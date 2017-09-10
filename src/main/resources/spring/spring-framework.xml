@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+          http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.10.2.xsd
+          http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+    <!-- 注解扫描 -->
+    <context:component-scan base-package="com.bc.pmpheep.**">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+    <!-- 加载属性文件 -->
+    <context:property-placeholder location="classpath:spring/spring.properties" ignore-unresolvable="true" />
+    <!-- 使用cglib进行动态代理 -->
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+    <!-- 数据源配置 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${sql.driverClassName}" />
+        <property name="url" value="${sql.url}" />
+        <property name="username" value="${sql.username}" />
+        <property name="password" value="${sql.password}" />
+        <property name="initialSize" value="${sql.initialSize}" />
+        <property name="minIdle" value="${sql.minIdle}" />
+        <property name="maxActive" value="${sql.maxActive}" />
+        <property name="maxWait" value="${sql.maxWait}" />
+        <property name="timeBetweenEvictionRunsMillis" value="${sql.timeBetweenEvictionRunsMillis}" />
+        <property name="minEvictableIdleTimeMillis" value="${sql.minEvictableIdleTimeMillis}" />
+        <property name="validationQuery" value="${sql.validationQuery}" />
+        <property name="testWhileIdle" value="${sql.testWhileIdle}" />
+        <property name="testOnBorrow" value="${sql.testOnBorrow}" />
+        <property name="testOnReturn" value="${sql.testOnReturn}" />
+    </bean>
+    <!-- myBatis -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+        <property name="mapperLocations" value="classpath:mybatis/mappers/*.xml" />
+        <property name="typeAliasesPackage" value="com.bc.pmpheep.back.po" />
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.bc.pmpheep.back.dao" />
+    </bean>
+    <!-- 支持注解方式声明式事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+    <!-- 事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <!-- 事务 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" />
+            <tx:method name="get*" read-only="true" />
+            <tx:method name="find*" read-only="true" />
+            <tx:method name="select*" read-only="true" />
+            <tx:method name="delete*" propagation="REQUIRED" />
+            <tx:method name="update*" propagation="REQUIRED" />
+            <tx:method name="add*" propagation="REQUIRED" />
+            <tx:method name="insert*" propagation="REQUIRED" />
+        </tx:attributes>
+    </tx:advice>
+    <!-- 事务入口 -->
+    <aop:config>
+        <aop:pointcut id="allServiceMethod" expression="execution(* com.bc.pmpheep.back.service.*.*(..))" />
+        <aop:advisor pointcut-ref="allServiceMethod" advice-ref="txAdvice" />
+    </aop:config>
+    <bean id="responseBeanAop" class="com.bc.pmpheep.controller.bean.ResponseBeanAop" />
+    <aop:config>
+        <aop:aspect id="myAop" ref="responseBeanAop">
+            <aop:pointcut id="target" expression="execution(public com.bc.pmpheep.controller.bean.ResponseBean *(..))" />
+            <aop:around method="controllerMethodHandler" pointcut-ref="target" />
+        </aop:aspect>
+    </aop:config>
+    <!--MongoDB-->
+    <mongo:mongo replica-set="${mongo.replicaSet}">
+        <mongo:options
+            connections-per-host="${mongo.connectionsPerHost}"
+            threads-allowed-to-block-for-connection-multiplier="${mongo.threadsAllowedToBlockForConnectionMultiplier}"
+            connect-timeout="${mongo.connectTimeout}"
+            max-wait-time="${mongo.maxWaitTime}"
+            auto-connect-retry="${mongo.autoConnectRetry}"
+            socket-keep-alive="${mongo.socketKeepAlive}"
+            socket-timeout="${mongo.socketTimeout}"
+            slave-ok="${mongo.slaveOk}"
+            write-number="${mongo.writeNumber}"
+            write-timeout="${mongo.writeTimeout}"
+            write-fsync="${mongo.writeFsync}" />
+    </mongo:mongo>
+    <mongo:db-factory id="mongoDbFactory" dbname="${mongo.dbName}" mongo-ref="mongo" />
+    <mongo:mapping-converter id="mappingConverter" db-factory-ref="mongoDbFactory" disable-validation="true" />
+    <bean id="gridFsTemplate" class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
+        <constructor-arg ref="mongoDbFactory" />
+        <constructor-arg ref="mappingConverter"/>
+    </bean>
+</beans>
