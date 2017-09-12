@@ -2,7 +2,7 @@
  * Copyright 2017 BangChen Information Technology Ltd., Co.
  * Licensed under the Apache License 2.0.
  */
-package com.bc.pmpheep.back.dao.pmphuser;
+package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.po.PmphUser;
 

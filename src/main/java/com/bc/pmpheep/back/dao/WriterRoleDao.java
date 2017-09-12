@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.dao.writerrole;
+package com.bc.pmpheep.back.dao;
 
 import org.springframework.stereotype.Component;
 

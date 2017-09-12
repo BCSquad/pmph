@@ -1,22 +1,22 @@
-package com.bc.pmpheep.back.service.org;
+package com.bc.pmpheep.back.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
-import com.bc.pmpheep.back.dao.org.OrgDao;
-import com.bc.pmpheep.back.po.Org;
-
+import com.bc.pmpheep.back.dao.AreaDao;
+import com.bc.pmpheep.back.po.Area;
 /**
- * OrgService 接口实现
- * @author Mryang
+ * AreaService 实现
+ * @author mryang
  *
  */
 @Service
-public class OrgServiceImpl extends BaseService implements OrgService {
+public class AreaServiceImpl extends BaseService implements AreaService {
 	
 	@Autowired
-	private OrgDao orgDao;
+	private AreaDao areaDao;
 	
 	/**
 	 * 
@@ -25,8 +25,8 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 	 * @throws Exception 
 	 */
 	@Override
-	public Integer addOrg(Org org) throws Exception{
-		return orgDao.addOrg(org);
+	public Integer addArea(Area area) throws Exception{
+		return areaDao.addArea(area);
 	}
 	
 	/**
@@ -36,11 +36,11 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
 	@Override
-	public Org getOrgById(Org org) throws Exception{
-		if(null==org.getId()){
+	public Area findAreaById(Area area) throws Exception{
+		if(null==area.getId()){
 			throw new NullPointerException("主键id为空");
 		}
-		return orgDao.getOrgById(org);
+		return areaDao.getAreaById( area);
 	}
 	
 	/**
@@ -50,11 +50,11 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
 	@Override
-	public Integer deleteOrgById(Org org) throws Exception{
-		if(null==org.getId()){
+	public Integer deleteAreaById(Area area) throws Exception{
+		if(null==area.getId()){
 			throw new NullPointerException("主键id为空");
 		}
-		return orgDao.deleteOrgById(org);
+		return areaDao.deleteAreaById(area);
 	}
 	
 	/**
@@ -63,11 +63,20 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 	 * @throws Exception ，NullPointerException(主键为空)
 	 */
 	@Override 
-	public Integer updateOrgById(Org org) throws Exception{
-		if(null==org.getId()){
+	public Integer updateAreaById(Area area) throws Exception{
+		if(null==area.getId()){
 			throw new NullPointerException("主键id为空");
 		}
-		return orgDao.updateOrgById(org);
+		return areaDao.updateAreaById(area);
 	}
-
+	
+	
+	
+		
 }
+
+
+
+
+
+

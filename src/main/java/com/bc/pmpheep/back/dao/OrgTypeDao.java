@@ -1,14 +1,14 @@
-package com.bc.pmpheep.back.service.orgtype;
+package com.bc.pmpheep.back.dao;
 
+import org.springframework.stereotype.Component;
 
 import com.bc.pmpheep.back.po.OrgType;
-
-
 /**
- * OrgTypeService 接口
- * @author Mryang
+ * OrgType 实体类数据访问层接口
+ * @author mryang
  */
-public interface OrgTypeService {
+@Component
+public interface  OrgTypeDao {
 	
 	/**
 	 * 
@@ -40,6 +40,5 @@ public interface OrgTypeService {
 	 * @throws Exception ，NullPointerException(主键为空)
 	 */
 	Integer updateOrgTypeById(OrgType OrgType) throws Exception;
+
 }
-
-

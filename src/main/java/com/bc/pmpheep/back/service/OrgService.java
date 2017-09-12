@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.service.org;
+package com.bc.pmpheep.back.service;
 
 
 import com.bc.pmpheep.back.po.Org;

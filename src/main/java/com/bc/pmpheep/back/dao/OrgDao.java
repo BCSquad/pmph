@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.dao.org;
+package com.bc.pmpheep.back.dao;
 
 import org.springframework.stereotype.Component;
 import com.bc.pmpheep.back.po.Org;

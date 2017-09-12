@@ -1,23 +1,20 @@
-package com.bc.pmpheep.back.dao.orguser;
-
-import org.springframework.stereotype.Component;
+package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.po.OrgType;
 import com.bc.pmpheep.back.po.OrgUser;
 
 /**
- * OrgUser  实体类数据访问层接口
- * @author mryang
+ * OrgUserService 接口
+ * @author Mryang
  */
-@Component
-public interface  OrgUserDao {
+public interface  OrgUserService {
 	/**
 	 * 
 	 * @param OrgUser 实体对象
 	 * @return  影响行数
 	 * @throws Exception 
 	 */
-	Integer addOrgUser(OrgUser orgUser) ;
+	Integer addOrgUser(OrgUser orgUser) throws Exception;
 	
 	/**
 	 * 
@@ -25,7 +22,7 @@ public interface  OrgUserDao {
 	 * @return  OrgUser
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	OrgType getOrgUserById(OrgUser orgUser) ;
+	OrgType getOrgUserById(OrgUser orgUser) throws Exception;
 	
 	/**
 	 * 
@@ -33,13 +30,12 @@ public interface  OrgUserDao {
 	 * @return  影响行数
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	Integer deleteOrgUserById(OrgUser orgUser);
+	Integer deleteOrgUserById(OrgUser orgUser) throws Exception;
 	
 	/**
 	 * @param OrgUser
 	 * @return 影响行数
 	 * @throws Exception ，NullPointerException(主键为空)
 	 */
-	Integer updateOrgUserById(OrgUser orgUser);
-
+	Integer updateOrgUserById(OrgUser orgUser) throws Exception;
 }

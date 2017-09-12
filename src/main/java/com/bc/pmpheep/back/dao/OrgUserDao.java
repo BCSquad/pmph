@@ -1,44 +1,45 @@
-package com.bc.pmpheep.back.dao.orgtype;
+package com.bc.pmpheep.back.dao;
 
 import org.springframework.stereotype.Component;
 
 import com.bc.pmpheep.back.po.OrgType;
+import com.bc.pmpheep.back.po.OrgUser;
+
 /**
- * OrgType 实体类数据访问层接口
+ * OrgUser  实体类数据访问层接口
  * @author mryang
  */
 @Component
-public interface  OrgTypeDao {
-	
+public interface  OrgUserDao {
 	/**
 	 * 
-	 * @param OrgType 实体对象
+	 * @param OrgUser 实体对象
 	 * @return  影响行数
 	 * @throws Exception 
 	 */
-	Integer addOrgType(OrgType orgType) throws Exception;
+	Integer addOrgUser(OrgUser orgUser) ;
 	
 	/**
 	 * 
-	 * @param OrgType 必须包含主键ID
-	 * @return  OrgType
+	 * @param OrgUser 必须包含主键ID
+	 * @return  OrgUser
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	OrgType getOrgTypeById(OrgType orgType) throws Exception;
+	OrgType getOrgUserById(OrgUser orgUser) ;
 	
 	/**
 	 * 
-	 * @param OrgType
+	 * @param OrgUser
 	 * @return  影响行数
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	Integer deleteOrgTypeById(OrgType orgType) throws Exception;
+	Integer deleteOrgUserById(OrgUser orgUser);
 	
 	/**
-	 * @param OrgType
+	 * @param OrgUser
 	 * @return 影响行数
 	 * @throws Exception ，NullPointerException(主键为空)
 	 */
-	Integer updateOrgTypeById(OrgType OrgType) throws Exception;
+	Integer updateOrgUserById(OrgUser orgUser);
 
 }

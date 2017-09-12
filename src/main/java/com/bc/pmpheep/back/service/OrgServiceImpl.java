@@ -1,22 +1,22 @@
-package com.bc.pmpheep.back.service.area;
+package com.bc.pmpheep.back.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
-import com.bc.pmpheep.back.dao.area.AreaDao;
-import com.bc.pmpheep.back.po.Area;
+import com.bc.pmpheep.back.dao.OrgDao;
+import com.bc.pmpheep.back.po.Org;
+
 /**
- * AreaService 实现
- * @author mryang
+ * OrgService 接口实现
+ * @author Mryang
  *
  */
 @Service
-public class AreaServiceImpl extends BaseService implements AreaService {
+public class OrgServiceImpl extends BaseService implements OrgService {
 	
 	@Autowired
-	private AreaDao areaDao;
+	private OrgDao orgDao;
 	
 	/**
 	 * 
@@ -25,8 +25,8 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 	 * @throws Exception 
 	 */
 	@Override
-	public Integer addArea(Area area) throws Exception{
-		return areaDao.addArea(area);
+	public Integer addOrg(Org org) throws Exception{
+		return orgDao.addOrg(org);
 	}
 	
 	/**
@@ -36,11 +36,11 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
 	@Override
-	public Area findAreaById(Area area) throws Exception{
-		if(null==area.getId()){
+	public Org getOrgById(Org org) throws Exception{
+		if(null==org.getId()){
 			throw new NullPointerException("主键id为空");
 		}
-		return areaDao.getAreaById( area);
+		return orgDao.getOrgById(org);
 	}
 	
 	/**
@@ -50,11 +50,11 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
 	@Override
-	public Integer deleteAreaById(Area area) throws Exception{
-		if(null==area.getId()){
+	public Integer deleteOrgById(Org org) throws Exception{
+		if(null==org.getId()){
 			throw new NullPointerException("主键id为空");
 		}
-		return areaDao.deleteAreaById(area);
+		return orgDao.deleteOrgById(org);
 	}
 	
 	/**
@@ -63,20 +63,11 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 	 * @throws Exception ，NullPointerException(主键为空)
 	 */
 	@Override 
-	public Integer updateAreaById(Area area) throws Exception{
-		if(null==area.getId()){
+	public Integer updateOrgById(Org org) throws Exception{
+		if(null==org.getId()){
 			throw new NullPointerException("主键id为空");
 		}
-		return areaDao.updateAreaById(area);
+		return orgDao.updateOrgById(org);
 	}
-	
-	
-	
-		
+
 }
-
-
-
-
-
-

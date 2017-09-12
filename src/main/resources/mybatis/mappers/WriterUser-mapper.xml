@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bc.pmpheep.back.dao.area.WriterUserDao">
+<mapper namespace="com.bc.pmpheep.back.dao.WriterUserDao">
 
 	<insert id="addWriterUser">insert into writer_user
 		(username,password,is_disabled,org_id,realname,sex,birthday,experience,position,title,fax,handphone,telephone,idcard,email,address,postcode,rank,is_teather,cert,auth_time,auth_user_type,auth_user_id,is_writer,is_expert,avatar,note,sort)

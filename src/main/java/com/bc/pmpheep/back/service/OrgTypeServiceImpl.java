@@ -1,10 +1,10 @@
-package com.bc.pmpheep.back.service.orgtype;
+package com.bc.pmpheep.back.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
-import com.bc.pmpheep.back.dao.orgtype.OrgTypeDao;
+import com.bc.pmpheep.back.dao.OrgTypeDao;
 import com.bc.pmpheep.back.po.OrgType;
 
 /**

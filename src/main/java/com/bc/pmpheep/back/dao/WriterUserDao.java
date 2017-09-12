@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.dao.writeruser;
+package com.bc.pmpheep.back.dao;
 
 import org.springframework.stereotype.Component;
 
