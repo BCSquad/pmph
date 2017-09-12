@@ -108,4 +108,10 @@ public class WriterPermission implements Serializable {
 		this.gmtUpdate = gmtUpdate;
 	}
 
+	@Override
+	public String toString() {
+		return "WriterPermission [id=" + id + ", permissionName=" + permissionName + ", idDisabled=" + idDisabled
+				+ ", note=" + note + ", sort=" + sort + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
+	}
+
 }

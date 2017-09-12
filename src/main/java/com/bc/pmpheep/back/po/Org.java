@@ -173,4 +173,13 @@ public class Org implements Serializable {
 		this.gmtUpdate = gmtUpdate;
 	}
 
+	@Override
+	public String toString() {
+		return "Org [id=" + id + ", parentId=" + parentId + ", orgName=" + orgName + ", orgTypeId=" + orgTypeId
+				+ ", areaId=" + areaId + ", countactPerson=" + countactPerson + ", countactPhone=" + countactPhone
+				+ ", note=" + note + ", sort=" + sort + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
+				+ ", gmtUpdate=" + gmtUpdate + "]";
+	}
+	
+
 }

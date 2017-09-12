@@ -67,4 +67,9 @@ public class Area implements Serializable {
 		this.sort = sort;
 	}
 
+	@Override
+	public String toString() {
+		return "Area [id=" + id + ", prentId=" + prentId + ", areaName=" + areaName + ", sort=" + sort + "]";
+	}
+
 }

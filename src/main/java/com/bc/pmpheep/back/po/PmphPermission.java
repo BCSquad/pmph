@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.po;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
@@ -11,7 +12,7 @@ import org.apache.ibatis.type.Alias;
  *
  */
 @Alias("PmphPermission")
-public class PmphPermission {
+public class PmphPermission implements Serializable {
 	/**
 	 * 主键
 	 */
@@ -106,6 +107,12 @@ public class PmphPermission {
 
 	public void setGmtUpdate(Date gmtUpdate) {
 		this.gmtUpdate = gmtUpdate;
+	}
+
+	@Override
+	public String toString() {
+		return "PmphPermission [id=" + id + ", peermission=" + peermission + ", idDeleted=" + idDeleted + ", note="
+				+ note + ", sort=" + sort + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.po;
 
+import java.io.Serializable;
+
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -9,7 +11,7 @@ import org.apache.ibatis.type.Alias;
  *
  */
 @Alias("PmphDepartment")
-public class PmphDepartment {
+public class PmphDepartment implements Serializable {
 	/**
 	 * 主键
 	 */
@@ -89,6 +91,12 @@ public class PmphDepartment {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	@Override
+	public String toString() {
+		return "PmphDepartment [id=" + id + ", parentId=" + parentId + ", path=" + path + ", dbName=" + dbName
+				+ ", sort=" + sort + ", note=" + note + "]";
 	}
 
 }

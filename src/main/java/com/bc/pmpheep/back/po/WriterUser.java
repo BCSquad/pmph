@@ -440,11 +440,15 @@ public class WriterUser implements Serializable {
 
 	@Override
 	public String toString() {
-		String writeruser = "{id:" + id + ", username" +username + ", " +password + ", " +isDisabled + ", " +orgId + ", " +realname + ", " +sex + ", " +birthday +", " + experience
-				+ ", " +position +", " + title + ", " +fax +"" + handphone + "" +telephone +"" + idcard +"" + email + "" +address +"" + postcode + "" +isTeather
-				+ "" +cert + "" +authTime +"" + authUserType + "" +authUserId +"" + isWriter + "" +isExpert + "" +avatar + "" +note +"" +sort + "" +isDeleted
-				+ "" +gmtCreate +"" + gmtUpdate;
-		return super.toString();
+		return "WriterUser [id=" + id + ", username=" + username + ", password=" + password + ", isDisabled="
+				+ isDisabled + ", orgId=" + orgId + ", realname=" + realname + ", sex=" + sex + ", birthday=" + birthday
+				+ ", experience=" + experience + ", position=" + position + ", title=" + title + ", fax=" + fax
+				+ ", handphone=" + handphone + ", telephone=" + telephone + ", idcard=" + idcard + ", email=" + email
+				+ ", address=" + address + ", postcode=" + postcode + ", rank=" + rank + ", isTeather=" + isTeather
+				+ ", cert=" + cert + ", authTime=" + authTime + ", authUserType=" + authUserType + ", authUserId="
+				+ authUserId + ", isWriter=" + isWriter + ", isExpert=" + isExpert + ", avatar=" + avatar + ", note="
+				+ note + ", sort=" + sort + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
+				+ gmtUpdate + "]";
 	}
 
 }

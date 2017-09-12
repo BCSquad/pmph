@@ -106,4 +106,10 @@ public class WriterRole implements Serializable {
 		this.gmtUpdate = gmtUpdate;
 	}
 
+	@Override
+	public String toString() {
+		return "WriterRole [id=" + id + ", roleName=" + roleName + ", isDisabled=" + isDisabled + ", note=" + note
+				+ ", sort=" + sort + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
+	}
+
 }

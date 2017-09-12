@@ -292,4 +292,14 @@ public class OrgUser implements Serializable {
 		this.gmtUpdate = gmtUpdate;
 	}
 
+	@Override
+	public String toString() {
+		return "OrgUser [id=" + id + ", username=" + username + ", password=" + password + ", idDisabled=" + idDisabled
+				+ ", orgId=" + orgId + ", realname=" + realname + ", sex=" + sex + ", position=" + position + ", title="
+				+ title + ", fax=" + fax + ", handphone=" + handphone + ", telephone=" + telephone + ", idcard="
+				+ idcard + ", email=" + email + ", address=" + address + ", postcode=" + postcode + ", note=" + note
+				+ ", sort=" + sort + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
+				+ gmtUpdate + "]";
+	}
+
 }

@@ -108,4 +108,10 @@ public class PmphRole implements Serializable {
 		this.gmtUpdate = gmtUpdate;
 	}
 
+	@Override
+	public String toString() {
+		return "PmphRole [id=" + id + ", roleName=" + roleName + ", isDisabled=" + isDisabled + ", note=" + note
+				+ ", sort=" + sort + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
+	}
+
 }

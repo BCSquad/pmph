@@ -54,4 +54,10 @@ public class OrgType implements Serializable {
 		this.sort = sort;
 	}
 
+	@Override
+	public String toString() {
+		return "OrgType [id=" + id + ", typeName=" + typeName + ", sort=" + sort + "]";
+	}
+	
+
 }
