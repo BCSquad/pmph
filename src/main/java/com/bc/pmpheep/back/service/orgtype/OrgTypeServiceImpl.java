@@ -35,11 +35,11 @@ public class OrgTypeServiceImpl extends BaseService implements OrgTypeService {
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
 	@Override
-	public OrgType getOrgTypeDaoById(OrgType orgType) throws Exception{
+	public OrgType getOrgTypeById(OrgType orgType) throws Exception{
 		if(null==orgType.getId()){
 			throw new NullPointerException("主键id为空");
 		}
-		return orgTypeDao.getOrgTypeDaoById(orgType);
+		return orgTypeDao.getOrgTypeById(orgType);
 	}
 	
 	/**

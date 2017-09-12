@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.orguser.OrgUserDao">
+
+	<!-- 新增OrgUser -->
+    <insert id="addOrgUser"  parameterType="OrgUser"   >
+        insert  into  org_user (username,password,   is_disabled,  org_id,  realname,   sex,   position,  title,    fax,   handphone,   telephone,   idcard,   email,   address,    postcode,  note,  sort,    is_deleted) 
+                        values(#{username},#{password},#{idDisabled},#{orgId},#{realname},#{sex},#{position},#{title},#{fax},#{handphone},#{telephone},#{idcard},#{email},#{address},#{postcode},#{note},#{sort},#{isDeleted}) ;
+    </insert>
+    
+   <!-- 根据id删除一个OrgUser -->
+	<delete id="deleteOrgUserById" parameterType="OrgUser"   >
+		delete from org_user where where id=#{id} ;
+	</delete>
+	
+	<!-- 更新OrgUser -->
+	<update id="updateOrgUserById"   parameterType="OrgUser"  >
+		update org_user  set  
+				(username=#{username},password=#{password},is_disabled=#{idDisabled},org_id=#{orgId},realname=#{realname},sex=#{sex},
+		         position=#{position},  title=#{title},    fax=#{fax},   handphone=#{handphone},   telephone=#{telephone},   idcard=#{idcard},  
+		         email=#{email},   address=#{address},    postcode=#{postcode},  note=#{note},  sort=#{sort},    is_deleted=#{isDeleted} 
+        where id=#{id} ;
+	</update>
+	
+	<!-- 根据id查询一个OrgUser -->
+	<select  id="getOrgUserById" parameterType="OrgUser"  resultType="OrgUser" >
+		select * from org_user where id=#{id} ;
+	</select>
+	
+</mapper>

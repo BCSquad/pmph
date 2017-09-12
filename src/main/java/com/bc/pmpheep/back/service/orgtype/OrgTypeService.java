@@ -24,7 +24,7 @@ public interface OrgTypeService {
 	 * @return  OrgType
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	OrgType getOrgTypeDaoById(OrgType orgType) throws Exception;
+	OrgType getOrgTypeById(OrgType orgType) throws Exception;
 	
 	/**
 	 * 

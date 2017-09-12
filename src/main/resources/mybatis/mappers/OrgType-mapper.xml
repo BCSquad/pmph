@@ -20,7 +20,7 @@
 	</update>
 	
 	<!-- 根据id查询一个OrgType -->
-	<select  id="getOrgTypeDaoById" parameterType="OrgType"  resultType="OrgType" >
+	<select  id="getOrgTypeById" parameterType="OrgType"  resultType="OrgType" >
 		select * from org_type where id=#{id} ;
 	</select>
 	
