@@ -142,6 +142,11 @@ public class WriterUser implements Serializable {
 	 */
 	private Date gmtUpdate;
 
+	public WriterUser(String username, String password) {
+		this.username = username;
+		this.password = password;
+	}
+
 	public WriterUser(String username, String password, boolean isDisabled, Long orgId, String realname, Integer sex,
 			Date birthday, Integer experience, String position, String title, String fax, String handphone,
 			String telephone, String idcard, String email, String address, String postcode, Integer rank,

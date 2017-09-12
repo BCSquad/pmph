@@ -98,6 +98,12 @@ public class OrgUser implements Serializable {
 	 */
 	private Date gmtUpdate;
 
+	public OrgUser(String username, String password) {
+		super();
+		this.username = username;
+		this.password = password;
+	}
+
 	public OrgUser(String username, String password, boolean idDisabled, Long orgId, String realname, Integer sex,
 			String position, String title, String fax, String handphone, String telephone, String idcard, String email,
 			String address, String postcode, String note, Integer sort, boolean isDeleted, Date gmtCreate,

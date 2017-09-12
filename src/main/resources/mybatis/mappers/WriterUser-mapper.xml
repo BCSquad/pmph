@@ -4,7 +4,7 @@
 <mapper namespace="com.bc.pmpheep.back.dao.area.WriterUserDao">
 
 	<insert id="addWriterUser">insert into writer_user
-		(username,password,is_disabled,org_id,realname,sex,birthday,experience,position,title,fax,handphone,telephone,idcard,email,address,postcode,rank,is_teather,cert,auth_time,auth_user_type,auth_user_id,is_writer,is_expert,avatar,note,sort,is_deleted)
+		(username,password,is_disabled,org_id,realname,sex,birthday,experience,position,title,fax,handphone,telephone,idcard,email,address,postcode,rank,is_teather,cert,auth_time,auth_user_type,auth_user_id,is_writer,is_expert,avatar,note,sort)
 		values
 		(#{username},#{password},#{isDisabled},#{orgId},#{realname},#{sex},#{birthday},#{experience},#{position},#{title},#{fax},#{handphone},#{telephone},#{idcard},#{email},#{address},#{postcode},#{rank},#{isTeather},#{cert},#{authTime},#{},#{},#{},#{},#{},#{},#{},);
 	</insert>
