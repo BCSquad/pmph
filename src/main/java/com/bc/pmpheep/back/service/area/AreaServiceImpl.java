@@ -40,7 +40,7 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 		if(null==area.getId()){
 			throw new NullPointerException("主键id为空");
 		}
-		return areaDao.findAreaById( area);
+		return areaDao.getAreaById( area);
 	}
 	
 	/**

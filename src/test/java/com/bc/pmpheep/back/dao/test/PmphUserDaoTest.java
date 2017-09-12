@@ -4,7 +4,7 @@
  */
 package com.bc.pmpheep.back.dao.test;
 
-import com.bc.pmpheep.back.dao.PmphUserDao;
+import com.bc.pmpheep.back.dao.pmphuser.PmphUserDao;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.test.BaseTest;
 import javax.annotation.Resource;

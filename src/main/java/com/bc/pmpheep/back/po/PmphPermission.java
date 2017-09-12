@@ -18,9 +18,25 @@ public class PmphPermission implements Serializable {
 	 */
 	private Long id;
 	/**
-	 * 权限名称
+	 * 上级许可id
 	 */
-	private String peermission;
+	private Long parentId;
+	/**
+	 * 根节点路径
+	 */
+	private String path;
+	/**
+	 * 许可名称
+	 */
+	private String peermissionName;
+	/**
+	 * 菜单名称
+	 */
+	private String menuName;
+	/**
+	 * 相对地址
+	 */
+	private String url;
 	/**
 	 * 是否禁用
 	 */
@@ -42,10 +58,13 @@ public class PmphPermission implements Serializable {
 	 */
 	private Date gmtUpdate;
 
-	public PmphPermission(String peermission, boolean idDeleted, String note, Integer sort, Date gmtCreate,
-			Date gmtUpdate) {
-		super();
-		this.peermission = peermission;
+	public PmphPermission(Long parentId, String path, String peermissionName, String menuName, String url,
+			boolean idDeleted, String note, Integer sort, Date gmtCreate, Date gmtUpdate) {
+		this.parentId = parentId;
+		this.path = path;
+		this.peermissionName = peermissionName;
+		this.menuName = menuName;
+		this.url = url;
 		this.idDeleted = idDeleted;
 		this.note = note;
 		this.sort = sort;
@@ -59,14 +78,6 @@ public class PmphPermission implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getPeermission() {
-		return peermission;
-	}
-
-	public void setPeermission(String peermission) {
-		this.peermission = peermission;
 	}
 
 	public boolean isIdDeleted() {
@@ -109,9 +120,50 @@ public class PmphPermission implements Serializable {
 		this.gmtUpdate = gmtUpdate;
 	}
 
+	public Long getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getPeermissionName() {
+		return peermissionName;
+	}
+
+	public void setPeermissionName(String peermissionName) {
+		this.peermissionName = peermissionName;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getMenuName() {
+		return menuName;
+	}
+
+	public void setMenuName(String menuName) {
+		this.menuName = menuName;
+	}
+
 	@Override
 	public String toString() {
-		return "PmphPermission [id=" + id + ", peermission=" + peermission + ", idDeleted=" + idDeleted + ", note="
+		return "PmphPermission [id=" + id + ", parentId=" + parentId + ", path=" + path + ", peermissionName="
+				+ peermissionName + ", menuName=" + menuName + ", url=" + url + ", idDeleted=" + idDeleted + ", note="
 				+ note + ", sort=" + sort + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
 	}
 

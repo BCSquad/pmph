@@ -148,7 +148,6 @@ public class WriterUser implements Serializable {
 			boolean isTeather, String cert, Date authTime, Integer authUserType, Long authUserId, boolean isWriter,
 			boolean isExpert, String avatar, String note, Integer sort, boolean isDeleted, Date gmtCreate,
 			Date gmtUpdate) {
-		super();
 		this.username = username;
 		this.password = password;
 		this.isDisabled = isDisabled;
