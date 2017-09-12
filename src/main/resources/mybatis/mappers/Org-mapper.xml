@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.org.OrgDao">
+
+	<!-- 新增Org -->
+    <insert id="addOrg"  parameterType="Org"   >
+    	insert into org (parent_id, org_name,   org_type_id, area_id,   contact_person,  contact_phone,   note ,  sort,  is_deleted ) 
+                   values(#{parentId},#{orgName},#{orgTypeId},#{areaId},#{countactPerson},#{countactPhone},#{note},#{sort},#{isDeleted});
+    </insert>
+    
+   
+   <!-- 根据id删除一个Org  -->
+	<delete id="deleteOrgById" parameterType="Org"   >
+		delete from org where where id=#{id} ;
+	</delete>
+	
+	<!-- 更新Org -->
+	<update id="updateOrgById"   parameterType="Org"  >
+		update org  set  parent_id=#{parentId}, org_name=#{orgName},   org_type_id=#{orgTypeId}, area_id=#{areaId}, 
+		                 contact_person=#{countactPerson},  contact_phone=#{countactPhone},   
+		                 note =#{note},  sort=#{sort},  is_deleted =#{isDeleted}
+            where id=#{id} ;
+	</update>
+	
+	<!-- 根据id查询一个Org -->
+	<select  id="getOrgById" parameterType="Org"  resultType="Org" >
+		select * from  org  where id=#{id} ;
+	</select>
+	
+</mapper>
