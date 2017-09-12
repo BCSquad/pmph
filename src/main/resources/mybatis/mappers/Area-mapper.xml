@@ -4,19 +4,19 @@
 <mapper namespace="com.bc.pmpheep.back.dao.area.AreaDao">
 
 	<!-- 新增Area -->
-    <insert id="addArea"  parameterType="Area"       resultType="java.lang.Integer"  >
+    <insert id="addArea"  parameterType="Area"   >
         insert  into  area (parent_id,area_name,sort) 
                      values(#{prentId},#{areaName},#{sort}) ;
     </insert>
     
    
    <!-- 根据id删除一个 -->
-	<delete id="deleteAreaById" parameterType="Area"  resultType="java.lang.Integer" >
+	<delete id="deleteAreaById" parameterType="Area"   >
 		delete from area where where id=#{id} ;
 	</delete>
 	
 	<!-- 更新Area -->
-	<update id="updateAreaById"   parameterType="Area"  resultType="java.lang.Integer" >
+	<update id="updateAreaById"   parameterType="Area"  >
 		update area  set  parent_id=#{prentId},area_name=#{areaName}, sort =#{sort}
 			where id=#{id} ;
 	</update>

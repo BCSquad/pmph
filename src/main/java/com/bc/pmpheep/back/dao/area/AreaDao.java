@@ -17,14 +17,14 @@ public interface AreaDao {
 	 * @param area 实体对象
 	 * @return  影响行数
 	 */
-	public Integer addArea(Area area);
+	Integer addArea(Area area);
 	
 	/**
 	 * 删除Area 通过主键id
 	 * @param area
 	 * @return  影响行数
 	 */
-	public Integer deleteAreaById(Area area) ;
+	Integer deleteAreaById(Area area) ;
 	
 	
 	/**
@@ -32,14 +32,14 @@ public interface AreaDao {
 	 * @param area
 	 * @return 影响行数
 	 */
-	public Integer updateAreaById(Area area) ;
+	Integer updateAreaById(Area area) ;
 	
 	/**
 	 * 查询一个 Area 通过主键id
 	 * @param area 必须包含主键ID
 	 * @return  area
 	 */
-	public Area findAreaById(Area area) ;
+	Area findAreaById(Area area) ;
 	
 	
 }
