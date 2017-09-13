@@ -2,7 +2,6 @@ package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -11,6 +10,7 @@ import org.apache.ibatis.type.Alias;
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("PmphGroup")
 public class PmphGroup implements Serializable {
 	/**
@@ -123,9 +123,9 @@ public class PmphGroup implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PmphGroup [id=" + id + ", groupName=" + groupName + ", groupImage=" + groupImage + ", founderId="
-				+ founderId + ", bookId=" + bookId + ", note=" + note + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
-				+ gmtUpdate + "]";
+		return "{id:" + id + ", groupName:" + groupName + ", groupImage:" + groupImage + ", founderId:"
+				+ founderId + ", bookId:" + bookId + ", note:" + note + ", gmtCreate:" + gmtCreate + ", gmtUpdate:"
+				+ gmtUpdate + "}";
 	}
 
 }
