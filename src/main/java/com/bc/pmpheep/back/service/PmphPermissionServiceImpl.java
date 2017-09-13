@@ -2,6 +2,8 @@ package com.bc.pmpheep.back.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphPermissionDao;
 import com.bc.pmpheep.back.po.PmphPermission;
 
@@ -11,7 +13,7 @@ import com.bc.pmpheep.back.po.PmphPermission;
  *
  */
 @Service
-public class PmphPermissionServiceImpl implements PmphPermissionService {
+public class PmphPermissionServiceImpl extends BaseService implements PmphPermissionService {
 	@Autowired
 	private PmphPermissionDao pmphPermissionDao;
 	
