@@ -18,9 +18,9 @@ public interface AreaDao {
 	 * 
 	 * @param area
 	 *            实体对象
-	 * @return 带主键的Area 
+	 * @return   id 主键
 	 */
-	Area addArea(Area area);
+	Long addArea(Area area);
 
 	/**
 	 * 删除Area 通过主键id

@@ -5,11 +5,12 @@ import java.io.Serializable;
 import org.apache.ibatis.type.Alias;
 
 /**
- * Area实体类
+ * Area(区域表（省市县）)实体类 --- Area
  * 
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("Area")
 public class Area implements Serializable {
 	/**
@@ -69,7 +70,7 @@ public class Area implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Area [id=" + id + ", prentId=" + prentId + ", areaName=" + areaName + ", sort=" + sort + "]";
+		return "{id:" + id + ", prentId:" + prentId + ", areaName:" + areaName + ", sort:" + sort + "}";
 	}
 
 }
