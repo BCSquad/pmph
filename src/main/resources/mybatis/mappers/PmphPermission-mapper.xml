@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.PmphPermissionDao">
+
+	<!-- 新增 PmphPermission -->
+    <insert id="addPmphPermission"  parameterType="PmphPermission"  useGeneratedKeys="true" keyProperty="id"  >
+    	insert  into  pmph_permission (permission_name,is_disabled,note,sort) 
+                     		 values(#{peermissionName},#{idDeleted},#{note},#{sort}) ;
+    </insert>
+    
+   <!-- 根据id删除一个 -->
+	<delete id="deletePmphPermissionById" parameterType="PmphPermission"   >
+		delete from  pmph_permission where where id=#{id} ;
+	</delete>
+	
+	<!-- 更新PmphPermission -->
+	<update id="updatePmphPermissionById"   parameterType="PmphPermission"  >
+		update pmph_permission  
+		  set   permission_name=#{peermissionName},is_disabled=#{idDeleted},note=#{note},sort=#{sort} where id=#{id} ;
+	</update>
+	
+	<!-- 根据id查询一个PmphPermission -->
+	<select  id="getPmphPermissionById" parameterType="PmphPermission"  resultType="PmphPermission" >
+		select * from pmph_permission where id=#{id} ;
+	</select>
+	
+</mapper>

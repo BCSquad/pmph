@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.PmphDepartmentDao">
+
+	<!-- 新增 PmphDepartmentDao -->
+    <insert id="addpmphDepartment"  parameterType="PmphDepartment"  useGeneratedKeys="true" keyProperty="id"  >
+    	 insert  into  pmph_department (parent_id,path,dp_name,sort,note) 
+                     		 values(#{parentId},#{path},#{dbName},#{sort},#{note}) ;
+    </insert>
+    
+   <!-- 根据id删除一个 -->
+	<delete id="deletePmphDepartmentById" parameterType="PmphDepartment"   >
+		delete from  pmph_department where where id=#{id} ;
+	</delete>
+	
+	<!-- 更新PmphDepartment -->
+	<update id="updatePmphDepartmentById"   parameterType="PmphDepartment"  >
+		update pmph_department  set  parent_id=#{parentId},path=#{path},dp_name=#{dbName},sort=#{sort},note= #{note} where id=#{id} ;
+	</update>
+	
+	<!-- 根据id查询一个PmphDepartment -->
+	<select  id="getPmphDepartmentById" parameterType="PmphDepartment"  resultType="PmphDepartment" >
+		select * from pmph_department where id=#{id} ;
+	</select>
+	
+</mapper>
