@@ -9,31 +9,28 @@ import com.bc.pmpheep.back.po.WriterPermission;
 
 @Service
 public class WriterPermissionServiceImpl extends BaseService implements WriterPermissionService {
-	@Autowired
-	WriterPermissionDao writerPermissionDao;
 
-	@Override
-	public Integer addWriterPermission(WriterPermission writerPermission) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Autowired
+    WriterPermissionDao writerPermissionDao;
 
-	@Override
-	public Integer deleteWriterPermissionById(String[] ids) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Integer addWriterPermission(WriterPermission writerPermission) throws Exception {
+	return writerPermissionDao.addWriterPermission(writerPermission);
+    }
 
-	@Override
-	public Integer updateWriterPermissionById(WriterPermission writerPermission) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Integer deleteWriterPermissionById(String[] ids) throws Exception {
+	return writerPermissionDao.deleteWriterPermissionById(ids);
+    }
 
-	@Override
-	public WriterPermission getWriterPermissionByPermissionName(String permissionName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Integer updateWriterPermissionById(WriterPermission writerPermission) throws Exception {
+	return writerPermissionDao.updateWriterPermissionById(writerPermission);
+    }
+
+    @Override
+    public WriterPermission getWriterPermissionByPermissionName(String permissionName) throws Exception {
+	return writerPermissionDao.getWriterPermissionByPermissionName(permissionName);
+    }
 
 }
