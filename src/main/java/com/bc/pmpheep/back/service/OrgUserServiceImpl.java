@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.OrgUserDao;
-import com.bc.pmpheep.back.po.OrgType;
 import com.bc.pmpheep.back.po.OrgUser;
 
 /**
@@ -35,7 +34,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
 	@Override
-	public OrgType getOrgUserById(OrgUser orgUser) throws Exception{
+	public OrgUser getOrgUserById(OrgUser orgUser) throws Exception{
 		if(null==orgUser.getId()){
 			throw new NullPointerException("主键id为空");
 		}

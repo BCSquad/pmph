@@ -149,11 +149,11 @@ public class Org implements Serializable {
 		this.sort = sort;
 	}
 
-	public boolean isDeleted() {
+	public boolean isIsDeleted() {
 		return isDeleted;
 	}
 
-	public void setDeleted(boolean isDeleted) {
+	public void setIsDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
 

@@ -28,7 +28,7 @@ public class OrgUser implements Serializable {
 	/**
 	 * 是否禁用
 	 */
-	private boolean idDisabled;
+	private boolean isDisabled;
 	/**
 	 * 对应学校ID
 	 */
@@ -104,13 +104,13 @@ public class OrgUser implements Serializable {
 		this.password = password;
 	}
 
-	public OrgUser(String username, String password, boolean idDisabled, Long orgId, String realname, Integer sex,
+	public OrgUser(String username, String password, boolean isDisabled, Long orgId, String realname, Integer sex,
 			String position, String title, String fax, String handphone, String telephone, String idcard, String email,
 			String address, String postcode, String note, Integer sort, boolean isDeleted, Date gmtCreate,
 			Date gmtUpdate) {
 		this.username = username;
 		this.password = password;
-		this.idDisabled = idDisabled;
+		this.isDisabled = isDisabled;
 		this.orgId = orgId;
 		this.realname = realname;
 		this.sex = sex;
@@ -154,12 +154,12 @@ public class OrgUser implements Serializable {
 		this.password = password;
 	}
 
-	public boolean isIdDisabled() {
-		return idDisabled;
+	public boolean isIsDisabled() {
+		return isDisabled;
 	}
 
-	public void setIdDisabled(boolean idDisabled) {
-		this.idDisabled = idDisabled;
+	public void setIsDisabled(boolean idDisabled) {
+		this.isDisabled = idDisabled;
 	}
 
 	public Long getOrgId() {
@@ -274,11 +274,11 @@ public class OrgUser implements Serializable {
 		this.sort = sort;
 	}
 
-	public boolean isDeleted() {
+	public boolean isIsDeleted() {
 		return isDeleted;
 	}
 
-	public void setDeleted(boolean isDeleted) {
+	public void setIsDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
 
@@ -300,7 +300,7 @@ public class OrgUser implements Serializable {
 
 	@Override
 	public String toString() {
-		return "OrgUser [id=" + id + ", username=" + username + ", password=" + password + ", idDisabled=" + idDisabled
+		return "OrgUser [id=" + id + ", username=" + username + ", password=" + password + ", idDisabled=" + isDisabled
 				+ ", orgId=" + orgId + ", realname=" + realname + ", sex=" + sex + ", position=" + position + ", title="
 				+ title + ", fax=" + fax + ", handphone=" + handphone + ", telephone=" + telephone + ", idcard="
 				+ idcard + ", email=" + email + ", address=" + address + ", postcode=" + postcode + ", note=" + note

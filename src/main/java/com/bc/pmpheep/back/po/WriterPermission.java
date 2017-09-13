@@ -24,7 +24,7 @@ public class WriterPermission implements Serializable {
 	/**
 	 * 是否禁用
 	 */
-	private boolean idDisabled;
+	private boolean isDisabled;
 	/**
 	 * 备注
 	 */
@@ -42,10 +42,10 @@ public class WriterPermission implements Serializable {
 	 */
 	private Date gmtUpdate;
 
-	public WriterPermission(String permissionName, boolean idDisabled, String note, Integer sort, Date gmtCreate,
+	public WriterPermission(String permissionName, boolean isDisabled, String note, Integer sort, Date gmtCreate,
 			Date gmtUpdate) {
 		this.permissionName = permissionName;
-		this.idDisabled = idDisabled;
+		this.isDisabled = isDisabled;
 		this.note = note;
 		this.sort = sort;
 		this.gmtCreate = gmtCreate;
@@ -68,12 +68,12 @@ public class WriterPermission implements Serializable {
 		this.permissionName = permissionName;
 	}
 
-	public boolean isIdDisabled() {
-		return idDisabled;
+	public boolean isIsDisabled() {
+		return isDisabled;
 	}
 
-	public void setIdDisabled(boolean idDisabled) {
-		this.idDisabled = idDisabled;
+	public void setIsDisabled(boolean isDisabled) {
+		this.isDisabled = isDisabled;
 	}
 
 	public String getNote() {
@@ -110,7 +110,7 @@ public class WriterPermission implements Serializable {
 
 	@Override
 	public String toString() {
-		return "WriterPermission [id=" + id + ", permissionName=" + permissionName + ", idDisabled=" + idDisabled
+		return "WriterPermission [id=" + id + ", permissionName=" + permissionName + ", idDisabled=" + isDisabled
 				+ ", note=" + note + ", sort=" + sort + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
 	}
 

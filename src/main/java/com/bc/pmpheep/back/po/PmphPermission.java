@@ -40,7 +40,7 @@ public class PmphPermission implements Serializable {
 	/**
 	 * 是否禁用
 	 */
-	private boolean idDeleted;
+	private boolean isDeleted;
 	/**
 	 * 备注
 	 */
@@ -59,13 +59,13 @@ public class PmphPermission implements Serializable {
 	private Date gmtUpdate;
 
 	public PmphPermission(Long parentId, String path, String peermissionName, String menuName, String url,
-			boolean idDeleted, String note, Integer sort, Date gmtCreate, Date gmtUpdate) {
+			boolean isDeleted, String note, Integer sort, Date gmtCreate, Date gmtUpdate) {
 		this.parentId = parentId;
 		this.path = path;
 		this.peermissionName = peermissionName;
 		this.menuName = menuName;
 		this.url = url;
-		this.idDeleted = idDeleted;
+		this.isDeleted = isDeleted;
 		this.note = note;
 		this.sort = sort;
 		this.gmtCreate = gmtCreate;
@@ -80,12 +80,12 @@ public class PmphPermission implements Serializable {
 		this.id = id;
 	}
 
-	public boolean isIdDeleted() {
-		return idDeleted;
+	public boolean isIsDeleted() {
+		return isDeleted;
 	}
 
-	public void setIdDeleted(boolean idDeleted) {
-		this.idDeleted = idDeleted;
+	public void setIsDeleted(boolean idDeleted) {
+		this.isDeleted = idDeleted;
 	}
 
 	public String getNote() {
@@ -163,7 +163,7 @@ public class PmphPermission implements Serializable {
 	@Override
 	public String toString() {
 		return "PmphPermission [id=" + id + ", parentId=" + parentId + ", path=" + path + ", peermissionName="
-				+ peermissionName + ", menuName=" + menuName + ", url=" + url + ", idDeleted=" + idDeleted + ", note="
+				+ peermissionName + ", menuName=" + menuName + ", url=" + url + ", idDeleted=" + isDeleted + ", note="
 				+ note + ", sort=" + sort + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
 	}
 

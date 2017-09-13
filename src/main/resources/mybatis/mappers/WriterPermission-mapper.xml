@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.bc.pmpheep.back.dao.WriterPermissionDao">
+
+	<!-- 添加一个作家权限 -->
+	<insert id="addWriterPermission" parameterType="WriterPermission">
+		insert into
+		writer_permission
+		(permission_name,is_disabled,note,sort) values
+		(#{permissionName},#{isDisabled},#{note},#{sort});
+	</insert>
+
+	<!-- 删除一个或者多个作家权限 -->
+	<delete id="deleteWriterPermissionById" parameterType="String">
+		delete from writer_permission where id in
+		<foreach collection="array" open="(" separator="," close=")"
+			item="id">#{id}
+		</foreach>
+	</delete>
+
+	<!-- 修改作家权限 -->
+	<update id="updateWriterPermissionById" parameterType="WriterPermission">
+		update
+		writer_permission set
+		permission_name=#{permissionName},is_disabled=#{isDisabled},note=#{note},sort=#{sort}
+		where id=#{id};
+	</update>
+
+	<!-- 根据权限名称查询 -->
+	<select id="getWriterPermissionByPermissionName" parameterType="String">
+		select * from writer_permission where permission_name =
+		#{permissionName};
+	</select>
+
+</mapper>

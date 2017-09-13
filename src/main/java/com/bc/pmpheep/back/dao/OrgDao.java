@@ -1,6 +1,5 @@
 package com.bc.pmpheep.back.dao;
 
-import org.springframework.stereotype.Component;
 import com.bc.pmpheep.back.po.Org;
 
 
@@ -8,7 +7,6 @@ import com.bc.pmpheep.back.po.Org;
  * OrgDao实体类数据访问层接口
  * @author mryang
  */
-@Component
 public interface OrgDao {
 	
 	/**

@@ -66,11 +66,11 @@ public class WriterRole implements Serializable {
 		this.roleName = roleName;
 	}
 
-	public boolean isDisabled() {
+	public boolean isIsDisabled() {
 		return isDisabled;
 	}
 
-	public void setDisabled(boolean isDisabled) {
+	public void setIsDisabled(boolean isDisabled) {
 		this.isDisabled = isDisabled;
 	}
 

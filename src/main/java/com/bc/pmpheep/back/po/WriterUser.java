@@ -210,11 +210,11 @@ public class WriterUser implements Serializable {
 		this.password = password;
 	}
 
-	public boolean isDisabled() {
+	public boolean isIsDisabled() {
 		return isDisabled;
 	}
 
-	public void setDisabled(boolean isDisabled) {
+	public void setIsDisabled(boolean isDisabled) {
 		this.isDisabled = isDisabled;
 	}
 
@@ -338,11 +338,11 @@ public class WriterUser implements Serializable {
 		this.rank = rank;
 	}
 
-	public boolean isTeather() {
+	public boolean isIsTeather() {
 		return isTeather;
 	}
 
-	public void setTeather(boolean isTeather) {
+	public void setIsTeather(boolean isTeather) {
 		this.isTeather = isTeather;
 	}
 
@@ -378,19 +378,19 @@ public class WriterUser implements Serializable {
 		this.authUserId = authUserId;
 	}
 
-	public boolean isWriter() {
+	public boolean isIsWriter() {
 		return isWriter;
 	}
 
-	public void setWriter(boolean isWriter) {
+	public void setIsWriter(boolean isWriter) {
 		this.isWriter = isWriter;
 	}
 
-	public boolean isExpert() {
+	public boolean isIsExpert() {
 		return isExpert;
 	}
 
-	public void setExpert(boolean isExpert) {
+	public void setIsExpert(boolean isExpert) {
 		this.isExpert = isExpert;
 	}
 
@@ -418,11 +418,11 @@ public class WriterUser implements Serializable {
 		this.sort = sort;
 	}
 
-	public boolean isDeleted() {
+	public boolean isIsDeleted() {
 		return isDeleted;
 	}
 
-	public void setDeleted(boolean isDeleted) {
+	public void setIsDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
 
