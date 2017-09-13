@@ -4,7 +4,7 @@
 <mapper namespace="com.bc.pmpheep.back.dao.AreaDao">
 
 	<!-- 新增Area -->
-	<insert id="addArea" parameterType="Area">
+	<insert id="addArea" parameterType="Area" keyProperty="id"  useGeneratedKeys="true">
 		insert into area (parent_id,area_name,sort)
 		values(#{prentId},#{areaName},#{sort}) ;
 	</insert>

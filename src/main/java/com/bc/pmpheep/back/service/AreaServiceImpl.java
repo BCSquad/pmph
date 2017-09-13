@@ -21,11 +21,11 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 	/**
 	 * 
 	 * @param area 实体对象
-	 * @return  影响行数
+	 * @return  带主键的Area 
 	 * @throws Exception 
 	 */
 	@Override
-	public Integer addArea(Area area) throws Exception{
+	public Area addArea(Area area) throws Exception{
 		return areaDao.addArea(area);
 	}
 	

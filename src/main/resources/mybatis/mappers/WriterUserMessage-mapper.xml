@@ -4,25 +4,25 @@
 <mapper namespace="com.bc.pmpheep.back.dao.WriterUserMessageDao">
 
 	<!-- 新增 WriterUserMessage -->
-    <insert id="addPmphGroup"  parameterType="WriterUserMessage"  useGeneratedKeys="true" keyProperty="id"  >
+    <insert id="addWriterUserMessage"  parameterType="WriterUserMessage"  useGeneratedKeys="true" keyProperty="id"  >
      	insert  into  writer_user_message  (msg_id,  user_id,is_read,   is_deleted) 
                      	             values(#{msgId},#{userId},#{isRead},#{isDelete}) ;
     </insert>
     
    <!-- 根据id删除一个 WriterUserMessage -->
-	<delete id="deletePmphGroupById" parameterType="WriterUserMessage"   >
+	<delete id="deleteWriterUserMessageById" parameterType="WriterUserMessage"   >
 		delete from  writer_user_message where where id=#{id} ;
 	</delete>
 	
 	<!-- 更新 WriterUserMessage -->
-	<update id="updatePmphGroupById"   parameterType="WriterUserMessage"  >
+	<update id="updateWriterUserMessageById"   parameterType="WriterUserMessage"  >
 		update writer_user_message 
 			set msg_id=#{msgId},  user_id=#{userId},is_read=#{isRead},   is_deleted= #{isDelete} 
 		where id=#{id} ;
 	</update>
 	
 	<!-- 根据id查询一个 WriterUserMessage -->
-	<select  id="deletePmphGroupById" parameterType="WriterUserMessage"  resultType="WriterUserMessage" >
+	<select  id="getWriterUserMessageById" parameterType="WriterUserMessage"  resultType="WriterUserMessage" >
 		select * from writer_user_message where id=#{id} ;
 	</select>
 	

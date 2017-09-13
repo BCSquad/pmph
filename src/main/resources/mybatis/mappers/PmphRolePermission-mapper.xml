@@ -4,22 +4,22 @@
 <mapper namespace="com.bc.pmpheep.back.dao.PmphRolePermissionDao">
 
 	<!-- 新增 PmphRolePermission -->
-    <insert id="addPmphGroup"  parameterType="PmphRolePermission"  useGeneratedKeys="true" keyProperty="id"  >
+    <insert id="addPmphRolePermission"  parameterType="PmphRolePermission"  useGeneratedKeys="true" keyProperty="id"  >
          insert  into  pmph_role_permission (role_id,permission_id)  values( #{roleId},#{permissionId} ) ;
     </insert>
     
    <!-- 根据id删除一个 PmphRolePermission -->
-	<delete id="deletePmphGroupById" parameterType="PmphRolePermission"   >
+	<delete id="deletePmphRolePermissionById" parameterType="PmphRolePermission"   >
 		delete from  pmph_role_permission where where id=#{id} ;
 	</delete>
 	
 	<!-- 更新 PmphRolePermission -->
-	<update id="updatePmphGroupById"   parameterType="PmphRolePermission"  >
+	<update id="updatePmphRolePermissionById"   parameterType="PmphRolePermission"  >
 		update pmph_role_permission  set role_id=#{roleId},permission_id= #{permissionId}   where id=#{id} ;
 	</update>
 	
 	<!-- 根据id查询一个 PmphRolePermission -->
-	<select  id="deletePmphGroupById" parameterType="PmphRolePermission"  resultType="PmphRolePermission" >
+	<select  id="getPmphRolePermissionById" parameterType="PmphRolePermission"  resultType="PmphRolePermission" >
 		select * from pmph_role_permission where id=#{id} ;
 	</select>
 	
