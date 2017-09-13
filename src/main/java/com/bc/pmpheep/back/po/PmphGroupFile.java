@@ -11,6 +11,7 @@ import org.apache.ibatis.type.Alias;
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("PmphGroupFile")
 public class PmphGroupFile implements Serializable {
     /**
@@ -110,8 +111,8 @@ public class PmphGroupFile implements Serializable {
 
     @Override
     public String toString() {
-	return "PmphGroupFile [id=" + id + ", groupId=" + groupId + ", memberId=" + memberId + ", fileId=" + fileId
-		+ ", fileName=" + fileName + ", download=" + download + ", gmtCreate=" + gmtCreate + "]";
+	return "{id:" + id + ", groupId:" + groupId + ", memberId:" + memberId + ", fileId:" + fileId
+		+ ", fileName:" + fileName + ", download:" + download + ", gmtCreate:" + gmtCreate + "}";
     }
 
 }
