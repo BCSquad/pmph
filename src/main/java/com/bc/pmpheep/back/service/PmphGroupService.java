@@ -1,7 +1,6 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.po.PmphGroup;
-import com.bc.pmpheep.back.po.PmphPermission;
 
 /**
  * PmphGroupService 接口
