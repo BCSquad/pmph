@@ -11,6 +11,7 @@ import org.apache.ibatis.type.Alias;
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("OrgUserMessage")
 public class OrgUserMessage implements Serializable {
     /**
@@ -109,8 +110,8 @@ public class OrgUserMessage implements Serializable {
 
     @Override
     public String toString() {
-	return "OrgUserMessage [id=" + id + ", msgId=" + msgId + ", userId=" + userId + ", isRead=" + isRead
-		+ ", isDelete=" + isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
+	return "{id:" + id + ", msgId:" + msgId + ", userId:" + userId + ", isRead:" + isRead
+		+ ", isDelete:" + isDeleted + ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate + "}";
     }
 
 }

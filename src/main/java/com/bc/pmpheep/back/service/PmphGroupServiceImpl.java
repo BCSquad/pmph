@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphGroupDao;
 import com.bc.pmpheep.back.po.PmphGroup;
-import com.bc.pmpheep.back.po.PmphPermission;
 
 /**
  * PmphGroupService 接口实现
