@@ -22,7 +22,7 @@
 	</update>
 	
 	<!-- 根据id查询一个 PmphGroup -->
-	<select  id="deletePmphGroupById" parameterType="PmphGroup"  resultType="PmphGroup" >
+	<select  id="getPmphGroupById" parameterType="PmphGroup"  resultType="PmphGroup" >
 		select * from pmph_group where id=#{id} ;
 	</select>
 	
