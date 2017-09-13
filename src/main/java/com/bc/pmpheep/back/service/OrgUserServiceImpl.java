@@ -35,7 +35,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
 	@Override
-	public OrgType getOrgUserById(OrgUser orgUser) throws Exception{
+	public OrgUser getOrgUserById(OrgUser orgUser) throws Exception{
 		if(null==orgUser.getId()){
 			throw new NullPointerException("主键id为空");
 		}

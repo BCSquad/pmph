@@ -22,7 +22,7 @@ public interface  OrgUserService {
 	 * @return  OrgUser
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	OrgType getOrgUserById(OrgUser orgUser) throws Exception;
+	OrgUser getOrgUserById(OrgUser orgUser) throws Exception;
 	
 	/**
 	 * 
