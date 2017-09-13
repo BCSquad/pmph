@@ -35,7 +35,7 @@ public interface PmphRoleDao {
 	 *            新的角色详细信息
 	 * @return 影响的行数
 	 */
-	Integer updatePmphRoleById(PmphRole PmphRole);
+	Integer updatePmphRoleById(PmphRole pmphRole);
 
 	/**
 	 * 根据角色名称精确的查询角色详细信息

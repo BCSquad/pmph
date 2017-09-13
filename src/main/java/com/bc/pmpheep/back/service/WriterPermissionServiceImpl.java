@@ -7,6 +7,12 @@ import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.WriterPermissionDao;
 import com.bc.pmpheep.back.po.WriterPermission;
 
+/**
+ * WriterPermissionService 实现
+ * 
+ * @author 曾庆峰
+ *
+ */
 @Service
 public class WriterPermissionServiceImpl extends BaseService implements WriterPermissionService {
 
