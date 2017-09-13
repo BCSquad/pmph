@@ -6,11 +6,12 @@ import java.util.Date;
 import org.apache.ibatis.type.Alias;
 
 /**
- * PmphGroupMessage 实体类
+ * PmphGroupMessage(后台小组消息表) 实体类   ,对应数据库 pmph_group_message 
  * 
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("PmphGroupMessage")
 public class PmphGroupMessage implements Serializable {
     /**
@@ -83,8 +84,8 @@ public class PmphGroupMessage implements Serializable {
 
     @Override
     public String toString() {
-	return "PmphGroupMessage [id=" + id + ", groupId=" + groupId + ", memberId=" + memberId + ", msgContent="
-		+ msgContent + ", gmtCreate=" + gmtCreate + "]";
+	return "{id:" + id + ", groupId:" + groupId + ", memberId:" + memberId + ", msgContent:"
+		+ msgContent + ", gmtCreate:" + gmtCreate + "}";
     }
 
 }
