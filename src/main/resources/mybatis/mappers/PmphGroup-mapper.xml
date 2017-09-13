@@ -11,7 +11,7 @@
     
    <!-- 根据id删除一个 PmphGroup -->
 	<delete id="deletePmphGroupById" parameterType="PmphGroup"   >
-		delete from  pmph_group where where id=#{id} ;
+		delete from  pmph_group  where id=#{id} ;
 	</delete>
 	
 	<!-- 更新 PmphGroup -->
