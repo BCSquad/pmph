@@ -1,6 +1,5 @@
 package com.bc.pmpheep.back.dao;
 
-import org.springframework.stereotype.Component;
 
 import com.bc.pmpheep.back.po.WriterPermission;
 
@@ -10,7 +9,6 @@ import com.bc.pmpheep.back.po.WriterPermission;
  * @author 曾庆峰
  *
  */
-@Component
 public interface WriterPermissionDao {
 	/**
 	 * 添加一个作家权限

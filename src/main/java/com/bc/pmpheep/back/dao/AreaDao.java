@@ -1,6 +1,5 @@
 package com.bc.pmpheep.back.dao;
 
-import org.springframework.stereotype.Component;
 
 import com.bc.pmpheep.back.po.Area;
 
@@ -9,7 +8,6 @@ import com.bc.pmpheep.back.po.Area;
  * 
  * @author mryang
  */
-@Component
 public interface AreaDao {
 
 	/**

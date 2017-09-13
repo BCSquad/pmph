@@ -1,6 +1,6 @@
 package com.bc.pmpheep.back.dao;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.WriterUser;
 
@@ -10,7 +10,7 @@ import com.bc.pmpheep.back.po.WriterUser;
  * @author 曾庆峰
  *
  */
-@Component
+@Repository
 public interface WriterUserDao {
 	/**
 	 * 添加一位作家用户

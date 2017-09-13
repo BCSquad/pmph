@@ -24,7 +24,7 @@
 	</update>
 
 	<!-- 根据id查询一个Area -->
-	<select id="findAreaById" parameterType="Area" resultType="Area">
+	<select id="getAreaById" parameterType="Area" resultType="Area">
 		select * from area where id=#{id} ;
 	</select>
 

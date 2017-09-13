@@ -1,15 +1,12 @@
 package com.bc.pmpheep.back.dao;
 
-import org.springframework.stereotype.Component;
 
-import com.bc.pmpheep.back.po.OrgType;
 import com.bc.pmpheep.back.po.OrgUser;
 
 /**
  * OrgUser  实体类数据访问层接口
  * @author mryang
  */
-@Component
 public interface  OrgUserDao {
 	/**
 	 * 
@@ -25,7 +22,7 @@ public interface  OrgUserDao {
 	 * @return  OrgUser
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	OrgType getOrgUserById(OrgUser orgUser) ;
+	OrgUser getOrgUserById(OrgUser orgUser) ;
 	
 	/**
 	 * 
