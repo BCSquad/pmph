@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.PmphGroupMemberDao">
+
+	<!-- 新增 PmphGroupMember -->
+    <insert id="addPmphGroup"  parameterType="PmphGroupMember"  useGeneratedKeys="true" keyProperty="id"  >
+     	insert  into  pmph_group_member 
+     	        (group_id,member_id,is_writer,   is_founder,is_admin,display_name) 
+        values(#{gruopId},#{memberId},#{isWriter},#{isFounder},#{isAdmin},#{displayName}) ;
+    </insert>
+    
+   <!-- 根据id删除一个 PmphGroupMember -->
+	<delete id="deletePmphGroupById" parameterType="PmphGroupMember"   >
+		delete from  pmph_group_member where where id=#{id} ;
+	</delete>
+	
+	<!-- 更新 PmphGroupMember -->
+	<update id="updatePmphGroupById"   parameterType="PmphGroupMember"  >
+		update pmph_group_member  
+		  set  group_id=#{gruopId},member_id=#{memberId},is_writer=#{isWriter},
+		       is_founder=#{isFounder},is_admin=#{isAdmin},display_name= #{displayName}
+        where id=#{id} ;
+	</update>
+	
+	<!-- 根据id查询一个 PmphGroupMember -->
+	<select  id="deletePmphGroupById" parameterType="PmphGroupMember"  resultType="PmphGroupMember" >
+		select * from pmph_group_member where id=#{id} ;
+	</select>
+	
+</mapper>
