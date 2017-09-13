@@ -6,11 +6,12 @@ import java.util.Date;
 import org.apache.ibatis.type.Alias;
 
 /**
- * PmphRole实体类
+ * PmphRole（社内用户角色表）实体类  对应数据库 pmph_role
  * 
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("PmphRole")
 public class PmphRole implements Serializable {
 	/**
@@ -110,8 +111,8 @@ public class PmphRole implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PmphRole [id=" + id + ", roleName=" + roleName + ", isDisabled=" + isDisabled + ", note=" + note
-				+ ", sort=" + sort + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
+		return "{id:" + id + ", roleName:" + roleName + ", isDisabled:" + isDisabled + ", note:" + note
+				+ ", sort:" + sort + ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate + "}";
 	}
 
 }
