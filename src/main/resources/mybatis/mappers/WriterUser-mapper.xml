@@ -19,7 +19,7 @@
 	<!-- 修改作家用户信息 -->
 	<update id="updateWriterUserById" parameterType="WriterUser">
 		update writer_user set
-		username=#{username},password=#{password},org_id=#{orgId},realname=#{realname},sex=#{sex},birthday=#{birthday},experience=#{experience},position=#{position},title=#{title},fax=#{fax},handphone=#{hangphone},telephone=#{telephone},idcard=#{idcard},email=#{email},address=#{address},postcode=#{postcode},rank=#{rank},cert=#{cert},avatar=#{},note=#{}
+		username=#{username},password=#{password},org_id=#{orgId},realname=#{realname},sex=#{sex},birthday=#{birthday},experience=#{experience},position=#{position},title=#{title},fax=#{fax},handphone=#{hangphone},telephone=#{telephone},idcard=#{idcard},email=#{email},address=#{address},postcode=#{postcode},rank=#{rank},cert=#{cert},avatar=#{avatar},note=#{note}
 		where id=#{id};
 	</update>
 	<!-- 根据用户名查询作家用户 -->
