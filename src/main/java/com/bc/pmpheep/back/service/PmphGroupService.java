@@ -14,7 +14,7 @@ public interface  PmphGroupService {
 	 * @return  带主键的PmphGroup
 	 * @throws Exception 
 	 */
-	PmphPermission addPmphGroup (PmphGroup pmphGroup) throws Exception;
+	PmphGroup addPmphGroup (PmphGroup pmphGroup) throws Exception;
 	
 	/**
 	 * 
@@ -22,7 +22,7 @@ public interface  PmphGroupService {
 	 * @return  PmphGroup
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	PmphPermission getPmphGroupById(PmphGroup pmphGroup) throws Exception;
+	PmphGroup getPmphGroupById(PmphGroup pmphGroup) throws Exception;
 	
 	/**
 	 * 

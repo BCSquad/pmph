@@ -5,8 +5,7 @@
 
 	<!-- 新增 OrgMessage -->
     <insert id="addOrgMessage"  parameterType="OrgMessage"  useGeneratedKeys="true" keyProperty="id"  >
-    	insert  into  org_message (msg_code,msg_type) 
-                     		 values(#{msgCode},#{msgType}) ;
+    	insert  into  org_message (msg_code,msg_type)  values(#{msgCode},#{msgType}) ;
     </insert>
     
    <!-- 根据id删除一个 -->

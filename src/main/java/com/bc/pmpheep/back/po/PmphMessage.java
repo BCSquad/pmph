@@ -10,6 +10,7 @@ import org.apache.ibatis.type.Alias;
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("PmphMessage")
 public class PmphMessage implements Serializable {
 
@@ -57,7 +58,7 @@ public class PmphMessage implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PmphMessage [id=" + id + ", msgCode=" + msgCode + ", msgType=" + msgType + "]";
+		return "{id:" + id + ", msgCode:" + msgCode + ", msgType:" + msgType + "}";
 	}
 
 }

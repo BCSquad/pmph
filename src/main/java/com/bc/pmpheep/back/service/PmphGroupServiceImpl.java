@@ -25,7 +25,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * @throws Exception 
 	 */
 	@Override
-	public PmphPermission addPmphGroup (PmphGroup pmphGroup) throws Exception{
+	public PmphGroup addPmphGroup (PmphGroup pmphGroup) throws Exception{
 		return pmphGroupnDao.addPmphGroup(pmphGroup);
 	}
 	
@@ -36,7 +36,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
 	@Override
-	public PmphPermission getPmphGroupById(PmphGroup pmphGroup) throws Exception{
+	public PmphGroup getPmphGroupById(PmphGroup pmphGroup) throws Exception{
 		if(null==pmphGroup.getId()){
 			throw new NullPointerException("主键id为空");
 		}
