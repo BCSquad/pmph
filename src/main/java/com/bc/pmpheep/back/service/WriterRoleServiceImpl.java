@@ -7,6 +7,12 @@ import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.WriterRoleDao;
 import com.bc.pmpheep.back.po.WriterRole;
 
+/**
+ * WriterRoleService 实现
+ * 
+ * @author 曾庆峰
+ *
+ */
 @Service
 public class WriterRoleServiceImpl extends BaseService implements WriterRoleService {
 
