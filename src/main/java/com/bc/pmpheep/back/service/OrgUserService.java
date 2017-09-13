@@ -1,6 +1,5 @@
 package com.bc.pmpheep.back.service;
 
-import com.bc.pmpheep.back.po.OrgType;
 import com.bc.pmpheep.back.po.OrgUser;
 
 /**
