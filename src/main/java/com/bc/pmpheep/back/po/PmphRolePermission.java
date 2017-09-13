@@ -4,10 +4,11 @@ import java.io.Serializable;
 
 import org.apache.ibatis.type.Alias;
 /**
- * PmphRolePermission 实体类
+ * PmphRolePermission(社内角色-许可关联表（多对多）) 实体类 -- pmph_role_permission
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("PmphRolePermission")
 public class PmphRolePermission implements Serializable {
     /**
@@ -54,7 +55,7 @@ public class PmphRolePermission implements Serializable {
 
     @Override
     public String toString() {
-	return "PmphRolePermission [id=" + id + ", roleId=" + roleId + ", permissionId=" + permissionId + "]";
+	return "{id:" + id + ", roleId:" + roleId + ", permissionId:" + permissionId + "}";
     }
 
 }
