@@ -5,11 +5,12 @@ import java.io.Serializable;
 import org.apache.ibatis.type.Alias;
 
 /**
- * WriterMseeage 实体类
+ * WriterMseeage(作家消息表) 实体类 -- writer_message
  * 
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("WriterMseeage")
 public class WriterMseeage implements Serializable {
 	/**
@@ -56,7 +57,7 @@ public class WriterMseeage implements Serializable {
 
 	@Override
 	public String toString() {
-		return "WriterMseeage [id=" + id + ", msgCode=" + msgCode + ", msgType=" + msgType + "]";
+		return "{id:" + id + ", msgCode:" + msgCode + ", msgType:" + msgType + "}";
 	}
 
 }
