@@ -24,8 +24,9 @@ public class PmphDepartmentServiceImpl extends BaseService  implements PmphDepar
 	 * @throws Exception 
 	 */
 	@Override
-	public PmphDepartment addpmphDepartment(PmphDepartment pmphDepartment) throws Exception{
-		return pmphDepartmentDao.addpmphDepartment(pmphDepartment);
+	public PmphDepartment addPmphDepartment(PmphDepartment pmphDepartment) throws Exception{
+		pmphDepartmentDao.addPmphDepartment(pmphDepartment);
+		return pmphDepartment;
 	}
 	
 	/**

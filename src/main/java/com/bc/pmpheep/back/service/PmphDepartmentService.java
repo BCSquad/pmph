@@ -13,7 +13,7 @@ public interface PmphDepartmentService {
 	 * @return  PmphDepartment 主键
 	 * @throws Exception 
 	 */
-	PmphDepartment addpmphDepartment(PmphDepartment pmphDepartment) throws Exception;
+	PmphDepartment addPmphDepartment(PmphDepartment pmphDepartment) throws Exception;
 	
 	/**
 	 * 

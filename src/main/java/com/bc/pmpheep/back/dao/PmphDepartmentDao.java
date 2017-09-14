@@ -14,10 +14,10 @@ public interface PmphDepartmentDao {
 	/**
 	 * 
 	 * @param  PmphDepartment 实体对象
-	 * @return  带主键的PmphDepartment
+	 * @return  影响行数
 	 * @throws Exception 
 	 */
-	PmphDepartment addpmphDepartment(PmphDepartment pmphDepartment);
+	Integer addPmphDepartment(PmphDepartment pmphDepartment);
 	
 	/**
 	 * 
