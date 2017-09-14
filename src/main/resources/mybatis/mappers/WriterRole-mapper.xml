@@ -17,7 +17,7 @@
          	#{roleName,jdbcType=VARCHAR},
         	#{isDisabled,jdbcType=TINYINT},
         	#{note,jdbcType=VARCHAR},
-        	#{sort,jdbcType=Integer},
+        	#{sort,jdbcType=INTEGER},
         	#{gmtCreate,jdbcType=TIMESTAMP},
         	#{gmtUpdate,jdbcType=TIMESTAMP}
          )
@@ -134,7 +134,7 @@
             role_id = #{roleId} AND permission_id = #{permissionId}
     </delete>
 
-    <select id="getResourceRole" parameterType="map" resultType="RoleResource">
+    <select id="getResourceRole" parameterType="map" resultType="WriterRolePermission">
         SELECT
             id,
             role_id,

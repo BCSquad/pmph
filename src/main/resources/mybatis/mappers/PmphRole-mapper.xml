@@ -18,7 +18,7 @@
          	#{roleName,jdbcType=VARCHAR},
         	#{isDisabled,jdbcType=TINYINT},
         	#{note,jdbcType=VARCHAR},
-        	#{sort,jdbcType=Integer},
+        	#{sort,jdbcType=INTEGER},
         	#{gmtCreate,jdbcType=TIMESTAMP},
         	#{gmtUpdate,jdbcType=TIMESTAMP}
          )
