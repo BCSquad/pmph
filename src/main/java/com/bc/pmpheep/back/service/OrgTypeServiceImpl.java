@@ -20,12 +20,13 @@ public class OrgTypeServiceImpl extends BaseService implements OrgTypeService {
 	/**
 	 * 
 	 * @param OrgType 实体对象
-	 * @return  影响行数
+	 * @return  带主键的OrgType
 	 * @throws Exception 
 	 */
 	@Override
-	public Integer addOrgType(OrgType orgType) throws Exception{
-		return orgTypeDao.addOrgType(orgType);
+	public OrgType addOrgType(OrgType orgType) throws Exception{
+		orgTypeDao.addOrgType(orgType);
+		return orgType;
 	}
 	
 	/**

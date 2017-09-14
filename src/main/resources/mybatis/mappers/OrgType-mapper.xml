@@ -5,13 +5,16 @@
 
 	<!-- 新增OrgType -->
     <insert id="addOrgType"  parameterType="OrgType"   >
+    	<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句  BEFORE 或 AFTER -->
+          SELECT LAST_INSERT_ID() 
+        </selectKey>
     	insert  into  org_type (type_name,sort) 
-                     values(#{typeName},#{sort}) ;
+                     values(#{typeName,jdbcType=VARCHAR},#{sort,jdbcType=INTEGER}) ;
     </insert>
     
    <!-- 根据id删除一个 -->
 	<delete id="deleteOrgTypeById" parameterType="OrgType"   >
-		delete from org_type where where id=#{id} ;
+		delete from org_type where id=#{id} ;
 	</delete>
 	
 	<!-- 更新OrgType -->

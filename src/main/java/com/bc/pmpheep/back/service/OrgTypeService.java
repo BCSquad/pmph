@@ -16,7 +16,7 @@ public interface OrgTypeService {
 	 * @return  影响行数
 	 * @throws Exception 
 	 */
-	Integer addOrgType(OrgType orgType) throws Exception;
+	OrgType addOrgType(OrgType orgType) throws Exception;
 	
 	/**
 	 * 
