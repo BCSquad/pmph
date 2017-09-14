@@ -1,16 +1,16 @@
 package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
-import java.util.Date;
-
+import java.sql.Timestamp;
 import org.apache.ibatis.type.Alias;
 
 /**
- * Org 实体类
+ * Org (机构信息表)实体类  -- org
  * 
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("Org")
 public class Org implements Serializable {
 	/**
@@ -56,14 +56,34 @@ public class Org implements Serializable {
 	/**
 	 * 创建时间
 	 */
-	private Date gmtCreate;
+	private Timestamp gmtCreate;
 	/**
 	 * 修改时间
 	 */
-	private Date gmtUpdate;
-
+	private Timestamp gmtUpdate;
+	
+	public Org(){
+		
+	}
+	public Org(Long id){
+		this.id=id;
+	}
+	/**
+	 * 
+	 * @param parentId  上级机构id
+	 * @param orgName   机构名称
+	 * @param orgTypeId  机构类型id
+	 * @param areaId    所在区域id
+	 * @param countactPerson  联系人
+	 * @param countactPhone  联系电话
+	 * @param note   备注
+	 * @param sort   显示顺序  
+	 * @param isDeleted  是否被逻辑删除
+	 * @param gmtCreate
+	 * @param gmtUpdate
+	 */
 	public Org(Long parentId, String orgName, Long orgTypeId, Long areaId, String countactPerson, String countactPhone,
-			String note, Integer sort, boolean isDeleted, Date gmtCreate, Date gmtUpdate) {
+			String note, Integer sort, boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate) {
 		this.parentId = parentId;
 		this.orgName = orgName;
 		this.orgTypeId = orgTypeId;
@@ -157,19 +177,19 @@ public class Org implements Serializable {
 		this.isDeleted = isDeleted;
 	}
 
-	public Date getGmtCreate() {
+	public Timestamp getGmtCreate() {
 		return gmtCreate;
 	}
 
-	public void setGmtCreate(Date gmtCreate) {
+	public void setGmtCreate(Timestamp gmtCreate) {
 		this.gmtCreate = gmtCreate;
 	}
 
-	public Date getGmtUpdate() {
+	public Timestamp getGmtUpdate() {
 		return gmtUpdate;
 	}
 
-	public void setGmtUpdate(Date gmtUpdate) {
+	public void setGmtUpdate(Timestamp gmtUpdate) {
 		this.gmtUpdate = gmtUpdate;
 	}
 

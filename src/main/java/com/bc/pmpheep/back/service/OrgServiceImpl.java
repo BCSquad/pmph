@@ -21,12 +21,13 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 	/**
 	 * 
 	 * @param area 实体对象
-	 * @return  影响行数
+	 * @return  Org
 	 * @throws Exception 
 	 */
 	@Override
-	public Integer addOrg(Org org) throws Exception{
-		return orgDao.addOrg(org);
+	public Org addOrg(Org org) throws Exception{
+		 orgDao.addOrg(org);
+		 return org;
 	}
 	
 	/**

@@ -14,9 +14,9 @@ public interface OrgService {
 	/**
 	 * 
 	 * @param org 实体对象
-	 * @return  影响行数
+	 * @return  带主键的Org 
 	 */
-	Integer addOrg(Org org) throws Exception ;
+	Org addOrg(Org org) throws Exception ;
 	
 	/**
 	 * 
