@@ -18,9 +18,9 @@ public interface AreaDao {
 	 * 
 	 * @param area
 	 *            实体对象
-	 * @return   id 主键
+	 * @return    影响行数
 	 */
-	Long addArea(Area area);
+	int addArea(Area area);
 
 	/**
 	 * 删除Area 通过主键id

@@ -6,17 +6,15 @@
 	<!-- 新增Area -->
 	<insert id="addArea" parameterType="Area" >
 	   <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句  BEFORE 或 AFTER -->
-          SELECT LAST_INSERT_ID() AS id
+          SELECT LAST_INSERT_ID() 
        </selectKey>
-		insert into area (parent_id,area_name,sort)
-		values(#{prentId},#{areaName},#{sort}) ;
+		insert into area (parent_id,area_name,sort)  values(#{prentId},#{areaName},#{sort}) ;
 	</insert>
 
 
 	<!-- 根据id删除一个 -->
 	<delete id="deleteAreaById" parameterType="Area">
-		delete from
-		area where where id=#{id} ;
+		delete from  area where  id=#{id} ;
 	</delete>
 
 	<!-- 更新Area -->
@@ -28,7 +26,7 @@
 
 	<!-- 根据id查询一个Area -->
 	<select id="getAreaById" parameterType="Area" resultType="Area">
-		select * from area where id=#{id} ;
+		select *  from area where id=#{id} ;
 	</select>
 
 </mapper>
