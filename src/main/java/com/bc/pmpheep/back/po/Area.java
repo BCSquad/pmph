@@ -35,7 +35,7 @@ public class Area implements Serializable {
 	
 	/**
 	 * 必传参数构造器 
-	 * @param prentId
+	 * @param parentId
 	 * @param areaName
 	 * @param sort
 	 */
