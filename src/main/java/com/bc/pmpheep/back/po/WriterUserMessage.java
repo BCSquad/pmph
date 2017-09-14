@@ -6,11 +6,12 @@ import java.util.Date;
 import org.apache.ibatis.type.Alias;
 
 /**
- * WriterUserMessage 实体类
+ * WriterUserMessage(消息-作家用户映射表（多对多）) 实体类 -- writer_user_message
  * 
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("WriterUserMessage")
 public class WriterUserMessage implements Serializable {
     /**
@@ -41,6 +42,9 @@ public class WriterUserMessage implements Serializable {
      * 修改时间
      */
     private Date gmtUpdate;
+
+    public WriterUserMessage() {
+    }
 
     public WriterUserMessage(Long msgId, Long userId, boolean isRead, boolean isDelete, Date gmtCreate,
 	    Date gmtUpdate) {
@@ -110,8 +114,8 @@ public class WriterUserMessage implements Serializable {
 
     @Override
     public String toString() {
-	return "WriterUserMessage [id=" + id + ", msgId=" + msgId + ", userId=" + userId + ", isRead=" + isRead
-		+ ", isDelete=" + isDelete + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
+	return "{id:" + id + ", msgId:" + msgId + ", userId:" + userId + ", isRead:" + isRead + ", isDelete:" + isDelete
+		+ ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate + "}";
     }
 
 }

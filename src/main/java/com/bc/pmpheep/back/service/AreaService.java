@@ -14,9 +14,9 @@ public interface AreaService {
 	/**
 	 * 新增一个Area 
 	 * @param area 实体对象
-	 * @return  影响行数
+	 * @return 带主键的 area 
 	 */
-	Integer addArea(Area area) throws Exception;
+	Area addArea(Area area) throws Exception;
 	
 	/**
 	 *  查询一个 Area 通过主键id
@@ -24,7 +24,7 @@ public interface AreaService {
 	 * @return  area
 	 * @throws Exception
 	 */
-	Area findAreaById(Area area) throws Exception;
+	Area getAreaById(Area area) throws Exception;
 	
 	/**
 	 * 删除Area 通过主键id

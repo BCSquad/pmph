@@ -1,15 +1,15 @@
 package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
-
 import org.apache.ibatis.type.Alias;
 
 /**
- * Area实体类
+ * Area(区域表（省市县）)实体类 --- Area
  * 
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("Area")
 public class Area implements Serializable {
 	/**
@@ -19,7 +19,7 @@ public class Area implements Serializable {
 	/**
 	 * 上级ID
 	 */
-	private Long prentId;
+	private Long parentId;
 	/**
 	 * 区域名称
 	 */
@@ -28,13 +28,30 @@ public class Area implements Serializable {
 	 * 显示顺序
 	 */
 	private Integer sort;
-
-	public Area(Long prentId, String areaName, Integer sort) {
-		this.prentId = prentId;
+	
+	public Area(){
+		
+	}
+	
+	/**
+	 * 必传参数构造器 
+	 * @param prentId
+	 * @param areaName
+	 * @param sort
+	 */
+	public Area(Long parentId, String areaName, Integer sort) {
+		this.parentId = parentId;
 		this.areaName = areaName;
 		this.sort = sort;
 	}
-
+	/**
+	 * 单体对象查询快速创建构造器
+	 *@param id
+	 */
+	public Area(Long id) {
+		this.id = id;
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -43,12 +60,12 @@ public class Area implements Serializable {
 		this.id = id;
 	}
 
-	public Long getPrentId() {
-		return prentId;
+	public Long getParentId() {
+		return parentId;
 	}
 
-	public void setPrentId(Long prentId) {
-		this.prentId = prentId;
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
 	}
 
 	public String getAreaName() {
@@ -69,7 +86,7 @@ public class Area implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Area [id=" + id + ", prentId=" + prentId + ", areaName=" + areaName + ", sort=" + sort + "]";
+		return "{id:" + id + ", parentId:" + parentId + ", areaName:" + areaName + ", sort:" + sort + "}";
 	}
 
 }

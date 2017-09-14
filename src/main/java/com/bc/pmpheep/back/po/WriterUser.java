@@ -142,156 +142,46 @@ public class WriterUser implements Serializable {
      */
     private Date    gmtUpdate;
 
-    public WriterUser(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public WriterUser(String username, String password, Integer isDisabled, Long orgId,
-    String realname, Integer sex, Date birthday, Integer experience, String position, String title,
-    String fax, String handphone, String telephone, String idcard, String email, String address,
-    String postcode, Integer rank, Integer isTeather, String cert, Date authTime,
-    Integer authUserType, Long authUserId, Integer isWriter, Integer isExpert, String avatar,
-    String note, Integer sort, Integer isDeleted, Date gmtCreate, Date gmtUpdate) {
-        this.username = username;
-        this.password = password;
-        this.isDisabled = isDisabled;
-        this.orgId = orgId;
-        this.realname = realname;
-        this.sex = sex;
-        this.birthday = birthday;
-        this.experience = experience;
-        this.position = position;
-        this.title = title;
-        this.fax = fax;
-        this.handphone = handphone;
-        this.telephone = telephone;
-        this.idcard = idcard;
-        this.email = email;
-        this.address = address;
-        this.postcode = postcode;
-        this.rank = rank;
-        this.isTeather = isTeather;
-        this.cert = cert;
-        this.authTime = authTime;
-        this.authUserType = authUserType;
-        this.authUserId = authUserId;
-        this.isWriter = isWriter;
-        this.isExpert = isExpert;
-        this.avatar = avatar;
-        this.note = note;
-        this.sort = sort;
-        this.isDeleted = isDeleted;
-        this.gmtCreate = gmtCreate;
-        this.gmtUpdate = gmtUpdate;
-    }
-
+    /**
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * @param id the id to set
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * @return the username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * @param username the username to set
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * @return the password
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * @param password the password to set
+     */
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Long getOrgId() {
-        return orgId;
-    }
-
-    public void setOrgId(Long orgId) {
-        this.orgId = orgId;
-    }
-
-    public String getRealname() {
-        return realname;
-    }
-
-    public void setRealname(String realname) {
-        this.realname = realname;
-    }
-
-    public Integer getSex() {
-        return sex;
-    }
-
-    public void setSex(Integer sex) {
-        this.sex = sex;
-    }
-
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
-    public Integer getExperience() {
-        return experience;
-    }
-
-    public void setExperience(Integer experience) {
-        this.experience = experience;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getFax() {
-        return fax;
-    }
-
-    public void setFax(String fax) {
-        this.fax = fax;
-    }
-
-    public String getHandphone() {
-        return handphone;
-    }
-
-    public void setHandphone(String handphone) {
-        this.handphone = handphone;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
-    public String getIdcard() {
-        return idcard;
     }
 
     /**
@@ -309,6 +199,216 @@ public class WriterUser implements Serializable {
     }
 
     /**
+     * @return the orgId
+     */
+    public Long getOrgId() {
+        return orgId;
+    }
+
+    /**
+     * @param orgId the orgId to set
+     */
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
+
+    /**
+     * @return the realname
+     */
+    public String getRealname() {
+        return realname;
+    }
+
+    /**
+     * @param realname the realname to set
+     */
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
+
+    /**
+     * @return the sex
+     */
+    public Integer getSex() {
+        return sex;
+    }
+
+    /**
+     * @param sex the sex to set
+     */
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    /**
+     * @return the birthday
+     */
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    /**
+     * @param birthday the birthday to set
+     */
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    /**
+     * @return the experience
+     */
+    public Integer getExperience() {
+        return experience;
+    }
+
+    /**
+     * @param experience the experience to set
+     */
+    public void setExperience(Integer experience) {
+        this.experience = experience;
+    }
+
+    /**
+     * @return the position
+     */
+    public String getPosition() {
+        return position;
+    }
+
+    /**
+     * @param position the position to set
+     */
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    /**
+     * @return the title
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @param title the title to set
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    /**
+     * @return the fax
+     */
+    public String getFax() {
+        return fax;
+    }
+
+    /**
+     * @param fax the fax to set
+     */
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+    /**
+     * @return the handphone
+     */
+    public String getHandphone() {
+        return handphone;
+    }
+
+    /**
+     * @param handphone the handphone to set
+     */
+    public void setHandphone(String handphone) {
+        this.handphone = handphone;
+    }
+
+    /**
+     * @return the telephone
+     */
+    public String getTelephone() {
+        return telephone;
+    }
+
+    /**
+     * @param telephone the telephone to set
+     */
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    /**
+     * @return the idcard
+     */
+    public String getIdcard() {
+        return idcard;
+    }
+
+    /**
+     * @param idcard the idcard to set
+     */
+    public void setIdcard(String idcard) {
+        this.idcard = idcard;
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return the address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * @param address the address to set
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    /**
+     * @return the postcode
+     */
+    public String getPostcode() {
+        return postcode;
+    }
+
+    /**
+     * @param postcode the postcode to set
+     */
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
+    }
+
+    /**
+     * @return the rank
+     */
+    public Integer getRank() {
+        return rank;
+    }
+
+    /**
+     * @param rank the rank to set
+     */
+    public void setRank(Integer rank) {
+        this.rank = rank;
+    }
+
+    /**
      * @return the isTeather
      */
     public Integer getIsTeather() {
@@ -320,6 +420,62 @@ public class WriterUser implements Serializable {
      */
     public void setIsTeather(Integer isTeather) {
         this.isTeather = isTeather;
+    }
+
+    /**
+     * @return the cert
+     */
+    public String getCert() {
+        return cert;
+    }
+
+    /**
+     * @param cert the cert to set
+     */
+    public void setCert(String cert) {
+        this.cert = cert;
+    }
+
+    /**
+     * @return the authTime
+     */
+    public Date getAuthTime() {
+        return authTime;
+    }
+
+    /**
+     * @param authTime the authTime to set
+     */
+    public void setAuthTime(Date authTime) {
+        this.authTime = authTime;
+    }
+
+    /**
+     * @return the authUserType
+     */
+    public Integer getAuthUserType() {
+        return authUserType;
+    }
+
+    /**
+     * @param authUserType the authUserType to set
+     */
+    public void setAuthUserType(Integer authUserType) {
+        this.authUserType = authUserType;
+    }
+
+    /**
+     * @return the authUserId
+     */
+    public Long getAuthUserId() {
+        return authUserId;
+    }
+
+    /**
+     * @param authUserId the authUserId to set
+     */
+    public void setAuthUserId(Long authUserId) {
+        this.authUserId = authUserId;
     }
 
     /**
@@ -351,6 +507,48 @@ public class WriterUser implements Serializable {
     }
 
     /**
+     * @return the avatar
+     */
+    public String getAvatar() {
+        return avatar;
+    }
+
+    /**
+     * @param avatar the avatar to set
+     */
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    /**
+     * @return the note
+     */
+    public String getNote() {
+        return note;
+    }
+
+    /**
+     * @param note the note to set
+     */
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    /**
+     * @return the sort
+     */
+    public Integer getSort() {
+        return sort;
+    }
+
+    /**
+     * @param sort the sort to set
+     */
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
+    /**
      * @return the isDeleted
      */
     public Integer getIsDeleted() {
@@ -364,114 +562,117 @@ public class WriterUser implements Serializable {
         this.isDeleted = isDeleted;
     }
 
-    public void setIdcard(String idcard) {
-        this.idcard = idcard;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPostcode() {
-        return postcode;
-    }
-
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
-    }
-
-    public Integer getRank() {
-        return rank;
-    }
-
-    public void setRank(Integer rank) {
-        this.rank = rank;
-    }
-
-    public String getCert() {
-        return cert;
-    }
-
-    public void setCert(String cert) {
-        this.cert = cert;
-    }
-
-    public Date getAuthTime() {
-        return authTime;
-    }
-
-    public void setAuthTime(Date authTime) {
-        this.authTime = authTime;
-    }
-
-    public Integer getAuthUserType() {
-        return authUserType;
-    }
-
-    public void setAuthUserType(Integer authUserType) {
-        this.authUserType = authUserType;
-    }
-
-    public Long getAuthUserId() {
-        return authUserId;
-    }
-
-    public void setAuthUserId(Long authUserId) {
-        this.authUserId = authUserId;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
+    /**
+     * @return the gmtCreate
+     */
     public Date getGmtCreate() {
         return gmtCreate;
     }
 
+    /**
+     * @param gmtCreate the gmtCreate to set
+     */
     public void setGmtCreate(Date gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
 
+    /**
+     * @return the gmtUpdate
+     */
     public Date getGmtUpdate() {
         return gmtUpdate;
     }
 
+    /**
+     * @param gmtUpdate the gmtUpdate to set
+     */
     public void setGmtUpdate(Date gmtUpdate) {
         this.gmtUpdate = gmtUpdate;
     }
 
+    public WriterUser() {
+    }
+
+    /**
+     * @param id
+     * @param username
+     * @param password
+     * @param isDisabled
+     * @param orgId
+     * @param realname
+     * @param sex
+     * @param birthday
+     * @param experience
+     * @param position
+     * @param title
+     * @param fax
+     * @param handphone
+     * @param telephone
+     * @param idcard
+     * @param email
+     * @param address
+     * @param postcode
+     * @param rank
+     * @param isTeather
+     * @param cert
+     * @param authTime
+     * @param authUserType
+     * @param authUserId
+     * @param isWriter
+     * @param isExpert
+     * @param avatar
+     * @param note
+     * @param sort
+     * @param isDeleted
+     * @param gmtCreate
+     * @param gmtUpdate
+     */
+    public WriterUser(Long id, String username, String password, Integer isDisabled, Long orgId,
+    String realname, Integer sex, Date birthday, Integer experience, String position, String title,
+    String fax, String handphone, String telephone, String idcard, String email, String address,
+    String postcode, Integer rank, Integer isTeather, String cert, Date authTime,
+    Integer authUserType, Long authUserId, Integer isWriter, Integer isExpert, String avatar,
+    String note, Integer sort, Integer isDeleted, Date gmtCreate, Date gmtUpdate) {
+        super();
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.isDisabled = isDisabled;
+        this.orgId = orgId;
+        this.realname = realname;
+        this.sex = sex;
+        this.birthday = birthday;
+        this.experience = experience;
+        this.position = position;
+        this.title = title;
+        this.fax = fax;
+        this.handphone = handphone;
+        this.telephone = telephone;
+        this.idcard = idcard;
+        this.email = email;
+        this.address = address;
+        this.postcode = postcode;
+        this.rank = rank;
+        this.isTeather = isTeather;
+        this.cert = cert;
+        this.authTime = authTime;
+        this.authUserType = authUserType;
+        this.authUserId = authUserId;
+        this.isWriter = isWriter;
+        this.isExpert = isExpert;
+        this.avatar = avatar;
+        this.note = note;
+        this.sort = sort;
+        this.isDeleted = isDeleted;
+        this.gmtCreate = gmtCreate;
+        this.gmtUpdate = gmtUpdate;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         return "WriterUser [id=" + id + ", username=" + username + ", password=" + password

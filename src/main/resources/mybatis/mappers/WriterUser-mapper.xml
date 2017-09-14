@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bc.pmpheep.back.dao.WriterUserDao">
+<<<<<<< HEAD
 	<insert id="add" parameterType="WriterUser" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO writer_user
         (
@@ -258,4 +259,36 @@
             LEFT JOIN `writer_user` tu ON tur.`user_id` = tu.id
         WHERE tu.`id` = #{uid}
     </select>
+    
+	<!-- 新增一个作家用户 -->
+	<insert id="addWriterUser" parameterType="WriterUser">
+		insert into writer_user
+		(username,password, is_disabled,org_id, realname, sex, birthday,
+		experience, position, title, fax, handphone, telephone, idcard, email,
+		address, postcode, rank, is_teacher, cert, auth_time, auth_user_type,
+		auth_user_id,is_writer, is_expert, avatar, note, sort)
+		values
+		(#{username},#{password},#{isDisabled},#{orgId},#{realname},#{sex},#{birthday},#{experience},#{position},#{title},#{fax},#{handphone},#{telephone},#{idcard},#{email},#{address},#{postcode},#{rank},#{isTeather},#{cert},#{authTime},#{authUserType},#{authUserId},#{isWriter},#{isExpert},#{avatar},#{note},#{sort});
+	</insert>
+	<!-- 删除作家用户 -->
+	<delete id="deleteWriterUserById" parameterType="String">
+		delete from
+		writer_user where id in
+		<foreach collection="array" open="(" separator="," close=")"
+			item="id">#{id}
+		</foreach>
+	</delete>
+	<!-- 修改作家用户信息 -->
+	<update id="updateWriterUserById" parameterType="WriterUser">
+		update
+		writer_user set
+		username=#{username},password=#{password},org_id=#{orgId},realname=#{realname},sex=#{sex},birthday=#{birthday},experience=#{experience},position=#{position},title=#{title},fax=#{fax},handphone=#{handphone},telephone=#{telephone},idcard=#{idcard},email=#{email},address=#{address},postcode=#{postcode},rank=#{rank},cert=#{cert},avatar=#{avatar},note=#{note}
+		where id=#{id};
+	</update>
+	<!-- 根据用户名查询作家用户 -->
+	<select id="getWriterUserByUsername" parameterType="String"
+		resultType="WriterUser">
+		select * from
+		writer_user where username=#{username};
+	</select>
 </mapper>

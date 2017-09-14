@@ -21,12 +21,13 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 	/**
 	 * 
 	 * @param area 实体对象
-	 * @return  影响行数
+	 * @return  带主键的 area
 	 * @throws Exception 
 	 */
 	@Override
-	public Integer addArea(Area area) throws Exception{
-		return areaDao.addArea(area);
+	public Area addArea(Area area) throws Exception{
+		areaDao.addArea(area); 
+		return area;
 	}
 	
 	/**
@@ -36,7 +37,7 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
 	@Override
-	public Area findAreaById(Area area) throws Exception{
+	public Area getAreaById(Area area) throws Exception{
 		if(null==area.getId()){
 			throw new NullPointerException("主键id为空");
 		}

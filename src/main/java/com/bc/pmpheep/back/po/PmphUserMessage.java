@@ -6,11 +6,12 @@ import java.util.Date;
 import org.apache.ibatis.type.Alias;
 
 /**
- * PmphUserMessage 实体类
+ * PmphUserMessage(消息-社内用户映射表（多对多）) 实体类  - -pmph_user_message
  * 
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("PmphUserMessage")
 public class PmphUserMessage implements Serializable {
     /**
@@ -109,8 +110,8 @@ public class PmphUserMessage implements Serializable {
 
     @Override
     public String toString() {
-	return "PmphUserMessage [id=" + id + ", msgId=" + msgId + ", userId=" + userId + ", isRead=" + isRead
-		+ ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
+	return "{id:" + id + ", msgId:" + msgId + ", userId:" + userId + ", isRead:" + isRead
+		+ ", isDeleted:" + isDeleted + ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate + "}";
     }
 
 }

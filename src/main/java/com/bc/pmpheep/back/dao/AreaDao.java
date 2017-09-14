@@ -1,6 +1,8 @@
 package com.bc.pmpheep.back.dao;
 
 
+import org.springframework.stereotype.Repository;
+
 import com.bc.pmpheep.back.po.Area;
 
 /**
@@ -8,6 +10,7 @@ import com.bc.pmpheep.back.po.Area;
  * 
  * @author mryang
  */
+@Repository
 public interface AreaDao {
 
 	/**
@@ -15,9 +18,9 @@ public interface AreaDao {
 	 * 
 	 * @param area
 	 *            实体对象
-	 * @return 影响行数
+	 * @return    影响行数
 	 */
-	Integer addArea(Area area);
+	int addArea(Area area);
 
 	/**
 	 * 删除Area 通过主键id
