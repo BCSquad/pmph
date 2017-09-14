@@ -5,11 +5,17 @@
 <configuration>
 
     <settings>
+    	<!-- 全局映射器启用缓存 -->  
         <setting name="cacheEnabled" value="true"/>
+        <!--使用 jdbc 的 getGeneratekeys 获取自增主键值-->
+        <setting name="useGeneratedKeys" value="true"/>
+        <!--开启驼峰命名转换Table:create_time到 Entity(createTime)-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+         <!--使用列别名替换别名　　默认true select name as title form table;-->
+        <setting name="useColumnLabel" value="true"/>
+        
         <setting name="lazyLoadingEnabled" value="true"/>
         <setting name="multipleResultSetsEnabled" value="true"/>
-        <setting name="useColumnLabel" value="true"/>
-        <setting name="useGeneratedKeys" value="false"/>
         <setting name="autoMappingBehavior" value="PARTIAL"/>
         <setting name="defaultExecutorType" value="SIMPLE"/>
         <setting name="defaultStatementTimeout" value="25"/>
@@ -18,6 +24,5 @@
         <setting name="localCacheScope" value="SESSION"/>
         <setting name="jdbcTypeForNull" value="OTHER"/>
         <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
-        <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
 </configuration>
