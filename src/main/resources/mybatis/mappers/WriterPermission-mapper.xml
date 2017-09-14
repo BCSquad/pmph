@@ -33,5 +33,35 @@
 		select * from writer_permission where permission_name =
 		#{permissionName};
 	</select>
+	
+	<select id="getListResource" resultType="WriterPermission">
+        SELECT
+             `id`,
+            `parent_id`,
+            `path`,
+            `permission_name`,
+            `menu_name`,
+            `url`
+        FROM
+          `writer_permission`
+    </select>
+    
+    <delete id="delete" parameterType="int">
+        DELETE FROM writer_permission
+        WHERE id = #{id}
+    </delete>
 
+    <select id="get" parameterType="int" resultType="WriterPermission">
+        SELECT
+            `id`,
+            `parent_id`,
+            `path`,
+            `permission_name`,
+            `menu_name`,
+            `url`
+        FROM
+          `writer_permission`
+        WHERE id = #{id}
+    </select>
+    
 </mapper>

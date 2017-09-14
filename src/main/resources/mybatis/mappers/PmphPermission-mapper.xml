@@ -25,4 +25,33 @@
 		select * from pmph_permission where id=#{id} ;
 	</select>
 	
+	<select id="getListResource" resultType="PmphPermission">
+        SELECT
+             `id`,
+            `parent_id`,
+            `path`,
+            `permission_name`,
+            `menu_name`,
+            `url`
+        FROM
+          `pmph_permission`
+    </select>
+    
+    <delete id="delete" parameterType="int">
+        DELETE FROM pmph_permission
+        WHERE id = #{id}
+    </delete>
+
+    <select id="get" parameterType="int" resultType="PmphPermission">
+        SELECT
+            `id`,
+            `parent_id`,
+            `path`,
+            `permission_name`,
+            `menu_name`,
+            `url`
+        FROM
+          `pmph_permission`
+        WHERE id = #{id}
+    </select>
 </mapper>

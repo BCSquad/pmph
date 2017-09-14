@@ -1,48 +1,85 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
+import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
+import com.bc.pmpheep.back.po.WriterRolePermission;
+import com.bc.pmpheep.back.po.WriterUserRole;
 
 /**
  * WriterRole 实体类的数据访问层接口
  * 
  * @author 曾庆峰
- *
+ * 
  */
 public interface WriterRoleDao {
-	/**
-	 * 添加一个作家角色
-	 * 
-	 * @param writerRole
-	 *            需要添加的作家角色的详细信息
-	 * @return 影响行数
-	 */
-	Integer addWriterRole(WriterRole writerRole);
+    /**
+     * 添加用户角色
+     * 
+     * @param pmphRole 添加的用户角色的详细信息
+     * @return 影响的行数
+     */
 
-	/**
-	 * 根据角色的id 单个或者批量删除作家权限
-	 * 
-	 * @param ids
-	 *            需要删除的id数组
-	 * @return 影响行数
-	 */
-	Integer deleteWriterRoleById(String[] ids);
+    Integer add(WriterRole role);
 
-	/**
-	 * 根据权限id 修改这个角色的详细信息
-	 * 
-	 * @param writerRole
-	 *            修改的角色信息
-	 * @return 影响行数
-	 */
-	Integer updateWriterRoleById(WriterRole writerRole);
+    Integer delete(Integer id);
 
-	/**
-	 * 根据角色名称精确查找作家角色
-	 * 
-	 * @param realname
-	 *            角色名称
-	 * @return 返回所需要的角色信息
-	 */
-	WriterRole getWriterRoleByRoleName(String roleName);
+    Integer batchDelete(@Param("ids") List<Integer> ids);
+
+    WriterRole get(Integer id);
+
+    Integer update(WriterRole role);
+
+    List<WriterRole> getListRole();
+
+    WriterUserRole getUserRole(@Param("userId") int userId, @Param("roleId") int roleId);
+
+    /**
+     * 为单个用户设置单个角色
+     * 
+     * @param userId
+     * @param roleId
+     * @return
+     */
+    Integer addUserRole(@Param("userId") int userId, @Param("roleId") int roleId);
+
+    /**
+     * 为单个用户设置多个角色
+     * 
+     * @param userId
+     * @param roleIds
+     * @return
+     */
+    Integer addUserRoles(@Param("userId") int userId, @Param("roleIds") List<Integer> roleIds);
+
+    Integer deleteUserRole(@Param("userId") int userId, @Param("roleId") int roleId);
+
+    /**
+     * 删除某个用户的所有角色
+     * 
+     * @param uid
+     */
+    Integer deleteUserRoles(int uid);
+
+    Integer batchDeleteRoleResource(@Param("roleIds") List<Integer> roleIds);
+
+    /**
+     * 根据角色id获取可以访问的所有资源
+     * 
+     * @param roleId
+     * @return
+     */
+    List<WriterPermission> getListRoleResource(int roleId);
+
+    Integer addRoleResource(@Param("roleId") int roleId, @Param("resourceId") int resourceId);
+
+    Integer deleteRoleResource(@Param("roleId") int roleId, @Param("resourceId") int resorceId);
+
+    WriterRolePermission getResourceRole(@Param("roleId") int roleId,
+    @Param("resourceId") int resorceId);
+
+    Integer deleteRoleAndUser(@Param("ids") List<Integer> ids);
 }

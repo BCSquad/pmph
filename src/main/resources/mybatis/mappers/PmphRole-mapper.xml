@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bc.pmpheep.back.dao.WriterRoleDao">
 
-	<insert id="add" parameterType="WriterRole">
-        INSERT INTO writer_role
+<mapper namespace="com.bc.pmpheep.back.dao.PmphRoleDao">
+
+	<insert id="add" parameterType="PmphRole">
+        INSERT INTO pmph_role
         (
         	`role_name`,
         	is_disabled,
@@ -24,29 +25,29 @@
     </insert>
 
     <delete id="delete" parameterType="int">
-        DELETE FROM writer_role
+        DELETE FROM pmph_role
         WHERE id = #{id}
     </delete>
 
     <delete id="batchDelete" parameterType="list">
-        DELETE FROM writer_role
+        DELETE FROM pmph_role
         WHERE id IN
         <foreach collection="ids" separator="," item="id" open="(" close=")">
             #{id}
         </foreach>
     </delete>
 
-    <select id="get" parameterType="int" resultType="WriterRole">
+    <select id="get" parameterType="int" resultType="PmphRole">
         SELECT
            *
         FROM
-            writer_role
+            pmph_role
         WHERE id = #{id}
     </select>
 
-    <update id="update" parameterType="WriterRole">
+    <update id="update" parameterType="PmphRole">
         UPDATE
-            writer_role
+            pmph_role
         <set>
         	<if test="roleName != null and roleName!=''">
                 role_name = #{roleName},
@@ -63,33 +64,33 @@
         </set>
     </update>
 
-    <select id="getListRole" resultType="WriterRole">
+    <select id="getListRole" resultType="PmphRole">
         SELECT
             id,
             `role_name`
         FROM
-            writer_role
+           pmph_role
     </select>
 
-    <select id="getUserRole" resultType="WriterUserRole" parameterType="map">
+    <select id="getUserRole" resultType="PmphUserRole" parameterType="map">
         SELECT
             id,
             user_id,
             role_id
         FROM
-            writer_user_role
+            pmph_user_role
         WHERE
             user_id = #{userId} AND role_id = #{roleId}
     </select>
 
     <insert id="addUserRole" parameterType="map">
-        INSERT INTO `writer_user_role`(`user_id`,`role_id`)
+        INSERT INTO `pmph_user_role`(`user_id`,`role_id`)
         VALUES(#{userId},#{roleId})
     </insert>
 
     <!-- 批量添加用户角色关联表数据 -->
     <insert id="addUserRoles" parameterType="map">
-        INSERT INTO `writer_user_role`(`user_id`,`role_id`)
+        INSERT INTO `pmph_user_role`(`user_id`,`role_id`)
         VALUES
         <foreach collection="roleIds" item="role_id" separator=",">
             (#{userId},#{role_id})
@@ -97,20 +98,20 @@
     </insert>
 
     <delete id="deleteUserRole" parameterType="map">
-        DELETE FROM writer_user_role
+        DELETE FROM pmph_user_role
         WHERE
             user_id = #{userId} AND role_id = #{roleId}
     </delete>
 
     <!-- 删除这个用户所有的角色 -->
     <delete id="deleteUserRoles">
-        DELETE FROM writer_user_role
+        DELETE FROM pmph_user_role
         WHERE
             user_id = #{userId}
     </delete>
 
     <!-- 根据角色 id 查询该角色 id 下的所有资源 -->
-    <select id="getListRoleResource" parameterType="int" resultType="WriterPermission">
+    <select id="getListRoleResource" parameterType="int" resultType="PmphPermission">
         SELECT
             tr.`id`,
             tr.`parent_id`,
@@ -118,35 +119,35 @@
             tr.`permission_name`,
             tr.`menu_name`,
             tr.`url`
-        FROM `writer_permission` tr
-        LEFT JOIN `writer_role_permission` trr ON tr.`id` = trr.`permission_id`
+        FROM `pmph_permission` tr
+        LEFT JOIN `pmph_role_permission` trr ON tr.`id` = trr.`permission_id`
         WHERE trr.`role_id` = #{roleId}
     </select>
 
     <insert id="addRoleResource" parameterType="map">
-        INSERT INTO writer_role_permission(role_id,permission_id)
+        INSERT INTO pmph_role_permission(role_id,permission_id)
         VALUES(#{roleId},#{permissionId})
     </insert>
 
     <delete id="deleteRoleResource" parameterType="map">
-        DELETE FROM writer_role_permission
+        DELETE FROM pmph_role_permission
         WHERE
             role_id = #{roleId} AND permission_id = #{permissionId}
     </delete>
 
-    <select id="getResourceRole" parameterType="map" resultType="RoleResource">
+    <select id="getResourceRole" parameterType="map" resultType="PmphPermission">
         SELECT
             id,
             role_id,
             permission_id
         FROM
-            writer_role_permission
+            pmph_role_permission
         WHERE
             role_id = #{roleId} AND resource_id = #{resourceId}
     </select>
 
     <delete id="batchDeleteRoleResource" parameterType="list">
-        DELETE FROM writer_role_permission
+        DELETE FROM pmph_role_permission
         WHERE role_id IN
         <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
             #{roleId}
@@ -154,11 +155,11 @@
     </delete>
 
     <delete id="deleteRoleAndUser" parameterType="list">
-        DELETE FROM writer_user_role
+        DELETE FROM pmph_user_role
         WHERE role_id in
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-
+	
 </mapper>

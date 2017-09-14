@@ -1,51 +1,54 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.po.WriterPermission;
+import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 
 /**
  * WriterUser 实体类的数据访问层接口
  * 
  * @author 曾庆峰
- *
+ * 
  */
 @Repository
 public interface WriterUserDao {
-	/**
-	 * 添加一位作家用户
-	 * 
-	 * @param writerUser
-	 *            作家用户的信息
-	 * @return 影响行数
-	 */
-	Integer addWriterUser(WriterUser writerUser);
+    /**
+     * 添加一个用户
+     * 
+     * @param pmphUser 添加用户的详细信息
+     * @return 影响的行数
+     */
+    Integer add(WriterUser user);
 
-	/**
-	 * 根据用户id 单个或者批量删除用户（物理）
-	 * 
-	 * @param ids
-	 *            需要删除用户的id数组
-	 * @return 影响行数
-	 */
-	Integer deleteWriterUserById(String[] ids);
+    Integer update(WriterUser user);
 
-	/**
-	 * 根据id 修改单个用户的信息
-	 * 
-	 * @param writerUser
-	 *            用户的最新信息
-	 * 
-	 * @return 影响行数
-	 */
-	Integer updateWriterUserById(WriterUser writerUser);
+    Integer delete(Integer id);
 
-	/**
-	 * 根据单一字段（用户名）精确查询用户
-	 * 
-	 * @param username
-	 *            用户名
-	 * @return 符合该用户名的用户信息
-	 */
-	WriterUser getWriterUserByUsername(String username);
+    Integer batchDelete(@Param("ids") List<Integer> ids);
+
+    WriterUser get(Integer id);
+
+    List<WriterUser> getListUser();
+
+    WriterUser getByUserName(String username);
+
+    /**
+     * 根据角色 id 查询所有是该角色的用户列表
+     * 
+     * @param rid
+     * @return
+     */
+    List<WriterUser> getListByRole(Integer rid);
+
+    List<WriterPermission> getListAllResources(Integer uid);
+
+    List<String> getListRoleSnByUser(Integer uid);
+
+    List<WriterRole> getListUserRole(Integer uid);
+
 }
