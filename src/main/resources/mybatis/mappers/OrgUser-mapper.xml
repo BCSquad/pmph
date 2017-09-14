@@ -5,19 +5,39 @@
 
 	<!-- 新增OrgUser -->
     <insert id="addOrgUser"  parameterType="OrgUser"   >
+    	<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句  BEFORE 或 AFTER -->
+          SELECT LAST_INSERT_ID() 
+        </selectKey>
         insert  into  org_user (username,password,   is_disabled,  org_id,  realname,   sex,   position,  title,    fax,   handphone,   telephone,   idcard,   email,   address,    postcode,  note,  sort,    is_deleted) 
-                        values(#{username},#{password},#{idDisabled},#{orgId},#{realname},#{sex},#{position},#{title},#{fax},#{handphone},#{telephone},#{idcard},#{email},#{address},#{postcode},#{note},#{sort},#{isDeleted}) ;
+                        values(#{username,jdbcType=VARCHAR},
+                        #{password,jdbcType=VARCHAR},
+                        #{isDisabled,jdbcType=TINYINT},
+                        #{orgId,jdbcType=BIGINT},
+                        #{realname,jdbcType=VARCHAR},
+                        #{sex,jdbcType=TINYINT},
+                        #{position,jdbcType=VARCHAR},
+                        #{title,jdbcType=VARCHAR},
+                        #{fax,jdbcType=VARCHAR},
+                        #{handphone,jdbcType=VARCHAR},
+                        #{telephone,jdbcType=VARCHAR},
+                        #{idcard,jdbcType=VARCHAR},
+                        #{email,jdbcType=VARCHAR},
+                        #{address,jdbcType=VARCHAR},
+                        #{postcode,jdbcType=VARCHAR},
+                        #{note,jdbcType=VARCHAR},
+                        #{sort,jdbcType=INTEGER},
+                        #{isDeleted,jdbcType=TINYINT}) ;
     </insert>
     
    <!-- 根据id删除一个OrgUser -->
 	<delete id="deleteOrgUserById" parameterType="OrgUser"   >
-		delete from org_user where where id=#{id} ;
+		delete from org_user where id=#{id} ;
 	</delete>
 	
 	<!-- 更新OrgUser -->
 	<update id="updateOrgUserById"   parameterType="OrgUser"  >
 		update org_user  set  
-				(username=#{username},password=#{password},is_disabled=#{idDisabled},org_id=#{orgId},realname=#{realname},sex=#{sex},
+			username=#{username},password=#{password},is_disabled=#{isDisabled},org_id=#{orgId},realname=#{realname},sex=#{sex},
 		         position=#{position},  title=#{title},    fax=#{fax},   handphone=#{handphone},   telephone=#{telephone},   idcard=#{idcard},  
 		         email=#{email},   address=#{address},    postcode=#{postcode},  note=#{note},  sort=#{sort},    is_deleted=#{isDeleted} 
         where id=#{id} ;

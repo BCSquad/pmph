@@ -19,12 +19,13 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	/**
 	 * 
 	 * @param OrgUser 实体对象
-	 * @return  影响行数
+	 * @return   带主键的 OrgUser
 	 * @throws Exception 
 	 */
 	@Override
-	public Integer addOrgUser(OrgUser orgUser) throws Exception{
-		return orgUserDao.addOrgUser(orgUser);
+	public OrgUser addOrgUser(OrgUser orgUser) throws Exception{
+		orgUserDao.addOrgUser(orgUser);
+		return orgUser;
 	}
 	
 	/**

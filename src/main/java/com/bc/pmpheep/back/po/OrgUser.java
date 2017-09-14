@@ -1,16 +1,16 @@
 package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
-import java.util.Date;
-
+import java.sql.Timestamp;
 import org.apache.ibatis.type.Alias;
 
 /**
- * OrgUser 实体类
+ * OrgUser  机构用户表  实体类--  Org_User
  * 
  * @author Thinkpad
  *
  */
+@SuppressWarnings("serial")
 @Alias("OrgUser")
 public class OrgUser implements Serializable {
 	/**
@@ -92,22 +92,32 @@ public class OrgUser implements Serializable {
 	/**
 	 * 创建时间
 	 */
-	private Date gmtCreate;
+	private Timestamp gmtCreate;
 	/**
 	 * 修改时间
 	 */
-	private Date gmtUpdate;
-
+	private Timestamp gmtUpdate;
+	
+	public OrgUser(){
+		
+	}
+	public OrgUser(Long id){
+		this.id=id;
+	}
+	/**
+	 * 
+	 * @param username 机构代码  /yonghuming
+	 * @param password  密码
+	 */
 	public OrgUser(String username, String password) {
-		super();
 		this.username = username;
 		this.password = password;
 	}
 
 	public OrgUser(String username, String password, boolean isDisabled, Long orgId, String realname, Integer sex,
 			String position, String title, String fax, String handphone, String telephone, String idcard, String email,
-			String address, String postcode, String note, Integer sort, boolean isDeleted, Date gmtCreate,
-			Date gmtUpdate) {
+			String address, String postcode, String note, Integer sort, boolean isDeleted, Timestamp gmtCreate,
+			Timestamp gmtUpdate) {
 		this.username = username;
 		this.password = password;
 		this.isDisabled = isDisabled;
@@ -273,39 +283,43 @@ public class OrgUser implements Serializable {
 	public void setSort(Integer sort) {
 		this.sort = sort;
 	}
-
-	public boolean isIsDeleted() {
+	
+	public boolean isDisabled() {
+		return isDisabled;
+	}
+	public void setDisabled(boolean isDisabled) {
+		this.isDisabled = isDisabled;
+	}
+	public boolean isDeleted() {
 		return isDeleted;
 	}
-
-	public void setIsDeleted(boolean isDeleted) {
+	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
-
-	public Date getGmtCreate() {
+	public Timestamp getGmtCreate() {
 		return gmtCreate;
 	}
 
-	public void setGmtCreate(Date gmtCreate) {
+	public void setGmtCreate(Timestamp gmtCreate) {
 		this.gmtCreate = gmtCreate;
 	}
 
-	public Date getGmtUpdate() {
+	public Timestamp getGmtUpdate() {
 		return gmtUpdate;
 	}
 
-	public void setGmtUpdate(Date gmtUpdate) {
+	public void setGmtUpdate(Timestamp gmtUpdate) {
 		this.gmtUpdate = gmtUpdate;
 	}
 
 	@Override
 	public String toString() {
-		return "OrgUser [id=" + id + ", username=" + username + ", password=" + password + ", idDisabled=" + isDisabled
-				+ ", orgId=" + orgId + ", realname=" + realname + ", sex=" + sex + ", position=" + position + ", title="
-				+ title + ", fax=" + fax + ", handphone=" + handphone + ", telephone=" + telephone + ", idcard="
-				+ idcard + ", email=" + email + ", address=" + address + ", postcode=" + postcode + ", note=" + note
-				+ ", sort=" + sort + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
-				+ gmtUpdate + "]";
+		return "{id:" + id + ", username:" + username + ", password:" + password + ", idDisabled:" + isDisabled
+				+ ", orgId:" + orgId + ", realname:" + realname + ", sex:" + sex + ", position:" + position + ", title:"
+				+ title + ", fax:" + fax + ", handphone:" + handphone + ", telephone:" + telephone + ", idcard:"
+				+ idcard + ", email:" + email + ", address:" + address + ", postcode:" + postcode + ", note:" + note
+				+ ", sort:" + sort + ", isDeleted:" + isDeleted + ", gmtCreate:" + gmtCreate + ", gmtUpdate:"
+				+ gmtUpdate + "}";
 	}
 
 }

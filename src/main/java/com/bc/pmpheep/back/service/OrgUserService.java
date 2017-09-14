@@ -10,10 +10,10 @@ public interface  OrgUserService {
 	/**
 	 * 
 	 * @param OrgUser 实体对象
-	 * @return  影响行数
+	 * @return  带主键的 OrgUser
 	 * @throws Exception 
 	 */
-	Integer addOrgUser(OrgUser orgUser) throws Exception;
+	OrgUser addOrgUser(OrgUser orgUser) throws Exception;
 	
 	/**
 	 * 
