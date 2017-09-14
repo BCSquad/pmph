@@ -24,6 +24,11 @@ public class WriterUserRole implements Serializable {
      * 角色id
      */
     private Long roleId;
+    
+    
+
+    public WriterUserRole() {
+    }
 
     public WriterUserRole(Long userId, Long roleId) {
 	this.userId = userId;

@@ -26,6 +26,10 @@ public class WriterMseeage implements Serializable {
 	 */
 	private Integer msgType;
 
+	
+	public WriterMseeage() {
+	}
+
 	public WriterMseeage(String msgCode, Integer msgType) {
 		this.msgCode = msgCode;
 		this.msgType = msgType;
