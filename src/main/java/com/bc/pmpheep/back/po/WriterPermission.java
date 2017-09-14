@@ -41,6 +41,11 @@ public class WriterPermission implements Serializable {
 	 * 修改时间
 	 */
 	private Date gmtUpdate;
+	
+	
+
+	public WriterPermission() {
+	}
 
 	public WriterPermission(String permissionName, boolean isDisabled, String note, Integer sort, Date gmtCreate,
 			Date gmtUpdate) {

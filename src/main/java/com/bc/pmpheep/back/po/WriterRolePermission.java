@@ -25,6 +25,9 @@ public class WriterRolePermission implements Serializable {
      */
     private Long permissionId;
 
+    public WriterRolePermission() {
+    }
+
     public WriterRolePermission(Long roleId, Long permissionId) {
 	this.roleId = roleId;
 	this.permissionId = permissionId;
