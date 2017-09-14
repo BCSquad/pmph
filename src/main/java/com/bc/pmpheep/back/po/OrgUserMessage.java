@@ -1,12 +1,12 @@
 package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
 /**
- * OrgUserMessage 实体类
+ * OrgUserMessage (消息-机构用户映射表（多对多）  )实体类 -- Org_User_Message
  * 
  * @author 曾庆峰
  *
@@ -37,20 +37,31 @@ public class OrgUserMessage implements Serializable {
     /**
      * 创建时间
      */
-    private Date gmtCreate;
+    private Timestamp gmtCreate;
     /**
      * 修改时间
      */
-    private Date gmtUpdate;
-
-    public OrgUserMessage(Long msgId, Long userId, boolean isRead, boolean isDeleted, Date gmtCreate, Date gmtUpdate) {
-	this.msgId = msgId;
-	this.userId = userId;
-	this.isRead = isRead;
-	this.isDeleted = isDeleted;
-	this.gmtCreate = gmtCreate;
-	this.gmtUpdate = gmtUpdate;
+    private Timestamp gmtUpdate;
+    
+    public OrgUserMessage(){
+    	
     }
+    public OrgUserMessage(Long id){
+    	this.id=id;
+    }
+    /**
+     * 
+     * @param msgId  消息id
+     * @param userId  机构id
+     * @param isRead  是否已读
+     * @param isDeleted  是否被逻辑删除
+     */
+    public OrgUserMessage(Long msgId, Long userId, boolean isRead, boolean isDeleted) {
+		this.msgId = msgId;
+		this.userId = userId;
+		this.isRead = isRead;
+		this.isDeleted = isDeleted;
+	}
 
     public Long getId() {
 	return id;
@@ -92,19 +103,19 @@ public class OrgUserMessage implements Serializable {
 	this.isDeleted = isDeleted;
     }
 
-    public Date getGmtCreate() {
+    public Timestamp getGmtCreate() {
 	return gmtCreate;
     }
 
-    public void setGmtCreate(Date gmtCreate) {
+    public void setGmtCreate(Timestamp gmtCreate) {
 	this.gmtCreate = gmtCreate;
     }
 
-    public Date getGmtUpdate() {
+    public Timestamp getGmtUpdate() {
 	return gmtUpdate;
     }
 
-    public void setGmtUpdate(Date gmtUpdate) {
+    public void setGmtUpdate(Timestamp gmtUpdate) {
 	this.gmtUpdate = gmtUpdate;
     }
 

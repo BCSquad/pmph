@@ -1,4 +1,6 @@
 package com.bc.pmpheep.back.servicetest;
+import java.util.Random;
+
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -25,7 +27,8 @@ public class OrgUserSeviceTest extends BaseTest {
     @Transactional  
     @Rollback(false) 
     public void test() throws Exception {
-    	OrgUser a=new OrgUser("张珊"+3,"999", false, 5L, "李四", 1,"zhiwei", "职称","cahunzehn", "shou", "dianhia","shenfenz", "email",
+    	Random r =new Random();
+    	OrgUser a=new OrgUser("张珊"+r.nextInt(10000),"999", false, 5L, "李四", 1,"zhiwei", "职称","cahunzehn", "shou", "dianhia","shenfenz", "email",
 			"address", "String postcode", "String note",2, false, null,null);
     	testService.addOrgUser(a);
     	l.info("---OrgUser--------------------------------新增--------------------------------------------");

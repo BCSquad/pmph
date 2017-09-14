@@ -26,7 +26,8 @@ public class OrgUserMessageServiceImpl extends BaseService implements OrgUserMes
 	 */
 	@Override
 	public OrgUserMessage addOrgUserMessage (OrgUserMessage orgUserMessage) throws Exception{
-		return orgUserMessgeDao.addOrgUserMessage(orgUserMessage);
+		 orgUserMessgeDao.addOrgUserMessage(orgUserMessage);
+		 return orgUserMessage;
 	}
 	
 	/**

@@ -4,14 +4,20 @@
 <mapper namespace="com.bc.pmpheep.back.dao.OrgUserMessageDao">
 
 	<!-- 新增 OrgUserMessage -->
-    <insert id="addOrgUserMessage"  parameterType="OrgUserMessage"  useGeneratedKeys="true" keyProperty="id"  >
+    <insert id="addOrgUserMessage"  parameterType="OrgUserMessage"  >
+    	<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句  BEFORE 或 AFTER -->
+          SELECT LAST_INSERT_ID() 
+        </selectKey>
         insert  into  org_user_message (msg_id ,user_id,is_read,is_deleted) 
-                     	     values(#{msgId},#{userId},#{isRead},#{isDeleted}) ;
+                     	     values(#{msgId,jdbcType=BIGINT},
+                     	     #{userId,jdbcType=BIGINT},
+                     	     #{isRead,jdbcType=TINYINT},
+                     	     #{isDeleted,jdbcType=TINYINT}) ;
     </insert>
     
    <!-- 根据id删除一个 OrgUserMessage -->
 	<delete id="deleteOrgUserMessageById" parameterType="OrgUserMessage"   >
-		delete from  org_user_message where where id=#{id} ;
+		delete from  org_user_message where id=#{id} ;
 	</delete>
 	
 	<!-- 更新 OrgUserMessage -->
