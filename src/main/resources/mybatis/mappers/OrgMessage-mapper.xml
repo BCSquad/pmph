@@ -5,12 +5,15 @@
 
 	<!-- 新增 OrgMessage -->
     <insert id="addOrgMessage"  parameterType="OrgMessage"  useGeneratedKeys="true" keyProperty="id"  >
-    	insert  into  org_message (msg_code,msg_type)  values(#{msgCode},#{msgType}) ;
+    	<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句  BEFORE 或 AFTER -->
+          SELECT LAST_INSERT_ID() 
+        </selectKey>
+    	insert  into  org_message (msg_code,msg_type)  values(#{msgCode,jdbcType=VARCHAR},#{msgType,jdbcType=TINYINT}) ;
     </insert>
     
    <!-- 根据id删除一个 -->
 	<delete id="deleteOrgMessageById" parameterType="OrgMessage"   >
-		delete from  org_message where where id=#{id} ;
+		delete from  org_message  where id=#{id} ;
 	</delete>
 	
 	<!-- 更新OrgMessage -->

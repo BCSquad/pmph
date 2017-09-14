@@ -14,10 +14,10 @@ public interface OrgMessageDao {
 	/**
 	 * 
 	 * @param  OrgMessage 实体对象
-	 * @return  带主键的OrgMessage
+	 * @return  影响行数
 	 * @throws Exception 
 	 */
-	OrgMessage addOrgMessage(OrgMessage orgMessage);
+	Integer addOrgMessage(OrgMessage orgMessage);
 	
 	/**
 	 * 
