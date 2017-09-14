@@ -22,6 +22,7 @@
         <maven-compiler-plugin.ver>3.6.0</maven-compiler-plugin.ver>
         <maven-war-plugin.ver>3.0.0</maven-war-plugin.ver>
         <maven-dependency-plugin.ver>2.10</maven-dependency-plugin.ver>
+        <maven-surefire.ver>2.4.2</maven-surefire.ver>
         <!--javaee-->
         <javaee-web-api.ver>7.0</javaee-web-api.ver>
         <javaee-endorsed-api.ver>7.0</javaee-endorsed-api.ver>
@@ -105,6 +106,11 @@
             <artifactId>spring-test</artifactId>
             <version>${springframework.ver}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${springframework.ver}</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
@@ -198,6 +204,14 @@
                     </compilerArguments>
                 </configuration>
             </plugin>
+            <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire.ver}</version>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
+			</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>

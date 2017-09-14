@@ -1,11 +1,14 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import com.bc.pmpheep.back.po.WriterPermission;
 
 /**
  * WriterPermissionService 接口
+ * 
  * @author 曾庆峰
- *
+ * 
  */
 public interface WriterPermissionService {
     /**
@@ -39,4 +42,31 @@ public interface WriterPermissionService {
      * @throws Exception
      */
     WriterPermission getWriterPermissionByPermissionName(String permissionName) throws Exception;
+
+    /**
+     * 按WriterPermission_id删除 对象
+     * 
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    Integer delete(int id) throws Exception;
+
+    /**
+     * 按WriterPermission_id查询 对象
+     * 
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    WriterPermission get(int id) throws Exception;
+
+    /**
+     * 查询List对象集合
+     * 
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    List<WriterPermission> getListResource() throws Exception;
 }

@@ -1,70 +1,220 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bc.pmpheep.back.common.service.BaseService;
+import com.bc.pmpheep.back.dao.WriterRoleDao;
 import com.bc.pmpheep.back.dao.WriterUserDao;
+import com.bc.pmpheep.back.po.WriterPermission;
+import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
+import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 
 /**
  * WriterUserService 实现
  * 
  * @author 曾庆峰
- *
+ * 
  */
 @Service
 public class WriterUserServiceImpl extends BaseService implements WriterUserService {
 
     @Autowired
-    WriterUserDao writerUserDao;
+    WriterUserDao userDao;
+    @Autowired
+    WriterRoleDao roleDao;
 
     /**
+     * 返回新插入用户数据的主键
      * 
-     * @param WriterUser
-     *            实体对象
-     * @return 影响行数
-     * @throws Exception
+     * @param user
+     * @return
      */
     @Override
-    public Integer addWriterUser(WriterUser writerUser) throws Exception {
-	return writerUserDao.addWriterUser(writerUser);
+    public WriterUser add(WriterUser user) throws Exception {
+        // 使用用户名作为盐值，MD5 算法加密
+        user.setPassword(ShiroKit.md5(user.getPassword(), user.getUsername()));
+        userDao.add(user);
+        return user;
+    }
+
+    /**
+     * 为单个用户设置多个角色
+     * 
+     * @param user
+     * @param rids
+     */
+    @Transactional
+    @Override
+    public WriterUser add(WriterUser user, List<Integer> rids) throws Exception {
+        Long userId = this.add(user).getId();
+        String uid = String.valueOf(userId);
+        roleDao.addUserRoles(Integer.valueOf(uid), rids);
+        return user;
+    }
+
+    /**
+     * 根据 user_id 删除用户数据
+     * 
+     * @param id
+     */
+    @Override
+    public void delete(int id) throws Exception {
+        if (id == 1) {
+            throw new RuntimeException("不能删除管理员用户");
+        }
+        userDao.delete(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUserAndRole(List<Integer> ids) throws Exception {
+        if (ids.contains(1)) {
+            throw new RuntimeException("不能删除管理员用户");
+        }
+        // 删除用户列表
+        userDao.batchDelete(ids);
+        // 依次删除这些用户所绑定的角色
+        for (Integer userId : ids) {
+            roleDao.deleteUserRoles(userId);
+        }
+
     }
 
     /**
      * 
-     * @param ids
-     *            需要删除的id 数组
-     * @return 影响行数
-     * @throws Exception
-     */
-    @Override
-    public Integer deleteWriterUserById(String[] ids) throws Exception {
-	return writerUserDao.deleteWriterUserById(ids);
-    }
-
-    /**
+     * 更新用户数据 1、更新用户基本信息 2、更新用户所属角色 （1）先删除所有的角色 （2）再添加绑定的角色
      * 
-     * @param WriterUser
-     *            实体对象
-     * @return 影响行数
-     * @throws Exception
+     * @param user
+     * @param rids
      */
+    @Transactional
     @Override
-    public Integer updateWriterUserById(WriterUser writerUser) throws Exception {
-	return writerUserDao.updateWriterUserById(writerUser);
+    public WriterUser update(WriterUser user, List<Integer> rids) throws Exception {
+        Long userId = user.getId();
+        String uid = String.valueOf(userId);
+        roleDao.deleteUserRoles(Integer.valueOf(uid));
+        roleDao.addUserRoles(Integer.valueOf(uid), rids);
+        this.update(user);
+        return user;
     }
 
     /**
+     * 更新单个用户信息
+     * 
+     * @param user
+     * @return
+     */
+    @Override
+    public WriterUser update(WriterUser user) throws Exception {
+        String password = user.getPassword();
+        if (password != null) {
+            user.setPassword(ShiroKit.md5(user.getPassword(), user.getUsername()));
+        }
+        userDao.update(user);
+        return user;
+    }
+
+    /**
+     * 根据主键 id 加载用户对象
+     * 
+     * @param id
+     * @return
+     */
+    @Override
+    public WriterUser get(int id) throws Exception {
+        return userDao.get(id);
+    }
+
+    /**
+     * 根据用户名加载用户对象（用于登录使用）
      * 
      * @param username
-     *            作家用户用户名
-     * @return 需要的作家用户信息
-     * @throws Exception
+     * @return
      */
     @Override
-    public WriterUser getWriterUserByUsername(String username) throws Exception {
-	return writerUserDao.getWriterUserByUsername(username);
+    public WriterUser getByUsername(String username) throws Exception {
+        return userDao.getByUserName(username);
+    }
+
+    /**
+     * 登录逻辑 1、先根据用户名查询用户对象 2、如果有用户对象，则继续匹配密码 如果没有用户对象，则抛出异常
+     * 
+     * @param username
+     * @param password
+     * @return
+     */
+    @Override
+    public WriterUser login(String username, String password) throws Exception {
+        WriterUser user = userDao.getByUserName(username);
+        // 密码匹配的工作交给 Shiro 去完成
+        if (user == null) {
+            // 因为缓存切面的原因,在这里就抛出用户名不存在的异常
+            throw new UnknownAccountException("用户名不存在(生产环境中应该写:用户名和密码的组合不正确)");
+        } else if (user.getIsDisabled() == 1) {
+            throw new LockedAccountException("用户已经被禁用，请联系管理员启用该账号");
+        }
+        return user;
+    }
+
+    /**
+     * 查询所有的用户对象列表
+     * 
+     * @return
+     */
+    @Override
+    public List<WriterUser> getList() throws Exception {
+        return userDao.getListUser();
+    }
+
+    /**
+     * 根据角色 id 查询是这个角色的所有用户
+     * 
+     * @param id
+     * @return
+     */
+    @Override
+    public List<WriterUser> getListByRole(int id) throws Exception {
+        return userDao.getListByRole(id);
+    }
+
+    /**
+     * 查询指定用户 id 所拥有的权限
+     * 
+     * @param uid
+     * @return
+     */
+    @Override
+    public List<WriterPermission> getListAllResource(int uid) throws Exception {
+        return userDao.getListAllResources(uid);
+    }
+
+    /**
+     * 查询指定用户所指定的角色字符串列表
+     * 
+     * @param uid
+     * @return
+     */
+    @Override
+    public List<String> getListRoleSnByUser(int uid) throws Exception {
+        return userDao.getListRoleSnByUser(uid);
+    }
+
+    /**
+     * 查询指定用户所绑定的角色列表
+     * 
+     * @param uid
+     * @return
+     */
+    @Override
+    public List<WriterRole> getListUserRole(int uid) throws Exception {
+        return userDao.getListUserRole(uid);
     }
 
 }

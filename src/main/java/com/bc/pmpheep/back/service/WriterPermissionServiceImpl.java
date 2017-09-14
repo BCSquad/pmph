@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,7 @@ import com.bc.pmpheep.back.po.WriterPermission;
  * WriterPermissionService 实现
  * 
  * @author 曾庆峰
- *
+ * 
  */
 @Service
 public class WriterPermissionServiceImpl extends BaseService implements WriterPermissionService {
@@ -21,22 +23,38 @@ public class WriterPermissionServiceImpl extends BaseService implements WriterPe
 
     @Override
     public Integer addWriterPermission(WriterPermission writerPermission) throws Exception {
-	return writerPermissionDao.addWriterPermission(writerPermission);
+        return writerPermissionDao.addWriterPermission(writerPermission);
     }
 
     @Override
     public Integer deleteWriterPermissionById(String[] ids) throws Exception {
-	return writerPermissionDao.deleteWriterPermissionById(ids);
+        return writerPermissionDao.deleteWriterPermissionById(ids);
     }
 
     @Override
     public Integer updateWriterPermissionById(WriterPermission writerPermission) throws Exception {
-	return writerPermissionDao.updateWriterPermissionById(writerPermission);
+        return writerPermissionDao.updateWriterPermissionById(writerPermission);
     }
 
     @Override
-    public WriterPermission getWriterPermissionByPermissionName(String permissionName) throws Exception {
-	return writerPermissionDao.getWriterPermissionByPermissionName(permissionName);
+    public WriterPermission getWriterPermissionByPermissionName(String permissionName)
+    throws Exception {
+        return writerPermissionDao.getWriterPermissionByPermissionName(permissionName);
+    }
+
+    @Override
+    public Integer delete(int id) throws Exception {
+        return writerPermissionDao.delete(id);
+    }
+
+    @Override
+    public WriterPermission get(int id) throws Exception {
+        return writerPermissionDao.get(id);
+    }
+
+    @Override
+    public List<WriterPermission> getListResource() throws Exception {
+        return writerPermissionDao.getListResource();
     }
 
 }

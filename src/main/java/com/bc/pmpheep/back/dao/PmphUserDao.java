@@ -4,49 +4,52 @@
  */
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.bc.pmpheep.back.po.PmphPermission;
+import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 
 /**
  * PmphUser实体类数据访问层接口
- *
+ * 
  * @author L.X <gugia@qq.com>
  */
 public interface PmphUserDao {
-	/**
-	 * 添加一个用户
-	 * 
-	 * @param pmphUser
-	 *            添加用户的详细信息
-	 * @return 影响的行数
-	 */
-	Integer addPmphUser(PmphUser pmphUser);
+    /**
+     * 添加一个用户
+     * 
+     * @param pmphUser 添加用户的详细信息
+     * @return 影响的行数
+     */
+    Integer add(PmphUser user);
 
-	/**
-	 * 根据用户Id删除用户
-	 * 
-	 * @param ids
-	 *            需要删除的用户的Id数组
-	 * @return影响的行数
-	 */
-	Integer deletePmphUserById(String[] ids);
+    Integer update(PmphUser user);
 
-	/**
-	 * 根据用户Id修改用户的详细信息
-	 * 
-	 * @param pmphUser
-	 *            用户新的详细信息
-	 * @return 影响的行数
-	 */
+    Integer delete(Integer id);
 
-	Integer updatePmphUserById(PmphUser pmphUser);
+    Integer batchDelete(@Param("ids") List<Integer> ids);
 
-	/**
-	 * 通过用户名（唯一字段）查找特定用户
-	 *
-	 * @param username
-	 *            用户名
-	 * @return 符合查找条件的PmphUser对象
-	 */
-	PmphUser getByUsername(String username);
+    PmphUser get(Integer id);
+
+    List<PmphUser> getListUser();
+
+    PmphUser getByUserName(String username);
+
+    /**
+     * 根据角色 id 查询所有是该角色的用户列表
+     * 
+     * @param rid
+     * @return
+     */
+    List<PmphUser> getListByRole(Integer rid);
+
+    List<PmphPermission> getListAllResources(Integer uid);
+
+    List<String> getListRoleSnByUser(Integer uid);
+
+    List<PmphRole> getListUserRole(Integer uid);
 
 }

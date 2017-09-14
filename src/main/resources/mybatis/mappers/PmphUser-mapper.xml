@@ -2,7 +2,164 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bc.pmpheep.back.dao.PmphUserDao">
-	<select id="getByUsername" parameterType="String" resultType="PmphUser">
-		select * from pmph_user where username = #{username}
-	</select>
+	<insert id="add" parameterType="WriterUser" useGeneratedKeys="true" keyProperty="id">
+         INSERT INTO pmph_user
+        (
+        	username,
+        	`password`,
+        	is_disabled,
+        	`realname`,
+        	department_id,
+        	handphone,
+        	email,
+        	note,
+        	sort,
+        	is_deleted,
+        	gmt_create,
+        	gmt_update
+        )
+        VALUES
+        (
+        	#{username,jdbcType=VARCHAR},
+        	#{password,jdbcType=VARCHAR},
+        	#{isDisabled,jdbcType=VARCHAR},
+        	#{realname,jdbcType=VARCHAR},
+        	#{departmentId,jdbcType=BIGINT},
+        	#{handphone,jdbcType=VARCHAR},
+        	#{email,jdbcType=VARCHAR},
+        	#{note,jdbcType=VARCHAR},
+        	#{sort,jdbcType=TINYINT},
+        	#{isDeleted,jdbcType=TINYINT},
+        	#{gmtCreate,jdbcType=TIMESTAMP},
+        	#{gmtUpdate,jdbcType=TIMESTAMP}
+        );
+    </insert>
+
+    <!-- 动态更新对象的写法 -->
+    <update id="update" parameterType="WriterUser">
+        UPDATE pmph_user
+        <set>
+            <if test="username != null and username!=''">
+                username = #{username},
+            </if>
+            <if test="password != null and password!='' ">
+                `password` = #{password},
+            </if>
+            <if test=" isDisabled!= null and isDisabled !=''">
+                 is_disabled= #{isDisabled},
+            </if>
+            <if test=" realname!= null and realname !=''">
+                 realname= #{realname},
+            </if>
+             <if test=" departmentId!= null and departmentId !=''">
+                department_id = #{departmentId},
+            </if>
+            <if test=" handphone!= null and handphone !=''">
+                handphone = #{handphone},
+            </if>
+            <if test=" email!= null and email !=''">
+                 email= #{email},
+            </if>
+            <if test=" note!= null and  note!=''">
+                note = #{note},
+            </if>
+            <if test=" sort!= null and  sort!=''">
+                sort = #{sort},
+            </if>
+            <if test=" isDeleted!= null and  isDeleted!=''">
+                 is_deleted= #{isDeleted},
+            </if>
+        </set>
+        WHERE
+          id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM pmph_user
+        where id = #{id}
+    </delete>
+
+    <!--  批量删除 -->
+    <delete id="deleteBatch" parameterType="list">
+        DELETE FROM pmph_user
+        where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="get" parameterType="int" resultType="WriterUser">
+        SELECT
+           *
+        FROM
+            pmph_user
+        WHERE
+            id = #{id}
+    </select>
+
+    <select id="getListUser" resultType="WriterUser">
+        SELECT
+            *
+        FROM
+            pmph_user
+    </select>
+
+    <select id="getByUserName" parameterType="string" resultType="WriterUser">
+        SELECT
+            *
+        FROM
+            pmph_user
+        WHERE
+            username = #{username}
+    </select>
+
+    <select id="getListByRole" parameterType="int" resultType="WriterUser">
+        SELECT
+            tu.id,
+            tu.username,
+            tu.`password`,
+            tu.realname,
+            tu.`is_disabled`
+        FROM
+            pmph_user tu
+        LEFT JOIN pmph_user_role tur ON tu.id = tur.user_id
+        LEFT JOIN pmph_role tr ON tur.role_id = tr.id
+        WHERE tr.id =#{rid}
+    </select>
+
+    <!-- 根据用户 id 查询这个用户拥有的所有资源（这里的资源就代表权限） -->
+    <select id="getListAllResources" resultType="WriterPermission" parameterType="int">
+        SELECT 
+        	tr.`id`,
+        	tr.`parent_id`,
+        	tr.`path`,
+        	tr.`permission_name`,
+        	tr.menu_name,
+        	tr.url
+        FROM `pmph_permission` tr
+        LEFT JOIN `pmph_role_permission` trr ON tr.`id` = trr.`resource_id`
+        LEFT JOIN `pmph_user_role` tur ON trr.`role_id` = tur.role_id
+        WHERE tur.user_id = #{uid}
+    </select>
+
+    <!-- 根据用户 id 查询用户所具有的角色字符串表示 -->
+    <select id="getListRoleSnByUser" parameterType="int" resultType="string">
+        SELECT
+            tr.role_name
+        FROM `pmph_role` tr
+        LEFT JOIN `pmph_user_role` tur ON tr.`id` = tur.role_id
+        LEFT JOIN `pmph_user` tu ON tur.`user_id` = tu.id
+        WHERE tu.`id` = #{uid}
+    </select>
+
+    <!-- 根据用户 id 查询用户所具有的角色对象表示 -->
+    <select id="getListUserRole" parameterType="int" resultType="WriterRole">
+        SELECT
+            tr.`id`,
+            tr.`role_name`
+        FROM `pmph_role` tr
+            LEFT JOIN `pmph_user_role` tur ON tr.`id` = tur.role_id
+            LEFT JOIN `pmph_user` tu ON tur.`user_id` = tu.id
+        WHERE tu.`id` = #{uid}
+    </select>
 </mapper>
