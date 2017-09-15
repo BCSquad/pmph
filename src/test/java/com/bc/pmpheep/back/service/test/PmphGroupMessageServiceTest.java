@@ -36,9 +36,9 @@ public class PmphGroupMessageServiceTest extends BaseTest {
     public void test() throws Exception {
     	Random r =new Random();
     	PmphGroupMessage testPar=new PmphGroupMessage(new Long(r.nextInt(200)), new Long(r.nextInt(200)), "String msgContent", null);  ;
-    	logger.info("---PmphGroupMemberService 测试---------------------------------------------------------------------------------");
+    	logger.info("---PmphGroupMessageService 测试---------------------------------------------------------------------------------");
     	//新增
-    	testService.addPmphGroupMember(testPar);
+    	testService.addPmphGroupMessage(testPar);
     	logger.info(testPar.toString());
     	//修改
     	testPar.setMsgContent(String.valueOf(r.nextInt(200)));
@@ -46,7 +46,7 @@ public class PmphGroupMessageServiceTest extends BaseTest {
     	//删除
     	logger.info(testService.deletePmphGroupMessageById(1L).toString());
     	//查询
-    	//logger.info(testService.getPmphGroupMessageById(2L).toString());
+    	logger.info(testService.getPmphGroupMessageById(2L).toString());
     	
     }
     
