@@ -1,20 +1,24 @@
-package com.bc.pmpheep.back.service;
+package com.bc.pmpheep.back.dao;
 
-import com.bc.pmpheep.back.po.WriterMseeage;
+import org.springframework.stereotype.Repository;
+
+import com.bc.pmpheep.back.po.WriterMessage;
 
 /**
- * WriterMseeageService 接口
- * @author Mryang
+ * WriterMseeage 实体类数据访问层接口
+ * 
+ * @author mryang
  */
-public interface WriterMseeageService {
-	
+@Repository
+public interface WriterMessageDao {
+
 	/**
 	 * 
 	 * @param  WriterMseeage 实体对象
 	 * @return  带主键的WriterMseeage
 	 * @throws Exception 
 	 */
-	WriterMseeage addWriterMseeage (WriterMseeage writerMseeage) throws Exception;
+	WriterMessage addWriterMseeage (WriterMessage writerMseeage) ;
 	
 	/**
 	 * 
@@ -22,7 +26,7 @@ public interface WriterMseeageService {
 	 * @return  WriterMseeage
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	WriterMseeage getWriterMseeageById(WriterMseeage writerMseeage) throws Exception;
+	WriterMessage getWriterMseeageById(WriterMessage writerMseeage)  ;
 	
 	/**
 	 * 
@@ -30,12 +34,12 @@ public interface WriterMseeageService {
 	 * @return  影响行数
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	Integer deleteWriterMseeageById(WriterMseeage writerMseeage) throws Exception;
+	Integer deleteWriterMseeageById(WriterMessage writerMseeage)  ;
 	
 	/**
 	 * @param WriterMseeage
 	 * @return 影响行数
 	 * @throws Exception ，NullPointerException(主键为空)
 	 */
-	Integer updateWriterMseeageById(WriterMseeage writerMseeage) throws Exception;
+	Integer updateWriterMseeageById(WriterMessage writerMseeage)  ;
 }

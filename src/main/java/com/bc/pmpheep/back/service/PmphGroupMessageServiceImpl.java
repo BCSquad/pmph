@@ -2,10 +2,13 @@ package com.bc.pmpheep.back.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphGroupMessageDao;
-import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphGroupMessage;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphGroupMessageService 接口实现
@@ -19,53 +22,57 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 	
 	/**
 	 * 
-	 * @param  PmphGroupMessage 实体对象
+	 * @param  pmphGroupMessage 实体对象
 	 * @return  带主键的 PmphGroupMessage
-	 * @throws Exception 
+	 * @throws CheckedServiceException 
 	 */
 	@Override
-	public PmphGroupMember addPmphGroupMessage (PmphGroupMessage pmphGroupMessage) throws Exception{
-		return pmphGroupMessageDao.addPmphGroupMessage (pmphGroupMessage);
+	public PmphGroupMessage addPmphGroupMessage (PmphGroupMessage pmphGroupMessage) throws CheckedServiceException{
+		if(null==pmphGroupMessage.getMsgContent()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "消息内容为空");
+		}
+		pmphGroupMessageDao.addPmphGroupMessage (pmphGroupMessage);
+		return  pmphGroupMessage;
 	}
 	
 	/**
 	 * 
-	 * @param PmphGroupMessage 必须包含主键ID
+	 * @param id
 	 * @return  PmphGroupMessage
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public PmphGroupMessage getPmphGroupMessageById(PmphGroupMessage pmphGroupMessage) throws Exception{
-		if(null==pmphGroupMessage.getId()){
-			throw new NullPointerException("主键id为空");
+	public PmphGroupMessage getPmphGroupMessageById(Long  id) throws CheckedServiceException{
+		if(null==id){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return pmphGroupMessageDao.getPmphGroupMessageById(pmphGroupMessage);
+		return pmphGroupMessageDao.getPmphGroupMessageById(id);
 	}
 	
 	/**
 	 * 
-	 * @param PmphGroupMessage
+	 * @param id 
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Integer deletePmphGroupMessageById(PmphGroupMessage pmphGroupMessage) throws Exception{
-		if(null==pmphGroupMessage.getId()){
-			throw new NullPointerException("主键id为空");
+	public Integer deletePmphGroupMessageById(Long  id) throws CheckedServiceException{
+		if(null==id){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return pmphGroupMessageDao.deletePmphGroupMessageById(pmphGroupMessage);
+		return pmphGroupMessageDao.deletePmphGroupMessageById(id);
 	}
 	
 	/**
-	 * @param PmphGroupMessage
+	 * @param pmphGroupMessage 
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override 
-	public Integer updatePmphGroupMessageById(PmphGroupMessage pmphGroupMessage) throws Exception{
+	public Integer updatePmphGroupMessage (PmphGroupMessage  pmphGroupMessage) throws CheckedServiceException{
 		if(null==pmphGroupMessage.getId()){
-			throw new NullPointerException("主键id为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return pmphGroupMessageDao.updatePmphGroupMessageById(pmphGroupMessage);
+		return pmphGroupMessageDao.updatePmphGroupMessage(pmphGroupMessage);
 	}
 }

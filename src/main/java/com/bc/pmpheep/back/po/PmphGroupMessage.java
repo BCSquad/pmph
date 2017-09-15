@@ -1,7 +1,9 @@
 package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
+
+
 
 import org.apache.ibatis.type.Alias;
 
@@ -33,9 +35,19 @@ public class PmphGroupMessage implements Serializable {
     /**
      * 创建时间
      */
-    private Date gmtCreate;
+    private Timestamp gmtCreate;
 
-    public PmphGroupMessage(Long groupId, Long memberId, String msgContent, Date gmtCreate) {
+    
+    public PmphGroupMessage(Long id) {
+		super();
+		this.id = id;
+	}
+
+	public PmphGroupMessage() {
+		super();
+	}
+
+	public PmphGroupMessage(Long groupId, Long memberId, String msgContent, Timestamp gmtCreate) {
 	this.groupId = groupId;
 	this.memberId = memberId;
 	this.msgContent = msgContent;
@@ -74,11 +86,11 @@ public class PmphGroupMessage implements Serializable {
 	this.msgContent = msgContent;
     }
 
-    public Date getGmtCreate() {
+    public Timestamp getGmtCreate() {
 	return gmtCreate;
     }
 
-    public void setGmtCreate(Date gmtCreate) {
+    public void setGmtCreate(Timestamp gmtCreate) {
 	this.gmtCreate = gmtCreate;
     }
 

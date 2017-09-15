@@ -4,22 +4,25 @@
 <mapper namespace="com.bc.pmpheep.back.dao.PmphGroupMessageDao">
 
 	<!-- 新增 PmphGroupMessage -->
-    <insert id="addPmphGroupMessage"  parameterType="PmphGroupMessage"  useGeneratedKeys="true" keyProperty="id"  >
+    <insert id="addPmphGroupMessage"  parameterType="PmphGroupMessage"  >
+    	<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句  BEFORE 或 AFTER -->
+          SELECT LAST_INSERT_ID() 
+        </selectKey>
         insert  into  pmph_group_message  (group_id,member_id,msg_content)  values(#{groupId},#{memberId},#{msgContent}) ;
     </insert>
     
    <!-- 根据id删除一个 PmphGroupMessage -->
-	<delete id="deletePmphGroupMessageById" parameterType="PmphGroupMessage"   >
-		delete from  pmph_group_message where where id=#{id} ;
+	<delete id="deletePmphGroupMessageById" parameterType="java.lang.Long"   >
+		delete from  pmph_group_message  where id=#{id} ;
 	</delete>
 	
 	<!-- 更新 PmphGroupMessage -->
-	<update id="updatePmphGroupMessageById"   parameterType="PmphGroupMessage"  >
+	<update id="updatePmphGroupMessage"   parameterType="PmphGroupMessage"  >
 		update pmph_group_message  set  group_id=#{groupId},member_id=#{memberId},msg_content= #{msgContent}   where id=#{id} ;
 	</update>
 	
 	<!-- 根据id查询一个 PmphGroupMessage -->
-	<select  id="getPmphGroupMessageById" parameterType="PmphGroupMessage"  resultType="PmphGroupMessage" >
+	<select  id="getPmphGroupMessageById" parameterType="java.lang.Long"  resultType="PmphGroupMessage" >
 		select * from pmph_group_message where id=#{id} ;
 	</select>
 	
