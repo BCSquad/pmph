@@ -20,56 +20,57 @@ public class WriterMessageServiceImpl extends BaseService implements WriterMessa
 
 	/**
 	 * 
-	 * @param WriterMseeage
+	 * @param WriterMessage
 	 *            实体对象
-	 * @return 带主键的WriterMseeage
+	 * @return 带主键的WriterMessage
 	 * @throws Exception
 	 */
 	@Override
-	public WriterMessage addWriterMseeage(WriterMessage writerMseeage) throws Exception {
-		return writerMessageDao.addWriterMseeage(writerMseeage);
+	public WriterMessage addWriterMessage(WriterMessage writerMessage) throws Exception {
+		writerMessageDao.addWriterMessage(writerMessage);
+		return writerMessage;
 	}
 
 	/**
 	 * 
-	 * @param WriterMseeage
+	 * @param WriterMessage
 	 *            必须包含主键ID
-	 * @return WriterMseeage
+	 * @return WriterMessage
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
 	@Override
-	public WriterMessage getWriterMseeageById(WriterMessage writerMseeage) throws Exception {
-		if (null == writerMseeage.getId()) {
+	public WriterMessage getWriterMessageById(WriterMessage writerMessage) throws Exception {
+		if (null == writerMessage.getId()) {
 			throw new NullPointerException("主键id为空");
 		}
-		return writerMessageDao.getWriterMseeageById(writerMseeage);
+		return writerMessageDao.getWriterMessageById(writerMessage);
 	}
 
 	/**
 	 * 
-	 * @param WriterMseeage
+	 * @param WriterMessage
 	 * @return 影响行数
 	 * @throws Exception，NullPointerException(主键为空)
 	 */
 	@Override
-	public Integer deleteWriterMseeageById(WriterMessage writerMseeage) throws Exception {
-		if (null == writerMseeage.getId()) {
+	public Integer deleteWriterMessageById(WriterMessage writerMessage) throws Exception {
+		if (null == writerMessage.getId()) {
 			throw new NullPointerException("主键id为空");
 		}
-		return writerMessageDao.deleteWriterMseeageById(writerMseeage);
+		return writerMessageDao.deleteWriterMessageById(writerMessage);
 	}
 
 	/**
-	 * @param WriterMseeage
+	 * @param WriterMessage
 	 * @return 影响行数
 	 * @throws Exception
 	 *             ，NullPointerException(主键为空)
 	 */
 	@Override
-	public Integer updateWriterMseeageById(WriterMessage writerMseeage) throws Exception {
-		if (null == writerMseeage.getId()) {
+	public Integer updateWriterMessageById(WriterMessage writerMessage) throws Exception {
+		if (null == writerMessage.getId()) {
 			throw new NullPointerException("主键id为空");
 		}
-		return writerMessageDao.updateWriterMseeageById(writerMseeage);
+		return writerMessageDao.updateWriterMessageById(writerMessage);
 	}
 }
