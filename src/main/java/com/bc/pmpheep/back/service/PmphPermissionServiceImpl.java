@@ -29,7 +29,8 @@ public class PmphPermissionServiceImpl implements PmphPermissionService {
     @Override
     public PmphPermission addPmphPermission(PmphPermission pmphPermission)
     throws CheckedServiceException {
-        return pmphPermissionDao.addPmphPermission(pmphPermission);
+        pmphPermissionDao.addPmphPermission(pmphPermission);
+        return  pmphPermission;
     }
 
     /**
