@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.po.PmphGroupMember;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphGroupMemberService 接口
@@ -10,31 +11,32 @@ public interface PmphGroupMemberService {
 
 	/**
 	 * 
-	 * @param  PmphGroupMember 实体对象
+	 * @param  pmphGroupMember 实体对象
 	 * @return  带主键的 PmphGroupMember
-	 * @throws Exception 
+	 * @throws CheckedServiceException 
 	 */
-	PmphGroupMember addPmphGroupMember (PmphGroupMember pmphGroupMember) throws Exception;
+	PmphGroupMember addPmphGroupMember (PmphGroupMember pmphGroupMember) throws CheckedServiceException;
 	
 	/**
 	 * 
-	 * @param PmphGroupMember 必须包含主键ID
+	 * @param 主键id
 	 * @return  PmphGroupMember
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	PmphGroupMember getPmphGroupMemberById(PmphGroupMember pmphGroupMember) throws Exception;
+	PmphGroupMember getPmphGroupMemberById(Long id) throws CheckedServiceException;
 	
 	/**
 	 * 
-	 * @param PmphGroupMember
+	 * @param 主键id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer deletePmphGroupMemberById(PmphGroupMember pmphGroupMember) throws Exception;
+	Integer deletePmphGroupMemberById(Long id) throws CheckedServiceException;
+	
 	/**
-	 * @param PmphGroupMember
+	 * @param pmphGroupMember
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer updatePmphGroupMemberById(PmphGroupMember pmphGroupMember) throws Exception;
+	Integer updatePmphGroupMember(PmphGroupMember pmphGroupMember) throws CheckedServiceException;
 }

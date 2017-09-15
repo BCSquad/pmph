@@ -4,7 +4,7 @@
 <mapper namespace="com.bc.pmpheep.back.dao.PmphGroupFileDao">
 
 	<!-- 新增 PmphGroupFile -->
-    <insert id="addPmphGroupFile"  parameterType="PmphGroupFile"  useGeneratedKeys="true" keyProperty="id"  >
+    <insert id="addPmphGroupFile"  parameterType="PmphGroupFile"    >
     	<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句  BEFORE 或 AFTER -->
           SELECT LAST_INSERT_ID() 
         </selectKey>
