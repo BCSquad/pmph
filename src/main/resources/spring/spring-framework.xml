@@ -64,7 +64,7 @@
         <property name="basePackage" value="com.bc.pmpheep.back.dao" />
           <!-- 注入 SqlSessionFactory -->
         <!-- 这是推荐配置的项，不要去配置 sqlSessionFactory ，已经被弃用了-->
-        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
     
     <!-- 支持注解方式声明式事务 -->

@@ -1,6 +1,6 @@
 <%-- 
     Document   : index
-    Created on : 2017-8-20, 17:48:18
+    Created on : 2017-9-10, 17:48:18
     Author     : L.X <gugia@qq.com>
 --%>
 
@@ -14,7 +14,7 @@
     </head>
     <body>
         <div>
-            <h2>PMPH E-education Platform</h2>
+            <h2>Welcome to PMPH E-education Platform</h2>
         </div>
         <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
         <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>

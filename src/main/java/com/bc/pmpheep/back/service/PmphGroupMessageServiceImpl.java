@@ -21,10 +21,10 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 	 * 
 	 * @param  PmphGroupMessage 实体对象
 	 * @return  带主键的 PmphGroupMessage
-	 * @throws Exception 
+	 * @throws CheckedServiceException 
 	 */
 	@Override
-	public PmphGroupMember addPmphGroupMessage (PmphGroupMessage pmphGroupMessage) throws Exception{
+	public PmphGroupMember addPmphGroupMessage (PmphGroupMessage pmphGroupMessage) throws CheckedServiceException{
 		return pmphGroupMessageDao.addPmphGroupMessage (pmphGroupMessage);
 	}
 	
@@ -32,10 +32,10 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 	 * 
 	 * @param PmphGroupMessage 必须包含主键ID
 	 * @return  PmphGroupMessage
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public PmphGroupMessage getPmphGroupMessageById(PmphGroupMessage pmphGroupMessage) throws Exception{
+	public PmphGroupMessage getPmphGroupMessageById(PmphGroupMessage pmphGroupMessage) throws CheckedServiceException{
 		if(null==pmphGroupMessage.getId()){
 			throw new NullPointerException("主键id为空");
 		}
@@ -46,10 +46,10 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 	 * 
 	 * @param PmphGroupMessage
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Integer deletePmphGroupMessageById(PmphGroupMessage pmphGroupMessage) throws Exception{
+	public Integer deletePmphGroupMessageById(Long  id) throws CheckedServiceException{
 		if(null==pmphGroupMessage.getId()){
 			throw new NullPointerException("主键id为空");
 		}
@@ -59,10 +59,10 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 	/**
 	 * @param PmphGroupMessage
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override 
-	public Integer updatePmphGroupMessageById(PmphGroupMessage pmphGroupMessage) throws Exception{
+	public Integer updatePmphGroupMessage(PmphGroupMessage pmphGroupMessage) throws CheckedServiceException{
 		if(null==pmphGroupMessage.getId()){
 			throw new NullPointerException("主键id为空");
 		}
