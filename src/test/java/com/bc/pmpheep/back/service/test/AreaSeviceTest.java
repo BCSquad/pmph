@@ -39,8 +39,8 @@ public class AreaSeviceTest extends BaseTest {
     	logger.info("------------------------------------删除-------------------------------------------");
     	logger.info(areaService.deleteAreaById(a).toString());
     	logger.info("-----------------------------------查询-------------------------------------------");
-//    	logger.info(areaService.getAreaById(new Area(6L)).toString());
-        areaService.updateAreaById(a)
+    	logger.info(areaService.getAreaById(new Area(6L)).toString());
+        
     }
     
 }

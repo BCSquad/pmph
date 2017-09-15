@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphGroupDao;
 import com.bc.pmpheep.back.po.PmphGroup;
+import com.bc.pmpheep.back.util.Tools;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphGroupService 接口实现
@@ -21,51 +25,55 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * 
 	 * @param  pmphGroup 实体对象
 	 * @return  带主键的PmphGroup
-	 * @throws Exception 
+	 * @throws CheckedServiceException 
 	 */
 	@Override
-	public PmphGroup addPmphGroup (PmphGroup pmphGroup) throws Exception{
-		return pmphGroupnDao.addPmphGroup(pmphGroup);
+	public PmphGroup addPmphGroup (PmphGroup pmphGroup) throws CheckedServiceException{
+		if(Tools.isEmpty(pmphGroup.getGroupName())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "小组名称为空不允许新增");
+		}
+		pmphGroupnDao.addPmphGroup(pmphGroup);
+		return pmphGroup;
 	}
 	
 	/**
 	 * 
-	 * @param PmphGroup 必须包含主键ID
+	 * @param id 主键ID
 	 * @return  PmphGroup
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public PmphGroup getPmphGroupById(PmphGroup pmphGroup) throws Exception{
-		if(null==pmphGroup.getId()){
-			throw new NullPointerException("主键id为空");
+	public PmphGroup getPmphGroupById(Long  id) throws CheckedServiceException{
+		if(null==id){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return pmphGroupnDao.getPmphGroupById(pmphGroup);
+		return pmphGroupnDao.getPmphGroupById(id);
 	}
 	
 	/**
 	 * 
 	 * @param PmphGroup
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Integer deletePmphGroupById(PmphGroup pmphGroup) throws Exception{
-		if(null==pmphGroup.getId()){
-			throw new NullPointerException("主键id为空");
+	public Integer deletePmphGroupById(Long  id) throws CheckedServiceException{
+		if(null==id){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return pmphGroupnDao.deletePmphGroupById(pmphGroup);
+		return pmphGroupnDao.deletePmphGroupById(id);
 	}
 	
 	/**
-	 * @param PmphGroup
+	 * @param PmphGroup 
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override 
-	public Integer updatePmphGroupById(PmphGroup pmphGroup) throws Exception{
+	public Integer updatePmphGroup(PmphGroup pmphGroup) throws CheckedServiceException{
 		if(null==pmphGroup.getId()){
-			throw new NullPointerException("主键id为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return pmphGroupnDao.updatePmphGroupById(pmphGroup);
+		return pmphGroupnDao.updatePmphGroup(pmphGroup);
 	}
 }
