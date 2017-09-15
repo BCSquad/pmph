@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphPermissionDao;
 import com.bc.pmpheep.back.po.PmphPermission;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphPermissionService 接口实现
@@ -24,10 +25,11 @@ public class PmphPermissionServiceImpl extends BaseService implements PmphPermis
      * 
      * @param PmphPermission 实体对象
      * @return 带主键的PmphPermission
-     * @throws Exception
+     * @throws CheckedServiceException
      */
     @Override
-    public PmphPermission addPmphPermission(PmphPermission pmphPermission) throws Exception {
+    public PmphPermission addPmphPermission(PmphPermission pmphPermission)
+    throws CheckedServiceException {
         return pmphPermissionDao.addPmphPermission(pmphPermission);
     }
 
@@ -35,10 +37,11 @@ public class PmphPermissionServiceImpl extends BaseService implements PmphPermis
      * 
      * @param PmphPermission 必须包含主键ID
      * @return PmphPermission
-     * @throws Exception，NullPointerException(主键为空)
+     * @throws CheckedServiceException，NullPointerException(主键为空)
      */
     @Override
-    public PmphPermission getPmphPermissionById(PmphPermission pmphPermission) throws Exception {
+    public PmphPermission getPmphPermissionById(PmphPermission pmphPermission)
+    throws CheckedServiceException {
         if (null == pmphPermission.getId()) {
             throw new NullPointerException("主键id为空");
         }
@@ -49,10 +52,11 @@ public class PmphPermissionServiceImpl extends BaseService implements PmphPermis
      * 
      * @param PmphPermission
      * @return 影响行数
-     * @throws Exception，NullPointerException(主键为空)
+     * @throws CheckedServiceException，NullPointerException(主键为空)
      */
     @Override
-    public Integer deletePmphPermissionById(PmphPermission pmphPermission) throws Exception {
+    public Integer deletePmphPermissionById(PmphPermission pmphPermission)
+    throws CheckedServiceException {
         if (null == pmphPermission.getId()) {
             throw new NullPointerException("主键id为空");
         }
@@ -62,10 +66,11 @@ public class PmphPermissionServiceImpl extends BaseService implements PmphPermis
     /**
      * @param PmphPermission
      * @return 影响行数
-     * @throws Exception ，NullPointerException(主键为空)
+     * @throws CheckedServiceException ，NullPointerException(主键为空)
      */
     @Override
-    public Integer updatePmphPermissionById(PmphPermission pmphPermission) throws Exception {
+    public Integer updatePmphPermissionById(PmphPermission pmphPermission)
+    throws CheckedServiceException {
         if (null == pmphPermission.getId()) {
             throw new NullPointerException("主键id为空");
         }
@@ -73,17 +78,17 @@ public class PmphPermissionServiceImpl extends BaseService implements PmphPermis
     }
 
     @Override
-    public Integer delete(int id) throws Exception {
+    public Integer delete(int id) throws CheckedServiceException {
         return pmphPermissionDao.delete(id);
     }
 
     @Override
-    public PmphPermission get(int id) throws Exception {
+    public PmphPermission get(int id) throws CheckedServiceException {
         return pmphPermissionDao.get(id);
     }
 
     @Override
-    public List<PmphPermission> getListResource() throws Exception {
+    public List<PmphPermission> getListResource() throws CheckedServiceException {
         return pmphPermissionDao.getListResource();
     }
 }

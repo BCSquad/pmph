@@ -54,31 +54,6 @@
         VALUES
         	(<include refid="value"/>);	
     </insert>
-		<selectKey resultType="java.lang.Long" order="AFTER"
-			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
-			SELECT LAST_INSERT_ID()
-		</selectKey>
-		INSERT INTO writer_role
-		(
-		`role_name`,
-		is_disabled,
-		note,
-		sort,
-		gmt_create,
-		gmt_update
-		)
-		VALUES
-		(
-		#{roleName,jdbcType=VARCHAR},
-		#{isDisabled,jdbcType=TINYINT},
-		#{note,jdbcType=VARCHAR},
-		#{sort,jdbcType=INTEGER},
-		#{gmtCreate,jdbcType=TIMESTAMP},
-		#{gmtUpdate,jdbcType=TIMESTAMP}
-		)
-	</insert>
->>>>>>> branch 'develop' of https://github.com/BCSquad/pmph.git
-
 	<delete id="delete" parameterType="int">
 		DELETE FROM writer_role
 		WHERE

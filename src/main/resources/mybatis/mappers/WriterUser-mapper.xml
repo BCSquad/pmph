@@ -391,7 +391,7 @@
         WHERE tu.`id` = #{uid}
     </select>
     
-	<!-- 	<!-- 新增一个作家用户
+	<!-- 	 新增一个作家用户
 	<insert id="addWriterUser" parameterType="WriterUser">
 		insert into writer_user
 		(username,password, is_disabled,org_id, realname, sex, birthday,

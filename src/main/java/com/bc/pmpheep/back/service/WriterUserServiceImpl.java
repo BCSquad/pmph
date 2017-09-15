@@ -15,6 +15,7 @@ import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * WriterUserService 实现
@@ -37,7 +38,7 @@ public class WriterUserServiceImpl extends BaseService implements WriterUserServ
      * @return
      */
     @Override
-    public WriterUser add(WriterUser user) throws Exception {
+    public WriterUser add(WriterUser user) throws CheckedServiceException {
         // 使用用户名作为盐值，MD5 算法加密
         user.setPassword(ShiroKit.md5(user.getPassword(), user.getUsername()));
         userDao.add(user);
@@ -52,7 +53,7 @@ public class WriterUserServiceImpl extends BaseService implements WriterUserServ
      */
     @Transactional
     @Override
-    public WriterUser add(WriterUser user, List<Integer> rids) throws Exception {
+    public WriterUser add(WriterUser user, List<Integer> rids) throws CheckedServiceException {
         Long userId = this.add(user).getId();
         String uid = String.valueOf(userId);
         roleDao.addUserRoles(Integer.valueOf(uid), rids);
@@ -65,7 +66,7 @@ public class WriterUserServiceImpl extends BaseService implements WriterUserServ
      * @param id
      */
     @Override
-    public void delete(int id) throws Exception {
+    public void delete(int id) throws CheckedServiceException {
         if (id == 1) {
             throw new RuntimeException("不能删除管理员用户");
         }
@@ -74,7 +75,7 @@ public class WriterUserServiceImpl extends BaseService implements WriterUserServ
 
     @Override
     @Transactional
-    public void deleteUserAndRole(List<Integer> ids) throws Exception {
+    public void deleteUserAndRole(List<Integer> ids) throws CheckedServiceException {
         if (ids.contains(1)) {
             throw new RuntimeException("不能删除管理员用户");
         }
@@ -96,7 +97,7 @@ public class WriterUserServiceImpl extends BaseService implements WriterUserServ
      */
     @Transactional
     @Override
-    public WriterUser update(WriterUser user, List<Integer> rids) throws Exception {
+    public WriterUser update(WriterUser user, List<Integer> rids) throws CheckedServiceException {
         Long userId = user.getId();
         String uid = String.valueOf(userId);
         roleDao.deleteUserRoles(Integer.valueOf(uid));
@@ -112,7 +113,7 @@ public class WriterUserServiceImpl extends BaseService implements WriterUserServ
      * @return
      */
     @Override
-    public WriterUser update(WriterUser user) throws Exception {
+    public WriterUser update(WriterUser user) throws CheckedServiceException {
         String password = user.getPassword();
         if (password != null) {
             user.setPassword(ShiroKit.md5(user.getPassword(), user.getUsername()));
@@ -128,7 +129,7 @@ public class WriterUserServiceImpl extends BaseService implements WriterUserServ
      * @return
      */
     @Override
-    public WriterUser get(int id) throws Exception {
+    public WriterUser get(int id) throws CheckedServiceException {
         return userDao.get(id);
     }
 
@@ -139,7 +140,7 @@ public class WriterUserServiceImpl extends BaseService implements WriterUserServ
      * @return
      */
     @Override
-    public WriterUser getByUsername(String username) throws Exception {
+    public WriterUser getByUsername(String username) throws CheckedServiceException {
         return userDao.getByUserName(username);
     }
 
@@ -151,7 +152,7 @@ public class WriterUserServiceImpl extends BaseService implements WriterUserServ
      * @return
      */
     @Override
-    public WriterUser login(String username, String password) throws Exception {
+    public WriterUser login(String username, String password) throws CheckedServiceException {
         WriterUser user = userDao.getByUserName(username);
         // 密码匹配的工作交给 Shiro 去完成
         if (user == null) {
@@ -169,7 +170,7 @@ public class WriterUserServiceImpl extends BaseService implements WriterUserServ
      * @return
      */
     @Override
-    public List<WriterUser> getList() throws Exception {
+    public List<WriterUser> getList() throws CheckedServiceException {
         return userDao.getListUser();
     }
 
@@ -180,7 +181,7 @@ public class WriterUserServiceImpl extends BaseService implements WriterUserServ
      * @return
      */
     @Override
-    public List<WriterUser> getListByRole(int id) throws Exception {
+    public List<WriterUser> getListByRole(int id) throws CheckedServiceException {
         return userDao.getListByRole(id);
     }
 
@@ -191,7 +192,7 @@ public class WriterUserServiceImpl extends BaseService implements WriterUserServ
      * @return
      */
     @Override
-    public List<WriterPermission> getListAllResource(int uid) throws Exception {
+    public List<WriterPermission> getListAllResource(int uid) throws CheckedServiceException {
         return userDao.getListAllResources(uid);
     }
 
@@ -202,7 +203,7 @@ public class WriterUserServiceImpl extends BaseService implements WriterUserServ
      * @return
      */
     @Override
-    public List<String> getListRoleSnByUser(int uid) throws Exception {
+    public List<String> getListRoleSnByUser(int uid) throws CheckedServiceException {
         return userDao.getListRoleSnByUser(uid);
     }
 
@@ -213,7 +214,7 @@ public class WriterUserServiceImpl extends BaseService implements WriterUserServ
      * @return
      */
     @Override
-    public List<WriterRole> getListUserRole(int uid) throws Exception {
+    public List<WriterRole> getListUserRole(int uid) throws CheckedServiceException {
         return userDao.getListUserRole(uid);
     }
 

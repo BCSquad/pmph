@@ -12,6 +12,7 @@ import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterRolePermission;
 import com.bc.pmpheep.back.po.WriterUserRole;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * WriterRoleService 实现
@@ -22,96 +23,97 @@ import com.bc.pmpheep.back.po.WriterUserRole;
 @Service
 public class WriterRoleServiceImpl extends BaseService implements WriterRoleService {
 
-	@Autowired
-	WriterRoleDao roleDao;
+    @Autowired
+    WriterRoleDao roleDao;
 
-	@Override
-	public WriterRole add(WriterRole writerRole) throws Exception {
-		roleDao.add(writerRole);
-		return writerRole;
-	}
+    @Override
+    public WriterRole add(WriterRole writerRole) throws CheckedServiceException {
+        roleDao.add(writerRole);
+        return writerRole;
+    }
 
-	@Override
-	public Integer delete(int id) throws Exception {
-		return roleDao.delete(id);
-	}
+    @Override
+    public Integer delete(int id) throws CheckedServiceException {
+        return roleDao.delete(id);
+    }
 
-	@Transactional
-	@Override
-	public void deleteRoleAndResource(List<Integer> ids) throws Exception {
-		roleDao.batchDelete(ids);
-		roleDao.batchDeleteRoleResource(ids);
+    @Transactional
+    @Override
+    public void deleteRoleAndResource(List<Integer> ids) throws CheckedServiceException {
+        roleDao.batchDelete(ids);
+        roleDao.batchDeleteRoleResource(ids);
 
-	}
+    }
 
-	@Override
-	public WriterRole get(int id) throws Exception {
-		return roleDao.get(id);
-	}
+    @Override
+    public WriterRole get(int id) throws CheckedServiceException {
+        return roleDao.get(id);
+    }
 
-	@Override
-	public List<WriterRole> getList() throws Exception {
-		return roleDao.getListRole();
-	}
+    @Override
+    public List<WriterRole> getList() throws CheckedServiceException {
+        return roleDao.getListRole();
+    }
 
-	@Override
-	public Integer update(WriterRole role) throws Exception {
-		return roleDao.update(role);
-	}
+    @Override
+    public Integer update(WriterRole role) throws CheckedServiceException {
+        return roleDao.update(role);
+    }
 
-	@Override
-	public List<WriterRole> getListRole() throws Exception {
-		return roleDao.getListRole();
-	}
+    @Override
+    public List<WriterRole> getListRole() throws CheckedServiceException {
+        return roleDao.getListRole();
+    }
 
-	@Override
-	public WriterUserRole getUserRole(int uid, int roleId) throws Exception {
-		return roleDao.getUserRole(uid, roleId);
-	}
+    @Override
+    public WriterUserRole getUserRole(int uid, int roleId) throws CheckedServiceException {
+        return roleDao.getUserRole(uid, roleId);
+    }
 
-	@Override
-	public void addUserRole(int uid, int roleId) throws Exception {
-		roleDao.addUserRole(uid, roleId);
+    @Override
+    public void addUserRole(int uid, int roleId) throws CheckedServiceException {
+        roleDao.addUserRole(uid, roleId);
 
-	}
+    }
 
-	@Override
-	public void deleteUserRole(int uid, int roleId) throws Exception {
-		roleDao.deleteUserRole(uid, roleId);
+    @Override
+    public void deleteUserRole(int uid, int roleId) throws CheckedServiceException {
+        roleDao.deleteUserRole(uid, roleId);
 
-	}
+    }
 
-	@Override
-	public void deleteUserRoles(int uid) throws Exception {
-		roleDao.deleteUserRoles(uid);
+    @Override
+    public void deleteUserRoles(int uid) throws CheckedServiceException {
+        roleDao.deleteUserRoles(uid);
 
-	}
+    }
 
-	@Override
-	public List<WriterPermission> getListRoleResource(int roleId) throws Exception {
-		return roleDao.getListRoleResource(roleId);
-	}
+    @Override
+    public List<WriterPermission> getListRoleResource(int roleId) throws CheckedServiceException {
+        return roleDao.getListRoleResource(roleId);
+    }
 
-	@Override
-	public void addRoleResource(int roleId, int resId) throws Exception {
-		roleDao.addRoleResource(roleId, resId);
+    @Override
+    public void addRoleResource(int roleId, int resId) throws CheckedServiceException {
+        roleDao.addRoleResource(roleId, resId);
 
-	}
+    }
 
-	@Override
-	public void deleteRoleResource(int roleId, int resId) throws Exception {
-		roleDao.deleteRoleResource(roleId, resId);
+    @Override
+    public void deleteRoleResource(int roleId, int resId) throws CheckedServiceException {
+        roleDao.deleteRoleResource(roleId, resId);
 
-	}
+    }
 
-	@Override
-	public WriterRolePermission getResourceRole(int roleId, int resId) throws Exception {
-		return roleDao.getResourceRole(roleId, resId);
-	}
+    @Override
+    public WriterRolePermission getResourceRole(int roleId, int resId)
+    throws CheckedServiceException {
+        return roleDao.getResourceRole(roleId, resId);
+    }
 
-	@Override
-	public Integer deleteRoleAndUser(List<Integer> ids) throws Exception {
-		return roleDao.deleteRoleAndUser(ids);
-	}
+    @Override
+    public Integer deleteRoleAndUser(List<Integer> ids) throws CheckedServiceException {
+        return roleDao.deleteRoleAndUser(ids);
+    }
 
 }
