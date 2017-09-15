@@ -19,7 +19,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	
 	/**
 	 * 
-	 * @param  PmphGroup 实体对象
+	 * @param  pmphGroup 实体对象
 	 * @return  带主键的PmphGroup
 	 * @throws Exception 
 	 */

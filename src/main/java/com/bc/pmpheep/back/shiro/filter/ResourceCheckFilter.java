@@ -11,12 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
+ * xx
  * @author Administrator
- * 
+ *
  */
 public class ResourceCheckFilter extends AccessControlFilter {
-    private String              errorUrl;
+
+    private String errorUrl;
     private static final Logger logger = LoggerFactory.getLogger(ResourceCheckFilter.class);
 
     public String getErrorUrl() {
@@ -29,7 +30,7 @@ public class ResourceCheckFilter extends AccessControlFilter {
 
     /**
      * 表示是否允许访问 ，如果允许访问返回true，否则false；
-     * 
+     *
      * @param servletRequest
      * @param servletResponse
      * @param o 表示写在拦截器中括号里面的字符串 mappedValue 就是 [urls] 配置中拦截器参数部分
@@ -38,7 +39,7 @@ public class ResourceCheckFilter extends AccessControlFilter {
      */
     @Override
     protected boolean isAccessAllowed(ServletRequest servletRequest,
-    ServletResponse servletResponse, Object o) throws Exception {
+            ServletResponse servletResponse, Object o) throws Exception {
         Subject subject = getSubject(servletRequest, servletResponse);
         String url = getPathWithinApplication(servletRequest);
         logger.debug("当前用户正在访问的 url => " + url);
@@ -47,7 +48,7 @@ public class ResourceCheckFilter extends AccessControlFilter {
 
     /**
      * onAccessDenied：表示当访问拒绝时是否已经处理了；如果返回 true 表示需要继续处理；如果返回 false 表示该拦截器实例已经处理了，将直接返回即可。
-     * 
+     *
      * @param servletRequest
      * @param servletResponse
      * @return
@@ -55,7 +56,7 @@ public class ResourceCheckFilter extends AccessControlFilter {
      */
     @Override
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse)
-    throws Exception {
+            throws Exception {
         logger.debug("当 isAccessAllowed 返回 false 的时候，才会执行 method onAccessDenied ");
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;

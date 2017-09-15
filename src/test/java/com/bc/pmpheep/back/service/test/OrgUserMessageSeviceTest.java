@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.servicetest;
+package com.bc.pmpheep.back.service.test;
 import javax.annotation.Resource;
 
 import org.junit.Test;
