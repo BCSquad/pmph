@@ -2,41 +2,99 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bc.pmpheep.back.dao.PmphUserDao">
-	<insert id="add" parameterType="WriterUser" useGeneratedKeys="true" keyProperty="id">
+	<sql id="key">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="username!=null">
+                username,
+            </if>
+            <if test="password!=null">
+                password,
+            </if>
+            <if test="isDisabled!=null">
+                is_disabled,
+            </if>
+             <if test="realname!=null">
+                realname,
+            </if>
+             <if test="departmentId!=null">
+                department_id,
+            </if>
+             <if test="handphone!=null">
+                handphone,
+            </if>
+             <if test="email!=null">
+                email,
+            </if>
+             <if test="note!=null">
+                note,
+            </if>
+             <if test="sort!=null">
+                sort,
+            </if>
+             <if test="isDeleted!=null">
+                is_deleted,
+            </if>
+             <if test="gmtCreate!=null">
+                gmt_create,
+            </if> 
+            <if test="gmtUpdate!=null">
+                gmt_update,
+            </if>
+        </trim>
+    </sql>
+    <!-- sql片段对应?,id属性值任意 -->
+    <sql id="value">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="username!=null">
+                #{username},
+            </if>
+            <if test="password!=null">
+               #{password},
+            </if>
+            <if test="isDisabled!=null">
+               #{isDisabled},
+            </if>
+             <if test="realname!=null">
+                #{realname},
+            </if>
+             <if test="departmentId!=null">
+                #{departmentId},
+            </if>
+             <if test="handphone!=null">
+              #{handphone},
+            </if>
+             <if test="email!=null">
+                #{email},
+            </if>
+             <if test="note!=null">
+               #{note},
+            </if>
+             <if test="sort!=null">
+                #{sort},
+            </if>
+             <if test="isDeleted!=null">
+               #{isDeleted},
+            </if>
+             <if test="gmtCreate!=null">
+               #{gmtCreate},
+            </if> 
+            <if test="gmtUpdate!=null">
+                #{gmtUpdate},
+            </if>
+        </trim>
+    </sql>
+	<insert id="add" parameterType="PmphUser" useGeneratedKeys="true" keyProperty="id">
+		<!-- sql片段对应字段名,id属性值任意 -->
          INSERT INTO pmph_user
-        (
-        	username,
-        	`password`,
-        	is_disabled,
-        	`realname`,
-        	department_id,
-        	handphone,
-        	email,
-        	note,
-        	sort,
-        	is_deleted,
-        	gmt_create,
-        	gmt_update
-        )
+        	(<include refid="key"/>)
         VALUES
-        (
-        	#{username,jdbcType=VARCHAR},
-        	#{password,jdbcType=VARCHAR},
-        	#{isDisabled,jdbcType=VARCHAR},
-        	#{realname,jdbcType=VARCHAR},
-        	#{departmentId,jdbcType=BIGINT},
-        	#{handphone,jdbcType=VARCHAR},
-        	#{email,jdbcType=VARCHAR},
-        	#{note,jdbcType=VARCHAR},
-        	#{sort,jdbcType=TINYINT},
-        	#{isDeleted,jdbcType=TINYINT},
-        	#{gmtCreate,jdbcType=TIMESTAMP},
-        	#{gmtUpdate,jdbcType=TIMESTAMP}
-        );
+        	(<include refid="value"/>);
     </insert>
 
     <!-- 动态更新对象的写法 -->
-    <update id="update" parameterType="WriterUser">
+    <update id="update" parameterType="PmphUser">
         UPDATE pmph_user
         <set>
             <if test="username != null and username!=''">
@@ -88,7 +146,7 @@
         </foreach>
     </delete>
 
-    <select id="get" parameterType="int" resultType="WriterUser">
+    <select id="get" parameterType="int" resultType="PmphUser">
         SELECT
            *
         FROM
@@ -97,14 +155,14 @@
             id = #{id}
     </select>
 
-    <select id="getListUser" resultType="WriterUser">
+    <select id="getListUser" resultType="PmphUser">
         SELECT
             *
         FROM
             pmph_user
     </select>
 
-    <select id="getByUserName" parameterType="string" resultType="WriterUser">
+    <select id="getByUserName" parameterType="string" resultType="PmphUser">
         SELECT
             *
         FROM
@@ -113,7 +171,7 @@
             username = #{username}
     </select>
 
-    <select id="getListByRole" parameterType="int" resultType="WriterUser">
+    <select id="getListByRole" parameterType="int" resultType="PmphUser">
         SELECT
             tu.id,
             tu.username,
@@ -128,7 +186,7 @@
     </select>
 
     <!-- 根据用户 id 查询这个用户拥有的所有资源（这里的资源就代表权限） -->
-    <select id="getListAllResources" resultType="WriterPermission" parameterType="int">
+    <select id="getListAllResources" resultType="PmphPermission" parameterType="int">
         SELECT 
         	tr.`id`,
         	tr.`parent_id`,
@@ -153,7 +211,7 @@
     </select>
 
     <!-- 根据用户 id 查询用户所具有的角色对象表示 -->
-    <select id="getListUserRole" parameterType="int" resultType="WriterRole">
+    <select id="getListUserRole" parameterType="int" resultType="PmphRole">
         SELECT
             tr.`id`,
             tr.`role_name`
