@@ -60,7 +60,7 @@ public class WriterUserMessageServiceTest extends BaseTest {
 		writerUserMessage.setMsgId(123L);
 		writerUserMessage.setUserId(1L);
 		WriterUserMessage writerUserMessage2 = new WriterUserMessage();
-		writerUserMessage2.setIsDelete(true);
+		writerUserMessage2.setIsDeleted(true);
 		writerUserMessage2.setMsgId(321L);
 		writerUserMessage2.setUserId(2L);
 		try {

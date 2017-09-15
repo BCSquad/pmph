@@ -10,19 +10,33 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		insert into writer_user_message (msg_id, user_id,is_read, is_deleted)
-		values(#{msgId},#{userId},#{isRead},#{isDelete}) ;
+		values(#{msgId,jdbcType=BIGINT},#{userId,jdbcType=BIGINT},#{isRead,jdbcType=TINYINT},#{isDelete,jdbcType=TINYINT})
+		;
 	</insert>
 
 	<!-- 根据id删除一个 WriterUserMessage -->
 	<delete id="deleteWriterUserMessageById" parameterType="WriterUserMessage">
-		delete from writer_user_message where id=#{id} ;
+		delete
+		from writer_user_message where id=#{id} ;
 	</delete>
 
 	<!-- 更新 WriterUserMessage -->
 	<update id="updateWriterUserMessageById" parameterType="WriterUserMessage">
 		update writer_user_message
-		set msg_id=#{msgId}, user_id=#{userId},is_read=#{isRead}, is_deleted=
-		#{isDelete}
+		<set>
+			<if test="msgId !=null and msgId!='' ">
+				msg_id=#{msgId},
+			</if>
+			<if test="userId!=null and userId!=''">
+				user_id=#{userId},
+			</if>
+			<if test="isRead!=null">
+				is_read=#{isRead},
+			</if>
+			<if test="isDeleted!=null">
+				is_deleted=#{isDeleted}
+			</if>
+		</set>
 		where id=#{id} ;
 	</update>
 
