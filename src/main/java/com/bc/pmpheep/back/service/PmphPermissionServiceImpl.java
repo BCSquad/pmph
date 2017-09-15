@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphPermissionDao;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -17,7 +16,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  */
 @Service
-public class PmphPermissionServiceImpl extends BaseService implements PmphPermissionService {
+public class PmphPermissionServiceImpl implements PmphPermissionService {
     @Autowired
     private PmphPermissionDao pmphPermissionDao;
 

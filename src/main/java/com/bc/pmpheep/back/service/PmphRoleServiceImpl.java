@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
@@ -21,7 +20,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  */
 @Service
-public class PmphRoleServiceImpl extends BaseService implements PmphRoleService {
+public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Autowired
     PmphRoleDao roleDao;

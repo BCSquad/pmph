@@ -3,7 +3,6 @@ package com.bc.pmpheep.back.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphRolePermissionDao;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphRolePermission;
@@ -16,7 +15,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  */
 @Service
-public class PmphRolePermissionServiceImpl extends BaseService implements PmphRolePermissionService {
+public class PmphRolePermissionServiceImpl implements PmphRolePermissionService {
     @Autowired
     private PmphRolePermissionDao pmphRolePermissionDao;
 

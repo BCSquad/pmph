@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.WriterPermissionDao;
 import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -17,7 +16,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  */
 @Service
-public class WriterPermissionServiceImpl extends BaseService implements WriterPermissionService {
+public class WriterPermissionServiceImpl implements WriterPermissionService {
 
     @Autowired
     WriterPermissionDao writerPermissionDao;

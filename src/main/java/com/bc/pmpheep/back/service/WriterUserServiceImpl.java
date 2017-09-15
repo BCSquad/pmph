@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.WriterRoleDao;
 import com.bc.pmpheep.back.dao.WriterUserDao;
 import com.bc.pmpheep.back.po.WriterPermission;
@@ -24,7 +23,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  */
 @Service
-public class WriterUserServiceImpl extends BaseService implements WriterUserService {
+public class WriterUserServiceImpl implements WriterUserService {
 
     @Autowired
     WriterUserDao userDao;
