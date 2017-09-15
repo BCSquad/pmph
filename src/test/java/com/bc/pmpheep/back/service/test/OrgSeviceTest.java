@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.servicetest;
+package com.bc.pmpheep.back.service.test;
 
 import javax.annotation.Resource;
 import org.junit.Test;
@@ -25,9 +25,10 @@ public class OrgSeviceTest extends BaseTest {
     @Transactional  
     @Rollback(false) 
     public void addArea() throws Exception {
+        l.info("---Org---以下测试什么内容，是怎么考虑的-----------");
     	Org a=new Org(5L,"测试", 4L, 4L,"ZHANGS", "1234", "BEIZHU", 4, false, null, null);
     	orgService.addOrg(a);
-    	l.info("---Org--------------------------------新增--------------------------------------------");
+    	l.debug("---Org--------------------------------新增--------------------------------------------");
     	l.info(a.toString());
     	l.info("---Org---------------------------------修改-------------------------------------------");
     	a.setOrgName("ceshiwwwwwwww"+a.getId());

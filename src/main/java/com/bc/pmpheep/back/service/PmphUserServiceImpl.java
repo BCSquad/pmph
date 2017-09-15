@@ -15,12 +15,15 @@ import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphUserService 实现
- * 
+ *
  * @author 曾庆峰
- * 
+ *
  */
 @Service
 public class PmphUserServiceImpl extends BaseService implements PmphUserService {
@@ -32,12 +35,21 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
 
     /**
      * 返回新插入用户数据的主键
-     * 
+     *
      * @param user
      * @return
      */
     @Override
-    public PmphUser add(PmphUser user) throws Exception {
+    public PmphUser add(PmphUser user) throws CheckedServiceException {
+        if(null == user.getUsername()){
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT, CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止新增用户");
+        }
+        if(null == user.getPassword()){
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT, CheckedExceptionResult.NULL_PARAM, "密码为空时禁止新增用户");
+        }
+        if(null == user.getRealname()){
+            user.setRealname(user.getUsername());
+        }
         // 使用用户名作为盐值，MD5 算法加密
         user.setPassword(ShiroKit.md5(user.getPassword(), user.getUsername()));
         userDao.add(user);
@@ -46,7 +58,7 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
 
     /**
      * 为单个用户设置多个角色
-     * 
+     *
      * @param user
      * @param rids
      */
@@ -61,7 +73,7 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
 
     /**
      * 根据 user_id 删除用户数据
-     * 
+     *
      * @param id
      */
     @Override
@@ -89,9 +101,9 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
     }
 
     /**
-     * 
+     *
      * 更新用户数据 1、更新用户基本信息 2、更新用户所属角色 （1）先删除所有的角色 （2）再添加绑定的角色
-     * 
+     *
      * @param user
      * @param rids
      */
@@ -108,7 +120,7 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
 
     /**
      * 更新单个用户信息
-     * 
+     *
      * @param user
      * @return
      */
@@ -124,7 +136,7 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
 
     /**
      * 根据主键 id 加载用户对象
-     * 
+     *
      * @param id
      * @return
      */
@@ -135,7 +147,7 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
 
     /**
      * 根据用户名加载用户对象（用于登录使用）
-     * 
+     *
      * @param username
      * @return
      */
@@ -146,7 +158,7 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
 
     /**
      * 登录逻辑 1、先根据用户名查询用户对象 2、如果有用户对象，则继续匹配密码 如果没有用户对象，则抛出异常
-     * 
+     *
      * @param username
      * @param password
      * @return
@@ -166,7 +178,7 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
 
     /**
      * 查询所有的用户对象列表
-     * 
+     *
      * @return
      */
     @Override
@@ -176,7 +188,7 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
 
     /**
      * 根据角色 id 查询是这个角色的所有用户
-     * 
+     *
      * @param id
      * @return
      */
@@ -187,7 +199,7 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
 
     /**
      * 查询指定用户 id 所拥有的权限
-     * 
+     *
      * @param uid
      * @return
      */
@@ -198,7 +210,7 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
 
     /**
      * 查询指定用户所指定的角色字符串列表
-     * 
+     *
      * @param uid
      * @return
      */
@@ -209,7 +221,7 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
 
     /**
      * 查询指定用户所绑定的角色列表
-     * 
+     *
      * @param uid
      * @return
      */
