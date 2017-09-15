@@ -10,7 +10,7 @@ public interface  OrgTypeDao {
 	
 	/**
 	 * 
-	 * @param OrgType 实体对象
+	 * @param orgType 实体对象
 	 * @return  影响行数
 	 * @throws Exception 
 	 */

@@ -13,32 +13,29 @@ import com.bc.pmpheep.back.po.PmphGroup;
 public interface PmphGroupDao {
 	/**
 	 * 
-	 * @param  PmphGroup 实体对象
-	 * @return  带主键的PmphGroup
-	 * @throws Exception 
+	 * @param  pmphGroup 实体对象
+	 * @return   影响行数
 	 */
-	PmphGroup addPmphGroup (PmphGroup pmphGroup) ;
+	Integer addPmphGroup (PmphGroup pmphGroup) ;
 	
 	/**
 	 * 
-	 * @param PmphGroup 必须包含主键ID
+	 * @param id 主键ID
 	 * @return  PmphGroup
-	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	PmphGroup getPmphGroupById(PmphGroup pmphGroup) ;
+	PmphGroup getPmphGroupById(Long  id) ;
 	
 	/**
 	 * 
-	 * @param PmphGroup
+	 * @param id 主键ID
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	Integer deletePmphGroupById(PmphGroup pmphGroup) ;
+	Integer deletePmphGroupById(Long  id) ;
 	
 	/**
-	 * @param PmphGroup
+	 * PmphGroup全字段更新
+	 * @param pmphGroup 必须包含主键
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
 	 */
-	Integer updatePmphGroupById(PmphGroup pmphGroup) ;
+	Integer updatePmphGroup(PmphGroup pmphGroup) ;
 }

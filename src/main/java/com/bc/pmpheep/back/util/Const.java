@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
  * 
  */
 public class Const {
+	public static final boolean      ISROLLBACK                 = false;                                                           //单元测试数据是否回滚 
     public static final String       WEB_PROJECT_NAME           = "PMPH_IMESP";
     public static final String       SESSION_SECURITY_CODE      = "sessionSecCode";
     public static final String       SESSION_USER               = "sessionUser";

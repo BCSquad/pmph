@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.servicetest;
+package com.bc.pmpheep.back.service.test;
 import java.util.Random;
 
 import javax.annotation.Resource;
@@ -42,8 +42,7 @@ public class OrgUserSeviceTest extends BaseTest {
     	l.info(testService.deleteOrgUserById(a).toString());
     	l.info("---OrgUser--------------------------------查询-------------------------------------------");
     	l.info(testService.getOrgUserById(new OrgUser(4L)).toString());
-    }
-    
+    }    
 }
 
 

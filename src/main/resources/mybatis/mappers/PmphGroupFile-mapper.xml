@@ -4,25 +4,38 @@
 <mapper namespace="com.bc.pmpheep.back.dao.PmphGroupFileDao">
 
 	<!-- 新增 PmphGroupFile -->
-    <insert id="addPmphGroupFile"  parameterType="PmphGroupFile"  useGeneratedKeys="true" keyProperty="id"  >
-     	insert  into  pmph_group_file (group_id,member_id,file_id,   file_name,download) 
-                     	       values(#{groupId},#{memberId},#{fileId},#{fileName},#{download}) ;
+    <insert id="addPmphGroupFile"  parameterType="PmphGroupFile"    >
+    	<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句  BEFORE 或 AFTER -->
+          SELECT LAST_INSERT_ID() 
+        </selectKey>
+     	insert  into  pmph_group_file (
+     		group_id,
+     		member_id,
+     		file_id,   
+     		file_name,
+     		download   ) 
+                     	       values(
+            #{groupId},
+            #{memberId},
+            #{fileId},
+            #{fileName},
+            #{download}) ;
     </insert>
     
    <!-- 根据id删除一个 PmphGroupFile -->
-	<delete id="deletePmphGroupFileById" parameterType="PmphGroupFile"   >
-		delete from  pmph_group_file where where id=#{id} ;
+	<delete id="deletePmphGroupFileById" parameterType="java.lang.Long"   >
+		delete from  pmph_group_file  where id=#{id} ;
 	</delete>
 	
 	<!-- 更新 PmphGroupFile -->
-	<update id="updatePmphGroupFileById"   parameterType="PmphGroupFile"  >
+	<update id="updatePmphGroupFile"   parameterType="PmphGroupFile"  >
 		update pmph_group_file  
 		  set    group_id=#{groupId},member_id=#{memberId},file_id=#{fileId}, file_name=#{fileName},download=#{download} 
         where id=#{id} ;
 	</update>
 	
 	<!-- 根据id查询一个 PmphGroupFile -->
-	<select  id="getPmphGroupFileById" parameterType="PmphGroupFile"  resultType="PmphGroupFile" >
+	<select  id="getPmphGroupFileById" parameterType="java.lang.Long"  resultType="PmphGroupFile" >
 		select * from pmph_group_file where id=#{id} ;
 	</select>
 	
