@@ -1,7 +1,7 @@
 package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
@@ -45,14 +45,23 @@ public class PmphGroupMember implements Serializable {
     /**
      * 创建时间
      */
-    private Date gmtCreate;
+    private Timestamp gmtCreate;
     /**
      * 修改时间
      */
-    private Date gmtUpdate;
+    private Timestamp gmtUpdate;
+    
+    public PmphGroupMember() {
+		super();
+	}
 
-    public PmphGroupMember(Long gruopId, Long memberId, boolean isWriter, boolean isFounder, boolean isAdmin,
-	    String displayName, Date gmtCreate, Date gmtUpdate) {
+	public PmphGroupMember(Long id) {
+		super();
+		this.id = id;
+	}
+
+	public PmphGroupMember(Long gruopId, Long memberId, boolean isWriter, boolean isFounder, boolean isAdmin,
+	    String displayName, Timestamp gmtCreate, Timestamp gmtUpdate) {
 	this.gruopId = gruopId;
 	this.memberId = memberId;
 	this.isWriter = isWriter;
@@ -119,19 +128,19 @@ public class PmphGroupMember implements Serializable {
 	this.displayName = displayName;
     }
 
-    public Date getGmtCreate() {
+    public Timestamp getGmtCreate() {
 	return gmtCreate;
     }
 
-    public void setGmtCreate(Date gmtCreate) {
+    public void setGmtCreate(Timestamp gmtCreate) {
 	this.gmtCreate = gmtCreate;
     }
 
-    public Date getGmtUpdate() {
+    public Timestamp getGmtUpdate() {
 	return gmtUpdate;
     }
 
-    public void setGmtUpdate(Date gmtUpdate) {
+    public void setGmtUpdate(Timestamp gmtUpdate) {
 	this.gmtUpdate = gmtUpdate;
     }
 

@@ -1,7 +1,7 @@
 package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
@@ -41,10 +41,19 @@ public class PmphGroupFile implements Serializable {
     /**
      * 上传时间
      */
-    private Date gmtCreate;
+    private Timestamp gmtCreate;
+    
+    public PmphGroupFile() {
+		super();
+	}
+    
+	public PmphGroupFile(Long id) {
+		super();
+		this.id = id;
+	}
 
-    public PmphGroupFile(Long groupId, Long memberId, String fileId, String fileName, Integer download,
-	    Date gmtCreate) {
+	public PmphGroupFile(Long groupId, Long memberId, String fileId, String fileName, Integer download,
+			Timestamp gmtCreate) {
 	this.groupId = groupId;
 	this.memberId = memberId;
 	this.fileId = fileId;
@@ -101,11 +110,11 @@ public class PmphGroupFile implements Serializable {
 	this.download = download;
     }
 
-    public Date getGmtCreate() {
+    public Timestamp getGmtCreate() {
 	return gmtCreate;
     }
 
-    public void setGmtCreate(Date gmtCreate) {
+    public void setGmtCreate(Timestamp gmtCreate) {
 	this.gmtCreate = gmtCreate;
     }
 

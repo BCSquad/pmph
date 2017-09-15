@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.po.PmphGroupFile;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphGroupFileService 接口
@@ -12,30 +13,31 @@ public interface PmphGroupFileService {
 	 * 
 	 * @param  PmphGroupFile 实体对象
 	 * @return  带主键的 PmphGroupFile
-	 * @throws Exception 
+	 * @throws  CheckedServiceException
 	 */
-	PmphGroupFile addPmphGroupFile (PmphGroupFile pmphGroupFile) throws Exception;
+	PmphGroupFile addPmphGroupFile (PmphGroupFile pmphGroupFile) throws  CheckedServiceException;
 	
 	/**
 	 * 
-	 * @param PmphGroupFile 必须包含主键ID
+	 * @param id 主键id
 	 * @return  PmphGroupFile
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	PmphGroupFile getPmphGroupFileById(PmphGroupFile pmphGroupFile) throws Exception;
+	PmphGroupFile getPmphGroupFileById(Long  id) throws CheckedServiceException;
 	
 	/**
 	 * 
-	 * @param PmphGroupFile
+	 * @param id 主键id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer deletePmphGroupFileById(PmphGroupFile pmphGroupFile) throws Exception;
+	Integer deletePmphGroupFileById(Long  id) throws CheckedServiceException;
 	
 	/**
-	 * @param PmphGroupFile
+	 * 全字段更新
+	 * @param pmphGroupFile
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer updatePmphGroupFileById(PmphGroupFile pmphGroupFile) throws Exception;
+	Integer updatePmphGroupFile(PmphGroupFile pmphGroupFile) throws CheckedServiceException;
 }
