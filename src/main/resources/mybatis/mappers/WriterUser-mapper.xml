@@ -2,75 +2,207 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bc.pmpheep.back.dao.WriterUserDao">
+	<sql id="key">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="username!=null">
+                username,
+            </if>
+            <if test="password!=null">
+                password,
+            </if>
+            <if test="isDisabled!=null">
+                is_disabled,
+            </if>
+             <if test="orgId!=null">
+                org_id,
+            </if>
+             <if test="realname!=null">
+                realname,
+            </if>
+             <if test="sex!=null">
+                sex,
+            </if>
+             <if test="birthday!=null">
+                birthday,
+            </if>
+             <if test="experience!=null">
+                experience,
+            </if>
+             <if test="position!=null">
+                position,
+            </if>
+             <if test="title!=null">
+                title,
+            </if>
+              <if test="fax!=null">
+                fax,
+            </if>
+              <if test="handphone!=null">
+                handphone,
+            </if>
+              <if test="telephone!=null">
+                telephone,
+            </if>
+              <if test="idcard!=null">
+                idcard,
+            </if>
+              <if test="email!=null">
+                email,
+            </if>
+              <if test="address!=null">
+                address,
+            </if>
+              <if test="postcode!=null">
+                postcode,
+            </if>
+              <if test="rank!=null">
+                rank,
+            </if>
+              <if test="isTeacher!=null">
+                is_teacher,
+            </if>
+              <if test="cert!=null">
+                cert,
+            </if>
+              <if test="authTime!=null">
+                auth_time,
+            </if>
+              <if test="authUserType!=null">
+                auth_user_type,
+            </if>
+              <if test="authUserId!=null">
+                auth_user_id,
+            </if>
+            <if test="isWriter!=null">
+                is_writer,
+            </if>
+            <if test="isExpert!=null">
+                is_expert,
+            </if>
+            <if test="avatar!=null">
+                avatar,
+            </if>
+            <if test="note!=null">
+                note,
+            </if>
+            <if test="sort!=null">
+                sort,
+            </if>
+            <if test="isDeleted!=null">
+                is_deleted,
+            </if>
+             <if test="gmtCreate!=null">
+                gmt_create,
+            </if> 
+            <if test="gmtUpdate!=null">
+                gmt_update,
+            </if>
+        </trim>
+    </sql>
+    <sql id="value">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="username!=null">
+                #{username},
+            </if>
+            <if test="password!=null">
+                #{password},
+            </if>
+            <if test="isDisabled!=null">
+                #{isDisabled},
+            </if>
+             <if test="orgId!=null">
+               #{orgId},
+            </if>
+             <if test="realname!=null">
+                #{realname},
+            </if>
+             <if test="sex!=null">
+                #{sex},
+            </if>
+             <if test="birthday!=null">
+               #{birthday},
+            </if>
+             <if test="experience!=null">
+               #{experience},
+            </if>
+             <if test="position!=null">
+                 #{position},
+            </if>
+             <if test="title!=null">
+                #{title},
+            </if>
+              <if test="fax!=null">
+                #{fax},
+            </if>
+            <if test="handphone!=null">
+                #{handphone},
+            </if>
+              <if test="telephone!=null">
+               #{telephone},
+            </if>
+              <if test="idcard!=null">
+               #{idcard},
+            </if>
+              <if test="email!=null">
+                #{email},
+            </if>
+              <if test="address!=null">
+               #{address},
+            </if>
+              <if test="postcode!=null">
+                #{postcode},
+            </if>
+              <if test="rank!=null">
+                #{rank},
+            </if>
+              <if test="isTeacher!=null">
+                #{isTeather},
+            </if>
+              <if test="cert!=null">
+                #{cert},
+            </if>
+              <if test="authTime!=null">
+                #{authTime},
+            </if>
+              <if test="authUserType!=null">
+                #{authUserType},
+            </if>
+              <if test="authUserId!=null">
+                #{authUserId},
+            </if>
+            <if test="isWriter!=null">
+                #{isWriter},
+            </if>
+            <if test="isExpert!=null">
+               #{isExpert},
+            </if>
+            <if test="avatar!=null">
+                #{avatar},
+            </if>
+            <if test="note!=null">
+                #{note},
+            </if>
+            <if test="sort!=null">
+               #{sort},
+            </if>
+            <if test="isDeleted!=null">
+               #{isDeleted},
+            </if>
+             <if test="gmtCreate!=null">
+               #{gmtCreate},
+            </if> 
+            <if test="gmtUpdate!=null">
+               #{gmtUpdate}
+            </if>
+        </trim>
+    </sql>
 	<insert id="add" parameterType="WriterUser" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO writer_user
-        (
-        	username,
-        	`password`,
-        	is_disabled,
-        	org_id,
-        	`realname`,
-        	sex,
-        	birthday,
-        	experience,
-        	position,
-        	title,
-        	fax,
-        	handphone,
-        	telephone,
-        	idcard,
-        	email,
-        	address,
-        	postcode,	
-        	rank,
-        	is_teacher,
-        	cert,
-        	auth_time,
-        	auth_user_type,
-        	auth_user_id,
-        	is_writer,
-        	is_expert,
-        	avatar,
-        	note,
-        	sort,
-        	is_deleted,
-        	gmt_create,
-        	gmt_update
-        )
+        	(<include refid="key"/>)
         VALUES
-        (
-        	#{username,jdbcType=VARCHAR},
-        	#{password,jdbcType=VARCHAR},
-        	#{isDisabled,jdbcType=VARCHAR},
-        	#{orgId,jdbcType=TINYINT},
-        	#{realname,jdbcType=VARCHAR},
-        	#{sex,jdbcType=TINYINT},
-        	#{birthday,jdbcType=DATE},
-        	#{experience,jdbcType=TINYINT},
-        	#{position,jdbcType=VARCHAR},
-        	#{title,jdbcType=VARCHAR},
-        	#{fax,jdbcType=VARCHAR},
-        	#{handphone,jdbcType=VARCHAR},
-        	#{telephone,jdbcType=VARCHAR},
-        	#{idcard,jdbcType=VARCHAR},
-        	#{email,jdbcType=VARCHAR},
-        	#{address,jdbcType=VARCHAR},
-        	#{postcode,jdbcType=VARCHAR},
-        	#{rank,jdbcType=TINYINT},
-        	#{isTeather,jdbcType=TINYINT},
-        	#{cert,jdbcType=VARCHAR},
-        	#{authTime,jdbcType=DATE},
-        	#{authUserType,jdbcType=TINYINT},
-        	#{authUserId,jdbcType=BIGINT},
-        	#{isWriter,jdbcType=TINYINT},
-        	#{isExpert,jdbcType=TINYINT},
-        	#{avatar,jdbcType=VARCHAR},
-        	#{note,jdbcType=VARCHAR},
-        	#{sort,jdbcType=TINYINT},
-        	#{isDeleted,jdbcType=TINYINT},
-        	#{gmtCreate,jdbcType=TIMESTAMP},
-        	#{gmtUpdate,jdbcType=TIMESTAMP}
-        );
+        	(<include refid="value"/>);
     </insert>
 
     <!-- 动态更新对象的写法 -->
@@ -259,7 +391,7 @@
         WHERE tu.`id` = #{uid}
     </select>
     
-	<!-- 新增一个作家用户 -->
+	<!-- 	<!-- 新增一个作家用户
 	<insert id="addWriterUser" parameterType="WriterUser">
 		insert into writer_user
 		(username,password, is_disabled,org_id, realname, sex, birthday,
@@ -269,7 +401,8 @@
 		values
 		(#{username},#{password},#{isDisabled},#{orgId},#{realname},#{sex},#{birthday},#{experience},#{position},#{title},#{fax},#{handphone},#{telephone},#{idcard},#{email},#{address},#{postcode},#{rank},#{isTeather},#{cert},#{authTime},#{authUserType},#{authUserId},#{isWriter},#{isExpert},#{avatar},#{note},#{sort});
 	</insert>
-	<!-- 删除作家用户 -->
+ 	-->	
+ 	<!-- 删除作家用户 -->
 	<delete id="deleteWriterUserById" parameterType="String">
 		delete from
 		writer_user where id in

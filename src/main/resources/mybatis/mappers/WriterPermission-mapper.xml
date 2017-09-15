@@ -3,13 +3,83 @@
 
 
 <mapper namespace="com.bc.pmpheep.back.dao.WriterPermissionDao">
-
+	<sql id="key">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="parentId!=null">
+                parent_id,
+            </if>
+            <if test="path!=null">
+                path,
+            </if>
+            <if test="peermissionName!=null">
+                permission_name,
+            </if>
+             <if test="menuName!=null">
+                menu_name,
+            </if>
+             <if test="url!=null">
+                url,
+            </if>
+             <if test="isDeleted!=null">
+                is_disabled,
+            </if>
+             <if test="note!=null">
+                note,
+            </if>
+             <if test="sort!=null">
+                sort,
+            </if>
+             <if test="gmtCreate!=null">
+                gmt_create,
+            </if> 
+            <if test="gmtUpdate!=null">
+                gmt_update,
+            </if>
+        </trim>
+    </sql>
+    <!-- sql片段对应?,id属性值任意 -->
+    <sql id="value">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="parentId!=null">
+                #{parentId},
+            </if>
+            <if test="path!=null">
+               #{path},
+            </if>
+            <if test="peermissionName!=null">
+               #{peermissionName},
+            </if>
+             <if test="menuName!=null">
+                #{menuName},
+            </if>
+             <if test="url!=null">
+                #{url},
+            </if>
+             <if test="isDeleted!=null">
+              #{isDeleted},
+            </if>
+             <if test="note!=null">
+                #{note},
+            </if>
+             <if test="sort!=null">
+                #{sort},
+            </if>
+             <if test="gmtCreate!=null">
+               #{gmtCreate},
+            </if> 
+            <if test="gmtUpdate!=null">
+                #{gmtUpdate},
+            </if>
+        </trim>
+    </sql>
 	<!-- 添加一个作家权限 -->
 	<insert id="addWriterPermission" parameterType="WriterPermission">
-		insert into
-		writer_permission
-		(permission_name,is_disabled,note,sort) values
-		(#{permissionName},#{isDisabled},#{note},#{sort});
+		insert into writer_permission
+			(<include refid="key"/>)
+        VALUES
+        	(<include refid="value"/>);
 	</insert>
 
 	<!-- 删除一个或者多个作家权限 -->

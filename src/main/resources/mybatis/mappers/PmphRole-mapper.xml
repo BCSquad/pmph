@@ -2,26 +2,58 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bc.pmpheep.back.dao.PmphRoleDao">
-
-	<insert id="add" parameterType="PmphRole">
+	<sql id="key">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="roleName!=null">
+                role_name,
+            </if>
+            <if test="isDisabled!=null">
+                is_disabled,
+            </if>
+             <if test="note!=null">
+                note,
+            </if>
+             <if test="sort!=null">
+                sort,
+            </if>
+             <if test="gmtCreate!=null">
+                gmt_create,
+            </if> 
+            <if test="gmtUpdate!=null">
+                gmt_update,
+            </if>
+        </trim>
+    </sql>
+    <!-- sql片段对应?,id属性值任意 -->
+    <sql id="value">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="roleName!=null">
+                #{roleName},
+            </if>
+            <if test="isDisabled!=null">
+               #{isDisabled},
+            </if>
+             <if test="note!=null">
+                #{note},
+            </if>
+             <if test="sort!=null">
+                #{sort},
+            </if>
+             <if test="gmtCreate!=null">
+               #{gmtCreate},
+            </if> 
+            <if test="gmtUpdate!=null">
+                #{gmtUpdate},
+            </if>
+        </trim>
+    </sql>
+	<insert id="add" parameterType="PmphRole" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO pmph_role
-        (
-        	`role_name`,
-        	is_disabled,
-        	note,
-        	sort,
-        	gmt_create,
-        	gmt_update
-        )
+        	(<include refid="key"/>)
         VALUES
-         (
-         	#{roleName,jdbcType=VARCHAR},
-        	#{isDisabled,jdbcType=TINYINT},
-        	#{note,jdbcType=VARCHAR},
-        	#{sort,jdbcType=INTEGER},
-        	#{gmtCreate,jdbcType=TIMESTAMP},
-        	#{gmtUpdate,jdbcType=TIMESTAMP}
-         )
+        	(<include refid="value"/>);
     </insert>
 
     <delete id="delete" parameterType="int">
@@ -82,7 +114,7 @@
         WHERE
             user_id = #{userId} AND role_id = #{roleId}
     </select>
-
+	
     <insert id="addUserRole" parameterType="map">
         INSERT INTO `pmph_user_role`(`user_id`,`role_id`)
         VALUES(#{userId},#{roleId})
