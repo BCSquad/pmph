@@ -18,4 +18,10 @@ public class CheckedExceptionBusiness {
     public final static String MESSAGE = "系统消息";
     
     public final static String GROUP = "小组";
+    
+    public final static String AREA = "区域";
+    
+    public final static String ORG = "机构";
+    
+    public final static String PMPH_DEPARTMENT = "社内部门";
 }

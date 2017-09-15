@@ -31,13 +31,13 @@ public class OrgUserMessageSeviceTest extends BaseTest {
     	l.info(a.toString());
     	l.info("---OrgUserMessage---------------------------------修改-------------------------------------------");
     	a.setMsgId(999L);
-    	l.info(testService.updateOrgUserMessageById(a).toString());
+    	l.info(testService.updateOrgUserMessage(a).toString());
     	a.setId(2L);
     	
     	l.info("---OrgUserMessage---------------------------------删除-------------------------------------------");
-    	l.info(testService.deleteOrgUserMessageById(a).toString());
+    	l.info(testService.deleteOrgUserMessageById(2L).toString());
     	l.info("---OrgUserMessage--------------------------------查询-------------------------------------------");
-    	l.info(testService.getOrgUserMessageById(new OrgUserMessage(1L)).toString());
+    	l.info(testService.getOrgUserMessageById(1L).toString());
     }
     
 }

@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.dao;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.OrgMessage;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * OrgMessage 实体类数据访问层接口
@@ -13,32 +14,28 @@ import com.bc.pmpheep.back.po.OrgMessage;
 public interface OrgMessageDao {
 	/**
 	 * 
-	 * @param  OrgMessage 实体对象
+	 * @param  orgMessage 实体对象
 	 * @return  影响行数
-	 * @throws Exception 
 	 */
-	Integer addOrgMessage(OrgMessage orgMessage);
+	Integer addOrgMessage(OrgMessage orgMessage)  ;
 	
 	/**
 	 * 
-	 * @param OrgMessage 必须包含主键ID
+	 * @param id
 	 * @return  OrgMessage
-	 * @throws Exception，NullPointerException(主键为空)
-	 */
-	OrgMessage getOrgMessageById(OrgMessage orgMessage) ;
+	  */
+	OrgMessage getOrgMessageById(Long  id)  ;
 	
 	/**
 	 * 
-	 * @param OrgMessage
+	 * @param id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
-	 */
-	Integer deleteOrgMessageById(OrgMessage orgMessage) ;
+	  */
+	Integer deleteOrgMessageById(Long  id) ;
 	
 	/**
-	 * @param OrgMessage
+	 * @param orgMessage
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
-	 */
-	Integer updateOrgMessageById(OrgMessage orgMessage) ;
+	  */
+	Integer updateOrgMessage(OrgMessage orgMessage) ;
 }

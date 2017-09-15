@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 
 import com.bc.pmpheep.back.po.OrgType;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 
 /**
@@ -13,33 +14,33 @@ public interface OrgTypeService {
 	/**
 	 * 
 	 * @param OrgType 实体对象
-	 * @return  影响行数
-	 * @throws Exception 
+	 * @return  带主键的OrgType
+	 * @throws CheckedServiceException 
 	 */
-	OrgType addOrgType(OrgType orgType) throws Exception;
+	OrgType addOrgType(OrgType orgType) throws CheckedServiceException;
 	
 	/**
 	 * 
 	 * @param OrgType 必须包含主键ID
 	 * @return  OrgType
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	OrgType getOrgTypeById(OrgType orgType) throws Exception;
+	OrgType getOrgTypeById(Long id) throws CheckedServiceException;
 	
 	/**
 	 * 
-	 * @param OrgType
+	 * @param id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer deleteOrgTypeById(OrgType orgType) throws Exception;
+	Integer deleteOrgTypeById(Long id) throws CheckedServiceException;
 	
 	/**
-	 * @param OrgType
+	 * @param orgType
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer updateOrgTypeById(OrgType OrgType) throws Exception;
+	Integer updateOrgType(OrgType orgType) throws CheckedServiceException;
 }
 
 

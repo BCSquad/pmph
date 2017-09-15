@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.po.OrgMessage;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * OrgMessageService 接口
@@ -9,32 +10,32 @@ import com.bc.pmpheep.back.po.OrgMessage;
 public interface OrgMessageService {
 	/**
 	 * 
-	 * @param  OrgMessage 实体对象
+	 * @param  orgMessage 实体对象
 	 * @return  带主键的OrgMessage
-	 * @throws Exception 
+	 * @throws CheckedServiceException
 	 */
-	OrgMessage addOrgMessage(OrgMessage orgMessage) throws Exception;
+	OrgMessage addOrgMessage(OrgMessage orgMessage) throws CheckedServiceException;
 	
 	/**
 	 * 
-	 * @param OrgMessage 必须包含主键ID
+	 * @param id
 	 * @return  OrgMessage
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	OrgMessage getOrgMessageById(OrgMessage orgMessage) throws Exception;
+	OrgMessage getOrgMessageById(Long  id) throws CheckedServiceException;
 	
 	/**
 	 * 
-	 * @param OrgMessage
+	 * @param id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer deleteOrgMessageById(OrgMessage orgMessage) throws Exception;
+	Integer deleteOrgMessageById(Long  id) throws CheckedServiceException;
 	
 	/**
-	 * @param OrgMessage
+	 * @param orgMessage
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer updateOrgMessageById(OrgMessage orgMessage) throws Exception;
+	Integer updateOrgMessage(OrgMessage orgMessage) throws CheckedServiceException;
 }

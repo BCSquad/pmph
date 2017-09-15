@@ -24,7 +24,7 @@ public class OrgSeviceTest extends BaseTest {
     @Test
     @Transactional  
     @Rollback(false) 
-    public void addArea() throws Exception {
+    public void test() throws Exception {
         l.info("---Org---以下测试什么内容，是怎么考虑的-----------");
     	Org a=new Org(5L,"测试", 4L, 4L,"ZHANGS", "1234", "BEIZHU", 4, false, null, null);
     	orgService.addOrg(a);
@@ -32,12 +32,12 @@ public class OrgSeviceTest extends BaseTest {
     	l.info(a.toString());
     	l.info("---Org---------------------------------修改-------------------------------------------");
     	a.setOrgName("ceshiwwwwwwww"+a.getId());
-    	l.info(orgService.updateOrgById(a).toString());
+    	l.info(orgService.updateOrg(a).toString());
     	a.setId(1L);
     	l.info("---Org---------------------------------删除-------------------------------------------");
-    	l.info(orgService.deleteOrgById(a).toString());
+    	l.info(orgService.deleteOrgById(4L).toString());
     	l.info("---Org--------------------------------查询-------------------------------------------");
-    	l.info(orgService.getOrgById(new Org(3L)).toString());
+    	l.info(orgService.getOrgById(3L).toString());
     }
     
 }

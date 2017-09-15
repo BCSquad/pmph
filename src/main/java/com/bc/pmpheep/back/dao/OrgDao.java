@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.po.Org;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 
 /**
@@ -12,29 +13,33 @@ public interface OrgDao {
 	/**
 	 * 
 	 * @param org 实体对象
-	 * @return  影响行数
+	 * @return  影像行数
+	 * @throws CheckedServiceException 
 	 */
 	Integer addOrg(Org org) ;
 	
 	/**
 	 * 
-	 * @param org 必须包含主键ID
-	 * @return  area
+	 * @param id
+	 * @return  Org
+	 * @throws CheckedServiceException
 	 */
-	Org getOrgById(Org org);
+	Org getOrgById(Long  id) ;
 	
 	/**
 	 * 
-	 * @param org
+	 * @param id
 	 * @return  影响行数
+	 * @throws CheckedServiceException
 	 */
-	Integer deleteOrgById(Org org);
+	Integer deleteOrgById(Long  id) ;
 	
 	/**
 	 * @param org
 	 * @return 影响行数
+	 * @throws CheckedServiceException
 	 */
-	Integer updateOrgById(Org org) ;
+	Integer updateOrg(Org org) ;
 	
 	
 }

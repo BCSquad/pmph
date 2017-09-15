@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.PmphMessage;
 
+
 /**
  * PmphMessage  实体类数据访问层接口
  * 
@@ -14,33 +15,29 @@ public interface PmphMessageDao {
 	
 	/**
 	 * 
-	 * @param  PmphMessage 实体对象
-	 * @return  带主键的PmphMessage
-	 * @throws Exception 
+	 * @param  pmphMessage 实体对象
+	 * @return  影响行数
 	 */
-	PmphMessage addPmphMessage (PmphMessage pmphMessage) throws Exception;
+	Integer addPmphMessage (PmphMessage pmphMessage) ;
 	
 	/**
 	 * 
-	 * @param PmphMessage 必须包含主键ID
+	 * @param id
 	 * @return  PmphMessage
-	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	PmphMessage getPmphMessageById(PmphMessage pmphMessage) throws Exception;
+	PmphMessage getPmphMessageById(Long id) ;
 	
 	/**
 	 * 
 	 * @param PmphMessage
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	Integer deletePmphMessageById(PmphMessage pmphMessage) throws Exception;
+	Integer deletePmphMessageById(Long id) ;
 	
 	/**
-	 * @param PmphMessage
+	 * @param pmphMessage
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
 	 */
-	Integer updatePmphMessageById(PmphMessage pmphMessage) throws Exception;
+	Integer updatePmphMessage(PmphMessage pmphMessage) ;
 
 }

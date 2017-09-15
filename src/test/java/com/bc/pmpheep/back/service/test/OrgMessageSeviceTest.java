@@ -30,12 +30,12 @@ public class OrgMessageSeviceTest extends BaseTest {
     	l.info(a.toString());
     	l.info("---OrgMessage---------------------------------修改-------------------------------------------");
     	a.setMsgCode("ceshiwwwwwwww"+a.getId());
-    	l.info(orgMessageService.updateOrgMessageById(a).toString());
+    	l.info(orgMessageService.updateOrgMessage(a).toString());
     	a.setId(3L);
     	l.info("---OrgMessage---------------------------------删除-------------------------------------------");
-    	l.info(orgMessageService.deleteOrgMessageById(a).toString());
+    	l.info(orgMessageService.deleteOrgMessageById(1L).toString());
     	l.info("---OrgMessage--------------------------------查询-------------------------------------------");
-    	l.info(orgMessageService.getOrgMessageById(new OrgMessage(2L)).toString());
+    	l.info(orgMessageService.getOrgMessageById(2L).toString());
     }
     
 }

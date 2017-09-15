@@ -35,13 +35,13 @@ public class OrgUserSeviceTest extends BaseTest {
     	l.info(a.toString());
     	l.info("---OrgUser---------------------------------修改-------------------------------------------");
     	a.setRealname("ceshiwwwwwwww"+a.getId());
-    	l.info(testService.updateOrgUserById(a).toString());
+    	l.info(testService.updateOrgUser(a).toString());
     	a.setId(2L);
     	
     	l.info("---OrgUser---------------------------------删除-------------------------------------------");
-    	l.info(testService.deleteOrgUserById(a).toString());
+    	l.info(testService.deleteOrgUserById(1l).toString());
     	l.info("---OrgUser--------------------------------查询-------------------------------------------");
-    	l.info(testService.getOrgUserById(new OrgUser(4L)).toString());
+    	l.info(testService.getOrgUserById(4L).toString());
     }    
 }
 

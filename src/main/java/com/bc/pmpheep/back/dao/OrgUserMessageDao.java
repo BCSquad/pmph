@@ -2,7 +2,9 @@ package com.bc.pmpheep.back.dao;
 
 import org.springframework.stereotype.Repository;
 
+
 import com.bc.pmpheep.back.po.OrgUserMessage;
+
 
 /**
  * OrgUserMessage 实体类数据访问层接口
@@ -13,32 +15,28 @@ import com.bc.pmpheep.back.po.OrgUserMessage;
 public interface OrgUserMessageDao {
 	/**
 	 * 
-	 * @param  OrgUserMessage 实体对象
-	 * @return 影响行数
-	 * @throws Exception 
-	 */
-	Integer addOrgUserMessage (OrgUserMessage orgUserMessage);
+	 * @param  orgUserMessage 实体对象
+	 * @return   影响行数
+	*/
+	Integer addOrgUserMessage (OrgUserMessage orgUserMessage) ;
 	
 	/**
 	 * 
-	 * @param OrgUserMessage 必须包含主键ID
+	 * @param id
 	 * @return  OrgUserMessage
-	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	OrgUserMessage getOrgUserMessageById(OrgUserMessage orgUserMessage);
+	OrgUserMessage getOrgUserMessageById(Long id);
 	
 	/**
 	 * 
 	 * @param OrgUserMessage
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	Integer deleteOrgUserMessageById(OrgUserMessage orgUserMessage) ;
+	Integer deleteOrgUserMessageById(Long id) ;
 	
 	/**
 	 * @param OrgUserMessage
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
 	 */
-	Integer updateOrgUserMessageById(OrgUserMessage orgUserMessage) ;
+	Integer updateOrgUserMessage(OrgUserMessage orgUserMessage) ;
 }

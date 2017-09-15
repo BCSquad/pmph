@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.dao;
 
 
 import com.bc.pmpheep.back.po.OrgUser;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * OrgUser  实体类数据访问层接口
@@ -10,33 +11,29 @@ import com.bc.pmpheep.back.po.OrgUser;
 public interface  OrgUserDao {
 	/**
 	 * 
-	 * @param OrgUser 实体对象
-	 * @return  影响行数
-	 * @throws Exception 
-	 */
-	Integer addOrgUser(OrgUser orgUser) ;
+	 * @param orgUser 实体对象
+	 * @return   影响行数
+	  */
+	Integer addOrgUser(OrgUser orgUser);
 	
 	/**
 	 * 
-	 * @param OrgUser 必须包含主键ID
+	 * @param id
 	 * @return  OrgUser
-	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	OrgUser getOrgUserById(OrgUser orgUser) ;
+	OrgUser getOrgUserById(Long id);
 	
 	/**
 	 * 
-	 * @param OrgUser
+	 * @param id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	Integer deleteOrgUserById(OrgUser orgUser);
+	Integer deleteOrgUserById(Long id);
 	
 	/**
-	 * @param OrgUser
+	 * @param orgUser
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
 	 */
-	Integer updateOrgUserById(OrgUser orgUser);
+	Integer updateOrgUser(OrgUser orgUser) ;
 
 }

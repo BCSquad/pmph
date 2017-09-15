@@ -39,13 +39,13 @@ public class PmphDepartmentSeviceTest extends BaseTest {
     	l.info(a.toString());
     	l.info("---PmphDepartment---------------------------------修改-------------------------------------------");
     	a.setDpName(String.valueOf(r.nextLong()));
-    	l.info(testService.updatePmphDepartmentById(a).toString());
+    	l.info(testService.updatePmphDepartment(a).toString());
     	a.setId(2L);
     	if(c){
     		l.info("---PmphDepartment---------------------------------删除-------------------------------------------");
-        	l.info(testService.deletePmphDepartmentById(a).toString());
+        	l.info(testService.deletePmphDepartmentById(2L).toString());
         	l.info("---PmphDepartment--------------------------------查询-------------------------------------------");
-        	l.info(testService.getPmphDepartmentById(new PmphDepartment(1L)).toString());
+        	l.info(testService.getPmphDepartmentById(1L).toString());
     	}
     }
     

@@ -20,7 +20,7 @@ public interface AreaDao {
 	 *            实体对象
 	 * @return    影响行数
 	 */
-	int addArea(Area area);
+	Integer addArea(Area area);
 
 	/**
 	 * 删除Area 通过主键id
@@ -28,7 +28,7 @@ public interface AreaDao {
 	 * @param area
 	 * @return 影响行数
 	 */
-	Integer deleteAreaById(Area area);
+	Integer deleteAreaById(Long id);
 
 	/**
 	 * 更新一个 Area通过主键id
@@ -36,7 +36,7 @@ public interface AreaDao {
 	 * @param area
 	 * @return 影响行数
 	 */
-	Integer updateAreaById(Area area);
+	Integer updateArea(Area area);
 
 	/**
 	 * 查询一个 Area 通过主键id
@@ -45,6 +45,6 @@ public interface AreaDao {
 	 *            必须包含主键ID
 	 * @return area
 	 */
-	Area getAreaById(Area area);
+	Area getAreaById(Long id);
 
 }

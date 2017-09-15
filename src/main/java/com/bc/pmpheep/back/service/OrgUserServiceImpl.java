@@ -2,9 +2,13 @@ package com.bc.pmpheep.back.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.OrgUserDao;
 import com.bc.pmpheep.back.po.OrgUser;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * OrgUserServiceImpl 接口实现
@@ -18,55 +22,58 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	
 	/**
 	 * 
-	 * @param OrgUser 实体对象
+	 * @param orgUser 实体对象
 	 * @return   带主键的 OrgUser
-	 * @throws Exception 
+	 * @throws CheckedServiceException 
 	 */
 	@Override
-	public OrgUser addOrgUser(OrgUser orgUser) throws Exception{
+	public OrgUser addOrgUser(OrgUser orgUser) throws CheckedServiceException{
+		if(null==orgUser.getRealname()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT, CheckedExceptionResult.NULL_PARAM, "真实名称为空");
+		}
 		orgUserDao.addOrgUser(orgUser);
 		return orgUser;
 	}
 	
 	/**
 	 * 
-	 * @param OrgUser 必须包含主键ID
+	 * @param id
 	 * @return  OrgUser
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public OrgUser getOrgUserById(OrgUser orgUser) throws Exception{
-		if(null==orgUser.getId()){
-			throw new NullPointerException("主键id为空");
+	public OrgUser getOrgUserById(Long id) throws CheckedServiceException{
+		if(null==id){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return orgUserDao.getOrgUserById(orgUser);
+		return orgUserDao.getOrgUserById(id);
 	}
 	
 	/**
 	 * 
-	 * @param OrgUser
+	 * @param id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Integer deleteOrgUserById(OrgUser orgUser) throws Exception{
-		if(null==orgUser.getId()){
-			throw new NullPointerException("主键id为空");
+	public Integer deleteOrgUserById(Long id) throws CheckedServiceException{
+		if(null==id){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return orgUserDao.deleteOrgUserById(orgUser);
+		return orgUserDao.deleteOrgUserById(id);
 	}
 	
 	/**
-	 * @param OrgUser
+	 * @param orgUser
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override 
-	public Integer updateOrgUserById(OrgUser orgUser) throws Exception{
+	public Integer updateOrgUser(OrgUser orgUser) throws CheckedServiceException{
 		if(null==orgUser.getId()){
-			throw new NullPointerException("主键id为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return orgUserDao.updateOrgUserById(orgUser);
+		return orgUserDao.updateOrgUser(orgUser);
 	}
 	
 }

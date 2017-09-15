@@ -1,7 +1,7 @@
 package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
@@ -52,14 +52,24 @@ public class PmphPermission implements Serializable {
 	/**
 	 * 创建时间
 	 */
-	private Date gmtCreate;
+	private Timestamp gmtCreate;
 	/**
 	 * 修改时间
 	 */
-	private Date gmtUpdate;
+	private Timestamp gmtUpdate;
+	
+	
+	public PmphPermission(Long id) {
+		super();
+		this.id = id;
+	}
+
+	public PmphPermission() {
+		super();
+	}
 
 	public PmphPermission(Long parentId, String path, String peermissionName, String menuName, String url,
-			boolean isDeleted, String note, Integer sort, Date gmtCreate, Date gmtUpdate) {
+			boolean isDeleted, String note, Integer sort, Timestamp gmtCreate, Timestamp gmtUpdate) {
 		this.parentId = parentId;
 		this.path = path;
 		this.peermissionName = peermissionName;
@@ -104,19 +114,19 @@ public class PmphPermission implements Serializable {
 		this.sort = sort;
 	}
 
-	public Date getGmtCreate() {
+	public Timestamp getGmtCreate() {
 		return gmtCreate;
 	}
 
-	public void setGmtCreate(Date gmtCreate) {
+	public void setGmtCreate(Timestamp gmtCreate) {
 		this.gmtCreate = gmtCreate;
 	}
 
-	public Date getGmtUpdate() {
+	public Timestamp getGmtUpdate() {
 		return gmtUpdate;
 	}
 
-	public void setGmtUpdate(Date gmtUpdate) {
+	public void setGmtUpdate(Timestamp gmtUpdate) {
 		this.gmtUpdate = gmtUpdate;
 	}
 

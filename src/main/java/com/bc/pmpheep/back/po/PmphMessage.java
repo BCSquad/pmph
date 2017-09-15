@@ -26,6 +26,14 @@ public class PmphMessage implements Serializable {
 	 * 消息类型
 	 */
 	private Integer msgType;
+	
+	public PmphMessage(Long id) {
+		this.id = id;
+	}
+	
+	public PmphMessage() {
+		
+	}
 
 	public PmphMessage(String msgCode, Integer msgType) {
 		this.msgCode = msgCode;
