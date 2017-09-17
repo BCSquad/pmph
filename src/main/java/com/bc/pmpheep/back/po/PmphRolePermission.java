@@ -23,8 +23,13 @@ public class PmphRolePermission implements Serializable {
      * 权限id
      */
     private Long permissionId;
+    
+    
 
-    public PmphRolePermission(Long roleId, Long permissionId) {
+    public PmphRolePermission() {
+	}
+
+	public PmphRolePermission(Long roleId, Long permissionId) {
 	this.roleId = roleId;
 	this.permissionId = permissionId;
     }

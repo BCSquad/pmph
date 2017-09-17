@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.po.OrgUser;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * OrgUserService 接口
@@ -9,32 +10,32 @@ import com.bc.pmpheep.back.po.OrgUser;
 public interface  OrgUserService {
 	/**
 	 * 
-	 * @param OrgUser 实体对象
-	 * @return  带主键的 OrgUser
-	 * @throws Exception 
+	 * @param orgUser 实体对象
+	 * @return   带主键的 OrgUser
+	 * @throws CheckedServiceException 
 	 */
-	OrgUser addOrgUser(OrgUser orgUser) throws Exception;
+	OrgUser addOrgUser(OrgUser orgUser) throws CheckedServiceException;
 	
 	/**
 	 * 
-	 * @param OrgUser 必须包含主键ID
+	 * @param id
 	 * @return  OrgUser
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	OrgUser getOrgUserById(OrgUser orgUser) throws Exception;
+	OrgUser getOrgUserById(Long id) throws CheckedServiceException;
 	
 	/**
 	 * 
-	 * @param OrgUser
+	 * @param id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer deleteOrgUserById(OrgUser orgUser) throws Exception;
+	Integer deleteOrgUserById(Long id) throws CheckedServiceException;
 	
 	/**
-	 * @param OrgUser
+	 * @param orgUser
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer updateOrgUserById(OrgUser orgUser) throws Exception;
+	Integer updateOrgUser(OrgUser orgUser) throws CheckedServiceException;
 }

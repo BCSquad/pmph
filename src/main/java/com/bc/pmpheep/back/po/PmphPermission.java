@@ -1,7 +1,7 @@
 package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
@@ -16,53 +16,72 @@ public class PmphPermission implements Serializable {
     /**
      * 主键
      */
-    private Long    id;
+    private Long      id;
     /**
      * 上级许可id
      */
-    private Long    parentId;
+    private Long      parentId;
     /**
      * 根节点路径
      */
-    private String  path;
+    private String    path;
     /**
      * 许可名称
      */
-    private String  peermissionName;
+    private String    peermissionName;
     /**
      * 菜单名称
      */
-    private String  menuName;
+    private String    menuName;
     /**
      * 相对地址
      */
-    private String  url;
+    private String    url;
     /**
      * 是否禁用
      */
-    private boolean isDisabled;
+    private boolean   isDisabled;
     /**
      * 备注
      */
-    private String  note;
+    private String    note;
     /**
      * 显示顺序
      */
-    private Integer sort;
+    private Integer   sort;
     /**
      * 创建时间
      */
-    private Date    gmtCreate;
+    private Timestamp gmtCreate;
     /**
      * 修改时间
      */
-    private Date    gmtUpdate;
+    private Timestamp gmtUpdate;
+
+    public PmphPermission(Long id) {
+        super();
+        this.id = id;
+    }
 
     public PmphPermission() {
     }
 
+    /**
+     * @param parentId
+     * @param path
+     * @param peermissionName
+     * @param menuName
+     * @param url
+     * @param isDisabled
+     * @param note
+     * @param sort
+     * @param gmtCreate
+     * @param gmtUpdate
+     */
     public PmphPermission(Long parentId, String path, String peermissionName, String menuName,
-    String url, boolean isDisabled, String note, Integer sort, Date gmtCreate, Date gmtUpdate) {
+    String url, boolean isDisabled, String note, Integer sort, Timestamp gmtCreate,
+    Timestamp gmtUpdate) {
+        super();
         this.parentId = parentId;
         this.path = path;
         this.peermissionName = peermissionName;
@@ -75,12 +94,88 @@ public class PmphPermission implements Serializable {
         this.gmtUpdate = gmtUpdate;
     }
 
+    /**
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * @param id the id to set
+     */
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * @return the parentId
+     */
+    public Long getParentId() {
+        return parentId;
+    }
+
+    /**
+     * @param parentId the parentId to set
+     */
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    /**
+     * @return the path
+     */
+    public String getPath() {
+        return path;
+    }
+
+    /**
+     * @param path the path to set
+     */
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    /**
+     * @return the peermissionName
+     */
+    public String getPeermissionName() {
+        return peermissionName;
+    }
+
+    /**
+     * @param peermissionName the peermissionName to set
+     */
+    public void setPeermissionName(String peermissionName) {
+        this.peermissionName = peermissionName;
+    }
+
+    /**
+     * @return the menuName
+     */
+    public String getMenuName() {
+        return menuName;
+    }
+
+    /**
+     * @param menuName the menuName to set
+     */
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
+    }
+
+    /**
+     * @return the url
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * @param url the url to set
+     */
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     /**
@@ -97,78 +192,67 @@ public class PmphPermission implements Serializable {
         this.isDisabled = isDisabled;
     }
 
+    /**
+     * @return the note
+     */
     public String getNote() {
         return note;
     }
 
+    /**
+     * @param note the note to set
+     */
     public void setNote(String note) {
         this.note = note;
     }
 
+    /**
+     * @return the sort
+     */
     public Integer getSort() {
         return sort;
     }
 
+    /**
+     * @param sort the sort to set
+     */
     public void setSort(Integer sort) {
         this.sort = sort;
     }
 
-    public Date getGmtCreate() {
+    /**
+     * @return the gmtCreate
+     */
+    public Timestamp getGmtCreate() {
         return gmtCreate;
     }
 
-    public void setGmtCreate(Date gmtCreate) {
+    /**
+     * @param gmtCreate the gmtCreate to set
+     */
+    public void setGmtCreate(Timestamp gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
 
-    public Date getGmtUpdate() {
+    /**
+     * @return the gmtUpdate
+     */
+    public Timestamp getGmtUpdate() {
         return gmtUpdate;
     }
 
-    public void setGmtUpdate(Date gmtUpdate) {
+    /**
+     * @param gmtUpdate the gmtUpdate to set
+     */
+    public void setGmtUpdate(Timestamp gmtUpdate) {
         this.gmtUpdate = gmtUpdate;
     }
 
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getPeermissionName() {
-        return peermissionName;
-    }
-
-    public void setPeermissionName(String peermissionName) {
-        this.peermissionName = peermissionName;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getMenuName() {
-        return menuName;
-    }
-
-    public void setMenuName(String menuName) {
-        this.menuName = menuName;
-    }
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         return "PmphPermission [id=" + id + ", parentId=" + parentId + ", path=" + path

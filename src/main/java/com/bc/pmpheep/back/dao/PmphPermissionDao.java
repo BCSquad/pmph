@@ -15,9 +15,14 @@ import com.bc.pmpheep.back.po.PmphPermission;
 public interface PmphPermissionDao {
     /**
      * 
+<<<<<<< HEAD
      * @param PmphPermissionTest 实体对象
      * @return 带主键的PmphPermission
      * @throws Exception
+=======
+     * @param PmphPermission 实体对象
+     * @return  影响行数
+>>>>>>> branch 'develop' of https://github.com/BCSquad/pmph.git
      */
     Integer addPmphPermission(PmphPermission pmphPermission);
 
@@ -25,7 +30,6 @@ public interface PmphPermissionDao {
      * 
      * @param PmphPermissionTest 必须包含主键ID
      * @return PmphPermission
-     * @throws Exception，NullPointerException(主键为空)
      */
     PmphPermission getPmphPermissionById(PmphPermission pmphPermission);
 
@@ -33,14 +37,12 @@ public interface PmphPermissionDao {
      * 
      * @param PmphPermissionTest
      * @return 影响行数
-     * @throws Exception，NullPointerException(主键为空)
      */
     Integer deletePmphPermissionById(PmphPermission pmphPermission);
 
     /**
      * @param PmphPermissionTest
      * @return 影响行数
-     * @throws Exception ，NullPointerException(主键为空)
      */
     Integer updatePmphPermissionById(PmphPermission pmphPermission);
 

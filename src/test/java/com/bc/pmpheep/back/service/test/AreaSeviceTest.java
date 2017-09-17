@@ -32,11 +32,11 @@ public class AreaSeviceTest extends BaseTest {
 		logger.info(a.toString());
 		logger.info("------------------------------------修改-------------------------------------------");
 		a.setAreaName("ceshiwwwwwwww");
-		logger.info(areaService.updateAreaById(a).toString());
+		logger.info(areaService.updateArea(a).toString());
 		logger.info("------------------------------------删除-------------------------------------------");
-		logger.info(areaService.deleteAreaById(a).toString());
+		logger.info(areaService.deleteAreaById(2L).toString());
 		logger.info("-----------------------------------查询-------------------------------------------");
-		logger.info(areaService.getAreaById(new Area(6L)).toString());
+		logger.info(areaService.getAreaById(6L).toString());
 	}
 
 }

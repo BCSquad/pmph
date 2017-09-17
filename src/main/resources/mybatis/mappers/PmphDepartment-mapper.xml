@@ -17,17 +17,17 @@
     </insert>
     
    <!-- 根据id删除一个 -->
-	<delete id="deletePmphDepartmentById" parameterType="PmphDepartment"   >
+	<delete id="deletePmphDepartmentById" parameterType="java.lang.Long"   >
 		delete from  pmph_department  where id=#{id} ;
 	</delete>
 	
 	<!-- 更新PmphDepartment -->
-	<update id="updatePmphDepartmentById"   parameterType="PmphDepartment"  >
+	<update id="updatePmphDepartment"   parameterType="PmphDepartment"  >
 		update pmph_department  set  parent_id=#{parentId},path=#{path},dp_name=#{dpName},sort=#{sort},note= #{note} where id=#{id} ;
 	</update>
 	
 	<!-- 根据id查询一个PmphDepartment -->
-	<select  id="getPmphDepartmentById" parameterType="PmphDepartment"  resultType="PmphDepartment" >
+	<select  id="getPmphDepartmentById" parameterType="java.lang.Long"  resultType="PmphDepartment" >
 		select * from pmph_department where id=#{id} ;
 	</select>
 	

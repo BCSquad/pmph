@@ -46,9 +46,19 @@ public class PmphRole implements Serializable {
     public PmphRole() {
     }
 
-    public PmphRole(String roleName, boolean isDisabled, String note, Integer sort, Date gmtCreate,
-    Date gmtUpdate) {
+    /**
+     * @param id
+     * @param roleName
+     * @param isDisabled
+     * @param note
+     * @param sort
+     * @param gmtCreate
+     * @param gmtUpdate
+     */
+    public PmphRole(Long id, String roleName, boolean isDisabled, String note, Integer sort,
+    Date gmtCreate, Date gmtUpdate) {
         super();
+        this.id = id;
         this.roleName = roleName;
         this.isDisabled = isDisabled;
         this.note = note;

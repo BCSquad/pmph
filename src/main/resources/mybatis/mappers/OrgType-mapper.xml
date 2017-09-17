@@ -13,17 +13,17 @@
     </insert>
     
    <!-- 根据id删除一个 -->
-	<delete id="deleteOrgTypeById" parameterType="OrgType"   >
+	<delete id="deleteOrgTypeById" parameterType="java.lang.Long"   >
 		delete from org_type where id=#{id} ;
 	</delete>
 	
 	<!-- 更新OrgType -->
-	<update id="updateOrgTypeById"   parameterType="OrgType"  >
+	<update id="updateOrgType"   parameterType="OrgType"  >
 		update org_type  set  type_name=#{typeName}, sort =#{sort} where id=#{id} ;
 	</update>
 	
 	<!-- 根据id查询一个OrgType -->
-	<select  id="getOrgTypeById" parameterType="OrgType"  resultType="OrgType" >
+	<select  id="getOrgTypeById" parameterType="java.lang.Long"  resultType="OrgType" >
 		select * from org_type where id=#{id} ;
 	</select>
 	

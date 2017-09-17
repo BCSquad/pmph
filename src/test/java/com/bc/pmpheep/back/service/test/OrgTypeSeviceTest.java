@@ -30,13 +30,13 @@ public class OrgTypeSeviceTest extends BaseTest {
     	l.info(a.toString());
     	l.info("---OrgType---------------------------------修改-------------------------------------------");
     	a.setTypeName("ceshiwwwwwwww"+a.getId());
-    	l.info(orgTypeService.updateOrgTypeById(a).toString());
+    	l.info(orgTypeService.updateOrgType(a).toString());
     	a.setId(3L);
     	
     	l.info("---OrgType---------------------------------删除-------------------------------------------");
-    	l.info(orgTypeService.deleteOrgTypeById(a).toString());
+    	l.info(orgTypeService.deleteOrgTypeById(1L).toString());
     	l.info("---OrgType--------------------------------查询-------------------------------------------");
-    	l.info(orgTypeService.getOrgTypeById(new OrgType(2L)).toString());
+    	l.info(orgTypeService.getOrgTypeById(2L).toString());
     }
     
 }

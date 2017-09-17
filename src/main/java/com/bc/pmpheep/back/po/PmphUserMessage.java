@@ -42,8 +42,13 @@ public class PmphUserMessage implements Serializable {
      * 修改时间
      */
     private Date gmtUpdate;
+    
+    
 
-    public PmphUserMessage(Long msgId, Long userId, boolean isRead, boolean isDeleted, Date gmtCreate, Date gmtUpdate) {
+    public PmphUserMessage() {
+	}
+
+	public PmphUserMessage(Long msgId, Long userId, boolean isRead, boolean isDeleted, Date gmtCreate, Date gmtUpdate) {
 	this.msgId = msgId;
 	this.userId = userId;
 	this.isRead = isRead;

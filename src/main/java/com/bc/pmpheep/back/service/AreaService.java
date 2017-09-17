@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 
 
 import com.bc.pmpheep.back.po.Area;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * AreaService 接口
@@ -15,30 +16,31 @@ public interface AreaService {
 	 * 新增一个Area 
 	 * @param area 实体对象
 	 * @return 带主键的 area 
+	 * thorws CheckedServiceException
 	 */
-	Area addArea(Area area) throws Exception;
+	Area addArea(Area area) throws CheckedServiceException;
 	
 	/**
 	 *  查询一个 Area 通过主键id
-	 * @param area 必须包含主键ID
+	 * @param id
 	 * @return  area
-	 * @throws Exception
+	 * @throws CheckedServiceException
 	 */
-	Area getAreaById(Area area) throws Exception;
+	Area getAreaById(Long id) throws CheckedServiceException;
 	
 	/**
 	 * 删除Area 通过主键id
 	 * @param area
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException
+	 * @throws CheckedServiceException
 	 */
-	Integer deleteAreaById(Area area) throws Exception;
+	Integer deleteAreaById(Long id) throws CheckedServiceException;
 	
 	/**
 	 * 更新一个 Area通过主键id
 	 * @param area
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer updateAreaById(Area area) throws Exception;
+	Integer updateArea(Area area) throws CheckedServiceException;
 }

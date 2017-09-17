@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bc.pmpheep.back.dao.WriterMseeageDao">
+<mapper namespace="com.bc.pmpheep.back.dao.WriterMessageDao">
 
-	<!-- 新增 WriterMseeage -->
-	<insert id="addWriterMseeage" parameterType="WriterMseeage"
+	<!-- 新增 WriterMessage -->
+	<insert id="addWriterMessage" parameterType="WriterMessage"
 		useGeneratedKeys="true" keyProperty="id">
 		<selectKey resultType="java.lang.Long" order="AFTER"
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
@@ -15,23 +15,23 @@
 		(#{msgCode,jdbcType=VARCHAR},#{msgType,jdbcType=TINYINT})
 	</insert>
 
-	<!-- 根据id删除一个 WriterMseeage -->
-	<delete id="deleteWriterMseeageById" parameterType="WriterMseeage">
+	<!-- 根据id删除一个 WriterMessage -->
+	<delete id="deleteWriterMessageById" parameterType="WriterMessage">
 		delete from
-		writer_message where where id=#{id} ;
+		writer_message where id=#{id} ;
 	</delete>
 
-	<!-- 更新 WriterMseeage -->
-	<update id="updateWriterMseeageById" parameterType="WriterMseeage">
+	<!-- 更新 WriterMessage -->
+	<update id="updateWriterMessageById" parameterType="WriterMessage">
 		update
 		writer_message set msg_code=#{msgCode},msg_type=#{msgType}
 		where
 		id=#{id} ;
 	</update>
 
-	<!-- 根据id查询一个 WriterMseeage -->
-	<select id="getWriterMseeageById" parameterType="WriterMseeage"
-		resultType="WriterMseeage">
+	<!-- 根据id查询一个 WriterMessage -->
+	<select id="getWriterMessageById" parameterType="WriterMessage"
+		resultType="WriterMessage">
 		select * from writer_message where id=#{id}
 		;
 	</select>

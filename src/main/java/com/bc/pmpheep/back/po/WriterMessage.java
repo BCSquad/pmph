@@ -11,7 +11,7 @@ import org.apache.ibatis.type.Alias;
  *
  */
 @SuppressWarnings("serial")
-@Alias("WriterMseeage")
+@Alias("WriterMessage")
 public class WriterMessage implements Serializable {
 	/**
 	 * 主键

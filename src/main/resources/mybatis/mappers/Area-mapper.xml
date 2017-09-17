@@ -13,19 +13,19 @@
 
 
 	<!-- 根据id删除一个 -->
-	<delete id="deleteAreaById" parameterType="Area">
+	<delete id="deleteAreaById" parameterType="java.lang.Long">
 		delete from  area where  id=#{id} ;
 	</delete>
 
 	<!-- 更新Area -->
-	<update id="updateAreaById" parameterType="Area">
+	<update id="updateArea" parameterType="Area">
 		update area set
 		parent_id=#{parentId},area_name=#{areaName}, sort =#{sort}
 		where id=#{id} ;
 	</update>
 
 	<!-- 根据id查询一个Area -->
-	<select id="getAreaById" parameterType="Area" resultType="Area">
+	<select id="getAreaById" parameterType="java.lang.Long" resultType="Area">
 		select *  from area where id=#{id} ;
 	</select>
 
