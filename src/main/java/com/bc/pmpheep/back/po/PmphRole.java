@@ -42,9 +42,13 @@ public class PmphRole implements Serializable {
 	 * 修改时间
 	 */
 	private Date gmtUpdate;
+	
+	
+
+	public PmphRole() {
+	}
 
 	public PmphRole(String roleName, boolean isDisabled, String note, Integer sort, Date gmtCreate, Date gmtUpdate) {
-		super();
 		this.roleName = roleName;
 		this.isDisabled = isDisabled;
 		this.note = note;
