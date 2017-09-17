@@ -18,9 +18,25 @@ public class WriterPermission implements Serializable {
      */
     private Long    id;
     /**
-     * 权限名称
+     * 上级许可id
      */
-    private String  permissionName;
+    private Long    parentId;
+    /**
+     * 根节点路径
+     */
+    private String  path;
+    /**
+     * 许可名称
+     */
+    private String  peermissionName;
+    /**
+     * 菜单名称
+     */
+    private String  menuName;
+    /**
+     * 相对地址
+     */
+    private String  url;
     /**
      * 是否禁用
      */
@@ -41,79 +57,106 @@ public class WriterPermission implements Serializable {
      * 修改时间
      */
     private Date    gmtUpdate;
-    /**
-     * 相对地址
-     */
-    private String  url;
 
     public WriterPermission() {
     }
 
-    public WriterPermission(String permissionName, boolean isDisabled, String note, Integer sort,
-    Date gmtCreate, Date gmtUpdate, String url) {
-        this.permissionName = permissionName;
+    /**
+     * @param id
+     * @param parentId
+     * @param path
+     * @param peermissionName
+     * @param menuName
+     * @param url
+     * @param isDisabled
+     * @param note
+     * @param sort
+     * @param gmtCreate
+     * @param gmtUpdate
+     */
+    public WriterPermission(Long parentId, String path, String peermissionName, String menuName,
+    String url, boolean isDisabled, String note, Integer sort, Date gmtCreate, Date gmtUpdate) {
+        super();
+        this.parentId = parentId;
+        this.path = path;
+        this.peermissionName = peermissionName;
+        this.menuName = menuName;
+        this.url = url;
         this.isDisabled = isDisabled;
         this.note = note;
         this.sort = sort;
         this.gmtCreate = gmtCreate;
         this.gmtUpdate = gmtUpdate;
-        this.url = url;
     }
 
+    /**
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * @param id the id to set
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
-    public String getPermissionName() {
-        return permissionName;
+    /**
+     * @return the parentId
+     */
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setPermissionName(String permissionName) {
-        this.permissionName = permissionName;
+    /**
+     * @param parentId the parentId to set
+     */
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
-    public boolean isIsDisabled() {
-        return isDisabled;
+    /**
+     * @return the path
+     */
+    public String getPath() {
+        return path;
     }
 
-    public void setIsDisabled(boolean isDisabled) {
-        this.isDisabled = isDisabled;
+    /**
+     * @param path the path to set
+     */
+    public void setPath(String path) {
+        this.path = path;
     }
 
-    public String getNote() {
-        return note;
+    /**
+     * @return the peermissionName
+     */
+    public String getPeermissionName() {
+        return peermissionName;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    /**
+     * @param peermissionName the peermissionName to set
+     */
+    public void setPeermissionName(String peermissionName) {
+        this.peermissionName = peermissionName;
     }
 
-    public Integer getSort() {
-        return sort;
+    /**
+     * @return the menuName
+     */
+    public String getMenuName() {
+        return menuName;
     }
 
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    public Date getGmtCreate() {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(Date gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
-
-    public Date getGmtUpdate() {
-        return gmtUpdate;
-    }
-
-    public void setGmtUpdate(Date gmtUpdate) {
-        this.gmtUpdate = gmtUpdate;
+    /**
+     * @param menuName the menuName to set
+     */
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
     }
 
     /**
@@ -130,11 +173,87 @@ public class WriterPermission implements Serializable {
         this.url = url;
     }
 
+    /**
+     * @return the isDisabled
+     */
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    /**
+     * @param isDisabled the isDisabled to set
+     */
+    public void setDisabled(boolean isDisabled) {
+        this.isDisabled = isDisabled;
+    }
+
+    /**
+     * @return the note
+     */
+    public String getNote() {
+        return note;
+    }
+
+    /**
+     * @param note the note to set
+     */
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    /**
+     * @return the sort
+     */
+    public Integer getSort() {
+        return sort;
+    }
+
+    /**
+     * @param sort the sort to set
+     */
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
+    /**
+     * @return the gmtCreate
+     */
+    public Date getGmtCreate() {
+        return gmtCreate;
+    }
+
+    /**
+     * @param gmtCreate the gmtCreate to set
+     */
+    public void setGmtCreate(Date gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    /**
+     * @return the gmtUpdate
+     */
+    public Date getGmtUpdate() {
+        return gmtUpdate;
+    }
+
+    /**
+     * @param gmtUpdate the gmtUpdate to set
+     */
+    public void setGmtUpdate(Date gmtUpdate) {
+        this.gmtUpdate = gmtUpdate;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
-        return "WriterPermission [id=" + id + ", permissionName=" + permissionName
-               + ", idDisabled=" + isDisabled + ", note=" + note + ", sort=" + sort
-               + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + ", url=" + url + "]";
+        return "WriterPermission {id=" + id + ", parentId=" + parentId + ", path=" + path
+               + ", peermissionName=" + peermissionName + ", menuName=" + menuName + ", url=" + url
+               + ", isDisabled=" + isDisabled + ", note=" + note + ", sort=" + sort
+               + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "}";
     }
 
 }

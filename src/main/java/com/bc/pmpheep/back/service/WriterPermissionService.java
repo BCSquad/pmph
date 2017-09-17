@@ -53,7 +53,7 @@ public interface WriterPermissionService {
      * @return
      * @throws CheckedServiceException
      */
-    Integer delete(int id) throws CheckedServiceException;
+    Integer delete(Long id) throws CheckedServiceException;
 
     /**
      * 按WriterPermission_id查询 对象
@@ -62,7 +62,7 @@ public interface WriterPermissionService {
      * @return
      * @throws CheckedServiceException
      */
-    WriterPermission get(int id) throws CheckedServiceException;
+    WriterPermission get(Long id) throws CheckedServiceException;
 
     /**
      * 查询List对象集合

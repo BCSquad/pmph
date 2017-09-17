@@ -43,9 +43,9 @@ public interface WriterPermissionDao {
      */
     WriterPermission getWriterPermissionByPermissionName(String permissionName);
 
-    Integer delete(int id);
+    Integer delete(Long id);
 
-    WriterPermission get(int id);
+    WriterPermission get(Long id);
 
     List<WriterPermission> getListResource();
 }

@@ -9,162 +9,172 @@ import org.apache.ibatis.type.Alias;
  * PmphPermission实体类
  * 
  * @author 曾庆峰
- *
+ * 
  */
 @Alias("PmphPermission")
 public class PmphPermission implements Serializable {
-	/**
-	 * 主键
-	 */
-	private Long id;
-	/**
-	 * 上级许可id
-	 */
-	private Long parentId;
-	/**
-	 * 根节点路径
-	 */
-	private String path;
-	/**
-	 * 许可名称
-	 */
-	private String peermissionName;
-	/**
-	 * 菜单名称
-	 */
-	private String menuName;
-	/**
-	 * 相对地址
-	 */
-	private String url;
-	/**
-	 * 是否禁用
-	 */
-	private boolean isDeleted;
-	/**
-	 * 备注
-	 */
-	private String note;
-	/**
-	 * 显示顺序
-	 */
-	private Integer sort;
-	/**
-	 * 创建时间
-	 */
-	private Date gmtCreate;
-	/**
-	 * 修改时间
-	 */
-	private Date gmtUpdate;
+    /**
+     * 主键
+     */
+    private Long    id;
+    /**
+     * 上级许可id
+     */
+    private Long    parentId;
+    /**
+     * 根节点路径
+     */
+    private String  path;
+    /**
+     * 许可名称
+     */
+    private String  peermissionName;
+    /**
+     * 菜单名称
+     */
+    private String  menuName;
+    /**
+     * 相对地址
+     */
+    private String  url;
+    /**
+     * 是否禁用
+     */
+    private boolean isDisabled;
+    /**
+     * 备注
+     */
+    private String  note;
+    /**
+     * 显示顺序
+     */
+    private Integer sort;
+    /**
+     * 创建时间
+     */
+    private Date    gmtCreate;
+    /**
+     * 修改时间
+     */
+    private Date    gmtUpdate;
 
-	public PmphPermission(Long parentId, String path, String peermissionName, String menuName, String url,
-			boolean isDeleted, String note, Integer sort, Date gmtCreate, Date gmtUpdate) {
-		this.parentId = parentId;
-		this.path = path;
-		this.peermissionName = peermissionName;
-		this.menuName = menuName;
-		this.url = url;
-		this.isDeleted = isDeleted;
-		this.note = note;
-		this.sort = sort;
-		this.gmtCreate = gmtCreate;
-		this.gmtUpdate = gmtUpdate;
-	}
+    public PmphPermission() {
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public PmphPermission(Long parentId, String path, String peermissionName, String menuName,
+    String url, boolean isDisabled, String note, Integer sort, Date gmtCreate, Date gmtUpdate) {
+        this.parentId = parentId;
+        this.path = path;
+        this.peermissionName = peermissionName;
+        this.menuName = menuName;
+        this.url = url;
+        this.isDisabled = isDisabled;
+        this.note = note;
+        this.sort = sort;
+        this.gmtCreate = gmtCreate;
+        this.gmtUpdate = gmtUpdate;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public boolean isIsDeleted() {
-		return isDeleted;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setIsDeleted(boolean idDeleted) {
-		this.isDeleted = idDeleted;
-	}
+    /**
+     * @return the isDisabled
+     */
+    public boolean isDisabled() {
+        return isDisabled;
+    }
 
-	public String getNote() {
-		return note;
-	}
+    /**
+     * @param isDisabled the isDisabled to set
+     */
+    public void setDisabled(boolean isDisabled) {
+        this.isDisabled = isDisabled;
+    }
 
-	public void setNote(String note) {
-		this.note = note;
-	}
+    public String getNote() {
+        return note;
+    }
 
-	public Integer getSort() {
-		return sort;
-	}
+    public void setNote(String note) {
+        this.note = note;
+    }
 
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
+    public Integer getSort() {
+        return sort;
+    }
 
-	public Date getGmtCreate() {
-		return gmtCreate;
-	}
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 
-	public void setGmtCreate(Date gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
+    public Date getGmtCreate() {
+        return gmtCreate;
+    }
 
-	public Date getGmtUpdate() {
-		return gmtUpdate;
-	}
+    public void setGmtCreate(Date gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
 
-	public void setGmtUpdate(Date gmtUpdate) {
-		this.gmtUpdate = gmtUpdate;
-	}
+    public Date getGmtUpdate() {
+        return gmtUpdate;
+    }
 
-	public Long getParentId() {
-		return parentId;
-	}
+    public void setGmtUpdate(Date gmtUpdate) {
+        this.gmtUpdate = gmtUpdate;
+    }
 
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
-	}
+    public Long getParentId() {
+        return parentId;
+    }
 
-	public String getPath() {
-		return path;
-	}
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+    public String getPath() {
+        return path;
+    }
 
-	public String getPeermissionName() {
-		return peermissionName;
-	}
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-	public void setPeermissionName(String peermissionName) {
-		this.peermissionName = peermissionName;
-	}
+    public String getPeermissionName() {
+        return peermissionName;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public void setPeermissionName(String peermissionName) {
+        this.peermissionName = peermissionName;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public String getMenuName() {
-		return menuName;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public void setMenuName(String menuName) {
-		this.menuName = menuName;
-	}
+    public String getMenuName() {
+        return menuName;
+    }
 
-	@Override
-	public String toString() {
-		return "PmphPermission [id=" + id + ", parentId=" + parentId + ", path=" + path + ", peermissionName="
-				+ peermissionName + ", menuName=" + menuName + ", url=" + url + ", idDeleted=" + isDeleted + ", note="
-				+ note + ", sort=" + sort + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
-	}
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
+    }
+
+    @Override
+    public String toString() {
+        return "PmphPermission [id=" + id + ", parentId=" + parentId + ", path=" + path
+               + ", peermissionName=" + peermissionName + ", menuName=" + menuName + ", url=" + url
+               + ", isDisabled=" + isDisabled + ", note=" + note + ", sort=" + sort
+               + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
+    }
 
 }

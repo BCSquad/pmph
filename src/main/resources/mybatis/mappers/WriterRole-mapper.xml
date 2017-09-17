@@ -54,7 +54,7 @@
         VALUES
         	(<include refid="value"/>);	
     </insert>
-	<delete id="delete" parameterType="int">
+	<delete id="delete" parameterType="Long">
 		DELETE FROM writer_role
 		WHERE
 		id = #{id}
@@ -69,7 +69,7 @@
 		</foreach>
 	</delete>
 
-	<select id="get" parameterType="int" resultType="WriterRole">
+	<select id="get" parameterType="Long" resultType="WriterRole">
 		SELECT
 		*
 		FROM
@@ -146,7 +146,7 @@
 	</delete>
 
 	<!-- 根据角色 id 查询该角色 id 下的所有资源 -->
-	<select id="getListRoleResource" parameterType="int"
+	<select id="getListRoleResource" parameterType="Long"
 		resultType="WriterPermission">
 		SELECT
 		tr.`id`,
@@ -185,7 +185,7 @@
 		FROM
 		writer_role_permission
 		WHERE
-		role_id = #{roleId} AND resource_id = #{resourceId}
+		role_id = #{roleId} AND permission_id = #{permissionId}
 	</select>
 
 	<delete id="batchDeleteRoleResource" parameterType="list">

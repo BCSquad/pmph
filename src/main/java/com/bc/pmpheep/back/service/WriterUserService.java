@@ -28,21 +28,21 @@ public interface WriterUserService {
      * @param user
      * @param rids
      */
-    WriterUser add(WriterUser user, List<Integer> rids) throws CheckedServiceException;
+    WriterUser add(WriterUser user, List<Long> rids) throws CheckedServiceException;
 
     /**
      * 根据 user_id 删除用户数据
      * 
      * @param id
      */
-    void delete(int id) throws CheckedServiceException;
+    void delete(Long id) throws CheckedServiceException;
 
     /**
      * 删除用户和用户绑定的角色信息
      * 
      * @param ids
      */
-    void deleteUserAndRole(List<Integer> ids) throws CheckedServiceException;
+    void deleteUserAndRole(List<Long> ids) throws CheckedServiceException;
 
     /**
      * // TODO: 2016/9/18 应该设置为一个事务 更新用户数据 1、更新用户基本信息 2、更新用户所属角色 （1）先删除所有的角色 （2）再添加绑定的角色
@@ -50,7 +50,7 @@ public interface WriterUserService {
      * @param user
      * @param rids
      */
-    WriterUser update(WriterUser user, List<Integer> rids) throws CheckedServiceException;
+    WriterUser update(WriterUser user, List<Long> rids) throws CheckedServiceException;
 
     /**
      * 更新单个用户信息
@@ -66,7 +66,7 @@ public interface WriterUserService {
      * @param id
      * @return
      */
-    WriterUser get(int id) throws CheckedServiceException;
+    WriterUser get(Long id) throws CheckedServiceException;
 
     /**
      * 根据用户名加载用户对象（用于登录使用）
@@ -98,7 +98,7 @@ public interface WriterUserService {
      * @param id
      * @return
      */
-    List<WriterUser> getListByRole(int id) throws CheckedServiceException;
+    List<WriterUser> getListByRole(Long id) throws CheckedServiceException;
 
     /**
      * 查询指定用户 id 所拥有的权限
@@ -106,7 +106,7 @@ public interface WriterUserService {
      * @param uid
      * @return
      */
-    List<WriterPermission> getListAllResource(int uid) throws CheckedServiceException;
+    List<WriterPermission> getListAllResource(Long uid) throws CheckedServiceException;
 
     /**
      * 查询指定用户所指定的角色字符串列表
@@ -114,7 +114,7 @@ public interface WriterUserService {
      * @param uid
      * @return
      */
-    List<String> getListRoleSnByUser(int uid) throws CheckedServiceException;
+    List<String> getListRoleSnByUser(Long uid) throws CheckedServiceException;
 
     /**
      * 查询指定用户所绑定的角色列表
@@ -122,6 +122,6 @@ public interface WriterUserService {
      * @param uid
      * @return
      */
-    List<WriterRole> getListUserRole(int uid) throws CheckedServiceException;
+    List<WriterRole> getListUserRole(Long uid) throws CheckedServiceException;
 
 }

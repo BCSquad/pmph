@@ -92,7 +92,7 @@ public class WriterUser implements Serializable {
     /**
      * 是否通过教师认证
      */
-    private Integer isTeather;
+    private Integer isTeacher;
     /**
      * 教师资格认证
      */
@@ -409,20 +409,6 @@ public class WriterUser implements Serializable {
     }
 
     /**
-     * @return the isTeather
-     */
-    public Integer getIsTeather() {
-        return isTeather;
-    }
-
-    /**
-     * @param isTeather the isTeather to set
-     */
-    public void setIsTeather(Integer isTeather) {
-        this.isTeather = isTeather;
-    }
-
-    /**
      * @return the cert
      */
     public String getCert() {
@@ -584,6 +570,20 @@ public class WriterUser implements Serializable {
     }
 
     /**
+     * @return the isTeacher
+     */
+    public Integer getIsTeacher() {
+        return isTeacher;
+    }
+
+    /**
+     * @param isTeacher the isTeacher to set
+     */
+    public void setIsTeacher(Integer isTeacher) {
+        this.isTeacher = isTeacher;
+    }
+
+    /**
      * @param gmtUpdate the gmtUpdate to set
      */
     public void setGmtUpdate(Date gmtUpdate) {
@@ -591,6 +591,11 @@ public class WriterUser implements Serializable {
     }
 
     public WriterUser() {
+    }
+
+    public WriterUser(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     /**
@@ -630,7 +635,7 @@ public class WriterUser implements Serializable {
     public WriterUser(Long id, String username, String password, Integer isDisabled, Long orgId,
     String realname, Integer sex, Date birthday, Integer experience, String position, String title,
     String fax, String handphone, String telephone, String idcard, String email, String address,
-    String postcode, Integer rank, Integer isTeather, String cert, Date authTime,
+    String postcode, Integer rank, Integer isTeacher, String cert, Date authTime,
     Integer authUserType, Long authUserId, Integer isWriter, Integer isExpert, String avatar,
     String note, Integer sort, Integer isDeleted, Date gmtCreate, Date gmtUpdate) {
         super();
@@ -653,7 +658,7 @@ public class WriterUser implements Serializable {
         this.address = address;
         this.postcode = postcode;
         this.rank = rank;
-        this.isTeather = isTeather;
+        this.isTeacher = isTeacher;
         this.cert = cert;
         this.authTime = authTime;
         this.authUserType = authUserType;
@@ -681,7 +686,7 @@ public class WriterUser implements Serializable {
                + ", position=" + position + ", title=" + title + ", fax=" + fax + ", handphone="
                + handphone + ", telephone=" + telephone + ", idcard=" + idcard + ", email=" + email
                + ", address=" + address + ", postcode=" + postcode + ", rank=" + rank
-               + ", isTeather=" + isTeather + ", cert=" + cert + ", authTime=" + authTime
+               + ", isTeacher=" + isTeacher + ", cert=" + cert + ", authTime=" + authTime
                + ", authUserType=" + authUserType + ", authUserId=" + authUserId + ", isWriter="
                + isWriter + ", isExpert=" + isExpert + ", avatar=" + avatar + ", note=" + note
                + ", sort=" + sort + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate

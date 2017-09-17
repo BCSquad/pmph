@@ -83,11 +83,11 @@
             <tx:method name="find*" read-only="true" />
             <tx:method name="select*" read-only="true" />
             <!-- 对insert,update,delete,add 开头的方法进行事务管理,只要有异常就回滚 -->
-            <tx:method name="batch*" propagation="REQUIRED" rollback-for="java.lang.Throwable" />
-            <tx:method name="delete*" propagation="REQUIRED" rollback-for="java.lang.Throwable" />
-            <tx:method name="update*" propagation="REQUIRED" rollback-for="java.lang.Throwable" />
-            <tx:method name="add*" propagation="REQUIRED" rollback-for="java.lang.Throwable" />
-            <tx:method name="insert*" propagation="REQUIRED" rollback-for="java.lang.Throwable" />
+            <tx:method name="batch*" read-only="false" rollback-for="Exception" propagation="REQUIRED" />
+            <tx:method name="delete*" read-only="false" rollback-for="Exception" propagation="REQUIRED" />
+            <tx:method name="update*" read-only="false" rollback-for="Exception" propagation="REQUIRED" />
+            <tx:method name="add*" read-only="false" rollback-for="Exception" propagation="REQUIRED" />
+            <tx:method name="insert*" read-only="false" rollback-for="Exception" propagation="REQUIRED" />
         </tx:attributes>
     </tx:advice>
     <!-- 事务入口 -->

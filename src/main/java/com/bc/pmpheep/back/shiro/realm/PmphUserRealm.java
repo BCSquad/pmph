@@ -46,14 +46,13 @@ public class PmphUserRealm extends AuthorizingRealm {
         // 获得经过认证的主体信息
         PmphUser user = (PmphUser) principalCollection.getPrimaryPrincipal();
         Long userId = user.getId();
-        String uid = String.valueOf(userId);
         // UserService userService = (UserService)InitServlet.getBean("userService");
         List<PmphPermission> resourceList = null;
         List<String> roleSnList = null;
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         try {
-            resourceList = userService.getListAllResource(Integer.parseInt(uid));
-            roleSnList = userService.getListRoleSnByUser(Integer.parseInt(uid));
+            resourceList = userService.getListAllResource(userId);
+            roleSnList = userService.getListRoleSnByUser(userId);
             List<String> resStrList = new ArrayList<>();
             for (PmphPermission resource : resourceList) {
                 resStrList.add(resource.getUrl());

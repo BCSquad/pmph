@@ -132,13 +132,13 @@
           id = #{id}
     </update>
 
-    <delete id="delete" parameterType="int">
+    <delete id="delete" parameterType="Long">
         DELETE FROM pmph_user
         where id = #{id}
     </delete>
 
     <!--  批量删除 -->
-    <delete id="deleteBatch" parameterType="list">
+    <delete id="batchDelete" parameterType="list">
         DELETE FROM pmph_user
         where id in
         <foreach collection="ids" item="id" open="(" close=")" separator=",">
@@ -146,7 +146,7 @@
         </foreach>
     </delete>
 
-    <select id="get" parameterType="int" resultType="PmphUser">
+    <select id="get" parameterType="Long" resultType="PmphUser">
         SELECT
            *
         FROM
@@ -162,7 +162,7 @@
             pmph_user
     </select>
 
-    <select id="getByUserName" parameterType="string" resultType="PmphUser">
+    <select id="getByUserName" parameterType="String" resultType="PmphUser">
         SELECT
             *
         FROM
@@ -171,7 +171,7 @@
             username = #{username}
     </select>
 
-    <select id="getListByRole" parameterType="int" resultType="PmphUser">
+    <select id="getListByRole" parameterType="Long" resultType="PmphUser">
         SELECT
             tu.id,
             tu.username,
@@ -186,7 +186,7 @@
     </select>
 
     <!-- 根据用户 id 查询这个用户拥有的所有资源（这里的资源就代表权限） -->
-    <select id="getListAllResources" resultType="PmphPermission" parameterType="int">
+    <select id="getListAllResources" resultType="PmphPermission" parameterType="Long">
         SELECT 
         	tr.`id`,
         	tr.`parent_id`,
@@ -195,13 +195,13 @@
         	tr.menu_name,
         	tr.url
         FROM `pmph_permission` tr
-        LEFT JOIN `pmph_role_permission` trr ON tr.`id` = trr.`resource_id`
+        LEFT JOIN `pmph_role_permission` trr ON tr.`id` = trr.`permission_id`
         LEFT JOIN `pmph_user_role` tur ON trr.`role_id` = tur.role_id
         WHERE tur.user_id = #{uid}
     </select>
 
     <!-- 根据用户 id 查询用户所具有的角色字符串表示 -->
-    <select id="getListRoleSnByUser" parameterType="int" resultType="string">
+    <select id="getListRoleSnByUser" parameterType="Long" resultType="String">
         SELECT
             tr.role_name
         FROM `pmph_role` tr
@@ -211,7 +211,7 @@
     </select>
 
     <!-- 根据用户 id 查询用户所具有的角色对象表示 -->
-    <select id="getListUserRole" parameterType="int" resultType="PmphRole">
+    <select id="getListUserRole" parameterType="Long" resultType="PmphRole">
         SELECT
             tr.`id`,
             tr.`role_name`

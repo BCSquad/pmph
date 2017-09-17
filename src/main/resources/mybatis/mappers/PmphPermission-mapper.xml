@@ -20,7 +20,7 @@
              <if test="url!=null">
                 url,
             </if>
-             <if test="isDeleted!=null">
+             <if test="isDisabled!=null">
                 is_disabled,
             </if>
              <if test="note!=null">
@@ -56,8 +56,8 @@
              <if test="url!=null">
                 #{url},
             </if>
-             <if test="isDeleted!=null">
-              #{isDeleted},
+             <if test="isDisabled!=null">
+              #{isDisabled},
             </if>
              <if test="note!=null">
                 #{note},
@@ -83,18 +83,44 @@
     
    <!-- 根据id删除一个 -->
 	<delete id="deletePmphPermissionById" parameterType="PmphPermission"   >
-		delete from  pmph_permission where where id=#{id} ;
+		delete from  pmph_permission  where id = #{id} ;
 	</delete>
 	
 	<!-- 更新PmphPermission -->
 	<update id="updatePmphPermissionById"   parameterType="PmphPermission"  >
 		update pmph_permission  
-		  set   permission_name=#{peermissionName},is_disabled=#{idDeleted},note=#{note},sort=#{sort} where id=#{id} ;
+		 <set>
+		 	 <if test="parentId!=null and parentId!='' ">
+                parent_id =#{parentId},
+            </if>
+            <if test="path!=null and path='' ">
+                path=#{path},
+            </if>
+        	<if test="peermissionName != null and peermissionName!=''">
+                permission_name = #{peermissionName},
+            </if>
+             <if test="menuName!=null and menuName!=''">
+                menu_name =#{menuName},
+            </if>
+             <if test="url!=null and url!=''">
+                url=#{url},
+            </if>
+           <if test="isDisabled != null and isDisabled!=''">
+                is_disabled = #{isDisabled},
+            </if>
+            <if test="note != null and note!=''">
+                note = #{note},
+            </if>
+            <if test="sort != null and sort!=''">
+                sort = #{sort}
+            </if>
+        </set>
+		  where id=#{id} ;
 	</update>
 	
 	<!-- 根据id查询一个PmphPermission -->
 	<select  id="getPmphPermissionById" parameterType="PmphPermission"  resultType="PmphPermission" >
-		select * from pmph_permission where id=#{id} ;
+		select * from pmph_permission where id = #{id};
 	</select>
 	
 	<select id="getListResource" resultType="PmphPermission">
@@ -109,12 +135,12 @@
           `pmph_permission`
     </select>
     
-    <delete id="delete" parameterType="int">
+    <delete id="delete" parameterType="Long">
         DELETE FROM pmph_permission
-        WHERE id = #{id}
+        where id = #{id}
     </delete>
 
-    <select id="get" parameterType="int" resultType="PmphPermission">
+    <select id="get" parameterType="Long" resultType="PmphPermission">
         SELECT
             `id`,
             `parent_id`,

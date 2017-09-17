@@ -6,113 +6,118 @@ import java.util.Date;
 import org.apache.ibatis.type.Alias;
 
 /**
- * PmphRole（社内用户角色表）实体类  对应数据库 pmph_role
+ * PmphRole（社内用户角色表）实体类 对应数据库 pmph_role
  * 
  * @author 曾庆峰
- *
+ * 
  */
 @SuppressWarnings("serial")
 @Alias("PmphRole")
 public class PmphRole implements Serializable {
-	/**
-	 * 主键
-	 */
-	private Long id;
-	/**
-	 * 角色名称
-	 */
-	private String roleName;
-	/**
-	 * 是否禁用
-	 */
-	private boolean isDisabled;
-	/**
-	 * 备注
-	 */
-	private String note;
-	/**
-	 * 显示顺序
-	 */
-	private Integer sort;
-	/**
-	 * 创建时间
-	 */
-	private Date gmtCreate;
-	/**
-	 * 修改时间
-	 */
-	private Date gmtUpdate;
+    /**
+     * 主键
+     */
+    private Long    id;
+    /**
+     * 角色名称
+     */
+    private String  roleName;
+    /**
+     * 是否禁用
+     */
+    private boolean isDisabled;
+    /**
+     * 备注
+     */
+    private String  note;
+    /**
+     * 显示顺序
+     */
+    private Integer sort;
+    /**
+     * 创建时间
+     */
+    private Date    gmtCreate;
+    /**
+     * 修改时间
+     */
+    private Date    gmtUpdate;
 
-	public PmphRole(String roleName, boolean isDisabled, String note, Integer sort, Date gmtCreate, Date gmtUpdate) {
-		super();
-		this.roleName = roleName;
-		this.isDisabled = isDisabled;
-		this.note = note;
-		this.sort = sort;
-		this.gmtCreate = gmtCreate;
-		this.gmtUpdate = gmtUpdate;
-	}
+    public PmphRole() {
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public PmphRole(String roleName, boolean isDisabled, String note, Integer sort, Date gmtCreate,
+    Date gmtUpdate) {
+        super();
+        this.roleName = roleName;
+        this.isDisabled = isDisabled;
+        this.note = note;
+        this.sort = sort;
+        this.gmtCreate = gmtCreate;
+        this.gmtUpdate = gmtUpdate;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getRoleName() {
-		return roleName;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
+    public String getRoleName() {
+        return roleName;
+    }
 
-	public boolean isIsDisabled() {
-		return isDisabled;
-	}
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
 
-	public void setIsDisabled(boolean isDisabled) {
-		this.isDisabled = isDisabled;
-	}
+    public boolean isIsDisabled() {
+        return isDisabled;
+    }
 
-	public String getNote() {
-		return note;
-	}
+    public void setIsDisabled(boolean isDisabled) {
+        this.isDisabled = isDisabled;
+    }
 
-	public void setNote(String note) {
-		this.note = note;
-	}
+    public String getNote() {
+        return note;
+    }
 
-	public Integer getSort() {
-		return sort;
-	}
+    public void setNote(String note) {
+        this.note = note;
+    }
 
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
+    public Integer getSort() {
+        return sort;
+    }
 
-	public Date getGmtCreate() {
-		return gmtCreate;
-	}
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 
-	public void setGmtCreate(Date gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
+    public Date getGmtCreate() {
+        return gmtCreate;
+    }
 
-	public Date getGmtUpdate() {
-		return gmtUpdate;
-	}
+    public void setGmtCreate(Date gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
 
-	public void setGmtUpdate(Date gmtUpdate) {
-		this.gmtUpdate = gmtUpdate;
-	}
+    public Date getGmtUpdate() {
+        return gmtUpdate;
+    }
 
-	@Override
-	public String toString() {
-		return "{id:" + id + ", roleName:" + roleName + ", isDisabled:" + isDisabled + ", note:" + note
-				+ ", sort:" + sort + ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate + "}";
-	}
+    public void setGmtUpdate(Date gmtUpdate) {
+        this.gmtUpdate = gmtUpdate;
+    }
+
+    @Override
+    public String toString() {
+        return "{id:" + id + ", roleName:" + roleName + ", isDisabled:" + isDisabled + ", note:"
+               + note + ", sort:" + sort + ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate
+               + "}";
+    }
 
 }

@@ -13,7 +13,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public interface PmphPermissionService {
     /**
      * 
-     * @param PmphPermission 实体对象
+     * @param PmphPermissionTest 实体对象
      * @return 带主键的PmphPermission
      * @throws CheckedServiceException
      */
@@ -21,7 +21,7 @@ public interface PmphPermissionService {
 
     /**
      * 
-     * @param PmphPermission 必须包含主键ID
+     * @param PmphPermissionTest 必须包含主键ID
      * @return PmphPermission
      * @throws CheckedServiceException，NullPointerException(主键为空)
      */
@@ -30,14 +30,14 @@ public interface PmphPermissionService {
 
     /**
      * 
-     * @param PmphPermission
+     * @param PmphPermissionTest
      * @return 影响行数
      * @throws CheckedServiceException，NullPointerException(主键为空)
      */
     Integer deletePmphPermissionById(PmphPermission pmphPermission) throws CheckedServiceException;
 
     /**
-     * @param PmphPermission
+     * @param PmphPermissionTest
      * @return 影响行数
      * @throws CheckedServiceException ，NullPointerException(主键为空)
      */
@@ -50,7 +50,7 @@ public interface PmphPermissionService {
      * @return
      * @throws CheckedServiceException
      */
-    Integer delete(int id) throws CheckedServiceException;
+    Integer delete(Long id) throws CheckedServiceException;
 
     /**
      * 按PmphPermission_id查询 对象
@@ -59,7 +59,7 @@ public interface PmphPermissionService {
      * @return
      * @throws CheckedServiceException
      */
-    PmphPermission get(int id) throws CheckedServiceException;
+    PmphPermission get(Long id) throws CheckedServiceException;
 
     /**
      * 查询List对象集合

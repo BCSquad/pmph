@@ -301,7 +301,7 @@
           id = #{id}
     </update>
 
-    <delete id="delete" parameterType="int">
+    <delete id="delete" parameterType="Long">
         DELETE FROM writer_user
         where id = #{id}
     </delete>
@@ -315,7 +315,7 @@
         </foreach>
     </delete>
 
-    <select id="get" parameterType="int" resultType="WriterUser">
+    <select id="get" parameterType="Long" resultType="WriterUser">
         SELECT
             *
         FROM
@@ -331,7 +331,7 @@
             writer_user
     </select>
 
-    <select id="getByUserName" parameterType="string" resultType="WriterUser">
+    <select id="getByUserName" parameterType="String" resultType="WriterUser">
         SELECT
             *
         FROM
@@ -340,7 +340,7 @@
             username = #{username}
     </select>
 
-    <select id="getListByRole" parameterType="int" resultType="WriterUser">
+    <select id="getListByRole" parameterType="Long" resultType="WriterUser">
         SELECT
             tu.id,
             tu.username,
@@ -356,7 +356,7 @@
     </select>
 
     <!-- 根据用户 id 查询这个用户拥有的所有资源（这里的资源就代表权限） -->
-    <select id="getListAllResources" resultType="WriterPermission" parameterType="int">
+    <select id="getListAllResources" resultType="WriterPermission" parameterType="Long">
         SELECT 	
         	tr.`id`,
         	tr.`parent_id`,
@@ -365,13 +365,13 @@
         	tr.menu_name,
         	tr.url
         FROM `writer_permission` tr
-        LEFT JOIN `write_role_permission` trr ON tr.`id` = trr.`resource_id`
+        LEFT JOIN `writer_role_permission` trr ON tr.`id` = trr.`permission_id`
         LEFT JOIN `writer_user_role` tur ON trr.`role_id` = tur.role_id
         WHERE tur.user_id = #{uid}
     </select>
 
     <!-- 根据用户 id 查询用户所具有的角色字符串表示 -->
-    <select id="getListRoleSnByUser" parameterType="int" resultType="string">
+    <select id="getListRoleSnByUser" parameterType="Long" resultType="String">
         SELECT
            tr.role_name
         FROM `writer_role` tr
@@ -381,7 +381,7 @@
     </select>
 
     <!-- 根据用户 id 查询用户所具有的角色对象表示 -->
-    <select id="getListUserRole" parameterType="int" resultType="WriterRole">
+    <select id="getListUserRole" parameterType="Long" resultType="WriterRole">
         SELECT
             tr.`id`,
             tr.`role_name`
@@ -391,17 +391,6 @@
         WHERE tu.`id` = #{uid}
     </select>
     
-	<!-- 	 新增一个作家用户
-	<insert id="addWriterUser" parameterType="WriterUser">
-		insert into writer_user
-		(username,password, is_disabled,org_id, realname, sex, birthday,
-		experience, position, title, fax, handphone, telephone, idcard, email,
-		address, postcode, rank, is_teacher, cert, auth_time, auth_user_type,
-		auth_user_id,is_writer, is_expert, avatar, note, sort)
-		values
-		(#{username},#{password},#{isDisabled},#{orgId},#{realname},#{sex},#{birthday},#{experience},#{position},#{title},#{fax},#{handphone},#{telephone},#{idcard},#{email},#{address},#{postcode},#{rank},#{isTeather},#{cert},#{authTime},#{authUserType},#{authUserId},#{isWriter},#{isExpert},#{avatar},#{note},#{sort});
-	</insert>
- 	-->	
  	<!-- 删除作家用户 -->
 	<delete id="deleteWriterUserById" parameterType="String">
 		delete from
