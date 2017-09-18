@@ -20,8 +20,8 @@ import com.bc.pmpheep.back.util.Const;
  *
  * @author mryang
  */
-public class PmphGroupFileSeviceTest extends BaseTest {
-	Logger logger = LoggerFactory.getLogger(PmphGroupFileSeviceTest.class);
+public class PmphGroupFileServiceTest extends BaseTest {
+	Logger logger = LoggerFactory.getLogger(PmphGroupFileServiceTest.class);
 	
 	@Resource
 	private PmphGroupFileService testService;

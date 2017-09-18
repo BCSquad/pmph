@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.MaterialExtraDao">
+
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="materialId!=null">
+				material_id,
+			</if>
+			<if test="notice!=null">
+				notice,
+			</if>
+			<if test="noticeAttachment!=null">
+				notice_attachment,
+			</if>
+			<if test="note!=null">
+				note,
+			</if>
+			<if test="noteAttachment!=null">
+				note_attachment,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="materialId!=null">
+				#{materialId},
+			</if>
+			<if test="notice!=null">
+				#{notice},
+			</if>
+			<if test="noticeAttachment!=null">
+				#{noticeAttachment},
+			</if>
+			<if test="note!=null">
+				#{note},
+			</if>
+			<if test="noteAttachment!=null">
+				#{noteAttachment},
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 新增MaterialExtra -->
+	<insert id="addMaterialExtra" parameterType="MaterialExtra">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		<!-- sql片段对应字段名,id属性值任意 -->
+		INSERT INTO material_extra
+		(
+		<include refid="key" />
+		)
+		VALUES
+		(
+		<include refid="value" />
+		);
+	</insert>
+
+
+	<!-- 根据id删除一个 -->
+	<delete id="deleteMaterialExtraById" parameterType="java.lang.Long">
+		delete from
+		material_extra where
+		id=#{id} ;
+	</delete>
+
+	<!-- 更新MaterialExtra -->
+	<update id="updateMaterialExtra" parameterType="MaterialExtra">
+		update material_extra
+		<set>
+			<if test="materialId != null and materialId !=''">
+				material_id = #{materialId},
+			</if>
+			<if test="notice != null and notice !='' ">
+				notice = #{notice},
+			</if>
+			<if test=" noticeAttachment != null and noticeAttachment !=''">
+				notice_attachment= #{noticeAttachment},
+			</if>
+			<if test=" note != null and note !=''">
+				note= #{note},
+			</if>
+			<if test=" noteAttachment != null and noteAttachment !=''">
+				note_attachment = #{noteAttachment},
+			</if>
+		</set>
+		where
+		id=#{id} ;
+	</update>
+
+	<!-- 根据id查询一个MaterialExtra -->
+	<select id="getMaterialExtraById" parameterType="java.lang.Long"
+		resultType="MaterialExtra">
+		select * from material_extra where id=#{id} ;
+	</select>
+
+</mapper>

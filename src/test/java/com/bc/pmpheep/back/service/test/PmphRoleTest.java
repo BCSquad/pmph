@@ -1,27 +1,28 @@
-package com.bc.pmpheep.back.servicetest;
+package com.bc.pmpheep.back.service.test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bc.pmpheep.back.po.WriterRole;
-import com.bc.pmpheep.back.service.WriterRoleService;
+import com.bc.pmpheep.back.po.PmphRole;
+import com.bc.pmpheep.back.service.PmphRoleService;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
- * WriterRole 单元测试
+ * PmphRole 单元测试
  * 
  * @author Administrator
  * 
  */
-public class WriterRoleTest extends BaseTest {
-    private static final Logger log = LoggerFactory.getLogger(WriterRoleTest.class);
+public class PmphRoleTest extends BaseTest {
+    private static final Logger log = LoggerFactory.getLogger(PmphRoleTest.class);
 
     @Autowired
-    WriterRoleService           roleService;
+    PmphRoleService             roleService;
 
     /**
      * PmphRole 添加Test
@@ -29,7 +30,7 @@ public class WriterRoleTest extends BaseTest {
     // @Test
     // @Rollback(false)
     public void addPmphRoleTest() {
-        WriterRole role = new WriterRole();
+        PmphRole role = new PmphRole();
         role.setRoleName("角色11");
         role.setNote("角色11");
         roleService.add(role);// 添加角色
@@ -43,8 +44,8 @@ public class WriterRoleTest extends BaseTest {
     // @Test
     // @Rollback(false)
     public void updatePmphRoleTest() {
-        WriterRole pr = new WriterRole();
-        pr.setId(1L);
+        PmphRole pr = new PmphRole();
+        pr.setId(4L);
         pr.setRoleName("角色");
         roleService.update(pr);
     }
@@ -52,7 +53,7 @@ public class WriterRoleTest extends BaseTest {
     /**
      * PmphRole 查询Test
      */
-    // @Test
+    @Test
     // @Rollback(false)
     public void getPmphRoleTest() {
         roleService.get(1L);// 按ID查询
