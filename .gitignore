@@ -1,6 +1,18 @@
 # Compiled class file
 *.class
 
+#忽略.classpath
+*.classpath
+
+#忽略.project 
+*.project
+
+#忽略.settings
+.settings/
+
+#忽略.jsdtscope
+*.jsdtscope
+
 # Log file
 *.log
 
