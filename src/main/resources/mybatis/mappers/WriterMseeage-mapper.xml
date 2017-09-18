@@ -3,6 +3,30 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.WriterMessageDao">
 
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="msgCode != null and msgCode !=''">
+				msg_code,
+			</if>
+			<if test="msgType != null and msgType !=''">
+				msg_type,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="msgCode != null and msgCode !=''">
+				#{msgCode},
+			</if>
+			<if test="msgType != null and msgType !=''">
+				#{msgType},
+			</if>
+		</trim>
+	</sql>
+
 	<!-- 新增 WriterMessage -->
 	<insert id="addWriterMessage" parameterType="WriterMessage"
 		useGeneratedKeys="true" keyProperty="id">
@@ -11,8 +35,12 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		insert into writer_message
-		(msg_code,msg_type) values
-		(#{msgCode,jdbcType=VARCHAR},#{msgType,jdbcType=TINYINT})
+		(
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
 	</insert>
 
 	<!-- 根据id删除一个 WriterMessage -->
@@ -24,7 +52,15 @@
 	<!-- 更新 WriterMessage -->
 	<update id="updateWriterMessageById" parameterType="WriterMessage">
 		update
-		writer_message set msg_code=#{msgCode},msg_type=#{msgType}
+		writer_message
+		<set>
+			<if test="msgCode != null and msgCode !=''">
+				msg_code = #{msgCode},
+			</if>
+			<if test="msgType != null and msgType !='' ">
+				msg_type = #{msgType},
+			</if>
+		</set>
 		where
 		id=#{id} ;
 	</update>
