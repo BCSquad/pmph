@@ -47,7 +47,8 @@ import com.bc.pmpheep.back.util.Tools;
  * 
  * @version 1.0
  */
-@Intercepts({ @Signature(type = StatementHandler.class, method = "prepare", args = { Connection.class }) })
+@Intercepts({ @Signature(type = StatementHandler.class, method = "prepare", args = {
+    Connection.class, Integer.class }) })
 public class PagePlugin implements Interceptor {
 
     private static String dialect   = ""; // 数据库方言

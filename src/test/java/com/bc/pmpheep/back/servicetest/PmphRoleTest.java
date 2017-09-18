@@ -56,7 +56,7 @@ public class PmphRoleTest extends BaseTest {
     @Test
     // @Rollback(false)
     public void getPmphRoleTest() {
-        roleService.get(1L);// 按ID查询
+        log.info(roleService.get(6L).toString());// 按ID查询
         roleService.getList();// 查询所有
         roleService.getListRole();//
         roleService.getUserRole(1L, 2L);// 根据用户ID，角色ID查询
