@@ -3,15 +3,54 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.WriterUserMessageDao">
 
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="msgId != null and msgId !=''">
+				msg_id,
+			</if>
+			<if test="userId != null and userId !=''">
+				user_id,
+			</if>
+			<if test="isRead != null">
+				is_read,
+			</if>
+			<if test="isDelete != null">
+				is_deleted,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="msgId != null and msgId !=''">
+				#{msgId},
+			</if>
+			<if test="userId != null and userId !=''">
+				#{userId},
+			</if>
+			<if test="isRead != null ">
+				#{isRead},
+			</if>
+			<if test="isDelete != null">
+				#{isDelete},
+			</if>
+		</trim>
+	</sql>
+
 	<!-- 新增 WriterUserMessage -->
 	<insert id="addWriterUserMessage" parameterType="WriterUserMessage">
 		<selectKey resultType="java.lang.Long" order="AFTER"
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into writer_user_message (msg_id, user_id,is_read, is_deleted)
-		values(#{msgId,jdbcType=BIGINT},#{userId,jdbcType=BIGINT},#{isRead,jdbcType=TINYINT},#{isDelete,jdbcType=TINYINT})
-		;
+		insert into writer_user_message (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
 	</insert>
 
 	<!-- 根据id删除一个 WriterUserMessage -->

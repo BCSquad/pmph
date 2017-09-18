@@ -3,31 +3,97 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.PmphGroupDao">
 
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="groupName != null and groupName !=''">
+				group_name,
+			</if>
+			<if test="groupImage != null and groupImage !=''">
+				group_image,
+			</if>
+			<if test="founderId != null and founderId !=''">
+				founder_id,
+			</if>
+			<if test="bookId != null and bookId !=''">
+				book_id,
+			</if>
+			<if test="note != null and note !=''">
+				note,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="groupName !=null and groupName !=''">
+				#{groupName},
+			</if>
+			<if test="groupImage !=null and groupImage !=''">
+				#{groupImage},
+			</if>
+			<if test="founderId !=null and founderId !=''">
+				#{founderId},
+			</if>
+			<if test="bookId !=null and bookId !=''">
+				#{bookId},
+			</if>
+			<if test="note !=null and note !=''">
+				#{note},
+			</if>
+		</trim>
+	</sql>
+
 	<!-- 新增 PmphGroup -->
-    <insert id="addPmphGroup"  parameterType="PmphGroup"   >
-    	<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句  BEFORE 或 AFTER -->
-          SELECT LAST_INSERT_ID() 
-        </selectKey>
-    	insert  into  pmph_group (group_name,group_image,founder_id,book_id,note) 
-                     	values(#{groupName,jdbcType=VARCHAR},#{groupImage,jdbcType=VARCHAR},
-                     	#{founderId,jdbcType=BIGINT},#{bookId,jdbcType=BIGINT},#{note,jdbcType=BIGINT}) ;
-    </insert>
-    
-   <!-- 根据id删除一个 PmphGroup -->
-	<delete id="deletePmphGroupById" parameterType="java.lang.Long"   >
-		delete from  pmph_group  where id=#{id} ;
+	<insert id="addPmphGroup" parameterType="PmphGroup">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into pmph_group
+		(
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 根据id删除一个 PmphGroup -->
+	<delete id="deletePmphGroupById" parameterType="java.lang.Long">
+		delete from
+		pmph_group where id=#{id} ;
 	</delete>
-	
+
 	<!-- 更新 PmphGroup -->
-	<update id="updatePmphGroup"   parameterType="PmphGroup"  >
-		update pmph_group  
-		  set   group_name=#{groupName},group_image=#{groupImage},founder_id=#{founderId},book_id=#{bookId},note= #{note}
-	     where id=#{id} ;
+	<update id="updatePmphGroup" parameterType="PmphGroup">
+		update
+		pmph_group
+		<set>
+			<if test="groupName != null and groupName !=''">
+				group_name = #{groupName},
+			</if>
+			<if test="groupImage != null and groupImage !='' ">
+				group_image = #{groupImage},
+			</if>
+			<if test=" founderId != null and founderId !=''">
+				founder_id= #{founderId},
+			</if>
+			<if test=" bookId != null and bookId !=''">
+				book_id= #{bookId},
+			</if>
+			<if test=" note != null and note !=''">
+				note = #{note},
+			</if>
+		</set>
+		where id=#{id} ;
 	</update>
-	
+
 	<!-- 根据id查询一个 PmphGroup -->
-	<select  id="getPmphGroupById" parameterType="java.lang.Long"  resultType="PmphGroup" >
+	<select id="getPmphGroupById" parameterType="java.lang.Long"
+		resultType="PmphGroup">
 		select * from pmph_group where id=#{id} ;
 	</select>
-	
+
 </mapper>
