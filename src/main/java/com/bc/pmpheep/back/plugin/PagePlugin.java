@@ -47,7 +47,8 @@ import com.bc.pmpheep.back.util.Tools;
  * 
  * @version 1.0
  */
-@Intercepts({ @Signature(type = StatementHandler.class, method = "prepare", args = { Connection.class }) })
+@Intercepts({ @Signature(type = StatementHandler.class, method = "prepare", args = {
+    Connection.class, Integer.class }) })
 public class PagePlugin implements Interceptor {
 
     private static String dialect   = ""; // 数据库方言
@@ -221,7 +222,7 @@ public class PagePlugin implements Interceptor {
             }
         }
         pageSqlId = p.getProperty("pageSqlId");
-        if (Tools.isEmpty(pageSqlId)) {
+        if (Tools.isEmpty(pageSqlId)) {  
             try {
                 throw new PropertyException("pageSqlId property is not found!");
             } catch (PropertyException e) {
