@@ -12,7 +12,7 @@ public interface PmphRolePermissionService {
 
 	/**
      * 
-     * @param PmphRolePermission 实体对象
+     * @param pmphRolePermission 实体对象
      * @return 带主键的PmphRolePermission
      * @throws CheckedServiceException，NullPointerException(主键为空)
      */
@@ -35,7 +35,8 @@ public interface PmphRolePermissionService {
     Integer deletePmphRolePermissionById(Long id) throws CheckedServiceException ;
 
     /**
-     * @param PmphRolePermission
+     * 更新  pmphRolePermission 不为空的字段根据主键id
+     * @param pmphRolePermission
      * @return 影响行数
      * @throws CheckedServiceException ，NullPointerException(主键为空)
      */

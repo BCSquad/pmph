@@ -55,7 +55,7 @@
 	
 	<!-- 根据id查询一个 PmphRolePermission -->
 	<select  id="getPmphRolePermissionById" parameterType="java.lang.Long"  resultType="PmphRolePermission" >
-		select id,permission_id permissionId,role_id   roleId  from pmph_role_permission where id=#{id} ;
+		select *  from pmph_role_permission where id=#{id} ;
 	</select>
 	
 </mapper>

@@ -38,7 +38,7 @@ public class PmphRolePermissionServiceTest extends BaseTest {
     	logger.info(testService.deletePmphRolePermissionById(2L).toString());
     	
     	//查询
-    	logger.info(testService.getPmphRolePermissionById(1L).toString());
+    	logger.info(testService.getPmphRolePermissionById(7L).toString());
     	
     }
     
