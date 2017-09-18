@@ -6,31 +6,31 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="materialId!=null">
+			<if test="materialId != null">
 				material_id,
 			</if>
-			<if test="textbookName!=null">
+			<if test="textbookName != null and textbookName !='' ">
 				textbook_name,
 			</if>
-			<if test="textbookRound!=null">
+			<if test="textbookRound != null ">
 				textbook_round,
 			</if>
-			<if test="isLocked!=null">
+			<if test="isLocked != null   ">
 				is_locked,
 			</if>
-			<if test="isPublished!=null">
+			<if test="isPublished !=null">
 				is_published,
 			</if>
-			<if test="gmtPublished!=null">
+			<if test="gmtPublished != null">
 				gmt_published,
 			</if>
-			<if test="isbn!=null">
+			<if test="isbn != null and isbn !='' ">
 				isbn,
 			</if>
-			<if test="sort!=null">
+			<if test="sort != null ">
 				sort,
 			</if>
-			<if test="founderId!=null">
+			<if test="founderId != null ">
 				founder_id,
 			</if>
 		</trim>
@@ -39,31 +39,31 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="materialId!=null">
+			<if test="materialId != null">
 				#{materialId},
 			</if>
-			<if test="textbookName!=null">
+			<if test="textbookName != null and textbookName !=''  ">
 				#{textbookName},
 			</if>
-			<if test="textbookRound!=null">
+			<if test="textbookRound != null">
 				#{textbookRound},
 			</if>
-			<if test="isLocked!=null">
+			<if test="isLocked != null  ">
 				#{isLocked},
 			</if>
-			<if test="isPublished!=null">
+			<if test="isPublished != null">
 				#{isPublished},
 			</if>
-			<if test="gmtPublished!=null">
+			<if test="gmtPublished != null">
 				#{gmtPublished},
 			</if>
-			<if test="isbn!=null">
+			<if test="isbn != null and isbn !='' ">
 				#{isbn},
 			</if>
-			<if test="sort!=null">
+			<if test="sort != null ">
 				#{sort},
 			</if>
-			<if test="founderId!=null">
+			<if test="founderId != null">
 				#{founderId},
 			</if>
 		</trim>
@@ -98,31 +98,31 @@
 	<update id="updateTextbook" parameterType="Textbook">
 		update textbook
 		<set>
-			<if test="materialId != null and materialId !=''">
+			<if test="materialId != null">
 				material_id = #{materialId},
 			</if>
 			<if test="textbookName != null and textbookName !='' ">
 				textbook_name = #{textbookName},
 			</if>
-			<if test=" textbookRound != null and textbookRound !=''">
+			<if test=" textbookRound != null">
 				textbook_round= #{textbookRound},
 			</if>
-			<if test=" isLocked != null and isLocked !=''">
+			<if test=" isLocked != null">
 				is_locked= #{isLocked},
 			</if>
-			<if test=" isPublished != null and isPublished !=''">
+			<if test=" isPublished != null">
 				is_published = #{isPublished},
 			</if>
-			<if test=" gmtPublished != null and gmtPublished !=''">
+			<if test=" gmtPublished != null">
 				gmt_published = #{gmtPublished},
 			</if>
-			<if test=" isbn != null and isbn !=''">
+			<if test=" isbn != null and  isbn != '' ">
 				isbn= #{isbn},
 			</if>
-			<if test=" sort != null and  sort !=''">
+			<if test=" sort != null">
 				sort = #{sort},
 			</if>
-			<if test=" founderId != null and  founderId !=''">
+			<if test=" founderId != null">
 				founder_id = #{founderId},
 			</if>
 		</set>

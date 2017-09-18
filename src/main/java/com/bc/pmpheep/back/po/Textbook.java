@@ -40,7 +40,12 @@ public class Textbook implements java.io.Serializable {
 	/** default constructor */
 	public Textbook() {
 	}
-
+	/**
+	 * 
+	 */
+	public Textbook(Long id){
+		this.id=id;
+	}
 	/** minimal constructor */
 	public Textbook(Long materialId, String textbookName,
 			Integer textbookRound, Boolean isLocked, Boolean isPublished,
@@ -55,7 +60,19 @@ public class Textbook implements java.io.Serializable {
 		this.gmtCreate = gmtCreate;
 	}
 
-	/** full constructor */
+	/**
+	 * 
+	 * @param materialId
+	 * @param textbookName
+	 * @param textbookRound
+	 * @param isLocked
+	 * @param isPublished
+	 * @param gmtPublished
+	 * @param isbn
+	 * @param sort
+	 * @param founderId
+	 * @param gmtCreate
+	 */
 	public Textbook(Long materialId, String textbookName,
 			Integer textbookRound, Boolean isLocked, Boolean isPublished,
 			Timestamp gmtPublished, String isbn, Integer sort, Long founderId,
