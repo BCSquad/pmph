@@ -3,32 +3,97 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.PmphDepartmentDao">
 
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="parentId != null and parentId !=''">
+				parent_id,
+			</if>
+			<if test="path != null and path !=''">
+				path,
+			</if>
+			<if test="dpName != null and dpName !=''">
+				dp_name,
+			</if>
+			<if test="sort != null and sort !=''">
+				sort,
+			</if>
+			<if test="note != null and note !=''">
+				note,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="parentId !=null and parentId !=''">
+				#{parentId},
+			</if>
+			<if test="path !=null and path !=''">
+				#{path},
+			</if>
+			<if test="dpName !=null and dpName !=''">
+				#{dpName},
+			</if>
+			<if test="sort !=null and sort !=''">
+				#{sort},
+			</if>
+			<if test="note !=null and note !=''">
+				#{note},
+			</if>
+		</trim>
+	</sql>
+
 	<!-- 新增 PmphDepartmentDao -->
-    <insert id="addPmphDepartment"  parameterType="PmphDepartment"    >
-    	<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句  BEFORE 或 AFTER -->
-          SELECT LAST_INSERT_ID() 
-        </selectKey>
-    	 insert  into  pmph_department (parent_id,path,dp_name,sort,note) 
-                     		 values(#{parentId,jdbcType=BIGINT},
-                     		 #{path,jdbcType=VARCHAR},
-                     		 #{dpName,jdbcType=VARCHAR},
-                     		 #{sort,jdbcType=INTEGER},
-                     		 #{note,jdbcType=VARCHAR}) ;
-    </insert>
-    
-   <!-- 根据id删除一个 -->
-	<delete id="deletePmphDepartmentById" parameterType="java.lang.Long"   >
-		delete from  pmph_department  where id=#{id} ;
+	<insert id="addPmphDepartment" parameterType="PmphDepartment">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into pmph_department (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 根据id删除一个 -->
+	<delete id="deletePmphDepartmentById" parameterType="java.lang.Long">
+		delete from
+		pmph_department where id=#{id} ;
 	</delete>
-	
+
 	<!-- 更新PmphDepartment -->
-	<update id="updatePmphDepartment"   parameterType="PmphDepartment"  >
-		update pmph_department  set  parent_id=#{parentId},path=#{path},dp_name=#{dpName},sort=#{sort},note= #{note} where id=#{id} ;
+	<update id="updatePmphDepartment" parameterType="PmphDepartment">
+		update
+		pmph_department
+		<set>
+			<if test="parentId != null and parentId !=''">
+				parent_id = #{parentId},
+			</if>
+			<if test="path != null and path !='' ">
+				path = #{path},
+			</if>
+			<if test=" dpName != null and dpName !=''">
+				dpName= #{dpName},
+			</if>
+			<if test=" sort != null and sort !=''">
+				sort= #{sort},
+			</if>
+			<if test=" note != null and note !=''">
+				note = #{note},
+			</if>
+		</set>
+		where id=#{id} ;
 	</update>
-	
+
 	<!-- 根据id查询一个PmphDepartment -->
-	<select  id="getPmphDepartmentById" parameterType="java.lang.Long"  resultType="PmphDepartment" >
-		select * from pmph_department where id=#{id} ;
+	<select id="getPmphDepartmentById" parameterType="java.lang.Long"
+		resultType="PmphDepartment">
+		select * from pmph_department where
+		id=#{id} ;
 	</select>
-	
+
 </mapper>
