@@ -103,7 +103,6 @@ public class DateUtil {
 	public static int getDiffYear(String startTime,String endTime) {
 		DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			long aa=0;
 			int years=(int) (((fmt.parse(endTime).getTime()-fmt.parse(startTime).getTime())/ (1000 * 60 * 60 * 24))/365);
 			return years;
 		} catch (Exception e) {
