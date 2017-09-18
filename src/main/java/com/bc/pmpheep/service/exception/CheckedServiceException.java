@@ -9,6 +9,7 @@ package com.bc.pmpheep.service.exception;
  *
  * @author L.X <gugia@qq.com>
  */
+@SuppressWarnings("serial")
 public class CheckedServiceException extends RuntimeException {
 
     private final String business;

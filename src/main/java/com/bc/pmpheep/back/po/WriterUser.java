@@ -11,6 +11,7 @@ import org.apache.ibatis.type.Alias;
  * @author 曾庆峰
  * 
  */
+@SuppressWarnings("serial")
 @Alias("WriterUser")
 public class WriterUser implements Serializable {
     /**

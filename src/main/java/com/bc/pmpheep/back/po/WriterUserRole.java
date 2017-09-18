@@ -10,6 +10,7 @@ import org.apache.ibatis.type.Alias;
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("WriterUserRole")
 public class WriterUserRole implements Serializable {
     /**
