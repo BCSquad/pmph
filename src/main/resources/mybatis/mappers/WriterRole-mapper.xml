@@ -4,7 +4,7 @@
 	<sql id="key">
         <!-- 去掉最后一个, -->
         <trim suffixOverrides=",">
-            <if test="roleName!=null and rileName !=''">
+            <if test="roleName!=null and roleName !=''">
                 role_name,
             </if>
             <if test="isDisabled!=null">
