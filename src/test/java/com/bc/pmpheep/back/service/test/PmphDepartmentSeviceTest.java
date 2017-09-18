@@ -1,52 +1,39 @@
 package com.bc.pmpheep.back.service.test;
 import java.util.Random;
-
 import javax.annotation.Resource;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.PmphDepartmentService;
+import com.bc.pmpheep.back.util.Const;
 /**
  * AreaDao 单元测试
  *
  * @author mryang
  */
 public class PmphDepartmentSeviceTest extends BaseTest {
-	Logger l = LoggerFactory.getLogger(PmphDepartmentSeviceTest.class);
+	Logger logger = LoggerFactory.getLogger(PmphDepartmentSeviceTest.class);
 	
 	@Resource
 	private PmphDepartmentService testService;
 	
     @Test
-    @Transactional  
-    @Rollback(false) 
-    public void testPmphDepartment() throws Exception {
-    	test(false);
-    	test(true);
-    }
-    
+    @Rollback(Const.ISROLLBACK)  
     private void test(boolean c) throws Exception{
     	Random r =new Random();
     	PmphDepartment a=new PmphDepartment(5L, "String path", "String dpName", r.nextInt(1000000), "String note") ;
     	testService.addPmphDepartment(a);
-    	l.info("---PmphDepartment--------------------------------新增--------------------------------------------");
-    	l.info(a.toString());
-    	l.info("---PmphDepartment---------------------------------修改-------------------------------------------");
+    	logger.info("---PmphDepartmentService---------------------------------------------------------------------------");
+    	logger.info(a.toString());
     	a.setDpName(String.valueOf(r.nextLong()));
-    	l.info(testService.updatePmphDepartment(a).toString());
+    	logger.info(testService.updatePmphDepartment(a).toString());
     	a.setId(2L);
-    	if(c){
-    		l.info("---PmphDepartment---------------------------------删除-------------------------------------------");
-        	l.info(testService.deletePmphDepartmentById(2L).toString());
-        	l.info("---PmphDepartment--------------------------------查询-------------------------------------------");
-        	l.info(testService.getPmphDepartmentById(1L).toString());
-    	}
+    	logger.info(testService.deletePmphDepartmentById(2L).toString());
+        logger.info(testService.getPmphDepartmentById(1L).toString());
+    	
     }
     
 }

@@ -1,13 +1,4 @@
 package com.bc.pmpheep.back.service.test;
-
-import javax.annotation.Resource;
-
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.bc.pmpheep.back.po.WriterUser;
-import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.test.BaseTest;
 /**
  * 

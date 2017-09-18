@@ -1,25 +1,12 @@
 package com.bc.pmpheep.back.service.test;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Random;
-
 import javax.annotation.Resource;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
-
-import com.bc.pmpheep.back.po.PmphGroup;
-import com.bc.pmpheep.back.po.PmphGroupFile;
-import com.bc.pmpheep.back.po.PmphGroupMember;
-import com.bc.pmpheep.back.po.PmphGroupMessage;
 import com.bc.pmpheep.back.po.PmphMessage;
 import com.bc.pmpheep.test.BaseTest;
-import com.bc.pmpheep.back.service.PmphGroupFileService;
-import com.bc.pmpheep.back.service.PmphGroupMemberService;
-import com.bc.pmpheep.back.service.PmphGroupMessageService;
-import com.bc.pmpheep.back.service.PmphGroupService;
 import com.bc.pmpheep.back.service.PmphMessageService;
 import com.bc.pmpheep.back.util.Const;
 /**
