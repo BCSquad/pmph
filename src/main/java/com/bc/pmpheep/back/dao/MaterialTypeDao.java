@@ -13,7 +13,7 @@ import com.bc.pmpheep.back.po.MaterialType;
 public interface MaterialTypeDao {
 
 	/**
-	 * 新增一个MaterialType
+	 * 新增一个materialType
 	 * 
 	 * @param MaterialType
 	 *            实体对象
@@ -24,15 +24,15 @@ public interface MaterialTypeDao {
 	/**
 	 * 删除MaterialType 通过主键id
 	 * 
-	 * @param MaterialType
+	 * @param id
 	 * @return 影响行数
 	 */
 	Integer deleteMaterialTypeById(Long id);
 
 	/**
-	 * 更新一个 MaterialType通过主键id
+	 * 根据主键id更新materialType 不为null和不为‘’的字段
 	 * 
-	 * @param MaterialType
+	 * @param materialType
 	 * @return 影响行数
 	 */
 	Integer updateMaterialType(MaterialType materialType);
@@ -40,7 +40,7 @@ public interface MaterialTypeDao {
 	/**
 	 * 查询一个 MaterialType 通过主键id
 	 * 
-	 * @param MaterialType
+	 * @param id
 	 *            必须包含主键ID
 	 * @return MaterialType
 	 */

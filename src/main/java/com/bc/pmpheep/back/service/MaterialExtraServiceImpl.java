@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialExtraDao;
 import com.bc.pmpheep.back.po.MaterialExtra;
+import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -24,13 +25,28 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
 
 	/**
 	 * 
-	 * @param MaterialExtra
+	 * @param materialExtra
 	 *            实体对象
 	 * @return 带主键的 MaterialExtra
 	 * @throws CheckedServiceException
 	 */
 	@Override
 	public MaterialExtra addMaterialExtra(MaterialExtra materialExtra) throws CheckedServiceException {
+		if(null==materialExtra.getMaterialId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA, CheckedExceptionResult.NULL_PARAM, "教材为空");
+		}
+		if(Tools.isEmpty(materialExtra.getNotice())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA, CheckedExceptionResult.NULL_PARAM, "通知内容为空");
+		}
+		if(Tools.isEmpty(materialExtra.getNoteAttachment())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA, CheckedExceptionResult.NULL_PARAM, "通知内容附件为空");
+		}
+		if(Tools.isEmpty(materialExtra.getNote())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA, CheckedExceptionResult.NULL_PARAM, "备注内容为空");
+		}
+		if(Tools.isEmpty(materialExtra.getNoteAttachment())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA, CheckedExceptionResult.NULL_PARAM, "备注附件为空");
+		}
 		materialExtraDao.addMaterialExtra(materialExtra);
 		return materialExtra;
 	}
@@ -66,7 +82,8 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
 	}
 
 	/**
-	 * @param MaterialExtra
+	 * 根据主键id 更新materialExtra 不为null和不为‘’的字段
+	 * @param materialExtra
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */

@@ -30,7 +30,7 @@ public interface MaterialDao {
 	Integer deleteMaterialById(Long id);
 
 	/**
-	 * 更新一个 Material通过主键id
+	 * 通过主键id更新material 不为null 的字段 
 	 * 
 	 * @param Material
 	 * @return 影响行数

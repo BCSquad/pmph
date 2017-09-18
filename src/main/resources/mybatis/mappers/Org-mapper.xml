@@ -3,132 +3,40 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.OrgDao">
 
-	<sql id="key">
-		<!-- 去掉最后一个, -->
-		<trim suffixOverrides=",">
-			<if test="parentId != null and parentId !=''">
-				parent_id,
-			</if>
-			<if test="orgName != null orgName !=''">
-				org_name,
-			</if>
-			<if test="orgTypeId != null orgTypeId !=''">
-				org_type_id,
-			</if>
-			<if test="areaId != null areaId !=''">
-				area_id,
-			</if>
-			<if test="countactPerson != null countactPerson !=''">
-				contact_person,
-			</if>
-			<if test="countactPhone != null countactPhone !=''">
-				contact_phone,
-			</if>
-			<if test="note != null note !=''">
-				note,
-			</if>
-			<if test="sort != null sort !=''">
-				sort,
-			</if>
-			<if test="isDeleted != null">
-				is_deleted,
-			</if>
-		</trim>
-	</sql>
-	<!-- sql片段对应?,id属性值任意 -->
-	<sql id="value">
-		<!-- 去掉最后一个, -->
-		<trim suffixOverrides=",">
-			<if test="parentId !=null parentId !=''">
-				#{parentId},
-			</if>
-			<if test="orgName !=null orgName !=''">
-				#{orgName},
-			</if>
-			<if test="orgTypeId !=null orgTypeId !=''">
-				#{orgTypeId},
-			</if>
-			<if test="areaId !=null areaId !=''">
-				#{areaId},
-			</if>
-			<if test="countactPerson !=null countactPerson !=''">
-				#{countactPerson},
-			</if>
-			<if test="countactPhone !=null countactPhone !=''">
-				#{countactPhone},
-			</if>
-			<if test="note !=null note !=''">
-				#{note},
-			</if>
-			<if test="sort !=null sort !=''">
-				#{sort},
-			</if>
-			<if test="isDeleted !=null">
-				#{isDeleted},
-			</if>
-		</trim>
-	</sql>
-
 	<!-- 新增Org -->
-	<insert id="addOrg" parameterType="Org">
-		<selectKey resultType="java.lang.Long" order="AFTER"
-			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
-			SELECT LAST_INSERT_ID()
-		</selectKey>
-		insert into org (
-		<include refid="key" />
-		)
-		values(
-		<include refid="value" />
-		) ;
-	</insert>
-
-
-	<!-- 根据id删除一个Org -->
-	<delete id="deleteOrgById" parameterType="java.lang.Long">
-		delete from org where
-		id=#{id} ;
+    <insert id="addOrg"  parameterType="Org"   >
+       <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句  BEFORE 或 AFTER -->
+          SELECT LAST_INSERT_ID() 
+       </selectKey>
+    	insert into org (parent_id, org_name,   org_type_id, area_id,   contact_person,  contact_phone,   note ,  sort,  is_deleted ) 
+                   values(#{parentId},
+                   #{orgName,jdbcType=VARCHAR},
+                   #{orgTypeId,jdbcType=VARCHAR},
+                   #{areaId,jdbcType=BIGINT},
+                   #{countactPerson,jdbcType=VARCHAR},
+                   #{countactPhone,jdbcType=VARCHAR},
+                   #{note,jdbcType=VARCHAR},
+                   #{sort,jdbcType=INTEGER},
+                   #{isDeleted,jdbcType=TINYINT});
+    </insert>
+    
+   
+   <!-- 根据id删除一个Org  -->
+	<delete id="deleteOrgById" parameterType="java.lang.Long"   >
+		delete from org  where id=#{id} ;
 	</delete>
-
+	
 	<!-- 更新Org -->
-	<update id="updateOrg" parameterType="Org">
-		update org
-		<set>
-			<if test="parentId != null and parentId !=''">
-				material_id = #{parentId},
-			</if>
-			<if test="orgName != null and orgName !='' ">
-				org_name = #{orgName},
-			</if>
-			<if test=" orgTypeId != null and orgTypeId !=''">
-				org_type_id= #{orgTypeId},
-			</if>
-			<if test=" areaId != null and areaId !=''">
-				area_id= #{areaId},
-			</if>
-			<if test=" countactPerson != null and countactPerson !=''">
-				contact_person = #{countactPerson},
-			</if>
-			<if test="countactPhone != null and countactPhone !='' ">
-				contact_phone = #{countactPhone},
-			</if>
-			<if test=" note != null and note !=''">
-				note= #{note},
-			</if>
-			<if test=" sort != null and sort !=''">
-				sort= #{sort},
-			</if>
-			<if test=" isDeleted != null ">
-				is_deleted = #{isDeleted},
-			</if>
-		</set>
-		where id=#{id} ;
+	<update id="updateOrg"   parameterType="Org"  >
+		update org  set  parent_id=#{parentId}, org_name=#{orgName},   org_type_id=#{orgTypeId}, area_id=#{areaId}, 
+		                 contact_person=#{countactPerson},  contact_phone=#{countactPhone},   
+		                 note =#{note},  sort=#{sort},  is_deleted =#{isDeleted}
+            where id=#{id} ;
 	</update>
-
+	
 	<!-- 根据id查询一个Org -->
-	<select id="getOrgById" parameterType="java.lang.Long"
-		resultType="Org">
-		select * from org where id=#{id} ;
+	<select  id="getOrgById" parameterType="java.lang.Long"  resultType="Org" >
+		select * from  org  where id=#{id} ;
 	</select>
-
+	
 </mapper>

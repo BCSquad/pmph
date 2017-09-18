@@ -15,7 +15,7 @@ public interface MaterialExtraDao {
 	/**
 	 * 新增一个MaterialExtra
 	 * 
-	 * @param MaterialExtra
+	 * @param materialExtra
 	 *            实体对象
 	 * @return 影响行数
 	 */
@@ -24,15 +24,14 @@ public interface MaterialExtraDao {
 	/**
 	 * 删除MaterialExtra 通过主键id
 	 * 
-	 * @param MaterialExtra
+	 * @param id 
 	 * @return 影响行数
 	 */
 	Integer deleteMaterialExtraById(Long id);
 
 	/**
-	 * 更新一个 MaterialExtra通过主键id
-	 * 
-	 * @param MaterialExtra
+	 * 根据主键id 更新materialExtra 不为null和不为‘’的字段
+	 * @param materialExtra
 	 * @return 影响行数
 	 */
 	Integer updateMaterialExtra(MaterialExtra materialExtra);
@@ -40,7 +39,7 @@ public interface MaterialExtraDao {
 	/**
 	 * 查询一个 MaterialExtra 通过主键id
 	 * 
-	 * @param MaterialExtra
+	 * @param id
 	 *            必须包含主键ID
 	 * @return MaterialExtra
 	 */

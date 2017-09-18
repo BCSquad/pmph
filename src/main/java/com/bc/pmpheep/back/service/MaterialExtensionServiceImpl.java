@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialExtensionDao;
 import com.bc.pmpheep.back.po.MaterialExtension;
+import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -24,13 +25,19 @@ public class MaterialExtensionServiceImpl extends BaseService implements Materia
 
 	/**
 	 * 
-	 * @param MaterialExtension
+	 * @param materialExtension
 	 *            实体对象
 	 * @return 带主键的 MaterialExtension
 	 * @throws CheckedServiceException
 	 */
 	@Override
 	public MaterialExtension addMaterialExtension(MaterialExtension materialExtension) throws CheckedServiceException {
+		if(null==materialExtension.getMaterialId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION, CheckedExceptionResult.NULL_PARAM, "教材为空");
+		}
+		if(Tools.isEmpty(materialExtension.getExtensionName()) ){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION, CheckedExceptionResult.NULL_PARAM, "扩展项名称为空");
+		}
 		materialExtensionDao.addMaterialExtension(materialExtension);
 		return materialExtension;
 	}
@@ -66,7 +73,8 @@ public class MaterialExtensionServiceImpl extends BaseService implements Materia
 	}
 
 	/**
-	 * @param MaterialExtension
+	 * 通过主键更新materialExtension不为null的字段
+	 * @param materialExtension
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */

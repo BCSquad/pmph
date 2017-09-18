@@ -5,28 +5,28 @@
 	<sql id="key">
         <!-- 去掉最后一个, -->
         <trim suffixOverrides=",">
-            <if test="parentId!=null and parentId !=''">
+            <if test="parentId!=null">
                 parent_id,
             </if>
-            <if test="path!=null and path !=''">
+            <if test="path!=null">
                 path,
             </if>
-            <if test="peermissionName!=null and peermissionName !=''">
+            <if test="peermissionName!=null">
                 permission_name,
             </if>
-             <if test="menuName!=null and menuName !=''">
+             <if test="menuName!=null">
                 menu_name,
             </if>
-             <if test="url!=null and url !=''">
+             <if test="url!=null">
                 url,
             </if>
              <if test="isDisabled!=null">
                 is_disabled,
             </if>
-             <if test="note!=null and note !=''">
+             <if test="note!=null">
                 note,
             </if>
-             <if test="sort!=null and sort !=''">
+             <if test="sort!=null">
                 sort,
             </if>
              <if test="gmtCreate!=null">
@@ -41,28 +41,28 @@
     <sql id="value">
         <!-- 去掉最后一个, -->
         <trim suffixOverrides=",">
-            <if test="parentId!=null and parentId !=''">
+            <if test="parentId!=null">
                 #{parentId},
             </if>
-            <if test="path!=null and path !=''">
+            <if test="path!=null">
                #{path},
             </if>
-            <if test="peermissionName!=null and peermissionName !=''">
+            <if test="peermissionName!=null">
                #{peermissionName},
             </if>
-             <if test="menuName!=null and menuName !=''">
+             <if test="menuName!=null">
                 #{menuName},
             </if>
-             <if test="url!=null and url !=''">
+             <if test="url!=null">
                 #{url},
             </if>
              <if test="isDisabled!=null">
               #{isDisabled},
             </if>
-             <if test="note!=null and note !=''">
+             <if test="note!=null">
                 #{note},
             </if>
-             <if test="sort!=null and sort !=''">
+             <if test="sort!=null">
                 #{sort},
             </if>
              <if test="gmtCreate!=null">
@@ -105,7 +105,7 @@
              <if test="url!=null and url!=''">
                 url=#{url},
             </if>
-           <if test="isDisabled != null">
+           <if test="isDisabled != null and isDisabled!=''">
                 is_disabled = #{isDisabled},
             </if>
             <if test="note != null and note!=''">

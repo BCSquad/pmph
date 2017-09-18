@@ -14,7 +14,7 @@ public interface MaterialExtraService {
 	
 	/**
 	 * 新增一个MaterialExtra 
-	 * @param MaterialExtra 实体对象
+	 * @param materialExtra 实体对象
 	 * @return 带主键的 MaterialExtra 
 	 * thorws CheckedServiceException
 	 */
@@ -30,15 +30,15 @@ public interface MaterialExtraService {
 	
 	/**
 	 * 删除MaterialExtra 通过主键id
-	 * @param MaterialExtra
+	 * @param id
 	 * @return  影响行数
 	 * @throws CheckedServiceException
 	 */
 	Integer deleteMaterialExtraById(Long id) throws CheckedServiceException;
 	
 	/**
-	 * 更新一个 MaterialExtra通过主键id
-	 * @param MaterialExtra
+	 * 根据主键id 更新materialExtra 不为null和不为‘’的字段 
+	 * @param materialExtra
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */

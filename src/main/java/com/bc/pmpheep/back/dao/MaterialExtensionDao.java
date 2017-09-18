@@ -15,7 +15,7 @@ public interface MaterialExtensionDao {
 	/**
 	 * 新增一个MaterialExtension
 	 * 
-	 * @param MaterialExtension
+	 * @param materialExtension
 	 *            实体对象
 	 * @return 影响行数
 	 */
@@ -24,15 +24,15 @@ public interface MaterialExtensionDao {
 	/**
 	 * 删除MaterialExtension 通过主键id
 	 * 
-	 * @param MaterialExtension
+	 * @param id
 	 * @return 影响行数
 	 */
 	Integer deleteMaterialExtensionById(Long id);
 
 	/**
-	 * 更新一个 MaterialExtension通过主键id
+	 * 通过主键id更新materialExtension不为null的字段
 	 * 
-	 * @param MaterialExtension
+	 * @param materialExtension
 	 * @return 影响行数
 	 */
 	Integer updateMaterialExtension(MaterialExtension materialExtension);
@@ -40,7 +40,7 @@ public interface MaterialExtensionDao {
 	/**
 	 * 查询一个 MaterialExtension 通过主键id
 	 * 
-	 * @param MaterialExtension
+	 * @param id
 	 *            必须包含主键ID
 	 * @return MaterialExtension
 	 */

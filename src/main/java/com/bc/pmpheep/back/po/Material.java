@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.po;
 
 import java.sql.Timestamp;
 import java.util.Date;
+
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -106,6 +107,13 @@ public class Material implements java.io.Serializable {
 	/** default constructor */
 	public Material() {
 	}
+	
+	
+	public Material(Long id) {
+		super();
+		this.id = id;
+	}
+
 
 	/** full constructor */
 	public Material(String materialName, Integer materialRound,

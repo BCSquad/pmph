@@ -28,6 +28,13 @@ public class MaterialExtra implements java.io.Serializable {
 	/** default constructor */
 	public MaterialExtra() {
 	}
+	
+
+	public MaterialExtra(Long id) {
+		super();
+		this.id = id;
+	}
+
 
 	/** full constructor */
 	public MaterialExtra(Long materialId, String notice,

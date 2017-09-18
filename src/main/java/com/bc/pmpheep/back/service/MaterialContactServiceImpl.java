@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialContactDao;
 import com.bc.pmpheep.back.po.MaterialContact;
+import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -31,6 +32,21 @@ public class MaterialContactServiceImpl extends BaseService implements MaterialC
 	 */
 	@Override
 	public MaterialContact addMaterialContact(MaterialContact materialContact) throws CheckedServiceException {
+		if(null==materialContact.getMaterialId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_CONTACT, CheckedExceptionResult.NULL_PARAM, "教材为空");
+		}
+		if(null==materialContact.getContactUserId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_CONTACT, CheckedExceptionResult.NULL_PARAM, "联系人姓名为空");
+		}
+		if(Tools.isEmpty(materialContact.getContactUserName())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_CONTACT, CheckedExceptionResult.NULL_PARAM, "联系人姓名为空");
+		}
+		if(Tools.isEmpty(materialContact.getContactPhone())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_CONTACT, CheckedExceptionResult.NULL_PARAM, "联系人电话为空");
+		}
+		if(Tools.isEmpty(materialContact.getContactEmail())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_CONTACT, CheckedExceptionResult.NULL_PARAM, "联系人邮箱为空");
+		}
 		materialContactDao.addMaterialContact(materialContact);
 		return materialContact;
 	}
@@ -64,6 +80,7 @@ public class MaterialContactServiceImpl extends BaseService implements MaterialC
 	}
 
 	/**
+	 * 根据id 更新materialContact不为null和''的字段 
 	 * @param MaterialContact
 	 * @return 影响行数
 	 * @throws CheckedServiceException

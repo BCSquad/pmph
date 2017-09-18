@@ -6,19 +6,19 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="materialId != null and materialId !=''">
+			<if test="materialId != null">
 				material_id,
 			</if>
-			<if test="contactUserId != null and contactUserId !=''">
+			<if test="contactUserId != null">
 				contact_user_id,
 			</if>
-			<if test="contactUserName != null and contactUserName !=''">
+			<if test="contactUserName != null">
 				contact_user_name,
 			</if>
-			<if test="contactPhone != null and contactPhone !=''">
+			<if test="contactPhone != null">
 				contact_phone,
 			</if>
-			<if test="contactEmail != null and contactEmail !=''">
+			<if test="contactEmail != null">
 				contact_email,
 			</if>
 		</trim>
@@ -27,19 +27,19 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="materialId !=null and materialId !=''">
+			<if test="materialId!=null">
 				#{materialId},
 			</if>
-			<if test="contactUserId !=null and contactUserId !=''">
+			<if test="contactUserId!=null">
 				#{contactUserId},
 			</if>
-			<if test="contactUserName !=null and contactUserName !=''">
+			<if test="contactUserName!=null">
 				#{contactUserName},
 			</if>
-			<if test="contactPhone !=null and contactPhone !=''">
+			<if test="contactPhone!=null">
 				#{contactPhone},
 			</if>
-			<if test="contactEmail !=null and contactEmail !=''">
+			<if test="contactEmail!=null">
 				#{contactEmail},
 			</if>
 		</trim>
@@ -72,10 +72,10 @@
 		update
 		material_contact
 		<set>
-			<if test="materialId != null and materialId !=''">
+			<if test="materialId != null">
 				material_id = #{materialId},
 			</if>
-			<if test="contactUserId != null and contactUserId !='' ">
+			<if test="contactUserId != null  ">
 				contact_user_id = #{contactUserId},
 			</if>
 			<if test=" contactUserName != null and contactUserName !=''">

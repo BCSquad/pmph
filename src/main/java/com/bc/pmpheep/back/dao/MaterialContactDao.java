@@ -15,7 +15,7 @@ public interface MaterialContactDao {
 	/**
 	 * 新增一个MaterialContact
 	 * 
-	 * @param MaterialContact
+	 * @param materialContact
 	 *            实体对象
 	 * @return 影响行数
 	 */
@@ -24,15 +24,15 @@ public interface MaterialContactDao {
 	/**
 	 * 删除MaterialContact 通过主键id
 	 * 
-	 * @param MaterialContact
+	 * @param id
 	 * @return 影响行数
 	 */
 	Integer deleteMaterialContactById(Long id);
 
 	/**
-	 * 更新一个 MaterialContact通过主键id
+	 *根据id 更新materialContact不为null和''的字段
 	 * 
-	 * @param MaterialContact
+	 * @param materialContact
 	 * @return 影响行数
 	 */
 	Integer updateMaterialContact(MaterialContact materialContact);

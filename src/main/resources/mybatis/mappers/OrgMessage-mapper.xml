@@ -3,71 +3,27 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.OrgMessageDao">
 
-	<sql id="key">
-		<!-- 去掉最后一个, -->
-		<trim suffixOverrides=",">
-			<if test="msgCode != null and msgCode !=''">
-				msg_code,
-			</if>
-			<if test="msgType != null and msgType !='' ">
-				msg_type,
-			</if>
-		</trim>
-	</sql>
-	<!-- sql片段对应?,id属性值任意 -->
-	<sql id="value">
-		<!-- 去掉最后一个, -->
-		<trim suffixOverrides=",">
-			<if test="msgCode != null and msgCode !=''">
-				#{msgCode},
-			</if>
-			<if test="msgType != null and msgType !='' ">
-				#{msgType},
-			</if>
-		</trim>
-	</sql>
-
 	<!-- 新增 OrgMessage -->
-	<insert id="addOrgMessage" parameterType="OrgMessage"
-		useGeneratedKeys="true" keyProperty="id">
-		<selectKey resultType="java.lang.Long" order="AFTER"
-			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
-			SELECT LAST_INSERT_ID()
-		</selectKey>
-		insert into org_message (
-		<include refid="key" />
-		)
-		values(
-		<include refid="value" />
-		) ;
-	</insert>
-
-	<!-- 根据id删除一个 -->
-	<delete id="deleteOrgMessageById" parameterType="java.lang.Long">
-		delete from
-		org_message where id=#{id} ;
+    <insert id="addOrgMessage"  parameterType="OrgMessage"  useGeneratedKeys="true" keyProperty="id"  >
+    	<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句  BEFORE 或 AFTER -->
+          SELECT LAST_INSERT_ID() 
+        </selectKey>
+    	insert  into  org_message (msg_code,msg_type)  values(#{msgCode,jdbcType=VARCHAR},#{msgType,jdbcType=TINYINT}) ;
+    </insert>
+    
+   <!-- 根据id删除一个 -->
+	<delete id="deleteOrgMessageById" parameterType="java.lang.Long"   >
+		delete from  org_message  where id=#{id} ;
 	</delete>
-
+	
 	<!-- 更新OrgMessage -->
-	<update id="updateOrgMessage" parameterType="OrgMessage">
-		update
-		org_message
-		<set>
-			<if test="msgCode != null and msgCode !=''">
-				msg_code = #{msgCode},
-			</if>
-			<if test="msgType != null and msgType !='' ">
-				msg_type = #{msgType},
-			</if>
-		</set>
-		where
-		id=#{id} ;
+	<update id="updateOrgMessage"   parameterType="OrgMessage"  >
+		update org_message   set   msg_code=#{msgCode} , msg_type=#{msgType}  where id=#{id} ;
 	</update>
-
+	
 	<!-- 根据id查询一个OrgMessage -->
-	<select id="getOrgMessageById" parameterType="java.lang.Long"
-		resultType="OrgMessage">
+	<select  id="getOrgMessageById" parameterType="java.lang.Long"  resultType="OrgMessage" >
 		select * from org_message where id=#{id} ;
 	</select>
-
+	
 </mapper>

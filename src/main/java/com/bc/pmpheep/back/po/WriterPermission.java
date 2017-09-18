@@ -11,6 +11,7 @@ import org.apache.ibatis.type.Alias;
  * @author 曾庆峰
  * 
  */
+@SuppressWarnings("serial")
 @Alias("WriterPermission")
 public class WriterPermission implements Serializable {
     /**
@@ -28,7 +29,7 @@ public class WriterPermission implements Serializable {
     /**
      * 许可名称
      */
-    private String  permissionName;
+    private String  peermissionName;
     /**
      * 菜单名称
      */
@@ -74,12 +75,12 @@ public class WriterPermission implements Serializable {
      * @param gmtCreate
      * @param gmtUpdate
      */
-    public WriterPermission(Long parentId, String path, String permissionName, String menuName,
+    public WriterPermission(Long parentId, String path, String peermissionName, String menuName,
     String url, boolean isDisabled, String note, Integer sort, Date gmtCreate, Date gmtUpdate) {
         super();
         this.parentId = parentId;
         this.path = path;
-        this.permissionName = permissionName;
+        this.peermissionName = peermissionName;
         this.menuName = menuName;
         this.url = url;
         this.isDisabled = isDisabled;
@@ -135,14 +136,14 @@ public class WriterPermission implements Serializable {
      * @return the peermissionName
      */
     public String getPeermissionName() {
-        return permissionName;
+        return peermissionName;
     }
 
     /**
      * @param peermissionName the peermissionName to set
      */
-    public void setPeermissionName(String permissionName) {
-        this.permissionName = permissionName;
+    public void setPeermissionName(String peermissionName) {
+        this.peermissionName = peermissionName;
     }
 
     /**
@@ -251,7 +252,7 @@ public class WriterPermission implements Serializable {
     @Override
     public String toString() {
         return "WriterPermission {id=" + id + ", parentId=" + parentId + ", path=" + path
-               + ", peermissionName=" + permissionName + ", menuName=" + menuName + ", url=" + url
+               + ", peermissionName=" + peermissionName + ", menuName=" + menuName + ", url=" + url
                + ", isDisabled=" + isDisabled + ", note=" + note + ", sort=" + sort
                + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "}";
     }
