@@ -4,82 +4,87 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.WriterPermissionDao">
 	<sql id="key">
-        <!-- 去掉最后一个, -->
-        <trim suffixOverrides=",">
-            <if test="parentId!=null">
-                parent_id,
-            </if>
-            <if test="path!=null">
-                path,
-            </if>
-            <if test="peermissionName!=null">
-                permission_name,
-            </if>
-             <if test="menuName!=null">
-                menu_name,
-            </if>
-             <if test="url!=null">
-                url,
-            </if>
-             <if test="isDisabled!=null">
-                is_disabled,
-            </if>
-             <if test="note!=null">
-                note,
-            </if>
-             <if test="sort!=null">
-                sort,
-            </if>
-             <if test="gmtCreate!=null">
-                gmt_create,
-            </if> 
-            <if test="gmtUpdate!=null">
-                gmt_update,
-            </if>
-        </trim>
-    </sql>
-    <!-- sql片段对应?,id属性值任意 -->
-    <sql id="value">
-        <!-- 去掉最后一个, -->
-        <trim suffixOverrides=",">
-            <if test="parentId!=null">
-                #{parentId},
-            </if>
-            <if test="path!=null">
-               #{path},
-            </if>
-            <if test="peermissionName!=null">
-               #{peermissionName},
-            </if>
-             <if test="menuName!=null">
-                #{menuName},
-            </if>
-             <if test="url!=null">
-                #{url},
-            </if>
-             <if test="isDisabled!=null">
-              #{isDisabled},
-            </if>
-             <if test="note!=null">
-                #{note},
-            </if>
-             <if test="sort!=null">
-                #{sort},
-            </if>
-             <if test="gmtCreate!=null">
-               #{gmtCreate},
-            </if> 
-            <if test="gmtUpdate!=null">
-                #{gmtUpdate},
-            </if>
-        </trim>
-    </sql>
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="parentId!=null and parentId !=''">
+				parent_id,
+			</if>
+			<if test="path!=null and path !=''">
+				path,
+			</if>
+			<if test="permissionName!=null and permissionName !=''">
+				permission_name,
+			</if>
+			<if test="menuName!=null and parentId !=''">
+				menu_name,
+			</if>
+			<if test="url!=null and url !=''">
+				url,
+			</if>
+			<if test="isDisabled!=null">
+				is_disabled,
+			</if>
+			<if test="note!=null and note !=''">
+				note,
+			</if>
+			<if test="sort!=null and sort !=''">
+				sort,
+			</if>
+			<if test="gmtCreate!=null">
+				gmt_create,
+			</if>
+			<if test="gmtUpdate!=null">
+				gmt_update,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="parentId!=null and parentId !=''">
+				#{parentId},
+			</if>
+			<if test="path!=null and path !=''">
+				#{path},
+			</if>
+			<if test="permissionName!=null and permissionName !=''">
+				#{permissionName},
+			</if>
+			<if test="menuName!=null and menuName !=''">
+				#{menuName},
+			</if>
+			<if test="url!=null and url !=''">
+				#{url},
+			</if>
+			<if test="isDisabled!=null">
+				#{isDisabled},
+			</if>
+			<if test="note!=null and note !=''">
+				#{note},
+			</if>
+			<if test="sort!=null and sort !=''">
+				#{sort},
+			</if>
+			<if test="gmtCreate!=null">
+				#{gmtCreate},
+			</if>
+			<if test="gmtUpdate!=null">
+				#{gmtUpdate},
+			</if>
+		</trim>
+	</sql>
 	<!-- 添加一个作家权限 -->
-	<insert id="addWriterPermission" parameterType="WriterPermission" useGeneratedKeys="true" keyProperty="id">
+	<insert id="addWriterPermission" parameterType="WriterPermission"
+		useGeneratedKeys="true" keyProperty="id">
 		insert into writer_permission
-			(<include refid="key"/>)
-        VALUES
-        	(<include refid="value"/>);
+		(
+		<include refid="key" />
+		)
+		VALUES
+		(
+		<include refid="value" />
+		);
 	</insert>
 
 	<!-- 删除一个或者多个作家权限 -->
@@ -93,69 +98,71 @@
 	<!-- 修改作家权限 -->
 	<update id="updateWriterPermissionById" parameterType="WriterPermission">
 		update
-		writer_permission 
-		 <set>
-		 	 <if test="parentId!=null and parentId!='' ">
-                parent_id =#{parentId},
-            </if>
-            <if test="path!=null and path !='' ">
-                path=#{path},
-            </if>
-        	<if test="peermissionName != null and peermissionName!=''">
-                permission_name = #{peermissionName},
-            </if>
-             <if test="menuName!=null and menuName!=''">
-                menu_name =#{menuName},
-            </if>
-             <if test="url!=null and url!=''">
-                url=#{url},
-            </if>
-           <if test="isDisabled != null and isDisabled!=''">
-                is_disabled = #{isDisabled},
-            </if>
-            <if test="note != null and note!=''">
-                note = #{note},
-            </if>
-            <if test="sort != null and sort!=''">
-                sort = #{sort}
-            </if>
-        </set>
-		  where id=#{id} ;
+		writer_permission
+		<set>
+			<if test="parentId!=null and parentId!='' ">
+				parent_id =#{parentId},
+			</if>
+			<if test="path!=null and path !='' ">
+				path=#{path},
+			</if>
+			<if test="permissionName != null and permissionName!=''">
+				permission_name = #{permissionName},
+			</if>
+			<if test="menuName!=null and menuName!=''">
+				menu_name =#{menuName},
+			</if>
+			<if test="url!=null and url!=''">
+				url=#{url},
+			</if>
+			<if test="isDisabled != null ">
+				is_disabled = #{isDisabled},
+			</if>
+			<if test="note != null and note!=''">
+				note = #{note},
+			</if>
+			<if test="sort != null and sort!=''">
+				sort = #{sort}
+			</if>
+		</set>
+		where id=#{id} ;
 	</update>
 
 	<!-- 根据权限名称查询 -->
-	<select id="getWriterPermissionByPermissionName" parameterType="String" resultType="WriterPermission">
-		select * from writer_permission where permission_name = #{permissionName};
+	<select id="getWriterPermissionByPermissionName" parameterType="String"
+		resultType="WriterPermission">
+		select * from writer_permission where permission_name =
+		#{permissionName};
 	</select>
-	
-	<select id="getListResource" resultType="WriterPermission">
-        SELECT
-             `id`,
-            `parent_id`,
-            `path`,
-            `permission_name`,
-            `menu_name`,
-            `url`
-        FROM
-          `writer_permission`
-    </select>
-    
-    <delete id="delete" parameterType="Long">
-        DELETE FROM writer_permission
-        WHERE id = #{id}
-    </delete>
 
-    <select id="get" parameterType="Long" resultType="WriterPermission">
-        SELECT
-            `id`,
-            `parent_id`,
-            `path`,
-            `permission_name`,
-            `menu_name`,
-            `url`
-        FROM
-          `writer_permission`
-        WHERE id = #{id}
-    </select>
-    
+	<select id="getListResource" resultType="WriterPermission">
+		SELECT
+		`id`,
+		`parent_id`,
+		`path`,
+		`permission_name`,
+		`menu_name`,
+		`url`
+		FROM
+		`writer_permission`
+	</select>
+
+	<delete id="delete" parameterType="Long">
+		DELETE FROM writer_permission
+		WHERE id = #{id}
+	</delete>
+
+	<select id="get" parameterType="Long" resultType="WriterPermission">
+		SELECT
+		`id`,
+		`parent_id`,
+		`path`,
+		`permission_name`,
+		`menu_name`,
+		`url`
+		FROM
+		`writer_permission`
+		WHERE id = #{id}
+	</select>
+
 </mapper>

@@ -3,195 +3,205 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.PmphRoleDao">
 	<sql id="key">
-        <!-- 去掉最后一个, -->
-        <trim suffixOverrides=",">
-            <if test="roleName!=null">
-                role_name,
-            </if>
-            <if test="isDisabled!=null">
-                is_disabled,
-            </if>
-             <if test="note!=null">
-                note,
-            </if>
-             <if test="sort!=null">
-                sort,
-            </if>
-             <if test="gmtCreate!=null">
-                gmt_create,
-            </if> 
-            <if test="gmtUpdate!=null">
-                gmt_update,
-            </if>
-        </trim>
-    </sql>
-    <!-- sql片段对应?,id属性值任意 -->
-    <sql id="value">
-        <!-- 去掉最后一个, -->
-        <trim suffixOverrides=",">
-            <if test="roleName!=null">
-                #{roleName},
-            </if>
-            <if test="isDisabled!=null">
-               #{isDisabled},
-            </if>
-             <if test="note!=null">
-                #{note},
-            </if>
-             <if test="sort!=null">
-                #{sort},
-            </if>
-             <if test="gmtCreate!=null">
-               #{gmtCreate},
-            </if> 
-            <if test="gmtUpdate!=null">
-                #{gmtUpdate},
-            </if>
-        </trim>
-    </sql>
-	<insert id="add" parameterType="PmphRole" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO pmph_role
-        	(<include refid="key"/>)
-        VALUES
-        	(<include refid="value"/>);
-    </insert>
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="roleName!=null and roleName !=''">
+				role_name,
+			</if>
+			<if test="isDisabled!=null">
+				is_disabled,
+			</if>
+			<if test="note!=null and note !=''">
+				note,
+			</if>
+			<if test="sort!=null and sort !=''">
+				sort,
+			</if>
+			<if test="gmtCreate!=null">
+				gmt_create,
+			</if>
+			<if test="gmtUpdate!=null">
+				gmt_update,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="roleName!=null and roleName !=''">
+				#{roleName},
+			</if>
+			<if test="isDisabled!=null">
+				#{isDisabled},
+			</if>
+			<if test="note!=null and note !=''">
+				#{note},
+			</if>
+			<if test="sort!=null and sort !=''">
+				#{sort},
+			</if>
+			<if test="gmtCreate!=null">
+				#{gmtCreate},
+			</if>
+			<if test="gmtUpdate!=null">
+				#{gmtUpdate},
+			</if>
+		</trim>
+	</sql>
+	<insert id="add" parameterType="PmphRole" useGeneratedKeys="true"
+		keyProperty="id">
+		INSERT INTO pmph_role
+		(
+		<include refid="key" />
+		)
+		VALUES
+		(
+		<include refid="value" />
+		);
+	</insert>
 
-    <delete id="delete" parameterType="Long">
-        DELETE FROM pmph_role
-        WHERE id = #{id}
-    </delete>
+	<delete id="delete" parameterType="Long">
+		DELETE FROM pmph_role
+		WHERE id = #{id}
+	</delete>
 
-    <delete id="batchDelete" parameterType="list">
-        DELETE FROM pmph_role
-        WHERE id IN
-        <foreach collection="ids" separator="," item="id" open="(" close=")">
-            #{id}
-        </foreach>
-    </delete>
+	<delete id="batchDelete" parameterType="list">
+		DELETE FROM pmph_role
+		WHERE id IN
+		<foreach collection="ids" separator="," item="id" open="("
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
 
-    <select id="get" parameterType="Long" resultType="PmphRole">
-        SELECT
-           *
-        FROM
-            pmph_role
-        WHERE id = #{id}
-    </select>
+	<select id="get" parameterType="Long" resultType="PmphRole">
+		SELECT
+		*
+		FROM
+		pmph_role
+		WHERE id = #{id}
+	</select>
 
-    <update id="update" parameterType="PmphRole">
-        UPDATE
-            pmph_role
-        <set>
-        	<if test="roleName != null and roleName!=''">
-                role_name = #{roleName},
-            </if>
-           <if test="isDisabled != null and isDisabled!=''">
-                is_disabled = #{isDisabled},
-            </if>
-            <if test="note != null and note!=''">
-                note = #{note},
-            </if>
-            <if test="sort != null and sort!=''">
-                sort = #{sort},
-            </if>
-        </set>
-    </update>
+	<update id="update" parameterType="PmphRole">
+		UPDATE
+		pmph_role
+		<set>
+			<if test="roleName != null and roleName!=''">
+				role_name = #{roleName},
+			</if>
+			<if test="isDisabled != null">
+				is_disabled = #{isDisabled},
+			</if>
+			<if test="note != null and note!=''">
+				note = #{note},
+			</if>
+			<if test="sort != null and sort!=''">
+				sort = #{sort},
+			</if>
+		</set>
+	</update>
 
-    <select id="getListRole" resultType="PmphRole">
-        SELECT
-            id,
-            `role_name`
-        FROM
-           pmph_role
-    </select>
+	<select id="getListRole" resultType="PmphRole">
+		SELECT
+		id,
+		`role_name`
+		FROM
+		pmph_role
+	</select>
 
-    <select id="getUserRole" resultType="PmphUserRole" parameterType="map">
-        SELECT
-            id,
-            user_id,
-            role_id
-        FROM
-            pmph_user_role
-        WHERE
-            user_id = #{userId} AND role_id = #{roleId}
-    </select>
-	
-    <insert id="addUserRole" parameterType="map">
-        INSERT INTO `pmph_user_role`(`user_id`,`role_id`)
-        VALUES(#{userId},#{roleId})
-    </insert>
+	<select id="getUserRole" resultType="PmphUserRole"
+		parameterType="map">
+		SELECT
+		id,
+		user_id,
+		role_id
+		FROM
+		pmph_user_role
+		WHERE
+		user_id = #{userId} AND role_id = #{roleId}
+	</select>
 
-    <!-- 批量添加用户角色关联表数据 -->
-    <insert id="addUserRoles" parameterType="map">
-        INSERT INTO `pmph_user_role`(`user_id`,`role_id`)
-        VALUES
-        <foreach collection="roleIds" item="role_id" separator=",">
-            (#{userId},#{role_id})
-        </foreach>
-    </insert>
+	<insert id="addUserRole" parameterType="map">
+		INSERT INTO `pmph_user_role`(`user_id`,`role_id`)
+		VALUES(#{userId},#{roleId})
+	</insert>
 
-    <delete id="deleteUserRole" parameterType="map">
-        DELETE FROM pmph_user_role
-        WHERE
-            user_id = #{userId} AND role_id = #{roleId}
-    </delete>
+	<!-- 批量添加用户角色关联表数据 -->
+	<insert id="addUserRoles" parameterType="map">
+		INSERT INTO `pmph_user_role`(`user_id`,`role_id`)
+		VALUES
+		<foreach collection="roleIds" item="role_id" separator=",">
+			(#{userId},#{role_id})
+		</foreach>
+	</insert>
 
-    <!-- 删除这个用户所有的角色 -->
-    <delete id="deleteUserRoles">
-        DELETE FROM pmph_user_role
-        WHERE
-            user_id = #{userId}
-    </delete>
+	<delete id="deleteUserRole" parameterType="map">
+		DELETE FROM pmph_user_role
+		WHERE
+		user_id = #{userId} AND role_id = #{roleId}
+	</delete>
 
-    <!-- 根据角色 id 查询该角色 id 下的所有资源 -->
-    <select id="getListRoleResource" parameterType="Long" resultType="PmphPermission">
-        SELECT
-            tr.`id`,
-            tr.`parent_id`,
-            tr.`path`,
-            tr.`permission_name`,
-            tr.`menu_name`,
-            tr.`url`
-        FROM `pmph_permission` tr
-        LEFT JOIN `pmph_role_permission` trr ON tr.`id` = trr.`permission_id`
-        WHERE trr.`role_id` = #{roleId}
-    </select>
+	<!-- 删除这个用户所有的角色 -->
+	<delete id="deleteUserRoles">
+		DELETE FROM pmph_user_role
+		WHERE
+		user_id = #{userId}
+	</delete>
 
-    <insert id="addRoleResource" parameterType="map">
-        INSERT INTO pmph_role_permission(role_id,permission_id)
-        VALUES(#{roleId},#{permissionId})
-    </insert>
+	<!-- 根据角色 id 查询该角色 id 下的所有资源 -->
+	<select id="getListRoleResource" parameterType="Long"
+		resultType="PmphPermission">
+		SELECT
+		tr.`id`,
+		tr.`parent_id`,
+		tr.`path`,
+		tr.`permission_name`,
+		tr.`menu_name`,
+		tr.`url`
+		FROM `pmph_permission` tr
+		LEFT JOIN `pmph_role_permission` trr ON tr.`id` = trr.`permission_id`
+		WHERE trr.`role_id` = #{roleId}
+	</select>
 
-    <delete id="deleteRoleResource" parameterType="map">
-        DELETE FROM pmph_role_permission
-        WHERE
-            role_id = #{roleId} AND permission_id = #{permissionId}
-    </delete>
+	<insert id="addRoleResource" parameterType="map">
+		INSERT INTO pmph_role_permission(role_id,permission_id)
+		VALUES(#{roleId},#{permissionId})
+	</insert>
 
-    <select id="getResourceRole" parameterType="map" resultType="PmphPermission">
-        SELECT
-            id,
-            role_id,
-            permission_id
-        FROM
-            pmph_role_permission
-        WHERE
-            role_id = #{roleId} AND permission_id = #{permissionId}
-    </select>
+	<delete id="deleteRoleResource" parameterType="map">
+		DELETE FROM pmph_role_permission
+		WHERE
+		role_id = #{roleId} AND permission_id = #{permissionId}
+	</delete>
 
-    <delete id="batchDeleteRoleResource" parameterType="list">
-        DELETE FROM pmph_role_permission
-        WHERE role_id IN
-        <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
-            #{roleId}
-        </foreach>
-    </delete>
+	<select id="getResourceRole" parameterType="map" resultType="PmphPermission">
+		SELECT
+		id,
+		role_id,
+		permission_id
+		FROM
+		pmph_role_permission
+		WHERE
+		role_id = #{roleId} AND permission_id = #{permissionId}
+	</select>
 
-    <delete id="deleteRoleAndUser" parameterType="list">
-        DELETE FROM pmph_user_role
-        WHERE role_id in
-        <foreach collection="ids" item="id" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
-	
+	<delete id="batchDeleteRoleResource" parameterType="list">
+		DELETE FROM pmph_role_permission
+		WHERE role_id IN
+		<foreach collection="roleIds" item="roleId" open="("
+			separator="," close=")">
+			#{roleId}
+		</foreach>
+	</delete>
+
+	<delete id="deleteRoleAndUser" parameterType="list">
+		DELETE FROM pmph_user_role
+		WHERE role_id in
+		<foreach collection="ids" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
 </mapper>

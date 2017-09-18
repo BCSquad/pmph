@@ -6,10 +6,10 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="materialId!=null">
+			<if test="materialId!=null and materialId !=''">
 				material_id,
 			</if>
-			<if test="extensionName!=null">
+			<if test="extensionName!=null and extensionName !=''">
 				extension_name,
 			</if>
 			<if test="isRequired!=null">
@@ -21,10 +21,10 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="materialId!=null">
+			<if test="materialId!=null and materialId !=''">
 				#{materialId},
 			</if>
-			<if test="extensionName!=null">
+			<if test="extensionName!=null and extensionName !=''">
 				#{extensionName},
 			</if>
 			<if test="isRequired!=null">
@@ -69,7 +69,7 @@
 			<if test="extensionName != null and extensionName !='' ">
 				extension_name = #{extensionName},
 			</if>
-			<if test=" isRequired != null and isRequired !=''">
+			<if test=" isRequired != null">
 				is_required= #{isRequired},
 			</if>
 		</set>

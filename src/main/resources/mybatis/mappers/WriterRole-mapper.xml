@@ -4,16 +4,16 @@
 	<sql id="key">
         <!-- 去掉最后一个, -->
         <trim suffixOverrides=",">
-            <if test="roleName!=null">
+            <if test="roleName!=null and rileName !=''">
                 role_name,
             </if>
             <if test="isDisabled!=null">
                 is_disabled,
             </if>
-             <if test="note!=null">
+             <if test="note!=null and note !=''">
                 note,
             </if>
-             <if test="sort!=null">
+             <if test="sort!=null and sort !=''">
                 sort,
             </if>
              <if test="gmtCreate!=null">
@@ -28,16 +28,16 @@
     <sql id="value">
         <!-- 去掉最后一个, -->
         <trim suffixOverrides=",">
-            <if test="roleName!=null">
+            <if test="roleName!=null and roleName !=''">
                 #{roleName},
             </if>
             <if test="isDisabled!=null">
                #{isDisabled},
             </if>
-             <if test="note!=null">
+             <if test="note!=null and note !=''">
                 #{note},
             </if>
-             <if test="sort!=null">
+             <if test="sort!=null and sort !=''">
                 #{sort},
             </if>
              <if test="gmtCreate!=null">
@@ -84,7 +84,7 @@
 			<if test="roleName != null and roleName!=''">
 				role_name = #{roleName},
 			</if>
-			<if test="isDisabled != null and isDisabled!=''">
+			<if test="isDisabled != null">
 				is_disabled = #{isDisabled},
 			</if>
 			<if test="note != null and note!=''">

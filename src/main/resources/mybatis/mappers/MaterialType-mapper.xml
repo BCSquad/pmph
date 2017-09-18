@@ -6,19 +6,19 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="parentId!=null">
+			<if test="parentId!=null and parentId !=''">
 				parent_id,
 			</if>
-			<if test="path!=null">
+			<if test="path!=null and path !=''">
 				path,
 			</if>
-			<if test="typeName!=null">
+			<if test="typeName!=null and typeName !=''">
 				type_name,
 			</if>
-			<if test="sort!=null">
+			<if test="sort!=null and sort !=''">
 				sort,
 			</if>
-			<if test="note!=null">
+			<if test="note!=null and note !=''">
 				note,
 			</if>
 		</trim>
@@ -27,19 +27,19 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="parentId!=null">
+			<if test="parentId!=null and parentId !=''">
 				#{parentId},
 			</if>
-			<if test="path!=null">
+			<if test="path!=null and path !=''">
 				#{path},
 			</if>
-			<if test="typeName!=null">
+			<if test="typeName!=null and typeName !=''">
 				#{typeName},
 			</if>
-			<if test="sort!=null">
+			<if test="sort!=null and sort !=''">
 				#{sort},
 			</if>
-			<if test="note!=null">
+			<if test="note!=null and note !=''">
 				#{note},
 			</if>
 		</trim>

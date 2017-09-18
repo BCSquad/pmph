@@ -28,7 +28,7 @@ public class WriterPermission implements Serializable {
     /**
      * 许可名称
      */
-    private String  peermissionName;
+    private String  permissionName;
     /**
      * 菜单名称
      */
@@ -74,12 +74,12 @@ public class WriterPermission implements Serializable {
      * @param gmtCreate
      * @param gmtUpdate
      */
-    public WriterPermission(Long parentId, String path, String peermissionName, String menuName,
+    public WriterPermission(Long parentId, String path, String permissionName, String menuName,
     String url, boolean isDisabled, String note, Integer sort, Date gmtCreate, Date gmtUpdate) {
         super();
         this.parentId = parentId;
         this.path = path;
-        this.peermissionName = peermissionName;
+        this.permissionName = permissionName;
         this.menuName = menuName;
         this.url = url;
         this.isDisabled = isDisabled;
@@ -135,14 +135,14 @@ public class WriterPermission implements Serializable {
      * @return the peermissionName
      */
     public String getPeermissionName() {
-        return peermissionName;
+        return permissionName;
     }
 
     /**
      * @param peermissionName the peermissionName to set
      */
-    public void setPeermissionName(String peermissionName) {
-        this.peermissionName = peermissionName;
+    public void setPeermissionName(String permissionName) {
+        this.permissionName = permissionName;
     }
 
     /**
@@ -251,7 +251,7 @@ public class WriterPermission implements Serializable {
     @Override
     public String toString() {
         return "WriterPermission {id=" + id + ", parentId=" + parentId + ", path=" + path
-               + ", peermissionName=" + peermissionName + ", menuName=" + menuName + ", url=" + url
+               + ", peermissionName=" + permissionName + ", menuName=" + menuName + ", url=" + url
                + ", isDisabled=" + isDisabled + ", note=" + note + ", sort=" + sort
                + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "}";
     }
