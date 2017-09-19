@@ -3,29 +3,107 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.PmphGroupMemberDao">
 
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="gruopId != null and gruopId !=''">
+				group_id,
+			</if>
+			<if test="memberId != null and memberId !=''">
+				member_id,
+			</if>
+			<if test=" isWriter != null ">
+				is_writer,
+			</if>
+			<if test="isFounder != null">
+				is_founder,
+			</if>
+			<if test="isAdmin != null">
+				is_admin,
+			</if>
+			<if test=" displayName != null and displayName !=''">
+				display_name,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="gruopId != null and gruopId !=''">
+				#{gruopId},
+			</if>
+			<if test="memberId != null and memberId !=''">
+				#{memberId},
+			</if>
+			<if test=" isWriter != null ">
+				#{isWriter},
+			</if>
+			<if test="isFounder != null ">
+				#{isFounder},
+			</if>
+			<if test="isAdmin != null ">
+				#{isAdmin},
+			</if>
+			<if test=" displayName != null and displayName !=''">
+				#{displayName},
+			</if>
+		</trim>
+	</sql>
+
 	<!-- 新增 PmphGroupMember -->
-    <insert id="addPmphGroupMember"  parameterType="PmphGroupMember"  useGeneratedKeys="true" keyProperty="id"  >
-     	insert  into  pmph_group_member 
-     	        (group_id,member_id,is_writer,   is_founder,is_admin,display_name) 
-        values(#{gruopId},#{memberId},#{isWriter},#{isFounder},#{isAdmin},#{displayName}) ;
-    </insert>
-    
-   <!-- 根据id删除一个 PmphGroupMember -->
-	<delete id="deletePmphGroupMemberById" parameterType="PmphGroupMember"   >
-		delete from  pmph_group_member where where id=#{id} ;
+	<insert id="addPmphGroupMember" parameterType="PmphGroupMember">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into pmph_group_member
+		(
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 根据id删除一个 PmphGroupMember -->
+	<delete id="deletePmphGroupMemberById" parameterType="java.lang.Long">
+		delete from
+		pmph_group_member where id=#{id} ;
 	</delete>
-	
+
 	<!-- 更新 PmphGroupMember -->
-	<update id="updatePmphGroupMemberById"   parameterType="PmphGroupMember"  >
-		update pmph_group_member  
-		  set  group_id=#{gruopId},member_id=#{memberId},is_writer=#{isWriter},
-		       is_founder=#{isFounder},is_admin=#{isAdmin},display_name= #{displayName}
-        where id=#{id} ;
+	<update id="updatePmphGroupMember" parameterType="PmphGroupMember">
+		update
+		pmph_group_member
+		<set>
+			<if test="gruopId != null and gruopId !=''">
+				group_id = #{gruopId},
+			</if>
+			<if test="memberId != null and memberId !='' ">
+				member_id = #{memberId},
+			</if>
+			<if test=" isWriter != null">
+				is_writer= #{isWriter},
+			</if>
+			<if test="isFounder != null ">
+				is_founder = #{isFounder},
+			</if>
+			<if test="isAdmin != null ">
+				is_admin = #{isAdmin},
+			</if>
+			<if test=" displayName != null and displayName !=''">
+				display_name= #{displayName},
+			</if>
+		</set>
+		where id=#{id} ;
 	</update>
-	
+
 	<!-- 根据id查询一个 PmphGroupMember -->
-	<select  id="getPmphGroupMemberById" parameterType="PmphGroupMember"  resultType="PmphGroupMember" >
-		select * from pmph_group_member where id=#{id} ;
+	<select id="getPmphGroupMemberById" parameterType="java.lang.Long"
+		resultType="PmphGroupMember">
+		select * from pmph_group_member where
+		id=#{id} ;
 	</select>
-	
+
 </mapper>

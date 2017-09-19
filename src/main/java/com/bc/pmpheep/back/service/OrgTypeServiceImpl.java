@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.OrgTypeDao;
 import com.bc.pmpheep.back.po.OrgType;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * OrgTypeService 接口实现
@@ -20,53 +23,57 @@ public class OrgTypeServiceImpl extends BaseService implements OrgTypeService {
 	/**
 	 * 
 	 * @param OrgType 实体对象
-	 * @return  影响行数
-	 * @throws Exception 
+	 * @return  带主键的OrgType
+	 * @throws CheckedServiceException 
 	 */
 	@Override
-	public Integer addOrgType(OrgType orgType) throws Exception{
-		return orgTypeDao.addOrgType(orgType);
+	public OrgType addOrgType(OrgType orgType) throws CheckedServiceException{
+		if(null==orgType.getTypeName()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构类型名称为空");
+		}
+		orgTypeDao.addOrgType(orgType);
+		return orgType;
 	}
 	
 	/**
 	 * 
 	 * @param OrgType 必须包含主键ID
 	 * @return  OrgType
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public OrgType getOrgTypeById(OrgType orgType) throws Exception{
-		if(null==orgType.getId()){
-			throw new NullPointerException("主键id为空");
+	public OrgType getOrgTypeById(Long id) throws CheckedServiceException{
+		if(null==id){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return orgTypeDao.getOrgTypeById(orgType);
+		return orgTypeDao.getOrgTypeById(id);
 	}
 	
 	/**
 	 * 
-	 * @param area
+	 * @param id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Integer deleteOrgTypeById(OrgType orgType) throws Exception{
-		if(null==orgType.getId()){
-			throw new NullPointerException("主键id为空");
+	public Integer deleteOrgTypeById(Long id) throws CheckedServiceException{
+		if(null==id){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return orgTypeDao.deleteOrgTypeById(orgType);
+		return orgTypeDao.deleteOrgTypeById(id);
 	}
 	
 	/**
-	 * @param area
+	 * @param orgType
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override 
-	public Integer updateOrgTypeById(OrgType orgType) throws Exception{
+	public Integer updateOrgType(OrgType orgType) throws CheckedServiceException{
 		if(null==orgType.getId()){
-			throw new NullPointerException("主键id为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return orgTypeDao.updateOrgTypeById(orgType);
+		return orgTypeDao.updateOrgType(orgType);
 	}
 	
 

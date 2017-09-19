@@ -5,6 +5,7 @@ import java.util.List;
 import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * WriterUserService 接口
@@ -19,7 +20,7 @@ public interface WriterUserService {
      * 
      * @param user
      */
-    WriterUser add(WriterUser user) throws Exception;
+    WriterUser add(WriterUser user) throws CheckedServiceException;
 
     /**
      * 批量添加用户角色关联表数据
@@ -27,21 +28,21 @@ public interface WriterUserService {
      * @param user
      * @param rids
      */
-    WriterUser add(WriterUser user, List<Integer> rids) throws Exception;
+    WriterUser add(WriterUser user, List<Long> rids) throws CheckedServiceException;
 
     /**
      * 根据 user_id 删除用户数据
      * 
      * @param id
      */
-    void delete(int id) throws Exception;
+    void delete(Long id) throws CheckedServiceException;
 
     /**
      * 删除用户和用户绑定的角色信息
      * 
      * @param ids
      */
-    void deleteUserAndRole(List<Integer> ids) throws Exception;
+    void deleteUserAndRole(List<Long> ids) throws CheckedServiceException;
 
     /**
      * // TODO: 2016/9/18 应该设置为一个事务 更新用户数据 1、更新用户基本信息 2、更新用户所属角色 （1）先删除所有的角色 （2）再添加绑定的角色
@@ -49,7 +50,7 @@ public interface WriterUserService {
      * @param user
      * @param rids
      */
-    WriterUser update(WriterUser user, List<Integer> rids) throws Exception;
+    WriterUser update(WriterUser user, List<Long> rids) throws CheckedServiceException;
 
     /**
      * 更新单个用户信息
@@ -57,7 +58,7 @@ public interface WriterUserService {
      * @param user
      * @return
      */
-    WriterUser update(WriterUser user) throws Exception;
+    WriterUser update(WriterUser user) throws CheckedServiceException;
 
     /**
      * 根据主键 id 加载用户对象
@@ -65,7 +66,7 @@ public interface WriterUserService {
      * @param id
      * @return
      */
-    WriterUser get(int id) throws Exception;
+    WriterUser get(Long id) throws CheckedServiceException;
 
     /**
      * 根据用户名加载用户对象（用于登录使用）
@@ -73,7 +74,7 @@ public interface WriterUserService {
      * @param username
      * @return
      */
-    WriterUser getByUsername(String username) throws Exception;
+    WriterUser getByUsername(String username) throws CheckedServiceException;
 
     /**
      * 登录逻辑 1、先根据用户名查询用户对象 2、如果有用户对象，则继续匹配密码 如果没有用户对象，则抛出异常
@@ -82,14 +83,14 @@ public interface WriterUserService {
      * @param password
      * @return
      */
-    WriterUser login(String username, String password) throws Exception;
+    WriterUser login(String username, String password) throws CheckedServiceException;
 
     /**
      * 查询所有的用户对象列表
      * 
      * @return
      */
-    List<WriterUser> getList() throws Exception;
+    List<WriterUser> getList() throws CheckedServiceException;
 
     /**
      * 根据角色 id 查询是这个角色的所有用户
@@ -97,7 +98,7 @@ public interface WriterUserService {
      * @param id
      * @return
      */
-    List<WriterUser> getListByRole(int id) throws Exception;
+    List<WriterUser> getListByRole(Long id) throws CheckedServiceException;
 
     /**
      * 查询指定用户 id 所拥有的权限
@@ -105,7 +106,7 @@ public interface WriterUserService {
      * @param uid
      * @return
      */
-    List<WriterPermission> getListAllResource(int uid) throws Exception;
+    List<WriterPermission> getListAllResource(Long uid) throws CheckedServiceException;
 
     /**
      * 查询指定用户所指定的角色字符串列表
@@ -113,7 +114,7 @@ public interface WriterUserService {
      * @param uid
      * @return
      */
-    List<String> getListRoleSnByUser(int uid) throws Exception;
+    List<String> getListRoleSnByUser(Long uid) throws CheckedServiceException;
 
     /**
      * 查询指定用户所绑定的角色列表
@@ -121,6 +122,6 @@ public interface WriterUserService {
      * @param uid
      * @return
      */
-    List<WriterRole> getListUserRole(int uid) throws Exception;
+    List<WriterRole> getListUserRole(Long uid) throws CheckedServiceException;
 
 }

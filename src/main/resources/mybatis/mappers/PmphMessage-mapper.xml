@@ -3,24 +3,68 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.PmphMessageDao">
 
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="msgCode != null and msgCode !=''">
+				msg_code,
+			</if>
+			<if test="msgType != null and msgType !=''">
+				msg_type,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="msgCode != null and msgCode !=''">
+				#{msgCode},
+			</if>
+			<if test="msgType != null and msgType !=''">
+				#{msgType},
+			</if>
+		</trim>
+	</sql>
+
 	<!-- 新增 PmphMessage -->
-    <insert id="addPmphMessage"  parameterType="PmphMessage"  useGeneratedKeys="true" keyProperty="id"  >
-    	insert  into  pmph_message (msg_code,msg_type)  values(#{msgCode},#{msgType})  ;
-    </insert>
-    
-   <!-- 根据id删除一个 PmphMessage -->
-	<delete id="deletePmphMessageById" parameterType="PmphMessage"   >
-		delete from  pmph_message where where id=#{id} ;
+	<insert id="addPmphMessage" parameterType="PmphMessage">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into pmph_message (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 根据id删除一个 PmphMessage -->
+	<delete id="deletePmphMessageById" parameterType="java.lang.Long">
+		delete from
+		pmph_message where id=#{id} ;
 	</delete>
-	
+
 	<!-- 更新 PmphMessage -->
-	<update id="updatePmphMessageById"   parameterType="PmphMessage"  >
-		update pmph_message  set msg_code=#{msgCode} , msg_type=#{msgType}  where id=#{id} ;
+	<update id="updatePmphMessage" parameterType="PmphMessage">
+		update pmph_message
+		<set>
+			<if test="msgCode != null and msgCode !='' ">
+				msg_code = #{msgCode},
+			</if>
+			<if test="msgType != null and msgType !=''">
+				msg_type= #{msgType},
+			</if>
+		</set>
+		where id=#{id} ;
 	</update>
-	
+
 	<!-- 根据id查询一个 PmphGroup -->
-	<select  id="getPmphMessageById" parameterType="PmphMessage"  resultType="PmphMessage" >
+	<select id="getPmphMessageById" parameterType="java.lang.Long"
+		resultType="PmphMessage">
 		select * from pmph_message where id=#{id} ;
 	</select>
-	
+
 </mapper>

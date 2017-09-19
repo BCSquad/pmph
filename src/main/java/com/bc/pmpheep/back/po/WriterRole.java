@@ -10,6 +10,7 @@ import org.apache.ibatis.type.Alias;
  * @author Thinkpad
  *
  */
+@SuppressWarnings("serial")
 @Alias("WriterRole")
 public class WriterRole implements Serializable {
     /**

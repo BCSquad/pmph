@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.MaterialDao">
+
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="materialName!=null">
+				material_name,
+			</if>
+			<if test="materialRound != null">
+				material_round,
+			</if>
+			<if test="materialType!=null">
+				material_type,
+			</if>
+			<if test="deadline!=null">
+				deadline,
+			</if>
+			<if test="actualDeadline!=null">
+				actual_deadline,
+			</if>
+			<if test="ageDeadline!=null">
+				age_deadline,
+			</if>
+			<if test="mailAddress!=null">
+				mail_address,
+			</if>
+			<if test="progress!=null">
+				progress,
+			</if>
+			<if test="departmentId!=null">
+				department_id,
+			</if>
+			<if test="director!=null">
+				director,
+			</if>
+			<if test="projectEditor!=null">
+				project_editor,
+			</if>
+			<if test="isMultiBooks!=null">
+				is_multi_books,
+			</if>
+			<if test="isMultiPosition!=null">
+				is_multi_position,
+			</if>
+			<if test="isEduExpUsed!=null">
+				is_edu_exp_used,
+			</if>
+			<if test="isEduExpRequired!=null">
+				is_edu_exp_required,
+			</if>
+			<if test="isWorkExpUsed!=null">
+				is_work_exp_used,
+			</if>
+			<if test="isWorkExpRequired!=null">
+				is_work_exp_required,
+			</if>
+			<if test="isTeachExpUsed!=null">
+				is_teach_exp_used,
+			</if>
+			<if test="isTeachExpRequired!=null">
+				is_teach_exp_required,
+			</if>
+			<if test="isAcadeUsed!=null">
+				is_acade_used,
+			</if>
+			<if test="isAcadeRequired!=null">
+				is_acade_required,
+			</if>
+			<if test="isLastPositionUsed!=null">
+				is_last_position_used,
+			</if>
+			<if test="isLastPositionRequired!=null">
+				is_last_position_required,
+			</if>
+			<if test="isNationalCourseUsed!=null">
+				is_national_course_used,
+			</if>
+			<if test="isNationalCourseRequired!=null">
+				is_national_course_required,
+			</if>
+			<if test="isProvincialCourseUsed!=null">
+				is_provincial_course_used,
+			</if>
+			<if test="isProvincialCourseRequired!=null">
+				is_provincial_course_required,
+			</if>
+			<if test="isSchoolCourseUsed!=null">
+				is_school_course_used,
+			</if>
+			<if test="isSchoolCourseRequired!=null">
+				is_school_course_required,
+			</if>
+			<if test="isNationalPlanUsed!=null">
+				is_national_plan_used,
+			</if>
+			<if test="isNationalPlanRequired!=null">
+				is_national_plan_required,
+			</if>
+			<if test="isTextbookWriterUsed!=null">
+				is_textbook_writer_used,
+			</if>
+			<if test="isTextbookWriterRequired!=null">
+				is_textbook_writer_required,
+			</if>
+			<if test="isOtherTextbookUsed!=null">
+				is_other_textbook_used,
+			</if>
+			<if test="isOtherTextbookRequired!=null">
+				is_other_textbook_required,
+			</if>
+			<if test="isResearchUsed!=null">
+				is_research_used,
+			</if>
+			<if test="isResearchRequired!=null">
+				is_research_required,
+			</if>
+			<if test="isPublished!=null">
+				is_published,
+			</if>
+			<if test="isDeleted!=null">
+				is_deleted,
+			</if>
+			<if test="founderId != null">
+				founder_id,
+			</if>
+			<if test="menderId!=null">
+				mender_id,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="materialName!=null">
+				#{materialName},
+			</if>
+			<if test="materialRound !=null ">
+				#{materialRound},
+			</if>
+			<if test="materialType!=null">
+				#{materialType},
+			</if>
+			<if test="deadline!=null">
+				#{deadline},
+			</if>
+			<if test="actualDeadline!=null">
+				#{actualDeadline},
+			</if>
+			<if test="ageDeadline!=null">
+				#{ageDeadline},
+			</if>
+			<if test="mailAddress!=null">
+				#{mailAddress},
+			</if>
+			<if test="progress!=null">
+				#{progress},
+			</if>
+			<if test="departmentId!=null">
+				#{departmentId},
+			</if>
+			<if test="director!=null">
+				#{director},
+			</if>
+			<if test="projectEditor!=null">
+				#{projectEditor},
+			</if>
+			<if test="isMultiBooks!=null">
+				#{isMultiBooks},
+			</if>
+			<if test="isMultiPosition!=null">
+				#{isMultiPosition},
+			</if>
+			<if test="isEduExpUsed!=null">
+				#{isEduExpUsed},
+			</if>
+			<if test="isEduExpRequired!=null">
+				#{isEduExpRequired},
+			</if>
+			<if test="isWorkExpUsed!=null">
+				#{isWorkExpUsed},
+			</if>
+			<if test="isWorkExpRequired!=null">
+				#{isWorkExpRequired},
+			</if>
+			<if test="isTeachExpUsed!=null">
+				#{isTeachExpUsed},
+			</if>
+			<if test="isTeachExpRequired!=null">
+				#{isTeachExpRequired},
+			</if>
+			<if test="isAcadeUsed!=null">
+				#{isAcadeUsed},
+			</if>
+			<if test="isAcadeRequired!=null">
+				#{isAcadeRequired},
+			</if>
+			<if test="isLastPositionUsed!=null">
+				#{isLastPositionUsed},
+			</if>
+			<if test="isLastPositionRequired!=null">
+				#{isLastPositionRequired},
+			</if>
+			<if test="isNationalCourseUsed!=null">
+				#{isNationalCourseUsed},
+			</if>
+			<if test="isNationalCourseRequired!=null">
+				#{isNationalCourseRequired},
+			</if>
+			<if test="isProvincialCourseUsed!=null">
+				#{isProvincialCourseUsed},
+			</if>
+			<if test="isProvincialCourseRequired!=null">
+				#{isProvincialCourseRequired},
+			</if>
+			<if test="isSchoolCourseUsed!=null">
+				#{isSchoolCourseUsed},
+			</if>
+			<if test="isSchoolCourseRequired!=null">
+				#{isSchoolCourseRequired},
+			</if>
+			<if test="isNationalPlanUsed!=null">
+				#{isNationalPlanUsed},
+			</if>
+			<if test="isNationalPlanRequired!=null">
+				#{isNationalPlanRequired},
+			</if>
+			<if test="isTextbookWriterUsed!=null">
+				#{isTextbookWriterUsed},
+			</if>
+			<if test="isTextbookWriterRequired!=null">
+				#{isTextbookWriterRequired},
+			</if>
+			<if test="isOtherTextbookUsed!=null">
+				#{isOtherTextbookUsed},
+			</if>
+			<if test="isOtherTextbookRequired!=null">
+				#{isOtherTextbookRequired},
+			</if>
+			<if test="isResearchUsed!=null">
+				#{isResearchUsed},
+			</if>
+			<if test="isResearchRequired!=null">
+				#{isResearchRequired},
+			</if>
+			<if test="isPublished!=null">
+				#{isPublished},
+			</if>
+			<if test="isDeleted!=null">
+				#{isDeleted},
+			</if>
+			<if test="founderId != null">
+				#{founderId},
+			</if>
+			<if test="menderId!=null">
+				#{menderId},
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 新增Material -->
+	<insert id="addMaterial" parameterType="Material">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		<!-- sql片段对应字段名,id属性值任意 -->
+		INSERT INTO material
+		(
+		<include refid="key" />
+		)
+		VALUES
+		(
+		<include refid="value" />
+		);
+	</insert>
+
+
+	<!-- 根据id删除一个 -->
+	<delete id="deleteMaterialById" parameterType="java.lang.Long">
+		delete from
+		material where
+		id=#{id} ;
+	</delete>
+
+	<!-- 更新Material -->
+	<update id="updateMaterial" parameterType="Material">
+		update material
+		<set>
+			<if test="materialName !=null and materialName !=''">
+				material_name=#{materialName},
+			</if>
+			<if test="materialRound !=null ">
+				material_round=#{materialRound},
+			</if>
+			<if test="materialType !=null ">
+				material_type=#{materialType},
+			</if>
+			<if test="deadline !=null ">
+				deadline=#{deadline},
+			</if>
+			<if test="actualDeadline !=null ">
+				actual_deadline=#{actualDeadline},
+			</if>
+			<if test="ageDeadline !=null ">
+				age_deadline=#{ageDeadline},
+			</if>
+			<if test="mailAddress !=null and mailAddress !=''">
+				mail_address=#{mailAddress},
+			</if>
+			<if test="progress !=null ">
+				progress=#{progress},
+			</if>
+			<if test="departmentId !=null ">
+				department_id=#{departmentId},
+			</if>
+			<if test="director !=null  ">
+				director=#{director},
+			</if>
+			<if test="projectEditor !=null  ">
+				project_editor=#{projectEditor},
+			</if>
+			<if test="isMultiBooks !=null ">
+				is_multi_books=#{isMultiBooks},
+			</if>
+			<if test="isMultiPosition !=null  ">
+				is_multi_position=#{isMultiPosition},
+			</if>
+			<if test="isEduExpUsed !=null  ">
+				is_edu_exp_used=#{isEduExpUsed},
+			</if>
+			<if test="isEduExpRequired !=null  ">
+				is_edu_exp_required=#{isEduExpRequired},
+			</if>
+			<if test="isWorkExpUsed !=null ">
+				is_work_exp_used=#{isWorkExpUsed},
+			</if>
+			<if test="isWorkExpRequired !=null  ">
+				is_work_exp_required=#{isWorkExpRequired},
+			</if>
+			<if test="isTeachExpUsed !=null  ">
+				is_teach_exp_used=#{isTeachExpUsed},
+			</if>
+			<if test="isTeachExpRequired !=null  ">
+				is_teach_exp_required=#{isTeachExpRequired},
+			</if>
+			<if test="isAcadeUsed !=null  ">
+				is_acade_used=#{isAcadeUsed},
+			</if>
+			<if test="isAcadeRequired !=null ">
+				is_acade_required=#{isAcadeRequired},
+			</if>
+			<if test="isLastPositionUsed !=null ">
+				is_last_position_used=#{isLastPositionUsed},
+			</if>
+			<if test="isLastPositionRequired !=null ">
+				is_last_position_required=#{isLastPositionRequired},
+			</if>
+			<if test="isNationalCourseUsed !=null  ">
+				is_national_course_used=#{isNationalCourseUsed},
+			</if>
+			<if
+				test="isNationalCourseRequired !=null  ">
+				is_national_course_required=#{isNationalCourseRequired},
+			</if>
+			<if test="isProvincialCourseUsed !=null  ">
+				is_provincial_course_used=#{isProvincialCourseUsed},
+			</if>
+			<if
+				test="isProvincialCourseRequired !=null  ">
+				is_provincial_course_required=#{isProvincialCourseRequired},
+			</if>
+			<if test="isSchoolCourseUsed !=null  ">
+				is_school_course_used=#{isSchoolCourseUsed},
+			</if>
+			<if test="isSchoolCourseRequired !=null  ">
+				is_school_course_required=#{isSchoolCourseRequired},
+			</if>
+			<if test="isNationalPlanUsed !=null  ">
+				is_national_plan_used=#{isNationalPlanUsed},
+			</if>
+			<if test="isNationalPlanRequired !=null  ">
+				is_national_plan_required=#isNationalPlanRequired},
+			</if>
+			<if test="isTextbookWriterUsed !=null  ">
+				is_textbook_writer_used=#{isTextbookWriterUsed},
+			</if>
+			<if
+				test="isTextbookWriterRequired !=null  ">
+				is_textbook_writer_required=#{isTextbookWriterRequired},
+			</if>
+			<if test="isOtherTextbookUsed !=null  ">
+				is_other_textbook_used=#{isOtherTextbookUsed},
+			</if>
+			<if test="isOtherTextbookRequired !=null  ">
+				is_other_textbook_required=#{isOtherTextbookRequired},
+			</if>
+			<if test="isResearchUsed !=null ">
+				is_research_used=#{isResearchUsed},
+			</if>
+			<if test="isResearchRequired !=null ">
+				is_research_required=#{isResearchRequired},
+			</if>
+			<if test="isPublished !=null  ">
+				is_published=#{isPublished},
+			</if>
+			<if test="isDeleted !=null  ">
+				is_deleted=#{isDeleted},
+			</if>
+			<if test="founderId != null" >
+				founder_id=#{founderId},
+			</if>
+			<if test="menderId !=null  ">
+				mender_id=#{menderId},
+			</if>
+		</set>
+		where
+		id=#{id} ;
+	</update>
+
+	<!-- 根据id查询一个Material -->
+	<select id="getMaterialById" parameterType="java.lang.Long"
+		resultType="Material">
+		select * from material where id=#{id} ;
+	</select>
+
+</mapper>

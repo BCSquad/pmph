@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.OrgMessageDao;
 import com.bc.pmpheep.back.po.OrgMessage;
+import com.bc.pmpheep.back.util.Tools;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 
 
@@ -21,53 +25,57 @@ public class OrgMessageServiceImpl extends BaseService  implements OrgMessageSer
 	
 	/**
 	 * 
-	 * @param  OrgMessage 实体对象
+	 * @param  orgMessage 实体对象
 	 * @return  带主键的OrgMessage
-	 * @throws Exception 
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public OrgMessage addOrgMessage(OrgMessage orgMessage) throws Exception{
-		return orgMessageDao.addOrgMessage(orgMessage);
+	public OrgMessage addOrgMessage(OrgMessage orgMessage) throws CheckedServiceException{
+		if(Tools.isEmpty(orgMessage.getMsgCode())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "消息标识为空");
+		}
+		orgMessageDao.addOrgMessage(orgMessage);
+		return orgMessage;
 	}
 	
 	/**
 	 * 
-	 * @param OrgMessage 必须包含主键ID
+	 * @param id
 	 * @return  OrgMessage
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public OrgMessage getOrgMessageById(OrgMessage orgMessage) throws Exception{
-		if(null==orgMessage.getId()){
-			throw new NullPointerException("主键id为空");
+	public OrgMessage getOrgMessageById(Long  id) throws CheckedServiceException{
+		if(null==id){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return orgMessageDao.getOrgMessageById(orgMessage);
+		return orgMessageDao.getOrgMessageById(id);
 	}
 	
 	/**
 	 * 
-	 * @param OrgMessage
+	 * @param id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Integer deleteOrgMessageById(OrgMessage orgMessage) throws Exception{
-		if(null==orgMessage.getId()){
-			throw new NullPointerException("主键id为空");
+	public Integer deleteOrgMessageById(Long  id) throws CheckedServiceException{
+		if(null==id){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return orgMessageDao.deleteOrgMessageById(orgMessage);
+		return orgMessageDao.deleteOrgMessageById(id);
 	}
 	
 	/**
-	 * @param OrgMessage
+	 * @param orgMessage
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override 
-	public Integer updateOrgMessageById(OrgMessage orgMessage) throws Exception{
+	public Integer updateOrgMessage(OrgMessage orgMessage) throws CheckedServiceException{
 		if(null==orgMessage.getId()){
-			throw new NullPointerException("主键id为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return orgMessageDao.updateOrgMessageById(orgMessage);
+		return orgMessageDao.updateOrgMessage(orgMessage);
 	}
 }

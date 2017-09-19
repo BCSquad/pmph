@@ -25,17 +25,17 @@ public interface PmphRoleDao {
 
     Integer add(PmphRole role);
 
-    Integer delete(Integer id);
+    Integer delete(Long id);
 
-    Integer batchDelete(@Param("ids") List<Integer> ids);
+    Integer batchDelete(@Param("ids") List<Long> ids);
 
-    PmphRole get(Integer id);
+    PmphRole get(Long id);
 
     Integer update(PmphRole role);
 
     List<PmphRole> getListRole();
 
-    PmphUserRole getUserRole(@Param("userId") int userId, @Param("roleId") int roleId);
+    PmphUserRole getUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
 
     /**
      * 为单个用户设置单个角色
@@ -44,7 +44,7 @@ public interface PmphRoleDao {
      * @param roleId
      * @return
      */
-    Integer addUserRole(@Param("userId") int userId, @Param("roleId") int roleId);
+    Integer addUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
 
     /**
      * 为单个用户设置多个角色
@@ -53,18 +53,18 @@ public interface PmphRoleDao {
      * @param roleIds
      * @return
      */
-    Integer addUserRoles(@Param("userId") int userId, @Param("roleIds") List<Integer> roleIds);
+    Integer addUserRoles(@Param("userId") Long userId, @Param("roleIds") List<Long> roleIds);
 
-    Integer deleteUserRole(@Param("userId") int userId, @Param("roleId") int roleId);
+    Integer deleteUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
 
     /**
      * 删除某个用户的所有角色
      * 
      * @param uid
      */
-    Integer deleteUserRoles(int uid);
+    Integer deleteUserRoles(Long uid);
 
-    Integer batchDeleteRoleResource(@Param("roleIds") List<Integer> roleIds);
+    Integer batchDeleteRoleResource(@Param("roleIds") List<Long> roleIds);
 
     /**
      * 根据角色id获取可以访问的所有资源
@@ -72,14 +72,15 @@ public interface PmphRoleDao {
      * @param roleId
      * @return
      */
-    List<PmphPermission> getListRoleResource(int roleId);
+    List<PmphPermission> getListRoleResource(Long roleId);
 
-    Integer addRoleResource(@Param("roleId") int roleId, @Param("resourceId") int resourceId);
+    Integer addRoleResource(@Param("roleId") Long roleId, @Param("permissionId") Long permissionId);
 
-    Integer deleteRoleResource(@Param("roleId") int roleId, @Param("resourceId") int resorceId);
+    Integer deleteRoleResource(@Param("roleId") Long roleId,
+    @Param("permissionId") Long permissionId);
 
-    PmphRolePermission getResourceRole(@Param("roleId") int roleId,
-    @Param("resourceId") int resorceId);
+    PmphRolePermission getResourceRole(@Param("roleId") Long roleId,
+    @Param("permissionId") Long permissionId);
 
-    Integer deleteRoleAndUser(@Param("ids") List<Integer> ids);
+    Integer deleteRoleAndUser(@Param("ids") List<Long> ids);
 }

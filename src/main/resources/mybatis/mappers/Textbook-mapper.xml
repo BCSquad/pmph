@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.TextbookDao">
+
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="materialId != null">
+				material_id,
+			</if>
+			<if test="textbookName != null and textbookName !='' ">
+				textbook_name,
+			</if>
+			<if test="textbookRound != null ">
+				textbook_round,
+			</if>
+			<if test="isLocked != null   ">
+				is_locked,
+			</if>
+			<if test="isPublished !=null">
+				is_published,
+			</if>
+			<if test="gmtPublished != null">
+				gmt_published,
+			</if>
+			<if test="isbn != null and isbn !='' ">
+				isbn,
+			</if>
+			<if test="sort != null ">
+				sort,
+			</if>
+			<if test="founderId != null ">
+				founder_id,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="materialId != null">
+				#{materialId},
+			</if>
+			<if test="textbookName != null and textbookName !=''  ">
+				#{textbookName},
+			</if>
+			<if test="textbookRound != null">
+				#{textbookRound},
+			</if>
+			<if test="isLocked != null  ">
+				#{isLocked},
+			</if>
+			<if test="isPublished != null">
+				#{isPublished},
+			</if>
+			<if test="gmtPublished != null">
+				#{gmtPublished},
+			</if>
+			<if test="isbn != null and isbn !='' ">
+				#{isbn},
+			</if>
+			<if test="sort != null ">
+				#{sort},
+			</if>
+			<if test="founderId != null">
+				#{founderId},
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 新增Textbook -->
+	<insert id="addTextbook" parameterType="Textbook">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		<!-- sql片段对应字段名,id属性值任意 -->
+		INSERT INTO textbook
+		(
+		<include refid="key" />
+		)
+		VALUES
+		(
+		<include refid="value" />
+		);
+	</insert>
+
+
+	<!-- 根据id删除一个 -->
+	<delete id="deleteTextbookById" parameterType="java.lang.Long">
+		delete from
+		textbook where
+		id=#{id} ;
+	</delete>
+
+	<!-- 更新Textbook -->
+	<update id="updateTextbook" parameterType="Textbook">
+		update textbook
+		<set>
+			<if test="materialId != null">
+				material_id = #{materialId},
+			</if>
+			<if test="textbookName != null and textbookName !='' ">
+				textbook_name = #{textbookName},
+			</if>
+			<if test=" textbookRound != null">
+				textbook_round= #{textbookRound},
+			</if>
+			<if test=" isLocked != null">
+				is_locked= #{isLocked},
+			</if>
+			<if test=" isPublished != null">
+				is_published = #{isPublished},
+			</if>
+			<if test=" gmtPublished != null">
+				gmt_published = #{gmtPublished},
+			</if>
+			<if test=" isbn != null and  isbn != '' ">
+				isbn= #{isbn},
+			</if>
+			<if test=" sort != null">
+				sort = #{sort},
+			</if>
+			<if test=" founderId != null">
+				founder_id = #{founderId},
+			</if>
+		</set>
+		where
+		id=#{id} ;
+	</update>
+
+	<!-- 根据id查询一个Textbook -->
+	<select id="getTextbookById" parameterType="java.lang.Long"
+		resultType="Textbook">
+		select * from textbook where id=#{id} ;
+	</select>
+
+</mapper>

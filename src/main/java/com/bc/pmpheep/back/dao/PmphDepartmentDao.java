@@ -14,32 +14,28 @@ public interface PmphDepartmentDao {
 	/**
 	 * 
 	 * @param  PmphDepartment 实体对象
-	 * @return  带主键的PmphDepartment
-	 * @throws Exception 
+	 * @return 影响行数
 	 */
-	PmphDepartment addpmphDepartment(PmphDepartment pmphDepartment);
+	Integer addPmphDepartment(PmphDepartment pmphDepartment) ;
 	
 	/**
 	 * 
-	 * @param PmphDepartment 必须包含主键ID
+	 * @param id
 	 * @return  PmphDepartment
-	 * @throws Exception，NullPointerException(主键为空)
-	 */
-	PmphDepartment getPmphDepartmentById(PmphDepartment pmphDepartment);
+	  */
+	PmphDepartment getPmphDepartmentById(Long id)  ;
 	
 	/**
 	 * 
-	 * @param PmphDepartment
+	 * @param id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
-	 */
-	Integer deletePmphDepartmentById(PmphDepartment pmphDepartment);
+	  */
+	Integer deletePmphDepartmentById(Long id)  ;
 	
 	/**
 	 * @param PmphDepartment
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
 	 */
-	Integer updatePmphDepartmentById(PmphDepartment pmphDepartment) ;
+	Integer updatePmphDepartment(PmphDepartment pmphDepartment)  ;
 
 }

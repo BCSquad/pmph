@@ -5,11 +5,12 @@ import java.io.Serializable;
 import org.apache.ibatis.type.Alias;
 
 /**
- * OrgType实体类
+ * OrgType (机构类型表) 实体类 -- Org_Type
  * 
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("OrgType")
 public class OrgType implements Serializable {
 	/**
@@ -25,6 +26,21 @@ public class OrgType implements Serializable {
 	 */
 	private Integer sort;
 
+	public OrgType() {
+
+	}
+
+	public OrgType(Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * 
+	 * @param typeName
+	 *            机构类型名称
+	 * @param sort
+	 *            显示顺序
+	 */
 	public OrgType(String typeName, Integer sort) {
 		this.typeName = typeName;
 		this.sort = sort;
@@ -56,8 +72,7 @@ public class OrgType implements Serializable {
 
 	@Override
 	public String toString() {
-		return "OrgType [id=" + id + ", typeName=" + typeName + ", sort=" + sort + "]";
+		return "{id:" + id + ", typeName:" + typeName + ", sort:" + sort + "}";
 	}
-	
 
 }

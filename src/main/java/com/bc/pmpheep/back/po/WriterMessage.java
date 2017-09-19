@@ -11,8 +11,8 @@ import org.apache.ibatis.type.Alias;
  *
  */
 @SuppressWarnings("serial")
-@Alias("WriterMseeage")
-public class WriterMseeage implements Serializable {
+@Alias("WriterMessage")
+public class WriterMessage implements Serializable {
 	/**
 	 * 主键
 	 */
@@ -27,10 +27,10 @@ public class WriterMseeage implements Serializable {
 	private Integer msgType;
 
 	
-	public WriterMseeage() {
+	public WriterMessage() {
 	}
 
-	public WriterMseeage(String msgCode, Integer msgType) {
+	public WriterMessage(String msgCode, Integer msgType) {
 		this.msgCode = msgCode;
 		this.msgType = msgType;
 	}

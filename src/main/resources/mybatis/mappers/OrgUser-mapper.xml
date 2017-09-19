@@ -2,30 +2,204 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bc.pmpheep.back.dao.OrgUserDao">
-
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="username != null and username !=''">
+				username,
+			</if>
+			<if test="password != null and password !=''">
+				password,
+			</if>
+			<if test="isDisabled != null">
+				is_disabled,
+			</if>
+			<if test="orgId != null and orgId !=''">
+				org_id,
+			</if>
+			<if test="realname != null and realname !=''">
+				realname,
+			</if>
+			<if test="sex != null and sex !=''">
+				sex,
+			</if>
+			<if test="position != null and position !=''">
+				position,
+			</if>
+			<if test="title != null and title !=''">
+				title,
+			</if>
+			<if test="fax != null and fax !=''">
+				fax,
+			</if>
+			<if test="handphone != null and handphone !=''">
+				handphone,
+			</if>
+			<if test="telephone != null and telephone !=''">
+				telephone,
+			</if>
+			<if test="idcard != null and idcard !=''">
+				idcard,
+			</if>
+			<if test="address != null and address !=''">
+				address,
+			</if>
+			<if test="postcode != null and postcode !=''">
+				postcode,
+			</if>
+			<if test="note != null and note !=''">
+				note,
+			</if>
+			<if test="sort != null and sort !=''">
+				sort,
+			</if>
+			<if test="isDeleted != null">
+				is_deleted,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="username != null and username !=''">
+				#{username},
+			</if>
+			<if test="password != null and password !=''">
+				#{password},
+			</if>
+			<if test="isDisabled != null">
+				#{isDisabled},
+			</if>
+			<if test="orgId != null and orgId !=''">
+				#{orgId},
+			</if>
+			<if test="realname != null and realname !=''">
+				#{realname},
+			</if>
+			<if test="sex != null and sex !=''">
+				#{sex},
+			</if>
+			<if test="position != null and position !=''">
+				#{position},
+			</if>
+			<if test="title != null and title !=''">
+				#{title},
+			</if>
+			<if test="fax != null and fax !=''">
+				#{fax},
+			</if>
+			<if test="handphone != null and handphone !=''">
+				#{handphone},
+			</if>
+			<if test="telephone != null and telephone !=''">
+				#{telephone},
+			</if>
+			<if test="idcard != null and idcard !=''">
+				#{idcard},
+			</if>
+			<if test="address != null and address !=''">
+				#{address},
+			</if>
+			<if test="postcode != null and postcode !=''">
+				#{postcode},
+			</if>
+			<if test="note != null and note !=''">
+				#{note},
+			</if>
+			<if test="sort != null and sort !=''">
+				#{sort},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted},
+			</if>
+		</trim>
+	</sql>
 	<!-- 新增OrgUser -->
-    <insert id="addOrgUser"  parameterType="OrgUser"   >
-        insert  into  org_user (username,password,   is_disabled,  org_id,  realname,   sex,   position,  title,    fax,   handphone,   telephone,   idcard,   email,   address,    postcode,  note,  sort,    is_deleted) 
-                        values(#{username},#{password},#{idDisabled},#{orgId},#{realname},#{sex},#{position},#{title},#{fax},#{handphone},#{telephone},#{idcard},#{email},#{address},#{postcode},#{note},#{sort},#{isDeleted}) ;
-    </insert>
-    
-   <!-- 根据id删除一个OrgUser -->
-	<delete id="deleteOrgUserById" parameterType="OrgUser"   >
-		delete from org_user where where id=#{id} ;
+	<insert id="addOrgUser" parameterType="OrgUser">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into org_user (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 根据id删除一个OrgUser -->
+	<delete id="deleteOrgUserById" parameterType="java.lang.Long">
+		delete from
+		org_user where id=#{id} ;
 	</delete>
-	
+
 	<!-- 更新OrgUser -->
-	<update id="updateOrgUserById"   parameterType="OrgUser"  >
-		update org_user  set  
-				(username=#{username},password=#{password},is_disabled=#{idDisabled},org_id=#{orgId},realname=#{realname},sex=#{sex},
-		         position=#{position},  title=#{title},    fax=#{fax},   handphone=#{handphone},   telephone=#{telephone},   idcard=#{idcard},  
-		         email=#{email},   address=#{address},    postcode=#{postcode},  note=#{note},  sort=#{sort},    is_deleted=#{isDeleted} 
-        where id=#{id} ;
+	<update id="updateOrgUser" parameterType="OrgUser">
+		update
+		org_user
+		<set>
+			<if test="username != null and username !=''">
+				username = #{username},
+			</if>
+			<if test="password != null and password !='' ">
+				password = #{password},
+			</if>
+			<if test=" isDisabled != null ">
+				is_disabled= #{isDisabled},
+			</if>
+			<if test=" orgId != null and orgId !=''">
+				org_id= #{orgId},
+			</if>
+			<if test=" realname != null and realname !=''">
+				realname = #{realname},
+			</if>
+			<if test="sex != null and sex !=''">
+				sex = #{sex},
+			</if>
+			<if test="position != null and position !='' ">
+				position = #{position},
+			</if>
+			<if test=" title != null and title !=''">
+				title= #{title},
+			</if>
+			<if test=" fax != null and fax !=''">
+				fax= #{fax},
+			</if>
+			<if test=" handphone != null and handphone !=''">
+				handphone = #{handphone},
+			</if>
+
+			<if test="telephone != null and telephone !=''">
+				telephone = #{telephone},
+			</if>
+			<if test="idcard != null and idcard !='' ">
+				idcard = #{idcard},
+			</if>
+			<if test=" address != null and address !=''">
+				address= #{address},
+			</if>
+			<if test=" postcode != null and postcode !=''">
+				postcode= #{postcode},
+			</if>
+			<if test=" note != null and note !=''">
+				note = #{note},
+			</if>
+			<if test="sort != null and sort !=''">
+				sort = #{sort},
+			</if>
+			<if test="isDeleted != null  ">
+				is_deleted = #{isDeleted},
+			</if>
+		</set>
+		where id=#{id} ;
 	</update>
-	
+
 	<!-- 根据id查询一个OrgUser -->
-	<select  id="getOrgUserById" parameterType="OrgUser"  resultType="OrgUser" >
+	<select id="getOrgUserById" parameterType="java.lang.Long"
+		resultType="OrgUser">
 		select * from org_user where id=#{id} ;
 	</select>
-	
+
 </mapper>

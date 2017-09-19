@@ -2,19 +2,20 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.dao.PmphUserDao;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
+import com.bc.pmpheep.back.util.Tools;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphUserService 实现
@@ -23,7 +24,7 @@ import com.bc.pmpheep.back.shiro.kit.ShiroKit;
  * 
  */
 @Service
-public class PmphUserServiceImpl extends BaseService implements PmphUserService {
+public class PmphUserServiceImpl implements PmphUserService {
 
     @Autowired
     PmphUserDao userDao;
@@ -37,7 +38,18 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
      * @return
      */
     @Override
-    public PmphUser add(PmphUser user) throws Exception {
+    public PmphUser add(PmphUser user) throws CheckedServiceException {
+        if (null == user.getUsername()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止新增用户");
+        }
+        if (null == user.getPassword()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "密码为空时禁止新增用户");
+        }
+        if (null == user.getRealname()) {
+            user.setRealname(user.getUsername());
+        }
         // 使用用户名作为盐值，MD5 算法加密
         user.setPassword(ShiroKit.md5(user.getPassword(), user.getUsername()));
         userDao.add(user);
@@ -52,10 +64,13 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
      */
     @Transactional
     @Override
-    public PmphUser add(PmphUser user, List<Integer> rids) throws Exception {
+    public PmphUser add(PmphUser user, List<Long> rids) throws CheckedServiceException {
         Long userId = this.add(user).getId();
-        String uid = String.valueOf(userId);
-        roleDao.addUserRoles(Integer.valueOf(uid), rids);
+        if (null == userId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时不能添加角色！");
+        }
+        roleDao.addUserRoles(userId, rids);
         return user;
     }
 
@@ -65,9 +80,10 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
      * @param id
      */
     @Override
-    public void delete(int id) throws Exception {
-        if (id == 1) {
-            throw new RuntimeException("不能删除管理员用户");
+    public void delete(Long id) throws CheckedServiceException {
+        if (1 == id) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "不能删除管理员用户！");
         }
         userDao.delete(id);
 
@@ -75,14 +91,15 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
 
     @Transactional
     @Override
-    public void deleteUserAndRole(List<Integer> ids) throws Exception {
+    public void deleteUserAndRole(List<Long> ids) throws CheckedServiceException {
         if (ids.contains(1)) {
-            throw new RuntimeException("不能删除管理员用户");
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "不能删除管理员用户！");
         }
         // 删除用户列表
         userDao.batchDelete(ids);
         // 依次删除这些用户所绑定的角色
-        for (Integer userId : ids) {
+        for (Long userId : ids) {
             roleDao.deleteUserRoles(userId);
         }
 
@@ -97,11 +114,14 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
      */
     @Transactional
     @Override
-    public PmphUser update(PmphUser user, List<Integer> rids) throws Exception {
+    public PmphUser update(PmphUser user, List<Long> rids) throws CheckedServiceException {
         Long userId = user.getId();
-        String uid = String.valueOf(userId);
-        roleDao.deleteUserRoles(Integer.valueOf(uid));
-        roleDao.addUserRoles(Integer.valueOf(uid), rids);
+        if (null == userId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
+        }
+        roleDao.deleteUserRoles(userId);
+        roleDao.addUserRoles(userId, rids);
         this.update(user);
         return user;
     }
@@ -113,8 +133,12 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
      * @return
      */
     @Override
-    public PmphUser update(PmphUser user) throws Exception {
+    public PmphUser update(PmphUser user) throws CheckedServiceException {
         String password = user.getPassword();
+        if (null == password) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户密码为空时禁止更新用户");
+        }
         if (password != null) {
             user.setPassword(ShiroKit.md5(user.getPassword(), user.getUsername()));
         }
@@ -129,7 +153,11 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
      * @return
      */
     @Override
-    public PmphUser get(int id) throws Exception {
+    public PmphUser get(Long id) throws CheckedServiceException {
+        if (null == id) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+        }
         return userDao.get(id);
     }
 
@@ -140,7 +168,11 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
      * @return
      */
     @Override
-    public PmphUser getByUsername(String username) throws Exception {
+    public PmphUser getByUsername(String username) throws CheckedServiceException {
+        if (null == username) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
+        }
         return userDao.getByUserName(username);
     }
 
@@ -152,14 +184,23 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
      * @return
      */
     @Override
-    public PmphUser login(String username, String password) throws Exception {
+    public PmphUser login(String username, String password) throws CheckedServiceException {
         PmphUser user = userDao.getByUserName(username);
         // 密码匹配的工作交给 Shiro 去完成
         if (user == null) {
             // 因为缓存切面的原因,在这里就抛出用户名不存在的异常
-            throw new UnknownAccountException("用户名不存在(生产环境中应该写:用户名和密码的组合不正确)");
-        } else if (user.getIsDisabled() == 1) {
-            throw new LockedAccountException("用户已经被禁用，请联系管理员启用该账号");
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM,
+                                              "用户名不存在(生产环境中应该写:用户名和密码的组合不正确)");
+        } else {
+            Integer isdisable = user.getIsDisabled();
+            if (Tools.isNullOrEmpty(isdisable)) {
+                isdisable = 0;
+            } else if (isdisable == 1) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                                  CheckedExceptionResult.ILLEGAL_PARAM,
+                                                  "用户已经被禁用，请联系管理员启用该账号");
+            }
         }
         return user;
     }
@@ -170,7 +211,7 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
      * @return
      */
     @Override
-    public List<PmphUser> getList() throws Exception {
+    public List<PmphUser> getList() throws CheckedServiceException {
         return userDao.getListUser();
     }
 
@@ -181,7 +222,11 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
      * @return
      */
     @Override
-    public List<PmphUser> getListByRole(int id) throws Exception {
+    public List<PmphUser> getListByRole(Long id) throws CheckedServiceException {
+        if (null == id) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
+        }
         return userDao.getListByRole(id);
     }
 
@@ -192,7 +237,11 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
      * @return
      */
     @Override
-    public List<PmphPermission> getListAllResource(int uid) throws Exception {
+    public List<PmphPermission> getListAllResource(Long uid) throws CheckedServiceException {
+        if (null == uid) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+        }
         return userDao.getListAllResources(uid);
     }
 
@@ -203,7 +252,11 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
      * @return
      */
     @Override
-    public List<String> getListRoleSnByUser(int uid) throws Exception {
+    public List<String> getListRoleSnByUser(Long uid) throws CheckedServiceException {
+        if (null == uid) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+        }
         return userDao.getListRoleSnByUser(uid);
     }
 
@@ -214,8 +267,11 @@ public class PmphUserServiceImpl extends BaseService implements PmphUserService 
      * @return
      */
     @Override
-    public List<PmphRole> getListUserRole(int uid) throws Exception {
+    public List<PmphRole> getListUserRole(Long uid) throws CheckedServiceException {
+        if (null == uid) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+        }
         return userDao.getListUserRole(uid);
     }
-
 }

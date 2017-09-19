@@ -5,11 +5,12 @@ import java.io.Serializable;
 import org.apache.ibatis.type.Alias;
 
 /**
- * OrgMessage 实体类
+ * OrgMessage（机构用户消息表） 实体类  -- org_message
  * 
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("OrgMessage")
 public class OrgMessage implements Serializable {
 	/**
@@ -24,7 +25,18 @@ public class OrgMessage implements Serializable {
 	 * 消息类型
 	 */
 	private Integer msgType;
-
+	
+	public OrgMessage(){
+		
+	}
+	public OrgMessage(Long id){
+		this.id=id;
+	}
+	/**
+	 * 
+	 * @param msgCode  消息标识
+	 * @param msgType  消息类型     0=系统消息/1=站内群发/2=站内私信
+	 */
 	public OrgMessage(String msgCode, Integer msgType) {
 		this.msgCode = msgCode;
 		this.msgType = msgType;
@@ -56,7 +68,7 @@ public class OrgMessage implements Serializable {
 
 	@Override
 	public String toString() {
-		return "OrgMessage [id=" + id + ", msgCode=" + msgCode + ", msgType=" + msgType + "]";
+		return "{id:" + id + ", msgCode:" + msgCode + ", msgType:" + msgType + "}";
 	}
 
 }

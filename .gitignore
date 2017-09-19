@@ -1,6 +1,21 @@
 # Compiled class file
 *.class
 
+#忽略数据库配置文件spring.properties
+spring.properties
+
+#忽略.classpath
+*.classpath
+
+#忽略.project 
+*.project
+
+#忽略.settings
+.settings/
+
+#忽略.jsdtscope
+*.jsdtscope
+
 # Log file
 *.log
 
@@ -23,3 +38,4 @@ hs_err_pid*
 /nb-configuration.xml
 /nbactions.xml
 /target/
+/bin

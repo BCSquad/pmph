@@ -28,11 +28,11 @@ public interface PmphUserDao {
 
     Integer update(PmphUser user);
 
-    Integer delete(Integer id);
+    Integer delete(Long id);
 
-    Integer batchDelete(@Param("ids") List<Integer> ids);
+    Integer batchDelete(@Param("ids") List<Long> ids);
 
-    PmphUser get(Integer id);
+    PmphUser get(Long id);
 
     List<PmphUser> getListUser();
 
@@ -44,12 +44,12 @@ public interface PmphUserDao {
      * @param rid
      * @return
      */
-    List<PmphUser> getListByRole(Integer rid);
+    List<PmphUser> getListByRole(Long rid);
 
-    List<PmphPermission> getListAllResources(Integer uid);
+    List<PmphPermission> getListAllResources(Long uid);
 
-    List<String> getListRoleSnByUser(Integer uid);
+    List<String> getListRoleSnByUser(Long uid);
 
-    List<PmphRole> getListUserRole(Integer uid);
+    List<PmphRole> getListUserRole(Long uid);
 
 }

@@ -15,7 +15,7 @@
     </bean>
 
     <!-- 声明一个自定义的 Realm -->
-    <bean id="myRealm" class="com.bc.pmpheep.back.shiro.realm.MyRealm">
+    <bean id="writerUserRealm" class="com.bc.pmpheep.back.shiro.realm.WriterUserRealm">
         <!-- 将上面声明的密码匹配器注入到自定义 Realm 的属性中去 -->
         <property name="credentialsMatcher" ref="credentialsMatcher"/>
         <!-- 将自定义的权限匹配器注入到自定义 Realm 中 -->
@@ -71,7 +71,7 @@
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <!-- Single realm app.  If you have multiple realms, use the 'realms' property instead. -->
         <!-- 设置安全管理器的安全数据源为自定义的 Realm -->
-        <property name="realm" ref="myRealm"/>
+        <property name="realm" ref="writerUserRealm"/>
         <!-- By default the servlet container sessions will be used.  Uncomment this line
              to use shiro's native sessions (see the JavaDoc for more): -->
         <!-- <property name="sessionMode" value="native"/> -->

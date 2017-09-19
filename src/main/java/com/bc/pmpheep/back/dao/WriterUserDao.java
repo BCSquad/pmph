@@ -27,11 +27,11 @@ public interface WriterUserDao {
 
     Integer update(WriterUser user);
 
-    Integer delete(Integer id);
+    Integer delete(Long id);
 
-    Integer batchDelete(@Param("ids") List<Integer> ids);
+    Integer batchDelete(@Param("ids") List<Long> ids);
 
-    WriterUser get(Integer id);
+    WriterUser get(Long id);
 
     List<WriterUser> getListUser();
 
@@ -43,12 +43,12 @@ public interface WriterUserDao {
      * @param rid
      * @return
      */
-    List<WriterUser> getListByRole(Integer rid);
+    List<WriterUser> getListByRole(Long rid);
 
-    List<WriterPermission> getListAllResources(Integer uid);
+    List<WriterPermission> getListAllResources(Long uid);
 
-    List<String> getListRoleSnByUser(Integer uid);
+    List<String> getListRoleSnByUser(Long uid);
 
-    List<WriterRole> getListUserRole(Integer uid);
+    List<WriterRole> getListUserRole(Long uid);
 
 }

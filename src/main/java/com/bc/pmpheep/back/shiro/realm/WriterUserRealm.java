@@ -19,19 +19,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphUser;
-import com.bc.pmpheep.back.service.PmphUserService;
+import com.bc.pmpheep.back.po.WriterPermission;
+import com.bc.pmpheep.back.po.WriterUser;
+import com.bc.pmpheep.back.service.WriterUserService;
 
 /**
  * 
  * @author Administrator
  * 
  */
-public class MyRealm extends AuthorizingRealm {
-    private static final Logger logger = LoggerFactory.getLogger(MyRealm.class);
+public class WriterUserRealm extends AuthorizingRealm {
+    private static final Logger logger = LoggerFactory.getLogger(WriterUserRealm.class);
     @Autowired
-    private PmphUserService     userService;
+    private WriterUserService   userService;
 
     /**
      * 授权
@@ -44,18 +45,17 @@ public class MyRealm extends AuthorizingRealm {
         logger.info("--- MyRealm doGetAuthorizationInfo ---");
 
         // 获得经过认证的主体信息
-        PmphUser user = (PmphUser) principalCollection.getPrimaryPrincipal();
+        WriterUser user = (WriterUser) principalCollection.getPrimaryPrincipal();
         Long userId = user.getId();
-        String uid = String.valueOf(userId);
         // UserService userService = (UserService)InitServlet.getBean("userService");
-        List<PmphPermission> resourceList = null;
+        List<WriterPermission> resourceList = null;
         List<String> roleSnList = null;
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         try {
-            resourceList = userService.getListAllResource(Integer.parseInt(uid));
-            roleSnList = userService.getListRoleSnByUser(Integer.parseInt(uid));
+            resourceList = userService.getListAllResource(userId);
+            roleSnList = userService.getListRoleSnByUser(userId);
             List<String> resStrList = new ArrayList<>();
-            for (PmphPermission resource : resourceList) {
+            for (WriterPermission resource : resourceList) {
                 resStrList.add(resource.getUrl());
             }
             info.setRoles(new HashSet<>(roleSnList));
@@ -92,7 +92,7 @@ public class MyRealm extends AuthorizingRealm {
         // 再到 subject.login(token) 里面去捕获对应的异常
         // 显示不同的消息到页面上
         try {
-            PmphUser user = userService.login(username, password);
+            WriterUser user = userService.login(username, password);
             if (user != null) {
                 // 第 1 个参数可以传一个实体对象，然后在认证的环节可以取出
                 // 第 2 个参数应该传递在数据库中“正确”的数据，然后和 token 中的数据进行匹配

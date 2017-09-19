@@ -2,8 +2,9 @@ package com.bc.pmpheep.back.dao;
 
 import org.springframework.stereotype.Repository;
 
-import com.bc.pmpheep.back.po.PmphGroupMember;
+
 import com.bc.pmpheep.back.po.PmphGroupMessage;
+
 
 /**
  * PmphGroupMessage 实体类数据访问层接口
@@ -14,31 +15,28 @@ import com.bc.pmpheep.back.po.PmphGroupMessage;
 public interface  PmphGroupMessageDao {
 	/**
 	 * 
-	 * @param  PmphGroupMessage 实体对象
-	 * @return  带主键的 PmphGroupMessage
-	 * @throws Exception 
+	 * @param  pmphGroupMessage 实体对象
+	 * @return  影响行数
 	 */
-	PmphGroupMember addPmphGroupMessage (PmphGroupMessage pmphGroupMessage) ;
+	Integer addPmphGroupMessage (PmphGroupMessage pmphGroupMessage) ;
 	
 	/**
 	 * 
 	 * @param PmphGroupMessage 必须包含主键ID
 	 * @return  PmphGroupMessage
-	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	PmphGroupMessage getPmphGroupMessageById(PmphGroupMessage pmphGroupMessage) ;
-	/**
-	 * 
-	 * @param PmphGroupMessage
-	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
-	 */
-	Integer deletePmphGroupMessageById(PmphGroupMessage pmphGroupMessage) ;
+	PmphGroupMessage getPmphGroupMessageById(Long  id) ;
 	
 	/**
-	 * @param PmphGroupMessage
-	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * 
+	 * @param id 
+	 * @return  影响行数
 	 */
-	Integer updatePmphGroupMessageById(PmphGroupMessage pmphGroupMessage) ;
+	Integer deletePmphGroupMessageById(Long  id) ;
+	
+	/**
+	 * @param pmphGroupMessage 
+	 * @return 影响行数
+	 */
+	Integer updatePmphGroupMessage (PmphGroupMessage  pmphGroupMessage) ;
 }

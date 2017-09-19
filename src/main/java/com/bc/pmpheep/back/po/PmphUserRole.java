@@ -10,6 +10,7 @@ import org.apache.ibatis.type.Alias;
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("PmphUserRole")
 public class PmphUserRole implements Serializable {
     /**
@@ -24,8 +25,12 @@ public class PmphUserRole implements Serializable {
      * 角色id
      */
     private Long roleId;
+    
 
-    public PmphUserRole(Long userId, Long roleId) {
+    public PmphUserRole() {
+	}
+
+	public PmphUserRole(Long userId, Long roleId) {
 	this.userId = userId;
 	this.roleId = roleId;
     }

@@ -12,31 +12,27 @@ public interface  OrgTypeDao {
 	 * 
 	 * @param OrgType 实体对象
 	 * @return  影响行数
-	 * @throws Exception 
 	 */
-	Integer addOrgType(OrgType orgType) throws Exception;
+	Integer addOrgType(OrgType orgType) ;
 	
 	/**
 	 * 
 	 * @param OrgType 必须包含主键ID
 	 * @return  OrgType
-	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	OrgType getOrgTypeById(OrgType orgType) throws Exception;
+	OrgType getOrgTypeById(Long id) ;
 	
 	/**
 	 * 
-	 * @param OrgType
+	 * @param id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	Integer deleteOrgTypeById(OrgType orgType) throws Exception;
+	Integer deleteOrgTypeById(Long id) ;
 	
 	/**
-	 * @param OrgType
+	 * @param orgType
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
 	 */
-	Integer updateOrgTypeById(OrgType OrgType) throws Exception;
+	Integer updateOrgType(OrgType orgType) ;
 
 }

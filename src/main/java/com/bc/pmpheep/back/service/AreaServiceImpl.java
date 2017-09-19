@@ -1,12 +1,14 @@
 package com.bc.pmpheep.back.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.AreaDao;
 import com.bc.pmpheep.back.po.Area;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 /**
  * AreaService 实现
  * @author mryang
@@ -22,53 +24,53 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 	 * 
 	 * @param area 实体对象
 	 * @return  带主键的 area
-	 * @throws Exception 
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Area addArea(Area area) throws Exception{
+	public Area addArea(Area area) throws CheckedServiceException{
 		areaDao.addArea(area); 
 		return area;
 	}
 	
 	/**
 	 * 
-	 * @param area 必须包含主键ID
+	 * @param id
 	 * @return  area
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Area getAreaById(Area area) throws Exception{
-		if(null==area.getId()){
-			throw new NullPointerException("主键id为空");
+	public Area getAreaById(Long id) throws CheckedServiceException{
+		if(null==id){
+			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return areaDao.getAreaById( area);
+		return areaDao.getAreaById(id);
 	}
 	
 	/**
 	 * 
-	 * @param area
+	 * @param id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Integer deleteAreaById(Area area) throws Exception{
-		if(null==area.getId()){
-			throw new NullPointerException("主键id为空");
+	public Integer deleteAreaById(Long id) throws CheckedServiceException{
+		if(null==id){
+			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return areaDao.deleteAreaById(area);
+		return areaDao.deleteAreaById(id);
 	}
 	
 	/**
 	 * @param area
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override 
-	public Integer updateAreaById(Area area) throws Exception{
+	public Integer updateArea(Area area) throws CheckedServiceException{
 		if(null==area.getId()){
-			throw new NullPointerException("主键id为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return areaDao.updateAreaById(area);
+		return areaDao.updateArea(area);
 	}
 	
 	

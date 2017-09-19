@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphPermissionDao;
 import com.bc.pmpheep.back.po.PmphPermission;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphPermissionService 接口实现
@@ -16,74 +18,94 @@ import com.bc.pmpheep.back.po.PmphPermission;
  * 
  */
 @Service
-public class PmphPermissionServiceImpl extends BaseService implements PmphPermissionService {
+public class PmphPermissionServiceImpl implements PmphPermissionService {
     @Autowired
     private PmphPermissionDao pmphPermissionDao;
 
     /**
      * 
-     * @param PmphPermission 实体对象
+     * @param PmphPermissionTest 实体对象
      * @return 带主键的PmphPermission
-     * @throws Exception
+     * @throws CheckedServiceException
      */
     @Override
-    public PmphPermission addPmphPermission(PmphPermission pmphPermission) throws Exception {
-        return pmphPermissionDao.addPmphPermission(pmphPermission);
+    public PmphPermission addPmphPermission(PmphPermission pmphPermission)
+    throws CheckedServiceException {
+        if (null == pmphPermission) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "资源属性为空时禁止添加!");
+        }
+        pmphPermissionDao.addPmphPermission(pmphPermission);
+        return pmphPermission;
     }
 
     /**
      * 
-     * @param PmphPermission 必须包含主键ID
+     * @param PmphPermissionTest 必须包含主键ID
      * @return PmphPermission
-     * @throws Exception，NullPointerException(主键为空)
+     * @throws CheckedServiceException，NullPointerException(主键为空)
      */
     @Override
-    public PmphPermission getPmphPermissionById(PmphPermission pmphPermission) throws Exception {
+    public PmphPermission getPmphPermissionById(PmphPermission pmphPermission)
+    throws CheckedServiceException {
         if (null == pmphPermission.getId()) {
-            throw new NullPointerException("主键id为空");
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "资源ID为空时禁止查询!");
         }
         return pmphPermissionDao.getPmphPermissionById(pmphPermission);
     }
 
     /**
      * 
-     * @param PmphPermission
+     * @param PmphPermissionTest
      * @return 影响行数
-     * @throws Exception，NullPointerException(主键为空)
+     * @throws CheckedServiceException，NullPointerException(主键为空)
      */
     @Override
-    public Integer deletePmphPermissionById(PmphPermission pmphPermission) throws Exception {
+    public Integer deletePmphPermissionById(PmphPermission pmphPermission)
+    throws CheckedServiceException {
         if (null == pmphPermission.getId()) {
-            throw new NullPointerException("主键id为空");
+            throw new CheckedServiceException(CheckedExceptionBusiness.RESOUCE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "资源ID为空时禁止删除!");
         }
         return pmphPermissionDao.deletePmphPermissionById(pmphPermission);
     }
 
     /**
-     * @param PmphPermission
+     * @param PmphPermissionTest
      * @return 影响行数
-     * @throws Exception ，NullPointerException(主键为空)
+     * @throws CheckedServiceException ，NullPointerException(主键为空)
      */
     @Override
-    public Integer updatePmphPermissionById(PmphPermission pmphPermission) throws Exception {
+    public Integer updatePmphPermissionById(PmphPermission pmphPermission)
+    throws CheckedServiceException {
         if (null == pmphPermission.getId()) {
-            throw new NullPointerException("主键id为空");
+            throw new CheckedServiceException(CheckedExceptionBusiness.RESOUCE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "资源ID为空时禁止更新!");
         }
         return pmphPermissionDao.updatePmphPermissionById(pmphPermission);
     }
 
     @Override
-    public Integer delete(int id) throws Exception {
+    public Integer delete(Long id) throws CheckedServiceException {
+        if (null == id) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.RESOUCE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "资源ID为空时禁止删除!");
+        }
         return pmphPermissionDao.delete(id);
     }
 
     @Override
-    public PmphPermission get(int id) throws Exception {
+    public PmphPermission get(Long id) throws CheckedServiceException {
+        if (null == id) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.RESOUCE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "资源ID为空时禁止查询!");
+        }
         return pmphPermissionDao.get(id);
     }
 
     @Override
-    public List<PmphPermission> getListResource() throws Exception {
+    public List<PmphPermission> getListResource() throws CheckedServiceException {
         return pmphPermissionDao.getListResource();
     }
 }

@@ -1,40 +1,42 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.po.OrgUserMessage;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * OrgUserMessageService  接口
  * @author Mryang
  */
 public interface   OrgUserMessageService {
+
 	/**
 	 * 
-	 * @param  OrgUserMessage 实体对象
+	 * @param  orgUserMessage 实体对象
 	 * @return  带主键的 OrgUserMessage
-	 * @throws Exception 
+	 * @throws CheckedServiceException 
 	 */
-	OrgUserMessage addOrgUserMessage (OrgUserMessage orgUserMessage) throws Exception;
+	OrgUserMessage addOrgUserMessage (OrgUserMessage orgUserMessage) throws CheckedServiceException;
 	
 	/**
 	 * 
-	 * @param OrgUserMessage 必须包含主键ID
+	 * @param id
 	 * @return  OrgUserMessage
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	OrgUserMessage getOrgUserMessageById(OrgUserMessage orgUserMessage) throws Exception;
+	OrgUserMessage getOrgUserMessageById(Long id) throws CheckedServiceException;
 	
 	/**
 	 * 
 	 * @param OrgUserMessage
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer deleteOrgUserMessageById(OrgUserMessage orgUserMessage) throws Exception;
+	Integer deleteOrgUserMessageById(Long id) throws CheckedServiceException;
 	
 	/**
 	 * @param OrgUserMessage
 	 * @return 影响行数
 	 * @throws Exception ，NullPointerException(主键为空)
 	 */
-	Integer updateOrgUserMessageById(OrgUserMessage orgUserMessage) throws Exception;
+	Integer updateOrgUserMessage(OrgUserMessage orgUserMessage) throws Exception;
 }

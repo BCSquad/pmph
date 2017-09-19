@@ -9,6 +9,7 @@ import org.apache.ibatis.type.Alias;
 /**
  * PmphUser 实体类
  */
+@SuppressWarnings("serial")
 @Alias("PmphUser")
 public class PmphUser implements java.io.Serializable {
     /**
