@@ -1,7 +1,10 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.plugin.PageTest;
 import com.bc.pmpheep.back.po.Area;
 
 /**
@@ -43,5 +46,7 @@ public interface AreaDao {
      * @return area
      */
     Area getAreaById(Long id);
-
+    //测试
+    List<Area>   getTest(PageTest<Area>  p);
+    Integer getTestTotal(PageTest<Area>  p);
 }

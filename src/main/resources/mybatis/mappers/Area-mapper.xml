@@ -75,5 +75,18 @@
 		resultType="Area">
 		select * from area where id=#{id} ;
 	</select>
+	<!-- 分页测试 -->
+	<select id="getTest" parameterType="PageTest" resultType="Area" >  
+	    select * from area
+	    <if test="start !=null and pageNumber != null">  
+	        limit #{(pageNumber-1)*pageSize},#{pageSize}  
+	    </if>  
+    </select> 
+    <select id="getTestTotal" parameterType="PageTest" resultType="java.lang.Integer" >  
+	    select count(*) from area
+	    <if test="start !=null and pageNumber != null">  
+	        limit #{(pageNumber-1)*pageSize},#{pageSize}  
+	    </if>  
+    </select> 
 
 </mapper>

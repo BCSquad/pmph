@@ -42,7 +42,7 @@
     	<!-- 分页拦截 -->
 		<plugin interceptor="com.bc.pmpheep.back.plugin.PagePlugin">
 			<property name="dialect" value="mysql"/>
-			<property name="pageSqlId" value=".*ListPage.*"/>
+			<property name="pageSqlId" value=".*listPage.*"/>
 		</plugin>
 	</plugins>
 </configuration>

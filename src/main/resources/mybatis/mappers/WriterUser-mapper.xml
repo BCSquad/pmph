@@ -158,7 +158,7 @@
 				#{rank},
 			</if>
 			<if test="isTeacher!=null">
-				#{isTeacher},
+				#{isTeather},
 			</if>
 			<if test="cert!=null and cert !=''">
 				#{cert},
@@ -268,8 +268,8 @@
 			<if test=" rank!= null and  rank!=''">
 				rank = #{rank},
 			</if>
-			<if test=" isTeacher!= null ">
-				is_teacher= #{isTeacher},
+			<if test=" isTeather!= null ">
+				is_teacher= #{isTeather},
 			</if>
 			<if test=" cert!= null and  cert!=''">
 				cert = #{cert},
