@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.po.Page;
 import com.bc.pmpheep.back.po.PmphPermission;
 
 /**
@@ -15,14 +16,11 @@ import com.bc.pmpheep.back.po.PmphPermission;
 public interface PmphPermissionDao {
     /**
      * 
-<<<<<<< HEAD
      * @param PmphPermissionTest 实体对象
      * @return 带主键的PmphPermission
      * @throws Exception
-=======
      * @param PmphPermission 实体对象
-     * @return  影响行数
->>>>>>> branch 'develop' of https://github.com/BCSquad/pmph.git
+     * @return 影响行数
      */
     Integer addPmphPermission(PmphPermission pmphPermission);
 
@@ -51,5 +49,7 @@ public interface PmphPermissionDao {
     PmphPermission get(Long id);
 
     List<PmphPermission> getListResource();
+
+    List<PmphPermission> getListPageResource(Page page);
 
 }

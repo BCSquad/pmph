@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
+import com.bc.pmpheep.back.po.Page;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -69,4 +70,6 @@ public interface PmphPermissionService {
      * @throws CheckedServiceException
      */
     List<PmphPermission> getListResource() throws CheckedServiceException;
+
+    List<PmphPermission> getListPageResource(Page page) throws CheckedServiceException;
 }
