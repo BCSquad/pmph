@@ -22,9 +22,9 @@ public class DataTransferTest extends BaseTest{
 	@Test
 	@Rollback(false)
 	public void area() throws Exception{
-		dataTransfer.Area("jdbc:mysql://localhost:3306/pmph_imesp_9.11?useSSL=true", "root", "cc148604");
+		dataTransfer.area("jdbc:mysql://localhost:3306/pmph_imesp_9.11?useSSL=true", "root", "cc148604");
 		logger.info("---------------区域表迁移----------------");
-		dataTransfer.PmphUser("jdbc:mysql://localhost:3306/pmph_imesp_9.11?useSSL=true", "root", "cc148604");
+		dataTransfer.pmphUser("jdbc:mysql://localhost:3306/pmph_imesp_9.11?useSSL=true", "root", "cc148604");
 		logger.info("---------------社内用户表迁移-------------");
 	}
 

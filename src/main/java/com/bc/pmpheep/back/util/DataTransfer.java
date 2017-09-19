@@ -53,7 +53,7 @@ public class DataTransfer {
 	/*
 	 * authoer:lyc 区域表迁移
 	 */
-	public void Area(String url, String username, String password) {
+	public void area(String url, String username, String password) {
 		String sql = "SELECT AreaID,ParentCode,AreaName FROM ba_areacode";
 		ConnectionManager cm = new ConnectionManager(url, username, password);
 		ResultSet rs = cm.getResultSet(sql);
@@ -87,7 +87,7 @@ public class DataTransfer {
 	/*
 	 * 机构表迁移
 	 */
-	public void Org(String url, String username, String password) {
+	public void org(String url, String username, String password) {
 		String sql = "SELECT parentid,orgname,orgtype,orgprovince,orgcity,orgcounty,linker,linktel,remark,sortno FROM ba_organize WHERE orgcode NOT LIKE '15%' ORDER BY LENGTH(orgcode),orgcode";
 		ConnectionManager cm = new ConnectionManager(url, username, password);
 		ResultSet rs = cm.getResultSet(sql);
@@ -138,7 +138,7 @@ public class DataTransfer {
 	/*
 	 * 机构用户表迁移
 	 */
-	public void OrgUser(String url, String username, String password) {
+	public void orgUser(String url, String username, String password) {
 		String sql = "SELECT a.usercode,a.`password`,a.isvalid,d.orgname,a.username,b.sex,b.duties,b.positional,b.fax,b.handset,b.phone,b.idcard,b.email,b.address,b.postcode,a.memo,a.sortno FROM sys_user a LEFT JOIN sys_userext b ON a.userid = b.userid LEFT JOIN sys_userorganize c ON b.userid = c.userid LEFT JOIN ba_organize d ON c.orgid = d.orgid WHERE a.sysflag=1 AND b.usertype=2";
 		ConnectionManager cm = new ConnectionManager(url, username, password);
 		ResultSet rs = cm.getResultSet(sql);
@@ -196,7 +196,7 @@ public class DataTransfer {
 	/*
 	 * 机构类型表迁移
 	 */
-	public void OrgType(String url, String username, String password) {
+	public void orgType(String url, String username, String password) {
 		String sql = "SELECT a.orgtype,a.orgname,a.sortno FROM ba_organize a WHERE a.parentid = 0 AND a.orgcode NOT LIKE '15%'";
 		ConnectionManager cm = new ConnectionManager(url, username, password);
 		ResultSet rs = cm.getResultSet(sql);
@@ -233,7 +233,7 @@ public class DataTransfer {
 	/*
 	 * 社内用户部门表迁移
 	 */
-	public void PmphDepartment(String url, String username, String password) {
+	public void pmphDepartment(String url, String username, String password) {
 		String sql = "SELECT a.parentid,a.orgcode,a.orgname,a.sortno,a.remark,a.isdelete,a.orgtype FROM ba_organize a WHERE a.orgcode LIKE '15%'";
 		ConnectionManager cm = new ConnectionManager(url, username, password);
 		ResultSet rs = cm.getResultSet(sql);
@@ -265,7 +265,7 @@ public class DataTransfer {
 	/*
 	 * 社内用户表迁移
 	 */
-	public void PmphUser(String url, String username, String password) {
+	public void pmphUser(String url, String username, String password) {
 		String sql = "SELECT a.usercode,a.`password`,a.username,c.orgid,b.handset,b.email,a.memo,a.sortno FROM sys_user a LEFT JOIN sys_userext b ON a.userid = b.userid LEFT JOIN sys_userorganize c ON b.userid = c.userid WHERE a.sysflag = 0";
 		ConnectionManager cm = new ConnectionManager(url, username, password);
 		ResultSet rs = cm.getResultSet(sql);
@@ -294,7 +294,7 @@ public class DataTransfer {
 					try {
 						pmphUser.setSort(Integer.parseInt((String) key
 								.get("sort")));
-					} catch (NumberFormatException ex) {
+					} catch (NumberFormatException ex) {                  //如果为空拆箱报错，设为默认值
 						pmphUser.setSort(999);
 					}
 					pmphUserService.add(pmphUser);
