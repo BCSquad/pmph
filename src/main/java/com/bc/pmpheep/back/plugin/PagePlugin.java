@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
+
 import javax.xml.bind.PropertyException;
+
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.executor.statement.BaseStatementHandler;
@@ -28,6 +30,8 @@ import org.apache.ibatis.scripting.xmltags.ForEachSqlNode;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+
+import com.bc.pmpheep.back.po.Page;
 import com.bc.pmpheep.back.util.ReflectHelper;
 import com.bc.pmpheep.back.util.Tools;
 
@@ -218,7 +222,7 @@ public class PagePlugin implements Interceptor {
             }
         }
         pageSqlId = p.getProperty("pageSqlId");
-        if (Tools.isEmpty(pageSqlId)) {  
+        if (Tools.isEmpty(pageSqlId)) {
             try {
                 throw new PropertyException("pageSqlId property is not found!");
             } catch (PropertyException e) {

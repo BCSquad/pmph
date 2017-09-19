@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.po;
 
+import org.apache.ibatis.type.Alias;
+
 import com.bc.pmpheep.back.util.PageData;
 
 /**
@@ -14,6 +16,7 @@ import com.bc.pmpheep.back.util.PageData;
  * 
  * @version 1.0
  */
+@Alias("Page")
 public class Page {
 
     private int      showCount;              // 每页显示记录数

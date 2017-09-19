@@ -154,7 +154,7 @@
     </select>
     
     <!-- 分页 -->
-   <select id="getListPageResource" parameterType="page" resultType="PmphPermission">
+   <select id="getListPageResource" parameterType="Page" resultType="PmphPermission">
    	SELECT
             `id`,
             `parent_id`,
@@ -165,7 +165,7 @@
         FROM
           `pmph_permission`
         where 1=1
-        <if test="object.parentId!=null">
+        <if test="object.parentId!=null" >
          and id = #{object.parentId}
         </if>
    </select>
