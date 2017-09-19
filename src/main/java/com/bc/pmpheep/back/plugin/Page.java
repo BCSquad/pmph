@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.po;
+package com.bc.pmpheep.back.plugin;
 
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.PageData;
