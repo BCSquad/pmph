@@ -7,7 +7,7 @@ import com.bc.pmpheep.test.BaseTest;
  * @author 曾庆峰 <791038935@qq.com>
  *
  */
-public class WriterPermissionServiceTest extends BaseTest {
+public class WriterPermissionServiceTest extends BaseTest {  
 
 //	Logger logger = LoggerFactory.getLogger(WriterPermissionServiceTest.class);
 //

@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.po.PmphUserMessage;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphUserMessageService 接口
@@ -9,33 +10,34 @@ import com.bc.pmpheep.back.po.PmphUserMessage;
 public interface   PmphUserMessageService {
 	
 	/**
-	 * 
-	 * @param  PmphUserMessage 实体对象
+	 * 新增 一个         pmphUserMessage 
+	 * @param  pmphUserMessage 
 	 * @return  带主键的 PmphUserMessage
-	 * @throws Exception 
+	 * @throws CheckedServiceException 
 	 */
-	PmphUserMessage addPmphUserMessage (PmphUserMessage pmphUserMessage) throws Exception;
+	PmphUserMessage addPmphUserMessage (PmphUserMessage pmphUserMessage)  throws CheckedServiceException;
 	
 	/**
-	 * 
-	 * @param PmphUserMessage 必须包含主键ID
+	 * 根据id查询 pmphUserMessage
+	 * @param id
 	 * @return  PmphUserMessage
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	PmphUserMessage getPmphUserMessageById(PmphUserMessage pmphUserMessage) throws Exception;
+	PmphUserMessage getPmphUserMessageById(Long id) throws CheckedServiceException;
 	
 	/**
-	 * 
-	 * @param PmphUserMessage
+	 * 根据id删除PmphUserMessage
+	 * @param id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer deletePmphUserMessageById(PmphUserMessage pmphUserMessage) throws Exception;
+	Integer deletePmphUserMessageById(Long id) throws CheckedServiceException;
 	
 	/**
-	 * @param PmphUserMessage
+	 * 根据带主键修改 pmphUserMessage（必须带主键）
+	 * @param pmphUserMessage 
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer updatePmphUserMessageById(PmphUserMessage pmphUserMessage) throws Exception;
+	Integer updatePmphUserMessage(PmphUserMessage pmphUserMessage) throws CheckedServiceException;
 }

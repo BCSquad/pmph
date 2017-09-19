@@ -1,6 +1,8 @@
-package com.bc.pmpheep.back.po;
+package com.bc.pmpheep.back.plugin;
 
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.PageData;
+import com.bc.pmpheep.back.util.Tools;
 
 /**
  * 
@@ -16,19 +18,18 @@ import com.bc.pmpheep.back.util.PageData;
  */
 public class Page {
 
-    private int      showCount;              // 每页显示记录数
-    private int      totalPage;              // 总页数
-    private int      totalResult;            // 总记录数
-    private int      currentPage;            // 当前页
-    private int      currentResult;          // 当前记录起始索引
-    private boolean  entityOrField;          // true:需要分页的地方，传入的参数就是Page实体；false:需要分页的地方，传入的参数所代表的实体拥有Page属性
-    private String   pageStr;                // 最终页面显示的底部翻页导航，详细见：getPageStr();
-    private PageData pd     = new PageData();
-    private Object   object = new Object();
+    private int      showCount;          // 每页显示记录数
+    private int      totalPage;          // 总页数
+    private int      totalResult;        // 总记录数
+    private int      currentPage;        // 当前页
+    private int      currentResult;      // 当前记录起始索引
+    private boolean  entityOrField;      // true:需要分页的地方，传入的参数就是Page实体；false:需要分页的地方，传入的参数所代表的实体拥有Page属性
+    private String   pageStr;            // 最终页面显示的底部翻页导航，详细见：getPageStr();
+    private PageData pd = new PageData();
 
     public Page() {
         try {
-            this.showCount = 10;
+            this.showCount = Integer.parseInt(Tools.readTxtFile(Const.PAGE));
         } catch (Exception e) {
             this.showCount = 15;
         }
@@ -129,7 +130,7 @@ public class Page {
 
             // 换页函数
             sb.append("function nextPage(page){");
-            // sb.append(" top.jzts();");
+            sb.append(" top.jzts();");
             sb.append("	if(true && document.forms[0]){\n");
             sb.append("		var url = document.forms[0].getAttribute(\"action\");\n");
             sb.append("		if(url.indexOf('?')>-1){url += \"&"
@@ -160,7 +161,7 @@ public class Page {
 
             // 调整每页显示条数
             sb.append("function changeCount(value){");
-            // sb.append(" top.jzts();");
+            sb.append(" top.jzts();");
             sb.append("	if(true && document.forms[0]){\n");
             sb.append("		var url = document.forms[0].getAttribute(\"action\");\n");
             sb.append("		if(url.indexOf('?')>-1){url += \"&"
@@ -246,20 +247,6 @@ public class Page {
      */
     public void setPd(PageData pd) {
         this.pd = pd;
-    }
-
-    /**
-     * @return the object
-     */
-    public Object getObject() {
-        return object;
-    }
-
-    /**
-     * @param object the object to set
-     */
-    public void setObject(Object object) {
-        this.object = object;
     }
 
 }

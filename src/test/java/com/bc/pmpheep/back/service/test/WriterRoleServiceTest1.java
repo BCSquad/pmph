@@ -1,11 +1,9 @@
 package com.bc.pmpheep.back.service.test;
 
 import javax.annotation.Resource;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.service.WriterRoleService;
 import com.bc.pmpheep.test.BaseTest;
@@ -15,9 +13,9 @@ import com.bc.pmpheep.test.BaseTest;
  * @author 曾庆峰 <791038935@qq.com>
  * 
  */
-public class WriterRoleServiceTest extends BaseTest {
+public class WriterRoleServiceTest1 extends BaseTest {
 
-    Logger            logger = LoggerFactory.getLogger(WriterRoleServiceTest.class);
+    Logger            logger = LoggerFactory.getLogger(WriterRoleServiceTest1.class);
 
     @Resource
     WriterRoleService writerRoleService;

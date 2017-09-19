@@ -19,8 +19,8 @@ import com.bc.pmpheep.test.BaseTest;
  * @author Administrator
  * 
  */
-public class PmphRoleTest extends BaseTest {
-	private static final Logger log = LoggerFactory.getLogger(PmphRoleTest.class);
+public class PmphRoleServiceTest extends BaseTest {
+	private static final Logger log = LoggerFactory.getLogger(PmphRoleServiceTest.class);
 
 	@Autowired
 	PmphRoleService roleService;
