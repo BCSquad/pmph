@@ -47,6 +47,9 @@ public class PmphUserMessage implements Serializable {
 
     public PmphUserMessage() {
 	}
+    public PmphUserMessage(Long id) {
+    	this.id=id;
+	}
 
 	public PmphUserMessage(Long msgId, Long userId, boolean isRead, boolean isDeleted, Date gmtCreate, Date gmtUpdate) {
 	this.msgId = msgId;

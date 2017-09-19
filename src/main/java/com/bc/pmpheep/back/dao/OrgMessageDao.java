@@ -1,9 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
 import org.springframework.stereotype.Repository;
-
 import com.bc.pmpheep.back.po.OrgMessage;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * OrgMessage 实体类数据访问层接口

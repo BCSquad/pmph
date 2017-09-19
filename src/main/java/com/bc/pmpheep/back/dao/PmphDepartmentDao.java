@@ -3,7 +3,6 @@ package com.bc.pmpheep.back.dao;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.PmphDepartment;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphDepartment 实体类数据访问层接口

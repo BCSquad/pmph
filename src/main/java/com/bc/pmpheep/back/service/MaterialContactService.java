@@ -37,7 +37,7 @@ public interface MaterialContactService {
 	Integer deleteMaterialContactById(Long id) throws CheckedServiceException;
 	
 	/**
-	 * 更新一个 MaterialContact通过主键id
+	 * 根据id 更新materialContact不为null和''的字段
 	 * @param MaterialContact
 	 * @return 影响行数
 	 * @throws CheckedServiceException

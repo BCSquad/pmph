@@ -9,16 +9,16 @@
 			<if test="materialId!=null">
 				material_id,
 			</if>
-			<if test="notice!=null">
+			<if test="notice!=null and notice!='' ">
 				notice,
 			</if>
-			<if test="noticeAttachment!=null">
+			<if test="noticeAttachment!=null and noticeAttachment !='' ">
 				notice_attachment,
 			</if>
-			<if test="note!=null">
+			<if test="note!=null and note !=''  ">
 				note,
 			</if>
-			<if test="noteAttachment!=null">
+			<if test="noteAttachment != null and noteAttachment !=''   ">
 				note_attachment,
 			</if>
 		</trim>
@@ -30,16 +30,16 @@
 			<if test="materialId!=null">
 				#{materialId},
 			</if>
-			<if test="notice!=null">
+			<if test="notice != null and notice !=''  ">
 				#{notice},
 			</if>
-			<if test="noticeAttachment!=null">
+			<if test="noticeAttachment != null and noticeAttachment !='' ">
 				#{noticeAttachment},
 			</if>
-			<if test="note!=null">
+			<if test="note != null and note !=''">
 				#{note},
 			</if>
-			<if test="noteAttachment!=null">
+			<if test="noteAttachment!=null  and noteAttachment !='' ">
 				#{noteAttachment},
 			</if>
 		</trim>
@@ -74,7 +74,7 @@
 	<update id="updateMaterialExtra" parameterType="MaterialExtra">
 		update material_extra
 		<set>
-			<if test="materialId != null and materialId !=''">
+			<if test="materialId != null">
 				material_id = #{materialId},
 			</if>
 			<if test="notice != null and notice !='' ">

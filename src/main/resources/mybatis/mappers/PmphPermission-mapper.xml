@@ -8,22 +8,22 @@
             <if test="parentId!=null">
                 parent_id,
             </if>
-            <if test="path!=null">
+            <if test="path!=null and path !=''">
                 path,
             </if>
-            <if test="peermissionName!=null">
+            <if test="peermissionName!=null and peermissionName !=''">
                 permission_name,
             </if>
-             <if test="menuName!=null">
+             <if test="menuName!=null and menuName !=''">
                 menu_name,
             </if>
-             <if test="url!=null">
+             <if test="url!=null and url !=''">
                 url,
             </if>
              <if test="isDisabled!=null">
                 is_disabled,
             </if>
-             <if test="note!=null">
+             <if test="note!=null and note !=''">
                 note,
             </if>
              <if test="sort!=null">
@@ -44,22 +44,22 @@
             <if test="parentId!=null">
                 #{parentId},
             </if>
-            <if test="path!=null">
+            <if test="path!=null and path !=''">
                #{path},
             </if>
-            <if test="peermissionName!=null">
+            <if test="peermissionName!=null and peermissionName !=''">
                #{peermissionName},
             </if>
-             <if test="menuName!=null">
+             <if test="menuName!=null and menuName !=''">
                 #{menuName},
             </if>
-             <if test="url!=null">
+             <if test="url!=null and url !=''">
                 #{url},
             </if>
              <if test="isDisabled!=null">
               #{isDisabled},
             </if>
-             <if test="note!=null">
+             <if test="note!=null and note !=''">
                 #{note},
             </if>
              <if test="sort!=null">
@@ -105,7 +105,7 @@
              <if test="url!=null and url!=''">
                 url=#{url},
             </if>
-           <if test="isDisabled != null and isDisabled!=''">
+           <if test="isDisabled != null">
                 is_disabled = #{isDisabled},
             </if>
             <if test="note != null and note!=''">

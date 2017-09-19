@@ -25,6 +25,13 @@ public class MaterialExtension implements java.io.Serializable {
 	/** default constructor */
 	public MaterialExtension() {
 	}
+	
+
+	public MaterialExtension(Long id) {
+		super();
+		this.id = id;
+	}
+
 
 	/** full constructor */
 	public MaterialExtension(Long materialId, String extensionName,

@@ -17,7 +17,7 @@ public class WriterUserMessageServiceTest extends BaseTest {
 	WriterUserMessageService writerUserMessageService;
 
 	@Test
-	public void addWriterUserMessage() {
+	public void addWriterUserMessage() {   
 		WriterUserMessage writerUserMessage = new WriterUserMessage();
 		writerUserMessage.setMsgId(123L);
 		writerUserMessage.setUserId(1L);

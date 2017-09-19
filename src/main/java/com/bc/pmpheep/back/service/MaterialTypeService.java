@@ -12,7 +12,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public interface MaterialTypeService {
 
 	/**
-	 * 新增一个MaterialType
+	 * 新增一个materialType
 	 * 
 	 * @param MaterialType
 	 *            实体对象
@@ -32,16 +32,16 @@ public interface MaterialTypeService {
 	/**
 	 * 删除MaterialType 通过主键id
 	 * 
-	 * @param MaterialType
+	 * @param id
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */
 	Integer deleteMaterialTypeById(Long id) throws CheckedServiceException;
 
 	/**
-	 * 更新一个 MaterialType通过主键id
+	 * 根据主键id更新materialType 不为null和不为‘’的字段
 	 * 
-	 * @param MaterialType
+	 * @param materialType
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */

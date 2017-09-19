@@ -9,7 +9,7 @@
 			<if test="materialId!=null">
 				material_id,
 			</if>
-			<if test="extensionName!=null">
+			<if test="extensionName!=null and extensionName !=''">
 				extension_name,
 			</if>
 			<if test="isRequired!=null">
@@ -24,7 +24,7 @@
 			<if test="materialId!=null">
 				#{materialId},
 			</if>
-			<if test="extensionName!=null">
+			<if test="extensionName!=null and extensionName !=''">
 				#{extensionName},
 			</if>
 			<if test="isRequired!=null">
@@ -63,13 +63,13 @@
 	<update id="updateMaterialExtension" parameterType="MaterialExtension">
 		update material_extension
 		<set>
-			<if test="materialId != null and materialId !=''">
+			<if test="materialId != null">
 				material_id = #{materialId},
 			</if>
 			<if test="extensionName != null and extensionName !='' ">
 				extension_name = #{extensionName},
 			</if>
-			<if test=" isRequired != null and isRequired !=''">
+			<if test=" isRequired != null">
 				is_required= #{isRequired},
 			</if>
 		</set>

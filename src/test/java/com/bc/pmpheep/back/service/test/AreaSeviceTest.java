@@ -6,11 +6,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.AreaService;
+import com.bc.pmpheep.back.util.Const;
 
 /**
  * AreaDao 单元测试
@@ -24,18 +24,15 @@ public class AreaSeviceTest extends BaseTest {
 	private AreaService areaService;
 
 	@Test
-	@Rollback(false)
+	@Rollback(Const.ISROLLBACK)
 	public void addArea() throws Exception {
 		Area a = new Area(5L, "测试", 4);
 		areaService.addArea(a);
-		logger.info("-----------------------------------新增--------------------------------------------");
+		logger.info("----AreaService-------------------------------------------------------------------------");
 		logger.info(a.toString());
-		logger.info("------------------------------------修改-------------------------------------------");
 		a.setAreaName("ceshiwwwwwwww");
 		logger.info(areaService.updateArea(a).toString());
-		logger.info("------------------------------------删除-------------------------------------------");
 		logger.info(areaService.deleteAreaById(2L).toString());
-		logger.info("-----------------------------------查询-------------------------------------------");
 		logger.info(areaService.getAreaById(6L).toString());
 	}
 

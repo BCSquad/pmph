@@ -12,6 +12,7 @@ import java.io.Serializable;
  * @author L.X <gugia@qq.com>
  * @param <T> 要返回的数据类型
  */
+@SuppressWarnings("serial")
 public class ResponseBean<T> implements Serializable {
 
     /**

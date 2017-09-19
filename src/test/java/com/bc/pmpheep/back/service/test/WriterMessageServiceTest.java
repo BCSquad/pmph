@@ -75,6 +75,7 @@ public class WriterMessageServiceTest extends BaseTest {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	@Test
 	public void get() {
 		WriterMessage writerMessage = new WriterMessage("asdasd", 1);

@@ -18,7 +18,7 @@ import com.bc.pmpheep.back.util.Const;
  */
 public class PmphGroupSeviceTest extends BaseTest {
 	Logger logger = LoggerFactory.getLogger(PmphGroupSeviceTest.class);
-	
+	 
 	@Resource
 	private PmphGroupService testService;
 	

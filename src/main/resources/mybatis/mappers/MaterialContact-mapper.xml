@@ -12,13 +12,13 @@
 			<if test="contactUserId != null">
 				contact_user_id,
 			</if>
-			<if test="contactUserName != null">
+			<if test="contactUserName != null and contactUserName !=''">
 				contact_user_name,
 			</if>
-			<if test="contactPhone != null">
+			<if test="contactPhone != null and contactPhone !=''">
 				contact_phone,
 			</if>
-			<if test="contactEmail != null">
+			<if test="contactEmail != null and contactEmail !=''">
 				contact_email,
 			</if>
 		</trim>
@@ -33,13 +33,13 @@
 			<if test="contactUserId!=null">
 				#{contactUserId},
 			</if>
-			<if test="contactUserName!=null">
+			<if test="contactUserName !=null and contactUserName !=''">
 				#{contactUserName},
 			</if>
-			<if test="contactPhone!=null">
+			<if test="contactPhone !=null and contactPhone !=''">
 				#{contactPhone},
 			</if>
-			<if test="contactEmail!=null">
+			<if test="contactEmail !=null and contactEmail !=''">
 				#{contactEmail},
 			</if>
 		</trim>
@@ -72,10 +72,10 @@
 		update
 		material_contact
 		<set>
-			<if test="materialId != null and materialId !=''">
+			<if test="materialId != null">
 				material_id = #{materialId},
 			</if>
-			<if test="contactUserId != null and contactUserId !='' ">
+			<if test="contactUserId != null  ">
 				contact_user_id = #{contactUserId},
 			</if>
 			<if test=" contactUserName != null and contactUserName !=''">

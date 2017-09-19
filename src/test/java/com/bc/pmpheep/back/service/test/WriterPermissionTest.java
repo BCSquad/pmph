@@ -16,7 +16,8 @@ import com.bc.pmpheep.test.BaseTest;
  * 
  */
 public class WriterPermissionTest extends BaseTest {
-    private static final Logger log = LoggerFactory.getLogger(WriterPermissionTest.class);
+    @SuppressWarnings("unused")
+	private static final Logger log = LoggerFactory.getLogger(WriterPermissionTest.class);
 
     @Autowired
     WriterPermissionService     writerPermissionService;

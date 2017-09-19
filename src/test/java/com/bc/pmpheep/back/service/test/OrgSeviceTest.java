@@ -5,10 +5,10 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.OrgService;
+import com.bc.pmpheep.back.util.Const;
 
 /**
  * AreaDao 单元测试
@@ -16,28 +16,23 @@ import com.bc.pmpheep.back.service.OrgService;
  * @author mryang
  */
 public class OrgSeviceTest extends BaseTest {
-	Logger l = LoggerFactory.getLogger(OrgSeviceTest.class);
+	Logger logger = LoggerFactory.getLogger(OrgSeviceTest.class);
 	
 	@Resource
 	private OrgService orgService;
 	
     @Test
-    @Transactional  
-    @Rollback(false) 
+    @Rollback(Const.ISROLLBACK) 
     public void test() throws Exception {
-        l.info("---Org---以下测试什么内容，是怎么考虑的-----------");
+        logger.info("---OrgService-----------------------------------------------------------------------------");
     	Org a=new Org(5L,"测试", 4L, 4L,"ZHANGS", "1234", "BEIZHU", 4, false, null, null);
     	orgService.addOrg(a);
-    	l.debug("---Org--------------------------------新增--------------------------------------------");
-    	l.info(a.toString());
-    	l.info("---Org---------------------------------修改-------------------------------------------");
+    	logger.info(a.toString());
     	a.setOrgName("ceshiwwwwwwww"+a.getId());
-    	l.info(orgService.updateOrg(a).toString());
+    	logger.info(orgService.updateOrg(a).toString());
     	a.setId(1L);
-    	l.info("---Org---------------------------------删除-------------------------------------------");
-    	l.info(orgService.deleteOrgById(4L).toString());
-    	l.info("---Org--------------------------------查询-------------------------------------------");
-    	l.info(orgService.getOrgById(3L).toString());
+    	logger.info(orgService.deleteOrgById(4L).toString());
+    	logger.info(orgService.getOrgById(3L).toString());
     }
     
 }

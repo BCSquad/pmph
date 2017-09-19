@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.WriterUserCertificationDao">
+
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="orgId != null">
+				org_id,
+			</if>
+			<if test="handphone != null and handphone != '' ">
+				handphone,
+			</if>
+			<if test="idcard  != null and idcard  != '' ">
+				idcard ,
+			</if>
+			<if test="progress  != null">
+				progress ,
+			</if>
+			<if test="cert  != null and cert != '' ">
+				cert  ,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="orgId != null">
+				#{orgId},
+			</if>
+			<if test="handphone != null and handphone != '' ">
+				#{handphone},
+			</if>
+			<if test="idcard  != null and idcard  != '' ">
+				#{idcard},
+			</if>
+			<if test="progress  != null">
+				#{progress},
+			</if>
+			<if test="cert  != null and cert != '' ">
+				#{cert},
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 新增WriterUserCertification -->
+	<insert id="addWriterUserCertification" parameterType="WriterUserCertification">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		<!-- sql片段对应字段名,id属性值任意 -->
+		INSERT INTO Writer_User_Certification
+		(
+		<include refid="key" />
+		)
+		VALUES
+		(
+		<include refid="value" />
+		);
+	</insert>
+
+
+	<!-- 根据id删除一个 WriterUserCertification-->
+	<delete id="deleteWriterUserCertificationById" parameterType="java.lang.Long">
+		delete from
+		Writer_User_Certification where
+		id=#{id} ;
+	</delete>
+
+	<!-- 更新WriterUserCertification -->
+	<update id="updateWriterUserCertification" parameterType="WriterUserCertification">
+		update Writer_User_Certification
+		<set>
+			<if test="userId != null">
+				user_id=#{userId},
+			</if>
+			<if test="orgId != null">
+				org_id=#{orgId},
+			</if>
+			<if test="handphone != null and handphone != '' ">
+				handphone=#{handphone},
+			</if>
+			<if test="idcard  != null and idcard  != '' ">
+				idcard=#{idcard},
+			</if>
+			<if test="progress  != null">
+				progress=#{progress},
+			</if>
+			<if test="cert  != null and cert != '' ">
+				cert=#{cert},
+			</if>
+		</set>
+		where
+		id=#{id} ;
+	</update>
+
+	<!-- 根据id查询一个WriterUserCertification -->
+	<select id="getWriterUserCertificationById" parameterType="java.lang.Long" resultType="WriterUserCertification">
+		select * from Writer_User_Certification where id=#{id} ;
+	</select>
+
+</mapper>

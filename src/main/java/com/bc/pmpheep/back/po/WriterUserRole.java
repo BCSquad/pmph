@@ -10,6 +10,7 @@ import org.apache.ibatis.type.Alias;
  * @author 曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("WriterUserRole")
 public class WriterUserRole implements Serializable {
     /**
@@ -28,6 +29,10 @@ public class WriterUserRole implements Serializable {
     
 
     public WriterUserRole() {
+    }
+    
+    public WriterUserRole(Long id) {
+    	this.id=id;
     }
 
     public WriterUserRole(Long userId, Long roleId) {

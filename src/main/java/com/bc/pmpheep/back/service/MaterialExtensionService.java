@@ -37,7 +37,7 @@ public interface MaterialExtensionService {
 	Integer deleteMaterialExtensionById(Long id) throws CheckedServiceException;
 	
 	/**
-	 * 更新一个 MaterialExtension通过主键id
+	 * 通过主键更新materialExtension不为null的字段
 	 * @param MaterialExtension
 	 * @return 影响行数
 	 * @throws CheckedServiceException

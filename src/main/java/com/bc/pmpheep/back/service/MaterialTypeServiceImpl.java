@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialTypeDao;
 import com.bc.pmpheep.back.po.MaterialType;
+import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -24,13 +25,28 @@ public class MaterialTypeServiceImpl extends BaseService implements MaterialType
 
 	/**
 	 * 
-	 * @param MaterialType
+	 * @param materialType
 	 *            实体对象
 	 * @return 带主键的 MaterialType
 	 * @throws CheckedServiceException
 	 */
 	@Override
 	public MaterialType addMaterialType(MaterialType materialType) throws CheckedServiceException {
+		if(null==materialType.getParentId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,CheckedExceptionResult.NULL_PARAM,"上级类型为空");
+		}
+		if(Tools.isEmpty(materialType.getPath())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,CheckedExceptionResult.NULL_PARAM,"节点路径为空");
+		}
+		if(Tools.isEmpty(materialType.getTypeName())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,CheckedExceptionResult.NULL_PARAM,"类型名称为空");
+		}
+		if(null==materialType.getSort()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,CheckedExceptionResult.NULL_PARAM,"显示顺序为空");
+		}
+		if(Tools.isEmpty(materialType.getNote())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,CheckedExceptionResult.NULL_PARAM,"备注为空");
+		}
 		materialTypeDao.addMaterialType(materialType);
 		return materialType;
 	}
@@ -66,7 +82,8 @@ public class MaterialTypeServiceImpl extends BaseService implements MaterialType
 	}
 
 	/**
-	 * @param MaterialType
+	 * 根据主键id更新materialType 不为null和不为‘’的字段
+	 * @param materialType
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */

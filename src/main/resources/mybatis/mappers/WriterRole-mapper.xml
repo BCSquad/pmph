@@ -2,58 +2,66 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bc.pmpheep.back.dao.WriterRoleDao">
 	<sql id="key">
-        <!-- 去掉最后一个, -->
-        <trim suffixOverrides=",">
-            <if test="roleName!=null">
-                role_name,
-            </if>
-            <if test="isDisabled!=null">
-                is_disabled,
-            </if>
-             <if test="note!=null">
-                note,
-            </if>
-             <if test="sort!=null">
-                sort,
-            </if>
-             <if test="gmtCreate!=null">
-                gmt_create,
-            </if> 
-            <if test="gmtUpdate!=null">
-                gmt_update,
-            </if>
-        </trim>
-    </sql>
-    <!-- sql片段对应?,id属性值任意 -->
-    <sql id="value">
-        <!-- 去掉最后一个, -->
-        <trim suffixOverrides=",">
-            <if test="roleName!=null">
-                #{roleName},
-            </if>
-            <if test="isDisabled!=null">
-               #{isDisabled},
-            </if>
-             <if test="note!=null">
-                #{note},
-            </if>
-             <if test="sort!=null">
-                #{sort},
-            </if>
-             <if test="gmtCreate!=null">
-               #{gmtCreate},
-            </if> 
-            <if test="gmtUpdate!=null">
-                #{gmtUpdate},
-            </if>
-        </trim>
-    </sql>
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="roleName!=null">
+				role_name,
+			</if>
+			<if test="isDisabled!=null">
+				is_disabled,
+			</if>
+			<if test="note!=null">
+				note,
+			</if>
+			<if test="sort!=null">
+				sort,
+			</if>
+			<if test="gmtCreate!=null">
+				gmt_create,
+			</if>
+			<if test="gmtUpdate!=null">
+				gmt_update,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="roleName!=null">
+				#{roleName},
+			</if>
+			<if test="isDisabled!=null">
+				#{isDisabled},
+			</if>
+			<if test="note!=null">
+				#{note},
+			</if>
+			<if test="sort!=null">
+				#{sort},
+			</if>
+			<if test="gmtCreate!=null">
+				#{gmtCreate},
+			</if>
+			<if test="gmtUpdate!=null">
+				#{gmtUpdate},
+			</if>
+		</trim>
+	</sql>
 	<insert id="add" parameterType="WriterRole">
-        INSERT INTO writer_role
-        	(<include refid="key"/>)
-        VALUES
-        	(<include refid="value"/>);	
-    </insert>
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO writer_role
+		(
+		<include refid="key" />
+		)
+		VALUES
+		(
+		<include refid="value" />
+		);
+	</insert>
 	<delete id="delete" parameterType="Long">
 		DELETE FROM writer_role
 		WHERE

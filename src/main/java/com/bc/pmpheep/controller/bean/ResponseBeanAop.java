@@ -28,7 +28,7 @@ public class ResponseBeanAop {
         }
         return responseBean;
     }
-
+    @SuppressWarnings("rawtypes")
     private ResponseBean<?> exceptionHandler(ProceedingJoinPoint pjp, Throwable ex) {
         ResponseBean<?> responseBean = new ResponseBean();
         // 已知异常

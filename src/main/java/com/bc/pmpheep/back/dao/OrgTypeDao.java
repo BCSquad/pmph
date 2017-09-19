@@ -2,7 +2,6 @@ package com.bc.pmpheep.back.dao;
 
 
 import com.bc.pmpheep.back.po.OrgType;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 /**
  * OrgType 实体类数据访问层接口
  * @author mryang

@@ -9,7 +9,7 @@
 			<if test="materialName!=null">
 				material_name,
 			</if>
-			<if test="MaterialRound!=null">
+			<if test="materialRound != null">
 				material_round,
 			</if>
 			<if test="materialType!=null">
@@ -123,6 +123,9 @@
 			<if test="isDeleted!=null">
 				is_deleted,
 			</if>
+			<if test="founderId != null">
+				founder_id,
+			</if>
 			<if test="menderId!=null">
 				mender_id,
 			</if>
@@ -135,8 +138,8 @@
 			<if test="materialName!=null">
 				#{materialName},
 			</if>
-			<if test="MaterialRound!=null">
-				#{MaterialRound},
+			<if test="materialRound !=null ">
+				#{materialRound},
 			</if>
 			<if test="materialType!=null">
 				#{materialType},
@@ -249,6 +252,9 @@
 			<if test="isDeleted!=null">
 				#{isDeleted},
 			</if>
+			<if test="founderId != null">
+				#{founderId},
+			</if>
 			<if test="menderId!=null">
 				#{menderId},
 			</if>
@@ -287,124 +293,127 @@
 			<if test="materialName !=null and materialName !=''">
 				material_name=#{materialName},
 			</if>
-			<if test="MaterialRound !=null and MaterialRound !=''">
-				material_round=#{MaterialRound},
+			<if test="materialRound !=null ">
+				material_round=#{materialRound},
 			</if>
-			<if test="materialType !=null and materialType !=''">
+			<if test="materialType !=null ">
 				material_type=#{materialType},
 			</if>
-			<if test="deadline !=null and deadline !=''">
+			<if test="deadline !=null ">
 				deadline=#{deadline},
 			</if>
-			<if test="actualDeadline !=null and actualDeadline !=''">
+			<if test="actualDeadline !=null ">
 				actual_deadline=#{actualDeadline},
 			</if>
-			<if test="ageDeadline !=null and ageDeadline !=''">
+			<if test="ageDeadline !=null ">
 				age_deadline=#{ageDeadline},
 			</if>
 			<if test="mailAddress !=null and mailAddress !=''">
 				mail_address=#{mailAddress},
 			</if>
-			<if test="progress !=null and progress !=''">
+			<if test="progress !=null ">
 				progress=#{progress},
 			</if>
-			<if test="departmentId !=null and departmentId !=''">
+			<if test="departmentId !=null ">
 				department_id=#{departmentId},
 			</if>
-			<if test="director !=null and director !=''">
+			<if test="director !=null  ">
 				director=#{director},
 			</if>
-			<if test="projectEditor !=null and projectEditor !=''">
+			<if test="projectEditor !=null  ">
 				project_editor=#{projectEditor},
 			</if>
-			<if test="isMultiBooks !=null and isMultiBooks !=''">
+			<if test="isMultiBooks !=null ">
 				is_multi_books=#{isMultiBooks},
 			</if>
-			<if test="isMultiPosition !=null and isMultiPosition !=''">
+			<if test="isMultiPosition !=null  ">
 				is_multi_position=#{isMultiPosition},
 			</if>
-			<if test="isEduExpUsed !=null and isEduExpUsed !=''">
+			<if test="isEduExpUsed !=null  ">
 				is_edu_exp_used=#{isEduExpUsed},
 			</if>
-			<if test="isEduExpRequired !=null and isEduExpRequired !=''">
+			<if test="isEduExpRequired !=null  ">
 				is_edu_exp_required=#{isEduExpRequired},
 			</if>
-			<if test="isWorkExpUsed !=null and isWorkExpUsed !=''">
+			<if test="isWorkExpUsed !=null ">
 				is_work_exp_used=#{isWorkExpUsed},
 			</if>
-			<if test="isWorkExpRequired !=null and isWorkExpRequired !=''">
+			<if test="isWorkExpRequired !=null  ">
 				is_work_exp_required=#{isWorkExpRequired},
 			</if>
-			<if test="isTeachExpUsed !=null and isTeachExpUsed !=''">
+			<if test="isTeachExpUsed !=null  ">
 				is_teach_exp_used=#{isTeachExpUsed},
 			</if>
-			<if test="isTeachExpRequired !=null and isTeachExpRequired !=''">
+			<if test="isTeachExpRequired !=null  ">
 				is_teach_exp_required=#{isTeachExpRequired},
 			</if>
-			<if test="isAcadeUsed !=null and isAcadeUsed !=''">
+			<if test="isAcadeUsed !=null  ">
 				is_acade_used=#{isAcadeUsed},
 			</if>
-			<if test="isAcadeRequired !=null and isAcadeRequired !=''">
+			<if test="isAcadeRequired !=null ">
 				is_acade_required=#{isAcadeRequired},
 			</if>
-			<if test="isLastPositionUsed !=null and isLastPositionUsed !=''">
+			<if test="isLastPositionUsed !=null ">
 				is_last_position_used=#{isLastPositionUsed},
 			</if>
-			<if test="isLastPositionRequired !=null and isLastPositionRequired !=''">
+			<if test="isLastPositionRequired !=null ">
 				is_last_position_required=#{isLastPositionRequired},
 			</if>
-			<if test="isNationalCourseUsed !=null and isNationalCourseUsed !=''">
+			<if test="isNationalCourseUsed !=null  ">
 				is_national_course_used=#{isNationalCourseUsed},
 			</if>
 			<if
-				test="isNationalCourseRequired !=null and isNationalCourseRequired !=''">
+				test="isNationalCourseRequired !=null  ">
 				is_national_course_required=#{isNationalCourseRequired},
 			</if>
-			<if test="isProvincialCourseUsed !=null and isProvincialCourseUsed !=''">
+			<if test="isProvincialCourseUsed !=null  ">
 				is_provincial_course_used=#{isProvincialCourseUsed},
 			</if>
 			<if
-				test="isProvincialCourseRequired !=null and isProvincialCourseRequired !=''">
+				test="isProvincialCourseRequired !=null  ">
 				is_provincial_course_required=#{isProvincialCourseRequired},
 			</if>
-			<if test="isSchoolCourseUsed !=null and isSchoolCourseUsed !=''">
+			<if test="isSchoolCourseUsed !=null  ">
 				is_school_course_used=#{isSchoolCourseUsed},
 			</if>
-			<if test="isSchoolCourseRequired !=null and isSchoolCourseRequired !=''">
+			<if test="isSchoolCourseRequired !=null  ">
 				is_school_course_required=#{isSchoolCourseRequired},
 			</if>
-			<if test="isNationalPlanUsed !=null and isNationalPlanUsed !=''">
+			<if test="isNationalPlanUsed !=null  ">
 				is_national_plan_used=#{isNationalPlanUsed},
 			</if>
-			<if test="isNationalPlanRequired !=null and isNationalPlanRequired !=''">
+			<if test="isNationalPlanRequired !=null  ">
 				is_national_plan_required=#isNationalPlanRequired},
 			</if>
-			<if test="isTextbookWriterUsed !=null and isTextbookWriterUsed !=''">
+			<if test="isTextbookWriterUsed !=null  ">
 				is_textbook_writer_used=#{isTextbookWriterUsed},
 			</if>
 			<if
-				test="isTextbookWriterRequired !=null and isTextbookWriterRequired !=''">
+				test="isTextbookWriterRequired !=null  ">
 				is_textbook_writer_required=#{isTextbookWriterRequired},
 			</if>
-			<if test="isOtherTextbookUsed !=null and isOtherTextbookUsed !=''">
+			<if test="isOtherTextbookUsed !=null  ">
 				is_other_textbook_used=#{isOtherTextbookUsed},
 			</if>
-			<if test="isOtherTextbookRequired !=null and isOtherTextbookRequired !=''">
+			<if test="isOtherTextbookRequired !=null  ">
 				is_other_textbook_required=#{isOtherTextbookRequired},
 			</if>
-			<if test="isResearchUsed !=null and isResearchUsed !=''">
+			<if test="isResearchUsed !=null ">
 				is_research_used=#{isResearchUsed},
 			</if>
-			<if test="isResearchRequired !=null and isResearchRequired !=''">
+			<if test="isResearchRequired !=null ">
 				is_research_required=#{isResearchRequired},
 			</if>
-			<if test="isPublished !=null and isPublished !=''">
+			<if test="isPublished !=null  ">
 				is_published=#{isPublished},
 			</if>
-			<if test="isDeleted !=null and isDeleted !=''">
+			<if test="isDeleted !=null  ">
 				is_deleted=#{isDeleted},
 			</if>
-			<if test="menderId !=null and menderId !=''">
+			<if test="founderId != null" >
+				founder_id=#{founderId},
+			</if>
+			<if test="menderId !=null  ">
 				mender_id=#{menderId},
 			</if>
 		</set>

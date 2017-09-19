@@ -28,6 +28,13 @@ public class MaterialContact implements java.io.Serializable {
 	/** default constructor */
 	public MaterialContact() {
 	}
+	
+
+	public MaterialContact(Long id) {
+		super();
+		this.id = id;
+	}
+
 
 	/** full constructor */
 	public MaterialContact(Long materialId, Long contactUserId,
