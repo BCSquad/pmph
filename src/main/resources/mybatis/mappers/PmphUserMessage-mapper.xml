@@ -3,27 +3,85 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.PmphUserMessageDao">
 
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="msgId != null and msgId !=''">
+				msg_id,
+			</if>
+			<if test="userId != null and userId !=''">
+				user_id,
+			</if>
+			<if test=" isRead != null ">
+				is_read,
+			</if>
+			<if test=" isDeleted != null ">
+				is_deleted,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="msgId != null and msgId !=''">
+				#{msgId},
+			</if>
+			<if test="userId != null and userId !=''">
+				#{userId},
+			</if>
+			<if test=" isRead != null ">
+				#{isRead},
+			</if>
+			<if test=" isDeleted != null ">
+				#{isDeleted},
+			</if>
+		</trim>
+	</sql>
+
 	<!-- 新增 PmphUserMessage -->
-    <insert id="addPmphUserMessage"  parameterType="PmphUserMessage"  useGeneratedKeys="true" keyProperty="id"  >
-     	insert  into  pmph_user_message   (msg_id,user_id,is_read,   is_deleted) 
-        							values(#{msgId},#{userId},#{isRead},#{isDeleted}) ;
-    </insert>
-    
-   <!-- 根据id删除一个 PmphUserMessage -->
-	<delete id="deletePmphUserMessageById" parameterType="PmphUserMessage"   >
-		delete from  pmph_user_message where where id=#{id} ;
+	<insert id="addPmphUserMessage" parameterType="PmphUserMessage"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into pmph_user_message
+		(
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 根据id删除一个 PmphUserMessage -->
+	<delete id="deletePmphUserMessageById" parameterType="PmphUserMessage">
+		delete from
+		pmph_user_message where where id=#{id} ;
 	</delete>
-	
+
 	<!-- 更新 PmphUserMessage -->
-	<update id="updatePmphUserMessageById"   parameterType="PmphUserMessage"  >
-		update pmph_user_message  
-		  set  msg_id=#{msgId},user_id=#{userId},is_read=#{isRead},   is_deleted=#{isDeleted} 
+	<update id="updatePmphUserMessageById" parameterType="PmphUserMessage">
+		update pmph_user_message
+		<set>
+			<if test="msgId != null and msgId !=''">
+				msg_id = #{msgId},
+			</if>
+			<if test="userId != null and userId !='' ">
+				user_id = #{userId},
+			</if>
+			<if test=" isRead != null ">
+				is_read= #{isRead},
+			</if>
+			<if test=" isDeleted != null ">
+				is_deleted= #{isDeleted},
+			</if>
+		</set>
 		where id=#{id} ;
 	</update>
-	
+
 	<!-- 根据id查询一个 PmphUserMessage -->
-	<select  id="getPmphUserMessageById" parameterType="PmphUserMessage"  resultType="PmphUserMessage" >
-		select * from pmph_user_message where id=#{id} ;
+	<select id="getPmphUserMessageById" parameterType="PmphUserMessage"
+		resultType="PmphUserMessage">
+		select * from pmph_user_message where
+		id=#{id} ;
 	</select>
-	
+
 </mapper>

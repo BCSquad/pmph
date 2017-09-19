@@ -190,7 +190,7 @@
 				sort = #{sort},
 			</if>
 			<if test="isDeleted != null  ">
-				isDeleted = #{isDeleted},
+				is_deleted = #{isDeleted},
 			</if>
 		</set>
 		where id=#{id} ;

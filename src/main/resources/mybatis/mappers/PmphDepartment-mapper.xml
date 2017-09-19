@@ -77,7 +77,7 @@
 				path = #{path},
 			</if>
 			<if test=" dpName != null and dpName !=''">
-				dpName= #{dpName},
+				dp_name= #{dpName},
 			</if>
 			<if test=" sort != null and sort !=''">
 				sort= #{sort},
