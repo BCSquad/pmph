@@ -29,6 +29,9 @@ public class PmphUserRole implements Serializable {
 
     public PmphUserRole() {
 	}
+    public PmphUserRole(Long id){
+    	this.id=id;
+    }
 
 	public PmphUserRole(Long userId, Long roleId) {
 	this.userId = userId;
