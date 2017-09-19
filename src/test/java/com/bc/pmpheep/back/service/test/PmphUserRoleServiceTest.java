@@ -26,7 +26,7 @@ public class PmphUserRoleServiceTest extends BaseTest {
     public void test() throws Exception {
     	Random r =new Random();
     	PmphUserRole testPar=new PmphUserRole ( new Long(r.nextInt(200)), new Long(r.nextInt(200)));
-    	logger.info("---MaterialService 测试---------------------------------------------------------------------------------");
+    	logger.info("---PmphUserRoleService 测试---------------------------------------------------------------------------------");
     	//新增
     	testService.addPmphUserRole(testPar);
     	logger.info(testPar.toString());
