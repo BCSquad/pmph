@@ -52,7 +52,7 @@ public class PmphPermissionServiceTest extends BaseTest {
     @Test
     public void test1() throws Exception {
         PmphPermission pp = new PmphPermission();
-        pp.setParentId(1L);
+        // pp.setParentId(1L);
         Page page = new Page();
         PageData pData = new PageData();
         // pData.put("parentId", 1L);
