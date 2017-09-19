@@ -6,19 +6,19 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="parentId!=null and parentId !=''">
+			<if test="parentId!=null">
 				parent_id,
 			</if>
-			<if test="path!=null and path !=''">
+			<if test="path!=null and path != '' ">
 				path,
 			</if>
-			<if test="typeName!=null and typeName !=''">
+			<if test="typeName!=null and typeName != ''  ">
 				type_name,
 			</if>
-			<if test="sort!=null and sort !=''">
+			<if test="sort!=null">
 				sort,
 			</if>
-			<if test="note!=null and note !=''">
+			<if test="note!=null  and note != ''   ">
 				note,
 			</if>
 		</trim>
@@ -27,19 +27,19 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="parentId!=null and parentId !=''">
+			<if test="parentId!=null">
 				#{parentId},
 			</if>
-			<if test="path!=null and path !=''">
+			<if test="path!=null  and path != ''  ">
 				#{path},
 			</if>
-			<if test="typeName!=null and typeName !=''">
+			<if test="typeName!=null  and typeName != '' ">
 				#{typeName},
 			</if>
-			<if test="sort!=null and sort !=''">
+			<if test="sort!=null">
 				#{sort},
 			</if>
-			<if test="note!=null and note !=''">
+			<if test="note!=null  and note != '' ">
 				#{note},
 			</if>
 		</trim>
@@ -74,7 +74,7 @@
 	<update id="updateMaterialType" parameterType="MaterialType">
 		update material_type
 		<set>
-			<if test="parentId != null and parentId !=''">
+			<if test="parentId != null ">
 				parent_id = #{parentId},
 			</if>
 			<if test="path != null and path !='' ">
@@ -83,7 +83,7 @@
 			<if test=" typeName != null and typeName !=''">
 				type_name= #{typeName},
 			</if>
-			<if test=" sort != null and sort !=''">
+			<if test=" sort != null">
 				sort= #{sort},
 			</if>
 			<if test=" note != null and note !=''">

@@ -5,7 +5,7 @@
 	<sql id="key">
         <!-- 去掉最后一个, -->
         <trim suffixOverrides=",">
-            <if test="parentId!=null and parentId !=''">
+            <if test="parentId!=null">
                 parent_id,
             </if>
             <if test="path!=null and path !=''">
@@ -26,7 +26,7 @@
              <if test="note!=null and note !=''">
                 note,
             </if>
-             <if test="sort!=null and sort !=''">
+             <if test="sort!=null">
                 sort,
             </if>
              <if test="gmtCreate!=null">
@@ -41,7 +41,7 @@
     <sql id="value">
         <!-- 去掉最后一个, -->
         <trim suffixOverrides=",">
-            <if test="parentId!=null and parentId !=''">
+            <if test="parentId!=null">
                 #{parentId},
             </if>
             <if test="path!=null and path !=''">
@@ -62,7 +62,7 @@
              <if test="note!=null and note !=''">
                 #{note},
             </if>
-             <if test="sort!=null and sort !=''">
+             <if test="sort!=null">
                 #{sort},
             </if>
              <if test="gmtCreate!=null">

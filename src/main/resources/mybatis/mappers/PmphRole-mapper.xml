@@ -14,7 +14,7 @@
 			<if test="note!=null and note !=''">
 				note,
 			</if>
-			<if test="sort!=null and sort !=''">
+			<if test="sort!=null ">
 				sort,
 			</if>
 			<if test="gmtCreate!=null">
@@ -38,7 +38,7 @@
 			<if test="note!=null and note !=''">
 				#{note},
 			</if>
-			<if test="sort!=null and sort !=''">
+			<if test="sort!=null">
 				#{sort},
 			</if>
 			<if test="gmtCreate!=null">

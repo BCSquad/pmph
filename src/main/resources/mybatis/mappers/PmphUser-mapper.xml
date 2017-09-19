@@ -5,31 +5,31 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="username!=null and username != ''">
+			<if test="username!=null and username != '' ">
 				username,
 			</if>
-			<if test="password!=null and password != ''">
+			<if test="password!=null and password != '' ">
 				password,
 			</if>
 			<if test="isDisabled!=null ">
 				is_disabled,
 			</if>
-			<if test="realname!=null and realname != ''">
+			<if test="realname!=null and realname != '' ">
 				realname,
 			</if>
-			<if test="departmentId!=null and departmentId != ''">
+			<if test="departmentId!=null ">
 				department_id,
 			</if>
-			<if test="handphone!=null and handphone != ''">
+			<if test="handphone!=null and handphone != '' ">
 				handphone,
 			</if>
-			<if test="email!=null and email != ''">
+			<if test="email!=null and email != '' ">
 				email,
 			</if>
-			<if test="note!=null and note != ''">
+			<if test="note!=null and note != '' ">
 				note,
 			</if>
-			<if test="sort!=null and sort != ''">
+			<if test="sort!=null ">
 				sort,
 			</if>
 			<if test="isDeleted!=null">
@@ -59,7 +59,7 @@
 			<if test="realname!=null and realname != ''">
 				#{realname},
 			</if>
-			<if test="departmentId!=null and departmentId != ''">
+			<if test="departmentId!=null ">
 				#{departmentId},
 			</if>
 			<if test="handphone!=null and handphone != ''">
@@ -71,7 +71,7 @@
 			<if test="note!=null and note != ''">
 				#{note},
 			</if>
-			<if test="sort!=null and sort != ''">
+			<if test="sort!=null ">
 				#{sort},
 			</if>
 			<if test="isDeleted!=null">

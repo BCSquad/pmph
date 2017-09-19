@@ -6,7 +6,7 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="materialId!=null and materialId !=''">
+			<if test="materialId!=null">
 				material_id,
 			</if>
 			<if test="extensionName!=null and extensionName !=''">
@@ -21,7 +21,7 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="materialId!=null and materialId !=''">
+			<if test="materialId!=null">
 				#{materialId},
 			</if>
 			<if test="extensionName!=null and extensionName !=''">
@@ -63,7 +63,7 @@
 	<update id="updateMaterialExtension" parameterType="MaterialExtension">
 		update material_extension
 		<set>
-			<if test="materialId != null and materialId !=''">
+			<if test="materialId != null">
 				material_id = #{materialId},
 			</if>
 			<if test="extensionName != null and extensionName !='' ">
@@ -82,5 +82,5 @@
 		resultType="MaterialExtension">
 		select * from material_extension where id=#{id} ;
 	</select>
-	
+
 </mapper>
