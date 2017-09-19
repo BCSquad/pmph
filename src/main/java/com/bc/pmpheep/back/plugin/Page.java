@@ -8,7 +8,7 @@ import com.bc.pmpheep.back.util.Const;
  *
  **/
 
-public class PageTest<T> {
+public class Page<T> {
 	//当前页码
     private Integer pageNumber = Const.PAGENUMBER;
     //页面大小
@@ -21,13 +21,26 @@ public class PageTest<T> {
     private boolean isFirst;
     //是否是最后一页
     private boolean isLast;
+    //查询开始页
+    private Integer start=0; 
     //数据集
 	private List<T> rows;
 	
-	public PageTest() {
+	public Page() {
 		super();
 	}
 	
+	
+	public Integer getStart() {
+		return start;
+	}
+
+
+	public void setStart(Integer start) {
+		this.start = start;
+	}
+
+
 	public Integer getPageNumber() {
 		return pageNumber;
 	}
@@ -53,10 +66,12 @@ public class PageTest<T> {
 		if(pageNumber!=null &&pageNumber == 1){
 			isFirst=true;
 		}
+		this.start=(this.pageNumber-1)*this.pageSize;
 	}
 
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
+		this.start=(this.pageNumber-1)*this.pageSize;
 	}
 
 	public Integer getPageSize() {
