@@ -2,7 +2,7 @@ package com.bc.pmpheep.back.service;
 
 
 
-import com.bc.pmpheep.back.plugin.PageTest;
+import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -45,5 +45,5 @@ public interface AreaService {
 	 */
 	Integer updateArea(Area area) throws CheckedServiceException;
 	
-	PageTest getTest();
+	Page getTest();
 }
