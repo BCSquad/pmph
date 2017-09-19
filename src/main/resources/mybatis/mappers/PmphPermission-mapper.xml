@@ -140,8 +140,8 @@
         where id = #{id}
     </delete>
 
-    <select id="get" parameterType="Long" resultType="PmphPermission">
-        SELECT
+    <select id="getListPageResource" parameterType="Page" resultType="PmphPermission">
+     SELECT
             `id`,
             `parent_id`,
             `path`,
@@ -150,23 +150,8 @@
             `url`
         FROM
           `pmph_permission`
+          where 1=1
+          
         WHERE id = #{id}
     </select>
-    
-    <!-- 分页 -->
-   <select id="getListPageResource" parameterType="Page" resultType="PmphPermission">
-   	SELECT
-            `id`,
-            `parent_id`,
-            `path`,
-            `permission_name`,
-            `menu_name`,
-            `url`
-        FROM
-          `pmph_permission`
-        where 1=1
-        <if test="object.parentId!=null" >
-         and id = #{object.parentId}
-        </if>
-   </select>
 </mapper>

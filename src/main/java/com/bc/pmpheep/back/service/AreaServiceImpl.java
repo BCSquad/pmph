@@ -1,11 +1,14 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.AreaDao;
 import com.bc.pmpheep.back.log.annotation.Log;
+import com.bc.pmpheep.back.plugin.PageTest;
 import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -75,6 +78,15 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
 		return areaDao.updateArea(area);
+	}
+	//测试
+	@Override
+	public PageTest<Area> getTest(){
+		PageTest<Area> p =new PageTest<Area>();
+		List<Area>  l=areaDao.getTest(p);
+		Integer rtotal=areaDao.getTestTotal(p);
+		p.setRows(l);
+		return p;
 	}
 
 }

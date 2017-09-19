@@ -2,7 +2,7 @@
 *.class
 
 #忽略数据库配置文件spring.properties
-spring.properties
+*.properties
 
 #忽略.classpath
 *.classpath

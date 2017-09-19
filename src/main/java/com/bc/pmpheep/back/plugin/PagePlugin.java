@@ -222,7 +222,7 @@ public class PagePlugin implements Interceptor {
             }
         }
         pageSqlId = p.getProperty("pageSqlId");
-        if (Tools.isEmpty(pageSqlId)) {
+        if (Tools.isEmpty(pageSqlId)) {  
             try {
                 throw new PropertyException("pageSqlId property is not found!");
             } catch (PropertyException e) {

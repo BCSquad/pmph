@@ -112,6 +112,7 @@ public class PmphPermissionServiceImpl implements PmphPermissionService {
 
     @Override
     public List<PmphPermission> getListPageResource(Page page) throws CheckedServiceException {
-        return pmphPermissionDao.getListPageResource(page);
+        // TODO Auto-generated method stub
+        return null;
     }
 }

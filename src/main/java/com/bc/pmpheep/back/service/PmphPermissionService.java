@@ -71,5 +71,12 @@ public interface PmphPermissionService {
      */
     List<PmphPermission> getListResource() throws CheckedServiceException;
 
+    /**
+     * 分页
+     * 
+     * @param page
+     * @return
+     * @throws CheckedServiceException
+     */
     List<PmphPermission> getListPageResource(Page page) throws CheckedServiceException;
 }
