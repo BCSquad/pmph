@@ -10,12 +10,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import com.bc.pmpheep.back.dao.AreaDao;
-import com.bc.pmpheep.back.dao.OrgDao;
-import com.bc.pmpheep.back.dao.OrgTypeDao;
-import com.bc.pmpheep.back.dao.OrgUserDao;
-import com.bc.pmpheep.back.dao.PmphDepartmentDao;
-import com.bc.pmpheep.back.dao.PmphUserDao;
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.bc.pmpheep.back.service.AreaService;
+import com.bc.pmpheep.back.service.OrgService;
+import com.bc.pmpheep.back.service.OrgTypeService;
+import com.bc.pmpheep.back.service.OrgUserService;
+import com.bc.pmpheep.back.service.PmphDepartmentService;
+import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.OrgUser;
@@ -29,21 +34,26 @@ import com.bc.pmpheep.back.po.PmphUser;
  * author:lyc
  * 数据迁移工具
  */
+@Component
 public class DataTransfer {
-	private static AreaDao areaDao;
-	private static OrgDao orgDao;
-	private static OrgUserDao orgUserDao;
-	private static OrgTypeDao orgTypeDao;
-	private static PmphDepartmentDao pmphDepartmentDao;
-	private static PmphUserDao pmphUserDao;
+	@Resource
+	private AreaService areaService;
+	@Resource
+	private OrgService orgService;
+	@Resource
+	private OrgUserService orgUserService;
+	@Resource
+	private OrgTypeService orgTypeService;
+	@Resource
+	private PmphDepartmentService pmphDepartmentService;
+	@Resource
+	private PmphUserService pmphUserService;
+	
 
-	private DataTransfer(){
-		
-	}
 	/*
 	 * authoer:lyc 区域表迁移
 	 */
-	public static void Area(String url, String username, String password) {
+	public void Area(String url, String username, String password) {
 		String sql = "SELECT AreaID,ParentCode,AreaName FROM ba_areacode";
 		ConnectionManager cm = new ConnectionManager(url, username, password);
 		ResultSet rs = cm.getResultSet(sql);
@@ -59,13 +69,14 @@ public class DataTransfer {
 				while (it.hasNext()) {
 					Area area = new Area();
 					HashMap key = it.next();
-					area.setId((Long) key.get("id"));
-					area.setParentId((Long) key.get("parentid"));
-					area.setAreaName((String) key.get("arenName"));
-					areaDao.addArea(area);
-					cm.closeConnection();
+					area.setId(Long.parseLong((String) key.get("id")));
+					area.setParentId(Long.parseLong((String) key
+							.get("parentid")));
+					area.setAreaName((String) key.get("areaName"));
+					areaService.addArea(area);
 				}
 			}
+			cm.closeConnection();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,7 +87,7 @@ public class DataTransfer {
 	/*
 	 * 机构表迁移
 	 */
-	public static void Org(String url, String username, String password) {
+	public void Org(String url, String username, String password) {
 		String sql = "SELECT parentid,orgname,orgtype,orgprovince,orgcity,orgcounty,linker,linktel,remark,sortno FROM ba_organize WHERE orgcode NOT LIKE '15%' ORDER BY LENGTH(orgcode),orgcode";
 		ConnectionManager cm = new ConnectionManager(url, username, password);
 		ResultSet rs = cm.getResultSet(sql);
@@ -114,20 +125,20 @@ public class DataTransfer {
 					org.setCountactPhone((String) key.get("linktel"));
 					org.setNote((String) key.get("note"));
 					org.setSort((Integer) key.get("sort"));
-					orgDao.addOrg(org);
-					cm.closeConnection();
+					orgService.addOrg(org);
 				}
 			}
+			cm.closeConnection();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-   
+
 	/*
 	 * 机构用户表迁移
 	 */
-	public static void OrgUser(String url, String username, String password) {
+	public void OrgUser(String url, String username, String password) {
 		String sql = "SELECT a.usercode,a.`password`,a.isvalid,d.orgname,a.username,b.sex,b.duties,b.positional,b.fax,b.handset,b.phone,b.idcard,b.email,b.address,b.postcode,a.memo,a.sortno FROM sys_user a LEFT JOIN sys_userext b ON a.userid = b.userid LEFT JOIN sys_userorganize c ON b.userid = c.userid LEFT JOIN ba_organize d ON c.orgid = d.orgid WHERE a.sysflag=1 AND b.usertype=2";
 		ConnectionManager cm = new ConnectionManager(url, username, password);
 		ResultSet rs = cm.getResultSet(sql);
@@ -172,10 +183,10 @@ public class DataTransfer {
 					orgUser.setPostcode((String) key.get("postcode"));
 					orgUser.setNote((String) key.get("note"));
 					orgUser.setSort((Integer) key.get("sort"));
-					orgUserDao.addOrgUser(orgUser);
-					cm.closeConnection();
+					orgUserService.addOrgUser(orgUser);
 				}
 			}
+			cm.closeConnection();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -185,7 +196,7 @@ public class DataTransfer {
 	/*
 	 * 机构类型表迁移
 	 */
-	public static void OrgType(String url, String username, String password) {
+	public void OrgType(String url, String username, String password) {
 		String sql = "SELECT a.orgtype,a.orgname,a.sortno FROM ba_organize a WHERE a.parentid = 0 AND a.orgcode NOT LIKE '15%'";
 		ConnectionManager cm = new ConnectionManager(url, username, password);
 		ResultSet rs = cm.getResultSet(sql);
@@ -205,14 +216,14 @@ public class DataTransfer {
 					orgType.setTypeName((String) key.get("typename"));
 					orgType.setSort((Integer) key.get("sort"));
 					try {
-						orgTypeDao.addOrgType(orgType);
-						cm.closeConnection();
+						orgTypeService.addOrgType(orgType);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
 			}
+			cm.closeConnection();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -222,8 +233,7 @@ public class DataTransfer {
 	/*
 	 * 社内用户部门表迁移
 	 */
-	public static void PmphDepartment(String url, String username,
-			String password) {
+	public void PmphDepartment(String url, String username, String password) {
 		String sql = "SELECT a.parentid,a.orgcode,a.orgname,a.sortno,a.remark,a.isdelete,a.orgtype FROM ba_organize a WHERE a.orgcode LIKE '15%'";
 		ConnectionManager cm = new ConnectionManager(url, username, password);
 		ResultSet rs = cm.getResultSet(sql);
@@ -239,23 +249,23 @@ public class DataTransfer {
 				while (it.hasNext()) {
 					HashMap key = it.next();
 					PmphDepartment pmphDepartment = new PmphDepartment();
-					pmphDepartment.setDbName((String) key.get("dpname"));
+					pmphDepartment.setDpName((String) key.get("dpname"));
 					pmphDepartment.setSort((Integer) key.get("sort"));
 					pmphDepartment.setNote((String) key.get("note"));
-					pmphDepartmentDao.addpmphDepartment(pmphDepartment);
-					cm.closeConnection();
+					pmphDepartmentService.addPmphDepartment(pmphDepartment);
 				}
 			}
+			cm.closeConnection();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-  
+
 	/*
 	 * 社内用户表迁移
 	 */
-	public static void PmphUser(String url, String username, String password) {
+	public void PmphUser(String url, String username, String password) {
 		String sql = "SELECT a.usercode,a.`password`,a.username,c.orgid,b.handset,b.email,a.memo,a.sortno FROM sys_user a LEFT JOIN sys_userext b ON a.userid = b.userid LEFT JOIN sys_userorganize c ON b.userid = c.userid WHERE a.sysflag = 0";
 		ConnectionManager cm = new ConnectionManager(url, username, password);
 		ResultSet rs = cm.getResultSet(sql);
@@ -281,11 +291,16 @@ public class DataTransfer {
 					pmphUser.setHandphone((String) key.get("handphone"));
 					pmphUser.setEmail((String) key.get("email"));
 					pmphUser.setNote((String) key.get("note"));
-					pmphUser.setSort((int) key.get("sort"));
-					pmphUserDao.add(pmphUser);
-					cm.closeConnection();
+					try {
+						pmphUser.setSort(Integer.parseInt((String) key
+								.get("sort")));
+					} catch (NumberFormatException ex) {
+						pmphUser.setSort(999);
+					}
+					pmphUserService.add(pmphUser);
 				}
 			}
+			cm.closeConnection();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -296,6 +311,7 @@ public class DataTransfer {
 
 	}
 }
+
 /*
  * JDBC连接原先数据库查询数据
  */
@@ -311,18 +327,20 @@ class ConnectionManager {
 	public ConnectionManager() {
 		init();
 	}
-    /*
-     * JDBC连接三巨头
-     */
+
+	/*
+	 * JDBC连接三巨头
+	 */
 	public ConnectionManager(String url, String name, String password) {
 		this.url = url;
 		this.name = name;
 		this.password = password;
 		init();
 	}
-    /*
-     * 获取连接
-     */
+
+	/*
+	 * 获取连接
+	 */
 	private void init() {
 		try {
 			Class.forName(driver);
@@ -339,9 +357,10 @@ class ConnectionManager {
 			e.printStackTrace();
 		}
 	}
-    /*
-     * 获取查询结果集
-     */
+
+	/*
+	 * 获取查询结果集
+	 */
 	public ResultSet getResultSet(String sql) {
 		ResultSet rs = null;
 		try {
@@ -354,10 +373,10 @@ class ConnectionManager {
 		return rs;
 
 	}
-    
-    /*
-     * 关闭连接
-     */
+
+	/*
+	 * 关闭连接
+	 */
 	public void closeConnection() {
 		if (conn != null) {
 			try {
