@@ -2,9 +2,13 @@ package com.bc.pmpheep.back.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphUserMessageDao;
 import com.bc.pmpheep.back.po.PmphUserMessage;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphGroupService 接口实现
@@ -17,55 +21,66 @@ public class PmphUserMessageServiceImpl extends BaseService implements PmphUserM
 	private PmphUserMessageDao pmphUserMessageDao;
 	
 	/**
-	 * 
-	 * @param  PmphUserMessage 实体对象
+	 * 新增 一个         pmphUserMessage 
+	 * @param  pmphUserMessage 
 	 * @return  带主键的 PmphUserMessage
-	 * @throws Exception 
+	 * @throws CheckedServiceException 
 	 */
 	@Override
-	public PmphUserMessage addPmphUserMessage (PmphUserMessage pmphUserMessage) throws Exception{
-		return pmphUserMessageDao.addPmphUserMessage (pmphUserMessage);
+	public PmphUserMessage addPmphUserMessage (PmphUserMessage pmphUserMessage)  throws CheckedServiceException{
+		if(null==pmphUserMessage){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "参数对象为空");
+		}
+		if(null==pmphUserMessage.getMsgId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "消息为空");
+		}
+		if(null==pmphUserMessage.getUserId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "用户为空");
+		}
+		pmphUserMessageDao.addPmphUserMessage (pmphUserMessage);
+		return pmphUserMessage;
 	}
 	
 	/**
-	 * 
-	 * @param PmphUserMessage 必须包含主键ID
+	 * 根据id查询 pmphUserMessage
+	 * @param id
 	 * @return  PmphUserMessage
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public PmphUserMessage getPmphUserMessageById(PmphUserMessage pmphUserMessage) throws Exception{
-		if(null==pmphUserMessage.getId()){
-			throw new NullPointerException("主键id为空");
+	public PmphUserMessage getPmphUserMessageById(Long id) throws CheckedServiceException{
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return pmphUserMessageDao.getPmphUserMessageById(pmphUserMessage);
+		return pmphUserMessageDao.getPmphUserMessageById(id);
 	}
 	
 	/**
-	 * 
-	 * @param PmphUserMessage
+	 * 根据id删除PmphUserMessage
+	 * @param id
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Integer deletePmphUserMessageById(PmphUserMessage pmphUserMessage) throws Exception{
-		if(null==pmphUserMessage.getId()){
-			throw new NullPointerException("主键id为空");
+	public Integer deletePmphUserMessageById(Long id) throws CheckedServiceException{
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return pmphUserMessageDao.deletePmphUserMessageById(pmphUserMessage);
+		return pmphUserMessageDao.deletePmphUserMessageById(id);
 	}
 	
 	/**
-	 * @param PmphUserMessage
+	 * 根据带主键修改 pmphUserMessage（必须带主键）
+	 * @param pmphUserMessage 
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override 
-	public Integer updatePmphUserMessageById(PmphUserMessage pmphUserMessage) throws Exception{
+	public Integer updatePmphUserMessage(PmphUserMessage pmphUserMessage) throws CheckedServiceException{
 		if(null==pmphUserMessage.getId()){
-			throw new NullPointerException("主键id为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return pmphUserMessageDao.updatePmphUserMessageById(pmphUserMessage);
+		return pmphUserMessageDao.updatePmphUserMessage(pmphUserMessage);
 	}
 
 }
