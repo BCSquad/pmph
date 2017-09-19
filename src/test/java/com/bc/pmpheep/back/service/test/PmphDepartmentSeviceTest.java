@@ -22,7 +22,7 @@ public class PmphDepartmentSeviceTest extends BaseTest {
 	
     @Test
     @Rollback(Const.ISROLLBACK)  
-    private void test(boolean c) throws Exception{
+    public void test() throws Exception{
     	Random r =new Random();
     	PmphDepartment a=new PmphDepartment(5L, "String path", "String dpName", r.nextInt(1000000), "String note") ;
     	testService.addPmphDepartment(a);
