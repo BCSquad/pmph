@@ -104,7 +104,7 @@
     </aop:config>
     <!--MongoDB-->
     <mongo:mongo replica-set="${mongo.replicaSet}">
-        <mongo:options
+        <mongo:options 
             connections-per-host="${mongo.connectionsPerHost}"
             threads-allowed-to-block-for-connection-multiplier="${mongo.threadsAllowedToBlockForConnectionMultiplier}"
             connect-timeout="${mongo.connectTimeout}"
