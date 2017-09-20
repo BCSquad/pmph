@@ -132,12 +132,7 @@ public class PmphUserServiceTest extends BaseTest {
 
     @Test
     public void getListByUsernameAndRealname() {
-        addUser();
         Page<PmphUserManagerVO> page = userService.getListByUsernameAndRealname("admin", 1, 10);
         logger.info(gson.toJson(page));
-    }
-    
-    private void addUser() {
-        
     }
 }

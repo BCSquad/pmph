@@ -50,7 +50,7 @@ public interface AreaDao {
 	Area getAreaById(Long id);
 
 	// 测试
-	List<Area> getTest(Page<Area> p);
+	List<Area> getTest(Page<Area,Area> p);
 
-	Integer getTestTotal(Page<Area> p);
+	Integer getTestTotal(Page<Area,Area> p);
 }
