@@ -9,7 +9,7 @@ import com.bc.pmpheep.back.util.Const;
 /**
  *@author MrYang 
  *@CreateDate 2017年9月19日 下午3:39:57
- *
+ *R 返回类型，P参数类型
  **/
 @Alias("Page")
 public class Page<R,P> {
