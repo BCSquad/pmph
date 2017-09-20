@@ -7,9 +7,10 @@ import org.apache.ibatis.type.Alias;
 
 import com.bc.pmpheep.back.util.Const;
 /**
+ * R 返回对象，P参数对象
  *@author MrYang 
  *@CreateDate 2017年9月19日 下午3:39:57
- *R 返回类型，P参数类型
+ *
  **/
 @Alias("Page")
 public class Page<R,P> {
