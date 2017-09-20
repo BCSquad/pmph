@@ -1,15 +1,21 @@
 package com.bc.pmpheep.back.service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bc.pmpheep.back.dao.OrgDao;
 import com.bc.pmpheep.back.dao.WriterRoleDao;
 import com.bc.pmpheep.back.dao.WriterUserDao;
 import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
@@ -33,6 +39,8 @@ public class WriterUserServiceImpl implements WriterUserService {
     WriterUserDao writerUserDao;
     @Autowired
     WriterRoleDao writerRoleDao;
+    @Autowired
+    OrgDao        orgDao;
 
     /**
      * 返回新插入用户数据的主键
@@ -288,7 +296,8 @@ public class WriterUserServiceImpl implements WriterUserService {
      * </pre>
      */
     @Override
-    public Page<WriterUserManagerVO, Map<String, String>> getListWriterUser(Page<WriterUserManagerVO, Map<String, String>> page) throws CheckedServiceException {
+    public Page<WriterUserManagerVO, Map<String, String>> getListWriterUser(
+    Page<WriterUserManagerVO, Map<String, String>> page) throws CheckedServiceException {
         if (null != page.getParameter().get("username")) {
             page.getParameter().put("username", "%" + page.getParameter().get("username") + "%");
         }
@@ -305,6 +314,62 @@ public class WriterUserServiceImpl implements WriterUserService {
         page.setTotal(total);
 
         return page;
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：分页查询作家用户
+     * 使用示范：
+     *
+     * @param page 传入的查询数据
+     * @return 需要的Page对象
+     * </pre>
+     * @throws ReflectiveOperationException 
+     */
+    @Override
+    public Page<WriterUserManagerVO, Map<String, String>> getListWriter(Page<WriterUser, Map<String, String>> page) throws CheckedServiceException, ReflectiveOperationException {
+        if (null != page.getParameter().get("username")) {
+            page.getParameter().put("username", "%" + page.getParameter().get("username") + "%");
+        }
+        if (null != page.getParameter().get("realname")) {
+            page.getParameter().put("realname", "%" + page.getParameter().get("realname") + "%");
+        }
+        if (null != page.getParameter().get("orgName")) {
+            page.getParameter().put("orgName", "%" + page.getParameter().get("orgName") + "%");
+        }
+        List<Org> orgs = orgDao.getListOrgByOrgName(page.getParameter().get("orgName"));
+        String orgId = "";
+        Map<Long, String> map = new HashMap<>();
+        for (Org org : orgs) {
+            orgId += "," + org.getId();
+            map.put(org.getId(), org.getOrgName());
+        }
+        if (orgId.equals("")) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "没有找到该机构");
+        } else {
+            orgId = orgId.substring(1);
+            page.getParameter().put("orgId", orgId);
+        }
+        Page<WriterUserManagerVO, Map<String, String>> pageVO = new Page<>();
+        int total = writerUserDao.getListTotal(page);
+        if (total > 0) {
+            List<WriterUserManagerVO> writerUserManagerVOs = new ArrayList<>();
+            List<WriterUser> writerUsers = writerUserDao.getList(page);
+            for(WriterUser writerUser : writerUsers){
+                WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
+                    BeanUtils.copyProperties(writerUserManagerVO, writerUser);
+                    writerUserManagerVO.setOrgName(map.get(writerUser.getOrgId()));
+                    writerUserManagerVOs.add(writerUserManagerVO);
+            }
+           
+            pageVO.setFirst(page.isFirst());
+            pageVO.setLast(page.isLast());
+            pageVO.setPageTotal(total);
+            pageVO.setRows(writerUserManagerVOs);
+        }
+        return pageVO;
     }
 
 }

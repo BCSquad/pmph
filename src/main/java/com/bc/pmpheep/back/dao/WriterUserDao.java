@@ -78,5 +78,27 @@ public interface WriterUserDao {
 	 * </pre>
 	 */
 	Integer getListWriterUserTotal(Page<WriterUserManagerVO,Map<String, String>> page);
+	/**
+	 * 
+	 * <pre>
+	 * 功能描述：查询总条数
+	 * 使用示范：
+	 *
+	 * @param page传入的查询条件
+	 * @return 查询到的条数
+	 * </pre>
+	 */
+	Integer getListTotal(Page<WriterUser, Map<String, String>> page);
+	/**
+     * 
+     * <pre>
+     * 功能描述：分页查询作家用户
+     * 使用示范：
+     *
+     * @param page 传入的查询条件
+     * @return 需要的作家用户集合
+     * </pre>
+     */
+    List<WriterUser> getList(Page<WriterUser,Map<String, String>> page);
 
 }

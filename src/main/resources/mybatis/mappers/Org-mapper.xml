@@ -130,5 +130,12 @@
 		resultType="Org">
 		select * from org where id=#{id} ;
 	</select>
-
+	<!-- 根据orgName模糊查询Org -->
+	<select id="getListOrgByOrgName" parameterType="java.lang.String"
+		resultType="Org">
+		select * from org where 1=1
+		<if test="orgName !=null">
+		and org_name like #{orgName}
+		</if>
+	</select>
 </mapper>

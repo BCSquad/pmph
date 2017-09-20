@@ -25,6 +25,8 @@ public class CheckedExceptionBusiness {
 
 	public final static String MATERIAL = "教材申报";
 
+	public final static String WRITER_USER_MANAGEMENT = "作家用户管理";
+	
 	public final static String USER_MANAGEMENT = "用户管理";
 
 	public final static String RESOUCE_MANAGEMENT = "资源管理";
