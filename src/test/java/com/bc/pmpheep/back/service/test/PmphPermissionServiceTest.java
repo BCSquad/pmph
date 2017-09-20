@@ -4,14 +4,11 @@ import java.util.Random;
 
 import javax.annotation.Resource;
 
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.service.PmphPermissionService;
-import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -25,8 +22,8 @@ public class PmphPermissionServiceTest extends BaseTest {
     @Resource
     private PmphPermissionService testService;
 
-    @Test
-    @Rollback(Const.ISROLLBACK)
+    // @Test
+    // @Rollback(Const.ISROLLBACK)
     public void test() throws Exception {
         Random r = new Random();
         PmphPermission testPar =

@@ -108,4 +108,5 @@ public class PmphPermissionServiceImpl implements PmphPermissionService {
     public List<PmphPermission> getListResource() throws CheckedServiceException {
         return pmphPermissionDao.getListResource();
     }
+
 }

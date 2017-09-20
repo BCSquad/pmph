@@ -15,14 +15,13 @@ import com.bc.pmpheep.back.po.PmphPermission;
 public interface PmphPermissionDao {
     /**
      * 
-<<<<<<< HEAD
+     <<<<<<< HEAD
+     * 
      * @param PmphPermissionTest 实体对象
      * @return 带主键的PmphPermission
-     * @throws Exception
-=======
+     * @throws Exception =======
      * @param PmphPermission 实体对象
-     * @return  影响行数
->>>>>>> branch 'develop' of https://github.com/BCSquad/pmph.git
+     * @return 影响行数 >>>>>>> branch 'develop' of https://github.com/BCSquad/pmph.git
      */
     Integer addPmphPermission(PmphPermission pmphPermission);
 
@@ -51,5 +50,4 @@ public interface PmphPermissionDao {
     PmphPermission get(Long id);
 
     List<PmphPermission> getListResource();
-
 }
