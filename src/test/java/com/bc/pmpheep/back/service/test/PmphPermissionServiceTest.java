@@ -1,18 +1,14 @@
 package com.bc.pmpheep.back.service.test;
 
-import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Resource;
 
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.bc.pmpheep.back.po.Page;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.service.PmphPermissionService;
-import com.bc.pmpheep.back.util.PageData;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -49,29 +45,4 @@ public class PmphPermissionServiceTest extends BaseTest {
 
     }
 
-    /**
-     * 分页测试
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void test1() throws Exception {
-        PmphPermission pp = new PmphPermission();
-        // pp.setParentId(1L);
-        Page page = new Page();
-        PageData pData = new PageData();
-        // pData.put("parentId", 1L);
-        page.setObject(pp);
-        page.setPd(pData);
-        List<PmphPermission> list = testService.getListPageResource(page);
-        for (PmphPermission ppp : list) {
-            System.out.println(ppp.toString());
-        }
-        System.out.println("分布函数==>" + page.getPageStr());
-        System.out.println("当前页==>" + page.getCurrentPage());
-        System.out.println("当前记录起始索引==>" + page.getCurrentResult());
-        System.out.println("每页显示记录数 ==>" + page.getShowCount());
-        System.out.println("总页数==>" + page.getTotalPage());
-        System.out.println("总记录数==>" + page.getTotalResult());
-    }
 }

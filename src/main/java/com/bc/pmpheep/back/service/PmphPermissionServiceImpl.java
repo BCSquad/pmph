@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.PmphPermissionDao;
-import com.bc.pmpheep.back.po.Page;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -110,9 +109,4 @@ public class PmphPermissionServiceImpl implements PmphPermissionService {
         return pmphPermissionDao.getListResource();
     }
 
-    @Override
-    public List<PmphPermission> getListPageResource(Page page) throws CheckedServiceException {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }

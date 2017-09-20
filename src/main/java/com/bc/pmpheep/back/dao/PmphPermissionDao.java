@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.bc.pmpheep.back.po.Page;
 import com.bc.pmpheep.back.po.PmphPermission;
 
 /**
@@ -51,7 +50,4 @@ public interface PmphPermissionDao {
     PmphPermission get(Long id);
 
     List<PmphPermission> getListResource();
-
-    List<PmphPermission> getListPageResource(Page page);
-
 }

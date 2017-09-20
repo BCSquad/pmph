@@ -2,14 +2,25 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
-import com.bc.pmpheep.back.po.Page;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
- * PmphPermissionService 接口
  * 
- * @author Mryang
+ * <pre>
+ * 功能描述：PmphPermissionService 接口
+ * 使用示范：
+ * 
+ * 
+ * @author (作者) nyz
+ * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2017-9-20
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
+ * </pre>
  */
 public interface PmphPermissionService {
     /**
@@ -71,12 +82,4 @@ public interface PmphPermissionService {
      */
     List<PmphPermission> getListResource() throws CheckedServiceException;
 
-    /**
-     * 分页
-     * 
-     * @param page
-     * @return
-     * @throws CheckedServiceException
-     */
-    List<PmphPermission> getListPageResource(Page page) throws CheckedServiceException;
 }
