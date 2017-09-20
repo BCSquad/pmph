@@ -12,7 +12,7 @@ import com.bc.pmpheep.back.util.Const;
  *
  **/
 @Alias("Page")
-public class Page<T> {
+public class Page<R,P> {
 	//当前页码
     private Integer pageNumber = 1;
     //页面大小
@@ -28,9 +28,9 @@ public class Page<T> {
     //查询开始页
     private Integer start      = 0; 
     //数据集
-	private List<T> rows       = new ArrayList<T>(Const.PAGESIZE);
+	private List<R> rows       = new ArrayList<R>(Const.PAGESIZE);
 	//参数对象
-	private T parameter ;
+	private P parameter ;
 	
 	public Page() {
 		super();
@@ -49,7 +49,7 @@ public class Page<T> {
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
 		this.start    = (this.pageNumber-1)*this.pageSize;
-		rows          = new ArrayList<T>(this.pageSize);
+		rows          = new ArrayList<R>(this.pageSize);
 	}
 
 	public void setTotal(Integer total) {
@@ -82,11 +82,11 @@ public class Page<T> {
 		this.start = start;
 	}
 
-	public void setRows(List<T> rows) {
+	public void setRows(List<R> rows) {
 		this.rows = rows;
 	}
 
-	public void setParameter(T parameter) {
+	public void setParameter(P parameter) {
 		this.parameter = parameter;
 	}
 
@@ -118,11 +118,11 @@ public class Page<T> {
 		return start;
 	}
 
-	public List<T> getRows() {
+	public List<R> getRows() {
 		return rows;
 	}
 
-	public T getParameter() {
+	public P getParameter() {
 		return parameter;
 	}
 
