@@ -28,7 +28,20 @@ public class Page<T> {
     private Integer start=0; 
     //数据集
 	private List<T> rows;
+	//参数对象
+	private T parameter;
 	
+	
+	public T getParameter() {
+		return parameter;
+	}
+
+
+	public void setParameter(T parameter) {
+		this.parameter = parameter;
+	}
+
+
 	public Page() {
 		super();
 	}
