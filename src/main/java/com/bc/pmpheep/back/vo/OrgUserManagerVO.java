@@ -1,4 +1,6 @@
-package com.bc.pmpheep.back.view;
+package com.bc.pmpheep.back.vo;
+
+import java.io.Serializable;
 
 import org.apache.ibatis.type.Alias;
 
@@ -10,7 +12,7 @@ import com.bc.pmpheep.back.po.OrgUser;
  *
  **/
 @SuppressWarnings("serial")
-@Alias("OrgUserView")
-public class OrgUserView extends OrgUser {
+@Alias("OrgUserManagerVO")
+public class OrgUserManagerVO implements Serializable {
 
 }

@@ -429,4 +429,38 @@
 		select * from
 		writer_user where username=#{username};
 	</select>
+	<!-- 分页测试 -->
+	<select id="getListWriterUserTotal" parameterType="Page"
+		resultType="java.lang.Integer">
+		select count(*) from writer_user w left join org o on o.id = w.org_id
+		where 1=1
+		<if test="parameter.username !=null ">
+			and w.username like #{parameter.username}
+		</if>
+		<if test="parameter.realname !=null">
+			and w.realname like #{parameter.realname}
+		</if>
+		<if test="parameter.orgName !=null">
+			and o.org_name like #{parameter.orgName}
+		</if>
+	</select>
+	<select id="getListWriterUser" parameterType="Page" resultType="WriterUserManagerVO">
+		select
+		w.id,w.username,w.is_disabled,w.address,w.realname,w.position,w.title,w.handphone,w.email,w.org_id,o.org_name,w.rank
+		from writer_user w left join org o on o.id = w.org_id where
+		1=1
+		<if test="parameter.username !=null ">
+			and w.username like #{parameter.username}
+		</if>
+		<if test="parameter.realname !=null">
+			and w.realname like #{parameter.realname}
+		</if>
+		<if test="parameter.orgName !=null">
+			and o.org_name like #{parameter.orgName}
+		</if>
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+
 </mapper>

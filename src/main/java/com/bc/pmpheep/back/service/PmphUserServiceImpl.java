@@ -186,13 +186,13 @@ public class PmphUserServiceImpl implements PmphUserService {
     }
 
     @Override
-    public Page<PmphUserManagerVO> getListByUsernameAndRealname(String name, int number, int size) throws CheckedServiceException {
+    public Page<PmphUserManagerVO,String> getListByUsernameAndRealname(String name, int number, int size) throws CheckedServiceException {
         if (null == name || "".equals(name)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                     CheckedExceptionResult.NULL_PARAM, "模糊查询条件为空");
         }
         List<PmphUser> pmphUsers = userDao.getListByUsernameAndRealname(name, (number - 1) * size, size);
-        Page<PmphUserManagerVO> page = new Page<>();
+        Page<PmphUserManagerVO,String> page = new Page<>();
         page.setFirst(true);
         page.setLast(true);
         page.setPageNumber(number);

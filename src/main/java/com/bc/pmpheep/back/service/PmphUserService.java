@@ -85,7 +85,7 @@ public interface PmphUserService {
      * @param name 模糊查询参数
      * @return 经过分页的PmphUserManagerVO视图对象集合
      */
-    Page<PmphUserManagerVO> getListByUsernameAndRealname(String name, int number, int size) throws CheckedServiceException;
+    Page<PmphUserManagerVO,String> getListByUsernameAndRealname(String name, int number, int size) throws CheckedServiceException;
 
     /**
      * 登录逻辑 1、先根据用户名查询用户对象 2、如果有用户对象，则继续匹配密码 如果没有用户对象，则抛出异常
