@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.plugin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.type.Alias;
@@ -13,122 +14,119 @@ import com.bc.pmpheep.back.util.Const;
 @Alias("Page")
 public class Page<T> {
 	//当前页码
-    private Integer pageNumber = Const.PAGENUMBER;
+    private Integer pageNumber = 1;
     //页面大小
     private Integer pageSize   = Const.PAGESIZE;
     //数据总条数
-    private Integer total      = Const.PAGETOTAL;
+    private Integer total      = 0;
     //总页数
-    private Integer pageTotal  ;
+    private Integer pageTotal  = 0;
     //是否是第一页
-    private boolean isFirst;
+    private Boolean isFirst    = true;
     //是否是最后一页
-    private boolean isLast;
+    private Boolean isLast     = true;
     //查询开始页
-    private Integer start=0; 
+    private Integer start      = 0; 
     //数据集
-	private List<T> rows;
+	private List<T> rows       = new ArrayList<T>(Const.PAGESIZE);
 	//参数对象
-	private T parameter;
+	private T parameter ;
 	
-	
-	public T getParameter() {
-		return parameter;
-	}
-
-
-	public void setParameter(T parameter) {
-		this.parameter = parameter;
-	}
-
-
 	public Page() {
 		super();
-	}
-	
-	
-	public Integer getStart() {
-		return start;
-	}
-
-
-	public void setStart(Integer start) {
-		this.start = start;
-	}
-
-
-	public Integer getPageNumber() {
-		return pageNumber;
-	}
-	
-	public boolean isFirst() {
-		return isFirst;
-	}
-
-	public void setFirst(boolean isFirst) {
-		this.isFirst = isFirst;
-	}
-
-	public boolean isLast() {
-		return isLast;
-	}
-
-	public void setLast(boolean isLast) {
-		this.isLast = isLast;
 	}
 
 	public void setPageNumber(Integer pageNumber) {
 		this.pageNumber = pageNumber;
-		if(pageNumber!=null &&pageNumber == 1){
-			isFirst=true;
+		if(this.pageNumber==1){
+			isFirst    = true;
+		}else{
+			isFirst    = false;
 		}
 		this.start=(this.pageNumber-1)*this.pageSize;
 	}
 
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
-		this.start=(this.pageNumber-1)*this.pageSize;
+		this.start    = (this.pageNumber-1)*this.pageSize;
+		rows          = new ArrayList<T>(this.pageSize);
+	}
+
+	public void setTotal(Integer total) {
+		this.total = total;
+		if(this.total%this.pageSize==0){
+			this.pageTotal=this.total/this.pageSize;
+		}else{
+			this.pageTotal=(this.total/this.pageSize)+1;
+		}
+		if(this.pageTotal==this.pageNumber){
+			isLast     = true;
+		}else{
+			isLast     = false;
+		}
+	}
+
+	public void setPageTotal(Integer pageTotal) {
+		this.pageTotal = pageTotal;
+	}
+
+	public void setFirst(Boolean isFirst) {
+		this.isFirst = isFirst;
+	}
+
+	public void setLast(Boolean isLast) {
+		this.isLast = isLast;
+	}
+
+	public void setStart(Integer start) {
+		this.start = start;
+	}
+
+	public void setRows(List<T> rows) {
+		this.rows = rows;
+	}
+
+	public void setParameter(T parameter) {
+		this.parameter = parameter;
+	}
+
+	public Integer getPageNumber() {
+		return pageNumber;
 	}
 
 	public Integer getPageSize() {
 		return pageSize;
 	}
-	
+
 	public Integer getTotal() {
 		return total;
 	}
-	public void setTotal(Integer total) {
-		this.total=total;
-		if(null==total||total==0){
-			this.pageTotal=0;
-			return ;
-		}
-		if(total%pageSize == 0){
-			this.total=total/this.pageSize;
-			if(this.total==this.pageNumber){
-				this.isLast=true;
-			}
-			return;
-		}
-		if(total%pageSize != 0){
-			this.pageTotal = (total/this.pageSize)+1;
-			if(this.total==this.pageNumber){
-				this.isLast=true;
-			}
-			return ;
-		}
-	}
+
 	public Integer getPageTotal() {
 		return pageTotal;
 	}
-	public void setPageTotal(Integer pageTotal) {
-		this.pageTotal=pageTotal;
+
+	public Boolean isFirst() {
+		return isFirst;
 	}
+
+	public Boolean isLast() {
+		return isLast;
+	}
+
+	public Integer getStart() {
+		return start;
+	}
+
 	public List<T> getRows() {
 		return rows;
 	}
-	public void setRows(List<T> rows) {
-		this.rows = rows;
+
+	public T getParameter() {
+		return parameter;
 	}
+
+	
+	
 	
 }
