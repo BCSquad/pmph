@@ -177,7 +177,7 @@
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>{beanutils.ver}</version>
+            <version>${beanutils.ver}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>

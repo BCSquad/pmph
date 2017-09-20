@@ -80,6 +80,7 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 	@Override
 	public Page<Area> getTest(){
 		Page<Area> p =new Page<Area>();
+		p.setParameter(new Area(4L,"",4));
 		Integer total=areaDao.getTestTotal(p);
 		if(total!=null && total>0){
 			List<Area>  l=areaDao.getTest(p);
