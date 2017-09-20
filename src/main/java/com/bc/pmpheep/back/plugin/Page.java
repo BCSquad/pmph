@@ -1,13 +1,16 @@
 package com.bc.pmpheep.back.plugin;
 
 import java.util.List;
+
+import org.apache.ibatis.type.Alias;
+
 import com.bc.pmpheep.back.util.Const;
 /**
  *@author MrYang 
  *@CreateDate 2017年9月19日 下午3:39:57
  *
  **/
-
+@Alias("Page")
 public class Page<T> {
 	//当前页码
     private Integer pageNumber = Const.PAGENUMBER;
