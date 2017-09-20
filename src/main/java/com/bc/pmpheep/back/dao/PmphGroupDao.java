@@ -1,8 +1,12 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.PmphGroup;
+import com.bc.pmpheep.back.vo.PmphGroupListVO;
 
 /**
  * PmphGroup 实体类数据访问层接口
@@ -38,4 +42,14 @@ public interface PmphGroupDao {
 	 * @return 影响行数
 	 */
 	Integer updatePmphGroup(PmphGroup pmphGroup) ;
+	
+	/**
+	 * 根据小组名称模糊查询获取当前用户的小组
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年9月20日 下午5:27:54
+	 * @param pmphGroup ,id当前用户id
+	 * @return  List<PmphGroupListVO>
+	 */
+	List<PmphGroupListVO> getList    (@Param("pmphGroup")PmphGroup pmphGroup,@Param("id")Long id) ;
 }
