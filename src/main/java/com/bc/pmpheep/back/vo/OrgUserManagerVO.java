@@ -12,7 +12,7 @@ import com.bc.pmpheep.back.po.OrgUser;
  *
  **/
 @SuppressWarnings("serial")
-@Alias("OrgUserView")
+@Alias("OrgUserManagerVO")
 public class OrgUserManagerVO implements Serializable {
 
 }
