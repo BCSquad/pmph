@@ -1,0 +1,51 @@
+package com.bc.pmpheep.back.vo;
+
+import java.sql.Timestamp;
+
+import org.apache.ibatis.type.Alias;
+/**
+ *@author MrYang 
+ *
+ *@CreateDate 2017年9月20日 下午1:51:11
+ *
+ **/
+@Alias("PmphGroupListVO")
+public class PmphGroupListVO {
+	//小组id
+    private Long id;
+    //小组名称
+    String groupName;
+    //小组头像地址
+    private String groupImage;
+    //小组最后一条消息的时间
+    private Timestamp lastMessageTime;
+    
+    public PmphGroupListVO() {
+		super();
+	}
+    
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getGroupName() {
+		return groupName;
+	}
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+	public String getGroupImage() {
+		return groupImage;
+	}
+	public void setGroupImage(String groupImage) {
+		this.groupImage = groupImage;
+	}
+	public Timestamp getLastMessageTime() {
+		return lastMessageTime;
+	}
+	public void setLastMessageTime(Timestamp lastMessageTime) {
+		this.lastMessageTime = lastMessageTime;
+	}
+}

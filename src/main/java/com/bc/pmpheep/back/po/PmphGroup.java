@@ -46,6 +46,10 @@ public class PmphGroup implements Serializable {
      * 修改时间
      */
     private Timestamp gmtUpdate;
+    /**
+     * 最后一条消息的时间
+     */
+    private Timestamp gmtLastMessage;
     
     public PmphGroup(){
     	
@@ -55,7 +59,7 @@ public class PmphGroup implements Serializable {
     	this.id=id;
     }
 
-    public PmphGroup(String groupName, String groupImage, Long founderId, Long bookId, String note, Timestamp gmtCreate,
+    public PmphGroup(String groupName, String groupImage, Long founderId, Long bookId, String note,Timestamp gmtLastMessage, Timestamp gmtCreate,
     		Timestamp gmtUpdate) {
 	this.groupName = groupName;
 	this.groupImage = groupImage;
@@ -64,6 +68,7 @@ public class PmphGroup implements Serializable {
 	this.note = note;
 	this.gmtCreate = gmtCreate;
 	this.gmtUpdate = gmtUpdate;
+	this.gmtLastMessage=gmtLastMessage;
     }
 
     public Long getId() {
@@ -130,11 +135,23 @@ public class PmphGroup implements Serializable {
 	this.gmtUpdate = gmtUpdate;
     }
 
-    @Override
-    public String toString() {
-	return "{id:" + id + ", groupName:" + groupName + ", groupImage:" + groupImage + ", founderId:" + founderId
-		+ ", bookId:" + bookId + ", note:" + note + ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate
-		+ "}";
-    }
+	public Timestamp getGmtLastMessage() {
+		return gmtLastMessage;
+	}
+
+	public void setGmtLastMessage(Timestamp gmtLastMessage) {
+		this.gmtLastMessage = gmtLastMessage;
+	}
+
+	@Override
+	public String toString() {
+		return "{id:" + id + ", groupName:" + groupName + ", groupImage:"
+				+ groupImage + ", founderId:" + founderId + ", bookId:"
+				+ bookId + ", note:" + note + ", gmtCreate:" + gmtCreate
+				+ ", gmtUpdate:" + gmtUpdate + ", gmtLastMessage:"
+				+ gmtLastMessage + "}";
+	}
+
+    
 
 }
