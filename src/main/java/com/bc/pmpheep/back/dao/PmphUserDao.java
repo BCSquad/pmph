@@ -14,13 +14,14 @@ import com.bc.pmpheep.back.po.PmphUser;
 
 /**
  * PmphUser实体类数据访问层接口
- * 
+ *
  * @author L.X <gugia@qq.com>
  */
 public interface PmphUserDao {
+
     /**
      * 添加一个用户
-     * 
+     *
      * @param pmphUser 添加用户的详细信息
      * @return 影响的行数
      */
@@ -36,11 +37,13 @@ public interface PmphUserDao {
 
     List<PmphUser> getListUser();
 
+    List<PmphUser> getListByUsernameAndRealname(@Param("name") String name, @Param("start") int start, @Param("size") int size);
+
     PmphUser getByUserName(String username);
 
     /**
      * 根据角色 id 查询所有是该角色的用户列表
-     * 
+     *
      * @param rid
      * @return
      */

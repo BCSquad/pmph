@@ -16,4 +16,6 @@ public class CheckedExceptionResult {
     public static final String NULL_PARAM = "参数为空";
     
     public static final String ILLEGAL_PARAM = "参数错误";
+    
+    public static final String VO_CONVERSION_FAILED = "视图对象转换失败";
 }
