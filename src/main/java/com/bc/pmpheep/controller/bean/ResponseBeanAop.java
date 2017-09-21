@@ -4,6 +4,7 @@
  */
 package com.bc.pmpheep.controller.bean;
 
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,18 +29,25 @@ public class ResponseBeanAop {
         }
         return responseBean;
     }
+
     @SuppressWarnings("rawtypes")
     private ResponseBean<?> exceptionHandler(ProceedingJoinPoint pjp, Throwable ex) {
         ResponseBean<?> responseBean = new ResponseBean();
-        // 已知异常
-        if (ex instanceof IndexOutOfBoundsException) {
-            responseBean.setMsg(ex.getLocalizedMessage());
-            responseBean.setCode(ResponseBean.FAILURE);
+        StringBuilder sb = new StringBuilder();
+        sb.append(pjp.getSignature().toString());
+        sb.append(" 发生错误:{}");
+        if (ex instanceof CheckedServiceException) {
+            responseBean.setCode(((CheckedServiceException) ex).getResult().getValue());
+            //如果是已检查的异常，不打印异常堆栈
+            logger.error(sb.toString(), ex.toString());
+        } else if (ex instanceof IndexOutOfBoundsException) {
+            responseBean.setMsg("下标越界异常");
+            logger.error(sb.toString(), ex.toString());
         } else {
-            logger.error(pjp.getSignature() + " error ", ex);
             responseBean.setMsg(ex.toString());
-            responseBean.setCode(ResponseBean.FAILURE);
-            // 未知异常是应该重点关注的，这里可以做其他操作，如通知邮件，单独写到某个文件等等。
+            responseBean.setCode(ResponseBean.UNKNOWN_ERROR);
+            //未知异常应打印堆栈
+            logger.error(pjp.getSignature() + " 发生未知错误", ex);
         }
         return responseBean;
     }
