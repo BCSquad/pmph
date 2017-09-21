@@ -31,8 +31,11 @@ public class PmphDepartmentServiceImpl extends BaseService  implements PmphDepar
 		if(null==pmphDepartment.getDpName()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "部门名称为空");
 		}
-		
+		Long id = pmphDepartment.getId();
 		pmphDepartmentDao.addPmphDepartment(pmphDepartment);
+		if(null != id){
+			pmphDepartment.setId(id);
+		}
 		return pmphDepartment;
 	}
 	
