@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.util.test;
 
+import com.bc.pmpheep.back.service.AreaService;
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -10,22 +11,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bc.pmpheep.back.util.DataTransfer;
 import com.bc.pmpheep.test.BaseTest;
+import org.junit.Assert;
 
 /*
  * author:lyc
  * 数据迁移工具测试类
  */
-public class DataTransferTest extends BaseTest{
-	Logger logger = LoggerFactory.getLogger(DataTransfer.class);
-	@Resource
-    DataTransfer dataTransfer;
-	@Test
-	@Rollback(false)
-	public void area() throws Exception{
-		dataTransfer.area("jdbc:mysql://localhost:3306/pmph_imesp_9.11?useSSL=true", "root", "cc148604");
-		logger.info("---------------区域表迁移----------------");
-		dataTransfer.pmphUser("jdbc:mysql://localhost:3306/pmph_imesp_9.11?useSSL=true", "root", "cc148604");
-		logger.info("---------------社内用户表迁移-------------");
-	}
+public class DataTransferTest extends BaseTest {
 
+    Logger logger = LoggerFactory.getLogger(DataTransferTest.class);
+
+    @Resource
+    DataTransfer dataTransfer;
+
+    @Test
+    @Rollback(false)
+    public void area() {
+        int count = dataTransfer.area();
+        Assert.assertTrue("数据迁移总条数应与当前数据库条目数一致", count > 0);
+    }
 }
