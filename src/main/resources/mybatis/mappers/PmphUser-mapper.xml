@@ -139,7 +139,8 @@
 
 	<delete id="delete" parameterType="Long">
 		DELETE FROM pmph_user
-		where id = #{id}
+		where id
+		= #{id}
 	</delete>
 
 	<!-- 批量删除 -->
@@ -175,7 +176,8 @@
 		pmph_user
 		<if test=" name!= null and name !=''">
 			WHERE
-			username LIKE CONCAT(CONCAT('%',#{name},'%')) AND realname LIKE
+			username LIKE CONCAT(CONCAT('%',#{name},'%')) AND
+			realname LIKE
 			CONCAT(CONCAT('%',#{name},'%'))
 		</if>
 		LIMIT #{start},#{size}
@@ -215,9 +217,12 @@
 		tr.menu_name,
 		tr.url
 		FROM `pmph_permission` tr
-		LEFT JOIN `pmph_role_permission` trr ON tr.`id` = trr.`permission_id`
-		LEFT JOIN `pmph_user_role` tur ON trr.`role_id` = tur.role_id
-		WHERE tur.user_id = #{uid}
+		LEFT
+		JOIN `pmph_role_permission` trr ON tr.`id` = trr.`permission_id`
+		LEFT
+		JOIN `pmph_user_role` tur ON trr.`role_id` = tur.role_id
+		WHERE
+		tur.user_id = #{uid}
 	</select>
 
 	<!-- 根据用户 id 查询用户所具有的角色字符串表示 -->
@@ -226,8 +231,10 @@
 		SELECT
 		tr.role_name
 		FROM `pmph_role` tr
-		LEFT JOIN `pmph_user_role` tur ON tr.`id` = tur.role_id
-		LEFT JOIN `pmph_user` tu ON tur.`user_id` = tu.id
+		LEFT JOIN
+		`pmph_user_role` tur ON tr.`id` = tur.role_id
+		LEFT JOIN `pmph_user` tu
+		ON tur.`user_id` = tu.id
 		WHERE tu.`id` = #{uid}
 	</select>
 
@@ -237,8 +244,10 @@
 		tr.`id`,
 		tr.`role_name`
 		FROM `pmph_role` tr
-		LEFT JOIN `pmph_user_role` tur ON tr.`id` = tur.role_id
-		LEFT JOIN `pmph_user` tu ON tur.`user_id` = tu.id
+		LEFT JOIN
+		`pmph_user_role` tur ON tr.`id` = tur.role_id
+		LEFT JOIN `pmph_user` tu
+		ON tur.`user_id` = tu.id
 		WHERE tu.`id` = #{uid}
 	</select>
 
@@ -247,5 +256,16 @@
 		select count(*)
 		from
 		pmph_user
+	</select>
+
+	<select id="getListPmphUser" parameterType="page" resultType="PmphUserManagerVO">
+		SELECT
+		u.id,u.username,u.is_disabled,u.realname,u.handphone,u.email,u.note,u.sort,GROUP_CONCAT(r.role_name ORDER BY r.id ASC) role_name,d.dp_name departmentName
+		FROM
+		pmph_user u
+		LEFT JOIN pmph_user_role p ON u.id = p.user_id
+		LEFT JOIN pmph_role r ON p.role_id = r.id
+		LEFT JOIN pmph_department d ON u.department_id = d.id
+		GROUP BY u.id
 	</select>
 </mapper>
