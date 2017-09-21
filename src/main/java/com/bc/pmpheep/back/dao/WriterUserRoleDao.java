@@ -42,4 +42,15 @@ public interface WriterUserRoleDao {
 	 * @return 影响行数
 	 */
 	Integer updateWriterUserRole(WriterUserRole writerUserRole) ;
+	
+    /**
+   * 
+   * <pre>
+   * 功能描述：查询表单的数据总条数
+   * 使用示范：
+   *
+   * @return 表单的数据总条数
+   * </pre>
+   */
+  Long getWriterUserRoleCount();
 }

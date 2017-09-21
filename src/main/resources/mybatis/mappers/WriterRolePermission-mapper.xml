@@ -67,4 +67,11 @@
 		select * from writer_role_permission where id=#{id} ;
 	</select>
 
+	<!-- 查询表单的数据总条数 -->
+	<select id="getWriterRolePermissionCount" resultType="java.lang.Long">
+		select
+		count(*) from
+		writer_role_permission ;
+	</select>
+
 </mapper>

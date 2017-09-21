@@ -463,36 +463,21 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
-	<!-- 
-	<select id="getListTotal" parameterType="Page" resultType="java.lang.Integer">
-		select count(*) from writer_user w
-		where 1=1
-		<if test="parameter.username !=null ">
-			and w.username like #{parameter.username}
-		</if>
-		<if test="parameter.realname !=null">
-			and w.realname like #{parameter.realname}
-		</if>
-		<if test="parameter.orgId !=null">
-			and w.org_id in (#{parameter.orgId})
-		</if>
-	</select>
-	<select id="getList" parameterType="Page" resultType="WriterUser">
+
+	<!-- 查询表单的数据总条数 -->
+	<select id="getWriterUserCount" resultType="java.lang.Long">
 		select
-		w.id,w.username,w.is_disabled,w.address,w.realname,w.position,w.title,w.handphone,w.email,w.org_id,w.rank
-		from writer_user w where
-		1=1
-		<if test="parameter.username !=null ">
-			and w.username like #{parameter.username}
-		</if>
-		<if test="parameter.realname !=null">
-			and w.realname like #{parameter.realname}
-		</if>
-		<if test="parameter.orgId !=null">
-			and w.org_id in (#{parameter.orgId})
-		</if>
-		<if test="start !=null and pageNumber != null">
-			limit #{start},#{pageSize}
-		</if>
-	</select> -->
+		count(*) from writer_user ;
+	</select>
+	<!-- <select id="getListTotal" parameterType="Page" resultType="java.lang.Integer"> 
+		select count(*) from writer_user w where 1=1 <if test="parameter.username 
+		!=null "> and w.username like #{parameter.username} </if> <if test="parameter.realname 
+		!=null"> and w.realname like #{parameter.realname} </if> <if test="parameter.orgId 
+		!=null"> and w.org_id in (#{parameter.orgId}) </if> </select> <select id="getList" 
+		parameterType="Page" resultType="WriterUser"> select w.id,w.username,w.is_disabled,w.address,w.realname,w.position,w.title,w.handphone,w.email,w.org_id,w.rank 
+		from writer_user w where 1=1 <if test="parameter.username !=null "> and w.username 
+		like #{parameter.username} </if> <if test="parameter.realname !=null"> and 
+		w.realname like #{parameter.realname} </if> <if test="parameter.orgId !=null"> 
+		and w.org_id in (#{parameter.orgId}) </if> <if test="start !=null and pageNumber 
+		!= null"> limit #{start},#{pageSize} </if> </select> -->
 </mapper>

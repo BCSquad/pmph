@@ -30,7 +30,7 @@ public class WriterUserServiceTest extends BaseTest {
 
     WriterUser        writerUser = new WriterUser();
 
-     @Test
+//     @Test
     public void addWriterUserService() {
         writerUser.setUsername("zasd");
         writerUser.setPassword("10214");
@@ -49,7 +49,7 @@ public class WriterUserServiceTest extends BaseTest {
         }
     }
 
-     @Test
+//     @Test
     public void deleteWriterUserServiceById() {
         int num = -1;
         writerUser.setUsername("zasd");
@@ -73,7 +73,7 @@ public class WriterUserServiceTest extends BaseTest {
 
     }
 
-     @Test
+//     @Test
     public void updateWriterUserById() {
         writerUser.setUsername("zasd");
         writerUser.setPassword("10214");
@@ -96,7 +96,7 @@ public class WriterUserServiceTest extends BaseTest {
 
     }
 
-     @Test
+//     @Test
     public void getWriterUserByUsername() {
         writerUser.setUsername("zasd");
         writerUser.setPassword("10214");

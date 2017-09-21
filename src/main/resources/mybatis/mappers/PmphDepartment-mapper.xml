@@ -96,4 +96,13 @@
 		id=#{id} ;
 	</select>
 
+	<!-- 查询表单的数据总数 -->
+	<select id="getPmphDepartmentCount" resultType="Long">
+		select
+		count(*)
+		from
+		pmph_department
+	</select>
+
+
 </mapper>

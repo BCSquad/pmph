@@ -45,4 +45,15 @@ public interface MaterialDao {
 	 * @return Material
 	 */
 	Material getMaterialById(Long id);
+	
+	/**
+     * 
+     * <pre>
+     * 功能描述：查询表单的数据总条数
+     * 使用示范：
+     *
+     * @return 表单的总条数
+     * </pre>
+     */
+	Long getMaterialCount();
 }

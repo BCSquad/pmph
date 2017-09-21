@@ -3,61 +3,74 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.PmphRolePermissionDao">
 	<sql id="key">
-        <!-- 去掉最后一个, -->
-        <trim suffixOverrides=",">
-            <if test="roleId!=null">
-                role_id,
-            </if>
-            <if test="permissionId!=null">
-                permission_id,
-            </if>
-        </trim>
-    </sql>
-    <!-- sql片段对应?,id属性值任意 -->
-    <sql id="value">
-        <!-- 去掉最后一个, -->
-        <trim suffixOverrides=",">
-            <if test="roleId!=null">
-                #{roleId},
-            </if>
-            <if test="permissionId!=null">
-               #{permissionId},
-            </if>
-        </trim>
-    </sql>
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="roleId!=null">
+				role_id,
+			</if>
+			<if test="permissionId!=null">
+				permission_id,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="roleId!=null">
+				#{roleId},
+			</if>
+			<if test="permissionId!=null">
+				#{permissionId},
+			</if>
+		</trim>
+	</sql>
 	<!-- 新增 PmphRolePermission -->
-    <insert id="addPmphRolePermission"  parameterType="PmphRolePermission"   useGeneratedKeys="true" keyProperty="id"  >
-    	insert  into  pmph_role_permission
-         	 (<include refid="key"/>)
-         VALUES
-        	(<include refid="value"/>);
-    </insert>
-    
-   <!-- 根据id删除一个 PmphRolePermission -->
-	<delete id="deletePmphRolePermissionById" parameterType="java.lang.Long"   >
-		delete from  pmph_role_permission  where id=#{id} ;
+	<insert id="addPmphRolePermission" parameterType="PmphRolePermission"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into pmph_role_permission
+		(
+		<include refid="key" />
+		)
+		VALUES
+		(
+		<include refid="value" />
+		);
+	</insert>
+
+	<!-- 根据id删除一个 PmphRolePermission -->
+	<delete id="deletePmphRolePermissionById" parameterType="java.lang.Long">
+		delete from pmph_role_permission where id=#{id} ;
 	</delete>
-	
+
 	<!-- 更新 PmphRolePermission -->
-	<update id="updatePmphRolePermission"   parameterType="PmphRolePermission"  >
-		update pmph_role_permission 
+	<update id="updatePmphRolePermission" parameterType="PmphRolePermission">
+		update pmph_role_permission
 		<set>
-            <if test="roleId != null and roleId != '' ">
-                role_id = #{roleId},
-            </if>
-            <if test="permissionId != null and permissionId !='' ">
-                permission_id = #{permissionId},
-            </if>
-        </set>
-        WHERE
-          id = #{id}
+			<if test="roleId != null and roleId != '' ">
+				role_id = #{roleId},
+			</if>
+			<if test="permissionId != null and permissionId !='' ">
+				permission_id = #{permissionId},
+			</if>
+		</set>
+		WHERE
+		id = #{id}
 	</update>
-	
+
 	<!-- 根据id查询一个 PmphRolePermission -->
-	<select  id="getPmphRolePermissionById" parameterType="java.lang.Long"  resultType="PmphRolePermission" >
-		select *  from pmph_role_permission where id=#{id} ;
+	<select id="getPmphRolePermissionById" parameterType="java.lang.Long"
+		resultType="PmphRolePermission">
+		select * from pmph_role_permission
+		where id=#{id} ;
 	</select>
-	
+	<!-- 查询表单的数据总数 -->
+	<select id="getPmphRolePermissionCount" resultType="Long">
+		select count(*)
+		from
+		pmph_role_permission
+	</select>
+
 </mapper>
 
 

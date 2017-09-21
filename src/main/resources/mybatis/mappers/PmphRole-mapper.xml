@@ -63,7 +63,8 @@
 
 	<delete id="delete" parameterType="Long">
 		DELETE FROM pmph_role
-		WHERE id = #{id}
+		WHERE id
+		= #{id}
 	</delete>
 
 	<delete id="batchDelete" parameterType="list">
@@ -119,11 +120,13 @@
 		FROM
 		pmph_user_role
 		WHERE
-		user_id = #{userId} AND role_id = #{roleId}
+		user_id =
+		#{userId} AND role_id = #{roleId}
 	</select>
 
 	<insert id="addUserRole" parameterType="map">
-		INSERT INTO `pmph_user_role`(`user_id`,`role_id`)
+		INSERT INTO
+		`pmph_user_role`(`user_id`,`role_id`)
 		VALUES(#{userId},#{roleId})
 	</insert>
 
@@ -137,7 +140,8 @@
 	</insert>
 
 	<delete id="deleteUserRole" parameterType="map">
-		DELETE FROM pmph_user_role
+		DELETE FROM
+		pmph_user_role
 		WHERE
 		user_id = #{userId} AND role_id = #{roleId}
 	</delete>
@@ -165,14 +169,17 @@
 	</select>
 
 	<insert id="addRoleResource" parameterType="map">
-		INSERT INTO pmph_role_permission(role_id,permission_id)
+		INSERT INTO
+		pmph_role_permission(role_id,permission_id)
 		VALUES(#{roleId},#{permissionId})
 	</insert>
 
 	<delete id="deleteRoleResource" parameterType="map">
-		DELETE FROM pmph_role_permission
+		DELETE FROM
+		pmph_role_permission
 		WHERE
-		role_id = #{roleId} AND permission_id = #{permissionId}
+		role_id = #{roleId} AND permission_id =
+		#{permissionId}
 	</delete>
 
 	<select id="getResourceRole" parameterType="map" resultType="PmphPermission">
@@ -183,7 +190,8 @@
 		FROM
 		pmph_role_permission
 		WHERE
-		role_id = #{roleId} AND permission_id = #{permissionId}
+		role_id =
+		#{roleId} AND permission_id = #{permissionId}
 	</select>
 
 	<delete id="batchDeleteRoleResource" parameterType="list">
@@ -203,5 +211,13 @@
 			#{id}
 		</foreach>
 	</delete>
+	
+	<!-- 查询表单的数据总数 -->
+	<select id="getPmphRoleCount" resultType="Long">
+		select
+		count(*)
+		from
+		pmph_role
+	</select>
 
 </mapper>

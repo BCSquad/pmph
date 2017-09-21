@@ -58,6 +58,17 @@ public interface AreaDao {
 	 * </pre>
 	 */
 	 void deleteAllArea();
+	 
+	 /**
+	  * 
+	  * <pre>
+	  * 功能描述：查询表单总条数
+	  * 使用示范：
+	  *
+	  * @return 表单的总条数
+	  * </pre>
+	  */
+	 Long getAreacount();
 
 	// 测试
 	List<Area> getTest(Page<Area,Area> p);

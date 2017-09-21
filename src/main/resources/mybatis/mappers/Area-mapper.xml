@@ -75,6 +75,15 @@
 		resultType="Area">
 		select * from area where id=#{id} ;
 	</select>
+	
+	<!-- 查询表单的数据总数 -->
+	<select id="getAreacount" resultType="Long">
+		select
+		count(*)
+		from
+		area
+	</select>
+	
 <!-- 分页测试 -->
 	<select id="getTestTotal" parameterType="Page" resultType="java.lang.Integer" >  
 	    select count(*) from area where true

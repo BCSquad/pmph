@@ -77,5 +77,11 @@
 		select * from pmph_group_message where
 		id=#{id} ;
 	</select>
-
+	<!-- 查询表单的数据总数 -->
+	<select id="getPmphGroupMessageCount" resultType="Long">
+		select
+		count(*)
+		from
+		pmph_group_message
+	</select>
 </mapper>

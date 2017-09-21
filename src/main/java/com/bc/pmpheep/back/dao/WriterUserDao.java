@@ -78,6 +78,17 @@ public interface WriterUserDao {
 	 * </pre>
 	 */
 	Integer getListWriterUserTotal(Page<WriterUserManagerVO,Map<String, String>> page);
+	
+	/**
+     * 
+     * <pre>
+     * 功能描述：查询表单的数据总条数
+     * 使用示范：
+     *
+     * @return 表单的数据总条数
+     * </pre>
+     */
+    Long getWriterUserCount();
 //	/**
 //	 * 
 //	 * <pre>

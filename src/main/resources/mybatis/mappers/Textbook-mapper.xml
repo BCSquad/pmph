@@ -136,4 +136,10 @@
 		select * from textbook where id=#{id} ;
 	</select>
 
+	<!-- 查询表单的数据总数 -->
+	<select id="getTextbookCount" resultType="Long">
+		select count(*)
+		from textbook
+	</select>
+
 </mapper>

@@ -54,5 +54,16 @@ public interface PmphUserDao {
     List<String> getListRoleSnByUser(Long uid);
 
     List<PmphRole> getListUserRole(Long uid);
+    
+    /**
+     * 
+     * <pre>
+     * 功能描述：查询表单的数据总条数
+     * 使用示范：
+     *
+     * @return 表单的总条数
+     * </pre>
+     */
+    Long getPmphUserCount();
 
 }

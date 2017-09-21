@@ -61,10 +61,18 @@
 		where id=#{id} ;
 	</update>
 
-	<!-- 根据id查询一个 PmphGroup -->
+	<!-- 根据id查询一个 PmphMessage -->
 	<select id="getPmphMessageById" parameterType="java.lang.Long"
 		resultType="PmphMessage">
 		select * from pmph_message where id=#{id} ;
+	</select>
+
+	<!-- 查询表单的数据总数 -->
+	<select id="getPmphMessageCount" resultType="Long">
+		select
+		count(*)
+		from
+		pmph_message
 	</select>
 
 </mapper>

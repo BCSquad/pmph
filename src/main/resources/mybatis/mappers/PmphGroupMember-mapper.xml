@@ -106,4 +106,12 @@
 		id=#{id} ;
 	</select>
 
+	<!-- 查询表单的数据总数 -->
+	<select id="getPmphGroupMemberCount" resultType="Long">
+		select
+		count(*)
+		from
+		pmph_group_member
+	</select>
+
 </mapper>

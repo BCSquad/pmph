@@ -84,5 +84,12 @@
 		select * from pmph_user_message where
 		id=#{id} ;
 	</select>
+	
+	<!-- 查询表单的数据总数 -->
+	<select id="getPmphUserMessageCount" resultType="Long">
+		select count(*)
+		from
+		pmph_user_message
+	</select>
 
 </mapper>

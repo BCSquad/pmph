@@ -83,4 +83,15 @@ public interface WriterRoleDao {
     @Param("permissionId") Long permissionId);
 
     Integer deleteRoleAndUser(@Param("ids") List<Long> ids);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：查询表单的数据总条数
+     * 使用示范：
+     *
+     * @return 表单的数据总条数
+     * </pre>
+     */
+    Long getWriterRoleCount();
 }

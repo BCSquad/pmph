@@ -86,4 +86,9 @@
 		id=#{id} ;
 	</select>
 
+	<!-- 查询表单的数据总条数 -->
+	<select id="getWriterUserMessageCount" resultType="java.lang.Long">
+		select
+		count(*) from writer_user_message ;
+	</select>
 </mapper>

@@ -22,7 +22,7 @@
 				note,
 			</if>
 			<if test="gmtLastMessage !=null ">
-			    gmt_last_message,
+				gmt_last_message,
 			</if>
 		</trim>
 	</sql>
@@ -46,7 +46,7 @@
 				#{note},
 			</if>
 			<if test="gmtLastMessage !=null ">
-			    #{gmtLastMessage},
+				#{gmtLastMessage},
 			</if>
 		</trim>
 	</sql>
@@ -67,8 +67,8 @@
 	</insert>
 
 	<!-- 根据id删除一个 PmphGroup -->
-	<delete id="deletePmphGroupById" parameterType="java.lang.Long" >
-		delete from  pmph_group where id=#{id} ;
+	<delete id="deletePmphGroupById" parameterType="java.lang.Long">
+		delete from pmph_group where id=#{id} ;
 	</delete>
 
 	<!-- 更新 PmphGroup -->
@@ -92,22 +92,33 @@
 				note = #{note},
 			</if>
 			<if test="gmtLastMessage !=null ">
-			    gmt_Last_Message = #{gmtLastMessage},
+				gmt_Last_Message = #{gmtLastMessage},
 			</if>
 		</set>
 		where id=#{id} ;
 	</update>
-	<!-- 根据id获取PmphGroup  -->
-	<select id="getPmphGroupById"  parameterType="java.lang.Long" resultType="PmphGroup"  >
-		select * from pmph_group  where id = #{id} ;
+	<!-- 根据id获取PmphGroup -->
+	<select id="getPmphGroupById" parameterType="java.lang.Long"
+		resultType="PmphGroup">
+		select * from pmph_group where id = #{id} ;
 	</select>
 
 	<!-- 查当前用户的小组列表 -->
-	<select id="getList"  resultType="PmphGroupListVO">
-	    select * from pmph_group  where id in (select DISTINCT group_id from pmph_group_member where member_id = #{id} )
-	    <if test="pmphGroup.groupName != null and pmphGroup.groupName !=''">
-			and group_name like  concat(concat('%',#{pmphGroup.groupName}),'%') ;
-		</if> 
+	<select id="getList" resultType="PmphGroupListVO">
+		select * from pmph_group where id in (select DISTINCT group_id from
+		pmph_group_member where member_id = #{id} )
+		<if test="pmphGroup.groupName != null and pmphGroup.groupName !=''">
+			and group_name like
+			concat(concat('%',#{pmphGroup.groupName}),'%') ;
+		</if>
 	</select>
-	
+
+	<!-- 查询表单的数据总数 -->
+	<select id="getPmphGroupCount" resultType="Long">
+		select
+		count(*)
+		from
+		pmph_group
+	</select>
+
 </mapper>

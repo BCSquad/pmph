@@ -202,4 +202,12 @@
 		select * from org_user where id=#{id} ;
 	</select>
 
+	<!-- 查询表单的数据总数 -->
+	<select id="getOrgUserCount" resultType="Long">
+		select
+		count(*)
+		from
+		org_user
+	</select>
+
 </mapper>

@@ -362,15 +362,13 @@
 			<if test="isNationalCourseUsed !=null  ">
 				is_national_course_used=#{isNationalCourseUsed},
 			</if>
-			<if
-				test="isNationalCourseRequired !=null  ">
+			<if test="isNationalCourseRequired !=null  ">
 				is_national_course_required=#{isNationalCourseRequired},
 			</if>
 			<if test="isProvincialCourseUsed !=null  ">
 				is_provincial_course_used=#{isProvincialCourseUsed},
 			</if>
-			<if
-				test="isProvincialCourseRequired !=null  ">
+			<if test="isProvincialCourseRequired !=null  ">
 				is_provincial_course_required=#{isProvincialCourseRequired},
 			</if>
 			<if test="isSchoolCourseUsed !=null  ">
@@ -388,8 +386,7 @@
 			<if test="isTextbookWriterUsed !=null  ">
 				is_textbook_writer_used=#{isTextbookWriterUsed},
 			</if>
-			<if
-				test="isTextbookWriterRequired !=null  ">
+			<if test="isTextbookWriterRequired !=null  ">
 				is_textbook_writer_required=#{isTextbookWriterRequired},
 			</if>
 			<if test="isOtherTextbookUsed !=null  ">
@@ -410,7 +407,7 @@
 			<if test="isDeleted !=null  ">
 				is_deleted=#{isDeleted},
 			</if>
-			<if test="founderId != null" >
+			<if test="founderId != null">
 				founder_id=#{founderId},
 			</if>
 			<if test="menderId !=null  ">
@@ -425,6 +422,14 @@
 	<select id="getMaterialById" parameterType="java.lang.Long"
 		resultType="Material">
 		select * from material where id=#{id} ;
+	</select>
+
+	<!-- 查询表单的数据总数 -->
+	<select id="getMaterialCount" resultType="Long">
+		select
+		count(*)
+		from
+		material
 	</select>
 
 </mapper>

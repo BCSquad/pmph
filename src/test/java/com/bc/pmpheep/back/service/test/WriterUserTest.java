@@ -3,11 +3,15 @@ package com.bc.pmpheep.back.service.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.bc.pmpheep.back.dao.WriterUserDao;
 import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
@@ -26,6 +30,14 @@ public class WriterUserTest extends BaseTest {
 
     @Autowired
     WriterUserService           userService;
+    @Resource
+    WriterUserDao               writerUserDao;
+
+    @Test
+    public void Count() {
+        Long num = writerUserDao.getWriterUserCount();
+        log.info("一共有{}条数据",num);
+    }
 
     /**
      * PmphUser 添加Test

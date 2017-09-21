@@ -52,4 +52,15 @@ public interface PmphGroupDao {
 	 * @return  List<PmphGroupListVO>
 	 */
 	List<PmphGroupListVO> getList    (@Param("pmphGroup")PmphGroup pmphGroup,@Param("id")Long id) ;
+	
+	/**
+     * 
+     * <pre>
+     * 功能描述：查询表单的数据总条数
+     * 使用示范：
+     *
+     * @return 表单的总条数
+     * </pre>
+     */
+    Long getPmphGroupCount();
 }

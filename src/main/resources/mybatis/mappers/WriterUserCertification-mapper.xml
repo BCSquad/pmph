@@ -22,7 +22,7 @@
 				progress ,
 			</if>
 			<if test="cert  != null and cert != '' ">
-				cert  ,
+				cert ,
 			</if>
 		</trim>
 	</sql>
@@ -69,7 +69,7 @@
 	</insert>
 
 
-	<!-- 根据id删除一个 WriterUserCertification-->
+	<!-- 根据id删除一个 WriterUserCertification -->
 	<delete id="deleteWriterUserCertificationById" parameterType="java.lang.Long">
 		delete from
 		Writer_User_Certification where
@@ -104,8 +104,15 @@
 	</update>
 
 	<!-- 根据id查询一个WriterUserCertification -->
-	<select id="getWriterUserCertificationById" parameterType="java.lang.Long" resultType="WriterUserCertification">
+	<select id="getWriterUserCertificationById" parameterType="java.lang.Long"
+		resultType="WriterUserCertification">
 		select * from Writer_User_Certification where id=#{id} ;
+	</select>
+
+	<!-- 查询表单的数据总条数 -->
+	<select id="getWriterUserCertificationCount" resultType="java.lang.Long">
+		select
+		count(*) from writer_user_certification ;
 	</select>
 
 </mapper>

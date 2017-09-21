@@ -63,6 +63,14 @@ public class WriterUserManagerVO implements Serializable {
      * 级别
      */
     private Integer rank;
+    /**
+     * 级别名称
+     */
+    private String  rankName;
+    /**
+     * 备注
+     */
+    private String  note;
 
     public Long getId() {
         return id;
@@ -158,6 +166,22 @@ public class WriterUserManagerVO implements Serializable {
 
     public void setRank(Integer rank) {
         this.rank = rank;
+    }
+
+    public String getRankName() {
+        return rankName;
+    }
+
+    public void setRankName(String rankName) {
+        this.rankName = rankName;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
 }

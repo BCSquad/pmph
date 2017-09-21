@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
 
+import com.bc.pmpheep.back.dao.AreaDao;
 import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.AreaService;
@@ -22,6 +23,8 @@ public class AreaSeviceTest extends BaseTest {
 
     @Resource
     private AreaService areaService;
+    @Resource
+    AreaDao             areaDao;
 
     @Test
     @Rollback(Const.ISROLLBACK)
@@ -35,7 +38,9 @@ public class AreaSeviceTest extends BaseTest {
         // logger.info(areaService.deleteAreaById(2L).toString());
         // logger.info(areaService.getAreaById(6L).toString());
         // areaService.getTest();
-        areaService.deleteAllArea();
+        // areaService.deleteAllArea();
+        Long num = areaDao.getAreacount();
+        logger.info("一共有{}条数据",num);
     }
 
 }

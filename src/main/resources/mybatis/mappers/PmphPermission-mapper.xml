@@ -3,155 +3,173 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.PmphPermissionDao">
 	<sql id="key">
-        <!-- 去掉最后一个, -->
-        <trim suffixOverrides=",">
-            <if test="parentId!=null">
-                parent_id,
-            </if>
-            <if test="path!=null and path !=''">
-                path,
-            </if>
-            <if test="peermissionName!=null and peermissionName !=''">
-                permission_name,
-            </if>
-             <if test="menuName!=null and menuName !=''">
-                menu_name,
-            </if>
-             <if test="url!=null and url !=''">
-                url,
-            </if>
-             <if test="isDisabled!=null">
-                is_disabled,
-            </if>
-             <if test="note!=null and note !=''">
-                note,
-            </if>
-             <if test="sort!=null">
-                sort,
-            </if>
-             <if test="gmtCreate!=null">
-                gmt_create,
-            </if> 
-            <if test="gmtUpdate!=null">
-                gmt_update,
-            </if>
-        </trim>
-    </sql>
-    <!-- sql片段对应?,id属性值任意 -->
-    <sql id="value">
-        <!-- 去掉最后一个, -->
-        <trim suffixOverrides=",">
-            <if test="parentId!=null">
-                #{parentId},
-            </if>
-            <if test="path!=null and path !=''">
-               #{path},
-            </if>
-            <if test="peermissionName!=null and peermissionName !=''">
-               #{peermissionName},
-            </if>
-             <if test="menuName!=null and menuName !=''">
-                #{menuName},
-            </if>
-             <if test="url!=null and url !=''">
-                #{url},
-            </if>
-             <if test="isDisabled!=null">
-              #{isDisabled},
-            </if>
-             <if test="note!=null and note !=''">
-                #{note},
-            </if>
-             <if test="sort!=null">
-                #{sort},
-            </if>
-             <if test="gmtCreate!=null">
-               #{gmtCreate},
-            </if> 
-            <if test="gmtUpdate!=null">
-                #{gmtUpdate},
-            </if>
-        </trim>
-    </sql>
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="parentId!=null">
+				parent_id,
+			</if>
+			<if test="path!=null and path !=''">
+				path,
+			</if>
+			<if test="peermissionName!=null and peermissionName !=''">
+				permission_name,
+			</if>
+			<if test="menuName!=null and menuName !=''">
+				menu_name,
+			</if>
+			<if test="url!=null and url !=''">
+				url,
+			</if>
+			<if test="isDisabled!=null">
+				is_disabled,
+			</if>
+			<if test="note!=null and note !=''">
+				note,
+			</if>
+			<if test="sort!=null">
+				sort,
+			</if>
+			<if test="gmtCreate!=null">
+				gmt_create,
+			</if>
+			<if test="gmtUpdate!=null">
+				gmt_update,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="parentId!=null">
+				#{parentId},
+			</if>
+			<if test="path!=null and path !=''">
+				#{path},
+			</if>
+			<if test="peermissionName!=null and peermissionName !=''">
+				#{peermissionName},
+			</if>
+			<if test="menuName!=null and menuName !=''">
+				#{menuName},
+			</if>
+			<if test="url!=null and url !=''">
+				#{url},
+			</if>
+			<if test="isDisabled!=null">
+				#{isDisabled},
+			</if>
+			<if test="note!=null and note !=''">
+				#{note},
+			</if>
+			<if test="sort!=null">
+				#{sort},
+			</if>
+			<if test="gmtCreate!=null">
+				#{gmtCreate},
+			</if>
+			<if test="gmtUpdate!=null">
+				#{gmtUpdate},
+			</if>
+		</trim>
+	</sql>
 	<!-- 新增 PmphPermission -->
-    <insert id="addPmphPermission"  parameterType="PmphPermission"  useGeneratedKeys="true" keyProperty="id"  >
-    	 INSERT INTO pmph_permission
-        	(<include refid="key"/>)
-        VALUES
-        	(<include refid="value"/>);
-    </insert>
-    
-   <!-- 根据id删除一个 -->
-	<delete id="deletePmphPermissionById" parameterType="PmphPermission"   >
-		delete from  pmph_permission  where id = #{id} ;
-	</delete>
-	
-	<!-- 更新PmphPermission -->
-	<update id="updatePmphPermissionById"   parameterType="PmphPermission"  >
-		update pmph_permission  
-		 <set>
-		 	 <if test="parentId!=null and parentId!='' ">
-                parent_id =#{parentId},
-            </if>
-            <if test="path!=null and path='' ">
-                path=#{path},
-            </if>
-        	<if test="peermissionName != null and peermissionName!=''">
-                permission_name = #{peermissionName},
-            </if>
-             <if test="menuName!=null and menuName!=''">
-                menu_name =#{menuName},
-            </if>
-             <if test="url!=null and url!=''">
-                url=#{url},
-            </if>
-           <if test="isDisabled != null">
-                is_disabled = #{isDisabled},
-            </if>
-            <if test="note != null and note!=''">
-                note = #{note},
-            </if>
-            <if test="sort != null and sort!=''">
-                sort = #{sort}
-            </if>
-        </set>
-		  where id=#{id} ;
-	</update>
-	
-	<!-- 根据id查询一个PmphPermission -->
-	<select  id="getPmphPermissionById" parameterType="PmphPermission"  resultType="PmphPermission" >
-		select * from pmph_permission where id = #{id};
-	</select>
-	
-	<select id="getListResource" resultType="PmphPermission">
-        SELECT
-             `id`,
-            `parent_id`,
-            `path`,
-            `permission_name`,
-            `menu_name`,
-            `url`
-        FROM
-          `pmph_permission`
-    </select>
-    
-    <delete id="delete" parameterType="Long">
-        DELETE FROM pmph_permission
-        where id = #{id}
-    </delete>
+	<insert id="addPmphPermission" parameterType="PmphPermission"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO pmph_permission
+		(
+		<include refid="key" />
+		)
+		VALUES
+		(
+		<include refid="value" />
+		);
+	</insert>
 
-    <select id="getListPageResource" parameterType="Page" resultType="PmphPermission">
-     SELECT
-            `id`,
-            `parent_id`,
-            `path`,
-            `permission_name`,
-            `menu_name`,
-            `url`
-        FROM
-          `pmph_permission`
-          where 1=1
-          
-        WHERE id = #{id}
-    </select>
+	<!-- 根据id删除一个 -->
+	<delete id="deletePmphPermissionById" parameterType="PmphPermission">
+		delete from
+		pmph_permission where id = #{id} ;
+	</delete>
+
+	<!-- 更新PmphPermission -->
+	<update id="updatePmphPermissionById" parameterType="PmphPermission">
+		update pmph_permission
+		<set>
+			<if test="parentId!=null and parentId!='' ">
+				parent_id =#{parentId},
+			</if>
+			<if test="path!=null and path='' ">
+				path=#{path},
+			</if>
+			<if test="peermissionName != null and peermissionName!=''">
+				permission_name = #{peermissionName},
+			</if>
+			<if test="menuName!=null and menuName!=''">
+				menu_name =#{menuName},
+			</if>
+			<if test="url!=null and url!=''">
+				url=#{url},
+			</if>
+			<if test="isDisabled != null">
+				is_disabled = #{isDisabled},
+			</if>
+			<if test="note != null and note!=''">
+				note = #{note},
+			</if>
+			<if test="sort != null and sort!=''">
+				sort = #{sort}
+			</if>
+		</set>
+		where id=#{id} ;
+	</update>
+
+	<!-- 根据id查询一个PmphPermission -->
+	<select id="getPmphPermissionById" parameterType="PmphPermission"
+		resultType="PmphPermission">
+		select * from pmph_permission where id =
+		#{id};
+	</select>
+
+	<select id="getListResource" resultType="PmphPermission">
+		SELECT
+		`id`,
+		`parent_id`,
+		`path`,
+		`permission_name`,
+		`menu_name`,
+		`url`
+		FROM
+		`pmph_permission`
+	</select>
+
+	<delete id="delete" parameterType="Long">
+		DELETE FROM pmph_permission
+		where id = #{id}
+	</delete>
+
+	<select id="getListPageResource" parameterType="Page"
+		resultType="PmphPermission">
+		SELECT
+		`id`,
+		`parent_id`,
+		`path`,
+		`permission_name`,
+		`menu_name`,
+		`url`
+		FROM
+		`pmph_permission`
+		where 1=1
+
+		WHERE id = #{id}
+	</select>
+
+	<!-- 查询表单的数据总数 -->
+	<select id="getPmphPermissionCount" resultType="Long">
+		select
+		count(*)
+		from
+		pmph_permission
+	</select>
+
 </mapper>
