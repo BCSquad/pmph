@@ -202,6 +202,41 @@
 		select * from org_user where id=#{id} ;
 	</select>
 
+	<!-- 分页测试 -->
+	<select id="getListOrgUserTotal" parameterType="Page"
+		resultType="java.lang.Integer">
+		select count(*) from org_user u left join org o on o.id = u.org_id
+		where 1=1
+		<if test="parameter.username !=null ">
+			and u.username like #{parameter.username}
+		</if>
+		<if test="parameter.realname !=null">
+			and u.realname like #{parameter.realname}
+		</if>
+		<if test="parameter.orgName !=null">
+			and o.org_name like #{parameter.orgName}
+		</if>
+	</select>
+	<select id="getListOrgUser" parameterType="Page"
+		resultType="OrgUserManagerVO">
+		select
+		*
+		from org_user u left join org o on o.id = u.org_id where
+		1=1
+		<if test="parameter.username !=null ">
+			and u.username like #{parameter.username}
+		</if>
+		<if test="parameter.realname !=null">
+			and u.realname like #{parameter.realname}
+		</if>
+		<if test="parameter.orgName !=null">
+			and o.org_name like #{parameter.orgName}
+		</if>
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+
 	<!-- 查询表单的数据总数 -->
 	<select id="getOrgUserCount" resultType="Long">
 		select
