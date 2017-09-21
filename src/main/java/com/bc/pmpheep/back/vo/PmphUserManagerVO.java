@@ -6,11 +6,14 @@ package com.bc.pmpheep.back.vo;
 
 import java.util.Date;
 
+import org.apache.ibatis.type.Alias;
+
 /**
  * 社内用户管理视图对象
  *
  * @author L.X <gugia@qq.com>
  */
+@Alias("PmphUserManagerVO")
 public class PmphUserManagerVO implements java.io.Serializable {
 
     /**

@@ -139,16 +139,16 @@ public interface WriterUserService {
 	 * </pre>
 	 */
 	Page<WriterUserManagerVO,Map<String, String>> getListWriterUser(Page<WriterUserManagerVO,Map<String, String>> page) throws CheckedServiceException;
-	/**
-	 * 
-	 * <pre>
-	 * 功能描述：分页查询作家用户
-	 * 使用示范：
-	 *
-	 * @param page 传入的查询条件
-	 * @return
-	 * @throws CheckedServiceException
-	 * </pre>
-	 */
-	Page<WriterUserManagerVO, Map<String, String>> getListWriter(Page<WriterUser, Map<String,String>> page) throws CheckedServiceException, ReflectiveOperationException;
+//	/**
+//	 * 
+//	 * <pre>
+//	 * 功能描述：分页查询作家用户
+//	 * 使用示范：
+//	 *
+//	 * @param page 传入的查询条件
+//	 * @return
+//	 * @throws CheckedServiceException
+//	 * </pre>
+//	 */
+//	Page<WriterUserManagerVO, Map<String, String>> getListWriter(Page<WriterUser, Map<String,String>> page) throws CheckedServiceException, ReflectiveOperationException;
 }

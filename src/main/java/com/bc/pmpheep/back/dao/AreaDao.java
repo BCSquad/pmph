@@ -48,6 +48,16 @@ public interface AreaDao {
 	 * @return area
 	 */
 	Area getAreaById(Long id);
+	
+	/**
+	 * 
+	 * <pre>
+	 * 功能描述：删除整张表数据
+	 * 使用示范：
+	 *
+	 * </pre>
+	 */
+	 void deleteAllArea();
 
 	// 测试
 	List<Area> getTest(Page<Area,Area> p);

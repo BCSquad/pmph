@@ -18,24 +18,24 @@ import com.bc.pmpheep.back.util.Const;
  * @author mryang
  */
 public class AreaSeviceTest extends BaseTest {
-	Logger logger = LoggerFactory.getLogger(AreaSeviceTest.class);
+    Logger              logger = LoggerFactory.getLogger(AreaSeviceTest.class);
 
-	@Resource
-	private AreaService areaService;
+    @Resource
+    private AreaService areaService;
 
-	@Test
-	@Rollback(Const.ISROLLBACK)
-	public void addArea() throws Exception {
-		Area a = new Area(5L, "测试", 4);
-		//areaService.addArea(a);
-		logger.info("----AreaService-------------------------------------------------------------------------");
-		logger.info(a.toString());
-		a.setAreaName("ceshiwwwwwwww");
-		//logger.info(areaService.updateArea(a).toString());
-		//logger.info(areaService.deleteAreaById(2L).toString());
-		//logger.info(areaService.getAreaById(6L).toString());
-		areaService.getTest();
-		
-	}
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void addArea() throws Exception {
+        // Area a = new Area(5L, "测试", 4);
+        // areaService.addArea(a);
+        logger.info("----AreaService-------------------------------------------------------------------------");
+        // logger.info(a.toString());
+        // a.setAreaName("ceshiwwwwwwww");
+        // logger.info(areaService.updateArea(a).toString());
+        // logger.info(areaService.deleteAreaById(2L).toString());
+        // logger.info(areaService.getAreaById(6L).toString());
+        // areaService.getTest();
+        areaService.deleteAllArea();
+    }
 
 }

@@ -463,7 +463,7 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
-	<!-- 分页测试2 -->
+	<!-- 
 	<select id="getListTotal" parameterType="Page" resultType="java.lang.Integer">
 		select count(*) from writer_user w
 		where 1=1
@@ -494,5 +494,5 @@
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
-	</select>
+	</select> -->
 </mapper>

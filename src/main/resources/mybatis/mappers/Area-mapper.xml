@@ -91,6 +91,8 @@
 	        limit #{start},#{pageSize}  
 	    </if>  
     </select> 
-    
+    <delete id="deleteAllArea">
+    delete from area where 1=1;
+    </delete>
 
 </mapper>

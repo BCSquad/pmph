@@ -316,60 +316,60 @@ public class WriterUserServiceImpl implements WriterUserService {
         return page;
     }
 
-    /**
-     * 
-     * <pre>
-     * 功能描述：分页查询作家用户
-     * 使用示范：
-     *
-     * @param page 传入的查询数据
-     * @return 需要的Page对象
-     * </pre>
-     * @throws ReflectiveOperationException 
-     */
-    @Override
-    public Page<WriterUserManagerVO, Map<String, String>> getListWriter(Page<WriterUser, Map<String, String>> page) throws CheckedServiceException, ReflectiveOperationException {
-        if (null != page.getParameter().get("username")) {
-            page.getParameter().put("username", "%" + page.getParameter().get("username") + "%");
-        }
-        if (null != page.getParameter().get("realname")) {
-            page.getParameter().put("realname", "%" + page.getParameter().get("realname") + "%");
-        }
-        if (null != page.getParameter().get("orgName")) {
-            page.getParameter().put("orgName", "%" + page.getParameter().get("orgName") + "%");
-        }
-        List<Org> orgs = orgDao.getListOrgByOrgName(page.getParameter().get("orgName"));
-        String orgId = "";
-        Map<Long, String> map = new HashMap<>();
-        for (Org org : orgs) {
-            orgId += "," + org.getId();
-            map.put(org.getId(), org.getOrgName());
-        }
-        if (orgId.equals("")) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "没有找到该机构");
-        } else {
-            orgId = orgId.substring(1);
-            page.getParameter().put("orgId", orgId);
-        }
-        Page<WriterUserManagerVO, Map<String, String>> pageVO = new Page<>();
-        int total = writerUserDao.getListTotal(page);
-        if (total > 0) {
-            List<WriterUserManagerVO> writerUserManagerVOs = new ArrayList<>();
-            List<WriterUser> writerUsers = writerUserDao.getList(page);
-            for(WriterUser writerUser : writerUsers){
-                WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
-                    BeanUtils.copyProperties(writerUserManagerVO, writerUser);
-                    writerUserManagerVO.setOrgName(map.get(writerUser.getOrgId()));
-                    writerUserManagerVOs.add(writerUserManagerVO);
-            }
-           
-            pageVO.setFirst(page.isFirst());
-            pageVO.setLast(page.isLast());
-            pageVO.setPageTotal(total);
-            pageVO.setRows(writerUserManagerVOs);
-        }
-        return pageVO;
-    }
+//    /**
+//     * 
+//     * <pre>
+//     * 功能描述：分页查询作家用户
+//     * 使用示范：
+//     *
+//     * @param page 传入的查询数据
+//     * @return 需要的Page对象
+//     * </pre>
+//     * @throws ReflectiveOperationException 
+//     */
+//    @Override
+//    public Page<WriterUserManagerVO, Map<String, String>> getListWriter(Page<WriterUser, Map<String, String>> page) throws CheckedServiceException, ReflectiveOperationException {
+//        if (null != page.getParameter().get("username")) {
+//            page.getParameter().put("username", "%" + page.getParameter().get("username") + "%");
+//        }
+//        if (null != page.getParameter().get("realname")) {
+//            page.getParameter().put("realname", "%" + page.getParameter().get("realname") + "%");
+//        }
+//        if (null != page.getParameter().get("orgName")) {
+//            page.getParameter().put("orgName", "%" + page.getParameter().get("orgName") + "%");
+//        }
+//        List<Org> orgs = orgDao.getListOrgByOrgName(page.getParameter().get("orgName"));
+//        String orgId = "";
+//        Map<Long, String> map = new HashMap<>();
+//        for (Org org : orgs) {
+//            orgId += "," + org.getId();
+//            map.put(org.getId(), org.getOrgName());
+//        }
+//        if (orgId.equals("")) {
+//            throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
+//                                              CheckedExceptionResult.NULL_PARAM, "没有找到该机构");
+//        } else {
+//            orgId = orgId.substring(1);
+//            page.getParameter().put("orgId", orgId);
+//        }
+//        Page<WriterUserManagerVO, Map<String, String>> pageVO = new Page<>();
+//        int total = writerUserDao.getListTotal(page);
+//        if (total > 0) {
+//            List<WriterUserManagerVO> writerUserManagerVOs = new ArrayList<>();
+//            List<WriterUser> writerUsers = writerUserDao.getList(page);
+//            for(WriterUser writerUser : writerUsers){
+//                WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
+//                    BeanUtils.copyProperties(writerUserManagerVO, writerUser);
+//                    writerUserManagerVO.setOrgName(map.get(writerUser.getOrgId()));
+//                    writerUserManagerVOs.add(writerUserManagerVO);
+//            }
+//           
+//            pageVO.setFirst(page.isFirst());
+//            pageVO.setLast(page.isLast());
+//            pageVO.setPageTotal(total);
+//            pageVO.setRows(writerUserManagerVOs);
+//        }
+//        return pageVO;
+//    }
 
 }

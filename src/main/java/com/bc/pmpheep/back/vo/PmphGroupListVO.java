@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.vo;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
@@ -10,7 +11,7 @@ import org.apache.ibatis.type.Alias;
  *
  **/
 @Alias("PmphGroupListVO")
-public class PmphGroupListVO {
+public class PmphGroupListVO implements Serializable{
 	//小组id
     private Long id;
     //小组名称

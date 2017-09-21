@@ -30,7 +30,7 @@ public class WriterUserServiceTest extends BaseTest {
 
     WriterUser        writerUser = new WriterUser();
 
-    // @Test
+     @Test
     public void addWriterUserService() {
         writerUser.setUsername("zasd");
         writerUser.setPassword("10214");
@@ -49,7 +49,7 @@ public class WriterUserServiceTest extends BaseTest {
         }
     }
 
-    // @Test
+     @Test
     public void deleteWriterUserServiceById() {
         int num = -1;
         writerUser.setUsername("zasd");
@@ -73,7 +73,7 @@ public class WriterUserServiceTest extends BaseTest {
 
     }
 
-    // @Test
+     @Test
     public void updateWriterUserById() {
         writerUser.setUsername("zasd");
         writerUser.setPassword("10214");
@@ -96,7 +96,7 @@ public class WriterUserServiceTest extends BaseTest {
 
     }
 
-    // @Test
+     @Test
     public void getWriterUserByUsername() {
         writerUser.setUsername("zasd");
         writerUser.setPassword("10214");
@@ -136,25 +136,25 @@ public class WriterUserServiceTest extends BaseTest {
         }
     }
 
-    @Test
-    public void getListWriterUserPO() {
-        Page<WriterUser, Map<String, String>> page = new Page<>();
-        Map<String, String> map = new HashMap<>();
-        map.put("username", null);
-        map.put("realname", null);
-        map.put("orgName", null);
-        page.setParameter(map);
-        page.setPageSize(15);
-        Page<WriterUserManagerVO, Map<String, String>> pageVO = new Page<>();
-        try {
-            pageVO = writerUserService.getListWriter(page);
-        } catch (CheckedServiceException | ReflectiveOperationException e) {
-            logger.error(e.getMessage());
-        }
-        if (pageVO.getRows().isEmpty()) {
-            logger.info("失败了");
-        } else {
-            logger.info("查找成功{}", pageVO);
-        }
-    }
+//    @Test
+//    public void getListWriterUserPO() {
+//        Page<WriterUser, Map<String, String>> page = new Page<>();
+//        Map<String, String> map = new HashMap<>();
+//        map.put("username", null);
+//        map.put("realname", null);
+//        map.put("orgName", null);
+//        page.setParameter(map);
+//        page.setPageSize(15);
+//        Page<WriterUserManagerVO, Map<String, String>> pageVO = new Page<>();
+//        try {
+//            pageVO = writerUserService.getListWriter(page);
+//        } catch (CheckedServiceException | ReflectiveOperationException e) {
+//            logger.error(e.getMessage());
+//        }
+//        if (pageVO.getRows().isEmpty()) {
+//            logger.info("失败了");
+//        } else {
+//            logger.info("查找成功{}", pageVO);
+//        }
+//    }
 }
