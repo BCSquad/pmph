@@ -1,8 +1,11 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.PmphDepartment;
+import com.bc.pmpheep.back.vo.PmphUserDepartmentVO;
 
 /**
  * PmphDepartment 实体类数据访问层接口
@@ -48,5 +51,14 @@ public interface PmphDepartmentDao {
      * </pre>
      */
     Long getPmphDepartmentCount();
+    
+    /**
+     * 
+     * 功能描述：获取全部出版社部门
+     * 使用示范：
+     * @param parentId 父级id
+     * @return 出版社部门
+     */
+    List<PmphUserDepartmentVO> getListPmphDepartment(Long parentId);
 
 }

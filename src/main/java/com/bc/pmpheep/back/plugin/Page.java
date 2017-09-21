@@ -127,6 +127,13 @@ public class Page<R,P> {
 		return parameter;
 	}
 
+    @Override
+    public String toString() {
+        return "Page [pageNumber=" + pageNumber + ", pageSize=" + pageSize + ", total=" + total
+               + ", pageTotal=" + pageTotal + ", isFirst=" + isFirst + ", isLast=" + isLast
+               + ", start=" + start + ", rows=" + rows.toString() + ", parameter=" + parameter.toString() + "]";
+    }
+
 	
 	
 	

@@ -68,6 +68,10 @@ public class WriterUserManagerVO implements Serializable {
      */
     private String  rankName;
     /**
+     * 显示顺序
+     */
+    private Integer sort;
+    /**
      * 备注
      */
     private String  note;
@@ -176,12 +180,29 @@ public class WriterUserManagerVO implements Serializable {
         this.rankName = rankName;
     }
 
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
     public String getNote() {
         return note;
     }
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    @Override
+    public String toString() {
+        return "WriterUserManagerVO [id=" + id + ", username=" + username + ", isDisabled="
+               + isDisabled + ", orgId=" + orgId + ", orgName=" + orgName + ", realname=" + realname
+               + ", position=" + position + ", title=" + title + ", handphone=" + handphone
+               + ", email=" + email + ", address=" + address + ", rank=" + rank + ", rankName="
+               + rankName + ", sort=" + sort + ", note=" + note + "]";
     }
 
 }
