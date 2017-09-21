@@ -110,5 +110,12 @@
 		pmph_department
 	</select>
 
+	<!-- 获取全部部门 -->
+	<select id="getListPmphDepartment" parameterType="java.lang.Long" resultType="PmphUserDepartmentVO">
+		select
+		id,parent_id,dp_name
+		from
+		pmph_department where parent_id = #{parentId};
+	</select>
 
 </mapper>
