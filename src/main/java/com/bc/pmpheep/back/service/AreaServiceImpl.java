@@ -31,7 +31,11 @@ public class AreaServiceImpl extends BaseService implements AreaService {
      */
     @Override
     public Area addArea(Area area) throws CheckedServiceException {
-        areaDao.addArea(area);
+    	Long id = area.getId();
+    	areaDao.addArea(area);
+    	if(null!=id){
+    		area.setId(id);
+    	}
         return area;
     }
 

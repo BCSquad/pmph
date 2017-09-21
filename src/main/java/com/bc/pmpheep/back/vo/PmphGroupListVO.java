@@ -10,6 +10,7 @@ import org.apache.ibatis.type.Alias;
  *@CreateDate 2017年9月20日 下午1:51:11
  *
  **/
+@SuppressWarnings("serial")
 @Alias("PmphGroupListVO")
 public class PmphGroupListVO implements Serializable{
 	//小组id

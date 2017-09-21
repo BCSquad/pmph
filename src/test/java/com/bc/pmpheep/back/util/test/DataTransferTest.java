@@ -19,15 +19,29 @@ import org.junit.Assert;
  */
 public class DataTransferTest extends BaseTest {
 
-    Logger logger = LoggerFactory.getLogger(DataTransferTest.class);
+	Logger logger = LoggerFactory.getLogger(DataTransferTest.class);
 
-    @Resource
-    DataTransfer dataTransfer;
+	@Resource
+	DataTransfer dataTransfer;
 
-    @Test
-    @Rollback(false)
-    public void area() {
-        int count = dataTransfer.area();
-        Assert.assertTrue("数据迁移总条数应与当前数据库条目数一致", count > 0);
-    }
+	@Test
+	@Rollback(false)
+	public void area() {
+		int count = dataTransfer.area();
+		Assert.assertTrue("数据迁移总条数应与当前数据库条目数一致", count > 0);
+	}
+
+	@Test
+	@Rollback(false)
+	public void pmphUser() {
+		int count = dataTransfer.pmphUser();
+		Assert.assertTrue("社内用户表总条数为" + count, count > 0);
+	}
+
+	@Test
+	@Rollback(false)
+	public void pmphDepartment() {
+		int count = dataTransfer.pmphDepartment();
+		Assert.assertTrue("社内部门表总条数为" + count, count > 0);
+	}
 }
