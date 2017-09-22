@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.po.PmphPermission;
@@ -45,7 +44,6 @@ public class PmphRoleServiceImpl implements PmphRoleService {
         return roleDao.delete(id);
     }
 
-    @Transactional
     @Override
     public void deleteRoleAndResource(List<Long> ids) throws CheckedServiceException {
         if (0 == ids.size()) {
