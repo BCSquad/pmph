@@ -47,6 +47,18 @@
 			<if test="postcode != null and postcode !=''">
 				postcode,
 			</if>
+			<if test="isProxyUpload != null and isProxyUpload !=''">
+				is_proxy_upload,
+			</if>
+			<if test="proxy != null and proxy !=''">
+				proxy,
+			</if>
+			<if test="progress != null and progress !=''">
+				progress,
+			</if>
+			<if test="reviewDate != null and reviewDate !=''">
+				review_date,
+			</if>
 			<if test="note != null and note !=''">
 				note,
 			</if>
@@ -103,6 +115,18 @@
 			</if>
 			<if test="postcode != null and postcode !=''">
 				#{postcode},
+			</if>
+			<if test="isProxyUpload != null and isProxyUpload !=''">
+				#{isProxyUpload},
+			</if>
+			<if test="proxy != null and proxy !=''">
+				#{proxy},
+			</if>
+			<if test="progress != null and progress !=''">
+				#{progress},
+			</if>
+			<if test="reviewDate != null and reviewDate !=''">
+				#{reviewDate},
 			</if>
 			<if test="note != null and note !=''">
 				#{note},
@@ -183,6 +207,18 @@
 			<if test=" postcode != null and postcode !=''">
 				postcode= #{postcode},
 			</if>
+			<if test=" isProxyUpload != null and isProxyUpload !=''">
+				is_proxy_upload = #{isProxyUpload},
+			</if>
+			<if test=" proxy != null and proxy !=''">
+				proxy = #{proxy},
+			</if>
+			<if test=" progress != null and progress !=''">
+				progress = #{progress},
+			</if>
+			<if test=" reviewDate != null and reviewDate !=''">
+				review_date = #{reviewDate},
+			</if>
 			<if test=" note != null and note !=''">
 				note = #{note},
 			</if>
@@ -202,7 +238,7 @@
 		select * from org_user where id=#{id} ;
 	</select>
 
-	<!-- 分页测试 -->
+	<!-- 分页查询 -->
 	<select id="getListOrgUserTotal" parameterType="Page"
 		resultType="java.lang.Integer">
 		select count(*) from org_user u left join org o on o.id = u.org_id
@@ -217,8 +253,7 @@
 			and o.org_name like #{parameter.orgName}
 		</if>
 	</select>
-	<select id="getListOrgUser" parameterType="Page"
-		resultType="OrgUserManagerVO">
+	<select id="getListOrgUser" parameterType="Page" resultType="OrgUserManagerVO">
 		select
 		*
 		from org_user u left join org o on o.id = u.org_id where
