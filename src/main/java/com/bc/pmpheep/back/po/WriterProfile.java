@@ -1,37 +1,41 @@
-package com.test;
+package com.bc.pmpheep.back.po;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import org.apache.ibatis.type.Alias;
 
 /**
- * WriterProfile entity. @author MyEclipse Persistence Tools
+ * 
+ * <p>Title:作家简介与标签表 实体类<p>
+ * <p>Description:作家简介与标签信息<p>
+ * @author lyc
+ * @date 2017年9月22日 上午10:38:14
  */
-@Entity
-@Table(name = "writer_profile", catalog = "pmph_imesp_db", uniqueConstraints = @UniqueConstraint(columnNames = "user_id"))
+@SuppressWarnings("serial")
+@Alias("WriterProfile")
 public class WriterProfile implements java.io.Serializable {
 
-	// Fields
-
+	// 主键
 	private Long id;
+	// 作家id
 	private Long userId;
+	// 个人简介
 	private String profile;
+	// 个人标签
 	private String tag;
 
-	// Constructors
+	// 构造器
 
 	/** default constructor */
 	public WriterProfile() {
 	}
 
-	/** minimal constructor */
-	public WriterProfile(Long userId) {
-		this.userId = userId;
+	
+
+	public WriterProfile(Long id) {
+		super();
+		this.id = id;
 	}
+
+
 
 	/** full constructor */
 	public WriterProfile(Long userId, String profile, String tag) {
@@ -40,43 +44,60 @@ public class WriterProfile implements java.io.Serializable {
 		this.tag = tag;
 	}
 
-	// Property accessors
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
+
+
 	public Long getId() {
-		return this.id;
+		return id;
 	}
+
+
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	@Column(name = "user_id", unique = true, nullable = false)
+
+
 	public Long getUserId() {
-		return this.userId;
+		return userId;
 	}
+
+
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
-	@Column(name = "profile", length = 3000)
+
+
 	public String getProfile() {
-		return this.profile;
+		return profile;
 	}
+
+
 
 	public void setProfile(String profile) {
 		this.profile = profile;
 	}
 
-	@Column(name = "tag", length = 200)
+
+
 	public String getTag() {
-		return this.tag;
+		return tag;
 	}
+
+
 
 	public void setTag(String tag) {
 		this.tag = tag;
 	}
+
+
+
+	@Override
+	public String toString() {
+		return " {id:" + id + ", userId:" + userId + ", profile:" + profile
+				+ ", tag:" + tag + "}";
+	}	
 
 }
