@@ -2,10 +2,12 @@ package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
+
 import org.apache.ibatis.type.Alias;
 
 /**
- * OrgUser  机构用户表  实体类--  Org_User
+ * OrgUser 机构用户表 实体类-- Org_User
  * 
  * @author Thinkpad
  *
@@ -78,6 +80,22 @@ public class OrgUser implements Serializable {
 	 */
 	private String postcode;
 	/**
+	 * 是否上传 委托书
+	 */
+	private boolean isProxyUpload;
+	/**
+	 * 委托书
+	 */
+	private String proxy;
+	/**
+	 * 审核进度
+	 */
+	private Integer progress;
+	/**
+	 * 审核通过时间
+	 */
+	private Date reviewDate;
+	/**
 	 * 备注
 	 */
 	private String note;
@@ -97,17 +115,21 @@ public class OrgUser implements Serializable {
 	 * 修改时间
 	 */
 	private Timestamp gmtUpdate;
-	
-	public OrgUser(){
-		
+
+	public OrgUser() {
+
 	}
-	public OrgUser(Long id){
-		this.id=id;
+
+	public OrgUser(Long id) {
+		this.id = id;
 	}
+
 	/**
 	 * 
-	 * @param username 机构代码  /yonghuming
-	 * @param password  密码
+	 * @param username
+	 *            机构代码 /yonghuming
+	 * @param password
+	 *            密码
 	 */
 	public OrgUser(String username, String password) {
 		this.username = username;
@@ -283,19 +305,23 @@ public class OrgUser implements Serializable {
 	public void setSort(Integer sort) {
 		this.sort = sort;
 	}
-	
+
 	public boolean isDisabled() {
 		return isDisabled;
 	}
+
 	public void setDisabled(boolean isDisabled) {
 		this.isDisabled = isDisabled;
 	}
+
 	public boolean isDeleted() {
 		return isDeleted;
 	}
+
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
+
 	public Timestamp getGmtCreate() {
 		return gmtCreate;
 	}

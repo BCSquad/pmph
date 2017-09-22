@@ -17,6 +17,9 @@
 			<if test="orgId!=null and orgId !=''">
 				org_id,
 			</if>
+			<if test="nickname!=null and nickname !=''">
+				nickname,
+			</if>
 			<if test="realname!=null and realname !=''">
 				realname,
 			</if>
@@ -114,6 +117,9 @@
 			</if>
 			<if test="orgId!=null and orgId !=''">
 				#{orgId},
+			</if>
+			<if test="nickname!=null and nickname !=''">
+				#{nickname},
 			</if>
 			<if test="realname!=null and realname !=''">
 				#{realname},
@@ -225,6 +231,9 @@
 			</if>
 			<if test="orgId != null and  orgId!=''">
 				org_id = #{orgId},
+			</if>
+			<if test=" nickname!= null and nickname !=''">
+				nickname= #{nickname},
 			</if>
 			<if test=" realname!= null and realname !=''">
 				realname= #{realname},
@@ -447,7 +456,7 @@
 	<select id="getListWriterUser" parameterType="Page"
 		resultType="WriterUserManagerVO">
 		select
-		w.id,w.username,w.is_disabled,w.address,w.realname,w.position,w.title,w.handphone,w.email,w.org_id,o.org_name,w.rank
+		*
 		from writer_user w left join org o on o.id = w.org_id where
 		1=1
 		<if test="parameter.username !=null ">

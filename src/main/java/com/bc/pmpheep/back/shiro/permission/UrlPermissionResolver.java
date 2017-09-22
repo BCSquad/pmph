@@ -22,7 +22,7 @@ public class UrlPermissionResolver implements PermissionResolver {
      */
     @Override
     public Permission resolvePermission(String s) {
-        logger.debug("s => " + s);
+        logger.info("s => " + s);
 
         if (s.startsWith("/")) {
             return new UrlPermission(s);

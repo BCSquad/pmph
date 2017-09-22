@@ -9,11 +9,14 @@ import org.springframework.context.ApplicationContext;
  * 
  */
 public class Const {
-	public static final Integer      PAGESIZE                   = 5;        //默认   page页面大小                                                
-	public static final boolean      ISROLLBACK                 = true;                                                           //单元测试数据是否回滚 
+    public static final Integer      PAGETOTAL                  = 0;                                                               // 默认
+    public static final Integer      PAGENUMBER                 = 1;                                                               // 默认
+    public static final Integer      PAGESIZE                   = 5;                                                               // 默认
+    public static final boolean      ISROLLBACK                 = true;                                                            // 单元测试数据是否回滚
     public static final String       WEB_PROJECT_NAME           = "PMPH_IMESP";
     public static final String       SESSION_SECURITY_CODE      = "sessionSecCode";
-    public static final String       SESSION_USER               = "sessionUser";
+    public static final String       SESSION_PMPH_USER          = "sessionPmphUser";
+    public static final String       SESSION_WRITER_USER        = "sessionWriterUser";
     public static final String       SESSION_ROLE_RIGHTS        = "sessionRoleRights";
     public static final String       SESSION_menuList           = "menuList";                                                      // 当前菜单
     public static final String       SESSION_allmenuList        = "allmenuList";                                                   // 全部菜单
