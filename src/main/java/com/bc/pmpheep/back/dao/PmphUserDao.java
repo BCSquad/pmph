@@ -61,11 +61,22 @@ public interface PmphUserDao {
 
 	/**
 	 * 
-	 * 功能描述：查询表单的数据总条数 
+	 * 功能描述：查询表单的数据总条数
 	 *
 	 * @return 表单的总条数
 	 */
 	Long getPmphUserCount();
+
+	/**
+	 * 
+	 * 
+	 * 功能描述： 获取社内用户的
+	 *
+	 * @param page
+	 * @return
+	 *
+	 */
+	Integer getListPmphUserTotal(Page<PmphUserManagerVO, PmphUserManagerVO> page);
 
 	/**
 	 * 

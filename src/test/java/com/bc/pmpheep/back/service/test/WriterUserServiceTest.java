@@ -13,7 +13,6 @@ import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -123,7 +122,7 @@ public class WriterUserServiceTest extends BaseTest {
     public void getListWriterUserVO() {
         Page<WriterUserManagerVO, Map<String, String>> page = new Page<>();
         Map<String, String> map = new HashMap<>();
-        map.put("username", null);
+        map.put("username", " ");
         map.put("realname", null);
         map.put("orgName", null);
         page.setParameter(map);
