@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -12,8 +13,10 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +35,10 @@ public class PmphUserRealm extends AuthorizingRealm {
     private static final Logger logger = LoggerFactory.getLogger(PmphUserRealm.class);
     @Autowired
     private PmphUserService     userService;
+
+    public PmphUserRealm() {
+        super();
+    }
 
     /**
      * 授权
@@ -60,10 +67,10 @@ public class PmphUserRealm extends AuthorizingRealm {
             info.setRoles(new HashSet<>(roleSnList));
             info.setStringPermissions(new HashSet<>(resStrList));
             // 以上完成了动态地对用户授权
-            logger.debug("role => " + roleSnList);
-            logger.debug("permission => " + resStrList);
+            logger.info("role => " + roleSnList);
+            logger.info("permission => " + resStrList);
         } catch (Exception e) {
-            logger.debug("message => " + e);
+            logger.info("message => " + e);
         }
         return info;
     }
@@ -78,18 +85,10 @@ public class PmphUserRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
     throws AuthenticationException {
-        logger.info("--- MyRealm doGetAuthenticationInfo ---");
+        logger.info("--- MyRealm doGetAuthenticationInfo ---[SecondRealm] doGetAuthenticationInfo "
+                    + authenticationToken);
         String username = authenticationToken.getPrincipal().toString();
         String password = new String((char[]) authenticationToken.getCredentials());
-        // 以后我们使用 Spring 管理 Shiro 的时候，就不必要这样得到 UserService 了
-        // userService = (IUserService) InitServlet.getBean("userService");
-        // User user = userService.login(username,password);
-        // 这里应该使用 load 方法，比对用户名的密码的环节应该交给 Shiro 这个框架去完成
-
-        // 在测试调试的时候发现,这里还是应该使用 login 判断,因为登录不成功的原因有很多,
-        // 可以在登录的逻辑里面抛出各种异常
-        // 再到 subject.login(token) 里面去捕获对应的异常
-        // 显示不同的消息到页面上
         try {
             PmphUser user = userService.login(username, password);
             if (user != null) {
@@ -107,6 +106,15 @@ public class PmphUserRealm extends AuthorizingRealm {
         return null;
     }
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：更新身份验证信息缓存
+     * 使用示范：
+     *
+     * @param principals
+     * </pre>
+     */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     protected void clearCachedAuthenticationInfo(PrincipalCollection principals) {
@@ -134,6 +142,15 @@ public class PmphUserRealm extends AuthorizingRealm {
         }
     }
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：更新用户授权信息缓存
+     * 使用示范：
+     *
+     * @param principals
+     * </pre>
+     */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     protected void clearCachedAuthorizationInfo(PrincipalCollection principals) {
@@ -154,5 +171,28 @@ public class PmphUserRealm extends AuthorizingRealm {
             logger.info("说明【授权】缓存被清空了。");
         }
 
+    }
+
+    /**
+     * 将一些数据放到ShiroSession中,以便于其它地方使用
+     * 
+     * <pre>
+     * 功能描述：
+     * 使用示范：比如Controller,使用时直接用HttpSession.getAttribute(key)就可以取到
+     *
+     * @param key
+     * @param value
+     * </pre>
+     */
+    @SuppressWarnings("unused")
+    private void setSession(Object key, Object value) {
+        Subject subject = SecurityUtils.getSubject();
+        if (null != subject) {
+            Session session = subject.getSession();
+            logger.debug("Session默认超时时间为[" + session.getTimeout() + "]毫秒");
+            if (null != session) {
+                session.setAttribute(key, value);
+            }
+        }
     }
 }

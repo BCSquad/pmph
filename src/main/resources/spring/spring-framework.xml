@@ -14,10 +14,17 @@
           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
           http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.10.2.xsd
           http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
-    <!-- 注解扫描 -->
-    <context:component-scan base-package="com.bc.pmpheep.**">
+          
+	
+    <!-- 启动组件扫描，排除@Controller组件，该组件由SpringMVC配置文件扫描 -->
+    <!--<context:component-scan base-package="com.bc.pmpheep"></context:component-scan>
+      <context:component-scan base-package="com.bc.pmpheep.**">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
-    </context:component-scan>
+    </context:component-scan> -->
+       <context:component-scan base-package="com.bc.pmpheep.back.shiro.cache"/>
+       <context:component-scan base-package="com.bc.pmpheep.back.service"/>
+    
+    
     <!-- 加载属性文件 -->
     <context:property-placeholder location="classpath:spring/spring.properties" ignore-unresolvable="true" />
     <!-- 使用cglib进行动态代理 -->
@@ -83,11 +90,11 @@
             <tx:method name="find*" read-only="true" />
             <tx:method name="select*" read-only="true" />
             <!-- 对insert,update,delete,add 开头的方法进行事务管理,只要有异常就回滚 -->
-            <tx:method name="batch*" read-only="false" rollback-for="Exception" propagation="REQUIRED" />
-            <tx:method name="delete*" read-only="false" rollback-for="Exception" propagation="REQUIRED" />
-            <tx:method name="update*" read-only="false" rollback-for="Exception" propagation="REQUIRED" />
-            <tx:method name="add*" read-only="false" rollback-for="Exception" propagation="REQUIRED" />
-            <tx:method name="insert*" read-only="false" rollback-for="Exception" propagation="REQUIRED" />
+            <tx:method name="batch*" read-only="false" rollback-for="java.lang.Exception" propagation="REQUIRED" />
+            <tx:method name="delete*" read-only="false" rollback-for="java.lang.Exception" propagation="REQUIRED" />
+            <tx:method name="update*" read-only="false" rollback-for="java.lang.Exception" propagation="REQUIRED" />
+            <tx:method name="add*" read-only="false" rollback-for="java.lang.Exception" propagation="REQUIRED" />
+            <tx:method name="insert*" read-only="false" rollback-for="java.lang.Exception" propagation="REQUIRED" />
         </tx:attributes>
     </tx:advice>
     <!-- 事务入口 -->
