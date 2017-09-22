@@ -1,17 +1,19 @@
-package com.test;
+package com.bc.pmpheep.back.po;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
+
+import org.apache.ibatis.type.Alias;
 
 /**
- * DecEduExp entity. @author MyEclipse Persistence Tools
+ * 
+ * <p>Title:作家学习经历表实体类<p>
+ * <p>Description:作家学习经历信息<p>
+ * @author lyc
+ * @date 2017年9月22日 上午9:51:38
  */
-@Entity
-@Table(name = "dec_edu_exp", catalog = "pmph_imesp_db")
+
+@SuppressWarnings("serial")
+@Alias("DecEduExp")
 public class DecEduExp implements java.io.Serializable {
 
 	// Fields
@@ -32,17 +34,14 @@ public class DecEduExp implements java.io.Serializable {
 	public DecEduExp() {
 	}
 
-	/** minimal constructor */
-	public DecEduExp(Long declarationId, String schoolName, String major,
-			String degree, String dateBegin, String dateEnd, Integer sort) {
-		this.declarationId = declarationId;
-		this.schoolName = schoolName;
-		this.major = major;
-		this.degree = degree;
-		this.dateBegin = dateBegin;
-		this.dateEnd = dateEnd;
-		this.sort = sort;
+	
+
+	public DecEduExp(Long id) {
+		super();
+		this.id = id;
 	}
+
+
 
 	/** full constructor */
 	public DecEduExp(Long declarationId, String schoolName, String major,
@@ -58,88 +57,86 @@ public class DecEduExp implements java.io.Serializable {
 		this.sort = sort;
 	}
 
-	// Property accessors
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
 	public Long getId() {
-		return this.id;
+		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	@Column(name = "declaration_id", nullable = false)
 	public Long getDeclarationId() {
-		return this.declarationId;
+		return declarationId;
 	}
 
 	public void setDeclarationId(Long declarationId) {
 		this.declarationId = declarationId;
 	}
 
-	@Column(name = "school_name", nullable = false, length = 80)
 	public String getSchoolName() {
-		return this.schoolName;
+		return schoolName;
 	}
 
 	public void setSchoolName(String schoolName) {
 		this.schoolName = schoolName;
 	}
 
-	@Column(name = "major", nullable = false, length = 50)
 	public String getMajor() {
-		return this.major;
+		return major;
 	}
 
 	public void setMajor(String major) {
 		this.major = major;
 	}
 
-	@Column(name = "degree", nullable = false, length = 30)
 	public String getDegree() {
-		return this.degree;
+		return degree;
 	}
 
 	public void setDegree(String degree) {
 		this.degree = degree;
 	}
 
-	@Column(name = "note", length = 100)
 	public String getNote() {
-		return this.note;
+		return note;
 	}
 
 	public void setNote(String note) {
 		this.note = note;
 	}
 
-	@Column(name = "date_begin", nullable = false, length = 20)
 	public String getDateBegin() {
-		return this.dateBegin;
+		return dateBegin;
 	}
 
 	public void setDateBegin(String dateBegin) {
 		this.dateBegin = dateBegin;
 	}
 
-	@Column(name = "date_end", nullable = false, length = 20)
 	public String getDateEnd() {
-		return this.dateEnd;
+		return dateEnd;
 	}
 
 	public void setDateEnd(String dateEnd) {
 		this.dateEnd = dateEnd;
 	}
 
-	@Column(name = "sort", nullable = false)
 	public Integer getSort() {
-		return this.sort;
+		return sort;
 	}
 
 	public void setSort(Integer sort) {
 		this.sort = sort;
 	}
+
+	@Override
+	public String toString() {
+		return " {id:" + id + ", declarationId:" + declarationId
+				+ ", schoolName:" + schoolName + ", major:" + major
+				+ ", degree:" + degree + ", note:" + note + ", dateBegin:"
+				+ dateBegin + ", dateEnd:" + dateEnd + ", sort:" + sort + "}";
+	}
+
+	
 
 }
