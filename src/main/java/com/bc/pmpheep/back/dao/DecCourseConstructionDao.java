@@ -45,7 +45,7 @@ public interface DecCourseConstructionDao {
 	 * @Param id主键
 	 * @Return DecCourseConstruction实体对象
 	 */
-	DecCourseConstructionDao getDecCourseConstructionById(Long id);
+	DecCourseConstruction getDecCourseConstructionById(Long id);
 	
 	/**
 	 * Description:根据申报表id查询精品课程建设情况信息
