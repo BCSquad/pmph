@@ -65,7 +65,7 @@ public interface WriterUserDao {
 	 * @return 需要的作家用户集合
 	 * </pre>
 	 */
-	List<WriterUserManagerVO> getListWriterUser(Page<WriterUserManagerVO,Map<String, String>> page);
+	List<WriterUserManagerVO> getListWriterUser(Page<WriterUserManagerVO,WriterUserManagerVO> page);
 
 	/**
 	 * 
@@ -77,7 +77,7 @@ public interface WriterUserDao {
 	 * @return 查询到的条数
 	 * </pre>
 	 */
-	Integer getListWriterUserTotal(Page<WriterUserManagerVO,Map<String, String>> page);
+	Integer getListWriterUserTotal(Page<WriterUserManagerVO,WriterUserManagerVO> page);
 	
 	/**
      * 
