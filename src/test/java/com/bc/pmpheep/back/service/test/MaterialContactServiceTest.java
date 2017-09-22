@@ -28,7 +28,7 @@ public class MaterialContactServiceTest extends BaseTest {
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void test() throws Exception {
+    public void test() {
     	Random r =new Random();
     	MaterialContact testPar=new MaterialContact(new Long(r.nextInt(200)),new Long(r.nextInt(200)),"contactUserName", "contactPhone", "contactEmai");
     	logger.info("---TextbookService 测试---------------------------------------------------------------------------------");

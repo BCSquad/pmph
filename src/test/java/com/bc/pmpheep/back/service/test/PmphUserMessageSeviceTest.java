@@ -25,7 +25,7 @@ public class PmphUserMessageSeviceTest extends BaseTest {
 
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void addArea() throws Exception {
+	public void addArea() {
 		Random r= new Random();
 		PmphUserMessage a = new PmphUserMessage (new Long(String.valueOf(r.nextInt(200))),new Long(String.valueOf(r.nextInt(200))), true,false, null,null);
 		pmphUserMessageService.addPmphUserMessage (a);

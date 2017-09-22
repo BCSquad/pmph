@@ -11,6 +11,7 @@ import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.service.PmphRoleService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -29,7 +30,7 @@ public class PmphRoleServiceTest extends BaseTest {
 	 * PmphRole 添加Test
 	 */
 	@Test
-	@Rollback(false)
+	@Rollback(Const.ISROLLBACK)
 	public void addPmphRoleTest() {
 		PmphRole role = new PmphRole();
 		role.setRoleName("角色11");
@@ -43,7 +44,7 @@ public class PmphRoleServiceTest extends BaseTest {
 	 * PmphRole 修改Test
 	 */
 	@Test
-	@Rollback(false)
+	@Rollback(Const.ISROLLBACK)
 	public void updatePmphRoleTest() {
 		PmphRole pr = new PmphRole();
 		pr.setId(4L);
@@ -55,7 +56,7 @@ public class PmphRoleServiceTest extends BaseTest {
 	 * PmphRole 查询Test
 	 */
 	@Test
-	@Rollback(false)
+	@Rollback(Const.ISROLLBACK)
 	public void getPmphRoleTest() {
 		roleService.get(1L);// 按ID查询
 		roleService.getList();// 查询所有
@@ -69,7 +70,7 @@ public class PmphRoleServiceTest extends BaseTest {
 	 * PmphRole 删除Test
 	 */
 	@Test
-	@Rollback(false)
+	@Rollback(Const.ISROLLBACK)
 	public void deletePmphRoleTest() {
 		List<Long> list = new ArrayList<Long>();
 		list.add(1L);

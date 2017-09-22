@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bc.pmpheep.back.dao.OrgDao;
+import com.bc.pmpheep.back.dao.WriterProfileDao;
 import com.bc.pmpheep.back.dao.WriterRoleDao;
 import com.bc.pmpheep.back.dao.WriterUserDao;
 import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.WriterPermission;
+import com.bc.pmpheep.back.po.WriterProfile;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
@@ -40,7 +42,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 	@Autowired
 	WriterRoleDao writerRoleDao;
 	@Autowired
-	OrgDao orgDao;
+	WriterProfileDao writerProfileDao;
 
 	/**
 	 * 返回新插入用户数据的主键
@@ -349,6 +351,30 @@ public class WriterUserServiceImpl implements WriterUserService {
 		page.setTotal(total);
 
 		return page;
+	}
+
+	@Override
+	public String addWriterUserOfBack(WriterUser writerUser) throws CheckedServiceException {
+		Long num = writerUserDao.add(writerUser);
+		String result = "FAIL";
+		if (num > 0) {
+			WriterProfile writerProfile = new WriterProfile();
+			writerProfile.setUserId(num);
+			writerProfileDao.addWriterProfile(writerProfile);
+			result = "SUCCESS";
+		}
+		return result;
+	}
+
+	@Override
+	public String updateWriterUserOfBack(WriterUser writerUser) throws CheckedServiceException {
+		int num = writerUserDao.update(writerUser);
+		String result = "FAIL";
+		if (num > 0) {
+
+			result = "SUCCESS";
+		}
+		return result;
 	}
 
 	// /**

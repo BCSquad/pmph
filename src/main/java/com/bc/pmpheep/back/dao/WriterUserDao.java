@@ -25,9 +25,9 @@ public interface WriterUserDao {
 	 * 
 	 * @param pmphUser
 	 *            添加用户的详细信息
-	 * @return 影响的行数
+	 * @return 添加的主键
 	 */
-	Integer add(WriterUser user);
+	Long add(WriterUser user);
 
 	Integer update(WriterUser user);
 
@@ -57,59 +57,53 @@ public interface WriterUserDao {
 
 	/**
 	 * 
-	 * <pre>
 	 * 功能描述：分页查询作家用户
-	 * 使用示范：
 	 *
-	 * @param page 传入的查询条件
+	 * @param page
+	 *            传入的查询条件
 	 * @return 需要的作家用户集合
-	 * </pre>
 	 */
-	List<WriterUserManagerVO> getListWriterUser(Page<WriterUserManagerVO,WriterUserManagerVO> page);
+	List<WriterUserManagerVO> getListWriterUser(Page<WriterUserManagerVO, WriterUserManagerVO> page);
 
 	/**
 	 * 
-	 * <pre>
 	 * 功能描述： 查询总共的条数
-	 * 使用示范：
 	 *
-	 * @param page 传入查询条件
+	 * @param page
+	 *            传入查询条件
 	 * @return 查询到的条数
-	 * </pre>
 	 */
-	Integer getListWriterUserTotal(Page<WriterUserManagerVO,WriterUserManagerVO> page);
-	
+	Integer getListWriterUserTotal(Page<WriterUserManagerVO, WriterUserManagerVO> page);
+
 	/**
-     * 
-     * <pre>
-     * 功能描述：查询表单的数据总条数
-     * 使用示范：
-     *
-     * @return 表单的数据总条数
-     * </pre>
-     */
-    Long getWriterUserCount();
-//	/**
-//	 * 
-//	 * <pre>
-//	 * 功能描述：查询总条数
-//	 * 使用示范：
-//	 *
-//	 * @param page传入的查询条件
-//	 * @return 查询到的条数
-//	 * </pre>
-//	 */
-//	Integer getListTotal(Page<WriterUser, Map<String, String>> page);
-//	/**
-//     * 
-//     * <pre>
-//     * 功能描述：分页查询作家用户
-//     * 使用示范：
-//     *
-//     * @param page 传入的查询条件
-//     * @return 需要的作家用户集合
-//     * </pre>
-//     */
-//    List<WriterUser> getList(Page<WriterUser,Map<String, String>> page);
+	 * 
+	 * 功能描述：查询表单的数据总条数
+	 *
+	 * @return 表单的数据总条数
+	 */
+	Long getWriterUserCount();
+
+	// /**
+	// *
+	// * <pre>
+	// * 功能描述：查询总条数
+	// * 使用示范：
+	// *
+	// * @param page传入的查询条件
+	// * @return 查询到的条数
+	// * </pre>
+	// */
+	// Integer getListTotal(Page<WriterUser, Map<String, String>> page);
+	// /**
+	// *
+	// * <pre>
+	// * 功能描述：分页查询作家用户
+	// * 使用示范：
+	// *
+	// * @param page 传入的查询条件
+	// * @return 需要的作家用户集合
+	// * </pre>
+	// */
+	// List<WriterUser> getList(Page<WriterUser,Map<String, String>> page);
 
 }

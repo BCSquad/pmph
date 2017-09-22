@@ -17,6 +17,7 @@ import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.WriterUserService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
@@ -146,7 +147,7 @@ public class WriterUserServiceTest extends BaseTest {
 	 * PmphUser 添加Test
 	 */
 	// @Test
-	// @Rollback(false)
+	// @Rollback(Const.ISROLLBACK)
 	public void addPmphUserTest() {
 		try {
 			List<Long> roleIdList = new ArrayList<Long>();
@@ -172,7 +173,7 @@ public class WriterUserServiceTest extends BaseTest {
 	 * PmphUser 添加删除
 	 */
 	// @Test
-	// @Rollback(false)
+	// @Rollback(Const.ISROLLBACK)
 	public void deletePmphUserTest() {
 		Integer aInteger = 0;
 		try {
@@ -222,7 +223,7 @@ public class WriterUserServiceTest extends BaseTest {
 	 * PmphUser 更新方法
 	 */
 	// @Test
-	// @Rollback(false)
+	// @Rollback(Const.ISROLLBACK)
 	public void updatePmphUserTest() {
 		WriterUser pmphUser = new WriterUser();
 		pmphUser.setId(18L);

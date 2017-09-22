@@ -22,7 +22,7 @@ public class PmphGroupMessageServiceTest extends BaseTest {
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void test() throws Exception {
+    public void test() {
     	Random r =new Random();
     	PmphGroupMessage testPar=new PmphGroupMessage(new Long(r.nextInt(200)), new Long(r.nextInt(200)), "String msgContent", null);  ;
     	logger.info("---PmphGroupMessageService 测试---------------------------------------------------------------------------------");

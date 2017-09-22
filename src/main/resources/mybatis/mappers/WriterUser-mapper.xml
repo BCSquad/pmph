@@ -206,6 +206,10 @@
 	</sql>
 	<insert id="add" parameterType="WriterUser" useGeneratedKeys="true"
 		keyProperty="id">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
 		INSERT INTO writer_user
 		(
 		<include refid="key" />
@@ -478,6 +482,21 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
+	<!-- 后台作家用户管理页面添加用户 -->
+	<insert id="addWriterUserOfBack" parameterType="WriterUser">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO writer_user
+		(
+		<include refid="key" />
+		)
+		VALUES
+		(
+		<include refid="value" />
+		);
+	</insert>
 
 	<!-- 查询表单的数据总条数 -->
 	<select id="getWriterUserCount" resultType="java.lang.Long">

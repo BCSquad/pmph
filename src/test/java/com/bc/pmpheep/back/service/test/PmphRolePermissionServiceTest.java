@@ -24,7 +24,7 @@ public class PmphRolePermissionServiceTest extends BaseTest {
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void test() throws Exception {
+    public void test(){
     	Random r =new Random();
     	PmphRolePermission testPar=new PmphRolePermission(new Long(r.nextInt(200)), new Long(r.nextInt(200)))  ;
     	logger.info("---PmphRolePermissionService 测试---------------------------------------------------------------------------------");
