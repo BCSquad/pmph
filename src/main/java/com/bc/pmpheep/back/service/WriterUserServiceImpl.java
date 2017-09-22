@@ -75,7 +75,6 @@ public class WriterUserServiceImpl implements WriterUserService {
 	 * @param user
 	 * @param rids
 	 */
-	@Transactional
 	@Override
 	public WriterUser add(WriterUser user, List<Long> rids) throws CheckedServiceException {
 		Long userId = this.add(user).getId();
@@ -102,7 +101,6 @@ public class WriterUserServiceImpl implements WriterUserService {
 	}
 
 	@Override
-	@Transactional
 	public void deleteUserAndRole(List<Long> ids) throws CheckedServiceException {
 		if (ids.contains(1)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
@@ -124,7 +122,6 @@ public class WriterUserServiceImpl implements WriterUserService {
 	 * @param user
 	 * @param rids
 	 */
-	@Transactional
 	@Override
 	public WriterUser update(WriterUser user, List<Long> rids) throws CheckedServiceException {
 		Long userId = user.getId();

@@ -23,7 +23,6 @@ public class OrgTypeSeviceTest extends BaseTest {
 	private OrgTypeService orgTypeService;
 	
     @Test
-    @Transactional  
     @Rollback(Const.ISROLLBACK) 
     public void addArea() {
     	OrgType a=new OrgType("测试",0);

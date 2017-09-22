@@ -5,6 +5,8 @@ package com.bc.pmpheep.back.dao;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 
 /**
@@ -15,6 +17,7 @@ import com.bc.pmpheep.back.po.DecCourseConstruction;
  * @author lyc
  * @date 2017年9月22日 下午3:34:58
  */
+@Repository
 public interface DecCourseConstructionDao {
 	/**
 	 * Description:新增一个精品课程建设情况信息

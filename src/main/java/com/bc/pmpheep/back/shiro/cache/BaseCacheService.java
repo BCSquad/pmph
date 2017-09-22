@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.shiro.cache;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 
@@ -25,6 +26,7 @@ public class BaseCacheService implements InitializingBean {
     /**
      * Spring 的 Cache
      */
+    @Autowired
     private CacheManager cacheManager;
     private Cache        cache;
     private String       cacheName;
