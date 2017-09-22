@@ -1,21 +1,15 @@
 package com.bc.pmpheep.back.service;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.bc.pmpheep.back.dao.OrgDao;
 import com.bc.pmpheep.back.dao.WriterRoleDao;
 import com.bc.pmpheep.back.dao.WriterUserDao;
 import com.bc.pmpheep.back.plugin.Page;
-import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
@@ -73,7 +67,6 @@ public class WriterUserServiceImpl implements WriterUserService {
      * @param user
      * @param rids
      */
-    @Transactional
     @Override
     public WriterUser add(WriterUser user, List<Long> rids) throws CheckedServiceException {
         Long userId = this.add(user).getId();
@@ -92,19 +85,18 @@ public class WriterUserServiceImpl implements WriterUserService {
      */
     @Override
     public void delete(Long id) throws CheckedServiceException {
-        if (1 == id) {
+        if (null == id) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "不能删除管理员用户！");
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除用户！");
         }
         writerUserDao.delete(id);
     }
 
     @Override
-    @Transactional
     public void deleteUserAndRole(List<Long> ids) throws CheckedServiceException {
-        if (ids.contains(1)) {
+        if (0 < ids.size()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "不能删除管理员用户！");
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除用户！");
         }
         // 删除用户列表
         writerUserDao.batchDelete(ids);
@@ -122,7 +114,6 @@ public class WriterUserServiceImpl implements WriterUserService {
      * @param user
      * @param rids
      */
-    @Transactional
     @Override
     public WriterUser update(WriterUser user, List<Long> rids) throws CheckedServiceException {
         Long userId = user.getId();
@@ -326,8 +317,9 @@ public class WriterUserServiceImpl implements WriterUserService {
                     break;
 
                 default:
-                    throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
-                                                       CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
+                    throw new CheckedServiceException(
+                                                      CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
+                                                      CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
                 }
             }
             page.setRows(list);
