@@ -55,7 +55,7 @@
 		</trim>
 	</sql>
 
-	<!-- 新增DecAcade -->
+	<!-- 新增DecCourseConstruction -->
 	<insert id="addDecCourseConstruction" parameterType="DecCourseConstruction">
 		<selectKey resultType="java.lang.Long" order="AFTER"
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或AFTER -->
@@ -69,14 +69,14 @@
 		);
 	</insert>
 
-	<!-- 根据id删除一个兼职学术组织信息 -->
+	<!-- 根据id删除一个精品课程建设情况信息 -->
 	<delete id="deleteDecCourseConstrction" parameterType="java.lang.Long">
 		delete from
 		dec_course_construction where
 		id=#{id};
 	</delete>
 
-	<!-- 更新兼职学术组织信息 -->
+	<!-- 更新精品课程建设情况信息 -->
 	<update id="updateDecCourseCnstruction" parameterType="DecCourseConstruction">
 		update dec_course_construction
 		<set>
@@ -102,20 +102,20 @@
 		where id=#{id} ;
 	</update>
 
-	<!-- 根据id查询一个兼职学术组织信息 -->
+	<!-- 根据id查询一个精品课程建设情况信息 -->
 	<select id="getDecCourseConstructionById" parameterType="java.lang.Long"
 		resultType="DecCourseConstruction">
 		select * from dec_course_construction where id=#{id};
 	</select>
 
-	<!-- 根据declarationId查询兼职学术组织信息 -->
+	<!-- 根据declarationId查询精品课程建设情况信息 -->
 	<select id="getDecCourseConstructionByDeclarationId" parameterType="java.lang.Long"
 		resultType="DecCourseConstruction">
 		select * from dec_course_construction where
 		declaration_id=#{declarationId};
 	</select>
 
-	<!-- 查询兼职学术信息表的总记录数 -->
+	<!-- 查询精品课程建设情况信息总记录数 -->
 	<select id="getDecCourseConstruction" resultType="java.lang.Long">
 		select count(*) from dec_course_construction
 	</select>
