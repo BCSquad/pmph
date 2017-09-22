@@ -285,42 +285,42 @@ public class WriterUserServiceImpl implements WriterUserService {
 
 	/**
 	 * 
-	 * <pre>
 	 * 功能描述：分页查询作家用户
-	 * 使用示范：
+	 * 
 	 *
-	 * &#64;param page 传入的查询数据
-	 * &#64;return 需要的Page对象
-	 * </pre>
+	 * @param page
+	 *            传入的查询数据
+	 * @return 需要的Page对象
 	 */
 	@Override
-	public Page<WriterUserManagerVO, Map<String, String>> getListWriterUser(
-			Page<WriterUserManagerVO, Map<String, String>> page) throws CheckedServiceException {
-		if (null != page.getParameter().get("username")) {
-			String username = page.getParameter().get("username").trim();
+	public Page<WriterUserManagerVO, WriterUserManagerVO> getListWriterUser(
+			Page<WriterUserManagerVO, WriterUserManagerVO> page) throws CheckedServiceException {
+		if (null != page.getParameter().getUsername()) {
+			String username = page.getParameter().getUsername().trim();
 			if (!username.equals("")) {
-				page.getParameter().put("username", "%" + username + "%");
+				page.getParameter().setUsername("%" + username + "%");
 			} else {
-				page.getParameter().put("username", username);
+				page.getParameter().setUsername(username);
 			}
 		}
-		if (null != page.getParameter().get("realname")) {
-			String realname = page.getParameter().get("realname").trim();
+		if (null != page.getParameter().getRealname()) {
+			String realname = page.getParameter().getRealname().trim();
 			if (!realname.equals("")) {
-				page.getParameter().put("realname", "%" + realname + "%");
+				page.getParameter().setRealname("%" + realname + "%");
 			} else {
-				page.getParameter().put("realname", realname);
+				page.getParameter().setRealname(realname);
 			}
 
 		}
-		if (null != page.getParameter().get("orgName")) {
-			String orgName = page.getParameter().get("orgName").trim();
+		if (null != page.getParameter().getOrgName()) {
+			String orgName = page.getParameter().getOrgName().trim();
 			if (!orgName.equals("")) {
-				page.getParameter().put("orgName", "%" + orgName + "%");
+				page.getParameter().setOrgName("%" + orgName + "%");
 			} else {
-				page.getParameter().put("orgName", orgName);
+				page.getParameter().setOrgName(orgName);
 			}
 		}
+
 		int total = writerUserDao.getListWriterUserTotal(page);
 		if (total > 0) {
 			List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(page);

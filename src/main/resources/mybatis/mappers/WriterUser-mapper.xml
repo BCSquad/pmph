@@ -452,6 +452,9 @@
 		<if test="parameter.orgName !=null and parameter.orgName !=''">
 			and o.org_name like #{parameter.orgName}
 		</if>
+		<if test="parameter.rank !=null">
+			and w.rank = #{parameter.rank}
+		</if>
 	</select>
 	<select id="getListWriterUser" parameterType="Page"
 		resultType="WriterUserManagerVO">
@@ -467,6 +470,9 @@
 		</if>
 		<if test="parameter.orgName !=null and parameter.orgName !=''">
 			and o.org_name like #{parameter.orgName}
+		</if>
+		<if test="parameter.rank !=null">
+			and w.rank = #{parameter.rank}
 		</if>
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}

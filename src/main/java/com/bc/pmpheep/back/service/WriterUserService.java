@@ -138,7 +138,7 @@ public interface WriterUserService {
 	 * @return
 	 * </pre>
 	 */
-	Page<WriterUserManagerVO,Map<String, String>> getListWriterUser(Page<WriterUserManagerVO,Map<String, String>> page) throws CheckedServiceException;
+	Page<WriterUserManagerVO,WriterUserManagerVO> getListWriterUser(Page<WriterUserManagerVO,WriterUserManagerVO> page) throws CheckedServiceException;
 //	/**
 //	 * 
 //	 * <pre>
