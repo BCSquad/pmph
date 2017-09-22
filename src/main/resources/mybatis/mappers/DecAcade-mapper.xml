@@ -82,7 +82,7 @@
 		update dec_acade
 		<set>
 			<if test="declarationId !=null and declarationId !=''">
-				declaration_id = #{declaration_id},
+				declaration_id = #{declarationId},
 			</if>
 			<if test="orgName !=null and orgName !=''">
 				org_name = #{orgName},
