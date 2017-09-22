@@ -1,22 +1,15 @@
 package com.bc.pmpheep.back.service;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.bc.pmpheep.back.dao.OrgDao;
 import com.bc.pmpheep.back.dao.WriterProfileDao;
 import com.bc.pmpheep.back.dao.WriterRoleDao;
 import com.bc.pmpheep.back.dao.WriterUserDao;
 import com.bc.pmpheep.back.plugin.Page;
-import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterProfile;
 import com.bc.pmpheep.back.po.WriterRole;
@@ -93,9 +86,9 @@ public class WriterUserServiceImpl implements WriterUserService {
 	 */
 	@Override
 	public void delete(Long id) throws CheckedServiceException {
-		if (1 == id) {
+		if (null == id) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.ILLEGAL_PARAM, "不能删除管理员用户！");
+					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除用户！");
 		}
 		writerUserDao.delete(id);
 	}
@@ -112,7 +105,6 @@ public class WriterUserServiceImpl implements WriterUserService {
 		for (Long userId : ids) {
 			writerRoleDao.deleteUserRoles(userId);
 		}
-
 	}
 
 	/**
@@ -286,7 +278,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 	 * 
 	 * 功能描述：分页查询作家用户
 	 * 
-	 *
+	 * 
 	 * @param page
 	 *            传入的查询数据
 	 * @return 需要的Page对象
