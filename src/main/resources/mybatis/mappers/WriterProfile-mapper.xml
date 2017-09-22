@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.WriterProfile">
+
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id !=null">
+				id,
+			</if>
+			<if test="userId !=null and userId !=''">
+				user_id,
+			</if>
+			<if test="profile !=null and profile !=''">
+				profile,
+			</if>
+			<if test="tag !=null and tag !=''">
+				tag,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<trim suffixOverrides=",">
+			<if test="id !=null">
+				#{id},
+			</if>
+			<if test="user_id !=null and user_id !=''">
+				#{user_id},
+			</if>
+			<if test="profile !=null and profile !=''">
+				#{profile},
+			</if>
+			<if test="tag !=null and tag !=''">
+				#{tag},
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 新增WriterProfile -->
+	<insert id="addWriterProfile" parameterType="WriterProfile">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into writer_profile(
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+
+	<!-- 根据id删除一个作家个人简介与标签信息 -->
+	<delete id="deleteWriterProfileById" parameterType="java.lang.Long">
+		delete from
+		writer_profile where
+		id=#{id};
+	</delete>
+
+	<!-- 更新作家个人简介与标签信息 -->
+	<update id="updateWriterProfile" parameterType="WriterProfile">
+		update writer_profile
+		<set>
+			<if test="userId !=null and userId !=''">
+				user_id = #{userId},
+			</if>
+			<if test="profile !=null and profile !=''">
+				profile = #{profile},
+			</if>
+			<if test="tag !=null and tag !=''">
+				tag = #{tag},
+			</if>
+		</set>
+		where id=#{id} ;
+	</update>
+
+	<!-- 根据id查询一个作家个人简介与标签信息 -->
+	<select id="getWriterProfileById" parameterType="java.lang.Long"
+		resultType="WriterProfile">
+		select * from writer_profile where id=#{id};
+	</select>
+
+	<!-- 查询作家个人简介与标签信息表的总记录数 -->
+	<select id="getWriterProfile" resultType="java.lang.Long">
+		select count(*) from
+		writer_profile
+	</select>
+</mapper>
