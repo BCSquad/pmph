@@ -71,5 +71,11 @@
 	<select id="getWriterUserRoleById" parameterType="java.lang.Long" resultType="WriterUserRole">
 		select * from writer_user_role where id=#{id} ;
 	</select>
+	
+		<!-- 查询表单的数据总条数 -->
+	<select id="getWriterUserRoleCount"  resultType="java.lang.Long">
+		select count(*) from writer_user_role ;
+	</select>
+	
 
 </mapper>

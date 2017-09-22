@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
+
+import com.bc.pmpheep.back.dao.MaterialContactDao;
 import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.MaterialContactService;
@@ -21,6 +23,8 @@ public class MaterialContactServiceTest extends BaseTest {
 	
 	@Resource
 	private MaterialContactService testService;
+	@Resource
+	MaterialContactDao materialContactDao;
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
@@ -28,6 +32,8 @@ public class MaterialContactServiceTest extends BaseTest {
     	Random r =new Random();
     	MaterialContact testPar=new MaterialContact(new Long(r.nextInt(200)),new Long(r.nextInt(200)),"contactUserName", "contactPhone", "contactEmai");
     	logger.info("---TextbookService 测试---------------------------------------------------------------------------------");
+    	Long num = materialContactDao.getMaterialContactCount();
+    	logger.info("一共有{}", num);
     	//新增
     	testService.addMaterialContact(testPar);
     	logger.info(testPar.toString());

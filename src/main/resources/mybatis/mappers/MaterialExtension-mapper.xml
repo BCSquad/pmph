@@ -83,4 +83,11 @@
 		select * from material_extension where id=#{id} ;
 	</select>
 
+	<!-- 查询表单的数据总数 -->
+	<select id="getMaterialExtensionCount" resultType="Long">
+		select
+		count(*)
+		from
+		material_extension
+	</select>
 </mapper>

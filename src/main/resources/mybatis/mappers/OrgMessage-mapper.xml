@@ -69,5 +69,12 @@
 		resultType="OrgMessage">
 		select * from org_message where id=#{id} ;
 	</select>
+	<!-- 查询表单的数据总数 -->
+	<select id="getOrgMessageCount" resultType="Long">
+		select
+		count(*)
+		from
+		org_message
+	</select>
 
 </mapper>

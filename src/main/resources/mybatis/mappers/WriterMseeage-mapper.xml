@@ -72,4 +72,10 @@
 		;
 	</select>
 
+	<!-- 查询表单的数据总数 -->
+	<select id="getWriterMessageCount" resultType="Long">
+		select count(*)
+		from writer_message
+	</select>
+
 </mapper>

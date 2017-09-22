@@ -1,18 +1,27 @@
 package com.bc.pmpheep.back.service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bc.pmpheep.back.dao.OrgDao;
 import com.bc.pmpheep.back.dao.WriterRoleDao;
 import com.bc.pmpheep.back.dao.WriterUserDao;
+import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Tools;
+import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -27,9 +36,11 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class WriterUserServiceImpl implements WriterUserService {
 
     @Autowired
-    WriterUserDao userDao;
+    WriterUserDao writerUserDao;
     @Autowired
-    WriterRoleDao roleDao;
+    WriterRoleDao writerRoleDao;
+    @Autowired
+    OrgDao        orgDao;
 
     /**
      * 返回新插入用户数据的主键
@@ -52,7 +63,7 @@ public class WriterUserServiceImpl implements WriterUserService {
         }
         // 使用用户名作为盐值，MD5 算法加密
         user.setPassword(ShiroKit.md5(user.getPassword(), user.getUsername()));
-        userDao.add(user);
+        writerUserDao.add(user);
         return user;
     }
 
@@ -70,7 +81,7 @@ public class WriterUserServiceImpl implements WriterUserService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时不能添加角色！");
         }
-        roleDao.addUserRoles(userId, rids);
+        writerRoleDao.addUserRoles(userId, rids);
         return user;
     }
 
@@ -85,7 +96,7 @@ public class WriterUserServiceImpl implements WriterUserService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.ILLEGAL_PARAM, "不能删除管理员用户！");
         }
-        userDao.delete(id);
+        writerUserDao.delete(id);
     }
 
     @Override
@@ -96,10 +107,10 @@ public class WriterUserServiceImpl implements WriterUserService {
                                               CheckedExceptionResult.ILLEGAL_PARAM, "不能删除管理员用户！");
         }
         // 删除用户列表
-        userDao.batchDelete(ids);
+        writerUserDao.batchDelete(ids);
         // 依次删除这些用户所绑定的角色
         for (Long userId : ids) {
-            roleDao.deleteUserRoles(userId);
+            writerRoleDao.deleteUserRoles(userId);
         }
 
     }
@@ -119,8 +130,8 @@ public class WriterUserServiceImpl implements WriterUserService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
         }
-        roleDao.deleteUserRoles(userId);
-        roleDao.addUserRoles(userId, rids);
+        writerRoleDao.deleteUserRoles(userId);
+        writerRoleDao.addUserRoles(userId, rids);
         this.update(user);
         return user;
     }
@@ -141,7 +152,7 @@ public class WriterUserServiceImpl implements WriterUserService {
         if (password != null) {
             user.setPassword(ShiroKit.md5(user.getPassword(), user.getUsername()));
         }
-        userDao.update(user);
+        writerUserDao.update(user);
         return user;
     }
 
@@ -157,7 +168,7 @@ public class WriterUserServiceImpl implements WriterUserService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
-        return userDao.get(id);
+        return writerUserDao.get(id);
     }
 
     /**
@@ -172,7 +183,7 @@ public class WriterUserServiceImpl implements WriterUserService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
         }
-        return userDao.getByUserName(username);
+        return writerUserDao.getByUserName(username);
     }
 
     /**
@@ -184,7 +195,7 @@ public class WriterUserServiceImpl implements WriterUserService {
      */
     @Override
     public WriterUser login(String username, String password) throws CheckedServiceException {
-        WriterUser user = userDao.getByUserName(username);
+        WriterUser user = writerUserDao.getByUserName(username);
         // 密码匹配的工作交给 Shiro 去完成
         if (user == null) {
             // 因为缓存切面的原因,在这里就抛出用户名不存在的异常
@@ -211,7 +222,7 @@ public class WriterUserServiceImpl implements WriterUserService {
      */
     @Override
     public List<WriterUser> getList() throws CheckedServiceException {
-        return userDao.getListUser();
+        return writerUserDao.getListUser();
     }
 
     /**
@@ -226,7 +237,7 @@ public class WriterUserServiceImpl implements WriterUserService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
         }
-        return userDao.getListByRole(id);
+        return writerUserDao.getListByRole(id);
     }
 
     /**
@@ -241,7 +252,7 @@ public class WriterUserServiceImpl implements WriterUserService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
         }
-        return userDao.getListAllResources(uid);
+        return writerUserDao.getListAllResources(uid);
     }
 
     /**
@@ -256,7 +267,7 @@ public class WriterUserServiceImpl implements WriterUserService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
         }
-        return userDao.getListRoleSnByUser(uid);
+        return writerUserDao.getListRoleSnByUser(uid);
     }
 
     /**
@@ -271,7 +282,116 @@ public class WriterUserServiceImpl implements WriterUserService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
         }
-        return userDao.getListUserRole(uid);
+        return writerUserDao.getListUserRole(uid);
     }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：分页查询作家用户
+     * 使用示范：
+     *
+     * @param page 传入的查询数据
+     * @return 需要的Page对象
+     * </pre>
+     */
+    @Override
+    public Page<WriterUserManagerVO, Map<String, String>> getListWriterUser(
+    Page<WriterUserManagerVO, Map<String, String>> page) throws CheckedServiceException {
+        if (null != page.getParameter().get("username")) {
+            page.getParameter().put("username", "%" + page.getParameter().get("username") + "%");
+        }
+        if (null != page.getParameter().get("realname")) {
+            page.getParameter().put("realname", "%" + page.getParameter().get("realname") + "%");
+        }
+        if (null != page.getParameter().get("orgName")) {
+            page.getParameter().put("orgName", "%" + page.getParameter().get("orgName") + "%");
+        }
+        int total = writerUserDao.getListWriterUserTotal(page);
+        if (total > 0) {
+            List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(page);
+            for (WriterUserManagerVO vo : list) {
+                switch (vo.getRank()) {
+                case 0:
+                    vo.setRankName("普通用户");
+                    break;
+                case 1:
+                    vo.setRankName("教师用户");
+                    break;
+                case 2:
+                    vo.setRankName("作家用户");
+                    break;
+                case 3:
+                    vo.setRankName("专家用户");
+                    break;
+
+                default:
+                    throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
+                                                       CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
+                }
+            }
+            page.setRows(list);
+        }
+        page.setTotal(total);
+
+        return page;
+    }
+
+    // /**
+    // *
+    // * <pre>
+    // * 功能描述：分页查询作家用户
+    // * 使用示范：
+    // *
+    // * @param page 传入的查询数据
+    // * @return 需要的Page对象
+    // * </pre>
+    // * @throws ReflectiveOperationException
+    // */
+    // @Override
+    // public Page<WriterUserManagerVO, Map<String, String>> getListWriter(Page<WriterUser,
+    // Map<String, String>> page) throws CheckedServiceException, ReflectiveOperationException {
+    // if (null != page.getParameter().get("username")) {
+    // page.getParameter().put("username", "%" + page.getParameter().get("username") + "%");
+    // }
+    // if (null != page.getParameter().get("realname")) {
+    // page.getParameter().put("realname", "%" + page.getParameter().get("realname") + "%");
+    // }
+    // if (null != page.getParameter().get("orgName")) {
+    // page.getParameter().put("orgName", "%" + page.getParameter().get("orgName") + "%");
+    // }
+    // List<Org> orgs = orgDao.getListOrgByOrgName(page.getParameter().get("orgName"));
+    // String orgId = "";
+    // Map<Long, String> map = new HashMap<>();
+    // for (Org org : orgs) {
+    // orgId += "," + org.getId();
+    // map.put(org.getId(), org.getOrgName());
+    // }
+    // if (orgId.equals("")) {
+    // throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
+    // CheckedExceptionResult.NULL_PARAM, "没有找到该机构");
+    // } else {
+    // orgId = orgId.substring(1);
+    // page.getParameter().put("orgId", orgId);
+    // }
+    // Page<WriterUserManagerVO, Map<String, String>> pageVO = new Page<>();
+    // int total = writerUserDao.getListTotal(page);
+    // if (total > 0) {
+    // List<WriterUserManagerVO> writerUserManagerVOs = new ArrayList<>();
+    // List<WriterUser> writerUsers = writerUserDao.getList(page);
+    // for(WriterUser writerUser : writerUsers){
+    // WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
+    // BeanUtils.copyProperties(writerUserManagerVO, writerUser);
+    // writerUserManagerVO.setOrgName(map.get(writerUser.getOrgId()));
+    // writerUserManagerVOs.add(writerUserManagerVO);
+    // }
+    //
+    // pageVO.setFirst(page.isFirst());
+    // pageVO.setLast(page.isLast());
+    // pageVO.setPageTotal(total);
+    // pageVO.setRows(writerUserManagerVOs);
+    // }
+    // return pageVO;
+    // }
 
 }

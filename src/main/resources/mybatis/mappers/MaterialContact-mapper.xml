@@ -98,4 +98,11 @@
 		select * from material_contact where id=#{id} ;
 	</select>
 
+	<!-- 查询表单的数据总数 -->
+	<select id="getMaterialContactCount" resultType="Long">
+		select
+		count(*)
+		from
+		material_contact
+	</select>
 </mapper>

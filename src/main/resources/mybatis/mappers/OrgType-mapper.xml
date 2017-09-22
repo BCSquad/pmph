@@ -66,5 +66,12 @@
 		resultType="OrgType">
 		select * from org_type where id=#{id} ;
 	</select>
+	<!-- 查询表单的数据总数 -->
+	<select id="getOrgTypeCount" resultType="Long">
+		select
+		count(*)
+		from
+		org_type
+	</select>
 
 </mapper>

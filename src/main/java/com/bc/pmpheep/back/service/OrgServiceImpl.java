@@ -32,7 +32,11 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 		if(null==org.getOrgName()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构名称为空");
 		}
+		Long id = org.getId();
 		orgDao.addOrg(org);
+		if(null != id){
+			org.setId(id);
+		}
 		return org;
 	}
 	

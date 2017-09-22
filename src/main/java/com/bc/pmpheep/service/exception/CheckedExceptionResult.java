@@ -9,11 +9,42 @@ package com.bc.pmpheep.service.exception;
  *
  * @author L.X <gugia@qq.com>
  */
-public class CheckedExceptionResult {
+public enum CheckedExceptionResult {
 
-    public static final String SUCCESS = "操作成功";
-    
-    public static final String NULL_PARAM = "参数为空";
-    
-    public static final String ILLEGAL_PARAM = "参数错误";
+    SUCCESS(1, "操作成功"),
+    NULL_PARAM(2, "参数错误"),
+    ILLEGAL_PARAM(3, "参数为空"),
+    VO_CONVERSION_FAILED(4, "视图对象转换失败");
+
+    private final int value;
+    private final String message;
+
+    private CheckedExceptionResult(int value, String message) {
+        this.value = value;
+        this.message = message;
+    }
+
+    public static CheckedExceptionResult getEnumByValue(int value) {
+        for (CheckedExceptionResult result : CheckedExceptionResult.values()) {
+            if (result.getValue() == value) {
+                return result;
+            }
+        }
+        return null;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+//    public static final String SUCCESS = "操作成功";
+//
+//    public static final String NULL_PARAM = "参数为空";
+//
+//    public static final String ILLEGAL_PARAM = "参数错误";
+//
+//    public static final String VO_CONVERSION_FAILED = "视图对象转换失败";
 }

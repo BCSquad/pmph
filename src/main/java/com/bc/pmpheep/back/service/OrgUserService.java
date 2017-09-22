@@ -1,6 +1,10 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.Map;
+
+import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.OrgUser;
+import com.bc.pmpheep.back.vo.OrgUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -38,4 +42,16 @@ public interface  OrgUserService {
 	 * @throws CheckedServiceException
 	 */
 	Integer updateOrgUser(OrgUser orgUser) throws CheckedServiceException;
+	
+	/**
+     * 
+     * <pre>
+     * 功能描述：分页查询作家用户
+     * 使用示范：
+     *
+     * @param page 传入的查询条件
+     * @return
+     * </pre>
+     */
+    Page<OrgUserManagerVO,Map<String, String>> getListOrgUser(Page<OrgUserManagerVO,Map<String, String>> page) throws CheckedServiceException;
 }

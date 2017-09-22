@@ -6,6 +6,9 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
+			<if test="id !=null "> 
+		        id,
+		    </if>
 			<if test="parentId != null and parentId !=''">
 				parent_id,
 			</if>
@@ -39,6 +42,9 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
+			<if test="id !=null "> 
+		    	#{id},
+		    </if>
 			<if test="parentId !=null and parentId !=''">
 				#{parentId},
 			</if>
@@ -130,5 +136,20 @@
 		resultType="Org">
 		select * from org where id=#{id} ;
 	</select>
+	<!-- 根据orgName模糊查询Org -->
+	<select id="getListOrgByOrgName" parameterType="java.lang.String"
+		resultType="Org">
+		select * from org where 1=1
+		<if test="orgName !=null">
+			and org_name like #{orgName}
+		</if>
+	</select>
 
+	<!-- 查询表单的数据总数 -->
+	<select id="getOrgCount" resultType="Long">
+		select
+		count(*)
+		from
+		org
+	</select>
 </mapper>

@@ -1,6 +1,9 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import com.bc.pmpheep.back.po.PmphGroup;
+import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -39,4 +42,15 @@ public interface  PmphGroupService {
 	 * @throws CheckedServiceException
 	 */
 	Integer updatePmphGroup(PmphGroup pmphGroup) throws CheckedServiceException;
+	
+	/**
+	 * 
+	 * @introduction  根据小组名称模糊查询获取当前用户的小组
+	 * @author Mryang
+	 * @createDate 2017年9月20日 下午4:45:48
+	 * @param pmphGroup
+	 * @return List<PmphGroupListVO>
+	 * @throws CheckedServiceException 
+	 */
+	public List<PmphGroupListVO> getList(PmphGroup pmphGroup) throws CheckedServiceException ;
 }

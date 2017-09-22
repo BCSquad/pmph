@@ -14,21 +14,21 @@ public class CheckedServiceException extends RuntimeException {
 
     private final String business;
 
-    private final String result;
+    private final CheckedExceptionResult result;
 
-    public CheckedServiceException(String business, String result, String message) {
+    public CheckedServiceException(String business, CheckedExceptionResult result, String message) {
         super(message);
         this.business = business;
         this.result = result;
     }
 
-    public CheckedServiceException(String business, String result, String message, Throwable cause) {
+    public CheckedServiceException(String business, CheckedExceptionResult result, String message, Throwable cause) {
         super(message, cause);
         this.business = business;
         this.result = result;
     }
 
-    public CheckedServiceException(String business, String result, Throwable cause) {
+    public CheckedServiceException(String business, CheckedExceptionResult result, Throwable cause) {
         super(cause);
         this.business = business;
         this.result = result;
@@ -39,7 +39,7 @@ public class CheckedServiceException extends RuntimeException {
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString()).append(" - [业务类型: ");
         sb.append(this.business).append("] <");
-        sb.append("异常结果: ").append(this.result).append("> ");
+        sb.append("异常结果: ").append(this.result.getMessage()).append("> ");
         sb.append(this.getMessage());
         return sb.toString();
     }
@@ -48,7 +48,7 @@ public class CheckedServiceException extends RuntimeException {
         return business;
     }
 
-    public String getResult() {
+    public CheckedExceptionResult getResult() {
         return result;
     }
 }

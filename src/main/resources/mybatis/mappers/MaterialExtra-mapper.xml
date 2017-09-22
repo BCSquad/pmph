@@ -100,4 +100,11 @@
 		select * from material_extra where id=#{id} ;
 	</select>
 
+	<!-- 查询表单的数据总数 -->
+	<select id="getMaterialExtraCount" resultType="Long">
+		select
+		count(*)
+		from
+		material_extra
+	</select>
 </mapper>

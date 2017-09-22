@@ -6,6 +6,9 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
+			<if test="id !=null "> 
+		    	id,
+		    </if>
 			<if test="parentId != null and parentId !=''">
 				parent_id,
 			</if>
@@ -27,6 +30,9 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
+			<if test="id !=null "> 
+		    	#{id},
+		    </if>
 			<if test="parentId !=null and parentId !=''">
 				#{parentId},
 			</if>
@@ -94,6 +100,22 @@
 		resultType="PmphDepartment">
 		select * from pmph_department where
 		id=#{id} ;
+	</select>
+
+	<!-- 查询表单的数据总数 -->
+	<select id="getPmphDepartmentCount" resultType="Long">
+		select
+		count(*)
+		from
+		pmph_department
+	</select>
+
+	<!-- 获取全部部门 -->
+	<select id="getListPmphDepartment" parameterType="java.lang.Long" resultType="PmphUserDepartmentVO">
+		select
+		id,parent_id,dp_name
+		from
+		pmph_department where parent_id = #{parentId};
 	</select>
 
 </mapper>

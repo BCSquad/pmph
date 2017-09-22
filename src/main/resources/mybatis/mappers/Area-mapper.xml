@@ -5,6 +5,9 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
+		    <if test="id !=null "> 
+		    	id,
+		    </if>
 			<if test="parentId != null and parentId !=''">
 				parent_id,
 			</if>
@@ -20,6 +23,9 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
+		    <if test="id !=null "> 
+		    	#{id},
+		    </if>
 			<if test="parentId != null and parentId !=''">
 				#{parentId},
 			</if>
@@ -75,18 +81,33 @@
 		resultType="Area">
 		select * from area where id=#{id} ;
 	</select>
-	<!-- 分页测试 -->
+	
+	<!-- 查询表单的数据总数 -->
+	<select id="getAreacount" resultType="Long">
+		select
+		count(*)
+		from
+		area
+	</select>
+	
+<!-- 分页测试 -->
+	<select id="getTestTotal" parameterType="Page" resultType="java.lang.Integer" >  
+	    select count(*) from area where true
+	     <if test="parameter.sort !=null ">  
+	        and sort = #{parameter.sort}
+	     </if>  
+    </select> 
 	<select id="getTest" parameterType="Page" resultType="Area" >  
-	    select * from area
+	    select * from area where true 
+	     <if test="parameter.sort !=null ">  
+	        and sort = #{parameter.sort}
+	    </if>  
 	    <if test="start !=null and pageNumber != null">  
 	        limit #{start},#{pageSize}  
 	    </if>  
     </select> 
-    <select id="getTestTotal" parameterType="Page" resultType="java.lang.Integer" >  
-	    select count(*) from area
-	    <if test="pageSize !=null and pageNumber != null">  
-	        limit #{start},#{pageSize}  
-	    </if>  
-    </select> 
+    <delete id="deleteAllArea">
+    delete from area where 1=1;
+    </delete>
 
 </mapper>

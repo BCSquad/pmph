@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -40,6 +42,28 @@ public interface OrgDao {
 	 * @throws CheckedServiceException
 	 */
 	Integer updateOrg(Org org) ;
+	/**
+	 * 
+	 * <pre>
+	 * 功能描述：根据机构名称查询机构
+	 * 使用示范：
+	 *
+	 * @param orgName  机构名称
+	 * @return 机构名称与机构id
+	 * </pre>
+	 */
+	List<Org> getListOrgByOrgName(String orgName);
+	
+	/**
+     * 
+     * <pre>
+     * 功能描述：查询表单的数据总条数
+     * 使用示范：
+     *
+     * @return 表单的总条数
+     * </pre>
+     */
+	Long getOrgCount();
 	
 	
 }

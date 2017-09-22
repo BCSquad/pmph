@@ -135,6 +135,12 @@
 		#{permissionName};
 	</select>
 
+	<!-- 查询表单的数据总数 -->
+	<select id="getWriterPermissionCount" resultType="Long">
+		select count(*)
+		from writer_permission
+	</select>
+
 	<select id="getListResource" resultType="WriterPermission">
 		SELECT
 		`id`,

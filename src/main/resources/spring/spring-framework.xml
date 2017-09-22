@@ -61,7 +61,7 @@
          <!-- 扫描 sql 配置文件，即 mapper 对应的 xml 文件 -->
         <property name="mapperLocations" value="classpath:mybatis/mappers/*.xml" />
         <!-- 扫描 entity 包，这样在 mapper 中就可以使用简单类名，多个用 ; 隔开 -->
-        <property name="typeAliasesPackage" value="com.bc.pmpheep.back.po;com.bc.pmpheep.back.plugin;com.bc.pmpheep.back.view" />
+        <property name="typeAliasesPackage" value="com.bc.pmpheep.back.po;com.bc.pmpheep.back.plugin;com.bc.pmpheep.back.vo" />
         <!-- 配置 MyBatis 全局配置文件 -->
         <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
     </bean>
@@ -111,7 +111,7 @@
     </aop:config>
     <!--MongoDB-->
     <mongo:mongo replica-set="${mongo.replicaSet}">
-        <mongo:options
+        <mongo:options 
             connections-per-host="${mongo.connectionsPerHost}"
             threads-allowed-to-block-for-connection-multiplier="${mongo.threadsAllowedToBlockForConnectionMultiplier}"
             connect-timeout="${mongo.connectTimeout}"
