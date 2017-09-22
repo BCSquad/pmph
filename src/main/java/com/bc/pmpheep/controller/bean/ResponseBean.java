@@ -21,19 +21,24 @@ public class ResponseBean<T> implements Serializable {
     public static final int SUCCESS = 1;
 
     /**
-     * 失败
-     */
-    public static final int FAILURE = 2;
-
-    /**
      * 错误的请求参数
      */
-    public static final int WRONG_REQ_PARA = 3;
+    public static final int WRONG_REQ_PARA = 20;
+    
+    /**
+     * 未经检查的错误
+     */
+    public static final int UNCHECKED_ERROR = 21;
+
+    /**
+     * 未知错误
+     */
+    public static final int UNKNOWN_ERROR = 99;
 
     /**
      * 没有操作权限
      */
-    public static final int NO_PERMISSION = 4;
+    public static final int NO_PERMISSION = 100;
 
     private int code = SUCCESS;
     private String msg = "success";
@@ -50,8 +55,8 @@ public class ResponseBean<T> implements Serializable {
 
     public ResponseBean(Throwable ex) {
         super();
-        this.msg = ex.toString();
-        this.code = FAILURE;
+        this.msg = ex.getMessage();
+        this.code = UNCHECKED_ERROR;
     }
 
     /**
