@@ -1,7 +1,6 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -104,7 +103,6 @@ public class WriterUserServiceImpl implements WriterUserService {
         for (Long userId : ids) {
             writerRoleDao.deleteUserRoles(userId);
         }
-
     }
 
     /**
@@ -278,26 +276,41 @@ public class WriterUserServiceImpl implements WriterUserService {
 
     /**
      * 
-     * <pre>
      * 功能描述：分页查询作家用户
-     * 使用示范：
-     *
+     * 
+     * 
      * @param page 传入的查询数据
      * @return 需要的Page对象
-     * </pre>
      */
     @Override
-    public Page<WriterUserManagerVO, Map<String, String>> getListWriterUser(
-    Page<WriterUserManagerVO, Map<String, String>> page) throws CheckedServiceException {
-        if (null != page.getParameter().get("username")) {
-            page.getParameter().put("username", "%" + page.getParameter().get("username") + "%");
+    public Page<WriterUserManagerVO, WriterUserManagerVO> getListWriterUser(
+    Page<WriterUserManagerVO, WriterUserManagerVO> page) throws CheckedServiceException {
+        if (null != page.getParameter().getUsername()) {
+            String username = page.getParameter().getUsername().trim();
+            if (!username.equals("")) {
+                page.getParameter().setUsername("%" + username + "%");
+            } else {
+                page.getParameter().setUsername(username);
+            }
         }
-        if (null != page.getParameter().get("realname")) {
-            page.getParameter().put("realname", "%" + page.getParameter().get("realname") + "%");
+        if (null != page.getParameter().getRealname()) {
+            String realname = page.getParameter().getRealname().trim();
+            if (!realname.equals("")) {
+                page.getParameter().setRealname("%" + realname + "%");
+            } else {
+                page.getParameter().setRealname(realname);
+            }
+
         }
-        if (null != page.getParameter().get("orgName")) {
-            page.getParameter().put("orgName", "%" + page.getParameter().get("orgName") + "%");
+        if (null != page.getParameter().getOrgName()) {
+            String orgName = page.getParameter().getOrgName().trim();
+            if (!orgName.equals("")) {
+                page.getParameter().setOrgName("%" + orgName + "%");
+            } else {
+                page.getParameter().setOrgName(orgName);
+            }
         }
+
         int total = writerUserDao.getListWriterUserTotal(page);
         if (total > 0) {
             List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(page);
@@ -341,18 +354,24 @@ public class WriterUserServiceImpl implements WriterUserService {
     // * @throws ReflectiveOperationException
     // */
     // @Override
-    // public Page<WriterUserManagerVO, Map<String, String>> getListWriter(Page<WriterUser,
-    // Map<String, String>> page) throws CheckedServiceException, ReflectiveOperationException {
+    // public Page<WriterUserManagerVO, Map<String, String>>
+    // getListWriter(Page<WriterUser,
+    // Map<String, String>> page) throws CheckedServiceException,
+    // ReflectiveOperationException {
     // if (null != page.getParameter().get("username")) {
-    // page.getParameter().put("username", "%" + page.getParameter().get("username") + "%");
+    // page.getParameter().put("username", "%" +
+    // page.getParameter().get("username") + "%");
     // }
     // if (null != page.getParameter().get("realname")) {
-    // page.getParameter().put("realname", "%" + page.getParameter().get("realname") + "%");
+    // page.getParameter().put("realname", "%" +
+    // page.getParameter().get("realname") + "%");
     // }
     // if (null != page.getParameter().get("orgName")) {
-    // page.getParameter().put("orgName", "%" + page.getParameter().get("orgName") + "%");
+    // page.getParameter().put("orgName", "%" +
+    // page.getParameter().get("orgName") + "%");
     // }
-    // List<Org> orgs = orgDao.getListOrgByOrgName(page.getParameter().get("orgName"));
+    // List<Org> orgs =
+    // orgDao.getListOrgByOrgName(page.getParameter().get("orgName"));
     // String orgId = "";
     // Map<Long, String> map = new HashMap<>();
     // for (Org org : orgs) {
@@ -360,7 +379,8 @@ public class WriterUserServiceImpl implements WriterUserService {
     // map.put(org.getId(), org.getOrgName());
     // }
     // if (orgId.equals("")) {
-    // throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
+    // throw new
+    // CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
     // CheckedExceptionResult.NULL_PARAM, "没有找到该机构");
     // } else {
     // orgId = orgId.substring(1);

@@ -33,6 +33,10 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	 */
 	private String realname;
 	/**
+	 * 根节点路径
+	 */
+	private String path;
+	/**
 	 * 部门名称
 	 */
 	private String departmentName;
@@ -115,6 +119,14 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	 */
 	public void setRealname(String realname) {
 		this.realname = realname;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	/**
@@ -203,8 +215,8 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "PmphUserManagerVO [id=" + id + ", username=" + username + ", isDisabled=" + isDisabled + ", realname="
-				+ realname + ", departmentName=" + departmentName + ", roleName=" + roleName + ", handphone="
-				+ handphone + ", email=" + email + ", note=" + note + ", sort=" + sort + "]";
+				+ realname + ", path=" + path + ", departmentName=" + departmentName + ", roleName=" + roleName
+				+ ", handphone=" + handphone + ", email=" + email + ", note=" + note + ", sort=" + sort + "]";
 	}
 
 }

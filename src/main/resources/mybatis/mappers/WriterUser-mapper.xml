@@ -438,19 +438,22 @@
 		select * from
 		writer_user where username=#{username};
 	</select>
-	<!-- 分页测试 -->
+	<!-- 分页查询 -->
 	<select id="getListWriterUserTotal" parameterType="Page"
 		resultType="java.lang.Integer">
 		select count(*) from writer_user w left join org o on o.id = w.org_id
 		where 1=1
-		<if test="parameter.username !=null ">
+		<if test="parameter.username !=null and parameter.username !='' ">
 			and w.username like #{parameter.username}
 		</if>
-		<if test="parameter.realname !=null">
+		<if test="parameter.realname !=null and parameter.realname !=''">
 			and w.realname like #{parameter.realname}
 		</if>
-		<if test="parameter.orgName !=null">
+		<if test="parameter.orgName !=null and parameter.orgName !=''">
 			and o.org_name like #{parameter.orgName}
+		</if>
+		<if test="parameter.rank !=null">
+			and w.rank = #{parameter.rank}
 		</if>
 	</select>
 	<select id="getListWriterUser" parameterType="Page"
@@ -459,14 +462,17 @@
 		*
 		from writer_user w left join org o on o.id = w.org_id where
 		1=1
-		<if test="parameter.username !=null ">
+		<if test="parameter.username !=null and parameter.username !='' ">
 			and w.username like #{parameter.username}
 		</if>
-		<if test="parameter.realname !=null">
+		<if test="parameter.realname !=null and parameter.realname !=''">
 			and w.realname like #{parameter.realname}
 		</if>
-		<if test="parameter.orgName !=null">
+		<if test="parameter.orgName !=null and parameter.orgName !=''">
 			and o.org_name like #{parameter.orgName}
+		</if>
+		<if test="parameter.rank !=null">
+			and w.rank = #{parameter.rank}
 		</if>
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
@@ -476,7 +482,8 @@
 	<!-- 查询表单的数据总条数 -->
 	<select id="getWriterUserCount" resultType="java.lang.Long">
 		select
-		count(*) from writer_user ;
+		count(*) from
+		writer_user ;
 	</select>
 	<!-- <select id="getListTotal" parameterType="Page" resultType="java.lang.Integer"> 
 		select count(*) from writer_user w where 1=1 <if test="parameter.username 

@@ -93,7 +93,6 @@ public class PmphUserServiceImpl implements PmphUserService {
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除用户");
         }
         userDao.delete(id);
-
     }
 
     @Override
@@ -108,7 +107,6 @@ public class PmphUserServiceImpl implements PmphUserService {
         for (Long userId : ids) {
             roleDao.deleteUserRoles(userId);
         }
-
     }
 
     /**
@@ -315,5 +313,43 @@ public class PmphUserServiceImpl implements PmphUserService {
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
         return userDao.getListUserRole(uid);
+    }
+
+    @Override
+    public Page<PmphUserManagerVO, PmphUserManagerVO> getListPmphUser(
+    Page<PmphUserManagerVO, PmphUserManagerVO> page) throws CheckedServiceException {
+        if (null != page.getParameter().getRealname()) {
+            String realname = page.getParameter().getRealname().trim();
+            if (!realname.equals("")) {
+                page.getParameter().setRealname("%" + realname + "%");
+            } else {
+                page.getParameter().setRealname(realname);
+            }
+        }
+        if (null != page.getParameter().getUsername()) {
+            String username = page.getParameter().getUsername().trim();
+            if (!username.endsWith("")) {
+                page.getParameter().setUsername("%" + username + "%");
+            } else {
+                page.getParameter().setUsername(username);
+            }
+        }
+        if (null != page.getParameter().getPath()) {
+            String path = page.getParameter().getPath().trim();
+            if (!path.endsWith("")) {
+                page.getParameter().setUsername(path + "%");
+            } else {
+                page.getParameter().setUsername(path);
+            }
+        }
+        int total = userDao.getListPmphUserTotal(page);
+        if (total > 0) {
+            List<PmphUserManagerVO> list = userDao.getListPmphUser(page);
+            page.setRows(list);
+        }
+
+        page.setTotal(total);
+
+        return page;
     }
 }

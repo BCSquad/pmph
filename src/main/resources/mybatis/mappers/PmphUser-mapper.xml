@@ -259,30 +259,57 @@
 	</select>
 
 	<select id="getListPmphUserTotal" parameterType="page"
-		resultType="Long">
+		resultType="int">
 		SELECT
 		count(*)
 		FROM
+		(SELECT
+		u.*, GROUP_CONCAT(r.role_name ORDER BY r.id
+		ASC) role_name,
+		d.dp_name departmentName,d.path
+		FROM
 		pmph_user u
-		LEFT JOIN pmph_user_role p ON
-		u.id = p.user_id
-		LEFT JOIN pmph_role r ON
-		p.role_id = r.id
 		LEFT JOIN
-		pmph_department d ON u.department_id = d.id
-		GROUP BY u.id
+		pmph_user_role p ON u.id = p.user_id
+		LEFT JOIN pmph_role r ON p.role_id
+		= r.id
+		LEFT JOIN pmph_department d ON u.department_id = d.id
+		WHERE
+		1 = 1
+		<if test="parameter.username !=null and parameter.username !='' ">
+			and u.username like #{parameter.username}
+		</if>
+		<if test="parameter.realname !=null and parameter.realname !=''">
+			and u.realname like #{parameter.realname}
+		</if>
+		<if test="parameter.path !=null and parameter.path !=''">
+			and d.path like #{parameter.path}
+		</if>
+		GROUP BY d.dp_name) t
 	</select>
 
 	<select id="getListPmphUser" parameterType="page" resultType="PmphUserManagerVO">
 		SELECT
-		u.*,GROUP_CONCAT(r.role_name
-		ORDER BY r.id ASC) role_name,d.dp_name departmentName
+		u.*, GROUP_CONCAT(r.role_name ORDER BY r.id ASC) role_name,
+		d.dp_name departmentName,d.path
 		FROM
 		pmph_user u
-		LEFT JOIN pmph_user_role p ON u.id = p.user_id
-		LEFT JOIN pmph_role r ON
-		p.role_id = r.id
-		LEFT JOIN pmph_department d ON u.department_id = d.id
-		GROUP BY u.id
+		LEFT JOIN pmph_user_role p ON
+		u.id = p.user_id
+		LEFT JOIN pmph_role r ON p.role_id = r.id
+		LEFT JOIN
+		pmph_department d ON u.department_id = d.id
+		WHERE
+		1 = 1
+		<if test="parameter.username !=null and parameter.username !='' ">
+			and u.username like #{parameter.username}
+		</if>
+		<if test="parameter.realname !=null and parameter.realname !=''">
+			and u.realname like #{parameter.realname}
+		</if>
+		<if test="parameter.path !=null and parameter.path !=''">
+			and d.path like #{parameter.path}
+		</if>
+		GROUP BY d.dp_name
 	</select>
 </mapper>
