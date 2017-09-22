@@ -47,7 +47,7 @@
 			<if test="position !=null and position !=''">
 				#{position},
 			</if>
-			<if test="note">
+			<if test="note !=null and note !=''">
 				#{note},
 			</if>
 			<if test="sort !=null and sort !=''">
