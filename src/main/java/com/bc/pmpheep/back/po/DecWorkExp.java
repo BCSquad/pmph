@@ -1,133 +1,166 @@
 package com.bc.pmpheep.back.po;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.apache.ibatis.type.Alias;
 
 /**
- * DecWorkExp entity. @author MyEclipse Persistence Tools
+ * 
+ * <p>Title:作家工作经历表 实体类<p>
+ * <p>Description:作家工作经历信息<p>
+ * @author lyc
+ * @date 2017年9月22日 上午10:29:26
  */
-@Entity
-@Table(name = "dec_work_exp", catalog = "pmph_imesp_db")
+@SuppressWarnings("serial")
+@Alias("DecWorkExp")
 public class DecWorkExp implements java.io.Serializable {
 
-    // Fields
+	// 主键
+	private Long id;
+	// 申报表id
+	private Long declarationId;
+	// 工作单位
+	private String orgName;
+	// 职位
+	private String position;
+	// 备注
+	private String note;
+	// 起始时间
+	private String dateBegin;
+	// 终止时间
+	private String dateEnd;
+	// 显示顺序
+	private Integer sort;
 
-    private Long    id;
-    private Long    declarationId;
-    private String  orgName;
-    private String  position;
-    private String  note;
-    private String  dateBegin;
-    private String  dateEnd;
-    private Integer sort;
+	// 构造器
 
-    // Constructors
+	/** default constructor */
+	public DecWorkExp() {
+	}
 
-    /** default constructor */
-    public DecWorkExp() {
-    }
+	
 
-    /** minimal constructor */
-    public DecWorkExp(Long declarationId, String orgName, String position, String dateBegin,
-    String dateEnd, Integer sort) {
-        this.declarationId = declarationId;
-        this.orgName = orgName;
-        this.position = position;
-        this.dateBegin = dateBegin;
-        this.dateEnd = dateEnd;
-        this.sort = sort;
-    }
+	public DecWorkExp(Long id) {
+		super();
+		this.id = id;
+	}
 
-    /** full constructor */
-    public DecWorkExp(Long declarationId, String orgName, String position, String note,
-    String dateBegin, String dateEnd, Integer sort) {
-        this.declarationId = declarationId;
-        this.orgName = orgName;
-        this.position = position;
-        this.note = note;
-        this.dateBegin = dateBegin;
-        this.dateEnd = dateEnd;
-        this.sort = sort;
-    }
 
-    // Property accessors
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Long getId() {
-        return this.id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/** full constructor */
+	public DecWorkExp(Long declarationId, String orgName, String position,
+			String note, String dateBegin, String dateEnd, Integer sort) {
+		this.declarationId = declarationId;
+		this.orgName = orgName;
+		this.position = position;
+		this.note = note;
+		this.dateBegin = dateBegin;
+		this.dateEnd = dateEnd;
+		this.sort = sort;
+	}
 
-    @Column(name = "declaration_id", nullable = false)
-    public Long getDeclarationId() {
-        return this.declarationId;
-    }
 
-    public void setDeclarationId(Long declarationId) {
-        this.declarationId = declarationId;
-    }
 
-    @Column(name = "org_name", nullable = false, length = 100)
-    public String getOrgName() {
-        return this.orgName;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setOrgName(String orgName) {
-        this.orgName = orgName;
-    }
 
-    @Column(name = "position", nullable = false, length = 100)
-    public String getPosition() {
-        return this.position;
-    }
 
-    public void setPosition(String position) {
-        this.position = position;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    @Column(name = "note", length = 100)
-    public String getNote() {
-        return this.note;
-    }
 
-    public void setNote(String note) {
-        this.note = note;
-    }
 
-    @Column(name = "date_begin", nullable = false, length = 20)
-    public String getDateBegin() {
-        return this.dateBegin;
-    }
+	public Long getDeclarationId() {
+		return declarationId;
+	}
 
-    public void setDateBegin(String dateBegin) {
-        this.dateBegin = dateBegin;
-    }
 
-    @Column(name = "date_end", nullable = false, length = 20)
-    public String getDateEnd() {
-        return this.dateEnd;
-    }
 
-    public void setDateEnd(String dateEnd) {
-        this.dateEnd = dateEnd;
-    }
+	public void setDeclarationId(Long declarationId) {
+		this.declarationId = declarationId;
+	}
 
-    @Column(name = "sort", nullable = false)
-    public Integer getSort() {
-        return this.sort;
-    }
 
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+
+
+	public String getPosition() {
+		return position;
+	}
+
+
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+
+
+	public String getNote() {
+		return note;
+	}
+
+
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+
+
+	public String getDateBegin() {
+		return dateBegin;
+	}
+
+
+
+	public void setDateBegin(String dateBegin) {
+		this.dateBegin = dateBegin;
+	}
+
+
+
+	public String getDateEnd() {
+		return dateEnd;
+	}
+
+
+
+	public void setDateEnd(String dateEnd) {
+		this.dateEnd = dateEnd;
+	}
+
+
+
+	public Integer getSort() {
+		return sort;
+	}
+
+
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return " {id:" + id + ", declarationId:" + declarationId + ", orgName:"
+				+ orgName + ", position:" + position + ", note:" + note
+				+ ", dateBegin:" + dateBegin + ", dateEnd:" + dateEnd
+				+ ", sort:" + sort + "}";
+	}
 
 }

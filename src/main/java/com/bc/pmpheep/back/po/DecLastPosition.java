@@ -1,108 +1,108 @@
 package com.bc.pmpheep.back.po;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.apache.ibatis.type.Alias;
 
 /**
- * DecLastPosition entity. @author MyEclipse Persistence Tools
+ * 
+ * <p>Title:作家上版教材参编情况表 实体类<p>
+ * <p>Description:作家上版教材参编信息<p>
+ * @author lyc
+ * @date 2017年9月22日 上午9:55:09
  */
-@Entity
-@Table(name = "dec_last_position", catalog = "pmph_imesp_db")
+@SuppressWarnings("serial")
+@Alias("DecLastPosition")
 public class DecLastPosition implements java.io.Serializable {
 
-    // Fields
+	//主键
+	private Long id;
+	//申报表id
+	private Long declarationId;
+	//教材名称
+	private String materialName;
+	//编写职务
+	private Short position;
+	//备注
+	private String note;
+	//显示顺序
+	private Integer sort;
 
-    private Long    id;
-    private Long    declarationId;
-    private String  materialName;
-    private Short   position;
-    private String  note;
-    private Integer sort;
+	// 构造器
 
-    // Constructors
+	/** default constructor */
+	public DecLastPosition() {
+	}
 
-    /** default constructor */
-    public DecLastPosition() {
-    }
+	
 
-    /** minimal constructor */
-    public DecLastPosition(Long declarationId, String materialName, Short position, Integer sort) {
-        this.declarationId = declarationId;
-        this.materialName = materialName;
-        this.position = position;
-        this.sort = sort;
-    }
+	public DecLastPosition(Long id) {
+		super();
+		this.id = id;
+	}
 
-    /** full constructor */
-    public DecLastPosition(Long declarationId, String materialName, Short position, String note,
-    Integer sort) {
-        this.declarationId = declarationId;
-        this.materialName = materialName;
-        this.position = position;
-        this.note = note;
-        this.sort = sort;
-    }
 
-    // Property accessors
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Long getId() {
-        return this.id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/** full constructor */
+	public DecLastPosition(Long declarationId, String materialName,
+			Short position, String note, Integer sort) {
+		this.declarationId = declarationId;
+		this.materialName = materialName;
+		this.position = position;
+		this.note = note;
+		this.sort = sort;
+	}
 
-    @Column(name = "declaration_id", nullable = false)
-    public Long getDeclarationId() {
-        return this.declarationId;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setDeclarationId(Long declarationId) {
-        this.declarationId = declarationId;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    @Column(name = "material_name", nullable = false, length = 100)
-    public String getMaterialName() {
-        return this.materialName;
-    }
+	public Long getDeclarationId() {
+		return declarationId;
+	}
 
-    public void setMaterialName(String materialName) {
-        this.materialName = materialName;
-    }
+	public void setDeclarationId(Long declarationId) {
+		this.declarationId = declarationId;
+	}
 
-    @Column(name = "position", nullable = false)
-    public Short getPosition() {
-        return this.position;
-    }
+	public String getMaterialName() {
+		return materialName;
+	}
 
-    public void setPosition(Short position) {
-        this.position = position;
-    }
+	public void setMaterialName(String materialName) {
+		this.materialName = materialName;
+	}
 
-    @Column(name = "note", length = 100)
-    public String getNote() {
-        return this.note;
-    }
+	public Short getPosition() {
+		return position;
+	}
 
-    public void setNote(String note) {
-        this.note = note;
-    }
+	public void setPosition(Short position) {
+		this.position = position;
+	}
 
-    @Column(name = "sort", nullable = false)
-    public Integer getSort() {
-        return this.sort;
-    }
+	public String getNote() {
+		return note;
+	}
 
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
+	public void setNote(String note) {
+		this.note = note;
+	}
 
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+
+	@Override
+	public String toString() {
+		return " {id:" + id + ", declarationId:" + declarationId
+				+ ", materialName:" + materialName + ", position:" + position
+				+ ", note:" + note + ", sort:" + sort + "}";
+	}
 }

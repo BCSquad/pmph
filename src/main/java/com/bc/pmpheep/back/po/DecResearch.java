@@ -1,119 +1,151 @@
 package com.bc.pmpheep.back.po;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.apache.ibatis.type.Alias;
 
 /**
- * DecResearch entity. @author MyEclipse Persistence Tools
+ * 
+ * <p>Title:作家科研情况表 实体类<p>
+ * <p>Description:作家科研情况信息<p>
+ * @author lyc
+ * @date 2017年9月22日 上午10:22:02
  */
-@Entity
-@Table(name = "dec_research", catalog = "pmph_imesp_db")
+@SuppressWarnings("serial")
+@Alias("DecResearch")
 public class DecResearch implements java.io.Serializable {
 
-    // Fields
+	// 主键
+	private Long id;
+	// 申报表id
+	private Long declarationId;
+	// 课题名称
+	private String researchName;
+	// 审批单位
+	private String approvalUnit;
+	// 获奖情况
+	private String award;
+	// 备注
+	private String note;
+	// 显示顺序
+	private Integer sort;
 
-    private Long    id;
-    private Long    declarationId;
-    private String  researchName;
-    private String  approvalUnit;
-    private String  award;
-    private String  note;
-    private Integer sort;
+	// 构造器
 
-    // Constructors
+	/** default constructor */
+	public DecResearch() {
+	}
 
-    /** default constructor */
-    public DecResearch() {
-    }
+	
 
-    /** minimal constructor */
-    public DecResearch(Long declarationId, String researchName, String approvalUnit, Integer sort) {
-        this.declarationId = declarationId;
-        this.researchName = researchName;
-        this.approvalUnit = approvalUnit;
-        this.sort = sort;
-    }
+	public DecResearch(Long id) {
+		super();
+		this.id = id;
+	}
 
-    /** full constructor */
-    public DecResearch(Long declarationId, String researchName, String approvalUnit, String award,
-    String note, Integer sort) {
-        this.declarationId = declarationId;
-        this.researchName = researchName;
-        this.approvalUnit = approvalUnit;
-        this.award = award;
-        this.note = note;
-        this.sort = sort;
-    }
 
-    // Property accessors
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Long getId() {
-        return this.id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/** full constructor */
+	public DecResearch(Long declarationId, String researchName,
+			String approvalUnit, String award, String note, Integer sort) {
+		this.declarationId = declarationId;
+		this.researchName = researchName;
+		this.approvalUnit = approvalUnit;
+		this.award = award;
+		this.note = note;
+		this.sort = sort;
+	}
 
-    @Column(name = "declaration_id", nullable = false)
-    public Long getDeclarationId() {
-        return this.declarationId;
-    }
 
-    public void setDeclarationId(Long declarationId) {
-        this.declarationId = declarationId;
-    }
 
-    @Column(name = "research_name", nullable = false, length = 150)
-    public String getResearchName() {
-        return this.researchName;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setResearchName(String researchName) {
-        this.researchName = researchName;
-    }
 
-    @Column(name = "approval_unit", nullable = false, length = 100)
-    public String getApprovalUnit() {
-        return this.approvalUnit;
-    }
 
-    public void setApprovalUnit(String approvalUnit) {
-        this.approvalUnit = approvalUnit;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    @Column(name = "award", length = 100)
-    public String getAward() {
-        return this.award;
-    }
 
-    public void setAward(String award) {
-        this.award = award;
-    }
 
-    @Column(name = "note", length = 100)
-    public String getNote() {
-        return this.note;
-    }
+	public Long getDeclarationId() {
+		return declarationId;
+	}
 
-    public void setNote(String note) {
-        this.note = note;
-    }
 
-    @Column(name = "sort", nullable = false)
-    public Integer getSort() {
-        return this.sort;
-    }
 
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
+	public void setDeclarationId(Long declarationId) {
+		this.declarationId = declarationId;
+	}
+
+
+
+	public String getResearchName() {
+		return researchName;
+	}
+
+
+
+	public void setResearchName(String researchName) {
+		this.researchName = researchName;
+	}
+
+
+
+	public String getApprovalUnit() {
+		return approvalUnit;
+	}
+
+
+
+	public void setApprovalUnit(String approvalUnit) {
+		this.approvalUnit = approvalUnit;
+	}
+
+
+
+	public String getAward() {
+		return award;
+	}
+
+
+
+	public void setAward(String award) {
+		this.award = award;
+	}
+
+
+
+	public String getNote() {
+		return note;
+	}
+
+
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+
+
+	public Integer getSort() {
+		return sort;
+	}
+
+
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return " {id:" + id + ", declarationId:" + declarationId
+				+ ", researchName:" + researchName + ", approvalUnit:"
+				+ approvalUnit + ", award:" + award + ", note:" + note
+				+ ", sort:" + sort + "}";
+	}
 
 }

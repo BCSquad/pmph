@@ -16,19 +16,26 @@ import org.apache.ibatis.type.Alias;
 @Alias("DecEduExp")
 public class DecEduExp implements java.io.Serializable {
 
-	// Fields
-
+	//主键
 	private Long id;
+	//申报表id
 	private Long declarationId;
+	//学校名称
 	private String schoolName;
+	//所学专业
 	private String major;
+	//学历
 	private String degree;
+	//备注
 	private String note;
+	//起始时间
 	private String dateBegin;
+	//终止时间
 	private String dateEnd;
+	//显示顺序
 	private Integer sort;
 
-	// Constructors
+	// 构造器
 
 	/** default constructor */
 	public DecEduExp() {

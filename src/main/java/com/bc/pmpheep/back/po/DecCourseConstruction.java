@@ -3,42 +3,54 @@ package com.bc.pmpheep.back.po;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+
 import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.apache.ibatis.type.Alias;
+
 /**
- * DecCourseConstruction entity. @author MyEclipse Persistence Tools
+ * 
+ * <p>Title:作家精品课程建设情况表 实体类<p>
+ * <p>Description:作家精品课程建设情况信息<p>
+ * @author lyc
+ * @date 2017年9月22日 上午10:04:07
  */
-@Entity
-@Table(name = "dec_course_construction", catalog = "pmph_imesp_db")
+@SuppressWarnings("serial")
+@Alias("DecCourseConstruction")
 public class DecCourseConstruction implements java.io.Serializable {
 
-	// Fields
-
+	//主键
 	private Long id;
+	//申报表id
 	private Long declarationId;
+	//课程名称
 	private String courseName;
+	//课程全年课时
 	private String classHour;
+	//级别
 	private Short type;
+	//备注
 	private String note;
+	//显示顺序
 	private Integer sort;
 
-	// Constructors
+	// 构造器
 
 	/** default constructor */
 	public DecCourseConstruction() {
 	}
 
-	/** minimal constructor */
-	public DecCourseConstruction(Long declarationId, String courseName,
-			String classHour, Short type, Integer sort) {
-		this.declarationId = declarationId;
-		this.courseName = courseName;
-		this.classHour = classHour;
-		this.type = type;
-		this.sort = sort;
+	
+
+	public DecCourseConstruction(Long id) {
+		super();
+		this.id = id;
 	}
+
+
 
 	/** full constructor */
 	public DecCourseConstruction(Long declarationId, String courseName,
@@ -51,70 +63,67 @@ public class DecCourseConstruction implements java.io.Serializable {
 		this.sort = sort;
 	}
 
-	// Property accessors
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
 	public Long getId() {
-		return this.id;
+		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	@Column(name = "declaration_id", nullable = false)
 	public Long getDeclarationId() {
-		return this.declarationId;
+		return declarationId;
 	}
 
 	public void setDeclarationId(Long declarationId) {
 		this.declarationId = declarationId;
 	}
 
-	@Column(name = "course_name", nullable = false, length = 50)
 	public String getCourseName() {
-		return this.courseName;
+		return courseName;
 	}
 
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
 	}
 
-	@Column(name = "class_hour", nullable = false, length = 50)
 	public String getClassHour() {
-		return this.classHour;
+		return classHour;
 	}
 
 	public void setClassHour(String classHour) {
 		this.classHour = classHour;
 	}
 
-	@Column(name = "type", nullable = false)
 	public Short getType() {
-		return this.type;
+		return type;
 	}
 
 	public void setType(Short type) {
 		this.type = type;
 	}
 
-	@Column(name = "note", length = 100)
 	public String getNote() {
-		return this.note;
+		return note;
 	}
 
 	public void setNote(String note) {
 		this.note = note;
 	}
 
-	@Column(name = "sort", nullable = false)
 	public Integer getSort() {
-		return this.sort;
+		return sort;
 	}
 
 	public void setSort(Integer sort) {
 		this.sort = sort;
 	}
 
+	@Override
+	public String toString() {
+		return " {id:" + id + ", declarationId:" + declarationId
+				+ ", courseName:" + courseName + ", classHour:" + classHour
+				+ ", type:" + type + ", note:" + note + ", sort:" + sort + "}";
+	}
+    	
 }

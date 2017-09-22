@@ -258,13 +258,30 @@
 		pmph_user
 	</select>
 
+	<select id="getListPmphUserTotal" parameterType="page"
+		resultType="Long">
+		SELECT
+		count(*)
+		FROM
+		pmph_user u
+		LEFT JOIN pmph_user_role p ON
+		u.id = p.user_id
+		LEFT JOIN pmph_role r ON
+		p.role_id = r.id
+		LEFT JOIN
+		pmph_department d ON u.department_id = d.id
+		GROUP BY u.id
+	</select>
+
 	<select id="getListPmphUser" parameterType="page" resultType="PmphUserManagerVO">
 		SELECT
-		u.id,u.username,u.is_disabled,u.realname,u.handphone,u.email,u.note,u.sort,GROUP_CONCAT(r.role_name ORDER BY r.id ASC) role_name,d.dp_name departmentName
+		u.*,GROUP_CONCAT(r.role_name
+		ORDER BY r.id ASC) role_name,d.dp_name departmentName
 		FROM
 		pmph_user u
 		LEFT JOIN pmph_user_role p ON u.id = p.user_id
-		LEFT JOIN pmph_role r ON p.role_id = r.id
+		LEFT JOIN pmph_role r ON
+		p.role_id = r.id
 		LEFT JOIN pmph_department d ON u.department_id = d.id
 		GROUP BY u.id
 	</select>

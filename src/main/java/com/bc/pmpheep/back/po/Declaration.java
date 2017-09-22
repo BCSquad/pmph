@@ -17,38 +17,64 @@ import org.apache.ibatis.type.Alias;
 @Alias("Declaration")
 public class Declaration implements java.io.Serializable {
 
-	// Fields
-
+    //主键
 	private Long id;
+	//教材id
 	private Long materialId;
+	//作家id
 	private Long userId;
+	//作家真实姓名
 	private String realname;
+	//作家性别
 	private Short sex;
+	//作家生日
 	private Date birthday;
+	//作家教龄
 	private Short experience;
+	//作家工作单位
 	private String orgName;
+	//作家职务
 	private String position;
+	//作家职称
 	private String title;
+	//作家地址
 	private String address;
+	//作家邮编
 	private String postcode;
+	//作家手机
 	private String handphone;
+	//作家邮箱
 	private String email;
+	//作家证件类型
 	private Short idtype;
+	//作家证件号码
 	private String idcard;
+	//作家电话
 	private String telephone;
+	//作家传真
 	private String fax;
+	//作家申报单位id
 	private Long orgId;
+	//审核进度
 	private Short onlineProgress;
+	//审核人id
 	private Long authUserId;
+	//审核通过时间
 	private Timestamp authDate;
+	//纸质表进度
 	private Short offlineProgress;
+	//纸质表收到时间
 	private Timestamp paperDate;
+	//是否暂存
 	private Boolean isStaging;
+	//是否逻辑删除
 	private Boolean isDeleted;
+	//创建时间
 	private Timestamp gmtCreate;
+	//修改时间
 	private Timestamp gmtUpdate;
 
-	// Constructors
+	// 构造器
 
 	/** default constructor */
 	public Declaration() {

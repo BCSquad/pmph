@@ -1,161 +1,200 @@
 package com.bc.pmpheep.back.po;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import org.apache.ibatis.type.Alias;
 
 /**
- * DecTextbook entity. @author MyEclipse Persistence Tools
+ * 
+ * <p>Title:作家教材编写情况表 实体类<p>
+ * <p>Description:作家教材编写情况信息<p>
+ * @author lyc
+ * @date 2017年9月22日 上午10:26:58
  */
-@Entity
-@Table(name = "dec_textbook", catalog = "pmph_imesp_db")
+@SuppressWarnings("serial")
+@Alias("DecTextbook")
 public class DecTextbook implements java.io.Serializable {
 
-    // Fields
+	// 主键
+	private Long id;
+	// 申报表id
+	private Long declarationId;
+	// 教材名称
+	private String materialName;
+	// 教材级别
+	private Short rank;
+	// 编写职务
+	private Short position;
+	// 出版社
+	private String publisher;
+	// 初版日期
+	private Date publishDate;
+	// 标准书号
+	private String isbn;
+	// 备注
+	private String note;
+	// 显示顺序
+	private Integer sort;
 
-    private Long    id;
-    private Long    declarationId;
-    private String  materialName;
-    private Short   rank;
-    private Short   position;
-    private String  publisher;
-    private Date    publishDate;
-    private String  isbn;
-    private String  note;
-    private Integer sort;
+	// 构造器
 
-    // Constructors
+	/** default constructor */
+	public DecTextbook() {
+	}
 
-    /** default constructor */
-    public DecTextbook() {
-    }
+	
+	
+	public DecTextbook(Long id) {
+		super();
+		this.id = id;
+	}
 
-    /** minimal constructor */
-    public DecTextbook(Long declarationId, String materialName, Short rank, Short position,
-    String publisher, Date publishDate, Integer sort) {
-        this.declarationId = declarationId;
-        this.materialName = materialName;
-        this.rank = rank;
-        this.position = position;
-        this.publisher = publisher;
-        this.publishDate = publishDate;
-        this.sort = sort;
-    }
 
-    /** full constructor */
-    public DecTextbook(Long declarationId, String materialName, Short rank, Short position,
-    String publisher, Date publishDate, String isbn, String note, Integer sort) {
-        this.declarationId = declarationId;
-        this.materialName = materialName;
-        this.rank = rank;
-        this.position = position;
-        this.publisher = publisher;
-        this.publishDate = publishDate;
-        this.isbn = isbn;
-        this.note = note;
-        this.sort = sort;
-    }
 
-    // Property accessors
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Long getId() {
-        return this.id;
-    }
+	/** full constructor */
+	public DecTextbook(Long declarationId, String materialName, Short rank,
+			Short position, String publisher, Date publishDate, String isbn,
+			String note, Integer sort) {
+		this.declarationId = declarationId;
+		this.materialName = materialName;
+		this.rank = rank;
+		this.position = position;
+		this.publisher = publisher;
+		this.publishDate = publishDate;
+		this.isbn = isbn;
+		this.note = note;
+		this.sort = sort;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    @Column(name = "declaration_id", nullable = false)
-    public Long getDeclarationId() {
-        return this.declarationId;
-    }
 
-    public void setDeclarationId(Long declarationId) {
-        this.declarationId = declarationId;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    @Column(name = "material_name", nullable = false, length = 100)
-    public String getMaterialName() {
-        return this.materialName;
-    }
 
-    public void setMaterialName(String materialName) {
-        this.materialName = materialName;
-    }
 
-    @Column(name = "rank", nullable = false)
-    public Short getRank() {
-        return this.rank;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setRank(Short rank) {
-        this.rank = rank;
-    }
 
-    @Column(name = "position", nullable = false)
-    public Short getPosition() {
-        return this.position;
-    }
 
-    public void setPosition(Short position) {
-        this.position = position;
-    }
+	public Long getDeclarationId() {
+		return declarationId;
+	}
 
-    @Column(name = "publisher", nullable = false, length = 50)
-    public String getPublisher() {
-        return this.publisher;
-    }
 
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
-    }
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "publish_date", nullable = false, length = 10)
-    public Date getPublishDate() {
-        return this.publishDate;
-    }
+	public void setDeclarationId(Long declarationId) {
+		this.declarationId = declarationId;
+	}
 
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
-    }
 
-    @Column(name = "isbn", length = 50)
-    public String getIsbn() {
-        return this.isbn;
-    }
 
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
+	public String getMaterialName() {
+		return materialName;
+	}
 
-    @Column(name = "note", length = 100)
-    public String getNote() {
-        return this.note;
-    }
 
-    public void setNote(String note) {
-        this.note = note;
-    }
 
-    @Column(name = "sort", nullable = false)
-    public Integer getSort() {
-        return this.sort;
-    }
+	public void setMaterialName(String materialName) {
+		this.materialName = materialName;
+	}
 
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
+
+
+	public Short getRank() {
+		return rank;
+	}
+
+
+
+	public void setRank(Short rank) {
+		this.rank = rank;
+	}
+
+
+
+	public Short getPosition() {
+		return position;
+	}
+
+
+
+	public void setPosition(Short position) {
+		this.position = position;
+	}
+
+
+
+	public String getPublisher() {
+		return publisher;
+	}
+
+
+
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
+	}
+
+
+
+	public Date getPublishDate() {
+		return publishDate;
+	}
+
+
+
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
+	}
+
+
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
+
+
+
+	public String getNote() {
+		return note;
+	}
+
+
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+
+
+	public Integer getSort() {
+		return sort;
+	}
+
+
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return " {id:" + id + ", declarationId:" + declarationId
+				+ ", materialName:" + materialName + ", rank:" + rank
+				+ ", position:" + position + ", publisher:" + publisher
+				+ ", publishDate:" + publishDate + ", isbn:" + isbn + ", note:"
+				+ note + ", sort:" + sort + "}";
+	}
 
 }
