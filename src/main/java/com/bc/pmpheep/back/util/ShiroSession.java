@@ -34,7 +34,7 @@ public class ShiroSession {
      * @return
      * </pre>
      */
-    public Session getShiroSessionUser() {
+    public static Session getShiroSessionUser() {
         Subject currentUser = SecurityUtils.getSubject();
         Session session = currentUser.getSession();
         return session;

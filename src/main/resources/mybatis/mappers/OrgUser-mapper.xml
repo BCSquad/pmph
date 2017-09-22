@@ -243,13 +243,13 @@
 		resultType="java.lang.Integer">
 		select count(*) from org_user u left join org o on o.id = u.org_id
 		where 1=1
-		<if test="parameter.username !=null ">
+		<if test="parameter.username !=null and parameter.username !='' ">
 			and u.username like #{parameter.username}
 		</if>
-		<if test="parameter.realname !=null">
+		<if test="parameter.realname !=null and parameter.realname !=''">
 			and u.realname like #{parameter.realname}
 		</if>
-		<if test="parameter.orgName !=null">
+		<if test="parameter.orgName !=null and parameter.orgName !=''">
 			and o.org_name like #{parameter.orgName}
 		</if>
 	</select>
@@ -258,13 +258,13 @@
 		*
 		from org_user u left join org o on o.id = u.org_id where
 		1=1
-		<if test="parameter.username !=null ">
+		<if test="parameter.username !=null and parameter.username !='' ">
 			and u.username like #{parameter.username}
 		</if>
-		<if test="parameter.realname !=null">
+		<if test="parameter.realname !=null and parameter.realname !=''">
 			and u.realname like #{parameter.realname}
 		</if>
-		<if test="parameter.orgName !=null">
+		<if test="parameter.orgName !=null and parameter.orgName !=''">
 			and o.org_name like #{parameter.orgName}
 		</if>
 		<if test="start !=null and pageNumber != null">
