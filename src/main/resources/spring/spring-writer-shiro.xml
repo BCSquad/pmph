@@ -27,11 +27,11 @@
         <!-- 开启认证缓存-->
         <property name="authenticationCachingEnabled" value="true"/>
         <!-- 指定认证缓存的名字(与 ehcache.xml 中声明的相同) -->
-        <property name="authenticationCacheName" value="shiro-authenticationCache"/>
+        <property name="authenticationCacheName" value="shiro-writer-authenticationCache"/>
         <!--开启授权缓存-->
         <property name="authorizationCachingEnabled" value="true"/>
         <!-- 指定授权缓存的名字(与 ehcache.xml 中声明的相同) -->
-        <property name="authorizationCacheName" value="shiro-authorizationCache"/>
+        <property name="authorizationCacheName" value="shiro-writer-authorizationCache"/>
     </bean>
 
     <!-- 自定义一个权限匹配器 -->
@@ -40,7 +40,7 @@
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
         <!-- 如果认证不通过,浏览器通过 Get 方式请求到 /login 上 -->
-        <property name="loginUrl" value="/login"/>
+        <property name="loginUrl" value="/writer/login"/>
 
         <!-- override these for application-specific URLs if you like:
 
@@ -56,8 +56,8 @@
         </property> -->
         <property name="filterChainDefinitions">
             <value>
-                /admin/**=authc,resourceCheckFilter
-                /login=anon
+                /writer/**=authc,resourceCheckFilter
+                /writer/login=anon
             </value>
         </property>
     </bean>
@@ -65,7 +65,7 @@
     <!-- 声明一个自定义的过滤器 -->
     <bean id="resourceCheckFilter" class="com.bc.pmpheep.back.shiro.filter.ResourceCheckFilter">
         <!-- 为上面声明的自定义过滤器注入属性值 -->
-        <property name="errorUrl" value="/unAuthorization"/>
+        <property name="errorUrl" value="/writer/unAuthorization"/>
     </bean>
 
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">

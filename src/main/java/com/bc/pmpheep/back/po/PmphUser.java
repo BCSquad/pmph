@@ -65,17 +65,20 @@ public class PmphUser implements java.io.Serializable {
      */
     private Date    gmtUpdate;
 
+    private String  loginType;
+
     public PmphUser() {
     }
 
     public PmphUser(String username, String password) {
         this.username = username;
         this.password = password;
+
     }
 
     public PmphUser(String username, String password, Integer isDisabled, String realname,
     long departmentId, String handphone, String email, String note, int sort, Integer isDeleted,
-    Date gmtCreate, Date gmtUpdate) {
+    Date gmtCreate, Date gmtUpdate, String loginType) {
         this.username = username;
         this.password = password;
         this.isDisabled = isDisabled;
@@ -88,6 +91,7 @@ public class PmphUser implements java.io.Serializable {
         this.isDeleted = isDeleted;
         this.gmtCreate = gmtCreate;
         this.gmtUpdate = gmtUpdate;
+        this.loginType = loginType;
     }
 
     public Long getId() {
@@ -206,13 +210,27 @@ public class PmphUser implements java.io.Serializable {
         this.isDeleted = isDeleted;
     }
 
+    /**
+     * @return the loginType
+     */
+    public String getLoginType() {
+        return loginType;
+    }
+
+    /**
+     * @param loginType the loginType to set
+     */
+    public void setLoginType(String loginType) {
+        this.loginType = loginType;
+    }
+
     @Override
     public String toString() {
         return "PmphUser [id=" + id + ", username=" + username + ", password=" + password
                + ", isDisabled=" + isDisabled + ", realname=" + realname + ", departmentId="
                + departmentId + ", handphone=" + handphone + ", email=" + email + ", note=" + note
                + ", sort=" + sort + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
-               + ", gmtUpdate=" + gmtUpdate + "]";
+               + ", gmtUpdate=" + gmtUpdate + ", loginType=" + loginType + "]";
     }
 
 }
