@@ -1,42 +1,42 @@
-package com.test;
+package com.bc.pmpheep.back.po;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.apache.ibatis.type.Alias;
 
 /**
- * DecNationalPlan entity. @author MyEclipse Persistence Tools
+ * 
+ * <p>Title:作家主编国家级规划教材情况表 实体类<p>
+ * <p>Description:作家主编国家级教材规划情况信息<p>
+ * @author lyc
+ * @date 2017年9月22日 上午9:57:49
  */
-@Entity
-@Table(name = "dec_national_plan", catalog = "pmph_imesp_db")
+@SuppressWarnings("serial")
+@Alias("DecNationalPlan")
 public class DecNationalPlan implements java.io.Serializable {
 
-	// Fields
-
+	//主键
 	private Long id;
+	//申报表id
 	private Long declarationId;
+	//教材名称
 	private String materialName;
+	//标准书号
 	private String isbn;
+	//教材级别
 	private Short rank;
+	//备注
 	private String note;
+	//显示顺序
 	private Integer sort;
 
-	// Constructors
+	// 构造器
 
 	/** default constructor */
 	public DecNationalPlan() {
 	}
 
-	/** minimal constructor */
-	public DecNationalPlan(Long declarationId, String materialName, Short rank,
-			Integer sort) {
-		this.declarationId = declarationId;
-		this.materialName = materialName;
-		this.rank = rank;
-		this.sort = sort;
+	public DecNationalPlan(Long id) {
+		super();
+		this.id = id;
 	}
 
 	/** full constructor */
@@ -50,70 +50,66 @@ public class DecNationalPlan implements java.io.Serializable {
 		this.sort = sort;
 	}
 
-	// Property accessors
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
 	public Long getId() {
-		return this.id;
+		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	@Column(name = "declaration_id", nullable = false)
 	public Long getDeclarationId() {
-		return this.declarationId;
+		return declarationId;
 	}
 
 	public void setDeclarationId(Long declarationId) {
 		this.declarationId = declarationId;
 	}
 
-	@Column(name = "material_name", nullable = false, length = 100)
 	public String getMaterialName() {
-		return this.materialName;
+		return materialName;
 	}
 
 	public void setMaterialName(String materialName) {
 		this.materialName = materialName;
 	}
 
-	@Column(name = "isbn", length = 50)
 	public String getIsbn() {
-		return this.isbn;
+		return isbn;
 	}
 
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
 	}
 
-	@Column(name = "rank", nullable = false)
 	public Short getRank() {
-		return this.rank;
+		return rank;
 	}
 
 	public void setRank(Short rank) {
 		this.rank = rank;
 	}
 
-	@Column(name = "note", length = 100)
 	public String getNote() {
-		return this.note;
+		return note;
 	}
 
 	public void setNote(String note) {
 		this.note = note;
 	}
 
-	@Column(name = "sort", nullable = false)
 	public Integer getSort() {
-		return this.sort;
+		return sort;
 	}
 
 	public void setSort(Integer sort) {
 		this.sort = sort;
 	}
 
+	@Override
+	public String toString() {
+		return " {id:" + id + ", declarationId:" + declarationId
+				+ ", materialName:" + materialName + ", isbn:" + isbn
+				+ ", rank:" + rank + ", note:" + note + ", sort:" + sort + "}";
+	}
 }
