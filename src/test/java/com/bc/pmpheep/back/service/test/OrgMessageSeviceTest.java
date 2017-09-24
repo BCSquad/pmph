@@ -22,7 +22,7 @@ public class OrgMessageSeviceTest extends BaseTest {
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void addArea() throws Exception {
+    public void addArea()  {
     	OrgMessage a=new OrgMessage("测试",0);
     	orgMessageService.addOrgMessage(a);
     	logger.info("---OrgMessage---------------------------------------------------------------------------");

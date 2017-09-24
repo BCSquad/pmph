@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphGroupDao;
 import com.bc.pmpheep.back.po.PmphGroup;
+import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.ShiroSession;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -100,7 +103,12 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		if(null==pmphGroup){
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "参数对象为空");
 		}
-		return pmphGroupnDao.getList(pmphGroup,2l);
+		//session PmphUser用户验证
+		PmphUser pmphUser =(PmphUser)(ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		if(null==pmphUser||null==pmphUser.getId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "用户为空");
+		}
+		return pmphGroupnDao.getList(pmphGroup,pmphUser.getId());
 	}
 	
 }

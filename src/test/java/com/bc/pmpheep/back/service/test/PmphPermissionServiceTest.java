@@ -24,7 +24,7 @@ public class PmphPermissionServiceTest extends BaseTest {
 
     // @Test
     // @Rollback(Const.ISROLLBACK)
-    public void test() throws Exception {
+    public void test() {
         Random r = new Random();
         PmphPermission testPar =
         new PmphPermission(new Long(r.nextInt(200)), String.valueOf(r.nextInt(200)),

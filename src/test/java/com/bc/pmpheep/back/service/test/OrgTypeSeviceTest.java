@@ -19,23 +19,23 @@ import com.bc.pmpheep.test.BaseTest;
  * @author mryang
  */
 public class OrgTypeSeviceTest extends BaseTest {
-    Logger                 logger = LoggerFactory.getLogger(OrgTypeSeviceTest.class);
+	Logger logger = LoggerFactory.getLogger(OrgTypeSeviceTest.class);
 
-    @Resource
-    private OrgTypeService orgTypeService;
+	@Resource
+	private OrgTypeService orgTypeService;
 
-    @Test
-    @Rollback(Const.ISROLLBACK)
-    public void addArea() throws Exception {
-        OrgType a = new OrgType("测试", 0);
-        orgTypeService.addOrgType(a);
-        logger.info("---OrgTypeService--------------------------------------------------------------------------");
-        logger.info(a.toString());
-        a.setTypeName("ceshiwwwwwwww" + a.getId());
-        logger.info(orgTypeService.updateOrgType(a).toString());
-        a.setId(3L);
-        logger.info(orgTypeService.deleteOrgTypeById(1L).toString());
-        logger.info(orgTypeService.getOrgTypeById(2L).toString());
-    }
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void addArea() {
+		OrgType a = new OrgType("测试", 0);
+		orgTypeService.addOrgType(a);
+		logger.info("---OrgTypeService--------------------------------------------------------------------------");
+		logger.info(a.toString());
+		a.setTypeName("ceshiwwwwwwww" + a.getId());
+		logger.info(orgTypeService.updateOrgType(a).toString());
+		a.setId(3L);
+		logger.info(orgTypeService.deleteOrgTypeById(1L).toString());
+		logger.info(orgTypeService.getOrgTypeById(2L).toString());
+	}
 
 }

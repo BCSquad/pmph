@@ -13,9 +13,9 @@ import com.bc.pmpheep.test.BaseTest;
  * @author 曾庆峰 <791038935@qq.com>
  * 
  */
-public class WriterRoleServiceTest1 extends BaseTest {
+public class WriterRoleServiceTest extends BaseTest {
 
-    Logger            logger = LoggerFactory.getLogger(WriterRoleServiceTest1.class);
+    Logger            logger = LoggerFactory.getLogger(WriterRoleServiceTest.class);
 
     @Resource
     WriterRoleService writerRoleService;

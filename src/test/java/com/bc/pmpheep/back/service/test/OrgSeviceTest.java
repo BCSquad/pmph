@@ -23,7 +23,7 @@ public class OrgSeviceTest extends BaseTest {
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void test() throws Exception {
+    public void test() {
         logger.info("---OrgService-----------------------------------------------------------------------------");
     	Org a=new Org(5L,"测试", 4L, 4L,"ZHANGS", "1234", "BEIZHU", 4, false, null, null);
     	orgService.addOrg(a);

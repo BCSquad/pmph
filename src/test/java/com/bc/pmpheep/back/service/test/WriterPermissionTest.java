@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.service.WriterPermissionService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -26,7 +27,7 @@ public class WriterPermissionTest extends BaseTest {
      * PmphPermission 添加Test
      */
     @Test
-    // @Rollback(false)
+    // @Rollback(Const.ISROLLBACK)
     public void addPmphPermissionTest() {
         WriterPermission pp = new WriterPermission();
         pp.setMenuName("用户管理");
@@ -42,7 +43,7 @@ public class WriterPermissionTest extends BaseTest {
      * PmphPermission 更新Test
      */
     // @Test
-    // @Rollback(false)
+    // @Rollback(Const.ISROLLBACK)
     public void updatePmphPermissionTest() {
         WriterPermission pp = new WriterPermission();
         pp.setId(1L);
@@ -54,7 +55,7 @@ public class WriterPermissionTest extends BaseTest {
      * PmphPermission 删除Test
      */
     // @Test
-    // @Rollback(false)
+    // @Rollback(Const.ISROLLBACK)
     public void deletePmphPermissionTest() {
         WriterPermission pp = new WriterPermission();
         pp.setId(1L);
@@ -67,7 +68,7 @@ public class WriterPermissionTest extends BaseTest {
      * PmphPermission 查询Test
      */
     // @Test
-    // @Rollback(false)
+    // @Rollback(Const.ISROLLBACK)
     public void getPmphPermissionTest() {
         WriterPermission pp = new WriterPermission();
         pp.setId(1L);

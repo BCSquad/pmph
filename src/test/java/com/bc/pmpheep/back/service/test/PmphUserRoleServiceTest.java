@@ -23,7 +23,7 @@ public class PmphUserRoleServiceTest extends BaseTest {
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void test() throws Exception {
+    public void test()  {
     	Random r =new Random();
     	PmphUserRole testPar=new PmphUserRole ( new Long(r.nextInt(200)), new Long(r.nextInt(200)));
     	logger.info("---PmphUserRoleService 测试---------------------------------------------------------------------------------");

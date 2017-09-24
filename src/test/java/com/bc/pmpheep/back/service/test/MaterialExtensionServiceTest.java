@@ -22,7 +22,7 @@ public class MaterialExtensionServiceTest extends BaseTest {
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void test() throws Exception {
+    public void test() {
     	Random r =new Random();
     	MaterialExtension testPar=new MaterialExtension (new Long(r.nextInt(200)), "extensionName", true);
     	logger.info("---MaterialExtensionService 测试---------------------------------------------------------------------------------");

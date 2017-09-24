@@ -24,7 +24,7 @@ public class PmphGroupSeviceTest extends BaseTest {
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void test() throws Exception {
+    public void test() {
     	Random r =new Random();
     	PmphGroup pmphGroup=new PmphGroup("String groupName", "String groupImage",
     			Long.parseLong(String.valueOf(r.nextInt(200))) , Long.parseLong(String.valueOf(r.nextInt(200)))," String note",null, null,

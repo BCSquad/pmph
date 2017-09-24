@@ -28,7 +28,7 @@ public class AreaSeviceTest extends BaseTest {
 
     @Test
     @Rollback(Const.ISROLLBACK)
-    public void addArea() throws Exception {
+    public void addArea() {
          Area a = new Area(5L, "测试hh", 4);
          //a.setId(647L);
          areaService.addArea(a);

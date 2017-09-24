@@ -22,7 +22,7 @@ public class TextbookServiceTest extends BaseTest {
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void test() throws Exception {
+    public void test()  {
     	Random r =new Random();
     	Textbook testPar=new Textbook(new Long(r.nextInt(200)), "Name", r.nextInt(200), false,false, null,String.valueOf(r.nextInt(200)),1,1L,null)  ;
     	logger.info("---TextbookService 测试---------------------------------------------------------------------------------");

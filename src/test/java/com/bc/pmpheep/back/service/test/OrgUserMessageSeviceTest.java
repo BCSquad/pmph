@@ -21,13 +21,17 @@ public class OrgUserMessageSeviceTest extends BaseTest {
 	
     @Test
     @Rollback(Const.ISROLLBACK)  
-    public void testOrgUserMessage() throws Exception {
+    public void testOrgUserMessage()  {
     	OrgUserMessage a=new OrgUserMessage(3L, 2L,true,true);
     	testService.addOrgUserMessage(a);
     	logger.info("---OrgUserMessageService--------------------------------------------------------------------------");
     	logger.info(a.toString());
     	a.setMsgId(999L);
-    	logger.info(testService.updateOrgUserMessage(a).toString());
+    	try {
+			logger.info(testService.updateOrgUserMessage(a).toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     	a.setId(2L);
     	logger.info(testService.deleteOrgUserMessageById(2L).toString());
     	logger.info(testService.getOrgUserMessageById(1L).toString());

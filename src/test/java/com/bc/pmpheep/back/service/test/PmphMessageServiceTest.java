@@ -27,7 +27,7 @@ public class PmphMessageServiceTest extends BaseTest {
 
     @Test
     @Rollback(Const.ISROLLBACK)
-    public void test() throws Exception {
+    public void test() {
         Random r = new Random();
         PmphMessage testPar = new PmphMessage("String msgCode", r.nextInt(200));
         logger.info("---PmphMessageService 测试---------------------------------------------------------------------------------");

@@ -23,7 +23,7 @@ public class MaterialServiceTest extends BaseTest {
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void test() throws Exception {
+    public void test() {
     	Random r =new Random();
     	Material testPar=new Material ("materialName",r.nextInt(200),
     			new Long(r.nextInt(200)), new Date(), new Date(),

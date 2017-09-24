@@ -130,25 +130,53 @@ public interface WriterUserService {
 
 	/**
 	 * 
-	 * <pre>
 	 * 功能描述：分页查询作家用户
-	 * 使用示范：
 	 *
-	 * @param page 传入的查询条件
+	 * @param page
+	 *            传入的查询条件
 	 * @return
-	 * </pre>
 	 */
-	Page<WriterUserManagerVO,WriterUserManagerVO> getListWriterUser(Page<WriterUserManagerVO,WriterUserManagerVO> page) throws CheckedServiceException;
-//	/**
-//	 * 
-//	 * <pre>
-//	 * 功能描述：分页查询作家用户
-//	 * 使用示范：
-//	 *
-//	 * @param page 传入的查询条件
-//	 * @return
-//	 * @throws CheckedServiceException
-//	 * </pre>
-//	 */
-//	Page<WriterUserManagerVO, Map<String, String>> getListWriter(Page<WriterUser, Map<String,String>> page) throws CheckedServiceException, ReflectiveOperationException;
+	Page<WriterUserManagerVO, WriterUserManagerVO> getListWriterUser(
+			Page<WriterUserManagerVO, WriterUserManagerVO> page) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：后台添加作家用户
+	 *
+	 * @param writerUser
+	 *            添加的作家用户属性
+	 * @return 返回影响的行数
+	 * @throws CheckedServiceException
+	 *
+	 */
+	String addWriterUserOfBack(WriterUser WriterUser) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：修改作家用户
+	 *
+	 * @param writerUser
+	 *            修改作家用户的属性
+	 * @return 返回影响的行数
+	 * @throws CheckedServiceException
+	 *
+	 */
+	String updateWriterUserOfBack(WriterUser WriterUser) throws CheckedServiceException;
+
+	// /**
+	// *
+	// * <pre>
+	// * 功能描述：分页查询作家用户
+	// * 使用示范：
+	// *
+	// * @param page 传入的查询条件
+	// * @return
+	// * @throws CheckedServiceException
+	// * </pre>
+	// */
+	// Page<WriterUserManagerVO, Map<String, String>>
+	// getListWriter(Page<WriterUser, Map<String,String>> page) throws
+	// CheckedServiceException, ReflectiveOperationException;
 }
