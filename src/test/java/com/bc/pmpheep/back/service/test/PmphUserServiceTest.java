@@ -29,14 +29,14 @@ import com.google.gson.Gson;
  */
 public class PmphUserServiceTest extends BaseTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(PmphUserServiceTest.class);
-    Gson                        gson   = new Gson();
+    Logger                   logger = LoggerFactory.getLogger(PmphUserServiceTest.class);
+    Gson                     gson   = new Gson();
 
     @Autowired
-    PmphUserService             userService;
+    PmphUserService          userService;
 
     @Rule
-    public ExpectedException    thrown = ExpectedException.none();
+    public ExpectedException thrown = ExpectedException.none();
 
     /**
      * PmphUser 添加Test

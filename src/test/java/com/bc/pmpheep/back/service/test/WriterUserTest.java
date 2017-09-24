@@ -26,17 +26,17 @@ import com.bc.pmpheep.test.BaseTest;
  * 
  */
 public class WriterUserTest extends BaseTest {
-    private static final Logger log = LoggerFactory.getLogger(WriterUserTest.class);
+    Logger            logger = LoggerFactory.getLogger(WriterUserTest.class);
 
     @Autowired
-    WriterUserService           userService;
+    WriterUserService userService;
     @Resource
-    WriterUserDao               writerUserDao;
+    WriterUserDao     writerUserDao;
 
     @Test
     public void Count() {
         Long num = writerUserDao.getWriterUserCount();
-        log.info("一共有{}条数据", num);
+        logger.info("一共有{}条数据", num);
     }
 
     /**
@@ -92,28 +92,28 @@ public class WriterUserTest extends BaseTest {
         List<WriterPermission> listPermissions;
         pmUsers = userService.getList();// 查询所有
         Assert.assertNotNull(pmUsers);
-        log.debug(pmUsers.toString());
+        logger.debug(pmUsers.toString());
         wtUser = userService.getByUsername("test1");// 按UserName 查询对象
         Assert.assertNotNull(wtUser);
-        log.debug(wtUser.toString());
+        logger.debug(wtUser.toString());
         wtUser = userService.get(1L);// 按ID查询对象
         Assert.assertNotNull(wtUser);
-        log.debug(wtUser.toString());
+        logger.debug(wtUser.toString());
         wtUser = userService.login("test1", "123");
         Assert.assertNotNull(wtUser);
-        log.debug(wtUser.toString());
+        logger.debug(wtUser.toString());
         pmUsers = userService.getListByRole(1L);
         Assert.assertNotNull(pmUsers);
-        log.debug(pmUsers.toString());
+        logger.debug(pmUsers.toString());
         listPermissions = userService.getListAllResource(1L);
         Assert.assertNotNull(listPermissions);
-        log.debug(listPermissions.size() == 0 ? "null" : listPermissions.get(0).toString());
+        logger.debug(listPermissions.size() == 0 ? "null" : listPermissions.get(0).toString());
         List<String> listRoleNameList = userService.getListRoleSnByUser(1L);
         Assert.assertNotNull(listRoleNameList);
-        log.debug(listRoleNameList.size() == 0 ? "null" : listRoleNameList.get(0));
+        logger.debug(listRoleNameList.size() == 0 ? "null" : listRoleNameList.get(0));
         List<WriterRole> pr = userService.getListUserRole(1L);
         Assert.assertNotNull(pr);
-        log.debug(pr.size() == 0 ? "null" : pr.get(0).toString());
+        logger.debug(pr.size() == 0 ? "null" : pr.get(0).toString());
     }
 
     /**
@@ -130,9 +130,9 @@ public class WriterUserTest extends BaseTest {
         userIdList.add(2L);
         WriterUser pu = userService.update(pmphUser);
         Assert.assertNotNull(pu);
-        log.debug(pu.toString());
+        logger.debug(pu.toString());
         WriterUser pu1 = userService.update(pmphUser, userIdList);
         Assert.assertNotNull(pu1);
-        log.debug(pu1.toString());
+        logger.debug(pu1.toString());
     }
 }
