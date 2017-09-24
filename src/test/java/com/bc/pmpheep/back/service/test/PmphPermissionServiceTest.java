@@ -4,6 +4,7 @@ import java.util.Random;
 
 import javax.annotation.Resource;
 
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,15 +35,21 @@ public class PmphPermissionServiceTest extends BaseTest {
         logger.info("---PmphPermissionService 测试---------------------------------------------------------------------------------");
         // 新增
         testService.addPmphPermission(testPar);
+        Assert.assertNotNull("是否添加成功", testPar.getId());
         logger.info(testPar.toString());
         // 修改
         testPar.setMenuName(String.valueOf(r.nextInt(200)));
-        logger.info(testService.updatePmphPermissionById(testPar).toString());
+        Integer aInteger = testService.updatePmphPermissionById(testPar);
+        Assert.assertTrue("是否更新成功", aInteger > 0 ? true : false);
+        logger.info(aInteger.toString());
         // 删除
-        logger.info(testService.deletePmphPermissionById(new PmphPermission((1L))).toString());
+        Integer bInteger = testService.deletePmphPermissionById(new PmphPermission((1L)));
+        Assert.assertTrue("是否删除成功", bInteger > 0 ? true : false);
+        logger.info(bInteger.toString());
         // 查询
-        logger.info(testService.getPmphPermissionById(new PmphPermission((2L))).toString());
+        PmphPermission pp = testService.getPmphPermissionById(new PmphPermission((2L)));
+        Assert.assertNotNull("是否获取数据", pp);
+        logger.info(pp.toString());
 
     }
-
 }

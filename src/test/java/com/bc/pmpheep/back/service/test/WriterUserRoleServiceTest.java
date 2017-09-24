@@ -4,49 +4,51 @@ import java.util.Random;
 
 import javax.annotation.Resource;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
+
 import com.bc.pmpheep.back.po.WriterUserRole;
-import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.WriterUserRoleService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.test.BaseTest;
+
 /**
  * AreaDao 单元测试
- *
+ * 
  * @author mryang
  */
 public class WriterUserRoleServiceTest extends BaseTest {
-	Logger logger = LoggerFactory.getLogger(WriterUserRoleServiceTest.class);
-	
-	@Resource
-	private WriterUserRoleService testService;
-	
+    Logger                        logger = LoggerFactory.getLogger(WriterUserRoleServiceTest.class);
+
+    @Resource
+    private WriterUserRoleService testService;
+
     @Test
-    @Rollback(Const.ISROLLBACK) 
+    @Rollback(Const.ISROLLBACK)
     public void test() throws Exception {
-    	Random r =new Random();
-    	WriterUserRole testPar=new WriterUserRole ( new Long(r.nextInt(200)), new Long(r.nextInt(200)));
-    	logger.info("---WriterUserRoleService 测试---------------------------------------------------------------------------------");
-    	//新增
-    	testService.addWriterUserRole(testPar);
-    	logger.info(testPar.toString());
-    	//修改
-    	testPar.setRoleId(new Long(r.nextInt(200)));
-    	logger.info(testService.updateWriterUserRole(testPar).toString());
-    	//删除
-    	logger.info(testService.deleteWriterUserRoleById(1L).toString());
-    	//查询
-    	logger.info(testService.getWriterUserRoleById(2L).toString());
-    	
+        Random r = new Random();
+        WriterUserRole testPar =
+        new WriterUserRole(new Long(r.nextInt(200)), new Long(r.nextInt(200)));
+        logger.info("---WriterUserRoleService 测试---------------------------------------------------------------------------------");
+        // 新增
+        testService.addWriterUserRole(testPar);
+        Assert.assertNotNull("是否保存成功", testPar.getId());
+        logger.info(testPar.toString());
+        // 修改
+        testPar.setRoleId(new Long(r.nextInt(200)));
+        Integer aInteger = testService.updateWriterUserRole(testPar);
+        Assert.assertTrue("是否修改成功", aInteger > 0 ? true : false);
+        logger.info(aInteger.toString());
+        // 删除
+        Integer bInteger = testService.deleteWriterUserRoleById(1L);
+        Assert.assertTrue("是否删除成功", bInteger > 0 ? true : false);
+        logger.info(bInteger.toString());
+        // 查询
+        WriterUserRole wur = testService.getWriterUserRoleById(2L);
+        Assert.assertNotNull("不为空", wur);
+        logger.info(wur.toString());
     }
-    
-    
-    
 }
-
-
-
-
-

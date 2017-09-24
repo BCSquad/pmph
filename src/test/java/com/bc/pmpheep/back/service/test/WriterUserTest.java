@@ -16,7 +16,6 @@ import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.WriterUserService;
-import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 
@@ -37,7 +36,7 @@ public class WriterUserTest extends BaseTest {
     @Test
     public void Count() {
         Long num = writerUserDao.getWriterUserCount();
-        log.info("一共有{}条数据",num);
+        log.info("一共有{}条数据", num);
     }
 
     /**
@@ -46,24 +45,20 @@ public class WriterUserTest extends BaseTest {
     // @Test
     // @Rollback(Const.ISROLLBACK)
     public void addPmphUserTest() {
-        try {
-            List<Long> roleIdList = new ArrayList<Long>();
-            roleIdList.add(1L);
-            roleIdList.add(2L);
-            roleIdList.add(3L);
-            WriterUser user = new WriterUser();
-            user.setUsername("admin");
-            user.setPassword("1");
-            user.setRealname("admin");
-            user.setIsDisabled(0);
-            WriterUser u = userService.add(user);// 添加用户
-            Long a = u.getId();// 返回自增主键
-            System.out.println(a);
-            WriterUser ps = userService.add(new WriterUser("test1", "123"), roleIdList);// 给单用户添加多个角色
-            Assert.assertNotNull(ps);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<Long> roleIdList = new ArrayList<Long>();
+        roleIdList.add(1L);
+        roleIdList.add(2L);
+        roleIdList.add(3L);
+        WriterUser user = new WriterUser();
+        user.setUsername("admin");
+        user.setPassword("1");
+        user.setRealname("admin");
+        user.setIsDisabled(0);
+        WriterUser u = userService.add(user);// 添加用户
+        // 查看两个对象的引用是否相等。类似于使用“==”比较两个对象
+        Assert.assertNotSame("是否有返回值", null, u.getId());
+        WriterUser ps = userService.add(new WriterUser("test1", "123"), roleIdList);// 给单用户添加多个角色
+        Assert.assertNotNull(ps);
     }
 
     /**
@@ -82,7 +77,9 @@ public class WriterUserTest extends BaseTest {
         } catch (CheckedServiceException e) {
             e.printStackTrace();
         }
-        System.out.println(aInteger);
+        Assert.fail("CheckedServiceException");
+        // 查看两个对象的引用是否相等。类似于使用“==”比较两个对象
+        Assert.assertSame("是否等于1", 1, aInteger);
     }
 
     /**
@@ -93,27 +90,30 @@ public class WriterUserTest extends BaseTest {
         WriterUser wtUser;
         List<WriterUser> pmUsers;
         List<WriterPermission> listPermissions;
-        try {
-            pmUsers = userService.getList();// 查询所有
-            log.debug(pmUsers.toString());
-            wtUser = userService.getByUsername("test1");// 按UserName 查询对象
-            log.debug(wtUser.toString());
-            wtUser = userService.get(1L);// 按ID查询对象
-            log.debug(wtUser.toString());
-            wtUser = userService.login("test1", "123");
-            log.debug(wtUser.toString());
-            pmUsers = userService.getListByRole(1L);
-            log.debug(pmUsers.toString());
-            listPermissions = userService.getListAllResource(1L);
-            log.debug(listPermissions.size() == 0 ? "null" : listPermissions.get(0).toString());
-            List<String> listRoleNameList = userService.getListRoleSnByUser(1L);
-            log.debug(listRoleNameList.size() == 0 ? "null" : listRoleNameList.get(0));
-            List<WriterRole> pr = userService.getListUserRole(1L);
-            log.debug(pr.size() == 0 ? "null" : pr.get(0).toString());
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        pmUsers = userService.getList();// 查询所有
+        Assert.assertNotNull(pmUsers);
+        log.debug(pmUsers.toString());
+        wtUser = userService.getByUsername("test1");// 按UserName 查询对象
+        Assert.assertNotNull(wtUser);
+        log.debug(wtUser.toString());
+        wtUser = userService.get(1L);// 按ID查询对象
+        Assert.assertNotNull(wtUser);
+        log.debug(wtUser.toString());
+        wtUser = userService.login("test1", "123");
+        Assert.assertNotNull(wtUser);
+        log.debug(wtUser.toString());
+        pmUsers = userService.getListByRole(1L);
+        Assert.assertNotNull(pmUsers);
+        log.debug(pmUsers.toString());
+        listPermissions = userService.getListAllResource(1L);
+        Assert.assertNotNull(listPermissions);
+        log.debug(listPermissions.size() == 0 ? "null" : listPermissions.get(0).toString());
+        List<String> listRoleNameList = userService.getListRoleSnByUser(1L);
+        Assert.assertNotNull(listRoleNameList);
+        log.debug(listRoleNameList.size() == 0 ? "null" : listRoleNameList.get(0));
+        List<WriterRole> pr = userService.getListUserRole(1L);
+        Assert.assertNotNull(pr);
+        log.debug(pr.size() == 0 ? "null" : pr.get(0).toString());
     }
 
     /**
@@ -129,8 +129,10 @@ public class WriterUserTest extends BaseTest {
         userIdList.add(1L);
         userIdList.add(2L);
         WriterUser pu = userService.update(pmphUser);
+        Assert.assertNotNull(pu);
         log.debug(pu.toString());
         WriterUser pu1 = userService.update(pmphUser, userIdList);
+        Assert.assertNotNull(pu1);
         log.debug(pu1.toString());
     }
 }
