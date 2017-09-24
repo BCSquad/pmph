@@ -35,20 +35,20 @@ public class PmphUserRoleServiceTest extends BaseTest {
         // 新增
         testService.addPmphUserRole(testPar);
         Assert.assertNotNull("是否保存成功", testPar.getId());
-        logger.info(testPar.toString());
+        //logger.info(testPar.toString());
         // 修改
         testPar.setRoleId(new Long(r.nextInt(200)));
         Integer aInteger = testService.updatePmphUserRole(testPar);
         Assert.assertTrue("是否修改成功", aInteger > 0 ? true : false);
-        logger.info(aInteger.toString());
+        //logger.info(aInteger.toString());
         // 删除
         Integer bInteger = testService.deletePmphUserRoleById(26L);
-        Assert.assertTrue("是否删除成功", bInteger > 0 ? true : false);
-        logger.info(bInteger.toString());
+        Assert.assertTrue("删除失败", bInteger > 0 ? true : false);
+        //logger.info(bInteger.toString());
         // 查询
         PmphUserRole pur = testService.getPmphUserRoleById(25L);
         Assert.assertNotNull("不为空", pur);
-        logger.info(pur.toString());
+        //logger.info(pur.toString());
 
     }
 

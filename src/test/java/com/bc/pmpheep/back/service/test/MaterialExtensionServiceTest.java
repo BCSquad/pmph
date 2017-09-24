@@ -1,10 +1,14 @@
 package com.bc.pmpheep.back.service.test;
 import java.util.Random;
+
 import javax.annotation.Resource;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
+
 import com.bc.pmpheep.back.po.MaterialExtension;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.MaterialExtensionService;
@@ -18,24 +22,24 @@ public class MaterialExtensionServiceTest extends BaseTest {
 	Logger logger = LoggerFactory.getLogger(MaterialExtensionServiceTest.class);
 	
 	@Resource
-	private MaterialExtensionService testService;
+	private MaterialExtensionService materialExtensionService;
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
     public void test() {
     	Random r =new Random();
-    	MaterialExtension testPar=new MaterialExtension (new Long(r.nextInt(200)), "extensionName", true);
+    	MaterialExtension materialExtension=new MaterialExtension (new Long(r.nextInt(200)), "extensionName", true);
     	logger.info("---MaterialExtensionService 测试---------------------------------------------------------------------------------");
     	//新增
-    	testService.addMaterialExtension(testPar);
-    	logger.info(testPar.toString());
+    	materialExtensionService.addMaterialExtension(materialExtension);
+    	Assert.assertTrue("添加失败",materialExtension.getId() > 0 );
     	//修改
-    	testPar.setExtensionName(String.valueOf(r.nextInt(200)));
-    	logger.info(testService.updateMaterialExtension(testPar).toString());
+    	materialExtension.setExtensionName(String.valueOf(r.nextInt(200)));
+    	Assert.assertTrue("更新失败",materialExtensionService.updateMaterialExtension(materialExtension)> 0 );
     	//删除
-    	logger.info(testService.deleteMaterialExtensionById(16L).toString());
+    	Assert.assertTrue("删除失败",materialExtensionService.deleteMaterialExtensionById(16L) >= 0 );
     	//查询
-    	logger.info(testService.getMaterialExtensionById(15L).toString());
+    	Assert.assertNotNull("获取数据失败",materialExtensionService.getMaterialExtensionById(15L));
     	
     }
     

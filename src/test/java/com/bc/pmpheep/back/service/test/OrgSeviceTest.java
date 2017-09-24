@@ -1,10 +1,13 @@
 package com.bc.pmpheep.back.service.test;
 
 import javax.annotation.Resource;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
+
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.OrgService;
@@ -25,14 +28,13 @@ public class OrgSeviceTest extends BaseTest {
     @Rollback(Const.ISROLLBACK) 
     public void test() {
         logger.info("---OrgService-----------------------------------------------------------------------------");
-    	Org a=new Org(5L,"测试", 4L, 4L,"ZHANGS", "1234", "BEIZHU", 4, false, null, null);
-    	orgService.addOrg(a);
-    	logger.info(a.toString());
-    	a.setOrgName("ceshiwwwwwwww"+a.getId());
-    	logger.info(orgService.updateOrg(a).toString());
-    	a.setId(1L);
-    	logger.info(orgService.deleteOrgById(4L).toString());
-    	logger.info(orgService.getOrgById(3L).toString());
+    	Org org=new Org(5L,"测试", 4L, 4L,"ZHANGS", "1234", "BEIZHU", 4, false, null, null);
+    	orgService.addOrg(org);
+    	Assert.assertTrue("添加失败",org.getId() > 0 );
+    	org.setOrgName("ceshiwwwwwwww"+org.getId());
+    	Assert.assertTrue("更新失败", orgService.updateOrg(org) > 0 );
+    	Assert.assertTrue("删除失败",orgService.deleteOrgById(4L)  >= 0 );
+    	Assert.assertNotNull("获取数据失败",orgService.getOrgById(3L));
     }
     
 }

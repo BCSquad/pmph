@@ -1,10 +1,12 @@
 package com.bc.pmpheep.back.service.test;
 import javax.annotation.Resource;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
+
 import com.bc.pmpheep.back.po.OrgMessage;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.OrgMessageService;
@@ -23,15 +25,15 @@ public class OrgMessageSeviceTest extends BaseTest {
     @Test
     @Rollback(Const.ISROLLBACK) 
     public void addArea()  {
-    	OrgMessage a=new OrgMessage("测试",0);
-    	orgMessageService.addOrgMessage(a);
+    	OrgMessage orgMessage=new OrgMessage("测试",0);
+    	orgMessageService.addOrgMessage(orgMessage);
     	logger.info("---OrgMessage---------------------------------------------------------------------------");
-    	logger.info(a.toString());
-    	a.setMsgCode("ceshiwwwwwwww"+a.getId());
-    	logger.info(orgMessageService.updateOrgMessage(a).toString());
-    	a.setId(3L);
-    	logger.info(orgMessageService.deleteOrgMessageById(1L).toString());
-    	logger.info(orgMessageService.getOrgMessageById(2L).toString());
+    	Assert.assertTrue("添加失败",orgMessage.getId() > 0 );
+    	orgMessage.setMsgCode("ceshiwwwwwwww"+orgMessage.getId());
+    	Assert.assertTrue("更新失败",orgMessageService.updateOrgMessage(orgMessage) > 0 );
+    	orgMessage.setId(3L);
+    	Assert.assertTrue("删除失败",orgMessageService.deleteOrgMessageById(1L) >= 0 );
+    	Assert.assertNotNull("获取数据失败",orgMessageService.getOrgMessageById(2L));
     }
     
 }

@@ -76,12 +76,12 @@ public class PmphRoleServiceTest extends BaseTest {
         List<Long> list = new ArrayList<Long>();
         list.add(1L);
         Integer count = roleService.delete(4L);// 按ID删除
-        Assert.assertTrue("idDelete", count > 0 ? true : false);
+        Assert.assertTrue("idDelete", count > 0 );
         roleService.deleteRoleAndResource(list);// 根据角色 id 删除对应资源
         roleService.deleteUserRole(1L, 1L);// 删除用户对应角色
         roleService.deleteUserRoles(1L);// 删除用户对应所有角色
         roleService.deleteRoleResource(1L, 1L);// 删除角色对应的资源
         Integer ins = roleService.deleteRoleAndUser(list);// 删除角色对应所有的用户
-        Assert.assertTrue("idDelete", ins > 0 ? true : false);
+        Assert.assertTrue("idDelete", ins > 0 );
     }
 }

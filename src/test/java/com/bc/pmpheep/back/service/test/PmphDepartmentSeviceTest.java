@@ -1,11 +1,15 @@
 package com.bc.pmpheep.back.service.test;
 import java.util.List;
 import java.util.Random;
+
 import javax.annotation.Resource;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
+
 import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.PmphDepartmentService;
@@ -20,23 +24,23 @@ public class PmphDepartmentSeviceTest extends BaseTest {
 	Logger logger = LoggerFactory.getLogger(PmphDepartmentSeviceTest.class);
 	
 	@Resource
-	private PmphDepartmentService testService;
+	private PmphDepartmentService pmphDepartmentService;
 	
     @Test
     @Rollback(Const.ISROLLBACK)  
     public void test() {
-//    	Random r =new Random();
-//    	PmphDepartment a=new PmphDepartment(5L, "String path", "String dpName", r.nextInt(1000000), "String note") ;
-//    	testService.addPmphDepartment(a);
-//    	logger.info("---PmphDepartmentService---------------------------------------------------------------------------");
-//    	logger.info(a.toString());
-//    	a.setDpName(String.valueOf(r.nextLong()));
-//    	logger.info(testService.updatePmphDepartment(a).toString());
-//    	a.setId(2L);
-//    	logger.info(testService.deletePmphDepartmentById(2L).toString());
-//        logger.info(testService.getPmphDepartmentById(1L).toString());
-        PmphUserDepartmentVO departmentVO = testService.getListPmphDepartment();
-    	logger.info(departmentVO.toString());
+    	Random random =new Random();
+    	PmphDepartment pmphDepartment=new PmphDepartment(5L, "String path", "String dpName", random.nextInt(1000000), "String note") ;
+    	pmphDepartmentService.addPmphDepartment(pmphDepartment);
+    	logger.info("---PmphDepartmentService---------------------------------------------------------------------------");
+    	Assert.assertTrue("添加失败",pmphDepartment.getId() > 0 );
+    	pmphDepartment.setDpName(String.valueOf(random.nextLong()));
+    	Assert.assertTrue("更新失败", pmphDepartmentService.updatePmphDepartment(pmphDepartment) > 0 );
+    	Assert.assertTrue("删除失败",pmphDepartmentService.deletePmphDepartmentById(2L) >= 0 );
+    	Assert.assertNotNull("获取数据失败",pmphDepartmentService.getPmphDepartmentById(1L));
+        PmphUserDepartmentVO departmentVO = pmphDepartmentService.getListPmphDepartment();
+        Assert.assertNotNull("获取数据失败",departmentVO);
+    	
     }
     
 }

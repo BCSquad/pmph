@@ -4,6 +4,7 @@ import java.util.Random;
 
 import javax.annotation.Resource;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,24 +24,24 @@ public class PmphMessageServiceTest extends BaseTest {
     Logger                     logger = LoggerFactory.getLogger(PmphMessageServiceTest.class);
 
     @Resource
-    private PmphMessageService testService;
+    private PmphMessageService pmphMessageService;
 
     @Test
     @Rollback(Const.ISROLLBACK)
     public void test() {
-        Random r = new Random();
-        PmphMessage testPar = new PmphMessage("String msgCode", r.nextInt(200));
+        Random random = new Random();
+        PmphMessage pmphMessage = new PmphMessage("String msgCode", random.nextInt(200));
         logger.info("---PmphMessageService 测试---------------------------------------------------------------------------------");
         // 新增
-        testService.addPmphMessage(testPar);
-        logger.info(testPar.toString());
+        pmphMessageService.addPmphMessage(pmphMessage);
+        Assert.assertTrue("添加失败",pmphMessage.getId() > 0 );
         // 修改
-        testPar.setMsgCode(String.valueOf(r.nextInt(200)));
-        logger.info(testService.updatePmphMessage(testPar).toString());
+        pmphMessage.setMsgCode(String.valueOf(random.nextInt(200)));
+        Assert.assertTrue("更新失败",pmphMessageService.updatePmphMessage(pmphMessage)> 0 );
         // 删除
-        logger.info(testService.deletePmphMessageById(1L).toString());
+        Assert.assertTrue("删除失败",pmphMessageService.deletePmphMessageById(1L)  >= 0 );
         // 查询
-        logger.info(testService.getPmphMessageById(2L).toString());
+        Assert.assertNotNull("获取数据失败",pmphMessageService.getPmphMessageById(2L));
     }
 
 }

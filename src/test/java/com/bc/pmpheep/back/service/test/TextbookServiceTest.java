@@ -1,10 +1,14 @@
 package com.bc.pmpheep.back.service.test;
 import java.util.Random;
+
 import javax.annotation.Resource;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
+
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.TextbookService;
@@ -18,24 +22,24 @@ public class TextbookServiceTest extends BaseTest {
 	Logger logger = LoggerFactory.getLogger(TextbookServiceTest.class);
 	
 	@Resource
-	private TextbookService testService;
+	private TextbookService textbookService;
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
     public void test()  {
-    	Random r =new Random();
-    	Textbook testPar=new Textbook(new Long(r.nextInt(200)), "Name", r.nextInt(200), false,false, null,String.valueOf(r.nextInt(200)),1,1L,null)  ;
+    	Random random =new Random();
+    	Textbook textbook=new Textbook(new Long(random.nextInt(200)), "Name", random.nextInt(200), false,false, null,String.valueOf(random.nextInt(200)),1,1L,null)  ;
     	logger.info("---TextbookService 测试---------------------------------------------------------------------------------");
     	//新增
-    	testService.addTextbook(testPar);
-    	logger.info(testPar.toString());
+    	textbookService.addTextbook(textbook);
+    	Assert.assertTrue("添加失败",textbook.getId() > 0 );
     	//修改
-    	testPar.setTextbookName(String.valueOf(r.nextInt(200)));
-    	logger.info(testService.updateTextbook(testPar).toString());
+    	textbook.setTextbookName(String.valueOf(random.nextInt(200)));
+    	Assert.assertTrue("更新失败", textbookService.updateTextbook(textbook) > 0 );
     	//删除
-    	logger.info(testService.deleteTextbookById(2L).toString());
+    	Assert.assertTrue("删除失败",textbookService.deleteTextbookById(2L)  >= 0 );
     	//查询
-    	logger.info(testService.getTextbookById(1L).toString());
+    	Assert.assertNotNull("获取数据失败",textbookService.getTextbookById(1L));
     	
     }
     
