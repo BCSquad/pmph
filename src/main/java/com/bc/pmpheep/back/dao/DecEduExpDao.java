@@ -5,6 +5,8 @@ package com.bc.pmpheep.back.dao;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.bc.pmpheep.back.po.DecEduExp;
 
 
@@ -13,6 +15,7 @@ import com.bc.pmpheep.back.po.DecEduExp;
  * @author lyc
  * @date 2017年9月24日 下午2:50:22
  */
+@Repository
 public interface DecEduExpDao {
 	/**
 	 * 新增一个作家学习经历信息
