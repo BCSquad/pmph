@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.DeclarationDao">
+
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id !=null">
+				id,
+			</if>
+			<if test="materialId !=null and materialId !=''">
+				material_id,
+			</if>
+			<if test="userId !=null and userId !=''">
+			    user_id,
+			</if>
+			<if test="realname !=null and realname !=''">
+				realname,
+			</if>
+			<if test="sex !=null and sex !=''">
+				sex,
+			</if>
+			<if test="birthday !=null and birthday !=''">
+			    birthday,
+			</if>
+			<if test="experience !=null and experience !=''">
+			    experience,
+			</if>
+			<if test="orgName !=null and orgName !=''">
+			    org_name,
+			</if>
+			<if test="position !=null and position !=''">
+				position,
+			</if>
+			<if test="title !=null and title !=''">
+			    title,
+			</if>
+			<if test="address !=null and address !=''">
+				address,
+			</if>
+			<if test="postcode !=null and postcode !=''">
+				postcode,
+			</if>
+			<if test="handphone !=null and handphone !=''">
+				handphone,
+			</if>
+			<if test="email !=null and email !=''">
+				email,
+			</if>
+			<if test="idtype !=null and idtype !=''">
+				idtype,
+			</if>
+			<if test="idcard !=null and idcard !=''">
+				idcard,
+			</if>
+			<if test="telephone !=null and telephone !=''">
+				telephone,
+			</if>
+			<if test="fax !=null and fax !=''">
+				fax,
+			</if>
+			<if test="orgId !=null and orgId !=''">
+				org_id,
+			</if>
+			<if test="onlineProgress !=null and onlineProgress !=''">
+				online_progress,
+			</if>
+			<if test="authUserId !=null and authUserId !=''">
+				auth_user_id,
+			</if>
+			<if test="authDate !=null and authDate !=''">
+				auth_date,
+			</if>
+			<if test="offlineProgress !=null and offlineProgress !=''">
+				offline_progress,
+			</if>
+			<if test="paperDate !=null and paperDate !=''">
+				paper_date,
+			</if>
+			<if test="isStaging !=null and isStaging !=''">
+				is_staging,
+			</if>
+			<if test="isDeleted !=null and isDeleted !=''">
+				is_deleted,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<trim suffixOverrides=",">
+			<if test="id !=null">
+				#{id},
+			</if>
+			<if test="materialId !=null and materialId !=''">
+				#{materialId},
+			</if>
+			<if test="userId !=null and userId !=''">
+			    #{userId},
+			</if>
+			<if test="realname !=null and realname !=''">
+				#{realname},
+			</if>
+			<if test="sex !=null and sex !=''">
+				#{sex},
+			</if>
+			<if test="birthday !=null and birthday !=''">
+			    #{birthday},
+			</if>
+			<if test="experience !=null and experience !=''">
+			    #{experience},
+			</if>
+			<if test="orgName !=null and orgName !=''">
+			    #{orgName},
+			</if>
+			<if test="position !=null and position !=''">
+				#{position},
+			</if>
+			<if test="title !=null and title !=''">
+			    #{title},
+			</if>
+			<if test="address !=null and address !=''">
+				#{address},
+			</if>
+			<if test="postcode !=null and postcode !=''">
+				#{postcode},
+			</if>
+			<if test="handphone !=null and handphone !=''">
+				#{handphone},
+			</if>
+			<if test="email !=null and email !=''">
+				#{email},
+			</if>
+			<if test="idtype !=null and idtype !=''">
+				#{idtype},
+			</if>
+			<if test="idcard !=null and idcard !=''">
+				#{idcard},
+			</if>
+			<if test="telephone !=null and telephone !=''">
+				#{telephone},
+			</if>
+			<if test="fax !=null and fax !=''">
+				#{fax},
+			</if>
+			<if test="orgId !=null and orgId !=''">
+				#{orgId},
+			</if>
+			<if test="onlineProgress !=null and onlineProgress !=''">
+				#{onlineProgress},
+			</if>
+			<if test="authUserId !=null and authUserId !=''">
+				#{authUserId},
+			</if>
+			<if test="authDate !=null and authDate !=''">
+				#{authDate},
+			</if>
+			<if test="offlineProgress !=null and offlineProgress !=''">
+				#{offlineProgress},
+			</if>
+			<if test="paperDate !=null and paperDate !=''">
+				#{paperDate},
+			</if>
+			<if test="isStaging !=null and isStaging !=''">
+				#{isStaging},
+			</if>
+			<if test="isDeleted !=null and isDeleted !=''">
+				#{isDeleted},
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 新增Declaration -->
+	<insert id="addDeclaration" parameterType="Declaration">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into declaration(
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+
+	<!-- 根据id删除一个作家申报信息 -->
+	<delete id="deleteDeclarationById" parameterType="java.lang.Long">
+		delete from
+		declaration where
+		id=#{id};
+	</delete>
+
+	<!-- 更新作家申报信息 -->
+	<update id="updateDeclaration" parameterType="Declaration">
+		update dec_acade
+		<set>
+			<if test="materialId !=null and materialId !=''">
+				material_id = #{materialId},
+			</if>
+			<if test="userId !=null and userId !=''">
+			    user_id = #{userId},
+			</if>
+			<if test="realname !=null and realname !=''">
+				realname = #{realname},
+			</if>
+			<if test="sex !=null and sex !=''">
+				sex = #{sex},
+			</if>
+			<if test="birthday !=null and birthday !=''">
+			    birthday = #{birthday},
+			</if>
+			<if test="experience !=null and experience !=''">
+			    experience = #{experience},
+			</if>
+			<if test="orgName !=null and orgName !=''">
+			    org_name = #{orgName},
+			</if>
+			<if test="position !=null and position !=''">
+				position = #{position},
+			</if>
+			<if test="title !=null and title !=''">
+			    title = #{title},
+			</if>
+			<if test="address !=null and address !=''">
+				address = #{address},
+			</if>
+			<if test="postcode !=null and postcode !=''">
+				postcode = #{postcode},
+			</if>
+			<if test="handphone !=null and handphone !=''">
+				handphone = #{handphone},
+			</if>
+			<if test="email !=null and email !=''">
+				email = #{email},
+			</if>
+			<if test="idtype !=null and idtype !=''">
+				idtype = #{idtype},
+			</if>
+			<if test="idcard !=null and idcard !=''">
+				idcard = #{idcard},
+			</if>
+			<if test="telephone !=null and telephone !=''">
+				telephone = #{telephone},
+			</if>
+			<if test="fax !=null and fax !=''">
+				fax = #{fax},
+			</if>
+			<if test="orgId !=null and orgId !=''">
+				org_id = #{orgId},
+			</if>
+			<if test="onlineProgress !=null and onlineProgress !=''">
+				online_progress = #{onlineProgress},
+			</if>
+			<if test="authUserId !=null and authUserId !=''">
+				auth_user_id = #{authUserId},
+			</if>
+			<if test="authDate !=null and authDate !=''">
+				auth_date = #{authDate},
+			</if>
+			<if test="offlineProgress !=null and offlineProgress !=''">
+				offline_progress = #{offlineProgress},
+			</if>
+			<if test="paperDate !=null and paperDate !=''">
+				paper_date = #{paperDate},
+			</if>
+			<if test="isStaging !=null and isStaging !=''">
+				is_staging = #{isStaging},
+			</if>
+			<if test="isDeleted !=null and isDeleted !=''">
+				is_deleted = #{isDeleted},
+			</if>
+		</set>
+		where id=#{id} ;
+	</update>
+
+	<!-- 根据id查询一个作家申报信息 -->
+	<select id="getDeclarationById" parameterType="java.lang.Long"
+		resultType="Declaration">
+		select * from declaration where id=#{id};
+	</select>
+
+	<!-- 根据MaterialId查询作家申报信息 -->
+	<select id="getDeclarationByMaterialId" parameterType="java.lang.Long"
+		resultType="Declaration">
+		select * from declaration where
+		material_id=#{materialId};
+	</select>
+
+	<!-- 查询兼职学术信息表的总记录数 -->
+	<select id="getDeclaration" resultType="java.lang.Long">
+		select count(*) from declaration
+	</select>
+</mapper>
