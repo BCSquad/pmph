@@ -1,13 +1,13 @@
 package com.bc.pmpheep.back.service.test;
 
-import javax.annotation.Resource;
 
+
+import javax.annotation.Resource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
-
 import com.bc.pmpheep.back.dao.AreaDao;
 import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.test.BaseTest;
@@ -39,7 +39,9 @@ public class AreaSeviceTest extends BaseTest {
         area.setAreaName("ceshiwwwwwwww");
         Assert.assertTrue("更新失败", areaService.updateArea(area) > 0 );
         Assert.assertTrue("删除失败", areaService.deleteAreaById(2L) >= 0 );
-        Assert.assertNotNull("获取数据失败", areaService.getAreaById(6L));
+        //Assert.assertNotNull("获取数据失败", areaService.getAreaById(6L));
+        Assert.assertNotNull("失败", areaService.getAreaTreeVO(0l));
+        Assert.assertTrue("删除失败", areaService.deleteAreaBatch(4707L)> 0 );
         //logger.info(areaService.getAreaById(6L).toString());
 //        areaService.getTest();
 //        areaService.deleteAllArea();
