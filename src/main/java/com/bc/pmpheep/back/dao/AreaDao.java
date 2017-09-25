@@ -1,11 +1,9 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
-
 import org.springframework.stereotype.Repository;
-
-import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.Area;
+import com.bc.pmpheep.back.vo.AreaTreeVO;
 
 /**
  * AreaDao实体类数据访问层接口
@@ -48,7 +46,20 @@ public interface AreaDao {
 	 * @return area
 	 */
 	Area getAreaById(Long id);
+	/**
+	 * 
+	 * 获取area集通过parentId (返回的只有一层List)
+	 * @author Mryang
+	 * @createDate 2017年9月25日 上午11:57:29
+	 * @param parentId
+	 * @return
+	 */
+	List<AreaTreeVO> getAreaByParentId(Long parentId);
 	
+	/**
+	 * 根据ids批量删除
+	 */
+	Integer deleteAreaBatch(List<Long> ids);
 	/**
 	 * 
 	 * <pre>
@@ -69,9 +80,5 @@ public interface AreaDao {
 	  * </pre>
 	  */
 	 Long getAreacount();
-
-	// 测试
-	List<Area> getTest(Page<Area,Area> p);
-
-	Integer getTestTotal(Page<Area,Area> p);
+	 
 }
