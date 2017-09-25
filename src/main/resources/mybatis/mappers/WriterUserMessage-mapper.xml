@@ -54,13 +54,13 @@
 	</insert>
 
 	<!-- 根据id删除一个 WriterUserMessage -->
-	<delete id="deleteWriterUserMessageById" parameterType="WriterUserMessage">
+	<delete id="deleteWriterUserMessageById" parameterType="java.lang.Long">
 		delete
 		from writer_user_message where id=#{id} ;
 	</delete>
 
 	<!-- 更新 WriterUserMessage -->
-	<update id="updateWriterUserMessageById" parameterType="WriterUserMessage">
+	<update id="updateWriterUserMessage" parameterType="WriterUserMessage">
 		update writer_user_message
 		<set>
 			<if test="msgId !=null and msgId!='' ">
@@ -80,7 +80,7 @@
 	</update>
 
 	<!-- 根据id查询一个 WriterUserMessage -->
-	<select id="getWriterUserMessageById" parameterType="WriterUserMessage"
+	<select id="getWriterUserMessageById" parameterType="java.lang.Long"
 		resultType="WriterUserMessage">
 		select * from writer_user_message where
 		id=#{id} ;
