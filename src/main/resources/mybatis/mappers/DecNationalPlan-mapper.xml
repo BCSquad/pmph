@@ -84,7 +84,7 @@
 			<if test="declarationId !=null and declarationId !=''">
 				declaration_id = #{declarationId},
 			</if>
-			<if test="materialName !=null andmaterialName !=''">
+			<if test="materialName !=null and materialName !=''">
 				material_name = #{materialName},
 			</if>
 			<if test="isbn !=null and isbn !=''">
