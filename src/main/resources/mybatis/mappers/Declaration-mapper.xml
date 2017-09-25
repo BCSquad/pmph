@@ -193,7 +193,7 @@
 
 	<!-- 更新作家申报信息 -->
 	<update id="updateDeclaration" parameterType="Declaration">
-		update dec_acade
+		update declaration
 		<set>
 			<if test="materialId !=null and materialId !=''">
 				material_id = #{materialId},
