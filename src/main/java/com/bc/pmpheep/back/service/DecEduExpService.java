@@ -51,6 +51,6 @@ public interface DecEduExpService {
 	 * @Return DecEduExp 实体对象集合
 	 * @Throws CheckedServiceException
 	 */
-	List<DecEduExp> getListDecAcadeByDeclarationId(Long declarationId)
+	List<DecEduExp> getListDecEduExpByDeclarationId(Long declarationId)
 			throws CheckedServiceException;
 }

@@ -11,7 +11,7 @@ import com.bc.pmpheep.back.po.DecAcade;
 
 /**
  * <p>
- * Title:DecAcadeDao数据访问层接口
+ * Title:作家兼职学术组织信息数据访问层接口
  * <p>
  * 
  * @author lyc

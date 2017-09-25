@@ -76,7 +76,7 @@ public class DecEduExpServiceImpl implements DecEduExpService {
 	}
 
 	@Override
-	public List<DecEduExp> getListDecAcadeByDeclarationId(Long declarationId)
+	public List<DecEduExp> getListDecEduExpByDeclarationId(Long declarationId)
 			throws CheckedServiceException {
 		if (null == declarationId) {
 			throw new CheckedServiceException(
