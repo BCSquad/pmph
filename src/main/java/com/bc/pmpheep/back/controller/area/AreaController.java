@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.controller.group;
+package com.bc.pmpheep.back.controller.area;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
