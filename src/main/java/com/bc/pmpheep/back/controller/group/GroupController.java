@@ -1,6 +1,6 @@
 package com.bc.pmpheep.back.controller.group;
 
-import java.util.List;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.service.PmphGroupService;
-import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
+
 
 /**
  * @author MrYang
@@ -21,6 +20,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  */
 @Controller
 @RequestMapping(value = "/groups")
+@SuppressWarnings({"rawtypes","unchecked"})
 public class GroupController {
 
     @Autowired
@@ -37,21 +37,6 @@ public class GroupController {
     @RequestMapping(value = "/getList")
     @ResponseBody
     public ResponseBean getList(PmphGroup pmphGroup) {
-        /*
-        ResponseBean<List<PmphGroupListVO>> responseBean = new ResponseBean<>();
-        try {
-            List<PmphGroupListVO> pmphGroupList = pmphGroupService.getList(pmphGroup);
-            responseBean.setData(pmphGroupList);
-        } catch (CheckedServiceException e) {
-            responseBean.setCode(ResponseBean.FAILURE);
-            responseBean.setMsg(e.toString());
-        } catch (Exception e) {
-            responseBean.setCode(ResponseBean.FAILURE);
-            responseBean.setMsg("未知错误,请联系管理员！");
-        }
-        return responseBean;
-        */
-        
         /* --------- 以下是正确的示例 ---------
          *
          * 在ResponseBean初始化时，通过ResponseBeanAop对其构造函数进行切面编程，

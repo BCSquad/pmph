@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.WriterMessageDao;
 import com.bc.pmpheep.back.po.WriterMessage;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphGroupService 接口实现
@@ -23,10 +26,13 @@ public class WriterMessageServiceImpl extends BaseService implements WriterMessa
 	 * @param WriterMessage
 	 *            实体对象
 	 * @return 带主键的WriterMessage
-	 * @throws Exception
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public WriterMessage addWriterMessage(WriterMessage writerMessage) throws Exception {
+	public WriterMessage addWriterMessage(WriterMessage writerMessage) throws CheckedServiceException {
+		if(null == writerMessage ){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
 		writerMessageDao.addWriterMessage(writerMessage);
 		return writerMessage;
 	}
@@ -36,12 +42,12 @@ public class WriterMessageServiceImpl extends BaseService implements WriterMessa
 	 * @param WriterMessage
 	 *            必须包含主键ID
 	 * @return WriterMessage
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public WriterMessage getWriterMessageById(WriterMessage writerMessage) throws Exception {
+	public WriterMessage getWriterMessageById(WriterMessage writerMessage) throws CheckedServiceException {
 		if (null == writerMessage.getId()) {
-			throw new NullPointerException("主键id为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键id为空");
 		}
 		return writerMessageDao.getWriterMessageById(writerMessage);
 	}
@@ -50,12 +56,12 @@ public class WriterMessageServiceImpl extends BaseService implements WriterMessa
 	 * 
 	 * @param WriterMessage
 	 * @return 影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Integer deleteWriterMessageById(WriterMessage writerMessage) throws Exception {
+	public Integer deleteWriterMessageById(WriterMessage writerMessage) throws CheckedServiceException {
 		if (null == writerMessage.getId()) {
-			throw new NullPointerException("主键id为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键id为空");
 		}
 		return writerMessageDao.deleteWriterMessageById(writerMessage);
 	}
@@ -63,13 +69,12 @@ public class WriterMessageServiceImpl extends BaseService implements WriterMessa
 	/**
 	 * @param WriterMessage
 	 * @return 影响行数
-	 * @throws Exception
-	 *             ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Integer updateWriterMessageById(WriterMessage writerMessage) throws Exception {
+	public Integer updateWriterMessageById(WriterMessage writerMessage) throws CheckedServiceException {
 		if (null == writerMessage.getId()) {
-			throw new NullPointerException("主键id为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键id为空");
 		}
 		return writerMessageDao.updateWriterMessageById(writerMessage);
 	}

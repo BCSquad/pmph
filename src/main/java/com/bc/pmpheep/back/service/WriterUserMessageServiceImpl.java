@@ -2,9 +2,13 @@ package com.bc.pmpheep.back.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.WriterUserMessageDao;
 import com.bc.pmpheep.back.po.WriterUserMessage;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * WriterUserMessageService 接口实现
@@ -19,58 +23,66 @@ public class WriterUserMessageServiceImpl extends BaseService implements WriterU
 
 	/**
 	 * 
-	 * @param WriterUserMessage
+	 * @param writerUserMessage
 	 *            实体对象
 	 * @return 带主键的WriterUserMessage
-	 * @throws Exception
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public WriterUserMessage addWriterUserMessage(WriterUserMessage writerUserMessage) throws Exception {
+	public WriterUserMessage addWriterUserMessage(WriterUserMessage writerUserMessage)  throws CheckedServiceException {
+		if(null == writerUserMessage){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		if(null == writerUserMessage.getMsgId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "消息为空");
+		}
+		if(null == writerUserMessage.getUserId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "消息人为空");
+		}
 		writerUserMessageDao.addWriterUserMessage(writerUserMessage);
 		return writerUserMessage;
 	}
 
 	/**
 	 * 
-	 * @param WriterUserMessage
-	 *            必须包含主键ID
+	 * @param id
+	 *            
 	 * @return WriterUserMessage
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public WriterUserMessage getWriterUserMessageById(WriterUserMessage writerUserMessage) throws Exception {
-		if (null == writerUserMessage.getId()) {
-			throw new NullPointerException("主键id为空");
+	public WriterUserMessage getWriterUserMessageById(Long id) throws CheckedServiceException {
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键id为空");
 		}
-		return writerUserMessageDao.getWriterUserMessageById(writerUserMessage);
+		return writerUserMessageDao.getWriterUserMessageById(id);
 	}
 
 	/**
 	 * 
-	 * @param WriterUserMessage
+	 * @param id
 	 * @return 影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Integer deleteWriterUserMessageById(WriterUserMessage writerUserMessage) throws Exception {
-		if (null == writerUserMessage.getId()) {
-			throw new NullPointerException("主键id为空");
+	public Integer deleteWriterUserMessageById(Long id) throws CheckedServiceException {
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键id为空");
 		}
-		return writerUserMessageDao.deleteWriterUserMessageById(writerUserMessage);
+		return writerUserMessageDao.deleteWriterUserMessageById(id);
 	}
 
 	/**
-	 * @param WriterUserMessage
+	 * @param writerUserMessage 必须包含主键ID
 	 * @return 影响行数
-	 * @throws Exception
-	 *             ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Integer updateWriterUserMessageById(WriterUserMessage writerUserMessage) throws Exception {
+	public Integer updateWriterUserMessage(WriterUserMessage writerUserMessage) throws CheckedServiceException {
 		if (null == writerUserMessage.getId()) {
-			throw new NullPointerException("主键id为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键id为空");
 		}
-		return writerUserMessageDao.updateWriterUserMessageById(writerUserMessage);
+		return writerUserMessageDao.updateWriterUserMessage(writerUserMessage);
 	}
 
 }
