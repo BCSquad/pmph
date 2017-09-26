@@ -21,11 +21,11 @@ public interface OrgTypeService {
 	
 	/**
 	 * 
-	 * @param OrgType 必须包含主键ID
+	 * @param id 如果为null 查询全部  不为null查询对应得数据
 	 * @return  OrgType
 	 * @throws CheckedServiceException
 	 */
-	OrgType getOrgTypeById(Long id) throws CheckedServiceException;
+	OrgType getOrgType(Long id) throws CheckedServiceException;
 	
 	/**
 	 * 

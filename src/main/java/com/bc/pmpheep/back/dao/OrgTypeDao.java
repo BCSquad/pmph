@@ -20,7 +20,7 @@ public interface  OrgTypeDao {
 	 * @param OrgType 必须包含主键ID
 	 * @return  OrgType
 	 */
-	OrgType getOrgTypeById(Long id) ;
+	OrgType getOrgType(Long id) ;
 	
 	/**
 	 * 
