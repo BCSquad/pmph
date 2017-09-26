@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,15 +40,12 @@ public class OrgTypeServiceImpl extends BaseService implements OrgTypeService {
 	/**
 	 * 
 	 * @param id 如果为null 查询全部  不为null查询对应得数据
-	 * @return  OrgType
+	 * @return  List<OrgType>
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public final OrgType getOrgType(Long id) throws CheckedServiceException{
-		if(null==id){
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "主键为空");
-		}
-		return orgTypeDao.getOrgType(id);
+	public  List<OrgType> getOrgType(Long id) throws CheckedServiceException{
+		return orgTypeDao.getOrgType(new OrgType(id));
 	}
 	
 	/**
