@@ -112,7 +112,7 @@
 
 	<!-- 根据父级id获取社内机构下级所有部门 -->
 	<select id="getListPmphDepartment" parameterType="java.lang.Long" resultType="PmphUserDepartmentVO">
-		select * from pmph_department where parent_id = #{parentId};
+		select * from pmph_department where parent_id = #{parentId} order by sort;
 	</select>
 	
 	<!-- 批量删除-->
