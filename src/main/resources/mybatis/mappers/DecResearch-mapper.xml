@@ -90,11 +90,11 @@
 			<if test="approvalUnit !=null and approvalUnit !=''">
 				approval_unit = #{approvalUnit},
 			</if>
-			<if test="position !=null and position !=''">
-				position = #{position},
-			</if>
 			<if test="award !=null and award !=''">
 				note = #{award},
+			</if>
+			<if test="note !=null and note !=''">
+				note = #{note},
 			</if>
 			<if test="sort !=null and sort !=''">
 				sort = #{sort},
