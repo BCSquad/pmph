@@ -60,5 +60,10 @@ public interface PmphDepartmentDao {
      * @return 出版社部门
      */
     List<PmphUserDepartmentVO> getListPmphDepartment(Long parentId);
+    
+    /**
+	 * 根据ids批量删除PmphDepartment
+	 */
+	Integer deletePmphDepartmentBatch(List<Long> ids);
 
 }

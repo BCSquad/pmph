@@ -1,13 +1,13 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphDepartmentDao;
 import com.bc.pmpheep.back.po.PmphDepartment;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.PmphUserDepartmentVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -26,18 +26,31 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 
 	/**
 	 * 
-	 * @param PmphDepartment
+	 * @param pmphDepartment
 	 *            实体对象
 	 * @return 带主键的PmphDepartment
 	 * @throws CheckedServiceException
 	 */
 	@Override
 	public PmphDepartment addPmphDepartment(PmphDepartment pmphDepartment) throws CheckedServiceException {
-		if (null == pmphDepartment.getDpName()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
-					CheckedExceptionResult.NULL_PARAM, "部门名称为空");
+		if(null == pmphDepartment){
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-
+		if(null == pmphDepartment.getParentId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "上级id为空");
+		}
+		if(null == pmphDepartment.getDpName()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "部门名称为空");
+		}
+		if(null == pmphDepartment.getPath()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "根节点为空");
+		}
+		if(null == pmphDepartment.getSort()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "排序为空");
+		}
+		if(null == pmphDepartment.getNote()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "备注为空");
+		}
 		pmphDepartmentDao.addPmphDepartment(pmphDepartment);
 		return pmphDepartment;
 	}
@@ -79,36 +92,69 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 	 */
 	@Override
 	public Integer updatePmphDepartment(PmphDepartment pmphDepartment) throws CheckedServiceException {
+		if(null == pmphDepartment){
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
 		if (null == pmphDepartment.getId()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
-					CheckedExceptionResult.NULL_PARAM, "主键为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "主键为空");
+		}
+		if(null == pmphDepartment.getParentId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "上级id为空");
+		}
+		if(null == pmphDepartment.getDpName()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "部门名称为空");
+		}
+		if(null == pmphDepartment.getPath()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "根节点为空");
+		}
+		if(null == pmphDepartment.getSort()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "排序为空");
+		}
+		if(null == pmphDepartment.getNote()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "备注为空");
 		}
 		return pmphDepartmentDao.updatePmphDepartment(pmphDepartment);
 	}
-
+	
 	@Override
-	public PmphUserDepartmentVO getListPmphDepartment() throws CheckedServiceException {
-		List<PmphUserDepartmentVO> list = pmphDepartmentDao.getListPmphDepartment(0L);
-		PmphUserDepartmentVO departmentVO = list.get(0);// 最高层始终只会有一个对象
-		RecursionPmphDepartment(departmentVO);
-
-		return departmentVO;
+	public PmphUserDepartmentVO getListPmphDepartment(Long parentId) throws CheckedServiceException {
+		if(null == parentId){
+			parentId = Const.PMPHDEPARTMENTROOTID;
+		}
+		Long id=parentId;
+		PmphUserDepartmentVO pmphUserDepartmentVO = new PmphUserDepartmentVO(id);
+    	recursionPmphDepartment(pmphUserDepartmentVO,new ArrayList<Long>(16));
+		return pmphUserDepartmentVO;
 	}
-
+	
+	@Override
+	public Integer deletePmphDepartmentBatch(Long id){
+		if(null == id){
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT, CheckedExceptionResult.NULL_PARAM, "主键为空");
+		}
+		List<Long> ids=new ArrayList<Long>();
+    	ids.add(id);
+    	recursionPmphDepartment(new PmphUserDepartmentVO(id),ids);
+    	return  pmphDepartmentDao.deletePmphDepartmentBatch(ids);
+	}
+	
 	/**
 	 * 
 	 * 功能描述：使用递归的方法将部门转化为树状图 使用示范：
 	 *
-	 * @param departmentVO
+	 * @param departmentVO   ids (为后面删除做准备)
 	 *            父级部门
 	 */
-	private void RecursionPmphDepartment(PmphUserDepartmentVO departmentVO) {
-		List<PmphUserDepartmentVO> list = pmphDepartmentDao.getListPmphDepartment(departmentVO.getId());
+	private void recursionPmphDepartment(PmphUserDepartmentVO pmphUserDepartmentVO,List<Long> ids) {
+		List<PmphUserDepartmentVO> list = pmphDepartmentDao.getListPmphDepartment(pmphUserDepartmentVO.getId());
 		if (null != list && list.size() > 0) {
-			departmentVO.setSonDepartment(list);
+			pmphUserDepartmentVO.setSonDepartment(list);
+			pmphUserDepartmentVO.setIsLeaf(false);
 			for (PmphUserDepartmentVO userDepartmentVO : list) {
-				RecursionPmphDepartment(userDepartmentVO);
+				ids.add(userDepartmentVO.getId());
+				recursionPmphDepartment(userDepartmentVO,ids);
 			}
 		}
 	}
+	
 }
