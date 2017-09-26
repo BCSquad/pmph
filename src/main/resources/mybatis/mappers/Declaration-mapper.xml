@@ -21,7 +21,7 @@
 			<if test="sex !=null and sex !=''">
 				sex,
 			</if>
-			<if test="birthday !=null and birthday !=''">
+			<if test="birthday !=null ">
 			    birthday,
 			</if>
 			<if test="experience !=null and experience !=''">
@@ -69,19 +69,19 @@
 			<if test="authUserId !=null and authUserId !=''">
 				auth_user_id,
 			</if>
-			<if test="authDate !=null and authDate !=''">
+			<if test="authDate !=null ">
 				auth_date,
 			</if>
 			<if test="offlineProgress !=null and offlineProgress !=''">
 				offline_progress,
 			</if>
-			<if test="paperDate !=null and paperDate !=''">
+			<if test="paperDate !=null ">
 				paper_date,
 			</if>
-			<if test="isStaging !=null and isStaging !=''">
+			<if test="isStaging !=null ">
 				is_staging,
 			</if>
-			<if test="isDeleted !=null and isDeleted !=''">
+			<if test="isDeleted !=null ">
 				is_deleted,
 			</if>
 		</trim>
