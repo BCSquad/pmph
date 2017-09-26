@@ -25,33 +25,33 @@ public class PmphRolePermissionServiceTest extends BaseTest {
                                              LoggerFactory.getLogger(PmphRolePermissionServiceTest.class);
 
     @Resource
-    private PmphRolePermissionService testService;
+    private PmphRolePermissionService pmphRolePermissionService;
 
     @Test
     @Rollback(Const.ISROLLBACK)
     public void test() {
-        Random r = new Random();
-        PmphRolePermission testPar =
-        new PmphRolePermission(new Long(r.nextInt(200)), new Long(r.nextInt(200)));
+        Random random = new Random();
+        PmphRolePermission pmphRolePermission =
+        new PmphRolePermission(new Long(random.nextInt(200)), new Long(random.nextInt(200)));
         logger.info("---PmphRolePermissionService 测试---------------------------------------------------------------------------------");
         // 新增
-        testService.addPmphRolePermission(testPar);
-        Assert.assertNotNull("是否添加成功", testPar.getId());
-        logger.info(testPar.toString());
+        pmphRolePermissionService.addPmphRolePermission(pmphRolePermission);
+        Assert.assertNotNull("是否添加成功", pmphRolePermission.getId());
+        //logger.info(testPar.toString());
         // 修改
-        testPar.setPermissionId(new Long(r.nextInt(200)));
-        Integer aInteger = testService.updatePmphRolePermission(testPar);
-        Assert.assertTrue("是否更新成功", aInteger > 0 ? true : false);
-        logger.info(aInteger.toString());
+        pmphRolePermission.setPermissionId(new Long(random.nextInt(200)));
+        Integer aInteger = pmphRolePermissionService.updatePmphRolePermission(pmphRolePermission);
+        Assert.assertTrue("更新失败", aInteger > 0 ? true : false);
+        //logger.info(aInteger.toString());
         // 删除
-        Integer bInteger = testService.deletePmphRolePermissionById(2L);
-        Assert.assertTrue("是否删除成功", bInteger > 0 ? true : false);
-        logger.info(bInteger.toString());
+        Integer bInteger = pmphRolePermissionService.deletePmphRolePermissionById(2L);
+        Assert.assertTrue("删除失败", bInteger > 0 ? true : false);
+        //logger.info(bInteger.toString());
 
         // 查询
-        PmphRolePermission pp = testService.getPmphRolePermissionById(7L);
+        PmphRolePermission pp = pmphRolePermissionService.getPmphRolePermissionById(7L);
         Assert.assertNotNull("是否获取数据", pp);
-        logger.info(pp.toString());
+        //logger.info(pp.toString());
 
     }
 }

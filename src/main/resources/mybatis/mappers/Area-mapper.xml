@@ -90,7 +90,25 @@
 		area
 	</select>
 	
-<!-- 分页测试 -->
+	<!-- 获取area集通过parentId -->
+	<select id="getAreaByParentId" parameterType="java.lang.Long" resultType="AreaTreeVO" >  
+	    select * from area where parent_id = #{parentId} order by  sort ;
+	</select> 
+	
+	<!-- 批量删除-->
+    <delete id="deleteAreaBatch" >
+    	delete from area where true and id in 
+    	<foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+	
+	<!-- 删除整张表数据的数据-->
+    <delete id="deleteAllArea">
+    	delete from area ;
+    </delete>
+    
+    <!-- 分页测试 -->
 	<select id="getTestTotal" parameterType="Page" resultType="java.lang.Integer" >  
 	    select count(*) from area where true
 	     <if test="parameter.sort !=null ">  
@@ -106,8 +124,5 @@
 	        limit #{start},#{pageSize}  
 	    </if>  
     </select> 
-    <delete id="deleteAllArea">
-    delete from area where 1=1;
-    </delete>
 
 </mapper>

@@ -3,6 +3,7 @@ import java.util.Random;
 
 import javax.annotation.Resource;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ public class MaterialContactServiceTest extends BaseTest {
 	Logger logger = LoggerFactory.getLogger(MaterialContactServiceTest.class);
 	
 	@Resource
-	private MaterialContactService testService;
+	private MaterialContactService materialContactService;
 	@Resource
 	MaterialContactDao materialContactDao;
 	
@@ -30,20 +31,20 @@ public class MaterialContactServiceTest extends BaseTest {
     @Rollback(Const.ISROLLBACK) 
     public void test() {
     	Random r =new Random();
-    	MaterialContact testPar=new MaterialContact(new Long(r.nextInt(200)),new Long(r.nextInt(200)),"contactUserName", "contactPhone", "contactEmai");
+    	MaterialContact materialContact=new MaterialContact(new Long(r.nextInt(200)),new Long(r.nextInt(200)),"contactUserName", "contactPhone", "contactEmai");
     	logger.info("---TextbookService 测试---------------------------------------------------------------------------------");
     	Long num = materialContactDao.getMaterialContactCount();
     	logger.info("一共有{}", num);
     	//新增
-    	testService.addMaterialContact(testPar);
-    	logger.info(testPar.toString());
+    	materialContactService.addMaterialContact(materialContact);
+    	Assert.assertTrue("添加失败",materialContact.getId() > 0 );
     	//修改
-    	testPar.setContactUserName(String.valueOf(r.nextInt(200)));
-    	logger.info(testService.updateMaterialContact(testPar).toString());
+    	materialContact.setContactUserName(String.valueOf(r.nextInt(200)));
+    	Assert.assertTrue("更新失败",materialContactService.updateMaterialContact(materialContact) > 0 );
     	//删除
-    	logger.info(testService.deleteMaterialContactById(2L).toString());
+    	Assert.assertTrue("删除失败",materialContactService.deleteMaterialContactById(2L) >= 0 );
     	//查询
-    	logger.info(testService.getMaterialContactById(1L).toString());
+    	Assert.assertNotNull("获取数据失败",materialContactService.getMaterialContactById(1L));
     	
     }
     

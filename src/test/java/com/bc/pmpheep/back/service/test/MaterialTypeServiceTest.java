@@ -1,10 +1,14 @@
 package com.bc.pmpheep.back.service.test;
 import java.util.Random;
+
 import javax.annotation.Resource;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
+
 import com.bc.pmpheep.back.po.MaterialType;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.MaterialTypeService;
@@ -18,24 +22,24 @@ public class MaterialTypeServiceTest extends BaseTest {
 	Logger logger = LoggerFactory.getLogger(MaterialTypeServiceTest.class);
 	
 	@Resource
-	private MaterialTypeService testService;
+	private MaterialTypeService materialTypeService;
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
     public void test() {
-    	Random r =new Random();
-    	MaterialType testPar=new MaterialType(new Long(r.nextInt(200)), "path"," typeName", r.nextInt(200)," note");
+    	Random random =new Random();
+    	MaterialType materialType=new MaterialType(new Long(random.nextInt(200)), "path"," typeName", random.nextInt(200)," note");
     	logger.info("---MaterialTypeService 测试---------------------------------------------------------------------------------");
     	//新增
-    	testService.addMaterialType(testPar);
-    	logger.info(testPar.toString());
+    	materialTypeService.addMaterialType(materialType);
+    	Assert.assertTrue("添加失败",materialType.getId() > 0 );
     	//修改
-    	testPar.setTypeName(String.valueOf(r.nextInt(200)));
-    	logger.info(testService.updateMaterialType(testPar).toString());
+    	materialType.setTypeName(String.valueOf(random.nextInt(200)));
+    	Assert.assertTrue("更新失败", materialTypeService.updateMaterialType(materialType) > 0 );
     	//删除
-    	logger.info(testService.deleteMaterialTypeById(2L).toString());
+    	Assert.assertTrue("删除失败",materialTypeService.deleteMaterialTypeById(2L)  >= 0 );
     	//查询
-    	logger.info(testService.getMaterialTypeById(14L).toString());
+    	Assert.assertNotNull("获取数据失败",materialTypeService.getMaterialTypeById(14L));
     	
     }
     

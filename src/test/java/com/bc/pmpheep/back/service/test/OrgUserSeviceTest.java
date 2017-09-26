@@ -3,7 +3,10 @@ package com.bc.pmpheep.back.service.test;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
 import javax.annotation.Resource;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,26 +28,25 @@ public class OrgUserSeviceTest extends BaseTest {
 	Logger logger = LoggerFactory.getLogger(OrgUserSeviceTest.class);
 
 	@Resource
-	private OrgUserService testService;
+	private OrgUserService orgUserService;
 
-	//
-	// @Test
-	// @Rollback(Const.ISROLLBACK)
-	// public void test() throws Exception {
-	// Random r =new Random();
-	// OrgUser a=new OrgUser("张珊"+r.nextInt(10000),"999", false, 5L, "李四",
-	// 1,"zhiwei", "职称","cahunzehn", "shou", "dianhia","shenfenz", "email",
-	// "address", "String postcode", "String note",2, false, null,null);
-	// testService.addOrgUser(a);
-	// logger.info("---OrgUserService--------------------------------新增--------------------------------------------");
-	// logger.info(a.toString());
-	// a.setRealname("ceshiwwwwwwww"+a.getId());
-	// logger.info(testService.updateOrgUser(a).toString());
-	// a.setId(2L);
-	// logger.info(testService.deleteOrgUserById(1l).toString());
-	// logger.info(testService.getOrgUserById(4L).toString());
-	// }
-	//
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void test() throws Exception {
+		 Random random =new Random();
+		 OrgUser orgUser=new OrgUser("张珊"+random.nextInt(10000),"999", false, 5L, "李四",
+		 1,"zhiwei", "职称","cahunzehn", "shou", "dianhia","shenfenz", "email",
+		 "address", "String postcode", "String note",2, false, null,null);
+		 orgUserService.addOrgUser(orgUser);
+		 logger.info("---OrgUserService--------------------------------新增--------------------------------------------");
+		 Assert.assertTrue("添加失败",orgUser.getId() > 0 );
+		 orgUser.setRealname("ceshiwwwwwwww"+orgUser.getId());
+		 Assert.assertTrue("更新失败", orgUserService.updateOrgUser(orgUser) > 0 );
+		 Assert.assertTrue("删除失败",orgUserService.deleteOrgUserById(1l) >= 0 );
+		 Assert.assertNotNull("获取数据失败",orgUserService.getOrgUserById(4L));
+	}
+	
 	@Test
 	public void getListOrgUserVO() {
 		Page<OrgUserManagerVO, Map<String, String>> page = new Page<>();
@@ -54,11 +56,7 @@ public class OrgUserSeviceTest extends BaseTest {
 		map.put("orgName", null);
 		page.setParameter(map);
 		page.setPageSize(15);
-		page = testService.getListOrgUser(page);
-		if (page.getRows().isEmpty()) {
-			logger.info("失败了");
-		} else {
-			logger.info("查找成功{}", page.toString());
-		}
+		page = orgUserService.getListOrgUser(page);
+		Assert.assertTrue("更新失败", page.getRows().isEmpty() );
 	}
 }

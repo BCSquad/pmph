@@ -1,12 +1,14 @@
 package com.bc.pmpheep.back.service.test;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.bc.pmpheep.back.po.OrgType;
 import com.bc.pmpheep.back.service.OrgTypeService;
@@ -27,15 +29,25 @@ public class OrgTypeSeviceTest extends BaseTest {
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void addArea() {
-		OrgType a = new OrgType("测试", 0);
-		orgTypeService.addOrgType(a);
+		OrgType orgType = new OrgType("测试", 0);
+		orgTypeService.addOrgType(orgType);
 		logger.info("---OrgTypeService--------------------------------------------------------------------------");
-		logger.info(a.toString());
-		a.setTypeName("ceshiwwwwwwww" + a.getId());
-		logger.info(orgTypeService.updateOrgType(a).toString());
-		a.setId(3L);
-		logger.info(orgTypeService.deleteOrgTypeById(1L).toString());
-		logger.info(orgTypeService.getOrgTypeById(2L).toString());
+		Assert.assertTrue("添加失败",orgType.getId() > 0 );
+		orgType.setTypeName("ceshiwwwwwwww" + orgType.getId());
+		Assert.assertTrue("更新失败", orgTypeService.updateOrgType(orgType) > 0 );
+		Assert.assertTrue("删除失败",orgTypeService.deleteOrgTypeById(1L) >= 0 );
+		Assert.assertNotNull("获取数据失败",orgTypeService.getOrgType(2L));
+		List<OrgType> orgTypeList=orgTypeService.getOrgType(null);
+		
 	}
 
 }
+
+
+
+
+
+
+
+
+

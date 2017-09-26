@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.po.WriterMessage;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * WriterMessageService 接口
@@ -12,30 +13,30 @@ public interface WriterMessageService {
 	 * 
 	 * @param  WriterMessage 实体对象
 	 * @return  带主键的WriterMessage
-	 * @throws Exception 
+	 * @throws CheckedServiceException 
 	 */
-	WriterMessage addWriterMessage (WriterMessage writerMessage) throws Exception;
+	WriterMessage addWriterMessage (WriterMessage writerMessage) throws CheckedServiceException;
 	
 	/**
 	 * 
 	 * @param WriterMessage 必须包含主键ID
 	 * @return  WriterMessage
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	WriterMessage getWriterMessageById(WriterMessage writerMessage) throws Exception;
+	WriterMessage getWriterMessageById(WriterMessage writerMessage) throws CheckedServiceException;
 	
 	/**
 	 * 
 	 * @param WriterMessage
 	 * @return  影响行数
-	 * @throws Exception，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer deleteWriterMessageById(WriterMessage writerMessage) throws Exception;
+	Integer deleteWriterMessageById(WriterMessage writerMessage) throws CheckedServiceException;
 	
 	/**
 	 * @param WriterMessage
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer updateWriterMessageById(WriterMessage writerMessage) throws Exception;
+	Integer updateWriterMessageById(WriterMessage writerMessage) throws CheckedServiceException;
 }

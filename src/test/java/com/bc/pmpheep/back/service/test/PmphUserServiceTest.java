@@ -17,7 +17,6 @@ import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 import com.google.gson.Gson;
 
@@ -66,21 +65,21 @@ public class PmphUserServiceTest extends BaseTest {
      */
     // @Test
     // @Rollback(Const.ISROLLBACK)
-    public void deletePmphUserTest() {
-        Integer aInteger = 0;
-        try {
-            List<Long> userIdList = new ArrayList<Long>();
-            userIdList.add(19L);
-            userService.deleteUserAndRole(userIdList);// 删除用户对应的角色
-            thrown.expect(CheckedServiceException.class);// 预期异常的属性信息
-            aInteger = 1;
-        } catch (CheckedServiceException e) {
-            e.printStackTrace();
-        }
-        Assert.fail("CheckedServiceException");
-        // 查看两个对象的引用是否相等。类似于使用“==”比较两个对象
-        Assert.assertSame("是否等于1", 1, aInteger);
-    }
+//    public void deletePmphUserTest() {
+//        Integer aInteger = 0;
+//        try {
+//            List<Long> userIdList = new ArrayList<Long>();
+//            userIdList.add(19L);
+//            userService.deleteUserAndRole(userIdList);// 删除用户对应的角色
+//            thrown.expect(CheckedServiceException.class);// 预期异常的属性信息
+//            aInteger = 1;
+//        } catch (CheckedServiceException e) {
+//            e.printStackTrace();
+//        }
+//        Assert.fail("CheckedServiceException");
+//        // 查看两个对象的引用是否相等。类似于使用“==”比较两个对象
+//        Assert.assertSame("是否等于1", 1, aInteger);
+//    }
 
     /**
      * PmphUser 更新方法

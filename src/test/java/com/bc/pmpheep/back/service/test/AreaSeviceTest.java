@@ -1,12 +1,13 @@
 package com.bc.pmpheep.back.service.test;
 
-import javax.annotation.Resource;
 
+
+import javax.annotation.Resource;
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
-
 import com.bc.pmpheep.back.dao.AreaDao;
 import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.test.BaseTest;
@@ -29,19 +30,23 @@ public class AreaSeviceTest extends BaseTest {
     @Test
     @Rollback(Const.ISROLLBACK)
     public void addArea() {
-         Area a = new Area(5L, "测试hh", 4);
+         Area area = new Area(5L, "测试hh", 4);
          //a.setId(647L);
-         areaService.addArea(a);
+        areaService.addArea(area);
         logger.info("----AreaService-------------------------------------------------------------------------");
-        logger.info(a.toString());
-        a.setAreaName("ceshiwwwwwwww");
-        logger.info(areaService.updateArea(a).toString());
-        // logger.info(areaService.deleteAreaById(2L).toString());
-        // logger.info(areaService.getAreaById(6L).toString());
-        // areaService.getTest();
-        // areaService.deleteAllArea();
-        Long num = areaDao.getAreacount();
-        logger.info("一共有{}条数据",num);
+        //logger.info(a.toString());
+        Assert.assertTrue("添加失败",area.getId() > 0 );
+        area.setAreaName("ceshiwwwwwwww");
+        Assert.assertTrue("更新失败", areaService.updateArea(area) > 0 );
+        Assert.assertTrue("删除失败", areaService.deleteAreaById(2L) >= 0 );
+        //Assert.assertNotNull("获取数据失败", areaService.getAreaById(6L));
+        Assert.assertNotNull("失败", areaService.getAreaTreeVO(0l));
+        Assert.assertTrue("删除失败", areaService.deleteAreaBatch(4707L)> 0 );
+        //logger.info(areaService.getAreaById(6L).toString());
+//        areaService.getTest();
+//        areaService.deleteAllArea();
+//        Long num = areaDao.getAreacount();
+//        logger.info("一共有{}条数据",num);
     }
 
 }

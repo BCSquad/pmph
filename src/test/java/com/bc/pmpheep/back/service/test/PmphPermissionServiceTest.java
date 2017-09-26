@@ -21,35 +21,35 @@ public class PmphPermissionServiceTest extends BaseTest {
     Logger                        logger = LoggerFactory.getLogger(PmphPermissionServiceTest.class);
 
     @Resource
-    private PmphPermissionService testService;
+    private PmphPermissionService pmphPermissionService;
 
     // @Test
     // @Rollback(Const.ISROLLBACK)
     public void test() {
-        Random r = new Random();
-        PmphPermission testPar =
-        new PmphPermission(new Long(r.nextInt(200)), String.valueOf(r.nextInt(200)),
-                           String.valueOf(r.nextInt(200)), String.valueOf(r.nextInt(200)),
-                           String.valueOf(r.nextInt(200)), true, String.valueOf(r.nextInt(200)),
-                           r.nextInt(200), null, null);
+        Random random = new Random();
+        PmphPermission pmphPermission =
+        new PmphPermission(new Long(random.nextInt(200)), String.valueOf(random.nextInt(200)),
+                           String.valueOf(random.nextInt(200)), String.valueOf(random.nextInt(200)),
+                           String.valueOf(random.nextInt(200)), true, String.valueOf(random.nextInt(200)),
+                           random.nextInt(200), null, null);
         logger.info("---PmphPermissionService 测试---------------------------------------------------------------------------------");
         // 新增
-        testService.addPmphPermission(testPar);
-        Assert.assertNotNull("是否添加成功", testPar.getId());
-        logger.info(testPar.toString());
+        pmphPermissionService.addPmphPermission(pmphPermission);
+        Assert.assertNotNull("是否添加成功", pmphPermission.getId());
+        //logger.info(testPar.toString());
         // 修改
-        testPar.setMenuName(String.valueOf(r.nextInt(200)));
-        Integer aInteger = testService.updatePmphPermissionById(testPar);
-        Assert.assertTrue("是否更新成功", aInteger > 0 ? true : false);
-        logger.info(aInteger.toString());
+        pmphPermission.setMenuName(String.valueOf(random.nextInt(200)));
+        Integer aInteger = pmphPermissionService.updatePmphPermissionById(pmphPermission);
+        Assert.assertTrue("更新失败", aInteger > 0 ? true : false);
+        //logger.info(aInteger.toString());
         // 删除
-        Integer bInteger = testService.deletePmphPermissionById(new PmphPermission((1L)));
-        Assert.assertTrue("是否删除成功", bInteger > 0 ? true : false);
-        logger.info(bInteger.toString());
+        Integer bInteger = pmphPermissionService.deletePmphPermissionById(new PmphPermission((1L)));
+        Assert.assertTrue("删除失败", bInteger > 0 ? true : false);
+        //logger.info(bInteger.toString());
         // 查询
-        PmphPermission pp = testService.getPmphPermissionById(new PmphPermission((2L)));
-        Assert.assertNotNull("是否获取数据", pp);
-        logger.info(pp.toString());
+        PmphPermission pp = pmphPermissionService.getPmphPermissionById(new PmphPermission((2L)));
+        Assert.assertNotNull("获取数据", pp);
+        //logger.info(pp.toString());
 
     }
 }

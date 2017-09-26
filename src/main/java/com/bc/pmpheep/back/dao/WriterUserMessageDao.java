@@ -13,37 +13,32 @@ import com.bc.pmpheep.back.po.WriterUserMessage;
 public interface WriterUserMessageDao {
 	/**
 	 * 
-	 * @param WriterUserMessage
+	 * @param writerUserMessage
 	 *            实体对象
 	 * @return 带主键的WriterUserMessage
-	 * @throws Exception
 	 */
 	Integer addWriterUserMessage(WriterUserMessage writerUserMessage);
 
 	/**
 	 * 
-	 * @param WriterUserMessage
-	 *            必须包含主键ID
+	 * @param id
 	 * @return WriterUserMessage
-	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	WriterUserMessage getWriterUserMessageById(WriterUserMessage writerUserMessage);
+	WriterUserMessage getWriterUserMessageById(Long  id);
 
 	/**
 	 * 
-	 * @param WriterUserMessage
+	 * @param id
 	 * @return 影响行数
-	 * @throws Exception，NullPointerException(主键为空)
 	 */
-	Integer deleteWriterUserMessageById(WriterUserMessage writerUserMessage);
+	Integer deleteWriterUserMessageById(Long id);
 
 	/**
-	 * @param WriterUserMessage
+	 * @param writerUserMessage 必须带主键
 	 * @return 影响行数
 	 * @throws Exception
-	 *             ，NullPointerException(主键为空)
 	 */
-	Integer updateWriterUserMessageById(WriterUserMessage writerUserMessage);
+	Integer updateWriterUserMessage(WriterUserMessage writerUserMessage);
 	
 	   /**
      * 

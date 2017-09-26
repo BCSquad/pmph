@@ -36,19 +36,19 @@ public class WriterUserRoleServiceTest extends BaseTest {
         // 新增
         testService.addWriterUserRole(testPar);
         Assert.assertNotNull("是否保存成功", testPar.getId());
-        logger.info(testPar.toString());
+        //logger.info(testPar.toString());
         // 修改
         testPar.setRoleId(new Long(r.nextInt(200)));
         Integer aInteger = testService.updateWriterUserRole(testPar);
         Assert.assertTrue("是否修改成功", aInteger > 0 ? true : false);
-        logger.info(aInteger.toString());
+        //logger.info(aInteger.toString());
         // 删除
         Integer bInteger = testService.deleteWriterUserRoleById(1L);
         Assert.assertTrue("是否删除成功", bInteger > 0 ? true : false);
-        logger.info(bInteger.toString());
+        //logger.info(bInteger.toString());
         // 查询
         WriterUserRole wur = testService.getWriterUserRoleById(2L);
         Assert.assertNotNull("不为空", wur);
-        logger.info(wur.toString());
+        //logger.info(wur.toString());
     }
 }

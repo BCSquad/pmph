@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
  * 
  */
 public class Const {
+	public static final Long         PMPHDEPARTMENTROOTID       = 0L;															   //社内部门根节点id
     public static final Integer      PAGETOTAL                  = 0;                                                               // 默认
     public static final Integer      PAGENUMBER                 = 1;                                                               // 默认
     public static final Integer      PAGESIZE                   = 5;                                                               // 默认

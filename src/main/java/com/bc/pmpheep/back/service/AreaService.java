@@ -1,7 +1,8 @@
 package com.bc.pmpheep.back.service;
 
-import com.bc.pmpheep.back.plugin.Page;
+import java.util.List;
 import com.bc.pmpheep.back.po.Area;
+import com.bc.pmpheep.back.vo.AreaTreeVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -57,6 +58,27 @@ public interface AreaService {
      * @throws CheckedServiceException
      */
     Integer updateArea(Area area) throws CheckedServiceException;
-
-    Page getTest();
+    
+    /**
+     * 
+     * 根据父级id获取下面的所有区域 
+     * @author Mryang
+     * @createDate 2017年9月25日 上午11:47:08
+     * @param parentId
+     * @return
+     * @throws CheckedServiceException
+     */
+    List<AreaTreeVO> getAreaTreeVO(Long parentId) throws CheckedServiceException;
+    
+    /**
+     * 根据id删除当前area和他下面的area
+     * @author Mryang
+     * @createDate 2017年9月25日 下午2:39:10
+     * @param id
+     * @return
+     * @throws CheckedServiceException
+     */
+    Integer deleteAreaBatch(Long id) throws CheckedServiceException;
+    
+    
 }

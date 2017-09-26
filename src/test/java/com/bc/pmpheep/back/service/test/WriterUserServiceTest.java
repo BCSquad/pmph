@@ -79,7 +79,7 @@ public class WriterUserServiceTest extends BaseTest {
         WriterUser writerUser1 = new WriterUser();
         writerUser = writerUserService.add(writerUser);
         Assert.assertNotNull("否保存成功", writerUser.getId());
-        Long id = writerUser.getId();
+        //Long id = writerUser.getId();
         writerUser1 = writerUserService.update(writerUser);
         Assert.assertNotNull("是否更新成功", writerUser1);
         logger.info("修改成功{}", writerUser1.toString());

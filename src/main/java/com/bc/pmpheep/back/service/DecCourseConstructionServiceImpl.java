@@ -43,6 +43,7 @@ public class DecCourseConstructionServiceImpl implements
 					CheckedExceptionResult.ILLEGAL_PARAM, "课程名称为空");
 		}
 		Long id = decCourseConstruction.getId();
+		decCourseConstructionDao.addDecCourseConstruction(decCourseConstruction);
 		if (null != id) {
 			decCourseConstruction.setId(id);
 		}

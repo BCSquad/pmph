@@ -1,13 +1,6 @@
 package com.bc.pmpheep.back.po;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 import org.apache.ibatis.type.Alias;
 

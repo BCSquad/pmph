@@ -36,7 +36,7 @@ public interface   OrgUserMessageService {
 	/**
 	 * @param OrgUserMessage
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
-	Integer updateOrgUserMessage(OrgUserMessage orgUserMessage) throws Exception;
+	Integer updateOrgUserMessage(OrgUserMessage orgUserMessage) throws CheckedServiceException;
 }

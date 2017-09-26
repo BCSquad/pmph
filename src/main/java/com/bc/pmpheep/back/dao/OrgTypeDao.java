@@ -1,6 +1,8 @@
 package com.bc.pmpheep.back.dao;
 
 
+import java.util.List;
+
 import com.bc.pmpheep.back.po.OrgType;
 /**
  * OrgType 实体类数据访问层接口
@@ -17,10 +19,10 @@ public interface  OrgTypeDao {
 	
 	/**
 	 * 
-	 * @param OrgType 必须包含主键ID
-	 * @return  OrgType
+	 * @param orgType的id如果为null查询全部 , 不为null查询对应得数据
+	 * @return  List<OrgType>
 	 */
-	OrgType getOrgTypeById(Long id) ;
+	List<OrgType> getOrgType(OrgType orgType) ;
 	
 	/**
 	 * 

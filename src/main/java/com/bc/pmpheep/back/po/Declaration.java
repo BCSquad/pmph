@@ -80,10 +80,51 @@ public class Declaration implements java.io.Serializable {
 	public Declaration() {
 	}
 
+    
+
 	public Declaration(Long id) {
 		super();
 		this.id = id;
 	}
+
+
+
+	public Declaration(Long materialId, Long userId, String realname,
+			Short sex, Date birthday, Short experience, String orgName,
+			String position, String title, String address, String postcode,
+			String handphone, String email, Short idtype, String idcard,
+			String telephone, String fax, Long orgId, Short onlineProgress,
+			Long authUserId, Timestamp authDate, Short offlineProgress,
+			Timestamp paperDate, Boolean isStaging, Boolean isDeleted) {
+		super();
+		this.materialId = materialId;
+		this.userId = userId;
+		this.realname = realname;
+		this.sex = sex;
+		this.birthday = birthday;
+		this.experience = experience;
+		this.orgName = orgName;
+		this.position = position;
+		this.title = title;
+		this.address = address;
+		this.postcode = postcode;
+		this.handphone = handphone;
+		this.email = email;
+		this.idtype = idtype;
+		this.idcard = idcard;
+		this.telephone = telephone;
+		this.fax = fax;
+		this.orgId = orgId;
+		this.onlineProgress = onlineProgress;
+		this.authUserId = authUserId;
+		this.authDate = authDate;
+		this.offlineProgress = offlineProgress;
+		this.paperDate = paperDate;
+		this.isStaging = isStaging;
+		this.isDeleted = isDeleted;
+	}
+
+
 
 	/** full constructor */
 	public Declaration(Long materialId, Long userId, String realname,

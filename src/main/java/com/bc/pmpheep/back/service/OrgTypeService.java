@@ -1,6 +1,8 @@
 package com.bc.pmpheep.back.service;
 
 
+import java.util.List;
+
 import com.bc.pmpheep.back.po.OrgType;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -21,11 +23,11 @@ public interface OrgTypeService {
 	
 	/**
 	 * 
-	 * @param OrgType 必须包含主键ID
-	 * @return  OrgType
+	 * @param id 如果为null 查询全部  不为null查询对应得数据
+	 * @return  List<OrgType>
 	 * @throws CheckedServiceException
 	 */
-	OrgType getOrgTypeById(Long id) throws CheckedServiceException;
+	List<OrgType> getOrgType(Long id) throws CheckedServiceException;
 	
 	/**
 	 * 

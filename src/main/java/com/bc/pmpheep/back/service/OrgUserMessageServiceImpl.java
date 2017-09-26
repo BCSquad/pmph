@@ -64,10 +64,10 @@ public class OrgUserMessageServiceImpl extends BaseService implements OrgUserMes
 	/**
 	 * @param OrgUserMessage
 	 * @return 影响行数
-	 * @throws Exception ，NullPointerException(主键为空)
+	 * @throws CheckedServiceException
 	 */
 	@Override 
-	public Integer updateOrgUserMessage(OrgUserMessage orgUserMessage) throws Exception{
+	public Integer updateOrgUserMessage(OrgUserMessage orgUserMessage) throws CheckedServiceException{
 		if(null==orgUserMessage.getId()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}

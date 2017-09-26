@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service.test;
 
 import javax.annotation.Resource;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,16 +26,8 @@ public class WriterMessageServiceTest extends BaseTest {
 	@Test
 	public void add() {
 		WriterMessage writerMessage = new WriterMessage("asdasd", 1);
-		try {
-			writerMessage = writerMessageService.addWriterMessage(writerMessage);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (null != writerMessage) {
-			logger.info("添加了{}条数据", writerMessage.toString());
-		} else {
-			logger.info("失败了");
-		}
+		writerMessage = writerMessageService.addWriterMessage(writerMessage);
+		Assert.assertNotNull("失败了",writerMessage);
 	}
 
 	@Test
@@ -42,18 +35,10 @@ public class WriterMessageServiceTest extends BaseTest {
 		int num = -1;
 		WriterMessage writerMessage = new WriterMessage("asdasd", 1);
 		WriterMessage writerMessage2 = new WriterMessage();
-		try {
-			writerMessage = writerMessageService.addWriterMessage(writerMessage);
-			writerMessage2.setId(writerMessage.getId());
-			num = writerMessageService.deleteWriterMessageById(writerMessage2);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (-1 != num) {
-			logger.info("删除了{}条数据", num);
-		} else {
-			logger.info("失败了");
-		}
+		writerMessage = writerMessageService.addWriterMessage(writerMessage);
+		writerMessage2.setId(writerMessage.getId());
+		num = writerMessageService.deleteWriterMessageById(writerMessage2);
+		Assert.assertTrue("失败",num >=0 );
 	}
 
 	@Test
@@ -61,18 +46,10 @@ public class WriterMessageServiceTest extends BaseTest {
 		int num = -1;
 		WriterMessage writerMessage = new WriterMessage("asdasd", 1);
 		WriterMessage writerMessage2 = new WriterMessage("qweqwe", 2);
-		try {
-			writerMessage = writerMessageService.addWriterMessage(writerMessage);
-			writerMessage2.setId(writerMessage.getId());
-			num = writerMessageService.updateWriterMessageById(writerMessage2);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (-1 != num) {
-			logger.info("修改了{}条数据", num);
-		} else {
-			logger.info("失败了");
-		}
+		writerMessage = writerMessageService.addWriterMessage(writerMessage);
+		writerMessage2.setId(writerMessage.getId());
+		num = writerMessageService.updateWriterMessageById(writerMessage2);
+		Assert.assertTrue("失败",num >=0 );
 	}
 
 	@SuppressWarnings("unused")
@@ -81,17 +58,9 @@ public class WriterMessageServiceTest extends BaseTest {
 		WriterMessage writerMessage = new WriterMessage("asdasd", 1);
 		WriterMessage writerMessage2 = new WriterMessage();
 		WriterMessage message = new WriterMessage();
-		try {
-			writerMessage = writerMessageService.addWriterMessage(writerMessage);
-			writerMessage2.setId(writerMessage.getId());
-			message = writerMessageService.getWriterMessageById(writerMessage2);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (null != writerMessage2) {
-			logger.info("查询到了{}", message.toString());
-		} else {
-			logger.info("失败了");
-		}
+		writerMessage = writerMessageService.addWriterMessage(writerMessage);
+		writerMessage2.setId(writerMessage.getId());
+		message = writerMessageService.getWriterMessageById(writerMessage2);
+		Assert.assertTrue("失败",null != writerMessage2);
 	}
 }
