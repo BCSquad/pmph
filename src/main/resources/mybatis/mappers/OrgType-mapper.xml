@@ -62,9 +62,11 @@
 	</update>
 
 	<!-- 根据id查询一个OrgType -->
-	<select id="getOrgTypeById" parameterType="java.lang.Long"
-		resultType="OrgType">
-		select * from org_type where id=#{id} ;
+	<select id="getOrgType" parameterType="java.lang.Long" resultType="OrgType">
+		select * from org_type where true 
+		<if test="typeName != null">
+				id=#{id} ;
+		</if>
 	</select>
 	<!-- 查询表单的数据总数 -->
 	<select id="getOrgTypeCount" resultType="Long">

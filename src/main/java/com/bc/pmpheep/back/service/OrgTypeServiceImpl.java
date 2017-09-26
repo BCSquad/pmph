@@ -37,16 +37,16 @@ public class OrgTypeServiceImpl extends BaseService implements OrgTypeService {
 	
 	/**
 	 * 
-	 * @param OrgType 必须包含主键ID
+	 * @param id 如果为null 查询全部  不为null查询对应得数据
 	 * @return  OrgType
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public OrgType getOrgTypeById(Long id) throws CheckedServiceException{
+	public final OrgType getOrgType(Long id) throws CheckedServiceException{
 		if(null==id){
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		return orgTypeDao.getOrgTypeById(id);
+		return orgTypeDao.getOrgType(id);
 	}
 	
 	/**
