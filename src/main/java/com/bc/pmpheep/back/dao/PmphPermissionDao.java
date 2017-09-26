@@ -45,12 +45,41 @@ public interface PmphPermissionDao {
      */
     Integer updatePmphPermissionById(PmphPermission pmphPermission);
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：按ID 删除
+     * 使用示范：
+     *
+     * @param id
+     * @return
+     * </pre>
+     */
     Integer delete(Long id);
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：按ID查询对象
+     * 使用示范：
+     *
+     * @param id
+     * @return
+     * </pre>
+     */
     PmphPermission get(Long id);
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取所有对象
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
     List<PmphPermission> getListResource();
-    
+
     /**
      * 
      * <pre>
@@ -61,4 +90,28 @@ public interface PmphPermissionDao {
      * </pre>
      */
     Long getPmphPermissionCount();
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取所有父级节点
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
+    List<PmphPermission> getListAllParentMenu();
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按父节点ID查询对应子节点
+     * 使用示范：
+     *
+     * @param parentId
+     * @return
+     * </pre>
+     */
+    List<PmphPermission> getListChildMenuByParentId(Long parentId);
+
 }

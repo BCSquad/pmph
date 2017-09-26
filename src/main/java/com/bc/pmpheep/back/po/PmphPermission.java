@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.ibatis.type.Alias;
 
@@ -17,47 +18,51 @@ public class PmphPermission implements Serializable {
     /**
      * 主键
      */
-    private Long      id;
+    private Long           id;
     /**
      * 上级许可id
      */
-    private Long      parentId;
+    private Long           parentId;
     /**
      * 根节点路径
      */
-    private String    path;
+    private String         path;
     /**
      * 许可名称
      */
-    private String    peermissionName;
+    private String         peermissionName;
     /**
      * 菜单名称
      */
-    private String    menuName;
+    private String         menuName;
     /**
      * 相对地址
      */
-    private String    url;
+    private String         url;
     /**
      * 是否禁用
      */
-    private boolean   isDisabled;
+    private boolean        isDisabled;
     /**
      * 备注
      */
-    private String    note;
+    private String         note;
     /**
      * 显示顺序
      */
-    private Integer   sort;
+    private Integer        sort;
     /**
      * 创建时间
      */
-    private Timestamp gmtCreate;
+    private Timestamp      gmtCreate;
     /**
      * 修改时间
      */
-    private Timestamp gmtUpdate;
+    private Timestamp      gmtUpdate;
+
+    private PmphPermission parentMenu;
+    List<PmphPermission>   children;
+    private boolean        hasChild = false;
 
     public PmphPermission(Long id) {
         super();
@@ -247,6 +252,48 @@ public class PmphPermission implements Serializable {
      */
     public void setGmtUpdate(Timestamp gmtUpdate) {
         this.gmtUpdate = gmtUpdate;
+    }
+
+    /**
+     * @return the children
+     */
+    public List<PmphPermission> getChildren() {
+        return children;
+    }
+
+    /**
+     * @param children the children to set
+     */
+    public void setChildren(List<PmphPermission> children) {
+        this.children = children;
+    }
+
+    /**
+     * @return the parentMenu
+     */
+    public PmphPermission getParentMenu() {
+        return parentMenu;
+    }
+
+    /**
+     * @param parentMenu the parentMenu to set
+     */
+    public void setParentMenu(PmphPermission parentMenu) {
+        this.parentMenu = parentMenu;
+    }
+
+    /**
+     * @return the hasChild
+     */
+    public boolean isHasChild() {
+        return hasChild;
+    }
+
+    /**
+     * @param hasChild the hasChild to set
+     */
+    public void setHasChild(boolean hasChild) {
+        this.hasChild = hasChild;
     }
 
     /*

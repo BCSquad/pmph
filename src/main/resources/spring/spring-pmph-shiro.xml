@@ -45,7 +45,8 @@
         <property name="filterChainDefinitions">
             <value>
                 /login         = anon
-                /**            = authc,resourceCheckFilter     
+                
+                <!-- /**            = authc,resourceCheckFilter    所有请求权限拦截先注释，方便测试  -->
             </value>
         </property>
     </bean>

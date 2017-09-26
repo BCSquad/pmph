@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.PmphDepartmentDao;
+import com.bc.pmpheep.back.dao.PmphPermissionDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.dao.PmphUserDao;
 import com.bc.pmpheep.back.plugin.Page;
@@ -38,6 +39,8 @@ public class PmphUserServiceImpl implements PmphUserService {
     PmphRoleDao       roleDao;
     @Autowired
     PmphDepartmentDao pmphDepartmentDao;
+    @Autowired
+    PmphPermissionDao permissionDao;
 
     /**
      * 返回新插入用户数据的主键
@@ -282,7 +285,19 @@ public class PmphUserServiceImpl implements PmphUserService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
-        return userDao.getListAllResources(uid);
+        List<PmphPermission> permissions = userDao.getListAllResources(uid);
+        // List<PmphPermission> perList = permissions;
+        // for (PmphPermission permission : permissions) {
+        // List<PmphPermission> subList =
+        // permissionDao.getListChildMenuByParentId(permission.getId());
+        // permission.setChildren(subList);
+        // if (!perList.contains(permission)) {
+        // permissions.remove(permission);
+        // }
+        // }
+
+        return permissions;
+
     }
 
     /**
