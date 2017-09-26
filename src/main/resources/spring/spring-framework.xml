@@ -12,16 +12,14 @@
           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
-          http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.10.2.xsd
-          http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
-          
+          http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.10.2.xsd">
 	
     <!-- 启动组件扫描，排除@Controller组件，该组件由SpringMVC配置文件扫描 -->
-     <!--  <context:component-scan base-package="com.bc.pmpheep.**">
+    <context:component-scan base-package="com.bc.pmpheep.**">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
-    </context:component-scan>   -->
-      <context:component-scan base-package="com.bc.pmpheep.back.shiro.cache"/>
-       <context:component-scan base-package="com.bc.pmpheep.back.service"/>
+    </context:component-scan>   
+    <context:component-scan base-package="com.bc.pmpheep.back.shiro.cache"/>
+    <context:component-scan base-package="com.bc.pmpheep.back.service"/>
     
     
     <!-- 加载属性文件 -->
@@ -31,7 +29,7 @@
     
     <!-- dataSource 配置 -->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
-    	<!-- 数据源驱动类可不写， Druid 默认会自动根据URL识别DriverClass -->
+        <!-- 数据源驱动类可不写， Druid 默认会自动根据URL识别DriverClass -->
         <property name="driverClassName" value="${sql.driverClassName}" />
         <!-- 基本属性 url、user、password -->
         <property name="url" value="${sql.url}" />
@@ -45,7 +43,7 @@
         <property name="maxWait" value="${sql.maxWait}" />
         <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
         <property name="timeBetweenEvictionRunsMillis" value="${sql.timeBetweenEvictionRunsMillis}" />
-          <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
         <property name="minEvictableIdleTimeMillis" value="${sql.minEvictableIdleTimeMillis}" />
         <property name="validationQuery" value="${sql.validationQuery}" />
         <property name="testWhileIdle" value="${sql.testWhileIdle}" />
@@ -55,22 +53,22 @@
     
     <!-- MyBatis 集成 Spring 必须配置的项 1 、配置 SqlSessionFactory 实例 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-     	<!-- 注入数据源-->
+        <!-- 注入数据源-->
         <property name="dataSource" ref="dataSource"></property>
-         <!-- 扫描 sql 配置文件，即 mapper 对应的 xml 文件 -->
+        <!-- 扫描 sql 配置文件，即 mapper 对应的 xml 文件 -->
         <property name="mapperLocations" value="classpath:mybatis/mappers/*.xml" />
         <!-- 扫描 entity 包，这样在 mapper 中就可以使用简单类名，多个用 ; 隔开 -->
         <property name="typeAliasesPackage" value="com.bc.pmpheep.back.po;com.bc.pmpheep.back.plugin;com.bc.pmpheep.back.vo" />
         <!-- 配置 MyBatis 全局配置文件 -->
         <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
     </bean>
-     <!-- MyBatis 集成 Spring 必须配置的项 2，可以不配置 id  -->
+    <!-- MyBatis 集成 Spring 必须配置的项 2，可以不配置 id  -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-      	<!-- 给出须要被扫描的 Dao 接口-->
-        <property name="basePackage" value="com.bc.pmpheep.back.dao" />
-          <!-- 注入 SqlSessionFactory -->
+        <!-- 给出须要被扫描的 Dao 接口-->
+        <property name="basePackage" value="com.bc.pmpheep.back.dao;com.bc.pmpheep.general.dao" />
+        <!-- 注入 SqlSessionFactory -->
         <!-- 这是推荐配置的项，不要去配置 sqlSessionFactory ，已经被弃用了-->
-         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
     
     <!-- 支持注解方式声明式事务 -->
@@ -82,7 +80,7 @@
     <!-- 事务 -->
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <tx:attributes>
-        	<!-- 对其他方法 使用默认的事务管理 -->
+            <!-- 对其他方法 使用默认的事务管理 -->
             <tx:method name="*" />
             <!-- get*,find*，select*开头的方法,开启只读,提高数据库访问性能 -->
             <tx:method name="get*" read-only="true" />
@@ -105,12 +103,13 @@
     <aop:config>
         <aop:aspect id="myAop" ref="responseBeanAop">
             <aop:pointcut id="target" expression="execution(public com.bc.pmpheep.controller.bean.ResponseBean *(..))" />
+            <!--<aop:after method="exceptionHandler" pointcut-ref="target" />-->
             <aop:around method="controllerMethodHandler" pointcut-ref="target" />
         </aop:aspect>
     </aop:config>
     <!--MongoDB-->
     <mongo:mongo replica-set="${mongo.replicaSet}">
-        <mongo:options 
+        <mongo:options
             connections-per-host="${mongo.connectionsPerHost}"
             threads-allowed-to-block-for-connection-multiplier="${mongo.threadsAllowedToBlockForConnectionMultiplier}"
             connect-timeout="${mongo.connectTimeout}"
@@ -123,8 +122,16 @@
             write-timeout="${mongo.writeTimeout}"
             write-fsync="${mongo.writeFsync}" />
     </mongo:mongo>
-    <mongo:db-factory id="mongoDbFactory" dbname="${mongo.dbName}" mongo-ref="mongo" />
+    <!--<mongo:mongo-client credentials="${mongo.credentials}" />-->
+    <mongo:db-factory id="mongoDbFactory" dbname="${mongo.dbName}" mongo-ref="mongo" username="${mongo.username}" password="${mongo.password}"/>
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+    </bean>
+    <mongo:repositories base-package="com.bc.pmpheep.general.dao" />
     <mongo:mapping-converter id="mappingConverter" db-factory-ref="mongoDbFactory" disable-validation="true" />
+    <bean id="anotherMongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+    </bean>
     <bean id="gridFsTemplate" class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
         <constructor-arg ref="mongoDbFactory" />
         <constructor-arg ref="mappingConverter"/>
