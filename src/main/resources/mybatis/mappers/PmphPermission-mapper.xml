@@ -142,12 +142,24 @@
 		FROM
 		`pmph_permission`
 	</select>
+	
+	<!--获取所有父节点  -->
+	<select id="getListAllParentMenu" resultType="PmphPermission">
+		select * from pmph_permission 
+		where PARENT_ID = 0 order by sort 
+	</select>
+	
+	<!--按父节点ID获取所有子节点  -->
+	<select id="getListChildMenuByParentId" parameterType="Long" resultType="PmphPermission">
+		select  * from pmph_permission
+		where PARENT_ID = #{parentId} order by sort 
+	</select>
 
 	<delete id="delete" parameterType="Long">
 		DELETE FROM pmph_permission
 		where id = #{id}
 	</delete>
-
+	
 	<select id="getListPageResource" parameterType="Page"
 		resultType="PmphPermission">
 		SELECT
@@ -160,7 +172,6 @@
 		FROM
 		`pmph_permission`
 		where 1=1
-
 		WHERE id = #{id}
 	</select>
 

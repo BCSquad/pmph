@@ -109,4 +109,19 @@ public class PmphPermissionServiceImpl implements PmphPermissionService {
         return pmphPermissionDao.getListResource();
     }
 
+    @Override
+    public List<PmphPermission> getListAllParentMenu() {
+        List<PmphPermission> permissions = pmphPermissionDao.getListAllParentMenu();
+        for (PmphPermission permission : permissions) {
+            List<PmphPermission> subList = this.getListChildMenuByParentId(permission.getId());
+            permission.setChildren(subList);
+        }
+        return pmphPermissionDao.getListAllParentMenu();
+    }
+
+    @Override
+    public List<PmphPermission> getListChildMenuByParentId(Long parentId) {
+        return pmphPermissionDao.getListChildMenuByParentId(parentId);
+    }
+
 }
