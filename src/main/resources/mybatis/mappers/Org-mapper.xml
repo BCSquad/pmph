@@ -136,13 +136,45 @@
 		resultType="Org">
 		select * from org where id=#{id} ;
 	</select>
-	<!-- 根据orgName模糊查询Org -->
-	<select id="getListOrgByOrgName" parameterType="java.lang.String"
-		resultType="Org">
-		select * from org where 1=1
-		<if test="orgName !=null">
-			and org_name like #{orgName}
-		</if>
+	
+	<!--orgNmae模糊查询获取列表-->
+	<select id="getOrgList" parameterType="Page" resultType="OrgVO">
+		select a.id,a.org_name,c.type_name,b.area_name,a.contact_person,a.contact_phone,a.sort,a.note,t.count from org a 
+			left join area b     on a.area_id =b.id 
+			left join org_type c on a.org_type_id=c.id,
+			(
+				select count(*) count from org a 
+					left join area b     on a.area_id =b.id 
+					left join org_type c on a.org_type_id=c.id
+				where a.is_deleted  = 0  
+			    <if test="parameter !=null ">
+			    	<if test="parameter.orgName !=null and  parameter.orgName != '' ">  
+			        	and a.org_name  like concat(concat('%',#{parameter.orgName}),'%')
+			    	</if> 
+			    	<if test="parameter.orgTypeId != null">
+			    		and c.id = #{parameter.orgTypeId}
+			    	</if> 
+			    	<if test="parameter.areaId != null">
+			    		and b.id = #{parameter.areaId}
+			    	</if> 
+			    </if>
+			)t
+		where a.is_deleted  = 0  
+	    <if test="parameter !=null ">
+	    	<if test="parameter.orgName !=null and  parameter.orgName != '' ">  
+	        	and a.org_name  like concat(concat('%',#{parameter.orgName}),'%')
+	    	</if> 
+	    	<if test="parameter.orgTypeId != null">
+	    		and c.id = #{parameter.orgTypeId}
+	    	</if> 
+	    	<if test="parameter.areaId != null">
+	    		and b.id = #{parameter.areaId}
+	    	</if> 
+	    </if> 
+	    order by a.sort 
+	    <if test="start !=null and pageNumber != null">  
+	        limit #{start},#{pageSize}  
+	    </if> 
 	</select>
 
 	<!-- 查询表单的数据总数 -->

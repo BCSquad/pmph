@@ -1,11 +1,15 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.OrgDao;
+import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.Org;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -29,8 +33,32 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 	 */
 	@Override
 	public Org addOrg(Org org) throws CheckedServiceException{
-		if(null==org.getOrgName()){
+		if(null == org ){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		if(null == org.getParentId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "上级机构id不能为空");
+		}
+		if(null == org.getOrgName()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构名称为空");
+		}
+		if(null == org.getOrgTypeId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构类型不能为空");
+		}
+		if(null == org.getAreaId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构区域不能为空");
+		}
+		if(null == org.getCountactPerson()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构联系人不能为空");
+		}
+		if(null == org.getCountactPhone()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构联系电话不能为空");
+		}
+		if(null == org.getSort()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构显示顺序为空");
+		}
+		if(null == org.getNote()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "备注为空");
 		}
 		Long id = org.getId();
 		orgDao.addOrg(org);
@@ -75,10 +103,49 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 	 */
 	@Override 
 	public Integer updateOrg(Org org) throws CheckedServiceException{
+		if(null == org ){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
 		if(null==org.getId()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
+		if(null == org.getParentId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "上级机构id不能为空");
+		}
+		if(null == org.getOrgName()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构名称为空");
+		}
+		if(null == org.getOrgTypeId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构类型不能为空");
+		}
+		if(null == org.getAreaId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构区域不能为空");
+		}
+		if(null == org.getCountactPerson()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构联系人不能为空");
+		}
+		if(null == org.getCountactPhone()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构联系电话不能为空");
+		}
+		if(null == org.getSort()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构显示顺序为空");
+		}
+		if(null == org.getNote()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "备注为空");
+		}
 		return orgDao.updateOrg(org);
+	}
+	
+	@Override
+	public  Page<OrgVO,OrgVO> getOrgList(Page<OrgVO,OrgVO> page) throws CheckedServiceException{
+		List<OrgVO> orgVOList = orgDao.getOrgList(page);
+		if(null != orgVOList && orgVOList.size() > 0 ){
+			Integer count =   orgVOList.get(0).getCount();
+			page.setTotal(count);
+			page.setRows(orgVOList);
+		}
+		page.setParameter(null);
+		return page;
 	}
 
 }
