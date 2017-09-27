@@ -301,9 +301,22 @@ public class Tools {
         }
         return "";
     }
+    
+    
 
     public static void main(String[] args) {
-        System.out.println(getRandomNum());
+        System.out.println(isNumeric("9999"));
     }
+    
+    public static boolean isNumeric(String str) {
+    	for(int i=str.length();--i>=0;){
+    		int chr=str.charAt(i);
+    		if(chr<48 || chr >57){
+    			return false;
+    		}
+    	}
+	    return true;
+    }
+    
 
 }
