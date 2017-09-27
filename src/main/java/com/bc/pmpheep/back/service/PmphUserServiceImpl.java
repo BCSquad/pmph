@@ -90,26 +90,29 @@ public class PmphUserServiceImpl implements PmphUserService {
      * @param id
      */
     @Override
-    public void delete(Long id) throws CheckedServiceException {
+    public Integer delete(Long id) throws CheckedServiceException {
         if (null == id) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除用户");
         }
-        userDao.delete(id);
+        return userDao.delete(id);
     }
 
     @Override
-    public void deleteUserAndRole(List<Long> ids) throws CheckedServiceException {
+    public Integer deleteUserAndRole(List<Long> ids) throws CheckedServiceException {
         if (0 < ids.size()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除用户！");
         }
+        Integer count = 0;
         // 删除用户列表
         userDao.batchDelete(ids);
         // 依次删除这些用户所绑定的角色
         for (Long userId : ids) {
+            count++;
             roleDao.deleteUserRoles(userId);
         }
+        return count;
     }
 
     /**

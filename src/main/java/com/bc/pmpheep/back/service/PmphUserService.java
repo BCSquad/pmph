@@ -38,14 +38,14 @@ public interface PmphUserService {
      * 
      * @param id
      */
-    void delete(Long id) throws CheckedServiceException;
+    Integer delete(Long id) throws CheckedServiceException;
 
     /**
      * 删除用户和用户绑定的角色信息
      * 
      * @param ids
      */
-    void deleteUserAndRole(List<Long> ids) throws CheckedServiceException;
+    Integer deleteUserAndRole(List<Long> ids) throws CheckedServiceException;
 
     /**
      * // TODO: 应该设置为一个事务 更新用户数据

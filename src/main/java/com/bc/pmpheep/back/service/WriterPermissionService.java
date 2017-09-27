@@ -72,4 +72,27 @@ public interface WriterPermissionService {
      * @throws CheckedServiceException
      */
     List<WriterPermission> getListResource() throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取所有父级节点
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
+    List<WriterPermission> getListAllParentMenu();
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按父节点ID查询对应子节点
+     * 使用示范：
+     *
+     * @param parentId
+     * @return
+     * </pre>
+     */
+    List<WriterPermission> getListChildMenuByParentId(Long parentId);
 }
