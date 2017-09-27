@@ -294,7 +294,8 @@
 		d.dp_name departmentName,d.path
 		FROM
 		pmph_user u
-		LEFT JOIN pmph_user_role p ON
+		LEFT JOIN pmph_user_role
+		p ON
 		u.id = p.user_id
 		LEFT JOIN pmph_role r ON p.role_id = r.id
 		LEFT JOIN
@@ -312,4 +313,43 @@
 		</if>
 		GROUP BY d.dp_name
 	</select>
+
+	<!-- 动态更新对象的写法 -->
+	<update id="updatePmphUserOfBack" parameterType="PmphUserManagerVO">
+		UPDATE pmph_user
+		<set>
+			<if test="username != null and username!=''">
+				username = #{username},
+			</if>
+			<if test="password != null and password!='' ">
+				`password` = #{password},
+			</if>
+			<if test=" isDisabled!= null ">
+				is_disabled= #{isDisabled},
+			</if>
+			<if test=" realname!= null and realname !=''">
+				realname= #{realname},
+			</if>
+			<if test=" departmentId!= null and departmentId !=''">
+				department_id = #{departmentId},
+			</if>
+			<if test=" handphone!= null and handphone !=''">
+				handphone = #{handphone},
+			</if>
+			<if test=" email!= null and email !=''">
+				email= #{email},
+			</if>
+			<if test=" note!= null and  note!=''">
+				note = #{note},
+			</if>
+			<if test=" sort!= null and  sort!=''">
+				sort = #{sort},
+			</if>
+			<if test=" isDeleted!= null ">
+				is_deleted= #{isDeleted},
+			</if>
+		</set>
+		WHERE
+		id = #{id}
+	</update>
 </mapper>

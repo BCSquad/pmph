@@ -215,10 +215,11 @@
 	</delete>
 
 	<!-- 查询表单的数据总条数 -->
-	<select id="getWriterUserRoleCount" resultType="java.lang.Long">
+	<select id="getWriterRoleCount" resultType="java.lang.Long">
 		select
-		count(*) from
-		writer_user_role ;
+		count(*)
+		from
+		writer_role ;
 	</select>
 
 </mapper>

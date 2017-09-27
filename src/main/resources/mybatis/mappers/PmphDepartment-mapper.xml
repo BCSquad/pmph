@@ -110,12 +110,17 @@
 		pmph_department
 	</select>
 
-	<!-- 获取全部部门 -->
+	<!-- 根据父级id获取社内机构下级所有部门 -->
 	<select id="getListPmphDepartment" parameterType="java.lang.Long" resultType="PmphUserDepartmentVO">
-		select
-		id,parent_id,dp_name
-		from
-		pmph_department where parent_id = #{parentId};
+		select * from pmph_department where parent_id = #{parentId} order by sort;
 	</select>
+	
+	<!-- 批量删除-->
+    <delete id="deletePmphDepartmentBatch" >
+    	delete from pmph_department where true and id in 
+    	<foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
 </mapper>

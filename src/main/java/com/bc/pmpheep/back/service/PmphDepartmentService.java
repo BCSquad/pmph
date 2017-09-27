@@ -1,7 +1,5 @@
 package com.bc.pmpheep.back.service;
 
-import java.util.List;
-
 import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.back.vo.PmphUserDepartmentVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -46,12 +44,22 @@ public interface PmphDepartmentService {
     
     /**
      * 
-     * 功能描述：获取出版社所有部门
-     * 使用示范：
-     *
+     * 获取出版社所有部门
+     * @author 曾庆峰
+     * @param  parentId
      * @return  已经分级的社内部门
      * @throws CheckedServiceException
+     * @update Mryang
      */
-    PmphUserDepartmentVO getListPmphDepartment() throws CheckedServiceException;
+    PmphUserDepartmentVO getListPmphDepartment(Long parentId) throws CheckedServiceException;
+    
+    /**
+     * 删除该部门以及下属部门
+     * @author Mryang
+     * @createDate 2017年9月26日 下午3:39:03
+     * @param id
+     * @return 删除条数
+     */
+    Integer deletePmphDepartmentBatch(Long id);
 
 }

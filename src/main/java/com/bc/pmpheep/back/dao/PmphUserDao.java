@@ -5,6 +5,7 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -88,5 +89,16 @@ public interface PmphUserDao {
 	 *
 	 */
 	List<PmphUserManagerVO> getListPmphUser(Page<PmphUserManagerVO, PmphUserManagerVO> page);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：
+	 * 
+	 * @param user
+	 * @return
+	 *
+	 */
+	Integer updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO);
 
 }

@@ -1,7 +1,9 @@
 package com.bc.pmpheep.back.service;
 
 
+import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.Org;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 
@@ -43,5 +45,10 @@ public interface OrgService {
 	 */
 	Integer updateOrg(Org org) throws CheckedServiceException;
 	
-	
+	/**
+	 * @param  page 带有分页参数和查询条件参数
+	 * @return Page<OrgVO,OrgVO>  包含 List<OrgVO>以及分页数据
+	 * @throws CheckedServiceException
+	 */
+	Page<OrgVO,OrgVO> getOrgList(Page<OrgVO,OrgVO> page);
 }

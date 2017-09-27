@@ -211,7 +211,12 @@
 			#{id}
 		</foreach>
 	</delete>
-	
+	<!-- 根据角色名称获取角色id -->
+	<select id="getPmphRoleId" parameterType="java.lang.String"
+		resultType="java.lang.Long">
+		select id from pmph_role where role_name =
+		#{roleName};
+	</select>
 	<!-- 查询表单的数据总数 -->
 	<select id="getPmphRoleCount" resultType="Long">
 		select

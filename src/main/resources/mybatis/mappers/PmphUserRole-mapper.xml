@@ -52,6 +52,14 @@
 		id=#{id} ;
 	</delete>
 
+	<!-- 根据id删除一个 PmphUserRole -->
+	<delete id="deletePmphUserRoleByUserId" parameterType="java.lang.Long">
+		delete
+		from
+		pmph_user_role where
+		user_id=#{userId} ;
+	</delete>
+
 	<!-- 更新PmphUserRole -->
 	<update id="updatePmphUserRole" parameterType="PmphUserRole">
 		update Pmph_User_Role
@@ -72,6 +80,7 @@
 		resultType="PmphUserRole">
 		select * from Pmph_User_Role where id=#{id} ;
 	</select>
+
 
 	<!-- 查询表单的数据总数 -->
 	<select id="getPmphUserRoleCount" resultType="Long">

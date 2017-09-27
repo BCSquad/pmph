@@ -2,7 +2,9 @@ package com.bc.pmpheep.back.dao;
 
 import java.util.List;
 
+import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.Org;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 
@@ -42,17 +44,6 @@ public interface OrgDao {
 	 * @throws CheckedServiceException
 	 */
 	Integer updateOrg(Org org) ;
-	/**
-	 * 
-	 * <pre>
-	 * 功能描述：根据机构名称查询机构
-	 * 使用示范：
-	 *
-	 * @param orgName  机构名称
-	 * @return 机构名称与机构id
-	 * </pre>
-	 */
-	List<Org> getListOrgByOrgName(String orgName);
 	
 	/**
      * 
@@ -64,6 +55,16 @@ public interface OrgDao {
      * </pre>
      */
 	Long getOrgCount();
+	
+	/**
+	 * 
+	 * 获取OrgVO列表（同时查询分页数据和总条数）
+	 * @author Mryang
+	 * @createDate 2017年9月26日 上午10:36:10
+	 * @param page
+	 * @return page
+	 */
+	List<OrgVO> getOrgList(Page<OrgVO,OrgVO> page);
 	
 	
 }

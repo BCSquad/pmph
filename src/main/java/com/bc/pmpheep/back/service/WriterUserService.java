@@ -142,11 +142,11 @@ public interface WriterUserService {
 	/**
 	 * 
 	 * 
-	 * 功能描述：后台添加作家用户
+	 * 功能描述：后台作家管理页面添加作家用户
 	 *
 	 * @param writerUser
 	 *            添加的作家用户属性
-	 * @return 返回影响的行数
+	 * @return 是否成功
 	 * @throws CheckedServiceException
 	 *
 	 */
@@ -155,11 +155,11 @@ public interface WriterUserService {
 	/**
 	 * 
 	 * 
-	 * 功能描述：修改作家用户
+	 * 功能描述：后台作家管理页面修改作家用户
 	 *
 	 * @param writerUser
 	 *            修改作家用户的属性
-	 * @return 返回影响的行数
+	 * @return 是否成功
 	 * @throws CheckedServiceException
 	 *
 	 */
