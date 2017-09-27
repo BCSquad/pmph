@@ -43,20 +43,72 @@ public interface WriterPermissionDao {
      */
     WriterPermission getWriterPermissionByPermissionName(String permissionName);
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：按ID 删除
+     * 使用示范：
+     *
+     * @param id
+     * @return
+     * </pre>
+     */
     Integer delete(Long id);
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：按ID查询对象
+     * 使用示范：
+     *
+     * @param id
+     * @return
+     * </pre>
+     */
     WriterPermission get(Long id);
 
-    List<WriterPermission> getListResource();
-    
     /**
-  * 
-  * <pre>
-  * 功能描述：查询表单的数据总条数
-  * 使用示范：
-  *
-  * @return 表单的数据总条数
-  * </pre>
-  */
- Long getWriterPermissionCount();
+     * 
+     * <pre>
+     * 功能描述：获取所有对象
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
+    List<WriterPermission> getListResource();
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取所有父级节点
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
+    List<WriterPermission> getListAllParentMenu();
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按父节点ID查询对应子节点
+     * 使用示范：
+     *
+     * @param parentId
+     * @return
+     * </pre>
+     */
+    List<WriterPermission> getListChildMenuByParentId(Long parentId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：查询表单的数据总条数
+     * 使用示范：
+     *
+     * @return 表单的数据总条数
+     * </pre>
+     */
+    Long getWriterPermissionCount();
 }

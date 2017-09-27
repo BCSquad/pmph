@@ -38,17 +38,17 @@ public class OrgUserController {
 	 * @Param: OrgUserManagerVO
 	 * @Return:分页数据集
 	 */
-	@RequestMapping(value="/getListOrgUser")
+	@RequestMapping(value = "/getListOrgUser")
 	@ResponseBody
-	public ResponseBean getListOrgUser(OrgUserManagerVO orgUserManagerVO,
-			Page page) {
+	public ResponseBean getListOrgUser(OrgUserManagerVO orgUserManagerVO, Page page) {
 		page.setParameter(orgUserManagerVO);
 		return new ResponseBean(orgUserService.getListOrgUser(page));
 	}
-	
+
 	/**
 	 * 
 	 * Description:新增一个机构用户
+	 * 
 	 * @author:lyc
 	 * @date:2017年9月26日下午5:50:20
 	 * @Param: OrgUser
@@ -56,13 +56,14 @@ public class OrgUserController {
 	 */
 	@RequestMapping(value = "/addOrgUser")
 	@ResponseBody
-	public ResponseBean addOrgUser(OrgUser orgUser){
+	public ResponseBean addOrgUser(OrgUser orgUser) {
 		return new ResponseBean(orgUserService.addOrgUser(orgUser));
 	}
-	
+
 	/**
 	 * 
 	 * Description:更新机构用户信息
+	 * 
 	 * @author:lyc
 	 * @date:2017年9月26日下午5:53:44
 	 * @Param: OrgUser
@@ -70,13 +71,14 @@ public class OrgUserController {
 	 */
 	@RequestMapping(value = "/updateOrgUser")
 	@ResponseBody
-	public ResponseBean updateOrgUser(OrgUser orgUser){
+	public ResponseBean updateOrgUser(OrgUser orgUser) {
 		return new ResponseBean(orgUserService.updateOrgUser(orgUser));
 	}
-	
+
 	/**
 	 * 
 	 * Description:通过id删除一个OrgUser
+	 * 
 	 * @author:lyc
 	 * @date:2017年9月26日下午5:56:38
 	 * @Param: id
@@ -84,13 +86,14 @@ public class OrgUserController {
 	 */
 	@RequestMapping(value = "/deleteOrgUserById")
 	@ResponseBody
-	public ResponseBean deleteOrgUserById(Long id){
+	public ResponseBean deleteOrgUserById(Long id) {
 		return new ResponseBean(orgUserService.deleteOrgUserById(id));
 	}
-	
+
 	/**
 	 * 
 	 * Description:根据id查询一个机构用户信息
+	 * 
 	 * @author:lyc
 	 * @date:2017年9月26日下午5:58:48
 	 * @Param: id
@@ -98,7 +101,41 @@ public class OrgUserController {
 	 */
 	@RequestMapping(value = "/getOrgUserById")
 	@ResponseBody
-	public ResponseBean getOrgUserById(Long id){
+	public ResponseBean getOrgUserById(Long id) {
 		return new ResponseBean(orgUserService.getOrgUserById(id));
+	}
+
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：在机构用户管理页面添加用户
+	 *
+	 * @param orgUser
+	 *            添加的用户
+	 * @return 是否成功
+	 *
+	 */
+	@RequestMapping(value = "/addOrgUserOfBack")
+	@ResponseBody
+	public ResponseBean addOrgUserOfBack(OrgUser orgUser) {
+
+		return new ResponseBean(orgUserService.addOrgUserOfBack(orgUser));
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：在机构用户管理页面修改用户
+	 *
+	 * @param orgUser
+	 *            修改的用户（必须传入用户id）
+	 * @return 是否成功
+	 *
+	 */
+	@RequestMapping(value = "/updateOrgUserOfBack")
+	@ResponseBody
+	public ResponseBean updateOrgUserOfBack(OrgUser orgUser) {
+		return new ResponseBean(orgUserService.updateOrgUserOfBack(orgUser));
 	}
 }

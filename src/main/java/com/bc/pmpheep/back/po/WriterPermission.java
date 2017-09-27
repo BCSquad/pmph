@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.ibatis.type.Alias;
 
@@ -17,47 +18,53 @@ public class WriterPermission implements Serializable {
     /**
      * 主键
      */
-    private Long    id;
+    private Long             id;
     /**
      * 上级许可id
      */
-    private Long    parentId;
+    private Long             parentId;
     /**
      * 根节点路径
      */
-    private String  path;
+    private String           path;
     /**
      * 许可名称
      */
-    private String  peermissionName;
+    private String           peermissionName;
     /**
      * 菜单名称
      */
-    private String  menuName;
+    private String           menuName;
     /**
      * 相对地址
      */
-    private String  url;
+    private String           url;
     /**
      * 是否禁用
      */
-    private boolean isDisabled;
+    private boolean          isDisabled;
     /**
      * 备注
      */
-    private String  note;
+    private String           note;
     /**
      * 显示顺序
      */
-    private Integer sort;
+    private Integer          sort;
     /**
      * 创建时间
      */
-    private Date    gmtCreate;
+    private Date             gmtCreate;
     /**
      * 修改时间
      */
-    private Date    gmtUpdate;
+    private Date             gmtUpdate;
+
+    private WriterPermission parentMenu;
+
+    List<WriterPermission>   children;
+
+    private boolean          hasMenu = false;
 
     public WriterPermission() {
     }
@@ -242,6 +249,48 @@ public class WriterPermission implements Serializable {
      */
     public void setGmtUpdate(Date gmtUpdate) {
         this.gmtUpdate = gmtUpdate;
+    }
+
+    /**
+     * @return the parentMenu
+     */
+    public WriterPermission getParentMenu() {
+        return parentMenu;
+    }
+
+    /**
+     * @param parentMenu the parentMenu to set
+     */
+    public void setParentMenu(WriterPermission parentMenu) {
+        this.parentMenu = parentMenu;
+    }
+
+    /**
+     * @return the children
+     */
+    public List<WriterPermission> getChildren() {
+        return children;
+    }
+
+    /**
+     * @param children the children to set
+     */
+    public void setChildren(List<WriterPermission> children) {
+        this.children = children;
+    }
+
+    /**
+     * @return the hasMenu
+     */
+    public boolean isHasMenu() {
+        return hasMenu;
+    }
+
+    /**
+     * @param hasMenu the hasMenu to set
+     */
+    public void setHasMenu(boolean hasMenu) {
+        this.hasMenu = hasMenu;
     }
 
     /*

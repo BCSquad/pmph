@@ -116,7 +116,7 @@ public class PmphPermissionServiceImpl implements PmphPermissionService {
             List<PmphPermission> subList = this.getListChildMenuByParentId(permission.getId());
             permission.setChildren(subList);
         }
-        return pmphPermissionDao.getListAllParentMenu();
+        return permissions;
     }
 
     @Override

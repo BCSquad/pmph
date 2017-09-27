@@ -61,8 +61,10 @@ public class PmphPermission implements Serializable {
     private Timestamp      gmtUpdate;
 
     private PmphPermission parentMenu;
+
     List<PmphPermission>   children;
-    private boolean        hasChild = false;
+
+    private boolean        hasMenu = false;
 
     public PmphPermission(Long id) {
         super();
@@ -283,17 +285,17 @@ public class PmphPermission implements Serializable {
     }
 
     /**
-     * @return the hasChild
+     * @return the hasMenu
      */
-    public boolean isHasChild() {
-        return hasChild;
+    public boolean isHasMenu() {
+        return hasMenu;
     }
 
     /**
-     * @param hasChild the hasChild to set
+     * @param hasMenu the hasMenu to set
      */
-    public void setHasChild(boolean hasChild) {
-        this.hasChild = hasChild;
+    public void setHasMenu(boolean hasMenu) {
+        this.hasMenu = hasMenu;
     }
 
     /*

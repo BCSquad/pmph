@@ -31,16 +31,39 @@ public class DecEduExpServiceImpl implements DecEduExpService {
 	@Override
 	public DecEduExp addDecEduExp(DecEduExp decEduExp)
 			throws CheckedServiceException {
+		if (null == decEduExp){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
+		}
+		if (null == decEduExp.getDeclarationId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id不能为空");
+		}
 		if (null == decEduExp.getSchoolName()) {
-			throw new CheckedServiceException(
-					CheckedExceptionBusiness.MATERIAL,
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "学校名称为空");
 		}
-		Long id = decEduExp.getId();
-		decEduExpDao.addDecEduExp(decEduExp);
-		if (null != id) {
-			decEduExp.setId(id);
+		if (null == decEduExp.getMajor()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "所学专业不能为空");
 		}
+		if (null == decEduExp.getDegree()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "学历不能为空");
+		}
+		if (null == decEduExp.getDateBegin()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "学习经历开始时间不能为空");
+		}
+		if (null == decEduExp.getDateEnd()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "学习经历终止时间不能为空");
+		}
+		if (null == decEduExp.getSort()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "显示顺序不能为空");
+		}
+		decEduExpDao.addDecEduExp(decEduExp);
 		return decEduExp;
 	}
 
