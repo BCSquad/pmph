@@ -157,7 +157,7 @@ public interface PmphUserService {
 	 * @throws CheckedServiceException
 	 * 
 	 */
-	Page<PmphUserManagerVO, Map<String, String>> getListPmphUser(Page<PmphUserManagerVO, Map<String, String>> page)
+	Page<PmphUserManagerVO, PmphUserManagerVO> getListPmphUser(Page<PmphUserManagerVO, PmphUserManagerVO> page)
 			throws CheckedServiceException;
 
 	/**
@@ -171,5 +171,5 @@ public interface PmphUserService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String updatePmphUserOfBack(PmphUser pmphUser) throws CheckedServiceException;
+	String updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO) throws CheckedServiceException;
 }

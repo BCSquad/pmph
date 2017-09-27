@@ -276,9 +276,11 @@
 		LEFT JOIN pmph_department d ON u.department_id = d.id
 		WHERE
 		1 = 1
-		<if test="parameter.name !=null and parameter.name !='' ">
-			and (u.username like #{parameter.name} or u.realname like
-			#{parameter.name}
+		<if test="parameter.username !=null and parameter.username !='' ">
+			and u.username like #{parameter.username}
+		</if>
+		<if test="parameter.realname !=null and parameter.realname !=''">
+			and u.realname like #{parameter.realname}
 		</if>
 		<if test="parameter.path !=null and parameter.path !=''">
 			and d.path like #{parameter.path}
@@ -300,13 +302,54 @@
 		pmph_department d ON u.department_id = d.id
 		WHERE
 		1 = 1
-		<if test="parameter.name !=null and parameter.name !='' ">
-			and (u.username like #{parameter.name} or u.realname like
-			#{parameter.name}
+		<if test="parameter.username !=null and parameter.username !='' ">
+			and u.username like #{parameter.username}
+		</if>
+		<if test="parameter.realname !=null and parameter.realname !=''">
+			and u.realname like #{parameter.realname}
 		</if>
 		<if test="parameter.path !=null and parameter.path !=''">
 			and d.path like #{parameter.path}
 		</if>
 		GROUP BY d.dp_name
 	</select>
+
+	<!-- 动态更新对象的写法 -->
+	<update id="updatePmphUserOfBack" parameterType="PmphUserManagerVO">
+		UPDATE pmph_user
+		<set>
+			<if test="username != null and username!=''">
+				username = #{username},
+			</if>
+			<if test="password != null and password!='' ">
+				`password` = #{password},
+			</if>
+			<if test=" isDisabled!= null ">
+				is_disabled= #{isDisabled},
+			</if>
+			<if test=" realname!= null and realname !=''">
+				realname= #{realname},
+			</if>
+			<if test=" departmentId!= null and departmentId !=''">
+				department_id = #{departmentId},
+			</if>
+			<if test=" handphone!= null and handphone !=''">
+				handphone = #{handphone},
+			</if>
+			<if test=" email!= null and email !=''">
+				email= #{email},
+			</if>
+			<if test=" note!= null and  note!=''">
+				note = #{note},
+			</if>
+			<if test=" sort!= null and  sort!=''">
+				sort = #{sort},
+			</if>
+			<if test=" isDeleted!= null ">
+				is_deleted= #{isDeleted},
+			</if>
+		</set>
+		WHERE
+		id = #{id}
+	</update>
 </mapper>

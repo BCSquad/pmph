@@ -77,7 +77,7 @@ public interface PmphUserDao {
 	 * @return
 	 *
 	 */
-	Integer getListPmphUserTotal(Page<PmphUserManagerVO, Map<String, String>> page);
+	Integer getListPmphUserTotal(Page<PmphUserManagerVO, PmphUserManagerVO> page);
 
 	/**
 	 * 
@@ -88,6 +88,17 @@ public interface PmphUserDao {
 	 * @return
 	 *
 	 */
-	List<PmphUserManagerVO> getListPmphUser(Page<PmphUserManagerVO, Map<String, String>> page);
+	List<PmphUserManagerVO> getListPmphUser(Page<PmphUserManagerVO, PmphUserManagerVO> page);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：
+	 * 
+	 * @param user
+	 * @return
+	 *
+	 */
+	Integer updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO);
 
 }
