@@ -276,11 +276,9 @@
 		LEFT JOIN pmph_department d ON u.department_id = d.id
 		WHERE
 		1 = 1
-		<if test="parameter.username !=null and parameter.username !='' ">
-			and u.username like #{parameter.username}
-		</if>
-		<if test="parameter.realname !=null and parameter.realname !=''">
-			and u.realname like #{parameter.realname}
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (u.username like #{parameter.name} or u.realname like
+			#{parameter.name}
 		</if>
 		<if test="parameter.path !=null and parameter.path !=''">
 			and d.path like #{parameter.path}
@@ -294,18 +292,17 @@
 		d.dp_name departmentName,d.path
 		FROM
 		pmph_user u
-		LEFT JOIN pmph_user_role p ON
+		LEFT JOIN pmph_user_role
+		p ON
 		u.id = p.user_id
 		LEFT JOIN pmph_role r ON p.role_id = r.id
 		LEFT JOIN
 		pmph_department d ON u.department_id = d.id
 		WHERE
 		1 = 1
-		<if test="parameter.username !=null and parameter.username !='' ">
-			and u.username like #{parameter.username}
-		</if>
-		<if test="parameter.realname !=null and parameter.realname !=''">
-			and u.realname like #{parameter.realname}
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (u.username like #{parameter.name} or u.realname like
+			#{parameter.name}
 		</if>
 		<if test="parameter.path !=null and parameter.path !=''">
 			and d.path like #{parameter.path}

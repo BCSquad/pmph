@@ -10,6 +10,10 @@ import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.OrgUserDao;
 import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.OrgUser;
+import com.bc.pmpheep.back.po.WriterProfile;
+import com.bc.pmpheep.back.po.WriterUser;
+import com.bc.pmpheep.back.shiro.kit.ShiroKit;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -89,40 +93,37 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 
 	/**
 	 * 
-	 * <pre>
 	 * 功能描述：分页查询作家用户
-	 * 使用示范：
 	 *
-	 * &#64;param page 传入的查询数据
-	 * &#64;return 需要的Page对象
-	 * </pre>
+	 * @param page
+	 *            传入的查询数据
+	 * @return 需要的Page对象
 	 */
 	@Override
-	public Page<OrgUserManagerVO, Map<String, String>> getListOrgUser(Page<OrgUserManagerVO, Map<String, String>> page)
+	public Page<OrgUserManagerVO, OrgUserManagerVO> getListOrgUser(Page<OrgUserManagerVO, OrgUserManagerVO> page)
 			throws CheckedServiceException {
-		if (null != page.getParameter().get("username")) {
-			String username = page.getParameter().get("username").trim();
+		if (null != page.getParameter().getUsername()) {
+			String username = page.getParameter().getUsername().trim();
 			if (!username.equals("")) {
-				page.getParameter().put("username", "%" + username + "%");
+				page.getParameter().setUsername("%" + username + "%");
 			} else {
-				page.getParameter().put("username", username);
+				page.getParameter().setUsername(username);
 			}
 		}
-		if (null != page.getParameter().get("realname")) {
-			String realname = page.getParameter().get("realname").trim();
+		if (null != page.getParameter().getRealname()) {
+			String realname = page.getParameter().getRealname().trim();
 			if (!realname.equals("")) {
-				page.getParameter().put("realname", "%" + realname + "%");
+				page.getParameter().setRealname("%" + realname + "%");
 			} else {
-				page.getParameter().put("realname", realname);
+				page.getParameter().setRealname(realname);
 			}
-
 		}
-		if (null != page.getParameter().get("orgName")) {
-			String orgName = page.getParameter().get("orgName").trim();
+		if (null != page.getParameter().getOrgName()) {
+			String orgName = page.getParameter().getOrgName().trim();
 			if (!orgName.equals("")) {
-				page.getParameter().put("orgName", "%" + orgName + "%");
+				page.getParameter().setOrgName("%" + orgName + "%");
 			} else {
-				page.getParameter().put("orgName", orgName);
+				page.getParameter().setOrgName(orgName);
 			}
 		}
 		int total = orgUserDao.getListOrgUserTotal(page);
@@ -135,4 +136,32 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 		return page;
 	}
 
+	@Override
+	public String addOrgUserOfBack(OrgUser orgUser) throws CheckedServiceException {
+		if (null == orgUser.getRealname()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "真实名称为空");
+		}
+		orgUser.setPassword(ShiroKit.md5(Const.DEFAULT_PASSWORD, orgUser.getUsername()));// 后台添加用户设置默认密码为123456
+		int num = orgUserDao.addOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
+		String result = "FAIL";
+		if (num > 0) {
+			result = "SUCCESS";
+		}
+		return result;
+	}
+
+	@Override
+	public String updateOrgUserOfBack(OrgUser orgUser) throws CheckedServiceException {
+		if (null == orgUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "主键为空");
+		}
+		int num = orgUserDao.updateOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
+		String result = "FAIL";
+		if (num > 0) {
+			result = "SUCCESS";
+		}
+		return result;
+	}
 }

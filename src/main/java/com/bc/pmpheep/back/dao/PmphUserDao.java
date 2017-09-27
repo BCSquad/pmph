@@ -5,6 +5,7 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -76,7 +77,7 @@ public interface PmphUserDao {
 	 * @return
 	 *
 	 */
-	Integer getListPmphUserTotal(Page<PmphUserManagerVO, PmphUserManagerVO> page);
+	Integer getListPmphUserTotal(Page<PmphUserManagerVO, Map<String, String>> page);
 
 	/**
 	 * 
@@ -87,6 +88,6 @@ public interface PmphUserDao {
 	 * @return
 	 *
 	 */
-	List<PmphUserManagerVO> getListPmphUser(Page<PmphUserManagerVO, PmphUserManagerVO> page);
+	List<PmphUserManagerVO> getListPmphUser(Page<PmphUserManagerVO, Map<String, String>> page);
 
 }
