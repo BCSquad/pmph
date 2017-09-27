@@ -31,16 +31,27 @@ public class DecLastPositionServiceImpl implements DecLastPositionService {
 	@Override
 	public DecLastPosition addDecLastPosition(DecLastPosition decLastPosition)
 			throws CheckedServiceException {
+		if (null == decLastPosition){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
+		}
+		if (null == decLastPosition.getDeclarationId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id为空");
+		}
 		if (null == decLastPosition.getMaterialName()) {
-			throw new CheckedServiceException(
-					CheckedExceptionBusiness.MATERIAL,
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "教材名称为空");
 		}
-		Long id = decLastPosition.getId();
-		decLastPositionDao.addDecLastPosition(decLastPosition);
-		if (null != id) {
-			decLastPosition.setId(id);
+		if (null == decLastPosition.getPosition()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "编写职务不能为空");
 		}
+		if (null == decLastPosition.getSort()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "显示顺序不能为空");
+		}
+		decLastPositionDao.addDecLastPosition(decLastPosition);
 		return decLastPosition;
 	}
 
