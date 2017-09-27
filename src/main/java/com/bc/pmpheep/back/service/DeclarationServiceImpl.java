@@ -31,16 +31,19 @@ public class DeclarationServiceImpl implements DeclarationService {
 	@Override
 	public Declaration addDeclaration(Declaration declaration)
 			throws CheckedServiceException {
+		if (null == declaration){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
+		}
 		if (null == declaration.getMaterialId()) {
-			throw new CheckedServiceException(
-					CheckedExceptionBusiness.MATERIAL,
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "教材id为空");
 		}
-		Long id = declaration.getId();
-		declarationDao.addDeclaration(declaration);
-		if (null != id) {
-			declaration.setId(id);
+		if (null == declaration.getUserId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "作家id不能为空");
 		}
+		declarationDao.addDeclaration(declaration);
 		return declaration;
 	}
 
