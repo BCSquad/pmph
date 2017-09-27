@@ -34,16 +34,35 @@ public class DecTeachExpServiceImpl implements DecTeachExpService {
 	@Override
 	public DecTeachExp addDecTeachExp(DecTeachExp decTeachExp)
 			throws CheckedServiceException {
+		if (null == decTeachExp){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
+		}
+		if (null == decTeachExp.getDeclarationId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id不能为空");
+		}
 		if (null == decTeachExp.getSchoolName()) {
-			throw new CheckedServiceException(
-					CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "学校名称为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "学校名称不能为空");
 		}
-		Long id = decTeachExp.getId();
+		if (null == decTeachExp.getSubject()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "教学科目不能为空");
+		}
+		if (null == decTeachExp.getDateBegin()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "教学经历开始时间不能为空");
+		}
+		if (null == decTeachExp.getDateEnd()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "教学经历终止时间不能为空");
+		}
+		if (null == decTeachExp.getSort()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "显示顺序不能为空");
+		}
 		decTeachExpDao.addDecTeachExp(decTeachExp);
-		if (null != id) {
-			decTeachExp.setId(id);
-		}
 		return decTeachExp;
 	}
 
