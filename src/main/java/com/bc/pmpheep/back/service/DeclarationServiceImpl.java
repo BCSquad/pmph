@@ -37,7 +37,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		if (null == declaration.getMaterialId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "教材id为空");
+					CheckedExceptionResult.ILLEGAL_PARAM, "教材id不能为空");
 		}
 		if (null == declaration.getUserId()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
