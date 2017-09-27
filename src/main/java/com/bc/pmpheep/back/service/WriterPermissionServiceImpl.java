@@ -85,4 +85,19 @@ public class WriterPermissionServiceImpl implements WriterPermissionService {
         return writerPermissionDao.getListResource();
     }
 
+    @Override
+    public List<WriterPermission> getListAllParentMenu() {
+        List<WriterPermission> permissions = writerPermissionDao.getListAllParentMenu();
+        for (WriterPermission permission : permissions) {
+            List<WriterPermission> subList = this.getListChildMenuByParentId(permission.getId());
+            permission.setChildren(subList);
+        }
+        return permissions;
+    }
+
+    @Override
+    public List<WriterPermission> getListChildMenuByParentId(Long parentId) {
+        return writerPermissionDao.getListChildMenuByParentId(parentId);
+    }
+
 }
