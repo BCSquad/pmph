@@ -237,6 +237,14 @@
 		resultType="OrgUser">
 		select * from org_user where id=#{id} ;
 	</select>
+	
+	<!-- 根据机构id集查询用户 -->
+	<select id="getOrgUserListByOrgIds" resultType="OrgUser">
+		select * from org_user where org_id in
+		<foreach item="orgId" collection="list" open="(" separator="," close=")">
+            #{orgId}
+        </foreach>
+	</select>
 
 	<!-- 分页查询 -->
 	<select id="getListOrgUserTotal" parameterType="Page"

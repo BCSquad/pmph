@@ -497,7 +497,15 @@
 		<include refid="value" />
 		);
 	</insert>
-
+	
+	<!-- 根据机构id集查询用户 -->
+	<select id="getWriterUserListByOrgIds" resultType="WriterUser">
+		select * from writer_user where org_id in
+		<foreach item="orgId" collection="list" open="(" separator="," close=")">
+            #{orgId}
+        </foreach>
+	</select>
+	
 	<!-- 查询表单的数据总条数 -->
 	<select id="getWriterUserCount" resultType="java.lang.Long">
 		select
