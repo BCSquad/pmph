@@ -4,7 +4,6 @@
  */
 package com.bc.pmpheep.general.service;
 
-import com.bc.pmpheep.back.controller.FileUploadController;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -45,6 +44,7 @@ public class FileService {
         GridFSFile gridFSFile;
         try (InputStream inputStream = file.getInputStream()) {
             gridFSFile = gridFsTemplate.store(inputStream, file.getOriginalFilename(), "multipart/form-data", metaData);
+            inputStream.close();
         }
         return gridFSFile.getId().toString();
     }
