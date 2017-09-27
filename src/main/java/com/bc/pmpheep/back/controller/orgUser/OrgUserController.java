@@ -105,25 +105,6 @@ public class OrgUserController {
 		return new ResponseBean(orgUserService.getOrgUserById(id));
 	}
 
-	/**
-	 * 
-	 * 
-	 * 功能描述：分页查询机构用户
-	 * 
-	 * @param page
-	 *            分页的信息
-	 * @param orgUserManagerVO
-	 *            查询条件
-	 * @return 按照分页条件分页的结果集
-	 *
-	 */
-	@RequestMapping(value = "/getListOrgUser")
-	@ResponseBody
-	public ResponseBean getListOrgUser(Page<OrgUserManagerVO, OrgUserManagerVO> page,
-			OrgUserManagerVO orgUserManagerVO) {
-		page.setParameter(orgUserManagerVO);
-		return new ResponseBean(orgUserService.getListOrgUser(page));
-	}
 
 	/**
 	 * 
