@@ -37,11 +37,11 @@ public class DecLastPositionServiceImpl implements DecLastPositionService {
 		}
 		if (null == decLastPosition.getDeclarationId()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id为空");
+					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id不能为空");
 		}
 		if (null == decLastPosition.getMaterialName()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "教材名称为空");
+					CheckedExceptionResult.ILLEGAL_PARAM, "教材名称不能为空");
 		}
 		if (null == decLastPosition.getPosition()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
