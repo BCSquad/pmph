@@ -64,7 +64,7 @@
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
-            <version>7.0</version>
+            <version>${javaee-web-api.ver}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
