@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.PmphRoleService;
 import com.bc.pmpheep.back.service.PmphUserService;
+import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
 /**
@@ -215,5 +217,37 @@ public class PmphUserController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResponseBean delete(@RequestParam("userIds[]") List<Long> userIds) {
         return new ResponseBean(userService.deleteUserAndRole(userIds));
+    }
+    
+    /**
+     * 
+     *  
+     * 功能描述：分页查询社内用户
+     *
+     * @param page 分页条件
+     * @param pmphUserManagerVO 查询条件
+     * @return 分好页的结果集
+     *
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getListPmphUser")
+    public ResponseBean getListPmphUser(Page<PmphUserManagerVO, PmphUserManagerVO> page,PmphUserManagerVO pmphUserManagerVO){
+    	page.setParameter(pmphUserManagerVO);
+    	return new ResponseBean(userService.getListPmphUser(page));
+    }
+    
+    /**
+     * 
+     *  
+     * 功能描述：在社内用户管理中修改社内用户
+     *
+     * @param pmphUserManagerVO 修改的社内用户（必须要有id）
+     * @return 是否成功
+     *
+     */
+    @ResponseBody
+    @RequestMapping(value = "/updatePmphUserOfBack")
+    public ResponseBean updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO){
+    	return new ResponseBean(userService.updatePmphUserOfBack(pmphUserManagerVO));
     }
 }
