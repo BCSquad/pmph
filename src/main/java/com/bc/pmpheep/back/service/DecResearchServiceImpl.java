@@ -34,16 +34,27 @@ public class DecResearchServiceImpl implements DecResearchService {
 	@Override
 	public DecResearch addDecResearch(DecResearch decResearch)
 			throws CheckedServiceException {
+		if (null == decResearch){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
+		}
+		if (null == decResearch.getDeclarationId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id不能为空");
+		}
 		if (null == decResearch.getResearchName()) {
-			throw new CheckedServiceException(
-					CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "课题名称为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "课题名称不能为空");
 		}
-		Long id = decResearch.getId();
+		if (null == decResearch.getApprovalUnit()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "审批单位不能为空");
+		}
+		if (null == decResearch.getSort()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "显示顺序不能为空");
+		}
 		decResearchDao.addDecResearch(decResearch);
-		if (null != id) {
-			decResearch.setId(id);
-		}
 		return decResearch;
 	}
 

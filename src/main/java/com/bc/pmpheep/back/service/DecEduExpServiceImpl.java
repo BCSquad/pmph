@@ -41,7 +41,7 @@ public class DecEduExpServiceImpl implements DecEduExpService {
 		}
 		if (null == decEduExp.getSchoolName()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "学校名称为空");
+					CheckedExceptionResult.ILLEGAL_PARAM, "学校名称不能为空");
 		}
 		if (null == decEduExp.getMajor()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,

@@ -42,4 +42,6 @@ public class CheckedExceptionBusiness {
 	public final static String ORG = "机构";
 
 	public final static String PMPH_DEPARTMENT = "社内部门";
+        
+        public final static String FILE = "文件服务";
 }
