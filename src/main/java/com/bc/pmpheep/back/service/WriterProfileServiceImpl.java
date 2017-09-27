@@ -30,15 +30,10 @@ public class WriterProfileServiceImpl implements WriterProfileService {
 	public WriterProfile addWriterProfile(WriterProfile writerProfile)
 			throws CheckedServiceException {
 		if (null == writerProfile.getUserId()) {
-			throw new CheckedServiceException(
-					CheckedExceptionBusiness.USER_MANAGEMENT,
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.ILLEGAL_PARAM, "作家id为空");
 		}
-		Long id = writerProfile.getId();
 		writerProfileDao.addWriterProfile(writerProfile);
-		if (null != id) {
-			writerProfile.setId(id);
-		}
 		return writerProfile;
 	}
 

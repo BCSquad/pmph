@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.UserMessageDao">
+	<!--MessageStateVO模糊查询获取列表-->
+	<select id="getMessageStateList" parameterType="Page" resultType="MessageStateVO">
+		SELECT a.id,a.msg_id,a.msg_type,a.gmt_create sendTime,a.gmt_update reciveTime,a.is_read,a.receiver_type,a.is_withdraw,t.count,
+		case when a.receiver_type =1 then b.realname when a.receiver_type =2 then c.realname when a.receiver_type =3 then d.realname end name,
+		case when a.receiver_type =1 then bd.dp_name  when a.receiver_type =2 then cd.org_name when a.receiver_type =3 then dd.org_name end dptname,
+		case when a.receiver_type =1 then b.handphone  when a.receiver_type =2 then c.handphone when a.receiver_type =3 then d.handphone end handphone
+		from user_message a 
+		left join (select a.*,1 usertype from pmph_user a) b on b.id=a.receiver_id and b.usertype = a.receiver_type
+		left join pmph_department bd on bd.id=b.department_id 
+		left join (select a.*,2 usertype from writer_user a) c on c.id=a.receiver_id and c.usertype = a.receiver_type
+		left join org cd on cd.id = c.org_id  
+		left join (select a.*,3 usertype from org_user a) d on d.id=a.receiver_id and d.usertype = a.receiver_type 
+		left join org dd on dd.id = d.org_id,(
+			SELECT  count(*) count 
+            from user_message a 
+			left join (select a.*,1 usertype from pmph_user a) b on b.id=a.receiver_id and b.usertype = a.receiver_type
+			left join pmph_department bd on bd.id=b.department_id 
+			left join (select a.*,2 usertype from writer_user a) c on c.id=a.receiver_id and c.usertype = a.receiver_type
+			left join org cd on cd.id = c.org_id  
+			left join (select a.*,3 usertype from org_user a) d on d.id=a.receiver_id and d.usertype = a.receiver_type 
+			left join org dd on dd.id = d.org_id
+			where true and  sender_id = #{parameter.senderId} and msg_id = #{parameter.msgId}
+			<if test="parameter !=null ">
+				<if test="parameter.isRead != null">
+					and   is_read = #{parameter.isRead}  
+				</if>
+				<if test="parameter.name !=null and parameter.name != '' ">
+					and (bd.dp_name  like concat('%',#{parameter.name},'%') or cd.org_name like concat('%',#{parameter.name},'%')
+					  or dd.org_name like concat('%',#{parameter.name},'%')  or b.realname like concat('%',#{parameter.name},'%')
+					  or c.realname  like concat('%',#{parameter.name},'%')  or d.realname like concat('%',#{parameter.name},'%')  ) 
+				</if>
+			</if>
+		) t
+		where true and  sender_id = #{parameter.senderId} and msg_id = #{parameter.msgId}
+		<if test="parameter !=null ">
+			<if test="parameter.isRead != null">
+				and   is_read = #{parameter.isRead}  
+			</if>
+			<if test="parameter.name !=null and parameter.name != '' ">
+				and (bd.dp_name  like concat('%',#{parameter.name},'%') or cd.org_name like concat('%',#{parameter.name},'%')
+				  or dd.org_name like concat('%',#{parameter.name},'%')  or b.realname like concat('%',#{parameter.name},'%')
+				  or c.realname  like concat('%',#{parameter.name},'%')  or d.realname like concat('%',#{parameter.name},'%')  ) 
+			</if>
+		</if>
+		order by name
+	    <if test="start !=null and pageNumber != null">  
+	        limit #{start},#{pageSize}  
+	    </if>  
+	</select>
+
+</mapper>
