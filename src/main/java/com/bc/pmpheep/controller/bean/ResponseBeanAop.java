@@ -40,9 +40,14 @@ public class ResponseBeanAop {
         if (ex instanceof CheckedServiceException) {
             responseBean.setCode(((CheckedServiceException) ex).getResult().getValue());
             // 如果是已检查的异常，不打印异常堆栈
+            responseBean.setMsg(((CheckedServiceException) ex).getBusiness() + "===>"
+                                + ex.getMessage());
             logger.error(sb.toString(), ex.toString());
         } else if (ex instanceof IndexOutOfBoundsException) {
             responseBean.setMsg("下标越界异常");
+            logger.error(sb.toString(), ex.toString());
+        } else if (ex instanceof ClassCastException) {
+            responseBean.setMsg("类型转换异常");
             logger.error(sb.toString(), ex.toString());
         } else {
             responseBean.setMsg(ex.toString());
@@ -50,6 +55,7 @@ public class ResponseBeanAop {
             // 未知异常应打印堆栈
             logger.error(pjp.getSignature() + " 发生未知错误", ex);
         }
+
         return responseBean;
     }
 }
