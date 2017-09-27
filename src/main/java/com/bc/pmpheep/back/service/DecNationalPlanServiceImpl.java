@@ -31,16 +31,27 @@ public class DecNationalPlanServiceImpl implements DecNationalPlanService {
 	@Override
 	public DecNationalPlan addDecNationalPlan(DecNationalPlan decNationalPlan)
 			throws CheckedServiceException {
+		if (null == decNationalPlan){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
+		}
+		if (null == decNationalPlan.getDeclarationId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id不能为空");
+		}
 		if (null == decNationalPlan.getMaterialName()) {
-			throw new CheckedServiceException(
-					CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "教材名称为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "教材名称不能为空");
 		}
-		Long id = decNationalPlan.getId();
+		if (null ==decNationalPlan.getRank()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "编写教材级别不能为空");
+		}
+		if (null == decNationalPlan.getSort()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "显示顺序不能为空");
+		}
 		decNationalPlanDao.addDecNationalPlan(decNationalPlan);
-		if (null != id) {
-			decNationalPlan.setId(id);
-		}
 		return decNationalPlan;
 	}
 
