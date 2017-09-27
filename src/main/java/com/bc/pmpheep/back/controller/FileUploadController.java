@@ -61,11 +61,8 @@ public class FileUploadController {
                                        // converter)
         try {
             inputStream = file.getInputStream();
-            gridFsTemplate.store(inputStream,
-                                 file.getOriginalFilename(),
-                                 "multipart/form-data",
-                                 metaData);
-        } catch (IOException ex) {
+            gridFsTemplate.store(inputStream, file.getOriginalFilename(), "multipart/form-data", metaData);
+        } catch (IOException ex) { 
             logger.error("文件上传时出现IO异常：{}", ex.getMessage());
             mv.addObject("msg", "上传失败");
         } finally {

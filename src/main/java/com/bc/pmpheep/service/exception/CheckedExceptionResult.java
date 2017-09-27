@@ -14,7 +14,8 @@ public enum CheckedExceptionResult {
     SUCCESS(1, "操作成功"),
     NULL_PARAM(2, "参数错误"),
     ILLEGAL_PARAM(3, "参数为空"),
-    VO_CONVERSION_FAILED(4, "视图对象转换失败");
+    OBJECT_NOT_FOUND(4, "无法找到对象"),
+    VO_CONVERSION_FAILED(5, "视图对象转换失败");
 
     private final int value;
     private final String message;
