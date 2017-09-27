@@ -45,9 +45,11 @@ public class ResponseBeanAop {
             logger.error(sb.toString(), ex.toString());
         } else if (ex instanceof IndexOutOfBoundsException) {
             responseBean.setMsg("下标越界异常");
+            responseBean.setCode(ResponseBean.INDEX_OUT_OF_BOUNDS);
             logger.error(sb.toString(), ex.toString());
         } else if (ex instanceof ClassCastException) {
             responseBean.setMsg("类型转换异常");
+            responseBean.setCode(ResponseBean.CLASS_CAST);
             logger.error(sb.toString(), ex.toString());
         } else {
             responseBean.setMsg(ex.toString());
