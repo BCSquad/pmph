@@ -59,7 +59,7 @@ public interface OrgUserService {
 	/**
 	 * 
 	 * 
-	 * 功能描述：后台机构用户管理页面添加作家用户
+	 * 功能描述：后台机构用户管理页面添加机构用户
 	 *
 	 * @param OrgUser
 	 *            添加的机构用户用户属性
@@ -72,7 +72,7 @@ public interface OrgUserService {
 	/**
 	 * 
 	 * 
-	 * 功能描述：后台机构用户管理页面修改作家用户
+	 * 功能描述：后台机构用户管理页面修改机构用户
 	 *
 	 * @param writerUser
 	 *            修改机构用户用户的属性
