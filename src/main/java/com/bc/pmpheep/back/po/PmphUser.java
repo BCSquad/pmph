@@ -69,6 +69,9 @@ public class PmphUser implements java.io.Serializable {
 
     public PmphUser() {
     }
+    public PmphUser(Long id) {
+    	this.id=id;
+    }
 
     public PmphUser(String username, String password) {
         this.username = username;

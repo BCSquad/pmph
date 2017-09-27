@@ -22,7 +22,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class MessageService {
 
     @Resource
-    MessageDao mongoMessageDao;
+    MessageDao messageDao;
 
     /**
      * 新增Message对象
@@ -39,7 +39,7 @@ public class MessageService {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                     CheckedExceptionResult.NULL_PARAM, "消息更新对象内容为空");
         }
-        return mongoMessageDao.save(message);
+        return messageDao.save(message);
     }
 
     /**
@@ -53,7 +53,7 @@ public class MessageService {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                     CheckedExceptionResult.NULL_PARAM, "消息获取时ID为空");
         }
-        return mongoMessageDao.findOne(id);
+        return messageDao.findOne(id);
     }
 
     /**
@@ -63,7 +63,7 @@ public class MessageService {
      * @return 返回Message对象集合
      */
     public List<Message> list(List<String> ids) {
-        return (List<Message>) mongoMessageDao.findAll(ids);
+        return (List<Message>) messageDao.findAll(ids);
     }
 
     /**
@@ -90,13 +90,13 @@ public class MessageService {
                     CheckedExceptionResult.OBJECT_NOT_FOUND, "未找到更新对象");
         }
         msg.setContent(message.getContent());
-        mongoMessageDao.save(msg);
+        messageDao.save(msg);
     }
 
     /**
      * 本方法在业务中不提供，仅用于测试
      */
     public void removeAll() {
-        mongoMessageDao.deleteAll();
+        messageDao.deleteAll();
     }
 }

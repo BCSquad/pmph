@@ -1,8 +1,6 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import com.bc.pmpheep.back.plugin.Page;
@@ -19,6 +17,11 @@ import com.bc.pmpheep.back.vo.WriterUserManagerVO;
  */
 @Repository
 public interface WriterUserDao {
+	/**
+	 * 根据机构id集查询用户
+	 */
+	List<WriterUser> getWriterUserListByOrgIds(List<Long> orgIds);
+	
 	/**
 	 * 添加一个用户
 	 * 

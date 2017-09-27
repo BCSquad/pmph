@@ -36,6 +36,15 @@ public class WriterUserServiceImpl implements WriterUserService {
     WriterRoleDao    writerRoleDao;
     @Autowired
     WriterProfileDao writerProfileDao;
+    
+    @Override
+	public List<WriterUser> getWriterUserListByOrgIds(List<Long> orgIds) throws CheckedServiceException{
+    	if(null == orgIds){
+    		 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                     CheckedExceptionResult.NULL_PARAM, "参数为空");
+    	}
+    	return writerUserDao.getWriterUserListByOrgIds(orgIds);
+    }
 
     /**
      * 返回新插入用户数据的主键
