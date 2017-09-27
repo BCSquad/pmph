@@ -39,9 +39,20 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	 */
 	@Override
 	public OrgUser addOrgUser(OrgUser orgUser) throws CheckedServiceException {
-		if (null == orgUser.getRealname()) {
+		if(null == orgUser){
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "真实名称为空");
+					CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
+		}
+		if(null == orgUser.getUsername()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "用户名不能为空");
+		}
+		if(null == orgUser.getPassword()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "密码不能为空");
+		}
+		if (null == orgUser.getRealname()) {
+			orgUser.setRealname(orgUser.getUsername());
 		}
 		orgUserDao.addOrgUser(orgUser);
 		return orgUser;
