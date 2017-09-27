@@ -154,4 +154,16 @@ public interface PmphUserService {
      */
     Page<PmphUserManagerVO, PmphUserManagerVO> getListPmphUser(
     Page<PmphUserManagerVO, PmphUserManagerVO> page) throws CheckedServiceException;
+
+    /**
+     * 
+     * 
+     * 功能描述：后台社内用户管理页面修改作家用户
+     * 
+     * @param PmphUser 修改社内用户的属性
+     * @return 是否成功
+     * @throws CheckedServiceException
+     * 
+     */
+    String updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO) throws CheckedServiceException;
 }

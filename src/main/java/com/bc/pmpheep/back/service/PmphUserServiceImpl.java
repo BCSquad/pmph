@@ -12,11 +12,13 @@ import com.bc.pmpheep.back.dao.PmphDepartmentDao;
 import com.bc.pmpheep.back.dao.PmphPermissionDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.dao.PmphUserDao;
+import com.bc.pmpheep.back.dao.PmphUserRoleDao;
 import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
@@ -41,6 +43,8 @@ public class PmphUserServiceImpl implements PmphUserService {
     PmphDepartmentDao pmphDepartmentDao;
     @Autowired
     PmphPermissionDao permissionDao;
+    @Autowired
+    PmphUserRoleDao   pmphUserRoleDao;
 
     /**
      * 返回新插入用户数据的主键
@@ -336,6 +340,14 @@ public class PmphUserServiceImpl implements PmphUserService {
     @Override
     public Page<PmphUserManagerVO, PmphUserManagerVO> getListPmphUser(
     Page<PmphUserManagerVO, PmphUserManagerVO> page) throws CheckedServiceException {
+        if (null != page.getParameter().getUsername()) {
+            String username = page.getParameter().getUsername().trim();
+            if (!username.equals("")) {
+                page.getParameter().setUsername("%" + username + "%");
+            } else {
+                page.getParameter().setUsername(username);
+            }
+        }
         if (null != page.getParameter().getRealname()) {
             String realname = page.getParameter().getRealname().trim();
             if (!realname.equals("")) {
@@ -344,20 +356,12 @@ public class PmphUserServiceImpl implements PmphUserService {
                 page.getParameter().setRealname(realname);
             }
         }
-        if (null != page.getParameter().getUsername()) {
-            String username = page.getParameter().getUsername().trim();
-            if (!username.endsWith("")) {
-                page.getParameter().setUsername("%" + username + "%");
-            } else {
-                page.getParameter().setUsername(username);
-            }
-        }
         if (null != page.getParameter().getPath()) {
             String path = page.getParameter().getPath().trim();
             if (!path.endsWith("")) {
-                page.getParameter().setUsername(path + "%");
+                page.getParameter().setPath(path + "%");
             } else {
-                page.getParameter().setUsername(path);
+                page.getParameter().setPath(path);
             }
         }
         int total = userDao.getListPmphUserTotal(page);
@@ -369,5 +373,27 @@ public class PmphUserServiceImpl implements PmphUserService {
         page.setTotal(total);
 
         return page;
+    }
+
+    @Override
+    public String updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO)
+    throws CheckedServiceException {
+        if (null == pmphUserManagerVO.getId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
+        }
+        int num = userDao.updatePmphUserOfBack(pmphUserManagerVO);
+        String result = "FAIL";
+        if (num > 0) {
+            pmphUserRoleDao.deletePmphUserRoleByUserId(pmphUserManagerVO.getId());
+            String[] roleNames = pmphUserManagerVO.getRoleName().split(",");
+            for (String roleName : roleNames) {
+                Long roleId = roleDao.getPmphRoleId(roleName);
+                PmphUserRole pmphUserRole = new PmphUserRole(pmphUserManagerVO.getId(), roleId);
+                pmphUserRoleDao.addPmphUserRole(pmphUserRole);
+            }
+            result = "SUCCESS";
+        }
+        return result;
     }
 }

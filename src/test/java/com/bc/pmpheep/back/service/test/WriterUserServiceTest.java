@@ -26,7 +26,7 @@ import com.bc.pmpheep.test.BaseTest;
  */
 public class WriterUserServiceTest extends BaseTest {
 
-    Logger            logger     = LoggerFactory.getLogger(WriterUserMessageServiceTest.class);
+    Logger            logger     = LoggerFactory.getLogger(WriterUserServiceTest.class);
 
     @Resource
     WriterUserService writerUserService;

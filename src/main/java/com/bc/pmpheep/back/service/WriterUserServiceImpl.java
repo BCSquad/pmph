@@ -14,6 +14,7 @@ import com.bc.pmpheep.back.po.WriterProfile;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -304,7 +305,6 @@ public class WriterUserServiceImpl implements WriterUserService {
             } else {
                 page.getParameter().setRealname(realname);
             }
-
         }
         if (null != page.getParameter().getOrgName()) {
             String orgName = page.getParameter().getOrgName().trim();
@@ -314,7 +314,6 @@ public class WriterUserServiceImpl implements WriterUserService {
                 page.getParameter().setOrgName(orgName);
             }
         }
-
         int total = writerUserDao.getListWriterUserTotal(page);
         if (total > 0) {
             List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(page);
@@ -348,6 +347,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 
     @Override
     public String addWriterUserOfBack(WriterUser writerUser) throws CheckedServiceException {
+        writerUser.setPassword(ShiroKit.md5(Const.DEFAULT_PASSWORD, writerUser.getUsername()));// 后台添加用户设置默认密码为123456
         Long num = writerUserDao.add(writerUser);
         String result = "FAIL";
         if (num > 0) {
