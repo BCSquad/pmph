@@ -24,6 +24,10 @@ public class WriterUserManagerVO implements Serializable {
 	 */
 	private String username;
 	/**
+	 * 用户名以及真实姓名
+	 */
+	private String name;
+	/**
 	 * 是否禁用
 	 */
 	private Integer isDisabled;
@@ -86,6 +90,14 @@ public class WriterUserManagerVO implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getUsername() {

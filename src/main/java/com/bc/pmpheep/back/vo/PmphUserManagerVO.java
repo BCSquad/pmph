@@ -21,6 +21,10 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	 */
 	private Long id;
 	/**
+	 * 用户名以及真实姓名
+	 */
+	private String name;
+	/**
 	 * 用户名
 	 */
 	private String username;
@@ -74,6 +78,14 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
