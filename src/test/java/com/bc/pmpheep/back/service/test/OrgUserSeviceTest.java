@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service.test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Resource;
@@ -55,5 +57,39 @@ public class OrgUserSeviceTest extends BaseTest {
 		page.setPageSize(15);
 		page = orgUserService.getListOrgUser(page);
 		Assert.assertTrue("更新失败", page.getRows().isEmpty());
+	}
+	
+	@Test
+	public void getOrgUserListByOrgIds(){
+		List<Long> orgIds = new ArrayList<Long>();
+		orgIds.add(1L);
+		orgIds.add(2L);
+		orgIds.add(3L);
+		orgIds.add(4L);
+		orgIds.add(6L);
+		List<OrgUser> orgUser = orgUserService.getOrgUserListByOrgIds(orgIds);
+		Assert.assertTrue("获取数据失败", orgUser.size()==5 );
+	}
+	
+	@Test
+	public void addOrgUserOfBack(){
+		OrgUser orgUser = new OrgUser();
+		orgUser.setUsername("OOO");
+		orgUser.setRealname("BBc");
+		String result = orgUserService.addOrgUserOfBack(orgUser);
+		Assert.assertTrue("添加失败", result.equals("SUCCESS"));
+		orgUser.setUsername("YYY");
+		orgUser.setRealname(null);
+		result = orgUserService.addOrgUserOfBack(orgUser);
+		Assert.assertTrue("添加失败", result.equals("SUCCESS"));
+	}
+	
+	@Test
+	public void updateOrgUserOfBack(){
+		OrgUser orgUser = new OrgUser();
+		orgUser = orgUserService.getOrgUserById(5L);
+		orgUser.setOrgId(10L);
+		String result = orgUserService.updateOrgUserOfBack(orgUser);
+		Assert.assertTrue("更新失败", result.equals("SUCCESS"));
 	}
 }
