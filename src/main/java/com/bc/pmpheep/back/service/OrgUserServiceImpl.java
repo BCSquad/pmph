@@ -153,9 +153,12 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 
 	@Override
 	public String addOrgUserOfBack(OrgUser orgUser) throws CheckedServiceException {
-		if (null == orgUser.getRealname()) {
+		if (null == orgUser.getUsername()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "真实名称为空");
+					CheckedExceptionResult.NULL_PARAM, "机构代码不能为空");
+		}
+		if (null == orgUser.getRealname()) {
+			orgUser.setRealname(orgUser.getUsername());
 		}
 		orgUser.setPassword(ShiroKit.md5(Const.DEFAULT_PASSWORD, orgUser.getUsername()));// 后台添加用户设置默认密码为123456
 		int num = orgUserDao.addOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
