@@ -302,11 +302,9 @@
 		pmph_department d ON u.department_id = d.id
 		WHERE
 		1 = 1
-		<if test="parameter.username !=null and parameter.username !='' ">
-			and u.username like #{parameter.username}
-		</if>
-		<if test="parameter.realname !=null and parameter.realname !=''">
-			and u.realname like #{parameter.realname}
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (u.username like #{parameter.name} or u.realname like
+			#{parameter.name})
 		</if>
 		<if test="parameter.path !=null and parameter.path !=''">
 			and d.path like #{parameter.path}

@@ -16,6 +16,11 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  */
 public interface WriterUserService {
+	
+	/**
+	 * 根据机构id集查询用户
+	 */
+	List<WriterUser> getWriterUserListByOrgIds(List<Long> orgIds);
 
     /**
      * 添加单个用户

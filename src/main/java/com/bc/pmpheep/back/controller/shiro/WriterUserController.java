@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.WriterRoleService;
 import com.bc.pmpheep.back.service.WriterUserService;
+import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
 /**
@@ -211,5 +213,52 @@ public class WriterUserController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResponseBean delete(@RequestParam("userIds[]") List<Long> userIds) {
         return new ResponseBean(writerUserService.deleteUserAndRole(userIds));
+    }
+
+    /**
+     * 
+     *  
+     * 功能描述：分页查询作家用户
+     *
+     * @param page 分页条件
+     * @param writerUserManagerVO 查询条件
+     * @return 分好页的结果集
+     *
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getListWriterUser")
+    public ResponseBean getListWriterUser(Page<WriterUserManagerVO, WriterUserManagerVO> page,WriterUserManagerVO writerUserManagerVO){
+    	page.setParameter(writerUserManagerVO);
+    	return new ResponseBean(writerUserService.getListWriterUser(page));
+    }
+    
+    /**
+     * 
+     *  
+     * 功能描述：在作家用户管理页面添加用户
+     *
+     * @param writerUser 添加的用户
+     * @return 是否成功
+     *
+     */
+    @ResponseBody
+    @RequestMapping(value ="/addWriterUserOfBack")
+    public ResponseBean addWriterUserOfBack(WriterUser writerUser){
+    	return new ResponseBean(writerUserService.addWriterUserOfBack(writerUser));
+    }
+    
+    /**
+     * 
+     *  
+     * 功能描述：在作家用户管理页面修改作家用户
+     *
+     * @param writerUser 修改的作家用户（必须要有id）
+     * @return 是否成功
+     *
+     */
+    @ResponseBody
+    @RequestMapping(value = "/updateWriterUserOfBack")
+    public ResponseBean updateWriterUserOfBack(WriterUser writerUser){
+    	return new ResponseBean(writerUserService.updateWriterUserOfBack(writerUser));
     }
 }

@@ -1,8 +1,6 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
-import java.util.Map;
-
 import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
@@ -13,6 +11,11 @@ import com.bc.pmpheep.back.vo.OrgUserManagerVO;
  * @author mryang
  */
 public interface OrgUserDao {
+	/**
+	 * 根据机构id集查询用户
+	 */
+	List<OrgUser> getOrgUserListByOrgIds(List<Long> orgIds);
+	
 	/**
 	 * 
 	 * @param orgUser

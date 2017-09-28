@@ -1,17 +1,12 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.OrgUserDao;
 import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.OrgUser;
-import com.bc.pmpheep.back.po.WriterProfile;
-import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
@@ -29,6 +24,15 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	@Autowired
 	private OrgUserDao orgUserDao;
+	
+	@Override
+	public List<OrgUser> getOrgUserListByOrgIds(List<Long> orgIds) throws CheckedServiceException{
+    	if(null == orgIds){
+    		 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                     CheckedExceptionResult.NULL_PARAM, "参数为空");
+    	}
+    	return orgUserDao.getOrgUserListByOrgIds(orgIds);
+    }
 
 	/**
 	 * 

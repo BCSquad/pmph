@@ -466,11 +466,9 @@
 		*
 		from writer_user w left join org o on o.id = w.org_id where
 		1=1
-		<if test="parameter.username !=null and parameter.username !='' ">
-			and w.username like #{parameter.username}
-		</if>
-		<if test="parameter.realname !=null and parameter.realname !=''">
-			and w.realname like #{parameter.realname}
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (w.username like #{parameter.name} or w.realname like
+			#{parameter.name})
 		</if>
 		<if test="parameter.orgName !=null and parameter.orgName !=''">
 			and o.org_name like #{parameter.orgName}
@@ -497,6 +495,15 @@
 		<include refid="value" />
 		);
 	</insert>
+
+	<!-- 根据机构id集查询用户 -->
+	<select id="getWriterUserListByOrgIds" resultType="WriterUser">
+		select * from writer_user where org_id in
+		<foreach item="orgId" collection="list" open="(" separator=","
+			close=")">
+			#{orgId}
+		</foreach>
+	</select>
 
 	<!-- 查询表单的数据总条数 -->
 	<select id="getWriterUserCount" resultType="java.lang.Long">

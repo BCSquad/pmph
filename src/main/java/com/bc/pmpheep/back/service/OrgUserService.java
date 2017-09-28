@@ -1,7 +1,6 @@
 package com.bc.pmpheep.back.service;
 
-import java.util.Map;
-
+import java.util.List;
 import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
@@ -13,6 +12,11 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * @author Mryang
  */
 public interface OrgUserService {
+	/**
+	 * 根据机构id集查询用户
+	 */
+	List<OrgUser> getOrgUserListByOrgIds(List<Long> orgIds) throws CheckedServiceException;
+	
 	/**
 	 * 
 	 * @param orgUser
