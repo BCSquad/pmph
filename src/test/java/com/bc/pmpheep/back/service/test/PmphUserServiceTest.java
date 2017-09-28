@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -158,5 +159,52 @@ public class PmphUserServiceTest extends BaseTest {
         } else {
             logger.info("查找成功{}", page);
         }
+    }
+    
+    @Test
+    public void delete(){
+    	PmphUser pmphUser = new PmphUser();
+    	pmphUser.setUsername("ABC");
+    	pmphUser.setPassword("456");
+    	pmphUser.setRealname("ABC");
+    	userService.add(pmphUser);
+    	PmphUser pmphUser2 = new PmphUser();
+    	pmphUser2 = userService.getByUsername(pmphUser.getUsername());
+    	Assert.assertTrue("删除失败", userService.delete(pmphUser2.getId())>0);
+    	logger.info("----分割线----");
+    	Assert.assertTrue("删除数据操作影响行数应该为0", userService.delete(10L)==0);
+    }
+    
+    @Test
+    public void deleteUserAndRole(){
+    	List<Long> ids = new ArrayList<Long>();
+    	ids.add(1L);
+    	ids.add(2L);
+    	ids.add(3L);
+    	PmphUser pmphUser = new PmphUser();
+    	pmphUser.setUsername("ABC");
+    	pmphUser.setPassword("123");
+    	pmphUser.setRealname("ABC");
+    	userService.add(pmphUser);
+    	userService.add(new PmphUser("POQ", "465"), ids);
+    	Assert.assertTrue("影响行数不为3就为错误", userService.deleteUserAndRole(ids)== 3);
+    }
+    
+    @Test
+    public void updatePmphUserOfBack(){
+    	PmphUser pmphUser = new PmphUser();
+    	pmphUser.setUsername("BBB");
+    	pmphUser.setPassword("666");
+    	pmphUser.setRealname("CCC");
+    	PmphUser pmphUser2 = new PmphUser();
+    	pmphUser2 = userService.add(pmphUser);
+    	pmphUser2.setPassword("777");
+    	PmphUserManagerVO managerVO = new PmphUserManagerVO();
+    	managerVO.setId(pmphUser2.getId());
+    	managerVO.setUsername(managerVO.getUsername());
+    	managerVO.setRealname(pmphUser2.getRealname());
+    	managerVO.setRoleName("角色");
+    	String result = userService.updatePmphUserOfBack(managerVO);
+    	Assert.assertTrue("更新失败", result.equals("SUCCESS"));  	
     }
 }
