@@ -66,5 +66,15 @@ public interface OrgDao {
 	 */
 	List<OrgVO> getOrgList(Page<OrgVO,OrgVO> page);
 	
+	/**
+	 * 
+	 *  
+	 * 功能描述：在机构用户与作家用户页面新增或者修改用户查询组织机构
+	 *
+	 * @param orgName 机构名称
+	 * @return 模糊查询到的所有机构
+	 *
+	 */
+	List<OrgVO> getOrgListByOrgName(String orgName);
 	
 }

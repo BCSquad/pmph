@@ -6,9 +6,9 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="id !=null "> 
-		        id,
-		    </if>
+			<if test="id !=null ">
+				id,
+			</if>
 			<if test="parentId != null and parentId !=''">
 				parent_id,
 			</if>
@@ -42,9 +42,9 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="id !=null "> 
-		    	#{id},
-		    </if>
+			<if test="id !=null ">
+				#{id},
+			</if>
 			<if test="parentId !=null and parentId !=''">
 				#{parentId},
 			</if>
@@ -136,47 +136,58 @@
 		resultType="Org">
 		select * from org where id=#{id} ;
 	</select>
-	
-	<!--orgNmae模糊查询获取列表-->
-	<select id="getOrgList" parameterType="Page" resultType="OrgVO">
-		select a.id,a.org_name,c.type_name,b.area_name,a.contact_person,a.contact_phone,a.sort,a.note,t.count from org a 
-			left join area b     on a.area_id =b.id 
-			left join org_type c on a.org_type_id=c.id,
-			(
-				select count(*) count from org a 
-					left join area b     on a.area_id =b.id 
-					left join org_type c on a.org_type_id=c.id
-				where a.is_deleted  = 0  
-			    <if test="parameter !=null ">
-			    	<if test="parameter.orgName !=null and  parameter.orgName != '' ">  
-			        	and a.org_name  like concat(concat('%',#{parameter.orgName}),'%')
-			    	</if> 
-			    	<if test="parameter.orgTypeId != null">
-			    		and c.id = #{parameter.orgTypeId}
-			    	</if> 
-			    	<if test="parameter.areaId != null">
-			    		and b.id = #{parameter.areaId}
-			    	</if> 
-			    </if>
-			)t
-		where a.is_deleted  = 0  
-	    <if test="parameter !=null ">
-	    	<if test="parameter.orgName !=null and  parameter.orgName != '' ">  
-	        	and a.org_name  like concat(concat('%',#{parameter.orgName}),'%')
-	    	</if> 
-	    	<if test="parameter.orgTypeId != null">
-	    		and c.id = #{parameter.orgTypeId}
-	    	</if> 
-	    	<if test="parameter.areaId != null">
-	    		and b.id = #{parameter.areaId}
-	    	</if> 
-	    </if> 
-	    order by a.sort 
-	    <if test="start !=null and pageNumber != null">  
-	        limit #{start},#{pageSize}  
-	    </if> 
-	</select>
 
+	<!--orgNmae模糊查询获取列表 -->
+	<select id="getOrgList" parameterType="Page" resultType="OrgVO">
+		select
+		a.id,a.org_name,c.type_name,b.area_name,a.contact_person,a.contact_phone,a.sort,a.note,t.count
+		from org a
+		left join area b on a.area_id =b.id
+		left join org_type c on
+		a.org_type_id=c.id,
+		(
+		select count(*) count from org a
+		left join area b
+		on a.area_id =b.id
+		left join org_type c on a.org_type_id=c.id
+		where
+		a.is_deleted = 0
+		<if test="parameter !=null ">
+			<if test="parameter.orgName !=null and  parameter.orgName != '' ">
+				and a.org_name like
+				concat(concat('%',#{parameter.orgName}),'%')
+			</if>
+			<if test="parameter.orgTypeId != null">
+				and c.id = #{parameter.orgTypeId}
+			</if>
+			<if test="parameter.areaId != null">
+				and b.id = #{parameter.areaId}
+			</if>
+		</if>
+		)t
+		where a.is_deleted = 0
+		<if test="parameter !=null ">
+			<if test="parameter.orgName !=null and  parameter.orgName != '' ">
+				and a.org_name like
+				concat(concat('%',#{parameter.orgName}),'%')
+			</if>
+			<if test="parameter.orgTypeId != null">
+				and c.id = #{parameter.orgTypeId}
+			</if>
+			<if test="parameter.areaId != null">
+				and b.id = #{parameter.areaId}
+			</if>
+		</if>
+		order by a.sort
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	<!-- 新增用户或者修改用户是加载的机构 -->
+	<select id="getOrgListByOrgName" parameterType="String"
+		resultType="OrgVO">
+		select id,org_name from org where org_name like #{orgName};
+	</select>
 	<!-- 查询表单的数据总数 -->
 	<select id="getOrgCount" resultType="Long">
 		select
