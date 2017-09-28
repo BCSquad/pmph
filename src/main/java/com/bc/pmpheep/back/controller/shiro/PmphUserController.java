@@ -21,6 +21,7 @@ import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.service.PmphDepartmentService;
 import com.bc.pmpheep.back.service.PmphRoleService;
 import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
@@ -52,6 +53,8 @@ public class PmphUserController {
     PmphUserService userService;
     @Autowired
     PmphRoleService roleService;
+    @Autowired
+    PmphDepartmentService pmphDepartmentService;
 
     @ResponseBody
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -249,5 +252,18 @@ public class PmphUserController {
     @RequestMapping(value = "/updatePmphUserOfBack")
     public ResponseBean updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO){
     	return new ResponseBean(userService.updatePmphUserOfBack(pmphUserManagerVO));
+    }
+    /**
+     * 
+     *  
+     * 功能描述：初始化获取社内所有部门
+     *
+     * @return 已经分好级的社内部门
+     *
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getListPmphDepartment")
+    public ResponseBean getListPmphDepartment(){
+    	return new ResponseBean(pmphDepartmentService.getListPmphDepartment(null));
     }
 }
