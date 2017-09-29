@@ -8,10 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -26,8 +22,10 @@ import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.WriterPermissionService;
 import com.bc.pmpheep.back.service.WriterUserService;
+import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * 
@@ -83,45 +81,35 @@ public class WriterLoginController {
         String password = user.getPassword();
         logger.debug("username => " + username);
         logger.debug("password => " + password);
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-        Subject subject = SecurityUtils.getSubject();
-        String msg = null;
         try {
-            subject.login(token);
+            WriterUser writerUser =
+            writerUserService.login(username, ShiroKit.md5(password, username));
             // 验证成功在Session中保存用户信息
-            final WriterUser writerUser = writerUserService.getByUsername(user.getUsername());
             request.getSession().setAttribute(Const.SESSION_WRITER_USER, writerUser);
             // 权限资源树集合
             permissions = writerPermissionService.getListAllParentMenu();
             // 拥有的权限资源
-            List<WriterPermission> havePermissions =
-            writerUserService.getListAllResource(writerUser.getId());
-            for (WriterPermission writerPermission : havePermissions) {
-                permissionsIds.add(writerPermission.getId());
-            }
+            // List<WriterPermission> havePermissions =
+            // writerUserService.getListAllResource(writerUser.getId());
+            // for (WriterPermission writerPermission : havePermissions) {
+            // permissionsIds.add(writerPermission.getId());
+            // }
             // 设置是否拥有权限
-            for (WriterPermission writerPermission : permissions) {
-                if (permissionsIds.contains(writerPermission.getId())) {
-                    writerPermission.setHasMenu(true);
-                    List<WriterPermission> childList = writerPermission.getChildren();
-                    for (WriterPermission child : childList) {
-                        if (permissionsIds.contains(child.getId())) {
-                            child.setHasMenu(true);
-                        }
-                    }
-                }
-            }
-        } catch (UnknownAccountException e) {
-            e.printStackTrace();
-            msg = e.getMessage();
-        } catch (IncorrectCredentialsException e) {
-            e.printStackTrace();
-            msg = "密码不匹配(生产环境中应该写:用户名和密码的组合不正确)";
-        } catch (LockedAccountException e) {
-            e.printStackTrace();
-            msg = e.getMessage();
+            // for (WriterPermission writerPermission : permissions) {
+            // if (permissionsIds.contains(writerPermission.getId())) {
+            // writerPermission.setHasMenu(true);
+            // List<WriterPermission> childList = writerPermission.getChildren();
+            // for (WriterPermission child : childList) {
+            // if (permissionsIds.contains(child.getId())) {
+            // child.setHasMenu(true);
+            // }
+            // }
+            // }
+            // }
+            return new ResponseBean(permissions);
+        } catch (CheckedServiceException cException) {
+            return new ResponseBean(cException);
         }
-        return new ResponseBean(permissions);
     }
 
     /**
