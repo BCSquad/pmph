@@ -83,7 +83,8 @@ public interface PmphUserService {
      * @param username
      * @return
      */
-    PmphUser getByUsername(String username) throws CheckedServiceException;
+    PmphUser getByUsernameAndPassword(String username, String password)
+    throws CheckedServiceException;
 
     /**
      * 根据用户名和真实姓名模糊查询社内用户
