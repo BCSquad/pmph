@@ -56,4 +56,17 @@ public interface PmphGroupMemberService {
 	 *
 	 */
 	List<PmphGroupMemberVO> getListPmphGroupMember(Long groupId) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述： 批量添加小组成员
+	 *
+	 * @param pmphGroupMembers 添加的小组成员
+	 * @return 是否成功
+	 * @throws CheckedServiceException
+	 *
+	 */
+	String addPmphGroupMemberOnGroup(List<PmphGroupMember> pmphGroupMembers) throws CheckedServiceException;
+
 }

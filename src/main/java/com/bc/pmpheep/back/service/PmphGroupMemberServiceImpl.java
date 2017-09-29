@@ -98,4 +98,32 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		list = pmphGroupMemberDao.getListPmphGroupMember(groupId);
 		return list;
 	}
+
+	@Override
+	public String addPmphGroupMemberOnGroup(List<PmphGroupMember> pmphGroupMembers) throws CheckedServiceException {
+		String result = "FAIL";
+		if (pmphGroupMembers.size() > 0) {
+			for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
+				if (null == pmphGroupMember.getGruopId()) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+							CheckedExceptionResult.ILLEGAL_PARAM, "成员小组id为空");
+				}
+				if (null == pmphGroupMember.getMemberId()) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+							CheckedExceptionResult.ILLEGAL_PARAM, "成员id为空");
+				}
+				if (null == pmphGroupMember.getDisplayName()) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+							CheckedExceptionResult.ILLEGAL_PARAM, "成员名称为空");
+				}
+				pmphGroupMemberDao.addPmphGroupMember(pmphGroupMember);
+
+			}
+			result = "SUCCESS";
+		} else {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
+		}
+		return result;
+	}
 }

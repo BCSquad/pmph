@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
  * 
  */
 public class Const {
+	public static final String DEFAULT_GROUP_IMAGE ="";//小组默认头像路径
 	public static final String DEFAULT_PASSWORD = "123456";
 	public static final Long PMPHDEPARTMENTROOTID = 0L; // 社内部门根节点id
 	public static final Integer PAGETOTAL = 0; // 默认

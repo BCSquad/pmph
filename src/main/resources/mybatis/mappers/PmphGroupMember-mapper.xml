@@ -110,7 +110,7 @@
 	<select id="getListPmphGroupMember" parameterType="java.lang.Long"
 		resultType="PmphGroupMemberVO">
 		select * from pmph_group_member where
-		group_id=#{groupId};
+		group_id=#{groupId} order by is_founder desc , is_admin ;
 	</select>
 	
 	<!-- 查询表单的数据总数 -->
