@@ -15,6 +15,7 @@ import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.WriterUserService;
+import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
@@ -79,7 +80,7 @@ public class WriterUserServiceTest extends BaseTest {
         WriterUser writerUser1 = new WriterUser();
         writerUser = writerUserService.add(writerUser);
         Assert.assertNotNull("否保存成功", writerUser.getId());
-        //Long id = writerUser.getId();
+        // Long id = writerUser.getId();
         writerUser1 = writerUserService.update(writerUser);
         Assert.assertNotNull("是否更新成功", writerUser1);
         logger.info("修改成功{}", writerUser1.toString());
@@ -167,7 +168,7 @@ public class WriterUserServiceTest extends BaseTest {
         pmUsers = writerUserService.getList();// 查询所有
         Assert.assertNotNull(pmUsers);
         logger.debug(pmUsers.toString());
-        wtUser = writerUserService.getByUsername("test1");// 按UserName 查询对象
+        wtUser = writerUserService.getByUsernameAndPassword("test1", ShiroKit.md5("123", "test1"));// 按UserName
         Assert.assertNotNull(wtUser);
         logger.debug(wtUser.toString());
         wtUser = writerUserService.get(1L);// 按ID查询对象
@@ -210,25 +211,50 @@ public class WriterUserServiceTest extends BaseTest {
         logger.debug(pu1.toString());
     }
 
-    // @Test
-    // public void getListWriterUserPO() {
-    // Page<WriterUser, Map<String, String>> page = new Page<>();
-    // Map<String, String> map = new HashMap<>();
-    // map.put("username", null);
-    // map.put("realname", null);
-    // map.put("orgName", null);
-    // page.setParameter(map);
-    // page.setPageSize(15);
-    // Page<WriterUserManagerVO, Map<String, String>> pageVO = new Page<>();
-    // try {
-    // pageVO = writerUserService.getListWriter(page);
-    // } catch (CheckedServiceException | ReflectiveOperationException e) {
-    // logger.error(e.getMessage());
-    // }
-    // if (pageVO.getRows().isEmpty()) {
-    // logger.info("失败了");
-    // } else {
-    // logger.info("查找成功{}", pageVO);
-    // }
-    // }
+    @Test
+    public void getWriterUserListByOrgIds() {
+        WriterUser writerUser = new WriterUser();
+        List<Long> orgIds = new ArrayList<Long>();
+        orgIds.add(1L);
+        orgIds.add(2L);
+        orgIds.add(3L);
+        writerUser.setUsername("ABC");
+        writerUser.setPassword("123");
+        writerUser.setRealname("ABC");
+        writerUser.setNickname("ABC");
+        writerUser.setAvatar("---");
+        writerUser.setOrgId(2L);
+        writerUserService.add(writerUser);
+        List<WriterUser> list = writerUserService.getWriterUserListByOrgIds(orgIds);
+        Assert.assertTrue("获取数据失败", list.size() > 0);
+        writerUser.setOrgId(5L);
+        writerUserService.update(writerUser);
+        list = writerUserService.getWriterUserListByOrgIds(orgIds);
+        Assert.assertTrue("不应该能获取数据", list.size() == 0);
+    }
+
+    @Test
+    public void addWriterUserOfBack() {
+        WriterUser writerUser = new WriterUser();
+        writerUser.setUsername("OPQ");
+        writerUser.setRealname("OPQ");
+        writerUser.setNickname("OPQ");
+        writerUser.setAvatar("---");
+        String result = writerUserService.addWriterUserOfBack(writerUser);
+        Assert.assertTrue("添加失败", result.equals("SUCCESS"));
+    }
+
+    @Test
+    public void updateWriterUserOfBack() {
+        WriterUser writerUser = new WriterUser();
+        writerUser.setUsername("XYZ");
+        writerUser.setPassword("789");
+        writerUser.setRealname("ZZZ");
+        writerUser.setNickname("QQQ");
+        writerUser.setAvatar("---");
+        writerUserService.addWriterUserOfBack(writerUser);
+        writerUser.setRealname("UUU");
+        String result = writerUserService.updateWriterUserOfBack(writerUser);
+        Assert.assertTrue("更新失败", result.equals("SUCCESS"));
+    }
 }

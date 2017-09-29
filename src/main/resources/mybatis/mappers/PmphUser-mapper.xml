@@ -342,17 +342,11 @@
 			<if test="username != null and username!=''">
 				username = #{username},
 			</if>
-			<if test="password != null and password!='' ">
-				`password` = #{password},
-			</if>
 			<if test=" isDisabled!= null ">
 				is_disabled= #{isDisabled},
 			</if>
 			<if test=" realname!= null and realname !=''">
 				realname= #{realname},
-			</if>
-			<if test=" departmentId!= null and departmentId !=''">
-				department_id = #{departmentId},
 			</if>
 			<if test=" handphone!= null and handphone !=''">
 				handphone = #{handphone},
@@ -365,9 +359,6 @@
 			</if>
 			<if test=" sort!= null and  sort!=''">
 				sort = #{sort},
-			</if>
-			<if test=" isDeleted!= null ">
-				is_deleted= #{isDeleted},
 			</if>
 		</set>
 		WHERE

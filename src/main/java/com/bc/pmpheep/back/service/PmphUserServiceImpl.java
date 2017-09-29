@@ -104,7 +104,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     @Override
     public Integer deleteUserAndRole(List<Long> ids) throws CheckedServiceException {
-        if (0 < ids.size()) {
+        if (ids.size() < 0) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除用户！");
         }
