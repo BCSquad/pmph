@@ -351,58 +351,69 @@
 		writer_user
 	</select>
 
-	<select id="getByUserName" parameterType="String" resultType="WriterUser">
+	<select id="getByUsernameAndPassword" parameterType="String" resultType="WriterUser">
 		SELECT
-		*
+			*
 		FROM
-		writer_user
+			writer_user
 		WHERE
-		username = #{username}
+			1=1 
+		<if test=" username!= null and username!='' ">
+			and	username = #{username}
+		</if>
+		<if test=" password!= null and password!='' ">
+			and	password = #{password}
+		</if>
+		
 	</select>
 
 	<select id="getListByRole" parameterType="Long" resultType="WriterUser">
 		SELECT
-		tu.id,
-		tu.username,
-		tu.`password`,
-		tu.is_disabled,
-		tu.`org_id`,
-		tu.`realname`
+			tu.id,
+			tu.username,
+			tu.`password`,
+			tu.is_disabled,
+			tu.`org_id`,
+			tu.`realname`
 		FROM
-		writer_user tu
-		LEFT JOIN writer_user_role tur ON tu.id
-		= tur.user_id
-		LEFT JOIN writer_role tr ON tur.role_id = tr.id
+			writer_user tu
+		LEFT JOIN 
+			writer_user_role tur ON tu.id = tur.user_id
+		LEFT JOIN 
+			writer_role tr ON tur.role_id = tr.id
 		WHERE
-		tr.id =#{rid}
+			tr.id =#{rid}
 	</select>
 
 	<!-- 根据用户 id 查询这个用户拥有的所有资源（这里的资源就代表权限） -->
 	<select id="getListAllResources" resultType="WriterPermission"
 		parameterType="Long">
 		SELECT
-		tr.`id`,
-		tr.`parent_id`,
-		tr.`path`,
-		tr.`permission_name`,
-		tr.menu_name,
-		tr.url
-		FROM `writer_permission` tr
-		LEFT JOIN `writer_role_permission` trr ON tr.`id` =
-		trr.`permission_id`
-		LEFT JOIN `writer_user_role` tur ON trr.`role_id` =
-		tur.role_id
-		WHERE tur.user_id = #{uid}
+			tr.`id`,
+			tr.`parent_id`,
+			tr.`path`,
+			tr.`permission_name`,
+			tr.menu_name,
+			tr.url
+		FROM 
+			`writer_permission` tr
+		LEFT JOIN 
+			`writer_role_permission` trr ON tr.`id` = trr.`permission_id`
+		LEFT JOIN 
+			`writer_user_role` tur ON trr.`role_id` = tur.role_id
+		WHERE 
+			tur.user_id = #{uid}
 	</select>
 
 	<!-- 根据用户 id 查询用户所具有的角色字符串表示 -->
 	<select id="getListRoleSnByUser" parameterType="Long"
 		resultType="String">
 		SELECT
-		tr.role_name
-		FROM `writer_role` tr
+			tr.role_name
+		FROM 
+			`writer_role` tr
 		LEFT JOIN
-		`writer_user_role` tur ON tr.`id` = tur.role_id
+			`writer_user_role` tur ON tr.`id` = tur.role_id
 		LEFT JOIN `writer_user`
 		tu ON tur.`user_id` = tu.id
 		WHERE tu.`id` = #{uid}
@@ -411,20 +422,25 @@
 	<!-- 根据用户 id 查询用户所具有的角色对象表示 -->
 	<select id="getListUserRole" parameterType="Long" resultType="WriterRole">
 		SELECT
-		tr.`id`,
-		tr.`role_name`
-		FROM `writer_role` tr
+			tr.`id`,
+			tr.`role_name`
+		FROM 
+			`writer_role` tr
 		LEFT JOIN
-		`writer_user_role` tur ON tr.`id` = tur.role_id
-		LEFT JOIN `writer_user`
-		tu ON tur.`user_id` = tu.id
-		WHERE tu.`id` = #{uid}
+			`writer_user_role` tur ON tr.`id` = tur.role_id
+		LEFT JOIN 
+			`writer_user` tu ON tur.`user_id` = tu.id
+		WHERE 
+			tu.`id` = #{uid}
 	</select>
 
 	<!-- 删除作家用户 -->
 	<delete id="deleteWriterUserById" parameterType="String">
 		delete from
-		writer_user where id in
+			writer_user 
+		where 
+			id 
+		in
 		<foreach collection="array" open="(" separator="," close=")"
 			item="id">#{id}
 		</foreach>
@@ -440,7 +456,9 @@
 	<select id="getWriterUserByUsername" parameterType="String"
 		resultType="WriterUser">
 		select * from
-		writer_user where username=#{username};
+			writer_user 
+		where 
+			username=#{username};
 	</select>
 	<!-- 分页查询 -->
 	<select id="getListWriterUserTotal" parameterType="Page"
@@ -498,7 +516,8 @@
 
 	<!-- 根据机构id集查询用户 -->
 	<select id="getWriterUserListByOrgIds" resultType="WriterUser">
-		select * from writer_user where org_id in
+		select * from writer_user where is_disabled =0 and is_deleted =0 and
+		org_id in
 		<foreach item="orgId" collection="list" open="(" separator=","
 			close=")">
 			#{orgId}

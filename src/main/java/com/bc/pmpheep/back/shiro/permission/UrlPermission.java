@@ -8,13 +8,25 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 
- * @author Administrator
+ * <pre>
+ * 功能描述：
+ * 使用示范：
  * 
+ * 
+ * @author (作者) nyz
+ * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2017-9-29
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
+ * </pre>
  */
 public class UrlPermission implements Permission {
-    private static final Logger logger = LoggerFactory.getLogger(UrlPermission.class);
+    Logger         logger = LoggerFactory.getLogger(UrlPermission.class);
     // 在 Realm 的授权方法中,由数据库查询出来的权限字符串
-    private String              url;
+    private String url;
 
     public UrlPermission(String url) {
         this.url = url;

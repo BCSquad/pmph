@@ -3,7 +3,6 @@ package com.bc.pmpheep.back.service.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,6 +16,7 @@ import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.PmphUserService;
+import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.test.BaseTest;
 import com.google.gson.Gson;
@@ -66,21 +66,21 @@ public class PmphUserServiceTest extends BaseTest {
      */
     // @Test
     // @Rollback(Const.ISROLLBACK)
-//    public void deletePmphUserTest() {
-//        Integer aInteger = 0;
-//        try {
-//            List<Long> userIdList = new ArrayList<Long>();
-//            userIdList.add(19L);
-//            userService.deleteUserAndRole(userIdList);// 删除用户对应的角色
-//            thrown.expect(CheckedServiceException.class);// 预期异常的属性信息
-//            aInteger = 1;
-//        } catch (CheckedServiceException e) {
-//            e.printStackTrace();
-//        }
-//        Assert.fail("CheckedServiceException");
-//        // 查看两个对象的引用是否相等。类似于使用“==”比较两个对象
-//        Assert.assertSame("是否等于1", 1, aInteger);
-//    }
+    // public void deletePmphUserTest() {
+    // Integer aInteger = 0;
+    // try {
+    // List<Long> userIdList = new ArrayList<Long>();
+    // userIdList.add(19L);
+    // userService.deleteUserAndRole(userIdList);// 删除用户对应的角色
+    // thrown.expect(CheckedServiceException.class);// 预期异常的属性信息
+    // aInteger = 1;
+    // } catch (CheckedServiceException e) {
+    // e.printStackTrace();
+    // }
+    // Assert.fail("CheckedServiceException");
+    // // 查看两个对象的引用是否相等。类似于使用“==”比较两个对象
+    // Assert.assertSame("是否等于1", 1, aInteger);
+    // }
 
     /**
      * PmphUser 更新方法
@@ -115,7 +115,7 @@ public class PmphUserServiceTest extends BaseTest {
         // try {
         pmUsers = userService.getList();// 查询所有
         Assert.assertNotNull(pmUsers);
-        puPmphUser = userService.getByUsername("test1");// 按UserName 查询对象
+        puPmphUser = userService.login("test1", ShiroKit.md5("123", "test1"));// 按UserName
         Assert.assertNotNull(puPmphUser);
         puPmphUser = userService.get(31L);// 按ID查询对象
         Assert.assertNotNull(puPmphUser);
@@ -160,51 +160,54 @@ public class PmphUserServiceTest extends BaseTest {
             logger.info("查找成功{}", page);
         }
     }
-    
+
     @Test
-    public void delete(){
-    	PmphUser pmphUser = new PmphUser();
-    	pmphUser.setUsername("ABC");
-    	pmphUser.setPassword("456");
-    	pmphUser.setRealname("ABC");
-    	userService.add(pmphUser);
-    	PmphUser pmphUser2 = new PmphUser();
-    	pmphUser2 = userService.getByUsername(pmphUser.getUsername());
-    	Assert.assertTrue("删除失败", userService.delete(pmphUser2.getId())>0);
-    	logger.info("----分割线----");
-    	Assert.assertTrue("删除数据操作影响行数应该为0", userService.delete(10L)==0);
+    public void delete() {
+        PmphUser pmphUser = new PmphUser();
+        pmphUser.setUsername("ABC");
+        pmphUser.setPassword("456");
+        pmphUser.setRealname("ABC");
+        userService.add(pmphUser);
+        PmphUser pmphUser2 = new PmphUser();
+        pmphUser2 =
+        userService.getByUsernameAndPassword(pmphUser.getUsername(),
+                                             ShiroKit.md5(pmphUser.getPassword(),
+                                                          pmphUser.getUsername()));
+        Assert.assertTrue("删除失败", userService.delete(pmphUser2.getId()) > 0);
+        logger.info("----分割线----");
+        Assert.assertTrue("删除数据操作影响行数应该为0", userService.delete(10L) == 0);
     }
-    
+
     @Test
-    public void deleteUserAndRole(){
-    	List<Long> ids = new ArrayList<Long>();
-    	ids.add(1L);
-    	ids.add(2L);
-    	ids.add(3L);
-    	PmphUser pmphUser = new PmphUser();
-    	pmphUser.setUsername("ABC");
-    	pmphUser.setPassword("123");
-    	pmphUser.setRealname("ABC");
-    	userService.add(pmphUser);
-    	userService.add(new PmphUser("POQ", "465"), ids);
-    	Assert.assertTrue("影响行数不为3就为错误", userService.deleteUserAndRole(ids)== 3);
+    public void deleteUserAndRole() {
+        List<Long> ids = new ArrayList<Long>();
+        ids.add(1L);
+        ids.add(2L);
+        ids.add(3L);
+        PmphUser pmphUser = new PmphUser();
+        pmphUser.setUsername("ABC");
+        pmphUser.setPassword("123");
+        pmphUser.setRealname("ABC");
+        userService.add(pmphUser);
+        userService.add(new PmphUser("POQ", "465"), ids);
+        Assert.assertTrue("影响行数不为3就为错误", userService.deleteUserAndRole(ids) == 3);
     }
-    
+
     @Test
-    public void updatePmphUserOfBack(){
-    	PmphUser pmphUser = new PmphUser();
-    	pmphUser.setUsername("BBB");
-    	pmphUser.setPassword("666");
-    	pmphUser.setRealname("CCC");
-    	PmphUser pmphUser2 = new PmphUser();
-    	pmphUser2 = userService.add(pmphUser);
-    	pmphUser2.setPassword("777");
-    	PmphUserManagerVO managerVO = new PmphUserManagerVO();
-    	managerVO.setId(pmphUser2.getId());
-    	managerVO.setUsername(managerVO.getUsername());
-    	managerVO.setRealname(pmphUser2.getRealname());
-    	managerVO.setRoleName("角色");
-    	String result = userService.updatePmphUserOfBack(managerVO);
-    	Assert.assertTrue("更新失败", result.equals("SUCCESS"));  	
+    public void updatePmphUserOfBack() {
+        PmphUser pmphUser = new PmphUser();
+        pmphUser.setUsername("BBB");
+        pmphUser.setPassword("666");
+        pmphUser.setRealname("CCC");
+        PmphUser pmphUser2 = new PmphUser();
+        pmphUser2 = userService.add(pmphUser);
+        pmphUser2.setPassword("777");
+        PmphUserManagerVO managerVO = new PmphUserManagerVO();
+        managerVO.setId(pmphUser2.getId());
+        managerVO.setUsername(managerVO.getUsername());
+        managerVO.setRealname(pmphUser2.getRealname());
+        managerVO.setRoleName("角色");
+        String result = userService.updatePmphUserOfBack(managerVO);
+        Assert.assertTrue("更新失败", result.equals("SUCCESS"));
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.vo.MessageStateVO;
 
 
@@ -31,5 +32,36 @@ public interface UserMessageDao {
 	 */
 	List<MessageStateVO> getMessageStateList(Page<MessageStateVO,MessageStateVO> page);
 	
+	/**
+	 * 批量插入 UserMessage
+	 * @author Mryang
+	 * @createDate 2017年9月28日 下午3:35:46
+	 * @param userMessageList
+	 */
+	void addUserMessageBatch (List<UserMessage> userMessageList); 
+	
+	/**
+	 * 根据消息msgId 获取 UserMessage集 
+	 * @author Mryang
+	 * @createDate 2017年9月29日 下午3:17:56
+	 * @param msgId
+	 * @return
+	 */
+	List<UserMessage>  getMessageByMsgId (String msgId); 
+	
+	/**
+	 * 通过msgId 动态更新UserMessage 
+	 */
+	Integer updateUserMessageByMsgId(String msgId);
+	
+	/**
+	 * 通过id 动态更新UserMessage 
+	 */
+	Integer updateUserMessageById(Long id);
+	
+	/**
+	 * 通过id删除UserMessage  
+	 */
+	Integer  deleteMessageById (Long id);
 	
 }

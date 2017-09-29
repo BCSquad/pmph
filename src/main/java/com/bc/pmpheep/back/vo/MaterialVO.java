@@ -113,5 +113,15 @@ public class MaterialVO {
 	public void setIsPublished(Boolean isPublished) {
 		this.isPublished = isPublished;
 	}
+
+	@Override
+	public String toString() {
+		return " {id:" + id + ", materialName:" + materialName + ", deadline:"
+				+ deadline + ", actualDeadline:" + actualDeadline
+				+ ", contactUserId:" + contactUserId + ", contactUserName:"
+				+ contactUserName + ", contactPhone:" + contactPhone
+				+ ", contactEmail:" + contactEmail + ", isPublished:"
+				+ isPublished + "}";
+	}
 	
 }

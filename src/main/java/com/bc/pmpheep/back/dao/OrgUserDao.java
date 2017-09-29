@@ -12,7 +12,7 @@ import com.bc.pmpheep.back.vo.OrgUserManagerVO;
  */
 public interface OrgUserDao {
 	/**
-	 * 根据机构id集查询用户
+	 * 根据机构id集查询用户 (逻辑没有删除和启用的)
 	 */
 	List<OrgUser> getOrgUserListByOrgIds(List<Long> orgIds);
 	

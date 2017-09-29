@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext;
  * 
  */
 public class Const {
-	public static final String DEFAULT_GROUP_IMAGE ="";//小组默认头像路径
+	public static final String DEFAULT_GROUP_IMAGE = "";// 小组默认头像路径
 	public static final String DEFAULT_PASSWORD = "123456";
 	public static final Long PMPHDEPARTMENTROOTID = 0L; // 社内部门根节点id
 	public static final Integer PAGETOTAL = 0; // 默认
@@ -17,6 +17,8 @@ public class Const {
 	public static final Integer PAGESIZE = 5; // 默认
 	public static final boolean ISROLLBACK = true; // 单元测试数据是否回滚
 	public static final String WEB_PROJECT_NAME = "PMPH_IMESP";
+	public static final String SEESION_PMPH_USER_TOKEN = "sessionPmphUserToken";
+	public static final String SEESION_WRITER_USER_TOKEN = "sessionWriterUserToken";
 	public static final String SESSION_SECURITY_CODE = "sessionSecCode";
 	public static final String SESSION_PMPH_USER = "sessionPmphUser";
 	public static final String SESSION_WRITER_USER = "sessionWriterUser";

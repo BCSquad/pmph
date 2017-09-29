@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.po;
 
 import java.sql.Timestamp;
+
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -42,6 +43,60 @@ public class UserMessage implements java.io.Serializable {
 	public UserMessage() {
 		super();
 	}
+	/**
+	 * 撤回构造器
+	 * @param msgId
+	 */
+	public UserMessage(String msgId,Boolean isWithdraw){
+		this.msgId=msgId;
+		this.isWithdraw=isWithdraw;
+	}
+	/**
+	 * id 构造器
+	 * @param id
+	 */
+	public UserMessage(Long id){
+		this.id=id;
+	}
+	public UserMessage(String msgId, Short msgType, Long senderId,
+			Short senderType, Long receiverId, Short receiverType,
+			Boolean isRead, Boolean isWithdraw, Boolean isDeleted,
+			Timestamp gmtCreate, Timestamp gmtUpdate) {
+		super();
+		this.msgId = msgId;
+		this.msgType = msgType;
+		this.senderId = senderId;
+		this.senderType = senderType;
+		this.receiverId = receiverId;
+		this.receiverType = receiverType;
+		this.isRead = isRead;
+		this.isWithdraw = isWithdraw;
+		this.isDeleted = isDeleted;
+		this.gmtCreate = gmtCreate;
+		this.gmtUpdate = gmtUpdate;
+	}
+	
+	/**
+	 * 
+	 * @param msgId  消息id
+	 * @param msgType 消息类型
+	 * @param senderId 发送者id
+	 * @param senderType 发送者类型
+	 * @param receiverId 收收人id
+	 * @param receiverType 收收人类型
+	 */
+	public UserMessage(String msgId, Short msgType, Long senderId,
+			Short senderType, Long receiverId, Short receiverType) {
+		super();
+		this.msgId = msgId;
+		this.msgType = msgType;
+		this.senderId = senderId;
+		this.senderType = senderType;
+		this.receiverId = receiverId;
+		this.receiverType = receiverType;
+	}
+
+
 	public Long getId() {
 		return id;
 	}

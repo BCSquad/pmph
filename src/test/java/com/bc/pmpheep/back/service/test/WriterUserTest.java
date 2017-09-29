@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.WriterUserService;
+import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 
@@ -93,7 +94,7 @@ public class WriterUserTest extends BaseTest {
         pmUsers = userService.getList();// 查询所有
         Assert.assertNotNull(pmUsers);
         logger.debug(pmUsers.toString());
-        wtUser = userService.getByUsername("test1");// 按UserName 查询对象
+        wtUser = userService.getByUsernameAndPassword("test1", ShiroKit.md5("123", "test1"));// 按UserName
         Assert.assertNotNull(wtUser);
         logger.debug(wtUser.toString());
         wtUser = userService.get(1L);// 按ID查询对象
