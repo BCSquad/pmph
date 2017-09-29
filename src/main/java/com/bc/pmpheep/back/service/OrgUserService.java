@@ -13,7 +13,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  */
 public interface OrgUserService {
 	/**
-	 * 根据机构id集查询用户
+	 * 根据机构id集查询用户(逻辑没有删除和启用的)
 	 */
 	List<OrgUser> getOrgUserListByOrgIds(List<Long> orgIds) throws CheckedServiceException;
 	

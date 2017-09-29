@@ -18,7 +18,7 @@ import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 @Repository
 public interface WriterUserDao {
 	/**
-	 * 根据机构id集查询用户
+	 * 根据机构id集查询用户(逻辑没有删除和启用的)
 	 */
 	List<WriterUser> getWriterUserListByOrgIds(List<Long> orgIds);
 	

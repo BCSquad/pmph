@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import com.bc.pmpheep.back.dao.UserMessageDao;
 import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.util.ShiroSession;
 import com.bc.pmpheep.back.util.Tools;
@@ -20,6 +22,8 @@ import com.bc.pmpheep.general.service.MessageService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.bc.pmpheep.websocket.MyWebSocketHandler;
+import com.bc.pmpheep.websocket.WebScocketMessage;
 
 /**
  *@author MrYang 
@@ -40,6 +44,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 	
 	@Autowired
 	private OrgUserService orgUserService;
+	
+	@Autowired
+	private MyWebSocketHandler handler;
 
 	@Override
 	public Page<MessageStateVO, MessageStateVO> getMessageStateList(Page<MessageStateVO, MessageStateVO> page) throws CheckedServiceException {
@@ -65,15 +72,29 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 	}
 	
 	@Override
-	public Integer addUserMessage(Message message,Integer sendType,String orgIds,String userIds,String bookids){
+	public Integer addOrUpdateUserMessage(Message message,Integer sendType,String orgIds,String userIds,String bookids,boolean isSave)
+			throws CheckedServiceException,IOException{
 		if(null == sendType || "".equals(sendType)){ 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "参数错误!");
 		}
-		message=messageService.add(message);
+		// 如果 补发不进行消息插入
+		if(isSave){
+			//MongoDB  消息插入
+			message=messageService.add(message);
+		}
 		if(null == message.getId() || "".equals(message.getId().trim())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
 		}
-		if(sendType == 1 || sendType == 2){//发送给学校管理员  //所有人
+		//发送者id
+		PmphUser pmphUser =ShiroSession.getPmphUser();
+		if(null == pmphUser){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.OBJECT_NOT_FOUND, "操作人为空!");
+		}
+		Long senderId =pmphUser.getId();
+		//装储存数据 
+		List<UserMessage> userMessageList = new ArrayList<UserMessage> ();
+		//1 发送给学校管理员  //2 所有人
+		if(sendType == 1 || sendType == 2){
 			if(null == orgIds || "".equals(userIds.trim())){
 				throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "参数错误!");
 			}
@@ -84,20 +105,123 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 					orgIds2.add(Long.parseLong(id));
 				}
 			}
-				List<WriterUser> lst1=writerUserService.getWriterUserListByOrgIds(orgIds2);
-				List<OrgUser>    lst2=orgUserService.getOrgUserListByOrgIds(orgIds2);
-				
+			List<OrgUser>    orgUserList=orgUserService.getOrgUserListByOrgIds(orgIds2);
+			//机构用户
+			for(OrgUser orgUser:orgUserList){
+				userMessageList.add(new UserMessage(message.getId(),(short)1, senderId ,(short) 1,orgUser.getId(),(short)3));
+			}
+			//作家用户
+			if(sendType == 2){
+				List<WriterUser> writerUserList=writerUserService.getWriterUserListByOrgIds(orgIds2);
+				for(WriterUser writerUser:writerUserList){
+					userMessageList.add(new UserMessage(message.getId(),(short)1, senderId ,(short) 1,writerUser.getId(),(short)2));
+				}
+			}
 		}
-		
-		if(sendType == 3){//指定用户
+		//指定用户
+		if(sendType == 3){
+			if(null ==userIds || "".equals(userIds)){
+				throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "没有选中发送人!");
+			}
+			String[]  ids=userIds.split(",");
+			for(String id:ids){
+				if(null != id && !"".equals(id)){
+					String userType=id.split("_")[0];
+					String userId  =id.split("_")[1];
+					if(null != userId && Tools.isNumeric(userId)){
+						userMessageList.add(new UserMessage(message.getId(),(short)1, senderId ,(short) 1,Long.parseLong(userId),new Short(userType)));
+					}
+				}
+			}
+		}
+		//发送给教材所有报名者
+		if(sendType == 4){ 
+			if(null ==bookids || "".equals(bookids)){
+				throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "书籍为空!");
+			}
+			///////////////////////////////// do
 			
 		}
-		if(sendType == 4){//发送给教材所有报名者 
-			
+		// 如果是补发,进入下面操作 进行已发人员筛出
+		if(!isSave){
+			List<UserMessage> temp =new ArrayList<UserMessage>();
+			//已经发送的人员列表
+			List<UserMessage> sendedList = userMessageDao.getMessageByMsgId (message.getId());
+			for(UserMessage userMessage :userMessageList){
+				boolean flag=false;//没有发送
+				for(UserMessage uMessage: sendedList ){
+					if(userMessage.getReceiverId() == uMessage.getReceiverId() && userMessage.getReceiverType()==uMessage.getReceiverType()){
+						flag =true;
+						break;
+					}
+				}
+				if(!flag){
+					temp.add(userMessage);
+				}
+			}
+			userMessageList = temp;
 		}
-		
-		//////////do
-		return null;
+		//插入消息发送对象数据
+		if(null != userMessageList && userMessageList.size()>0){
+			userMessageDao.addUserMessageBatch (userMessageList);
+		}
+		//websocket发送的id集合
+		List<String> websocketUserIds = new ArrayList<String>();
+		for(UserMessage userMessage : userMessageList){
+			websocketUserIds.add(userMessage.getReceiverType()+"_"+userMessage.getReceiverId());
+		}
+		//webscokt发送消息
+		if(null != websocketUserIds && websocketUserIds.size()>0){
+			WebScocketMessage webScocketMessage=new WebScocketMessage(  message.getId(),(short)1,senderId,
+																		pmphUser.getRealname(),(short)1,(short)0,message.getContent(),
+																		message.getContent(), Tools.getCurrentTime());
+			handler.sendWebSocketMessageToUser(websocketUserIds,webScocketMessage);
+		}
+		return userMessageList.size();
+	}
+	
+	@Override
+	public Integer updateUserMessage(Message message) throws CheckedServiceException{
+		if (null == message) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                    CheckedExceptionResult.NULL_PARAM, "消息更新对象为空");
+        }
+        if (null == message.getId() || message.getId().isEmpty()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                    CheckedExceptionResult.NULL_PARAM, "消息更新对象id为空");
+        }
+        if (null == message.getContent() || message.getContent().isEmpty()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                    CheckedExceptionResult.NULL_PARAM, "消息更新对象内容为空");
+        }
+		messageService.update(message);
+		return 1;
+	}
+	
+	@Override
+	public Integer updateToWithdraw(UserMessage userMessage) throws CheckedServiceException{
+		if (Tools.isEmpty(userMessage.getMsgId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "消息更新对象id为空");
+        }
+		//已经发送的人员列表
+		List<UserMessage> sendedList = userMessageDao.getMessageByMsgId (userMessage.getMsgId());
+		for(UserMessage userMessage2 : sendedList){
+			if(null != userMessage2.getIsRead() && userMessage2.getIsRead()){
+				throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "消息已有人读取，无法撤销！");
+			}
+		}
+		return userMessageDao.updateUserMessageByMsgId(userMessage.getMsgId());
+	}
+	
+	/**
+	 * 通过id删除UserMessage  
+	 */
+	@Override
+	public Integer  deleteMessageById (Long id) throws CheckedServiceException{
+		if(null == id){
+			 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "id为空");
+		}
+		return userMessageDao.deleteMessageById(id);
 	}
 
 }

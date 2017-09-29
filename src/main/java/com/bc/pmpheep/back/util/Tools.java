@@ -305,7 +305,7 @@ public class Tools {
     
 
     public static void main(String[] args) {
-        System.out.println(isNumeric("9999"));
+        System.out.println(getCurrentTime());
     }
     
     public static boolean isNumeric(String str) {
