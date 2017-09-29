@@ -28,13 +28,25 @@ import com.bc.pmpheep.back.service.PmphUserService;
 
 /**
  * 
- * @author Administrator
+ * <pre>
+ * 功能描述：PmphUser 自定义Realm
+ * 使用示范：
  * 
+ * 
+ * @author (作者) nyz
+ * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2017-9-29
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
+ * </pre>
  */
 public class PmphUserRealm extends AuthorizingRealm {
-    private static final Logger logger = LoggerFactory.getLogger(PmphUserRealm.class);
+    Logger          logger = LoggerFactory.getLogger(PmphUserRealm.class);
     @Autowired
-    private PmphUserService     userService;
+    PmphUserService userService;
 
     public PmphUserRealm() {
         super();

@@ -27,9 +27,9 @@ public class BaseCacheService implements InitializingBean {
      * Spring 的 Cache
      */
     @Autowired
-    private CacheManager cacheManager;
-    private Cache        cache;
-    private String       cacheName;
+    CacheManager   cacheManager;
+    private Cache  cache;
+    private String cacheName;
 
     public void setCacheManager(CacheManager cacheManager) {
         this.cacheManager = cacheManager;

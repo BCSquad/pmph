@@ -16,11 +16,11 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  */
 public interface WriterUserService {
-	
-	/**
-	 * 根据机构id集查询用户
-	 */
-	List<WriterUser> getWriterUserListByOrgIds(List<Long> orgIds);
+
+    /**
+     * 根据机构id集查询用户
+     */
+    List<WriterUser> getWriterUserListByOrgIds(List<Long> orgIds);
 
     /**
      * 添加单个用户
@@ -81,7 +81,8 @@ public interface WriterUserService {
      * @param username
      * @return
      */
-    WriterUser getByUsername(String username) throws CheckedServiceException;
+    WriterUser getByUsernameAndPassword(String username, String password)
+    throws CheckedServiceException;
 
     /**
      * 登录逻辑 1、先根据用户名查询用户对象 2、如果有用户对象，则继续匹配密码 如果没有用户对象，则抛出异常
