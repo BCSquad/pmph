@@ -6,19 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,8 +20,10 @@ import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.PmphPermissionService;
 import com.bc.pmpheep.back.service.PmphUserService;
+import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * 
@@ -85,44 +80,37 @@ public class PmphLoginController {
         String password = user.getPassword();
         logger.debug("username => " + username);
         logger.debug("password => " + password);
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-        Subject subject = SecurityUtils.getSubject();
         try {
-            subject.login(token);
+            PmphUser pmphUser = pmphUserService.login(username, ShiroKit.md5(password, username));
             // 验证成功在Session中保存用户信息
-            final PmphUser pmphUser = pmphUserService.getByUsername(username);
             request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
+            // 验证成功在Session中保存用户Token信息
+            request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
+                                              ShiroKit.md5(username, password));
             // 权限资源树集合
             permissions = pmphPermissionService.getListAllParentMenu();
             // 拥有的权限资源
-            List<PmphPermission> havePermissions =
-            pmphUserService.getListAllResource(pmphUser.getId());
-            for (PmphPermission pmphPermission : havePermissions) {
-                permissionsIds.add(pmphPermission.getId());
-            }
+            // List<PmphPermission> havePermissions =
+            // pmphUserService.getListAllResource(pmphUser.getId());
+            // for (PmphPermission pmphPermission : havePermissions) {
+            // permissionsIds.add(pmphPermission.getId());
+            // }
             // 设置是否拥有权限
-            for (PmphPermission permission : permissions) {
-                if (permissionsIds.contains(permission.getId())) {
-                    permission.setHasMenu(true);
-                    List<PmphPermission> childList = permission.getChildren();
-                    for (PmphPermission child : childList) {
-                        if (permissionsIds.contains(child.getId())) {
-                            child.setHasMenu(true);
-                        }
-                    }
-                }
-            }
-        } catch (UnknownAccountException e) {
-            System.out.println(e.getMessage());
-            msg = e.getMessage();
-        } catch (IncorrectCredentialsException e) {
-            e.printStackTrace();
-            msg = "密码不匹配(生产环境中应该写:用户名和密码的组合不正确)";
-        } catch (LockedAccountException e) {
-            e.printStackTrace();
-            msg = e.getMessage();
+            // for (PmphPermission permission : permissions) {
+            // if (permissionsIds.contains(permission.getId())) {
+            // permission.setHasMenu(true);
+            // List<PmphPermission> childList = permission.getChildren();
+            // for (PmphPermission child : childList) {
+            // if (permissionsIds.contains(child.getId())) {
+            // child.setHasMenu(true);
+            // }
+            // }
+            // }
+            // }
+            return new ResponseBean(permissions);
+        } catch (CheckedServiceException cException) {
+            return new ResponseBean(cException);
         }
-        return new ResponseBean(permissions);
     }
 
     /**
@@ -137,12 +125,11 @@ public class PmphLoginController {
      */
     @ResponseBody
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ResponseBean logout(Model model) {
+    public ResponseBean logout(HttpServletRequest request) {
         Map<String, String> returnMap = new HashMap<String, String>();
-        Subject subject = SecurityUtils.getSubject();
-        Session session = subject.getSession();
-        session.removeAttribute(Const.SESSION_PMPH_USER);
-        subject.logout();
+        HttpSession session = request.getSession();
+        session.removeAttribute(Const.SESSION_PMPH_USER);// 清除User信息
+        session.removeAttribute(Const.SEESION_PMPH_USER_TOKEN);// 清除token
         returnMap.put("url", "/login");
         return new ResponseBean(returnMap);
     }

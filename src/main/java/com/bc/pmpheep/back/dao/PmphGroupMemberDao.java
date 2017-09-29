@@ -1,8 +1,11 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.PmphGroupMember;
+import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
 
 /**
  * PmphGroupMember 实体类数据访问层接口
@@ -38,14 +41,22 @@ public interface  PmphGroupMemberDao {
 	 */
 	Integer updatePmphGroupMember(PmphGroupMember pmphGroupMember);
 	
+	/**
+	 * 
+	 *  
+	 * 功能描述：根据小组id加载小组用户
+	 *
+	 * @param groupId  小组id
+	 * @return 小组成员
+	 *
+	 */
+	List<PmphGroupMemberVO> getListPmphGroupMember(Long groupId);
+	
 	 /**
      * 
-     * <pre>
      * 功能描述：查询表单的数据总条数
-     * 使用示范：
      *
      * @return 表单的总条数
-     * </pre>
      */
     Long getPmphGroupMemberCount();
 }
