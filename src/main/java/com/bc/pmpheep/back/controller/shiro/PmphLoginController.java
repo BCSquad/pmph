@@ -84,6 +84,9 @@ public class PmphLoginController {
             PmphUser pmphUser = pmphUserService.login(username, ShiroKit.md5(password, username));
             // 验证成功在Session中保存用户信息
             request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
+            // 验证成功在Session中保存用户Token信息
+            request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
+                                              ShiroKit.md5(username, password));
             // 权限资源树集合
             permissions = pmphPermissionService.getListAllParentMenu();
             // 拥有的权限资源
@@ -125,7 +128,8 @@ public class PmphLoginController {
     public ResponseBean logout(HttpServletRequest request) {
         Map<String, String> returnMap = new HashMap<String, String>();
         HttpSession session = request.getSession();
-        session.removeAttribute(Const.SESSION_PMPH_USER);
+        session.removeAttribute(Const.SESSION_PMPH_USER);// 清除User信息
+        session.removeAttribute(Const.SEESION_PMPH_USER_TOKEN);// 清除token
         returnMap.put("url", "/login");
         return new ResponseBean(returnMap);
     }
