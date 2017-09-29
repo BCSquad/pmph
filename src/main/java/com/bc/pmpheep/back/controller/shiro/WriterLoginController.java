@@ -6,10 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +84,9 @@ public class WriterLoginController {
             writerUserService.login(username, ShiroKit.md5(password, username));
             // 验证成功在Session中保存用户信息
             request.getSession().setAttribute(Const.SESSION_WRITER_USER, writerUser);
+            // 验证成功在Session中保存用户Token信息
+            request.getSession().setAttribute(Const.SEESION_WRITER_USER_TOKEN,
+                                              ShiroKit.md5(username, password));
             // 权限资源树集合
             permissions = writerPermissionService.getListAllParentMenu();
             // 拥有的权限资源
@@ -123,12 +124,11 @@ public class WriterLoginController {
      * </pre>
      */
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ResponseBean logout() {
+    public ResponseBean logout(HttpServletRequest request) {
         Map<String, String> returnMap = new HashMap<String, String>();
-        Subject subject = SecurityUtils.getSubject();
-        Session session = subject.getSession();
-        session.removeAttribute(Const.SESSION_WRITER_USER);
-        subject.logout();
+        HttpSession session = request.getSession();
+        session.removeAttribute(Const.SESSION_WRITER_USER);// 清除User信息
+        session.removeAttribute(Const.SEESION_WRITER_USER_TOKEN);// 清除token
         returnMap.put("url", "/login");
         return new ResponseBean(returnMap);
     }
