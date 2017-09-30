@@ -62,7 +62,10 @@
 	<!-- 根据id删除一个 PmphGroupFile -->
 	<delete id="deletePmphGroupFileById" parameterType="java.lang.Long">
 		delete from
-		pmph_group_file where id=#{id} ;
+		pmph_group_file where 1=1 and id in 
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+		#{id} ;
+		</foreach>
 	</delete>
 
 	<!-- 更新 PmphGroupFile -->

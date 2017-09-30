@@ -30,7 +30,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Service
 public class PmphGroupServiceImpl extends BaseService implements PmphGroupService {
 	@Autowired
-	private PmphGroupDao pmphGroupnDao;
+	private PmphGroupDao pmphGroupDao;
 	@Autowired
 	FileService fileService;
 	@Autowired
@@ -53,7 +53,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"小组名称为空不允许新增");
 		}
-		pmphGroupnDao.addPmphGroup(pmphGroup);
+		pmphGroupDao.addPmphGroup(pmphGroup);
 		return pmphGroup;
 	}
 
@@ -70,7 +70,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
 		}
-		return pmphGroupnDao.getPmphGroupById(id);
+		return pmphGroupDao.getPmphGroupById(id);
 	}
 
 	/**
@@ -80,12 +80,18 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Integer deletePmphGroupById(Long id) throws CheckedServiceException {
-		if (null == id) {
+	public String deletePmphGroupById(PmphGroup pmphGroup) throws CheckedServiceException {
+		String result = "FAIL";
+		if (null == pmphGroup.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
 		}
-		return pmphGroupnDao.deletePmphGroupById(id);
+		int num = pmphGroupDao.deletePmphGroupById(pmphGroup.getId());
+		if (num > 0) {
+			result = pmphGroupMemberService.deletePmphGroupMemberOnGroup(pmphGroup.getId());
+		}
+
+		return result;
 	}
 
 	/**
@@ -103,7 +109,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
 		}
-		return pmphGroupnDao.updatePmphGroup(pmphGroup);
+		return pmphGroupDao.updatePmphGroup(pmphGroup);
 	}
 
 	/**
@@ -127,7 +133,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		return pmphGroupnDao.getList(pmphGroup, pmphUser.getId());
+		return pmphGroupDao.getList(pmphGroup, pmphUser.getId());
 	}
 
 	@Override
@@ -138,13 +144,13 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		String groupImage = Const.DEFAULT_GROUP_IMAGE;//未上传小组头像时，获取默认小组头像路径
+		String groupImage = Const.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		if (null != file) {
 			groupImage = fileService.save(file);
 		}
 		pmphGroup.setGroupImage(groupImage);
 		pmphGroup.setFounderId(pmphUser.getId());
-		pmphGroupnDao.addPmphGroup(pmphGroup);
+		pmphGroupDao.addPmphGroup(pmphGroup);
 		if (null != pmphGroup.getId()) {// 判断是否新增小组成功，如果成功则调用PmphGroupMemberService添加小组成员的方法将创建者添加到小组中
 			PmphGroupMember pmphGroupMember = new PmphGroupMember();
 			pmphGroupMember.setGruopId(pmphGroup.getId());
@@ -152,10 +158,24 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			pmphGroupMember.setMemberId(pmphUser.getId());
 			pmphGroupMember.setDisplayName(pmphUser.getRealname());
 			pmphGroupMemberService.addPmphGroupMember(pmphGroupMember);
-		}else{
+		} else {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.OBJECT_NOT_FOUND,
 					"添加小组失败");
 		}
+		return pmphGroup;
+	}
+
+	@Override
+	public PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup)
+			throws CheckedServiceException, IOException {
+		if (null != file) {
+			pmphGroup.setGroupImage(fileService.save(file));
+		}
+		if (null == pmphGroup.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"小组id不能为空");
+		}
+		pmphGroupDao.updatePmphGroup(pmphGroup);
 		return pmphGroup;
 	}
 

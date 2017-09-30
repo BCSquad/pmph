@@ -96,11 +96,48 @@ public class GroupController {
 	 * 
 	 * 功能描述：添加小组成员
 	 *
-	 * @param pmphGroupMembers 需要小组Id 成员Id 是否作家用户
+	 * @param pmphGroupMembers
+	 *            需要小组Id 成员Id 是否作家用户
 	 * @return 是否成功
 	 *
 	 */
+	@ResponseBody
+	@RequestMapping(value = "/addPmphGroupMemberOnGroup")
 	public ResponseBean addPmphGroupMemberOnGroup(List<PmphGroupMember> pmphGroupMembers) {
 		return new ResponseBean(pmphGroupMemberService.addPmphGroupMemberOnGroup(pmphGroupMembers));
 	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：修改小组头像或小组名称
+	 *
+	 * @param file
+	 *            修改后上传的头像
+	 * @param pmphGroup
+	 *            小组id 与 小组新名称
+	 * @return 是否成功
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/updatePmphGroupOnGroup")
+	public ResponseBean updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup) {
+		return new ResponseBean(pmphGroupService.updatePmphGroup(pmphGroup));
+	}
+	
+	/**
+	 * 
+	 *  
+	 * 功能描述： 根据小组id解散小组
+	 *
+	 * @param pmphGroup 要删除的小组
+	 * @return 是否成功
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/deletePmphGroupById")
+	public ResponseBean deletePmphGroupById(PmphGroup pmphGroup) {
+		return new ResponseBean(pmphGroupService.deletePmphGroupById(pmphGroup));
+	}
+	
 }

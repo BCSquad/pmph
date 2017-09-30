@@ -35,12 +35,12 @@ public interface PmphGroupService {
 
 	/**
 	 * 
-	 * @param id
+	 * @param pmphGroup
 	 *            主键ID
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */
-	Integer deletePmphGroupById(Long id) throws CheckedServiceException;
+	String deletePmphGroupById(PmphGroup pmphGroup) throws CheckedServiceException;
 
 	/**
 	 * PmphGroup全字段更新
@@ -62,17 +62,35 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 */
 	List<PmphGroupListVO> getList(PmphGroup pmphGroup) throws CheckedServiceException;
-	
+
 	/**
 	 * 
-	 *  
+	 * 
 	 * 功能描述：新增小组
 	 *
-	 * @param file 上传的头像
-	 * @param pmphGroup 新增的小组信息
+	 * @param file
+	 *            上传的头像
+	 * @param pmphGroup
+	 *            新增的小组信息
 	 * @return 带主键的PmphGroup
 	 * @throws CheckedServiceException
 	 *
 	 */
 	PmphGroup addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup) throws CheckedServiceException, IOException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：修改小组
+	 *
+	 * @param file
+	 *            上传的头像
+	 * @param pmphGroup
+	 *            小组id与小组新名称
+	 * @return 带主键的PmphGroup
+	 * @throws CheckedServiceException
+	 *
+	 */
+	PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup)
+			throws CheckedServiceException, IOException;
 }

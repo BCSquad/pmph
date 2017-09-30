@@ -5,7 +5,10 @@ import com.bc.pmpheep.back.po.PmphGroupFile;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * PmphGroupFileService 接口
@@ -16,10 +19,11 @@ public interface PmphGroupFileService {
 	/**
 	 * 
 	 * @param  PmphGroupFileVO 实体对象
-	 * @return  带主键的 PmphGroupFile
+	 * @return  上传成功与否提示信息
 	 * @throws  CheckedServiceException
 	 */
-	PmphGroupFile addPmphGroupFile (PmphGroupFile pmphGroupFile) throws  CheckedServiceException;
+	String addPmphGroupFile (List<PmphGroupFile> pmphGroupFiles , MultipartFile file) 
+			throws  CheckedServiceException , IOException;
 	
 	/**
 	 * 
@@ -32,10 +36,10 @@ public interface PmphGroupFileService {
 	/**
 	 * 
 	 * @param id 主键id
-	 * @return  影响行数
+	 * @return  删除成功与否状态提示
 	 * @throws CheckedServiceException
 	 */
-	Integer deletePmphGroupFileById(Long  id) throws CheckedServiceException;
+	String deletePmphGroupFileById(List<Long> ids) throws CheckedServiceException;
 	
 	/**
 	 * 全字段更新
