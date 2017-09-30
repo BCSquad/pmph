@@ -172,7 +172,8 @@ public class GroupController {
 	 */
 	@RequestMapping(value = "/getGroupFileList")
 	@ResponseBody
-	public ResponseBean getGroupFileList(Page<PmphGroupFileVO, PmphGroupFileVO> page){
+	public ResponseBean getGroupFileList(PmphGroupFileVO pmphGroupFileVO, Page page){
+		page.setParameter(pmphGroupFileVO);
 		return new ResponseBean(pmphGroupFileService.getGroupFileList(page));
 	}
 	
