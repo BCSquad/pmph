@@ -96,6 +96,13 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			groupId = pmphGroupService.getList(new PmphGroup()).get(0).getId();// 初始化页面时没有参数传入则直接调用初始化时小组排序的第一个小组id
 		}
 		list = pmphGroupMemberDao.getListPmphGroupMember(groupId);
+		for (PmphGroupMemberVO pmphGroupMemberVO : list) {
+			if (pmphGroupMemberVO.isIsWriter()) {
+				
+			} else {
+
+			}
+		}
 		return list;
 	}
 

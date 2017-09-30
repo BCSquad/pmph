@@ -72,12 +72,12 @@ public class MyWebSocketHandler implements WebSocketHandler{
    * @throws IOException
    */
    public void sendWebSocketMessageToUser(List<String> userIds, WebScocketMessage webScocketMessage) throws IOException  {
-	  TextMessage tMg = new TextMessage(webScocketMessage.toString(), true);
+	  TextMessage textMessage = new TextMessage(webScocketMessage.toString(), true);
       for(String userId:userIds){
     	  if(null != userId && !"".equals(userId)){
     		  WebSocketSession webSocketSession = userSocketSessionMap.get(userId);
     	      if (webSocketSession != null && webSocketSession.isOpen()) {
-    	    	  webSocketSession.sendMessage(tMg);
+    	    	  webSocketSession.sendMessage(textMessage);
     	      }
     	  }
 	  }

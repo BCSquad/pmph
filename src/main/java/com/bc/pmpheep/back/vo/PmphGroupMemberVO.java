@@ -31,6 +31,14 @@ public class PmphGroupMemberVO implements Serializable {
 	 * 成员id
 	 */
 	private Long memberId;
+	/***
+	 * 小组成员头像
+	 */
+	private String avatar;
+	/**
+	 * 是否是作家用户
+	 */
+	private boolean isWriter;
 	/**
 	 * 是否创建者
 	 */
@@ -68,19 +76,35 @@ public class PmphGroupMemberVO implements Serializable {
 		this.memberId = memberId;
 	}
 
-	public boolean isFounder() {
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public boolean isIsWriter() {
+		return isWriter;
+	}
+
+	public void setIsWriter(boolean isWriter) {
+		this.isWriter = isWriter;
+	}
+
+	public boolean isIsFounder() {
 		return isFounder;
 	}
 
-	public void setFounder(boolean isFounder) {
+	public void setIsFounder(boolean isFounder) {
 		this.isFounder = isFounder;
 	}
 
-	public boolean isAdmin() {
+	public boolean isIsAdmin() {
 		return isAdmin;
 	}
 
-	public void setAdmin(boolean isAdmin) {
+	public void setIsAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
 	}
 
