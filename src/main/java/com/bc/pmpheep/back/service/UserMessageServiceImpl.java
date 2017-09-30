@@ -72,7 +72,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 	}
 	
 	@Override
-	public Integer addOrUpdateUserMessage(Message message,Integer sendType,String orgIds,String userIds,String bookids,boolean isSave)
+	public Integer addOrUpdateUserMessage(Message message,Integer sendType,String orgIds,String userIds,String bookIds,boolean isSave)
 			throws CheckedServiceException,IOException{
 		if(null == sendType || "".equals(sendType)){ 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "参数错误!");
@@ -118,7 +118,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 				}
 			}
 		}
-		//指定用户
+		//3 指定用户
 		if(sendType == 3){
 			if(null ==userIds || "".equals(userIds)){
 				throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "没有选中发送人!");
@@ -134,9 +134,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 				}
 			}
 		}
-		//发送给教材所有报名者
+		//4 发送给教材所有报名者
 		if(sendType == 4){ 
-			if(null ==bookids || "".equals(bookids)){
+			if(null ==bookIds || "".equals(bookIds)){
 				throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "书籍为空!");
 			}
 			///////////////////////////////// do
@@ -213,15 +213,14 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 		return userMessageDao.updateUserMessageByMsgId(userMessage.getMsgId());
 	}
 	
-	/**
-	 * 通过id删除UserMessage  
-	 */
 	@Override
-	public Integer  deleteMessageById (Long id) throws CheckedServiceException{
-		if(null == id){
+	public Integer  deleteMessageByMsgId (String msgId) throws CheckedServiceException{
+		if(null == msgId){
 			 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "id为空");
 		}
-		return userMessageDao.deleteMessageById(id);
+		Integer sum= userMessageDao.deleteMessageByMsgId(msgId);
+		//messageService. 删除
+		return sum;
 	}
 
 }
