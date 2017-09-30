@@ -36,9 +36,6 @@
 			<if test="director!=null">
 				director,
 			</if>
-			<if test="projectEditor!=null">
-				project_editor,
-			</if>
 			<if test="isMultiBooks!=null">
 				is_multi_books,
 			</if>
@@ -164,9 +161,6 @@
 			</if>
 			<if test="director!=null">
 				#{director},
-			</if>
-			<if test="projectEditor!=null">
-				#{projectEditor},
 			</if>
 			<if test="isMultiBooks!=null">
 				#{isMultiBooks},
@@ -319,9 +313,6 @@
 			</if>
 			<if test="director !=null  ">
 				director=#{director},
-			</if>
-			<if test="projectEditor !=null  ">
-				project_editor=#{projectEditor},
 			</if>
 			<if test="isMultiBooks !=null ">
 				is_multi_books=#{isMultiBooks},

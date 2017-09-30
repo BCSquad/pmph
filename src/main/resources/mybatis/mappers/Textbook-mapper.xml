@@ -15,6 +15,24 @@
 			<if test="textbookRound != null ">
 				textbook_round,
 			</if>
+			<if test="planningEditor != null">
+				planning_editor,
+			</if>
+			<if test="isChiefChosen != null ">
+				is_chief_chosen,
+			</if>
+			<if test="isQualifierSelected != null ">
+				is_qualifier_selected,
+			</if>
+			<if test="isListSelected != null ">
+				is_list_selected,
+			</if>
+			<if test="isPlanningEditorConfirm != null ">
+				is_planning_editor_confirm,
+			</if>
+			<if test="isProjectEditorConfirm != null ">
+				is_project_editor_confirm,
+			</if>
 			<if test="isLocked != null   ">
 				is_locked,
 			</if>
@@ -23,6 +41,12 @@
 			</if>
 			<if test="gmtPublished != null">
 				gmt_published,
+			</if>
+			<if test="revisionTimes != null ">
+				revision_times,
+			</if>
+			<if test="republishTimes != null ">
+				republish_times,
 			</if>
 			<if test="isbn != null and isbn !='' ">
 				isbn,
@@ -48,6 +72,24 @@
 			<if test="textbookRound != null">
 				#{textbookRound},
 			</if>
+			<if test="planningEditor != null">
+				#{planningEditor},
+			</if>
+			<if test="isChiefChosen != null ">
+				#{isChiefChosen},
+			</if>
+			<if test="isQualifierSelected != null ">
+				#{isQualifierSelected},
+			</if>
+			<if test="isListSelected != null ">
+				#{isListSelected},
+			</if>
+			<if test="isPlanningEditorConfirm != null ">
+				#{isPlanningEditorConfirm},
+			</if>
+			<if test="isProjectEditorConfirm != null ">
+				#{isProjectEditorConfirm},
+			</if>
 			<if test="isLocked != null  ">
 				#{isLocked},
 			</if>
@@ -56,6 +98,12 @@
 			</if>
 			<if test="gmtPublished != null">
 				#{gmtPublished},
+			</if>
+			<if test="revisionTimes != null ">
+				#{revisionTimes},
+			</if>
+			<if test="republishTimes != null ">
+				#{republishTimes},
 			</if>
 			<if test="isbn != null and isbn !='' ">
 				#{isbn},
@@ -107,6 +155,24 @@
 			<if test=" textbookRound != null">
 				textbook_round= #{textbookRound},
 			</if>
+			<if test="planningEditor != null">
+				planning_editor = #{planningEditor},
+			</if>
+			<if test="isChiefChosen != null ">
+				is_chief_chosen = #{isChiefChosen},
+			</if>
+			<if test="isQualifierSelected != null ">
+				is_qualifier_selected = #{isQualifierSelected},
+			</if>
+			<if test="isListSelected != null ">
+				is_list_selected = #{isListSelected},
+			</if>
+			<if test="isPlanningEditorConfirm != null ">
+				is_planning_editor_confirm = #{isPlanningEditorConfirm},
+			</if>
+			<if test="isProjectEditorConfirm != null ">
+				is_project_editor_confirm = #{isProjectEditorConfirm},
+			</if>
 			<if test=" isLocked != null">
 				is_locked= #{isLocked},
 			</if>
@@ -115,6 +181,12 @@
 			</if>
 			<if test=" gmtPublished != null">
 				gmt_published = #{gmtPublished},
+			</if>
+			<if test="revisionTimes != null ">
+				revision_times = #{revisionTimes},
+			</if>
+			<if test="republishTimes != null ">
+				republish_times = #{republishTimes},
 			</if>
 			<if test=" isbn != null and  isbn != '' ">
 				isbn= #{isbn},
