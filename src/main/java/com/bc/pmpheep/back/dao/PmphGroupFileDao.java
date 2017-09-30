@@ -58,7 +58,7 @@ public interface  PmphGroupFileDao {
 	 * Description:获取小组共享文件列表
 	 * @author:lyc
 	 * @date:2017年9月30日上午9:20:07
-	 * @Param:Page
+	 * @Param:Page查询条件，若有文件名则为模糊查询
 	 * @Return:List<PmphGroupFileVO>需要的小组共享文件集合
 	 */
 	List<PmphGroupFileVO> getGroupFileList(Page<PmphGroupFileVO, PmphGroupFileVO> page);

@@ -54,10 +54,11 @@ public interface PmphGroupFileService {
 	 * Description:获取小组共享文件
 	 * @author:lyc
 	 * @date:2017年9月30日上午11:31:14
-	 * @Param:page传入的查询条件
-	 * @Return:List<PmphGroupFileVO>
+	 * @Param:page传入的查询条件,若有文件名则为模糊查询
+	 * @Return:List<PmphGroupFileVO>查询到的小组文件集合
 	 * @throws CheckedServiceException
 	 */
-	Page<PmphGroupFileVO , PmphGroupFileVO> getFileList(Page<PmphGroupFileVO, PmphGroupFileVO> page) 
+	Page<PmphGroupFileVO , PmphGroupFileVO> getGroupFileList(Page<PmphGroupFileVO, PmphGroupFileVO> page) 
 			throws CheckedServiceException;
+	
 }

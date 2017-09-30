@@ -10,10 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.PmphGroup;
+import com.bc.pmpheep.back.po.PmphGroupFile;
 import com.bc.pmpheep.back.po.PmphGroupMember;
+import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.PmphGroupMemberService;
 import com.bc.pmpheep.back.service.PmphGroupService;
+import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -32,7 +36,8 @@ public class GroupController {
 	private PmphGroupService pmphGroupService;
 	@Autowired
 	PmphGroupMemberService pmphGroupMemberService;
-
+    @Autowired
+    private PmphGroupFileService pmphGroupFileService;
 	/**
 	 * 根据小组名称模糊查询获取当前用户的小组
 	 *
@@ -139,5 +144,50 @@ public class GroupController {
 	public ResponseBean deletePmphGroupById(PmphGroup pmphGroup) {
 		return new ResponseBean(pmphGroupService.deletePmphGroupById(pmphGroup));
 	}
+	/**
+	 * 
+	 * Description:上传小组文件
+	 * @author:lyc
+	 * @date:2017年9月30日下午4:50:04
+	 * @Param:上传的文件以及小组、上传人信息
+	 * @Return:是否成功
+	 */
+	@RequestMapping(value = "/addPmphGroupFile")
+	@ResponseBody
+	public ResponseBean addPmphGroupFile(List<PmphGroupFile> pmphGroupFiles , MultipartFile file){
+		try {
+			return new ResponseBean(pmphGroupFileService.addPmphGroupFile(pmphGroupFiles, file));
+		} catch (CheckedServiceException | IOException e) {
+			return new ResponseBean(e);
+		}
+	}
 	
+	/**
+	 * 
+	 * Description:分页查询小组共享文件
+	 * @author:lyc
+	 * @date:2017年9月30日下午4:53:26
+	 * @Param:Page传入的查询条件，若文件名不为空则为模糊查询功能
+	 * @Return:小组共享文件分页集合
+	 */
+	@RequestMapping(value = "/getGroupFileList")
+	@ResponseBody
+	public ResponseBean getGroupFileList(PmphGroupFileVO pmphGroupFileVO, Page page){
+		page.setParameter(pmphGroupFileVO);
+		return new ResponseBean(pmphGroupFileService.getGroupFileList(page));
+	}
+	
+	/**
+	 * 
+	 * Description:删除小组共享文件
+	 * @author:lyc
+	 * @date:2017年9月30日下午4:58:50
+	 * @Param:文件id
+	 * @Return:是否成功
+	 */
+	@RequestMapping(value = "/deletePmphGroupFileById")
+	@ResponseBody
+	public ResponseBean deletePmphGroupFileById(List<Long> ids){
+		return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(ids));
+	}
 }
