@@ -45,13 +45,23 @@ public interface  PmphGroupFileDao {
 	
 	/**
 	 * 
-	 * Description:TODO
+	 * Description:查询总共的条数
+	 * @author:lyc
+	 * @date:2017年9月30日下午1:48:36
+	 * @Param:Page
+	 * @Return:Integer查询到的数据数量
+	 */
+	Integer getGroupFileTotal(Page<PmphGroupFileVO , PmphGroupFileVO> page);
+	
+	/**
+	 * 
+	 * Description:获取小组共享文件列表
 	 * @author:lyc
 	 * @date:2017年9月30日上午9:20:07
 	 * @Param:Page
-	 * @Return:List<PmphGroupFileVO>
+	 * @Return:List<PmphGroupFileVO>需要的小组共享文件集合
 	 */
-	List<PmphGroupFileVO> getFileList(Page<PmphGroupFileVO, PmphGroupFileVO> page);
+	List<PmphGroupFileVO> getGroupFileList(Page<PmphGroupFileVO, PmphGroupFileVO> page);
 
     /**
      * 
