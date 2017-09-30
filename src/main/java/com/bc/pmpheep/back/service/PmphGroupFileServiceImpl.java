@@ -109,11 +109,15 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 
 	
 	@Override
-	public Page<PmphGroupFileVO, PmphGroupFileVO> getFileList(
+	public Page<PmphGroupFileVO, PmphGroupFileVO> getGroupFileList(
 			Page<PmphGroupFileVO, PmphGroupFileVO> page) {
 		if (null == page.getParameter().getGroupId()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 					CheckedExceptionResult.NULL_PARAM, "小组id不能为空");
+		}
+		String fileName = page.getParameter().getFileName();
+		if (!fileName.equals("")){
+			page.getParameter().setFileName( "%" + fileName + "%");
 		}
 		int total = pmphGroupFileDao.getGroupFileTotal(page);
 		if (total > 0){
