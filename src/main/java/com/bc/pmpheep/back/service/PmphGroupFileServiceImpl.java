@@ -1,12 +1,16 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphGroupFileDao;
+import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.PmphGroupFile;
 import com.bc.pmpheep.back.util.Tools;
+import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -65,7 +69,7 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 	}
 	
 	/**
-	 * @param PmphGroupFile
+	 * @param PmphGroupFileVO
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */
@@ -75,6 +79,23 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
 		return pmphGroupFileDao.updatePmphGroupFile(pmphGroupFile);
+	}
+
+	
+	@Override
+	public Page<PmphGroupFileVO, PmphGroupFileVO> getFileList(
+			Page<PmphGroupFileVO, PmphGroupFileVO> page) {
+		if (null == page.getParameter().getGroupId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "小组id不能为空");
+		}
+		int total = pmphGroupFileDao.getGroupFileTotal(page);
+		if (total > 0){
+			List<PmphGroupFileVO> list = pmphGroupFileDao.getGroupFileList(page);
+			page.setRows(list);
+		}
+		page.setTotal(total);
+		return page;
 	}
 
 }
