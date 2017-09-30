@@ -34,7 +34,7 @@ public interface  PmphGroupFileDao {
 	 * @param id 主键id
 	 * @return  影响行数
 	 */
-	Integer deletePmphGroupFileById(Long  id) ;
+	Integer deletePmphGroupFileById(List<Long> ids) ;
 	
 	/**
 	 * 全字段更新
