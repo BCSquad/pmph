@@ -1,8 +1,12 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.plugin.Page;
 import com.bc.pmpheep.back.po.PmphGroupFile;
+import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 
 /**
  * PmphGroupFile 实体类数据访问层接口
@@ -34,10 +38,20 @@ public interface  PmphGroupFileDao {
 	
 	/**
 	 * 全字段更新
-	 * @param pmphGroupFile
-	 * @return 影响行数
+	 * @Param： pmphGroupFile
+	 * @Return： 影响行数
 	 */
 	Integer updatePmphGroupFile(PmphGroupFile pmphGroupFile) ;
+	
+	/**
+	 * 
+	 * Description:TODO
+	 * @author:lyc
+	 * @date:2017年9月30日上午9:20:07
+	 * @Param:Page
+	 * @Return:List<PmphGroupFileVO>
+	 */
+	List<PmphGroupFileVO> getFileList(Page<PmphGroupFileVO, PmphGroupFileVO> page);
 
     /**
      * 
