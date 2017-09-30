@@ -4,8 +4,8 @@
 <mapper namespace="com.bc.pmpheep.back.dao.UserMessageDao">
 	
 	<!-- 通过id删除UserMessage   -->
-	<delete id="deleteMessageById" parameterType="java.lang.Long"   >
-	 	delete from user_message where  id = #{id}; 
+	<delete id="deleteMessageByMsgId" parameterType="java.lang.String"  >
+	 	delete from user_message where  msg_id = #{msgId}; 
 	</delete>
 	
 	<!-- 通过id 动态更新UserMessage  -->

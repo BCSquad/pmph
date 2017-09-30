@@ -26,6 +26,8 @@ public class PmphGroupFileVO {
 	private Timestamp gmtCreate;
 	//上传者id
 	private Long memberId;
+	//上传者小组内名字
+	private String memberName;
 	//上传小组数
 	private Integer groupCount;
 	//下载次数
@@ -81,6 +83,14 @@ public class PmphGroupFileVO {
 
 	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
+	}
+
+	public String getMemberName() {
+		return memberName;
+	}
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
 	}
 
 	public Integer getGroupCount() {

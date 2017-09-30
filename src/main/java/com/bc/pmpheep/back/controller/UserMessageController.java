@@ -60,7 +60,7 @@ public class UserMessageController {
 	}
 	
 	/**
-	 *  向各个对象补发消息 
+	 * 向各个对象补发消息 
 	 * @author Mryang
 	 * @createDate 2017年9月28日 下午4:29:27
 	 * @param message
@@ -72,9 +72,9 @@ public class UserMessageController {
 	 */
 	@RequestMapping(value = "/addUserMessageAgain")
     @ResponseBody
-    public ResponseBean addUserMessageAgain(Message message,Integer sendType,String orgIds,String userIds,String bookids){
+    public ResponseBean addUserMessageAgain(Message message,Integer sendType,String orgIds,String userIds,String bookIds){
 		try {
-			return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,sendType,orgIds,userIds,bookids,false));
+			return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,sendType,orgIds,userIds,bookIds,false));
 		} catch (IOException e) {
 			return new ResponseBean(e);
 		}
@@ -107,12 +107,12 @@ public class UserMessageController {
 	}
 	
 	/**
-	 * 通过id删除UserMessage  
+	 * 通过消息id删除UserMessage  
 	 */
 	@RequestMapping(value = "/deleteUserMessage")
     @ResponseBody
 	public ResponseBean deleteUserMessage(UserMessage userMessage){
-		return new ResponseBean(userMessageService.deleteMessageById(userMessage.getId()));
+		return new ResponseBean(userMessageService.deleteMessageByMsgId(userMessage.getMsgId()));
 	}
 	
 	

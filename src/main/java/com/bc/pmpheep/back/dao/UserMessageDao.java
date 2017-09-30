@@ -60,8 +60,8 @@ public interface UserMessageDao {
 	Integer updateUserMessageById(Long id);
 	
 	/**
-	 * 通过id删除UserMessage  
+	 * 通过消息id删除UserMessage  
 	 */
-	Integer  deleteMessageById (Long id);
+	Integer  deleteMessageByMsgId (String msgId);
 	
 }

@@ -34,7 +34,7 @@ public interface UserMessageService {
 	 * @param isSave true新增，false补发
 	 * @return
 	 */
-	Integer addOrUpdateUserMessage(Message message,Integer sendType,String orgIds,String userIds,String bookids,boolean isSave) throws CheckedServiceException,IOException;
+	Integer addOrUpdateUserMessage(Message message,Integer sendType,String orgIds,String userIds,String bookIds,boolean isSave) throws CheckedServiceException,IOException;
 	
 	/**
 	 * 单纯修改消息 
@@ -55,8 +55,8 @@ public interface UserMessageService {
 	Integer updateToWithdraw(UserMessage userMessage) throws CheckedServiceException;
 	
 	/**
-	 * 通过id删除UserMessage  
-	 * @return
+	 * 通过消息id删除UserMessage
+	 * @return 影响行数
 	 */
-	Integer  deleteMessageById (Long id) throws CheckedServiceException;
+	Integer  deleteMessageByMsgId (String msgId) throws CheckedServiceException;
 }

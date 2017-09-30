@@ -96,6 +96,27 @@
 		id=#{id} ;
 	</select>
 
+	<!-- 查询到的小组文件数量 -->
+	<select id="getGroupFileTotal" parameterType="Page" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM(SELECT
+		a.id,a.group_id,a.file_id,a.file_name,a.gmt_create,a.member_id,b.display_name,(SELECT
+		COUNT(*) FROM pmph_group_file c WHERE a.member_id = c.member_id AND
+		a.file_name = c.file_name) AS group_count,a.download FROM
+		pmph_group_file a LEFT JOIN pmph_group_member b ON a.group_id =
+		b.group_id WHERE b.group_id = 1 GROUP BY a.file_name)t
+	</select>
+
+	<!-- 获取小组文件列表 -->
+	<select id="getGroupFileList" parameterType="Page" resultType="PmphGroupFileVO">
+		SELECT
+		a.id,a.group_id,a.file_id,a.file_name,a.gmt_create,a.member_id,b.display_name,(SELECT
+		COUNT(*) FROM pmph_group_file c WHERE a.member_id = c.member_id AND
+		a.file_name = c.file_name) AS group_count,a.download FROM
+		pmph_group_file a LEFT JOIN pmph_group_member b ON a.group_id =
+		b.group_id WHERE b.group_id = #{parameter.groupId} GROUP BY
+		a.file_name ;
+	</select>
+
 	<!-- 查询表单的数据总数 -->
 	<select id="getPmphGroupFileCount" resultType="Long">
 		select
