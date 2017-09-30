@@ -22,6 +22,19 @@ public class AreaController {
     private AreaService areaService;
 	
 	/**
+	 * 根据父级id获取下一级子节点
+	 * @author Mryang
+	 * @createDate 2017年9月30日 下午3:00:28
+	 * @param parentId
+	 * @return
+	 */
+	@RequestMapping(value = "/getAreaChirldren")
+    @ResponseBody
+    public ResponseBean getAreaChirldren(Long parentId) {
+       return new ResponseBean(areaService.getAreaChirldren(parentId));
+    }
+	
+	/**
 	 * 通过parentId获取树
 	 * @author Mryang
 	 * @createDate 2017年9月25日 下午3:00:28

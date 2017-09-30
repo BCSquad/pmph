@@ -80,5 +80,14 @@ public interface AreaService {
      */
     Integer deleteAreaBatch(Long id) throws CheckedServiceException;
     
+    /**
+     * 根据父级id获取下一级子节点
+     * @author Mryang
+     * @createDate 2017年9月30日 下午2:57:38
+     * @param parentId
+     * @return
+     * @throws CheckedServiceException
+     */
+    List<AreaTreeVO> getAreaChirldren(Long parentId) throws CheckedServiceException;
     
 }

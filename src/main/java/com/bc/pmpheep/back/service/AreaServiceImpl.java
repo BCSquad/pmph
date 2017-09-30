@@ -2,8 +2,10 @@ package com.bc.pmpheep.back.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.AreaDao;
 import com.bc.pmpheep.back.po.Area;
@@ -96,6 +98,22 @@ public class AreaServiceImpl extends BaseService implements AreaService {
             throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
         return areaDao.updateArea(area);
+    }
+    
+    @Override
+    public List<AreaTreeVO> getAreaChirldren(Long parentId) throws CheckedServiceException{
+    	if(null == parentId){
+    		throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, "参数为空");
+    	}
+    	List<AreaTreeVO> areaVOList =areaDao.getAreaByParentId(parentId);
+    	for(AreaTreeVO areaTreeVO:areaVOList){
+    		//检查是否是子节点
+    		List<AreaTreeVO> areaChirldrenVOList =areaDao.getAreaByParentId(areaTreeVO.getId());
+    		if(null != areaChirldrenVOList && areaChirldrenVOList.size() > 0 ){
+    			areaTreeVO.setIsLeaf(false);
+    		}
+    	}
+    	return areaVOList;
     }
     
     @Override
