@@ -105,14 +105,22 @@
 		select * from pmph_group_member where
 		id=#{id} ;
 	</select>
-	
+
+	<!-- 解散小组时删除小组所有成员 -->
+	<delete id="deletePmphGroupMemberOnGroup" parameterType="java.lang.Long">
+		delete
+		from
+		pmph_group_member where group_id=#{groupId} ;
+	</delete>
+
 	<!-- 根据小组id查询小组所有成员 -->
 	<select id="getListPmphGroupMember" parameterType="java.lang.Long"
 		resultType="PmphGroupMemberVO">
 		select * from pmph_group_member where
-		group_id=#{groupId} order by is_founder desc , is_admin ;
+		group_id=#{groupId}
+		order by is_founder desc , is_admin ;
 	</select>
-	
+
 	<!-- 查询表单的数据总数 -->
 	<select id="getPmphGroupMemberCount" resultType="Long">
 		select

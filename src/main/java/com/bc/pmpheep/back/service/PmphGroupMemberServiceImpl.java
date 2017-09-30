@@ -121,9 +121,24 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			}
 			result = "SUCCESS";
 		} else {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-					CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"参数为空");
 		}
+		return result;
+	}
+
+	@Override
+	public String deletePmphGroupMemberOnGroup(Long groupId) throws CheckedServiceException {
+		String result = "FAIL";
+		if (null == groupId) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"小组id为空");
+		}
+		int num = pmphGroupMemberDao.deletePmphGroupMemberOnGroup(groupId);
+		if (num > 0) {
+			result = "SUCCESS";
+		}
+
 		return result;
 	}
 }
