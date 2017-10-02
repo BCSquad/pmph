@@ -6,6 +6,7 @@ package com.bc.pmpheep.back.controller.orgUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.back.plugin.Page;
@@ -38,9 +39,18 @@ public class OrgUserController {
 	 * @Param: OrgUserManagerVO
 	 * @Return:分页数据集
 	 */
-	@RequestMapping(value = "/getListOrgUser")
+	@RequestMapping(value = "/user/org")
 	@ResponseBody
-	public ResponseBean getListOrgUser(OrgUserManagerVO orgUserManagerVO, Page page) {
+	public ResponseBean listOrgUser(@RequestParam("pageSize") Integer pageSize,
+			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("username") String username,
+			@RequestParam("realname") String realname, @RequestParam("orgName") String orgName) {
+		Page page = new Page<>();
+		OrgUserManagerVO orgUserManagerVO = new OrgUserManagerVO();
+		orgUserManagerVO.setUsername(username);
+		orgUserManagerVO.setRealname(realname);
+		orgUserManagerVO.setOrgName(orgName);
+		page.setPageNumber(pageNumber);
+		page.setPageSize(pageSize);
 		page.setParameter(orgUserManagerVO);
 		return new ResponseBean(orgUserService.getListOrgUser(page));
 	}
@@ -104,7 +114,6 @@ public class OrgUserController {
 	public ResponseBean getOrgUserById(Long id) {
 		return new ResponseBean(orgUserService.getOrgUserById(id));
 	}
-
 
 	/**
 	 * 
