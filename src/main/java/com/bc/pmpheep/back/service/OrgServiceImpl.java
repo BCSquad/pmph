@@ -2,14 +2,14 @@ package com.bc.pmpheep.back.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.OrgDao;
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Org;
+import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -154,15 +154,16 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 	}
 
 	@Override
-	public Page<OrgVO, OrgVO> getOrgList(Page<OrgVO, OrgVO> page) throws CheckedServiceException {
-		List<OrgVO> orgVOList = orgDao.getOrgList(page);
+	public PageResult<OrgVO> getOrgList(PageParameter<OrgVO> pageParameter) throws CheckedServiceException {
+		PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
+		Tools.CopyPageParameter(pageParameter, pageResult);
+		List<OrgVO> orgVOList = orgDao.getOrgList(pageParameter);
 		if (null != orgVOList && orgVOList.size() > 0) {
 			Integer count = orgVOList.get(0).getCount();
-			page.setTotal(count);
-			page.setRows(orgVOList);
+			pageResult.setTotal(count);
+			pageResult.setRows(orgVOList);
 		}
-		page.setParameter(null);
-		return page;
+		return pageResult;
 	}
 
 	@Override

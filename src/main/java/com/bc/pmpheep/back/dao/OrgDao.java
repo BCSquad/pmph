@@ -1,8 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
-
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -61,10 +60,10 @@ public interface OrgDao {
 	 * 获取OrgVO列表（同时查询分页数据和总条数）
 	 * @author Mryang
 	 * @createDate 2017年9月26日 上午10:36:10
-	 * @param page
-	 * @return page
+	 * @param pageParameter
+	 * @return List<OrgVO>
 	 */
-	List<OrgVO> getOrgList(Page<OrgVO,OrgVO> page);
+	List<OrgVO> getOrgList(PageParameter<OrgVO> pageParameter);
 	
 	/**
 	 * 
