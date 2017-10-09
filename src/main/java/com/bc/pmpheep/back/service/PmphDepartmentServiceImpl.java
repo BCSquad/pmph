@@ -132,7 +132,7 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 	@Override
 	public PmphUserDepartmentVO listPmphDepartment(Long parentId) throws CheckedServiceException {
 		if (null == parentId) {
-			parentId = Const.PMPHDEPARTMENTROOTID;
+			parentId = Const.PMPH_DEPARTMENT_ROOT_ID;
 		}
 		Long id = parentId;
 		PmphUserDepartmentVO pmphUserDepartmentVO = new PmphUserDepartmentVO(id);

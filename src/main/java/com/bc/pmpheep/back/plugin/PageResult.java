@@ -17,7 +17,7 @@ public class PageResult<T> {
 	//当前页码
     private Integer pageNumber = 1;
     //页面大小
-    private Integer pageSize   = Const.PAGESIZE;
+    private Integer pageSize   = Const.PAGE_SIZE;
     //数据总条数
     private Integer total      = 0;
     //总页数
@@ -29,7 +29,7 @@ public class PageResult<T> {
     //查询开始页
     private Integer start      = 0; 
     //数据集
-	private List<T> rows       = new ArrayList<T>(Const.PAGESIZE);
+	private List<T> rows       = new ArrayList<T>(Const.PAGE_SIZE);
 	
 	
 	public PageResult() {
