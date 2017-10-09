@@ -1,13 +1,13 @@
 package com.bc.pmpheep.back.service;
 
-import com.bc.pmpheep.back.plugin.Page;
+
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphGroupFile;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
-
 import java.io.IOException;
 import java.util.List;
-
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -54,11 +54,11 @@ public interface PmphGroupFileService {
 	 * Description:获取小组共享文件
 	 * @author:lyc
 	 * @date:2017年9月30日上午11:31:14
-	 * @Param:page传入的查询条件,若有文件名则为模糊查询
+	 * @Param:pageParameter传入的查询条件,若有文件名则为模糊查询
 	 * @Return:List<PmphGroupFileVO>查询到的小组文件集合
 	 * @throws CheckedServiceException
 	 */
-	Page<PmphGroupFileVO , PmphGroupFileVO> getGroupFileList(Page<PmphGroupFileVO, PmphGroupFileVO> page) 
+	PageResult<PmphGroupFileVO> getGroupFileList(PageParameter<PmphGroupFileVO> pageParameter) 
 			throws CheckedServiceException;
 	
 }

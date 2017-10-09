@@ -1,10 +1,8 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
-
 import org.springframework.stereotype.Repository;
-
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphGroupFile;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 
@@ -48,20 +46,20 @@ public interface  PmphGroupFileDao {
 	 * Description:查询总共的条数
 	 * @author:lyc
 	 * @date:2017年9月30日下午1:48:36
-	 * @Param:Page
+	 * @Param:pageParameter
 	 * @Return:Integer查询到的数据数量
 	 */
-	Integer getGroupFileTotal(Page<PmphGroupFileVO , PmphGroupFileVO> page);
+	Integer getGroupFileTotal(PageParameter<PmphGroupFileVO> pageParameter);
 	
 	/**
 	 * 
 	 * Description:获取小组共享文件列表
 	 * @author:lyc
 	 * @date:2017年9月30日上午9:20:07
-	 * @Param:Page查询条件，若有文件名则为模糊查询
+	 * @Param:pageParameter查询条件，若有文件名则为模糊查询
 	 * @Return:List<PmphGroupFileVO>需要的小组共享文件集合
 	 */
-	List<PmphGroupFileVO> getGroupFileList(Page<PmphGroupFileVO, PmphGroupFileVO> page);
+	List<PmphGroupFileVO> getGroupFileList(PageParameter<PmphGroupFileVO> pageParameter);
 
     /**
      * 

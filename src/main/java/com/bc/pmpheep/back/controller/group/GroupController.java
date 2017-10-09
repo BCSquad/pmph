@@ -6,11 +6,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupFile;
 import com.bc.pmpheep.back.po.PmphGroupMember;
@@ -170,11 +170,14 @@ public class GroupController {
 	 * @Param:Page传入的查询条件，若文件名不为空则为模糊查询功能
 	 * @Return:小组共享文件分页集合
 	 */
-	@RequestMapping(value = "/getGroupFileList")
+	@RequestMapping(value = "/getGroupFileList", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseBean getGroupFileList(PmphGroupFileVO pmphGroupFileVO, Page page){
-		page.setParameter(pmphGroupFileVO);
-		return new ResponseBean(pmphGroupFileService.getGroupFileList(page));
+	public ResponseBean getGroupFileList(
+			@RequestParam(name="pageNumber",defaultValue="1")Integer pageNumber,
+			@RequestParam(name="pageSize"  )Integer pageSize,
+			PmphGroupFileVO pmphGroupFileVO){
+		PageParameter<PmphGroupFileVO> pageParameter =new PageParameter<PmphGroupFileVO>(pageNumber,pageSize,pmphGroupFileVO);
+		return new ResponseBean(pmphGroupFileService.getGroupFileList(pageParameter));
 	}
 	
 	/**

@@ -2,15 +2,15 @@ package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphGroupFileDao;
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphGroupFile;
+import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -109,23 +109,25 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 
 	
 	@Override
-	public Page<PmphGroupFileVO, PmphGroupFileVO> getGroupFileList(
-			Page<PmphGroupFileVO, PmphGroupFileVO> page) {
-		if (null == page.getParameter().getGroupId()){
+	public PageResult<PmphGroupFileVO> getGroupFileList(
+			PageParameter<PmphGroupFileVO> pageParameter) {
+		if (null == pageParameter.getParameter().getGroupId()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 					CheckedExceptionResult.NULL_PARAM, "小组id不能为空");
 		}
-		String fileName = page.getParameter().getFileName();
+		String fileName = pageParameter.getParameter().getFileName();
 		if (!fileName.equals("")){
-			page.getParameter().setFileName( "%" + fileName + "%");
+			pageParameter.getParameter().setFileName( "%" + fileName + "%");
 		}
-		int total = pmphGroupFileDao.getGroupFileTotal(page);
+		PageResult<PmphGroupFileVO> pageResult = new PageResult<PmphGroupFileVO>();
+		Tools.CopyPageParameter(pageParameter, pageResult);
+		int total = pmphGroupFileDao.getGroupFileTotal(pageParameter);
 		if (total > 0){
-			List<PmphGroupFileVO> list = pmphGroupFileDao.getGroupFileList(page);
-			page.setRows(list);
+			pageResult.setTotal(total);
+			List<PmphGroupFileVO> list = pmphGroupFileDao.getGroupFileList(pageParameter);
+			pageResult.setRows(list);
 		}
-		page.setTotal(total);
-		return page;
+		return pageResult;
 	}
 
 }
