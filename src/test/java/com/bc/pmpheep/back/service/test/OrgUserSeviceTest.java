@@ -3,16 +3,13 @@ package com.bc.pmpheep.back.service.test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import javax.annotation.Resource;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
-
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.OrgUserService;
@@ -48,15 +45,12 @@ public class OrgUserSeviceTest extends BaseTest {
 
 	@Test
 	public void getListOrgUserVO() {
-		Page<OrgUserManagerVO, OrgUserManagerVO> page = new Page<>();
 		OrgUserManagerVO managerVO = new OrgUserManagerVO();
 		managerVO.setUsername(null);
 		managerVO.setRealname(null);
 		managerVO.setOrgName(null);
-		page.setParameter(managerVO);
-		page.setPageSize(15);
-		page = orgUserService.getListOrgUser(page);
-		Assert.assertTrue("更新失败", page.getRows().isEmpty());
+		PageParameter<OrgUserManagerVO> pageParameter =new PageParameter<OrgUserManagerVO>(1,15,managerVO);
+    	Assert.assertTrue("更新失败", orgUserService.getListOrgUser(pageParameter).getRows().isEmpty());
 	}
 	
 	@Test
