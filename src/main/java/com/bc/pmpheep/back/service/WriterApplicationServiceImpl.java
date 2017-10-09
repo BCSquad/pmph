@@ -16,7 +16,7 @@ public class WriterApplicationServiceImpl extends BaseService implements WriterA
 	
 	@Override
 	public Boolean addApplication(ApplicationVO applicationVO){
-		if(null == applicationVO){
+		if(null == applicationVO || null == applicationVO.getDeclaration()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		Long materialId = applicationVO.getDeclaration().getMaterialId();

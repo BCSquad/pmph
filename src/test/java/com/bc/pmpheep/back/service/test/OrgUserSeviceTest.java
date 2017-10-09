@@ -3,15 +3,12 @@ package com.bc.pmpheep.back.service.test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import javax.annotation.Resource;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
-
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.OrgUser;
