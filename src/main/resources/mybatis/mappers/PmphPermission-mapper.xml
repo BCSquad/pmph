@@ -160,7 +160,7 @@
 		where id = #{id}
 	</delete>
 	
-	<select id="getListPageResource" parameterType="Page"
+	<select id="getListPageResource" parameterType="PageParameter"
 		resultType="PmphPermission">
 		SELECT
 		`id`,

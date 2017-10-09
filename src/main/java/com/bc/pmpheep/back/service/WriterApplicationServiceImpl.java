@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.vo.ApplicationVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -12,6 +14,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  *@CreateDate 2017年9月30日 下午5:21:24
  *
  **/
+@Service
 public class WriterApplicationServiceImpl extends BaseService implements WriterApplicationService {
 	
 	@Override
