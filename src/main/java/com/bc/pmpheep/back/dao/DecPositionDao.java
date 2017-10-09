@@ -26,7 +26,7 @@ public interface DecPositionDao {
      * @Param:
      * @Return:Integer
      */
-	Integer DecPosition (DecPosition decPosition);
+	Integer decPosition (DecPosition decPosition);
 	
 	/**
 	 * 
