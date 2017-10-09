@@ -6,10 +6,10 @@ package com.bc.pmpheep.back.controller.orgUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
@@ -39,20 +39,19 @@ public class OrgUserController {
 	 * @Param: OrgUserManagerVO
 	 * @Return:分页数据集
 	 */
-	@RequestMapping(value = "/user/org")
+	@RequestMapping(value = "/user/org", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseBean listOrgUser(@RequestParam("pageSize") Integer pageSize,
-			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("username") String username,
-			@RequestParam("realname") String realname, @RequestParam("orgName") String orgName) {
-		Page page = new Page<>();
+			@RequestParam("pageNumber") Integer pageNumber, 
+			@RequestParam("username") String username,
+			@RequestParam("realname") String realname, 
+			@RequestParam("orgName") String orgName) {
 		OrgUserManagerVO orgUserManagerVO = new OrgUserManagerVO();
 		orgUserManagerVO.setUsername(username);
 		orgUserManagerVO.setRealname(realname);
 		orgUserManagerVO.setOrgName(orgName);
-		page.setPageNumber(pageNumber);
-		page.setPageSize(pageSize);
-		page.setParameter(orgUserManagerVO);
-		return new ResponseBean(orgUserService.getListOrgUser(page));
+		PageParameter<OrgUserManagerVO> pageParameter =new PageParameter<OrgUserManagerVO>(pageNumber,pageSize,orgUserManagerVO);
+		return new ResponseBean(orgUserService.getListOrgUser(pageParameter));
 	}
 
 	/**

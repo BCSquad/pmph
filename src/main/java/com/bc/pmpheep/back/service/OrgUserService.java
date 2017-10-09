@@ -1,7 +1,8 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -53,11 +54,11 @@ public interface OrgUserService {
 	 * 
 	 * 功能描述：分页查询作家用户
 	 *
-	 * @param page
+	 * @param pageParameter
 	 *            传入的查询条件
 	 * @return
 	 */
-	Page<OrgUserManagerVO, OrgUserManagerVO> getListOrgUser(Page<OrgUserManagerVO, OrgUserManagerVO> page)
+	PageResult<OrgUserManagerVO> getListOrgUser(PageParameter<OrgUserManagerVO> pageParameter)
 			throws CheckedServiceException;
 
 	/**
