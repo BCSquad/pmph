@@ -1,6 +1,5 @@
 package com.bc.pmpheep.back.service.test;
 
-
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import org.springframework.test.annotation.Rollback;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.dao.UserMessageDao;
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.service.UserMessageService;
@@ -31,45 +30,43 @@ import com.bc.pmpheep.general.po.Message;
  *
  * @author mryang
  */
-@SuppressWarnings("all" )
+@SuppressWarnings("all")
 public class UserMessageServiceTest extends BaseTest {
-    Logger              logger = LoggerFactory.getLogger(UserMessageServiceTest.class);
+	Logger logger = LoggerFactory.getLogger(UserMessageServiceTest.class);
 
-    @Resource
-    private UserMessageService userMessageService;
-    
-    @Resource
-    UserMessageDao userMessageDao;
-    
-    @Test
-    @Rollback(Const.ISROLLBACK)
-    public void getMessageStateListTest() throws IOException {
-    	ShiroSession.getShiroSessionUser().setAttribute(Const.SESSION_PMPH_USER, new PmphUser(2L));
-    	MessageStateVO messageStateVO =new MessageStateVO();
-        Page page=new Page();
-		page.setParameter(messageStateVO);
-        userMessageService.getMessageStateList(page);
-        userMessageService.addOrUpdateUserMessage(new Message(null,"eee"),1,"1",null,"1",true);
-        userMessageService.addOrUpdateUserMessage(new Message("1" ,"eee"),2,"2","1","1",false);
-        userMessageService.updateUserMessage(new Message("1","eeeddd"));;
-        userMessageService.updateToWithdraw(new UserMessage("1",true))  ;
-        userMessageService.deleteMessageByMsgId ("1") ;
-    }
-    
-    
-    
+	@Resource
+	private UserMessageService userMessageService;
+
+	@Resource
+	UserMessageDao userMessageDao;
+
 	@Test
-    @Rollback(Const.ISROLLBACK)
-    public void addUserMessageBatch() {
-		List<UserMessage> userMessageList = new  ArrayList<>();
-		Random r =new Random();
-		for(int i=0;i<10;i++){
-			userMessageList.add(new UserMessage(String.valueOf(r.nextInt(200)),(short)1, Long.parseLong(String.valueOf(r.nextInt(200))), 
-					(short)1,Long.parseLong(String.valueOf(r.nextInt(200))), (short)1,
-					true, true, true,
-					null, null));
+	@Rollback(Const.ISROLLBACK)
+	public void getMessageStateListTest() throws IOException {
+		ShiroSession.getShiroSessionUser().setAttribute(Const.SESSION_PMPH_USER, new PmphUser(2L));
+		MessageStateVO messageStateVO = new MessageStateVO();
+		PageParameter pageParameter = new PageParameter<>();
+		pageParameter.setParameter(messageStateVO);
+		userMessageService.getMessageStateList(pageParameter);
+		userMessageService.addOrUpdateUserMessage(new Message(null, "eee"), 1, "1", null, "1", true);
+		userMessageService.addOrUpdateUserMessage(new Message("1", "eee"), 2, "2", "1", "1", false);
+		userMessageService.updateUserMessage(new Message("1", "eeeddd"));
+		;
+		userMessageService.updateToWithdraw(new UserMessage("1", true));
+		userMessageService.deleteMessageByMsgId("1");
+	}
+
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void addUserMessageBatch() {
+		List<UserMessage> userMessageList = new ArrayList<>();
+		Random r = new Random();
+		for (int i = 0; i < 10; i++) {
+			userMessageList.add(new UserMessage(String.valueOf(r.nextInt(200)), (short) 1,
+					Long.parseLong(String.valueOf(r.nextInt(200))), (short) 1,
+					Long.parseLong(String.valueOf(r.nextInt(200))), (short) 1, true, true, true, null, null));
 		}
 		userMessageDao.addUserMessageBatch(userMessageList);
-    }
+	}
 
 }

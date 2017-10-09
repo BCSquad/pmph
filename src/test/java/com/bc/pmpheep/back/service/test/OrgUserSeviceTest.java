@@ -12,7 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
 
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.OrgUserService;
@@ -48,19 +49,20 @@ public class OrgUserSeviceTest extends BaseTest {
 
 	@Test
 	public void getListOrgUserVO() {
-		Page<OrgUserManagerVO, OrgUserManagerVO> page = new Page<>();
+		PageParameter pageParameter = new PageParameter<>();
+		PageResult pageResult = new PageResult<>();
 		OrgUserManagerVO managerVO = new OrgUserManagerVO();
 		managerVO.setUsername(null);
 		managerVO.setRealname(null);
 		managerVO.setOrgName(null);
-		page.setParameter(managerVO);
-		page.setPageSize(15);
-		page = orgUserService.getListOrgUser(page);
-		Assert.assertTrue("更新失败", page.getRows().isEmpty());
+		pageParameter.setParameter(managerVO);
+		pageParameter.setPageSize(15);
+		pageResult = orgUserService.getListOrgUser(pageParameter);
+		Assert.assertTrue("更新失败", pageResult.getRows().isEmpty());
 	}
-	
+
 	@Test
-	public void getOrgUserListByOrgIds(){
+	public void getOrgUserListByOrgIds() {
 		List<Long> orgIds = new ArrayList<Long>();
 		orgIds.add(1L);
 		orgIds.add(2L);
@@ -68,11 +70,11 @@ public class OrgUserSeviceTest extends BaseTest {
 		orgIds.add(4L);
 		orgIds.add(6L);
 		List<OrgUser> orgUser = orgUserService.getOrgUserListByOrgIds(orgIds);
-		Assert.assertTrue("获取数据失败", orgUser.size()==5 );
+		Assert.assertTrue("获取数据失败", orgUser.size() == 5);
 	}
-	
+
 	@Test
-	public void addOrgUserOfBack(){
+	public void addOrgUserOfBack() {
 		OrgUser orgUser = new OrgUser();
 		orgUser.setUsername("OOO");
 		orgUser.setRealname("BBc");
@@ -83,9 +85,9 @@ public class OrgUserSeviceTest extends BaseTest {
 		result = orgUserService.addOrgUserOfBack(orgUser);
 		Assert.assertTrue("添加失败", result.equals("SUCCESS"));
 	}
-	
+
 	@Test
-	public void updateOrgUserOfBack(){
+	public void updateOrgUserOfBack() {
 		OrgUser orgUser = new OrgUser();
 		orgUser = orgUserService.getOrgUserById(5L);
 		orgUser.setOrgId(10L);

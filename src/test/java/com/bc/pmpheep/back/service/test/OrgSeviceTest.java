@@ -8,7 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
 
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.OrgService;
@@ -39,9 +40,10 @@ public class OrgSeviceTest extends BaseTest {
 //    	Assert.assertNotNull("获取数据失败",orgService.getOrgById(3L));
     	OrgVO orgVO=new OrgVO();
     	orgVO.setOrgName("w29");
-    	Page<OrgVO,OrgVO> page =new Page<OrgVO,OrgVO>();
-    	page.setParameter(orgVO);
-    	page =orgService.getOrgList(page);
+    	PageResult<OrgVO> page =new PageResult<OrgVO>();
+    	PageParameter pageParameter = new PageParameter<>();
+    	pageParameter.setParameter(orgVO);
+    	page =orgService.getOrgList(pageParameter);
     	System.out.println(page.getRows());
     }
     
