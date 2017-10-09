@@ -8,7 +8,7 @@
     <description>人民卫生出版社医学教育交互综合服务平台</description>
 
     <servlet>
-        <servlet-name>dispatcher</servlet-name>
+        <servlet-name>springMvc</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
@@ -19,9 +19,24 @@
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>dispatcher</servlet-name>
+        <servlet-name>springMvc</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+    
+    <!-- 
+    	使用配置文件修改来实现Put和Delete请求的参数传递 
+    	这种方式是在有时候，Ajax使用PUT/DELTET调用时，参数获取不到的情况下使用
+    	<filter>
+	    	<filter-name>HiddenHttpMethodFilter</filter-name>
+	    	<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+		</filter>
+		<filter-mapping>
+		    <filter-name>HiddenHttpMethodFilter</filter-name>
+		    <!-- 名称必须和springMvc配置的servlet名称对应 
+		    <servlet-name>springMvc</servlet-name>    
+		</filter-mapping> 
+     -->
+     
 
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

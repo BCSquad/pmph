@@ -144,7 +144,7 @@ public class WriterLoginController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/unAuthorization")
+    @RequestMapping(value = "/unAuthorization", method = RequestMethod.GET)
     public ResponseBean unAuthorization() {
         ResponseBean<Object> responseBean = new ResponseBean<Object>();
         responseBean.setCode(ResponseBean.NO_PERMISSION);
