@@ -11,10 +11,10 @@ import org.springframework.context.ApplicationContext;
 public class Const {
 	public static final String DEFAULT_GROUP_IMAGE = "";// 小组默认头像路径
 	public static final String DEFAULT_PASSWORD = "123456";
-	public static final Long PMPHDEPARTMENTROOTID = 0L; // 社内部门根节点id
-	public static final Integer PAGETOTAL = 0; // 默认
-	public static final Integer PAGENUMBER = 1; // 默认
-	public static final Integer PAGESIZE = 5; // 默认
+	public static final Long PMPH_DEPARTMENT_ROOT_ID = 0L; // 社内部门根节点id
+	public static final Integer PAGE_TOTAL = 0; // 默认
+	public static final Integer PAGE_NUMBER = 1; // 默认
+	public static final Integer PAGE_SIZE = 5; // 默认
 	public static final boolean ISROLLBACK = true; // 单元测试数据是否回滚
 	public static final String WEB_PROJECT_NAME = "PMPH_IMESP";
 	public static final String SEESION_PMPH_USER_TOKEN = "sessionPmphUserToken";

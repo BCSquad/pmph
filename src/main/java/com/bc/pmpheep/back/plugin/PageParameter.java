@@ -17,7 +17,7 @@ public class PageParameter<T> {
 	//当前页码
     private Integer pageNumber = 1;
     //页面大小
-    private Integer pageSize   = Const.PAGESIZE;
+    private Integer pageSize   = Const.PAGE_SIZE;
     //查询开始页
     private Integer start      = 0; 
     //参数对象
