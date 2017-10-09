@@ -138,7 +138,7 @@ public class PmphUserController {
 	 * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
     public ResponseBean update(@PathVariable("id") Long id) {
         Map<String, Object> result = new HashMap<String, Object>();
         // 要从数据库查询对象进行回显
