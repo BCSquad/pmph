@@ -34,14 +34,12 @@ public class OrgController {
 	 * @param orgVO
 	 * @return 分页数据集
 	 */
-	@RequestMapping(value = "/getOrgList", method = RequestMethod.POST)
+	@RequestMapping(value = "/list/org", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseBean getOrgList(
-			@RequestParam(name="pageNumber",defaultValue="1")Integer pageNumber
-			,@RequestParam(name="pageSize"  )Integer pageSize
-			,OrgVO orgVO) {
-		PageParameter<OrgVO> pageParameter =new PageParameter<OrgVO>(pageNumber,pageSize,orgVO);
-		return new ResponseBean(orgService.getOrgList(pageParameter));
+	public ResponseBean listOrg(@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+			@RequestParam(name = "pageSize") Integer pageSize, OrgVO orgVO) {
+		PageParameter<OrgVO> pageParameter = new PageParameter<OrgVO>(pageNumber, pageSize, orgVO);
+		return new ResponseBean(orgService.listOrg(pageParameter));
 	}
 
 	/**
@@ -52,7 +50,7 @@ public class OrgController {
 	 * @param org
 	 * @return 新增后的org
 	 */
-	@RequestMapping(value = "/addOrg")
+	@RequestMapping(value = "/add/org", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseBean addOrg(Org org) {
 		return new ResponseBean(orgService.addOrg(org));
@@ -66,7 +64,7 @@ public class OrgController {
 	 * @param org
 	 * @return 更新影响的行数
 	 */
-	@RequestMapping(value = "/updateOrg")
+	@RequestMapping(value = "/update/org", method = RequestMethod.PUT)
 	@ResponseBody
 	public ResponseBean updateOrg(Org org) {
 		return new ResponseBean(orgService.updateOrg(org));
@@ -80,7 +78,7 @@ public class OrgController {
 	 * @param id
 	 * @return 影响的行数
 	 */
-	@RequestMapping(value = "/deleteOrgById")
+	@RequestMapping(value = "/delete/org/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ResponseBean deleteOrgById(Long id) {
 		return new ResponseBean(orgService.deleteOrgById(id));
@@ -97,9 +95,9 @@ public class OrgController {
 	 *
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/getOegListByOrgName")
-	public ResponseBean getOegListByOrgName(@RequestParam("orgName") String orgName) {
-		return new ResponseBean(orgService.getOegListByOrgName(orgName));
+	@RequestMapping(value = "/list/org/{orgName}", method = RequestMethod.GET)
+	public ResponseBean listOrgByOrgName(@RequestParam("orgName") String orgName) {
+		return new ResponseBean(orgService.listOrgByOrgName(orgName));
 	}
 
 }

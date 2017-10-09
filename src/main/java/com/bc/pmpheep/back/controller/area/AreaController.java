@@ -30,7 +30,7 @@ public class AreaController {
 	 * @param parentId
 	 * @return
 	 */
-	@RequestMapping(value = "/areachirldren", method = RequestMethod.GET)
+	@RequestMapping(value = "/areachirldren/{parentId}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseBean getAreaChirldren(Long parentId) {
 		return new ResponseBean(areaService.getAreaChirldren(parentId));
@@ -44,7 +44,7 @@ public class AreaController {
 	 * @param parentId
 	 * @return
 	 */
-	@RequestMapping(value = "/areatree", method = RequestMethod.GET)
+	@RequestMapping(value = "/areatree/{parentId}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseBean getAreaTree(Long parentId) {
 		return new ResponseBean(areaService.getAreaTreeVO(parentId));
@@ -74,7 +74,7 @@ public class AreaController {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "/delete/areabatch", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/delete/areabatch/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ResponseBean deleteAreaBatch(Long id) {
 		return new ResponseBean(areaService.deleteAreaBatch(id));

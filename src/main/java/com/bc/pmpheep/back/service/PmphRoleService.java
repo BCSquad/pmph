@@ -64,7 +64,7 @@ public interface PmphRoleService {
      * 
      * @return
      */
-    List<PmphRole> getListRole() throws CheckedServiceException;
+    List<PmphRole> listRole() throws CheckedServiceException;
 
     /**
      * 根据用户 id 和角色 id 加载一条用户角色关系数据

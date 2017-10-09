@@ -77,7 +77,7 @@ public class WriterRoleController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseBean add() {
         return new ResponseBean(new WriterRole());
     }
@@ -111,7 +111,7 @@ public class WriterRoleController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
     public ResponseBean update(@PathVariable("id") Long id) {
         WriterRole role = writerRoleService.get(id);
         return new ResponseBean(role);

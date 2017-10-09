@@ -154,10 +154,10 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 	}
 
 	@Override
-	public PageResult<OrgVO> getOrgList(PageParameter<OrgVO> pageParameter) throws CheckedServiceException {
+	public PageResult<OrgVO> listOrg(PageParameter<OrgVO> pageParameter) throws CheckedServiceException {
 		PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
 		Tools.CopyPageParameter(pageParameter, pageResult);
-		List<OrgVO> orgVOList = orgDao.getOrgList(pageParameter);
+		List<OrgVO> orgVOList = orgDao.listOrg(pageParameter);
 		if (null != orgVOList && orgVOList.size() > 0) {
 			Integer count = orgVOList.get(0).getCount();
 			pageResult.setTotal(count);
@@ -167,13 +167,13 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 	}
 
 	@Override
-	public List<OrgVO> getOegListByOrgName(String orgName) throws CheckedServiceException {
+	public List<OrgVO> listOrgByOrgName(String orgName) throws CheckedServiceException {
 		List<OrgVO> list = new ArrayList<>();
 		if (null != orgName) {
 			orgName = orgName.trim();
 			if (!orgName.equals("")) {
 				orgName = "%" + orgName + "%";
-				list = orgDao.getOrgListByOrgName(orgName);
+				list = orgDao.listOrgByOrgName(orgName);
 			}
 
 		}

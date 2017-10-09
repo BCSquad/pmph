@@ -39,18 +39,17 @@ public class OrgUserController {
 	 * @Param: OrgUserManagerVO
 	 * @Return:分页数据集
 	 */
-	@RequestMapping(value = "/user/org", method = RequestMethod.POST)
+	@RequestMapping(value = "/list/orguser", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseBean listOrgUser(@RequestParam("pageSize") Integer pageSize,
-			@RequestParam("pageNumber") Integer pageNumber, 
-			@RequestParam("username") String username,
-			@RequestParam("realname") String realname, 
-			@RequestParam("orgName") String orgName) {
+			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("username") String username,
+			@RequestParam("realname") String realname, @RequestParam("orgName") String orgName) {
 		OrgUserManagerVO orgUserManagerVO = new OrgUserManagerVO();
 		orgUserManagerVO.setUsername(username);
 		orgUserManagerVO.setRealname(realname);
 		orgUserManagerVO.setOrgName(orgName);
-		PageParameter<OrgUserManagerVO> pageParameter =new PageParameter<OrgUserManagerVO>(pageNumber,pageSize,orgUserManagerVO);
+		PageParameter<OrgUserManagerVO> pageParameter = new PageParameter<OrgUserManagerVO>(pageNumber, pageSize,
+				orgUserManagerVO);
 		return new ResponseBean(orgUserService.getListOrgUser(pageParameter));
 	}
 
@@ -63,7 +62,7 @@ public class OrgUserController {
 	 * @Param: OrgUser
 	 * @Return:新增的OrgUser
 	 */
-	@RequestMapping(value = "/addOrgUser")
+	@RequestMapping(value = "/add/orguser", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseBean addOrgUser(OrgUser orgUser) {
 		return new ResponseBean(orgUserService.addOrgUser(orgUser));
@@ -78,7 +77,7 @@ public class OrgUserController {
 	 * @Param: OrgUser
 	 * @Return:更新影响的行数
 	 */
-	@RequestMapping(value = "/updateOrgUser")
+	@RequestMapping(value = "/update/orguser", method = RequestMethod.PUT)
 	@ResponseBody
 	public ResponseBean updateOrgUser(OrgUser orgUser) {
 		return new ResponseBean(orgUserService.updateOrgUser(orgUser));
@@ -93,7 +92,7 @@ public class OrgUserController {
 	 * @Param: id
 	 * @Return:影响的行数
 	 */
-	@RequestMapping(value = "/deleteOrgUserById")
+	@RequestMapping(value = "/delete/orguser/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ResponseBean deleteOrgUserById(Long id) {
 		return new ResponseBean(orgUserService.deleteOrgUserById(id));
@@ -108,7 +107,7 @@ public class OrgUserController {
 	 * @Param: id
 	 * @Return:OrgUser
 	 */
-	@RequestMapping(value = "/getOrgUserById")
+	@RequestMapping(value = "/orguser/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseBean getOrgUserById(Long id) {
 		return new ResponseBean(orgUserService.getOrgUserById(id));
@@ -124,7 +123,7 @@ public class OrgUserController {
 	 * @return 是否成功
 	 *
 	 */
-	@RequestMapping(value = "/addOrgUserOfBack")
+	@RequestMapping(value = "/add/orguserofback", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseBean addOrgUserOfBack(OrgUser orgUser) {
 
@@ -141,7 +140,7 @@ public class OrgUserController {
 	 * @return 是否成功
 	 *
 	 */
-	@RequestMapping(value = "/updateOrgUserOfBack")
+	@RequestMapping(value = "/update/orguserofback", method = RequestMethod.PUT)
 	@ResponseBody
 	public ResponseBean updateOrgUserOfBack(OrgUser orgUser) {
 		return new ResponseBean(orgUserService.updateOrgUserOfBack(orgUser));

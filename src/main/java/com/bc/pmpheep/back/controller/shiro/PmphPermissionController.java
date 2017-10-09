@@ -70,7 +70,7 @@ public class PmphPermissionController {
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @ResponseBody
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseBean add() {
         return new ResponseBean(new PmphPermission());
     }
@@ -106,7 +106,7 @@ public class PmphPermissionController {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @ResponseBody
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseBean update(@PathVariable("id") Long id) {
         PmphPermission resource = pmphPermissionService.get(id);
         return new ResponseBean(resource);

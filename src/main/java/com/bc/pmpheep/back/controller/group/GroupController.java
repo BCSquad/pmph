@@ -194,7 +194,7 @@ public class GroupController {
 	 * @Param:文件id
 	 * @Return:是否成功
 	 */
-	@RequestMapping(value = "/delete/pmphgroupfile", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/delete/pmphgroupfile/{ids}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ResponseBean deletePmphGroupFileById(List<Long> ids) {
 		return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(ids));
