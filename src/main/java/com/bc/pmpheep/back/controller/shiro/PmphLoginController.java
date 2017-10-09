@@ -65,15 +65,14 @@ public class PmphLoginController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ResponseBean login(PmphUser user, HttpServletRequest request) {
         List<Long> permissionsIds = new ArrayList<Long>();// 用户拥有的权限资源ID集合
         List<PmphPermission> permissions = new ArrayList<PmphPermission>();// 权限资源树集合
-        String msg = "";
         String username = user.getUsername();
         String password = user.getPassword();
-        logger.debug("username => " + username);
-        logger.debug("password => " + password);
+        logger.info("username => " + username);
+        logger.info("password => " + password);
         try {
             PmphUser pmphUser = pmphUserService.login(username, ShiroKit.md5(password, username));
             // 验证成功在Session中保存用户信息
@@ -138,7 +137,7 @@ public class PmphLoginController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/unAuthorization")
+    @RequestMapping(value = "/unAuthorization", method = RequestMethod.GET)
     public ResponseBean unAuthorization() {
         ResponseBean<Object> responseBean = new ResponseBean<Object>();
         responseBean.setCode(ResponseBean.NO_PERMISSION);

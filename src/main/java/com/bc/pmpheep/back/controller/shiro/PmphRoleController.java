@@ -224,18 +224,18 @@ public class PmphRoleController {
         result.put("success", true);
         return new ResponseBean(result);
     }
-    
+
     /**
      * 
-     *  
+     * 
      * 功能描述：社内用户修改时获取所有角色
      * 
      * @return 获取到角色的id与名称
-     *
+     * 
      */
     @ResponseBody
     @RequestMapping(value = "/list/role", method = RequestMethod.GET)
-    public ResponseBean listRole(){
-    	return new ResponseBean(roleService.listRole());
+    public ResponseBean listRole() {
+        return new ResponseBean(roleService.listRole());
     }
 }
