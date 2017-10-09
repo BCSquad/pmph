@@ -55,7 +55,7 @@ public interface PmphGroupMemberService {
 	 * @return 小组成员
 	 *
 	 */
-	List<PmphGroupMemberVO> getListPmphGroupMember(Long groupId) throws CheckedServiceException;
+	List<PmphGroupMemberVO> listPmphGroupMember(Long groupId) throws CheckedServiceException;
 
 	/**
 	 * 

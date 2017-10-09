@@ -64,7 +64,7 @@ public interface PmphGroupFileDao {
      * @Param:pageParameter查询条件，若有文件名则为模糊查询
      * @Return:List<PmphGroupFileVO>需要的小组共享文件集合
      */
-    List<PmphGroupFileVO> getGroupFileList(PageParameter<PmphGroupFileVO> pageParameter);
+    List<PmphGroupFileVO> listGroupFile(PageParameter<PmphGroupFileVO> pageParameter);
 
     /**
      * 

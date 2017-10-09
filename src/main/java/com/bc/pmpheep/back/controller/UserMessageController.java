@@ -35,7 +35,7 @@ public class UserMessageController {
 	 * @createDate 2017年9月26日 上午9:46:19
 	 * @return 分页数据集
 	 */
-	@RequestMapping(value = "/message/list", method = RequestMethod.GET)
+	@RequestMapping(value = "/list/messagestate", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseBean listMessageState(@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
 			@RequestParam(name = "pageSize") Integer pageSize, MessageStateVO messageStateVO) {

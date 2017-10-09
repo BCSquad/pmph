@@ -61,7 +61,7 @@ public interface PmphGroupService {
 	 * @return List<PmphGroupListVO>
 	 * @throws CheckedServiceException
 	 */
-	List<PmphGroupListVO> getList(PmphGroup pmphGroup) throws CheckedServiceException;
+	List<PmphGroupListVO> listPmphGroup(PmphGroup pmphGroup) throws CheckedServiceException;
 
 	/**
 	 * 

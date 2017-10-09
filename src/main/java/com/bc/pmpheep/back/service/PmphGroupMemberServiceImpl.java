@@ -90,12 +90,12 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public List<PmphGroupMemberVO> getListPmphGroupMember(Long groupId) throws CheckedServiceException {
+	public List<PmphGroupMemberVO> listPmphGroupMember(Long groupId) throws CheckedServiceException {
 		List<PmphGroupMemberVO> list = new ArrayList<>();
 		if (null == groupId || groupId == 0) {
-			groupId = pmphGroupService.getList(new PmphGroup()).get(0).getId();// 初始化页面时没有参数传入则直接调用初始化时小组排序的第一个小组id
+			groupId = pmphGroupService.listPmphGroup(new PmphGroup()).get(0).getId();// 初始化页面时没有参数传入则直接调用初始化时小组排序的第一个小组id
 		}
-		list = pmphGroupMemberDao.getListPmphGroupMember(groupId);
+		list = pmphGroupMemberDao.listPmphGroupMember(groupId);
 		for (PmphGroupMemberVO pmphGroupMemberVO : list) {
 			if (pmphGroupMemberVO.isIsWriter()) {
 				

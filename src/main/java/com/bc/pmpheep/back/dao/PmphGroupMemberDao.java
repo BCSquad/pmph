@@ -50,7 +50,7 @@ public interface  PmphGroupMemberDao {
 	 * @return 小组成员
 	 *
 	 */
-	List<PmphGroupMemberVO> getListPmphGroupMember(Long groupId);
+	List<PmphGroupMemberVO> listPmphGroupMember(Long groupId);
 	
 	 /**
      * 
