@@ -73,7 +73,7 @@ public class PmphUserController {
 	 * </pre>
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseBean add() {
 		logger.debug("跳转到添加用户的页面");
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -119,7 +119,7 @@ public class PmphUserController {
 	 * </pre>
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/updateStatus", method = RequestMethod.POST)
+	@RequestMapping(value = "/updateStatus", method = RequestMethod.PUT)
 	public ResponseBean updateStatus(PmphUser user) {
 		PmphUser pmphUser = userService.update(user);
 		return new ResponseBean(pmphUser);
@@ -137,7 +137,7 @@ public class PmphUserController {
 	 * </pre>
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
 	public ResponseBean update(@PathVariable("id") Long id) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 要从数据库查询对象进行回显
@@ -169,7 +169,7 @@ public class PmphUserController {
 	 * </pre>
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
 	public ResponseBean update(PmphUser user, HttpServletRequest request) {
 		logger.debug("user => " + user.toString());
 		String[] roleIds = request.getParameterValues("roleId");
@@ -217,7 +217,7 @@ public class PmphUserController {
 	 * </pre>
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public ResponseBean delete(@RequestParam("userIds[]") List<Long> userIds) {
 		return new ResponseBean(userService.deleteUserAndRole(userIds));
 	}
@@ -235,9 +235,10 @@ public class PmphUserController {
 	 *
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/user/Pmph")
+	@RequestMapping(value = "/list/pmphuser", method = RequestMethod.GET)
 	public ResponseBean listPmphUser(@RequestParam("pageSize") Integer pageSize,
-			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name, @RequestParam("path")String path) {
+			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
+			@RequestParam("path") String path) {
 		PageParameter pageParameter = new PageParameter<>();
 		PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
 		pmphUserManagerVO.setName(name);
@@ -259,7 +260,7 @@ public class PmphUserController {
 	 *
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/updatePmphUserOfBack")
+	@RequestMapping(value = "/update/pmphuserofback", method = RequestMethod.PUT)
 	public ResponseBean updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO) {
 		return new ResponseBean(userService.updatePmphUserOfBack(pmphUserManagerVO));
 	}
@@ -273,8 +274,8 @@ public class PmphUserController {
 	 *
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/getListPmphDepartment")
-	public ResponseBean getListPmphDepartment() {
-		return new ResponseBean(pmphDepartmentService.getListPmphDepartment(null));
+	@RequestMapping(value = "/list/pmphdepartment", method = RequestMethod.GET)
+	public ResponseBean listPmphDepartment() {
+		return new ResponseBean(pmphDepartmentService.listPmphDepartment(null));
 	}
 }

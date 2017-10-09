@@ -53,7 +53,7 @@ public interface OrgService {
 	 * @return PageResult 包含 List<OrgVO>以及分页数据
 	 * @throws CheckedServiceException
 	 */
-	PageResult<OrgVO> getOrgList(PageParameter<OrgVO> pageParameter) throws CheckedServiceException;
+	PageResult<OrgVO> listOrg(PageParameter<OrgVO> pageParameter) throws CheckedServiceException;
 	
 	/**
 	 * 
@@ -65,5 +65,5 @@ public interface OrgService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	List<OrgVO> getOegListByOrgName(String orgName) throws CheckedServiceException;
+	List<OrgVO> listOrgByOrgName(String orgName) throws CheckedServiceException;
 }

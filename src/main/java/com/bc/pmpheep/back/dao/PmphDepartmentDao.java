@@ -59,7 +59,7 @@ public interface PmphDepartmentDao {
      * @param parentId 父级id
      * @return 出版社部门
      */
-    List<PmphUserDepartmentVO> getListPmphDepartment(Long parentId);
+    List<PmphUserDepartmentVO> listPmphDepartment(Long parentId);
     
     /**
 	 * 根据ids批量删除PmphDepartment

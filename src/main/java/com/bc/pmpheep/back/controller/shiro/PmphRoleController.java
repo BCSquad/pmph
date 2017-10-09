@@ -77,7 +77,7 @@ public class PmphRoleController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseBean add() {
         return new ResponseBean(new PmphRole());
     }
@@ -111,7 +111,7 @@ public class PmphRoleController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
     public ResponseBean update(@PathVariable("id") Long id) {
         PmphRole role = roleService.get(id);
         return new ResponseBean(role);
@@ -128,7 +128,7 @@ public class PmphRoleController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
     public ResponseBean update(PmphRole role) {
         logger.debug(role.toString());
         return new ResponseBean(roleService.update(role));
@@ -210,7 +210,7 @@ public class PmphRoleController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public ResponseBean deleteRole(@RequestParam("roleIds[]") List<Long> roleIds) {
         logger.debug(roleIds.toString());
         Map<String, Object> result = new HashMap<String, Object>();
@@ -234,8 +234,8 @@ public class PmphRoleController {
      *
      */
     @ResponseBody
-    @RequestMapping(value = "/getListRole", method = RequestMethod.POST)
-    public ResponseBean getListRole(){
-    	return new ResponseBean(roleService.getListRole());
+    @RequestMapping(value = "/list/role", method = RequestMethod.GET)
+    public ResponseBean listRole(){
+    	return new ResponseBean(roleService.listRole());
     }
 }

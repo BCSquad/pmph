@@ -34,7 +34,7 @@ public interface PmphRoleDao {
 
 	Integer update(PmphRole role);
 
-	List<PmphRole> getListRole();
+	List<PmphRole> listRole();
 
 	PmphUserRole getUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
 

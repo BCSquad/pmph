@@ -69,7 +69,7 @@ public class WriterPermissionController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseBean add() {
         return new ResponseBean(new WriterPermission());
     }
@@ -103,7 +103,7 @@ public class WriterPermissionController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseBean update(@PathVariable("id") Long id) {
         WriterPermission resource = writerPermissionService.get(id);
         return new ResponseBean(resource);
@@ -120,7 +120,7 @@ public class WriterPermissionController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseBean update(WriterPermission writerPermission) {
         logger.debug(writerPermission.toString());
         Integer count = writerPermissionService.updateWriterPermissionById(writerPermission);

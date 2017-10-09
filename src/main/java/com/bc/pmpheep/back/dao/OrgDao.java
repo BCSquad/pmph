@@ -6,74 +6,77 @@ import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
-
 /**
  * OrgDao实体类数据访问层接口
+ * 
  * @author mryang
  */
 public interface OrgDao {
-	
+
 	/**
 	 * 
-	 * @param org 实体对象
-	 * @return  影像行数
-	 * @throws CheckedServiceException 
+	 * @param org
+	 *            实体对象
+	 * @return 影像行数
+	 * @throws CheckedServiceException
 	 */
-	Integer addOrg(Org org) ;
-	
+	Integer addOrg(Org org);
+
 	/**
 	 * 
 	 * @param id
-	 * @return  Org
+	 * @return Org
 	 * @throws CheckedServiceException
 	 */
-	Org getOrgById(Long  id) ;
-	
+	Org getOrgById(Long id);
+
 	/**
 	 * 
 	 * @param id
-	 * @return  影响行数
+	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */
-	Integer deleteOrgById(Long  id) ;
-	
+	Integer deleteOrgById(Long id);
+
 	/**
 	 * @param org
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */
-	Integer updateOrg(Org org) ;
-	
+	Integer updateOrg(Org org);
+
 	/**
-     * 
-     * <pre>
-     * 功能描述：查询表单的数据总条数
-     * 使用示范：
-     *
-     * @return 表单的总条数
-     * </pre>
-     */
+	 * 
+	 * <pre>
+	 * 功能描述：查询表单的数据总条数
+	 * 使用示范：
+	 *
+	 * &#64;return 表单的总条数
+	 * </pre>
+	 */
 	Long getOrgCount();
-	
+
 	/**
 	 * 
 	 * 获取OrgVO列表（同时查询分页数据和总条数）
+	 * 
 	 * @author Mryang
 	 * @createDate 2017年9月26日 上午10:36:10
 	 * @param pageParameter
 	 * @return List<OrgVO>
 	 */
-	List<OrgVO> getOrgList(PageParameter<OrgVO> pageParameter);
-	
+	List<OrgVO> listOrg(PageParameter<OrgVO> pageParameter);
+
 	/**
 	 * 
-	 *  
+	 * 
 	 * 功能描述：在机构用户与作家用户页面新增或者修改用户查询组织机构
 	 *
-	 * @param orgName 机构名称
+	 * @param orgName
+	 *            机构名称
 	 * @return 模糊查询到的所有机构
 	 *
 	 */
-	List<OrgVO> getOrgListByOrgName(String orgName);
-	
+	List<OrgVO> listOrgByOrgName(String orgName);
+
 }

@@ -51,7 +51,7 @@ public interface PmphDepartmentService {
      * @throws CheckedServiceException
      * @update Mryang
      */
-    PmphUserDepartmentVO getListPmphDepartment(Long parentId) throws CheckedServiceException;
+    PmphUserDepartmentVO listPmphDepartment(Long parentId) throws CheckedServiceException;
     
     /**
      * 删除该部门以及下属部门

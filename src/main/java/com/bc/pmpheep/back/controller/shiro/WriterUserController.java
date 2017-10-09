@@ -70,7 +70,7 @@ public class WriterUserController {
 	 * </pre>
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseBean add() {
 		logger.debug("跳转到添加用户的页面");
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -116,7 +116,7 @@ public class WriterUserController {
 	 * </pre>
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/updateStatus", method = RequestMethod.POST)
+	@RequestMapping(value = "/updatestatus", method = RequestMethod.PUT)
 	public ResponseBean updateStatus(WriterUser user) {
 		WriterUser writerUser = writerUserService.update(user);
 		return new ResponseBean(writerUser);
@@ -134,7 +134,7 @@ public class WriterUserController {
 	 * </pre>
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
 	public ResponseBean update(@PathVariable("id") Long id) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 要从数据库查询对象进行回显
@@ -166,7 +166,7 @@ public class WriterUserController {
 	 * </pre>
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
 	public ResponseBean update(WriterUser user, HttpServletRequest request) {
 		logger.debug("user => " + user.toString());
 		String[] roleIds = request.getParameterValues("roleId");
@@ -210,7 +210,7 @@ public class WriterUserController {
 	 * </pre>
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public ResponseBean delete(@RequestParam("userIds[]") List<Long> userIds) {
 		return new ResponseBean(writerUserService.deleteUserAndRole(userIds));
 	}
@@ -228,9 +228,10 @@ public class WriterUserController {
 	 *
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/user/writer")
-	public ResponseBean listWriterUser(@RequestParam("pageSize") Integer pageSize, @RequestParam("pageNumber") Integer pageNumber,
-			@RequestParam("name") String name, @RequestParam("rank") Integer rank, @RequestParam("orgName") String orgName) {
+	@RequestMapping(value = "/list/writeruser", method = RequestMethod.GET)
+	public ResponseBean listWriterUser(@RequestParam("pageSize") Integer pageSize,
+			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
+			@RequestParam("rank") Integer rank, @RequestParam("orgName") String orgName) {
 		PageParameter pageParameter = new PageParameter<>();
 		WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
 		writerUserManagerVO.setName(name);
@@ -253,7 +254,7 @@ public class WriterUserController {
 	 *
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/addWriterUserOfBack")
+	@RequestMapping(value = "/add/writeruserofback", method = RequestMethod.POST)
 	public ResponseBean addWriterUserOfBack(WriterUser writerUser) {
 		return new ResponseBean(writerUserService.addWriterUserOfBack(writerUser));
 	}
@@ -269,7 +270,7 @@ public class WriterUserController {
 	 *
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/updateWriterUserOfBack")
+	@RequestMapping(value = "/update/writeruserofback", method = RequestMethod.PUT)
 	public ResponseBean updateWriterUserOfBack(WriterUser writerUser) {
 		return new ResponseBean(writerUserService.updateWriterUserOfBack(writerUser));
 	}
