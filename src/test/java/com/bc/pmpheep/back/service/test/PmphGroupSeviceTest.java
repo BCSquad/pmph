@@ -43,7 +43,7 @@ public class PmphGroupSeviceTest extends BaseTest {
 //    	//根据小组名称模糊查询获取当前用户的小组
 //    	pmphGroup.setGroupName("1");
 //    	logger.info(testService.getList(pmphGroup).toString());
-    	testService.getList(pmphGroup) ;
+    	testService.listPmphGroup(pmphGroup) ;
     	
     }
     

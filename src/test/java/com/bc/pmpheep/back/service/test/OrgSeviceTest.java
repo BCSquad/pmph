@@ -42,7 +42,7 @@ public class OrgSeviceTest extends BaseTest {
 		PageResult<OrgVO> page = new PageResult<OrgVO>();
 		PageParameter pageParameter = new PageParameter<>();
 		pageParameter.setParameter(orgVO);
-		page = orgService.getOrgList(pageParameter);
+		page = orgService.listOrg(pageParameter);
 		System.out.println(page.getRows());
 	}
 
