@@ -53,12 +53,6 @@ public class PmphLoginController {
     @Autowired
     PmphPermissionService pmphPermissionService;
 
-    @ResponseBody
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ResponseBean login() {
-        return new ResponseBean("login");
-    }
-
     /**
      * 
      * <pre>
