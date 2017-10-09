@@ -281,7 +281,7 @@
 			pmph_user
 	</select>
 
-	<select id="getListPmphUserTotal" parameterType="page"
+	<select id="getListPmphUserTotal" parameterType="PageParameter"
 		resultType="int">
 		SELECT
 			count(*)
@@ -311,7 +311,7 @@
 		GROUP BY d.dp_name) t
 	</select>
 
-	<select id="getListPmphUser" parameterType="page" resultType="PmphUserManagerVO">
+	<select id="getListPmphUser" parameterType="PageParameter" resultType="PmphUserManagerVO">
 		SELECT
 		u.*, GROUP_CONCAT(r.role_name ORDER BY r.id ASC) role_name,
 		d.dp_name departmentName,d.path

@@ -461,7 +461,7 @@
 			username=#{username};
 	</select>
 	<!-- 分页查询 -->
-	<select id="getListWriterUserTotal" parameterType="Page"
+	<select id="getListWriterUserTotal" parameterType="PageParameter"
 		resultType="java.lang.Integer">
 		select count(*) from writer_user w left join org o on o.id = w.org_id
 		where 1=1
@@ -478,7 +478,7 @@
 			and w.rank = #{parameter.rank}
 		</if>
 	</select>
-	<select id="getListWriterUser" parameterType="Page"
+	<select id="getListWriterUser" parameterType="PageParameter"
 		resultType="WriterUserManagerVO">
 		select
 		*
