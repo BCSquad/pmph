@@ -128,7 +128,7 @@ public class PmphRoleController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
     public ResponseBean update(PmphRole role) {
         logger.debug(role.toString());
         return new ResponseBean(roleService.update(role));
@@ -210,7 +210,7 @@ public class PmphRoleController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public ResponseBean deleteRole(@RequestParam("roleIds[]") List<Long> roleIds) {
         logger.debug(roleIds.toString());
         Map<String, Object> result = new HashMap<String, Object>();
@@ -224,18 +224,18 @@ public class PmphRoleController {
         result.put("success", true);
         return new ResponseBean(result);
     }
-    
+
     /**
      * 
-     *  
+     * 
      * 功能描述：社内用户修改时获取所有角色
      * 
      * @return 获取到角色的id与名称
-     *
+     * 
      */
     @ResponseBody
-    @RequestMapping(value = "/getListRole", method = RequestMethod.POST)
-    public ResponseBean getListRole(){
-    	return new ResponseBean(roleService.getListRole());
+    @RequestMapping(value = "/getListRole", method = RequestMethod.GET)
+    public ResponseBean getListRole() {
+        return new ResponseBean(roleService.getListRole());
     }
 }

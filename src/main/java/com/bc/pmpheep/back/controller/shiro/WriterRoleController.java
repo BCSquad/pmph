@@ -128,7 +128,7 @@ public class WriterRoleController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
     public ResponseBean update(WriterRole role) {
         logger.debug(role.toString());
         writerRoleService.update(role);
@@ -211,7 +211,7 @@ public class WriterRoleController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public ResponseBean deleteRole(@RequestParam("roleIds[]") List<Long> roleIds) {
         Map<String, Object> result = new HashMap<String, Object>();
         logger.debug(roleIds.toString());

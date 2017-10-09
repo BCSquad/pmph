@@ -120,7 +120,7 @@ public class WriterPermissionController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseBean update(WriterPermission writerPermission) {
         logger.debug(writerPermission.toString());
         Integer count = writerPermissionService.updateWriterPermissionById(writerPermission);
