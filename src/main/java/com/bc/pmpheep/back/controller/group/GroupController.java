@@ -18,6 +18,7 @@ import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.PmphGroupMemberService;
 import com.bc.pmpheep.back.service.PmphGroupService;
+import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -29,7 +30,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  */
 @Controller
-@RequestMapping(value = "/groups")
+@RequestMapping(value = "/group")
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class GroupController {
 
@@ -50,13 +51,17 @@ public class GroupController {
 	 */
 	@RequestMapping(value = "/list/pmphgroup", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseBean listPmphGroup(PmphGroup pmphGroup) {
+	public ResponseBean listPmphGroup(@RequestParam(name = "groupName", defaultValue = "")String groupName) {
 		/*
 		 * --------- 以下是正确的示例 ---------
 		 * 
 		 * 在ResponseBean初始化时，通过ResponseBeanAop对其构造函数进行切面编程，
 		 * 因此返回时<务必>要使用ResponseBean的构造函数即 new ResponseBean(anything)
 		 */
+		PmphGroup pmphGroup = new PmphGroup ();
+		if(Tools.isNotNullOrEmpty(groupName)){
+			pmphGroup.setGroupName(groupName);
+		}
 		return new ResponseBean(pmphGroupService.listPmphGroup(pmphGroup));
 	}
 
