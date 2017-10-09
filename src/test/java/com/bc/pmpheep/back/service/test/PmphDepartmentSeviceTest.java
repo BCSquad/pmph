@@ -38,7 +38,7 @@ public class PmphDepartmentSeviceTest extends BaseTest {
     	Assert.assertTrue("更新失败", pmphDepartmentService.updatePmphDepartment(pmphDepartment) > 0 );
     	Assert.assertTrue("删除失败",pmphDepartmentService.deletePmphDepartmentById(2L) >= 0 );
     	Assert.assertNotNull("获取数据失败",pmphDepartmentService.getPmphDepartmentById(1L));
-        PmphUserDepartmentVO departmentVO = pmphDepartmentService.getListPmphDepartment(0L);
+        PmphUserDepartmentVO departmentVO = pmphDepartmentService.listPmphDepartment(0L);
         Assert.assertNotNull("获取数据失败",departmentVO);
     	
     }
