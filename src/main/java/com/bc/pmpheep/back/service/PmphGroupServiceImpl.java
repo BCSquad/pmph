@@ -122,7 +122,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public List<PmphGroupListVO> getList(PmphGroup pmphGroup) throws CheckedServiceException {
+	public List<PmphGroupListVO> listPmphGroup(PmphGroup pmphGroup) throws CheckedServiceException {
 		if (null == pmphGroup) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"参数对象为空");
