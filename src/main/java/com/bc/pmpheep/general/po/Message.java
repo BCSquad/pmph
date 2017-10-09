@@ -5,6 +5,7 @@
 package com.bc.pmpheep.general.po;
 
 import java.io.Serializable;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,11 +20,25 @@ public class Message implements Serializable {
     private String id;
     private String content;
     
-    public Message(String content) {
+    public Message() {
+		super();
+	}
+    
+
+	public Message(String content) {
         this.content = content;
     }
+	
+	
 
-    /**
+    public Message(String id, String content) {
+		super();
+		this.id = id;
+		this.content = content;
+	}
+
+
+	/**
      * @return the id
      */
     public String getId() {

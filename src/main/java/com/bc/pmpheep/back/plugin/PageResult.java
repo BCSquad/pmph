@@ -7,13 +7,13 @@ import org.apache.ibatis.type.Alias;
 
 import com.bc.pmpheep.back.util.Const;
 /**
- * R 返回对象，P参数对象
- *@author MrYang 
- *@CreateDate 2017年9月19日 下午3:39:57
+ *分页结果
+ *@author Mryang
+ *@createDate 2017年10月8日 下午10:14:44
  *
- **/
-@Alias("Page")
-public class Page<R,P> {
+ */
+@Alias("PageResult")
+public class PageResult<T> {
 	//当前页码
     private Integer pageNumber = 1;
     //页面大小
@@ -29,11 +29,10 @@ public class Page<R,P> {
     //查询开始页
     private Integer start      = 0; 
     //数据集
-	private List<R> rows       = new ArrayList<R>(Const.PAGESIZE);
-	//参数对象
-	private P parameter ;
+	private List<T> rows       = new ArrayList<T>(Const.PAGESIZE);
 	
-	public Page() {
+	
+	public PageResult() {
 		super();
 	}
 
@@ -50,7 +49,7 @@ public class Page<R,P> {
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
 		this.start    = (this.pageNumber-1)*this.pageSize;
-		rows          = new ArrayList<R>(this.pageSize);
+		rows          = new ArrayList<T>(this.pageSize);
 	}
 
 	public void setTotal(Integer total) {
@@ -83,13 +82,10 @@ public class Page<R,P> {
 		this.start = start;
 	}
 
-	public void setRows(List<R> rows) {
+	public void setRows(List<T> rows) {
 		this.rows = rows;
 	}
 
-	public void setParameter(P parameter) {
-		this.parameter = parameter;
-	}
 
 	public Integer getPageNumber() {
 		return pageNumber;
@@ -119,19 +115,17 @@ public class Page<R,P> {
 		return start;
 	}
 
-	public List<R> getRows() {
+	public List<T> getRows() {
 		return rows;
 	}
 
-	public P getParameter() {
-		return parameter;
-	}
+	
 
     @Override
     public String toString() {
         return "Page [pageNumber=" + pageNumber + ", pageSize=" + pageSize + ", total=" + total
                + ", pageTotal=" + pageTotal + ", isFirst=" + isFirst + ", isLast=" + isLast
-               + ", start=" + start + ", rows=" + rows.toString() + ", parameter=" + parameter.toString() + "]";
+               + ", start=" + start + ", rows=" + rows.toString() + "]";
     }
 
 	

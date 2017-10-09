@@ -17,6 +17,9 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
+
 public class Tools {
 
     /**
@@ -305,9 +308,16 @@ public class Tools {
     
 
     public static void main(String[] args) {
-        System.out.println(isNumeric("9999"));
+        System.out.println(getCurrentTime());
     }
-    
+    /**
+     * 
+     * 判断字符串是否可以转化成数字
+     * @author Mryang
+     * @createDate 2017年10月8日 下午10:22:08
+     * @param str
+     * @return
+     */
     public static boolean isNumeric(String str) {
     	for(int i=str.length();--i>=0;){
     		int chr=str.charAt(i);
@@ -318,5 +328,18 @@ public class Tools {
 	    return true;
     }
     
+    /**
+     * 
+     * 将 PageParameter的当前页数和页面大小拷贝到PageResult 对象里面去
+     * @author Mryang
+     * @createDate 2017年10月8日 下午10:23:51
+     * @param PageParameter
+     * @param pageResult
+     */
+    @SuppressWarnings("rawtypes")
+	public static void CopyPageParameter (PageParameter pageParameter,PageResult pageResult){
+    	pageParameter.setPageNumber(pageResult.getPageNumber());
+    	pageParameter.setPageSize(pageResult.getPageSize());
+    }
 
 }

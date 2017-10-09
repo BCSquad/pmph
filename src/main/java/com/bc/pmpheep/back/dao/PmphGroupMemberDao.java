@@ -59,4 +59,15 @@ public interface  PmphGroupMemberDao {
      * @return 表单的总条数
      */
     Long getPmphGroupMemberCount();
+    
+    /**
+     * 
+     *  
+     * 功能描述： 解散小组时删除小组内所有成员
+     *
+     * @param groupId 小组id
+     * @return 影响行数
+     *
+     */
+    Integer deletePmphGroupMemberOnGroup(Long groupId);
 }

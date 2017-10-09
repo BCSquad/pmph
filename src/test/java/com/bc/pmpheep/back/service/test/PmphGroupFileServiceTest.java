@@ -33,13 +33,13 @@ public class PmphGroupFileServiceTest extends BaseTest {
     		    null)  ;
     	logger.info("---PmphGroupFileSevice 测试---------------------------------------------------------------------------------");
     	//新增
-    	pmphGroupFileService.addPmphGroupFile(pmphGroupFile);
+    	//pmphGroupFileService.addPmphGroupFile(pmphGroupFile);
     	Assert.assertTrue("添加失败",pmphGroupFile.getId() > 0 );
     	//修改
     	pmphGroupFile.setFileName(String.valueOf(random.nextInt(200)));
     	Assert.assertTrue("更新失败",pmphGroupFileService.updatePmphGroupFile(pmphGroupFile) > 0 );
     	//删除
-    	Assert.assertTrue("删除失败",pmphGroupFileService.deletePmphGroupFileById(2L)  >= 0 );
+    	//Assert.assertTrue("删除失败",pmphGroupFileService.deletePmphGroupFileById(2L)  >= 0 );
     	//查询
     	Assert.assertNotNull("获取数据失败",pmphGroupFileService.getPmphGroupFileById(5L));
     	

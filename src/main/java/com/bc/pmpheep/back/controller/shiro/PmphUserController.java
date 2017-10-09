@@ -233,8 +233,14 @@ public class PmphUserController {
      *
      */
     @ResponseBody
-    @RequestMapping(value = "/getListPmphUser")
-    public ResponseBean getListPmphUser(Page<PmphUserManagerVO, PmphUserManagerVO> page,PmphUserManagerVO pmphUserManagerVO){
+    @RequestMapping(value = "/user/Pmph")
+    public ResponseBean listPmphUser(Integer pageSize,Integer pageNumber,String name,String path){
+    	Page page = new Page<>();
+    	PmphUserManagerVO pmphUserManagerVO =new PmphUserManagerVO();
+    	pmphUserManagerVO.setName(name);
+    	pmphUserManagerVO.setPath(path);
+    	page.setPageNumber(pageNumber);
+    	page.setPageSize(pageSize);
     	page.setParameter(pmphUserManagerVO);
     	return new ResponseBean(userService.getListPmphUser(page));
     }

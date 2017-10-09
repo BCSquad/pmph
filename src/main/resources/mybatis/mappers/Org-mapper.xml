@@ -138,7 +138,7 @@
 	</select>
 
 	<!--orgNmae模糊查询获取列表 -->
-	<select id="getOrgList" parameterType="Page" resultType="OrgVO">
+	<select id="getOrgList" parameterType="PageParameter" resultType="OrgVO">
 		select
 		a.id,a.org_name,c.type_name,b.area_name,a.contact_person,a.contact_phone,a.sort,a.note,t.count
 		from org a

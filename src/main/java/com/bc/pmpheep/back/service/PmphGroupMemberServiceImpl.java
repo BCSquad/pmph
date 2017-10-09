@@ -96,6 +96,56 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			groupId = pmphGroupService.getList(new PmphGroup()).get(0).getId();// 初始化页面时没有参数传入则直接调用初始化时小组排序的第一个小组id
 		}
 		list = pmphGroupMemberDao.getListPmphGroupMember(groupId);
+		for (PmphGroupMemberVO pmphGroupMemberVO : list) {
+			if (pmphGroupMemberVO.isIsWriter()) {
+				
+			} else {
+
+			}
+		}
 		return list;
+	}
+
+	@Override
+	public String addPmphGroupMemberOnGroup(List<PmphGroupMember> pmphGroupMembers) throws CheckedServiceException {
+		String result = "FAIL";
+		if (pmphGroupMembers.size() > 0) {
+			for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
+				if (null == pmphGroupMember.getGruopId()) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+							CheckedExceptionResult.ILLEGAL_PARAM, "成员小组id为空");
+				}
+				if (null == pmphGroupMember.getMemberId()) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+							CheckedExceptionResult.ILLEGAL_PARAM, "成员id为空");
+				}
+				if (null == pmphGroupMember.getDisplayName()) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+							CheckedExceptionResult.ILLEGAL_PARAM, "成员名称为空");
+				}
+				pmphGroupMemberDao.addPmphGroupMember(pmphGroupMember);
+
+			}
+			result = "SUCCESS";
+		} else {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"参数为空");
+		}
+		return result;
+	}
+
+	@Override
+	public String deletePmphGroupMemberOnGroup(Long groupId) throws CheckedServiceException {
+		String result = "FAIL";
+		if (null == groupId) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"小组id为空");
+		}
+		int num = pmphGroupMemberDao.deletePmphGroupMemberOnGroup(groupId);
+		if (num > 0) {
+			result = "SUCCESS";
+		}
+
+		return result;
 	}
 }

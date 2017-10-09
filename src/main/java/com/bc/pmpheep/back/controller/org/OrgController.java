@@ -3,10 +3,11 @@ package com.bc.pmpheep.back.controller.org;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.vo.OrgVO;
@@ -33,11 +34,14 @@ public class OrgController {
 	 * @param orgVO
 	 * @return 分页数据集
 	 */
-	@RequestMapping(value = "/getOrgList")
+	@RequestMapping(value = "/getOrgList", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseBean getOrgList(OrgVO orgVO, Page page) {
-		page.setParameter(orgVO);
-		return new ResponseBean(orgService.getOrgList(page));
+	public ResponseBean getOrgList(
+			@RequestParam(name="pageNumber",defaultValue="1")Integer pageNumber
+			,@RequestParam(name="pageSize"  )Integer pageSize
+			,OrgVO orgVO) {
+		PageParameter<OrgVO> pageParameter =new PageParameter<OrgVO>(pageNumber,pageSize,orgVO);
+		return new ResponseBean(orgService.getOrgList(pageParameter));
 	}
 
 	/**

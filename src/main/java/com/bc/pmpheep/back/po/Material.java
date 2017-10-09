@@ -35,8 +35,6 @@ public class Material implements java.io.Serializable {
 	private Long departmentId;
 	//主任id
 	private Long director;
-	//项目编辑id
-	private Long projectEditor;
 	//是否书籍多选
 	private Boolean isMultiBooks;
 	//是否职位多选
@@ -119,7 +117,7 @@ public class Material implements java.io.Serializable {
 	public Material(String materialName, Integer materialRound,
 			Long materialType, Date deadline, Date actualDeadline,
 			Date ageDeadline, String mailAddress, Short progress,
-			Long departmentId, Long director, Long projectEditor,
+			Long departmentId, Long director, 
 			Boolean isMultiBooks, Boolean isMultiPosition,
 			Boolean isEduExpUsed, Boolean isEduExpRequired,
 			Boolean isWorkExpUsed, Boolean isWorkExpRequired,
@@ -145,7 +143,6 @@ public class Material implements java.io.Serializable {
 		this.progress = progress;
 		this.departmentId = departmentId;
 		this.director = director;
-		this.projectEditor = projectEditor;
 		this.isMultiBooks = isMultiBooks;
 		this.isMultiPosition = isMultiPosition;
 		this.isEduExpUsed = isEduExpUsed;
@@ -268,13 +265,6 @@ public class Material implements java.io.Serializable {
 		this.director = director;
 	}
 
-	public Long getProjectEditor() {
-		return this.projectEditor;
-	}
-
-	public void setProjectEditor(Long projectEditor) {
-		this.projectEditor = projectEditor;
-	}
 
 	public Boolean getIsMultiBooks() {
 		return this.isMultiBooks;
@@ -532,6 +522,7 @@ public class Material implements java.io.Serializable {
 		this.menderId = menderId;
 	}
 
+
 	@Override
 	public String toString() {
 		return "{id:" + id + ", materialName:" + materialName
@@ -540,11 +531,10 @@ public class Material implements java.io.Serializable {
 				+ actualDeadline + ", ageDeadline:" + ageDeadline
 				+ ", mailAddress:" + mailAddress + ", progress:" + progress
 				+ ", departmentId:" + departmentId + ", director:" + director
-				+ ", projectEditor:" + projectEditor + ", isMultiBooks:"
-				+ isMultiBooks + ", isMultiPosition:" + isMultiPosition
-				+ ", isEduExpUsed:" + isEduExpUsed + ", isEduExpRequired:"
-				+ isEduExpRequired + ", isWorkExpUsed:" + isWorkExpUsed
-				+ ", isWorkExpRequired:" + isWorkExpRequired
+				+ ", isMultiBooks:" + isMultiBooks + ", isMultiPosition:"
+				+ isMultiPosition + ", isEduExpUsed:" + isEduExpUsed
+				+ ", isEduExpRequired:" + isEduExpRequired + ", isWorkExpUsed:"
+				+ isWorkExpUsed + ", isWorkExpRequired:" + isWorkExpRequired
 				+ ", isTeachExpUsed:" + isTeachExpUsed
 				+ ", isTeachExpRequired:" + isTeachExpRequired
 				+ ", isAcadeUsed:" + isAcadeUsed + ", isAcadeRequired:"
@@ -568,7 +558,7 @@ public class Material implements java.io.Serializable {
 				+ ", gmtCreate:" + gmtCreate + ", founderId:" + founderId
 				+ ", gmtUpdate:" + gmtUpdate + ", menderId:" + menderId + "}";
 	}
-	
+
 	
 
 }

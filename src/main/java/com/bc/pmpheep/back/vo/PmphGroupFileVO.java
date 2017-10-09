@@ -13,7 +13,7 @@ import java.sql.Timestamp;
  * @author lyc
  * @date 2017年9月29日 下午3:55:53
  */
-public class PmphGroupFile {
+public class PmphGroupFileVO {
 	// 主键
 	private Long id;
 	//小组id
@@ -26,12 +26,14 @@ public class PmphGroupFile {
 	private Timestamp gmtCreate;
 	//上传者id
 	private Long memberId;
+	//上传者小组内名字
+	private String memberName;
 	//上传小组数
 	private Integer groupCount;
 	//下载次数
 	private Integer download;
 	
-	public PmphGroupFile() {
+	public PmphGroupFileVO() {
 		super();
 	}
 
@@ -81,6 +83,14 @@ public class PmphGroupFile {
 
 	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
+	}
+
+	public String getMemberName() {
+		return memberName;
+	}
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
 	}
 
 	public Integer getGroupCount() {

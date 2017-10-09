@@ -3,7 +3,9 @@ package com.bc.pmpheep.websocket;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -66,16 +68,18 @@ public class MyWebSocketHandler implements WebSocketHandler{
    * @author Mryang
    * @createDate 2017年9月27日 上午10:58:24
    * @param userIds  用户id的集合 （社内用户1_id,前台作家用户2_id，前台管理员3_id，) 
-   * @param jsonStr json形式的字符串
+   * @param webScocketMessage
    * @throws IOException
    */
-   public void sendWebSocketMessageToUser(String[] userIds, String jsonStr) throws IOException {
-	  TextMessage tMg = new TextMessage(jsonStr, true);
+   public void sendWebSocketMessageToUser(List<String> userIds, WebScocketMessage webScocketMessage) throws IOException  {
+	  TextMessage textMessage = new TextMessage(webScocketMessage.toString(), true);
       for(String userId:userIds){
-		  WebSocketSession webSocketSession = userSocketSessionMap.get(userId);
-	      if (webSocketSession != null && webSocketSession.isOpen()) {
-	    	  webSocketSession.sendMessage(tMg);
-	      }
+    	  if(null != userId && !"".equals(userId)){
+    		  WebSocketSession webSocketSession = userSocketSessionMap.get(userId);
+    	      if (webSocketSession != null && webSocketSession.isOpen()) {
+    	    	  webSocketSession.sendMessage(textMessage);
+    	      }
+    	  }
 	  }
    }
 
@@ -90,11 +94,7 @@ public class MyWebSocketHandler implements WebSocketHandler{
 	   //System.out.println("传输失败");
    }
 
-  
-  
-  
-
-	@Override
+   @Override
 	public boolean supportsPartialMessages() {
 		return false;
 	}
