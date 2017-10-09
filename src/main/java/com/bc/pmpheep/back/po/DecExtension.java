@@ -8,7 +8,7 @@ import org.apache.ibatis.type.Alias;
  *
  **/
 @SuppressWarnings("serial")
-@Alias("DecEduExp")
+@Alias("DecExtension")
 public class DecExtension implements java.io.Serializable {
 	
 	//主键

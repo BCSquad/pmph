@@ -109,13 +109,13 @@
     </delete>
     
     <!-- 分页测试 -->
-	<select id="getTestTotal" parameterType="Page" resultType="java.lang.Integer" >  
+	<select id="getTestTotal" parameterType="PageParameter" resultType="java.lang.Integer" >  
 	    select count(*) from area where true
 	     <if test="parameter.sort !=null ">  
 	        and sort = #{parameter.sort}
 	     </if>  
     </select> 
-	<select id="getTest" parameterType="Page" resultType="Area" >  
+	<select id="getTest" parameterType="PageParameter" resultType="Area" >  
 	    select * from area where true 
 	     <if test="parameter.sort !=null ">  
 	        and sort = #{parameter.sort}
