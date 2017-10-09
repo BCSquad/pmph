@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
@@ -231,15 +231,15 @@ public class WriterUserController {
 	@RequestMapping(value = "/user/writer")
 	public ResponseBean listWriterUser(@RequestParam("pageSize") Integer pageSize, @RequestParam("pageNumber") Integer pageNumber,
 			@RequestParam("name") String name, @RequestParam("rank") Integer rank, @RequestParam("orgName") String orgName) {
-		Page page = new Page<>();
+		PageParameter pageParameter = new PageParameter<>();
 		WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
 		writerUserManagerVO.setName(name);
 		writerUserManagerVO.setOrgName(orgName);
 		writerUserManagerVO.setRank(rank);
-		page.setPageNumber(pageNumber);
-		page.setPageSize(pageSize);
-		page.setParameter(writerUserManagerVO);
-		return new ResponseBean(writerUserService.getListWriterUser(page));
+		pageParameter.setPageNumber(pageNumber);
+		pageParameter.setPageSize(pageSize);
+		pageParameter.setParameter(writerUserManagerVO);
+		return new ResponseBean(writerUserService.getListWriterUser(pageParameter));
 	}
 
 	/**
