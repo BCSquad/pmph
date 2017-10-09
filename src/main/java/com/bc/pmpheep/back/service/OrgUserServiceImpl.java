@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.OrgUserDao;
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -115,40 +117,41 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	 * @return 需要的Page对象
 	 */
 	@Override
-	public Page<OrgUserManagerVO, OrgUserManagerVO> getListOrgUser(Page<OrgUserManagerVO, OrgUserManagerVO> page)
+	public PageResult<OrgUserManagerVO> getListOrgUser(PageParameter<OrgUserManagerVO> pageParameter)
 			throws CheckedServiceException {
-		if (null != page.getParameter().getUsername()) {
-			String username = page.getParameter().getUsername().trim();
+		if (null != pageParameter.getParameter().getUsername()) {
+			String username = pageParameter.getParameter().getUsername().trim();
 			if (!username.equals("")) {
-				page.getParameter().setUsername("%" + username + "%");
+				pageParameter.getParameter().setUsername("%" + username + "%");
 			} else {
-				page.getParameter().setUsername(username);
+				pageParameter.getParameter().setUsername(username);
 			}
 		}
-		if (null != page.getParameter().getRealname()) {
-			String realname = page.getParameter().getRealname().trim();
+		if (null != pageParameter.getParameter().getRealname()) {
+			String realname = pageParameter.getParameter().getRealname().trim();
 			if (!realname.equals("")) {
-				page.getParameter().setRealname("%" + realname + "%");
+				pageParameter.getParameter().setRealname("%" + realname + "%");
 			} else {
-				page.getParameter().setRealname(realname);
+				pageParameter.getParameter().setRealname(realname);
 			}
 		}
-		if (null != page.getParameter().getOrgName()) {
-			String orgName = page.getParameter().getOrgName().trim();
+		if (null != pageParameter.getParameter().getOrgName()) {
+			String orgName = pageParameter.getParameter().getOrgName().trim();
 			if (!orgName.equals("")) {
-				page.getParameter().setOrgName("%" + orgName + "%");
+				pageParameter.getParameter().setOrgName("%" + orgName + "%");
 			} else {
-				page.getParameter().setOrgName(orgName);
+				pageParameter.getParameter().setOrgName(orgName);
 			}
 		}
-		int total = orgUserDao.getListOrgUserTotal(page);
+		PageResult<OrgUserManagerVO> pageResult = new PageResult<OrgUserManagerVO>();
+		Tools.CopyPageParameter(pageParameter, pageResult);
+		int total = orgUserDao.getListOrgUserTotal(pageParameter);
 		if (total > 0) {
-			List<OrgUserManagerVO> list = orgUserDao.getListOrgUser(page);
-			page.setRows(list);
+			pageResult.setTotal(total);
+			List<OrgUserManagerVO> list = orgUserDao.getListOrgUser(pageParameter);
+			pageResult.setRows(list);
 		}
-		page.setTotal(total);
-
-		return page;
+		return pageResult;
 	}
 
 	@Override

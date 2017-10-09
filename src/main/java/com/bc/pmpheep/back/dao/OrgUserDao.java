@@ -1,7 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
 
@@ -61,11 +61,11 @@ public interface OrgUserDao {
 	 * 功能描述：分页查询作家用户
 	 * 使用示范：
 	 *
-	 * &#64;param page 传入的查询条件
+	 * &#64;param pageParameter 传入的查询条件
 	 * &#64;return 需要的作家用户集合
 	 * </pre>
 	 */
-	List<OrgUserManagerVO> getListOrgUser(Page<OrgUserManagerVO, OrgUserManagerVO> page);
+	List<OrgUserManagerVO> getListOrgUser(PageParameter<OrgUserManagerVO> pageParameter);
 
 	/**
 	 * 
@@ -73,10 +73,10 @@ public interface OrgUserDao {
 	 * 功能描述： 查询总共的条数
 	 * 使用示范：
 	 *
-	 * &#64;param page 传入查询条件
+	 * &#64;param pageParameter 传入查询条件
 	 * &#64;return 查询到的条数
 	 * </pre>
 	 */
-	Integer getListOrgUserTotal(Page<OrgUserManagerVO, OrgUserManagerVO> page);
+	Integer getListOrgUserTotal(PageParameter<OrgUserManagerVO> pageParameter);
 
 }

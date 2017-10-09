@@ -248,7 +248,7 @@
 	</select>
 
 	<!-- 分页查询 -->
-	<select id="getListOrgUserTotal" parameterType="Page"
+	<select id="getListOrgUserTotal" parameterType="PageParameter"
 		resultType="java.lang.Integer">
 		select count(*) from org_user u left join org o on o.id = u.org_id
 		where 1=1
@@ -262,7 +262,7 @@
 			and o.org_name like #{parameter.orgName}
 		</if>
 	</select>
-	<select id="getListOrgUser" parameterType="Page" resultType="OrgUserManagerVO">
+	<select id="getListOrgUser" parameterType="PageParameter" resultType="OrgUserManagerVO">
 		select
 		*
 		from org_user u left join org o on o.id = u.org_id where
