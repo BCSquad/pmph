@@ -1,8 +1,8 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
-
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.vo.MessageStateVO;
 import com.bc.pmpheep.general.po.Message;
@@ -16,11 +16,11 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public interface UserMessageService {
 	
 	/**
-	 * @param  page 带有分页参数和查询条件参数
-	 * @return Page<MessageStateVO,MessageStateVO>  包含 List<MessageStateVO>以及分页数据
+	 * @param  pageParameter 带有分页参数和查询条件参数
+	 * @return PageResult<MessageStateVO>  包含 List<MessageStateVO>以及分页数据
 	 * @throws CheckedServiceException
 	 */
-	Page<MessageStateVO,MessageStateVO> getMessageStateList(Page<MessageStateVO,MessageStateVO> page) throws CheckedServiceException;
+	PageResult<MessageStateVO> getMessageStateList(PageParameter<MessageStateVO> pageParameter) throws CheckedServiceException;
 	
 	/**
 	 *  向各个对象发送消息 

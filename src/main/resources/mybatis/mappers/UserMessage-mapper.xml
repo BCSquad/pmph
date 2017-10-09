@@ -98,7 +98,7 @@
 	</insert>
 
 	<!--MessageStateVO模糊查询获取列表-->
-	<select id="getMessageStateList" parameterType="Page" resultType="MessageStateVO">
+	<select id="getMessageStateList" parameterType="PageParameter" resultType="MessageStateVO">
 		SELECT a.id,a.msg_id,a.msg_type,a.gmt_create sendTime,a.gmt_update reciveTime,a.is_read,a.receiver_type,a.is_withdraw,t.count,
 		case when a.receiver_type =1 then b.realname when a.receiver_type =2 then c.realname when a.receiver_type =3 then d.realname end name,
 		case when a.receiver_type =1 then bd.dp_name  when a.receiver_type =2 then cd.org_name when a.receiver_type =3 then dd.org_name end dptname,

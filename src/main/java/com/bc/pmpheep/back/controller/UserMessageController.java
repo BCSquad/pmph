@@ -1,11 +1,14 @@
 package com.bc.pmpheep.back.controller;
 
 import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.service.UserMessageService;
 import com.bc.pmpheep.back.vo.MessageStateVO;
@@ -31,11 +34,14 @@ public class UserMessageController {
 	 * @createDate 2017年9月26日 上午9:46:19
 	 * @return 分页数据集
 	 */
-	@RequestMapping(value = "/getMessageStateList")
+	@RequestMapping(value = "/getMessageStateList", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseBean getMessageStateList(MessageStateVO messageStateVO,Page page) {
-		page.setParameter(messageStateVO);
-        return new ResponseBean(userMessageService.getMessageStateList(page));
+    public ResponseBean getMessageStateList(
+    		@RequestParam(name="pageNumber",defaultValue="1")Integer pageNumber
+		   ,@RequestParam(name="pageSize"  )Integer pageSize
+		   ,MessageStateVO messageStateVO) {
+		PageParameter<MessageStateVO> pageParameter =new PageParameter<MessageStateVO>(pageNumber,pageSize,messageStateVO);
+        return new ResponseBean(userMessageService.getMessageStateList(pageParameter));
     }
 	
 	/**

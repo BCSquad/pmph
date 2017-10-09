@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.UserMessageDao;
-import com.bc.pmpheep.back.plugin.Page;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.UserMessage;
@@ -31,6 +32,7 @@ import com.bc.pmpheep.websocket.WebScocketMessage;
  *
  **/
 @Service
+@SuppressWarnings("all")
 public class UserMessageServiceImpl extends BaseService implements UserMessageService {
 	
 	@Autowired
@@ -49,7 +51,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 	private MyWebSocketHandler handler;
 
 	@Override
-	public Page<MessageStateVO, MessageStateVO> getMessageStateList(Page<MessageStateVO, MessageStateVO> page) throws CheckedServiceException {
+	public PageResult<MessageStateVO> getMessageStateList(PageParameter<MessageStateVO> pageParameter) throws CheckedServiceException {
 		PmphUser pmphUser =ShiroSession.getPmphUser();
 		if(null == pmphUser){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "用户为空");
@@ -57,18 +59,21 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 		if(null == pmphUser.getId()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "用户为空");
 		}
-		if(null == page.getParameter().getMsgId() || "".equals(page.getParameter().getMsgId().trim())){
+		if(null == pageParameter.getParameter().getMsgId() || "".equals(pageParameter.getParameter().getMsgId().trim())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "消息为空");
 		}
-		page.getParameter().setSenderId(pmphUser.getId());
-		List<MessageStateVO>  messageStateList=userMessageDao.getMessageStateList(page);
+		pageParameter.getParameter().setSenderId(pmphUser.getId());
+		PageResult<MessageStateVO> pageResult = new PageResult<MessageStateVO>();
+		//将页面大小和页面页码拷贝
+		Tools.CopyPageParameter(pageParameter, pageResult);
+		//包含数据总条数的数据集
+		List<MessageStateVO>  messageStateList=userMessageDao.getMessageStateList(pageParameter);
 		if(null != messageStateList && messageStateList.size() > 0 ){
 			Integer count =   messageStateList.get(0).getCount();
-			page.setTotal(count);
-			page.setRows(messageStateList);
+			pageResult.setTotal(count);
+			pageResult.setRows(messageStateList);
 		}
-		page.setParameter(null);
-		return page;
+		return pageResult;
 	}
 	
 	@Override
