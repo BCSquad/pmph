@@ -20,7 +20,8 @@ public interface UserMessageService {
 	 * @return PageResult<MessageStateVO>  包含 List<MessageStateVO>以及分页数据
 	 * @throws CheckedServiceException
 	 */
-	PageResult<MessageStateVO> getMessageStateList(PageParameter<MessageStateVO> pageParameter) throws CheckedServiceException;
+	PageResult<MessageStateVO> listMessageState(PageParameter<MessageStateVO> pageParameter) throws CheckedServiceException;
+	
 	
 	/**
 	 *  向各个对象发送消息 
