@@ -32,9 +32,9 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	@Autowired
 	private PmphGroupDao pmphGroupDao;
 	@Autowired
-	FileService fileService;
+	private FileService fileService;
 	@Autowired
-	PmphGroupMemberService pmphGroupMemberService;
+	private PmphGroupMemberService pmphGroupMemberService;
 
 	/**
 	 * 

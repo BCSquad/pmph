@@ -27,11 +27,11 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	@Autowired
 	private PmphGroupMemberDao pmphGroupMemberDao;
 	@Autowired
-	PmphGroupService pmphGroupService;
+	private PmphGroupService pmphGroupService;
 	@Autowired
-	PmphUserService pmphUserService;
+	private PmphUserService pmphUserService;
 	@Autowired
-	WriterUserService writerUserService;
+	private WriterUserService writerUserService;
 
 	/**
 	 * 
