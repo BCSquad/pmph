@@ -62,7 +62,7 @@ public class UserMessageServiceTest extends BaseTest {
 		List<UserMessage> userMessageList = new ArrayList<>();
 		Random r = new Random();
 		for (int i = 0; i < 10; i++) {
-			userMessageList.add(new UserMessage(String.valueOf(r.nextInt(200)), (short) 1,
+			userMessageList.add(new UserMessage(String.valueOf(r.nextInt(200)), "asdhga", (short) 1,
 					Long.parseLong(String.valueOf(r.nextInt(200))), (short) 1,
 					Long.parseLong(String.valueOf(r.nextInt(200))), (short) 1, true, true, true, null, null));
 		}
