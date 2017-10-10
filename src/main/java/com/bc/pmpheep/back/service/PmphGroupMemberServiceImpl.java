@@ -11,6 +11,7 @@ import com.bc.pmpheep.back.dao.PmphGroupMemberDao;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -98,7 +99,11 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	public List<PmphGroupMemberVO> listPmphGroupMember(Long groupId) throws CheckedServiceException {
 		List<PmphGroupMemberVO> list = new ArrayList<>();
 		if (null == groupId || groupId == 0) {
-			groupId = pmphGroupService.listPmphGroup(new PmphGroup()).get(0).getId();// 初始化页面时没有参数传入则直接调用初始化时小组排序的第一个小组id
+			List<PmphGroupListVO> myPmphGroupListVOList =pmphGroupService.listPmphGroup(new PmphGroup());
+			if(null == myPmphGroupListVOList || myPmphGroupListVOList.size() == 0){
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "你没有小组！");
+			}
+			groupId = myPmphGroupListVOList.get(0).getId();// 初始化页面时没有参数传入则直接调用初始化时小组排序的第一个小组id
 		}
 		list = pmphGroupMemberDao.listPmphGroupMember(groupId);
 		for (PmphGroupMemberVO pmphGroupMemberVO : list) {
