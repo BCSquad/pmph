@@ -18,6 +18,7 @@ import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.util.ShiroSession;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.MessageStateVO;
+import com.bc.pmpheep.back.vo.UserMessageVO;
 import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.general.service.MessageService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -244,6 +245,21 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 		Integer sum = userMessageDao.deleteMessageByMsgId(msgId);
 		// messageService. 删除
 		return sum;
+	}
+
+	@Override
+	public PageResult<UserMessage> listMessage(PageParameter<UserMessage> pageParameter)
+			throws CheckedServiceException {
+		if (null != pageParameter.getParameter().getTitle() && (pageParameter.getParameter().getTitle()).equals("")) {
+			String title = pageParameter.getParameter().getTitle();
+			title = title.trim();
+			title = title.replace(" ", "%");
+			title = "%" + title + "%";
+			pageParameter.getParameter().setTitle(title);
+		}
+		PageResult<UserMessageVO> pageResult = new PageResult<>();
+		Tools.CopyPageParameter(pageParameter, pageResult);
+		return null;
 	}
 
 }

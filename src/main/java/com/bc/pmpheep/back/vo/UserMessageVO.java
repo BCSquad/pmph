@@ -30,7 +30,7 @@ public class UserMessageVO implements Serializable {
 	/**
 	 * 标题
 	 */
-	private String titel;
+	private String title;
 
 	/**
 	 * 消息内容
@@ -57,6 +57,7 @@ public class UserMessageVO implements Serializable {
 	 */
 	private String msgId;
 
+	
 	public Long getId() {
 		return id;
 	}
@@ -65,12 +66,12 @@ public class UserMessageVO implements Serializable {
 		this.id = id;
 	}
 
-	public String getTitel() {
-		return titel;
+	public String getTitkle() {
+		return title;
 	}
 
-	public void setTitel(String titel) {
-		this.titel = titel;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getContent() {
