@@ -2,14 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bc.pmpheep.back.dao.UserMessageDao">
-	
-	<!-- 通过id删除UserMessage   -->
-	<delete id="deleteMessageByMsgId" parameterType="java.lang.String"  >
-	 	delete from user_message where  msg_id = #{msgId}; 
+
+	<!-- 通过id删除UserMessage -->
+	<delete id="deleteMessageByMsgId" parameterType="java.lang.String">
+		delete from
+		user_message where msg_id = #{msgId};
 	</delete>
-	
-	<!-- 通过id 动态更新UserMessage  -->
-	<update id="updateUserMessageById"  parameterType="java.lang.Long"  >
+
+	<!-- 通过id 动态更新UserMessage -->
+	<update id="updateUserMessageById" parameterType="java.lang.Long">
 		update user_message
 		<set>
 			<if test="msgId != null">
@@ -19,7 +20,7 @@
 				msg_type = #{msgType},
 			</if>
 			<if test="senderId != null">
-				sender_id  = #{senderId},
+				sender_id = #{senderId},
 			</if>
 			<if test="senderType != null">
 				sender_type =#{senderType},
@@ -39,19 +40,19 @@
 			<if test="isDeleted != null">
 				is_deleted =#{isDeleted},
 			</if>
-		 </set>
-		 where  id = #{id} ;
+		</set>
+		where id = #{id} ;
 	</update>
 
-	<!-- 通过msgId 动态更新UserMessage  -->
-	<update id="updateUserMessageByMsgId"  parameterType="java.lang.String" >
+	<!-- 通过msgId 动态更新UserMessage -->
+	<update id="updateUserMessageByMsgId" parameterType="java.lang.String">
 		update user_message
 		<set>
 			<if test="msgType != null">
 				msg_type = #{msgType},
 			</if>
 			<if test="senderId != null">
-				sender_id  = #{senderId},
+				sender_id = #{senderId},
 			</if>
 			<if test="senderType != null">
 				sender_type =#{senderType},
@@ -71,80 +72,142 @@
 			<if test="isDeleted != null">
 				is_deleted =#{isDeleted},
 			</if>
-		 </set>
-		 where msg_id = #{msgId};
+		</set>
+		where msg_id = #{msgId};
 	</update>
-	
+
 	<!-- 根据消息id 获取 UserMessage集 -->
-	<select id="getMessageByMsgId"  parameterType="java.lang.String"  resultType="UserMessage">
-		select * from user_message where  msg_id = #{msgId};
+	<select id="getMessageByMsgId" parameterType="java.lang.String"
+		resultType="UserMessage">
+		select * from user_message where msg_id = #{msgId};
 	</select>
 
-	<!-- 批量插入 UserMessage-->
+	<!-- 批量插入 UserMessage -->
 	<insert id="addUserMessageBatch" parameterType="java.util.List">
-		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into user_message(msg_id,msg_type,sender_id,sender_type,receiver_id,receiver_type) values
-		<foreach collection ="list" item="UserMessage" index= "index" separator =",">
-                 ( #{UserMessage.msgId},
-                   #{UserMessage.msgType},
-                   #{UserMessage.senderId},
-                   #{UserMessage.senderType},
-                   #{UserMessage.receiverId}, 
-                   #{UserMessage.receiverType}
-                 )
-       </foreach >
+		insert into
+		user_message(msg_id,msg_type,sender_id,sender_type,receiver_id,receiver_type)
+		values
+		<foreach collection="list" item="UserMessage" index="index"
+			separator=",">
+			( #{UserMessage.msgId},
+			#{UserMessage.msgType},
+			#{UserMessage.senderId},
+			#{UserMessage.senderType},
+			#{UserMessage.receiverId},
+			#{UserMessage.receiverType}
+			)
+		</foreach>
 	</insert>
 
-	<!--MessageStateVO模糊查询获取列表-->
-	<select id="listMessageState" parameterType="PageParameter" resultType="MessageStateVO">
-		SELECT a.id,a.msg_id,a.msg_type,a.gmt_create sendTime,a.gmt_update reciveTime,a.is_read,a.receiver_type,a.is_withdraw,t.count,
-		case when a.receiver_type =1 then b.realname when a.receiver_type =2 then c.realname when a.receiver_type =3 then d.realname end name,
-		case when a.receiver_type =1 then bd.dp_name  when a.receiver_type =2 then cd.org_name when a.receiver_type =3 then dd.org_name end dptname,
-		case when a.receiver_type =1 then b.handphone  when a.receiver_type =2 then c.handphone when a.receiver_type =3 then d.handphone end handphone
-		from user_message a 
-		left join (select a.*,1 usertype from pmph_user a) b on b.id=a.receiver_id and b.usertype = a.receiver_type
-		left join pmph_department bd on bd.id=b.department_id 
-		left join (select a.*,2 usertype from writer_user a) c on c.id=a.receiver_id and c.usertype = a.receiver_type
-		left join org cd on cd.id = c.org_id  
-		left join (select a.*,3 usertype from org_user a) d on d.id=a.receiver_id and d.usertype = a.receiver_type 
+	<!--MessageStateVO模糊查询获取列表 -->
+	<select id="listMessageState" parameterType="PageParameter"
+		resultType="MessageStateVO">
+		SELECT a.id,a.msg_id,a.msg_type,a.gmt_create sendTime,a.gmt_update
+		reciveTime,a.is_read,a.receiver_type,a.is_withdraw,t.count,
+		case when
+		a.receiver_type =1 then b.realname when a.receiver_type =2 then
+		c.realname when a.receiver_type =3 then d.realname end name,
+		case when
+		a.receiver_type =1 then bd.dp_name when a.receiver_type =2 then
+		cd.org_name when a.receiver_type =3 then dd.org_name end dptname,
+		case
+		when a.receiver_type =1 then b.handphone when a.receiver_type =2 then
+		c.handphone when a.receiver_type =3 then d.handphone end handphone
+		from user_message a
+		left join (select a.*,1 usertype from pmph_user a)
+		b on b.id=a.receiver_id
+		and b.usertype = a.receiver_type
+		left join
+		pmph_department bd on
+		bd.id=b.department_id
+		left join (select a.*,2
+		usertype from writer_user a) c on
+		c.id=a.receiver_id and c.usertype =
+		a.receiver_type
+		left join org cd on
+		cd.id = c.org_id
+		left join (select
+		a.*,3 usertype from org_user a) d on d.id=a.receiver_id
+		and d.usertype
+		= a.receiver_type
 		left join org dd on dd.id = d.org_id,(
-			SELECT  count(*) count 
-            from user_message a 
-			left join (select a.*,1 usertype from pmph_user a) b on b.id=a.receiver_id and b.usertype = a.receiver_type
-			left join pmph_department bd on bd.id=b.department_id 
-			left join (select a.*,2 usertype from writer_user a) c on c.id=a.receiver_id and c.usertype = a.receiver_type
-			left join org cd on cd.id = c.org_id  
-			left join (select a.*,3 usertype from org_user a) d on d.id=a.receiver_id and d.usertype = a.receiver_type 
-			left join org dd on dd.id = d.org_id
-			where true and  sender_id = #{parameter.senderId} and msg_id = #{parameter.msgId}
-			<if test="parameter !=null ">
-				<if test="parameter.isRead != null">
-					and   is_read = #{parameter.isRead}  
-				</if>
-				<if test="parameter.name !=null and parameter.name != '' ">
-					and (bd.dp_name  like concat('%',#{parameter.name},'%') or cd.org_name like concat('%',#{parameter.name},'%')
-					  or dd.org_name like concat('%',#{parameter.name},'%')  or b.realname like concat('%',#{parameter.name},'%')
-					  or c.realname  like concat('%',#{parameter.name},'%')  or d.realname like concat('%',#{parameter.name},'%')  ) 
-				</if>
-			</if>
-		) t
-		where true and  sender_id = #{parameter.senderId} and msg_id = #{parameter.msgId}
+		SELECT count(*)
+		count
+		from user_message a
+		left join (select a.*,1 usertype from
+		pmph_user a) b on b.id=a.receiver_id
+		and b.usertype = a.receiver_type
+		left join pmph_department bd on bd.id=b.department_id
+		left join (select
+		a.*,2 usertype from writer_user a) c on
+		c.id=a.receiver_id and
+		c.usertype = a.receiver_type
+		left join org cd on cd.id = c.org_id
+		left
+		join (select a.*,3 usertype from org_user a) d on d.id=a.receiver_id
+		and d.usertype = a.receiver_type
+		left join org dd on dd.id = d.org_id
+		where true and sender_id = #{parameter.senderId} and msg_id =
+		#{parameter.msgId}
 		<if test="parameter !=null ">
 			<if test="parameter.isRead != null">
-				and   is_read = #{parameter.isRead}  
+				and is_read = #{parameter.isRead}
 			</if>
 			<if test="parameter.name !=null and parameter.name != '' ">
-				and (bd.dp_name  like concat('%',#{parameter.name},'%') or cd.org_name like concat('%',#{parameter.name},'%')
-				  or dd.org_name like concat('%',#{parameter.name},'%')  or b.realname like concat('%',#{parameter.name},'%')
-				  or c.realname  like concat('%',#{parameter.name},'%')  or d.realname like concat('%',#{parameter.name},'%')  ) 
+				and (bd.dp_name like concat('%',#{parameter.name},'%') or
+				cd.org_name
+				like concat('%',#{parameter.name},'%')
+				or dd.org_name like
+				concat('%',#{parameter.name},'%') or b.realname
+				like
+				concat('%',#{parameter.name},'%')
+				or c.realname like
+				concat('%',#{parameter.name},'%') or d.realname
+				like
+				concat('%',#{parameter.name},'%') )
+			</if>
+		</if>
+		) t
+		where true and sender_id = #{parameter.senderId} and msg_id =
+		#{parameter.msgId}
+		<if test="parameter !=null ">
+			<if test="parameter.isRead != null">
+				and is_read = #{parameter.isRead}
+			</if>
+			<if test="parameter.name !=null and parameter.name != '' ">
+				and (bd.dp_name like concat('%',#{parameter.name},'%') or
+				cd.org_name like concat('%',#{parameter.name},'%')
+				or dd.org_name
+				like concat('%',#{parameter.name},'%') or b.realname
+				like
+				concat('%',#{parameter.name},'%')
+				or c.realname like
+				concat('%',#{parameter.name},'%') or d.realname
+				like
+				concat('%',#{parameter.name},'%') )
 			</if>
 		</if>
 		order by name
-	    <if test="start !=null and pageNumber != null">  
-	        limit #{start},#{pageSize}  
-	    </if>  
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	<select id="listMessagetotal" parameterType="String" resultType="int">
+		select count(*) from user_message where 1=1
+		<if test="title != null and title != ''">
+			and title like #{title}
+		</if>
+	</select>
+	<select id="listMessage" parameterType="PageParameter"
+		resultType="MessageStateVO">
+		select * from user_message where 1=1
+		<if test="title != null and title != ''">
+			and title like #{title}
+		</if>
 	</select>
 
 </mapper>

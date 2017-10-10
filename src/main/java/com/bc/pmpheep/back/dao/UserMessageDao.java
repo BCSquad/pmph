@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.vo.MessageStateVO;
+import com.bc.pmpheep.back.vo.UserMessageVO;
 
 /**
  * 
@@ -28,6 +29,30 @@ public interface UserMessageDao {
 	 * @return List<MessageStateVO>
 	 */
 	List<MessageStateVO> listMessageState(PageParameter<MessageStateVO> pageParameter);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据条件查询所有的条数
+	 *
+	 * @param title
+	 *            标题
+	 * @return 总数
+	 *
+	 */
+	Integer listMessageTotal(String title);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：初始化/模糊查询系统消息 分页
+	 *
+	 * @param pageParameter
+	 *            分页条件以及查询条件
+	 * @return 一页的结果集
+	 *
+	 */
+	List<UserMessageVO> listMessage(PageParameter<UserMessage> pageParameter);
 
 	/**
 	 * 批量插入 UserMessage
