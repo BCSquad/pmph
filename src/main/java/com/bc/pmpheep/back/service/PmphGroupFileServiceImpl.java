@@ -58,10 +58,17 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 							"文件名称不能为空");
 				}
+				if (null == file){
+					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+							CheckedExceptionResult.NULL_PARAM, "文件不能为空");
+				}
 				pmphGroupFile.setFileId(fileService.save(file));
 				pmphGroupFileDao.addPmphGroupFile(pmphGroupFile);
 			}
 			result = "SUCCESS";
+		}else{
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "参数不能为空");
 		}
 		return result;
 	}

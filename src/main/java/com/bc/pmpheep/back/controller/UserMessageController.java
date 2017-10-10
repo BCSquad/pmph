@@ -41,7 +41,7 @@ public class UserMessageController {
 			@RequestParam(name = "pageSize") Integer pageSize, MessageStateVO messageStateVO) {
 		PageParameter<MessageStateVO> pageParameter = new PageParameter<MessageStateVO>(pageNumber, pageSize,
 				messageStateVO);
-		return new ResponseBean(userMessageService.getMessageStateList(pageParameter));
+		return new ResponseBean(userMessageService.listMessageState(pageParameter));
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class UserMessageController {
 	 * @param bookids
 	 * @return
 	 */
-	@RequestMapping(value = "/add/messageAgain", method = RequestMethod.POST)
+	@RequestMapping(value = "/add/messageagain", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseBean addUserMessageAgain(Message message, Integer sendType, String orgIds, String userIds,
 			String bookIds) {

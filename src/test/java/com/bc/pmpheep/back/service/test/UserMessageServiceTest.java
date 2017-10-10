@@ -43,11 +43,11 @@ public class UserMessageServiceTest extends BaseTest {
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void getMessageStateListTest() throws IOException {
-		ShiroSession.getShiroSessionUser().setAttribute(Const.SESSION_PMPH_USER, new PmphUser(2L));
+		ShiroSession.getShiroSessionUser().setAttribute(Const.SESSION_PMPH_USER, new PmphUser(1L));
 		MessageStateVO messageStateVO = new MessageStateVO();
 		PageParameter pageParameter = new PageParameter<>();
 		pageParameter.setParameter(messageStateVO);
-		userMessageService.getMessageStateList(pageParameter);
+		userMessageService.listMessageState(pageParameter);
 		userMessageService.addOrUpdateUserMessage(new Message(null, "eee"), 1, "1", null, "1", true);
 		userMessageService.addOrUpdateUserMessage(new Message("1", "eee"), 2, "2", "1", "1", false);
 		userMessageService.updateUserMessage(new Message("1", "eeeddd"));
@@ -62,7 +62,7 @@ public class UserMessageServiceTest extends BaseTest {
 		List<UserMessage> userMessageList = new ArrayList<>();
 		Random r = new Random();
 		for (int i = 0; i < 10; i++) {
-			userMessageList.add(new UserMessage(String.valueOf(r.nextInt(200)), (short) 1,
+			userMessageList.add(new UserMessage(String.valueOf(r.nextInt(200)), "asdhga", (short) 1,
 					Long.parseLong(String.valueOf(r.nextInt(200))), (short) 1,
 					Long.parseLong(String.valueOf(r.nextInt(200))), (short) 1, true, true, true, null, null));
 		}
