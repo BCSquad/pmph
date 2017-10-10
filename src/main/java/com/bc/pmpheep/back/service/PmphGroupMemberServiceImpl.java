@@ -10,6 +10,7 @@ import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphGroupMemberDao;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMember;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -27,6 +28,10 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	private PmphGroupMemberDao pmphGroupMemberDao;
 	@Autowired
 	PmphGroupService pmphGroupService;
+	@Autowired
+	PmphUserService pmphUserService;
+	@Autowired
+	WriterUserService writerUserService;
 
 	/**
 	 * 
@@ -98,9 +103,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		list = pmphGroupMemberDao.listPmphGroupMember(groupId);
 		for (PmphGroupMemberVO pmphGroupMemberVO : list) {
 			if (pmphGroupMemberVO.isIsWriter()) {
-				
+				pmphGroupMemberVO.setAvatar(writerUserService.get(pmphGroupMemberVO.getMemberId()).getAvatar());
 			} else {
-
+				pmphGroupMemberVO.setAvatar("");
 			}
 		}
 		return list;
