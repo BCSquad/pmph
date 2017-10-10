@@ -75,7 +75,7 @@ public class DecPositionServiceImpl implements DecPositionService{
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.NULL_PARAM, "id不能为空");
 		}
-		return decPositionById(id);
+		return decPositionDao.decPositionById(id);
 	}
 
 	@Override
