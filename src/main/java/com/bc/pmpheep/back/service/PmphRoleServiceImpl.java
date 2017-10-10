@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,13 +46,14 @@ public class PmphRoleServiceImpl implements PmphRoleService {
     }
 
     @Override
-    public void deleteRoleAndResource(List<Long> ids) throws CheckedServiceException {
+    public Integer deleteRoleAndResource(List<Long> ids) throws CheckedServiceException {
         if (0 == ids.size()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止删除");
         }
         roleDao.batchDelete(ids);
-        roleDao.batchDeleteRoleResource(ids);
+        Integer count = roleDao.batchDeleteRoleResource(ids);
+        return count;
     }
 
     @Override
@@ -65,7 +67,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public List<PmphRole> getList() throws CheckedServiceException {
-        return roleDao.listRole();
+        return roleDao.getListRole();
     }
 
     @Override
@@ -79,7 +81,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public List<PmphRole> listRole() throws CheckedServiceException {
-        return roleDao.listRole();
+        return roleDao.getListRole();
     }
 
     @Override
@@ -92,33 +94,33 @@ public class PmphRoleServiceImpl implements PmphRoleService {
     }
 
     @Override
-    public void addUserRole(Long uid, Long roleId) throws CheckedServiceException {
+    public Integer addUserRole(Long uid, Long roleId) throws CheckedServiceException {
         if (null == uid || null == roleId) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或用户ID为空时禁止新增");
         }
-        roleDao.addUserRole(uid, roleId);
-
+        Integer count = roleDao.addUserRole(uid, roleId);
+        return count;
     }
 
     @Override
-    public void deleteUserRole(Long uid, Long roleId) throws CheckedServiceException {
+    public Integer deleteUserRole(Long uid, Long roleId) throws CheckedServiceException {
         if (null == uid || null == roleId) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或用户ID为空时禁止删除");
         }
-        roleDao.deleteUserRole(uid, roleId);
-
+        Integer count = roleDao.deleteUserRole(uid, roleId);
+        return count;
     }
 
     @Override
-    public void deleteUserRoles(Long uid) throws CheckedServiceException {
+    public Integer deleteUserRoles(Long uid) throws CheckedServiceException {
         if (null == uid) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除");
         }
-        roleDao.deleteUserRoles(uid);
-
+        Integer count = roleDao.deleteUserRoles(uid);
+        return count;
     }
 
     @Override
@@ -131,22 +133,34 @@ public class PmphRoleServiceImpl implements PmphRoleService {
     }
 
     @Override
-    public void addRoleResource(Long roleId, Long resId) throws CheckedServiceException {
-        if (null == roleId || null == resId) {
+    public Integer addRoleResource(Long roleId, List<Long> permissionIds)
+    throws CheckedServiceException {
+        // 添加时先删除当前权限
+        deleteRoleResourceByRoleId(roleId);
+        if (null == roleId || permissionIds.size() < 0) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或资源ID为空时禁止新增");
         }
-        roleDao.addRoleResource(roleId, resId);
+        List<PmphRolePermission> lists = new ArrayList<PmphRolePermission>();
+        PmphRolePermission pmphRolePermission;
+        for (Long permissionId : permissionIds) {
+            pmphRolePermission = new PmphRolePermission();
+            pmphRolePermission.setRoleId(roleId);
+            pmphRolePermission.setPermissionId(permissionId);
+            lists.add(pmphRolePermission);
+        }
+        Integer count = roleDao.addRoleResource(lists);
+        return count;
     }
 
     @Override
-    public void deleteRoleResource(Long roleId, Long resId) throws CheckedServiceException {
+    public Integer deleteRoleResource(Long roleId, Long resId) throws CheckedServiceException {
         if (null == roleId || null == resId) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或资源ID为空时禁止删除");
         }
-        roleDao.deleteRoleResource(roleId, resId);
-
+        Integer count = roleDao.deleteRoleResource(roleId, resId);
+        return count;
     }
 
     @Override
@@ -166,6 +180,25 @@ public class PmphRoleServiceImpl implements PmphRoleService {
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除");
         }
         return roleDao.deleteRoleAndUser(ids);
+    }
+
+    @Override
+    public Integer deleteRoleResourceByRoleId(Long roleId) throws CheckedServiceException {
+        if (null == roleId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止删除");
+        }
+        Integer count = roleDao.deleteRoleResourceByRoleId(roleId);
+        return count;
+    }
+
+    @Override
+    public List<PmphRolePermission> getListPmphRolePermission(Long roleId) {
+        if (null == roleId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止查询");
+        }
+        return roleDao.getListPmphRolePermission(roleId);
     }
 
 }
