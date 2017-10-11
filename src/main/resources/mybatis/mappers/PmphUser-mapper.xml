@@ -138,18 +138,18 @@
 	</update>
 
 	<delete id="delete" parameterType="Long">
-		DELETE 
-			FROM pmph_user
-		where 
-			id = #{id}
+		DELETE
+		FROM pmph_user
+		where
+		id = #{id}
 	</delete>
 
 	<!-- 批量删除 -->
 	<delete id="batchDelete" parameterType="list">
-		DELETE FROM 
-			pmph_user
-		where 
-			id 
+		DELETE FROM
+		pmph_user
+		where
+		id
 		in
 		<foreach collection="ids" item="id" open="(" close=")"
 			separator=",">
@@ -159,43 +159,44 @@
 
 	<select id="get" parameterType="Long" resultType="PmphUser">
 		SELECT
-			username,
-			is_disabled,
-			realname,
-			department_id,
-			handphone,
-			email,
-			note,
-			sort,
-			is_deleted
+		username,
+		is_disabled,
+		realname,
+		department_id,
+		handphone,
+		email,
+		note,
+		sort,
+		is_deleted
 		FROM
-			pmph_user
+		pmph_user
 		WHERE
-			id = #{id}
+		id = #{id}
 	</select>
 
 	<select id="getListUser" resultType="PmphUser">
 		SELECT
-			username,
-			is_disabled,
-			realname,
-			department_id,
-			handphone,
-			email,
-			note,
-			sort,
-			is_deleted
+		username,
+		is_disabled,
+		realname,
+		department_id,
+		handphone,
+		email,
+		note,
+		sort,
+		is_deleted
 		FROM
-			pmph_user
-		where 
-			is_disabled=0 
+		pmph_user
+		where
+		is_disabled=0
 	</select>
 
-	<select id="getListByUsernameAndRealname" resultType="PmphUser" parameterType="map">
+	<select id="getListByUsernameAndRealname" resultType="PmphUser"
+		parameterType="map">
 		SELECT
-			*
+		*
 		FROM
-			pmph_user
+		pmph_user
 		<if test=" name!= null and name !=''">
 			WHERE
 			username LIKE CONCAT(CONCAT('%',#{name},'%')) AND
@@ -205,13 +206,14 @@
 		LIMIT #{start},#{size}
 	</select>
 
-	<select id="getByUsernameAndPassword" resultType="PmphUser" parameterType="map">
+	<select id="getByUsernameAndPassword" resultType="PmphUser"
+		parameterType="map">
 		SELECT
-			*
+		*
 		FROM
-			pmph_user
-		WHERE 
-			1=1
+		pmph_user
+		WHERE
+		1=1
 		<if test=" username!= null and username !=''">
 			and username = #{username}
 		</if>
@@ -222,87 +224,87 @@
 
 	<select id="getListByRole" parameterType="Long" resultType="PmphUser">
 		SELECT
-			tu.id,
-			tu.username,
-			tu.`password`,
-			tu.realname,
-			tu.`is_disabled`
+		tu.id,
+		tu.username,
+		tu.`password`,
+		tu.realname,
+		tu.`is_disabled`
 		FROM
-			pmph_user tu
-		LEFT JOIN 
-			pmph_user_role tur ON tu.id = tur.user_id
-		LEFT JOIN 
-			pmph_role tr ON tur.role_id = tr.id
-		WHERE 
-			tr.id =#{rid}
+		pmph_user tu
+		LEFT JOIN
+		pmph_user_role tur ON tu.id = tur.user_id
+		LEFT JOIN
+		pmph_role tr ON tur.role_id = tr.id
+		WHERE
+		tr.id =#{rid}
 	</select>
 
 	<!-- 根据用户 id 查询这个用户拥有的所有资源（这里的资源就代表权限） -->
 	<select id="getListAllResources" resultType="PmphPermission"
 		parameterType="Long">
 		SELECT
-			tr.`id`,
-			tr.`parent_id`,
-			tr.`path`,
-			tr.`permission_name`,
-			tr.menu_name,
-			tr.url
-		FROM 
-			`pmph_permission` tr
-		LEFT JOIN 
-			`pmph_role_permission` trr ON tr.`id` = trr.`permission_id`
-		LEFT JOIN 
-			`pmph_user_role` tur ON trr.`role_id` = tur.role_id
+		tr.`id`,
+		tr.`parent_id`,
+		tr.`path`,
+		tr.`permission_name`,
+		tr.menu_name,
+		tr.url
+		FROM
+		`pmph_permission` tr
+		LEFT JOIN
+		`pmph_role_permission` trr ON tr.`id` = trr.`permission_id`
+		LEFT JOIN
+		`pmph_user_role` tur ON trr.`role_id` = tur.role_id
 		WHERE
-			tur.user_id = #{uid}
+		tur.user_id = #{uid}
 	</select>
 
 	<!-- 根据用户 id 查询用户所具有的角色字符串表示 -->
 	<select id="getListRoleSnByUser" parameterType="Long"
 		resultType="String">
 		SELECT
-			tr.role_name
-		FROM 
-			`pmph_role` tr
+		tr.role_name
+		FROM
+		`pmph_role` tr
 		LEFT JOIN
-			`pmph_user_role` tur ON tr.`id` = tur.role_id
-		LEFT JOIN 
-			`pmph_user` tu
-		ON 
-			tur.`user_id` = tu.id
-		WHERE 
-			tu.`id` = #{uid}
+		`pmph_user_role` tur ON tr.`id` = tur.role_id
+		LEFT JOIN
+		`pmph_user` tu
+		ON
+		tur.`user_id` = tu.id
+		WHERE
+		tu.`id` = #{uid}
 	</select>
 
 	<!-- 根据用户 id 查询用户所具有的角色对象表示 -->
 	<select id="getListUserRole" parameterType="Long" resultType="PmphRole">
 		SELECT
-			tr.`id`,
-			tr.`role_name`
-		FROM 
-			`pmph_role` tr
+		tr.`id`,
+		tr.`role_name`
+		FROM
+		`pmph_role` tr
 		LEFT JOIN
-			`pmph_user_role` tur ON tr.`id` = tur.role_id
-		LEFT JOIN 
-			`pmph_user` tu
-		ON 
-			tur.`user_id` = tu.id
-		WHERE 
-			tu.`id` = #{uid}
+		`pmph_user_role` tur ON tr.`id` = tur.role_id
+		LEFT JOIN
+		`pmph_user` tu
+		ON
+		tur.`user_id` = tu.id
+		WHERE
+		tu.`id` = #{uid}
 	</select>
 
 	<!-- 查询表单的数据总数 -->
 	<select id="getPmphUserCount" resultType="Long">
-		select 
-			count(*)
+		select
+		count(*)
 		from
-			pmph_user
+		pmph_user
 	</select>
 
 	<select id="getListPmphUserTotal" parameterType="PageParameter"
 		resultType="int">
 		SELECT
-			count(*)
+		count(*)
 		FROM
 		(SELECT
 		u.*, GROUP_CONCAT(r.role_name ORDER BY r.id
@@ -311,10 +313,12 @@
 		FROM
 		pmph_user u
 		LEFT JOIN
-		pmph_user_role p ON u.id = p.user_id
+		pmph_user_role
+		p ON u.id = p.user_id
 		LEFT JOIN pmph_role r ON p.role_id
 		= r.id
-		LEFT JOIN pmph_department d ON u.department_id = d.id
+		LEFT JOIN
+		pmph_department d ON u.department_id = d.id
 		WHERE
 		1 = 1
 		<if test="parameter.username !=null and parameter.username !='' ">
@@ -329,7 +333,8 @@
 		GROUP BY d.dp_name) t
 	</select>
 
-	<select id="getListPmphUser" parameterType="PageParameter" resultType="PmphUserManagerVO">
+	<select id="getListPmphUser" parameterType="PageParameter"
+		resultType="PmphUserManagerVO">
 		SELECT
 		u.*, GROUP_CONCAT(r.role_name ORDER BY r.id ASC) role_name,
 		d.dp_name departmentName,d.path
@@ -350,24 +355,26 @@
 		<if test="parameter.path !=null and parameter.path !=''">
 			and d.path like #{parameter.path}
 		</if>
-		GROUP BY u.id ORDER BY d.dp_name limit #{pageNumber},#{pageSize}
+		GROUP BY u.id ORDER BY d.dp_name
+		LIMIT #{pageNumber},#{pageSize}
 	</select>
 	<!-- 根据用户id获取用户对应的权限 -->
-	<select id="getPmphUserPermissionByUserId" parameterType="Long" resultType="Long">
-		SELECT 
-			prp.`permission_id` 
+	<select id="getPmphUserPermissionByUserId" parameterType="Long"
+		resultType="Long">
+		SELECT
+		prp.`permission_id`
 		FROM
-		   `pmph_user` pu 
-		LEFT JOIN 
-			`pmph_user_role` pur 
-		ON 
-			pu.`id` = pur.`user_id` 
-		LEFT JOIN 
-			`pmph_role_permission` prp 
-		ON 
-			pur.`role_id` = prp.`role_id` 
-		WHERE 
-			pu.`id` = #{userId}
+		`pmph_user` pu
+		LEFT JOIN
+		`pmph_user_role` pur
+		ON
+		pu.`id` = pur.`user_id`
+		LEFT JOIN
+		`pmph_role_permission` prp
+		ON
+		pur.`role_id` = prp.`role_id`
+		WHERE
+		pu.`id` = #{userId}
 	</select>
 
 	<!-- 动态更新对象的写法 -->
