@@ -31,6 +31,14 @@ public interface OrgTypeService {
 	
 	/**
 	 * 
+	 * @param typeName 如果为null 查询全部  不为null查询对应得数据
+	 * @return  List<OrgType>
+	 * @throws CheckedServiceException
+	 */
+	List<OrgType> listOrgTypeByTypeName(String typeName) throws CheckedServiceException;
+	
+	/**
+	 * 
 	 * @param id
 	 * @return  影响行数
 	 * @throws CheckedServiceException
