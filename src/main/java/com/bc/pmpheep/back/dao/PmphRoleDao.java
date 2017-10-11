@@ -16,93 +16,97 @@ import com.bc.pmpheep.back.po.PmphUserRole;
  * 
  */
 public interface PmphRoleDao {
-	/**
-	 * 添加用户角色
-	 * 
-	 * @param pmphRole
-	 *            添加的用户角色的详细信息
-	 * @return 影响的行数
-	 */
+    /**
+     * 添加用户角色
+     * 
+     * @param pmphRole 添加的用户角色的详细信息
+     * @return 影响的行数
+     */
 
-	Integer add(PmphRole role);
+    Integer add(PmphRole role);
 
-	Integer delete(Long id);
+    Integer delete(Long id);
 
-	Integer batchDelete(@Param("ids") List<Long> ids);
+    Integer batchDelete(@Param("ids") List<Long> ids);
 
-	PmphRole get(Long id);
+    PmphRole get(Long id);
 
-	Integer update(PmphRole role);
+    Integer update(PmphRole role);
 
-	List<PmphRole> listRole();
+    List<PmphRole> getListRole();
 
-	PmphUserRole getUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
+    List<PmphRolePermission> getListPmphRolePermission(Long roleId);
 
-	/**
-	 * 为单个用户设置单个角色
-	 * 
-	 * @param userId
-	 * @param roleId
-	 * @return
-	 */
-	Integer addUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
+    PmphUserRole getUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
 
-	/**
-	 * 为单个用户设置多个角色
-	 * 
-	 * @param userId
-	 * @param roleIds
-	 * @return
-	 */
-	Integer addUserRoles(@Param("userId") Long userId, @Param("roleIds") List<Long> roleIds);
+    /**
+     * 为单个用户设置单个角色
+     * 
+     * @param userId
+     * @param roleId
+     * @return
+     */
+    Integer addUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
 
-	Integer deleteUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
+    /**
+     * 为单个用户设置多个角色
+     * 
+     * @param userId
+     * @param roleIds
+     * @return
+     */
+    Integer addUserRoles(@Param("userId") Long userId, @Param("roleIds") List<Long> roleIds);
 
-	/**
-	 * 删除某个用户的所有角色
-	 * 
-	 * @param uid
-	 */
-	Integer deleteUserRoles(Long uid);
+    Integer deleteUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
 
-	Integer batchDeleteRoleResource(@Param("roleIds") List<Long> roleIds);
+    /**
+     * 删除某个用户的所有角色
+     * 
+     * @param uid
+     */
+    Integer deleteUserRoles(Long uid);
 
-	/**
-	 * 根据角色id获取可以访问的所有资源
-	 * 
-	 * @param roleId
-	 * @return
-	 */
-	List<PmphPermission> getListRoleResource(Long roleId);
+    Integer batchDeleteRoleResource(@Param("roleIds") List<Long> roleIds);
 
-	Integer addRoleResource(@Param("roleId") Long roleId, @Param("permissionId") Long permissionId);
+    /**
+     * 根据角色id获取可以访问的所有资源
+     * 
+     * @param roleId
+     * @return
+     */
+    List<PmphPermission> getListRoleResource(Long roleId);
 
-	Integer deleteRoleResource(@Param("roleId") Long roleId, @Param("permissionId") Long permissionId);
+    Integer addRoleResource(List<PmphRolePermission> pmphRolePermission);
 
-	PmphRolePermission getResourceRole(@Param("roleId") Long roleId, @Param("permissionId") Long permissionId);
+    Integer deleteRoleResource(@Param("roleId") Long roleId,
+    @Param("permissionId") Long permissionId);
 
-	Integer deleteRoleAndUser(@Param("ids") List<Long> ids);
+    Integer deleteRoleResourceByRoleId(@Param("roleId") Long roleId);
 
-	/**
-	 * 
-	 * <pre>
+    PmphRolePermission getResourceRole(@Param("roleId") Long roleId,
+    @Param("permissionId") Long permissionId);
+
+    Integer deleteRoleAndUser(@Param("ids") List<Long> ids);
+
+    /**
+     * 
+     * <pre>
 	 * 功能描述：查询表单的数据总条数
 	 * 使用示范：
 	 *
 	 * &#64;return 表单的总条数
 	 * </pre>
-	 */
-	Long getPmphRoleCount();
+     */
+    Long getPmphRoleCount();
 
-	/**
-	 * 
-	 * 
-	 * 功能描述：根据角色名称获取角色id
-	 *
-	 * @param roleName
-	 *            角色名称
-	 * @return 角色id
-	 *
-	 */
-	Long getPmphRoleId(String roleName);
+    /**
+     * 
+     * 
+     * 功能描述：根据角色名称获取角色id
+     * 
+     * @param roleName 角色名称
+     * @return 角色id
+     * 
+     */
+    Long getPmphRoleId(String roleName);
 }

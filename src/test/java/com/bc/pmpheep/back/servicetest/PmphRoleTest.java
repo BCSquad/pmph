@@ -14,15 +14,16 @@ import com.bc.pmpheep.test.BaseTest;
 
 /**
  * PmphRole 单元测试
- * 
+ *
  * @author Administrator
- * 
+ *
  */
 public class PmphRoleTest extends BaseTest {
+
     private static final Logger log = LoggerFactory.getLogger(PmphRoleTest.class);
 
     @Autowired
-    PmphRoleService             roleService;
+    PmphRoleService roleService;
 
     /**
      * PmphRole 添加Test
@@ -35,7 +36,10 @@ public class PmphRoleTest extends BaseTest {
         role.setNote("角色11");
         roleService.add(role);// 添加角色
         roleService.addUserRole(1L, 4L);// 添加用户角色
-        roleService.addRoleResource(1L, 4L);// 添加角色资源
+        List<Long> list = new ArrayList<>();
+        list.add(4L);
+        list.add(5L);
+        roleService.addRoleResource(1L, list);// 添加角色资源
     }
 
     /**

@@ -11,6 +11,8 @@ import com.bc.pmpheep.back.dao.PmphGroupMemberDao;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.ShiroSession;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -119,8 +121,16 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	@Override
 	public String addPmphGroupMemberOnGroup(List<PmphGroupMember> pmphGroupMembers) throws CheckedServiceException {
 		String result = "FAIL";
-		if (pmphGroupMembers.size() > 0) {
-			for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
+		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		if (null == pmphUser||null == pmphUser.getId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "用户为空");
+		}
+		Long id = pmphUser.getId();
+		PmphGroupMember currentUser = pmphGroupMemberDao.getPmphGroupMemberById(id);
+		if (currentUser.isIsFounder()|currentUser.isIsAdmin()){
+		  if (pmphGroupMembers.size() > 0) {
+			 for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
 				if (null == pmphGroupMember.getGruopId()) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 							CheckedExceptionResult.ILLEGAL_PARAM, "成员小组id为空");
@@ -141,6 +151,10 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
 					"参数为空");
 		}
+	   }else{
+		   throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+				   CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
+	   }
 		return result;
 	}
 
