@@ -95,7 +95,7 @@ public class OrgController {
 	 *
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/list/org/{orgName}", method = RequestMethod.GET)
+	@RequestMapping(value = "/list/org", method = RequestMethod.GET)
 	public ResponseBean listOrgByOrgName(@RequestParam("orgName") String orgName) {
 		return new ResponseBean(orgService.listOrgByOrgName(orgName));
 	}
