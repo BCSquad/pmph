@@ -184,7 +184,7 @@
 		</if>
 	</select>
 	<!-- 新增用户或者修改用户是加载的机构 -->
-	<select id="getOrgListByOrgName" parameterType="String"
+	<select id="listOrgByOrgName" parameterType="String"
 		resultType="OrgVO">
 		select id,org_name from org where org_name like #{orgName};
 	</select>
