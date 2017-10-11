@@ -354,7 +354,7 @@
 			and d.path like #{parameter.path}
 		</if>
 		GROUP BY u.id ORDER BY d.dp_name
-		LIMIT #{pageNumber},#{pageSize}
+		LIMIT #{start},#{pageSize}
 	</select>
 	<!-- 根据用户id获取用户对应的权限 -->
 	<select id="getPmphUserPermissionByUserId" parameterType="Long"

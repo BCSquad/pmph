@@ -359,7 +359,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         }
         if (null != pageParameter.getParameter().getPath()) {
             String path = pageParameter.getParameter().getPath().trim();
-            if (!path.endsWith("")) {
+            if (!path.equals("")) {
                 pageParameter.getParameter().setPath(path + "%");
             } else {
                 pageParameter.getParameter().setPath(path);
