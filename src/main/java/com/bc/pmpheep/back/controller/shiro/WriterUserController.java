@@ -211,7 +211,7 @@ public class WriterUserController {
      */
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public ResponseBean delete(@RequestParam("userIds[]") List<Long> userIds) {
+    public ResponseBean delete(@RequestParam("userIds") List<Long> userIds) {
         return new ResponseBean(writerUserService.deleteUserAndRole(userIds));
     }
 

@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.controller.shiro;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,13 +74,17 @@ public class PmphLoginController {
         logger.info("password => " + password);
         try {
             PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
+            // 根据用户Id查询对应权限Id
+            List<Long> pmphUserPermissionIds =
+            pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
             // 验证成功在Session中保存用户信息
             request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
             // 验证成功在Session中保存用户Token信息
             request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
                                               new DesRun(password, username).enpsw);
-            // resultMap.put(Const.SESSION_PMPH_USER, pmphUser);
+            resultMap.put(Const.SESSION_PMPH_USER, pmphUser);
             resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun(password, username).enpsw);
+            resultMap.put("pmphUserPermissionIds", pmphUserPermissionIds);
             // 权限资源树集合
             // permissions = pmphPermissionService.getListAllParentMenu();
             // 拥有的权限资源
@@ -123,7 +128,7 @@ public class PmphLoginController {
         HttpSession session = request.getSession();
         session.removeAttribute(Const.SESSION_PMPH_USER);// 清除User信息
         session.removeAttribute(Const.SEESION_PMPH_USER_TOKEN);// 清除token
-        returnMap.put("url", "/login");
+        returnMap.put("url", "/pmph/login");
         return new ResponseBean(returnMap);
     }
 
