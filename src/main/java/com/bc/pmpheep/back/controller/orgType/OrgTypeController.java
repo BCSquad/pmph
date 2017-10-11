@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.back.service.OrgTypeService;
@@ -27,13 +28,13 @@ public class OrgTypeController {
 	 * 
 	 * @author Mryang
 	 * @createDate 2017年9月25日 下午3:00:28
-	 * @param id
+	 * @param typeName
 	 *            可以为null
 	 * @return
 	 */
-	@RequestMapping(value = "/orgtype/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/list/orgtype/{typeName}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseBean getOrgType(Long id) {
-		return new ResponseBean(orgTypeService.getOrgType(id));
+	public ResponseBean listOrgTypeByTypeName(@RequestParam("typeName") String typeName) {
+		return new ResponseBean(orgTypeService.listOrgTypeByTypeName(typeName));
 	}
 }

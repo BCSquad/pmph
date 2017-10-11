@@ -37,8 +37,8 @@ public class OrgTypeSeviceTest extends BaseTest {
 		Assert.assertTrue("更新失败", orgTypeService.updateOrgType(orgType) > 0 );
 		Assert.assertTrue("删除失败",orgTypeService.deleteOrgTypeById(1L) >= 0 );
 		Assert.assertNotNull("获取数据失败",orgTypeService.getOrgType(2L));
-		List<OrgType> orgTypeList=orgTypeService.getOrgType(null);
-		
+		Assert.assertNotNull("获取数据失败", orgTypeService.listOrgTypeByTypeName(null));
+		List<OrgType> orgTypeList=orgTypeService.listOrgTypeByTypeName(null);
 	}
 
 }

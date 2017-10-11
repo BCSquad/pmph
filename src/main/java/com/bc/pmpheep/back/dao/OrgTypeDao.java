@@ -26,6 +26,13 @@ public interface  OrgTypeDao {
 	
 	/**
 	 * 
+	 * @param typeName如果为null查询全部 , 不为null查询对应得数据
+	 * @return  List<OrgType>
+	 */
+	List<OrgType> listOrgTypeByTypeName(String typeName) ;
+	
+	/**
+	 * 
 	 * @param id
 	 * @return  影响行数
 	 */
