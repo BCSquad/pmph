@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -137,8 +138,7 @@ public class WriterUserServiceImpl implements WriterUserService {
         }
         writerRoleDao.deleteUserRoles(userId);
         writerRoleDao.addUserRoles(userId, rids);
-        this.update(user);
-        return user;
+        return update(user);
     }
 
     /**
@@ -155,7 +155,7 @@ public class WriterUserServiceImpl implements WriterUserService {
                                               CheckedExceptionResult.NULL_PARAM, "用户密码为空时禁止更新用户");
         }
         if (password != null) {
-            user.setPassword(ShiroKit.md5(user.getPassword(), user.getUsername()));
+            user.setPassword(new DesRun("", user.getPassword()).enpsw);
         }
         writerUserDao.update(user);
         return user;
