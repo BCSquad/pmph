@@ -350,7 +350,7 @@
 		<if test="parameter.path !=null and parameter.path !=''">
 			and d.path like #{parameter.path}
 		</if>
-		GROUP BY u.id ORDER BY d.dp_name
+		GROUP BY u.id ORDER BY d.dp_name limit #{pageNumber},#{pageSize}
 	</select>
 	<!-- 根据用户id获取用户对应的权限 -->
 	<select id="getPmphUserPermissionByUserId" parameterType="Long" resultType="Long">
