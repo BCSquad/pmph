@@ -44,36 +44,10 @@
 		where id = #{id} ;
 	</update>
 
-	<!-- 通过msgId 动态更新UserMessage -->
+	<!-- 通过msgId 撤销UserMessage -->
 	<update id="updateUserMessageByMsgId" parameterType="java.lang.String">
-		update user_message
-		<set>
-			<if test="msgType != null">
-				msg_type = #{msgType},
-			</if>
-			<if test="senderId != null">
-				sender_id = #{senderId},
-			</if>
-			<if test="senderType != null">
-				sender_type =#{senderType},
-			</if>
-			<if test="receiverId != null">
-				receiver_id =#{receiverId},
-			</if>
-			<if test="receiverType != null">
-				receiver_type = #{receiverType},
-			</if>
-			<if test="isRead != null">
-				is_read =#{isRead},
-			</if>
-			<if test="isWithdraw != null">
-				is_withdraw = #{isWithdraw},
-			</if>
-			<if test="isDeleted != null">
-				is_deleted =#{isDeleted},
-			</if>
-		</set>
-		where msg_id = #{msgId};
+		update
+		user_message set is_withdraw = true where msg_id = #{msgId};
 	</update>
 
 	<!-- 根据消息id 获取 UserMessage集 -->
