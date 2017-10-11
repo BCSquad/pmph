@@ -159,7 +159,15 @@
 
 	<select id="get" parameterType="Long" resultType="PmphUser">
 		SELECT
-			*
+			username,
+			is_disabled,
+			realname,
+			department_id,
+			handphone,
+			email,
+			note,
+			sort,
+			is_deleted
 		FROM
 			pmph_user
 		WHERE
@@ -168,9 +176,19 @@
 
 	<select id="getListUser" resultType="PmphUser">
 		SELECT
-			*
+			username,
+			is_disabled,
+			realname,
+			department_id,
+			handphone,
+			email,
+			note,
+			sort,
+			is_deleted
 		FROM
 			pmph_user
+		where 
+			is_disabled=0 
 	</select>
 
 	<select id="getListByUsernameAndRealname" resultType="PmphUser" parameterType="map">

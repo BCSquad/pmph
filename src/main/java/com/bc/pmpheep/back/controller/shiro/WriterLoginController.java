@@ -1,8 +1,6 @@
 package com.bc.pmpheep.back.controller.shiro;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,14 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.WriterPermissionService;
 import com.bc.pmpheep.back.service.WriterUserService;
-import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -72,42 +70,22 @@ public class WriterLoginController {
      */
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseBean login(WriterUser user, HttpServletRequest request) {
-        List<Long> permissionsIds = new ArrayList<Long>();// 用户拥有的权限资源ID集合
-        List<WriterPermission> permissions = new ArrayList<WriterPermission>();// 权限资源树集合
-        String username = user.getUsername();
-        String password = user.getPassword();
-        logger.debug("username => " + username);
-        logger.debug("password => " + password);
+    public ResponseBean login(@RequestParam("username") String username,
+    @RequestParam("password") String password, HttpServletRequest request) {
+        logger.info("username => " + username);
+        logger.info("password => " + password);
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         try {
             WriterUser writerUser =
-            writerUserService.login(username, ShiroKit.md5(password, username));
+            writerUserService.login(username, new DesRun("", password).enpsw);
             // 验证成功在Session中保存用户信息
             request.getSession().setAttribute(Const.SESSION_WRITER_USER, writerUser);
             // 验证成功在Session中保存用户Token信息
             request.getSession().setAttribute(Const.SEESION_WRITER_USER_TOKEN,
-                                              ShiroKit.md5(username, password));
-            // 权限资源树集合
-            permissions = writerPermissionService.getListAllParentMenu();
-            // 拥有的权限资源
-            // List<WriterPermission> havePermissions =
-            // writerUserService.getListAllResource(writerUser.getId());
-            // for (WriterPermission writerPermission : havePermissions) {
-            // permissionsIds.add(writerPermission.getId());
-            // }
-            // 设置是否拥有权限
-            // for (WriterPermission writerPermission : permissions) {
-            // if (permissionsIds.contains(writerPermission.getId())) {
-            // writerPermission.setHasMenu(true);
-            // List<WriterPermission> childList = writerPermission.getChildren();
-            // for (WriterPermission child : childList) {
-            // if (permissionsIds.contains(child.getId())) {
-            // child.setHasMenu(true);
-            // }
-            // }
-            // }
-            // }
-            return new ResponseBean(permissions);
+                                              new DesRun(password, username).enpsw);
+            // resultMap.put(Const.SESSION_WRITER_USER, writerUser);
+            resultMap.put(Const.SEESION_WRITER_USER_TOKEN, new DesRun(password, username).enpsw);
+            return new ResponseBean(resultMap);
         } catch (CheckedServiceException cException) {
             return new ResponseBean(cException);
         }

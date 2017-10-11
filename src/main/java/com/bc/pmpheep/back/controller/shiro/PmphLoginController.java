@@ -1,8 +1,6 @@
 package com.bc.pmpheep.back.controller.shiro;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,14 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.PmphPermissionService;
 import com.bc.pmpheep.back.service.PmphUserService;
-import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -43,7 +41,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * </pre>
  */
 @SuppressWarnings("all")
-@RequestMapping(value = "/")
+@RequestMapping(value = "/pmph")
 @Controller
 public class PmphLoginController {
     Logger                logger = LoggerFactory.getLogger(PmphLoginController.class);
@@ -66,22 +64,24 @@ public class PmphLoginController {
      */
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ResponseBean login(PmphUser user, HttpServletRequest request) {
-        List<Long> permissionsIds = new ArrayList<Long>();// 用户拥有的权限资源ID集合
-        List<PmphPermission> permissions = new ArrayList<PmphPermission>();// 权限资源树集合
-        String username = user.getUsername();
-        String password = user.getPassword();
+    public ResponseBean login(@RequestParam("username") String username,
+    @RequestParam("password") String password, HttpServletRequest request) {
+        // List<Long> permissionsIds = new ArrayList<Long>();// 用户拥有的权限资源ID集合
+        // List<PmphPermission> permissions = new ArrayList<PmphPermission>();// 权限资源树集合
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         logger.info("username => " + username);
         logger.info("password => " + password);
         try {
-            PmphUser pmphUser = pmphUserService.login(username, ShiroKit.md5(password, username));
+            PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
             // 验证成功在Session中保存用户信息
             request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
             // 验证成功在Session中保存用户Token信息
             request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
-                                              ShiroKit.md5(username, password));
+                                              new DesRun(password, username).enpsw);
+            // resultMap.put(Const.SESSION_PMPH_USER, pmphUser);
+            resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun(password, username).enpsw);
             // 权限资源树集合
-            permissions = pmphPermissionService.getListAllParentMenu();
+            // permissions = pmphPermissionService.getListAllParentMenu();
             // 拥有的权限资源
             // List<PmphPermission> havePermissions =
             // pmphUserService.getListAllResource(pmphUser.getId());
@@ -100,7 +100,7 @@ public class PmphLoginController {
             // }
             // }
             // }
-            return new ResponseBean(permissions);
+            return new ResponseBean(resultMap);
         } catch (CheckedServiceException cException) {
             return new ResponseBean(cException);
         }

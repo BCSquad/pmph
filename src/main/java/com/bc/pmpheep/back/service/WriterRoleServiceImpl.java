@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,36 +28,6 @@ public class WriterRoleServiceImpl implements WriterRoleService {
     WriterRoleDao roleDao;
 
     @Override
-    public WriterRole add(WriterRole writerRole) throws CheckedServiceException {
-        if (null == writerRole) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "角色属性为空时禁止新增角色");
-        }
-        roleDao.add(writerRole);
-        return writerRole;
-    }
-
-    @Override
-    public Integer delete(Long id) throws CheckedServiceException {
-        if (null == id) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止删除");
-        }
-        return roleDao.delete(id);
-    }
-
-    @Override
-    public void deleteRoleAndResource(List<Long> ids) throws CheckedServiceException {
-        if (0 == ids.size()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止删除");
-        }
-        roleDao.batchDelete(ids);
-        roleDao.batchDeleteRoleResource(ids);
-
-    }
-
-    @Override
     public WriterRole get(Long id) throws CheckedServiceException {
         if (null == id) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
@@ -68,15 +39,6 @@ public class WriterRoleServiceImpl implements WriterRoleService {
     @Override
     public List<WriterRole> getList() throws CheckedServiceException {
         return roleDao.getListRole();
-    }
-
-    @Override
-    public Integer update(WriterRole role) throws CheckedServiceException {
-        if (null == role.getId()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止更新");
-        }
-        return roleDao.update(role);
     }
 
     @Override
@@ -94,62 +56,12 @@ public class WriterRoleServiceImpl implements WriterRoleService {
     }
 
     @Override
-    public void addUserRole(Long uid, Long roleId) throws CheckedServiceException {
-        if (null == uid || null == roleId) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "角色ID或用户ID为空时禁止新增");
-        }
-        roleDao.addUserRole(uid, roleId);
-
-    }
-
-    @Override
-    public void deleteUserRole(Long uid, Long roleId) throws CheckedServiceException {
-        if (null == uid || null == roleId) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "角色ID或用户ID为空时禁止删除");
-        }
-        roleDao.deleteUserRole(uid, roleId);
-
-    }
-
-    @Override
-    public void deleteUserRoles(Long uid) throws CheckedServiceException {
-        if (null == uid) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除");
-        }
-        roleDao.deleteUserRoles(uid);
-
-    }
-
-    @Override
     public List<WriterPermission> getListRoleResource(Long roleId) throws CheckedServiceException {
         if (null == roleId) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止查询");
         }
         return roleDao.getListRoleResource(roleId);
-    }
-
-    @Override
-    public void addRoleResource(Long roleId, Long resId) throws CheckedServiceException {
-        if (null == roleId || null == resId) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "角色ID或资源ID为空时禁止新增");
-        }
-        roleDao.addRoleResource(roleId, resId);
-
-    }
-
-    @Override
-    public void deleteRoleResource(Long roleId, Long resId) throws CheckedServiceException {
-        if (null == roleId || null == resId) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "角色ID或资源ID为空时禁止删除");
-        }
-        roleDao.deleteRoleResource(roleId, resId);
-
     }
 
     @Override
@@ -163,12 +75,139 @@ public class WriterRoleServiceImpl implements WriterRoleService {
     }
 
     @Override
+    public List<Long> getListPmphWriterPermissionIdByRoleId(Long roleId) {
+        if (null == roleId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止查询");
+        }
+        return roleDao.getWriterRolePermissionIdByRoleId(roleId);
+    }
+
+    @Override
+    public List<WriterRolePermission> getListWriterRolePermission(Long roleId) {
+        if (null == roleId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止查询");
+        }
+        return roleDao.getWriterRolePermissionByRoleId(roleId);
+    }
+
+    @Override
+    public WriterRole add(WriterRole writerRole) throws CheckedServiceException {
+        if (null == writerRole) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色属性为空时禁止新增角色");
+        }
+        roleDao.add(writerRole);
+        return writerRole;
+    }
+
+    @Override
+    public Integer addUserRole(Long uid, Long roleId) throws CheckedServiceException {
+        if (null == uid || null == roleId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色ID或用户ID为空时禁止新增");
+        }
+        return roleDao.addUserRole(uid, roleId);
+
+    }
+
+    @Override
+    public Integer addRoleResource(Long roleId, List<Long> permissionIds)
+    throws CheckedServiceException {
+        // 添加时先删除当前权限
+        deleteRoleResourceByRoleId(roleId);
+        if (null == roleId || permissionIds.size() < 0) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色ID或资源ID为空时禁止新增");
+        }
+        List<WriterRolePermission> lists = new ArrayList<WriterRolePermission>();
+        WriterRolePermission writerRolePermission;
+        for (Long permissionId : permissionIds) {
+            writerRolePermission = new WriterRolePermission();
+            writerRolePermission.setRoleId(roleId);
+            writerRolePermission.setPermissionId(permissionId);
+            lists.add(writerRolePermission);
+        }
+        return roleDao.addRoleResource(lists);
+
+    }
+
+    @Override
+    public Integer update(WriterRole role) throws CheckedServiceException {
+        if (null == role.getId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止更新");
+        }
+        return roleDao.update(role);
+    }
+
+    @Override
+    public Integer delete(Long id) throws CheckedServiceException {
+        if (null == id) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止删除");
+        }
+        return roleDao.delete(id);
+    }
+
+    @Override
+    public Integer deleteRoleAndResource(List<Long> ids) throws CheckedServiceException {
+        if (0 == ids.size()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止删除");
+        }
+        roleDao.batchDelete(ids);
+        Integer count = roleDao.batchDeleteRoleResource(ids);
+        return count;
+    }
+
+    @Override
+    public Integer deleteUserRole(Long uid, Long roleId) throws CheckedServiceException {
+        if (null == uid || null == roleId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色ID或用户ID为空时禁止删除");
+        }
+        return roleDao.deleteUserRole(uid, roleId);
+
+    }
+
+    @Override
+    public Integer deleteUserRoles(Long uid) throws CheckedServiceException {
+        if (null == uid) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除");
+        }
+        return roleDao.deleteUserRoles(uid);
+
+    }
+
+    @Override
+    public Integer deleteRoleResource(Long roleId, Long resId) throws CheckedServiceException {
+        if (null == roleId || null == resId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色ID或资源ID为空时禁止删除");
+        }
+        return roleDao.deleteRoleResource(roleId, resId);
+
+    }
+
+    @Override
     public Integer deleteRoleAndUser(List<Long> ids) throws CheckedServiceException {
         if (0 == ids.size()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除");
         }
         return roleDao.deleteRoleAndUser(ids);
+    }
+
+    @Override
+    public Integer deleteRoleResourceByRoleId(Long roleId) throws CheckedServiceException {
+        if (null == roleId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止删除");
+        }
+        return roleDao.deleteRoleResourceByRoleId(roleId);
     }
 
 }

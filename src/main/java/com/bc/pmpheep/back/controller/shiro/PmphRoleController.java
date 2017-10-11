@@ -38,7 +38,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  */
 @SuppressWarnings("all")
 @Controller
-@RequestMapping("/pmph/role")
+@RequestMapping("role/pmph")
 public class PmphRoleController {
     Logger                logger = LoggerFactory.getLogger(PmphRoleController.class);
     @Autowired
@@ -155,8 +155,8 @@ public class PmphRoleController {
 	 * 功能描述：
 	 * 使用示范：
 	 *
-	 * @param pmphRolePermission
-	 * @param check
+	 * @param roleId
+	 * @param permissionIds
 	 * @return
 	 * </pre>
      */
@@ -204,6 +204,6 @@ public class PmphRoleController {
     @ResponseBody
     @RequestMapping(value = "/list/role", method = RequestMethod.GET)
     public ResponseBean listRole() {
-        return new ResponseBean(roleService.listRole());
+        return new ResponseBean(roleService.getListRole());
     }
 }

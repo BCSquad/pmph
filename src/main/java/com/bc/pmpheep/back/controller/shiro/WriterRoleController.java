@@ -1,6 +1,5 @@
 package com.bc.pmpheep.back.controller.shiro;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bc.pmpheep.back.po.PmphRolePermission;
-import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.service.WriterPermissionService;
 import com.bc.pmpheep.back.service.WriterRoleService;
@@ -41,7 +38,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  */
 @SuppressWarnings("all")
 @Controller
-@RequestMapping("/writer/role")
+@RequestMapping("/role/writer")
 public class WriterRoleController {
     Logger                  logger = LoggerFactory.getLogger(WriterRoleController.class);
     @Autowired
@@ -141,29 +138,14 @@ public class WriterRoleController {
      * 功能描述：获取资源
      * 使用示范：
      *
-     * @param id
-     * @param model
+     * @param roleId
      * @return
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/resources/{id}", method = RequestMethod.GET)
-    public ResponseBean getListResources(@PathVariable("id") Long id) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        // 查询这个角色拥有的资源集合
-        List<WriterPermission> hasResourceList = writerRoleService.getListRoleResource(id);
-        List<Long> hasResourceIds = new ArrayList<>();
-        for (WriterPermission resource : hasResourceList) {
-            hasResourceIds.add(resource.getId());
-        }
-        // 查询所有资源列表
-        List<WriterPermission> resourceAllList = writerPermissionService.getListResource();
-        // 查询角色对象
-        WriterRole role = writerRoleService.get(id);
-        map.put("hasResourceIds", hasResourceIds);
-        map.put("resourceList", resourceAllList);
-        map.put("role", role);
-        return new ResponseBean(map);
+    @RequestMapping(value = "/resources/{roleId}", method = RequestMethod.GET)
+    public ResponseBean getListResources(@PathVariable("roleId") Long roleId) {
+        return new ResponseBean(writerRoleService.getListWriterRolePermission(roleId));
     }
 
     /**
@@ -173,31 +155,16 @@ public class WriterRoleController {
      * 功能描述：
      * 使用示范：
      *
-     * @param pmphRolePermission
-     * @param check
+     * @param roleId
+     * @param permissionIds
      * @return
      * </pre>
      */
     @ResponseBody
     @RequestMapping(value = "/resource", method = RequestMethod.POST)
-    public ResponseBean resource(PmphRolePermission pmphRolePermission, Integer check) {
-        logger.debug(pmphRolePermission.toString());
-        Long roleId = pmphRolePermission.getRoleId();
-        Long resourceId = pmphRolePermission.getPermissionId();
-        Map<String, Object> result = new HashMap<String, Object>();
-        if (check != null) {
-            if (check == 0) {
-                writerRoleService.deleteRoleResource(roleId, resourceId);
-            }
-            if (check == 1) {
-                writerRoleService.addRoleResource(roleId, resourceId);
-            }
-            result.put("success", true);
-        } else {
-            result.put("success", false);
-            result.put("errorInfo", "数据修改失败");
-        }
-        return new ResponseBean(result);
+    public ResponseBean resource(@RequestParam("roleId") Long roleId,
+    @RequestParam("permissionIds[]") List<Long> permissionIds) {
+        return new ResponseBean(writerRoleService.addRoleResource(roleId, permissionIds));
     }
 
     /**

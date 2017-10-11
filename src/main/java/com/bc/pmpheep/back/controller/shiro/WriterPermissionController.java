@@ -33,7 +33,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  * </pre>
  */
 @SuppressWarnings("all")
-@RequestMapping("/writer/resource")
+@RequestMapping("/permission/writer")
 @Controller
 public class WriterPermissionController {
     Logger                  logger = LoggerFactory.getLogger(WriterPermissionController.class);
