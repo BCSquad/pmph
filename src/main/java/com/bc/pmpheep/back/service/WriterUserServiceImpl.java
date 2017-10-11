@@ -307,9 +307,9 @@ public class WriterUserServiceImpl implements WriterUserService {
         if (null != pageParameter.getParameter().getName()) {
             String name = pageParameter.getParameter().getName().trim();
             if (!name.equals("")) {
-                pageParameter.getParameter().setUsername("%" + name + "%");
+                pageParameter.getParameter().setName("%" + name + "%");
             } else {
-                pageParameter.getParameter().setUsername(name);
+                pageParameter.getParameter().setName(name);
             }
         }
         if (null != pageParameter.getParameter().getOrgName()) {
