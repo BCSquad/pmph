@@ -350,7 +350,7 @@
 		<if test="parameter.path !=null and parameter.path !=''">
 			and d.path like #{parameter.path}
 		</if>
-		GROUP BY d.dp_name
+		GROUP BY u.id ORDER BY d.dp_name
 	</select>
 
 	<!-- 动态更新对象的写法 -->
