@@ -60,25 +60,53 @@
 		<include refid="value" />
 		);
 	</insert>
+	
+	<insert id="addUserRole" parameterType="map">
+		INSERT INTO
+			`pmph_user_role`(`user_id`,`role_id`)
+		VALUES
+			(
+				#{userId},#{roleId}
+			)
+	</insert>
 
-	<delete id="delete" parameterType="Long">
-		DELETE FROM 
-			pmph_role
-		WHERE 
-			id= #{id}
-	</delete>
-
-	<delete id="batchDelete" parameterType="list">
-		DELETE FROM 
-			pmph_role
-		WHERE 
+	<!-- 批量添加用户角色关联表数据 -->
+	<insert id="addUserRoles" parameterType="map">
+		INSERT INTO 
+			`pmph_user_role`(`user_id`,`role_id`)
+		VALUES
+			<foreach collection="roleIds" item="role_id" separator=",">
+				(#{userId},#{role_id})
+			</foreach>
+	</insert>
+	
+	<insert id="addRoleResource" parameterType="list">
+		INSERT INTO
+			pmph_role_permission(role_id,permission_id)
+		VALUES
+		  <foreach item="item" index="key" collection="list" open="" separator="," close="">
+		  	(#{item.roleId}, #{item.permissionId})
+		  </foreach>    
+	</insert>
+	
+	<!-- 根据角色名称获取角色id -->
+	<select id="getPmphRoleId" parameterType="java.lang.String"
+		resultType="java.lang.Long">
+		select 
 			id 
-		IN
-		<foreach collection="ids" separator="," item="id" open="("
-			close=")">
-			#{id}
-		</foreach>
-	</delete>
+		from 
+			pmph_role 
+		where 
+			role_name = #{roleName};
+	</select>
+	
+	<!-- 查询表单的数据总数 -->
+	<select id="getPmphRoleCount" resultType="Long">
+		select
+			count(*)
+		from
+			pmph_role
+	</select>
 
 	<select id="get" parameterType="Long" resultType="PmphRole">
 		SELECT
@@ -88,7 +116,79 @@
 		WHERE 
 			id = #{id}
 	</select>
+	
+	<select id="getListRole" resultType="PmphRole">
+		SELECT
+			id,
+			role_name,
+			is_disabled,
+			note,
+			sort
+		FROM
+			pmph_role
+	</select>
+	
+	<select id="getPmphRolePermissionByRoleId" parameterType="Long" resultType="PmphRolePermission">
+		SELECT
+			*
+		FROM
+			pmph_role_permission
+		WHERE 
+			role_id = #{roleId}
+	</select>
+	
+	<select id="getPmphRolePermissionIdByRoleId" parameterType="Long" resultType="Long">
+		SELECT
+			permission_id
+		FROM
+			pmph_role_permission
+		WHERE 
+			role_id = #{roleId}
+	</select>
 
+	<select id="getUserRole" resultType="PmphUserRole" parameterType="map">
+		SELECT
+			id,
+			user_id,
+			role_id
+		FROM
+			pmph_user_role
+		WHERE
+			user_id = #{userId} AND role_id = #{roleId}
+	</select>
+	
+	<!-- 根据角色 id 查询该角色 id 下的所有资源 -->
+	<select id="getListRoleResource" parameterType="Long" resultType="PmphPermission">
+		SELECT
+			tr.`id`,
+			tr.`parent_id`,
+			tr.`path`,
+			tr.`permission_name`,
+			tr.`menu_name`,
+			tr.`url`
+		FROM 
+			`pmph_permission` tr
+		LEFT JOIN 
+			`pmph_role_permission` trr 
+		ON 
+			tr.`id` = trr.`permission_id`
+		WHERE 
+			trr.`role_id` = #{roleId}
+	</select>
+	
+	<select id="getResourceRole" parameterType="map" resultType="PmphPermission">
+		SELECT
+			id,
+			role_id,
+			permission_id
+		FROM
+			pmph_role_permission
+		WHERE
+			role_id =#{roleId} 
+		AND 
+			permission_id = #{permissionId}
+	</select>
+	
 	<update id="update" parameterType="PmphRole">
 		UPDATE
 			pmph_role
@@ -108,56 +208,6 @@
 		</set>
 	</update>
 
-	<select id="getListRole" resultType="PmphRole">
-		SELECT
-			id,
-			role_name,
-			is_disabled,
-			note,
-			sort
-		FROM
-			pmph_role
-	</select>
-	
-	<select id="getListPmphRolePermission" parameterType="Long" resultType="PmphRolePermission">
-		SELECT
-			*
-		FROM
-			pmph_role_permission
-		WHERE 
-			role_id = #{roleId}
-	</select>
-
-	<select id="getUserRole" resultType="PmphUserRole" parameterType="map">
-		SELECT
-			id,
-			user_id,
-			role_id
-		FROM
-			pmph_user_role
-		WHERE
-			user_id = #{userId} AND role_id = #{roleId}
-	</select>
-
-	<insert id="addUserRole" parameterType="map">
-		INSERT INTO
-			`pmph_user_role`(`user_id`,`role_id`)
-		VALUES
-			(
-				#{userId},#{roleId}
-			)
-	</insert>
-
-	<!-- 批量添加用户角色关联表数据 -->
-	<insert id="addUserRoles" parameterType="map">
-		INSERT INTO 
-			`pmph_user_role`(`user_id`,`role_id`)
-		VALUES
-			<foreach collection="roleIds" item="role_id" separator=",">
-				(#{userId},#{role_id})
-			</foreach>
-	</insert>
-
 	<delete id="deleteUserRole" parameterType="map">
 		DELETE FROM
 			pmph_user_role
@@ -174,35 +224,6 @@
 		WHERE
 			user_id = #{userId}
 	</delete>
-
-	<!-- 根据角色 id 查询该角色 id 下的所有资源 -->
-	<select id="getListRoleResource" parameterType="Long"
-		resultType="PmphPermission">
-		SELECT
-			tr.`id`,
-			tr.`parent_id`,
-			tr.`path`,
-			tr.`permission_name`,
-			tr.`menu_name`,
-			tr.`url`
-		FROM 
-			`pmph_permission` tr
-		LEFT JOIN 
-			`pmph_role_permission` trr 
-		ON 
-			tr.`id` = trr.`permission_id`
-		WHERE 
-			trr.`role_id` = #{roleId}
-	</select>
-
-	<insert id="addRoleResource" parameterType="list">
-		INSERT INTO
-			pmph_role_permission(role_id,permission_id)
-		VALUES
-		  <foreach item="item" index="key" collection="list" open="" separator="," close="">
-		  	(#{item.roleId}, #{item.permissionId})
-		  </foreach>    
-	</insert>
 	
 	<delete id="deleteRoleResource" parameterType="map">
 		DELETE FROM
@@ -219,19 +240,6 @@
 		WHERE 
 			role_id = #{roleId}
 	</delete>
-
-	<select id="getResourceRole" parameterType="map" resultType="PmphPermission">
-		SELECT
-			id,
-			role_id,
-			permission_id
-		FROM
-			pmph_role_permission
-		WHERE
-			role_id =#{roleId} 
-		AND 
-			permission_id = #{permissionId}
-	</select>
 
 	<delete id="batchDeleteRoleResource" parameterType="list">
 		DELETE FROM 
@@ -256,22 +264,23 @@
 			#{id}
 		</foreach>
 	</delete>
-	<!-- 根据角色名称获取角色id -->
-	<select id="getPmphRoleId" parameterType="java.lang.String"
-		resultType="java.lang.Long">
-		select 
-			id 
-		from 
-			pmph_role 
-		where 
-			role_name = #{roleName};
-	</select>
-	<!-- 查询表单的数据总数 -->
-	<select id="getPmphRoleCount" resultType="Long">
-		select
-			count(*)
-		from
+	
+	<delete id="delete" parameterType="Long">
+		DELETE FROM 
 			pmph_role
-	</select>
+		WHERE 
+			id= #{id}
+	</delete>
 
+	<delete id="batchDelete" parameterType="list">
+		DELETE FROM 
+			pmph_role
+		WHERE 
+			id 
+		IN
+		<foreach collection="ids" separator="," item="id" open="("
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
 </mapper>

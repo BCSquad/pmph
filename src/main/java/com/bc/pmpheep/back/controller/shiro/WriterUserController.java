@@ -45,7 +45,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  */
 @SuppressWarnings("all")
 @Controller
-@RequestMapping(value = "/writer/user")
+@RequestMapping(value = "/user/writer")
 public class WriterUserController {
     Logger            logger = LoggerFactory.getLogger(WriterUserController.class);
     @Autowired

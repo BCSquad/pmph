@@ -27,7 +27,7 @@ public class PmphUser implements java.io.Serializable {
     /**
      * 是否禁用
      */
-    private Integer isDisabled;
+    private Boolean isDisabled;
     /**
      * 真实姓名
      */
@@ -55,7 +55,7 @@ public class PmphUser implements java.io.Serializable {
     /**
      * 是否逻辑删除
      */
-    private Integer isDeleted;
+    private Boolean isDeleted;
     /**
      * 创建时间
      */
@@ -69,8 +69,9 @@ public class PmphUser implements java.io.Serializable {
 
     public PmphUser() {
     }
+
     public PmphUser(Long id) {
-    	this.id=id;
+        this.id = id;
     }
 
     public PmphUser(String username, String password) {
@@ -79,8 +80,8 @@ public class PmphUser implements java.io.Serializable {
 
     }
 
-    public PmphUser(String username, String password, Integer isDisabled, String realname,
-    long departmentId, String handphone, String email, String note, int sort, Integer isDeleted,
+    public PmphUser(String username, String password, Boolean isDisabled, String realname,
+    long departmentId, String handphone, String email, String note, int sort, Boolean isDeleted,
     Date gmtCreate, Date gmtUpdate, String loginType) {
         this.username = username;
         this.password = password;
@@ -188,28 +189,28 @@ public class PmphUser implements java.io.Serializable {
     /**
      * @return the isDisabled
      */
-    public Integer getIsDisabled() {
+    public Boolean getIsDisabled() {
         return isDisabled;
     }
 
     /**
      * @param isDisabled the isDisabled to set
      */
-    public void setIsDisabled(Integer isDisabled) {
+    public void setIsDisabled(Boolean isDisabled) {
         this.isDisabled = isDisabled;
     }
 
     /**
      * @return the isDeleted
      */
-    public Integer getIsDeleted() {
+    public Boolean getIsDeleted() {
         return isDeleted;
     }
 
     /**
      * @param isDeleted the isDeleted to set
      */
-    public void setIsDeleted(Integer isDeleted) {
+    public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
 

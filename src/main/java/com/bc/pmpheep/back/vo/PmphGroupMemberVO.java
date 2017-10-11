@@ -17,6 +17,7 @@ import org.apache.ibatis.type.Alias;
  * @修改人 ：曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("PmphGroupMemberVO")
 public class PmphGroupMemberVO implements Serializable {
 	/**

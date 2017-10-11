@@ -32,7 +32,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  * @审核人 ：
  * </pre>
  */
-@RequestMapping("/pmph/resource")
+@RequestMapping("/permission/pmph")
 @Controller
 public class PmphPermissionController {
     Logger                logger = LoggerFactory.getLogger(PmphPermissionController.class);

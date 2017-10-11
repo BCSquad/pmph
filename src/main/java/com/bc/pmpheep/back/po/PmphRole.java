@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.ibatis.type.Alias;
 
@@ -42,6 +43,9 @@ public class PmphRole implements Serializable {
      * 修改时间
      */
     private Date    gmtUpdate;
+
+    // 角色对应权限
+    List<Long>      pmphRolePermissionChild;
 
     public PmphRole() {
     }
@@ -121,6 +125,20 @@ public class PmphRole implements Serializable {
 
     public void setGmtUpdate(Date gmtUpdate) {
         this.gmtUpdate = gmtUpdate;
+    }
+
+    /**
+     * @return the pmphRolePermissionChild
+     */
+    public List<Long> getPmphRolePermissionChild() {
+        return pmphRolePermissionChild;
+    }
+
+    /**
+     * @param pmphRolePermissionChild the pmphRolePermissionChild to set
+     */
+    public void setPmphRolePermissionChild(List<Long> pmphRolePermissionChild) {
+        this.pmphRolePermissionChild = pmphRolePermissionChild;
     }
 
     @Override
