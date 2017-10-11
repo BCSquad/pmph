@@ -21,6 +21,7 @@ import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
+import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -154,7 +155,7 @@ public class PmphUserServiceImpl implements PmphUserService {
                                               CheckedExceptionResult.NULL_PARAM, "用户密码为空时禁止更新用户");
         }
         if (password != null) {
-            user.setPassword(ShiroKit.md5(user.getPassword(), user.getUsername()));
+            user.setPassword(new DesRun("", user.getPassword()).enpsw);
         }
         userDao.update(user);
         return user;
