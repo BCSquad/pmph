@@ -378,6 +378,15 @@ public class WriterUserServiceImpl implements WriterUserService {
         return result;
     }
 
+    @Override
+    public List<Long> getWriterUserPermissionByUserId(Long userId) {
+        if (null == userId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+        }
+        return writerUserDao.getWriterUserPermissionByUserId(userId);
+    }
+
     // /**
     // *
     // * <pre>

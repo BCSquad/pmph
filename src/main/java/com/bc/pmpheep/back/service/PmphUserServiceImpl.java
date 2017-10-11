@@ -398,4 +398,13 @@ public class PmphUserServiceImpl implements PmphUserService {
         }
         return result;
     }
+
+    @Override
+    public List<Long> getPmphUserPermissionByUserId(Long userId) {
+        if (null == userId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+        }
+        return userDao.getPmphUserPermissionByUserId(userId);
+    }
 }

@@ -163,7 +163,7 @@ public class PmphRoleController {
     @ResponseBody
     @RequestMapping(value = "/resources", method = RequestMethod.POST)
     public ResponseBean resource(@RequestParam("roleId") Long roleId,
-    @RequestParam("permissionIds[]") List<Long> permissionIds) {
+    @RequestParam("permissionIds") List<Long> permissionIds) {
         return new ResponseBean(roleService.addRoleResource(roleId, permissionIds));
     }
 
@@ -179,7 +179,7 @@ public class PmphRoleController {
      */
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public ResponseBean deleteRole(@RequestParam("roleIds[]") List<Long> roleIds) {
+    public ResponseBean deleteRole(@RequestParam("roleIds") List<Long> roleIds) {
         logger.debug(roleIds.toString());
         Map<String, Object> result = new HashMap<String, Object>();
         for (Long roleId : roleIds) {

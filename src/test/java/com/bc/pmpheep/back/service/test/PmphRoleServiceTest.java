@@ -17,13 +17,13 @@ import com.bc.pmpheep.test.BaseTest;
 
 /**
  * PmphRole 单元测试
- *
+ * 
  * @author Administrator
- *
+ * 
  */
 public class PmphRoleServiceTest extends BaseTest {
 
-    Logger logger = LoggerFactory.getLogger(PmphRoleServiceTest.class);
+    Logger          logger = LoggerFactory.getLogger(PmphRoleServiceTest.class);
 
     @Autowired
     PmphRoleService roleService;
@@ -65,7 +65,7 @@ public class PmphRoleServiceTest extends BaseTest {
     public void getPmphRoleTest() {
         Assert.assertNotNull(roleService.get(1L));// 按ID查询
         Assert.assertNotNull(roleService.getList());// 查询所有
-        Assert.assertNotNull(roleService.listRole());//
+        Assert.assertNotNull(roleService.getListRole());//
         Assert.assertNotNull(roleService.getUserRole(1L, 2L));// 根据用户ID，角色ID查询
         Assert.assertNotNull(roleService.getListRoleResource(1L));// 根据角色ID查询资源
         Assert.assertNotNull(roleService.getResourceRole(1L, 1L));// 根据角色ID查询资源

@@ -161,9 +161,9 @@ public class WriterRoleController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/resource", method = RequestMethod.POST)
+    @RequestMapping(value = "/resources", method = RequestMethod.POST)
     public ResponseBean resource(@RequestParam("roleId") Long roleId,
-    @RequestParam("permissionIds[]") List<Long> permissionIds) {
+    @RequestParam("permissionIds") List<Long> permissionIds) {
         return new ResponseBean(writerRoleService.addRoleResource(roleId, permissionIds));
     }
 
@@ -179,7 +179,7 @@ public class WriterRoleController {
      */
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public ResponseBean deleteRole(@RequestParam("roleIds[]") List<Long> roleIds) {
+    public ResponseBean deleteRole(@RequestParam("roleIds") List<Long> roleIds) {
         Map<String, Object> result = new HashMap<String, Object>();
         logger.debug(roleIds.toString());
         for (Long roleId : roleIds) {

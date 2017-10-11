@@ -352,6 +352,23 @@
 		</if>
 		GROUP BY d.dp_name
 	</select>
+	<!-- 根据用户id获取用户对应的权限 -->
+	<select id="getPmphUserPermissionByUserId" parameterType="Long" resultType="Long">
+		SELECT 
+			prp.`permission_id` 
+		FROM
+		   `pmph_user` pu 
+		LEFT JOIN 
+			`pmph_user_role` pur 
+		ON 
+			pu.`id` = pur.`user_id` 
+		LEFT JOIN 
+			`pmph_role_permission` prp 
+		ON 
+			pur.`role_id` = prp.`role_id` 
+		WHERE 
+			pu.`id` = #{userId}
+	</select>
 
 	<!-- 动态更新对象的写法 -->
 	<update id="updatePmphUserOfBack" parameterType="PmphUserManagerVO">
