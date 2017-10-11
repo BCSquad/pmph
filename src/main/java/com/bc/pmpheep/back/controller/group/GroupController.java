@@ -2,7 +2,6 @@ package com.bc.pmpheep.back.controller.group;
 
 import java.io.IOException;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,15 +9,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupFile;
-import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.PmphGroupMemberService;
 import com.bc.pmpheep.back.service.PmphGroupService;
 import com.bc.pmpheep.back.util.Tools;
+import com.bc.pmpheep.back.vo.ListPar;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -115,8 +113,8 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/add/pmphgroupmember", method = RequestMethod.POST)
-	public ResponseBean addPmphGroupMemberOnGroup(List<PmphGroupMember> pmphGroupMembers) {
-		return new ResponseBean(pmphGroupMemberService.addPmphGroupMemberOnGroup(pmphGroupMembers));
+	public ResponseBean addPmphGroupMemberOnGroup(ListPar ListPar) {
+		return new ResponseBean(pmphGroupMemberService.addPmphGroupMemberOnGroup(ListPar.getPmphGroupMembers()));
 	}
 
 	/**

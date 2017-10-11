@@ -82,15 +82,26 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	@Override
 	public String deletePmphGroupById(PmphGroup pmphGroup) throws CheckedServiceException {
 		String result = "FAIL";
-		if (null == pmphGroup.getId()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		if (null == pmphUser || null == pmphUser.getId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "该用户为空");
+		}
+		Long id = pmphUser.getId();
+		PmphGroupMember currentUser = pmphGroupMemberService.getPmphGroupMemberById(id);
+		if (currentUser.isIsFounder()){
+		   if (null == pmphGroup.getId()) {
+			   throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
-		}
-		int num = pmphGroupDao.deletePmphGroupById(pmphGroup.getId());
-		if (num > 0) {
+		    }
+		    int num = pmphGroupDao.deletePmphGroupById(pmphGroup.getId());
+		    if (num > 0) {
 			result = pmphGroupMemberService.deletePmphGroupMemberOnGroup(pmphGroup.getId());
-		}
-
+		  }
+	   }else{
+		   throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+				   CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
+	   }
 		return result;
 	}
 
@@ -168,15 +179,27 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	@Override
 	public PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup)
 			throws CheckedServiceException, IOException {
-		if (null != file) {
-			pmphGroup.setGroupImage(fileService.save(file));
+		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		if (null == pmphUser || null == pmphUser.getId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "该用户为空");
 		}
-		if (null == pmphGroup.getId()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
-					"小组id不能为空");
+		Long id = pmphUser.getId();
+		PmphGroupMember currentUser = pmphGroupMemberService.getPmphGroupMemberById(id);
+		if (currentUser.isIsFounder()||currentUser.isIsAdmin()){
+		    if (null != file) {
+			     pmphGroup.setGroupImage(fileService.save(file));
+		    }
+		    if (null == pmphGroup.getId()) {
+			     throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					    "小组id不能为空");
+		    }
+		  pmphGroupDao.updatePmphGroup(pmphGroup);
+		}else{
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
 		}
-		pmphGroupDao.updatePmphGroup(pmphGroup);
-		return pmphGroup;
+	  return pmphGroup;		
 	}
 
 }

@@ -43,7 +43,8 @@
 
 	<!-- 根据id删除一个 -->
 	<delete id="deleteOrgTypeById" parameterType="java.lang.Long">
-		delete from org_type where id=#{id} ;
+		delete from
+		org_type where id=#{id} ;
 	</delete>
 
 	<!-- 更新OrgType -->
@@ -62,9 +63,17 @@
 
 	<!-- 根据id查询一个OrgType 或者全部OrgType -->
 	<select id="getOrgType" parameterType="OrgType" resultType="OrgType">
-		select * from org_type 
+		select * from org_type
 		<if test="id != null">
-			 where id=#{id} ; 
+			where id=#{id} ;
+		</if>
+	</select>
+
+	<!-- 根据id查询一个OrgType 或者全部OrgType -->
+	<select id="listOrgTypeByTypeName" parameterType="String" resultType="OrgType">
+		select * from org_type
+		<if test="typeName != null and typeName != ''">
+			where type_name like #{typeName} ;
 		</if>
 	</select>
 	<!-- 查询表单的数据总数 -->
