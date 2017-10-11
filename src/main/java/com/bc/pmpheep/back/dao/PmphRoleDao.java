@@ -35,7 +35,9 @@ public interface PmphRoleDao {
 
     List<PmphRole> getListRole();
 
-    List<PmphRolePermission> getListPmphRolePermission(Long roleId);
+    List<PmphRolePermission> getPmphRolePermissionByRoleId(Long roleId);
+
+    List<Long> getPmphRolePermissionIdByRoleId(Long roleId);
 
     PmphUserRole getUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
 

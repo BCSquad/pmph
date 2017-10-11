@@ -34,7 +34,7 @@ public interface WriterRoleService {
      * @param ids
      * @return
      */
-    void deleteRoleAndResource(List<Long> ids) throws CheckedServiceException;
+    Integer deleteRoleAndResource(List<Long> ids) throws CheckedServiceException;
 
     /**
      * 根据 id 加载角色对象
@@ -80,7 +80,7 @@ public interface WriterRoleService {
      * @param uid
      * @param roleId
      */
-    void addUserRole(Long uid, Long roleId) throws CheckedServiceException;
+    Integer addUserRole(Long uid, Long roleId) throws CheckedServiceException;
 
     /**
      * 根据用户 id 和角色 id 删除一条用户角色关系数据
@@ -88,14 +88,14 @@ public interface WriterRoleService {
      * @param uid
      * @param roleId
      */
-    void deleteUserRole(Long uid, Long roleId) throws CheckedServiceException;
+    Integer deleteUserRole(Long uid, Long roleId) throws CheckedServiceException;
 
     /**
      * 删除某个用户的所有角色
      * 
      * @param uid
      */
-    void deleteUserRoles(Long uid) throws CheckedServiceException;
+    Integer deleteUserRoles(Long uid) throws CheckedServiceException;
 
     /**
      * 根据角色id获取可以访问的所有资源
@@ -106,12 +106,36 @@ public interface WriterRoleService {
     List<WriterPermission> getListRoleResource(Long roleId) throws CheckedServiceException;
 
     /**
+     * 
+     * <pre>
+     * 功能描述：根据角色ID查询对应权限对象集合
+     * 使用示范：
+     *
+     * @param roleId 角色ID
+     * @return
+     * </pre>
+     */
+    List<WriterRolePermission> getListWriterRolePermission(Long roleId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据角色ID查询对应权限Id集合
+     * 使用示范：
+     *
+     * @param roleId 角色ID
+     * @return
+     * </pre>
+     */
+    List<Long> getListPmphWriterPermissionIdByRoleId(Long roleId);
+
+    /**
      * 根据角色 id 和权限 id 增加一条用户权限关联数据
      * 
      * @param roleId
      * @param resId
      */
-    void addRoleResource(Long roleId, Long resId) throws CheckedServiceException;
+    Integer addRoleResource(Long roleId, List<Long> permissionIds) throws CheckedServiceException;
 
     /**
      * 根据角色 id 和权限 id 删除一条用户权限关联数据
@@ -119,7 +143,15 @@ public interface WriterRoleService {
      * @param roleId
      * @param resId
      */
-    void deleteRoleResource(Long roleId, Long resId) throws CheckedServiceException;
+    Integer deleteRoleResource(Long roleId, Long resId) throws CheckedServiceException;
+
+    /**
+     * 根据角色 id 删除用户权限关联数据
+     * 
+     * @param roleId 角色ID
+     * @param resId 权限ID
+     */
+    Integer deleteRoleResourceByRoleId(Long roleId) throws CheckedServiceException;
 
     /**
      * 根据角色 id 和权限 id 查询一条用户权限关联数据
@@ -130,5 +162,16 @@ public interface WriterRoleService {
      */
     WriterRolePermission getResourceRole(Long roleId, Long resId) throws CheckedServiceException;
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：
+     * 使用示范：
+     *
+     * @param ids 角色ID集合
+     * @return
+     * @throws CheckedServiceException
+     * </pre>
+     */
     Integer deleteRoleAndUser(List<Long> ids) throws CheckedServiceException;
 }

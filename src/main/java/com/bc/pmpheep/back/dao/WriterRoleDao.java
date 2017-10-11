@@ -35,6 +35,10 @@ public interface WriterRoleDao {
 
     List<WriterRole> getListRole();
 
+    List<WriterRolePermission> getWriterRolePermissionByRoleId(Long roleId);
+
+    List<Long> getWriterRolePermissionIdByRoleId(Long roleId);
+
     WriterUserRole getUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
 
     /**
@@ -74,10 +78,12 @@ public interface WriterRoleDao {
      */
     List<WriterPermission> getListRoleResource(Long roleId);
 
-    Integer addRoleResource(@Param("roleId") Long roleId, @Param("permissionId") Long permissionId);
+    Integer addRoleResource(List<WriterRolePermission> writerRolePermission);
 
     Integer deleteRoleResource(@Param("roleId") Long roleId,
     @Param("permissionId") Long permissionId);
+
+    Integer deleteRoleResourceByRoleId(@Param("roleId") Long roleId);
 
     WriterRolePermission getResourceRole(@Param("roleId") Long roleId,
     @Param("permissionId") Long permissionId);

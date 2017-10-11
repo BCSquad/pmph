@@ -46,7 +46,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  */
 @SuppressWarnings("all")
 @Controller
-@RequestMapping(value = "/pmph/user")
+@RequestMapping(value = "/user/pmph")
 public class PmphUserController {
     Logger                logger = LoggerFactory.getLogger(PmphUserController.class);
     @Autowired
