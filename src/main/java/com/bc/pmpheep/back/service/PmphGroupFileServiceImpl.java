@@ -12,6 +12,10 @@ import com.bc.pmpheep.back.dao.PmphGroupFileDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphGroupFile;
+import com.bc.pmpheep.back.po.PmphGroupMember;
+import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.ShiroSession;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.general.service.FileService;
@@ -29,7 +33,8 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFileService {
 	@Autowired
 	private PmphGroupFileDao pmphGroupFileDao;
-
+    @Autowired
+    private PmphGroupMemberService pmphGroupMemberService;
 	@Autowired
 	private FileService fileService;
 
@@ -99,13 +104,29 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 	@Override
 	public String deletePmphGroupFileById(List<Long> ids) throws CheckedServiceException {
 		String result = "FAIL";
-		if (null == ids || ids.size() == 0) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-					"主键为空");
-		} else {
-			pmphGroupFileDao.deletePmphGroupFileById(ids);
-			result = "SUCCESS";
+		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		if (null == pmphUser || null == pmphUser.getId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "该用户为空");
 		}
+		Long id = pmphUser.getId();
+		PmphGroupMember currentUser = pmphGroupMemberService.getPmphGroupMemberById(id);
+	    if (null == ids || ids.size() == 0) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, 
+			        		  CheckedExceptionResult.NULL_PARAM, "主键为空");
+		  } else {
+			  for (Long fileId : ids){
+				  Long uploaderId = pmphGroupFileDao.getPmphGroupFileById(fileId).getMemberId();
+				  if (uploaderId == currentUser.getGruopId()||currentUser.isIsFounder()
+						  ||currentUser.isIsAdmin()){
+					  pmphGroupFileDao.deletePmphGroupFileById(fileId);					  
+				  }else{
+					  throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+							  CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
+				  }
+			  }
+			     result = "SUCCESS";
+		  }
 		return result;
 	}
 

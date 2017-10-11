@@ -134,7 +134,11 @@ public class GroupController {
 	@ResponseBody
 	@RequestMapping(value = "/update/pmphgroup", method = RequestMethod.PUT)
 	public ResponseBean updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup) {
-		return new ResponseBean(pmphGroupService.updatePmphGroup(pmphGroup));
+		try {
+			return new ResponseBean(pmphGroupService.updatePmphGroupOnGroup(file, pmphGroup));
+		} catch (CheckedServiceException | IOException e) {
+			return new ResponseBean(e);
+		}
 	}
 
 	/**

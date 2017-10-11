@@ -3,6 +3,7 @@
  */
 package com.bc.pmpheep.back.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
@@ -18,7 +19,7 @@ import org.apache.ibatis.type.Alias;
 
 @SuppressWarnings("serial")
 @Alias("MaterialVO")
-public class MaterialVO {
+public class MaterialVO implements Serializable{
 	//教材主键
 	private Long id;
 	//教材名称

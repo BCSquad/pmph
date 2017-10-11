@@ -3,7 +3,10 @@
  */
 package com.bc.pmpheep.back.vo;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
+
+import org.apache.ibatis.type.Alias;
 
 /**
  * <p>
@@ -13,7 +16,9 @@ import java.sql.Timestamp;
  * @author lyc
  * @date 2017年9月29日 下午3:55:53
  */
-public class PmphGroupFileVO {
+@SuppressWarnings("serial")
+@Alias("PmphGroupFileVO")
+public class PmphGroupFileVO implements Serializable{
 	// 主键
 	private Long id;
 	//小组id
