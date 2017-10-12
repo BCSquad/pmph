@@ -208,7 +208,7 @@ public class PmphUserServiceTest extends BaseTest {
         managerVO.setId(pmphUser2.getId());
         managerVO.setUsername(managerVO.getUsername());
         managerVO.setRealname(pmphUser2.getRealname());
-        managerVO.setRoleName("角色");
+        managerVO.setRealname("角色");
         String result = userService.updatePmphUserOfBack(managerVO);
         Assert.assertTrue("更新失败", result.equals("SUCCESS"));
     }
