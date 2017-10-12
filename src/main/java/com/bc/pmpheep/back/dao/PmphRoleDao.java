@@ -8,6 +8,7 @@ import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphRolePermission;
 import com.bc.pmpheep.back.po.PmphUserRole;
+import com.bc.pmpheep.back.vo.PmphRoleVO;
 
 /**
  * PmphRole实体类的数据实现层接口
@@ -34,10 +35,23 @@ public interface PmphRoleDao {
     Integer update(PmphRole role);
 
     List<PmphRole> getListRole();
+    
+    List<PmphRoleVO> listRole();
 
     List<PmphRolePermission> getPmphRolePermissionByRoleId(Long roleId);
 
     List<Long> getPmphRolePermissionIdByRoleId(Long roleId);
+    
+    /**
+	 * 
+	 *  
+	 * 功能描述：根据用户id获取该用户所属角色
+	 *
+	 * @param userId  用户id
+	 * @return 所属角色对象
+	 *
+	 */
+	List<PmphRoleVO> listPmphUserRoleByUserId(Long userId);
 
     PmphUserRole getUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
 

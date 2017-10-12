@@ -5,8 +5,11 @@
 package com.bc.pmpheep.back.vo;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.ibatis.type.Alias;
+
+import com.bc.pmpheep.back.po.PmphRole;
 
 /**
  * 社内用户管理视图对象
@@ -47,7 +50,7 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	/**
 	 * 角色名称
 	 */
-	private String roleName;
+	private List<PmphRoleVO> pmphRoles;
 	/**
 	 * 手机
 	 */
@@ -216,19 +219,20 @@ public class PmphUserManagerVO implements java.io.Serializable {
 		this.sort = sort;
 	}
 
-	public String getRoleName() {
-		return roleName;
+	public List<PmphRoleVO> getPmphRoles() {
+		return pmphRoles;
 	}
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
+	public void setPmphRoles(List<PmphRoleVO> pmphRoles) {
+		this.pmphRoles = pmphRoles;
 	}
 
 	@Override
 	public String toString() {
-		return "PmphUserManagerVO [id=" + id + ", username=" + username + ", isDisabled=" + isDisabled + ", realname="
-				+ realname + ", path=" + path + ", departmentName=" + departmentName + ", roleName=" + roleName
-				+ ", handphone=" + handphone + ", email=" + email + ", note=" + note + ", sort=" + sort + "]";
+		return "PmphUserManagerVO [id=" + id + ", name=" + name + ", username=" + username + ", isDisabled="
+				+ isDisabled + ", realname=" + realname + ", path=" + path + ", departmentName=" + departmentName
+				+ ", pmphRoles=" + pmphRoles + ", handphone=" + handphone + ", email=" + email + ", note=" + note
+				+ ", sort=" + sort + "]";
 	}
 
 }

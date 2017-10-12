@@ -23,6 +23,7 @@ import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.Tools;
+import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -369,6 +370,11 @@ public class PmphUserServiceImpl implements PmphUserService {
         int total = userDao.getListPmphUserTotal(pageParameter);
         if (total > 0) {
             List<PmphUserManagerVO> list = userDao.getListPmphUser(pageParameter);
+            for (PmphUserManagerVO pmphUserManagerVO : list) {
+                List<PmphRoleVO> pmphRoles =
+                roleDao.listPmphUserRoleByUserId(pmphUserManagerVO.getId());
+                pmphUserManagerVO.setPmphRoles(pmphRoles);
+            }
             pageResult.setRows(list);
         }
 
@@ -388,13 +394,15 @@ public class PmphUserServiceImpl implements PmphUserService {
         String result = "FAIL";
         if (num > 0) {
             pmphUserRoleDao.deletePmphUserRoleByUserId(pmphUserManagerVO.getId());
-            String[] roleNames = pmphUserManagerVO.getRoleName().split(",");
-            for (String roleName : roleNames) {
-                Long roleId = roleDao.getPmphRoleId(roleName);
-                PmphUserRole pmphUserRole = new PmphUserRole(pmphUserManagerVO.getId(), roleId);
-                pmphUserRoleDao.addPmphUserRole(pmphUserRole);
+            List<PmphRoleVO> pmphRoles = pmphUserManagerVO.getPmphRoles();
+            if (pmphRoles.size() > 0) {
+                for (PmphRoleVO pmphRole : pmphRoles) {
+                    PmphUserRole pmphUserRole =
+                    new PmphUserRole(pmphUserManagerVO.getId(), pmphRole.getId());
+                    pmphUserRoleDao.addPmphUserRole(pmphUserRole);
+                }
+                result = "SUCCESS";
             }
-            result = "SUCCESS";
         }
         return result;
     }

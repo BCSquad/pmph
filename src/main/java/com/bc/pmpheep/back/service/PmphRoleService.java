@@ -6,6 +6,7 @@ import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphRolePermission;
 import com.bc.pmpheep.back.po.PmphUserRole;
+import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -64,7 +65,7 @@ public interface PmphRoleService {
      * 
      * @return
      */
-    List<PmphRole> getListRole() throws CheckedServiceException;
+    List<PmphRoleVO> getListRole() throws CheckedServiceException;
 
     /**
      * 根据用户 id 和角色 id 加载一条用户角色关系数据
