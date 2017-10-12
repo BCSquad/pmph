@@ -67,22 +67,6 @@ public class PmphRoleController {
     /**
      * 
      * <pre>
-	 * 功能描述：跳转到添加角色的页面
-	 * 使用示范：
-	 *
-	 * @param model
-	 * @return
-	 * </pre>
-     */
-    @ResponseBody
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public ResponseBean add() {
-        return new ResponseBean(new PmphRole());
-    }
-
-    /**
-     * 
-     * <pre>
 	 * 功能描述：添加用户角色的后台方法
 	 * 使用示范：
 	 *
@@ -165,12 +149,12 @@ public class PmphRoleController {
     @RequestMapping(value = "/resources", method = RequestMethod.POST)
     public ResponseBean resource(@RequestParam("roleId") Long roleId,
     @RequestParam("permissionIds") String permissionIds) {
-        String[] ssString = permissionIds.split(",");
-        List<Long> list = new ArrayList<Long>();
-        for (String str : ssString) {
-            list.add(Long.valueOf(str));
+        String[] ids = permissionIds.split(",");
+        List<Long> idLists = new ArrayList<Long>();
+        for (String id : ids) {
+            idLists.add(Long.valueOf(id));
         }
-        return new ResponseBean(roleService.addRoleResource(roleId, list));
+        return new ResponseBean(roleService.addRoleResource(roleId, idLists));
     }
 
     /**

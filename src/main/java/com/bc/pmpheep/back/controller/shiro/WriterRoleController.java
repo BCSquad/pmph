@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.controller.shiro;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,22 +62,6 @@ public class WriterRoleController {
     public ResponseBean list() {
         List<WriterRole> roleList = writerRoleService.getList();
         return new ResponseBean(roleList);
-    }
-
-    /**
-     * 
-     * <pre>
-     * 功能描述：跳转到添加角色的页面
-     * 使用示范：
-     *
-     * @param model
-     * @return
-     * </pre>
-     */
-    @ResponseBody
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public ResponseBean add() {
-        return new ResponseBean(new WriterRole());
     }
 
     /**
@@ -163,8 +148,13 @@ public class WriterRoleController {
     @ResponseBody
     @RequestMapping(value = "/resources", method = RequestMethod.POST)
     public ResponseBean resource(@RequestParam("roleId") Long roleId,
-    @RequestParam("permissionIds") List<Long> permissionIds) {
-        return new ResponseBean(writerRoleService.addRoleResource(roleId, permissionIds));
+    @RequestParam("permissionIds") String permissionIds) {
+        String[] ids = permissionIds.split(",");
+        List<Long> idLists = new ArrayList<Long>();
+        for (String id : ids) {
+            idLists.add(Long.valueOf(id));
+        }
+        return new ResponseBean(writerRoleService.addRoleResource(roleId, idLists));
     }
 
     /**
