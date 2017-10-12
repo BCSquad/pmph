@@ -19,7 +19,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  *
  **/
 @Controller
-@RequestMapping(value = "/org")
+@RequestMapping(value = "/orgs")
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class OrgController {
 

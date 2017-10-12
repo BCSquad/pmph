@@ -235,8 +235,7 @@ public class PmphUserController {
      */
     @ResponseBody
     @RequestMapping(value = "/list/pmphuser", method = RequestMethod.GET)
-    public ResponseBean listPmphUser(@RequestParam("pageSize") Integer pageSize,
-    @RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
+    public ResponseBean listPmphUser(Integer pageSize,Integer pageNumber,String name,
     @RequestParam("path") String path) {
         PageParameter pageParameter = new PageParameter<>();
         PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
