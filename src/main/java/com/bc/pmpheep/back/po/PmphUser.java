@@ -45,6 +45,10 @@ public class PmphUser implements java.io.Serializable {
      */
     private String  email;
     /**
+     * 头像
+     */
+    private String avatar;
+    /**
      * 备注
      */
     private String  note;
@@ -81,7 +85,7 @@ public class PmphUser implements java.io.Serializable {
     }
 
     public PmphUser(String username, String password, Boolean isDisabled, String realname,
-    long departmentId, String handphone, String email, String note, int sort, Boolean isDeleted,
+    long departmentId, String handphone, String email, String avatar, String note, int sort, Boolean isDeleted,
     Date gmtCreate, Date gmtUpdate, String loginType) {
         this.username = username;
         this.password = password;
@@ -90,6 +94,7 @@ public class PmphUser implements java.io.Serializable {
         this.departmentId = departmentId;
         this.handphone = handphone;
         this.email = email;
+        this.avatar = avatar;
         this.note = note;
         this.sort = sort;
         this.isDeleted = isDeleted;
@@ -154,7 +159,15 @@ public class PmphUser implements java.io.Serializable {
         this.email = email;
     }
 
-    public String getNote() {
+    public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public String getNote() {
         return this.note;
     }
 
@@ -232,9 +245,10 @@ public class PmphUser implements java.io.Serializable {
     public String toString() {
         return "PmphUser [id=" + id + ", username=" + username + ", password=" + password
                + ", isDisabled=" + isDisabled + ", realname=" + realname + ", departmentId="
-               + departmentId + ", handphone=" + handphone + ", email=" + email + ", note=" + note
-               + ", sort=" + sort + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
-               + ", gmtUpdate=" + gmtUpdate + ", loginType=" + loginType + "]";
+               + departmentId + ", handphone=" + handphone + ", email=" + email + ", avatar="
+               + avatar + ", note=" + note + ", sort=" + sort + ", isDeleted=" + isDeleted 
+               + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + ", loginType=" 
+               + loginType + "]";
     }
 
 }
