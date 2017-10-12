@@ -98,7 +98,7 @@
 		</set>
 		where id=#{id} ;
 	</update>
-   
+    
 	<!-- 根据id查询一个 PmphGroupMember -->
 	<select id="getPmphGroupMemberById" parameterType="java.lang.Long"
 		resultType="PmphGroupMember">

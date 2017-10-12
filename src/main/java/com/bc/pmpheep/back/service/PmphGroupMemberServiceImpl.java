@@ -286,4 +286,29 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		}
 		return pmphGroupMemberDao.getPmphGroupMemberByMemberId(memberId);
 	}
+
+	@Override
+	public String updateMemberIdentity(List<PmphGroupMember> members)
+			throws CheckedServiceException {
+		String result = "FAIL";
+		if (!isFounder()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.ILLEGAL_PARAM, "只有创建者有此权限操作");
+		}
+		if (null == members || members.size()==0){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "参数不能为空");
+		}else{
+		    for (PmphGroupMember pmphGroupMember : members){
+			    if(pmphGroupMember.isIsAdmin()){
+				    pmphGroupMember.setIsAdmin(true);
+			   }else{
+				   pmphGroupMember.setIsAdmin(false);
+			   }
+			   pmphGroupMemberDao.updatePmphGroupMember(pmphGroupMember);
+		   }
+		  result = "SUCCESS";
+		}
+		return result;
+	}
 }
