@@ -48,7 +48,8 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public List<PmphRole> getListRole() throws CheckedServiceException {
-        return roleDao.getListRole();
+    	List<PmphRole> list = roleDao.getListRole();
+        return list;
     }
 
     @Override
