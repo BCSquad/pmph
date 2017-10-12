@@ -11,6 +11,7 @@ import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphRolePermission;
 import com.bc.pmpheep.back.po.PmphUserRole;
+import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -47,8 +48,8 @@ public class PmphRoleServiceImpl implements PmphRoleService {
     }
 
     @Override
-    public List<PmphRole> getListRole() throws CheckedServiceException {
-    	List<PmphRole> list = roleDao.getListRole();
+    public List<PmphRoleVO> getListRole() throws CheckedServiceException {
+    	List<PmphRoleVO> list = roleDao.listRole();
         return list;
     }
 

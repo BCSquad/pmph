@@ -23,10 +23,15 @@
 	</servlet-mapping>
 
 	<!-- 使用配置文件修改来实现Put和Delete请求的参数传递 这种方式是在有时候，Ajax使用PUT/DELTET调用时，参数获取不到的情况下使用 
-		名称必须和springMvc配置的servlet名称对应 <filter> <filter-name>HiddenHttpMethodFilter</filter-name> 
-		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class> 
-		</filter> <filter-mapping> <filter-name>HiddenHttpMethodFilter</filter-name> 
-		<servlet-name>springMvc</servlet-name> </filter-mapping> -->
+		名称必须和springMvc配置的servlet名称对应 -->
+	<filter>
+		<filter-name>HiddenHttpMethodFilter</filter-name>
+		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>HiddenHttpMethodFilter</filter-name>
+		<servlet-name>springMvc</servlet-name>
+	</filter-mapping>
 
 
 

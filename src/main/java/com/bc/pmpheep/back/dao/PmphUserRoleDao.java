@@ -1,6 +1,8 @@
 package com.bc.pmpheep.back.dao;
 
+
 import org.springframework.stereotype.Repository;
+
 import com.bc.pmpheep.back.po.PmphUserRole;
 
 /**
@@ -34,6 +36,7 @@ public interface PmphUserRoleDao {
 	 * @return PmphUserRole
 	 */
 	PmphUserRole getPmphUserRoleById(Long id);
+	
 
 	/**
 	 * 根据id删除一个 PmphUserRole
