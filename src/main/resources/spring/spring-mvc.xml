@@ -17,6 +17,11 @@
     
     <context:component-scan base-package="com.bc.pmpheep.back.controller;com.bc.pmpheep.general.controller" />
     
+    <!--AXIOS跨域请求访问拦截 -->
+    <mvc:interceptors>  
+       <bean class="com.bc.pmpheep.back.interceptor.ProcessInterceptor"></bean>  
+   </mvc:interceptors>
+   
     <mvc:annotation-driven />
     
     <mvc:resources mapping="/resources/**" location="/resources/" />

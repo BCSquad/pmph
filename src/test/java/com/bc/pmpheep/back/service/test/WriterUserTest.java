@@ -54,7 +54,7 @@ public class WriterUserTest extends BaseTest {
         user.setUsername("admin");
         user.setPassword("1");
         user.setRealname("admin");
-        user.setIsDisabled(0);
+        user.setIsDisabled(false);
         WriterUser u = userService.add(user);// 添加用户
         // 查看两个对象的引用是否相等。类似于使用“==”比较两个对象
         Assert.assertNotSame("是否有返回值", null, u.getId());

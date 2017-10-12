@@ -16,7 +16,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  *
  **/
 @Controller
-@RequestMapping(value = "/pmphDepartment")
+@RequestMapping(value = "/departments")
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class PmphDepartmentController {
 

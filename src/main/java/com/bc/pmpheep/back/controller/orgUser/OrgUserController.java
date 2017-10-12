@@ -24,7 +24,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  * @date 2017年9月26日 下午5:40:52
  */
 @Controller
-@RequestMapping(value = "/orgUser")
+@RequestMapping(value = "/users/org")
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class OrgUserController {
 

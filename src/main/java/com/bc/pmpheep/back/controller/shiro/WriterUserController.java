@@ -45,7 +45,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  */
 @SuppressWarnings("all")
 @Controller
-@RequestMapping(value = "/user/writer")
+@RequestMapping(value = "/users/writer")
 public class WriterUserController {
     Logger            logger = LoggerFactory.getLogger(WriterUserController.class);
     @Autowired
@@ -211,7 +211,7 @@ public class WriterUserController {
      */
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public ResponseBean delete(@RequestParam("userIds[]") List<Long> userIds) {
+    public ResponseBean delete(@RequestParam("userIds") List<Long> userIds) {
         return new ResponseBean(writerUserService.deleteUserAndRole(userIds));
     }
 

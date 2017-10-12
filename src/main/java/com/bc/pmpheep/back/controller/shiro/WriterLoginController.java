@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.controller.shiro;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -78,13 +79,17 @@ public class WriterLoginController {
         try {
             WriterUser writerUser =
             writerUserService.login(username, new DesRun("", password).enpsw);
+            // 根据用户Id查询对应权限Id
+            List<Long> writerUserPermissionIds =
+            writerUserService.getWriterUserPermissionByUserId(writerUser.getId());
             // 验证成功在Session中保存用户信息
             request.getSession().setAttribute(Const.SESSION_WRITER_USER, writerUser);
             // 验证成功在Session中保存用户Token信息
             request.getSession().setAttribute(Const.SEESION_WRITER_USER_TOKEN,
                                               new DesRun(password, username).enpsw);
-            // resultMap.put(Const.SESSION_WRITER_USER, writerUser);
+            resultMap.put(Const.SESSION_WRITER_USER, writerUser);
             resultMap.put(Const.SEESION_WRITER_USER_TOKEN, new DesRun(password, username).enpsw);
+            resultMap.put("writerUserPermissionIds", writerUserPermissionIds);
             return new ResponseBean(resultMap);
         } catch (CheckedServiceException cException) {
             return new ResponseBean(cException);

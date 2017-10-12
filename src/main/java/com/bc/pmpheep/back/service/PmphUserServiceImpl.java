@@ -21,6 +21,7 @@ import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
+import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -154,7 +155,7 @@ public class PmphUserServiceImpl implements PmphUserService {
                                               CheckedExceptionResult.NULL_PARAM, "用户密码为空时禁止更新用户");
         }
         if (password != null) {
-            user.setPassword(ShiroKit.md5(user.getPassword(), user.getUsername()));
+            user.setPassword(new DesRun("", user.getPassword()).enpsw);
         }
         userDao.update(user);
         return user;
@@ -351,14 +352,14 @@ public class PmphUserServiceImpl implements PmphUserService {
         if (null != pageParameter.getParameter().getName()) {
             String name = pageParameter.getParameter().getName().trim();
             if (!name.equals("")) {
-                pageParameter.getParameter().setUsername("%" + name + "%");
+                pageParameter.getParameter().setName("%" + name + "%");
             } else {
-                pageParameter.getParameter().setUsername(name);
+                pageParameter.getParameter().setName(name);
             }
         }
         if (null != pageParameter.getParameter().getPath()) {
             String path = pageParameter.getParameter().getPath().trim();
-            if (!path.endsWith("")) {
+            if (!path.equals("")) {
                 pageParameter.getParameter().setPath(path + "%");
             } else {
                 pageParameter.getParameter().setPath(path);
@@ -397,5 +398,14 @@ public class PmphUserServiceImpl implements PmphUserService {
             result = "SUCCESS";
         }
         return result;
+    }
+
+    @Override
+    public List<Long> getPmphUserPermissionByUserId(Long userId) {
+        if (null == userId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+        }
+        return userDao.getPmphUserPermissionByUserId(userId);
     }
 }

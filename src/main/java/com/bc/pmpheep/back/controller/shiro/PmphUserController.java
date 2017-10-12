@@ -46,7 +46,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  */
 @SuppressWarnings("all")
 @Controller
-@RequestMapping(value = "/user/pmph")
+@RequestMapping(value = "/users/pmph")
 public class PmphUserController {
     Logger                logger = LoggerFactory.getLogger(PmphUserController.class);
     @Autowired
@@ -219,7 +219,7 @@ public class PmphUserController {
      */
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public ResponseBean delete(@RequestParam("userIds[]") List<Long> userIds) {
+    public ResponseBean delete(@RequestParam("userIds") List<Long> userIds) {
         return new ResponseBean(userService.deleteUserAndRole(userIds));
     }
 
@@ -235,8 +235,7 @@ public class PmphUserController {
      */
     @ResponseBody
     @RequestMapping(value = "/list/pmphuser", method = RequestMethod.GET)
-    public ResponseBean listPmphUser(@RequestParam("pageSize") Integer pageSize,
-    @RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
+    public ResponseBean listPmphUser(Integer pageSize,Integer pageNumber,String name,
     @RequestParam("path") String path) {
         PageParameter pageParameter = new PageParameter<>();
         PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();

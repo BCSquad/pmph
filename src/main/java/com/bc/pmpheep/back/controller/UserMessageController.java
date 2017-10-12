@@ -21,7 +21,7 @@ import com.bc.pmpheep.general.po.Message;
  *
  **/
 @Controller
-@RequestMapping(value = "/userMessage")
+@RequestMapping(value = "/messages")
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class UserMessageController {
 
@@ -35,7 +35,7 @@ public class UserMessageController {
 	 * @createDate 2017年9月26日 上午9:46:19
 	 * @return 分页数据集
 	 */
-	@RequestMapping(value = "/list/messagestate", method = RequestMethod.GET)
+	@RequestMapping(value = "/message/{msgId}/state", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseBean listMessageState(@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
 			@RequestParam(name = "pageSize") Integer pageSize, MessageStateVO messageStateVO) {
@@ -57,7 +57,7 @@ public class UserMessageController {
 	 * @param bookids
 	 * @return
 	 */
-	@RequestMapping(value = "/add/message", method = RequestMethod.POST)
+	@RequestMapping(value = "/message/new", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseBean addUserMessage(Message message, Integer sendType, String orgIds, String userIds,
 			String bookids) {
@@ -82,7 +82,7 @@ public class UserMessageController {
 	 * @param bookids
 	 * @return
 	 */
-	@RequestMapping(value = "/add/messageagain", method = RequestMethod.POST)
+	@RequestMapping(value = "/message/again", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseBean addUserMessageAgain(Message message, Integer sendType, String orgIds, String userIds,
 			String bookIds) {
@@ -116,7 +116,7 @@ public class UserMessageController {
 	 * @param userMessage
 	 * @return
 	 */
-	@RequestMapping(value = "/withdraw/message", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/withdraw/message", method = RequestMethod.PUT)
 	@ResponseBody
 	public ResponseBean withdrawUserMessage(UserMessage userMessage) {
 		return new ResponseBean(userMessageService.updateToWithdraw(new UserMessage(userMessage.getMsgId(), true)));
