@@ -110,7 +110,7 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 					CheckedExceptionResult.NULL_PARAM, "该用户为空");
 		}
 		Long id = pmphUser.getId();
-		PmphGroupMember currentUser = pmphGroupMemberService.getPmphGroupMemberById(id);
+		PmphGroupMember currentUser = pmphGroupMemberService.getPmphGroupMemberByMemberId(id);
 	    if (null == ids || ids.size() == 0) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, 
 			        		  CheckedExceptionResult.NULL_PARAM, "主键为空");
@@ -150,9 +150,13 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"小组id不能为空");
 		}
-		String fileName = pageParameter.getParameter().getFileName();
-		if (!fileName.equals("")) {
-			pageParameter.getParameter().setFileName("%" + fileName + "%");
+		if (null != pageParameter.getParameter().getFileName()){
+		    String fileName = pageParameter.getParameter().getFileName().trim();
+		    if (!fileName.equals("")) {
+			       pageParameter.getParameter().setFileName("%" + fileName + "%");
+		    }else{
+		    	pageParameter.getParameter().setFileName(fileName);
+		    }
 		}
 		PageResult<PmphGroupFileVO> pageResult = new PageResult<PmphGroupFileVO>();
 		Tools.CopyPageParameter(pageParameter, pageResult);
