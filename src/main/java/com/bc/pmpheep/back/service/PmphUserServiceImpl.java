@@ -387,14 +387,13 @@ public class PmphUserServiceImpl implements PmphUserService {
 		String result = "FAIL";
 		if (num > 0) {
 			pmphUserRoleDao.deletePmphUserRoleByUserId(pmphUserManagerVO.getId());
-			List<PmphRoleVO> pmphRoles = pmphUserManagerVO.getPmphRoles();
-			if (pmphRoles.size() > 0) {
-				for (PmphRoleVO pmphRole : pmphRoles) {
-					PmphUserRole pmphUserRole = new PmphUserRole(pmphUserManagerVO.getId(), pmphRole.getId());
-					pmphUserRoleDao.addPmphUserRole(pmphUserRole);
-				}
-				result = "SUCCESS";
+			String pmphRoles = pmphUserManagerVO.getRoleIds();
+			String[] roleIds = pmphRoles.split(",");
+			for (String roleId : roleIds) {
+				PmphUserRole pmphUserRole = new PmphUserRole(pmphUserManagerVO.getId(), Long.valueOf(roleId));
+				pmphUserRoleDao.addPmphUserRole(pmphUserRole);
 			}
+			result = "SUCCESS";
 		}
 		return result;
 	}
