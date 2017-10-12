@@ -115,8 +115,8 @@ public class PmphUserServiceImpl implements PmphUserService {
         userDao.batchDelete(ids);
         // 依次删除这些用户所绑定的角色
         for (Long userId : ids) {
-            count++;
             roleDao.deleteUserRoles(userId);
+            count++;
         }
         return count;
     }
