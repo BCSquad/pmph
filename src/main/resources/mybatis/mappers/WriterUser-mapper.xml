@@ -518,6 +518,50 @@
 		</if>
 	</select>
 	
+	<!-- 小组成员添加界面作家用户记录总数 -->
+	<select id="getGroupMemberWriterUserTotal" parameterType="PageParameter"
+	     resultType="java.lang.Integer">
+	     SELECT COUNT(*) FROM writer_user a LEFT JOIN org b ON a.org_id = b.id LEFT JOIN declaration c
+         ON a.id = c.user_id LEFT JOIN dec_position d ON c.id = d.declaration_id LEFT JOIN 
+         textbook e ON d.textbook_id = e.id WHERE 1=1
+         <if test="bookname !=null and bookname !=''">
+            and e.textbook_name like #{parameter.bookname}
+         </if>
+         <if test="parameter.chosenPosition !=null">
+            and d.chosen_position = #{parameter.chosenPosition}
+         </if>
+         <if test="parameter.realname !=null and parameter.realname !=''">
+            and a.realname like #{parameter.realname}
+         </if>
+         <if test="parameter.username !=null and parameter.username !=''">
+            and a.username like #{parameter.username}
+         </if>
+	</select>
+	
+	<!-- 小组成员添加界面作家用户信息 -->
+	<select id="getListGroupMemberWriterUserVOs" parameterType="PageParameter"
+	     resultType="GroupMemberWriterUserVO">
+	     SELECT a.id,e.id,a.realname,a.username,d.chosen_position,a.org_id,
+         b.org_name FROM writer_user a LEFT JOIN org b ON a.org_id = b.id LEFT JOIN declaration c
+         ON a.id = c.user_id LEFT JOIN dec_position d ON c.id = d.declaration_id LEFT JOIN 
+         textbook e ON d.textbook_id = e.id WHERE 1=1
+         <if test="bookname !=null and bookname !=''">
+            and e.textbook_name like #{parameter.bookname}
+         </if>
+         <if test="parameter.chosenPosition !=null">
+            and d.chosen_position = #{parameter.chosenPosition}
+         </if>
+         <if test="parameter.realname !=null and parameter.realname !=''">
+            and a.realname like #{parameter.realname}
+         </if>
+         <if test="parameter.username !=null and parameter.username !=''">
+            and a.username like #{parameter.username}
+         </if>
+         <if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
 	<!-- <select id="getListTotal" parameterType="Page" resultType="java.lang.Integer"> 
 		select count(*) from writer_user w where 1=1 <if test="parameter.username 
 		!=null "> and w.username like #{parameter.username} </if> <if test="parameter.realname 

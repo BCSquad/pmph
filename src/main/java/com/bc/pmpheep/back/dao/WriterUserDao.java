@@ -9,6 +9,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
+import com.bc.pmpheep.back.vo.GroupMemberWriterUserVO;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 
 /**
@@ -88,7 +89,27 @@ public interface WriterUserDao {
      * @return 查询到的条数
      */
     Integer getListWriterUserTotal(PageParameter<WriterUserManagerVO> page);
-
+    
+    /**
+     * 
+     * Description:添加成员界面作家用户信息展示
+     * @author:lyc
+     * @date:2017年10月12日下午5:56:05
+     * @param pageParameter若教材书籍、遴选职位、账号或姓名有值则为模糊查询
+     * @return List<GroupMemberWriterUserVO>作家用户信息集合
+     */
+    List<GroupMemberWriterUserVO> getListGroupMemberWriterUserVOs(PageParameter<GroupMemberWriterUserVO> pageParameter);
+    
+    /**
+     * 
+     * Description:作家用户总数
+     * @author:lyc
+     * @date:2017年10月12日下午5:59:59
+     * @param pageParameter若教材书籍、遴选职位、账号或姓名有值则为模糊查询
+     * @return Integer数据总数
+     */
+    Integer getGroupMemberWriterUserTotal(PageParameter<GroupMemberWriterUserVO>pageParameter);
+    
     /**
      * 
      * 功能描述：查询表单的数据总条数
