@@ -103,9 +103,9 @@
 		COUNT(*) FROM pmph_group_file c WHERE a.member_id = c.member_id AND
 		a.file_name = c.file_name) AS group_count,a.download FROM
 		pmph_group_file a LEFT JOIN pmph_group_member b ON a.group_id =
-		b.group_id WHERE b.group_id = #{parameter.groupId} and
-		<if test="fileName !=null and fileName !=''">
-		a.file_name like #{parameter.fileName}
+		b.group_id WHERE b.group_id = #{parameter.groupId}
+		<if test="parameter.fileName !=null and parameter.fileName !=''">
+		and a.file_name like #{parameter.fileName}
 		</if>
 		GROUP BY a.file_name)t ;
 	</select>
@@ -117,9 +117,9 @@
 		COUNT(*) FROM pmph_group_file c WHERE a.member_id = c.member_id AND
 		a.file_name = c.file_name) AS group_count,a.download FROM
 		pmph_group_file a LEFT JOIN pmph_group_member b ON a.group_id =
-		b.group_id WHERE b.group_id = #{parameter.groupId} and
-		<if test="fileName !=null and fileName !=''">
-		a.file_name like #{parameter.fileName}
+		b.group_id WHERE b.group_id = #{parameter.groupId}
+		<if test="parameter.fileName !=null and parameter.fileName !=''">
+		and a.file_name like #{parameter.fileName}
 		</if>
 		GROUP BY a.file_name ;
 	</select>
