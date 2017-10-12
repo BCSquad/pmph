@@ -231,33 +231,34 @@ public class PmphUserServiceImpl implements PmphUserService {
 		return page;
 	}
 
-	/**
-	 * 登录逻辑
-	 * 
-	 * 1、先根据用户名查询用户对象
-	 * 
-	 * 2、如果有用户对象，则继续匹配密码 如果没有用户对象，则抛出异常
-	 * 
-	 * @param username
-	 * @param password
-	 * @return
-	 */
-	@Override
-	public PmphUser login(String username, String password) throws CheckedServiceException {
-		PmphUser user = userDao.getByUsernameAndPassword(username, password);
-		// 密码匹配的工作交给 Shiro 去完成
-		if (user == null) {
-			// 因为缓存切面的原因,在这里就抛出用户名不存在的异常
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "用户名不存在(生产环境中应该写:用户名和密码的组合不正确)");
-		} else {
-			if (user.getIsDisabled()) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-						CheckedExceptionResult.ILLEGAL_PARAM, "用户已经被禁用，请联系管理员启用该账号");
-			}
-		}
-		return user;
-	}
+    /**
+     * 登录逻辑
+     * 
+     * 1、先根据用户名查询用户对象
+     * 
+     * 2、如果有用户对象，则继续匹配密码 如果没有用户对象，则抛出异常
+     * 
+     * @param username
+     * @param password
+     * @return
+     */
+    @Override
+    public PmphUser login(String username, String password) throws CheckedServiceException {
+        PmphUser user = userDao.getByUsernameAndPassword(username, password);
+        // 密码匹配的工作交给 Shiro 去完成
+        if (user == null) {
+            // 因为缓存切面的原因,在这里就抛出用户名不存在的异常
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户名或密码不正确！");
+        } else {
+            if (user.getIsDisabled()) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                                  CheckedExceptionResult.ILLEGAL_PARAM,
+                                                  "用户已经被禁用，请联系管理员启用该账号");
+            }
+        }
+        return user;
+    }
 
 	/**
 	 * 查询所有的用户对象列表

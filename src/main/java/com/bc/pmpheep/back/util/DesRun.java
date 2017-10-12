@@ -140,7 +140,8 @@ public class DesRun {
 
     public static void main(String[] args) {
         // DesRun desRun = new DesRun("E0:EA:AA:CD:4B:60:3F:18:71:14:48:58:D7:2D:6B:32");
-        DesRun desRun = new DesRun("", "1234");
-        System.out.println(desRun.enpsw);
+        DesRun desRun = new DesRun("544cf11b696231513e04cb9bd1846691");
+        // DesRun desRun = new DesRun("", "1234");
+        System.out.println(desRun.depsw);
     }
 }

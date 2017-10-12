@@ -8,12 +8,16 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphGroupMemberDao;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ShiroSession;
+import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
+import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -112,7 +116,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			if (pmphGroupMemberVO.isIsWriter()) {
 				pmphGroupMemberVO.setAvatar(writerUserService.get(pmphGroupMemberVO.getMemberId()).getAvatar());
 			} else {
-				pmphGroupMemberVO.setAvatar("");
+				pmphGroupMemberVO.setAvatar(pmphUserService.get(pmphGroupMemberVO.getMemberId()).getAvatar());
 			}
 		}
 		return list;
@@ -121,14 +125,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	@Override
 	public String addPmphGroupMemberOnGroup(List<PmphGroupMember> pmphGroupMembers) throws CheckedServiceException {
 		String result = "FAIL";
-		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
-		if (null == pmphUser||null == pmphUser.getId()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-					CheckedExceptionResult.NULL_PARAM, "用户为空");
-		}
-		Long id = pmphUser.getId();
-		PmphGroupMember currentUser = pmphGroupMemberDao.getPmphGroupMemberById(id);
-		if (currentUser.isIsFounder()|currentUser.isIsAdmin()){
+		if (isFounderOrisAdmin()){
 		  if (pmphGroupMembers.size() > 0) {
 			 for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
 				if (null == pmphGroupMember.getGruopId()) {
@@ -171,5 +168,122 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		}
 
 		return result;
+	}
+
+	@Override
+	public Boolean isFounderOrisAdmin() throws CheckedServiceException {
+		boolean flag = false;
+		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		if (null == pmphUser||null == pmphUser.getId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "用户为空");
+		}
+		Long id = pmphUser.getId();
+		PmphGroupMember currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(id);
+		if (currentUser.isIsFounder()||currentUser.isIsAdmin()){
+			flag = true;
+		}
+		return flag;
+	}
+
+	@Override
+	public Boolean isFounder() throws CheckedServiceException {
+		boolean flag = false;
+		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		if (null == pmphUser||null == pmphUser.getId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "用户为空");
+		}
+		Long id = pmphUser.getId();
+		PmphGroupMember currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(id);
+		if (currentUser.isIsFounder()){
+			flag = true;
+		}
+		return flag;
+	}
+
+	@Override
+	public PageResult<PmphGroupMemberManagerVO> listGroupMemberManagerVOs(
+			PageParameter<PmphGroupMemberManagerVO> pageParameter)
+			throws CheckedServiceException {
+		if (null == pageParameter.getParameter().getGroupId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "小组id不能为空");
+		}
+		if (null != pageParameter.getParameter().getDisplayName()){
+			String displayName = pageParameter.getParameter().getDisplayName().trim();
+			if (!displayName.equals("")){
+				pageParameter.getParameter().setDisplayName("%" + displayName + "%");
+			}else{
+				pageParameter.getParameter().setDisplayName(displayName);
+			}
+		}
+		if (null != pageParameter.getParameter().getUserName()){
+			String userName = pageParameter.getParameter().getUserName().trim();
+			if (!userName.equals("")){
+				pageParameter.getParameter().setUserName("%" + userName + "%");
+			}else{
+				pageParameter.getParameter().setUserName(userName);
+			}
+		}
+		PageResult<PmphGroupMemberManagerVO> pageResult = new PageResult<>();
+		Tools.CopyPageParameter(pageParameter, pageResult);
+		int total = pmphGroupMemberDao.groupMemberTotal(pageParameter);
+		if (total > 0){
+			List <PmphGroupMemberManagerVO> list = pmphGroupMemberDao.listGroupMemberManagerVOs(pageParameter);
+			pageResult.setRows(list);
+			pageResult.setTotal(total);
+		}
+		return pageResult;
+	}
+
+	@Override
+	public String deletePmphGroupMemberByIds(List<Long> ids)
+			throws CheckedServiceException {
+		String result = "FAIL";
+		if (!isFounderOrisAdmin()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有操作权限");
+		}
+		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		if (null == pmphUser||null == pmphUser.getId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "该用户为空");
+		}
+		Long userid = pmphUser.getId();
+		PmphGroupMember currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(userid);
+		if (null == ids || ids.size()==0){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "主键不能为空");
+		}else{
+			for (Long id : ids){
+				if (userid == pmphGroupMemberDao.getPmphGroupMemberById(id).getMemberId()){
+					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+							CheckedExceptionResult.ILLEGAL_PARAM, "不能删除自己");
+				}
+				if (currentUser.isIsFounder()){
+					pmphGroupMemberDao.deletePmphGroupMemberById(id);
+				}
+				if (currentUser.isIsAdmin() && (pmphGroupMemberDao.getPmphGroupMemberById(id).isIsFounder()
+						||pmphGroupMemberDao.getPmphGroupMemberById(id).isIsAdmin())){
+					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+							CheckedExceptionResult.ILLEGAL_PARAM, "管理员不能删除创建者或其他管理员");
+				}else{
+					pmphGroupMemberDao.deletePmphGroupMemberById(id);
+				}				
+			}
+			result = "SUCCESS";
+		}
+		return result;
+	}
+
+	@Override
+	public PmphGroupMember getPmphGroupMemberByMemberId(Long memberId)
+			throws CheckedServiceException {
+		if (null == memberId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "组员id不能为空");
+		}
+		return pmphGroupMemberDao.getPmphGroupMemberByMemberId(memberId);
 	}
 }
