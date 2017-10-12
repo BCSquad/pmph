@@ -52,6 +52,10 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	 */
 	private List<PmphRoleVO> pmphRoles;
 	/**
+	 * 接受前端传入的角色id数组
+	 */
+	private Long[] roleIds;
+	/**
 	 * 手机
 	 */
 	private String handphone;
@@ -104,6 +108,14 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	 */
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public Long[] getRoleIds() {
+		return roleIds;
+	}
+
+	public void setRoleIds(Long[] roleIds) {
+		this.roleIds = roleIds;
 	}
 
 	/**
