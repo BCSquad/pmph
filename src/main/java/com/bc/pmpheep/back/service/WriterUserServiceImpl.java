@@ -357,7 +357,7 @@ public class WriterUserServiceImpl implements WriterUserService {
     public String addWriterUserOfBack(WriterUser writerUser) throws CheckedServiceException {
         writerUser.setPassword(ShiroKit.md5(Const.DEFAULT_PASSWORD, writerUser.getUsername()));// 后台添加用户设置默认密码为123456
         writerUser.setNickname(writerUser.getUsername());
-        writerUser.setRealname(writerUser.getUsername());
+        writerUser.setAvatar(Const.DEFAULT_USER_AVATAR);//后台添加新用户时，设置为默认头像
         Long num = writerUserDao.add(writerUser);
         String result = "FAIL";
         if (num > 0) {
