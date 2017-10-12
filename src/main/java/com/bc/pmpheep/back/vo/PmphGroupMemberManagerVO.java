@@ -24,6 +24,8 @@ public class PmphGroupMemberManagerVO implements Serializable {
 	private Long groupId;
 	// 书籍id
 	private Long bookId;
+	// 成员id
+	private Long memberId;
 	// 小组内显示名称;
 	private String displayName;
 	// 账号
@@ -67,6 +69,14 @@ public class PmphGroupMemberManagerVO implements Serializable {
 
 	public void setBookId(Long bookId) {
 		this.bookId = bookId;
+	}
+
+	public Long getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(Long memberId) {
+		this.memberId = memberId;
 	}
 
 	public String getDisplayName() {

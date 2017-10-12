@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphGroupMember;
+import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
 
 /**
@@ -28,6 +30,15 @@ public interface  PmphGroupMemberDao {
 	 */
 	PmphGroupMember getPmphGroupMemberById(Long id) ;
 	
+	/**
+	 * 
+	 * Description:根据当前用户id查找成员
+	 * @author:lyc
+	 * @date:2017年10月12日下午2:52:57
+	 * @Param:小组内成员id
+	 * @Return:PmphGroupMember
+	 */
+	PmphGroupMember getPmphGroupMemberByMemberId(Long memberId);
 	/**
 	 * 
 	 * @param 主键id
@@ -70,4 +81,24 @@ public interface  PmphGroupMemberDao {
      *
      */
     Integer deletePmphGroupMemberOnGroup(Long groupId);
+    
+    /**
+     * 
+     * Description:小组成员管理界面小组成员总数
+     * @author:lyc
+     * @date:2017年10月11日下午3:33:02
+     * @Param:pageParameter
+     * @Return:Integer
+     */
+    Integer groupMemberTotal(PageParameter<PmphGroupMemberManagerVO> pageParameter);
+    
+    /**
+     * 
+     * Description:小组成员管理界面小组成员信息
+     * @author:lyc
+     * @date:2017年10月11日下午3:39:32
+     * @Param:pageParameter username或displayname不为空则为模糊查询
+     * @Return:List<PmphGroupMemberManagerVO>小组成员信息集合
+     */
+    List<PmphGroupMemberManagerVO> listGroupMemberManagerVOs(PageParameter<PmphGroupMemberManagerVO> pageParameter);
 }
