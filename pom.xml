@@ -58,6 +58,8 @@
         <beanutils.ver>1.9.3</beanutils.ver>
         <!--MongoDB-->
         <mongodb.ver>1.10.4.RELEASE</mongodb.ver>
+        <!--zip4j-->
+        <zip4j.ver>1.3.2</zip4j.ver>
     </properties>
     
     <dependencies>
@@ -188,6 +190,11 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
             <version>${mongodb.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.lingala.zip4j</groupId>
+            <artifactId>zip4j</artifactId>
+            <version>${zip4j.ver}</version>
         </dependency>
     </dependencies>
 
