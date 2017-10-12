@@ -98,8 +98,9 @@
             <tx:method name="insert*" read-only="false" rollback-for="java.lang.Exception" propagation="REQUIRED" />
         </tx:attributes>
     </tx:advice>
+    
     <bean id="responseBeanAop" class="com.bc.pmpheep.controller.bean.ResponseBeanAop" />
-     
+    
     <!-- 事务入口 -->
     <aop:config>
         <aop:pointcut id="allServiceMethod"  expression="execution(* com.bc.pmpheep.back.service.*.*(..))" />

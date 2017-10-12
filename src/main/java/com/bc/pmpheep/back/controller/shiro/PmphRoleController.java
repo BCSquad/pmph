@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.controller.shiro;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,8 +164,13 @@ public class PmphRoleController {
     @ResponseBody
     @RequestMapping(value = "/resources", method = RequestMethod.POST)
     public ResponseBean resource(@RequestParam("roleId") Long roleId,
-    @RequestParam("permissionIds") List<Long> permissionIds) {
-        return new ResponseBean(roleService.addRoleResource(roleId, permissionIds));
+    @RequestParam("permissionIds") String permissionIds) {
+        String[] ssString = permissionIds.split(",");
+        List<Long> list = new ArrayList<Long>();
+        for (String str : ssString) {
+            list.add(Long.valueOf(str));
+        }
+        return new ResponseBean(roleService.addRoleResource(roleId, list));
     }
 
     /**
