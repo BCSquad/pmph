@@ -98,7 +98,7 @@
 		</set>
 		where id=#{id} ;
 	</update>
-
+   
 	<!-- 根据id查询一个 PmphGroupMember -->
 	<select id="getPmphGroupMemberById" parameterType="java.lang.Long"
 		resultType="PmphGroupMember">
@@ -141,10 +141,10 @@
     </select>
     
     <!-- 根据小组id查询到的小组成员详细信息 -->
-    <select id="listGroupMemberManagerVOs" parameterType="pageParamter" resultType="PmphGroupMemberManagerVO">
+    <select id="listGroupMemberManagerVOs" parameterType="pageParameter" resultType="PmphGroupMemberManagerVO">
         SELECT a.id,a.group_id,b.book_id,a.member_id,a.display_name,
         CASE WHEN a.is_writer =1 THEN e.username WHEN a.is_writer = 0 THEN c.username END username,
-        CASE WHEN a.is_founder THEN '创建者' WHEN a.is_admin THEN '管理员' ELSE '成员' END identity,
+        CASE WHEN a.is_founder =1 THEN '创建者' WHEN a.is_admin =1 THEN '管理员' ELSE '成员' END identity,
 		CASE WHEN a.is_writer =1 THEN (CASE WHEN h.chosen_position=1 THEN '主编' 
 		WHEN h.chosen_position=2 THEN '副主编' WHEN h.chosen_position=3 THEN '编委' 
 		WHEN h.chosen_position=0 THEN '无' END ) WHEN a.is_writer =0 THEN '项目策划编辑' END position,
