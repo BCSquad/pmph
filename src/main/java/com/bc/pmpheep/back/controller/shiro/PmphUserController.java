@@ -218,9 +218,14 @@ public class PmphUserController {
 	 * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public ResponseBean delete(@RequestParam("userIds") List<Long> userIds) {
-        return new ResponseBean(userService.deleteUserAndRole(userIds));
+    @RequestMapping(value = "/delete/{userIds}", method = RequestMethod.DELETE)
+    public ResponseBean delete(@PathVariable("userIds") String userIds) {
+        String[] ids = userIds.split(",");
+        List<Long> list = new ArrayList<Long>();
+        for (String str : ids) {
+            list.add(Long.valueOf(str));
+        }
+        return new ResponseBean(userService.deleteUserAndRole(list));
     }
 
     /**
@@ -235,7 +240,7 @@ public class PmphUserController {
      */
     @ResponseBody
     @RequestMapping(value = "/list/pmphuser", method = RequestMethod.GET)
-    public ResponseBean listPmphUser(Integer pageSize,Integer pageNumber,String name,
+    public ResponseBean listPmphUser(Integer pageSize, Integer pageNumber, String name,
     @RequestParam("path") String path) {
         PageParameter pageParameter = new PageParameter<>();
         PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
