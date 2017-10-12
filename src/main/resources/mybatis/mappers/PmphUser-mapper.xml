@@ -141,7 +141,8 @@
 		DELETE
 		FROM pmph_user
 		where
-		id = #{id}
+		id =
+		#{id}
 	</delete>
 
 	<!-- 批量删除 -->
@@ -251,9 +252,11 @@
 		tr.url
 		FROM
 		`pmph_permission` tr
-		LEFT JOIN
+		LEFT
+		JOIN
 		`pmph_role_permission` trr ON tr.`id` = trr.`permission_id`
-		LEFT JOIN
+		LEFT
+		JOIN
 		`pmph_user_role` tur ON trr.`role_id` = tur.role_id
 		WHERE
 		tur.user_id = #{uid}
@@ -307,16 +310,9 @@
 		count(*)
 		FROM
 		(SELECT
-		u.*, GROUP_CONCAT(r.role_name ORDER BY r.id
-		ASC) role_name,
-		d.dp_name departmentName,d.path
+		u.*,d.dp_name departmentName,d.path
 		FROM
 		pmph_user u
-		LEFT JOIN
-		pmph_user_role
-		p ON u.id = p.user_id
-		LEFT JOIN pmph_role r ON p.role_id
-		= r.id
 		LEFT JOIN
 		pmph_department d ON u.department_id = d.id
 		WHERE
@@ -328,20 +324,15 @@
 		<if test="parameter.path !=null and parameter.path !=''">
 			and d.path like #{parameter.path}
 		</if>
-		GROUP BY u.id) t
+		) t
 	</select>
 
 	<select id="getListPmphUser" parameterType="PageParameter"
 		resultType="PmphUserManagerVO">
 		SELECT
-		u.*, GROUP_CONCAT(r.role_name ORDER BY r.id ASC) role_name,
-		d.dp_name departmentName,d.path
+		u.*,d.dp_name departmentName,d.path
 		FROM
 		pmph_user u
-		LEFT JOIN pmph_user_role
-		p ON
-		u.id = p.user_id
-		LEFT JOIN pmph_role r ON p.role_id = r.id
 		LEFT JOIN
 		pmph_department d ON u.department_id = d.id
 		WHERE
@@ -353,7 +344,6 @@
 		<if test="parameter.path !=null and parameter.path !=''">
 			and d.path like #{parameter.path}
 		</if>
-		GROUP BY u.id ORDER BY d.dp_name
 		LIMIT #{start},#{pageSize}
 	</select>
 	<!-- 根据用户id获取用户对应的权限 -->
@@ -372,7 +362,8 @@
 		ON
 		pur.`role_id` = prp.`role_id`
 		WHERE
-		pu.`id` = #{userId}
+		pu.`id`
+		= #{userId}
 	</select>
 
 	<!-- 动态更新对象的写法 -->
