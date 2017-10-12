@@ -116,7 +116,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			if (pmphGroupMemberVO.isIsWriter()) {
 				pmphGroupMemberVO.setAvatar(writerUserService.get(pmphGroupMemberVO.getMemberId()).getAvatar());
 			} else {
-				pmphGroupMemberVO.setAvatar("");
+				pmphGroupMemberVO.setAvatar(pmphUserService.get(pmphGroupMemberVO.getMemberId()).getAvatar());
 			}
 		}
 		return list;
