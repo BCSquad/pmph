@@ -98,7 +98,7 @@
 		</set>
 		where id=#{id} ;
 	</update>
-   
+    
 	<!-- 根据id查询一个 PmphGroupMember -->
 	<select id="getPmphGroupMemberById" parameterType="java.lang.Long"
 		resultType="PmphGroupMember">
@@ -159,11 +159,13 @@
 		ON g.user_id = e.id LEFT JOIN dec_position h ON g.id = h.declaration_id
 		WHERE a.group_id = #{parameter.groupId} 
 		<if test="parameter.displayName !=null and parameter.displayName !=''">
-		and display_name like #{parameter.displayName}
+		and a.display_name like #{parameter.displayName}
 		</if>
 		<if test="parameter.userName !=null and parameter.userName !=''">
-		or username like #{parameter.userName} 
+		or e.username like #{parameter.userName} or c.username like #{parameter.userName}
 		</if>
-		;
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
     </select>
 </mapper>

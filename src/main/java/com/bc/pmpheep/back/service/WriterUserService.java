@@ -7,6 +7,7 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
+import com.bc.pmpheep.back.vo.GroupMemberWriterUserVO;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -154,7 +155,17 @@ public interface WriterUserService {
      */
     PageResult<WriterUserManagerVO> getListWriterUser(
     PageParameter<WriterUserManagerVO> pageParameter) throws CheckedServiceException;
-
+    
+    /**
+     * 
+     * Description:分页查询小组成员添加界面作家用户信息
+     * @author:lyc
+     * @date:2017年10月12日下午6:43:33
+     * @param pageParameter查询条件，若书籍、姓名/账号、遴选职位不为空则为模糊查询
+     * @return PageResult<GroupMemberWriterUserVO>用户信息集合
+     */
+    PageResult<GroupMemberWriterUserVO> getListGroupMemberWriterUsers(
+    PageParameter<GroupMemberWriterUserVO> pageParameter) throws CheckedServiceException;
     /**
      * 
      * 

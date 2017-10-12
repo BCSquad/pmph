@@ -121,7 +121,10 @@
 		<if test="parameter.fileName !=null and parameter.fileName !=''">
 		and a.file_name like #{parameter.fileName}
 		</if>
-		GROUP BY a.file_name ;
+		GROUP BY a.file_name
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
 	</select>
 
 	<!-- 查询表单的数据总数 -->

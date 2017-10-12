@@ -34,7 +34,7 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	/**
 	 * 是否禁用
 	 */
-	private Integer isDisabled;
+	private boolean isDisabled;
 	/**
 	 * 真实姓名
 	 */
@@ -51,6 +51,10 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	 * 角色名称
 	 */
 	private List<PmphRoleVO> pmphRoles;
+	/**
+	 * 接受前端传入的角色id数组
+	 */
+	private String roleIds;
 	/**
 	 * 手机
 	 */
@@ -106,10 +110,18 @@ public class PmphUserManagerVO implements java.io.Serializable {
 		this.username = username;
 	}
 
+	public String getRoleIds() {
+		return roleIds;
+	}
+
+	public void setRoleIds(String roleIds) {
+		this.roleIds = roleIds;
+	}
+
 	/**
 	 * @return the isDisabled
 	 */
-	public Integer getIsDisabled() {
+	public boolean isIsDisabled() {
 		return isDisabled;
 	}
 
@@ -117,7 +129,7 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	 * @param isDisabled
 	 *            the isDisabled to set
 	 */
-	public void setIsDisabled(Integer isDisabled) {
+	public void isIsDisabled(boolean isDisabled) {
 		this.isDisabled = isDisabled;
 	}
 
