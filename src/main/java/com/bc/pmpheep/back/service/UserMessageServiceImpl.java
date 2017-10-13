@@ -159,7 +159,10 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 				throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
 						"书籍为空!");
 			}
-			// /////////////////////////////// do
+			String[] ids = bookIds.split(",");
+			for (String id : ids) {
+				///////////获取到书籍id然后根据书籍id查询申报者id放入userMessage的接收人中
+			}
 
 		}
 		// 如果是补发,进入下面操作 进行已发人员筛出
@@ -269,13 +272,17 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 		pageParameter.getParameter().setSenderId(pmphUser.getId());
 		PageResult<UserMessageVO> pageResult = new PageResult<>();
 		Tools.CopyPageParameter(pageParameter, pageResult);
-		int total = userMessageDao.listMessageTotal(pageParameter.getParameter().getTitle());
-		if(total > 0){
+		int total = userMessageDao.getMessageTotal(pageParameter);
+		if (total > 0) {
 			List<UserMessageVO> list = userMessageDao.listMessage(pageParameter);
+			for (UserMessageVO userMessageVO : list) {
+				Message message = messageService.get(userMessageVO.getMsgId());
+				userMessageVO.setContent(message.getContent());
+			}
 			pageResult.setRows(list);
 		}
 		pageResult.setPageTotal(total);
-		
+
 		return pageResult;
 	}
 

@@ -40,7 +40,7 @@ public interface UserMessageDao {
 	 * @return 总数
 	 *
 	 */
-	Integer listMessageTotal(String title);
+	Integer getMessageTotal(PageParameter<UserMessageVO> pageParameter);
 
 	/**
 	 * 
