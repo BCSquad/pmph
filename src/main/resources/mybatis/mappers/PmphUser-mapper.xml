@@ -316,7 +316,8 @@
 		LEFT JOIN
 		pmph_department d ON u.department_id = d.id
 		WHERE
-		1 = 1
+		1
+		= 1
 		<if test="parameter.name !=null and parameter.name !='' ">
 			and (u.username like #{parameter.name} or u.realname like
 			#{parameter.name})
@@ -378,6 +379,9 @@
 			</if>
 			<if test=" realname!= null and realname !=''">
 				realname= #{realname},
+			</if>
+			<if test=" departmentId!= null and departmentId !=''">
+				department_id = #{departmentId},
 			</if>
 			<if test=" handphone!= null and handphone !=''">
 				handphone = #{handphone},

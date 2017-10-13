@@ -178,10 +178,26 @@
 	</select>
 	<select id="listMessage" parameterType="PageParameter"
 		resultType="MessageStateVO">
-		select * from user_message where 1=1
+		SELECT
+		m.msg_id,
+		m.sender_id,
+		m.sender_type,
+		m.title,
+		m.gmt_create
+		FROM
+		user_message m
+		WHERE
+		m.is_deleted = 0
+		AND m.msg_type = 1
+		AND m.sender_id = #{parameter.senderId}
 		<if test="title != null and title != ''">
-			and title like #{title}
+			and title like #{parameter.title}
 		</if>
+		GROUP BY m.msg_id,
+		m.sender_id,
+		m.sender_type,
+		m.title;
+		
 	</select>
 
 </mapper>

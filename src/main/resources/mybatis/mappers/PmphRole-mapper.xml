@@ -219,6 +219,7 @@
 				sort = #{sort},
 			</if>
 		</set>
+		where id = #{id}
 	</update>
 
 	<delete id="deleteUserRole" parameterType="map">
