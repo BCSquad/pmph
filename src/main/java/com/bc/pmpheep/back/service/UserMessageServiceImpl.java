@@ -269,6 +269,12 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 		pageParameter.getParameter().setSenderId(pmphUser.getId());
 		PageResult<UserMessageVO> pageResult = new PageResult<>();
 		Tools.CopyPageParameter(pageParameter, pageResult);
+		int num = userMessageDao.listMessageTotal(pageParameter.getParameter().getTitle());
+		if(num > 0){
+			List<UserMessageVO> list = userMessageDao.listMessage(pageParameter);
+			pageResult.setRows(list);
+		}
+		
 		return null;
 	}
 

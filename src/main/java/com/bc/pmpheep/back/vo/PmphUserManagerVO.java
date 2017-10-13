@@ -38,7 +38,7 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	/**
 	 * 是否禁用
 	 */
-	private boolean isDisabled;
+	private Boolean isDisabled;
 	/**
 	 * 真实姓名
 	 */
@@ -122,18 +122,11 @@ public class PmphUserManagerVO implements java.io.Serializable {
 		this.roleIds = roleIds;
 	}
 
-	/**
-	 * @return the isDisabled
-	 */
-	public boolean isIsDisabled() {
+	public Boolean getIsDisabled() {
 		return isDisabled;
 	}
 
-	/**
-	 * @param isDisabled
-	 *            the isDisabled to set
-	 */
-	public void isIsDisabled(boolean isDisabled) {
+	public void setIsDisabled(Boolean isDisabled) {
 		this.isDisabled = isDisabled;
 	}
 
