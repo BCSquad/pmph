@@ -30,7 +30,7 @@ public class OrgUser implements Serializable {
 	/**
 	 * 是否禁用
 	 */
-	private boolean isDisabled;
+	private Boolean isDisabled;
 	/**
 	 * 对应学校ID
 	 */
@@ -82,7 +82,7 @@ public class OrgUser implements Serializable {
 	/**
 	 * 是否上传 委托书
 	 */
-	private boolean isProxyUpload;
+	private Boolean isProxyUpload;
 	/**
 	 * 委托书
 	 */
@@ -106,7 +106,7 @@ public class OrgUser implements Serializable {
 	/**
 	 * 是否逻辑删除
 	 */
-	private boolean isDeleted;
+	private Boolean isDeleted;
 	/**
 	 * 创建时间
 	 */
@@ -136,9 +136,9 @@ public class OrgUser implements Serializable {
 		this.password = password;
 	}
 
-	public OrgUser(String username, String password, boolean isDisabled, Long orgId, String realname, Integer sex,
+	public OrgUser(String username, String password, Boolean isDisabled, Long orgId, String realname, Integer sex,
 			String position, String title, String fax, String handphone, String telephone, String idcard, String email,
-			String address, String postcode, String note, Integer sort, boolean isDeleted, Timestamp gmtCreate,
+			String address, String postcode, String note, Integer sort, Boolean isDeleted, Timestamp gmtCreate,
 			Timestamp gmtUpdate) {
 		this.username = username;
 		this.password = password;
@@ -186,12 +186,52 @@ public class OrgUser implements Serializable {
 		this.password = password;
 	}
 
-	public boolean isIsDisabled() {
+	public Boolean getIsDisabled() {
 		return isDisabled;
 	}
 
-	public void setIsDisabled(boolean idDisabled) {
-		this.isDisabled = idDisabled;
+	public void setIsDisabled(Boolean isDisabled) {
+		this.isDisabled = isDisabled;
+	}
+
+	public Boolean getIsProxyUpload() {
+		return isProxyUpload;
+	}
+
+	public void setIsProxyUpload(Boolean isProxyUpload) {
+		this.isProxyUpload = isProxyUpload;
+	}
+
+	public String getProxy() {
+		return proxy;
+	}
+
+	public void setProxy(String proxy) {
+		this.proxy = proxy;
+	}
+
+	public Integer getProgress() {
+		return progress;
+	}
+
+	public void setProgress(Integer progress) {
+		this.progress = progress;
+	}
+
+	public Date getReviewDate() {
+		return reviewDate;
+	}
+
+	public void setReviewDate(Date reviewDate) {
+		this.reviewDate = reviewDate;
+	}
+
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
 	public Long getOrgId() {
@@ -304,14 +344,6 @@ public class OrgUser implements Serializable {
 
 	public void setSort(Integer sort) {
 		this.sort = sort;
-	}
-
-	public boolean isIsDeleted() {
-		return isDeleted;
-	}
-
-	public void setIsDeleted(boolean isDeleted) {
-		this.isDeleted = isDeleted;
 	}
 
 	public Timestamp getGmtCreate() {

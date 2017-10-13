@@ -251,7 +251,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户名或密码不正确！");
 		} else {
-			if (user.isIsDisabled()) {
+			if (user.getIsDisabled()) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 						CheckedExceptionResult.ILLEGAL_PARAM, "用户已经被禁用，请联系管理员启用该账号");
 			}

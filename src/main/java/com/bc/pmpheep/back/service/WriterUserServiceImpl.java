@@ -215,7 +215,7 @@ public class WriterUserServiceImpl implements WriterUserService {
                                               CheckedExceptionResult.NULL_PARAM,
                                               "用户名不存在(生产环境中应该写:用户名和密码的组合不正确)");
         } else {
-            if (user.isIsDisabled()) {
+            if (user.getIsDisabled()) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                                   CheckedExceptionResult.ILLEGAL_PARAM,
                                                   "用户已经被禁用，请联系管理员启用该账号");
