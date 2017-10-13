@@ -16,17 +16,15 @@ public class PmphRolePermission implements Serializable {
     /**
      * 主键
      */
-    private Long   id;
+    private Long id;
     /**
      * 角色id
      */
-    private Long   roleId;
+    private Long roleId;
     /**
      * 权限id
      */
-    private Long   permissionId;
-
-    private String permissionIds;
+    private Long permissionId;
 
     public PmphRolePermission() {
     }
@@ -70,20 +68,6 @@ public class PmphRolePermission implements Serializable {
 
     public void setPermissionId(Long permissionId) {
         this.permissionId = permissionId;
-    }
-
-    /**
-     * @return the permissionIds
-     */
-    public String getPermissionIds() {
-        return permissionIds;
-    }
-
-    /**
-     * @param permissionIds the permissionIds to set
-     */
-    public void setPermissionIds(String permissionIds) {
-        this.permissionIds = permissionIds;
     }
 
     @Override

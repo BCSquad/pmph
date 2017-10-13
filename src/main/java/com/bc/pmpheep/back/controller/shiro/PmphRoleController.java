@@ -1,9 +1,7 @@
 package com.bc.pmpheep.back.controller.shiro;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,7 +108,7 @@ public class PmphRoleController {
 	 * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseBean update(PmphRole role) {
         logger.debug(role.toString());
         return new ResponseBean(roleService.update(role));
@@ -150,7 +148,7 @@ public class PmphRoleController {
     public ResponseBean resource(@RequestParam("roleId") Long roleId,
     @RequestParam("permissionIds") String permissionIds) {
         String[] ids = permissionIds.split(",");
-        List<Long> idLists = new ArrayList<Long>();
+        List<Long> idLists = new ArrayList<Long>(ids.length);
         for (String id : ids) {
             idLists.add(Long.valueOf(id));
         }
@@ -168,19 +166,19 @@ public class PmphRoleController {
 	 * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public ResponseBean deleteRole(@RequestParam("roleIds") List<Long> roleIds) {
-        logger.debug(roleIds.toString());
-        Map<String, Object> result = new HashMap<String, Object>();
-        for (Long roleId : roleIds) {
-            logger.debug(roleId.toString());
+    @RequestMapping(value = "/delete/{roleIds}", method = RequestMethod.DELETE)
+    public ResponseBean deleteRole(@PathVariable("roleIds") String roleIds) {
+        logger.debug(roleIds);
+        String[] ids = roleIds.split(",");
+        List<Long> idLists = new ArrayList<Long>(ids.length);
+        for (String id : ids) {
+            idLists.add(Long.valueOf(id));
         }
         // 先批量删除角色,再从角色资源表中删除角色资源数据
-        roleService.deleteRoleAndResource(roleIds);
+        roleService.deleteRoleAndResource(idLists);
         // 用户绑定到这个角色上,也应该删除
-        roleService.deleteRoleAndUser(roleIds);
-        result.put("success", true);
-        return new ResponseBean(result);
+        Integer count = roleService.deleteRoleAndUser(idLists);
+        return new ResponseBean(count);
     }
 
     /**

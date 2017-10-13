@@ -49,7 +49,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public List<PmphRoleVO> getListRole() throws CheckedServiceException {
-    	List<PmphRoleVO> list = roleDao.listRole();
+        List<PmphRoleVO> list = roleDao.listRole();
         return list;
     }
 
@@ -126,7 +126,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或资源ID为空时禁止新增");
         }
-        List<PmphRolePermission> lists = new ArrayList<PmphRolePermission>();
+        List<PmphRolePermission> lists = new ArrayList<PmphRolePermission>(permissionIds.size());
         PmphRolePermission pmphRolePermission;
         for (Long permissionId : permissionIds) {
             pmphRolePermission = new PmphRolePermission();
