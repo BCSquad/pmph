@@ -57,7 +57,6 @@ public class UserMessageVO implements Serializable {
 	 */
 	private String msgId;
 
-	
 	public Long getId() {
 		return id;
 	}
@@ -112,6 +111,10 @@ public class UserMessageVO implements Serializable {
 
 	public void setMsgId(String msgId) {
 		this.msgId = msgId;
+	}
+
+	public String getTitle() {
+		return title;
 	}
 
 }
