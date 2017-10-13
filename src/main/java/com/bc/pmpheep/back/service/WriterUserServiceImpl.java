@@ -150,13 +150,14 @@ public class WriterUserServiceImpl implements WriterUserService {
      */
     @Override
     public WriterUser update(WriterUser user) throws CheckedServiceException {
-        String password = user.getPassword();
-        if (null == password) {
+        if (null == user) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "用户密码为空时禁止更新用户");
-        }
-        if (password != null) {
-            user.setPassword(new DesRun("", user.getPassword()).enpsw);
+                                              CheckedExceptionResult.NULL_PARAM, "用户属性为空时禁止更新用户");
+        } else {
+            String password = user.getPassword();
+            if (Tools.notEmpty(password)) {
+                user.setPassword(new DesRun("", user.getPassword()).enpsw);
+            }
         }
         writerUserDao.update(user);
         return user;

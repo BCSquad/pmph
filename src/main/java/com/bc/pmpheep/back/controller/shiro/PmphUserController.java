@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 
 import org.slf4j.Logger;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphPermission;
-import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.PmphDepartmentService;
 import com.bc.pmpheep.back.service.PmphRoleService;
@@ -69,27 +67,6 @@ public class PmphUserController {
 	 * 功能描述：添加用户保存的方法
 	 * 使用示范：
 	 *
-	 * &#64;param model
-	 * &#64;return
-	 * </pre>
-     * 
-     */
-    @ResponseBody
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public ResponseBean add() {
-        logger.debug("跳转到添加用户的页面");
-        Map<String, Object> result = new HashMap<String, Object>();
-        result.put("user", new PmphUser());
-        result.put("roles", roleService.getList());
-        return new ResponseBean(result);
-    }
-
-    /**
-     * 
-     * <pre>
-	 * 功能描述：添加用户保存的方法
-	 * 使用示范：
-	 *
 	 * &#64;param user
 	 * &#64;param request
 	 * &#64;return
@@ -97,12 +74,12 @@ public class PmphUserController {
      */
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseBean add(PmphUser user, HttpServletRequest request) {
+    public ResponseBean add(PmphUser user, @FormParam("roleIds") String roleIds) {
         logger.debug("添加用户 post 方法");
         logger.debug(user.toString());
-        String[] roldIds = request.getParameterValues("roleId");
-        List<Long> roleIdList = new ArrayList<>(roldIds.length);
-        for (String roleId : roldIds) {
+        String[] ids = roleIds.split(",");
+        List<Long> roleIdList = new ArrayList<>(ids.length);
+        for (String roleId : ids) {
             roleIdList.add(Long.valueOf(roleId));
         }
         return new ResponseBean(userService.add(user, roleIdList));
@@ -124,38 +101,6 @@ public class PmphUserController {
     public ResponseBean updateStatus(PmphUser user) {
         PmphUser pmphUser = userService.update(user);
         return new ResponseBean(pmphUser);
-    }
-
-    /**
-     * 
-     * <pre>
-	 * 功能描述：更新用户
-	 * 使用示范：
-	 *
-	 * &#64;param id
-	 * &#64;param model
-	 * &#64;return
-	 * </pre>
-     */
-    @ResponseBody
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
-    public ResponseBean update(@PathVariable("id") Long id) {
-        Map<String, Object> result = new HashMap<String, Object>();
-        // 要从数据库查询对象进行回显
-        PmphUser user = userService.get(id);
-        result.put("user", user);
-        // 所有的角色列表
-        result.put("roles", roleService.getList());
-        // 根据用户 id 查询用户的所有角色
-        List<PmphRole> hasRoles = userService.getListUserRole(id);
-        // 将用户的所有角色 id 添加到一个字符串中
-        List<Long> rids = new ArrayList<>(hasRoles.size());
-        for (PmphRole r : hasRoles) {
-            rids.add(r.getId());
-        }
-        // 指定用户拥有的角色信息
-        result.put("hasRole", rids);
-        return new ResponseBean(result);
     }
 
     /**

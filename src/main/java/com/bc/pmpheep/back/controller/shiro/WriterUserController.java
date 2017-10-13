@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 
 import org.slf4j.Logger;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.WriterPermission;
-import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.WriterRoleService;
 import com.bc.pmpheep.back.service.WriterUserService;
@@ -63,26 +61,6 @@ public class WriterUserController {
     /**
      * 
      * <pre>
-	 * 功能描述：
-	 * 使用示范：
-	 *
-	 * @param model
-	 * @return
-	 * </pre>
-     */
-    @ResponseBody
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public ResponseBean add() {
-        logger.debug("跳转到添加用户的页面");
-        Map<String, Object> result = new HashMap<String, Object>();
-        result.put("user", new WriterUser());
-        result.put("roles", writerRoleService.getList());
-        return new ResponseBean(result);
-    }
-
-    /**
-     * 
-     * <pre>
 	 * 功能描述：添加用户保存的方法
 	 * 使用示范：
 	 *
@@ -93,12 +71,12 @@ public class WriterUserController {
      */
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseBean add(WriterUser user, HttpServletRequest request) {
+    public ResponseBean add(WriterUser user, @FormParam("roleIds") String roleIds) {
         logger.debug("添加用户 post 方法");
         logger.debug(user.toString());
-        String[] roldIds = request.getParameterValues("roleId");
-        List<Long> roleIdList = new ArrayList<>(roldIds.length);
-        for (String roleId : roldIds) {
+        String[] ids = roleIds.split(",");
+        List<Long> roleIdList = new ArrayList<>(ids.length);
+        for (String roleId : ids) {
             roleIdList.add(Long.valueOf(roleId));
         }
         return new ResponseBean(writerUserService.add(user, roleIdList));
@@ -120,38 +98,6 @@ public class WriterUserController {
     public ResponseBean updateStatus(WriterUser user) {
         WriterUser writerUser = writerUserService.update(user);
         return new ResponseBean(writerUser);
-    }
-
-    /**
-     * 
-     * <pre>
-	 * 功能描述：更新用户
-	 * 使用示范：
-	 *
-	 * @param id
-	 * @param model
-	 * @return
-	 * </pre>
-     */
-    @ResponseBody
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
-    public ResponseBean update(@PathVariable("id") Long id) {
-        Map<String, Object> result = new HashMap<String, Object>();
-        // 要从数据库查询对象进行回显
-        WriterUser user = writerUserService.get(id);
-        result.put("user", user);
-        // 所有的角色列表
-        result.put("roles", writerRoleService.getList());
-        // 根据用户 id 查询用户的所有角色
-        List<WriterRole> hasRoles = writerUserService.getListUserRole(id);
-        // 将用户的所有角色 id 添加到一个字符串中
-        List<Long> rids = new ArrayList<>(hasRoles.size());
-        for (WriterRole r : hasRoles) {
-            rids.add(r.getId());
-        }
-        // 指定用户拥有的角色信息
-        result.put("hasRole", rids);
-        return new ResponseBean(result);
     }
 
     /**

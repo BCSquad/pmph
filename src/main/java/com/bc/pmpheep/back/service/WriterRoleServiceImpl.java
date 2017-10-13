@@ -37,13 +37,8 @@ public class WriterRoleServiceImpl implements WriterRoleService {
     }
 
     @Override
-    public List<WriterRole> getList() throws CheckedServiceException {
-        return roleDao.getListRole();
-    }
-
-    @Override
-    public List<WriterRole> getListRole() throws CheckedServiceException {
-        return roleDao.getListRole();
+    public List<WriterRole> getListRole(String roleName) throws CheckedServiceException {
+        return roleDao.getListRole(roleName);
     }
 
     @Override

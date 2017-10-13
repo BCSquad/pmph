@@ -57,8 +57,8 @@ public class WriterRoleController {
      */
     @ResponseBody
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ResponseBean list() {
-        List<WriterRole> roleList = writerRoleService.getList();
+    public ResponseBean list(@RequestParam("roleName") String roleName) {
+        List<WriterRole> roleList = writerRoleService.getListRole(roleName);
         return new ResponseBean(roleList);
     }
 

@@ -51,7 +51,7 @@ public interface PmphRoleService {
      * 
      * @return
      */
-    List<PmphRole> getList() throws CheckedServiceException;
+    List<PmphRole> getList(String roleName) throws CheckedServiceException;
 
     /**
      * 更新单个角色对象
