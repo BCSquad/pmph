@@ -118,7 +118,7 @@
 		id = #{id}
 	</select>
 
-	<select id="getListRole" parameterType="String" resultType="PmphRole">
+	<select id="getListRole" parameterType="map" resultType="PmphRole">
 		SELECT
 			id,
 			role_name,

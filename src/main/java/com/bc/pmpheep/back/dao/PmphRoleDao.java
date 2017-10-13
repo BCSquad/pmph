@@ -34,7 +34,7 @@ public interface PmphRoleDao {
 
     Integer update(PmphRole role);
 
-    List<PmphRole> getListRole(String roleName);
+    List<PmphRole> getListRole(@Param("roleName") String roleName);
 
     List<PmphRoleVO> listRole();
 

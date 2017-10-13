@@ -117,7 +117,7 @@
 			id = #{id}
 	</select>
 	
-	<select id="getListRole" parameterType="String" resultType="WriterRole">
+	<select id="getListRole" parameterType="map" resultType="WriterRole">
 		SELECT
 			id,
 			role_name,
