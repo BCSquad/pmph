@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * MongoDB 图片控制器
+ * 文件下载控制器
  *
  * @author L.X <gugia@qq.com>
  */
 @Controller
-public class ImageController {
+public class FileDownLoadController {
 
-    Logger logger = LoggerFactory.getLogger(ImageController.class);
+    Logger logger = LoggerFactory.getLogger(FileDownLoadController.class);
 
     @Resource
     FileService fileService;
@@ -36,14 +36,16 @@ public class ImageController {
      * @param id 图片在MongoDB中的id
      * @param response 服务响应
      */
-    @RequestMapping(value = "/image/{id}", method = RequestMethod.GET)
-    public void avatar(@PathVariable("id") String id, HttpServletResponse response) {
-        response.setContentType("image/png");
+    @RequestMapping(value = "/file/download/{id}", method = RequestMethod.GET)
+    public void download(@PathVariable("id") String id, HttpServletResponse response) {
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/force-download");
         GridFSDBFile file = fileService.get(id);
         if (null == file) {
-            logger.warn("未找到id为'{}'的图片文件", id);
+            logger.warn("未找到id为'{}'的文件", id);
             return;
         }
+        response.setHeader("Content-Disposition", "attachment;fileName=" + file.getFilename());
         try (OutputStream out = response.getOutputStream()) {
             file.writeTo(out);
             out.flush();
