@@ -4,6 +4,8 @@
  */
 package com.bc.pmpheep.general.service;
 
+import com.bc.pmpheep.general.bean.FileType;
+import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -33,14 +35,49 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileService {
 
     Logger logger = LoggerFactory.getLogger(FileService.class);
+    final String IS_IMAGE = "is_image";
+    final String PK = "pk";
+    final String TYPE = "type";
 
     @Resource
     GridFsTemplate gridFsTemplate;
 
-    public String save(MultipartFile file) throws IOException {
+    /**
+     * 保存图片
+     *
+     * @param file 要保存的图片
+     * @param imageType 图片所属类型
+     * @param pk 对应的实体类主键(id)
+     * @return 返回由MongoDB自动生成的id字符串
+     * @throws IOException IO读写错误
+     */
+    public String save(MultipartFile file, ImageType imageType, long pk) throws IOException {
         DBObject metaData = new BasicDBObject();
-        metaData.put("extra1", "anything 1");
-        metaData.put("extra2", "anything 2");
+        metaData.put(IS_IMAGE, true);
+        metaData.put(TYPE, imageType.getType());
+        metaData.put(PK, pk);
+        GridFSFile gridFSFile;
+        try (InputStream inputStream = file.getInputStream()) {
+            gridFSFile = gridFsTemplate.store(inputStream, file.getOriginalFilename(), "multipart/form-data", metaData);
+            inputStream.close();
+        }
+        return gridFSFile.getId().toString();
+    }
+    
+    /**
+     * 保存文件
+     *
+     * @param file 要保存的文件
+     * @param fileType 文件所属类型
+     * @param pk 对应的实体类主键(id)
+     * @return 返回由MongoDB自动生成的id字符串
+     * @throws IOException IO读写错误
+     */
+    public String save(MultipartFile file, FileType fileType, long pk) throws IOException {
+        DBObject metaData = new BasicDBObject();
+        metaData.put(IS_IMAGE, false);
+        metaData.put(TYPE, fileType.getType());
+        metaData.put(PK, pk);
         GridFSFile gridFSFile;
         try (InputStream inputStream = file.getInputStream()) {
             gridFSFile = gridFsTemplate.store(inputStream, file.getOriginalFilename(), "multipart/form-data", metaData);
