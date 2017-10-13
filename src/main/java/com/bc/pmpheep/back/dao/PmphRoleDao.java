@@ -34,24 +34,24 @@ public interface PmphRoleDao {
 
     Integer update(PmphRole role);
 
-    List<PmphRole> getListRole();
-    
+    List<PmphRole> getListRole(String roleName);
+
     List<PmphRoleVO> listRole();
 
     List<PmphRolePermission> getPmphRolePermissionByRoleId(Long roleId);
 
     List<Long> getPmphRolePermissionIdByRoleId(Long roleId);
-    
+
     /**
-	 * 
-	 *  
-	 * 功能描述：根据用户id获取该用户所属角色
-	 *
-	 * @param userId  用户id
-	 * @return 所属角色对象
-	 *
-	 */
-	List<PmphRoleVO> listPmphUserRoleByUserId(Long userId);
+     * 
+     * 
+     * 功能描述：根据用户id获取该用户所属角色
+     * 
+     * @param userId 用户id
+     * @return 所属角色对象
+     * 
+     */
+    List<PmphRoleVO> listPmphUserRoleByUserId(Long userId);
 
     PmphUserRole getUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
 

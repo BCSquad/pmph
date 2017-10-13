@@ -45,13 +45,6 @@ public interface WriterRoleService {
     WriterRole get(Long id) throws CheckedServiceException;
 
     /**
-     * 查询所有角色对象的列表
-     * 
-     * @return
-     */
-    List<WriterRole> getList() throws CheckedServiceException;
-
-    /**
      * 更新单个角色对象
      * 
      * @param role
@@ -63,7 +56,7 @@ public interface WriterRoleService {
      * 
      * @return
      */
-    List<WriterRole> getListRole() throws CheckedServiceException;
+    List<WriterRole> getListRole(String roleName) throws CheckedServiceException;
 
     /**
      * 根据用户 id 和角色 id 加载一条用户角色关系数据

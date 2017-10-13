@@ -117,12 +117,22 @@
 			id = #{id}
 	</select>
 	
-	<select id="getListRole" resultType="WriterRole">
+	<select id="getListRole" parameterType="String" resultType="WriterRole">
 		SELECT
 			id,
-			`role_name`
+			role_name,
+			is_disabled,
+			note,
+			sort
 		FROM
 			writer_role
+		where 
+			1=1
+		<if test="roleName != null and roleName!=''">
+			and ROLE_NAME LIKE CONCAT('%',CONCAT(#{roleName},'%')) 
+		</if>
+		order by 
+			sort asc
 	</select>
 
 	<select id="getUserRole" resultType="WriterUserRole"

@@ -33,7 +33,7 @@ public interface WriterRoleDao {
 
     Integer update(WriterRole role);
 
-    List<WriterRole> getListRole();
+    List<WriterRole> getListRole(String roleName);
 
     List<WriterRolePermission> getWriterRolePermissionByRoleId(Long roleId);
 

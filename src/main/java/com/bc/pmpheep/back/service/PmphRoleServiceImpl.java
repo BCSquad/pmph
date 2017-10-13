@@ -38,8 +38,8 @@ public class PmphRoleServiceImpl implements PmphRoleService {
     }
 
     @Override
-    public List<PmphRole> getList() throws CheckedServiceException {
-        List<PmphRole> pmphRoles = roleDao.getListRole();
+    public List<PmphRole> getList(String roleName) throws CheckedServiceException {
+        List<PmphRole> pmphRoles = roleDao.getListRole(roleName);
         for (PmphRole pmphRole : pmphRoles) {
             List<Long> subList = this.getListPmphRolePermissionIdByRoleId(pmphRole.getId());
             pmphRole.setPmphRolePermissionChild(subList);

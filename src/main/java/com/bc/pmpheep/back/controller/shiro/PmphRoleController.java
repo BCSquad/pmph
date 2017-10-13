@@ -57,8 +57,8 @@ public class PmphRoleController {
      */
     @ResponseBody
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ResponseBean list() {
-        List<PmphRole> roleList = roleService.getList();
+    public ResponseBean list(@RequestParam("roleName") String roleName) {
+        List<PmphRole> roleList = roleService.getList(roleName);
         return new ResponseBean(roleList);
     }
 

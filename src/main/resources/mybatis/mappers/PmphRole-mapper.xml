@@ -118,15 +118,22 @@
 		id = #{id}
 	</select>
 
-	<select id="getListRole" resultType="PmphRole">
+	<select id="getListRole" parameterType="String" resultType="PmphRole">
 		SELECT
-		id,
-		role_name,
-		is_disabled,
-		note,
-		sort
+			id,
+			role_name,
+			is_disabled,
+			note,
+			sort
 		FROM
-		pmph_role
+			pmph_role 
+		where 
+			1=1
+		<if test="roleName != null and roleName!=''">
+			and ROLE_NAME LIKE CONCAT('%',CONCAT(#{roleName},'%')) 
+		</if>
+		order by 
+			sort asc
 	</select>
 	
 	<select id="listRole" resultType="PmphRoleVO">
