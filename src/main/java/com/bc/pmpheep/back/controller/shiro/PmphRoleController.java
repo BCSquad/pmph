@@ -108,7 +108,7 @@ public class PmphRoleController {
 	 * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseBean update(PmphRole role) {
         logger.debug(role.toString());
         return new ResponseBean(roleService.update(role));

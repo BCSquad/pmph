@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.FormParam;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -165,12 +166,12 @@ public class WriterUserController {
 	 * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
-    public ResponseBean update(WriterUser user, HttpServletRequest request) {
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    public ResponseBean update(WriterUser user, @FormParam("roleIds") String roleIds) {
         logger.debug("user => " + user.toString());
-        String[] roleIds = request.getParameterValues("roleId");
-        List<Long> roleIdList = new ArrayList<>(roleIds.length);
-        for (String roleId : roleIds) {
+        String[] ids = roleIds.split(",");
+        List<Long> roleIdList = new ArrayList<>(ids.length);
+        for (String roleId : ids) {
             roleIdList.add(Long.valueOf(roleId));
         }
         return new ResponseBean(writerUserService.update(user, roleIdList));
