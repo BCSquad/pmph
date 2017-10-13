@@ -11,6 +11,7 @@ import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.UserMessageDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.UserMessage;
@@ -50,6 +51,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
 	@Autowired
 	private MyWebSocketHandler handler;
+
+	@Autowired
+	private DecPositionService decPositionService;
 
 	@Override
 	public PageResult<MessageStateVO> listMessageState(PageParameter<MessageStateVO> pageParameter)
@@ -161,7 +165,11 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 			}
 			String[] ids = bookIds.split(",");
 			for (String id : ids) {
-				///////////获取到书籍id然后根据书籍id查询申报者id放入userMessage的接收人中
+				List<DecPosition> list = decPositionService.listDecPositionsByTextbookId(Long.valueOf(id));
+				for (DecPosition position : list) {
+					
+				}
+				// 获取到书籍id然后根据书籍id在dec_position表中获取到申报表id根据申报表id在declaration表中获取作家id放入userMessage的接收人中
 			}
 
 		}

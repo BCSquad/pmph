@@ -70,6 +70,17 @@ public interface DecPositionDao {
 	
 	/**
 	 * 
+	 *  
+	 * 功能描述：根据书籍id获取申报表id
+	 *
+	 * @param textbookId 书籍id
+	 * @return 申报表id结果集
+	 *
+	 */
+	List<DecPosition> listDecPositionsByTextbookId(Long textbookId);
+	
+	/**
+	 * 
 	 * Description:查询表的总记录数
 	 * @author:lyc
 	 * @date:2017年10月9日下午4:55:26

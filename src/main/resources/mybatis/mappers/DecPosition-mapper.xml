@@ -28,10 +28,10 @@
 				rank,
 			</if>
 			<if test="syllabusId !=null and syllabusId !=''">
-			    syllabus_id,
+				syllabus_id,
 			</if>
 			<if test="syllabusName !=null and syllabusName !=''">
-			    syllabus_name,
+				syllabus_name,
 			</if>
 		</trim>
 	</sql>
@@ -60,10 +60,10 @@
 				#{rank},
 			</if>
 			<if test="syllabusId !=null and syllabusId !=''">
-			    #{syllabusId},
+				#{syllabusId},
 			</if>
 			<if test="syllabusName !=null and syllabusName !=''">
-			    #{syllabusName},
+				#{syllabusName},
 			</if>
 		</trim>
 	</sql>
@@ -112,10 +112,10 @@
 				rank = #{rank},
 			</if>
 			<if test="syllabusId !=null and syllabusId !=''">
-			    syllabus_id = #{syllabusId},
+				syllabus_id = #{syllabusId},
 			</if>
 			<if test="syllabusName !=null and syllabusName !=''">
-			    syllabus_name = #{syllabusName},
+				syllabus_name = #{syllabusName},
 			</if>
 		</set>
 		where id=#{id} ;
@@ -134,8 +134,16 @@
 		declaration_id=#{declarationId};
 	</select>
 
+	<!-- 根据书籍id查询申报id -->
+	<select id="listDecPositionsByTextbookId" parameterType="java.lang.Long"
+		resultType="DecPosition">
+		SELECT d.user_id FROM declaration d LEFT JOIN dec_position
+		p ON d.id = p.declaration_id WHERE p.textbook_id =#{textbookId};
+	</select>
+
 	<!-- 查询作家申报职位表的总记录数 -->
 	<select id="getDecPosition" resultType="java.lang.Long">
-		select count(*) from dec_position
+		select count(*) from
+		dec_position
 	</select>
 </mapper>

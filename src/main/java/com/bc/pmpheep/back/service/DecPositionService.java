@@ -49,4 +49,16 @@ public interface DecPositionService {
    	 * @throws CheckedServiceException
    	 */ 
     List<DecPosition> listDecPositions(Long declarationId) throws CheckedServiceException;
+    
+    /**
+     * 
+     *  
+     * 功能描述：根据书籍id获取申报表id
+     *
+     * @param textbookId 书籍id
+     * @return 申报表id结果集
+     * @throws CheckedServiceException
+     *
+     */
+    List<DecPosition> listDecPositionsByTextbookId(Long textbookId) throws CheckedServiceException;
 }

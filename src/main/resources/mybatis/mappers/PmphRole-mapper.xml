@@ -141,7 +141,7 @@
 		id,
 		role_name
 		FROM
-		pmph_role
+		pmph_role where is_disabled = false;
 	</select>
 
 	<select id="getPmphRolePermissionByRoleId" parameterType="Long"
