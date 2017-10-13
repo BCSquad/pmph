@@ -18,6 +18,7 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ShiroSession;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
+import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -67,7 +68,7 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 							CheckedExceptionResult.NULL_PARAM, "文件不能为空");
 				}
-				pmphGroupFile.setFileId(fileService.save(file));
+				pmphGroupFile.setFileId(fileService.save(file,FileType.GROUP_FILE, 0));
 				pmphGroupFileDao.addPmphGroupFile(pmphGroupFile);
 			}
 			result = "SUCCESS";

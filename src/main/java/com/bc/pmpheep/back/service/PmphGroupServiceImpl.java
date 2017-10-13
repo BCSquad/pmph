@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ShiroSession;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
+import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -150,7 +151,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		}
 		String groupImage = Const.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		if (null != file) {
-			groupImage = fileService.save(file);
+			groupImage = fileService.save(file,ImageType.GROUP_AVATAR, 0);
 		}
 		pmphGroup.setGroupImage(groupImage);
 		pmphGroup.setFounderId(pmphUser.getId());
@@ -174,7 +175,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throws CheckedServiceException, IOException {
 		if (pmphGroupMemberService.isFounderOrisAdmin()){
 		    if (null != file) {
-			     pmphGroup.setGroupImage(fileService.save(file));
+			     pmphGroup.setGroupImage(fileService.save(file,ImageType.GROUP_AVATAR, 0));
 		    }
 		    if (null == pmphGroup.getId()) {
 			     throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
