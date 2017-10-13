@@ -202,7 +202,7 @@ public class PmphUser implements java.io.Serializable {
     /**
      * @return the isDisabled
      */
-    public Boolean getIsDisabled() {
+    public Boolean isIsDisabled() {
         return isDisabled;
     }
 
@@ -216,7 +216,7 @@ public class PmphUser implements java.io.Serializable {
     /**
      * @return the isDeleted
      */
-    public Boolean getIsDeleted() {
+    public Boolean isIsDeleted() {
         return isDeleted;
     }
 

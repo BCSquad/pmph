@@ -306,19 +306,11 @@ public class OrgUser implements Serializable {
 		this.sort = sort;
 	}
 
-	public boolean isDisabled() {
-		return isDisabled;
-	}
-
-	public void setDisabled(boolean isDisabled) {
-		this.isDisabled = isDisabled;
-	}
-
-	public boolean isDeleted() {
+	public boolean isIsDeleted() {
 		return isDeleted;
 	}
 
-	public void setDeleted(boolean isDeleted) {
+	public void setIsDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
 

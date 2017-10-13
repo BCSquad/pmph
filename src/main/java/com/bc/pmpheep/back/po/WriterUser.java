@@ -536,7 +536,7 @@ public class WriterUser implements Serializable {
     /**
      * @return the isDisabled
      */
-    public Boolean getIsDisabled() {
+    public Boolean isIsDisabled() {
         return isDisabled;
     }
 
@@ -550,7 +550,7 @@ public class WriterUser implements Serializable {
     /**
      * @return the isTeacher
      */
-    public Boolean getIsTeacher() {
+    public Boolean isIsTeacher() {
         return isTeacher;
     }
 
@@ -564,7 +564,7 @@ public class WriterUser implements Serializable {
     /**
      * @return the isWriter
      */
-    public Boolean getIsWriter() {
+    public boolean isIsWriter() {
         return isWriter;
     }
 
@@ -578,7 +578,7 @@ public class WriterUser implements Serializable {
     /**
      * @return the isExpert
      */
-    public Boolean getIsExpert() {
+    public Boolean isIsExpert() {
         return isExpert;
     }
 
@@ -592,7 +592,7 @@ public class WriterUser implements Serializable {
     /**
      * @return the isDeleted
      */
-    public Boolean getIsDeleted() {
+    public Boolean isIsDeleted() {
         return isDeleted;
     }
 
