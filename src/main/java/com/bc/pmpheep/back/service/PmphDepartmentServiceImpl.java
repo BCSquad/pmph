@@ -171,4 +171,15 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 		}
 	}
 
+	@Override
+	public List<PmphUserDepartmentVO> listPmphUserDepartmentByDpName(String dpName) throws CheckedServiceException {
+		if (null != dpName) {
+			dpName = dpName.trim();
+			dpName = dpName.replace(" ", "%");
+			dpName = "%" + dpName + "%";
+		}
+		List<PmphUserDepartmentVO> list = pmphDepartmentDao.listPmphDepartmentByDpName(dpName);
+		return list;
+	}
+
 }

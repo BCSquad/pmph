@@ -62,6 +62,14 @@ public interface PmphDepartmentDao {
     List<PmphUserDepartmentVO> listPmphDepartment(Long parentId);
     
     /**
+     * 
+     * 功能描述：模糊查询部门
+     * @param dpName 部门名称
+     * @return 查询的结果集
+     */
+    List<PmphUserDepartmentVO> listPmphDepartmentByDpName(String dpName);
+    
+    /**
 	 * 根据ids批量删除PmphDepartment
 	 */
 	Integer deletePmphDepartmentBatch(List<Long> ids);

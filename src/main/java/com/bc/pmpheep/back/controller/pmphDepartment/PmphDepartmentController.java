@@ -78,4 +78,18 @@ public class PmphDepartmentController {
 		return new ResponseBean(pmphDepartmentService.deletePmphDepartmentBatch(id));
 	}
 
+	/**
+	 * 
+	 *  
+	 * 功能描述：根据部门名称模糊查询部门
+	 *
+	 * @param dpName 部门名称
+	 * @return 查询出来的结果集
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/list/pmphdepartment", method = RequestMethod.GET)
+	public ResponseBean listPmphDepartment(String dpName) {
+		return new ResponseBean(pmphDepartmentService.listPmphUserDepartmentByDpName(dpName));
+	}
 }

@@ -32,6 +32,10 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	 */
 	private String username;
 	/**
+	 * 部门id
+	 */
+	private long departmentId;
+	/**
 	 * 是否禁用
 	 */
 	private boolean isDisabled;
@@ -191,6 +195,14 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	 */
 	public String getEmail() {
 		return email;
+	}
+
+	public long getDepartmentId() {
+		return departmentId;
+	}
+
+	public void setDepartmentId(long departmentId) {
+		this.departmentId = departmentId;
 	}
 
 	/**

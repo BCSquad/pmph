@@ -115,6 +115,11 @@
 		select * from pmph_department where parent_id = #{parentId} order by sort;
 	</select>
 	
+		<!-- 根据部门名称模糊查询部门 -->
+	<select id="listPmphDepartmentByDpName" parameterType="java.lang.String" resultType="PmphUserDepartmentVO">
+		select id,dp_name from pmph_department where dp_name like #{dpName};
+	</select>
+	
 	<!-- 批量删除-->
     <delete id="deletePmphDepartmentBatch" >
     	delete from pmph_department where true and id in 
