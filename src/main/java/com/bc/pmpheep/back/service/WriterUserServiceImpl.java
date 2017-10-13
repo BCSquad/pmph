@@ -70,7 +70,7 @@ public class WriterUserServiceImpl implements WriterUserService {
             user.setRealname(user.getUsername());
         }
         // 使用用户名作为盐值，MD5 算法加密
-        user.setPassword(ShiroKit.md5(user.getPassword(), user.getUsername()));
+        user.setPassword(new DesRun("", user.getPassword()).enpsw);
         writerUserDao.add(user);
         return user;
     }
@@ -391,63 +391,65 @@ public class WriterUserServiceImpl implements WriterUserService {
         return writerUserDao.getWriterUserPermissionByUserId(userId);
     }
 
-	@Override
-	public PageResult<GroupMemberWriterUserVO> getListGroupMemberWriterUsers(
-			PageParameter<GroupMemberWriterUserVO> pageParameter)
-			throws CheckedServiceException {
-		if (null == pageParameter.getParameter().getBookname()){
-			String bookname = pageParameter.getParameter().getBookname().trim();
-			if (!bookname.equals("")){
-				pageParameter.getParameter().setBookname("%" + bookname + "%");
-			}else{
-				pageParameter.getParameter().setBookname(bookname);
-			}
-		}
-		if (null == pageParameter.getParameter().getRealname()){
-			String realname = pageParameter.getParameter().getRealname().trim();
-			if (!realname.equals("")){
-				pageParameter.getParameter().setRealname("%" + realname + "%");
-			}else{
-				pageParameter.getParameter().setRealname(realname);
-			}
-		}
-		if (null == pageParameter.getParameter().getUsername()){
-			String username = pageParameter.getParameter().getUsername().trim();
-			if (!username.equals("")){
-				pageParameter.getParameter().setUsername("%" + username + "%");
-			}else{
-				pageParameter.getParameter().setUsername(username);
-			}
-		}
-		PageResult<GroupMemberWriterUserVO> pageResult = new PageResult<>();
-		Tools.CopyPageParameter(pageParameter, pageResult);
-		int total = writerUserDao.getGroupMemberWriterUserTotal(pageParameter);
-		if (total > 0){
-			List<GroupMemberWriterUserVO> list = writerUserDao.getListGroupMemberWriterUserVOs(pageParameter);
-			for (GroupMemberWriterUserVO vo : list){
-				switch (vo.getChosenPosition()) {
-				case 0:
-					vo.setChosenPositionName("无职位");;
-					break;
-				case 1:
-					vo.setChosenPositionName("主编");
-					break;
-				case 2:
-					vo.setChosenPositionName("副主编");
-					break;
-				case 3:
-					vo.setChosenPositionName("编委");
-					break;
-				default:
-					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-							CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有身份");
-				}
-			}
-			pageResult.setRows(list);
-		}
-		pageResult.setTotal(total);
-		return pageResult;
-	}
+    @Override
+    public PageResult<GroupMemberWriterUserVO> getListGroupMemberWriterUsers(
+    PageParameter<GroupMemberWriterUserVO> pageParameter) throws CheckedServiceException {
+        if (null == pageParameter.getParameter().getBookname()) {
+            String bookname = pageParameter.getParameter().getBookname().trim();
+            if (!bookname.equals("")) {
+                pageParameter.getParameter().setBookname("%" + bookname + "%");
+            } else {
+                pageParameter.getParameter().setBookname(bookname);
+            }
+        }
+        if (null == pageParameter.getParameter().getRealname()) {
+            String realname = pageParameter.getParameter().getRealname().trim();
+            if (!realname.equals("")) {
+                pageParameter.getParameter().setRealname("%" + realname + "%");
+            } else {
+                pageParameter.getParameter().setRealname(realname);
+            }
+        }
+        if (null == pageParameter.getParameter().getUsername()) {
+            String username = pageParameter.getParameter().getUsername().trim();
+            if (!username.equals("")) {
+                pageParameter.getParameter().setUsername("%" + username + "%");
+            } else {
+                pageParameter.getParameter().setUsername(username);
+            }
+        }
+        PageResult<GroupMemberWriterUserVO> pageResult = new PageResult<>();
+        Tools.CopyPageParameter(pageParameter, pageResult);
+        int total = writerUserDao.getGroupMemberWriterUserTotal(pageParameter);
+        if (total > 0) {
+            List<GroupMemberWriterUserVO> list =
+            writerUserDao.getListGroupMemberWriterUserVOs(pageParameter);
+            for (GroupMemberWriterUserVO vo : list) {
+                switch (vo.getChosenPosition()) {
+                case 0:
+                    vo.setChosenPositionName("无职位");
+                    ;
+                    break;
+                case 1:
+                    vo.setChosenPositionName("主编");
+                    break;
+                case 2:
+                    vo.setChosenPositionName("副主编");
+                    break;
+                case 3:
+                    vo.setChosenPositionName("编委");
+                    break;
+                default:
+                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                                      CheckedExceptionResult.ILLEGAL_PARAM,
+                                                      "该用户没有身份");
+                }
+            }
+            pageResult.setRows(list);
+        }
+        pageResult.setTotal(total);
+        return pageResult;
+    }
 
     // /**
     // *

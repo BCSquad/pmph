@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -96,9 +95,8 @@ public class WriterUserController {
     public ResponseBean add(WriterUser user, HttpServletRequest request) {
         logger.debug("添加用户 post 方法");
         logger.debug(user.toString());
-        Map<String, Object> result = new HashMap<String, Object>();
-        List<Long> roleIdList = new ArrayList<>();
         String[] roldIds = request.getParameterValues("roleId");
+        List<Long> roleIdList = new ArrayList<>(roldIds.length);
         for (String roleId : roldIds) {
             roleIdList.add(Long.valueOf(roleId));
         }
@@ -146,7 +144,7 @@ public class WriterUserController {
         // 根据用户 id 查询用户的所有角色
         List<WriterRole> hasRoles = writerUserService.getListUserRole(id);
         // 将用户的所有角色 id 添加到一个字符串中
-        List<Long> rids = new ArrayList<>();
+        List<Long> rids = new ArrayList<>(hasRoles.size());
         for (WriterRole r : hasRoles) {
             rids.add(r.getId());
         }
@@ -171,7 +169,7 @@ public class WriterUserController {
     public ResponseBean update(WriterUser user, HttpServletRequest request) {
         logger.debug("user => " + user.toString());
         String[] roleIds = request.getParameterValues("roleId");
-        List<Long> roleIdList = new ArrayList<>();
+        List<Long> roleIdList = new ArrayList<>(roleIds.length);
         for (String roleId : roleIds) {
             roleIdList.add(Long.valueOf(roleId));
         }
@@ -214,7 +212,7 @@ public class WriterUserController {
     @RequestMapping(value = "/delete/{userIds}", method = RequestMethod.DELETE)
     public ResponseBean delete(@PathVariable("userIds") String userIds) {
         String[] ids = userIds.split(",");
-        List<Long> list = new ArrayList<Long>();
+        List<Long> list = new ArrayList<Long>(ids.length);
         for (String str : ids) {
             list.add(Long.valueOf(str));
         }
