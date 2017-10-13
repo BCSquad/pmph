@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 
 import org.slf4j.Logger;
@@ -97,12 +96,12 @@ public class PmphUserController {
      */
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseBean add(PmphUser user, HttpServletRequest request) {
+    public ResponseBean add(PmphUser user, @FormParam("roleIds") String roleIds) {
         logger.debug("添加用户 post 方法");
         logger.debug(user.toString());
-        String[] roldIds = request.getParameterValues("roleId");
-        List<Long> roleIdList = new ArrayList<>(roldIds.length);
-        for (String roleId : roldIds) {
+        String[] ids = roleIds.split(",");
+        List<Long> roleIdList = new ArrayList<>(ids.length);
+        for (String roleId : ids) {
             roleIdList.add(Long.valueOf(roleId));
         }
         return new ResponseBean(userService.add(user, roleIdList));
