@@ -52,7 +52,7 @@ public interface UserMessageDao {
 	 * @return 一页的结果集
 	 *
 	 */
-	List<UserMessageVO> listMessage(PageParameter<UserMessage> pageParameter);
+	List<UserMessageVO> listMessage(PageParameter<UserMessageVO> pageParameter);
 
 	/**
 	 * 批量插入 UserMessage

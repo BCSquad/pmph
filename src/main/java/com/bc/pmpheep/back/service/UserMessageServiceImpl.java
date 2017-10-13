@@ -248,7 +248,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 	}
 
 	@Override
-	public PageResult<UserMessage> listMessage(PageParameter<UserMessage> pageParameter)
+	public PageResult<UserMessageVO> listMessage(PageParameter<UserMessageVO> pageParameter)
 			throws CheckedServiceException {
 		PmphUser pmphUser = ShiroSession.getPmphUser();
 		if (null == pmphUser) {
@@ -269,13 +269,14 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 		pageParameter.getParameter().setSenderId(pmphUser.getId());
 		PageResult<UserMessageVO> pageResult = new PageResult<>();
 		Tools.CopyPageParameter(pageParameter, pageResult);
-		int num = userMessageDao.listMessageTotal(pageParameter.getParameter().getTitle());
-		if(num > 0){
+		int total = userMessageDao.listMessageTotal(pageParameter.getParameter().getTitle());
+		if(total > 0){
 			List<UserMessageVO> list = userMessageDao.listMessage(pageParameter);
 			pageResult.setRows(list);
 		}
+		pageResult.setPageTotal(total);
 		
-		return null;
+		return pageResult;
 	}
 
 }

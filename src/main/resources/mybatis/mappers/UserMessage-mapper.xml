@@ -196,8 +196,8 @@
 		GROUP BY m.msg_id,
 		m.sender_id,
 		m.sender_type,
-		m.title;
-		
+		m.title
+		LIMIT #{start},#{pageSize}
 	</select>
 
 </mapper>

@@ -5,6 +5,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.vo.MessageStateVO;
+import com.bc.pmpheep.back.vo.UserMessageVO;
 import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -35,7 +36,7 @@ public interface UserMessageService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PageResult<UserMessage> listMessage(PageParameter<UserMessage> pageParameter) throws CheckedServiceException;
+	PageResult<UserMessageVO> listMessage(PageParameter<UserMessageVO> pageParameter) throws CheckedServiceException;
 
 	/**
 	 * 向各个对象发送消息

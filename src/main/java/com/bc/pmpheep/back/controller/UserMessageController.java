@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +14,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.service.UserMessageService;
 import com.bc.pmpheep.back.vo.MessageStateVO;
+import com.bc.pmpheep.back.vo.UserMessageVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.po.Message;
 
@@ -132,4 +134,24 @@ public class UserMessageController {
 		return new ResponseBean(userMessageService.deleteMessageByMsgId(userMessage.getMsgId()));
 	}
 
+	/**
+	 * 
+	 *  
+	 * 功能描述：初始化/消息标题查询系统消息
+	 *
+	 * @param pageNumber 当前页
+	 * @param pageSize 页面数据条数
+	 * @param title 标题
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/list/message", method = RequestMethod.GET)
+	public ResponseBean listMessage(Integer pageNumber, Integer pageSize, String title) {
+		PageParameter<UserMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+		UserMessageVO userMessageVO = new UserMessageVO();
+		userMessageVO.setTitle(title);
+		pageParameter.setParameter(userMessageVO);
+		return new ResponseBean(userMessageService.listMessage(pageParameter));
+	}
 }
