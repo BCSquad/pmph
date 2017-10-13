@@ -134,6 +134,17 @@ public class UserMessageController {
 		return new ResponseBean(userMessageService.deleteMessageByMsgId(userMessage.getMsgId()));
 	}
 
+	/**
+	 * 
+	 *  
+	 * 功能描述：初始化/消息标题查询系统消息
+	 *
+	 * @param pageNumber 当前页
+	 * @param pageSize 页面数据条数
+	 * @param title 标题
+	 * @return
+	 *
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/list/message", method = RequestMethod.GET)
 	public ResponseBean listMessage(Integer pageNumber, Integer pageSize, String title) {
