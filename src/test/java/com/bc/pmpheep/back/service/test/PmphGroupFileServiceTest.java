@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -47,7 +48,10 @@ public class PmphGroupFileServiceTest extends BaseTest {
     	File file = new File("C:/Users/Administrator/Desktop/学校信息.xlsx");
     	FileInputStream fis = new FileInputStream(file);
     	MockMultipartFile multipartFile = new MockMultipartFile("C:/Users/Administrator/Desktop","学校信息.xlsx","application/vnd_ms-excel",fis);
-    	pmphGroupFileService.addPmphGroupFile(files,multipartFile);
+    	List <MultipartFile> multipartFiles =new ArrayList<MultipartFile>(1);
+    	List <Long> goupIds =new ArrayList<Long>(1);
+    	goupIds.add(1L);
+    	pmphGroupFileService.addPmphGroupFile(goupIds,multipartFiles);
     	Assert.assertTrue("添加失败",pmphGroupFile.getId() > 0 );
     	//修改
     	pmphGroupFile.setFileName(String.valueOf(random.nextInt(200)));

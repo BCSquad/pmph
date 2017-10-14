@@ -103,9 +103,11 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * @param PmphGroup
 	 * @return 影响行数
 	 * @throws CheckedServiceException
+	 * @throws IOException 
+	 * @update Mryang 2017.10.13 15:20
 	 */
 	@Override
-	public Integer updatePmphGroup(PmphGroup pmphGroup) throws CheckedServiceException {
+	public Integer updatePmphGroup(MultipartFile file,PmphGroup pmphGroup) throws CheckedServiceException, IOException {
 		if (null == pmphGroup) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"参数对象为空");
@@ -113,6 +115,16 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		if (null == pmphGroup.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
+		}
+		//修改小组图片
+		if(null != file ){
+			Long id = pmphGroup.getId();
+			PmphGroup pmphGroupOld =getPmphGroupById(id);
+			if(null != pmphGroupOld && null != pmphGroupOld.getGroupImage() && !"".equals(pmphGroupOld.getGroupImage())){
+				fileService.remove(pmphGroupOld.getGroupImage());
+			}
+			String newGroupImage = fileService.save(file,ImageType.GROUP_AVATAR, 0);
+			pmphGroup.setGroupImage(newGroupImage);
 		}
 		return pmphGroupDao.updatePmphGroup(pmphGroup);
 	}
