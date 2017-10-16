@@ -11,10 +11,25 @@ package com.bc.pmpheep.general.bean;
  */
 public enum FileType {
 
+    /**
+     * 小组文件
+     */
     GROUP_FILE("小组文件"),
+    /**
+     * 教材通知内容附件
+     */
     MATERIAL_NOTICE_ATTACHMENT("教材通知内容附件"),
+    /**
+     * 教材备注附件
+     */
     MATERIAL_NOTE_ATTACHMENT("教材备注附件"),
+    /**
+     * 教学大纲
+     */
     SYLLABUS("教学大纲"),
+    /**
+     * CMS附件
+     */
     CMS_ATTACHMENT("CMS附件");
 
     private final String type;
