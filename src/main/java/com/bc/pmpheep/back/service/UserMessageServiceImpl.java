@@ -167,7 +167,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 			for (String id : ids) {
 				List<DecPosition> list = decPositionService.listDecPositionsByTextbookId(Long.valueOf(id));
 				for (DecPosition position : list) {
-					
+
 				}
 				// 获取到书籍id然后根据书籍id在dec_position表中获取到申报表id根据申报表id在declaration表中获取作家id放入userMessage的接收人中
 			}
@@ -270,8 +270,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		if (null != pageParameter.getParameter().getTitle() && pageParameter.getParameter().getTitle().equals("")) {
-			String title = pageParameter.getParameter().getTitle();
+		String title = pageParameter.getParameter().getTitle();
+		if (null != title && !"".equals(title)) {
 			title = title.trim();
 			title = title.replace(" ", "%");
 			title = "%" + title + "%";
@@ -283,10 +283,10 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 		int total = userMessageDao.getMessageTotal(pageParameter);
 		if (total > 0) {
 			List<UserMessageVO> list = userMessageDao.listMessage(pageParameter);
-			for (UserMessageVO userMessageVO : list) {
-				Message message = messageService.get(userMessageVO.getMsgId());
-				userMessageVO.setContent(message.getContent());
-			}
+			 for (UserMessageVO userMessageVO : list) {
+			 Message message = messageService.get(userMessageVO.getMsgId());
+			 userMessageVO.setContent(message.getContent());
+			 }
 			pageResult.setRows(list);
 		}
 		pageResult.setPageTotal(total);
