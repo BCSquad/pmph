@@ -11,6 +11,7 @@ import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.UserMessageDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.UserMessage;
@@ -50,6 +51,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
 	@Autowired
 	private MyWebSocketHandler handler;
+
+	@Autowired
+	private DecPositionService decPositionService;
 
 	@Override
 	public PageResult<MessageStateVO> listMessageState(PageParameter<MessageStateVO> pageParameter)
@@ -159,7 +163,14 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 				throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
 						"书籍为空!");
 			}
-			// /////////////////////////////// do
+			String[] ids = bookIds.split(",");
+			for (String id : ids) {
+				List<DecPosition> list = decPositionService.listDecPositionsByTextbookId(Long.valueOf(id));
+				for (DecPosition position : list) {
+					
+				}
+				// 获取到书籍id然后根据书籍id在dec_position表中获取到申报表id根据申报表id在declaration表中获取作家id放入userMessage的接收人中
+			}
 
 		}
 		// 如果是补发,进入下面操作 进行已发人员筛出
@@ -269,13 +280,17 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 		pageParameter.getParameter().setSenderId(pmphUser.getId());
 		PageResult<UserMessageVO> pageResult = new PageResult<>();
 		Tools.CopyPageParameter(pageParameter, pageResult);
-		int total = userMessageDao.listMessageTotal(pageParameter.getParameter().getTitle());
-		if(total > 0){
+		int total = userMessageDao.getMessageTotal(pageParameter);
+		if (total > 0) {
 			List<UserMessageVO> list = userMessageDao.listMessage(pageParameter);
+			for (UserMessageVO userMessageVO : list) {
+				Message message = messageService.get(userMessageVO.getMsgId());
+				userMessageVO.setContent(message.getContent());
+			}
 			pageResult.setRows(list);
 		}
 		pageResult.setPageTotal(total);
-		
+
 		return pageResult;
 	}
 

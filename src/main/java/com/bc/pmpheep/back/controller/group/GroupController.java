@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphGroup;
-import com.bc.pmpheep.back.po.PmphGroupFile;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.PmphGroupMemberService;
 import com.bc.pmpheep.back.service.PmphGroupService;
@@ -19,7 +18,6 @@ import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.ListPar;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * @author MrYang
@@ -127,12 +125,17 @@ public class GroupController {
 	 * @param pmphGroup
 	 *            小组id 与 小组新名称
 	 * @return 是否成功
+	 * @update Mryang 2017.10.13 15:20
 	 * 
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/update/pmphgroup", method = RequestMethod.PUT)
 	public ResponseBean updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup) {
-		return new ResponseBean(pmphGroupService.updatePmphGroup(pmphGroup));
+		try {
+			return new ResponseBean(pmphGroupService.updatePmphGroup(file,pmphGroup));
+		} catch (IOException e) {
+			return new ResponseBean(e);
+		}
 	}
 
 	/**
@@ -159,13 +162,14 @@ public class GroupController {
 	 * @date:2017年9月30日下午4:50:04
 	 * @Param:上传的文件以及小组、上传人信息
 	 * @Return:是否成功
+	 * @update Mryang 2017.10.13 15:30
 	 */
 	@RequestMapping(value = "/add/pmphgroupfile", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseBean addPmphGroupFile(List<PmphGroupFile> pmphGroupFiles, MultipartFile file) {
+	public ResponseBean addPmphGroupFile(ListPar listPar) {
 		try {
-			return new ResponseBean(pmphGroupFileService.addPmphGroupFile(pmphGroupFiles, file));
-		} catch (CheckedServiceException | IOException e) {
+			return new ResponseBean(pmphGroupFileService.addPmphGroupFile(listPar.getIds(), listPar.getFiles()));
+		} catch (IOException e) {
 			return new ResponseBean(e);
 		}
 	}

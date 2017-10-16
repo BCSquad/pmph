@@ -15,10 +15,11 @@
     <body>
         <div>
             <h2>Welcome to PMPH E-education Platform</h2>
-            <form action="file" method="post" enctype="multipart/form-data">
+            <form action="file/upload" method="post" enctype="multipart/form-data">
                 <input name="file" type="file" class="opt_input" />
                 <input type="submit" />
             </form>
+            <a href="file/download/59cbd0da588e8a8aa8bb6925">下载文件</a>
             <img src="avatar/59cbd0da588e8a8aa8bb6925" />
             <img src="avatar/59cbd0da588e8a8aa8bb6925" />
             <img src="avatar/59cbd0da588e8a8aa8bb6925" />

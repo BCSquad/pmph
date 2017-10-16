@@ -170,34 +170,53 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
-	<select id="listMessagetotal" parameterType="String" resultType="int">
-		select count(*) from user_message where 1=1
-		<if test="title != null and title != ''">
-			and title like #{title}
-		</if>
-	</select>
-	<select id="listMessage" parameterType="PageParameter"
-		resultType="MessageStateVO">
-		SELECT
+	<select id="getMessageTotal" parameterType="PageParameter"
+		resultType="Integer">
+		SELECT COUNT(*) FROM(SELECT
+		m.id,
 		m.msg_id,
-		m.sender_id,
-		m.sender_type,
 		m.title,
-		m.gmt_create
+		m.sender_id,
+		u.realname sendName,
+		m.gmt_create sendTime
 		FROM
 		user_message m
+		LEFT JOIN pmph_user u ON u.id =	m.sender_id
 		WHERE
 		m.is_deleted = 0
 		AND m.msg_type = 1
-		AND m.sender_id = #{parameter.senderId}
-		<if test="title != null and title != ''">
+		AND	m.sender_id = #{parameter.senderId}
+		<if test="parameter.title != null and parameter.title != ''">
 			and title like #{parameter.title}
 		</if>
 		GROUP BY m.msg_id,
 		m.sender_id,
-		m.sender_type,
+		m.title) t
+	</select>
+	<select id="listMessage" parameterType="PageParameter"
+		resultType="UserMessageVO">
+		SELECT
+		m.id,
+		m.msg_id,
+		m.title,
+		m.sender_id,
+		u.realname sendName,
+		m.gmt_create sendTime
+		FROM
+		user_message m
+		LEFT JOIN pmph_user u ON u.id =	m.sender_id
+		WHERE
+		m.is_deleted = 0
+		AND m.msg_type = 1
+		AND	m.sender_id = #{parameter.senderId}
+		<if test="parameter.title != null and parameter.title != ''">
+			and title like #{parameter.title}
+		</if>
+		GROUP BY m.msg_id,
+		m.sender_id,
 		m.title
-		LIMIT #{start},#{pageSize}
+		LIMIT
+		#{start},#{pageSize}
 	</select>
 
 </mapper>

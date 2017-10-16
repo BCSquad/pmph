@@ -18,6 +18,7 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ShiroSession;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
+import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -44,38 +45,33 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 	 *            实体对象
 	 * @return 带主键的 PmphGroupFile
 	 * @throws CheckedServiceException
+	 * @update Mryang 2017.10.13 15:30
 	 */
 	@Override
-	public String addPmphGroupFile(List<PmphGroupFile> pmphGroupFiles, MultipartFile file)
+	public String addPmphGroupFile(List<Long> ids, List<MultipartFile> files)
 			throws CheckedServiceException, IOException {
-		String result = "FAIL";
-		if (pmphGroupFiles.size() > 0) {
-			for (PmphGroupFile pmphGroupFile : pmphGroupFiles) {
-				if (null == pmphGroupFile.getGroupId()) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-							"小组id不能为空");
-				}
-				if (null == pmphGroupFile.getMemberId()) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-							"成员id不能为空");
-				}
-				if (null == pmphGroupFile.getFileName()) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-							"文件名称不能为空");
-				}
-				if (null == file){
-					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-							CheckedExceptionResult.NULL_PARAM, "文件不能为空");
-				}
-				pmphGroupFile.setFileId(fileService.save(file));
+		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "用户没有登录");
+		}
+		if (null == ids || ids.size()==0 ){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "参数不能为空");
+		}
+		if (null == files || files.size()==0 ){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "文件不能为空");
+		}
+		Long memberId =pmphUser.getId();
+		for (Long id : ids) {
+			if (null == id) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "小组id不能为空");
+			}
+			for(MultipartFile file: files){
+				String fileId = fileService.save(file,FileType.GROUP_FILE, 0);
+				PmphGroupFile pmphGroupFile =new PmphGroupFile(id,memberId,fileId,file.getOriginalFilename(),0,null);
 				pmphGroupFileDao.addPmphGroupFile(pmphGroupFile);
 			}
-			result = "SUCCESS";
-		}else{
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-					CheckedExceptionResult.NULL_PARAM, "参数不能为空");
 		}
-		return result;
+		return "success";
 	}
 
 	/**

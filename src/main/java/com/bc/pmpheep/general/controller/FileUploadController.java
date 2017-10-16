@@ -5,15 +5,14 @@ package com.bc.pmpheep.general.controller;
  * Licensed under the Apache License 2.0.
  */
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,10 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 
 /**
  * 文件上传控制器
@@ -47,10 +42,10 @@ public class FileUploadController {
      * @return 返回上传结果
      */
     @ResponseBody
-    @RequestMapping(value = "/file", method = RequestMethod.POST)
+    @RequestMapping(value = "/file/upload", method = RequestMethod.POST)
     public ResponseBean upload(Model model, @RequestParam("file") MultipartFile file) {
         try {
-            return new ResponseBean(fileService.save(file));
+            return new ResponseBean(fileService.save(file,FileType.GROUP_FILE, 0));
         } catch (IOException ex) {
             return new ResponseBean(ex);
         }

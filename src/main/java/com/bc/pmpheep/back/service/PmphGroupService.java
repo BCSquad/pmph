@@ -43,14 +43,14 @@ public interface PmphGroupService {
 	String deletePmphGroupById(PmphGroup pmphGroup) throws CheckedServiceException;
 
 	/**
-	 * PmphGroup全字段更新
+	 * PmphGroup 更新
 	 * 
 	 * @param pmphGroup
 	 *            必须包含主键
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */
-	Integer updatePmphGroup(PmphGroup pmphGroup) throws CheckedServiceException;
+	Integer updatePmphGroup(MultipartFile file,PmphGroup pmphGroup) throws CheckedServiceException , IOException;
 
 	/**
 	 * 
