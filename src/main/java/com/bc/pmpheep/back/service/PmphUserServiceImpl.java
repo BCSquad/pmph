@@ -4,7 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -223,10 +224,10 @@ public class PmphUserServiceImpl implements PmphUserService {
                 }
                 try {
                     BeanUtils.copyProperties(userVO, user);
-                } catch (IllegalAccessException | InvocationTargetException ex) {
+                } catch (BeansException ex) {
                     throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                                      CheckedExceptionResult.VO_CONVERSION_FAILED,
-                                                      ex.getMessage());
+                            CheckedExceptionResult.VO_CONVERSION_FAILED,
+                            ex.getMessage());
                 }
                 list.add(userVO);
             }
