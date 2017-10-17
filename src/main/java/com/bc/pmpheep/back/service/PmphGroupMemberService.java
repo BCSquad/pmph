@@ -16,129 +16,135 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  */
 public interface PmphGroupMemberService {
 
-	/**
-	 * 
-	 * @param pmphGroupMember
-	 *            实体对象
-	 * @return 带主键的 PmphGroupMember
-	 * @throws CheckedServiceException
-	 */
-	PmphGroupMember addPmphGroupMember(PmphGroupMember pmphGroupMember) throws CheckedServiceException;
+    /**
+     * 
+     * @param pmphGroupMember 实体对象
+     * @return 带主键的 PmphGroupMember
+     * @throws CheckedServiceException
+     */
+    PmphGroupMember addPmphGroupMember(PmphGroupMember pmphGroupMember)
+    throws CheckedServiceException;
 
-	/**
-	 * 
-	 * @param 主键id
-	 * @return PmphGroupMember
-	 * @throws CheckedServiceException
-	 */
-	PmphGroupMember getPmphGroupMemberById(Long id) throws CheckedServiceException;
-    
-	/**
-	 * 
-	 * Description:根据组员id查找一个组员
-	 * @author:lyc
-	 * @date:2017年10月12日下午2:56:39
-	 * @param:组员id
-	 * @return:PmphGroupMember
-	 */
-	PmphGroupMember getPmphGroupMemberByMemberId(Long memberId) throws CheckedServiceException;
-	/**
-	 * 
-	 * @param 主键id
-	 * @return 影响行数
-	 * @throws CheckedServiceException
-	 */
-	Integer deletePmphGroupMemberById(Long id) throws CheckedServiceException;
+    /**
+     * 
+     * @param 主键id
+     * @return PmphGroupMember
+     * @throws CheckedServiceException
+     */
+    PmphGroupMember getPmphGroupMemberById(Long id) throws CheckedServiceException;
 
-	/**
-	 * @param pmphGroupMember
-	 * @return 影响行数
-	 * @throws CheckedServiceException
-	 */
-	Integer updatePmphGroupMember(PmphGroupMember pmphGroupMember) throws CheckedServiceException;
+    /**
+     * 
+     * Description:根据组员id查找一个组员
+     * 
+     * @author:lyc
+     * @date:2017年10月12日下午2:56:39
+     * @param:组员id
+     * @return:PmphGroupMember
+     */
+    PmphGroupMember getPmphGroupMemberByMemberId(Long memberId) throws CheckedServiceException;
 
-	/**
-	 * 
-	 * 
-	 * 功能描述：根据小组id加载小组用户
-	 *
-	 * @param groupId
-	 *            小组id
-	 * @return 小组成员
-	 *
-	 */
-	List<PmphGroupMemberVO> listPmphGroupMember(Long groupId) throws CheckedServiceException;
+    /**
+     * 
+     * @param 主键id
+     * @return 影响行数
+     * @throws CheckedServiceException
+     */
+    Integer deletePmphGroupMemberById(Long id) throws CheckedServiceException;
 
-	/**
-	 * 
-	 * 
-	 * 功能描述： 批量添加小组成员
-	 *
-	 * @param pmphGroupMembers
-	 *            添加的小组成员
-	 * @return 是否成功
-	 * @throws CheckedServiceException
-	 *
-	 */
-	String addPmphGroupMemberOnGroup(List<PmphGroupMember> pmphGroupMembers) throws CheckedServiceException;
+    /**
+     * @param pmphGroupMember
+     * @return 影响行数
+     * @throws CheckedServiceException
+     */
+    Integer updatePmphGroupMember(PmphGroupMember pmphGroupMember) throws CheckedServiceException;
 
-	/**
-	 * 
-	 * 
-	 * 功能描述：解散小组时清除该小组所有成员
-	 *
-	 * @param groupId
-	 *            小组id
-	 * @return 是否成功
-	 * @throws CheckedServiceException
-	 *
-	 */
-	String deletePmphGroupMemberOnGroup(Long groupId) throws CheckedServiceException;
-	
-	/**
-	 * 
-	 * Description:进行各种操作之前判断是否为创建者或管理者
-	 * @author:lyc
-	 * @date:2017年10月12日上午11:18:08
-	 * @param:
-	 * @return:Boolean
-	 */
+    /**
+     * 
+     * 
+     * 功能描述：根据小组id加载小组用户
+     * 
+     * @param groupId 小组id
+     * @return 小组成员
+     * 
+     */
+    List<PmphGroupMemberVO> listPmphGroupMember(Long groupId, String sessionId)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * 
+     * 功能描述： 批量添加小组成员
+     * 
+     * @param pmphGroupMembers 添加的小组成员
+     * @return 是否成功
+     * @throws CheckedServiceException
+     * 
+     */
+    String addPmphGroupMemberOnGroup(List<PmphGroupMember> pmphGroupMembers)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * 
+     * 功能描述：解散小组时清除该小组所有成员
+     * 
+     * @param groupId 小组id
+     * @return 是否成功
+     * @throws CheckedServiceException
+     * 
+     */
+    String deletePmphGroupMemberOnGroup(Long groupId) throws CheckedServiceException;
+
+    /**
+     * 
+     * Description:进行各种操作之前判断是否为创建者或管理者
+     * 
+     * @author:lyc
+     * @date:2017年10月12日上午11:18:08
+     * @param:
+     * @return:Boolean
+     */
     Boolean isFounderOrisAdmin() throws CheckedServiceException;
-    
+
     /**
      * 
      * Description:进行各种操作之前判断是否为创建者
+     * 
      * @author:Administrator
      * @date:2017年10月12日上午11:18:34
      * @param
      * @return Boolean
      */
     Boolean isFounder() throws CheckedServiceException;
-    
+
     /**
      * 
      * Description:分页查询小组成员管理界面小组成员信息
+     * 
      * @author:Administrator
      * @date:2017年10月12日上午11:30:22
      * @param PageParameter 若displayname和username不为空，则为模糊查询操作，否则为初始化
      * @return PageResult<PmphGroupMemberManagerVO>
      */
-    PageResult<PmphGroupMemberManagerVO> listGroupMemberManagerVOs(PageParameter<PmphGroupMemberManagerVO> pageParameter) 
-    		throws CheckedServiceException;
-    
+    PageResult<PmphGroupMemberManagerVO> listGroupMemberManagerVOs(
+    PageParameter<PmphGroupMemberManagerVO> pageParameter) throws CheckedServiceException;
+
     /**
      * 
      * Description:批量删除小组内成员
+     * 
      * @author:lyc
      * @date:2017年10月12日下午2:38:14
      * @param 成员表id集合
      * @return String 删除成功与否状态
      */
-    String deletePmphGroupMemberByIds(List<Long> ids)throws CheckedServiceException;
-    
+    String deletePmphGroupMemberByIds(List<Long> ids) throws CheckedServiceException;
+
     /**
      * 
      * Description:批量更改小组成员的权限
+     * 
      * @author:lyc
      * @date:2017年10月12日下午5:00:08
      * @param members 小组成员集合
