@@ -128,7 +128,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		if (isFounderOrisAdmin()){
 		  if (pmphGroupMembers.size() > 0) {
 			 for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
-				if (null == pmphGroupMember.getGruopId()) {
+				if (null == pmphGroupMember.getGroupId()) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 							CheckedExceptionResult.ILLEGAL_PARAM, "成员小组id为空");
 				}

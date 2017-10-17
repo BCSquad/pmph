@@ -113,7 +113,7 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 		  } else {
 			  for (Long fileId : ids){
 				  Long uploaderId = pmphGroupFileDao.getPmphGroupFileById(fileId).getMemberId();
-				  if (uploaderId == currentUser.getGruopId()||currentUser.getIsFounder()
+				  if (uploaderId == currentUser.getGroupId()||currentUser.getIsFounder()
 						  ||currentUser.getIsAdmin()){
 					  pmphGroupFileDao.deletePmphGroupFileById(fileId);					  
 				  }else{
