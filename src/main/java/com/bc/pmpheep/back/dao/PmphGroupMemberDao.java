@@ -90,7 +90,7 @@ public interface  PmphGroupMemberDao {
      * @Param:pageParameter
      * @Return:Integer
      */
-    Integer groupMemberTotal(PageParameter<PmphGroupMemberManagerVO> pageParameter);
+	Integer groupMemberTotal(PageParameter<PmphGroupMemberManagerVO> pageParameter);
     
     /**
      * 

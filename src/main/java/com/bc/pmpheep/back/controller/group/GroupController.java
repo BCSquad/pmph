@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.controller.group;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphGroup;
+import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.PmphGroupMemberService;
 import com.bc.pmpheep.back.service.PmphGroupService;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.ListPar;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
+import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
 /**
@@ -212,10 +215,49 @@ public class GroupController {
 		return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(listPar.getIds()));
 	}
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：批量修改小组成员权限
+	 *
+	 * @param listPar
+	 *            成员id
+	 * @return 是否成功
+	 *
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/update/identity", method = RequestMethod.PUT)
 	public ResponseBean updateMemberIdentity(ListPar listPar) {
-
-		return null;
+		PmphGroupMember pmphGroupMember = new PmphGroupMember();
+		List<PmphGroupMember> list = new ArrayList<>();
+		for (Long id : listPar.getIds()) {
+			pmphGroupMember.setId(id);
+			list.add(pmphGroupMember);
+		}
+		return new ResponseBean(pmphGroupMemberService.updateMemberIdentity(list));
 	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：分页查询小组成员管理界面小组成员信息
+	 *
+	 * @param pageSize 当页条数
+	 * @param pageNumber 当前页数
+	 * @param groupId 小组id
+	 * @param name 姓名/帐号
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/list/manager")
+	public ResponseBean listGroupMemberManagerVOs(Integer pageSize, Integer pageNumber, Long groupId, String name) {
+		PageParameter pageParameter = new PageParameter<>(pageNumber, pageSize);
+		PmphGroupMemberManagerVO pmphGroupMemberManagerVO = new PmphGroupMemberManagerVO();
+		pmphGroupMemberManagerVO.setName(name);
+		pmphGroupMemberManagerVO.setGroupId(groupId);
+		pageParameter.setParameter(pmphGroupMemberManagerVO);
+		return new ResponseBean(pmphGroupMemberService.listGroupMemberManagerVOs(pageParameter));
+	}
+
 }
