@@ -150,5 +150,5 @@ public interface PmphGroupMemberService {
      * @param members 小组成员集合
      * @return String成功与否状态
      */
-    String updateMemberIdentity(List<PmphGroupMember> members) throws CheckedServiceException;
+	String updateMemberIdentity(List<PmphGroupMember> members) throws CheckedServiceException;
 }
