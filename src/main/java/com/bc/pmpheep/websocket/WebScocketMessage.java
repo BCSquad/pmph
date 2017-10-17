@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 public class WebScocketMessage {
 	//主键
 	private String id;
-	//消息类型   0=系统消息/1=站内群发/2=站内私信(作家和机构用户不能群发)
+	//消息类型   0=系统消息/1=站内群发/2=站内私信(作家和机构用户不能群发)/3 小组互动
 	private Short msgType;
 	//发送者id 0=系统/其他=用户id
 	private Long senderId;
