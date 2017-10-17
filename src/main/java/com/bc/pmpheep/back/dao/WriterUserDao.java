@@ -98,7 +98,7 @@ public interface WriterUserDao {
      * @param pageParameter若教材书籍、遴选职位、账号或姓名有值则为模糊查询
      * @return List<GroupMemberWriterUserVO>作家用户信息集合
      */
-    List<GroupMemberWriterUserVO> getListGroupMemberWriterUserVOs(PageParameter<GroupMemberWriterUserVO> pageParameter);
+    List<GroupMemberWriterUserVO> listGroupMemberWriterUserVOs(PageParameter<GroupMemberWriterUserVO> pageParameter);
     
     /**
      * 
