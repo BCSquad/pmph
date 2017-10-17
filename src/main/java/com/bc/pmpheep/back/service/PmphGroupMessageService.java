@@ -40,4 +40,6 @@ public interface PmphGroupMessageService {
 	 * @throws CheckedServiceException
 	 */
 	Integer updatePmphGroupMessage (PmphGroupMessage  pmphGroupMessage) throws CheckedServiceException;
+	
+	String addGroupMessage(String msgConrent, Long groupId, String sessionId) throws CheckedServiceException;
 }

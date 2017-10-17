@@ -124,9 +124,10 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public String addPmphGroupMemberOnGroup(List<PmphGroupMember> pmphGroupMembers) throws CheckedServiceException {
+	public String addPmphGroupMemberOnGroup(List<PmphGroupMember> pmphGroupMembers, String sessionId)
+			throws CheckedServiceException {
 		String result = "FAIL";
-		if (isFounderOrisAdmin()) {
+		if (isFounderOrisAdmin(sessionId)) {
 			if (pmphGroupMembers.size() > 0) {
 				for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
 					if (null == pmphGroupMember.getGruopId()) {
@@ -172,9 +173,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public Boolean isFounderOrisAdmin() throws CheckedServiceException {
+	public Boolean isFounderOrisAdmin(String sessionId) throws CheckedServiceException {
 		boolean flag = false;
-		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		PmphUser pmphUser = ShiroSession.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
@@ -188,9 +189,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public Boolean isFounder() throws CheckedServiceException {
+	public Boolean isFounder(String sessionId) throws CheckedServiceException {
 		boolean flag = false;
-		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		PmphUser pmphUser = ShiroSession.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
@@ -230,9 +231,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public String deletePmphGroupMemberByIds(List<Long> ids) throws CheckedServiceException {
+	public String deletePmphGroupMemberByIds(List<Long> ids, String sessionId) throws CheckedServiceException {
 		String result = "FAIL";
-		if (!isFounderOrisAdmin()) {
+		if (!isFounderOrisAdmin(sessionId)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
 					"该用户没有操作权限");
 		}
@@ -278,9 +279,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public String updateMemberIdentity(List<PmphGroupMember> members) throws CheckedServiceException {
+	public String updateMemberIdentity(List<PmphGroupMember> members, String sessionId) throws CheckedServiceException {
 		String result = "FAIL";
-		if (!isFounder()) {
+		if (!isFounder(sessionId)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
 					"只有创建者有此权限操作");
 		}

@@ -32,16 +32,18 @@ public interface PmphGroupMemberService {
 	 * @throws CheckedServiceException
 	 */
 	PmphGroupMember getPmphGroupMemberById(Long id) throws CheckedServiceException;
-    
+
 	/**
 	 * 
 	 * Description:根据组员id查找一个组员
+	 * 
 	 * @author:lyc
 	 * @date:2017年10月12日下午2:56:39
 	 * @param:组员id
 	 * @return:PmphGroupMember
 	 */
 	PmphGroupMember getPmphGroupMemberByMemberId(Long memberId) throws CheckedServiceException;
+
 	/**
 	 * 
 	 * @param 主键id
@@ -67,7 +69,7 @@ public interface PmphGroupMemberService {
 	 * @return 小组成员
 	 *
 	 */
-	List<PmphGroupMemberVO> listPmphGroupMember(Long groupId,String sessionId) throws CheckedServiceException;
+	List<PmphGroupMemberVO> listPmphGroupMember(Long groupId, String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 
@@ -80,7 +82,8 @@ public interface PmphGroupMemberService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String addPmphGroupMemberOnGroup(List<PmphGroupMember> pmphGroupMembers) throws CheckedServiceException;
+	String addPmphGroupMemberOnGroup(List<PmphGroupMember> pmphGroupMembers, String sessionId)
+			throws CheckedServiceException;
 
 	/**
 	 * 
@@ -94,55 +97,63 @@ public interface PmphGroupMemberService {
 	 *
 	 */
 	String deletePmphGroupMemberOnGroup(Long groupId) throws CheckedServiceException;
-	
+
 	/**
 	 * 
 	 * Description:进行各种操作之前判断是否为创建者或管理者
+	 * 
 	 * @author:lyc
 	 * @date:2017年10月12日上午11:18:08
 	 * @param:
 	 * @return:Boolean
 	 */
-    Boolean isFounderOrisAdmin() throws CheckedServiceException;
-    
-    /**
-     * 
-     * Description:进行各种操作之前判断是否为创建者
-     * @author:Administrator
-     * @date:2017年10月12日上午11:18:34
-     * @param
-     * @return Boolean
-     */
-    Boolean isFounder() throws CheckedServiceException;
-    
-    /**
-     * 
-     * Description:分页查询小组成员管理界面小组成员信息
-     * @author:Administrator
-     * @date:2017年10月12日上午11:30:22
-     * @param PageParameter 若displayname和username不为空，则为模糊查询操作，否则为初始化
-     * @return PageResult<PmphGroupMemberManagerVO>
-     */
-    PageResult<PmphGroupMemberManagerVO> listGroupMemberManagerVOs(PageParameter<PmphGroupMemberManagerVO> pageParameter) 
-    		throws CheckedServiceException;
-    
-    /**
-     * 
-     * Description:批量删除小组内成员
-     * @author:lyc
-     * @date:2017年10月12日下午2:38:14
-     * @param 成员表id集合
-     * @return String 删除成功与否状态
-     */
-    String deletePmphGroupMemberByIds(List<Long> ids)throws CheckedServiceException;
-    
-    /**
-     * 
-     * Description:批量更改小组成员的权限
-     * @author:lyc
-     * @date:2017年10月12日下午5:00:08
-     * @param members 小组成员集合
-     * @return String成功与否状态
-     */
-    String updateMemberIdentity(List<PmphGroupMember> members) throws CheckedServiceException;
+	Boolean isFounderOrisAdmin(String sessionId) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * Description:进行各种操作之前判断是否为创建者
+	 * 
+	 * @author:Administrator
+	 * @date:2017年10月12日上午11:18:34
+	 * @param
+	 * @return Boolean
+	 */
+	Boolean isFounder(String sessionId) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * Description:分页查询小组成员管理界面小组成员信息
+	 * 
+	 * @author:Administrator
+	 * @date:2017年10月12日上午11:30:22
+	 * @param PageParameter
+	 *            若displayname和username不为空，则为模糊查询操作，否则为初始化
+	 * @return PageResult<PmphGroupMemberManagerVO>
+	 */
+	PageResult<PmphGroupMemberManagerVO> listGroupMemberManagerVOs(
+			PageParameter<PmphGroupMemberManagerVO> pageParameter) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * Description:批量删除小组内成员
+	 * 
+	 * @author:lyc
+	 * @date:2017年10月12日下午2:38:14
+	 * @param 成员表id集合
+	 * @return String 删除成功与否状态
+	 */
+	String deletePmphGroupMemberByIds(List<Long> ids, String sessionId) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * Description:批量更改小组成员的权限
+	 * 
+	 * @author:lyc
+	 * @date:2017年10月12日下午5:00:08
+	 * @param members
+	 *            小组成员集合
+	 * @return String成功与否状态
+	 */
+	String updateMemberIdentity(List<PmphGroupMember> members, String sessionId) throws CheckedServiceException;
+
 }
