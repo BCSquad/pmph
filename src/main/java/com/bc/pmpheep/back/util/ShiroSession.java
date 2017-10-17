@@ -12,6 +12,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.sessioncontext.SessionContext;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * 
@@ -92,12 +95,13 @@ public class ShiroSession {
      * @return
      * </pre>
      */
-    public static PmphUser getPmphUserBySessionId(String sessionId) {
-        PmphUser pmphUser = null;
-        if (Tools.notEmpty(sessionId)) {
-            HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
-            pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
+    public static PmphUser getPmphUserBySessionId(String sessionId) throws CheckedServiceException {
+        HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
+        if (Tools.isNullOrEmpty(session)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
+                                              CheckedExceptionResult.USER_SESSION, "用户Session为空");
         }
+        PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
         return pmphUser;
     }
 
@@ -144,12 +148,14 @@ public class ShiroSession {
      * @return
      * </pre>
      */
-    public static WriterUser getWriterUserBySessionId(String sessionId) {
-        WriterUser writerUser = null;
-        if (Tools.notEmpty(sessionId)) {
-            HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
-            writerUser = (WriterUser) session.getAttribute(Const.SESSION_WRITER_USER);
+    public static WriterUser getWriterUserBySessionId(String sessionId)
+    throws CheckedServiceException {
+        HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
+        if (Tools.isNullOrEmpty(session)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
+                                              CheckedExceptionResult.USER_SESSION, "用户Session为空");
         }
+        WriterUser writerUser = (WriterUser) session.getAttribute(Const.SESSION_WRITER_USER);
         return writerUser;
     }
 }

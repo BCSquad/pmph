@@ -32,6 +32,29 @@ public class UserMessageController {
     private UserMessageService userMessageService;
 
     /**
+     * 
+     * 
+     * 功能描述：初始化/消息标题查询系统消息
+     * 
+     * @param pageNumber 当前页
+     * @param pageSize 页面数据条数
+     * @param title 标题
+     * @return
+     * 
+     */
+    @ResponseBody
+    @RequestMapping(value = "/list/message", method = RequestMethod.GET)
+    public ResponseBean listMessage(@RequestParam("pageNumber") Integer pageNumber,
+    @RequestParam("pageSize") Integer pageSize, @RequestParam("title") String title,
+    @RequestParam("sessionId") String sessionId) {
+        PageParameter<UserMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+        UserMessageVO userMessageVO = new UserMessageVO();
+        userMessageVO.setTitle(title);
+        pageParameter.setParameter(userMessageVO);
+        return new ResponseBean(userMessageService.listMessage(pageParameter, sessionId));
+    }
+
+    /**
      * 分页查询条件查询MessageState 列表
      * 
      * @author Mryang
@@ -65,7 +88,7 @@ public class UserMessageController {
     @ResponseBody
     public ResponseBean addUserMessage(Message message, @RequestParam("sendType") Integer sendType,
     @RequestParam("orgIds") String orgIds, @RequestParam("userIds") String userIds,
-    @RequestParam("bookids") String bookids, @RequestParam("sessionId") String sessionId) {
+    @RequestParam("bookIds") String bookids, @RequestParam("sessionId") String sessionId) {
         try {
             return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,
                                                                               sendType,
@@ -156,28 +179,5 @@ public class UserMessageController {
     public ResponseBean deleteUserMessage(@PathVariable("msgId") String msgId) {
         return new ResponseBean(userMessageService.updateUserMessageIsDeletedByMsgId(msgId));
 
-    }
-
-    /**
-     * 
-     * 
-     * 功能描述：初始化/消息标题查询系统消息
-     * 
-     * @param pageNumber 当前页
-     * @param pageSize 页面数据条数
-     * @param title 标题
-     * @return
-     * 
-     */
-    @ResponseBody
-    @RequestMapping(value = "/list/message", method = RequestMethod.GET)
-    public ResponseBean listMessage(@RequestParam("pageNumber") Integer pageNumber,
-    @RequestParam("pageSize") Integer pageSize, @RequestParam("title") String title,
-    @RequestParam("sessionId") String sessionId) {
-        PageParameter<UserMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
-        UserMessageVO userMessageVO = new UserMessageVO();
-        userMessageVO.setTitle(title);
-        pageParameter.setParameter(userMessageVO);
-        return new ResponseBean(userMessageService.listMessage(pageParameter, sessionId));
     }
 }
