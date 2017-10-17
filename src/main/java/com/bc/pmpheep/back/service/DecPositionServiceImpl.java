@@ -28,74 +28,84 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Service
 public class DecPositionServiceImpl implements DecPositionService {
 
-	@Autowired
-	private DecPositionDao decPositionDao;
+    @Autowired
+    private DecPositionDao decPositionDao;
 
-	@Override
-	public DecPosition decPosition(DecPosition decPosition) throws CheckedServiceException {
-		if (null == decPosition) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"参数不能为空");
-		}
-		if (null == decPosition.getDeclarationId()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"申报表id不能为空");
-		}
-		if (null == decPosition.getTextbookId()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"书籍id不能为空");
-		}
-		if (null == decPosition.getPresetPosition()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"申报职务不能为空");
-		}
-		decPositionDao.decPosition(decPosition);
-		return decPosition;
-	}
+    @Override
+    public DecPosition decPosition(DecPosition decPosition) throws CheckedServiceException {
+        if (null == decPosition) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "参数不能为空");
+        }
+        if (null == decPosition.getDeclarationId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "申报表id不能为空");
+        }
+        if (null == decPosition.getTextbookId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
+        }
+        if (null == decPosition.getPresetPosition()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "申报职务不能为空");
+        }
+        decPositionDao.decPosition(decPosition);
+        return decPosition;
+    }
 
-	@Override
-	public Integer deleteDecPosition(Long id) throws CheckedServiceException {
-		if (null == id) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"id不能为空");
-		}
-		return decPositionDao.deleteDecPosition(id);
-	}
+    @Override
+    public Integer deleteDecPosition(Long id) throws CheckedServiceException {
+        if (null == id) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "id不能为空");
+        }
+        return decPositionDao.deleteDecPosition(id);
+    }
 
-	@Override
-	public Integer updateDecPosition(DecPosition decPosition) throws CheckedServiceException {
-		if (null == decPosition.getId()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"id不能为空");
-		}
-		return decPositionDao.updateDecPosition(decPosition);
-	}
+    @Override
+    public Integer updateDecPosition(DecPosition decPosition) throws CheckedServiceException {
+        if (null == decPosition.getId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "id不能为空");
+        }
+        return decPositionDao.updateDecPosition(decPosition);
+    }
 
-	@Override
-	public DecPosition decPositionById(Long id) throws CheckedServiceException {
-		if (null == id) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"id不能为空");
-		}
-		return decPositionDao.decPositionById(id);
-	}
+    @Override
+    public DecPosition decPositionById(Long id) throws CheckedServiceException {
+        if (null == id) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "id不能为空");
+        }
+        return decPositionDao.decPositionById(id);
+    }
 
-	@Override
-	public List<DecPosition> listDecPositions(Long declarationId) throws CheckedServiceException {
-		if (null == declarationId) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"申报表id不能为空");
-		}
-		return decPositionDao.listDecPositions(declarationId);
-	}
+    @Override
+    public List<DecPosition> listDecPositions(Long declarationId) throws CheckedServiceException {
+        if (null == declarationId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "申报表id不能为空");
+        }
+        return decPositionDao.listDecPositions(declarationId);
+    }
 
-	@Override
-	public List<DecPosition> listDecPositionsByTextbookId(Long textbookId) throws CheckedServiceException {
-		if (null == textbookId) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"书籍id不能为空");
-		}
-		return decPositionDao.listDecPositionsByTextbookId(textbookId);
-	}
+    @Override
+    public List<DecPosition> listDecPositionsByTextbookId(Long textbookId)
+    throws CheckedServiceException {
+        if (null == textbookId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
+        }
+        return decPositionDao.listDecPositionsByTextbookId(textbookId);
+    }
 
+    @Override
+    public List<Long> listDecPositionsByTextbookIds(String[] textbookIds)
+    throws CheckedServiceException {
+        if (0 == textbookIds.length) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
+        }
+        return decPositionDao.listDecPositionsByTextbookIds(textbookIds);
+    }
 }
