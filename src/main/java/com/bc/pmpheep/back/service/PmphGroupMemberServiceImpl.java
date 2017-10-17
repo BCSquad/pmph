@@ -210,20 +210,12 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"小组id不能为空");
 		}
-		if (null != pageParameter.getParameter().getDisplayName()) {
-			String displayName = pageParameter.getParameter().getDisplayName().trim();
-			if (!displayName.equals("")) {
-				pageParameter.getParameter().setDisplayName("%" + displayName + "%");
+		if (null != pageParameter.getParameter().getName()) {
+			String name = pageParameter.getParameter().getName().trim();
+			if (!name.equals("")) {
+				pageParameter.getParameter().setDisplayName("%" + name + "%");
 			} else {
-				pageParameter.getParameter().setDisplayName(displayName);
-			}
-		}
-		if (null != pageParameter.getParameter().getUserName()) {
-			String userName = pageParameter.getParameter().getUserName().trim();
-			if (!userName.equals("")) {
-				pageParameter.getParameter().setUserName("%" + userName + "%");
-			} else {
-				pageParameter.getParameter().setUserName(userName);
+				pageParameter.getParameter().setDisplayName(name);
 			}
 		}
 		PageResult<PmphGroupMemberManagerVO> pageResult = new PageResult<>();

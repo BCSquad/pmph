@@ -29,7 +29,9 @@ public class PmphGroupMemberManagerVO implements Serializable {
 	// 小组内显示名称;
 	private String displayName;
 	// 账号
-	private String userName;
+	private String username;
+	// 账号/名称
+	private String name;
 	// 权限（身份）
 	private String identity;
 	// 职位
@@ -87,12 +89,20 @@ public class PmphGroupMemberManagerVO implements Serializable {
 		this.displayName = displayName;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getIdentity() {
@@ -145,11 +155,10 @@ public class PmphGroupMemberManagerVO implements Serializable {
 
 	@Override
 	public String toString() {
-		return " {id:" + id + ", groupId:" + groupId + ", bookId:" + bookId
-				+ ", displayName:" + displayName + ", userName:" + userName
-				+ ", identity:" + identity + ", position:" + position
-				+ ", workId:" + workId + ", workName:" + workName
-				+ ", handphone:" + handphone + ", email:" + email + "}";
+		return "PmphGroupMemberManagerVO [id=" + id + ", groupId=" + groupId + ", bookId=" + bookId + ", memberId="
+				+ memberId + ", displayName=" + displayName + ", username=" + username + ", name=" + name
+				+ ", identity=" + identity + ", position=" + position + ", workId=" + workId + ", workName=" + workName
+				+ ", handphone=" + handphone + ", email=" + email + "]";
 	}
 
 }

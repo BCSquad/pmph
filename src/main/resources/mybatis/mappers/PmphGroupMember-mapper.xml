@@ -98,20 +98,21 @@
 		</set>
 		where id=#{id} ;
 	</update>
-    
+
 	<!-- 根据id查询一个 PmphGroupMember -->
 	<select id="getPmphGroupMemberById" parameterType="java.lang.Long"
 		resultType="PmphGroupMember">
 		select * from pmph_group_member where
 		id=#{id} ;
 	</select>
-    
-    <!-- 根据组员id查询一个PmphGroupMember -->
-    <select id="getPmphGroupMemberByMemberId" parameterType="java.lang.Long"
-        resultType="PmphGroupMember">
-        select * from pmph_group_member where
-		member_id=#{memberId} ;
-    </select>
+
+	<!-- 根据组员id查询一个PmphGroupMember -->
+	<select id="getPmphGroupMemberByMemberId" parameterType="java.lang.Long"
+		resultType="PmphGroupMember">
+		select * from pmph_group_member where
+		member_id=#{memberId}
+		;
+	</select>
 	<!-- 解散小组时删除小组所有成员 -->
 	<delete id="deletePmphGroupMemberOnGroup" parameterType="java.lang.Long">
 		delete
@@ -134,38 +135,70 @@
 		from
 		pmph_group_member
 	</select>
-    
-    <!-- 根据小组id查询到的数据总数 -->
-    <select id="groupMemberTotal" parameterType="pageParameter" resultType="java.lang.Integer">
-        SELECT COUNT(*) FROM pmph_group_member WHERE group_id = #{parameter.groupId} ;
-    </select>
-    
-    <!-- 根据小组id查询到的小组成员详细信息 -->
-    <select id="listGroupMemberManagerVOs" parameterType="pageParameter" resultType="PmphGroupMemberManagerVO">
-        SELECT a.id,a.group_id,b.book_id,a.member_id,a.display_name,
-        CASE WHEN a.is_writer =1 THEN e.username WHEN a.is_writer = 0 THEN c.username END username,
-        CASE WHEN a.is_founder =1 THEN '创建者' WHEN a.is_admin =1 THEN '管理员' ELSE '成员' END identity,
-		CASE WHEN a.is_writer =1 THEN (CASE WHEN h.chosen_position=1 THEN '主编' 
-		WHEN h.chosen_position=2 THEN '副主编' WHEN h.chosen_position=3 THEN '编委' 
-		WHEN h.chosen_position=0 THEN '无' END ) WHEN a.is_writer =0 THEN '项目策划编辑' END position,
-		CASE WHEN a.is_writer =1 THEN e.org_id WHEN a.is_writer = 0 THEN c.department_id END workid,
-		CASE WHEN a.is_writer =1 THEN f.org_name WHEN a.is_writer = 0 THEN d.dp_name END workname,
-		CASE WHEN a.is_writer =1 THEN e.handphone WHEN a.is_writer = 0 THEN c.handphone END handphone,
-		CASE WHEN a.is_writer =1 THEN e.email WHEN a.is_writer =0 THEN c.email END email
-		FROM pmph_group_member a LEFT JOIN pmph_group b ON a.group_id = b.id LEFT JOIN 
-		(SELECT a.* FROM pmph_user a)c ON c.id = a.member_id LEFT JOIN pmph_department d 
-		ON c.department_id = d.id LEFT JOIN (SELECT a.* FROM writer_user a)e 
-		ON a.member_id = e.id LEFT JOIN org f ON f.id = e.org_id LEFT JOIN declaration g
-		ON g.user_id = e.id LEFT JOIN dec_position h ON g.id = h.declaration_id
-		WHERE a.group_id = #{parameter.groupId} 
-		<if test="parameter.displayName !=null and parameter.displayName !=''">
-		and a.display_name like #{parameter.displayName}
+
+	<!-- 根据小组id查询到的数据总数 -->
+	<select id="groupMemberTotal" parameterType="pageParameter"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM pmph_group_member WHERE group_id =
+		#{parameter.groupId}
+		<if test="parameter.name !=null and parameter.name !=''">
+			and (e.username like #{parameter.name} or c.username like
+			#{parameter.name} or a.display_name LIKE #{parameter.name})
 		</if>
-		<if test="parameter.userName !=null and parameter.userName !=''">
-		or e.username like #{parameter.userName} or c.username like #{parameter.userName}
+	</select>
+
+	<!-- 根据小组id查询到的小组成员详细信息 -->
+	<select id="listGroupMemberManagerVOs" parameterType="pageParameter"
+		resultType="PmphGroupMemberManagerVO">
+		SELECT a.id,a.group_id,b.book_id,a.member_id,a.display_name,
+		CASE WHEN
+		a.is_writer =1 THEN e.username WHEN a.is_writer = 0 THEN
+		c.username END
+		username,
+		CASE WHEN a.is_founder =1 THEN '创建者' WHEN a.is_admin =1 THEN
+		'管理员' ELSE
+		'成员' END identity,
+		CASE WHEN a.is_writer =1 THEN (CASE WHEN
+		h.chosen_position=1 THEN '主编'
+		WHEN h.chosen_position=2 THEN '副主编' WHEN
+		h.chosen_position=3 THEN '编委'
+		WHEN h.chosen_position=0 THEN '无' END )
+		WHEN a.is_writer =0 THEN
+		'项目策划编辑' END position,
+		CASE WHEN a.is_writer =1
+		THEN e.org_id WHEN
+		a.is_writer = 0 THEN c.department_id END workid,
+		CASE WHEN a.is_writer
+		=1 THEN f.org_name WHEN a.is_writer = 0 THEN
+		d.dp_name END workname,
+		CASE WHEN a.is_writer =1 THEN e.handphone WHEN
+		a.is_writer = 0 THEN
+		c.handphone END handphone,
+		CASE WHEN a.is_writer =1
+		THEN e.email WHEN
+		a.is_writer =0 THEN c.email END email
+		FROM
+		pmph_group_member a LEFT
+		JOIN pmph_group b ON a.group_id = b.id LEFT
+		JOIN
+		(SELECT a.* FROM pmph_user a)c ON c.id = a.member_id LEFT JOIN
+		pmph_department d
+		ON c.department_id = d.id LEFT JOIN (SELECT a.* FROM
+		writer_user a)e
+		ON a.member_id = e.id LEFT JOIN org f ON f.id =
+		e.org_id LEFT JOIN
+		declaration g
+		ON g.user_id = e.id LEFT JOIN
+		dec_position h ON g.id =
+		h.declaration_id
+		WHERE a.group_id =
+		#{parameter.groupId}
+		<if test="parameter.name !=null and parameter.name !=''">
+			and (e.username like #{parameter.name} or c.username like
+			#{parameter.name} or a.display_name LIKE #{parameter.name})
 		</if>
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
-    </select>
+	</select>
 </mapper>
