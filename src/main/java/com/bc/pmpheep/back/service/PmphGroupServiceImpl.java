@@ -26,7 +26,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * PmphGroupService 接口实现
  * 
  * @author Mryang
- *
+ * 
  */
 @Service
 public class PmphGroupServiceImpl extends BaseService implements PmphGroupService {
@@ -81,21 +81,21 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public String deletePmphGroupById(PmphGroup pmphGroup) throws CheckedServiceException {
+	public String deletePmphGroupById(PmphGroup pmphGroup,String sessionId) throws CheckedServiceException {
 		String result = "FAIL";
-		if (pmphGroupMemberService.isFounder()){
-		   if (null == pmphGroup.getId()) {
-			   throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-					"主键为空");
-		    }
-		    int num = pmphGroupDao.deletePmphGroupById(pmphGroup.getId());
-		    if (num > 0) {
-			result = pmphGroupMemberService.deletePmphGroupMemberOnGroup(pmphGroup.getId());
-		  }
-	   }else{
-		   throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-				   CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
-	   }
+		if (pmphGroupMemberService.isFounder(sessionId)) {
+			if (null == pmphGroup.getId()) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+						"主键为空");
+			}
+			int num = pmphGroupDao.deletePmphGroupById(pmphGroup.getId());
+			if (num > 0) {
+				result = pmphGroupMemberService.deletePmphGroupMemberOnGroup(pmphGroup.getId());
+			}
+		} else {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"该用户没有此操作权限");
+		}
 		return result;
 	}
 
@@ -103,11 +103,12 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * @param PmphGroup
 	 * @return 影响行数
 	 * @throws CheckedServiceException
-	 * @throws IOException 
+	 * @throws IOException
 	 * @update Mryang 2017.10.13 15:20
 	 */
 	@Override
-	public Integer updatePmphGroup(MultipartFile file,PmphGroup pmphGroup) throws CheckedServiceException, IOException {
+	public Integer updatePmphGroup(MultipartFile file, PmphGroup pmphGroup)
+			throws CheckedServiceException, IOException {
 		if (null == pmphGroup) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"参数对象为空");
@@ -116,14 +117,15 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
 		}
-		//修改小组图片
-		if(null != file ){
+		// 修改小组图片
+		if (null != file) {
 			Long id = pmphGroup.getId();
-			PmphGroup pmphGroupOld =getPmphGroupById(id);
-			if(null != pmphGroupOld && null != pmphGroupOld.getGroupImage() && !"".equals(pmphGroupOld.getGroupImage())){
+			PmphGroup pmphGroupOld = getPmphGroupById(id);
+			if (null != pmphGroupOld && null != pmphGroupOld.getGroupImage()
+					&& !"".equals(pmphGroupOld.getGroupImage())) {
 				fileService.remove(pmphGroupOld.getGroupImage());
 			}
-			String newGroupImage = fileService.save(file,ImageType.GROUP_AVATAR, 0);
+			String newGroupImage = fileService.save(file, ImageType.GROUP_AVATAR, 0);
 			pmphGroup.setGroupImage(newGroupImage);
 		}
 		return pmphGroupDao.updatePmphGroup(pmphGroup);
@@ -139,13 +141,13 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public List<PmphGroupListVO> listPmphGroup(PmphGroup pmphGroup) throws CheckedServiceException {
+	public List<PmphGroupListVO> listPmphGroup(PmphGroup pmphGroup, String sessionId) throws CheckedServiceException {
 		if (null == pmphGroup) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"参数对象为空");
 		}
 		// session PmphUser用户验证
-		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		PmphUser pmphUser = ShiroSession.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
@@ -154,16 +156,16 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	}
 
 	@Override
-	public PmphGroup addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup)
+	public PmphGroup addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, String sessionId)
 			throws CheckedServiceException, IOException {
-		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		PmphUser pmphUser = ShiroSession.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
 		String groupImage = Const.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		if (null != file) {
-			groupImage = fileService.save(file,ImageType.GROUP_AVATAR, 0);
+			groupImage = fileService.save(file, ImageType.GROUP_AVATAR, 0);
 		}
 		pmphGroup.setGroupImage(groupImage);
 		pmphGroup.setFounderId(pmphUser.getId());
@@ -183,22 +185,22 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	}
 
 	@Override
-	public PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup)
+	public PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup,String sessionId)
 			throws CheckedServiceException, IOException {
-		if (pmphGroupMemberService.isFounderOrisAdmin()){
-		    if (null != file) {
-			     pmphGroup.setGroupImage(fileService.save(file,ImageType.GROUP_AVATAR, 0));
-		    }
-		    if (null == pmphGroup.getId()) {
-			     throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
-					    "小组id不能为空");
-		    }
-		  pmphGroupDao.updatePmphGroup(pmphGroup);
-		}else{
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-					CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
+		if (pmphGroupMemberService.isFounderOrisAdmin(sessionId)) {
+			if (null != file) {
+				pmphGroup.setGroupImage(fileService.save(file, ImageType.GROUP_AVATAR, 0));
+			}
+			if (null == pmphGroup.getId()) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+						"小组id不能为空");
+			}
+			pmphGroupDao.updatePmphGroup(pmphGroup);
+		} else {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"该用户没有此操作权限");
 		}
-	  return pmphGroup;		
+		return pmphGroup;
 	}
 
 }

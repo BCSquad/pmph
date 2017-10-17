@@ -103,16 +103,27 @@
         select * from pmph_group where id = #{id} ;
     </select>
 
-    <!-- 查当前用户的小组列表 -->
-    <select id="getList" resultType="PmphGroupListVO">
-        select id,group_Name,group_Image,last_Message_Time lastMessageTime from pmph_group 
-        where id in (select DISTINCT group_id from pmph_group_member where member_id = #{id} )
-        <if test="pmphGroup.groupName != null and pmphGroup.groupName !=''">
-            and group_name like
-            concat(concat('%',#{pmphGroup.groupName}),'%') 
-        </if>
-        order by last_Message_Time desc , group_Name ;
-    </select>
+	<!-- 查当前用户的小组列表 -->
+	<select id="getList" resultType="PmphGroupListVO">
+		select 
+			id,
+			group_Name,
+			group_Image,
+			gmt_last_message gmtLastMessage 
+		from 
+			pmph_group 
+		where 
+			id 
+		in (
+			select DISTINCT group_id from pmph_group_member where member_id = #{id} 
+			)
+		<if test="pmphGroup.groupName != null and pmphGroup.groupName !=''">
+			and group_name like
+				concat(concat('%',#{pmphGroup.groupName}),'%') 
+		</if>
+		order by 
+			gmt_last_message desc , group_Name ;
+	</select>
 
     <!-- 查当前用户的小组列表总数 -->
     <select id="getPmphGroupCount" resultType="Long">

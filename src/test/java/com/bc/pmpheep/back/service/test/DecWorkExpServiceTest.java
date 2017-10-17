@@ -41,7 +41,7 @@ public class DecWorkExpServiceTest extends BaseTest {
         logger.info("--------获取单条信息成功---------");
         Assert.assertTrue("获取数据集合失败", decWorkExpService.getListDecWorkExpByDeclarationId(27L).size()>0);
         logger.info("--------获取数据集合成功---------");
-        Assert.assertTrue("数据删除失败", decWorkExpService.deleteDecWorkExpById(3l) >= 0);
+        Assert.assertTrue("数据删除失败", decWorkExpService.deleteDecWorkExpById(3L) >= 0);
         logger.info("---------测试成功——----------");
 	}
 }

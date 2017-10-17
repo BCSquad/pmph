@@ -39,7 +39,7 @@ public class WriterProfileServiceTest extends BaseTest {
 		logger.info("----------数据更新成功----------");
 		Assert.assertNotNull("数据获取失败", writerProfileService.getWriterProfileById(5L));
 		logger.info("----------数据获取成功----------");
-		Assert.assertTrue("删除数据失败", writerProfileService.deleteWriterProfileById(5l) >= 0);
+		Assert.assertTrue("删除数据失败", writerProfileService.deleteWriterProfileById(5L) >= 0);
 		logger.info("----------测试成功-----------");
 	}
 }

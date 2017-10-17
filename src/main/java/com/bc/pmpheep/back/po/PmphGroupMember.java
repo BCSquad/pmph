@@ -146,7 +146,7 @@ public class PmphGroupMember implements Serializable {
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ", gruopId:" + groupId + ", memberId:" + memberId + ", isWriter:" + isWriter
+		return "{id:" + id + ", groupId:" + groupId + ", memberId:" + memberId + ", isWriter:" + isWriter
 				+ ", isFounder:" + isFounder + ", isAdmin:" + isAdmin + ", displayName:" + displayName + ", gmtCreate:"
 				+ gmtCreate + ", gmtUpdate:" + gmtUpdate + "}";
 	}

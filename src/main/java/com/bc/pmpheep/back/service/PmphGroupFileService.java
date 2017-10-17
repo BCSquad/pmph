@@ -25,7 +25,7 @@ public interface PmphGroupFileService {
 	 * @return 上传成功与否提示信息
 	 * @throws CheckedServiceException
 	 */
-	String addPmphGroupFile(List<Long> ids,List<MultipartFile> files)
+	String addPmphGroupFile(List<Long> ids,List<MultipartFile> files,String sessionId)
 			throws CheckedServiceException, IOException;
 
 	/**

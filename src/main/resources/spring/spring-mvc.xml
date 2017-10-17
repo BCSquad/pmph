@@ -20,7 +20,7 @@
     <!--AXIOS跨域请求访问拦截 -->
     <mvc:interceptors>  
        <bean class="com.bc.pmpheep.back.interceptor.ProcessInterceptor"></bean>  
-   </mvc:interceptors>
+    </mvc:interceptors> 
    
     <mvc:annotation-driven />
     
@@ -31,7 +31,6 @@
         <property name="prefix" value="/WEB-INF/jsp/" />
         <property name="suffix" value=".jsp" />
     </bean>
-    
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="defaultEncoding" value="utf-8" />
         <property name="maxUploadSize" value="10485760" />

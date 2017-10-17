@@ -8,7 +8,6 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphGroupMember 实体类数据访问层接口
@@ -29,7 +28,7 @@ public interface  PmphGroupMemberDao {
 	 * @param 主键id
 	 * @return  PmphGroupMember
 	 */
-	PmphGroupMember getPmphGroupMemberById(Long id) ;
+	PmphGroupMemberVO getPmphGroupMemberById(Long id) ;
 	
 	/**
 	 * 
@@ -39,7 +38,7 @@ public interface  PmphGroupMemberDao {
 	 * @Param:小组内成员id
 	 * @Return:PmphGroupMember
 	 */
-	PmphGroupMember getPmphGroupMemberByMemberId(Long memberId);
+	PmphGroupMemberVO getPmphGroupMemberByMemberId(Long memberId);
 	/**
 	 * 
 	 * @param 主键id
@@ -91,7 +90,7 @@ public interface  PmphGroupMemberDao {
      * @Param:pageParameter
      * @Return:Integer
      */
-    Integer groupMemberTotal(PageParameter<PmphGroupMemberManagerVO> pageParameter);
+	Integer groupMemberTotal(PageParameter<PmphGroupMemberManagerVO> pageParameter);
     
     /**
      * 

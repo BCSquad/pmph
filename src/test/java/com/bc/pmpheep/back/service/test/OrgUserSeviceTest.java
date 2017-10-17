@@ -40,7 +40,7 @@ public class OrgUserSeviceTest extends BaseTest {
 		Assert.assertTrue("添加失败", orgUser.getId() > 0);
 		orgUser.setRealname("ceshiwwwwwwww" + orgUser.getId());
 		Assert.assertTrue("更新失败", orgUserService.updateOrgUser(orgUser) > 0);
-		Assert.assertTrue("删除失败", orgUserService.deleteOrgUserById(1l) >= 0);
+		Assert.assertTrue("删除失败", orgUserService.deleteOrgUserById(1L) >= 0);
 		Assert.assertNotNull("获取数据失败", orgUserService.getOrgUserById(4L));
 	}
 

@@ -11,6 +11,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.WriterUser;
+import com.bc.pmpheep.back.sessioncontext.SessionContext;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * 
@@ -65,10 +69,38 @@ public class ShiroSession {
         }
     }
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据Request获取用户（现阶段不使用）
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
     public static PmphUser getPmphUser() {
         HttpServletRequest request =
         ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         HttpSession session = request.getSession();
+        PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
+        return pmphUser;
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据SessionId获取用户对象(现阶段使用)
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
+    public static PmphUser getPmphUserBySessionId(String sessionId) throws CheckedServiceException {
+        HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
+        if (Tools.isNullOrEmpty(session)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
+                                              CheckedExceptionResult.USER_SESSION, "用户Session为空");
+        }
         PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
         return pmphUser;
     }
@@ -90,10 +122,39 @@ public class ShiroSession {
         }
     }
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据Request获取用户（现阶段不使用）
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
     public static WriterUser getWriterUser() {
         HttpServletRequest request =
         ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         HttpSession session = request.getSession();
+        WriterUser writerUser = (WriterUser) session.getAttribute(Const.SESSION_WRITER_USER);
+        return writerUser;
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据SessionId获取用户对象(现阶段使用)
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
+    public static WriterUser getWriterUserBySessionId(String sessionId)
+    throws CheckedServiceException {
+        HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
+        if (Tools.isNullOrEmpty(session)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
+                                              CheckedExceptionResult.USER_SESSION, "用户Session为空");
+        }
         WriterUser writerUser = (WriterUser) session.getAttribute(Const.SESSION_WRITER_USER);
         return writerUser;
     }

@@ -4,9 +4,15 @@
 <mapper namespace="com.bc.pmpheep.back.dao.UserMessageDao">
 
 	<!-- 通过id删除UserMessage -->
-	<delete id="deleteMessageByMsgId" parameterType="java.lang.String">
+	<delete id="deleteMessageByMsgId" >
 		delete from
-		user_message where msg_id = #{msgId};
+			user_message 
+		where 
+			msg_id 
+		in
+			<foreach collection="array" item="msgId" index="index" open="(" close=")" separator=",">
+            	#{msgId}
+        	</foreach>	
 	</delete>
 
 	<!-- 通过id 动态更新UserMessage -->
@@ -48,6 +54,20 @@
 	<update id="updateUserMessageByMsgId" parameterType="java.lang.String">
 		update
 		user_message set is_withdraw = true where msg_id = #{msgId};
+	</update>
+	
+	<!-- 通过msgId 更新是否被逻辑删除 -->
+	<update id="updateUserMessageIsDeletedByMsgId" >
+		update
+			user_message 
+		set 
+			is_deleted = true 
+		where 
+			msg_id
+		in 
+			<foreach collection="array" item="msgId" index="index" open="(" close=")" separator=",">
+            	#{msgId}
+        	</foreach> ;
 	</update>
 
 	<!-- 根据消息id 获取 UserMessage集 -->

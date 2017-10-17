@@ -140,6 +140,24 @@
 		SELECT d.user_id FROM declaration d LEFT JOIN dec_position
 		p ON d.id = p.declaration_id WHERE p.textbook_id =#{textbookId};
 	</select>
+	
+	<!-- 根据书籍id查询申报id -->
+	<select id="listDecPositionsByTextbookIds" resultType="java.lang.Long">
+		SELECT 
+			d.user_id 
+		FROM 
+			declaration d 
+		LEFT JOIN 
+			dec_position p 
+		ON 
+			d.id = p.declaration_id 
+		WHERE 
+			p.textbook_id 
+		in 
+			<foreach collection="array" item="item" index="index" open="(" close=")" separator=",">
+            	#{item}
+        	</foreach>
+	</select>
 
 	<!-- 查询作家申报职位表的总记录数 -->
 	<select id="getDecPosition" resultType="java.lang.Long">
