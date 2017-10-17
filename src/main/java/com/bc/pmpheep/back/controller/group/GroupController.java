@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.controller.group;
 
 import java.io.IOException;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
@@ -31,167 +33,168 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class GroupController {
 
-	@Autowired
-	private PmphGroupService pmphGroupService;
-	@Autowired
-	PmphGroupMemberService pmphGroupMemberService;
-	@Autowired
-	private PmphGroupFileService pmphGroupFileService;
+    @Autowired
+    private PmphGroupService     pmphGroupService;
+    @Autowired
+    PmphGroupMemberService       pmphGroupMemberService;
+    @Autowired
+    private PmphGroupFileService pmphGroupFileService;
 
-	/**
-	 * 根据小组名称模糊查询获取当前用户的小组
-	 * 
-	 * @author Mryang
-	 * @param pmphGroup
-	 * @return
-	 * @createDate 2017年9月21日 下午4:02:57
-	 */
-	@RequestMapping(value = "/list/pmphgroup", method = RequestMethod.GET)
-	@ResponseBody
-	public ResponseBean listPmphGroup(@RequestParam(name = "groupName", defaultValue = "") String groupName) {
-		/*
-		 * --------- 以下是正确的示例 ---------
-		 * 
-		 * 在ResponseBean初始化时，通过ResponseBeanAop对其构造函数进行切面编程，
-		 * 因此返回时<务必>要使用ResponseBean的构造函数即 new ResponseBean(anything)
-		 */
-		PmphGroup pmphGroup = new PmphGroup();
-		if (Tools.isNotNullOrEmpty(groupName)) {
-			pmphGroup.setGroupName(groupName);
-		}
-		return new ResponseBean(pmphGroupService.listPmphGroup(pmphGroup));
-	}
+    /**
+     * 根据小组名称模糊查询获取当前用户的小组
+     * 
+     * @author Mryang
+     * @param pmphGroup
+     * @return
+     * @createDate 2017年9月21日 下午4:02:57
+     */
+    @RequestMapping(value = "/list/pmphgroup", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseBean listPmphGroup(
+    @RequestParam(name = "groupName", defaultValue = "") String groupName,
+    @RequestParam("sessionId") String sessionId) {
+        /*
+         * --------- 以下是正确的示例 ---------
+         * 
+         * 在ResponseBean初始化时，通过ResponseBeanAop对其构造函数进行切面编程， 因此返回时<务必>要使用ResponseBean的构造函数即 new
+         * ResponseBean(anything)
+         */
+        PmphGroup pmphGroup = new PmphGroup();
+        if (Tools.isNotNullOrEmpty(groupName)) {
+            pmphGroup.setGroupName(groupName);
+        }
+        return new ResponseBean(pmphGroupService.listPmphGroup(pmphGroup, sessionId));
+    }
 
-	/**
-	 * 
-	 * 
-	 * 功能描述：根据小组id查询小组成员
-	 * 
-	 * @param groupId
-	 *            小组id
-	 * @return 该小组的小组成员
-	 * 
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/list/pmphgroupmember", method = RequestMethod.GET)
-	public ResponseBean listPmphGroupMember(Long groupId) {
-		return new ResponseBean(pmphGroupMemberService.listPmphGroupMember(groupId));
-	}
+    /**
+     * 
+     * 
+     * 功能描述：根据小组id查询小组成员
+     * 
+     * @param groupId 小组id
+     * @return 该小组的小组成员
+     * 
+     */
+    @ResponseBody
+    @RequestMapping(value = "/list/pmphgroupmember", method = RequestMethod.GET)
+    public ResponseBean listPmphGroupMember(Long groupId,
+    @RequestParam("sessionId") String sessionId) {
+        return new ResponseBean(pmphGroupMemberService.listPmphGroupMember(groupId, sessionId));
+    }
 
-	/**
-	 * 
-	 * 
-	 * 功能描述：新建小组
-	 * 
-	 * @param file
-	 *            上传的头像
-	 * @param pmphGroup
-	 *            新增的小组信息
-	 * @return 是否成功
-	 * 
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/add/pmphgroup", method = RequestMethod.POST)
-	public ResponseBean addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup) {
-		try {
-			return new ResponseBean(pmphGroupService.addPmphGroupOnGroup(file, pmphGroup));
-		} catch (IOException e) {
-			return new ResponseBean(e);
-		}
-	}
+    /**
+     * 
+     * 
+     * 功能描述：新建小组
+     * 
+     * @param file 上传的头像
+     * @param pmphGroup 新增的小组信息
+     * @return 是否成功
+     * 
+     */
+    @ResponseBody
+    @RequestMapping(value = "/add/pmphgroup", method = RequestMethod.POST)
+    public ResponseBean addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup,
+    @RequestParam("sessionId") String sessionId) {
+        try {
+            return new ResponseBean(
+                                    pmphGroupService.addPmphGroupOnGroup(file, pmphGroup, sessionId));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
+    }
 
-	/**
-	 * 
-	 * 
-	 * 功能描述：添加小组成员
-	 * 
-	 * @param pmphGroupMembers
-	 *            需要小组Id 成员Id 是否作家用户
-	 * @return 是否成功
-	 * 
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/add/pmphgroupmember", method = RequestMethod.POST)
-	public ResponseBean addPmphGroupMemberOnGroup(ListPar listPar) {
-		return new ResponseBean(pmphGroupMemberService.addPmphGroupMemberOnGroup(listPar.getPmphGroupMembers()));
-	}
+    /**
+     * 
+     * 
+     * 功能描述：添加小组成员
+     * 
+     * @param pmphGroupMembers 需要小组Id 成员Id 是否作家用户
+     * @return 是否成功
+     * 
+     */
+    @ResponseBody
+    @RequestMapping(value = "/add/pmphgroupmember", method = RequestMethod.POST)
+    public ResponseBean addPmphGroupMemberOnGroup(ListPar ListPar) {
+        return new ResponseBean(
+                                pmphGroupMemberService.addPmphGroupMemberOnGroup(ListPar.getPmphGroupMembers()));
+    }
 
-	/**
-	 * 
-	 * 
-	 * 功能描述：修改小组头像或小组名称
-	 * 
-	 * @param file
-	 *            修改后上传的头像
-	 * @param pmphGroup
-	 *            小组id 与 小组新名称
-	 * @return 是否成功
-	 * @update Mryang 2017.10.13 15:20
-	 * 
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/update/pmphgroup", method = RequestMethod.PUT)
-	public ResponseBean updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup) {
-		try {
-			return new ResponseBean(pmphGroupService.updatePmphGroup(file, pmphGroup));
-		} catch (IOException e) {
-			return new ResponseBean(e);
-		}
-	}
+    /**
+     * 
+     * 
+     * 功能描述：修改小组头像或小组名称
+     * 
+     * @param file 修改后上传的头像
+     * @param pmphGroup 小组id 与 小组新名称
+     * @return 是否成功
+     * @update Mryang 2017.10.13 15:20
+     * 
+     */
+    @ResponseBody
+    @RequestMapping(value = "/update/pmphgroup", method = RequestMethod.PUT)
+    public ResponseBean updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup) {
+        try {
+            return new ResponseBean(pmphGroupService.updatePmphGroup(file, pmphGroup));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
+    }
 
-	/**
-	 * 
-	 * 
-	 * 功能描述： 根据小组id解散小组
-	 * 
-	 * @param pmphGroup
-	 *            要删除的小组
-	 * @return 是否成功
-	 * 
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/delete/pmphgroup", method = RequestMethod.DELETE)
-	public ResponseBean deletePmphGroupById(PmphGroup pmphGroup) {
-		return new ResponseBean(pmphGroupService.deletePmphGroupById(pmphGroup));
-	}
+    /**
+     * 
+     * 
+     * 功能描述： 根据小组id解散小组
+     * 
+     * @param pmphGroup 要删除的小组
+     * @return 是否成功
+     * 
+     */
+    @ResponseBody
+    @RequestMapping(value = "/delete/pmphgroup", method = RequestMethod.DELETE)
+    public ResponseBean deletePmphGroupById(PmphGroup pmphGroup) {
+        return new ResponseBean(pmphGroupService.deletePmphGroupById(pmphGroup));
+    }
 
-	/**
-	 * 
-	 * Description:上传小组文件
-	 * 
-	 * @author:lyc
-	 * @date:2017年9月30日下午4:50:04
-	 * @Param:上传的文件以及小组、上传人信息
-	 * @Return:是否成功
-	 * @update Mryang 2017.10.13 15:30
-	 */
-	@RequestMapping(value = "/add/pmphgroupfile", method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseBean addPmphGroupFile(ListPar listPar) {
-		try {
-			return new ResponseBean(pmphGroupFileService.addPmphGroupFile(listPar.getIds(), listPar.getFiles()));
-		} catch (IOException e) {
-			return new ResponseBean(e);
-		}
-	}
+    /**
+     * 
+     * Description:上传小组文件
+     * 
+     * @author:lyc
+     * @date:2017年9月30日下午4:50:04
+     * @Param:上传的文件以及小组、上传人信息
+     * @Return:是否成功
+     * @update Mryang 2017.10.13 15:30
+     */
+    @RequestMapping(value = "/add/pmphgroupfile", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseBean addPmphGroupFile(ListPar listPar) {
+        try {
+            return new ResponseBean(pmphGroupFileService.addPmphGroupFile(listPar.getIds(),
+                                                                          listPar.getFiles()));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
+    }
 
-	/**
-	 * 
-	 * Description:分页查询小组共享文件
-	 * 
-	 * @author:lyc
-	 * @date:2017年9月30日下午4:53:26
-	 * @Param:Page传入的查询条件，若文件名不为空则为模糊查询功能
-	 * @Return:小组共享文件分页集合
-	 */
-	@RequestMapping(value = "/list/groupfile", method = RequestMethod.GET)
-	@ResponseBody
-	public ResponseBean listGroupFile(@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
-			@RequestParam(name = "pageSize") Integer pageSize, PmphGroupFileVO pmphGroupFileVO) {
-		PageParameter<PmphGroupFileVO> pageParameter = new PageParameter<PmphGroupFileVO>(pageNumber, pageSize,
-				pmphGroupFileVO);
-		return new ResponseBean(pmphGroupFileService.listGroupFile(pageParameter));
-	}
+    /**
+     * 
+     * Description:分页查询小组共享文件
+     * 
+     * @author:lyc
+     * @date:2017年9月30日下午4:53:26
+     * @Param:Page传入的查询条件，若文件名不为空则为模糊查询功能
+     * @Return:小组共享文件分页集合
+     */
+    @RequestMapping(value = "/list/groupfile", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseBean listGroupFile(
+    @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+    @RequestParam(name = "pageSize") Integer pageSize, PmphGroupFileVO pmphGroupFileVO) {
+        PageParameter<PmphGroupFileVO> pageParameter =
+        new PageParameter<PmphGroupFileVO>(pageNumber, pageSize, pmphGroupFileVO);
+        return new ResponseBean(pmphGroupFileService.listGroupFile(pageParameter));
+    }
 
 	/**
 	 * 
