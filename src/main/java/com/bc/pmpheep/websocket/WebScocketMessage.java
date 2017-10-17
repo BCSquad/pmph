@@ -123,5 +123,4 @@ public class WebScocketMessage {
                + senderName + ", senderType:" + senderType + ", sendMsgType:" + sendMsgType
                + ", title:" + title + ", content:" + content + ", time:" + time + "}";
     }
-
 }

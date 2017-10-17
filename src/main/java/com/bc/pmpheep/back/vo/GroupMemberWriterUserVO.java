@@ -8,34 +8,41 @@ import java.io.Serializable;
 import org.apache.ibatis.type.Alias;
 
 /**
- * <p>Title:添加组员作家用户视图<p>
- * <p>Description:作家用户信息展示<p>
+ * <p>
+ * Title:添加组员作家用户视图
+ * <p>
+ * <p>
+ * Description:作家用户信息展示
+ * <p>
+ * 
  * @author Administrator
  * @date 2017年10月12日 下午5:45:35
  */
 @SuppressWarnings("serial")
 @Alias("GroupMemberWriterUserVO")
-public class GroupMemberWriterUserVO implements Serializable{
-	//主键
-    private Long id;
-    //教材书籍id
-    private Long bookId;
-    //姓名
-    private String realname;
-    //账号
-    private String username;
-    //教材书籍
-    private String bookname;
-    //遴选职务
-    private Integer chosenPosition;
-    //职务名称
-    private String chosenPositionName;
-    //工作单位机构id
-    private String workId;
-    //工作单位
-    private String workName;
-	
-    public GroupMemberWriterUserVO() {
+public class GroupMemberWriterUserVO implements Serializable {
+	// 主键
+	private Long id;
+	// 教材书籍id
+	private Long bookId;
+	// 姓名
+	private String realname;
+	// 账号
+	private String username;
+	// 帐号/姓名
+	private String name;
+	// 教材书籍
+	private String bookname;
+	// 遴选职务
+	private Integer chosenPosition;
+	// 职务名称
+	private String chosenPositionName;
+	// 工作单位机构id
+	private String workId;
+	// 工作单位
+	private String workName;
+
+	public GroupMemberWriterUserVO() {
 		super();
 	}
 
@@ -111,12 +118,19 @@ public class GroupMemberWriterUserVO implements Serializable{
 		this.workName = workName;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
 	public String toString() {
-		return " {id:" + id + ", bookId:" + bookId + ", realname:" + realname + ", username:"
-				+ username + ", bookname:" + bookname + ", chosenPosition:" + chosenPosition + ","
-				+ "chosenPositionName:" + chosenPositionName + ", workId:" + workId + ", workName:" 
-				+ workName + "}";
+		return " {id:" + id + ", bookId:" + bookId + ", realname:" + realname + ", username:" + username + ", bookname:"
+				+ bookname + ", chosenPosition:" + chosenPosition + "," + "chosenPositionName:" + chosenPositionName
+				+ ", workId:" + workId + ", workName:" + workName + "}";
 	}
-     
+
 }

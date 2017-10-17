@@ -209,4 +209,19 @@ public class GroupController {
     public ResponseBean deletePmphGroupFileById(List<Long> ids) {
         return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(ids));
     }
+
+    /**
+     * 
+     * Description:删除小组共享文件
+     * 
+     * @author:lyc
+     * @date:2017年9月30日下午4:58:50
+     * @Param:文件id
+     * @Return:是否成功
+     */
+    @RequestMapping(value = "/delete/pmphgroupfile", method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResponseBean deletePmphGroupFileById(ListPar listPar) {
+        return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(listPar.getIds()));
+    }
 }

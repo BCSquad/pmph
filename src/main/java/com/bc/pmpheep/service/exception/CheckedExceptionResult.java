@@ -11,10 +11,25 @@ package com.bc.pmpheep.service.exception;
  */
 public enum CheckedExceptionResult {
 
+    /**
+     * 操作成功
+     */
     SUCCESS(1, "操作成功"),
+    /**
+     * 参数错误
+     */
     NULL_PARAM(2, "参数错误"),
+    /**
+     * 参数为空
+     */
     ILLEGAL_PARAM(3, "参数为空"),
+    /**
+     * 无法找到对象
+     */
     OBJECT_NOT_FOUND(4, "无法找到对象"),
+    /**
+     * 视图对象转换失败
+     */
     VO_CONVERSION_FAILED(5, "视图对象转换失败");
 
     private final int value;

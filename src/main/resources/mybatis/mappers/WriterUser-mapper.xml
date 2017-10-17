@@ -357,7 +357,8 @@
 		writer_user
 	</select>
 
-	<select id="getByUsernameAndPassword" parameterType="String" resultType="WriterUser">
+	<select id="getByUsernameAndPassword" parameterType="String"
+		resultType="WriterUser">
 		SELECT
 			id,
 			username,
@@ -382,98 +383,103 @@
 		FROM
 			writer_user
 		WHERE
-			1=1 
+			1=1
 		<if test=" username!= null and username!='' ">
-			and	username = #{username}
+			and username = #{username}
 		</if>
 		<if test=" password!= null and password!='' ">
-			and	password = #{password}
+			and password = #{password}
 		</if>
-		
+
 	</select>
 
 	<select id="getListByRole" parameterType="Long" resultType="WriterUser">
 		SELECT
-			tu.id,
-			tu.username,
-			tu.`password`,
-			tu.is_disabled,
-			tu.`org_id`,
-			tu.`realname`
+		tu.id,
+		tu.username,
+		tu.`password`,
+		tu.is_disabled,
+		tu.`org_id`,
+		tu.`realname`
 		FROM
-			writer_user tu
-		LEFT JOIN 
-			writer_user_role tur ON tu.id = tur.user_id
-		LEFT JOIN 
-			writer_role tr ON tur.role_id = tr.id
+		writer_user tu
+		LEFT JOIN
+		writer_user_role tur ON tu.id
+		= tur.user_id
+		LEFT JOIN
+		writer_role tr ON tur.role_id = tr.id
 		WHERE
-			tr.id =#{rid}
+		tr.id
+		=#{rid}
 	</select>
 
 	<!-- 根据用户 id 查询这个用户拥有的所有资源（这里的资源就代表权限） -->
 	<select id="getListAllResources" resultType="WriterPermission"
 		parameterType="Long">
 		SELECT
-			tr.`id`,
-			tr.`parent_id`,
-			tr.`path`,
-			tr.`permission_name`,
-			tr.menu_name,
-			tr.url
-		FROM 
-			`writer_permission` tr
-		LEFT JOIN 
-			`writer_role_permission` trr ON tr.`id` = trr.`permission_id`
-		LEFT JOIN 
-			`writer_user_role` tur ON trr.`role_id` = tur.role_id
-		WHERE 
-			tur.user_id = #{uid}
+		tr.`id`,
+		tr.`parent_id`,
+		tr.`path`,
+		tr.`permission_name`,
+		tr.menu_name,
+		tr.url
+		FROM
+		`writer_permission` tr
+		LEFT JOIN
+		`writer_role_permission` trr ON tr.`id` = trr.`permission_id`
+		LEFT JOIN
+		`writer_user_role` tur ON trr.`role_id` = tur.role_id
+		WHERE
+		tur.user_id = #{uid}
 	</select>
 
 	<!-- 根据用户 id 查询用户所具有的角色字符串表示 -->
 	<select id="getListRoleSnByUser" parameterType="Long"
 		resultType="String">
 		SELECT
-			tr.role_name
-		FROM 
-			`writer_role` tr
+		tr.role_name
+		FROM
+		`writer_role` tr
 		LEFT JOIN
-			`writer_user_role` tur ON tr.`id` = tur.role_id
+		`writer_user_role` tur ON tr.`id` = tur.role_id
 		LEFT JOIN `writer_user`
-		tu ON tur.`user_id` = tu.id
+		tu ON
+		tur.`user_id` = tu.id
 		WHERE tu.`id` = #{uid}
 	</select>
 
 	<!-- 根据用户 id 查询用户所具有的角色对象表示 -->
 	<select id="getListUserRole" parameterType="Long" resultType="WriterRole">
 		SELECT
-			tr.`id`,
-			tr.`role_name`
-		FROM 
-			`writer_role` tr
+		tr.`id`,
+		tr.`role_name`
+		FROM
+		`writer_role` tr
 		LEFT JOIN
-			`writer_user_role` tur ON tr.`id` = tur.role_id
-		LEFT JOIN 
-			`writer_user` tu ON tur.`user_id` = tu.id
-		WHERE 
-			tu.`id` = #{uid}
+		`writer_user_role` tur ON tr.`id` = tur.role_id
+		LEFT JOIN
+		`writer_user`
+		tu ON tur.`user_id` = tu.id
+		WHERE
+		tu.`id` = #{uid}
 	</select>
 	<!-- 根据用户id获取用户对应的权限 -->
-	<select id="getWriterUserPermissionByUserId" parameterType="Long" resultType="Long">
-		SELECT 
-			prp.`permission_id` 
+	<select id="getWriterUserPermissionByUserId" parameterType="Long"
+		resultType="Long">
+		SELECT
+		prp.`permission_id`
 		FROM
-		   `writer_user` wu 
-		LEFT JOIN 
-			`writer_user_role` wur 
-		ON 
-			wu.`id` = wur.`user_id` 
-		LEFT JOIN 
-			`writer_role_permission` wrp 
-		ON 
-			wur.`role_id` = wrp.`role_id` 
-		WHERE 
-			wu.`id` = #{userId}
+		`writer_user` wu
+		LEFT JOIN
+		`writer_user_role` wur
+		ON
+		wu.`id` = wur.`user_id`
+		LEFT JOIN
+		`writer_role_permission` wrp
+		ON
+		wur.`role_id` = wrp.`role_id`
+		WHERE
+		wu.`id` = #{userId}
 	</select>
 	<!-- 根据机构id集查询用户 -->
 	<select id="getWriterUserListByOrgIds" resultType="WriterUser">
@@ -491,14 +497,14 @@
 		count(*) from
 		writer_user ;
 	</select>
-	
+
 	<!-- 根据用户名查询作家用户 -->
 	<select id="getWriterUserByUsername" parameterType="String"
 		resultType="WriterUser">
 		select * from
-			writer_user 
-		where 
-			username=#{username};
+		writer_user
+		where
+		username=#{username};
 	</select>
 	<!-- 分页查询 -->
 	<select id="getListWriterUserTotal" parameterType="PageParameter"
@@ -536,51 +542,57 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
-	
+
 	<!-- 小组成员添加界面作家用户记录总数 -->
 	<select id="getGroupMemberWriterUserTotal" parameterType="PageParameter"
-	     resultType="java.lang.Integer">
-	     SELECT COUNT(*) FROM writer_user a LEFT JOIN org b ON a.org_id = b.id LEFT JOIN declaration c
-         ON a.id = c.user_id LEFT JOIN dec_position d ON c.id = d.declaration_id LEFT JOIN 
-         textbook e ON d.textbook_id = e.id WHERE 1=1
-         <if test="bookname !=null and bookname !=''">
-            and e.textbook_name like #{parameter.bookname}
-         </if>
-         <if test="parameter.chosenPosition !=null">
-            and d.chosen_position = #{parameter.chosenPosition}
-         </if>
-         <if test="parameter.realname !=null and parameter.realname !=''">
-            and a.realname like #{parameter.realname}
-         </if>
-         <if test="parameter.username !=null and parameter.username !=''">
-            and a.username like #{parameter.username}
-         </if>
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM writer_user a LEFT JOIN org b ON a.org_id = b.id
+		LEFT JOIN declaration c
+		ON a.id = c.user_id LEFT JOIN dec_position d ON
+		c.id = d.declaration_id
+		LEFT JOIN
+		textbook e ON d.textbook_id = e.id
+		WHERE 1=1
+		<if test="bookname !=null and bookname !=''">
+			and e.textbook_name like #{parameter.bookname}
+		</if>
+		<if test="parameter.chosenPosition !=null">
+			and d.chosen_position = #{parameter.chosenPosition}
+		</if>
+		<if test="parameter.realname !=null and parameter.realname !=''">
+			and a.realname like #{parameter.realname}
+		</if>
+		<if test="parameter.username !=null and parameter.username !=''">
+			and a.username like #{parameter.username}
+		</if>
 	</select>
-	
+
 	<!-- 小组成员添加界面作家用户信息 -->
-	<select id="getListGroupMemberWriterUserVOs" parameterType="PageParameter"
-	     resultType="GroupMemberWriterUserVO">
-	     SELECT a.id,e.id,a.realname,a.username,d.chosen_position,a.org_id,
-         b.org_name FROM writer_user a LEFT JOIN org b ON a.org_id = b.id LEFT JOIN declaration c
-         ON a.id = c.user_id LEFT JOIN dec_position d ON c.id = d.declaration_id LEFT JOIN 
-         textbook e ON d.textbook_id = e.id WHERE 1=1
-         <if test="bookname !=null and bookname !=''">
-            and e.textbook_name like #{parameter.bookname}
-         </if>
-         <if test="parameter.chosenPosition !=null">
-            and d.chosen_position = #{parameter.chosenPosition}
-         </if>
-         <if test="parameter.realname !=null and parameter.realname !=''">
-            and a.realname like #{parameter.realname}
-         </if>
-         <if test="parameter.username !=null and parameter.username !=''">
-            and a.username like #{parameter.username}
-         </if>
-         <if test="start !=null and pageNumber != null">
+	<select id="listGroupMemberWriterUserVOs" parameterType="PageParameter"
+		resultType="GroupMemberWriterUserVO">
+		SELECT a.id,e.id,a.realname,a.username,d.chosen_position,a.org_id,
+		b.org_name FROM writer_user a LEFT JOIN org b ON a.org_id = b.id LEFT
+		JOIN declaration c
+		ON a.id = c.user_id LEFT JOIN dec_position d ON c.id
+		= d.declaration_id
+		LEFT JOIN
+		textbook e ON d.textbook_id = e.id WHERE
+		1=1
+		<if test="bookname !=null and bookname !=''">
+			and e.textbook_name like #{parameter.bookname}
+		</if>
+		<if test="parameter.chosenPosition !=null">
+			and d.chosen_position = #{parameter.chosenPosition}
+		</if>
+		<if test="parameter.name !=null and parameter.name !=''">
+			and (a.realname like #{parameter.name} or a.username like
+			#{parameter.name})
+		</if>
+		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
 	</select>
-	
+
 	<!-- <select id="getListTotal" parameterType="Page" resultType="java.lang.Integer"> 
 		select count(*) from writer_user w where 1=1 <if test="parameter.username 
 		!=null "> and w.username like #{parameter.username} </if> <if test="parameter.realname 
@@ -592,7 +604,7 @@
 		w.realname like #{parameter.realname} </if> <if test="parameter.orgId !=null"> 
 		and w.org_id in (#{parameter.orgId}) </if> <if test="start !=null and pageNumber 
 		!= null"> limit #{start},#{pageSize} </if> </select> -->
-		
+
 	<delete id="delete" parameterType="Long">
 		DELETE FROM writer_user
 		where
@@ -611,9 +623,9 @@
 	<!-- 删除作家用户 -->
 	<delete id="deleteWriterUserById" parameterType="String">
 		delete from
-			writer_user 
-		where 
-			id 
+		writer_user
+		where
+		id
 		in
 		<foreach collection="array" open="(" separator="," close=")"
 			item="id">#{id}

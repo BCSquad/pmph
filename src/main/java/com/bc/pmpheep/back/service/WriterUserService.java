@@ -164,7 +164,7 @@ public interface WriterUserService {
      * @param pageParameter查询条件，若书籍、姓名/账号、遴选职位不为空则为模糊查询
      * @return PageResult<GroupMemberWriterUserVO>用户信息集合
      */
-    PageResult<GroupMemberWriterUserVO> getListGroupMemberWriterUsers(
+    PageResult<GroupMemberWriterUserVO> listGroupMemberWriterUsers(
     PageParameter<GroupMemberWriterUserVO> pageParameter) throws CheckedServiceException;
     /**
      * 
@@ -176,7 +176,7 @@ public interface WriterUserService {
      * @throws CheckedServiceException
      * 
      */
-    String addWriterUserOfBack(WriterUser WriterUser) throws CheckedServiceException;
+	String addWriterUserOfBack(WriterUser WriterUser) throws CheckedServiceException;
 
     /**
      * 

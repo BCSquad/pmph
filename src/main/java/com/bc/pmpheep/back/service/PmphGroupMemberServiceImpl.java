@@ -191,7 +191,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
         }
         Long id = pmphUser.getId();
         PmphGroupMember currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(id);
-        if (currentUser.isIsFounder() || currentUser.isIsAdmin()) {
+        if (currentUser.getIsFounder() || currentUser.getIsAdmin()) {
             flag = true;
         }
         return flag;
@@ -208,7 +208,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
         }
         Long id = pmphUser.getId();
         PmphGroupMember currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(id);
-        if (currentUser.isIsFounder()) {
+        if (currentUser.getIsFounder()) {
             flag = true;
         }
         return flag;
@@ -274,12 +274,12 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
                                                       CheckedExceptionResult.ILLEGAL_PARAM,
                                                       "不能删除自己");
                 }
-                if (currentUser.isIsFounder()) {
+                if (currentUser.getIsFounder()) {
                     pmphGroupMemberDao.deletePmphGroupMemberById(id);
                 }
-                if (currentUser.isIsAdmin()
-                    && (pmphGroupMemberDao.getPmphGroupMemberById(id).isIsFounder() || pmphGroupMemberDao.getPmphGroupMemberById(id)
-                                                                                                         .isIsAdmin())) {
+                if (currentUser.getIsAdmin()
+                    && (pmphGroupMemberDao.getPmphGroupMemberById(id).getIsFounder() || pmphGroupMemberDao.getPmphGroupMemberById(id)
+                                                                                                          .getIsAdmin())) {
                     throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
                                                       CheckedExceptionResult.ILLEGAL_PARAM,
                                                       "管理员不能删除创建者或其他管理员");
@@ -315,7 +315,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
                                               CheckedExceptionResult.NULL_PARAM, "参数不能为空");
         } else {
             for (PmphGroupMember pmphGroupMember : members) {
-                if (pmphGroupMember.isIsAdmin()) {
+                if (pmphGroupMember.getIsAdmin()) {
                     pmphGroupMember.setIsAdmin(true);
                 } else {
                     pmphGroupMember.setIsAdmin(false);
