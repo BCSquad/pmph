@@ -111,8 +111,8 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/add/pmphgroupmember", method = RequestMethod.POST)
-	public ResponseBean addPmphGroupMemberOnGroup(ListPar ListPar) {
-		return new ResponseBean(pmphGroupMemberService.addPmphGroupMemberOnGroup(ListPar.getPmphGroupMembers()));
+	public ResponseBean addPmphGroupMemberOnGroup(ListPar listPar) {
+		return new ResponseBean(pmphGroupMemberService.addPmphGroupMemberOnGroup(listPar.getPmphGroupMembers()));
 	}
 
 	/**

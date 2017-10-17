@@ -11,10 +11,25 @@ package com.bc.pmpheep.general.bean;
  */
 public enum ImageType {
 
+    /**
+     * 社内用户头像
+     */
     PMPH_USER_AVATAR("社内用户头像"),
+    /**
+     * 作家用户头像
+     */
     WRITER_USER_AVATAR("作家用户头像"),
+    /**
+     * 教师资格证
+     */
     WRITER_USER_CERT("教师资格证"),
+    /**
+     * 机构用户委托书
+     */
     ORG_USER_PROXY("机构用户委托书"),
+    /**
+     * 小组头像
+     */
     GROUP_AVATAR("小组头像");
 
     private final String type;
