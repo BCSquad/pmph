@@ -20,14 +20,14 @@ import javax.crypto.spec.DESKeySpec;
  * 使用示范：
  * 
  * 
- * @author (作者) nyz
+ * &#64;author (作者) nyz
  * 
- * @since (该版本支持的JDK版本) ：JDK 1.6或以上
- * @version (版本) 1.0
- * @date (开发日期) 2017-10-11
- * @modify (最后修改时间) 
- * @修改人 ：nyz 
- * @审核人 ：
+ * &#64;since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * &#64;version (版本) 1.0
+ * &#64;date (开发日期) 2017-10-11
+ * &#64;modify (最后修改时间) 
+ * &#64;修改人 ：nyz 
+ * &#64;审核人 ：
  * </pre>
  */
 public class DesRun {
@@ -127,12 +127,14 @@ public class DesRun {
         String stmp;
         for (int n = 0; n < b.length; n++) {
             stmp = (java.lang.Integer.toHexString(b[n] & 0XFF));
-            if (stmp.length() == 1)
+            if (stmp.length() == 1) {
                 hs = hs + "0" + stmp;
-            else
+            } else {
                 hs = hs + stmp;
-            if (n < b.length - 1)
+            }
+            if (n < b.length - 1) {
                 hs = hs + ":";
+            }
         }
 
         return hs.toUpperCase();
@@ -140,8 +142,8 @@ public class DesRun {
 
     public static void main(String[] args) {
         // DesRun desRun = new DesRun("E0:EA:AA:CD:4B:60:3F:18:71:14:48:58:D7:2D:6B:32");
-        DesRun desRun = new DesRun("544cf11b696231513e04cb9bd1846691");
+        String a = new DesRun("15fdsafdsa", "544cf11b696231513e04cb9bd1846691").enpsw;
         // DesRun desRun = new DesRun("", "1234");
-        System.out.println(desRun.depsw);
+        System.out.println(new DesRun(a).depsw);
     }
 }

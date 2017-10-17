@@ -87,6 +87,7 @@ public class WriterLoginController {
             // 验证成功在Session中保存用户Token信息
             request.getSession().setAttribute(Const.SEESION_WRITER_USER_TOKEN,
                                               new DesRun(password, username).enpsw);
+            resultMap.put(Const.USER_SEESION_ID, new DesRun("", request.getSession().getId()).enpsw);
             resultMap.put(Const.SESSION_WRITER_USER, writerUser);
             resultMap.put(Const.SEESION_WRITER_USER_TOKEN, new DesRun(password, username).enpsw);
             resultMap.put("writerUserPermissionIds", writerUserPermissionIds);

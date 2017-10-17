@@ -8,7 +8,6 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * PmphGroupMember 实体类数据访问层接口

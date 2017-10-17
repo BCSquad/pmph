@@ -32,7 +32,7 @@
 		<filter-name>HiddenHttpMethodFilter</filter-name>
 		<servlet-name>springMvc</servlet-name>
 	</filter-mapping>
-	
+
 	<filter>
 		<filter-name>HttpPutFormContentFilter</filter-name>
 		<filter-class>org.springframework.web.filter.HttpPutFormContentFilter</filter-class>
@@ -50,7 +50,11 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:spring-root.xml</param-value>
 	</context-param>
-
+	
+	<!-- Session 监听 -->
+	<listener>
+		<listener-class>com.bc.pmpheep.back.sessioncontext.SessionListener</listener-class>
+	</listener>
 	<!-- 添加 Shiro 相关配置 -->
 
 	<!-- The filter-name matches name of a 'shiroFilter' bean inside applicationContext.xml -->

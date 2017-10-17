@@ -10,35 +10,32 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- *
+ * 
  * @author L.X <gugia@qq.com>
  */
+@SuppressWarnings("all")
 @Document(collection = "message")
 public class Message implements Serializable {
 
     @Id
     private String id;
     private String content;
-    
-    public Message() {
-		super();
-	}
-    
 
-	public Message(String content) {
+    public Message() {
+        super();
+    }
+
+    public Message(String content) {
         this.content = content;
     }
-	
-	
 
     public Message(String id, String content) {
-		super();
-		this.id = id;
-		this.content = content;
-	}
+        super();
+        this.id = id;
+        this.content = content;
+    }
 
-
-	/**
+    /**
      * @return the id
      */
     public String getId() {
