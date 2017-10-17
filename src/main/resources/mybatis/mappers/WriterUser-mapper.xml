@@ -359,7 +359,26 @@
 
 	<select id="getByUsernameAndPassword" parameterType="String" resultType="WriterUser">
 		SELECT
-			*
+			id,
+			username,
+			password,
+			is_disabled,
+			org_id,
+			realname,
+			sex,
+			experience,
+			position,
+			title,
+			rank,
+			is_teacher,
+			cert,
+			auth_time,
+			auth_user_type,
+			auth_user_id,
+			is_writer,
+			is_expert,
+			signature,
+			is_deleted
 		FROM
 			writer_user
 		WHERE

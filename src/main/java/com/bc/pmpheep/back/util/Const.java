@@ -36,12 +36,12 @@ public class Const {
     public static final Integer      PAGE_SIZE                 = 5;
     // 单元测试数据是否回滚
     public static final boolean      ISROLLBACK                = true;
+    // 用户SessionId
+    public static final String       USER_SEESION_ID           = "serSessionId";
     // PMPH_USER_TOKEN
     public static final String       SEESION_PMPH_USER_TOKEN   = "sessionPmphUserToken";
-    public static final String       PMPH_USER_SEESION_ID      = "pmphUserSessionId";
     // WRITER_USER_TOKEN
     public static final String       SEESION_WRITER_USER_TOKEN = "sessionWriterUserToken";
-    public static final String       WRITER_USER_SEESION_ID    = "writerUserSessionId";
     // PMPH_USER_TOKEN
     public static final String       SESSION_SECURITY_CODE     = "sessionSecCode";
     // PMPH_USER

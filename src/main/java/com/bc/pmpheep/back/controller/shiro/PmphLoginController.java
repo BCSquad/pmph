@@ -83,8 +83,7 @@ public class PmphLoginController {
             request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
                                               new DesRun(password, username).enpsw);
             // pmphUserSessionId
-            resultMap.put(Const.PMPH_USER_SEESION_ID,
-                          new DesRun("", request.getSession().getId()).enpsw);
+            resultMap.put(Const.USER_SEESION_ID, new DesRun("", request.getSession().getId()).enpsw);
             resultMap.put(Const.SESSION_PMPH_USER, pmphUser);
             resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun(password, username).enpsw);
             resultMap.put("pmphUserPermissionIds", pmphUserPermissionIds);
