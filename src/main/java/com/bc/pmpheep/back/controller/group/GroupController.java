@@ -19,11 +19,13 @@ import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.PmphGroupMemberService;
 import com.bc.pmpheep.back.service.PmphGroupMessageService;
 import com.bc.pmpheep.back.service.PmphGroupService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.ListPar;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * @author MrYang
@@ -177,9 +179,10 @@ public class GroupController {
 	 */
 	@RequestMapping(value = "/add/pmphgroupfile", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseBean addPmphGroupFile(ListPar listPar) {
+	public ResponseBean addPmphGroupFile(ListPar listPar, String sessionId) {
 		try {
-			return new ResponseBean(pmphGroupFileService.addPmphGroupFile(listPar.getIds(), listPar.getFiles()));
+			return new ResponseBean(
+					pmphGroupFileService.addPmphGroupFile(listPar.getIds(), listPar.getFiles(), sessionId));
 		} catch (IOException e) {
 			return new ResponseBean(e);
 		}
@@ -285,10 +288,50 @@ public class GroupController {
 		return new ResponseBean(pmphGroupMemberService.listGroupMemberManagerVOs(pageParameter));
 	}
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：发送小组消息
+	 *
+	 * @param msgConrent
+	 *            消息内容
+	 * @param groupId
+	 *            小组id
+	 * @param sessionId
+	 *            当前用户session id
+	 * @return 是否成功
+	 *
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/add/groupmessage", method = RequestMethod.POST)
 	public ResponseBean addGroupMessage(String msgConrent, Long groupId, String sessionId) {
-		
-		return null;
+		try {
+			return new ResponseBean(
+					pmphGroupMessageService.addGroupMessage(msgConrent, groupId, sessionId, Const.SENDER_TYPE_1));
+		} catch (IOException e) {
+			return new ResponseBean(e);
+		}
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：撤回消息
+	 *
+	 * @param id
+	 *            该消息id
+	 * @param sessionId
+	 *            当前用户session id
+	 * @return 是否成功
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/delete/pmphgroupmessage", method = RequestMethod.DELETE)
+	public ResponseBean deletePmphGroupMessageById(Long id, String sessionId) {
+		try {
+			return new ResponseBean(pmphGroupMessageService.deletePmphGroupMessageById(id, sessionId));
+		} catch (IOException e) {
+			return new ResponseBean(e);
+		}
 	}
 }

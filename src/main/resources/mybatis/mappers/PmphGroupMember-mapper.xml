@@ -108,7 +108,7 @@
 
 	<!-- 根据组员id查询一个PmphGroupMember -->
 	<select id="getPmphGroupMemberByMemberId" parameterType="java.lang.Long"
-		resultType="PmphGroupMember">
+		resultType="PmphGroupMemberVO">
 		select * from pmph_group_member where
 		member_id=#{memberId}
 		;

@@ -64,12 +64,18 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public PmphGroupMember getPmphGroupMemberById(Long id) throws CheckedServiceException {
+	public PmphGroupMemberVO getPmphGroupMemberById(Long id) throws CheckedServiceException {
 		if (null == id) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
 		}
-		return pmphGroupMemberDao.getPmphGroupMemberById(id);
+		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberDao.getPmphGroupMemberById(id);
+		if (pmphGroupMemberVO.getIsWriter()) {
+			pmphGroupMemberVO.setAvatar(writerUserService.get(pmphGroupMemberVO.getMemberId()).getAvatar());
+		} else {
+			pmphGroupMemberVO.setAvatar(pmphUserService.get(pmphGroupMemberVO.getMemberId()).getAvatar());
+		}
+		return pmphGroupMemberVO;
 	}
 
 	/**
@@ -130,7 +136,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		if (isFounderOrisAdmin(sessionId)) {
 			if (pmphGroupMembers.size() > 0) {
 				for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
-					if (null == pmphGroupMember.getGruopId()) {
+					if (null == pmphGroupMember.getGroupId()) {
 						throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 								CheckedExceptionResult.ILLEGAL_PARAM, "成员小组id为空");
 					}
@@ -181,7 +187,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 					"用户为空");
 		}
 		Long id = pmphUser.getId();
-		PmphGroupMember currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(id);
+		PmphGroupMemberVO currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(id);
 		if (currentUser.getIsFounder() || currentUser.getIsAdmin()) {
 			flag = true;
 		}
@@ -197,7 +203,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 					"用户为空");
 		}
 		Long id = pmphUser.getId();
-		PmphGroupMember currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(id);
+		PmphGroupMemberVO currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(id);
 		if (currentUser.getIsFounder()) {
 			flag = true;
 		}
@@ -243,7 +249,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 					"该用户为空");
 		}
 		Long userid = pmphUser.getId();
-		PmphGroupMember currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(userid);
+		PmphGroupMemberVO currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(userid);
 		if (null == ids || ids.size() == 0) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"主键不能为空");
@@ -270,12 +276,18 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public PmphGroupMember getPmphGroupMemberByMemberId(Long memberId) throws CheckedServiceException {
+	public PmphGroupMemberVO getPmphGroupMemberByMemberId(Long memberId) throws CheckedServiceException {
 		if (null == memberId) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"组员id不能为空");
 		}
-		return pmphGroupMemberDao.getPmphGroupMemberByMemberId(memberId);
+		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberDao.getPmphGroupMemberByMemberId(memberId);
+		if (pmphGroupMemberVO.getIsWriter()) {
+			pmphGroupMemberVO.setAvatar(writerUserService.get(memberId).getAvatar());
+		} else {
+			pmphGroupMemberVO.setAvatar(pmphUserService.get(memberId).getAvatar());
+		}
+		return pmphGroupMemberVO;
 	}
 
 	@Override
