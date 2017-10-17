@@ -59,16 +59,15 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     public PageResult<MessageStateVO> listMessageState(PageParameter<MessageStateVO> pageParameter,
     String sessionId) throws CheckedServiceException {
         PmphUser pmphUser = ShiroSession.getPmphUserBySessionId(sessionId);
-        if (null == pmphUser) {
+        if (Tools.isNullOrEmpty(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        if (null == pmphUser.getId()) {
+        if (Tools.isNullOrEmpty(pmphUser.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        if (null == pageParameter.getParameter().getMsgId()
-            || "".equals(pageParameter.getParameter().getMsgId().trim())) {
+        if (Tools.isEmpty(pageParameter.getParameter().getMsgId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息为空");
         }
@@ -78,7 +77,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         Tools.CopyPageParameter(pageParameter, pageResult);
         // 包含数据总条数的数据集
         List<MessageStateVO> messageStateList = userMessageDao.listMessageState(pageParameter);
-        if (null != messageStateList && messageStateList.size() > 0) {
+        if (!messageStateList.isEmpty() && messageStateList.size() > 0) {
             Integer count = messageStateList.get(0).getCount();
             pageResult.setTotal(count);
             pageResult.setRows(messageStateList);
@@ -90,7 +89,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     public Integer addOrUpdateUserMessage(Message message, Integer sendType, String orgIds,
     String userIds, String bookIds, boolean isSave, String sessionId)
     throws CheckedServiceException, IOException {
-        if (null == sendType || "".equals(sendType)) {
+        if (Tools.isNullOrEmpty(sendType)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "参数错误!");
         }
@@ -99,13 +98,13 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             // MongoDB 消息插入
             message = messageService.add(message);
         }
-        if (null == message.getId() || "".equals(message.getId().trim())) {
+        if (Tools.isNullOrEmpty(message.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
         }
         // 发送者id
         PmphUser pmphUser = ShiroSession.getPmphUserBySessionId(sessionId);
-        if (null == pmphUser) {
+        if (Tools.isNullOrEmpty(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "操作人为空!");
         }
@@ -113,15 +112,15 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         // 装储存数据
         List<UserMessage> userMessageList = new ArrayList<UserMessage>();
         // 1 发送给学校管理员 //2 所有人
-        if (sendType == Const.SEND_OBJECT_1 || sendType == Const.SEND_OBJECT_2) {
-            if (null == orgIds || "".equals(userIds.trim())) {
+        if (Const.SEND_OBJECT_1 == sendType || Const.SEND_OBJECT_2 == sendType) {
+            if (Tools.isEmpty(orgIds)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                                   CheckedExceptionResult.NULL_PARAM, "参数错误!");
             }
             String[] orgIds1 = orgIds.split(",");
             List<Long> orgIds2 = new ArrayList<Long>(orgIds1.length);
             for (String id : orgIds1) {
-                if (null != id && Tools.isNumeric(id)) {
+                if (Tools.notEmpty(id)) {
                     orgIds2.add(Long.parseLong(id));
                 }
             }
@@ -133,7 +132,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                     Const.RECEIVER_TYPE_3));
             }
             // 作家用户
-            if (sendType == Const.SEND_OBJECT_2) {
+            if (Const.SEND_OBJECT_2 == sendType) {
                 List<WriterUser> writerUserList =
                 writerUserService.getWriterUserListByOrgIds(orgIds2);
                 for (WriterUser writerUser : writerUserList) {
@@ -144,14 +143,14 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             }
         }
         // 3 指定用户
-        if (sendType == Const.SEND_OBJECT_3) {
-            if (null == userIds || "".equals(userIds)) {
+        if (Const.SEND_OBJECT_3 == sendType) {
+            if (Tools.isEmpty(userIds)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                                   CheckedExceptionResult.NULL_PARAM, "没有选中发送人!");
             }
             String[] ids = userIds.split(",");
             for (String id : ids) {
-                if (null != id && !"".equals(id)) {
+                if (Tools.notEmpty(id)) {
                     String userType = id.split("_")[0];
                     String userId = id.split("_")[1];
                     if (null != userId && Tools.isNumeric(userId)) {
@@ -164,8 +163,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             }
         }
         // 4 发送给教材所有报名者
-        if (sendType == Const.SEND_OBJECT_4) {
-            if (null == bookIds || "".equals(bookIds)) {
+        if (Const.SEND_OBJECT_4 == sendType) {
+            if (Tools.isEmpty(bookIds)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                                   CheckedExceptionResult.NULL_PARAM, "书籍为空!");
             }
@@ -202,7 +201,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             userMessageList = temp;
         }
         // 插入消息发送对象数据
-        if (null != userMessageList && userMessageList.size() > 0) {
+        if (!userMessageList.isEmpty() && userMessageList.size() > 0) {
             userMessageDao.addUserMessageBatch(userMessageList);
         }
         // websocket发送的id集合
@@ -211,7 +210,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             websocketUserIds.add(userMessage.getReceiverType() + "_" + userMessage.getReceiverId());
         }
         // webscokt发送消息
-        if (null != websocketUserIds && websocketUserIds.size() > 0) {
+        if (!websocketUserIds.isEmpty() && websocketUserIds.size() > 0) {
             WebScocketMessage webScocketMessage =
             new WebScocketMessage(message.getId(), Const.MSG_TYPE_1, senderId,
                                   pmphUser.getRealname(), Const.SEND_MSG_TYPE_1,
@@ -224,15 +223,15 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Override
     public Integer updateUserMessage(Message message) throws CheckedServiceException {
-        if (null == message) {
+        if (Tools.isNullOrEmpty(message)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象为空");
         }
-        if (null == message.getId() || message.getId().isEmpty()) {
+        if (Tools.isNullOrEmpty(message.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象id为空");
         }
-        if (null == message.getContent() || message.getContent().isEmpty()) {
+        if (Tools.isEmpty(message.getContent())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象内容为空");
         }
@@ -289,16 +288,15 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     public PageResult<UserMessageVO> listMessage(PageParameter<UserMessageVO> pageParameter,
     String sessionId) throws CheckedServiceException {
         PmphUser pmphUser = ShiroSession.getPmphUserBySessionId(sessionId);
-        if (null == pmphUser) {
+        if (Tools.isNullOrEmpty(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        if (null == pmphUser.getId()) {
+        if (Tools.isNullOrEmpty(pmphUser.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        if (null != pageParameter.getParameter().getTitle()
-            && pageParameter.getParameter().getTitle().equals("")) {
+        if (Tools.isNotNullOrEmpty(pageParameter.getParameter().getTitle())) {
             String title = pageParameter.getParameter().getTitle();
             title = title.trim();
             title = title.replace(" ", "%");
@@ -308,18 +306,19 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         pageParameter.getParameter().setSenderId(pmphUser.getId());
         PageResult<UserMessageVO> pageResult = new PageResult<>();
         Tools.CopyPageParameter(pageParameter, pageResult);
-        int total = userMessageDao.getMessageTotal(pageParameter);
+        Integer total = userMessageDao.getMessageTotal(pageParameter);
         if (total > 0) {
             List<UserMessageVO> list = userMessageDao.listMessage(pageParameter);
+            Message message;
             for (UserMessageVO userMessageVO : list) {
-                Message message = messageService.get(userMessageVO.getMsgId());
-                userMessageVO.setContent(message.getContent());
+                message = messageService.get(userMessageVO.getMsgId());
+                if (Tools.isNotNullOrEmpty(message)) {
+                    userMessageVO.setContent(message.getContent());
+                }
             }
             pageResult.setRows(list);
+            pageResult.setTotal(total);
         }
-        pageResult.setPageTotal(total);
-
         return pageResult;
     }
-
 }
