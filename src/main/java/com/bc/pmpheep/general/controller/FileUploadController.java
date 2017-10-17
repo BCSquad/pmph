@@ -4,9 +4,6 @@ package com.bc.pmpheep.general.controller;
  * Copyright 2017 BangChen Information Technology Ltd., Co.
  * Licensed under the Apache License 2.0.
  */
-import com.bc.pmpheep.controller.bean.ResponseBean;
-import com.bc.pmpheep.general.bean.FileType;
-import com.bc.pmpheep.general.service.FileService;
 import java.io.IOException;
 
 import javax.annotation.Resource;
@@ -21,22 +18,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.general.bean.FileType;
+import com.bc.pmpheep.general.service.FileService;
+
 /**
  * 文件上传控制器
- *
+ * 
  * @author L.X <gugia@qq.com>
  */
+@SuppressWarnings("all")
 @Controller
 public class FileUploadController {
 
-    Logger logger = LoggerFactory.getLogger(FileUploadController.class);
+    Logger      logger = LoggerFactory.getLogger(FileUploadController.class);
 
     @Resource
     FileService fileService;
 
     /**
      * 上传文件并保存在Mongodb中
-     *
+     * 
      * @param model 状态
      * @param file 文件
      * @return 返回上传结果
@@ -45,7 +47,7 @@ public class FileUploadController {
     @RequestMapping(value = "/file/upload", method = RequestMethod.POST)
     public ResponseBean upload(Model model, @RequestParam("file") MultipartFile file) {
         try {
-            return new ResponseBean(fileService.save(file,FileType.GROUP_FILE, 0));
+            return new ResponseBean(fileService.save(file, FileType.GROUP_FILE, 0));
         } catch (IOException ex) {
             return new ResponseBean(ex);
         }
