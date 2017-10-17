@@ -113,7 +113,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		}
 		list = pmphGroupMemberDao.listPmphGroupMember(groupId);
 		for (PmphGroupMemberVO pmphGroupMemberVO : list) {
-			if (pmphGroupMemberVO.isIsWriter()) {
+			if (pmphGroupMemberVO.getIsWriter()) {
 				pmphGroupMemberVO.setAvatar(writerUserService.get(pmphGroupMemberVO.getMemberId()).getAvatar());
 			} else {
 				pmphGroupMemberVO.setAvatar(pmphUserService.get(pmphGroupMemberVO.getMemberId()).getAvatar());

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,15 +48,15 @@ public class GroupController {
 	 */
 	@RequestMapping(value = "/list/pmphgroup", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseBean listPmphGroup(@RequestParam(name = "groupName", defaultValue = "")String groupName) {
+	public ResponseBean listPmphGroup(@RequestParam(name = "groupName", defaultValue = "") String groupName) {
 		/*
 		 * --------- 以下是正确的示例 ---------
 		 * 
 		 * 在ResponseBean初始化时，通过ResponseBeanAop对其构造函数进行切面编程，
 		 * 因此返回时<务必>要使用ResponseBean的构造函数即 new ResponseBean(anything)
 		 */
-		PmphGroup pmphGroup = new PmphGroup ();
-		if(Tools.isNotNullOrEmpty(groupName)){
+		PmphGroup pmphGroup = new PmphGroup();
+		if (Tools.isNotNullOrEmpty(groupName)) {
 			pmphGroup.setGroupName(groupName);
 		}
 		return new ResponseBean(pmphGroupService.listPmphGroup(pmphGroup));
@@ -132,7 +133,7 @@ public class GroupController {
 	@RequestMapping(value = "/update/pmphgroup", method = RequestMethod.PUT)
 	public ResponseBean updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup) {
 		try {
-			return new ResponseBean(pmphGroupService.updatePmphGroup(file,pmphGroup));
+			return new ResponseBean(pmphGroupService.updatePmphGroup(file, pmphGroup));
 		} catch (IOException e) {
 			return new ResponseBean(e);
 		}
@@ -205,5 +206,12 @@ public class GroupController {
 	@ResponseBody
 	public ResponseBean deletePmphGroupFileById(ListPar listPar) {
 		return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(listPar.getIds()));
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/update/identity", method = RequestMethod.PUT)
+	public ResponseBean updateMemberIdentity(ListPar listPar) {
+		
+		return null;
 	}
 }
