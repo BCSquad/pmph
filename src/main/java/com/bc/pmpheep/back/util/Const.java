@@ -37,7 +37,7 @@ public class Const {
     // 单元测试数据是否回滚
     public static final boolean      ISROLLBACK                = true;
     // 用户SessionId
-    public static final String       USER_SEESION_ID           = "serSessionId";
+    public static final String       USER_SEESION_ID           = "userSessionId";
     // PMPH_USER_TOKEN
     public static final String       SEESION_PMPH_USER_TOKEN   = "sessionPmphUserToken";
     // WRITER_USER_TOKEN
