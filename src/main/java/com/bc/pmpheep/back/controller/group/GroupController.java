@@ -355,10 +355,10 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/list/message", method = RequestMethod.GET)
-	public ResponseBean listPmphGroupMessage(Integer pageSize, Integer pageNumber, Long groupId, Timestamp nowTime) {
+	public ResponseBean listPmphGroupMessage(Integer pageSize, Integer pageNumber, Long groupId, Timestamp baseTime) {
 		PageParameter<PmphGroupMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		PmphGroupMessageVO pmphGroupMessageVO = new PmphGroupMessageVO();
-		pmphGroupMessageVO.setGmtCreate(nowTime);
+		pmphGroupMessageVO.setGmtCreate(baseTime);
 		pmphGroupMessageVO.setGroupId(groupId);
 		pageParameter.setParameter(pmphGroupMessageVO);
 		return new ResponseBean(pmphGroupMessageService.listPmphGroupMessage(pageParameter));
