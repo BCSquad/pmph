@@ -18,7 +18,7 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.service.UserMessageService;
 import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.ShiroSession;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.MessageStateVO;
 import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.test.BaseTest;
@@ -41,7 +41,7 @@ public class UserMessageServiceTest extends BaseTest {
     @Test
     @Rollback(Const.ISROLLBACK)
     public void getMessageStateListTest() throws IOException {
-        ShiroSession.getShiroSessionUser().setAttribute(Const.SESSION_PMPH_USER, new PmphUser(1L));
+        SessionUtil.getShiroSessionUser().setAttribute(Const.SESSION_PMPH_USER, new PmphUser(1L));
         MessageStateVO messageStateVO = new MessageStateVO();
         PageParameter pageParameter = new PageParameter<>();
         String[] ids = new String[] { "1" };

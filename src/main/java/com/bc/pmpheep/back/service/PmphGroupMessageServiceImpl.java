@@ -9,13 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphGroupDao;
-import com.bc.pmpheep.back.dao.PmphGroupMemberDao;
 import com.bc.pmpheep.back.dao.PmphGroupMessageDao;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMessage;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.ShiroSession;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -27,7 +26,7 @@ import com.bc.pmpheep.websocket.WebScocketMessage;
  * PmphGroupMessageService 接口实现
  * 
  * @author Mryang
- *
+ * 
  */
 @Service
 public class PmphGroupMessageServiceImpl extends BaseService implements PmphGroupMessageService {
@@ -121,7 +120,7 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 	@Override
 	public String addGroupMessage(String msgConrent, Long groupId, String sessionId, Short senderType)
 			throws CheckedServiceException, IOException {
-		PmphUser pmphUser = ShiroSession.getPmphUserBySessionId(sessionId);
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");

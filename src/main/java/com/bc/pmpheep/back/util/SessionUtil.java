@@ -33,7 +33,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * @审核人 ：
  * </pre>
  */
-public class ShiroSession {
+public class SessionUtil {
 
     /**
      * 
@@ -99,7 +99,8 @@ public class ShiroSession {
         HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
         if (Tools.isNullOrEmpty(session)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
-                                              CheckedExceptionResult.USER_SESSION, "用户Session为空");
+                                              CheckedExceptionResult.USER_SESSION,
+                                              "当前Session会话已过期，请重新登录!");
         }
         PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
         return pmphUser;
@@ -153,7 +154,8 @@ public class ShiroSession {
         HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
         if (Tools.isNullOrEmpty(session)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
-                                              CheckedExceptionResult.USER_SESSION, "用户Session为空");
+                                              CheckedExceptionResult.USER_SESSION,
+                                              "当前Session会话已过期，请重新登录!");
         }
         WriterUser writerUser = (WriterUser) session.getAttribute(Const.SESSION_WRITER_USER);
         return writerUser;

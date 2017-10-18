@@ -12,7 +12,7 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.WriterUser;
-import com.bc.pmpheep.back.util.ShiroSession;
+import com.bc.pmpheep.back.util.SessionUtil;
 
 public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
 
@@ -34,7 +34,7 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
             }
             // userType 1=社内用户/2=作家/3=机构用户
             if ("1".equals(userType)) {
-                PmphUser pmphUser = ShiroSession.getPmphUser();
+                PmphUser pmphUser = SessionUtil.getPmphUser();
                 if (null == pmphUser) {
                     return false;
                 }
@@ -44,7 +44,7 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
                 }
                 userId = userType + "_" + pmphUserId;
             } else if ("2".equals(userType)) {
-                WriterUser writerUser = ShiroSession.getWriterUser();
+                WriterUser writerUser = SessionUtil.getWriterUser();
                 if (null == writerUser) {
                     return false;
                 }

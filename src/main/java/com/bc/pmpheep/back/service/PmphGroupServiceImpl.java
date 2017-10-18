@@ -13,7 +13,7 @@ import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.ShiroSession;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.general.bean.ImageType;
@@ -147,7 +147,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 					"参数对象为空");
 		}
 		// session PmphUser用户验证
-		PmphUser pmphUser = ShiroSession.getPmphUserBySessionId(sessionId);
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
@@ -158,7 +158,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	@Override
 	public PmphGroup addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, String sessionId)
 			throws CheckedServiceException, IOException {
-		PmphUser pmphUser = ShiroSession.getPmphUserBySessionId(sessionId);
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
