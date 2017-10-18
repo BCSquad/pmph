@@ -31,7 +31,7 @@ public class PmphGroupMemberVO implements Serializable {
 	/**
 	 * 成员id
 	 */
-	private Long memberId;
+	private Long userId;
 	/***
 	 * 小组成员头像
 	 */
@@ -69,12 +69,12 @@ public class PmphGroupMemberVO implements Serializable {
 		this.groupId = groupId;
 	}
 
-	public Long getMemberId() {
-		return memberId;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setMemberId(Long memberId) {
-		this.memberId = memberId;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public String getAvatar() {

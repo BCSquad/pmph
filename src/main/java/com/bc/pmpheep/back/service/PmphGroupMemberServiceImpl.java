@@ -71,9 +71,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		}
 		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberDao.getPmphGroupMemberById(id);
 		if (pmphGroupMemberVO.getIsWriter()) {
-			pmphGroupMemberVO.setAvatar(writerUserService.get(pmphGroupMemberVO.getMemberId()).getAvatar());
+			pmphGroupMemberVO.setAvatar(writerUserService.get(pmphGroupMemberVO.getUserId()).getAvatar());
 		} else {
-			pmphGroupMemberVO.setAvatar(pmphUserService.get(pmphGroupMemberVO.getMemberId()).getAvatar());
+			pmphGroupMemberVO.setAvatar(pmphUserService.get(pmphGroupMemberVO.getUserId()).getAvatar());
 		}
 		return pmphGroupMemberVO;
 	}
@@ -121,9 +121,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		list = pmphGroupMemberDao.listPmphGroupMember(groupId);
 		for (PmphGroupMemberVO pmphGroupMemberVO : list) {
 			if (pmphGroupMemberVO.getIsWriter()) {
-				pmphGroupMemberVO.setAvatar(writerUserService.get(pmphGroupMemberVO.getMemberId()).getAvatar());
+				pmphGroupMemberVO.setAvatar(writerUserService.get(pmphGroupMemberVO.getUserId()).getAvatar());
 			} else {
-				pmphGroupMemberVO.setAvatar(pmphUserService.get(pmphGroupMemberVO.getMemberId()).getAvatar());
+				pmphGroupMemberVO.setAvatar(pmphUserService.get(pmphGroupMemberVO.getUserId()).getAvatar());
 			}
 		}
 		return list;
@@ -140,7 +140,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 						throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 								CheckedExceptionResult.ILLEGAL_PARAM, "成员小组id为空");
 					}
-					if (null == pmphGroupMember.getMemberId()) {
+					if (null == pmphGroupMember.getUserId()) {
 						throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 								CheckedExceptionResult.ILLEGAL_PARAM, "成员id为空");
 					}
@@ -256,7 +256,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 					"主键不能为空");
 		} else {
 			for (Long id : ids) {
-				if (userid == pmphGroupMemberDao.getPmphGroupMemberById(id).getMemberId()) {
+				if (userid == pmphGroupMemberDao.getPmphGroupMemberById(id).getUserId()) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 							CheckedExceptionResult.ILLEGAL_PARAM, "不能删除自己");
 				}
@@ -277,15 +277,15 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public PmphGroupMemberVO getPmphGroupMemberByMemberId(Long memberId, Long groupId, Boolean isWriter)
+	public PmphGroupMemberVO getPmphGroupMemberByMemberId(Long groupId, Long userId, Boolean isWriter)
 			throws CheckedServiceException {
-		if (null == memberId) {
+		if (null == userId) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"组员id不能为空");
 		}
-		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberDao.getPmphGroupMemberByMemberId(memberId, groupId,
+		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId, userId,
 				isWriter);
-		pmphGroupMemberVO.setAvatar(pmphUserService.get(memberId).getAvatar());
+		pmphGroupMemberVO.setAvatar(pmphUserService.get(userId).getAvatar());
 		return pmphGroupMemberVO;
 	}
 
@@ -293,7 +293,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	public String updateMemberIdentity(Long groupId, List<PmphGroupMember> members, String sessionId)
 			throws CheckedServiceException {
 		String result = "FAIL";
-		if (!isFounder(groupId,sessionId)) {
+		if (!isFounder(groupId, sessionId)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
 					"只有创建者有此权限操作");
 		}
