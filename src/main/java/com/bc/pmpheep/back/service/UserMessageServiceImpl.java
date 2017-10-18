@@ -16,7 +16,7 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.ShiroSession;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.MessageStateVO;
 import com.bc.pmpheep.back.vo.UserMessageVO;
@@ -58,7 +58,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     @Override
     public PageResult<MessageStateVO> listMessageState(PageParameter<MessageStateVO> pageParameter,
     String sessionId) throws CheckedServiceException {
-        PmphUser pmphUser = ShiroSession.getPmphUserBySessionId(sessionId);
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (Tools.isNullOrEmpty(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
@@ -103,7 +103,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
         }
         // 发送者id
-        PmphUser pmphUser = ShiroSession.getPmphUserBySessionId(sessionId);
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (Tools.isNullOrEmpty(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "操作人为空!");
@@ -287,7 +287,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     @Override
     public PageResult<UserMessageVO> listMessage(PageParameter<UserMessageVO> pageParameter,
     String sessionId) throws CheckedServiceException {
-        PmphUser pmphUser = ShiroSession.getPmphUserBySessionId(sessionId);
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (Tools.isNullOrEmpty(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");

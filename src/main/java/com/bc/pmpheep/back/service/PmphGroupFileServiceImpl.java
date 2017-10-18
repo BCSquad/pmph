@@ -15,7 +15,7 @@ import com.bc.pmpheep.back.po.PmphGroupFile;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.ShiroSession;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.general.bean.FileType;
@@ -50,7 +50,7 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 	@Override
 	public String addPmphGroupFile(List<Long> ids, List<MultipartFile> files)
 			throws CheckedServiceException, IOException {
-		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		PmphUser pmphUser = (PmphUser) (SessionUtil.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM, "用户没有登录");
 		}
@@ -100,7 +100,7 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 	@Override
 	public String deletePmphGroupFileById(List<Long> ids) throws CheckedServiceException {
 		String result = "FAIL";
-		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		PmphUser pmphUser = (PmphUser) (SessionUtil.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
 		if (null == pmphUser || null == pmphUser.getId()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 					CheckedExceptionResult.NULL_PARAM, "该用户为空");

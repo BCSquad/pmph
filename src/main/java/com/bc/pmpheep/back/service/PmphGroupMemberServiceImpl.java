@@ -14,7 +14,7 @@ import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.ShiroSession;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
@@ -174,7 +174,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	@Override
 	public Boolean isFounderOrisAdmin() throws CheckedServiceException {
 		boolean flag = false;
-		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		PmphUser pmphUser = (PmphUser) (SessionUtil.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
@@ -190,7 +190,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	@Override
 	public Boolean isFounder() throws CheckedServiceException {
 		boolean flag = false;
-		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		PmphUser pmphUser = (PmphUser) (SessionUtil.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
@@ -236,7 +236,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
 					"该用户没有操作权限");
 		}
-		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		PmphUser pmphUser = (PmphUser) (SessionUtil.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"该用户为空");
