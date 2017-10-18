@@ -217,8 +217,8 @@ public class GroupController {
 	 */
 	@RequestMapping(value = "/delete/pmphgroupfile", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ResponseBean deletePmphGroupFileById(ListPar listPar) {
-		return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(listPar.getIds()));
+	public ResponseBean deletePmphGroupFileById(ListPar listPar,String sessionId) {
+		return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(listPar.getIds(),sessionId));
 	}
 
 	/**

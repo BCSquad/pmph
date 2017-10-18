@@ -44,7 +44,7 @@ public interface PmphGroupFileService {
 	 * @return 删除成功与否状态提示
 	 * @throws CheckedServiceException
 	 */
-	String deletePmphGroupFileById(List<Long> ids) throws CheckedServiceException;
+	String deletePmphGroupFileById(List<Long> ids,String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 全字段更新

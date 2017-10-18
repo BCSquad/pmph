@@ -107,12 +107,12 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public String deletePmphGroupFileById(List<Long> ids) throws CheckedServiceException {
+	public String deletePmphGroupFileById(List<Long> ids,String sessionId) throws CheckedServiceException {
 		String result = "FAIL";
-		PmphUser pmphUser = (PmphUser) (ShiroSession.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		PmphUser pmphUser = ShiroSession.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-					"该用户为空");
+					"用户为空");
 		}
 		Long id = pmphUser.getId();
 		PmphGroupMemberVO currentUser = pmphGroupMemberService.getPmphGroupMemberByMemberId(id);

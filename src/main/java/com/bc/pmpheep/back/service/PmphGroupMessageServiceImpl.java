@@ -77,7 +77,7 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 	 * @param id
 	 * @return 影响行数
 	 * @throws CheckedServiceException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@Override
 	public String deletePmphGroupMessageById(Long id, String sessionId) throws CheckedServiceException, IOException {
@@ -149,6 +149,7 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 		WebScocketMessage webScocketMessage = new WebScocketMessage(String.valueOf(pmphGroupMessage.getId()),
 				Const.MSG_TYPE_3, pmphGroupMemberVO.getId(), pmphGroupMemberVO.getDisplayName(), senderType,
 				Const.SEND_MSG_TYPE_0, null, msgConrent, pmphGroupMessage.getGmtCreate());
+		webScocketMessage.setGroupId(groupId);
 		webScocketMessage.setSenderIcon(pmphGroupMemberVO.getAvatar());
 		handler.sendWebSocketMessageToUser(ids, webScocketMessage);
 		return "SUCCESS";
