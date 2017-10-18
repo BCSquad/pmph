@@ -93,5 +93,6 @@ public class OrgMigationHelper {
         }
         logger.info("ba_organize表迁移完成！");
         logger.info("旧库中共 {} 条数据，迁移完成 {} 条", maps.size(), count);
+        
 	}
 }
