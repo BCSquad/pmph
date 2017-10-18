@@ -42,7 +42,8 @@ public interface PmphGroupMemberService {
 	 * @param:组员id
 	 * @return:PmphGroupMember
 	 */
-	PmphGroupMemberVO getPmphGroupMemberByMemberId(Long memberId) throws CheckedServiceException;
+	PmphGroupMemberVO getPmphGroupMemberByMemberId(Long memberId, Long groupId, Boolean isWriter)
+			throws CheckedServiceException;
 
 	/**
 	 * 
@@ -82,7 +83,7 @@ public interface PmphGroupMemberService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String addPmphGroupMemberOnGroup(List<PmphGroupMember> pmphGroupMembers, String sessionId)
+	String addPmphGroupMemberOnGroup(Long groupId,List<PmphGroupMember> pmphGroupMembers, String sessionId)
 			throws CheckedServiceException;
 
 	/**
@@ -107,7 +108,7 @@ public interface PmphGroupMemberService {
 	 * @param:
 	 * @return:Boolean
 	 */
-	Boolean isFounderOrisAdmin(String sessionId) throws CheckedServiceException;
+	Boolean isFounderOrisAdmin(Long groupId, String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 
@@ -118,7 +119,7 @@ public interface PmphGroupMemberService {
 	 * @param
 	 * @return Boolean
 	 */
-	Boolean isFounder(String sessionId) throws CheckedServiceException;
+	Boolean isFounder(Long groupId, String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 
@@ -142,7 +143,7 @@ public interface PmphGroupMemberService {
 	 * @param 成员表id集合
 	 * @return String 删除成功与否状态
 	 */
-	String deletePmphGroupMemberByIds(List<Long> ids, String sessionId) throws CheckedServiceException;
+	String deletePmphGroupMemberByIds(Long groupId, List<Long> ids, String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 
@@ -154,6 +155,7 @@ public interface PmphGroupMemberService {
 	 *            小组成员集合
 	 * @return String成功与否状态
 	 */
-	String updateMemberIdentity(List<PmphGroupMember> members, String sessionId) throws CheckedServiceException;
+	String updateMemberIdentity(Long groupId, List<PmphGroupMember> members, String sessionId)
+			throws CheckedServiceException;
 
 }

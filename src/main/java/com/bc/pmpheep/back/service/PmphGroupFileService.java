@@ -25,7 +25,7 @@ public interface PmphGroupFileService {
 	 * @return 上传成功与否提示信息
 	 * @throws CheckedServiceException
 	 */
-	String addPmphGroupFile(List<Long> ids,List<MultipartFile> files,String sessionId)
+	String addPmphGroupFile(List<Long> ids, List<MultipartFile> files, String sessionId)
 			throws CheckedServiceException, IOException;
 
 	/**
@@ -44,7 +44,7 @@ public interface PmphGroupFileService {
 	 * @return 删除成功与否状态提示
 	 * @throws CheckedServiceException
 	 */
-	String deletePmphGroupFileById(List<Long> ids,String sessionId) throws CheckedServiceException;
+	String deletePmphGroupFileById(Long groupId, List<Long> ids, String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 全字段更新
