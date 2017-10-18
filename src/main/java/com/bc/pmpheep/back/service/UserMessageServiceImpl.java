@@ -61,6 +61,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     private OrgService         orgService;
 
     @Autowired
+    private MaterialService    materialService;
+
+    @Autowired
     private MyWebSocketHandler handler;
 
     @Autowired
@@ -97,15 +100,13 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     }
 
     @Override
-    public Map<String, Object> listSendOject(Integer sendType,
-    PageParameter<PmphUserManagerVO> pmphPageParameter,
-    PageParameter<WriterUserManagerVO> writerPageParameter,
-    PageParameter<OrgUserManagerVO> orgPageParameter, String orgName)
+    public Map<String, Object> listSendOject(Integer sendType, Integer pageNumber,
+    Integer pageSize, String orgName, String userNameOrUserCode, String materialName)
     throws CheckedServiceException {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         if (Tools.isNullOrEmpty(sendType)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                              CheckedExceptionResult.NULL_PARAM, "参数错误!");
+                                              CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择发送对象!");
         }
         // 1 发送给学校管理员 //2 所有人
         if (Const.SEND_OBJECT_1 == sendType || Const.SEND_OBJECT_2 == sendType) {
@@ -113,13 +114,31 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         }
         // 指定用户
         if (Const.SEND_OBJECT_3 == sendType) {
+            // PMPH_User
+            PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
+            pmphUserManagerVO.setName(userNameOrUserCode);
+            PageParameter<PmphUserManagerVO> pmphPageParameter =
+            new PageParameter<PmphUserManagerVO>(pageNumber, pageSize, pmphUserManagerVO);
+            // Writer_User
+            WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
+            writerUserManagerVO.setName(userNameOrUserCode);
+            writerUserManagerVO.setOrgName(orgName);
+            // writerUserManagerVO.setRank(0);
+            PageParameter<WriterUserManagerVO> writerPageParameter =
+            new PageParameter<WriterUserManagerVO>(pageNumber, pageSize, writerUserManagerVO);
+            // Org_User
+            OrgUserManagerVO orgUserManagerVO = new OrgUserManagerVO();
+            orgUserManagerVO.setUsername(userNameOrUserCode);
+            orgUserManagerVO.setOrgName(orgName);
+            PageParameter<OrgUserManagerVO> orgPageParameter =
+            new PageParameter<OrgUserManagerVO>(pageNumber, pageSize, orgUserManagerVO);
             resultMap.put("pmphUser", pmphUserService.getListPmphUser(pmphPageParameter));
             resultMap.put("writerUser", writerUserService.getListWriterUser(writerPageParameter));
             resultMap.put("orgUser", orgUserService.getListOrgUser(orgPageParameter));
         }
         // 教材所有报名者
         if (Const.SEND_OBJECT_4 == sendType) {
-
+            resultMap.put("Material", materialService.getListMaterial(materialName));
         }
         return resultMap;
     }
@@ -130,7 +149,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     throws CheckedServiceException, IOException {
         if (Tools.isNullOrEmpty(sendType)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                              CheckedExceptionResult.NULL_PARAM, "参数错误!");
+                                              CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择发送对象!");
         }
         // 如果 补发不进行消息插入
         if (isSave) {

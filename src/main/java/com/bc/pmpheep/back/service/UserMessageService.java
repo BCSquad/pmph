@@ -7,10 +7,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.vo.MessageStateVO;
-import com.bc.pmpheep.back.vo.OrgUserManagerVO;
-import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.back.vo.UserMessageVO;
-import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -48,15 +45,17 @@ public interface UserMessageService {
      * 功能描述：系统消息——发送新消息——发送对象（学校管理员、所有人、指定用户、教材所有报名者）页面数据加载
      * 使用示范：
      *
-     * @param orgName 机构名称
+     * @param sendType //1 发送给学校管理员 //2 所有人 //3指定用户 //4发送给教材所有报名者
+     * @param pageNumber 
+     * @param pageSize
+     * @param orgName
+     * @param userNameOrUserCode 用户姓名或者用户账号
      * @return
+     * @throws CheckedServiceException
      * </pre>
      */
-    Map<String, Object> listSendOject(Integer sendType,
-    PageParameter<PmphUserManagerVO> pmphPageParameter,
-    PageParameter<WriterUserManagerVO> writerPageParameter,
-    PageParameter<OrgUserManagerVO> orgPageParameter, String orgName)
-    throws CheckedServiceException;
+    Map<String, Object> listSendOject(Integer sendType, Integer pageNumber, Integer pageSize,
+    String orgName, String userNameOrUserCode, String materialName) throws CheckedServiceException;
 
     /**
      * 向各个对象发送消息

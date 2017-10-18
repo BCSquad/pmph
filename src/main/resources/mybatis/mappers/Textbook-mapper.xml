@@ -213,5 +213,16 @@
 		select count(*)
 		from textbook
 	</select>
+	
+	<!-- 根据教材Id查询对应的书籍 -->
+	<select id="getTextBookByMaterialId" parameterType="map" resultType="Textbook">
+		select 
+			* 
+		from 
+			textbook tb
+		where 
+			tb.id=#{materialId}
+		order by tb.id desc;
+	</select>
 
 </mapper>
