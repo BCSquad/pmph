@@ -169,12 +169,15 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"进入小组时间为空");
 		}
-		PageResult pageResult = new PageResult<>();
+		PageResult<PmphGroupMessageVO> pageResult = new PageResult<>();
 		int total = pmphGroupMessageDao.getPmphGroupMessageTotal(pageParameter);
 		if (total > 0) {
 			Tools.CopyPageParameter(pageParameter, pageResult);
+			List<PmphGroupMessageVO> list = pmphGroupMessageDao.listPmphGroupMessage(pageParameter);
+			pageResult.setRows(list);
 		}
-		return null;
+		pageResult.setTotal(total);
+		return pageResult;
 	}
 
 }
