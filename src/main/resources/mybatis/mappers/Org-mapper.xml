@@ -161,8 +161,8 @@
 			`area` ar ON o.`area_id` = ar.`id` 
 		WHERE 
 			1=1
-			<if test="orgName !=null and  orgName != '' ">
-				and o.`org_name` LIKE CONCAT(CONCAT('%',#{orpName},'%'))
+			<if test="orgName !=null and orgName != '' ">
+				and o.`org_name` LIKE CONCAT(CONCAT('%',#{orgName},'%'))
 			</if>
 		GROUP BY 
 			o.`area_id` 

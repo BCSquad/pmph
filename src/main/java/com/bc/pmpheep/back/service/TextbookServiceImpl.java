@@ -94,6 +94,10 @@ public class TextbookServiceImpl implements TextbookService {
 
     @Override
     public List<Textbook> getTextBookByMaterialId(Long materialId) throws CheckedServiceException {
+        if (Tools.isNullOrEmpty(materialId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+                                              CheckedExceptionResult.NULL_PARAM, "教材ID为空，禁止查询！");
+        }
         return textbookDao.getTextBookByMaterialId(materialId);
     }
 

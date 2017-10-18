@@ -90,6 +90,6 @@ public interface OrgDao {
      * @return
      * </pre>
      */
-    List<OrgVO> listSendToSchoolAdminOrAllUser(@Param("orpName") String orgName);
+    List<OrgVO> listSendToSchoolAdminOrAllUser(@Param("orgName") String orgName);
 
 }
