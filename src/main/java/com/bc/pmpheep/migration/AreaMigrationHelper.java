@@ -35,7 +35,7 @@ public class AreaMigrationHelper {
 	            //获取旧表主键进行转换
 	            String areaId=map.get("areaId").toString();
 	            area.setId(Long.valueOf(areaId));
-	            //获取旧表父级区域编码进行转换
+	            //获取旧表父级区域编码进行转换后设置
 	            String parentCode=map.get("parentCode").toString();
 	            area.setParentId(Long.valueOf(parentCode));
 	            //直接转换区域名称
