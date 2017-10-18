@@ -1,20 +1,17 @@
 package com.bc.pmpheep.back.controller.group;
 
-import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.fileupload.FileItem;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphGroup;
@@ -28,6 +25,7 @@ import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.ListPar;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
+import com.bc.pmpheep.back.vo.PmphGroupMessageVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -337,5 +335,32 @@ public class GroupController {
 		} catch (IOException e) {
 			return new ResponseBean(e);
 		}
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：进入小组的时候获取历史消息
+	 *
+	 * @param pageSize
+	 *            获取的条数
+	 * @param pageNumber
+	 *            当前第几页
+	 * @param groupId
+	 *            小组id
+	 * @param nowTime
+	 *            进入小组的时间节点
+	 * @return 消息结果集
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/list/message", method = RequestMethod.GET)
+	public ResponseBean listPmphGroupMessage(Integer pageSize, Integer pageNumber, Long groupId, Timestamp baseTime) {
+		PageParameter<PmphGroupMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+		PmphGroupMessageVO pmphGroupMessageVO = new PmphGroupMessageVO();
+		pmphGroupMessageVO.setGmtCreate(baseTime);
+		pmphGroupMessageVO.setGroupId(groupId);
+		pageParameter.setParameter(pmphGroupMessageVO);
+		return new ResponseBean(pmphGroupMessageService.listPmphGroupMessage(pageParameter));
 	}
 }

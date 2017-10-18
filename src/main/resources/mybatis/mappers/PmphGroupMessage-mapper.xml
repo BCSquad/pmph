@@ -84,4 +84,29 @@
 		from
 		pmph_group_message
 	</select>
+
+	<!-- 查询小组历史消息总数 -->
+	<select id="getPmphGroupMessageTotal" parameterType="PageParameter"
+		resultType="Integer">
+		select
+		count(*)
+		from
+		pmph_group_message m WHERE
+		m.group_id =
+		#{parameter.groupId} AND m.gmt_create &lt; #{parameter.gmtCreate}
+	</select>
+
+	<!-- 查询小组历史消息 -->
+	<select id="listPmphGroupMessage" parameterType="PageParameter"
+		resultType="PmphGroupMessageVO">
+		select
+		count(*)
+		from
+		pmph_group_message m WHERE 1 = 1
+		AND m.group_id =
+		#{parameter.groupId} AND m.gmt_create &lt; #{parameter.gmtCreate}
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
 </mapper>
