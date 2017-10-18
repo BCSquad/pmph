@@ -2,7 +2,10 @@ package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphGroupMessage;
+import com.bc.pmpheep.back.vo.PmphGroupMessageVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -65,5 +68,18 @@ public interface PmphGroupMessageService {
 	 */
 	String addGroupMessage(String msgConrent, Long groupId, String sessionId, Short senderType)
 			throws CheckedServiceException, IOException;
+
+	/**
+	 * 
+	 *  
+	 * 功能描述：进入小组是加载历史消息
+	 *
+	 * @param pageParameter 分页参数 以及 小组id和进入小组时间
+	 * @return 分页消息结果集
+	 * @throws CheckedServiceException
+	 *
+	 */
+	PageResult<PmphGroupMessageVO> listPmphGroupMessage(PageParameter<PmphGroupMessageVO> pageParameter)
+			throws CheckedServiceException;
 
 }
