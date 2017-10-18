@@ -13,13 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.service.UserMessageService;
-import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.MessageStateVO;
-import com.bc.pmpheep.back.vo.OrgUserManagerVO;
-import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.back.vo.UserMessageVO;
-import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.po.Message;
 
@@ -77,46 +72,34 @@ public class UserMessageController {
         return new ResponseBean(userMessageService.listMessageState(pageParameter, sessionId));
     }
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：初始化数据(选择向各个对象发送消息)
+     * 使用示范：
+     *
+     * @param sendType //1 发送给学校管理员 //2 所有人 //3指定用户 //4发送给教材所有报名者
+     * @param pageNumber
+     * @param pageSize
+     * @param orgName 机构名称
+     * @param userNameOrUserCode 用户姓名/用户账号
+     * @param materialName 教材名称
+     * @return
+     * </pre>
+     */
+    @ResponseBody
+    @RequestMapping(value = "/message/sendObject", method = RequestMethod.GET)
     public ResponseBean listSendOject(@RequestParam("sendType") Integer sendType,
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, @RequestParam("orgName") String orgName,
     @RequestParam("userNameOrUserCode") String userNameOrUserCode,
-    @RequestParam("sessionId") String sessionId) {
-        PageParameter<PmphUserManagerVO> pmphPageParameter = null;
-        PageParameter<WriterUserManagerVO> writerPageParameter = null;
-        PageParameter<OrgUserManagerVO> orgPageParameter = null;
-        if (Tools.isNotNullOrEmpty(sendType)) {
-            if (Const.SEND_OBJECT_1 == sendType || Const.SEND_OBJECT_2 == sendType) {
-
-            }
-            if (Const.SEND_OBJECT_3 == sendType) {
-                // PMPH_User
-                PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
-                pmphUserManagerVO.setName(userNameOrUserCode);
-                pmphPageParameter =
-                new PageParameter<PmphUserManagerVO>(pageNumber, pageSize, pmphUserManagerVO);
-                // Writer_User
-                WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
-                writerUserManagerVO.setName(userNameOrUserCode);
-                writerUserManagerVO.setOrgName(orgName);
-                writerUserManagerVO.setRank(0);
-                writerPageParameter =
-                new PageParameter<WriterUserManagerVO>(pageNumber, pageSize, writerUserManagerVO);
-                // Org_User
-                OrgUserManagerVO orgUserManagerVO = new OrgUserManagerVO();
-                orgUserManagerVO.setUsername(userNameOrUserCode);
-                orgUserManagerVO.setOrgName(orgName);
-                orgPageParameter =
-                new PageParameter<OrgUserManagerVO>(pageNumber, pageSize, orgUserManagerVO);
-            }
-            if (Const.SEND_OBJECT_4 == sendType) {
-            }
-        }
+    @RequestParam("materialName") String materialName) {
         return new ResponseBean(userMessageService.listSendOject(sendType,
-                                                                 pmphPageParameter,
-                                                                 writerPageParameter,
-                                                                 orgPageParameter,
-                                                                 orgName));
+                                                                 pageNumber,
+                                                                 pageSize,
+                                                                 orgName,
+                                                                 userNameOrUserCode,
+                                                                 materialName));
     }
 
     /**

@@ -271,15 +271,7 @@
 		<include refid="value" />
 		);
 	</insert>
-
-
-	<!-- 根据id删除一个 -->
-	<delete id="deleteMaterialById" parameterType="java.lang.Long">
-		delete from
-		material where
-		id=#{id} ;
-	</delete>
-
+	
 	<!-- 更新Material -->
 	<update id="updateMaterial" parameterType="Material">
 		update material
@@ -422,5 +414,26 @@
 		from
 		material
 	</select>
+	
+	<!--获取教材集合  -->
+	<select id="getListMaterial" resultType="Material">
+		select
+			 * 
+		from 
+			material ma
+		where 
+			1=1
+			<if test="materialName !=null and materialName !=''">
+				and	material_name  LIKE CONCAT(CONCAT('%',#{materialName},'%'))
+			</if>
+		order by ma.id desc;
+	</select>
+	
+	<!-- 根据id删除一个 -->
+	<delete id="deleteMaterialById" parameterType="java.lang.Long">
+		delete from
+		material where
+		id=#{id} ;
+	</delete>
 
 </mapper>
