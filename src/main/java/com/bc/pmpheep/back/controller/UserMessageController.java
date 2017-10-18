@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.UserMessage;
+import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.service.UserMessageService;
 import com.bc.pmpheep.back.vo.MessageStateVO;
 import com.bc.pmpheep.back.vo.UserMessageVO;
@@ -30,6 +31,8 @@ public class UserMessageController {
 
     @Autowired
     private UserMessageService userMessageService;
+    @Autowired
+    private TextbookService    textbookService;
 
     /**
      * 
@@ -70,6 +73,52 @@ public class UserMessageController {
         PageParameter<MessageStateVO> pageParameter =
         new PageParameter<MessageStateVO>(pageNumber, pageSize, messageStateVO);
         return new ResponseBean(userMessageService.listMessageState(pageParameter, sessionId));
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：初始化数据(选择向各个对象发送消息)
+     * 使用示范：
+     *
+     * @param sendType //1 发送给学校管理员 //2 所有人 //3指定用户 //4发送给教材所有报名者
+     * @param pageNumber
+     * @param pageSize
+     * @param orgName 机构名称
+     * @param userNameOrUserCode 用户姓名/用户账号
+     * @param materialName 教材名称
+     * @return
+     * </pre>
+     */
+    @ResponseBody
+    @RequestMapping(value = "/message/send_object", method = RequestMethod.GET)
+    public ResponseBean listSendOject(@RequestParam("sendType") Integer sendType,
+    @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+    @RequestParam(name = "pageSize") Integer pageSize, @RequestParam("orgName") String orgName,
+    @RequestParam("userNameOrUserCode") String userNameOrUserCode,
+    @RequestParam("materialName") String materialName) {
+        return new ResponseBean(userMessageService.listSendOject(sendType,
+                                                                 pageNumber,
+                                                                 pageSize,
+                                                                 orgName,
+                                                                 userNameOrUserCode,
+                                                                 materialName));
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据教材ID查询书籍列表
+     * 使用示范：
+     *
+     * @param materialId 教材ID
+     * @return
+     * </pre>
+     */
+    @ResponseBody
+    @RequestMapping(value = "/message/send_object/{materialId}/text_book", method = RequestMethod.GET)
+    public ResponseBean getListTextBookByMaterialId(@PathVariable("materialId") Long materialId) {
+        return new ResponseBean(textbookService.getTextBookByMaterialId(materialId));
     }
 
     /**

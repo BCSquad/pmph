@@ -2,7 +2,9 @@ package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,10 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.MessageStateVO;
+import com.bc.pmpheep.back.vo.OrgUserManagerVO;
+import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.back.vo.UserMessageVO;
+import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.general.service.MessageService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -48,6 +53,15 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Autowired
     private OrgUserService     orgUserService;
+
+    @Autowired
+    private PmphUserService    pmphUserService;
+
+    @Autowired
+    private OrgService         orgService;
+
+    @Autowired
+    private MaterialService    materialService;
 
     @Autowired
     private MyWebSocketHandler handler;
@@ -86,12 +100,56 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     }
 
     @Override
+    public Map<String, Object> listSendOject(Integer sendType, Integer pageNumber,
+    Integer pageSize, String orgName, String userNameOrUserCode, String materialName)
+    throws CheckedServiceException {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        if (Tools.isNullOrEmpty(sendType)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择发送对象!");
+        }
+        // 1 发送给学校管理员 //2 所有人
+        if (Const.SEND_OBJECT_1 == sendType || Const.SEND_OBJECT_2 == sendType) {
+            resultMap.put("orgVo", orgService.listSendToSchoolAdminOrAllUser(orgName));
+        }
+        // 指定用户
+        if (Const.SEND_OBJECT_3 == sendType) {
+            // PMPH_User
+            PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
+            pmphUserManagerVO.setName(userNameOrUserCode);
+            PageParameter<PmphUserManagerVO> pmphPageParameter =
+            new PageParameter<PmphUserManagerVO>(pageNumber, pageSize, pmphUserManagerVO);
+            // Writer_User
+            WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
+            writerUserManagerVO.setName(userNameOrUserCode);
+            writerUserManagerVO.setOrgName(orgName);
+            // writerUserManagerVO.setRank(0);
+            PageParameter<WriterUserManagerVO> writerPageParameter =
+            new PageParameter<WriterUserManagerVO>(pageNumber, pageSize, writerUserManagerVO);
+            // Org_User
+            OrgUserManagerVO orgUserManagerVO = new OrgUserManagerVO();
+            orgUserManagerVO.setUsername(userNameOrUserCode);
+            orgUserManagerVO.setOrgName(orgName);
+            PageParameter<OrgUserManagerVO> orgPageParameter =
+            new PageParameter<OrgUserManagerVO>(pageNumber, pageSize, orgUserManagerVO);
+            resultMap.put("pmphUser", pmphUserService.getListPmphUser(pmphPageParameter));
+            resultMap.put("writerUser", writerUserService.getListWriterUser(writerPageParameter));
+            resultMap.put("orgUser", orgUserService.getListOrgUser(orgPageParameter));
+        }
+        // 教材所有报名者
+        if (Const.SEND_OBJECT_4 == sendType) {
+            resultMap.put("Material", materialService.getListMaterial(materialName));
+        }
+        return resultMap;
+    }
+
+    @Override
     public Integer addOrUpdateUserMessage(Message message, Integer sendType, String orgIds,
     String userIds, String bookIds, boolean isSave, String sessionId)
     throws CheckedServiceException, IOException {
         if (Tools.isNullOrEmpty(sendType)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                              CheckedExceptionResult.NULL_PARAM, "参数错误!");
+                                              CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择发送对象!");
         }
         // 如果 补发不进行消息插入
         if (isSave) {

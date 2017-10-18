@@ -38,7 +38,18 @@ public interface  PmphGroupMemberDao {
 	 * @Param:小组内成员id
 	 * @Return:PmphGroupMember
 	 */
-	PmphGroupMemberVO getPmphGroupMemberByMemberId(Long memberId);
+	PmphGroupMemberVO getPmphGroupMemberByMemberId(Long memberId,Long groupId,Boolean isWriter);
+	
+	/**
+	 * 
+	 * Description:根据当前用户id查找成员
+	 * @author:lyc
+	 * @date:2017年10月12日下午2:52:57
+	 * @Param:小组内成员id
+	 * @Return:PmphGroupMember
+	 */
+	PmphGroupMemberVO getPmphGroupMemberByMemberIdAndIsWriter(Long memberId);
+	
 	/**
 	 * 
 	 * @param 主键id

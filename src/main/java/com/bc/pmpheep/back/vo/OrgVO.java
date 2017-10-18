@@ -5,137 +5,158 @@ import java.io.Serializable;
 import org.apache.ibatis.type.Alias;
 
 /**
- *@author MrYang 
- *@CreateDate 2017年9月26日 上午9:33:25
- *
+ * @author MrYang
+ * @CreateDate 2017年9月26日 上午9:33:25
+ * 
  **/
 @SuppressWarnings("serial")
 @Alias("OrgVO")
 public class OrgVO implements Serializable {
-	// 主键
-	private Long id;
-	//机构名称
-	private String orgName;
-	//机构类型id
-	private Long   orgTypeId;
-	//机构类型名称
-	private String orgTypeName;
-	//区域id
-	private Long areaId;
-	//所属区域名称
-	private String areaName;
-	//联系人
-	private String countactPerson;
-	//联系电话
-	private String countactPhone;
-	//备注
-	private String note;
-	// 显示顺序
-	private Integer sort;
-	//条件分页总条数
-	private Integer count;
-	
-	public OrgVO() {
-		super();
-	}
+    // 主键
+    private Long    id;
+    // 机构名称
+    private String  orgName;
+    // 机构类型id
+    private Long    orgTypeId;
+    // 机构类型名称
+    private String  orgTypeName;
+    // 上级机构id
+    private Long    parentId;
+    // 区域id
+    private Long    areaId;
+    // 所属区域名称
+    private String  areaName;
+    // 联系人
+    private String  countactPerson;
+    // 联系电话
+    private String  countactPhone;
+    // 备注
+    private String  note;
+    // 显示顺序
+    private Integer sort;
+    // 条件分页总条数
+    private Integer count;
 
-	public Long getId() {
-		return id;
-	}
+    public OrgVO() {
+        super();
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getOrgName() {
-		return orgName;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
-	}
+    public String getOrgName() {
+        return orgName;
+    }
 
-	public Long getOrgTypeId() {
-		return orgTypeId;
-	}
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
 
-	public void setOrgTypeId(Long orgTypeId) {
-		this.orgTypeId = orgTypeId;
-	}
+    public Long getOrgTypeId() {
+        return orgTypeId;
+    }
 
-	public String getOrgTypeName() {
-		return orgTypeName;
-	}
+    public void setOrgTypeId(Long orgTypeId) {
+        this.orgTypeId = orgTypeId;
+    }
 
-	public void setOrgTypeName(String orgTypeName) {
-		this.orgTypeName = orgTypeName;
-	}
+    public String getOrgTypeName() {
+        return orgTypeName;
+    }
 
-	public Long getAreaId() {
-		return areaId;
-	}
+    public void setOrgTypeName(String orgTypeName) {
+        this.orgTypeName = orgTypeName;
+    }
 
-	public void setAreaId(Long areaId) {
-		this.areaId = areaId;
-	}
+    public Long getAreaId() {
+        return areaId;
+    }
 
-	public String getAreaName() {
-		return areaName;
-	}
+    public void setAreaId(Long areaId) {
+        this.areaId = areaId;
+    }
 
-	public void setAreaName(String areaName) {
-		this.areaName = areaName;
-	}
+    public String getAreaName() {
+        return areaName;
+    }
 
-	public String getCountactPerson() {
-		return countactPerson;
-	}
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
 
-	public void setCountactPerson(String countactPerson) {
-		this.countactPerson = countactPerson;
-	}
+    public String getCountactPerson() {
+        return countactPerson;
+    }
 
-	public String getCountactPhone() {
-		return countactPhone;
-	}
+    public void setCountactPerson(String countactPerson) {
+        this.countactPerson = countactPerson;
+    }
 
-	public void setCountactPhone(String countactPhone) {
-		this.countactPhone = countactPhone;
-	}
+    public String getCountactPhone() {
+        return countactPhone;
+    }
 
-	public String getNote() {
-		return note;
-	}
+    public void setCountactPhone(String countactPhone) {
+        this.countactPhone = countactPhone;
+    }
 
-	public void setNote(String note) {
-		this.note = note;
-	}
+    public String getNote() {
+        return note;
+    }
 
-	public Integer getSort() {
-		return sort;
-	}
+    public void setNote(String note) {
+        this.note = note;
+    }
 
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
+    public Integer getSort() {
+        return sort;
+    }
 
-	public Integer getCount() {
-		return count;
-	}
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 
-	public void setCount(Integer count) {
-		this.count = count;
-	}
+    public Integer getCount() {
+        return count;
+    }
 
-	@Override
-	public String toString() {
-		return "{id:" + id + ", orgName:" + orgName + ", orgTypeId:"
-				+ orgTypeId + ", orgTypeName:" + orgTypeName + ", areaId:"
-				+ areaId + ", areaName:" + areaName + ", countactPerson:"
-				+ countactPerson + ", countactPhone:" + countactPhone
-				+ ", note:" + note + ", sort:" + sort + ", count:" + count
-				+ "}";
-	}
-	
-	
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    /**
+     * @return the parentId
+     */
+    public Long getParentId() {
+        return parentId;
+    }
+
+    /**
+     * @param parentId the parentId to set
+     */
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    /**
+     * <pre>
+     * 功能描述：
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
+    @Override
+    public String toString() {
+        return "{id:" + id + ", orgName:" + orgName + ", orgTypeId:" + orgTypeId + ", orgTypeName:"
+               + orgTypeName + ", parentId=" + parentId + ", areaId:" + areaId + ", areaName:"
+               + areaName + ", countactPerson:" + countactPerson + ", countactPhone:"
+               + countactPhone + ", note:" + note + ", sort:" + sort + ", count:" + count + "}";
+    }
+
 }

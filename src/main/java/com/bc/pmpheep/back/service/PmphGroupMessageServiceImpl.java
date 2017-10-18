@@ -10,12 +10,16 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphGroupDao;
 import com.bc.pmpheep.back.dao.PmphGroupMessageDao;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMessage;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
+import com.bc.pmpheep.back.vo.PmphGroupMessageVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -126,7 +130,8 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 					"用户为空");
 		}
 		Long memberId = pmphUser.getId();
-		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(memberId);
+		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(groupId, memberId,
+				false);// 获取后台用户
 		PmphGroupMessage pmphGroupMessage;
 		if (senderType == 0) {
 			pmphGroupMessage = new PmphGroupMessage(groupId, 0L, msgConrent);
@@ -152,6 +157,28 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 		webScocketMessage.setSenderIcon(pmphGroupMemberVO.getAvatar());
 		handler.sendWebSocketMessageToUser(ids, webScocketMessage);
 		return "SUCCESS";
+	}
+
+	@Override
+	public PageResult<PmphGroupMessageVO> listPmphGroupMessage(PageParameter<PmphGroupMessageVO> pageParameter)
+			throws CheckedServiceException {
+		if (null == pageParameter.getParameter().getGroupId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"小组id为空");
+		}
+		if (null == pageParameter.getParameter().getGmtCreate()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"进入小组时间为空");
+		}
+		PageResult<PmphGroupMessageVO> pageResult = new PageResult<>();
+		int total = pmphGroupMessageDao.getPmphGroupMessageTotal(pageParameter);
+		if (total > 0) {
+			Tools.CopyPageParameter(pageParameter, pageResult);
+			List<PmphGroupMessageVO> list = pmphGroupMessageDao.listPmphGroupMessage(pageParameter);
+			pageResult.setRows(list);
+		}
+		pageResult.setTotal(total);
+		return pageResult;
 	}
 
 }

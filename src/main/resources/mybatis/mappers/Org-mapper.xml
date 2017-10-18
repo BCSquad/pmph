@@ -89,48 +89,6 @@
 		) ;
 	</insert>
 
-
-	<!-- 根据id删除一个Org -->
-	<delete id="deleteOrgById" parameterType="java.lang.Long">
-		delete from org where
-		id=#{id} ;
-	</delete>
-
-	<!-- 更新Org -->
-	<update id="updateOrg" parameterType="Org">
-		update org
-		<set>
-			<if test="parentId != null and parentId !=''">
-				parent_id = #{parentId},
-			</if>
-			<if test="orgName != null and orgName !='' ">
-				org_name = #{orgName},
-			</if>
-			<if test=" orgTypeId != null and orgTypeId !=''">
-				org_type_id= #{orgTypeId},
-			</if>
-			<if test=" areaId != null and areaId !=''">
-				area_id= #{areaId},
-			</if>
-			<if test=" countactPerson != null and countactPerson !=''">
-				contact_person = #{countactPerson},
-			</if>
-			<if test="countactPhone != null and countactPhone !='' ">
-				contact_phone = #{countactPhone},
-			</if>
-			<if test=" note != null and note !=''">
-				note= #{note},
-			</if>
-			<if test=" sort != null and sort !=''">
-				sort= #{sort},
-			</if>
-			<if test=" isDeleted != null ">
-				is_deleted = #{isDeleted},
-			</if>
-		</set>
-		where id=#{id} ;
-	</update>
-
 	<!-- 根据id查询一个Org -->
 	<select id="getOrgById" parameterType="java.lang.Long"
 		resultType="Org">
@@ -183,11 +141,41 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
+	
+	<!-- 系统消息——发送新消息——发送对象（学校管理员、所有人） -->
+	<select id="listSendToSchoolAdminOrAllUser" parameterType="map" resultType="OrgVO">
+		SELECT 
+			GROUP_CONCAT(o.`id`) id,
+			GROUP_CONCAT(o.`org_name`)org_name,
+			o.`area_id`,
+			o.`parent_id`,
+			GROUP_CONCAT(ot.`type_name`)type_name,
+			ar.`area_name` 
+		FROM 
+			`org` o 
+		LEFT JOIN 
+			`org_type` ot 
+		ON 
+			o.`org_type_id` = ot.`id` 
+		LEFT JOIN 
+			`area` ar ON o.`area_id` = ar.`id` 
+		WHERE 
+			1=1
+			<if test="orgName !=null and orgName != '' ">
+				and o.`org_name` LIKE CONCAT(CONCAT('%',#{orgName},'%'))
+			</if>
+		GROUP BY 
+			o.`area_id` 
+		ORDER BY 
+			o.`area_id`,o.`id` ASC;
+	</select>
+	
 	<!-- 新增用户或者修改用户是加载的机构 -->
 	<select id="listOrgByOrgName" parameterType="String"
 		resultType="OrgVO">
 		select id,org_name from org where org_name like #{orgName};
 	</select>
+	
 	<!-- 查询表单的数据总数 -->
 	<select id="getOrgCount" resultType="Long">
 		select
@@ -195,4 +183,47 @@
 		from
 		org
 	</select>
+
+	<!-- 更新Org -->
+	<update id="updateOrg" parameterType="Org">
+		update org
+		<set>
+			<if test="parentId != null and parentId !=''">
+				parent_id = #{parentId},
+			</if>
+			<if test="orgName != null and orgName !='' ">
+				org_name = #{orgName},
+			</if>
+			<if test=" orgTypeId != null and orgTypeId !=''">
+				org_type_id= #{orgTypeId},
+			</if>
+			<if test=" areaId != null and areaId !=''">
+				area_id= #{areaId},
+			</if>
+			<if test=" countactPerson != null and countactPerson !=''">
+				contact_person = #{countactPerson},
+			</if>
+			<if test="countactPhone != null and countactPhone !='' ">
+				contact_phone = #{countactPhone},
+			</if>
+			<if test=" note != null and note !=''">
+				note= #{note},
+			</if>
+			<if test=" sort != null and sort !=''">
+				sort= #{sort},
+			</if>
+			<if test=" isDeleted != null ">
+				is_deleted = #{isDeleted},
+			</if>
+		</set>
+		where id=#{id} ;
+	</update>
+	
+	<!-- 根据id删除一个Org -->
+	<delete id="deleteOrgById" parameterType="java.lang.Long">
+		delete from 
+			org 
+		where
+			id=#{id} ;
+	</delete>
 </mapper>

@@ -81,9 +81,9 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public String deletePmphGroupById(PmphGroup pmphGroup,String sessionId) throws CheckedServiceException {
+	public String deletePmphGroupById(PmphGroup pmphGroup, String sessionId) throws CheckedServiceException {
 		String result = "FAIL";
-		if (pmphGroupMemberService.isFounder(sessionId)) {
+		if (pmphGroupMemberService.isFounder(pmphGroup.getId(), sessionId)) {
 			if (null == pmphGroup.getId()) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 						"主键为空");
@@ -185,9 +185,9 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	}
 
 	@Override
-	public PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup,String sessionId)
+	public PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, String sessionId)
 			throws CheckedServiceException, IOException {
-		if (pmphGroupMemberService.isFounderOrisAdmin(sessionId)) {
+		if (pmphGroupMemberService.isFounderOrisAdmin(pmphGroup.getId(), sessionId)) {
 			if (null != file) {
 				pmphGroup.setGroupImage(fileService.save(file, ImageType.GROUP_AVATAR, 0));
 			}
