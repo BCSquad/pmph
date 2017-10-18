@@ -32,72 +32,71 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  */
 @Service
 public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFileService {
-    @Autowired
-    private PmphGroupFileDao        pmphGroupFileDao;
-    @Autowired
-    private PmphGroupMemberService  pmphGroupMemberService;
-    @Autowired
-    private FileService             fileService;
-    @Autowired
-    private PmphGroupMessageService pmphGroupMessageService;
+	@Autowired
+	private PmphGroupFileDao pmphGroupFileDao;
+	@Autowired
+	private PmphGroupMemberService pmphGroupMemberService;
+	@Autowired
+	private FileService fileService;
+	@Autowired
+	private PmphGroupMessageService pmphGroupMessageService;
 
-    /**
-     * 
-     * @param pmphGroupFile 实体对象
-     * @return 带主键的 PmphGroupFile
-     * @throws CheckedServiceException
-     * @update Mryang 2017.10.13 15:30
-     */
-    @Override
-    public String addPmphGroupFile(List<Long> ids, List<MultipartFile> files, String sessionId)
-    throws CheckedServiceException, IOException {
-        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-        if (null == pmphUser || null == pmphUser.getId()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-                                              CheckedExceptionResult.NULL_PARAM, "用户为空");
-        }
-        if (null == ids || ids.size() == 0) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-                                              CheckedExceptionResult.NULL_PARAM, "参数不能为空");
-        }
-        if (null == files || files.size() == 0) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-                                              CheckedExceptionResult.NULL_PARAM, "文件不能为空");
-        }
-        Long memberId = pmphUser.getId();
-        for (Long id : ids) {
-            if (null == id) {
-                throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-                                                  CheckedExceptionResult.NULL_PARAM, "小组id不能为空");
-            }
-            for (MultipartFile file : files) {
-                String fileId = fileService.save(file, FileType.GROUP_FILE, 0);
-                PmphGroupFile pmphGroupFile =
-                new PmphGroupFile(id, memberId, fileId, file.getOriginalFilename(), 0, null);
-                pmphGroupFileDao.addPmphGroupFile(pmphGroupFile);
-                pmphGroupMessageService.addGroupMessage(file.getOriginalFilename(),
-                                                        id,
-                                                        sessionId,
-                                                        Const.SENDER_TYPE_0);
-            }
-        }
-        return "success";
-    }
+	/**
+	 * 
+	 * @param pmphGroupFile
+	 *            实体对象
+	 * @return 带主键的 PmphGroupFile
+	 * @throws CheckedServiceException
+	 * @update Mryang 2017.10.13 15:30
+	 */
+	@Override
+	public String addPmphGroupFile(List<Long> ids, List<MultipartFile> files, String sessionId)
+			throws CheckedServiceException, IOException {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
+		}
+		if (null == ids || ids.size() == 0) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"参数不能为空");
+		}
+		if (null == files || files.size() == 0) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"文件不能为空");
+		}
+		Long memberId = pmphUser.getId();
+		for (Long id : ids) {
+			if (null == id) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+						"小组id不能为空");
+			}
+			for (MultipartFile file : files) {
+				String fileId = fileService.save(file, FileType.GROUP_FILE, 0);
+				PmphGroupFile pmphGroupFile = new PmphGroupFile(id, memberId, fileId, file.getOriginalFilename(), 0,
+						null);
+				pmphGroupFileDao.addPmphGroupFile(pmphGroupFile);
+				pmphGroupMessageService.addGroupMessage(file.getOriginalFilename(), id, sessionId, Const.SENDER_TYPE_0);
+			}
+		}
+		return "success";
+	}
 
-    /**
-     * 
-     * @param id 主键id
-     * @return PmphGroupFile
-     * @throws CheckedServiceException
-     */
-    @Override
-    public PmphGroupFile getPmphGroupFileById(Long id) throws CheckedServiceException {
-        if (null == id) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-                                              CheckedExceptionResult.NULL_PARAM, "主键为空");
-        }
-        return pmphGroupFileDao.getPmphGroupFileById(id);
-    }
+	/**
+	 * 
+	 * @param id
+	 *            主键id
+	 * @return PmphGroupFile
+	 * @throws CheckedServiceException
+	 */
+	@Override
+	public PmphGroupFile getPmphGroupFileById(Long id) throws CheckedServiceException {
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"主键为空");
+		}
+		return pmphGroupFileDao.getPmphGroupFileById(id);
+	}
 
 	/**
 	 * 
@@ -107,7 +106,7 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public String deletePmphGroupFileById(List<Long> ids,String sessionId) throws CheckedServiceException {
+	public String deletePmphGroupFileById(List<Long> ids, String sessionId) throws CheckedServiceException {
 		String result = "FAIL";
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
@@ -134,43 +133,43 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 		return result;
 	}
 
-    /**
-     * @param PmphGroupFileVO
-     * @return 影响行数
-     * @throws CheckedServiceException
-     */
-    @Override
-    public Integer updatePmphGroupFile(PmphGroupFile pmphGroupFile) throws CheckedServiceException {
-        if (null == pmphGroupFile.getId()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-                                              CheckedExceptionResult.NULL_PARAM, "主键为空");
-        }
-        return pmphGroupFileDao.updatePmphGroupFile(pmphGroupFile);
-    }
+	/**
+	 * @param PmphGroupFileVO
+	 * @return 影响行数
+	 * @throws CheckedServiceException
+	 */
+	@Override
+	public Integer updatePmphGroupFile(PmphGroupFile pmphGroupFile) throws CheckedServiceException {
+		if (null == pmphGroupFile.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"主键为空");
+		}
+		return pmphGroupFileDao.updatePmphGroupFile(pmphGroupFile);
+	}
 
-    @Override
-    public PageResult<PmphGroupFileVO> listGroupFile(PageParameter<PmphGroupFileVO> pageParameter) {
-        if (null == pageParameter.getParameter().getGroupId()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-                                              CheckedExceptionResult.NULL_PARAM, "小组id不能为空");
-        }
-        if (null != pageParameter.getParameter().getFileName()) {
-            String fileName = pageParameter.getParameter().getFileName().trim();
-            if (!fileName.equals("")) {
-                pageParameter.getParameter().setFileName("%" + fileName + "%");
-            } else {
-                pageParameter.getParameter().setFileName(fileName);
-            }
-        }
-        PageResult<PmphGroupFileVO> pageResult = new PageResult<PmphGroupFileVO>();
-        Tools.CopyPageParameter(pageParameter, pageResult);
-        int total = pmphGroupFileDao.getGroupFileTotal(pageParameter);
-        if (total > 0) {
-            pageResult.setTotal(total);
-            List<PmphGroupFileVO> list = pmphGroupFileDao.listGroupFile(pageParameter);
-            pageResult.setRows(list);
-        }
-        return pageResult;
-    }
+	@Override
+	public PageResult<PmphGroupFileVO> listGroupFile(PageParameter<PmphGroupFileVO> pageParameter) {
+		if (null == pageParameter.getParameter().getGroupId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"小组id不能为空");
+		}
+		if (null != pageParameter.getParameter().getFileName()) {
+			String fileName = pageParameter.getParameter().getFileName().trim();
+			if (!fileName.equals("")) {
+				pageParameter.getParameter().setFileName("%" + fileName + "%");
+			} else {
+				pageParameter.getParameter().setFileName(fileName);
+			}
+		}
+		PageResult<PmphGroupFileVO> pageResult = new PageResult<PmphGroupFileVO>();
+		Tools.CopyPageParameter(pageParameter, pageResult);
+		int total = pmphGroupFileDao.getGroupFileTotal(pageParameter);
+		if (total > 0) {
+			pageResult.setTotal(total);
+			List<PmphGroupFileVO> list = pmphGroupFileDao.listGroupFile(pageParameter);
+			pageResult.setRows(list);
+		}
+		return pageResult;
+	}
 
 }

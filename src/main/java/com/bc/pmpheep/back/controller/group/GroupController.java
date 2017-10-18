@@ -1,16 +1,20 @@
 package com.bc.pmpheep.back.controller.group;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.fileupload.FileItem;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphGroup;
@@ -217,8 +221,8 @@ public class GroupController {
 	 */
 	@RequestMapping(value = "/delete/pmphgroupfile", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ResponseBean deletePmphGroupFileById(ListPar listPar,String sessionId) {
-		return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(listPar.getIds(),sessionId));
+	public ResponseBean deletePmphGroupFileById(ListPar listPar, String sessionId) {
+		return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(listPar.getIds(), sessionId));
 	}
 
 	/**
