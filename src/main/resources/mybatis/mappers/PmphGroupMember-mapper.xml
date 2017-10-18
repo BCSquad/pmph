@@ -106,13 +106,22 @@
 		id=#{id} ;
 	</select>
 
-	<!-- 根据组员id查询一个PmphGroupMember -->
+	<!-- 根据组员id查询PmphGroupMember -->
 	<select id="getPmphGroupMemberByMemberId" parameterType="java.lang.Long"
 		resultType="PmphGroupMemberVO">
 		select * from pmph_group_member where
 		member_id=#{memberId}
 		;
 	</select>
+	
+	<!-- 根据组员id查询PmphGroupMember -->
+	<select id="getPmphGroupMemberByMemberIdAndIsWriter" parameterType="java.lang.Long"
+		resultType="PmphGroupMemberVO">
+		select * from pmph_group_member where
+		member_id=#{memberId} and is_writer = false
+		;
+	</select>
+	
 	<!-- 解散小组时删除小组所有成员 -->
 	<delete id="deletePmphGroupMemberOnGroup" parameterType="java.lang.Long">
 		delete

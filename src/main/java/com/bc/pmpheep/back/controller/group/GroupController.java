@@ -125,9 +125,9 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/add/pmphgroupmember", method = RequestMethod.POST)
-	public ResponseBean addPmphGroupMemberOnGroup(ListPar listPar, String sessionId) {
+	public ResponseBean addPmphGroupMemberOnGroup(Long gruopId, ListPar listPar, String sessionId) {
 		return new ResponseBean(
-				pmphGroupMemberService.addPmphGroupMemberOnGroup(listPar.getPmphGroupMembers(), sessionId));
+				pmphGroupMemberService.addPmphGroupMemberOnGroup(gruopId, listPar.getPmphGroupMembers(), sessionId));
 	}
 
 	/**
@@ -219,8 +219,8 @@ public class GroupController {
 	 */
 	@RequestMapping(value = "/delete/pmphgroupfile", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ResponseBean deletePmphGroupFileById(ListPar listPar, String sessionId) {
-		return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(listPar.getIds(), sessionId));
+	public ResponseBean deletePmphGroupFileById(Long groupId, ListPar listPar, String sessionId) {
+		return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(groupId, listPar.getIds(), sessionId));
 	}
 
 	/**
@@ -237,8 +237,9 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/delete/pmphgroupmember", method = RequestMethod.DELETE)
-	public ResponseBean deletePmphGroupMemberByIds(ListPar listPar, String sessionId) {
-		return new ResponseBean(pmphGroupMemberService.deletePmphGroupMemberByIds(listPar.getIds(), sessionId));
+	public ResponseBean deletePmphGroupMemberByIds(Long groupId, ListPar listPar, String sessionId) {
+		return new ResponseBean(
+				pmphGroupMemberService.deletePmphGroupMemberByIds(groupId, listPar.getIds(), sessionId));
 	}
 
 	/**
@@ -253,14 +254,14 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/update/identity", method = RequestMethod.PUT)
-	public ResponseBean updateMemberIdentity(ListPar listPar, String sessionId) {
+	public ResponseBean updateMemberIdentity(Long groupId, ListPar listPar, String sessionId) {
 		PmphGroupMember pmphGroupMember = new PmphGroupMember();
 		List<PmphGroupMember> list = new ArrayList<>();
 		for (Long id : listPar.getIds()) {
 			pmphGroupMember.setId(id);
 			list.add(pmphGroupMember);
 		}
-		return new ResponseBean(pmphGroupMemberService.updateMemberIdentity(list, sessionId));
+		return new ResponseBean(pmphGroupMemberService.updateMemberIdentity(groupId, list, sessionId));
 	}
 
 	/**

@@ -130,7 +130,8 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 					"用户为空");
 		}
 		Long memberId = pmphUser.getId();
-		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(memberId);
+		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(groupId, memberId,
+				false);// 获取后台用户
 		PmphGroupMessage pmphGroupMessage;
 		if (senderType == 0) {
 			pmphGroupMessage = new PmphGroupMessage(groupId, 0L, msgConrent);
