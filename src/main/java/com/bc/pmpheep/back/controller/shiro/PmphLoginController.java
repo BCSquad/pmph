@@ -74,6 +74,7 @@ public class PmphLoginController {
         logger.info("password => " + password);
         try {
             PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
+            pmphUser.setLoginType("1");// 1社内用户，2作用用户，3机构用户
             // 根据用户Id查询对应权限Id
             List<Long> pmphUserPermissionIds =
             pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
