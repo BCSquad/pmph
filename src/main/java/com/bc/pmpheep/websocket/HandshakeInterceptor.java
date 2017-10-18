@@ -21,20 +21,23 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest serverHttpRequest,
     ServerHttpResponse serverHttpResponse, WebSocketHandler webSocketHandler,
     Map<String, Object> map) throws Exception {
-        if (serverHttpRequest instanceof ServletServerHttpRequest) {
+    	if (serverHttpRequest instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) serverHttpRequest;
             String userType = servletRequest.getServletRequest().getParameter("userType");
+            String sessionId = servletRequest.getServletRequest().getParameter("sessionId");
+            
             if (null == userType || "".equals(userType)) {
                 return false;
             }
-            HttpSession session = servletRequest.getServletRequest().getSession(false);
+            //HttpSession session = servletRequest.getServletRequest().getSession(false);
             String userId = null;
-            if (null == session) {
-                return false;
-            }
+//            if (null == session) {
+//                return false;
+//            }
             // userType 1=社内用户/2=作家/3=机构用户
             if ("1".equals(userType)) {
-                PmphUser pmphUser = SessionUtil.getPmphUser();
+                //PmphUser pmphUser = SessionUtil.getPmphUser();
+                PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
                 if (null == pmphUser) {
                     return false;
                 }
@@ -44,7 +47,7 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
                 }
                 userId = userType + "_" + pmphUserId;
             } else if ("2".equals(userType)) {
-                WriterUser writerUser = SessionUtil.getWriterUser();
+                WriterUser writerUser = SessionUtil.getWriterUserBySessionId(sessionId);
                 if (null == writerUser) {
                     return false;
                 }
