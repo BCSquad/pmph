@@ -79,6 +79,7 @@ public class WriterLoginController {
         try {
             WriterUser writerUser =
             writerUserService.login(username, new DesRun("", password).enpsw);
+            writerUser.setLoginType("2");// 1社内用户，2作用用户，3机构用户
             // 根据用户Id查询对应权限Id
             List<Long> writerUserPermissionIds =
             writerUserService.getWriterUserPermissionByUserId(writerUser.getId());
