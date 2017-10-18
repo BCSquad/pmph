@@ -37,7 +37,7 @@ public interface PmphGroupService {
      * @return 影响行数
      * @throws CheckedServiceException
      */
-    String deletePmphGroupById(PmphGroup pmphGroup) throws CheckedServiceException;
+    String deletePmphGroupById(PmphGroup pmphGroup,String sessionId) throws CheckedServiceException;
 
     /**
      * PmphGroup 更新
@@ -86,6 +86,6 @@ public interface PmphGroupService {
      * @throws CheckedServiceException
      * 
      */
-    PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup)
+    PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup,String sessionId)
     throws CheckedServiceException, IOException;
 }

@@ -3,74 +3,74 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.PmphGroupMemberDao">
 
-	<sql id="key">
-		<!-- 去掉最后一个, -->
-		<trim suffixOverrides=",">
-			<if test="gruopId != null and gruopId !=''">
-				group_id,
-			</if>
-			<if test="memberId != null and memberId !=''">
-				member_id,
-			</if>
-			<if test=" isWriter != null ">
-				is_writer,
-			</if>
-			<if test="isFounder != null">
-				is_founder,
-			</if>
-			<if test="isAdmin != null">
-				is_admin,
-			</if>
-			<if test=" displayName != null and displayName !=''">
-				display_name,
-			</if>
-		</trim>
-	</sql>
-	<!-- sql片段对应?,id属性值任意 -->
-	<sql id="value">
-		<!-- 去掉最后一个, -->
-		<trim suffixOverrides=",">
-			<if test="gruopId != null and gruopId !=''">
-				#{gruopId},
-			</if>
-			<if test="memberId != null and memberId !=''">
-				#{memberId},
-			</if>
-			<if test=" isWriter != null ">
-				#{isWriter},
-			</if>
-			<if test="isFounder != null ">
-				#{isFounder},
-			</if>
-			<if test="isAdmin != null ">
-				#{isAdmin},
-			</if>
-			<if test=" displayName != null and displayName !=''">
-				#{displayName},
-			</if>
-		</trim>
-	</sql>
+    <sql id="key">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="groupId != null">
+                group_id,
+            </if>
+            <if test="memberId != null">
+                member_id,
+            </if>
+            <if test="isWriter != null">
+                is_writer,
+            </if>
+            <if test="isFounder != null">
+                is_founder,
+            </if>
+            <if test="isAdmin != null">
+                is_admin,
+            </if>
+            <if test="displayName != null and displayName !=''">
+                display_name,
+            </if>
+        </trim>
+    </sql>
+    <!-- sql片段对应?,id属性值任意 -->
+    <sql id="value">
+        <!-- 去掉最后一个, -->
+        <trim suffixOverrides=",">
+            <if test="groupId != null">
+                #{groupId},
+            </if>
+            <if test="memberId != null">
+                #{memberId},
+            </if>
+            <if test="isWriter != null">
+                #{isWriter},
+            </if>
+            <if test="isFounder != null">
+                #{isFounder},
+            </if>
+            <if test="isAdmin != null">
+                #{isAdmin},
+            </if>
+            <if test="displayName != null and displayName !=''">
+                #{displayName},
+            </if>
+        </trim>
+    </sql>
 
-	<!-- 新增 PmphGroupMember -->
-	<insert id="addPmphGroupMember" parameterType="PmphGroupMember">
-		<selectKey resultType="java.lang.Long" order="AFTER"
-			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
-			SELECT LAST_INSERT_ID()
-		</selectKey>
-		insert into pmph_group_member
-		(
-		<include refid="key" />
-		)
-		values(
-		<include refid="value" />
-		) ;
-	</insert>
+    <!-- 新增 PmphGroupMember -->
+    <insert id="addPmphGroupMember" parameterType="PmphGroupMember">
+        <selectKey resultType="java.lang.Long" order="AFTER"
+                   keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into pmph_group_member
+        (
+        <include refid="key" />
+        )
+        values(
+        <include refid="value" />
+        ) ;
+    </insert>
 
-	<!-- 根据id删除一个 PmphGroupMember -->
-	<delete id="deletePmphGroupMemberById" parameterType="java.lang.Long">
-		delete from
-		pmph_group_member where id=#{id} ;
-	</delete>
+    <!-- 根据id删除一个 PmphGroupMember -->
+    <delete id="deletePmphGroupMemberById" parameterType="java.lang.Long">
+        delete from
+        pmph_group_member where id=#{id} ;
+    </delete>
 
 	<!-- 更新 PmphGroupMember -->
 	<update id="updatePmphGroupMember" parameterType="PmphGroupMember">
@@ -108,7 +108,7 @@
 
 	<!-- 根据组员id查询一个PmphGroupMember -->
 	<select id="getPmphGroupMemberByMemberId" parameterType="java.lang.Long"
-		resultType="PmphGroupMember">
+		resultType="PmphGroupMemberVO">
 		select * from pmph_group_member where
 		member_id=#{memberId}
 		;
@@ -120,13 +120,13 @@
 		pmph_group_member where group_id=#{groupId} ;
 	</delete>
 
-	<!-- 根据小组id查询小组所有成员 -->
-	<select id="listPmphGroupMember" parameterType="java.lang.Long"
-		resultType="PmphGroupMemberVO">
-		select * from pmph_group_member where
-		group_id=#{groupId}
-		order by is_founder desc , is_admin ;
-	</select>
+    <!-- 根据小组id查询小组所有成员 -->
+    <select id="listPmphGroupMember" parameterType="java.lang.Long"
+            resultType="PmphGroupMemberVO">
+        select * from pmph_group_member where
+        group_id=#{groupId}
+        order by is_founder desc , is_admin ;
+    </select>
 
 	<!-- 查询表单的数据总数 -->
 	<select id="getPmphGroupMemberCount" resultType="Long">

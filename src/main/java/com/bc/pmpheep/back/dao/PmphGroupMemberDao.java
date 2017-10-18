@@ -28,7 +28,7 @@ public interface  PmphGroupMemberDao {
 	 * @param 主键id
 	 * @return  PmphGroupMember
 	 */
-	PmphGroupMember getPmphGroupMemberById(Long id) ;
+	PmphGroupMemberVO getPmphGroupMemberById(Long id) ;
 	
 	/**
 	 * 
@@ -38,7 +38,7 @@ public interface  PmphGroupMemberDao {
 	 * @Param:小组内成员id
 	 * @Return:PmphGroupMember
 	 */
-	PmphGroupMember getPmphGroupMemberByMemberId(Long memberId);
+	PmphGroupMemberVO getPmphGroupMemberByMemberId(Long memberId);
 	/**
 	 * 
 	 * @param 主键id

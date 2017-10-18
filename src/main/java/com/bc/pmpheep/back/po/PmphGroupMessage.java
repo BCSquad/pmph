@@ -47,11 +47,10 @@ public class PmphGroupMessage implements Serializable {
 		super();
 	}
 
-	public PmphGroupMessage(Long groupId, Long memberId, String msgContent, Timestamp gmtCreate) {
+	public PmphGroupMessage(Long groupId, Long memberId, String msgContent) {
 	this.groupId = groupId;
 	this.memberId = memberId;
 	this.msgContent = msgContent;
-	this.gmtCreate = gmtCreate;
     }
 
     public Long getId() {

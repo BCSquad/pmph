@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,12 +17,15 @@ import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.PmphGroupMemberService;
+import com.bc.pmpheep.back.service.PmphGroupMessageService;
 import com.bc.pmpheep.back.service.PmphGroupService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.ListPar;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * @author MrYang
@@ -42,6 +44,8 @@ public class GroupController {
 	PmphGroupMemberService pmphGroupMemberService;
 	@Autowired
 	private PmphGroupFileService pmphGroupFileService;
+	@Autowired
+	PmphGroupMessageService pmphGroupMessageService;
 
 	/**
 	 * 根据小组名称模糊查询获取当前用户的小组
@@ -119,8 +123,9 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/add/pmphgroupmember", method = RequestMethod.POST)
-	public ResponseBean addPmphGroupMemberOnGroup(ListPar ListPar) {
-		return new ResponseBean(pmphGroupMemberService.addPmphGroupMemberOnGroup(ListPar.getPmphGroupMembers()));
+	public ResponseBean addPmphGroupMemberOnGroup(ListPar listPar, String sessionId) {
+		return new ResponseBean(
+				pmphGroupMemberService.addPmphGroupMemberOnGroup(listPar.getPmphGroupMembers(), sessionId));
 	}
 
 	/**
@@ -158,8 +163,8 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/delete/pmphgroup", method = RequestMethod.DELETE)
-	public ResponseBean deletePmphGroupById(PmphGroup pmphGroup) {
-		return new ResponseBean(pmphGroupService.deletePmphGroupById(pmphGroup));
+	public ResponseBean deletePmphGroupById(PmphGroup pmphGroup, String sessionId) {
+		return new ResponseBean(pmphGroupService.deletePmphGroupById(pmphGroup, sessionId));
 	}
 
 	/**
@@ -174,9 +179,10 @@ public class GroupController {
 	 */
 	@RequestMapping(value = "/add/pmphgroupfile", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseBean addPmphGroupFile(ListPar listPar) {
+	public ResponseBean addPmphGroupFile(ListPar listPar, String sessionId) {
 		try {
-			return new ResponseBean(pmphGroupFileService.addPmphGroupFile(listPar.getIds(), listPar.getFiles()));
+			return new ResponseBean(
+					pmphGroupFileService.addPmphGroupFile(listPar.getIds(), listPar.getFiles(), sessionId));
 		} catch (IOException e) {
 			return new ResponseBean(e);
 		}
@@ -218,6 +224,24 @@ public class GroupController {
 	/**
 	 * 
 	 * 
+	 * 功能描述：批量删除小组成员
+	 *
+	 * @param listPar
+	 *            小组成员id
+	 * @param sessionId
+	 *            当前操作者
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/delete/pmphgroupmember", method = RequestMethod.DELETE)
+	public ResponseBean deletePmphGroupMemberByIds(ListPar listPar, String sessionId) {
+		return new ResponseBean(pmphGroupMemberService.deletePmphGroupMemberByIds(listPar.getIds(), sessionId));
+	}
+
+	/**
+	 * 
+	 * 
 	 * 功能描述：批量修改小组成员权限
 	 *
 	 * @param listPar
@@ -227,14 +251,14 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/update/identity", method = RequestMethod.PUT)
-	public ResponseBean updateMemberIdentity(ListPar listPar) {
+	public ResponseBean updateMemberIdentity(ListPar listPar, String sessionId) {
 		PmphGroupMember pmphGroupMember = new PmphGroupMember();
 		List<PmphGroupMember> list = new ArrayList<>();
 		for (Long id : listPar.getIds()) {
 			pmphGroupMember.setId(id);
 			list.add(pmphGroupMember);
 		}
-		return new ResponseBean(pmphGroupMemberService.updateMemberIdentity(list));
+		return new ResponseBean(pmphGroupMemberService.updateMemberIdentity(list, sessionId));
 	}
 
 	/**
@@ -242,10 +266,14 @@ public class GroupController {
 	 * 
 	 * 功能描述：分页查询小组成员管理界面小组成员信息
 	 *
-	 * @param pageSize 当页条数
-	 * @param pageNumber 当前页数
-	 * @param groupId 小组id
-	 * @param name 姓名/帐号
+	 * @param pageSize
+	 *            当页条数
+	 * @param pageNumber
+	 *            当前页数
+	 * @param groupId
+	 *            小组id
+	 * @param name
+	 *            姓名/帐号
 	 * @return
 	 *
 	 */
@@ -260,4 +288,50 @@ public class GroupController {
 		return new ResponseBean(pmphGroupMemberService.listGroupMemberManagerVOs(pageParameter));
 	}
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：发送小组消息
+	 *
+	 * @param msgConrent
+	 *            消息内容
+	 * @param groupId
+	 *            小组id
+	 * @param sessionId
+	 *            当前用户session id
+	 * @return 是否成功
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/add/groupmessage", method = RequestMethod.POST)
+	public ResponseBean addGroupMessage(String msgConrent, Long groupId, String sessionId) {
+		try {
+			return new ResponseBean(
+					pmphGroupMessageService.addGroupMessage(msgConrent, groupId, sessionId, Const.SENDER_TYPE_1));
+		} catch (IOException e) {
+			return new ResponseBean(e);
+		}
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：撤回消息
+	 *
+	 * @param id
+	 *            该消息id
+	 * @param sessionId
+	 *            当前用户session id
+	 * @return 是否成功
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/delete/pmphgroupmessage", method = RequestMethod.DELETE)
+	public ResponseBean deletePmphGroupMessageById(Long id, String sessionId) {
+		try {
+			return new ResponseBean(pmphGroupMessageService.deletePmphGroupMessageById(id, sessionId));
+		} catch (IOException e) {
+			return new ResponseBean(e);
+		}
+	}
 }
