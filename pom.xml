@@ -56,6 +56,12 @@
         <commons-io.ver>2.4</commons-io.ver>
         <!--commons-beanutils-->
         <beanutils.ver>1.9.3</beanutils.ver>
+        <!--commons-lang-->
+        <commons-lang.version>3.4</commons-lang.version>
+        <!--commons-collections-->
+        <commons-collections.version>4.0</commons-collections.version>
+        <!--commons-codec-->
+        <commons-codec.version>1.10</commons-codec.version>
         <!--MongoDB-->
         <mongodb.ver>1.10.4.RELEASE</mongodb.ver>
         <!--zip4j-->
@@ -195,6 +201,24 @@
             <groupId>net.lingala.zip4j</groupId>
             <artifactId>zip4j</artifactId>
             <version>${zip4j.ver}</version>
+        </dependency>
+        <!-- Commons Lang -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang.version}</version>
+        </dependency>
+        <!-- Commons Collections -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${commons-collections.version}</version>
+        </dependency>
+        <!-- Commons Codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons-codec.version}</version>
         </dependency>
     </dependencies>
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -31,21 +32,21 @@ public class TextbookServiceImpl implements TextbookService {
      * @throws CheckedServiceException
      */
     @Override
-    public Textbook addTextbook(Textbook Textbook) throws CheckedServiceException {
-        if (Tools.isEmpty(Textbook.getTextbookName())) {
+    public Textbook addTextbook(Textbook textbook) throws CheckedServiceException {
+        if (StringUtil.isEmpty(textbook.getTextbookName())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
                                               CheckedExceptionResult.NULL_PARAM, "书籍名称为空");
         }
-        if (null == Textbook.getTextbookRound()) {
+        if (Tools.isNullOrEmpty(textbook.getTextbookRound())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
                                               CheckedExceptionResult.NULL_PARAM, "书籍轮次为空");
         }
-        if (null == Textbook.getSort()) {
+        if (Tools.isNullOrEmpty(textbook.getSort())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
                                               CheckedExceptionResult.NULL_PARAM, "图书序号为空");
         }
-        textbookDao.addTextbook(Textbook);
-        return Textbook;
+        textbookDao.addTextbook(textbook);
+        return textbook;
     }
 
     /**

@@ -17,6 +17,7 @@ import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DesRun;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.GroupMemberWriterUserVO;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
@@ -58,15 +59,15 @@ public class WriterUserServiceImpl implements WriterUserService {
      */
     @Override
     public WriterUser add(WriterUser user) throws CheckedServiceException {
-        if (Tools.isEmpty(user.getUsername())) {
+        if (StringUtil.isEmpty(user.getUsername())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止新增用户");
         }
-        if (Tools.isEmpty(user.getPassword())) {
+        if (StringUtil.isEmpty(user.getPassword())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "密码为空时禁止新增用户");
         }
-        if (Tools.isEmpty(user.getRealname())) {
+        if (StringUtil.isEmpty(user.getRealname())) {
             user.setRealname(user.getUsername());
         }
         // 使用用户名作为盐值，MD5 算法加密
@@ -155,7 +156,7 @@ public class WriterUserServiceImpl implements WriterUserService {
                                               CheckedExceptionResult.NULL_PARAM, "用户属性为空时禁止更新用户");
         } else {
             String password = user.getPassword();
-            if (Tools.notEmpty(password)) {
+            if (StringUtil.notEmpty(password)) {
                 user.setPassword(new DesRun("", user.getPassword()).enpsw);
             }
         }
@@ -187,7 +188,7 @@ public class WriterUserServiceImpl implements WriterUserService {
     @Override
     public WriterUser getByUsernameAndPassword(String username, String password)
     throws CheckedServiceException {
-        if (Tools.isEmpty(username) || Tools.isEmpty(password)) {
+        if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名或密码为空时禁止查询");
         }
@@ -307,11 +308,11 @@ public class WriterUserServiceImpl implements WriterUserService {
     public PageResult<WriterUserManagerVO> getListWriterUser(
     PageParameter<WriterUserManagerVO> pageParameter) throws CheckedServiceException {
         String name = pageParameter.getParameter().getName();
-        if (Tools.notEmpty(name)) {
+        if (StringUtil.notEmpty(name)) {
             pageParameter.getParameter().setName(name);
         }
         String orgName = pageParameter.getParameter().getOrgName();
-        if (Tools.notEmpty(orgName)) {
+        if (StringUtil.notEmpty(orgName)) {
             pageParameter.getParameter().setOrgName(orgName);
         }
         PageResult<WriterUserManagerVO> pageResult = new PageResult<>();
@@ -388,11 +389,11 @@ public class WriterUserServiceImpl implements WriterUserService {
     public PageResult<GroupMemberWriterUserVO> listGroupMemberWriterUsers(
     PageParameter<GroupMemberWriterUserVO> pageParameter) throws CheckedServiceException {
         String bookName = pageParameter.getParameter().getBookname();
-        if (Tools.notEmpty(bookName)) {
+        if (StringUtil.notEmpty(bookName)) {
             pageParameter.getParameter().setBookname(bookName);
         }
         String name = pageParameter.getParameter().getName();
-        if (Tools.notEmpty(name)) {
+        if (StringUtil.notEmpty(name)) {
             pageParameter.getParameter().setRealname(name);
         }
         PageResult<GroupMemberWriterUserVO> pageResult = new PageResult<>();

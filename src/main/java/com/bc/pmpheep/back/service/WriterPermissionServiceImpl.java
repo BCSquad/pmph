@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.WriterPermissionDao;
 import com.bc.pmpheep.back.po.WriterPermission;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -56,7 +57,7 @@ public class WriterPermissionServiceImpl implements WriterPermissionService {
     @Override
     public WriterPermission getWriterPermissionByPermissionName(String permissionName)
     throws CheckedServiceException {
-        if (Tools.isEmpty(permissionName)) {
+        if (StringUtil.isEmpty(permissionName)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.RESOUCE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "资源名称为空时禁止查询!");
         }
