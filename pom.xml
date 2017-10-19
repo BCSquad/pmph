@@ -56,8 +56,11 @@
         <commons-io.ver>2.4</commons-io.ver>
         <!--commons-beanutils-->
         <beanutils.ver>1.9.3</beanutils.ver>
+        <!--commons-lang-->
         <commons-lang.version>3.4</commons-lang.version>
+        <!--commons-collections-->
         <commons-collections.version>4.0</commons-collections.version>
+        <!--commons-codec-->
         <commons-codec.version>1.10</commons-codec.version>
         <!--MongoDB-->
         <mongodb.ver>1.10.4.RELEASE</mongodb.ver>
