@@ -183,8 +183,10 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 			for(PmphGroupMessageVO pmphGroupMessageVO : list){
 				if(pmphGroupMessageVO.getIsWriter()){
 					pmphGroupMessageVO.setAvatar(writerUserService.get(pmphGroupMessageVO.getUserId()).getAvatar());
+					pmphGroupMessageVO.setUserType(Const.SENDER_TYPE_2);
 				}else{
 					pmphGroupMessageVO.setAvatar(pmphUserService.get(pmphGroupMessageVO.getUserId()).getAvatar());
+					pmphGroupMessageVO.setUserType(Const.SENDER_TYPE_1);
 				}
 			}
 			pageResult.setRows(list);
