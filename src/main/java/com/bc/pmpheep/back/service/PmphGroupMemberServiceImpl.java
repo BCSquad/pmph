@@ -15,6 +15,7 @@ import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
@@ -217,14 +218,10 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"小组id不能为空");
 		}
-		if (null != pageParameter.getParameter().getName()) {
-			String name = pageParameter.getParameter().getName().trim();
-			if (!name.equals("")) {
-				pageParameter.getParameter().setDisplayName("%" + name + "%");
-			} else {
-				pageParameter.getParameter().setDisplayName(name);
+			String name = pageParameter.getParameter().getName();
+			if (StringUtil.notEmpty(name)) {
+				pageParameter.getParameter().setName(name);
 			}
-		}
 		PageResult<PmphGroupMemberManagerVO> pageResult = new PageResult<>();
 		Tools.CopyPageParameter(pageParameter, pageResult);
 		int total = pmphGroupMemberDao.groupMemberTotal(pageParameter);
