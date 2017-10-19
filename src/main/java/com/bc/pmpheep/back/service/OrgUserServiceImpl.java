@@ -10,6 +10,7 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -120,15 +121,15 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	public PageResult<OrgUserManagerVO> getListOrgUser(PageParameter<OrgUserManagerVO> pageParameter)
 			throws CheckedServiceException {
 		String username = pageParameter.getParameter().getUsername();
-		if (Tools.notEmpty(username)) {
+		if (StringUtil.notEmpty(username)) {
 			pageParameter.getParameter().setUsername(username);
 		}
 		String realname = pageParameter.getParameter().getRealname();
-		if (Tools.notEmpty(realname)) {
+		if (StringUtil.notEmpty(realname)) {
 			pageParameter.getParameter().setRealname(realname);
 		}
 		String orgName = pageParameter.getParameter().getOrgName();
-		if (Tools.notEmpty(orgName)) {
+		if (StringUtil.notEmpty(orgName)) {
 			pageParameter.getParameter().setOrgName(orgName);
 		}
 		PageResult<OrgUserManagerVO> pageResult = new PageResult<OrgUserManagerVO>();
