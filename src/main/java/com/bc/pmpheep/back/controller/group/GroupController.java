@@ -30,7 +30,6 @@ import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.vo.ListPar;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
-import com.bc.pmpheep.back.vo.PmphGroupMembers;
 import com.bc.pmpheep.back.vo.PmphGroupMessageVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.google.gson.Gson;
