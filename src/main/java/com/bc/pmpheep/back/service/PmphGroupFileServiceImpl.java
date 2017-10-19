@@ -168,10 +168,10 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 		Tools.CopyPageParameter(pageParameter, pageResult);
 		int total = pmphGroupFileDao.getGroupFileTotal(pageParameter);
 		if (total > 0) {
-			pageResult.setTotal(total);
 			List<PmphGroupFileVO> list = pmphGroupFileDao.listGroupFile(pageParameter);
 			pageResult.setRows(list);
 		}
+		pageResult.setTotal(total);
 		return pageResult;
 	}
 
