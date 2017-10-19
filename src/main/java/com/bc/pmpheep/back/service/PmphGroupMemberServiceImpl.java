@@ -138,20 +138,23 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		if (isFounderOrisAdmin(groupId, sessionId)) {
 			if (pmphGroupMembers.size() > 0) {
 				for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
-					if (null == pmphGroupMember.getUserId()) {
-						throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-								CheckedExceptionResult.ILLEGAL_PARAM, "成员id为空");
-					}
-					if (pmphGroupMember.getIsWriter()) {
-						WriterUser writerUser = writerUserService.get(pmphGroupMember.getUserId());
-						pmphGroupMember.setDisplayName(writerUser.getRealname());
-					} else {
-						PmphUser pmphUser = pmphUserService.get(pmphGroupMember.getUserId());
-						pmphGroupMember.setDisplayName(pmphUser.getRealname());
-					}
-					pmphGroupMember.setGroupId(groupId);
-					pmphGroupMemberDao.addPmphGroupMember(pmphGroupMember);
+					if (null == pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId, pmphGroupMember.getUserId(),
+							pmphGroupMember.getIsWriter())) {
+						if (null == pmphGroupMember.getUserId()) {
+							throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+									CheckedExceptionResult.ILLEGAL_PARAM, "成员id为空");
+						}
+						if (pmphGroupMember.getIsWriter()) {
+							WriterUser writerUser = writerUserService.get(pmphGroupMember.getUserId());
+							pmphGroupMember.setDisplayName(writerUser.getRealname());
+						} else {
+							PmphUser pmphUser = pmphUserService.get(pmphGroupMember.getUserId());
+							pmphGroupMember.setDisplayName(pmphUser.getRealname());
+						}
+						pmphGroupMember.setGroupId(groupId);
+						pmphGroupMemberDao.addPmphGroupMember(pmphGroupMember);
 
+					}
 				}
 				result = "SUCCESS";
 			} else {
