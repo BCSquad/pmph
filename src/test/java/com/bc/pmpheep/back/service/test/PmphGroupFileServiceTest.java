@@ -66,7 +66,7 @@ public class PmphGroupFileServiceTest extends BaseTest {
         ids.add(2L);
         ids.add(3L);
         Assert.assertTrue("删除失败",
-                          pmphGroupFileService.deletePmphGroupFileById(0L, ids, "")
+                          pmphGroupFileService.deletePmphGroupFileById(1L, ids, "")
                                               .equals("SUCCESS"));
         // 查询
         Assert.assertNotNull("获取数据失败", pmphGroupFileService.getPmphGroupFileById(5L));

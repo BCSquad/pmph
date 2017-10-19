@@ -174,7 +174,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			PmphGroupMember pmphGroupMember = new PmphGroupMember();
 			pmphGroupMember.setGroupId(pmphGroup.getId());
 			pmphGroupMember.setIsFounder(true);
-			pmphGroupMember.setMemberId(pmphUser.getId());
+			pmphGroupMember.setUserId(pmphUser.getId());
 			pmphGroupMember.setDisplayName(pmphUser.getRealname());
 			pmphGroupMemberService.addPmphGroupMember(pmphGroupMember);
 		} else {
@@ -187,13 +187,24 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	@Override
 	public PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, String sessionId)
 			throws CheckedServiceException, IOException {
+		if (null == pmphGroup){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"参数对象不能为空");
+		}
+		if (null == pmphGroup.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"小组id不能为空");
+		}
 		if (pmphGroupMemberService.isFounderOrisAdmin(pmphGroup.getId(), sessionId)) {
 			if (null != file) {
-				pmphGroup.setGroupImage(fileService.save(file, ImageType.GROUP_AVATAR, 0));
-			}
-			if (null == pmphGroup.getId()) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
-						"小组id不能为空");
+				Long id = pmphGroup.getId();
+				PmphGroup pmphGroupOld = getPmphGroupById(id);
+				if (null != pmphGroupOld && null != pmphGroupOld.getGroupImage()
+						&& !"".equals(pmphGroupOld.getGroupImage())) {
+					fileService.remove(pmphGroupOld.getGroupImage());
+				}
+				String newGroupImage = fileService.save(file, ImageType.GROUP_AVATAR, 0);
+				pmphGroup.setGroupImage(newGroupImage);
 			}
 			pmphGroupDao.updatePmphGroup(pmphGroup);
 		} else {

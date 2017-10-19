@@ -25,7 +25,7 @@ public class PmphGroupMember implements Serializable {
 	/**
 	 * 成员id
 	 */
-	private Long memberId;
+	private Long userId;
 	/**
 	 * 是否作家用户
 	 */
@@ -60,10 +60,10 @@ public class PmphGroupMember implements Serializable {
 		this.id = id;
 	}
 
-	public PmphGroupMember(Long groupId, Long memberId, Boolean isWriter, Boolean isFounder, Boolean isAdmin,
+	public PmphGroupMember(Long groupId, Long userId, Boolean isWriter, Boolean isFounder, Boolean isAdmin,
 			String displayName, Timestamp gmtCreate, Timestamp gmtUpdate) {
 		this.groupId = groupId;
-		this.memberId = memberId;
+		this.userId = userId;
 		this.isWriter = isWriter;
 		this.isFounder = isFounder;
 		this.isAdmin = isAdmin;
@@ -88,12 +88,12 @@ public class PmphGroupMember implements Serializable {
 		this.groupId = groupId;
 	}
 
-	public Long getMemberId() {
-		return memberId;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setMemberId(Long memberId) {
-		this.memberId = memberId;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public Boolean getIsWriter() {
@@ -146,7 +146,7 @@ public class PmphGroupMember implements Serializable {
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ", groupId:" + groupId + ", memberId:" + memberId + ", isWriter:" + isWriter
+		return "{id:" + id + ", groupId:" + groupId + ", userId:" + userId + ", isWriter:" + isWriter
 				+ ", isFounder:" + isFounder + ", isAdmin:" + isAdmin + ", displayName:" + displayName + ", gmtCreate:"
 				+ gmtCreate + ", gmtUpdate:" + gmtUpdate + "}";
 	}

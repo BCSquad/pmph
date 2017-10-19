@@ -99,7 +99,7 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 			List<PmphGroupMemberVO> list = pmphGroupMemberService.listPmphGroupMember(groupId, sessionId);
 			List<String> ids = new ArrayList<String>();
 			for (PmphGroupMemberVO groupMemberVO : list) {
-				String tempId = (groupMemberVO.getIsWriter() ? "2" : "1") + "_" + groupMemberVO.getMemberId();
+				String tempId = (groupMemberVO.getIsWriter() ? "2" : "1") + "_" + groupMemberVO.getUserId();
 				ids.add(tempId);
 			}
 			handler.sendWebSocketMessageToUser(ids, webScocketMessage);
@@ -129,16 +129,17 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		Long memberId = pmphUser.getId();
-		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(groupId, memberId,
+		Long userId = pmphUser.getId();
+		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(groupId, userId,
 				false);// 获取后台用户
 		PmphGroupMessage pmphGroupMessage;
 		if (senderType == 0) {
 			pmphGroupMessage = new PmphGroupMessage(groupId, 0L, msgConrent);
 		} else {
-			pmphGroupMessage = new PmphGroupMessage(groupId, memberId, msgConrent);
+			pmphGroupMessage = new PmphGroupMessage(groupId, userId, msgConrent);
 		}
 		pmphGroupMessageDao.addPmphGroupMessage(pmphGroupMessage);
+		pmphGroupMessage = pmphGroupMessageDao.getPmphGroupMessageById(pmphGroupMessage.getId());
 		PmphGroup pmphGroup = new PmphGroup();// 将该条消息创建时间作为最后一条消息时间放入该小组中
 		pmphGroup.setId(groupId);
 		pmphGroup.setGmtLastMessage(pmphGroupMessage.getGmtCreate());
@@ -147,7 +148,7 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 		List<PmphGroupMemberVO> list = pmphGroupMemberService.listPmphGroupMember(groupId, sessionId);
 		List<String> ids = new ArrayList<String>();
 		for (PmphGroupMemberVO groupMemberVO : list) {
-			String tempId = (groupMemberVO.getIsWriter() ? "2" : "1") + "_" + groupMemberVO.getMemberId();
+			String tempId = (groupMemberVO.getIsWriter() ? "2" : "1") + "_" + groupMemberVO.getUserId();
 			ids.add(tempId);
 		}
 		WebScocketMessage webScocketMessage = new WebScocketMessage(String.valueOf(pmphGroupMessage.getId()),

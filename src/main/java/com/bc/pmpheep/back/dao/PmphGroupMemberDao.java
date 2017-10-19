@@ -38,7 +38,7 @@ public interface  PmphGroupMemberDao {
 	 * @Param:小组内成员id
 	 * @Return:PmphGroupMember
 	 */
-	PmphGroupMemberVO getPmphGroupMemberByMemberId(Long memberId,Long groupId,Boolean isWriter);
+	PmphGroupMemberVO getPmphGroupMemberByMemberId(Long groupId,Long userId ,Boolean isWriter);
 	
 	/**
 	 * 

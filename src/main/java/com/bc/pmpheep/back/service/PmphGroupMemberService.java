@@ -42,7 +42,7 @@ public interface PmphGroupMemberService {
 	 * @param:组员id
 	 * @return:PmphGroupMember
 	 */
-	PmphGroupMemberVO getPmphGroupMemberByMemberId(Long memberId, Long groupId, Boolean isWriter)
+	PmphGroupMemberVO getPmphGroupMemberByMemberId(Long groupId, Long userId, Boolean isWriter)
 			throws CheckedServiceException;
 
 	/**
