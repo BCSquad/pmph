@@ -56,15 +56,15 @@ public class PmphUserServiceImpl implements PmphUserService {
      */
     @Override
     public PmphUser add(PmphUser user) throws CheckedServiceException {
-        if (null == user.getUsername()) {
+        if (Tools.isEmpty(user.getUsername())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止新增用户");
         }
-        if (null == user.getPassword()) {
+        if (Tools.isEmpty(user.getPassword())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "密码为空时禁止新增用户");
         }
-        if (null == user.getRealname()) {
+        if (Tools.isEmpty(user.getRealname())) {
             user.setRealname(user.getUsername());
         }
         // 使用用户名作为盐值，MD5 算法加密
@@ -82,7 +82,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     @Override
     public PmphUser add(PmphUser user, List<Long> rids) throws CheckedServiceException {
         Long userId = this.add(user).getId();
-        if (null == userId) {
+        if (Tools.isNullOrEmpty(userId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时不能添加角色！");
         }
@@ -97,7 +97,7 @@ public class PmphUserServiceImpl implements PmphUserService {
      */
     @Override
     public Integer delete(Long id) throws CheckedServiceException {
-        if (null == id) {
+        if (Tools.isNullOrEmpty(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除用户");
         }
@@ -131,7 +131,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     @Override
     public PmphUser update(PmphUser user, List<Long> rids) throws CheckedServiceException {
         Long userId = user.getId();
-        if (null == userId) {
+        if (Tools.isNullOrEmpty(userId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
         }
@@ -149,7 +149,7 @@ public class PmphUserServiceImpl implements PmphUserService {
      */
     @Override
     public PmphUser update(PmphUser user) throws CheckedServiceException {
-        if (null == user) {
+        if (Tools.isNullOrEmpty(user)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户属性为空时禁止更新用户");
         } else {
@@ -170,7 +170,7 @@ public class PmphUserServiceImpl implements PmphUserService {
      */
     @Override
     public PmphUser get(Long id) throws CheckedServiceException {
-        if (null == id) {
+        if (Tools.isNullOrEmpty(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
@@ -225,8 +225,8 @@ public class PmphUserServiceImpl implements PmphUserService {
                     BeanUtils.copyProperties(userVO, user);
                 } catch (BeansException ex) {
                     throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                            CheckedExceptionResult.VO_CONVERSION_FAILED,
-                            ex.getMessage());
+                                                      CheckedExceptionResult.VO_CONVERSION_FAILED,
+                                                      ex.getMessage());
                 }
                 list.add(userVO);
             }
@@ -250,7 +250,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     public PmphUser login(String username, String password) throws CheckedServiceException {
         PmphUser user = userDao.getByUsernameAndPassword(username, password);
         // 密码匹配的工作交给 Shiro 去完成
-        if (user == null) {
+        if (Tools.isNullOrEmpty(user)) {
             // 因为缓存切面的原因,在这里就抛出用户名不存在的异常
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名或密码不正确！");
@@ -282,7 +282,7 @@ public class PmphUserServiceImpl implements PmphUserService {
      */
     @Override
     public List<PmphUser> getListByRole(Long id) throws CheckedServiceException {
-        if (null == id) {
+        if (Tools.isNullOrEmpty(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
         }
@@ -297,7 +297,7 @@ public class PmphUserServiceImpl implements PmphUserService {
      */
     @Override
     public List<PmphPermission> getListAllResource(Long uid) throws CheckedServiceException {
-        if (null == uid) {
+        if (Tools.isNullOrEmpty(uid)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
@@ -324,7 +324,7 @@ public class PmphUserServiceImpl implements PmphUserService {
      */
     @Override
     public List<String> getListRoleSnByUser(Long uid) throws CheckedServiceException {
-        if (null == uid) {
+        if (Tools.isNullOrEmpty(uid)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
@@ -339,7 +339,7 @@ public class PmphUserServiceImpl implements PmphUserService {
      */
     @Override
     public List<PmphRole> getListUserRole(Long uid) throws CheckedServiceException {
-        if (null == uid) {
+        if (Tools.isNullOrEmpty(uid)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
@@ -386,7 +386,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     @Override
     public String updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO)
     throws CheckedServiceException {
-        if (null == pmphUserManagerVO.getId()) {
+        if (Tools.isNullOrEmpty(pmphUserManagerVO.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
         }
@@ -408,7 +408,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     @Override
     public List<Long> getPmphUserPermissionByUserId(Long userId) {
-        if (null == userId) {
+        if (Tools.isNullOrEmpty(userId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }

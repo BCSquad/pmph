@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.PmphRolePermissionDao;
 import com.bc.pmpheep.back.po.PmphRolePermission;
+import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -29,7 +30,7 @@ public class PmphRolePermissionServiceImpl implements PmphRolePermissionService 
     @Override
     public PmphRolePermission addPmphRolePermission(PmphRolePermission pmphRolePermission)
     throws CheckedServiceException {
-        if (null == pmphRolePermission) {
+        if (Tools.isNullOrEmpty(pmphRolePermission)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色属性为空时禁止新增用户！");
         }
@@ -39,14 +40,13 @@ public class PmphRolePermissionServiceImpl implements PmphRolePermissionService 
 
     /**
      * 
-     * @param id 
+     * @param id
      * @return PmphRolePermission
      * @throws CheckedServiceException ，NullPointerException(主键为空)
      */
     @Override
-    public PmphRolePermission getPmphRolePermissionById(Long id )
-    throws CheckedServiceException {
-        if (null == id) {
+    public PmphRolePermission getPmphRolePermissionById(Long id) throws CheckedServiceException {
+        if (Tools.isNullOrEmpty(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止新增查询！");
         }
@@ -60,9 +60,9 @@ public class PmphRolePermissionServiceImpl implements PmphRolePermissionService 
      * @throws CheckedServiceException，NullPointerException(主键为空)
      */
     @Override
-    public Integer deletePmphRolePermissionById(Long id)
-    throws CheckedServiceException {
-        if (null == id) {
+    public Integer deletePmphRolePermissionById(Long id) throws CheckedServiceException {
+        if (Tools.isNullOrEmpty(id)) {
+
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止删除！");
         }
@@ -77,7 +77,7 @@ public class PmphRolePermissionServiceImpl implements PmphRolePermissionService 
     @Override
     public Integer updatePmphRolePermission(PmphRolePermission pmphRolePermission)
     throws CheckedServiceException {
-        if (null == pmphRolePermission.getId()) {
+        if (Tools.isNullOrEmpty(pmphRolePermission.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止更新！");
         }
