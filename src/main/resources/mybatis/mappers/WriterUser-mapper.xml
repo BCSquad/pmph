@@ -553,7 +553,7 @@
 		LEFT JOIN
 		textbook e ON d.textbook_id = e.id
 		WHERE 1=1
-		<if test="bookname !=null and bookname !=''">
+		<if test="parameter.bookname !=null and parameter.bookname !=''">
 			and e.textbook_name like #{parameter.bookname}
 		</if>
 		<if test="parameter.chosenPosition !=null">
@@ -578,7 +578,7 @@
 		LEFT JOIN
 		textbook e ON d.textbook_id = e.id WHERE
 		1=1
-		<if test="bookname !=null and bookname !=''">
+		<if test="parameter.bookname !=null and parameter.bookname !=''">
 			and e.textbook_name like #{parameter.bookname}
 		</if>
 		<if test="parameter.chosenPosition !=null">
