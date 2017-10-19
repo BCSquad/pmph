@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.WriterRolePermissionDao;
 import com.bc.pmpheep.back.po.WriterRolePermission;
-import com.bc.pmpheep.back.util.Tools;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -45,7 +45,7 @@ WriterRolePermissionService {
      */
     @Override
     public WriterRolePermission getWriterRolePermissionById(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_ROLE_PERMISSION,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
@@ -60,7 +60,7 @@ WriterRolePermissionService {
      */
     @Override
     public Integer deleteWriterRolePermissionById(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_ROLE_PERMISSION,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
@@ -75,7 +75,7 @@ WriterRolePermissionService {
     @Override
     public Integer updateWriterRolePermission(WriterRolePermission writerRolePermission)
     throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(writerRolePermission.getId())) {
+        if (ObjectUtil.isNull(writerRolePermission.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_ROLE_PERMISSION,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }

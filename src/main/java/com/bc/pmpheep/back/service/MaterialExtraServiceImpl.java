@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialExtraDao;
 import com.bc.pmpheep.back.po.MaterialExtra;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -33,7 +33,7 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
     @Override
     public MaterialExtra addMaterialExtra(MaterialExtra materialExtra)
     throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(materialExtra.getMaterialId())) {
+        if (ObjectUtil.isNull(materialExtra.getMaterialId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.NULL_PARAM, "教材为空");
         }

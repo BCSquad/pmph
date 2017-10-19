@@ -16,8 +16,8 @@ import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMessage;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
 import com.bc.pmpheep.back.vo.PmphGroupMessageVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -178,7 +178,7 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 		PageResult<PmphGroupMessageVO> pageResult = new PageResult<>();
 		int total = pmphGroupMessageDao.getPmphGroupMessageTotal(pageParameter);
 		if (total > 0) {
-			Tools.CopyPageParameter(pageParameter, pageResult);
+			PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 			List<PmphGroupMessageVO> list = pmphGroupMessageDao.listPmphGroupMessage(pageParameter);
 			for (PmphGroupMessageVO pmphGroupMessageVO : list) {
 				if (0 != pmphGroupMessageVO.getMemberId()) {

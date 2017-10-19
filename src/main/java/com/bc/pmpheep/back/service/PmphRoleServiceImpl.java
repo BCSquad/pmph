@@ -11,7 +11,7 @@ import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphRolePermission;
 import com.bc.pmpheep.back.po.PmphUserRole;
-import com.bc.pmpheep.back.util.Tools;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -31,7 +31,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public PmphRole get(Long id) throws CheckedServiceException {
-        if (Tools.isNotNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止查询");
         }
@@ -56,7 +56,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public PmphUserRole getUserRole(Long uid, Long roleId) throws CheckedServiceException {
-        if (Tools.isNotNullOrEmpty(uid) || Tools.isNotNullOrEmpty(roleId)) {
+        if (ObjectUtil.isNull(uid) || ObjectUtil.isNull(roleId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或用户ID为空时禁止查询");
         }
@@ -65,7 +65,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public List<PmphPermission> getListRoleResource(Long roleId) throws CheckedServiceException {
-        if (Tools.isNotNullOrEmpty(roleId)) {
+        if (ObjectUtil.isNull(roleId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止查询");
         }
@@ -75,7 +75,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
     @Override
     public PmphRolePermission getResourceRole(Long roleId, Long resId)
     throws CheckedServiceException {
-        if (Tools.isNotNullOrEmpty(roleId) || Tools.isNotNullOrEmpty(resId)) {
+        if (ObjectUtil.isNull(roleId) || ObjectUtil.isNull(resId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或资源ID为空时禁止查询");
         }
@@ -84,7 +84,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public List<PmphRolePermission> getListPmphRolePermission(Long roleId) {
-        if (Tools.isNotNullOrEmpty(roleId)) {
+        if (ObjectUtil.isNull(roleId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止查询");
         }
@@ -93,7 +93,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public List<Long> getListPmphRolePermissionIdByRoleId(Long roleId) {
-        if (Tools.isNotNullOrEmpty(roleId)) {
+        if (ObjectUtil.isNull(roleId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止查询");
         }
@@ -102,7 +102,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public Integer add(PmphRole role) throws CheckedServiceException {
-        if (Tools.isNotNullOrEmpty(role)) {
+        if (ObjectUtil.isNull(role)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色属性为空时禁止新增角色");
         }
@@ -111,7 +111,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public Integer addUserRole(Long uid, Long roleId) throws CheckedServiceException {
-        if (Tools.isNotNullOrEmpty(uid) || Tools.isNotNullOrEmpty(roleId)) {
+        if (ObjectUtil.isNull(uid) || ObjectUtil.isNull(roleId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或用户ID为空时禁止新增");
         }
@@ -123,7 +123,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
     throws CheckedServiceException {
         // 添加时先删除当前权限
         deleteRoleResourceByRoleId(roleId);
-        if (Tools.isNullOrEmpty(roleId) || permissionIds.size() < 0) {
+        if (ObjectUtil.isNull(roleId) || permissionIds.size() < 0) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或资源ID为空时禁止新增");
         }
@@ -140,7 +140,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public Integer update(PmphRole role) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(role.getId())) {
+        if (ObjectUtil.isNull(role.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止更新");
         }
@@ -149,7 +149,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public Integer delete(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止删除");
         }
@@ -169,7 +169,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public Integer deleteUserRole(Long uid, Long roleId) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(uid) || Tools.isNullOrEmpty(roleId)) {
+        if (ObjectUtil.isNull(uid) || ObjectUtil.isNull(roleId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或用户ID为空时禁止删除");
         }
@@ -178,7 +178,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public Integer deleteUserRoles(Long uid) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(uid)) {
+        if (ObjectUtil.isNull(uid)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除");
         }
@@ -187,7 +187,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public Integer deleteRoleResource(Long roleId, Long resId) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(roleId) || Tools.isNullOrEmpty(resId)) {
+        if (ObjectUtil.isNull(roleId) || ObjectUtil.isNull(resId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或资源ID为空时禁止删除");
         }
@@ -205,7 +205,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Override
     public Integer deleteRoleResourceByRoleId(Long roleId) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(roleId)) {
+        if (ObjectUtil.isNull(roleId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止删除");
         }

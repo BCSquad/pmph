@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -37,11 +37,11 @@ public class TextbookServiceImpl implements TextbookService {
             throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
                                               CheckedExceptionResult.NULL_PARAM, "书籍名称为空");
         }
-        if (Tools.isNullOrEmpty(textbook.getTextbookRound())) {
+        if (ObjectUtil.isNull(textbook.getTextbookRound())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
                                               CheckedExceptionResult.NULL_PARAM, "书籍轮次为空");
         }
-        if (Tools.isNullOrEmpty(textbook.getSort())) {
+        if (ObjectUtil.isNull(textbook.getSort())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
                                               CheckedExceptionResult.NULL_PARAM, "图书序号为空");
         }
@@ -95,7 +95,7 @@ public class TextbookServiceImpl implements TextbookService {
 
     @Override
     public List<Textbook> getTextBookByMaterialId(Long materialId) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(materialId)) {
+        if (ObjectUtil.isNull(materialId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
                                               CheckedExceptionResult.NULL_PARAM, "教材ID为空，禁止查询！");
         }

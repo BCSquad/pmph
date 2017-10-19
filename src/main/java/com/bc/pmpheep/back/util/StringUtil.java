@@ -92,6 +92,23 @@ public final class StringUtil {
         return str.split(splitRegex);
     }
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取字符串长度
+     * 使用示范：
+     *
+     * @param str
+     * @return
+     * </pre>
+     */
+    public static int strLength(String str) {
+        if (isEmpty(str)) {
+            return 0;
+        }
+        return str.length();
+    }
+
     public static void main(String[] args) {
         System.out.println(indexOf("rewqreqwr", "q", true));
     }
