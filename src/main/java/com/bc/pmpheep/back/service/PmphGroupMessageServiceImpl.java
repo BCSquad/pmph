@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMessage;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
@@ -195,6 +196,15 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 		}
 		pageResult.setTotal(total);
 		return pageResult;
+	}
+
+	@Override
+	public Integer deletePmphGroupMessageByGroupId(Long groupId) throws CheckedServiceException {
+		if (ObjectUtil.isNull(groupId)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"小组id为空");
+		}
+		return pmphGroupMessageDao.deletePmphGroupMessageByGroupId(groupId);
 	}
 
 }

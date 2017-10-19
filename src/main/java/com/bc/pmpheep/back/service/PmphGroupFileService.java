@@ -44,7 +44,7 @@ public interface PmphGroupFileService {
 	 * @return 删除成功与否状态提示
 	 * @throws CheckedServiceException
 	 */
-	String deletePmphGroupFileById(Long groupId, List<Long> ids, String sessionId) throws CheckedServiceException;
+	String deletePmphGroupFileById(Long groupId, Long[] ids, String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 全字段更新
@@ -67,5 +67,31 @@ public interface PmphGroupFileService {
 	 */
 	PageResult<PmphGroupFileVO> listGroupFile(PageParameter<PmphGroupFileVO> pageParameter)
 			throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据小组获取该组所有文件
+	 *
+	 * @param groupId
+	 *            小组id
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	List<PmphGroupFile> listPmphGroupFileByGroupId(Long groupId) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据文件id查询该文件在几个小组内使用
+	 *
+	 * @param fileId
+	 *            文件id
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	List<PmphGroupFile> listPmphGroupFileByFileId(String fileId) throws CheckedServiceException;
 
 }

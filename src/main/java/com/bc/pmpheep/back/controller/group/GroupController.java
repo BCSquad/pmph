@@ -5,13 +5,9 @@ import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import javax.json.JsonObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +23,6 @@ import com.bc.pmpheep.back.service.PmphGroupMessageService;
 import com.bc.pmpheep.back.service.PmphGroupService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.vo.ListPar;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
 import com.bc.pmpheep.back.vo.PmphGroupMessageVO;
@@ -228,8 +223,8 @@ public class GroupController {
 	 */
 	@RequestMapping(value = "/delete/pmphgroupfile", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ResponseBean deletePmphGroupFileById(Long groupId, ListPar listPar, String sessionId) {
-		return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(groupId, listPar.getIds(), sessionId));
+	public ResponseBean deletePmphGroupFileById(Long groupId, Long[] ids, String sessionId) {
+		return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(groupId, ids, sessionId));
 	}
 
 	/**
@@ -246,9 +241,8 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/delete/pmphgroupmember", method = RequestMethod.DELETE)
-	public ResponseBean deletePmphGroupMemberByIds(Long groupId, ListPar listPar, String sessionId) {
-		return new ResponseBean(
-				pmphGroupMemberService.deletePmphGroupMemberByIds(groupId, listPar.getIds(), sessionId));
+	public ResponseBean deletePmphGroupMemberByIds(Long groupId, Long[] ids, String sessionId) {
+		return new ResponseBean(pmphGroupMemberService.deletePmphGroupMemberByIds(groupId, ids, sessionId));
 	}
 
 	/**
@@ -263,10 +257,10 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/update/identity", method = RequestMethod.PUT)
-	public ResponseBean updateMemberIdentity(Long groupId, ListPar listPar, String sessionId) {
+	public ResponseBean updateMemberIdentity(Long groupId, Long[] ids, String sessionId) {
 		PmphGroupMember pmphGroupMember = new PmphGroupMember();
 		List<PmphGroupMember> list = new ArrayList<>();
-		for (Long id : listPar.getIds()) {
+		for (Long id : ids) {
 			pmphGroupMember.setId(id);
 			list.add(pmphGroupMember);
 		}

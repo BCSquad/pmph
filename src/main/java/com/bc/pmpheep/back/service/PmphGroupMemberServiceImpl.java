@@ -238,7 +238,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public String deletePmphGroupMemberByIds(Long groupId, List<Long> ids, String sessionId)
+	public String deletePmphGroupMemberByIds(Long groupId, Long[] ids, String sessionId)
 			throws CheckedServiceException {
 		String result = "FAIL";
 		if (!isFounderOrisAdmin(groupId, sessionId)) {
@@ -252,7 +252,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		}
 		Long userid = pmphUser.getId();
 		PmphGroupMemberVO currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId, userid, false);
-		if (null == ids || ids.size() == 0) {
+		if (null == ids || ids.length == 0) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"主键不能为空");
 		} else {
