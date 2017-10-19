@@ -110,8 +110,6 @@ public final class StringUtil {
     }
 
     public static void main(String[] args) {
-        // System.out.println(indexOf("rewqreqwr", "q", true));
-        String aString = null;
-        System.out.println(aString.length());
+        System.out.println(indexOf("rewqreqwr", "q", true));
     }
 }
