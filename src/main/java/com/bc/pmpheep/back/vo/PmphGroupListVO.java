@@ -22,6 +22,10 @@ public class PmphGroupListVO implements Serializable {
 	private String groupImage;
 	// 小组最后一条消息的时间
 	private Timestamp gmtLastMessage;
+	// 小组书籍id
+	private String bookId;
+	// 小组书籍名称
+	private String bookName;
 
 	public PmphGroupListVO() {
 		super();

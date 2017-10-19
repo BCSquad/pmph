@@ -42,6 +42,10 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 	private PmphGroupMemberService pmphGroupMemberService;
 	@Autowired
 	private MyWebSocketHandler handler;
+	@Autowired
+	private WriterUserService writerUserService;
+	@Autowired
+	private PmphUserService pmphUserService;
 
 	/**
 	 * 
@@ -176,6 +180,13 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 		if (total > 0) {
 			Tools.CopyPageParameter(pageParameter, pageResult);
 			List<PmphGroupMessageVO> list = pmphGroupMessageDao.listPmphGroupMessage(pageParameter);
+			for(PmphGroupMessageVO pmphGroupMessageVO : list){
+				if(pmphGroupMessageVO.getIsWriter()){
+					pmphGroupMessageVO.setAvatar(writerUserService.get(pmphGroupMessageVO.getUserId()).getAvatar());
+				}else{
+					pmphGroupMessageVO.setAvatar(pmphUserService.get(pmphGroupMessageVO.getUserId()).getAvatar());
+				}
+			}
 			pageResult.setRows(list);
 		}
 		pageResult.setTotal(total);
