@@ -97,31 +97,71 @@
 	</select>
 
 	<!-- 查询到的小组文件数量 -->
-	<select id="getGroupFileTotal" parameterType="PageParameter" resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM(SELECT
-		a.id,a.group_id,a.file_id,a.file_name,a.gmt_create,a.member_id,b.display_name,(SELECT
-		COUNT(*) FROM pmph_group_file c WHERE a.member_id = c.member_id AND
-		a.file_name = c.file_name) AS group_count,a.download FROM
-		pmph_group_file a LEFT JOIN pmph_group_member b ON a.group_id =
-		b.group_id WHERE b.group_id = #{parameter.groupId}
-		<if test="parameter.fileName !=null and parameter.fileName !=''">
-		and a.file_name like #{parameter.fileName}
+	<select id="getGroupFileTotal" parameterType="PageParameter"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM( SELECT
+		a.id,
+		a.group_id,
+		a.file_id,
+		a.file_name,
+		a.gmt_create,
+		a.member_id,
+		b.display_name memberName,
+		(
+		SELECT
+		COUNT(*)
+		FROM
+		pmph_group_file c
+		WHERE
+		a.member_id = c.member_id
+		AND a.file_id =
+		c.file_id
+		) AS group_count,
+		a.download
+		FROM
+		pmph_group_file a
+		LEFT JOIN
+		pmph_group_member b ON a.group_id = b.group_id
+		WHERE
+		b.group_id =
+		#{parameter.groupId}
+		<if test="parameter.fileName != null and parameter.fileName != ''">
+			and a.file_name like concat('%',#{parameter.fileName},'%')
 		</if>
-		GROUP BY a.file_name)t ;
+		GROUP BY a.file_id)t ;
 	</select>
 
 	<!-- 获取小组文件列表 -->
-	<select id="getGroupFileList" parameterType="PageParameter" resultType="PmphGroupFileVO">
+	<select id="listGroupFile" parameterType="PageParameter"
+		resultType="PmphGroupFileVO">
 		SELECT
-		a.id,a.group_id,a.file_id,a.file_name,a.gmt_create,a.member_id,b.display_name,(SELECT
-		COUNT(*) FROM pmph_group_file c WHERE a.member_id = c.member_id AND
-		a.file_name = c.file_name) AS group_count,a.download FROM
-		pmph_group_file a LEFT JOIN pmph_group_member b ON a.group_id =
-		b.group_id WHERE b.group_id = #{parameter.groupId}
+		a.id,
+		a.group_id,
+		a.file_id,
+		a.file_name,
+		a.gmt_create,
+		a.member_id,
+		b.display_name memberName,
+		(
+		SELECT
+		COUNT(*)
+		FROM
+		pmph_group_file c
+		WHERE
+		a.member_id = c.member_id
+		AND a.file_id = c.file_id
+		) AS group_count,
+		a.download
+		FROM
+		pmph_group_file a
+		LEFT JOIN pmph_group_member b ON
+		a.group_id = b.group_id
+		WHERE
+		b.group_id = #{parameter.groupId}
 		<if test="parameter.fileName !=null and parameter.fileName !=''">
-		and a.file_name like #{parameter.fileName}
+			and a.file_name like concat('%',#{parameter.fileName},'%')
 		</if>
-		GROUP BY a.file_name
+		GROUP BY a.file_id
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>

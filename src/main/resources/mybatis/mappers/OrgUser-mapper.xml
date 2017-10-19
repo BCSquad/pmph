@@ -248,19 +248,21 @@
 	</select>
 
 	<!-- 根据机构id集查询用户 -->
-	<select id="getOrgUserListByOrgIds" resultType="OrgUser" parameterType="list">
-		select 
-			* 
-		from 
-			org_user 
-		where 
-			is_disabled =0 
-		and 
-			is_deleted =0 
-		and 
-			org_id 
+	<select id="getOrgUserListByOrgIds" resultType="OrgUser"
+		parameterType="list">
+		select
+		*
+		from
+		org_user
+		where
+		is_disabled =0
+		and
+		is_deleted =0
+		and
+		org_id
 		in
-		 <foreach item="item" collection="list" separator="," open="(" close=")" index="">
+		<foreach item="item" collection="list" separator="," open="("
+			close=")" index="">
 			#{item}
 		</foreach>
 	</select>
@@ -271,13 +273,13 @@
 		select count(*) from org_user u left join org o on o.id = u.org_id
 		where 1=1
 		<if test="parameter.username !=null and parameter.username !='' ">
-			and u.username like #{parameter.username}
+			and u.username like concat('%',#{parameter.username},'%')
 		</if>
 		<if test="parameter.realname !=null and parameter.realname !=''">
-			and u.realname like #{parameter.realname}
+			and u.realname like concat('%',#{parameter.realname},'%')
 		</if>
 		<if test="parameter.orgName !=null and parameter.orgName !=''">
-			and o.org_name like #{parameter.orgName}
+			and o.org_name like concat('%',#{parameter.orgName},'%')
 		</if>
 	</select>
 	<select id="getListOrgUser" parameterType="PageParameter"
@@ -287,13 +289,13 @@
 		from org_user u left join org o on o.id = u.org_id where
 		1=1
 		<if test="parameter.username !=null and parameter.username !='' ">
-			and u.username like #{parameter.username}
+			and u.username like concat('%',#{parameter.username},'%')
 		</if>
 		<if test="parameter.realname !=null and parameter.realname !=''">
-			and u.realname like #{parameter.realname}
+			and u.realname like concat('%',#{parameter.realname},'%')
 		</if>
 		<if test="parameter.orgName !=null and parameter.orgName !=''">
-			and o.org_name like #{parameter.orgName}
+			and o.org_name like concat('%',#{parameter.orgName},'%')
 		</if>
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}

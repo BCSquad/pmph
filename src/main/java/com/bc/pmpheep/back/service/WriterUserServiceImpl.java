@@ -17,8 +17,9 @@ import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DesRun;
+import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.GroupMemberWriterUserVO;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -85,7 +86,7 @@ public class WriterUserServiceImpl implements WriterUserService {
     @Override
     public WriterUser add(WriterUser user, List<Long> rids) throws CheckedServiceException {
         Long userId = this.add(user).getId();
-        if (Tools.isNullOrEmpty(userId)) {
+        if (ObjectUtil.isNull(userId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时不能添加角色！");
         }
@@ -100,7 +101,7 @@ public class WriterUserServiceImpl implements WriterUserService {
      */
     @Override
     public Integer delete(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除用户！");
         }
@@ -134,7 +135,7 @@ public class WriterUserServiceImpl implements WriterUserService {
     @Override
     public WriterUser update(WriterUser user, List<Long> rids) throws CheckedServiceException {
         Long userId = user.getId();
-        if (Tools.isNullOrEmpty(userId)) {
+        if (ObjectUtil.isNull(userId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
         }
@@ -151,7 +152,7 @@ public class WriterUserServiceImpl implements WriterUserService {
      */
     @Override
     public WriterUser update(WriterUser user) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(user)) {
+        if (ObjectUtil.isNull(user)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户属性为空时禁止更新用户");
         } else {
@@ -172,7 +173,7 @@ public class WriterUserServiceImpl implements WriterUserService {
      */
     @Override
     public WriterUser get(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
@@ -193,7 +194,7 @@ public class WriterUserServiceImpl implements WriterUserService {
                                               CheckedExceptionResult.NULL_PARAM, "用户名或密码为空时禁止查询");
         }
         WriterUser writerUser = writerUserDao.getByUsernameAndPassword(username, password);
-        if (Tools.isNullOrEmpty(writerUser)) {
+        if (ObjectUtil.isNull(writerUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "用户名或密码错误！");
         }
@@ -211,7 +212,7 @@ public class WriterUserServiceImpl implements WriterUserService {
     public WriterUser login(String username, String password) throws CheckedServiceException {
         WriterUser user = writerUserDao.getByUsernameAndPassword(username, password);
         // 密码匹配的工作交给 Shiro 去完成
-        if (Tools.isNullOrEmpty(user)) {
+        if (ObjectUtil.isNull(user)) {
             // 因为缓存切面的原因,在这里就抛出用户名不存在的异常
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM,
@@ -244,7 +245,7 @@ public class WriterUserServiceImpl implements WriterUserService {
      */
     @Override
     public List<WriterUser> getListByRole(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
         }
@@ -259,7 +260,7 @@ public class WriterUserServiceImpl implements WriterUserService {
      */
     @Override
     public List<WriterPermission> getListAllResource(Long uid) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(uid)) {
+        if (ObjectUtil.isNull(uid)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
         }
@@ -274,7 +275,7 @@ public class WriterUserServiceImpl implements WriterUserService {
      */
     @Override
     public List<String> getListRoleSnByUser(Long uid) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(uid)) {
+        if (ObjectUtil.isNull(uid)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
         }
@@ -289,7 +290,7 @@ public class WriterUserServiceImpl implements WriterUserService {
      */
     @Override
     public List<WriterRole> getListUserRole(Long uid) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(uid)) {
+        if (ObjectUtil.isNull(uid)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
         }
@@ -316,7 +317,7 @@ public class WriterUserServiceImpl implements WriterUserService {
             pageParameter.getParameter().setOrgName(orgName);
         }
         PageResult<WriterUserManagerVO> pageResult = new PageResult<>();
-        Tools.CopyPageParameter(pageParameter, pageResult);
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         int total = writerUserDao.getListWriterUserTotal(pageParameter);
         if (total > 0) {
             List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(pageParameter);
@@ -378,7 +379,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 
     @Override
     public List<Long> getWriterUserPermissionByUserId(Long userId) {
-        if (Tools.isNullOrEmpty(userId)) {
+        if (ObjectUtil.isNull(userId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
         }
@@ -397,7 +398,7 @@ public class WriterUserServiceImpl implements WriterUserService {
             pageParameter.getParameter().setRealname(name);
         }
         PageResult<GroupMemberWriterUserVO> pageResult = new PageResult<>();
-        Tools.CopyPageParameter(pageParameter, pageResult);
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         int total = writerUserDao.getGroupMemberWriterUserTotal(pageParameter);
         if (total > 0) {
             List<GroupMemberWriterUserVO> list =

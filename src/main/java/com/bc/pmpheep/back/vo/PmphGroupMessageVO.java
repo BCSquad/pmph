@@ -42,6 +42,10 @@ public class PmphGroupMessageVO implements Serializable {
 	 */
 	private Long userId;
 	/**
+	 * 发送者的用户id
+	 */
+	private Short userType;
+	/**
 	 * 该成员是否是作家用户
 	 */
 	private Boolean isWriter;
@@ -88,6 +92,14 @@ public class PmphGroupMessageVO implements Serializable {
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	public Short getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Short senderType2) {
+		this.userType = senderType2;
 	}
 
 	public Boolean getIsWriter() {

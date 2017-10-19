@@ -19,9 +19,10 @@ import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.MessageStateVO;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
@@ -75,11 +76,11 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     public PageResult<MessageStateVO> listMessageState(PageParameter<MessageStateVO> pageParameter,
     String sessionId) throws CheckedServiceException {
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-        if (Tools.isNullOrEmpty(pmphUser)) {
+        if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        if (Tools.isNullOrEmpty(pmphUser.getId())) {
+        if (ObjectUtil.isNull(pmphUser.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
@@ -90,7 +91,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         pageParameter.getParameter().setSenderId(pmphUser.getId());
         PageResult<MessageStateVO> pageResult = new PageResult<MessageStateVO>();
         // 将页面大小和页面页码拷贝
-        Tools.CopyPageParameter(pageParameter, pageResult);
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         // 包含数据总条数的数据集
         List<MessageStateVO> messageStateList = userMessageDao.listMessageState(pageParameter);
         if (!messageStateList.isEmpty() && messageStateList.size() > 0) {
@@ -106,7 +107,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     Integer pageSize, String orgName, String userNameOrUserCode, String materialName)
     throws CheckedServiceException {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        if (Tools.isNullOrEmpty(sendType)) {
+        if (ObjectUtil.isNull(sendType)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择发送对象!");
         }
@@ -149,7 +150,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     public Integer addOrUpdateUserMessage(Message message, Integer sendType, String orgIds,
     String userIds, String bookIds, boolean isSave, String sessionId)
     throws CheckedServiceException, IOException {
-        if (Tools.isNullOrEmpty(sendType)) {
+        if (ObjectUtil.isNull(sendType)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择发送对象!");
         }
@@ -158,13 +159,13 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             // MongoDB 消息插入
             message = messageService.add(message);
         }
-        if (Tools.isNullOrEmpty(message.getId())) {
+        if (ObjectUtil.isNull(message.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
         }
         // 发送者id
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-        if (Tools.isNullOrEmpty(pmphUser)) {
+        if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "操作人为空!");
         }
@@ -213,7 +214,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 if (StringUtil.notEmpty(id)) {
                     String userType = id.split("_")[0];
                     String userId = id.split("_")[1];
-                    if (null != userId && Tools.isNumeric(userId)) {
+                    if (StringUtil.notEmpty(userId) && StringUtil.isNumeric(userId)) {
                         userMessageList.add(new UserMessage(message.getId(), Const.MSG_TYPE_1,
                                                             senderId, Const.SENDER_TYPE_1,
                                                             Long.parseLong(userId),
@@ -283,11 +284,11 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Override
     public Integer updateUserMessage(Message message) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(message)) {
+        if (ObjectUtil.isNull(message)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象为空");
         }
-        if (Tools.isNullOrEmpty(message.getId())) {
+        if (ObjectUtil.isNull(message.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象id为空");
         }
@@ -348,15 +349,15 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     public PageResult<UserMessageVO> listMessage(PageParameter<UserMessageVO> pageParameter,
     String sessionId) throws CheckedServiceException {
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-        if (Tools.isNullOrEmpty(pmphUser)) {
+        if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        if (Tools.isNullOrEmpty(pmphUser.getId())) {
+        if (ObjectUtil.isNull(pmphUser.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        if (Tools.isNotNullOrEmpty(pageParameter.getParameter().getTitle())) {
+        if (ObjectUtil.notNull(pageParameter.getParameter().getTitle())) {
             String title = pageParameter.getParameter().getTitle();
             title = title.trim();
             title = title.replace(" ", "%");
@@ -365,14 +366,14 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         }
         pageParameter.getParameter().setSenderId(pmphUser.getId());
         PageResult<UserMessageVO> pageResult = new PageResult<>();
-        Tools.CopyPageParameter(pageParameter, pageResult);
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         Integer total = userMessageDao.getMessageTotal(pageParameter);
         if (total > 0) {
             List<UserMessageVO> list = userMessageDao.listMessage(pageParameter);
             Message message;
             for (UserMessageVO userMessageVO : list) {
                 message = messageService.get(userMessageVO.getMsgId());
-                if (Tools.isNotNullOrEmpty(message)) {
+                if (ObjectUtil.notNull(message)) {
                     userMessageVO.setContent(message.getContent());
                 }
             }

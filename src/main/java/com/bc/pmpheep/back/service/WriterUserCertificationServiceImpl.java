@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.WriterUserCertificationDao;
 import com.bc.pmpheep.back.po.WriterUserCertification;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -40,11 +40,11 @@ WriterUserCertificationService {
     @Override
     public WriterUserCertification addWriterUserCertification(
     WriterUserCertification writerUserCertification) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(writerUserCertification.getUserId())) {
+        if (ObjectUtil.isNull(writerUserCertification.getUserId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "作家为空");
         }
-        if (Tools.isNullOrEmpty(writerUserCertification.getOrgId())) {
+        if (ObjectUtil.isNull(writerUserCertification.getOrgId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "作家学校为空");
         }
@@ -72,7 +72,7 @@ WriterUserCertificationService {
     @Override
     public WriterUserCertification getWriterUserCertificationById(Long id)
     throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
@@ -90,7 +90,7 @@ WriterUserCertificationService {
      */
     @Override
     public Integer deleteWriterUserCertificationById(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
@@ -109,7 +109,7 @@ WriterUserCertificationService {
     @Override
     public Integer updateWriterUserCertification(WriterUserCertification writerUserCertification)
     throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(writerUserCertification.getId())) {
+        if (ObjectUtil.isNull(writerUserCertification.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }

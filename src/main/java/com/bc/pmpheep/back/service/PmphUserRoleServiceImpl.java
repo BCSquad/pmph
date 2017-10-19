@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphUserRoleDao;
 import com.bc.pmpheep.back.po.PmphUserRole;
-import com.bc.pmpheep.back.util.Tools;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -37,15 +37,15 @@ public class PmphUserRoleServiceImpl extends BaseService implements PmphUserRole
      */
     @Override
     public PmphUserRole addPmphUserRole(PmphUserRole pmphUserRole) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(pmphUserRole)) {
+        if (ObjectUtil.isNull(pmphUserRole)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "参数对象为空");
         }
-        if (Tools.isNullOrEmpty(pmphUserRole.getUserId())) {
+        if (ObjectUtil.isNull(pmphUserRole.getUserId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户id为空");
         }
-        if (Tools.isNullOrEmpty(pmphUserRole.getRoleId())) {
+        if (ObjectUtil.isNull(pmphUserRole.getRoleId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色id为空");
         }
@@ -64,7 +64,7 @@ public class PmphUserRoleServiceImpl extends BaseService implements PmphUserRole
      */
     @Override
     public PmphUserRole getPmphUserRoleById(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
@@ -83,7 +83,7 @@ public class PmphUserRoleServiceImpl extends BaseService implements PmphUserRole
      */
     @Override
     public Integer deletePmphUserRoleById(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
@@ -101,7 +101,7 @@ public class PmphUserRoleServiceImpl extends BaseService implements PmphUserRole
      */
     @Override
     public Integer updatePmphUserRole(PmphUserRole pmphUserRole) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(pmphUserRole.getId())) {
+        if (ObjectUtil.isNull(pmphUserRole.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }

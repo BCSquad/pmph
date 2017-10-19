@@ -34,6 +34,8 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * </pre>
  */
 public class SessionUtil {
+    private SessionUtil() {
+    }
 
     /**
      * 
@@ -97,7 +99,7 @@ public class SessionUtil {
      */
     public static PmphUser getPmphUserBySessionId(String sessionId) throws CheckedServiceException {
         HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
-        if (Tools.isNullOrEmpty(session)) {
+        if (ObjectUtil.isNull(session)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
                                               CheckedExceptionResult.USER_SESSION,
                                               "当前Session会话已过期，请重新登录!");
@@ -152,7 +154,7 @@ public class SessionUtil {
     public static WriterUser getWriterUserBySessionId(String sessionId)
     throws CheckedServiceException {
         HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
-        if (Tools.isNullOrEmpty(session)) {
+        if (ObjectUtil.isNull(session)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
                                               CheckedExceptionResult.USER_SESSION,
                                               "当前Session会话已过期，请重新登录!");

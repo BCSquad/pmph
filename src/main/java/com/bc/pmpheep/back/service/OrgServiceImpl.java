@@ -11,7 +11,7 @@ import com.bc.pmpheep.back.dao.OrgDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Org;
-import com.bc.pmpheep.back.util.Tools;
+import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -165,7 +165,7 @@ public class OrgServiceImpl extends BaseService implements OrgService {
     public PageResult<OrgVO> listOrg(PageParameter<OrgVO> pageParameter)
     throws CheckedServiceException {
         PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
-        Tools.CopyPageParameter(pageParameter, pageResult);
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         List<OrgVO> orgVOList = orgDao.listOrg(pageParameter);
         if (null != orgVOList && orgVOList.size() > 0) {
             Integer count = orgVOList.get(0).getCount();
