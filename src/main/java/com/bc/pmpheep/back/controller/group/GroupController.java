@@ -145,7 +145,7 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/update/pmphgroup", method = RequestMethod.PUT)
-	public ResponseBean updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup,String sessionId) {
+	public ResponseBean updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, String sessionId) {
 		try {
 			return new ResponseBean(pmphGroupService.updatePmphGroupOnGroup(file, pmphGroup, sessionId));
 		} catch (IOException e) {
@@ -356,10 +356,10 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/list/message", method = RequestMethod.GET)
-	public ResponseBean listPmphGroupMessage(Integer pageSize, Integer pageNumber, Long groupId, Timestamp baseTime) {
+	public ResponseBean listPmphGroupMessage(Integer pageSize, Integer pageNumber, Long groupId, Long baseTime) {
 		PageParameter<PmphGroupMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		PmphGroupMessageVO pmphGroupMessageVO = new PmphGroupMessageVO();
-		pmphGroupMessageVO.setGmtCreate(baseTime);
+		pmphGroupMessageVO.setGmtCreate(new Timestamp(baseTime));
 		pmphGroupMessageVO.setGroupId(groupId);
 		pageParameter.setParameter(pmphGroupMessageVO);
 		return new ResponseBean(pmphGroupMessageService.listPmphGroupMessage(pageParameter));

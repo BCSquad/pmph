@@ -100,11 +100,13 @@
 	<select id="listPmphGroupMessage" parameterType="PageParameter"
 		resultType="PmphGroupMessageVO">
 		select
-		count(*)
+		m.*,g.is_writer,g.user_id,g.display_name memberName
 		from
-		pmph_group_message m WHERE 1 = 1
+		pmph_group_message m LEFT JOIN pmph_group_member g ON m.member_id =
+		g.id WHERE 1 = 1
 		AND m.group_id =
-		#{parameter.groupId} AND m.gmt_create &lt; #{parameter.gmtCreate}
+		#{parameter.groupId} AND m.gmt_create
+		&lt; #{parameter.gmtCreate}
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>

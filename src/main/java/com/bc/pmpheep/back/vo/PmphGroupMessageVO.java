@@ -38,6 +38,14 @@ public class PmphGroupMessageVO implements Serializable {
 	 */
 	private String memberName;
 	/**
+	 * 发送者的用户id
+	 */
+	private Long userId;
+	/**
+	 * 该成员是否是作家用户
+	 */
+	private Boolean isWriter;
+	/**
 	 * 小组成员头像
 	 */
 	private String avatar;
@@ -72,6 +80,22 @@ public class PmphGroupMessageVO implements Serializable {
 
 	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public Boolean getIsWriter() {
+		return isWriter;
+	}
+
+	public void setIsWriter(Boolean isWriter) {
+		this.isWriter = isWriter;
 	}
 
 	public String getMemberName() {
