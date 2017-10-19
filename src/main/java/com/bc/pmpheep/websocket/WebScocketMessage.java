@@ -146,8 +146,8 @@ public class WebScocketMessage {
 	public String toString() {
 		return "{'id':" + id + ", 'msgType':" + msgType + ", 'senderId':" + senderId + ", 'senderName':'" + senderName
 				+ "', 'senderIcon':'" + senderIcon + "',' groupId':" + groupId + ", 'senderType':" + senderType
-				+ ", 'sendType':" + sendType + ", 'title':'" + title + "', 'content':'" + content + "', 'time':" + time
-				+ "}";
+				+ ", 'sendType':" + sendType + ", 'title':'" + title + "', 'content':'" + content + "', 'time':'" + time
+				+ "'}";
 	}
 
 }

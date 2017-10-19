@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
@@ -159,13 +160,9 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"小组id不能为空");
 		}
-		if (null != pageParameter.getParameter().getFileName()) {
-			String fileName = pageParameter.getParameter().getFileName().trim();
-			if (!fileName.equals("")) {
-				pageParameter.getParameter().setFileName("%" + fileName + "%");
-			} else {
-				pageParameter.getParameter().setFileName(fileName);
-			}
+		String fileName = pageParameter.getParameter().getFileName();
+		if (StringUtil.notEmpty(fileName)) {
+			pageParameter.getParameter().setFileName(fileName);
 		}
 		PageResult<PmphGroupFileVO> pageResult = new PageResult<PmphGroupFileVO>();
 		Tools.CopyPageParameter(pageParameter, pageResult);
