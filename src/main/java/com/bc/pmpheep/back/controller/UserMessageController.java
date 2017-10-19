@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.UserMessage;
+import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.service.UserMessageService;
 import com.bc.pmpheep.back.vo.MessageStateVO;
 import com.bc.pmpheep.back.vo.UserMessageVO;
@@ -30,6 +31,8 @@ public class UserMessageController {
 
     @Autowired
     private UserMessageService userMessageService;
+    @Autowired
+    private TextbookService    textbookService;
 
     /**
      * 
@@ -88,7 +91,7 @@ public class UserMessageController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/message/sendObject", method = RequestMethod.GET)
+    @RequestMapping(value = "/message/send_object", method = RequestMethod.GET)
     public ResponseBean listSendOject(@RequestParam("sendType") Integer sendType,
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, @RequestParam("orgName") String orgName,
@@ -100,6 +103,22 @@ public class UserMessageController {
                                                                  orgName,
                                                                  userNameOrUserCode,
                                                                  materialName));
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据教材ID查询书籍列表
+     * 使用示范：
+     *
+     * @param materialId 教材ID
+     * @return
+     * </pre>
+     */
+    @ResponseBody
+    @RequestMapping(value = "/message/send_object/{materialId}/text_book", method = RequestMethod.GET)
+    public ResponseBean getListTextBookByMaterialId(@PathVariable("materialId") Long materialId) {
+        return new ResponseBean(textbookService.getTextBookByMaterialId(materialId));
     }
 
     /**
