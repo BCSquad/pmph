@@ -76,8 +76,8 @@ public class GroupMigrationHelper {
             String groupID = map.get("groupID").toString();
             long groupId = groupIdMap.get(groupID);//取得旧表groupID对应新表的主键
             member.setGroupId(groupId);
-            long memberId = 0L;//此处应有中间表，建立旧库sys_user和新库三张用户表的映射关系
-            member.setMemberId(memberId);
+            long userId = 0L;//此处应有中间表，建立旧库sys_user和新库三张用户表的映射关系
+            member.setUserId(userId);
             member.setIsWriter(true);//同上，需要先迁移用户表
             /* 是否创建者的判断依据是GUID是否等于groupID */
             String guid = map.get("GUID").toString();

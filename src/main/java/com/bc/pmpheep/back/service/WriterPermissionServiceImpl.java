@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.WriterPermissionDao;
 import com.bc.pmpheep.back.po.WriterPermission;
+import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -26,7 +28,7 @@ public class WriterPermissionServiceImpl implements WriterPermissionService {
     @Override
     public Integer addWriterPermission(WriterPermission writerPermission)
     throws CheckedServiceException {
-        if (null == writerPermission) {
+        if (Tools.isNullOrEmpty(writerPermission)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.RESOUCE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "资源属性为空时禁止添加!");
         }
@@ -45,7 +47,7 @@ public class WriterPermissionServiceImpl implements WriterPermissionService {
     @Override
     public Integer updateWriterPermissionById(WriterPermission writerPermission)
     throws CheckedServiceException {
-        if (null == writerPermission.getId()) {
+        if (Tools.isNullOrEmpty(writerPermission.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.RESOUCE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "资源ID为空时禁止更新!");
         }
@@ -55,7 +57,7 @@ public class WriterPermissionServiceImpl implements WriterPermissionService {
     @Override
     public WriterPermission getWriterPermissionByPermissionName(String permissionName)
     throws CheckedServiceException {
-        if (null == permissionName) {
+        if (StringUtil.isEmpty(permissionName)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.RESOUCE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "资源名称为空时禁止查询!");
         }
@@ -64,7 +66,7 @@ public class WriterPermissionServiceImpl implements WriterPermissionService {
 
     @Override
     public Integer delete(Long id) throws CheckedServiceException {
-        if (null == id) {
+        if (Tools.isNullOrEmpty(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.RESOUCE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "资源ID为空时禁止删除!");
         }
@@ -73,7 +75,7 @@ public class WriterPermissionServiceImpl implements WriterPermissionService {
 
     @Override
     public WriterPermission get(Long id) throws CheckedServiceException {
-        if (null == id) {
+        if (Tools.isNullOrEmpty(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.RESOUCE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "资源ID为空时禁止查询!");
         }

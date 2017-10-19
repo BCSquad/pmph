@@ -6,13 +6,13 @@ package com.bc.pmpheep.service.exception;
 
 /**
  * 自定义服务层异常，用于抛出已知异常
- *
+ * 
  * @author L.X <gugia@qq.com>
  */
 @SuppressWarnings("serial")
 public class CheckedServiceException extends RuntimeException {
 
-    private final String business;
+    private final String                 business;
 
     private final CheckedExceptionResult result;
 
@@ -22,7 +22,8 @@ public class CheckedServiceException extends RuntimeException {
         this.result = result;
     }
 
-    public CheckedServiceException(String business, CheckedExceptionResult result, String message, Throwable cause) {
+    public CheckedServiceException(String business, CheckedExceptionResult result, String message,
+    Throwable cause) {
         super(message, cause);
         this.business = business;
         this.result = result;
