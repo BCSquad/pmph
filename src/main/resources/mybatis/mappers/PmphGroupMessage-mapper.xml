@@ -9,7 +9,7 @@
 			<if test="groupId != null and groupId !=''">
 				group_id,
 			</if>
-			<if test="memberId != null and memberId !=''">
+			<if test="memberId != null">
 				member_id,
 			</if>
 			<if test="msgContent != null and msgContent !=''">
@@ -24,7 +24,7 @@
 			<if test="groupId != null and groupId !=''">
 				#{groupId},
 			</if>
-			<if test="memberId != null and memberId !=''">
+			<if test="memberId != null ">
 				#{memberId},
 			</if>
 			<if test="msgContent != null and msgContent !=''">

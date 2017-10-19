@@ -13,6 +13,7 @@ import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -119,29 +120,17 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
     @Override
     public PageResult<OrgUserManagerVO> getListOrgUser(PageParameter<OrgUserManagerVO> pageParameter)
     throws CheckedServiceException {
-        if (null != pageParameter.getParameter().getUsername()) {
-            String username = pageParameter.getParameter().getUsername().trim();
-            if (!username.equals("")) {
-                pageParameter.getParameter().setUsername("%" + username + "%");
-            } else {
-                pageParameter.getParameter().setUsername(username);
-            }
+        String username = pageParameter.getParameter().getUsername();
+        if (StringUtil.notEmpty(username)) {
+            pageParameter.getParameter().setUsername(username);
         }
-        if (null != pageParameter.getParameter().getRealname()) {
-            String realname = pageParameter.getParameter().getRealname().trim();
-            if (!realname.equals("")) {
-                pageParameter.getParameter().setRealname("%" + realname + "%");
-            } else {
-                pageParameter.getParameter().setRealname(realname);
-            }
+        String realname = pageParameter.getParameter().getRealname();
+        if (StringUtil.notEmpty(realname)) {
+            pageParameter.getParameter().setRealname(realname);
         }
-        if (null != pageParameter.getParameter().getOrgName()) {
-            String orgName = pageParameter.getParameter().getOrgName().trim();
-            if (!orgName.equals("")) {
-                pageParameter.getParameter().setOrgName("%" + orgName + "%");
-            } else {
-                pageParameter.getParameter().setOrgName(orgName);
-            }
+        String orgName = pageParameter.getParameter().getOrgName();
+        if (StringUtil.notEmpty(orgName)) {
+            pageParameter.getParameter().setOrgName(orgName);
         }
         PageResult<OrgUserManagerVO> pageResult = new PageResult<OrgUserManagerVO>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);

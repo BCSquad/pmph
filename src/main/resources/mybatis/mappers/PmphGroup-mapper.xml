@@ -106,19 +106,22 @@
 	<!-- 查当前用户的小组列表 -->
 	<select id="getList" resultType="PmphGroupListVO">
 		select 
-			id,
-			group_Name,
-			group_Image,
-			gmt_last_message gmtLastMessage 
+			g.id,
+			g.group_name,
+			g.group_image,
+			g.gmt_last_message gmtLastMessage,
+			g.book_id,
+			t.textbook_name bookName
 		from 
-			pmph_group 
+			pmph_group g
+LEFT JOIN textbook t ON g.book_id = t.id
 		where 
-			id 
+			g.id 
 		in (
-			select DISTINCT group_id from pmph_group_member where user_id = #{id} 
-			)
+			select DISTINCT group_id from pmph_group_member where user_id = #{id}
+			) 
 		<if test="pmphGroup.groupName != null and pmphGroup.groupName !=''">
-			and group_name like
+			and g.group_name like
 				concat(concat('%',#{pmphGroup.groupName}),'%') 
 		</if>
 		order by 
