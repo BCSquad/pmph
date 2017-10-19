@@ -217,17 +217,17 @@
 	<select id="getByUsernameAndPassword" resultType="PmphUser"
 		parameterType="map">
 		SELECT
-			id,
-			username,
-			is_disabled,
-			realname,
-			department_id,
-			note,
-			is_deleted
+		id,
+		username,
+		is_disabled,
+		realname,
+		department_id,
+		note,
+		is_deleted
 		FROM
-			pmph_user
+		pmph_user
 		WHERE
-			1=1
+		1=1
 		<if test=" username!= null and username !=''">
 			and username = #{username}
 		</if>
@@ -332,11 +332,12 @@
 		1
 		= 1
 		<if test="parameter.name !=null and parameter.name !='' ">
-			and (u.username like #{parameter.name} or u.realname like
-			#{parameter.name})
+			and (u.username like concat('%',#{parameter.name},'%') or
+			u.realname like
+			concat('%',#{parameter.name},'%'))
 		</if>
 		<if test="parameter.path !=null and parameter.path !=''">
-			and d.path like #{parameter.path}
+			and d.path like concat(#{parameter.path},'%')
 		</if>
 		) t
 	</select>
@@ -352,11 +353,12 @@
 		WHERE
 		1 = 1
 		<if test="parameter.name !=null and parameter.name !='' ">
-			and (u.username like #{parameter.name} or u.realname like
-			#{parameter.name})
+			and (u.username like concat('%',#{parameter.name},'%') or
+			u.realname like
+			concat('%',#{parameter.name},'%'))
 		</if>
 		<if test="parameter.path !=null and parameter.path !=''">
-			and d.path like #{parameter.path}
+			and d.path like concat(#{parameter.path},'%')
 		</if>
 		LIMIT #{start},#{pageSize}
 	</select>

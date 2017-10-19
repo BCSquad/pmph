@@ -360,30 +360,30 @@
 	<select id="getByUsernameAndPassword" parameterType="String"
 		resultType="WriterUser">
 		SELECT
-			id,
-			username,
-			password,
-			is_disabled,
-			org_id,
-			realname,
-			sex,
-			experience,
-			position,
-			title,
-			rank,
-			is_teacher,
-			cert,
-			auth_time,
-			auth_user_type,
-			auth_user_id,
-			is_writer,
-			is_expert,
-			signature,
-			is_deleted
+		id,
+		username,
+		password,
+		is_disabled,
+		org_id,
+		realname,
+		sex,
+		experience,
+		position,
+		title,
+		rank,
+		is_teacher,
+		cert,
+		auth_time,
+		auth_user_type,
+		auth_user_id,
+		is_writer,
+		is_expert,
+		signature,
+		is_deleted
 		FROM
-			writer_user
+		writer_user
 		WHERE
-			1=1
+		1=1
 		<if test=" username!= null and username!='' ">
 			and username = #{username}
 		</if>
@@ -512,11 +512,12 @@
 		select count(*) from writer_user w left join org o on o.id = w.org_id
 		where 1=1
 		<if test="parameter.name !=null and parameter.name !='' ">
-			and (w.username like #{parameter.name} or w.realname like
-			#{parameter.name})
+			and (w.username like concat('%',#{parameter.name},'%' ) or
+			w.realname like
+			concat('%',#{parameter.name},'%' ) )
 		</if>
 		<if test="parameter.orgName !=null and parameter.orgName !=''">
-			and o.org_name like #{parameter.orgName}
+			and o.org_name like concat('%', #{parameter.orgName},'%')
 		</if>
 		<if test="parameter.rank !=null">
 			and w.rank = #{parameter.rank}
@@ -529,11 +530,12 @@
 		from writer_user w left join org o on o.id = w.org_id where
 		1=1
 		<if test="parameter.name !=null and parameter.name !='' ">
-			and (w.username like #{parameter.name} or w.realname like
-			#{parameter.name})
+			and (w.username like concat('%',#{parameter.name},'%' ) or
+			w.realname like
+			concat('%',#{parameter.name},'%' ) )
 		</if>
 		<if test="parameter.orgName !=null and parameter.orgName !=''">
-			and o.org_name like #{parameter.orgName}
+			and o.org_name like concat('%', #{parameter.orgName},'%')
 		</if>
 		<if test="parameter.rank !=null">
 			and w.rank = #{parameter.rank}
@@ -554,16 +556,16 @@
 		textbook e ON d.textbook_id = e.id
 		WHERE 1=1
 		<if test="parameter.bookname !=null and parameter.bookname !=''">
-			and e.textbook_name like #{parameter.bookname}
+			and e.textbook_name like
+			concat('%',#{parameter.bookname},'%')
 		</if>
 		<if test="parameter.chosenPosition !=null">
 			and d.chosen_position = #{parameter.chosenPosition}
 		</if>
-		<if test="parameter.realname !=null and parameter.realname !=''">
-			and a.realname like #{parameter.realname}
-		</if>
-		<if test="parameter.username !=null and parameter.username !=''">
-			and a.username like #{parameter.username}
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (a.username like concat('%',#{parameter.name},'%' ) or
+			a.realname like
+			concat('%',#{parameter.name},'%' ) )
 		</if>
 	</select>
 
@@ -579,14 +581,16 @@
 		textbook e ON d.textbook_id = e.id WHERE
 		1=1
 		<if test="parameter.bookname !=null and parameter.bookname !=''">
-			and e.textbook_name like #{parameter.bookname}
+			and e.textbook_name like
+			concat('%',#{parameter.bookname},'%')
 		</if>
 		<if test="parameter.chosenPosition !=null">
 			and d.chosen_position = #{parameter.chosenPosition}
 		</if>
-		<if test="parameter.name !=null and parameter.name !=''">
-			and (a.realname like #{parameter.name} or a.username like
-			#{parameter.name})
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (a.username like concat('%',#{parameter.name},'%' ) or
+			a.realname like
+			concat('%',#{parameter.name},'%' ) )
 		</if>
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}

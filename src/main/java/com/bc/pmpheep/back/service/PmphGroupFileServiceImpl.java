@@ -12,6 +12,7 @@ import com.bc.pmpheep.back.dao.PmphGroupFileDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphGroupFile;
+import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -65,18 +66,22 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"文件不能为空");
 		}
-		Long memberId = pmphUser.getId();
+		Long userId = pmphUser.getId();
 		for (Long id : ids) {
 			if (null == id) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 						"小组id不能为空");
 			}
+			PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(id, userId,
+					false);
 			for (MultipartFile file : files) {
 				String fileId = fileService.save(file, FileType.GROUP_FILE, 0);
-				PmphGroupFile pmphGroupFile = new PmphGroupFile(id, memberId, fileId, file.getOriginalFilename(), 0,
-						null);
+				PmphGroupFile pmphGroupFile = new PmphGroupFile(id, pmphGroupMemberVO.getId(), fileId,
+						file.getOriginalFilename(), 0, null);
 				pmphGroupFileDao.addPmphGroupFile(pmphGroupFile);
-				pmphGroupMessageService.addGroupMessage(file.getOriginalFilename(), id, sessionId, Const.SENDER_TYPE_0);
+				pmphGroupMessageService.addGroupMessage(
+						pmphGroupMemberVO.getDisplayName() + "上传了文件" + file.getOriginalFilename(), id, sessionId,
+						Const.SENDER_TYPE_0);
 			}
 		}
 		return "success";

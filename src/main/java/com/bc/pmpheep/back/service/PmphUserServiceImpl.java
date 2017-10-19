@@ -349,22 +349,14 @@ public class PmphUserServiceImpl implements PmphUserService {
     @Override
     public PageResult<PmphUserManagerVO> getListPmphUser(
     PageParameter<PmphUserManagerVO> pageParameter) throws CheckedServiceException {
-        if (null != pageParameter.getParameter().getName()) {
-            String name = pageParameter.getParameter().getName().trim();
-            if (!name.equals("")) {
-                pageParameter.getParameter().setName("%" + name + "%");
-            } else {
+            String name = pageParameter.getParameter().getName();
+            if (Tools.notEmpty(name)) {
                 pageParameter.getParameter().setName(name);
             }
-        }
-        if (null != pageParameter.getParameter().getPath()) {
-            String path = pageParameter.getParameter().getPath().trim();
-            if (!path.equals("")) {
-                pageParameter.getParameter().setPath(path + "%");
-            } else {
+            String path = pageParameter.getParameter().getPath();
+            if (Tools.notEmpty(path)) {
                 pageParameter.getParameter().setPath(path);
             }
-        }
         PageResult<PmphUserManagerVO> pageResult = new PageResult<>();
         Tools.CopyPageParameter(pageParameter, pageResult);
         int total = userDao.getListPmphUserTotal(pageParameter);

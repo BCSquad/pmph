@@ -26,15 +26,15 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	@Autowired
 	private OrgUserDao orgUserDao;
-	
+
 	@Override
-	public List<OrgUser> getOrgUserListByOrgIds(List<Long> orgIds) throws CheckedServiceException{
-    	if(null == orgIds){
-    		 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                     CheckedExceptionResult.NULL_PARAM, "参数为空");
-    	}
-    	return orgUserDao.getOrgUserListByOrgIds(orgIds);
-    }
+	public List<OrgUser> getOrgUserListByOrgIds(List<Long> orgIds) throws CheckedServiceException {
+		if (null == orgIds) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return orgUserDao.getOrgUserListByOrgIds(orgIds);
+	}
 
 	/**
 	 * 
@@ -45,15 +45,15 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	 */
 	@Override
 	public OrgUser addOrgUser(OrgUser orgUser) throws CheckedServiceException {
-		if(null == orgUser){
+		if (null == orgUser) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
 		}
-		if(null == orgUser.getUsername()){
+		if (null == orgUser.getUsername()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.ILLEGAL_PARAM, "用户名不能为空");
 		}
-		if(null == orgUser.getPassword()){
+		if (null == orgUser.getPassword()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.ILLEGAL_PARAM, "密码不能为空");
 		}
@@ -119,29 +119,17 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	@Override
 	public PageResult<OrgUserManagerVO> getListOrgUser(PageParameter<OrgUserManagerVO> pageParameter)
 			throws CheckedServiceException {
-		if (null != pageParameter.getParameter().getUsername()) {
-			String username = pageParameter.getParameter().getUsername().trim();
-			if (!username.equals("")) {
-				pageParameter.getParameter().setUsername("%" + username + "%");
-			} else {
-				pageParameter.getParameter().setUsername(username);
-			}
+		String username = pageParameter.getParameter().getUsername();
+		if (Tools.notEmpty(username)) {
+			pageParameter.getParameter().setUsername(username);
 		}
-		if (null != pageParameter.getParameter().getRealname()) {
-			String realname = pageParameter.getParameter().getRealname().trim();
-			if (!realname.equals("")) {
-				pageParameter.getParameter().setRealname("%" + realname + "%");
-			} else {
-				pageParameter.getParameter().setRealname(realname);
-			}
+		String realname = pageParameter.getParameter().getRealname();
+		if (Tools.notEmpty(realname)) {
+			pageParameter.getParameter().setRealname(realname);
 		}
-		if (null != pageParameter.getParameter().getOrgName()) {
-			String orgName = pageParameter.getParameter().getOrgName().trim();
-			if (!orgName.equals("")) {
-				pageParameter.getParameter().setOrgName("%" + orgName + "%");
-			} else {
-				pageParameter.getParameter().setOrgName(orgName);
-			}
+		String orgName = pageParameter.getParameter().getOrgName();
+		if (Tools.notEmpty(orgName)) {
+			pageParameter.getParameter().setOrgName(orgName);
 		}
 		PageResult<OrgUserManagerVO> pageResult = new PageResult<OrgUserManagerVO>();
 		Tools.CopyPageParameter(pageParameter, pageResult);
@@ -156,7 +144,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 
 	@Override
 	public String addOrgUserOfBack(OrgUser orgUser) throws CheckedServiceException {
-		if (null == orgUser.getUsername()){
+		if (null == orgUser.getUsername()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "机构代码不能为空");
 		}
