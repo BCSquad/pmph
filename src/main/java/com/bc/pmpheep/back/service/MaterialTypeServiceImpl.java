@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialTypeDao;
 import com.bc.pmpheep.back.po.MaterialType;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -44,7 +44,7 @@ public class MaterialTypeServiceImpl extends BaseService implements MaterialType
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,
                                               CheckedExceptionResult.NULL_PARAM, "类型名称为空");
         }
-        if (Tools.isNullOrEmpty(materialType.getSort())) {
+        if (ObjectUtil.isNull(materialType.getSort())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,
                                               CheckedExceptionResult.NULL_PARAM, "显示顺序为空");
         }
@@ -64,7 +64,7 @@ public class MaterialTypeServiceImpl extends BaseService implements MaterialType
      */
     @Override
     public MaterialType getMaterialTypeById(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
@@ -79,7 +79,7 @@ public class MaterialTypeServiceImpl extends BaseService implements MaterialType
      */
     @Override
     public Integer deleteMaterialTypeById(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
@@ -95,7 +95,7 @@ public class MaterialTypeServiceImpl extends BaseService implements MaterialType
      */
     @Override
     public Integer updateMaterialType(MaterialType materialType) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(materialType.getId())) {
+        if (ObjectUtil.isNull(materialType.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }

@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DateUtil {
+public final class DateUtil {
     private final static SimpleDateFormat sdfYear = new SimpleDateFormat("yyyy");
 
     private final static SimpleDateFormat sdfDay  = new SimpleDateFormat("yyyy-MM-dd");

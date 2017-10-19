@@ -11,7 +11,7 @@ import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterRolePermission;
 import com.bc.pmpheep.back.po.WriterUserRole;
-import com.bc.pmpheep.back.util.Tools;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -30,7 +30,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
 
     @Override
     public WriterRole get(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止查询");
         }
@@ -44,7 +44,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
 
     @Override
     public WriterUserRole getUserRole(Long uid, Long roleId) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(uid) || Tools.isNullOrEmpty(roleId)) {
+        if (ObjectUtil.isNull(uid) || ObjectUtil.isNull(roleId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或用户ID为空时禁止查询");
         }
@@ -53,7 +53,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
 
     @Override
     public List<WriterPermission> getListRoleResource(Long roleId) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(roleId)) {
+        if (ObjectUtil.isNull(roleId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止查询");
         }
@@ -63,7 +63,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
     @Override
     public WriterRolePermission getResourceRole(Long roleId, Long resId)
     throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(roleId) || Tools.isNullOrEmpty(resId)) {
+        if (ObjectUtil.isNull(roleId) || ObjectUtil.isNull(resId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或资源ID为空时禁止查询");
         }
@@ -72,7 +72,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
 
     @Override
     public List<Long> getListPmphWriterPermissionIdByRoleId(Long roleId) {
-        if (Tools.isNullOrEmpty(roleId)) {
+        if (ObjectUtil.isNull(roleId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止查询");
         }
@@ -81,7 +81,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
 
     @Override
     public List<WriterRolePermission> getListWriterRolePermission(Long roleId) {
-        if (Tools.isNullOrEmpty(roleId)) {
+        if (ObjectUtil.isNull(roleId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止查询");
         }
@@ -90,7 +90,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
 
     @Override
     public WriterRole add(WriterRole writerRole) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(writerRole)) {
+        if (ObjectUtil.isNull(writerRole)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色属性为空时禁止新增角色");
         }
@@ -100,7 +100,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
 
     @Override
     public Integer addUserRole(Long uid, Long roleId) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(uid) || Tools.isNullOrEmpty(roleId)) {
+        if (ObjectUtil.isNull(uid) || ObjectUtil.isNull(roleId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或用户ID为空时禁止新增");
         }
@@ -113,7 +113,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
     throws CheckedServiceException {
         // 添加时先删除当前权限
         deleteRoleResourceByRoleId(roleId);
-        if (Tools.isNullOrEmpty(roleId) || permissionIds.size() < 0) {
+        if (ObjectUtil.isNull(roleId) || permissionIds.size() < 0) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或资源ID为空时禁止新增");
         }
@@ -131,7 +131,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
 
     @Override
     public Integer update(WriterRole role) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(role.getId())) {
+        if (ObjectUtil.isNull(role.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止更新");
         }
@@ -140,7 +140,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
 
     @Override
     public Integer delete(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止删除");
         }
@@ -160,7 +160,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
 
     @Override
     public Integer deleteUserRole(Long uid, Long roleId) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(uid) || Tools.isNullOrEmpty(roleId)) {
+        if (ObjectUtil.isNull(uid) || ObjectUtil.isNull(roleId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或用户ID为空时禁止删除");
         }
@@ -170,7 +170,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
 
     @Override
     public Integer deleteUserRoles(Long uid) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(uid)) {
+        if (ObjectUtil.isNull(uid)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除");
         }
@@ -180,7 +180,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
 
     @Override
     public Integer deleteRoleResource(Long roleId, Long resId) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(roleId) || Tools.isNullOrEmpty(resId)) {
+        if (ObjectUtil.isNull(roleId) || ObjectUtil.isNull(resId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID或资源ID为空时禁止删除");
         }
@@ -199,7 +199,7 @@ public class WriterRoleServiceImpl implements WriterRoleService {
 
     @Override
     public Integer deleteRoleResourceByRoleId(Long roleId) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(roleId)) {
+        if (ObjectUtil.isNull(roleId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止删除");
         }

@@ -13,9 +13,9 @@ import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
@@ -46,7 +46,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
      */
     @Override
     public PmphGroup addPmphGroup(PmphGroup pmphGroup) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(pmphGroup)) {
+        if (ObjectUtil.isNull(pmphGroup)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
                                               CheckedExceptionResult.NULL_PARAM, "参数对象为空");
         }

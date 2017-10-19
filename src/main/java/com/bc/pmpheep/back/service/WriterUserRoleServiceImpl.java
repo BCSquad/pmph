@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.WriterUserRoleDao;
 import com.bc.pmpheep.back.po.WriterUserRole;
-import com.bc.pmpheep.back.util.Tools;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -35,15 +35,15 @@ public class WriterUserRoleServiceImpl extends BaseService implements WriterUser
     @Override
     public WriterUserRole addWriterUserRole(WriterUserRole writerUserRole)
     throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(writerUserRole)) {
+        if (ObjectUtil.isNull(writerUserRole)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "参数对象为空");
         }
-        if (Tools.isNullOrEmpty(writerUserRole.getUserId())) {
+        if (ObjectUtil.isNull(writerUserRole.getUserId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户id为空");
         }
-        if (Tools.isNullOrEmpty(writerUserRole.getRoleId())) {
+        if (ObjectUtil.isNull(writerUserRole.getRoleId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色id为空");
         }
@@ -59,7 +59,7 @@ public class WriterUserRoleServiceImpl extends BaseService implements WriterUser
      */
     @Override
     public WriterUserRole getWriterUserRoleById(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
@@ -74,7 +74,7 @@ public class WriterUserRoleServiceImpl extends BaseService implements WriterUser
      */
     @Override
     public Integer deleteWriterUserRoleById(Long id) throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
@@ -91,7 +91,7 @@ public class WriterUserRoleServiceImpl extends BaseService implements WriterUser
     @Override
     public Integer updateWriterUserRole(WriterUserRole writerUserRole)
     throws CheckedServiceException {
-        if (Tools.isNullOrEmpty(writerUserRole.getId())) {
+        if (ObjectUtil.isNull(writerUserRole.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
