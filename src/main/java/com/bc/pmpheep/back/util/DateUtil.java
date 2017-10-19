@@ -205,7 +205,7 @@ public final class DateUtil {
      * @return
      */
     public static String date2Str(Date date, String format) {
-        if (date != null) {
+        if (ObjectUtil.notNull(date)) {
             SimpleDateFormat sdf = new SimpleDateFormat(format);
             return sdf.format(date);
         } else {
@@ -258,6 +258,26 @@ public final class DateUtil {
         ret = sdfTime.format(new java.util.Date());
         Timestamp currentTime = Timestamp.valueOf(ret);
         return currentTime;
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：格式化时间戳(java.sql.Timestamp)
+     * 使用示范：
+     *
+     * @param format
+     * @param tm
+     * @return String
+     * </pre>
+     */
+    public static String formatTimeStamp(String format, Timestamp tm) {
+        if (ObjectUtil.notNull(tm)) {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            return sdf.format(new Date(tm.getTime()));
+        } else {
+            return "";
+        }
     }
 
     public static void main(String[] args) {
