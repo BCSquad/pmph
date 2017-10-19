@@ -18,7 +18,9 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.MessageStateVO;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
@@ -81,7 +83,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        if (Tools.isEmpty(pageParameter.getParameter().getMsgId())) {
+        if (StringUtil.isEmpty(pageParameter.getParameter().getMsgId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息为空");
         }
@@ -171,14 +173,14 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         List<UserMessage> userMessageList = new ArrayList<UserMessage>();
         // 1 发送给学校管理员 //2 所有人
         if (Const.SEND_OBJECT_1 == sendType || Const.SEND_OBJECT_2 == sendType) {
-            if (Tools.isEmpty(orgIds)) {
+            if (StringUtil.isEmpty(orgIds)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                                   CheckedExceptionResult.NULL_PARAM, "参数错误!");
             }
             String[] orgIds1 = orgIds.split(",");
             List<Long> orgIds2 = new ArrayList<Long>(orgIds1.length);
             for (String id : orgIds1) {
-                if (Tools.notEmpty(id)) {
+                if (StringUtil.notEmpty(id)) {
                     orgIds2.add(Long.parseLong(id));
                 }
             }
@@ -202,13 +204,13 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         }
         // 3 指定用户
         if (Const.SEND_OBJECT_3 == sendType) {
-            if (Tools.isEmpty(userIds)) {
+            if (StringUtil.isEmpty(userIds)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                                   CheckedExceptionResult.NULL_PARAM, "没有选中发送人!");
             }
             String[] ids = userIds.split(",");
             for (String id : ids) {
-                if (Tools.notEmpty(id)) {
+                if (StringUtil.notEmpty(id)) {
                     String userType = id.split("_")[0];
                     String userId = id.split("_")[1];
                     if (null != userId && Tools.isNumeric(userId)) {
@@ -222,7 +224,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         }
         // 4 发送给教材所有报名者
         if (Const.SEND_OBJECT_4 == sendType) {
-            if (Tools.isEmpty(bookIds)) {
+            if (StringUtil.isEmpty(bookIds)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                                   CheckedExceptionResult.NULL_PARAM, "书籍为空!");
             }
@@ -273,7 +275,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             new WebScocketMessage(message.getId(), Const.MSG_TYPE_1, senderId,
                                   pmphUser.getRealname(), Const.SEND_MSG_TYPE_1,
                                   Const.SEND_MSG_TYPE_0, message.getContent(),
-                                  message.getContent(), Tools.getCurrentTime());
+                                  message.getContent(), DateUtil.getCurrentTime());
             handler.sendWebSocketMessageToUser(websocketUserIds, webScocketMessage);
         }
         return userMessageList.size();
@@ -289,7 +291,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象id为空");
         }
-        if (Tools.isEmpty(message.getContent())) {
+        if (StringUtil.isEmpty(message.getContent())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象内容为空");
         }
@@ -299,7 +301,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Override
     public Integer updateToWithdraw(UserMessage userMessage) throws CheckedServiceException {
-        if (Tools.isEmpty(userMessage.getMsgId())) {
+        if (StringUtil.isEmpty(userMessage.getMsgId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象id为空");
         }
@@ -317,7 +319,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Override
     public Integer updateUserMessageIsDeletedByMsgId(String msgId) throws CheckedServiceException {
-        if (Tools.isEmpty(msgId)) {
+        if (StringUtil.isEmpty(msgId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象id为空");
         }

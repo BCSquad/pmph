@@ -21,6 +21,7 @@ import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.util.DesRun;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.Tools;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
@@ -56,15 +57,15 @@ public class PmphUserServiceImpl implements PmphUserService {
      */
     @Override
     public PmphUser add(PmphUser user) throws CheckedServiceException {
-        if (Tools.isEmpty(user.getUsername())) {
+        if (StringUtil.isEmpty(user.getUsername())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止新增用户");
         }
-        if (Tools.isEmpty(user.getPassword())) {
+        if (StringUtil.isEmpty(user.getPassword())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "密码为空时禁止新增用户");
         }
-        if (Tools.isEmpty(user.getRealname())) {
+        if (StringUtil.isEmpty(user.getRealname())) {
             user.setRealname(user.getUsername());
         }
         // 使用用户名作为盐值，MD5 算法加密
@@ -154,7 +155,7 @@ public class PmphUserServiceImpl implements PmphUserService {
                                               CheckedExceptionResult.NULL_PARAM, "用户属性为空时禁止更新用户");
         } else {
             String password = user.getPassword();
-            if (Tools.notEmpty(password)) {
+            if (StringUtil.notEmpty(password)) {
                 user.setPassword(new DesRun("", user.getPassword()).enpsw);
             }
         }
@@ -186,7 +187,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     @Override
     public PmphUser getByUsernameAndPassword(String username, String password)
     throws CheckedServiceException {
-        if (Tools.isEmpty(username) || Tools.isEmpty(password)) {
+        if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户名或密码为空时禁止查询");
         }
