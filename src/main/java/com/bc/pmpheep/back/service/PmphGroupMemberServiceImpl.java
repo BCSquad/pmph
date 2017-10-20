@@ -15,6 +15,7 @@ import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -245,7 +246,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
 					"该用户没有操作权限");
 		}
-		PmphUser pmphUser = (PmphUser) (SessionUtil.getShiroSessionUser().getAttribute(Const.SESSION_PMPH_USER));
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"该用户为空");
@@ -313,5 +314,17 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			result = "SUCCESS";
 		}
 		return result;
+
+	}
+
+	@Override
+	public PmphGroupMemberVO getCurrentUser(Long groupId, String sessionId) throws CheckedServiceException {
+		if (ObjectUtil.isNull(groupId)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"小组id不能为空");
+		}
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		Long userId = pmphUser.getId();
+		return pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId, userId, false);
 	}
 }

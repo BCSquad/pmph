@@ -158,4 +158,17 @@ public interface PmphGroupMemberService {
 	String updateMemberIdentity(Long groupId, List<PmphGroupMember> members, String sessionId)
 			throws CheckedServiceException;
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取当前用户在小组中的权限
+	 *
+	 * @param groupId 小组id
+	 * @param sessionId 当前用户sessionId
+	 * @return 返回权限
+	 * @throws CheckedServiceException
+	 *
+	 */
+	PmphGroupMemberVO getCurrentUser(Long groupId, String sessionId) throws CheckedServiceException;
+
 }
