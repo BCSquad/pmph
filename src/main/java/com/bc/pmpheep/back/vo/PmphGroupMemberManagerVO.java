@@ -25,7 +25,7 @@ public class PmphGroupMemberManagerVO implements Serializable {
 	// 书籍id
 	private Long bookId;
 	// 成员id
-	private Long memberId;
+	private Long userId;
 	// 小组内显示名称;
 	private String displayName;
 	// 账号
@@ -73,12 +73,12 @@ public class PmphGroupMemberManagerVO implements Serializable {
 		this.bookId = bookId;
 	}
 
-	public Long getMemberId() {
-		return memberId;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setMemberId(Long memberId) {
-		this.memberId = memberId;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public String getDisplayName() {
@@ -155,10 +155,10 @@ public class PmphGroupMemberManagerVO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PmphGroupMemberManagerVO [id=" + id + ", groupId=" + groupId + ", bookId=" + bookId + ", memberId="
-				+ memberId + ", displayName=" + displayName + ", username=" + username + ", name=" + name
-				+ ", identity=" + identity + ", position=" + position + ", workId=" + workId + ", workName=" + workName
-				+ ", handphone=" + handphone + ", email=" + email + "]";
+		return "PmphGroupMemberManagerVO [id=" + id + ", groupId=" + groupId + ", bookId=" + bookId + ", userId="
+				+ userId + ", displayName=" + displayName + ", username=" + username + ", name=" + name + ", identity="
+				+ identity + ", position=" + position + ", workId=" + workId + ", workName=" + workName + ", handphone="
+				+ handphone + ", email=" + email + "]";
 	}
 
 }
