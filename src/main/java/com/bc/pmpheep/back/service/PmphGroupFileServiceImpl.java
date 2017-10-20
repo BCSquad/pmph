@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 	 * @update Mryang 2017.10.13 15:30
 	 */
 	@Override
-	public String addPmphGroupFile(Long[] ids, MultipartFile[] files, String sessionId)
+	public String addPmphGroupFile(Long[] ids, MultipartFile file, String sessionId)
 			throws CheckedServiceException, IOException {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
@@ -63,30 +64,34 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"参数不能为空");
 		}
-		if (ObjectUtil.isNull(files) || files.length == 0) {
+		if (ObjectUtil.isNull(file)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"文件不能为空");
 		}
 		Long userId = pmphUser.getId();
-
-		for (MultipartFile file : files) {
-			for (Long id : ids) {
-				if (ObjectUtil.isNull(id)) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-							"小组id不能为空");
-				}
-				PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(id, userId,
-						false);
-				PmphGroupFile pmphGroupFile = new PmphGroupFile(id, pmphGroupMemberVO.getId(), "0",
-						file.getOriginalFilename(), 0, null);
-				pmphGroupFileDao.addPmphGroupFile(pmphGroupFile);
-				String fileId = fileService.save(file, FileType.GROUP_FILE, pmphGroupFile.getId());
-				pmphGroupFile.setFileId(fileId);
-				pmphGroupFileDao.updatePmphGroupFile(pmphGroupFile);
-				pmphGroupMessageService.addGroupMessage(
-						pmphGroupMemberVO.getDisplayName() + "上传了文件" + file.getOriginalFilename(), id, sessionId,
-						Const.SENDER_TYPE_0);
+		List<PmphGroupFile> list = new ArrayList<>();
+		for (Long id : ids) {
+			if (ObjectUtil.isNull(id)) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+						"小组id不能为空");
 			}
+			PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(id, userId,
+					false);
+			PmphGroupFile pmphGroupFile = new PmphGroupFile(id, pmphGroupMemberVO.getId(), "0",
+					file.getOriginalFilename(), 0, null);
+			pmphGroupFileDao.addPmphGroupFile(pmphGroupFile);
+			list.add(pmphGroupFile);
+
+		}
+		String fileId = fileService.save(file, FileType.GROUP_FILE, list.get(0).getId());// list.get(0).getId()获取上传的第一条数据的id
+		for (PmphGroupFile pmphGroupFile : list) {
+			pmphGroupFile.setFileId(fileId);
+			pmphGroupFileDao.updatePmphGroupFile(pmphGroupFile);
+			PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService
+					.getPmphGroupMemberByMemberId(pmphGroupFile.getGroupId(), userId, false);
+			pmphGroupMessageService.addGroupMessage(
+					pmphGroupMemberVO.getDisplayName() + "上传了文件" + file.getOriginalFilename(),
+					pmphGroupFile.getGroupId(), sessionId, Const.SENDER_TYPE_0);
 		}
 		return "success";
 	}

@@ -186,9 +186,9 @@ public class GroupController {
 	 */
 	@RequestMapping(value = "/add/pmphgroupfile", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseBean addPmphGroupFile(Long[] ids, MultipartFile[] files, String sessionId) {
+	public ResponseBean addPmphGroupFile(Long[] ids, MultipartFile file, String sessionId) {
 		try {
-			return new ResponseBean(pmphGroupFileService.addPmphGroupFile(ids, files, sessionId));
+			return new ResponseBean(pmphGroupFileService.addPmphGroupFile(ids, file, sessionId));
 		} catch (IOException e) {
 			return new ResponseBean(e);
 		}

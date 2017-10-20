@@ -67,17 +67,12 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public PmphGroupMemberVO getPmphGroupMemberById(Long id) throws CheckedServiceException {
+	public PmphGroupMember getPmphGroupMemberById(Long id) throws CheckedServiceException {
 		if (null == id) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
 		}
-		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberDao.getPmphGroupMemberById(id);
-		if (pmphGroupMemberVO.getIsWriter()) {
-			pmphGroupMemberVO.setAvatar(writerUserService.get(pmphGroupMemberVO.getUserId()).getAvatar());
-		} else {
-			pmphGroupMemberVO.setAvatar(pmphUserService.get(pmphGroupMemberVO.getUserId()).getAvatar());
-		}
+		PmphGroupMember pmphGroupMemberVO = pmphGroupMemberDao.getPmphGroupMemberById(id);
 		return pmphGroupMemberVO;
 	}
 
@@ -267,15 +262,15 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 					"主键不能为空");
 		} else {
 			for (Long id : ids) {
-				if (userid == pmphGroupMemberDao.getPmphGroupMemberById(id).getUserId()) {
+				PmphGroupMember pmphGroupMember = pmphGroupMemberDao.getPmphGroupMemberById(id);
+				if (userid == pmphGroupMember.getUserId() && !pmphGroupMember.getIsWriter()) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 							CheckedExceptionResult.ILLEGAL_PARAM, "不能删除自己");
 				}
 				if (currentUser.getIsFounder()) {
 					pmphGroupMemberDao.deletePmphGroupMemberById(id);
 				}
-				if (currentUser.getIsAdmin() && (pmphGroupMemberDao.getPmphGroupMemberById(id).getIsFounder()
-						|| pmphGroupMemberDao.getPmphGroupMemberById(id).getIsAdmin())) {
+				if (currentUser.getIsAdmin() && (pmphGroupMember.getIsFounder() || pmphGroupMember.getIsAdmin())) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 							CheckedExceptionResult.ILLEGAL_PARAM, "管理员不能删除创建者或其他管理员");
 				} else {

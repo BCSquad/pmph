@@ -31,7 +31,7 @@ public interface PmphGroupMemberService {
 	 * @return PmphGroupMember
 	 * @throws CheckedServiceException
 	 */
-	PmphGroupMemberVO getPmphGroupMemberById(Long id) throws CheckedServiceException;
+	PmphGroupMember getPmphGroupMemberById(Long id) throws CheckedServiceException;
 
 	/**
 	 * 
