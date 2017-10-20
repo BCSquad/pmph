@@ -77,10 +77,12 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 				}
 				PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(id, userId,
 						false);
-				String fileId = fileService.save(file, FileType.GROUP_FILE, 0);
-				PmphGroupFile pmphGroupFile = new PmphGroupFile(id, pmphGroupMemberVO.getId(), fileId,
+				PmphGroupFile pmphGroupFile = new PmphGroupFile(id, pmphGroupMemberVO.getId(), "0",
 						file.getOriginalFilename(), 0, null);
 				pmphGroupFileDao.addPmphGroupFile(pmphGroupFile);
+				String fileId = fileService.save(file, FileType.GROUP_FILE, pmphGroupFile.getId());
+				pmphGroupFile.setFileId(fileId);
+				pmphGroupFileDao.updatePmphGroupFile(pmphGroupFile);
 				pmphGroupMessageService.addGroupMessage(
 						pmphGroupMemberVO.getDisplayName() + "上传了文件" + file.getOriginalFilename(), id, sessionId,
 						Const.SENDER_TYPE_0);

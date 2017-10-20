@@ -77,8 +77,8 @@
 		update
 		pmph_group_member
 		<set>
-			<if test="gruopId != null and gruopId !=''">
-				group_id = #{gruopId},
+			<if test="groupId != null and groupId !=''">
+				group_id = #{groupId},
 			</if>
 			<if test="userId != null and userId !='' ">
 				user_id = #{userId},
