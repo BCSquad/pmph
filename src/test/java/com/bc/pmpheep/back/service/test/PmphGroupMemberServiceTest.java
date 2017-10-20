@@ -41,7 +41,6 @@ public class PmphGroupMemberServiceTest extends BaseTest {
     	Assert.assertTrue("删除失败",pmphGroupMemberService.deletePmphGroupMemberById(1L)  >= 0 );
     	//查询
     	Assert.assertNotNull("获取数据失败",pmphGroupMemberService.getPmphGroupMemberById(2L));
-    	
     }
     
     

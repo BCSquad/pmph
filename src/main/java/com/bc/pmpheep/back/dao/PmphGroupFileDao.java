@@ -103,4 +103,16 @@ public interface PmphGroupFileDao {
 	 * </pre>
 	 */
 	Long getPmphGroupFileCount();
+	
+	/**
+	 * 
+	 *  
+	 * 功能描述：下载成功后下载次数+1
+	 *
+	 * @param groupId  小组id
+	 * @param fileId 文件id
+	 * @return
+	 *
+	 */
+	Integer updatePmphGroupFileOfDownload(Long groupId,String fileId);
 }

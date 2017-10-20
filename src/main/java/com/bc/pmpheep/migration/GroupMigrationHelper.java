@@ -60,7 +60,7 @@ public class GroupMigrationHelper {
             groupIdMap.put(groupID, pmphGroup.getId());
             count++;
         }
-        logger.info("pmph_user表迁移完成！");
+        logger.info("pmph_group表迁移完成！");
         logger.info("旧库中共 {} 条数据，迁移完成 {} 条", maps.size(), count);
     }
 
@@ -93,7 +93,7 @@ public class GroupMigrationHelper {
             groupMemberIdMap.put(guid, member.getId());
             count++;
         }
-        logger.info("pmph_user表迁移完成！");
+        logger.info("pmph_group_member表迁移完成！");
         logger.info("旧库中共 {} 条数据，迁移完成 {} 条", maps.size(), count);
     }
 
@@ -126,7 +126,7 @@ public class GroupMigrationHelper {
             groupMessageService.addPmphGroupMessage(groupMessage);
             count++;
         }
-        logger.info("pmph_user表迁移完成！");
+        logger.info("pmph_group_message表迁移完成！");
         logger.info("旧库中共 {} 条数据，迁移完成 {} 条", maps.size(), count);
     }
 }

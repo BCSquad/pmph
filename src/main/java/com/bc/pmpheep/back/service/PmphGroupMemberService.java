@@ -31,7 +31,7 @@ public interface PmphGroupMemberService {
 	 * @return PmphGroupMember
 	 * @throws CheckedServiceException
 	 */
-	PmphGroupMemberVO getPmphGroupMemberById(Long id) throws CheckedServiceException;
+	PmphGroupMember getPmphGroupMemberById(Long id) throws CheckedServiceException;
 
 	/**
 	 * 
@@ -157,5 +157,6 @@ public interface PmphGroupMemberService {
 	 */
 	String updateMemberIdentity(Long groupId, List<PmphGroupMember> members, String sessionId)
 			throws CheckedServiceException;
+
 
 }

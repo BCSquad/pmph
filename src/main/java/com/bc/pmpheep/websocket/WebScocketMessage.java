@@ -147,7 +147,7 @@ public class WebScocketMessage {
 		return "{\"id\":\"" + id + "\", \"msgType\":" + msgType + ", \"senderId\":" + senderId + ", \"senderName\":\""
 				+ senderName + "\", \"senderIcon\":\"" + senderIcon + "\",\"groupId\":" + groupId + ", \"senderType\":"
 				+ senderType + ", \"sendType\":" + sendType + ", \"title\":\"" + title + "\", \"content\":\"" + content
-				+ "\", \"time\":\"" + time + "\"}";
+				+ "\", \"time\":\"" + String.valueOf(time.getTime()) + "\"}";
 	}
 
 }

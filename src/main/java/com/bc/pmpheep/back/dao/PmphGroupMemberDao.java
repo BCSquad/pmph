@@ -28,7 +28,7 @@ public interface  PmphGroupMemberDao {
 	 * @param 主键id
 	 * @return  PmphGroupMember
 	 */
-	PmphGroupMemberVO getPmphGroupMemberById(Long id) ;
+	PmphGroupMember getPmphGroupMemberById(Long id) ;
 	
 	/**
 	 * 

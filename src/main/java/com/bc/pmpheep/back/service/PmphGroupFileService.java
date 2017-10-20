@@ -25,7 +25,7 @@ public interface PmphGroupFileService {
 	 * @return 上传成功与否提示信息
 	 * @throws CheckedServiceException
 	 */
-	String addPmphGroupFile(Long[] ids, MultipartFile[] files, String sessionId)
+	String addPmphGroupFile(Long[] ids, MultipartFile file, String sessionId)
 			throws CheckedServiceException, IOException;
 
 	/**
@@ -80,5 +80,18 @@ public interface PmphGroupFileService {
 	 *
 	 */
 	List<PmphGroupFile> listPmphGroupFileByGroupId(Long groupId) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：下载之后下载次数+1
+	 *
+	 * @param
+	 *
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	Integer updatePmphGroupFileOfDown(Long groupId,String fileId) throws CheckedServiceException;
 
 }

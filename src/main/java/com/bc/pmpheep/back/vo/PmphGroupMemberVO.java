@@ -32,6 +32,10 @@ public class PmphGroupMemberVO implements Serializable {
 	 * 成员id
 	 */
 	private Long userId;
+	/**
+	 * 成员类型 1 社内 2 作家 3 机构
+	 */
+	private Short userType;
 	/***
 	 * 小组成员头像
 	 */
@@ -103,6 +107,14 @@ public class PmphGroupMemberVO implements Serializable {
 
 	public Boolean getIsAdmin() {
 		return isAdmin;
+	}
+
+	public Short getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Short userType) {
+		this.userType = userType;
 	}
 
 	public void setIsAdmin(Boolean isAdmin) {
