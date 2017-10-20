@@ -81,4 +81,17 @@ public interface PmphGroupFileService {
 	 */
 	List<PmphGroupFile> listPmphGroupFileByGroupId(Long groupId) throws CheckedServiceException;
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：下载之后下载次数+1
+	 *
+	 * @param
+	 *
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	Integer updatePmphGroupFileOfDown(Long groupId,String fileId) throws CheckedServiceException;
+
 }
