@@ -128,15 +128,8 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 			for (Long id : ids) {
 				Long uploaderId = pmphGroupFileDao.getPmphGroupFileById(id).getMemberId();
 				if (uploaderId == currentUser.getGroupId() || currentUser.getIsFounder() || currentUser.getIsAdmin()) {
-					List<PmphGroupFile> pmphGroupFiles = pmphGroupFileDao.listPmphGroupFileByGroupId(groupId);
-					for (PmphGroupFile pmphGroupFile : pmphGroupFiles) {
-						List list = pmphGroupFileDao.listPmphGroupFileByFileId(pmphGroupFile.getFileId());
-						if (1 == list.size()) {
-							fileService.remove(pmphGroupFile.getFileId());
-						}
-						pmphGroupFileDao.deletePmphGroupFileById(pmphGroupFile.getId());
-					}
-
+					PmphGroupFile pmphGroupFile = pmphGroupFileDao.getPmphGroupFileById(id);
+					fileService.remove(pmphGroupFile.getFileId());
 					pmphGroupFileDao.deletePmphGroupFileById(id);
 				} else {
 					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
@@ -190,16 +183,6 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 					"小组id不能为空");
 		}
 		return pmphGroupFileDao.listPmphGroupFileByGroupId(groupId);
-	}
-
-	@Override
-	public List<PmphGroupFile> listPmphGroupFileByFileId(String fileId) throws CheckedServiceException {
-
-		if (StringUtil.isEmpty(fileId)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-					"小组id不能为空");
-		}
-		return pmphGroupFileDao.listPmphGroupFileByFileId(fileId);
 	}
 
 }

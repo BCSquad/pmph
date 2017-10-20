@@ -88,10 +88,10 @@ public interface PmphGroupFileDao {
 	 *
 	 * @param fileId
 	 *            文件id
-	 * @return
+	 * @return 所在小组数
 	 *
 	 */
-	List<PmphGroupFile> listPmphGroupFileByFileId(String fileId);
+	Integer getPmphGroupFileTotalByFileId(String fileId);
 
 	/**
 	 * 

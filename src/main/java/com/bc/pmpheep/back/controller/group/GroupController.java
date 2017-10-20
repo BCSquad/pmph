@@ -257,13 +257,11 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/update/identity", method = RequestMethod.PUT)
-	public ResponseBean updateMemberIdentity(Long groupId, Long[] ids, String sessionId) {
-		PmphGroupMember pmphGroupMember = new PmphGroupMember();
-		List<PmphGroupMember> list = new ArrayList<>();
-		for (Long id : ids) {
-			pmphGroupMember.setId(id);
-			list.add(pmphGroupMember);
-		}
+	public ResponseBean updateMemberIdentity(Long groupId, String pmphGroupMembers, String sessionId) {
+		Gson gson = new Gson();
+		Type type = new TypeToken<ArrayList<PmphGroupMember>>() {
+		}.getType();
+		List<PmphGroupMember> list = gson.fromJson(pmphGroupMembers, type);
 		return new ResponseBean(pmphGroupMemberService.updateMemberIdentity(groupId, list, sessionId));
 	}
 

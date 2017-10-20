@@ -175,4 +175,17 @@
 		pmph_group_file
 	</select>
 
+	<!-- 根据小组id查询 PmphGroupFile -->
+	<select id="listPmphGroupFileByGroupId" parameterType="java.lang.Long"
+		resultType="PmphGroupFile">
+		select * from pmph_group_file where
+		group_id=#{groupId} ;
+	</select>
+
+	<!-- 根据文件id查询文件所在小组数量 -->
+	<select id="getPmphGroupFileTotalByFileId" parameterType="java.lang.String"
+		resultType="Integer">
+		select count(*) from pmph_group_file where
+		file_id=#{fileId} ;
+	</select>
 </mapper>

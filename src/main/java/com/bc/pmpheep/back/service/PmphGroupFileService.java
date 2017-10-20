@@ -81,17 +81,4 @@ public interface PmphGroupFileService {
 	 */
 	List<PmphGroupFile> listPmphGroupFileByGroupId(Long groupId) throws CheckedServiceException;
 
-	/**
-	 * 
-	 * 
-	 * 功能描述：根据文件id查询该文件在几个小组内使用
-	 *
-	 * @param fileId
-	 *            文件id
-	 * @return
-	 * @throws CheckedServiceException
-	 *
-	 */
-	List<PmphGroupFile> listPmphGroupFileByFileId(String fileId) throws CheckedServiceException;
-
 }
