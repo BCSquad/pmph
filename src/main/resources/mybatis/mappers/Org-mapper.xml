@@ -149,7 +149,7 @@
 			GROUP_CONCAT(o.`org_name`)org_name,
 			o.`area_id`,
 			o.`parent_id`,
-			GROUP_CONCAT(ot.`type_name`)type_name,
+			GROUP_CONCAT(o.`org_type_id`)org_type_id,
 			ar.`area_name` 
 		FROM 
 			`org` o 

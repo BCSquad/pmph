@@ -13,17 +13,17 @@ import org.apache.ibatis.type.Alias;
 @Alias("OrgVO")
 public class OrgVO implements Serializable {
     // 主键
-    private Long    id;
+    private String  id;
     // 机构名称
     private String  orgName;
     // 机构类型id
-    private Long    orgTypeId;
+    private String  orgTypeId;
     // 机构类型名称
     private String  orgTypeName;
     // 上级机构id
-    private Long    parentId;
+    private String  parentId;
     // 区域id
-    private Long    areaId;
+    private String  areaId;
     // 所属区域名称
     private String  areaName;
     // 联系人
@@ -41,11 +41,11 @@ public class OrgVO implements Serializable {
         super();
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -57,11 +57,11 @@ public class OrgVO implements Serializable {
         this.orgName = orgName;
     }
 
-    public Long getOrgTypeId() {
+    public String getOrgTypeId() {
         return orgTypeId;
     }
 
-    public void setOrgTypeId(Long orgTypeId) {
+    public void setOrgTypeId(String orgTypeId) {
         this.orgTypeId = orgTypeId;
     }
 
@@ -73,11 +73,11 @@ public class OrgVO implements Serializable {
         this.orgTypeName = orgTypeName;
     }
 
-    public Long getAreaId() {
+    public String getAreaId() {
         return areaId;
     }
 
-    public void setAreaId(Long areaId) {
+    public void setAreaId(String areaId) {
         this.areaId = areaId;
     }
 
@@ -132,14 +132,14 @@ public class OrgVO implements Serializable {
     /**
      * @return the parentId
      */
-    public Long getParentId() {
+    public String getParentId() {
         return parentId;
     }
 
     /**
      * @param parentId the parentId to set
      */
-    public void setParentId(Long parentId) {
+    public void setParentId(String parentId) {
         this.parentId = parentId;
     }
 

@@ -14,9 +14,13 @@
             	#{msgId}
         	</foreach>	
 	</delete>
+	
+	<select id="getUserMessageById" parameterType="map" resultType="UserMessage">
+		select * from user_message where id = #{id};
+	</select>
 
 	<!-- 通过id 动态更新UserMessage -->
-	<update id="updateUserMessageById" parameterType="java.lang.Long">
+	<update id="updateUserMessageById" parameterType="UserMessage">
 		update user_message
 		<set>
 			<if test="msgId != null">
@@ -24,6 +28,9 @@
 			</if>
 			<if test="msgType != null">
 				msg_type = #{msgType},
+			</if>
+			<if test="title != null and title != '' ">
+				title = #{title},
 			</if>
 			<if test="senderId != null">
 				sender_id = #{senderId},

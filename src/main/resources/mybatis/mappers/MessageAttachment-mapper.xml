@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.MessageAttachmentDao">
+
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="msgId!=null and msgId != ''">
+				msg_id,
+			</if>
+			<if test="attachment!=null and attachment != '' ">
+				attachment,
+			</if>
+			<if test="attachmentName!=null and attachmentName != ''  ">
+				attachment_name,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="msgId!=null and msgId != ''">
+				#{msgId},
+			</if>
+			<if test="attachment!=null and attachment != '' ">
+				#{attachment},
+			</if>
+			<if test="attachmentName!=null and attachmentName != ''  ">
+				#{attachmentName},
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 新增MessageAttachment -->
+	<insert id="addMessageAttachment" parameterType="MessageAttachment" useGeneratedKeys="true" keyProperty="id">
+		<!-- sql片段对应字段名,id属性值任意 -->
+		INSERT INTO message_attachment	
+		(
+		<include refid="key" />
+		)
+		VALUES
+		(
+		<include refid="value" />
+		);
+	</insert>
+
+
+	<!-- 根据id删除一个 -->
+	<delete id="deleteMaterialTypeById">
+		delete from
+			material_type 
+		where
+			msg_id
+		in
+			<foreach collection="list" item="id" open="(" close=")" separator=",">
+			  #{id}
+		    </foreach>
+	</delete>
+
+	<!-- 更新MessageAttachment -->
+	<update id="updateMessageAttachment" parameterType="MessageAttachment">
+		update message_attachment
+		<set>
+			<if test="msgId!=null and msgId != ''">
+				msg_id = #{msgId},
+			</if>
+			<if test="attachment!=null and attachment != '' ">
+				attachment = #{attachment},
+			</if>
+			<if test="attachmentName!=null and attachmentName != ''  ">
+				attachment_name = #{attachmentName},
+			</if>
+		</set>
+		where
+		id=#{id} ;
+	</update>
+
+	<!-- 根据msgId查询一个MessageAttachment -->
+	<select id="getMessageAttachmentByMsgId" resultType="MessageAttachment">
+		select
+			* 
+		from 
+			message_attachment 
+		where 
+			msg_id = #{msgId}
+			<!-- <foreach collection="list" item="item" open="(" close=")" separator=",">
+   				 #{item}
+    		</foreach> -->
+	</select>
+
+</mapper>

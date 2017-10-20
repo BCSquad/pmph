@@ -187,6 +187,22 @@ public class UserMessageController {
     }
 
     /**
+     * 
+     * <pre>
+     * 功能描述：查看单条消息内容
+     * 使用示范：
+     *
+     * @param userMsgId UserMessage 主键ID
+     * @return
+     * </pre>
+     */
+    @RequestMapping(value = "/message/content", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseBean getMessageContent(@RequestParam("userMsgId") Long userMsgId) {
+        return new ResponseBean(userMessageService.getUserMessageById(userMsgId));
+    }
+
+    /**
      * 单纯修改消息
      * 
      * @author Mryang
@@ -196,8 +212,9 @@ public class UserMessageController {
      */
     @RequestMapping(value = "/update/message", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseBean updateUserMessage(Message message) {
-        return new ResponseBean(userMessageService.updateUserMessage(message));
+    public ResponseBean updateUserMessage(Message message,
+    @RequestParam("userMsgId") Long userMsgId, @RequestParam("msgTitle") String msgTitle) {
+        return new ResponseBean(userMessageService.updateUserMessage(message, userMsgId, msgTitle));
     }
 
     /**

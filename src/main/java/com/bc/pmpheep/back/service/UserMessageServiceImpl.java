@@ -15,6 +15,7 @@ import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.UserMessageDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.MessageAttachment;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.UserMessage;
@@ -24,6 +25,7 @@ import com.bc.pmpheep.back.util.CastUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.FileUpload;
+import com.bc.pmpheep.back.util.FileUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -35,9 +37,7 @@ import com.bc.pmpheep.back.vo.UserMessageVO;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.po.Message;
-import com.bc.pmpheep.general.po.MessageAttachment;
 import com.bc.pmpheep.general.service.FileService;
-import com.bc.pmpheep.general.service.MessageAttachmentService;
 import com.bc.pmpheep.general.service.MessageService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -178,28 +178,6 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
         }
-        // 添加附件到MongoDB表中
-        if (ArrayUtil.isNotEmpty(files)) {
-            for (int i = 0; i < files.length; i++) {
-                File file = FileUpload.getFileByFilePath(files[i]);
-                // 循环获取file数组中得文件
-                if (StringUtil.notEmpty(file.getName())) {
-                    String gridFSFileId =
-                    fileService.saveLocalFile(file,
-                                              FileType.MSG_FILE,
-                                              CastUtil.castLong(message.getId()));// 上传文件到MongoDB
-                    if (StringUtil.isEmpty(gridFSFileId)) {
-                        throw new CheckedServiceException(
-                                                          CheckedExceptionBusiness.MESSAGE,
-                                                          CheckedExceptionResult.FILE_UPLOAD_FAILED,
-                                                          "文件上传失败!");
-                    }
-                    // 保存对应数据到MongoDB
-                    messageAttachmentService.add(new MessageAttachment(message.getId(),
-                                                                       gridFSFileId, file.getName()));
-                }
-            }
-        }
 
         // 发送者id
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -317,23 +295,62 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                   message.getContent(), DateUtil.getCurrentTime());
             handler.sendWebSocketMessageToUser(websocketUserIds, webScocketMessage);
         }
+        // 添加附件到MongoDB表中
+        if (ArrayUtil.isNotEmpty(files)) {
+            for (int i = 0; i < files.length; i++) {
+                File file = FileUpload.getFileByFilePath(files[i]);
+                // 循环获取file数组中得文件
+                if (StringUtil.notEmpty(file.getName())) {
+                    String gridFSFileId =
+                    fileService.saveLocalFile(file,
+                                              FileType.MSG_FILE,
+                                              CastUtil.castLong(message.getId()));// 上传文件到MongoDB
+                    if (StringUtil.isEmpty(gridFSFileId)) {
+                        throw new CheckedServiceException(
+                                                          CheckedExceptionBusiness.MESSAGE,
+                                                          CheckedExceptionResult.FILE_UPLOAD_FAILED,
+                                                          "文件上传失败!");
+                    }
+                    // 保存对应数据
+                    MessageAttachment mAttachment =
+                    messageAttachmentService.addMessageAttachment(new MessageAttachment(
+                                                                                        message.getId(),
+                                                                                        gridFSFileId,
+                                                                                        file.getName()));
+                    if (ObjectUtil.isNull(mAttachment.getId())) {
+                        throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                          CheckedExceptionResult.NULL_PARAM,
+                                                          "MessageAttachment对象保存失败!");
+                    }
+                    messageAttachmentService.updateMessageAttachment(new MessageAttachment(
+                                                                                           mAttachment.getId(),
+                                                                                           ""));
+                    FileUtil.delFile(files[i]);// 删除本地临时文件
+                }
+            }
+        }
         return userMessageList.size();
     }
 
     @Override
-    public Integer updateUserMessage(Message message) throws CheckedServiceException {
+    public Integer updateUserMessage(Message message, Long userMsgId, String msgTitle)
+    throws CheckedServiceException {
         if (ObjectUtil.isNull(message)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象为空");
         }
-        if (ObjectUtil.isNull(message.getId())) {
+        if (ObjectUtil.isNull(message.getId()) || ObjectUtil.isNull(userMsgId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象id为空");
         }
-        if (StringUtil.isEmpty(message.getContent())) {
+        if (StringUtil.isEmpty(message.getContent()) || StringUtil.isEmpty(msgTitle)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象内容为空");
         }
+        UserMessage userMessage = new UserMessage();
+        userMessage.setId(userMsgId);
+        userMessage.setTitle(msgTitle);
+        userMessageDao.updateUserMessageById(userMessage);
         messageService.update(message);
         return 1;
     }
@@ -436,5 +453,30 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             filePath = Const.MSG_FILE_PATH_FILE + fullFileName;
         }
         return filePath;
+    }
+
+    @Override
+    public Map<String, Object> getUserMessageById(Long userMsgId) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        if (ObjectUtil.isNull(userMsgId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "消息ID为空！");
+        }
+        UserMessage userMessage = userMessageDao.getUserMessageById(userMsgId);
+        if (ObjectUtil.isNull(userMessage)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "用户消息对象为空！");
+        }
+        resultMap.put("title", userMessage.getTitle());
+        Message message = messageService.get(userMessage.getMsgId());
+        if (ObjectUtil.isNull(message)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "消息对象为空！");
+        }
+        resultMap.put("content", message.getContent());
+        List<MessageAttachment> messageAttachments =
+        messageAttachmentService.getMessageAttachmentByMsgId(message.getId());
+        resultMap.put("MessageAttachment", messageAttachments);
+        return resultMap;
     }
 }

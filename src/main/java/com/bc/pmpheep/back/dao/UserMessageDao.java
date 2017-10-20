@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -31,6 +32,18 @@ public interface UserMessageDao {
      * @return List<MessageStateVO>
      */
     List<MessageStateVO> listMessageState(PageParameter<MessageStateVO> pageParameter);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据主键ID查询 
+     * 使用示范：
+     *
+     * @param id 
+     * @return
+     * </pre>
+     */
+    UserMessage getUserMessageById(@Param("id") Long id);
 
     /**
      * 
@@ -93,7 +106,7 @@ public interface UserMessageDao {
     /**
      * 通过id 动态更新UserMessage
      */
-    Integer updateUserMessageById(Long id);
+    Integer updateUserMessageById(UserMessage userMessage);
 
     /**
      * 通过消息id删除UserMessage

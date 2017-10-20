@@ -31,6 +31,7 @@ import org.apache.commons.io.FileUtils;
  * @审核人 ：
  * </pre>
  */
+@SuppressWarnings("all")
 public class FileUtil {
 
     public static void main(String[] args) {

@@ -1,7 +1,6 @@
-package com.bc.pmpheep.general.po;
+package com.bc.pmpheep.back.po;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.apache.ibatis.type.Alias;
 
 /**
  * 
@@ -20,16 +19,33 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @审核人 ：
  * </pre>
  */
-@Document(collection = "messageAttachment")
+@Alias("MessageAttachment")
 public class MessageAttachment {
-    @Id
-    private String id;
+    /**
+     * 主键
+     */
+    private Long   id;
+    /**
+     * 消息ID
+     */
     private String msgId;
+    /**
+     * 附件路径
+     */
     private String attachment;
+    /**
+     * 附件名称
+     */
     private String attachmentName;
 
     public MessageAttachment() {
         super();
+    }
+
+    public MessageAttachment(Long id, String attachment) {
+        super();
+        this.id = id;
+        this.attachment = attachment;
     }
 
     /**
@@ -52,14 +68,14 @@ public class MessageAttachment {
     /**
      * @return the id
      */
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -103,6 +119,20 @@ public class MessageAttachment {
      */
     public void setAttachmentName(String attachmentName) {
         this.attachmentName = attachmentName;
+    }
+
+    /**
+     * <pre>
+     * 功能描述：
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
+    @Override
+    public String toString() {
+        return "｛id:" + id + ", msgId:" + msgId + ", attachment:" + attachment
+               + ", attachmentName:" + attachmentName + "｝";
     }
 
 }

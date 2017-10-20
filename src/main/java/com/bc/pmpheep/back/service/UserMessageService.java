@@ -84,7 +84,20 @@ public interface UserMessageService {
      * @param message
      * @return 影响行数
      */
-    Integer updateUserMessage(Message message) throws CheckedServiceException;
+    Integer updateUserMessage(Message message, Long userMsgId, String msgTitle)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：修改消息 ，按主键ID查询
+     * 使用示范：
+     *
+     * @param userMsgId　主键ID
+     * @return
+     * </pre>
+     */
+    Map<String, Object> getUserMessageById(Long userMsgId);
 
     /**
      * 
