@@ -125,4 +125,8 @@ public final class CastUtil {
         }
         return booleanValue;
     }
+
+    public static void main(String[] args) {
+        System.out.println(castLong(""));
+    }
 }

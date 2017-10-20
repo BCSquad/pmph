@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.UserMessage;
@@ -137,7 +138,8 @@ public class UserMessageController {
     @ResponseBody
     public ResponseBean addUserMessage(Message message, @RequestParam("sendType") Integer sendType,
     @RequestParam("orgIds") String orgIds, @RequestParam("userIds") String userIds,
-    @RequestParam("bookIds") String bookids, @RequestParam("sessionId") String sessionId) {
+    @RequestParam("bookIds") String bookids, @RequestParam("file") String[] files,
+    @RequestParam("sessionId") String sessionId) {
         try {
             return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,
                                                                               sendType,
@@ -145,6 +147,7 @@ public class UserMessageController {
                                                                               userIds,
                                                                               bookids,
                                                                               true,
+                                                                              files,
                                                                               sessionId));
         } catch (IOException e) {
             return new ResponseBean(e);
@@ -168,7 +171,7 @@ public class UserMessageController {
     public ResponseBean addUserMessageAgain(Message message,
     @RequestParam("sendType") Integer sendType, @RequestParam("orgIds") String orgIds,
     @RequestParam("userIds") String userIds, @RequestParam("bookIds") String bookIds,
-    @RequestParam("sessionId") String sessionId) {
+    @RequestParam("file") String[] files, @RequestParam("sessionId") String sessionId) {
         try {
             return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,
                                                                               sendType,
@@ -176,6 +179,7 @@ public class UserMessageController {
                                                                               userIds,
                                                                               bookIds,
                                                                               false,
+                                                                              files,
                                                                               sessionId));
         } catch (IOException e) {
             return new ResponseBean(e);
@@ -211,6 +215,23 @@ public class UserMessageController {
                                 userMessageService.updateToWithdraw(new UserMessage(
                                                                                     userMessage.getMsgId(),
                                                                                     true)));
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：新增消息附件上传
+     * 使用示范：
+     *
+     * @param request
+     * @param files
+     * @return
+     * </pre>
+     */
+    @ResponseBody
+    @RequestMapping(value = "/message/file", method = RequestMethod.POST)
+    public ResponseBean msgUploadFiles(@RequestParam("file") MultipartFile file) {
+        return new ResponseBean(userMessageService.msgUploadFiles(file));
     }
 
     /**
