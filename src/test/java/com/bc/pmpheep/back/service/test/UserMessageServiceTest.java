@@ -53,6 +53,7 @@ public class UserMessageServiceTest extends BaseTest {
                                                   null,
                                                   "1",
                                                   true,
+                                                  new String[] { "1" },
                                                   "");
         userMessageService.addOrUpdateUserMessage(new Message("1", "eee"),
                                                   2,
@@ -60,9 +61,9 @@ public class UserMessageServiceTest extends BaseTest {
                                                   "1",
                                                   "1",
                                                   false,
+                                                  new String[] { "1" },
                                                   "");
-        userMessageService.updateUserMessage(new Message("1", "eeeddd"));
-        ;
+        userMessageService.updateUserMessage(new Message("1", "aa"), 1L, "");
         userMessageService.updateToWithdraw(new UserMessage("1", true));
         userMessageService.deleteMessageByMsgId(ids);
     }
