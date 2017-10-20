@@ -83,7 +83,7 @@ public interface PmphGroupMemberService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String addPmphGroupMemberOnGroup(Long groupId,List<PmphGroupMember> pmphGroupMembers, String sessionId)
+	String addPmphGroupMemberOnGroup(Long groupId, List<PmphGroupMember> pmphGroupMembers, String sessionId)
 			throws CheckedServiceException;
 
 	/**
@@ -143,7 +143,7 @@ public interface PmphGroupMemberService {
 	 * @param 成员表id集合
 	 * @return String 删除成功与否状态
 	 */
-	String deletePmphGroupMemberByIds(Long groupId, List<Long> ids, String sessionId) throws CheckedServiceException;
+	String deletePmphGroupMemberByIds(Long groupId, Long[] ids, String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 
@@ -157,5 +157,6 @@ public interface PmphGroupMemberService {
 	 */
 	String updateMemberIdentity(Long groupId, List<PmphGroupMember> members, String sessionId)
 			throws CheckedServiceException;
+
 
 }

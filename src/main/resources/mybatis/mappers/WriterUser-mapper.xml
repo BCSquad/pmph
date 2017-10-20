@@ -378,6 +378,7 @@
 		auth_user_id,
 		is_writer,
 		is_expert,
+		avatar,
 		signature,
 		is_deleted
 		FROM

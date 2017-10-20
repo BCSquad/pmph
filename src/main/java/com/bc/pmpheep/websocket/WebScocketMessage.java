@@ -145,7 +145,7 @@ public class WebScocketMessage {
 	@Override
 	public String toString() {
 		return "{\"id\":\"" + id + "\", \"msgType\":" + msgType + ", \"senderId\":" + senderId + ", \"senderName\":\""
-				+ senderName + "\", \"senderIcon\":\"" + senderIcon + "\",\" groupId\":" + groupId + ", \"senderType\":"
+				+ senderName + "\", \"senderIcon\":\"" + senderIcon + "\",\"groupId\":" + groupId + ", \"senderType\":"
 				+ senderType + ", \"sendType\":" + sendType + ", \"title\":\"" + title + "\", \"content\":\"" + content
 				+ "\", \"time\":\"" + String.valueOf(time.getTime()) + "\"}";
 	}

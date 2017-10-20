@@ -25,7 +25,11 @@ public class PmphGroupMemberManagerVO implements Serializable {
 	// 书籍id
 	private Long bookId;
 	// 成员id
-	private Long memberId;
+	private Long userId;
+	// 成员类型 1 社内 2 作家 3 机构
+	private Short userType;
+	// 是否为作家用户
+	private Boolean isWriter;
 	// 小组内显示名称;
 	private String displayName;
 	// 账号
@@ -73,12 +77,12 @@ public class PmphGroupMemberManagerVO implements Serializable {
 		this.bookId = bookId;
 	}
 
-	public Long getMemberId() {
-		return memberId;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setMemberId(Long memberId) {
-		this.memberId = memberId;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public String getDisplayName() {
@@ -105,6 +109,14 @@ public class PmphGroupMemberManagerVO implements Serializable {
 		this.name = name;
 	}
 
+	public Short getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Short userType) {
+		this.userType = userType;
+	}
+
 	public String getIdentity() {
 		return identity;
 	}
@@ -115,6 +127,14 @@ public class PmphGroupMemberManagerVO implements Serializable {
 
 	public String getPosition() {
 		return position;
+	}
+
+	public Boolean getIsWriter() {
+		return isWriter;
+	}
+
+	public void setIsWriter(Boolean isWriter) {
+		this.isWriter = isWriter;
 	}
 
 	public void setPosition(String position) {
@@ -155,10 +175,10 @@ public class PmphGroupMemberManagerVO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PmphGroupMemberManagerVO [id=" + id + ", groupId=" + groupId + ", bookId=" + bookId + ", memberId="
-				+ memberId + ", displayName=" + displayName + ", username=" + username + ", name=" + name
-				+ ", identity=" + identity + ", position=" + position + ", workId=" + workId + ", workName=" + workName
-				+ ", handphone=" + handphone + ", email=" + email + "]";
+		return "PmphGroupMemberManagerVO [id=" + id + ", groupId=" + groupId + ", bookId=" + bookId + ", userId="
+				+ userId + ", displayName=" + displayName + ", username=" + username + ", name=" + name + ", identity="
+				+ identity + ", position=" + position + ", workId=" + workId + ", workName=" + workName + ", handphone="
+				+ handphone + ", email=" + email + "]";
 	}
 
 }

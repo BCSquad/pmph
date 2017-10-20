@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.UserMessageDao;
@@ -17,8 +19,11 @@ import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.po.WriterUser;
+import com.bc.pmpheep.back.util.ArrayUtil;
+import com.bc.pmpheep.back.util.CastUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.back.util.FileUpload;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -28,7 +33,11 @@ import com.bc.pmpheep.back.vo.OrgUserManagerVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.back.vo.UserMessageVO;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
+import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.po.Message;
+import com.bc.pmpheep.general.po.MessageAttachment;
+import com.bc.pmpheep.general.service.FileService;
+import com.bc.pmpheep.general.service.MessageAttachmentService;
 import com.bc.pmpheep.general.service.MessageService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -46,31 +55,37 @@ import com.bc.pmpheep.websocket.WebScocketMessage;
 public class UserMessageServiceImpl extends BaseService implements UserMessageService {
 
     @Autowired
-    private UserMessageDao     userMessageDao;
+    private UserMessageDao           userMessageDao;
 
     @Autowired
-    private MessageService     messageService;
+    private MessageService           messageService;
 
     @Autowired
-    private WriterUserService  writerUserService;
+    private WriterUserService        writerUserService;
 
     @Autowired
-    private OrgUserService     orgUserService;
+    private OrgUserService           orgUserService;
 
     @Autowired
-    private PmphUserService    pmphUserService;
+    private PmphUserService          pmphUserService;
 
     @Autowired
-    private OrgService         orgService;
+    private OrgService               orgService;
 
     @Autowired
-    private MaterialService    materialService;
+    private MaterialService          materialService;
 
     @Autowired
-    private MyWebSocketHandler handler;
+    private FileService              fileService;
 
     @Autowired
-    private DecPositionService decPositionService;
+    private MessageAttachmentService messageAttachmentService;
+
+    @Autowired
+    private MyWebSocketHandler       handler;
+
+    @Autowired
+    private DecPositionService       decPositionService;
 
     @Override
     public PageResult<MessageStateVO> listMessageState(PageParameter<MessageStateVO> pageParameter,
@@ -148,11 +163,11 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Override
     public Integer addOrUpdateUserMessage(Message message, Integer sendType, String orgIds,
-    String userIds, String bookIds, boolean isSave, String sessionId)
+    String userIds, String bookIds, boolean isSave, String[] files, String sessionId)
     throws CheckedServiceException, IOException {
         if (ObjectUtil.isNull(sendType)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                              CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择发送对象!");
+                                              CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择!");
         }
         // 如果 补发不进行消息插入
         if (isSave) {
@@ -163,6 +178,29 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
         }
+        // 添加附件到MongoDB表中
+        if (ArrayUtil.isNotEmpty(files)) {
+            for (int i = 0; i < files.length; i++) {
+                File file = FileUpload.getFileByFilePath(files[i]);
+                // 循环获取file数组中得文件
+                if (StringUtil.notEmpty(file.getName())) {
+                    String gridFSFileId =
+                    fileService.saveLocalFile(file,
+                                              FileType.MSG_FILE,
+                                              CastUtil.castLong(message.getId()));// 上传文件到MongoDB
+                    if (StringUtil.isEmpty(gridFSFileId)) {
+                        throw new CheckedServiceException(
+                                                          CheckedExceptionBusiness.MESSAGE,
+                                                          CheckedExceptionResult.FILE_UPLOAD_FAILED,
+                                                          "文件上传失败!");
+                    }
+                    // 保存对应数据到MongoDB
+                    messageAttachmentService.add(new MessageAttachment(message.getId(),
+                                                                       gridFSFileId, file.getName()));
+                }
+            }
+        }
+
         // 发送者id
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
@@ -381,5 +419,22 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             pageResult.setTotal(total);
         }
         return pageResult;
+    }
+
+    @Override
+    public String msgUploadFiles(MultipartFile file) throws CheckedServiceException {
+        if (ObjectUtil.isNull(file)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "消息附件为空！");
+        }
+        String filePath = "";
+        // 循环获取file数组中得文件
+        if (StringUtil.notEmpty(file.getOriginalFilename())) {
+            String fullFileName = file.getOriginalFilename();// 完整文件名
+            String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));// 去掉后缀的文件名称
+            FileUpload.fileUp(file, Const.MSG_FILE_PATH_FILE, fileName);// 上传文件
+            filePath = Const.MSG_FILE_PATH_FILE + fullFileName;
+        }
+        return filePath;
     }
 }

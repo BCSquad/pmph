@@ -223,6 +223,7 @@
 		realname,
 		department_id,
 		note,
+		avatar,
 		is_deleted
 		FROM
 		pmph_user

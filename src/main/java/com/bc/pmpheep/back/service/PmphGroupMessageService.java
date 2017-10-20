@@ -71,15 +71,29 @@ public interface PmphGroupMessageService {
 
 	/**
 	 * 
-	 *  
+	 * 
 	 * 功能描述：进入小组是加载历史消息
 	 *
-	 * @param pageParameter 分页参数 以及 小组id和进入小组时间
+	 * @param pageParameter
+	 *            分页参数 以及 小组id和进入小组时间
 	 * @return 分页消息结果集
 	 * @throws CheckedServiceException
 	 *
 	 */
 	PageResult<PmphGroupMessageVO> listPmphGroupMessage(PageParameter<PmphGroupMessageVO> pageParameter)
 			throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据小组id删除小组消息
+	 *
+	 * @param groupId
+	 *            小组id
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	Integer deletePmphGroupMessageByGroupId(Long groupId) throws CheckedServiceException;
 
 }

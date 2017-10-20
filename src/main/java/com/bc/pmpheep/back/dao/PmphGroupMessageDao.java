@@ -60,6 +60,18 @@ public interface PmphGroupMessageDao {
 	/**
 	 * 
 	 * 
+	 * 功能描述： 根据小组id删除小组消息
+	 *
+	 * @param groupId
+	 *            小组id
+	 * @return 影响的行数
+	 *
+	 */
+	Integer deletePmphGroupMessageByGroupId(Long groupId);
+
+	/**
+	 * 
+	 * 
 	 * 功能描述：获取全部历史消息数量
 	 *
 	 * @param pageParameter
