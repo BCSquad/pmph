@@ -366,22 +366,4 @@ public class GroupController {
 		return new ResponseBean(pmphGroupMessageService.listPmphGroupMessage(pageParameter));
 	}
 
-	/**
-	 * 
-	 * 
-	 * 功能描述：获取当前用户在小组中的权限
-	 *
-	 * @param groupId
-	 *            当前小组
-	 * @param sessionId
-	 *            当前用户sessionId
-	 * @return 返回权限
-	 *
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/user/currer", method = RequestMethod.GET)
-	public ResponseBean getCurrentUser(Long groupId, String sessionId) {
-		return new ResponseBean(pmphGroupMemberService.getCurrentUser(groupId, sessionId));
-	}
-
 }

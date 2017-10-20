@@ -26,6 +26,10 @@ public class PmphGroupMemberManagerVO implements Serializable {
 	private Long bookId;
 	// 成员id
 	private Long userId;
+	// 成员类型 1 社内 2 作家 3 机构
+	private Short userType;
+	// 是否为作家用户
+	private Boolean isWriter;
 	// 小组内显示名称;
 	private String displayName;
 	// 账号
@@ -105,6 +109,14 @@ public class PmphGroupMemberManagerVO implements Serializable {
 		this.name = name;
 	}
 
+	public Short getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Short userType) {
+		this.userType = userType;
+	}
+
 	public String getIdentity() {
 		return identity;
 	}
@@ -115,6 +127,14 @@ public class PmphGroupMemberManagerVO implements Serializable {
 
 	public String getPosition() {
 		return position;
+	}
+
+	public Boolean getIsWriter() {
+		return isWriter;
+	}
+
+	public void setIsWriter(Boolean isWriter) {
+		this.isWriter = isWriter;
 	}
 
 	public void setPosition(String position) {

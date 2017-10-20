@@ -232,6 +232,13 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		int total = pmphGroupMemberDao.groupMemberTotal(pageParameter);
 		if (total > 0) {
 			List<PmphGroupMemberManagerVO> list = pmphGroupMemberDao.listGroupMemberManagerVOs(pageParameter);
+			for (PmphGroupMemberManagerVO pmphGroupMemberManagerVO : list) {
+				if (pmphGroupMemberManagerVO.getIsWriter()) {
+					pmphGroupMemberManagerVO.setUserType(Const.SENDER_TYPE_2);
+				} else {
+					pmphGroupMemberManagerVO.setUserType(Const.SENDER_TYPE_1);
+				}
+			}
 			pageResult.setRows(list);
 			pageResult.setTotal(total);
 		}
@@ -317,14 +324,4 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 
 	}
 
-	@Override
-	public PmphGroupMemberVO getCurrentUser(Long groupId, String sessionId) throws CheckedServiceException {
-		if (ObjectUtil.isNull(groupId)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-					"小组id不能为空");
-		}
-		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-		Long userId = pmphUser.getId();
-		return pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId, userId, false);
-	}
 }
