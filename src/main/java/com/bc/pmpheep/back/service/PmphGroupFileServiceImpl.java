@@ -68,14 +68,15 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 					"文件不能为空");
 		}
 		Long userId = pmphUser.getId();
-		for (Long id : ids) {
-			if (ObjectUtil.isNull(id)) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-						"小组id不能为空");
-			}
-			PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(id, userId,
-					false);
-			for (MultipartFile file : files) {
+
+		for (MultipartFile file : files) {
+			for (Long id : ids) {
+				if (ObjectUtil.isNull(id)) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+							"小组id不能为空");
+				}
+				PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(id, userId,
+						false);
 				String fileId = fileService.save(file, FileType.GROUP_FILE, 0);
 				PmphGroupFile pmphGroupFile = new PmphGroupFile(id, pmphGroupMemberVO.getId(), fileId,
 						file.getOriginalFilename(), 0, null);
@@ -130,7 +131,9 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 				if (uploaderId == currentUser.getId() || currentUser.getIsFounder() || currentUser.getIsAdmin()) {
 					PmphGroupFile pmphGroupFile = pmphGroupFileDao.getPmphGroupFileById(id);
 					Integer num = pmphGroupFileDao.getPmphGroupFileTotalByFileId(pmphGroupFile.getFileId());
-					fileService.remove(pmphGroupFile.getFileId());
+					if (1 == num) {
+						fileService.remove(pmphGroupFile.getFileId());
+					}
 					pmphGroupFileDao.deletePmphGroupFileById(id);
 				} else {
 					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
