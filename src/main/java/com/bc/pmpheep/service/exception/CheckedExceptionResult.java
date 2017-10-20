@@ -40,6 +40,10 @@ public enum CheckedExceptionResult {
      */
     FILE_UPLOAD_FAILED(7, "文件上传失败"),
     /**
+     * 文件下载失败
+     */
+    FILE_DOWNLOAD_FAILED(8, "文件下载失败"),
+    /**
      * 用户SESSION为空
      */
     USER_SESSION(30, "用户SESSION为空");
