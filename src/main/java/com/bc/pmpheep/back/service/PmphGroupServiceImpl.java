@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import com.bc.pmpheep.back.po.PmphGroupFile;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.ArrayUtil;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -95,18 +97,23 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 						"主键为空");
 			}
-			List<PmphGroupFile> pmphGroupFiles = pmphGroupFileService.listPmphGroupFileByGroupId(pmphGroup.getId());//获取该小组的文件
-			Long[] ids = null;
-			for (PmphGroupFile pmphGroupFile : pmphGroupFiles) {
-				ids = new Long[] { pmphGroupFile.getId() };
+			PmphGroup group = pmphGroupDao.getPmphGroupById(pmphGroup.getId());
+			List<PmphGroupFile> pmphGroupFiles = pmphGroupFileService.listPmphGroupFileByGroupId(pmphGroup.getId());// 获取该小组的文件
+			Long[] ids = new Long[pmphGroupFiles.size()];
+			for (int i = 0; i < pmphGroupFiles.size(); i++) {
+				PmphGroupFile pmphGroupFile = pmphGroupFiles.get(i);
+				ids[i] = pmphGroupFile.getId();
 			}
-			if (ArrayUtil.isNotEmpty(ids)) {//判断该小组是否有文件
-				pmphGroupFileService.deletePmphGroupFileById(pmphGroup.getId(), ids, sessionId);
-			}
-			int num = pmphGroupDao.deletePmphGroupById(pmphGroup.getId());
+			int num = pmphGroupDao.deletePmphGroupById(pmphGroup.getId());// 删除小组
 			if (num > 0) {
-				pmphGroupMessageService.deletePmphGroupMessageByGroupId(pmphGroup.getId());
-				result = pmphGroupMemberService.deletePmphGroupMemberOnGroup(pmphGroup.getId());
+				if (ArrayUtil.isNotEmpty(ids)) {// 判断该小组是否有文件
+					pmphGroupFileService.deletePmphGroupFileById(pmphGroup.getId(), ids, sessionId);// 删除小组文件
+				}
+				if (!Const.DEFAULT_GROUP_IMAGE.equals(group.getGroupImage())) {// 解散小组时删除小组头像
+					fileService.remove(group.getGroupImage());
+				}
+				pmphGroupMessageService.deletePmphGroupMessageByGroupId(pmphGroup.getId());// 删除小组消息
+				result = pmphGroupMemberService.deletePmphGroupMemberOnGroup(pmphGroup.getId());// 删除小组成员
 			}
 		} else {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,

@@ -91,7 +91,8 @@
 		select
 		count(*)
 		from
-		pmph_group_message m WHERE
+		pmph_group_message m LEFT JOIN pmph_group_member g ON m.member_id =
+		g.id WHERE
 		m.group_id =
 		#{parameter.groupId} AND m.gmt_create &lt; #{parameter.gmtCreate}
 	</select>

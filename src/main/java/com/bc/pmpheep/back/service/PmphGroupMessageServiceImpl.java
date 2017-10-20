@@ -141,7 +141,7 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 		if (senderType == 0) {
 			pmphGroupMessage = new PmphGroupMessage(groupId, 0L, msgConrent);
 		} else {
-			pmphGroupMessage = new PmphGroupMessage(groupId, userId, msgConrent);
+			pmphGroupMessage = new PmphGroupMessage(groupId, pmphGroupMemberVO.getId(), msgConrent);
 		}
 		pmphGroupMessageDao.addPmphGroupMessage(pmphGroupMessage);
 		pmphGroupMessage = pmphGroupMessageDao.getPmphGroupMessageById(pmphGroupMessage.getId());
@@ -190,6 +190,9 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 						pmphGroupMessageVO.setAvatar(pmphUserService.get(pmphGroupMessageVO.getUserId()).getAvatar());
 						pmphGroupMessageVO.setUserType(Const.SENDER_TYPE_1);
 					}
+				} else {
+					pmphGroupMessageVO.setUserId(0L);
+					pmphGroupMessageVO.setUserType(Const.SENDER_TYPE_0);
 				}
 			}
 			pageResult.setRows(list);
