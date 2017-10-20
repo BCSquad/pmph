@@ -112,7 +112,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 
 	@Override
 	public List<PmphGroupMemberVO> listPmphGroupMember(Long groupId, String sessionId) throws CheckedServiceException {
-		List<PmphGroupMemberVO> list = new ArrayList<>();
+
 		if (null == groupId || groupId == 0) {
 			List<PmphGroupListVO> myPmphGroupListVOList = pmphGroupService.listPmphGroup(new PmphGroup(), sessionId);
 			if (null == myPmphGroupListVOList || myPmphGroupListVOList.size() == 0) {
@@ -121,12 +121,14 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			}
 			groupId = myPmphGroupListVOList.get(0).getId();// 初始化页面时没有参数传入则直接调用初始化时小组排序的第一个小组id
 		}
-		list = pmphGroupMemberDao.listPmphGroupMember(groupId);
+		List<PmphGroupMemberVO> list = pmphGroupMemberDao.listPmphGroupMember(groupId);
 		for (PmphGroupMemberVO pmphGroupMemberVO : list) {
 			if (pmphGroupMemberVO.getIsWriter()) {
 				pmphGroupMemberVO.setAvatar(writerUserService.get(pmphGroupMemberVO.getUserId()).getAvatar());
+				pmphGroupMemberVO.setUserType(Const.SENDER_TYPE_2);
 			} else {
 				pmphGroupMemberVO.setAvatar(pmphUserService.get(pmphGroupMemberVO.getUserId()).getAvatar());
+				pmphGroupMemberVO.setUserType(Const.SENDER_TYPE_1);
 			}
 		}
 		return list;

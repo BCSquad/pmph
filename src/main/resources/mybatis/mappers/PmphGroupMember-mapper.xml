@@ -165,46 +165,58 @@
 	<!-- 根据小组id查询到的小组成员详细信息 -->
 	<select id="listGroupMemberManagerVOs" parameterType="pageParameter"
 		resultType="PmphGroupMemberManagerVO">
-		SELECT a.id,a.group_id,b.book_id,a.user_id,a.display_name,
+		SELECT a.id,a.group_id,a.is_writer,b.book_id,a.user_id,a.display_name,
 		CASE WHEN
 		a.is_writer =1 THEN e.username WHEN a.is_writer = 0 THEN
 		c.username END
 		username,
-		CASE WHEN a.is_founder =1 THEN '创建者' WHEN a.is_admin =1 THEN
+		CASE WHEN a.is_founder =1 THEN '创建者' WHEN
+		a.is_admin =1 THEN
 		'管理员' ELSE
 		'成员' END identity,
-		CASE WHEN a.is_writer =1 THEN (CASE WHEN
+		CASE WHEN a.is_writer =1
+		THEN (CASE WHEN
 		h.chosen_position=1 THEN '主编'
-		WHEN h.chosen_position=2 THEN '副主编' WHEN
+		WHEN h.chosen_position=2
+		THEN '副主编' WHEN
 		h.chosen_position=3 THEN '编委'
-		WHEN h.chosen_position=0 THEN '无' END )
+		WHEN h.chosen_position=0
+		THEN '无' END )
 		WHEN a.is_writer =0 THEN
 		'项目策划编辑' END position,
-		CASE WHEN a.is_writer =1
+		CASE WHEN
+		a.is_writer =1
 		THEN e.org_id WHEN
-		a.is_writer = 0 THEN c.department_id END workid,
+		a.is_writer = 0 THEN c.department_id
+		END workid,
 		CASE WHEN a.is_writer
-		=1 THEN f.org_name WHEN a.is_writer = 0 THEN
+		=1 THEN f.org_name WHEN a.is_writer =
+		0 THEN
 		d.dp_name END workname,
-		CASE WHEN a.is_writer =1 THEN e.handphone WHEN
+		CASE WHEN a.is_writer =1 THEN e.handphone
+		WHEN
 		a.is_writer = 0 THEN
 		c.handphone END handphone,
-		CASE WHEN a.is_writer =1
+		CASE WHEN
+		a.is_writer =1
 		THEN e.email WHEN
 		a.is_writer =0 THEN c.email END email
 		FROM
 		pmph_group_member a LEFT
-		JOIN pmph_group b ON a.group_id = b.id LEFT
+		JOIN pmph_group b ON a.group_id = b.id
+		LEFT
 		JOIN
 		(SELECT a.* FROM pmph_user a)c ON c.id = a.user_id LEFT JOIN
 		pmph_department d
 		ON c.department_id = d.id LEFT JOIN (SELECT a.* FROM
 		writer_user a)e
 		ON a.user_id = e.id LEFT JOIN org f ON f.id =
-		e.org_id LEFT JOIN
+		e.org_id
+		LEFT JOIN
 		declaration g
 		ON g.user_id = e.id LEFT JOIN
-		dec_position h ON g.id =
+		dec_position h ON
+		g.id =
 		h.declaration_id
 		WHERE a.group_id =
 		#{parameter.groupId}
