@@ -13,6 +13,7 @@ import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupFile;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -94,12 +95,14 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 						"主键为空");
 			}
-			List<PmphGroupFile> pmphGroupFiles = pmphGroupFileService.listPmphGroupFileByGroupId(pmphGroup.getId());
+			List<PmphGroupFile> pmphGroupFiles = pmphGroupFileService.listPmphGroupFileByGroupId(pmphGroup.getId());//获取该小组的文件
 			Long[] ids = null;
 			for (PmphGroupFile pmphGroupFile : pmphGroupFiles) {
 				ids = new Long[] { pmphGroupFile.getId() };
 			}
-			pmphGroupFileService.deletePmphGroupFileById(pmphGroup.getId(), ids, sessionId);
+			if (ArrayUtil.isNotEmpty(ids)) {//判断该小组是否有文件
+				pmphGroupFileService.deletePmphGroupFileById(pmphGroup.getId(), ids, sessionId);
+			}
 			int num = pmphGroupDao.deletePmphGroupById(pmphGroup.getId());
 			if (num > 0) {
 				pmphGroupMessageService.deletePmphGroupMessageByGroupId(pmphGroup.getId());

@@ -111,4 +111,10 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
+
+	<!-- 根据小组id删除小组消息 -->
+	<delete id="deletePmphGroupMessageByGroupId" parameterType="java.lang.Long">
+		delete
+		from pmph_group_message where group_id=#{groupId} ;
+	</delete>
 </mapper>

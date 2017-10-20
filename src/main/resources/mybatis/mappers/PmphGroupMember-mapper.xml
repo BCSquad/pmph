@@ -80,8 +80,8 @@
 			<if test="gruopId != null and gruopId !=''">
 				group_id = #{gruopId},
 			</if>
-			<if test="memberId != null and memberId !='' ">
-				member_id = #{memberId},
+			<if test="userId != null and userId !='' ">
+				user_id = #{userId},
 			</if>
 			<if test=" isWriter != null">
 				is_writer= #{isWriter},
@@ -122,7 +122,7 @@
 		parameterType="java.lang.Long" resultType="PmphGroupMemberVO">
 		select * from
 		pmph_group_member where
-		member_id=#{memberId} and is_writer = false
+		user_id=#{userId} and is_writer = false
 		;
 	</select>
 
@@ -165,7 +165,7 @@
 	<!-- 根据小组id查询到的小组成员详细信息 -->
 	<select id="listGroupMemberManagerVOs" parameterType="pageParameter"
 		resultType="PmphGroupMemberManagerVO">
-		SELECT a.id,a.group_id,b.book_id,a.member_id,a.display_name,
+		SELECT a.id,a.group_id,b.book_id,a.user_id,a.display_name,
 		CASE WHEN
 		a.is_writer =1 THEN e.username WHEN a.is_writer = 0 THEN
 		c.username END
@@ -196,11 +196,11 @@
 		pmph_group_member a LEFT
 		JOIN pmph_group b ON a.group_id = b.id LEFT
 		JOIN
-		(SELECT a.* FROM pmph_user a)c ON c.id = a.member_id LEFT JOIN
+		(SELECT a.* FROM pmph_user a)c ON c.id = a.user_id LEFT JOIN
 		pmph_department d
 		ON c.department_id = d.id LEFT JOIN (SELECT a.* FROM
 		writer_user a)e
-		ON a.member_id = e.id LEFT JOIN org f ON f.id =
+		ON a.user_id = e.id LEFT JOIN org f ON f.id =
 		e.org_id LEFT JOIN
 		declaration g
 		ON g.user_id = e.id LEFT JOIN
