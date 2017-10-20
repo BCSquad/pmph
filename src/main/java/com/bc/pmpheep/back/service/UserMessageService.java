@@ -3,6 +3,8 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.UserMessage;
@@ -71,7 +73,7 @@ public interface UserMessageService {
      * @return
      */
     Integer addOrUpdateUserMessage(Message message, Integer sendType, String orgIds,
-    String userIds, String bookIds, boolean isSave, String sessionId)
+    String userIds, String bookIds, boolean isSave, String[] files, String sessionId)
     throws CheckedServiceException, IOException;
 
     /**
@@ -113,4 +115,17 @@ public interface UserMessageService {
      * @return 影响行数
      */
     Integer deleteMessageByMsgId(String[] msgId) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：消息附件上传
+     * 使用示范：
+     *
+     * @param files
+     * @return
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    String msgUploadFiles(MultipartFile file) throws CheckedServiceException;
 }

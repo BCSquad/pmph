@@ -147,7 +147,7 @@ public class WriterUser implements Serializable {
      */
     private Date    gmtUpdate;
 
-    private String  loginType;
+    private Short   loginType;
 
     /**
      * @return the id
@@ -578,14 +578,14 @@ public class WriterUser implements Serializable {
     /**
      * @return the loginType
      */
-    public String getLoginType() {
+    public Short getLoginType() {
         return loginType;
     }
 
     /**
      * @param loginType the loginType to set
      */
-    public void setLoginType(String loginType) {
+    public void setLoginType(Short loginType) {
         this.loginType = loginType;
     }
 

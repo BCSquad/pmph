@@ -18,11 +18,11 @@ public enum CheckedExceptionResult {
     /**
      * 参数错误
      */
-    NULL_PARAM(2, "参数错误"),
+    NULL_PARAM(2, "参数为空"),
     /**
      * 参数为空
      */
-    ILLEGAL_PARAM(3, "参数为空"),
+    ILLEGAL_PARAM(3, "参数错误"),
     /**
      * 无法找到对象
      */
@@ -31,6 +31,14 @@ public enum CheckedExceptionResult {
      * 视图对象转换失败
      */
     VO_CONVERSION_FAILED(5, "视图对象转换失败"),
+    /**
+     * 创建文件夹失败
+     */
+    CREATE_FILE_FAILED(6, "创建文件夹失败"),
+    /**
+     * 文件上传失败
+     */
+    FILE_UPLOAD_FAILED(7, "文件上传失败"),
     /**
      * 用户SESSION为空
      */
