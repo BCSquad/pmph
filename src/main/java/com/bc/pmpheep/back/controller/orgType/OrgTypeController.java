@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.controller.orgType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,9 +33,9 @@ public class OrgTypeController {
 	 *            可以为null
 	 * @return
 	 */
-	@RequestMapping(value = "/list/orgtype/{typeName}", method = RequestMethod.GET)
+	@RequestMapping(value = "/list/orgtype", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseBean listOrgTypeByTypeName(@RequestParam("typeName") String typeName) {
+	public ResponseBean listOrgTypeByTypeName(String typeName) {
 		return new ResponseBean(orgTypeService.listOrgTypeByTypeName(typeName));
 	}
 }
