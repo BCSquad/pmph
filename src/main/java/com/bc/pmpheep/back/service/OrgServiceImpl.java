@@ -121,10 +121,11 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 		if (null == org.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
-		if (null == org.getParentId()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
-					"上级机构id不能为空");
-		}
+		// if (null == org.getParentId()) {
+		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+		// CheckedExceptionResult.NULL_PARAM,
+		// "上级机构id不能为空");
+		// }
 		if (null == org.getOrgName()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
 					"机构名称为空");
