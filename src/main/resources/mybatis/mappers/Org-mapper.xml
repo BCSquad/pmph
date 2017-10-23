@@ -99,7 +99,7 @@
 	<select id="listOrg" parameterType="PageParameter" resultType="OrgVO">
 		select
 		a.id,a.org_name,c.type_name orgTypeName,a.org_type_id,b.id
-		areaId,a.parent_id
+		areaId,a.parent_id,a.gmt_create
 		,b.area_name,a.contact_person,a.contact_phone,a.sort,a.note,t.count
 		from org a
 		left join area b on a.area_id =b.id
