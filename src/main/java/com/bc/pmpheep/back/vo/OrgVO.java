@@ -28,9 +28,9 @@ public class OrgVO implements Serializable {
 	// 所属区域名称
 	private String areaName;
 	// 联系人
-	private String countactPerson;
+	private String contactPerson;
 	// 联系电话
-	private String countactPhone;
+	private String contactPhone;
 	// 备注
 	private String note;
 	// 显示顺序
@@ -92,20 +92,20 @@ public class OrgVO implements Serializable {
 		this.areaName = areaName;
 	}
 
-	public String getCountactPerson() {
-		return countactPerson;
+	public String getContactPerson() {
+		return contactPerson;
 	}
 
-	public void setCountactPerson(String countactPerson) {
-		this.countactPerson = countactPerson;
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
 	}
 
-	public String getCountactPhone() {
-		return countactPhone;
+	public String getContactPhone() {
+		return contactPhone;
 	}
 
-	public void setCountactPhone(String countactPhone) {
-		this.countactPhone = countactPhone;
+	public void setContactPhone(String contactPhone) {
+		this.contactPhone = contactPhone;
 	}
 
 	public String getNote() {
@@ -159,7 +159,7 @@ public class OrgVO implements Serializable {
 	public String toString() {
 		return "OrgVO [id=" + id + ", orgName=" + orgName + ", orgTypeId=" + orgTypeId + ", orgTypeName=" + orgTypeName
 				+ ", parentId=" + parentId + ", areaId=" + areaId + ", areaName=" + areaName + ", countactPerson="
-				+ countactPerson + ", countactPhone=" + countactPhone + ", note=" + note + ", sort=" + sort + ", count="
+				+ contactPerson + ", countactPhone=" + contactPhone + ", note=" + note + ", sort=" + sort + ", count="
 				+ count + ", gmtCreate=" + gmtCreate + "]";
 	}
 
