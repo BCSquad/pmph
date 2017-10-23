@@ -18,10 +18,10 @@
 			<if test="areaId != null and areaId !=''">
 				area_id,
 			</if>
-			<if test="countactPerson != null and countactPerson !=''">
+			<if test="contactPerson != null and contactPerson !=''">
 				contact_person,
 			</if>
-			<if test="countactPhone != null and countactPhone !=''">
+			<if test="contactPhone != null and contactPhone !=''">
 				contact_phone,
 			</if>
 			<if test="note != null and note !=''">
@@ -54,11 +54,11 @@
 			<if test="areaId !=null and areaId !=''">
 				#{areaId},
 			</if>
-			<if test="countactPerson !=null and countactPerson !=''">
-				#{countactPerson},
+			<if test="contactPerson !=null and contactPerson !=''">
+				#{contactPerson},
 			</if>
-			<if test="countactPhone !=null and countactPhone !=''">
-				#{countactPhone},
+			<if test="contactPhone !=null and contactPhone !=''">
+				#{contactPhone},
 			</if>
 			<if test="note !=null and note !=''">
 				#{note},
@@ -200,11 +200,11 @@
 			<if test=" areaId != null and areaId !=''">
 				area_id= #{areaId},
 			</if>
-			<if test=" countactPerson != null and countactPerson !=''">
-				contact_person = #{countactPerson},
+			<if test=" contactPerson != null and contactPerson !=''">
+				contact_person = #{contactPerson},
 			</if>
-			<if test="countactPhone != null and countactPhone !='' ">
-				contact_phone = #{countactPhone},
+			<if test="contactPhone != null and contactPhone !='' ">
+				contact_phone = #{contactPhone},
 			</if>
 			<if test=" note != null and note !=''">
 				note= #{note},

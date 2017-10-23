@@ -57,11 +57,11 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
 					"机构区域不能为空");
 		}
-		if (null == org.getCountactPerson()) {
+		if (null == org.getContactPerson()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
 					"机构联系人不能为空");
 		}
-		if (null == org.getCountactPhone()) {
+		if (null == org.getContactPhone()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
 					"机构联系电话不能为空");
 		}
@@ -138,11 +138,11 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
 					"机构区域不能为空");
 		}
-		if (null == org.getCountactPerson()) {
+		if (null == org.getContactPerson()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
 					"机构联系人不能为空");
 		}
-		if (null == org.getCountactPhone()) {
+		if (null == org.getContactPhone()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
 					"机构联系电话不能为空");
 		}
