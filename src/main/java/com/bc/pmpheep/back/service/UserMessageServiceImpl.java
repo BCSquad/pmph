@@ -162,8 +162,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     }
 
     @Override
-    public Integer addOrUpdateUserMessage(Message message, Integer sendType, String orgIds,
-    String userIds, String bookIds, boolean isSave, String[] files, String sessionId)
+    public Integer addOrUpdateUserMessage(Message message, String title, Integer sendType,
+    String orgIds, String userIds, String bookIds, boolean isSave, String[] files, String sessionId)
     throws CheckedServiceException, IOException {
         if (ObjectUtil.isNull(sendType)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
@@ -204,8 +204,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(orgIds2);
             // 机构用户
             for (OrgUser orgUser : orgUserList) {
-                userMessageList.add(new UserMessage(message.getId(), Const.MSG_TYPE_1, senderId,
-                                                    Const.SENDER_TYPE_1, orgUser.getId(),
+                userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
+                                                    senderId, Const.SENDER_TYPE_1, orgUser.getId(),
                                                     Const.RECEIVER_TYPE_3));
             }
             // 作家用户
@@ -213,7 +213,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 List<WriterUser> writerUserList =
                 writerUserService.getWriterUserListByOrgIds(orgIds2);
                 for (WriterUser writerUser : writerUserList) {
-                    userMessageList.add(new UserMessage(message.getId(), Const.MSG_TYPE_1,
+                    userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
                                                         senderId, Const.SENDER_TYPE_1,
                                                         writerUser.getId(), Const.RECEIVER_TYPE_2));
                 }
@@ -231,8 +231,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                     String userType = id.split("_")[0];
                     String userId = id.split("_")[1];
                     if (StringUtil.notEmpty(userId) && StringUtil.isNumeric(userId)) {
-                        userMessageList.add(new UserMessage(message.getId(), Const.MSG_TYPE_1,
-                                                            senderId, Const.SENDER_TYPE_1,
+                        userMessageList.add(new UserMessage(message.getId(), title,
+                                                            Const.MSG_TYPE_1, senderId,
+                                                            Const.SENDER_TYPE_1,
                                                             Long.parseLong(userId),
                                                             new Short(userType)));
                     }
@@ -249,7 +250,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             for (String id : ids) {
                 List<Long> userIdList = decPositionService.listDecPositionsByTextbookIds(ids);
                 for (Long userId : userIdList) {
-                    userMessageList.add(new UserMessage(message.getId(), Const.MSG_TYPE_1,
+                    userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
                                                         senderId, Const.SENDER_TYPE_1, userId,
                                                         Const.RECEIVER_TYPE_2));
                 }
@@ -324,7 +325,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                     }
                     messageAttachmentService.updateMessageAttachment(new MessageAttachment(
                                                                                            mAttachment.getId(),
-                                                                                           ""));
+                                                                                           "/groupfile/download/"
+                                                                                           + gridFSFileId));
                     FileUtil.delFile(files[i]);// 删除本地临时文件
                 }
             }
@@ -347,10 +349,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象内容为空");
         }
-        UserMessage userMessage = new UserMessage();
-        userMessage.setId(userMsgId);
-        userMessage.setTitle(msgTitle);
-        userMessageDao.updateUserMessageById(userMessage);
+        userMessageDao.updateUserMessageById(new UserMessage(userMsgId, msgTitle));
         messageService.update(message);
         return 1;
     }
@@ -379,14 +378,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象id为空");
         }
-        Integer index = msgId.indexOf(",");
-        String[] msgIds;
-        if (index > 0) {// 多个msgId
-            msgIds = msgId.split(",");
-        } else {// 单个
-            msgIds = new String[] { msgId };
-        }
-        return userMessageDao.updateUserMessageIsDeletedByMsgId(msgIds);
+        return userMessageDao.updateUserMessageIsDeletedByMsgId(StringUtil.StrList(msgId));
     }
 
     @Override

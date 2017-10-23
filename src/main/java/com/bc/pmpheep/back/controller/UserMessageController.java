@@ -136,12 +136,13 @@ public class UserMessageController {
      */
     @RequestMapping(value = "/message/new", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseBean addUserMessage(Message message, @RequestParam("sendType") Integer sendType,
-    @RequestParam("orgIds") String orgIds, @RequestParam("userIds") String userIds,
-    @RequestParam("bookIds") String bookids, @RequestParam("file") String[] files,
-    @RequestParam("sessionId") String sessionId) {
+    public ResponseBean addUserMessage(Message message, @RequestParam("title") String title,
+    @RequestParam("sendType") Integer sendType, @RequestParam("orgIds") String orgIds,
+    @RequestParam("userIds") String userIds, @RequestParam("bookIds") String bookids,
+    @RequestParam("file") String[] files, @RequestParam("sessionId") String sessionId) {
         try {
             return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,
+                                                                              title,
                                                                               sendType,
                                                                               orgIds,
                                                                               userIds,
@@ -168,12 +169,13 @@ public class UserMessageController {
      */
     @RequestMapping(value = "/message/again", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseBean addUserMessageAgain(Message message,
+    public ResponseBean addUserMessageAgain(Message message, @RequestParam("title") String title,
     @RequestParam("sendType") Integer sendType, @RequestParam("orgIds") String orgIds,
     @RequestParam("userIds") String userIds, @RequestParam("bookIds") String bookIds,
     @RequestParam("file") String[] files, @RequestParam("sessionId") String sessionId) {
         try {
             return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,
+                                                                              title,
                                                                               sendType,
                                                                               orgIds,
                                                                               userIds,

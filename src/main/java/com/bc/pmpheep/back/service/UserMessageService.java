@@ -72,7 +72,7 @@ public interface UserMessageService {
      * @param isSave true新增，false补发
      * @return
      */
-    Integer addOrUpdateUserMessage(Message message, Integer sendType, String orgIds,
+    Integer addOrUpdateUserMessage(Message message, String title, Integer sendType, String orgIds,
     String userIds, String bookIds, boolean isSave, String[] files, String sessionId)
     throws CheckedServiceException, IOException;
 
