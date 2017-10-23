@@ -48,6 +48,7 @@ public class UserMessageServiceTest extends BaseTest {
         pageParameter.setParameter(messageStateVO);
         userMessageService.listMessageState(pageParameter, "");
         userMessageService.addOrUpdateUserMessage(new Message(null, "eee"),
+                                                  "测试",
                                                   1,
                                                   "1",
                                                   null,
@@ -56,6 +57,7 @@ public class UserMessageServiceTest extends BaseTest {
                                                   new String[] { "1" },
                                                   "");
         userMessageService.addOrUpdateUserMessage(new Message("1", "eee"),
+                                                  "测试",
                                                   2,
                                                   "2",
                                                   "1",
