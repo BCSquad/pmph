@@ -30,7 +30,7 @@ public class PmphDepartmentController {
 	 * @createDate 2017年9月26日 下午3:21:34
 	 * @param parentId
 	 */
-	@RequestMapping(value = "/pmphdepartmenttree/{parentId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/pmphdepartmenttree", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseBean getPmphDepartmentTree(Long parentId) {
 		return new ResponseBean(pmphDepartmentService.listPmphDepartment(parentId));
@@ -72,7 +72,7 @@ public class PmphDepartmentController {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "/delete/pmphdepartmentbatch/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/delete/pmphdepartmentbatch", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ResponseBean deletePmphDepartmentBatch(Long id) {
 		return new ResponseBean(pmphDepartmentService.deletePmphDepartmentBatch(id));
