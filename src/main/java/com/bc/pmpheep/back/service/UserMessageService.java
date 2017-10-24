@@ -105,12 +105,12 @@ public interface UserMessageService {
      * 功能描述：逻辑删除（通过msgId 动态更新UserMessage_IsDeleted字段）
      * 使用示范：
      *
-     * @param msgIds
-     * @return
+     * @param ids  消息id
+     * @return   影响行数
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer updateUserMessageIsDeletedByMsgId(String msgId) throws CheckedServiceException;
+    Integer updateUserMessageIsDeletedByMsgId(String[] ids) throws CheckedServiceException;
 
     /**
      * 撤回消息
@@ -123,11 +123,17 @@ public interface UserMessageService {
     Integer updateToWithdraw(UserMessage userMessage) throws CheckedServiceException;
 
     /**
-     * 通过消息id删除UserMessage
      * 
+     * <pre>
+     * 功能描述：通过消息id删除UserMessage
+     * 使用示范：
+     *
+     * @param ids 消息id
      * @return 影响行数
+     * @throws CheckedServiceException
+     * </pre>
      */
-    Integer deleteMessageByMsgId(String[] msgId) throws CheckedServiceException;
+    Integer deleteMessageByMsgId(String[] ids) throws CheckedServiceException;
 
     /**
      * 
@@ -135,8 +141,8 @@ public interface UserMessageService {
      * 功能描述：消息附件上传
      * 使用示范：
      *
-     * @param files
-     * @return
+     * @param file 消息附件
+     * @return 上传成功后消息附件路径
      * @throws CheckedServiceException
      * </pre>
      */

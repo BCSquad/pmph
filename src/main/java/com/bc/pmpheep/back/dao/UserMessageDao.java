@@ -87,9 +87,9 @@ public interface UserMessageDao {
     List<UserMessage> getMessageByMsgId(String msgId);
 
     /**
-     * 通过msgId 动态更新UserMessage
+     * 通过id 动态更新UserMessage
      */
-    Integer updateUserMessageByMsgId(String msgId);
+    Integer updateUserMessageByMsgId(Long id);
 
     /**
      * 

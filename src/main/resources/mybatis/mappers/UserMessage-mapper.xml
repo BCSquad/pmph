@@ -8,10 +8,10 @@
 		delete from
 			user_message 
 		where 
-			msg_id 
+			id 
 		in
-			<foreach collection="array" item="msgId" index="index" open="(" close=")" separator=",">
-            	#{msgId}
+			<foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+            	#{id}
         	</foreach>	
 	</delete>
 	
@@ -58,9 +58,9 @@
 	</update>
 
 	<!-- 通过msgId 撤销UserMessage -->
-	<update id="updateUserMessageByMsgId" parameterType="java.lang.String">
+	<update id="updateUserMessageByMsgId" parameterType="java.lang.Long">
 		update
-		user_message set is_withdraw = true where msg_id = #{msgId};
+		user_message set is_withdraw = true where id = #{id};
 	</update>
 	
 	<!-- 通过msgId 更新是否被逻辑删除 -->
@@ -70,10 +70,10 @@
 		set 
 			is_deleted = true 
 		where 
-			msg_id
+			id
 		in 
-			<foreach collection="array" item="msgId" index="index" open="(" close=")" separator=",">
-            	#{msgId}
+			<foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+            	#{id}
         	</foreach> ;
 	</update>
 
@@ -90,12 +90,13 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		insert into
-		user_message(msg_id,msg_type,sender_id,sender_type,receiver_id,receiver_type)
+		user_message(msg_id,msg_type,title,sender_id,sender_type,receiver_id,receiver_type)
 		values
 		<foreach collection="list" item="UserMessage" index="index"
 			separator=",">
 			( #{UserMessage.msgId},
 			#{UserMessage.msgType},
+			#{UserMessage.title},
 			#{UserMessage.senderId},
 			#{UserMessage.senderType},
 			#{UserMessage.receiverId},
@@ -214,7 +215,7 @@
 		AND m.msg_type = 1
 		AND	m.sender_id = #{parameter.senderId}
 		<if test="parameter.title != null and parameter.title != ''">
-			and title like #{parameter.title}
+			and m.title like concat('%',#{parameter.title},'%')
 		</if>
 		GROUP BY m.msg_id,
 		m.sender_id,
@@ -227,6 +228,7 @@
 		m.msg_id,
 		m.title,
 		m.sender_id,
+		m.is_withdraw,
 		u.realname sendName,
 		m.gmt_create sendTime
 		FROM
@@ -237,7 +239,7 @@
 		AND m.msg_type = 1
 		AND	m.sender_id = #{parameter.senderId}
 		<if test="parameter.title != null and parameter.title != ''">
-			and title like #{parameter.title}
+			and m.title like concat('%',#{parameter.title},'%')
 		</if>
 		GROUP BY m.msg_id,
 		m.sender_id,
