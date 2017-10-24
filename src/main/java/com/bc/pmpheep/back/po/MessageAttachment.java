@@ -19,8 +19,9 @@ import org.apache.ibatis.type.Alias;
  * @审核人 ：
  * </pre>
  */
+@SuppressWarnings("serial")
 @Alias("MessageAttachment")
-public class MessageAttachment {
+public class MessageAttachment implements java.io.Serializable {
     /**
      * 主键
      */

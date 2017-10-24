@@ -44,7 +44,9 @@ public class MessageAttachmentServiceImpl implements MessageAttachmentService {
                                               CheckedExceptionResult.NULL_PARAM, "消息附件对象为空 ");
 
         }
-        return messageAttachmentDao.addMessageAttachment(messageAttachment);
+        messageAttachmentDao.addMessageAttachment(messageAttachment);
+        return messageAttachment;
+
     }
 
     @Override

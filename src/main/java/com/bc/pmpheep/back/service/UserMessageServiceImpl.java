@@ -295,41 +295,43 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                   Const.SEND_MSG_TYPE_0, message.getContent(),
                                   message.getContent(), DateUtil.getCurrentTime());
             handler.sendWebSocketMessageToUser(websocketUserIds, webScocketMessage);
-        }
-        // 添加附件到MongoDB表中
-        if (ArrayUtil.isNotEmpty(files)) {
-            for (int i = 0; i < files.length; i++) {
-                File file = FileUpload.getFileByFilePath(files[i]);
-                // 循环获取file数组中得文件
-                if (StringUtil.notEmpty(file.getName())) {
-                    String gridFSFileId =
-                    fileService.saveLocalFile(file,
-                                              FileType.MSG_FILE,
-                                              CastUtil.castLong(message.getId()));// 上传文件到MongoDB
-                    if (StringUtil.isEmpty(gridFSFileId)) {
-                        throw new CheckedServiceException(
-                                                          CheckedExceptionBusiness.MESSAGE,
-                                                          CheckedExceptionResult.FILE_UPLOAD_FAILED,
-                                                          "文件上传失败!");
+            // 添加附件到MongoDB表中
+            if (ArrayUtil.isNotEmpty(files)) {
+                for (int i = 0; i < files.length; i++) {
+                    File file = FileUpload.getFileByFilePath(files[i]);
+                    // 循环获取file数组中得文件
+                    if (StringUtil.notEmpty(file.getName())) {
+                        String gridFSFileId =
+                        fileService.saveLocalFile(file,
+                                                  FileType.MSG_FILE,
+                                                  CastUtil.castLong(message.getId()));// 上传文件到MongoDB
+                        if (StringUtil.isEmpty(gridFSFileId)) {
+                            throw new CheckedServiceException(
+                                                              CheckedExceptionBusiness.MESSAGE,
+                                                              CheckedExceptionResult.FILE_UPLOAD_FAILED,
+                                                              "文件上传失败!");
+                        }
+                        // 保存对应数据
+                        MessageAttachment mAttachment =
+                        messageAttachmentService.addMessageAttachment(new MessageAttachment(
+                                                                                            message.getId(),
+                                                                                            gridFSFileId,
+                                                                                            file.getName()));
+                        if (ObjectUtil.isNull(mAttachment.getId())) {
+                            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                              CheckedExceptionResult.NULL_PARAM,
+                                                              "MessageAttachment对象保存失败!");
+                        }
+                        messageAttachmentService.updateMessageAttachment(new MessageAttachment(
+                                                                                               mAttachment.getId(),
+                                                                                               "/groupfile/download/"
+                                                                                               + gridFSFileId));
                     }
-                    // 保存对应数据
-                    MessageAttachment mAttachment =
-                    messageAttachmentService.addMessageAttachment(new MessageAttachment(
-                                                                                        message.getId(),
-                                                                                        gridFSFileId,
-                                                                                        file.getName()));
-                    if (ObjectUtil.isNull(mAttachment.getId())) {
-                        throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                                          CheckedExceptionResult.NULL_PARAM,
-                                                          "MessageAttachment对象保存失败!");
-                    }
-                    messageAttachmentService.updateMessageAttachment(new MessageAttachment(
-                                                                                           mAttachment.getId(),
-                                                                                           "/groupfile/download/"
-                                                                                           + gridFSFileId));
-                    FileUtil.delFile(files[i]);// 删除本地临时文件
                 }
             }
+        }
+        for (int i = 0; i < files.length; i++) {
+            FileUtil.delFile(files[i]);// 删除本地临时文件
         }
         return userMessageList.size();
     }

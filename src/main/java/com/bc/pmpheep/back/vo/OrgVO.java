@@ -37,6 +37,34 @@ public class OrgVO implements Serializable {
     private String    countactPhone;
     // 审核进度
     private Integer   progress;
+    /**
+     * 手机
+     */
+    private String    handphone;
+    /**
+     * 邮箱
+     */
+    private String    email;
+    /**
+     * 职务
+     */
+    private String    position;
+    /**
+     * 职称
+     */
+    private String    title;
+    /**
+     * 地址
+     */
+    private String    address;
+    /**
+     * 邮编
+     */
+    private String    postcode;
+    /**
+     * 委托书
+     */
+    private String    proxy;
     // 备注
     private String    note;
     // 显示顺序
@@ -215,6 +243,104 @@ public class OrgVO implements Serializable {
     }
 
     /**
+     * @return the handphone
+     */
+    public String getHandphone() {
+        return handphone;
+    }
+
+    /**
+     * @param handphone the handphone to set
+     */
+    public void setHandphone(String handphone) {
+        this.handphone = handphone;
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return the position
+     */
+    public String getPosition() {
+        return position;
+    }
+
+    /**
+     * @param position the position to set
+     */
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    /**
+     * @return the title
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @param title the title to set
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    /**
+     * @return the address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * @param address the address to set
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    /**
+     * @return the postcode
+     */
+    public String getPostcode() {
+        return postcode;
+    }
+
+    /**
+     * @param postcode the postcode to set
+     */
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
+    }
+
+    /**
+     * @return the proxy
+     */
+    public String getProxy() {
+        return proxy;
+    }
+
+    /**
+     * @param proxy the proxy to set
+     */
+    public void setProxy(String proxy) {
+        this.proxy = proxy;
+    }
+
+    /**
      * <pre>
      * 功能描述：
      * 使用示范：
@@ -224,11 +350,13 @@ public class OrgVO implements Serializable {
      */
     @Override
     public String toString() {
-        return "{id:" + id + ", orgName:" + orgName + ", username:" + username + ", realname:"
-               + realname + ", progress:" + progress + ", orgTypeId:" + orgTypeId
-               + ", orgTypeName:" + orgTypeName + ", parentId=" + parentId + ", areaId:" + areaId
-               + ", areaName:" + areaName + ", countactPerson:" + countactPerson
-               + ", countactPhone:" + countactPhone + ", note:" + note + ", sort:" + sort
-               + ", count:" + count + "}";
+        return "OrgVO {id=" + id + ", orgName=" + orgName + ", username=" + username
+               + ", realname=" + realname + ", orgTypeId=" + orgTypeId + ", orgTypeName="
+               + orgTypeName + ", parentId=" + parentId + ", areaId=" + areaId + ", areaName="
+               + areaName + ", countactPerson=" + countactPerson + ", countactPhone="
+               + countactPhone + ", progress=" + progress + ", handphone=" + handphone + ", email="
+               + email + ", position=" + position + ", title=" + title + ", address=" + address
+               + ", postcode=" + postcode + ", note=" + note + ", sort=" + sort + ", count="
+               + count + ", gmtCreate=" + gmtCreate + "}";
     }
 }

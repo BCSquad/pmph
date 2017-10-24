@@ -33,7 +33,7 @@ public interface MessageAttachmentDao {
      * @param MessageAttachment 实体对象
      * @return 带主键的 MessageAttachment thorws CheckedServiceException
      */
-    MessageAttachment addMessageAttachment(MessageAttachment messageAttachment);
+    Integer addMessageAttachment(MessageAttachment messageAttachment);
 
     /**
      * 查询MessageAttachment集合 通过msgId
