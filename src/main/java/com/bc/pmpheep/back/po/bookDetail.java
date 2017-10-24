@@ -17,6 +17,7 @@ import org.apache.ibatis.type.Alias;
  * @修改人 ：曾庆峰
  *
  */
+@SuppressWarnings("serial")
 @Alias("bookDetail")
 public class bookDetail implements Serializable {
 	/**
