@@ -49,14 +49,6 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
 					CheckedExceptionResult.NULL_PARAM, "根节点为空");
 		}
-		if (null == pmphDepartment.getSort()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
-					CheckedExceptionResult.NULL_PARAM, "排序为空");
-		}
-		if (null == pmphDepartment.getNote()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
-					CheckedExceptionResult.NULL_PARAM, "备注为空");
-		}
 		pmphDepartmentDao.addPmphDepartment(pmphDepartment);
 		return pmphDepartment;
 	}
@@ -117,14 +109,6 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 		if (null == pmphDepartment.getPath()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
 					CheckedExceptionResult.NULL_PARAM, "根节点为空");
-		}
-		if (null == pmphDepartment.getSort()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
-					CheckedExceptionResult.NULL_PARAM, "排序为空");
-		}
-		if (null == pmphDepartment.getNote()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
-					CheckedExceptionResult.NULL_PARAM, "备注为空");
 		}
 		return pmphDepartmentDao.updatePmphDepartment(pmphDepartment);
 	}
