@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.PmphPermissionService;
 import com.bc.pmpheep.back.service.PmphUserService;
+import com.bc.pmpheep.back.sessioncontext.SessionContext;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DesRun;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -46,7 +48,6 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Controller
 public class PmphLoginController {
     Logger                logger = LoggerFactory.getLogger(PmphLoginController.class);
-
     @Autowired
     PmphUserService       pmphUserService;
     @Autowired
@@ -127,13 +128,16 @@ public class PmphLoginController {
      */
     @ResponseBody
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ResponseBean logout(HttpServletRequest request) {
-        Map<String, String> returnMap = new HashMap<String, String>();
-        HttpSession session = request.getSession();
-        session.removeAttribute(Const.SESSION_PMPH_USER);// 清除User信息
-        session.removeAttribute(Const.SEESION_PMPH_USER_TOKEN);// 清除token
-        returnMap.put("url", "/pmph/login");
-        return new ResponseBean(returnMap);
+    public ResponseBean logout(@RequestParam("sessionId") String sessionId,
+    @RequestParam("loginType") Short loginType) {
+        HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
+        if (ObjectUtil.notNull(session)) {
+            if (Const.LOGIN_TYPE_PMPH == loginType) {
+                session.removeAttribute(Const.SESSION_PMPH_USER);// 清除User信息
+                session.removeAttribute(Const.SEESION_PMPH_USER_TOKEN);// 清除token
+            }
+        }
+        return new ResponseBean();
     }
 
     /**

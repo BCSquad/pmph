@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.WriterPermissionService;
 import com.bc.pmpheep.back.service.WriterUserService;
+import com.bc.pmpheep.back.sessioncontext.SessionContext;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DesRun;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -109,14 +111,18 @@ public class WriterLoginController {
      * @return
      * </pre>
      */
+    @ResponseBody
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ResponseBean logout(HttpServletRequest request) {
-        Map<String, String> returnMap = new HashMap<String, String>();
-        HttpSession session = request.getSession();
-        session.removeAttribute(Const.SESSION_WRITER_USER);// 清除User信息
-        session.removeAttribute(Const.SEESION_WRITER_USER_TOKEN);// 清除token
-        returnMap.put("url", "/login");
-        return new ResponseBean(returnMap);
+    public ResponseBean logout(@RequestParam("sessionId") String sessionId,
+    @RequestParam("loginType") Short loginType) {
+        HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
+        if (ObjectUtil.notNull(session)) {
+            if (Const.LOGIN_TYPE_WRITER == loginType) {
+                session.removeAttribute(Const.SESSION_WRITER_USER);// 清除User信息
+                session.removeAttribute(Const.SEESION_WRITER_USER_TOKEN);// 清除token
+            }
+        }
+        return new ResponseBean();
     }
 
     /**
