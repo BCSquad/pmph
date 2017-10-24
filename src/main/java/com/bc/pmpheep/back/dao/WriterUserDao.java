@@ -83,33 +83,48 @@ public interface WriterUserDao {
 
     /**
      * 
+     * <pre>
+     * 功能描述：获取教师审核列表
+     * 使用示范：
+     *
+     * @param pageParameter
+     * @return
+     * </pre>
+     */
+    List<WriterUserManagerVO> getTeacherCheckList(PageParameter<WriterUserManagerVO> pageParameter);
+
+    /**
+     * 
      * 功能描述： 查询总共的条数
      * 
      * @param page 传入查询条件
      * @return 查询到的条数
      */
     Integer getListWriterUserTotal(PageParameter<WriterUserManagerVO> page);
-    
+
     /**
      * 
      * Description:添加成员界面作家用户信息展示
+     * 
      * @author:lyc
      * @date:2017年10月12日下午5:56:05
      * @param pageParameter若教材书籍、遴选职位、账号或姓名有值则为模糊查询
      * @return List<GroupMemberWriterUserVO>作家用户信息集合
      */
-    List<GroupMemberWriterUserVO> listGroupMemberWriterUserVOs(PageParameter<GroupMemberWriterUserVO> pageParameter);
-    
+    List<GroupMemberWriterUserVO> listGroupMemberWriterUserVOs(
+    PageParameter<GroupMemberWriterUserVO> pageParameter);
+
     /**
      * 
      * Description:作家用户总数
+     * 
      * @author:lyc
      * @date:2017年10月12日下午5:59:59
      * @param pageParameter若教材书籍、遴选职位、账号或姓名有值则为模糊查询
      * @return Integer数据总数
      */
-    Integer getGroupMemberWriterUserTotal(PageParameter<GroupMemberWriterUserVO>pageParameter);
-    
+    Integer getGroupMemberWriterUserTotal(PageParameter<GroupMemberWriterUserVO> pageParameter);
+
     /**
      * 
      * 功能描述：查询表单的数据总条数

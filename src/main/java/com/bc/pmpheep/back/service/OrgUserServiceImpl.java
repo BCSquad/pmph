@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,10 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
+import com.bc.pmpheep.back.util.ArrayUtil;
+import com.bc.pmpheep.back.util.CastUtil;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
@@ -110,6 +114,20 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         return orgUserDao.updateOrgUser(orgUser);
     }
 
+    @Override
+    public Integer updateOrgUserProgressById(Integer progress, String[] orgUserIds)
+    throws CheckedServiceException {
+        if (ArrayUtil.isEmpty(orgUserIds) || ObjectUtil.isNull(progress)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.SCHOOL_ADMIN_CHECK,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        List<OrgUser> orgUserList = new ArrayList<OrgUser>(orgUserIds.length);
+        for (String orgId : orgUserIds) {
+            orgUserList.add(new OrgUser(CastUtil.castLong(orgId), progress));
+        }
+        return orgUserDao.updateOrgUserProgressById(orgUserList);
+    }
+
     /**
      * 
      * 功能描述：分页查询作家用户
@@ -174,4 +192,5 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         }
         return result;
     }
+
 }

@@ -15,6 +15,7 @@ import com.bc.pmpheep.back.po.WriterProfile;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -350,6 +351,21 @@ public class WriterUserServiceImpl implements WriterUserService {
     }
 
     @Override
+    public PageResult<WriterUserManagerVO> getTeacherCheckList(
+    PageParameter<WriterUserManagerVO> pageParameter) throws CheckedServiceException {
+        PageResult<WriterUserManagerVO> pageResult = new PageResult<WriterUserManagerVO>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        List<WriterUserManagerVO> writerUserManagerVOList =
+        writerUserDao.getTeacherCheckList(pageParameter);
+        if (CollectionUtil.isNotEmpty(writerUserManagerVOList)) {
+            Integer count = writerUserManagerVOList.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(writerUserManagerVOList);
+        }
+        return pageResult;
+    }
+
+    @Override
     public String addWriterUserOfBack(WriterUser writerUser) throws CheckedServiceException {
         writerUser.setPassword(ShiroKit.md5(Const.DEFAULT_PASSWORD, writerUser.getUsername()));// 后台添加用户设置默认密码为123456
         writerUser.setNickname(writerUser.getUsername());
@@ -428,6 +444,7 @@ public class WriterUserServiceImpl implements WriterUserService {
         pageResult.setTotal(total);
         return pageResult;
     }
+
     // /**
     // *
     // * <pre>

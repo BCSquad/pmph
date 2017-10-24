@@ -67,7 +67,19 @@ public interface OrgDao {
      * @param pageParameter
      * @return List<OrgVO>
      */
-    List<OrgVO> listOrg(PageParameter<OrgVO> pageParameter);
+    List<OrgVO> getOrgList(PageParameter<OrgVO> pageParameter);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取学校管理员审核列表(同时查询分页数据和总条数）
+     * 使用示范：
+     *
+     * @param pageParameter
+     * @return
+     * </pre>
+     */
+    List<OrgVO> getSchoolAdminCheckList(PageParameter<OrgVO> pageParameter);
 
     /**
      * 

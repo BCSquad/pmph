@@ -11,6 +11,7 @@ import com.bc.pmpheep.back.dao.OrgDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Org;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -166,8 +167,22 @@ public class OrgServiceImpl extends BaseService implements OrgService {
     throws CheckedServiceException {
         PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-        List<OrgVO> orgVOList = orgDao.listOrg(pageParameter);
+        List<OrgVO> orgVOList = orgDao.getOrgList(pageParameter);
         if (null != orgVOList && orgVOList.size() > 0) {
+            Integer count = orgVOList.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(orgVOList);
+        }
+        return pageResult;
+    }
+
+    @Override
+    public PageResult<OrgVO> getSchoolAdminCheckList(PageParameter<OrgVO> pageParameter)
+    throws CheckedServiceException {
+        PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        List<OrgVO> orgVOList = orgDao.getSchoolAdminCheckList(pageParameter);
+        if (CollectionUtil.isNotEmpty(orgVOList)) {
             Integer count = orgVOList.get(0).getCount();
             pageResult.setTotal(count);
             pageResult.setRows(orgVOList);

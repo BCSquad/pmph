@@ -136,6 +136,11 @@ public class OrgUser implements Serializable {
         this.password = password;
     }
 
+    public OrgUser(Long id, Integer progress) {
+        this.id = id;
+        this.progress = progress;
+    }
+
     public OrgUser(String username, String password, Boolean isDisabled, Long orgId,
     String realname, Integer sex, String position, String title, String fax, String handphone,
     String telephone, String idcard, String email, String address, String postcode, String note,

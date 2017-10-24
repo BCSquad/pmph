@@ -1,4 +1,4 @@
-# Compiled class file
+﻿# Compiled class file
 *.class
 
 #忽略数据库配置文件spring.properties
@@ -9,6 +9,9 @@
 
 #忽略.project 
 *.project
+
+#忽略.mymetadata
+*.mymetadata
 
 #忽略.settings
 .settings/

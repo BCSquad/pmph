@@ -16,6 +16,10 @@ public class OrgVO implements Serializable {
     private String  id;
     // 机构名称
     private String  orgName;
+    // 机构代码
+    private String  username;
+    // 管理员姓名
+    private String  realname;
     // 机构类型id
     private String  orgTypeId;
     // 机构类型名称
@@ -30,6 +34,8 @@ public class OrgVO implements Serializable {
     private String  countactPerson;
     // 联系电话
     private String  countactPhone;
+    // 审核进度
+    private Integer progress;
     // 备注
     private String  note;
     // 显示顺序
@@ -144,6 +150,48 @@ public class OrgVO implements Serializable {
     }
 
     /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * @return the progress
+     */
+    public Integer getProgress() {
+        return progress;
+    }
+
+    /**
+     * @param progress the progress to set
+     */
+    public void setProgress(Integer progress) {
+        this.progress = progress;
+    }
+
+    /**
+     * @return the realname
+     */
+    public String getRealname() {
+        return realname;
+    }
+
+    /**
+     * @param realname the realname to set
+     */
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
+
+    /**
      * <pre>
      * 功能描述：
      * 使用示范：
@@ -153,10 +201,12 @@ public class OrgVO implements Serializable {
      */
     @Override
     public String toString() {
-        return "{id:" + id + ", orgName:" + orgName + ", orgTypeId:" + orgTypeId + ", orgTypeName:"
-               + orgTypeName + ", parentId=" + parentId + ", areaId:" + areaId + ", areaName:"
-               + areaName + ", countactPerson:" + countactPerson + ", countactPhone:"
-               + countactPhone + ", note:" + note + ", sort:" + sort + ", count:" + count + "}";
+        return "{id:" + id + ", orgName:" + orgName + ", username:" + username + ", realname:"
+               + realname + ", progress:" + progress + ", orgTypeId:" + orgTypeId
+               + ", orgTypeName:" + orgTypeName + ", parentId=" + parentId + ", areaId:" + areaId
+               + ", areaName:" + areaName + ", countactPerson:" + countactPerson
+               + ", countactPhone:" + countactPhone + ", note:" + note + ", sort:" + sort
+               + ", count:" + count + "}";
     }
 
 }

@@ -75,7 +75,20 @@
 		Writer_User_Certification where
 		id=#{id} ;
 	</delete>
-
+	
+	<!-- 教师审核更新WriterUserCertification中Progress状态字段-->
+	<update id="updateWriterUserCertificationProgressByUserId" parameterType="java.util.List">
+		<foreach item="item" collection="list" index="index" open="" separator=";">
+			update 
+				Writer_User_Certification 
+			<set>
+				progress = #{item.progress}
+			</set>
+			where 
+				user_id=#{item.userId}
+		</foreach>
+	</update>
+	
 	<!-- 更新WriterUserCertification -->
 	<update id="updateWriterUserCertification" parameterType="WriterUserCertification">
 		update Writer_User_Certification

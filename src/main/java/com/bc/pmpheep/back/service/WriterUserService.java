@@ -155,10 +155,24 @@ public interface WriterUserService {
      */
     PageResult<WriterUserManagerVO> getListWriterUser(
     PageParameter<WriterUserManagerVO> pageParameter) throws CheckedServiceException;
-    
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取教师审核列表
+     * 使用示范：
+     *
+     * @param page
+     * @return
+     * </pre>
+     */
+    PageResult<WriterUserManagerVO> getTeacherCheckList(
+    PageParameter<WriterUserManagerVO> pageParameter) throws CheckedServiceException;
+
     /**
      * 
      * Description:分页查询小组成员添加界面作家用户信息
+     * 
      * @author:lyc
      * @date:2017年10月12日下午6:43:33
      * @param pageParameter查询条件，若书籍、姓名/账号、遴选职位不为空则为模糊查询
@@ -166,6 +180,7 @@ public interface WriterUserService {
      */
     PageResult<GroupMemberWriterUserVO> listGroupMemberWriterUsers(
     PageParameter<GroupMemberWriterUserVO> pageParameter) throws CheckedServiceException;
+
     /**
      * 
      * 
@@ -176,7 +191,7 @@ public interface WriterUserService {
      * @throws CheckedServiceException
      * 
      */
-	String addWriterUserOfBack(WriterUser WriterUser) throws CheckedServiceException;
+    String addWriterUserOfBack(WriterUser WriterUser) throws CheckedServiceException;
 
     /**
      * 
