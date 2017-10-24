@@ -67,7 +67,7 @@ public interface OrgDao {
      * @param pageParameter
      * @return List<OrgVO>
      */
-    List<OrgVO> getOrgList(PageParameter<OrgVO> pageParameter);
+    List<OrgVO> listOrg(PageParameter<OrgVO> pageParameter);
 
     /**
      * 

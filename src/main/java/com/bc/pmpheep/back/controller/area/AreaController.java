@@ -74,7 +74,7 @@ public class AreaController {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "/delete/areabatch/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/delete/areabatch", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ResponseBean deleteAreaBatch(Long id) {
 		return new ResponseBean(areaService.deleteAreaBatch(id));
