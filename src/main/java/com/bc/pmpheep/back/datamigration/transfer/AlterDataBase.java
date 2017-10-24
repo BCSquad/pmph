@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
 import com.bc.pmpheep.back.datamigration.common.Until;
 
 /**
@@ -12,6 +14,7 @@ import com.bc.pmpheep.back.datamigration.common.Until;
  *@CreateDate 2017年10月23日 上午11:42:30
  *
  **/
+@Component
 public class AlterDataBase {
 	
 	/**

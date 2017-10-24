@@ -259,6 +259,15 @@ public final class DateUtil {
         Timestamp currentTime = Timestamp.valueOf(ret);
         return currentTime;
     }
+    /**
+     *  字符串转时间戳
+     */
+    public static Timestamp str2Timestam(String date) {
+        String ret;
+        ret = sdfTime.format(fomatDate(date));
+        Timestamp currentTime = Timestamp.valueOf(ret);
+        return currentTime;
+    } 
 
     /**
      * 
