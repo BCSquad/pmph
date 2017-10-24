@@ -42,10 +42,10 @@ public class OrgServiceImpl extends BaseService implements OrgService {
             throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        if (null == org.getParentId()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-                                              CheckedExceptionResult.NULL_PARAM, "上级机构id不能为空");
-        }
+        // if (null == org.getParentId()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM, "上级机构id不能为空");
+        // }
         if (null == org.getOrgName()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
                                               CheckedExceptionResult.NULL_PARAM, "机构名称为空");
@@ -58,22 +58,25 @@ public class OrgServiceImpl extends BaseService implements OrgService {
             throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
                                               CheckedExceptionResult.NULL_PARAM, "机构区域不能为空");
         }
-        if (null == org.getCountactPerson()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-                                              CheckedExceptionResult.NULL_PARAM, "机构联系人不能为空");
-        }
-        if (null == org.getCountactPhone()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-                                              CheckedExceptionResult.NULL_PARAM, "机构联系电话不能为空");
-        }
-        if (null == org.getSort()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-                                              CheckedExceptionResult.NULL_PARAM, "机构显示顺序为空");
-        }
-        if (null == org.getNote()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-                                              CheckedExceptionResult.NULL_PARAM, "备注为空");
-        }
+        // if (null == org.getContactPerson()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM,
+        // "机构联系人不能为空");
+        // }
+        // if (null == org.getContactPhone()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM,
+        // "机构联系电话不能为空");
+        // }
+        // if (null == org.getSort()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM,
+        // "机构显示顺序为空");
+        // }
+        // if (null == org.getNote()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM, "备注为空");
+        // }
         Long id = org.getId();
         orgDao.addOrg(org);
         if (null != id) {
@@ -127,10 +130,11 @@ public class OrgServiceImpl extends BaseService implements OrgService {
             throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
-        if (null == org.getParentId()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-                                              CheckedExceptionResult.NULL_PARAM, "上级机构id不能为空");
-        }
+        // if (null == org.getParentId()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM,
+        // "上级机构id不能为空");
+        // }
         if (null == org.getOrgName()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
                                               CheckedExceptionResult.NULL_PARAM, "机构名称为空");
@@ -143,22 +147,25 @@ public class OrgServiceImpl extends BaseService implements OrgService {
             throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
                                               CheckedExceptionResult.NULL_PARAM, "机构区域不能为空");
         }
-        if (null == org.getCountactPerson()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-                                              CheckedExceptionResult.NULL_PARAM, "机构联系人不能为空");
-        }
-        if (null == org.getCountactPhone()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-                                              CheckedExceptionResult.NULL_PARAM, "机构联系电话不能为空");
-        }
-        if (null == org.getSort()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-                                              CheckedExceptionResult.NULL_PARAM, "机构显示顺序为空");
-        }
-        if (null == org.getNote()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-                                              CheckedExceptionResult.NULL_PARAM, "备注为空");
-        }
+        // if (null == org.getContactPerson()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM,
+        // "机构联系人不能为空");
+        // }
+        // if (null == org.getContactPhone()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM,
+        // "机构联系电话不能为空");
+        // }
+        // if (null == org.getSort()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM,
+        // "机构显示顺序为空");
+        // }
+        // if (null == org.getNote()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM, "备注为空");
+        // }
         return orgDao.updateOrg(org);
     }
 
@@ -199,7 +206,6 @@ public class OrgServiceImpl extends BaseService implements OrgService {
                 orgName = "%" + orgName + "%";
                 list = orgDao.listOrgByOrgName(orgName);
             }
-
         }
         return list;
     }

@@ -6,9 +6,6 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="id !=null ">
-				id,
-			</if>
 			<if test="parentId != null and parentId !=''">
 				parent_id,
 			</if>
@@ -21,10 +18,10 @@
 			<if test="areaId != null and areaId !=''">
 				area_id,
 			</if>
-			<if test="countactPerson != null and countactPerson !=''">
+			<if test="contactPerson != null and contactPerson !=''">
 				contact_person,
 			</if>
-			<if test="countactPhone != null and countactPhone !=''">
+			<if test="contactPhone != null and contactPhone !=''">
 				contact_phone,
 			</if>
 			<if test="note != null and note !=''">
@@ -57,11 +54,11 @@
 			<if test="areaId !=null and areaId !=''">
 				#{areaId},
 			</if>
-			<if test="countactPerson !=null and countactPerson !=''">
-				#{countactPerson},
+			<if test="contactPerson !=null and contactPerson !=''">
+				#{contactPerson},
 			</if>
-			<if test="countactPhone !=null and countactPhone !=''">
-				#{countactPhone},
+			<if test="contactPhone !=null and contactPhone !=''">
+				#{contactPhone},
 			</if>
 			<if test="note !=null and note !=''">
 				#{note},
@@ -165,9 +162,11 @@
 	</select>
 
 	<!--orgNmae模糊查询获取列表 -->
-	<select id="getOrgList" parameterType="PageParameter" resultType="OrgVO">
+	<select id="listOrg" parameterType="PageParameter" resultType="OrgVO">
 		select
-		a.id,a.org_name,c.type_name,b.area_name,a.contact_person,a.contact_phone,a.sort,a.note,t.count
+		a.id,a.org_name,c.type_name orgTypeName,a.org_type_id,b.id
+		areaId,a.parent_id,a.gmt_create
+		,b.area_name,a.contact_person,a.contact_phone,a.sort,a.note,t.count
 		from org a
 		left join area b on a.area_id =b.id
 		left join org_type c on
@@ -184,10 +183,10 @@
 				and a.org_name like
 				concat(concat('%',#{parameter.orgName}),'%')
 			</if>
-			<if test="parameter.orgTypeId != null">
+			<if test="parameter.orgTypeId != null and parameter.orgTypeId != '' ">
 				and c.id = #{parameter.orgTypeId}
 			</if>
-			<if test="parameter.areaId != null">
+			<if test="parameter.areaId != null and parameter.areaId != '' ">
 				and b.id = #{parameter.areaId}
 			</if>
 		</if>
@@ -198,10 +197,10 @@
 				and a.org_name like
 				concat(concat('%',#{parameter.orgName}),'%')
 			</if>
-			<if test="parameter.orgTypeId != null">
+			<if test="parameter.orgTypeId != null and parameter.orgTypeId != ''">
 				and c.id = #{parameter.orgTypeId}
 			</if>
-			<if test="parameter.areaId != null">
+			<if test="parameter.areaId != null and parameter.areaId != '' ">
 				and b.id = #{parameter.areaId}
 			</if>
 		</if>
@@ -210,41 +209,42 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
-	
+
 	<!-- 系统消息——发送新消息——发送对象（学校管理员、所有人） -->
-	<select id="listSendToSchoolAdminOrAllUser" parameterType="map" resultType="OrgVO">
-		SELECT 
-			GROUP_CONCAT(o.`id`) id,
-			GROUP_CONCAT(o.`org_name`)org_name,
-			o.`area_id`,
-			o.`parent_id`,
-			GROUP_CONCAT(o.`org_type_id`)org_type_id,
-			ar.`area_name` 
-		FROM 
-			`org` o 
-		LEFT JOIN 
-			`org_type` ot 
-		ON 
-			o.`org_type_id` = ot.`id` 
-		LEFT JOIN 
-			`area` ar ON o.`area_id` = ar.`id` 
-		WHERE 
-			1=1
-			<if test="orgName !=null and orgName != '' ">
-				and o.`org_name` LIKE CONCAT(CONCAT('%',#{orgName},'%'))
-			</if>
-		GROUP BY 
-			o.`area_id` 
-		ORDER BY 
-			o.`area_id`,o.`id` ASC;
-	</select>
-	
-	<!-- 新增用户或者修改用户是加载的机构 -->
-	<select id="listOrgByOrgName" parameterType="String"
+	<select id="listSendToSchoolAdminOrAllUser" parameterType="map"
 		resultType="OrgVO">
+		SELECT
+		GROUP_CONCAT(o.`id`) id,
+		GROUP_CONCAT(o.`org_name`)org_name,
+		o.`area_id`,
+		o.`parent_id`,
+		GROUP_CONCAT(o.`org_type_id`)org_type_id,
+		ar.`area_name`
+		FROM
+		`org` o
+		LEFT JOIN
+		`org_type` ot
+		ON
+		o.`org_type_id` =
+		ot.`id`
+		LEFT JOIN
+		`area` ar ON o.`area_id` = ar.`id`
+		WHERE
+		1=1
+		<if test="orgName !=null and orgName != '' ">
+			and o.`org_name` LIKE CONCAT(CONCAT('%',#{orgName},'%'))
+		</if>
+		GROUP BY
+		o.`area_id`
+		ORDER BY
+		o.`area_id`,o.`id` ASC;
+	</select>
+
+	<!-- 新增用户或者修改用户是加载的机构 -->
+	<select id="listOrgByOrgName" parameterType="String" resultType="OrgVO">
 		select id,org_name from org where org_name like #{orgName};
 	</select>
-	
+
 	<!-- 查询表单的数据总数 -->
 	<select id="getOrgCount" resultType="Long">
 		select
@@ -269,11 +269,11 @@
 			<if test=" areaId != null and areaId !=''">
 				area_id= #{areaId},
 			</if>
-			<if test=" countactPerson != null and countactPerson !=''">
-				contact_person = #{countactPerson},
+			<if test=" contactPerson != null and contactPerson !=''">
+				contact_person = #{contactPerson},
 			</if>
-			<if test="countactPhone != null and countactPhone !='' ">
-				contact_phone = #{countactPhone},
+			<if test="contactPhone != null and contactPhone !='' ">
+				contact_phone = #{contactPhone},
 			</if>
 			<if test=" note != null and note !=''">
 				note= #{note},
@@ -287,12 +287,12 @@
 		</set>
 		where id=#{id} ;
 	</update>
-	
+
 	<!-- 根据id删除一个Org -->
 	<delete id="deleteOrgById" parameterType="java.lang.Long">
-		delete from 
-			org 
+		delete from
+		org
 		where
-			id=#{id} ;
+		id=#{id} ;
 	</delete>
 </mapper>

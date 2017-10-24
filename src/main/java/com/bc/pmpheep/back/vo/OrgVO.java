@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
@@ -13,35 +14,37 @@ import org.apache.ibatis.type.Alias;
 @Alias("OrgVO")
 public class OrgVO implements Serializable {
     // 主键
-    private String  id;
+    private String    id;
     // 机构名称
-    private String  orgName;
+    private String    orgName;
     // 机构代码
-    private String  username;
+    private String    username;
     // 管理员姓名
-    private String  realname;
+    private String    realname;
     // 机构类型id
-    private String  orgTypeId;
+    private String    orgTypeId;
     // 机构类型名称
-    private String  orgTypeName;
+    private String    orgTypeName;
     // 上级机构id
-    private String  parentId;
+    private String    parentId;
     // 区域id
-    private String  areaId;
+    private String    areaId;
     // 所属区域名称
-    private String  areaName;
+    private String    areaName;
     // 联系人
-    private String  countactPerson;
+    private String    countactPerson;
     // 联系电话
-    private String  countactPhone;
+    private String    countactPhone;
     // 审核进度
-    private Integer progress;
+    private Integer   progress;
     // 备注
-    private String  note;
+    private String    note;
     // 显示顺序
-    private Integer sort;
+    private Integer   sort;
     // 条件分页总条数
-    private Integer count;
+    private Integer   count;
+    // 创建时间
+    private Timestamp gmtCreate;
 
     public OrgVO() {
         super();
@@ -93,22 +96,6 @@ public class OrgVO implements Serializable {
 
     public void setAreaName(String areaName) {
         this.areaName = areaName;
-    }
-
-    public String getCountactPerson() {
-        return countactPerson;
-    }
-
-    public void setCountactPerson(String countactPerson) {
-        this.countactPerson = countactPerson;
-    }
-
-    public String getCountactPhone() {
-        return countactPhone;
-    }
-
-    public void setCountactPhone(String countactPhone) {
-        this.countactPhone = countactPhone;
     }
 
     public String getNote() {
@@ -191,6 +178,42 @@ public class OrgVO implements Serializable {
         this.realname = realname;
     }
 
+    public Timestamp getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    /**
+     * @return the countactPerson
+     */
+    public String getCountactPerson() {
+        return countactPerson;
+    }
+
+    /**
+     * @param countactPerson the countactPerson to set
+     */
+    public void setCountactPerson(String countactPerson) {
+        this.countactPerson = countactPerson;
+    }
+
+    /**
+     * @return the countactPhone
+     */
+    public String getCountactPhone() {
+        return countactPhone;
+    }
+
+    /**
+     * @param countactPhone the countactPhone to set
+     */
+    public void setCountactPhone(String countactPhone) {
+        this.countactPhone = countactPhone;
+    }
+
     /**
      * <pre>
      * 功能描述：
@@ -208,5 +231,4 @@ public class OrgVO implements Serializable {
                + ", countactPhone:" + countactPhone + ", note:" + note + ", sort:" + sort
                + ", count:" + count + "}";
     }
-
 }

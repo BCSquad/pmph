@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.controller.org;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -80,7 +81,7 @@ public class OrgController {
 	 */
 	@RequestMapping(value = "/delete/org/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ResponseBean deleteOrgById(Long id) {
+	public ResponseBean deleteOrgById(@PathVariable Long id) {
 		return new ResponseBean(orgService.deleteOrgById(id));
 	}
 

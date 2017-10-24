@@ -70,10 +70,10 @@
 	</select>
 
 	<!-- 根据id查询一个OrgType 或者全部OrgType -->
-	<select id="listOrgTypeByTypeName" parameterType="String" resultType="OrgType">
+	<select id="listOrgTypeByTypeName" resultType="OrgType">
 		select * from org_type
-		<if test="typeName != null and typeName != ''">
-			where type_name like #{typeName} ;
+		<if test="_parameter != null and _parameter != ''">
+			where type_name like concat('%',#{_parameter},'%') ;
 		</if>
 	</select>
 	<!-- 查询表单的数据总数 -->

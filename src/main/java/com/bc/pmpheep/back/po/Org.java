@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import org.apache.ibatis.type.Alias;
 
 /**
- * Org (机构信息表)实体类  -- org
+ * Org (机构信息表)实体类 -- org
  * 
  * @author 曾庆峰
  *
@@ -36,11 +36,11 @@ public class Org implements Serializable {
 	/**
 	 * 联系人
 	 */
-	private String countactPerson;
+	private String contactPerson;
 	/**
 	 * 联系电话
 	 */
-	private String countactPhone;
+	private String contactPhone;
 	/**
 	 * 备注
 	 */
@@ -52,7 +52,7 @@ public class Org implements Serializable {
 	/**
 	 * 是否被逻辑删除
 	 */
-	private boolean isDeleted;
+	private Boolean isDeleted;
 	/**
 	 * 创建时间
 	 */
@@ -61,35 +61,46 @@ public class Org implements Serializable {
 	 * 修改时间
 	 */
 	private Timestamp gmtUpdate;
-	
-	public Org(){
-		
+
+	public Org() {
+
 	}
-	public Org(Long id){
-		this.id=id;
+
+	public Org(Long id) {
+		this.id = id;
 	}
+
 	/**
 	 * 
-	 * @param parentId  上级机构id
-	 * @param orgName   机构名称
-	 * @param orgTypeId  机构类型id
-	 * @param areaId    所在区域id
-	 * @param countactPerson  联系人
-	 * @param countactPhone  联系电话
-	 * @param note   备注
-	 * @param sort   显示顺序  
-	 * @param isDeleted  是否被逻辑删除
+	 * @param parentId
+	 *            上级机构id
+	 * @param orgName
+	 *            机构名称
+	 * @param orgTypeId
+	 *            机构类型id
+	 * @param areaId
+	 *            所在区域id
+	 * @param countactPerson
+	 *            联系人
+	 * @param countactPhone
+	 *            联系电话
+	 * @param note
+	 *            备注
+	 * @param sort
+	 *            显示顺序
+	 * @param isDeleted
+	 *            是否被逻辑删除
 	 * @param gmtCreate
 	 * @param gmtUpdate
 	 */
-	public Org(Long parentId, String orgName, Long orgTypeId, Long areaId, String countactPerson, String countactPhone,
+	public Org(Long parentId, String orgName, Long orgTypeId, Long areaId, String contactPerson, String contactPhone,
 			String note, Integer sort, boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate) {
 		this.parentId = parentId;
 		this.orgName = orgName;
 		this.orgTypeId = orgTypeId;
 		this.areaId = areaId;
-		this.countactPerson = countactPerson;
-		this.countactPhone = countactPhone;
+		this.contactPerson = contactPerson;
+		this.contactPhone = contactPhone;
 		this.note = note;
 		this.sort = sort;
 		this.isDeleted = isDeleted;
@@ -137,20 +148,20 @@ public class Org implements Serializable {
 		this.areaId = areaId;
 	}
 
-	public String getCountactPerson() {
-		return countactPerson;
+	public String getContactPerson() {
+		return contactPerson;
 	}
 
-	public void setCountactPerson(String countactPerson) {
-		this.countactPerson = countactPerson;
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
 	}
 
-	public String getCountactPhone() {
-		return countactPhone;
+	public String getContactPhone() {
+		return contactPhone;
 	}
 
-	public void setCountactPhone(String countactPhone) {
-		this.countactPhone = countactPhone;
+	public void setContactPhone(String contactPhone) {
+		this.contactPhone = contactPhone;
 	}
 
 	public String getNote() {
@@ -169,11 +180,11 @@ public class Org implements Serializable {
 		this.sort = sort;
 	}
 
-	public boolean isIsDeleted() {
+	public Boolean getIsDeleted() {
 		return isDeleted;
 	}
 
-	public void setIsDeleted(boolean isDeleted) {
+	public void setIsDeleted(Boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
 
@@ -196,10 +207,9 @@ public class Org implements Serializable {
 	@Override
 	public String toString() {
 		return "{id:" + id + ", parentId:" + parentId + ", orgName:" + orgName + ", orgTypeId:" + orgTypeId
-				+ ", areaId:" + areaId + ", countactPerson:" + countactPerson + ", countactPhone:" + countactPhone
+				+ ", areaId:" + areaId + ", countactPerson:" + contactPerson + ", countactPhone:" + contactPhone
 				+ ", note:" + note + ", sort:" + sort + ", isDeleted:" + isDeleted + ", gmtCreate:" + gmtCreate
 				+ ", gmtUpdate:" + gmtUpdate + "}";
 	}
-	
 
 }
