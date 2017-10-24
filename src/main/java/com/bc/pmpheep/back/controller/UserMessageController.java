@@ -259,14 +259,14 @@ public class UserMessageController {
      * 功能描述：逻辑删除（通过消息id批量更新UserMessage_is_deleted字段）
      * 使用示范：
      *
-     * @param msgId 数组
+     * @param ids 数组
      * @return
      * </pre>
      */
-    @RequestMapping(value = "/delete/message/{msgId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/message", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseBean deleteUserMessage(@PathVariable("msgId") String msgId) {
-        return new ResponseBean(userMessageService.updateUserMessageIsDeletedByMsgId(msgId));
+    public ResponseBean deleteUserMessage(@RequestParam("ids") String[] ids) {
+        return new ResponseBean(userMessageService.updateUserMessageIsDeletedByMsgId(ids));
 
     }
 }

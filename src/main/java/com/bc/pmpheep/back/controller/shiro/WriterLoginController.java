@@ -54,12 +54,6 @@ public class WriterLoginController {
     @Autowired
     WriterPermissionService writerPermissionService;
 
-    @ResponseBody
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ResponseBean login() {
-        return new ResponseBean("login");
-    }
-
     /**
      * 
      * <pre>
@@ -72,7 +66,7 @@ public class WriterLoginController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ResponseBean login(@RequestParam("username") String username,
     @RequestParam("password") String password, HttpServletRequest request) {
         logger.info("username => " + username);

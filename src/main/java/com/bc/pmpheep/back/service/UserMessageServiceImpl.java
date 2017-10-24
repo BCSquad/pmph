@@ -324,7 +324,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                         }
                         messageAttachmentService.updateMessageAttachment(new MessageAttachment(
                                                                                                mAttachment.getId(),
-                                                                                               "/groupfile/download/"
+                                                                                               "/file/download/"
                                                                                                + gridFSFileId));
                     }
                 }
@@ -371,27 +371,25 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                   "消息已有人读取，无法撤销！");
             }
         }
-        return userMessageDao.updateUserMessageByMsgId(userMessage.getMsgId());
+        return userMessageDao.updateUserMessageByMsgId(userMessage.getId());
     }
 
     @Override
-    public Integer updateUserMessageIsDeletedByMsgId(String msgId) throws CheckedServiceException {
-        if (StringUtil.isEmpty(msgId)) {
+    public Integer updateUserMessageIsDeletedByMsgId(String[] ids) throws CheckedServiceException {
+        if (ArrayUtil.isEmpty(ids)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息更新对象id为空");
         }
-        return userMessageDao.updateUserMessageIsDeletedByMsgId(StringUtil.StrList(msgId));
+        return userMessageDao.updateUserMessageIsDeletedByMsgId(ids);
     }
 
     @Override
-    public Integer deleteMessageByMsgId(String[] msgId) throws CheckedServiceException {
-        if (0 == msgId.length) {
+    public Integer deleteMessageByMsgId(String[] ids) throws CheckedServiceException {
+        if (ArrayUtil.isEmpty(ids)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "id为空");
         }
-        Integer sum = userMessageDao.deleteMessageByMsgId(msgId);
-        // messageService. 删除
-        return sum;
+        return userMessageDao.deleteMessageByMsgId(ids);
     }
 
     @Override
@@ -405,13 +403,6 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         if (ObjectUtil.isNull(pmphUser.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
-        }
-        if (ObjectUtil.notNull(pageParameter.getParameter().getTitle())) {
-            String title = pageParameter.getParameter().getTitle();
-            title = title.trim();
-            title = title.replace(" ", "%");
-            title = "%" + title + "%";
-            pageParameter.getParameter().setTitle(title);
         }
         pageParameter.getParameter().setSenderId(pmphUser.getId());
         PageResult<UserMessageVO> pageResult = new PageResult<>();
