@@ -6,9 +6,6 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="id !=null ">
-				id,
-			</if>
 			<if test="parentId != null and parentId !=''">
 				parent_id,
 			</if>
@@ -21,10 +18,10 @@
 			<if test="areaId != null and areaId !=''">
 				area_id,
 			</if>
-			<if test="countactPerson != null and countactPerson !=''">
+			<if test="contactPerson != null and contactPerson !=''">
 				contact_person,
 			</if>
-			<if test="countactPhone != null and countactPhone !=''">
+			<if test="contactPhone != null and contactPhone !=''">
 				contact_phone,
 			</if>
 			<if test="note != null and note !=''">
@@ -57,11 +54,11 @@
 			<if test="areaId !=null and areaId !=''">
 				#{areaId},
 			</if>
-			<if test="countactPerson !=null and countactPerson !=''">
-				#{countactPerson},
+			<if test="contactPerson !=null and contactPerson !=''">
+				#{contactPerson},
 			</if>
-			<if test="countactPhone !=null and countactPhone !=''">
-				#{countactPhone},
+			<if test="contactPhone !=null and contactPhone !=''">
+				#{contactPhone},
 			</if>
 			<if test="note !=null and note !=''">
 				#{note},
@@ -93,6 +90,75 @@
 	<select id="getOrgById" parameterType="java.lang.Long"
 		resultType="Org">
 		select * from org where id=#{id} ;
+	</select>
+	
+	<!--获取学校管理员审核列表 -->
+	<select id="getSchoolAdminCheckList" parameterType="PageParameter" resultType="OrgVO">
+		SELECT 
+			ou.`id`,o.`org_name`,ou.`username`,ou.`realname`,ou.`handphone`,
+			ou.`email`,ou.`position`,ou.`title`,ou.`address`,
+			ou.`postcode`,ou.`proxy`,ou.`progress`,t.count
+		FROM   
+			`org` o
+		LEFT JOIN 
+			`org_user` ou 
+		ON 
+			o.`id`=ou.`org_id`,
+			(
+				select 
+					count(*) count 
+				from 
+					org o
+				left join 
+					`org_user` ou 
+				ON 
+					o.`id`=ou.`org_id`
+				where
+				ou.is_deleted = 0
+				<if test="parameter !=null ">
+					<!-- 学校名称 -->
+					<if test="parameter.orgName !=null and  parameter.orgName != '' ">
+						and o.org_name like concat(concat('%',#{parameter.orgName}),'%')
+					</if>
+					<!-- 机构代码  -->
+					<if test="parameter.username != null and parameter.username !='' ">
+						and ou.username like concat(concat('%',#{parameter.username}),'%')
+					</if>
+					<!-- 管理员姓名 -->
+					<if test="parameter.realname != null and parameter.realname !='' ">
+						and ou.`realname` like concat(concat('%',#{parameter.realname}),'%')
+					</if>
+					<!-- 审核状态 -->
+					<if test="parameter.progress != null">
+						and ou.progress = #{parameter.progress}
+					</if>
+				</if>
+			)t
+		where 
+			ou.is_deleted = 0
+		<if test="parameter !=null ">
+			<!-- 学校名称 -->
+			<if test="parameter.orgName !=null and  parameter.orgName != '' ">
+				and o.org_name like concat(concat('%',#{parameter.orgName}),'%')
+			</if>
+			<!-- 机构代码  -->
+			<if test="parameter.username != null and parameter.username !='' ">
+				and ou.username like concat(concat('%',#{parameter.username}),'%')
+			</if>
+			<!-- 管理员姓名 -->
+			<if test="parameter.realname != null and parameter.realname !='' ">
+				and ou.`realname` like concat(concat('%',#{parameter.realname}),'%')
+			</if>
+			<!-- 审核状态 -->
+			<if test="parameter.progress != null">
+				and ou.progress = #{parameter.progress}
+			</if>
+		</if>
+		order by 
+			ou.sort
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
 	</select>
 
 	<!--orgNmae模糊查询获取列表 -->
@@ -203,11 +269,11 @@
 			<if test=" areaId != null and areaId !=''">
 				area_id= #{areaId},
 			</if>
-			<if test=" countactPerson != null and countactPerson !=''">
-				contact_person = #{countactPerson},
+			<if test=" contactPerson != null and contactPerson !=''">
+				contact_person = #{contactPerson},
 			</if>
-			<if test="countactPhone != null and countactPhone !='' ">
-				contact_phone = #{countactPhone},
+			<if test="contactPhone != null and contactPhone !='' ">
+				contact_phone = #{contactPhone},
 			</if>
 			<if test=" note != null and note !=''">
 				note= #{note},

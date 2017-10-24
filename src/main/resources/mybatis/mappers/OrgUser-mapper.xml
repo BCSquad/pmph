@@ -240,6 +240,19 @@
 		</set>
 		where id=#{id} ;
 	</update>
+	
+	<!-- 学校管理员审核(按Id更新审核状态) -->
+	<update id="updateOrgUserProgressById" parameterType="java.util.List">
+		<foreach item="item" collection="list" index="index" open="" separator=";">
+			update
+				org_user
+			<set>
+				progress = #{item.progress}
+			</set>
+			where 
+				id=#{item.id}
+		</foreach>
+	</update>
 
 	<!-- 根据id查询一个OrgUser -->
 	<select id="getOrgUserById" parameterType="java.lang.Long"

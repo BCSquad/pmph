@@ -56,6 +56,20 @@ public interface OrgService {
 
     /**
      * 
+     * <pre>
+     * 功能描述：获取学校管理员审核列表(同时查询分页数据和总条数）
+     * 使用示范：
+     *
+     * @param pageParameter 带有分页参数和查询条件参数
+     * @return PageResult 包含 List<OrgVO>以及分页数据
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    PageResult<OrgVO> getSchoolAdminCheckList(PageParameter<OrgVO> pageParameter)
+    throws CheckedServiceException;
+
+    /**
+     * 
      * 
      * 功能描述：在新增用户与修改用户时查询机构
      * 

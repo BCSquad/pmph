@@ -1,11 +1,16 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.WriterUserCertificationDao;
 import com.bc.pmpheep.back.po.WriterUserCertification;
+import com.bc.pmpheep.back.util.ArrayUtil;
+import com.bc.pmpheep.back.util.CastUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -114,6 +119,23 @@ WriterUserCertificationService {
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
         return writerUserCertificationDao.updateWriterUserCertification(writerUserCertification);
+    }
+
+    @Override
+    public Integer updateWriterUserCertificationProgressByUserId(Short progress, String[] userIds)
+    throws CheckedServiceException {
+        if (ArrayUtil.isEmpty(userIds) || ObjectUtil.isNull(progress)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.TEACHER_CHECK,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        List<WriterUserCertification> writerUserCertifications =
+        new ArrayList<WriterUserCertification>(userIds.length);
+        for (String userId : userIds) {
+            writerUserCertifications.add(new WriterUserCertification(CastUtil.castLong(userId),
+                                                                     progress));
+
+        }
+        return writerUserCertificationDao.updateWriterUserCertificationProgressByUserId(writerUserCertifications);
     }
 
 }

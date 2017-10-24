@@ -46,4 +46,8 @@ public class CheckedExceptionBusiness {
     public final static String FILE                   = "文件服务";
 
     public final static String SESSION                = "用户SESSION";
+
+    public final static String SCHOOL_ADMIN_CHECK     = "学校管理员审核";
+
+    public final static String TEACHER_CHECK          = "教师审核";
 }
