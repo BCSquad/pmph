@@ -75,6 +75,7 @@ public class PmphLoginController {
         try {
             PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
             pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
+            pmphUser.setAvatar(Const.DEFAULT_USER_AVATAR);
             // 根据用户Id查询对应权限Id
             List<Long> pmphUserPermissionIds =
             pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());

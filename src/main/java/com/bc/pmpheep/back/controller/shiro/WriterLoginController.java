@@ -80,6 +80,7 @@ public class WriterLoginController {
             WriterUser writerUser =
             writerUserService.login(username, new DesRun("", password).enpsw);
             writerUser.setLoginType(Const.LOGIN_TYPE_WRITER);
+            writerUser.setAvatar(Const.DEFAULT_USER_AVATAR);
             // 根据用户Id查询对应权限Id
             List<Long> writerUserPermissionIds =
             writerUserService.getWriterUserPermissionByUserId(writerUser.getId());
