@@ -212,18 +212,6 @@ public class UserMessageController {
      * 使用示范：
      *
      * @param message 消息对象
-     * @param userMsgId 消息主键Id
-     * @param msgTitle 消息标题
-     * @return 影响行数
-     * </pre>
-     */
-    /**
-     * 
-     * <pre>
-     * 功能描述：单纯修改消息
-     * 使用示范：
-     *
-     * @param message 消息对象
      * @param msgId Message主键Id
      * @param msgTitle 消息标题
      * @return 影响行数

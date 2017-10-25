@@ -261,6 +261,10 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         }
         // 如果是补发,进入下面操作 进行已发人员筛出
         if (!isSave) {
+            Message msg = messageService.get(message.getId());
+            if (ObjectUtil.notNull(msg)) {
+                message.setContent(msg.getContent());
+            }
             List<UserMessage> temp = new ArrayList<UserMessage>();
             // 已经发送的人员列表
             List<UserMessage> sendedList = userMessageDao.getMessageByMsgId(message.getId());
@@ -292,8 +296,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         if (!websocketUserIds.isEmpty() && websocketUserIds.size() > 0) {
             WebScocketMessage webScocketMessage =
             new WebScocketMessage(message.getId(), Const.MSG_TYPE_1, senderId,
-                                  pmphUser.getRealname(), Const.SEND_MSG_TYPE_1,
-                                  Const.SEND_MSG_TYPE_0, message.getContent(),
+                                  pmphUser.getRealname(), Const.SENDER_TYPE_1,
+                                  Const.SEND_MSG_TYPE_0, Const.DEFAULT_USER_AVATAR, title,
                                   message.getContent(), DateUtil.getCurrentTime());
             handler.sendWebSocketMessageToUser(websocketUserIds, webScocketMessage);
             // 添加附件到MongoDB表中
@@ -368,7 +372,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         // 已经发送的人员列表
         List<UserMessage> sendedList = userMessageDao.getMessageByMsgId(userMessage.getMsgId());
         for (UserMessage userMessage2 : sendedList) {
-            if (null != userMessage2.getIsRead() && userMessage2.getIsRead()) {
+            if (ObjectUtil.notNull(userMessage2.getIsRead()) && userMessage2.getIsRead()) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                                   CheckedExceptionResult.NULL_PARAM,
                                                   "消息已有人读取，无法撤销！");
