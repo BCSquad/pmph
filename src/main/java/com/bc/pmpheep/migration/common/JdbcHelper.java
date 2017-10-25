@@ -33,18 +33,17 @@ public class JdbcHelper {
         return new JdbcTemplate(dataSource);
     }
     
-    
-    
-    private static Connection conn=null;
-	
-	static {
+    //加载静态块
+    static {
 		try {
 			Class.forName(SQLParameters.DRIVER);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
-	//默认新平台数据库
+	
+	private static Connection conn=null;
+	
 	public static Connection getConnection() throws Exception{
 		if(conn==null||conn.isClosed()){
 			conn=DriverManager.getConnection(SQLParameters.DB_URL,SQLParameters.DB_USERNAME,SQLParameters.DB_PASSWORD);
@@ -52,6 +51,7 @@ public class JdbcHelper {
 		return conn;
 	}
 	
+	//关闭相关连接
 	public static void colse(ResultSet rs,PreparedStatement ps,Connection con){
 		if(null != rs ){
 			try {
