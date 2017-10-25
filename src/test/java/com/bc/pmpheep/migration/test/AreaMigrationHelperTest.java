@@ -26,7 +26,7 @@ public class AreaMigrationHelperTest extends BaseTest{
     @Test
     @Rollback(false)
     public void demo() {
-    	helper.area();
+//    	helper.area();
     }
 	
 }
