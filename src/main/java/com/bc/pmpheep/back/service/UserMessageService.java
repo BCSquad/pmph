@@ -204,7 +204,7 @@ public interface UserMessageService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	MyMessageVO getMyMessageDetail(Long id) throws CheckedServiceException;
+	MyMessageVO updateMyMessageDetail(Long id) throws CheckedServiceException;
 
 	/**
 	 * 

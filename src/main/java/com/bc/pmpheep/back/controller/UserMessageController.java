@@ -299,8 +299,8 @@ public class UserMessageController {
 
 	@RequestMapping(value = "/detail/mymessage", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseBean getMyMessageDetail(Long id) {
-		return new ResponseBean(userMessageService.getMyMessageDetail(id));
+	public ResponseBean updateMyMessageDetail(Long id) {
+		return new ResponseBean(userMessageService.updateMyMessageDetail(id));
 	}
 
 	@RequestMapping(value = "/delete/mymessage", method = RequestMethod.PUT)

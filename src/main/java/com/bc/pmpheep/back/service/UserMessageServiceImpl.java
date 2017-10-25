@@ -553,15 +553,11 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 	}
 
 	@Override
-	public MyMessageVO getMyMessageDetail(Long id) throws CheckedServiceException {
+	public MyMessageVO updateMyMessageDetail(Long id) throws CheckedServiceException {
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
 					"消息id为空！");
 		}
-		UserMessage userMessage = new UserMessage();
-		userMessage.setId(id);
-		userMessage.setIsRead(true);
-		userMessageDao.updateUserMessageById(userMessage);
 		MyMessageVO myMessageVO = userMessageDao.getMyMessageDetail(id);
 		switch (myMessageVO.getSenderType()) {
 		case 0:
@@ -589,6 +585,10 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 		}
 		myMessageVO.setContent(messageService.get(myMessageVO.getMsgId()).getContent());
 		myMessageVO.setMessageAttachments(messageAttachmentService.getMessageAttachmentByMsgId(myMessageVO.getMsgId()));
+		UserMessage userMessage = new UserMessage();
+		userMessage.setId(id);
+		userMessage.setIsRead(true);
+		userMessageDao.updateUserMessageById(userMessage);
 		return myMessageVO;
 	}
 }
