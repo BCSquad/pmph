@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.datamigration.common;
+package com.bc.pmpheep.migration.common;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,8 +23,8 @@ public class Until {
 	 * @throws Exception
 	 */
 	public static List<Object[]> getListData(String sql) throws Exception{
-		//拿连接
-		Connection con= ConnectionManager.getConnection();
+		//获取连接
+		Connection con= JdbcHelper.getConnection();
 		//拿PreparedStatement
 		PreparedStatement ps = con.prepareStatement(sql);
 		//获取结果集
@@ -40,7 +40,7 @@ public class Until {
 		   }
 		   lst.add(object);
 		}
-		ConnectionManager.colse(rs,ps,con);
+		JdbcHelper.colse(rs,ps,con);
 		return lst;
 	} 
 	/**
@@ -76,12 +76,12 @@ public class Until {
 	 */
 	public static int getUpdateRes(String sql) throws Exception{
 		//拿连接
-		Connection con= ConnectionManager.getConnection();
+		Connection con= JdbcHelper.getConnection();
 		//拿PreparedStatement
 		PreparedStatement ps = con.prepareStatement(sql);
 		//获取执行结果
 		int count = ps.executeUpdate();
-		ConnectionManager.colse(null,ps,con);
+		JdbcHelper.colse(null,ps,con);
 		return count;
 	} 
 	/**
@@ -99,14 +99,14 @@ public class Until {
 		String pk=getPk(tableName);
 		String newPk="NEW_"+pk.toUpperCase();
 		//拿连接
-		Connection con= ConnectionManager.getConnection();
+		Connection con= JdbcHelper.getConnection();
 		//拿PreparedStatement
 		PreparedStatement ps = con.prepareStatement("update "+tableName+" set "+newPk+"= ? where "+pk+" = ? ");
 		ps.setLong(1, newValue);
 		ps.setObject(2, oldValue);
 		//获取执行结果
 		int count = ps.executeUpdate();
-		ConnectionManager.colse(null,ps,con);
+		JdbcHelper.colse(null,ps,con);
 		return count;
 	}
 }

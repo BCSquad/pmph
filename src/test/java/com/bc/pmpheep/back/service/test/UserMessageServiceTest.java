@@ -69,6 +69,9 @@ public class UserMessageServiceTest extends BaseTest {
         userMessageService.updateUserMessage(new Message("1", "aa"), "", "");
         userMessageService.updateToWithdraw(new UserMessage("1", true));
         userMessageService.deleteMessageByMsgId(list);
+        List<String> ids = new ArrayList<String>(1);
+        ids.add("1");
+        userMessageService.deleteMessageByMsgId(ids);
     }
 
     @Test

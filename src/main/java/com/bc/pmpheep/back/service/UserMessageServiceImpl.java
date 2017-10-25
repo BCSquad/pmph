@@ -32,6 +32,7 @@ import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MessageStateVO;
+import com.bc.pmpheep.back.vo.MyMessageVO;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.back.vo.UserMessageVO;
@@ -257,10 +258,10 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 }
                 // 获取到书籍id然后根据书籍id在dec_position表中获取到申报表id根据申报表id在declaration表中获取作家id放入userMessage的接收人中
             }
-
         }
         // 如果是补发,进入下面操作 进行已发人员筛出
         if (!isSave) {
+            // 查询当前消息内容
             Message msg = messageService.get(message.getId());
             if (ObjectUtil.notNull(msg)) {
                 message.setContent(msg.getContent());
@@ -471,5 +472,153 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         messageAttachmentService.getMessageAttachmentByMsgId(message.getId());
         resultMap.put("MessageAttachment", messageAttachments);
         return resultMap;
+    }
+
+    @Override
+    public PageResult<MyMessageVO> listMyMessage(PageParameter<MyMessageVO> pageParameter)
+    throws CheckedServiceException {
+        if (ObjectUtil.isNull(pageParameter.getParameter().getUserId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "用户id为空！");
+        }
+        if (ObjectUtil.isNull(pageParameter.getParameter().getUserType())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "用户类型为空！");
+        }
+        PageResult<MyMessageVO> pageResult = new PageResult<MyMessageVO>();
+        Integer total = userMessageDao.listMyMessageTotal(pageParameter);
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        if (total > 0) {
+            List<MyMessageVO> list = userMessageDao.listMyMessage(pageParameter);
+            for (MyMessageVO myMessageVO : list) {
+                switch (myMessageVO.getSenderType()) {
+                case 0:
+                    myMessageVO.setSenderName("系统");
+                    break;
+                case 1:
+                    PmphUser pmphUser = pmphUserService.get(myMessageVO.getSenderId());
+                    myMessageVO.setSenderAvatar(pmphUser.getAvatar());
+                    myMessageVO.setSenderName(pmphUser.getRealname());
+                    break;
+
+                case 2:
+                    WriterUser writerUser = writerUserService.get(myMessageVO.getSenderId());
+                    myMessageVO.setSenderAvatar(writerUser.getAvatar());
+                    myMessageVO.setSenderName(writerUser.getRealname());
+                    break;
+
+                case 3:
+                    // 现在没有机构用户
+                    break;
+
+                default:
+                    throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                      CheckedExceptionResult.NULL_PARAM,
+                                                      "发送者类型不正确！");
+                }
+            }
+            pageResult.setRows(list);
+        }
+        pageResult.setTotal(total);
+        return pageResult;
+    }
+
+    @Override
+    public Integer updateMyMessage(Long[] ids) throws CheckedServiceException {
+        if (ArrayUtil.isEmpty(ids)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "没有删除的消息");
+        }
+        return userMessageDao.updateMyMessage(ids);
+    }
+
+    @Override
+    public PageResult<MyMessageVO> listMyMessageOfIcon(PageParameter<MyMessageVO> pageParameter)
+    throws CheckedServiceException {
+        if (ObjectUtil.isNull(pageParameter.getParameter().getUserId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "用户id为空！");
+        }
+        if (ObjectUtil.isNull(pageParameter.getParameter().getUserType())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "用户类型为空！");
+        }
+        PageResult<MyMessageVO> pageResult = new PageResult<MyMessageVO>();
+        Integer total = userMessageDao.listMyMessageTotal(pageParameter);
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        if (total > 0) {
+            List<MyMessageVO> list = userMessageDao.listMyMessage(pageParameter);
+            for (MyMessageVO myMessageVO : list) {
+                switch (myMessageVO.getSenderType()) {
+                case 0:
+                    myMessageVO.setSenderName("系统");
+                    break;
+                case 1:
+                    PmphUser pmphUser = pmphUserService.get(myMessageVO.getSenderId());
+                    myMessageVO.setSenderAvatar(pmphUser.getAvatar());
+                    myMessageVO.setSenderName(pmphUser.getRealname());
+                    break;
+
+                case 2:
+                    WriterUser writerUser = writerUserService.get(myMessageVO.getSenderId());
+                    myMessageVO.setSenderAvatar(writerUser.getAvatar());
+                    myMessageVO.setSenderName(writerUser.getRealname());
+                    break;
+
+                case 3:
+                    // 现在没有机构用户
+                    break;
+
+                default:
+                    throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                      CheckedExceptionResult.NULL_PARAM,
+                                                      "发送者类型不正确！");
+                }
+                myMessageVO.setContent(messageService.get(myMessageVO.getMsgId()).getContent());
+            }
+            pageResult.setRows(list);
+        }
+        pageResult.setTotal(total);
+        return pageResult;
+    }
+
+    @Override
+    public MyMessageVO updateMyMessageDetail(Long id) throws CheckedServiceException {
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "消息id为空！");
+        }
+        MyMessageVO myMessageVO = userMessageDao.getMyMessageDetail(id);
+        switch (myMessageVO.getSenderType()) {
+        case 0:
+            myMessageVO.setSenderName("系统");
+            break;
+        case 1:
+            PmphUser pmphUser = pmphUserService.get(myMessageVO.getSenderId());
+            myMessageVO.setSenderAvatar(pmphUser.getAvatar());
+            myMessageVO.setSenderName(pmphUser.getRealname());
+            break;
+
+        case 2:
+            WriterUser writerUser = writerUserService.get(myMessageVO.getSenderId());
+            myMessageVO.setSenderAvatar(writerUser.getAvatar());
+            myMessageVO.setSenderName(writerUser.getRealname());
+            break;
+
+        case 3:
+            // 现在没有机构用户
+            break;
+
+        default:
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "发送者类型不正确！");
+        }
+        myMessageVO.setContent(messageService.get(myMessageVO.getMsgId()).getContent());
+        myMessageVO.setMessageAttachments(messageAttachmentService.getMessageAttachmentByMsgId(myMessageVO.getMsgId()));
+        UserMessage userMessage = new UserMessage();
+        userMessage.setId(id);
+        userMessage.setIsRead(true);
+        userMessageDao.updateUserMessageById(userMessage);
+        return myMessageVO;
     }
 }
