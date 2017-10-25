@@ -4,19 +4,13 @@
  */
 package com.bc.pmpheep.utils;
 
-import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
-import com.bc.pmpheep.service.exception.CheckedExceptionResult;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
+import java.util.Map;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -36,11 +30,55 @@ public class ExcelHelper {
     private final Logger logger = LoggerFactory.getLogger(ExcelHelper.class);
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 
-    public Workbook getWorkbook(List list) throws IOException, SecurityException, IllegalArgumentException, IllegalAccessException {
-        if (null == list || list.isEmpty()) {
+    /**
+     * 根据Map集合创建工作簿
+     *
+     * @param maps 工作簿的数据源
+     * @param sheetName 表名
+     * @return 根据Map集合创建的工作簿
+     */
+    public Workbook fromMaps(List<Map<String, Object>> maps, String sheetName) {
+        if (null == maps || maps.isEmpty()) {
+            throw new IllegalArgumentException("生成Excel时数据源对象为空");
+        }
+        /* 创建工作簿 */
+        Workbook workbook = new HSSFWorkbook();
+        /* 创建工作表 */
+        Sheet sheet = workbook.createSheet(sheetName);
+        int rowCount = 0; //行计数
+        int columnCount = 0; //列计数
+        for (Map<String, Object> map : maps) {
+            /* 先设置表头，表头等于Map键名 */
+            if (rowCount == 0) {
+                Row header = sheet.createRow(0);
+                for (String key : map.keySet()) {
+                    Cell cell = header.createCell(columnCount);
+                    cell.setCellValue(key);
+                    columnCount++;
+                }
+                rowCount++;
+            }
+            columnCount = 0;//列计数归零
+            Row row = sheet.createRow(rowCount);
+            /* 开始以键值填充单元格 */
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                if (null != entry.getValue()) {
+                    Cell cell = row.createCell(columnCount);
+                    cell.setCellValue(entry.getValue().toString());
+                }
+                columnCount++;
+            }
+            rowCount++;
+        }
+        return workbook;
+    }
+
+    @Deprecated
+    public Workbook fromPersistentObject(List dataSource) throws IOException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        if (null == dataSource || dataSource.isEmpty()) {
             return null;
         }
-        Field[] fields = list.get(0).getClass().getDeclaredFields();
+        Field[] fields = dataSource.get(0).getClass().getDeclaredFields();
         /* 获取字段总数 */
         int totalFields = fields.length;
         try (Workbook workbook = new HSSFWorkbook()) {
@@ -56,7 +94,7 @@ public class ExcelHelper {
             /* 设置计数器 */
             int count = 1;
             /* 遍历list中的对象 */
-            Iterator iterator = list.iterator();
+            Iterator iterator = dataSource.iterator();
             while (iterator.hasNext()) {
                 Object object = iterator.next();
                 Row row = sheet.createRow(count);
