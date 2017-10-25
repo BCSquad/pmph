@@ -23,20 +23,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 使用示范：
  * 
  * 
- * @author (作者) nyz
+ * &#64;author (作者) nyz
  * 
- * @since (该版本支持的JDK版本) ：JDK 1.6或以上
- * @version (版本) 1.0
- * @date (开发日期) 2017-10-19
- * @modify (最后修改时间) 
- * @修改人 ：nyz 
- * @审核人 ：
+ * &#64;since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * &#64;version (版本) 1.0
+ * &#64;date (开发日期) 2017-10-19
+ * &#64;modify (最后修改时间) 
+ * &#64;修改人 ：nyz 
+ * &#64;审核人 ：
  * </pre>
  */
 @SuppressWarnings("unused")
 public class JsonUtil<T> {
     private static final Logger LOGGER              = LoggerFactory.getLogger(JsonUtil.class);
-    private static ObjectMapper objectMapper;
+    private static ObjectMapper objectMapper        = new ObjectMapper();
     private static final String TIME_DATE_FORMAT    = "yyyy-MM-dd HH:mm:ss";
     private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
     private String              timeFormat;
@@ -51,14 +51,12 @@ public class JsonUtil<T> {
     }
 
     public JsonUtil() {
-        objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setDateFormat(new SimpleDateFormat(DEFAULT_DATE_FORMAT));
     }
 
     public JsonUtil(String timeFormat) {
-        objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setDateFormat(new SimpleDateFormat(timeFormat));
@@ -131,6 +129,7 @@ public class JsonUtil<T> {
         }
         return pojo;
     }
+
     /**
      * 字符串转化为ArrayList对象
      * 
