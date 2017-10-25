@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bc.pmpheep.back.dao.DecCourseConstructionDao">
 
-	<sql id="key">
+	<sql id="key"> 
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
 			<if test="id !=null">
