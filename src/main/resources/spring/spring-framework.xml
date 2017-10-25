@@ -18,15 +18,15 @@
     <!-- <aop:aspectj-autoproxy proxy-target-class="true" /> -->
     
     <!-- 启动组件扫描，排除@Controller组件，该组件由SpringMVC配置文件扫描 -->
-    <!-- <context:component-scan base-package="com.bc.pmpheep.**">
+    <context:component-scan base-package="com.bc.pmpheep.**">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
         <context:exclude-filter type="annotation" expression="org.springframework.context.annotation.Configuration" />
-    </context:component-scan> -->
+    </context:component-scan> 
     <!--  <context:component-scan base-package="com.bc.pmpheep.back.shiro.cache"/> -->
-     <context:component-scan base-package="com.bc.pmpheep.back.service"/> 
-     <context:component-scan base-package="com.bc.pmpheep.general.service"/>
-     <context:component-scan base-package="com.bc.pmpheep.websocket"/>
-     <context:component-scan base-package="com.bc.pmpheep.back.datamigration"/><!-- 用于数据导入 -->
+     <!--<context:component-scan base-package="com.bc.pmpheep.back.service"/>--> 
+     <!--<context:component-scan base-package="com.bc.pmpheep.general.service"/>-->
+     <!--<context:component-scan base-package="com.bc.pmpheep.websocket"/>-->
+     <!--<context:component-scan base-package="com.bc.pmpheep.utils"/>-->
     <!-- 加载属性文件 -->
     <context:property-placeholder location="classpath:spring/spring.properties" ignore-unresolvable="true" />
     

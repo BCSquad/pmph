@@ -3,22 +3,21 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.UserMessageDao">
 
-	<!-- 通过id删除UserMessage -->
-	<delete id="deleteMessageByMsgId">
-		delete from
-		user_message
-		where
-		id
-		in
-		<foreach collection="array" item="id" index="index" open="("
-			close=")" separator=",">
-			#{id}
-		</foreach>
-	</delete>
-
+	<!-- 通过id 查询UserMessage -->
 	<select id="getUserMessageById" parameterType="map" resultType="UserMessage">
 		select * from user_message where id = #{id};
 	</select>
+
+	<!-- 通过MsgId 动态更新UserMessage -->
+	<update id="updateUserMessageTitleByMsgId" parameterType="UserMessage">
+		update user_message
+		<set>
+			<if test="title != null and title != ''">
+				title = #{title},
+			</if>
+		</set>
+		where msg_id = #{msgId};
+	</update>
 
 	<!-- 通过id 动态更新UserMessage -->
 	<update id="updateUserMessageById" parameterType="UserMessage">
@@ -59,25 +58,24 @@
 	</update>
 
 	<!-- 通过msgId 撤销UserMessage -->
-	<update id="updateUserMessageByMsgId" parameterType="java.lang.Long">
+	<update id="updateUserMessageWithdrawByMsgId" parameterType="java.lang.String">
 		update
-		user_message set is_withdraw = true where id = #{id};
+		user_message set is_withdraw = true where msg_id = #{msgId};
 	</update>
 
 	<!-- 通过msgId 更新是否被逻辑删除 -->
-	<update id="updateUserMessageIsDeletedByMsgId">
+	<update id="updateUserMessageIsDeletedByMsgId" parameterType="java.util.List">
 		update
 		user_message
 		set
 		is_deleted = true
 		where
-		id
+		msg_id
 		in
-		<foreach collection="array" item="id" index="index" open="("
+		<foreach collection="list" item="msgId" index="index" open="("
 			close=")" separator=",">
-			#{id}
+			#{msgId}
 		</foreach>
-		;
 	</update>
 
 	<!-- 根据消息id 获取 UserMessage集 -->
@@ -320,4 +318,17 @@
 		</foreach>
 		;
 	</update>
+
+	<!-- 通过id删除UserMessage -->
+	<delete id="deleteMessageByMsgId" parameterType="java.util.List">
+		delete from
+		user_message
+		where
+		msg_id
+		in
+		<foreach collection="list" item="msgId" index="index" open="("
+			close=")" separator=",">
+			#{msgId}
+		</foreach>
+	</delete>
 </mapper>

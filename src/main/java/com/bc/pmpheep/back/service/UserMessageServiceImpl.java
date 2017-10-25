@@ -22,6 +22,7 @@ import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CastUtil;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.FileUpload;
@@ -318,20 +319,21 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 	}
 
 	@Override
-	public Integer updateUserMessage(Message message, Long userMsgId, String msgTitle) throws CheckedServiceException {
+	public Integer updateUserMessage(Message message, String msgId, String msgTitle) throws CheckedServiceException {
 		if (ObjectUtil.isNull(message)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
 					"消息更新对象为空");
 		}
-		if (ObjectUtil.isNull(message.getId()) || ObjectUtil.isNull(userMsgId)) {
+		if (ObjectUtil.isNull(message.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
 					"消息更新对象id为空");
 		}
-		if (StringUtil.isEmpty(message.getContent()) || StringUtil.isEmpty(msgTitle)) {
+		if (StringUtil.isEmpty(message.getContent()) || StringUtil.isEmpty(msgId) || StringUtil.isEmpty(msgTitle)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
 					"消息更新对象内容为空");
 		}
-		userMessageDao.updateUserMessageById(new UserMessage(userMsgId, msgTitle));
+		userMessageDao.updateUserMessageTitleByMsgId(new UserMessage(msgId, msgTitle));
+		message.setId(msgId);
 		messageService.update(message);
 		return 1;
 	}
@@ -350,25 +352,25 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 						"消息已有人读取，无法撤销！");
 			}
 		}
-		return userMessageDao.updateUserMessageByMsgId(userMessage.getId());
+		return userMessageDao.updateUserMessageWithdrawByMsgId(userMessage.getMsgId());
 	}
 
 	@Override
-	public Integer updateUserMessageIsDeletedByMsgId(String[] ids) throws CheckedServiceException {
-		if (ArrayUtil.isEmpty(ids)) {
+	public Integer updateUserMessageIsDeletedByMsgId(List<String> msgIds) throws CheckedServiceException {
+		if (CollectionUtil.isEmpty(msgIds)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
 					"消息更新对象id为空");
 		}
-		return userMessageDao.updateUserMessageIsDeletedByMsgId(ids);
+		return userMessageDao.updateUserMessageIsDeletedByMsgId(msgIds);
 	}
 
 	@Override
-	public Integer deleteMessageByMsgId(String[] ids) throws CheckedServiceException {
-		if (ArrayUtil.isEmpty(ids)) {
+	public Integer deleteMessageByMsgId(List<String> msgIds) throws CheckedServiceException {
+		if (CollectionUtil.isEmpty(msgIds)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
 					"id为空");
 		}
-		return userMessageDao.deleteMessageByMsgId(ids);
+		return userMessageDao.deleteMessageByMsgId(msgIds);
 	}
 
 	@Override

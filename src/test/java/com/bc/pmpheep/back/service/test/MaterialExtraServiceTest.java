@@ -28,7 +28,7 @@ public class MaterialExtraServiceTest extends BaseTest {
     @Rollback(Const.ISROLLBACK) 
     public void test()  {
     	Random r =new Random();
-    	MaterialExtra materialExtra=new MaterialExtra (new Long(r.nextInt(200)),"notice", "noticeAttachment", "note", "noteAttachment");
+    	MaterialExtra materialExtra=new MaterialExtra (new Long(r.nextInt(200)),"notice", "note");
     	logger.info("---MaterialExtraService 测试---------------------------------------------------------------------------------");
     	//新增
     	materialExtraService.addMaterialExtra(materialExtra);

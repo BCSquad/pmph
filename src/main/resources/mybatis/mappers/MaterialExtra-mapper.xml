@@ -12,14 +12,8 @@
 			<if test="notice!=null and notice!='' ">
 				notice,
 			</if>
-			<if test="noticeAttachment!=null and noticeAttachment !='' ">
-				notice_attachment,
-			</if>
 			<if test="note!=null and note !=''  ">
 				note,
-			</if>
-			<if test="noteAttachment != null and noteAttachment !=''   ">
-				note_attachment,
 			</if>
 		</trim>
 	</sql>
@@ -33,14 +27,8 @@
 			<if test="notice != null and notice !=''  ">
 				#{notice},
 			</if>
-			<if test="noticeAttachment != null and noticeAttachment !='' ">
-				#{noticeAttachment},
-			</if>
 			<if test="note != null and note !=''">
 				#{note},
-			</if>
-			<if test="noteAttachment!=null  and noteAttachment !='' ">
-				#{noteAttachment},
 			</if>
 		</trim>
 	</sql>
@@ -80,14 +68,8 @@
 			<if test="notice != null and notice !='' ">
 				notice = #{notice},
 			</if>
-			<if test=" noticeAttachment != null and noticeAttachment !=''">
-				notice_attachment= #{noticeAttachment},
-			</if>
 			<if test=" note != null and note !=''">
 				note= #{note},
-			</if>
-			<if test=" noteAttachment != null and noteAttachment !=''">
-				note_attachment = #{noteAttachment},
 			</if>
 		</set>
 		where

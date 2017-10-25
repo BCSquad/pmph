@@ -92,9 +92,16 @@ public interface UserMessageDao {
 	List<UserMessage> getMessageByMsgId(String msgId);
 
 	/**
-	 * 通过id 动态更新UserMessage
+	 * 
+	 * <pre>
+	 * 功能描述：通过msgId撤销消息
+	 * 使用示范：
+	 *
+	 * &#64;param msgId message主键ID
+	 * &#64;return 影响行数
+	 * </pre>
 	 */
-	Integer updateUserMessageByMsgId(Long id);
+	Integer updateUserMessageWithdrawByMsgId(String msgId);
 
 	/**
 	 * 
@@ -102,21 +109,16 @@ public interface UserMessageDao {
 	 * 功能描述：逻辑删除（通过msgId 动态更新UserMessage_IsDeleted字段）
 	 * 使用示范：
 	 *
-	 * &#64;param msgId 数组
+	 * &#64;param msgIds 数组
 	 * &#64;return
 	 * </pre>
 	 */
-	Integer updateUserMessageIsDeletedByMsgId(String[] msgId);
+	Integer updateUserMessageIsDeletedByMsgId(List<String> msgIds);
 
 	/**
 	 * 通过id 动态更新UserMessage
 	 */
 	Integer updateUserMessageById(UserMessage userMessage);
-
-	/**
-	 * 通过消息id删除UserMessage
-	 */
-	Integer deleteMessageByMsgId(String[] msgId);
 
 	/**
 	 * 
@@ -167,5 +169,23 @@ public interface UserMessageDao {
 	 *
 	 */
 	Integer updateMyMessage(Long[] ids);
+
+	/**
+	 * 
+	 * <pre>
+	 * 功能描述：通过MsgId 更新消息
+	 * 使用示范：
+	 *
+	 * &#64;param msgId message 主键Id
+	 * &#64;param title 消息标题
+	 * &#64;return
+	 * </pre>
+	 */
+	Integer updateUserMessageTitleByMsgId(UserMessage userMessage);
+
+	/**
+	 * 通过消息id删除UserMessage
+	 */
+	Integer deleteMessageByMsgId(List<String> msgIds);
 
 }

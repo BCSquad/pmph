@@ -1,8 +1,10 @@
 package com.bc.pmpheep.back.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.bc.pmpheep.migration.GroupMigrationHelper;
 
 /**
  *@author MrYang 
@@ -13,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/olddata")
 public class DataImportAction {
 	
-	@Autowired
-	private com.bc.pmpheep.back.datamigration.Import it;
+	@Resource
+	GroupMigrationHelper helper;
 	
 	@RequestMapping(value = "/start")
 	public void start(){
-		it.start( );
+		helper.group();
+        helper.groupMember();
+        helper.groupMessage();
 	}
 }
