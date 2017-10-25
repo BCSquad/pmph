@@ -15,10 +15,10 @@ import com.bc.pmpheep.test.BaseTest;
 
 /**
  * <p>
- * Title:DecAcadeService测试类
+ * MaterialNoticeAttachmentService测试类
  * <p>
  * 
- * @author lyc
+ * @author yangliang
  * @date 2017年9月25日 上午11:26:59
  */
 public class MaterialNoticeAttachmentServiceTest extends BaseTest {
