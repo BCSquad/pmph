@@ -141,7 +141,7 @@ public class WebScocketMessage {
 	public void setTime(Timestamp time) {
 		this.time = time;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "{\"id\":\"" + id + "\", \"msgType\":" + msgType + ", \"senderId\":" + senderId + ", \"senderName\":\""
