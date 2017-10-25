@@ -86,13 +86,13 @@ public class UserMessageController {
 	 * 功能描述：初始化数据(选择向各个对象发送消息)
 	 * 使用示范：
 	 *
-	 * &#64;param sendType //1 发送给学校管理员 //2 所有人 //3指定用户 //4发送给教材所有报名者
-	 * &#64;param pageNumber
-	 * &#64;param pageSize
-	 * &#64;param orgName 机构名称
-	 * &#64;param userNameOrUserCode 用户姓名/用户账号
-	 * &#64;param materialName 教材名称
-	 * &#64;return
+	 * @param sendType //1 发送给学校管理员 //2 所有人 //3指定用户 //4发送给教材所有报名者
+	 * @param pageNumber
+	 * @param pageSize
+	 * @param orgName 机构名称
+	 * @param userNameOrUserCode 用户姓名/用户账号
+	 * @param materialName 教材名称
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -112,8 +112,8 @@ public class UserMessageController {
 	 * 功能描述：根据教材ID查询书籍列表
 	 * 使用示范：
 	 *
-	 * &#64;param materialId 教材ID
-	 * &#64;return
+	 * @param materialId 教材ID
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -182,8 +182,8 @@ public class UserMessageController {
 	 * 功能描述：查看单条消息内容
 	 * 使用示范：
 	 *
-	 * &#64;param userMsgId UserMessage 主键ID
-	 * &#64;return
+	 * @param userMsgId UserMessage 主键ID
+	 * @return
 	 * </pre>
 	 */
 	@RequestMapping(value = "/message/content", method = RequestMethod.GET)
@@ -198,10 +198,10 @@ public class UserMessageController {
 	 * 功能描述：单纯修改消息
 	 * 使用示范：
 	 *
-	 * &#64;param message 消息对象
-	 * &#64;param userMsgId 消息主键Id
-	 * &#64;param msgTitle 消息标题
-	 * &#64;return 影响行数
+	 * @param message 消息对象
+	 * @param userMsgId 消息主键Id
+	 * @param msgTitle 消息标题
+	 * @return 影响行数
 	 * </pre>
 	 */
 	/**
@@ -210,10 +210,10 @@ public class UserMessageController {
 	 * 功能描述：单纯修改消息
 	 * 使用示范：
 	 *
-	 * &#64;param message 消息对象
-	 * &#64;param msgId Message主键Id
-	 * &#64;param msgTitle 消息标题
-	 * &#64;return 影响行数
+	 * @param message 消息对象
+	 * @param msgId Message主键Id
+	 * @param msgTitle 消息标题
+	 * @return 影响行数
 	 * </pre>
 	 */
 	@RequestMapping(value = "/update/message", method = RequestMethod.PUT)
@@ -243,9 +243,9 @@ public class UserMessageController {
 	 * 功能描述：新增消息附件上传
 	 * 使用示范：
 	 *
-	 * &#64;param request
-	 * &#64;param files
-	 * &#64;return
+	 * @param request
+	 * @param files
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -260,8 +260,8 @@ public class UserMessageController {
 	 * 功能描述：逻辑删除（通过消息id批量更新UserMessage_is_deleted字段）
 	 * 使用示范：
 	 *
-	 * &#64;param ids 数组
-	 * &#64;return
+	 * @param ids 数组
+	 * @return
 	 * </pre>
 	 */
 	@RequestMapping(value = "/delete/message", method = RequestMethod.PUT)
@@ -271,6 +271,26 @@ public class UserMessageController {
 
 	}
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取我的消息列表
+	 *
+	 * @param pageSize
+	 *            当页条数
+	 * @param pageNumber
+	 *            当前页码
+	 * @param title
+	 *            标题
+	 * @param isRead
+	 *            是否已读
+	 * @param userId
+	 *            用户id
+	 * @param userType
+	 *            用户类型
+	 * @return
+	 *
+	 */
 	@RequestMapping(value = "/list/mymessage", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseBean listMyMessage(Integer pageSize, Integer pageNumber, String title, Boolean isRead, Long userId,
@@ -285,6 +305,22 @@ public class UserMessageController {
 		return new ResponseBean(userMessageService.listMyMessage(pageParameter));
 	}
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取前几条未读消息
+	 *
+	 * @param pageSize
+	 *            前几条消息
+	 * @param pageNumber
+	 *            当前页码
+	 * @param userId
+	 *            用户id
+	 * @param userType
+	 *            用户类型
+	 * @return
+	 *
+	 */
 	@RequestMapping(value = "/icon/mymessage", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseBean listMyMessageOfIcon(Integer pageSize, Integer pageNumber, Long userId, Integer userType) {
@@ -297,12 +333,32 @@ public class UserMessageController {
 		return new ResponseBean(userMessageService.listMyMessageOfIcon(pageParameter));
 	}
 
+	/**
+	 * 
+	 * 
+	 * 功能描述： 获取消息详情
+	 *
+	 * @param id
+	 *            消息id
+	 * @return
+	 *
+	 */
 	@RequestMapping(value = "/detail/mymessage", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseBean updateMyMessageDetail(Long id) {
 		return new ResponseBean(userMessageService.updateMyMessageDetail(id));
 	}
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：逻辑删除消息
+	 *
+	 * @param ids
+	 *            需要删除的消息id
+	 * @return
+	 *
+	 */
 	@RequestMapping(value = "/delete/mymessage", method = RequestMethod.PUT)
 	@ResponseBody
 	public ResponseBean updateMyMessage(Long[] ids) {
