@@ -101,12 +101,12 @@ public class PmphRoleServiceImpl implements PmphRoleService {
     }
 
     @Override
-    public Integer add(PmphRole role) throws CheckedServiceException {
+    public PmphRole add(PmphRole role) throws CheckedServiceException {
         if (ObjectUtil.isNull(role)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色属性为空时禁止新增角色");
         }
-        return roleDao.add(role);
+        return role;
     }
 
     @Override

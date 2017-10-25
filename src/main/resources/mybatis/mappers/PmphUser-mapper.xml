@@ -129,6 +129,9 @@
 			<if test=" email!= null and email !=''">
 				email= #{email},
 			</if>
+			<if test="avatar!=null and avatar != ''">
+				avatar = #{avatar},
+			</if>
 			<if test=" note!= null and  note!=''">
 				note = #{note},
 			</if>
