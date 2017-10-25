@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.datamigration.transfer;
+package com.bc.pmpheep.migration;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,7 +6,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.bc.pmpheep.back.datamigration.common.Until;
+import com.bc.pmpheep.migration.common.Until;
+
 
 /**
  * 给每个表添加一个new_pk,这个类的addNewPk() 必须第一步执行;

@@ -3,12 +3,16 @@ package com.bc.pmpheep.migration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.back.service.AreaService;
+import com.bc.pmpheep.migration.common.JdbcHelper;
 
 /**
  * 区域迁移工具类

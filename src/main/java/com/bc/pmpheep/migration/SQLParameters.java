@@ -18,17 +18,17 @@ public class SQLParameters {
     /**
      * 现有平台数据库地址
      */
-    public static final String DB_URL = "jdbc:mysql://localhost:3306/pmph_imesp";
+    public static final String DB_URL = "jdbc:mysql://localhost:3306/pmph_out";
 
     /**
      * 现有平台数据库用户名
      */
-    public static final String DB_USERNAME = "gugia";
+    public static final String DB_USERNAME = "root";
 
     /**
      * 现有平台数据库密码
      */
-    public static final String DB_PASSWORD = "123123";
+    public static final String DB_PASSWORD = "root";
 
     /**
      * 专家平台数据库地址

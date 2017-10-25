@@ -10,11 +10,15 @@ import com.bc.pmpheep.back.po.PmphGroupMessage;
 import com.bc.pmpheep.back.service.PmphGroupMemberService;
 import com.bc.pmpheep.back.service.PmphGroupMessageService;
 import com.bc.pmpheep.back.service.PmphGroupService;
+import com.bc.pmpheep.migration.common.JdbcHelper;
+
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -41,6 +45,7 @@ public class GroupMigrationHelper {
     public void group() {
         String sql = "SELECT * FROM bbs_group";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        List<Object[]> lst =JdbcHelper.getJdbcTemplate().queryForList(sql,Object[].class);
         groupIdMap = new HashMap(maps.size());//初始化
         int count = 0;//迁移成功的条目数
         for (Map<String, Object> map : maps) {

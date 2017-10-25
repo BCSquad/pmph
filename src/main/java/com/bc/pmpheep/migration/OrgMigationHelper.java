@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.service.OrgTypeService;
 import com.bc.pmpheep.back.service.OrgUserService;
+import com.bc.pmpheep.migration.common.JdbcHelper;
 
 /**
  * 机构数据迁移工具类

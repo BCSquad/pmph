@@ -1,12 +1,12 @@
-package com.bc.pmpheep.back.datamigration.transfer.material;
+package com.bc.pmpheep.migration;
 import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.bc.pmpheep.back.datamigration.common.Until;
 import com.bc.pmpheep.back.service.MaterialService;
+import com.bc.pmpheep.migration.common.Until;
 /**
  *@author MrYang 
  *@CreateDate 2017年10月23日 下午2:18:10
