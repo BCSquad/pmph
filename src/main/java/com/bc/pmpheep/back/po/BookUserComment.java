@@ -19,8 +19,8 @@ import org.apache.ibatis.type.Alias;
  *
  */
 @SuppressWarnings("serial")
-@Alias("bookUserComment")
-public class bookUserComment implements Serializable {
+@Alias("BookUserComment")
+public class BookUserComment implements Serializable {
 	/**
 	 * 主键
 	 */
@@ -70,11 +70,11 @@ public class bookUserComment implements Serializable {
 	 */
 	private Timestamp gmtUpdate;
 
-	public bookUserComment() {
+	public BookUserComment() {
 		super();
 	}
 
-	public bookUserComment(Long bookId, Long writerId, Double score, String content, Boolean isHide, Boolean isAuth,
+	public BookUserComment(Long bookId, Long writerId, Double score, String content, Boolean isHide, Boolean isAuth,
 			Long authUserId, Timestamp authDate, Boolean isDelete, Timestamp gmtCreate, Timestamp gmtUpdate) {
 		super();
 		this.bookId = bookId;

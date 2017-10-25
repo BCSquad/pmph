@@ -19,8 +19,8 @@ import org.apache.ibatis.type.Alias;
  *
  */
 @SuppressWarnings("serial")
-@Alias("bookUserMark")
-public class bookUserMark implements Serializable {
+@Alias("BookUserMark")
+public class BookUserMark implements Serializable {
 	/**
 	 * 主键
 	 */
@@ -42,11 +42,11 @@ public class bookUserMark implements Serializable {
 	 */
 	private Timestamp gmtCreate;
 
-	public bookUserMark() {
+	public BookUserMark() {
 		super();
 	}
 
-	public bookUserMark(Long bookId, Long writerId, Long favoriteId, Timestamp gmtCreate) {
+	public BookUserMark(Long bookId, Long writerId, Long favoriteId, Timestamp gmtCreate) {
 		super();
 		this.bookId = bookId;
 		WriterId = writerId;

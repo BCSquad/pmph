@@ -19,8 +19,8 @@ import org.apache.ibatis.type.Alias;
  *
  */
 @SuppressWarnings("serial")
-@Alias("bookUserLike")
-public class bookUserLike implements Serializable {
+@Alias("BookUserLike")
+public class BookUserLike implements Serializable {
 	/**
 	 * 主键
 	 */
@@ -38,11 +38,11 @@ public class bookUserLike implements Serializable {
 	 */
 	private Timestamp gmtCreate;
 
-	public bookUserLike() {
+	public BookUserLike() {
 		super();
 	}
 
-	public bookUserLike(Long bookId, Long writerId, Timestamp gmtCreate) {
+	public BookUserLike(Long bookId, Long writerId, Timestamp gmtCreate) {
 		super();
 		this.bookId = bookId;
 		this.writerId = writerId;

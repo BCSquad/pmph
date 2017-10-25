@@ -19,8 +19,8 @@ import org.apache.ibatis.type.Alias;
  *
  */
 @SuppressWarnings("serial")
-@Alias("book")
-public class book implements Serializable {
+@Alias("Book")
+public class Book implements Serializable {
 	/**
 	 * 主键
 	 */
@@ -154,11 +154,11 @@ public class book implements Serializable {
 	 */
 	private Timestamp gmtUpdate;
 
-	public book() {
+	public Book() {
 		super();
 	}
 
-	public book(String bookname, String isbn, String sn, String author, String publisher, String lang, Integer revision,
+	public Book(String bookname, String isbn, String sn, String author, String publisher, String lang, Integer revision,
 			Long type, Timestamp publishDate, String reader, Double price, Double score, String buyUrl, String imageUrl,
 			String pdfUrl, Long clicks, Long comments, Long likes, Long bookmarks, Boolean isStick, Integer sort,
 			Timestamp deadlineStick, Boolean isNew, Integer sortNew, Timestamp deadlineNew, Boolean isPromote,

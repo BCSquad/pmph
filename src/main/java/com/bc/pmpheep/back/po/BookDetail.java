@@ -18,8 +18,8 @@ import org.apache.ibatis.type.Alias;
  *
  */
 @SuppressWarnings("serial")
-@Alias("bookDetail")
-public class bookDetail implements Serializable {
+@Alias("BookDetail")
+public class BookDetail implements Serializable {
 	/**
 	 * 主键
 	 */
@@ -33,11 +33,11 @@ public class bookDetail implements Serializable {
 	 */
 	private String detail;
 
-	public bookDetail() {
+	public BookDetail() {
 		super();
 	}
 
-	public bookDetail(Long bookId, String detail) {
+	public BookDetail(Long bookId, String detail) {
 		super();
 		this.bookId = bookId;
 		this.detail = detail;
