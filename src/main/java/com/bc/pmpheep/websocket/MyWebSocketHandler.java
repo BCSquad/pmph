@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.json.Json;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -79,7 +81,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
 	 */
 	public void sendWebSocketMessageToUser(List<String> userIds, WebScocketMessage webScocketMessage)
 			throws IOException {
-		TextMessage textMessage = new TextMessage(JsonUtil.toJson(webScocketMessage), true);
+		TextMessage textMessage = new TextMessage(JsonUtil.toJSon(webScocketMessage), true);
 		for (String userId : userIds) {
 			if (null != userId && !"".equals(userId)) {
 				WebSocketSession webSocketSession = userSocketSessionMap.get(userId);
