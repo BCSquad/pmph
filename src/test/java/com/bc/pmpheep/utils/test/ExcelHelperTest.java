@@ -1,7 +1,7 @@
 package com.bc.pmpheep.utils.test;
 
 import com.bc.pmpheep.back.po.Area;
-import com.bc.pmpheep.migration.JdbcHelper;
+import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.utils.ExcelHelper;
 import java.io.FileNotFoundException;

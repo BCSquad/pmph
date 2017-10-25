@@ -1,13 +1,13 @@
 /**
  * 
  */
-package com.bc.pmpheep.back.datamigration;
+package com.bc.pmpheep.migration;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.bc.pmpheep.back.datamigration.common.Until;
 import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
@@ -17,6 +17,7 @@ import com.bc.pmpheep.back.service.PmphRoleService;
 import com.bc.pmpheep.back.service.PmphUserRoleService;
 import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.general.service.FileService;
+import com.bc.pmpheep.migration.common.Until;
 
 /**
  * <p>Title:PmphUserData<p>
@@ -24,6 +25,7 @@ import com.bc.pmpheep.general.service.FileService;
  * @author Administrator
  * @date 2017年10月24日 下午7:40:00
  */
+@Component
 public class PmphUserData {
 	@Autowired
 	private PmphDepartmentService pmphDepartmentService;

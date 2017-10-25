@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -205,18 +206,34 @@ public class UserMessageController {
     }
 
     /**
-     * 单纯修改消息
      * 
-     * @author Mryang
-     * @createDate 2017年9月29日 下午4:30:14
-     * @param message
+     * <pre>
+     * 功能描述：单纯修改消息
+     * 使用示范：
+     *
+     * @param message 消息对象
+     * @param userMsgId 消息主键Id
+     * @param msgTitle 消息标题
      * @return 影响行数
+     * </pre>
+     */
+    /**
+     * 
+     * <pre>
+     * 功能描述：单纯修改消息
+     * 使用示范：
+     *
+     * @param message 消息对象
+     * @param msgId Message主键Id
+     * @param msgTitle 消息标题
+     * @return 影响行数
+     * </pre>
      */
     @RequestMapping(value = "/update/message", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseBean updateUserMessage(Message message,
-    @RequestParam("userMsgId") Long userMsgId, @RequestParam("msgTitle") String msgTitle) {
-        return new ResponseBean(userMessageService.updateUserMessage(message, userMsgId, msgTitle));
+    public ResponseBean updateUserMessage(Message message, @RequestParam("msgId") String msgId,
+    @RequestParam("msgTitle") String msgTitle) {
+        return new ResponseBean(userMessageService.updateUserMessage(message, msgId, msgTitle));
     }
 
     /**
@@ -265,8 +282,8 @@ public class UserMessageController {
      */
     @RequestMapping(value = "/delete/message", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseBean deleteUserMessage(@RequestParam("ids") String[] ids) {
-        return new ResponseBean(userMessageService.updateUserMessageIsDeletedByMsgId(ids));
+    public ResponseBean deleteUserMessage(@RequestParam("msgIds") List<String> msgIds) {
+        return new ResponseBean(userMessageService.updateUserMessageIsDeletedByMsgId(msgIds));
 
     }
 }

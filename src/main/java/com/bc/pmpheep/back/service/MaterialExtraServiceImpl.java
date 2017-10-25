@@ -41,17 +41,9 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.NULL_PARAM, "通知内容为空");
         }
-        if (StringUtil.isEmpty(materialExtra.getNoteAttachment())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
-                                              CheckedExceptionResult.NULL_PARAM, "通知内容附件为空");
-        }
         if (StringUtil.isEmpty(materialExtra.getNote())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.NULL_PARAM, "备注内容为空");
-        }
-        if (StringUtil.isEmpty(materialExtra.getNoteAttachment())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
-                                              CheckedExceptionResult.NULL_PARAM, "备注附件为空");
         }
         materialExtraDao.addMaterialExtra(materialExtra);
         return materialExtra;
