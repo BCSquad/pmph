@@ -4,6 +4,9 @@
  */
 package com.bc.pmpheep.utils;
 
+import com.bc.pmpheep.back.util.StringUtil;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -34,17 +37,17 @@ public class ExcelHelper {
      * 根据Map集合创建工作簿
      *
      * @param maps 工作簿的数据源
-     * @param sheetName 表名
+     * @param sheetname 表名
      * @return 根据Map集合创建的工作簿
      */
-    public Workbook fromMaps(List<Map<String, Object>> maps, String sheetName) {
+    public Workbook fromMaps(List<Map<String, Object>> maps, String sheetname) {
         if (null == maps || maps.isEmpty()) {
             throw new IllegalArgumentException("生成Excel时数据源对象为空");
         }
         /* 创建工作簿 */
         Workbook workbook = new HSSFWorkbook();
         /* 创建工作表 */
-        Sheet sheet = workbook.createSheet(sheetName);
+        Sheet sheet = workbook.createSheet(sheetname);
         int rowCount = 0; //行计数
         int columnCount = 0; //列计数
         for (Map<String, Object> map : maps) {
@@ -71,6 +74,29 @@ public class ExcelHelper {
             rowCount++;
         }
         return workbook;
+    }
+
+    /**
+     * 根据Map集合创建工作簿并导出到指定路径
+     *
+     * @param maps 工作簿的数据源
+     * @param sheetname 表名
+     * @param path Excel导出路径，为空时导出到本工程路径下
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public void exportFromMaps(List<Map<String, Object>> maps, String sheetname, String path) throws FileNotFoundException, IOException {
+        Workbook workbook = fromMaps(maps, sheetname);
+        if (StringUtil.isEmpty(path)) {
+            path = "";
+        }
+        StringBuilder sb = new StringBuilder(path);
+        sb.append(sheetname);
+        sb.append(".xls");
+        try (FileOutputStream out = new FileOutputStream(sb.toString())) {
+            workbook.write(out);
+            out.flush();
+        }
     }
 
     @Deprecated

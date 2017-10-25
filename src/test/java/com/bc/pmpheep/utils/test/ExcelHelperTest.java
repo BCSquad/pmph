@@ -59,4 +59,14 @@ public class ExcelHelperTest extends BaseTest {
         out.flush();
         out.close();
     }
+
+    @Test
+    public void exportFromMaps() throws IOException {
+        String sql = "SELECT * FROM bbs_group";
+        List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        for (Map<String, Object> map : maps) {
+            map.put("exception", "数据异常原因");
+        }
+        excelHelper.exportFromMaps(maps, "bbs_group", null);
+    }
 }
