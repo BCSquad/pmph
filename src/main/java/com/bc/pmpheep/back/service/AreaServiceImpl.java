@@ -37,14 +37,8 @@ public class AreaServiceImpl extends BaseService implements AreaService {
     	if(null == area){
     		throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, "参数为空");
     	}
-    	if(null == area.getParentId()){
-    		throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, "上级id为空");
-    	}
     	if(null == area.getAreaName()){
     		throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, "区域名称为空");
-    	}
-    	if(null == area.getSort()){
-    		throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, "排序为空");
     	}
     	Long id = area.getId();
     	areaDao.addArea(area);

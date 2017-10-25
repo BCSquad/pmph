@@ -5,6 +5,8 @@ package com.bc.pmpheep.migration;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,12 +23,13 @@ import com.bc.pmpheep.migration.common.Until;
 
 /**
  * <p>Title:PmphUserData<p>
- * <p>Description:TODO<p>
- * @author Administrator
+ * <p>Description:社内用户模块数据迁移类<p>
+ * @author lyc
  * @date 2017年10月24日 下午7:40:00
  */
 @Component
 public class PmphUserData {
+	private final Logger logger = LoggerFactory.getLogger(PmphUserData.class);
 	@Autowired
 	private PmphDepartmentService pmphDepartmentService;
 	@Autowired
@@ -49,6 +52,7 @@ public class PmphUserData {
 	public void pmphDepartment() throws Exception {
 		String sql = "SELECT orgid,parentid,orgname,sortno,remark FROM ba_organize WHERE orgcode LIKE '15%' ORDER BY orgcode ;";
 		List<Object[]> list = Until.getListData(sql);
+		int count = 0;
 		for (Object[] s : list) {
 			PmphDepartment pmphDepartment = new PmphDepartment();
 			String departmentId = String.valueOf(s[0]);
@@ -56,9 +60,8 @@ public class PmphUserData {
 			pmphDepartment.setParentId(0L);
 			pmphDepartment.setPath("0-1");
 			pmphDepartment.setDpName(String.valueOf(s[2]));
-			String sort = String.valueOf(s[3]);
-			if (!("null".equals(sort)|| "".equals(sort))){				
-				pmphDepartment.setSort(Integer.parseInt(sort));
+			if (!(null == s[3] || "".equals(String.valueOf(s[3])))){				
+				pmphDepartment.setSort(Integer.parseInt(String.valueOf(s[3])));
 			}
 			pmphDepartment.setNote(String.valueOf(s[4]));
 			pmphDepartment = pmphDepartmentService
@@ -73,7 +76,10 @@ public class PmphUserData {
 			String path = researchParentId(departmentId);
 			pmphDepartment.setPath(path.substring(0, path.lastIndexOf("-")));
 			pmphDepartmentService.updatePmphDepartment(pmphDepartment);
+			count++;
 		}
+		logger.info("pmph_department表数据迁移完成");
+		logger.info("原数据库中共有{}条数据，迁移了{}条数据",list.size(),count);
 	}
 
 	/**
@@ -119,6 +125,7 @@ public class PmphUserData {
 					   +"LEFT JOIN ba_organize d ON c.orgid = d.orgid "
 					   +"WHERE a.sysflag = 0 ;";
     	  List<Object[] > list = Until.getListData(sql);
+    	  int count = 0 ;
     	  for(Object[] s : list){
     		  String userId = String.valueOf(s[0]);
     		  PmphUser pmphUser = new PmphUser();
@@ -145,7 +152,10 @@ public class PmphUserData {
 //              MultipartFile multipartFile = new MockMultipartFile("file", file.getName(), "text/plain", IOUtils.toByteArray(input));
 //              pmphUser.setAvatar(fileService.save(multipartFile, ImageType.PMPH_USER_AVATAR, pmphUser.getId()));
               pmphUserService.update(pmphUser);
+              count++;
     	  }
+    	  logger.info("pmph_user表迁移完成");
+    	  logger.info("原数据库表共有{}条数据，迁移了{}条数据",list.size(),count);
       }
 	
 	/**
@@ -159,6 +169,7 @@ public class PmphUserData {
 	public void pmphRole() throws Exception{
 		String sql = "SELECT roleid,rolename,isvalid,sortno,memo FROM sys_role";
 		List<Object[]> list = Until.getListData(sql);
+		int count = 0 ;
 		for (Object[] s : list){
 			String roleId = String.valueOf(s[0]);
 			PmphRole pmphRole = new PmphRole();
@@ -168,7 +179,10 @@ public class PmphUserData {
 			pmphRole.setNote(String.valueOf(s[4]));
 			pmphRole = pmphRoleService.add(pmphRole);
 			Until.updateNewPk(roleId, "sys_role", pmphRole.getId());
+			count++;
 		}
+		logger.info("pmph_role表迁移完成");
+		logger.info("原数据库表共有{}条数据，迁移了{}条数据",list.size(),count);
 	}
 	
 	/**
@@ -185,6 +199,7 @@ public class PmphUserData {
                       +"LEFT JOIN sys_role c ON b.roleid = c.roleid"
                       +"WHERE a.sysflag = 0 ;";
 		List<Object[]> list = Until.getListData(sql);
+		int count = 0 ;
 		for (Object[] s : list){
 			String userRoleId = String.valueOf(s[0]);
 			PmphUserRole pmphUserRole = new PmphUserRole();
@@ -192,6 +207,9 @@ public class PmphUserData {
 			pmphUserRole.setRoleId(Long.parseLong(String.valueOf(s[2])));
 			pmphUserRole = pmphUserRoleService.addPmphUserRole(pmphUserRole);
 			Until.updateNewPk(userRoleId, "sys_userrole", pmphUserRole.getId());
+			count++;
 		}
+		logger.info("pmph_user_role表迁移完成");
+		logger.info("原数据库表共有{}条数据，迁移了{}条数据",list.size(),count);
 	}
 }

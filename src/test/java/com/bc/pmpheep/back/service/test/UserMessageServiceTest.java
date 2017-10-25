@@ -44,6 +44,8 @@ public class UserMessageServiceTest extends BaseTest {
         SessionUtil.getShiroSessionUser().setAttribute(Const.SESSION_PMPH_USER, new PmphUser(1L));
         MessageStateVO messageStateVO = new MessageStateVO();
         PageParameter pageParameter = new PageParameter<>();
+        List<String> list = new ArrayList<String>();
+        list.add("fd");
         pageParameter.setParameter(messageStateVO);
         userMessageService.listMessageState(pageParameter, "");
         userMessageService.addOrUpdateUserMessage(new Message(null, "eee"),
@@ -64,9 +66,10 @@ public class UserMessageServiceTest extends BaseTest {
                                                   false,
                                                   new String[] { "1" },
                                                   "");
-        userMessageService.updateUserMessage(new Message("1", "aa"), "1L", "");
+        userMessageService.updateUserMessage(new Message("1", "aa"), "", "");
         userMessageService.updateToWithdraw(new UserMessage("1", true));
-        List<String> ids=new ArrayList<String>(1);
+        userMessageService.deleteMessageByMsgId(list);
+        List<String> ids = new ArrayList<String>(1);
         ids.add("1");
         userMessageService.deleteMessageByMsgId(ids);
     }
