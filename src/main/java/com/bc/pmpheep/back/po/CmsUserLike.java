@@ -1,81 +1,98 @@
 package com.bc.pmpheep.back.po;
 
 import java.sql.Timestamp;
+
 import org.apache.ibatis.type.Alias;
 
 /**
- * CMS内容点赞表（多对多）
- * @introduction
- *
- * @author Mryang
- *
- * @createDate 2017年10月24日 下午5:15:40
- *
+ * 
+ * <pre>
+ * 功能描述：CMS内容点赞 实体
+ * 使用示范：
+ * 
+ * 
+ * @author (作者) nyz
+ * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2017-10-25
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
+ * </pre>
  */
 @SuppressWarnings("serial")
 @Alias("CmsUserLike")
 public class CmsUserLike implements java.io.Serializable {
 
-	// Fields
-	/**
-	 * 主键
-	 */
-	private Long id;
-	/**
-	 * 内容id
-	 */
-	private Long contentId;
-	/**
-	 * 用户id
-	 */
-	private Long writerId;
-	/**
-	 * 创建时间
-	 */
-	private Timestamp gmtCreate;
-	
-	public CmsUserLike() {
-		super();
-	}
+    // Fields
+    // 主键
+    private Long      id;
+    // 内容id
+    private Long      contentId;
+    // 用户id
+    private Long      writerId;
+    // 创建时间
+    private Timestamp gmtCreate;
 
-	public Long getId() {
-		return id;
-	}
+    // Constructors
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    /** default constructor */
+    public CmsUserLike() {
+    }
 
-	public Long getContentId() {
-		return contentId;
-	}
+    /** full constructor */
+    public CmsUserLike(Long contentId, Long writerId, Timestamp gmtCreate) {
+        this.contentId = contentId;
+        this.writerId = writerId;
+        this.gmtCreate = gmtCreate;
+    }
 
-	public void setContentId(Long contentId) {
-		this.contentId = contentId;
-	}
+    // Property accessors
+    public Long getId() {
+        return this.id;
+    }
 
-	public Long getWriterId() {
-		return writerId;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setWriterId(Long writerId) {
-		this.writerId = writerId;
-	}
+    public Long getContentId() {
+        return this.contentId;
+    }
 
-	public Timestamp getGmtCreate() {
-		return gmtCreate;
-	}
+    public void setContentId(Long contentId) {
+        this.contentId = contentId;
+    }
 
-	public void setGmtCreate(Timestamp gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
+    public Long getWriterId() {
+        return this.writerId;
+    }
 
-	@Override
-	public String toString() {
-		return "{id:" + id + ", contentId:" + contentId + ", writerId:"
-				+ writerId + ", gmtCreate:" + gmtCreate + "}";
-	}
+    public void setWriterId(Long writerId) {
+        this.writerId = writerId;
+    }
 
-	
+    public Timestamp getGmtCreate() {
+        return this.gmtCreate;
+    }
+
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    /**
+     * <pre>
+     * 功能描述：
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
+    @Override
+    public String toString() {
+        return "{id:" + id + ", contentId:" + contentId + ", writerId:" + writerId + ", gmtCreate:"
+               + gmtCreate + "}";
+    }
 
 }

@@ -1,268 +1,270 @@
 package com.bc.pmpheep.back.po;
+
 import org.apache.ibatis.type.Alias;
 
 /**
- * CMS内容类别实体
- * @introduction
- *
- * @author Mryang
- *
- * @createDate 2017年10月24日 下午4:51:52
- *
+ * 
+ * <pre>
+ * 功能描述：CMS 内容类别实体
+ * 使用示范：
+ * 
+ * 
+ * @author (作者) nyz
+ * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2017-10-25
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
+ * </pre>
  */
 @SuppressWarnings("serial")
 @Alias("CmsCategory")
 public class CmsCategory implements java.io.Serializable {
-	/**
-	 * 主键
-	 */
-	private Long id;
-	/**
-	 * 上级类别id
-	 */
-	private Long parentId;
-	/**
-	 * 根节点路径
-	 */
-	private String path;
-	/**
-	 * 类别名称
-	 */
-	private String categoryName;
-	/**
-	 * 是否后台类别
-	 */
-	private Boolean isBackground;
-	/**
-	 * 操作权限id
-	 */
-	private Long permissionId;
-	/**
-	 * 是否需要审核
-	 */
-	private Boolean isAuthRequired;
-	/**
-	 * 审核角色id
-	 */
-	private Long authRoleId;
-	/**
-	 * 是否教材通知
-	 */
-	private Boolean isMaterialNotice;
-	/**
-	 * 教材id
-	 */
-	private Long materialId;
-	/**
-	 * 是否显示摘要
-	 */
-	private Boolean isSummaryVisible;
-	/**
-	 * 是否显示关键字
-	 */
-	private Boolean isKeywordVisible;
-	/**
-	 * 是否显示作者
-	 */
-	private Boolean isAuthorVisible;
-	/**
-	 * 是否显示点击数
-	 */
-	private Boolean isClicksVisible;
-	/**
-	 * 是否允许评论
-	 */
-	private Boolean isCommentsAllow;
-	/**
-	 * 是否显示评论数
-	 */
-	private Boolean isCommentsVisible;
-	/**
-	 * 是否显示点赞数
-	 */
-	private Boolean isLikesVisible;
-	/**
-	 * 是否显示收藏数
-	 */
-	private Boolean isBookmarksVisible;
-	/**
-	 * 显示顺序
-	 */
-	private Integer sort;
-	
-	public CmsCategory() {
-		super();
-	}
 
-	public Long getId() {
-		return id;
-	}
+    // 主键
+    private Long    id;
+    // 上级类别id
+    private Long    parentId;
+    // 根节点路径
+    private String  path;
+    // 类别名称
+    private String  categoryName;
+    // 是否后台类别
+    private Boolean isBackground;
+    // 操作权限id
+    private Long    permissionId;
+    // 是否需要审核
+    private Boolean isAuthRequired;
+    // 审核角色id
+    private Long    authRoleId;
+    // 是否教材通知
+    private Boolean isMaterialNotice;
+    // 教材id
+    private Long    materialId;
+    // 是否显示摘要
+    private Boolean isSummaryVisible;
+    // 是否显示关键字
+    private Boolean isKeywordVisible;
+    // 是否显示作者
+    private Boolean isAuthorVisible;
+    // 是否显示点击数
+    private Boolean isClicksVisible;
+    // 是否允许评论
+    private Boolean isCommentsAllow;
+    // 是否显示评论数
+    private Boolean isCommentsVisible;
+    // 是否显示点赞数
+    private Boolean isLikesVisible;
+    // 是否显示收藏数
+    private Boolean isBookmarksVisible;
+    // 显示顺序
+    private Integer sort;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    // Constructors
 
-	public Long getParentId() {
-		return parentId;
-	}
+    /** default constructor */
+    public CmsCategory() {
+    }
 
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
-	}
+    /** full constructor */
+    public CmsCategory(Long parentId, String path, String categoryName, Boolean isBackground,
+    Long permissionId, Boolean isAuthRequired, Long authRoleId, Boolean isMaterialNotice,
+    Long materialId, Boolean isSummaryVisible, Boolean isKeywordVisible, Boolean isAuthorVisible,
+    Boolean isClicksVisible, Boolean isCommentsAllow, Boolean isCommentsVisible,
+    Boolean isLikesVisible, Boolean isBookmarksVisible, Integer sort) {
+        this.parentId = parentId;
+        this.path = path;
+        this.categoryName = categoryName;
+        this.isBackground = isBackground;
+        this.permissionId = permissionId;
+        this.isAuthRequired = isAuthRequired;
+        this.authRoleId = authRoleId;
+        this.isMaterialNotice = isMaterialNotice;
+        this.materialId = materialId;
+        this.isSummaryVisible = isSummaryVisible;
+        this.isKeywordVisible = isKeywordVisible;
+        this.isAuthorVisible = isAuthorVisible;
+        this.isClicksVisible = isClicksVisible;
+        this.isCommentsAllow = isCommentsAllow;
+        this.isCommentsVisible = isCommentsVisible;
+        this.isLikesVisible = isLikesVisible;
+        this.isBookmarksVisible = isBookmarksVisible;
+        this.sort = sort;
+    }
 
-	public String getPath() {
-		return path;
-	}
+    public Long getId() {
+        return this.id;
+    }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getCategoryName() {
-		return categoryName;
-	}
+    public Long getParentId() {
+        return this.parentId;
+    }
 
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
-	}
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
 
-	public Boolean getIsBackground() {
-		return isBackground;
-	}
+    public String getPath() {
+        return this.path;
+    }
 
-	public void setIsBackground(Boolean isBackground) {
-		this.isBackground = isBackground;
-	}
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-	public Long getPermissionId() {
-		return permissionId;
-	}
+    public String getCategoryName() {
+        return this.categoryName;
+    }
 
-	public void setPermissionId(Long permissionId) {
-		this.permissionId = permissionId;
-	}
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 
-	public Boolean getIsAuthRequired() {
-		return isAuthRequired;
-	}
+    public Boolean getIsBackground() {
+        return this.isBackground;
+    }
 
-	public void setIsAuthRequired(Boolean isAuthRequired) {
-		this.isAuthRequired = isAuthRequired;
-	}
+    public void setIsBackground(Boolean isBackground) {
+        this.isBackground = isBackground;
+    }
 
-	public Long getAuthRoleId() {
-		return authRoleId;
-	}
+    public Long getPermissionId() {
+        return this.permissionId;
+    }
 
-	public void setAuthRoleId(Long authRoleId) {
-		this.authRoleId = authRoleId;
-	}
+    public void setPermissionId(Long permissionId) {
+        this.permissionId = permissionId;
+    }
 
-	public Boolean getIsMaterialNotice() {
-		return isMaterialNotice;
-	}
+    public Boolean getIsAuthRequired() {
+        return this.isAuthRequired;
+    }
 
-	public void setIsMaterialNotice(Boolean isMaterialNotice) {
-		this.isMaterialNotice = isMaterialNotice;
-	}
+    public void setIsAuthRequired(Boolean isAuthRequired) {
+        this.isAuthRequired = isAuthRequired;
+    }
 
-	public Long getMaterialId() {
-		return materialId;
-	}
+    public Long getAuthRoleId() {
+        return this.authRoleId;
+    }
 
-	public void setMaterialId(Long materialId) {
-		this.materialId = materialId;
-	}
+    public void setAuthRoleId(Long authRoleId) {
+        this.authRoleId = authRoleId;
+    }
 
-	public Boolean getIsSummaryVisible() {
-		return isSummaryVisible;
-	}
+    public Boolean getIsMaterialNotice() {
+        return this.isMaterialNotice;
+    }
 
-	public void setIsSummaryVisible(Boolean isSummaryVisible) {
-		this.isSummaryVisible = isSummaryVisible;
-	}
+    public void setIsMaterialNotice(Boolean isMaterialNotice) {
+        this.isMaterialNotice = isMaterialNotice;
+    }
 
-	public Boolean getIsKeywordVisible() {
-		return isKeywordVisible;
-	}
+    public Long getMaterialId() {
+        return this.materialId;
+    }
 
-	public void setIsKeywordVisible(Boolean isKeywordVisible) {
-		this.isKeywordVisible = isKeywordVisible;
-	}
+    public void setMaterialId(Long materialId) {
+        this.materialId = materialId;
+    }
 
-	public Boolean getIsAuthorVisible() {
-		return isAuthorVisible;
-	}
+    public Boolean getIsSummaryVisible() {
+        return this.isSummaryVisible;
+    }
 
-	public void setIsAuthorVisible(Boolean isAuthorVisible) {
-		this.isAuthorVisible = isAuthorVisible;
-	}
+    public void setIsSummaryVisible(Boolean isSummaryVisible) {
+        this.isSummaryVisible = isSummaryVisible;
+    }
 
-	public Boolean getIsClicksVisible() {
-		return isClicksVisible;
-	}
+    public Boolean getIsKeywordVisible() {
+        return this.isKeywordVisible;
+    }
 
-	public void setIsClicksVisible(Boolean isClicksVisible) {
-		this.isClicksVisible = isClicksVisible;
-	}
+    public void setIsKeywordVisible(Boolean isKeywordVisible) {
+        this.isKeywordVisible = isKeywordVisible;
+    }
 
-	public Boolean getIsCommentsAllow() {
-		return isCommentsAllow;
-	}
+    public Boolean getIsAuthorVisible() {
+        return this.isAuthorVisible;
+    }
 
-	public void setIsCommentsAllow(Boolean isCommentsAllow) {
-		this.isCommentsAllow = isCommentsAllow;
-	}
+    public void setIsAuthorVisible(Boolean isAuthorVisible) {
+        this.isAuthorVisible = isAuthorVisible;
+    }
 
-	public Boolean getIsCommentsVisible() {
-		return isCommentsVisible;
-	}
+    public Boolean getIsClicksVisible() {
+        return this.isClicksVisible;
+    }
 
-	public void setIsCommentsVisible(Boolean isCommentsVisible) {
-		this.isCommentsVisible = isCommentsVisible;
-	}
+    public void setIsClicksVisible(Boolean isClicksVisible) {
+        this.isClicksVisible = isClicksVisible;
+    }
 
-	public Boolean getIsLikesVisible() {
-		return isLikesVisible;
-	}
+    public Boolean getIsCommentsAllow() {
+        return this.isCommentsAllow;
+    }
 
-	public void setIsLikesVisible(Boolean isLikesVisible) {
-		this.isLikesVisible = isLikesVisible;
-	}
+    public void setIsCommentsAllow(Boolean isCommentsAllow) {
+        this.isCommentsAllow = isCommentsAllow;
+    }
 
-	public Boolean getIsBookmarksVisible() {
-		return isBookmarksVisible;
-	}
+    public Boolean getIsCommentsVisible() {
+        return this.isCommentsVisible;
+    }
 
-	public void setIsBookmarksVisible(Boolean isBookmarksVisible) {
-		this.isBookmarksVisible = isBookmarksVisible;
-	}
+    public void setIsCommentsVisible(Boolean isCommentsVisible) {
+        this.isCommentsVisible = isCommentsVisible;
+    }
 
-	public Integer getSort() {
-		return sort;
-	}
+    public Boolean getIsLikesVisible() {
+        return this.isLikesVisible;
+    }
 
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
+    public void setIsLikesVisible(Boolean isLikesVisible) {
+        this.isLikesVisible = isLikesVisible;
+    }
 
-	@Override
-	public String toString() {
-		return "{id:" + id + ", parentId:" + parentId + ", path:" + path
-				+ ", categoryName:" + categoryName + ", isBackground:"
-				+ isBackground + ", permissionId:" + permissionId
-				+ ", isAuthRequired:" + isAuthRequired + ", authRoleId:"
-				+ authRoleId + ", isMaterialNotice:" + isMaterialNotice
-				+ ", materialId:" + materialId + ", isSummaryVisible:"
-				+ isSummaryVisible + ", isKeywordVisible:" + isKeywordVisible
-				+ ", isAuthorVisible:" + isAuthorVisible + ", isClicksVisible:"
-				+ isClicksVisible + ", isCommentsAllow:" + isCommentsAllow
-				+ ", isCommentsVisible:" + isCommentsVisible
-				+ ", isLikesVisible:" + isLikesVisible
-				+ ", isBookmarksVisible:" + isBookmarksVisible + ", sort:"
-				+ sort + "}";
-	}
-	
-	
+    public Boolean getIsBookmarksVisible() {
+        return this.isBookmarksVisible;
+    }
+
+    public void setIsBookmarksVisible(Boolean isBookmarksVisible) {
+        this.isBookmarksVisible = isBookmarksVisible;
+    }
+
+    public Integer getSort() {
+        return this.sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
+    /**
+     * <pre>
+     * 功能描述：
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
+    @Override
+    public String toString() {
+        return " {id:" + id + ", parentId:" + parentId + ", path:" + path + ", categoryName:"
+               + categoryName + ", isBackground:" + isBackground + ", permissionId:" + permissionId
+               + ", isAuthRequired:" + isAuthRequired + ", authRoleId:" + authRoleId
+               + ", isMaterialNotice:" + isMaterialNotice + ", materialId:" + materialId
+               + ", isSummaryVisible:" + isSummaryVisible + ", isKeywordVisible:"
+               + isKeywordVisible + ", isAuthorVisible:" + isAuthorVisible + ", isClicksVisible:"
+               + isClicksVisible + ", isCommentsAllow:" + isCommentsAllow + ", isCommentsVisible:"
+               + isCommentsVisible + ", isLikesVisible:" + isLikesVisible + ", isBookmarksVisible:"
+               + isBookmarksVisible + ", sort:" + sort + "}";
+    }
 
 }

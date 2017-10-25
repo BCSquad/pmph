@@ -72,54 +72,54 @@ public class Material {
 					"LEFT JOIN sys_user h on h.userid = a.updateuserid,(select new_user_id from sys_user where usercode='admin' )t  "+
 					"WHERE a.isdelete = 0 GROUP BY A.new_materid ";
 		//获取到所有数据表
-		List<Object[]> lst=Until.getListData(sql);
-		for(Object[]o:lst){
-			String oldMaterid = (String)o[0];
-			com.bc.pmpheep.back.po.Material m =new com.bc.pmpheep.back.po.Material();
-			m.setMaterialName((String)o[1]);
-			m.setMaterialRound((Integer.parseInt(String.valueOf(o[2]))));
-			m.setMaterialType(new Long((String) o[3]));
-			m.setDeadline((Timestamp)o[4]);
-			m.setActualDeadline((Timestamp)o[5]);
-			m.setAgeDeadline((Timestamp)o[6]);
-			m.setMailAddress((String)o[7]);
-			m.setProgress(new Short((String)o[8]));
-			m.setDepartmentId((Long)o[9]);
-			m.setDirector((Long) o[10]);//director,
-			m.setIsMultiBooks("1".equals(String.valueOf(o[11]))); //is_multi_books,
-			m.setIsMultiPosition("1".equals(String.valueOf(o[12])));//is_multi_position,
-			m.setIsEduExpUsed("1".equals(String.valueOf(o[13])));//is_edu_exp_used,
-			m.setIsEduExpRequired("1".equals(String.valueOf(o[14])));//is_edu_exp_required,
-			m.setIsWorkExpUsed("1".equals(String.valueOf(o[15])));//is_work_exp_used,
-			m.setIsWorkExpRequired("1".equals(String.valueOf(o[16])));//is_work_exp_required,
-			m.setIsTeachExpUsed("1".equals(String.valueOf(o[17])));//is_teach_exp_used,
-			m.setIsTeachExpRequired("1".equals(String.valueOf(o[18])));//is_teach_exp_required,
-			m.setIsAcadeUsed("1".equals(String.valueOf(o[19])));//is_acade_used,
-			m.setIsAcadeRequired("1".equals(String.valueOf(o[20])));//is_acade_required,
-			m.setIsLastPositionUsed("1".equals(String.valueOf(o[21])));//is_last_position_used,
-			m.setIsLastPositionRequired("1".equals(String.valueOf(o[22])));//is_last_position_required,
-			m.setIsNationalCourseUsed("1".equals(String.valueOf(o[23])));//is_national_course_used,
-			m.setIsNationalCourseRequired("1".equals(String.valueOf(o[24])));//is_national_course_required,
-			m.setIsProvincialCourseUsed("1".equals(String.valueOf(o[25])));//is_provincial_course_used,
-			m.setIsProvincialCourseRequired("1".equals(String.valueOf(o[26])));//is_provincial_course_required,
-			m.setIsSchoolCourseUsed("1".equals(String.valueOf(o[27])));//is_school_course_used,
-			m.setIsSchoolCourseRequired("1".equals(String.valueOf(o[28])));//is_school_course_required,
-			m.setIsNationalPlanUsed("1".equals(String.valueOf(o[29])));//is_national_plan_used,
-			m.setIsNationalPlanRequired("1".equals(String.valueOf(o[30])));//is_national_plan_required,
-			m.setIsTextbookWriterUsed("1".equals(String.valueOf(o[31])));//is_textbook_writer_used,
-			m.setIsTextbookWriterRequired("1".equals(String.valueOf(o[32])));//is_textbook_writer_required,
-			m.setIsOtherTextbookUsed("1".equals(String.valueOf(o[33])));//is_other_textbook_used,
-			m.setIsOtherTextbookRequired("1".equals(String.valueOf(o[34])));//is_other_textbook_required,
-			m.setIsResearchUsed("1".equals(String.valueOf(o[35])));//is_research_used,
-			m.setIsResearchRequired("1".equals(String.valueOf(o[36])));//is_research_required,
-			m.setIsPublished("1".equals(String.valueOf(o[37])));//is_published,
-			m.setIsDeleted("1".equals(String.valueOf(o[38])));//is_deleted,
-			m.setGmtCreate((Timestamp)o[39]);//gmt_create,
-			m.setFounderId((Long)o[40]);//founder_id,
-			m.setGmtUpdate((Timestamp)o[41]);//gmt_update,
-			m.setMenderId((Long)o[42]);//mender_id
-			m=materialService.addMaterial(m);
-			Until.updateNewPk(oldMaterid, "teach_material", m.getId());
+		List<Object[]> materialList=Until.getListData(sql);
+		for(Object[] oldMaterial:materialList){
+			String oldMaterid = (String)oldMaterial[0];
+			com.bc.pmpheep.back.po.Material material =new com.bc.pmpheep.back.po.Material();
+			material.setMaterialName((String)oldMaterial[1]);
+			material.setMaterialRound((Integer.parseInt(String.valueOf(oldMaterial[2]))));
+			material.setMaterialType(new Long((String) oldMaterial[3]));
+			material.setDeadline((Timestamp)oldMaterial[4]);
+			material.setActualDeadline((Timestamp)oldMaterial[5]);
+			material.setAgeDeadline((Timestamp)oldMaterial[6]);
+			material.setMailAddress((String)oldMaterial[7]);
+			material.setProgress(new Short((String)oldMaterial[8]));
+			material.setDepartmentId((Long)oldMaterial[9]);
+			material.setDirector((Long) oldMaterial[10]);//director,
+			material.setIsMultiBooks("1".equals(String.valueOf(oldMaterial[11]))); //is_multi_books,
+			material.setIsMultiPosition("1".equals(String.valueOf(oldMaterial[12])));//is_multi_position,
+			material.setIsEduExpUsed("1".equals(String.valueOf(oldMaterial[13])));//is_edu_exp_used,
+			material.setIsEduExpRequired("1".equals(String.valueOf(oldMaterial[14])));//is_edu_exp_required,
+			material.setIsWorkExpUsed("1".equals(String.valueOf(oldMaterial[15])));//is_work_exp_used,
+			material.setIsWorkExpRequired("1".equals(String.valueOf(oldMaterial[16])));//is_work_exp_required,
+			material.setIsTeachExpUsed("1".equals(String.valueOf(oldMaterial[17])));//is_teach_exp_used,
+			material.setIsTeachExpRequired("1".equals(String.valueOf(oldMaterial[18])));//is_teach_exp_required,
+			material.setIsAcadeUsed("1".equals(String.valueOf(oldMaterial[19])));//is_acade_used,
+			material.setIsAcadeRequired("1".equals(String.valueOf(oldMaterial[20])));//is_acade_required,
+			material.setIsLastPositionUsed("1".equals(String.valueOf(oldMaterial[21])));//is_last_position_used,
+			material.setIsLastPositionRequired("1".equals(String.valueOf(oldMaterial[22])));//is_last_position_required,
+			material.setIsNationalCourseUsed("1".equals(String.valueOf(oldMaterial[23])));//is_national_course_used,
+			material.setIsNationalCourseRequired("1".equals(String.valueOf(oldMaterial[24])));//is_national_course_required,
+			material.setIsProvincialCourseUsed("1".equals(String.valueOf(oldMaterial[25])));//is_provincial_course_used,
+			material.setIsProvincialCourseRequired("1".equals(String.valueOf(oldMaterial[26])));//is_provincial_course_required,
+			material.setIsSchoolCourseUsed("1".equals(String.valueOf(oldMaterial[27])));//is_school_course_used,
+			material.setIsSchoolCourseRequired("1".equals(String.valueOf(oldMaterial[28])));//is_school_course_required,
+			material.setIsNationalPlanUsed("1".equals(String.valueOf(oldMaterial[29])));//is_national_plan_used,
+			material.setIsNationalPlanRequired("1".equals(String.valueOf(oldMaterial[30])));//is_national_plan_required,
+			material.setIsTextbookWriterUsed("1".equals(String.valueOf(oldMaterial[31])));//is_textbook_writer_used,
+			material.setIsTextbookWriterRequired("1".equals(String.valueOf(oldMaterial[32])));//is_textbook_writer_required,
+			material.setIsOtherTextbookUsed("1".equals(String.valueOf(oldMaterial[33])));//is_other_textbook_used,
+			material.setIsOtherTextbookRequired("1".equals(String.valueOf(oldMaterial[34])));//is_other_textbook_required,
+			material.setIsResearchUsed("1".equals(String.valueOf(oldMaterial[35])));//is_research_used,
+			material.setIsResearchRequired("1".equals(String.valueOf(oldMaterial[36])));//is_research_required,
+			material.setIsPublished("1".equals(String.valueOf(oldMaterial[37])));//is_published,
+			material.setIsDeleted("1".equals(String.valueOf(oldMaterial[38])));//is_deleted,
+			material.setGmtCreate((Timestamp)oldMaterial[39]);//gmt_create,
+			material.setFounderId((Long)oldMaterial[40]);//founder_id,
+			material.setGmtUpdate((Timestamp)oldMaterial[41]);//gmt_update,
+			material.setMenderId((Long)oldMaterial[42]);//mender_id
+			material=materialService.addMaterial(material);
+			Until.updateNewPk(oldMaterid, "teach_material", material.getId());
 		}
 	} 
 

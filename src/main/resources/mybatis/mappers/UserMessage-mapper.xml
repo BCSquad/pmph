@@ -7,7 +7,7 @@
 	<select id="getUserMessageById" parameterType="map" resultType="UserMessage">
 		select * from user_message where id = #{id};
 	</select>
-	
+
 	<!-- 通过MsgId 动态更新UserMessage -->
 	<update id="updateUserMessageTitleByMsgId" parameterType="UserMessage">
 		update user_message
@@ -18,7 +18,7 @@
 		</set>
 		where msg_id = #{msgId};
 	</update>
-	
+
 	<!-- 通过id 动态更新UserMessage -->
 	<update id="updateUserMessageById" parameterType="UserMessage">
 		update user_message
@@ -62,19 +62,20 @@
 		update
 		user_message set is_withdraw = true where msg_id = #{msgId};
 	</update>
-	
+
 	<!-- 通过msgId 更新是否被逻辑删除 -->
-	<update id="updateUserMessageIsDeletedByMsgId" parameterType="java.util.List" >
+	<update id="updateUserMessageIsDeletedByMsgId" parameterType="java.util.List">
 		update
-			user_message 
+		user_message
 		set
-			is_deleted = true
-		where 
-			msg_id
-		in 
-		<foreach collection="list" item="msgId" index="index" open="(" close=")" separator=",">
-  			#{msgId}
-     	</foreach>
+		is_deleted = true
+		where
+		msg_id
+		in
+		<foreach collection="list" item="msgId" index="index" open="("
+			close=")" separator=",">
+			#{msgId}
+		</foreach>
 	</update>
 
 	<!-- 根据消息id 获取 UserMessage集 -->
@@ -209,11 +210,13 @@
 		m.gmt_create sendTime
 		FROM
 		user_message m
-		LEFT JOIN pmph_user u ON u.id =	m.sender_id
+		LEFT JOIN
+		pmph_user u ON u.id = m.sender_id
 		WHERE
 		m.is_deleted = 0
-		AND m.msg_type = 1
-		AND	m.sender_id = #{parameter.senderId}
+		AND m.msg_type =
+		1
+		AND m.sender_id = #{parameter.senderId}
 		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
 		</if>
@@ -229,15 +232,18 @@
 		m.title,
 		m.sender_id,
 		m.is_withdraw,
-		u.realname sendName,
+		u.realname
+		sendName,
 		m.gmt_create sendTime
 		FROM
 		user_message m
-		LEFT JOIN pmph_user u ON u.id =	m.sender_id
+		LEFT JOIN pmph_user u
+		ON u.id = m.sender_id
 		WHERE
 		m.is_deleted = 0
 		AND m.msg_type = 1
-		AND	m.sender_id = #{parameter.senderId}
+		AND
+		m.sender_id = #{parameter.senderId}
 		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
 		</if>
@@ -247,16 +253,82 @@
 		LIMIT
 		#{start},#{pageSize}
 	</select>
-	
+
+	<select id="listMyMessage" parameterType="PageParameter"
+		resultType="MyMessageVO">
+		SELECT
+		*,m.gmt_create sendTime
+		FROM
+		user_message m WHERE
+		m.receiver_id=#{parameter.userId} AND m.receiver_type =
+		#{parameter.userType} AND m.is_deleted = false
+		<if test="parameter.title != null and parameter.title != ''">
+			and m.title like concat('%',#{parameter.title},'%')
+		</if>
+		<if test="parameter.isRead != null ">
+			and m.is_read = #{parameter.isRead}
+		</if>
+		ORDER BY m.gmt_create DESC
+		LIMIT
+		#{start},#{pageSize}
+	</select>
+
+	<select id="listMyMessageTotal" parameterType="PageParameter"
+		resultType="Integer">
+		SELECT count(*) from
+		(SELECT
+		*,m.gmt_create sendTime
+		FROM
+		user_message m
+		WHERE
+		m.receiver_id=#{parameter.userId} AND m.receiver_type =
+		#{parameter.userType} AND m.is_deleted = false
+		<if test="parameter.title != null and parameter.title != ''">
+			and m.title like concat('%',#{parameter.title},'%')
+		</if>
+		<if test="parameter.isRead != null ">
+			and m.is_read = #{parameter.isRead}
+		</if>
+		ORDER BY m.gmt_create DESC) t
+	</select>
+
+	<select id="getMyMessageDetail" parameterType="PageParameter"
+		resultType="MyMessageVO">
+		SELECT
+		*,m.gmt_create sendTime
+		FROM
+		user_message m
+		WHERE
+		m.id =
+		#{id}
+	</select>
+
+	<!-- 通过id 更新是否被逻辑删除 -->
+	<update id="updateMyMessage">
+		update
+		user_message
+		set
+		is_deleted = true
+		where
+		id
+		in
+		<foreach collection="array" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach>
+		;
+	</update>
+
 	<!-- 通过id删除UserMessage -->
 	<delete id="deleteMessageByMsgId" parameterType="java.util.List">
 		delete from
-			user_message 
-		where 
-			msg_id
+		user_message
+		where
+		msg_id
 		in
-			<foreach collection="list" item="msgId" index="index" open="(" close=")" separator=",">
-            	#{msgId}
-        	</foreach>	
+		<foreach collection="list" item="msgId" index="index" open="("
+			close=")" separator=",">
+			#{msgId}
+		</foreach>
 	</delete>
 </mapper>
