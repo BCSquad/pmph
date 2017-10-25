@@ -14,11 +14,15 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtension;
 import com.bc.pmpheep.back.po.MaterialExtra;
+import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
+import com.bc.pmpheep.back.service.MaterialContactService;
 import com.bc.pmpheep.back.service.MaterialExtensionService;
 import com.bc.pmpheep.back.service.MaterialExtraService;
+import com.bc.pmpheep.back.service.MaterialNoteAttachmentService;
 import com.bc.pmpheep.back.service.MaterialNoticeAttachmentService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.general.bean.FileType;
@@ -149,13 +153,13 @@ public class Material {
 	
 	public void transferMaterialExtension() throws Exception{
 		String sql = "select "+
-						"a.expendid,"+
-						"b.new_materid,"+
-						"a.expendname,"+
-						"a.isfill from "+
-						"teach_material_extend a "+
-						"LEFT JOIN teach_material b on b.materid=a.materid "+
-						"where b.materid is not null and b.isdelete =0 ";
+						"a.expendid, "+
+						"b.new_materid, "+
+						"a.expendname, "+
+						"a.isfill from  "+
+						"teach_material_extend a  "+
+						"LEFT JOIN teach_material b on b.materid=a.materid  "+
+						"where b.materid is not null and b.isdelete =0  ";
 		List<Object[]> materialExtensionList=Until.getListData(sql);
 		for(Object[] materialExtension:materialExtensionList){
 			String oldExpendid = (String)materialExtension[0];
@@ -176,9 +180,9 @@ public class Material {
 	
 	public void transferMaterialExtra() throws Exception{
 		String sql = "select "+
-						"new_materid,"+
-						"new_materid,"+
-						"introduction,"+
+						"new_materid, "+
+						"new_materid, "+
+						"introduction, "+
 						"remark "+
 						"from teach_material where isdelete =0 ";
 		List<Object[]> materialExtraList=Until.getListData(sql);
@@ -232,6 +236,68 @@ public class Material {
 				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
 			}
 		}
+	}
+	
+	
+	@Autowired
+	private MaterialNoteAttachmentService materialNoteAttachmentService;
+	
+	public void transferMaterialNoteAttachment() throws Exception{
+		String sql = "select "+
+						"a.new_materid, "+
+						"b.filedir, "+
+						"b.filename, "+
+						"1 "+
+						"from teach_material a  "+
+						"LEFT JOIN pub_addfileinfo b on b.tablekeyid = a.materid "+
+						"where a.isdelete =0 and b.childsystemname='notice' and tablename='TEACH_MATERIAL' ";
+		List<Object[]> materialMaterialNoteAttachmentList=Until.getListData(sql);
+		for(Object[] object:materialMaterialNoteAttachmentList){
+			//根据文件路径获取File文件
+			File oldFile = new File(OtherParamaters.FILEPATH+(String)object[1]);
+			//文件存在并且不是文件夹
+			if(oldFile.exists() && !oldFile.isDirectory()){
+				//文件名
+				String fileName = oldFile.getName();
+				Long newMaterid =(Long)object[0];
+				Long materialExtraId = mps.get(newMaterid);
+				MaterialNoteAttachment materialNoteAttachment =new MaterialNoteAttachment();
+				materialNoteAttachment.setMaterialExtraId(materialExtraId);
+				//先用一个临时的"-"占位，不然会报错;
+				materialNoteAttachment.setAttachment("-");
+				materialNoteAttachment.setAttachmentName(fileName);
+				materialNoteAttachment.setDownload(1L);
+				materialNoteAttachment=materialNoteAttachmentService.addMaterialNoteAttachment(materialNoteAttachment);
+				MultipartFile file= new MockMultipartFile(fileName,new FileInputStream(oldFile));
+				String fileId=fileService.save(file, FileType.MATERIAL_NOTE_ATTACHMENT, materialNoteAttachment.getId());
+				materialNoteAttachment.setAttachment(fileId);
+				//更新附件id
+				materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
+			}
+		}
+	}
+	
+	@Autowired
+	private MaterialContactService materialContactService;
+	
+	public void transferMaterialContact() throws Exception{
+		String sql ="select "+
+						"b.new_materid, "+
+						"c.new_user_id, "+
+						"c.username , "+
+						"a.linkphone, "+
+						"a.email, "+
+						"a.orderno "+
+						"from teach_material_linker  a  "+
+						"LEFT JOIN teach_material  b on b.materid = a.materid "+
+						"LEFT JOIN sys_user  c on c.userid = a.userid "+
+						"where b.isdelete =0 ";
+		List<Object[]> materialContactList=Until.getListData(sql);
+		for(Object[] object:materialContactList){
+			MaterialContact materialContact= new MaterialContact((Long) object[0],(Long) object[1],(String) object[2],(String)object[3], (String)object[4],(Integer) object[5]);
+			materialContactService.addMaterialContact(materialContact);
+		}
+		
 	}
 
 }
