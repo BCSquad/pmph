@@ -558,7 +558,35 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
 					"消息id为空！");
 		}
+		UserMessage userMessage = new UserMessage();
+		userMessage.setId(id);
+		userMessage.setIsRead(true);
+		userMessageDao.updateUserMessageById(userMessage);
 		MyMessageVO myMessageVO = userMessageDao.getMyMessageDetail(id);
+		switch (myMessageVO.getSenderType()) {
+		case 0:
+			myMessageVO.setSenderName("系统");
+			break;
+		case 1:
+			PmphUser pmphUser = pmphUserService.get(myMessageVO.getSenderId());
+			myMessageVO.setSenderAvatar(pmphUser.getAvatar());
+			myMessageVO.setSenderName(pmphUser.getRealname());
+			break;
+
+		case 2:
+			WriterUser writerUser = writerUserService.get(myMessageVO.getSenderId());
+			myMessageVO.setSenderAvatar(writerUser.getAvatar());
+			myMessageVO.setSenderName(writerUser.getRealname());
+			break;
+
+		case 3:
+			// 现在没有机构用户
+			break;
+
+		default:
+			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
+					"发送者类型不正确！");
+		}
 		myMessageVO.setContent(messageService.get(myMessageVO.getMsgId()).getContent());
 		myMessageVO.setMessageAttachments(messageAttachmentService.getMessageAttachmentByMsgId(myMessageVO.getMsgId()));
 		return myMessageVO;
