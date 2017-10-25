@@ -2,7 +2,7 @@
  * Copyright 2017 BangChen Information Technology Ltd., Co.
  * Licensed under the Apache License 2.0.
  */
-package com.bc.pmpheep.migration;
+package com.bc.pmpheep.migration.common;
 
 /**
  * 数据迁移所需全局变量

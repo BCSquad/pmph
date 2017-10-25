@@ -13,8 +13,6 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import com.bc.pmpheep.migration.SQLParameters;
-
 /**
  * JDBC工具类
  *
@@ -41,7 +39,7 @@ public class JdbcHelper {
 	
 	static {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName(SQLParameters.DRIVER);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -49,7 +47,7 @@ public class JdbcHelper {
 	//默认新平台数据库
 	public static Connection getConnection() throws Exception{
 		if(conn==null||conn.isClosed()){
-			conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/pmph_out","root","root");
+			conn=DriverManager.getConnection(SQLParameters.DB_URL,SQLParameters.DB_USERNAME,SQLParameters.DB_PASSWORD);
 		}
 		return conn;
 	}
