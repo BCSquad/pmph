@@ -66,8 +66,8 @@ public class UserMessage implements java.io.Serializable {
      * @param title 标题
      *</pre>
      */
-    public UserMessage(Long id, String title) {
-        this.id = id;
+    public UserMessage(String msgId, String title) {
+        this.msgId = msgId;
         this.title = title;
     }
 

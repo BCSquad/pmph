@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -77,14 +78,27 @@ public interface UserMessageService {
     throws CheckedServiceException, IOException;
 
     /**
-     * 单纯修改消息
+     * 
      * 
      * @author Mryang
      * @createDate 2017年9月29日 下午4:30:14
      * @param message
      * @return 影响行数
      */
-    Integer updateUserMessage(Message message, Long userMsgId, String msgTitle)
+    /**
+     * 
+     * <pre>
+     * 功能描述：单纯修改消息
+     * 使用示范：
+     *
+     * @param message 消息对象
+     * @param msgId Message主键ID
+     * @param msgTitle 消息标题
+     * @return 影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer updateUserMessage(Message message, String msgId, String msgTitle)
     throws CheckedServiceException;
 
     /**
@@ -93,7 +107,7 @@ public interface UserMessageService {
      * 功能描述：修改消息 ，按主键ID查询
      * 使用示范：
      *
-     * @param userMsgId　主键ID
+     * @param userMsgId　UserMessage主键ID
      * @return
      * </pre>
      */
@@ -105,12 +119,12 @@ public interface UserMessageService {
      * 功能描述：逻辑删除（通过msgId 动态更新UserMessage_IsDeleted字段）
      * 使用示范：
      *
-     * @param ids  消息id
+     * @param msgIds  Message主键id
      * @return   影响行数
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer updateUserMessageIsDeletedByMsgId(String[] ids) throws CheckedServiceException;
+    Integer updateUserMessageIsDeletedByMsgId(List<String> msgIds) throws CheckedServiceException;
 
     /**
      * 撤回消息
@@ -128,12 +142,12 @@ public interface UserMessageService {
      * 功能描述：通过消息id删除UserMessage
      * 使用示范：
      *
-     * @param ids 消息id
+     * @param msgIds  Message主键id
      * @return 影响行数
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer deleteMessageByMsgId(String[] ids) throws CheckedServiceException;
+    Integer deleteMessageByMsgId(List<String> msgIds) throws CheckedServiceException;
 
     /**
      * 
