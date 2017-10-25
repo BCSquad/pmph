@@ -1,11 +1,29 @@
 package com.bc.pmpheep.migration;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.bc.pmpheep.back.po.MaterialExtension;
+import com.bc.pmpheep.back.po.MaterialExtra;
+import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
+import com.bc.pmpheep.back.service.MaterialExtensionService;
+import com.bc.pmpheep.back.service.MaterialExtraService;
+import com.bc.pmpheep.back.service.MaterialNoticeAttachmentService;
 import com.bc.pmpheep.back.service.MaterialService;
+import com.bc.pmpheep.general.bean.FileType;
+import com.bc.pmpheep.general.service.FileService;
+import com.bc.pmpheep.migration.common.OtherParamaters;
 import com.bc.pmpheep.migration.common.Until;
 /**
  *@author MrYang 
@@ -13,6 +31,8 @@ import com.bc.pmpheep.migration.common.Until;
  **/
 @Component
 public class Material {
+	
+	Logger  logger = LoggerFactory.getLogger(Material.class);
 	
 	@Autowired
 	private MaterialService materialService;
@@ -121,6 +141,97 @@ public class Material {
 			material=materialService.addMaterial(material);
 			Until.updateNewPk(oldMaterid, "teach_material", material.getId());
 		}
+		logger.info("教材主表导入完毕！");
 	} 
+	
+	@Autowired
+	private MaterialExtensionService materialExtensionService;
+	
+	public void transferMaterialExtension() throws Exception{
+		String sql = "select "+
+						"a.expendid,"+
+						"b.new_materid,"+
+						"a.expendname,"+
+						"a.isfill from "+
+						"teach_material_extend a "+
+						"LEFT JOIN teach_material b on b.materid=a.materid "+
+						"where b.materid is not null and b.isdelete =0 ";
+		List<Object[]> materialExtensionList=Until.getListData(sql);
+		for(Object[] materialExtension:materialExtensionList){
+			String oldExpendid = (String)materialExtension[0];
+			MaterialExtension newMaterialExtension=new MaterialExtension();
+			newMaterialExtension.setMaterialId((Long)materialExtension[1]);
+			newMaterialExtension.setExtensionName((String)materialExtension[2]);
+			newMaterialExtension.setIsRequired("1".equals(String.valueOf(materialExtension[3])));
+			newMaterialExtension=materialExtensionService.addMaterialExtension(newMaterialExtension);
+			Until.updateNewPk(oldExpendid, "teach_material_extend", newMaterialExtension.getId());
+		}
+	}
+	
+	@Autowired
+	private MaterialExtraService materialExtraService;
+	
+	//用来储存MaterialExtra返回的主键，供后面使用 Map<教材id,教材通知备注表id> 
+	public static Map<Long,Long> mps = new HashMap<Long,Long>(12);
+	
+	public void transferMaterialExtra() throws Exception{
+		String sql = "select "+
+						"new_materid,"+
+						"new_materid,"+
+						"introduction,"+
+						"remark "+
+						"from teach_material where isdelete =0 ";
+		List<Object[]> materialExtraList=Until.getListData(sql);
+		for(Object[] object:materialExtraList){
+			MaterialExtra materialExtra = new MaterialExtra();
+			materialExtra.setMaterialId((Long)object[1]);
+			materialExtra.setNotice((String)object[2]);
+			materialExtra.setNote((String)object[3]);
+			materialExtra=materialExtraService.addMaterialExtra(materialExtra);
+			mps.put(materialExtra.getMaterialId(), materialExtra.getId());
+		}
+	}
+	
+	
+	@Autowired
+	private MaterialNoticeAttachmentService materialNoticeAttachmentService;
+	
+	@Autowired
+	private FileService fileService;
+	
+	public void transferMaterialNoticeAttachment() throws Exception{
+		String sql = "select "+
+						"a.new_materid, "+
+						"b.filedir, "+
+						"b.filename, "+
+						"1 "+
+						"from teach_material a "+
+						"LEFT JOIN pub_addfileinfo b on b.tablekeyid = a.materid "+
+						"where a.isdelete =0 and b.childsystemname='notice_introduction' and tablename='TEACH_MATERIAL_INTRODUCTION' ";
+		List<Object[]> materialNoticeAttachmentList=Until.getListData(sql);
+		for(Object[] object:materialNoticeAttachmentList){
+			//根据文件路径获取File文件
+			File oldFile = new File(OtherParamaters.FILEPATH+(String)object[1]);
+			//文件存在并且不是文件夹
+			if(oldFile.exists() && !oldFile.isDirectory()){
+				//文件名
+				String fileName = oldFile.getName();
+				Long newMaterid =(Long)object[0];
+				Long materialExtraId = mps.get(newMaterid);
+				MaterialNoticeAttachment materialNoticeAttachment =new MaterialNoticeAttachment();
+				materialNoticeAttachment.setMaterialExtraId(materialExtraId);
+				//先用一个临时的"-"占位，不然会报错;
+				materialNoticeAttachment.setAttachment("-");
+				materialNoticeAttachment.setAttachmentName(fileName);
+				materialNoticeAttachment.setDownload(1L);
+				materialNoticeAttachment=materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
+				MultipartFile file= new MockMultipartFile(fileName,new FileInputStream(oldFile));
+				String fileId=fileService.save(file, FileType.MATERIAL_NOTICE_ATTACHMENT, materialNoticeAttachment.getId());
+				materialNoticeAttachment.setAttachment(fileId);
+				//更新附件id
+				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
+			}
+		}
+	}
 
 }

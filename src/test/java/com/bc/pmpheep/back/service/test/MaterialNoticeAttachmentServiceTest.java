@@ -9,10 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.bc.pmpheep.back.po.DecAcade;
 import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
-import com.bc.pmpheep.back.service.DecAcadeService;
 import com.bc.pmpheep.back.service.MaterialNoticeAttachmentService;
 import com.bc.pmpheep.test.BaseTest;
 
