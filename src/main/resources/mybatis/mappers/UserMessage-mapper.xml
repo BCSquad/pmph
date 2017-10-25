@@ -4,17 +4,18 @@
 <mapper namespace="com.bc.pmpheep.back.dao.UserMessageDao">
 
 	<!-- 通过id删除UserMessage -->
-	<delete id="deleteMessageByMsgId" >
+	<delete id="deleteMessageByMsgId">
 		delete from
-			user_message 
-		where 
-			id 
+		user_message
+		where
+		id
 		in
-			<foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
-            	#{id}
-        	</foreach>	
+		<foreach collection="array" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach>
 	</delete>
-	
+
 	<select id="getUserMessageById" parameterType="map" resultType="UserMessage">
 		select * from user_message where id = #{id};
 	</select>
@@ -62,19 +63,21 @@
 		update
 		user_message set is_withdraw = true where id = #{id};
 	</update>
-	
+
 	<!-- 通过msgId 更新是否被逻辑删除 -->
-	<update id="updateUserMessageIsDeletedByMsgId" >
+	<update id="updateUserMessageIsDeletedByMsgId">
 		update
-			user_message 
-		set 
-			is_deleted = true 
-		where 
-			id
-		in 
-			<foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
-            	#{id}
-        	</foreach> ;
+		user_message
+		set
+		is_deleted = true
+		where
+		id
+		in
+		<foreach collection="array" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach>
+		;
 	</update>
 
 	<!-- 根据消息id 获取 UserMessage集 -->
@@ -209,11 +212,13 @@
 		m.gmt_create sendTime
 		FROM
 		user_message m
-		LEFT JOIN pmph_user u ON u.id =	m.sender_id
+		LEFT JOIN
+		pmph_user u ON u.id = m.sender_id
 		WHERE
 		m.is_deleted = 0
-		AND m.msg_type = 1
-		AND	m.sender_id = #{parameter.senderId}
+		AND m.msg_type =
+		1
+		AND m.sender_id = #{parameter.senderId}
 		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
 		</if>
@@ -229,15 +234,18 @@
 		m.title,
 		m.sender_id,
 		m.is_withdraw,
-		u.realname sendName,
+		u.realname
+		sendName,
 		m.gmt_create sendTime
 		FROM
 		user_message m
-		LEFT JOIN pmph_user u ON u.id =	m.sender_id
+		LEFT JOIN pmph_user u
+		ON u.id = m.sender_id
 		WHERE
 		m.is_deleted = 0
 		AND m.msg_type = 1
-		AND	m.sender_id = #{parameter.senderId}
+		AND
+		m.sender_id = #{parameter.senderId}
 		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
 		</if>
@@ -248,4 +256,68 @@
 		#{start},#{pageSize}
 	</select>
 
+	<select id="listMyMessage" parameterType="PageParameter"
+		resultType="MyMessageVO">
+		SELECT
+		*,m.gmt_create sendTime
+		FROM
+		user_message m WHERE
+		m.receiver_id=#{parameter.userId} AND m.receiver_type =
+		#{parameter.userType} AND m.is_deleted = false
+		<if test="parameter.title != null and parameter.title != ''">
+			and m.title like concat('%',#{parameter.title},'%')
+		</if>
+		<if test="parameter.isRead != null ">
+			and m.is_read = #{parameter.isRead}
+		</if>
+		ORDER BY m.gmt_create DESC
+		LIMIT
+		#{start},#{pageSize}
+	</select>
+
+	<select id="listMyMessageTotal" parameterType="PageParameter"
+		resultType="Integer">
+		SELECT count(*) from
+		(SELECT
+		*,m.gmt_create sendTime
+		FROM
+		user_message m
+		WHERE
+		m.receiver_id=#{parameter.userId} AND m.receiver_type =
+		#{parameter.userType} AND m.is_deleted = false
+		<if test="parameter.title != null and parameter.title != ''">
+			and m.title like concat('%',#{parameter.title},'%')
+		</if>
+		<if test="parameter.isRead != null ">
+			and m.is_read = #{parameter.isRead}
+		</if>
+		ORDER BY m.gmt_create DESC) t
+	</select>
+
+	<select id="getMyMessageDetail" parameterType="PageParameter"
+		resultType="MyMessageVO">
+		SELECT
+		*,m.gmt_create sendTime
+		FROM
+		user_message m
+		WHERE
+		m.id =
+		#{id}
+	</select>
+
+	<!-- 通过id 更新是否被逻辑删除 -->
+	<update id="updateMyMessage">
+		update
+		user_message
+		set
+		is_deleted = true
+		where
+		id
+		in
+		<foreach collection="array" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach>
+		;
+	</update>
 </mapper>
