@@ -3,14 +3,9 @@
  */
 package com.bc.pmpheep.back.datamigration;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.datamigration.common.Until;
 import com.bc.pmpheep.back.po.PmphDepartment;
@@ -21,7 +16,6 @@ import com.bc.pmpheep.back.service.PmphDepartmentService;
 import com.bc.pmpheep.back.service.PmphRoleService;
 import com.bc.pmpheep.back.service.PmphUserRoleService;
 import com.bc.pmpheep.back.service.PmphUserService;
-import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 
 /**
@@ -144,10 +138,10 @@ public class PmphUserData {
               pmphUser = pmphUserService.add(pmphUser);
               Until.updateNewPk(userId, "sys_user", pmphUser.getId());
               String avatarUrl = String.valueOf(s[8]);
-              File file = new File(avatarUrl);
-              FileInputStream input = new FileInputStream(file);
-              MultipartFile multipartFile = new MockMultipartFile("file", file.getName(), "text/plain", IOUtils.toByteArray(input));
-              pmphUser.setAvatar(fileService.save(multipartFile, ImageType.PMPH_USER_AVATAR, pmphUser.getId()));
+//              File file = new File(avatarUrl);
+//              FileInputStream input = new FileInputStream(file);
+//              MultipartFile multipartFile = new MockMultipartFile("file", file.getName(), "text/plain", IOUtils.toByteArray(input));
+//              pmphUser.setAvatar(fileService.save(multipartFile, ImageType.PMPH_USER_AVATAR, pmphUser.getId()));
               pmphUserService.update(pmphUser);
     	  }
       }
