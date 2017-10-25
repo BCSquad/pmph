@@ -268,8 +268,7 @@ public class Material {
 				materialNoteAttachment.setAttachmentName(fileName);
 				materialNoteAttachment.setDownload(1L);
 				materialNoteAttachment=materialNoteAttachmentService.addMaterialNoteAttachment(materialNoteAttachment);
-				MultipartFile file= new MockMultipartFile(fileName,new FileInputStream(oldFile));
-				String fileId=fileService.save(file, FileType.MATERIAL_NOTE_ATTACHMENT, materialNoteAttachment.getId());
+				String fileId = fileService.saveLocalFile(oldFile, FileType.MATERIAL_NOTE_ATTACHMENT, materialNoteAttachment.getId());
 				materialNoteAttachment.setAttachment(fileId);
 				//更新附件id
 				materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
