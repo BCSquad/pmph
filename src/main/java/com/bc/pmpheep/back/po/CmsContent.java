@@ -57,13 +57,13 @@ public class CmsContent implements java.io.Serializable {
     private Boolean   isStick;
     // 分类显示顺序
     private Integer   sort;
-    // 热门到期时间
-    private Timestamp deadlineStick;
     // 置顶到期时间
-    private Boolean   isHot;
+    private Timestamp deadlineStick;
     // 是否热门
-    private Integer   sortHot;
+    private Boolean   isHot;
     // 热门显示顺序
+    private Integer   sortHot;
+    // 热门到期时间
     private Timestamp deadlineHot;
     // 是否推荐
     private Boolean   isPromote;
