@@ -52,27 +52,35 @@ public class JdbcHelper {
 	}
 	
 	//关闭相关连接
+	@SuppressWarnings("finally")
 	public static void colse(ResultSet rs,PreparedStatement ps,Connection con){
-		if(null != rs ){
-			try {
-				rs.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		if(null != ps ){
-			try {
-				ps.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		if(null != con ){
-			try {
-				con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		try{
+		    if(rs != null){
+		    	rs.close();
+		    	rs = null;
+		    }  
+		}catch(SQLException e){
+		    e.printStackTrace();
+		}finally{
+		    try{
+		        if(ps != null){
+		            ps.close();
+		            ps = null;
+		        }
+		    }catch(SQLException e){
+		        e.printStackTrace();
+		    }finally{
+		        try{
+				     if(con != null){
+				    	 con.close();
+				    	 con = null;
+				     }
+				}catch(SQLException e){
+				     e.printStackTrace();
+				}finally{
+				     return ;
+				}
+		    }
 		}
 	}
 }
