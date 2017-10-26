@@ -124,6 +124,32 @@ public class FileService {
         }
         return gridFSFile.getId().toString();
     }
+    
+    /**
+     * 
+     * <pre>
+     * 功能描述： 本地图片保存到MongoDB
+     * 使用示范：
+     *
+     * @param file 要保存的文件
+     * @param fileType 文件所属类型
+     * @param pk 对应的实体类主键(id)
+     * @return 返回由MongoDB自动生成的id字符串
+     * @throws IOException IO读写错误
+     * </pre>
+     */
+    public String saveLocalFile(File file, ImageType imageType, long pk) throws IOException {
+        DBObject metaData = new BasicDBObject();
+        metaData.put(IS_IMAGE, true);
+        metaData.put(TYPE, imageType.getType());
+        metaData.put(PK, pk);
+        GridFSFile gridFSFile;
+        try (InputStream inputStream = FileUtils.openInputStream(file)) {
+            gridFSFile = gridFsTemplate.store(inputStream, file.getName(), metaData);
+            inputStream.close();
+        }
+        return gridFSFile.getId().toString();
+    }
 
     public GridFSDBFile get(String id) {
         if (null == id || id.isEmpty()) {
