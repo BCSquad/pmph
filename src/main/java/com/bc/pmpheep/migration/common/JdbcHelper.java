@@ -115,7 +115,7 @@ public class JdbcHelper {
     	String path = "";
     	//根据旧表父节点字段查询父节点对应的new_pk字段值
     	Long parentId = getJdbcTemplate().queryForObject(sql, Long.class, parentColumnValue);
-    	//如果旧表中父节点为0，则直接返回路径0，若不为0，再继续往父类节点查
+    	//如果旧表中父节点为0，则直接返回路径0，若不为0，再继续往父类节点查最后拼接
     	if ( !"0".equals(parentColumnValue.toString())){
     		path = getPath(tableName, column, parentId) + "-" + parentId;
     	}else{
