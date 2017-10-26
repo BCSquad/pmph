@@ -97,4 +97,30 @@ public class JdbcHelper {
         String sql = QUERY.replace("?", tableName);
         return getJdbcTemplate().queryForList(sql);
     }
+    
+    /**
+     * 
+     * Description:根据旧表父节点字段查询父节点对应的new_pk字段值，如果不为0，则递归调用自己，
+     * 知道找到为旧表父节点为0的最高节点，拼接成path
+     * @author:lyc
+     * @date:2017年10月26日下午5:23:43
+     * @param tableName 旧数据库表名
+     * @param column 旧数据表中的主键列名
+     * @param parentColumnValue 对应字段值
+     * @return 拼接的path
+     */
+    public static String getPath(String tableName, String column, Object parentColumnValue) throws DataAccessException{
+    	String sql = GET_PARENT_PK.replace("#", tableName);
+    	sql = sql.replace("$", column);
+    	String path = "";
+    	//根据旧表父节点字段查询父节点对应的new_pk字段值
+    	Long parentId = getJdbcTemplate().queryForObject(sql, Long.class, parentColumnValue);
+    	//如果旧表中父节点为0，则直接返回路径0，若不为0，再继续往父类节点查
+    	if ( !"0".equals(parentColumnValue.toString())){
+    		path = getPath(tableName, column, parentId) + "-" + parentId;
+    	}else{
+    		path = "0";
+    	}
+    	return path;
+    }
 }
