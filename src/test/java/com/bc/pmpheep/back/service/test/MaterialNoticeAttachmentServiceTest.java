@@ -9,19 +9,16 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.bc.pmpheep.back.po.DecAcade;
 import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
-import com.bc.pmpheep.back.service.DecAcadeService;
 import com.bc.pmpheep.back.service.MaterialNoticeAttachmentService;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
  * <p>
- * Title:DecAcadeService测试类
+ * MaterialNoticeAttachmentService测试类
  * <p>
  * 
- * @author lyc
+ * @author yangliang
  * @date 2017年9月25日 上午11:26:59
  */
 public class MaterialNoticeAttachmentServiceTest extends BaseTest {

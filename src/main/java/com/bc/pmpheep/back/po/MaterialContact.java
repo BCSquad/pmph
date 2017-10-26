@@ -22,6 +22,8 @@ public class MaterialContact implements java.io.Serializable {
 	private String contactPhone;
 	//联系邮箱
 	private String contactEmail;
+	//教材id
+    private Integer sort;
 
 	// Constructors
 
@@ -38,12 +40,13 @@ public class MaterialContact implements java.io.Serializable {
 
 	/** full constructor */
 	public MaterialContact(Long materialId, Long contactUserId,
-			String contactUserName, String contactPhone, String contactEmail) {
+			String contactUserName, String contactPhone, String contactEmail,Integer sort) {
 		this.materialId = materialId;
 		this.contactUserId = contactUserId;
 		this.contactUserName = contactUserName;
 		this.contactPhone = contactPhone;
 		this.contactEmail = contactEmail;
+		this.sort = sort;
 	}
 
 	// Property accessors
@@ -94,14 +97,27 @@ public class MaterialContact implements java.io.Serializable {
 	public void setContactEmail(String contactEmail) {
 		this.contactEmail = contactEmail;
 	}
+	
+
+	public Integer getSort() {
+		return sort;
+	}
+
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+
 
 	@Override
 	public String toString() {
 		return "{id:" + id + ", materialId:" + materialId + ", contactUserId:"
 				+ contactUserId + ", contactUserName:" + contactUserName
 				+ ", contactPhone:" + contactPhone + ", contactEmail:"
-				+ contactEmail + "}";
+				+ contactEmail + ", sort:" + sort + "}";
 	}
+
+	
 	
 	
 }

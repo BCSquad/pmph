@@ -1,8 +1,6 @@
 package com.bc.pmpheep.migration;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -12,51 +10,42 @@ import org.springframework.stereotype.Component;
 
 import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.back.service.AreaService;
-import com.bc.pmpheep.migration.common.JdbcHelper;
+import com.bc.pmpheep.migration.common.Until;
 
 /**
  * 区域迁移工具类
- *
+ * <p>Description:区域模块数据迁移类，此为所有迁移工具的第一步<p>
  * @author 陶勇诚
  */
 @Component
 public class AreaMigrationHelper {
 
     private final Logger logger = LoggerFactory.getLogger(AreaMigrationHelper.class);
-    private Map<String, Long> areaIdMap; //area与ba_areacode的主键关系映射
 
     @Resource
     AreaService areaService;
 
-    public void area() {
+    public void area() throws Exception{
         String sql = "SELECT * FROM ba_areacode";
-        List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
-        areaIdMap = new HashMap(maps.size());//初始化
-        int count = 0;//迁移成功的条目数
-        for (Map<String, Object> map : maps) {
-            Area area = new Area();
-            //获取旧表主键进行转换
-            String areaId = map.get("areaId").toString();
-            area.setId(Long.valueOf(areaId));
-            //获取旧表父级区域编码进行转换后设置
-            String parentCode = map.get("parentCode").toString();
-            area.setParentId(Long.valueOf(parentCode));
-            //直接转换区域名称
-            area.setAreaName((String) map.get("areaName"));
-            //直接转换顺序
-            area.setSort((Integer) map.get("level"));
-            areaService.addArea(area);
-            getAreaIdMap().put(areaId, area.getId());
-            count++;
+        List<Object[]> list = Until.getListData(sql);
+        int count = 0 ;
+        for (Object[] s : list){
+        	String areaId = String.valueOf(s[0]);
+        	String parentId = String.valueOf(s[2]);
+        	Area area = new Area();
+        	area.setAreaName(String.valueOf(s[3]));
+        	area = areaService.addArea(area);
+        	Until.updateNewPk(areaId, "ba_areacode", area.getId());
+        	if (!"0".equals(area.getParentId())){
+        		String oldSql = "SELECT NEW_AREAID FROM ba_areacode WHERE AreaID = '"+ parentId +"';";
+        		List<Object[]> parentIds = Until.getListData(oldSql);
+        		area.setParentId(Long.parseLong(String.valueOf(parentIds.get(0)[0])));
+        	}
+        	areaService.updateArea(area);
+        	count++;
         }
-        logger.info("area表迁移完成！");
-        logger.info("旧库中共 {} 条数据，迁移完成 {} 条", maps.size(), count);
+        logger.info("area表迁移完成");
+        logger.info("原数据库中共有{}条数据，迁移了{}条数据",list.size(),count);
     }
 
-    /**
-     * @return the areaIdMap
-     */
-    public Map<String, Long> getAreaIdMap() {
-        return areaIdMap;
-    }
 }

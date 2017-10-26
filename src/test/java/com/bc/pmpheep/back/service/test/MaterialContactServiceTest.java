@@ -31,7 +31,7 @@ public class MaterialContactServiceTest extends BaseTest {
     @Rollback(Const.ISROLLBACK) 
     public void test() {
     	Random r =new Random();
-    	MaterialContact materialContact=new MaterialContact(new Long(r.nextInt(200)),new Long(r.nextInt(200)),"contactUserName", "contactPhone", "contactEmai");
+    	MaterialContact materialContact=new MaterialContact(new Long(r.nextInt(200)),new Long(r.nextInt(200)),"contactUserName", "contactPhone", "contactEmai",1);
     	logger.info("---TextbookService 测试---------------------------------------------------------------------------------");
     	Long num = materialContactDao.getMaterialContactCount();
     	logger.info("一共有{}", num);

@@ -36,7 +36,7 @@ public class AlterDataBase {
 			String tableName= (String)table[0];
 			//所有字段以及属性
 			List<Object[]> colums=Until.getListData("describe "+tableName.replace(" ", ""));
-			String pk="id";
+			String pk=null;
 			//用来储存字段名，为后面判断是否含有新主键做准备
 			Map<String,String> keys= new HashMap<String,String>(colums.size());
 			//遍历所有列
@@ -47,6 +47,11 @@ public class AlterDataBase {
 					pk=(String)colum[0];
 				}
 			}
+			//没有主键，不再执行下面操作
+			if(null == pk){
+				logger.info("没有主键:"+tableName);
+				continue;
+			}
 			String newPk="NEW_"+pk.toUpperCase();
 			//不包含新主编
 			if(!keys.containsKey(newPk)){
@@ -55,7 +60,6 @@ public class AlterDataBase {
 				} catch (Exception e) {
 					logger.info("添加新主键失败了:"+tableName);
 				}
-				
 			}
 			//插入新的id值（个人做单元的时候需要执行，后面顺序执行不需要执行）
 			try {

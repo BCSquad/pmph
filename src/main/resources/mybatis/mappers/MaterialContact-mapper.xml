@@ -21,6 +21,9 @@
 			<if test="contactEmail != null and contactEmail !=''">
 				contact_email,
 			</if>
+			<if test="sort != null">
+				sort,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -41,6 +44,9 @@
 			</if>
 			<if test="contactEmail !=null and contactEmail !=''">
 				#{contactEmail},
+			</if>
+			<if test="sort != null">
+				#{sort},
 			</if>
 		</trim>
 	</sql>
@@ -86,6 +92,9 @@
 			</if>
 			<if test=" contactEmail != null and contactEmail !=''">
 				contact_email = #{contactEmail},
+			</if>
+			<if test="sort != null">
+				sort=#{sort},
 			</if>
 		</set>
 		where

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bc.pmpheep.back.dao.MaterialNoteAttachmentDao">
+
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id !=null">
+				id,
+			</if>
+			<if test="materialExtraId !=null">
+				material_extra_id,
+			</if>
+			<if test="attachment !=null and attachment !=''">
+				attachment,
+			</if>
+			<if test="attachmentName !=null and attachmentName !=''">
+				attachment_name,
+			</if>
+			<if test="download !=null">
+				download,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<trim suffixOverrides=",">
+			<if test="id !=null">
+				#{id},
+			</if>
+			<if test="materialExtraId !=null">
+				#{materialExtraId},
+			</if>
+			<if test="attachment !=null and attachment !=''">
+				#{attachment},
+			</if>
+			<if test="attachmentName !=null and attachmentName !=''">
+				#{attachmentName},
+			</if>
+			<if test="download !=null">
+				#{download},
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 新增MaterialNoteAttachment -->
+	<insert id="addMaterialNoteAttachment" parameterType="MaterialNoteAttachment">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dec_course_construction(
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+
+	<!-- 更新MaterialNoteAttachment-->
+	<update id="updateMaterialNoteAttachment" parameterType="MaterialNoteAttachment">
+		update dec_course_construction
+		<set>
+			<if test="materialExtraId !=null">
+				material_extra_id=#{materialExtraId},
+			</if>
+			<if test="attachment !=null and attachment !=''">
+				attachment=#{attachment},
+			</if>
+			<if test="attachmentName !=null and attachmentName !=''">
+				attachment_name=#{attachmentName},
+			</if>
+			<if test="download !=null">
+				download=#{download},
+			</if>
+		</set>
+		where id=#{id} ;
+	</update>
+
+</mapper>
