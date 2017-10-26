@@ -57,13 +57,13 @@ public class CmsContent implements java.io.Serializable {
     private Boolean   isStick;
     // 分类显示顺序
     private Integer   sort;
-    // 热门到期时间
-    private Timestamp deadlineStick;
     // 置顶到期时间
-    private Boolean   isHot;
+    private Timestamp deadlineStick;
     // 是否热门
-    private Integer   sortHot;
+    private Boolean   isHot;
     // 热门显示顺序
+    private Integer   sortHot;
+    // 热门到期时间
     private Timestamp deadlineHot;
     // 是否推荐
     private Boolean   isPromote;
@@ -96,6 +96,31 @@ public class CmsContent implements java.io.Serializable {
 
     /** default constructor */
     public CmsContent() {
+    }
+
+    public CmsContent(Long id, Long parentId, String path, Timestamp gmtReedit) {
+        this.id = id;
+        this.parentId = parentId;
+        this.path = path;
+        this.gmtReedit = gmtReedit;
+    }
+
+    public CmsContent(Long parentId, String path, String mid, String title, String summary,
+    String keyword, Short authorType, Timestamp deadlineStick, Timestamp deadlineHot,
+    Timestamp deadlinePromote, Long authUserId, Timestamp authDate, Timestamp gmtReedit) {
+        this.parentId = parentId;
+        this.path = path;
+        this.mid = mid;
+        this.title = title;
+        this.summary = summary;
+        this.keyword = keyword;
+        this.authorType = authorType;
+        this.deadlineStick = deadlineStick;
+        this.deadlineHot = deadlineHot;
+        this.deadlinePromote = deadlinePromote;
+        this.authUserId = authUserId;
+        this.authDate = authDate;
+        this.gmtReedit = gmtReedit;
     }
 
     /** minimal constructor */

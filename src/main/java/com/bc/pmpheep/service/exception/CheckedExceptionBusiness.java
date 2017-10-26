@@ -50,4 +50,6 @@ public class CheckedExceptionBusiness {
     public final static String SCHOOL_ADMIN_CHECK     = "学校管理员审核";
 
     public final static String TEACHER_CHECK          = "教师审核";
+
+    public final static String CMS                    = "内容管理";
 }

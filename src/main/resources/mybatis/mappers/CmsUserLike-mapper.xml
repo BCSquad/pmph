@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.CmsUserLikeDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="contentId != null">
+				content_id,
+			</if>
+			<if test="writerId != null " >
+				writer_id,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="contentId != null">
+				#{contentId},
+			</if>
+			<if test="writerId != null " >
+				#{writerId},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增CmsUserLike -->
+	<insert id="addCmsUserLike" parameterType="CmsUserLike" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into cms_user_like (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 更新CmsUserLike -->
+	<update id="updateCmsUserLike" parameterType="CmsUserLike">
+		update cms_user_like
+		<set>
+			<if test="contentId != null">
+				content_id=#{contentId},
+			</if>
+			<if test="writerId != null " >
+				writer_id=#{writerId},
+			</if>
+		</set>
+		where 
+			id=#{id};
+	</update>
+
+	<!-- 根据id查询一个CmsUserLike -->
+	<select id="getCmsUserLikeById" parameterType="java.lang.Long" resultType="CmsUserLike">
+		select * from cms_user_like where id=#{id};
+	</select>
+	
+	<!-- 查询表单的数据总数 -->
+	<select id="getCmsUserLike" resultType="java.lang.Integer">
+		select
+			count(*)
+		from
+			cms_user_like
+	</select>
+	
+	<!-- 根据id删除一个 CmsUserLike-->
+	<delete id="deleteCmsUserLikeById" parameterType="java.lang.Long">
+		delete from cms_user_like where id=#{id};
+	</delete>
+	
+	<!-- 批量删除-->
+    <delete id="deleteCmsUserLikeByIds" >
+    	delete from cms_user_like
+		where 
+			id
+		in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.CmsContentDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="path != null and path !=''" >
+				path,
+			</if>
+			<if test="mid != null and mid !=''">
+				mid,
+			</if>
+			<if test="categoryId != null and mid !=''">
+				category_id,
+			</if>
+			<if test="title != null and title !=''">
+				title,
+			</if>
+			<if test="summary != null and summary !=''">
+				summary,
+			</if>
+			<if test="keyword != null and keyword !=''">
+				keyword,
+			</if>
+			<if test="authorType != null">
+				author_type,
+			</if>
+			<if test="authorId != null">
+				author_id,
+			</if>
+			<if test="clicks != null">
+				clicks,
+			</if>
+			<if test="comments != null">
+				comments,
+			</if>
+			<if test="likes != null">
+				likes,
+			</if>
+			<if test="bookmarks != null">
+				bookmarks,
+			</if>
+			<if test="isStick != null">
+				is_stick,
+			</if>
+			<if test="sort != null">
+				sort,
+			</if>
+			<if test="deadlineStick != null">
+				deadline_stick,
+			</if>
+			<if test="isHot != null">
+				is_hot,
+			</if>
+			<if test="sortHot != null">
+				sort_hot,
+			</if>
+			<if test="deadlineHot != null">
+				deadline_hot,
+			</if>
+			<if test="isPromote != null">
+				is_promote,
+			</if>
+			<if test="sortPromote != null">
+				sort_promote,
+			</if>
+			<if test="deadlinePromote != null">
+				deadline_promote,
+			</if>
+			<if test="isScheduled != null">
+				is_scheduled,
+			</if>
+			<if test="isHide != null">
+				is_hide,
+			</if>
+			<if test="isPublished != null">
+				is_published,
+			</if>
+			<if test="isAuth != null">
+				is_auth,
+			</if>
+			<if test="authUserId != null">
+				auth_user_id,
+			</if>
+			<if test="authDate != null">
+				auth_date,
+			</if>
+			<if test="isDeleted != null">
+				is_deleted,
+			</if>
+			<if test="gmtReedit != null">
+				gmt_reedit,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="parentId != null">
+				#{parentId},
+			</if>
+			<if test="path != null and path !=''" >
+				#{path},
+			</if>
+			<if test="mid != null and mid !=''">
+				#{mid},
+			</if>
+			<if test="categoryId != null and mid !=''">
+				#{categoryId},
+			</if>
+			<if test="title != null and title !=''">
+				#{title},
+			</if>
+			<if test="summary != null and summary !=''">
+				#{summary},
+			</if>
+			<if test="keyword != null and keyword !=''">
+				#{keyword},
+			</if>
+			<if test="authorType != null">
+				#{authorType},
+			</if>
+			<if test="authorId != null">
+				#{authorId},
+			</if>
+			<if test="clicks != null">
+				#{clicks},
+			</if>
+			<if test="comments != null">
+				#{comments},
+			</if>
+			<if test="likes != null">
+				#{likes},
+			</if>
+			<if test="bookmarks != null">
+				#{bookmarks},
+			</if>
+			<if test="isStick != null">
+				#{isStick},
+			</if>
+			<if test="sort != null">
+				#{sort},
+			</if>
+			<if test="deadlineStick != null">
+				#{deadlineStick},
+			</if>
+			<if test="isHot != null">
+				#{isHot},
+			</if>
+			<if test="sortHot != null">
+				#{sortHot},
+			</if>
+			<if test="deadlineHot != null">
+				#{deadlineHot},
+			</if>
+			<if test="isPromote != null">
+				#{isPromote},
+			</if>
+			<if test="sortPromote != null">
+				#{sortPromote},
+			</if>
+			<if test="deadlinePromote != null">
+				#{deadlinePromote},
+			</if>
+			<if test="isScheduled != null">
+				#{isScheduled},
+			</if>
+			<if test="isHide != null">
+				#{isHide},
+			</if>
+			<if test="isPublished != null">
+				#{isPublished},
+			</if>
+			<if test="isAuth != null">
+				#{isAuth},
+			</if>
+			<if test="authUserId != null">
+				#{authUserId},
+			</if>
+			<if test="authDate != null">
+				#{authDate},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted},
+			</if>
+			<if test="gmtReedit != null">
+				#{gmtReedit},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增CmsContent -->
+	<insert id="addCmsContent" parameterType="CmsContent" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into cms_content (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 更新CmsContent -->
+	<update id="updateCmsContent" parameterType="CmsContent">
+		update cms_content
+		<set>
+			<if test="parentId != null">
+				parent_id=#{parentId},
+			</if>
+			<if test="path != null and path !=''" >
+				path=#{path},
+			</if>
+			<if test="mid != null and mid !=''">
+				mid=#{mid},
+			</if>
+			<if test="categoryId != null and mid !=''">
+				category_id=#{categoryId},
+			</if>
+			<if test="title != null and title !=''">
+				title=#{title},
+			</if>
+			<if test="summary != null and summary !=''">
+				summary=#{summary},
+			</if>
+			<if test="keyword != null and keyword !=''">
+				keyword=#{keyword},
+			</if>
+			<if test="authorType != null">
+				author_type=#{authorType},
+			</if>
+			<if test="authorId != null">
+				author_id=#{authorId},
+			</if>
+			<if test="clicks != null">
+				clicks=#{clicks},
+			</if>
+			<if test="comments != null">
+				comments=#{comments},
+			</if>
+			<if test="likes != null">
+				likes=#{likes},
+			</if>
+			<if test="bookmarks != null">
+				bookmarks=#{bookmarks},
+			</if>
+			<if test="isStick != null">
+				is_stick=#{isStick},
+			</if>
+			<if test="sort != null">
+				sort=#{sort},
+			</if>
+			<if test="deadlineStick != null">
+				deadline_stick=#{deadlineStick},
+			</if>
+			<if test="isHot != null">
+				is_hot=#{isHot},
+			</if>
+			<if test="sortHot != null">
+				sort_hot=#{sortHot},
+			</if>
+			<if test="deadlineHot != null">
+				deadline_hot=#{deadlineHot},
+			</if>
+			<if test="isPromote != null">
+				is_promote=#{isPromote},
+			</if>
+			<if test="sortPromote != null">
+				sort_promote=#{sortPromote},
+			</if>
+			<if test="deadlinePromote != null">
+				deadline_promote=#{deadlinePromote},
+			</if>
+			<if test="isScheduled != null">
+				is_scheduled=#{isScheduled},
+			</if>
+			<if test="isHide != null">
+				is_hide=#{isHide},
+			</if>
+			<if test="isPublished != null">
+				is_published=#{isPublished},
+			</if>
+			<if test="isAuth != null">
+				is_auth=#{isAuth},
+			</if>
+			<if test="authUserId != null">
+				auth_user_id=#{authUserId},
+			</if>
+			<if test="authDate != null">
+				auth_date=#{authDate},
+			</if>
+			<if test="isDeleted != null">
+				is_deleted=#{isDeleted},
+			</if>
+			<if test="gmtReedit != null">
+				gmt_reedit=#{gmtReedit},
+			</if>
+		</set>
+		where 
+			id=#{id};
+	</update>
+
+	<!-- 根据id查询一个CmsContent -->
+	<select id="getCmsContentById" parameterType="java.lang.Long" resultType="CmsContent">
+		select * from cms_content where id=#{id};
+	</select>
+	
+	<!-- 查询表单的数据总数 -->
+	<select id="getCmsContentCount" resultType="java.lang.Integer">
+		select
+			count(*)
+		from
+			cms_content
+	</select>
+	
+	<!-- 根据id删除一个 CmsContent-->
+	<delete id="deleteCmsContentById" parameterType="java.lang.Long">
+		delete from cms_content where id=#{id};
+	</delete>
+	
+	<!-- 批量删除-->
+    <delete id="deleteCmsContentByIds" >
+    	delete from cms_content
+		where 
+			id
+		in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+    </delete>
+</mapper>

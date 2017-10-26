@@ -39,6 +39,12 @@ public class CmsExtra implements java.io.Serializable {
     public CmsExtra() {
     }
 
+    public CmsExtra(Long id, Long contentId, String attachment) {
+        this.id = id;
+        this.contentId = contentId;
+        this.attachment = attachment;
+    }
+
     /** full constructor */
     public CmsExtra(Long contentId, String attachment, String attachmentName, Long download) {
         this.contentId = contentId;
