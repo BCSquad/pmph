@@ -13,6 +13,7 @@ import java.util.List;
  *
  **/
 public class Until {
+	
 	/**
 	 * 传入sql 获取 结果集
 	 * @introduction 
@@ -53,7 +54,7 @@ public class Until {
 	 * @throws Exception 
 	 */
 	public static String getPk(String tableName) throws Exception{
-		String pk="id";
+		String pk=null;
 		List<Object[]> lst=getListData("describe "+tableName.replace(" ", ""));
 		for(Object[] o:lst){
 			String key= (String)o[3];
@@ -97,16 +98,10 @@ public class Until {
 	 */
 	public static int updateNewPk(Object oldValue,String tableName,Long newValue) throws Exception{
 		String pk=getPk(tableName);
+		if(null == pk){
+			return 0;
+		}
 		String newPk="NEW_"+pk.toUpperCase();
-		//拿连接
-		Connection con= JdbcHelper.getConnection();
-		//拿PreparedStatement
-		PreparedStatement ps = con.prepareStatement("update "+tableName+" set "+newPk+"= ? where "+pk+" = ? ");
-		ps.setLong(1, newValue);
-		ps.setObject(2, oldValue);
-		//获取执行结果
-		int count = ps.executeUpdate();
-		JdbcHelper.colse(null,ps,con);
-		return count;
+		return getUpdateRes("update "+tableName+" set "+newPk+"= ? where "+pk+" = ? ");
 	}
 }
