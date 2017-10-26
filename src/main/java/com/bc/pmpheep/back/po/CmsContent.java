@@ -98,6 +98,31 @@ public class CmsContent implements java.io.Serializable {
     public CmsContent() {
     }
 
+    public CmsContent(Long id, Long parentId, String path, Timestamp gmtReedit) {
+        this.id = id;
+        this.parentId = parentId;
+        this.path = path;
+        this.gmtReedit = gmtReedit;
+    }
+
+    public CmsContent(Long parentId, String path, String mid, String title, String summary,
+    String keyword, Short authorType, Timestamp deadlineStick, Timestamp deadlineHot,
+    Timestamp deadlinePromote, Long authUserId, Timestamp authDate, Timestamp gmtReedit) {
+        this.parentId = parentId;
+        this.path = path;
+        this.mid = mid;
+        this.title = title;
+        this.summary = summary;
+        this.keyword = keyword;
+        this.authorType = authorType;
+        this.deadlineStick = deadlineStick;
+        this.deadlineHot = deadlineHot;
+        this.deadlinePromote = deadlinePromote;
+        this.authUserId = authUserId;
+        this.authDate = authDate;
+        this.gmtReedit = gmtReedit;
+    }
+
     /** minimal constructor */
     public CmsContent(Long parentId, String path, String mid, Long categoryId, String title,
     Short authorType, Long authorId, Long clicks, Long comments, Long likes, Long bookmarks,

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.CmsCategoryDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="path != null and path !=''" >
+				path,
+			</if>
+			<if test="categoryName != null">
+				category_name,
+			</if>
+			<if test="isBackground != null">
+				is_background,
+			</if>
+			<if test="permissionId != null">
+				permission_id,
+			</if>
+			<if test="isAuthRequired != null">
+				is_auth_required,
+			</if>
+			<if test="authRoleId != null">
+				auth_role_id,
+			</if>
+			<if test="isMaterialNotice != null">
+				is_material_notice,
+			</if>
+			<if test="materialId != null">
+				material_id,
+			</if>
+			<if test="isSummaryVisible != null">
+				is_summary_visible,
+			</if>
+			<if test="isKeywordVisible != null">
+				is_keyword_visible,
+			</if>
+			<if test="isAuthorVisible != null">
+				is_author_visible,
+			</if>
+			<if test="isClicksVisible != null">
+				is_clicks_visible,
+			</if>
+			<if test="isCommentsAllow != null">
+				is_comments_allow,
+			</if>
+			<if test="isCommentsVisible != null">
+				is_comments_visible,
+			</if>
+			<if test="isLikesVisible != null">
+				is_likes_visible,
+			</if>
+			<if test="isBookmarksVisible != null">
+				is_bookmarks_visible,
+			</if>
+			<if test="sort != null">
+				sort,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="parentId != null">
+				#{parentId},
+			</if>
+			<if test="path != null and path !=''" >
+				#{path},
+			</if>
+			<if test="categoryName != null">
+				#{categoryName},
+			</if>
+			<if test="isBackground != null">
+				#{isBackground},
+			</if>
+			<if test="permissionId != null">
+				#{permissionId},
+			</if>
+			<if test="isAuthRequired != null">
+				#{isAuthRequired},
+			</if>
+			<if test="authRoleId != null">
+				#{authRoleId},
+			</if>
+			<if test="isMaterialNotice != null">
+				#{isMaterialNotice},
+			</if>
+			<if test="materialId != null">
+				#{materialId},
+			</if>
+			<if test="isSummaryVisible != null">
+				#{isSummaryVisible},
+			</if>
+			<if test="isKeywordVisible != null">
+				#{isKeywordVisible},
+			</if>
+			<if test="isAuthorVisible != null">
+				#{isAuthorVisible},
+			</if>
+			<if test="isClicksVisible != null">
+				#{isClicksVisible},
+			</if>
+			<if test="isCommentsAllow != null">
+				#{isCommentsAllow},
+			</if>
+			<if test="isCommentsVisible != null">
+				#{isCommentsVisible},
+			</if>
+			<if test="isLikesVisible != null">
+				#{isLikesVisible},
+			</if>
+			<if test="isBookmarksVisible != null">
+				#{isBookmarksVisible},
+			</if>
+			<if test="sort != null">
+				#{sort},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增CmsCategory -->
+	<insert id="addCmsCategory" parameterType="CmsCategory" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into cms_category (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 更新CmsCategory -->
+	<update id="updateCmsCategory" parameterType="CmsCategory">
+		update cms_category
+		<set>
+			<if test="parentId != null">
+				parent_id=#{parentId},
+			</if>
+			<if test="path != null and path !=''" >
+				path=#{path},
+			</if>
+			<if test="categoryName != null">
+				category_name=#{categoryName},
+			</if>
+			<if test="isBackground != null">
+				is_background=#{isBackground},
+			</if>
+			<if test="permissionId != null">
+				permission_id=#{permissionId},
+			</if>
+			<if test="isAuthRequired != null">
+				is_auth_required=#{isAuthRequired},
+			</if>
+			<if test="authRoleId != null">
+				auth_role_id=#{authRoleId},
+			</if>
+			<if test="isMaterialNotice != null">
+				is_material_notice=#{isMaterialNotice},
+			</if>
+			<if test="materialId != null">
+				material_id=#{materialId},
+			</if>
+			<if test="isSummaryVisible != null">
+				is_summary_visible=#{isSummaryVisible},
+			</if>
+			<if test="isKeywordVisible != null">
+				is_keyword_visible=#{isKeywordVisible},
+			</if>
+			<if test="isAuthorVisible != null">
+				is_author_visible=#{isAuthorVisible},
+			</if>
+			<if test="isClicksVisible != null">
+				is_clicks_visible=#{isClicksVisible},
+			</if>
+			<if test="isCommentsAllow != null">
+				is_comments_allow=#{isCommentsAllow},
+			</if>
+			<if test="isCommentsVisible != null">
+				is_comments_visible=#{isCommentsVisible},
+			</if>
+			<if test="isLikesVisible != null">
+				is_likes_visible=#{isLikesVisible},
+			</if>
+			<if test="isBookmarksVisible != null">
+				is_bookmarks_visible=#{isBookmarksVisible},
+			</if>
+			<if test="sort != null">
+				sort=#{sort},
+			</if>
+		</set>
+		where 
+			id=#{id};
+	</update>
+
+	<!-- 根据id查询一个CmsCategory -->
+	<select id="getCmsCategoryById" parameterType="java.lang.Long" resultType="CmsCategory">
+		select * from cms_category where id=#{id};
+	</select>
+	
+	<!-- 查询表单的数据总数 -->
+	<select id="getCmsCategoryCount" resultType="java.lang.Integer">
+		select
+			count(*)
+		from
+			cms_category
+	</select>
+	
+	<!-- 根据id删除一个 CmsCategory-->
+	<delete id="deleteCmsCategoryById" parameterType="java.lang.Long">
+		delete from cms_category where id=#{id};
+	</delete>
+	
+	<!-- 批量删除-->
+    <delete id="deleteCmsCategoryByIds" >
+    	delete from cms_category
+		where 
+			id
+		in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+    </delete>
+</mapper>

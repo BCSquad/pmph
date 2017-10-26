@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.CmsUserMarkDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="contentId != null">
+				content_id,
+			</if>
+			<if test="writerId != null " >
+				writer_id,
+			</if>
+			<if test="favoriteId != null " >
+				favorite_id,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="contentId != null">
+				#{contentId},
+			</if>
+			<if test="writerId != null " >
+				#{writerId},
+			</if>
+			<if test="favoriteId != null " >
+				#{favoriteId},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增CmsUserMark -->
+	<insert id="addCmsUserMark" parameterType="CmsUserMark" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into cms_user_mark (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 更新CmsUserMark -->
+	<update id="updateCmsUserMark" parameterType="CmsUserMark">
+		update cms_user_mark
+		<set>
+			<if test="contentId != null">
+				content_id=#{contentId},
+			</if>
+			<if test="writerId != null " >
+				writer_id=#{writerId},
+			</if>
+			<if test="favoriteId != null " >
+				favorite_id=#{favoriteId},
+			</if>
+		</set>
+		where 
+			id=#{id};
+	</update>
+
+	<!-- 根据id查询一个CmsUserMark -->
+	<select id="getCmsUserMarkById" parameterType="java.lang.Long" resultType="CmsUserMark">
+		select * from cms_user_mark where id=#{id};
+	</select>
+	
+	<!-- 查询表单的数据总数 -->
+	<select id="getCmsUserMark" resultType="java.lang.Integer">
+		select
+			count(*)
+		from
+			cms_user_mark
+	</select>
+	
+	<!-- 根据id删除一个 CmsUserMark-->
+	<delete id="deleteCmsUserMarkById" parameterType="java.lang.Long">
+		delete from cms_user_mark where id=#{id};
+	</delete>
+	
+	<!-- 批量删除-->
+    <delete id="deleteCmsUserMarkByIds" >
+    	delete from cms_user_mark
+		where 
+			id
+		in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+    </delete>
+</mapper>

@@ -41,6 +41,13 @@ public class CmsUserLike implements java.io.Serializable {
     public CmsUserLike() {
     }
 
+    public CmsUserLike(Long id, Long contentId, Long writerId, Timestamp gmtCreate) {
+        this.id = id;
+        this.contentId = contentId;
+        this.writerId = writerId;
+        this.gmtCreate = gmtCreate;
+    }
+
     /** full constructor */
     public CmsUserLike(Long contentId, Long writerId, Timestamp gmtCreate) {
         this.contentId = contentId;
