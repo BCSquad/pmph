@@ -1,7 +1,6 @@
 package com.bc.pmpheep.migration;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -10,9 +9,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtension;
@@ -229,8 +226,7 @@ public class Material {
 				materialNoticeAttachment.setAttachmentName(fileName);
 				materialNoticeAttachment.setDownload(1L);
 				materialNoticeAttachment=materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
-				MultipartFile file= new MockMultipartFile(fileName,new FileInputStream(oldFile));
-				String fileId=fileService.save(file, FileType.MATERIAL_NOTICE_ATTACHMENT, materialNoticeAttachment.getId());
+				String fileId=fileService.saveLocalFile(oldFile, FileType.MATERIAL_NOTICE_ATTACHMENT, materialNoticeAttachment.getId());
 				materialNoticeAttachment.setAttachment(fileId);
 				//更新附件id
 				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
