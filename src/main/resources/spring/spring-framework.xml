@@ -15,18 +15,20 @@
           http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.10.2.xsd">
           
     <!-- 使用cglib进行动态代理 -->
-    <!-- <aop:aspectj-autoproxy proxy-target-class="true" /> -->
+     <aop:aspectj-autoproxy proxy-target-class="true" />
     
     <!-- 启动组件扫描，排除@Controller组件，该组件由SpringMVC配置文件扫描 -->
-    <context:component-scan base-package="com.bc.pmpheep.**">
+    <!-- <context:component-scan base-package="com.bc.pmpheep.**">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
         <context:exclude-filter type="annotation" expression="org.springframework.context.annotation.Configuration" />
-    </context:component-scan> 
-    <!--  <context:component-scan base-package="com.bc.pmpheep.back.shiro.cache"/> -->
-     <!--<context:component-scan base-package="com.bc.pmpheep.back.service"/>--> 
-     <!--<context:component-scan base-package="com.bc.pmpheep.general.service"/>-->
-     <!--<context:component-scan base-package="com.bc.pmpheep.websocket"/>-->
-     <!--<context:component-scan base-package="com.bc.pmpheep.utils"/>-->
+    </context:component-scan>  -->
+     <context:component-scan base-package="com.bc.pmpheep.back.shiro.cache"/>
+     <context:component-scan base-package="com.bc.pmpheep.back.service"/> 
+     <context:component-scan base-package="com.bc.pmpheep.general.service"/>
+     <context:component-scan base-package="com.bc.pmpheep.websocket"/>
+     <context:component-scan base-package="com.bc.pmpheep.utils"/>
+     <context:component-scan base-package="com.bc.pmpheep.migration"/>
+     
     <!-- 加载属性文件 -->
     <context:property-placeholder location="classpath:spring/spring.properties" ignore-unresolvable="true" />
     
