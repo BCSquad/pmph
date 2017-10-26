@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.BookUserCommentDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null and id !=''">
+				id,
+			</if>
+			<if test="bookId != null and bookId !=''">
+				book_id
+			</if>
+			<if test=" writerId != null and writerId !=''">
+				writer_id,
+			</if>
+                        <if test="score != null and score !=''">
+				score,
+			</if>
+			<if test="content != null and content !=''">
+				content,
+			</if>
+			<if test=" isHide != null and isHide !=''">
+				is_hide,
+			</if>
+                        <if test="isAuth != null and isAuth !=''">
+				is_auth,
+			</if>
+			<if test="authUserId != null and authUserId !=''">
+				auth_user_id,
+			</if>
+			<if test=" authDate != null and authDate !=''">
+				auth_date,
+			</if>
+                        <if test="isDelete != null and isDelete !=''">
+				is_delete,
+			</if>
+				<if test="gmtCreate != null and gmtCreate !=''">
+				gmt_create,
+			</if>
+			<if test=" gmtUpdate != null and gmtUpdate !=''">
+				gmt_update,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null and id !=''">
+				#{id}   ,
+			</if>
+			<if test="bookId != null and bookId !=''">
+		#{bookId}		 ,
+			</if>
+			<if test=" writerId != null and writerId !=''">
+		#{writerId}		 ,
+			</if>
+                        <if test="score != null and score !=''">
+		#{score}		 ,
+			</if>
+			<if test="content != null and content !=''">
+		#{content}		 ,
+			</if>
+			<if test=" isHide != null and isHide !=''">
+		#{isHide}		 ,
+			</if>
+                        <if test="isAuth != null and isAuth !=''">
+		#{isAuth}		 ,
+			</if>
+			<if test="authUserId != null and authUserId !=''">
+		#{authUserId}		 ,
+			</if>
+			<if test=" authDate != null and authDate !=''">
+		#{authDate}		 ,
+			</if>
+                        <if test="isDelete != null and isDelete !=''">
+	                        	#{isDelete} ,
+			</if>
+				<if test="gmtCreate != null and gmtCreate !=''">
+				#{gmtCreate},
+			</if>
+			<if test=" gmtUpdate != null and gmtUpdate !=''">
+				#{gmtUpdate},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增BookUserComment -->
+	<insert id="addBookUserComment" parameterType="BookUserComment">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into book_user_comment (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+
+	<!-- 根据id删除一个 -->
+	<delete id="deleteBookUserCommentById" parameterType="java.lang.Long">
+		delete from book_user_comment where
+		id=#{id} ;
+	</delete>
+
+	<!-- 更新BookUserComment -->
+	<update id="updateBookUserComment" parameterType="BookUserComment">
+		update book_user_comment
+		<set>
+				<if test="id != null and id !=''">
+			id=	#{id}   ,
+			</if>
+			<if test="bookId != null and bookId !=''">
+book_id	=	#{bookId}		 ,
+			</if>
+			<if test=" writerId != null and writerId !=''">
+	writer_id	=#{writerId}		 ,
+			</if>
+                        <if test="score != null and score !=''">
+score	=	#{score}		 ,
+			</if>
+			<if test="content != null and content !=''">
+	comtent=	#{content}		 ,
+			</if>
+			<if test=" isHide != null and isHide !=''">
+is_hide	=	#{isHide}		 ,
+			</if>
+                        <if test="isAuth != null and isAuth !=''">
+is_auth	=	#{isAuth}		 ,
+			</if>
+			<if test="authUserId != null and authUserId !=''">
+	auth_user_id=	#{authUserId}		 ,
+			</if>
+			<if test=" authDate != null and authDate !=''">
+	auth_date=	#{authDate}		 ,
+			</if>
+                        <if test="isDelete != null and isDelete !=''">
+	             is_delete           	=#{isDelete} ,
+			</if>
+				<if test="gmtCreate != null and gmtCreate !=''">
+				gmt_create=#{gmtCreate},
+			</if>
+			<if test=" gmtUpdate != null and gmtUpdate !=''">
+				gmt_update=#{gmtUpdate},
+			</if>
+		</set>
+		where
+		id=#{id} ;
+	</update>
+
+	<!-- 根据id查询一个BookUserComment -->
+	<select id="getBookUserCommentById" parameterType="java.lang.Long"
+		resultType="BookUserComment">
+		select * from book_user_comment where id=#{id} ;
+	</select>
+	
+</mapper>
