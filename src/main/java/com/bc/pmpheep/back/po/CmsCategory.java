@@ -68,6 +68,19 @@ public class CmsCategory implements java.io.Serializable {
     public CmsCategory() {
     }
 
+    public CmsCategory(Long id, String path, String categoryName) {
+        this.id = id;
+        this.path = path;
+        this.categoryName = categoryName;
+    }
+
+    public CmsCategory(Long parentId, String path, String categoryName, Boolean isBackground) {
+        this.parentId = parentId;
+        this.path = path;
+        this.categoryName = categoryName;
+        this.isBackground = isBackground;
+    }
+
     /** full constructor */
     public CmsCategory(Long parentId, String path, String categoryName, Boolean isBackground,
     Long permissionId, Boolean isAuthRequired, Long authRoleId, Boolean isMaterialNotice,

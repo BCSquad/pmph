@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.CmsExtraDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="contentId != null">
+				content_id,
+			</if>
+			<if test="attachment != null and attachment !='' " >
+				attachment,
+			</if>
+			<if test="attachmentName != null and attachmentName !='' " >
+				attachment_name,
+			</if>
+			<if test="download != null " >
+				download,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="contentId != null">
+				#{contentId},
+			</if>
+			<if test="attachment != null and attachment !='' " >
+				#{attachment},
+			</if>
+			<if test="attachmentName != null and attachmentName !='' " >
+				#{attachmentName},
+			</if>
+			<if test="download != null " >
+				#{download},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增CmsExtra -->
+	<insert id="addCmsExtra" parameterType="CmsExtra" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into cms_extra (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 更新CmsExtra -->
+	<update id="updateCmsExtra" parameterType="CmsExtra">
+		update cms_extra
+		<set>
+			<if test="contentId != null">
+				content_id=#{contentId},
+			</if>
+			<if test="attachment != null and attachment !='' " >
+				attachment=#{attachment},
+			</if>
+			<if test="attachmentName != null and attachmentName !='' " >
+				attachment_name=#{attachmentName},
+			</if>
+			<if test="download != null " >
+				download=#{download},
+			</if>
+		</set>
+		where 
+			id=#{id};
+	</update>
+
+	<!-- 根据id查询一个CmsExtra -->
+	<select id="getCmsExtraById" parameterType="java.lang.Long" resultType="CmsExtra">
+		select * from cms_extra where id=#{id};
+	</select>
+	
+	<!-- 查询表单的数据总数 -->
+	<select id="getCmsExtra" resultType="java.lang.Integer">
+		select
+			count(*)
+		from
+			cms_extra
+	</select>
+	
+	<!-- 根据id删除一个 CmsExtra-->
+	<delete id="deleteCmsExtraById" parameterType="java.lang.Long">
+		delete from cms_extra where id=#{id};
+	</delete>
+	
+	<!-- 批量删除-->
+    <delete id="deleteCmsExtraByIds" >
+    	delete from cms_extra
+		where 
+			id
+		in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+    </delete>
+</mapper>

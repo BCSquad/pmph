@@ -43,6 +43,14 @@ public class CmsUserMark implements java.io.Serializable {
     public CmsUserMark() {
     }
 
+    public CmsUserMark(Long id, Long contentId, Long writerId, Long favoriteId, Timestamp gmtCreate) {
+        this.id = id;
+        this.contentId = contentId;
+        this.writerId = writerId;
+        this.favoriteId = favoriteId;
+        this.gmtCreate = gmtCreate;
+    }
+
     /** full constructor */
     public CmsUserMark(Long contentId, Long writerId, Long favoriteId, Timestamp gmtCreate) {
         this.contentId = contentId;

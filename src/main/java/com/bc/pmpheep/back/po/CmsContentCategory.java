@@ -36,6 +36,12 @@ public class CmsContentCategory implements java.io.Serializable {
     public CmsContentCategory() {
     }
 
+    public CmsContentCategory(Long id, Long contentId, Long categoryId) {
+        this.id = id;
+        this.contentId = contentId;
+        this.categoryId = categoryId;
+    }
+
     /** full constructor */
     public CmsContentCategory(Long contentId, Long categoryId) {
         this.contentId = contentId;

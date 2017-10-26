@@ -12,13 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 用于测试的基类(抽象类)，所有测试类都从该类继承
- *
+ * 
  * @author L.X <gugia@qq.com>
  */
 @Configuration
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/spring-framework.xml",
-    "classpath:spring/spring-pmph-shiro.xml"})
+@ContextConfiguration(locations = { "classpath:spring/spring-framework.xml" })
 @Transactional(transactionManager = "transactionManager")
 public abstract class BaseTest {
 
