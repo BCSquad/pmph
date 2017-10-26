@@ -9,14 +9,14 @@ import org.springframework.context.ApplicationContext;
  * 使用示范：
  * 
  * 
- * &#64;author (作者) nyz
+ * @author (作者) nyz
  * 
- * &#64;since (该版本支持的JDK版本) ：JDK 1.6或以上
- * &#64;version (版本) 1.0
- * &#64;date (开发日期) 2017-9-20
- * &#64;modify (最后修改时间) 
- * &#64;修改人 ：nyz 
- * &#64;审核人 ：
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2017-9-20
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
  * </pre>
  */
 public class Const {

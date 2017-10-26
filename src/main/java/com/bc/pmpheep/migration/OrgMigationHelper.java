@@ -17,7 +17,6 @@ import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.service.OrgTypeService;
 import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
-import com.bc.pmpheep.migration.common.Until;
 
 /**
  * 机构数据迁移工具类
@@ -45,7 +44,7 @@ public class OrgMigationHelper {
 	 * @date:2017年10月25日下午3:14:26
 	 * @param 
 	 * @return void
-	 */
+	 *//*
 	public void OrgType() throws Exception{
 		String sql = "SELECT orgid,orgname,sortno FROM ba_organize WHERE orgcode NOT LIKE '15%' AND parentid=0";
 		List<Object[]> list = Until.getListData(sql);
@@ -72,7 +71,7 @@ public class OrgMigationHelper {
 	 * @date:2017年10月25日下午3:15:02
 	 * @param 
 	 * @return void
-	 */
+	 *//*
 	public void Org() throws Exception{
 		String sql = "SELECT b.NEW_AREAID, a.* FROM ba_organize a "
 					+"LEFT JOIN ba_areacode b ON b.AreaID =a.orgprovince " 
@@ -109,5 +108,5 @@ public class OrgMigationHelper {
 		}
           logger.info("org表前已完成");
           logger.info("原数据库表共有{}条数据，迁移了{}条数据",list.size(),count);
-	}
+	}*/
 }

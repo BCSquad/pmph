@@ -16,24 +16,48 @@ import com.bc.pmpheep.back.po.MaterialExtension;
 import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
+import com.bc.pmpheep.back.po.MaterialType;
 import com.bc.pmpheep.back.service.MaterialContactService;
 import com.bc.pmpheep.back.service.MaterialExtensionService;
 import com.bc.pmpheep.back.service.MaterialExtraService;
 import com.bc.pmpheep.back.service.MaterialNoteAttachmentService;
 import com.bc.pmpheep.back.service.MaterialNoticeAttachmentService;
 import com.bc.pmpheep.back.service.MaterialService;
+import com.bc.pmpheep.back.service.MaterialTypeService;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.OtherParamaters;
-import com.bc.pmpheep.migration.common.Until;
 /**
  *@author MrYang 
  *@CreateDate 2017年10月23日 下午2:18:10
  **/
 @Component
 public class Material {
-	
+	/*
 	Logger  logger = LoggerFactory.getLogger(Material.class);
+	
+	@Autowired
+	private MaterialTypeService materialTypeService;
+	
+	public  void transferMaterialType() throws Exception{
+		String sql="select "+ 
+						"BookTypesID, "+
+						"'0', "+  
+						"'---' path, "+ 
+						"TypeName, "+ 
+						"Sortno, "+ 
+						"Remark "+ 
+						"from  "+ 
+						"sys_booktypes  a "; 
+		List<Object[]> materialTypeList=Until.getListData(sql);
+		for(Object[] object: materialTypeList){
+			String oldId=(String)object[0];
+			MaterialType materialType =new MaterialType(0L,"---", (String) object[3],(Integer) object[4], (String) object[5]);
+			materialType=materialTypeService.addMaterialType(materialType);
+			Until.updateNewPk(oldId, "sys_booktypes", materialType.getId());
+		}
+		
+	}
 	
 	@Autowired
 	private MaterialService materialService;
@@ -294,5 +318,5 @@ public class Material {
 		}
 		
 	}
-
+*/
 }
