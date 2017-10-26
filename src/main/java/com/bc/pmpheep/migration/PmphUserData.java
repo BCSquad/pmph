@@ -21,7 +21,6 @@ import com.bc.pmpheep.back.service.PmphUserRoleService;
 import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
-import com.bc.pmpheep.migration.common.Until;
 
 /**
  * <p>Title:PmphUserData<p>
@@ -50,7 +49,7 @@ public class PmphUserData {
 	 * @date:2017年10月24日下午2:33:07
 	 * @param 
 	 * @return void
-	 */
+	 *//*
 	public void pmphDepartment() throws Exception {
 		String sql = "SELECT orgid,parentid,orgname,sortno,remark FROM ba_organize WHERE orgcode LIKE '15%' ORDER BY orgcode ;";
 		List<Object[]> list = Until.getListData(sql);
@@ -92,7 +91,7 @@ public class PmphUserData {
 	 * @date:2017年10月24日上午9:55:25
 	 * @param 主键
 	 * @return path
-	 */
+	 *//*
 	public String researchParentId(String id) throws Exception {
 		String path = "";
 		String sql = "SELECT parentid,NEW_ORGID FROM ba_organize WHERE orgid='"
@@ -117,7 +116,7 @@ public class PmphUserData {
 	 * @date:2017年10月24日下午2:32:51
 	 * @param 
 	 * @return void
-	 */
+	 *//*
 	public void pmphUser() throws Exception{
     	  String sql = "SELECT a.userid,a.usercode,a.`password`,a.isvalid,a.username,d.NEW_ORGID,b.handset,"
                        +"b.email,b.icon,a.memo,a.sortno"
@@ -165,7 +164,7 @@ public class PmphUserData {
 	 * @date:2017年10月24日下午2:42:04
 	 * @param 
 	 * @return void
-	 */
+	 *//*
 	public void pmphRole() throws Exception{
 		String sql = "SELECT roleid,rolename,isvalid,sortno,memo FROM sys_role";
 		List<Object[]> list = Until.getListData(sql);
@@ -192,7 +191,7 @@ public class PmphUserData {
 	 * @date:2017年10月24日下午3:32:44
 	 * @param 
 	 * @return void
-	 */
+	 *//*
 	public void pmphUserRole() throws Exception {
 		String sql = "SELECT b.userroleid,a.NEW_USERID,c.NEW_ROLEID FROM sys_user a "
                       +"LEFT JOIN sys_userrole b ON a.userid = b.userid"
@@ -211,5 +210,5 @@ public class PmphUserData {
 		}
 		logger.info("pmph_user_role表迁移完成");
 		logger.info("原数据库表共有{}条数据，迁移了{}条数据",list.size(),count);
-	}
+	}*/
 }

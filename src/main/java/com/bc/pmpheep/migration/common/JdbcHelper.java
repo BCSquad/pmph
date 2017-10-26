@@ -9,6 +9,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -21,7 +26,13 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 public class JdbcHelper {
 
     private static DriverManagerDataSource dataSource;
-    
+    private static final Logger LOG = LoggerFactory.getLogger(JdbcHelper.class);
+
+    private static final String ADD_NEW_PK_COLUMN = "ALTER TABLE ? ADD new_pk BIGINT(20) NOT NULL COMMENT '新表主键'";
+    private static final String UPDATE_NEW_PK = "UPDATE # SET new_pk = ? WHERE $ = ?";
+    private static final String QUERY = "SELECT * FROM ?";
+    private static final String GET_PARENT_PK = "SELECT new_pk FROM # WHERE $ = ?";
+
     public static JdbcTemplate getJdbcTemplate() {
         if (null == dataSource) {
             dataSource = new DriverManagerDataSource();
@@ -32,55 +43,58 @@ public class JdbcHelper {
         }
         return new JdbcTemplate(dataSource);
     }
-    
-    //加载静态块
-    static {
-		try {
-			Class.forName(SQLParameters.DRIVER);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	private static Connection conn=null;
-	
-	public static Connection getConnection() throws Exception{
-		if(conn==null||conn.isClosed()){
-			conn=DriverManager.getConnection(SQLParameters.DB_URL,SQLParameters.DB_USERNAME,SQLParameters.DB_PASSWORD);
-		}
-		return conn;
-	}
-	
-	//关闭相关连接
-	@SuppressWarnings("finally")
-	public static void colse(ResultSet rs,PreparedStatement ps,Connection con){
-		try{
-		    if(rs != null){
-		    	rs.close();
-		    	rs = null;
-		    }  
-		}catch(SQLException e){
-		    e.printStackTrace();
-		}finally{
-		    try{
-		        if(ps != null){
-		            ps.close();
-		            ps = null;
-		        }
-		    }catch(SQLException e){
-		        e.printStackTrace();
-		    }finally{
-		        try{
-				     if(con != null){
-				    	 con.close();
-				    	 con = null;
-				     }
-				}catch(SQLException e){
-				     e.printStackTrace();
-				}finally{
-				     return ;
-				}
-		    }
-		}
-	}
+
+    /**
+     * 为旧数据库指定表新增new_pk列
+     *
+     * @param tableName 旧数据库表名，例如"bbs_group"
+     */
+    public static void addColumn(String tableName) {
+        String sql = ADD_NEW_PK_COLUMN.replace("?", tableName);
+        try {
+            getJdbcTemplate().execute(sql);
+        } catch (DataAccessException ex) {
+            LOG.info(ex.getMessage());
+            LOG.warn("执行SQL时发生异常，可能表<{}>已存在'new_pk'字段", tableName);
+        }
+    }
+
+    /**
+     * 更新旧数据库指定表符合查询条件的new_pk字段
+     *
+     * @param tableName 旧数据库表名，例如"bbs_group"
+     * @param pk 数据在新表中的主键
+     * @param column 旧数据表中的主键列名
+     * @param columnValue 旧数据表中的主键值
+     */
+    public static void updateNewPrimaryKey(String tableName, long pk, String column, Object columnValue) throws DataAccessException {
+        String sql = UPDATE_NEW_PK.replace("#", tableName);
+        sql = sql.replace("$", column);
+        getJdbcTemplate().update(sql, pk, columnValue);
+    }
+
+    /**
+     * 根据旧表父节点字段查询父节点对应的new_pk字段值
+     *
+     * @param tableName 旧数据库表名
+     * @param column 旧数据表中的主键列名
+     * @param parentColumnValue 对应字段值
+     * @return 查询结果
+     */
+    public static long getParentPrimaryKey(String tableName, String column, Object parentColumnValue) throws DataAccessException {
+        String sql = GET_PARENT_PK.replace("#", tableName);
+        sql = sql.replace("$", column);
+        return getJdbcTemplate().queryForObject(sql, Long.class, parentColumnValue);
+    }
+
+    /**
+     * 查询旧数据库指定表的全部数据
+     *
+     * @param tableName 旧数据库表名，例如"bbs_group"
+     * @return 查询到的结果集
+     */
+    public static List<Map<String, Object>> queryForList(String tableName) throws DataAccessException {
+        String sql = QUERY.replace("?", tableName);
+        return getJdbcTemplate().queryForList(sql);
+    }
 }

@@ -27,14 +27,13 @@ import com.bc.pmpheep.back.service.MaterialTypeService;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.OtherParamaters;
-import com.bc.pmpheep.migration.common.Until;
 /**
  *@author MrYang 
  *@CreateDate 2017年10月23日 下午2:18:10
  **/
 @Component
 public class Material {
-	
+	/*
 	Logger  logger = LoggerFactory.getLogger(Material.class);
 	
 	@Autowired
@@ -319,5 +318,5 @@ public class Material {
 		}
 		
 	}
-
+*/
 }
