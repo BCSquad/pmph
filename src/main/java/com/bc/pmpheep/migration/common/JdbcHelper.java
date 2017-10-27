@@ -24,7 +24,6 @@ import org.springframework.stereotype.Component;
  *
  * @author L.X <gugia@qq.com>
  */
-@Component
 public class JdbcHelper {
 
     private static DriverManagerDataSource dataSource;
