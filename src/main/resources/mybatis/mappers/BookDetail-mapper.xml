@@ -48,7 +48,8 @@
 
 	<!-- 根据id删除一个 -->
 	<delete id="deleteBookDetailById" parameterType="java.lang.Long">
-		delete from book_detail where
+		delete from
+		book_detail where
 		id=#{id} ;
 	</delete>
 

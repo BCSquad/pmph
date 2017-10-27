@@ -14,7 +14,7 @@
 			<if test=" isbn != null and isbn !=''">
 				isbn,
 			</if>
-                        <if test="sn != null and sn !=''">
+			<if test="sn != null and sn !=''">
 				sn,
 			</if>
 			<if test="author != null and author !=''">
@@ -23,7 +23,7 @@
 			<if test=" publisher != null and publisher !=''">
 				publisher,
 			</if>
-                        <if test="lang != null and lang !=''">
+			<if test="lang != null and lang !=''">
 				lang,
 			</if>
 			<if test="revision != null and revision !=''">
@@ -32,7 +32,7 @@
 			<if test=" type != null and type !=''">
 				type,
 			</if>
-                        <if test="publishDate != null and publishDate !=''">
+			<if test="publishDate != null and publishDate !=''">
 				publish_date,
 			</if>
 			<if test="reader != null and reader !=''">
@@ -41,7 +41,7 @@
 			<if test=" price != null and price !=''">
 				price,
 			</if>
-                        <if test="score != null and score !=''">
+			<if test="score != null and score !=''">
 				score,
 			</if>
 			<if test="buyUrl != null and buyUrl !=''">
@@ -50,7 +50,7 @@
 			<if test=" imageUrl != null and imageUrl !=''">
 				image_url,
 			</if>
-                        <if test="pdfUrl != null and pdfUrl !=''">
+			<if test="pdfUrl != null and pdfUrl !=''">
 				pdf_url,
 			</if>
 			<if test="clicks != null and clicks !=''">
@@ -59,7 +59,7 @@
 			<if test=" comments != null and comments !=''">
 				comments,
 			</if>
-                        <if test="likes != null and likes !=''">
+			<if test="likes != null and likes !=''">
 				likes,
 			</if>
 			<if test="bookmarks != null and bookmarks !=''">
@@ -68,10 +68,10 @@
 			<if test=" isStick != null and isStick !=''">
 				is_stick,
 			</if>
-                        	<if test=" sort != null and sort !=''">
+			<if test=" sort != null and sort !=''">
 				sort,
 			</if>
-                        <if test="deadlineStick != null and deadlineStick !=''">
+			<if test="deadlineStick != null and deadlineStick !=''">
 				deadline_stick,
 			</if>
 			<if test="isNew != null and isNew !=''">
@@ -80,13 +80,13 @@
 			<if test=" sortNew != null and sortNew !=''">
 				sort_new
 			</if>
-                        	<if test="deadlineNew != null and deadlineNew !=''">
+			<if test="deadlineNew != null and deadlineNew !=''">
 				deadline_new,
 			</if>
 			<if test=" isPromote != null and isPromote !=''">
 				is_promote,
 			</if>
-                        <if test="sortPromote != null and sortPromote !=''">
+			<if test="sortPromote != null and sortPromote !=''">
 				sort_promote,
 			</if>
 			<if test="deadlinePromote != null and deadlinePromote !=''">
@@ -95,10 +95,10 @@
 			<if test=" sales != null and sales !=''">
 				sales,
 			</if>
-                        	<if test=" isOnSale != null and isOnSale !=''">
+			<if test=" isOnSale != null and isOnSale !=''">
 				is_on_sale,
 			</if>
-                        <if test="deadlineStick != null and deadlineStick !=''">
+			<if test="deadlineStick != null and deadlineStick !=''">
 				deadline_stick,
 			</if>
 			<if test="gmtCreate != null and gmtCreate !=''">
@@ -122,7 +122,7 @@
 			<if test=" isbn != null and isbn !=''">
 				#{isbn},
 			</if>
-                        <if test="sn != null and sn !=''">
+			<if test="sn != null and sn !=''">
 				#{sn},
 			</if>
 			<if test="author != null and author !=''">
@@ -131,7 +131,7 @@
 			<if test=" publisher != null and publisher !=''">
 				#{publisher},
 			</if>
-                        <if test="lang != null and lang !=''">
+			<if test="lang != null and lang !=''">
 				#{lang},
 			</if>
 			<if test="revision != null and revision !=''">
@@ -140,7 +140,7 @@
 			<if test=" type != null and type !=''">
 				#{type},
 			</if>
-                        <if test="publishDate != null and publishDate !=''">
+			<if test="publishDate != null and publishDate !=''">
 				#{publishDate},
 			</if>
 			<if test="reader != null and reader !=''">
@@ -149,7 +149,7 @@
 			<if test=" price != null and price !=''">
 				#{price},
 			</if>
-                        <if test="score != null and score !=''">
+			<if test="score != null and score !=''">
 				#{score},
 			</if>
 			<if test="buyUrl != null and buyUrl !=''">
@@ -158,7 +158,7 @@
 			<if test=" imageUrl != null and imageUrl !=''">
 				#{imageUrl},
 			</if>
-                        <if test="pdfUrl != null and pdfUrl !=''">
+			<if test="pdfUrl != null and pdfUrl !=''">
 				#{pdfUrl},
 			</if>
 			<if test="clicks != null and clicks !=''">
@@ -167,7 +167,7 @@
 			<if test=" comments != null and comments !=''">
 				#{comments},
 			</if>
-                        <if test="likes != null and likes !=''">
+			<if test="likes != null and likes !=''">
 				#{likes},
 			</if>
 			<if test="bookmarks != null and bookmarks !=''">
@@ -176,10 +176,10 @@
 			<if test=" isStick != null and isStick !=''">
 				#{isStick},
 			</if>
-                        	<if test=" sort != null and sort !=''">
+			<if test=" sort != null and sort !=''">
 				#{sort},
 			</if>
-                        <if test="deadlineStick != null and deadlineStick !=''">
+			<if test="deadlineStick != null and deadlineStick !=''">
 				#{deadlineStick},
 			</if>
 			<if test="isNew != null and isNew !=''">
@@ -188,13 +188,13 @@
 			<if test=" sortNew != null and sortNew !=''">
 				#{sortNew},
 			</if>
-                        	<if test="deadlineNew != null and deadlineNew !=''">
+			<if test="deadlineNew != null and deadlineNew !=''">
 				#{deadlineNew},
 			</if>
 			<if test=" isPromote != null and isPromote !=''">
 				#{}is_promote,
 			</if>
-                        <if test="sortPromote != null and sortPromote !=''">
+			<if test="sortPromote != null and sortPromote !=''">
 				#{sortPromote},
 			</if>
 			<if test="deadlinePromote != null and deadlinePromote !=''">
@@ -203,10 +203,10 @@
 			<if test=" sales != null and sales !=''">
 				#{sales},
 			</if>
-                        	<if test=" isOnSale != null and isOnSale !=''">
+			<if test=" isOnSale != null and isOnSale !=''">
 				#{isOnSale},
 			</if>
-                        <if test="deadlineStick != null and deadlineStick !=''">
+			<if test="deadlineStick != null and deadlineStick !=''">
 				#{deadlineStick},
 			</if>
 			<if test="gmtCreate != null and gmtCreate !=''">
@@ -242,7 +242,7 @@
 	<update id="updateBook" parameterType="Book">
 		update book
 		<set>
-				<if test="id != null and id !=''">
+			<if test="id != null and id !=''">
 				id=#{id},
 			</if>
 			<if test="bookname != null and bookname !=''">
@@ -251,7 +251,7 @@
 			<if test=" isbn != null and isbn !=''">
 				isbn=#{isbn},
 			</if>
-                        <if test="sn != null and sn !=''">
+			<if test="sn != null and sn !=''">
 				sn=#{sn},
 			</if>
 			<if test="author != null and author !=''">
@@ -260,7 +260,7 @@
 			<if test=" publisher != null and publisher !=''">
 				publisher=#{publisher},
 			</if>
-                        <if test="lang != null and lang !=''">
+			<if test="lang != null and lang !=''">
 				lang=#{lang},
 			</if>
 			<if test="revision != null and revision !=''">
@@ -269,7 +269,7 @@
 			<if test=" type != null and type !=''">
 				type=#{type},
 			</if>
-                        <if test="publishDate != null and publishDate !=''">
+			<if test="publishDate != null and publishDate !=''">
 				publish_date=#{publishDate},
 			</if>
 			<if test="reader != null and reader !=''">
@@ -278,16 +278,16 @@
 			<if test=" price != null and price !=''">
 				price=#{price},
 			</if>
-                        <if test="score != null and score !=''">
+			<if test="score != null and score !=''">
 				score=#{score},
 			</if>
 			<if test="buyUrl != null and buyUrl !=''">
 				buy_url=#{buyUrl},
 			</if>
 			<if test=" imageUrl != null and imageUrl !=''">
-			image_url	=#{imageUrl},
+				image_url =#{imageUrl},
 			</if>
-                        <if test="pdfUrl != null and pdfUrl !=''">
+			<if test="pdfUrl != null and pdfUrl !=''">
 				pdf_url=#{pdfUrl},
 			</if>
 			<if test="clicks != null and clicks !=''">
@@ -296,7 +296,7 @@
 			<if test=" comments != null and comments !=''">
 				comments=#{comments},
 			</if>
-                        <if test="likes != null and likes !=''">
+			<if test="likes != null and likes !=''">
 				likes=#{likes},
 			</if>
 			<if test="bookmarks != null and bookmarks !=''">
@@ -305,10 +305,10 @@
 			<if test=" isStick != null and isStick !=''">
 				is_stick=#{isStick},
 			</if>
-                        	<if test=" sort != null and sort !=''">
+			<if test=" sort != null and sort !=''">
 				sort=#{sort},
 			</if>
-                        <if test="deadlineStick != null and deadlineStick !=''">
+			<if test="deadlineStick != null and deadlineStick !=''">
 				deadline_stick=#{deadlineStick},
 			</if>
 			<if test="isNew != null and isNew !=''">
@@ -317,13 +317,13 @@
 			<if test=" sortNew != null and sortNew !=''">
 				sort_new=#{sortNew},
 			</if>
-                        	<if test="deadlineNew != null and deadlineNew !=''">
+			<if test="deadlineNew != null and deadlineNew !=''">
 				deadline_new=#{deadlineNew},
 			</if>
 			<if test=" isPromote != null and isPromote !=''">
 				is_promote=#{isPromote},
 			</if>
-                        <if test="sortPromote != null and sortPromote !=''">
+			<if test="sortPromote != null and sortPromote !=''">
 				sort_promote=#{sortPromote},
 			</if>
 			<if test="deadlinePromote != null and deadlinePromote !=''">
@@ -332,10 +332,10 @@
 			<if test=" sales != null and sales !=''">
 				sales=#{sales},
 			</if>
-                        	<if test=" isOnSale != null and isOnSale !=''">
+			<if test=" isOnSale != null and isOnSale !=''">
 				is_on_sale=#{isOnSale},
 			</if>
-                        <if test="deadlineStick != null and deadlineStick !=''">
+			<if test="deadlineStick != null and deadlineStick !=''">
 				deadline_stick=#{deadlineStick},
 			</if>
 			<if test="gmtCreate != null and gmtCreate !=''">
