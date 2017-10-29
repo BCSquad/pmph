@@ -14,7 +14,7 @@
 			<if test=" writerId != null and writerId !=''">
 				writer_id,
 			</if>
-                        <if test="favoriteId != null and favoriteId !=''">
+			<if test="favoriteId != null and favoriteId !=''">
 				favorite_Id,
 			</if>
 			<if test=" gmtCreate != null and gmtCreate !=''">
@@ -35,7 +35,7 @@
 			<if test=" writerId != null and writerId !=''">
 				#{writerId},
 			</if>
-                        <if test="favoriteId != null and favoriteId !=''">
+			<if test="favoriteId != null and favoriteId !=''">
 				#{favoriteId},
 			</if>
 			<if test=" gmtCreate != null and gmtCreate !=''">
@@ -60,7 +60,8 @@
 
 	<!-- 根据id删除一个 -->
 	<delete id="deleteBookUserMarkById" parameterType="java.lang.Long">
-		delete from book_user_mark where
+		delete from
+		book_user_mark where
 		id=#{id} ;
 	</delete>
 
@@ -77,7 +78,7 @@
 			<if test=" writerId != null and writerId !=''">
 				writer_id=#{writerId},
 			</if>
-                        <if test="favoriteId != null and favoriteId !=''">
+			<if test="favoriteId != null and favoriteId !=''">
 				favorite_id=#{favoriteId},
 			</if>
 			<if test=" gmtCreate != null and gmtCreate !=''">
