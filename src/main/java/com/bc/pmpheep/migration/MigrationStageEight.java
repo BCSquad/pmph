@@ -86,7 +86,7 @@ public class MigrationStageEight {
             /* 以下读取小组头像并保存在mongoDB中，读取失败时导出到Excel中 */
             String mongoId = "";
             try {
-                mongoId = fileService.saveLocalFile(groupImg, ImageType.GROUP_AVATAR, pk);
+                mongoId = fileService.migrateFile(groupImg, ImageType.GROUP_AVATAR, pk);
             } catch (IOException ex) {
                 logger.error("文件读取异常，路径<{}>，异常信息：{}", groupImg, ex.getMessage());
                 map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
