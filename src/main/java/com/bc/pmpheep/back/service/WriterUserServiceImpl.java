@@ -366,7 +366,6 @@ public class WriterUserServiceImpl implements WriterUserService {
 			case 3:
 				writerUserManagerVO.setRankName("专家用户");
 				break;
-
 			default:
 				throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
 						CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
