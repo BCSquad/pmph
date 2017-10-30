@@ -78,7 +78,7 @@ public class MigrationStageOne {
              * 该对象默认为根节点，如果不是根节点，则根据parentCode反查父节点的new_pk。 注意此处由于ba_areacode表爷爷-父亲-儿子是按正序排列的，父节点总是已经被插入到新表，所以不需要再次循环。
              */
             if (parentCode.intValue() != 0) {
-                parentPk = JdbcHelper.getParentPrimaryKey(tableName, "AreaID", parentCode);//返回Long型新主键
+                parentPk = JdbcHelper.getPrimaryKey(tableName, "AreaID", parentCode);//返回Long型新主键
             }
             area.setParentId(parentPk);
             area = areaService.addArea(area);

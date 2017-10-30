@@ -18,17 +18,17 @@ public class SQLParameters {
     /**
      * 现有平台数据库地址
      */
-    public static final String DB_URL = "jdbc:mysql://localhost:3306/pmph_out";
+    public static final String DB_URL = "jdbc:mysql://localhost:3306/pmph_imesp";
 
     /**
      * 现有平台数据库用户名
      */
-    public static final String DB_USERNAME = "root";
+    public static final String DB_USERNAME = "gugia";
 
     /**
      * 现有平台数据库密码
      */
-    public static final String DB_PASSWORD = "root";
+    public static final String DB_PASSWORD = "123123";
 
     /**
      * 专家平台数据库地址
@@ -44,4 +44,14 @@ public class SQLParameters {
      * 专家平台数据库密码
      */
     public static final String ZJ_PASSWORD = "";
+
+    /**
+     * 现有平台文件路径（最后以/结尾）
+     */
+    public static final String FILE_PATH = "D:\\upload\\";
+    
+    /**
+     * Excel异常导出统一表头
+     */
+    public static final String EXCEL_EX_HEADER = "exception";
 }

@@ -266,10 +266,10 @@
 			<if test="revision != null and revision !=''">
 				revision=#{revision},
 			</if>
-			<if test=" type != null and type !=''">
+			<if test=" type != null ">
 				type=#{type},
 			</if>
-			<if test="publishDate != null and publishDate !=''">
+			<if test="publishDate != null ">
 				publish_date=#{publishDate},
 			</if>
 			<if test="reader != null and reader !=''">
@@ -302,7 +302,7 @@
 			<if test="bookmarks != null and bookmarks !=''">
 				bookmarks=#{bookmarks},
 			</if>
-			<if test=" isStick != null and isStick !=''">
+			<if test=" isStick != null ">
 				is_stick=#{isStick},
 			</if>
 			<if test=" sort != null and sort !=''">
@@ -311,7 +311,7 @@
 			<if test="deadlineStick != null and deadlineStick !=''">
 				deadline_stick=#{deadlineStick},
 			</if>
-			<if test="isNew != null and isNew !=''">
+			<if test="isNew != null ">
 				is_new=#{isNew},
 			</if>
 			<if test=" sortNew != null and sortNew !=''">
@@ -320,7 +320,7 @@
 			<if test="deadlineNew != null and deadlineNew !=''">
 				deadline_new=#{deadlineNew},
 			</if>
-			<if test=" isPromote != null and isPromote !=''">
+			<if test=" isPromote != null ">
 				is_promote=#{isPromote},
 			</if>
 			<if test="sortPromote != null and sortPromote !=''">
@@ -332,16 +332,16 @@
 			<if test=" sales != null and sales !=''">
 				sales=#{sales},
 			</if>
-			<if test=" isOnSale != null and isOnSale !=''">
+			<if test=" isOnSale != null ">
 				is_on_sale=#{isOnSale},
 			</if>
 			<if test="deadlineStick != null and deadlineStick !=''">
 				deadline_stick=#{deadlineStick},
 			</if>
-			<if test="gmtCreate != null and gmtCreate !=''">
+			<if test="gmtCreate != null ">
 				gmt_create=#{gmtCreate},
 			</if>
-			<if test=" gmtUpdate != null and gmtUpdate !=''">
+			<if test=" gmtUpdate != null ">
 				gmt_update=#{gmtUpdate},
 			</if>
 		</set>
@@ -353,6 +353,55 @@
 	<select id="getBookById" parameterType="java.lang.Long"
 		resultType="Book">
 		select * from book where id=#{id} ;
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="listBookVO" parameterType="PageParameter"
+		resultType="BookVO">
+		SELECT b.*,t.type_name FROM book b ,material_type t WHERE t.id =
+		b.type
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (b.isbn like concat('%',#{parameter.name},'%') or
+			b.bookname like
+			concat('%',#{parameter.name},'%'))
+		</if>
+		<if test="parameter.path !=null and parameter.path != ''">
+			and t.path like concat(#{parameter.path},'%')
+		</if>
+		<if test="parameter.isNew !=null ">
+			and b.is_new =#{parameter.isNew}
+		</if>
+		<if test="parameter.isOnSale !=null ">
+			and b.is_on_sale =#{parameter.isOnSale}
+		</if>
+		<if test="parameter.isPromote !=null ">
+			and b.is_promote = #{parameter.isPromote}
+		</if>
+		LIMIT #{start},#{pageSize}
+	</select>
+
+	<!-- 查询总数 -->
+	<select id="getBookVOTotal" parameterType="PageParameter"
+		resultType="Integer">
+		SELECT count(*) FROM book b ,material_type t WHERE t.id =
+		b.type
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (b.isbn like concat('%',#{parameter.name},'%') or
+			b.bookname like
+			concat('%',#{parameter.name},'%'))
+		</if>
+		<if test="parameter.isNew !=null ">
+			and b.is_new =#{parameter.isNew}
+		</if>
+		<if test="parameter.isOnSale !=null ">
+			and b.is_on_sale =#{parameter.isOnSale}
+		</if>
+		<if test="parameter.isPromote !=null ">
+			and b.is_promote = #{parameter.isPromote}
+		</if>
+		<if test="parameter.path !=null and parameter.path != ''">
+			and t.path like concat(#{parameter.path},'%')
+		</if>
 	</select>
 
 

@@ -37,7 +37,7 @@ public class BookUserCommentController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/list/comment", method = RequestMethod.GET)
-	public ResponseBean listBookUserComment(Integer pageSize, Integer pageNumber, String name, Boolean isAuth) {
+	public ResponseBean listBookUserComment(Integer pageSize, Integer pageNumber, String name, Integer isAuth) {
 		PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
 		bookUserCommentVO.setIsAuth(isAuth);

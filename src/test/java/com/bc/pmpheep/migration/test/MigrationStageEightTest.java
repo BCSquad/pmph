@@ -4,7 +4,7 @@
  */
 package com.bc.pmpheep.migration.test;
 
-import com.bc.pmpheep.migration.GroupMigrationHelper;
+import com.bc.pmpheep.migration.MigrationStageEight;
 import com.bc.pmpheep.test.BaseTest;
 import javax.annotation.Resource;
 import org.junit.Test;
@@ -16,18 +16,16 @@ import org.slf4j.LoggerFactory;
  *
  * @author L.X <gugia@qq.com>
  */
-public class GroupMigrationHelperTest extends BaseTest {
+public class MigrationStageEightTest extends BaseTest {
 
-    Logger logger = LoggerFactory.getLogger(GroupMigrationHelperTest.class);
+    Logger logger = LoggerFactory.getLogger(MigrationStageEightTest.class);
 
     @Resource
-    GroupMigrationHelper helper;
+    MigrationStageEight migrationStageEight;
 
     @Test
     //@Rollback(false)
     public void demo() {
-        helper.group();
-        helper.groupMember();
-        helper.groupMessage();
+        migrationStageEight.start();
     }
 }
