@@ -498,70 +498,88 @@
 		count(*) from
 		writer_user ;
 	</select>
-	
+
 	<!--获取教师审核列表 -->
-	<select id="getTeacherCheckList" parameterType="PageParameter" resultType="WriterUserManagerVO">
-		SELECT 
-			wu.`id`,wu.`realname`,wu.`username`,wu.`idcard`,o.`org_name`,wu.`handphone`,
-			wu.`email`,wu.`position`,wu.`title`,wuc.`cert`,wuc.`progress`,t.count
-		FROM  
-			`writer_user` wu
-		LEFT JOIN 
-			`writer_user_certification` wuc
-		ON 
-			wu.`id`= wuc.`user_id`
-		LEFT JOIN 
-			`org` o ON wuc.`org_id` = o.`id`,
+	<select id="getTeacherCheckList" parameterType="PageParameter"
+		resultType="WriterUserManagerVO">
+		SELECT
+		wu.`id`,wu.`realname`,wu.`username`,wu.`idcard`,o.`org_name`,wu.`handphone`,
+		wu.`email`,wu.`position`,wu.`title`,wuc.`cert`,wu.address,wu.rank,wu.is_disabled,wuc.`progress`,t.count
+		FROM
+		`writer_user` wu
+		LEFT JOIN
+		`writer_user_certification` wuc
+		ON
+		wu.`id`= wuc.`user_id`
+		LEFT JOIN
+		`org` o ON wuc.`org_id` = o.`id`,
 		(
-		SELECT 
-			count(*) `count`
-		FROM  
-			`writer_user` wu
-		LEFT JOIN 
-			`writer_user_certification` wuc
-		ON 
-			wu.`id`= wuc.`user_id`
-		LEFT JOIN 
-			`org` o ON wuc.`org_id` = o.`id`
-		where 
-			wu.`is_deleted`=0
-			<if test="parameter !=null ">
-					<!-- 学校名称 -->
-					<if test="parameter.orgName !=null and  parameter.orgName != '' ">
-						and o.org_name like concat(concat('%',#{parameter.orgName}),'%')
-					</if>
-					<!-- 教师姓名 -->
-					<if test="parameter.realname != null and parameter.realname !='' ">
-						and wu.`realname` like concat(concat('%',#{parameter.realname}),'%') 
-					</if>
-					<!-- 审核状态 -->
-					<if test="parameter.progress != null">
-						and wuc.`progress` = #{parameter.progress}
-					</if>
-				</if>
+		SELECT
+		count(*) `count`
+		FROM
+		`writer_user` wu
+		LEFT JOIN
+		`writer_user_certification` wuc
+		ON
+		wu.`id`= wuc.`user_id`
+		LEFT JOIN
+		`org`
+		o ON wuc.`org_id` = o.`id`
+		where
+		wu.`is_deleted`=0
+		<if test="parameter !=null ">
+			<!-- 学校名称 -->
+			<if test="parameter.orgName !=null and  parameter.orgName != '' ">
+				and o.org_name like
+				concat(concat('%',#{parameter.orgName}),'%')
+			</if>
+			<!-- 教师姓名 -->
+			<if test="parameter.name !=null and parameter.name !='' ">
+				and (wu.username like concat('%',#{parameter.name},'%' )
+				or
+				wu.realname like
+				concat('%',#{parameter.name},'%' ) )
+			</if>
+			<!-- 用户类型 -->
+			<if test="parameter.rank !=null">
+				and wu.rank = #{parameter.rank}
+			</if>
+			<!-- 审核状态 -->
+			<if test="parameter.progress != null">
+				and wuc.`progress` = #{parameter.progress}
+			</if>
+		</if>
 		)t
-		WHERE 
-			wu.`is_deleted`=0
-			<if test="parameter !=null ">
-					<!-- 学校名称 -->
-					<if test="parameter.orgName !=null and  parameter.orgName != '' ">
-						and o.org_name like concat(concat('%',#{parameter.orgName}),'%')
-					</if>
-					<!-- 教师姓名 -->
-					<if test="parameter.realname != null and parameter.realname !='' ">
-						and wu.`realname` like concat(concat('%',#{parameter.realname}),'%') 
-					</if>
-					<!-- 审核状态 -->
-					<if test="parameter.progress != null">
-						and wuc.`progress` = #{parameter.progress}
-					</if>
-				</if>
+		WHERE
+		wu.`is_deleted`=0
+		<if test="parameter !=null ">
+			<!-- 学校名称 -->
+			<if test="parameter.orgName !=null and  parameter.orgName != '' ">
+				and o.org_name like
+				concat(concat('%',#{parameter.orgName}),'%')
+			</if>
+			<!-- 教师姓名 -->
+			<if test="parameter.name !=null and parameter.name !='' ">
+				and (wu.username like concat('%',#{parameter.name},'%' )
+				or
+				wu.realname like
+				concat('%',#{parameter.name},'%' ) )
+			</if>
+			<!-- 用户类型 -->
+			<if test="parameter.rank !=null">
+				and wu.rank = #{parameter.rank}
+			</if>
+			<!-- 审核状态 -->
+			<if test="parameter.progress != null">
+				and wuc.`progress` = #{parameter.progress}
+			</if>
+		</if>
 		order by
-			 wu.sort
+		wu.sort
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
-		
+
 	</select>
 	<!-- 根据用户名查询作家用户 -->
 	<select id="getWriterUserByUsername" parameterType="String"
