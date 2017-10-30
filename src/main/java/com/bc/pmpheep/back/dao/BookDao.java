@@ -1,8 +1,13 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Book;
+import com.bc.pmpheep.back.vo.BookVO;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 @Repository
 public interface BookDao {
@@ -40,4 +45,32 @@ public interface BookDao {
 	 * @return Book
 	 */
 	Book getBookById(Long id);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：分页初始化/查询图书详情
+	 *
+	 * @param pageParameter
+	 *            分页参数 ，isOnSale 是否上架，isNew 是否新书 ，type 书籍类别 ， isPromote 是否推荐，name
+	 *            isbn/图书名称
+	 * @return 分好页的结果集
+	 * @throws CheckedServiceException
+	 *
+	 */
+	List<BookVO> listBookVO(PageParameter<BookVO> pageParameter);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取总条数
+	 *
+	 * @param pageParameter
+	 *            分页参数 ，isOnSale 是否上架，isNew 是否新书 ，type 书籍类别 ， isPromote 是否推荐，name
+	 *            isbn/图书名称
+	 * @return 分好页的结果集
+	 * @throws CheckedServiceException
+	 *
+	 */
+	Integer getBookVOTotal(PageParameter<BookVO> pageParameter);
 }

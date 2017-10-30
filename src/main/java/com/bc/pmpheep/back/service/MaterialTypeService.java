@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.po.MaterialType;
+import com.bc.pmpheep.back.vo.MaterialTypeVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -46,4 +47,17 @@ public interface MaterialTypeService {
 	 * @throws CheckedServiceException
 	 */
 	Integer updateMaterialType(MaterialType materialType) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 获取所有书籍类别
+	 * 
+	 * @author 曾庆峰
+	 * @param parentId
+	 * @return 已经分级的书籍类别
+	 * @throws CheckedServiceException
+	 * @update Mryang
+	 */
+	MaterialTypeVO listMaterialType(Long parentId) throws CheckedServiceException;
+
 }

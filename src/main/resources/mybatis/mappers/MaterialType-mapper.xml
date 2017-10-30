@@ -107,4 +107,11 @@
 		from
 		material_type
 	</select>
+
+	<!-- 根据父级id获取所有书籍类别 -->
+	<select id="listMaterialType" parameterType="java.lang.Long"
+		resultType="MaterialTypeVO">
+		select * from material_type where parent_id = #{parentId}
+		order by sort;
+	</select>
 </mapper>
