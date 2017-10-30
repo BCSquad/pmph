@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.DecExtensionDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="extensionId != null and extensionId !=''">
+				extension_id,
+			</if>
+			<if test="declarationId != null and declarationId !=''">
+				declaration_id,
+			</if>
+			<if test=" content != null and content !=''">
+				content,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="extensionId != null and extensionId !=''">
+				#{extensionId},
+			</if>
+			<if test="declarationId != null and declarationId !=''">
+				#{declarationId},
+			</if>
+			<if test=" content != null and content !=''">
+				#{content},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增DecExtension -->
+	<insert id="addDecExtension" parameterType="DecExtension">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dec_extension (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+
+	<!-- 根据id删除一个 -->
+	<delete id="deleteDecExtension" parameterType="java.lang.Long">
+		delete from dec_extension where
+		id=#{id} ;
+	</delete>
+
+	<!-- 更新DecExtension -->
+	<update id="updateDecExtension" parameterType="DecExtension">
+		update dec_extension
+		<set>
+			<if test="extensionId != null and extensionId !=''">
+				extension_id = #{extensionId},
+			</if>
+			<if test="declarationId != null and declarationId !='' ">
+				declaration_id = #{declarationId},
+			</if>
+			<if test=" content != null and content !=''">
+				content= #{content},
+			</if>
+		</set>
+		where
+		id=#{id} ;
+	</update>
+
+	<!-- 根据id查询一个DecExtension -->
+	<select id="getDecExtensionById" parameterType="java.lang.Long"
+		resultType="DecExtension">
+		select * from dec_extension where id=#{id} ;
+	</select>
+	
+	<!-- 获取DecExtension集通过extensionId -->
+	<select id="getListDecExtensionsByExtensionId" parameterType="java.lang.Long" 
+	resultType="DecExtension" >  
+	    select * from dec_extension where
+		extension_id=#{extensionId};
+	</select> 
+	
+	<!-- 获取DecExtension集通过declarationId -->
+	<select id="getListDecExtensionsByDeclarationId" parameterType="java.lang.Long" 
+	resultType="DecExtension" >  
+	    select * from dec_extension where
+		declaration_id=#{declarationId};
+	</select> 
+	
+	<!-- 查询表单的数据总数 -->
+	<select id="getDecExtensionCount" resultType="Long">
+		select
+		count(*)
+		from
+		dec_extension
+	</select>
+</mapper>
