@@ -1,5 +1,6 @@
 package com.bc.pmpheep.migration;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.OrgType;
 import com.bc.pmpheep.back.po.OrgUser;
+import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.AreaService;
 import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.service.OrgTypeService;
@@ -54,7 +56,7 @@ public class MigrationStageOne {
         orgType();
         org();
         orgUser();
-        WriterUser();
+        writerUser();
     }
 
     protected void area() {
@@ -200,8 +202,50 @@ public class MigrationStageOne {
         logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
     }
 
-    protected void WriterUser() {
-        //todo
+    protected void writerUser() {
+        String tableName = "sys_user";
+        String sql = "SELECT a.userid,a.usercode,a.`password`,a.isvalid,d.new_pk org_new_pk,a.username,b.sex,"
+					+"b.birthdate,b.seniority,b.duties,b.positional,b.fax,b.handset,b.phone,b.idcard,b.email,"
+					+"b.address,b.postcode,"
+					+"CASE WHEN b.usertype=4 THEN 1 WHEN b.usertype=1 OR b.usertype=6 THEN 2 "
+					+"WHEN b.usertype=5 OR b.usertype=7 THEN 3 ELSE 0 END rank,"
+					+"CASE WHEN b.isteacher=2 THEN 1 ELSE 0 END is_teacher,f.filedir,b.teacherauditdate,"
+					+"CASE WHEN g.sysflag=0 THEN 1 WHEN g.sysflag=1 THEN 2 END auth_user_type,"
+					+"g.new_pk auth_user_id,"
+					+"CASE WHEN b.usertype=1 OR b.usertype=6 THEN 1 ELSE 0 END is_writer,"
+					+"CASE WHEN b.usertype=5 OR b.usertype=7 THEN 1 ELSE 0 END is_expert,"
+					+"e.filedir avatar,b.usersign,a.memo,a.sortno"
+					+"FROM sys_user a "
+					+"LEFT JOIN sys_userext b ON a.userid = b.userid "
+					+"LEFT JOIN sys_userorganize c ON b.userid = c.userid "
+					+"LEFT JOIN ba_organize d ON c.orgid = d.orgid "
+					+"LEFT JOIN (SELECT * FROM pub_addfileinfo x WHERE x.fileid IN (SELECT MAX(o.fileid) "
+					+"FROM pub_addfileinfo o WHERE o.childsystemname='sys_userext_avatar' GROUP BY o.operuserid))e " 
+					+"ON a.userid = e.operuserid "
+					+"LEFT JOIN (SELECT * FROM pub_addfileinfo y WHERE y.fileid IN (SELECT MAX(p.fileid) "
+					+"FROM pub_addfileinfo p WHERE p.childsystemname='sys_userext_teacher' GROUP BY p.operuserid))f "
+					+"ON a.userid = f.operuserid "
+					+"LEFT JOIN sys_user g ON b.teacheraudituser = g.userid "
+					+"WHERE a.sysflag=1 AND b.usertype !=2 ;";
+        List<Map<String,Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        int count = 0 ;
+        for (Map<String,Object> map : maps){
+            String userid = map.get("userid").toString();
+            WriterUser writerUser = new WriterUser();
+            writerUser.setUsername((String) map.get("usercode"));
+            writerUser.setPassword((String) map.get("password"));
+            writerUser.setIsDisabled((Boolean) map.get("isvalid"));
+            writerUser.setOrgId((Long) map.get("org_new_pk"));
+            writerUser.setNickname((String) map.get("usercode"));
+            writerUser.setRealname((String) map.get("username"));
+            writerUser.setSex((Integer) map.get("sex"));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            writerUser.setBirthday((Date) map.get("birthdate"));
+            
+        	count++;
+        }
+        logger.info("writer_user表迁移完成");
+        logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
     }
 
 }
