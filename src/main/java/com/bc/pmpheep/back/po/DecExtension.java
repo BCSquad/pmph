@@ -14,7 +14,7 @@ public class DecExtension implements java.io.Serializable {
 	//主键
 	private Long id;
 	//教材扩展项id
-	private Long extension_id;
+	private Long extensionId;
 	//申报表id
 	private Long declarationId;
 	//扩展值
@@ -24,11 +24,11 @@ public class DecExtension implements java.io.Serializable {
 		super();
 	}
 
-	public DecExtension(Long id, Long extension_id, Long declarationId,
+	public DecExtension(Long id, Long extensionId, Long declarationId,
 			String content) {
 		super();
 		this.id = id;
-		this.extension_id = extension_id;
+		this.extensionId = extensionId;
 		this.declarationId = declarationId;
 		this.content = content;
 	}
@@ -41,12 +41,12 @@ public class DecExtension implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public Long getExtension_id() {
-		return extension_id;
+	public Long getExtensionId() {
+		return extensionId;
 	}
 
-	public void setExtension_id(Long extension_id) {
-		this.extension_id = extension_id;
+	public void setExtensionId(Long extensionId) {
+		this.extensionId = extensionId;
 	}
 
 	public Long getDeclarationId() {
@@ -67,7 +67,7 @@ public class DecExtension implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ", extension_id:" + extension_id
+		return "{id:" + id + ", extensionId:" + extensionId
 				+ ", declarationId:" + declarationId + ", content:" + content
 				+ "}";
 	}
