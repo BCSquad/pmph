@@ -186,9 +186,9 @@ public class MigrationStageOne {
         	orgUser = orgUserService.addOrgUser(orgUser);
         	Long pk = orgUser.getId();
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "userid", userId);
-        	File file = new File((String) map.get("filedir"));
+        	String filePath = (String) map.get("filedir");
         	try {
-				String fileId = fileService.saveLocalFile(file, FileType.PROXY, pk);
+				String fileId = fileService.migrateFile(filePath, FileType.PROXY, pk);
 				orgUser.setProxy(fileId);
 			} catch (IOException e) {
 				logger.info(e.getMessage());
@@ -228,9 +228,11 @@ public class MigrationStageOne {
 					+"LEFT JOIN sys_user g ON b.teacheraudituser = g.userid "
 					+"WHERE a.sysflag=1 AND b.usertype !=2 ;";
         List<Map<String,Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        Date birth = new Date();
         int count = 0 ;
         for (Map<String,Object> map : maps){
             String userid = map.get("userid").toString();
+            String birthday = (String) map.get("birthdate");
             WriterUser writerUser = new WriterUser();
             writerUser.setUsername((String) map.get("usercode"));
             writerUser.setPassword((String) map.get("password"));
@@ -239,9 +241,23 @@ public class MigrationStageOne {
             writerUser.setNickname((String) map.get("usercode"));
             writerUser.setRealname((String) map.get("username"));
             writerUser.setSex((Integer) map.get("sex"));
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            writerUser.setBirthday((Date) map.get("birthdate"));
-            
+            writerUser.setExperience((Integer) map.get("seniority"));
+            writerUser.setPosition((String) map.get("duties"));
+            writerUser.setTitle((String) map.get("positional"));
+            writerUser.setFax((String) map.get("fax"));
+            writerUser.setHandphone((String) map.get("handset"));
+            writerUser.setTelephone((String) map.get("phone"));
+            writerUser.setIdcard((String) map.get("idcard"));
+            writerUser.setEmail((String) map.get("email"));
+            writerUser.setAddress((String) map.get("address"));
+            writerUser.setPostcode((String) map.get("postcode"));
+            writerUser.setRank((Integer) map.get("rank"));
+            writerUser.setIsTeacher((Boolean) map.get("is_teacher"));
+            writerUser.setAuthUserType((Integer) map.get("auth_user_type"));
+            writerUser.setAuthUserId((Long) map.get("auth_user_id"));
+            writerUser.setIsWriter((Boolean) map.get("is_writer"));
+            writerUser.setIsExpert((Boolean) map.get("is_expert"));
+
         	count++;
         }
         logger.info("writer_user表迁移完成");
