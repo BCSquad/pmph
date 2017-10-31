@@ -16,6 +16,6 @@
 	
 	String rootPath = application.getRealPath( "/" );
 	
-	out.write( new ActionEnter( request, rootPath,"D:\\install_File_Nie\\Tomca7\\apache-tomcat-7.0.79_2\\webapps\\pmpheep\\utf8-jsp\\jsp\\config.json" ).exec() );
+	out.write( new ActionEnter( request, rootPath,rootPath+"utf8-jsp\\jsp\\config.json" ).exec() );
 	
 %>
