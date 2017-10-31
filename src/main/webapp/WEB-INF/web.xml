@@ -50,7 +50,12 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:spring-root.xml</param-value>
 	</context-param>
-	
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:spring-root.xml</param-value>
+	</context-param>
+
 	<!-- Session 监听 -->
 	<listener>
 		<listener-class>com.bc.pmpheep.back.sessioncontext.SessionListener</listener-class>

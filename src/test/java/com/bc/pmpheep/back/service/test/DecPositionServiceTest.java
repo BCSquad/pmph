@@ -32,7 +32,7 @@ public class DecPositionServiceTest extends BaseTest{
     	 decPosition.setDeclarationId(2L);
     	 decPosition.setTextbookId(1L);
     	 decPosition.setPresetPosition((short) 2);
-    	 decPositionService.decPosition(decPosition);
+    	 decPositionService.addDecPosition(decPosition);
     	 Assert.assertTrue("添加数据失败", decPosition.getId() > 0);
     	 decPosition.setPresetPosition((short)3);
     	 Assert.assertTrue("更新失败", decPositionService.updateDecPosition(decPosition) > 0);
@@ -40,8 +40,8 @@ public class DecPositionServiceTest extends BaseTest{
     	 decPosition2.setDeclarationId(2L);
     	 decPosition2.setTextbookId(3L);
     	 decPosition2.setPresetPosition((short)1);
-    	 decPositionService.decPosition(decPosition2);
-    	 Assert.assertNotNull("获取消息失败", decPositionService.decPositionById(2L));
+    	 decPositionService.addDecPosition(decPosition2);
+    	 Assert.assertNotNull("获取消息失败", decPositionService.getDecPositionById(2L));
     	 Assert.assertTrue("获取数据集合失败", decPositionService.listDecPositions(2L).size() > 0);
     	 Assert.assertTrue("删除数据失败", decPositionService.deleteDecPosition(1L)>= 0);
      }

@@ -358,7 +358,7 @@
 	<!-- 分页查询 -->
 	<select id="listBookVO" parameterType="PageParameter"
 		resultType="BookVO">
-		SELECT b.*,t.type_name FROM book b ,material_type t WHERE t.id =
+		SELECT b.*,t.type_name,t.path FROM book b ,material_type t WHERE t.id =
 		b.type
 		<if test="parameter.name !=null and parameter.name !='' ">
 			and (b.isbn like concat('%',#{parameter.name},'%') or
