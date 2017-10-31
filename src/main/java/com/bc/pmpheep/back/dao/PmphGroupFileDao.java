@@ -20,7 +20,7 @@ public interface PmphGroupFileDao {
      * @param pmphGroupFile 实体对象
      * @return 影响行数
      */
-    Integer addPmphGroupFile(PmphGroupFile pmphGroupFile);
+    Long addPmphGroupFile(PmphGroupFile pmphGroupFile);
 
     /**
      * 
