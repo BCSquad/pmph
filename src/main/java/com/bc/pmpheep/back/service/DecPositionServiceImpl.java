@@ -32,7 +32,7 @@ public class DecPositionServiceImpl implements DecPositionService {
     private DecPositionDao decPositionDao;
 
     @Override
-    public DecPosition decPosition(DecPosition decPosition) throws CheckedServiceException {
+    public DecPosition addDecPosition(DecPosition decPosition) throws CheckedServiceException {
         if (null == decPosition) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "参数不能为空");
@@ -49,7 +49,7 @@ public class DecPositionServiceImpl implements DecPositionService {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "申报职务不能为空");
         }
-        decPositionDao.decPosition(decPosition);
+        decPositionDao.addDecPosition(decPosition);
         return decPosition;
     }
 
@@ -72,12 +72,12 @@ public class DecPositionServiceImpl implements DecPositionService {
     }
 
     @Override
-    public DecPosition decPositionById(Long id) throws CheckedServiceException {
+    public DecPosition getDecPositionById(Long id) throws CheckedServiceException {
         if (null == id) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "id不能为空");
         }
-        return decPositionDao.decPositionById(id);
+        return decPositionDao.getDecPositionById(id);
     }
 
     @Override
