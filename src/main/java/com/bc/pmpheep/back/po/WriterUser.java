@@ -127,6 +127,10 @@ public class WriterUser implements Serializable {
      */
     private String  avatar;
     /**
+     * 个性签名
+     */
+    private String  signature;
+    /**
      * 备注
      */
     private String  note;
@@ -480,6 +484,21 @@ public class WriterUser implements Serializable {
     }
 
     /**
+     * @return the signature
+     */
+    
+    public String getSignature() {
+		return signature;
+	}
+
+    /**
+     * @param signature the signature to set
+     */
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
+	/**
      * @return the note
      */
     public String getNote() {
@@ -602,7 +621,7 @@ public class WriterUser implements Serializable {
     String position, String title, String fax, String handphone, String telephone, String idcard,
     String email, String address, String postcode, Integer rank, Boolean isTeacher, String cert,
     Date authTime, Integer authUserType, Long authUserId, Boolean isWriter, Boolean isExpert,
-    String avatar, String note, Integer sort, Boolean isDeleted, Date gmtCreate, Date gmtUpdate) {
+    String avatar, String signature, String note, Integer sort, Boolean isDeleted, Date gmtCreate, Date gmtUpdate) {
         this.username = username;
         this.password = password;
         this.isDisabled = isDisabled;
@@ -630,6 +649,7 @@ public class WriterUser implements Serializable {
         this.isWriter = isWriter;
         this.isExpert = isExpert;
         this.avatar = avatar;
+        this.signature = signature;
         this.note = note;
         this.sort = sort;
         this.isDeleted = isDeleted;
@@ -648,7 +668,7 @@ public class WriterUser implements Serializable {
                + postcode + ", rank=" + rank + ", isTeacher=" + isTeacher + ", cert=" + cert
                + ", authTime=" + authTime + ", authUserType=" + authUserType + ", authUserId="
                + authUserId + ", isWriter=" + isWriter + ", isExpert=" + isExpert + ", avatar="
-               + avatar + ", note=" + note + ", sort=" + sort + ", isDeleted=" + isDeleted
+               + avatar + ", signature=" + signature + ", note=" + note + ", sort=" + sort + ", isDeleted=" + isDeleted
                + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
     }
 

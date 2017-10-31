@@ -86,6 +86,9 @@
 			<if test="avatar!=null and avatar !=''">
 				avatar,
 			</if>
+			<if test="signature!=null and signature !=''">
+			    signature,
+			</if>
 			<if test="note!=null and note !=''">
 				note,
 			</if>
@@ -186,6 +189,9 @@
 			</if>
 			<if test="avatar!=null and avatar !=''">
 				#{avatar},
+			</if>
+			<if test="signature!=null and signature !=''">
+			    #{signature},
 			</if>
 			<if test="note!=null and note !=''">
 				#{note},
@@ -319,6 +325,9 @@
 			</if>
 			<if test=" avatar!= null and  avatar!=''">
 				avatar= #{avatar},
+			</if>
+			<if test=" signature!=null and signature!=''">
+			    signature = #{signature},
 			</if>
 			<if test=" note!= null and  note!=''">
 				note = #{note},
