@@ -221,4 +221,8 @@ public class MigrationStageEight {
         logger.info("bbs_discuss表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
     }
+    
+    protected void groupFile() {
+        
+    }
 }

@@ -118,7 +118,7 @@ public class JdbcHelper {
     	sqlNewParentId = sqlNewParentId.replace("$", column);
     	sqlParentId = sqlParentId.replace("$", column);
     	sqlParentId = sqlParentId.replace("%", parentColumn);
-    	String path = "";
+    	String path;
     	//如果旧表中父节点为0，则直接返回路径0，若不为0，再继续往父类节点查最后拼接
     	if ( !"0".equals(parentColumnValue.toString())){
     		//不为0，根据旧表父节点字段查询父节点对应的new_pk和父节点id字段值，依次类推，查最后拼接
