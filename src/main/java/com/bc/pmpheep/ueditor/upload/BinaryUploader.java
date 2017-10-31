@@ -1,5 +1,6 @@
 package com.bc.pmpheep.ueditor.upload;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -15,8 +16,12 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.bc.pmpheep.back.util.FileUpload;
+import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.ueditor.PathFormat;
 import com.bc.pmpheep.ueditor.define.AppInfo;
@@ -82,15 +87,15 @@ public class BinaryUploader {
             is.close();
 
             if (storageState.isSuccess()) {
-                // ApplicationContext ctx =
-                // WebApplicationContextUtils.getWebApplicationContext(request.getSession()
-                // .getServletContext());
-                // FileService fileService = (FileService) ctx.getBean("fileService");//
+                ApplicationContext ctx =
+                WebApplicationContextUtils.getWebApplicationContext(request.getSession()
+                                                                           .getServletContext());
+                FileService fileService = (FileService) ctx.getBean("fileService");
                 // 如是注解的Service取注解
-                // File file = FileUpload.getFileByFilePath(physicalPath);
-                // String picId = fileService.saveLocalFile(file, ImageType.SYS_MESSAGE, 1L);
-                // storageState.putInfo("url", "/image/" + picId);
-                storageState.putInfo("url", PathFormat.format(savePath));
+                File file = FileUpload.getFileByFilePath(physicalPath);
+                String picId = fileService.saveLocalFile(file, ImageType.SYS_MESSAGE, 1L);
+                storageState.putInfo("url", "/image/" + picId);
+                // storageState.putInfo("url", PathFormat.format(savePath));
                 storageState.putInfo("type", suffix);
                 storageState.putInfo("original", originFileName + suffix);
             }

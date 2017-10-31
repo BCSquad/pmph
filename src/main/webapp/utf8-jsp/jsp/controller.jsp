@@ -9,7 +9,7 @@
     response.setHeader("Access-Control-Allow-Credentials", "true");
     response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     response.setHeader("Access-Control-Expose-Headers", "Access-Control-Allow-Origin,Access-Control-Allow-Credentials");
-	response.setHeader("Access-Control-Allow-Headers", "Accept,Origin,X-Requested-With,Content-Type,Last-Modified,Access-Control-Allow-Origin,x-auth-token");
+	response.setHeader("Access-Control-Allow-Headers", "Accept,Origin,X-Requested-With,X_Requested_With,Content-Type,Last-Modified,Access-Control-Allow-Origin,x-auth-token");
 	response.setHeader("Access-Control-Max-Age","3600");
 	response.setHeader("Content-Type" , "text/html");
 	
