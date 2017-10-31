@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.BookDetailDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null and id !=''">
+				id,
+			</if>
+			<if test="bookId != null and bookId !=''">
+				book_id,
+			</if>
+			<if test=" detail != null and detail !=''">
+				detail,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null and id !=''">
+				#{id},
+			</if>
+			<if test="bookId != null and bookId !=''">
+				#{bookId},
+			</if>
+			<if test=" detail != null and detail !=''">
+				#{detail},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增BookDetail -->
+	<insert id="addBookDetail" parameterType="BookDetail">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into book_detail (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+
+	<!-- 根据id删除一个 -->
+	<delete id="deleteBookDetailById" parameterType="java.lang.Long">
+		delete from
+		book_detail where
+		id=#{id} ;
+	</delete>
+
+	<!-- 更新BookDetail -->
+	<update id="updateBookDetail" parameterType="BookDetail">
+		update book_detail
+		<set>
+			<if test="parentId != null and parentId !=''">
+				parent_id = #{parentId},
+			</if>
+			<if test="areaName != null and areaName !='' ">
+				area_name = #{areaName},
+			</if>
+			<if test=" sort != null and sort !=''">
+				sort= #{sort},
+			</if>
+		</set>
+		where
+		id=#{id} ;
+	</update>
+
+	<!-- 根据id查询一个BookDetail -->
+	<select id="getBookDetailById" parameterType="java.lang.Long"
+		resultType="BookDetail">
+		select * from book_detail where id=#{id} ;
+	</select>
+
+
+</mapper>

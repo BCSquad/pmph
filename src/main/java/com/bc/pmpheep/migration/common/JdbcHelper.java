@@ -11,12 +11,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.stereotype.Component;
 
 /**
  * JDBC工具类
@@ -32,6 +33,7 @@ public class JdbcHelper {
     private static final String UPDATE_NEW_PK = "UPDATE # SET new_pk = ? WHERE $ = ?";
     private static final String QUERY = "SELECT * FROM ?";
     private static final String GET_PARENT_PK = "SELECT new_pk FROM # WHERE $ = ?";
+    private static final String GET_PARENTID = "SELECT % FROM # WHERE $ = ?";
 
     public static JdbcTemplate getJdbcTemplate() {
         if (null == dataSource) {
@@ -74,17 +76,17 @@ public class JdbcHelper {
     }
 
     /**
-     * 根据旧表父节点字段查询父节点对应的new_pk字段值
+     * 根据旧表字段查询父节点对应的new_pk字段值
      *
      * @param tableName 旧数据库表名
      * @param column 旧数据表中的主键列名
-     * @param parentColumnValue 对应字段值
+     * @param columnValue 对应字段值
      * @return 查询结果
      */
-    public static long getParentPrimaryKey(String tableName, String column, Object parentColumnValue) throws DataAccessException {
+    public static Long getPrimaryKey(String tableName, String column, Object columnValue) throws DataAccessException {
         String sql = GET_PARENT_PK.replace("#", tableName);
         sql = sql.replace("$", column);
-        return getJdbcTemplate().queryForObject(sql, Long.class, parentColumnValue);
+        return getJdbcTemplate().queryForObject(sql, Long.class, columnValue);
     }
 
     /**
@@ -96,5 +98,36 @@ public class JdbcHelper {
     public static List<Map<String, Object>> queryForList(String tableName) throws DataAccessException {
         String sql = QUERY.replace("?", tableName);
         return getJdbcTemplate().queryForList(sql);
+    }
+
+    /**
+     *
+     * Description:根据旧表父节点字段查询父节点对应的new_pk字段值，如果不为0，则递归调用自己， 知道找到为旧表父节点为0的最高节点，拼接成path
+     *
+     * @author:lyc
+     * @date:2017年10月26日下午5:23:43
+     * @param tableName 旧数据库表名
+     * @param column 旧数据表中的主键列名
+     * @param parentColumn 旧数据表中的父节点列名
+     * @param parentColumnValue 对应字段值
+     * @return 拼接的path
+     */
+    public static String getPath(String tableName, String column, String parentColumn, Object parentColumnValue) throws DataAccessException{
+    	String sqlNewParentId = GET_PARENT_PK.replace("#", tableName);
+    	String sqlParentId = GET_PARENTID.replace("#", tableName);
+    	sqlNewParentId = sqlNewParentId.replace("$", column);
+    	sqlParentId = sqlParentId.replace("$", column);
+    	sqlParentId = sqlParentId.replace("%", parentColumn);
+    	String path = "";
+    	//如果旧表中父节点为0，则直接返回路径0，若不为0，再继续往父类节点查最后拼接
+    	if ( !"0".equals(parentColumnValue.toString())){
+    		//不为0，根据旧表父节点字段查询父节点对应的new_pk和父节点id字段值，依次类推，查最后拼接
+    		String parentId = getJdbcTemplate().queryForObject(sqlParentId,String.class,parentColumnValue);
+    		Long parentNewId = getJdbcTemplate().queryForObject(sqlNewParentId, Long.class, parentColumnValue);
+    		path = getPath(tableName, column, parentColumn, parentId) + "-" + parentNewId;
+    	}else{
+    		path = "0";
+    	}
+    	return path;
     }
 }

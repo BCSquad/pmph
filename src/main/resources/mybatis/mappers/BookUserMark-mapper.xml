@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.BookUserMarkDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null and id !=''">
+				id,
+			</if>
+			<if test="bookId != null and bookId !=''">
+				book_id,
+			</if>
+			<if test=" writerId != null and writerId !=''">
+				writer_id,
+			</if>
+			<if test="favoriteId != null and favoriteId !=''">
+				favorite_Id,
+			</if>
+			<if test=" gmtCreate != null and gmtCreate !=''">
+				gmt_create,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null and id !=''">
+				#{id},
+			</if>
+			<if test="bookId != null and bookId !=''">
+				#{bookId},
+			</if>
+			<if test=" writerId != null and writerId !=''">
+				#{writerId},
+			</if>
+			<if test="favoriteId != null and favoriteId !=''">
+				#{favoriteId},
+			</if>
+			<if test=" gmtCreate != null and gmtCreate !=''">
+				#{gmtCreate},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增BookUserMark -->
+	<insert id="addBookUserMark" parameterType="BookUserMark">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into book_user_mark (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+
+	<!-- 根据id删除一个 -->
+	<delete id="deleteBookUserMarkById" parameterType="java.lang.Long">
+		delete from
+		book_user_mark where
+		id=#{id} ;
+	</delete>
+
+	<!-- 更新BookUserMark -->
+	<update id="updateBookUserMark" parameterType="BookUserMark">
+		update book_user_mark
+		<set>
+			<if test="id != null and id !=''">
+				id=#{id},
+			</if>
+			<if test="bookId != null and bookId !=''">
+				book_id=#{bookId},
+			</if>
+			<if test=" writerId != null and writerId !=''">
+				writer_id=#{writerId},
+			</if>
+			<if test="favoriteId != null and favoriteId !=''">
+				favorite_id=#{favoriteId},
+			</if>
+			<if test=" gmtCreate != null and gmtCreate !=''">
+				gmt_create=#{gmtCreate},
+			</if>
+		</set>
+		where
+		id=#{id} ;
+	</update>
+
+	<!-- 根据id查询一个BookUserMark -->
+	<select id="getBookUserMarkById" parameterType="java.lang.Long"
+		resultType="BookUserMark">
+		select * from book_user_mark where id=#{id} ;
+	</select>
+
+</mapper>

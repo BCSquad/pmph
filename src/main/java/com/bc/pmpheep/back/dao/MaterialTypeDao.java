@@ -1,11 +1,15 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.MaterialType;
+import com.bc.pmpheep.back.vo.MaterialTypeVO;
 
 /**
  * MaterialTypeDao实体类数据访问层接口
+ * 
  * @author 曾庆峰
  *
  */
@@ -45,16 +49,28 @@ public interface MaterialTypeDao {
 	 * @return MaterialType
 	 */
 	MaterialType getMaterialTypeById(Long id);
-	
+
 	/**
-     * 
-     * <pre>
-     * 功能描述：查询表单的数据总条数
-     * 使用示范：
-     *
-     * @return 表单的总条数
-     * </pre>
-     */
+	 * 
+	 * <pre>
+	 * 功能描述：查询表单的数据总条数
+	 * 使用示范：
+	 *
+	 * &#64;return 表单的总条数
+	 * </pre>
+	 */
 	Long getMaterialTypeCount();
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据父级id获取子目录
+	 *
+	 * @param parentId
+	 *            父级id
+	 * @return
+	 *
+	 */
+	List<MaterialTypeVO> listMaterialType(Long parentId);
 
 }

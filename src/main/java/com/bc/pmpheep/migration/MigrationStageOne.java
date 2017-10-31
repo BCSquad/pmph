@@ -1,5 +1,7 @@
 package com.bc.pmpheep.migration;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -9,8 +11,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.bc.pmpheep.back.po.Area;
+import com.bc.pmpheep.back.po.Org;
+import com.bc.pmpheep.back.po.OrgType;
+import com.bc.pmpheep.back.po.OrgUser;
+import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.AreaService;
+import com.bc.pmpheep.back.service.OrgService;
+import com.bc.pmpheep.back.service.OrgTypeService;
+import com.bc.pmpheep.back.service.OrgUserService;
+import com.bc.pmpheep.general.bean.FileType;
+import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
+
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -27,12 +41,22 @@ public class MigrationStageOne {
 
     @Resource
     AreaService areaService;
+    @Resource
+    OrgTypeService orgTypeService;
+    @Resource
+    OrgService orgService;
+    @Resource
+    OrgUserService orgUserService;
+    @Resource
+    FileService fileService;
+    
 
     public void start() {
         area();
         orgType();
+        org();
         orgUser();
-        WriterUser();
+        writerUser();
     }
 
     protected void area() {
@@ -54,7 +78,7 @@ public class MigrationStageOne {
              * 该对象默认为根节点，如果不是根节点，则根据parentCode反查父节点的new_pk。 注意此处由于ba_areacode表爷爷-父亲-儿子是按正序排列的，父节点总是已经被插入到新表，所以不需要再次循环。
              */
             if (parentCode.intValue() != 0) {
-                parentPk = JdbcHelper.getParentPrimaryKey(tableName, "AreaID", parentCode);//返回Long型新主键
+                parentPk = JdbcHelper.getPrimaryKey(tableName, "AreaID", parentCode);//返回Long型新主键
             }
             area.setParentId(parentPk);
             area = areaService.addArea(area);
@@ -67,14 +91,177 @@ public class MigrationStageOne {
     }
 
     protected void orgType() {
-        //todo
+        String tableName = "ba_organize";
+        String sql = "SELECT orgid,orgname,sortno FROM ba_organize WHERE orgcode NOT LIKE '15%' AND parentid=0 ;";
+        List<Map<String,Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        int count = 0 ;
+        for (Map<String,Object> map : maps){
+        	String orgTypeId = map.get("orgid").toString();
+        	String orgName = map.get("orgname").toString();
+        	Integer sort = (Integer) map.get("sortno");
+        	OrgType orgType = new OrgType();
+        	orgType.setTypeName(orgName);
+        	orgType.setSort(sort);
+        	orgType = orgTypeService.addOrgType(orgType);
+        	Long pk = orgType.getId();
+        	JdbcHelper.updateNewPrimaryKey(tableName, pk, "orgid", orgTypeId);
+        	count++;
+        }
+        logger.info("org_type表迁移完成");
+        logger.info("原数据库表中共有{}条数据，迁移了{}条数据",maps.size(),count);
     }
-
+    
+    protected void org() {
+    	String tableName = "ba_organize";
+		String sql = "SELECT b.new_pk, a.* FROM ba_organize a "
+					+"LEFT JOIN ba_areacode b ON b.AreaID =a.orgprovince " 
+					+"WHERE a.orgcode NOT LIKE '15%' AND a.parentid !=0 ORDER BY a.orgcode";
+		List<Map<String,Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+		int count = 0 ;
+		for (Map<String,Object> map : maps){
+			String orgId = map.get("orgid").toString();
+			Org org = new Org();
+			org.setParentId(0L);
+			org.setOrgName(map.get("orgname").toString());
+			org.setOrgTypeId((Long) map.get("orgtype"));
+			org.setAreaId((Long) map.get("new_pk"));
+			org.setContactPerson(map.get("linker").toString());
+			org.setContactPhone(map.get("linktel").toString());
+			org.setSort((Integer) map.get("sortno"));
+			org.setNote(map.get("remark").toString());
+			org.setIsDeleted((Boolean) map.get("isdelete"));
+			org = orgService.addOrg(org);
+			Long pk = org.getId();
+			JdbcHelper.updateNewPrimaryKey(tableName, pk, "orgid", orgId);
+			count++;
+		}
+		logger.info("org表迁移完成");
+		logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
+	}
     protected void orgUser() {
-        //todo
+    	String tableName = "sys_user";
+        String sql = "SELECT a.userid,a.usercode,a.`password`,a.isvalid,d.new_pk,a.username,b.sex,b.duties,"
+					+"b.positional,b.fax,b.handset,b.phone,b.idcard,b.email,b.address,b.postcode,"
+					+"CASE WHEN e.fileid IS NOT NULL THEN 1 ELSE 0 END is_proxy_upload,e.filedir,e.fileid"
+					+"CASE WHEN b.audittype=0 THEN 0 WHEN 2 THEN 1 WHEN 1 THEN 2 END progress,"
+					+"b.auditdate,a.memo,a.sortno "
+					+"FROM sys_user a "
+					+"LEFT JOIN sys_userext b ON a.userid = b.userid "
+					+"LEFT JOIN sys_userorganize c ON a.userid = c.userid "
+					+"LEFT JOIN ba_organize d ON c.orgid = d.orgid "
+					+"LEFT JOIN pub_addfileinfo e ON a.userid = e.operuserid "
+					+"WHERE a.sysflag=1 AND b.usertype=2 "
+					+"AND NOT EXISTS (SELECT * FROM pub_addfileinfo p WHERE e.operdate<p.operdate "
+					+"AND e.operuserid=p.operuserid) "
+					+"ORDER BY a.userid ;";
+        List<Map<String,Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        int count = 0 ;
+        for (Map<String,Object> map : maps){
+        	String userId = map.get("userid").toString();
+        	OrgUser orgUser = new OrgUser();
+        	orgUser.setUsername((String) map.get("usercode"));
+        	orgUser.setPassword((String) map.get("password"));
+        	orgUser.setIsDisabled((Boolean) map.get("isvalid"));
+        	orgUser.setOrgId((Long) map.get("new_pk"));
+        	if ( null ==map.get("username") || "".equals(map.get("username").toString())){
+        		orgUser.setRealname((String) map.get("usercode"));
+        	}else{
+        		orgUser.setRealname((String) map.get("username"));
+        	}
+        	orgUser.setSex((Integer) map.get("sex"));
+        	orgUser.setPosition((String) map.get("duties"));
+        	orgUser.setTitle((String) map.get("positional"));
+        	orgUser.setFax((String) map.get("fax"));
+        	orgUser.setHandphone((String) map.get("handset"));
+        	orgUser.setTelephone((String) map.get("phone"));
+        	orgUser.setIdcard((String) map.get("idcard"));
+        	orgUser.setEmail((String) map.get("email"));
+        	orgUser.setAddress((String) map.get("address"));
+        	orgUser.setPostcode((String) map.get("postcode"));
+        	orgUser.setIsProxyUpload((Boolean) map.get("is_proxy_upload"));
+        	orgUser.setProgress((Integer) map.get("progress"));
+        	orgUser.setReviewDate((Date) map.get("auditdate"));
+        	orgUser.setNote((String) map.get("memo"));
+        	orgUser.setSort((Integer) map.get("sortno"));
+        	orgUser = orgUserService.addOrgUser(orgUser);
+        	Long pk = orgUser.getId();
+        	JdbcHelper.updateNewPrimaryKey(tableName, pk, "userid", userId);
+        	String filePath = (String) map.get("filedir");
+        	try {
+				String fileId = fileService.migrateFile(filePath, FileType.PROXY, pk);
+				orgUser.setProxy(fileId);
+			} catch (IOException e) {
+				logger.info(e.getMessage());
+				logger.warn("执行插入MongoDB程序出错，可能老数据库表pub_addfileinfo主键为{}文件找不到",
+						map.get("fileid"));
+			}
+        	orgUserService.updateOrgUser(orgUser);
+        	count++;
+        }
+        logger.info("org_user表迁移完成");
+        logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
     }
 
-    protected void WriterUser() {
-        //todo
+    protected void writerUser() {
+        String tableName = "sys_user";
+        String sql = "SELECT a.userid,a.usercode,a.`password`,a.isvalid,d.new_pk org_new_pk,a.username,b.sex,"
+					+"b.birthdate,b.seniority,b.duties,b.positional,b.fax,b.handset,b.phone,b.idcard,b.email,"
+					+"b.address,b.postcode,"
+					+"CASE WHEN b.usertype=4 THEN 1 WHEN b.usertype=1 OR b.usertype=6 THEN 2 "
+					+"WHEN b.usertype=5 OR b.usertype=7 THEN 3 ELSE 0 END rank,"
+					+"CASE WHEN b.isteacher=2 THEN 1 ELSE 0 END is_teacher,f.filedir,b.teacherauditdate,"
+					+"CASE WHEN g.sysflag=0 THEN 1 WHEN g.sysflag=1 THEN 2 END auth_user_type,"
+					+"g.new_pk auth_user_id,"
+					+"CASE WHEN b.usertype=1 OR b.usertype=6 THEN 1 ELSE 0 END is_writer,"
+					+"CASE WHEN b.usertype=5 OR b.usertype=7 THEN 1 ELSE 0 END is_expert,"
+					+"e.filedir avatar,b.usersign,a.memo,a.sortno"
+					+"FROM sys_user a "
+					+"LEFT JOIN sys_userext b ON a.userid = b.userid "
+					+"LEFT JOIN sys_userorganize c ON b.userid = c.userid "
+					+"LEFT JOIN ba_organize d ON c.orgid = d.orgid "
+					+"LEFT JOIN (SELECT * FROM pub_addfileinfo x WHERE x.fileid IN (SELECT MAX(o.fileid) "
+					+"FROM pub_addfileinfo o WHERE o.childsystemname='sys_userext_avatar' GROUP BY o.operuserid))e " 
+					+"ON a.userid = e.operuserid "
+					+"LEFT JOIN (SELECT * FROM pub_addfileinfo y WHERE y.fileid IN (SELECT MAX(p.fileid) "
+					+"FROM pub_addfileinfo p WHERE p.childsystemname='sys_userext_teacher' GROUP BY p.operuserid))f "
+					+"ON a.userid = f.operuserid "
+					+"LEFT JOIN sys_user g ON b.teacheraudituser = g.userid "
+					+"WHERE a.sysflag=1 AND b.usertype !=2 ;";
+        List<Map<String,Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        Date birth = new Date();
+        int count = 0 ;
+        for (Map<String,Object> map : maps){
+            String userid = map.get("userid").toString();
+            String birthday = (String) map.get("birthdate");
+            WriterUser writerUser = new WriterUser();
+            writerUser.setUsername((String) map.get("usercode"));
+            writerUser.setPassword((String) map.get("password"));
+            writerUser.setIsDisabled((Boolean) map.get("isvalid"));
+            writerUser.setOrgId((Long) map.get("org_new_pk"));
+            writerUser.setNickname((String) map.get("usercode"));
+            writerUser.setRealname((String) map.get("username"));
+            writerUser.setSex((Integer) map.get("sex"));
+            writerUser.setExperience((Integer) map.get("seniority"));
+            writerUser.setPosition((String) map.get("duties"));
+            writerUser.setTitle((String) map.get("positional"));
+            writerUser.setFax((String) map.get("fax"));
+            writerUser.setHandphone((String) map.get("handset"));
+            writerUser.setTelephone((String) map.get("phone"));
+            writerUser.setIdcard((String) map.get("idcard"));
+            writerUser.setEmail((String) map.get("email"));
+            writerUser.setAddress((String) map.get("address"));
+            writerUser.setPostcode((String) map.get("postcode"));
+            writerUser.setRank((Integer) map.get("rank"));
+            writerUser.setIsTeacher((Boolean) map.get("is_teacher"));
+            writerUser.setAuthUserType((Integer) map.get("auth_user_type"));
+            writerUser.setAuthUserId((Long) map.get("auth_user_id"));
+            writerUser.setIsWriter((Boolean) map.get("is_writer"));
+            writerUser.setIsExpert((Boolean) map.get("is_expert"));
+
+        	count++;
+        }
+        logger.info("writer_user表迁移完成");
+        logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
     }
+
 }
