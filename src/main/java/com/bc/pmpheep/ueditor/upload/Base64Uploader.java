@@ -2,33 +2,26 @@ package com.bc.pmpheep.ueditor.upload;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 
-import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.bc.pmpheep.back.util.FileUpload;
+import com.bc.pmpheep.general.bean.ImageType;
+import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.ueditor.PathFormat;
 import com.bc.pmpheep.ueditor.define.AppInfo;
 import com.bc.pmpheep.ueditor.define.BaseState;
 import com.bc.pmpheep.ueditor.define.FileType;
 import com.bc.pmpheep.ueditor.define.State;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.gridfs.GridFSFile;
 
 public final class Base64Uploader {
-    static final String   IS_IMAGE = "is_image";
-    static final String   PK       = "pk";
-    static final String   TYPE     = "type";
-    @Resource
-    static GridFsTemplate gridFsTemplate;
 
-    public static State save(String content, Map<String, Object> conf) {
+    public State save(String content, Map<String, Object> conf, HttpServletRequest request) {
 
         byte[] data = decode(content);
 
@@ -49,19 +42,18 @@ public final class Base64Uploader {
         State storageState = StorageManager.saveBinaryFile(data, physicalPath);
 
         if (storageState.isSuccess()) {
+            ApplicationContext ctx =
+            WebApplicationContextUtils.getWebApplicationContext(request.getSession()
+                                                                       .getServletContext());
+            FileService fileService = (FileService) ctx.getBean("fileService");
             File file = FileUpload.getFileByFilePath(physicalPath);
-            DBObject metaData = new BasicDBObject();
-            metaData.put(IS_IMAGE, true);
-            metaData.put(TYPE, "系统消息图片");
-            metaData.put(PK, 1L);
-            GridFSFile gridFSFile = null;
-            try (InputStream inputStream = FileUtils.openInputStream(file)) {
-                gridFSFile = gridFsTemplate.store(inputStream, file.getName(), metaData);
-                inputStream.close();
+            String picId;
+            try {
+                picId = fileService.saveLocalFile(file, ImageType.SYS_MESSAGE, 1L);
             } catch (IOException e) {
-                e.printStackTrace();
+                return new BaseState(false, AppInfo.IO_ERROR);
             }
-            storageState.putInfo("url", "//image//" + gridFSFile.getId().toString());
+            storageState.putInfo("url", "/image/" + picId);
             // storageState.putInfo("url", PathFormat.format(savePath));
             storageState.putInfo("type", suffix);
             storageState.putInfo("original", "");

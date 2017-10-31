@@ -27,9 +27,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.ueditor.define.ActionMap;
 import com.bc.pmpheep.ueditor.define.AppInfo;
 import com.bc.pmpheep.ueditor.define.BaseState;
@@ -44,8 +41,6 @@ import com.bc.pmpheep.ueditor.upload.Uploader;
  * 
  */
 public class ActionEnter {
-    @Autowired
-    FileService                fileService;
 
     private HttpServletRequest request       = null;
 

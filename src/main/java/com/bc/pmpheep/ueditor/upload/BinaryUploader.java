@@ -91,7 +91,6 @@ public class BinaryUploader {
                 WebApplicationContextUtils.getWebApplicationContext(request.getSession()
                                                                            .getServletContext());
                 FileService fileService = (FileService) ctx.getBean("fileService");
-                // 如是注解的Service取注解
                 File file = FileUpload.getFileByFilePath(physicalPath);
                 String picId = fileService.saveLocalFile(file, ImageType.SYS_MESSAGE, 1L);
                 storageState.putInfo("url", "/image/" + picId);
@@ -104,8 +103,9 @@ public class BinaryUploader {
         } catch (FileUploadException e) {
             return new BaseState(false, AppInfo.PARSE_REQUEST_ERROR);
         } catch (IOException e) {
+            return new BaseState(false, AppInfo.IO_ERROR);
         }
-        return new BaseState(false, AppInfo.IO_ERROR);
+
     }
 
     private static boolean validType(String type, String[] allowTypes) {

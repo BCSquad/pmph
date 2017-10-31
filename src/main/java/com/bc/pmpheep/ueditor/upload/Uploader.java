@@ -22,10 +22,13 @@ public class Uploader {
     public State doExec() {
         String filedName = (String) this.conf.get("fieldName");
         State state = null;
-        BinaryUploader binaryUploader = new BinaryUploader();
+
         if ("true".equals(this.conf.get("isBase64"))) {
-            state = Base64Uploader.save(this.request.getParameter(filedName), this.conf);
+            Base64Uploader base64Uploader = new Base64Uploader();
+            state =
+            base64Uploader.save(this.request.getParameter(filedName), this.conf, this.request);
         } else {
+            BinaryUploader binaryUploader = new BinaryUploader();
             state = binaryUploader.save(this.request, this.conf);
         }
         return state;
