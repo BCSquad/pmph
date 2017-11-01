@@ -53,6 +53,13 @@
 		id=#{id} ;
 	</delete>
 
+	<!-- 根据书籍id删除 -->
+	<delete id="deleteBookDetailByBookId" parameterType="java.lang.Long">
+		delete from
+		book_detail where
+		book_id=#{bookId} ;
+	</delete>
+
 	<!-- 更新BookDetail -->
 	<update id="updateBookDetail" parameterType="BookDetail">
 		update book_detail

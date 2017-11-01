@@ -49,5 +49,5 @@ public interface BookDetailDao {
 	 * @return
 	 *
 	 */
-	Integer deleteBookDetailByBookId(Long bookId);// 未写mapper方法
+	Integer deleteBookDetailByBookId(Long bookId);
 }
