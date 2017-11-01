@@ -20,7 +20,7 @@ public class DecLastPosition implements java.io.Serializable {
 	//教材名称
 	private String materialName;
 	//编写职务
-	private Short position;
+	private Integer position;
 	//备注
 	private String note;
 	//显示顺序
@@ -43,7 +43,7 @@ public class DecLastPosition implements java.io.Serializable {
 
 	/** full constructor */
 	public DecLastPosition(Long declarationId, String materialName,
-			Short position, String note, Integer sort) {
+			Integer position, String note, Integer sort) {
 		this.declarationId = declarationId;
 		this.materialName = materialName;
 		this.position = position;
@@ -75,11 +75,11 @@ public class DecLastPosition implements java.io.Serializable {
 		this.materialName = materialName;
 	}
 
-	public Short getPosition() {
+	public Integer getPosition() {
 		return position;
 	}
 
-	public void setPosition(Short position) {
+	public void setPosition(Integer position) {
 		this.position = position;
 	}
 

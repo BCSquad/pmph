@@ -30,7 +30,7 @@ public class DecAcadeServiceTest extends BaseTest {
 	@Test
 	public void test() {
 		logger.info("---------作家兼职学术组织信息测试------------");
-		DecAcade decAcade = new DecAcade(10L, "心理咨询研究会", (short) 3, "会员",
+		DecAcade decAcade = new DecAcade(10L, "心理咨询研究会", (Integer) 3, "会员",
 				"实验室成员", 10);
 		decAcadeService.addDecAcade(decAcade);
 		Assert.assertTrue("添加信息失败", decAcade.getId() > 0);

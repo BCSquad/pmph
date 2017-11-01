@@ -31,7 +31,7 @@ public class DeclarationServiceTest extends BaseTest {
 	@Test
 	public void test() {
            logger.info("------------作家申报表------------");
-           Declaration declaration = new Declaration(99L, 5L, null, (short)2, null, (short)18, null, null, null, null, null, null, null, (short)1, null, null, null, 13L, (short)1, 135L, null, (short)1, null, Boolean.valueOf("0"), Boolean.valueOf("0"));
+           Declaration declaration = new Declaration(99L, 5L, null, (Integer)2, null, (short)18, null, null, null, null, null, null, null, (short)1, null, null, null, 13L, (Integer)1, 135L, null, (Integer)1, null, Integer.valueOf("0"), Integer.valueOf("0"));
            declarationService.addDeclaration(declaration);
            Assert.assertTrue("添加数据失败", declaration.getId() > 0);
            logger.info("------数据添加成功--------");
