@@ -1,7 +1,8 @@
 package com.bc.pmpheep.migration;
 
-import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -19,11 +20,13 @@ import com.bc.pmpheep.back.service.AreaService;
 import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.service.OrgTypeService;
 import com.bc.pmpheep.back.service.OrgUserService;
-import com.bc.pmpheep.general.bean.FileType;
+import com.bc.pmpheep.back.service.WriterUserService;
+import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
+import com.bc.pmpheep.migration.common.SQLParameters;
+import com.bc.pmpheep.utils.ExcelHelper;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
@@ -49,7 +52,10 @@ public class MigrationStageOne {
     OrgUserService orgUserService;
     @Resource
     FileService fileService;
-    
+    @Resource
+    WriterUserService writerUserService;
+    @Resource
+    ExcelHelper excelHelper;
 
     public void start() {
         area();
@@ -63,13 +69,26 @@ public class MigrationStageOne {
         String tableName = "ba_areacode"; //要迁移的旧库表名
         JdbcHelper.addColumn(tableName); //增加new_pk字段
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);//取得该表中所有数据
+        List<Map<String,Object>> excel = new LinkedList<>();
         int count = 0;//迁移成功的条目数
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             /* 根据MySQL字段类型进行类型转换 */
             BigDecimal areaId = (BigDecimal) map.get("AreaID");
             BigDecimal parentCode = (BigDecimal) map.get("ParentCode");
+            if (null == parentCode){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "父区域编码为空");
+            	excel.add(map);
+            	logger.error("父区域编码为空，有误，此结果将被记录在Excel中");
+            	continue;
+            }
             String areaName = map.get("AreaName").toString();
+            if (null == areaName){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "区域名称为空");
+            	excel.add(map);
+            	logger.error("区域名称为空，有误，此结果将被记录在Excel中");
+            	continue;
+            }
             /* 开始新增新表对象，并设置属性值 */
             Area area = new Area();
             area.setAreaName(areaName);
@@ -86,19 +105,38 @@ public class MigrationStageOne {
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "AreaID", areaId);//更新旧表中new_pk字段
             count++;
         }
+        try {
+			excelHelper.exportFromMaps(excel, tableName, tableName);
+		} catch (IOException ex) {
+			logger.error("异常数据导出到Excel失败",ex);
+		}
         logger.info("area表迁移完成");
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
     }
 
     protected void orgType() {
         String tableName = "ba_organize";
+        JdbcHelper.addColumn(tableName);
         String sql = "SELECT orgid,orgname,sortno FROM ba_organize WHERE orgcode NOT LIKE '15%' AND parentid=0 ;";
         List<Map<String,Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        List<Map<String,Object>> excel = new LinkedList<>();
         int count = 0 ;
         for (Map<String,Object> map : maps){
-        	String orgTypeId = map.get("orgid").toString();
-        	String orgName = map.get("orgname").toString();
+        	String orgTypeId = (String) map.get("orgid");
+        	String orgName = (String) map.get("orgname");
+        	if (null == orgName){
+        		map.put(SQLParameters.EXCEL_EX_HEADER, "机构类型名称为空");
+        		excel.add(map);
+        		logger.error("机构类型名称为空，有误，此结果将被记录在Excel中");
+        		continue;
+        	}
         	Integer sort = (Integer) map.get("sortno");
+        	if (sort<0){
+        		map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
+        		excel.add(map);
+        		logger.error("显示顺序为负数，有误，此结果将被记录在Excel中");
+        		continue;
+        	}
         	OrgType orgType = new OrgType();
         	orgType.setTypeName(orgName);
         	orgType.setSort(sort);
@@ -107,6 +145,11 @@ public class MigrationStageOne {
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "orgid", orgTypeId);
         	count++;
         }
+        try {
+			excelHelper.exportFromMaps(excel, tableName, tableName);
+		}  catch (IOException ex) {
+			logger.error("异常数据导出到Excel失败",ex);
+		}
         logger.info("org_type表迁移完成");
         logger.info("原数据库表中共有{}条数据，迁移了{}条数据",maps.size(),count);
     }
@@ -117,29 +160,74 @@ public class MigrationStageOne {
 					+"LEFT JOIN ba_areacode b ON b.AreaID =a.orgprovince " 
 					+"WHERE a.orgcode NOT LIKE '15%' AND a.parentid !=0 ORDER BY a.orgcode";
 		List<Map<String,Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+		List<Map<String,Object>> excel = new LinkedList<>();
 		int count = 0 ;
 		for (Map<String,Object> map : maps){
-			String orgId = map.get("orgid").toString();
+			String orgId = (String) map.get("orgid");
+			String orgName = (String) map.get("orgname");
+			if (null == orgName){
+				map.put(SQLParameters.EXCEL_EX_HEADER, "机构名称为空");
+				excel.add(map);
+				logger.error("机构名称为空，有误，此结果将被记录在Excel中");
+				continue;
+			}
+			Long orgTypeId = (Long) map.get("orgtype");
+			if (null == orgTypeId){
+				map.put(SQLParameters.EXCEL_EX_HEADER, "机构类型id为空");
+				excel.add(map);
+				logger.error("机构类型id为空，有误，此结果将被记录在Excel中");
+				continue;
+			}
+			Long areaId = (Long) map.get("new_pk");
+			if (null == areaId){
+				map.put(SQLParameters.EXCEL_EX_HEADER, "所在区域id为空");
+				excel.add(map);
+				logger.error("所在区域id为空，有误，此结果将被记录在Excel中");
+				continue;
+			}
+			String contactPerson = (String) map.get("linker");
+			String contactPhone = (String) map.get("linktel");
+			Integer sort = (Integer) map.get("sortno");
+			if (sort<0){
+				map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
+				excel.add(map);
+				logger.error("显示顺序为负数，有误，此结果将被记录在Excel中");
+				continue;
+			}
+			String note = (String) map.get("remark");
+			Integer isDeleted = (Integer) map.get("isdelete");
+			if (null == isDeleted){
+				map.put(SQLParameters.EXCEL_EX_HEADER, "是否逻辑删除数据为空");
+				excel.add(map);
+				logger.error("是否逻辑删除数据为空，有误，此结果将被记录在Excel中");
+				continue;
+			}
 			Org org = new Org();
-			org.setParentId(0L);
-			org.setOrgName(map.get("orgname").toString());
-			org.setOrgTypeId((Long) map.get("orgtype"));
-			org.setAreaId((Long) map.get("new_pk"));
-			org.setContactPerson(map.get("linker").toString());
-			org.setContactPhone(map.get("linktel").toString());
-			org.setSort((Integer) map.get("sortno"));
-			org.setNote(map.get("remark").toString());
-			org.setIsDeleted((Boolean) map.get("isdelete"));
+			org.setOrgName(orgName);
+			org.setOrgTypeId(orgTypeId);
+			org.setAreaId(areaId);
+			org.setContactPerson(contactPerson);
+			org.setContactPhone(contactPhone);
+			org.setSort(sort);
+			org.setNote(note);
+			org.setIsDeleted(isDeleted == 1);
 			org = orgService.addOrg(org);
 			Long pk = org.getId();
 			JdbcHelper.updateNewPrimaryKey(tableName, pk, "orgid", orgId);
 			count++;
+		}
+		try {
+			excelHelper.exportFromMaps(excel, tableName, tableName);
+		} catch (IOException ex) {
+			logger.error("异常数据导出到Excel失败",ex);
 		}
 		logger.info("org表迁移完成");
 		logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
 	}
     protected void orgUser() {
     	String tableName = "sys_user";
+    	JdbcHelper.addColumn(tableName);
+    	JdbcHelper.addColumn("sys_userext");
         String sql = "SELECT a.userid,a.usercode,a.`password`,a.isvalid,d.new_pk,a.username,b.sex,b.duties,"
 					+"b.positional,b.fax,b.handset,b.phone,b.idcard,b.email,b.address,b.postcode,"
 					+"CASE WHEN e.fileid IS NOT NULL THEN 1 ELSE 0 END is_proxy_upload,e.filedir,e.fileid"
@@ -155,48 +243,108 @@ public class MigrationStageOne {
 					+"AND e.operuserid=p.operuserid) "
 					+"ORDER BY a.userid ;";
         List<Map<String,Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        List<Map<String,Object>> excel = new LinkedList<>();
         int count = 0 ;
         for (Map<String,Object> map : maps){
         	String userId = map.get("userid").toString();
-        	OrgUser orgUser = new OrgUser();
-        	orgUser.setUsername((String) map.get("usercode"));
-        	orgUser.setPassword((String) map.get("password"));
-        	orgUser.setIsDisabled((Boolean) map.get("isvalid"));
-        	orgUser.setOrgId((Long) map.get("new_pk"));
-        	if ( null ==map.get("username") || "".equals(map.get("username").toString())){
-        		orgUser.setRealname((String) map.get("usercode"));
-        	}else{
-        		orgUser.setRealname((String) map.get("username"));
+        	String username = (String) map.get("usercode");
+        	if (null == username){
+        		map.put(SQLParameters.EXCEL_EX_HEADER, "机构代码为空");
+        		excel.add(map);
+        		logger.error("机构代码为空，有误，此结果将被记录在Excel中");
+        		continue;
         	}
-        	orgUser.setSex((Integer) map.get("sex"));
-        	orgUser.setPosition((String) map.get("duties"));
-        	orgUser.setTitle((String) map.get("positional"));
-        	orgUser.setFax((String) map.get("fax"));
-        	orgUser.setHandphone((String) map.get("handset"));
-        	orgUser.setTelephone((String) map.get("phone"));
-        	orgUser.setIdcard((String) map.get("idcard"));
-        	orgUser.setEmail((String) map.get("email"));
-        	orgUser.setAddress((String) map.get("address"));
-        	orgUser.setPostcode((String) map.get("postcode"));
-        	orgUser.setIsProxyUpload((Boolean) map.get("is_proxy_upload"));
-        	orgUser.setProgress((Integer) map.get("progress"));
-        	orgUser.setReviewDate((Date) map.get("auditdate"));
-        	orgUser.setNote((String) map.get("memo"));
-        	orgUser.setSort((Integer) map.get("sortno"));
+        	String password = (String) map.get("password");
+        	if (null == password){
+        		map.put(SQLParameters.EXCEL_EX_HEADER, "机构用户登陆密码为空");
+        		excel.add(map);
+        		logger.error("机构用户登陆密码为空，有误，此结果将被记录在Excel中");
+        		continue;
+        	}
+        	Integer isDisabled = (Integer) map.get("isvalid");
+        	Long orgId = (Long) map.get("new_pk");
+        	if (null == orgId){
+        		map.put(SQLParameters.EXCEL_EX_HEADER, "对应学校id理应不能为空，为可疑问题数据");
+        		excel.add(map);
+        		logger.error("对应学校id理应不能为空，为可疑问题数据，此结果将被记录在Excel中");
+        	}
+        	String realName= (String) map.get("username");
+        	if ( null == realName){
+        		realName = username;
+        	}
+        	Integer sex = (Integer) map.get("sex");
+        	String position = (String) map.get("duties");
+        	String title = (String) map.get("positional");
+        	String fax = (String) map.get("fax");
+        	String handphone = (String) map.get("handset");
+        	String telephone = (String) map.get("phone");
+        	String idcard = (String) map.get("idcard");
+        	String email = (String) map.get("email");
+        	String address = (String) map.get("address");
+        	String postcode = (String) map.get("postcode");
+        	Integer isProxyUpload = (Integer) map.get("is_proxy_upload");
+        	String proxy = (String) map.get("filedir");
+        	Integer progress = (Integer) map.get("progress");
+        	Timestamp reviewDate = (Timestamp) map.get("auditdate");
+        	String note = (String) map.get("memo");
+        	Integer sort = (Integer) map.get("sortno");
+        	if (sort<0){
+        		map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
+        		excel.add(map);
+        		logger.error("显示顺序为负数，有误，此结果将被记录在Excel中");
+        		continue;
+        	}
+        	OrgUser orgUser = new OrgUser();
+        	orgUser.setUsername(username);
+        	orgUser.setPassword(password);
+        	orgUser.setIsDisabled(isDisabled == 1);
+        	orgUser.setOrgId(orgId);
+        	orgUser.setRealname(realName);
+        	orgUser.setSex(sex);
+        	orgUser.setPosition(position);
+        	orgUser.setTitle(title);
+        	orgUser.setFax(fax);
+        	orgUser.setHandphone(handphone);
+        	orgUser.setTelephone(telephone);
+        	orgUser.setIdcard(idcard);
+        	orgUser.setEmail(email);
+        	orgUser.setAddress(address);
+        	orgUser.setPostcode(postcode);
+        	orgUser.setIsProxyUpload(isProxyUpload == 1);
+        	orgUser.setProgress(progress);
+        	orgUser.setReviewDate(reviewDate);
+        	orgUser.setNote(note);
+        	orgUser.setSort(sort);
+        	if (null != realName && !username.equals(realName) ){
+        		if(null == position || null == title || null == handphone
+                		|| null == address || null == postcode || null == email){
+        			map.put(SQLParameters.EXCEL_EX_HEADER, "学校有联系人后，提交认证时的资料理应不为空，"
+        					+ "为可疑问题数据");
+                	excel.add(map);
+                	logger.info("学校有联系人后，提交认证时的资料理应不为空，为可疑问题数据,"
+                			+ "但仍会导入新表，过后核对和进行二次处理");     
+        		}
+        	}
         	orgUser = orgUserService.addOrgUser(orgUser);
         	Long pk = orgUser.getId();
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "userid", userId);
-        	String filePath = (String) map.get("filedir");
-        	try {
-				String fileId = fileService.migrateFile(filePath, FileType.PROXY, pk);
-				orgUser.setProxy(fileId);
-			} catch (IOException e) {
-				logger.info(e.getMessage());
-				logger.warn("执行插入MongoDB程序出错，可能老数据库表pub_addfileinfo主键为{}文件找不到",
-						map.get("fileid"));
-			}
-        	orgUserService.updateOrgUser(orgUser);
+        	JdbcHelper.updateNewPrimaryKey("sys_userext", pk, "userid", userId);
         	count++;
+            String mongoId = "";
+            if (null != proxy){
+            	try {
+					mongoId = fileService.migrateFile(proxy, ImageType.ORG_USER_PROXY, pk);
+				} catch (IOException ex) {
+					logger.error("文件读取异常，路径<{}>,异常信息：{}",proxy,ex.getMessage());
+					map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
+					excel.add(map);
+					continue;
+				}
+            }else{
+            	mongoId = proxy;
+            }
+        	orgUser.setProxy(mongoId);
+        	orgUserService.updateOrgUser(orgUser);
         }
         logger.info("org_user表迁移完成");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
@@ -228,38 +376,136 @@ public class MigrationStageOne {
 					+"LEFT JOIN sys_user g ON b.teacheraudituser = g.userid "
 					+"WHERE a.sysflag=1 AND b.usertype !=2 ;";
         List<Map<String,Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
-        Date birth = new Date();
+        List<Map<String,Object>> excel = new LinkedList<>();
         int count = 0 ;
         for (Map<String,Object> map : maps){
-            String userid = map.get("userid").toString();
-            String birthday = (String) map.get("birthdate");
-            WriterUser writerUser = new WriterUser();
-            writerUser.setUsername((String) map.get("usercode"));
-            writerUser.setPassword((String) map.get("password"));
-            writerUser.setIsDisabled((Boolean) map.get("isvalid"));
-            writerUser.setOrgId((Long) map.get("org_new_pk"));
-            writerUser.setNickname((String) map.get("usercode"));
-            writerUser.setRealname((String) map.get("username"));
-            writerUser.setSex((Integer) map.get("sex"));
-            writerUser.setExperience((Integer) map.get("seniority"));
-            writerUser.setPosition((String) map.get("duties"));
-            writerUser.setTitle((String) map.get("positional"));
-            writerUser.setFax((String) map.get("fax"));
-            writerUser.setHandphone((String) map.get("handset"));
-            writerUser.setTelephone((String) map.get("phone"));
-            writerUser.setIdcard((String) map.get("idcard"));
-            writerUser.setEmail((String) map.get("email"));
-            writerUser.setAddress((String) map.get("address"));
-            writerUser.setPostcode((String) map.get("postcode"));
-            writerUser.setRank((Integer) map.get("rank"));
-            writerUser.setIsTeacher((Boolean) map.get("is_teacher"));
-            writerUser.setAuthUserType((Integer) map.get("auth_user_type"));
-            writerUser.setAuthUserId((Long) map.get("auth_user_id"));
-            writerUser.setIsWriter((Boolean) map.get("is_writer"));
-            writerUser.setIsExpert((Boolean) map.get("is_expert"));
-
+        	WriterUser writerUser = new WriterUser();
+            String userid = map.get("userid").toString();            
+            String username = (String) map.get("usercode");
+            if (null == username){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到用户的登陆名");
+            	excel.add(map);
+            	logger.error("未找到用户的登录名，此结果将被记录在Excel中");
+            	continue;
+            }
+            String password = (String) map.get("password");
+            if (null == password){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到用户的登陆密码");
+            	excel.add(map);
+            	logger.error("未找到用户的登录密码，此结果将被记录在Excel中");
+            	continue;
+            }
+            Integer isDisabled = (Integer) map.get("isvalid");
+            Long orgid = (Long) map.get("org_new_pk");
+            String realName = (String) map.get("username");
+            if (null == realName){
+            	realName = username;
+            }
+            Integer sex = (Integer) map.get("sex");
+            Date birthday = (Date) map.get("birthdate");
+            Integer experience = (Integer) map.get("seniority");
+            String position = (String) map.get("duties");
+            String title = (String) map.get("positional");
+            String fax = (String) map.get("fax");
+            String handphone = (String) map.get("handset");
+            String telephone = (String) map.get("phone");
+            String idcard = (String) map.get("idcard");
+            String email = (String) map.get("email");
+            String address= (String) map.get("address");
+            String postcode = (String) map.get("postcode");
+            Integer rank = (Integer) map.get("rank");
+            String cert = (String) map.get("filedir");
+            Timestamp authTime = (Timestamp) map.get("teacherauditdate");
+            Integer isTeacher = (Integer) map.get("is_teacher");
+            Integer authUserType = (Integer) map.get("auth_user_type");
+            Long authUserId = (Long) map.get("auth_user_id");
+            Integer isWriter = (Integer) map.get("is_writer");
+            Integer isExpert = (Integer) map.get("is_expert");
+            String avatar = (String) map.get("avatar");
+            if (null == avatar){
+            	avatar = "/upload/sys_userext_avatar/1706/20170623191553876.png";
+            }
+            String signature = (String) map.get("usersign");
+            String note = (String) map.get("memo");
+            Integer sort = (Integer) map.get("sortno");
+            if (sort<0){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序数据为负数");
+            	excel.add(map);
+            	logger.error("显示顺序数据为负数，有误，此结果将被记录在Excel中");
+            	continue;
+            }
+            writerUser.setUsername(username);
+            writerUser.setNickname(username);
+            writerUser.setPassword(password);
+            writerUser.setIsDisabled(isDisabled==1);
+            writerUser.setOrgId(orgid);
+            writerUser.setRealname(realName);
+            writerUser.setSex(sex);
+            writerUser.setBirthday(birthday);
+            writerUser.setExperience(experience);
+            writerUser.setPosition(position);
+            writerUser.setTitle(title);
+            writerUser.setFax(fax);
+            writerUser.setHandphone(handphone);
+            writerUser.setTelephone(telephone);
+            writerUser.setIdcard(idcard);
+            writerUser.setEmail(email);
+            writerUser.setAddress(address);
+            writerUser.setPostcode(postcode);
+            writerUser.setRank(rank);
+            writerUser.setIsTeacher(isTeacher == 1);
+            writerUser.setAuthTime(authTime);
+            writerUser.setAuthUserType(authUserType);
+            writerUser.setAuthUserId(authUserId);
+            writerUser.setIsWriter(isWriter == 1);
+            writerUser.setIsExpert(isExpert == 1);
+            writerUser.setSignature(signature);
+            writerUser.setNote(note);
+            writerUser.setSort(sort);
+            if (null == realName || null == sex || null == birthday || null == orgid 
+            		|| null == experience || null == position || null == title || null == handphone
+            		|| null == address || null == postcode || null == signature){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "字段为前台必填项，查询出字段值为空，"
+            			+ "疑为问题数据");
+            	excel.add(map);
+            	logger.info("字段为前台必填项，查询出字段值为空，疑为问题数据，此结果将被记录在Excel中,"
+            			+ "但仍会导入新表，过后核对和进行二次处理");            	
+            }
+            writerUser = writerUserService.add(writerUser);
+            Long pk = writerUser.getId();
+            JdbcHelper.updateNewPrimaryKey(tableName, pk, "userid", userid);
+            JdbcHelper.updateNewPrimaryKey("sys_userext", pk, "userid", userid);
         	count++;
+        	String certMongoId = "";
+        	if(null != cert){
+	        	try {
+					certMongoId = fileService.migrateFile(cert, ImageType.WRITER_USER_CERT, pk);
+				} catch (IOException ex) {
+					logger.error("文件读取异常，路径<{}>,异常信息：{}",cert,ex.getMessage());
+					map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
+					excel.add(map);
+					continue;
+				}
+        	}else{
+        		certMongoId = cert;
+        	}
+        	writerUser.setCert(certMongoId);
+        	String avatarMongoId = "";
+        	try {
+				avatarMongoId = fileService.migrateFile(avatar, ImageType.WRITER_USER_AVATAR, pk);
+			} catch (IOException ex) {
+				logger.error("文件读取异常，路径<{}>,异常信息：{}",avatar,ex.getMessage());
+				map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
+				excel.add(map);
+			}
+        	writerUser.setAvatar(avatarMongoId);
+        	writerUserService.update(writerUser);
         }
+        try {
+			excelHelper.exportFromMaps(excel, tableName, tableName);
+		} catch (IOException ex) {
+			logger.error("异常数据导出到Excel失败",ex);
+		}
         logger.info("writer_user表迁移完成");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
     }

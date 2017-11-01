@@ -10,27 +10,26 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * MongoDB 系统消息对象
- *
+ * MongoDB CMS内容对象
  * @author L.X <gugia@qq.com>
  */
 @SuppressWarnings("all")
-@Document(collection = "message")
-public class Message implements Serializable {
+@Document(collection = "cms_content")
+public class Content implements Serializable {
 
     @Id
     private String id;
     private String content;
 
-    public Message() {
+    public Content() {
         super();
     }
 
-    public Message(String content) {
+    public Content(String content) {
         this.content = content;
     }
 
-    public Message(String id, String content) {
+    public Content(String id, String content) {
         super();
         this.id = id;
         this.content = content;

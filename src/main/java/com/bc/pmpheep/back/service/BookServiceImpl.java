@@ -30,6 +30,8 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Book;
 import com.bc.pmpheep.back.po.BookDetail;
+import com.bc.pmpheep.back.po.BookUserLike;
+import com.bc.pmpheep.back.po.BookUserMark;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.ContactMallUtil;
 import com.bc.pmpheep.back.util.DateUtil;
@@ -106,6 +108,46 @@ public class BookServiceImpl extends BaseService implements BookService {
 		}
 		result = "SUCCESS";
 		return result;
+	}
+
+	@Override
+	public Book add(Book book) {
+		if (ObjectUtil.isNull(book)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"图书对象为空");
+		}
+		bookDao.addBook(book);
+		return book;
+	}
+
+	@Override
+	public BookDetail add(BookDetail detail) {
+		if (ObjectUtil.isNull(detail)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"图书详情对象为空");
+		}
+		bookDetailDao.addBookDetail(detail);
+		return detail;
+	}
+
+	@Override
+	public BookUserLike add(BookUserLike like) {
+		if (ObjectUtil.isNull(like)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"图书点赞对象为空");
+		}
+		bookUserLikeDao.addBookUserLike(like);
+		return like;
+	}
+
+	@Override
+	public BookUserMark add(BookUserMark mark) {
+		if (ObjectUtil.isNull(mark)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"图书收藏对象为空");
+		}
+		bookUserMarkDao.addBookUserMark(mark);
+		return mark;
 	}
 
 	@Override

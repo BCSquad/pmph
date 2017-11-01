@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.MessageAttachmentDao;
 import com.bc.pmpheep.back.po.MessageAttachment;
+import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -79,6 +80,17 @@ public class MessageAttachmentServiceImpl implements MessageAttachmentService {
 
         }
         return messageAttachmentDao.updateMessageAttachment(messageAttachment);
+    }
+
+    @Override
+    public Integer deleteMessageAttachmentByAttachment(String[] attachment)
+    throws CheckedServiceException {
+        if (ArrayUtil.isEmpty(attachment)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "附件ID为空 ");
+
+        }
+        return messageAttachmentDao.deleteMessageAttachmentByAttachment(attachment);
     }
 
 }

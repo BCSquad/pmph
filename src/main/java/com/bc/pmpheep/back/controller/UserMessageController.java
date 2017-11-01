@@ -221,8 +221,17 @@ public class UserMessageController {
     @RequestMapping(value = "/update/message", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseBean updateUserMessage(Message message, @RequestParam("msgId") String msgId,
-    @RequestParam("msgTitle") String msgTitle) {
-        return new ResponseBean(userMessageService.updateUserMessage(message, msgId, msgTitle));
+    @RequestParam("msgTitle") String msgTitle, @RequestParam("file") String[] files,
+    @RequestParam("attachment") String[] attachment) {
+        try {
+            return new ResponseBean(userMessageService.updateUserMessage(message,
+                                                                         msgId,
+                                                                         msgTitle,
+                                                                         files,
+                                                                         attachment));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
     }
 
     /**
