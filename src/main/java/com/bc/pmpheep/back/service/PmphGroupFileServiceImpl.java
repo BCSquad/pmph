@@ -51,12 +51,16 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
             throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
                     "小组文件对象为空");
         }
-        Long id = pmphGroupFileDao.addPmphGroupFile(pmphGroupFile);
-        if (ObjectUtil.isNull(id)) {
+        //原来的id
+        Long id = pmphGroupFile.getId();
+        pmphGroupFileDao.addPmphGroupFile(pmphGroupFile);
+        if (ObjectUtil.isNull(pmphGroupFile.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.PO_ADD_FAILED,
                     "小组文件对象保存失败");
         }
-        pmphGroupFile.setId(id);
+        if (null != id) {
+        	pmphGroupFile.setId(id);
+        }
         return pmphGroupFile;
     }
 
