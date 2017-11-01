@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.MaterialOrgDao">
+
+	<!-- 新增一个MaterialOrg -->
+	<insert id="addMaterialOrg" parameterType="MaterialOrg">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into material_org (material_id,org_id)  values(#{materialId},#{orgId}) ;
+	</insert>
+	
+	<!--批量新增 materialOrg -->
+	<insert id="addMaterialOrgs" parameterType="java.util.List">
+		insert into material_org (material_id,org_id)  values
+		<foreach collection="list" item="item" index="index" separator=",">
+								(#{item.materialId},#{item.orgId}) 
+		</foreach>
+	</insert>
+
+	<!-- 根据materialId删除 -->
+	<delete id="deleteMaterialOrgByMaterialId" parameterType="java.lang.Long">
+		delete from material_org where material_id=#{materialId} ;
+	</delete>
+	
+	<!-- 根据orgId删除 -->
+	<delete id="deleteMaterialOrgByOrgId" parameterType="java.lang.Long">
+		delete from material_org where org_id = #{orgId} ;
+	</delete>
+
+</mapper>
