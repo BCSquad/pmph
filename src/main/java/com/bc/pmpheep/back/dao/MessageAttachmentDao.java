@@ -45,15 +45,6 @@ public interface MessageAttachmentDao {
     List<MessageAttachment> getMessageAttachmentByMsgId(@Param("msgId") String msgId);
 
     /**
-     * 删除MaterialType 通过msgIds
-     * 
-     * @param msgIds
-     * @return 影响行数
-     * @throws CheckedServiceException
-     */
-    Integer deleteMessageAttachment(List<String> msgIds);
-
-    /**
      * 根据主键id更新messageAttachment 不为null和不为‘’的字段
      * 
      * @param messageAttachment
@@ -61,4 +52,25 @@ public interface MessageAttachmentDao {
      * @throws CheckedServiceException
      */
     Integer updateMessageAttachment(MessageAttachment messageAttachment);
+
+    /**
+     * 
+     * <pre> 
+     * 功能描述：根据attachment数组删除messageAttachment
+     * 使用示范：
+     *
+     * @param attachment 数组
+     * @return 影响行数  
+     * </pre>
+     */
+    Integer deleteMessageAttachmentByAttachment(String[] attachment);
+
+    /**
+     * 删除MessageAttachment 通过msgIds
+     * 
+     * @param msgIds
+     * @return 影响行数
+     * @throws CheckedServiceException
+     */
+    Integer deleteMessageAttachment(List<String> msgIds);
 }
