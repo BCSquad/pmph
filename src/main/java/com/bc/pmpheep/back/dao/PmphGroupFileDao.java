@@ -16,11 +16,11 @@ import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 @Repository
 public interface PmphGroupFileDao {
     /**
-     * 
+     * TODO：施工中，当前返回影响行数，预期返回主键
      * @param pmphGroupFile 实体对象
-     * @return 影响行数
+     * @return 主键
      */
-    Integer addPmphGroupFile(PmphGroupFile pmphGroupFile);
+    Long addPmphGroupFile(PmphGroupFile pmphGroupFile);
 
     /**
      * 

@@ -25,7 +25,7 @@ public interface DecPositionService {
      * @Return DecPosition带主键
      * @throws CheckedServiceException
      */
-    DecPosition decPosition(DecPosition decPosition) throws CheckedServiceException;
+    DecPosition addDecPosition(DecPosition decPosition) throws CheckedServiceException;
 
     /**
      * @Param id
@@ -46,7 +46,7 @@ public interface DecPositionService {
      * @Return DecPosition 实体对象
      * @throws CheckedServiceException
      */
-    DecPosition decPositionById(Long id) throws CheckedServiceException;
+    DecPosition getDecPositionById(Long id) throws CheckedServiceException;
 
     /**
      * @Param declarationId

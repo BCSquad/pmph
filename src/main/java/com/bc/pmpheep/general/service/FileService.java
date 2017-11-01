@@ -100,9 +100,9 @@ public class FileService {
         }
         return gridFSFile.getId().toString();
     }
-    
+
     /**
-     * 
+     *
      * <pre>
      * 功能描述： 本地文件保存到MongoDB
      * 使用示范：
@@ -126,15 +126,15 @@ public class FileService {
         }
         return gridFSFile.getId().toString();
     }
-    
+
     /**
-     * 
+     *
      * <pre>
      * 功能描述： 本地图片保存到MongoDB
      * 使用示范：
      *
-     * @param file 要保存的文件
-     * @param fileType 文件所属类型
+     * @param file 要保存的图片
+     * @param imageType 图片所属类型
      * @param pk 对应的实体类主键(id)
      * @return 返回由MongoDB自动生成的id字符串
      * @throws IOException IO读写错误
@@ -217,6 +217,12 @@ public class FileService {
         return gridFSFile.getId().toString();
     }
 
+    /**
+     * 根据MySQL中存储的MongoDB主键获取指定文件
+     *
+     * @param id 文件在MongoDB中的主键
+     * @return GridFSDBFile对象
+     */
     public GridFSDBFile get(String id) {
         if (null == id || id.isEmpty()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
@@ -225,6 +231,12 @@ public class FileService {
         return gridFsTemplate.findOne(Query.query(new GridFsCriteria("_id").is(id)));
     }
 
+    /**
+     * 根据MySQL中存储的一些MongoDB主键获取对应文件
+     *
+     * @param ids 主键集合
+     * @return GridFSDBFile对象集合
+     */
     public List<GridFSDBFile> list(List<String> ids) {
         List<GridFSDBFile> list = new ArrayList<>(ids.size());
         for (String id : ids) {
@@ -240,6 +252,11 @@ public class FileService {
         return list;
     }
 
+    /**
+     * 根据MySQL中存储的MongoDB主键删除指定文件
+     *
+     * @param id 文件在MongoDB中的主键
+     */
     public void remove(String id) {
         if (null == id || id.isEmpty()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,

@@ -21,6 +21,7 @@ import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.util.ValidatUtil;
 import com.bc.pmpheep.back.vo.GroupMemberWriterUserVO;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -381,6 +382,28 @@ public class WriterUserServiceImpl implements WriterUserService {
 
 	@Override
 	public String addWriterUserOfBack(WriterUser writerUser) throws CheckedServiceException {
+		if (StringUtil.strLength(writerUser.getUsername()) > 20) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "用户名需要小于20字符");
+		}
+		if (StringUtil.strLength(writerUser.getRealname()) > 20) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "姓名需要小于20字符");
+		}
+		if (!ValidatUtil.checkMobileNumber(writerUser.getHandphone())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "电话格式不正确");
+		}
+		if (!ValidatUtil.checkEmail(writerUser.getEmail())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "邮箱格式不正确");
+		}
+		if (!StringUtil.isEmpty(writerUser.getNote())) {
+			if (StringUtil.strLength(writerUser.getNote()) > 100) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+						CheckedExceptionResult.NULL_PARAM, "备注需要小于100字符");
+			}
+		}
 		writerUser.setPassword(ShiroKit.md5(Const.DEFAULT_PASSWORD, writerUser.getUsername()));// 后台添加用户设置默认密码为123456
 		writerUser.setNickname(writerUser.getUsername());
 		writerUser.setAvatar(Const.DEFAULT_USER_AVATAR);// 后台添加新用户时，设置为默认头像

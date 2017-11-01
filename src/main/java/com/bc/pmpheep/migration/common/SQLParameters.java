@@ -48,7 +48,7 @@ public class SQLParameters {
     /**
      * 现有平台文件路径（最后以/结尾）
      */
-    public static final String FILE_PATH = "D:\\upload\\";
+    public static final String FILE_PATH = "D:\\";
     
     /**
      * Excel异常导出统一表头

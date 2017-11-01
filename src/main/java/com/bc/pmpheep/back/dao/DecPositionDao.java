@@ -32,7 +32,7 @@ public interface DecPositionDao {
      * @Param:
      * @Return:Integer
      */
-    Integer decPosition(DecPosition decPosition);
+    Integer addDecPosition(DecPosition decPosition);
 
     /**
      * 
@@ -65,7 +65,7 @@ public interface DecPositionDao {
      * @Param:
      * @Return:DecPosition
      */
-    DecPosition decPositionById(Long id);
+    DecPosition getDecPositionById(Long id);
 
     /**
      * 

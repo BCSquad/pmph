@@ -44,6 +44,10 @@ public enum CheckedExceptionResult {
      */
     FILE_DOWNLOAD_FAILED(8, "文件下载失败"),
     /**
+     * 文件下载失败
+     */
+    PO_ADD_FAILED(9, "持久化对象保存失败"),
+    /**
      * 用户SESSION为空
      */
     USER_SESSION(30, "用户SESSION为空");

@@ -6,7 +6,7 @@ package com.bc.pmpheep.general.bean;
 
 /**
  * 用于MongoDB图片存取服务的图片类型枚举
- *
+ * 
  * @author L.X <gugia@qq.com>
  */
 public enum ImageType {
@@ -27,6 +27,10 @@ public enum ImageType {
      * 机构用户委托书
      */
     ORG_USER_PROXY("机构用户委托书"),
+    /**
+     * 系统消息
+     */
+    SYS_MESSAGE("系统消息"),
     /**
      * 小组头像
      */

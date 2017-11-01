@@ -10,7 +10,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * 
+ * MongoDB 系统消息对象
+ *
  * @author L.X <gugia@qq.com>
  */
 @SuppressWarnings("all")
