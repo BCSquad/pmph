@@ -420,7 +420,8 @@ public class MigrationStageOne {
         List<Map<String,Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String,Object>> excel = new LinkedList<>();
         int count = 0 ;
-        for (Map<String,Object> map : maps){           
+        for (Map<String,Object> map : maps){
+        	String userId = (String) map.get("userid");
             String username = (String) map.get("usercode");
             if (null == username){
             	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到用户的登陆名");
@@ -469,8 +470,14 @@ public class MigrationStageOne {
             		excel.add(map);
             		logger.info("教龄中有空格，此结果将被记录在Excel中与专家平台进行核准");
             	}
+            	if (experienceNum.indexOf("岁")!= -1){
+            		experienceNum = "32";
+            		map.put(SQLParameters.EXCEL_EX_HEADER, "教龄中数据疑似为年龄，导出Excel进行核对");
+            		excel.add(map);
+            		logger.info("教龄中数据疑似为年龄，此结果将被记录在Excel中与专家平台进行核对");
+            	}
             	if (experienceNum.indexOf("年")== -1 && experienceNum.indexOf("s")== -1 && 
-            			experienceNum.length()>2){
+            			experienceNum.indexOf("岁")== -1 && experienceNum.length()>2){
             		experienceNum = experienceNum.substring(0,experienceNum.length()-1);
             		map.put(SQLParameters.EXCEL_EX_HEADER, "教龄为三位数数字，有误");
             		excel.add(map);
@@ -564,6 +571,8 @@ public class MigrationStageOne {
             }
             writerUser = writerUserService.add(writerUser);
             Long pk = writerUser.getId();
+            JdbcHelper.updateNewPrimaryKey(tableName, pk, "userid", userId);
+        	JdbcHelper.updateNewPrimaryKey("sys_userext", pk, "userid", userId);
         	count++;
         	String certMongoId = "";
         	if(null != cert){
