@@ -25,6 +25,10 @@ public class Book implements Serializable {
 	 */
 	private Long id;
 	/**
+	 * 本版号
+	 */
+	private String vn;
+	/**
 	 * 图书名称
 	 */
 	private String bookname;
@@ -152,20 +156,21 @@ public class Book implements Serializable {
 	 * 修改时间
 	 */
 	private Timestamp gmtUpdate;
+	/**
+	 * 书籍简介
+	 */
+	private String content;
 
 	public Book() {
 		super();
 	}
 
-	public Book(String bookname, String isbn, String sn, String author,
-			String publisher, String lang, Integer revision, Long type,
-			Timestamp publishDate, String reader, Double price, Double score,
-			String buyUrl, String imageUrl, String pdfUrl, Long clicks,
-			Long comments, Long likes, Long bookmarks, Boolean isStick,
-			Integer sort, Timestamp deadlineStick, Boolean isNew,
-			Integer sortNew, Timestamp deadlineNew, Boolean isPromote,
-			Integer sortPromote, Timestamp deadlinePromote, Long sales,
-			Boolean isOnSale, Timestamp gmtCreate, Timestamp gmtUpdate) {
+	public Book(String bookname, String isbn, String sn, String author, String publisher, String lang, Integer revision,
+			Long type, Timestamp publishDate, String reader, Double price, Double score, String buyUrl, String imageUrl,
+			String pdfUrl, Long clicks, Long comments, Long likes, Long bookmarks, Boolean isStick, Integer sort,
+			Timestamp deadlineStick, Boolean isNew, Integer sortNew, Timestamp deadlineNew, Boolean isPromote,
+			Integer sortPromote, Timestamp deadlinePromote, Long sales, Boolean isOnSale, Timestamp gmtCreate,
+			Timestamp gmtUpdate) {
 		super();
 		this.bookname = bookname;
 		this.isbn = isbn;
@@ -199,6 +204,14 @@ public class Book implements Serializable {
 		this.isOnSale = isOnSale;
 		this.gmtCreate = gmtCreate;
 		this.gmtUpdate = gmtUpdate;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public Long getId() {
@@ -465,23 +478,25 @@ public class Book implements Serializable {
 		this.gmtUpdate = gmtUpdate;
 	}
 
+	public String getVn() {
+		return vn;
+	}
+
+	public void setVn(String vn) {
+		this.vn = vn;
+	}
+
 	@Override
 	public String toString() {
-		return "book [id=" + id + ", bookname=" + bookname + ", isbn=" + isbn
-				+ ", sn=" + sn + ", author=" + author + ", publisher="
-				+ publisher + ", lang=" + lang + ", revision=" + revision
-				+ ", type=" + type + ", publishDate=" + publishDate
-				+ ", reader=" + reader + ", price=" + price + ", score="
-				+ score + ", buyUrl=" + buyUrl + ", imageUrl=" + imageUrl
-				+ ", pdfUrl=" + pdfUrl + ", clicks=" + clicks + ", comments="
-				+ comments + ", likes=" + likes + ", bookmarks=" + bookmarks
-				+ ", isStick=" + isStick + ", sort=" + sort
-				+ ", deadlineStick=" + deadlineStick + ", isNew=" + isNew
-				+ ", sortNew=" + sortNew + ", deadlineNew=" + deadlineNew
-				+ ", isPromote=" + isPromote + ", sortPromote=" + sortPromote
-				+ ", deadlinePromote=" + deadlinePromote + ", sales=" + sales
-				+ ", isOnSale=" + isOnSale + ", gmtCreate=" + gmtCreate
-				+ ", gmtUpdate=" + gmtUpdate + "]";
+		return "book [id=" + id + ", bookname=" + bookname + ", isbn=" + isbn + ", sn=" + sn + ", author=" + author
+				+ ", publisher=" + publisher + ", lang=" + lang + ", revision=" + revision + ", type=" + type
+				+ ", publishDate=" + publishDate + ", reader=" + reader + ", price=" + price + ", score=" + score
+				+ ", buyUrl=" + buyUrl + ", imageUrl=" + imageUrl + ", pdfUrl=" + pdfUrl + ", clicks=" + clicks
+				+ ", comments=" + comments + ", likes=" + likes + ", bookmarks=" + bookmarks + ", isStick=" + isStick
+				+ ", sort=" + sort + ", deadlineStick=" + deadlineStick + ", isNew=" + isNew + ", sortNew=" + sortNew
+				+ ", deadlineNew=" + deadlineNew + ", isPromote=" + isPromote + ", sortPromote=" + sortPromote
+				+ ", deadlinePromote=" + deadlinePromote + ", sales=" + sales + ", isOnSale=" + isOnSale
+				+ ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
 	}
 
 }

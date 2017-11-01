@@ -60,4 +60,18 @@ public interface MessageAttachmentService {
      */
     Integer updateMessageAttachment(MessageAttachment messageAttachment)
     throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre> 
+     * 功能描述：根据attachment数组删除messageAttachment
+     * 使用示范：
+     *
+     * @param attachment 数组
+     * @return 影响行数  
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer deleteMessageAttachmentByAttachment(String[] attachment) throws CheckedServiceException;
+
 }

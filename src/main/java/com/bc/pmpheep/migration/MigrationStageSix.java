@@ -38,7 +38,6 @@ import com.bc.pmpheep.back.service.DecTextbookService;
 import com.bc.pmpheep.back.service.DecWorkExpService;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.general.bean.FileType;
-import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
@@ -86,7 +85,7 @@ public class MigrationStageSix {
     ExcelHelper excelHelper;
 	
 	public void start(){
-		declaration();
+		//declaration();
 		decEduExp();
 		decWorkExp();
 		decTeachExp();
@@ -97,13 +96,14 @@ public class MigrationStageSix {
 		decTextbook();
 		decResearch();
 		decExtension();
+		decPosition();
 	}
 	
 	/**
 	 * 作家申报表
 	 */
 	protected void declaration(){
-		String tableName = "writer_declaration"; // 要迁移的旧库表名
+		String tableName = "writer_declaration";// 要迁移的旧库表名
 		JdbcHelper.addColumn(tableName); // 增加new_pk字段
 		String sql = "select wd.writerid,wd.materid,wd.writername,wd.sex,wd.birthdate,wd.duties,"
 				+ "wd.positional,wd.address,wd.postcode,wd.handset,wd.email,wd.idcardtype,"
@@ -135,7 +135,7 @@ public class MigrationStageSix {
 				+ "where su.userid is not null "
 				+ "group by wd.writerid";
 		List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
-		int count = 0; // 迁移成功的条目数
+		int count = 0;// 迁移成功的条目数
 		List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -773,15 +773,17 @@ public class MigrationStageSix {
                 logger.error("文件读取异常，路径<{}>，异常信息：{}", outLineUrl, ex.getMessage());
                 map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
                 excel.add(map);
-            } finally {
-                decPosition.setSyllabusId(mongoId);
-                decPositionService.updateDecPosition(decPosition);
+                continue;
             }
+            decPosition.setSyllabusId(mongoId);
+            decPositionService.updateDecPosition(decPosition);
         }
-        try {
-            excelHelper.exportFromMaps(excel, tableName, null);
-        } catch (IOException ex) {
-            logger.error("异常数据导出到Excel失败", ex);
+        if (excel.size() > 0) {
+        	try {
+                excelHelper.exportFromMaps(excel, tableName, null);
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
         }
         logger.info("teach_applyposition表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);

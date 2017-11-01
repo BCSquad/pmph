@@ -31,6 +31,14 @@ public class MaterialProjectEditor implements java.io.Serializable {
 	
 	}
 
+	
+	public MaterialProjectEditor(Long materialId, Long editorId) {
+		super();
+		this.materialId = materialId;
+		this.editorId = editorId;
+	}
+
+
 	public Long getId() {
 		return id;
 	}

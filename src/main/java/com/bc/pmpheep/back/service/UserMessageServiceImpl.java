@@ -33,10 +33,7 @@ import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MessageStateVO;
 import com.bc.pmpheep.back.vo.MyMessageVO;
-import com.bc.pmpheep.back.vo.OrgUserManagerVO;
-import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.back.vo.UserMessageVO;
-import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.general.service.FileService;
@@ -135,26 +132,27 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         // 指定用户
         if (Const.SEND_OBJECT_3 == sendType) {
             // PMPH_User
-            PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
-            pmphUserManagerVO.setName(userNameOrUserCode);
-            PageParameter<PmphUserManagerVO> pmphPageParameter =
-            new PageParameter<PmphUserManagerVO>(pageNumber, pageSize, pmphUserManagerVO);
+            // PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
+            // pmphUserManagerVO.setName(userNameOrUserCode);
+            // PageParameter<PmphUserManagerVO> pmphPageParameter =
+            // new PageParameter<PmphUserManagerVO>(pageNumber, pageSize, pmphUserManagerVO);
             // Writer_User
-            WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
-            writerUserManagerVO.setName(userNameOrUserCode);
-            writerUserManagerVO.setOrgName(orgName);
+            // WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
+            // writerUserManagerVO.setName(userNameOrUserCode);
+            // writerUserManagerVO.setOrgName(orgName);
             // writerUserManagerVO.setRank(0);
-            PageParameter<WriterUserManagerVO> writerPageParameter =
-            new PageParameter<WriterUserManagerVO>(pageNumber, pageSize, writerUserManagerVO);
+            // PageParameter<WriterUserManagerVO> writerPageParameter =
+            // new PageParameter<WriterUserManagerVO>(pageNumber, pageSize, writerUserManagerVO);
             // Org_User
-            OrgUserManagerVO orgUserManagerVO = new OrgUserManagerVO();
-            orgUserManagerVO.setUsername(userNameOrUserCode);
-            orgUserManagerVO.setOrgName(orgName);
-            PageParameter<OrgUserManagerVO> orgPageParameter =
-            new PageParameter<OrgUserManagerVO>(pageNumber, pageSize, orgUserManagerVO);
-            resultMap.put("pmphUser", pmphUserService.getListPmphUser(pmphPageParameter));
-            resultMap.put("writerUser", writerUserService.getListWriterUser(writerPageParameter));
-            resultMap.put("orgUser", orgUserService.getListOrgUser(orgPageParameter));
+            // OrgUserManagerVO orgUserManagerVO = new OrgUserManagerVO();
+            // orgUserManagerVO.setUsername(userNameOrUserCode);
+            // orgUserManagerVO.setOrgName(orgName);
+            // PageParameter<OrgUserManagerVO> orgPageParameter =
+            // new PageParameter<OrgUserManagerVO>(pageNumber, pageSize, orgUserManagerVO);
+            // resultMap.put("pmphUser", pmphUserService.getListPmphUser(pmphPageParameter));
+            // resultMap.put("writerUser",
+            // writerUserService.getListWriterUser(writerPageParameter));
+            // resultMap.put("orgUser", orgUserService.getListOrgUser(orgPageParameter));
         }
         // 教材所有报名者
         if (Const.SEND_OBJECT_4 == sendType) {
@@ -176,7 +174,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             // MongoDB 消息插入
             message = messageService.add(message);
         }
-        if (ObjectUtil.isNull(message.getId())) {
+        if (StringUtil.isEmpty(message.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
         }
@@ -328,10 +326,6 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                               CheckedExceptionResult.NULL_PARAM,
                                                               "MessageAttachment对象保存失败!");
                         }
-                        messageAttachmentService.updateMessageAttachment(new MessageAttachment(
-                                                                                               mAttachment.getId(),
-                                                                                               "/file/download/"
-                                                                                               + gridFSFileId));
                     }
                 }
             }
@@ -343,25 +337,58 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     }
 
     @Override
-    public Integer updateUserMessage(Message message, String msgId, String msgTitle)
-    throws CheckedServiceException {
-        if (ObjectUtil.isNull(message)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                              CheckedExceptionResult.NULL_PARAM, "消息更新对象为空");
+    public Integer updateUserMessage(Message message, String msgId, String msgTitle,
+    String[] files, String[] attachment) throws CheckedServiceException, IOException {
+        Integer count = 0;
+        // 更新消息内容Message
+        if (StringUtil.notEmpty(msgId) && ObjectUtil.notNull(message.getContent())) {
+            message.setId(msgId);
+            messageService.update(message);
+            count = 1;
         }
-        if (ObjectUtil.isNull(message.getId())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                              CheckedExceptionResult.NULL_PARAM, "消息更新对象id为空");
+        // 更新用户消息UserMessage
+        if (StringUtil.notEmpty(msgId) && StringUtil.notEmpty(msgTitle)) {
+            userMessageDao.updateUserMessageTitleByMsgId(new UserMessage(msgId, msgTitle));
+            count = 1;
         }
-        if (StringUtil.isEmpty(message.getContent()) || StringUtil.isEmpty(msgId)
-            || StringUtil.isEmpty(msgTitle)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                              CheckedExceptionResult.NULL_PARAM, "消息更新对象内容为空");
+        // 是否有消息附件上传
+        if (ArrayUtil.isNotEmpty(files)) {
+            for (int i = 0; i < files.length; i++) {
+                File file = FileUpload.getFileByFilePath(files[i]);
+                // 循环获取file数组中得文件
+                if (StringUtil.notEmpty(file.getName())) {
+                    String gridFSFileId =
+                    fileService.saveLocalFile(file,
+                                              FileType.MSG_FILE,
+                                              CastUtil.castLong(message.getId()));
+                    if (StringUtil.isEmpty(gridFSFileId)) {
+                        throw new CheckedServiceException(
+                                                          CheckedExceptionBusiness.MESSAGE,
+                                                          CheckedExceptionResult.FILE_UPLOAD_FAILED,
+                                                          "文件上传失败!");
+                    }
+                    // 保存对应数据
+                    MessageAttachment mAttachment =
+                    messageAttachmentService.addMessageAttachment(new MessageAttachment(
+                                                                                        message.getId(),
+                                                                                        gridFSFileId,
+                                                                                        file.getName()));
+                }
+            }
+            count = 1;
         }
-        userMessageDao.updateUserMessageTitleByMsgId(new UserMessage(msgId, msgTitle));
-        message.setId(msgId);
-        messageService.update(message);
-        return 1;
+        // 是否有消息附件删除
+        if (ArrayUtil.isNotEmpty(attachment)) {
+            messageAttachmentService.deleteMessageAttachmentByAttachment(attachment);
+            for (int i = 0; i < attachment.length; i++) {
+                fileService.remove(attachment[i]);
+            }
+            count = 1;
+        }
+        for (int i = 0; i < files.length; i++) {
+            FileUtil.delFile(files[i]);// 删除本地临时文件
+        }
+        return count;
     }
 
     @Override
@@ -470,6 +497,15 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         resultMap.put("content", message.getContent());
         List<MessageAttachment> messageAttachments =
         messageAttachmentService.getMessageAttachmentByMsgId(message.getId());
+        // List<MessageAttachment> mAttachments =
+        // new ArrayList<MessageAttachment>(messageAttachments.size());
+        if (CollectionUtil.isNotEmpty(messageAttachments)) {
+            for (MessageAttachment mAttachment : messageAttachments) {
+                String attachmentId = mAttachment.getAttachment();
+                mAttachment.setAttachment(Const.FILE_DOWNLOAD + attachmentId);
+                // mAttachments.add(mAttachment);
+            }
+        }
         resultMap.put("MessageAttachment", messageAttachments);
         return resultMap;
     }

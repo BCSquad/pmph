@@ -421,6 +421,28 @@ public class WriterUserServiceImpl implements WriterUserService {
 
 	@Override
 	public String updateWriterUserOfBack(WriterUser writerUser) throws CheckedServiceException {
+		if (StringUtil.strLength(writerUser.getUsername()) > 20) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "用户名需要小于20字符");
+		}
+		if (StringUtil.strLength(writerUser.getRealname()) > 20) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "姓名需要小于20字符");
+		}
+		if (!ValidatUtil.checkMobileNumber(writerUser.getHandphone())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "电话格式不正确");
+		}
+		if (!ValidatUtil.checkEmail(writerUser.getEmail())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "邮箱格式不正确");
+		}
+		if (!StringUtil.isEmpty(writerUser.getNote())) {
+			if (StringUtil.strLength(writerUser.getNote()) > 100) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+						CheckedExceptionResult.NULL_PARAM, "备注需要小于100字符");
+			}
+		}
 		int num = writerUserDao.update(writerUser);
 		String result = "FAIL";
 		if (num > 0) {

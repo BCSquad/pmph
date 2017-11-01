@@ -31,6 +31,14 @@ public class MaterialOrg implements java.io.Serializable {
 		super();
 	}
 	
+	public MaterialOrg(Long materialId, Long orgId) {
+		super();
+		this.materialId = materialId;
+		this.orgId = orgId;
+	}
+
+
+
 	public Long getId() {
 		return id;
 	}

@@ -20,8 +20,8 @@ import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.PmphGroupMemberService;
 import com.bc.pmpheep.back.service.PmphGroupMessageService;
 import com.bc.pmpheep.back.service.PmphGroupService;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
-import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
@@ -66,46 +66,44 @@ public class MigrationStageEight {
         JdbcHelper.addColumn(tableName); //增加new_pk字段
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);//取得该表中所有数据
         int count = 0;//迁移成功的条目数
+        /* 经人工判断，所有小组头像都是默认图片，所以此处只需要保存一张图片即可 */
+        String groupImg = "DEFAULT";
+        String sql = "SELECT sysflag FROM sys_user WHERE userid = ?";
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             /* 根据MySQL字段类型进行类型转换 */
             String groupID = (String) map.get("groupID");
             String groupTitle = (String) map.get("groupTitle");
-            int groupType = (Integer) map.get("groupType");
+            String createUser = (String) map.get("createUser");
             String createTime = map.get("createTime").toString();
-            String groupImg = (String) map.get("groupImg");
+            //String groupImg = (String) map.get("groupImg");
             String bookid = (String) map.get("bookid");
             /* 开始新增新表对象，并设置属性值 */
             PmphGroup pmphGroup = new PmphGroup();
             pmphGroup.setGroupName(groupTitle);
-            pmphGroup.setGroupImage("default");//小组默认头像
+            pmphGroup.setGroupImage(groupImg);//小组默认头像
+            pmphGroup.setFounderId(0L);//留到PmphGroupMember迁移时更新
             pmphGroup.setGmtCreate(Timestamp.valueOf(createTime));
-            Long bookId = JdbcHelper.getPrimaryKey("teach_bookinfo", "bookid", bookid);
-            if (null != bookId) {
-                pmphGroup.setBookId(bookId);
+            if (StringUtil.notEmpty(bookid)) {
+                Long bookId = JdbcHelper.getPrimaryKey("teach_bookinfo", "bookid", bookid);
+                if (null != bookId) {
+                    pmphGroup.setBookId(bookId);
+                }
+            } else {
+                pmphGroup.setBookId(0L);
             }
             pmphGroup = groupService.addPmphGroup(pmphGroup);
             long pk = pmphGroup.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "groupID", groupID);//更新旧表中new_pk字段
             count++;
-            /* 以下读取小组头像并保存在mongoDB中，读取失败时导出到Excel中 */
-            String mongoId;
-            try {
-                mongoId = fileService.migrateFile(groupImg, ImageType.GROUP_AVATAR, pk);
-            } catch (IOException ex) {
-                logger.error("文件读取异常，路径<{}>，异常信息：{}", groupImg, ex.getMessage());
-                map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
-                excel.add(map);
-                continue;
-            }
-            pmphGroup.setGroupImage(mongoId);
-            groupService.updatePmphGroup(pmphGroup);
         }
-        try {
-            excelHelper.exportFromMaps(excel, tableName, tableName);
-        } catch (IOException ex) {
-            logger.error("异常数据导出到Excel失败", ex);
+        if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, tableName, tableName);
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
@@ -158,6 +156,8 @@ public class MigrationStageEight {
             String guid = map.get("GUID").toString();
             if (guid.equals(groupID)) {
                 member.setIsFounder(true);
+            }else{
+                member.setIsFounder(false);
             }
             String userName = map.get("userName").toString();
             member.setDisplayName(userName);
@@ -168,11 +168,18 @@ public class MigrationStageEight {
             long pk = member.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "GUID", guid);//更新旧表中new_pk字段
             count++;
+            if (member.getIsFounder()) {
+                PmphGroup pmphGroup = groupService.getPmphGroupById(groupId);
+                pmphGroup.setFounderId(userId);
+                groupService.updatePmphGroup(pmphGroup);
+            }
         }
-        try {
-            excelHelper.exportFromMaps(excel, tableName, tableName);
-        } catch (IOException ex) {
-            logger.error("异常数据导出到Excel失败", ex);
+        if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, tableName, tableName);
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
@@ -219,10 +226,12 @@ public class MigrationStageEight {
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "ID", id);//更新旧表中new_pk字段
             count++;
         }
-        try {
-            excelHelper.exportFromMaps(excel, tableName, tableName);
-        } catch (IOException ex) {
-            logger.error("异常数据导出到Excel失败", ex);
+        if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, tableName, tableName);
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
@@ -259,6 +268,7 @@ public class MigrationStageEight {
                 logger.error("未找到文件对应上传者，此结果将被记录在Excel中");
                 continue;
             }
+            groupFile.setFileId("LOST");//file_id设为固定字符串，稍后更新
             groupFile.setMemberId(memberId);
             groupFile.setFileName(fileName);
             groupFile.setDownload(donloadCount);
@@ -276,7 +286,7 @@ public class MigrationStageEight {
             long pk = groupFile.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "ID", id);//更新旧表中new_pk字段
             count++;
-            /* 以下读取小组头像并保存在mongoDB中，读取失败时导出到Excel中 */
+            /* 以下读取小组文件并保存在mongoDB中，读取失败时导出到Excel中 */
             String path = serverPath.concat(serverName);
             String mongoId;
             try {
@@ -290,10 +300,12 @@ public class MigrationStageEight {
             groupFile.setFileId(mongoId);
             groupFileService.updatePmphGroupFile(groupFile);
         }
-        try {
-            excelHelper.exportFromMaps(excel, tableName, tableName);
-        } catch (IOException ex) {
-            logger.error("异常数据导出到Excel失败", ex);
+        if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, tableName, tableName);
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
