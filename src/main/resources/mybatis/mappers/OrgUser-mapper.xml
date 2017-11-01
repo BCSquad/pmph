@@ -18,7 +18,7 @@
 				org_id,
 			</if>
 			<if test="email != null and email != '' ">
-				email
+				email,
 			</if>
 			<if test="realname != null and realname !=''">
 				realname,
@@ -59,7 +59,7 @@
 			<if test="progress != null and progress !=''">
 				progress,
 			</if>
-			<if test="reviewDate != null and reviewDate !=''">
+			<if test="reviewDate != null ">
 				review_date,
 			</if>
 			<if test="note != null and note !=''">
@@ -90,7 +90,7 @@
 				#{orgId},
 			</if>
 			<if test="email != null and email != ''">
-				#{email}
+				#{email},
 			</if>
 			<if test="realname != null and realname !=''">
 				#{realname},
@@ -131,7 +131,7 @@
 			<if test="progress != null and progress !=''">
 				#{progress},
 			</if>
-			<if test="reviewDate != null and reviewDate !=''">
+			<if test="reviewDate != null ">
 				#{reviewDate},
 			</if>
 			<if test="note != null and note !=''">
@@ -225,7 +225,7 @@
 			<if test=" progress != null and progress !=''">
 				progress = #{progress},
 			</if>
-			<if test=" reviewDate != null and reviewDate !=''">
+			<if test=" reviewDate != null ">
 				review_date = #{reviewDate},
 			</if>
 			<if test=" note != null and note !=''">
