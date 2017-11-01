@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookDetailDao {
-/**
+	/**
 	 * ����һ��BookDetail
 	 * 
 	 * @param BookDetail
@@ -38,4 +38,16 @@ public interface BookDetailDao {
 	 * @return BookDetail
 	 */
 	BookDetail getBookDetailById(Long id);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据书籍id删除书籍详情
+	 *
+	 * @param bookId
+	 *            书籍id
+	 * @return
+	 *
+	 */
+	Integer deleteBookDetailByBookId(Long bookId);// 未写mapper方法
 }

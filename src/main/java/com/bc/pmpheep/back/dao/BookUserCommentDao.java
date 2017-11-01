@@ -81,4 +81,16 @@ public interface BookUserCommentDao {
 	 */
 	Integer deleteBookUserCommentById(Long[] ids);
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据书籍id删除书籍评论
+	 *
+	 * @param bookId
+	 *            书籍id
+	 * @return
+	 *
+	 */
+	Integer deleteBookUserCommentByBookId(Long bookId);// 没有写mapper方法
+
 }

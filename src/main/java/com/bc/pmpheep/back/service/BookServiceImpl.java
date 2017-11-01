@@ -1,16 +1,41 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.BookDao;
+import com.bc.pmpheep.back.dao.BookDetailDao;
+import com.bc.pmpheep.back.dao.BookUserCommentDao;
+import com.bc.pmpheep.back.dao.BookUserLikeDao;
+import com.bc.pmpheep.back.dao.BookUserMarkDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Book;
+import com.bc.pmpheep.back.po.BookDetail;
+import com.bc.pmpheep.back.po.BookUserLike;
+import com.bc.pmpheep.back.po.BookUserMark;
 import com.bc.pmpheep.back.util.ArrayUtil;
+import com.bc.pmpheep.back.util.ContactMallUtil;
+import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.back.util.MD5;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.vo.BookVO;
@@ -20,9 +45,19 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 @Service
 public class BookServiceImpl extends BaseService implements BookService {
+	private static Properties pmphapiconfigPro = null;
+	private static InputStream pmphapiconfigIs = null;
 
 	@Autowired
 	BookDao bookDao;
+	@Autowired
+	BookDetailDao bookDetailDao;
+	@Autowired
+	BookUserCommentDao bookUserCommentDao;
+	@Autowired
+	BookUserMarkDao bookUserMarkDao;
+	@Autowired
+	BookUserLikeDao bookUserLikeDao;
 
 	@Override
 	public PageResult<BookVO> listBookVO(PageParameter<BookVO> pageParameter) throws CheckedServiceException {
@@ -75,4 +110,203 @@ public class BookServiceImpl extends BaseService implements BookService {
 		return result;
 	}
 
+	@Override
+	public Book add(Book book) {
+		if (ObjectUtil.isNull(book)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"图书对象为空");
+		}
+		bookDao.addBook(book);
+		return book;
+	}
+
+	@Override
+	public BookDetail add(BookDetail detail) {
+		if (ObjectUtil.isNull(detail)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"图书详情对象为空");
+		}
+		bookDetailDao.addBookDetail(detail);
+		return detail;
+	}
+
+	@Override
+	public BookUserLike add(BookUserLike like) {
+		if (ObjectUtil.isNull(like)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"图书点赞对象为空");
+		}
+		bookUserLikeDao.addBookUserLike(like);
+		return like;
+	}
+
+	@Override
+	public BookUserMark add(BookUserMark mark) {
+		if (ObjectUtil.isNull(mark)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"图书收藏对象为空");
+		}
+		bookUserMarkDao.addBookUserMark(mark);
+		return mark;
+	}
+
+	@Override
+	public String AbuttingJoint(String[] vns, Integer type) throws CheckedServiceException {
+		// TODO Auto-generated method stub
+		String result = "SUCCESS";
+		for (int i = 0; i < vns.length; i++) {
+			JSONObject ot = new JSONObject();
+			try {
+				ot = PostBusyAPI(vns[i]);
+				if (ot.getJSONObject("RESP").getString("CODE").equals("1")) {
+					// 请求成功并正常返回
+					if (type == 1) {
+						emptyBooks(vns[i]);// 如果请求成功有返回值时，清除所有数据
+
+					}
+					JSONArray array = ot.getJSONObject("RESP").getJSONObject("responseData").getJSONArray("results");
+					if (array.size() > 0) {
+						Book book = BusyResJSONToModel(array.getJSONObject(0), null);
+						String content = book.getContent();// 获取到图书详情将其存入到图书详情表中
+						if (ObjectUtil.isNull(book.getId())) {
+							book.setScore(9.0);
+							bookDao.addBook(book);
+							BookDetail bookDetail = new BookDetail(book.getId(), content);
+							bookDetailDao.addBookDetail(bookDetail);
+						} else {
+							bookDao.updateBook(book);
+							BookDetail bookDetail = new BookDetail(book.getId(), content);
+							bookDetailDao.updateBookDetail(bookDetail);
+						}
+
+					}
+				}
+			} catch (Exception e) {
+				result = "FAIL";
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述: 获取数据
+	 *
+	 * @param editNumbers
+	 * @param config
+	 * @return
+	 * @throws IOException
+	 *
+	 */
+	private JSONObject PostBusyAPI(String editNumbers, String... config) throws IOException {
+		String uri = "", app_key = "", app_secret = "", session_key = "";
+		if (config == null) {
+			if (pmphapiconfigPro == null || pmphapiconfigIs == null) {
+				pmphapiconfigPro = new Properties();
+				pmphapiconfigIs = BookServiceImpl.class.getClassLoader()
+						.getResourceAsStream("pmphapi-config.properties");
+				pmphapiconfigPro.load(pmphapiconfigIs);
+			}
+			uri = pmphapiconfigPro.getProperty("uri");
+			app_key = pmphapiconfigPro.getProperty("app_key");
+			app_secret = pmphapiconfigPro.getProperty("app_secret");
+			session_key = pmphapiconfigPro.getProperty("session_key");
+		} else {
+			uri = config[0];
+			app_key = config[1];
+			app_secret = config[2];
+			session_key = config[3];
+		}
+
+		String sendTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+		StringBuffer sbSgin = new StringBuffer();
+		sbSgin.append(app_secret);
+		sbSgin.append("app_key" + app_key + "&");
+		sbSgin.append("formatjson&");
+		sbSgin.append("methodcom.ai.ecp.pmph.gdsdetail.services&");
+		sbSgin.append("session" + session_key + "&");
+		sbSgin.append("sign_methodmd5&");
+		sbSgin.append("timestamp" + sendTime + "&");
+		sbSgin.append("v1.0&");
+		sbSgin.append("versionNumber" + editNumbers);
+		sbSgin.append(app_secret);
+		String strSign = MD5.md5(sbSgin.toString()).toLowerCase();
+
+		StringBuffer sbPar = new StringBuffer();
+		sbPar.append("method=com.ai.ecp.pmph.gdsdetail.services&");
+		sbPar.append("timestamp=" + URLEncoder.encode(sendTime, "UTF-8") + "&");
+		sbPar.append("format=json&");
+		sbPar.append("app_key=" + app_key + "&");
+		sbPar.append("v=1.0&");
+		sbPar.append("sign=" + strSign + "&");
+		sbPar.append("sign_method=md5&");
+		sbPar.append("session=" + session_key + "&");
+		sbPar.append("versionNumber=" + URLEncoder.encode(editNumbers, "UTF-8"));
+		String strRes = ContactMallUtil.getInfomation(uri, sbPar.toString());
+		return JSONObject.fromObject(strRes);
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：将获取的信息装到Book里面去
+	 *
+	 * @param item
+	 * @param model
+	 * @return
+	 *
+	 */
+	private Book BusyResJSONToModel(JSONObject item, Book model) {
+		if (model == null) {
+			model = bookDao.getBookByVn(item.getString("versionNumber"));
+			if (model == null) {
+				model = new Book();
+				model.setIsPromote(true);
+				model.setIsOnSale(true);
+				model.setIsNew(true);
+				model.setSales(0L);
+				model.setGmtCreate(DateUtil.getCurrentTime());
+			}
+			model = model == null ? new Book() : model;
+		}
+		model.setBookname(item.getString("gdsName")); // 书名
+		model.setAuthor(item.getString("author")); // 作者
+		model.setReader(item.getString("reader")); // 读者对象
+		model.setPublishDate(Timestamp.valueOf(item.getString("publicDate") + " 00:00:00")); // 出版时间
+		model.setPublisher(item.getString("publicCompany")); // 出版社
+		model.setRevision(Integer.parseInt(item.getString("edition"))); // 版次 ,印次
+		model.setLang(item.getString("language")); // 语言
+		model.setContent(item.getJSONArray("gdsDescList").getJSONObject(0).getString("gdsDescContent")); // 内容简介
+		model.setImageUrl(item.getJSONArray("imageList").size() > 0
+				? item.getJSONArray("imageList").getJSONObject(0).getString("imgUrl")
+				: ""); // 图片地址
+		model.setPdfUrl(item.getString("pdfFile"));
+		model.setBuyUrl(item.getString("webGdsDetailUrl"));
+		model.setVn(item.getString("versionNumber"));
+		model.setIsbn(item.getString("isbn"));
+		return model;
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：清除书籍与其相关的所有的数据
+	 *
+	 * @param vn
+	 *            书籍本版号
+	 * @return
+	 *
+	 */
+	private void emptyBooks(String vn) {
+		// 1.根据本版号搜索出书籍id 2.根据书籍id删除关联表的所有数据
+		Book book = bookDao.getBookByVn(vn);
+		Long id = book.getId();
+		bookDao.deleteBookById(id);
+		bookDetailDao.deleteBookDetailByBookId(id);
+		bookUserCommentDao.deleteBookUserCommentByBookId(id);
+		bookUserLikeDao.deleteBookUserLikeByBookId(id);
+		bookUserMarkDao.deleteBookUserMarkByBookId(id);
+
+	}
 }
