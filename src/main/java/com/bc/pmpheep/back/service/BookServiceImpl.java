@@ -161,7 +161,6 @@ public class BookServiceImpl extends BaseService implements BookService {
 					// 请求成功并正常返回
 					if (type == 1) {
 						emptyBooks(vns[i]);// 如果请求成功有返回值时，清除所有数据
-
 					}
 					JSONArray array = ot.getJSONObject("RESP").getJSONObject("responseData").getJSONArray("results");
 					if (array.size() > 0) {
@@ -177,7 +176,6 @@ public class BookServiceImpl extends BaseService implements BookService {
 							BookDetail bookDetail = new BookDetail(book.getId(), content);
 							bookDetailDao.updateBookDetail(bookDetail);
 						}
-
 					}
 				}
 			} catch (Exception e) {
@@ -217,7 +215,6 @@ public class BookServiceImpl extends BaseService implements BookService {
 			app_secret = config[2];
 			session_key = config[3];
 		}
-
 		String sendTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
 		StringBuffer sbSgin = new StringBuffer();
 		sbSgin.append(app_secret);
@@ -306,7 +303,6 @@ public class BookServiceImpl extends BaseService implements BookService {
 		bookUserCommentDao.deleteBookUserCommentByBookId(id);
 		bookUserLikeDao.deleteBookUserLikeByBookId(id);
 		bookUserMarkDao.deleteBookUserMarkByBookId(id);
-
 	}
 
 	@Override
@@ -320,7 +316,6 @@ public class BookServiceImpl extends BaseService implements BookService {
 		bookUserCommentDao.deleteBookUserCommentByBookId(id);
 		bookUserLikeDao.deleteBookUserLikeByBookId(id);
 		bookUserMarkDao.deleteBookUserMarkByBookId(id);
-
 		return "SUCCESS";
 	}
 }

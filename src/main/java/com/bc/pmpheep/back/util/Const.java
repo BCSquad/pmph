@@ -9,21 +9,21 @@ import org.springframework.context.ApplicationContext;
  * 使用示范：
  * 
  * 
- * &#64;author (作者) nyz
+ * @author (作者) nyz
  * 
- * &#64;since (该版本支持的JDK版本) ：JDK 1.6或以上
- * &#64;version (版本) 1.0
- * &#64;date (开发日期) 2017-9-20
- * &#64;modify (最后修改时间) 
- * &#64;修改人 ：nyz 
- * &#64;审核人 ：
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2017-9-20
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
  * </pre>
  */
 public class Const {
-    // 小组默认头像路径（现在没有数据没有路径，等有路径的时候加入）
-    public static final String       DEFAULT_GROUP_IMAGE       = "59ed934d2d8524d12871e0dd";
-    // 新建用户默认头像（现在没有数据没有路径，等有路径的时候加入）
-    public static final String       DEFAULT_USER_AVATAR       = "59ed934d2d8524d12871e0dd";
+	// 小组默认头像路径（现在没有数据没有路径，等有路径的时候加入）
+	public static final String DEFAULT_GROUP_IMAGE = "59ed934d2d8524d12871e0dd";
+	// 新建用户默认头像（现在没有数据没有路径，等有路径的时候加入）
+	public static final String DEFAULT_USER_AVATAR = "59ed934d2d8524d12871e0dd";
     public static final String       DEFAULT_PASSWORD          = "123456";
     public static final String       WEB_PROJECT_NAME          = "PMPH_PROJECT";
     // 社内部门根节点id
