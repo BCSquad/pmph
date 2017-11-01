@@ -34,11 +34,7 @@ public enum FileType {
     /**
      * CMS附件
      */
-    CMS_ATTACHMENT("CMS附件"),
-    /**
-     * 机构用户上传的委托书
-     */
-    PROXY("委托书");
+    CMS_ATTACHMENT("CMS附件");
     
     private final String type;
 
