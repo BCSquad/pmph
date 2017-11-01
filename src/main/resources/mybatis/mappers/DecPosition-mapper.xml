@@ -69,7 +69,7 @@
 	</sql>
 
 	<!-- 新增DecPosition -->
-	<insert id="decPosition" parameterType="DecPosition">
+	<insert id="addDecPosition" parameterType="DecPosition">
 		<selectKey resultType="java.lang.Long" order="AFTER"
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或AFTER -->
 			SELECT LAST_INSERT_ID()
@@ -122,7 +122,7 @@
 	</update>
 
 	<!-- 根据id查询一个作家申报职位信息 -->
-	<select id="decPositionById" parameterType="java.lang.Long"
+	<select id="getDecPositionById" parameterType="java.lang.Long"
 		resultType="DecPosition">
 		select * from dec_position where id=#{id};
 	</select>
