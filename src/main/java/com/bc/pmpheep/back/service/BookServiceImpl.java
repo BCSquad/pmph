@@ -158,7 +158,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 			JSONObject ot = new JSONObject();
 			try {
 				ot = PostBusyAPI(vns[i]);
-				if (ot.getJSONObject("RESP").getString("CODE").equals("1")) {
+				if ("1".equals(ot.getJSONObject("RESP").getString("CODE"))) {
 					// 请求成功并正常返回
 					if (type == 1) {
 						emptyBooks(vns[i]);// 如果请求成功有返回值时，清除所有数据
