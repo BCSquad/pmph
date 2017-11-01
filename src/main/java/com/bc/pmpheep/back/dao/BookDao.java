@@ -73,4 +73,16 @@ public interface BookDao {
 	 *
 	 */
 	Integer getBookVOTotal(PageParameter<BookVO> pageParameter);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据本版号获取书籍信息
+	 *
+	 * @param vn
+	 *            本版号
+	 * @return
+	 *
+	 */
+	Book getBookByVn(String vn);
 }

@@ -42,4 +42,18 @@ public interface BookService {
 	 */
 	String updateBookById(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote)
 			throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：通过本版编号来获取人卫系统上的图书商品详情
+	 *
+	 * @param revision
+	 *            本版号
+	 * @param type
+	 *            访问类型 1：全量同步 2；增量同步
+	 * @throws CheckedServiceException
+	 *
+	 */
+	String AbuttingJoint(String[] vns, Integer type) throws CheckedServiceException;
 }
