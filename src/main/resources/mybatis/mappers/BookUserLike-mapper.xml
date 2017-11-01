@@ -59,6 +59,13 @@
 		id=#{id} ;
 	</delete>
 
+	<!-- 根据书籍id删除 -->
+	<delete id="deleteBookUserLikeByBookId" parameterType="java.lang.Long">
+		delete from
+		book_user_like where
+		book_id=#{bookId} ;
+	</delete>
+	
 	<!-- 更新BookUserLike -->
 	<update id="updateBookUserLike" parameterType="BookUserLike">
 		update book_user_like

@@ -91,6 +91,5 @@ public interface BookUserCommentDao {
 	 * @return
 	 *
 	 */
-	Integer deleteBookUserCommentByBookId(Long bookId);// 没有写mapper方法
-
+	Integer deleteBookUserCommentByBookId(Long bookId);
 }
