@@ -330,8 +330,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                         }
                         messageAttachmentService.updateMessageAttachment(new MessageAttachment(
                                                                                                mAttachment.getId(),
-                                                                                               "/file/download/"
-                                                                                               + gridFSFileId));
+                                                                                               gridFSFileId));
                     }
                 }
             }
@@ -343,25 +342,57 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     }
 
     @Override
-    public Integer updateUserMessage(Message message, String msgId, String msgTitle)
-    throws CheckedServiceException {
-        if (ObjectUtil.isNull(message)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                              CheckedExceptionResult.NULL_PARAM, "消息更新对象为空");
+    public Integer updateUserMessage(Message message, String msgId, String msgTitle,
+    String[] files, String[] attachment) throws CheckedServiceException {
+        Integer count = 0;
+        // 更新消息内容Message
+        if (StringUtil.notEmpty(msgId) && ObjectUtil.notNull(message.getContent())) {
+            message.setId(msgId);
+            messageService.update(message);
+            count = 1;
         }
-        if (ObjectUtil.isNull(message.getId())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                              CheckedExceptionResult.NULL_PARAM, "消息更新对象id为空");
+        // 更新用户消息UserMessage
+        if (StringUtil.notEmpty(msgId) && StringUtil.notEmpty(msgTitle)) {
+            userMessageDao.updateUserMessageTitleByMsgId(new UserMessage(msgId, msgTitle));
+            count = 1;
         }
-        if (StringUtil.isEmpty(message.getContent()) || StringUtil.isEmpty(msgId)
-            || StringUtil.isEmpty(msgTitle)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                              CheckedExceptionResult.NULL_PARAM, "消息更新对象内容为空");
+        // 是否有消息附件上传
+        if (ArrayUtil.isNotEmpty(files)) {
+            for (int i = 0; i < files.length; i++) {
+                File file = FileUpload.getFileByFilePath(files[i]);
+                // 循环获取file数组中得文件
+                if (StringUtil.notEmpty(file.getName())) {
+                    String gridFSFileId;
+                    try {
+                        gridFSFileId =
+                        fileService.saveLocalFile(file,
+                                                  FileType.MSG_FILE,
+                                                  CastUtil.castLong(message.getId()));
+                    } catch (IOException e) {
+                        throw new CheckedServiceException(
+                                                          CheckedExceptionBusiness.MESSAGE,
+                                                          CheckedExceptionResult.FILE_UPLOAD_FAILED,
+                                                          "文件上传失败!");
+                    }
+                    // 保存对应数据
+                    MessageAttachment mAttachment =
+                    messageAttachmentService.addMessageAttachment(new MessageAttachment(
+                                                                                        message.getId(),
+                                                                                        gridFSFileId,
+                                                                                        file.getName()));
+                }
+            }
+            count = 1;
         }
-        userMessageDao.updateUserMessageTitleByMsgId(new UserMessage(msgId, msgTitle));
-        message.setId(msgId);
-        messageService.update(message);
-        return 1;
+        // 是否有消息附件删除
+        if (ArrayUtil.isNotEmpty(attachment)) {
+            messageAttachmentService.deleteMessageAttachmentByAttachment(attachment);
+            count = 1;
+        }
+        for (int i = 0; i < files.length; i++) {
+            FileUtil.delFile(files[i]);// 删除本地临时文件
+        }
+        return count;
     }
 
     @Override
@@ -470,6 +501,15 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         resultMap.put("content", message.getContent());
         List<MessageAttachment> messageAttachments =
         messageAttachmentService.getMessageAttachmentByMsgId(message.getId());
+        // List<MessageAttachment> mAttachments =
+        // new ArrayList<MessageAttachment>(messageAttachments.size());
+        if (CollectionUtil.isNotEmpty(messageAttachments)) {
+            for (MessageAttachment mAttachment : messageAttachments) {
+                String attachmentId = mAttachment.getAttachment();
+                mAttachment.setAttachment(Const.FILE_DOWNLOAD + attachmentId);
+                // mAttachments.add(mAttachment);
+            }
+        }
         resultMap.put("MessageAttachment", messageAttachments);
         return resultMap;
     }

@@ -3,12 +3,11 @@ package com.bc.pmpheep.back.service.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bc.pmpheep.back.po.CmsUserMark;
 import com.bc.pmpheep.back.service.CmsUserMarkService;
@@ -35,7 +34,7 @@ import com.bc.pmpheep.test.BaseTest;
 public class CmsUserMarkServiceTest extends BaseTest {
     Logger             logger = LoggerFactory.getLogger(CmsUserMarkServiceTest.class);
 
-    @Resource
+    @Autowired
     CmsUserMarkService cmsUserMarkService;
 
     /**

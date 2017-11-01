@@ -46,19 +46,6 @@
 		);
 	</insert>
 
-
-	<!-- 根据id删除一个 -->
-	<delete id="deleteMaterialTypeById">
-		delete from
-			material_type 
-		where
-			msg_id
-		in
-			<foreach collection="list" item="id" open="(" close=")" separator=",">
-			  #{id}
-		    </foreach>
-	</delete>
-
 	<!-- 更新MessageAttachment -->
 	<update id="updateMessageAttachment" parameterType="MessageAttachment">
 		update message_attachment
@@ -89,5 +76,29 @@
    				 #{item}
     		</foreach> -->
 	</select>
-
+	
+	<!-- 根据attachment数组删除messageAttachment -->
+	<delete id="deleteMessageAttachmentByAttachment">
+		delete from
+			material_type 
+		where
+			attachment
+		in
+			<foreach collection="array" item="id" open="(" close=")" separator=",">
+			  #{id}
+		    </foreach>
+	</delete>
+	
+	<!-- 根据id删除一个 -->
+	<delete id="deleteMessageAttachment">
+		delete from
+			message_attachment 
+		where
+			msg_id
+		in
+			<foreach collection="list" item="msgId" open="(" close=")" separator=",">
+			  #{msgId}
+		    </foreach>
+	</delete>
+	
 </mapper>
