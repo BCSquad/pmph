@@ -14,9 +14,9 @@ import com.bc.pmpheep.migration.MigrationStageOne;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
- * <p>Title:MigrationStageOneTest<p>
- * <p>Description:TODO<p>
- * @author Administrator
+ * <p>Title:测试类<p>
+ * <p>Description:迁移工具图一测试类<p>
+ * @author lyc
  * @date 2017年10月31日 下午5:39:19
  */
 public class MigrationStageOneTest extends BaseTest{
@@ -26,6 +26,7 @@ public class MigrationStageOneTest extends BaseTest{
        MigrationStageOne migrationStageOne;
        
        @Test
+       @Rollback(false)
        public void test(){
     	   migrationStageOne.start();
        }
