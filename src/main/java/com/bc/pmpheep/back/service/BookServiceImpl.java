@@ -152,7 +152,6 @@ public class BookServiceImpl extends BaseService implements BookService {
 
 	@Override
 	public String AbuttingJoint(String[] vns, Integer type) throws CheckedServiceException {
-		// TODO Auto-generated method stub
 		String result = "SUCCESS";
 		for (int i = 0; i < vns.length; i++) {
 			JSONObject ot = new JSONObject();
@@ -308,5 +307,20 @@ public class BookServiceImpl extends BaseService implements BookService {
 		bookUserLikeDao.deleteBookUserLikeByBookId(id);
 		bookUserMarkDao.deleteBookUserMarkByBookId(id);
 
+	}
+
+	@Override
+	public String deleteBookById(Long id) throws CheckedServiceException {
+		if (ObjectUtil.isNull(id)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"书籍id为空");
+		}
+		bookDao.deleteBookById(id);
+		bookDetailDao.deleteBookDetailByBookId(id);
+		bookUserCommentDao.deleteBookUserCommentByBookId(id);
+		bookUserLikeDao.deleteBookUserLikeByBookId(id);
+		bookUserMarkDao.deleteBookUserMarkByBookId(id);
+
+		return "SUCCESS";
 	}
 }
