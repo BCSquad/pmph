@@ -33,10 +33,7 @@ import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MessageStateVO;
 import com.bc.pmpheep.back.vo.MyMessageVO;
-import com.bc.pmpheep.back.vo.OrgUserManagerVO;
-import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.back.vo.UserMessageVO;
-import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.general.service.FileService;
@@ -135,26 +132,27 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         // 指定用户
         if (Const.SEND_OBJECT_3 == sendType) {
             // PMPH_User
-            PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
-            pmphUserManagerVO.setName(userNameOrUserCode);
-            PageParameter<PmphUserManagerVO> pmphPageParameter =
-            new PageParameter<PmphUserManagerVO>(pageNumber, pageSize, pmphUserManagerVO);
+            // PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
+            // pmphUserManagerVO.setName(userNameOrUserCode);
+            // PageParameter<PmphUserManagerVO> pmphPageParameter =
+            // new PageParameter<PmphUserManagerVO>(pageNumber, pageSize, pmphUserManagerVO);
             // Writer_User
-            WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
-            writerUserManagerVO.setName(userNameOrUserCode);
-            writerUserManagerVO.setOrgName(orgName);
+            // WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
+            // writerUserManagerVO.setName(userNameOrUserCode);
+            // writerUserManagerVO.setOrgName(orgName);
             // writerUserManagerVO.setRank(0);
-            PageParameter<WriterUserManagerVO> writerPageParameter =
-            new PageParameter<WriterUserManagerVO>(pageNumber, pageSize, writerUserManagerVO);
+            // PageParameter<WriterUserManagerVO> writerPageParameter =
+            // new PageParameter<WriterUserManagerVO>(pageNumber, pageSize, writerUserManagerVO);
             // Org_User
-            OrgUserManagerVO orgUserManagerVO = new OrgUserManagerVO();
-            orgUserManagerVO.setUsername(userNameOrUserCode);
-            orgUserManagerVO.setOrgName(orgName);
-            PageParameter<OrgUserManagerVO> orgPageParameter =
-            new PageParameter<OrgUserManagerVO>(pageNumber, pageSize, orgUserManagerVO);
-            resultMap.put("pmphUser", pmphUserService.getListPmphUser(pmphPageParameter));
-            resultMap.put("writerUser", writerUserService.getListWriterUser(writerPageParameter));
-            resultMap.put("orgUser", orgUserService.getListOrgUser(orgPageParameter));
+            // OrgUserManagerVO orgUserManagerVO = new OrgUserManagerVO();
+            // orgUserManagerVO.setUsername(userNameOrUserCode);
+            // orgUserManagerVO.setOrgName(orgName);
+            // PageParameter<OrgUserManagerVO> orgPageParameter =
+            // new PageParameter<OrgUserManagerVO>(pageNumber, pageSize, orgUserManagerVO);
+            // resultMap.put("pmphUser", pmphUserService.getListPmphUser(pmphPageParameter));
+            // resultMap.put("writerUser",
+            // writerUserService.getListWriterUser(writerPageParameter));
+            // resultMap.put("orgUser", orgUserService.getListOrgUser(orgPageParameter));
         }
         // 教材所有报名者
         if (Const.SEND_OBJECT_4 == sendType) {
@@ -328,9 +326,6 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                               CheckedExceptionResult.NULL_PARAM,
                                                               "MessageAttachment对象保存失败!");
                         }
-                        messageAttachmentService.updateMessageAttachment(new MessageAttachment(
-                                                                                               mAttachment.getId(),
-                                                                                               gridFSFileId));
                     }
                 }
             }
@@ -343,7 +338,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Override
     public Integer updateUserMessage(Message message, String msgId, String msgTitle,
-    String[] files, String[] attachment) throws CheckedServiceException {
+    String[] files, String[] attachment) throws CheckedServiceException, IOException {
         Integer count = 0;
         // 更新消息内容Message
         if (StringUtil.notEmpty(msgId) && ObjectUtil.notNull(message.getContent())) {
@@ -362,13 +357,11 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 File file = FileUpload.getFileByFilePath(files[i]);
                 // 循环获取file数组中得文件
                 if (StringUtil.notEmpty(file.getName())) {
-                    String gridFSFileId;
-                    try {
-                        gridFSFileId =
-                        fileService.saveLocalFile(file,
-                                                  FileType.MSG_FILE,
-                                                  CastUtil.castLong(message.getId()));
-                    } catch (IOException e) {
+                    String gridFSFileId =
+                    fileService.saveLocalFile(file,
+                                              FileType.MSG_FILE,
+                                              CastUtil.castLong(message.getId()));
+                    if (StringUtil.isEmpty(gridFSFileId)) {
                         throw new CheckedServiceException(
                                                           CheckedExceptionBusiness.MESSAGE,
                                                           CheckedExceptionResult.FILE_UPLOAD_FAILED,

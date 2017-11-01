@@ -223,11 +223,15 @@ public class UserMessageController {
     public ResponseBean updateUserMessage(Message message, @RequestParam("msgId") String msgId,
     @RequestParam("msgTitle") String msgTitle, @RequestParam("file") String[] files,
     @RequestParam("attachment") String[] attachment) {
-        return new ResponseBean(userMessageService.updateUserMessage(message,
-                                                                     msgId,
-                                                                     msgTitle,
-                                                                     files,
-                                                                     attachment));
+        try {
+            return new ResponseBean(userMessageService.updateUserMessage(message,
+                                                                         msgId,
+                                                                         msgTitle,
+                                                                         files,
+                                                                         attachment));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
     }
 
     /**

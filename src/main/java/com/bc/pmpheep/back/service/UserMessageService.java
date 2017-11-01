@@ -49,13 +49,13 @@ public interface UserMessageService {
 	 * 功能描述：系统消息——发送新消息——发送对象（学校管理员、所有人、指定用户、教材所有报名者）页面数据加载
 	 * 使用示范：
 	 *
-	 * &#64;param sendType //1 发送给学校管理员 //2 所有人 //3指定用户 //4发送给教材所有报名者
-	 * &#64;param pageNumber 
-	 * &#64;param pageSize
-	 * &#64;param orgName
-	 * &#64;param userNameOrUserCode 用户姓名或者用户账号
-	 * &#64;return
-	 * &#64;throws CheckedServiceException
+	 * @param sendType //1 发送给学校管理员 //2 所有人 //3指定用户 //4发送给教材所有报名者
+	 * @param pageNumber 
+	 * @param pageSize
+	 * @param orgName
+	 * @param userNameOrUserCode 用户姓名或者用户账号
+	 * @return
+	 * @throws CheckedServiceException
 	 * </pre>
      */
     Map<String, Object> listSendOject(Integer sendType, Integer pageNumber, Integer pageSize,
@@ -92,15 +92,15 @@ public interface UserMessageService {
 	 * 功能描述：单纯修改消息
 	 * 使用示范：
 	 *
-	 * &#64;param message 消息对象
-	 * &#64;param msgId Message主键ID
-	 * &#64;param msgTitle 消息标题
-	 * &#64;return 影响行数
-	 * &#64;throws CheckedServiceException
+	 * @param message 消息对象
+	 * @param msgId Message主键ID
+	 * @param msgTitle 消息标题
+	 * @return 影响行数
+	 * @throws CheckedServiceException IOException
 	 * </pre>
      */
     Integer updateUserMessage(Message message, String msgId, String msgTitle, String[] files,
-    String[] attachment) throws CheckedServiceException;
+    String[] attachment) throws CheckedServiceException, IOException;
 
     /**
      * 
@@ -108,8 +108,8 @@ public interface UserMessageService {
 	 * 功能描述：修改消息 ，按主键ID查询
 	 * 使用示范：
 	 *
-	 * &#64;param userMsgId　UserMessage主键ID
-	 * &#64;return
+	 * @param userMsgId　UserMessage主键ID
+	 * @return
 	 * </pre>
      */
     Map<String, Object> getUserMessageById(Long userMsgId);
@@ -120,9 +120,9 @@ public interface UserMessageService {
 	 * 功能描述：逻辑删除（通过msgId 动态更新UserMessage_IsDeleted字段）
 	 * 使用示范：
 	 *
-	 * &#64;param msgIds  Message主键id
-	 * &#64;return   影响行数
-	 * &#64;throws CheckedServiceException
+	 * @param msgIds  Message主键id
+	 * @return   影响行数
+	 * @throws CheckedServiceException
 	 * </pre>
      */
     Integer updateUserMessageIsDeletedByMsgId(List<String> msgIds) throws CheckedServiceException;
@@ -143,9 +143,9 @@ public interface UserMessageService {
 	 * 功能描述：通过消息id删除UserMessage
 	 * 使用示范：
 	 *
-	 * &#64;param msgIds  Message主键id
-	 * &#64;return 影响行数
-	 * &#64;throws CheckedServiceException
+	 * @param msgIds  Message主键id
+	 * @return 影响行数
+	 * @throws CheckedServiceException
 	 * </pre>
      */
     Integer deleteMessageByMsgId(List<String> msgIds) throws CheckedServiceException;
@@ -156,9 +156,9 @@ public interface UserMessageService {
 	 * 功能描述：消息附件上传
 	 * 使用示范：
 	 *
-	 * &#64;param file 消息附件
-	 * &#64;return 上传成功后消息附件路径
-	 * &#64;throws CheckedServiceException
+	 * @param file 消息附件
+	 * @return 上传成功后消息附件路径
+	 * @throws CheckedServiceException
 	 * </pre>
      */
     String msgUploadFiles(MultipartFile file) throws CheckedServiceException;
