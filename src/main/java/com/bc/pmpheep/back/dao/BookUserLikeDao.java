@@ -39,4 +39,16 @@ public interface BookUserLikeDao {
 	 * @return BookUserLike
 	 */
 	BookUserLike getBookUserLikeById(Long id);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据书籍id删除书籍点赞
+	 *
+	 * @param bookId
+	 *            书籍id
+	 * @return
+	 *
+	 */
+	Integer deleteBookUserLikeByBookId(Long bookId);// 未写mapper方法
 }

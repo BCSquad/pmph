@@ -80,7 +80,7 @@
 	<!-- 根据attachment数组删除messageAttachment -->
 	<delete id="deleteMessageAttachmentByAttachment">
 		delete from
-			material_type 
+			message_attachment 
 		where
 			attachment
 		in

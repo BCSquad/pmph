@@ -39,4 +39,16 @@ public interface BookUserMarkDao {
 	 * @return BookUserMark
 	 */
 	BookUserMark getBookUserMarkById(Long id);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据书籍id删除书籍收藏
+	 *
+	 * @param bookId
+	 *            书籍id
+	 * @return
+	 *
+	 */
+	Integer deleteBookUserMarkByBookId(Long bookId);// 未写mapper方法
 }

@@ -76,4 +76,20 @@ public class BookController {
 	public ResponseBean listMaterialType(Long parentId) {
 		return new ResponseBean(materialTypeService.listMaterialType(parentId));
 	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据书籍id删除书籍
+	 *
+	 * @param id
+	 *            书籍id
+	 * @return 是否成功
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/delete/book", method = RequestMethod.DELETE)
+	public ResponseBean deleteBookById(Long id) {
+		return new ResponseBean(bookService.deleteBookById(id));
+	}
 }
