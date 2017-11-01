@@ -174,7 +174,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             // MongoDB 消息插入
             message = messageService.add(message);
         }
-        if (ObjectUtil.isNull(message.getId())) {
+        if (StringUtil.isEmpty(message.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
         }
@@ -380,6 +380,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         // 是否有消息附件删除
         if (ArrayUtil.isNotEmpty(attachment)) {
             messageAttachmentService.deleteMessageAttachmentByAttachment(attachment);
+            for (int i = 0; i < attachment.length; i++) {
+                fileService.remove(attachment[i]);
+            }
             count = 1;
         }
         for (int i = 0; i < files.length; i++) {
