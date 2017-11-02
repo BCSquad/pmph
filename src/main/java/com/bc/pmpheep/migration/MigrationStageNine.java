@@ -16,6 +16,9 @@ import com.bc.pmpheep.utils.ExcelHelper;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +38,7 @@ public class MigrationStageNine {
 
     private final Logger logger = LoggerFactory.getLogger(MigrationStageNine.class);
     private final Timestamp deadline = Timestamp.valueOf("2030-01-01 00:00:00");
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Resource
     BookService bookService;
@@ -52,9 +56,11 @@ public class MigrationStageNine {
     protected void book() {
         String tableName = "book_goodsinfo"; //要迁移的旧库表名
         JdbcHelper.addColumn(tableName); //增加new_pk字段
+        JdbcHelper.addColumn("sys_booktypes"); //增加new_pk字段
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);//取得该表中所有数据
         int count = 0;//迁移成功的条目数
-        String sql = "SELECT booktypesid FROM book_goodstype WHERE bookid = ?";
+        /* booktypesid这张表重复的bookid非常多，因此用group来返回唯一结果 */
+        String sql = "SELECT booktypesid FROM book_goodstype WHERE bookid = ? GROUP BY bookid";
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -71,13 +77,11 @@ public class MigrationStageNine {
             String buyurl = (String) map.get("buyurl");
             String picurl = (String) map.get("picurl");
             String pdfurl = (String) map.get("pdfurl");
-            String tags = (String) map.get("tags");
+            //String tags = (String) map.get("tags");
             String reader = (String) map.get("reader");
-            String publicationdate = map.get("publicationdate").toString();
-            String createdate = map.get("createdate").toString();
+            //String createdate = map.get("createdate").toString();
             BigDecimal score = (BigDecimal) map.get("score");
-            Integer isdelete = (Integer) map.get("isdelete");
-            //String content = (String) map.get("content");
+            //Integer isdelete = (Integer) map.get("isdelete");
             //String language = (String) map.get("language");
             Integer isnew = (Integer) map.get("isnew");
             Integer ismajor = (Integer) map.get("ismajor");
@@ -123,7 +127,22 @@ public class MigrationStageNine {
                 book.setPdfUrl(pdfurl);
             }
             book.setPrice(price.doubleValue());
-            book.setPublishDate(Timestamp.valueOf(publicationdate));
+            if (null == map.get("publicationdate")) {
+                book.setPublishDate(new Date());
+                map.put(SQLParameters.EXCEL_EX_HEADER, "旧数据库中出版日期为空，已设为当前日期");
+                excel.add(map);
+                logger.warn("旧数据库中出版日期为空，已设为当前日期，此结果将被记录在Excel中");
+            } else {
+                try {
+                    String publicationdate = map.get("publicationdate").toString();
+                    book.setPublishDate(sdf.parse(publicationdate));
+                } catch (ParseException ex) {
+                    book.setPublishDate(new Date());
+                    map.put(SQLParameters.EXCEL_EX_HEADER, "出版日期转换失败，已设为当前日期");
+                    excel.add(map);
+                    logger.warn("出版日期转换失败，此结果将被记录在Excel中，错误信息：{}", ex.getMessage());
+                }
+            }
             if (StringUtil.notEmpty(press)) {
                 book.setPublisher(press);
             } else {
@@ -149,7 +168,7 @@ public class MigrationStageNine {
                 continue;
             }
             Long pk = JdbcHelper.getPrimaryKey("sys_booktypes", "BookTypesID", booktypesid);
-            if (null != pk) {
+            if (null == pk) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "获取sys_booktypes表new_pk字段失败，BookTypesID=" + booktypesid);
                 excel.add(map);
                 logger.error("获取sys_booktypes表new_pk字段失败，此结果将被记录在Excel中");
@@ -167,6 +186,7 @@ public class MigrationStageNine {
                 detail.setDetail(content);
             }
             bookService.add(detail);
+            count++;
         }
         if (excel.size() > 0) {
             try {
