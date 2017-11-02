@@ -18,7 +18,7 @@ public class SQLParameters {
     /**
      * 现有平台数据库地址
      */
-    public static final String DB_URL = "jdbc:mysql://localhost:3306/pmph_imesp_10.16";
+    public static final String DB_URL = "jdbc:mysql://localhost:3306/pmph_out";
 
     /**
      * 现有平台数据库用户名
@@ -28,7 +28,7 @@ public class SQLParameters {
     /**
      * 现有平台数据库密码
      */
-    public static final String DB_PASSWORD = "cc148604";
+    public static final String DB_PASSWORD = "root";
 
     /**
      * 专家平台数据库地址
@@ -54,4 +54,8 @@ public class SQLParameters {
      * Excel异常导出统一表头
      */
     public static final String EXCEL_EX_HEADER = "exception";
+    /**
+     * 上传服务器lujing 例如：http://120.76.221.250/pmpheep
+     */
+    public static final String severPath="http://120.76.221.250/pmpheep"; 
 }
