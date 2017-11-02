@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.OrgDao;
+import com.bc.pmpheep.back.dao.OrgUserDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -29,6 +31,8 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 
 	@Autowired
 	private OrgDao orgDao;
+	@Autowired
+	OrgUserDao orgUserDao;
 
 	/**
 	 * 
@@ -107,8 +111,12 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 	 */
 	@Override
 	public Integer deleteOrgById(Long id) throws CheckedServiceException {
-		if (null == id) {
+		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "主键为空");
+		}
+		if (!CollectionUtil.isEmpty(orgUserDao.listOrgUserByOrgId(id))) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
+					"该机构内还有用户哦，请先将用户删除。");
 		}
 		return orgDao.deleteOrgById(id);
 	}

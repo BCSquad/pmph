@@ -7,6 +7,7 @@ import java.util.Random;
 
 import javax.annotation.Resource;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +81,13 @@ public class UserMessageServiceTest extends BaseTest {
     public void addUserMessageBatch() {
         List<UserMessage> userMessageList = new ArrayList<>();
         Random r = new Random();
+        UserMessage userMessage=userMessageService.addUserMessage(new UserMessage(String.valueOf(r.nextInt(200)), "asdhga",
+                (short) 1,
+                Long.parseLong(String.valueOf(r.nextInt(200))),
+                (short) 1,
+                Long.parseLong(String.valueOf(r.nextInt(200))),
+                (short) 1, true, true, true, null, null));
+        Assert.assertTrue("添加失败", userMessage.getId() > 0);
         for (int i = 0; i < 10; i++) {
             userMessageList.add(new UserMessage(String.valueOf(r.nextInt(200)), "asdhga",
                                                 (short) 1,
@@ -88,6 +96,8 @@ public class UserMessageServiceTest extends BaseTest {
                                                 Long.parseLong(String.valueOf(r.nextInt(200))),
                                                 (short) 1, true, true, true, null, null));
         }
+        
+        
         userMessageDao.addUserMessageBatch(userMessageList);
     }
 
