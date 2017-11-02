@@ -647,7 +647,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         pageResult.setTotal(total);
         return pageResult;
     }
-
+    
     @Override
     public MyMessageVO updateMyMessageDetail(Long id) throws CheckedServiceException {
         if (ObjectUtil.isNull(id)) {
@@ -684,7 +684,15 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         UserMessage userMessage = new UserMessage();
         userMessage.setId(id);
         userMessage.setIsRead(true);
-        userMessageDao.updateUserMessageById(userMessage);
+        userMessageDao.updateUserMessage(userMessage);
         return myMessageVO;
+    }
+    
+    @Override
+    public Integer updateUserMessage(UserMessage userMessage) throws CheckedServiceException {
+    	if (null == userMessage.getId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键为空！");
+        }
+    	return userMessageDao.updateUserMessage(userMessage);
     }
 }

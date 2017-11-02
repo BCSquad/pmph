@@ -39,42 +39,42 @@ public class UserMessageServiceTest extends BaseTest {
     @Resource
     UserMessageDao             userMessageDao;
 
-    @Test
-    @Rollback(Const.ISROLLBACK)
-    public void getMessageStateListTest() throws IOException {
-        SessionUtil.getShiroSessionUser().setAttribute(Const.SESSION_PMPH_USER, new PmphUser(1L));
-        MessageStateVO messageStateVO = new MessageStateVO();
-        PageParameter pageParameter = new PageParameter<>();
-        List<String> list = new ArrayList<String>();
-        list.add("fd");
-        String[] attachment = new String[] { "12" };
-        pageParameter.setParameter(messageStateVO);
-        userMessageService.listMessageState(pageParameter, "");
-        userMessageService.addOrUpdateUserMessage(new Message(null, "eee"),
-                                                  "测试",
-                                                  1,
-                                                  "1",
-                                                  null,
-                                                  "1",
-                                                  true,
-                                                  new String[] { "1" },
-                                                  "");
-        userMessageService.addOrUpdateUserMessage(new Message("1", "eee"),
-                                                  "测试",
-                                                  2,
-                                                  "2",
-                                                  "1",
-                                                  "1",
-                                                  false,
-                                                  new String[] { "1" },
-                                                  "");
-        userMessageService.updateUserMessage(new Message("1", "aa"), "", "", attachment, attachment);
-        userMessageService.updateToWithdraw(new UserMessage("1", true));
-        userMessageService.deleteMessageByMsgId(list);
-        List<String> ids = new ArrayList<String>(1);
-        ids.add("1");
-        userMessageService.deleteMessageByMsgId(ids);
-    }
+//    @Test
+//    @Rollback(Const.ISROLLBACK)
+//    public void getMessageStateListTest() throws IOException {
+//        SessionUtil.getShiroSessionUser().setAttribute(Const.SESSION_PMPH_USER, new PmphUser(1L));
+//        MessageStateVO messageStateVO = new MessageStateVO();
+//        PageParameter pageParameter = new PageParameter<>();
+//        List<String> list = new ArrayList<String>();
+//        list.add("fd");
+//        String[] attachment = new String[] { "12" };
+//        pageParameter.setParameter(messageStateVO);
+//        userMessageService.listMessageState(pageParameter, "");
+//        userMessageService.addOrUpdateUserMessage(new Message(null, "eee"),
+//                                                  "测试",
+//                                                  1,
+//                                                  "1",
+//                                                  null,
+//                                                  "1",
+//                                                  true,
+//                                                  new String[] { "1" },
+//                                                  "");
+//        userMessageService.addOrUpdateUserMessage(new Message("1", "eee"),
+//                                                  "测试",
+//                                                  2,
+//                                                  "2",
+//                                                  "1",
+//                                                  "1",
+//                                                  false,
+//                                                  new String[] { "1" },
+//                                                  "");
+//        userMessageService.updateUserMessage(new Message("1", "aa"), "", "", attachment, attachment);
+//        userMessageService.updateToWithdraw(new UserMessage("1", true));
+//        userMessageService.deleteMessageByMsgId(list);
+//        List<String> ids = new ArrayList<String>(1);
+//        ids.add("1");
+//        userMessageService.deleteMessageByMsgId(ids);
+//    }
 
     @Test
     @Rollback(Const.ISROLLBACK)
@@ -88,6 +88,7 @@ public class UserMessageServiceTest extends BaseTest {
                 Long.parseLong(String.valueOf(r.nextInt(200))),
                 (short) 1, true, true, true, null, null));
         Assert.assertTrue("添加失败", userMessage.getId() > 0);
+        userMessageService.updateUserMessage(userMessage);
         for (int i = 0; i < 10; i++) {
             userMessageList.add(new UserMessage(String.valueOf(r.nextInt(200)), "asdhga",
                                                 (short) 1,
