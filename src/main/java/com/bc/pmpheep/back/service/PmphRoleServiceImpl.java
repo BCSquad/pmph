@@ -106,6 +106,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色属性为空时禁止新增角色");
         }
+        roleDao.add(role);
         return role;
     }
 
