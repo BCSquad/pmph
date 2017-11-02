@@ -269,7 +269,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 		model.setBookname(item.getString("gdsName")); // 书名
 		model.setAuthor(item.getString("author")); // 作者
 		model.setReader(item.getString("reader")); // 读者对象
-		model.setPublishDate(Timestamp.valueOf(item.getString("publicDate") + " 00:00:00")); // 出版时间
+		model.setPublishDate(DateUtil.str2Date(item.getString("publicDate") + " 00:00:00")); // 出版时间
 		model.setPublisher(item.getString("publicCompany")); // 出版社
 		model.setRevision(Integer.parseInt(item.getString("edition"))); // 版次 ,印次
 		model.setLang(item.getString("language")); // 语言

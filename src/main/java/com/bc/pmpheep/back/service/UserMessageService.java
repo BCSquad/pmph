@@ -221,5 +221,10 @@ public interface UserMessageService {
      * 
      */
     Integer updateMyMessage(Long[] ids) throws CheckedServiceException;
+    
+    /**
+     * 通过id 动态更新UserMessage
+     */
+    Integer updateUserMessage(UserMessage userMessage);
 
 }

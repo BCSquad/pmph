@@ -125,7 +125,7 @@ public interface UserMessageDao {
     /**
      * 通过id 动态更新UserMessage
      */
-    Integer updateUserMessageById(UserMessage userMessage);
+    Integer updateUserMessage(UserMessage userMessage);
 
     /**
      * 

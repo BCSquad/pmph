@@ -157,10 +157,6 @@ public class Book implements Serializable {
 	 * 修改时间
 	 */
 	private Timestamp gmtUpdate;
-	/**
-	 * 书籍简介
-	 */
-	private String content;
 
 	public Book() {
 		super();
@@ -205,14 +201,6 @@ public class Book implements Serializable {
 		this.isOnSale = isOnSale;
 		this.gmtCreate = gmtCreate;
 		this.gmtUpdate = gmtUpdate;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
 	}
 
 	public Long getId() {

@@ -27,7 +27,6 @@ public class MigrationStageTwoTest extends BaseTest{
 	MigrationStageTwo migrationStageTwo;
 	
 	@Test
-	@Rollback(false)
 	public void test(){
 		migrationStageTwo.start();
 	}

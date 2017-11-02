@@ -54,4 +54,8 @@ public class SQLParameters {
      * Excel异常导出统一表头
      */
     public static final String EXCEL_EX_HEADER = "exception";
+    /**
+     * 上传服务器lujing 例如：http://120.76.221.250/pmpheep
+     */
+    public static final String severPath="http://120.76.221.250/pmpheep"; 
 }
