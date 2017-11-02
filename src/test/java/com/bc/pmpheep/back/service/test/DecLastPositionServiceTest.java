@@ -30,7 +30,7 @@ public class DecLastPositionServiceTest extends BaseTest {
 	@Test
 	public void test() {
           logger.info("----------作家上套教材参编情况----------");
-          DecLastPosition decLastPosition = new DecLastPosition(7L, "心理诊断学", (short)1, "参编", 5);
+          DecLastPosition decLastPosition = new DecLastPosition(7L, "心理诊断学", (Integer)1, "参编", 5);
           decLastPositionService.addDecLastPosition(decLastPosition);
           Assert.assertTrue("添加数据失败", decLastPosition.getId()>0);
           logger.info("---------添加数据成功----------");

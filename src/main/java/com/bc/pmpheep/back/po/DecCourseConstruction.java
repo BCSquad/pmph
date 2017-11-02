@@ -23,8 +23,8 @@ public class DecCourseConstruction implements java.io.Serializable {
 	private String courseName;
 	//课程全年课时
 	private String classHour;
-	//级别
-	private Short type;
+	//职务
+	private Integer type;
 	//备注
 	private String note;
 	//显示顺序
@@ -47,7 +47,7 @@ public class DecCourseConstruction implements java.io.Serializable {
 
 	/** full constructor */
 	public DecCourseConstruction(Long declarationId, String courseName,
-			String classHour, Short type, String note, Integer sort) {
+			String classHour, Integer type, String note, Integer sort) {
 		this.declarationId = declarationId;
 		this.courseName = courseName;
 		this.classHour = classHour;
@@ -88,11 +88,11 @@ public class DecCourseConstruction implements java.io.Serializable {
 		this.classHour = classHour;
 	}
 
-	public Short getType() {
+	public Integer getType() {
 		return type;
 	}
 
-	public void setType(Short type) {
+	public void setType(Integer type) {
 		this.type = type;
 	}
 

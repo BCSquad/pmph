@@ -23,7 +23,7 @@ public class DecAcade implements java.io.Serializable {
 	//兼职学术组织
 	private String orgName;
 	//级别
-	private Short rank;
+	private Integer rank;
 	//职务
 	private String position;
 	//备注
@@ -43,7 +43,7 @@ public class DecAcade implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public DecAcade(Long declarationId, String orgName, Short rank,
+	public DecAcade(Long declarationId, String orgName, Integer rank,
 			String position, String note, Integer sort) {
 		this.declarationId = declarationId;
 		this.orgName = orgName;
@@ -78,11 +78,11 @@ public class DecAcade implements java.io.Serializable {
 		this.orgName = orgName;
 	}
 
-	public Short getRank() {
+	public Integer getRank() {
 		return this.rank;
 	}
 
-	public void setRank(Short rank) {
+	public void setRank(Integer rank) {
 		this.rank = rank;
 	}
 

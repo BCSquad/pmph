@@ -8,14 +8,15 @@ import javax.annotation.Resource;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.migration.MigrationStageOne;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
- * <p>Title:MigrationStageOneTest<p>
- * <p>Description:TODO<p>
- * @author Administrator
+ * <p>Title:测试类<p>
+ * <p>Description:迁移工具图一测试类<p>
+ * @author lyc
  * @date 2017年10月31日 下午5:39:19
  */
 public class MigrationStageOneTest extends BaseTest{

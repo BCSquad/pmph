@@ -22,9 +22,9 @@ public class DecTextbook implements java.io.Serializable {
 	// 教材名称
 	private String materialName;
 	// 教材级别
-	private Short rank;
+	private Integer rank;
 	// 编写职务
-	private Short position;
+	private Integer position;
 	// 出版社
 	private String publisher;
 	// 初版日期
@@ -52,8 +52,8 @@ public class DecTextbook implements java.io.Serializable {
 
 
 	/** full constructor */
-	public DecTextbook(Long declarationId, String materialName, Short rank,
-			Short position, String publisher, Date publishDate, String isbn,
+	public DecTextbook(Long declarationId, String materialName, Integer rank,
+			Integer position, String publisher, Date publishDate, String isbn,
 			String note, Integer sort) {
 		this.declarationId = declarationId;
 		this.materialName = materialName;
@@ -104,25 +104,25 @@ public class DecTextbook implements java.io.Serializable {
 
 
 
-	public Short getRank() {
+	public Integer getRank() {
 		return rank;
 	}
 
 
 
-	public void setRank(Short rank) {
+	public void setRank(Integer rank) {
 		this.rank = rank;
 	}
 
 
 
-	public Short getPosition() {
+	public Integer getPosition() {
 		return position;
 	}
 
 
 
-	public void setPosition(Short position) {
+	public void setPosition(Integer position) {
 		this.position = position;
 	}
 

@@ -26,7 +26,7 @@
 			<if test="sex!=null and sex !=''">
 				sex,
 			</if>
-			<if test="birthday!=null and birthday !=''">
+			<if test="birthday!=null">
 				birthday,
 			</if>
 			<if test="experience!=null and experience !=''">
@@ -68,7 +68,7 @@
 			<if test="cert!=null and cert !=''">
 				cert,
 			</if>
-			<if test="authTime!=null and authTime !=''">
+			<if test="authTime!=null">
 				auth_time,
 			</if>
 			<if test="authUserType!=null and authUserType !=''">
@@ -130,7 +130,7 @@
 			<if test="sex!=null and sex !=''">
 				#{sex},
 			</if>
-			<if test="birthday!=null and birthday !=''">
+			<if test="birthday!=null">
 				#{birthday},
 			</if>
 			<if test="experience!=null and experience !=''">
@@ -172,7 +172,7 @@
 			<if test="cert!=null and cert !=''">
 				#{cert},
 			</if>
-			<if test="authTime!=null and authTime !=''">
+			<if test="authTime!=null">
 				#{authTime},
 			</if>
 			<if test="authUserType!=null and authUserType !=''">
@@ -266,7 +266,7 @@
 			<if test=" sex!= null and  sex!=''">
 				sex= #{sex},
 			</if>
-			<if test=" birthday!= null and birthday !=''">
+			<if test=" birthday!= null">
 				birthday= #{birthday},
 			</if>
 			<if test=" experience!= null and  experience!=''">
@@ -308,7 +308,7 @@
 			<if test=" cert!= null and  cert!=''">
 				cert = #{cert},
 			</if>
-			<if test=" authTime!= null and  authTime!=''">
+			<if test=" authTime!= null">
 				auth_time = #{authTime},
 			</if>
 			<if test=" authUserType!= null and  authUserType!=''">

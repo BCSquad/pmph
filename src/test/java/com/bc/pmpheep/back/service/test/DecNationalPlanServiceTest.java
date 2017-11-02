@@ -31,7 +31,7 @@ public class DecNationalPlanServiceTest extends BaseTest {
 	public void test() {
 		logger.info("-------作家主编国家级规划教材情况--------");
 		DecNationalPlan decNationalPlan = new DecNationalPlan(14L, "心理学史",
-				"ISBN-18956", (short) 2, "选修", 56);
+				"ISBN-18956", (Integer) 2, "选修", 56);
 		decNationalPlanService.addDecNationalPlan(decNationalPlan);
 		Assert.assertTrue("添加数据失败", decNationalPlan.getId() > 0);
 		logger.info("--------添加数据成功--------");
