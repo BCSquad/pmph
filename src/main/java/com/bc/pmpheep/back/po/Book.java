@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
@@ -63,7 +64,7 @@ public class Book implements Serializable {
 	/**
 	 * 出版日期
 	 */
-	private Timestamp publishDate;
+	private Date publishDate;
 	/**
 	 * 读者对象
 	 */
@@ -115,7 +116,7 @@ public class Book implements Serializable {
 	/**
 	 * 置顶到期时间
 	 */
-	private Timestamp deadlineStick;
+	private Date deadlineStick;
 	/**
 	 * 是否新书
 	 */
@@ -127,7 +128,7 @@ public class Book implements Serializable {
 	/**
 	 * 新书到期时间
 	 */
-	private Timestamp deadlineNew;
+	private Date deadlineNew;
 	/**
 	 * 是否推荐
 	 */
@@ -139,7 +140,7 @@ public class Book implements Serializable {
 	/**
 	 * 推荐到期时间
 	 */
-	private Timestamp deadlinePromote;
+	private Date deadlinePromote;
 	/**
 	 * 销量
 	 */
@@ -165,13 +166,14 @@ public class Book implements Serializable {
 		super();
 	}
 
-	public Book(String bookname, String isbn, String sn, String author, String publisher, String lang, Integer revision,
-			Long type, Timestamp publishDate, String reader, Double price, Double score, String buyUrl, String imageUrl,
-			String pdfUrl, Long clicks, Long comments, Long likes, Long bookmarks, Boolean isStick, Integer sort,
-			Timestamp deadlineStick, Boolean isNew, Integer sortNew, Timestamp deadlineNew, Boolean isPromote,
-			Integer sortPromote, Timestamp deadlinePromote, Long sales, Boolean isOnSale, Timestamp gmtCreate,
-			Timestamp gmtUpdate) {
+	public Book(String vn, String bookname, String isbn, String sn, String author, String publisher, String lang,
+			Integer revision, Long type, Date publishDate, String reader, Double price, Double score, String buyUrl,
+			String imageUrl, String pdfUrl, Long clicks, Long comments, Long likes, Long bookmarks, Boolean isStick,
+			Integer sort, Date deadlineStick, Boolean isNew, Integer sortNew, Date deadlineNew, Boolean isPromote,
+			Integer sortPromote, Date deadlinePromote, Long sales, Boolean isOnSale, Timestamp gmtCreate,
+			Timestamp gmtUpdate, String content) {
 		super();
+		this.vn = vn;
 		this.bookname = bookname;
 		this.isbn = isbn;
 		this.sn = sn;
@@ -204,6 +206,7 @@ public class Book implements Serializable {
 		this.isOnSale = isOnSale;
 		this.gmtCreate = gmtCreate;
 		this.gmtUpdate = gmtUpdate;
+		this.content = content;
 	}
 
 	public String getContent() {
@@ -258,6 +261,38 @@ public class Book implements Serializable {
 		return publisher;
 	}
 
+	public Date getPublishDate() {
+		return publishDate;
+	}
+
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
+	}
+
+	public Date getDeadlineStick() {
+		return deadlineStick;
+	}
+
+	public void setDeadlineStick(Date deadlineStick) {
+		this.deadlineStick = deadlineStick;
+	}
+
+	public Date getDeadlineNew() {
+		return deadlineNew;
+	}
+
+	public void setDeadlineNew(Date deadlineNew) {
+		this.deadlineNew = deadlineNew;
+	}
+
+	public Date getDeadlinePromote() {
+		return deadlinePromote;
+	}
+
+	public void setDeadlinePromote(Date deadlinePromote) {
+		this.deadlinePromote = deadlinePromote;
+	}
+
 	public void setPublisher(String publisher) {
 		this.publisher = publisher;
 	}
@@ -284,14 +319,6 @@ public class Book implements Serializable {
 
 	public void setType(Long type) {
 		this.type = type;
-	}
-
-	public Timestamp getPublishDate() {
-		return publishDate;
-	}
-
-	public void setPublishDate(Timestamp publishDate) {
-		this.publishDate = publishDate;
 	}
 
 	public String getReader() {
@@ -390,14 +417,6 @@ public class Book implements Serializable {
 		this.sort = sort;
 	}
 
-	public Timestamp getDeadlineStick() {
-		return deadlineStick;
-	}
-
-	public void setDeadlineStick(Timestamp deadlineStick) {
-		this.deadlineStick = deadlineStick;
-	}
-
 	public Boolean getIsNew() {
 		return isNew;
 	}
@@ -414,14 +433,6 @@ public class Book implements Serializable {
 		this.sortNew = sortNew;
 	}
 
-	public Timestamp getDeadlineNew() {
-		return deadlineNew;
-	}
-
-	public void setDeadlineNew(Timestamp deadlineNew) {
-		this.deadlineNew = deadlineNew;
-	}
-
 	public Boolean getIsPromote() {
 		return isPromote;
 	}
@@ -436,14 +447,6 @@ public class Book implements Serializable {
 
 	public void setSortPromote(Integer sortPromote) {
 		this.sortPromote = sortPromote;
-	}
-
-	public Timestamp getDeadlinePromote() {
-		return deadlinePromote;
-	}
-
-	public void setDeadlinePromote(Timestamp deadlinePromote) {
-		this.deadlinePromote = deadlinePromote;
 	}
 
 	public Long getSales() {
