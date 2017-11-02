@@ -11,7 +11,7 @@ import com.bc.pmpheep.test.BaseTest;
  *@CreateDate 2017年11月2日 上午10:44:31
  *
  **/
-public class FourTest extends BaseTest {
+public class MigrationStageFourTest extends BaseTest {
 	
 	@Resource
 	MigrationStageFour migrationStageFour;
