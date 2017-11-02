@@ -39,9 +39,11 @@ import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
 
 /**
- *@author MrYang 
- *@CreateDate 2017年10月23日 下午2:18:10
- **/
+ * @author Mryang
+ *
+ * @createDate 2017年11月2日 下午12:05:57
+ *
+ */
 @Component
 public class MigrationStageFour {
 	
