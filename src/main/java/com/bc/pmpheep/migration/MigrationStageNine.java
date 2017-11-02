@@ -5,6 +5,7 @@
 package com.bc.pmpheep.migration;
 
 import com.bc.pmpheep.back.po.Book;
+import com.bc.pmpheep.back.po.BookDetail;
 import com.bc.pmpheep.back.service.BookService;
 import com.bc.pmpheep.back.service.BookUserCommentService;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -45,7 +46,7 @@ public class MigrationStageNine {
     ExcelHelper excelHelper;
 
     public void start() {
-
+        book();
     }
 
     protected void book() {
@@ -156,7 +157,16 @@ public class MigrationStageNine {
             }
             book.setType(pk);
             book = bookService.add(book);
-            JdbcHelper.updateNewPrimaryKey(tableName, book.getId(), "bookid", bookid);
+            Long bookId = book.getId();
+            JdbcHelper.updateNewPrimaryKey(tableName, bookId, "bookid", bookid);
+            /* 以下创建关联的BookDetail对象 */
+            String content = (String) map.get("content");
+            BookDetail detail = new BookDetail();
+            detail.setBookId(bookId);
+            if (StringUtil.notEmpty(content)) {
+                detail.setDetail(content);
+            }
+            bookService.add(detail);
         }
         if (excel.size() > 0) {
             try {
@@ -167,5 +177,9 @@ public class MigrationStageNine {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+    }
+
+    protected void bookUserCommnet() {
+        /* 放弃迁移虚假评论 */
     }
 }
