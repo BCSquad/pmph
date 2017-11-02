@@ -94,18 +94,18 @@
 		user_message(msg_id,msg_type,title,sender_id,sender_type,receiver_id,receiver_type,
 		is_read,is_withdraw,is_deleted,gmt_create,gmt_update
 		)
-		values ( #{UserMessage.msgId},
-			#{UserMessage.msgType},
-			#{UserMessage.title},
-			#{UserMessage.senderId},
-			#{UserMessage.senderType},
-			#{UserMessage.receiverId},
-			#{UserMessage.receiverType},
-			#{UserMessage.isRead},
-			#{UserMessage.isWithdraw},
-			#{UserMessage.isDeleted},
-			#{UserMessage.gmtCreate},
-			#{UserMessage.gmtUpdate},
+		values ( #{msgId},
+			#{msgType},
+			#{title},
+			#{senderId},
+			#{senderType},
+			#{receiverId},
+			#{receiverType},
+			#{isRead},
+			#{isWithdraw},
+			#{isDeleted},
+			#{gmtCreate},
+			#{gmtUpdate}
 			)
 		
 	</insert>
