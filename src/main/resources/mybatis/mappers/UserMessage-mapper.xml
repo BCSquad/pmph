@@ -83,6 +83,32 @@
 		resultType="UserMessage">
 		select * from user_message where msg_id = #{msgId};
 	</select>
+	
+	<!--单条插入 UserMessage -->
+	<insert id="addUserMessage" parameterType="UserMessage">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into
+		user_message(msg_id,msg_type,title,sender_id,sender_type,receiver_id,receiver_type,
+		is_read,is_withdraw,is_deleted,gmt_create,gmt_update
+		)
+		values ( #{msgId},
+			#{msgType},
+			#{title},
+			#{senderId},
+			#{senderType},
+			#{receiverId},
+			#{receiverType},
+			#{isRead},
+			#{isWithdraw},
+			#{isDeleted},
+			#{gmtCreate},
+			#{gmtUpdate}
+			)
+		
+	</insert>
 
 	<!-- 批量插入 UserMessage -->
 	<insert id="addUserMessageBatch" parameterType="java.util.List">

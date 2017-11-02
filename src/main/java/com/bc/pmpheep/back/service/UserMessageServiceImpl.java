@@ -85,6 +85,36 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Autowired
     private DecPositionService       decPositionService;
+    
+    @Override
+    public UserMessage addUserMessage(UserMessage userMessage) throws CheckedServiceException{
+    	if (null == userMessage) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+    	if (StringUtil.isEmpty(userMessage.getMsgId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "消息为空");
+        }
+    	if (null == userMessage.getMsgType()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "消息类型为空");
+        }
+    	if (StringUtil.isEmpty(userMessage.getTitle())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "消息标题为空");
+        }
+    	if (null == userMessage.getSenderId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "发送者id为空");
+        }
+    	if (null == userMessage.getSenderType()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "发送者类型为空");
+        }
+    	if (null == userMessage.getReceiverId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "接收者id为空");
+        }
+    	if (null == userMessage.getReceiverType()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "接收者类型为空");
+        }
+    	userMessageDao.addUserMessage(userMessage);
+    	return userMessage;
+    }
 
     @Override
     public PageResult<MessageStateVO> listMessageState(PageParameter<MessageStateVO> pageParameter,
