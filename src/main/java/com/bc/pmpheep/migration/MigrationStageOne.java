@@ -134,10 +134,10 @@ public class MigrationStageOne {
         	}
         	Integer sort = (Integer) map.get("sortno");
         	if (null !=sort && sort<0){
+        		sort = 999;
         		map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
         		excel.add(map);
         		logger.error("显示顺序为负数，有误，此结果将被记录在Excel中");
-        		continue;
         	}
         	OrgType orgType = new OrgType();
         	orgType.setTypeName(orgName);
@@ -209,18 +209,18 @@ public class MigrationStageOne {
 			String contactPhone = (String) map.get("linktel");
 			Integer sort = (Integer) map.get("sortno");
 			if (null !=sort && sort<0){
+				sort = 999;
 				map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
 				excel.add(map);
 				logger.error("显示顺序为负数，有误，此结果将被记录在Excel中");
-				continue;
 			}
 			String note = (String) map.get("remark");
 			Integer isDeleted = (Integer) map.get("isdelete");
 			if (null == isDeleted){
+				isDeleted = 0;
 				map.put(SQLParameters.EXCEL_EX_HEADER, "是否逻辑删除数据为空");
 				excel.add(map);
 				logger.error("是否逻辑删除数据为空，有误，此结果将被记录在Excel中");
-				continue;
 			}
 			Org org = new Org();
 			org.setOrgName(orgName);
@@ -278,10 +278,10 @@ public class MigrationStageOne {
         	}
         	String password = (String) map.get("password");
         	if (null == password){
+        		password = "888888";
         		map.put(SQLParameters.EXCEL_EX_HEADER, "机构用户登陆密码为空");
         		excel.add(map);
         		logger.error("机构用户登陆密码为空，有误，此结果将被记录在Excel中");
-        		continue;
         	}
         	Integer isDisabled = (Integer) map.get("isvalid");
         	Long orgId = (Long) map.get("new_pk");
@@ -316,10 +316,10 @@ public class MigrationStageOne {
         	String note = (String) map.get("memo");
         	Integer sort = (Integer) map.get("sortno");
         	if (null !=sort && sort<0){
+        		sort= 999;
         		map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
         		excel.add(map);
         		logger.error("显示顺序为负数，有误，此结果将被记录在Excel中");
-        		continue;
         	}
         	OrgUser orgUser = new OrgUser();
         	orgUser.setUsername(username);
@@ -370,10 +370,10 @@ public class MigrationStageOne {
             	try {
 					mongoId = fileService.migrateFile(proxy, ImageType.ORG_USER_PROXY, pk);
 				} catch (IOException ex) {
+					mongoId = "DEFAULT";
 					logger.error("文件读取异常，路径<{}>,异常信息：{}",proxy,ex.getMessage());
 					map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
 					excel.add(map);
-					continue;
 				}
             }else{
             	mongoId = proxy;
@@ -428,6 +428,21 @@ public class MigrationStageOne {
             	excel.add(map);
             	logger.error("未找到用户的登录名，此结果将被记录在Excel中");
             	continue;
+            }
+            if (count>0){
+				boolean flag = false;
+				for(int i = 0 ; i < count;i++){
+					if(maps.get(i).get("usercode").equals(username)){
+						map.put(SQLParameters.EXCEL_EX_HEADER, "用户登陆账号重复，无法插入新表");
+						excel.add(map);
+						logger.error("用户登陆账号，有误，此结果将被记录在Excel中");
+						flag = true;
+						break;
+					}
+				}
+				if (flag){
+					continue;
+				}
             }
             String password = "888888";
             Integer isDisabled = (Integer) map.get("isvalid");
@@ -518,10 +533,10 @@ public class MigrationStageOne {
             String note = (String) map.get("memo");
             Integer sort = (Integer) map.get("sortno");
             if (null !=sort && sort<0){
+            	sort = 999;
             	map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序数据为负数");
             	excel.add(map);
-            	logger.error("显示顺序数据为负数，有误，此结果将被记录在Excel中");
-            	continue;
+            	logger.info("显示顺序数据为负数，有误，此结果将被记录在Excel中");
             }
             WriterUser writerUser = new WriterUser();
             writerUser.setUsername(username);
