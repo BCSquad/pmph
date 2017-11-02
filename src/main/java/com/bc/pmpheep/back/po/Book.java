@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
 
@@ -63,7 +64,7 @@ public class Book implements Serializable {
 	/**
 	 * 出版日期
 	 */
-	private Timestamp publishDate;
+	private Date publishDate;
 	/**
 	 * 读者对象
 	 */
@@ -166,7 +167,7 @@ public class Book implements Serializable {
 	}
 
 	public Book(String bookname, String isbn, String sn, String author, String publisher, String lang, Integer revision,
-			Long type, Timestamp publishDate, String reader, Double price, Double score, String buyUrl, String imageUrl,
+			Long type, Date publishDate, String reader, Double price, Double score, String buyUrl, String imageUrl,
 			String pdfUrl, Long clicks, Long comments, Long likes, Long bookmarks, Boolean isStick, Integer sort,
 			Timestamp deadlineStick, Boolean isNew, Integer sortNew, Timestamp deadlineNew, Boolean isPromote,
 			Integer sortPromote, Timestamp deadlinePromote, Long sales, Boolean isOnSale, Timestamp gmtCreate,
@@ -286,11 +287,11 @@ public class Book implements Serializable {
 		this.type = type;
 	}
 
-	public Timestamp getPublishDate() {
+	public Date getPublishDate() {
 		return publishDate;
 	}
 
-	public void setPublishDate(Timestamp publishDate) {
+	public void setPublishDate(Date publishDate) {
 		this.publishDate = publishDate;
 	}
 
