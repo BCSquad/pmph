@@ -423,7 +423,7 @@
 		id = #{id}
 	</update>
 
-	<select id="getListPmphUser" parameterType="PageParameter"
+	<select id="getPmphUserByDepartmentId" parameterType="PageParameter"
 		resultType="PmphUser">
 		SELECT
 		*
