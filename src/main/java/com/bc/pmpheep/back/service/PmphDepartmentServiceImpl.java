@@ -49,6 +49,11 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
 					CheckedExceptionResult.NULL_PARAM, "根节点为空");
 		}
+		if (pmphDepartmentDao.getPmphDepartmentByDpNameAndParentId(pmphDepartment).size() > 0) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
+					CheckedExceptionResult.NULL_PARAM, "该部门下有相同的子部门了");
+		}
+
 		String path = pmphDepartment.getPath() + "-" + pmphDepartment.getParentId();
 		pmphDepartment.setPath(path);
 		pmphDepartmentDao.addPmphDepartment(pmphDepartment);

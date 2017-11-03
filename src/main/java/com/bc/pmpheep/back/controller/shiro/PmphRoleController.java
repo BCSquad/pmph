@@ -74,9 +74,9 @@ public class PmphRoleController {
      */
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseBean add(PmphRole role) {
+    public ResponseBean add(PmphRole role,Long[] ids) {
         logger.debug(role.toString());
-        return new ResponseBean(roleService.add(role));
+        return new ResponseBean(roleService.add(role,ids));
     }
 
     /**
