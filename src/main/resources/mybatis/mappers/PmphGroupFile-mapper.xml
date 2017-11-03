@@ -160,8 +160,8 @@
 		b.group_id = #{parameter.groupId}
 		<if test="parameter.fileName !=null and parameter.fileName !=''">
 			and a.file_name like concat('%',#{parameter.fileName},'%')
-		</if>
-		GROUP BY a.file_id
+		</if> 
+		GROUP BY a.file_id DESC
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
