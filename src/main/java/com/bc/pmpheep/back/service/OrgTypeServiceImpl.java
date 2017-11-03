@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
+import com.bc.pmpheep.back.dao.OrgDao;
 import com.bc.pmpheep.back.dao.OrgTypeDao;
 import com.bc.pmpheep.back.po.OrgType;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -22,6 +24,8 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class OrgTypeServiceImpl extends BaseService implements OrgTypeService {
 	@Autowired
 	private OrgTypeDao orgTypeDao;
+	@Autowired
+	OrgDao orgDao;
 
 	/**
 	 * 
@@ -60,8 +64,11 @@ public class OrgTypeServiceImpl extends BaseService implements OrgTypeService {
 	 */
 	@Override
 	public Integer deleteOrgTypeById(Long id) throws CheckedServiceException {
-		if (null == id) {
+		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "主键为空");
+		}
+		if (orgDao.listOrgByOrgType(id).size() > 0) {
+
 		}
 		return orgTypeDao.deleteOrgTypeById(id);
 	}

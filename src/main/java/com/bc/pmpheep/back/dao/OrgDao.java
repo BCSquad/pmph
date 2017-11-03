@@ -54,7 +54,7 @@ public interface OrgDao {
 	 * 功能描述：查询表单的数据总条数
 	 * 使用示范：
 	 *
-	 * @return 表单的总条数
+	 * &#64;return 表单的总条数
 	 * </pre>
 	 */
 	Long getOrgCount();
@@ -76,8 +76,8 @@ public interface OrgDao {
 	 * 功能描述：获取学校管理员审核列表(同时查询分页数据和总条数）
 	 * 使用示范：
 	 *
-	 * @param pageParameter
-	 * @return
+	 * &#64;param pageParameter
+	 * &#64;return
 	 * </pre>
 	 */
 	List<OrgVO> getSchoolAdminCheckList(PageParameter<OrgVO> pageParameter);
@@ -100,8 +100,8 @@ public interface OrgDao {
 	 * 功能描述：系统消息——发送新消息——发送对象（学校管理员、所有人）
 	 * 使用示范：
 	 *
-	 * @param orgName 机构名称
-	 * @return
+	 * &#64;param orgName 机构名称
+	 * &#64;return
 	 * </pre>
 	 */
 	List<OrgVO> listSendToSchoolAdminOrAllUser(@Param("orgName") String orgName);
@@ -113,5 +113,16 @@ public interface OrgDao {
 	 * @throws CheckedServiceException
 	 */
 	List<Org> getOrgByOrgName(String orgName);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据机构类型查询机构
+	 *
+	 * @param typeId
+	 * @return
+	 *
+	 */
+	List<Org> listOrgByOrgType(Long typeId);
 
 }
