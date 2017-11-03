@@ -350,8 +350,9 @@ public class PmphUserServiceImpl implements PmphUserService {
 			pageParameter.getParameter().setName(name);
 		}
 		String path = pageParameter.getParameter().getPath();
-		if (StringUtil.notEmpty(path)) {
-			pageParameter.getParameter().setPath(path);
+		Long departmentId = pageParameter.getParameter().getDepartmentId();
+		if (StringUtil.notEmpty(path) && ObjectUtil.notNull(departmentId)) {
+			pageParameter.getParameter().setPath(path + "-" + departmentId);
 		}
 		PageResult<PmphUserManagerVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
