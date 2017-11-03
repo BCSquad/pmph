@@ -21,95 +21,108 @@ import com.bc.pmpheep.back.vo.PmphUserManagerVO;
  */
 public interface PmphUserDao {
 
-    /**
-     * 添加一个用户
-     * 
-     * @param pmphUser 添加用户的详细信息
-     * @return 影响的行数
-     */
-    Integer add(PmphUser user);
+	/**
+	 * 添加一个用户
+	 * 
+	 * @param pmphUser
+	 *            添加用户的详细信息
+	 * @return 影响的行数
+	 */
+	Integer add(PmphUser user);
 
-    Integer update(PmphUser user);
+	Integer update(PmphUser user);
 
-    Integer delete(Long id);
+	Integer delete(Long id);
 
-    Integer batchDelete(@Param("ids") List<Long> ids);
+	Integer batchDelete(@Param("ids") List<Long> ids);
 
-    PmphUser get(Long id);
+	PmphUser get(Long id);
 
-    List<PmphUser> getListUser();
+	List<PmphUser> getListUser();
 
-    List<PmphUser> getListByUsernameAndRealname(@Param("name") String name,
-    @Param("start") int start, @Param("size") int size);
+	List<PmphUser> getListByUsernameAndRealname(@Param("name") String name, @Param("start") int start,
+			@Param("size") int size);
 
-    PmphUser getByUsernameAndPassword(@Param("username") String username,
-    @Param("password") String password);
+	PmphUser getByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
 
-    /**
-     * 根据角色 id 查询所有是该角色的用户列表
-     * 
-     * @param rid
-     * @return
-     */
-    List<PmphUser> getListByRole(Long rid);
+	/**
+	 * 根据角色 id 查询所有是该角色的用户列表
+	 * 
+	 * @param rid
+	 * @return
+	 */
+	List<PmphUser> getListByRole(Long rid);
 
-    List<PmphPermission> getListAllResources(Long uid);
+	List<PmphPermission> getListAllResources(Long uid);
 
-    List<String> getListRoleSnByUser(Long uid);
+	List<String> getListRoleSnByUser(Long uid);
 
-    List<PmphRole> getListUserRole(Long uid);
+	List<PmphRole> getListUserRole(Long uid);
 
-    /**
-     * 
-     * <pre>
-     * 功能描述：根据用户Id查询对应权限
-     * 使用示范：
-     *
-     * @param userId
-     * @return
-     * </pre>
-     */
-    List<Long> getPmphUserPermissionByUserId(Long userId);
+	/**
+	 * 
+	 * <pre>
+	 * 功能描述：根据用户Id查询对应权限
+	 * 使用示范：
+	 *
+	 * &#64;param userId
+	 * &#64;return
+	 * </pre>
+	 */
+	List<Long> getPmphUserPermissionByUserId(Long userId);
 
-    /**
-     * 
-     * 功能描述：查询表单的数据总条数
-     * 
-     * @return 表单的总条数
-     */
-    Long getPmphUserCount();
+	/**
+	 * 
+	 * 功能描述：查询表单的数据总条数
+	 * 
+	 * @return 表单的总条数
+	 */
+	Long getPmphUserCount();
 
-    /**
-     * 
-     * 
-     * 功能描述： 获取社内用户的
-     * 
-     * @param page
-     * @return
-     * 
-     */
-    Integer getListPmphUserTotal(PageParameter<PmphUserManagerVO> pageParameter);
+	/**
+	 * 
+	 * 
+	 * 功能描述： 获取社内用户的
+	 * 
+	 * @param page
+	 * @return
+	 * 
+	 */
+	Integer getListPmphUserTotal(PageParameter<PmphUserManagerVO> pageParameter);
 
-    /**
-     * 
-     * 
-     * 功能描述： 获取社内用户的
-     * 
-     * @param page
-     * @return
-     * 
-     */
-    List<PmphUserManagerVO> getListPmphUser(PageParameter<PmphUserManagerVO> pageParameter);
+	/**
+	 * 
+	 * 
+	 * 功能描述： 获取社内用户的
+	 * 
+	 * @param page
+	 * @return
+	 * 
+	 */
+	List<PmphUserManagerVO> getListPmphUser(PageParameter<PmphUserManagerVO> pageParameter);
 
-    /**
-     * 
-     * 
-     * 功能描述：
-     * 
-     * @param user
-     * @return
-     * 
-     */
-    Integer updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO);
+	/**
+	 * 
+	 * 
+	 * 功能描述：
+	 * 
+	 * @param user
+	 * @return
+	 * 
+	 */
+	Integer updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据部门id判断部门中是否还有用户
+	 *
+	 * @param departmentId
+	 *            部门id
+	 * 
+	 * @return
+	 *
+	 */
+	List<PmphUser> getPmphUserByDepartmentId(Long departmentId);
 
 }

@@ -85,7 +85,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 	@Override
 	public PmphUser add(PmphUser user, List<Long> rids) throws CheckedServiceException {
 		Long userId = this.add(user).getId();
-		if (ObjectUtil.isNull(userId)) {
+		if (!ObjectUtil.isNull(userId)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时不能添加角色！");
 		}
@@ -350,8 +350,9 @@ public class PmphUserServiceImpl implements PmphUserService {
 			pageParameter.getParameter().setName(name);
 		}
 		String path = pageParameter.getParameter().getPath();
-		if (StringUtil.notEmpty(path)) {
-			pageParameter.getParameter().setPath(path);
+		Long departmentId = pageParameter.getParameter().getDepartmentId();
+		if (StringUtil.notEmpty(path) && ObjectUtil.notNull(departmentId)) {
+			pageParameter.getParameter().setPath(path + "-" + departmentId);
 		}
 		PageResult<PmphUserManagerVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
