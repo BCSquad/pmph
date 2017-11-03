@@ -37,7 +37,7 @@ import com.bc.pmpheep.utils.ExcelHelper;
 @Component
 public class MigrationStageTwo {
 
-	private Logger logger = LoggerFactory.getLogger(MigrationStageTwo.class);
+	private final Logger logger = LoggerFactory.getLogger(MigrationStageTwo.class);
 	
 	@Resource
 	ExcelHelper excelHelper;
@@ -206,7 +206,6 @@ public class MigrationStageTwo {
 	
 	protected void pmphRole() {
 		String tableName = "sys_role";
-		JdbcHelper.addColumn(tableName);
 		List<Map<String,Object>> maps = JdbcHelper.queryForList(tableName);
 		List<Map<String,Object>> excel = new LinkedList<>();
 		int count = 0;
@@ -245,7 +244,6 @@ public class MigrationStageTwo {
 	
 	protected void pmphUserRole() {
 		String tableName = "sys_userrole";
-		JdbcHelper.addColumn(tableName);
 		String sql = "SELECT a.userroleid,b.userid,b.new_pk user_new_pk,c.roleid,c.new_pk role_new_pk "
 				    + "FROM sys_userrole a "
 					+"LEFT JOIN sys_user b ON a.userid = b.userid "
