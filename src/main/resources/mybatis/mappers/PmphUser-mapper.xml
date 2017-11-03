@@ -422,4 +422,14 @@
 		WHERE
 		id = #{id}
 	</update>
+
+	<select id="getListPmphUser" parameterType="PageParameter"
+		resultType="PmphUser">
+		SELECT
+		*
+		FROM
+		pmph_user u where
+		u.department_id =
+		#{departmentId}
+	</select>
 </mapper>

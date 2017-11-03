@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphDepartmentDao;
+import com.bc.pmpheep.back.dao.PmphUserDao;
 import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.PmphUserDepartmentVO;
@@ -23,6 +24,8 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class PmphDepartmentServiceImpl extends BaseService implements PmphDepartmentService {
 	@Autowired
 	private PmphDepartmentDao pmphDepartmentDao;
+	@Autowired
+	PmphUserDao pmphUserDao;
 
 	/**
 	 * 
@@ -140,6 +143,12 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(id);
 		recursionPmphDepartment(new PmphUserDepartmentVO(id), ids);
+		for (Long departmentId : ids) {
+			if (pmphUserDao.getPmphUserByDepartmentId(departmentId).size() > 0) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
+						CheckedExceptionResult.ILLEGAL_PARAM, "部门中还有用户，不能删除部门");
+			}
+		}
 		return pmphDepartmentDao.deletePmphDepartmentBatch(ids);
 	}
 
