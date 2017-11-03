@@ -18,7 +18,7 @@ import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
 
 /**
- * 教材书籍迁移工具类
+ * 图五教材书籍迁移工具类
  * @author Mr
  *
  */
