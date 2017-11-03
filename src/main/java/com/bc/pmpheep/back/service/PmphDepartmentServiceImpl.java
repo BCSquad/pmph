@@ -57,7 +57,7 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 					CheckedExceptionResult.NULL_PARAM, "该部门下有相同的子部门了");
 		}
 
-		String path = pmphDepartment.getPath() + "-" + pmphDepartment.getParentId();
+		String path = pmphDepartment.getPath() + "-" + String.valueOf(pmphDepartment.getParentId());
 		pmphDepartment.setPath(path);
 		pmphDepartmentDao.addPmphDepartment(pmphDepartment);
 		return pmphDepartment;
