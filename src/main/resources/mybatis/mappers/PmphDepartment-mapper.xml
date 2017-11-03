@@ -133,7 +133,7 @@
 		</foreach>
 	</delete>
 	<!-- 根据父级id 和 名称查询 -->
-	<select id="getPmphDepartmentByDpNameAndParentId" parameterType="java.lang.String"
+	<select id="getPmphDepartmentByDpNameAndParentId" parameterType="PmphDepartment"
 		resultType="PmphUserDepartmentVO">
 		select * from pmph_department where dp_name =
 		#{dpName} and
