@@ -3,7 +3,6 @@
  */
 package com.bc.pmpheep.migration;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -126,10 +125,11 @@ public class MigrationStageTwo {
 		List<Map<String,Object>> excel = new LinkedList<>();
 	    int count = 0 ;
 		for(Map<String,Object> map : maps){
+			  StringBuilder sb = new StringBuilder();
 			  String userId = (String) map.get("userid");
 			  String userName = (String) map.get("usercode");
 			  if (null == userName){
-				  map.put(SQLParameters.EXCEL_EX_HEADER, "找不到用户的登陆账号");
+				  map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到用户的登陆账号  "));
 				  excel.add(map);
 				  logger.error("找不到用户的登陆账号，有误，此结果将被记录在Excel中");
 				  continue;
@@ -143,8 +143,8 @@ public class MigrationStageTwo {
 			  Long departmentId = (Long) map.get("new_pk");
 			  if (null == departmentId){
 				  departmentId = 0L;
-				  map.put(SQLParameters.EXCEL_EX_HEADER, "找不到对应的社内部门，暂时设为0，"
-				  		+ "即未分配部门");
+				  map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到对应的社内部门，暂时设为0，"
+				  		+ "即未分配部门  "));
 				  excel.add(map);
 				  logger.info("找不到对应的社内部门，此结果将被记录在Excel中，暂时设为0，"
 				  		+ "即未分配部门，过后同专家库进行核对确认进行二次处理");
@@ -156,7 +156,7 @@ public class MigrationStageTwo {
 			  Integer sort = (Integer) map.get("sortno");
 			  if (null != sort && sort < 0){
 				  sort = 999;
-				  map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数，先暂时设为默认值");
+				  map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("显示顺序为负数，先暂时设为默认值  "));
 				  excel.add(map);
 				  logger.info("显示顺序为负数，有误，此结果将被记录在Excel中，先暂时设为默认值");
 			  }
@@ -183,7 +183,7 @@ public class MigrationStageTwo {
 				} catch (IOException ex) {
 					mongoId = "DEFAULT";
 					logger.error("文件读取异常，路径<{}>,异常信息：{}",avatar,ex.getMessage());
-					map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
+					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("文件读取异常  "));
 					excel.add(map);
 				}
 			  }else{
