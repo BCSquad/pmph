@@ -68,7 +68,8 @@ public class PmphRoleController {
 	 * 功能描述：添加用户角色的后台方法
 	 * 使用示范：
 	 *
-	 * @param role
+	 * @param role 
+	 *        ids 角色默认权限的id
 	 * @return
 	 * </pre>
      */

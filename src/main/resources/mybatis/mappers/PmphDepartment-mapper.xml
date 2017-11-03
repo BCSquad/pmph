@@ -137,6 +137,6 @@
 		resultType="PmphUserDepartmentVO">
 		select * from pmph_department where dp_name =
 		#{dpName} and
-		parent_id = #{parentid};
+		parent_id = #{parentId};
 	</select>
 </mapper>
