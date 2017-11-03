@@ -3,8 +3,8 @@
  */
 package com.bc.pmpheep.migration;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +15,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.WriterProfile;
 import com.bc.pmpheep.back.po.WriterRole;
+import com.bc.pmpheep.back.po.WriterUserCertification;
 import com.bc.pmpheep.back.po.WriterUserRole;
 import com.bc.pmpheep.back.service.WriterProfileService;
 import com.bc.pmpheep.back.service.WriterRoleService;
+import com.bc.pmpheep.back.service.WriterUserCertificationService;
 import com.bc.pmpheep.back.service.WriterUserRoleService;
+import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
@@ -29,14 +31,14 @@ import com.bc.pmpheep.utils.ExcelHelper;
 
 /**
  * <p>Title:图三数据迁移工具<p>
- * <p>Description:作家用户模块<p>
+ * <p>Description:作家用户模块，需作为第二模块进行<p>
  * @author lyc
  * @date 2017年11月2日 下午4:56:48
  */
 @Component
 public class MigrationStageThree {
 
-	private Logger logger = LoggerFactory.getLogger(MigrationStageThree.class);
+	private final Logger logger = LoggerFactory.getLogger(MigrationStageThree.class);
 	
 	@Resource
 	ExcelHelper excelHelper;
@@ -48,13 +50,20 @@ public class MigrationStageThree {
 	WriterUserRoleService writerUserRoleService;
 	@Resource
 	WriterProfileService writerProfileService;
+	@Resource
+	WriterUserCertificationService writerCertificationService;
 	
 	public void start(){
 		writerRole();
+		writerUserRole();
+		writerProfile();
+		writerUserCertification();
+		orgUserRole();
 	}
 	
 	protected void writerRole() {
 		String tableName = "sys_role";
+		JdbcHelper.addColumn(tableName);
 		List<Map<String,Object>> maps = JdbcHelper.queryForList(tableName);
 		List<Map<String,Object>> excel = new LinkedList<>();
 		int count = 0 ;
@@ -93,6 +102,7 @@ public class MigrationStageThree {
 	
 	protected void writerUserRole() {
 		String tableName = "sys_userrole";
+		JdbcHelper.addColumn(tableName);
 		String sql = "SELECT a.userroleid,b.userid,b.new_pk user_new_pk,c.roleid,c.new_pk role_new_pk "
 					+"FROM sys_userrole a "
 					+"LEFT JOIN sys_user b ON a.userid = b.userid "
@@ -155,7 +165,74 @@ public class MigrationStageThree {
 	}
 	
 	protected void writerUserCertification() {
-		String tableName = "";
+		String sql = "SELECT a.userid,a.new_pk user_new_pk,d.new_pk org_new_pk,b.handset,b.idcard,"
+					+"CASE WHEN b.isteacher = 2 THEN 3 WHEN b.isteacher = 1 THEN 2 WHEN b.isteacher = 0 "
+					+"THEN 1 ELSE 0 END progress,e.filedir,e.operdate "
+					+"FROM sys_user a LEFT JOIN sys_userext b ON a.userid = b.userid "
+					+"LEFT JOIN sys_userorganize c ON a.userid = c.userid "
+					+"LEFT JOIN ba_organize d ON c.orgid = d.orgid "
+					+"LEFT JOIN (SELECT * FROM pub_addfileinfo y WHERE y.fileid IN (SELECT MAX(p.fileid) "
+					+"FROM pub_addfileinfo p WHERE p.childsystemname='sys_userext_teacher' GROUP BY p.operuserid))e "
+					+"ON a.userid = e.operuserid ;";
+		List<Map<String,Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+		List<Map<String,Object>> excel = new LinkedList<>();
+		int count = 0 ;
+		for (Map<String,Object> map : maps){
+			Long userId = (Long) map.get("user_new_pk");
+			if (userId == 0){
+				map.put(SQLParameters.EXCEL_EX_HEADER, "用户为社内用户");
+				excel.add(map);
+				logger.error("用户为社内用户，此结果将被记录在Excel中");
+				continue;
+			}
+			Long orgId = (Long) map.get("org_new_pk");
+			if (null == orgId || orgId == 0){
+				map.put(SQLParameters.EXCEL_EX_HEADER, "为空则用户没有和机构关联，为0则可能因为"
+						+ "机构重名查询不到");
+				excel.add(map);
+				logger.error("未和用户关联，或因机构重名查询不到，此结果将被记录在Excel中");
+				continue;
+			}
+			String handphone = (String) map.get("handset");
+			String idcard = (String) map.get("idcard");
+			Long progressNum = (Long) map.get("progress");
+			short progress = progressNum.shortValue();
+			String cert = (String) map.get("filedir");
+			Timestamp gmtCreate = (Timestamp) map.get("operdate");
+			WriterUserCertification writerUserCertification = new WriterUserCertification();
+			writerUserCertification.setUserId(userId);
+			writerUserCertification.setOrgId(orgId);
+			writerUserCertification.setHandphone(handphone);
+			writerUserCertification.setIdcard(idcard);
+			writerUserCertification.setProgress(progress);
+			writerUserCertification.setGmtCreate(gmtCreate);
+			writerUserCertification = writerCertificationService
+					.addWriterUserCertification(writerUserCertification);
+			count++;
+			Long pk = writerUserCertification.getId();
+			if (null != cert){
+				String mongoId = "";
+				try {
+					fileService.migrateFile(cert, ImageType.WRITER_USER_CERT, pk);
+				} catch (IOException ex) {
+					mongoId = "DEFAULT";
+					map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
+					excel.add(map);
+					logger.error("文件读取异常，路径<{}>,异常信息：{}",cert,ex.getMessage());
+				}
+				writerUserCertification.setCert(mongoId);
+			}
+			writerCertificationService.updateWriterUserCertification(writerUserCertification);
+		}
+		if (excel.size() > 0){
+			try {
+				excelHelper.exportFromMaps(excel, "教师资格认证表", "");
+			}  catch (IOException ex) {
+				logger.error("异常数据导出到Excel失败",ex);
+			}
+		}
+		logger.info("writer_user_certification");
+		logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
 	}
 	
 	protected void orgUserRole() {
