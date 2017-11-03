@@ -68,15 +68,16 @@ public class PmphRoleController {
 	 * 功能描述：添加用户角色的后台方法
 	 * 使用示范：
 	 *
-	 * @param role
+	 * @param role 
+	 *        ids 角色默认权限的id
 	 * @return
 	 * </pre>
      */
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseBean add(PmphRole role) {
+    public ResponseBean add(PmphRole role,Long[] ids) {
         logger.debug(role.toString());
-        return new ResponseBean(roleService.add(role));
+        return new ResponseBean(roleService.add(role,ids));
     }
 
     /**

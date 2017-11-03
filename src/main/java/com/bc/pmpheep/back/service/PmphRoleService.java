@@ -21,7 +21,7 @@ public interface PmphRoleService {
      * 
      * @param role 角色对象
      */
-    PmphRole add(PmphRole role) throws CheckedServiceException;
+    PmphRole add(PmphRole role,Long[] ids) throws CheckedServiceException;
 
     /**
      * 根据角色 id 删除单个角色对象
