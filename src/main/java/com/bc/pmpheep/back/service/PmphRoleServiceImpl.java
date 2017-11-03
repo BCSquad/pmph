@@ -13,7 +13,6 @@ import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphRolePermission;
 import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.util.ArrayUtil;
-import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -222,6 +221,16 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 					CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止删除");
 		}
 		return roleDao.deleteRoleResourceByRoleId(roleId);
+	}
+
+	@Override
+	public PmphRole addPmphRole(PmphRole role) throws CheckedServiceException {
+		if (ObjectUtil.isNull(role)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "角色属性为空时禁止新增角色");
+		}
+		roleDao.add(role);
+		return role;
 	}
 
 }
