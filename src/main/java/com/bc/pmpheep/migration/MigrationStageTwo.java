@@ -227,7 +227,7 @@ public class MigrationStageTwo {
 			pmphRole.setIsDisabled(isDisabled==1);
 			pmphRole.setSort(sort);
 			pmphRole.setNote(note);
-			pmphRole = pmphRoleService.add(pmphRole);
+			pmphRole = pmphRoleService.addPmphRole(pmphRole);
 			count++ ;
 			Long pk = pmphRole.getId();
 			JdbcHelper.updateNewPrimaryKey(tableName, pk, "roleid", roleId);
