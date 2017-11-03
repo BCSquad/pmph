@@ -29,9 +29,6 @@
 			<if test="isMaterialNotice != null">
 				is_material_notice,
 			</if>
-			<if test="materialId != null">
-				material_id,
-			</if>
 			<if test="isSummaryVisible != null">
 				is_summary_visible,
 			</if>
@@ -89,9 +86,6 @@
 			<if test="isMaterialNotice != null">
 				#{isMaterialNotice},
 			</if>
-			<if test="materialId != null">
-				#{materialId},
-			</if>
 			<if test="isSummaryVisible != null">
 				#{isSummaryVisible},
 			</if>
@@ -131,6 +125,45 @@
 		<include refid="value" />
 		) ;
 	</insert>
+	<sql id="roleKey">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="categoryId != null">
+				category_id,
+			</if>
+			<if test="roleId != null " >
+				role_id,
+			</if>
+			<if test="permissionType != null">
+				permission_type,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="roleValue">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="categoryId != null">
+				#{categoryId},
+			</if>
+			<if test="roleId != null " >
+				#{roleId},
+			</if>
+			<if test="permissionType != null">
+				#{permissionType},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增CmsCategoryRole -->
+	<insert id="addCmsCategoryRole" parameterType="CmsCategoryRole" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into cms_category_role (
+		<include refid="roleKey" />
+		)
+		values(
+		<include refid="roleValue" />
+		) ;
+	</insert>
 
 	<!-- 更新CmsCategory -->
 	<update id="updateCmsCategory" parameterType="CmsCategory">
@@ -159,9 +192,6 @@
 			</if>
 			<if test="isMaterialNotice != null">
 				is_material_notice=#{isMaterialNotice},
-			</if>
-			<if test="materialId != null">
-				material_id=#{materialId},
 			</if>
 			<if test="isSummaryVisible != null">
 				is_summary_visible=#{isSummaryVisible},
@@ -194,6 +224,52 @@
 		where 
 			id=#{id};
 	</update>
+	
+	<!-- 更新CmsCategoryRole -->
+	<update id="updateCmsCategoryRole" parameterType="CmsCategoryRole">
+		update cms_category
+		<set>
+			<if test="categoryId != null">
+				category_id = #{categoryId},
+			</if>
+			<if test="roleId != null " >
+				role_id = #{roleId},
+			</if>
+			<if test="permissionType != null">
+				permission_type = #{permissionType},
+			</if>
+		</set>
+		where 
+			id=#{id};
+	</update>
+	
+	<!--获取所有父节点  -->
+	<select id="getListAllParentMenu"  parameterType="java.lang.String" resultType="CmsCategory">
+		select 
+			* 
+		from 
+			cms_category 
+		where 
+			PARENT_ID = 0 
+			<if test="categoryName != null and categoryName!='' ">
+				category_name = #{categoryName}
+			</if>
+		order by sort 
+	</select>
+	
+	<!--按父节点ID获取所有子节点  -->
+	<select id="getListChildMenuByParentId" parameterType="map" resultType="CmsCategory">
+		select 
+			 * 
+		from 
+			cms_category
+		where
+			PARENT_ID = #{parentId} 
+			<if test="categoryName != null and categoryName!='' ">
+				category_name = #{categoryName}
+			</if>
+		order by sort 
+	</select>
 
 	<!-- 根据id查询一个CmsCategory -->
 	<select id="getCmsCategoryById" parameterType="java.lang.Long" resultType="CmsCategory">
@@ -211,6 +287,11 @@
 	<!-- 根据id删除一个 CmsCategory-->
 	<delete id="deleteCmsCategoryById" parameterType="java.lang.Long">
 		delete from cms_category where id=#{id};
+	</delete>
+	
+	<!-- 根据CategoryId删除一个 CmsCategoryRole-->
+	<delete id="deleteCmsCategoryRoleByCategoryId" parameterType="java.lang.Long">
+		delete from cms_category_role where category_id = #{categoryId};
 	</delete>
 	
 	<!-- 批量删除-->

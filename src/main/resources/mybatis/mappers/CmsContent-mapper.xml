@@ -95,6 +95,9 @@
 			<if test="gmtReedit != null">
 				gmt_reedit,
 			</if>
+			<if test="materialId != null">
+				material_id,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -191,6 +194,9 @@
 			<if test="gmtReedit != null">
 				#{gmtReedit},
 			</if>
+			<if test="materialId != null">
+				#{materialId},
+			</if>
 		</trim>
 	</sql>
 	<!-- 新增CmsContent -->
@@ -280,11 +286,14 @@
 			<if test="isHide != null">
 				is_hide=#{isHide},
 			</if>
+			<if test="isStaging != null">
+				is_staging=#{isStaging},
+			</if>
 			<if test="isPublished != null">
 				is_published=#{isPublished},
 			</if>
-			<if test="isAuth != null">
-				is_auth=#{isAuth},
+			<if test="authStatus != null">
+				auth_status=#{authStatus},
 			</if>
 			<if test="authUserId != null">
 				auth_user_id=#{authUserId},
@@ -298,11 +307,331 @@
 			<if test="gmtReedit != null">
 				gmt_reedit=#{gmtReedit},
 			</if>
+			<if test="materialId != null">
+				material_id=#{materialId},
+			</if>
 		</set>
 		where 
 			id=#{id};
 	</update>
-
+	
+	 <!-- 内容发布 -->
+	 <update id="publishCmsContentById" parameterType="java.lang.Long">
+	 		update cms_content set is_published = true  where id = #{id};
+	 </update>
+	 <!-- 内容隐藏 -->
+	 <update id="hideCmsContentById" parameterType="java.lang.Long">
+	 		update cms_content  set is_hide = true  where id = #{id};
+	 </update>
+	 <!-- 逻辑删除-->
+	<update id="deleteCmsContentById" parameterType="java.lang.Long">
+		update cms_content set is_deleted = true  where id = #{id};
+	</update>
+	
+	<update id="checkContentById" parameterType="CmsContent">
+		update cms_content 
+			<set>
+				<if test="authStatus != null">
+					auth_status=#{authStatus},
+				</if>
+				<if test="authUserId != null">
+					auth_user_id=#{authUserId},
+				</if>
+				<if test="authDate != null">
+					auth_date=#{authDate},
+				</if>
+			</set>
+			 where
+			 	 id = #{id};
+	</update>
+	 
+	<!--CmsContentVO模糊查询获取列表 -->
+	<select id="listCmsContent" parameterType="PageParameter"
+		resultType="CmsContentVO">
+		SELECT 
+			cc.`id`,cc.`title`,pu.username,cc.`auth_status`,cc.`gmt_create`,cc.`clicks`,
+			cc.`comments`,cc.`likes`,cc.`bookmarks`
+			cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,t.count
+		FROM 
+			`cms_content`cc
+		LEFT JOIN
+			`pmph_user` pu 
+		ON
+			cc.author_id = pu.id
+		LEFT JOIN 
+			`cms_category` ccg 
+		ON 
+			cc.`category_id` = ccg.`id`
+			(
+				SELECT 
+					count(*) count
+				FROM 
+					`cms_content`cc
+				LEFT JOIN
+					`pmph_user` pu 
+				ON
+					cc.author_id = pu.id
+				LEFT JOIN 
+					`cms_category` ccg 
+				ON 
+					cc.`category_id` = ccg.`id`
+				WHERE
+				cc.`is_deleted`= 0 
+				
+				<if test="parameter !=null ">
+					<if test="parameter.isAdmin == false ">
+						AND cc.`author_id`=#{parameter.authorId} 
+					</if>
+					<if test="parameter.title != null and parameter.title != ''">
+						AND cc.`title` like concat('%',#{parameter.title},'%')
+					</if>
+					<if test="parameter.status !=null ">
+						<if test="parameter.status ==0 ">
+							AND cc.`is_published` =true 
+						</if>
+						<if test="parameter.status ==1 ">
+							AND cc.`auth_status`= 2
+						</if>
+						<if test="parameter.status ==2 ">
+							AND cc.`is_stick` = true 
+						</if>
+						<if test="parameter.status ==3 ">
+							AND cc.`is_hot` = true
+						</if>
+						<if test="parameter.status ==4 ">
+							AND cc.`is_promote` = true 
+						</if>
+						<if test="parameter.status ==5 ">
+							AND cc.`is_hide`= true
+						</if>
+					</if>
+				</if>
+			) t
+			WHERE
+			cc.`is_deleted`= 0 
+			<if test="parameter !=null ">
+				<if test="parameter.isAdmin == false ">
+					AND cc.`author_id`=#{parameter.authorId} 
+				</if>
+				<if test="parameter.title != null and parameter.title != ''">
+					AND cc.`title` like concat('%',#{parameter.title},'%')
+				</if>
+				<if test="parameter.status !=null ">
+						<if test="parameter.status ==0 ">
+							AND cc.`is_published` =true 
+						</if>
+						<if test="parameter.status ==1 ">
+							AND cc.`auth_status`= 2
+						</if>
+						<if test="parameter.status ==2 ">
+							AND cc.`is_stick` = true 
+						</if>
+						<if test="parameter.status ==3 ">
+							AND cc.`is_hot` = true
+						</if>
+						<if test="parameter.status ==4 ">
+							AND cc.`is_promote` = true 
+						</if>
+						<if test="parameter.status ==5 ">
+							AND cc.`is_hide`= true
+						</if>
+				</if>
+			</if>
+		order by cc.sort
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
+	<!--分页查询条件查询《社外内容管理》列表 -->
+	<select id="listContentManage" parameterType="PageParameter"
+		resultType="CmsContentVO">
+		SELECT 
+			cc.`id`,cc.`title`,pu.username,cc.`auth_status`,cc.`gmt_create`,cc.`clicks`,
+			cc.`comments`,cc.`likes`,cc.`bookmarks`
+			cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,t.count
+		FROM 
+			`cms_content`cc
+		LEFT JOIN
+			`pmph_user` pu 
+		ON
+			cc.auth_user_id = pu.id
+		LEFT JOIN 
+			`cms_category` ccg 
+		ON 
+			cc.`category_id` = ccg.`id`
+			(
+				SELECT 
+					count(*) count
+				FROM 
+					`cms_content`cc
+				LEFT JOIN
+					`pmph_user` pu 
+				ON
+					cc.auth_user_id = pu.id
+				LEFT JOIN 
+					`cms_category` ccg 
+				ON 
+					cc.`category_id` = ccg.`id`
+				WHERE
+					cc.`is_deleted`= 0 
+				AND
+					cc.`auth_status`= 2
+				<if test="parameter !=null ">
+					<if test="parameter.title != null and parameter.title != ''">
+						AND cc.`title` like concat('%',#{parameter.title},'%')
+					</if>
+					<if test="parameter.status !=null ">
+						<if test="parameter.status ==0 ">
+							AND cc.`is_published` =true 
+						</if>
+						<if test="parameter.status ==1 ">
+							AND cc.`auth_status`= 2
+						</if>
+						<if test="parameter.status ==2 ">
+							AND cc.`is_stick` = true 
+						</if>
+						<if test="parameter.status ==3 ">
+							AND cc.`is_hot` = true
+						</if>
+						<if test="parameter.status ==4 ">
+							AND cc.`is_promote` = true 
+						</if>
+						<if test="parameter.status ==5 ">
+							AND cc.`is_hide`= true
+						</if>
+					</if>
+				</if>
+			) t
+			WHERE
+				cc.`is_deleted`= 0 
+			AND
+				cc.`auth_status`= 2
+			<if test="parameter !=null ">
+				<if test="parameter.title != null and parameter.title != ''">
+					AND cc.`title` like concat('%',#{parameter.title},'%')
+				</if>
+				<if test="parameter.status !=null ">
+						<if test="parameter.status ==0 ">
+							AND cc.`is_published` =true 
+						</if>
+						<if test="parameter.status ==1 ">
+							AND cc.`auth_status`= 2
+						</if>
+						<if test="parameter.status ==2 ">
+							AND cc.`is_stick` = true 
+						</if>
+						<if test="parameter.status ==3 ">
+							AND cc.`is_hot` = true
+						</if>
+						<if test="parameter.status ==4 ">
+							AND cc.`is_promote` = true 
+						</if>
+						<if test="parameter.status ==5 ">
+							AND cc.`is_hide`= true
+						</if>
+				</if>
+			</if>
+		order by cc.sort
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
+	<!--分页查询条件查询《社外内容审核》列表 -->
+	<select id="listContentCheck" parameterType="PageParameter"
+		resultType="CmsContentVO">
+		SELECT 
+			cc.`id`,cc.`title`,pu.username,cc.`auth_status`,cc.`gmt_create`,cc.`clicks`,
+			cc.`comments`,cc.`likes`,cc.`bookmarks`
+			cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,t.count
+		FROM 
+			`cms_content`cc
+		LEFT JOIN
+			`pmph_user` pu 
+		ON
+			cc.author_id = pu.id
+		LEFT JOIN 
+			`cms_category` ccg 
+		ON 
+			cc.`category_id` = ccg.`id`
+			(
+				SELECT 
+					count(*) count
+				FROM 
+					`cms_content`cc
+				LEFT JOIN
+					`pmph_user` pu 
+				ON
+					cc.author_id = pu.id
+				LEFT JOIN 
+					`cms_category` ccg 
+				ON 
+					cc.`category_id` = ccg.`id`
+				WHERE
+					cc.`is_deleted`= 0 
+				AND
+					cc.`auth_status`= 0 
+				<if test="parameter !=null ">
+					<if test="parameter.title != null and parameter.title != ''">
+						AND cc.`title` like concat('%',#{parameter.title},'%')
+					</if>
+					<if test="parameter.status !=null ">
+						<if test="parameter.status ==0 ">
+							AND cc.`is_published` =true 
+						</if>
+						<if test="parameter.status ==1 ">
+							AND cc.`auth_status`= 2
+						</if>
+						<if test="parameter.status ==2 ">
+							AND cc.`is_stick` = true 
+						</if>
+						<if test="parameter.status ==3 ">
+							AND cc.`is_hot` = true
+						</if>
+						<if test="parameter.status ==4 ">
+							AND cc.`is_promote` = true 
+						</if>
+						<if test="parameter.status ==5 ">
+							AND cc.`is_hide`= true
+						</if>
+					</if>
+				</if>
+			) t
+			WHERE
+				cc.`is_deleted`= 0 
+			AND
+				cc.`auth_status`= 0 
+			<if test="parameter !=null ">
+				<if test="parameter.title != null and parameter.title != ''">
+					AND cc.`title` like concat('%',#{parameter.title},'%')
+				</if>
+				<if test="parameter.status !=null ">
+						<if test="parameter.status ==0 ">
+							AND cc.`is_published` =true 
+						</if>
+						<if test="parameter.status ==1 ">
+							AND cc.`auth_status`= 2
+						</if>
+						<if test="parameter.status ==2 ">
+							AND cc.`is_stick` = true 
+						</if>
+						<if test="parameter.status ==3 ">
+							AND cc.`is_hot` = true
+						</if>
+						<if test="parameter.status ==4 ">
+							AND cc.`is_promote` = true 
+						</if>
+						<if test="parameter.status ==5 ">
+							AND cc.`is_hide`= true
+						</if>
+				</if>
+			</if>
+		order by cc.sort
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
 	<!-- 根据id查询一个CmsContent -->
 	<select id="getCmsContentById" parameterType="java.lang.Long" resultType="CmsContent">
 		select * from cms_content where id=#{id};
@@ -316,11 +645,6 @@
 			cms_content
 	</select>
 	
-	<!-- 根据id删除一个 CmsContent-->
-	<delete id="deleteCmsContentById" parameterType="java.lang.Long">
-		delete from cms_content where id=#{id};
-	</delete>
-	
 	<!-- 批量删除-->
     <delete id="deleteCmsContentByIds" >
     	delete from cms_content
@@ -331,4 +655,7 @@
                  #{item}
 		</foreach>
     </delete>
+    
+    
+    
 </mapper>
