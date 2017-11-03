@@ -3,16 +3,9 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -165,17 +158,17 @@ public class BookServiceImpl extends BaseService implements BookService {
 					JSONArray array = ot.getJSONObject("RESP").getJSONObject("responseData").getJSONArray("results");
 					if (array.size() > 0) {
 						Book book = BusyResJSONToModel(array.getJSONObject(0), null);
-						String content = book.getContent();// 获取到图书详情将其存入到图书详情表中
-						if (ObjectUtil.isNull(book.getId())) {
-							book.setScore(9.0);
-							bookDao.addBook(book);
-							BookDetail bookDetail = new BookDetail(book.getId(), content);
-							bookDetailDao.addBookDetail(bookDetail);
-						} else {
-							bookDao.updateBook(book);
-							BookDetail bookDetail = new BookDetail(book.getId(), content);
-							bookDetailDao.updateBookDetail(bookDetail);
-						}
+//						String content = book.getContent();// 获取到图书详情将其存入到图书详情表中
+//						if (ObjectUtil.isNull(book.getId())) {
+//							book.setScore(9.0);
+//							bookDao.addBook(book);
+//							BookDetail bookDetail = new BookDetail(book.getId(), content);
+//							bookDetailDao.addBookDetail(bookDetail);
+//						} else {
+//							bookDao.updateBook(book);
+//							BookDetail bookDetail = new BookDetail(book.getId(), content);
+//							bookDetailDao.updateBookDetail(bookDetail);
+//						}
 					}
 				}
 			} catch (Exception e) {
@@ -269,11 +262,11 @@ public class BookServiceImpl extends BaseService implements BookService {
 		model.setBookname(item.getString("gdsName")); // 书名
 		model.setAuthor(item.getString("author")); // 作者
 		model.setReader(item.getString("reader")); // 读者对象
-		model.setPublishDate(Timestamp.valueOf(item.getString("publicDate") + " 00:00:00")); // 出版时间
+		model.setPublishDate(DateUtil.str2Date(item.getString("publicDate") + " 00:00:00")); // 出版时间
 		model.setPublisher(item.getString("publicCompany")); // 出版社
 		model.setRevision(Integer.parseInt(item.getString("edition"))); // 版次 ,印次
 		model.setLang(item.getString("language")); // 语言
-		model.setContent(item.getJSONArray("gdsDescList").getJSONObject(0).getString("gdsDescContent")); // 内容简介
+		//model.setContent(item.getJSONArray("gdsDescList").getJSONObject(0).getString("gdsDescContent")); // 内容简介
 		model.setImageUrl(item.getJSONArray("imageList").size() > 0
 				? item.getJSONArray("imageList").getJSONObject(0).getString("imgUrl")
 				: ""); // 图片地址

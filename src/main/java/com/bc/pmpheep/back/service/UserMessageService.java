@@ -21,6 +21,15 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  **/
 public interface UserMessageService {
+	/**
+     * 单条数据插入 UserMessage
+     * 
+     * @author Mryang
+     * @createDate 2017年9月28日 下午3:35:46
+     * @param userMessage
+     * @return userMessage带主键
+     */
+    UserMessage addUserMessage(UserMessage userMessage) ;
 
     /**
      * @param pageParameter 带有分页参数和查询条件参数
@@ -212,5 +221,10 @@ public interface UserMessageService {
      * 
      */
     Integer updateMyMessage(Long[] ids) throws CheckedServiceException;
+    
+    /**
+     * 通过id 动态更新UserMessage
+     */
+    Integer updateUserMessage(UserMessage userMessage);
 
 }

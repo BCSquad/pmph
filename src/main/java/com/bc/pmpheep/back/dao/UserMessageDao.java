@@ -68,6 +68,16 @@ public interface UserMessageDao {
      * 
      */
     List<UserMessageVO> listMessage(PageParameter<UserMessageVO> pageParameter);
+    
+    /**
+     * 单条数据插入 UserMessage
+     * 
+     * @author Mryang
+     * @createDate 2017年9月28日 下午3:35:46
+     * @param userMessage
+     * @return 影响行数
+     */
+    Integer addUserMessage(UserMessage userMessage);
 
     /**
      * 批量插入 UserMessage
@@ -115,7 +125,7 @@ public interface UserMessageDao {
     /**
      * 通过id 动态更新UserMessage
      */
-    Integer updateUserMessageById(UserMessage userMessage);
+    Integer updateUserMessage(UserMessage userMessage);
 
     /**
      * 

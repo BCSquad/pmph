@@ -32,6 +32,7 @@ import com.bc.pmpheep.back.service.MaterialOrgService;
 import com.bc.pmpheep.back.service.MaterialProjectEditorService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.MaterialTypeService;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
@@ -65,19 +66,45 @@ public class MigrationStageFour {
 		for (Map<String, Object> map : maps) {
 			Integer tempLevel=Integer.parseInt(String.valueOf(map.get("level")));
 			maxLevel = tempLevel>maxLevel?tempLevel:maxLevel;
-			MaterialType materialType=null;
+			String typeName=(String)map.get("TypeName");
+			StringBuilder  exception=  new StringBuilder("");
+			if(StringUtil.isEmpty(typeName)){
+				 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("类型名称为空").toString());
+				 excel.add(map);
+				 continue;
+			}
+			Integer sort =(Integer) map.get("Sortno");
+			if(null == sort){
+				 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("排序为空，设为默认999").toString());
+				 sort=999;
+				 excel.add(map);
+			}
+			String  note =(String)map.get("Remark");
+			if(StringUtil.isEmpty(note)){
+				 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("备注为空，设为默认为类型名称").toString());
+				 note=typeName;
+				 excel.add(map);
+			}
+			MaterialType materialType = new MaterialType(0L,"0",typeName,sort ,note);
 			try {
-				materialType = new MaterialType(0L,"0",(String)map.get("TypeName"), (Integer) map.get("Sortno"),(String)map.get("Remark"));
 				materialType=materialTypeService.addMaterialType(materialType);
-				count++;
 			} catch (Exception e) {
 				excel.add(map);
-				logger.error( e.getMessage());
+				map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage());
+				continue;
 			}
+			count++;
 			if(null != materialType.getId()){
 				JdbcHelper.updateNewPrimaryKey(tableName, materialType.getId(), "BookTypesID", map.get("BookTypesID"));//更新旧表中new_pk字段
 			}
 		}
+		if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, tableName, tableName);
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
+        }
 		//插入parentId和path
 //		String sql="select a1.NEW_BOOKTYPESID id,"+
 //					"ifnull(a2.NEW_BOOKTYPESID,0) parentid,"+
@@ -101,10 +128,27 @@ public class MigrationStageFour {
 			 sql += "LEFT JOIN sys_booktypes  a"+i+" on a"+i+".BookTypesID=a"+(i-1)+".ParentTypesID ";
 		}
 		maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+		excel = new LinkedList<>();
 		for (Map<String, Object> map : maps) {
+			StringBuilder  exception=  new StringBuilder("");
 			String path  =(String) map.get("path");
+			if(StringUtil.isEmpty(path)){
+				 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("path空,设默认0").toString());
+				 path="0";
+				 excel.add(map);
+			}
 			Long id      =(Long)map.get("id");
+			if(null == id){
+				 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("主键为空").toString());
+				 excel.add(map);
+				 continue;
+			}
 			Long parentId=(Long)map.get("parentid");
+			if(null == parentId){
+				 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("parentId为空,设为默认0").toString());
+				 parentId=0L;
+				 excel.add(map);
+			}
 			String temp="0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0";
 			for(int i=maxLevel;2*i-1>0;i--){
 				path = path.replace(temp.substring(0, 2*i-1), "0");
@@ -117,9 +161,9 @@ public class MigrationStageFour {
 		}
 		if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, tableName, tableName);
+                excelHelper.exportFromMaps(excel, tableName+"更新", tableName+"更新");
             } catch (IOException ex) {
-                logger.error("异常数据导出到Excel失败", ex);
+                logger.error("异常数据导出到Excel失败："+ex.getMessage(), ex);
             }
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
@@ -138,14 +182,14 @@ public class MigrationStageFour {
 		String sql="select "+
 					"a.materid, "+
 					"a.matername, "+
-					"if(a.teachround  is null or a.teachround  ='',1,a.teachround) round, "+
-					"if(i.new_pk is   null or    i.new_pk ='',0,i.new_pk) booktypesid, "+
+					"a.teachround round, "+
+					"i.new_pk  booktypesid, "+
 					"a.showenddate, "+
 					"a.enddate, "+
 					"a.agedeaddate, "+
 					"a.mailaddress, "+
 					"a.flowtype, "+
-					"ifnull(d.neworgid,0) DepartmentId , "+
+					"d.neworgid DepartmentId , "+
 					"d.newuserid director, "+
 					"a.isbookmulti, "+
 					"a.ispositionmulti, "+
@@ -200,16 +244,53 @@ public class MigrationStageFour {
 		int count =0;
 		for(Map<String, Object> oldMaterial:materialList){
 			Material material =new Material();
-			material.setMaterialName((String)oldMaterial.get("matername"));
-			material.setMaterialRound((Integer.parseInt(String.valueOf(oldMaterial.get("round")))));
-			material.setMaterialType((Long) oldMaterial.get("booktypesid"));
+			StringBuilder  exception=  new StringBuilder("");
+			String  matername = (String)oldMaterial.get("matername");
+			if(StringUtil.isEmpty(matername)){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材名称为空").toString());
+				excel.add(oldMaterial);
+				continue;
+			}
+			material.setMaterialName(matername);
+			Integer  round = (Integer.parseInt(String.valueOf(oldMaterial.get("round"))));
+			if(null == round){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("轮次为空,设默认值1").toString());
+				excel.add(oldMaterial);
+				round =1;
+			}
+			material.setMaterialRound(round);
+			Long booktypesid=(Long) oldMaterial.get("booktypesid");
+			if(null == booktypesid){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("架构为空，设为默认0").toString());
+				excel.add(oldMaterial);
+				booktypesid =0L;
+			}
+			material.setMaterialType(booktypesid);
 			material.setDeadline((Timestamp)oldMaterial.get("showenddate"));
 			material.setActualDeadline((Timestamp)oldMaterial.get("enddate"));
 			material.setAgeDeadline((Timestamp)oldMaterial.get("agedeaddate"));
-			material.setMailAddress((String)oldMaterial.get("mailaddress"));
+			String mailaddress=(String)oldMaterial.get("mailaddress");
+			if(StringUtil.isEmpty(mailaddress)){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("邮寄地址为空").toString());
+				excel.add(oldMaterial);
+				continue;
+			}
+			material.setMailAddress(mailaddress);
 			material.setProgress(new Short((String)oldMaterial.get("flowtype")));
-			material.setDepartmentId((Long)oldMaterial.get("DepartmentId"));
-			material.setDirector((Long) oldMaterial.get("director"));//director,
+			Long DepartmentId =(Long)oldMaterial.get("DepartmentId") ;
+			if(null == DepartmentId){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建部门为空").toString());
+				excel.add(oldMaterial);
+				continue;
+			}
+			material.setDepartmentId(DepartmentId);
+			Long director =(Long)oldMaterial.get("director") ;
+			if(null == director){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("主任为空").toString());
+				excel.add(oldMaterial);
+				continue;
+			}
+			material.setDirector(director);//director,
 			material.setIsMultiBooks("1".equals(String.valueOf(oldMaterial.get("isbookmulti")))); //is_multi_books,
 			material.setIsMultiPosition("1".equals(String.valueOf(oldMaterial.get("ispositionmulti"))));//is_multi_position,
 			material.setIsEduExpUsed("1".equals(String.valueOf(oldMaterial.get("isuselearnexp"))));//is_edu_exp_used,
@@ -239,15 +320,29 @@ public class MigrationStageFour {
 			material.setIsPublished("1".equals(String.valueOf(oldMaterial.get("ispublishfront"))));//is_published,
 			material.setIsDeleted("1".equals(String.valueOf(oldMaterial.get("isdelete"))));//is_deleted,
 			material.setGmtCreate((Timestamp)oldMaterial.get("createdate"));//gmt_create,
-			material.setFounderId((Long)oldMaterial.get("founder_id"));//founder_id,
+			Long founder_id =(Long)oldMaterial.get("founder_id") ;
+			if(null == founder_id){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建人为空").toString());
+				excel.add(oldMaterial);
+				continue;
+			}
+			material.setFounderId(founder_id);//founder_id,
 			material.setGmtUpdate((Timestamp)oldMaterial.get("updatedate"));//gmt_update,
+			Long mender_id =(Long)oldMaterial.get("mender_id") ;
+			if(null == mender_id){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("修改人id为空,设置默认为创建者").toString());
+				excel.add(oldMaterial);
+				mender_id = founder_id;
+			}
 			material.setMenderId((Long)oldMaterial.get("mender_id"));//mender_id
 			try {
 				material=materialService.addMaterial(material);
 				count++;
 			} catch (Exception e) {
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage()).toString());
 				excel.add(oldMaterial);
 				logger.error( e.getMessage());
+				continue;
 			}
 			if(null != material.getId()){
 				JdbcHelper.updateNewPrimaryKey(tableName, material.getId(), "materid",oldMaterial.get("materid"));//更新旧表中new_pk字段
@@ -284,14 +379,28 @@ public class MigrationStageFour {
 		int count =0;
 		for(Map<String, Object> materialExtension:materialExtensionList){
 			String oldExpendid = (String)materialExtension.get("expendid");
+			StringBuilder  exception=  new StringBuilder("");
 			MaterialExtension newMaterialExtension=new MaterialExtension();
-			newMaterialExtension.setMaterialId((Long)materialExtension.get("materid"));
-			newMaterialExtension.setExtensionName((String)materialExtension.get("expendname"));
+			Long materid =(Long)materialExtension.get("materid");
+			if(null == materid){
+				materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空").toString());
+				excel.add(materialExtension);
+				continue;
+			}
+			newMaterialExtension.setMaterialId(materid);
+			String expendname=(String)materialExtension.get("expendname");
+			if(StringUtil.isEmpty(expendname)){
+				materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append("扩展名称为空").toString());
+				excel.add(materialExtension);
+				continue;
+			}
+			newMaterialExtension.setExtensionName( expendname);
 			newMaterialExtension.setIsRequired("1".equals(String.valueOf(materialExtension.get("isfill"))));
 			try {
 				newMaterialExtension=materialExtensionService.addMaterialExtension(newMaterialExtension);
 				count++;
 			} catch (Exception e) {
+				materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage()).toString());
 				excel.add(materialExtension);
 				logger.error( e.getMessage());
 			}
@@ -325,11 +434,31 @@ public class MigrationStageFour {
 		//获取到所有数据表
 		List<Map<String, Object>> materialExtraList=JdbcHelper.getJdbcTemplate().queryForList(sql);
 		int count =0;
+		List<Map<String, Object>> excel = new LinkedList<>();
 		for(Map<String, Object> object:materialExtraList){
 			MaterialExtra materialExtra = new MaterialExtra();
-			materialExtra.setMaterialId((Long)object.get("new_pk"));
-			materialExtra.setNotice((String)object.get("introduction"));
-			materialExtra.setNote((String)object.get("remark"));
+			StringBuilder  exception=  new StringBuilder("");
+			Long materid =(Long)object.get("new_pk");
+			if(null == materid){
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空").toString());
+				excel.add(object);
+				continue;
+			}
+			materialExtra.setMaterialId(materid);
+			String notice =(String)object.get("introduction");
+			if(StringUtil.isEmpty(notice)){
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("通知内容为空").toString());
+				excel.add(object);
+				continue;
+			}
+			materialExtra.setNotice(notice);
+			String note =(String)object.get("remark");
+			if(StringUtil.isEmpty(note)){
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("备注").toString());
+				excel.add(object);
+				continue;
+			}
+			materialExtra.setNote(note);
 			try {
 				materialExtra=materialExtraService.addMaterialExtra(materialExtra);
 				count++;
@@ -338,6 +467,13 @@ public class MigrationStageFour {
 			}
 			mps.put(materialExtra.getMaterialId(), materialExtra.getId());
 		}
+		if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, "教材通知备注表", "教材通知备注表");
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
+        }
 		logger.info("'{}'表迁移完成，异常条目数量：{}", "material_extra",count);
     }
 	
@@ -361,10 +497,26 @@ public class MigrationStageFour {
 		List<Map<String, Object>> excel = new LinkedList<>();
 		int count =0;
 		for(Map<String, Object> map:materialNoticeAttachmentList){
+			StringBuilder  exception=  new StringBuilder("");
 			//文件名
 			String fileName = (String)map.get("filename") ;
+			if(StringUtil.isEmpty(fileName)){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("文件名称为空").toString());
+				excel.add(map);
+				continue;
+			}
 			Long newMaterid = (Long)  map.get("new_pk");
+			if(null == newMaterid){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空").toString());
+				excel.add(map);
+				continue;
+			}
 			Long materialExtraId = mps.get(newMaterid);
+			if(null == materialExtraId){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材通知备注id").toString());
+				excel.add(map);
+				continue;
+			}
 			MaterialNoticeAttachment materialNoticeAttachment =new MaterialNoticeAttachment();
 			materialNoticeAttachment.setMaterialExtraId(materialExtraId);
 			//先用一个临时的"-"占位，不然会报错;
@@ -390,9 +542,20 @@ public class MigrationStageFour {
 	            	materialNoticeAttachment.setAttachment(mongoId);
 	                materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
 	                count++;
-	            }
+	            }else{
+					map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("文件保存失败或者文件不存在").toString());
+					excel.add(map);
+					continue;
+				}
 	        }
 		}
+		if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, "教材通知附件表", "教材通知附件表");
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
+        }
 		logger.info("教材通知附件表迁移了{}条数据",count);
 	}
 	
@@ -412,10 +575,26 @@ public class MigrationStageFour {
 		List<Map<String, Object>> excel = new LinkedList<>();
 		int count =0;
 		for(Map<String, Object> map:materialMaterialNoteAttachmentList){
+			StringBuilder  exception=  new StringBuilder("");
 			//文件名
 			String fileName =(String) map.get("filename");
+			if(StringUtil.isEmpty(fileName)){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("文件名称为空").toString());
+				excel.add(map);
+				continue;
+			}
 			Long newMaterid =(Long)   map.get("materid");
+			if(null == newMaterid){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空").toString());
+				excel.add(map);
+				continue;
+			}
 			Long materialExtraId = mps.get(newMaterid);
+			if(null == materialExtraId){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材通知备注id").toString());
+				excel.add(map);
+				continue;
+			}
 			MaterialNoteAttachment materialNoteAttachment =new MaterialNoteAttachment();
 			materialNoteAttachment.setMaterialExtraId(materialExtraId);
 			//先用一个临时的"-"占位，不然会报错;
@@ -441,9 +620,20 @@ public class MigrationStageFour {
 	            	materialNoteAttachment.setAttachment(mongoId);
 	            	materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
 	                count++;
-	            }
+	            }else{
+					map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("文件保存失败或者文件不存在").toString());
+					excel.add(map);
+					continue;
+				}
 	        }
 		}
+		if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, "教材备注附件表", "教材备注附件表");
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
+        }
 		logger.info("教材通知附件表迁移了{}条数据",count);
 	}
 	
@@ -470,17 +660,57 @@ public class MigrationStageFour {
 		List<Map<String, Object>> excel = new LinkedList<>();
 		int count =0;
 		for(Map<String, Object> object:materialContactList){
+			StringBuilder  exception=  new StringBuilder("");
+			Long materid =(Long) object.get("materid");
+			if(null == materid){
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空").toString());
+				excel.add(object);
+				continue;
+			}
+			Long userid =(Long) object.get("userid");
+			if(null == userid){
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("联系人id为空").toString());
+				excel.add(object);
+				continue;
+			}
+			String username =(String) object.get("username");
+			if(StringUtil.isEmpty(username)){
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("联系人姓名为空").toString());
+				excel.add(object);
+				continue;
+			}
+			String linkphone =(String) object.get("linkphone");
+			if(StringUtil.isEmpty(linkphone)){
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("联系人电话为空").toString());
+				excel.add(object);
+				continue;
+			}
+			String email =(String) object.get("email");
+			if(StringUtil.isEmpty(email)){
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("联系人邮箱为空").toString());
+				excel.add(object);
+				continue;
+			}
+			Integer orderno =(Integer) object.get("orderno");
+			if(null == orderno){
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("联系人排序为空,社默认999").toString());
+				orderno =999;
+				excel.add(object);
+			}
 			MaterialContact materialContact= new MaterialContact(
-					(Long) object.get("materid"),
-					(Long) object.get("userid"),
-					(String) object.get("username"),
-					(String)object.get("linkphone"), 
-					(String)object.get("email"),
-					(Integer) object.get("orderno"));
+					materid,
+					userid,
+					username,
+					linkphone, 
+					email,
+					orderno
+					);
+			
 			try {
 				materialContact=materialContactService.addMaterialContact(materialContact);
 				count++;
 			} catch (Exception e) {
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage()).toString());
 				excel.add(object);
 				logger.error( e.getMessage());
 			}
@@ -517,11 +747,25 @@ public class MigrationStageFour {
 		List<Map<String, Object>> excel = new LinkedList<>();
 		int count =0;
 		for(Map<String, Object> object:pubList){
-			MaterialOrg materialOrg= new MaterialOrg((Long) object.get("materid"), (Long) object.get("orgid"));
+			StringBuilder  exception=  new StringBuilder("");
+			Long materid =(Long) object.get("materid");
+			if(null == materid){
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空").toString());
+				excel.add(object);
+				continue;
+			}
+			Long orgid =(Long) object.get("orgid");
+			if(null == orgid){
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("结构id为空").toString());
+				excel.add(object);
+				continue;
+			}
+			MaterialOrg materialOrg= new MaterialOrg(materid,orgid);
 			try {
 				materialOrg=materialOrgService.addMaterialOrg(materialOrg);
 				count++;
 			} catch (Exception e) {
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage()).toString());
 				excel.add(object);
 				logger.error( e.getMessage());
 			}
@@ -562,11 +806,25 @@ public class MigrationStageFour {
 		List<Map<String, Object>> excel = new LinkedList<>();
 		int count =0;
 		for(Map<String, Object> object:materialProjectEditorList){
-			MaterialProjectEditor materialProjectEditor= new MaterialProjectEditor((Long) object.get("materid"), (Long) object.get("userid"));
+			StringBuilder  exception=  new StringBuilder("");
+			Long materid =(Long) object.get("materid");
+			if(null == materid){
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空").toString());
+				excel.add(object);
+				continue;
+			}
+			Long userid =(Long) object.get("userid");
+			if(null == userid){
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("用户id为空").toString());
+				excel.add(object);
+				continue;
+			}
+			MaterialProjectEditor materialProjectEditor= new MaterialProjectEditor(materid, userid);
 			try {
 				materialProjectEditor=materialProjectEditorService.addMaterialProjectEditor(materialProjectEditor);
 				count++;
 			} catch (Exception e) {
+				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage()).toString());
 				excel.add(object);
 				logger.error( e.getMessage());
 			}
@@ -583,13 +841,13 @@ public class MigrationStageFour {
 	}
 	
 	public void start() throws Exception {
-		//materialType();
-//		material();
-//		materialExtension();
-//		materialExtra();
-//		transferMaterialNoticeAttachment();
-//		transferMaterialNoteAttachment();
-//		transferMaterialContact();
+		materialType();
+		material();
+		materialExtension();
+		materialExtra();
+		transferMaterialNoticeAttachment();
+		transferMaterialNoteAttachment();
+		transferMaterialContact();
 		materialOrg();
 		materialPprojectEeditor();
 	}
