@@ -30,7 +30,7 @@ public class Declaration implements java.io.Serializable {
 	//作家生日
 	private Date birthday;
 	//作家教龄
-	private Short experience;
+	private Integer experience;
 	//作家工作单位
 	private String orgName;
 	//作家职务
@@ -90,7 +90,7 @@ public class Declaration implements java.io.Serializable {
 
 
 	public Declaration(Long materialId, Long userId, String realname,
-			Integer sex, Date birthday, Short experience, String orgName,
+			Integer sex, Date birthday, Integer experience, String orgName,
 			String position, String title, String address, String postcode,
 			String handphone, String email, Short idtype, String idcard,
 			String telephone, String fax, Long orgId, Integer onlineProgress,
@@ -128,7 +128,7 @@ public class Declaration implements java.io.Serializable {
 
 	/** full constructor */
 	public Declaration(Long materialId, Long userId, String realname,
-			Integer sex, Date birthday, Short experience, String orgName,
+			Integer sex, Date birthday, Integer experience, String orgName,
 			String position, String title, String address, String postcode,
 			String handphone, String email, Short idtype, String idcard,
 			String telephone, String fax, Long orgId, Integer onlineProgress,
@@ -212,11 +212,11 @@ public class Declaration implements java.io.Serializable {
 		this.birthday = birthday;
 	}
 
-	public Short getExperience() {
+	public Integer getExperience() {
 		return experience;
 	}
 
-	public void setExperience(Short experience) {
+	public void setExperience(Integer experience) {
 		this.experience = experience;
 	}
 

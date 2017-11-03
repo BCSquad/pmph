@@ -104,7 +104,7 @@
 			<if test="sex !=null and sex !=''">
 				#{sex},
 			</if>
-			<if test="birthday !=null and birthday !=''">
+			<if test="birthday !=null">
 			    #{birthday},
 			</if>
 			<if test="experience !=null and experience !=''">
@@ -152,13 +152,13 @@
 			<if test="authUserId !=null and authUserId !=''">
 				#{authUserId},
 			</if>
-			<if test="authDate !=null and authDate !=''">
+			<if test="authDate !=null">
 				#{authDate},
 			</if>
 			<if test="offlineProgress !=null and offlineProgress !=''">
 				#{offlineProgress},
 			</if>
-			<if test="paperDate !=null and paperDate !=''">
+			<if test="paperDate !=null">
 				#{paperDate},
 			</if>
 			<if test="isStaging !=null and isStaging !=''">
@@ -207,7 +207,7 @@
 			<if test="sex !=null and sex !=''">
 				sex = #{sex},
 			</if>
-			<if test="birthday !=null and birthday !=''">
+			<if test="birthday !=null">
 			    birthday = #{birthday},
 			</if>
 			<if test="experience !=null and experience !=''">
@@ -255,13 +255,13 @@
 			<if test="authUserId !=null and authUserId !=''">
 				auth_user_id = #{authUserId},
 			</if>
-			<if test="authDate !=null and authDate !=''">
+			<if test="authDate !=null">
 				auth_date = #{authDate},
 			</if>
 			<if test="offlineProgress !=null and offlineProgress !=''">
 				offline_progress = #{offlineProgress},
 			</if>
-			<if test="paperDate !=null and paperDate !=''">
+			<if test="paperDate !=null">
 				paper_date = #{paperDate},
 			</if>
 			<if test="isStaging !=null and isStaging !=''">
