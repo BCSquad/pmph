@@ -9,14 +9,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import com.bc.pmpheep.back.po.MessageAttachment;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.service.MessageAttachmentService;
 import com.bc.pmpheep.back.service.UserMessageService;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.general.service.MessageService;
@@ -47,6 +51,7 @@ public class MigrationStageSeven {
 	@Resource
     private ExcelHelper excelHelper;
 	
+	@SuppressWarnings("all")
 	public void userMessage_messageAttachment (){
 		String sql="select "+
 						 "DISTINCT  "+
@@ -74,13 +79,44 @@ public class MigrationStageSeven {
 		Map<String, String>       msgidOldAndNew = new HashMap<String, String>(maps.size());
 		int count =0; 
 		for (Map<String, Object> map : maps) {
+			StringBuilder  exception=  new StringBuilder("");
 			//先保存这条记录
 			Short msgtype    = new Short (String.valueOf(map.get("msgtype")));
+			if(null == msgtype ){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("消息类型为空,设置默认 0").toString());
+				excel.add(map);
+				msgtype =0;
+			}
 			String title     =(String)map.get("title");
+			if(StringUtil.isEmpty(title)){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("消息标题为空").toString());
+				excel.add(map);
+				continue;
+			}
 			Long senderid    =(Long)  map.get("senderid");
+			if(null == senderid ){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("发送者id为空").toString());
+				excel.add(map);
+				continue;
+			}
 			Short sendertype =new Short(String.valueOf(map.get("sendertype")));
+			if(null == sendertype ){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("发送者类型为空,设置默认 0").toString());
+				excel.add(map);
+				sendertype =0;
+			}
 			Long receiverid  =(Long ) map.get("receiverid");
+			if(null == receiverid ){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("接收者id为空").toString());
+				excel.add(map);
+				continue;
+			}
 			Short receivertype=new Short (String.valueOf((map.get("receivertype"))));
+			if(null == receivertype ){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("接收者类型为空,设置默认 0").toString());
+				excel.add(map);
+				receivertype =0;
+			}
 			Boolean isread    ="1".equals(map.get("isread"));
 			Boolean iswithdraw="1".equals(map.get("iswithdraw"));
 			Boolean isdeleted ="1".equals(map.get("isdeleted"));
@@ -91,6 +127,7 @@ public class MigrationStageSeven {
 			try {
 				userMessage=userMessageSevice.addUserMessage(userMessage);
 			} catch (Exception e) {
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage().toString()));
 				excel.add(map);
 				logger.error( e.getMessage());
 				continue;

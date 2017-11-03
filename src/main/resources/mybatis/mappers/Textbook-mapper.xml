@@ -57,6 +57,12 @@
 			<if test="founderId != null ">
 				founder_id,
 			</if>
+			<if test="gmtCreate != null ">
+				gmt_create,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -113,6 +119,12 @@
 			</if>
 			<if test="founderId != null">
 				#{founderId},
+			</if>
+			<if test="gmtCreate != null ">
+				#{gmtCreate},
+			</if>
+			<if test="gmtUpdate != null ">
+				#{gmtUpdate}
 			</if>
 		</trim>
 	</sql>
