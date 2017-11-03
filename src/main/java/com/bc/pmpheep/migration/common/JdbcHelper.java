@@ -136,4 +136,21 @@ public class JdbcHelper {
         }
         return path;
     }
+    
+    /**
+     * 
+     * Description:判断表中唯一值方法
+     * @author:若表中除主键外有需要判断重复值的列，调用此方法，若重名，返回true，否则返回false
+     * @date:2017年11月3日上午2:41:47
+     * @param list 装有需要判断字段值的集合
+     * @param name 需要判断的具体值
+     * @return boolean
+     */
+    public static boolean nameDuplicate (List<String> list ,String name){
+    	boolean flag = false;
+    	if (list.contains(name)){
+    		flag = true;
+    	}
+    	return flag;
+    }
 }

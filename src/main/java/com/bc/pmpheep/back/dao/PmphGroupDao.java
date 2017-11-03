@@ -17,50 +17,67 @@ import com.bc.pmpheep.back.vo.PmphGroupListVO;
 public interface PmphGroupDao {
 	/**
 	 * 
-	 * @param  pmphGroup 实体对象
-	 * @return   影响行数
-	 */
-	Integer addPmphGroup (PmphGroup pmphGroup) ;
-	
-	/**
-	 * 
-	 * @param id 主键ID
-	 * @return  PmphGroup
-	 */
-	PmphGroup getPmphGroupById(Long  id) ;
-	
-	/**
-	 * 
-	 * @param id 主键ID
-	 * @return  影响行数
-	 */
-	Integer deletePmphGroupById(Long  id) ;
-	
-	/**
-	 * PmphGroup全字段更新
-	 * @param pmphGroup 必须包含主键
+	 * @param pmphGroup
+	 *            实体对象
 	 * @return 影响行数
 	 */
-	Integer updatePmphGroup(PmphGroup pmphGroup) ;
-	
+	Integer addPmphGroup(PmphGroup pmphGroup);
+
+	/**
+	 * 
+	 * @param id
+	 *            主键ID
+	 * @return PmphGroup
+	 */
+	PmphGroup getPmphGroupById(Long id);
+
+	/**
+	 * 
+	 * @param id
+	 *            主键ID
+	 * @return 影响行数
+	 */
+	Integer deletePmphGroupById(Long id);
+
+	/**
+	 * PmphGroup全字段更新
+	 * 
+	 * @param pmphGroup
+	 *            必须包含主键
+	 * @return 影响行数
+	 */
+	Integer updatePmphGroup(PmphGroup pmphGroup);
+
 	/**
 	 * 根据小组名称模糊查询获取当前用户的小组
-	 * @introduction 
+	 * 
+	 * @introduction
 	 * @author Mryang
 	 * @createDate 2017年9月20日 下午5:27:54
-	 * @param pmphGroup ,id当前用户id
-	 * @return  List<PmphGroupListVO>
+	 * @param pmphGroup
+	 *            ,id当前用户id
+	 * @return List<PmphGroupListVO>
 	 */
-	List<PmphGroupListVO> getList    (@Param("pmphGroup")PmphGroup pmphGroup,@Param("id")Long id) ;
-	
+	List<PmphGroupListVO> getList(@Param("pmphGroup") PmphGroup pmphGroup, @Param("id") Long id);
+
 	/**
-     * 
-     * <pre>
-     * 功能描述：查询表单的数据总条数
-     * 使用示范：
-     *
-     * @return 表单的总条数
-     * </pre>
-     */
-    Long getPmphGroupCount();
+	 * 
+	 * <pre>
+	 * 功能描述：查询表单的数据总条数
+	 * 使用示范：
+	 *
+	 * @return 表单的总条数
+	 * </pre>
+	 */
+	Long getPmphGroupCount();
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：超级管理员获取所有小组
+	 *
+	 * @return
+	 *
+	 */
+	List<PmphGroupListVO> listPmphGroup();
 }

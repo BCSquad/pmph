@@ -6,9 +6,9 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="id !=null "> 
-		    	id,
-		    </if>
+			<if test="id !=null ">
+				id,
+			</if>
 			<if test="parentId != null and parentId !=''">
 				parent_id,
 			</if>
@@ -30,9 +30,9 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="id !=null "> 
-		    	#{id},
-		    </if>
+			<if test="id !=null ">
+				#{id},
+			</if>
 			<if test="parentId !=null and parentId !=''">
 				#{parentId},
 			</if>
@@ -111,21 +111,32 @@
 	</select>
 
 	<!-- 根据父级id获取社内机构下级所有部门 -->
-	<select id="listPmphDepartment" parameterType="java.lang.Long" resultType="PmphUserDepartmentVO">
-		select * from pmph_department where parent_id = #{parentId} order by sort;
+	<select id="listPmphDepartment" parameterType="java.lang.Long"
+		resultType="PmphUserDepartmentVO">
+		select * from pmph_department where parent_id = #{parentId}
+		order by sort;
 	</select>
-	
-		<!-- 根据部门名称模糊查询部门 -->
-	<select id="listPmphDepartmentByDpName" parameterType="java.lang.String" resultType="PmphUserDepartmentVO">
-		select id,dp_name from pmph_department where dp_name like #{dpName};
-	</select>
-	
-	<!-- 批量删除-->
-    <delete id="deletePmphDepartmentBatch" >
-    	delete from pmph_department where true and id in 
-    	<foreach item="id" collection="list" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
 
+	<!-- 根据部门名称模糊查询部门 -->
+	<select id="listPmphDepartmentByDpName" parameterType="java.lang.String"
+		resultType="PmphUserDepartmentVO">
+		select id,dp_name from pmph_department where dp_name like
+		#{dpName};
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deletePmphDepartmentBatch">
+		delete from pmph_department where true and id in
+		<foreach item="id" collection="list" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+	<!-- 根据父级id 和 名称查询 -->
+	<select id="getPmphDepartmentByDpNameAndParentId" parameterType="PmphDepartment"
+		resultType="PmphUserDepartmentVO">
+		select * from pmph_department where dp_name =
+		#{dpName} and
+		parent_id = #{parentId};
+	</select>
 </mapper>

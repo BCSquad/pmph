@@ -133,9 +133,12 @@ public class MigrationStageSeven {
 				continue;
 			}
 			count++;
-			//对html的图片处理
+			if(count%1000==0){//打印进度
+				logger.info("执行了:"+(count*100.0)/maps.size()+"%");
+			}
+			//对html里面内置的图片处理
 			String msgid=      String.valueOf(map.get("msgid"));
-			String msg_id = msgidOldAndNew.get("msgid"); //MongoDB对应主键
+			String msg_id = msgidOldAndNew.get(msgid); //MongoDB对应主键
 			if(null == msg_id || "".equals(msg_id)){//消息主体没有存入
 				String msgcontent =(String) map.get("msgcontent");
 				List<String>srcs  =getImgSrc(msgcontent);
@@ -156,7 +159,7 @@ public class MigrationStageSeven {
 				message = messageService.add(message);
 				msg_id  = message.getId();
 				msgidOldAndNew.put(msgid, msg_id);
-				//插入附件
+				//附件处理
 				sql="select c.* from sys_messages a  "+
                 		"LEFT JOIN (   "+
                 			 "sELECT * FROM pub_addfileinfo WHERE tablename ='SYS_MESSAGES' AND childsystemname='sysNotice'   "+

@@ -252,7 +252,12 @@ public class MigrationStageFour {
 				continue;
 			}
 			material.setMaterialName(matername);
-			Integer  round = (Integer.parseInt(String.valueOf(oldMaterial.get("round"))));
+			Integer  round = null;
+			try {
+				round=(Integer.parseInt(String.valueOf(oldMaterial.get("round"))));
+			} catch (Exception e) {
+				
+			}
 			if(null == round){
 				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("轮次为空,设默认值1").toString());
 				excel.add(oldMaterial);
@@ -691,7 +696,12 @@ public class MigrationStageFour {
 				excel.add(object);
 				continue;
 			}
-			Integer orderno =(Integer) object.get("orderno");
+			Integer orderno =null;
+			try {
+				orderno=(Integer) object.get("orderno");
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 			if(null == orderno){
 				object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("联系人排序为空,社默认999").toString());
 				orderno =999;
