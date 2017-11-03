@@ -54,7 +54,7 @@ public interface OrgDao {
 	 * 功能描述：查询表单的数据总条数
 	 * 使用示范：
 	 *
-	 * &#64;return 表单的总条数
+	 * @return 表单的总条数
 	 * </pre>
 	 */
 	Long getOrgCount();
@@ -76,8 +76,13 @@ public interface OrgDao {
 	 * 功能描述：获取学校管理员审核列表(同时查询分页数据和总条数）
 	 * 使用示范：
 	 *
+<<<<<<< HEAD
+	 * @param pageParameter
+	 * @return
+=======
 	 * &#64;param pageParameter
 	 * &#64;return
+>>>>>>> branch 'develop' of https://github.com/BCSquad/pmph.git
 	 * </pre>
 	 */
 	List<OrgVO> getSchoolAdminCheckList(PageParameter<OrgVO> pageParameter);
