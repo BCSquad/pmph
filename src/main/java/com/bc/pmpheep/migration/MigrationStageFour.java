@@ -2,10 +2,13 @@ package com.bc.pmpheep.migration;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -175,6 +178,7 @@ public class MigrationStageFour {
 	@Autowired
 	private MaterialService materialService;
 	
+	@SuppressWarnings("all")
 	public  void material() throws Exception{
 		
 		
@@ -353,6 +357,13 @@ public class MigrationStageFour {
 				JdbcHelper.updateNewPrimaryKey(tableName, material.getId(), "materid",oldMaterial.get("materid"));//更新旧表中new_pk字段
 			}
 		}
+		List<Map<String, Object>> neweExcel = new  ArrayList<Map<String, Object>>(); 
+        for (Map<String, Object> map:excel) {
+        	if(!neweExcel.contains(map)){
+        		neweExcel.add(map);
+            }
+        }
+        excel=neweExcel;
 		if (excel.size() > 0) {
             try {
                 excelHelper.exportFromMaps(excel, tableName, tableName);

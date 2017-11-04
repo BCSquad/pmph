@@ -87,18 +87,18 @@ public class MigrationStageSix {
     ExcelHelper excelHelper;
 	
 	public void start(){
-		//declaration();
-		//decEduExp();
-		//decWorkExp();
-		//decTeachExp();
-		//decAcade();
-		//decLastPosition();
-		//decCourseConstruction();
-		//decNationalPlan();
-		//decTextbook();
-		//decResearch();
+		declaration();
+		decEduExp();
+		decWorkExp();
+		decTeachExp();
+		decAcade();
+		decLastPosition();
+		decCourseConstruction();
+		decNationalPlan();
+		decTextbook();
+		decResearch();
 		decExtension();
-		//decPosition();
+		decPosition();
 	}
 	
 	/**
