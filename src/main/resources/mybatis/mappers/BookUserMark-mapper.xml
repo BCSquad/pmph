@@ -64,7 +64,15 @@
 		book_user_mark where
 		id=#{id} ;
 	</delete>
-
+	
+	<!-- 根据书籍id删除 -->
+	<delete id="deleteBookUserMarkByBookId" parameterType="java.lang.Long">
+		delete
+		from
+		book_user_mark where
+		book_id=#{bookId} ;
+	</delete>
+	
 	<!-- 更新BookUserMark -->
 	<update id="updateBookUserMark" parameterType="BookUserMark">
 		update book_user_mark

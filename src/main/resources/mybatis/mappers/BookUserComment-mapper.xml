@@ -207,6 +207,14 @@
 		</if>
 
 	</select>
+
+	<!-- 根据书籍id删除 -->
+	<delete id="deleteBookUserCommentByBookId" parameterType="java.lang.Long">
+		delete
+		from
+		book_user_comment where
+		book_id=#{bookId} ;
+	</delete>
 	<!-- 批量删除评论 -->
 	<delete id="deleteBookUserCommentById">
 		delete from

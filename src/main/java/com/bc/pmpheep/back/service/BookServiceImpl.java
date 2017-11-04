@@ -3,16 +3,9 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -152,33 +145,30 @@ public class BookServiceImpl extends BaseService implements BookService {
 
 	@Override
 	public String AbuttingJoint(String[] vns, Integer type) throws CheckedServiceException {
-		// TODO Auto-generated method stub
 		String result = "SUCCESS";
 		for (int i = 0; i < vns.length; i++) {
 			JSONObject ot = new JSONObject();
 			try {
 				ot = PostBusyAPI(vns[i]);
-				if (ot.getJSONObject("RESP").getString("CODE").equals("1")) {
+				if ("1".equals(ot.getJSONObject("RESP").getString("CODE"))) {
 					// 请求成功并正常返回
 					if (type == 1) {
 						emptyBooks(vns[i]);// 如果请求成功有返回值时，清除所有数据
-
 					}
 					JSONArray array = ot.getJSONObject("RESP").getJSONObject("responseData").getJSONArray("results");
 					if (array.size() > 0) {
 						Book book = BusyResJSONToModel(array.getJSONObject(0), null);
-						String content = book.getContent();// 获取到图书详情将其存入到图书详情表中
-						if (ObjectUtil.isNull(book.getId())) {
-							book.setScore(9.0);
-							bookDao.addBook(book);
-							BookDetail bookDetail = new BookDetail(book.getId(), content);
-							bookDetailDao.addBookDetail(bookDetail);
-						} else {
-							bookDao.updateBook(book);
-							BookDetail bookDetail = new BookDetail(book.getId(), content);
-							bookDetailDao.updateBookDetail(bookDetail);
-						}
-
+//						String content = book.getContent();// 获取到图书详情将其存入到图书详情表中
+//						if (ObjectUtil.isNull(book.getId())) {
+//							book.setScore(9.0);
+//							bookDao.addBook(book);
+//							BookDetail bookDetail = new BookDetail(book.getId(), content);
+//							bookDetailDao.addBookDetail(bookDetail);
+//						} else {
+//							bookDao.updateBook(book);
+//							BookDetail bookDetail = new BookDetail(book.getId(), content);
+//							bookDetailDao.updateBookDetail(bookDetail);
+//						}
 					}
 				}
 			} catch (Exception e) {
@@ -218,7 +208,6 @@ public class BookServiceImpl extends BaseService implements BookService {
 			app_secret = config[2];
 			session_key = config[3];
 		}
-
 		String sendTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
 		StringBuffer sbSgin = new StringBuffer();
 		sbSgin.append(app_secret);
@@ -273,11 +262,11 @@ public class BookServiceImpl extends BaseService implements BookService {
 		model.setBookname(item.getString("gdsName")); // 书名
 		model.setAuthor(item.getString("author")); // 作者
 		model.setReader(item.getString("reader")); // 读者对象
-		model.setPublishDate(Timestamp.valueOf(item.getString("publicDate") + " 00:00:00")); // 出版时间
+		model.setPublishDate(DateUtil.str2Date(item.getString("publicDate") + " 00:00:00")); // 出版时间
 		model.setPublisher(item.getString("publicCompany")); // 出版社
 		model.setRevision(Integer.parseInt(item.getString("edition"))); // 版次 ,印次
 		model.setLang(item.getString("language")); // 语言
-		model.setContent(item.getJSONArray("gdsDescList").getJSONObject(0).getString("gdsDescContent")); // 内容简介
+		//model.setContent(item.getJSONArray("gdsDescList").getJSONObject(0).getString("gdsDescContent")); // 内容简介
 		model.setImageUrl(item.getJSONArray("imageList").size() > 0
 				? item.getJSONArray("imageList").getJSONObject(0).getString("imgUrl")
 				: ""); // 图片地址
@@ -307,6 +296,19 @@ public class BookServiceImpl extends BaseService implements BookService {
 		bookUserCommentDao.deleteBookUserCommentByBookId(id);
 		bookUserLikeDao.deleteBookUserLikeByBookId(id);
 		bookUserMarkDao.deleteBookUserMarkByBookId(id);
+	}
 
+	@Override
+	public String deleteBookById(Long id) throws CheckedServiceException {
+		if (ObjectUtil.isNull(id)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"书籍id为空");
+		}
+		bookDao.deleteBookById(id);
+		bookDetailDao.deleteBookDetailByBookId(id);
+		bookUserCommentDao.deleteBookUserCommentByBookId(id);
+		bookUserLikeDao.deleteBookUserLikeByBookId(id);
+		bookUserMarkDao.deleteBookUserMarkByBookId(id);
+		return "SUCCESS";
 	}
 }

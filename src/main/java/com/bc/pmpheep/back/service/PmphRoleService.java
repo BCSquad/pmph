@@ -16,12 +16,19 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  */
 public interface PmphRoleService {
+	/**
+     * 添加单个角色对象
+     * 
+     * @param role 角色对象
+     */
+	PmphRole addPmphRole(PmphRole role) throws CheckedServiceException;
+	
     /**
      * 添加单个角色对象
      * 
      * @param role 角色对象
      */
-    PmphRole add(PmphRole role) throws CheckedServiceException;
+    PmphRole add(PmphRole role,Long[] ids) throws CheckedServiceException;
 
     /**
      * 根据角色 id 删除单个角色对象

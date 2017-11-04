@@ -37,7 +37,7 @@ public class PmphRoleServiceTest extends BaseTest {
         PmphRole role = new PmphRole();
         role.setRoleName("角色11");
         role.setNote("角色11");
-        Assert.assertNotNull(roleService.add(role));// 添加角色
+        Assert.assertNotNull(roleService.addPmphRole(role));// 添加角色
         roleService.addUserRole(1L, 4L);// 添加用户角色
         List<Long> list = new ArrayList<>();
         list.add(4L);

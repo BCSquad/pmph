@@ -33,8 +33,8 @@ public class DecTextbookServiceTest extends BaseTest {
 	@Test
 	public void test() {
 		Date date = new Date();
-		DecTextbook decTextbook = new DecTextbook(19L, "心理诊断学", (short) 2,
-				(short) 3, "科学出版社", date, "ISBN-15640", "必修", 10);
+		DecTextbook decTextbook = new DecTextbook(19L, "心理诊断学", (Integer) 2,
+				(Integer) 3, "科学出版社", date, "ISBN-15640", "必修", 10);
 		decTextbookService.addDecTextbook(decTextbook);
 		Assert.assertTrue("添加数据失败", decTextbook.getId() > 0);
 		logger.info("--------数据添加成功---------");

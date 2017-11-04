@@ -301,6 +301,7 @@
 	</delete>
 	
 	<!-- 根据CategoryId删除一个 CmsCategoryRole-->
+<<<<<<< HEAD
 	<delete id="deleteCmsCategoryRoleByCategoryId" parameterType="CmsCategoryRole">
 		delete from 
 			cms_category_role 
@@ -308,6 +309,10 @@
 			category_id = #{categoryId} 
 		and 
 			permission_type = #{permissionType};
+=======
+	<delete id="deleteCmsCategoryRoleByCategoryId" parameterType="java.lang.Long">
+		delete from cms_category_role where category_id = #{categoryId};
+>>>>>>> branch 'develop' of https://github.com/BCSquad/pmph.git
 	</delete>
 	
 	<!-- 批量删除-->

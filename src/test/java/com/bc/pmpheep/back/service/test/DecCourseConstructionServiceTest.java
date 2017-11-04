@@ -32,11 +32,11 @@ public class DecCourseConstructionServiceTest extends BaseTest{
 	public void test() {
 		logger.info("---------作家精品课程建设情况信息测试------------");
 		DecCourseConstruction decCourseConstruction = new DecCourseConstruction(
-				9L, "管理心理学", "36", (short) 1, "专业必修", 8);
+				9L, "管理心理学", "36", (Integer) 1, "专业必修", 8);
 		decCourseConstructionService.addDecCourseConstruction(decCourseConstruction);
 		Assert.assertTrue("添加数据失败", decCourseConstruction.getId()>0);
 		logger.info("--------添加数据成功---------");
-		decCourseConstruction.setType((short)72);
+		decCourseConstruction.setType((Integer)72);
 		Assert.assertTrue("更新失败", decCourseConstructionService.updateDecCourseConstruction(decCourseConstruction)>0);
 		logger.info("---------数据更新成功----------");
 		Assert.assertNotNull("获取数据失败", decCourseConstructionService.getDecCourseConstructionById(2L));

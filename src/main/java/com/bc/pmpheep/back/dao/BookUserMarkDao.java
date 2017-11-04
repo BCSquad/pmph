@@ -50,5 +50,5 @@ public interface BookUserMarkDao {
 	 * @return
 	 *
 	 */
-	Integer deleteBookUserMarkByBookId(Long bookId);// 未写mapper方法
+	Integer deleteBookUserMarkByBookId(Long bookId);
 }

@@ -55,7 +55,7 @@ public class PmphUser implements java.io.Serializable {
     /**
      * 显示顺序
      */
-    private int     sort;
+    private Integer sort;
     /**
      * 是否逻辑删除
      */
@@ -91,7 +91,7 @@ public class PmphUser implements java.io.Serializable {
     }
 
     public PmphUser(String username, String password, Boolean isDisabled, String realname,
-    long departmentId, String handphone, String email, String avatar, String note, int sort,
+    long departmentId, String handphone, String email, String avatar, String note, Integer sort,
     Boolean isDeleted, Date gmtCreate, Date gmtUpdate, Short loginType) {
         this.username = username;
         this.password = password;
@@ -181,11 +181,11 @@ public class PmphUser implements java.io.Serializable {
         this.note = note;
     }
 
-    public int getSort() {
+    public Integer getSort() {
         return this.sort;
     }
 
-    public void setSort(int sort) {
+    public void setSort(Integer sort) {
         this.sort = sort;
     }
 

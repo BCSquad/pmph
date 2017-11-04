@@ -91,71 +91,79 @@
 		resultType="Org">
 		select * from org where id=#{id} ;
 	</select>
-	
+
 	<!--获取学校管理员审核列表 -->
-	<select id="getSchoolAdminCheckList" parameterType="PageParameter" resultType="OrgVO">
-		SELECT 
-			ou.`id`,o.`org_name`,ou.`username`,ou.`realname`,ou.`handphone`,
-			ou.`email`,ou.`position`,ou.`title`,ou.`address`,
-			ou.`postcode`,ou.`proxy`,ou.`progress`,t.count
-		FROM   
-			`org` o
-		LEFT JOIN 
-			`org_user` ou 
-		ON 
-			o.`id`=ou.`org_id`,
-			(
-				select 
-					count(*) count 
-				from 
-					org o
-				left join 
-					`org_user` ou 
-				ON 
-					o.`id`=ou.`org_id`
-				where
-				ou.is_deleted = 0
-				<if test="parameter !=null ">
-					<!-- 学校名称 -->
-					<if test="parameter.orgName !=null and  parameter.orgName != '' ">
-						and o.org_name like concat(concat('%',#{parameter.orgName}),'%')
-					</if>
-					<!-- 机构代码  -->
-					<if test="parameter.username != null and parameter.username !='' ">
-						and ou.username like concat(concat('%',#{parameter.username}),'%')
-					</if>
-					<!-- 管理员姓名 -->
-					<if test="parameter.realname != null and parameter.realname !='' ">
-						and ou.`realname` like concat(concat('%',#{parameter.realname}),'%')
-					</if>
-					<!-- 审核状态 -->
-					<if test="parameter.progress != null">
-						and ou.progress = #{parameter.progress}
-					</if>
-				</if>
-			)t
-		where 
-			ou.is_deleted = 0
+	<select id="getSchoolAdminCheckList" parameterType="PageParameter"
+		resultType="OrgVO">
+		SELECT
+		ou.`id`,o.`org_name`,ou.`username`,ou.`realname`,ou.`handphone`,
+		ou.`email`,ou.`position`,ou.`title`,ou.`address`,
+		ou.`postcode`,ou.`proxy`,ou.`progress`,t.count
+		FROM
+		`org` o
+		LEFT JOIN
+		`org_user` ou
+		ON
+		o.`id`=ou.`org_id`,
+		(
+		select
+		count(*) count
+		from
+		org o
+		left
+		join
+		`org_user` ou
+		ON
+		o.`id`=ou.`org_id`
+		where
+		ou.is_deleted = 0
 		<if test="parameter !=null ">
 			<!-- 学校名称 -->
 			<if test="parameter.orgName !=null and  parameter.orgName != '' ">
-				and o.org_name like concat(concat('%',#{parameter.orgName}),'%')
+				and o.org_name like
+				concat(concat('%',#{parameter.orgName}),'%')
 			</if>
-			<!-- 机构代码  -->
+			<!-- 机构代码 -->
 			<if test="parameter.username != null and parameter.username !='' ">
-				and ou.username like concat(concat('%',#{parameter.username}),'%')
+				and ou.username like
+				concat(concat('%',#{parameter.username}),'%')
 			</if>
 			<!-- 管理员姓名 -->
 			<if test="parameter.realname != null and parameter.realname !='' ">
-				and ou.`realname` like concat(concat('%',#{parameter.realname}),'%')
+				and ou.`realname` like
+				concat(concat('%',#{parameter.realname}),'%')
 			</if>
 			<!-- 审核状态 -->
 			<if test="parameter.progress != null">
 				and ou.progress = #{parameter.progress}
 			</if>
 		</if>
-		order by 
-			ou.sort
+		)t
+		where
+		ou.is_deleted = 0
+		<if test="parameter !=null ">
+			<!-- 学校名称 -->
+			<if test="parameter.orgName !=null and  parameter.orgName != '' ">
+				and o.org_name like
+				concat(concat('%',#{parameter.orgName}),'%')
+			</if>
+			<!-- 机构代码 -->
+			<if test="parameter.username != null and parameter.username !='' ">
+				and ou.username like
+				concat(concat('%',#{parameter.username}),'%')
+			</if>
+			<!-- 管理员姓名 -->
+			<if test="parameter.realname != null and parameter.realname !='' ">
+				and ou.`realname` like
+				concat(concat('%',#{parameter.realname}),'%')
+			</if>
+			<!-- 审核状态 -->
+			<if test="parameter.progress != null">
+				and ou.progress = #{parameter.progress}
+			</if>
+		</if>
+		order by
+		ou.sort
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
@@ -295,4 +303,16 @@
 		where
 		id=#{id} ;
 	</delete>
+
+	<!-- 根据orgName查询Org -->
+	<select id="getOrgByOrgName" parameterType="java.lang.String"
+		resultType="Org">
+		select * from org where org_name=#{orgName} ;
+	</select>
+	<!-- 根据typeId查询Org -->
+	<select id="listOrgByOrgType" parameterType="java.lang.Long"
+		resultType="Org">
+		select * from org where org_type_id=#{typeId} ;
+	</select>
+	
 </mapper>

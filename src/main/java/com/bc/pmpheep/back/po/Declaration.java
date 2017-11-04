@@ -26,11 +26,11 @@ public class Declaration implements java.io.Serializable {
 	//作家真实姓名
 	private String realname;
 	//作家性别
-	private Short sex;
+	private Integer sex;
 	//作家生日
 	private Date birthday;
 	//作家教龄
-	private Short experience;
+	private Integer experience;
 	//作家工作单位
 	private String orgName;
 	//作家职务
@@ -56,19 +56,19 @@ public class Declaration implements java.io.Serializable {
 	//作家申报单位id
 	private Long orgId;
 	//审核进度
-	private Short onlineProgress;
+	private Integer onlineProgress;
 	//审核人id
 	private Long authUserId;
 	//审核通过时间
 	private Timestamp authDate;
 	//纸质表进度
-	private Short offlineProgress;
+	private Integer offlineProgress;
 	//纸质表收到时间
 	private Timestamp paperDate;
 	//是否暂存
-	private Boolean isStaging;
+	private Integer isStaging;
 	//是否逻辑删除
-	private Boolean isDeleted;
+	private Integer isDeleted;
 	//创建时间
 	private Timestamp gmtCreate;
 	//修改时间
@@ -90,12 +90,12 @@ public class Declaration implements java.io.Serializable {
 
 
 	public Declaration(Long materialId, Long userId, String realname,
-			Short sex, Date birthday, Short experience, String orgName,
+			Integer sex, Date birthday, Integer experience, String orgName,
 			String position, String title, String address, String postcode,
 			String handphone, String email, Short idtype, String idcard,
-			String telephone, String fax, Long orgId, Short onlineProgress,
-			Long authUserId, Timestamp authDate, Short offlineProgress,
-			Timestamp paperDate, Boolean isStaging, Boolean isDeleted) {
+			String telephone, String fax, Long orgId, Integer onlineProgress,
+			Long authUserId, Timestamp authDate, Integer offlineProgress,
+			Timestamp paperDate, Integer isStaging, Integer isDeleted) {
 		super();
 		this.materialId = materialId;
 		this.userId = userId;
@@ -128,12 +128,12 @@ public class Declaration implements java.io.Serializable {
 
 	/** full constructor */
 	public Declaration(Long materialId, Long userId, String realname,
-			Short sex, Date birthday, Short experience, String orgName,
+			Integer sex, Date birthday, Integer experience, String orgName,
 			String position, String title, String address, String postcode,
 			String handphone, String email, Short idtype, String idcard,
-			String telephone, String fax, Long orgId, Short onlineProgress,
-			Long authUserId, Timestamp authDate, Short offlineProgress,
-			Timestamp paperDate, Boolean isStaging, Boolean isDeleted,
+			String telephone, String fax, Long orgId, Integer onlineProgress,
+			Long authUserId, Timestamp authDate, Integer offlineProgress,
+			Timestamp paperDate, Integer isStaging, Integer isDeleted,
 			Timestamp gmtCreate, Timestamp gmtUpdate) {
 		this.materialId = materialId;
 		this.userId = userId;
@@ -196,11 +196,11 @@ public class Declaration implements java.io.Serializable {
 		this.realname = realname;
 	}
 
-	public Short getSex() {
+	public Integer getSex() {
 		return sex;
 	}
 
-	public void setSex(Short sex) {
+	public void setSex(Integer sex) {
 		this.sex = sex;
 	}
 
@@ -212,11 +212,11 @@ public class Declaration implements java.io.Serializable {
 		this.birthday = birthday;
 	}
 
-	public Short getExperience() {
+	public Integer getExperience() {
 		return experience;
 	}
 
-	public void setExperience(Short experience) {
+	public void setExperience(Integer experience) {
 		this.experience = experience;
 	}
 
@@ -316,11 +316,11 @@ public class Declaration implements java.io.Serializable {
 		this.orgId = orgId;
 	}
 
-	public Short getOnlineProgress() {
+	public Integer getOnlineProgress() {
 		return onlineProgress;
 	}
 
-	public void setOnlineProgress(Short onlineProgress) {
+	public void setOnlineProgress(Integer onlineProgress) {
 		this.onlineProgress = onlineProgress;
 	}
 
@@ -340,11 +340,11 @@ public class Declaration implements java.io.Serializable {
 		this.authDate = authDate;
 	}
 
-	public Short getOfflineProgress() {
+	public Integer getOfflineProgress() {
 		return offlineProgress;
 	}
 
-	public void setOfflineProgress(Short offlineProgress) {
+	public void setOfflineProgress(Integer offlineProgress) {
 		this.offlineProgress = offlineProgress;
 	}
 
@@ -356,19 +356,19 @@ public class Declaration implements java.io.Serializable {
 		this.paperDate = paperDate;
 	}
 
-	public Boolean getIsStaging() {
+	public Integer getIsStaging() {
 		return isStaging;
 	}
 
-	public void setIsStaging(Boolean isStaging) {
+	public void setIsStaging(Integer isStaging) {
 		this.isStaging = isStaging;
 	}
 
-	public Boolean getIsDeleted() {
+	public Integer getIsDeleted() {
 		return isDeleted;
 	}
 
-	public void setIsDeleted(Boolean isDeleted) {
+	public void setIsDeleted(Integer isDeleted) {
 		this.isDeleted = isDeleted;
 	}
 

@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.PmphRoleDao;
+import com.bc.pmpheep.back.dao.PmphRolePermissionDao;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphRolePermission;
 import com.bc.pmpheep.back.po.PmphUserRole;
+import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -27,7 +30,9 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class PmphRoleServiceImpl implements PmphRoleService {
 
     @Autowired
-    PmphRoleDao roleDao;
+    PmphRoleDao           roleDao;
+    @Autowired
+    PmphRolePermissionDao pmphRolePermissionDao;
 
     @Override
     public PmphRole get(Long id) throws CheckedServiceException {
@@ -110,10 +115,31 @@ public class PmphRoleServiceImpl implements PmphRoleService {
     }
 
     @Override
-    public PmphRole add(PmphRole role) throws CheckedServiceException {
+    public PmphRole add(PmphRole role, Long[] ids) throws CheckedServiceException {
         if (ObjectUtil.isNull(role)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色属性为空时禁止新增角色");
+        }
+        if (ArrayUtil.isEmpty(ids)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色默认权限为空时禁止新增角色");
+        }
+        if (StringUtil.getLength(role.getRoleName()) > 10) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "角色名称不能超过20个字符");
+        }
+        if (ObjectUtil.notNull(roleDao.getPmphRoleId(role.getRoleName()))) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "角色名称重复了");
+        }
+        if (!StringUtil.isEmpty(role.getNote()) && StringUtil.getLength(role.getNote()) > 10) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "备注不能超过20个字符");
+        }
+        roleDao.add(role);
+        for (Long id : ids) {
+            PmphRolePermission pmphRolePermission = new PmphRolePermission(role.getId(), id);
+            pmphRolePermissionDao.addPmphRolePermission(pmphRolePermission);
         }
         return role;
     }
@@ -152,6 +178,18 @@ public class PmphRoleServiceImpl implements PmphRoleService {
         if (ObjectUtil.isNull(role.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止更新");
+        }
+        if (StringUtil.getLength(role.getRoleName()) > 10) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "角色名称不能超过20个字符");
+        }
+        if (ObjectUtil.notNull(roleDao.getPmphRoleId(role.getRoleName()))) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "角色名称重复了");
+        }
+        if (!StringUtil.isEmpty(role.getNote()) && StringUtil.getLength(role.getNote()) > 10) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "备注不能超过20个字符");
         }
         return roleDao.update(role);
     }
@@ -219,6 +257,16 @@ public class PmphRoleServiceImpl implements PmphRoleService {
                                               CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止删除");
         }
         return roleDao.deleteRoleResourceByRoleId(roleId);
+    }
+
+    @Override
+    public PmphRole addPmphRole(PmphRole role) throws CheckedServiceException {
+        if (ObjectUtil.isNull(role)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "角色属性为空时禁止新增角色");
+        }
+        roleDao.add(role);
+        return role;
     }
 
 }

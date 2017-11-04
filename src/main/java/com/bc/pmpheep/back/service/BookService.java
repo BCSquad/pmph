@@ -94,4 +94,17 @@ public interface BookService {
 	 */
 	String updateBookById(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote)
 			throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据书籍id删除书籍信息
+	 *
+	 * @param id
+	 *            书籍id
+	 * @return 是否成功
+	 * @throws CheckedServiceException
+	 *
+	 */
+	String deleteBookById(Long id) throws CheckedServiceException;
 }

@@ -1,7 +1,10 @@
 package com.bc.pmpheep.back.vo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.ibatis.type.Alias;
 
 import com.bc.pmpheep.back.po.DecAcade;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
@@ -21,7 +24,9 @@ import com.bc.pmpheep.back.po.Declaration;
  *@CreateDate 2017年9月30日 下午4:34:28
  *
  **/
-public class ApplicationVO {
+@SuppressWarnings("serial")
+@Alias("ApplicationVO")
+public class ApplicationVO implements Serializable {
 	//申报职位
 	private List<DecPosition> decPositionList =new ArrayList<DecPosition>(5);
 	//作家申报表

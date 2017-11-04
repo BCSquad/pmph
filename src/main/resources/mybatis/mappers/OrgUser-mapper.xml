@@ -18,7 +18,7 @@
 				org_id,
 			</if>
 			<if test="email != null and email != '' ">
-				email
+				email,
 			</if>
 			<if test="realname != null and realname !=''">
 				realname,
@@ -59,7 +59,7 @@
 			<if test="progress != null and progress !=''">
 				progress,
 			</if>
-			<if test="reviewDate != null and reviewDate !=''">
+			<if test="reviewDate != null ">
 				review_date,
 			</if>
 			<if test="note != null and note !=''">
@@ -90,7 +90,7 @@
 				#{orgId},
 			</if>
 			<if test="email != null and email != ''">
-				#{email}
+				#{email},
 			</if>
 			<if test="realname != null and realname !=''">
 				#{realname},
@@ -131,7 +131,7 @@
 			<if test="progress != null and progress !=''">
 				#{progress},
 			</if>
-			<if test="reviewDate != null and reviewDate !=''">
+			<if test="reviewDate != null ">
 				#{reviewDate},
 			</if>
 			<if test="note != null and note !=''">
@@ -225,7 +225,7 @@
 			<if test=" progress != null and progress !=''">
 				progress = #{progress},
 			</if>
-			<if test=" reviewDate != null and reviewDate !=''">
+			<if test=" reviewDate != null ">
 				review_date = #{reviewDate},
 			</if>
 			<if test=" note != null and note !=''">
@@ -240,17 +240,18 @@
 		</set>
 		where id=#{id} ;
 	</update>
-	
+
 	<!-- 学校管理员审核(按Id更新审核状态) -->
 	<update id="updateOrgUserProgressById" parameterType="java.util.List">
-		<foreach item="item" collection="list" index="index" open="" separator=";">
+		<foreach item="item" collection="list" index="index" open=""
+			separator=";">
 			update
-				org_user
+			org_user
 			<set>
 				progress = #{item.progress}
 			</set>
-			where 
-				id=#{item.id}
+			where
+			id=#{item.id}
 		</foreach>
 	</update>
 
@@ -323,4 +324,9 @@
 		org_user
 	</select>
 
+	<!-- 根据机构id查询OrgUser -->
+	<select id="listOrgUserByOrgId" parameterType="java.lang.Long"
+		resultType="OrgUser">
+		select * from org_user where org_id=#{orgId} ;
+	</select>
 </mapper>

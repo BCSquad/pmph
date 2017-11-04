@@ -20,6 +20,10 @@ public enum FileType {
      */
     MSG_FILE("消息附件"),
     /**
+     * 消息内嵌图片
+     */
+    MSG_PIC("消息内嵌图片"),
+    /**
      * 教材通知内容附件
      */
     MATERIAL_NOTICE_ATTACHMENT("教材通知内容附件"),
@@ -34,11 +38,7 @@ public enum FileType {
     /**
      * CMS附件
      */
-    CMS_ATTACHMENT("CMS附件"),
-    /**
-     * 机构用户上传的委托书
-     */
-    PROXY("委托书");
+    CMS_ATTACHMENT("CMS附件");
     
     private final String type;
 

@@ -68,7 +68,8 @@
 
 	<!-- 根据id删除一个 PmphGroup -->
 	<delete id="deletePmphGroupById" parameterType="java.lang.Long">
-		delete from pmph_group where id=#{id} ;
+		delete from
+		pmph_group where id=#{id} ;
 	</delete>
 
 	<!-- 更新 PmphGroup -->
@@ -109,17 +110,21 @@
 		g.id,
 		g.group_name,
 		g.group_image,
-		g.gmt_last_message gmtLastMessage,
+		g.gmt_last_message
+		gmtLastMessage,
 		g.book_id,
 		t.textbook_name bookName
 		from
 		pmph_group g
-		LEFT JOIN textbook t ON g.book_id = t.id
+		LEFT
+		JOIN textbook t ON g.book_id = t.id
 		where
 		g.id
 		in (
-		select DISTINCT group_id from pmph_group_member where user_id = #{id} and
-		is_writer = false
+		select DISTINCT
+		group_id from pmph_group_member where user_id = #{id} and
+		is_writer =
+		false
 		)
 		<if test="pmphGroup.groupName != null and pmphGroup.groupName !=''">
 			and g.group_name like
@@ -135,6 +140,31 @@
 		count(*)
 		from
 		pmph_group
+	</select>
+
+	<!-- 查当前用户的小组列表 -->
+	<select id="listPmphGroup" resultType="PmphGroupListVO">
+		select
+		g.id,
+		g.group_name,
+		g.group_image,
+		g.gmt_last_message gmtLastMessage,
+		g.book_id,
+		t.textbook_name bookName
+		from
+		pmph_group g
+		LEFT JOIN textbook t ON
+		g.book_id = t.id
+		where
+		g.id
+		in (
+		select DISTINCT group_id from
+		pmph_group_member where
+		is_writer = false
+		)
+		order by
+		gmt_last_message desc
+		, group_Name ;
 	</select>
 
 </mapper>

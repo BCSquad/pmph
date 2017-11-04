@@ -49,7 +49,7 @@
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into dec_course_construction(
+		insert into material_notice_attachment(
 		<include refid="key" />
 		)
 		values(
@@ -59,7 +59,7 @@
 
 	<!-- 更新MaterialNoticeAttachment-->
 	<update id="updateMaterialNoticeAttachment" parameterType="MaterialNoticeAttachment">
-		update dec_course_construction
+		update material_notice_attachment
 		<set>
 			<if test="materialExtraId !=null">
 				material_extra_id=#{materialExtraId},

@@ -31,15 +31,15 @@ public class DecPositionServiceTest extends BaseTest{
     	 DecPosition decPosition = new DecPosition();
     	 decPosition.setDeclarationId(2L);
     	 decPosition.setTextbookId(1L);
-    	 decPosition.setPresetPosition((short) 2);
+    	 decPosition.setPresetPosition((Integer) 2);
     	 decPositionService.addDecPosition(decPosition);
     	 Assert.assertTrue("添加数据失败", decPosition.getId() > 0);
-    	 decPosition.setPresetPosition((short)3);
+    	 decPosition.setPresetPosition((Integer)3);
     	 Assert.assertTrue("更新失败", decPositionService.updateDecPosition(decPosition) > 0);
     	 DecPosition decPosition2 = new DecPosition();
     	 decPosition2.setDeclarationId(2L);
     	 decPosition2.setTextbookId(3L);
-    	 decPosition2.setPresetPosition((short)1);
+    	 decPosition2.setPresetPosition((Integer)1);
     	 decPositionService.addDecPosition(decPosition2);
     	 Assert.assertNotNull("获取消息失败", decPositionService.getDecPositionById(2L));
     	 Assert.assertTrue("获取数据集合失败", decPositionService.listDecPositions(2L).size() > 0);

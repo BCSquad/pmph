@@ -8,11 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.OrgDao;
+import com.bc.pmpheep.back.dao.OrgUserDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -29,6 +32,8 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 
 	@Autowired
 	private OrgDao orgDao;
+	@Autowired
+	OrgUserDao orgUserDao;
 
 	/**
 	 * 
@@ -39,22 +44,30 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 	 */
 	@Override
 	public Org addOrg(Org org) throws CheckedServiceException {
-		if (null == org) {
+		if (ObjectUtil.isNull(org)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		// if (null == org.getParentId()) {
 		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
 		// CheckedExceptionResult.NULL_PARAM, "上级机构id不能为空");
 		// }
-		if (null == org.getOrgName()) {
+		if (StringUtil.isEmpty(org.getOrgName())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
 					"机构名称为空");
 		}
-		if (null == org.getOrgTypeId()) {
+		if (StringUtil.length(org.getOrgName()) > 20) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
+					"机构名称过长");
+		}
+		if (orgDao.getOrgByOrgName(org.getOrgName()).size() > 0) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
+					"机构名称重复了");
+		}
+		if (ObjectUtil.isNull(org.getOrgTypeId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
 					"机构类型不能为空");
 		}
-		if (null == org.getAreaId()) {
+		if (ObjectUtil.isNull(org.getAreaId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
 					"机构区域不能为空");
 		}
@@ -107,8 +120,12 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 	 */
 	@Override
 	public Integer deleteOrgById(Long id) throws CheckedServiceException {
-		if (null == id) {
+		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "主键为空");
+		}
+		if (!CollectionUtil.isEmpty(orgUserDao.listOrgUserByOrgId(id))) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
+					"该机构内还有用户哦，请先将用户删除。");
 		}
 		return orgDao.deleteOrgById(id);
 	}

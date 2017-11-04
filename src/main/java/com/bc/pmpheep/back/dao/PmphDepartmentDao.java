@@ -16,62 +16,76 @@ import com.bc.pmpheep.back.vo.PmphUserDepartmentVO;
 public interface PmphDepartmentDao {
 	/**
 	 * 
-	 * @param  PmphDepartment 实体对象
+	 * @param PmphDepartment
+	 *            实体对象
 	 * @return 影响行数
 	 */
-	Integer addPmphDepartment(PmphDepartment pmphDepartment) ;
-	
+	Integer addPmphDepartment(PmphDepartment pmphDepartment);
+
 	/**
 	 * 
 	 * @param id
-	 * @return  PmphDepartment
-	  */
-	PmphDepartment getPmphDepartmentById(Long id)  ;
-	
+	 * @return PmphDepartment
+	 */
+	PmphDepartment getPmphDepartmentById(Long id);
+
 	/**
 	 * 
 	 * @param id
-	 * @return  影响行数
-	  */
-	Integer deletePmphDepartmentById(Long id)  ;
-	
+	 * @return 影响行数
+	 */
+	Integer deletePmphDepartmentById(Long id);
+
 	/**
 	 * @param PmphDepartment
 	 * @return 影响行数
 	 */
-	Integer updatePmphDepartment(PmphDepartment pmphDepartment)  ;
-	
+	Integer updatePmphDepartment(PmphDepartment pmphDepartment);
+
 	/**
-     * 
-     * <pre>
-     * 功能描述：查询表单的数据总条数
-     * 使用示范：
-     *
-     * @return 表单的总条数
-     * </pre>
-     */
-    Long getPmphDepartmentCount();
-    
-    /**
-     * 
-     * 功能描述：获取全部出版社部门
-     * 使用示范：
-     * @param parentId 父级id
-     * @return 出版社部门
-     */
-    List<PmphUserDepartmentVO> listPmphDepartment(Long parentId);
-    
-    /**
-     * 
-     * 功能描述：模糊查询部门
-     * @param dpName 部门名称
-     * @return 查询的结果集
-     */
-    List<PmphUserDepartmentVO> listPmphDepartmentByDpName(String dpName);
-    
-    /**
+	 * 
+	 * <pre>
+	 * 功能描述：查询表单的数据总条数
+	 * 使用示范：
+	 *
+	 * &#64;return 表单的总条数
+	 * </pre>
+	 */
+	Long getPmphDepartmentCount();
+
+	/**
+	 * 
+	 * 功能描述：获取全部出版社部门 使用示范：
+	 * 
+	 * @param parentId
+	 *            父级id
+	 * @return 出版社部门
+	 */
+	List<PmphUserDepartmentVO> listPmphDepartment(Long parentId);
+
+	/**
+	 * 
+	 * 功能描述：模糊查询部门
+	 * 
+	 * @param dpName
+	 *            部门名称
+	 * @return 查询的结果集
+	 */
+	List<PmphUserDepartmentVO> listPmphDepartmentByDpName(String dpName);
+
+	/**
 	 * 根据ids批量删除PmphDepartment
 	 */
 	Integer deletePmphDepartmentBatch(List<Long> ids);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据父级id 和 名称查询
+	 *
+	 * @return
+	 *
+	 */
+	List<PmphDepartment> getPmphDepartmentByDpNameAndParentId(PmphDepartment pmphDepartment);
 
 }
