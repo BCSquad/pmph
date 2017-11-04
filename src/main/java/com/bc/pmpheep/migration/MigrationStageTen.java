@@ -37,11 +37,11 @@ public class MigrationStageTen {
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Resource
-    CmsContentService contentService;
+    CmsContentService cmsContentService;
     @Resource
-    CmsCategoryService categoryService;
+    CmsCategoryService cmsCategoryService;
     @Resource
-    CmsContentCategoryService contentCategoryService;
+    CmsContentCategoryService cmsContentCategoryService;
     @Resource
     FileService fileService;
     @Resource
@@ -60,12 +60,12 @@ public class MigrationStageTen {
         CmsCategory category1 = new CmsCategory(0L, "0", "公告管理", true);
         category1.setIsMaterialNotice(true);
         category1.setIsClicksVisible(true);
-        category1 = categoryService.addCmsCategory(category1);
+        category1 = cmsCategoryService.addCmsCategory(category1);
         long pk = category1.getId();
         JdbcHelper.updateNewPrimaryKey(tableName, pk, "name", "公告管理");//更新旧表中new_pk字段
         CmsCategory category2 = new CmsCategory(0L, "0", "快报管理", true);
         category2.setIsClicksVisible(true);
-        category2 = categoryService.addCmsCategory(category2);
+        category2 = cmsCategoryService.addCmsCategory(category2);
         pk = category2.getId();
         JdbcHelper.updateNewPrimaryKey(tableName, pk, "name", "快报管理");//更新旧表中new_pk字
         CmsCategory category3 = new CmsCategory(0L, "0", "医学随笔", false);
@@ -76,7 +76,7 @@ public class MigrationStageTen {
         category3.setIsCommentsVisible(true);
         category3.setIsLikesVisible(true);
         category3.setIsBookmarksVisible(true);
-        category3 = categoryService.addCmsCategory(category3);
+        category3 = cmsCategoryService.addCmsCategory(category3);
         pk = category3.getId();
         JdbcHelper.updateNewPrimaryKey(tableName, pk, "name", "医学随笔");//更新旧表中new_pk字
         logger.info("'{}'表迁移完成", tableName);
@@ -108,9 +108,9 @@ public class MigrationStageTen {
                 logger.error("获取site_column表new_pk字段失败，此结果将被记录在Excel中");
                 continue;
             }
-            cmsContent = contentService.addCmsContent(cmsContent);
+            cmsContent = cmsContentService.addCmsContent(cmsContent);
             CmsContentCategory contentCategory = new CmsContentCategory(cmsContent.getId(), pk);
-            contentCategoryService.addCmsContentCategory(contentCategory);
+            cmsContentCategoryService.addCmsContentCategory(contentCategory);
             Integer category = (Integer) map.get("category");
             if (null == category) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "内容类别为空");
