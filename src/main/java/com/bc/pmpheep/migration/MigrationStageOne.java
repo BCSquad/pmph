@@ -22,6 +22,7 @@ import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.service.OrgTypeService;
 import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.service.WriterUserService;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
@@ -182,6 +183,12 @@ public class MigrationStageOne {
 				map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构名称重复，无法插入新表  "));
 				excel.add(map);
 				logger.error("机构名称重复，有误，此结果将被记录在Excel中进行核对");
+				continue;
+			}
+			if (StringUtil.length(orgName) > 20){
+				map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构名称过长，无法插入新表  "));
+				excel.add(map);
+				logger.error("机构名称过长，此结果将被记录在Excel中进行核对");
 				continue;
 			}
 			list.add(orgName);
