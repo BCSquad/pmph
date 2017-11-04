@@ -79,6 +79,8 @@ public class CmsContent implements java.io.Serializable {
     private Boolean   isPublished;
     // 是否通过审核
     private Boolean   isAuth;
+    // 审核状态
+    private Short     authStatus;
     // 审核者id
     private Long      authUserId;
     // 审核通过时间
@@ -91,6 +93,8 @@ public class CmsContent implements java.io.Serializable {
     private Timestamp gmtUpdate;
     // 再次编辑时间
     private Timestamp gmtReedit;
+    // 教材id
+    private Long      materialId;
 
     // Constructors
 
@@ -98,16 +102,27 @@ public class CmsContent implements java.io.Serializable {
     public CmsContent() {
     }
 
-    public CmsContent(Long id, Long parentId, String path, Timestamp gmtReedit) {
+    public CmsContent(Long id, Short authStatus, Long authUserId, Timestamp authDate,
+    Long materialId) {
+        this.id = id;
+        this.authStatus = authStatus;
+        this.authUserId = authUserId;
+        this.authDate = authDate;
+        this.materialId = materialId;
+    }
+
+    public CmsContent(Long id, Long parentId, String path, Timestamp gmtReedit, Long materialId) {
         this.id = id;
         this.parentId = parentId;
         this.path = path;
         this.gmtReedit = gmtReedit;
+        this.materialId = materialId;
     }
 
     public CmsContent(Long parentId, String path, String mid, String title, String summary,
     String keyword, Short authorType, Timestamp deadlineStick, Timestamp deadlineHot,
-    Timestamp deadlinePromote, Long authUserId, Timestamp authDate, Timestamp gmtReedit) {
+    Timestamp deadlinePromote, Long authUserId, Timestamp authDate, Timestamp gmtReedit,
+    Long materialId) {
         this.parentId = parentId;
         this.path = path;
         this.mid = mid;
@@ -121,20 +136,23 @@ public class CmsContent implements java.io.Serializable {
         this.authUserId = authUserId;
         this.authDate = authDate;
         this.gmtReedit = gmtReedit;
+        this.materialId = materialId;
     }
 
     /** minimal constructor */
     public CmsContent(Long parentId, String path, String mid, Long categoryId, String title,
-    Short authorType, Long authorId, Long clicks, Long comments, Long likes, Long bookmarks,
-    Boolean isStick, Integer sort, Boolean isHot, Integer sortHot, Boolean isPromote,
-    Integer sortPromote, Boolean isScheduled, Boolean isHide, Boolean isPublished, Boolean isAuth,
-    Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate) {
+    Short authorType, Short authStatus, Long authorId, Long clicks, Long comments, Long likes,
+    Long bookmarks, Boolean isStick, Integer sort, Boolean isHot, Integer sortHot,
+    Boolean isPromote, Integer sortPromote, Boolean isScheduled, Boolean isHide,
+    Boolean isPublished, Boolean isAuth, Boolean isDeleted, Timestamp gmtCreate,
+    Timestamp gmtUpdate, Long materialId) {
         this.parentId = parentId;
         this.path = path;
         this.mid = mid;
         this.categoryId = categoryId;
         this.title = title;
         this.authorType = authorType;
+        this.authStatus = authStatus;
         this.authorId = authorId;
         this.clicks = clicks;
         this.comments = comments;
@@ -153,16 +171,18 @@ public class CmsContent implements java.io.Serializable {
         this.isDeleted = isDeleted;
         this.gmtCreate = gmtCreate;
         this.gmtUpdate = gmtUpdate;
+        this.materialId = materialId;
     }
 
     /** full constructor */
     public CmsContent(Long parentId, String path, String mid, Long categoryId, String title,
-    String summary, String keyword, Short authorType, Long authorId, Long clicks, Long comments,
-    Long likes, Long bookmarks, Boolean isStick, Integer sort, Timestamp deadlineStick,
-    Boolean isHot, Integer sortHot, Timestamp deadlineHot, Boolean isPromote, Integer sortPromote,
-    Timestamp deadlinePromote, Boolean isScheduled, Boolean isHide, Boolean isPublished,
-    Boolean isAuth, Long authUserId, Timestamp authDate, Boolean isDeleted, Timestamp gmtCreate,
-    Timestamp gmtUpdate, Timestamp gmtReedit) {
+    String summary, String keyword, Short authorType, Short authStatus, Long authorId, Long clicks,
+    Long comments, Long likes, Long bookmarks, Boolean isStick, Integer sort,
+    Timestamp deadlineStick, Boolean isHot, Integer sortHot, Timestamp deadlineHot,
+    Boolean isPromote, Integer sortPromote, Timestamp deadlinePromote, Boolean isScheduled,
+    Boolean isHide, Boolean isPublished, Boolean isAuth, Long authUserId, Timestamp authDate,
+    Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate, Timestamp gmtReedit,
+    Long materialId) {
         this.parentId = parentId;
         this.path = path;
         this.mid = mid;
@@ -171,6 +191,7 @@ public class CmsContent implements java.io.Serializable {
         this.summary = summary;
         this.keyword = keyword;
         this.authorType = authorType;
+        this.authStatus = authStatus;
         this.authorId = authorId;
         this.clicks = clicks;
         this.comments = comments;
@@ -195,6 +216,7 @@ public class CmsContent implements java.io.Serializable {
         this.gmtCreate = gmtCreate;
         this.gmtUpdate = gmtUpdate;
         this.gmtReedit = gmtReedit;
+        this.materialId = materialId;
     }
 
     // Property accessors
@@ -463,6 +485,34 @@ public class CmsContent implements java.io.Serializable {
     }
 
     /**
+     * @return the authStatus
+     */
+    public Short getAuthStatus() {
+        return authStatus;
+    }
+
+    /**
+     * @param authStatus the authStatus to set
+     */
+    public void setAuthStatus(Short authStatus) {
+        this.authStatus = authStatus;
+    }
+
+    /**
+     * @return the materialId
+     */
+    public Long getMaterialId() {
+        return materialId;
+    }
+
+    /**
+     * @param materialId the materialId to set
+     */
+    public void setMaterialId(Long materialId) {
+        this.materialId = materialId;
+    }
+
+    /**
      * <pre>
      * 功能描述：
      * 使用示范：
@@ -474,16 +524,17 @@ public class CmsContent implements java.io.Serializable {
     public String toString() {
         return " {id:" + id + ", parentId:" + parentId + ", path:" + path + ", mid:" + mid
                + ", categoryId:" + categoryId + ", title:" + title + ", summary:" + summary
-               + ", keyword:" + keyword + ", authorType:" + authorType + ", authorId:" + authorId
-               + ", clicks:" + clicks + ", comments:" + comments + ", likes:" + likes
-               + ", bookmarks:" + bookmarks + ", isStick:" + isStick + ", sort:" + sort
-               + ", deadlineStick:" + deadlineStick + ", isHot:" + isHot + ", sortHot:" + sortHot
-               + ", deadlineHot:" + deadlineHot + ", isPromote:" + isPromote + ", sortPromote:"
-               + sortPromote + ", deadlinePromote:" + deadlinePromote + ", isScheduled:"
-               + isScheduled + ", isHide:" + isHide + ", isPublished:" + isPublished + ", isAuth:"
-               + isAuth + ", authUserId:" + authUserId + ", authDate:" + authDate + ", isDeleted:"
-               + isDeleted + ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate
-               + ", gmtReedit:" + gmtReedit + "}";
+               + ", keyword:" + keyword + ", authorType:" + authorType + ",authStatus:"
+               + authStatus + " authorId:" + authorId + ", clicks:" + clicks + ", comments:"
+               + comments + ", likes:" + likes + ", bookmarks:" + bookmarks + ", isStick:"
+               + isStick + ", sort:" + sort + ", deadlineStick:" + deadlineStick + ", isHot:"
+               + isHot + ", sortHot:" + sortHot + ", deadlineHot:" + deadlineHot + ", isPromote:"
+               + isPromote + ", sortPromote:" + sortPromote + ", deadlinePromote:"
+               + deadlinePromote + ", isScheduled:" + isScheduled + ", isHide:" + isHide
+               + ", isPublished:" + isPublished + ", isAuth:" + isAuth + ", authUserId:"
+               + authUserId + ", authDate:" + authDate + ", isDeleted:" + isDeleted
+               + ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate + ", gmtReedit:"
+               + gmtReedit + ", materialId:" + materialId + "}";
     }
 
 }
