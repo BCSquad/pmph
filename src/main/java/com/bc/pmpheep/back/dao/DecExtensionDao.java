@@ -24,9 +24,9 @@ public interface DecExtensionDao {
 	 * @author:lyc
 	 * @date:2017年10月30日下午10:58:14
 	 * @param DecExtension对象
-	 * @return 添加后的DecExtension对象
+	 * @return Integer影响行数
 	 */
-  DecExtension addDecExtension(DecExtension decExtension);
+  Integer addDecExtension(DecExtension decExtension);
   
   /**
    * 
