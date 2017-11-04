@@ -56,7 +56,7 @@ public class MigrationStageNine {
     protected void book() {
         String tableName = "book_goodsinfo"; //要迁移的旧库表名
         JdbcHelper.addColumn(tableName); //增加new_pk字段
-        JdbcHelper.addColumn("sys_booktypes"); //增加new_pk字段
+        //JdbcHelper.addColumn("sys_booktypes"); //增加new_pk字段
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);//取得该表中所有数据
         int count = 0;//迁移成功的条目数
         /* booktypesid这张表重复的bookid非常多，因此用group来返回唯一结果 */

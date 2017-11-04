@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.po;
 
+import java.util.List;
+
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -24,43 +26,47 @@ import org.apache.ibatis.type.Alias;
 public class CmsCategory implements java.io.Serializable {
 
     // 主键
-    private Long    id;
+    private Long        id;
     // 上级类别id
-    private Long    parentId;
+    private Long        parentId;
     // 根节点路径
-    private String  path;
+    private String      path;
     // 类别名称
-    private String  categoryName;
+    private String      categoryName;
     // 是否后台类别
-    private Boolean isBackground;
+    private Boolean     isBackground;
     // 操作权限id
-    private Long    permissionId;
+    private Long        permissionId;
     // 是否需要审核
-    private Boolean isAuthRequired;
+    private Boolean     isAuthRequired;
     // 审核角色id
-    private Long    authRoleId;
+    private Long        authRoleId;
     // 是否教材通知
-    private Boolean isMaterialNotice;
-    // 教材id
-    private Long    materialId;
+    private Boolean     isMaterialNotice;
     // 是否显示摘要
-    private Boolean isSummaryVisible;
+    private Boolean     isSummaryVisible;
     // 是否显示关键字
-    private Boolean isKeywordVisible;
+    private Boolean     isKeywordVisible;
     // 是否显示作者
-    private Boolean isAuthorVisible;
+    private Boolean     isAuthorVisible;
     // 是否显示点击数
-    private Boolean isClicksVisible;
+    private Boolean     isClicksVisible;
     // 是否允许评论
-    private Boolean isCommentsAllow;
+    private Boolean     isCommentsAllow;
     // 是否显示评论数
-    private Boolean isCommentsVisible;
+    private Boolean     isCommentsVisible;
     // 是否显示点赞数
-    private Boolean isLikesVisible;
+    private Boolean     isLikesVisible;
     // 是否显示收藏数
-    private Boolean isBookmarksVisible;
+    private Boolean     isBookmarksVisible;
     // 显示顺序
-    private Integer sort;
+    private Integer     sort;
+
+    private CmsCategory parentMenu;
+
+    List<CmsCategory>   children;
+
+    private boolean     hasMenu = false;
 
     // Constructors
 
@@ -84,7 +90,7 @@ public class CmsCategory implements java.io.Serializable {
     /** full constructor */
     public CmsCategory(Long parentId, String path, String categoryName, Boolean isBackground,
     Long permissionId, Boolean isAuthRequired, Long authRoleId, Boolean isMaterialNotice,
-    Long materialId, Boolean isSummaryVisible, Boolean isKeywordVisible, Boolean isAuthorVisible,
+    Boolean isSummaryVisible, Boolean isKeywordVisible, Boolean isAuthorVisible,
     Boolean isClicksVisible, Boolean isCommentsAllow, Boolean isCommentsVisible,
     Boolean isLikesVisible, Boolean isBookmarksVisible, Integer sort) {
         this.parentId = parentId;
@@ -95,7 +101,6 @@ public class CmsCategory implements java.io.Serializable {
         this.isAuthRequired = isAuthRequired;
         this.authRoleId = authRoleId;
         this.isMaterialNotice = isMaterialNotice;
-        this.materialId = materialId;
         this.isSummaryVisible = isSummaryVisible;
         this.isKeywordVisible = isKeywordVisible;
         this.isAuthorVisible = isAuthorVisible;
@@ -179,14 +184,6 @@ public class CmsCategory implements java.io.Serializable {
         this.isMaterialNotice = isMaterialNotice;
     }
 
-    public Long getMaterialId() {
-        return this.materialId;
-    }
-
-    public void setMaterialId(Long materialId) {
-        this.materialId = materialId;
-    }
-
     public Boolean getIsSummaryVisible() {
         return this.isSummaryVisible;
     }
@@ -260,6 +257,48 @@ public class CmsCategory implements java.io.Serializable {
     }
 
     /**
+     * @return the parentMenu
+     */
+    public CmsCategory getParentMenu() {
+        return parentMenu;
+    }
+
+    /**
+     * @param parentMenu the parentMenu to set
+     */
+    public void setParentMenu(CmsCategory parentMenu) {
+        this.parentMenu = parentMenu;
+    }
+
+    /**
+     * @return the children
+     */
+    public List<CmsCategory> getChildren() {
+        return children;
+    }
+
+    /**
+     * @param children the children to set
+     */
+    public void setChildren(List<CmsCategory> children) {
+        this.children = children;
+    }
+
+    /**
+     * @return the hasMenu
+     */
+    public boolean isHasMenu() {
+        return hasMenu;
+    }
+
+    /**
+     * @param hasMenu the hasMenu to set
+     */
+    public void setHasMenu(boolean hasMenu) {
+        this.hasMenu = hasMenu;
+    }
+
+    /**
      * <pre>
      * 功能描述：
      * 使用示范：
@@ -272,12 +311,11 @@ public class CmsCategory implements java.io.Serializable {
         return " {id:" + id + ", parentId:" + parentId + ", path:" + path + ", categoryName:"
                + categoryName + ", isBackground:" + isBackground + ", permissionId:" + permissionId
                + ", isAuthRequired:" + isAuthRequired + ", authRoleId:" + authRoleId
-               + ", isMaterialNotice:" + isMaterialNotice + ", materialId:" + materialId
-               + ", isSummaryVisible:" + isSummaryVisible + ", isKeywordVisible:"
-               + isKeywordVisible + ", isAuthorVisible:" + isAuthorVisible + ", isClicksVisible:"
-               + isClicksVisible + ", isCommentsAllow:" + isCommentsAllow + ", isCommentsVisible:"
-               + isCommentsVisible + ", isLikesVisible:" + isLikesVisible + ", isBookmarksVisible:"
-               + isBookmarksVisible + ", sort:" + sort + "}";
+               + ", isMaterialNotice:" + isMaterialNotice + " , isSummaryVisible:"
+               + isSummaryVisible + ", isKeywordVisible:" + isKeywordVisible + ", isAuthorVisible:"
+               + isAuthorVisible + ", isClicksVisible:" + isClicksVisible + ", isCommentsAllow:"
+               + isCommentsAllow + ", isCommentsVisible:" + isCommentsVisible + ", isLikesVisible:"
+               + isLikesVisible + ", isBookmarksVisible:" + isBookmarksVisible + ", sort:" + sort
+               + "}";
     }
-
 }
