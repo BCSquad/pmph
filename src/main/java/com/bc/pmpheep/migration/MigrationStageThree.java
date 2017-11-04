@@ -54,9 +54,9 @@ public class MigrationStageThree {
 	WriterUserCertificationService writerCertificationService;
 	
 	public void start(){
-		writerRole();
-		writerUserRole();
-		writerProfile();
+//		writerRole();
+//		writerUserRole();
+//		writerProfile();
 		writerUserCertification();
 		orgUserRole();
 	}
@@ -110,11 +110,18 @@ public class MigrationStageThree {
 					+"LEFT JOIN sys_userext d ON a.userid = d.userid "
 					+"WHERE b.sysflag = 1 AND d.usertype != 2 ;";
 		List<Map<String,Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+		List<Map<String,Object>> excel = new LinkedList<>();
 		int count = 0 ;
 		for (Map<String,Object> map : maps){
 			Double userroleId = (Double) map.get("userroleid");
 			Long userId = (Long) map.get("user_new_pk");
 			Long roleId = (Long) map.get("role_new_pk");
+			if (null == roleId){
+				map.put(SQLParameters.EXCEL_EX_HEADER, "角色被删除，无法关联到");
+				excel.add(map);
+				logger.error("角色被删除，无法被关联到，此结果将被记录在Excel中");
+				continue;
+			}
 			WriterUserRole writerUserRole = new WriterUserRole();
 			writerUserRole.setUserId(userId);
 			writerUserRole.setRoleId(roleId);
@@ -122,6 +129,14 @@ public class MigrationStageThree {
 			count++;
 			Long pk = writerUserRole.getId();
 			JdbcHelper.updateNewPrimaryKey(tableName, pk, "userroleid", userroleId);
+			logger.info("id为：" + userId + ","+ count + "条");
+		}
+		if (excel.size() > 0){
+			try {
+				excelHelper.exportFromMaps(excel, tableName, tableName);
+			}  catch (IOException ex) {
+				logger.error("异常数据导出到Excel失败",ex);
+			}
 		}
 		logger.info("writer_user_role迁移完成");
 		logger.info("原数据库表共{}条数据，迁移了{}条数据",maps.size(),count);
@@ -173,7 +188,8 @@ public class MigrationStageThree {
 					+"LEFT JOIN ba_organize d ON c.orgid = d.orgid "
 					+"LEFT JOIN (SELECT * FROM pub_addfileinfo y WHERE y.fileid IN (SELECT MAX(p.fileid) "
 					+"FROM pub_addfileinfo p WHERE p.childsystemname='sys_userext_teacher' GROUP BY p.operuserid))e "
-					+"ON a.userid = e.operuserid ;";
+					+"ON a.userid = e.operuserid "
+					+ "WHERE a.sysflag=1 AND b.usertype !=2;";
 		List<Map<String,Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
 		List<Map<String,Object>> excel = new LinkedList<>();
 		int count = 0 ;
@@ -209,6 +225,7 @@ public class MigrationStageThree {
 			writerUserCertification = writerCertificationService
 					.addWriterUserCertification(writerUserCertification);
 			count++;
+			logger.info("id:"+userId+","+"count:"+count);
 			Long pk = writerUserCertification.getId();
 			if (null != cert){
 				String mongoId = "";
