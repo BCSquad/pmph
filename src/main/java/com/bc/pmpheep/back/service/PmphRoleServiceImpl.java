@@ -14,6 +14,7 @@ import com.bc.pmpheep.back.po.PmphRolePermission;
 import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -113,6 +114,18 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "角色默认权限为空时禁止新增角色");
 		}
+		if (StringUtil.getLength(role.getRoleName()) > 10) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "角色名称不能超过20个字符");
+		}
+		if (ObjectUtil.notNull(roleDao.getPmphRoleId(role.getRoleName()))) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "角色名称重复了");
+		}
+		if (!StringUtil.isEmpty(role.getNote()) && StringUtil.getLength(role.getNote()) > 10) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "备注不能超过20个字符");
+		}
 		roleDao.add(role);
 		for (Long id : ids) {
 			PmphRolePermission pmphRolePermission = new PmphRolePermission(role.getId(), id);
@@ -154,6 +167,18 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 		if (ObjectUtil.isNull(role.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "角色ID为空时禁止更新");
+		}
+		if (StringUtil.getLength(role.getRoleName()) > 10) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "角色名称不能超过20个字符");
+		}
+		if (ObjectUtil.notNull(roleDao.getPmphRoleId(role.getRoleName()))) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "角色名称重复了");
+		}
+		if (!StringUtil.isEmpty(role.getNote()) && StringUtil.getLength(role.getNote()) > 10) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "备注不能超过20个字符");
 		}
 		return roleDao.update(role);
 	}

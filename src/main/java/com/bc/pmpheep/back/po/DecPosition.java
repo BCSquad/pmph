@@ -21,13 +21,13 @@ public class DecPosition implements Serializable {
 	//书籍id	
 	private Long  textbookId;
 	//申报职务
-	private Short presetPosition;	
+	private Integer presetPosition;	
 	//是否进入预选名单
-	private Boolean isOnList;		
+	private Integer isOnList;		
 	//遴选职务
-	private Short chosenPosition;	
+	private Integer chosenPosition;	
 	//排位
-	private Short rank;	
+	private Integer rank;	
 	//教学大纲id	
 	private String syllabusId	;
 	//教学大纲名称
@@ -63,28 +63,28 @@ public class DecPosition implements Serializable {
 	public void setTextbookId(Long textbookId) {
 		this.textbookId = textbookId;
 	}
-	public Short getPresetPosition() {
+	public Integer getPresetPosition() {
 		return presetPosition;
 	}
-	public void setPresetPosition(Short presetPosition) {
+	public void setPresetPosition(Integer presetPosition) {
 		this.presetPosition = presetPosition;
 	}
-	public Boolean getIsOnList() {
+	public Integer getIsOnList() {
 		return isOnList;
 	}
-	public void setIsOnList(Boolean isOnList) {
+	public void setIsOnList(Integer isOnList) {
 		this.isOnList = isOnList;
 	}
-	public Short getChosenPosition() {
+	public Integer getChosenPosition() {
 		return chosenPosition;
 	}
-	public void setChosenPosition(Short chosenPosition) {
+	public void setChosenPosition(Integer chosenPosition) {
 		this.chosenPosition = chosenPosition;
 	}
-	public Short getRank() {
+	public Integer getRank() {
 		return rank;
 	}
-	public void setRank(Short rank) {
+	public void setRank(Integer rank) {
 		this.rank = rank;
 	}
 	public String getSyllabusId() {
