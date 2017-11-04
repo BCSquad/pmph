@@ -1109,14 +1109,15 @@ public class MigrationStageSix {
 	protected void decExtension(){
 		String tableName = "teach_material_extvalue"; // 要迁移的旧库表名
 		JdbcHelper.addColumn(tableName); // 增加new_pk字段
-		String sql = "SELECT a.extvalueid,a.expendid,a.writerid,a.content from teach_material_extvalue a "
-				+ "LEFT JOIN writer_declaration b on b.writerid=a.writerid "
-				+ "LEFT JOIN teach_material_extend c on c.expendid=a.expendid";
-		List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+		/*String sql = "select t.extvalueid,t.expendid,t.writerid,t.content "
+				+ "from teach_material_extvalue t "
+				+ "left join writer_declaration wd on wd.writerid=t.writerid "
+				+ "left join teach_material_extend tme on tm.expendid=t.expendid ";*/
+		List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);
+		//JdbcHelper.getJdbcTemplate().queryForList(sql);
 		int count = 0; // 迁移成功的条目数
 		List<Map<String, Object>> excel = new LinkedList<>();
 		String regular = "^[0-9a-zA-Z]{8,10}$"; // 正则表达式判断
-		String expenIdsql = "select expendid from teach_material_extend where expendid=?";
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
         	Double id = (Double) map.get("extvalueid"); // 旧表主键值
@@ -1131,7 +1132,7 @@ public class MigrationStageSix {
             		logger.error("未找到教材扩展项id，此结果将被记录在Excel中");
                     continue;
                 }
-                decExtension.setDeclarationId(extensionId);
+                decExtension.setExtensionId(extensionId);
             }
         	if (StringUtil.notEmpty(declarationid)) {
                 Long declarationId = JdbcHelper.getPrimaryKey("writer_declaration", "writerid", declarationid);
@@ -1146,9 +1147,9 @@ public class MigrationStageSix {
         	String content = (String) map.get("content"); // 扩展项内容
         	if (null == content || ("无").equals(content) || ("").equals(content) 
         			|| regular.equals(content)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到教材扩展项id");
+        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到扩展项内容");
         		excel.add(map);
-        		logger.error("未找到教材扩展项id，此结果将被记录在Excel中");
+        		logger.error("未找到扩展项内容，此结果将被记录在Excel中");
                 continue;
         	}
         	decExtension.setContent(content);
