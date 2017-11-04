@@ -1,8 +1,10 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.bc.pmpheep.back.po.CmsCategory;
+import com.bc.pmpheep.back.po.CmsCategoryRole;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -27,7 +29,23 @@ public interface CmsCategoryService {
     /**
      * 
      * <pre>
-     * 功能描述：新增
+     * 功能描述：新增CmsCategory
+     * 使用示范：
+     *
+     * @param cmsCategory  CmsCategory对象
+     * @param permissionId  操作权限id集合
+     * @param authRoleId  审核角色id集合
+     * @return 影响行数 
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer addCmsCategory(CmsCategory cmsCategory, List<Long> permissionId, List<Long> authRoleId)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：新增CmsCategory
      * 使用示范：
      *
      * @param cmsCategory  CmsCategory对象
@@ -36,6 +54,19 @@ public interface CmsCategoryService {
      * </pre>
      */
     CmsCategory addCmsCategory(CmsCategory cmsCategory) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：新增CmsCategoryRole
+     * 使用示范：
+     *
+     * @param cmsCategoryRole  CmsCategoryRole对象
+     * @return 影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer addCmsCategoryRole(CmsCategoryRole cmsCategoryRole) throws CheckedServiceException;
 
     /**
      * 
@@ -49,6 +80,60 @@ public interface CmsCategoryService {
      * </pre>
      */
     Integer updateCmsCategory(CmsCategory cmsCategory) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：修改CmsCategory，CmsCategoryRole
+     * 使用示范：
+     * @param cmsCategory 对象
+     * @param permissionId  操作权限id集合
+     * @param authRoleId  审核角色id集合
+     * @return 影响行数 
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer updateCmsCategoryAndCategoryRole(CmsCategory cmsCategory, List<Long> permissionId,
+    List<Long> authRoleId) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：修改CmsCategoryRole
+     * 使用示范：
+     *
+     * @param cmsCategoryRole  CmsCategoryRole对象
+     * @return 影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer updateCmsCategoryRole(CmsCategoryRole cmsCategoryRole) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取所有父级节点
+     * 使用示范：
+     * @param categoryName 栏目名称
+     * @return CmsCategory 集合对象
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    List<CmsCategory> getListAllParentMenu(String categoryName) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按父节点ID查询对应子节点
+     * 使用示范：
+     * @param categoryName 栏目名称
+     * @param parentId 父节点ID
+     * @return CmsCategory 集合对象
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    List<CmsCategory> getListChildMenuByParentId(Long parentId, String categoryName)
+    throws CheckedServiceException;
 
     /**
      * 
@@ -77,17 +162,31 @@ public interface CmsCategoryService {
      */
     CmsCategory getCmsCategoryById(Long id) throws CheckedServiceException;
 
+    Map<String, Object> getCmsCategoryDetail(Long id) throws CheckedServiceException;
+
     /**
      * 
      * <pre>
      * 功能描述：获取总条数
      * 使用示范：
-     *
+     *@param categoryId CmsCategory 主键ID
      * @return 总条数
-     * @throws CheckedServiceException
      * </pre>
      */
-    Integer getCmsCategoryCount() throws CheckedServiceException;
+    Integer getCmsCategoryCount(Long categoryId) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：通过categoryId查询权限
+     * 使用示范：
+     *
+     * @param categoryId CmsCategory主键ID
+     * @return  CmsCategoryRole 集合
+     * </pre>
+     */
+    List<CmsCategoryRole> getCmsCategoryRoleByCategoryId(Long categoryId)
+    throws CheckedServiceException;
 
     /**
      * 
@@ -101,6 +200,34 @@ public interface CmsCategoryService {
      * </pre>
      */
     Integer deleteCmsCategoryById(Long id) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按主键Id集合批量删除
+     * 使用示范：
+     *
+     * @param ids 主键id集合
+     * @return 影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer batchDeleteCmsCategoryById(List<Long> ids) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按主键categoryId删除
+     * 使用示范：
+     *
+     * @param categoryId 内容栏目主键ID
+     * @param permissionType 权限
+     * @return 影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer deleteCmsCategoryRoleByCategoryId(Long categoryId, Short permissionType)
+    throws CheckedServiceException;
 
     /**
      * 

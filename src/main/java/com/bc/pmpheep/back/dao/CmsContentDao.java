@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.CmsContent;
+import com.bc.pmpheep.back.vo.CmsContentVO;
 
 /**
  * 
@@ -52,6 +54,102 @@ public interface CmsContentDao {
     /**
      * 
      * <pre>
+     * 功能描述： 内容发布
+     * 使用示范：
+     * 
+     * @param id 主键ID
+     * @return 影响行数
+     * </pre>
+     */
+    Integer publishCmsContentById(Long id);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：内容修改 按ID
+     * 使用示范：
+     *
+     * @param id 主键ID
+     * @return 影响行数
+     * </pre>
+     */
+    Integer updateCmsContentById(Long id);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述： 内容隐藏
+     * 使用示范：
+     *
+     * @param id 主键ID
+     * @return 影响行数
+     * </pre>
+     */
+    Integer hideCmsContentById(Long id);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述： 社外内容审核操作(通过/拒绝)
+     * 使用示范：
+     *
+     * @param id 主键ID
+     * @param authStatus 审核状态
+     * @return 影响行数
+     * </pre>
+     */
+    Integer checkContentById(CmsContent cmsContent);
+
+    /**
+     * 
+     * 获取CmsContent列表（同时查询分页数据和总条数）
+     * 
+     * @author Mryang
+     * @createDate 2017年9月27日 上午10:36:10
+     * @param pageParameter
+     * @return List<MessageStateVO>
+     */
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取CmsContent列表（同时查询分页数据和总条数）
+     * 使用示范：
+     *
+     * @param pageParameter
+     * @return List<CmsContentVO>
+     * </pre>
+     */
+    List<CmsContentVO> listCmsContent(PageParameter<CmsContentVO> pageParameter);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：分页查询条件查询《社外内容管理》列表
+     * 使用示范：
+     *
+     * @param pageParameter 带有分页参数和查询条件参数
+     * @param sessionId 
+     * @return 
+     * </pre>
+     */
+    List<CmsContentVO> listContentManage(PageParameter<CmsContentVO> pageParameter);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：分页查询条件查询《社外内容审核》列表
+     * 使用示范：
+     *
+     * @param pageParameter 带有分页参数和查询条件参数
+     * @param sessionId 
+     * @return 
+     * </pre>
+     */
+    List<CmsContentVO> listContentCheck(PageParameter<CmsContentVO> pageParameter);
+
+    /**
+     * 
+     * <pre>
      * 功能描述：查询CmsContent列表(全部)
      * 使用示范：
      *
@@ -87,7 +185,7 @@ public interface CmsContentDao {
     /**
      * 
      * <pre>
-     * 功能描述：按主键Id删除
+     * 功能描述：按主键Id删除(逻辑删除)
      * 使用示范：
      *
      * @param id 主键ID

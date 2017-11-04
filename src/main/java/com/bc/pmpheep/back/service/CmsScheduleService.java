@@ -78,6 +78,19 @@ public interface CmsScheduleService {
     /**
      * 
      * <pre>
+     * 功能描述：通过ContentId获取CmsSchedule对象
+     * 使用示范：
+     *
+     * @param id cms_Content_id 主键ID
+     * @return CmsSchedule 对象
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    CmsSchedule getCmsScheduleByContentId(Long contentId) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
      * 功能描述：获取总条数
      * 使用示范：
      *
@@ -98,6 +111,19 @@ public interface CmsScheduleService {
      * </pre>
      */
     Integer deleteCmsScheduleById(Long id) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按contentId删除
+     * 使用示范：
+     *
+     * @param contentId Cms_Content_id 
+     * @return 影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer deleteCmsScheduleByContentId(Long contentId) throws CheckedServiceException;
 
     /**
      * 

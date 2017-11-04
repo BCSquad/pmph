@@ -39,6 +39,15 @@ public class PmphRoleServiceImpl implements PmphRoleService {
     }
 
     @Override
+    public PmphRole getPmphRoleByUserId(Long userId) throws CheckedServiceException {
+        if (ObjectUtil.isNull(userId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+        }
+        return roleDao.getPmphRoleByUserId(userId);
+    }
+
+    @Override
     public List<PmphRole> getList(String roleName) throws CheckedServiceException {
         List<PmphRole> pmphRoles = roleDao.getListRole(roleName);
         for (PmphRole pmphRole : pmphRoles) {

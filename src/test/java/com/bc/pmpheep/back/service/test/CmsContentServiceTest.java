@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service.test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.service.CmsContentService;
 import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -55,13 +57,27 @@ public class CmsContentServiceTest extends BaseTest {
                                                        DateUtil.getCurrentTime(),
                                                        DateUtil.getCurrentTime(), 2L,
                                                        DateUtil.getCurrentTime(),
-                                                       DateUtil.getCurrentTime()));
+                                                       DateUtil.getCurrentTime(), 0L));
         logger.info(cmsContent.getPath());
         Assert.assertNotNull("插入内容后返回的CmsContent.id不应为空", cmsContent.getId());
         // uddate
-        Integer count =
-        cmsContentService.updateCmsContent(new CmsContent(cmsContent.getId(), 3L, "d:/pmph/img",
-                                                          DateUtil.getCurrentTime()));
+        Integer count = 0;
+        try {
+            count =
+            cmsContentService.updateCmsContent(new CmsContent(cmsContent.getId(), 3L,
+                                                              "d:/pmph/img",
+                                                              DateUtil.getCurrentTime(), 0L),
+                                               null,
+                                               null,
+                                               null,
+                                               null,
+                                               null);
+        } catch (CheckedServiceException e) {
+            logger.error(e.toString());
+        } catch (IOException e) {
+            logger.error(e.toString());
+        }
+        Assert.fail();
         Assert.assertTrue("是否更新CmsContent成功", count > 0 ? true : false);
         // getById
         CmsContent cms = cmsContentService.getCmsContentById(cmsContent.getId());

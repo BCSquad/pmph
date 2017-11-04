@@ -78,6 +78,16 @@ public class CmsScheduleServiceImpl implements CmsScheduleService {
     }
 
     @Override
+    public CmsSchedule getCmsScheduleByContentId(Long contentId) throws CheckedServiceException {
+        if (ObjectUtil.isNull(contentId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "contentId参数为空");
+
+        }
+        return cmsScheduleDao.getCmsScheduleByContentId(contentId);
+    }
+
+    @Override
     public Integer getCmsScheduleCount() throws CheckedServiceException {
         return cmsScheduleDao.getCmsScheduleCount();
     }
@@ -90,6 +100,16 @@ public class CmsScheduleServiceImpl implements CmsScheduleService {
 
         }
         return cmsScheduleDao.deleteCmsScheduleById(id);
+    }
+
+    @Override
+    public Integer deleteCmsScheduleByContentId(Long contentId) throws CheckedServiceException {
+        if (ObjectUtil.isNull(contentId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "contentId参数为空");
+
+        }
+        return cmsScheduleDao.deleteCmsScheduleByContentId(contentId);
     }
 
     @Override

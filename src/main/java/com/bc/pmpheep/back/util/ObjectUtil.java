@@ -35,7 +35,7 @@ public final class ObjectUtil {
      * 检测对象是否为空
      * 
      * @param s
-     * @return 不为空则返回true，否则返回false
+     * @return 为空则返回true，否则返回false
      */
     public static boolean isNull(Object obj) {
         return null == obj;

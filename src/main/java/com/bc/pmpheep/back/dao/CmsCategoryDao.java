@@ -2,10 +2,11 @@ package com.bc.pmpheep.back.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.CmsCategory;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.bc.pmpheep.back.po.CmsCategoryRole;
 
 /**
  * 
@@ -29,12 +30,11 @@ public interface CmsCategoryDao {
     /**
      * 
      * <pre>
-     * 功能描述：新增
+     * 功能描述：新增CmsCategory
      * 使用示范：
      *
      * @param cmsCategory  CmsCategory对象
      * @return 影响行数
-     * @throws CheckedServiceException
      * </pre>
      */
     Integer addCmsCategory(CmsCategory cmsCategory);
@@ -42,15 +42,63 @@ public interface CmsCategoryDao {
     /**
      * 
      * <pre>
+     * 功能描述：新增CmsCategoryRole
+     * 使用示范：
+     *
+     * @param cmsCategoryRole  CmsCategoryRole对象
+     * @return 影响行数
+     * </pre>
+     */
+    Integer addCmsCategoryRole(CmsCategoryRole cmsCategoryRole);
+
+    /**
+     * 
+     * <pre>
      * 功能描述：修改CmsCategory
      * 使用示范：
      *
-     * @param cmsCategory 
+     * @param cmsCategory CmsCategory对象
      * @return 影响行数
-     * @throws CheckedServiceException
      * </pre>
      */
     Integer updateCmsCategory(CmsCategory cmsCategory);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：修改CmsCategoryRole
+     * 使用示范：
+     *
+     * @param cmsCategoryRole  CmsCategoryRole对象
+     * @return 影响行数
+     * </pre>
+     */
+    Integer updateCmsCategoryRole(CmsCategoryRole cmsCategoryRole);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取所有父级节点
+     * 使用示范：
+     *
+     * @param categoryName 栏目名称
+     * @return CmsCategory 集合对象
+     * </pre>
+     */
+    List<CmsCategory> getListAllParentMenu(String categoryName);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按父节点ID查询对应子节点
+     * 使用示范：
+     * @param categoryName 栏目名称
+     * @param parentId 父节点ID
+     * @return CmsCategory 集合对象
+     * </pre>
+     */
+    List<CmsCategory> getListChildMenuByParentId(@Param("parentId") Long parentId,
+    @Param("categoryName") String categoryName);
 
     /**
      * 
@@ -60,7 +108,6 @@ public interface CmsCategoryDao {
      *
      * @param cmsCategory 
      * @return CmsCategory集合对象
-     * @throws CheckedServiceException
      * </pre>
      */
     List<CmsCategory> getCmsCategoryList(CmsCategory cmsCategory);
@@ -73,7 +120,6 @@ public interface CmsCategoryDao {
      *
      * @param id 主键ID
      * @return CmsCategory 对象
-     * @throws CheckedServiceException
      * </pre>
      */
     CmsCategory getCmsCategoryById(Long id);
@@ -81,13 +127,25 @@ public interface CmsCategoryDao {
     /**
      * 
      * <pre>
-     * 功能描述：获取总条数
+     * 功能描述：通过categoryId查询权限
      * 使用示范：
      *
+     * @param categoryId CmsCategory主键ID
+     * @return  CmsCategoryRole 集合
+     * </pre>
+     */
+    List<CmsCategoryRole> getCmsCategoryRoleByCategoryId(Long categoryId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取总条数
+     * 使用示范：
+     *@param categoryId CmsCategory 主键ID
      * @return 总条数
      * </pre>
      */
-    Integer getCmsCategoryCount();
+    Integer getCmsCategoryCount(Long categoryId);
 
     /**
      * 
@@ -97,10 +155,21 @@ public interface CmsCategoryDao {
      *
      * @param id 主键ID
      * @return 影响行数
-     * @throws CheckedServiceException
      * </pre>
      */
     Integer deleteCmsCategoryById(Long id);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按主键categoryId删除
+     * 使用示范：
+     *
+     * @param cmsCategoryRole CmsCategoryRole 对象
+     * @return 影响行数
+     * </pre>
+     */
+    Integer deleteCmsCategoryRoleByCategoryId(CmsCategoryRole cmsCategoryRole);
 
     /**
      * 
@@ -110,7 +179,6 @@ public interface CmsCategoryDao {
      *
      * @param ids 主键id 集合
      * @return 影响行数
-     * @throws CheckedServiceException
      * </pre>
      */
     Integer deleteCmsCategoryByIds(List<Long> ids);
