@@ -54,9 +54,9 @@ public class MigrationStageThree {
 	WriterUserCertificationService writerCertificationService;
 	
 	public void start(){
-		writerRole();
-		writerUserRole();
-		writerProfile();
+//		writerRole();
+//		writerUserRole();
+//		writerProfile();
 		writerUserCertification();
 		orgUserRole();
 	}
@@ -154,7 +154,7 @@ public class MigrationStageThree {
 		for (Map<String,Object> map : maps){
 			Long userId = (Long) map.get("new_pk");
 			if (null == userId || userId == 0){
-				map.put(SQLParameters.EXCEL_EX_HEADER, "关联id主表存在或为社内用户");
+				map.put(SQLParameters.EXCEL_EX_HEADER, "关联id主表不存在或为社内用户");
 				excel.add(map);
 				logger.error("关联id主表存在或为社内用户,此结果将被记录在Excel中");
 				continue;
