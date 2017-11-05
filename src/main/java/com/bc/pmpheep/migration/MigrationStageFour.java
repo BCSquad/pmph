@@ -229,11 +229,12 @@ public class MigrationStageFour {
 					"ifnull(h.new_pk,g.new_pk) mender_id  "+//如果更新者为空那么默认创建者
 					"from teach_material a  "+
 					"LEFT JOIN ( "+
-					 	"select DISTINCT e.materid,d.rolename,a.userid,a.new_pk newuserid,b.new_pk neworgid from sys_user  a "+
+					 	"select DISTINCT e.materid,d.rolename,a.userid,a.new_pk newuserid,f.new_pk neworgid from sys_user  a "+
 						"LEFT JOIN  sys_userorganize b on b.userid=a.userid "+
 						"LEFT JOIN  sys_userrole   c on   c.userid =a.userid  "+
 						"LEFT JOIN  sys_role   d  on d.roleid =c.roleid "+
 						"LEFT JOIN teach_material e on e.createorgid = b.orgid  "+
+						"LEFT JOIN ba_organize f on f.orgid = b.orgid " +
 						"where d.rolename like '%主任%' and e.materid is not null  GROUP BY e.materid "+
 					") d on d.materid = a.materid "+
 					"LEFT JOIN sys_user g on g.userid = a.createuserid "+
