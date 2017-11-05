@@ -54,9 +54,9 @@ public class MigrationStageThree {
 	WriterUserCertificationService writerCertificationService;
 	
 	public void start(){
-//		writerRole();
-//		writerUserRole();
-//		writerProfile();
+		writerRole();
+		writerUserRole();
+		writerProfile();
 		writerUserCertification();
 		orgUserRole();
 	}
