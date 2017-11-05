@@ -117,6 +117,19 @@
 		WHERE
 		id = #{id}
 	</select>
+	
+	<select id="getPmphRoleByUserId" parameterType="java.lang.Long" resultType="PmphRole">
+		SELECT 
+			* 
+		FROM  
+			`pmph_role` pr
+		LEFT JOIN 
+			`pmph_user_role` pur
+		ON 
+			pr.id = pur.role_id
+		WHERE 
+			pur.user_id=#{userId}
+	</select>
 
 	<select id="getListRole" parameterType="map" resultType="PmphRole">
 		SELECT

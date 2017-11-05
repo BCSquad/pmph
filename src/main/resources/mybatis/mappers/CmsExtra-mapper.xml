@@ -68,7 +68,17 @@
 		where 
 			id=#{id};
 	</update>
-
+	
+	<!-- 按attachment修改下载次数  -->
+	<update id="updateCmsExtraDownLoadCountsByAttachment" parameterType="java.lang.String">
+		UPDATE cms_extra SET download =download+1 WHERE attachment = #{attachment}
+	</update>
+	
+	<!-- 根据ContentId查询一个CmsExtra -->
+	<select id="getCmsExtraByContentId" parameterType="java.lang.Long" resultType="CmsExtra">
+		select * from cms_extra where content_id = #{contentId};
+	</select>
+	
 	<!-- 根据id查询一个CmsExtra -->
 	<select id="getCmsExtraById" parameterType="java.lang.Long" resultType="CmsExtra">
 		select * from cms_extra where id=#{id};
@@ -86,6 +96,17 @@
 	<delete id="deleteCmsExtraById" parameterType="java.lang.Long">
 		delete from cms_extra where id=#{id};
 	</delete>
+	
+	<!-- 根据attachment删除一个 CmsExtra-->
+	<delete id="deleteCmsExtraByAttachment" >
+    	delete from cms_extra
+		where 
+			attachment
+		in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+    </delete>
 	
 	<!-- 批量删除-->
     <delete id="deleteCmsExtraByIds" >

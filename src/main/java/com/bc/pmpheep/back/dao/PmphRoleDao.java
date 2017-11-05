@@ -44,6 +44,18 @@ public interface PmphRoleDao {
 
     /**
      * 
+     * <pre>
+     * 功能描述：根据用户Id查询角色信息
+     * 使用示范：
+     *
+     * @param userId 用户ID
+     * @return PmphRole 对象
+     * </pre>
+     */
+    PmphRole getPmphRoleByUserId(Long userId);
+
+    /**
+     * 
      * 
      * 功能描述：根据用户id获取该用户所属角色
      * 

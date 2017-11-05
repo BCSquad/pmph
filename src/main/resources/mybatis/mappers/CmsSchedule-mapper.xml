@@ -56,6 +56,11 @@
 		select * from cms_schedule where id=#{id};
 	</select>
 	
+	<!-- 根据ContentId查询一个CmsSchedule -->
+	<select id="getCmsScheduleByContentId" parameterType="java.lang.Long" resultType="CmsSchedule">
+		select * from cms_schedule where content_id = #{contentId};
+	</select>
+	
 	<!-- 查询表单的数据总数 -->
 	<select id="getCmsSchedule" resultType="java.lang.Integer">
 		select
@@ -67,6 +72,11 @@
 	<!-- 根据id删除一个 CmsSchedule-->
 	<delete id="deleteCmsScheduleById" parameterType="java.lang.Long">
 		delete from cms_schedule where id=#{id};
+	</delete>
+	
+	<!-- 根据contentId删除一个 CmsSchedule-->
+	<delete id="deleteCmsScheduleByContentId" parameterType="java.lang.Long">
+		delete from cms_schedule where content_id = #{contentId};
 	</delete>
 	
 	<!-- 批量删除-->

@@ -638,11 +638,14 @@
 	</select>
 	
 	<!-- 查询表单的数据总数 -->
-	<select id="getCmsContentCount" resultType="java.lang.Integer">
+	<select id="getCmsContentCount" parameterType="java.lang.Long"  resultType="java.lang.Integer">
 		select
 			count(*)
 		from
 			cms_content
+		<if test="categoryId != null">
+			where  category_id = #{categoryId}
+		</if>
 	</select>
 	
 	<!-- 批量删除-->

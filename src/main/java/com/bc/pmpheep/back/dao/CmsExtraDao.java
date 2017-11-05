@@ -52,6 +52,18 @@ public interface CmsExtraDao {
     /**
      * 
      * <pre>
+     * 功能描述：按attachment修改下载次数 
+     * 使用示范：
+     *
+     * @param attachment  MongoDB附件表的主键
+     * @return 影响行数
+     * </pre>
+     */
+    Integer updateCmsExtraDownLoadCountsByAttachment(String attachment);
+
+    /**
+     * 
+     * <pre>
      * 功能描述：查询CmsExtra列表(全部)
      * 使用示范：
      *
@@ -76,6 +88,18 @@ public interface CmsExtraDao {
     /**
      * 
      * <pre>
+     * 功能描述：通过content_id获取CmsExtra集合对象
+     * 使用示范：
+     *
+     * @param id 主键ID
+     * @return CmsCategory 集合对象
+     * </pre>
+     */
+    List<CmsExtra> getCmsExtraByContentId(Long contentId);
+
+    /**
+     * 
+     * <pre>
      * 功能描述：获取总条数
      * 使用示范：
      *
@@ -95,6 +119,18 @@ public interface CmsExtraDao {
      * </pre>
      */
     Integer deleteCmsExtraById(Long id);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按attachment删除
+     * 使用示范：
+     *
+     * @param attachment MongoDB附件表的主键
+     * @return 影响行数
+     * </pre>
+     */
+    Integer deleteCmsExtraByAttachment(String[] attachment);
 
     /**
      * 

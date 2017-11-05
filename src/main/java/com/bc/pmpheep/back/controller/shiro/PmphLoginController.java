@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.PmphPermissionService;
+import com.bc.pmpheep.back.service.PmphRoleService;
 import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.sessioncontext.SessionContext;
 import com.bc.pmpheep.back.util.Const;
@@ -52,6 +54,8 @@ public class PmphLoginController {
     PmphUserService       pmphUserService;
     @Autowired
     PmphPermissionService pmphPermissionService;
+    @Autowired
+    PmphRoleService       pmphRoleService;
 
     /**
      * 
@@ -77,6 +81,16 @@ public class PmphLoginController {
             PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
             pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
             pmphUser.setAvatar(Const.DEFAULT_USER_AVATAR);
+            // 根据用户Id查询对应角色
+            PmphRole pmphRole = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
+            if (ObjectUtil.notNull(pmphRole)) {
+                if (Const.LOGIN_USER_IS_ADMIN.equals(pmphRole.getRoleName())
+                    || Const.LOGIN_USER_IS_ADMINS.equals(pmphRole.getRoleName())) {
+                    pmphUser.setIsAdmin(true);
+                } else {
+                    pmphUser.setIsAdmin(false);
+                }
+            }
             // 根据用户Id查询对应权限Id
             List<Long> pmphUserPermissionIds =
             pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());

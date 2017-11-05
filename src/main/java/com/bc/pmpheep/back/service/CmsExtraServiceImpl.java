@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.CmsExtraDao;
 import com.bc.pmpheep.back.po.CmsExtra;
+import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -56,6 +58,25 @@ public class CmsExtraServiceImpl implements CmsExtraService {
     }
 
     @Override
+    public Integer updateCmsExtraDownLoadCountsByAttachment(String attachment)
+    throws CheckedServiceException {
+        if (StringUtil.isEmpty(attachment)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "attachment参数为空");
+        }
+        return cmsExtraDao.updateCmsExtraDownLoadCountsByAttachment(attachment);
+    }
+
+    @Override
+    public List<CmsExtra> getCmsExtraByContentId(Long contentId) throws CheckedServiceException {
+        if (ObjectUtil.isNull(contentId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "contentId参数为空");
+        }
+        return cmsExtraDao.getCmsExtraByContentId(contentId);
+    }
+
+    @Override
     public List<CmsExtra> getCmsExtraList(CmsExtra cmsExtra) throws CheckedServiceException {
         if (ObjectUtil.isNull(cmsExtra)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
@@ -98,6 +119,15 @@ public class CmsExtraServiceImpl implements CmsExtraService {
 
         }
         return cmsExtraDao.deleteCmsExtraByIds(ids);
+    }
+
+    @Override
+    public Integer deleteCmsExtraByAttachment(String[] attachment) throws CheckedServiceException {
+        if (ArrayUtil.isEmpty(attachment)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "attachment数组为空");
+        }
+        return cmsExtraDao.deleteCmsExtraByAttachment(attachment);
     }
 
 }

@@ -1,0 +1,364 @@
+package com.bc.pmpheep.back.vo;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+
+import org.apache.ibatis.type.Alias;
+
+@SuppressWarnings("serial")
+@Alias("CmsContentVO")
+public class CmsContentVO implements Serializable {
+    // 主键
+    private Long      id;
+    // 内容id
+    private String    mid;
+    // 内容类型
+    private Long      categoryId;
+    // 类别名称
+    private String    categoryName;
+    // 内容标题
+    private String    title;
+    // 作者类型
+    private Short     authorType;
+    // 作者id
+    private Long      authorId;
+    // 点击数
+    private Long      clicks;
+    // 评论数
+    private Long      comments;
+    // 点赞数
+    private Long      likes;
+    // 收藏数
+    private Long      bookmarks;
+    // 是否分类置顶
+    private Boolean   isStick;
+    // 是否热门
+    private Boolean   isHot;
+    // 是否推荐
+    private Boolean   isPromote;
+    // 是否通过审核
+    private Boolean   isAuth;
+    // 审核者id
+    private Long      authUserId;
+    // 审核通过时间
+    private Timestamp authDate;
+    // 条件分页总条数分页查询
+    private Integer   count;
+    // 页面查询条件（状态）
+    private Integer   status;
+    // 作家姓名
+    private String    username;
+    // 是否为管理员
+    private Boolean   isAdmin;
+    // 创建时间
+    private Timestamp gmtCreate;
+
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the mid
+     */
+    public String getMid() {
+        return mid;
+    }
+
+    /**
+     * @param mid the mid to set
+     */
+    public void setMid(String mid) {
+        this.mid = mid;
+    }
+
+    /**
+     * @return the categoryId
+     */
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    /**
+     * @param categoryId the categoryId to set
+     */
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    /**
+     * @return the categoryName
+     */
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    /**
+     * @param categoryName the categoryName to set
+     */
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    /**
+     * @return the title
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @param title the title to set
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    /**
+     * @return the authorType
+     */
+    public Short getAuthorType() {
+        return authorType;
+    }
+
+    /**
+     * @param authorType the authorType to set
+     */
+    public void setAuthorType(Short authorType) {
+        this.authorType = authorType;
+    }
+
+    /**
+     * @return the authorId
+     */
+    public Long getAuthorId() {
+        return authorId;
+    }
+
+    /**
+     * @param authorId the authorId to set
+     */
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
+    }
+
+    /**
+     * @return the clicks
+     */
+    public Long getClicks() {
+        return clicks;
+    }
+
+    /**
+     * @param clicks the clicks to set
+     */
+    public void setClicks(Long clicks) {
+        this.clicks = clicks;
+    }
+
+    /**
+     * @return the comments
+     */
+    public Long getComments() {
+        return comments;
+    }
+
+    /**
+     * @param comments the comments to set
+     */
+    public void setComments(Long comments) {
+        this.comments = comments;
+    }
+
+    /**
+     * @return the likes
+     */
+    public Long getLikes() {
+        return likes;
+    }
+
+    /**
+     * @param likes the likes to set
+     */
+    public void setLikes(Long likes) {
+        this.likes = likes;
+    }
+
+    /**
+     * @return the bookmarks
+     */
+    public Long getBookmarks() {
+        return bookmarks;
+    }
+
+    /**
+     * @param bookmarks the bookmarks to set
+     */
+    public void setBookmarks(Long bookmarks) {
+        this.bookmarks = bookmarks;
+    }
+
+    /**
+     * @return the isStick
+     */
+    public Boolean getIsStick() {
+        return isStick;
+    }
+
+    /**
+     * @param isStick the isStick to set
+     */
+    public void setIsStick(Boolean isStick) {
+        this.isStick = isStick;
+    }
+
+    /**
+     * @return the isHot
+     */
+    public Boolean getIsHot() {
+        return isHot;
+    }
+
+    /**
+     * @param isHot the isHot to set
+     */
+    public void setIsHot(Boolean isHot) {
+        this.isHot = isHot;
+    }
+
+    /**
+     * @return the isPromote
+     */
+    public Boolean getIsPromote() {
+        return isPromote;
+    }
+
+    /**
+     * @param isPromote the isPromote to set
+     */
+    public void setIsPromote(Boolean isPromote) {
+        this.isPromote = isPromote;
+    }
+
+    /**
+     * @return the isAuth
+     */
+    public Boolean getIsAuth() {
+        return isAuth;
+    }
+
+    /**
+     * @param isAuth the isAuth to set
+     */
+    public void setIsAuth(Boolean isAuth) {
+        this.isAuth = isAuth;
+    }
+
+    /**
+     * @return the authDate
+     */
+    public Timestamp getAuthDate() {
+        return authDate;
+    }
+
+    /**
+     * @param authDate the authDate to set
+     */
+    public void setAuthDate(Timestamp authDate) {
+        this.authDate = authDate;
+    }
+
+    /**
+     * @return the count
+     */
+    public Integer getCount() {
+        return count;
+    }
+
+    /**
+     * @param count the count to set
+     */
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    /**
+     * @return the status
+     */
+    public Integer getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * @return the isAdmin
+     */
+    public Boolean getIsAdmin() {
+        return isAdmin;
+    }
+
+    /**
+     * @param isAdmin the isAdmin to set
+     */
+    public void setIsAdmin(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    /**
+     * @return the authUserId
+     */
+    public Long getAuthUserId() {
+        return authUserId;
+    }
+
+    /**
+     * @param authUserId the authUserId to set
+     */
+    public void setAuthUserId(Long authUserId) {
+        this.authUserId = authUserId;
+    }
+
+    /**
+     * @return the gmtCreate
+     */
+    public Timestamp getGmtCreate() {
+        return gmtCreate;
+    }
+
+    /**
+     * @param gmtCreate the gmtCreate to set
+     */
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+}

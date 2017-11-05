@@ -68,8 +68,14 @@ public class PmphUser implements java.io.Serializable {
      * 修改时间
      */
     private Date    gmtUpdate;
-
+    /**
+     * 登陆类型
+     */
     private Short   loginType;
+    /**
+     * 是否为管理员
+     */
+    private Boolean isAdmin = false;
 
     public PmphUser() {
     }
@@ -227,6 +233,20 @@ public class PmphUser implements java.io.Serializable {
      */
     public void setLoginType(Short loginType) {
         this.loginType = loginType;
+    }
+
+    /**
+     * @return the isAdmin
+     */
+    public Boolean getIsAdmin() {
+        return isAdmin;
+    }
+
+    /**
+     * @param isAdmin the isAdmin to set
+     */
+    public void setIsAdmin(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     @Override

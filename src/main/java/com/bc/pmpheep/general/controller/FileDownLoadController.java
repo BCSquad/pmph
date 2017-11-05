@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.bc.pmpheep.back.service.CmsExtraService;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -41,6 +43,8 @@ public class FileDownLoadController {
     FileService          fileService;
     @Resource
     PmphGroupFileService groupFileService;
+    @Resource
+    CmsExtraService      cmsExtraService;
 
     /**
      * 普通文件下载
@@ -63,6 +67,41 @@ public class FileDownLoadController {
             file.writeTo(out);
             out.flush();
             out.close();
+        } catch (IOException ex) {
+            logger.error("文件下载时出现IO异常：{}", ex.getMessage());
+        }
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：普通文件下载(更新下载数)
+     * 使用示范：
+     *
+     * @param type 模块类型
+     * @param id 文件在MongoDB中的id
+     * @param response 服务响应
+     * </pre>
+     */
+    @RequestMapping(value = "/file/{type}/download/{id}", method = RequestMethod.GET)
+    public void download(@PathVariable("type") String type, @PathVariable("id") String id,
+    HttpServletResponse response) {
+
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/force-download");
+        GridFSDBFile file = fileService.get(id);
+        if (null == file) {
+            logger.warn("未找到id为'{}'的文件", id);
+            return;
+        }
+        response.setHeader("Content-Disposition", "attachment;fileName=" + file.getFilename());
+        try (OutputStream out = response.getOutputStream()) {
+            file.writeTo(out);
+            out.flush();
+            out.close();
+            if (Const.CMS_TYPE.equals(type)) {
+                cmsExtraService.updateCmsExtraDownLoadCountsByAttachment(id);
+            }
         } catch (IOException ex) {
             logger.error("文件下载时出现IO异常：{}", ex.getMessage());
         }

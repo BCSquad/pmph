@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.CmsSchedule;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * 
@@ -76,6 +77,18 @@ public interface CmsScheduleDao {
     /**
      * 
      * <pre>
+     * 功能描述：通过ContentId获取CmsSchedule对象
+     * 使用示范：
+     *
+     * @param id cms_Content_id 主键ID
+     * @return CmsSchedule 对象
+     * </pre>
+     */
+    CmsSchedule getCmsScheduleByContentId(Long contentId);
+
+    /**
+     * 
+     * <pre>
      * 功能描述：获取总条数
      * 使用示范：
      *
@@ -95,6 +108,18 @@ public interface CmsScheduleDao {
      * </pre>
      */
     Integer deleteCmsScheduleById(Long id);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按主键contentId删除
+     * 使用示范：
+     *
+     * @param contentId Cms_Content_id 
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer deleteCmsScheduleByContentId(Long contentId);
 
     /**
      * 

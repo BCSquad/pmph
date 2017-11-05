@@ -54,6 +54,19 @@ public interface PmphRoleService {
     PmphRole get(Long id) throws CheckedServiceException;
 
     /**
+     * 
+     * <pre>
+     * 功能描述：根据用户id获取角色对象
+     * 使用示范：
+     *
+     * @param userId  用户id
+     * @return PmphRole 对象
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    PmphRole getPmphRoleByUserId(Long userId) throws CheckedServiceException;
+
+    /**
      * 查询所有角色对象的列表
      * 
      * @return

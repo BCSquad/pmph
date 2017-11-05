@@ -357,11 +357,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                               "MessageAttachment对象保存失败!");
                         }
                     }
+                    FileUtil.delFile(files[i]);// 删除本地临时文件
                 }
             }
-        }
-        for (int i = 0; i < files.length; i++) {
-            FileUtil.delFile(files[i]);// 删除本地临时文件
         }
         return userMessageList.size();
     }
@@ -404,6 +402,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                                                         gridFSFileId,
                                                                                         file.getName()));
                 }
+                FileUtil.delFile(files[i]);// 删除本地临时文件
             }
             count = 1;
         }
@@ -414,9 +413,6 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 fileService.remove(attachment[i]);
             }
             count = 1;
-        }
-        for (int i = 0; i < files.length; i++) {
-            FileUtil.delFile(files[i]);// 删除本地临时文件
         }
         return count;
     }
