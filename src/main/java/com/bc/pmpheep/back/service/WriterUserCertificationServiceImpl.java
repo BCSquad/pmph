@@ -53,14 +53,6 @@ WriterUserCertificationService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "作家学校为空");
         }
-        if (StringUtil.isEmpty(writerUserCertification.getHandphone())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "作家手机为空");
-        }
-        if (StringUtil.isEmpty(writerUserCertification.getIdcard())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "作家身份证为空");
-        }
         writerUserCertificationDao.addWriterUserCertification(writerUserCertification);
         return writerUserCertification;
     }
