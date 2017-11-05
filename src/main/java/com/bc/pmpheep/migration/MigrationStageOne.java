@@ -376,6 +376,10 @@ public class MigrationStageOne {
 					logger.error("文件读取异常，路径<{}>,异常信息：{}",proxy,ex.getMessage());
 					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("文件读取异常  "));
 					excel.add(map);
+				}catch (Exception ex){
+					mongoId = "DEFAULT";
+					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常："+ex.getMessage()));
+					excel.add(map);
 				}
             }else{
             	mongoId = proxy;
@@ -592,6 +596,10 @@ public class MigrationStageOne {
 					certMongoId = "DEFAULT";
 					logger.error("文件读取异常，路径<{}>,异常信息：{}",cert,ex.getMessage());
 					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("教师资格证文件读取异常  "));
+					excel.add(map);
+				}catch (Exception ex){
+					certMongoId = "DEFAULT";
+					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常："+ex.getMessage()));
 					excel.add(map);
 				}
         	}else{
