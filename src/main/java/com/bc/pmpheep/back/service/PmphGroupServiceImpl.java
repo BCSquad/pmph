@@ -179,11 +179,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		// if (pmphUser.getIsAdmin()) {
-		// return pmphGroupDao.listPmphGroup();
-		// } else {
 		return pmphGroupDao.getList(pmphGroup, pmphUser.getId());
-		// }
 	}
 
 	@Override
