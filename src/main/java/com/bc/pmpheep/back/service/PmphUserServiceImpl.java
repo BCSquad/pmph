@@ -64,8 +64,9 @@ public class PmphUserServiceImpl implements PmphUserService {
 					CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止新增用户");
 		}
 		if (StringUtil.isEmpty(user.getPassword())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "密码为空时禁止新增用户");
+			user.setPassword("123");
+			// throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+			// CheckedExceptionResult.NULL_PARAM, "密码为空时禁止新增用户");
 		}
 		if (StringUtil.isEmpty(user.getRealname())) {
 			user.setRealname(user.getUsername());
