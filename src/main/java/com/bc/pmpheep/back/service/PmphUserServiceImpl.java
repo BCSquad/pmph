@@ -84,12 +84,12 @@ public class PmphUserServiceImpl implements PmphUserService {
 	 */
 	@Override
 	public PmphUser add(PmphUser user, List<Long> rids) throws CheckedServiceException {
-		Long userId = add(user).getId();
-		if (!ObjectUtil.isNull(userId)) {
+		userDao.add(user);
+		if (!ObjectUtil.isNull(user.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时不能添加角色！");
 		}
-		roleDao.addUserRoles(userId, rids);
+		roleDao.addUserRoles(user.getId(), rids);
 		return user;
 	}
 
