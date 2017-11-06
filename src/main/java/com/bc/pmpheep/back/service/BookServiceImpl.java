@@ -31,6 +31,7 @@ import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.MD5;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -56,6 +57,11 @@ public class BookServiceImpl extends BaseService implements BookService {
 	public PageResult<BookVO> listBookVO(PageParameter<BookVO> pageParameter) throws CheckedServiceException {
 		if (ObjectUtil.isNull(pageParameter.getParameter())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		String path = pageParameter.getParameter().getPath();
+		Long type = pageParameter.getParameter().getType();
+		if (StringUtil.notEmpty(path) && ObjectUtil.notNull(type)) {
+			pageParameter.getParameter().setPath(path + "-" + String.valueOf(type));
 		}
 		int total = bookDao.getBookVOTotal(pageParameter);
 		PageResult<BookVO> pageResult = new PageResult<>();
@@ -158,17 +164,17 @@ public class BookServiceImpl extends BaseService implements BookService {
 					JSONArray array = ot.getJSONObject("RESP").getJSONObject("responseData").getJSONArray("results");
 					if (array.size() > 0) {
 						Book book = BusyResJSONToModel(array.getJSONObject(0), null);
-//						String content = book.getContent();// 获取到图书详情将其存入到图书详情表中
-//						if (ObjectUtil.isNull(book.getId())) {
-//							book.setScore(9.0);
-//							bookDao.addBook(book);
-//							BookDetail bookDetail = new BookDetail(book.getId(), content);
-//							bookDetailDao.addBookDetail(bookDetail);
-//						} else {
-//							bookDao.updateBook(book);
-//							BookDetail bookDetail = new BookDetail(book.getId(), content);
-//							bookDetailDao.updateBookDetail(bookDetail);
-//						}
+						// String content = book.getContent();// 获取到图书详情将其存入到图书详情表中
+						// if (ObjectUtil.isNull(book.getId())) {
+						// book.setScore(9.0);
+						// bookDao.addBook(book);
+						// BookDetail bookDetail = new BookDetail(book.getId(), content);
+						// bookDetailDao.addBookDetail(bookDetail);
+						// } else {
+						// bookDao.updateBook(book);
+						// BookDetail bookDetail = new BookDetail(book.getId(), content);
+						// bookDetailDao.updateBookDetail(bookDetail);
+						// }
 					}
 				}
 			} catch (Exception e) {
@@ -266,7 +272,8 @@ public class BookServiceImpl extends BaseService implements BookService {
 		model.setPublisher(item.getString("publicCompany")); // 出版社
 		model.setRevision(Integer.parseInt(item.getString("edition"))); // 版次 ,印次
 		model.setLang(item.getString("language")); // 语言
-		//model.setContent(item.getJSONArray("gdsDescList").getJSONObject(0).getString("gdsDescContent")); // 内容简介
+		// model.setContent(item.getJSONArray("gdsDescList").getJSONObject(0).getString("gdsDescContent"));
+		// // 内容简介
 		model.setImageUrl(item.getJSONArray("imageList").size() > 0
 				? item.getJSONArray("imageList").getJSONObject(0).getString("imgUrl")
 				: ""); // 图片地址
