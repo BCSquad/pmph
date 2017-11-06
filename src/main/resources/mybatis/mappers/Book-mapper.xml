@@ -355,9 +355,8 @@
     <!-- 分页查询 -->
     <select id="listBookVO" parameterType="PageParameter"
                 resultType="BookVO">
-        SELECT b.*,t.type_name,t.path FROM book b ,material_type t WHERE t.id
-        =
-        b.type
+        SELECT b.*,t.type_name,t.path FROM book b LEFT JOIN  material_type t 
+        ON t.id = b.type WHERE 1 = 1
         <if test="parameter.name !=null and parameter.name !='' ">
             and (b.isbn like concat('%',#{parameter.name},'%') or
             b.bookname like
@@ -381,8 +380,8 @@
     <!-- 查询总数 -->
     <select id="getBookVOTotal" parameterType="PageParameter"
                 resultType="Integer">
-        SELECT count(*) FROM book b ,material_type t WHERE t.id =
-        b.type
+        SELECT count(*) FROM book b LEFT JOIN material_type t ON t.id =
+        b.type WHERE 1 = 1
         <if test="parameter.name !=null and parameter.name !='' ">
             and (b.isbn like concat('%',#{parameter.name},'%') or
             b.bookname like
