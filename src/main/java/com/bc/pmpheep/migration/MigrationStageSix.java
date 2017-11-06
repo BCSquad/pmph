@@ -88,7 +88,7 @@ public class MigrationStageSix {
 	
 	public void start(){
 		declaration();
-		decEduExp();
+		/*decEduExp();
 		decWorkExp();
 		decTeachExp();
 		decAcade();
@@ -97,8 +97,8 @@ public class MigrationStageSix {
 		decNationalPlan();
 		decTextbook();
 		decResearch();
-		decExtension();
-		decPosition();
+		decExtension();*/
+		//decPosition();
 	}
 	
 	/**
@@ -107,8 +107,8 @@ public class MigrationStageSix {
 	protected void declaration(){
 		String tableName = "writer_declaration";// 要迁移的旧库表名
 		JdbcHelper.addColumn(tableName); // 增加new_pk字段
-		String sql = "select wd.writerid,wd.materid,wd.writername,wd.sex,wd.birthdate,wd.duties,"
-				+ "wd.positional,wd.address,wd.postcode,wd.handset,wd.email,wd.idcardtype,"
+		String sql = "select wd.writerid,wd.materid,wd.writername,wd.sex,wd.birthdate,wd.seniority,"
+				+ "wd.duties,wd.positional,wd.address,wd.postcode,wd.handset,wd.email,wd.idcardtype,"
 				+ "IFNULL(wd.idcardtype,0) idcardtype,"
 				+ "wd.idcard,wd.linktel,wd.fax,"
 				+ "case when wd.unitid=bo.orgid then 0 "
@@ -139,15 +139,17 @@ public class MigrationStageSix {
 				+ "left join teach_applyposition ta on ta.writerid=wd.writerid "
 				+ "where su.userid is not null "
 				+ "group by wd.writerid";
-		List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
-		int count = 0;// 迁移成功的条目数
+		List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql); // 查询所有数据
+		int count = 0; // 迁移成功的条目数
 		List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
         	String id = (String) map.get("writerid"); // 旧表主键值
         	String materialid = (String) map.get("materid"); // 教材id
         	String userid = (String) map.get("userid"); // 作家id
-        	String sexJudge = (String) map.get("sex");
+        	String realName = (String) map.get("writername"); // 作家姓名
+        	String sexJudge = (String) map.get("sex"); // 性别
+        	String experienceNum = (String) map.get("seniority"); // 教龄
         	Long onlineProgressJudge = (Long) map.get("online_progress");
         	Long offlineProgressJudge = (Long) map.get("offline_progress");
         	Long isStagingJudge = (Long) map.get("is_staging");
@@ -172,20 +174,14 @@ public class MigrationStageSix {
 				}
                 declaration.setUserId(userId);
             }
-        	String realName = (String) map.get("writername"); // 作家姓名
-        	if (StringUtil.notEmpty(realName)) {
-            	declaration.setRealname(realName);
-            } else {
-            	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到作家姓名");
-                excel.add(map);
-                logger.error("未找到作家姓名，此结果将被记录在Excel中");
-            }
+        	declaration.setRealname(realName);
         	if (null != sexJudge || "".equals(sexJudge)) {
-        		Integer sex = Integer.parseInt((String) map.get("sex")); // 性别
+        		Integer sex = Integer.parseInt(sexJudge.trim()); // 性别
             	declaration.setSex(sex);
-        	}
+        	} else {
+				declaration.setSex(null);
+			}
         	declaration.setBirthday((Date) map.get("birthdate")); // 生日
-        	String experienceNum = (String) map.get("seniority"); // 教龄
         	if ("".equals(experienceNum) || "无".equals(experienceNum) || "、".equals(experienceNum)){
         		experienceNum = null;
             	map.put(SQLParameters.EXCEL_EX_HEADER, "教龄为空字符串或无或顿号，导出Excel进行核准");
@@ -201,7 +197,7 @@ public class MigrationStageSix {
             		excel.add(map);
             		logger.info("教龄有年等汉字，此结果将被记录在Excel中与专家平台进行核准");
             	}
-            	if (experienceNum.indexOf("s")!= -1){
+            	/*if (experienceNum.indexOf("s")!= -1){
             		experienceNum = experienceNum.substring(0, experienceNum.indexOf("s"));
             		map.put(SQLParameters.EXCEL_EX_HEADER, "教龄有英文字母，导出Excel进行核对");
             		excel.add(map);
@@ -212,7 +208,7 @@ public class MigrationStageSix {
             		map.put(SQLParameters.EXCEL_EX_HEADER, "教龄中包含空格，导出Excel进行核对");
             		excel.add(map);
             		logger.info("教龄中有空格，此结果将被记录在Excel中与专家平台进行核准");
-            	}
+            	}*/
             	if (experienceNum.indexOf("岁")!= -1){
             		experienceNum = "32";
             		map.put(SQLParameters.EXCEL_EX_HEADER, "教龄中数据疑似为年龄，导出Excel进行核对");
@@ -291,7 +287,7 @@ public class MigrationStageSix {
         	try {
         		declaration = declarationService.addDeclaration(declaration);
 			} catch (Exception e) {
-				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误");
+				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误"+e.getMessage());
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
@@ -390,7 +386,7 @@ public class MigrationStageSix {
         	try {
         		decEduExp = decEduExpService.addDecEduExp(decEduExp);
         	} catch (Exception e) {
-				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误");
+				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误"+e.getMessage());
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
@@ -485,7 +481,7 @@ public class MigrationStageSix {
         	try {
         		decWorkExp = decWorkExpService.addDecWorkExp(decWorkExp);
 			} catch (Exception e) {
-				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误");
+				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误"+e.getMessage());
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
@@ -580,7 +576,7 @@ public class MigrationStageSix {
         	try {
         		decTeachExp = decTeachExpService.addDecTeachExp(decTeachExp);
 			} catch (Exception e) {
-				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误");
+				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误"+e.getMessage());
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
@@ -662,7 +658,7 @@ public class MigrationStageSix {
         	try {
         		decAcade = decAcadeService.addDecAcade(decAcade);
 			} catch (Exception e) {
-				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误");
+				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误"+e.getMessage());
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
@@ -811,7 +807,7 @@ public class MigrationStageSix {
         	try {
         		decCourseConstruction = decCourseConstructionService.addDecCourseConstruction(decCourseConstruction);
 			} catch (Exception e) {
-				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误");
+				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误"+e.getMessage());
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
@@ -899,7 +895,7 @@ public class MigrationStageSix {
         	try {
         		decNationalPlan = decNationalPlanService.addDecNationalPlan(decNationalPlan);
 			} catch (Exception e) {
-				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误");
+				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误"+e.getMessage());
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
@@ -1010,7 +1006,7 @@ public class MigrationStageSix {
         	try {
         		decTextbook = decTextbookService.addDecTextbook(decTextbook);
 			} catch (Exception e) {
-				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误");
+				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误"+e.getMessage());
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
@@ -1083,7 +1079,7 @@ public class MigrationStageSix {
         	try {
         		decResearch = decResearchService.addDecResearch(decResearch);
 			} catch (Exception e) {
-				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误");
+				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误"+e.getMessage());
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
@@ -1145,7 +1141,7 @@ public class MigrationStageSix {
                 decExtension.setDeclarationId(declarationId);
             }
         	String content = (String) map.get("content"); // 扩展项内容
-        	if (null == content || ("无").equals(content) || ("").equals(content) 
+        	if (null == content || ("无").equals(content) || ("").equals(content.trim()) 
         			|| regular.equals(content)) {
         		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到扩展项内容");
         		excel.add(map);
@@ -1156,7 +1152,7 @@ public class MigrationStageSix {
         	try {
         		decExtension = decExtensionService.addDecExtension(decExtension);
 			} catch (Exception e) {
-				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误");
+				map.put(SQLParameters.EXCEL_EX_HEADER, "添加字段在关联表中无数据错误"+e.getMessage());
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
