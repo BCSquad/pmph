@@ -93,7 +93,13 @@ public class MigrationStageEight {
             } else {
                 pmphGroup.setBookId(0L);
             }
-            pmphGroup = groupService.addPmphGroup(pmphGroup);
+            try {
+            	pmphGroup = groupService.addPmphGroup(pmphGroup);
+			} catch (Exception e) {
+				map.put(SQLParameters.EXCEL_EX_HEADER, "未知错误:"+e.getMessage());
+				excel.add(map);
+				continue;
+			}
             long pk = pmphGroup.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "groupID", groupID);//更新旧表中new_pk字段
             count++;
@@ -164,7 +170,13 @@ public class MigrationStageEight {
             /* 旧表的isManager和新表的is_admin疑似刚好相反 */
             int isManager = (Integer) map.get("isManager");
             member.setIsAdmin(isManager == 0);
-            member = groupMemberService.addPmphGroupMember(member);
+            try{
+            	member = groupMemberService.addPmphGroupMember(member);
+            }catch (Exception e) {
+				map.put(SQLParameters.EXCEL_EX_HEADER, "未知错误:"+e.getMessage());
+				excel.add(map);
+				continue;
+			}
             long pk = member.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "GUID", guid);//更新旧表中new_pk字段
             count++;
