@@ -3,6 +3,7 @@ package com.bc.pmpheep.migration;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -116,6 +117,10 @@ public class MigrationStageOne {
         }
         logger.info("area表迁移完成");
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "area表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
     }
 
     protected void orgType() {
@@ -158,6 +163,10 @@ public class MigrationStageOne {
         }
         logger.info("org_type表迁移完成");
         logger.info("原数据库表中共有{}条数据，迁移了{}条数据",maps.size(),count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "org_type表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
     }
     
     protected void org() {
@@ -247,6 +256,10 @@ public class MigrationStageOne {
 		}
 		logger.info("org表迁移完成");
 		logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "org表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
     protected void orgUser() {
     	String tableName = "sys_user";
@@ -396,6 +409,10 @@ public class MigrationStageOne {
         }
         logger.info("org_user表迁移完成");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "org_user表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
     }
 
     protected void writerUser() {
@@ -630,6 +647,10 @@ public class MigrationStageOne {
         }
         logger.info("writer_user表迁移完成");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "writer_user表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
     }
 
 }
