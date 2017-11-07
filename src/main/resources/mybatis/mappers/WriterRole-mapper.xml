@@ -54,146 +54,149 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		INSERT INTO writer_role
-			(
-			<include refid="key" />
-			)
+		(
+		<include refid="key" />
+		)
 		VALUES
-			(
-			<include refid="value" />
-			);
+		(
+		<include refid="value" />
+		);
 	</insert>
-	
+
 	<insert id="addUserRole" parameterType="map">
 		INSERT INTO
-			`writer_user_role`(`user_id`,`role_id`)
+		`writer_user_role`(`user_id`,`role_id`)
 		VALUES
-			(
-				#{userId},#{roleId}
-			)
+		(
+		#{userId},#{roleId}
+		)
 	</insert>
-	
+
 	<!-- 批量添加用户角色关联表数据 -->
 	<insert id="addUserRoles" parameterType="map">
-		INSERT INTO 
-			`writer_user_role`(`user_id`,`role_id`)
+		INSERT INTO
+		`writer_user_role`(`user_id`,`role_id`)
 		VALUES
-			<foreach collection="roleIds" item="role_id" separator=",">
-				(#{userId},#{role_id})
-			</foreach>
+		<foreach collection="roleIds" item="role_id" separator=",">
+			(#{userId},#{role_id})
+		</foreach>
 	</insert>
-	
+
 	<insert id="addRoleResource" parameterType="list">
 		INSERT INTO
-			writer_role_permission(role_id,permission_id)
-		<foreach item="item" index="key" collection="list" open="" separator="," close="">
-		  	(#{item.roleId}, #{item.permissionId})
-		  </foreach> 
+		writer_role_permission(role_id,permission_id) VALUES
+		<foreach item="item" index="key" collection="list" open=""
+			separator="," close="">
+			(#{item.roleId}, #{item.permissionId})
+		</foreach>
 	</insert>
-	
-	<select id="getWriterRolePermissionByRoleId" parameterType="Long" resultType="WriterRolePermission">
+
+	<select id="getWriterRolePermissionByRoleId" parameterType="Long"
+		resultType="WriterRolePermission">
 		SELECT
-			*
+		*
 		FROM
-			writer_role_permission
-		WHERE 
-			role_id = #{roleId}
+		writer_role_permission
+		WHERE
+		role_id = #{roleId}
 	</select>
-	
-	<select id="getWriterRolePermissionIdByRoleId" parameterType="Long" resultType="Long">
+
+	<select id="getWriterRolePermissionIdByRoleId" parameterType="Long"
+		resultType="Long">
 		SELECT
-			permission_id
+		permission_id
 		FROM
-			writer_role_permission
-		WHERE 
-			role_id = #{roleId}
+		writer_role_permission
+		WHERE
+		role_id = #{roleId}
 	</select>
-	
+
 	<select id="get" parameterType="Long" resultType="WriterRole">
 		SELECT
-			*
+		*
 		FROM
-			writer_role
-		WHERE 
-			id = #{id}
+		writer_role
+		WHERE
+		id = #{id}
 	</select>
-	
+
 	<select id="getListRole" parameterType="map" resultType="WriterRole">
 		SELECT
-			id,
-			role_name,
-			is_disabled,
-			note,
-			sort
+		id,
+		role_name,
+		is_disabled,
+		note,
+		sort
 		FROM
-			writer_role
-		where 
-			1=1
+		writer_role
+		where
+		1=1
 		<if test="roleName != null and roleName!=''">
-			and ROLE_NAME LIKE CONCAT('%',CONCAT(#{roleName},'%')) 
+			and ROLE_NAME LIKE CONCAT('%',CONCAT(#{roleName},'%'))
 		</if>
-		order by 
-			sort asc
+		order by
+		sort asc
 	</select>
 
 	<select id="getUserRole" resultType="WriterUserRole"
 		parameterType="map">
 		SELECT
-			id,
-			user_id,
-			role_id
+		id,
+		user_id,
+		role_id
 		FROM
-			writer_user_role
+		writer_user_role
 		WHERE
-			user_id = #{userId} 
-		AND 
-			role_id = #{roleId}
+		user_id = #{userId}
+		AND
+		role_id = #{roleId}
 	</select>
-	
+
 	<!-- 根据角色 id 查询该角色 id 下的所有资源 -->
 	<select id="getListRoleResource" parameterType="Long"
 		resultType="WriterPermission">
 		SELECT
-			tr.`id`,
-			tr.`parent_id`,
-			tr.`path`,
-			tr.`permission_name`,
-			tr.`menu_name`,
-			tr.`url`
-		FROM 
-			`writer_permission` tr
-		LEFT JOIN 
-			`writer_role_permission` trr 
-		ON 
-			tr.`id` = trr.`permission_id`
-		WHERE 
-			trr.`role_id` = #{roleId}
+		tr.`id`,
+		tr.`parent_id`,
+		tr.`path`,
+		tr.`permission_name`,
+		tr.`menu_name`,
+		tr.`url`
+		FROM
+		`writer_permission` tr
+		LEFT JOIN
+		`writer_role_permission` trr
+		ON
+		tr.`id` = trr.`permission_id`
+		WHERE
+		trr.`role_id` = #{roleId}
 	</select>
-	
+
 	<select id="getResourceRole" parameterType="map"
 		resultType="WriterRolePermission">
 		SELECT
-			id,
-			role_id,
-			permission_id
+		id,
+		role_id,
+		permission_id
 		FROM
-			writer_role_permission
+		writer_role_permission
 		WHERE
-			role_id = #{roleId} 
-		AND 
-			permission_id = #{permissionId}
+		role_id = #{roleId}
+		AND
+		permission_id = #{permissionId}
 	</select>
-	
+
 	<!-- 查询表单的数据总条数 -->
 	<select id="getWriterRoleCount" resultType="java.lang.Long">
 		select
-			count(*)
+		count(*)
 		from
-			writer_role ;
+		writer_role ;
 	</select>
-	
+
 	<update id="update" parameterType="WriterRole">
 		UPDATE
-			writer_role
+		writer_role
 		<set>
 			<if test="roleName != null and roleName!=''">
 				role_name = #{roleName},
@@ -208,20 +211,21 @@
 				sort = #{sort},
 			</if>
 		</set>
+		where id=#{id}
 	</update>
-	
+
 	<delete id="delete" parameterType="Long">
-		DELETE FROM 
-			writer_role
+		DELETE FROM
+		writer_role
 		WHERE
-			id = #{id}
+		id = #{id}
 	</delete>
 
 	<delete id="batchDelete" parameterType="list">
-		DELETE FROM 
-			writer_role
-		WHERE 
-			id 
+		DELETE FROM
+		writer_role
+		WHERE
+		id
 		IN
 		<foreach collection="ids" separator="," item="id" open="("
 			close=")">
@@ -231,35 +235,35 @@
 
 	<delete id="deleteUserRole" parameterType="map">
 		DELETE FROM
-			writer_user_role
+		writer_user_role
 		WHERE
-			user_id = #{userId} 
-		AND 
-			role_id = #{roleId}
+		user_id = #{userId}
+		AND
+		role_id = #{roleId}
 	</delete>
 
 	<!-- 删除这个用户所有的角色 -->
 	<delete id="deleteUserRoles">
-		DELETE FROM 
-			writer_user_role
+		DELETE FROM
+		writer_user_role
 		WHERE
-			user_id = #{userId}
+		user_id = #{userId}
 	</delete>
 
 	<delete id="deleteRoleResource" parameterType="map">
 		DELETE FROM
-			writer_role_permission
+		writer_role_permission
 		WHERE
-			role_id = #{roleId} 
-		AND 
-			permission_id = #{permissionId}
+		role_id = #{roleId}
+		AND
+		permission_id = #{permissionId}
 	</delete>
 
 	<delete id="batchDeleteRoleResource" parameterType="list">
-		DELETE FROM 
-			writer_role_permission
-		WHERE 
-			role_id 
+		DELETE FROM
+		writer_role_permission
+		WHERE
+		role_id
 		IN
 		<foreach collection="roleIds" item="roleId" open="("
 			separator="," close=")">
@@ -268,21 +272,22 @@
 	</delete>
 
 	<delete id="deleteRoleAndUser" parameterType="list">
-		DELETE FROM 
-			writer_user_role
-		WHERE 
-			role_id 
+		DELETE FROM
+		writer_user_role
+		WHERE
+		role_id
 		in
 		<foreach collection="ids" item="id" open="(" separator=","
 			close=")">
 			#{id}
 		</foreach>
 	</delete>
-	
+
 	<delete id="deleteRoleResourceByRoleId" parameterType="map">
-		DELETE FROM
-			writer_role_permission
-		WHERE 
-			role_id = #{roleId}
+		DELETE
+		FROM
+		writer_role_permission
+		WHERE
+		role_id = #{roleId}
 	</delete>
 </mapper>
