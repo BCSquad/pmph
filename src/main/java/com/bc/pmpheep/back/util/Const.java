@@ -21,9 +21,9 @@ import org.springframework.context.ApplicationContext;
  */
 public class Const {
     // 小组默认头像路径（现在没有数据没有路径，等有路径的时候加入）
-    public static final String       DEFAULT_GROUP_IMAGE        = "5a006b942d85697d21c52ef8";
+    public static final String       DEFAULT_GROUP_IMAGE        = "5a012a17a201ee3ed7590351";
     // 新建用户默认头像（现在没有数据没有路径，等有路径的时候加入）
-    public static final String       DEFAULT_USER_AVATAR        = "5a006b942d85697d21c52ef8";
+    public static final String       DEFAULT_USER_AVATAR        = "5a012a17a201ee3ed7590351";
     public static final String       DEFAULT_PASSWORD           = "123456";
     public static final String       WEB_PROJECT_NAME           = "PMPH_PROJECT";
     // 社内部门根节点id
