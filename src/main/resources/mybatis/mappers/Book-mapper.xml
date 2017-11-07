@@ -81,7 +81,7 @@
                 is_new,
             </if>
             <if test="sortNew != null">
-                sort_new
+                sort_new,
             </if>
             <if test="deadlineNew != null">
                 deadline_new,
