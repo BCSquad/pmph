@@ -65,5 +65,5 @@ public class SQLParameters {
 	/**
 	 * 储存错误信息，方便测序完成一次打印或者导出完毕信息
 	 */
-	public static List<Map<String,Object>> msg = new ArrayList<Map<String,Object>>();
+	public static List<Map<String,Object>> msg = new ArrayList<Map<String,Object>>(16);
 }
