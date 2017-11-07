@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.back.dao.WriterUserDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -19,6 +20,7 @@ import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.GroupMemberWriterUserVO;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -47,8 +49,8 @@ public class WriterUserTest extends BaseTest {
 	/**
 	 * WriterUser 添加Test
 	 */
-	// @Test
-	// @Rollback(Const.ISROLLBACK)
+	//@Test
+	//@Rollback(Const.ISROLLBACK)
 	public void addPmphUserTest() {
 		List<Long> roleIdList = new ArrayList<Long>();
 		roleIdList.add(1L);
@@ -69,8 +71,8 @@ public class WriterUserTest extends BaseTest {
 	/**
 	 * WriterUser 添加删除
 	 */
-	// @Test
-	// @Rollback(Const.ISROLLBACK)
+	//@Test
+	//@Rollback(Const.ISROLLBACK)
 	public void deletePmphUserTest() {
 		Integer aInteger = 0;
 		try {
@@ -90,7 +92,7 @@ public class WriterUserTest extends BaseTest {
 	/**
 	 * 查询
 	 */
-	// @Test
+	//@Test
 	public void getListsTest() {
 		WriterUser wtUser;
 		List<WriterUser> wtUsers;
@@ -124,8 +126,8 @@ public class WriterUserTest extends BaseTest {
 	/**
 	 * writerUser 更新方法
 	 */
-	// @Test
-	// @Rollback(Const.ISROLLBACK)
+	//@Test
+	//@Rollback(Const.ISROLLBACK)
 	public void updatePmphUserTest() {
 		WriterUser writerUser = new WriterUser();
 		writerUser.setId(18L);
@@ -148,7 +150,7 @@ public class WriterUserTest extends BaseTest {
 	 *
 	 *
 	 */
-	@Test
+	//@Test
 	public void backWriterUserTest() {
 		// PageParameter<GroupMemberWriterUserVO> pageParameter = new PageParameter<>(1,
 		// 20);
