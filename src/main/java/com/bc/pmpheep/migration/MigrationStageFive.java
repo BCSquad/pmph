@@ -1,15 +1,18 @@
 package com.bc.pmpheep.migration;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -164,5 +167,9 @@ public class MigrationStageFive {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 }
