@@ -34,7 +34,7 @@
 		insert into writer_role_permission (
 		<include refid="key" />
 		)
-		values(
+		values (
 		<include refid="value" />
 		) ;
 	</insert>

@@ -150,9 +150,10 @@ public class MigrationStageSix {
         	String realName = (String) map.get("writername"); // 作家姓名
         	String sexJudge = (String) map.get("sex"); // 性别
         	String experienceNum = (String) map.get("seniority"); // 教龄
-        	Long onlineProgressJudge = (Long) map.get("online_progress");
-        	Long offlineProgressJudge = (Long) map.get("offline_progress");
-        	Long isStagingJudge = (Long) map.get("is_staging");
+        	Long onlineProgressJudge = (Long) map.get("online_progress"); // 审核进度
+        	String authUserid = (String) map.get("auth_user_id"); // 审核人id
+        	Long offlineProgressJudge = (Long) map.get("offline_progress"); // 纸质表进度
+        	Long isStagingJudge = (Long) map.get("is_staging"); // 是否暂存
         	Declaration declaration = new Declaration();
         	if (StringUtil.notEmpty(materialid)) {
     			Long materialId = JdbcHelper.getPrimaryKey("teach_material", "materid", materialid);
@@ -246,7 +247,6 @@ public class MigrationStageSix {
         		logger.error("未找到审核进度，此结果将被记录在Excel中");
                 continue;
 			}
-        	String authUserid = (String) map.get("auth_user_id"); // 审核人id
         	if (StringUtil.notEmpty(authUserid)) {
     			Long authUserId = JdbcHelper.getPrimaryKey("sys_user", "userid", userid);
 				if (null == authUserId) {
@@ -268,7 +268,7 @@ public class MigrationStageSix {
                 continue;
 			}
         	declaration.setPaperDate((Timestamp) map.get("editauditdate")); // 纸质表收到时间
-        	String submitType = (String) map.get("submittype"); // 是否暂存
+        	String submitType = (String) map.get("submittype"); // 旧表字段：是否暂存
         	if (submitType.length()>2) {
         		map.put(SQLParameters.EXCEL_EX_HEADER, "是否暂存大于2位数");
         		excel.add(map);

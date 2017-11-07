@@ -64,8 +64,8 @@ public class PmphUserServiceImpl implements PmphUserService {
 					CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止新增用户");
 		}
 		if (StringUtil.isEmpty(user.getPassword())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "密码为空时禁止新增用户");
+			 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+			 CheckedExceptionResult.NULL_PARAM, "密码为空时禁止新增用户");
 		}
 		if (StringUtil.isEmpty(user.getRealname())) {
 			user.setRealname(user.getUsername());
@@ -85,7 +85,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 	@Override
 	public PmphUser add(PmphUser user, List<Long> rids) throws CheckedServiceException {
 		Long userId = this.add(user).getId();
-		if (!ObjectUtil.isNull(userId)) {
+		if (ObjectUtil.isNull(userId)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时不能添加角色！");
 		}
