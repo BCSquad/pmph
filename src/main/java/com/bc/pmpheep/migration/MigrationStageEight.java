@@ -188,6 +188,11 @@ public class MigrationStageEight {
             count++;
             if (member.getIsFounder()) {
                 PmphGroup pmphGroup = groupService.getPmphGroupById(groupId);
+                if(null == pmphGroup){
+                	map.put(SQLParameters.EXCEL_EX_HEADER, "小组id为："+groupId+" 的小组没有找到");
+    				excel.add(map);
+                	continue;
+                }
                 pmphGroup.setFounderId(userId);
                 groupService.updatePmphGroup(pmphGroup);
             }
@@ -320,6 +325,10 @@ public class MigrationStageEight {
             } catch (IOException ex) {
                 logger.error("文件读取异常，路径<{}>，异常信息：{}", path, ex.getMessage());
                 map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
+                excel.add(map);
+                continue;
+            }catch (Exception ex) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, "位置错误信息："+ ex.getMessage());
                 excel.add(map);
                 continue;
             }
