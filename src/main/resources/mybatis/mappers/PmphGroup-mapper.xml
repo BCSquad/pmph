@@ -168,7 +168,7 @@
 	</select>
 
 	<!-- 根据小组名称查寻小组 -->
-	<select id="getPmphGroupCount" resultType="Long">
+	<select id="getPmphGroupByGroupName" resultType="PmphGroup">
 		select
 		*
 		from
