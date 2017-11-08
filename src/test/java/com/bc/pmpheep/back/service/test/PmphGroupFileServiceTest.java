@@ -10,6 +10,7 @@ import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.PmphGroupFile;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
@@ -84,5 +85,15 @@ public class PmphGroupFileServiceTest extends BaseTest {
             logger.info("获取成功");
         }
     }
-
+    @Test
+    public void add(){
+    	PmphGroupFile pmphGroupFile=new PmphGroupFile();
+    	pmphGroupFile.setGroupId(1L);
+    	pmphGroupFile.setMemberId(2L);
+    	pmphGroupFile.setFileName("文件名");
+    	pmphGroupFile.setFileId("文件id");
+    	PmphGroupFile result=pmphGroupFileService.add(pmphGroupFile);
+    	Assert.assertNotNull("增加对象失败", result);
+    	Assert.assertNotNull("根据小组获取该组所有文件失败",pmphGroupFileService.listPmphGroupFileByGroupId(1L));
+    }
 }

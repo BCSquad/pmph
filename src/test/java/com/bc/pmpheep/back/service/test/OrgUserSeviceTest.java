@@ -91,4 +91,9 @@ public class OrgUserSeviceTest extends BaseTest {
 		String result = orgUserService.updateOrgUserOfBack(orgUser);
 		Assert.assertTrue("更新失败", result.equals("SUCCESS"));
 	}
+	@Test
+	public void updateOrgUserProgressById(){
+		String [] orgUserIds={"1","2"};
+		Assert.assertNotNull("更新审核状态失败", orgUserService.updateOrgUserProgressById(1, orgUserIds));
+	}
 }
