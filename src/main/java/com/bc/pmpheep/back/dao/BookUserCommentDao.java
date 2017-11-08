@@ -43,7 +43,7 @@ public interface BookUserCommentDao {
 	 *            必须包含主键ID
 	 * @return BookUserComment
 	 */
-	BookUserComment getBookUserComment(Long id);
+	BookUserComment getBookUserCommentById(Long id);
 
 	/**
 	 * 

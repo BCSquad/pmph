@@ -18,6 +18,7 @@ import com.bc.pmpheep.back.util.Const;
  * AreaDao 单元测试
  *
  * @author mryang
+ * @修改人：mr
  */
 public class MaterialServiceTest extends BaseTest {
 	Logger logger = LoggerFactory.getLogger(MaterialServiceTest.class);
@@ -59,6 +60,8 @@ public class MaterialServiceTest extends BaseTest {
     	Assert.assertTrue("删除失败",materialService.deleteMaterialById(2L)  >= 0 );
     	//查询
     	Assert.assertNotNull("获取数据失败",materialService.getMaterialById(3L));
+    	// 获取教材集合
+    	Assert.assertNotNull("获取教材集合失败", materialService.getListMaterial("教材名称"));
     	
     }
     
