@@ -2,13 +2,17 @@ package com.bc.pmpheep.back.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphDepartmentDao;
 import com.bc.pmpheep.back.dao.PmphUserDao;
 import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphUserDepartmentVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -62,7 +66,41 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 		pmphDepartmentDao.addPmphDepartment(pmphDepartment);
 		return pmphDepartment;
 	}
-
+  
+	/**
+	 * 
+	 * Description:数据迁移工具用，因add方法有改动，未防后续改动新添add方法进行数据迁移工具类调用
+	 * @author:lyc
+	 * @date:2017年11月8日下午5:23:38
+	 * @param pmphDepartment实体对象
+	 * @return PmphDepartment实体对象
+	 * @throws CheckedServiceException
+	 */
+	public PmphDepartment add(PmphDepartment pmphDepartment) throws CheckedServiceException {
+		if (ObjectUtil.isNull(pmphDepartment)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
+					CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		if (ObjectUtil.isNull(pmphDepartment.getParentId())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
+					CheckedExceptionResult.NULL_PARAM, "上级id为空");
+		}
+		if (StringUtil.isEmpty(pmphDepartment.getDpName())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
+					CheckedExceptionResult.NULL_PARAM, "部门名称为空");
+		}
+		if (StringUtil.isEmpty(pmphDepartment.getPath())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
+					CheckedExceptionResult.NULL_PARAM, "根节点为空");
+		}
+		if (pmphDepartmentDao.getPmphDepartmentByDpNameAndParentId(pmphDepartment).size() > 0) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
+					CheckedExceptionResult.NULL_PARAM, "该部门下有相同的子部门了");
+		}
+		pmphDepartmentDao.addPmphDepartment(pmphDepartment);
+		return pmphDepartment;
+	}
+	
 	/**
 	 * 
 	 * @param id
