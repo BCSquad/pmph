@@ -39,7 +39,9 @@ public class TextbookServiceTest extends BaseTest {
     	//删除
     	Assert.assertTrue("删除失败",textbookService.deleteTextbookById(2L)  >= 0 );
     	//查询
-    	Assert.assertNotNull("获取数据失败",textbookService.getTextbookById(1L));
+    	Assert.assertNotNull("获取数据失败",textbookService.getTextbookById(6L));
+    	//查询
+    	Assert.assertNotNull("获取数据失败",textbookService.getTextBookByMaterialId(1L));
     	
     }
     
