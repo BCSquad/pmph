@@ -77,7 +77,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 		}
 		int num = 0;
 		for (Long id : ids) {
-			BookUserComment bookUserComment = bookUserCommentDao.getBookUserComment(id);
+			BookUserComment bookUserComment = bookUserCommentDao.getBookUserCommentById(id);
 			if (!bookUserComment.getIsAuth()) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.ILLEGAL_PARAM,
 						"有已经退回的评论了");
