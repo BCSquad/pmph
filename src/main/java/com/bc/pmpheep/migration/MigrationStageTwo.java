@@ -64,6 +64,7 @@ public class MigrationStageTwo {
 	
 	protected void pmphDepartment() {
 		String tableName = "ba_organize";
+		JdbcHelper.addColumn(tableName);
 		String sql = "SELECT orgid,parentid,orgname,sortno,remark "
 				   + "FROM ba_organize WHERE orgcode "
 				   + "LIKE '15%' ORDER BY LENGTH(orgcode),orgcode ;";
@@ -93,7 +94,7 @@ public class MigrationStageTwo {
             pmphDepartment.setDpName(dpName);
             pmphDepartment.setSort(sort);
             pmphDepartment.setNote(note);
-            pmphDepartment = pmphDepartmentService.addPmphDepartment(pmphDepartment);
+            pmphDepartment = pmphDepartmentService.add(pmphDepartment);
             Long pk = pmphDepartment.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "orgid", departmentId);            
 			count++;			
