@@ -72,24 +72,35 @@ public class PmphGroupFileServiceTest extends BaseTest {
 
 	}
 
-	@Test
-	public void getList() {
-		PageResult pageResult = new PageResult<>();
-		PageParameter pageParameter = new PageParameter<>();
-		PmphGroupFileVO fileVO = new PmphGroupFileVO();
-		fileVO.setFileName("555");
-		fileVO.setFileId("7");
-		fileVO.setGroupId(2L);
-		;
-		pageParameter.setParameter(fileVO);
-		pageParameter.setPageSize(15);
-		pageResult = pmphGroupFileService.listGroupFile(pageParameter);
-		Assert.assertNotNull(pageResult);
-		if (pageResult.getRows().isEmpty()) {
-			logger.info("获取失败");
-		} else {
-			logger.info("获取成功");
-		}
-	}
+    // @Test
+    public void getList() {
+        PageResult pageResult = new PageResult<>();
+        PageParameter pageParameter = new PageParameter<>();
+        PmphGroupFileVO fileVO = new PmphGroupFileVO();
+        fileVO.setFileName("555");
+        fileVO.setFileId("7");
+        fileVO.setGroupId(2L);
+        ;
+        pageParameter.setParameter(fileVO);
+        pageParameter.setPageSize(15);
+        pageResult = pmphGroupFileService.listGroupFile(pageParameter);
+        Assert.assertNotNull(pageResult);
+        if (pageResult.getRows().isEmpty()) {
+            logger.info("获取失败");
+        } else {
+            logger.info("获取成功");
+        }
+    }
+    @Test
+    public void add(){
+    	PmphGroupFile pmphGroupFile=new PmphGroupFile();
+    	pmphGroupFile.setGroupId(1L);
+    	pmphGroupFile.setMemberId(2L);
+    	pmphGroupFile.setFileName("文件名");
+    	pmphGroupFile.setFileId("文件id");
+    	PmphGroupFile result=pmphGroupFileService.add(pmphGroupFile);
+    	Assert.assertNotNull("增加对象失败", result);
+    	Assert.assertNotNull("根据小组获取该组所有文件失败",pmphGroupFileService.listPmphGroupFileByGroupId(1L));
+    }
 
 }

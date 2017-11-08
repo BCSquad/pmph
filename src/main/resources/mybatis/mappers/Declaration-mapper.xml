@@ -161,10 +161,10 @@
 			<if test="paperDate !=null">
 				#{paperDate},
 			</if>
-			<if test="isStaging !=null and isStaging !=''">
+			<if test="isStaging !=null">
 				#{isStaging},
 			</if>
-			<if test="isDeleted !=null and isDeleted !=''">
+			<if test="isDeleted !=null">
 				#{isDeleted},
 			</if>
 		</trim>
