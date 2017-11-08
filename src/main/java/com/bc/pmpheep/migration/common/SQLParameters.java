@@ -4,6 +4,10 @@
  */
 package com.bc.pmpheep.migration.common;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 数据迁移所需全局变量
  *
@@ -18,7 +22,7 @@ public class SQLParameters {
 	/**
 	 * 现有平台数据库地址
 	 */
-	public static final String DB_URL = "jdbc:mysql://localhost:3306/pmph";
+	public static final String DB_URL = "jdbc:mysql://localhost:3306/pmph_imesp";
 
 	/**
 	 * 现有平台数据库用户名
@@ -58,4 +62,8 @@ public class SQLParameters {
 	 * 上传服务器lujing 例如：http://120.76.221.250/pmpheep
 	 */
 	public static final String severPath = "http://120.76.221.250/pmpheep";
+	/**
+	 * 储存错误信息，方便测序完成一次打印或者导出完毕信息
+	 */
+	public static List<Map<String,Object>> msg = new ArrayList<Map<String,Object>>(16);
 }

@@ -399,7 +399,8 @@
 			and b.is_promote = #{parameter.isPromote}
 		</if>
 		<if test="parameter.path !=null and parameter.path != ''">
-			and t.path like concat(#{parameter.path},'%')
+			and (t.path like concat(#{parameter.path},'%') or
+			t.id=#{parameter.type})
 		</if>
 	</select>
 

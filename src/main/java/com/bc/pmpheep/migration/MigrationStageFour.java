@@ -4,19 +4,14 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtension;
@@ -171,6 +166,10 @@ public class MigrationStageFour {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+" 表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	
@@ -374,6 +373,10 @@ public class MigrationStageFour {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", materialList.size(), count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+" 表迁移完成"+count+"/"+ materialList.size());
+        SQLParameters.msg.add(msg);
 	} 
 	
 	@Autowired
@@ -434,6 +437,10 @@ public class MigrationStageFour {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", materialExtensionList.size(), count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+" 表迁移完成"+count+"/"+ materialExtensionList.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	@Autowired
@@ -492,6 +499,10 @@ public class MigrationStageFour {
             }
         }
 		logger.info("'{}'表迁移完成，异常条目数量：{}", "material_extra",count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "material_extra 表迁移完成"+count+"/"+ materialExtraList.size());
+        SQLParameters.msg.add(msg);
     }
 	
 	
@@ -574,6 +585,10 @@ public class MigrationStageFour {
             }
         }
 		logger.info("教材通知附件表迁移了{}条数据",count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "教材通知附件  表迁移完成"+count+"/"+ materialNoticeAttachmentList.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	
@@ -652,6 +667,10 @@ public class MigrationStageFour {
             }
         }
 		logger.info("教材通知附件表迁移了{}条数据",count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "教材备注附件表  表迁移完成"+count+"/"+ materialMaterialNoteAttachmentList.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	@Autowired
@@ -749,6 +768,10 @@ public class MigrationStageFour {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", materialContactList.size(), count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ materialContactList.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	@Autowired
@@ -804,6 +827,10 @@ public class MigrationStageFour {
 		}
 		logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
 		logger.info("原数据库中共有{}条数据，迁移了{}条数据", pubList.size(), count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ pubList.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	@Autowired
@@ -860,6 +887,10 @@ public class MigrationStageFour {
 		}
 		logger.info("'{}'表迁移完成，异常条目数量：{}", "MaterialProjectEditor", excel.size());
 		logger.info("原数据库中共有{}条数据，迁移了{}条数据", materialProjectEditorList.size(), count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "MaterialProjectEditor  表迁移完成"+count+"/"+ materialProjectEditorList.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	public void start() throws Exception {

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +89,7 @@ public class MigrationStageSix {
 	
 	public void start(){
 		declaration();
-		/*decEduExp();
+		decEduExp();
 		decWorkExp();
 		decTeachExp();
 		decAcade();
@@ -97,8 +98,8 @@ public class MigrationStageSix {
 		decNationalPlan();
 		decTextbook();
 		decResearch();
-		decExtension();*/
-		//decPosition();
+		decExtension();
+		decPosition();
 	}
 	
 	/**
@@ -305,6 +306,10 @@ public class MigrationStageSix {
         }
         logger.info("writer_declaration表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	/**
@@ -404,6 +409,10 @@ public class MigrationStageSix {
         }
         logger.info("writer_learn表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	/**
@@ -499,6 +508,10 @@ public class MigrationStageSix {
         }
         logger.info("writer_work表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	/**
@@ -594,6 +607,10 @@ public class MigrationStageSix {
         }
         logger.info("writer_teach表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	/**
@@ -676,6 +693,10 @@ public class MigrationStageSix {
         }
         logger.info("writer_acade表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	/**
@@ -750,6 +771,10 @@ public class MigrationStageSix {
         }
         logger.info("writer_materpat表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	/**
@@ -825,6 +850,10 @@ public class MigrationStageSix {
         }
         logger.info("writer_construction表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	/**
@@ -913,6 +942,10 @@ public class MigrationStageSix {
         }
         logger.info("writer_editorbook表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	/**
@@ -1024,6 +1057,10 @@ public class MigrationStageSix {
         }
         logger.info("writer_materwrite表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	/**
@@ -1097,6 +1134,10 @@ public class MigrationStageSix {
         }
         logger.info("writer_scientresearch表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	/**
@@ -1170,6 +1211,10 @@ public class MigrationStageSix {
         }
         logger.info("teach_material_extvalue表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	/**
@@ -1296,5 +1341,9 @@ public class MigrationStageSix {
         }
         logger.info("teach_applyposition表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 }
