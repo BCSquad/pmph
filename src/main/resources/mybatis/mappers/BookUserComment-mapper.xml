@@ -124,7 +124,7 @@
 				score = #{score} ,
 			</if>
 			<if test="content != null and content !=''">
-				comtent= #{content} ,
+				content= #{content} ,
 			</if>
 			<if test=" isHide != null ">
 				is_hide = #{isHide} ,

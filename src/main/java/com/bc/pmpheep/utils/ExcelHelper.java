@@ -5,14 +5,17 @@
 package com.bc.pmpheep.utils;
 
 import com.bc.pmpheep.back.util.StringUtil;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -86,7 +89,14 @@ public class ExcelHelper {
      * @throws IOException
      */
     public void exportFromMaps(List<Map<String, Object>> maps, String sheetname, String path) throws FileNotFoundException, IOException {
-        Workbook workbook = fromMaps(maps, sheetname);
+    	//过滤maps的重复对象
+    	List<Map<String,Object>> newMaps=new ArrayList<Map<String,Object>>();
+		for(Map<String,Object> tm:maps){
+			if(!newMaps.contains(tm)){
+				newMaps.add(tm);
+			}
+		}
+        Workbook workbook = fromMaps(newMaps, sheetname);
         if (StringUtil.isEmpty(path)) {
             path = "";
         }
