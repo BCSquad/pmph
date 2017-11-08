@@ -24,6 +24,15 @@ public interface PmphDepartmentService {
 
 	/**
 	 * 
+	 * @param PmphDepartment
+	 *            实体对象
+	 * @return 带主键的PmphDepartment
+	 * @throws CheckedServiceException
+	 */
+	PmphDepartment add(PmphDepartment pmphDepartment) throws CheckedServiceException;
+	
+	/**
+	 * 
 	 * @param id
 	 * @return PmphDepartment
 	 * @throws CheckedServiceException
