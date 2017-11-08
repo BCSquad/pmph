@@ -68,9 +68,9 @@ public class OrgSeviceTest extends BaseTest {
 		Long id = org.getId();
 		orgService.deleteOrgById(id);
 		System.out.println("删除成功");
-		orgService.getOrgById(472L);
-		org.setOrgName("测试2");
-		orgService.updateOrg(org);
+		Org orgU = orgService.getOrgById(472L);
+		orgU.setOrgName("测试2");
+		orgService.updateOrg(orgU);
 		System.out.println("获取更新后的数据："+orgService.getOrgById(472L));
 	}
 	
