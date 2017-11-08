@@ -5,6 +5,7 @@ package com.bc.pmpheep.migration;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +99,10 @@ public class MigrationStageThree {
 		}
 		logger.info("writer_role表迁移完成");
 		logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "writer_role表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	protected void writerUserRole() {
@@ -140,6 +145,10 @@ public class MigrationStageThree {
 		}
 		logger.info("writer_user_role迁移完成");
 		logger.info("原数据库表共{}条数据，迁移了{}条数据",maps.size(),count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "writer_user_role表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	protected void writerProfile() {
@@ -177,6 +186,10 @@ public class MigrationStageThree {
 		}
 		logger.info("writer_profile表迁移完成");
 		logger.info("原数据库表共{}条数据，迁移了{}条数据",maps.size(),count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "writer_profile表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	protected void writerUserCertification() {
@@ -250,6 +263,10 @@ public class MigrationStageThree {
 		}
 		logger.info("writer_user_certification");
 		logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "writer_user_certification表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	protected void orgUserRole() {
@@ -278,5 +295,9 @@ public class MigrationStageThree {
 			}
 		}
 		logger.info("机构用户关联角色共有{}条数据，导出了{}条数据",maps.size(),count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "sys_userrole表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 }

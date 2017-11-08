@@ -4,6 +4,7 @@
 package com.bc.pmpheep.migration;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -106,6 +107,10 @@ public class MigrationStageTwo {
 		}
 		logger.info("pmph_department表数据迁移完成");
 		logger.info("原数据库中共有{}条数据，迁移了{}条数据",maps.size(),count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "pmph_department表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	protected void pmphUser() {
@@ -202,7 +207,11 @@ public class MigrationStageTwo {
 		}
 		  logger.info("pmph_user表迁移完成");
 		  logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
-		}
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "pmph_user表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
+	}
 	
 	protected void pmphRole() {
 		String tableName = "sys_role";
@@ -240,6 +249,10 @@ public class MigrationStageTwo {
 		}
 		logger.info("pmph_role表迁移完成");
 		logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "pmph_role表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	protected void pmphUserRole() {
@@ -265,6 +278,10 @@ public class MigrationStageTwo {
 		}
 		logger.info("pmph_user_role表迁移完成");
 		logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "pmph_user_role表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	protected void cannotFindUser() {
@@ -312,8 +329,12 @@ public class MigrationStageTwo {
 			}  catch (IOException ex) {
 				logger.error("异常数据导出到Excel失败",ex);
 			}
-			logger.info("sys_user缺失关联字段数据共有{}条数据，导出{}条数据",maps.size(),count);
 		}
+		logger.info("sys_user缺失关联字段数据共有{}条数据，导出{}条数据",maps.size(),count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "sys_user表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	protected void cannotFindRole() {
@@ -335,7 +356,12 @@ public class MigrationStageTwo {
 			} catch (IOException ex) {
 				logger.error("异常数据导出到Excel失败",ex);
 			}
-			logger.info("用户-角色关联表关联字段缺失共{}条数据，导出{}条数据",maps.size(),count);
 		}
+		logger.info("用户-角色关联表关联字段缺失共{}条数据，导出{}条数据",maps.size(),count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "用户-角色关联 表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
+	
 }

@@ -195,6 +195,10 @@ public class MigrationStageSeven {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", "sys_messages", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result","sys_messages  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	
