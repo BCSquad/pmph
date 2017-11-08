@@ -167,12 +167,10 @@
 		, group_Name ;
 	</select>
 
-	<!-- 根据小组名称查寻小组 -->
-	<select id="getPmphGroupByGroupName" resultType="PmphGroup">
-		select
-		*
-		from
-		pmph_group
-		where group_name = #{groupName};
+	<!-- 根据小组名称获取PmphGroup -->
+	<select id="getPmphGroupByGroupName" parameterType="java.lang.String"
+		resultType="PmphGroup">
+		select * from pmph_group where group_name = #{groupName} ;
 	</select>
+
 </mapper>
