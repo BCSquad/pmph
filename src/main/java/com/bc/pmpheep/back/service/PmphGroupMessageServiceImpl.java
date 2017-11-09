@@ -183,12 +183,19 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 			List<PmphGroupMessageVO> list = pmphGroupMessageDao.listPmphGroupMessage(pageParameter);
 			for (PmphGroupMessageVO pmphGroupMessageVO : list) {
 				if (0 != pmphGroupMessageVO.getMemberId()) {
-					if (pmphGroupMessageVO.getIsWriter()) {
-						pmphGroupMessageVO.setAvatar(writerUserService.get(pmphGroupMessageVO.getUserId()).getAvatar());
-						pmphGroupMessageVO.setUserType(Const.SENDER_TYPE_2);
+					if (null == pmphGroupMessageVO.getIsWriter()) {
+						pmphGroupMessageVO.setAvatar(Const.DEFAULT_USER_AVATAR);
+						pmphGroupMessageVO.setMemberName("该人员已经退出小组");
 					} else {
-						pmphGroupMessageVO.setAvatar(pmphUserService.get(pmphGroupMessageVO.getUserId()).getAvatar());
-						pmphGroupMessageVO.setUserType(Const.SENDER_TYPE_1);
+						if (pmphGroupMessageVO.getIsWriter()) {
+							pmphGroupMessageVO
+									.setAvatar(writerUserService.get(pmphGroupMessageVO.getUserId()).getAvatar());
+							pmphGroupMessageVO.setUserType(Const.SENDER_TYPE_2);
+						} else {
+							pmphGroupMessageVO
+									.setAvatar(pmphUserService.get(pmphGroupMessageVO.getUserId()).getAvatar());
+							pmphGroupMessageVO.setUserType(Const.SENDER_TYPE_1);
+						}
 					}
 				} else {
 					pmphGroupMessageVO.setUserId(0L);
