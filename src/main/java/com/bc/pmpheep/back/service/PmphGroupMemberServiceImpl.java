@@ -326,7 +326,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 						throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 								CheckedExceptionResult.NULL_PARAM, "不要把创建者添加为管理员了");
 					}
-					if (!pmphGroupMember.getIsAdmin()) {
+					if (pmphGroupMember.getIsAdmin()) {
 						pmphGroupMember.setIsAdmin(true);
 					} else {
 						pmphGroupMember.setIsAdmin(false);
