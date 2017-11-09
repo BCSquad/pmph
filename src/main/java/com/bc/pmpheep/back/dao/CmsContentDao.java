@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -54,6 +55,18 @@ public interface CmsContentDao {
     /**
      * 
      * <pre>
+     * 功能描述：定时任务批量更新
+     * 使用示范：
+     *
+     * @param csmContents CmsContent对象集合
+     * @return
+     * </pre>
+     */
+    Integer updateCmsContentByIds(List<CmsContent> csmContents);
+
+    /**
+     * 
+     * <pre>
      * 功能描述： 内容发布
      * 使用示范：
      * 
@@ -100,15 +113,6 @@ public interface CmsContentDao {
      */
     Integer checkContentById(CmsContent cmsContent);
 
-    /**
-     * 
-     * 获取CmsContent列表（同时查询分页数据和总条数）
-     * 
-     * @author Mryang
-     * @createDate 2017年9月27日 上午10:36:10
-     * @param pageParameter
-     * @return List<MessageStateVO>
-     */
     /**
      * 
      * <pre>
@@ -176,11 +180,11 @@ public interface CmsContentDao {
      * <pre>
      * 功能描述：获取总条数
      * 使用示范：
-     *
+      *@param categoryId CmsCategory 主键ID
      * @return 总条数
      * </pre>
      */
-    Integer getCmsContentCount();
+    Integer getCmsContentCount(@Param("categoryId") Long categoryId);
 
     /**
      * 

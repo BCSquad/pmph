@@ -33,14 +33,14 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  * 使用示范：
  * 
  * 
- * &#64;author (作者) nyz
+ * @author (作者) nyz
  * 
- * &#64;since (该版本支持的JDK版本) ：JDK 1.6或以上
- * &#64;version (版本) 1.0
- * &#64;date (开发日期) 2017-9-20
- * &#64;modify (最后修改时间) 
- * &#64;修改人 ：nyz 
- * &#64;审核人 ：
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2017-9-20
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
  * </pre>
  */
 @SuppressWarnings("all")
@@ -67,9 +67,9 @@ public class PmphUserController {
 	 * 功能描述：添加用户保存的方法
 	 * 使用示范：
 	 *
-	 * &#64;param user
-	 * &#64;param request
-	 * &#64;return
+	 * @param user
+	 * @param request
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -92,8 +92,8 @@ public class PmphUserController {
 	 * 功能描述：
 	 * 使用示范：
 	 *
-	 * &#64;param user
-	 * &#64;return
+	 * @param user
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -109,9 +109,9 @@ public class PmphUserController {
 	 * 功能描述：更新用户的信息（包括更新用户绑定的角色）
 	 * 使用示范：
 	 *
-	 * &#64;param user
-	 * &#64;param request
-	 * &#64;return
+	 * @param user
+	 * @param request
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -132,9 +132,9 @@ public class PmphUserController {
 	 * 功能描述：根据用户 id 跳转到用户权限的列表页面
 	 * 使用示范：
 	 *
-	 * &#64;param userId
-	 * &#64;param model
-	 * &#64;return
+	 * @param userId
+	 * @param model
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -158,8 +158,8 @@ public class PmphUserController {
 	 * 2、删除用户绑定的角色数据
 	 * 使用示范：
 	 *
-	 * &#64;param userIds
-	 * &#64;return
+	 * @param userIds
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody

@@ -140,7 +140,7 @@ public class CmsContentController {
     @ResponseBody
     @RequestMapping(value = "/content/{id}", method = RequestMethod.GET)
     public ResponseBean getCmsContentAndContentAndAttachment(@PathVariable("id") Long id) {
-        return new ResponseBean(cmsContentService.getCmsContentById(id));
+        return new ResponseBean(cmsContentService.getCmsContentAndContentAndAttachmentById(id));
     }
 
     /**

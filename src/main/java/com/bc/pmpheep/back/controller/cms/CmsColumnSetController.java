@@ -50,7 +50,7 @@ public class CmsColumnSetController {
      */
     @ResponseBody
     @RequestMapping(value = "/set", method = RequestMethod.GET)
-    public ResponseBean listCmsCategory(@RequestParam(name = "categoryName") String categoryName) {
+    public ResponseBean listCmsCategory(@RequestParam("categoryName") String categoryName) {
         return new ResponseBean(cmsCategoryService.getListAllParentMenu(categoryName));
     }
 

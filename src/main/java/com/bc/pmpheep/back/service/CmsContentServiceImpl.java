@@ -95,6 +95,10 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "作者类型参数为空");
         }
+        if (cmsContent.getTitle().length() > 50) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "消息标题不能超过50个字！");
+        }
         cmsContentDao.addCmsContent(cmsContent);
         return cmsContent;
     }
@@ -112,6 +116,11 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "内容参数为空");
         }
+        if (ObjectUtil.isNull(cmsContent.getCategoryId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "所属栏目不能为空");
+
+        }
         // MongoDB 内容插入
         Content contentObj = contentService.add(new Content(content));
         if (StringUtil.isEmpty(contentObj.getId())) {
@@ -120,8 +129,8 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               "Content对象内容保存失败");
         }
         // 内容保存
-        cmsContent.setParentId(Const.CMS_CONTENT_PARENT_ID);// 上级id
-        cmsContent.setPath(Const.CMS_CONTENT_PATH);// 根节点路径
+        cmsContent.setParentId(cmsContent.getCategoryId());// 上级id
+        cmsContent.setPath(cmsContent.getPath());// 根节点路径
         cmsContent.setMid(contentObj.getId());// 内容id
         cmsContent.setAuthorType(Const.CMS_AUTHOR_TYPE_1);// 作者类型
         cmsContent.setAuthorId(pmphUser.getId());// 作者id
@@ -141,32 +150,7 @@ public class CmsContentServiceImpl implements CmsContentService {
                                                               DateUtil.str2Timestam(scheduledTime)));
         }
         // 保存附件到MongoDB
-        if (ArrayUtil.isNotEmpty(files)) {
-            for (int i = 0; i < files.length; i++) {
-                File file = FileUpload.getFileByFilePath(files[i]);
-                // 循环获取file数组中得文件
-                if (StringUtil.notEmpty(file.getName())) {
-                    String gridFSFileId =
-                    fileService.saveLocalFile(file, FileType.CMS_ATTACHMENT, contentId);
-                    if (StringUtil.isEmpty(gridFSFileId)) {
-                        throw new CheckedServiceException(
-                                                          CheckedExceptionBusiness.CMS,
-                                                          CheckedExceptionResult.FILE_UPLOAD_FAILED,
-                                                          "文件上传失败!");
-                    }
-                    // 保存对应数据
-                    CmsExtra cmsExtra =
-                    cmsExtraService.addCmsExtra(new CmsExtra(contentId, gridFSFileId,
-                                                             file.getName(), null));
-                    if (ObjectUtil.isNull(cmsExtra.getId())) {
-                        throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                                          CheckedExceptionResult.PO_ADD_FAILED,
-                                                          "CmsExtra对象新增失败");
-                    }
-                }
-                FileUtil.delFile(files[i]);// 删除本地临时文件
-            }
-        }
+        this.saveFileToMongoDB(files, contentId);
         return cmsContent;
     }
 
@@ -190,22 +174,24 @@ public class CmsContentServiceImpl implements CmsContentService {
 
         }
         // 如果是更新,或者退回后修改，审核用户ID，审核时间都清空
-        cmsContent.setAuthUserId(null);
-        cmsContent.setAuthDate(null);
+        cmsContent.setAuthUserId(null);// 审核用户
+        cmsContent.setAuthDate(null);// 审核时间
+        cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_0);// 审核状态
         // 再次编辑时间
-        cmsContent.setGmtReedit(DateUtil.getCurrentTime());
+        cmsContent.setGmtReedit(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                         DateUtil.getCurrentTime()));
         cmsContentDao.updateCmsContent(cmsContent);
 
         // 是否定时发布
         CmsSchedule csmSchedule = cmsScheduleService.getCmsScheduleByContentId(cmsContent.getId());
         // 1.修改时如果不选择定时发布，则查询该数据之前是否有选择定时发布，如果有则删除
-        if (false == cmsContent.getIsScheduled()) {
+        if (Const.FALSE == cmsContent.getIsScheduled()) {
             if (ObjectUtil.notNull(csmSchedule)) {
                 cmsScheduleService.deleteCmsScheduleByContentId(cmsContent.getId());
             }
         }
         // 2.修改时如果选择定时发布，则查询该数据之前是否有选择定时发布，如果有则更新，没有则新增
-        if (true == cmsContent.getIsScheduled()) {
+        if (Const.TRUE == cmsContent.getIsScheduled()) {
             if (StringUtil.isEmpty(scheduledTime)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                                   CheckedExceptionResult.NULL_PARAM, "定时发布时间参数为空");
@@ -231,32 +217,7 @@ public class CmsContentServiceImpl implements CmsContentService {
             }
         }
         // 保存附件到MongoDB
-        if (ArrayUtil.isNotEmpty(files)) {
-            for (int i = 0; i < files.length; i++) {
-                File file = FileUpload.getFileByFilePath(files[i]);
-                // 循环获取file数组中得文件
-                if (StringUtil.notEmpty(file.getName())) {
-                    String gridFSFileId =
-                    fileService.saveLocalFile(file, FileType.CMS_ATTACHMENT, cmsContent.getId());
-                    if (StringUtil.isEmpty(gridFSFileId)) {
-                        throw new CheckedServiceException(
-                                                          CheckedExceptionBusiness.CMS,
-                                                          CheckedExceptionResult.FILE_UPLOAD_FAILED,
-                                                          "文件上传失败!");
-                    }
-                    // 保存对应数据
-                    CmsExtra cmsExtra =
-                    cmsExtraService.addCmsExtra(new CmsExtra(cmsContent.getId(), gridFSFileId,
-                                                             file.getName(), null));
-                    if (ObjectUtil.isNull(cmsExtra.getId())) {
-                        throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                                          CheckedExceptionResult.PO_ADD_FAILED,
-                                                          "CmsExtra对象新增失败");
-                    }
-                }
-                FileUtil.delFile(files[i]);// 删除本地临时文件
-            }
-        }
+        this.saveFileToMongoDB(files, cmsContent.getId());
         return 0;
     }
 
@@ -291,8 +252,12 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        return cmsContentDao.checkContentById(new CmsContent(id, authStatus, pmphUser.getId(),
-                                                             DateUtil.getCurrentTime(),
+        return cmsContentDao.checkContentById(new CmsContent(
+                                                             id,
+                                                             authStatus,
+                                                             pmphUser.getId(),
+                                                             DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                                                      DateUtil.getCurrentTime()),
                                                              Const.MATERIAL_TYPE_ID));
     }
 
@@ -357,7 +322,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         // 将页面大小和页面页码拷贝
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         // 包含数据总条数的数据集
-        List<CmsContentVO> cmsContentList = cmsContentDao.listContentManage(pageParameter);
+        List<CmsContentVO> cmsContentList = cmsContentDao.listContentCheck(pageParameter);
         if (CollectionUtil.isNotEmpty(cmsContentList)) {
             Integer count = cmsContentList.get(0).getCount();
             pageResult.setTotal(count);
@@ -387,10 +352,26 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         // 按id 获取CmsContent对象
         CmsContent cmsContent = cmsContentDao.getCmsContentById(id);
+        String authDate = cmsContent.getAuthDate();
+        if (StringUtil.notEmpty(authDate)) {
+            cmsContent.setAuthDate(DateUtil.date2Str(DateUtil.str2Date(authDate)));
+        }
+        String deadlinePromote = cmsContent.getDeadlinePromote();
+        if (StringUtil.notEmpty(deadlinePromote)) {
+            cmsContent.setDeadlinePromote(DateUtil.date2Str(DateUtil.str2Date(deadlinePromote)));
+        }
+        String deadlineStick = cmsContent.getDeadlineStick();
+        if (StringUtil.notEmpty(deadlineStick)) {
+            cmsContent.setDeadlineStick(DateUtil.date2Str(DateUtil.str2Date(deadlineStick)));
+        }
+        String deadlineHot = cmsContent.getDeadlineHot();
+        if (StringUtil.notEmpty(deadlineHot)) {
+            cmsContent.setDeadlineHot(DateUtil.date2Str(DateUtil.str2Date(deadlineHot)));
+        }
         resultMap.put("cmsContent", cmsContent);
-        // 判断是内容易是否已经发布或审核通过
+        // 判断内容是否已经发布或审核通过
         String fileDownLoadType = null;
-        if (true == cmsContent.getIsPublished()
+        if (Const.TRUE == cmsContent.getIsPublished()
             || Const.CMS_AUTHOR_STATUS_2 == cmsContent.getAuthStatus()) {
             fileDownLoadType = Const.CMS_FILE_DOWNLOAD;
         } else {
@@ -419,8 +400,8 @@ public class CmsContentServiceImpl implements CmsContentService {
     }
 
     @Override
-    public Integer getCmsContentCount() throws CheckedServiceException {
-        return cmsContentDao.getCmsContentCount();
+    public Integer getCmsContentCount(Long categoryId) throws CheckedServiceException {
+        return cmsContentDao.getCmsContentCount(categoryId);
     }
 
     @Override
@@ -443,4 +424,55 @@ public class CmsContentServiceImpl implements CmsContentService {
         return cmsContentDao.deleteCmsContentByIds(ids);
     }
 
+    @Override
+    public Integer updateCmsContentByIds(List<CmsContent> csmContents)
+    throws CheckedServiceException {
+        if (CollectionUtil.isEmpty(csmContents)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return cmsContentDao.updateCmsContentByIds(csmContents);
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：保存文件到MongoDB
+     * 使用示范：
+     *
+     * @param files 临时文件路径
+     * @param contentId cms内容ID
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    private void saveFileToMongoDB(String[] files, Long contentId) throws CheckedServiceException,
+    IOException {
+        // 保存附件到MongoDB
+        if (ArrayUtil.isNotEmpty(files)) {
+            for (int i = 0; i < files.length; i++) {
+                File file = FileUpload.getFileByFilePath(files[i]);
+                // 循环获取file数组中得文件
+                if (StringUtil.notEmpty(file.getName())) {
+                    String gridFSFileId =
+                    fileService.saveLocalFile(file, FileType.CMS_ATTACHMENT, contentId);
+                    if (StringUtil.isEmpty(gridFSFileId)) {
+                        throw new CheckedServiceException(
+                                                          CheckedExceptionBusiness.CMS,
+                                                          CheckedExceptionResult.FILE_UPLOAD_FAILED,
+                                                          "文件上传失败!");
+                    }
+                    // 保存对应数据
+                    CmsExtra cmsExtra =
+                    cmsExtraService.addCmsExtra(new CmsExtra(contentId, gridFSFileId,
+                                                             file.getName(), null));
+                    if (ObjectUtil.isNull(cmsExtra.getId())) {
+                        throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                                          CheckedExceptionResult.PO_ADD_FAILED,
+                                                          "CmsExtra对象新增失败");
+                    }
+                }
+                FileUtil.delFile(files[i]);// 删除本地临时文件
+            }
+        }
+    }
 }

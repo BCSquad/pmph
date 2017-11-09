@@ -66,7 +66,7 @@ public interface PmphGroupDao {
 	 * 功能描述：查询表单的数据总条数
 	 * 使用示范：
 	 *
-	 * @return 表单的总条数
+	 * &#64;return 表单的总条数
 	 * </pre>
 	 */
 	Long getPmphGroupCount();
@@ -80,4 +80,15 @@ public interface PmphGroupDao {
 	 *
 	 */
 	List<PmphGroupListVO> listPmphGroup();
+	
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据小组名称获取小组
+	 *
+	 * @param groupName 小组名称
+	 * @return 小组详情
+	 *
+	 */
+	PmphGroup getPmphGroupByGroupName(String groupName);
 }
