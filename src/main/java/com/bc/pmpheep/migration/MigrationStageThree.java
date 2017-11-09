@@ -24,6 +24,8 @@ import com.bc.pmpheep.back.service.WriterProfileService;
 import com.bc.pmpheep.back.service.WriterRoleService;
 import com.bc.pmpheep.back.service.WriterUserCertificationService;
 import com.bc.pmpheep.back.service.WriterUserRoleService;
+import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
@@ -64,7 +66,7 @@ public class MigrationStageThree {
 	
 	protected void writerRole() {
 		String tableName = "sys_role";
-		JdbcHelper.addColumn(tableName);
+		JdbcHelper.addColumn(tableName);//增加new_pk字段
 		List<Map<String,Object>> maps = JdbcHelper.queryForList(tableName);
 		List<Map<String,Object>> excel = new LinkedList<>();
 		int count = 0 ;
@@ -73,11 +75,11 @@ public class MigrationStageThree {
 			String rolename = (String) map.get("rolename");
 			Integer isDisabled = (Integer) map.get("isvalid");
 			Integer sort = (Integer) map.get("sortno");
-			if ( null != sort && sort < 0){
+			if ( ObjectUtil.notNull(sort) && sort < 0){
 				sort = 999;
 				map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
 				excel.add(map);
-				logger.info("显示顺序为负数，有误，此结构将被记录在Excel中");
+				logger.info("显示顺序为负数，此结果将被记录在Excel中");
 			}
 			String note = (String) map.get("memo");
 			WriterRole writerRole = new WriterRole();
@@ -92,7 +94,7 @@ public class MigrationStageThree {
 		}
 		if (excel.size() > 0){
 			try {
-				excelHelper.exportFromMaps(excel, tableName + "作家角色", tableName + "作家角色");
+				excelHelper.exportFromMaps(excel, "作家角色表", "writer_role");
 			} catch (IOException ex) {
 				logger.error("异常数据导出到Excel失败",ex);
 			}
@@ -107,7 +109,7 @@ public class MigrationStageThree {
 	
 	protected void writerUserRole() {
 		String tableName = "sys_userrole";
-		JdbcHelper.addColumn(tableName);
+		JdbcHelper.addColumn(tableName);//增加new_pk字段
 		String sql = "SELECT a.userroleid,b.userid,b.new_pk user_new_pk,c.roleid,c.new_pk role_new_pk "
 					+"FROM sys_userrole a "
 					+"LEFT JOIN sys_user b ON a.userid = b.userid "
@@ -121,7 +123,7 @@ public class MigrationStageThree {
 			Double userroleId = (Double) map.get("userroleid");
 			Long userId = (Long) map.get("user_new_pk");
 			Long roleId = (Long) map.get("role_new_pk");
-			if (null == roleId){
+			if (ObjectUtil.notNull(roleId)){
 				map.put(SQLParameters.EXCEL_EX_HEADER, "角色被删除，无法关联到");
 				excel.add(map);
 				logger.error("角色被删除，无法被关联到，此结果将被记录在Excel中");
@@ -134,11 +136,10 @@ public class MigrationStageThree {
 			count++;
 			Long pk = writerUserRole.getId();
 			JdbcHelper.updateNewPrimaryKey(tableName, pk, "userroleid", userroleId);
-			logger.info("id为：" + userId + ","+ count + "条");
 		}
 		if (excel.size() > 0){
 			try {
-				excelHelper.exportFromMaps(excel, tableName, tableName);
+				excelHelper.exportFromMaps(excel, "作家-角色关联表", "writer_user_role");
 			}  catch (IOException ex) {
 				logger.error("异常数据导出到Excel失败",ex);
 			}
@@ -162,10 +163,10 @@ public class MigrationStageThree {
 		int count = 0;
 		for (Map<String,Object> map : maps){
 			Long userId = (Long) map.get("new_pk");
-			if (null == userId || userId == 0){
-				map.put(SQLParameters.EXCEL_EX_HEADER, "关联id主表不存在或为社内用户");
+			if (ObjectUtil.isNull(userId) || userId == 0){
+				map.put(SQLParameters.EXCEL_EX_HEADER, "主表不存在关联id或为社内用户");
 				excel.add(map);
-				logger.error("关联id主表存在或为社内用户,此结果将被记录在Excel中");
+				logger.error("主表不存在关联id或为社内用户,此结果将被记录在Excel中");
 				continue;
 			}
 			String profile = (String) map.get("introduce");
@@ -176,10 +177,11 @@ public class MigrationStageThree {
 			writerProfile.setTag(tagName);
 			writerProfile = writerProfileService.addWriterProfile(writerProfile);
 			count++;
+			//此表原系统数据不存在，所以无需反向更新
 		}
 		if (excel.size() > 0){
 			try {
-				excelHelper.exportFromMaps(excel, "作家标签表", "");
+				excelHelper.exportFromMaps(excel, "作家标签表", "writer_profile");
 			} catch (IOException ex) {
 				logger.error("异常数据导出到Excel失败",ex);
 			}
@@ -207,17 +209,18 @@ public class MigrationStageThree {
 		List<Map<String,Object>> excel = new LinkedList<>();
 		int count = 0 ;
 		for (Map<String,Object> map : maps){
+			StringBuilder sb = new StringBuilder();
 			Long userId = (Long) map.get("user_new_pk");
 			if (userId == 0){
-				map.put(SQLParameters.EXCEL_EX_HEADER, "用户为社内用户");
+				map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户为社内用户。"));
 				excel.add(map);
 				logger.error("用户为社内用户，此结果将被记录在Excel中");
 				continue;
 			}
 			Long orgId = (Long) map.get("org_new_pk");
-			if (null == orgId || orgId == 0){
-				map.put(SQLParameters.EXCEL_EX_HEADER, "为空则用户没有和机构关联，为0则可能因为"
-						+ "机构重名查询不到");
+			if (ObjectUtil.isNull(orgId) || orgId == 0){
+				map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("为空则用户没有和机构关联，为0则可能因为"
+						+ "机构重名查询不到。"));
 				excel.add(map);
 				logger.error("未和用户关联，或因机构重名查询不到，此结果将被记录在Excel中");
 				continue;
@@ -238,25 +241,28 @@ public class MigrationStageThree {
 			writerUserCertification = writerCertificationService
 					.addWriterUserCertification(writerUserCertification);
 			count++;
-			logger.info("id:"+userId+","+"count:"+count);
 			Long pk = writerUserCertification.getId();
-			if (null != cert){
+			if (StringUtil.notEmpty(cert)){
 				String mongoId = "";
 				try {
 					fileService.migrateFile(cert, ImageType.WRITER_USER_CERT, pk);
 				} catch (IOException ex) {
 					mongoId = "DEFAULT";
-					map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
+					map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常。");
 					excel.add(map);
 					logger.error("文件读取异常，路径<{}>,异常信息：{}",cert,ex.getMessage());
+				} catch (Exception e){
+					mongoId = "DEFAULT";
+					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常："+e.getMessage() + "。"));
+					excel.add(map);
 				}
 				writerUserCertification.setCert(mongoId);
+				writerCertificationService.updateWriterUserCertification(writerUserCertification);
 			}
-			writerCertificationService.updateWriterUserCertification(writerUserCertification);
 		}
 		if (excel.size() > 0){
 			try {
-				excelHelper.exportFromMaps(excel, "教师资格认证表", "");
+				excelHelper.exportFromMaps(excel, "教师资格认证表", "writer_user_certification");
 			}  catch (IOException ex) {
 				logger.error("异常数据导出到Excel失败",ex);
 			}
@@ -269,8 +275,15 @@ public class MigrationStageThree {
         SQLParameters.msg.add(msg);
 	}
 	
+	/**
+	 * 
+	 * Description:新库没有机构用户关联表，这部分数据没有意义，只是以防万一查询出导出为Excel
+	 * @author:lyc
+	 * @date:2017年11月9日下午5:19:45
+	 * @param 
+	 * @return void
+	 */
 	protected void orgUserRole() {
-		String tableName = "sys_userrole";
 		String sql = "SELECT a.userroleid,b.userid,b.usercode,b.username,b.new_pk user_new_pk,"
 				+ "c.rolename,c.rolecode,c.isvalid,c.roleid,c.new_pk role_new_pk "
 					+"FROM sys_userrole a "
@@ -289,7 +302,7 @@ public class MigrationStageThree {
 		}
 		if (excel.size() > 0){
 			try {
-				excelHelper.exportFromMaps(excel, tableName + "机构用户关联", tableName + "机构用户关联");
+				excelHelper.exportFromMaps(excel, "机构用户关联", "");
 			} catch (IOException ex) {
 				logger.error("异常数据导出到Excel失败",ex);
 			}
