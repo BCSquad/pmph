@@ -146,8 +146,8 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 		} else {
 			for (Long id : ids) {
 				Long uploaderId = pmphGroupFileDao.getPmphGroupFileById(id).getMemberId();
-				if (uploaderId == currentUser.getId() || currentUser.getIsFounder() || currentUser.getIsAdmin()
-						|| pmphUser.getIsAdmin()) {// 超级管理员、小组创建者、小组管理者、文件上传人才可以删除文件
+				if (pmphUser.getIsAdmin() || uploaderId == currentUser.getId() || currentUser.getIsFounder()
+						|| currentUser.getIsAdmin()) {// 超级管理员、小组创建者、小组管理者、文件上传人才可以删除文件
 					PmphGroupFile pmphGroupFile = pmphGroupFileDao.getPmphGroupFileById(id);
 					Integer num = pmphGroupFileDao.getPmphGroupFileTotalByFileId(pmphGroupFile.getFileId());
 					if (1 == num) {
