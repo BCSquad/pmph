@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.bc.pmpheep.back.po.CmsCategory;
 import com.bc.pmpheep.back.po.CmsCategoryRole;
+import com.bc.pmpheep.back.vo.CmsCategoryRoleVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -138,15 +139,15 @@ public interface CmsCategoryService {
     /**
      * 
      * <pre>
-     * 功能描述：查询CmsCategory列表(全部)
+     * 功能描述：按categoryName查询CmsCategory列表
      * 使用示范：
      *
-     * @param cmsCategory 
+     * @param categoryName 栏目名称
      * @return CmsCategory集合对象
      * @throws CheckedServiceException
      * </pre>
      */
-    public List<CmsCategory> getCmsCategoryList(CmsCategory cmsCategory)
+    public List<CmsCategory> getCmsCategoryListByCategoryName(String categoryName)
     throws CheckedServiceException;
 
     /**
@@ -169,11 +170,12 @@ public interface CmsCategoryService {
      * <pre>
      * 功能描述：获取总条数
      * 使用示范：
-     *@param categoryId CmsCategory 主键ID
+     * 
      * @return 总条数
+     * @throws CheckedServiceException
      * </pre>
      */
-    Integer getCmsCategoryCount(Long categoryId) throws CheckedServiceException;
+    Integer getCmsCategoryCount() throws CheckedServiceException;
 
     /**
      * 
@@ -183,9 +185,24 @@ public interface CmsCategoryService {
      *
      * @param categoryId CmsCategory主键ID
      * @return  CmsCategoryRole 集合
+     * @throws CheckedServiceException
      * </pre>
      */
-    List<CmsCategoryRole> getCmsCategoryRoleByCategoryId(Long categoryId)
+    List<CmsCategoryRoleVO> getCmsCategoryRoleByCategoryId(Long categoryId)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：通过roleIds查询权限
+     * 使用示范：
+     *
+     * @param roleIds 角色id集合
+     * @return CmsCategoryRole 集合对象
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    List<CmsCategoryRoleVO> getCmsCategoryRoleByRoleIds(List<Long> roleIds)
     throws CheckedServiceException;
 
     /**

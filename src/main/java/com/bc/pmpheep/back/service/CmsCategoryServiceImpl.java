@@ -14,6 +14,7 @@ import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.CmsCategoryRoleVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -38,7 +39,9 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Service
 public class CmsCategoryServiceImpl implements CmsCategoryService {
     @Autowired
-    CmsCategoryDao categoryDao;
+    CmsCategoryDao    categoryDao;
+    @Autowired
+    CmsContentService cmsContentService;
 
     @Override
     public Integer addCmsCategory(CmsCategory cmsCategory, List<Long> permissionId,
@@ -48,14 +51,14 @@ public class CmsCategoryServiceImpl implements CmsCategoryService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.PO_ADD_FAILED, "对象保存失败");
         }
-        if (CollectionUtil.isEmpty(authRoleId)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                              CheckedExceptionResult.NULL_PARAM, "审核角色ID参数为空");
-        }
-        if (CollectionUtil.isEmpty(permissionId)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                              CheckedExceptionResult.NULL_PARAM, "操作权限ID参数为空");
-        }
+        // if (CollectionUtil.isEmpty(authRoleId)) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+        // CheckedExceptionResult.NULL_PARAM, "审核角色ID参数为空");
+        // }
+        // if (CollectionUtil.isEmpty(permissionId)) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+        // CheckedExceptionResult.NULL_PARAM, "操作权限ID参数为空");
+        // }
         // 操作权限id集合
         for (Long roleId : permissionId) {
             categoryDao.addCmsCategoryRole(new CmsCategoryRole(cmsCategoryId, roleId,
@@ -183,19 +186,23 @@ public class CmsCategoryServiceImpl implements CmsCategoryService {
     throws CheckedServiceException {
         List<CmsCategory> cmsCategories;
         if (StringUtil.isEmpty(categoryName)) {
-            cmsCategories = categoryDao.getListAllParentMenu(categoryName);
+            cmsCategories = categoryDao.getListAllParentMenu(null);
         } else {
-            // 按栏目查询
-            cmsCategories = categoryDao.getListAllParentMenu(categoryName);
-            // 如果为空,则查询全部
-            if (CollectionUtil.isEmpty(cmsCategories)) {
-                cmsCategories = categoryDao.getListAllParentMenu(null);
-            }
+            cmsCategories = categoryDao.getCmsCategoryListByCategoryName(categoryName);
         }
         for (CmsCategory cmsCategory : cmsCategories) {
             List<CmsCategory> subList =
             this.getListChildMenuByParentId(cmsCategory.getId(), categoryName);
-            cmsCategory.setChildren(subList);
+            if (CollectionUtil.isNotEmpty(subList)) {
+                cmsCategory.setChildren(subList);
+                for (CmsCategory category : subList) {
+                    List<CmsCategory> subList1 =
+                    this.getListChildMenuByParentId(category.getId(), null);
+                    if (CollectionUtil.isNotEmpty(subList1)) {
+                        category.setChildren(subList1);
+                    }
+                }
+            }
         }
         return cmsCategories;
     }
@@ -211,14 +218,14 @@ public class CmsCategoryServiceImpl implements CmsCategoryService {
     }
 
     @Override
-    public List<CmsCategory> getCmsCategoryList(CmsCategory cmsCategory)
+    public List<CmsCategory> getCmsCategoryListByCategoryName(String categoryName)
     throws CheckedServiceException {
-        if (ObjectUtil.isNull(cmsCategory)) {
+        if (StringUtil.isEmpty(categoryName)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
 
         }
-        return categoryDao.getCmsCategoryList(cmsCategory);
+        return categoryDao.getCmsCategoryListByCategoryName(categoryName);
     }
 
     @Override
@@ -232,8 +239,49 @@ public class CmsCategoryServiceImpl implements CmsCategoryService {
     }
 
     @Override
-    public Integer getCmsCategoryCount(Long categoryId) throws CheckedServiceException {
-        return categoryDao.getCmsCategoryCount(categoryId);
+    public Integer getCmsCategoryCount() throws CheckedServiceException {
+        return categoryDao.getCmsCategoryCount();
+    }
+
+    @Override
+    public Map<String, Object> getCmsCategoryDetail(Long id) throws CheckedServiceException {
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        CmsCategory cmsCategory = this.getCmsCategoryById(id);
+        resultMap.put("cmsCategory", cmsCategory);
+        // 按Category查询对应权限
+        List<CmsCategoryRoleVO> cmsCategoryRoles = this.getCmsCategoryRoleByCategoryId(id);
+        for (CmsCategoryRoleVO cmsCategoryRole : cmsCategoryRoles) {
+            if (Const.CMS_CATEGORY_PERMISSSION_1 == cmsCategoryRole.getPermissionType()) {
+                resultMap.put("permissionId", cmsCategoryRole.getRoleId());
+            } else {
+                resultMap.put("authRoleId", cmsCategoryRole.getRoleId());
+            }
+        }
+        return resultMap;
+    }
+
+    @Override
+    public List<CmsCategoryRoleVO> getCmsCategoryRoleByCategoryId(Long categoryId)
+    throws CheckedServiceException {
+        if (ObjectUtil.isNull(categoryId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "categoryId对象为空");
+        }
+        return categoryDao.getCmsCategoryRoleByCategoryId(categoryId);
+    }
+
+    @Override
+    public List<CmsCategoryRoleVO> getCmsCategoryRoleByRoleIds(List<Long> roleIds)
+    throws CheckedServiceException {
+        if (CollectionUtil.isEmpty(roleIds)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return categoryDao.getCmsCategoryRoleByRoleIds(roleIds);
     }
 
     @Override
@@ -242,13 +290,14 @@ public class CmsCategoryServiceImpl implements CmsCategoryService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        Integer count = this.getCmsCategoryCount(id);
-        if (0 <= count) {
-            return categoryDao.deleteCmsCategoryById(id);
-        } else {
+        Integer count = cmsContentService.getCmsContentCount(id);
+        if (count > 0) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.ILLEGAL_PARAM,
                                               "该栏目下存在发布内容，不能删除！");
+        } else {
+            this.deleteCmsCategoryRoleByCategoryId(id, null);
+            return categoryDao.deleteCmsCategoryById(id);
         }
     }
 
@@ -258,12 +307,6 @@ public class CmsCategoryServiceImpl implements CmsCategoryService {
         if (ObjectUtil.isNull(categoryId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "categoryId参数为空");
-
-        }
-        if (ObjectUtil.isNull(permissionType)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                              CheckedExceptionResult.NULL_PARAM,
-                                              "permissionType参数为空");
 
         }
         return categoryDao.deleteCmsCategoryRoleByCategoryId(new CmsCategoryRole(categoryId,
@@ -277,37 +320,6 @@ public class CmsCategoryServiceImpl implements CmsCategoryService {
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         return categoryDao.deleteCmsCategoryByIds(ids);
-    }
-
-    @Override
-    public Map<String, Object> getCmsCategoryDetail(Long id) throws CheckedServiceException {
-        if (ObjectUtil.isNull(id)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
-        }
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        CmsCategory cmsCategory = this.getCmsCategoryById(id);
-        resultMap.put("cmsCategory", cmsCategory);
-        // 按Category查询对应权限
-        List<CmsCategoryRole> cmsCategoryRoles = this.getCmsCategoryRoleByCategoryId(id);
-        for (CmsCategoryRole cmsCategoryRole : cmsCategoryRoles) {
-            if (Const.CMS_CATEGORY_PERMISSSION_1 == cmsCategoryRole.getPermissionType()) {
-                resultMap.put("permissionId", cmsCategoryRole.getRoleId());
-            } else {
-                resultMap.put("authRoleId", cmsCategoryRole.getRoleId());
-            }
-        }
-        return resultMap;
-    }
-
-    @Override
-    public List<CmsCategoryRole> getCmsCategoryRoleByCategoryId(Long categoryId)
-    throws CheckedServiceException {
-        if (ObjectUtil.isNull(categoryId)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                              CheckedExceptionResult.NULL_PARAM, "categoryId对象为空");
-        }
-        return categoryDao.getCmsCategoryRoleByCategoryId(categoryId);
     }
 
     @Override

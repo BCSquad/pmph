@@ -17,14 +17,8 @@
 			<if test="isBackground != null">
 				is_background,
 			</if>
-			<if test="permissionId != null">
-				permission_id,
-			</if>
 			<if test="isAuthRequired != null">
 				is_auth_required,
-			</if>
-			<if test="authRoleId != null">
-				auth_role_id,
 			</if>
 			<if test="isMaterialNotice != null">
 				is_material_notice,
@@ -74,14 +68,8 @@
 			<if test="isBackground != null">
 				#{isBackground},
 			</if>
-			<if test="permissionId != null">
-				#{permissionId},
-			</if>
 			<if test="isAuthRequired != null">
 				#{isAuthRequired},
-			</if>
-			<if test="authRoleId != null">
-				#{authRoleId},
 			</if>
 			<if test="isMaterialNotice != null">
 				#{isMaterialNotice},
@@ -181,14 +169,8 @@
 			<if test="isBackground != null">
 				is_background=#{isBackground},
 			</if>
-			<if test="permissionId != null">
-				permission_id=#{permissionId},
-			</if>
 			<if test="isAuthRequired != null">
 				is_auth_required=#{isAuthRequired},
-			</if>
-			<if test="authRoleId != null">
-				auth_role_id=#{authRoleId},
 			</if>
 			<if test="isMaterialNotice != null">
 				is_material_notice=#{isMaterialNotice},
@@ -252,7 +234,7 @@
 		where 
 			PARENT_ID = 0 
 			<if test="categoryName != null and categoryName!='' ">
-				category_name = #{categoryName}
+				and category_name like concat('%',#{categoryName},'%') 
 			</if>
 		order by sort 
 	</select>
@@ -264,11 +246,16 @@
 		from 
 			cms_category
 		where
-			PARENT_ID = #{parentId} 
+				PARENT_ID = #{parentId} 
 			<if test="categoryName != null and categoryName!='' ">
-				category_name = #{categoryName}
+				and category_name  like concat('%',#{categoryName},'%') 
 			</if>
 		order by sort 
+	</select>
+	
+	<!-- 根据CategoryName查询一个CmsCategory -->
+	<select id="getCmsCategoryListByCategoryName" parameterType="java.lang.String" resultType="CmsCategory">
+		select * from cms_category where category_name like concat('%',#{categoryName},'%');
 	</select>
 
 	<!-- 根据id查询一个CmsCategory -->
@@ -276,7 +263,7 @@
 		select * from cms_category where id=#{id};
 	</select>
 		<!-- 根据id查询一个CmsCategoryRole -->
-	<select id="getCmsCategoryRoleByCategoryId" parameterType="java.lang.Long" resultType="CmsCategoryRole">
+	<select id="getCmsCategoryRoleByCategoryId" parameterType="java.lang.Long" resultType="CmsCategoryRoleVO">
 		select 
 			GROUP_CONCAT(role_id) roleId, permission_type 
 		from 
@@ -285,6 +272,24 @@
 			category_id= #{categoryId} 
 		GROUP BY 
 			permission_type
+	</select>
+	
+	<!-- 通过roleIds查询权限 -->
+	<select id="getCmsCategoryRoleByRoleIds" parameterType="java.util.List" resultType="CmsCategoryRoleVO">	
+		SELECT 
+			GROUP_CONCAT(t.`category_id`)category_id,
+			GROUP_CONCAT(t.`role_id`) role_id,
+			t.`permission_type`
+		FROM 
+			`cms_category_role` t 
+		WHERE 
+			t.`role_id`
+			in
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                 #{item}
+			</foreach>
+		GROUP BY 
+			t.`permission_type`;
 	</select>
 	
 	<!-- 查询表单的数据总数 -->
@@ -301,15 +306,15 @@
 	</delete>
 	
 	<!-- 根据CategoryId删除一个 CmsCategoryRole-->
-
 	<delete id="deleteCmsCategoryRoleByCategoryId" parameterType="CmsCategoryRole">
 		delete from 
 			cms_category_role 
 		where 
-			category_id = #{categoryId} 
-		and 
-			permission_type = #{permissionType};
-
+			category_id = #{categoryId}
+			<if test="permissionType != null ">
+				and 
+					permission_type = #{permissionType};
+			</if>
 	</delete>
 	
 	<!-- 批量删除-->

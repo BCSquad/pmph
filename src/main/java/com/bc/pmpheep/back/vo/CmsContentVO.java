@@ -50,6 +50,8 @@ public class CmsContentVO implements Serializable {
     private String    username;
     // 是否为管理员
     private Boolean   isAdmin;
+    // 是否已发布
+    private Boolean   isPublished;
     // 创建时间
     private Timestamp gmtCreate;
 
@@ -359,6 +361,20 @@ public class CmsContentVO implements Serializable {
      */
     public void setGmtCreate(Timestamp gmtCreate) {
         this.gmtCreate = gmtCreate;
+    }
+
+    /**
+     * @return the isPublished
+     */
+    public Boolean getIsPublished() {
+        return isPublished;
+    }
+
+    /**
+     * @param isPublished the isPublished to set
+     */
+    public void setIsPublished(Boolean isPublished) {
+        this.isPublished = isPublished;
     }
 
 }

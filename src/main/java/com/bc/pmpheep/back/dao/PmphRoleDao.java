@@ -52,7 +52,7 @@ public interface PmphRoleDao {
      * @return PmphRole 对象
      * </pre>
      */
-    PmphRole getPmphRoleByUserId(Long userId);
+    List<PmphRole> getPmphRoleByUserId(Long userId);
 
     /**
      * 

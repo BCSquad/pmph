@@ -44,7 +44,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
     }
 
     @Override
-    public PmphRole getPmphRoleByUserId(Long userId) throws CheckedServiceException {
+    public List<PmphRole> getPmphRoleByUserId(Long userId) throws CheckedServiceException {
         if (ObjectUtil.isNull(userId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");

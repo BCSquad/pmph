@@ -85,35 +85,43 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Autowired
     private DecPositionService       decPositionService;
-    
+
     @Override
-    public UserMessage addUserMessage(UserMessage userMessage) throws CheckedServiceException{
-    	if (null == userMessage) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,CheckedExceptionResult.NULL_PARAM, "参数为空");
+    public UserMessage addUserMessage(UserMessage userMessage) throws CheckedServiceException {
+        if (null == userMessage) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-    	if (StringUtil.isEmpty(userMessage.getMsgId())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "消息为空");
+        if (StringUtil.isEmpty(userMessage.getMsgId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "消息为空");
         }
-    	if (null == userMessage.getMsgType()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "消息类型为空");
+        if (null == userMessage.getMsgType()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "消息类型为空");
         }
-    	if (StringUtil.isEmpty(userMessage.getTitle())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "消息标题为空");
+        if (StringUtil.isEmpty(userMessage.getTitle())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "消息标题为空");
         }
-    	if (null == userMessage.getSenderId()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "发送者id为空");
+        if (null == userMessage.getSenderId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "发送者id为空");
         }
-    	if (null == userMessage.getSenderType()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "发送者类型为空");
+        if (null == userMessage.getSenderType()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "发送者类型为空");
         }
-    	if (null == userMessage.getReceiverId()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "接收者id为空");
+        if (null == userMessage.getReceiverId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "接收者id为空");
         }
-    	if (null == userMessage.getReceiverType()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "接收者类型为空");
+        if (null == userMessage.getReceiverType()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "接收者类型为空");
         }
-    	userMessageDao.addUserMessage(userMessage);
-    	return userMessage;
+        userMessageDao.addUserMessage(userMessage);
+        return userMessage;
     }
 
     @Override
@@ -466,7 +474,10 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        pageParameter.getParameter().setSenderId(pmphUser.getId());
+        // 如果是系统管理员，则查询所有，否则查询对应的消息
+        if (Const.FALSE == pmphUser.getIsAdmin()) {
+            pageParameter.getParameter().setSenderId(pmphUser.getId());
+        }
         PageResult<UserMessageVO> pageResult = new PageResult<>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         Integer total = userMessageDao.getMessageTotal(pageParameter);
@@ -489,7 +500,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     public String msgUploadFiles(MultipartFile file) throws CheckedServiceException {
         if (ObjectUtil.isNull(file)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                              CheckedExceptionResult.NULL_PARAM, "消息附件为空！");
+                                              CheckedExceptionResult.NULL_PARAM, "附件为空！");
         }
         String filePath = "";
         // 循环获取file数组中得文件
@@ -514,25 +525,23 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户消息对象为空！");
         }
-        resultMap.put("title", userMessage.getTitle());
+        resultMap.put("msgId", userMessage.getId());// 主键ID
+        resultMap.put("title", userMessage.getTitle());// 标题
         Message message = messageService.get(userMessage.getMsgId());
         if (ObjectUtil.isNull(message)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息对象为空！");
         }
-        resultMap.put("content", message.getContent());
+        resultMap.put("content", message.getContent());// 内容
         List<MessageAttachment> messageAttachments =
         messageAttachmentService.getMessageAttachmentByMsgId(message.getId());
-        // List<MessageAttachment> mAttachments =
-        // new ArrayList<MessageAttachment>(messageAttachments.size());
         if (CollectionUtil.isNotEmpty(messageAttachments)) {
             for (MessageAttachment mAttachment : messageAttachments) {
                 String attachmentId = mAttachment.getAttachment();
                 mAttachment.setAttachment(Const.FILE_DOWNLOAD + attachmentId);
-                // mAttachments.add(mAttachment);
             }
         }
-        resultMap.put("MessageAttachment", messageAttachments);
+        resultMap.put("MessageAttachment", messageAttachments);// 内容附件
         return resultMap;
     }
 
@@ -643,7 +652,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         pageResult.setTotal(total);
         return pageResult;
     }
-    
+
     @Override
     public MyMessageVO updateMyMessageDetail(Long id) throws CheckedServiceException {
         if (ObjectUtil.isNull(id)) {
@@ -683,12 +692,13 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         userMessageDao.updateUserMessage(userMessage);
         return myMessageVO;
     }
-    
+
     @Override
     public Integer updateUserMessage(UserMessage userMessage) throws CheckedServiceException {
-    	if (null == userMessage.getId()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "主键为空！");
+        if (null == userMessage.getId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "主键为空！");
         }
-    	return userMessageDao.updateUserMessage(userMessage);
+        return userMessageDao.updateUserMessage(userMessage);
     }
 }

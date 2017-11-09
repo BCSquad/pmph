@@ -14,7 +14,7 @@
 			<if test="mid != null and mid !=''">
 				mid,
 			</if>
-			<if test="categoryId != null and mid !=''">
+			<if test="categoryId != null">
 				category_id,
 			</if>
 			<if test="title != null and title !=''">
@@ -50,7 +50,7 @@
 			<if test="sort != null">
 				sort,
 			</if>
-			<if test="deadlineStick != null">
+			<if test="deadlineStick != null and deadlineStick != ''">
 				deadline_stick,
 			</if>
 			<if test="isHot != null">
@@ -59,7 +59,7 @@
 			<if test="sortHot != null">
 				sort_hot,
 			</if>
-			<if test="deadlineHot != null">
+			<if test="deadlineHot != null and deadlineHot != ''">
 				deadline_hot,
 			</if>
 			<if test="isPromote != null">
@@ -68,7 +68,7 @@
 			<if test="sortPromote != null">
 				sort_promote,
 			</if>
-			<if test="deadlinePromote != null">
+			<if test="deadlinePromote != null and deadlinePromote != ''">
 				deadline_promote,
 			</if>
 			<if test="isScheduled != null">
@@ -80,23 +80,26 @@
 			<if test="isPublished != null">
 				is_published,
 			</if>
-			<if test="isAuth != null">
-				is_auth,
+			<if test="authStatus != null">
+				auth_status,
 			</if>
 			<if test="authUserId != null">
 				auth_user_id,
 			</if>
-			<if test="authDate != null">
+			<if test="authDate != null and authDate != ''">
 				auth_date,
 			</if>
 			<if test="isDeleted != null">
 				is_deleted,
 			</if>
-			<if test="gmtReedit != null">
+			<if test="gmtReedit != null and gmtReedit != ''">
 				gmt_reedit,
 			</if>
 			<if test="materialId != null">
 				material_id,
+			</if>
+			<if test="isStaging != null">
+				is_staging,
 			</if>
 		</trim>
 	</sql>
@@ -113,7 +116,7 @@
 			<if test="mid != null and mid !=''">
 				#{mid},
 			</if>
-			<if test="categoryId != null and mid !=''">
+			<if test="categoryId != null">
 				#{categoryId},
 			</if>
 			<if test="title != null and title !=''">
@@ -149,7 +152,7 @@
 			<if test="sort != null">
 				#{sort},
 			</if>
-			<if test="deadlineStick != null">
+			<if test="deadlineStick != null and deadlineStick != '' ">
 				#{deadlineStick},
 			</if>
 			<if test="isHot != null">
@@ -158,7 +161,7 @@
 			<if test="sortHot != null">
 				#{sortHot},
 			</if>
-			<if test="deadlineHot != null">
+			<if test="deadlineHot != null and deadlineHot != ''">
 				#{deadlineHot},
 			</if>
 			<if test="isPromote != null">
@@ -167,7 +170,7 @@
 			<if test="sortPromote != null">
 				#{sortPromote},
 			</if>
-			<if test="deadlinePromote != null">
+			<if test="deadlinePromote != null and deadlinePromote != ''">
 				#{deadlinePromote},
 			</if>
 			<if test="isScheduled != null">
@@ -179,13 +182,13 @@
 			<if test="isPublished != null">
 				#{isPublished},
 			</if>
-			<if test="isAuth != null">
-				#{isAuth},
+			<if test="authStatus != null">
+				#{authStatus},
 			</if>
 			<if test="authUserId != null">
 				#{authUserId},
 			</if>
-			<if test="authDate != null">
+			<if test="authDate != null and authDate != '' ">
 				#{authDate},
 			</if>
 			<if test="isDeleted != null">
@@ -196,6 +199,9 @@
 			</if>
 			<if test="materialId != null">
 				#{materialId},
+			</if>
+			<if test="isStaging != null">
+				#{isStaging},
 			</if>
 		</trim>
 	</sql>
@@ -223,7 +229,7 @@
 			<if test="mid != null and mid !=''">
 				mid=#{mid},
 			</if>
-			<if test="categoryId != null and mid !=''">
+			<if test="categoryId != null ">
 				category_id=#{categoryId},
 			</if>
 			<if test="title != null and title !=''">
@@ -315,6 +321,20 @@
 			id=#{id};
 	</update>
 	
+	<!-- CMS_content定时任务批量更新 -->
+	 <update id="updateCmsContentByIds" parameterType="java.util.List">
+	 	<foreach collection="list" item="item" index="index" open="" separator=";">
+	 		update 
+	 			cms_content 
+	 		<set>
+	 			is_published = #{isPublished},
+	 			gmt_update = #{gmtUpdate},
+	 		</set>
+	 		where
+	 			id=#{id};
+	 	</foreach>
+	 </update>
+	 
 	 <!-- 内容发布 -->
 	 <update id="publishCmsContentById" parameterType="java.lang.Long">
 	 		update cms_content set is_published = true  where id = #{id};
@@ -350,8 +370,8 @@
 		resultType="CmsContentVO">
 		SELECT 
 			cc.`id`,cc.`title`,pu.username,cc.`auth_status`,cc.`gmt_create`,cc.`clicks`,
-			cc.`comments`,cc.`likes`,cc.`bookmarks`
-			cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,t.count
+			cc.`comments`,cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,
+			cc.`is_published`,cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,t.count
 		FROM 
 			`cms_content`cc
 		LEFT JOIN
@@ -361,7 +381,7 @@
 		LEFT JOIN 
 			`cms_category` ccg 
 		ON 
-			cc.`category_id` = ccg.`id`
+			cc.`category_id` = ccg.`id`,
 			(
 				SELECT 
 					count(*) count
@@ -376,9 +396,13 @@
 				ON 
 					cc.`category_id` = ccg.`id`
 				WHERE
-				cc.`is_deleted`= 0 
-				
+					cc.`is_deleted`= 0 
+				and
+					cc.`is_hide` = 0
 				<if test="parameter !=null ">
+					<if test="parameter.categoryId != null">
+						AND cc.`category_id` = #{parameter.categoryId} 
+					</if>
 					<if test="parameter.isAdmin == false ">
 						AND cc.`author_id`=#{parameter.authorId} 
 					</if>
@@ -408,8 +432,13 @@
 				</if>
 			) t
 			WHERE
-			cc.`is_deleted`= 0 
+				cc.`is_deleted`= 0 
+			and
+				cc.`is_hide` = 0
 			<if test="parameter !=null ">
+				<if test="parameter.categoryId != null">
+					AND cc.`category_id` = #{parameter.categoryId} 
+				</if>
 				<if test="parameter.isAdmin == false ">
 					AND cc.`author_id`=#{parameter.authorId} 
 				</if>
@@ -448,8 +477,8 @@
 		resultType="CmsContentVO">
 		SELECT 
 			cc.`id`,cc.`title`,pu.username,cc.`auth_status`,cc.`gmt_create`,cc.`clicks`,
-			cc.`comments`,cc.`likes`,cc.`bookmarks`
-			cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,t.count
+			cc.`comments`,cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,
+			cc.`is_published`,cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,t.count
 		FROM 
 			`cms_content`cc
 		LEFT JOIN
@@ -459,10 +488,10 @@
 		LEFT JOIN 
 			`cms_category` ccg 
 		ON 
-			cc.`category_id` = ccg.`id`
+			cc.`category_id` = ccg.`id`,
 			(
 				SELECT 
-					count(*) count
+					count(*) `count`
 				FROM 
 					`cms_content`cc
 				LEFT JOIN
@@ -477,9 +506,14 @@
 					cc.`is_deleted`= 0 
 				AND
 					cc.`auth_status`= 2
+				AND
+					cc.`is_hide` = 0
 				<if test="parameter !=null ">
 					<if test="parameter.title != null and parameter.title != ''">
 						AND cc.`title` like concat('%',#{parameter.title},'%')
+					</if>
+					<if test="parameter.categoryId != null">
+						AND cc.`category_id` = #{parameter.categoryId} 
 					</if>
 					<if test="parameter.status !=null ">
 						<if test="parameter.status ==0 ">
@@ -507,9 +541,14 @@
 				cc.`is_deleted`= 0 
 			AND
 				cc.`auth_status`= 2
+			AND
+				cc.`is_hide` = 0
 			<if test="parameter !=null ">
 				<if test="parameter.title != null and parameter.title != ''">
 					AND cc.`title` like concat('%',#{parameter.title},'%')
+				</if>
+				<if test="parameter.categoryId != null">
+					AND cc.`category_id` = #{parameter.categoryId} 
 				</if>
 				<if test="parameter.status !=null ">
 						<if test="parameter.status ==0 ">
@@ -543,8 +582,8 @@
 		resultType="CmsContentVO">
 		SELECT 
 			cc.`id`,cc.`title`,pu.username,cc.`auth_status`,cc.`gmt_create`,cc.`clicks`,
-			cc.`comments`,cc.`likes`,cc.`bookmarks`
-			cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,t.count
+			cc.`comments`,cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,
+			cc.`is_published`,cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,t.count
 		FROM 
 			`cms_content`cc
 		LEFT JOIN
@@ -554,7 +593,7 @@
 		LEFT JOIN 
 			`cms_category` ccg 
 		ON 
-			cc.`category_id` = ccg.`id`
+			cc.`category_id` = ccg.`id`,
 			(
 				SELECT 
 					count(*) count
@@ -575,6 +614,9 @@
 				<if test="parameter !=null ">
 					<if test="parameter.title != null and parameter.title != ''">
 						AND cc.`title` like concat('%',#{parameter.title},'%')
+					</if>
+					<if test="parameter.categoryId != null">
+						AND cc.`category_id` = #{parameter.categoryId} 
 					</if>
 					<if test="parameter.status !=null ">
 						<if test="parameter.status ==0 ">
@@ -605,6 +647,9 @@
 			<if test="parameter !=null ">
 				<if test="parameter.title != null and parameter.title != ''">
 					AND cc.`title` like concat('%',#{parameter.title},'%')
+				</if>
+				<if test="parameter.categoryId != null">
+					AND cc.`category_id` = #{parameter.categoryId} 
 				</if>
 				<if test="parameter.status !=null ">
 						<if test="parameter.status ==0 ">
@@ -650,9 +695,12 @@
 	
 	<!-- 批量删除-->
     <delete id="deleteCmsContentByIds" >
-    	delete from cms_content
-		where 
-			id
+    	update 
+    		cms_content 
+    	set 
+    		is_deleted =true
+	 	where
+	 		id
 		in
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
                  #{item}

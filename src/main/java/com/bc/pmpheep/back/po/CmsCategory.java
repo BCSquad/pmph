@@ -36,11 +36,11 @@ public class CmsCategory implements java.io.Serializable {
     // 是否后台类别
     private Boolean     isBackground;
     // 操作权限id
-    private Long        permissionId;
+    // private Long permissionId;
     // 是否需要审核
     private Boolean     isAuthRequired;
     // 审核角色id
-    private Long        authRoleId;
+    // private Long authRoleId;
     // 是否教材通知
     private Boolean     isMaterialNotice;
     // 是否显示摘要
@@ -65,6 +65,7 @@ public class CmsCategory implements java.io.Serializable {
     private CmsCategory parentMenu;
 
     List<CmsCategory>   children;
+    List<CmsCategory>   children1;
 
     private boolean     hasMenu = false;
 
@@ -89,17 +90,17 @@ public class CmsCategory implements java.io.Serializable {
 
     /** full constructor */
     public CmsCategory(Long parentId, String path, String categoryName, Boolean isBackground,
-    Long permissionId, Boolean isAuthRequired, Long authRoleId, Boolean isMaterialNotice,
-    Boolean isSummaryVisible, Boolean isKeywordVisible, Boolean isAuthorVisible,
-    Boolean isClicksVisible, Boolean isCommentsAllow, Boolean isCommentsVisible,
-    Boolean isLikesVisible, Boolean isBookmarksVisible, Integer sort) {
+    Boolean isAuthRequired, Boolean isMaterialNotice, Boolean isSummaryVisible,
+    Boolean isKeywordVisible, Boolean isAuthorVisible, Boolean isClicksVisible,
+    Boolean isCommentsAllow, Boolean isCommentsVisible, Boolean isLikesVisible,
+    Boolean isBookmarksVisible, Integer sort) {
         this.parentId = parentId;
         this.path = path;
         this.categoryName = categoryName;
         this.isBackground = isBackground;
-        this.permissionId = permissionId;
+        // this.permissionId = permissionId;
         this.isAuthRequired = isAuthRequired;
-        this.authRoleId = authRoleId;
+        // this.authRoleId = authRoleId;
         this.isMaterialNotice = isMaterialNotice;
         this.isSummaryVisible = isSummaryVisible;
         this.isKeywordVisible = isKeywordVisible;
@@ -152,13 +153,13 @@ public class CmsCategory implements java.io.Serializable {
         this.isBackground = isBackground;
     }
 
-    public Long getPermissionId() {
-        return this.permissionId;
-    }
-
-    public void setPermissionId(Long permissionId) {
-        this.permissionId = permissionId;
-    }
+    // public Long getPermissionId() {
+    // return this.permissionId;
+    // }
+    //
+    // public void setPermissionId(Long permissionId) {
+    // this.permissionId = permissionId;
+    // }
 
     public Boolean getIsAuthRequired() {
         return this.isAuthRequired;
@@ -168,13 +169,13 @@ public class CmsCategory implements java.io.Serializable {
         this.isAuthRequired = isAuthRequired;
     }
 
-    public Long getAuthRoleId() {
-        return this.authRoleId;
-    }
-
-    public void setAuthRoleId(Long authRoleId) {
-        this.authRoleId = authRoleId;
-    }
+    // public Long getAuthRoleId() {
+    // return this.authRoleId;
+    // }
+    //
+    // public void setAuthRoleId(Long authRoleId) {
+    // this.authRoleId = authRoleId;
+    // }
 
     public Boolean getIsMaterialNotice() {
         return this.isMaterialNotice;
@@ -299,6 +300,20 @@ public class CmsCategory implements java.io.Serializable {
     }
 
     /**
+     * @return the children1
+     */
+    public List<CmsCategory> getChildren1() {
+        return children1;
+    }
+
+    /**
+     * @param children1 the children1 to set
+     */
+    public void setChildren1(List<CmsCategory> children1) {
+        this.children1 = children1;
+    }
+
+    /**
      * <pre>
      * 功能描述：
      * 使用示范：
@@ -309,9 +324,8 @@ public class CmsCategory implements java.io.Serializable {
     @Override
     public String toString() {
         return " {id:" + id + ", parentId:" + parentId + ", path:" + path + ", categoryName:"
-               + categoryName + ", isBackground:" + isBackground + ", permissionId:" + permissionId
-               + ", isAuthRequired:" + isAuthRequired + ", authRoleId:" + authRoleId
-               + ", isMaterialNotice:" + isMaterialNotice + " , isSummaryVisible:"
+               + categoryName + ", isBackground:" + isBackground + ", isAuthRequired:"
+               + isAuthRequired + ", isMaterialNotice:" + isMaterialNotice + " , isSummaryVisible:"
                + isSummaryVisible + ", isKeywordVisible:" + isKeywordVisible + ", isAuthorVisible:"
                + isAuthorVisible + ", isClicksVisible:" + isClicksVisible + ", isCommentsAllow:"
                + isCommentsAllow + ", isCommentsVisible:" + isCommentsVisible + ", isLikesVisible:"

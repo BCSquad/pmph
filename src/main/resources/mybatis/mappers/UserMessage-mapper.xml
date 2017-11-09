@@ -246,9 +246,11 @@
 		pmph_user u ON u.id = m.sender_id
 		WHERE
 		m.is_deleted = 0
-		AND m.msg_type =
-		1
-		AND m.sender_id = #{parameter.senderId}
+		AND m.msg_type = 1
+		<if  test="parameter.senderId != null">
+			AND
+				m.sender_id = #{parameter.senderId}
+		</if>
 		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
 		</if>
@@ -274,8 +276,10 @@
 		WHERE
 		m.is_deleted = 0
 		AND m.msg_type = 1
-		AND
-		m.sender_id = #{parameter.senderId}
+		<if  test="parameter.senderId != null">
+			AND
+				m.sender_id = #{parameter.senderId}
+		</if>
 		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
 		</if>

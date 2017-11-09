@@ -44,12 +44,24 @@
 				content_id=#{contentId},
 			</if>
 			<if test="scheduledTime != null " >
-				scheduled_time=#{scheduledTime},
+				scheduled_time = #{scheduledTime},
 			</if>
 		</set>
 		where 
 			id=#{id};
 	</update>
+	
+	<!-- 根据id查询一个CmsSchedule -->
+	<select id="getCmsScheduleList" parameterType="CmsSchedule" resultType="CmsSchedule">
+		select 
+			* 
+		from 
+			cms_schedule
+		<if test="scheduledTime != null " >
+		where
+			 scheduled_time BETWEEN DATE_SUB(#{scheduledTime}, INTERVAL 5 MINUTE) AND #{scheduledTime}
+		</if>
+	</select>
 
 	<!-- 根据id查询一个CmsSchedule -->
 	<select id="getCmsScheduleById" parameterType="java.lang.Long" resultType="CmsSchedule">

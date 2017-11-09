@@ -22,7 +22,7 @@
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
         <context:exclude-filter type="annotation" expression="org.springframework.context.annotation.Configuration" /> 
     </context:component-scan>  -->
-    <!--  <context:component-scan base-package="com.bc.pmpheep.back.shiro.cache"/> -->
+      <!-- <context:component-scan base-package="com.bc.pmpheep.back.shiro.cache"/> -->
      <context:component-scan base-package="com.bc.pmpheep.back.service"/> 
      <context:component-scan base-package="com.bc.pmpheep.general.service"/>
      <context:component-scan base-package="com.bc.pmpheep.websocket"/>
