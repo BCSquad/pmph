@@ -140,6 +140,10 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息为空");
         }
+        String orgNameOrReceiver = pageParameter.getParameter().getName();
+        if (StringUtil.notEmpty(orgNameOrReceiver)) {
+            pageParameter.getParameter().setName(orgNameOrReceiver.replaceAll(" ", ""));
+        }
         pageParameter.getParameter().setSenderId(pmphUser.getId());
         PageResult<MessageStateVO> pageResult = new PageResult<MessageStateVO>();
         // 将页面大小和页面页码拷贝
@@ -498,14 +502,23 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Override
     public String msgUploadFiles(MultipartFile file) throws CheckedServiceException {
-        if (ObjectUtil.isNull(file)) {
+        if (file.isEmpty()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "附件为空！");
+        }
+        if (file.getSize() <= 0) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "附件内容为空，请确认后再上传！");
         }
         String filePath = "";
         // 循环获取file数组中得文件
         if (StringUtil.notEmpty(file.getOriginalFilename())) {
             String fullFileName = file.getOriginalFilename();// 完整文件名
+            if (fullFileName.length() > 80) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                  CheckedExceptionResult.NULL_PARAM,
+                                                  "附件名称超出80个字符长度，请修改后上传！");
+            }
             String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));// 去掉后缀的文件名称
             FileUpload.fileUp(file, Const.MSG_FILE_PATH_FILE, fileName);// 上传文件
             filePath = Const.MSG_FILE_PATH_FILE + fullFileName;
