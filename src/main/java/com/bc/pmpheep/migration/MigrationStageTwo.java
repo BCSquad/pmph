@@ -23,6 +23,7 @@ import com.bc.pmpheep.back.service.PmphDepartmentService;
 import com.bc.pmpheep.back.service.PmphRoleService;
 import com.bc.pmpheep.back.service.PmphUserRoleService;
 import com.bc.pmpheep.back.service.PmphUserService;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
@@ -63,8 +64,7 @@ public class MigrationStageTwo {
 	}
 	
 	protected void pmphDepartment() {
-		String tableName = "ba_organize";
-		JdbcHelper.addColumn(tableName);
+		String tableName = "ba_organize";//图一此表已添加new_pk
 		String sql = "SELECT orgid,parentid,orgname,sortno,remark "
 				   + "FROM ba_organize WHERE orgcode "
 				   + "LIKE '15%' ORDER BY LENGTH(orgcode),orgcode ;";
@@ -76,19 +76,21 @@ public class MigrationStageTwo {
 			String parentCode = (String) map.get("parentid");
 			String dpName = (String) map.get("orgname");
             Integer sort = (Integer) map.get("sortno");
-            if (null != sort && sort < 0){
+            if (ObjectUtil.notNull(sort) && sort < 0){
             	map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
             	excel.add(map);
-            	logger.error("显示顺序为负数，有误，此结果将被记录在Excel中");
+            	logger.error("显示顺序为负数，此结果将被记录在Excel中");
             	continue;
             }
             String note = (String) map.get("remark");
             PmphDepartment pmphDepartment = new PmphDepartment();
             Long parentId = 0L;
+            //不为0说明有父节点
             if (!"0".equals(parentCode)){
             	parentId = JdbcHelper.getPrimaryKey(tableName, "orgid", parentCode);
             }
             pmphDepartment.setParentId(parentId);
+            //因为查询结果是排序了的，所以子节点的新id一定在父节点之后才生成
             String path = JdbcHelper.getPath(tableName, "orgid", "parentid", parentCode);
             pmphDepartment.setPath(path);
             pmphDepartment.setDpName(dpName);
@@ -101,7 +103,7 @@ public class MigrationStageTwo {
 		}
 		if(excel.size() > 0){
 			try {
-				excelHelper.exportFromMaps(excel, tableName+"社内部门", tableName+"社内部门");
+				excelHelper.exportFromMaps(excel, "社内部门表", "pmph_department");
 			}  catch (IOException ex) {
 				logger.error("异常数据导出到Excel失败",ex);
 			}

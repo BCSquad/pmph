@@ -123,7 +123,7 @@ public class MigrationStageThree {
 			Double userroleId = (Double) map.get("userroleid");
 			Long userId = (Long) map.get("user_new_pk");
 			Long roleId = (Long) map.get("role_new_pk");
-			if (ObjectUtil.notNull(roleId)){
+			if (ObjectUtil.isNull(roleId)){
 				map.put(SQLParameters.EXCEL_EX_HEADER, "角色被删除，无法关联到");
 				excel.add(map);
 				logger.error("角色被删除，无法被关联到，此结果将被记录在Excel中");
