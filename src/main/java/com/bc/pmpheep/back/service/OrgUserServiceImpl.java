@@ -129,6 +129,11 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 		}
 		List<OrgUser> orgUserList = new ArrayList<OrgUser>(orgUserIds.length);
 		for (String orgId : orgUserIds) {
+			OrgUser orgUser = orgUserDao.getOrgUserById(CastUtil.castLong(orgId));
+			if (orgUser.getProgress() != 0) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.SCHOOL_ADMIN_CHECK,
+						CheckedExceptionResult.NULL_PARAM, "用户已经审核过了");
+			}
 			orgUserList.add(new OrgUser(CastUtil.castLong(orgId), progress));
 		}
 		return orgUserDao.updateOrgUserProgressById(orgUserList);
