@@ -194,8 +194,9 @@
 	<!-- 更新 下载次数 -->
 	<update id="updatePmphGroupFileOfDownload" parameterType="PmphGroupFile">
 		update
-		pmph_group_file set download=download+1 WHERE group_id = #{groupId}
-		AND file_id = #{fileId}
+		pmph_group_file set download=download+1 WHERE group_id = #{arg0}
+		AND
+		file_id = #{arg1}
 	</update>
 
 </mapper>
