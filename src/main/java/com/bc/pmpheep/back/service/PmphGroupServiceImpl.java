@@ -241,7 +241,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		if (pmphGroupMemberService.isFounderOrisAdmin(pmphGroup.getId(), sessionId) || pmphUser.getIsAdmin()) {// 超级管理员与小组创建者、管理者才能修改小组信息
+		if (pmphUser.getIsAdmin() || pmphGroupMemberService.isFounderOrisAdmin(pmphGroup.getId(), sessionId)) {// 超级管理员与小组创建者、管理者才能修改小组信息
 			if (null != file) {
 				Long id = pmphGroup.getId();
 				PmphGroup pmphGroupOld = getPmphGroupById(id);
