@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.controller.shiro;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.service.CmsCategoryService;
 import com.bc.pmpheep.back.service.PmphPermissionService;
 import com.bc.pmpheep.back.service.PmphRoleService;
 import com.bc.pmpheep.back.service.PmphUserService;
@@ -25,6 +27,7 @@ import com.bc.pmpheep.back.sessioncontext.SessionContext;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.vo.CmsCategoryRoleVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -56,6 +59,8 @@ public class PmphLoginController {
     PmphPermissionService pmphPermissionService;
     @Autowired
     PmphRoleService       pmphRoleService;
+    @Autowired
+    CmsCategoryService    cmsCategoryService;
 
     /**
      * 
@@ -81,14 +86,32 @@ public class PmphLoginController {
             PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
             pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
             pmphUser.setAvatar(Const.DEFAULT_USER_AVATAR);
-            // 根据用户Id查询对应角色
-            PmphRole pmphRole = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
-            if (ObjectUtil.notNull(pmphRole)) {
-                if (Const.LOGIN_USER_IS_ADMIN.equals(pmphRole.getRoleName())
-                    || Const.LOGIN_USER_IS_ADMINS.equals(pmphRole.getRoleName())) {
-                    pmphUser.setIsAdmin(true);
+            // 根据用户Id查询对应角色(是否为管理员)
+            List<PmphRole> pmphRoles = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
+            List<Long> roleIds = new ArrayList<Long>(pmphRoles.size());
+            for (PmphRole pmphRole : pmphRoles) {
+                roleIds.add(pmphRole.getId());
+                if (ObjectUtil.notNull(pmphRole)) {
+                    if (Const.LOGIN_USER_IS_ADMIN.equals(pmphRole.getRoleName())
+                        || Const.LOGIN_USER_IS_ADMINS.equals(pmphRole.getRoleName())
+                        || Const.LOGIN_SYS_USER_IS_ADMIN.equals(pmphRole.getRoleName())) {
+                        pmphUser.setIsAdmin(true);
+                    } else {
+                        pmphUser.setIsAdmin(false);
+                    }
+                }
+                if (Const.TRUE == pmphUser.getIsAdmin()) {
+                    break;
+                }
+            }
+            // 根据角色ID集合，查询CMS栏目操作权限，CMS内容审核权限
+            List<CmsCategoryRoleVO> cmsCategoryRoleVOs =
+            cmsCategoryService.getCmsCategoryRoleByRoleIds(roleIds);
+            for (CmsCategoryRoleVO cmsCategoryRoleVO : cmsCategoryRoleVOs) {
+                if (Const.CMS_CATEGORY_PERMISSSION_1 == cmsCategoryRoleVO.getPermissionType()) {
+                    resultMap.put("operateColumn", cmsCategoryRoleVO.getCategoryId());// CMS栏目后台操作权限
                 } else {
-                    pmphUser.setIsAdmin(false);
+                    resultMap.put("checkContent", cmsCategoryRoleVO.getCategoryId());// CMS内容审核权限
                 }
             }
             // 根据用户Id查询对应权限Id

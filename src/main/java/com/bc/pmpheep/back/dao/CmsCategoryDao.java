@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.CmsCategory;
 import com.bc.pmpheep.back.po.CmsCategoryRole;
+import com.bc.pmpheep.back.vo.CmsCategoryRoleVO;
 
 /**
  * 
@@ -85,7 +86,7 @@ public interface CmsCategoryDao {
      * @return CmsCategory 集合对象
      * </pre>
      */
-    List<CmsCategory> getListAllParentMenu(String categoryName);
+    List<CmsCategory> getListAllParentMenu(@Param("categoryName") String categoryName);
 
     /**
      * 
@@ -103,14 +104,14 @@ public interface CmsCategoryDao {
     /**
      * 
      * <pre>
-     * 功能描述：查询CmsCategory列表(全部)
+     * 功能描述：查询按categoryName查询CmsCategory列表
      * 使用示范：
      *
-     * @param cmsCategory 
+     * @param categoryName 栏目名称
      * @return CmsCategory集合对象
      * </pre>
      */
-    List<CmsCategory> getCmsCategoryList(CmsCategory cmsCategory);
+    List<CmsCategory> getCmsCategoryListByCategoryName(@Param("categoryName") String categoryName);
 
     /**
      * 
@@ -134,7 +135,19 @@ public interface CmsCategoryDao {
      * @return  CmsCategoryRole 集合
      * </pre>
      */
-    List<CmsCategoryRole> getCmsCategoryRoleByCategoryId(Long categoryId);
+    List<CmsCategoryRoleVO> getCmsCategoryRoleByCategoryId(Long categoryId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：通过roleIds查询权限
+     * 使用示范：
+     *
+     * @param roleIds 角色id集合
+     * @return CmsCategoryRole 集合对象
+     * </pre>
+     */
+    List<CmsCategoryRoleVO> getCmsCategoryRoleByRoleIds(List<Long> roleIds);
 
     /**
      * 

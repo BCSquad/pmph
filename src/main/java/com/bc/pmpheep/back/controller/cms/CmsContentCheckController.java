@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -78,6 +79,22 @@ public class CmsContentCheckController {
     public ResponseBean updateCheckContent(@RequestParam("id") Long id,
     @RequestParam("authStatus") Short authStatus, @RequestParam("sessionId") String sessionId) {
         return new ResponseBean(cmsContentService.checkContentById(id, authStatus, sessionId));
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：社外内容审核操作(逻辑删除)
+     * 使用示范：
+     *
+     * @param ids 主键ID集合
+     * @return 影响行数
+     * </pre>
+     */
+    @ResponseBody
+    @RequestMapping(value = "/check/{id}/content", method = RequestMethod.DELETE)
+    public ResponseBean updateContentByIds(@PathVariable("id") Long id) {
+        return new ResponseBean(cmsContentService.deleteCmsContentById(id));
     }
 
     /**

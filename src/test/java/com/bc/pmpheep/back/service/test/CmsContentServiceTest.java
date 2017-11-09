@@ -1,4 +1,3 @@
-
 package com.bc.pmpheep.back.service.test;
 
 import java.io.IOException;
@@ -54,11 +53,12 @@ public class CmsContentServiceTest extends BaseTest {
         // add
         CmsContent cmsContent =
         cmsContentService.addCmsContent(new CmsContent(1L, "d:/pmph", "内容id", "标题", "摘要", "关键字",
-                                                       (short) 1, DateUtil.getCurrentTime(),
-                                                       DateUtil.getCurrentTime(),
-                                                       DateUtil.getCurrentTime(), 2L,
-                                                       DateUtil.getCurrentTime(),
-                                                       DateUtil.getCurrentTime(), 0L));
+                                                       (short) 1, DateUtil.getCurrentTime()
+                                                                          .toString(),
+                                                       DateUtil.getCurrentTime().toString(),
+                                                       DateUtil.getCurrentTime().toString(), 2L,
+                                                       DateUtil.getCurrentTime().toString(),
+                                                       DateUtil.getCurrentTime().toString(), 0L));
         logger.info(cmsContent.getPath());
         Assert.assertNotNull("插入内容后返回的CmsContent.id不应为空", cmsContent.getId());
         // uddate
@@ -67,12 +67,8 @@ public class CmsContentServiceTest extends BaseTest {
             count =
             cmsContentService.updateCmsContent(new CmsContent(cmsContent.getId(), 3L,
                                                               "d:/pmph/img",
-                                                              DateUtil.getCurrentTime(), 0L),
-                                               null,
-                                               null,
-                                               null,
-                                               null,
-                                               null);
+                                                              DateUtil.getCurrentTime().toString(),
+                                                              0L), null, null, null, null, null);
         } catch (CheckedServiceException e) {
             logger.error(e.toString());
         } catch (IOException e) {
@@ -94,4 +90,3 @@ public class CmsContentServiceTest extends BaseTest {
 
     }
 }
-

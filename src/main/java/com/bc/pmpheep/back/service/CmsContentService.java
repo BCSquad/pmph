@@ -35,7 +35,7 @@ public interface CmsContentService {
      * 使用示范：
      *
      * @param cmsContent CmsContent对象
-     * @return
+     * @return CmsContent对象
      * @throws CheckedServiceException
      * </pre>
      */
@@ -69,6 +69,19 @@ public interface CmsContentService {
     Integer updateCmsContent(CmsContent cmsContent, String[] files, String content,
     String[] attachment, String scheduledTime, String sessionId) throws CheckedServiceException,
     IOException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：定时任务批量更新
+     * 使用示范：
+     *
+     * @param csmContents CmsContent对象集合
+     * @return 影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer updateCmsContentByIds(List<CmsContent> csmContents) throws CheckedServiceException;
 
     /**
      * 
@@ -119,7 +132,7 @@ public interface CmsContentService {
      *
      * @param pageParameter 带有分页参数和查询条件参数
      * @param sessionId 
-     * @return 
+     * @return 分页结果集
      * @throws CheckedServiceException
      * </pre>
      */
@@ -134,7 +147,7 @@ public interface CmsContentService {
      *
      * @param pageParameter 带有分页参数和查询条件参数
      * @param sessionId 
-     * @return 
+     * @return 分页结果集
      * @throws CheckedServiceException
      * </pre>
      */
@@ -149,7 +162,7 @@ public interface CmsContentService {
      *
      * @param pageParameter 带有分页参数和查询条件参数
      * @param sessionId 
-     * @return 
+     * @return  分页结果集
      * @throws CheckedServiceException
      * </pre>
      */
