@@ -140,8 +140,12 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息为空");
         }
+        // 搜索条件，按收件人或单位搜索
         String orgNameOrReceiver = pageParameter.getParameter().getName();
-        if (StringUtil.notEmpty(orgNameOrReceiver)) {
+        // 防止输入空格查询，如果为" "
+        if (StringUtil.isEmpty(orgNameOrReceiver)) {
+            pageParameter.getParameter().setName(null);
+        } else {
             pageParameter.getParameter().setName(orgNameOrReceiver.replaceAll(" ", ""));
         }
         pageParameter.getParameter().setSenderId(pmphUser.getId());
