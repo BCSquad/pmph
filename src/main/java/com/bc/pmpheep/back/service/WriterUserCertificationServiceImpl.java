@@ -121,7 +121,7 @@ public class WriterUserCertificationServiceImpl extends BaseService implements W
 		List<WriterUserCertification> writerUserCertifications = new ArrayList<WriterUserCertification>(userIds.length);
 		for (String userId : userIds) {
 			WriterUserCertification writerUserCertification = writerUserCertificationDao
-					.getWriterUserCertificationById(CastUtil.castLong(userId));
+					.getWriterUserCertificationByUserId(CastUtil.castLong(userId));
 			if (writerUserCertification.getProgress() == 0) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TEACHER_CHECK,
 						CheckedExceptionResult.NULL_PARAM, "用户未提交审核申请");
