@@ -170,12 +170,12 @@ public interface CmsCategoryService {
      * <pre>
      * 功能描述：获取总条数
      * 使用示范：
-     *@param categoryId CmsCategory 主键ID
+     * 
      * @return 总条数
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer getCmsCategoryCount(Long categoryId) throws CheckedServiceException;
+    Integer getCmsCategoryCount() throws CheckedServiceException;
 
     /**
      * 
