@@ -52,7 +52,7 @@ public class MigrationStageSeven {
     private ExcelHelper excelHelper;
 	
 	@SuppressWarnings("all")
-	public void userMessage_messageAttachment (){
+	public void userMessage_messageAttachment (){//case WHEN e.sysflag=0 then 1 when e.sysflag=1 and e.usertype=2 then 3 else 2 end
 		String sql="select "+
 						 "DISTINCT  "+
 						 "a.msgid , "+
@@ -61,9 +61,13 @@ public class MigrationStageSeven {
 						 "a.msgtitle title, "+
 						 "case WHEN a.msgtype =12  then  d.new_pk  else 0   end senderid , "+
 						 "case WHEN a.msgtype =12 and d.sysflag=0 then 1 when a.msgtype=12 and d.sysflag=1 and d.usertype=2 then 3 when a.msgtype=12 then 2  else 0 end  sendertype ,  "+ 
-						 "e.new_pk  receiverid, "+
-						 "case WHEN e.sysflag=0 then 1 when e.sysflag=1 and e.usertype=2 then 3 else 2 end   receivertype, "+
-						 "b.recivetype isread  , "+
+						 "ifnull(e.new_pk,f.new_pk)  receiverid, "+
+						 "case WHEN e.new_pk is null then case WHEN f.sysflag=0 then 1 when f.sysflag=1 and f.usertype=2 then 3 else 2 end "+
+						 "     else                       case WHEN e.sysflag=0 then 1 when e.sysflag=1 and e.usertype=2 then 3 else 2 end "+
+						 "end   receivertype, "+
+						 "case WHEN e.new_pk is null then a.recivetype "+
+						 "     else b.recivetype "+
+						 "end isread  , "+
 						 "0   iswithdraw, "+
 						 "b.isdelete  isdeleted, "+
 						 "b.senddate gt, "+
@@ -71,7 +75,8 @@ public class MigrationStageSeven {
 					"from sys_messages a "+
                 		"LEFT JOIN sys_msgrecive b on b.msgid=a.msgid "+
                 		"LEFT JOIN (select a.userid,a.new_pk,a.sysflag,b.usertype from sys_user a left join sys_userext b on b.userid=a.userid )  d on  d.userid =a.formuser  "+
-                	    "LEFT JOIN (select a.userid,a.new_pk,a.sysflag,b.usertype from sys_user a left join sys_userext b on b.userid=a.userid )  e on  e.userid =b.touser ";
+                	    "LEFT JOIN (select a.userid,a.new_pk,a.sysflag,b.usertype from sys_user a left join sys_userext b on b.userid=a.userid )  e on  e.userid =b.touser " +
+                		"LEFT JOIN (select a.userid,a.new_pk,a.sysflag,b.usertype from sys_user a left join sys_userext b on b.userid=a.userid )  f on  f.userid =a.touser ";
 //		String tableName="";
 //		JdbcHelper.addColumn(tableName); //增加new_pk字段
 		List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
@@ -195,6 +200,10 @@ public class MigrationStageSeven {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", "sys_messages", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result","sys_messages  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
 	
 	

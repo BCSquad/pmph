@@ -24,13 +24,14 @@ public class BookController {
 
 	@ResponseBody
 	@RequestMapping(value = "/list/book", method = RequestMethod.GET)
-	public ResponseBean listBookVO(Integer pageSize, Integer pageNumber, String name, Boolean isOnSale, Boolean isNew,
-			Boolean isPromote, String path) {
+	public ResponseBean listBookVO(Integer pageSize, Integer pageNumber, Long type, String name, Boolean isOnSale,
+			Boolean isNew, Boolean isPromote, String path) {
 		PageParameter<BookVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		BookVO bookVO = new BookVO();
 		bookVO.setName(name);
 		bookVO.setIsNew(isNew);
 		bookVO.setPath(path);
+		bookVO.setType(type);
 		bookVO.setIsOnSale(isOnSale);
 		bookVO.setIsPromote(isPromote);
 		pageParameter.setParameter(bookVO);

@@ -55,7 +55,7 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
 					"机构名称为空");
 		}
-		if (StringUtil.length(org.getOrgName()) > 20) {
+		if (StringUtil.strLength(org.getOrgName()) > 20) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
 					"机构名称过长");
 		}

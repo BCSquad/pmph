@@ -3,6 +3,7 @@ package com.bc.pmpheep.migration;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -116,6 +117,10 @@ public class MigrationStageOne {
         }
         logger.info("area表迁移完成");
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "area表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
     }
 
     protected void orgType() {
@@ -158,6 +163,10 @@ public class MigrationStageOne {
         }
         logger.info("org_type表迁移完成");
         logger.info("原数据库表中共有{}条数据，迁移了{}条数据",maps.size(),count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "org_type表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
     }
     
     protected void org() {
@@ -247,6 +256,10 @@ public class MigrationStageOne {
 		}
 		logger.info("org表迁移完成");
 		logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
+		//记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "org表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
 	}
     protected void orgUser() {
     	String tableName = "sys_user";
@@ -376,6 +389,10 @@ public class MigrationStageOne {
 					logger.error("文件读取异常，路径<{}>,异常信息：{}",proxy,ex.getMessage());
 					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("文件读取异常  "));
 					excel.add(map);
+				}catch (Exception ex){
+					mongoId = "DEFAULT";
+					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常："+ex.getMessage()));
+					excel.add(map);
 				}
             }else{
             	mongoId = proxy;
@@ -392,6 +409,10 @@ public class MigrationStageOne {
         }
         logger.info("org_user表迁移完成");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "org_user表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
     }
 
     protected void writerUser() {
@@ -593,6 +614,10 @@ public class MigrationStageOne {
 					logger.error("文件读取异常，路径<{}>,异常信息：{}",cert,ex.getMessage());
 					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("教师资格证文件读取异常  "));
 					excel.add(map);
+				}catch (Exception ex){
+					certMongoId = "DEFAULT";
+					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常："+ex.getMessage()));
+					excel.add(map);
 				}
         	}else{
         		certMongoId = cert;
@@ -622,6 +647,10 @@ public class MigrationStageOne {
         }
         logger.info("writer_user表迁移完成");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据",maps.size(),count);
+        //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result", "writer_user表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
     }
 
 }

@@ -26,8 +26,10 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
+
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -93,7 +95,13 @@ public class MigrationStageEight {
             } else {
                 pmphGroup.setBookId(0L);
             }
-            pmphGroup = groupService.addPmphGroup(pmphGroup);
+            try {
+            	pmphGroup = groupService.addPmphGroup(pmphGroup);
+			} catch (Exception e) {
+				map.put(SQLParameters.EXCEL_EX_HEADER, "未知错误:"+e.getMessage());
+				excel.add(map);
+				continue;
+			}
             long pk = pmphGroup.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "groupID", groupID);//更新旧表中new_pk字段
             count++;
@@ -107,6 +115,10 @@ public class MigrationStageEight {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result",""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
     }
 
     protected void groupMember() {
@@ -164,12 +176,23 @@ public class MigrationStageEight {
             /* 旧表的isManager和新表的is_admin疑似刚好相反 */
             int isManager = (Integer) map.get("isManager");
             member.setIsAdmin(isManager == 0);
-            member = groupMemberService.addPmphGroupMember(member);
+            try{
+            	member = groupMemberService.addPmphGroupMember(member);
+            }catch (Exception e) {
+				map.put(SQLParameters.EXCEL_EX_HEADER, "未知错误:"+e.getMessage());
+				excel.add(map);
+				continue;
+			}
             long pk = member.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "GUID", guid);//更新旧表中new_pk字段
             count++;
             if (member.getIsFounder()) {
                 PmphGroup pmphGroup = groupService.getPmphGroupById(groupId);
+                if(null == pmphGroup){
+                	map.put(SQLParameters.EXCEL_EX_HEADER, "小组id为："+groupId+" 的小组没有找到");
+    				excel.add(map);
+                	continue;
+                }
                 pmphGroup.setFounderId(userId);
                 groupService.updatePmphGroup(pmphGroup);
             }
@@ -183,6 +206,10 @@ public class MigrationStageEight {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result",""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
     }
 
     protected void groupMessage() {
@@ -235,6 +262,10 @@ public class MigrationStageEight {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result",""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
     }
 
     protected void groupFile() {
@@ -296,6 +327,10 @@ public class MigrationStageEight {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
                 excel.add(map);
                 continue;
+            }catch (Exception ex) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, "位置错误信息："+ ex.getMessage());
+                excel.add(map);
+                continue;
             }
             groupFile.setFileId(mongoId);
             groupFileService.updatePmphGroupFile(groupFile);
@@ -309,5 +344,9 @@ public class MigrationStageEight {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+      //记录信息
+        Map<String,Object> msg= new HashMap<String,Object>();
+        msg.put("result",""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        SQLParameters.msg.add(msg);
     }
 }

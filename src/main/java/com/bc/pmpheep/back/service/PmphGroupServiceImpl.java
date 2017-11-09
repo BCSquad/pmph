@@ -91,7 +91,12 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	@Override
 	public String deletePmphGroupById(PmphGroup pmphGroup, String sessionId) throws CheckedServiceException {
 		String result = "FAIL";
-		if (pmphGroupMemberService.isFounder(pmphGroup.getId(), sessionId)) {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
+		}
+		if (pmphGroupMemberService.isFounder(pmphGroup.getId(), sessionId) || pmphUser.getIsAdmin()) {// 超级管理员与小组创建者才有权利删除小组
 			if (null == pmphGroup.getId()) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 						"主键为空");
@@ -179,11 +184,12 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		// if (pmphUser.getIsAdmin()) {
-		// return pmphGroupDao.listPmphGroup();
-		// } else {
-		return pmphGroupDao.getList(pmphGroup, pmphUser.getId());
-		// }
+		if (pmphUser.getIsAdmin()) {
+			return pmphGroupDao.listPmphGroup();
+		} else {
+			return pmphGroupDao.getList(pmphGroup, pmphUser.getId());
+		}
+
 	}
 
 	@Override
@@ -193,6 +199,10 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
+		}
+		if (ObjectUtil.notNull(pmphGroupDao.getPmphGroupByGroupName(pmphGroup.getGroupName()))) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"您的小组名称已经被使用了");
 		}
 		String groupImage = Const.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		if (null != file) {
@@ -226,7 +236,12 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
 					"小组id不能为空");
 		}
-		if (pmphGroupMemberService.isFounderOrisAdmin(pmphGroup.getId(), sessionId)) {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
+		}
+		if (pmphGroupMemberService.isFounderOrisAdmin(pmphGroup.getId(), sessionId) || pmphUser.getIsAdmin()) {// 超级管理员与小组创建者、管理者才能修改小组信息
 			if (null != file) {
 				Long id = pmphGroup.getId();
 				PmphGroup pmphGroupOld = getPmphGroupById(id);
