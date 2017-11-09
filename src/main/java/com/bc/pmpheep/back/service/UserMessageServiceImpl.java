@@ -525,13 +525,14 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户消息对象为空！");
         }
-        resultMap.put("title", userMessage.getTitle());
+        resultMap.put("msgId", userMessage.getId());// 主键ID
+        resultMap.put("title", userMessage.getTitle());// 标题
         Message message = messageService.get(userMessage.getMsgId());
         if (ObjectUtil.isNull(message)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息对象为空！");
         }
-        resultMap.put("content", message.getContent());
+        resultMap.put("content", message.getContent());// 内容
         List<MessageAttachment> messageAttachments =
         messageAttachmentService.getMessageAttachmentByMsgId(message.getId());
         if (CollectionUtil.isNotEmpty(messageAttachments)) {
@@ -540,7 +541,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 mAttachment.setAttachment(Const.FILE_DOWNLOAD + attachmentId);
             }
         }
-        resultMap.put("MessageAttachment", messageAttachments);
+        resultMap.put("MessageAttachment", messageAttachments);// 内容附件
         return resultMap;
     }
 
