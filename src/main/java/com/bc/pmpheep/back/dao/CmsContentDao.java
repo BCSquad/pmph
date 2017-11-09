@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -179,11 +180,11 @@ public interface CmsContentDao {
      * <pre>
      * 功能描述：获取总条数
      * 使用示范：
-     *
+      *@param categoryId CmsCategory 主键ID
      * @return 总条数
      * </pre>
      */
-    Integer getCmsContentCount();
+    Integer getCmsContentCount(@Param("categoryId") Long categoryId);
 
     /**
      * 

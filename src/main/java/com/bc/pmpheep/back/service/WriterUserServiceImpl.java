@@ -384,19 +384,26 @@ public class WriterUserServiceImpl implements WriterUserService {
 	public String addWriterUserOfBack(WriterUser writerUser) throws CheckedServiceException {
 		if (StringUtil.strLength(writerUser.getUsername()) > 20) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "用户名需要小于20字符");
+					CheckedExceptionResult.ILLEGAL_PARAM, "用户名需要小于20字符");
 		}
 		if (StringUtil.strLength(writerUser.getRealname()) > 20) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "姓名需要小于20字符");
+					CheckedExceptionResult.ILLEGAL_PARAM, "姓名需要小于20字符");
 		}
 		if (!ValidatUtil.checkMobileNumber(writerUser.getHandphone())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "电话格式不正确");
+					CheckedExceptionResult.ILLEGAL_PARAM, "电话格式不正确");
 		}
 		if (!ValidatUtil.checkEmail(writerUser.getEmail())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "邮箱格式不正确");
+					CheckedExceptionResult.ILLEGAL_PARAM, "邮箱格式不正确");
+		}
+		if (StringUtil.isEmpty(writerUser.getUsername())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "用户名为空");
+		}
+		if (StringUtil.isEmpty(writerUser.getRealname())) {
+			writerUser.setRealname(writerUser.getUsername());
 		}
 		if (!StringUtil.isEmpty(writerUser.getNote())) {
 			if (StringUtil.strLength(writerUser.getNote()) > 100) {

@@ -400,8 +400,8 @@ public class CmsContentServiceImpl implements CmsContentService {
     }
 
     @Override
-    public Integer getCmsContentCount() throws CheckedServiceException {
-        return cmsContentDao.getCmsContentCount();
+    public Integer getCmsContentCount(Long categoryId) throws CheckedServiceException {
+        return cmsContentDao.getCmsContentCount(categoryId);
     }
 
     @Override

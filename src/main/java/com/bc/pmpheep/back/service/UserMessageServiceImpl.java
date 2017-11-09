@@ -140,6 +140,14 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息为空");
         }
+        // 搜索条件，按收件人或单位搜索
+        String orgNameOrReceiver = pageParameter.getParameter().getName();
+        // 防止输入空格查询，如果为" "
+        if (StringUtil.isEmpty(orgNameOrReceiver)) {
+            pageParameter.getParameter().setName(null);
+        } else {
+            pageParameter.getParameter().setName(orgNameOrReceiver.replaceAll(" ", ""));
+        }
         pageParameter.getParameter().setSenderId(pmphUser.getId());
         PageResult<MessageStateVO> pageResult = new PageResult<MessageStateVO>();
         // 将页面大小和页面页码拷贝
@@ -498,14 +506,23 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Override
     public String msgUploadFiles(MultipartFile file) throws CheckedServiceException {
-        if (ObjectUtil.isNull(file)) {
+        if (file.isEmpty()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "附件为空！");
+        }
+        if (file.getSize() <= 0) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "附件内容为空，请确认后再上传！");
         }
         String filePath = "";
         // 循环获取file数组中得文件
         if (StringUtil.notEmpty(file.getOriginalFilename())) {
             String fullFileName = file.getOriginalFilename();// 完整文件名
+            if (fullFileName.length() > 80) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                  CheckedExceptionResult.NULL_PARAM,
+                                                  "附件名称超出80个字符长度，请修改后上传！");
+            }
             String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));// 去掉后缀的文件名称
             FileUpload.fileUp(file, Const.MSG_FILE_PATH_FILE, fileName);// 上传文件
             filePath = Const.MSG_FILE_PATH_FILE + fullFileName;
@@ -525,13 +542,14 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户消息对象为空！");
         }
-        resultMap.put("title", userMessage.getTitle());
+        resultMap.put("msgId", userMessage.getId());// 主键ID
+        resultMap.put("title", userMessage.getTitle());// 标题
         Message message = messageService.get(userMessage.getMsgId());
         if (ObjectUtil.isNull(message)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息对象为空！");
         }
-        resultMap.put("content", message.getContent());
+        resultMap.put("content", message.getContent());// 内容
         List<MessageAttachment> messageAttachments =
         messageAttachmentService.getMessageAttachmentByMsgId(message.getId());
         if (CollectionUtil.isNotEmpty(messageAttachments)) {
@@ -540,7 +558,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 mAttachment.setAttachment(Const.FILE_DOWNLOAD + attachmentId);
             }
         }
-        resultMap.put("MessageAttachment", messageAttachments);
+        resultMap.put("MessageAttachment", messageAttachments);// 内容附件
         return resultMap;
     }
 

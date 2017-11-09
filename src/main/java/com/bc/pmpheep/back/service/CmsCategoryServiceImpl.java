@@ -39,7 +39,9 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Service
 public class CmsCategoryServiceImpl implements CmsCategoryService {
     @Autowired
-    CmsCategoryDao categoryDao;
+    CmsCategoryDao    categoryDao;
+    @Autowired
+    CmsContentService cmsContentService;
 
     @Override
     public Integer addCmsCategory(CmsCategory cmsCategory, List<Long> permissionId,
@@ -237,8 +239,8 @@ public class CmsCategoryServiceImpl implements CmsCategoryService {
     }
 
     @Override
-    public Integer getCmsCategoryCount(Long categoryId) throws CheckedServiceException {
-        return categoryDao.getCmsCategoryCount(categoryId);
+    public Integer getCmsCategoryCount() throws CheckedServiceException {
+        return categoryDao.getCmsCategoryCount();
     }
 
     @Override
@@ -288,14 +290,14 @@ public class CmsCategoryServiceImpl implements CmsCategoryService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        Integer count = this.getCmsCategoryCount(id);
-        if (0 <= count) {
-            this.deleteCmsCategoryRoleByCategoryId(id, null);
-            return categoryDao.deleteCmsCategoryById(id);
-        } else {
+        Integer count = cmsContentService.getCmsContentCount(id);
+        if (count > 0) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.ILLEGAL_PARAM,
                                               "该栏目下存在发布内容，不能删除！");
+        } else {
+            this.deleteCmsCategoryRoleByCategoryId(id, null);
+            return categoryDao.deleteCmsCategoryById(id);
         }
     }
 
@@ -305,12 +307,6 @@ public class CmsCategoryServiceImpl implements CmsCategoryService {
         if (ObjectUtil.isNull(categoryId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "categoryId参数为空");
-
-        }
-        if (ObjectUtil.isNull(permissionType)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                              CheckedExceptionResult.NULL_PARAM,
-                                              "permissionType参数为空");
 
         }
         return categoryDao.deleteCmsCategoryRoleByCategoryId(new CmsCategoryRole(categoryId,
