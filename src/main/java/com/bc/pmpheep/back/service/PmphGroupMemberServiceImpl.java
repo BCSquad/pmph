@@ -14,6 +14,7 @@ import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -298,6 +299,10 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		}
 		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId, userId,
 				isWriter);
+		if (ObjectUtil.isNull(pmphGroupMemberVO)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"你不是该小组的组员");
+		}
 		pmphGroupMemberVO.setAvatar(pmphUserService.get(userId).getAvatar());
 		return pmphGroupMemberVO;
 	}
