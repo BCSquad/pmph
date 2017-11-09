@@ -139,11 +139,16 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 					"用户为空");
 		}
 		Long userId = pmphUser.getId();
-		PmphGroupMemberVO currentUser = pmphGroupMemberService.getPmphGroupMemberByMemberId(groupId, userId, false);
+		PmphGroupMemberVO currentUser = new PmphGroupMemberVO();
 		if (ObjectUtil.isNull(ids) || ids.length == 0) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
 		} else {
+			if (pmphUser.getIsAdmin()) {
+
+			} else {
+				currentUser = pmphGroupMemberService.getPmphGroupMemberByMemberId(groupId, userId, false);
+			}
 			for (Long id : ids) {
 				Long uploaderId = pmphGroupFileDao.getPmphGroupFileById(id).getMemberId();
 				if (pmphUser.getIsAdmin() || uploaderId == currentUser.getId() || currentUser.getIsFounder()
