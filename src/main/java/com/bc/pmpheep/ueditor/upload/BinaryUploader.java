@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileItemIterator;
@@ -15,9 +14,7 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.bc.pmpheep.back.util.FileUpload;
@@ -30,11 +27,6 @@ import com.bc.pmpheep.ueditor.define.FileType;
 import com.bc.pmpheep.ueditor.define.State;
 
 public class BinaryUploader {
-
-    @Autowired
-    FileService    fileService;
-    @Resource
-    GridFsTemplate gridFsTemplate;
 
     public State save(HttpServletRequest request, Map<String, Object> conf) {
         FileItemStream fileStream = null;

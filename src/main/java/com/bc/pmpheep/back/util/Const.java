@@ -60,8 +60,8 @@ public class Const {
     public static final String       SESSION_USERROL            = "USERROL";
     // 用户名
     public static final String       SESSION_USERNAME           = "USERNAME";
-    public static final String       TRUE                       = "T";
-    public static final String       FALSE                      = "F";
+    public static final Boolean      TRUE                       = true;
+    public static final Boolean      FALSE                      = false;
     // 登录地址
     public static final String       LOGIN                      = "/login_toLogin.do";
     // 图片上传路径
@@ -139,6 +139,7 @@ public class Const {
     public static final Short        LOGIN_TYPE_ORG             = 3;
     public static final String       LOGIN_USER_IS_ADMINS       = "超级管理员";
     public static final String       LOGIN_USER_IS_ADMIN        = "管理员";
+    public static final String       LOGIN_SYS_USER_IS_ADMIN    = "系统管理员";
     /**
      * CMS
      */
@@ -152,10 +153,6 @@ public class Const {
     public static final Short        CMS_AUTHOR_TYPE_1          = 1;
     // 作者类型--作家
     public static final Short        CMS_AUTHOR_TYPE_2          = 2;
-    // CMS-CONTENT 表上级id
-    public static final Long         CMS_CONTENT_PARENT_ID      = 0l;
-    // CMS-CONTENT 表 根节点路径
-    public static final String       CMS_CONTENT_PATH           = "0";
     // CMS 页面搜索状态(0:是否发布,1:是否审核,2:是否置顶,3:是否热门,4:是否推荐,5:是否隐藏)
     public static final Integer      CMS_PAGE_SEARCH_0          = 0;
     public static final Integer      CMS_PAGE_SEARCH_1          = 1;

@@ -58,19 +58,19 @@ public class CmsContent implements java.io.Serializable {
     // 分类显示顺序
     private Integer   sort;
     // 置顶到期时间
-    private Timestamp deadlineStick;
+    private String    deadlineStick;
     // 是否热门
     private Boolean   isHot;
     // 热门显示顺序
     private Integer   sortHot;
     // 热门到期时间
-    private Timestamp deadlineHot;
+    private String    deadlineHot;
     // 是否推荐
     private Boolean   isPromote;
     // 推荐显示顺序
     private Integer   sortPromote;
     // 推荐到期时间
-    private Timestamp deadlinePromote;
+    private String    deadlinePromote;
     // 是否定时发布
     private Boolean   isScheduled;
     // 是否隐藏
@@ -84,7 +84,7 @@ public class CmsContent implements java.io.Serializable {
     // 审核者id
     private Long      authUserId;
     // 审核通过时间
-    private Timestamp authDate;
+    private String    authDate;
     // 是否被逻辑删除
     private Boolean   isDeleted;
     // 创建时间
@@ -92,9 +92,11 @@ public class CmsContent implements java.io.Serializable {
     // 修改时间
     private Timestamp gmtUpdate;
     // 再次编辑时间
-    private Timestamp gmtReedit;
+    private String    gmtReedit;
     // 教材id
     private Long      materialId;
+    // 是否暂存
+    private Boolean   isStaging;
 
     // Constructors
 
@@ -102,8 +104,13 @@ public class CmsContent implements java.io.Serializable {
     public CmsContent() {
     }
 
-    public CmsContent(Long id, Short authStatus, Long authUserId, Timestamp authDate,
-    Long materialId) {
+    public CmsContent(Long id, Boolean isPublished, Timestamp gmtUpdate) {
+        this.id = id;
+        this.isPublished = isPublished;
+        this.gmtUpdate = gmtUpdate;
+    }
+
+    public CmsContent(Long id, Short authStatus, Long authUserId, String authDate, Long materialId) {
         this.id = id;
         this.authStatus = authStatus;
         this.authUserId = authUserId;
@@ -111,7 +118,7 @@ public class CmsContent implements java.io.Serializable {
         this.materialId = materialId;
     }
 
-    public CmsContent(Long id, Long parentId, String path, Timestamp gmtReedit, Long materialId) {
+    public CmsContent(Long id, Long parentId, String path, String gmtReedit, Long materialId) {
         this.id = id;
         this.parentId = parentId;
         this.path = path;
@@ -120,9 +127,8 @@ public class CmsContent implements java.io.Serializable {
     }
 
     public CmsContent(Long parentId, String path, String mid, String title, String summary,
-    String keyword, Short authorType, Timestamp deadlineStick, Timestamp deadlineHot,
-    Timestamp deadlinePromote, Long authUserId, Timestamp authDate, Timestamp gmtReedit,
-    Long materialId) {
+    String keyword, Short authorType, String deadlineStick, String deadlineHot,
+    String deadlinePromote, Long authUserId, String authDate, String gmtReedit, Long materialId) {
         this.parentId = parentId;
         this.path = path;
         this.mid = mid;
@@ -177,12 +183,11 @@ public class CmsContent implements java.io.Serializable {
     /** full constructor */
     public CmsContent(Long parentId, String path, String mid, Long categoryId, String title,
     String summary, String keyword, Short authorType, Short authStatus, Long authorId, Long clicks,
-    Long comments, Long likes, Long bookmarks, Boolean isStick, Integer sort,
-    Timestamp deadlineStick, Boolean isHot, Integer sortHot, Timestamp deadlineHot,
-    Boolean isPromote, Integer sortPromote, Timestamp deadlinePromote, Boolean isScheduled,
-    Boolean isHide, Boolean isPublished, Boolean isAuth, Long authUserId, Timestamp authDate,
-    Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate, Timestamp gmtReedit,
-    Long materialId) {
+    Long comments, Long likes, Long bookmarks, Boolean isStick, Integer sort, String deadlineStick,
+    Boolean isHot, Integer sortHot, String deadlineHot, Boolean isPromote, Integer sortPromote,
+    String deadlinePromote, Boolean isScheduled, Boolean isHide, Boolean isPublished,
+    Boolean isAuth, Long authUserId, String authDate, Boolean isDeleted, Timestamp gmtCreate,
+    Timestamp gmtUpdate, String gmtReedit, Long materialId) {
         this.parentId = parentId;
         this.path = path;
         this.mid = mid;
@@ -348,11 +353,11 @@ public class CmsContent implements java.io.Serializable {
         this.sort = sort;
     }
 
-    public Timestamp getDeadlineStick() {
+    public String getDeadlineStick() {
         return this.deadlineStick;
     }
 
-    public void setDeadlineStick(Timestamp deadlineStick) {
+    public void setDeadlineStick(String deadlineStick) {
         this.deadlineStick = deadlineStick;
     }
 
@@ -372,11 +377,11 @@ public class CmsContent implements java.io.Serializable {
         this.sortHot = sortHot;
     }
 
-    public Timestamp getDeadlineHot() {
+    public String getDeadlineHot() {
         return this.deadlineHot;
     }
 
-    public void setDeadlineHot(Timestamp deadlineHot) {
+    public void setDeadlineHot(String deadlineHot) {
         this.deadlineHot = deadlineHot;
     }
 
@@ -396,11 +401,11 @@ public class CmsContent implements java.io.Serializable {
         this.sortPromote = sortPromote;
     }
 
-    public Timestamp getDeadlinePromote() {
+    public String getDeadlinePromote() {
         return this.deadlinePromote;
     }
 
-    public void setDeadlinePromote(Timestamp deadlinePromote) {
+    public void setDeadlinePromote(String deadlinePromote) {
         this.deadlinePromote = deadlinePromote;
     }
 
@@ -444,11 +449,11 @@ public class CmsContent implements java.io.Serializable {
         this.authUserId = authUserId;
     }
 
-    public Timestamp getAuthDate() {
+    public String getAuthDate() {
         return this.authDate;
     }
 
-    public void setAuthDate(Timestamp authDate) {
+    public void setAuthDate(String authDate) {
         this.authDate = authDate;
     }
 
@@ -476,11 +481,11 @@ public class CmsContent implements java.io.Serializable {
         this.gmtUpdate = gmtUpdate;
     }
 
-    public Timestamp getGmtReedit() {
+    public String getGmtReedit() {
         return this.gmtReedit;
     }
 
-    public void setGmtReedit(Timestamp gmtReedit) {
+    public void setGmtReedit(String gmtReedit) {
         this.gmtReedit = gmtReedit;
     }
 
@@ -510,6 +515,20 @@ public class CmsContent implements java.io.Serializable {
      */
     public void setMaterialId(Long materialId) {
         this.materialId = materialId;
+    }
+
+    /**
+     * @return the isStaging
+     */
+    public Boolean getIsStaging() {
+        return isStaging;
+    }
+
+    /**
+     * @param isStaging the isStaging to set
+     */
+    public void setIsStaging(Boolean isStaging) {
+        this.isStaging = isStaging;
     }
 
     /**

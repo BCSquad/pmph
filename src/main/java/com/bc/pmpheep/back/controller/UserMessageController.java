@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.service.UserMessageService;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MessageStateVO;
 import com.bc.pmpheep.back.vo.MyMessageVO;
 import com.bc.pmpheep.back.vo.UserMessageVO;
@@ -55,7 +56,9 @@ public class UserMessageController {
     @RequestParam("sessionId") String sessionId) {
         PageParameter<UserMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
         UserMessageVO userMessageVO = new UserMessageVO();
-        userMessageVO.setTitle(title);
+        if (StringUtil.notEmpty(title)) {
+            userMessageVO.setTitle(title.replaceAll(" ", ""));// 去除空格
+        }
         pageParameter.setParameter(userMessageVO);
         return new ResponseBean(userMessageService.listMessage(pageParameter, sessionId));
     }

@@ -141,7 +141,7 @@
 		FROM
 			pmph_role 
 		where 
-			1=1
+			is_disabled = false
 		<if test="roleName != null and roleName!=''">
 			and ROLE_NAME LIKE CONCAT('%',CONCAT(#{roleName},'%')) 
 		</if>

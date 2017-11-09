@@ -39,6 +39,10 @@ public class CmsSchedule implements java.io.Serializable {
     public CmsSchedule() {
     }
 
+    public CmsSchedule(Timestamp scheduledTime) {
+        this.scheduledTime = scheduledTime;
+    }
+
     public CmsSchedule(Long id, Long contentId, Timestamp scheduledTime) {
         this.id = id;
         this.contentId = contentId;

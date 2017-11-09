@@ -172,7 +172,7 @@ public class MigrationStageSeven {
 				List<Map<String, Object>> message_attachments = JdbcHelper.getJdbcTemplate().queryForList(sql,new Object[]{msgid});
 				for(Map<String, Object> message_attachment :message_attachments ){
 					MessageAttachment messageAttachment = new MessageAttachment();
-					messageAttachment.setMsgId(msgid);
+					messageAttachment.setMsgId(msg_id);
 					messageAttachment.setAttachment("-----------");
 					messageAttachment.setAttachmentName((String)message_attachment.get("filename"));
 					messageAttachment=messageAttachmentService.addMessageAttachment(messageAttachment);
