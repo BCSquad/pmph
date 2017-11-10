@@ -79,14 +79,15 @@ public interface PmphGroupDao {
 	 * @return
 	 *
 	 */
-	List<PmphGroupListVO> listPmphGroup();
-	
+	List<PmphGroupListVO> listPmphGroup(PmphGroup pmphGroup);
+
 	/**
 	 * 
 	 * 
 	 * 功能描述：根据小组名称获取小组
 	 *
-	 * @param groupName 小组名称
+	 * @param groupName
+	 *            小组名称
 	 * @return 小组详情
 	 *
 	 */
