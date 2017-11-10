@@ -179,11 +179,12 @@ public class JdbcHelper {
     		experience = "0" ;
     	}
         if (experience.indexOf("岁") != -1){
+        	experience = experience.substring(0, experience.lastIndexOf("岁"));
         	Integer age = Integer.parseInt(experience);
         	age = age - 20 ;
         	experience = String.valueOf(age);
         }else{
-        	experience.replace("年", "").replace("五", "5").replace("s", "").replace(" ", "");
+        	experience = experience.replace("年", "").replace("五", "5").replace("s", "").replace(" ", "");
         	if (StringUtil.strLength(experience) > 2){
         		experience = experience.substring(0,2);
         	}
