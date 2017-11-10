@@ -188,7 +188,7 @@ public class MigrationStageOne {
 			String orgId = (String) map.get("orgid");
 			String orgName = (String) map.get("orgname");
 			if (StringUtil.isEmpty(orgName) || JdbcHelper.nameDuplicate(list, orgName) 
-					|| StringUtil.length(orgName) > 20){
+					|| StringUtil.strLength(orgName) > 20){
 				map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构名称不符合规范，可能为空、"
 						+ "重复或过长。"));
 				excel.add(map);
@@ -196,7 +196,7 @@ public class MigrationStageOne {
 				continue;
 			}
 			list.add(orgName);
-			Long orgType = (Long) map.get("orgtype");
+			Integer orgType = (Integer) map.get("orgtype");
 			Long areaId = (Long) map.get("new_pk");
 			if (ObjectUtil.isNull(orgType) || ObjectUtil.isNull(areaId)){
 				map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构类型id或区域id为空。"));
@@ -204,6 +204,7 @@ public class MigrationStageOne {
 				logger.error("机构类型id或区域id为空，此结果将被记录在Excel中");
 				continue;
 			}
+			Long orgTypeId = Long.valueOf(orgType);
 			String contactPerson = (String) map.get("linker");
 			String contactPhone = (String) map.get("linktel");
 			Integer sort = (Integer) map.get("sortno");
@@ -223,7 +224,7 @@ public class MigrationStageOne {
 			}
 			Org org = new Org();
 			org.setOrgName(orgName);
-			org.setOrgTypeId(orgType);
+			org.setOrgTypeId(orgTypeId);
 			org.setAreaId(areaId);
 			org.setContactPerson(contactPerson);
 			org.setContactPhone(contactPhone);
@@ -374,7 +375,6 @@ public class MigrationStageOne {
 					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常："+e.getMessage() + "。"));
 					excel.add(map);
 				}
-            	mongoId = proxy;
             	orgUser.setProxy(mongoId);
             	orgUserService.updateOrgUser(orgUser);
             }
@@ -552,7 +552,6 @@ public class MigrationStageOne {
 					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常："+e.getMessage() + "。"));
 					excel.add(map);
 				}
-	        	certMongoId = cert;
 	        	writerUser.setCert(certMongoId);
         	}
         	if(StringUtil.notEmpty(avatar)){
