@@ -1,16 +1,9 @@
 ﻿# Compiled class file
 *.class
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> branch 'develop' of https://zqf050217@github.com/BCSquad/pmph.git
-=======
 #忽略.properties
 *.properties
 
->>>>>>> branch 'develop' of https://zqf050217@github.com/BCSquad/pmph.git
 #忽略.classpath
 *.classpath
 
