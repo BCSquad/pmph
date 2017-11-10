@@ -1,7 +1,6 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +52,6 @@ public class CmsContentQuartzJob {
             // 按contentId批量删除
             cmsScheduleService.deleteCmsScheduleByIds(contentIds);
         }
-        System.out.println("执行时间" + new Date());
+        // System.out.println("执行时间" + DateUtil.getCurrentTime());
     }
 }

@@ -1,9 +1,6 @@
 ﻿# Compiled class file
 *.class
 
-#忽略数据库配置文件spring.properties
-*.properties
-
 #忽略.classpath
 *.classpath
 
