@@ -360,8 +360,8 @@ public class MigrationStageOne {
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "userid", userId);
         	JdbcHelper.updateNewPrimaryKey("sys_userext", pk, "userid", userId);//用户拓展表也要更新new_pk
         	count++;
-            String mongoId = "";
             if (StringUtil.notEmpty(proxy)){
+            	String mongoId = "";
             	try {
 					mongoId = fileService.migrateFile(proxy, ImageType.ORG_USER_PROXY, pk);
 				} catch (IOException ex) {
@@ -374,11 +374,10 @@ public class MigrationStageOne {
 					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常："+e.getMessage() + "。"));
 					excel.add(map);
 				}
-            }else{
             	mongoId = proxy;
+            	orgUser.setProxy(mongoId);
+            	orgUserService.updateOrgUser(orgUser);
             }
-        	orgUser.setProxy(mongoId);
-        	orgUserService.updateOrgUser(orgUser);
         }
         if(excel.size()>0){
         	try {
@@ -539,8 +538,8 @@ public class MigrationStageOne {
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "userid", userId);
         	JdbcHelper.updateNewPrimaryKey("sys_userext", pk, "userid", userId);
         	count++;
-        	String certMongoId = "";
         	if(StringUtil.notEmpty(cert)){
+        		String certMongoId = "";
 	        	try {
 					certMongoId = fileService.migrateFile(cert, ImageType.WRITER_USER_CERT, pk);
 				} catch (IOException ex) {
@@ -553,10 +552,9 @@ public class MigrationStageOne {
 					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常："+e.getMessage() + "。"));
 					excel.add(map);
 				}
-        	}else{
-        		certMongoId = cert;
+	        	certMongoId = cert;
+	        	writerUser.setCert(certMongoId);
         	}
-        	writerUser.setCert(certMongoId);
         	if(StringUtil.notEmpty(avatar)){
 	        	String avatarMongoId = "";
 	        	try {
