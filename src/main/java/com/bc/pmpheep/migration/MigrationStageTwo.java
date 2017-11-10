@@ -82,7 +82,6 @@ public class MigrationStageTwo {
             	map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
             	excel.add(map);
             	logger.error("显示顺序为负数，此结果将被记录在Excel中");
-            	continue;
             }
             String note = (String) map.get("remark");
             PmphDepartment pmphDepartment = new PmphDepartment();
