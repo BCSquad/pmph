@@ -148,7 +148,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         } else {
             pageParameter.getParameter().setName(orgNameOrReceiver.replaceAll(" ", ""));
         }
-        pageParameter.getParameter().setSenderId(pmphUser.getId());
+        if (Const.FALSE == pmphUser.getIsAdmin()) {
+            pageParameter.getParameter().setSenderId(pmphUser.getId());
+        }
         PageResult<MessageStateVO> pageResult = new PageResult<MessageStateVO>();
         // 将页面大小和页面页码拷贝
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
@@ -209,8 +211,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Override
     public Integer addOrUpdateUserMessage(Message message, String title, Integer sendType,
-    String orgIds, String userIds, String bookIds, boolean isSave, String[] files, String sessionId)
-    throws CheckedServiceException, IOException {
+    String orgIds, Long senderId, String userIds, String bookIds, boolean isSave, String[] files,
+    String sessionId) throws CheckedServiceException, IOException {
         if (ObjectUtil.isNull(sendType)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择!");
@@ -224,14 +226,19 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
         }
-
         // 发送者id
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "操作人为空!");
         }
-        Long senderId = pmphUser.getId();
+        // 是否为补发消息设置（发送者ID）
+        Long senderUserId;
+        if (ObjectUtil.isNull(senderId)) {// 新发消息,发送者Id为登陆用户ID
+            senderUserId = pmphUser.getId();
+        } else {
+            senderUserId = senderId;// 补发消息,发送者Id为当前补发消息的发送者ID
+        }
         // 装储存数据
         List<UserMessage> userMessageList = new ArrayList<UserMessage>();
         // 1 发送给学校管理员 //2 所有人
@@ -251,8 +258,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             // 机构用户
             for (OrgUser orgUser : orgUserList) {
                 userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
-                                                    senderId, Const.SENDER_TYPE_1, orgUser.getId(),
-                                                    Const.RECEIVER_TYPE_3));
+                                                    senderUserId, Const.SENDER_TYPE_1,
+                                                    orgUser.getId(), Const.RECEIVER_TYPE_3));
             }
             // 作家用户
             if (Const.SEND_OBJECT_2 == sendType) {
@@ -260,7 +267,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 writerUserService.getWriterUserListByOrgIds(orgIds2);
                 for (WriterUser writerUser : writerUserList) {
                     userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
-                                                        senderId, Const.SENDER_TYPE_1,
+                                                        senderUserId, Const.SENDER_TYPE_1,
                                                         writerUser.getId(), Const.RECEIVER_TYPE_2));
                 }
             }
@@ -278,7 +285,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                     String userId = id.split("_")[1];
                     if (StringUtil.notEmpty(userId) && StringUtil.isNumeric(userId)) {
                         userMessageList.add(new UserMessage(message.getId(), title,
-                                                            Const.MSG_TYPE_1, senderId,
+                                                            Const.MSG_TYPE_1, senderUserId,
                                                             Const.SENDER_TYPE_1,
                                                             Long.parseLong(userId),
                                                             new Short(userType)));
@@ -297,7 +304,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 List<Long> userIdList = decPositionService.listDecPositionsByTextbookIds(ids);
                 for (Long userId : userIdList) {
                     userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
-                                                        senderId, Const.SENDER_TYPE_1, userId,
+                                                        senderUserId, Const.SENDER_TYPE_1, userId,
                                                         Const.RECEIVER_TYPE_2));
                 }
                 // 获取到书籍id然后根据书籍id在dec_position表中获取到申报表id根据申报表id在declaration表中获取作家id放入userMessage的接收人中
@@ -340,7 +347,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         // webscokt发送消息
         if (!websocketUserIds.isEmpty() && websocketUserIds.size() > 0) {
             WebScocketMessage webScocketMessage =
-            new WebScocketMessage(message.getId(), Const.MSG_TYPE_1, senderId,
+            new WebScocketMessage(message.getId(), Const.MSG_TYPE_1, senderUserId,
                                   pmphUser.getRealname(), Const.SENDER_TYPE_1,
                                   Const.SEND_MSG_TYPE_0, Const.DEFAULT_USER_AVATAR, title,
                                   message.getContent(), DateUtil.getCurrentTime());

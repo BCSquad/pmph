@@ -233,7 +233,7 @@
 		from 
 			textbook tb
 		where 
-			tb.id=#{materialId}
+			tb.`material_id`=#{materialId}
 		order by tb.id desc;
 	</select>
 
