@@ -186,11 +186,14 @@
 		join (select a.*,3 usertype from org_user a) d on d.id=a.receiver_id
 		and d.usertype = a.receiver_type
 		left join org dd on dd.id = d.org_id
-		where true and sender_id = #{parameter.senderId} and msg_id =
-		#{parameter.msgId}
+		where true and msg_id = #{parameter.msgId}
+		and is_withdraw =0
 		<if test="parameter !=null ">
 			<if test="parameter.isRead != null">
 				and is_read = #{parameter.isRead}
+			</if>
+			<if test="parameter.senderId != null">
+				and sender_id = #{parameter.senderId}
 			</if>
 			<if test="parameter.name !=null and parameter.name != '' ">
 				and (bd.dp_name like concat('%',#{parameter.name},'%') or
@@ -207,11 +210,14 @@
 			</if>
 		</if>
 		) t
-		where true and sender_id = #{parameter.senderId} and msg_id =
-		#{parameter.msgId}
+		where true and msg_id =
+		#{parameter.msgId} and is_withdraw =0
 		<if test="parameter !=null ">
 			<if test="parameter.isRead != null">
 				and is_read = #{parameter.isRead}
+			</if>
+			<if test="parameter.senderId != null">
+				and sender_id = #{parameter.senderId}
 			</if>
 			<if test="parameter.name !=null and parameter.name != '' ">
 				and (bd.dp_name like concat('%',#{parameter.name},'%') or
