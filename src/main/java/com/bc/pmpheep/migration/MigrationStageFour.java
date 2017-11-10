@@ -3,7 +3,6 @@ package com.bc.pmpheep.migration;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,6 +59,8 @@ public class MigrationStageFour {
 	private MaterialTypeService materialTypeService;
 	@Autowired
 	private MaterialService materialService;
+	@Autowired
+	private MaterialExtensionService materialExtensionService;
 	
 	protected void materialType(){
 		String tableName="sys_booktypes";
@@ -112,7 +113,7 @@ public class MigrationStageFour {
 				materialType=materialTypeService.addMaterialType(materialType);
 			} catch (Exception e) {
 				excel.add(map);
-				map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage());
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage() + "。"));
 				continue;
 			}
 			count++;
@@ -136,6 +137,7 @@ public class MigrationStageFour {
 	}
 	
 	protected void material(){	
+		String tableName ="teach_material";
 		String sql="select "+
 					"a.materid, "+
 					"a.matername, "+
@@ -194,65 +196,72 @@ public class MigrationStageFour {
 					"LEFT JOIN sys_user h on h.userid = a.updateuserid  "+
 					"LEFT JOIN sys_booktypes i on i.BookTypesID = a. booktypesid  "+
 					"WHERE true GROUP BY a.materid  ";
-		//获取到所有数据表
-		String tableName ="teach_material";
 		JdbcHelper.addColumn(tableName); //增加new_pk字段
-		List<Map<String, Object>> materialList=JdbcHelper.getJdbcTemplate().queryForList(sql);
+		List<Map<String, Object>> maps=JdbcHelper.getJdbcTemplate().queryForList(sql);
 		List<Map<String, Object>> excel = new LinkedList<>();
 		int count =0;
-		for(Map<String, Object> oldMaterial:materialList){
-			Material material =new Material();
-			StringBuilder  exception=  new StringBuilder("");
+		for(Map<String, Object> oldMaterial : maps){
+			StringBuilder  exception=  new StringBuilder();
+			String materialId = String.valueOf(oldMaterial.get("materid"));
 			String  matername = (String)oldMaterial.get("matername");
-			if(StringUtil.isEmpty(matername)){
-				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材名称为空").toString());
+			if (StringUtil.isEmpty(matername)){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材名称为空。"));
 				excel.add(oldMaterial);
 				continue;
 			}
-			material.setMaterialName(matername);
-			Integer  round = null;
-			try {
-				round=(Integer.parseInt(String.valueOf(oldMaterial.get("round"))));
-			} catch (Exception e) {
-				
-			}
-			if(null == round){
-				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("轮次为空,设默认值1").toString());
+			String mailaddress=(String)oldMaterial.get("mailaddress");
+			if (StringUtil.isEmpty(mailaddress)){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("邮寄地址为空。"));
 				excel.add(oldMaterial);
-				round =1;
+				continue;
 			}
-			material.setMaterialRound(round);
+			Long DepartmentId =(Long)oldMaterial.get("DepartmentId") ;
+			if (ObjectUtil.isNull(DepartmentId)){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建部门为空。"));
+				excel.add(oldMaterial);
+				continue;
+			}
+			Long director =(Long)oldMaterial.get("director") ;
+			if (ObjectUtil.isNull(director)){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("主任为空。"));
+				excel.add(oldMaterial);
+				continue;
+			}
+			Long founder_id =(Long)oldMaterial.get("founder_id") ;
+			if(ObjectUtil.isNull(founder_id)){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建人为空。"));
+				excel.add(oldMaterial);
+				continue;
+			}
+			String teachRound = (String) oldMaterial.get("round");
+			if (StringUtil.isEmpty(teachRound)){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("轮次为空,设默认值1。"));
+				excel.add(oldMaterial);
+				teachRound ="1";
+			}
+			Integer round = Integer.parseInt(teachRound);
 			Long booktypesid=(Long) oldMaterial.get("booktypesid");
-			if(null == booktypesid){
-				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("架构为空，设为默认0").toString());
+			if(ObjectUtil.isNull(booktypesid)){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("架构为空，设为默认0。"));
 				excel.add(oldMaterial);
-				booktypesid =0L;
+				booktypesid = 0L;
 			}
+			Long mender_id =(Long)oldMaterial.get("mender_id") ;
+			if(ObjectUtil.isNull(mender_id)){
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("修改人id为空,设置默认为创建者。"));
+				excel.add(oldMaterial);
+				mender_id = founder_id;
+			}
+			Material material =new Material();
+			material.setMaterialName(matername);
+			material.setMaterialRound(round);
 			material.setMaterialType(booktypesid);
 			material.setDeadline((Timestamp)oldMaterial.get("showenddate"));
 			material.setActualDeadline((Timestamp)oldMaterial.get("enddate"));
-			material.setAgeDeadline((Timestamp)oldMaterial.get("agedeaddate"));
-			String mailaddress=(String)oldMaterial.get("mailaddress");
-			if(StringUtil.isEmpty(mailaddress)){
-				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("邮寄地址为空").toString());
-				excel.add(oldMaterial);
-				continue;
-			}
+			material.setAgeDeadline((Timestamp)oldMaterial.get("agedeaddate"));			
 			material.setMailAddress(mailaddress);
-			material.setProgress(new Short((String)oldMaterial.get("flowtype")));
-			Long DepartmentId =(Long)oldMaterial.get("DepartmentId") ;
-			if(null == DepartmentId){
-				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建部门为空").toString());
-				excel.add(oldMaterial);
-				continue;
-			}
-			material.setDepartmentId(DepartmentId);
-			Long director =(Long)oldMaterial.get("director") ;
-			if(null == director){
-				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("主任为空").toString());
-				excel.add(oldMaterial);
-				continue;
-			}
+			material.setProgress(new Short((String)oldMaterial.get("flowtype")));			
+			material.setDepartmentId(DepartmentId);			
 			material.setDirector(director);//director,
 			material.setIsMultiBooks("1".equals(String.valueOf(oldMaterial.get("isbookmulti")))); //is_multi_books,
 			material.setIsMultiPosition("1".equals(String.valueOf(oldMaterial.get("ispositionmulti"))));//is_multi_position,
@@ -282,61 +291,39 @@ public class MigrationStageFour {
 			material.setIsResearchRequired("1".equals(String.valueOf(oldMaterial.get("isfillscientresearch"))));//is_research_required,
 			material.setIsPublished("1".equals(String.valueOf(oldMaterial.get("ispublishfront"))));//is_published,
 			material.setIsDeleted("1".equals(String.valueOf(oldMaterial.get("isdelete"))));//is_deleted,
-			material.setGmtCreate((Timestamp)oldMaterial.get("createdate"));//gmt_create,
-			Long founder_id =(Long)oldMaterial.get("founder_id") ;
-			if(null == founder_id){
-				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建人为空").toString());
-				excel.add(oldMaterial);
-				continue;
-			}
+			material.setGmtCreate((Timestamp)oldMaterial.get("createdate"));//gmt_create,			
 			material.setFounderId(founder_id);//founder_id,
-			material.setGmtUpdate((Timestamp)oldMaterial.get("updatedate"));//gmt_update,
-			Long mender_id =(Long)oldMaterial.get("mender_id") ;
-			if(null == mender_id){
-				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("修改人id为空,设置默认为创建者").toString());
-				excel.add(oldMaterial);
-				mender_id = founder_id;
-			}
+			material.setGmtUpdate((Timestamp)oldMaterial.get("updatedate"));//gmt_update,			
 			material.setMenderId((Long)oldMaterial.get("mender_id"));//mender_id
 			try {
 				material=materialService.addMaterial(material);
 				count++;
 			} catch (Exception e) {
-				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage()).toString());
+				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage()) + "。");
 				excel.add(oldMaterial);
-				logger.error( e.getMessage());
+				logger.error(e.getMessage());
 				continue;
 			}
-			if(null != material.getId()){
-				JdbcHelper.updateNewPrimaryKey(tableName, material.getId(), "materid",oldMaterial.get("materid"));//更新旧表中new_pk字段
-			}
+			long pk = material.getId();
+			JdbcHelper.updateNewPrimaryKey(tableName, pk, "materid",materialId);//更新旧表中new_pk字段
 		}
-		List<Map<String, Object>> neweExcel = new  ArrayList<Map<String, Object>>(); 
-        for (Map<String, Object> map:excel) {
-        	if(!neweExcel.contains(map)){
-        		neweExcel.add(map);
-            }
-        }
-        excel=neweExcel;
 		if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, tableName, tableName);
+                excelHelper.exportFromMaps(excel, "教材信息表", "material");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
-        logger.info("原数据库中共有{}条数据，迁移了{}条数据", materialList.size(), count);
+        logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
         Map<String,Object> msg= new HashMap<String,Object>();
-        msg.put("result", ""+tableName+" 表迁移完成"+count+"/"+ materialList.size());
+        msg.put("result", ""+tableName+" 表迁移完成"+count+"/"+ maps.size());
         SQLParameters.msg.add(msg);
 	} 
 	
-	@Autowired
-	private MaterialExtensionService materialExtensionService;
-	
-	public void materialExtension() throws Exception{
+	protected void materialExtension(){
+		String tableName ="teach_material_extend";
 		String sql = "select "+
 						"a.expendid, "+
 						"b.new_pk materid, "+
@@ -345,8 +332,6 @@ public class MigrationStageFour {
 						"teach_material_extend a  "+
 						"LEFT JOIN teach_material b on b.materid=a.materid  "+
 						"where b.materid is not null ";
-		//获取到所有数据表
-		String tableName ="teach_material_extend";
 		JdbcHelper.addColumn(tableName); //增加new_pk字段
 		List<Map<String, Object>> materialExtensionList=JdbcHelper.getJdbcTemplate().queryForList(sql);
 		List<Map<String, Object>> excel = new LinkedList<>();
