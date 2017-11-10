@@ -51,6 +51,8 @@ import com.bc.pmpheep.utils.ExcelHelper;
 public class MigrationStageFour {
 	
 	Logger  logger = LoggerFactory.getLogger(MigrationStageFour.class);
+	//用来储存MaterialExtra返回的主键，供后面使用 Map<教材id,教材通知备注表id> 
+	public static Map<Long,Long> mps = new HashMap<Long,Long>(12);
 	
 	@Resource
     private ExcelHelper excelHelper;
@@ -61,6 +63,8 @@ public class MigrationStageFour {
 	private MaterialService materialService;
 	@Autowired
 	private MaterialExtensionService materialExtensionService;
+	@Autowired
+	private MaterialExtraService materialExtraService;
 	
 	protected void materialType(){
 		String tableName="sys_booktypes";
@@ -333,62 +337,55 @@ public class MigrationStageFour {
 						"LEFT JOIN teach_material b on b.materid=a.materid  "+
 						"where b.materid is not null ";
 		JdbcHelper.addColumn(tableName); //增加new_pk字段
-		List<Map<String, Object>> materialExtensionList=JdbcHelper.getJdbcTemplate().queryForList(sql);
+		List<Map<String, Object>> maps=JdbcHelper.getJdbcTemplate().queryForList(sql);
 		List<Map<String, Object>> excel = new LinkedList<>();
 		int count =0;
-		for(Map<String, Object> materialExtension:materialExtensionList){
+		for(Map<String, Object> materialExtension:maps){
 			String oldExpendid = (String)materialExtension.get("expendid");
-			StringBuilder  exception=  new StringBuilder("");
-			MaterialExtension newMaterialExtension=new MaterialExtension();
+			StringBuilder exception= new StringBuilder();
 			Long materid =(Long)materialExtension.get("materid");
-			if(null == materid){
-				materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空").toString());
+			if(ObjectUtil.isNull(materid)){
+				materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空。"));
 				excel.add(materialExtension);
 				continue;
 			}
-			newMaterialExtension.setMaterialId(materid);
 			String expendname=(String)materialExtension.get("expendname");
 			if(StringUtil.isEmpty(expendname)){
-				materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append("扩展名称为空").toString());
+				materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append("扩展名称为空。"));
 				excel.add(materialExtension);
 				continue;
 			}
-			newMaterialExtension.setExtensionName( expendname);
+			MaterialExtension newMaterialExtension=new MaterialExtension();
+			newMaterialExtension.setMaterialId(materid);
+			newMaterialExtension.setExtensionName(expendname);
 			newMaterialExtension.setIsRequired("1".equals(String.valueOf(materialExtension.get("isfill"))));
 			try {
 				newMaterialExtension=materialExtensionService.addMaterialExtension(newMaterialExtension);
 				count++;
 			} catch (Exception e) {
-				materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage()).toString());
+				materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage()) + "。");
 				excel.add(materialExtension);
 				logger.error( e.getMessage());
 			}
-			if(null != newMaterialExtension.getId()){
-				JdbcHelper.updateNewPrimaryKey(tableName, newMaterialExtension.getId(), "expendid",oldExpendid);//更新旧表中new_pk字段
-			}
+			long pk = newMaterialExtension.getId();
+			JdbcHelper.updateNewPrimaryKey(tableName, pk, "expendid",oldExpendid);//更新旧表中new_pk字段
 		}
 		if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, tableName, tableName);
+                excelHelper.exportFromMaps(excel, "教材信息扩展项表", "material_extension");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
-        logger.info("原数据库中共有{}条数据，迁移了{}条数据", materialExtensionList.size(), count);
+        logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
         Map<String,Object> msg= new HashMap<String,Object>();
-        msg.put("result", ""+tableName+" 表迁移完成"+count+"/"+ materialExtensionList.size());
+        msg.put("result", ""+tableName+" 表迁移完成"+count+"/"+ maps.size());
         SQLParameters.msg.add(msg);
 	}
-	
-	@Autowired
-	private MaterialExtraService materialExtraService;
-	
-	//用来储存MaterialExtra返回的主键，供后面使用 Map<教材id,教材通知备注表id> 
-	public static Map<Long,Long> mps = new HashMap<Long,Long>(12);
-	
-	public void materialExtra() throws Exception{
+			
+	protected void materialExtra(){
 		String sql = "select "+
 						"new_pk, "+
 						"introduction, "+
