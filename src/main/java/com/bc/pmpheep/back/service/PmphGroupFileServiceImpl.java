@@ -144,9 +144,7 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
 		} else {
-			if (pmphUser.getIsAdmin()) {
-
-			} else {
+			if (!pmphUser.getIsAdmin()) {
 				currentUser = pmphGroupMemberService.getPmphGroupMemberByMemberId(groupId, userId, false);
 			}
 			for (Long id : ids) {
