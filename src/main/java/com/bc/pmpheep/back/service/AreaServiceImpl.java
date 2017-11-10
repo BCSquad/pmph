@@ -135,6 +135,10 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 		if (null == id) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, "ID为空");
 		}
+		if (1 < areaDao.getOrgId(id)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, 
+					"区域在机构区域已使用");
+		}
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(id);
 		getAreaTree(new AreaTreeVO(id), ids);
