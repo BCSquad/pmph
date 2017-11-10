@@ -274,7 +274,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 				if (pmphUser.getIsAdmin() || currentUser.getIsFounder()) {// 只有小组创建者和超级管理员可以删除小组成员
 					if (pmphGroupMemberDao.getPmphGroupMemberById(id).getIsFounder()) {
 						throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-								CheckedExceptionResult.ILLEGAL_PARAM, "不能删除创建者");
+								CheckedExceptionResult.ILLEGAL_PARAM, "小组创建者不能删除，请重新选择");
 					}
 					pmphGroupMemberDao.deletePmphGroupMemberById(id);
 				}
@@ -322,14 +322,26 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 						"参数不能为空");
 			} else {
 				for (PmphGroupMember pmphGroupMember : members) {
-					if (pmphGroupMemberDao.getPmphGroupMemberById(pmphGroupMember.getId()).getIsFounder()) {
+					PmphGroupMember member = pmphGroupMemberDao.getPmphGroupMemberById(pmphGroupMember.getId());
+					if (member.getIsFounder()) {
 						throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 								CheckedExceptionResult.NULL_PARAM, "不要把创建者添加为管理员了");
 					}
 					if (pmphGroupMember.getIsAdmin()) {
-						pmphGroupMember.setIsAdmin(true);
+						if (member.getIsAdmin()) {
+							throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+									CheckedExceptionResult.NULL_PARAM, "该用户已经是管理员了");
+						} else {
+							pmphGroupMember.setIsAdmin(true);
+						}
 					} else {
-						pmphGroupMember.setIsAdmin(false);
+						if (member.getIsAdmin()) {
+							pmphGroupMember.setIsAdmin(false);
+						} else {
+							throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+									CheckedExceptionResult.NULL_PARAM, "该成员不是小组管理员");
+						}
+
 					}
 					pmphGroupMemberDao.updatePmphGroupMember(pmphGroupMember);
 				}

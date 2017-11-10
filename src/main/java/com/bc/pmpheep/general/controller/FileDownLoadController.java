@@ -6,6 +6,8 @@ package com.bc.pmpheep.general.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -37,112 +39,119 @@ import com.mongodb.gridfs.GridFSDBFile;
 @Controller
 public class FileDownLoadController {
 
-    Logger               logger = LoggerFactory.getLogger(FileDownLoadController.class);
+	Logger logger = LoggerFactory.getLogger(FileDownLoadController.class);
 
-    @Resource
-    FileService          fileService;
-    @Resource
-    PmphGroupFileService groupFileService;
-    @Resource
-    CmsExtraService      cmsExtraService;
+	@Resource
+	FileService fileService;
+	@Resource
+	PmphGroupFileService groupFileService;
+	@Resource
+	CmsExtraService cmsExtraService;
 
-    /**
-     * 普通文件下载
-     * 
-     * @param id 文件在MongoDB中的id
-     * @param response 服务响应
-     */
-    @RequestMapping(value = "/file/download/{id}", method = RequestMethod.GET)
-    public void download(@PathVariable("id") String id, HttpServletResponse response) {
+	/**
+	 * 普通文件下载
+	 * 
+	 * @param id
+	 *            文件在MongoDB中的id
+	 * @param response
+	 *            服务响应
+	 */
+	@RequestMapping(value = "/file/download/{id}", method = RequestMethod.GET)
+	public void download(@PathVariable("id") String id, HttpServletResponse response) {
 
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("application/force-download");
-        GridFSDBFile file = fileService.get(id);
-        if (null == file) {
-            logger.warn("未找到id为'{}'的文件", id);
-            return;
-        }
-        response.setHeader("Content-Disposition", "attachment;fileName=" + file.getFilename());
-        try (OutputStream out = response.getOutputStream()) {
-            file.writeTo(out);
-            out.flush();
-            out.close();
-        } catch (IOException ex) {
-            logger.error("文件下载时出现IO异常：{}", ex.getMessage());
-        }
-    }
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		GridFSDBFile file = fileService.get(id);
+		if (null == file) {
+			logger.warn("未找到id为'{}'的文件", id);
+			return;
+		}
+		response.setHeader("Content-Disposition", "attachment;fileName=" + file.getFilename());
+		try (OutputStream out = response.getOutputStream()) {
+			file.writeTo(out);
+			out.flush();
+			out.close();
+		} catch (IOException ex) {
+			logger.error("文件下载时出现IO异常：{}", ex.getMessage());
+		}
+	}
 
-    /**
-     * 
-     * <pre>
-     * 功能描述：普通文件下载(更新下载数)
-     * 使用示范：
-     *
-     * @param type 模块类型
-     * @param id 文件在MongoDB中的id
-     * @param response 服务响应
-     * </pre>
-     */
-    @RequestMapping(value = "/file/{type}/download/{id}", method = RequestMethod.GET)
-    public void download(@PathVariable("type") String type, @PathVariable("id") String id,
-    HttpServletResponse response) {
+	/**
+	 * 
+	 * <pre>
+	 * 功能描述：普通文件下载(更新下载数)
+	 * 使用示范：
+	 *
+	 * &#64;param type 模块类型
+	 * &#64;param id 文件在MongoDB中的id
+	 * &#64;param response 服务响应
+	 * </pre>
+	 */
+	@RequestMapping(value = "/file/{type}/download/{id}", method = RequestMethod.GET)
+	public void download(@PathVariable("type") String type, @PathVariable("id") String id,
+			HttpServletResponse response) {
 
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("application/force-download");
-        GridFSDBFile file = fileService.get(id);
-        if (null == file) {
-            logger.warn("未找到id为'{}'的文件", id);
-            return;
-        }
-        response.setHeader("Content-Disposition", "attachment;fileName=" + file.getFilename());
-        try (OutputStream out = response.getOutputStream()) {
-            file.writeTo(out);
-            out.flush();
-            out.close();
-            if (Const.CMS_TYPE.equals(type)) {
-                cmsExtraService.updateCmsExtraDownLoadCountsByAttachment(id);
-            }
-        } catch (IOException ex) {
-            logger.error("文件下载时出现IO异常：{}", ex.getMessage());
-        }
-    }
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		GridFSDBFile file = fileService.get(id);
+		if (null == file) {
+			logger.warn("未找到id为'{}'的文件", id);
+			return;
+		}
+		response.setHeader("Content-Disposition", "attachment;fileName=" + file.getFilename());
+		try (OutputStream out = response.getOutputStream()) {
+			file.writeTo(out);
+			out.flush();
+			out.close();
+			if (Const.CMS_TYPE.equals(type)) {
+				cmsExtraService.updateCmsExtraDownLoadCountsByAttachment(id);
+			}
+		} catch (IOException ex) {
+			logger.error("文件下载时出现IO异常：{}", ex.getMessage());
+		}
+	}
 
-    /**
-     * 小组文件下载
-     * 
-     * @param id 图片在MongoDB中的id
-     * @param groupId 小组id
-     * @param response 服务响应
-     * @return ResponseBean对象
-     */
-    @RequestMapping(value = "/groupfile/download/{id}", method = RequestMethod.GET)
-    public ResponseBean download(@PathVariable("id") String id,
-    @RequestParam("groupId") long groupId, HttpServletResponse response) {
-        if (groupId < 1) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
-                                              "小组id错误（负数或零）");
-        }
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("application/force-download");
-        GridFSDBFile file = fileService.get(id);
-        if (null == file) {
-            logger.warn("未找到id为'{}'的文件", id);
-            throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
-                                              "未找到对应文件");
-        }
-        response.setHeader("Content-Disposition", "attachment;fileName=" + file.getFilename());
-        try (OutputStream out = response.getOutputStream()) {
-            file.writeTo(out);
-            out.flush();
-            out.close();
-        } catch (IOException ex) {
-            logger.warn("文件下载时出现IO异常：{}", ex.getMessage());
-            throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
-                                              "文件在传输时中断");
-        }
-        return new ResponseBean(groupFileService.updatePmphGroupFileOfDown(groupId, id));
-    }
+	/**
+	 * 小组文件下载
+	 * 
+	 * @param id
+	 *            图片在MongoDB中的id
+	 * @param groupId
+	 *            小组id
+	 * @param response
+	 *            服务响应
+	 * @return ResponseBean对象
+	 */
+	@RequestMapping(value = "/groupfile/download/{id}", method = RequestMethod.GET)
+	public ResponseBean download(@PathVariable("id") String id, @RequestParam("groupId") long groupId,
+			HttpServletResponse response) {
+		if (groupId < 1) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "小组id错误（负数或零）");
+		}
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		GridFSDBFile file = fileService.get(id);
+		if (null == file) {
+			logger.warn("未找到id为'{}'的文件", id);
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "未找到对应文件");
+		}
+		try {
+			String file_name = URLEncoder.encode(file.getFilename(), "UTF-8");
+			response.setHeader("Content-Disposition", "attachment;fileName=" + file_name);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		try (OutputStream out = response.getOutputStream()) {
+			file.writeTo(out);
+			out.flush();
+			out.close();
+		} catch (IOException ex) {
+			logger.warn("文件下载时出现IO异常：{}", ex.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+		return new ResponseBean(groupFileService.updatePmphGroupFileOfDown(groupId, id));
+	}
 }
