@@ -105,7 +105,7 @@
 	</select>
 
 	<!-- 查当前用户的小组列表 -->
-	<select id="getList" resultType="PmphGroupListVO">
+	<select id="getList" parameterType="PmphGroup" resultType="PmphGroupListVO">
 		select
 		g.id,
 		g.group_name,
@@ -131,7 +131,7 @@
 			concat(concat('%',#{pmphGroup.groupName}),'%')
 		</if>
 		order by
-		gmt_last_message desc , group_Name ;
+		gmt_last_message desc , group_name ;
 	</select>
 
 	<!-- 查当前用户的小组列表总数 -->
@@ -143,25 +143,27 @@
 	</select>
 
 	<!-- 查当前用户的小组列表 -->
-	<select id="listPmphGroup" resultType="PmphGroupListVO">
+	<select id="listPmphGroup" parameterType="java.lang.String"
+		resultType="PmphGroupListVO">
 		select
 		g.id,
 		g.group_name,
 		g.group_image,
-		g.gmt_last_message gmtLastMessage,
+		g.gmt_last_message
+		gmtLastMessage,
 		g.book_id,
 		t.textbook_name bookName
 		from
 		pmph_group g
-		LEFT JOIN textbook t ON
+		LEFT
+		JOIN textbook t ON
 		g.book_id = t.id
 		where
-		g.id
-		in (
-		select DISTINCT group_id from
-		pmph_group_member where
-		is_writer = false
-		)
+		1=1
+		<if test="_parameter != null and _parameter !=''">
+			and g.group_name like
+			concat('%',#{groupName},'%')
+		</if>
 		order by
 		gmt_last_message desc
 		, group_Name ;

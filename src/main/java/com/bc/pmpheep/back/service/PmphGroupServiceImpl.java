@@ -96,7 +96,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		if (pmphGroupMemberService.isFounder(pmphGroup.getId(), sessionId) || pmphUser.getIsAdmin()) {// 超级管理员与小组创建者才有权利删除小组
+		if (pmphUser.getIsAdmin() || pmphGroupMemberService.isFounder(pmphGroup.getId(), sessionId)) {// 超级管理员与小组创建者才有权利删除小组
 			if (null == pmphGroup.getId()) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 						"主键为空");
@@ -185,7 +185,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 					"用户为空");
 		}
 		if (pmphUser.getIsAdmin()) {
-			return pmphGroupDao.listPmphGroup();
+			return pmphGroupDao.listPmphGroup(pmphGroup.getGroupName());
 		} else {
 			return pmphGroupDao.getList(pmphGroup, pmphUser.getId());
 		}

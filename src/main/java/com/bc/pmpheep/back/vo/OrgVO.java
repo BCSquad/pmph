@@ -31,10 +31,10 @@ public class OrgVO implements Serializable {
     private String    areaId;
     // 所属区域名称
     private String    areaName;
-    // 联系人
-    private String    countactPerson;
+    // 联系人 
+    private String    contactPerson;
     // 联系电话
-    private String    countactPhone;
+    private String    contactPhone;
     // 审核进度
     private Integer   progress;
     /**
@@ -217,29 +217,29 @@ public class OrgVO implements Serializable {
     /**
      * @return the countactPerson
      */
-    public String getCountactPerson() {
-        return countactPerson;
+    public String getContactPerson() {
+        return contactPerson;
     }
 
     /**
      * @param countactPerson the countactPerson to set
      */
-    public void setCountactPerson(String countactPerson) {
-        this.countactPerson = countactPerson;
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
     }
 
     /**
      * @return the countactPhone
      */
-    public String getCountactPhone() {
-        return countactPhone;
+    public String getContactPhone() {
+        return contactPhone;
     }
 
     /**
      * @param countactPhone the countactPhone to set
      */
-    public void setCountactPhone(String countactPhone) {
-        this.countactPhone = countactPhone;
+    public void setContactPhone(String contactPhone) {
+        this.contactPhone = contactPhone;
     }
 
     /**
@@ -353,8 +353,8 @@ public class OrgVO implements Serializable {
         return "OrgVO {id=" + id + ", orgName=" + orgName + ", username=" + username
                + ", realname=" + realname + ", orgTypeId=" + orgTypeId + ", orgTypeName="
                + orgTypeName + ", parentId=" + parentId + ", areaId=" + areaId + ", areaName="
-               + areaName + ", countactPerson=" + countactPerson + ", countactPhone="
-               + countactPhone + ", progress=" + progress + ", handphone=" + handphone + ", email="
+               + areaName + ", contactPerson=" + contactPerson + ", contactPhone="
+               + contactPhone + ", progress=" + progress + ", handphone=" + handphone + ", email="
                + email + ", position=" + position + ", title=" + title + ", address=" + address
                + ", postcode=" + postcode + ", note=" + note + ", sort=" + sort + ", count="
                + count + ", gmtCreate=" + gmtCreate + "}";
