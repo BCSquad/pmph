@@ -148,20 +148,21 @@
 		g.id,
 		g.group_name,
 		g.group_image,
-		g.gmt_last_message gmtLastMessage,
+		g.gmt_last_message
+		gmtLastMessage,
 		g.book_id,
 		t.textbook_name bookName
 		from
 		pmph_group g
-		LEFT JOIN textbook t ON
+		LEFT
+		JOIN textbook t ON
 		g.book_id = t.id
 		where
-		g.id
-		in (
-		select DISTINCT group_id from
-		pmph_group_member where
-		is_writer = false
-		)
+		1=1
+		<if test="pmphGroup.groupName != null and pmphGroup.groupName !=''">
+			and g.group_name like
+			concat(concat('%',#{pmphGroup.groupName}),'%')
+		</if>
 		order by
 		gmt_last_message desc
 		, group_Name ;

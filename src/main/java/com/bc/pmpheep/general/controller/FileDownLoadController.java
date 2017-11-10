@@ -137,8 +137,9 @@ public class FileDownLoadController {
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "未找到对应文件");
 		}
+		String file_name;
 		try {
-			String file_name = URLEncoder.encode(file.getFilename(), "UTF-8");
+			file_name = new String(file.getFilename().getBytes(), "ISO-8859-1");
 			response.setHeader("Content-Disposition", "attachment;fileName=" + file_name);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
