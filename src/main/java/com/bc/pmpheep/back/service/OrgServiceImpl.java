@@ -168,15 +168,13 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG,CheckedExceptionResult.NULL_PARAM,
 					"机构联系电话不能为空");
 		}
-		// if (null == org.getSort()) {
-		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-		// CheckedExceptionResult.NULL_PARAM,
-		// "机构显示顺序为空");
-		// }
-		// if (null == org.getNote()) {
-		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-		// CheckedExceptionResult.NULL_PARAM, "备注为空");
-		// }
+		if (null == org.getSort()) {
+			 throw new CheckedServiceException(CheckedExceptionBusiness.ORG,CheckedExceptionResult.NULL_PARAM,
+					 "机构显示顺序为空");
+		}
+		if (null == org.getNote()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG,CheckedExceptionResult.NULL_PARAM, "备注为空");
+		}
 		return orgDao.updateOrg(org);
 	}
 
