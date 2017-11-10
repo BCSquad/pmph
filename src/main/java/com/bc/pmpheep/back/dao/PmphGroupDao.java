@@ -79,7 +79,7 @@ public interface PmphGroupDao {
 	 * @return
 	 *
 	 */
-	List<PmphGroupListVO> listPmphGroup(PmphGroup pmphGroup);
+	List<PmphGroupListVO> listPmphGroup(String groupName);
 
 	/**
 	 * 

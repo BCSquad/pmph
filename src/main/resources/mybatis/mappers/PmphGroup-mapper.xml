@@ -105,7 +105,7 @@
 	</select>
 
 	<!-- 查当前用户的小组列表 -->
-	<select id="getList" resultType="PmphGroupListVO">
+	<select id="getList" parameterType="PmphGroup" resultType="PmphGroupListVO">
 		select
 		g.id,
 		g.group_name,
@@ -131,7 +131,7 @@
 			concat(concat('%',#{pmphGroup.groupName}),'%')
 		</if>
 		order by
-		gmt_last_message desc , group_Name ;
+		gmt_last_message desc , group_name ;
 	</select>
 
 	<!-- 查当前用户的小组列表总数 -->
@@ -143,7 +143,8 @@
 	</select>
 
 	<!-- 查当前用户的小组列表 -->
-	<select id="listPmphGroup" resultType="PmphGroupListVO">
+	<select id="listPmphGroup" parameterType="java.lang.String"
+		resultType="PmphGroupListVO">
 		select
 		g.id,
 		g.group_name,
@@ -159,9 +160,9 @@
 		g.book_id = t.id
 		where
 		1=1
-		<if test="pmphGroup.groupName != null and pmphGroup.groupName !=''">
+		<if test="_parameter != null and _parameter !=''">
 			and g.group_name like
-			concat(concat('%',#{pmphGroup.groupName}),'%')
+			concat('%',#{groupName},'%')
 		</if>
 		order by
 		gmt_last_message desc

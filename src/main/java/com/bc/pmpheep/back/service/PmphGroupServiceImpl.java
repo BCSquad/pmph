@@ -185,7 +185,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 					"用户为空");
 		}
 		if (pmphUser.getIsAdmin()) {
-			return pmphGroupDao.listPmphGroup(pmphGroup);
+			return pmphGroupDao.listPmphGroup(pmphGroup.getGroupName());
 		} else {
 			return pmphGroupDao.getList(pmphGroup, pmphUser.getId());
 		}
