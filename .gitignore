@@ -1,7 +1,10 @@
 ﻿# Compiled class file
 *.class
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> branch 'develop' of https://zqf050217@github.com/BCSquad/pmph.git
 #忽略.classpath
 *.classpath
 
