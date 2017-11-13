@@ -23,6 +23,7 @@ import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.ValidatUtil;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
@@ -64,11 +65,14 @@ public class PmphUserServiceImpl implements PmphUserService {
 					CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止新增用户");
 		}
 		if (StringUtil.isEmpty(user.getPassword())) {
-			 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-			 CheckedExceptionResult.NULL_PARAM, "密码为空时禁止新增用户");
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "密码为空时禁止新增用户");
 		}
 		if (StringUtil.isEmpty(user.getRealname())) {
 			user.setRealname(user.getUsername());
+		}
+		if (StringUtil.isEmpty(user.getAvatar())) {
+			user.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);
 		}
 		// 使用用户名作为盐值，MD5 算法加密
 		user.setPassword(new DesRun("", user.getPassword()).enpsw);
@@ -373,6 +377,11 @@ public class PmphUserServiceImpl implements PmphUserService {
 
 	@Override
 	public String updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO) throws CheckedServiceException {
+		PmphUser username = userDao.get(pmphUserManagerVO.getId());
+		if (!username.getUsername().equals(pmphUserManagerVO.getUsername())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "用户账号不相同");
+		}
 		if (ObjectUtil.isNull(pmphUserManagerVO.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
@@ -392,6 +401,9 @@ public class PmphUserServiceImpl implements PmphUserService {
 		if (!ValidatUtil.checkEmail(pmphUserManagerVO.getEmail())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.ILLEGAL_PARAM, "邮箱格式不正确");
+		}
+		if (StringUtil.isEmpty(pmphUserManagerVO.getRealname())) {
+			pmphUserManagerVO.setRealname(pmphUserManagerVO.getUsername());
 		}
 		int num = userDao.updatePmphUserOfBack(pmphUserManagerVO);
 		String result = "FAIL";

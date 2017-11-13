@@ -81,4 +81,18 @@ public interface AreaDao {
 	  */
 	 Long getAreacount();
 	 
+	 /**
+	  * 功能描述：根据区域名称获取区域id
+	  * @param areaName 区域名称
+	  * @return id 区域id
+	  */
+	 Long getAreaId(String areaName);
+	 
+	 /**
+	  * 功能描述：获取区域机构id的数量
+	  * @param id
+	  * @return
+	  */
+	 //Long getAreaByOrgId(Long id);
+	 Long getOrgId(Long id);
 }

@@ -23,6 +23,7 @@ import com.bc.pmpheep.back.sessioncontext.SessionContext;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -33,108 +34,107 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 使用示范：
  * 
  * 
- * @author (作者) nyz
+ * &#64;author (作者) nyz
  * 
- * @since (该版本支持的JDK版本) ：JDK 1.6或以上
- * @version (版本) 1.0
- * @date (开发日期) 2017-9-20
- * @modify (最后修改时间) 
- * @修改人 ：nyz 
- * @审核人 ：
+ * &#64;since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * &#64;version (版本) 1.0
+ * &#64;date (开发日期) 2017-9-20
+ * &#64;modify (最后修改时间) 
+ * &#64;修改人 ：nyz 
+ * &#64;审核人 ：
  * </pre>
  */
 @SuppressWarnings("all")
 @RequestMapping(value = "/writer")
 @Controller
 public class WriterLoginController {
-    Logger                  logger = LoggerFactory.getLogger(WriterLoginController.class);
+	Logger logger = LoggerFactory.getLogger(WriterLoginController.class);
 
-    @Autowired
-    WriterUserService       writerUserService;
-    @Autowired
-    WriterPermissionService writerPermissionService;
+	@Autowired
+	WriterUserService writerUserService;
+	@Autowired
+	WriterPermissionService writerPermissionService;
 
-    /**
-     * 
-     * <pre>
-     * 功能描述：登陆
-     * 使用示范：
-     *
-     * @param user
-     * @param model
-     * @return
-     * </pre>
-     */
-    @ResponseBody
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ResponseBean login(@RequestParam("username") String username,
-    @RequestParam("password") String password, HttpServletRequest request) {
-        logger.info("username => " + username);
-        logger.info("password => " + password);
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        try {
-            WriterUser writerUser =
-            writerUserService.login(username, new DesRun("", password).enpsw);
-            writerUser.setLoginType(Const.LOGIN_TYPE_WRITER);
-            writerUser.setAvatar(Const.DEFAULT_USER_AVATAR);
-            // 根据用户Id查询对应权限Id
-            List<Long> writerUserPermissionIds =
-            writerUserService.getWriterUserPermissionByUserId(writerUser.getId());
-            // 验证成功在Session中保存用户信息
-            request.getSession().setAttribute(Const.SESSION_WRITER_USER, writerUser);
-            // 验证成功在Session中保存用户Token信息
-            request.getSession().setAttribute(Const.SEESION_WRITER_USER_TOKEN,
-                                              new DesRun(password, username).enpsw);
-            resultMap.put(Const.USER_SEESION_ID, new DesRun("", request.getSession().getId()).enpsw);
-            resultMap.put(Const.SESSION_WRITER_USER, writerUser);
-            resultMap.put(Const.SEESION_WRITER_USER_TOKEN, new DesRun(password, username).enpsw);
-            resultMap.put("writerUserPermissionIds", writerUserPermissionIds);
-            return new ResponseBean(resultMap);
-        } catch (CheckedServiceException cException) {
-            return new ResponseBean(cException);
-        }
-    }
+	/**
+	 * 
+	 * <pre>
+	 * 功能描述：登陆
+	 * 使用示范：
+	 *
+	 * &#64;param user
+	 * &#64;param model
+	 * &#64;return
+	 * </pre>
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public ResponseBean login(@RequestParam("username") String username, @RequestParam("password") String password,
+			HttpServletRequest request) {
+		logger.info("username => " + username);
+		logger.info("password => " + password);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			WriterUser writerUser = writerUserService.login(username, new DesRun("", password).enpsw);
+			writerUser.setLoginType(Const.LOGIN_TYPE_WRITER);
+			if (!RouteUtil.DEFAULT_USER_AVATAR.equals(writerUser.getAvatar())) {
+				writerUser.setAvatar(RouteUtil.userAvatar(writerUser.getAvatar()));
+			}
+			// 根据用户Id查询对应权限Id
+			List<Long> writerUserPermissionIds = writerUserService.getWriterUserPermissionByUserId(writerUser.getId());
+			// 验证成功在Session中保存用户信息
+			request.getSession().setAttribute(Const.SESSION_WRITER_USER, writerUser);
+			// 验证成功在Session中保存用户Token信息
+			request.getSession().setAttribute(Const.SEESION_WRITER_USER_TOKEN, new DesRun(password, username).enpsw);
+			resultMap.put(Const.USER_SEESION_ID, new DesRun("", request.getSession().getId()).enpsw);
+			resultMap.put(Const.SESSION_WRITER_USER, writerUser);
+			resultMap.put(Const.SEESION_WRITER_USER_TOKEN, new DesRun(password, username).enpsw);
+			resultMap.put("writerUserPermissionIds", writerUserPermissionIds);
+			return new ResponseBean(resultMap);
+		} catch (CheckedServiceException cException) {
+			return new ResponseBean(cException);
+		}
+	}
 
-    /**
-     * 
-     * <pre>
-     * 功能描述：退出
-     * 使用示范：
-     *
-     * @param model
-     * @return
-     * </pre>
-     */
-    @ResponseBody
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ResponseBean logout(@RequestParam("sessionId") String sessionId,
-    @RequestParam("loginType") Short loginType) {
-        HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
-        if (ObjectUtil.notNull(session)) {
-            if (Const.LOGIN_TYPE_WRITER == loginType) {
-                session.removeAttribute(Const.SESSION_WRITER_USER);// 清除User信息
-                session.removeAttribute(Const.SEESION_WRITER_USER_TOKEN);// 清除token
-            }
-        }
-        return new ResponseBean();
-    }
+	/**
+	 * 
+	 * <pre>
+	 * 功能描述：退出
+	 * 使用示范：
+	 *
+	 * &#64;param model
+	 * &#64;return
+	 * </pre>
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public ResponseBean logout(@RequestParam("sessionId") String sessionId,
+			@RequestParam("loginType") Short loginType) {
+		HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
+		if (ObjectUtil.notNull(session)) {
+			if (Const.LOGIN_TYPE_WRITER == loginType) {
+				session.removeAttribute(Const.SESSION_WRITER_USER);// 清除User信息
+				session.removeAttribute(Const.SEESION_WRITER_USER_TOKEN);// 清除token
+			}
+		}
+		return new ResponseBean();
+	}
 
-    /**
-     * 无权限
-     * 
-     * <pre>
-     * 功能描述：
-     * 使用示范：
-     *
-     * @return
-     * </pre>
-     */
-    @ResponseBody
-    @RequestMapping(value = "/unAuthorization", method = RequestMethod.GET)
-    public ResponseBean unAuthorization() {
-        ResponseBean<Object> responseBean = new ResponseBean<Object>();
-        responseBean.setCode(ResponseBean.NO_PERMISSION);
-        responseBean.setMsg("没有权限！");
-        return responseBean;
-    }
+	/**
+	 * 无权限
+	 * 
+	 * <pre>
+	 * 功能描述：
+	 * 使用示范：
+	 *
+	 * &#64;return
+	 * </pre>
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/unAuthorization", method = RequestMethod.GET)
+	public ResponseBean unAuthorization() {
+		ResponseBean<Object> responseBean = new ResponseBean<Object>();
+		responseBean.setCode(ResponseBean.NO_PERMISSION);
+		responseBean.setMsg("没有权限！");
+		return responseBean;
+	}
 }

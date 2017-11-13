@@ -119,4 +119,22 @@
 	    </if>  
     </select> 
 
+	<!-- 根据区域名称获取区域id -->
+	<select id="getAreaId" parameterType="java.lang.String"
+		resultType="java.lang.Long">
+		select
+		id
+		from
+		area
+		where
+		area_name = #{areaName}
+	</select>
+	
+	<!-- 获取区域机构id的数量 -->
+	<!-- <select id="getAreaByOrgId" parameterType="java.lang.Long" resultType="java.lang.Long">
+		select id from area where id=#{id}
+	</select> -->
+	<select id="getOrgId" parameterType="java.lang.Long" resultType="java.lang.Long">
+		select count(area_id) from org where area_id=#{id}
+	</select>
 </mapper>

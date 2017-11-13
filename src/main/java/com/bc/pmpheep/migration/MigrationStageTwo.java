@@ -41,6 +41,7 @@ import com.bc.pmpheep.utils.ExcelHelper;
 public class MigrationStageTwo {
 
 	private final Logger logger = LoggerFactory.getLogger(MigrationStageTwo.class);
+	private int number = 0 ;
 	
 	@Resource
 	ExcelHelper excelHelper;
@@ -64,7 +65,7 @@ public class MigrationStageTwo {
 		cannotFindRole();
 	}
 	
-	protected int pmphDepartment() {
+	protected void pmphDepartment() {
 		String tableName = "ba_organize";//图一此表已添加new_pk
 		String sql = "SELECT orgid,parentid,orgname,sortno,remark "
 				   + "FROM ba_organize WHERE orgcode "
@@ -81,7 +82,6 @@ public class MigrationStageTwo {
             	map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
             	excel.add(map);
             	logger.error("显示顺序为负数，此结果将被记录在Excel中");
-            	continue;
             }
             String note = (String) map.get("remark");
             PmphDepartment pmphDepartment = new PmphDepartment();
@@ -100,7 +100,8 @@ public class MigrationStageTwo {
             pmphDepartment = pmphDepartmentService.add(pmphDepartment);
             Long pk = pmphDepartment.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "orgid", departmentId);            
-			count++;			
+			count++;
+			number++;
 		}
 		if(excel.size() > 0){
 			try {
@@ -115,7 +116,6 @@ public class MigrationStageTwo {
         Map<String,Object> msg= new HashMap<String,Object>();
         msg.put("result", "pmph_department表迁移完成"+count+"/"+ maps.size());
         SQLParameters.msg.add(msg);
-        return count; 
 	}
 	
 	protected void pmphUser() {
@@ -151,7 +151,7 @@ public class MigrationStageTwo {
 				  realName = userName;
 			  }
 			  Long departmentId = (Long) map.get("new_pk");
-			  if (ObjectUtil.isNull(departmentId) || departmentId > pmphDepartment()){
+			  if (ObjectUtil.isNull(departmentId) || departmentId > number){
 				  departmentId = 0L;
 				  map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到对应社内部门或连接的是学校机构。"));
 				  excel.add(map);

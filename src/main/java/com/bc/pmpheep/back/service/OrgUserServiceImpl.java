@@ -203,6 +203,11 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 
 	@Override
 	public String updateOrgUserOfBack(OrgUser orgUser) throws CheckedServiceException {
+		OrgUser username=orgUserDao.getOrgUserById(orgUser.getId());
+		if(!username.getUsername().equals(orgUser.getUsername())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "机构代码不相同");
+		}
 		if (ObjectUtil.isNull(orgUser.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "主键为空");

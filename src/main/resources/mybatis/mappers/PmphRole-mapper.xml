@@ -230,12 +230,13 @@
 			<if test="isDisabled != null">
 				is_disabled = #{isDisabled},
 			</if>
-			<if test="note != null and note!=''">
+			<!-- <if test="note != null and note!=''">
 				note = #{note},
-			</if>
+			</if> -->
 			<if test="sort != null and sort!=''">
 				sort = #{sort},
 			</if>
+			note = #{note}
 		</set>
 		where id = #{id}
 	</update>
