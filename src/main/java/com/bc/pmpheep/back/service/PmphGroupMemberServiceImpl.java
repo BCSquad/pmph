@@ -253,14 +253,16 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	public String deletePmphGroupMemberByIds(Long groupId, Long[] ids, String sessionId)
 			throws CheckedServiceException {
 		String result = "FAIL";
-		if (!isFounderOrisAdmin(groupId, sessionId)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
-					"该用户没有操作权限");
-		}
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"该用户为空");
+		}
+		if (!pmphUser.getIsAdmin()) {
+			if (!isFounderOrisAdmin(groupId, sessionId)) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+						"该用户没有操作权限");
+			}
 		}
 		Long userid = pmphUser.getId();
 		PmphGroupMemberVO currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId, userid, false);
