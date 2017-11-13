@@ -73,7 +73,7 @@ public class DesRun {
     }
 
     private String decrypt(String strPassword) {
-        if ("".equals(strPassword)) {
+        if (null== strPassword || ("".equals(strPassword))) {
             return "";
         }
         String pw = "";

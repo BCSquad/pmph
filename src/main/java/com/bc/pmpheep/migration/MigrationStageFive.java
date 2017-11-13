@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.TextbookService;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
@@ -57,75 +58,69 @@ public class MigrationStageFive {
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             /* 根据MySQL字段类型进行类型转换 */
-        	String id = map.get("bookid").toString();// 旧表主键
+        	String id = (String) map.get("bookid");// 旧表主键
         	Textbook textbook = new Textbook();
-        	textbook.setId(0L);// 主键
             Integer revision = (Integer) map.get("revision");
-            if( null != revision){
-            	textbook.setTextbookRound(revision); //书籍轮次
-            } else {
-            	textbook.setTextbookRound(1);//没有值，则书籍轮次默认为1
+            if( ObjectUtil.isNull(revision)){
+            	revision = 1;//没有值，则书籍轮次默认为1
             }
             Long c = (Long) map.get("newmaterid");
-            if (null != c) {
-            	textbook.setMaterialId(c);// 教材id
-			} else {
-				map.put(SQLParameters.EXCEL_EX_HEADER, "教材id为空");
-				excel.add(map);
-				logger.error("教材id为空，此结果将将被记录在Excel中");
-				continue;
-			}
+            if (ObjectUtil.isNull(c)) {
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "教材id为空。");
+            	excel.add(map);
+            	logger.error("教材id为空，此结果将将被记录在Excel中");
+            	continue;
+            }
             Long createuserid = (Long) map.get("bookcreateuserid");
             Long newcreateuseid=(Long) map.get("newcreateuserid");
-            if (null != createuserid||null != newcreateuseid) {
-            	if(createuserid==newcreateuseid){// 如果没有创建者id 就找教材创建者id
-            		textbook.setFounderId(createuserid); // 创建者id
-            	}else{
-            		textbook.setFounderId(newcreateuseid); // 创建者id	
-            	}
-			} else {
-				/*记录教材书籍表没有的创建者id为空*/
-				map.put(SQLParameters.EXCEL_EX_HEADER, "创建者id为空，");
-				excel.add(map);
-				logger.error("创建者id为空，此结果将将被记录在Excel中");
-				continue;
-			}
+            if (ObjectUtil.isNull(createuserid) && ObjectUtil.isNull(newcreateuseid)) {
+            	/*记录教材书籍表没有的创建者id为空*/
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "创建者id为空。");
+            	excel.add(map);
+            	logger.error("创建者id为空，此结果将将被记录在Excel中");
+            	continue;
+            }
             String bookname = (String) map.get("bookname");
             if(StringUtil.isEmpty(bookname)){
-            	map.put(SQLParameters.EXCEL_EX_HEADER, "书籍名称为空");
-				excel.add(map);
-				logger.error("书籍名称为空，此结果将将被记录在Excel中");
-				continue;
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "书籍名称为空。");
+            	excel.add(map);
+            	logger.error("书籍名称为空，此结果将将被记录在Excel中");
+            	continue;
             }
             java.util.Date ceDate = (java.util.Date) map.get("createdate");
             /*教材表对应书籍创建时间*/
-        	java.util.Date createdate = (java.util.Date) map.get("newcreatedate");
-            if(null != ceDate||null !=createdate){//如果没有创建时间 就查找关联教材创建时间
-            	if(ceDate==createdate){
-            		textbook.setGmtCreate((Timestamp) ceDate);// 创建时间
-            	}else{
-            		textbook.setGmtCreate((Timestamp) createdate);
-            	}
-            } else {
-            	map.put(SQLParameters.EXCEL_EX_HEADER, "创建时间为空");
-				excel.add(map);
-				logger.error("创建时间为空，因新库不能插入null，去教材表找对应创建时间，此结果将将被记录在Excel中");
-				continue;
-			}
+            java.util.Date createdate = (java.util.Date) map.get("newcreatedate");
+            if(ObjectUtil.isNull(ceDate) && ObjectUtil.isNull(createdate)){//如果没有创建时间 就查找关联教材创建时间
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "创建时间为空。");
+            	excel.add(map);
+            	logger.error("创建时间为空，因新库不能插入null，去教材表找对应创建时间，此结果将将被记录在Excel中");
+            	continue;
+            }
             Integer xnumber = (Integer) map.get("xnumber");
-            if(null != xnumber){
-            	textbook.setSort(xnumber);// 图书序号
-            } else {
-            	map.put(SQLParameters.EXCEL_EX_HEADER, "图书序号为空");
-				excel.add(map);
-				logger.error("图书序号为空，此结果将将被记录在Excel中");
-				continue;
-			}
+            if(ObjectUtil.isNull(xnumber)){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "图书序号为空。");
+            	excel.add(map);
+            	logger.error("图书序号为空，此结果将将被记录在Excel中");
+            	continue;
+            } 
+            textbook.setTextbookRound(revision); //书籍轮次
+            textbook.setMaterialId(c);// 教材id
+            if(createuserid==newcreateuseid){// 如果没有创建者id 就找教材创建者id
+            	textbook.setFounderId(createuserid); // 创建者id
+            }else{
+            	textbook.setFounderId(newcreateuseid); // 创建者id	
+            }
+            if(ceDate==createdate){
+            	textbook.setGmtCreate((Timestamp) ceDate);// 创建时间
+            }else{
+            	textbook.setGmtCreate((Timestamp) createdate);
+            }
+            textbook.setSort(xnumber);// 图书序号
             textbook.setPlanningEditor((Long) map.get("editroid"));// 策划编辑id
             textbook.setTextbookName(bookname);// 书籍名称
             textbook.setGmtPublished((Timestamp) map.get("resultpublishdate"));// 公布时间
             textbook.setIsbn((String) map.get("isbn"));// ISBN号
-            textbook.setIsLocked(true);// 是否锁定（通过）旧平台无该状态 默认0
+            textbook.setIsLocked(false);// 是否锁定（通过）旧平台无该状态 默认0
             textbook.setRevisionTimes(0);// 公布后再次修改次数  旧平台无该状态 默认0
             textbook.setRepublishTimes(0);// 公布后再次公布次数 旧平台无该状态 默认0
             textbook.setGmtUpdate((Timestamp) map.get("resultpublishdate"));// 修改时间 旧平台无 默认为公布时间
@@ -160,7 +155,7 @@ public class MigrationStageFive {
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, tableName, tableName);
+                excelHelper.exportFromMaps(excel, "教材书籍表", "textbook");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
