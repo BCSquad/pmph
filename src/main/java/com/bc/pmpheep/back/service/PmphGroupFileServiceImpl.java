@@ -88,8 +88,8 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 			}
 			PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(id, userId,
 					false);
-			PmphGroupFile pmphGroupFile = new PmphGroupFile(id, pmphGroupMemberVO.getId(), "0",
-					file.getOriginalFilename(), 0, null);
+			PmphGroupFile pmphGroupFile = new PmphGroupFile(id, pmphGroupMemberVO.getId(),
+					"0" + pmphGroupMemberVO.getId(), file.getOriginalFilename(), 0, null);
 			pmphGroupFileDao.addPmphGroupFile(pmphGroupFile);
 			list.add(pmphGroupFile);
 
