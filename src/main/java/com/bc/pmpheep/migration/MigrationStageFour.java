@@ -261,13 +261,12 @@ public class MigrationStageFour {
 				excel.add(oldMaterial);
 				continue;
 			}
-			String teachRound = (String) oldMaterial.get("round");
-			if (StringUtil.isEmpty(teachRound)){
+			Integer round = (Integer) oldMaterial.get("round");
+			if (ObjectUtil.isNull(round)){
 				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("轮次为空,设默认值1。"));
 				excel.add(oldMaterial);
-				teachRound ="1";
+				round = 1;
 			}
-			Integer round = Integer.parseInt(teachRound);
 			Long booktypesid=(Long) oldMaterial.get("booktypesid");
 			if(ObjectUtil.isNull(booktypesid)){
 				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("架构为空，设为默认0。"));
