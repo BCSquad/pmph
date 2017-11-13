@@ -431,7 +431,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 		WriterUser username=writerUserDao.get(writerUser.getId());
 		if(!writerUser.getUsername().equals(username.getUsername())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT, 
-					CheckedExceptionResult.NULL_PARAM, "用户代码不相同");
+					CheckedExceptionResult.ILLEGAL_PARAM, "用户代码不相同");
 		}
 		if (StringUtil.strLength(writerUser.getUsername()) > 20) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
