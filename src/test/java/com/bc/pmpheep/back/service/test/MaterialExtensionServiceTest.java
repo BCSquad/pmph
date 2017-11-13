@@ -39,8 +39,10 @@ public class MaterialExtensionServiceTest extends BaseTest {
     	//删除
     	Assert.assertTrue("删除失败",materialExtensionService.deleteMaterialExtensionById(16L) >= 0 );
     	//查询
-    	Assert.assertNotNull("获取数据失败",materialExtensionService.getMaterialExtensionById(15L));
+    	Assert.assertNotNull("获取数据失败",materialExtensionService.getMaterialExtensionById(7L));
     	
+    	//查询
+    	Assert.assertNotNull("获取数据失败",materialExtensionService.getMaterialExtensionByMaterialId(23L));
     }
     
     
