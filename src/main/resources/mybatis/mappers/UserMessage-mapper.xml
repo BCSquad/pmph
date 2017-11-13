@@ -386,7 +386,9 @@
 		AND 
 			m.receiver_type = #{parameter.userType} 
 		AND 
-			m.is_deleted = false
+			m.is_deleted = false 
+		AND 
+			m.is_withdraw = false
 		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
 		</if>

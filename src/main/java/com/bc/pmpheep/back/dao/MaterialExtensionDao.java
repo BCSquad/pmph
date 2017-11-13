@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.MaterialExtension;
@@ -11,6 +13,14 @@ import com.bc.pmpheep.back.po.MaterialExtension;
  */
 @Repository
 public interface MaterialExtensionDao {
+	/**
+	 * 根据 materialId 获取 MaterialExtension结果集 
+	 * @author Mryang
+	 * @createDate 2017年11月13日 下午5:12:51
+	 * @param materialId
+	 * @return
+	 */
+	List<MaterialExtension> getMaterialExtensionByMaterialId(Long materialId);
 
 	/**
 	 * 新增一个MaterialExtension

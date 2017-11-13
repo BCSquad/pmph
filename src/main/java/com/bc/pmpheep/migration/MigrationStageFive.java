@@ -59,7 +59,7 @@ public class MigrationStageFive {
         for (Map<String, Object> map : maps) {
             /* 根据MySQL字段类型进行类型转换 */
         	String id = (String) map.get("bookid");// 旧表主键
-        	Textbook textbook = new Textbook();
+        	
             Integer revision = (Integer) map.get("revision");
             if( ObjectUtil.isNull(revision)){
             	revision = 1;//没有值，则书籍轮次默认为1
@@ -102,7 +102,8 @@ public class MigrationStageFive {
             	excel.add(map);
             	logger.error("图书序号为空，此结果将将被记录在Excel中");
             	continue;
-            } 
+            }
+            Textbook textbook = new Textbook();
             textbook.setTextbookRound(revision); //书籍轮次
             textbook.setMaterialId(c);// 教材id
             if(createuserid==newcreateuseid){// 如果没有创建者id 就找教材创建者id
