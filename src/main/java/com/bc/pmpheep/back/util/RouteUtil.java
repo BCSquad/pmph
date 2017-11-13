@@ -23,7 +23,7 @@ public class RouteUtil {
 	// 新建用户默认头像（现在没有数据没有路径，等有路径的时候加入）
 	public static final String DEFAULT_USER_AVATAR = "/static/default_image.png";
 	// mongoDB图片的前缀
-	public static final String MONGODB_IMAGE = "pmpheep/image/";
+	public static final String MONGODB_IMAGE = "/pmpheep/image/";
 	// mongoDB文件的前缀(小组)
 	public static final String MONGODB_GROUP_FILE = "/groupfile/download/";
 	// mongoDB文件的前缀(普通)
