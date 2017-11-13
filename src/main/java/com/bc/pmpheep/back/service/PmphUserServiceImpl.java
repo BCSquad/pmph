@@ -374,7 +374,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 	@Override
 	public String updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO) throws CheckedServiceException {
 		PmphUser username=userDao.get(pmphUserManagerVO.getId());
-		if(!pmphUserManagerVO.getUsername().equals(username)){
+		if(!username.equals(pmphUserManagerVO.getUsername())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.ILLEGAL_PARAM,"用户账号不相同");
 		}
