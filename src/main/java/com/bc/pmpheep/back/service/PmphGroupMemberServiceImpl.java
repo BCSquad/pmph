@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
@@ -118,10 +119,12 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		List<PmphGroupMemberVO> list = pmphGroupMemberDao.listPmphGroupMember(groupId);
 		for (PmphGroupMemberVO pmphGroupMemberVO : list) {
 			if (pmphGroupMemberVO.getIsWriter()) {
-				pmphGroupMemberVO.setAvatar(writerUserService.get(pmphGroupMemberVO.getUserId()).getAvatar());
+				pmphGroupMemberVO.setAvatar(
+						RouteUtil.userAvatar(writerUserService.get(pmphGroupMemberVO.getUserId()).getAvatar()));
 				pmphGroupMemberVO.setUserType(Const.SENDER_TYPE_2);
 			} else {
-				pmphGroupMemberVO.setAvatar(pmphUserService.get(pmphGroupMemberVO.getUserId()).getAvatar());
+				pmphGroupMemberVO.setAvatar(
+						RouteUtil.userAvatar(pmphUserService.get(pmphGroupMemberVO.getUserId()).getAvatar()));
 				pmphGroupMemberVO.setUserType(Const.SENDER_TYPE_1);
 			}
 		}
@@ -250,14 +253,16 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	public String deletePmphGroupMemberByIds(Long groupId, Long[] ids, String sessionId)
 			throws CheckedServiceException {
 		String result = "FAIL";
-		if (!isFounderOrisAdmin(groupId, sessionId)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
-					"该用户没有操作权限");
-		}
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"该用户为空");
+		}
+		if (!pmphUser.getIsAdmin()) {
+			if (!isFounderOrisAdmin(groupId, sessionId)) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+						"该用户没有操作权限");
+			}
 		}
 		Long userid = pmphUser.getId();
 		PmphGroupMemberVO currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId, userid, false);
@@ -269,7 +274,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 				PmphGroupMember pmphGroupMember = pmphGroupMemberDao.getPmphGroupMemberById(id);
 				if (userid == pmphGroupMember.getUserId() && !pmphGroupMember.getIsWriter()) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-							CheckedExceptionResult.ILLEGAL_PARAM, "不能删除自己");
+							CheckedExceptionResult.ILLEGAL_PARAM, "您无权限删除管理员，请重新选择");
 				}
 				if (pmphUser.getIsAdmin() || currentUser.getIsFounder()) {// 只有小组创建者和超级管理员可以删除小组成员
 					if (pmphGroupMemberDao.getPmphGroupMemberById(id).getIsFounder()) {
@@ -280,7 +285,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 				}
 				if (currentUser.getIsAdmin() && (pmphGroupMember.getIsFounder() || pmphGroupMember.getIsAdmin())) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-							CheckedExceptionResult.ILLEGAL_PARAM, "管理员不能删除创建者或其他管理员");
+							CheckedExceptionResult.ILLEGAL_PARAM, "您无权限删除管理员，请重新选择");
 				} else {
 					pmphGroupMemberDao.deletePmphGroupMemberById(id);
 				}
@@ -323,14 +328,14 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			} else {
 				for (PmphGroupMember pmphGroupMember : members) {
 					PmphGroupMember member = pmphGroupMemberDao.getPmphGroupMemberById(pmphGroupMember.getId());
-					if (member.getIsFounder()) {
+					if (member.getIsFounder() && !pmphGroupMember.getIsAdmin()) {
 						throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-								CheckedExceptionResult.NULL_PARAM, "不要把创建者添加为管理员了");
+								CheckedExceptionResult.NULL_PARAM, "小组创建者不能取消管理员身份");
 					}
 					if (pmphGroupMember.getIsAdmin()) {
-						if (member.getIsAdmin()) {
+						if (member.getIsAdmin() || member.getIsFounder()) {
 							throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-									CheckedExceptionResult.NULL_PARAM, "该用户已经是管理员了");
+									CheckedExceptionResult.NULL_PARAM, "该用户已是小组管理员了");
 						} else {
 							pmphGroupMember.setIsAdmin(true);
 						}
@@ -339,7 +344,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 							pmphGroupMember.setIsAdmin(false);
 						} else {
 							throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-									CheckedExceptionResult.NULL_PARAM, "该成员不是小组管理员");
+									CheckedExceptionResult.NULL_PARAM, "该用户不是小组管理员");
 						}
 
 					}

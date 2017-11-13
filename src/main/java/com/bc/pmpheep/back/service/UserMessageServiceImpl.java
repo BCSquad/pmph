@@ -29,6 +29,7 @@ import com.bc.pmpheep.back.util.FileUpload;
 import com.bc.pmpheep.back.util.FileUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MessageStateVO;
@@ -349,7 +350,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             WebScocketMessage webScocketMessage =
             new WebScocketMessage(message.getId(), Const.MSG_TYPE_1, senderUserId,
                                   pmphUser.getRealname(), Const.SENDER_TYPE_1,
-                                  Const.SEND_MSG_TYPE_0, Const.DEFAULT_USER_AVATAR, title,
+                                  Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, title,
                                   message.getContent(), DateUtil.getCurrentTime());
             handler.sendWebSocketMessageToUser(websocketUserIds, webScocketMessage);
             // 添加附件到MongoDB表中

@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
@@ -113,7 +115,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 				if (ArrayUtil.isNotEmpty(ids)) {// 判断该小组是否有文件
 					pmphGroupFileService.deletePmphGroupFileById(pmphGroup.getId(), ids, sessionId);// 删除小组文件
 				}
-				if (!Const.DEFAULT_GROUP_IMAGE.equals(group.getGroupImage())) {// 解散小组时删除小组头像
+				if (!RouteUtil.DEFAULT_GROUP_IMAGE.equals(group.getGroupImage())) {// 解散小组时删除小组头像
 					fileService.remove(group.getGroupImage());
 				}
 				pmphGroupMessageService.deletePmphGroupMessageByGroupId(pmphGroup.getId());// 删除小组消息
@@ -184,12 +186,19 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
+		List<PmphGroupListVO> list = new ArrayList<>();
 		if (pmphUser.getIsAdmin()) {
-			return pmphGroupDao.listPmphGroup(pmphGroup.getGroupName());
+			list = pmphGroupDao.listPmphGroup(pmphGroup.getGroupName());
+			for (PmphGroupListVO pmphGroupListVO : list) {
+				pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
+			}
 		} else {
-			return pmphGroupDao.getList(pmphGroup, pmphUser.getId());
+			list = pmphGroupDao.getList(pmphGroup, pmphUser.getId());
+			for (PmphGroupListVO pmphGroupListVO : list) {
+				pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
+			}
 		}
-
+		return list;
 	}
 
 	@Override
@@ -204,7 +213,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"您的小组名称已经被使用了");
 		}
-		String groupImage = Const.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
+		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		if (null != file) {
 			groupImage = fileService.save(file, ImageType.GROUP_AVATAR, 0);
 		}
@@ -246,7 +255,8 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 				Long id = pmphGroup.getId();
 				PmphGroup pmphGroupOld = getPmphGroupById(id);
 				if (null != pmphGroupOld && null != pmphGroupOld.getGroupImage()
-						&& !"".equals(pmphGroupOld.getGroupImage())) {
+						&& !"".equals(pmphGroupOld.getGroupImage())
+						&& !RouteUtil.DEFAULT_USER_AVATAR.equals(pmphGroupOld.getGroupImage())) {
 					fileService.remove(pmphGroupOld.getGroupImage());
 				}
 				String newGroupImage = fileService.save(file, ImageType.GROUP_AVATAR, 0);
