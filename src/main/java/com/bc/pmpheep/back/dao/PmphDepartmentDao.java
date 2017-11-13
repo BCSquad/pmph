@@ -87,5 +87,12 @@ public interface PmphDepartmentDao {
 	 *
 	 */
 	List<PmphDepartment> getPmphDepartmentByDpNameAndParentId(PmphDepartment pmphDepartment);
+	
+	/**
+	 * 根据主键id查询
+	 * @param id
+	 * @return
+	 */
+	List<PmphUserDepartmentVO> getDepartmentId(Long id);
 
 }

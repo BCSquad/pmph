@@ -183,7 +183,7 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 						CheckedExceptionResult.ILLEGAL_PARAM, "部门中还有用户，不能删除部门");
 			}
 		}
-		List<PmphUserDepartmentVO> idList = pmphDepartmentDao.listPmphDepartment(id);
+		List<PmphUserDepartmentVO> idList = pmphDepartmentDao.getDepartmentId(id);
 		for (PmphUserDepartmentVO idListVo : idList) {
 			// 检查是否是子节点
 			List<PmphUserDepartmentVO> idLists = pmphDepartmentDao.listPmphDepartment(idListVo.getId());

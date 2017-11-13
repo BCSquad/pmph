@@ -59,7 +59,7 @@ public class PmphDepartmentSeviceTest extends BaseTest {
 	
 	@Test
 	public void deletePmphDepartmentBatch(){
-		Long id = 192L;
+		Long id = 197L;
 		pmphDepartmentService.deletePmphDepartmentBatch(id);
 		System.out.println(pmphDepartmentService.getPmphDepartmentById(id));
 	}
