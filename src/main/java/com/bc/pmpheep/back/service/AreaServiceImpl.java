@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.AreaDao;
 import com.bc.pmpheep.back.po.Area;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.vo.AreaTreeVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -42,6 +43,10 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM,
 					"区域名称为空");
 		}
+		if (ObjectUtil.notNull(areaDao.getAreaId(area.getAreaName()))) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM,
+					"区域名称重复");
+		}
 		Long id = area.getId();
 		areaDao.addArea(area);
 		if (null != id) {
@@ -74,6 +79,10 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 	public Integer deleteAreaById(Long id) throws CheckedServiceException {
 		if (null == id) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, "主键为空");
+		}
+		if (0 < areaDao.getOrgId(id)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, 
+					"区域在机构区域已使用");
 		}
 		return areaDao.deleteAreaById(id);
 	}
@@ -125,6 +134,10 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 	public Integer deleteAreaBatch(Long id) throws CheckedServiceException {
 		if (null == id) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, "ID为空");
+		}
+		if (0 < areaDao.getOrgId(id)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, 
+					"区域在机构区域已使用");
 		}
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(id);

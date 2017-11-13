@@ -59,7 +59,7 @@ public class CmsScheduleServiceImpl implements CmsScheduleService {
     @Override
     public List<CmsSchedule> getCmsScheduleList(CmsSchedule cmsSchedule)
     throws CheckedServiceException {
-        if (ObjectUtil.isNull(cmsSchedule)) {
+        if (ObjectUtil.isNull(cmsSchedule.getScheduledTime())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
 

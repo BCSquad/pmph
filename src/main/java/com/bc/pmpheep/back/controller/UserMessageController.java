@@ -74,8 +74,8 @@ public class UserMessageController {
     @ResponseBody
     public ResponseBean listMessageState(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
-    @RequestParam(name = "pageSize") Integer pageSize, MessageStateVO messageStateVO,
-    @RequestParam("sessionId") String sessionId) {
+    @PathVariable("msgId") String msgId, @RequestParam(name = "pageSize") Integer pageSize,
+    MessageStateVO messageStateVO, @RequestParam("sessionId") String sessionId) {
         PageParameter<MessageStateVO> pageParameter =
         new PageParameter<MessageStateVO>(pageNumber, pageSize, messageStateVO);
         return new ResponseBean(userMessageService.listMessageState(pageParameter, sessionId));
@@ -143,13 +143,15 @@ public class UserMessageController {
     @ResponseBody
     public ResponseBean addUserMessage(Message message, @RequestParam("title") String title,
     @RequestParam("sendType") Integer sendType, @RequestParam("orgIds") String orgIds,
-    @RequestParam("userIds") String userIds, @RequestParam("bookIds") String bookids,
-    @RequestParam("file") String[] files, @RequestParam("sessionId") String sessionId) {
+    @RequestParam("senderId") Long senderId, @RequestParam("userIds") String userIds,
+    @RequestParam("bookIds") String bookids, @RequestParam("file") String[] files,
+    @RequestParam("sessionId") String sessionId) {
         try {
             return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,
                                                                               title,
                                                                               sendType,
                                                                               orgIds,
+                                                                              senderId,
                                                                               userIds,
                                                                               bookids,
                                                                               true,
@@ -176,13 +178,15 @@ public class UserMessageController {
     @ResponseBody
     public ResponseBean addUserMessageAgain(Message message, @RequestParam("title") String title,
     @RequestParam("sendType") Integer sendType, @RequestParam("orgIds") String orgIds,
-    @RequestParam("userIds") String userIds, @RequestParam("bookIds") String bookIds,
-    @RequestParam("file") String[] files, @RequestParam("sessionId") String sessionId) {
+    @RequestParam("senderId") Long senderId, @RequestParam("userIds") String userIds,
+    @RequestParam("bookIds") String bookIds, @RequestParam("file") String[] files,
+    @RequestParam("sessionId") String sessionId) {
         try {
             return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,
                                                                               title,
                                                                               sendType,
                                                                               orgIds,
+                                                                              senderId,
                                                                               userIds,
                                                                               bookIds,
                                                                               false,

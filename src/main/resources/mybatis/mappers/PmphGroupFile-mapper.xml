@@ -157,10 +157,12 @@
 		LEFT JOIN pmph_group_member b ON
 		a.group_id = b.group_id
 		WHERE
-		b.group_id = #{parameter.groupId}
+		b.group_id = #{parameter.groupId} AND
+		b.id
+		= a.member_id
 		<if test="parameter.fileName !=null and parameter.fileName !=''">
 			and a.file_name like concat('%',#{parameter.fileName},'%')
-		</if> 
+		</if>
 		GROUP BY a.file_id DESC
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
@@ -188,10 +190,13 @@
 		select count(*) from pmph_group_file where
 		file_id=#{fileId} ;
 	</select>
-	
+
 	<!-- 更新 下载次数 -->
 	<update id="updatePmphGroupFileOfDownload" parameterType="PmphGroupFile">
-		update pmph_group_file set download=download+1 WHERE group_id = #{groupId} AND file_id = #{fileId}
+		update
+		pmph_group_file set download=download+1 WHERE group_id = #{arg0}
+		AND
+		file_id = #{arg1}
 	</update>
-	
+
 </mapper>

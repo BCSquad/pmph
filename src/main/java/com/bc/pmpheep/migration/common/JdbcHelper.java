@@ -4,21 +4,16 @@
  */
 package com.bc.pmpheep.migration.common;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.stereotype.Component;
+
+import com.bc.pmpheep.back.util.StringUtil;
 
 /**
  * JDBC工具类
@@ -152,5 +147,48 @@ public class JdbcHelper {
     		flag = true;
     	}
     	return flag;
+    }
+    
+    /**
+     * 
+     * Description:判断教龄数据是否符合规范
+     * @author:lyc
+     * @date:2017年11月9日下午3:35:10
+     * @param 教龄
+     * @return boolean
+     */
+    public static boolean judgeExperience (String experience){
+    	boolean flag = true;
+    	if (StringUtil.notEmpty(experience) && StringUtil.isNumeric(experience) 
+    			&& StringUtil.strLength(experience) < 3){
+    		flag = false;
+    	}
+    	return flag;
+    }
+    
+    /**
+     * 
+     * Description:将不符合规范的教龄修改为合乎规范的数据
+     * @author:lyc
+     * @date:2017年11月9日下午3:40:11
+     * @param 教龄
+     * @return 合乎规范的教龄数据
+     */
+    public static String correctExperience (String experience){
+    	if (StringUtil.isEmpty(experience) || "无".equals(experience) || "、".equals(experience)){
+    		experience = "0" ;
+    	}
+        if (experience.indexOf("岁") != -1){
+        	experience = experience.substring(0, experience.lastIndexOf("岁"));
+        	Integer age = Integer.parseInt(experience);
+        	age = age - 20 ;
+        	experience = String.valueOf(age);
+        }else{
+        	experience = experience.replace("年", "").replace("五", "5").replace("s", "").replace(" ", "");
+        	if (StringUtil.strLength(experience) > 2){
+        		experience = experience.substring(0,2);
+        	}
+        }
+    	return experience;
     }
 }

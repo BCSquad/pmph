@@ -68,7 +68,8 @@ public class OrgTypeServiceImpl extends BaseService implements OrgTypeService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
 		if (orgDao.listOrgByOrgType(id).size() > 0) {
-
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.ILLEGAL_PARAM,
+					"该类型还有关联的机构");
 		}
 		return orgTypeDao.deleteOrgTypeById(id);
 	}

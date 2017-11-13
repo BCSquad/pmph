@@ -70,7 +70,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 					CheckedExceptionResult.ILLEGAL_PARAM, "用户名不能超过20个字符");
 		}
 
-		if (null == orgUser.getRealname()) {
+		if (StringUtil.isEmpty(orgUser.getRealname())) {
 			orgUser.setRealname(orgUser.getUsername());
 		}
 		orgUserDao.addOrgUser(orgUser);
@@ -129,6 +129,11 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 		}
 		List<OrgUser> orgUserList = new ArrayList<OrgUser>(orgUserIds.length);
 		for (String orgId : orgUserIds) {
+			OrgUser orgUser = orgUserDao.getOrgUserById(CastUtil.castLong(orgId));
+			if (orgUser.getProgress() != 0) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.SCHOOL_ADMIN_CHECK,
+						CheckedExceptionResult.NULL_PARAM, "用户已经审核过了");
+			}
 			orgUserList.add(new OrgUser(CastUtil.castLong(orgId), progress));
 		}
 		return orgUserDao.updateOrgUserProgressById(orgUserList);
@@ -198,6 +203,11 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 
 	@Override
 	public String updateOrgUserOfBack(OrgUser orgUser) throws CheckedServiceException {
+		OrgUser username=orgUserDao.getOrgUserById(orgUser.getId());
+		if(!orgUser.getUsername().equals(username)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "机构代码不相同");
+		}
 		if (ObjectUtil.isNull(orgUser.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "主键为空");

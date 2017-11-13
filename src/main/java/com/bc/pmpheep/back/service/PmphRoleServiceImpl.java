@@ -184,8 +184,10 @@ public class PmphRoleServiceImpl implements PmphRoleService {
                                               CheckedExceptionResult.ILLEGAL_PARAM, "角色名称不能超过20个字符");
         }
         if (ObjectUtil.notNull(roleDao.getPmphRoleId(role.getRoleName()))) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "角色名称重复了");
+        	if (roleDao.getPmphRoleId(role.getRoleName()) != role.getId()) {
+        		throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+                        CheckedExceptionResult.ILLEGAL_PARAM, "角色名称重复了");
+        	}
         }
         if (!StringUtil.isEmpty(role.getNote()) && StringUtil.getLength(role.getNote()) > 10) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,

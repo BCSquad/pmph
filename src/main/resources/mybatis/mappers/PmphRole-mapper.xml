@@ -139,11 +139,9 @@
 			note,
 			sort
 		FROM
-			pmph_role 
-		where 
-			is_disabled = false
+			pmph_role
 		<if test="roleName != null and roleName!=''">
-			and ROLE_NAME LIKE CONCAT('%',CONCAT(#{roleName},'%')) 
+			where ROLE_NAME LIKE CONCAT('%',CONCAT(#{roleName},'%')) 
 		</if>
 		order by 
 			sort asc
@@ -323,7 +321,7 @@
 	<select id="listPmphUserRoleByUserId" parameterType="Long"
 		resultType="PmphRoleVO">
 		SELECT r.id,r.role_name FROM pmph_user_role p LEFT JOIN
-		pmph_role r ON p.role_id =r.id WHERE r.is_disabled = FALSE AND
+		pmph_role r ON p.role_id =r.id WHERE 
 		p.user_id = #{id}
 	</select>
 </mapper>
