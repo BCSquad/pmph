@@ -20,6 +20,7 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.ValidatUtil;
 import com.bc.pmpheep.back.vo.GroupMemberWriterUserVO;
@@ -71,6 +72,9 @@ public class WriterUserServiceImpl implements WriterUserService {
 		}
 		if (StringUtil.isEmpty(user.getRealname())) {
 			user.setRealname(user.getUsername());
+		}
+		if (StringUtil.isEmpty(user.getAvatar())) {
+			user.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);
 		}
 		// 使用用户名作为盐值，MD5 算法加密
 		user.setPassword(new DesRun("", user.getPassword()).enpsw);
@@ -413,7 +417,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 		}
 		writerUser.setPassword(ShiroKit.md5(Const.DEFAULT_PASSWORD, writerUser.getUsername()));// 后台添加用户设置默认密码为123456
 		writerUser.setNickname(writerUser.getUsername());
-		writerUser.setAvatar(Const.DEFAULT_USER_AVATAR);// 后台添加新用户时，设置为默认头像
+		writerUser.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);// 后台添加新用户时，设置为默认头像
 		writerUserDao.add(writerUser);
 		Long num = writerUser.getId();
 		String result = "FAIL";
@@ -428,9 +432,9 @@ public class WriterUserServiceImpl implements WriterUserService {
 
 	@Override
 	public String updateWriterUserOfBack(WriterUser writerUser) throws CheckedServiceException {
-		WriterUser username=writerUserDao.get(writerUser.getId());
-		if(!writerUser.getUsername().equals(username.getUsername())){
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT, 
+		WriterUser username = writerUserDao.get(writerUser.getId());
+		if (!writerUser.getUsername().equals(username.getUsername())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.ILLEGAL_PARAM, "用户代码不相同");
 		}
 		if (StringUtil.strLength(writerUser.getUsername()) > 20) {

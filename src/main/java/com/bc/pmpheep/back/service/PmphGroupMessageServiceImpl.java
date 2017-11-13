@@ -19,6 +19,7 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
 import com.bc.pmpheep.back.vo.PmphGroupMessageVO;
@@ -186,16 +187,16 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 			for (PmphGroupMessageVO pmphGroupMessageVO : list) {
 				if (0 != pmphGroupMessageVO.getMemberId()) {
 					if (null == pmphGroupMessageVO.getIsWriter()) {
-						pmphGroupMessageVO.setAvatar(Const.DEFAULT_USER_AVATAR);
+						pmphGroupMessageVO.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);
 						pmphGroupMessageVO.setMemberName("该人员已经退出小组");
 					} else {
 						if (pmphGroupMessageVO.getIsWriter()) {
-							pmphGroupMessageVO
-									.setAvatar(writerUserService.get(pmphGroupMessageVO.getUserId()).getAvatar());
 							pmphGroupMessageVO.setUserType(Const.SENDER_TYPE_2);
+							pmphGroupMessageVO.setAvatar(RouteUtil
+									.userAvatar(writerUserService.get(pmphGroupMessageVO.getUserId()).getAvatar()));
 						} else {
-							pmphGroupMessageVO
-									.setAvatar(pmphUserService.get(pmphGroupMessageVO.getUserId()).getAvatar());
+							pmphGroupMessageVO.setAvatar(RouteUtil
+									.userAvatar(pmphUserService.get(pmphGroupMessageVO.getUserId()).getAvatar()));
 							pmphGroupMessageVO.setUserType(Const.SENDER_TYPE_1);
 						}
 					}

@@ -10,13 +10,15 @@
 
 	<!-- 通过MsgId 动态更新UserMessage -->
 	<update id="updateUserMessageTitleByMsgId" parameterType="UserMessage">
-		update user_message
+		update 
+			user_message
 		<set>
 			<if test="title != null and title != ''">
 				title = #{title},
 			</if>
 		</set>
-		where msg_id = #{msgId};
+		where 
+			msg_id = #{msgId};
 	</update>
 
 	<!-- 通过id 动态更新UserMessage -->
@@ -66,17 +68,21 @@
 	<!-- 通过msgId 撤销UserMessage -->
 	<update id="updateUserMessageWithdrawByMsgId" parameterType="java.lang.String">
 		update
-		user_message set is_withdraw = true where msg_id = #{msgId};
+			user_message 
+		set 
+			is_withdraw = true 
+		where 
+			msg_id = #{msgId};
 	</update>
 
 	<!-- 通过msgId 更新是否被逻辑删除 -->
 	<update id="updateUserMessageIsDeletedByMsgId" parameterType="java.util.List">
 		update
-		user_message
+			user_message
 		set
-		is_deleted = true
+			is_deleted = true
 		where
-		msg_id
+			msg_id
 		in
 		<foreach collection="list" item="msgId" index="index" open="("
 			close=")" separator=",">
@@ -97,9 +103,10 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		insert into
-		user_message(msg_id,msg_type,title,sender_id,sender_type,receiver_id,receiver_type,
-		is_read,is_withdraw,is_deleted,gmt_create,gmt_update
-		)
+			user_message(
+				msg_id,msg_type,title,sender_id,sender_type,receiver_id,receiver_type,
+				is_read,is_withdraw,is_deleted,gmt_create,gmt_update
+				)
 		values ( #{msgId},
 			#{msgType},
 			#{title},
@@ -123,7 +130,11 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		insert into
-		user_message(msg_id,msg_type,title,sender_id,sender_type,receiver_id,receiver_type)
+			user_message(
+					msg_id,msg_type,title,
+					sender_id,sender_type,
+					receiver_id,receiver_type
+				)
 		values
 		<foreach collection="list" item="UserMessage" index="index"
 			separator=",">
@@ -141,53 +152,109 @@
 	<!--MessageStateVO模糊查询获取列表 -->
 	<select id="listMessageState" parameterType="PageParameter"
 		resultType="MessageStateVO">
-		SELECT a.id,a.msg_id,a.msg_type,a.gmt_create sendTime,a.gmt_update
-		reciveTime,a.is_read,a.receiver_type,a.is_withdraw,t.count,
+		SELECT 
+			a.id,a.msg_id,a.msg_type,a.gmt_create sendTime,a.gmt_update
+			a.is_withdraw,reciveTime,a.is_read,a.receiver_type,a.is_withdraw,t.count,
 		case when
-		a.receiver_type =1 then b.realname when a.receiver_type =2 then
-		c.realname when a.receiver_type =3 then d.realname end name,
+			a.receiver_type =1
+		then 
+			b.realname when a.receiver_type =2 
+		then
+			c.realname when a.receiver_type =3 
+		then 
+			d.realname end name,
 		case when
-		a.receiver_type =1 then bd.dp_name when a.receiver_type =2 then
-		cd.org_name when a.receiver_type =3 then dd.org_name end dptname,
-		case
-		when a.receiver_type =1 then b.handphone when a.receiver_type =2 then
-		c.handphone when a.receiver_type =3 then d.handphone end handphone
-		from user_message a
-		left join (select a.*,1 usertype from pmph_user a)
-		b on b.id=a.receiver_id
-		and b.usertype = a.receiver_type
+			a.receiver_type =1 
+		then 
+			bd.dp_name when a.receiver_type =2 
+		then
+			cd.org_name when a.receiver_type =3 
+		then 
+			dd.org_name end dptname,
+		case when 
+			a.receiver_type =1 
+		then 
+			b.handphone 
+		when 
+			a.receiver_type =2 
+		then
+			c.handphone 
+		when 
+			a.receiver_type =3 
+		then 
+			d.handphone 
+		end 
+			handphone
+		from 
+			user_message a
+		left join 
+			(select a.*,1 usertype from pmph_user a) b 
+		on 
+			b.id=a.receiver_id
+		and 
+			b.usertype = a.receiver_type
 		left join
-		pmph_department bd on
-		bd.id=b.department_id
-		left join (select a.*,2
-		usertype from writer_user a) c on
-		c.id=a.receiver_id and c.usertype =
-		a.receiver_type
-		left join org cd on
-		cd.id = c.org_id
-		left join (select
-		a.*,3 usertype from org_user a) d on d.id=a.receiver_id
-		and d.usertype
-		= a.receiver_type
-		left join org dd on dd.id = d.org_id,(
-		SELECT count(*)
-		count
-		from user_message a
-		left join (select a.*,1 usertype from
-		pmph_user a) b on b.id=a.receiver_id
-		and b.usertype = a.receiver_type
-		left join pmph_department bd on bd.id=b.department_id
-		left join (select
-		a.*,2 usertype from writer_user a) c on
-		c.id=a.receiver_id and
-		c.usertype = a.receiver_type
-		left join org cd on cd.id = c.org_id
-		left
-		join (select a.*,3 usertype from org_user a) d on d.id=a.receiver_id
-		and d.usertype = a.receiver_type
-		left join org dd on dd.id = d.org_id
-		where true and msg_id = #{parameter.msgId}
-		and is_withdraw =0
+			pmph_department bd 
+		on
+			bd.id=b.department_id
+		left join 
+			(select a.*,2 usertype from writer_user a) c 
+		on
+			c.id=a.receiver_id 
+		and 
+			c.usertype = a.receiver_type
+		left join 
+			org cd 
+		on
+			cd.id = c.org_id
+		left join 
+			(select a.*,3 usertype from org_user a) d 
+		on 
+			d.id=a.receiver_id
+		and 
+			d.usertype = a.receiver_type
+		left join 
+			org dd 
+		on 
+			dd.id = d.org_id,
+			(SELECT 
+				count(*) count 
+			from 
+				user_message a
+			left join 
+				(select  a.*,1 usertype  from pmph_user a) b 
+			on 
+				b.id=a.receiver_id
+			and 
+				b.usertype = a.receiver_type
+			left join 
+				pmph_department bd 
+			on 
+				bd.id=b.department_id
+			left join 
+				(select a.*,2 usertype  from  writer_user a) c 
+			on
+				c.id=a.receiver_id 
+			and
+				c.usertype = a.receiver_type
+			left join 
+				org cd 
+			on 
+				cd.id = c.org_id
+			left join 
+				(select a.*,3 usertype from org_user a) d 
+			on 
+				d.id=a.receiver_id
+			and 
+				d.usertype = a.receiver_type
+			left join 
+				org dd 
+			on 
+				dd.id = d.org_id
+			where 
+				true and msg_id = #{parameter.msgId}
+			and 
+				is_withdraw =0
 		<if test="parameter !=null ">
 			<if test="parameter.isRead != null">
 				and is_read = #{parameter.isRead}
@@ -239,49 +306,57 @@
 	</select>
 	<select id="getMessageTotal" parameterType="PageParameter"
 		resultType="Integer">
-		SELECT COUNT(*) FROM(SELECT
-		m.id,
-		m.msg_id,
-		m.title,
-		m.sender_id,
-		u.realname sendName,
-		m.gmt_create sendTime
-		FROM
-		user_message m
-		LEFT JOIN
-		pmph_user u ON u.id = m.sender_id
-		WHERE
-		m.is_deleted = 0
-		AND m.msg_type = 1
-		<if  test="parameter.senderId != null">
-			AND
-				m.sender_id = #{parameter.senderId}
-		</if>
-		<if test="parameter.title != null and parameter.title != ''">
-			and m.title like concat('%',#{parameter.title},'%')
-		</if>
-		GROUP BY m.msg_id,
-		m.sender_id,
-		m.title) t
+		SELECT 
+			COUNT(*) 
+		FROM(
+			SELECT
+				m.id,
+				m.msg_id,
+				m.title,
+				m.sender_id,
+				u.realname sendName,
+				m.gmt_create sendTime
+			FROM
+				user_message m
+			LEFT JOIN
+				pmph_user u ON u.id = m.sender_id
+			WHERE
+				m.is_deleted = 0
+			AND 
+				m.msg_type = 1
+				<if  test="parameter.senderId != null">
+					AND
+						m.sender_id = #{parameter.senderId}
+				</if>
+				<if test="parameter.title != null and parameter.title != ''">
+					and m.title like concat('%',#{parameter.title},'%')
+				</if>
+			GROUP BY 
+				m.msg_id,
+				m.sender_id,
+				m.title
+		) t
 	</select>
 	<select id="listMessage" parameterType="PageParameter"
 		resultType="UserMessageVO">
 		SELECT
-		m.id,
-		m.msg_id,
-		m.title,
-		m.sender_id,
-		m.is_withdraw,
-		u.realname
-		sendName,
-		m.gmt_create sendTime
+			m.id,
+			m.msg_id,
+			m.title,
+			m.sender_id,
+			m.is_withdraw,
+			u.realname sendName,
+			m.gmt_create sendTime
 		FROM
-		user_message m
-		LEFT JOIN pmph_user u
-		ON u.id = m.sender_id
+			user_message m
+		LEFT JOIN 
+			pmph_user u
+		ON 
+			u.id = m.sender_id
 		WHERE
-		m.is_deleted = 0
-		AND m.msg_type = 1
+			m.is_deleted = 0
+		AND 
+			m.msg_type = 1
 		<if  test="parameter.senderId != null">
 			AND
 				m.sender_id = #{parameter.senderId}
@@ -289,70 +364,88 @@
 		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
 		</if>
-		GROUP BY m.msg_id,
-		m.sender_id,
-		m.title
+		GROUP BY 
+			m.msg_id,
+			m.sender_id,
+			m.title
+		ORDER BY 
+			m.`gmt_create` DESC
 		LIMIT
-		#{start},#{pageSize}
+			#{start},#{pageSize}
 	</select>
 
 	<select id="listMyMessage" parameterType="PageParameter"
 		resultType="MyMessageVO">
 		SELECT
-		*,m.gmt_create sendTime
+			*,
+			m.gmt_create sendTime
 		FROM
-		user_message m WHERE
-		m.receiver_id=#{parameter.userId} AND m.receiver_type =
-		#{parameter.userType} AND m.is_deleted = false
+			user_message m 
+		WHERE
+			m.receiver_id=#{parameter.userId} 
+		AND 
+			m.receiver_type = #{parameter.userType} 
+		AND 
+			m.is_deleted = false 
+		AND 
+			m.is_withdraw = false
 		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
 		</if>
 		<if test="parameter.isRead != null ">
 			and m.is_read = #{parameter.isRead}
 		</if>
-		ORDER BY m.gmt_create DESC
+		ORDER BY 
+			m.gmt_create DESC
 		LIMIT
-		#{start},#{pageSize}
+			#{start},#{pageSize}
 	</select>
 
 	<select id="listMyMessageTotal" parameterType="PageParameter"
 		resultType="Integer">
-		SELECT count(*) from
-		(SELECT
-		*,m.gmt_create sendTime
-		FROM
-		user_message m
-		WHERE
-		m.receiver_id=#{parameter.userId} AND m.receiver_type =
-		#{parameter.userType} AND m.is_deleted = false
-		<if test="parameter.title != null and parameter.title != ''">
-			and m.title like concat('%',#{parameter.title},'%')
-		</if>
-		<if test="parameter.isRead != null ">
-			and m.is_read = #{parameter.isRead}
-		</if>
-		ORDER BY m.gmt_create DESC) t
+		SELECT 
+			count(*) 
+		from
+			(SELECT
+				*,m.gmt_create sendTime
+			FROM
+				user_message m
+			WHERE
+				m.receiver_id=#{parameter.userId} 
+			AND 
+				m.receiver_type = #{parameter.userType} 
+			AND 
+				m.is_deleted = false
+				<if test="parameter.title != null and parameter.title != ''">
+					and m.title like concat('%',#{parameter.title},'%')
+				</if>
+				<if test="parameter.isRead != null ">
+					and m.is_read = #{parameter.isRead}
+				</if>
+			ORDER BY 
+				m.gmt_create DESC
+		) t
 	</select>
 
 	<select id="getMyMessageDetail" parameterType="PageParameter"
 		resultType="MyMessageVO">
 		SELECT
-		*,m.gmt_create sendTime
+			*,
+			m.gmt_create sendTime
 		FROM
-		user_message m
+			user_message m
 		WHERE
-		m.id =
-		#{id}
+			m.id = #{id}
 	</select>
 
 	<!-- 通过id 更新是否被逻辑删除 -->
 	<update id="updateMyMessage">
 		update
-		user_message
+			user_message
 		set
-		is_deleted = true
+			is_deleted = true
 		where
-		id
+			id
 		in
 		<foreach collection="array" item="id" index="index" open="("
 			close=")" separator=",">
@@ -364,9 +457,9 @@
 	<!-- 通过id删除UserMessage -->
 	<delete id="deleteMessageByMsgId" parameterType="java.util.List">
 		delete from
-		user_message
+			user_message
 		where
-		msg_id
+			msg_id
 		in
 		<foreach collection="list" item="msgId" index="index" open="("
 			close=")" separator=",">
