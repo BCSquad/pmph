@@ -47,4 +47,9 @@ public class AreaSeviceTest extends BaseTest {
 		// logger.info("一共有{}条数据",num);
 	}
 
+	@Test
+	public void deleteArea(){
+		Integer area = areaService.deleteAreaById(3L);
+		System.out.println(area);
+	}
 }
