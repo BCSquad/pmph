@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,14 @@ public class MaterialExtensionServiceImpl extends BaseService implements Materia
 
     @Autowired
     private MaterialExtensionDao materialExtensionDao;
+
+    @Override
+    public List<MaterialExtension> getMaterialExtensionByMaterialId(Long materialId) throws CheckedServiceException{
+    	if (null == materialId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION, CheckedExceptionResult.NULL_PARAM, "教材id为空");
+        }
+    	return materialExtensionDao.getMaterialExtensionByMaterialId(materialId);
+    }
 
     /**
      * 
