@@ -28,6 +28,14 @@ public interface MaterialContactDao {
 	 * @return 影响行数
 	 */
 	Integer deleteMaterialContactById(Long id);
+	
+	/**
+	 * 删除MaterialContact 通过主键materialId
+	 * 
+	 * @param id
+	 * @return 影响行数
+	 */
+	Integer deleteMaterialContactsByMaterialId(Long materialId);
 
 	/**
 	 *根据id 更新materialContact不为null和''的字段

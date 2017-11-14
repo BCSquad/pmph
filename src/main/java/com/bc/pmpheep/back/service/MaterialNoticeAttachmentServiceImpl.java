@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +63,31 @@ public class MaterialNoticeAttachmentServiceImpl extends BaseService implements 
                                               CheckedExceptionResult.NULL_PARAM, "附件名称");
         }
         return materialNoticeAttachmentDao.updateMaterialNoticeAttachment(materialNoticeAttachment);
+	}
+	
+	
+	@Override
+	public List<MaterialNoticeAttachment> getMaterialNoticeAttachmentsByMaterialExtraId(Long materialExtraId)throws CheckedServiceException{
+		if(null == materialExtraId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return materialNoticeAttachmentDao.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtraId);
+	}
+	
+	@Override
+	public Integer deleteMaterialNoticeAttachmentsByMaterialExtraId(Long materialExtraId)throws CheckedServiceException{
+		if(null == materialExtraId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return materialNoticeAttachmentDao.deleteMaterialNoticeAttachmentsByMaterialExtraId(materialExtraId);
+	}
+	
+	@Override
+	public Integer deleteMaterialNoticeAttachmentById(Long id)throws CheckedServiceException{
+		if(null == id){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return  materialNoticeAttachmentDao.deleteMaterialNoticeAttachmentById(id);
 	}
 
 }
