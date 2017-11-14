@@ -248,7 +248,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                                   CheckedExceptionResult.NULL_PARAM, "参数错误!");
             }
-            String[] orgIds1 = orgIds.split(",");
+            String[] orgIds1 = StringUtil.str2StrArray(orgIds);
             List<Long> orgIds2 = new ArrayList<Long>(orgIds1.length);
             for (String id : orgIds1) {
                 if (StringUtil.notEmpty(id)) {
@@ -279,7 +279,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                                   CheckedExceptionResult.NULL_PARAM, "没有选中发送人!");
             }
-            String[] ids = userIds.split(",");
+            String[] ids = StringUtil.str2StrArray(userIds);
             for (String id : ids) {
                 if (StringUtil.notEmpty(id)) {
                     String userType = id.split("_")[0];
@@ -300,7 +300,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                                   CheckedExceptionResult.NULL_PARAM, "书籍为空!");
             }
-            String[] ids = bookIds.split(",");
+            String[] ids = StringUtil.str2StrArray(bookIds);
             for (String id : ids) {
                 List<Long> userIdList = decPositionService.listDecPositionsByTextbookIds(ids);
                 for (Long userId : userIdList) {
@@ -337,7 +337,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             userMessageList = temp;
         }
         // 插入消息发送对象数据
-        if (!userMessageList.isEmpty() && userMessageList.size() > 0) {
+        if (CollectionUtil.isNotEmpty(userMessageList)) {
             userMessageDao.addUserMessageBatch(userMessageList);
         }
         // websocket发送的id集合
@@ -346,7 +346,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             websocketUserIds.add(userMessage.getReceiverType() + "_" + userMessage.getReceiverId());
         }
         // webscokt发送消息
-        if (!websocketUserIds.isEmpty() && websocketUserIds.size() > 0) {
+        if (CollectionUtil.isNotEmpty(websocketUserIds)) {
             WebScocketMessage webScocketMessage =
             new WebScocketMessage(message.getId(), Const.MSG_TYPE_1, senderUserId,
                                   pmphUser.getRealname(), Const.SENDER_TYPE_1,
@@ -400,8 +400,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         }
         // 更新用户消息UserMessage
         if (StringUtil.notEmpty(msgId) && StringUtil.notEmpty(msgTitle)) {
-            userMessageDao.updateUserMessageTitleByMsgId(new UserMessage(msgId, msgTitle));
-            count = 1;
+            count = userMessageDao.updateUserMessageTitleByMsgId(new UserMessage(msgId, msgTitle));
         }
         // 是否有消息附件上传
         if (ArrayUtil.isNotEmpty(files)) {
@@ -550,9 +549,12 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户消息对象为空！");
         }
+        PmphUser pmphUser = pmphUserService.get(userMessage.getSenderId());
         resultMap.put("msgId", userMessage.getId());// 主键ID
         resultMap.put("title", userMessage.getTitle());// 标题
-        Message message = messageService.get(userMessage.getMsgId());
+        resultMap.put("senderName", pmphUser.getRealname());// 发送者
+        resultMap.put("senderDate", userMessage.getGmtCreate());// 发送时间
+        Message message = messageService.get(userMessage.getMsgId());// 获取消息内容
         if (ObjectUtil.isNull(message)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息对象为空！");

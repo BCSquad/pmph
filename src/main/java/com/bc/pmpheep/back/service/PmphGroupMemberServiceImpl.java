@@ -282,12 +282,13 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 								CheckedExceptionResult.ILLEGAL_PARAM, "小组创建者不能删除，请重新选择");
 					}
 					pmphGroupMemberDao.deletePmphGroupMemberById(id);
-				}
-				if (currentUser.getIsAdmin() && (pmphGroupMember.getIsFounder() || pmphGroupMember.getIsAdmin())) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-							CheckedExceptionResult.ILLEGAL_PARAM, "您无权限删除管理员，请重新选择");
-				} else {
-					pmphGroupMemberDao.deletePmphGroupMemberById(id);
+				} else {// 管理员进入的方法
+					if (currentUser.getIsAdmin() && (pmphGroupMember.getIsFounder() || pmphGroupMember.getIsAdmin())) {
+						throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+								CheckedExceptionResult.ILLEGAL_PARAM, "您无权限删除管理员，请重新选择");
+					} else {
+						pmphGroupMemberDao.deletePmphGroupMemberById(id);
+					}
 				}
 			}
 			result = "SUCCESS";

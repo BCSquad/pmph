@@ -259,4 +259,14 @@ public class WriterUserServiceTest extends BaseTest {
         String result = writerUserService.updateWriterUserOfBack(writerUser);
         Assert.assertTrue("更新失败", result.equals("SUCCESS"));
     }
+    @Test
+    public void getTeacherCheckList(){
+    	WriterUserManagerVO writerUserManagerVO=new WriterUserManagerVO();
+    	writerUserManagerVO.setRealname(null);
+    	PageParameter<WriterUserManagerVO> pageParameter =
+    	        new PageParameter<WriterUserManagerVO>(1, 15, writerUserManagerVO);
+    	PageResult<WriterUserManagerVO> pageResult = new PageResult<WriterUserManagerVO>();
+    	pageResult=writerUserService.getTeacherCheckList(pageParameter);
+    	Assert.assertNotNull("获取失败", pageResult);
+    }
 }
