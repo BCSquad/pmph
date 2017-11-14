@@ -386,6 +386,11 @@ public class WriterUserServiceImpl implements WriterUserService {
 
 	@Override
 	public String addWriterUserOfBack(WriterUser writerUser) throws CheckedServiceException {
+		WriterUser username=writerUserDao.getUsername(writerUser.getUsername());
+		if(username!=null){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "用户代码已存在");
+		}
 		if (StringUtil.strLength(writerUser.getUsername()) > 20) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.ILLEGAL_PARAM, "用户名需要小于20字符");
@@ -449,13 +454,17 @@ public class WriterUserServiceImpl implements WriterUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "姓名需要小于20字符");
 		}
-		if (!ValidatUtil.checkMobileNumber(writerUser.getHandphone())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "电话格式不正确");
+		if(!StringUtil.isEmpty(writerUser.getHandphone())){
+			if (!ValidatUtil.checkMobileNumber(writerUser.getHandphone())) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+						CheckedExceptionResult.NULL_PARAM, "电话格式不正确");
+			}
 		}
-		if (!ValidatUtil.checkEmail(writerUser.getEmail())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "邮箱格式不正确");
+		if(!StringUtil.isEmpty(writerUser.getEmail())){
+			if (!ValidatUtil.checkEmail(writerUser.getEmail())) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+						CheckedExceptionResult.NULL_PARAM, "邮箱格式不正确");
+			}
 		}
 		if (!StringUtil.isEmpty(writerUser.getNote())) {
 			if (StringUtil.strLength(writerUser.getNote()) > 100) {

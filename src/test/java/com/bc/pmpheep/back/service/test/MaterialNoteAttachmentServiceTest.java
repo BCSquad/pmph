@@ -3,12 +3,15 @@
  */
 package com.bc.pmpheep.back.service.test;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.service.MaterialNoteAttachmentService;
 import com.bc.pmpheep.test.BaseTest;
@@ -38,5 +41,9 @@ public class MaterialNoteAttachmentServiceTest extends BaseTest {
 		materialNoteAttachment.setAttachmentName("++++++");
 		Integer res=materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
 		Assert.assertTrue("更新失败", res != null);
+		List<MaterialNoteAttachment> materialNoteAttachments=materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(17L);
+		Assert.assertTrue("获取失败", materialNoteAttachments != null);
+		res = materialNoteAttachmentService.deleteMaterialNoteAttachmentById(79L);
+		res = materialNoteAttachmentService.deleteMaterialNoteAttachmentByMaterialExtraId(20L);
 	}
 }

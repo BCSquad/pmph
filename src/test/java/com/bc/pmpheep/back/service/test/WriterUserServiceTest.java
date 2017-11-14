@@ -9,7 +9,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.bc.pmpheep.back.dao.WriterUserDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.WriterPermission;
@@ -32,9 +34,10 @@ public class WriterUserServiceTest extends BaseTest {
 
     @Resource
     WriterUserService writerUserService;
-
+    @Autowired
+    WriterUserDao writerUserDao;
     WriterUser        writerUser = new WriterUser();
-
+    
     // @Test
     public void addWriterUserService() {
         writerUser.setUsername("zasd");
@@ -238,10 +241,10 @@ public class WriterUserServiceTest extends BaseTest {
     @Test
     public void addWriterUserOfBack() {
         WriterUser writerUser = new WriterUser();
-        writerUser.setUsername("OPQ");
-        writerUser.setRealname("OPQ");
-        writerUser.setNickname("OPQ");
-        writerUser.setAvatar("---");
+        writerUser.setUsername("shuyongqian");
+        writerUser.setRealname("用户名");
+        writerUser.setNickname("昵称");
+        writerUser.setOrgId(727L);
         String result = writerUserService.addWriterUserOfBack(writerUser);
         Assert.assertTrue("添加失败", result.equals("SUCCESS"));
     }
