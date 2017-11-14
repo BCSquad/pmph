@@ -43,10 +43,10 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM,
 					"区域名称为空");
 		}
-		if (ObjectUtil.notNull(areaDao.getAreaId(area.getAreaName()))) {
+		/*if (ObjectUtil.notNull(areaDao.getAreaId(area.getAreaName()))) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM,
 					"区域名称重复");
-		}
+		}*/
 		Long id = area.getId();
 		areaDao.addArea(area);
 		if (null != id) {
