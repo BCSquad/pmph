@@ -1,7 +1,10 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialNoteAttachmentDao;
 import com.bc.pmpheep.back.po.MaterialNoteAttachment;
@@ -60,6 +63,30 @@ public class MaterialNoteAttachmentServiceImpl extends BaseService implements  M
                                               CheckedExceptionResult.NULL_PARAM, "附件名称");
         }
         return materialNoticeAttachmentDao.updateMaterialNoteAttachment(materialNoteAttachment);
+	}
+	
+	@Override
+	public Integer deleteMaterialNoteAttachmentById(Long id)throws CheckedServiceException{
+		if (null == id) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION, CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+		return materialNoticeAttachmentDao.deleteMaterialNoteAttachmentById(id);
+	}
+	
+	@Override
+	public Integer deleteMaterialNoteAttachmentByMaterialExtraId(Long materialExtraId)throws CheckedServiceException{
+		if (null == materialExtraId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION, CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+		return materialNoticeAttachmentDao.deleteMaterialNoteAttachmentByMaterialExtraId(materialExtraId);
+	}
+	
+	@Override
+	public List<MaterialNoteAttachment> getMaterialNoteAttachmentByMaterialExtraId(Long materialExtraId)throws CheckedServiceException{
+		if (null == materialExtraId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION, CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+		return materialNoticeAttachmentDao.getMaterialNoteAttachmentByMaterialExtraId(materialExtraId);
 	}
 
 }
