@@ -20,6 +20,14 @@ public interface AreaService {
      * @return 带主键的 area thorws CheckedServiceException
      */
     Area addArea(Area area) throws CheckedServiceException;
+    
+    /**
+     * 新增一个Area数据迁移
+     * 
+     * @param area 实体对象
+     * @return 带主键的 area thorws CheckedServiceException
+     */
+    Area addAreaStage(Area area) throws CheckedServiceException;
 
     /**
      * 查询一个 Area 通过主键id

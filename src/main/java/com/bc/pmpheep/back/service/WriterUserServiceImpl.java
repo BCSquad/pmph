@@ -386,6 +386,11 @@ public class WriterUserServiceImpl implements WriterUserService {
 
 	@Override
 	public String addWriterUserOfBack(WriterUser writerUser) throws CheckedServiceException {
+		WriterUser username=writerUserDao.getUsername(writerUser.getUsername());
+		if(username!=null){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "用户代码已存在");
+		}
 		if (StringUtil.strLength(writerUser.getUsername()) > 20) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.ILLEGAL_PARAM, "用户名需要小于20字符");

@@ -103,7 +103,7 @@ public class MigrationStageOne {
                 parentPk = JdbcHelper.getPrimaryKey(tableName, "AreaID", parentCode);//返回Long型新主键
             }
             area.setParentId(parentPk);
-            area = areaService.addArea(area);
+            area = areaService.addAreaStage(area);
             long pk = area.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "AreaID", areaId);//更新旧表中new_pk字段
             count++;

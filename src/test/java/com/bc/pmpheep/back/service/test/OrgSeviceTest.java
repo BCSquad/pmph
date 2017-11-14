@@ -1,5 +1,8 @@
 package com.bc.pmpheep.back.service.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.aspectj.weaver.ast.Or;
@@ -16,6 +19,7 @@ import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.OrgVO;
+import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 
 /**
  * AreaDao 单元测试
@@ -86,12 +90,18 @@ public class OrgSeviceTest extends BaseTest {
 	}
 	@Test
 	public void getSchoolAdminCheckList(){
+		PageParameter pageParameter = new PageParameter<>();
+		PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
 		OrgVO orgVO=new OrgVO();
-		orgVO.setOrgName("机构名称");
-		orgVO.setAreaId("2");
-		PageParameter<OrgVO> pageParameter = new PageParameter<OrgVO>(1, 1, orgVO);
-		Assert.assertNull("获取学校管理员审核列表失败", orgService.getSchoolAdminCheckList(pageParameter));
-		Assert.assertNull("在新增用户与修改用户时查询机构失败", orgService.listOrgByOrgName("机构名称"));
-		Assert.assertNull("系统消息——发送新消息——发送对象失败", orgService.listSendToSchoolAdminOrAllUser("机构名称"));
+		orgVO.setOrgName(null);
+		orgVO.setAreaId(null);
+		orgVO.setRealname("张二");
+		pageParameter.setPageNumber(1);
+		pageParameter.setPageSize(20);
+		pageParameter.setParameter(orgVO);
+		pageResult=orgService.getSchoolAdminCheckList(pageParameter);
+		Assert.assertNotNull("获取学校管理员审核列表失败", pageResult);
+		Assert.assertNotNull("在新增用户与修改用户时查询机构失败", orgService.listOrgByOrgName("机构名称"));
+		Assert.assertNotNull("系统消息——发送新消息——发送对象失败", orgService.listSendToSchoolAdminOrAllUser("机构名称"));
 	}
 }

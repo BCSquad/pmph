@@ -85,6 +85,17 @@ public class MaterialContactServiceImpl extends BaseService implements MaterialC
         }
         return materialContactDao.deleteMaterialContactById(id);
     }
+    
+    @Override 
+    public Integer deleteMaterialContactsByMaterialId(Long materialId) throws CheckedServiceException{
+    	if (null == materialId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_CONTACT,
+                                              CheckedExceptionResult.NULL_PARAM, "教材id为空");
+        }
+        return materialContactDao.deleteMaterialContactsByMaterialId(materialId) ;
+    }
+    
+    
 
     /**
      * 根据id 更新materialContact不为null和''的字段

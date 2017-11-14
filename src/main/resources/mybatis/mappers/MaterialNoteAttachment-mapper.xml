@@ -76,5 +76,34 @@
 		</set>
 		where id=#{id} ;
 	</update>
+	
+	<!-- 通过主键id删除 MaterialNoteAttachment-->
+	<delete id="deleteMaterialNoteAttachmentById" parameterType="java.lang.Long">
+		delete from material_note_attachment where id = #{id};
+	</delete>
+	
+	<!-- 通过materialExtraId删除 MaterialNoteAttachment-->
+	<delete id="deleteMaterialNoteAttachmentByMaterialExtraId" parameterType="java.lang.Long" >
+		delete from material_note_attachment  where material_extra_id = #{materialExtraId};
+	</delete>
+	
+	<!-- 根据 materialExtraId获取 MaterialNoteAttachment   -->
+	<select id="getMaterialNoteAttachmentByMaterialExtraId" parameterType="java.lang.Long" resultType="MaterialNoteAttachment">
+		select * from material_note_attachment where material_extra_id = #{materialExtraId};
+	</select>
 
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

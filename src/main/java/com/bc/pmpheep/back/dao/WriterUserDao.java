@@ -132,6 +132,13 @@ public interface WriterUserDao {
      * @return 表单的数据总条数
      */
     Long getWriterUserCount();
+    
+    /**
+     * @des 根据用户输入的用户代码查询用户代码是否重复
+     * @param username
+     * @return 查询的username
+     */
+	WriterUser getUsername(String username);
 
     // /**
     // *
