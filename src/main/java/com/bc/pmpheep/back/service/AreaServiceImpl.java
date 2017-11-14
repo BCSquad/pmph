@@ -43,10 +43,34 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM,
 					"区域名称为空");
 		}
-		/*if (ObjectUtil.notNull(areaDao.getAreaId(area.getAreaName()))) {
+		if (ObjectUtil.notNull(areaDao.getAreaId(area.getAreaName()))) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM,
 					"区域名称重复");
-		}*/
+		}
+		Long id = area.getId();
+		areaDao.addArea(area);
+		if (null != id) {
+			area.setId(id);
+		}
+		return area;
+	}
+	
+	/**
+	 * 新增一个Area数据迁移
+	 * @param area
+	 *            实体对象
+	 * @return 带主键的 area
+	 * @throws CheckedServiceException
+	 */
+	@Override
+	public Area addAreaStage(Area area) throws CheckedServiceException {
+		if (null == area) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		if (null == area.getAreaName()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM,
+					"区域名称为空");
+		}
 		Long id = area.getId();
 		areaDao.addArea(area);
 		if (null != id) {
