@@ -56,4 +56,11 @@ public class PmphDepartmentSeviceTest extends BaseTest {
 				CollectionUtil.isNotEmpty(pmphDepartmentService.listPmphUserDepartmentByDpName(dpName)));
 
 	}
+	
+	@Test
+	public void deletePmphDepartmentBatch(){
+		Long id = 197L;
+		pmphDepartmentService.deletePmphDepartmentBatch(id);
+		System.out.println(pmphDepartmentService.getPmphDepartmentById(id));
+	}
 }

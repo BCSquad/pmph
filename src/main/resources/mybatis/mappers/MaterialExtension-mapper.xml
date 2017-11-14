@@ -58,6 +58,11 @@
 		material_extension where
 		id=#{id} ;
 	</delete>
+	
+	<!-- 根据materialId获取MaterialExtension -->
+	<select  id="getMaterialExtensionByMaterialId" parameterType="java.lang.Long"  resultType="MaterialExtension">
+		select * from material_extension where  material_id=#{materialId} ;
+	</select>
 
 	<!-- 更新MaterialExtension -->
 	<update id="updateMaterialExtension" parameterType="MaterialExtension">

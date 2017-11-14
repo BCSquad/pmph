@@ -2,6 +2,8 @@ package com.bc.pmpheep.back.service;
 
 
 
+import java.util.List;
+
 import com.bc.pmpheep.back.po.MaterialExtension;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -11,6 +13,15 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  *
  */
 public interface MaterialExtensionService {
+	/**
+	 * 根据 materialId 获取 MaterialExtension结果集 
+	 * @author Mryang
+	 * @createDate 2017年11月13日 下午5:12:51
+	 * @param materialId
+	 * thorws CheckedServiceException
+	 * @return
+	 */
+	List<MaterialExtension> getMaterialExtensionByMaterialId(Long materialId) throws CheckedServiceException;
 	
 	/**
 	 * 新增一个MaterialExtension 

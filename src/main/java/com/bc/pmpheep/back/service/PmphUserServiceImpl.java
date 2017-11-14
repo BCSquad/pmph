@@ -394,13 +394,17 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.ILLEGAL_PARAM, "姓名需要小于20字符");
 		}
-		if (!ValidatUtil.checkMobileNumber(pmphUserManagerVO.getHandphone())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.ILLEGAL_PARAM, "电话格式不正确");
+		if(!StringUtil.isEmpty(pmphUserManagerVO.getHandphone())){
+			if (!ValidatUtil.checkMobileNumber(pmphUserManagerVO.getHandphone())) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+						CheckedExceptionResult.ILLEGAL_PARAM, "电话格式不正确");
+			}
 		}
-		if (!ValidatUtil.checkEmail(pmphUserManagerVO.getEmail())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.ILLEGAL_PARAM, "邮箱格式不正确");
+		if(!StringUtil.isEmpty(pmphUserManagerVO.getEmail())){
+			if (!ValidatUtil.checkEmail(pmphUserManagerVO.getEmail())) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+						CheckedExceptionResult.ILLEGAL_PARAM, "邮箱格式不正确");
+			}
 		}
 		if (StringUtil.isEmpty(pmphUserManagerVO.getRealname())) {
 			pmphUserManagerVO.setRealname(pmphUserManagerVO.getUsername());

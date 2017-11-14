@@ -253,14 +253,16 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	public String deletePmphGroupMemberByIds(Long groupId, Long[] ids, String sessionId)
 			throws CheckedServiceException {
 		String result = "FAIL";
-		if (!isFounderOrisAdmin(groupId, sessionId)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
-					"该用户没有操作权限");
-		}
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"该用户为空");
+		}
+		if (!pmphUser.getIsAdmin()) {
+			if (!isFounderOrisAdmin(groupId, sessionId)) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+						"该用户没有操作权限");
+			}
 		}
 		Long userid = pmphUser.getId();
 		PmphGroupMemberVO currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId, userid, false);
@@ -280,12 +282,13 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 								CheckedExceptionResult.ILLEGAL_PARAM, "小组创建者不能删除，请重新选择");
 					}
 					pmphGroupMemberDao.deletePmphGroupMemberById(id);
-				}
-				if (currentUser.getIsAdmin() && (pmphGroupMember.getIsFounder() || pmphGroupMember.getIsAdmin())) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-							CheckedExceptionResult.ILLEGAL_PARAM, "您无权限删除管理员，请重新选择");
-				} else {
-					pmphGroupMemberDao.deletePmphGroupMemberById(id);
+				} else {// 管理员进入的方法
+					if (currentUser.getIsAdmin() && (pmphGroupMember.getIsFounder() || pmphGroupMember.getIsAdmin())) {
+						throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+								CheckedExceptionResult.ILLEGAL_PARAM, "您无权限删除管理员，请重新选择");
+					} else {
+						pmphGroupMemberDao.deletePmphGroupMemberById(id);
+					}
 				}
 			}
 			result = "SUCCESS";

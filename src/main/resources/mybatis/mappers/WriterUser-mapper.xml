@@ -568,11 +568,11 @@
 				concat(concat('%',#{parameter.orgName}),'%')
 			</if>
 			<!-- 教师姓名 -->
-			<if test="parameter.name !=null and parameter.name !='' ">
-				and (wu.username like concat('%',#{parameter.name},'%' )
+			<if test="parameter.realname !=null and parameter.realname !='' ">
+				and (wu.username like concat('%',#{parameter.realname},'%' )
 				or
 				wu.realname like
-				concat('%',#{parameter.name},'%' ) )
+				concat('%',#{parameter.realname},'%' ) )
 			</if>
 			<!-- 用户类型 -->
 			<if test="parameter.rank !=null">
