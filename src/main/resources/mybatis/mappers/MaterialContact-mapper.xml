@@ -72,6 +72,11 @@
 		material_contact where
 		id=#{id} ;
 	</delete>
+	
+	<!-- 根据materialId删除多个 -->
+	<delete id="deleteMaterialContactsByMaterialId" parameterType="java.lang.Long">
+		delete  from  material_contact  where  material_id = #{materialId} ;
+	</delete>
 
 	<!-- 更新MaterialContact -->
 	<update id="updateMaterialContact" parameterType="MaterialContact">

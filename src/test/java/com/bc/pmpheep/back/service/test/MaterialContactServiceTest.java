@@ -43,8 +43,10 @@ public class MaterialContactServiceTest extends BaseTest {
     	Assert.assertTrue("更新失败",materialContactService.updateMaterialContact(materialContact) > 0 );
     	//删除
     	Assert.assertTrue("删除失败",materialContactService.deleteMaterialContactById(2L) >= 0 );
+    	//删除
+    	Assert.assertTrue("删除失败",materialContactService.deleteMaterialContactsByMaterialId(30L) >= 0 );
     	//查询
-    	Assert.assertNotNull("获取数据失败",materialContactService.getMaterialContactById(1L));
+    	Assert.assertNotNull("获取数据失败",materialContactService.getMaterialContactById(100L));
     	
     }
     
