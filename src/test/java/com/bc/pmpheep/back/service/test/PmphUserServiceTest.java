@@ -20,6 +20,8 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
@@ -157,9 +159,11 @@ public class PmphUserServiceTest extends BaseTest {
 		PmphUserManagerVO managerVO = new PmphUserManagerVO();
 		managerVO.setUsername(null);
 		managerVO.setRealname(null);
-		managerVO.setPath(null);
+		managerVO.setPath("0-92-174");
+		managerVO.setDepartmentId(176L);
 		pageParameter.setParameter(managerVO);
-		pageParameter.setPageSize(15);
+		pageParameter.setPageNumber(1);
+		pageParameter.setPageSize(30);
 		pageResult = userService.getListPmphUser(pageParameter);
 		Assert.assertNotNull(pageResult);
 		if (pageResult.getRows().isEmpty()) {

@@ -727,4 +727,13 @@
 			item="id">#{id}
 		</foreach>
 	</delete>
+	<!-- 查询用户代码 -->
+	<select id="getUsername" parameterType="String" resultType="WriterUser">
+		SELECT
+		*
+		FROM
+		writer_user
+		WHERE
+		username = #{username}
+	</select>
 </mapper>
