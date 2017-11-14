@@ -454,13 +454,17 @@ public class WriterUserServiceImpl implements WriterUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "姓名需要小于20字符");
 		}
-		if (!ValidatUtil.checkMobileNumber(writerUser.getHandphone())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "电话格式不正确");
+		if(!StringUtil.isEmpty(writerUser.getHandphone())){
+			if (!ValidatUtil.checkMobileNumber(writerUser.getHandphone())) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+						CheckedExceptionResult.NULL_PARAM, "电话格式不正确");
+			}
 		}
-		if (!ValidatUtil.checkEmail(writerUser.getEmail())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "邮箱格式不正确");
+		if(!StringUtil.isEmpty(writerUser.getEmail())){
+			if (!ValidatUtil.checkEmail(writerUser.getEmail())) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+						CheckedExceptionResult.NULL_PARAM, "邮箱格式不正确");
+			}
 		}
 		if (!StringUtil.isEmpty(writerUser.getNote())) {
 			if (StringUtil.strLength(writerUser.getNote()) > 100) {
