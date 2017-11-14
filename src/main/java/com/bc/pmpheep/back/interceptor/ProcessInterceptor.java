@@ -34,7 +34,7 @@ public class ProcessInterceptor implements HandlerInterceptor {
         // httpServletResponse.setHeader("Access-Control-Allow-Headers",
         // "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
         httpServletResponse.setHeader("Access-Control-Allow-Headers",
-                                      "Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers");
+                                      "Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
 
         httpServletResponse.setHeader("X-Powered-By", "Jetty");

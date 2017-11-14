@@ -517,10 +517,6 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "附件为空！");
         }
-        if (file.getSize() <= 0) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                              CheckedExceptionResult.NULL_PARAM, "附件内容为空，请确认后再上传！");
-        }
         String filePath = "";
         // 循环获取file数组中得文件
         if (StringUtil.notEmpty(file.getOriginalFilename())) {
