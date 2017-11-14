@@ -189,7 +189,7 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 			List<PmphUserDepartmentVO> idLists = pmphDepartmentDao.listPmphDepartment(idListVo.getId());
 			if (idLists.size() > 0) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
-						CheckedExceptionResult.ILLEGAL_PARAM, "部门下还有子部门，不能删除部门");
+						CheckedExceptionResult.NULL_PARAM, "部门下还有子部门，不能删除部门");
 			}
 		}
 		return pmphDepartmentDao.deletePmphDepartmentBatch(ids);

@@ -226,13 +226,17 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.ILLEGAL_PARAM, "备注不能超过100个字符");
         }
-        if (!ValidatUtil.checkEmail(orgUser.getEmail())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "邮箱不符合规范");
+        if (!StringUtil.isEmpty(orgUser.getEmail())) {
+            if (!ValidatUtil.checkEmail(orgUser.getEmail())) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                                  CheckedExceptionResult.ILLEGAL_PARAM, "邮箱不符合规范");
+            }
         }
-        if (!ValidatUtil.checkMobileNumber(orgUser.getHandphone())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "手机号码不符合规范");
+        if (!StringUtil.isEmpty(orgUser.getHandphone())) {
+            if (!ValidatUtil.checkMobileNumber(orgUser.getHandphone())) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                                  CheckedExceptionResult.ILLEGAL_PARAM, "手机号码不符合规范");
+            }
         }
         int num = orgUserDao.updateOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
         String result = "FAIL";
