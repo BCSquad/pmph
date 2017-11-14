@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -30,5 +32,37 @@ public interface MaterialNoticeAttachmentService {
 	 * @return 影响行数
 	 */
 	Integer updateMaterialNoticeAttachment(MaterialNoticeAttachment materialNoticeAttachment)throws CheckedServiceException;
+	
+	/**
+	 * 根据教材通知备注id获取 MaterialNoticeAttachment
+	 * @author Mryang
+	 * @createDate 2017年11月14日 上午9:43:58
+	 * @param materialExtraId
+	 * @return List<MaterialNoticeAttachment> 
+	 */
+	List<MaterialNoticeAttachment> getMaterialNoticeAttachmentsByMaterialExtraId(Long materialExtraId)throws CheckedServiceException;
+	
+	/**
+	 * 根据教材通知备注id删除 MaterialNoticeAttachment
+	 * @author Mryang
+	 * @createDate 2017年11月14日 上午9:44:34
+	 * @param materialExtraId
+	 * @return
+	 */
+	Integer deleteMaterialNoticeAttachmentsByMaterialExtraId(Long materialExtraId)throws CheckedServiceException;
+	
+	/**
+	 * 根据主键id删除 MaterialNoticeAttachment
+	 * @author Mryang
+	 * @createDate 2017年11月14日 上午9:44:34
+	 * @param id
+	 * @return
+	 */
+	Integer deleteMaterialNoticeAttachmentsById(Long id)throws CheckedServiceException;
 
 }
+
+
+
+
+

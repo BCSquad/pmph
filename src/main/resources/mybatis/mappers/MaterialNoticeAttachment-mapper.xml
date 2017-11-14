@@ -76,5 +76,26 @@
 		</set>
 		where id=#{id} ;
 	</update>
+	
+	<!--  根据教材通知备注id删除 MaterialNoticeAttachment -->
+	<delete id="deleteMaterialNoticeAttachmentsByMaterialExtraId" parameterType="java.lang.Long">
+		delete from material_notice_attachment where material_extra_id = #{materialExtraId} ;
+	</delete>
+	
+	<!--  根据主键id删除 MaterialNoticeAttachment -->
+	<delete id="deleteMaterialNoticeAttachmentsById" parameterType="java.lang.Long">
+		delete from material_notice_attachment where id = #{id} ;
+	</delete>
+	
+	<!--  根据主键id删除 MaterialNoticeAttachment -->
+	<select id="getMaterialNoticeAttachmentsByMaterialExtraId" parameterType="java.lang.Long" resultType="MaterialNoticeAttachment">
+		select * from material_notice_attachment where material_extra_id = #{materialExtraId} ;
+	</select>
 
 </mapper>
+
+
+
+
+
+
