@@ -136,7 +136,7 @@ public interface PmphGroupMemberService {
 
 	/**
 	 * 
-	 * Description:批量删除小组内成员
+	 * Description:批量删除小组内成员(物理删除)
 	 * 
 	 * @author:lyc
 	 * @date:2017年10月12日下午2:38:14
@@ -144,6 +144,17 @@ public interface PmphGroupMemberService {
 	 * @return String 删除成功与否状态
 	 */
 	String deletePmphGroupMemberByIds(Long groupId, Long[] ids, String sessionId) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * Description:批量删除小组内成员(逻辑删除)
+	 * 
+	 * @author:lyc
+	 * @date:2017年10月12日下午2:38:14
+	 * @param 成员表id集合
+	 * @return String 删除成功与否状态
+	 */
+	String updateGroupMemberByIds(Long groupId, Long[] ids, String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 
@@ -157,6 +168,5 @@ public interface PmphGroupMemberService {
 	 */
 	String updateMemberIdentity(Long groupId, List<PmphGroupMember> members, String sessionId)
 			throws CheckedServiceException;
-
 
 }

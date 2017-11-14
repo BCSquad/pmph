@@ -123,8 +123,7 @@
 		in (
 		select DISTINCT
 		group_id from pmph_group_member where user_id = #{id} and
-		is_writer =
-		false
+		is_writer =	false AND is_deleted = FALSE
 		)
 		<if test="pmphGroup.groupName != null and pmphGroup.groupName !=''">
 			and g.group_name like
