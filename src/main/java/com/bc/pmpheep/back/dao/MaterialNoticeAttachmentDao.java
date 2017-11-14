@@ -66,5 +66,5 @@ public interface MaterialNoticeAttachmentDao {
 	 * @param id
 	 * @return
 	 */
-	Integer deleteMaterialNoticeAttachmentsById(Long id);
+	Integer deleteMaterialNoticeAttachmentById(Long id);
 }

@@ -41,7 +41,7 @@ public class MaterialNoticeAttachmentServiceTest extends BaseTest {
 		materialNoticeAttachment.setAttachmentName("++++++");
 		Integer res=materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
 		Assert.assertTrue("updateMaterialNoticeAttachment更新失败", res != null);
-		res=materialNoticeAttachmentService.deleteMaterialNoticeAttachmentsById(15L);
+		res=materialNoticeAttachmentService.deleteMaterialNoticeAttachmentById(15L);
 		Assert.assertTrue("deleteMaterialNoticeAttachmentsById删除失败", res != null);
 		res=materialNoticeAttachmentService.deleteMaterialNoticeAttachmentsByMaterialExtraId(15L);
 		Assert.assertTrue("deleteMaterialNoticeAttachmentsByMaterialExtraId删除失败", res != null);

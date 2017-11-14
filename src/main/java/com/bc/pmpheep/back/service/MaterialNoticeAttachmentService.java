@@ -58,7 +58,7 @@ public interface MaterialNoticeAttachmentService {
 	 * @param id
 	 * @return
 	 */
-	Integer deleteMaterialNoticeAttachmentsById(Long id)throws CheckedServiceException;
+	Integer deleteMaterialNoticeAttachmentById(Long id)throws CheckedServiceException;
 
 }
 

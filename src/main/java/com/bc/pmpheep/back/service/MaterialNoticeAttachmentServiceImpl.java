@@ -83,11 +83,11 @@ public class MaterialNoticeAttachmentServiceImpl extends BaseService implements 
 	}
 	
 	@Override
-	public Integer deleteMaterialNoticeAttachmentsById(Long id)throws CheckedServiceException{
+	public Integer deleteMaterialNoticeAttachmentById(Long id)throws CheckedServiceException{
 		if(null == id){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		return  materialNoticeAttachmentDao.deleteMaterialNoticeAttachmentsById(id);
+		return  materialNoticeAttachmentDao.deleteMaterialNoticeAttachmentById(id);
 	}
 
 }

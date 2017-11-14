@@ -83,7 +83,7 @@
 	</delete>
 	
 	<!--  根据主键id删除 MaterialNoticeAttachment -->
-	<delete id="deleteMaterialNoticeAttachmentsById" parameterType="java.lang.Long">
+	<delete id="deleteMaterialNoticeAttachmentById" parameterType="java.lang.Long">
 		delete from material_notice_attachment where id = #{id} ;
 	</delete>
 	
