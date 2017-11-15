@@ -123,6 +123,7 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
                             break;
                         }
                     }
+                    System.out.println("logRemark===" + logRemark);
                     // 此处调用 sysOperationService 保存方法
                     sysOperationService.addSysOperation(new SysOperation(pmphUser.getId(),
                                                                          pmphUser.getUsername(),
@@ -130,6 +131,7 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
                                                                          DateUtil.getCurrentTime(),
                                                                          url + "-" + logRemark,
                                                                          request.getRemoteHost()));
+                    System.out.println("保存成功！");
                 }
             }
         }
