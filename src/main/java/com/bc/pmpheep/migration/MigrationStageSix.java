@@ -89,9 +89,9 @@ public class MigrationStageSix {
     ExcelHelper excelHelper;
 	
 	public void start(){
-		declaration();
+		//declaration();
 		decEduExp();
-		decWorkExp();
+		/*decWorkExp();
 		decTeachExp();
 		decAcade();
 		decLastPosition();
@@ -100,7 +100,7 @@ public class MigrationStageSix {
 		decTextbook();
 		decResearch();
 		decExtension();
-		decPosition();
+		decPosition();*/
 	}
 	
 	/**
@@ -152,37 +152,58 @@ public class MigrationStageSix {
         	String realName = (String) map.get("writername"); // 作家姓名
         	String sexJudge = (String) map.get("sex"); // 性别
         	String experienceNum = (String) map.get("seniority"); // 教龄
+        	String postCode = (String) map.get("postcode"); // 邮编
         	Long onlineProgressJudge = (Long) map.get("online_progress"); // 审核进度
         	String authUserid = (String) map.get("auth_user_id"); // 审核人id
         	Long offlineProgressJudge = (Long) map.get("offline_progress"); // 纸质表进度
         	Long isStagingJudge = (Long) map.get("is_staging"); // 是否暂存
         	Declaration declaration = new Declaration();
-        	if (StringUtil.notEmpty(materialid)) {
-    			Long materialId = JdbcHelper.getPrimaryKey("teach_material", "materid", materialid);
+        	if (StringUtil.isEmpty(materialid)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到教材id为空。"));
+				excel.add(map);
+				logger.error("找到教材id为空，此结果将被记录在Excel中");
+				continue;
+            } else {
+				Long materialId = JdbcHelper.getPrimaryKey("teach_material", "materid", materialid);
     			if (ObjectUtil.isNull(materialId)) {
 					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材id的结果。"));
 					excel.add(map);
 					logger.error("未找到教材id的结果，此结果将被记录在Excel中");
 					continue;
+				} else if ("0".equals(materialId)) {
+					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材id的对应pk"));
+					excel.add(map);
+					logger.error("未找到教材id的对应pk，此结果将被记录在Excel中");
+					continue;
 				}
     			declaration.setMaterialId(materialId);
-            }
-        	if (StringUtil.notEmpty(userid)) {
-    			Long userId = JdbcHelper.getPrimaryKey("sys_user", "userid", userid);
+			}
+        	if (StringUtil.isEmpty(userid)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到作家id为空。"));
+				excel.add(map);
+				logger.error("找到作家id为空，此结果将被记录在Excel中");
+				continue;
+            } else {
+				Long userId = JdbcHelper.getPrimaryKey("sys_user", "userid", userid);
 				if (ObjectUtil.isNull(userId)) {
 					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到作家id的结果。"));
 					excel.add(map);
 					logger.error("未找到作家id的结果，此结果将被记录在Excel中");
 					continue;
+				} else if ("0".equals(userId)) {
+					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到作家id的对应pk"));
+					excel.add(map);
+					logger.error("未找到作家id的对应pk，此结果将被记录在Excel中");
+					continue;
 				}
                 declaration.setUserId(userId);
-            }
+			}
         	declaration.setRealname(realName);
-        	if (StringUtil.notEmpty(sexJudge)) {
-        		Integer sex = Integer.parseInt(sexJudge.trim()); // 性别
-            	declaration.setSex(sex);
+        	if (StringUtil.isEmpty(sexJudge)) {
+        		declaration.setSex(1);
         	} else {
-				declaration.setSex(null);
+				Integer sex = Integer.parseInt(sexJudge.trim()); // 性别
+            	declaration.setSex(sex);
 			}
         	declaration.setBirthday((Date) map.get("birthdate")); // 生日
         	if (JdbcHelper.judgeExperience(experienceNum)){
@@ -196,7 +217,15 @@ public class MigrationStageSix {
         	declaration.setPosition((String) map.get("duties")); // 职务
         	declaration.setTitle((String) map.get("positional")); // 职称
         	declaration.setAddress((String) map.get("address")); // 联系地址
-        	declaration.setPostcode((String) map.get("postcode")); // 邮编
+        	if (StringUtil.notEmpty(postCode)) {
+        		if (postCode.length()>20) {
+            		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("邮编长度过长"));
+    				excel.add(map);
+    				logger.error("邮编长度过长，此结果将被记录在Excel中");
+    				continue;
+            	}
+        	}
+        	declaration.setPostcode(postCode); // 邮编
         	declaration.setHandphone((String) map.get("handset")); // 手机
         	declaration.setEmail((String) map.get("email")); // 邮箱
         	declaration.setIdtype((Short) map.get("idcardtype1")); // 证件类型
@@ -213,16 +242,8 @@ public class MigrationStageSix {
         		logger.error("未找到审核进度，此结果将被记录在Excel中");
                 continue;
 			}
-        	if (StringUtil.notEmpty(authUserid)) {
-    			Long authUserId = JdbcHelper.getPrimaryKey("sys_user", "userid", userid);
-				if (ObjectUtil.isNull(authUserId)) {
-					map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到审核人id的结果。"));
-					excel.add(map);
-					logger.error("未找到审核人id的结果，此结果将被记录在Excel中");
-					continue;
-				}
-				declaration.setAuthUserId(authUserId);
-            }
+			Long authUserId = JdbcHelper.getPrimaryKey("sys_user", "userid", authUserid);
+			declaration.setAuthUserId(authUserId);
         	declaration.setAuthDate((Timestamp) map.get("auditdate")); // 审核通过时间
         	if (ObjectUtil.notNull(offlineProgressJudge)) {
             	Integer offlineProgress = offlineProgressJudge.intValue(); // 纸质表进度
@@ -231,7 +252,7 @@ public class MigrationStageSix {
         		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到纸质表进度。"));
         		excel.add(map);
         		logger.error("未找到纸质表进度，此结果将被记录在Excel中");
-                continue;
+        		declaration.setOfflineProgress(0);
 			}
         	declaration.setPaperDate((Timestamp) map.get("editauditdate")); // 纸质表收到时间
         	String submitType = (String) map.get("submittype"); // 旧表字段：是否暂存
@@ -250,14 +271,14 @@ public class MigrationStageSix {
         		logger.error("未找到是否暂存，此结果将被记录在Excel中");
                 continue;
         	}
-        	try {
+        	//try {
         		declaration = declarationService.addDeclaration(declaration);
-			} catch (Exception e) {
-				map.put(SQLParameters.EXCEL_EX_HEADER, sb.append(e.getMessage() + "。"));
+			/*} catch (Exception e) {
+				map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
-				continue;
-			}
+				declaration.setIsStaging(0);
+			}*/
         	long pk = declaration.getId();
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "writerid", id); // 更新旧表中new_pk字段
         	count++;
@@ -288,13 +309,14 @@ public class MigrationStageSix {
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
+        	StringBuilder sb = new StringBuilder();
         	String id = (String) map.get("leamid"); // 旧表主键值
         	String declarationid = (String) map.get("writerid"); // 申报表id
         	DecEduExp decEduExp = new DecEduExp();
         	if (StringUtil.notEmpty(declarationid)) {
                 Long declarationId = JdbcHelper.getPrimaryKey("writer_declaration", "writerid", declarationid);
                 if (ObjectUtil.isNull(declarationId)) {
-                	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到申报表id。");
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id。"));
             		excel.add(map);
             		logger.error("未找到申报表id，此结果将被记录在Excel中");
                     continue;
@@ -302,56 +324,51 @@ public class MigrationStageSix {
                 decEduExp.setDeclarationId(declarationId);
             }
         	String schoolName = (String) map.get("schoolname"); // 学校名称
-        	if (StringUtil.isEmpty(schoolName) || ("无").equals(schoolName)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到学校名称。");
+        	if (("无").equals(schoolName)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到学校名称。"));
         		excel.add(map);
         		logger.error("未找到学校名称，此结果将被记录在Excel中");
-                continue;
         	}
         	decEduExp.setSchoolName(schoolName);
         	String major = (String) map.get("speciality"); // 所学专业
-        	if (StringUtil.isEmpty(major) || ("无").equals(major)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到所学专业。");
+        	if (("无").equals(major)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到所学专业。"));
         		excel.add(map);
         		logger.error("未找到所学专业，此结果将被记录在Excel中");
-                continue;
         	}
         	decEduExp.setMajor(major);
         	String degree = (String) map.get("record");  // 学历
-        	if (StringUtil.isEmpty(degree) || ("无").equals(degree)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到学历。");
+        	if (("无").equals(degree)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到学历。"));
         		excel.add(map);
         		logger.error("未找到学历，此结果将被记录在Excel中");
-                continue;
         	}
         	decEduExp.setDegree(degree);
         	decEduExp.setNote((String) map.get("remark")); // 备注
         	SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
         	Timestamp startstopDate = (Timestamp) map.get("startstopdate"); // 起始时间
-        	if (ObjectUtil.notNull(startstopDate)) {
+        	//if (ObjectUtil.notNull(startstopDate)) {
         		String dateBegin = dateChange.format(startstopDate);
         		decEduExp.setDateBegin(dateBegin);
-        	} else {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到起始时间。");
+        	/*} else {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, stringBuilder.append("未找到起始时间。"));
         		excel.add(map);
         		logger.error("未找到起始时间，此结果将被记录在Excel中");
-                continue;
-			}
+			}*/
         	Timestamp createDate = (Timestamp) map.get("createdate"); // 获取对比时间
         	Timestamp endDate = (Timestamp) map.get("enddate"); // 终止时间
-        	if (ObjectUtil.notNull(endDate)) {
+        	//if (ObjectUtil.notNull(endDate)) {
         		if (endDate.equals(createDate) || endDate.equals("2017-07-29 15:25:03.0")) {
             		decEduExp.setDateEnd("至今");
             	} else {
             		String dateEnd = dateChange.format(endDate);
             		decEduExp.setDateEnd(dateEnd);
     			}
-			} else {
-				map.put(SQLParameters.EXCEL_EX_HEADER, "未找到终止时间。");
+			/*} else {
+				map.put(SQLParameters.EXCEL_EX_HEADER, stringBuilder.append("未找到终止时间。"));
         		excel.add(map);
         		logger.error("未找到终止时间，此结果将被记录在Excel中");
-                continue;
-			}
+			}*/
         	decEduExp.setSort(999); // 显示顺序
         	try {
         		decEduExp = decEduExpService.addDecEduExp(decEduExp);
@@ -395,13 +412,14 @@ public class MigrationStageSix {
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
+        	StringBuilder sb = new StringBuilder();
         	String id = (String) map.get("workid"); // 旧表主键值
         	String declarationid = (String) map.get("writerid"); // 申报表id
         	DecWorkExp decWorkExp = new DecWorkExp();
         	if (StringUtil.notEmpty(declarationid)) {
                 Long declarationId = JdbcHelper.getPrimaryKey("writer_declaration", "writerid", declarationid);
                 if (ObjectUtil.isNull(declarationId)) {
-                	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到申报表id。");
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id。"));
             		excel.add(map);
             		logger.error("未找到申报表id，此结果将被记录在Excel中");
                     continue;
@@ -409,48 +427,46 @@ public class MigrationStageSix {
                 decWorkExp.setDeclarationId(declarationId);
             }
         	String orgName = (String) map.get("workunitname"); // 工作单位
-        	if (StringUtil.isEmpty(orgName) || ("无").equals(orgName)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到工作单位。");
+        	if (("无").equals(orgName)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到工作单位。"));
         		excel.add(map);
         		logger.error("未找到工作单位，此结果将被记录在Excel中");
-                continue;
         	}
         	decWorkExp.setOrgName(orgName);
         	String position = (String) map.get("position"); // 职位
-        	if (StringUtil.isEmpty(position) || ("无").equals(position)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到职位。");
+        	if (("无").equals(position)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到职位。"));
         		excel.add(map);
         		logger.error("未找到职位，此结果将被记录在Excel中");
-                continue;
         	}
         	decWorkExp.setPosition(position);
         	decWorkExp.setNote((String) map.get("remark")); // 备注
         	SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
         	Timestamp startstopDate = (Timestamp) map.get("startstopdate"); // 起始时间
-        	if (ObjectUtil.notNull(startstopDate)) {
+        	//if (ObjectUtil.notNull(startstopDate)) {
         		String dateBegin = dateChange.format(startstopDate);
         		decWorkExp.setDateBegin(dateBegin);
-        	} else {
+        	/*} else {
         		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到起始时间。");
         		excel.add(map);
         		logger.error("未找到起始时间，此结果将被记录在Excel中");
                 continue;
-			}
+			}*/
         	Timestamp createDate = (Timestamp) map.get("createdate"); // 获取对比时间
         	Timestamp endDate = (Timestamp) map.get("enddate"); // 终止时间
-        	if (ObjectUtil.notNull(endDate)) {
+        	//if (ObjectUtil.notNull(endDate)) {
         		if (endDate.equals(createDate) || endDate.equals("2017-07-29 15:25:03.0")) {
         			decWorkExp.setDateEnd("至今");
             	} else {
             		String dateEnd = dateChange.format(endDate);
             		decWorkExp.setDateEnd(dateEnd);
     			}
-			} else {
+			/*} else {
 				map.put(SQLParameters.EXCEL_EX_HEADER, "未找到终止时间。");
         		excel.add(map);
         		logger.error("未找到终止时间，此结果将被记录在Excel中");
                 continue;
-			}
+			}*/
         	decWorkExp.setSort(999); // 显示顺序
         	try {
         		decWorkExp = decWorkExpService.addDecWorkExp(decWorkExp);
@@ -494,13 +510,14 @@ public class MigrationStageSix {
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
+        	StringBuilder sb = new StringBuilder();
         	String id = (String) map.get("teachid"); // 旧表主键值
         	String declarationid = (String) map.get("writerid"); // 申报表id
         	DecTeachExp decTeachExp = new DecTeachExp();
         	if (StringUtil.notEmpty(declarationid)) {
                 Long declarationId = JdbcHelper.getPrimaryKey("writer_declaration", "writerid", declarationid);
                 if (ObjectUtil.isNull(declarationId)) {
-                	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到申报表id。");
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id。"));
             		excel.add(map);
             		logger.error("未找到申报表id，此结果将被记录在Excel中");
                     continue;
@@ -508,16 +525,15 @@ public class MigrationStageSix {
                 decTeachExp.setDeclarationId(declarationId);
             }
         	String schoolName = (String) map.get("schoolname"); // 学校名称
-        	if (StringUtil.isEmpty(schoolName) || schoolName.indexOf("1")!=-1) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到学校名称。");
+        	if (schoolName.indexOf("1")!=-1) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到学校名称。"));
         		excel.add(map);
         		logger.error("未找到学校名称，此结果将被记录在Excel中");
-                continue;
         	}
         	decTeachExp.setSchoolName(schoolName);
         	String subject = (String) map.get("subjects"); // 教学科目
-        	if (StringUtil.isEmpty(subject) || StringUtil.isNumeric(subject)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到教学科目。");
+        	if (StringUtil.isNumeric(subject)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教学科目。"));
         		excel.add(map);
         		logger.error("未找到教学科目，此结果将被记录在Excel中");
                 continue;
@@ -526,30 +542,30 @@ public class MigrationStageSix {
         	decTeachExp.setNote((String) map.get("remark")); // 备注
         	SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
         	Timestamp startstopDate = (Timestamp) map.get("startstopdate"); // 起始时间
-        	if (ObjectUtil.notNull(startstopDate)) {
+        	//if (ObjectUtil.notNull(startstopDate)) {
         		String dateBegin = dateChange.format(startstopDate);
         		decTeachExp.setDateBegin(dateBegin);
-        	} else {
+        	/*} else {
         		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到起始时间。");
         		excel.add(map);
         		logger.error("未找到起始时间，此结果将被记录在Excel中");
                 continue;
-			}
+			}*/
         	Timestamp createDate = (Timestamp) map.get("createdate"); // 获取对比时间
         	Timestamp endDate = (Timestamp) map.get("enddate"); // 终止时间
-        	if (ObjectUtil.notNull(endDate)) {
+        	//if (ObjectUtil.notNull(endDate)) {
         		if (endDate.equals(createDate) || endDate.equals("2017-07-29 15:25:03.0")) {
         			decTeachExp.setDateEnd("至今");
             	} else {
             		String dateEnd = dateChange.format(endDate);
             		decTeachExp.setDateEnd(dateEnd);
     			}
-			} else {
+			/*} else {
 				map.put(SQLParameters.EXCEL_EX_HEADER, "未找到终止时间。");
         		excel.add(map);
         		logger.error("未找到终止时间，此结果将被记录在Excel中");
                 continue;
-			}
+			}*/
         	decTeachExp.setSort(999); // 显示顺序
         	try {
         		decTeachExp = decTeachExpService.addDecTeachExp(decTeachExp);
@@ -589,6 +605,7 @@ public class MigrationStageSix {
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
+        	StringBuilder sb = new StringBuilder();
         	String id = (String) map.get("acadeid"); // 旧表主键值
         	String declarationid = (String) map.get("writerid"); // 申报表id
         	String rankJudge = (String) map.get("level");
@@ -596,7 +613,7 @@ public class MigrationStageSix {
         	if (StringUtil.notEmpty(declarationid)) {
                 Long declarationId = JdbcHelper.getPrimaryKey("writer_declaration", "writerid", declarationid);
                 if (ObjectUtil.isNull(declarationId)) {
-                	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到申报表id。");
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id。"));
             		excel.add(map);
             		logger.error("未找到申报表id，此结果将被记录在Excel中");
                     continue;
@@ -604,27 +621,26 @@ public class MigrationStageSix {
                 decAcade.setDeclarationId(declarationId);
             }
         	String position = (String) map.get("duties"); // 职务
-        	if (StringUtil.isEmpty(position) || ("无").equals(position) || StringUtil.isNumeric(position)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到职务或职务数据不规范。");
+        	if (("无").equals(position) || StringUtil.isNumeric(position)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到职务或职务数据不规范。"));
         		excel.add(map);
         		logger.error("未找到职务，此结果将被记录在Excel中");
         		continue;
         	}
-        	if (StringUtil.notEmpty(rankJudge) && !"nu".equals(rankJudge)) {
+        	if (!"nu".equals(rankJudge)) {
         		Integer rank = Integer.parseInt(rankJudge); // 级别
         		decAcade.setRank(rank);
         	} else {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到级别和数据是nu。");
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到级别数据是nu。"));
         		excel.add(map);
-        		logger.error("未找到级别和数据是nu，此结果将被记录在Excel中");
+        		logger.error("找到级别数据是nu，此结果将被记录在Excel中");
         		continue;
         	}
         	String orgName = (String) map.get("organization"); // 兼职学术组织
-        	if (StringUtil.isEmpty(orgName) || ("无").equals(orgName)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到兼职学术组织。");
+        	if (("无").equals(orgName)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到兼职学术组织。"));
         		excel.add(map);
         		logger.error("未找到兼职学术组织，此结果将被记录在Excel中");
-                continue;
         	}
         	decAcade.setOrgName(orgName);
         	decAcade.setPosition(position);
@@ -675,6 +691,7 @@ public class MigrationStageSix {
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
+        	StringBuilder sb = new StringBuilder();
         	String id = (String) map.get("materpatid"); // 旧表主键值
         	String declarationid = (String) map.get("writerid"); // 申报表id
         	Long positionJudge = (Long) map.get("position");
@@ -682,7 +699,7 @@ public class MigrationStageSix {
         	if (StringUtil.notEmpty(declarationid)) {
                 Long declarationId = JdbcHelper.getPrimaryKey("writer_declaration", "writerid", declarationid);
                 if (ObjectUtil.isNull(declarationId)) {
-                	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到申报表id。");
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id。"));
             		excel.add(map);
             		logger.error("未找到申报表id，此结果将被记录在Excel中");
                     continue;
@@ -690,22 +707,21 @@ public class MigrationStageSix {
                 decLastPosition.setDeclarationId(declarationId);
             }
         	String materialName = (String) map.get("matername"); // 教材名称
-        	if (StringUtil.isEmpty(materialName) || ("无").equals(materialName)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到教材名称。");
+        	if (("无").equals(materialName)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材名称。"));
         		excel.add(map);
         		logger.error("未找到教材名称，此结果将被记录在Excel中");
-                continue;
         	}
         	decLastPosition.setMaterialName(materialName);
-        	if (ObjectUtil.notNull(positionJudge)) {
+        	//if (ObjectUtil.notNull(positionJudge)) {
         		Integer position = positionJudge.intValue(); // 编写职务
         		decLastPosition.setPosition(position);
-        	} else {
+        	/*} else {
         		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到编写职务。");
         		excel.add(map);
         		logger.error("未找到编写职务，此结果将被记录在Excel中");
                 continue;
-			}
+			}*/
         	decLastPosition.setNote((String) map.get("remark")); // 备注
         	decLastPosition.setSort(999); // 显示顺序
         	try {
@@ -746,6 +762,7 @@ public class MigrationStageSix {
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
+        	StringBuilder sb = new StringBuilder();
         	String id = (String) map.get("constructionid"); // 旧表主键值
         	String declarationid = (String) map.get("writerid"); // 申报表id
         	String typeJudge = (String) map.get("type");
@@ -753,7 +770,7 @@ public class MigrationStageSix {
         	if (StringUtil.notEmpty(declarationid)) {
                 Long declarationId = JdbcHelper.getPrimaryKey("writer_declaration", "writerid", declarationid);
                 if (ObjectUtil.isNull(declarationId)) {
-                	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到申报表id。");
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id。"));
             		excel.add(map);
             		logger.error("未找到申报表id，此结果将被记录在Excel中");
                     continue;
@@ -761,30 +778,28 @@ public class MigrationStageSix {
                 decCourseConstruction.setDeclarationId(declarationId);
             }
         	String courseName = (String) map.get("curriculumname"); // 课程名称
-        	if (StringUtil.isEmpty(courseName) || ("无").equals(courseName)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到课程名称。");
+        	if (("无").equals(courseName)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到课程名称。"));
         		excel.add(map);
         		logger.error("未找到课程名称，此结果将被记录在Excel中");
-                continue;
         	}
         	decCourseConstruction.setCourseName(courseName);
         	String classHour = (String) map.get("classhour"); // 课程全年课时数
-        	if (StringUtil.isEmpty(classHour) || ("无").equals(classHour)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到课程全年课时数。");
+        	if (("无").equals(classHour)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到课程全年课时数。"));
         		excel.add(map);
         		logger.error("未找到课程全年课时数，此结果将被记录在Excel中");
-                continue;
         	}
         	decCourseConstruction.setClassHour(classHour);
-        	if (StringUtil.notEmpty(typeJudge)) {
-        		Integer type = Integer.parseInt((String) map.get("type")); // 职务
+        	//if (StringUtil.notEmpty(typeJudge)) {
+        		Integer type = Integer.parseInt(typeJudge); // 职务
         		decCourseConstruction.setType(type);
-        	} else {
+        	/*} else {
         		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到职务。");
         		excel.add(map);
         		logger.error("未找到职务，此结果将被记录在Excel中");
                 continue;
-			}
+			}*/
         	decCourseConstruction.setNote((String) map.get("remark")); // 备注
         	decCourseConstruction.setSort(999); // 显示顺序
         	try {
@@ -832,6 +847,7 @@ public class MigrationStageSix {
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
+        	StringBuilder sb = new StringBuilder();
         	String id = (String) map.get("editorbookid"); // 旧表主键值
         	String declarationid = (String) map.get("writerid"); // 申报表id
         	Long rankJudge = (Long) map.get("rank");
@@ -839,7 +855,7 @@ public class MigrationStageSix {
         	if (StringUtil.notEmpty(declarationid)) {
                 Long declarationId = JdbcHelper.getPrimaryKey("writer_declaration", "writerid", declarationid);
                 if (ObjectUtil.isNull(declarationId)) {
-                	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到申报表id。");
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id。"));
             		excel.add(map);
             		logger.error("未找到申报表id，此结果将被记录在Excel中");
                     continue;
@@ -847,34 +863,32 @@ public class MigrationStageSix {
                 decNationalPlan.setDeclarationId(declarationId);
             }
         	String materialName = (String) map.get("matername"); // 教材名称
-        	if (StringUtil.isEmpty(materialName) || ("无").equals(materialName)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到教材名称。");
+        	if (("无").equals(materialName)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材名称。"));
         		excel.add(map);
         		logger.error("未找到教材名称，此结果将被记录在Excel中");
-                continue;
         	}
         	decNationalPlan.setMaterialName(materialName);
         	String isbn = (String) map.get("booknumber"); // 标准书号
-        	if (StringUtil.notEmpty(isbn)){
+        	//if (StringUtil.notEmpty(isbn)){
         		isbn = isbn.trim();
         		isbn = isbn.replace("ISBN", "").replace("isbn", "").replace(":", "").replace("：", "");
-        	}
+        	//}
         	if (("无").equals(isbn)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到标准书号。");
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到标准书号。"));
         		excel.add(map);
         		logger.error("未找到标准书号，此结果将被记录在Excel中");
-                continue;
         	}
         	decNationalPlan.setIsbn(isbn);
-        	if (ObjectUtil.notNull(rankJudge)) {
+        	//if (ObjectUtil.notNull(rankJudge)) {
         		Integer rank = rankJudge.intValue(); // 教材级别
         		decNationalPlan.setRank(rank);
-        	} else {
+        	/*} else {
         		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到教材级别。");
         		excel.add(map);
         		logger.error("未找到教材级别，此结果将被记录在Excel中");
                 continue;
-			}
+			}*/
         	decNationalPlan.setNote((String) map.get("remark")); // 备注
         	decNationalPlan.setSort(999); // 显示顺序
         	try {
@@ -925,6 +939,7 @@ public class MigrationStageSix {
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
+        	StringBuilder sb = new StringBuilder();
         	String id = (String) map.get("materwriteid"); // 旧表主键值
         	String declarationid = (String) map.get("writerid"); // 申报表id
         	Long rankJudge = (Long) map.get("rank");
@@ -933,7 +948,7 @@ public class MigrationStageSix {
         	if (StringUtil.notEmpty(declarationid)) {
                 Long declarationId = JdbcHelper.getPrimaryKey("writer_declaration", "writerid", declarationid);
                 if (ObjectUtil.isNull(declarationId)) {
-                	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到申报表id。");
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id。"));
             		excel.add(map);
             		logger.error("未找到申报表id，此结果将被记录在Excel中");
                     continue;
@@ -941,57 +956,54 @@ public class MigrationStageSix {
                 decTextbook.setDeclarationId(declarationId);
             }
         	String materialName = (String) map.get("matername"); // 教材名称
-        	if (StringUtil.isEmpty(materialName) || ("无").equals(materialName)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到教材名称。");
+        	if (("无").equals(materialName)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材名称。"));
         		excel.add(map);
         		logger.error("未找到教材名称，此结果将被记录在Excel中");
-                continue;
         	}
         	decTextbook.setMaterialName(materialName);
-        	if (ObjectUtil.notNull(rankJudge)) {
+        	//if (ObjectUtil.notNull(rankJudge)) {
         		Integer rank = rankJudge.intValue(); // 教材级别
         		decTextbook.setRank(rank);
-        	} else {
+        	/*} else {
         		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到教材级别。");
         		excel.add(map);
         		logger.error("未找到教材级别，此结果将被记录在Excel中");
                 continue;
-			}
-        	if (ObjectUtil.notNull(positionJudge)) {
+			}*/
+        	//if (ObjectUtil.notNull(positionJudge)) {
         		Integer position = positionJudge.intValue(); // 编写职务
         		decTextbook.setPosition(position);
-        	} else {
+        	/*} else {
         		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到编写职务。");
         		excel.add(map);
         		logger.error("未找到编写职务，此结果将被记录在Excel中");
                 continue;
-			}
+			}*/
         	String publisher = (String) map.get("publishing"); // 出版社
-        	if (StringUtil.isEmpty(publisher) || ("无").equals(publisher)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到出版社。");
+        	if (("无").equals(publisher)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到出版社。"));
         		excel.add(map);
         		logger.error("未找到出版社，此结果将被记录在Excel中");
-                continue;
         	}
         	decTextbook.setPublisher(publisher);
         	Date publishDate = (Date) map.get("publisdate"); // 出版时间
-        	if (ObjectUtil.isNull(publishDate)) {
+        	/*if (ObjectUtil.isNull(publishDate)) {
         		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到出版时间。");
         		excel.add(map);
         		logger.error("未找到出版时间，此结果将被记录在Excel中");
                 continue;
-        	}
+        	}*/
         	decTextbook.setPublishDate(publishDate);
         	String isbn = (String) map.get("booknumber"); // 标准书号
-        	if (StringUtil.notEmpty(isbn)){
+        	//if (StringUtil.notEmpty(isbn)){
         		isbn = isbn.trim();
         		isbn = isbn.replace("ISBN", "").replace("isbn", "").replace(":", "").replace("：", "");
-        	}
+        	//}
         	if (("无").equals(isbn)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到标准书号。");
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到标准书号。"));
         		excel.add(map);
         		logger.error("未找到标准书号，此结果将被记录在Excel中");
-                continue;
         	}
         	decTextbook.setIsbn(isbn);
         	decTextbook.setNote((String) map.get("remark")); // 备注
@@ -1034,13 +1046,14 @@ public class MigrationStageSix {
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
+        	StringBuilder sb = new StringBuilder();
         	String id = (String) map.get("scientresearchid"); // 旧表主键值
         	String declarationid = (String) map.get("writerid"); // 申报表id
         	DecResearch decResearch = new DecResearch();
         	if (StringUtil.notEmpty(declarationid)) {
                 Long declarationId = JdbcHelper.getPrimaryKey("writer_declaration", "writerid", declarationid);
                 if (ObjectUtil.isNull(declarationId)) {
-                	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到申报表id。");
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id。"));
             		excel.add(map);
             		logger.error("未找到申报表id，此结果将被记录在Excel中");
                     continue;
@@ -1048,27 +1061,24 @@ public class MigrationStageSix {
                 decResearch.setDeclarationId(declarationId);
             }
         	String researchName = (String) map.get("topicname"); // 课题名称
-        	if (StringUtil.isEmpty(researchName) || ("无").equals(researchName)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到课题名称。");
+        	if (("无").equals(researchName)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到课题名称。"));
         		excel.add(map);
         		logger.error("未找到课题名称，此结果将被记录在Excel中");
-                continue;
         	}
         	decResearch.setResearchName(researchName);
         	String approvalUnit = (String) map.get("approvaluntiname"); // 审批单位
-        	if (StringUtil.isEmpty(approvalUnit) || ("无").equals(approvalUnit)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到审批单位。");
+        	if (("无").equals(approvalUnit)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到审批单位。"));
         		excel.add(map);
         		logger.error("未找到审批单位，此结果将被记录在Excel中");
-                continue;
         	}
         	decResearch.setApprovalUnit(approvalUnit);
         	String award = (String) map.get("award"); // 获奖情况
         	if (("无").equals(award)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到获奖情况。");
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到获奖情况。"));
         		excel.add(map);
         		logger.error("未找到获奖情况，此结果将被记录在Excel中");
-                continue;
         	}
         	decResearch.setAward(award);
         	decResearch.setNote((String) map.get("remark")); // 备注
@@ -1113,6 +1123,7 @@ public class MigrationStageSix {
 		String regular = "^[0-9a-zA-Z]{8,10}$"; // 正则表达式判断
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
+        	StringBuilder sb = new StringBuilder();
         	Double id = (Double) map.get("extvalueid"); // 旧表主键值
         	String extensionid = (String) map.get("expendid"); // 教材扩展项id
         	String declarationid = (String) map.get("writerid"); // 申报表id
@@ -1120,7 +1131,7 @@ public class MigrationStageSix {
         	if (StringUtil.notEmpty(extensionid)) {
                 Long extensionId = JdbcHelper.getPrimaryKey("teach_material_extend", "expendid", extensionid);
                 if (ObjectUtil.isNull(extensionId)) {
-                	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到教材扩展项id。");
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材扩展项id。"));
             		excel.add(map);
             		logger.error("未找到教材扩展项id，此结果将被记录在Excel中");
                     continue;
@@ -1130,7 +1141,7 @@ public class MigrationStageSix {
         	if (StringUtil.notEmpty(declarationid)) {
                 Long declarationId = JdbcHelper.getPrimaryKey("writer_declaration", "writerid", declarationid);
                 if (ObjectUtil.isNull(declarationId)) {
-                	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到申报表id。");
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id。"));
             		excel.add(map);
             		logger.error("未找到申报表id，此结果将被记录在Excel中");
                     continue;
@@ -1138,11 +1149,10 @@ public class MigrationStageSix {
                 decExtension.setDeclarationId(declarationId);
             }
         	String content = (String) map.get("content"); // 扩展项内容
-        	if (StringUtil.isEmpty(content) || ("无").equals(content) || regular.equals(content)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到扩展项内容。");
+        	if (("无").equals(content) || regular.equals(content)) {
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到扩展项内容。"));
         		excel.add(map);
         		logger.error("未找到扩展项内容，此结果将被记录在Excel中");
-                continue;
         	}
         	decExtension.setContent(content);
         	try {
@@ -1196,13 +1206,14 @@ public class MigrationStageSix {
 		List<Map<String, Object>> excel = new LinkedList<>();
 		 /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
+        	StringBuilder sb = new StringBuilder();
         	String id = (String) map.get("materid"); // 旧表主键值
         	DecPosition decPosition = new DecPosition();
         	String declarationid = (String) map.get("writerid"); // 申报表id
         	if (StringUtil.notEmpty(declarationid)) {
                 Long declarationId = JdbcHelper.getPrimaryKey("writer_declaration", "writerid", declarationid);
                 if (ObjectUtil.isNull(declarationId)) {
-                	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到申报表id。");
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id。"));
             		excel.add(map);
             		logger.error("未找到申报表id，此结果将被记录在Excel中");
                     continue;
@@ -1213,7 +1224,7 @@ public class MigrationStageSix {
         	if (StringUtil.notEmpty(textbookid)) {
                 Long textbookId = JdbcHelper.getPrimaryKey("teach_bookinfo", "bookid", textbookid);
                 if (ObjectUtil.isNull(textbookId)) {
-                	map.put(SQLParameters.EXCEL_EX_HEADER, "未找到书籍id。");
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到书籍id。"));
             		excel.add(map);
             		logger.error("未找到书籍id，此结果将被记录在Excel中");
                     continue;
@@ -1222,7 +1233,7 @@ public class MigrationStageSix {
             }
         	Long presetPosition = (Long) map.get("preset_position"); // 申报职务
         	if (ObjectUtil.isNull(presetPosition)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到申报职务。");
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报职务。"));
         		excel.add(map);
         		logger.error("未找到申报职务，此结果将被记录在Excel中");
                 continue;
@@ -1231,7 +1242,7 @@ public class MigrationStageSix {
         	decPosition.setPresetPosition(preset);
         	Long isOnList = (Long) map.get("is_on_list"); // 是否进入预选名单
         	if (ObjectUtil.isNull(isOnList)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到是否进入预选名单。");
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到是否进入预选名单。"));
         		excel.add(map);
         		logger.error("未找到是否进入预选名单，此结果将被记录在Excel中");
                 continue;
@@ -1240,7 +1251,7 @@ public class MigrationStageSix {
         	decPosition.setIsOnList(isOn);
         	Long chosenPosition = (Long) map.get("chosen_position"); // 遴选职务
         	if (ObjectUtil.isNull(chosenPosition)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到遴选职务。");
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到遴选职务。"));
         		excel.add(map);
         		logger.error("未找到遴选职务，此结果将被记录在Excel中");
                 continue;
