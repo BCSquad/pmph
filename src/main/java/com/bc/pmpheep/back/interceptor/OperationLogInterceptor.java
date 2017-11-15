@@ -2,11 +2,10 @@ package com.bc.pmpheep.back.interceptor;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,11 +16,8 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.SysOperation;
 import com.bc.pmpheep.back.service.SysOperationService;
 import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.util.StringUtil;
 
 /**
  * 
@@ -101,17 +97,23 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
             Class cls = Class.forName(object.getClass().getName());// 类名
             Method[] methods = cls.getMethods();
             String logRemark = "";// 方法用途
-            String sessionId = "";
-            Map<String, Cookie> map = CookiesUtil.ReadCookieMap(request);
-            for (Map.Entry<String, Cookie> entry : map.entrySet()) {
-                if ("sessionId".equals(entry.getKey())) {
-                    sessionId = entry.getValue().getValue();
-                    System.out.println("session-========" + sessionId);
-                }
-            }
-            if (StringUtil.notEmpty(sessionId)) {
-                PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+            // String sessionId = "";
+            // Map<String, Cookie> map = CookiesUtil.ReadCookieMap(request);
+            // for (Map.Entry<String, Cookie> entry : map.entrySet()) {
+            // if ("sessionId".equals(entry.getKey())) {
+            // sessionId = entry.getValue().getValue();
+            // System.out.println("session-========" + sessionId);
+            // }
+            // }
+            HttpSession session = request.getSession();
+            if (ObjectUtil.notNull(session)) {
+                PmphUser pmphUser = (PmphUser) session.getAttribute(Const.USER_SEESION_ID);
+                System.out.println("为空！！！！！！！！！！！");
+                // }
+                // if (StringUtil.notEmpty(sessionId)) {
+                // PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
                 if (ObjectUtil.notNull(pmphUser)) {
+                    System.out.println(pmphUser.toString());
                     String subUrl = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("."));// 模块地址
                     for (Method method : methods) {
                         LogDetail logObj = method.getAnnotation(LogDetail.class);
