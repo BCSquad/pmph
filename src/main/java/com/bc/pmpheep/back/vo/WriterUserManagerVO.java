@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import org.apache.ibatis.type.Alias;
 
+import com.bc.pmpheep.back.util.ObjectUtil;
+
 /**
  * @author MrYang
  * @CreateDate 2017年9月20日 上午9:19:30
@@ -136,7 +138,7 @@ public class WriterUserManagerVO implements Serializable {
     }
 
     public void setOrgName(String orgName) {
-        this.orgName = orgName;
+        this.orgName = (orgName==null?null:orgName.trim());
     }
 
     public String getNickname() {
@@ -152,7 +154,7 @@ public class WriterUserManagerVO implements Serializable {
     }
 
     public void setRealname(String realname) {
-        this.realname = realname;
+        this.realname = (realname==null?null:realname.trim());
     }
 
     public String getPosition() {
