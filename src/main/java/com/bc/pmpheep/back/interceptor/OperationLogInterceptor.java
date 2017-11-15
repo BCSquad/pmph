@@ -107,8 +107,8 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
             // }
             HttpSession session = request.getSession();
             if (ObjectUtil.notNull(session)) {
-                PmphUser pmphUser = (PmphUser) session.getAttribute(Const.USER_SEESION_ID);
-                System.out.println("为空！！！！！！！！！！！");
+                // PmphUser pmphUser1 = SessionUtil.getPmphUser();
+                PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
                 // }
                 // if (StringUtil.notEmpty(sessionId)) {
                 // PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
