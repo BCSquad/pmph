@@ -138,6 +138,14 @@ public class Const {
     public static final String       LOGIN_USER_IS_ADMIN        = "管理员";
     public static final String       LOGIN_SYS_USER_IS_ADMIN    = "系统管理员";
     /**
+     * 学校审核
+     * 
+     * 0=待审核/1=通过/2=退回
+     */
+    public static final Integer      ORG_USER_PROGRESS_0        = 0;
+    public static final Integer      ORG_USER_PROGRESS_1        = 1;
+    public static final Integer      ORG_USER_PROGRESS_2        = 2;
+    /**
      * CMS
      */
     // CMS 类型

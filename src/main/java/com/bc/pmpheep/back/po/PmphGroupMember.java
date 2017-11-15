@@ -39,6 +39,10 @@ public class PmphGroupMember implements Serializable {
 	 */
 	private Boolean isAdmin;
 	/**
+	 * 是否被移出小组
+	 */
+	private Boolean isDeleted;
+	/**
 	 * 小组内显示名称
 	 */
 	private String displayName;
@@ -61,12 +65,14 @@ public class PmphGroupMember implements Serializable {
 	}
 
 	public PmphGroupMember(Long groupId, Long userId, Boolean isWriter, Boolean isFounder, Boolean isAdmin,
-			String displayName, Timestamp gmtCreate, Timestamp gmtUpdate) {
+			Boolean isDeleted, String displayName, Timestamp gmtCreate, Timestamp gmtUpdate) {
+		super();
 		this.groupId = groupId;
 		this.userId = userId;
 		this.isWriter = isWriter;
 		this.isFounder = isFounder;
 		this.isAdmin = isAdmin;
+		this.isDeleted = isDeleted;
 		this.displayName = displayName;
 		this.gmtCreate = gmtCreate;
 		this.gmtUpdate = gmtUpdate;
@@ -82,6 +88,14 @@ public class PmphGroupMember implements Serializable {
 
 	public Long getGroupId() {
 		return groupId;
+	}
+
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
 	public void setGroupId(Long groupId) {
@@ -146,9 +160,9 @@ public class PmphGroupMember implements Serializable {
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ", groupId:" + groupId + ", userId:" + userId + ", isWriter:" + isWriter
-				+ ", isFounder:" + isFounder + ", isAdmin:" + isAdmin + ", displayName:" + displayName + ", gmtCreate:"
-				+ gmtCreate + ", gmtUpdate:" + gmtUpdate + "}";
+		return "{id:" + id + ", groupId:" + groupId + ", userId:" + userId + ", isWriter:" + isWriter + ", isFounder:"
+				+ isFounder + ", isAdmin:" + isAdmin + ", displayName:" + displayName + ", gmtCreate:" + gmtCreate
+				+ ", gmtUpdate:" + gmtUpdate + "}";
 	}
 
 }

@@ -95,7 +95,7 @@ public class MigrationStageFour {
 		JdbcHelper.addColumn(tableName); //增加new_pk字段
 		List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);//取得该表中所有数据
 		List<Map<String, Object>> excel = new LinkedList<>();
-		int count =0; 
+		int count =0;
 		//插入除parentid和path的字段；
 		for (Map<String, Object> map : maps) {
 			/*因此表有主要级字段和次要级字段，次要级字段插入新表同时也需导出Excel，因此异常信息不止一条，
@@ -176,7 +176,7 @@ public class MigrationStageFour {
 					"a.agedeaddate, "+
 					"a.mailaddress, "+
 					"a.flowtype, "+
-					"d.neworgid DepartmentId , "+
+					"j.new_pk DepartmentId , "+
 					"d.newuserid director, "+
 					"a.isbookmulti, "+
 					"a.ispositionmulti, "+
@@ -223,7 +223,8 @@ public class MigrationStageFour {
 					"LEFT JOIN sys_user g on g.userid = a.createuserid "+
 					"LEFT JOIN sys_user h on h.userid = a.updateuserid  "+
 					"LEFT JOIN sys_booktypes i on i.BookTypesID = a. booktypesid  "+
-					"WHERE true GROUP BY a.materid  ";
+					"LEFT JOIN ba_organize j on a.createorgid = j.orgid " +
+					"WHERE true GROUP BY a.materid ;";
 		JdbcHelper.addColumn(tableName); //增加new_pk字段
 		List<Map<String, Object>> maps=JdbcHelper.getJdbcTemplate().queryForList(sql);
 		List<Map<String, Object>> excel = new LinkedList<>();

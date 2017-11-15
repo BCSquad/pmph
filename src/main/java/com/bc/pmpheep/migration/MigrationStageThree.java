@@ -154,7 +154,7 @@ public class MigrationStageThree {
 	
 	protected void writerProfile() {
 		String sql= "SELECT  b.userid,b.new_pk,a.userid tag_userid,c.introduce,"
-				        + "GROUP_CONCAT(d.tagname SEPARATOR '%') tag_name "
+				        + "GROUP_CONCAT(d.tagname SEPARATOR '%') tag_name,c.usertype "
 						+"FROM sys_usertagmap a LEFT JOIN sys_user b ON a.userid = b.userid "
 						+"LEFT JOIN sys_userext c ON b.userid = c.userid "
 						+"LEFT JOIN book_tag d ON a.tagid = d.tagid GROUP BY a.userid ;";
@@ -163,10 +163,17 @@ public class MigrationStageThree {
 		int count = 0;
 		for (Map<String,Object> map : maps){
 			Long userId = (Long) map.get("new_pk");
-			if (ObjectUtil.isNull(userId) || userId == 0){
-				map.put(SQLParameters.EXCEL_EX_HEADER, "主表不存在关联id或为社内用户");
+			Integer usertype = (Integer) map.get("usertype");
+			if (ObjectUtil.notNull(usertype) && 2 == usertype.intValue()){
+				map.put(SQLParameters.EXCEL_EX_HEADER, "此用户为机构用户。");
 				excel.add(map);
-				logger.error("主表不存在关联id或为社内用户,此结果将被记录在Excel中");
+				logger.error("用户为机构用户,此结果将被记录在Excel中");
+				continue;
+			}
+			if (ObjectUtil.isNull(userId) || userId == 0){
+				map.put(SQLParameters.EXCEL_EX_HEADER, "此用户可能被删除或为社内用户。");
+				excel.add(map);
+				logger.error("此用户可能被删除或为社内用户,此结果将被记录在Excel中");
 				continue;
 			}
 			String profile = (String) map.get("introduce");
