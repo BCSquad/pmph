@@ -19,13 +19,33 @@
     
     <context:component-scan base-package="com.bc.pmpheep.back.controller;com.bc.pmpheep.general.controller" />
     
-    <!--AXIOS跨域请求访问拦截 -->
-    <mvc:interceptors>  
-       <bean class="com.bc.pmpheep.back.interceptor.ProcessInterceptor"></bean>  
-    </mvc:interceptors> 
-   
+    <!-- 对静态资源文件的访问  restful-->     
     <mvc:resources mapping="/statics/**" location="/statics/" />
     
+   <!-- 访问拦截  -->  
+    <mvc:interceptors>  
+     	<!--AXIOS跨域请求访问拦截 -->
+     	<mvc:interceptor>
+			<mvc:mapping path="/**/**"/>
+			<bean class="com.bc.pmpheep.back.interceptor.ProcessInterceptor"></bean>
+		</mvc:interceptor>
+       
+       <!-- 系统操作日志拦截 -->
+		<mvc:interceptor>
+			<!-- 只拦截方法 -->
+			<mvc:mapping path="/**/**"/>
+			<bean class="com.bc.pmpheep.back.interceptor.OperationLogInterceptor">
+			<!-- 不需要拦截的请求方法-->
+			<property name="excludeUrls">
+				<list>
+					<value>/sysOperation/new</value><!-- 登陆日志 -->
+					<value>/sysOperation/operations</value><!-- 操作日志 -->
+				</list>
+			</property>
+		</bean>	
+		</mvc:interceptor>
+    </mvc:interceptors> 
+   
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <!--<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>-->
         <property name="prefix" value="/WEB-INF/jsp/" />

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.SysOperationDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="userName != null and userName !=''">
+				user_name,
+			</if>
+			<if test=" userRealName != null and userRealName !=''">
+				user_real_name,
+			</if>
+			<if test=" operateDate != null ">
+				operate_date,
+			</if>
+			<if test=" operateText != null and operateText !=''">
+				operate_text,
+			</if>
+			<if test=" clientIp != null and clientIp !=''">
+				client_ip,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="userName != null and userName !=''">
+				#{userName},
+			</if>
+			<if test=" userRealName != null and userRealName !=''">
+				#{userRealName},
+			</if>
+			<if test=" operateDate != null ">
+				#{operateDate},
+			</if>
+			<if test=" operateText != null and operateText !=''">
+				#{operateText},
+			</if>
+			<if test=" clientIp != null and clientIp !=''">
+				#{clientIp},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增SysOperation -->
+	<insert id="addSysOperation" parameterType="SysOperation" useGeneratedKeys="true" keyProperty="id">
+		insert into sys_operation (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!--SysOperation模糊查询获取列表 -->
+	<select id="getListSysOperation" parameterType="PageParameter" resultType="SysOperation">
+		SELECT 
+			so.*,
+			t.count
+		FROM 
+			`sys_operation` so,
+			(
+				SELECT 
+					count(*) count
+				FROM 
+					`sys_operation`cc
+				where
+					1 = 1
+					<if test="parameter !=null ">
+						<if test="parameter.userName != null and parameter.userName !='' ">
+							AND (
+									cc.`user_name` like concat('%',#{parameter.userName},'%') 
+								 or
+								 	cc.`user_real_name` like concat('%',#{parameter.userName},'%') 
+								 )
+						</if>
+						<if test="parameter.operateDate !=null ">
+						</if>
+				   </if>
+			)t
+		where
+			1 = 1
+			<if test="parameter !=null ">
+				<if test="parameter.userName != null and parameter.userName !='' ">
+					AND (
+							cc.`user_name` like concat('%',#{parameter.userName},'%') 
+						or
+							cc.`user_real_name` like concat('%',#{parameter.userName},'%') 
+						)
+				</if>
+				<if test="parameter.operateDate !=null ">
+				</if>
+			</if>
+			order by 
+				so.id desc
+	</select>
+</mapper>
