@@ -62,11 +62,13 @@ public class MigrationStageOne {
     ExcelHelper excelHelper;
 
     public void start() {
+    	Date beforeTime = new Date(System.currentTimeMillis());
         area();
         orgType();
         org();
         orgUser();
         writerUser();
+        logger.info(JdbcHelper.migrationTime(beforeTime));
     }
 
     protected void area() {
@@ -255,7 +257,7 @@ public class MigrationStageOne {
     	String tableName = "sys_user";
     	JdbcHelper.addColumn(tableName);//添加new_pk字段
     	JdbcHelper.addColumn("sys_userext");//因为是用户相关，所以用户拓展表也要添加new_pk字段
-        String sql = "SELECT a.userid,a.usercode,a.`password`,a.isvalid,d.new_pk,a.username,b.sex,b.duties,"
+        String sql = "SELECT a.userid,a.usercode,a.`password`,a.isvalid,d.new_pk,a.username,d.orgname,b.sex,"
 					+"b.duties,b.positional,b.fax,b.handset,b.phone,b.idcard,b.email,b.address,b.postcode,"
 					+"CASE WHEN e.fileid IS NOT NULL THEN 1 ELSE 0 END is_proxy_upload,e.filedir,"
 					+"CASE WHEN b.audittype=2 THEN 1 WHEN b.audittype=1 THEN 2 ELSE 0 END progress,"
@@ -279,7 +281,8 @@ public class MigrationStageOne {
         	String username = (String) map.get("usercode");
         	if (StringUtil.isEmpty(username) || JdbcHelper.nameDuplicate(list, username) 
         			|| StringUtil.strLength(username) > 20){
-        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构代码不符合规划，为空、重复或过长。"));
+        		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构代码不符合规范，可能没有机构代码、"
+        				+ "重复或过长。"));
         		excel.add(map);
         		logger.error("机构代码不符合规范，此结果将被记录在Excel中");
         		continue;
@@ -300,9 +303,10 @@ public class MigrationStageOne {
         		logger.error("机构用户登陆密码为空，此结果将被记录在Excel中");
         	}
         	Integer isDisabled = (Integer) map.get("isvalid");
-        	String realName= (String) map.get("username");
+        	String realName = (String) map.get("username");
+        	String orgName = (String) map.get("orgname");
         	if ( StringUtil.isEmpty(realName)){
-        		realName = username;
+        		realName = orgName;
         	}
         	String sexNum = (String) map.get("sex");
         	Integer sex = null;
@@ -328,7 +332,7 @@ public class MigrationStageOne {
         		sort= 999;
         		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("显示顺序为负数。"));
         		excel.add(map);
-        		logger.error("显示顺序为负数，有误，此结果将被记录在Excel中");
+        		logger.error("显示顺序为负数，此结果将被记录在Excel中");
         	}
         	OrgUser orgUser = new OrgUser();
         	orgUser.setUsername(username);
@@ -440,6 +444,10 @@ public class MigrationStageOne {
             String realName = (String) map.get("username");
             if (StringUtil.isEmpty(realName)){
             	realName = username;
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户真实姓名为必填项，"
+            			+ "此处真实姓名找不到。"));
+            	excel.add(map);
+            	logger.info("找不到真实姓名");
             }
             String sexNum = (String) map.get("sex");
             Integer sex = 0;
@@ -521,13 +529,6 @@ public class MigrationStageOne {
             writerUser.setSignature(signature);
             writerUser.setNote(note);
             writerUser.setSort(sort);
-            //原专家平台作家用户界面有所展示的信息，也有为空情况，保险起见还是导出再核对一次
-            if (username.equals(realName) || StringUtil.isEmpty(email) || StringUtil.isEmpty(handphone) 
-            		|| ObjectUtil.isNull(isDisabled)){
-            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("专家平台可展示信息查询为空。"));
-            	excel.add(map);
-            	logger.info("专家平台可展示信息查询为空，此结果将被记录在Excel中");            	
-            }
             if (writerUser.getIsTeacher() && ObjectUtil.isNull(writerUser.getAuthTime())){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("认证通过但认证时间为空。"));
             	excel.add(map);
