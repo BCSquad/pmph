@@ -70,7 +70,7 @@ public class GroupController {
 		 */
 		PmphGroup pmphGroup = new PmphGroup();
 		if (ObjectUtil.notNull(groupName)) {
-			pmphGroup.setGroupName(groupName);
+			pmphGroup.setGroupName(groupName.trim());
 		}
 		return new ResponseBean(pmphGroupService.listPmphGroup(pmphGroup, sessionId));
 	}
