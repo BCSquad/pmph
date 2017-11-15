@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.service.PmphPermissionService;
 import com.bc.pmpheep.back.service.PmphRoleService;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
 /**
@@ -58,7 +59,7 @@ public class PmphRoleController {
     @ResponseBody
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseBean list(@RequestParam("roleName") String roleName) {
-        List<PmphRole> roleList = roleService.getList(roleName);
+        List<PmphRole> roleList = roleService.getList(StringUtil.isEmpty(roleName)?roleName:roleName.trim());
         return new ResponseBean(roleList);
     }
 
