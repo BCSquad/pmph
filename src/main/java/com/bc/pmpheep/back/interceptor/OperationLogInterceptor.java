@@ -105,7 +105,8 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
             Map<String, Cookie> map = CookiesUtil.ReadCookieMap(request);
             for (Map.Entry<String, Cookie> entry : map.entrySet()) {
                 if ("sessionId".equals(entry.getKey())) {
-                    sessionId = entry.getValue().toString();
+                    sessionId = entry.getValue().getValue();
+                    System.out.println("session-========" + sessionId);
                 }
             }
             if (StringUtil.notEmpty(sessionId)) {
