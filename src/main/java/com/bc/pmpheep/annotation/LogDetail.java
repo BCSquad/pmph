@@ -16,6 +16,7 @@ import java.lang.annotation.Target;
  * 所以他们可以用反射的方式读取。RetentionPolicy.RUNTIME 可以让你从JVM中读取Annotation注解的信息，以便在分析程序的时候使用.
  * 
  * 类和方法的annotation缺省情况下是不出现在javadoc中的，为了加入这个性质我们用@Documented java用 @interface Annotation{ } 定义一个注解
+ * 
  * @Annotation，一个注解是一个类。
  * 
  * @interface是一个关键字，在设计annotations的时候必须把一个类型定义为@interface，而不能用class或interface关键字
@@ -29,4 +30,6 @@ import java.lang.annotation.Target;
 @Documented
 public @interface LogDetail {
     String logRemark() default "";
+
+    String businessType() default "";
 }

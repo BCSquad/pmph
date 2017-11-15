@@ -23,6 +23,7 @@ import com.bc.pmpheep.back.vo.MyMessageVO;
 import com.bc.pmpheep.back.vo.UserMessageVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.po.Message;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 
 /**
  * @author MrYang
@@ -51,9 +52,9 @@ public class UserMessageController {
      * 
      */
     @ResponseBody
-    @LogDetail(logRemark = "初始化/消息标题查询系统消息")
+    @LogDetail(businessType = CheckedExceptionBusiness.MESSAGE, logRemark = "系统消息列表")
     @RequestMapping(value = "/list/message", method = RequestMethod.GET)
-    public ResponseBean listMessage(@RequestParam("pageNumber") Integer pageNumber,
+    public ResponseBean message(@RequestParam("pageNumber") Integer pageNumber,
     @RequestParam("pageSize") Integer pageSize, @RequestParam("title") String title,
     @RequestParam("sessionId") String sessionId) {
         PageParameter<UserMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
