@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
+import com.bc.pmpheep.back.dao.OrgDao;
 import com.bc.pmpheep.back.dao.OrgUserDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -33,6 +35,8 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class OrgUserServiceImpl extends BaseService implements OrgUserService {
     @Autowired
     private OrgUserDao orgUserDao;
+    @Autowired
+	private OrgDao orgDao;
 
     @Override
     public List<OrgUser> getOrgUserListByOrgIds(List<Long> orgIds) throws CheckedServiceException {
@@ -245,5 +249,84 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         }
         return result;
     }
+
+	@Override
+	public Object addOrgUserAndOrgOfBack(OrgUser orgUser, Org org) {
+		 if (StringUtil.isEmpty(orgUser.getUsername())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+            		CheckedExceptionResult.NULL_PARAM, "机构代码不能为空");
+	        }
+        if (StringUtil.strLength(orgUser.getUsername()) > 20) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+            		CheckedExceptionResult.ILLEGAL_PARAM, "机构代码不能超过20个字符");
+        }
+        if (!StringUtil.isEmpty(orgUser.getNote())) {
+            if (StringUtil.strLength(orgUser.getNote()) > 100) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                		CheckedExceptionResult.ILLEGAL_PARAM,"备注不能超过100个字符");
+            }
+        }
+        if (null == orgUser.getRealname()) {
+            orgUser.setRealname(orgUser.getUsername());
+        }
+        if (ObjectUtil.isNull(org)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		// if (null == org.getParentId()) {
+		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+		// CheckedExceptionResult.NULL_PARAM, "上级机构id不能为空");
+		// }
+		if (StringUtil.isEmpty(org.getOrgName())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
+					"机构名称为空");
+		}
+		if (StringUtil.strLength(org.getOrgName()) > 20) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
+					"机构名称过长");
+		}
+		if (orgDao.getOrgByOrgName(org.getOrgName()).size() > 0) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
+					"机构名称重复了");
+		}
+		if (ObjectUtil.isNull(org.getOrgTypeId())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
+					"机构类型不能为空");
+		}
+		if (ObjectUtil.isNull(org.getAreaId())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
+					"机构区域不能为空");
+		}
+		// if (null == org.getContactPerson()) {
+		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+		// CheckedExceptionResult.NULL_PARAM,
+		// "机构联系人不能为空");
+		// }
+		// if (null == org.getContactPhone()) {
+		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+		// CheckedExceptionResult.NULL_PARAM,
+		// "机构联系电话不能为空");
+		// }
+		// if (null == org.getSort()) {
+		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+		// CheckedExceptionResult.NULL_PARAM,
+		// "机构显示顺序为空");
+		// }
+		// if (null == org.getNote()) {
+		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+		// CheckedExceptionResult.NULL_PARAM, "备注为空");
+		// }
+		Long id = org.getId();
+		orgDao.addOrg(org);
+		if (null != id) {
+			org.setId(id);
+		}
+        orgUser.setPassword(ShiroKit.md5(Const.DEFAULT_PASSWORD, orgUser.getUsername()));// 后台添加用户设置默认密码为123456
+        int num = orgUserDao.addOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
+        String result = "FAIL";
+        if (num > 0) {
+            result = "SUCCESS";
+        }
+        return result;
+	}
 
 }
