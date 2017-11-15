@@ -23,6 +23,7 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.PmphDepartmentService;
 import com.bc.pmpheep.back.service.PmphRoleService;
 import com.bc.pmpheep.back.service.PmphUserService;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -191,7 +192,7 @@ public class PmphUserController {
 			@RequestParam("path") String path, Long departmentId) {
 		PageParameter pageParameter = new PageParameter<>();
 		PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
-		pmphUserManagerVO.setName(name.trim());
+		pmphUserManagerVO.setName(StringUtil.isEmpty(name)?null:name.trim());
 		pmphUserManagerVO.setPath(path);
 		pmphUserManagerVO.setDepartmentId(departmentId);
 		pageParameter.setPageNumber(pageNumber);
