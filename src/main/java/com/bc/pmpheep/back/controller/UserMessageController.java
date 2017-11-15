@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.service.TextbookService;
@@ -50,6 +51,7 @@ public class UserMessageController {
      * 
      */
     @ResponseBody
+    @LogDetail(logRemark = "初始化/消息标题查询系统消息")
     @RequestMapping(value = "/list/message", method = RequestMethod.GET)
     public ResponseBean listMessage(@RequestParam("pageNumber") Integer pageNumber,
     @RequestParam("pageSize") Integer pageSize, @RequestParam("title") String title,
@@ -70,6 +72,7 @@ public class UserMessageController {
      * @createDate 2017年9月26日 上午9:46:19
      * @return 分页数据集
      */
+    @LogDetail(logRemark = "分页查询条件查询系统消息列表")
     @RequestMapping(value = "/message/{msgId}/state", method = RequestMethod.GET)
     @ResponseBody
     public ResponseBean listMessageState(
@@ -96,6 +99,7 @@ public class UserMessageController {
 	 * @return
 	 * </pre>
      */
+    @LogDetail(logRemark = "选择向各个对象发送消息")
     @ResponseBody
     @RequestMapping(value = "/message/send_object", method = RequestMethod.GET)
     public ResponseBean listSendOject(@RequestParam("sendType") Integer sendType,
@@ -121,6 +125,7 @@ public class UserMessageController {
 	 * @return
 	 * </pre>
      */
+    @LogDetail(logRemark = "选择向各个对象发送消息")
     @ResponseBody
     @RequestMapping(value = "/message/send_object/{materialId}/text_book", method = RequestMethod.GET)
     public ResponseBean getListTextBookByMaterialId(@PathVariable("materialId") Long materialId) {
@@ -139,6 +144,7 @@ public class UserMessageController {
      * @param bookids
      * @return
      */
+    @LogDetail(logRemark = "选择向各个对象发送消息")
     @RequestMapping(value = "/message/new", method = RequestMethod.POST)
     @ResponseBody
     public ResponseBean addUserMessage(Message message, @RequestParam("title") String title,
@@ -174,6 +180,7 @@ public class UserMessageController {
      * @param bookids
      * @return
      */
+    @LogDetail(logRemark = "选择向各个对象发送消息")
     @RequestMapping(value = "/message/again", method = RequestMethod.POST)
     @ResponseBody
     public ResponseBean addUserMessageAgain(Message message, @RequestParam("title") String title,
@@ -207,6 +214,7 @@ public class UserMessageController {
 	 * @return
 	 * </pre>
      */
+    @LogDetail(logRemark = "选择向各个对象发送消息")
     @RequestMapping(value = "/message/content", method = RequestMethod.GET)
     @ResponseBody
     public ResponseBean getMessageContent(@RequestParam("userMsgId") Long userMsgId) {
@@ -225,6 +233,7 @@ public class UserMessageController {
 	 * @return 影响行数
 	 * </pre>
      */
+    @LogDetail(logRemark = "选择向各个对象发送消息")
     @RequestMapping(value = "/update/message", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseBean updateUserMessage(Message message, @RequestParam("msgId") String msgId,
@@ -249,6 +258,7 @@ public class UserMessageController {
      * @param userMessage
      * @return
      */
+    @LogDetail(logRemark = "选择向各个对象发送消息")
     @RequestMapping(value = "/withdraw/message", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseBean withdrawUserMessage(UserMessage userMessage) {
@@ -269,6 +279,7 @@ public class UserMessageController {
 	 * @return
 	 * </pre>
      */
+    @LogDetail(logRemark = "选择向各个对象发送消息")
     @ResponseBody
     @RequestMapping(value = "/message/file", method = RequestMethod.POST)
     public ResponseBean msgUploadFiles(@RequestParam("file") MultipartFile file) {
@@ -285,6 +296,7 @@ public class UserMessageController {
 	 * @return
 	 * </pre>
      */
+    @LogDetail(logRemark = "选择向各个对象发送消息")
     @RequestMapping(value = "/delete/message", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseBean deleteUserMessage(@RequestParam("msgIds") List<String> msgIds) {
@@ -306,6 +318,7 @@ public class UserMessageController {
      * @return
      * 
      */
+    @LogDetail(logRemark = "选择向各个对象发送消息")
     @RequestMapping(value = "/list/mymessage", method = RequestMethod.GET)
     @ResponseBody
     public ResponseBean listMyMessage(Integer pageSize, Integer pageNumber, String title,
@@ -332,6 +345,7 @@ public class UserMessageController {
      * @return
      * 
      */
+    @LogDetail(logRemark = "选择向各个对象发送消息")
     @RequestMapping(value = "/icon/mymessage", method = RequestMethod.GET)
     @ResponseBody
     public ResponseBean listMyMessageOfIcon(Integer pageSize, Integer pageNumber, Long userId,
@@ -354,6 +368,7 @@ public class UserMessageController {
      * @return
      * 
      */
+    @LogDetail(logRemark = "选择向各个对象发送消息")
     @RequestMapping(value = "/detail/mymessage", method = RequestMethod.GET)
     @ResponseBody
     public ResponseBean updateMyMessageDetail(Long id) {
@@ -369,6 +384,7 @@ public class UserMessageController {
      * @return
      * 
      */
+    @LogDetail(logRemark = "选择向各个对象发送消息")
     @RequestMapping(value = "/delete/mymessage", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseBean updateMyMessage(Long[] ids) {

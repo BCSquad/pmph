@@ -70,7 +70,7 @@ public class GroupController {
 		 */
 		PmphGroup pmphGroup = new PmphGroup();
 		if (ObjectUtil.notNull(groupName)) {
-			pmphGroup.setGroupName(groupName);
+			pmphGroup.setGroupName(groupName.trim());
 		}
 		return new ResponseBean(pmphGroupService.listPmphGroup(pmphGroup, sessionId));
 	}
@@ -240,9 +240,9 @@ public class GroupController {
 	 * 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/delete/pmphgroupmember", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/delete/pmphgroupmember", method = RequestMethod.PUT)
 	public ResponseBean deletePmphGroupMemberByIds(Long groupId, Long[] ids, String sessionId) {
-		return new ResponseBean(pmphGroupMemberService.deletePmphGroupMemberByIds(groupId, ids, sessionId));
+		return new ResponseBean(pmphGroupMemberService.updateGroupMemberByIds(groupId, ids, sessionId));
 	}
 
 	/**

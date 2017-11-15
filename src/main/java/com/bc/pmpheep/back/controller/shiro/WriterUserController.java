@@ -22,6 +22,7 @@ import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.WriterRoleService;
 import com.bc.pmpheep.back.service.WriterUserService;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.GroupMemberWriterUserVO;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -186,8 +187,8 @@ public class WriterUserController {
 			@RequestParam("rank") Integer rank, @RequestParam("orgName") String orgName) {
 		PageParameter pageParameter = new PageParameter<>();
 		WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
-		writerUserManagerVO.setName(name);
-		writerUserManagerVO.setOrgName(orgName);
+		writerUserManagerVO.setName(StringUtil.isEmpty(name)?null:name.trim());
+		writerUserManagerVO.setOrgName(StringUtil.isEmpty(orgName)?null:orgName.trim());
 		writerUserManagerVO.setRank(rank);
 		pageParameter.setPageNumber(pageNumber);
 		pageParameter.setPageSize(pageSize);

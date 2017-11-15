@@ -185,7 +185,8 @@ public class JdbcHelper {
         	age = age - 20 ;
         	experience = String.valueOf(age);
         }else{
-        	experience = experience.replace("年", "").replace("五", "5").replace("s", "").replace(" ", "");
+        	experience = experience.replace("年", "").replace("五", "5").replace("s", "").replace(" ", "")
+        			.replace("内", "");
         	if (StringUtil.strLength(experience) > 2){
         		experience = experience.substring(0,2);
         	}

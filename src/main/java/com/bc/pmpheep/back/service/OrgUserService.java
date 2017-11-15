@@ -62,7 +62,7 @@ public interface OrgUserService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer updateOrgUserProgressById(Integer progress, String[] orgUserIds)
+    Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds)
     throws CheckedServiceException;
 
     /**

@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -81,7 +83,7 @@ public class SchoolAndTeacherCheckController {
     @ResponseBody
     @RequestMapping(value = "/orgs/check", method = RequestMethod.PUT)
     public ResponseBean updateSchoolAdminCheck(@RequestParam(name = "progress") Integer progress,
-    @RequestParam(name = "orgUserIds") String[] orgUserIds) {
+    @RequestParam(name = "orgUserIds") List<Long> orgUserIds) {
         return new ResponseBean(orgUserService.updateOrgUserProgressById(progress, orgUserIds));
     }
 

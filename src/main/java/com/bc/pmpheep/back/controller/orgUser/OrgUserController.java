@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.service.OrgUserService;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -46,9 +47,9 @@ public class OrgUserController {
     @RequestParam("pageNumber") Integer pageNumber, @RequestParam("username") String username,
     @RequestParam("realname") String realname, @RequestParam("orgName") String orgName) {
         OrgUserManagerVO orgUserManagerVO = new OrgUserManagerVO();
-        orgUserManagerVO.setUsername(username);
-        orgUserManagerVO.setRealname(realname);
-        orgUserManagerVO.setOrgName(orgName);
+        orgUserManagerVO.setUsername(StringUtil.isEmpty(username)?null:username.trim());
+        orgUserManagerVO.setRealname(StringUtil.isEmpty(realname)?null:realname.trim());
+        orgUserManagerVO.setOrgName(StringUtil.isEmpty(orgName)?null:orgName.trim());
         PageParameter<OrgUserManagerVO> pageParameter =
         new PageParameter<OrgUserManagerVO>(pageNumber, pageSize, orgUserManagerVO);
         return new ResponseBean(orgUserService.getListOrgUser(pageParameter));

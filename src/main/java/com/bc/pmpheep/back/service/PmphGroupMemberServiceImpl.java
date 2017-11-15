@@ -297,6 +297,52 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
+	public String updateGroupMemberByIds(Long groupId, Long[] ids, String sessionId) throws CheckedServiceException {
+		String result = "FAIL";
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"该用户为空");
+		}
+		if (!pmphUser.getIsAdmin()) {
+			if (!isFounderOrisAdmin(groupId, sessionId)) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+						"该用户没有操作权限");
+			}
+		}
+		Long userid = pmphUser.getId();
+		PmphGroupMemberVO currentUser = pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId, userid, false);
+		if (null == ids || ids.length == 0) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"主键不能为空");
+		} else {
+			for (Long id : ids) {
+				PmphGroupMember pmphGroupMember = pmphGroupMemberDao.getPmphGroupMemberById(id);
+				if (userid == pmphGroupMember.getUserId() && !pmphGroupMember.getIsWriter()) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+							CheckedExceptionResult.ILLEGAL_PARAM, "您无权限删除管理员，请重新选择");
+				}
+				if (pmphUser.getIsAdmin() || currentUser.getIsFounder()) {// 只有小组创建者和超级管理员可以删除小组成员
+					if (pmphGroupMemberDao.getPmphGroupMemberById(id).getIsFounder()) {
+						throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+								CheckedExceptionResult.ILLEGAL_PARAM, "小组创建者不能删除，请重新选择");
+					}
+					pmphGroupMemberDao.updateGroupMemberById(id);
+				} else {// 管理员进入的方法
+					if (currentUser.getIsAdmin() && (pmphGroupMember.getIsFounder() || pmphGroupMember.getIsAdmin())) {
+						throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+								CheckedExceptionResult.ILLEGAL_PARAM, "您无权限删除管理员，请重新选择");
+					} else {
+						pmphGroupMemberDao.updateGroupMemberById(id);
+					}
+				}
+			}
+			result = "SUCCESS";
+		}
+		return result;
+	}
+
+	@Override
 	public PmphGroupMemberVO getPmphGroupMemberByMemberId(Long groupId, Long userId, Boolean isWriter)
 			throws CheckedServiceException {
 		if (null == userId) {
