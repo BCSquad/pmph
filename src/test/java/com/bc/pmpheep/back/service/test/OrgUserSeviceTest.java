@@ -14,6 +14,7 @@ import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.util.Const;
@@ -53,7 +54,7 @@ public class OrgUserSeviceTest extends BaseTest {
         PageParameter pageParameter = new PageParameter<>();
         PageResult pageResult = new PageResult<>();
         OrgUserManagerVO managerVO = new OrgUserManagerVO();
-        managerVO.setUsername(null);
+        managerVO.setUsername("mmmmmmm");
         managerVO.setRealname(null);
         managerVO.setOrgName(null);
         pageParameter.setParameter(managerVO);
@@ -102,4 +103,21 @@ public class OrgUserSeviceTest extends BaseTest {
         list.add(1l);
         Assert.assertNotNull("更新审核状态失败", orgUserService.updateOrgUserProgressById(1, list));
     }
+    
+    @Test
+    @Rollback(false)
+    public void addOrgUserAndOrgOfBack(){
+    	Org org=new Org();
+    	OrgUser orgUser=new OrgUser();
+    	org.setAreaId(9999L);//所属区域
+    	org.setOrgTypeId(2L);//机构类型
+    	org.setSort(999);//排序码
+    	org.setNote(null);//备注
+    	org.setOrgName("机构名称1");//管理员姓名
+    	orgUser.setUsername("mmmmmmm");//机构代码
+    	orgUser.setEmail(null);
+    	orgUser.setHandphone(null);
+    	Assert.assertNotNull("添加失败",orgUserService.addOrgUserAndOrgOfBack(orgUser, org));
+    }
+    
 }
