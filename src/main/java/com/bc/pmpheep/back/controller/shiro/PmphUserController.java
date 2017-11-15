@@ -191,7 +191,7 @@ public class PmphUserController {
 			@RequestParam("path") String path, Long departmentId) {
 		PageParameter pageParameter = new PageParameter<>();
 		PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
-		pmphUserManagerVO.setName(name);
+		pmphUserManagerVO.setName(name.trim());
 		pmphUserManagerVO.setPath(path);
 		pmphUserManagerVO.setDepartmentId(departmentId);
 		pageParameter.setPageNumber(pageNumber);
