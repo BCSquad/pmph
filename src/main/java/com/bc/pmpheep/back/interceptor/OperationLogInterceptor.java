@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -93,45 +94,38 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
         String requestUri = request.getRequestURI();// 完 整请求路径
         String contextPath = request.getContextPath();// 项目路径
         String url = requestUri.substring(contextPath.length());// 模块路径
+        HandlerMethod handlerMethod = (HandlerMethod) object;
         if (!url.matches(Const.NO_INTERCEPTOR_PATH)) {
-            Class cls = Class.forName(object.getClass().getName());// 类名
+            Class cls = handlerMethod.getBeanType();// 类名
             Method[] methods = cls.getMethods();
             String logRemark = "";// 方法用途
-            // String sessionId = "";
-            // Map<String, Cookie> map = CookiesUtil.ReadCookieMap(request);
-            // for (Map.Entry<String, Cookie> entry : map.entrySet()) {
-            // if ("sessionId".equals(entry.getKey())) {
-            // sessionId = entry.getValue().getValue();
-            // System.out.println("session-========" + sessionId);
-            // }
-            // }
+            String businessType = "";// 业务类型
+            Boolean isPhone = false;// 是否是手机端访问
             HttpSession session = request.getSession();
             if (ObjectUtil.notNull(session)) {
-                // PmphUser pmphUser1 = SessionUtil.getPmphUser();
                 PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
                 // }
                 // if (StringUtil.notEmpty(sessionId)) {
                 // PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
                 if (ObjectUtil.notNull(pmphUser)) {
-                    System.out.println(pmphUser.toString());
-                    String subUrl = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("."));// 模块地址
+                    String subUrl = url.substring(url.lastIndexOf("/") + 1, url.length());// 模块地址
                     for (Method method : methods) {
                         LogDetail logObj = method.getAnnotation(LogDetail.class);
                         if (ObjectUtil.notNull(logObj) && method.getName().equals(subUrl)) {
-                            System.out.println(method.getName());
                             logRemark = logObj.logRemark();
+                            businessType = logObj.businessType();
                             break;
                         }
                     }
-                    System.out.println("logRemark===" + logRemark);
+                    // Boolean isIphone = DeviceUtils.isMobileDevice(request);
                     // 此处调用 sysOperationService 保存方法
                     sysOperationService.addSysOperation(new SysOperation(pmphUser.getId(),
                                                                          pmphUser.getUsername(),
                                                                          pmphUser.getRealname(),
                                                                          DateUtil.getCurrentTime(),
                                                                          url + "-" + logRemark,
-                                                                         request.getRemoteHost()));
-                    System.out.println("保存成功！");
+                                                                         request.getRemoteHost(),
+                                                                         businessType, "PC"));
                 }
             }
         }

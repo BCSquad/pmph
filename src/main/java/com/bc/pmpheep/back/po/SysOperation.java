@@ -39,6 +39,11 @@ public class SysOperation implements java.io.Serializable {
     private String    operateText;
     // 操作人IP
     private String    clientIp;
+    // 业务类型
+    private String    businessType;
+    // 设备类型
+    private String    deviceType;
+
     private Integer   count;
 
     // Constructors
@@ -57,13 +62,15 @@ public class SysOperation implements java.io.Serializable {
 
     /** full constructor */
     public SysOperation(Long userId, String userName, String userRealName, Timestamp operateDate,
-    String operateText, String clientIp) {
+    String operateText, String clientIp, String businessType, String deviceType) {
         this.userId = userId;
         this.userName = userName;
         this.userRealName = userRealName;
         this.operateDate = operateDate;
         this.operateText = operateText;
         this.clientIp = clientIp;
+        this.businessType = businessType;
+        this.deviceType = deviceType;
     }
 
     public Long getId() {
@@ -123,6 +130,34 @@ public class SysOperation implements java.io.Serializable {
     }
 
     /**
+     * @return the businessType
+     */
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    /**
+     * @param businessType the businessType to set
+     */
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
+
+    /**
+     * @return the deviceType
+     */
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    /**
+     * @param deviceType the deviceType to set
+     */
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    /**
      * @return the count
      */
     public Integer getCount() {
@@ -148,7 +183,7 @@ public class SysOperation implements java.io.Serializable {
     public String toString() {
         return "{id:" + id + ", userId:" + userId + ", userName:" + userName + ", userRealName:"
                + userRealName + ", operateDate:" + operateDate + ", operateText:" + operateText
-               + ", clientIp:" + clientIp + "}";
+               + ", clientIp:" + clientIp + "+, businessType:" + businessType + "+, deviceType:"
+               + deviceType + "}";
     }
-
 }

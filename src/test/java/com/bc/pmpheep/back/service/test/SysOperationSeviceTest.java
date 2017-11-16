@@ -49,7 +49,8 @@ public class SysOperationSeviceTest extends BaseTest {
         SysOperation sysOperation =
         sysOperationService.addSysOperation(new SysOperation(1L, "a", "a",
                                                              DateUtil.getCurrentTime(),
-                                                             "/cms/content", "192.168.200.209"));
+                                                             "/cms/content", "192.168.200.209",
+                                                             "aaaa", "pc"));
         logger.info(sysOperation.toString());
         Assert.assertNotNull("插入内容后返回的sysOperation.id不应为空", sysOperation.getId());
 

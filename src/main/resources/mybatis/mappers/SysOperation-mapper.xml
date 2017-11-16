@@ -23,6 +23,12 @@
 			<if test=" clientIp != null and clientIp !=''">
 				client_ip,
 			</if>
+			<if test=" businessType != null and businessType !=''">
+				business_type,
+			</if>
+			<if test=" deviceType != null and deviceType !=''">
+				device_type,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -46,6 +52,12 @@
 			</if>
 			<if test=" clientIp != null and clientIp !=''">
 				#{clientIp},
+			</if>
+			<if test=" businessType != null and businessType !=''">
+				#{businessType},
+			</if>
+			<if test=" deviceType != null and deviceType !=''">
+				#{deviceType},
 			</if>
 		</trim>
 	</sql>
