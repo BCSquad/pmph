@@ -42,7 +42,7 @@ public class DecTeachExpServiceImpl implements DecTeachExpService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id不能为空");
 		}
-		if (null == decTeachExp.getSchoolName()) {
+		/*if (null == decTeachExp.getSchoolName()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "学校名称不能为空");
 		}
@@ -57,7 +57,7 @@ public class DecTeachExpServiceImpl implements DecTeachExpService {
 		if (null == decTeachExp.getDateEnd()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "教学经历终止时间不能为空");
-		}
+		}*/
 		if (null == decTeachExp.getSort()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "显示顺序不能为空");
