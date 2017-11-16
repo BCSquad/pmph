@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.service.CmsContentService;
@@ -38,7 +39,9 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CmsContentController {
     @Autowired
-    CmsContentService cmsContentService;
+    CmsContentService           cmsContentService;
+    // 当前业务类型
+    private static final String BUSSINESS_TYPE = "文章管理";
 
     /**
      * 
@@ -53,9 +56,10 @@ public class CmsContentController {
      * @return 分页数据集
      * </pre>
      */
-    @RequestMapping(value = "/contents", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseBean listCmsContent(
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询文章管理列表")
+    @RequestMapping(value = "/contents", method = RequestMethod.GET)
+    public ResponseBean contents(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, CmsContentVO cmsContentVO,
     @RequestParam("sessionId") String sessionId) {
@@ -80,8 +84,9 @@ public class CmsContentController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/content/new", method = RequestMethod.POST)
-    public ResponseBean saveCmsContent(CmsContent cmsContent, @RequestParam("file") String[] files,
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增文章")
+    @RequestMapping(value = "/new_content", method = RequestMethod.POST)
+    public ResponseBean new_content(CmsContent cmsContent, @RequestParam("file") String[] files,
     @RequestParam("content") String content, @RequestParam("scheduledTime") String scheduledTime,
     @RequestParam("sessionId") String sessionId) {
         try {
@@ -106,8 +111,9 @@ public class CmsContentController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "文章发布")
     @RequestMapping(value = "/content/{id}/publish", method = RequestMethod.PUT)
-    public ResponseBean publishCmsContent(@PathVariable("id") Long id) {
+    public ResponseBean publish(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.publishCmsContentById(id));
     }
 
@@ -122,8 +128,9 @@ public class CmsContentController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查看文章详情")
     @RequestMapping(value = "/content/{id}/detail", method = RequestMethod.GET)
-    public ResponseBean searchCmsContent(@PathVariable("id") Long id) {
+    public ResponseBean detail(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.getCmsContentAndContentAndAttachmentById(id));
     }
 
@@ -138,8 +145,9 @@ public class CmsContentController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/content/{id}", method = RequestMethod.GET)
-    public ResponseBean getCmsContentAndContentAndAttachment(@PathVariable("id") Long id) {
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询文章详情")
+    @RequestMapping(value = "/content/{id}/search", method = RequestMethod.GET)
+    public ResponseBean search(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.getCmsContentAndContentAndAttachmentById(id));
     }
 
@@ -154,10 +162,10 @@ public class CmsContentController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "文章修改")
     @RequestMapping(value = "/content/update", method = RequestMethod.PUT)
-    public ResponseBean updateCmsContent(CmsContent cmsContent,
-    @RequestParam("file") String[] files, @RequestParam("content") String content,
-    @RequestParam("attachment") String[] attachment,
+    public ResponseBean update(CmsContent cmsContent, @RequestParam("file") String[] files,
+    @RequestParam("content") String content, @RequestParam("attachment") String[] attachment,
     @RequestParam("scheduledTime") String scheduledTime, @RequestParam("sessionId") String sessionId) {
         try {
             return new ResponseBean(cmsContentService.updateCmsContent(cmsContent,
@@ -182,8 +190,9 @@ public class CmsContentController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "文章隐藏")
     @RequestMapping(value = "/content/{id}/hide", method = RequestMethod.PUT)
-    public ResponseBean hideCmsContent(@PathVariable("id") Long id) {
+    public ResponseBean hide(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.hideCmsContentById(id));
     }
 
@@ -198,7 +207,8 @@ public class CmsContentController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/content/{id}", method = RequestMethod.DELETE)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "文章删除")
+    @RequestMapping(value = "/content/{id}/delete", method = RequestMethod.DELETE)
     public ResponseBean delCmsContent(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.deleteCmsContentById(id));
     }

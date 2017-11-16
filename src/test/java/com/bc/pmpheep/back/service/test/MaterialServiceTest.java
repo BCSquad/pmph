@@ -32,8 +32,9 @@ public class MaterialServiceTest extends BaseTest {
     	Random random =new Random();
     	Material material=new Material ("materialName",random.nextInt(200),
     			new Long(random.nextInt(200)), new Date(), new Date(),
-    			new Date(),"mailAddress",new Short("1"),
-    			new Long(random.nextInt(200)),new Long(random.nextInt(200)),
+    			new Date(),"mailAddress",new Long(random.nextInt(200)),
+    			new Long(random.nextInt(200)),true,
+    			true, true,
     			true, true,
     			true, true,
     			true, true,

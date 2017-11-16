@@ -60,7 +60,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 	}
 
 	@Override
-	public String updateBookUserCommentByAuth(Long[] ids, Integer isAuth, String sessionId)
+	public String updateBookUserCommentByAuth(Long[] ids, Boolean isAuth, String sessionId)
 			throws CheckedServiceException {
 		String result = "FAIL";
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -78,7 +78,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 		int num = 0;
 		for (Long id : ids) {
 			BookUserComment bookUserComment = bookUserCommentDao.getBookUserCommentById(id);
-			if (bookUserComment.getIsAuth() != 2) {
+			if (bookUserComment.getIsAuth()) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.ILLEGAL_PARAM,
 						"有已经审核的评论了");
 			}

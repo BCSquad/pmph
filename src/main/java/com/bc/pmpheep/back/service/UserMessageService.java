@@ -134,9 +134,22 @@ public interface UserMessageService {
      * @author Mryang
      * @createDate 2017年9月29日 下午4:44:35
      * @param userMessage
-     * @return
+     * @return 影响行数
      */
     Integer updateToWithdraw(UserMessage userMessage) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：取消撤回消息
+     * 使用示范：
+     *
+     * @param msgId  Message主键id
+     * @return  影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer updateCancelToWithdraw(String msgId) throws CheckedServiceException;
 
     /**
      * 

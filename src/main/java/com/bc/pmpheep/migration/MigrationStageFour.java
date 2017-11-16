@@ -175,7 +175,9 @@ public class MigrationStageFour {
 					"a.enddate, "+
 					"a.agedeaddate, "+
 					"a.mailaddress, "+
-					"a.flowtype, "+
+					"CASE WHEN a.flowtype=10 THEN 0 ELSE 1 END is_published,"+
+					"CASE WHEN a.flowtype=12 AND k.materid IS NOT NULL THEN 1 ELSE 0 " +
+				    "END is_all_textbook_published, " + 
 					"j.new_pk DepartmentId , "+
 					"d.newuserid director, "+
 					"a.isbookmulti, "+
@@ -224,6 +226,7 @@ public class MigrationStageFour {
 					"LEFT JOIN sys_user h on h.userid = a.updateuserid  "+
 					"LEFT JOIN sys_booktypes i on i.BookTypesID = a. booktypesid  "+
 					"LEFT JOIN ba_organize j on a.createorgid = j.orgid " +
+					"LEFT JOIN site_article k ON a.materid = k.materid " +
 					"WHERE true GROUP BY a.materid ;";
 		JdbcHelper.addColumn(tableName); //增加new_pk字段
 		List<Map<String, Object>> maps=JdbcHelper.getJdbcTemplate().queryForList(sql);
@@ -287,8 +290,7 @@ public class MigrationStageFour {
 			material.setDeadline((Timestamp)oldMaterial.get("showenddate"));
 			material.setActualDeadline((Timestamp)oldMaterial.get("enddate"));
 			material.setAgeDeadline((Timestamp)oldMaterial.get("agedeaddate"));			
-			material.setMailAddress(mailaddress);
-			material.setProgress(new Short((String)oldMaterial.get("flowtype")));			
+			material.setMailAddress(mailaddress);		
 			material.setDepartmentId(DepartmentId);			
 			material.setDirector(director);//director,
 			material.setIsMultiBooks("1".equals(String.valueOf(oldMaterial.get("isbookmulti")))); //is_multi_books,

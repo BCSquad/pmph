@@ -39,7 +39,7 @@ public class DecTextbookServiceImpl implements DecTextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id不能为空");
 		}
-		if (null == decTextbook.getMaterialName()) {
+		/*if (null == decTextbook.getMaterialName()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "教材名称不能为空");
 		}
@@ -58,7 +58,7 @@ public class DecTextbookServiceImpl implements DecTextbookService {
 		if (null == decTextbook.getPublishDate()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "出版时间不能为空");
-		}
+		}*/
 		if (null ==decTextbook.getSort()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "显示顺序不能为空");
