@@ -163,8 +163,8 @@
 	<select id="listMessageState" parameterType="PageParameter"
 		resultType="MessageStateVO">
 		SELECT 
-			a.id,a.msg_id,a.msg_type,a.gmt_create sendTime,a.gmt_update
-			a.is_withdraw,reciveTime,a.is_read,a.receiver_type,a.is_withdraw,t.count,
+			a.id,a.msg_id,a.msg_type,a.gmt_create sendTime,a.gmt_update reciveTime,
+			a.is_read,a.receiver_type,a.is_withdraw,t.count,
 		case when
 			a.receiver_type =1
 		then 
