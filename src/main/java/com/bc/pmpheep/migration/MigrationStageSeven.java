@@ -3,6 +3,7 @@ package com.bc.pmpheep.migration;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +21,8 @@ import com.bc.pmpheep.back.po.MessageAttachment;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.service.MessageAttachmentService;
 import com.bc.pmpheep.back.service.UserMessageService;
+import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.po.Message;
@@ -51,7 +54,12 @@ public class MigrationStageSeven {
 	@Resource
     private ExcelHelper excelHelper;
 	
-	@SuppressWarnings("all")
+	public void start(){
+		Date beforeTime = new Date(System.currentTimeMillis());
+		userMessage_messageAttachment ();
+		logger.info(JdbcHelper.migrationTime(beforeTime));
+	}
+	
 	public void userMessage_messageAttachment (){//case WHEN e.sysflag=0 then 1 when e.sysflag=1 and e.usertype=2 then 3 else 2 end
 		String sql="select "+
 						 "DISTINCT  "+
@@ -81,77 +89,78 @@ public class MigrationStageSeven {
 //		JdbcHelper.addColumn(tableName); //增加new_pk字段
 		List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
 		List<Map<String, Object>> excel = new LinkedList<>();
-		Map<String, String>       msgidOldAndNew = new HashMap<String, String>(maps.size());
+		Map<String, String> msgidOldAndNew = new HashMap<String, String>(maps.size());
 		int count =0; 
 		for (Map<String, Object> map : maps) {
 			StringBuilder  exception=  new StringBuilder("");
 			//先保存这条记录
-			Short msgtype    = new Short (String.valueOf(map.get("msgtype")));
-			if(null == msgtype ){
-				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("消息类型为空,设置默认 0").toString());
-				excel.add(map);
-				msgtype =0;
-			}
-			String title     =(String)map.get("title");
+			String title =(String)map.get("title");
 			if(StringUtil.isEmpty(title)){
-				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("消息标题为空").toString());
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("消息标题查询到为空值。"));
 				excel.add(map);
 				continue;
 			}
 			Long senderid    =(Long)  map.get("senderid");
-			if(null == senderid ){
-				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("发送者id为空").toString());
+			if(ObjectUtil.isNull(senderid)){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("发送者id查询到为空值。"));
 				excel.add(map);
 				continue;
 			}
+			Long receiverid  =(Long ) map.get("receiverid");
+			if(ObjectUtil.isNull(receiverid)){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("接收者id查询到为空值。"));
+				excel.add(map);
+				continue;
+			}
+			Short msgtype = new Short (String.valueOf(map.get("msgtype")));
+			if(ObjectUtil.isNull(msgtype)){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("消息类型查询到为空值。"));
+				excel.add(map);
+				msgtype =0;
+			}
 			Short sendertype =new Short(String.valueOf(map.get("sendertype")));
-			if(null == sendertype ){
-				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("发送者类型为空,设置默认 0").toString());
+			if(ObjectUtil.isNull(sendertype)){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("发送者类型查询到为空值。"));
 				excel.add(map);
 				sendertype =0;
 			}
-			Long receiverid  =(Long ) map.get("receiverid");
-			if(null == receiverid ){
-				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("接收者id为空").toString());
-				excel.add(map);
-				continue;
-			}
 			Short receivertype=new Short (String.valueOf((map.get("receivertype"))));
-			if(null == receivertype ){
-				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("接收者类型为空,设置默认 0").toString());
+			if(ObjectUtil.isNull(receivertype)){
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("接收者类型查询到为空值。"));
 				excel.add(map);
 				receivertype =0;
 			}
-			Boolean isread    ="1".equals(map.get("isread"));
+			Boolean isread ="1".equals(map.get("isread"));
 			Boolean iswithdraw="1".equals(map.get("iswithdraw"));
 			Boolean isdeleted ="1".equals(map.get("isdeleted"));
-			Timestamp gt      =(Timestamp)map.get("gt");
-			Timestamp ut      =(Timestamp)map.get("ut");
+			Timestamp gt =(Timestamp)map.get("gt");
+			Timestamp ut =(Timestamp)map.get("ut");
 			UserMessage  userMessage = new UserMessage("---------",title,msgtype,senderid,sendertype,
 					receiverid, receivertype, isread, iswithdraw, isdeleted,gt, ut);
 			try {
 				userMessage=userMessageSevice.addUserMessage(userMessage);
 			} catch (Exception e) {
-				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage().toString()));
+				map.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage() + "。"));
 				excel.add(map);
 				logger.error( e.getMessage());
 				continue;
 			}
 			count++;
+			long pk = userMessage.getId();
 			if(count%1000==0){//打印进度
 				logger.info("执行了:"+(count*100.0)/maps.size()+"%");
 			}
 			//对html里面内置的图片处理
-			String msgid=      String.valueOf(map.get("msgid"));
+			String msgid= String.valueOf(map.get("msgid"));
 			String msg_id = msgidOldAndNew.get(msgid); //MongoDB对应主键
-			if(null == msg_id || "".equals(msg_id)){//消息主体没有存入
+			if(StringUtil.isEmpty(msg_id)){//消息主体没有存入
 				String msgcontent =(String) map.get("msgcontent");
 				List<String>srcs  =getImgSrc(msgcontent);
-				if(null != srcs && srcs.size()>0){//内容里面包含图片
+				if(CollectionUtil.isNotEmpty(srcs)){//内容里面包含图片
 					for(String src :srcs){
 						String mongoId = null;
 						try {
-							mongoId =fileService.migrateFile(src.replace("/pmph_imesp",""), FileType.MSG_PIC,userMessage.getId());
+							mongoId =fileService.migrateFile(src.replace("/pmph_imesp",""), FileType.MSG_PIC,pk);
 						} catch (Exception e) {
 							
 						}
@@ -228,10 +237,7 @@ public class MigrationStageSeven {
         }  
         return pics;  
     }  
-	
-	public void start(){
-		userMessage_messageAttachment ();
-	}
+
 	
 	
 }
