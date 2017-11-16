@@ -176,7 +176,8 @@
 		g.id =
 		h.declaration_id
 		WHERE a.group_id =
-		#{parameter.groupId}
+		#{parameter.groupId} and
+		a.is_deleted = false
 		<if test="parameter.name !=null and parameter.name !=''">
 			and (e.username like concat('%',#{parameter.name},'%') or
 			c.username like
