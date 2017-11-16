@@ -65,6 +65,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     @Autowired
     private PmphUserService pmphUserService;
     
+    @Autowired
+    private DecExtensionService decExtensionService;
+    
 
     /**
      * 
@@ -168,28 +171,29 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     	}else if(null == director.getDepartmentId() ){
     		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,CheckedExceptionResult.ILLEGAL_PARAM, "主任对应的机构为空");
     	}
-    	//创建人
-    	material.setFounderId(pmphUser.getId());
+    	
     	//教材所属部门
     	material.setDepartmentId(director.getDepartmentId());
-    	//修改人
+    	//修改人 
     	material.setMenderId(pmphUser.getId());
     	//保存或者更新教材
     	if(isUpdate){
     		materialDao.updateMaterial(material);
     	}else{
+    		//创建人
+    		material.setFounderId(pmphUser.getId());
     		materialDao.addMaterial(material);
     	}
     	Long materialId = material.getId();
     	Gson gson = new Gson();
-    	//扩展项目转换
+    	//扩展项转换
     	List<MaterialExtension> oldMaterialExtensionlist =materialExtensionService.getMaterialExtensionByMaterialId(materialId);
     	String newMaterialExtensionIds=",";
     	if(!StringUtil.isEmpty(materialExtensions)){
     		List<MaterialExtension> materialExtensionlist = gson.fromJson(materialExtensions,new TypeToken<ArrayList<MaterialExtension>>() { }.getType());
     		for(MaterialExtension materialExtension:materialExtensionlist){
     			if(null == materialExtension){
-    				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,CheckedExceptionResult.NULL_PARAM, "教材联系人对象为空");
+    				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,CheckedExceptionResult.NULL_PARAM, "扩展项对象为空");
     			}
     			if(StringUtil.isEmpty(materialExtension.getExtensionName())){
     				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,CheckedExceptionResult.NULL_PARAM, "扩展项名称为空");
@@ -208,7 +212,10 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     	}
     	for(MaterialExtension oldMaterialExtension: oldMaterialExtensionlist){ //删除删除的MaterialExtension
     		if(!newMaterialExtensionIds.contains(","+oldMaterialExtension.getId()+",")){ //不包含
+    			//删除扩展项
     			materialExtensionService.deleteMaterialExtensionById(oldMaterialExtension.getId());
+    			//删除扩展值
+    			decExtensionService.deleteDecExtensionByExtensionId(oldMaterialExtension.getId());
     		}
     	}
     	//联系人转换
