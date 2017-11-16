@@ -68,7 +68,7 @@ public interface UserMessageDao {
      * 
      */
     List<UserMessageVO> listMessage(PageParameter<UserMessageVO> pageParameter);
-    
+
     /**
      * 单条数据插入 UserMessage
      * 
@@ -109,6 +109,18 @@ public interface UserMessageDao {
 	 * </pre>
      */
     Integer updateUserMessageWithdrawByMsgId(String msgId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：取消撤销UserMessage
+     * 使用示范：
+     *
+     * @param msgId message主键ID
+     * @return 影响行数
+     * </pre>
+     */
+    Integer updateUserMessageCancelWithdrawByMsgId(String msgId);
 
     /**
      * 

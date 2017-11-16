@@ -321,9 +321,16 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             List<UserMessage> temp = new ArrayList<UserMessage>();
             // 已经发送的人员列表
             List<UserMessage> sendedList = userMessageDao.getMessageByMsgId(message.getId());
+            // 已发送消息是否撤回
+            Boolean isWithdraw = false;
             for (UserMessage userMessage : userMessageList) {
                 boolean flag = false;// 没有发送
                 for (UserMessage uMessage : sendedList) {
+                    if (!isWithdraw) {
+                        if (uMessage.getIsWithdraw()) {// 判断消息是否撤回
+                            isWithdraw = true;
+                        }
+                    }
                     if (userMessage.getReceiverId() == uMessage.getReceiverId()
                         && userMessage.getReceiverType() == uMessage.getReceiverType()) {
                         flag = true;
@@ -335,6 +342,10 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 }
             }
             userMessageList = temp;
+            // 补发，取消撤回当前已发送的消息
+            if (isWithdraw) {
+                this.updateCancelToWithdraw(message.getId());
+            }
         }
         // 插入消息发送对象数据
         if (CollectionUtil.isNotEmpty(userMessageList)) {
@@ -723,5 +734,14 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                               CheckedExceptionResult.NULL_PARAM, "主键为空！");
         }
         return userMessageDao.updateUserMessage(userMessage);
+    }
+
+    @Override
+    public Integer updateCancelToWithdraw(String msgId) throws CheckedServiceException {
+        if (StringUtil.isEmpty(msgId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return userMessageDao.updateUserMessageCancelWithdrawByMsgId(msgId);
     }
 }

@@ -74,6 +74,16 @@
 		where 
 			msg_id = #{msgId};
 	</update>
+	
+	<!-- 通过msgId 取消撤销UserMessage -->
+	<update id="updateUserMessageCancelWithdrawByMsgId" parameterType="java.lang.String">
+		update
+			user_message 
+		set 
+			is_withdraw = false 
+		where 
+			msg_id = #{msgId};
+	</update>
 
 	<!-- 通过msgId 更新是否被逻辑删除 -->
 	<update id="updateUserMessageIsDeletedByMsgId" parameterType="java.util.List">

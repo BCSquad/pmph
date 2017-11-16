@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.CmsContentService;
 import com.bc.pmpheep.back.vo.CmsContentVO;
@@ -35,7 +36,9 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CmsContentManageController {
     @Autowired
-    CmsContentService cmsContentService;
+    CmsContentService           cmsContentService;
+    // 当前业务类型
+    private static final String BUSSINESS_TYPE = "信息快报管理";
 
     /**
      * 
@@ -50,9 +53,10 @@ public class CmsContentManageController {
      * @return 分页数据集
      * </pre>
      */
-    @RequestMapping(value = "/manage", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseBean listContentManage(
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询信息快报列表")
+    @RequestMapping(value = "/manage", method = RequestMethod.GET)
+    public ResponseBean manage(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, CmsContentVO cmsContentVO,
     @RequestParam("sessionId") String sessionId) {
@@ -72,8 +76,9 @@ public class CmsContentManageController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询信息快报内容")
     @RequestMapping(value = "/manage/content/{id}/search", method = RequestMethod.GET)
-    public ResponseBean searchCmsContent(@PathVariable("id") Long id) {
+    public ResponseBean search(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.getCmsContentAndContentAndAttachmentById(id));
     }
 
@@ -88,8 +93,9 @@ public class CmsContentManageController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "信息快报消息隐藏")
     @RequestMapping(value = "/manage/content/{id}/hide", method = RequestMethod.PUT)
-    public ResponseBean hideCmsContent(@PathVariable("id") Long id) {
+    public ResponseBean hide(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.hideCmsContentById(id));
     }
 
@@ -104,8 +110,9 @@ public class CmsContentManageController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/manage/content/{id}", method = RequestMethod.DELETE)
-    public ResponseBean delCmsContent(@PathVariable("id") Long id) {
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除一条信息快报")
+    @RequestMapping(value = "/manage/content/{id}/delete", method = RequestMethod.DELETE)
+    public ResponseBean delete(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.deleteCmsContentById(id));
     }
 }

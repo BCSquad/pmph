@@ -122,12 +122,13 @@ public class DeviceUtils {
      * @param request http请求
      * @return 如果命中手机特征规则，则返回对应的特征字符串
      */
-    public static boolean isMobileDevice(HttpServletRequest request) {
+    public static String isMobileDevice(HttpServletRequest request) {
         boolean isMobile = false;
         boolean pcFlag = false;
         boolean mobileFlag = false;
         String via = request.getHeader("Via");
         String userAgent = request.getHeader("user-agent");
+        String deviceType = "";
         for (int i = 0; via != null && !via.trim().equals("") && i < mobileGateWayHeaders.length; i++) {
             if (via.contains(mobileGateWayHeaders[i])) {
                 mobileFlag = true;
@@ -137,12 +138,16 @@ public class DeviceUtils {
         for (int i = 0; !mobileFlag && userAgent != null && !userAgent.trim().equals("")
                         && i < mobileUserAgents.length; i++) {
             if (userAgent.contains(mobileUserAgents[i])) {
-                mobileFlag = true;
-                break;
+                if (userAgent.equals(pcHeaders[i])) {
+                    deviceType = userAgent;
+                    pcFlag = true;
+                    break;
+                }
             }
         }
         for (int i = 0; userAgent != null && !userAgent.trim().equals("") && i < pcHeaders.length; i++) {
             if (userAgent.contains(pcHeaders[i])) {
+                deviceType = "PC";
                 pcFlag = true;
                 break;
             }
@@ -150,7 +155,7 @@ public class DeviceUtils {
         if (mobileFlag == true && pcFlag == false) {
             isMobile = true;
         }
-        return isMobile;// false pc true mobile
+        return deviceType;// false pc true mobile
 
     }
 

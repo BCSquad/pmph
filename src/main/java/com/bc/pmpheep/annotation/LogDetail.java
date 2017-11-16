@@ -29,7 +29,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface LogDetail {
+    // 方法业务描述
     String logRemark() default "";
 
+    // 业务类型
     String businessType() default "";
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.service.PmphPermissionService;
 import com.bc.pmpheep.back.service.PmphRoleService;
@@ -40,11 +41,13 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 @Controller
 @RequestMapping("role/pmph")
 public class PmphRoleController {
-    Logger                logger = LoggerFactory.getLogger(PmphRoleController.class);
+    Logger                      logger         = LoggerFactory.getLogger(PmphRoleController.class);
     @Autowired
-    PmphRoleService       roleService;
+    PmphRoleService             roleService;
     @Autowired
-    PmphPermissionService pmphPermissionService;
+    PmphPermissionService       pmphPermissionService;
+    // 当前业务类型
+    private static final String BUSSINESS_TYPE = "角色";
 
     /**
      * 
@@ -57,9 +60,11 @@ public class PmphRoleController {
 	 * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询角色列表信息")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseBean list(@RequestParam("roleName") String roleName) {
-        List<PmphRole> roleList = roleService.getList(StringUtil.isEmpty(roleName)?roleName:roleName.trim());
+        List<PmphRole> roleList =
+        roleService.getList(StringUtil.isEmpty(roleName) ? roleName : roleName.trim());
         return new ResponseBean(roleList);
     }
 
@@ -75,10 +80,11 @@ public class PmphRoleController {
 	 * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增角色")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseBean add(PmphRole role,Long[] ids) {
+    public ResponseBean add(PmphRole role, Long[] ids) {
         logger.debug(role.toString());
-        return new ResponseBean(roleService.add(role,ids));
+        return new ResponseBean(roleService.add(role, ids));
     }
 
     /**
@@ -110,6 +116,7 @@ public class PmphRoleController {
 	 * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改角色")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseBean update(PmphRole role) {
         logger.debug(role.toString());
@@ -128,8 +135,9 @@ public class PmphRoleController {
 	 * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/resources/{roleId}", method = RequestMethod.GET)
-    public ResponseBean getListResources(@PathVariable("roleId") Long roleId) {
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询角色拥有的资源菜单列表")
+    @RequestMapping(value = "/{roleId}/resources", method = RequestMethod.GET)
+    public ResponseBean resources(@PathVariable("roleId") Long roleId) {
         return new ResponseBean(roleService.getListPmphRolePermission(roleId));
     }
 
@@ -146,7 +154,8 @@ public class PmphRoleController {
 	 * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/resources", method = RequestMethod.POST)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新角色拥有的资源菜单")
+    @RequestMapping(value = "/resource", method = RequestMethod.POST)
     public ResponseBean resource(@RequestParam("roleId") Long roleId,
     @RequestParam("permissionIds") String permissionIds) {
         String[] ids = permissionIds.split(",");
@@ -168,8 +177,9 @@ public class PmphRoleController {
 	 * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/delete/{roleIds}", method = RequestMethod.DELETE)
-    public ResponseBean deleteRole(@PathVariable("roleIds") String roleIds) {
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除角色")
+    @RequestMapping(value = "/{roleIds}/delete", method = RequestMethod.DELETE)
+    public ResponseBean delete(@PathVariable("roleIds") String roleIds) {
         logger.debug(roleIds);
         String[] ids = roleIds.split(",");
         List<Long> idLists = new ArrayList<Long>(ids.length);
@@ -192,8 +202,9 @@ public class PmphRoleController {
      * 
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
     @RequestMapping(value = "/list/role", method = RequestMethod.GET)
-    public ResponseBean listRole() {
+    public ResponseBean role() {
         return new ResponseBean(roleService.getListRole());
     }
 }

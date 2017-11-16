@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.service.OrgUserService;
@@ -47,6 +48,8 @@ public class SchoolAndTeacherCheckController {
     WriterUserService              writerUserService;
     @Autowired
     WriterUserCertificationService writerUserCertificationService;
+    // 当前业务类型
+    private static final String    BUSSINESS_TYPE = "学校/教师审核";
 
     /**
      * 
@@ -61,8 +64,9 @@ public class SchoolAndTeacherCheckController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/orgs/list", method = RequestMethod.GET)
-    public ResponseBean listSchoolAdminCheck(
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
+    @RequestMapping(value = "/org_list", method = RequestMethod.GET)
+    public ResponseBean org_list(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, OrgVO orgVO) {
         PageParameter<OrgVO> pageParameter = new PageParameter<OrgVO>(pageNumber, pageSize, orgVO);
@@ -81,8 +85,9 @@ public class SchoolAndTeacherCheckController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/orgs/check", method = RequestMethod.PUT)
-    public ResponseBean updateSchoolAdminCheck(@RequestParam(name = "progress") Integer progress,
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
+    @RequestMapping(value = "/org_check", method = RequestMethod.PUT)
+    public ResponseBean org_check(@RequestParam(name = "progress") Integer progress,
     @RequestParam(name = "orgUserIds") List<Long> orgUserIds) {
         return new ResponseBean(orgUserService.updateOrgUserProgressById(progress, orgUserIds));
     }
@@ -100,8 +105,9 @@ public class SchoolAndTeacherCheckController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/writers/list", method = RequestMethod.GET)
-    public ResponseBean listTeacherCheck(
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
+    @RequestMapping(value = "/writer_list", method = RequestMethod.GET)
+    public ResponseBean writer_list(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, WriterUserManagerVO writerUserManagerVO) {
         PageParameter<WriterUserManagerVO> pageParameter =
@@ -121,8 +127,9 @@ public class SchoolAndTeacherCheckController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/writers/check", method = RequestMethod.PUT)
-    public ResponseBean updateTeacherCheck(@RequestParam(name = "progress") Short progress,
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
+    @RequestMapping(value = "/writer_check", method = RequestMethod.PUT)
+    public ResponseBean writer_check(@RequestParam(name = "progress") Short progress,
     @RequestParam(name = "userIds") String[] userIds) {
         return new ResponseBean(
                                 writerUserCertificationService.updateWriterUserCertificationProgressByUserId(progress,
