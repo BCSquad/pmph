@@ -210,6 +210,11 @@ public class JdbcHelper {
     		timeValue = timeValue / 60;
     		time = "迁移共用时：{" + timeValue + "}分钟";
     	}
+    	if (timeValue > 3600){
+    		long min = timeValue / 60 % 60;
+    		timeValue = timeValue / 60 / 60;
+    		time = "迁移共用时：{" + timeValue + "}小时{" + min + "}分钟";
+    	}
     	return time;
     }
 }

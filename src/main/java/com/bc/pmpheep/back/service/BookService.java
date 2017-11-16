@@ -18,21 +18,21 @@ public interface BookService {
 	 *            图书实例
 	 * @return 包含主键的插入对象
 	 */
-	Book add(Book book);
+	Book add(Book book) throws CheckedServiceException;
 
 	/**
 	 * 
 	 * 
-	 * 功能描述：通过本版编号来获取人卫系统上的图书商品详情
+	 * 功能描述：商城更新图书的接口
 	 *
-	 * @param revision
+	 * @param noteicetype
+	 *            通知类型 0：修改
+	 * @param key
 	 *            本版号
-	 * @param type
-	 *            访问类型 1：全量同步 2；增量同步
-	 * @throws CheckedServiceException
+	 * @return
 	 *
 	 */
-	String AbuttingJoint(String[] vns, Integer type) throws CheckedServiceException;
+	String AbuttingJoint(String[] key, Integer noteicetype) throws CheckedServiceException;
 
 	/**
 	 * 保存图书详情
@@ -41,7 +41,7 @@ public interface BookService {
 	 *            图书详情实例
 	 * @return 包含主键的插入对象
 	 */
-	BookDetail add(BookDetail detail);
+	BookDetail add(BookDetail detail) throws CheckedServiceException;
 
 	/**
 	 * 图书被点赞
@@ -50,7 +50,7 @@ public interface BookService {
 	 *            点赞关联数据
 	 * @return 包含主键的插入对象
 	 */
-	BookUserLike add(BookUserLike like);
+	BookUserLike add(BookUserLike like) throws CheckedServiceException;
 
 	/**
 	 * 图书被收藏
@@ -59,7 +59,7 @@ public interface BookService {
 	 *            收藏关联数据
 	 * @return 包含主键的插入对象
 	 */
-	BookUserMark add(BookUserMark mark);
+	BookUserMark add(BookUserMark mark) throws CheckedServiceException;
 
 	/**
 	 *
@@ -107,4 +107,17 @@ public interface BookService {
 	 *
 	 */
 	String deleteBookById(Long id) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：书籍同步
+	 * 
+	 * @param type
+	 *            2：增量 1：全量
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	String AllSynchronization(Integer type) throws CheckedServiceException;
 }

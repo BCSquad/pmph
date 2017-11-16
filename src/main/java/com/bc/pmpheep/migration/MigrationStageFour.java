@@ -3,6 +3,7 @@ package com.bc.pmpheep.migration;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,6 +80,7 @@ public class MigrationStageFour {
 	private MaterialProjectEditorService materialProjectEditorService;
 	
 	public void start() {
+		Date beforeTime = new Date(System.currentTimeMillis());
 		materialType();
 		material();
 		materialExtension();
@@ -88,6 +90,7 @@ public class MigrationStageFour {
 		transferMaterialContact();
 		materialOrg();
 		materialPprojectEeditor();
+		logger.info(JdbcHelper.migrationTime(beforeTime));
 	}
 	
 	protected void materialType(){
@@ -175,8 +178,8 @@ public class MigrationStageFour {
 					"a.enddate, "+
 					"a.agedeaddate, "+
 					"a.mailaddress, "+
-					"CASE WHEN a.flowtype=10 THEN 0 ELSE 1 END is_published,"+
-					"CASE WHEN a.flowtype=12 AND k.materid IS NOT NULL THEN 1 ELSE 0 " +
+					"CASE WHEN a.flowtype=10 THEN '0' ELSE '1' END is_published,"+
+					"CASE WHEN a.flowtype=12 AND k.materid IS NOT NULL THEN '1' ELSE '0' " +
 				    "END is_all_textbook_published, " + 
 					"j.new_pk DepartmentId , "+
 					"d.newuserid director, "+
@@ -206,7 +209,6 @@ public class MigrationStageFour {
 					"a.isfillothermaterwrite, "+
 					"a.isusescientresearch, "+
 					"a.isfillscientresearch, "+
-					"if(a.ispublishfront =1,true,false) ispublishfront, "+
 					"if(a.isdelete =1 ,true,false) isdelete, "+
 					"a.createdate, "+
 					"g.new_pk founder_id, "+
@@ -235,7 +237,7 @@ public class MigrationStageFour {
 		for(Map<String, Object> oldMaterial : maps){
 			StringBuilder  exception=  new StringBuilder();
 			String materialId = String.valueOf(oldMaterial.get("materid"));
-			String  matername = (String)oldMaterial.get("matername");
+			String matername = (String)oldMaterial.get("matername");
 			if (StringUtil.isEmpty(matername)){
 				oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材名称为空。"));
 				excel.add(oldMaterial);
@@ -313,13 +315,16 @@ public class MigrationStageFour {
 			material.setIsSchoolCourseRequired("1".equals(String.valueOf(oldMaterial.get("isfillschoolconstr"))));//is_school_course_required,
 			material.setIsNationalPlanUsed("1".equals(String.valueOf(oldMaterial.get("isuseeditormater"))));//is_national_plan_used,
 			material.setIsNationalPlanRequired("1".equals(String.valueOf(oldMaterial.get("isfilleditormater"))));//is_national_plan_required,
-			material.setIsTextbookWriterUsed("1".equals(String.valueOf(oldMaterial.get("isusematerwrite"))));//is_textbook_writer_used,
-			material.setIsTextbookWriterRequired("1".equals(String.valueOf(oldMaterial.get("isfillmaterwrite"))));//is_textbook_writer_required,
+			material.setIsTextbookUsed("1".equals(String.valueOf(oldMaterial.get("isusematerwrite"))));//is_textbook_writer_used,
+			material.setIsTextbookRequired("1".equals(String.valueOf(oldMaterial.get("isfillmaterwrite"))));//is_textbook_writer_required,
 			material.setIsOtherTextbookUsed("1".equals(String.valueOf(oldMaterial.get("isuseothermaterwrite"))));//is_other_textbook_used,
 			material.setIsOtherTextbookRequired("1".equals(String.valueOf(oldMaterial.get("isfillothermaterwrite"))));//is_other_textbook_required,
 			material.setIsResearchUsed("1".equals(String.valueOf(oldMaterial.get("isusescientresearch"))));//is_research_used,
 			material.setIsResearchRequired("1".equals(String.valueOf(oldMaterial.get("isfillscientresearch"))));//is_research_required,
-			material.setIsPublished("1".equals(String.valueOf(oldMaterial.get("ispublishfront"))));//is_published,
+			material.setIsPublished("1".equals(String.valueOf(oldMaterial.get("is_published"))));//is_published,
+			material.setIsPublic(false);//is_public
+			material.setIsAllTextbookPublished("1".equals(String.valueOf(oldMaterial.get("is_all_textbook_published"))));//is_all_textbook_published
+			material.setIsForceEnd(false);//is_force_end
 			material.setIsDeleted("1".equals(String.valueOf(oldMaterial.get("isdelete"))));//is_deleted,
 			material.setGmtCreate((Timestamp)oldMaterial.get("createdate"));//gmt_create,			
 			material.setFounderId(founder_id);//founder_id,

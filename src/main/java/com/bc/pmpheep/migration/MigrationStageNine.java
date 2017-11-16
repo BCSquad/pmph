@@ -54,7 +54,9 @@ public class MigrationStageNine {
     ExcelHelper excelHelper;
 
     public void start() {
+    	Date beforeTime = new Date(System.currentTimeMillis());
         book();
+        logger.info(JdbcHelper.migrationTime(beforeTime));
     }
 
     protected void book() {

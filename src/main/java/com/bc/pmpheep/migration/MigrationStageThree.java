@@ -5,6 +5,7 @@ package com.bc.pmpheep.migration;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,11 +58,13 @@ public class MigrationStageThree {
 	WriterUserCertificationService writerCertificationService;
 	
 	public void start(){
+		Date beforeTime = new Date(System.currentTimeMillis());
 		writerRole();
 		writerUserRole();
 		writerProfile();
 		writerUserCertification();
 		orgUserRole();
+		logger.info(JdbcHelper.migrationTime(beforeTime));
 	}
 	
 	protected void writerRole() {

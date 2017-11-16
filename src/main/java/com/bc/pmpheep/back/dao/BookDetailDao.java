@@ -31,6 +31,17 @@ public interface BookDetailDao {
 	Integer updateBookDetail(BookDetail bookDetail);
 
 	/**
+	 * 
+	 * 
+	 * 功能描述： 根据bookId 修改图书详细信息
+	 *
+	 * @param bookDetail
+	 * @return
+	 *
+	 */
+	Integer updateBookDetailByBookId(BookDetail bookDetail);
+
+	/**
 	 * ��ѯһ�� BookDetail ͨ������id
 	 * 
 	 * @param BookDetail

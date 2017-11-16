@@ -50,6 +50,8 @@ public class GroupController {
 	private PmphGroupFileService pmphGroupFileService;
 	@Autowired
 	PmphGroupMessageService pmphGroupMessageService;
+	// 当前业务类型
+	private static final String BUSSINESS_TYPE = "小组";
 
 	/**
 	 * 根据小组名称模糊查询获取当前用户的小组
@@ -60,7 +62,7 @@ public class GroupController {
 	 * @createDate 2017年9月21日 下午4:02:57
 	 */
 	@RequestMapping(value = "/list/pmphgroup", method = RequestMethod.GET)
-	@LogDetail(logRemark = "根据小组名称模糊查询获取当前用户的小组")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据小组名称模糊查询获取当前用户的小组")
 	@ResponseBody
 	public ResponseBean pmphgroup(@RequestParam(name = "groupName", defaultValue = "") String groupName,
 			@RequestParam("sessionId") String sessionId) {
@@ -88,7 +90,7 @@ public class GroupController {
 	 * 
 	 */
 	@ResponseBody
-	@LogDetail(logRemark = "根据小组id查询小组成员")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据小组id查询小组成员")
 	@RequestMapping(value = "/list/pmphgroupmember", method = RequestMethod.GET)
 	public ResponseBean pmphgroupmember(Long groupId, @RequestParam("sessionId") String sessionId) {
 		return new ResponseBean(pmphGroupMemberService.listPmphGroupMember(groupId, sessionId));
@@ -107,7 +109,7 @@ public class GroupController {
 	 * 
 	 */
 	@ResponseBody
-	@LogDetail(logRemark = "新建小组")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新建小组")
 	@RequestMapping(value = "/add/pmphgroup", method = RequestMethod.POST)
 	public ResponseBean pmphgroup(MultipartFile file, PmphGroup pmphGroup,
 			@RequestParam("sessionId") String sessionId) {
@@ -129,7 +131,7 @@ public class GroupController {
 	 * 
 	 */
 	@ResponseBody
-	@LogDetail(logRemark = "添加小组成员")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "添加小组成员")
 	@RequestMapping(value = "/add/pmphgroupmember", method = RequestMethod.POST)
 	public ResponseBean pmphgroupmember(Long groupId, String pmphGroupMembers, String sessionId) {
 		Gson gson = new Gson();
@@ -154,7 +156,7 @@ public class GroupController {
 	 * 
 	 */
 	@ResponseBody
-	@LogDetail(logRemark = "修改小组头像或小组名称")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改小组头像或小组名称")
 	@RequestMapping(value = "/update/pmphgroupdetail", method = RequestMethod.POST)
 	public ResponseBean pmphgroupdetail(MultipartFile file, PmphGroup pmphGroup, String sessionId) {
 		try {
@@ -175,7 +177,7 @@ public class GroupController {
 	 * 
 	 */
 	@ResponseBody
-	@LogDetail(logRemark = "解散小组")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "解散小组")
 	@RequestMapping(value = "/delete/pmphgroup", method = RequestMethod.DELETE)
 	public ResponseBean pmphgroup(PmphGroup pmphGroup, String sessionId) {
 		return new ResponseBean(pmphGroupService.deletePmphGroupById(pmphGroup, sessionId));
@@ -192,7 +194,7 @@ public class GroupController {
 	 * @update Mryang 2017.10.13 15:30
 	 */
 	@RequestMapping(value = "/add/pmphgroupfile", method = RequestMethod.POST)
-	@LogDetail(logRemark = "上传小组文件")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "上传小组文件")
 	@ResponseBody
 	public ResponseBean pmphgroupfile(Long[] ids, MultipartFile file, String sessionId) {
 		try {
@@ -212,7 +214,7 @@ public class GroupController {
 	 * @Return:小组共享文件分页集合
 	 */
 	@RequestMapping(value = "/list/groupfile", method = RequestMethod.GET)
-	@LogDetail(logRemark = "查询小组共享文件")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询小组共享文件")
 	@ResponseBody
 	public ResponseBean groupfile(@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
 			@RequestParam(name = "pageSize") Integer pageSize, PmphGroupFileVO pmphGroupFileVO) {
@@ -231,7 +233,7 @@ public class GroupController {
 	 * @Return:是否成功
 	 */
 	@RequestMapping(value = "/delete/pmphgroupfile", method = RequestMethod.DELETE)
-	@LogDetail(logRemark = "删除小组共享文件")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除小组共享文件")
 	@ResponseBody
 	public ResponseBean pmphgroupfile(Long groupId, Long[] ids, String sessionId) {
 		return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(groupId, ids, sessionId));
@@ -250,7 +252,7 @@ public class GroupController {
 	 * 
 	 */
 	@ResponseBody
-	@LogDetail(logRemark = "批量删除小组成员")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除小组成员")
 	@RequestMapping(value = "/delete/pmphgroupmember", method = RequestMethod.PUT)
 	public ResponseBean pmphgroupmember(Long groupId, Long[] ids, String sessionId) {
 		return new ResponseBean(pmphGroupMemberService.updateGroupMemberByIds(groupId, ids, sessionId));
@@ -267,7 +269,7 @@ public class GroupController {
 	 * 
 	 */
 	@ResponseBody
-	@LogDetail(logRemark = "批量修改小组成员权限")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量修改小组成员权限")
 	@RequestMapping(value = "/update/identity", method = RequestMethod.PUT)
 	public ResponseBean identity(Long groupId, String pmphGroupMembers, String sessionId) {
 		Gson gson = new Gson();
@@ -294,7 +296,7 @@ public class GroupController {
 	 * 
 	 */
 	@ResponseBody
-	@LogDetail(logRemark = "分页查询小组成员管理界面小组成员信息")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页查询小组成员管理界面小组成员信息")
 	@RequestMapping(value = "/list/manager", method = RequestMethod.GET)
 	public ResponseBean manager(Integer pageSize, Integer pageNumber, Long groupId, String name) {
 		PageParameter pageParameter = new PageParameter<>(pageNumber, pageSize);
@@ -320,7 +322,7 @@ public class GroupController {
 	 * 
 	 */
 	@ResponseBody
-	@LogDetail(logRemark = "发送小组消息")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "发送小组消息")
 	@RequestMapping(value = "/add/groupmessage", method = RequestMethod.POST)
 	public ResponseBean groupmessage(String msgConrent, Long groupId, String sessionId) {
 		try {
@@ -344,6 +346,7 @@ public class GroupController {
 	 * 
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "撤回小组消息")
 	@RequestMapping(value = "/delete/pmphgroupmessage", method = RequestMethod.DELETE)
 	public ResponseBean deletePmphGroupMessageById(Long id, String sessionId) {
 		try {
@@ -370,7 +373,7 @@ public class GroupController {
 	 * 
 	 */
 	@ResponseBody
-	@LogDetail(logRemark = "获取历史消息")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取历史消息")
 	@RequestMapping(value = "/list/message", method = RequestMethod.GET)
 	public ResponseBean message(Integer pageSize, Integer pageNumber, Long groupId, Long baseTime) {
 		PageParameter<PmphGroupMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
