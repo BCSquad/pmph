@@ -4,6 +4,7 @@
  */
 package com.bc.pmpheep.migration.common;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -184,11 +185,31 @@ public class JdbcHelper {
         	age = age - 20 ;
         	experience = String.valueOf(age);
         }else{
-        	experience = experience.replace("年", "").replace("五", "5").replace("s", "").replace(" ", "");
+        	experience = experience.replace("年", "").replace("五", "5").replace("s", "").replace(" ", "")
+        			.replace("内", "");
         	if (StringUtil.strLength(experience) > 2){
         		experience = experience.substring(0,2);
         	}
         }
     	return experience;
+    }
+    
+    /**
+     * 
+     * Description:计算每个模块（图）迁移所耗时间
+     * @author:lyc
+     * @date:2017年11月15日下午5:51:26
+     * @param 每个模块迁移程序启动时的系统时间
+     * @return String
+     */
+    public static String migrationTime (Date beforeTime){
+    	Date nowTime = new Date(System.currentTimeMillis());
+    	long timeValue = (nowTime.getTime() - beforeTime.getTime()) / 1000; 
+    	String time = "迁移共用时{" + timeValue + "}秒";
+    	if (timeValue > 600){
+    		timeValue = timeValue / 60;
+    		time = "迁移共用时{" + timeValue + "}分";
+    	}
+    	return time;
     }
 }

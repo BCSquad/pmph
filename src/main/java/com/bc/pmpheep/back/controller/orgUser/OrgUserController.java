@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.service.OrgUserService;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -46,9 +48,9 @@ public class OrgUserController {
     @RequestParam("pageNumber") Integer pageNumber, @RequestParam("username") String username,
     @RequestParam("realname") String realname, @RequestParam("orgName") String orgName) {
         OrgUserManagerVO orgUserManagerVO = new OrgUserManagerVO();
-        orgUserManagerVO.setUsername(username);
-        orgUserManagerVO.setRealname(realname);
-        orgUserManagerVO.setOrgName(orgName);
+        orgUserManagerVO.setUsername(StringUtil.isEmpty(username)?null:username.trim());
+        orgUserManagerVO.setRealname(StringUtil.isEmpty(realname)?null:realname.trim());
+        orgUserManagerVO.setOrgName(StringUtil.isEmpty(orgName)?null:orgName.trim());
         PageParameter<OrgUserManagerVO> pageParameter =
         new PageParameter<OrgUserManagerVO>(pageNumber, pageSize, orgUserManagerVO);
         return new ResponseBean(orgUserService.getListOrgUser(pageParameter));
@@ -126,7 +128,6 @@ public class OrgUserController {
     @RequestMapping(value = "/add/orguserofback", method = RequestMethod.POST)
     @ResponseBody
     public ResponseBean addOrgUserOfBack(OrgUser orgUser) {
-
         return new ResponseBean(orgUserService.addOrgUserOfBack(orgUser));
     }
 
@@ -144,5 +145,17 @@ public class OrgUserController {
     public ResponseBean updateOrgUserOfBack(OrgUser orgUser) {
         System.out.println(orgUser.toString());
         return new ResponseBean(orgUserService.updateOrgUserOfBack(orgUser));
+    }
+    
+    /**
+     * 功能描述：在机构用户页面增加机构用户
+     * 
+     * @param orgUser org
+     * @return 是否成功
+     */
+    @RequestMapping(value = "/add/orguserandorgofback", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseBean addOrgUserAndOrgOfBack(OrgUser orgUser,Org org) {
+        return new ResponseBean(orgUserService.addOrgUserAndOrgOfBack(orgUser,org));
     }
 }

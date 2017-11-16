@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -62,7 +63,7 @@ public interface OrgUserService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer updateOrgUserProgressById(Integer progress, String[] orgUserIds)
+    Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds)
     throws CheckedServiceException;
 
     /**
@@ -98,4 +99,14 @@ public interface OrgUserService {
      * 
      */
     String updateOrgUserOfBack(OrgUser orgUser) throws CheckedServiceException;
+    
+    /**
+     * 	功能描述：在机构用户页面增加机构用户
+     * 
+     * @param orgUser
+     * @param org
+     * @return 是否成功
+     * @throws CheckedServiceException
+     */
+    Object addOrgUserAndOrgOfBack(OrgUser orgUser, Org org) throws CheckedServiceException;
 }
