@@ -75,7 +75,7 @@ public class BookUserCommentVO implements Serializable {
 	/**
 	 * 是否逻辑删除
 	 */
-	private Boolean isDelete;
+	private Boolean isDeleted;
 	/**
 	 * 评论时间
 	 */
@@ -177,12 +177,12 @@ public class BookUserCommentVO implements Serializable {
 		this.authDate = authDate;
 	}
 
-	public Boolean getIsDelete() {
-		return isDelete;
+	public Boolean getIsDeleted() {
+		return isDeleted;
 	}
 
-	public void setIsDelete(Boolean isDelete) {
-		this.isDelete = isDelete;
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
 	public Timestamp getGmtCreate() {

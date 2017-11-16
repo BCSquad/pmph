@@ -59,7 +59,7 @@ public class BookUserComment implements Serializable {
 	/**
 	 * 是否逻辑删除
 	 */
-	private Boolean isDelete;
+	private Boolean isDeleted;
 	/**
 	 * 创建时间
 	 */
@@ -74,7 +74,7 @@ public class BookUserComment implements Serializable {
 	}
 
 	public BookUserComment(Long bookId, Long writerId, Double score, String content, Boolean isHide, Integer isAuth,
-			Long authUserId, Timestamp authDate, Boolean isDelete, Timestamp gmtCreate, Timestamp gmtUpdate) {
+			Long authUserId, Timestamp authDate, Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate) {
 		super();
 		this.bookId = bookId;
 		this.writerId = writerId;
@@ -84,7 +84,7 @@ public class BookUserComment implements Serializable {
 		this.isAuth = isAuth;
 		this.authUserId = authUserId;
 		this.authDate = authDate;
-		this.isDelete = isDelete;
+		this.isDeleted = isDeleted;
 		this.gmtCreate = gmtCreate;
 		this.gmtUpdate = gmtUpdate;
 	}
@@ -161,12 +161,12 @@ public class BookUserComment implements Serializable {
 		this.authDate = authDate;
 	}
 
-	public Boolean getIsDelete() {
-		return isDelete;
+	public Boolean getIsDeleted() {
+		return isDeleted;
 	}
 
-	public void setIsDelete(Boolean isDelete) {
-		this.isDelete = isDelete;
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
 	public Timestamp getGmtCreate() {
@@ -189,7 +189,7 @@ public class BookUserComment implements Serializable {
 	public String toString() {
 		return "bookUserComment [id=" + id + ", bookId=" + bookId + ", writerId=" + writerId + ", score=" + score
 				+ ", content=" + content + ", isHide=" + isHide + ", isAuth=" + isAuth + ", authUserId=" + authUserId
-				+ ", authDate=" + authDate + ", isDelete=" + isDelete + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
+				+ ", authDate=" + authDate + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
 				+ gmtUpdate + "]";
 	}
 
