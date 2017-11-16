@@ -29,6 +29,7 @@ import com.bc.pmpheep.utils.ExcelHelper;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -57,10 +58,12 @@ public class MigrationStageEight {
     ExcelHelper excelHelper;
 
     public void start() {
+    	Date beforeTime = new Date(System.currentTimeMillis());
         group();
         groupMember();
         groupMessage();
         groupFile();
+        logger.info(JdbcHelper.migrationTime(beforeTime));
     }
 
     protected void group() {
