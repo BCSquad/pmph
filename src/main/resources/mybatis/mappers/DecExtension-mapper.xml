@@ -51,6 +51,11 @@
 		delete from dec_extension where
 		id=#{id} ;
 	</delete>
+	
+	<!-- 根据extensionId 删除 DecExtension-->
+	<delete id="deleteDecExtensionByExtensionId" parameterType="java.lang.Long">
+		delete from dec_extension where extension_id = #{extensionId} ;
+	</delete>
 
 	<!-- 更新DecExtension -->
 	<update id="updateDecExtension" parameterType="DecExtension">

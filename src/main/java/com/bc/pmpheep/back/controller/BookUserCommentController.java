@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.BookUserCommentService;
 import com.bc.pmpheep.back.vo.BookUserCommentVO;
@@ -18,6 +19,8 @@ public class BookUserCommentController {
 
 	@Autowired
 	BookUserCommentService bookUserCommentService;
+	// 当前业务类型
+	private static final String BUSSINESS_TYPE = "评论审核";
 
 	/**
 	 * 
@@ -36,6 +39,7 @@ public class BookUserCommentController {
 	 *
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页初始化/模糊查询图书评论")
 	@RequestMapping(value = "/list/comment", method = RequestMethod.GET)
 	public ResponseBean listBookUserComment(Integer pageSize, Integer pageNumber, String name, Integer isAuth) {
 		PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
@@ -61,8 +65,9 @@ public class BookUserCommentController {
 	 *
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量审核图书评论")
 	@RequestMapping(value = "/update/comment", method = RequestMethod.PUT)
-	public ResponseBean updateBookUserCommentByAuth(Long[] ids, Integer isAuth, String sessionId) {
+	public ResponseBean updateBookUserCommentByAuth(Long[] ids, Boolean isAuth, String sessionId) {
 		return new ResponseBean(bookUserCommentService.updateBookUserCommentByAuth(ids, isAuth, sessionId));
 	}
 
@@ -77,6 +82,7 @@ public class BookUserCommentController {
 	 *
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除图书评论")
 	@RequestMapping(value = "/delete/comment", method = RequestMethod.DELETE)
 	public ResponseBean deleteBookUserCommentById(Long[] ids) {
 		return new ResponseBean(bookUserCommentService.deleteBookUserCommentById(ids));

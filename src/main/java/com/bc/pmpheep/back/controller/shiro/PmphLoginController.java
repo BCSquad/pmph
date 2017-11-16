@@ -123,11 +123,13 @@ public class PmphLoginController {
             List<Long> pmphUserPermissionIds =
             pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
             // 验证成功在Session中保存用户信息
+            request.getSession().invalidate();//先销毁session
             request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
             // 验证成功在Session中保存用户Token信息
             request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
                                               new DesRun(password, username).enpsw);
             // pmphUserSessionId
+            System.out.println("sessionId= ====" + request.getSession().getId());
             resultMap.put(Const.USER_SEESION_ID, new DesRun("", request.getSession().getId()).enpsw);
             resultMap.put(Const.SESSION_PMPH_USER, pmphUser);
             resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun(password, username).enpsw);

@@ -95,7 +95,7 @@ public class OrgSeviceTest extends BaseTest {
 		OrgVO orgVO=new OrgVO();
 		orgVO.setOrgName(null);
 		orgVO.setAreaId(null);
-		orgVO.setRealname("张二");
+		orgVO.setRealname(null);
 		pageParameter.setPageNumber(1);
 		pageParameter.setPageSize(20);
 		pageParameter.setParameter(orgVO);

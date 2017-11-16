@@ -47,7 +47,7 @@ public class BookUserComment implements Serializable {
 	/**
 	 * 是否通过审核
 	 */
-	private Integer isAuth;
+	private Boolean isAuth;
 	/**
 	 * 审核者id
 	 */
@@ -73,7 +73,7 @@ public class BookUserComment implements Serializable {
 		super();
 	}
 
-	public BookUserComment(Long bookId, Long writerId, Double score, String content, Boolean isHide, Integer isAuth,
+	public BookUserComment(Long bookId, Long writerId, Double score, String content, Boolean isHide, Boolean isAuth,
 			Long authUserId, Timestamp authDate, Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate) {
 		super();
 		this.bookId = bookId;
@@ -137,11 +137,11 @@ public class BookUserComment implements Serializable {
 		this.isHide = isHide;
 	}
 
-	public Integer getIsAuth() {
+	public Boolean getIsAuth() {
 		return isAuth;
 	}
 
-	public void setIsAuth(Integer isAuth) {
+	public void setIsAuth(Boolean isAuth) {
 		this.isAuth = isAuth;
 	}
 

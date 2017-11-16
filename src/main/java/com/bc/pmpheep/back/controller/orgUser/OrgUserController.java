@@ -15,7 +15,7 @@ import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.vo.OrgUserManagerVO;
+import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
 /**
@@ -47,12 +47,12 @@ public class OrgUserController {
     public ResponseBean listOrgUser(@RequestParam("pageSize") Integer pageSize,
     @RequestParam("pageNumber") Integer pageNumber, @RequestParam("username") String username,
     @RequestParam("realname") String realname, @RequestParam("orgName") String orgName) {
-        OrgUserManagerVO orgUserManagerVO = new OrgUserManagerVO();
+    	OrgAndOrgUserVO orgUserManagerVO = new OrgAndOrgUserVO();
         orgUserManagerVO.setUsername(StringUtil.isEmpty(username)?null:username.trim());
         orgUserManagerVO.setRealname(StringUtil.isEmpty(realname)?null:realname.trim());
         orgUserManagerVO.setOrgName(StringUtil.isEmpty(orgName)?null:orgName.trim());
-        PageParameter<OrgUserManagerVO> pageParameter =
-        new PageParameter<OrgUserManagerVO>(pageNumber, pageSize, orgUserManagerVO);
+        PageParameter<OrgAndOrgUserVO> pageParameter =
+        new PageParameter<OrgAndOrgUserVO>(pageNumber, pageSize, orgUserManagerVO);
         return new ResponseBean(orgUserService.getListOrgUser(pageParameter));
     }
 

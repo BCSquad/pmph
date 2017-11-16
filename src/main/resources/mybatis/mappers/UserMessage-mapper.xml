@@ -74,6 +74,16 @@
 		where 
 			msg_id = #{msgId};
 	</update>
+	
+	<!-- 通过msgId 取消撤销UserMessage -->
+	<update id="updateUserMessageCancelWithdrawByMsgId" parameterType="java.lang.String">
+		update
+			user_message 
+		set 
+			is_withdraw = false 
+		where 
+			msg_id = #{msgId};
+	</update>
 
 	<!-- 通过msgId 更新是否被逻辑删除 -->
 	<update id="updateUserMessageIsDeletedByMsgId" parameterType="java.util.List">
@@ -153,8 +163,8 @@
 	<select id="listMessageState" parameterType="PageParameter"
 		resultType="MessageStateVO">
 		SELECT 
-			a.id,a.msg_id,a.msg_type,a.gmt_create sendTime,a.gmt_update
-			a.is_withdraw,reciveTime,a.is_read,a.receiver_type,a.is_withdraw,t.count,
+			a.id,a.msg_id,a.msg_type,a.gmt_create sendTime,a.gmt_update reciveTime,
+			a.is_read,a.receiver_type,a.is_withdraw,t.count,
 		case when
 			a.receiver_type =1
 		then 

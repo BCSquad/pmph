@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.CmsContentService;
 import com.bc.pmpheep.back.vo.CmsContentVO;
@@ -37,7 +38,9 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CmsContentCheckController {
     @Autowired
-    CmsContentService cmsContentService;
+    CmsContentService           cmsContentService;
+    // 当前业务类型
+    private static final String BUSSINESS_TYPE = "公告管理";
 
     /**
      * 
@@ -53,8 +56,9 @@ public class CmsContentCheckController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询公告管理列表")
     @RequestMapping(value = "/check", method = RequestMethod.GET)
-    public ResponseBean listContentCheck(
+    public ResponseBean check(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, CmsContentVO cmsContentVO,
     @RequestParam("sessionId") String sessionId) {
@@ -75,8 +79,9 @@ public class CmsContentCheckController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
     @RequestMapping(value = "/check/content", method = RequestMethod.PUT)
-    public ResponseBean updateCheckContent(@RequestParam("id") Long id,
+    public ResponseBean content(@RequestParam("id") Long id,
     @RequestParam("authStatus") Short authStatus, @RequestParam("sessionId") String sessionId) {
         return new ResponseBean(cmsContentService.checkContentById(id, authStatus, sessionId));
     }
@@ -92,8 +97,9 @@ public class CmsContentCheckController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/check/{id}/content", method = RequestMethod.DELETE)
-    public ResponseBean updateContentByIds(@PathVariable("id") Long id) {
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除一条公告管理数据")
+    @RequestMapping(value = "/check/{id}/update_content", method = RequestMethod.DELETE)
+    public ResponseBean update_content(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.deleteCmsContentById(id));
     }
 
@@ -108,8 +114,9 @@ public class CmsContentCheckController {
      * </pre>
      */
     @ResponseBody
-    @RequestMapping(value = "/check/content", method = RequestMethod.DELETE)
-    public ResponseBean updateContentByIds(@RequestParam("ids") List<Long> ids) {
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除公告管理数据")
+    @RequestMapping(value = "/check/delete_content", method = RequestMethod.DELETE)
+    public ResponseBean delete_content(@RequestParam("ids") List<Long> ids) {
         return new ResponseBean(cmsContentService.deleteCmsContentByIds(ids));
     }
 }

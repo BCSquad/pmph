@@ -45,6 +45,14 @@ public class DecExtensionServiceImpl implements DecExtensionService{
 		}
 		return decExtensionDao.deleteDecExtension(id);
 	}
+	
+	@Override
+	public Integer  deleteDecExtensionByExtensionId(Long extensionId) throws CheckedServiceException {
+		if (null == extensionId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,CheckedExceptionResult.NULL_PARAM, "扩展id不能为空");
+		}
+		return decExtensionDao.deleteDecExtensionByExtensionId(extensionId);
+	}
 
 	@Override
 	public Integer updateDecExtension(DecExtension decExtension)

@@ -308,11 +308,13 @@
 		</if>
 	</select>
 	<select id="getListOrgUser" parameterType="PageParameter"
-		resultType="OrgUserManagerVO">
-		select
-		*
-		from org_user u left join org o on o.id = u.org_id where
-		1=1
+		resultType="OrgAndOrgUserVO">
+		select 
+		u.*,o.*,ot.*,ot.type_name orgTypeName
+		from org_user u 
+		left join org o on o.id = u.org_id
+		left join org_type ot on ot.id=o.org_type_id 
+		where 1=1
 		<if test="parameter.username !=null and parameter.username !='' ">
 			and u.username like concat('%',#{parameter.username},'%')
 		</if>

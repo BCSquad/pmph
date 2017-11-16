@@ -314,5 +314,9 @@
 		resultType="Org">
 		select * from org where org_type_id=#{typeId} ;
 	</select>
-	
+	<!-- 根据orgName查询id-->
+	<select id="getOrgid" parameterType="String"
+		resultType="Long">
+		select id from org where org_name=#{orgName} ;
+	</select>
 </mapper>
