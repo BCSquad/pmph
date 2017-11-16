@@ -1,8 +1,7 @@
 ﻿# Compiled class file
 *.class
 
-#忽略.properties
-*.properties
+
 
 #忽略.classpath
 *.classpath
