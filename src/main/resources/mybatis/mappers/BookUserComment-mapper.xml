@@ -32,8 +32,8 @@
 			<if test=" authDate != null">
 				auth_date,
 			</if>
-			<if test="isDelete != null">
-				is_delete,
+			<if test="isDeleted != null">
+				is_deleted,
 			</if>
 			<if test="gmtCreate != null">
 				gmt_create,
@@ -74,8 +74,8 @@
 			<if test=" authDate != null">
 				#{authDate} ,
 			</if>
-			<if test="isDelete != null">
-				#{isDelete} ,
+			<if test="isDeleted != null">
+				#{isDeleted} ,
 			</if>
 			<if test="gmtCreate != null ">
 				#{gmtCreate},
@@ -138,8 +138,8 @@
 			<if test=" authDate != null ">
 				auth_date= #{authDate} ,
 			</if>
-			<if test="isDelete != null">
-				is_delete =#{isDelete} ,
+			<if test="isDeleted != null">
+				is_deleted =#{isDeleted} ,
 			</if>
 			<if test="gmtCreate != null ">
 				gmt_create=#{gmtCreate},
@@ -172,7 +172,7 @@
 		writer_user u ON u.id =
 		c.writer_id
 		WHERE
-		c.is_delete = FALSE
+		c.is_deleted = FALSE
 		<if test="parameter.name != null and parameter.name != ''">
 			and (b.bookname like concat("%",#{parameter.name},"%") or
 			b.isbn like concat("%",#{parameter.name},"%"))
@@ -196,7 +196,7 @@
 		writer_user u ON u.id =
 		c.writer_id
 		WHERE
-		c.is_delete =
+		c.is_deleted =
 		FALSE
 		<if test="parameter.name != null and parameter.name != ''">
 			and (b.bookname like concat("%",#{parameter.name},"%") or
