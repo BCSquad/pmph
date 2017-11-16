@@ -4,9 +4,7 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
-
 import org.springframework.stereotype.Repository;
-
 import com.bc.pmpheep.back.po.DecExtension;
 
 /**
@@ -37,6 +35,15 @@ public interface DecExtensionDao {
    * @return Integer影响行数
    */
   Integer deleteDecExtension(Long id);
+  
+  /**
+   * 根据扩展id 删除 扩展作家扩展项填报
+   * @author Mryang
+   * @createDate 2017年11月16日 下午1:44:45
+   * @param extensionId
+   * @return 影响行数
+   */
+  Integer  deleteDecExtensionByExtensionId(Long extensionId);
   
   /**
    * 
