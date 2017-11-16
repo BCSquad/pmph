@@ -32,7 +32,7 @@ public class SQLParameters {
 	/**
 	 * 现有平台数据库密码
 	 */
-	public static final String DB_PASSWORD = "root";
+	public static final String DB_PASSWORD = "bcit2017=pmph";
 
 	/**
 	 * 专家平台数据库地址
@@ -52,16 +52,12 @@ public class SQLParameters {
 	/**
 	 * 现有平台文件路径（最后以/结尾）
 	 */
-	public static final String FILE_PATH = "D:\\";
+	public static final String FILE_PATH = "/home/ftp/";
 
 	/**
 	 * Excel异常导出统一表头
 	 */
 	public static final String EXCEL_EX_HEADER = "exception";
-	/**
-	 * 上传服务器lujing 例如：http://120.76.221.250/pmpheep
-	 */
-	public static final String severPath = "http://120.76.221.250/pmpheep";
 	/**
 	 * 储存错误信息，方便测序完成一次打印或者导出完毕信息
 	 */
