@@ -318,7 +318,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 			org.setId(id);
 		}
 		if (ObjectUtil.isNull(orgUser.getRealname())) {
-	        orgUser.setRealname(orgUser.getUsername());
+	        orgUser.setRealname(org.getOrgName());
 	    }
         orgUser.setPassword(ShiroKit.md5(Const.DEFAULT_PASSWORD, orgUser.getUsername()));// 后台添加用户设置默认密码为123456
         int num = orgUserDao.addOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
