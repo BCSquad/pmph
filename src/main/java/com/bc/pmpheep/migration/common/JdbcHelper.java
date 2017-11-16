@@ -205,10 +205,10 @@ public class JdbcHelper {
     public static String migrationTime (Date beforeTime){
     	Date nowTime = new Date(System.currentTimeMillis());
     	long timeValue = (nowTime.getTime() - beforeTime.getTime()) / 1000; 
-    	String time = "迁移共用时{" + timeValue + "}秒";
+    	String time = "迁移共用时：{" + timeValue + "}秒钟";
     	if (timeValue > 600){
     		timeValue = timeValue / 60;
-    		time = "迁移共用时{" + timeValue + "}分";
+    		time = "迁移共用时：{" + timeValue + "}分钟";
     	}
     	return time;
     }

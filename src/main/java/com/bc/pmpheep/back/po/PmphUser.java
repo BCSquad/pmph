@@ -35,7 +35,7 @@ public class PmphUser implements java.io.Serializable {
     /**
      * 部门id
      */
-    private long    departmentId;
+    private Long    departmentId;
     /**
      * 手机
      */
@@ -91,7 +91,7 @@ public class PmphUser implements java.io.Serializable {
     }
 
     public PmphUser(String username, String password, Boolean isDisabled, String realname,
-    long departmentId, String handphone, String email, String avatar, String note, Integer sort,
+    Long departmentId, String handphone, String email, String avatar, String note, Integer sort,
     Boolean isDeleted, Date gmtCreate, Date gmtUpdate, Short loginType) {
         this.username = username;
         this.password = password;
@@ -141,11 +141,11 @@ public class PmphUser implements java.io.Serializable {
         this.realname = realname;
     }
 
-    public long getDepartmentId() {
+    public Long getDepartmentId() {
         return this.departmentId;
     }
 
-    public void setDepartmentId(long departmentId) {
+    public void setDepartmentId(Long departmentId) {
         this.departmentId = departmentId;
     }
 

@@ -190,9 +190,9 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
                                                   "备注不能超过100个字符");
             }
         }
-        if (null == orgUser.getRealname()) {
-            orgUser.setRealname(orgUser.getUsername());
-        }
+//        if (null == orgUser.getRealname()) {
+//            orgUser.setRealname(orgUser.getUsername());
+//        }
         orgUser.setPassword(ShiroKit.md5(Const.DEFAULT_PASSWORD, orgUser.getUsername()));// 后台添加用户设置默认密码为123456
         int num = orgUserDao.addOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
         String result = "FAIL";
@@ -266,9 +266,6 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
                 		CheckedExceptionResult.ILLEGAL_PARAM,"备注不能超过100个字符");
             }
         }
-        if (null == orgUser.getRealname()) {
-            orgUser.setRealname(orgUser.getUsername());
-        }
         if (ObjectUtil.isNull(org)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
@@ -294,7 +291,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 		}
 		if (ObjectUtil.isNull(org.getAreaId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
-					"机构区域不能为空");
+					"所属区域不能为空");
 		}
 		// if (null == org.getContactPerson()) {
 		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
@@ -320,6 +317,9 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 		if (null != id) {
 			org.setId(id);
 		}
+		if (StringUtil.isEmpty(orgUser.getRealname())) {
+	        orgUser.setRealname(org.getOrgName());
+	    }
         orgUser.setPassword(ShiroKit.md5(Const.DEFAULT_PASSWORD, orgUser.getUsername()));// 后台添加用户设置默认密码为123456
         int num = orgUserDao.addOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
         String result = "FAIL";
