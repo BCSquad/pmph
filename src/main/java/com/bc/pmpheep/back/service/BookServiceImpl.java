@@ -336,8 +336,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
 					"同步中产生了错误，请重新同步");
 		}
-		BookInfoWorking bookInfoWorking = new BookInfoWorking();
-		String[] vns = bookInfoWorking.listBookInfo();
+		String[] vns = new BookInfoWorking().listBookInfo();
 		if (1 == type) {
 			AbuttingJoint(vns, type);
 		} else {
