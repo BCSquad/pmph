@@ -62,7 +62,7 @@ public class BookUserCommentController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/update/comment", method = RequestMethod.PUT)
-	public ResponseBean updateBookUserCommentByAuth(Long[] ids, Integer isAuth, String sessionId) {
+	public ResponseBean updateBookUserCommentByAuth(Long[] ids, Boolean isAuth, String sessionId) {
 		return new ResponseBean(bookUserCommentService.updateBookUserCommentByAuth(ids, isAuth, sessionId));
 	}
 

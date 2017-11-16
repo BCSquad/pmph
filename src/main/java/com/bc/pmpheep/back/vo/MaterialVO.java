@@ -1,128 +1,97 @@
-/**
- * 
- */
 package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
-import java.util.Date;
-
 import org.apache.ibatis.type.Alias;
+import com.bc.pmpheep.back.po.Material;
+import com.bc.pmpheep.back.po.MaterialExtra;
+
 
 /**
- * <p>
- * Title:教材申报界面
- * <p>
  * 
- * @author lyc
- * @date 2017年9月29日 下午12:05:04
+ * 教材VO
+ *
+ * @author Mryang
+ *
+ * @createDate 2017年11月14日 上午11:25:40
+ *
  */
-
 @SuppressWarnings("serial")
 @Alias("MaterialVO")
 public class MaterialVO implements Serializable{
-	//教材主键
-	private Long id;
-	//教材名称
-	private String materialName;
-	//显示报名截止时间
-	private Date deadline;
-	//实际报名截止时间
-	private Date actualDeadline;
-	//联系id
-	private Long contactUserId;
-	//联系人姓名
-	private String contactUserName;
-	//联系电话
-	private String contactPhone;
-	//联系邮箱
-	private String contactEmail;
-	//是否发布到前台（状态）
-	private Boolean isPublished;
+	//教材
+	private Material material;
+	//教材通知备注
+	private MaterialExtra materialExtra;
+	//联系人
+	private String   materialContacts;
+	//扩展项
+	private String   materialExtensions;
+	//项目编辑
+	private String   materialProjectEditors;
+	//通知附件信息         （更新的时候需要）
+	private String materialNoticeAttachments;
+	//通知备注附件信息 （更新的时候需要）
+	private String materialNoteAttachments;
 	
 	public MaterialVO() {
 		super();
 	}
 
-	public Long getId() {
-		return id;
+	public Material getMaterial() {
+		return material;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setMaterial(Material material) {
+		this.material = material;
 	}
 
-	public String getMaterialName() {
-		return materialName;
+	public MaterialExtra getMaterialExtra() {
+		return materialExtra;
 	}
 
-	public void setMaterialName(String materialName) {
-		this.materialName = materialName;
+	public void setMaterialExtra(MaterialExtra materialExtra) {
+		this.materialExtra = materialExtra;
 	}
 
-	public Date getDeadline() {
-		return deadline;
+	public String getMaterialContacts() {
+		return materialContacts;
 	}
 
-	public void setDeadline(Date deadline) {
-		this.deadline = deadline;
+	public void setMaterialContacts(String materialContacts) {
+		this.materialContacts = materialContacts;
 	}
 
-	public Date getActualDeadline() {
-		return actualDeadline;
+	public String getMaterialExtensions() {
+		return materialExtensions;
 	}
 
-	public void setActualDeadline(Date actualDeadline) {
-		this.actualDeadline = actualDeadline;
+	public void setMaterialExtensions(String materialExtensions) {
+		this.materialExtensions = materialExtensions;
 	}
 
-	public Long getContactUserId() {
-		return contactUserId;
+	public String getMaterialProjectEditors() {
+		return materialProjectEditors;
 	}
 
-	public void setContactUserId(Long contactUserId) {
-		this.contactUserId = contactUserId;
+	public void setMaterialProjectEditors(String materialProjectEditors) {
+		this.materialProjectEditors = materialProjectEditors;
 	}
 
-	public String getContactUserName() {
-		return contactUserName;
+	public String getMaterialNoticeAttachments() {
+		return materialNoticeAttachments;
 	}
 
-	public void setContactUserName(String contactUserName) {
-		this.contactUserName = contactUserName;
+	public void setMaterialNoticeAttachments(String materialNoticeAttachments) {
+		this.materialNoticeAttachments = materialNoticeAttachments;
 	}
 
-	public String getContactPhone() {
-		return contactPhone;
+	public String getMaterialNoteAttachments() {
+		return materialNoteAttachments;
 	}
 
-	public void setContactPhone(String contactPhone) {
-		this.contactPhone = contactPhone;
+	public void setMaterialNoteAttachments(String materialNoteAttachments) {
+		this.materialNoteAttachments = materialNoteAttachments;
 	}
-
-	public String getContactEmail() {
-		return contactEmail;
-	}
-
-	public void setContactEmail(String contactEmail) {
-		this.contactEmail = contactEmail;
-	}
-
-	public Boolean getIsPublished() {
-		return isPublished;
-	}
-
-	public void setIsPublished(Boolean isPublished) {
-		this.isPublished = isPublished;
-	}
-
-	@Override
-	public String toString() {
-		return " {id:" + id + ", materialName:" + materialName + ", deadline:"
-				+ deadline + ", actualDeadline:" + actualDeadline
-				+ ", contactUserId:" + contactUserId + ", contactUserName:"
-				+ contactUserName + ", contactPhone:" + contactPhone
-				+ ", contactEmail:" + contactEmail + ", isPublished:"
-				+ isPublished + "}";
-	}
+	
 	
 }

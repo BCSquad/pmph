@@ -29,8 +29,6 @@ public class Material implements java.io.Serializable {
 	private Date ageDeadline;
 	//邮寄地址
 	private String mailAddress;
-	//当前进度
-	private Short progress;
 	//教材所属部门
 	private Long departmentId;
 	//主任id
@@ -89,6 +87,12 @@ public class Material implements java.io.Serializable {
 	private Boolean isResearchRequired;
 	//是否已发布到前台
 	private Boolean isPublished;
+	//可见性区别
+	private Boolean isPublic;
+	//是否所有书籍已公布
+	private Boolean isAllTextbookPublished;
+	//是否被强制结束
+	private Boolean isForceEnd;
 	//是否被逻辑删除
 	private Boolean isDeleted;
 	//创建时间
@@ -112,13 +116,10 @@ public class Material implements java.io.Serializable {
 		this.id = id;
 	}
 
-
-	/** full constructor */
 	public Material(String materialName, Integer materialRound,
 			Long materialType, Date deadline, Date actualDeadline,
-			Date ageDeadline, String mailAddress, Short progress,
-			Long departmentId, Long director, 
-			Boolean isMultiBooks, Boolean isMultiPosition,
+			Date ageDeadline, String mailAddress, Long departmentId,
+			Long director, Boolean isMultiBooks, Boolean isMultiPosition,
 			Boolean isEduExpUsed, Boolean isEduExpRequired,
 			Boolean isWorkExpUsed, Boolean isWorkExpRequired,
 			Boolean isTeachExpUsed, Boolean isTeachExpRequired,
@@ -131,8 +132,11 @@ public class Material implements java.io.Serializable {
 			Boolean isTextbookWriterUsed, Boolean isTextbookWriterRequired,
 			Boolean isOtherTextbookUsed, Boolean isOtherTextbookRequired,
 			Boolean isResearchUsed, Boolean isResearchRequired,
-			Boolean isPublished, Boolean isDeleted, Timestamp gmtCreate,
-			Long founderId, Timestamp gmtUpdate, Long menderId) {
+			Boolean isPublished, Boolean isPublic,
+			Boolean isAllTextbookPublished, Boolean isForceEnd,
+			Boolean isDeleted, Timestamp gmtCreate, Long founderId,
+			Timestamp gmtUpdate, Long menderId) {
+		super();
 		this.materialName = materialName;
 		this.materialRound = materialRound;
 		this.materialType = materialType;
@@ -140,7 +144,6 @@ public class Material implements java.io.Serializable {
 		this.actualDeadline = actualDeadline;
 		this.ageDeadline = ageDeadline;
 		this.mailAddress = mailAddress;
-		this.progress = progress;
 		this.departmentId = departmentId;
 		this.director = director;
 		this.isMultiBooks = isMultiBooks;
@@ -170,12 +173,16 @@ public class Material implements java.io.Serializable {
 		this.isResearchUsed = isResearchUsed;
 		this.isResearchRequired = isResearchRequired;
 		this.isPublished = isPublished;
+		this.isPublic = isPublic;
+		this.isAllTextbookPublished = isAllTextbookPublished;
+		this.isForceEnd = isForceEnd;
 		this.isDeleted = isDeleted;
 		this.gmtCreate = gmtCreate;
 		this.founderId = founderId;
 		this.gmtUpdate = gmtUpdate;
 		this.menderId = menderId;
 	}
+
 
 	public Long getId() {
 		return this.id;
@@ -239,14 +246,6 @@ public class Material implements java.io.Serializable {
 
 	public void setMailAddress(String mailAddress) {
 		this.mailAddress = mailAddress;
-	}
-
-	public Short getProgress() {
-		return this.progress;
-	}
-
-	public void setProgress(Short progress) {
-		this.progress = progress;
 	}
 
 	public Long getDepartmentId() {
@@ -482,6 +481,36 @@ public class Material implements java.io.Serializable {
 		this.isPublished = isPublished;
 	}
 
+	public Boolean getIsPublic() {
+		return isPublic;
+	}
+
+
+	public void setIsPublic(Boolean isPublic) {
+		this.isPublic = isPublic;
+	}
+
+
+	public Boolean getIsAllTextbookPublished() {
+		return isAllTextbookPublished;
+	}
+
+
+	public void setIsAllTextbookPublished(Boolean isAllTextbookPublished) {
+		this.isAllTextbookPublished = isAllTextbookPublished;
+	}
+
+
+	public Boolean getIsForceEnd() {
+		return isForceEnd;
+	}
+
+
+	public void setIsForceEnd(Boolean isForceEnd) {
+		this.isForceEnd = isForceEnd;
+	}
+
+
 	public Boolean getIsDeleted() {
 		return this.isDeleted;
 	}
@@ -522,19 +551,18 @@ public class Material implements java.io.Serializable {
 		this.menderId = menderId;
 	}
 
-
 	@Override
 	public String toString() {
-		return "{id:" + id + ", materialName:" + materialName
+		return " {id:" + id + ", materialName:" + materialName
 				+ ", materialRound:" + materialRound + ", materialType:"
 				+ materialType + ", deadline:" + deadline + ", actualDeadline:"
 				+ actualDeadline + ", ageDeadline:" + ageDeadline
-				+ ", mailAddress:" + mailAddress + ", progress:" + progress
-				+ ", departmentId:" + departmentId + ", director:" + director
-				+ ", isMultiBooks:" + isMultiBooks + ", isMultiPosition:"
-				+ isMultiPosition + ", isEduExpUsed:" + isEduExpUsed
-				+ ", isEduExpRequired:" + isEduExpRequired + ", isWorkExpUsed:"
-				+ isWorkExpUsed + ", isWorkExpRequired:" + isWorkExpRequired
+				+ ", mailAddress:" + mailAddress + ", departmentId:"
+				+ departmentId + ", director:" + director + ", isMultiBooks:"
+				+ isMultiBooks + ", isMultiPosition:" + isMultiPosition
+				+ ", isEduExpUsed:" + isEduExpUsed + ", isEduExpRequired:"
+				+ isEduExpRequired + ", isWorkExpUsed:" + isWorkExpUsed
+				+ ", isWorkExpRequired:" + isWorkExpRequired
 				+ ", isTeachExpUsed:" + isTeachExpUsed
 				+ ", isTeachExpRequired:" + isTeachExpRequired
 				+ ", isAcadeUsed:" + isAcadeUsed + ", isAcadeRequired:"
@@ -554,11 +582,11 @@ public class Material implements java.io.Serializable {
 				+ isOtherTextbookUsed + ", isOtherTextbookRequired:"
 				+ isOtherTextbookRequired + ", isResearchUsed:"
 				+ isResearchUsed + ", isResearchRequired:" + isResearchRequired
-				+ ", isPublished:" + isPublished + ", isDeleted:" + isDeleted
+				+ ", isPublished:" + isPublished + ", isPublic:" + isPublic
+				+ ", isAllTextbookPublished:" + isAllTextbookPublished
+				+ ", isForceEnd:" + isForceEnd + ", isDeleted:" + isDeleted
 				+ ", gmtCreate:" + gmtCreate + ", founderId:" + founderId
 				+ ", gmtUpdate:" + gmtUpdate + ", menderId:" + menderId + "}";
 	}
-
-	
 
 }

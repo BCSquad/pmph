@@ -2,7 +2,10 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.bc.pmpheep.back.po.Material;
+import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -20,6 +23,36 @@ public interface MaterialService {
      * @return 带主键的 Material thorws CheckedServiceException
      */
     Material addMaterial(Material material) throws CheckedServiceException;
+    /**
+     * 
+     * 新建遴选公告
+     * @createDate 2017年11月13日 下午2:33:56
+     * @param sessionId
+     * @param material
+     * @param materialContacts
+     * @param materialExtensions
+     * @param materialProjectEditors
+     * @param materialExtra
+     * @param noticeFiles
+     * @param materialNoticeAttachments
+     * @param noteFiles
+     * @param materialNoteAttachments
+     * @param isUpdate false新增,true更新
+     * @return material 主键
+     * @throws CheckedServiceException
+     */
+    Long addOrUpdateMaterial(String sessionId, 
+    		String   materialContacts,
+    		String   materialExtensions, 
+    		String   materialProjectEditors,
+    		Material material,
+		    MaterialExtra     materialExtra,
+		    MultipartFile[]   noticeFiles,
+		    String materialNoticeAttachments,
+		    MultipartFile[]   noteFiles,
+		    String materialNoteAttachments,
+		    boolean isUpdate) throws CheckedServiceException;
+   
 
     /**
      * 查询一个 Material 通过主键id
