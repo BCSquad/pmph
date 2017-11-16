@@ -20,7 +20,7 @@ import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.ValidatUtil;
-import com.bc.pmpheep.back.vo.OrgUserManagerVO;
+import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -148,7 +148,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
      * @return 需要的Page对象
      */
     @Override
-    public PageResult<OrgUserManagerVO> getListOrgUser(PageParameter<OrgUserManagerVO> pageParameter)
+    public PageResult<OrgAndOrgUserVO> getListOrgUser(PageParameter<OrgAndOrgUserVO> pageParameter)
     throws CheckedServiceException {
         String username = pageParameter.getParameter().getUsername();
         if (StringUtil.notEmpty(username)) {
@@ -162,12 +162,12 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         if (StringUtil.notEmpty(orgName)) {
             pageParameter.getParameter().setOrgName(orgName);
         }
-        PageResult<OrgUserManagerVO> pageResult = new PageResult<OrgUserManagerVO>();
+        PageResult<OrgAndOrgUserVO> pageResult = new PageResult<OrgAndOrgUserVO>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         int total = orgUserDao.getListOrgUserTotal(pageParameter);
         if (total > 0) {
             pageResult.setTotal(total);
-            List<OrgUserManagerVO> list = orgUserDao.getListOrgUser(pageParameter);
+            List<OrgAndOrgUserVO> list = orgUserDao.getListOrgUser(pageParameter);
             pageResult.setRows(list);
         }
         return pageResult;
@@ -303,23 +303,11 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 		// CheckedExceptionResult.NULL_PARAM,
 		// "机构联系电话不能为空");
 		// }
-		// if (null == org.getSort()) {
-		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-		// CheckedExceptionResult.NULL_PARAM,
-		// "机构显示顺序为空");
-		// }
-		// if (null == org.getNote()) {
-		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-		// CheckedExceptionResult.NULL_PARAM, "备注为空");
-		// }
-		Long id = org.getId();
 		orgDao.addOrg(org);
-		if (null != id) {
-			org.setId(id);
-		}
 		if (StringUtil.isEmpty(orgUser.getRealname())) {
 	        orgUser.setRealname(org.getOrgName());
 	    }
+		orgUser.setOrgId(orgDao.getOrgid(org.getOrgName()));
         orgUser.setPassword(ShiroKit.md5(Const.DEFAULT_PASSWORD, orgUser.getUsername()));// 后台添加用户设置默认密码为123456
         int num = orgUserDao.addOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
         String result = "FAIL";

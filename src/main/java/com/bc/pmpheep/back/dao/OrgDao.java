@@ -122,5 +122,12 @@ public interface OrgDao {
      * 
      */
     List<Org> listOrgByOrgType(Long typeId);
+    
+    /**
+     * 功能描述：根据orgName去获取id
+     * @param orgName
+     * @return id
+     */
+	Long getOrgid(String orgName);
 
 }

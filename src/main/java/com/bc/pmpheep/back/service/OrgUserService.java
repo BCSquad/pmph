@@ -6,7 +6,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.OrgUser;
-import com.bc.pmpheep.back.vo.OrgUserManagerVO;
+import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -73,7 +73,7 @@ public interface OrgUserService {
      * @param pageParameter 传入的查询条件
      * @return
      */
-    PageResult<OrgUserManagerVO> getListOrgUser(PageParameter<OrgUserManagerVO> pageParameter)
+    PageResult<OrgAndOrgUserVO> getListOrgUser(PageParameter<OrgAndOrgUserVO> pageParameter)
     throws CheckedServiceException;
 
     /**

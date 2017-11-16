@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.OrgUser;
-import com.bc.pmpheep.back.vo.OrgUserManagerVO;
+import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
 
 /**
  * OrgUser 实体类数据访问层接口
@@ -78,7 +78,7 @@ public interface OrgUserDao {
 	 * @return 需要的作家用户集合
 	 * </pre>
      */
-    List<OrgUserManagerVO> getListOrgUser(PageParameter<OrgUserManagerVO> pageParameter);
+    List<OrgAndOrgUserVO> getListOrgUser(PageParameter<OrgAndOrgUserVO> pageParameter);
 
     /**
      * 
@@ -90,7 +90,7 @@ public interface OrgUserDao {
 	 * @return 查询到的条数
 	 * </pre>
      */
-    Integer getListOrgUserTotal(PageParameter<OrgUserManagerVO> pageParameter);
+    Integer getListOrgUserTotal(PageParameter<OrgAndOrgUserVO> pageParameter);
 
     /**
      * 
