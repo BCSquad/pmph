@@ -31,6 +31,16 @@ public interface DecExtensionService {
 	Integer deleteDecExtension(Long id) throws CheckedServiceException;
 	
 	/**
+	 * 根据扩展id 删除 扩展作家扩展项填报
+	 * @author Mryang
+	 * @createDate 2017年11月16日 下午1:44:45
+	 * @param extensionId
+	 * @return 影响行数
+	 * @throws CheckedServiceException
+	 */
+	Integer  deleteDecExtensionByExtensionId(Long extensionId) throws CheckedServiceException;
+	
+	/**
 	 * @param DecExtension 实体对象
 	 * @return Integer影响行数
 	 * @throws CheckedServiceException

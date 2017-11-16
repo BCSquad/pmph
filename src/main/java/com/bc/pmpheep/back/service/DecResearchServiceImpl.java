@@ -42,14 +42,14 @@ public class DecResearchServiceImpl implements DecResearchService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id不能为空");
 		}
-		if (null == decResearch.getResearchName()) {
+		/*if (null == decResearch.getResearchName()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "课题名称不能为空");
 		}
 		if (null == decResearch.getApprovalUnit()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "审批单位不能为空");
-		}
+		}*/
 		if (null == decResearch.getSort()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "显示顺序不能为空");
