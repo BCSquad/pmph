@@ -39,4 +39,14 @@ public interface MaterialProjectEditorDao {
 	 * @return 影响行数
 	 */
 	Integer deleteMaterialProjectEditorByMaterialId(Long materialId) ;
+	
+	/**
+	 * 根据教材id批量项目编辑
+	 * @author Mryang
+	 * @createDate 2017年11月17日 下午3:37:18
+	 * @param materialId
+	 * @return List<MaterialProjectEditor>
+	 */
+	List<MaterialProjectEditor> listMaterialProjectEditors(Long materialId);
+	
 }

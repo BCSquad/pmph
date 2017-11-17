@@ -157,7 +157,6 @@ public class OrgUserController {
 		System.out.println(orgUser.toString());
 		return new ResponseBean(orgUserService.updateOrgUserOfBack(orgUser,org));
 	}
-
 	/**
 	 * 功能描述：在机构用户页面增加机构用户
 	 * 

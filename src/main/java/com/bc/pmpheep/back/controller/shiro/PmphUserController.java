@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphUser;
@@ -55,8 +56,11 @@ public class PmphUserController {
 	PmphRoleService roleService;
 	@Autowired
 	PmphDepartmentService pmphDepartmentService;
+	// 当前业务类型
+	private static final String BUSSINESS_TYPE = "社内用户";
 
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询所有的用户对象列表")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ResponseBean list() {
 		return new ResponseBean(userService.getList());
@@ -74,6 +78,7 @@ public class PmphUserController {
 	 * </pre>
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "添加用户角色关联表数据")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseBean add(PmphUser user, @FormParam("roleIds") String roleIds) {
 		logger.debug("添加用户 post 方法");
@@ -98,6 +103,7 @@ public class PmphUserController {
 	 * </pre>
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新单个用户信息")
 	@RequestMapping(value = "/updateStatus", method = RequestMethod.PUT)
 	public ResponseBean updateStatus(PmphUser user) {
 		PmphUser pmphUser = userService.update(user);
@@ -116,6 +122,7 @@ public class PmphUserController {
 	 * </pre>
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新用户数据和角色")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	public ResponseBean update(PmphUser user, @FormParam("roleIds") String roleIds) {
 		logger.debug("user => " + user.toString());
@@ -139,8 +146,9 @@ public class PmphUserController {
 	 * </pre>
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询指定用户 id 所拥有的权限")
 	@RequestMapping(value = "/resources/{id}", method = RequestMethod.GET)
-	public ResponseBean listResources(@PathVariable("id") Long userId) {
+	public ResponseBean resources(@PathVariable("id") Long userId) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		List<PmphPermission> resourceList = userService.getListAllResource(userId);
 		PmphUser user = userService.get(userId);
@@ -164,6 +172,7 @@ public class PmphUserController {
 	 * </pre>
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除用户")
 	@RequestMapping(value = "/delete/{userIds}", method = RequestMethod.DELETE)
 	public ResponseBean delete(@PathVariable("userIds") String userIds) {
 		String[] ids = userIds.split(",");
@@ -187,9 +196,10 @@ public class PmphUserController {
 	 * 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/list/pmphuser", method = RequestMethod.GET)
-	public ResponseBean listPmphUser(Integer pageSize, Integer pageNumber, String name,
-			@RequestParam("path") String path, Long departmentId) {
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页查询社内用户")
+	@RequestMapping(value = "/list/pmphUser", method = RequestMethod.GET)
+	public ResponseBean pmphUser(Integer pageSize, Integer pageNumber, String name, @RequestParam("path") String path,
+			Long departmentId) {
 		PageParameter pageParameter = new PageParameter<>();
 		PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
 		pmphUserManagerVO.setName(name.replaceAll(" ", ""));//去除空格
@@ -212,8 +222,9 @@ public class PmphUserController {
 	 * 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/update/pmphuserofback", method = RequestMethod.PUT)
-	public ResponseBean updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO) {
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改社内用户")
+	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
+	public ResponseBean updateUser(PmphUserManagerVO pmphUserManagerVO) {
 		return new ResponseBean(userService.updatePmphUserOfBack(pmphUserManagerVO));
 	}
 
@@ -226,8 +237,9 @@ public class PmphUserController {
 	 * 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/list/pmphdepartment", method = RequestMethod.GET)
-	public ResponseBean listPmphDepartment() {
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "初始化获取社内所有部门")
+	@RequestMapping(value = "/list/pmphDepartment", method = RequestMethod.GET)
+	public ResponseBean pmphDepartment() {
 		return new ResponseBean(pmphDepartmentService.listPmphDepartment(null));
 	}
 }

@@ -109,7 +109,7 @@ public class OrgUserSeviceTest extends BaseTest {
     @Test
     public void updateOrgUserProgressById() {
         List<Long> list = new ArrayList<Long>();
-        list.add(1l);
+        list.add(1L);
         Assert.assertNotNull("更新审核状态失败", orgUserService.updateOrgUserProgressById(1, list));
     }
     

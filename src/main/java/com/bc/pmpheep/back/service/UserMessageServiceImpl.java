@@ -82,7 +82,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     private MessageAttachmentService messageAttachmentService;
 
     @Autowired
-    private MyWebSocketHandler       handler;
+    private MyWebSocketHandler       myWebSocketHandler;
 
     @Autowired
     private DecPositionService       decPositionService;
@@ -397,7 +397,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                   pmphUser.getRealname(), Const.SENDER_TYPE_1,
                                   Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, title,
                                   message.getContent(), DateUtil.getCurrentTime());
-            handler.sendWebSocketMessageToUser(websocketUserIds, webScocketMessage);
+            myWebSocketHandler.sendWebSocketMessageToUser(websocketUserIds, webScocketMessage);
             // 添加附件到MongoDB表中
             if (ArrayUtil.isNotEmpty(files)) {
                 for (int i = 0; i < files.length; i++) {

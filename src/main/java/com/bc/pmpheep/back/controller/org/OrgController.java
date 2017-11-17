@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.service.OrgService;
@@ -26,6 +27,8 @@ public class OrgController {
 
 	@Autowired
 	private OrgService orgService;
+	// 当前业务类型
+	private static final String BUSSINESS_TYPE = "机构";
 
 	/**
 	 * 分页查询org
@@ -96,8 +99,9 @@ public class OrgController {
 	 *
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "在新增或者修改用户页面查询机构")
 	@RequestMapping(value = "/list/orgByOrgName", method = RequestMethod.GET)
-	public ResponseBean listOrgByOrgName(@RequestParam("orgName") String orgName) {
+	public ResponseBean orgByOrgName(@RequestParam("orgName") String orgName) {
 		return new ResponseBean(orgService.listOrgByOrgName(orgName));
 	}
 
