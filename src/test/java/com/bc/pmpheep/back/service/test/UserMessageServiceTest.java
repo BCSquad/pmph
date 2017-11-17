@@ -112,7 +112,7 @@ public class UserMessageServiceTest extends BaseTest {
 					Long.parseLong(String.valueOf(r.nextInt(200))), (short) 1, true, true, true, null, null));
 		}
 
-		userMessageDao.addUserMessageBatch(userMessageList);
+		userMessageService.addUserMessageBatch(userMessageList);
 	}
 
 }
