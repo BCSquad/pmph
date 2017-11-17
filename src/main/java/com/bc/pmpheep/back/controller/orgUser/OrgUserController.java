@@ -45,11 +45,10 @@ public class OrgUserController {
     @RequestMapping(value = "/list/orguser", method = RequestMethod.GET)
     @ResponseBody
     public ResponseBean listOrgUser(@RequestParam("pageSize") Integer pageSize,
-    @RequestParam("pageNumber") Integer pageNumber, @RequestParam("username") String username,
-    @RequestParam("realname") String realname, @RequestParam("orgName") String orgName) {
+    @RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
+    @RequestParam("orgName") String orgName) {
     	OrgAndOrgUserVO orgUserManagerVO = new OrgAndOrgUserVO();
-        orgUserManagerVO.setUsername(username.replaceAll(" ", ""));//去除空格
-        orgUserManagerVO.setRealname(realname.replaceAll(" ", ""));
+        orgUserManagerVO.setName(name.replaceAll(" ", ""));//去除空格
         orgUserManagerVO.setOrgName(orgName.replaceAll(" ", ""));
         PageParameter<OrgAndOrgUserVO> pageParameter =
         new PageParameter<OrgAndOrgUserVO>(pageNumber, pageSize, orgUserManagerVO);
