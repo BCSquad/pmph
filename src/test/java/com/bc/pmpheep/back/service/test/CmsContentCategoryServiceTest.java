@@ -46,31 +46,47 @@ public class CmsContentCategoryServiceTest extends BaseTest {
      * </pre>
      */
     @Test
-    public void serviceAllMethodTest() {
-        // add
-        CmsContentCategory cmsContentCategory =
-        cmsContentCategoryService.addCmsContentCategory(new CmsContentCategory(1L, 2L));
+    public void testAddCmsContentCategory() {
+        CmsContentCategory cmsContentCategory = this.addCmsContentCategory();
+        logger.info(cmsContentCategory.toString());
         Assert.assertNotNull("插入内容后返回的CmsContentCategory.id不应为空", cmsContentCategory.getId());
-        // uddate
+    }
+
+    @Test
+    public void testUpdateCmsContentCategory() {
+        CmsContentCategory cmsContentCategory = this.addCmsContentCategory();
         Integer count =
         cmsContentCategoryService.updateCmsContentCategory(new CmsContentCategory(
                                                                                   cmsContentCategory.getId(),
                                                                                   32L, 3L));
-        Assert.assertTrue("是否更新CmsContentCategory成功", count > 0 ? true : false);
-        // getById
+        Assert.assertTrue("是否更新CmsContentCategory成功", count > 0);
+    }
+
+    @Test
+    public void testGetCmsContentCategoryById() {
+        CmsContentCategory cmsContentCategory = this.addCmsContentCategory();
         CmsContentCategory cms =
         cmsContentCategoryService.getCmsContentCategoryById(cmsContentCategory.getId());
         logger.info(cms.toString());
         Assert.assertNotNull("按ID查询是否该对象", cms);
-        // delete
-        // Assert.assertTrue("是否删除成功",
-        // cmsContentCategoryService.deleteCmsContentCategoryById(cmsContentCategory.getId()) > 0 ?
-        // true :
-        // false);
-        List<Long> idList = new ArrayList<Long>(1);
-        idList.add(cmsContentCategory.getId());
-        Assert.assertTrue("批量删除是否成功",
-                          cmsContentCategoryService.deleteCmsContentCategoryByIds(idList) > 0 ? true : false);
-
     }
+
+    @Test
+    public void testDeleteCmsContentCategoryById() {
+        CmsContentCategory cmsContentCategory = this.addCmsContentCategory();
+        Assert.assertTrue("是否删除成功",
+                          cmsContentCategoryService.deleteCmsContentCategoryById(cmsContentCategory.getId()) > 0);
+        CmsContentCategory ccc = this.addCmsContentCategory();
+        List<Long> idList = new ArrayList<Long>(1);
+        idList.add(ccc.getId());
+        Assert.assertTrue("批量删除是否成功",
+                          cmsContentCategoryService.deleteCmsContentCategoryByIds(idList) > 0);
+    }
+
+    private CmsContentCategory addCmsContentCategory() {
+        CmsContentCategory cmsContentCategory =
+        cmsContentCategoryService.addCmsContentCategory(new CmsContentCategory(1L, 2L));
+        return cmsContentCategory;
+    }
+
 }
