@@ -4,15 +4,20 @@
 package com.bc.pmpheep.back.service.test;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.service.DeclarationService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -29,20 +34,59 @@ public class DeclarationServiceTest extends BaseTest {
 	DeclarationService declarationService;
 
 	@Test
-	public void test() {
-           logger.info("------------作家申报表------------");
-           Declaration declaration = new Declaration(99L, 5L, null, (Integer)2, null, (Integer)18, null, null, null, null, null, null, null, (short)1, null, null, null, 13L, (Integer)1, 135L, null, (Integer)1, null, Integer.valueOf("0"), Integer.valueOf("0"));
-           declarationService.addDeclaration(declaration);
-           Assert.assertTrue("添加数据失败", declaration.getId() > 0);
-           logger.info("------数据添加成功--------");
-           declaration.setRealname("POW");
-           Assert.assertTrue("更新失败", declarationService.updateDeclaration(declaration)>0);
-           logger.info("------数据更新成功---------");
-           Assert.assertNotNull("获取信息失败", declarationService.getDeclarationById(5L));
-           logger.info("------获取单条信息成功-------");
-           Assert.assertTrue("获取信息集合失败", declarationService.getDeclarationByMaterialId(99L).size()>0);
-           logger.info("---------获取信息集合成功---------");
-           Assert.assertTrue("删除数据失败", declarationService.deleteDeclarationById(3L) >= 0);
-           logger.info("--------测试完成---------");
+	@Rollback(Const.ISROLLBACK)
+	public void testAddDeclaration(){
+		Declaration declaration = new Declaration();
+		declaration.setMaterialId(5L);
+		declaration.setUserId(6L);
+		declaration = declarationService.addDeclaration(declaration);
+		Assert.assertTrue("添加数据失败", declaration.getId() > 0);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testDeleteDeclaration(){
+		long id = add().getId();
+		Integer count = declarationService.deleteDeclarationById(id);
+		Assert.assertTrue("删除数据失败", count > 0);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testUpdateDeclaration(){
+		Declaration declaration = add();
+		declaration.setMaterialId(10L);
+		declaration.setUserId(9L);
+		Integer count = declarationService.updateDeclaration(declaration);
+		Assert.assertTrue("数据更新失败", count > 0);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testGetDeclaration(){
+		long id = add().getId();
+		Declaration declaration = declarationService.getDeclarationById(id);
+		Assert.assertNotNull("获取作家申报表信息失败", declaration);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testListDeclaration(){
+		add();
+		List<Declaration> list = new ArrayList<>();
+		list = declarationService.getDeclarationByMaterialId(2L);
+		Assert.assertTrue("获取作家申报表信息集合失败", list.size() > 0);
+	}
+	
+	private Declaration add(){
+		Declaration declaration = new Declaration();
+		declaration.setMaterialId(2L);
+		declaration.setUserId(1L);
+		declarationService.addDeclaration(declaration);
+		Declaration declaration2 = new Declaration(2L, 2L);
+		declarationService.addDeclaration(declaration2);
+		Declaration declaration3 = new Declaration(1L, 3L);
+		declarationService.addDeclaration(declaration3);
+		return declaration3;
 	}
 }
