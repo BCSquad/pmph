@@ -56,7 +56,7 @@ public class BookController {
 			Boolean isNew, Boolean isPromote, String path) {
 		PageParameter<BookVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		BookVO bookVO = new BookVO();
-		bookVO.setName(name);
+		bookVO.setName(name.replaceAll(" ", ""));//去除空格
 		bookVO.setIsNew(isNew);
 		bookVO.setPath(path);
 		bookVO.setType(type);

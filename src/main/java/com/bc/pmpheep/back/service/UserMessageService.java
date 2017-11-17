@@ -21,15 +21,33 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  **/
 public interface UserMessageService {
-    /**
+	/**
+	 * 批量插入 UserMessage (UserMessage只插入了
+	        UserMessage.msgId
+			UserMessage.msgType
+			UserMessage.title
+			UserMessage.senderId
+			UserMessage.senderType
+			UserMessage.receiverId
+			UserMessage.receiverType
+			字段
+	 * @author Mryang
+	 * @createDate 2017年11月17日 上午10:07:23
+	 * @param userMessageList
+	 * @throws CheckedServiceException
+	 */
+	void addUserMessageBatch(List<UserMessage> userMessageList) throws CheckedServiceException;
+	
+	/**
      * 单条数据插入 UserMessage
      * 
      * @author Mryang
      * @createDate 2017年9月28日 下午3:35:46
      * @param userMessage
+     * @throws CheckedServiceException
      * @return userMessage带主键
      */
-    UserMessage addUserMessage(UserMessage userMessage);
+    UserMessage addUserMessage(UserMessage userMessage) throws CheckedServiceException;
 
     /**
      * @param pageParameter 带有分页参数和查询条件参数
