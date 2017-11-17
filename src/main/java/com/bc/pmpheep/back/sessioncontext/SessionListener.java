@@ -29,7 +29,6 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
 
     @Override
     public void attributeReplaced(HttpSessionBindingEvent event) {
-        this.sessionDestroyed(event);
         this.sessionCreated(event);
     }
 

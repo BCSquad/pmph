@@ -98,8 +98,8 @@ public class CmsContentCheckController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除一条公告管理数据")
-    @RequestMapping(value = "/check/{id}/update_content", method = RequestMethod.DELETE)
-    public ResponseBean update_content(@PathVariable("id") Long id) {
+    @RequestMapping(value = "/check/{id}/update", method = RequestMethod.DELETE)
+    public ResponseBean update(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.deleteCmsContentById(id));
     }
 
@@ -115,8 +115,8 @@ public class CmsContentCheckController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除公告管理数据")
-    @RequestMapping(value = "/check/delete_content", method = RequestMethod.DELETE)
-    public ResponseBean delete_content(@RequestParam("ids") List<Long> ids) {
+    @RequestMapping(value = "/check/delete", method = RequestMethod.DELETE)
+    public ResponseBean delete(@RequestParam("ids") List<Long> ids) {
         return new ResponseBean(cmsContentService.deleteCmsContentByIds(ids));
     }
 }
