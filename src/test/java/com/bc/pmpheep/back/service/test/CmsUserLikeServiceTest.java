@@ -47,27 +47,43 @@ public class CmsUserLikeServiceTest extends BaseTest {
      * </pre>
      */
     @Test
-    public void serviceAllMethodTest() {
-        // add
-        CmsUserLike cmsUserLike =
-        cmsUserLikeService.addCmsUserLike(new CmsUserLike(1L, 2L, DateUtil.getCurrentTime()));
+    public void testAddCmsUserLike() {
+        CmsUserLike cmsUserLike = this.addCmsUserLike();
+        logger.info(cmsUserLike.toString());
         Assert.assertNotNull("插入内容后返回的CmsUserLike.id不应为空", cmsUserLike.getId());
-        // uddate
+    }
+
+    @Test
+    public void testUpdateCmsUserLike() {
+        CmsUserLike cmsUserLike = this.addCmsUserLike();
         Integer count =
         cmsUserLikeService.updateCmsUserLike(new CmsUserLike(cmsUserLike.getId(), 3L, 4L,
                                                              DateUtil.getCurrentTime()));
-        Assert.assertTrue("是否更新CmsUserLike成功", count > 0 ? true : false);
-        // getById
+        Assert.assertTrue("是否更新CmsUserLike成功", count > 0);
+    }
+
+    @Test
+    public void testGetCmsUserLikeById() {
+        CmsUserLike cmsUserLike = this.addCmsUserLike();
         CmsUserLike cms = cmsUserLikeService.getCmsUserLikeById(cmsUserLike.getId());
         logger.info(cms.toString());
         Assert.assertNotNull("按ID查询是否该对象", cms);
-        // delete
-        // Assert.assertTrue("是否删除成功",
-        // cmsUserLikeService.deleteCmsUserLikeById(cmsUserLike.getId()) > 0 ? true : false);
-        List<Long> idList = new ArrayList<Long>(1);
-        idList.add(cmsUserLike.getId());
-        Assert.assertTrue("批量删除是否成功",
-                          cmsUserLikeService.deleteCmsUserLikeByIds(idList) > 0 ? true : false);
+    }
 
+    @Test
+    public void testDeleteCmsUserLikeById() {
+        CmsUserLike cmsUserLike = this.addCmsUserLike();
+        Assert.assertTrue("是否删除成功",
+                          cmsUserLikeService.deleteCmsUserLikeById(cmsUserLike.getId()) > 0);
+        CmsUserLike cu = this.addCmsUserLike();
+        List<Long> idList = new ArrayList<Long>(1);
+        idList.add(cu.getId());
+        Assert.assertTrue("批量删除是否成功", cmsUserLikeService.deleteCmsUserLikeByIds(idList) > 0);
+    }
+
+    private CmsUserLike addCmsUserLike() {
+        CmsUserLike cmsUserLike =
+        cmsUserLikeService.addCmsUserLike(new CmsUserLike(1L, 2L, DateUtil.getCurrentTime()));
+        return cmsUserLike;
     }
 }

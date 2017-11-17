@@ -184,26 +184,7 @@ public class CmsCategoryServiceImpl implements CmsCategoryService {
     @Override
     public List<CmsCategory> getListAllParentMenu(String categoryName)
     throws CheckedServiceException {
-        List<CmsCategory> cmsCategories;
-        if (StringUtil.isEmpty(categoryName)) {
-            cmsCategories = categoryDao.getListAllParentMenu(null);
-        } else {
-            cmsCategories = categoryDao.getCmsCategoryListByCategoryName(categoryName);
-        }
-        for (CmsCategory cmsCategory : cmsCategories) {
-            List<CmsCategory> subList =
-            this.getListChildMenuByParentId(cmsCategory.getId(), categoryName);
-            if (CollectionUtil.isNotEmpty(subList)) {
-                cmsCategory.setChildren(subList);
-                for (CmsCategory category : subList) {
-                    List<CmsCategory> subList1 =
-                    this.getListChildMenuByParentId(category.getId(), null);
-                    if (CollectionUtil.isNotEmpty(subList1)) {
-                        category.setChildren(subList1);
-                    }
-                }
-            }
-        }
+        List<CmsCategory> cmsCategories = categoryDao.getListAllParentMenu(categoryName);
         return cmsCategories;
     }
 

@@ -89,14 +89,7 @@ public class ExcelHelper {
      * @throws IOException
      */
     public void exportFromMaps(List<Map<String, Object>> maps, String sheetname, String path) throws FileNotFoundException, IOException {
-    	//过滤maps的重复对象
-    	List<Map<String,Object>> newMaps=new ArrayList<Map<String,Object>>();
-		for(Map<String,Object> tm:maps){
-			if(!newMaps.contains(tm)){
-				newMaps.add(tm);
-			}
-		}
-        Workbook workbook = fromMaps(newMaps, sheetname);
+        Workbook workbook = fromMaps(maps, sheetname);
         if (StringUtil.isEmpty(path)) {
             path = "";
         }
