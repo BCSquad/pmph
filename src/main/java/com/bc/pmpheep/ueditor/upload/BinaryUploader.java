@@ -48,8 +48,9 @@ public class BinaryUploader {
             while (iterator.hasNext()) {
                 fileStream = iterator.next();
 
-                if (!fileStream.isFormField())
+                if (!fileStream.isFormField()){
                     break;
+                }
                 fileStream = null;
             }
 

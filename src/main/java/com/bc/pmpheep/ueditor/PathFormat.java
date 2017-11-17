@@ -25,7 +25,7 @@ public class PathFormat {
     private static Date         currentDate = null;
 
     public static String parse(String input) {
-
+    	
         Pattern pattern = Pattern.compile("\\{([^\\}]+)\\}", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(input);
 

@@ -56,7 +56,7 @@ public class OrgUserSeviceTest extends BaseTest {
         PageParameter pageParameter = new PageParameter<>();
         PageResult pageResult = new PageResult<>();
         OrgAndOrgUserVO managerVO = new OrgAndOrgUserVO();
-        managerVO.setUsername("m5");
+        managerVO.setUsername("m");
         managerVO.setRealname(null);
         managerVO.setOrgName(null);
         pageParameter.setParameter(managerVO);
@@ -92,18 +92,24 @@ public class OrgUserSeviceTest extends BaseTest {
     }
 
     @Test
+    @Rollback(false)
     public void updateOrgUserOfBack() {
         OrgUser orgUser = new OrgUser();
-        orgUser = orgUserService.getOrgUserById(5L);
-        orgUser.setOrgId(10L);
-        String result = orgUserService.updateOrgUserOfBack(orgUser);
+        Org org=new Org();
+        orgUser = orgUserService.getOrgUserById(1040L);
+        org.setOrgName("机构");
+        orgUser.setEmail(null);
+        orgUser.setHandphone(null);
+        org.setOrgTypeId(10L);
+        orgUser.setRealname("名称");
+        Object result = orgUserService.updateOrgUserOfBack(orgUser, org);
         Assert.assertTrue("更新失败", result.equals("SUCCESS"));
     }
 
     @Test
     public void updateOrgUserProgressById() {
         List<Long> list = new ArrayList<Long>();
-        list.add(1l);
+        list.add(1L);
         Assert.assertNotNull("更新审核状态失败", orgUserService.updateOrgUserProgressById(1, list));
     }
     
@@ -118,11 +124,10 @@ public class OrgUserSeviceTest extends BaseTest {
     	org.setSort(null);//排序码
     	org.setNote(null);//备注
     	orgUser.setOrgId(org.getId());
-    	org.setOrgName("测试机构9");//管理员姓名
-    	orgUser.setUsername("m9");//机构代码
+    	org.setOrgName("测试机构");//管理员姓名
+    	orgUser.setUsername("m1");//机构代码
     	orgUser.setEmail(null);
     	orgUser.setHandphone(null);
     	Assert.assertNotNull("添加失败",orgUserService.addOrgUserAndOrgOfBack(orgUser, org));
     }
-    
 }
