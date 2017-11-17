@@ -67,7 +67,7 @@ public class BookUserCommentVO implements Serializable {
 	/**
 	 * 是否通过审核
 	 */
-	private Integer isAuth;
+	private Boolean isAuth;
 	/**
 	 * 审核通过时间
 	 */
@@ -153,11 +153,11 @@ public class BookUserCommentVO implements Serializable {
 		this.isHide = isHide;
 	}
 
-	public Integer getIsAuth() {
+	public Boolean getIsAuth() {
 		return isAuth;
 	}
 
-	public void setIsAuth(Integer isAuth) {
+	public void setIsAuth(Boolean isAuth) {
 		this.isAuth = isAuth;
 	}
 

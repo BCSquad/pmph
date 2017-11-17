@@ -19,8 +19,6 @@ import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
-import com.bc.pmpheep.back.vo.OrgUserManagerVO;
-import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -83,6 +81,7 @@ public class OrgUserSeviceTest extends BaseTest {
 
 	@Test
 	public void testGetOrgUserListByOrgIds() {
+		orgUserService.addOrgUser(orgUser);
 		List<Long> orgIds = new ArrayList<Long>();
 		orgIds.add(5L);
 		List<OrgUser> orgUser = orgUserService.getOrgUserListByOrgIds(orgIds);
@@ -98,29 +97,42 @@ public class OrgUserSeviceTest extends BaseTest {
 		Assert.assertTrue("添加失败", result.equals("SUCCESS"));
 	}
 
+	@Test
+	public void testUpdateOrgUserOfBack() {
+		OrgUser orgUser = new OrgUser();
+		Org org = new Org();
+		orgUser = orgUserService.getOrgUserById(1040L);
+		org.setOrgName("机构");
+		orgUser.setEmail(null);
+		orgUser.setHandphone(null);
+		org.setOrgTypeId(10L);
+		orgUser.setRealname("名称");
+		Object result = orgUserService.updateOrgUserOfBack(orgUser, org);
+		Assert.assertTrue("更新失败", result.equals("SUCCESS"));
+	}
 
-    @Test
-    public void updateOrgUserProgressById() {
-        List<Long> list = new ArrayList<Long>();
-        list.add(1L);
-        Assert.assertNotNull("更新审核状态失败", orgUserService.updateOrgUserProgressById(1, list));
-    }
-    
-    @Test
-    @Rollback(false)
-    public void addOrgUserAndOrgOfBack(){
-    	Org org=new Org();
-    	OrgUser orgUser=new OrgUser();
-    	org.setAreaId(12345L);//所属区域
-    	org.setOrgTypeId(4L);//机构id
-    	orgUser.setRealname(null);
-    	org.setSort(null);//排序码
-    	org.setNote(null);//备注
-    	orgUser.setOrgId(org.getId());
-    	org.setOrgName("测试机构");//管理员姓名
-    	orgUser.setUsername("m1");//机构代码
-    	orgUser.setEmail(null);
-    	orgUser.setHandphone(null);
-    	Assert.assertNotNull("添加失败",orgUserService.addOrgUserAndOrgOfBack(orgUser, org));
-    }
+	@Test
+	public void testUpdateOrgUserProgressById() {
+		orgUserService.addOrgUser(orgUser);
+		List<Long> list = new ArrayList<Long>();
+		list.add(orgUser.getId());
+		Assert.assertTrue("更新审核状态失败", orgUserService.updateOrgUserProgressById(1, list) > 0);
+	}
+
+	@Test
+	public void addOrgUserAndOrgOfBack() {
+		Org org = new Org();
+		OrgUser orgUser = new OrgUser();
+		org.setAreaId(12345L);// 所属区域
+		org.setOrgTypeId(4L);// 机构id
+		orgUser.setRealname("s");
+		org.setSort(null);// 排序码
+		org.setNote(null);// 备注
+		orgUser.setOrgId(org.getId());
+		org.setOrgName("asdasdasdasda");// 管理员姓名
+		orgUser.setUsername("m1001021");// 机构代码
+		orgUser.setEmail(null);
+		orgUser.setHandphone(null);
+		Assert.assertNotNull("添加失败", orgUserService.addOrgUserAndOrgOfBack(orgUser, org));
+	}
 }
