@@ -5,6 +5,7 @@
 package com.bc.pmpheep.test;
 
 import org.junit.runner.RunWith;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  * @author L.X <gugia@qq.com>
  */
-// @Configuration
+@Configuration
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:spring/spring-framework.xml" })
+@ContextConfiguration(locations = { "classpath:spring/spring-test.xml" })
 @Transactional(transactionManager = "transactionManager")
-public class BaseTest {
+public abstract class BaseTest {
 
     // assertArrayEquals(expecteds, actuals) 查看两个数组是否相等。
     // byte[] expected = "trial".getBytes();
