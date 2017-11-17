@@ -68,8 +68,15 @@ public class SchoolAndTeacherCheckController {
     @RequestMapping(value = "/orgList", method = RequestMethod.GET)
     public ResponseBean orgList(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
-    @RequestParam(name = "pageSize") Integer pageSize, OrgVO orgVO) {
-        PageParameter<OrgVO> pageParameter = new PageParameter<OrgVO>(pageNumber, pageSize, orgVO);
+    @RequestParam("orgName") String orgName,@RequestParam("realname") String realname,
+    @RequestParam(name = "pageSize") Integer pageSize) {
+    	PageParameter pageParameter = new PageParameter<>();
+    	OrgVO orgVO=new OrgVO();
+    	orgVO.setOrgName(orgName.replaceAll(" ", ""));
+    	orgVO.setRealname(realname.replaceAll(" ", ""));
+		pageParameter.setPageNumber(pageNumber);
+		pageParameter.setPageSize(pageSize);
+		pageParameter.setParameter(orgVO);
         return new ResponseBean(orgService.getSchoolAdminCheckList(pageParameter));
     }
 
