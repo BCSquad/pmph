@@ -2,6 +2,8 @@ package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphGroupMessage;
@@ -39,7 +41,7 @@ public interface PmphGroupMessageService {
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */
-	String deletePmphGroupMessageById(Long id, String sessionId) throws CheckedServiceException, IOException;
+	String deletePmphGroupMessageById(Long id, HttpServletRequest request) throws CheckedServiceException, IOException;
 
 	/**
 	 * @param pmphGroupMessage
@@ -66,7 +68,7 @@ public interface PmphGroupMessageService {
 	 * @throws IOException
 	 *
 	 */
-	String addGroupMessage(String msgConrent, Long groupId, String sessionId, Short senderType)
+	String addGroupMessage(String msgConrent, Long groupId, HttpServletRequest request, Short senderType)
 			throws CheckedServiceException, IOException;
 
 	/**

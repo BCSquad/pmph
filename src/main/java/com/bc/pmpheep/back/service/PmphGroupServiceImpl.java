@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +18,7 @@ import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -91,14 +94,15 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public String deletePmphGroupById(PmphGroup pmphGroup, String sessionId) throws CheckedServiceException {
+	public String deletePmphGroupById(PmphGroup pmphGroup, HttpServletRequest request) throws CheckedServiceException {
+		String sessionId = CookiesUtil.getCookieByName(request, "sessionId").getValue();
 		String result = "FAIL";
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		if (pmphUser.getIsAdmin() || pmphGroupMemberService.isFounder(pmphGroup.getId(), sessionId)) {// 超级管理员与小组创建者才有权利删除小组
+		if (pmphUser.getIsAdmin() || pmphGroupMemberService.isFounder(pmphGroup.getId(), request)) {// 超级管理员与小组创建者才有权利删除小组
 			if (null == pmphGroup.getId()) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 						"主键为空");
@@ -113,7 +117,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			int num = pmphGroupDao.deletePmphGroupById(pmphGroup.getId());// 删除小组
 			if (num > 0) {
 				if (ArrayUtil.isNotEmpty(ids)) {// 判断该小组是否有文件
-					pmphGroupFileService.deletePmphGroupFileById(pmphGroup.getId(), ids, sessionId);// 删除小组文件
+					pmphGroupFileService.deletePmphGroupFileById(pmphGroup.getId(), ids, request);// 删除小组文件
 				}
 				if (!RouteUtil.DEFAULT_GROUP_IMAGE.equals(group.getGroupImage())) {// 解散小组时删除小组头像
 					fileService.remove(group.getGroupImage());
@@ -175,7 +179,9 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public List<PmphGroupListVO> listPmphGroup(PmphGroup pmphGroup, String sessionId) throws CheckedServiceException {
+	public List<PmphGroupListVO> listPmphGroup(PmphGroup pmphGroup, HttpServletRequest request)
+			throws CheckedServiceException {
+		String sessionId = CookiesUtil.getCookieByName(request, "sessionId").getValue();
 		if (null == pmphGroup) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"参数对象为空");
@@ -202,8 +208,9 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	}
 
 	@Override
-	public PmphGroup addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, String sessionId)
+	public PmphGroup addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, HttpServletRequest request)
 			throws CheckedServiceException, IOException {
+		
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.OrgUser;
@@ -31,131 +32,144 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class OrgUserController {
 
-    @Autowired
-    private OrgUserService orgUserService;
+	@Autowired
+	private OrgUserService orgUserService;
+	// 当前业务类型
+	private static final String BUSSINESS_TYPE = "机构用户";
 
-    /**
-     * Description:分页查询机构用户
-     * 
-     * @author:lyc
-     * @date:2017年9月26日下午5:43:59
-     * @Param: OrgUserManagerVO
-     * @Return:分页数据集
-     */
-    @RequestMapping(value = "/list/orguser", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseBean listOrgUser(@RequestParam("pageSize") Integer pageSize,
-    @RequestParam("pageNumber") Integer pageNumber, @RequestParam("username") String username,
-    @RequestParam("realname") String realname, @RequestParam("orgName") String orgName) {
-    	OrgAndOrgUserVO orgUserManagerVO = new OrgAndOrgUserVO();
-        orgUserManagerVO.setUsername(StringUtil.isEmpty(username)?null:username.trim());
-        orgUserManagerVO.setRealname(StringUtil.isEmpty(realname)?null:realname.trim());
-        orgUserManagerVO.setOrgName(StringUtil.isEmpty(orgName)?null:orgName.trim());
-        PageParameter<OrgAndOrgUserVO> pageParameter =
-        new PageParameter<OrgAndOrgUserVO>(pageNumber, pageSize, orgUserManagerVO);
-        return new ResponseBean(orgUserService.getListOrgUser(pageParameter));
-    }
+	/**
+	 * Description:分页查询机构用户
+	 * 
+	 * @author:lyc
+	 * @date:2017年9月26日下午5:43:59
+	 * @Param: OrgUserManagerVO
+	 * @Return:分页数据集
+	 */
+	@RequestMapping(value = "/list/orguser", method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页查询机构用户")
+	@ResponseBody
+	public ResponseBean orguser(@RequestParam("pageSize") Integer pageSize,
+			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("username") String username,
+			@RequestParam("realname") String realname, @RequestParam("orgName") String orgName) {
+		OrgAndOrgUserVO orgUserManagerVO = new OrgAndOrgUserVO();
+		orgUserManagerVO.setUsername(StringUtil.isEmpty(username) ? null : username.trim());
+		orgUserManagerVO.setRealname(StringUtil.isEmpty(realname) ? null : realname.trim());
+		orgUserManagerVO.setOrgName(StringUtil.isEmpty(orgName) ? null : orgName.trim());
+		PageParameter<OrgAndOrgUserVO> pageParameter = new PageParameter<OrgAndOrgUserVO>(pageNumber, pageSize,
+				orgUserManagerVO);
+		return new ResponseBean(orgUserService.getListOrgUser(pageParameter));
+	}
 
-    /**
-     * 
-     * Description:新增一个机构用户
-     * 
-     * @author:lyc
-     * @date:2017年9月26日下午5:50:20
-     * @Param: OrgUser
-     * @Return:新增的OrgUser
-     */
-    @RequestMapping(value = "/add/orguser", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseBean addOrgUser(OrgUser orgUser) {
-        return new ResponseBean(orgUserService.addOrgUser(orgUser));
-    }
+	/**
+	 * 
+	 * Description:新增一个机构用户
+	 * 
+	 * @author:lyc
+	 * @date:2017年9月26日下午5:50:20
+	 * @Param: OrgUser
+	 * @Return:新增的OrgUser
+	 */
+	@RequestMapping(value = "/addorguser", method = RequestMethod.POST)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增一个机构用户")
+	@ResponseBody
+	public ResponseBean addorguser(OrgUser orgUser) {
+		return new ResponseBean(orgUserService.addOrgUser(orgUser));
+	}
 
-    /**
-     * 
-     * Description:更新机构用户信息
-     * 
-     * @author:lyc
-     * @date:2017年9月26日下午5:53:44
-     * @Param: OrgUser
-     * @Return:更新影响的行数
-     */
-    @RequestMapping(value = "/update/orguser", method = RequestMethod.PUT)
-    @ResponseBody
-    public ResponseBean updateOrgUser(OrgUser orgUser) {
-        return new ResponseBean(orgUserService.updateOrgUser(orgUser));
-    }
+	/**
+	 * 
+	 * Description:更新机构用户信息
+	 * 
+	 * @author:lyc
+	 * @date:2017年9月26日下午5:53:44
+	 * @Param: OrgUser
+	 * @Return:更新影响的行数
+	 */
+	@RequestMapping(value = "/updateorguser", method = RequestMethod.PUT)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新机构用户信息")
+	@ResponseBody
+	public ResponseBean updateorguser(OrgUser orgUser) {
+		return new ResponseBean(orgUserService.updateOrgUser(orgUser));
+	}
 
-    /**
-     * 
-     * Description:通过id删除一个OrgUser
-     * 
-     * @author:lyc
-     * @date:2017年9月26日下午5:56:38
-     * @Param: id
-     * @Return:影响的行数
-     */
-    @RequestMapping(value = "/delete/orguser/{id}", method = RequestMethod.DELETE)
-    @ResponseBody
-    public ResponseBean deleteOrgUserById(Long id) {
-        return new ResponseBean(orgUserService.deleteOrgUserById(id));
-    }
+	/**
+	 * 
+	 * Description:通过id删除一个OrgUser
+	 * 
+	 * @author:lyc
+	 * @date:2017年9月26日下午5:56:38
+	 * @Param: id
+	 * @Return:影响的行数
+	 */
+	@RequestMapping(value = "/deleteuser/{id}", method = RequestMethod.DELETE)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "通过id删除一个机构用户")
+	@ResponseBody
+	public ResponseBean deleteuser(Long id) {
+		return new ResponseBean(orgUserService.deleteOrgUserById(id));
+	}
 
-    /**
-     * 
-     * Description:根据id查询一个机构用户信息
-     * 
-     * @author:lyc
-     * @date:2017年9月26日下午5:58:48
-     * @Param: id
-     * @Return:OrgUser
-     */
-    @RequestMapping(value = "/orguser/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseBean getOrgUserById(Long id) {
-        return new ResponseBean(orgUserService.getOrgUserById(id));
-    }
+	/**
+	 * 
+	 * Description:根据id查询一个机构用户信息
+	 * 
+	 * @author:lyc
+	 * @date:2017年9月26日下午5:58:48
+	 * @Param: id
+	 * @Return:OrgUser
+	 */
+	@RequestMapping(value = "/orguser/{id}", method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据id查询一个机构用户信息")
+	@ResponseBody
+	public ResponseBean orguser(Long id) {
+		return new ResponseBean(orgUserService.getOrgUserById(id));
+	}
 
-    /**
-     * 
-     * 
-     * 功能描述：在机构用户管理页面添加用户
-     * 
-     * @param orgUser 添加的用户
-     * @return 是否成功
-     * 
-     */
-    @RequestMapping(value = "/add/orguserofback", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseBean addOrgUserOfBack(OrgUser orgUser) {
-        return new ResponseBean(orgUserService.addOrgUserOfBack(orgUser));
-    }
+	/**
+	 * 
+	 * 
+	 * 功能描述：在机构用户管理页面添加用户
+	 * 
+	 * @param orgUser
+	 *            添加的用户
+	 * @return 是否成功
+	 * 
+	 */
+	@RequestMapping(value = "/adduser", method = RequestMethod.POST)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "添加用户")
+	@ResponseBody
+	public ResponseBean adduser(OrgUser orgUser) {
+		return new ResponseBean(orgUserService.addOrgUserOfBack(orgUser));
+	}
 
-    /**
-     * 
-     * 
-     * 功能描述：在机构用户管理页面修改用户
-     * 
-     * @param orgUser 修改的用户（必须传入用户id）
-     * @return 是否成功
-     * 
-     */
-    @RequestMapping(value = "/update/orguserofback", method = RequestMethod.PUT)
-    @ResponseBody
-    public ResponseBean updateOrgUserOfBack(OrgUser orgUser) {
-        System.out.println(orgUser.toString());
-        return new ResponseBean(orgUserService.updateOrgUserOfBack(orgUser));
-    }
-    
-    /**
-     * 功能描述：在机构用户页面增加机构用户
-     * 
-     * @param orgUser org
-     * @return 是否成功
-     */
-    @RequestMapping(value = "/add/orguserandorgofback", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseBean addOrgUserAndOrgOfBack(OrgUser orgUser,Org org) {
-        return new ResponseBean(orgUserService.addOrgUserAndOrgOfBack(orgUser,org));
-    }
+	/**
+	 * 
+	 * 
+	 * 功能描述：在机构用户管理页面修改用户
+	 * 
+	 * @param orgUser
+	 *            修改的用户（必须传入用户id）
+	 * @return 是否成功
+	 * 
+	 */
+	@RequestMapping(value = "/updateuser", method = RequestMethod.PUT)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改用户")
+	@ResponseBody
+	public ResponseBean updateuser(OrgUser orgUser) {
+		System.out.println(orgUser.toString());
+		return new ResponseBean(orgUserService.updateOrgUserOfBack(orgUser));
+	}
+
+	/**
+	 * 功能描述：在机构用户页面增加机构用户
+	 * 
+	 * @param orgUser
+	 *            org
+	 * @return 是否成功
+	 */
+	@RequestMapping(value = "/add/orguserandorgofback", method = RequestMethod.POST)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "增加机构用户")
+	@ResponseBody
+	public ResponseBean orguserandorgofback(OrgUser orgUser, Org org) {
+		return new ResponseBean(orgUserService.addOrgUserAndOrgOfBack(orgUser, org));
+	}
 }

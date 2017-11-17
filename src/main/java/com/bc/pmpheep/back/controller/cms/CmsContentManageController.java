@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.controller.cms;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,7 +61,7 @@ public class CmsContentManageController {
     public ResponseBean manage(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, CmsContentVO cmsContentVO,
-    @RequestParam("sessionId") String sessionId) {
+    HttpServletRequest request) {
         PageParameter<CmsContentVO> pageParameter =
         new PageParameter<CmsContentVO>(pageNumber, pageSize, cmsContentVO);
         return new ResponseBean(cmsContentService.listContentManage(pageParameter, sessionId));

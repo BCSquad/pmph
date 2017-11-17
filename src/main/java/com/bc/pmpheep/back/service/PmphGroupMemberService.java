@@ -2,6 +2,8 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphGroupMember;
@@ -70,7 +72,8 @@ public interface PmphGroupMemberService {
 	 * @return 小组成员
 	 *
 	 */
-	List<PmphGroupMemberVO> listPmphGroupMember(Long groupId, String sessionId) throws CheckedServiceException;
+	List<PmphGroupMemberVO> listPmphGroupMember(Long groupId, HttpServletRequest request)
+			throws CheckedServiceException;
 
 	/**
 	 * 
@@ -83,7 +86,7 @@ public interface PmphGroupMemberService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String addPmphGroupMemberOnGroup(Long groupId, List<PmphGroupMember> pmphGroupMembers, String sessionId)
+	String addPmphGroupMemberOnGroup(Long groupId, List<PmphGroupMember> pmphGroupMembers, HttpServletRequest request)
 			throws CheckedServiceException;
 
 	/**
@@ -108,7 +111,7 @@ public interface PmphGroupMemberService {
 	 * @param:
 	 * @return:Boolean
 	 */
-	Boolean isFounderOrisAdmin(Long groupId, String sessionId) throws CheckedServiceException;
+	Boolean isFounderOrisAdmin(Long groupId, HttpServletRequest request) throws CheckedServiceException;
 
 	/**
 	 * 
@@ -119,7 +122,7 @@ public interface PmphGroupMemberService {
 	 * @param
 	 * @return Boolean
 	 */
-	Boolean isFounder(Long groupId, String sessionId) throws CheckedServiceException;
+	Boolean isFounder(Long groupId, HttpServletRequest request) throws CheckedServiceException;
 
 	/**
 	 * 
@@ -143,7 +146,7 @@ public interface PmphGroupMemberService {
 	 * @param 成员表id集合
 	 * @return String 删除成功与否状态
 	 */
-	String deletePmphGroupMemberByIds(Long groupId, Long[] ids, String sessionId) throws CheckedServiceException;
+	String deletePmphGroupMemberByIds(Long groupId, Long[] ids, HttpServletRequest request) throws CheckedServiceException;
 
 	/**
 	 * 
@@ -154,7 +157,7 @@ public interface PmphGroupMemberService {
 	 * @param 成员表id集合
 	 * @return String 删除成功与否状态
 	 */
-	String updateGroupMemberByIds(Long groupId, Long[] ids, String sessionId) throws CheckedServiceException;
+	String updateGroupMemberByIds(Long groupId, Long[] ids, HttpServletRequest request) throws CheckedServiceException;
 
 	/**
 	 * 
@@ -166,7 +169,7 @@ public interface PmphGroupMemberService {
 	 *            小组成员集合
 	 * @return String成功与否状态
 	 */
-	String updateMemberIdentity(Long groupId, List<PmphGroupMember> members, String sessionId)
+	String updateMemberIdentity(Long groupId, List<PmphGroupMember> members, HttpServletRequest request)
 			throws CheckedServiceException;
 
 }
