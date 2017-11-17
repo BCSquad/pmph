@@ -141,9 +141,8 @@ public class OrgUserController {
      */
     @RequestMapping(value = "/update/orguserofback", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseBean updateOrgUserOfBack(OrgUser orgUser) {
-        System.out.println(orgUser.toString());
-        return new ResponseBean(orgUserService.updateOrgUserOfBack(orgUser));
+    public ResponseBean updateOrgUserOfBack(OrgUser orgUser,Org org) {
+        return new ResponseBean(orgUserService.updateOrgUserOfBack(orgUser,org));
     }
     
     /**
