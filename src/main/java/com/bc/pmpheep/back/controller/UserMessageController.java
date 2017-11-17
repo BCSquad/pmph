@@ -3,6 +3,8 @@ package com.bc.pmpheep.back.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.service.UserMessageService;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MessageStateVO;
 import com.bc.pmpheep.back.vo.MyMessageVO;
@@ -57,13 +60,14 @@ public class UserMessageController {
     @RequestMapping(value = "/list/message", method = RequestMethod.GET)
     public ResponseBean message(@RequestParam("pageNumber") Integer pageNumber,
     @RequestParam("pageSize") Integer pageSize, @RequestParam("title") String title,
-    @RequestParam("sessionId") String sessionId) {
+    HttpServletRequest request) {
         PageParameter<UserMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
         UserMessageVO userMessageVO = new UserMessageVO();
         if (StringUtil.notEmpty(title)) {
             userMessageVO.setTitle(title.replaceAll(" ", ""));// 去除空格
         }
         pageParameter.setParameter(userMessageVO);
+        String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(userMessageService.listMessage(pageParameter, sessionId));
     }
 
@@ -80,9 +84,10 @@ public class UserMessageController {
     public ResponseBean state(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @PathVariable("msgId") String msgId, @RequestParam(name = "pageSize") Integer pageSize,
-    MessageStateVO messageStateVO, @RequestParam("sessionId") String sessionId) {
+    MessageStateVO messageStateVO,HttpServletRequest request) {
         PageParameter<MessageStateVO> pageParameter =
         new PageParameter<MessageStateVO>(pageNumber, pageSize, messageStateVO);
+        String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(userMessageService.listMessageState(pageParameter, sessionId));
     }
 
@@ -153,8 +158,9 @@ public class UserMessageController {
     @RequestParam("sendType") Integer sendType, @RequestParam("orgIds") String orgIds,
     @RequestParam("senderId") Long senderId, @RequestParam("userIds") String userIds,
     @RequestParam("bookIds") String bookids, @RequestParam("file") String[] files,
-    @RequestParam("sessionId") String sessionId) {
+    HttpServletRequest request) {
         try {
+        	String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,
                                                                               title,
                                                                               sendType,
@@ -189,8 +195,9 @@ public class UserMessageController {
     @RequestParam("sendType") Integer sendType, @RequestParam("orgIds") String orgIds,
     @RequestParam("senderId") Long senderId, @RequestParam("userIds") String userIds,
     @RequestParam("bookIds") String bookIds, @RequestParam("file") String[] files,
-    @RequestParam("sessionId") String sessionId) {
+    HttpServletRequest request) {
         try {
+        	String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,
                                                                               title,
                                                                               sendType,
@@ -349,8 +356,8 @@ public class UserMessageController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取前几条未读消息")
-    @RequestMapping(value = "/icon/listMyMessageOfIcon", method = RequestMethod.GET)
-    public ResponseBean listMyMessageOfIcon(Integer pageSize, Integer pageNumber, Long userId,
+    @RequestMapping(value = "/list/myMessageIcon", method = RequestMethod.GET)
+    public ResponseBean myMessageIcon(Integer pageSize, Integer pageNumber, Long userId,
     Integer userType) {
         PageParameter<MyMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
         MyMessageVO myMessageVO = new MyMessageVO();
@@ -372,8 +379,8 @@ public class UserMessageController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取我收到消息详情")
-    @RequestMapping(value = "/detail/updateMyMessageDetail", method = RequestMethod.GET)
-    public ResponseBean updateMyMessageDetail(Long id) {
+    @RequestMapping(value = "/update/myMessageDetail", method = RequestMethod.GET)
+    public ResponseBean myMessageDetail(Long id) {
         return new ResponseBean(userMessageService.updateMyMessageDetail(id));
     }
 
@@ -388,8 +395,8 @@ public class UserMessageController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除我收到消息")
-    @RequestMapping(value = "/delete/updateMyMessage", method = RequestMethod.PUT)
-    public ResponseBean updateMyMessage(Long[] ids) {
+    @RequestMapping(value = "/delete/myMessages", method = RequestMethod.PUT)
+    public ResponseBean myMessages(Long[] ids) {
         return new ResponseBean(userMessageService.updateMyMessage(ids));
     }
 }

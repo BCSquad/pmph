@@ -6,6 +6,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,7 @@ import com.bc.pmpheep.back.service.PmphGroupMemberService;
 import com.bc.pmpheep.back.service.PmphGroupMessageService;
 import com.bc.pmpheep.back.service.PmphGroupService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
@@ -61,11 +64,11 @@ public class GroupController {
 	 * @return
 	 * @createDate 2017年9月21日 下午4:02:57
 	 */
-	@RequestMapping(value = "/list/pmphgroup", method = RequestMethod.GET)
+	@RequestMapping(value = "/list/pmphGroup", method = RequestMethod.GET)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据小组名称模糊查询获取当前用户的小组")
 	@ResponseBody
-	public ResponseBean pmphgroup(@RequestParam(name = "groupName", defaultValue = "") String groupName,
-			@RequestParam("sessionId") String sessionId) {
+	public ResponseBean pmphGroup(@RequestParam(name = "groupName", defaultValue = "") String groupName,
+			HttpServletRequest request) {
 		/*
 		 * --------- 以下是正确的示例 ---------
 		 * 
@@ -74,8 +77,9 @@ public class GroupController {
 		 */
 		PmphGroup pmphGroup = new PmphGroup();
 		if (ObjectUtil.notNull(groupName)) {
-			pmphGroup.setGroupName(groupName.replaceAll(" ", ""));//去空格
+			pmphGroup.setGroupName(groupName.trim());
 		}
+		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(pmphGroupService.listPmphGroup(pmphGroup, sessionId));
 	}
 
@@ -91,8 +95,9 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据小组id查询小组成员")
-	@RequestMapping(value = "/list/pmphgroupmember", method = RequestMethod.GET)
-	public ResponseBean pmphgroupmember(Long groupId, @RequestParam("sessionId") String sessionId) {
+	@RequestMapping(value = "/list/pmphGroupMember", method = RequestMethod.GET)
+	public ResponseBean pmphGroupMember(Long groupId, HttpServletRequest request) {
+		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(pmphGroupMemberService.listPmphGroupMember(groupId, sessionId));
 	}
 
@@ -110,10 +115,10 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新建小组")
-	@RequestMapping(value = "/add/pmphgroup", method = RequestMethod.POST)
-	public ResponseBean pmphgroup(MultipartFile file, PmphGroup pmphGroup,
-			@RequestParam("sessionId") String sessionId) {
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public ResponseBean add(MultipartFile file, PmphGroup pmphGroup, HttpServletRequest request) {
 		try {
+			String sessionId = CookiesUtil.getSessionId(request);
 			return new ResponseBean(pmphGroupService.addPmphGroupOnGroup(file, pmphGroup, sessionId));
 		} catch (IOException e) {
 			return new ResponseBean(e);
@@ -132,12 +137,13 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "添加小组成员")
-	@RequestMapping(value = "/add/pmphgroupmember", method = RequestMethod.POST)
-	public ResponseBean pmphgroupmember(Long groupId, String pmphGroupMembers, String sessionId) {
+	@RequestMapping(value = "/add/groupMember", method = RequestMethod.POST)
+	public ResponseBean groupMember(Long groupId, String pmphGroupMembers, HttpServletRequest request) {
 		Gson gson = new Gson();
 		Type type = new TypeToken<ArrayList<PmphGroupMember>>() {
 		}.getType();
 		List<PmphGroupMember> list = gson.fromJson(pmphGroupMembers, type);
+		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(pmphGroupMemberService.addPmphGroupMemberOnGroup(groupId, list, sessionId));
 
 	}
@@ -157,9 +163,10 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改小组头像或小组名称")
-	@RequestMapping(value = "/update/pmphgroupdetail", method = RequestMethod.POST)
-	public ResponseBean pmphgroupdetail(MultipartFile file, PmphGroup pmphGroup, String sessionId) {
+	@RequestMapping(value = "/update/pmphGroupDetail", method = RequestMethod.POST)
+	public ResponseBean pmphGroupDetail(MultipartFile file, PmphGroup pmphGroup, HttpServletRequest request) {
 		try {
+			String sessionId = CookiesUtil.getSessionId(request);
 			return new ResponseBean(pmphGroupService.updatePmphGroupOnGroup(file, pmphGroup, sessionId));
 		} catch (IOException e) {
 			return new ResponseBean(e);
@@ -178,8 +185,9 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "解散小组")
-	@RequestMapping(value = "/delete/pmphgroup", method = RequestMethod.DELETE)
-	public ResponseBean pmphgroup(PmphGroup pmphGroup, String sessionId) {
+	@RequestMapping(value = "/delete/group", method = RequestMethod.DELETE)
+	public ResponseBean group(PmphGroup pmphGroup, HttpServletRequest request) {
+		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(pmphGroupService.deletePmphGroupById(pmphGroup, sessionId));
 	}
 
@@ -193,11 +201,12 @@ public class GroupController {
 	 * @Return:是否成功
 	 * @update Mryang 2017.10.13 15:30
 	 */
-	@RequestMapping(value = "/add/pmphgroupfile", method = RequestMethod.POST)
+	@RequestMapping(value = "/add/pmphGroupFile", method = RequestMethod.POST)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "上传小组文件")
 	@ResponseBody
-	public ResponseBean pmphgroupfile(Long[] ids, MultipartFile file, String sessionId) {
+	public ResponseBean pmphGroupFile(Long[] ids, MultipartFile file, HttpServletRequest request) {
 		try {
+			String sessionId = CookiesUtil.getSessionId(request);
 			return new ResponseBean(pmphGroupFileService.addPmphGroupFile(ids, file, sessionId));
 		} catch (IOException e) {
 			return new ResponseBean(e);
@@ -213,10 +222,10 @@ public class GroupController {
 	 * @Param:Page传入的查询条件，若文件名不为空则为模糊查询功能
 	 * @Return:小组共享文件分页集合
 	 */
-	@RequestMapping(value = "/list/groupfile", method = RequestMethod.GET)
+	@RequestMapping(value = "/list/groupFile", method = RequestMethod.GET)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询小组共享文件")
 	@ResponseBody
-	public ResponseBean groupfile(@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+	public ResponseBean groupFile(@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
 			@RequestParam(name = "pageSize") Integer pageSize, PmphGroupFileVO pmphGroupFileVO) {
 		PageParameter<PmphGroupFileVO> pageParameter = new PageParameter<PmphGroupFileVO>(pageNumber, pageSize,
 				pmphGroupFileVO);
@@ -232,10 +241,11 @@ public class GroupController {
 	 * @Param:文件id
 	 * @Return:是否成功
 	 */
-	@RequestMapping(value = "/delete/pmphgroupfile", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/delete/file", method = RequestMethod.DELETE)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除小组共享文件")
 	@ResponseBody
-	public ResponseBean pmphgroupfile(Long groupId, Long[] ids, String sessionId) {
+	public ResponseBean file(Long groupId, Long[] ids, HttpServletRequest request) {
+		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(pmphGroupFileService.deletePmphGroupFileById(groupId, ids, sessionId));
 	}
 
@@ -253,8 +263,9 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除小组成员")
-	@RequestMapping(value = "/delete/pmphgroupmember", method = RequestMethod.PUT)
-	public ResponseBean pmphgroupmember(Long groupId, Long[] ids, String sessionId) {
+	@RequestMapping(value = "/delete/pmphGroupMembers", method = RequestMethod.PUT)
+	public ResponseBean pmphGroupMembers(Long groupId, Long[] ids, HttpServletRequest request) {
+		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(pmphGroupMemberService.updateGroupMemberByIds(groupId, ids, sessionId));
 	}
 
@@ -271,11 +282,12 @@ public class GroupController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量修改小组成员权限")
 	@RequestMapping(value = "/update/identity", method = RequestMethod.PUT)
-	public ResponseBean identity(Long groupId, String pmphGroupMembers, String sessionId) {
+	public ResponseBean identity(Long groupId, String pmphGroupMembers, HttpServletRequest request) {
 		Gson gson = new Gson();
 		Type type = new TypeToken<ArrayList<PmphGroupMember>>() {
 		}.getType();
 		List<PmphGroupMember> list = gson.fromJson(pmphGroupMembers, type);
+		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(pmphGroupMemberService.updateMemberIdentity(groupId, list, sessionId));
 	}
 
@@ -323,9 +335,10 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "发送小组消息")
-	@RequestMapping(value = "/add/groupmessage", method = RequestMethod.POST)
-	public ResponseBean groupmessage(String msgConrent, Long groupId, String sessionId) {
+	@RequestMapping(value = "/add/groupMessage", method = RequestMethod.POST)
+	public ResponseBean groupMessage(String msgConrent, Long groupId, HttpServletRequest request) {
 		try {
+			String sessionId = CookiesUtil.getSessionId(request);
 			return new ResponseBean(
 					pmphGroupMessageService.addGroupMessage(msgConrent, groupId, sessionId, Const.SENDER_TYPE_1));
 		} catch (IOException e) {
@@ -347,9 +360,10 @@ public class GroupController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "撤回小组消息")
-	@RequestMapping(value = "/delete/pmphgroupmessage", method = RequestMethod.DELETE)
-	public ResponseBean deletePmphGroupMessageById(Long id, String sessionId) {
+	@RequestMapping(value = "/delete/pmphGroupMessage", method = RequestMethod.DELETE)
+	public ResponseBean pmphGroupMessage(Long id, HttpServletRequest request) {
 		try {
+			String sessionId = CookiesUtil.getSessionId(request);
 			return new ResponseBean(pmphGroupMessageService.deletePmphGroupMessageById(id, sessionId));
 		} catch (IOException e) {
 			return new ResponseBean(e);
