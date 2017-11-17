@@ -28,6 +28,7 @@ public class ContentServiceTest extends BaseTest {
     ContentService contentService;
 
     @Test
+    @SuppressWarnings("deprecation")
     public void add() {
         Content content = new Content(html);
         Content cnt = contentService.add(content);
@@ -38,6 +39,7 @@ public class ContentServiceTest extends BaseTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void get() {
         Content content = new Content(html);
         Content cnt = contentService.add(content);
@@ -48,6 +50,7 @@ public class ContentServiceTest extends BaseTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void update() {
         Content content = new Content(html);
         Content cnt = contentService.add(content);
