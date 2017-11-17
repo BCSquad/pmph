@@ -45,21 +45,20 @@ public class WriterUserTest extends BaseTest {
 		Long num = writerUserDao.getWriterUserCount();
 		logger.info("一共有{}条数据", num);
 	}
-
+	
 	/**
 	 * WriterUser 添加Test
 	 */
-	//@Test
-	//@Rollback(Const.ISROLLBACK)
-	public void addPmphUserTest() {
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testAdd() {
 		List<Long> roleIdList = new ArrayList<Long>();
 		roleIdList.add(1L);
 		roleIdList.add(2L);
 		roleIdList.add(3L);
 		WriterUser user = new WriterUser();
-		user.setUsername("admin");
+		user.setUsername("admin5");
 		user.setPassword("1");
-		user.setRealname("admin");
 		user.setIsDisabled(false);
 		WriterUser u = userService.add(user);// 添加用户
 		// 查看两个对象的引用是否相等。类似于使用“==”比较两个对象
@@ -67,7 +66,6 @@ public class WriterUserTest extends BaseTest {
 		WriterUser ps = userService.add(new WriterUser("test1", "123"), roleIdList);// 给单用户添加多个角色
 		Assert.assertNotNull(ps);
 	}
-
 	/**
 	 * WriterUser 添加删除
 	 */

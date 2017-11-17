@@ -21,6 +21,7 @@ import com.bc.pmpheep.back.service.WriterPermissionService;
 import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.sessioncontext.SessionContext;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
@@ -107,8 +108,8 @@ public class WriterLoginController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public ResponseBean logout(@RequestParam("sessionId") String sessionId,
-			@RequestParam("loginType") Short loginType) {
+	public ResponseBean logout(HttpServletRequest request, @RequestParam("loginType") Short loginType) {
+		String sessionId = CookiesUtil.getSessionId(request);
 		HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
 		if (ObjectUtil.notNull(session)) {
 			if (Const.LOGIN_TYPE_WRITER == loginType) {

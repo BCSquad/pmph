@@ -101,6 +101,7 @@ public class UserMessage implements java.io.Serializable {
     /**
      * 
      * @param msgId 消息id
+     * @param title 消息标题
      * @param msgType 消息类型
      * @param senderId 发送者id
      * @param senderType 发送者类型

@@ -204,7 +204,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	}
 
 	@Override
-	public String updateOrgUserOfBack(OrgUser orgUser) throws CheckedServiceException {
+	public Object updateOrgUserOfBack(OrgUser orgUser,Org org) throws CheckedServiceException {
 		OrgUser username = orgUserDao.getOrgUserById(orgUser.getId());
 		if (!username.getUsername().equals(orgUser.getUsername())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
@@ -242,6 +242,8 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 						CheckedExceptionResult.ILLEGAL_PARAM, "手机号码不符合规范");
 			}
 		}
+		org.setId(username.getOrgId());
+		orgDao.updateOrg(org);
 		int num = orgUserDao.updateOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
 		String result = "FAIL";
 		if (num > 0) {

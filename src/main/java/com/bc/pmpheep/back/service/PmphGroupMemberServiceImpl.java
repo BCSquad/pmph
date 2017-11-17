@@ -2,6 +2,8 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -106,7 +108,8 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public List<PmphGroupMemberVO> listPmphGroupMember(Long groupId, String sessionId) throws CheckedServiceException {
+	public List<PmphGroupMemberVO> listPmphGroupMember(Long groupId, String sessionId)
+			throws CheckedServiceException {
 
 		if (null == groupId || groupId == 0) {
 			List<PmphGroupListVO> myPmphGroupListVOList = pmphGroupService.listPmphGroup(new PmphGroup(), sessionId);

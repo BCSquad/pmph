@@ -29,6 +29,7 @@ public class MessageServiceTest extends BaseTest {
     MessageService messageService;
 
     @Test
+    @SuppressWarnings("deprecation")
     public void add() {
         Message message = new Message(str);
         Message msg = messageService.add(message);
@@ -39,6 +40,7 @@ public class MessageServiceTest extends BaseTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void get() {
         Message message = new Message(str);
         Message msg = messageService.add(message);
@@ -49,6 +51,7 @@ public class MessageServiceTest extends BaseTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void list() {
         int number = 10;
         List<Message> list = createMessages(number);
@@ -66,6 +69,7 @@ public class MessageServiceTest extends BaseTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void update() {
         Message message = new Message(str);
         Message msg = messageService.add(message);
