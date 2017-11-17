@@ -206,7 +206,7 @@ public class MigrationStageNine {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void bookUserCommnet() {

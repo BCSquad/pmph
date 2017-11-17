@@ -164,7 +164,7 @@ public class MigrationStageFour {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "" + tableName + " 表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void material() {
@@ -355,7 +355,7 @@ public class MigrationStageFour {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "" + tableName + " 表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void materialExtension() {
@@ -414,7 +414,7 @@ public class MigrationStageFour {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "" + tableName + " 表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void materialExtra() {
@@ -470,7 +470,7 @@ public class MigrationStageFour {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "material_extra 表迁移完成" + count + "/" + materialExtraList.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void transferMaterialNoticeAttachment() {
@@ -553,7 +553,7 @@ public class MigrationStageFour {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "教材通知附件  表迁移完成" + count + "/" + materialNoticeAttachmentList.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void transferMaterialNoteAttachment() {
@@ -635,7 +635,7 @@ public class MigrationStageFour {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "教材备注附件表  表迁移完成" + count + "/" + materialMaterialNoteAttachmentList.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void transferMaterialContact() {
@@ -729,7 +729,7 @@ public class MigrationStageFour {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + materialContactList.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void materialOrg() {
@@ -790,7 +790,7 @@ public class MigrationStageFour {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + pubList.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void materialPprojectEeditor() {
@@ -850,7 +850,7 @@ public class MigrationStageFour {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "MaterialProjectEditor  表迁移完成" + count + "/" + materialProjectEditorList.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
 }

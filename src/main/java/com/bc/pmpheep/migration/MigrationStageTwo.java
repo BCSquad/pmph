@@ -120,7 +120,7 @@ public class MigrationStageTwo {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "pmph_department表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void pmphUser() {
@@ -220,7 +220,7 @@ public class MigrationStageTwo {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "pmph_user表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void pmphRole() {
@@ -262,7 +262,7 @@ public class MigrationStageTwo {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "pmph_role表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void pmphUserRole() {
@@ -305,7 +305,7 @@ public class MigrationStageTwo {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "pmph_user_role表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     /**
@@ -341,7 +341,7 @@ public class MigrationStageTwo {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "sys_user表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     /**
@@ -376,7 +376,7 @@ public class MigrationStageTwo {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "用户-角色关联 表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
 }

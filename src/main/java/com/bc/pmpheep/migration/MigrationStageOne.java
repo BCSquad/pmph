@@ -122,7 +122,7 @@ public class MigrationStageOne {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "area表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void orgType() {
@@ -169,7 +169,7 @@ public class MigrationStageOne {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "org_type表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void org() {
@@ -250,7 +250,7 @@ public class MigrationStageOne {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "org表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void orgUser() {
@@ -395,7 +395,7 @@ public class MigrationStageOne {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "org_user表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void writerUser() {
@@ -586,7 +586,7 @@ public class MigrationStageOne {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "writer_user表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
 }
