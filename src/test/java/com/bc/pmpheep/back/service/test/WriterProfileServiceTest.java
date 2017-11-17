@@ -26,9 +26,9 @@ public class WriterProfileServiceTest extends BaseTest {
 	Logger logger = LoggerFactory.getLogger(WriterProfileServiceTest.class);
 	@Resource
 	WriterProfileService writerProfileService;
-
+	
 	@Test
-	public void test() {
+	public void testAllWriterProfile() {
 		logger.info("----------作家简介与标签-----------");
 		WriterProfile writerProfile = new WriterProfile(3L, "物理学专家，机械工程学教授", "科研大赛冠军");
 		writerProfileService.addWriterProfile(writerProfile);
@@ -37,9 +37,39 @@ public class WriterProfileServiceTest extends BaseTest {
 		writerProfile.setTag("中科院名誉教授");
 		Assert.assertTrue("数据更新失败", writerProfileService.updateWriterProfile(writerProfile)>0);
 		logger.info("----------数据更新成功----------");
-		Assert.assertNotNull("数据获取失败", writerProfileService.getWriterProfileById(5L));
+		Assert.assertNotNull("数据获取失败", writerProfileService.getWriterProfileById(writerProfile.getId()));
 		logger.info("----------数据获取成功----------");
-		Assert.assertTrue("删除数据失败", writerProfileService.deleteWriterProfileById(5L) >= 0);
+		Assert.assertTrue("删除数据失败", writerProfileService.deleteWriterProfileById(writerProfile.getId()) >= 0);
 		logger.info("----------测试成功-----------");
 	}
+	
+	@Test
+	public void testAddWriterProfile(){
+		WriterProfile writerProfile = new WriterProfile(3L, "物理学专家，机械工程学教授", "科研大赛冠军");
+		writerProfileService.addWriterProfile(writerProfile);
+		Assert.assertTrue("数据添加失败", writerProfile.getId()>0);
+	}
+	
+	@Test
+	public void testUpdateWriterProfile(){
+		WriterProfile writerProfile = new WriterProfile();
+		writerProfile.setId(1L);
+		writerProfile.setTag("中科院名誉教授");
+		Assert.assertTrue("数据更新失败", writerProfileService.updateWriterProfile(writerProfile)>0);
+	}
+	
+	@Test
+	public void testGetWriterProfileById(){
+		WriterProfile writerProfile = new WriterProfile();
+		writerProfile.setId(1L);
+		Assert.assertNotNull("数据获取失败", writerProfileService.getWriterProfileById(1L));
+	}
+	
+	@Test
+	public void testDeleteWriterProfileById(){
+		WriterProfile writerProfile = new WriterProfile();
+		writerProfile.setId(1L);
+		Assert.assertTrue("删除数据失败", writerProfileService.deleteWriterProfileById(1L) >= 0);
+	}
+	
 }
