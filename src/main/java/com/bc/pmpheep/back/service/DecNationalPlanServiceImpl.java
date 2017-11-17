@@ -39,18 +39,6 @@ public class DecNationalPlanServiceImpl implements DecNationalPlanService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id不能为空");
 		}
-		/*if (null == decNationalPlan.getMaterialName()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "教材名称不能为空");
-		}
-		if (null ==decNationalPlan.getRank()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "编写教材级别不能为空");
-		}*/
-		if (null == decNationalPlan.getSort()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "显示顺序不能为空");
-		}
 		decNationalPlanDao.addDecNationalPlan(decNationalPlan);
 		return decNationalPlan;
 	}
