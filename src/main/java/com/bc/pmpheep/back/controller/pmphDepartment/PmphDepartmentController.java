@@ -33,10 +33,10 @@ public class PmphDepartmentController {
 	 * @createDate 2017年9月26日 下午3:21:34
 	 * @param parentId
 	 */
-	@RequestMapping(value = "/pmphdepartmenttree", method = RequestMethod.GET)
+	@RequestMapping(value = "/tree", method = RequestMethod.GET)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据父级id获取整个部门")
 	@ResponseBody
-	public ResponseBean pmphdepartmenttree(Long parentId) {
+	public ResponseBean tree(Long parentId) {
 		return new ResponseBean(pmphDepartmentService.listPmphDepartment(parentId));
 	}
 
@@ -48,10 +48,10 @@ public class PmphDepartmentController {
 	 * @param pmphDepartment
 	 * @return 带主键的pmphDepartment
 	 */
-	@RequestMapping(value = "/add/department", method = RequestMethod.POST)
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增部门")
 	@ResponseBody
-	public ResponseBean department(PmphDepartment pmphDepartment) {
+	public ResponseBean add(PmphDepartment pmphDepartment) {
 		return new ResponseBean(pmphDepartmentService.addPmphDepartment(pmphDepartment));
 	}
 
@@ -63,10 +63,10 @@ public class PmphDepartmentController {
 	 * @param pmphDepartment
 	 * @return 影响行数
 	 */
-	@RequestMapping(value = "/update/pmphdepartment", method = RequestMethod.PUT)
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新部门")
 	@ResponseBody
-	public ResponseBean pmphdepartment(PmphDepartment pmphDepartment) {
+	public ResponseBean update(PmphDepartment pmphDepartment) {
 		return new ResponseBean(pmphDepartmentService.updatePmphDepartment(pmphDepartment));
 	}
 
@@ -78,10 +78,10 @@ public class PmphDepartmentController {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "/delete/pmphdepartmentbatch", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除部门")
 	@ResponseBody
-	public ResponseBean pmphdepartmentbatch(Long id) {
+	public ResponseBean delete(Long id) {
 		return new ResponseBean(pmphDepartmentService.deletePmphDepartmentBatch(id));
 	}
 
@@ -97,8 +97,8 @@ public class PmphDepartmentController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据部门名称模糊查询部门")
-	@RequestMapping(value = "/list/pmphdepartment", method = RequestMethod.GET)
-	public ResponseBean pmphdepartment(String dpName) {
+	@RequestMapping(value = "/list/department", method = RequestMethod.GET)
+	public ResponseBean department(String dpName) {
 		return new ResponseBean(pmphDepartmentService.listPmphUserDepartmentByDpName(dpName));
 	}
 }

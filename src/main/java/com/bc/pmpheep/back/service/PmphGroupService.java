@@ -43,7 +43,7 @@ public interface PmphGroupService {
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */
-	String deletePmphGroupById(PmphGroup pmphGroup, HttpServletRequest request) throws CheckedServiceException;
+	String deletePmphGroupById(PmphGroup pmphGroup, String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 更新小组持久化对象
@@ -72,7 +72,7 @@ public interface PmphGroupService {
 	 * @return List<PmphGroupListVO>
 	 * @throws CheckedServiceException
 	 */
-	List<PmphGroupListVO> listPmphGroup(PmphGroup pmphGroup, HttpServletRequest request) throws CheckedServiceException;
+	List<PmphGroupListVO> listPmphGroup(PmphGroup pmphGroup,String sessionId) throws CheckedServiceException;
 
 	/**
 	 *
@@ -87,7 +87,7 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PmphGroup addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, HttpServletRequest request)
+	PmphGroup addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup,String sessionId)
 			throws CheckedServiceException, IOException;
 
 	/**
@@ -103,6 +103,6 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, HttpServletRequest request)
+	PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, String sessionId)
 			throws CheckedServiceException, IOException;
 }

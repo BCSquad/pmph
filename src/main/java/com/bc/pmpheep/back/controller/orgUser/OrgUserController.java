@@ -45,10 +45,10 @@ public class OrgUserController {
 	 * @Param: OrgUserManagerVO
 	 * @Return:分页数据集
 	 */
-	@RequestMapping(value = "/list/orguser", method = RequestMethod.GET)
+	@RequestMapping(value = "/list/orgUser", method = RequestMethod.GET)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页查询机构用户")
 	@ResponseBody
-	public ResponseBean listOrgUser(@RequestParam("pageSize") Integer pageSize,
+	public ResponseBean orgUser(@RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
 			@RequestParam("orgName") String orgName) {
 		OrgAndOrgUserVO orgUserManagerVO = new OrgAndOrgUserVO();
@@ -68,10 +68,10 @@ public class OrgUserController {
 	 * @Param: OrgUser
 	 * @Return:新增的OrgUser
 	 */
-	@RequestMapping(value = "/addorguser", method = RequestMethod.POST)
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增一个机构用户")
 	@ResponseBody
-	public ResponseBean addorguser(OrgUser orgUser) {
+	public ResponseBean add(OrgUser orgUser) {
 		return new ResponseBean(orgUserService.addOrgUser(orgUser));
 	}
 
@@ -84,10 +84,10 @@ public class OrgUserController {
 	 * @Param: OrgUser
 	 * @Return:更新影响的行数
 	 */
-	@RequestMapping(value = "/updateorguser", method = RequestMethod.PUT)
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新机构用户信息")
 	@ResponseBody
-	public ResponseBean updateorguser(OrgUser orgUser) {
+	public ResponseBean update(OrgUser orgUser) {
 		return new ResponseBean(orgUserService.updateOrgUser(orgUser));
 	}
 
@@ -100,10 +100,10 @@ public class OrgUserController {
 	 * @Param: id
 	 * @Return:影响的行数
 	 */
-	@RequestMapping(value = "/deleteuser/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "通过id删除一个机构用户")
 	@ResponseBody
-	public ResponseBean deleteuser(Long id) {
+	public ResponseBean delete(Long id) {
 		return new ResponseBean(orgUserService.deleteOrgUserById(id));
 	}
 
@@ -116,10 +116,10 @@ public class OrgUserController {
 	 * @Param: id
 	 * @Return:OrgUser
 	 */
-	@RequestMapping(value = "/orguser/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/orgUser/{id}", method = RequestMethod.GET)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据id查询一个机构用户信息")
 	@ResponseBody
-	public ResponseBean orguser(Long id) {
+	public ResponseBean orgUser(Long id) {
 		return new ResponseBean(orgUserService.getOrgUserById(id));
 	}
 
@@ -133,10 +133,10 @@ public class OrgUserController {
 	 * @return 是否成功
 	 * 
 	 */
-	@RequestMapping(value = "/adduser", method = RequestMethod.POST)
+	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "添加用户")
 	@ResponseBody
-	public ResponseBean adduser(OrgUser orgUser) {
+	public ResponseBean addUser(OrgUser orgUser) {
 		return new ResponseBean(orgUserService.addOrgUserOfBack(orgUser));
 	}
 
@@ -150,10 +150,10 @@ public class OrgUserController {
 	 * @return 是否成功
 	 * 
 	 */
-	@RequestMapping(value = "/updateuser", method = RequestMethod.PUT)
+	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改用户")
 	@ResponseBody
-	public ResponseBean updateuser(OrgUser orgUser) {
+	public ResponseBean updateUser(OrgUser orgUser) {
 		System.out.println(orgUser.toString());
 		return new ResponseBean(orgUserService.updateOrgUserOfBack(orgUser));
 	}
@@ -165,10 +165,10 @@ public class OrgUserController {
 	 *            org
 	 * @return 是否成功
 	 */
-	@RequestMapping(value = "/add/orguserandorgofback", method = RequestMethod.POST)
+	@RequestMapping(value = "/add/orgAndUser", method = RequestMethod.POST)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "增加机构用户")
 	@ResponseBody
-	public ResponseBean orguserandorgofback(OrgUser orgUser, Org org) {
+	public ResponseBean orgAndUser(OrgUser orgUser, Org org) {
 		return new ResponseBean(orgUserService.addOrgUserAndOrgOfBack(orgUser, org));
 	}
 }

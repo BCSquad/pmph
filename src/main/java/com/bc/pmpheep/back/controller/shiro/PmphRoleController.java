@@ -99,7 +99,6 @@ public class PmphRoleController {
 	 * </pre>
      */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "跳转到更新角色的页面")
     @RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
     public ResponseBean update(@PathVariable("id") Long id) {
         PmphRole role = roleService.get(id);

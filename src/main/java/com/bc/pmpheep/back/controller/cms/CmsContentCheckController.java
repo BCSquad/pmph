@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.CmsContentService;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.vo.CmsContentVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -63,6 +64,7 @@ public class CmsContentCheckController {
 	public ResponseBean check(@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
 			@RequestParam(name = "pageSize") Integer pageSize, CmsContentVO cmsContentVO, HttpServletRequest request) {
 		PageParameter<CmsContentVO> pageParameter = new PageParameter<CmsContentVO>(pageNumber, pageSize, cmsContentVO);
+		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(cmsContentService.listContentCheck(pageParameter, sessionId));
 	}
 
@@ -82,6 +84,7 @@ public class CmsContentCheckController {
 	@RequestMapping(value = "/check/content", method = RequestMethod.PUT)
 	public ResponseBean content(@RequestParam("id") Long id, @RequestParam("authStatus") Short authStatus,
 			HttpServletRequest request) {
+		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(cmsContentService.checkContentById(id, authStatus, sessionId));
 	}
 

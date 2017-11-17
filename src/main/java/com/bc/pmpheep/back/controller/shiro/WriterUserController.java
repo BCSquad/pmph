@@ -190,8 +190,8 @@ public class WriterUserController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "分页查询作家用户")
-	@RequestMapping(value = "/list/writeruser", method = RequestMethod.GET)
-	public ResponseBean writeruser(@RequestParam("pageSize") Integer pageSize,
+	@RequestMapping(value = "/list/writerUser", method = RequestMethod.GET)
+	public ResponseBean writerUser(@RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
 			@RequestParam("rank") Integer rank, @RequestParam("orgName") String orgName) {
 		PageParameter pageParameter = new PageParameter<>();
@@ -217,8 +217,8 @@ public class WriterUserController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "添加用户")
-	@RequestMapping(value = "/adduser", method = RequestMethod.POST)
-	public ResponseBean adduser(WriterUser writerUser) {
+	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
+	public ResponseBean addUser(WriterUser writerUser) {
 		return new ResponseBean(writerUserService.addWriterUserOfBack(writerUser));
 	}
 
@@ -234,8 +234,8 @@ public class WriterUserController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "修改作家用户")
-	@RequestMapping(value = "/updateuser", method = RequestMethod.PUT)
-	public ResponseBean updateuser(WriterUser writerUser) {
+	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
+	public ResponseBean updateUser(WriterUser writerUser) {
 		return new ResponseBean(writerUserService.updateWriterUserOfBack(writerUser));
 	}
 
@@ -255,8 +255,8 @@ public class WriterUserController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = " 分页查询小组成员添加界面作家用户信息")
-	@RequestMapping(value = "/list/groupmember", method = RequestMethod.GET)
-	public ResponseBean listGroupMemberWriterUsers(Integer pageSize, Integer pageNumber, String bookname,
+	@RequestMapping(value = "/list/groupMember", method = RequestMethod.GET)
+	public ResponseBean groupMember(Integer pageSize, Integer pageNumber, String bookname,
 			Integer chosenPosition, String name) {
 		PageParameter<GroupMemberWriterUserVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		GroupMemberWriterUserVO groupMemberWriterUserVO = new GroupMemberWriterUserVO();

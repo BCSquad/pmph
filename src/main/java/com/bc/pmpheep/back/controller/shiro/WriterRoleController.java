@@ -153,7 +153,7 @@ public class WriterRoleController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据角色 id 和权限 id 增加一条用户权限关联数据")
-	@RequestMapping(value = "/resources", method = RequestMethod.POST)
+	@RequestMapping(value = "/resource", method = RequestMethod.POST)
 	public ResponseBean resource(@RequestParam("roleId") Long roleId,
 			@RequestParam("permissionIds") String permissionIds) {
 		String[] ids = permissionIds.split(",");

@@ -197,8 +197,8 @@ public class PmphUserController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页查询社内用户")
-	@RequestMapping(value = "/list/pmphuser", method = RequestMethod.GET)
-	public ResponseBean pmphuser(Integer pageSize, Integer pageNumber, String name, @RequestParam("path") String path,
+	@RequestMapping(value = "/list/pmphUser", method = RequestMethod.GET)
+	public ResponseBean pmphUser(Integer pageSize, Integer pageNumber, String name, @RequestParam("path") String path,
 			Long departmentId) {
 		PageParameter pageParameter = new PageParameter<>();
 		PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
@@ -223,8 +223,8 @@ public class PmphUserController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改社内用户")
-	@RequestMapping(value = "/update/pmphuserofback", method = RequestMethod.PUT)
-	public ResponseBean pmphuserofback(PmphUserManagerVO pmphUserManagerVO) {
+	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
+	public ResponseBean updateUser(PmphUserManagerVO pmphUserManagerVO) {
 		return new ResponseBean(userService.updatePmphUserOfBack(pmphUserManagerVO));
 	}
 
@@ -238,8 +238,8 @@ public class PmphUserController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "初始化获取社内所有部门")
-	@RequestMapping(value = "/list/pmphdepartment", method = RequestMethod.GET)
-	public ResponseBean pmphdepartment() {
+	@RequestMapping(value = "/list/pmphDepartment", method = RequestMethod.GET)
+	public ResponseBean pmphDepartment() {
 		return new ResponseBean(pmphDepartmentService.listPmphDepartment(null));
 	}
 }

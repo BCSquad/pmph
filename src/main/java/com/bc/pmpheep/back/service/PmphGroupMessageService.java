@@ -41,7 +41,7 @@ public interface PmphGroupMessageService {
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */
-	String deletePmphGroupMessageById(Long id, HttpServletRequest request) throws CheckedServiceException, IOException;
+	String deletePmphGroupMessageById(Long id, String sessionId) throws CheckedServiceException, IOException;
 
 	/**
 	 * @param pmphGroupMessage
@@ -68,7 +68,7 @@ public interface PmphGroupMessageService {
 	 * @throws IOException
 	 *
 	 */
-	String addGroupMessage(String msgConrent, Long groupId, HttpServletRequest request, Short senderType)
+	String addGroupMessage(String msgConrent, Long groupId, String sessionId, Short senderType)
 			throws CheckedServiceException, IOException;
 
 	/**

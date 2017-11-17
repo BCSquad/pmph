@@ -108,11 +108,11 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public List<PmphGroupMemberVO> listPmphGroupMember(Long groupId, HttpServletRequest request)
+	public List<PmphGroupMemberVO> listPmphGroupMember(Long groupId, String sessionId)
 			throws CheckedServiceException {
 
 		if (null == groupId || groupId == 0) {
-			List<PmphGroupListVO> myPmphGroupListVOList = pmphGroupService.listPmphGroup(new PmphGroup(), request);
+			List<PmphGroupListVO> myPmphGroupListVOList = pmphGroupService.listPmphGroup(new PmphGroup(), sessionId);
 			if (null == myPmphGroupListVOList || myPmphGroupListVOList.size() == 0) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 						"你没有小组！");

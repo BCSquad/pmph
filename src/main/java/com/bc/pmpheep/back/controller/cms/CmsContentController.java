@@ -16,6 +16,7 @@ import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.service.CmsContentService;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.vo.CmsContentVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -67,6 +68,7 @@ public class CmsContentController {
     HttpServletRequest request) {
         PageParameter<CmsContentVO> pageParameter =
         new PageParameter<CmsContentVO>(pageNumber, pageSize, cmsContentVO);
+        String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(cmsContentService.listCmsContent(pageParameter, sessionId));
     }
 
@@ -92,6 +94,7 @@ public class CmsContentController {
     @RequestParam("content") String content, @RequestParam("scheduledTime") String scheduledTime,
     HttpServletRequest request) {
         try {
+        	String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(cmsContentService.addCmsContent(cmsContent,
                                                                     files,
                                                                     content,
@@ -170,6 +173,7 @@ public class CmsContentController {
     @RequestParam("content") String content, @RequestParam("attachment") String[] attachment,
     @RequestParam("scheduledTime") String scheduledTime, HttpServletRequest request) {
         try {
+        	String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(cmsContentService.updateCmsContent(cmsContent,
                                                                        files,
                                                                        content,
