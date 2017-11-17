@@ -93,8 +93,7 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object object,
     ModelAndView modelAndView) throws Exception {
-
-        String requestUri = request.getRequestURI();// 完 整请求路径
+        String requestUri = request.getRequestURI();// 完整请求路径
         String contextPath = request.getContextPath();// 项目路径
         String url = requestUri.substring(contextPath.length());// 模块路径
         if (!url.matches(Const.NO_INTERCEPTOR_PATH)) {

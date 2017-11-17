@@ -128,8 +128,7 @@ public class PmphLoginController {
             request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
                                               new DesRun(password, username).enpsw);
             // pmphUserSessionId
-            System.out.println("sessionId= ====" + request.getSession().getId());
-            resultMap.put(Const.USER_SEESION_ID, new DesRun("", request.getSession().getId()).enpsw);
+            resultMap.put(Const.USER_SEESION_ID, request.getSession().getId());
             resultMap.put(Const.SESSION_PMPH_USER, pmphUser);
             resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun(password, username).enpsw);
             resultMap.put("pmphUserPermissionIds", pmphUserPermissionIds);
@@ -173,11 +172,12 @@ public class PmphLoginController {
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public ResponseBean logout(@RequestParam("sessionId") String sessionId,
     @RequestParam("loginType") Short loginType) {
-        HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
+        HttpSession session = SessionContext.getSession(sessionId);
         if (ObjectUtil.notNull(session)) {
             if (Const.LOGIN_TYPE_PMPH == loginType) {
-                session.removeAttribute(Const.SESSION_PMPH_USER);// 清除User信息
-                session.removeAttribute(Const.SEESION_PMPH_USER_TOKEN);// 清除token
+                // session.removeAttribute(Const.SESSION_PMPH_USER);// 清除User信息
+                // session.removeAttribute(Const.SEESION_PMPH_USER_TOKEN);// 清除token
+                session.invalidate();
             }
         }
         return new ResponseBean();
