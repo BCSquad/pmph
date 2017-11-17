@@ -79,7 +79,7 @@ public interface PmphDepartmentService {
 	List<PmphUserDepartmentVO> listPmphUserDepartmentByDpName(String dpName) throws CheckedServiceException;
 
 	/**
-	 * 删除该部门以及下属部门
+	 * 删除该部门
 	 * 
 	 * @author Mryang
 	 * @createDate 2017年9月26日 下午3:39:03

@@ -28,26 +28,47 @@ public class OrgTypeSeviceTest extends BaseTest {
 
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void addArea() {
+	public void testAddOrgType() {
 		OrgType orgType = new OrgType("测试", 0);
 		orgTypeService.addOrgType(orgType);
-		logger.info("---OrgTypeService--------------------------------------------------------------------------");
-		Assert.assertTrue("添加失败",orgType.getId() > 0 );
+		Assert.assertTrue("添加失败", orgType.getId() > 0);
+	}
+
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testUpdateOrgType() {
+		OrgType orgType = new OrgType("测试", 0);
+		orgTypeService.addOrgType(orgType);
+		Assert.assertTrue("添加失败", orgType.getId() > 0);
 		orgType.setTypeName("ceshiwwwwwwww" + orgType.getId());
-		Assert.assertTrue("更新失败", orgTypeService.updateOrgType(orgType) > 0 );
-		Assert.assertTrue("删除失败",orgTypeService.deleteOrgTypeById(1L) >= 0 );
-		Assert.assertNotNull("获取数据失败",orgTypeService.getOrgType(2L));
-		Assert.assertNotNull("获取数据失败", orgTypeService.listOrgTypeByTypeName(null));
-		List<OrgType> orgTypeList=orgTypeService.listOrgTypeByTypeName(null);
+		Assert.assertTrue("更新失败", orgTypeService.updateOrgType(orgType) > 0);
+	}
+
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testDeleteOrgType() {
+		OrgType orgType = new OrgType("测试", 0);
+		orgTypeService.addOrgType(orgType);
+		Assert.assertTrue("添加失败", orgType.getId() > 0);
+		Assert.assertTrue("删除失败", orgTypeService.deleteOrgTypeById(orgType.getId()) >= 0);
+	}
+
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testGetOrgType() {
+		OrgType orgType = new OrgType("测试", 0);
+		orgTypeService.addOrgType(orgType);
+		Assert.assertTrue("添加失败", orgType.getId() > 0);
+		Assert.assertNotNull("获取数据失败", orgTypeService.getOrgType(orgType.getId()));
+	}
+
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testListOrgType() {
+		OrgType orgType = new OrgType("测试", 0);
+		orgTypeService.addOrgType(orgType);
+		Assert.assertTrue("添加失败", orgType.getId() > 0);
+		Assert.assertNotNull("获取数据失败", orgTypeService.listOrgTypeByTypeName("测试"));
 	}
 
 }
-
-
-
-
-
-
-
-
-

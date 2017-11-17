@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service.test;
 
+import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Resource;
@@ -28,39 +29,62 @@ public class PmphDepartmentSeviceTest extends BaseTest {
 
 	@Resource
 	private PmphDepartmentService pmphDepartmentService;
+	Random random = new Random();
+	PmphDepartment pmphDepartment = new PmphDepartment(5L, "String path", "String dpName", random.nextInt(1000000),
+			"String note");
 
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void test() {
-		Random random = new Random();
-		PmphDepartment pmphDepartment = new PmphDepartment(5L, "String path", "String dpName", random.nextInt(1000000),
-				"String note");
+	public void testAddPmphDepartment() {
 		pmphDepartmentService.addPmphDepartment(pmphDepartment);
-		logger.info(
-				"---PmphDepartmentService---------------------------------------------------------------------------");
 		Assert.assertTrue("添加失败", pmphDepartment.getId() > 0);
+	}
+
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testAddDepartment() {
+		pmphDepartmentService.add(pmphDepartment);
+		Assert.assertTrue("添加失败", pmphDepartment.getId() > 0);
+	}
+
+	@Test
+	public void testUpdatePmphDepartment() {
+		pmphDepartmentService.addPmphDepartment(pmphDepartment);
 		pmphDepartment.setDpName(String.valueOf(random.nextLong()));
 		Assert.assertTrue("更新失败", pmphDepartmentService.updatePmphDepartment(pmphDepartment) > 0);
-		Assert.assertTrue("删除失败", pmphDepartmentService.deletePmphDepartmentById(2L) >= 0);
-		Assert.assertNotNull("获取数据失败", pmphDepartmentService.getPmphDepartmentById(1L));
+	}
+
+	@Test
+	public void testDeletePmphDepartment() {
+		pmphDepartmentService.addPmphDepartment(pmphDepartment);
+		Assert.assertTrue("删除失败", pmphDepartmentService.deletePmphDepartmentById(pmphDepartment.getId()) >= 0);
+	}
+	
+	@Test
+	public void testDeletePmphDepartmentBatch() {
+		pmphDepartmentService.addPmphDepartment(pmphDepartment);
+		Assert.assertTrue("删除失败", pmphDepartmentService.deletePmphDepartmentBatch(pmphDepartment.getId()) >= 0);
+	}
+
+	@Test
+	public void testGetPmphDepartment() {
+		pmphDepartmentService.addPmphDepartment(pmphDepartment);
+		Assert.assertNotNull("获取数据失败", pmphDepartmentService.getPmphDepartmentById(pmphDepartment.getId()));
+	}
+
+	@Test
+	public void testListPmphDepartment() {
+		pmphDepartmentService.addPmphDepartment(pmphDepartment);
 		PmphUserDepartmentVO departmentVO = pmphDepartmentService.listPmphDepartment(0L);
 		Assert.assertNotNull("获取数据失败", departmentVO);
 	}
 
 	@Test
-	public void pmphDepartmentServiceTest() {
-		Long id = 0L;
-		Assert.assertTrue("删除失败", pmphDepartmentService.deletePmphDepartmentBatch(id) > 0);
-		String dpName = "人民";
-		Assert.assertTrue("获取数据失败",
-				CollectionUtil.isNotEmpty(pmphDepartmentService.listPmphUserDepartmentByDpName(dpName)));
+	public void testListPmphUserDepartmentByDpName() {
+		pmphDepartmentService.addPmphDepartment(pmphDepartment);
+		List<PmphUserDepartmentVO> list = pmphDepartmentService
+				.listPmphUserDepartmentByDpName(pmphDepartment.getDpName());
+		Assert.assertNotNull("获取数据失败", list);
+	}
 
-	}
-	
-	@Test
-	public void deletePmphDepartmentBatch(){
-		Long id = 197L;
-		pmphDepartmentService.deletePmphDepartmentBatch(id);
-		System.out.println(pmphDepartmentService.getPmphDepartmentById(id));
-	}
 }

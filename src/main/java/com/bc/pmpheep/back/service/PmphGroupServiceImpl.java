@@ -94,7 +94,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public String deletePmphGroupById(PmphGroup pmphGroup,String sessionId) throws CheckedServiceException {
+	public String deletePmphGroupById(PmphGroup pmphGroup, String sessionId) throws CheckedServiceException {
 		String result = "FAIL";
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
@@ -178,8 +178,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public List<PmphGroupListVO> listPmphGroup(PmphGroup pmphGroup, String sessionId)
-			throws CheckedServiceException {
+	public List<PmphGroupListVO> listPmphGroup(PmphGroup pmphGroup, String sessionId) throws CheckedServiceException {
 		if (null == pmphGroup) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"参数对象为空");
@@ -208,7 +207,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	@Override
 	public PmphGroup addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, String sessionId)
 			throws CheckedServiceException, IOException {
-		
+
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
@@ -216,7 +215,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		}
 		if (ObjectUtil.notNull(pmphGroupDao.getPmphGroupByGroupName(pmphGroup.getGroupName()))) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-					"您的小组名称已经被使用了");
+					"该小组名称已被使用，请重新输入");
 		}
 		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		if (null != file) {
