@@ -64,7 +64,7 @@ public class PmphRoleController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseBean list(@RequestParam("roleName") String roleName) {
         List<PmphRole> roleList =
-        roleService.getList(StringUtil.isEmpty(roleName) ? roleName : roleName.trim());
+        roleService.getList(roleName.replaceAll(" ", ""));
         return new ResponseBean(roleList);
     }
 

@@ -48,13 +48,12 @@ public class OrgUserController {
 	@RequestMapping(value = "/list/orguser", method = RequestMethod.GET)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页查询机构用户")
 	@ResponseBody
-	public ResponseBean orguser(@RequestParam("pageSize") Integer pageSize,
-			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("username") String username,
-			@RequestParam("realname") String realname, @RequestParam("orgName") String orgName) {
+	public ResponseBean listOrgUser(@RequestParam("pageSize") Integer pageSize,
+			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
+			@RequestParam("orgName") String orgName) {
 		OrgAndOrgUserVO orgUserManagerVO = new OrgAndOrgUserVO();
-		orgUserManagerVO.setUsername(StringUtil.isEmpty(username) ? null : username.trim());
-		orgUserManagerVO.setRealname(StringUtil.isEmpty(realname) ? null : realname.trim());
-		orgUserManagerVO.setOrgName(StringUtil.isEmpty(orgName) ? null : orgName.trim());
+		orgUserManagerVO.setName(name.replaceAll(" ", ""));// 去除空格
+		orgUserManagerVO.setOrgName(orgName.replaceAll(" ", ""));
 		PageParameter<OrgAndOrgUserVO> pageParameter = new PageParameter<OrgAndOrgUserVO>(pageNumber, pageSize,
 				orgUserManagerVO);
 		return new ResponseBean(orgUserService.getListOrgUser(pageParameter));

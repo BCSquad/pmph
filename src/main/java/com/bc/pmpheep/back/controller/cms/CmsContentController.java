@@ -87,8 +87,8 @@ public class CmsContentController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增文章")
-    @RequestMapping(value = "/new_content", method = RequestMethod.POST)
-    public ResponseBean new_content(CmsContent cmsContent, @RequestParam("file") String[] files,
+    @RequestMapping(value = "/newContent", method = RequestMethod.POST)
+    public ResponseBean newContent(CmsContent cmsContent, @RequestParam("file") String[] files,
     @RequestParam("content") String content, @RequestParam("scheduledTime") String scheduledTime,
     HttpServletRequest request) {
         try {

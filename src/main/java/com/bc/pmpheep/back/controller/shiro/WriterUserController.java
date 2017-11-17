@@ -196,8 +196,8 @@ public class WriterUserController {
 			@RequestParam("rank") Integer rank, @RequestParam("orgName") String orgName) {
 		PageParameter pageParameter = new PageParameter<>();
 		WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
-		writerUserManagerVO.setName(StringUtil.isEmpty(name) ? null : name.trim());
-		writerUserManagerVO.setOrgName(StringUtil.isEmpty(orgName) ? null : orgName.trim());
+		writerUserManagerVO.setName(name.replaceAll(" ", ""));//去除空格
+		writerUserManagerVO.setOrgName(orgName.replaceAll(" ", ""));
 		writerUserManagerVO.setRank(rank);
 		pageParameter.setPageNumber(pageNumber);
 		pageParameter.setPageSize(pageSize);

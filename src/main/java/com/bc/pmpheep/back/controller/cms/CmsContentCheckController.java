@@ -85,37 +85,37 @@ public class CmsContentCheckController {
 		return new ResponseBean(cmsContentService.checkContentById(id, authStatus, sessionId));
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 功能描述：社外内容审核操作(逻辑删除)
-	 * 使用示范：
-	 *
-	 * &#64;param ids 主键ID集合
-	 * &#64;return 影响行数
-	 * </pre>
-	 */
-	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除一条公告管理数据")
-	@RequestMapping(value = "/check/{id}/update_content", method = RequestMethod.DELETE)
-	public ResponseBean update_content(@PathVariable("id") Long id) {
-		return new ResponseBean(cmsContentService.deleteCmsContentById(id));
-	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 功能描述：社外内容审核操作(批量逻辑删除)
-	 * 使用示范：
-	 *
-	 * &#64;param ids 主键ID集合
-	 * &#64;return 影响行数
-	 * </pre>
-	 */
-	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除公告管理数据")
-	@RequestMapping(value = "/check/delete_content", method = RequestMethod.DELETE)
-	public ResponseBean delete_content(@RequestParam("ids") List<Long> ids) {
-		return new ResponseBean(cmsContentService.deleteCmsContentByIds(ids));
-	}
+    /**
+     * 
+     * <pre>
+     * 功能描述：社外内容审核操作(逻辑删除)
+     * 使用示范：
+     *
+     * @param ids 主键ID集合
+     * @return 影响行数
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除一条公告管理数据")
+    @RequestMapping(value = "/check/{id}/update", method = RequestMethod.DELETE)
+    public ResponseBean update(@PathVariable("id") Long id) {
+        return new ResponseBean(cmsContentService.deleteCmsContentById(id));
+    }
+    /**
+     * 
+     * <pre>
+     * 功能描述：社外内容审核操作(批量逻辑删除)
+     * 使用示范：
+     *
+     * @param ids 主键ID集合
+     * @return 影响行数
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除公告管理数据")
+    @RequestMapping(value = "/check/delete", method = RequestMethod.DELETE)
+    public ResponseBean delete(@RequestParam("ids") List<Long> ids) {
+        return new ResponseBean(cmsContentService.deleteCmsContentByIds(ids));
+    }
 }

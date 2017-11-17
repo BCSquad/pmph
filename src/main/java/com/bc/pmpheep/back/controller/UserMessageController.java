@@ -103,8 +103,8 @@ public class UserMessageController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "加载选择对象业务数据")
-    @RequestMapping(value = "/message/send_object", method = RequestMethod.GET)
-    public ResponseBean send_object(@RequestParam("sendType") Integer sendType,
+    @RequestMapping(value = "/message/sendObject", method = RequestMethod.GET)
+    public ResponseBean sendObject(@RequestParam("sendType") Integer sendType,
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, @RequestParam("orgName") String orgName,
     @RequestParam("userNameOrUserCode") String userNameOrUserCode,
@@ -129,8 +129,8 @@ public class UserMessageController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询书籍列表")
-    @RequestMapping(value = "/message/send_object/{materialId}/text_book", method = RequestMethod.GET)
-    public ResponseBean text_book(@PathVariable("materialId") Long materialId) {
+    @RequestMapping(value = "/message/send_object/{materialId}/textBook", method = RequestMethod.GET)
+    public ResponseBean textBook(@PathVariable("materialId") Long materialId) {
         return new ResponseBean(textbookService.getTextBookByMaterialId(materialId));
     }
 
@@ -148,8 +148,8 @@ public class UserMessageController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "选择向各个对象发送消息")
-    @RequestMapping(value = "/new_message", method = RequestMethod.POST)
-    public ResponseBean new_message(Message message, @RequestParam("title") String title,
+    @RequestMapping(value = "/newMessage", method = RequestMethod.POST)
+    public ResponseBean newMessage(Message message, @RequestParam("title") String title,
     @RequestParam("sendType") Integer sendType, @RequestParam("orgIds") String orgIds,
     @RequestParam("senderId") Long senderId, @RequestParam("userIds") String userIds,
     @RequestParam("bookIds") String bookids, @RequestParam("file") String[] files,
@@ -237,8 +237,8 @@ public class UserMessageController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改消息内容")
-    @RequestMapping(value = "/update_message", method = RequestMethod.PUT)
-    public ResponseBean update_message(Message message, @RequestParam("msgId") String msgId,
+    @RequestMapping(value = "/updateMessage", method = RequestMethod.PUT)
+    public ResponseBean updateMessage(Message message, @RequestParam("msgId") String msgId,
     @RequestParam("msgTitle") String msgTitle, @RequestParam("file") String[] files,
     @RequestParam("attachment") String[] attachment) {
         try {
@@ -300,8 +300,8 @@ public class UserMessageController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除消息")
-    @RequestMapping(value = "/delete_message", method = RequestMethod.PUT)
-    public ResponseBean delete_message(@RequestParam("msgIds") List<String> msgIds) {
+    @RequestMapping(value = "/deleteMessage", method = RequestMethod.PUT)
+    public ResponseBean deleteMessage(@RequestParam("msgIds") List<String> msgIds) {
         return new ResponseBean(userMessageService.updateUserMessageIsDeletedByMsgId(msgIds));
 
     }

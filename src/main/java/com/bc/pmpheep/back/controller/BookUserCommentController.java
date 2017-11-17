@@ -45,7 +45,7 @@ public class BookUserCommentController {
 		PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
 		bookUserCommentVO.setIsAuth(isAuth);
-		bookUserCommentVO.setName(name);
+		bookUserCommentVO.setName(name.replaceAll(" ",""));//去除空格
 		pageParameter.setParameter(bookUserCommentVO);
 		return new ResponseBean(bookUserCommentService.listBookUserComment(pageParameter));
 	}
