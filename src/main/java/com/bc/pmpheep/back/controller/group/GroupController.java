@@ -74,7 +74,7 @@ public class GroupController {
 		 */
 		PmphGroup pmphGroup = new PmphGroup();
 		if (ObjectUtil.notNull(groupName)) {
-			pmphGroup.setGroupName(groupName.trim());
+			pmphGroup.setGroupName(groupName.replaceAll(" ", ""));//去空格
 		}
 		return new ResponseBean(pmphGroupService.listPmphGroup(pmphGroup, sessionId));
 	}

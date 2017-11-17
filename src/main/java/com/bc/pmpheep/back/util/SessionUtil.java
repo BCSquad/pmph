@@ -98,7 +98,7 @@ public class SessionUtil {
      * </pre>
      */
     public static PmphUser getPmphUserBySessionId(String sessionId) throws CheckedServiceException {
-        HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
+        HttpSession session = SessionContext.getSession(sessionId);
         if (ObjectUtil.isNull(session)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
                                               CheckedExceptionResult.USER_SESSION,
@@ -153,7 +153,7 @@ public class SessionUtil {
      */
     public static WriterUser getWriterUserBySessionId(String sessionId)
     throws CheckedServiceException {
-        HttpSession session = SessionContext.getSession(new DesRun(sessionId).depsw);
+        HttpSession session = SessionContext.getSession(sessionId);
         if (ObjectUtil.isNull(session)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.SESSION,
                                               CheckedExceptionResult.USER_SESSION,
