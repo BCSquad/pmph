@@ -165,7 +165,7 @@ public class MigrationStageSeven {
 							
 						}
 						if(null != mongoId ){
-							msgcontent = msgcontent.replace(src, SQLParameters.severPath+"/image/"+mongoId);
+							msgcontent = msgcontent.replace(src, "/image/"+mongoId);
 						}
 					}
 				}

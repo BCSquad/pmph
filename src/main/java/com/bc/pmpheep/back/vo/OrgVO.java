@@ -91,7 +91,7 @@ public class OrgVO implements Serializable {
     }
 
     public void setOrgName(String orgName) {
-        this.orgName = (orgName==null?null:orgName.trim());
+        this.orgName = orgName;
     }
 
     public String getOrgTypeId() {
@@ -203,7 +203,7 @@ public class OrgVO implements Serializable {
      * @param realname the realname to set
      */
     public void setRealname(String realname) {
-        this.realname = (realname==null?null:realname.trim());
+        this.realname = realname;
     }
 
     public Timestamp getGmtCreate() {

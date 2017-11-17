@@ -65,11 +65,18 @@ public class SchoolAndTeacherCheckController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
-    @RequestMapping(value = "/org_list", method = RequestMethod.GET)
-    public ResponseBean org_list(
+    @RequestMapping(value = "/orgList", method = RequestMethod.GET)
+    public ResponseBean orgList(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
-    @RequestParam(name = "pageSize") Integer pageSize, OrgVO orgVO) {
-        PageParameter<OrgVO> pageParameter = new PageParameter<OrgVO>(pageNumber, pageSize, orgVO);
+    @RequestParam("orgName") String orgName,@RequestParam("realname") String realname,
+    @RequestParam(name = "pageSize") Integer pageSize) {
+    	PageParameter pageParameter = new PageParameter<>();
+    	OrgVO orgVO=new OrgVO();
+    	orgVO.setOrgName(orgName.replaceAll(" ", ""));
+    	orgVO.setRealname(realname.replaceAll(" ", ""));
+		pageParameter.setPageNumber(pageNumber);
+		pageParameter.setPageSize(pageSize);
+		pageParameter.setParameter(orgVO);
         return new ResponseBean(orgService.getSchoolAdminCheckList(pageParameter));
     }
 
@@ -86,8 +93,8 @@ public class SchoolAndTeacherCheckController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
-    @RequestMapping(value = "/org_check", method = RequestMethod.PUT)
-    public ResponseBean org_check(@RequestParam(name = "progress") Integer progress,
+    @RequestMapping(value = "/orgCheck", method = RequestMethod.PUT)
+    public ResponseBean orgCheck(@RequestParam(name = "progress") Integer progress,
     @RequestParam(name = "orgUserIds") List<Long> orgUserIds) {
         return new ResponseBean(orgUserService.updateOrgUserProgressById(progress, orgUserIds));
     }
@@ -106,8 +113,8 @@ public class SchoolAndTeacherCheckController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
-    @RequestMapping(value = "/writer_list", method = RequestMethod.GET)
-    public ResponseBean writer_list(
+    @RequestMapping(value = "/writerList", method = RequestMethod.GET)
+    public ResponseBean writerList(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, WriterUserManagerVO writerUserManagerVO) {
         PageParameter<WriterUserManagerVO> pageParameter =
@@ -128,8 +135,8 @@ public class SchoolAndTeacherCheckController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
-    @RequestMapping(value = "/writer_check", method = RequestMethod.PUT)
-    public ResponseBean writer_check(@RequestParam(name = "progress") Short progress,
+    @RequestMapping(value = "/writerCheck", method = RequestMethod.PUT)
+    public ResponseBean writerCheck(@RequestParam(name = "progress") Short progress,
     @RequestParam(name = "userIds") String[] userIds) {
         return new ResponseBean(
                                 writerUserCertificationService.updateWriterUserCertificationProgressByUserId(progress,

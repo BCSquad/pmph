@@ -315,14 +315,13 @@
 		left join org o on o.id = u.org_id
 		left join org_type ot on ot.id=o.org_type_id 
 		where 1=1
-		<if test="parameter.username !=null and parameter.username !='' ">
-			and u.username like concat('%',#{parameter.username},'%')
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (u.username like concat('%',#{parameter.name},'%' ) or
+			o.org_name like
+			concat('%',#{parameter.name},'%' ) )
 		</if>
 		<if test="parameter.realname !=null and parameter.realname !=''">
 			and u.realname like concat('%',#{parameter.realname},'%')
-		</if>
-		<if test="parameter.orgName !=null and parameter.orgName !=''">
-			and o.org_name like concat('%',#{parameter.orgName},'%')
 		</if>
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}

@@ -3,6 +3,7 @@ package com.bc.pmpheep.migration.test;
 import javax.annotation.Resource;
 
 import org.junit.Test;
+import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.migration.MigrationStageSix;
 import com.bc.pmpheep.test.BaseTest;
@@ -18,6 +19,7 @@ public class MigrationStageSixTest extends BaseTest {
 	MigrationStageSix migrationStageSix;
 	
 	@Test
+	@Rollback(true)
 	public void demo() throws Exception {
 		migrationStageSix.start();
 	}

@@ -18,7 +18,9 @@ import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
 import com.bc.pmpheep.back.vo.OrgUserManagerVO;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -53,14 +55,15 @@ public class OrgUserSeviceTest extends BaseTest {
     public void getListOrgUserVO() {
         PageParameter pageParameter = new PageParameter<>();
         PageResult pageResult = new PageResult<>();
-        OrgUserManagerVO managerVO = new OrgUserManagerVO();
-        managerVO.setUsername("mmmmmmm");
+        OrgAndOrgUserVO managerVO = new OrgAndOrgUserVO();
+        managerVO.setUsername("m5");
         managerVO.setRealname(null);
         managerVO.setOrgName(null);
         pageParameter.setParameter(managerVO);
+        pageParameter.setStart(1);
         pageParameter.setPageSize(15);
         pageResult = orgUserService.getListOrgUser(pageParameter);
-        Assert.assertTrue("更新失败", pageResult.getRows().isEmpty());
+        Assert.assertNotNull("获取失败", pageResult);
     }
 
     @Test
@@ -109,12 +112,14 @@ public class OrgUserSeviceTest extends BaseTest {
     public void addOrgUserAndOrgOfBack(){
     	Org org=new Org();
     	OrgUser orgUser=new OrgUser();
-    	org.setAreaId(9999L);//所属区域
-    	org.setOrgTypeId(2L);//机构类型
-    	org.setSort(999);//排序码
+    	org.setAreaId(12345L);//所属区域
+    	org.setOrgTypeId(4L);//机构id
+    	orgUser.setRealname(null);
+    	org.setSort(null);//排序码
     	org.setNote(null);//备注
-    	org.setOrgName("机构名称1");//管理员姓名
-    	orgUser.setUsername("mmmmmmm");//机构代码
+    	orgUser.setOrgId(org.getId());
+    	org.setOrgName("测试机构9");//管理员姓名
+    	orgUser.setUsername("m9");//机构代码
     	orgUser.setEmail(null);
     	orgUser.setHandphone(null);
     	Assert.assertNotNull("添加失败",orgUserService.addOrgUserAndOrgOfBack(orgUser, org));
