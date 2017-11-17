@@ -132,89 +132,111 @@ public class JdbcHelper {
         }
         return path;
     }
-    
+
     /**
-     * 
+     *
      * Description:判断表中唯一值方法
+     *
      * @author:若表中除主键外有需要判断重复值的列，调用此方法，若重名，返回true，否则返回false
      * @date:2017年11月3日上午2:41:47
      * @param list 装有需要判断字段值的集合
      * @param name 需要判断的具体值
      * @return boolean
      */
-    public static boolean nameDuplicate (List<String> list ,String name){
-    	boolean flag = false;
-    	if (list.contains(name)){
-    		flag = true;
-    	}
-    	return flag;
+    public static boolean nameDuplicate(List<String> list, String name) {
+        boolean flag = false;
+        if (list.contains(name)) {
+            flag = true;
+        }
+        return flag;
     }
-    
+
     /**
-     * 
+     *
      * Description:判断教龄数据是否符合规范
+     *
      * @author:lyc
      * @date:2017年11月9日下午3:35:10
-     * @param 教龄
+     * @param experience 教龄
      * @return boolean
      */
-    public static boolean judgeExperience (String experience){
-    	boolean flag = true;
-    	if (StringUtil.notEmpty(experience) && StringUtil.isNumeric(experience) 
-    			&& StringUtil.strLength(experience) < 3){
-    		flag = false;
-    	}
-    	return flag;
+    public static boolean judgeExperience(String experience) {
+        boolean flag = true;
+        if (StringUtil.notEmpty(experience) && StringUtil.isNumeric(experience)
+                && StringUtil.strLength(experience) < 3) {
+            flag = false;
+        }
+        return flag;
     }
-    
+
     /**
-     * 
+     *
      * Description:将不符合规范的教龄修改为合乎规范的数据
+     *
      * @author:lyc
      * @date:2017年11月9日下午3:40:11
-     * @param 教龄
+     * @param experience 教龄
      * @return 合乎规范的教龄数据
      */
-    public static String correctExperience (String experience){
-    	if (StringUtil.isEmpty(experience) || "无".equals(experience) || "、".equals(experience)){
-    		experience = "0" ;
-    	}
-        if (experience.indexOf("岁") != -1){
-        	experience = experience.substring(0, experience.lastIndexOf("岁"));
-        	Integer age = Integer.parseInt(experience);
-        	age = age - 20 ;
-        	experience = String.valueOf(age);
-        }else{
-        	experience = experience.replace("年", "").replace("五", "5").replace("s", "").replace(" ", "")
-        			.replace("内", "");
-        	if (StringUtil.strLength(experience) > 2){
-        		experience = experience.substring(0,2);
-        	}
+    public static String correctExperience(String experience) {
+        if (StringUtil.isEmpty(experience) || "无".equals(experience) || "、".equals(experience)) {
+            experience = "0";
         }
-    	return experience;
+        if (experience.contains("岁")) {
+            experience = experience.substring(0, experience.lastIndexOf("岁"));
+            Integer age = Integer.parseInt(experience);
+            age = age - 20;
+            experience = String.valueOf(age);
+        } else {
+            experience = experience.replace("年", "").replace("五", "5").replace("s", "").replace(" ", "")
+                    .replace("内", "");
+            if (StringUtil.strLength(experience) > 2) {
+                experience = experience.substring(0, 2);
+            }
+        }
+        return experience;
     }
-    
+
     /**
-     * 
+     *
      * Description:计算每个模块（图）迁移所耗时间
+     *
+     * @param begin 每个模块迁移程序启动时的系统时间
+     * @return
      * @author:lyc
      * @date:2017年11月15日下午5:51:26
-     * @param 每个模块迁移程序启动时的系统时间
-     * @return String
      */
-    public static String migrationTime (Date beforeTime){
-    	Date nowTime = new Date(System.currentTimeMillis());
-    	long timeValue = (nowTime.getTime() - beforeTime.getTime()) / 1000; 
-    	String time = "迁移共用时：{" + timeValue + "}秒钟";
-    	if (timeValue > 600){
-    		timeValue = timeValue / 60;
-    		time = "迁移共用时：{" + timeValue + "}分钟";
-    	}
-    	if (timeValue > 3600){
-    		long min = timeValue / 60 % 60;
-    		timeValue = timeValue / 60 / 60;
-    		time = "迁移共用时：{" + timeValue + "}小时{" + min + "}分钟";
-    	}
-    	return time;
+    public static String getPastTime(Date begin) {
+        StringBuilder sb = new StringBuilder();
+        Date end = new Date();
+        long milliseconds = end.getTime() - begin.getTime();
+        if (milliseconds < 1000) {
+            sb.append(milliseconds);
+            sb.append("毫秒");
+            return sb.toString();
+        }
+        long second = milliseconds / 1000;
+        long hour = 0, minute = 0;
+        if (second > 3600) {
+            hour = second / 3600;
+            second = second % 3600;
+            minute = second / 60;
+            second = second % 60;
+        }
+        if (second > 60) {
+            minute = second / 60;
+            second = second % 60;
+        }
+        if (hour > 0) {
+            sb.append(hour);
+            sb.append("小时");
+        }
+        if (hour > 0 || minute > 0) {
+            sb.append(minute);
+            sb.append("分");
+        }
+        sb.append(second);
+        sb.append("秒");
+        return sb.toString();
     }
 }

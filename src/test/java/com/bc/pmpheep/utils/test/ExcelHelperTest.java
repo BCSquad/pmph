@@ -29,6 +29,7 @@ public class ExcelHelperTest extends BaseTest {
     ExcelHelper excelHelper;
 
     @Test
+    @SuppressWarnings("deprecation")
     public void fromPersistentObject() throws IOException, SecurityException, IllegalArgumentException, IllegalAccessException {
         List<Area> list = new ArrayList();
         Area area = new Area(1L, "北京", 999);

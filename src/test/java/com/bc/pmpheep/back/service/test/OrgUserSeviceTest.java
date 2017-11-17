@@ -98,37 +98,29 @@ public class OrgUserSeviceTest extends BaseTest {
 		Assert.assertTrue("添加失败", result.equals("SUCCESS"));
 	}
 
-	@Test
-	public void testUpdateOrgUserOfBack() {
-		OrgUser orgUser = new OrgUser();
-		orgUser = orgUserService.getOrgUserById(5L);
-		orgUser.setOrgId(10L);
-		String result = orgUserService.updateOrgUserOfBack(orgUser);
-		Assert.assertTrue("更新失败", result.equals("SUCCESS"));
-	}
 
-	@Test
-	public void updateOrgUserProgressById() {
-		List<Long> list = new ArrayList<Long>();
-		list.add(1l);
-		Assert.assertNotNull("更新审核状态失败", orgUserService.updateOrgUserProgressById(1, list));
-	}
-
-	@Test
-	public void addOrgUserAndOrgOfBack() {
-		Org org = new Org();
-		OrgUser orgUser = new OrgUser();
-		org.setAreaId(12345L);// 所属区域
-		org.setOrgTypeId(4L);// 机构id
-		orgUser.setRealname(null);
-		org.setSort(null);// 排序码
-		org.setNote(null);// 备注
-		orgUser.setOrgId(org.getId());
-		org.setOrgName("测试机构9");// 管理员姓名
-		orgUser.setUsername("m9");// 机构代码
-		orgUser.setEmail(null);
-		orgUser.setHandphone(null);
-		Assert.assertNotNull("添加失败", orgUserService.addOrgUserAndOrgOfBack(orgUser, org));
-	}
-
+    @Test
+    public void updateOrgUserProgressById() {
+        List<Long> list = new ArrayList<Long>();
+        list.add(1L);
+        Assert.assertNotNull("更新审核状态失败", orgUserService.updateOrgUserProgressById(1, list));
+    }
+    
+    @Test
+    @Rollback(false)
+    public void addOrgUserAndOrgOfBack(){
+    	Org org=new Org();
+    	OrgUser orgUser=new OrgUser();
+    	org.setAreaId(12345L);//所属区域
+    	org.setOrgTypeId(4L);//机构id
+    	orgUser.setRealname(null);
+    	org.setSort(null);//排序码
+    	org.setNote(null);//备注
+    	orgUser.setOrgId(org.getId());
+    	org.setOrgName("测试机构");//管理员姓名
+    	orgUser.setUsername("m1");//机构代码
+    	orgUser.setEmail(null);
+    	orgUser.setHandphone(null);
+    	Assert.assertNotNull("添加失败",orgUserService.addOrgUserAndOrgOfBack(orgUser, org));
+    }
 }

@@ -44,6 +44,14 @@ public class MaterialProjectEditorServiceImpl extends BaseService implements Mat
 	}
 	
 	@Override
+	public List<MaterialProjectEditor> listMaterialProjectEditors(Long materialId) throws CheckedServiceException{
+		if (null == materialId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PROJECTER, CheckedExceptionResult.NULL_PARAM, "教材id为空");
+        }
+		return materialProjectEditorDao.listMaterialProjectEditors(materialId);
+	}
+	
+	@Override
 	public Integer deleteMaterialProjectEditorByMaterialId(Long materialId) throws CheckedServiceException{
 		if (null == materialId) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PROJECTER, CheckedExceptionResult.NULL_PARAM, "教材id为空");

@@ -70,7 +70,7 @@ public class Const {
     public static final String       FILE_PATH_FILE             = "uploadFiles/file/";
     // 不对匹配该值的访问路径拦截（正则）
     public static final String       NO_INTERCEPTOR_PATH        =
-                                                                ".*/((login)|(logout)|(code)|(static)|(websocket)).*";
+                                                                ".*/((login)|(logout)|(code)|(static)|(websocket))";
     // 该值会在web容器启动时由WebAppContextListener初始化
     public static ApplicationContext WEB_APP_CONTEXT            = null;
     // 普通文件下载控制器方法
