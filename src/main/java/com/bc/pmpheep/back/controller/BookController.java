@@ -103,8 +103,8 @@ public class BookController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "获取所有书籍类别")
-	@RequestMapping(value = "/list/materialtype", method = RequestMethod.GET)
-	public ResponseBean materialtype(Long parentId) {
+	@RequestMapping(value = "/list/materialType", method = RequestMethod.GET)
+	public ResponseBean materialType(Long parentId) {
 		return new ResponseBean(materialTypeService.listMaterialType(parentId));
 	}
 
@@ -139,7 +139,7 @@ public class BookController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "商城更新图书")
-	@RequestMapping(value = "/abuttingjoint", method = RequestMethod.POST)
+	@RequestMapping(value = "/abuttingjoint", method = RequestMethod.GET)
 	public ResponseBean abuttingjoint(Integer noteicetype, String[] key) {
 		return new ResponseBean(bookService.AbuttingJoint(key, noteicetype));
 	}

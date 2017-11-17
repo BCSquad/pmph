@@ -379,7 +379,7 @@ public class UserMessageController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取我收到消息详情")
-    @RequestMapping(value = "/update/myMessageDetail", method = RequestMethod.GET)
+    @RequestMapping(value = "/myMessageDetail", method = RequestMethod.GET)
     public ResponseBean myMessageDetail(Long id) {
         return new ResponseBean(userMessageService.updateMyMessageDetail(id));
     }
