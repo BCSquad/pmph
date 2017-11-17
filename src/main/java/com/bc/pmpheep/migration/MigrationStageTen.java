@@ -18,6 +18,7 @@ import com.bc.pmpheep.utils.ExcelHelper;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,7 +53,9 @@ public class MigrationStageTen {
     ExcelHelper excelHelper;
 
     public void start() {
+    	Date beforeTime = new Date(System.currentTimeMillis());
         cmsCategory();
+        logger.info(JdbcHelper.migrationTime(beforeTime));
     }
 
     public void cmsCategory() {

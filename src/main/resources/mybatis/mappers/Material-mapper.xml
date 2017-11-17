@@ -93,11 +93,11 @@
 			<if test="isNationalPlanRequired!=null">
 				is_national_plan_required,
 			</if>
-			<if test="isTextbookWriterUsed!=null">
-				is_textbook_writer_used,
+			<if test="isTextbookUsed!=null">
+				is_textbook_used,
 			</if>
-			<if test="isTextbookWriterRequired!=null">
-				is_textbook_writer_required,
+			<if test="isTextbookRequired!=null">
+				is_textbook_required,
 			</if>
 			<if test="isOtherTextbookUsed!=null">
 				is_other_textbook_used,
@@ -126,8 +126,14 @@
 			<if test="isDeleted!=null">
 				is_deleted,
 			</if>
-			<if test="founderId != null">
+			<if test="gmtCreate!=null">
+				gmt_create,
+			</if>
+			<if test="founderId!= null">
 				founder_id,
+			</if>
+			<if test="gmtUpdate!=null">
+				gmt_update,
 			</if>
 			<if test="menderId!=null">
 				mender_id,
@@ -225,11 +231,11 @@
 			<if test="isNationalPlanRequired!=null">
 				#{isNationalPlanRequired},
 			</if>
-			<if test="isTextbookWriterUsed!=null">
-				#{isTextbookWriterUsed},
+			<if test="isTextbookUsed!=null">
+				#{isTextbookUsed},
 			</if>
-			<if test="isTextbookWriterRequired!=null">
-				#{isTextbookWriterRequired},
+			<if test="isTextbookRequired!=null">
+				#{isTextbookRequired},
 			</if>
 			<if test="isOtherTextbookUsed!=null">
 				#{isOtherTextbookUsed},
@@ -249,17 +255,23 @@
 			<if test="isPublic!=null">
 			    #{isPublic},
 			</if>
-			<if test="isAllTextbookPublished">
+			<if test="isAllTextbookPublished!=null">
 			    #{isAllTextbookPublished},
 			</if>
-			<if test="isForceEnd">
+			<if test="isForceEnd!=null">
 			    #{isForceEnd},
 			</if>
 			<if test="isDeleted!=null">
 				#{isDeleted},
 			</if>
+			<if test="gmtCreate!=null">
+				#{gmtCreate},
+			</if>
 			<if test="founderId != null">
 				#{founderId},
+			</if>
+			<if test="gmtUpdate!=null">
+				#{gmtUpdate},
 			</if>
 			<if test="menderId!=null">
 				#{menderId},

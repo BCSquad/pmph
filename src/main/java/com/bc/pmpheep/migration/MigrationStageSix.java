@@ -89,18 +89,20 @@ public class MigrationStageSix {
     ExcelHelper excelHelper;
 	
 	public void start(){
-		//declaration();
-		//decEduExp();
-		//decWorkExp();
-		//decTeachExp();
-		//decAcade();
-		//decLastPosition();
-		//decCourseConstruction();
-		//decNationalPlan();
+		Date beforeTime = new Date(System.currentTimeMillis());
+		declaration();
+		decEduExp();
+		decWorkExp();
+		decTeachExp();
+		decAcade();
+		decLastPosition();
+		decCourseConstruction();
+		decNationalPlan();
 		decTextbook();
-		/*decResearch();
+		decResearch();
 		decExtension();
-		decPosition();*/
+		decPosition();
+		logger.info(JdbcHelper.migrationTime(beforeTime));
 	}
 	
 	/**
@@ -245,14 +247,14 @@ public class MigrationStageSix {
         		logger.error("未找到是否暂存信息，此结果将被记录在Excel中");
                 continue;
         	}
-        	//try {
+        	try {
         		declaration = declarationService.addDeclaration(declaration);
-			/*} catch (Exception e) {
+			} catch (Exception e) {
 				map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				declaration.setIsStaging(0);
-			}*/
+			}
         	long pk = declaration.getId();
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "writerid", id); // 更新旧表中new_pk字段
         	count++;
@@ -297,16 +299,7 @@ public class MigrationStageSix {
         		excel.add(map);
         		logger.error("找到申报表id对应的关联结果，此结果将被记录在Excel中");
         		continue;
-            }/* else {
-            	Long declarationId = JdbcHelper.getPrimaryKey("writer_declaration", "writerid", declarationid);
-                if (ObjectUtil.isNull(declarationId)) {
-                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id。"));
-            		excel.add(map);
-            		logger.error("未找到申报表id，此结果将被记录在Excel中");
-                    continue;
-                }
-                decEduExp.setDeclarationId(declarationid);
-			}*/
+            }
         	decEduExp.setDeclarationId(declarationid);
         	String schoolName = (String) map.get("schoolname"); // 学校名称
         	if (("无").equals(schoolName)) {
@@ -351,14 +344,14 @@ public class MigrationStageSix {
     			}
 			}
         	decEduExp.setSort(999); // 显示顺序
-        	//try {
+        	try {
         		decEduExp = decEduExpService.addDecEduExp(decEduExp);
-        	/*} catch (Exception e) {
+        	} catch (Exception e) {
 				map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
-			}*/
+			}
         	long pk = decEduExp.getId();
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "leamid", id);
         	count++;
@@ -441,14 +434,14 @@ public class MigrationStageSix {
     			}
 			}
         	decWorkExp.setSort(999); // 显示顺序
-        	//try {
+        	try {
         		decWorkExp = decWorkExpService.addDecWorkExp(decWorkExp);
-			/*} catch (Exception e) {
+			} catch (Exception e) {
 				map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
-			}*/
+			}
         	long pk = decWorkExp.getId();
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "workid", id);
         	count++;
@@ -531,14 +524,14 @@ public class MigrationStageSix {
     			}
 			}
         	decTeachExp.setSort(999); // 显示顺序
-        	//try {
+        	try {
         		decTeachExp = decTeachExpService.addDecTeachExp(decTeachExp);
-			/*} catch (Exception e) {
+			} catch (Exception e) {
 				map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
-			}*/
+			}
         	long pk = decTeachExp.getId();
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "teachid", id);
         	count++;
@@ -611,14 +604,14 @@ public class MigrationStageSix {
         	decAcade.setPosition(position);
         	decAcade.setNote((String) map.get("remark")); // 备注
         	decAcade.setSort(999);
-        	//try {
+        	try {
         		decAcade = decAcadeService.addDecAcade(decAcade);
-			/*} catch (Exception e) {
+			} catch (Exception e) {
 				map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
-			}*/
+			}
         	long pk = decAcade.getId();
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "acadeid", id);
         	count++;
@@ -686,14 +679,14 @@ public class MigrationStageSix {
 			}*/
         	decLastPosition.setNote((String) map.get("remark")); // 备注
         	decLastPosition.setSort(999); // 显示顺序
-        	//try {
+        	try {
         		decLastPosition = decLastPositionService.addDecLastPosition(decLastPosition);
-			/*} catch (Exception e) {
+			} catch (Exception e) {
 				map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
-			}*/
+			}
         	long pk = decLastPosition.getId();
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "materpatid", id);
         	count++;
@@ -763,14 +756,14 @@ public class MigrationStageSix {
 			}*/
         	decCourseConstruction.setNote((String) map.get("remark")); // 备注
         	decCourseConstruction.setSort(999); // 显示顺序
-        	//try {
+        	try {
         		decCourseConstruction = decCourseConstructionService.addDecCourseConstruction(decCourseConstruction);
-			/*} catch (Exception e) {
+			} catch (Exception e) {
 				map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
-			}*/
+			}
         	long pk = decCourseConstruction.getId();
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "constructionid", id);
         	count++;
@@ -828,10 +821,10 @@ public class MigrationStageSix {
         	}
         	decNationalPlan.setMaterialName(materialName);
         	String isbn = (String) map.get("booknumber"); // 标准书号
-        	//if (StringUtil.notEmpty(isbn)){
+        	if (StringUtil.notEmpty(isbn)){
         		isbn = isbn.trim();
         		isbn = isbn.replace("ISBN", "").replace("isbn", "").replace(":", "").replace("：", "");
-        	//}
+        	}
         	if (("无").equals(isbn)) {
         		map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到标准书号。"));
         		excel.add(map);
@@ -849,14 +842,14 @@ public class MigrationStageSix {
 			}*/
         	decNationalPlan.setNote((String) map.get("remark")); // 备注
         	decNationalPlan.setSort(999); // 显示顺序
-        	//try {
+        	try {
         		decNationalPlan = decNationalPlanService.addDecNationalPlan(decNationalPlan);
-			/*} catch (Exception e) {
+			} catch (Exception e) {
 				map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
-			}*/
+			}
         	long pk = decNationalPlan.getId();
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "editorbookid", id);
         	count++;
@@ -870,7 +863,7 @@ public class MigrationStageSix {
         }
         logger.info("writer_editorbook表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
-      //记录信息
+        //记录信息
         Map<String,Object> msg= new HashMap<String,Object>();
         msg.put("result", ""+tableName+"  表迁移完成"+count+"/"+ maps.size());
         SQLParameters.msg.add(msg);
@@ -943,12 +936,6 @@ public class MigrationStageSix {
         	}
         	decTextbook.setPublisher(publisher);
         	Date publishDate = (Date) map.get("publisdate"); // 出版时间
-        	/*if (ObjectUtil.isNull(publishDate)) {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到出版时间。");
-        		excel.add(map);
-        		logger.error("未找到出版时间，此结果将被记录在Excel中");
-                continue;
-        	}*/
         	decTextbook.setPublishDate(publishDate);
         	String isbn = (String) map.get("booknumber"); // 标准书号
         	if (StringUtil.notEmpty(isbn)){
@@ -963,14 +950,14 @@ public class MigrationStageSix {
         	decTextbook.setIsbn(isbn);
         	decTextbook.setNote((String) map.get("remark")); // 备注
         	decTextbook.setSort(999); // 显示顺序
-        	//try {
+        	try {
         		decTextbook = decTextbookService.addDecTextbook(decTextbook);
-			/*} catch (Exception e) {
+			} catch (Exception e) {
 				map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
-			}*/
+			}
         	long pk = decTextbook.getId();
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "materwriteid", id);
         	count++;
@@ -1037,14 +1024,14 @@ public class MigrationStageSix {
         	decResearch.setAward(award);
         	decResearch.setNote((String) map.get("remark")); // 备注
         	decResearch.setSort(999); // 显示顺序
-        	//try {
+        	try {
         		decResearch = decResearchService.addDecResearch(decResearch);
-			/*} catch (Exception e) {
+			} catch (Exception e) {
 				map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
-			}*/
+			}
         	long pk = decResearch.getId();
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "scientresearchid", id);
         	count++;
@@ -1107,14 +1094,14 @@ public class MigrationStageSix {
         		logger.error("未找到扩展项内容，此结果将被记录在Excel中");
         	}
         	decExtension.setContent(content);
-        	//try {
+        	try {
         		decExtension = decExtensionService.addDecExtension(decExtension);
-			/*} catch (Exception e) {
+			} catch (Exception e) {
 				map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
 				excel.add(map);
 				logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
 				continue;
-			}*/
+			}
         	long pk = decExtension.getId();
         	JdbcHelper.updateNewPrimaryKey(tableName, pk, "extvalueid", id);
         	count++;
@@ -1230,12 +1217,10 @@ public class MigrationStageSix {
 	                logger.error("文件读取异常，路径<{}>，异常信息：{}", outLineUrl, ex.getMessage());
 	                map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
 	                excel.add(map);
-	                continue;
 	            }catch (Exception e) {
 					map.put(SQLParameters.EXCEL_EX_HEADER, "存文件未知异常：" + e.getMessage() + "。");
 					excel.add(map);
 					logger.error("更新mongoDB的id错误，此结果将被记录在Excel中");
-					continue;
 	            }
 	            decPosition.setSyllabusId(mongoId);
 	            decPositionService.updateDecPosition(decPosition);

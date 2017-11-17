@@ -13,6 +13,7 @@
           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 ">
    	 <mvc:annotation-driven/>
+   	 <mvc:default-servlet-handler/>
    	
    	<!-- 使用cglib进行动态代理 -->
     <aop:aspectj-autoproxy proxy-target-class="true" />
