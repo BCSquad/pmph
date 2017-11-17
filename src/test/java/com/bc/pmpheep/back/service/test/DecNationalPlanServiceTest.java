@@ -3,15 +3,20 @@
  */
 package com.bc.pmpheep.back.service.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.back.po.DecNationalPlan;
 import com.bc.pmpheep.back.service.DecNationalPlanService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -28,26 +33,65 @@ public class DecNationalPlanServiceTest extends BaseTest {
 	DecNationalPlanService decNationalPlanService;
 
 	@Test
-	public void test() {
-		logger.info("-------作家主编国家级规划教材情况--------");
-		DecNationalPlan decNationalPlan = new DecNationalPlan(14L, "心理学史",
-				"ISBN-18956", (Integer) 2, "选修", 56);
-		decNationalPlanService.addDecNationalPlan(decNationalPlan);
+	@Rollback(Const.ISROLLBACK)
+	public void testAddDecNationalPlan(){
+		DecNationalPlan decNationalPlan = new DecNationalPlan();
+		decNationalPlan.setDeclarationId(3L);
+		decNationalPlan.setMaterialName("人体解剖学");
+		decNationalPlan.setIsbn("666");
+		decNationalPlan.setRank(1);
+		decNationalPlan.setNote("重点建设学科");
+		decNationalPlan.setSort(1);
+		decNationalPlan = decNationalPlanService.addDecNationalPlan(decNationalPlan);
 		Assert.assertTrue("添加数据失败", decNationalPlan.getId() > 0);
-		logger.info("--------添加数据成功--------");
-		decNationalPlan.setMaterialName("心理统计学");
-		Assert.assertTrue(
-				"更新失败",
-				decNationalPlanService.updateDecNationalPlan(decNationalPlan) > 0);
-		logger.info("--------数据更新成功--------");
-		Assert.assertNotNull("获取数据失败",
-				decNationalPlanService.getDecNationalPlanById(5L));
-		logger.info("--------获取单条信息成功--------");
-		Assert.assertTrue("获取信息集合失败", decNationalPlanService
-				.getListDecNationalPlanByDeclarationId(14L).size() > 0);
-		logger.info("--------获取数据集合成功---------");
-		Assert.assertTrue("删除数据失败",
-				decNationalPlanService.deleteDecNationalPlanById(5L) >= 0);
-		logger.info("-------测试成功-----------");
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testDeleteDecNationalPlan(){
+		long id = add().getId();
+		Integer count = decNationalPlanService.deleteDecNationalPlanById(id);
+		Assert.assertTrue("数据删除失败", count > 0);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testUpdateDecNationalPlan(){
+		DecNationalPlan decNationalPlan = add();
+		Integer count = decNationalPlanService.updateDecNationalPlan(decNationalPlan);
+		Assert.assertTrue("数据更新失败", count > 0);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testGetDecNationalPlan(){
+		long id = add().getId();
+		DecNationalPlan decNationalPlan = decNationalPlanService.getDecNationalPlanById(id);
+		Assert.assertNotNull("获取主编国家级规划教材情况失败", decNationalPlan);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testListDecNationalPlan(){
+		add();
+		List<DecNationalPlan> list = new ArrayList<>();
+		list = decNationalPlanService.getListDecNationalPlanByDeclarationId(1L);
+		Assert.assertTrue("获取主编国家级规划教材情况集合信息失败", list.size() > 0);
+	}
+	
+	private DecNationalPlan add(){
+		DecNationalPlan decNationalPlan = new DecNationalPlan();
+		decNationalPlan.setDeclarationId(1L);
+		decNationalPlan.setMaterialName("普通心理学");
+		decNationalPlan.setIsbn("123456");
+		decNationalPlan.setRank(2);
+		decNationalPlan.setSort(13);
+		decNationalPlanService.addDecNationalPlan(decNationalPlan);
+		DecNationalPlan decNationalPlan2 = new DecNationalPlan(1L, "社会心理学", "654321",
+				1, "专业主修教材", null);
+		decNationalPlanService.addDecNationalPlan(decNationalPlan2);
+		DecNationalPlan decNationalPlan3 = new DecNationalPlan(2L, "变态心理学", "111", 3, null, null);
+		decNationalPlanService.addDecNationalPlan(decNationalPlan3);
+		return decNationalPlan3;
 	}
 }
