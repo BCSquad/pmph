@@ -74,9 +74,9 @@ public class Material implements java.io.Serializable {
 	//主编国家规划教材情况必填
 	private Boolean isNationalPlanRequired;
 	//教材编写情况
-	private Boolean isTextbookWriterUsed;
+	private Boolean isTextbookUsed;
 	//教材编写情况必填
-	private Boolean isTextbookWriterRequired;
+	private Boolean isTextbookRequired;
 	//其他教材编写情况
 	private Boolean isOtherTextbookUsed;
 	//其他教材编写情况必填
@@ -129,7 +129,7 @@ public class Material implements java.io.Serializable {
 			Boolean isProvincialCourseUsed, Boolean isProvincialCourseRequired,
 			Boolean isSchoolCourseUsed, Boolean isSchoolCourseRequired,
 			Boolean isNationalPlanUsed, Boolean isNationalPlanRequired,
-			Boolean isTextbookWriterUsed, Boolean isTextbookWriterRequired,
+			Boolean isTextbookUsed, Boolean isTextbookRequired,
 			Boolean isOtherTextbookUsed, Boolean isOtherTextbookRequired,
 			Boolean isResearchUsed, Boolean isResearchRequired,
 			Boolean isPublished, Boolean isPublic,
@@ -166,8 +166,8 @@ public class Material implements java.io.Serializable {
 		this.isSchoolCourseRequired = isSchoolCourseRequired;
 		this.isNationalPlanUsed = isNationalPlanUsed;
 		this.isNationalPlanRequired = isNationalPlanRequired;
-		this.isTextbookWriterUsed = isTextbookWriterUsed;
-		this.isTextbookWriterRequired = isTextbookWriterRequired;
+		this.isTextbookUsed = isTextbookUsed;
+		this.isTextbookRequired = isTextbookRequired;
 		this.isOtherTextbookUsed = isOtherTextbookUsed;
 		this.isOtherTextbookRequired = isOtherTextbookRequired;
 		this.isResearchUsed = isResearchUsed;
@@ -425,20 +425,20 @@ public class Material implements java.io.Serializable {
 		this.isNationalPlanRequired = isNationalPlanRequired;
 	}
 
-	public Boolean getIsTextbookWriterUsed() {
-		return this.isTextbookWriterUsed;
+	public Boolean getIsTextbookUsed() {
+		return this.isTextbookUsed;
 	}
 
-	public void setIsTextbookWriterUsed(Boolean isTextbookWriterUsed) {
-		this.isTextbookWriterUsed = isTextbookWriterUsed;
+	public void setIsTextbookUsed(Boolean isTextbookUsed) {
+		this.isTextbookUsed = isTextbookUsed;
 	}
 
-	public Boolean getIsTextbookWriterRequired() {
-		return this.isTextbookWriterRequired;
+	public Boolean getIsTextbookRequired() {
+		return this.isTextbookRequired;
 	}
 
-	public void setIsTextbookWriterRequired(Boolean isTextbookWriterRequired) {
-		this.isTextbookWriterRequired = isTextbookWriterRequired;
+	public void setIsTextbookRequired(Boolean isTextbookRequired) {
+		this.isTextbookRequired = isTextbookRequired;
 	}
 
 	public Boolean getIsOtherTextbookUsed() {
@@ -576,9 +576,9 @@ public class Material implements java.io.Serializable {
 				+ isSchoolCourseUsed + ", isSchoolCourseRequired:"
 				+ isSchoolCourseRequired + ", isNationalPlanUsed:"
 				+ isNationalPlanUsed + ", isNationalPlanRequired:"
-				+ isNationalPlanRequired + ", isTextbookWriterUsed:"
-				+ isTextbookWriterUsed + ", isTextbookWriterRequired:"
-				+ isTextbookWriterRequired + ", isOtherTextbookUsed:"
+				+ isNationalPlanRequired + ", isTextbookUsed:"
+				+ isTextbookUsed + ", isTextbookRequired:"
+				+ isTextbookRequired + ", isOtherTextbookUsed:"
 				+ isOtherTextbookUsed + ", isOtherTextbookRequired:"
 				+ isOtherTextbookRequired + ", isResearchUsed:"
 				+ isResearchUsed + ", isResearchRequired:" + isResearchRequired

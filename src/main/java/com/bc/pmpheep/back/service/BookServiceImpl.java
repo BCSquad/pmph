@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import net.sf.json.JSONArray;
@@ -19,6 +21,7 @@ import com.bc.pmpheep.back.dao.BookDetailDao;
 import com.bc.pmpheep.back.dao.BookUserCommentDao;
 import com.bc.pmpheep.back.dao.BookUserLikeDao;
 import com.bc.pmpheep.back.dao.BookUserMarkDao;
+import com.bc.pmpheep.back.erp.service.BookInfoWorking;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Book;
@@ -26,6 +29,7 @@ import com.bc.pmpheep.back.po.BookDetail;
 import com.bc.pmpheep.back.po.BookUserLike;
 import com.bc.pmpheep.back.po.BookUserMark;
 import com.bc.pmpheep.back.util.ArrayUtil;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ContactMallUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.MD5;
@@ -154,6 +158,11 @@ public class BookServiceImpl extends BaseService implements BookService {
 		String result = "SUCCESS";
 		for (int i = 0; i < vns.length; i++) {
 			JSONObject ot = new JSONObject();
+			if (type == 0) {// 商城发送修改的请求
+				if (ObjectUtil.isNull(bookDao.getBookByVn(vns[i]))) {
+					continue;
+				}
+			}
 			try {
 				ot = PostBusyAPI(vns[i]);
 				if ("1".equals(ot.getJSONObject("RESP").getString("CODE"))) {
@@ -164,20 +173,21 @@ public class BookServiceImpl extends BaseService implements BookService {
 					JSONArray array = ot.getJSONObject("RESP").getJSONObject("responseData").getJSONArray("results");
 					if (array.size() > 0) {
 						Book book = BusyResJSONToModel(array.getJSONObject(0), null);
-						// String content = book.getContent();// 获取到图书详情将其存入到图书详情表中
-						// if (ObjectUtil.isNull(book.getId())) {
-						// book.setScore(9.0);
-						// bookDao.addBook(book);
-						// BookDetail bookDetail = new BookDetail(book.getId(), content);
-						// bookDetailDao.addBookDetail(bookDetail);
-						// } else {
-						// bookDao.updateBook(book);
-						// BookDetail bookDetail = new BookDetail(book.getId(), content);
-						// bookDetailDao.updateBookDetail(bookDetail);
-						// }
+						String content = book.getContent();// 获取到图书详情将其存入到图书详情表中
+						if (ObjectUtil.isNull(book.getId())) {
+							book.setScore(9.0);
+							bookDao.addBook(book);
+							BookDetail bookDetail = new BookDetail(book.getId(), content);
+							bookDetailDao.addBookDetail(bookDetail);
+						} else {
+							bookDao.updateBook(book);
+							BookDetail bookDetail = new BookDetail(book.getId(), content);
+							bookDetailDao.updateBookDetailByBookId(bookDetail);
+						}
 					}
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				result = "FAIL";
 			}
 		}
@@ -195,9 +205,9 @@ public class BookServiceImpl extends BaseService implements BookService {
 	 * @throws IOException
 	 *
 	 */
-	private JSONObject PostBusyAPI(String editNumbers, String... config) throws IOException {
+	private JSONObject PostBusyAPI(String vn, String... config) throws IOException {
 		String uri = "", app_key = "", app_secret = "", session_key = "";
-		if (config == null) {
+		if (config != null) {
 			if (pmphapiconfigPro == null || pmphapiconfigIs == null) {
 				pmphapiconfigPro = new Properties();
 				pmphapiconfigIs = BookServiceImpl.class.getClassLoader()
@@ -224,7 +234,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 		sbSgin.append("sign_methodmd5&");
 		sbSgin.append("timestamp" + sendTime + "&");
 		sbSgin.append("v1.0&");
-		sbSgin.append("versionNumber" + editNumbers);
+		sbSgin.append("versionNumber" + vn);
 		sbSgin.append(app_secret);
 		String strSign = MD5.md5(sbSgin.toString()).toLowerCase();
 
@@ -237,7 +247,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 		sbPar.append("sign=" + strSign + "&");
 		sbPar.append("sign_method=md5&");
 		sbPar.append("session=" + session_key + "&");
-		sbPar.append("versionNumber=" + URLEncoder.encode(editNumbers, "UTF-8"));
+		sbPar.append("versionNumber=" + URLEncoder.encode(vn, "UTF-8"));
 		String strRes = ContactMallUtil.getInfomation(uri, sbPar.toString());
 		return JSONObject.fromObject(strRes);
 	}
@@ -272,8 +282,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 		model.setPublisher(item.getString("publicCompany")); // 出版社
 		model.setRevision(Integer.parseInt(item.getString("edition"))); // 版次 ,印次
 		model.setLang(item.getString("language")); // 语言
-		// model.setContent(item.getJSONArray("gdsDescList").getJSONObject(0).getString("gdsDescContent"));
-		// // 内容简介
+		model.setContent(item.getJSONArray("gdsDescList").getJSONObject(0).getString("gdsDescContent")); // 内容简介
 		model.setImageUrl(item.getJSONArray("imageList").size() > 0
 				? item.getJSONArray("imageList").getJSONObject(0).getString("imgUrl")
 				: ""); // 图片地址
@@ -297,12 +306,14 @@ public class BookServiceImpl extends BaseService implements BookService {
 	private void emptyBooks(String vn) {
 		// 1.根据本版号搜索出书籍id 2.根据书籍id删除关联表的所有数据
 		Book book = bookDao.getBookByVn(vn);
-		Long id = book.getId();
-		bookDao.deleteBookById(id);
-		bookDetailDao.deleteBookDetailByBookId(id);
-		bookUserCommentDao.deleteBookUserCommentByBookId(id);
-		bookUserLikeDao.deleteBookUserLikeByBookId(id);
-		bookUserMarkDao.deleteBookUserMarkByBookId(id);
+		if (!ObjectUtil.isNull(book)) {
+			Long id = book.getId();
+			bookDao.deleteBookById(id);
+			bookDetailDao.deleteBookDetailByBookId(id);
+			bookUserCommentDao.deleteBookUserCommentByBookId(id);
+			bookUserLikeDao.deleteBookUserLikeByBookId(id);
+			bookUserMarkDao.deleteBookUserMarkByBookId(id);
+		}
 	}
 
 	@Override
@@ -316,6 +327,33 @@ public class BookServiceImpl extends BaseService implements BookService {
 		bookUserCommentDao.deleteBookUserCommentByBookId(id);
 		bookUserLikeDao.deleteBookUserLikeByBookId(id);
 		bookUserMarkDao.deleteBookUserMarkByBookId(id);
+		return "SUCCESS";
+	}
+
+	@Override
+	public String AllSynchronization(Integer type) throws CheckedServiceException {
+		if (ObjectUtil.isNull(type)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"同步中产生了错误，请重新同步");
+		}
+		String[] vns = new BookInfoWorking().listBookInfo();
+		if (1 == type) {
+			AbuttingJoint(vns, type);
+		} else {
+			List<String> list = new ArrayList<>();
+			for (String vn : vns) {
+				Book book = bookDao.getBookByVn(vn);
+				if (ObjectUtil.isNull(book)) {
+					list.add(vn);
+				}
+			}
+			String editionnums[] = new String[list.size()];
+			for (int i = 0, j = list.size(); i < j; i++) {
+				editionnums[i] = list.get(i);
+			}
+			AbuttingJoint(editionnums, type);
+		}
+
 		return "SUCCESS";
 	}
 }

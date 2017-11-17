@@ -386,8 +386,8 @@ public class WriterUserServiceImpl implements WriterUserService {
 
 	@Override
 	public String addWriterUserOfBack(WriterUser writerUser) throws CheckedServiceException {
-		WriterUser username=writerUserDao.getUsername(writerUser.getUsername());
-		if(username!=null){
+		WriterUser username = writerUserDao.getUsername(writerUser.getUsername());
+		if (username != null) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.ILLEGAL_PARAM, "用户代码已存在");
 		}
@@ -399,13 +399,13 @@ public class WriterUserServiceImpl implements WriterUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.ILLEGAL_PARAM, "姓名需要小于20字符");
 		}
-		if(!StringUtil.isEmpty(writerUser.getHandphone())){
+		if (!StringUtil.isEmpty(writerUser.getHandphone())) {
 			if (!ValidatUtil.checkMobileNumber(writerUser.getHandphone())) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 						CheckedExceptionResult.ILLEGAL_PARAM, "电话格式不正确");
 			}
 		}
-		if(!StringUtil.isEmpty(writerUser.getEmail())){
+		if (!StringUtil.isEmpty(writerUser.getEmail())) {
 			if (!ValidatUtil.checkEmail(writerUser.getEmail())) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 						CheckedExceptionResult.ILLEGAL_PARAM, "邮箱格式不正确");
@@ -424,7 +424,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 						CheckedExceptionResult.NULL_PARAM, "备注需要小于100字符");
 			}
 		}
-		writerUser.setPassword(ShiroKit.md5(Const.DEFAULT_PASSWORD, writerUser.getUsername()));// 后台添加用户设置默认密码为123456
+		writerUser.setPassword(new DesRun("", Const.DEFAULT_PASSWORD).enpsw);// 后台添加用户设置默认密码为123456
 		writerUser.setNickname(writerUser.getUsername());
 		writerUser.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);// 后台添加新用户时，设置为默认头像
 		writerUserDao.add(writerUser);
@@ -454,13 +454,13 @@ public class WriterUserServiceImpl implements WriterUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "姓名需要小于20字符");
 		}
-		if(!StringUtil.isEmpty(writerUser.getHandphone())){
+		if (!StringUtil.isEmpty(writerUser.getHandphone())) {
 			if (!ValidatUtil.checkMobileNumber(writerUser.getHandphone())) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 						CheckedExceptionResult.NULL_PARAM, "电话格式不正确");
 			}
 		}
-		if(!StringUtil.isEmpty(writerUser.getEmail())){
+		if (!StringUtil.isEmpty(writerUser.getEmail())) {
 			if (!ValidatUtil.checkEmail(writerUser.getEmail())) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 						CheckedExceptionResult.NULL_PARAM, "邮箱格式不正确");

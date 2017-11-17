@@ -64,18 +64,24 @@
 	<update id="updateBookDetail" parameterType="BookDetail">
 		update book_detail
 		<set>
-			<if test="parentId != null and parentId !=''">
-				parent_id = #{parentId},
+			<if test="bookId != null and bookId !=''">
+				book_id = #{bookId},
 			</if>
-			<if test="areaName != null and areaName !='' ">
-				area_name = #{areaName},
-			</if>
-			<if test=" sort != null and sort !=''">
-				sort= #{sort},
+			<if test="detail != null and detail !='' ">
+				detail = #{detail},
 			</if>
 		</set>
 		where
 		id=#{id} ;
+	</update>
+
+	<!-- 更新BookDetail -->
+	<update id="updateBookDetailByBookId" parameterType="BookDetail">
+		update
+		book_detail set
+		detail = #{detail}
+		where
+		book_id = #{bookId} ;
 	</update>
 
 	<!-- 根据id查询一个BookDetail -->

@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.po;
+package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -9,18 +9,22 @@ import org.apache.ibatis.type.Alias;
 /**
  * 
  * 
- * 功能描述：出版图书表实体类
+ * 功能描述： 获取从商城接收的数据
+ * 
  * 
  * 
  * @author (作者) 曾庆峰
  * 
  * @since (该版本支持的JDK版本) ：JDK 1.6或以上
- * @date (开发日期) 2017年10月24日
+ * @version (版本) 1.0
+ * @date (开发日期) 2017年11月15日
+ * @modify (最后修改时间)
  * @修改人 ：曾庆峰
+ * @审核人 ：
  *
  */
-@Alias("Book")
-public class Book implements Serializable {
+@Alias("BookNewVO")
+public class BookNewVO implements Serializable {
 	/**
 	 * 主键
 	 */
@@ -162,57 +166,20 @@ public class Book implements Serializable {
 	 */
 	private Timestamp gmtUpdate;
 
-	public Book() {
-		super();
-	}
-
-	public Book(String bookname, String isbn, String sn, String author, String publisher, String lang, Integer revision,
-			Long type, Date publishDate, String reader, Double price, Double score, String buyUrl, String imageUrl,
-			String pdfUrl, Long clicks, Long comments, Long likes, Long bookmarks, Boolean isStick, Integer sort,
-			Timestamp deadlineStick, Boolean isNew, Integer sortNew, Timestamp deadlineNew, Boolean isPromote,
-			Integer sortPromote, Timestamp deadlinePromote, Long sales, Boolean isOnSale, Timestamp gmtCreate,
-			Timestamp gmtUpdate) {
-		super();
-		this.bookname = bookname;
-		this.isbn = isbn;
-		this.sn = sn;
-		this.author = author;
-		this.publisher = publisher;
-		this.lang = lang;
-		this.revision = revision;
-		this.type = type;
-		this.publishDate = publishDate;
-		this.reader = reader;
-		this.price = price;
-		this.score = score;
-		this.buyUrl = buyUrl;
-		this.imageUrl = imageUrl;
-		this.pdfUrl = pdfUrl;
-		this.clicks = clicks;
-		this.comments = comments;
-		this.likes = likes;
-		this.bookmarks = bookmarks;
-		this.isStick = isStick;
-		this.sort = sort;
-		this.deadlineStick = deadlineStick;
-		this.isNew = isNew;
-		this.sortNew = sortNew;
-		this.deadlineNew = deadlineNew;
-		this.isPromote = isPromote;
-		this.sortPromote = sortPromote;
-		this.deadlinePromote = deadlinePromote;
-		this.sales = sales;
-		this.isOnSale = isOnSale;
-		this.gmtCreate = gmtCreate;
-		this.gmtUpdate = gmtUpdate;
-	}
-
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getVn() {
+		return vn;
+	}
+
+	public void setVn(String vn) {
+		this.vn = vn;
 	}
 
 	public String getBookname() {
@@ -477,27 +444,6 @@ public class Book implements Serializable {
 
 	public void setGmtUpdate(Timestamp gmtUpdate) {
 		this.gmtUpdate = gmtUpdate;
-	}
-
-	public String getVn() {
-		return vn;
-	}
-
-	public void setVn(String vn) {
-		this.vn = vn;
-	}
-
-	@Override
-	public String toString() {
-		return "book [id=" + id + ", bookname=" + bookname + ", isbn=" + isbn + ", sn=" + sn + ", author=" + author
-				+ ", publisher=" + publisher + ", lang=" + lang + ", revision=" + revision + ", type=" + type
-				+ ", publishDate=" + publishDate + ", reader=" + reader + ", price=" + price + ", score=" + score
-				+ ", buyUrl=" + buyUrl + ", imageUrl=" + imageUrl + ", pdfUrl=" + pdfUrl + ", clicks=" + clicks
-				+ ", comments=" + comments + ", likes=" + likes + ", bookmarks=" + bookmarks + ", isStick=" + isStick
-				+ ", sort=" + sort + ", deadlineStick=" + deadlineStick + ", isNew=" + isNew + ", sortNew=" + sortNew
-				+ ", deadlineNew=" + deadlineNew + ", isPromote=" + isPromote + ", sortPromote=" + sortPromote
-				+ ", deadlinePromote=" + deadlinePromote + ", sales=" + sales + ", isOnSale=" + isOnSale
-				+ ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
 	}
 
 }

@@ -4,6 +4,7 @@
 package com.bc.pmpheep.migration;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,12 +58,14 @@ public class MigrationStageTwo {
 	PmphUserRoleService pmphUserRoleService;
 	
 	public void start(){
+		Date beforeTime = new Date(System.currentTimeMillis());
 		pmphDepartment();
 		pmphUser();
 		pmphRole();
 		pmphUserRole();
 		cannotFindUser();
 		cannotFindRole();
+		logger.info(JdbcHelper.migrationTime(beforeTime));
 	}
 	
 	protected void pmphDepartment() {
