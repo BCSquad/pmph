@@ -33,7 +33,7 @@ public class BookUserCommentServiceTest extends BaseTest {
     public void testListBookUserComment() {
         PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>(1, 1);
         BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
-        bookUserCommentVO.setIsAuth(1);
+        bookUserCommentVO.setIsAuth(true);
         bookUserCommentVO.setName("名字");
         pageParameter.setParameter(bookUserCommentVO);
         PageResult<BookUserCommentVO> pageResult =
