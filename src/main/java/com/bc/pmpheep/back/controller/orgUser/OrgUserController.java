@@ -48,9 +48,9 @@ public class OrgUserController {
     @RequestParam("pageNumber") Integer pageNumber, @RequestParam("username") String username,
     @RequestParam("realname") String realname, @RequestParam("orgName") String orgName) {
     	OrgAndOrgUserVO orgUserManagerVO = new OrgAndOrgUserVO();
-        orgUserManagerVO.setUsername(StringUtil.isEmpty(username)?null:username.trim());
-        orgUserManagerVO.setRealname(StringUtil.isEmpty(realname)?null:realname.trim());
-        orgUserManagerVO.setOrgName(StringUtil.isEmpty(orgName)?null:orgName.trim());
+        orgUserManagerVO.setUsername(username.replaceAll(" ", ""));//去除空格
+        orgUserManagerVO.setRealname(realname.replaceAll(" ", ""));
+        orgUserManagerVO.setOrgName(orgName.replaceAll(" ", ""));
         PageParameter<OrgAndOrgUserVO> pageParameter =
         new PageParameter<OrgAndOrgUserVO>(pageNumber, pageSize, orgUserManagerVO);
         return new ResponseBean(orgUserService.getListOrgUser(pageParameter));
