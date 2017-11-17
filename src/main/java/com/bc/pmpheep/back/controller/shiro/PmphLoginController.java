@@ -123,7 +123,6 @@ public class PmphLoginController {
             List<Long> pmphUserPermissionIds =
             pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
             // 验证成功在Session中保存用户信息
-            request.getSession().invalidate();//先销毁session
             request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
             // 验证成功在Session中保存用户Token信息
             request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
