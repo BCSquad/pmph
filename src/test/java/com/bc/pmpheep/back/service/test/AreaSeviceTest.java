@@ -1,55 +1,70 @@
 package com.bc.pmpheep.back.service.test;
 
+import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.annotation.Rollback;
-import com.bc.pmpheep.back.dao.AreaDao;
+
 import com.bc.pmpheep.back.po.Area;
-import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.AreaService;
-import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.vo.AreaTreeVO;
+import com.bc.pmpheep.test.BaseTest;
 
 /**
  * AreaDao 单元测试
- *
+ * 
  * @author mryang
  */
 public class AreaSeviceTest extends BaseTest {
-	Logger logger = LoggerFactory.getLogger(AreaSeviceTest.class);
+    Logger              logger = LoggerFactory.getLogger(AreaSeviceTest.class);
 
-	@Resource
-	private AreaService areaService;
-	@Resource
-	AreaDao areaDao;
+    @Resource
+    private AreaService areaService;
 
-	@Test
-	@Rollback(Const.ISROLLBACK)
-	public void addArea() {
-		Area area = new Area(5L, "测试hh", 4);
-		// a.setId(647L);
-		areaService.addArea(area);
-		logger.info("----AreaService-------------------------------------------------------------------------");
-		// logger.info(a.toString());
-		Assert.assertTrue("添加失败", area.getId() > 0);
-		area.setAreaName("ceshiwwwwwwww");
-		Assert.assertTrue("更新失败", areaService.updateArea(area) > 0);
-		Assert.assertTrue("删除失败", areaService.deleteAreaById(2L) >= 0);
-		// Assert.assertNotNull("获取数据失败", areaService.getAreaById(6L));
-		Assert.assertNotNull("失败", areaService.getAreaTreeVO(0L));
-		Assert.assertTrue("删除失败", areaService.deleteAreaBatch(4707L) > 0);
-		// logger.info(areaService.getAreaById(6L).toString());
-		// areaService.getTest();
-		// areaService.deleteAllArea();
-		// Long num = areaDao.getAreacount();
-		// logger.info("一共有{}条数据",num);
-	}
+    @Test
+    public void testAddArea() {
+        Area area = addArea();
+        logger.info("插入的Area对象=" + area.toString());
+        Assert.assertNotNull("插入内容后返回的Area不应为空", area.getId());
+    }
 
-	@Test
-	public void deleteArea(){
-		Integer area = areaService.deleteAreaById(3L);
-		System.out.println(area);
-	}
+    @Test
+    public void testUpdateArea() {
+        Area area = addArea();
+        areaService.updateArea(new Area(area.getId(), "测试区域修改方法"));
+        Area area1 = areaService.getAreaById(area.getId());
+        Assert.assertEquals("是否更新成功", "测试区域修改方法", area1.getAreaName());
+    }
+
+    @Test
+    public void testDeleteAreaById() {
+        Area area = addArea();
+        Integer count = areaService.deleteAreaById(area.getId());
+        Assert.assertTrue("如果删除成功更新数应该会大于或等于1", count >= 1);
+    }
+
+    @Test
+    public void testGetAreaById() {
+        Area area = addArea();
+        Area area2 = areaService.getAreaById(area.getId());
+        Assert.assertNotNull("是否存在", area2);
+        Assert.assertEquals("查询结果是否相等", "测试区域", area2.getAreaName());
+
+    }
+
+    @Test
+    public void testGetAreaChirldren() {
+        Area area = addArea();
+        List<AreaTreeVO> listAreaTreeVOs = areaService.getAreaChirldren(area.getId());
+        Assert.assertNotNull("有子节点", listAreaTreeVOs);
+    }
+
+    private Area addArea() {
+        Area area = areaService.addArea(new Area(11L, "测试区域", 4));
+        return area;
+    }
 }
