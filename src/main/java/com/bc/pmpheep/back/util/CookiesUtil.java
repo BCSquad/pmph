@@ -45,6 +45,25 @@ public class CookiesUtil {
     }
 
     /**
+     * 
+     * <pre>
+     * 功能描述：获取cookie对象中的SessionId
+     * 使用示范：
+     *
+     * @param request
+     * @return
+     * </pre>
+     */
+    public static String getSessionId(HttpServletRequest request) {
+        String sessionId = "";
+        Cookie cookie = getCookieByName(request, Const.SESSION_ID);
+        if (ObjectUtil.notNull(cookie)) {
+            sessionId = cookie.getValue();
+        }
+        return sessionId;
+    }
+
+    /**
      * 将cookie封装到Map里面
      * 
      * @param request
