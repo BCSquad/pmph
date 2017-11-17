@@ -109,7 +109,7 @@ public class MigrationStageThree {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "writer_role表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void writerUserRole() {
@@ -154,7 +154,7 @@ public class MigrationStageThree {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "writer_user_role表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void writerProfile() {
@@ -203,7 +203,7 @@ public class MigrationStageThree {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "writer_profile表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void writerUserCertification() {
@@ -284,7 +284,7 @@ public class MigrationStageThree {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "writer_user_certification表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     /**
@@ -324,6 +324,6 @@ public class MigrationStageThree {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "sys_userrole表迁移完成" + count + "/" + maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 }
