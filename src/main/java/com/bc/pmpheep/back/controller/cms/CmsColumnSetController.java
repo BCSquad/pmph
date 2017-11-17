@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.po.CmsCategory;
 import com.bc.pmpheep.back.service.CmsCategoryService;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -36,7 +37,9 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CmsColumnSetController {
     @Autowired
-    CmsCategoryService cmsCategoryService;
+    CmsCategoryService          cmsCategoryService;
+    // 当前业务类型
+    private static final String BUSSINESS_TYPE = "栏目类型";
 
     /**
      * 
@@ -49,8 +52,9 @@ public class CmsColumnSetController {
      * </pre>
      */
     @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询栏目类型列表")
     @RequestMapping(value = "/set", method = RequestMethod.GET)
-    public ResponseBean listCmsCategory(@RequestParam("categoryName") String categoryName) {
+    public ResponseBean set(@RequestParam("categoryName") String categoryName) {
         return new ResponseBean(cmsCategoryService.getListAllParentMenu(categoryName));
     }
 
