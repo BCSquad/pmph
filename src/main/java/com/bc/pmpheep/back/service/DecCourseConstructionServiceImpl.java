@@ -45,22 +45,6 @@ public class DecCourseConstructionServiceImpl implements
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "申报id不能为空");
 		}
-		/*if (null == decCourseConstruction.getCourseName()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "课程名称不能为空");
-		}
-		if (null == decCourseConstruction.getClassHour()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "课程全年课时不能为空");
-		}
-		if (null == decCourseConstruction.getType()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "职务不能为空");
-		}*/
-		if (null == decCourseConstruction.getSort()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "显示顺序不能为空");
-		}
 		decCourseConstructionDao.addDecCourseConstruction(decCourseConstruction);
 		return decCourseConstruction;
 	}
