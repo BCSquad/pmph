@@ -322,8 +322,8 @@ public class UserMessageController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询我的消息列表")
-    @RequestMapping(value = "/list/mymessage", method = RequestMethod.GET)
-    public ResponseBean listMyMessage(Integer pageSize, Integer pageNumber, String title,
+    @RequestMapping(value = "/list/myMessage", method = RequestMethod.GET)
+    public ResponseBean myMessage(Integer pageSize, Integer pageNumber, String title,
     Boolean isRead, Long userId, Integer userType) {
         PageParameter<MyMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
         MyMessageVO myMessageVO = new MyMessageVO();
@@ -349,7 +349,7 @@ public class UserMessageController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取前几条未读消息")
-    @RequestMapping(value = "/icon/mymessage", method = RequestMethod.GET)
+    @RequestMapping(value = "/icon/listMyMessageOfIcon", method = RequestMethod.GET)
     public ResponseBean listMyMessageOfIcon(Integer pageSize, Integer pageNumber, Long userId,
     Integer userType) {
         PageParameter<MyMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
@@ -372,7 +372,7 @@ public class UserMessageController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取我收到消息详情")
-    @RequestMapping(value = "/detail/mymessage", method = RequestMethod.GET)
+    @RequestMapping(value = "/detail/updateMyMessageDetail", method = RequestMethod.GET)
     public ResponseBean updateMyMessageDetail(Long id) {
         return new ResponseBean(userMessageService.updateMyMessageDetail(id));
     }
@@ -388,7 +388,7 @@ public class UserMessageController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除我收到消息")
-    @RequestMapping(value = "/delete/mymessage", method = RequestMethod.PUT)
+    @RequestMapping(value = "/delete/updateMyMessage", method = RequestMethod.PUT)
     public ResponseBean updateMyMessage(Long[] ids) {
         return new ResponseBean(userMessageService.updateMyMessage(ids));
     }
