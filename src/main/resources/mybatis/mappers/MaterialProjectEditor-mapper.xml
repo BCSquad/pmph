@@ -19,6 +19,11 @@
 								(#{item.materialId},#{item.editorId}) 
 		</foreach>
 	</insert>
+	
+	<!-- 根据教材id批量项目编辑 -->
+	<select id="listMaterialProjectEditors" parameterType="java.lang.Long"  resultType="MaterialProjectEditor"  >
+		select * from material_project_editor where material_id = #{materialId};
+	</select>
 
 	<!-- 根据materialId删除 -->
 	<delete id="deleteMaterialProjectEditorByMaterialId" parameterType="java.lang.Long">
