@@ -46,27 +46,46 @@ public class CmsUserMarkServiceTest extends BaseTest {
      * </pre>
      */
     @Test
-    public void serviceAllMethodTest() {
-        // add
-        CmsUserMark cmsUserMark =
-        cmsUserMarkService.addCmsUserMark(new CmsUserMark(2L, 3L, 4L, DateUtil.getCurrentTime()));
+    public void testAddCmsUserMark() {
+        CmsUserMark cmsUserMark = this.addCmsUserMark();
+        logger.info(cmsUserMark.toString());
         Assert.assertNotNull("插入内容后返回的CmsUserMark.id不应为空", cmsUserMark.getId());
-        // uddate
+    }
+
+    @Test
+    public void testUpdateCmsUserMark() {
+        CmsUserMark cmsUserMark = this.addCmsUserMark();
         Integer count =
         cmsUserMarkService.updateCmsUserMark(new CmsUserMark(cmsUserMark.getId(), 4L, 6L, 7L,
                                                              DateUtil.getCurrentTime()));
-        Assert.assertTrue("是否更新CmsUserMark成功", count > 0 ? true : false);
-        // getById
+        Assert.assertTrue("是否更新CmsUserMark成功", count > 0);
+
+    }
+
+    @Test
+    public void testGetCmsUserMarkById() {
+        CmsUserMark cmsUserMark = this.addCmsUserMark();
         CmsUserMark cms = cmsUserMarkService.getCmsUserMarkById(cmsUserMark.getId());
         logger.info(cms.toString());
         Assert.assertNotNull("按ID查询是否该对象", cms);
-        // delete
-        // Assert.assertTrue("是否删除成功",
-        // cmsUserMarkService.deleteCmsUserMarkById(cmsUserMark.getId()) > 0 ? true : false);
-        List<Long> idList = new ArrayList<Long>(1);
-        idList.add(cmsUserMark.getId());
-        Assert.assertTrue("批量删除是否成功",
-                          cmsUserMarkService.deleteCmsUserMarkByIds(idList) > 0 ? true : false);
 
+    }
+
+    @Test
+    public void testDeleteCmsUserMarkById() {
+        CmsUserMark cmsUserMark = this.addCmsUserMark();
+        Assert.assertTrue("是否删除成功",
+                          cmsUserMarkService.deleteCmsUserMarkById(cmsUserMark.getId()) > 0);
+        CmsUserMark cum = this.addCmsUserMark();
+        List<Long> idList = new ArrayList<Long>(1);
+        idList.add(cum.getId());
+        Assert.assertTrue("批量删除是否成功", cmsUserMarkService.deleteCmsUserMarkByIds(idList) > 0);
+
+    }
+
+    private CmsUserMark addCmsUserMark() {
+        CmsUserMark cmsUserMark =
+        cmsUserMarkService.addCmsUserMark(new CmsUserMark(2L, 3L, 4L, DateUtil.getCurrentTime()));
+        return cmsUserMark;
     }
 }
