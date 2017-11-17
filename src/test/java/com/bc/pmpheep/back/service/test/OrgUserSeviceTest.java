@@ -92,7 +92,6 @@ public class OrgUserSeviceTest extends BaseTest {
     }
 
     @Test
-    @Rollback(false)
     public void updateOrgUserOfBack() {
         OrgUser orgUser = new OrgUser();
         Org org=new Org();
@@ -114,7 +113,6 @@ public class OrgUserSeviceTest extends BaseTest {
     }
     
     @Test
-    @Rollback(false)
     public void addOrgUserAndOrgOfBack(){
     	Org org=new Org();
     	OrgUser orgUser=new OrgUser();
