@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.annotation.Resource;
 
@@ -53,9 +54,9 @@ public class MigrationStageTen {
     ExcelHelper excelHelper;
 
     public void start() {
-    	Date beforeTime = new Date(System.currentTimeMillis());
+        Date begin = new Date();
         cmsCategory();
-        logger.info(JdbcHelper.migrationTime(beforeTime));
+        logger.info("迁移第十步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
     public void cmsCategory() {
@@ -88,9 +89,9 @@ public class MigrationStageTen {
         JdbcHelper.updateNewPrimaryKey(tableName, pk, "name", "医学随笔");//更新旧表中new_pk字
         logger.info("'{}'表迁移完成", tableName);
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
-      //记录信息
-        Map<String,Object> msg= new HashMap<String,Object>();
-        msg.put("result",""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        //记录信息
+        Map<String, Object> msg = new HashMap<String, Object>();
+        msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + maps.size());
         SQLParameters.msg.add(msg);
     }
 

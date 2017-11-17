@@ -58,12 +58,12 @@ public class MigrationStageEight {
     ExcelHelper excelHelper;
 
     public void start() {
-    	Date beforeTime = new Date(System.currentTimeMillis());
+    	Date begin = new Date();
         group();
         groupMember();
         groupMessage();
         groupFile();
-        logger.info(JdbcHelper.migrationTime(beforeTime));
+        logger.info("迁移第八步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
     protected void group() {

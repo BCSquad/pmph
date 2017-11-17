@@ -54,9 +54,9 @@ public class MigrationStageNine {
     ExcelHelper excelHelper;
 
     public void start() {
-    	Date beforeTime = new Date(System.currentTimeMillis());
+        Date begin = new Date();
         book();
-        logger.info(JdbcHelper.migrationTime(beforeTime));
+        logger.info("迁移第九步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
     protected void book() {
@@ -203,9 +203,9 @@ public class MigrationStageNine {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
-      //记录信息
-        Map<String,Object> msg= new HashMap<String,Object>();
-        msg.put("result",""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        //记录信息
+        Map<String, Object> msg = new HashMap<String, Object>();
+        msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + maps.size());
         SQLParameters.msg.add(msg);
     }
 
