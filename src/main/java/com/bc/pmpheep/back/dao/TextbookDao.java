@@ -69,6 +69,6 @@ public interface TextbookDao {
      * @return
      * </pre>
      */
-    List<Textbook> getTextBookByMaterialId(@Param("materialId") Long materialId);
+    List<Textbook> getTextbookByMaterialId(@Param("materialId") Long materialId);
 
 }
