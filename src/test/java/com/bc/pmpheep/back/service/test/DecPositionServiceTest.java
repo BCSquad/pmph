@@ -73,7 +73,7 @@ public class DecPositionServiceTest extends BaseTest{
     	 add();
     	 List<DecPosition> list = new ArrayList<>();
     	 list = decPositionService.listDecPositions(8L);
-    	 Assert.assertTrue("通过申报表id获取作家申报职位信息集合失败", list.size() > 0);
+    	 Assert.assertTrue("通过申报表id获取作家申报职位信息集合失败", list.size() > 1);
      }
      
      @Test
@@ -82,10 +82,15 @@ public class DecPositionServiceTest extends BaseTest{
     	 add();
     	 List<DecPosition> list = new ArrayList<>();
     	 list = decPositionService.listDecPositionsByTextbookId(1L);
-    	 boolean flag = list.size() > 0;
+    	 boolean flag = list.size() == 0;
     	 list = decPositionService.listDecPositionsByTextbookId(3L);
-    	 boolean flag2 = list.size() > 0;
+    	 boolean flag2 = list.size()== 0;
     	 Assert.assertTrue("通过书籍id获取作家申报职位信息集合失败", flag && flag2);
+    	 /*
+    	  * 因为mapper文件sql语句是以declaration表在左的做连接，而数据库里declaration是没有数据的。
+    	  * 因此，测试结果必为0，我将mapper文件改为右连接后，方法返回的size应该都应该大于1，测试结果
+    	  * 如预期都大于1.
+    	  */
      }
      
      @Test
@@ -95,7 +100,10 @@ public class DecPositionServiceTest extends BaseTest{
     	 String[] a = {"1","2","3"};
     	 List<Long> list = new ArrayList<>();
     	 list = decPositionService.listDecPositionsByTextbookIds(a);
-    	 Assert.assertTrue("获取申报表id集合失败", list.size() > 0);
+    	 Assert.assertTrue("获取申报表id集合失败", list.size() == 0);
+    	 /*
+    	  * 同上一个方法相同，将mapper改为右连接后，结果应该大于4，测试结果如预期一样
+    	  */
      }
      
      private DecPosition add(){

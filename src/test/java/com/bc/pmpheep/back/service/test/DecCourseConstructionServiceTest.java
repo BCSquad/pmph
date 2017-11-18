@@ -75,7 +75,7 @@ public class DecCourseConstructionServiceTest extends BaseTest{
 		add();
 		List<DecCourseConstruction> list = new ArrayList<>();
 		list = decCourseConstructionService.getDecCourseConstructionBydeclarationId(2L);
-		Assert.assertTrue("获取作家精品课程建设情况信息集合失败", list.size() > 0);
+		Assert.assertTrue("获取作家精品课程建设情况信息集合失败", list.size() > 1);
 	}
 	
 	private DecCourseConstruction add(){

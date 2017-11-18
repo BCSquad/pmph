@@ -76,7 +76,7 @@ public class DecNationalPlanServiceTest extends BaseTest {
 		add();
 		List<DecNationalPlan> list = new ArrayList<>();
 		list = decNationalPlanService.getListDecNationalPlanByDeclarationId(1L);
-		Assert.assertTrue("获取主编国家级规划教材情况集合信息失败", list.size() > 0);
+		Assert.assertTrue("获取主编国家级规划教材情况集合信息失败", list.size() > 1);
 	}
 	
 	private DecNationalPlan add(){

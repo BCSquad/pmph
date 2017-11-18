@@ -90,9 +90,9 @@ public class DecExtensionServiceTest extends BaseTest {
 		add();
 		List<DecExtension> list = new ArrayList<>();
 		list = decExtensionService.getListDecExtensionsByDeclarationId(2L);
-		boolean flag = list.size() > 0;
+		boolean flag = list.size() > 1;
 		list = decExtensionService.getListDecExtensionsByDeclarationId(1L);
-		boolean flag2 = list.size() > 0;
+		boolean flag2 = list.size() > 1;
 		Assert.assertTrue("根据申报表id获取作家扩展项填报信息集合失败", flag && flag2);
 	}
 	

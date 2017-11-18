@@ -75,7 +75,7 @@ public class DeclarationServiceTest extends BaseTest {
 		add();
 		List<Declaration> list = new ArrayList<>();
 		list = declarationService.getDeclarationByMaterialId(2L);
-		Assert.assertTrue("获取作家申报表信息集合失败", list.size() > 0);
+		Assert.assertTrue("获取作家申报表信息集合失败", list.size() > 1);
 	}
 	
 	private Declaration add(){

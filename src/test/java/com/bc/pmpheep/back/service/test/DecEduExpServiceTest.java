@@ -73,7 +73,7 @@ public class DecEduExpServiceTest extends BaseTest {
 		add();
 		List<DecEduExp> list = new ArrayList<>();
 		list = decEduExpService.getListDecEduExpByDeclarationId(3L);
-		Assert.assertTrue("获取学习经历信息集合失败", list.size() > 0);
+		Assert.assertTrue("获取学习经历信息集合失败", list.size() > 1);
 	}
 	
 	private DecEduExp add(){

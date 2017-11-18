@@ -77,7 +77,7 @@ public class DecLastPositionServiceTest extends BaseTest {
 		add();
 		List<DecLastPosition> list = new ArrayList<>();
 		list = decLastPositionService.getListDecLastPositionByDeclarationId(5L);
-		Assert.assertTrue("获取作家上套教材参编情况集合失败", list.size() > 0);
+		Assert.assertTrue("获取作家上套教材参编情况集合失败", list.size() > 1);
 	}
 	
 	private DecLastPosition add(){

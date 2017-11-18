@@ -72,7 +72,7 @@ public class DecAcadeServiceTest extends BaseTest {
 		add();
 		List<DecAcade> list = new ArrayList<>();
 		list = decAcadeService.getListDecAcadeByDeclarationId(5L);
-		Assert.assertTrue("作家兼职学术组织信息集合获取失败", list.size() > 0);
+		Assert.assertTrue("作家兼职学术组织信息集合获取失败", list.size() > 1);
 	}
 	
 	private DecAcade add(){

@@ -76,7 +76,7 @@ public class DecResearchServiceTest extends BaseTest {
 		add();
 		List<DecResearch> list = new ArrayList<>();
 		list = decResearchService.getListDecResearchByDeclarationId(2L);
-		Assert.assertTrue("获取作家科研情况信息集合失败", list.size() > 0);
+		Assert.assertTrue("获取作家科研情况信息集合失败", list.size() > 1);
 	}
 	
 	private DecResearch add(){
