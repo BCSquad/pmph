@@ -67,6 +67,17 @@ public class Textbook implements java.io.Serializable {
 		this.id=id;
 	}
 	
+	
+	
+	public Textbook(Long materialId, String textbookName,
+			Integer textbookRound, Integer sort, Long founderId) {
+		super();
+		this.materialId = materialId;
+		this.textbookName = textbookName;
+		this.textbookRound = textbookRound;
+		this.sort = sort;
+		this.founderId = founderId;
+	}
 	public Textbook(Long materialId, String textbookName,
 			Integer textbookRound, Boolean isLocked, Boolean isPublished,
 			Integer sort, Long founderId, Timestamp gmtCreate) {
