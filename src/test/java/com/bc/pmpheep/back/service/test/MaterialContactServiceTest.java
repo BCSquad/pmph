@@ -27,31 +27,52 @@ public class MaterialContactServiceTest extends BaseTest {
 	@Resource
 	MaterialContactDao materialContactDao;
 	
+	Random r =new Random();
+	MaterialContact materialContact=new MaterialContact(new Long(r.nextInt(200)),new Long(r.nextInt(200)),"contactUserName", "contactPhone", "contactEmai",1);
+	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void test() {
-    	Random r =new Random();
-    	MaterialContact materialContact=new MaterialContact(new Long(r.nextInt(200)),new Long(r.nextInt(200)),"contactUserName", "contactPhone", "contactEmai",1);
-    	logger.info("---TextbookService 测试---------------------------------------------------------------------------------");
+    public void testAddMaterialContact() {
     	Long num = materialContactDao.getMaterialContactCount();
     	logger.info("一共有{}", num);
     	//新增
     	materialContactService.addMaterialContact(materialContact);
     	Assert.assertTrue("添加失败",materialContact.getId() > 0 );
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testUpdateMaterialContact() {
+    	materialContactService.addMaterialContact(materialContact);
     	//修改
     	materialContact.setContactUserName(String.valueOf(r.nextInt(200)));
     	Assert.assertTrue("更新失败",materialContactService.updateMaterialContact(materialContact) > 0 );
-    	//删除
-    	Assert.assertTrue("删除失败",materialContactService.deleteMaterialContactById(2L) >= 0 );
-    	//删除
-    	Assert.assertTrue("删除失败",materialContactService.deleteMaterialContactsByMaterialId(30L) >= 0 );
-    	//查询
-    	Assert.assertNotNull("获取数据失败",materialContactService.getMaterialContactById(100L));
-    	
+    	//修改
+    	materialContact.setContactUserName(String.valueOf(r.nextInt(200)));
+    	materialContact.setId((long) r.nextInt(200));
+    	Assert.assertTrue("更新失败",materialContactService.updateMaterialContact(materialContact) >= 0 );
     }
     
-    
-    
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testDeleteMaterialContactById() {
+    	//删除
+    	Assert.assertTrue("删除失败",materialContactService.deleteMaterialContactById(2L) >= 0 );
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testDeleteMaterialContactsByMaterialId() {
+    	//删除
+    	Assert.assertTrue("删除失败",materialContactService.deleteMaterialContactsByMaterialId(30L) >= 0 );
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testGetMaterialContactById() {
+    	materialContactService.addMaterialContact(materialContact);
+    	MaterialContact  materialContact = materialContactService.getMaterialContactById(this.materialContact.getId());
+    	//查询
+    	Assert.assertNotNull("获取数据失败",materialContact);
+    	materialContact = materialContactService.getMaterialContactById(222L);
+    }
 }
 
 
