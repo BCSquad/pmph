@@ -64,21 +64,6 @@ public class OrgUserSeviceTest extends BaseTest {
 		Assert.assertNotNull("获取数据失败", orgUserService.getOrgUserById(orgUser.getId()));
 	}
 
-<<<<<<< HEAD
-    @Test
-    public void updateOrgUserOfBack() {
-        OrgUser orgUser = new OrgUser();
-        Org org=new Org();
-        orgUser = orgUserService.getOrgUserById(1040L);
-        org.setOrgName("机构");
-        orgUser.setEmail(null);
-        orgUser.setHandphone(null);
-        org.setOrgTypeId(10L);
-        orgUser.setRealname("名称");
-        Object result = orgUserService.updateOrgUserOfBack(orgUser, org);
-        Assert.assertTrue("更新失败", result.equals("SUCCESS"));
-    }
-=======
 	@Test
 	public void testGetListOrgUserVO() {
 		PageParameter pageParameter = new PageParameter<>();
@@ -93,33 +78,7 @@ public class OrgUserSeviceTest extends BaseTest {
 		pageResult = orgUserService.getListOrgUser(pageParameter);
 		Assert.assertNotNull("获取失败", pageResult);
 	}
->>>>>>> branch 'develop' of https://github.com/BCSquad/pmph.git
 
-<<<<<<< HEAD
-    @Test
-    public void updateOrgUserProgressById() {
-        List<Long> list = new ArrayList<Long>();
-        list.add(1L);
-        Assert.assertNotNull("更新审核状态失败", orgUserService.updateOrgUserProgressById(1, list));
-    }
-    
-    @Test
-    public void addOrgUserAndOrgOfBack(){
-    	Org org=new Org();
-    	OrgUser orgUser=new OrgUser();
-    	org.setAreaId(12345L);//所属区域
-    	org.setOrgTypeId(4L);//机构id
-    	orgUser.setRealname(null);
-    	org.setSort(null);//排序码
-    	org.setNote(null);//备注
-    	orgUser.setOrgId(org.getId());
-    	org.setOrgName("测试机构");//管理员姓名
-    	orgUser.setUsername("m1");//机构代码
-    	orgUser.setEmail(null);
-    	orgUser.setHandphone(null);
-    	Assert.assertNotNull("添加失败",orgUserService.addOrgUserAndOrgOfBack(orgUser, org));
-    }
-=======
 	@Test
 	public void testGetOrgUserListByOrgIds() {
 		orgUserService.addOrgUser(orgUser);
@@ -176,5 +135,4 @@ public class OrgUserSeviceTest extends BaseTest {
 		orgUser.setHandphone(null);
 		Assert.assertNotNull("添加失败", orgUserService.addOrgUserAndOrgOfBack(orgUser, org));
 	}
->>>>>>> branch 'develop' of https://github.com/BCSquad/pmph.git
 }
