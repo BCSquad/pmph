@@ -27,12 +27,12 @@ public class SQLParameters {
     /**
      * 现有平台数据库用户名
      */
-    public static final String DB_USERNAME = "root";
+    public static final String DB_USERNAME = "gugia";
 
     /**
      * 现有平台数据库密码
      */
-    public static final String DB_PASSWORD = "root";
+    public static final String DB_PASSWORD = "123123";
 
     /**
      * 专家平台数据库地址
@@ -52,7 +52,7 @@ public class SQLParameters {
     /**
      * 现有平台文件路径（最后以/结尾）
      */
-    public static final String FILE_PATH = "D:\\";
+    public static final String FILE_PATH = "/home/ftp/";
 
     /**
      * Excel异常导出统一表头

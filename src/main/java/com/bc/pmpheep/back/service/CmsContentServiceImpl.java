@@ -423,6 +423,16 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         return cmsContentDao.deleteCmsContentByIds(ids);
     }
+    
+    @Override
+    public Integer updateCmsContent(CmsContent cmsContent)
+    throws CheckedServiceException {
+        if (ObjectUtil.isNull(cmsContent)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return cmsContentDao.updateCmsContent(cmsContent);
+    }
 
     @Override
     public Integer updateCmsContentByIds(List<CmsContent> csmContents)
