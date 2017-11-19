@@ -177,7 +177,15 @@ public interface CmsContentService {
      */
     PageResult<CmsContentVO> listContentCheck(PageParameter<CmsContentVO> pageParameter,
     String sessionId) throws CheckedServiceException;
-
+    
+    /**
+     * 通过id获取 CmsContent
+     * @author Mryang
+     * @createDate 2017年11月17日 下午5:17:23
+     * @param id
+     * @return CmsContent
+     * @throws CheckedServiceException
+     */
     CmsContent getCmsContentById(Long id) throws CheckedServiceException;
 
     /**

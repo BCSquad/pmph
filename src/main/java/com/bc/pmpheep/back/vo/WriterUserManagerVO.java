@@ -138,7 +138,7 @@ public class WriterUserManagerVO implements Serializable {
     }
 
     public void setOrgName(String orgName) {
-        this.orgName = orgName.replaceAll(" ", "");
+        this.orgName = orgName;
     }
 
     public String getNickname() {
@@ -154,7 +154,7 @@ public class WriterUserManagerVO implements Serializable {
     }
 
     public void setRealname(String realname) {
-        this.realname = (realname==null?null:realname.trim());
+        this.realname = realname;
     }
 
     public String getPosition() {

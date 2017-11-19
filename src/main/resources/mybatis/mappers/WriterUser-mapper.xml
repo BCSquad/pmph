@@ -477,7 +477,7 @@
 	<select id="getWriterUserPermissionByUserId" parameterType="Long"
 		resultType="Long">
 		SELECT
-		prp.`permission_id`
+		wrp.`permission_id`
 		FROM
 		`writer_user` wu
 		LEFT JOIN

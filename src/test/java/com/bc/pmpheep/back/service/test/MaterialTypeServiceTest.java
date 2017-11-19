@@ -25,24 +25,50 @@ public class MaterialTypeServiceTest extends BaseTest {
 	@Resource
 	private MaterialTypeService materialTypeService;
 	
+	Random random =new Random();
+	MaterialType materialType=new MaterialType(new Long(random.nextInt(200)), "path"," typeName", random.nextInt(200)," note");
+	
+	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void test() {
-    	Random random =new Random();
-    	MaterialType materialType=new MaterialType(new Long(random.nextInt(200)), "path"," typeName", random.nextInt(200)," note");
-    	logger.info("---MaterialTypeService 测试---------------------------------------------------------------------------------");
+    public void testAddMaterialType() {
     	//新增
     	materialTypeService.addMaterialType(materialType);
     	Assert.assertTrue("添加失败",materialType.getId() > 0 );
+    	
+    }
+    
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testUpdateMaterialType() {
+    	materialTypeService.addMaterialType(materialType);
     	//修改
     	materialType.setTypeName(String.valueOf(random.nextInt(200)));
     	Assert.assertTrue("更新失败", materialTypeService.updateMaterialType(materialType) > 0 );
+    	
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testDeleteMaterialTypeById() {
+    	materialTypeService.addMaterialType(materialType);
     	//删除
-    	Assert.assertTrue("删除失败",materialTypeService.deleteMaterialTypeById(2L)  >= 0 );
+    	Assert.assertTrue("删除失败",materialTypeService.deleteMaterialTypeById(materialType.getId())  >= 0 );
+    	
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testGetMaterialTypeById() {
+    	materialTypeService.addMaterialType(materialType);
     	//查询
-    	Assert.assertNotNull("获取数据失败",materialTypeService.getMaterialTypeById(14L));
+    	Assert.assertNotNull("获取数据失败",materialTypeService.getMaterialTypeById(materialType.getId()));
+    	
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void test() {
+    	materialTypeService.addMaterialType(materialType);
     	//获取所有书籍类别
-    	Assert.assertNotNull("获取所有书籍类别失败", materialTypeService.listMaterialType(2L));
+    	Assert.assertNotNull("获取所有书籍类别失败", materialTypeService.listMaterialType(materialType.getParentId()));
     }
     
 }

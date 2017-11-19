@@ -387,12 +387,13 @@
 			<if test="isNationalPlanRequired !=null  ">
 				is_national_plan_required=#isNationalPlanRequired},
 			</if>
+			<!-- 
 			<if test="isTextbookWriterUsed !=null  ">
 				is_textbook_writer_used=#{isTextbookWriterUsed},
 			</if>
 			<if test="isTextbookWriterRequired !=null  ">
 				is_textbook_writer_required=#{isTextbookWriterRequired},
-			</if>
+			</if> --> 
 			<if test="isOtherTextbookUsed !=null  ">
 				is_other_textbook_used=#{isOtherTextbookUsed},
 			</if>
