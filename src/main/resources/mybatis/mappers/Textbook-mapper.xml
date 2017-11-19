@@ -227,7 +227,7 @@
 	</select>
 	
 	<!-- 根据教材Id查询对应的书籍 -->
-	<select id="getTextBookByMaterialId" parameterType="map" resultType="Textbook">
+	<select id="getTextbookByMaterialId" parameterType="map" resultType="Textbook">
 		select 
 			* 
 		from 

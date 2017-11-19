@@ -33,6 +33,14 @@ public class DecExtensionServiceImpl implements DecExtensionService{
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.NULL_PARAM, "参数不能为空");
 		}
+		if (ObjectUtil.isNull(decExtension.getExtensionId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.NULL_PARAM, "扩展项id不能为空");
+		}
+		if (ObjectUtil.isNull(decExtension.getDeclarationId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.NULL_PARAM, "申报表id不能为空");
+		}
 		decExtensionDao.addDecExtension(decExtension);
 		return decExtension;
 	}

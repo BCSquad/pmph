@@ -58,6 +58,6 @@ public interface TextbookService {
      * @return
      * </pre>
      */
-    List<Textbook> getTextBookByMaterialId(Long materialId) throws CheckedServiceException;
+    List<Textbook> getTextbookByMaterialId(Long materialId) throws CheckedServiceException;
 
 }

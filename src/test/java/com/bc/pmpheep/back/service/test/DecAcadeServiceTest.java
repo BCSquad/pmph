@@ -3,15 +3,20 @@
  */
 package com.bc.pmpheep.back.service.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.back.po.DecAcade;
 import com.bc.pmpheep.back.service.DecAcadeService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -28,23 +33,61 @@ public class DecAcadeServiceTest extends BaseTest {
 	DecAcadeService decAcadeService;
 
 	@Test
-	public void test() {
-		logger.info("---------作家兼职学术组织信息测试------------");
-		DecAcade decAcade = new DecAcade(10L, "心理咨询研究会", (Integer) 3, "会员",
-				"实验室成员", 10);
+	@Rollback(Const.ISROLLBACK)
+	public void testAddDecAcade(){
+		DecAcade decAcade = new DecAcade(3L, "神经科学研究会", 1, "会长", "名誉会长", 21);
+		decAcade = decAcadeService.addDecAcade(decAcade);
+		Assert.assertTrue("添加数据失败", decAcade.getId() > 0);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testDeleteDecAcade(){
+		long id = add().getId();
+		Integer count = decAcadeService.deleteDecAcadeById(id);
+		Assert.assertTrue("数据删除失败", count > 0);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testUpdateDecAcade(){
+		DecAcade decAcade = add();
+		decAcade.setDeclarationId(2L);
+		decAcade.setRank(1);
+		Integer count =decAcadeService.updateDecAcade(decAcade);
+		Assert.assertTrue("数据更新失败", count > 0);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testGetDecAcade(){
+		long id = add().getId();
+		DecAcade decAcade = decAcadeService.getDecAcadeById(id);
+		Assert.assertNotNull("作家兼职学术组织信息获取失败", decAcade);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testListDecAcade(){
+		add();
+		List<DecAcade> list = new ArrayList<>();
+		list = decAcadeService.getListDecAcadeByDeclarationId(5L);
+		Assert.assertTrue("作家兼职学术组织信息集合获取失败", list.size() > 1);
+	}
+	
+	private DecAcade add(){
+		DecAcade decAcade = new DecAcade();
+		decAcade.setDeclarationId(3L);
+		decAcade.setOrgName("脑科学研究会");
+		decAcade.setPosition("副会长");
+		decAcade.setRank(3);
+		decAcade.setNote("主管科研方向");
+		decAcade.setSort(10);
 		decAcadeService.addDecAcade(decAcade);
-		Assert.assertTrue("添加信息失败", decAcade.getId() > 0);
-		logger.info("----------添加成功---------");
-		decAcade.setOrgName("行为矫正协会");
-		Assert.assertTrue("更新组织信息失败",
-				decAcadeService.updateDecAcade(decAcade) > 0);
-		logger.info("---------更新成功---------");
-		Assert.assertNotNull("获取数据失败", decAcadeService.getDecAcadeById(1L));
-		logger.info("----------获取单条信息成功-----------");
-		Assert.assertTrue("获取信息集合失败", decAcadeService
-				.getListDecAcadeByDeclarationId(10L).size() > 0);
-		logger.info("-----------获取信息集合成功------------");
-		Assert.assertTrue("删除信息失败", decAcadeService.deleteDecAcadeById(1L) >= 0);
-		logger.info("------------测试完成-------------");
+		DecAcade decAcade2 = new DecAcade(5L,"心理学研究会", 2, "副会长", "名誉主席", 12);
+		decAcadeService.addDecAcade(decAcade2);
+		DecAcade decAcade3 = new DecAcade(5L,"脑科学研究会", 3, "会员", "特邀成员",14);
+		decAcadeService.addDecAcade(decAcade3);
+		return decAcade3;
 	}
 }

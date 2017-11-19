@@ -39,30 +39,6 @@ public class DecTextbookServiceImpl implements DecTextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id不能为空");
 		}
-		/*if (null == decTextbook.getMaterialName()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "教材名称不能为空");
-		}
-		if (null == decTextbook.getRank()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "编写教材级别不能为空");
-		}
-		if (null == decTextbook.getPosition()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "编写职务不能为空");
-		}
-		if (null == decTextbook.getPublisher()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "出版社不能为空");
-		}
-		if (null == decTextbook.getPublishDate()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "出版时间不能为空");
-		}*/
-		if (null ==decTextbook.getSort()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "显示顺序不能为空");
-		}
 		decTextbookDao.addDecTextbook(decTextbook);
 		return decTextbook;
 	}

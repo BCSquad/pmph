@@ -132,13 +132,18 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		List<OrgUser> orgUserList = orgUserDao.getOrgUserByIds(orgUserIds);
-		List<OrgUser> orgUsers = new ArrayList<OrgUser>(orgUserList.size());
-		for (OrgUser orgUser : orgUserList) {
-			if (Const.ORG_USER_PROGRESS_0 == orgUser.getProgress()) {
-				orgUsers.add(new OrgUser(orgUser.getId(), progress));
+		List<OrgUser> orgUsers =null;
+		Integer count=0;
+		if(CollectionUtil.isNotEmpty(orgUserList)) {
+			orgUsers=new ArrayList<OrgUser>(orgUserList.size());
+			for (OrgUser orgUser : orgUserList) {
+				if (Const.ORG_USER_PROGRESS_0 == orgUser.getProgress()) {
+					orgUsers.add(new OrgUser(orgUser.getId(), progress));
+				}
 			}
+			count= orgUserDao.updateOrgUserProgressById(orgUsers);
 		}
-		return orgUserDao.updateOrgUserProgressById(orgUsers);
+		return count;
 	}
 
 	/**

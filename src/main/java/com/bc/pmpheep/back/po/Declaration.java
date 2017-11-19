@@ -87,7 +87,11 @@ public class Declaration implements java.io.Serializable {
 		this.id = id;
 	}
 
-
+	public Declaration(Long materialId, Long userId) {
+		super();
+		this.materialId = materialId;
+		this.userId = userId;
+	}
 
 	public Declaration(Long materialId, Long userId, String realname,
 			Integer sex, Date birthday, Integer experience, String orgName,

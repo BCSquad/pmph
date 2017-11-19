@@ -23,11 +23,16 @@ public class DecExtension implements java.io.Serializable {
 	public DecExtension() {
 		super();
 	}
-
-	public DecExtension(Long id, Long extensionId, Long declarationId,
-			String content) {
+	
+	public DecExtension(Long id) {
 		super();
 		this.id = id;
+	}
+
+
+	public DecExtension(Long extensionId, Long declarationId,
+			String content) {
+		super();
 		this.extensionId = extensionId;
 		this.declarationId = declarationId;
 		this.content = content;

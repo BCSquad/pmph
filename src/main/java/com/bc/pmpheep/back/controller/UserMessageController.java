@@ -136,7 +136,7 @@ public class UserMessageController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询书籍列表")
     @RequestMapping(value = "/message/send_object/{materialId}/textBook", method = RequestMethod.GET)
     public ResponseBean textBook(@PathVariable("materialId") Long materialId) {
-        return new ResponseBean(textbookService.getTextBookByMaterialId(materialId));
+        return new ResponseBean(textbookService.getTextbookByMaterialId(materialId));
     }
 
     /**

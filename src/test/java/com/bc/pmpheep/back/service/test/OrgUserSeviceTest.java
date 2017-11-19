@@ -19,8 +19,6 @@ import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
-import com.bc.pmpheep.back.vo.OrgUserManagerVO;
-import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -29,68 +27,44 @@ import com.bc.pmpheep.test.BaseTest;
  * @author mryang
  */
 public class OrgUserSeviceTest extends BaseTest {
-    Logger                 logger = LoggerFactory.getLogger(OrgUserSeviceTest.class);
+	Logger logger = LoggerFactory.getLogger(OrgUserSeviceTest.class);
 
-    @Resource
-    private OrgUserService orgUserService;
+	@Resource
+	private OrgUserService orgUserService;
+	Random random = new Random();
+	OrgUser orgUser = new OrgUser("张珊" + random.nextInt(10000), "999", false, 5L, "李四", 1, "zhiwei", "职称", "cahunzehn",
+			"shou", "dianhia", "shenfenz", "email", "address", "String postcode", "String note", 2, false, null, null);
 
-    @Test
-    @Rollback(Const.ISROLLBACK)
-    public void test() throws Exception {
-        Random random = new Random();
-        OrgUser orgUser =
-        new OrgUser("张珊" + random.nextInt(10000), "999", false, 5L, "李四", 1, "zhiwei", "职称",
-                    "cahunzehn", "shou", "dianhia", "shenfenz", "email", "address",
-                    "String postcode", "String note", 2, false, null, null);
-        orgUserService.addOrgUser(orgUser);
-        logger.info("---OrgUserService--------------------------------新增--------------------------------------------");
-        Assert.assertTrue("添加失败", orgUser.getId() > 0);
-        orgUser.setRealname("ceshiwwwwwwww" + orgUser.getId());
-        Assert.assertTrue("更新失败", orgUserService.updateOrgUser(orgUser) > 0);
-        Assert.assertTrue("删除失败", orgUserService.deleteOrgUserById(1L) >= 0);
-        Assert.assertNotNull("获取数据失败", orgUserService.getOrgUserById(4L));
-    }
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testAddOrgUser() {
+		orgUserService.addOrgUser(orgUser);
+		Assert.assertTrue("添加失败", orgUser.getId() > 0);
+	}
 
-    @Test
-    public void getListOrgUserVO() {
-        PageParameter pageParameter = new PageParameter<>();
-        PageResult pageResult = new PageResult<>();
-        OrgAndOrgUserVO managerVO = new OrgAndOrgUserVO();
-        managerVO.setUsername("m");
-        managerVO.setRealname(null);
-        managerVO.setOrgName(null);
-        pageParameter.setParameter(managerVO);
-        pageParameter.setStart(1);
-        pageParameter.setPageSize(15);
-        pageResult = orgUserService.getListOrgUser(pageParameter);
-        Assert.assertNotNull("获取失败", pageResult);
-    }
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testUpdateOrgUser() {
+		orgUserService.addOrgUser(orgUser);
+		orgUser.setRealname("ceshiwwwwwwww" + orgUser.getId());
+		Assert.assertTrue("更新失败", orgUserService.updateOrgUser(orgUser) > 0);
+	}
 
-    @Test
-    public void getOrgUserListByOrgIds() {
-        List<Long> orgIds = new ArrayList<Long>();
-        orgIds.add(1L);
-        orgIds.add(2L);
-        orgIds.add(3L);
-        orgIds.add(4L);
-        orgIds.add(6L);
-        List<OrgUser> orgUser = orgUserService.getOrgUserListByOrgIds(orgIds);
-        Assert.assertTrue("获取数据失败", orgUser.size() == 5);
-    }
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testDeleteOrgUserById() {
+		orgUserService.addOrgUser(orgUser);
+		Assert.assertTrue("删除失败", orgUserService.deleteOrgUserById(orgUser.getId()) >= 0);
+	}
 
-    @Test
-    public void addOrgUserOfBack() {
-        OrgUser orgUser = new OrgUser();
-        orgUser.setUsername("OOO");
-        orgUser.setRealname("BBc");
-        String result = orgUserService.addOrgUserOfBack(orgUser);
-        Assert.assertTrue("添加失败", result.equals("SUCCESS"));
-        orgUser.setUsername("YYY");
-        orgUser.setRealname(null);
-        result = orgUserService.addOrgUserOfBack(orgUser);
-        Assert.assertTrue("添加失败", result.equals("SUCCESS"));
-    }
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testGetOrgUserById() {
+		orgUserService.addOrgUser(orgUser);
+		Assert.assertNotNull("获取数据失败", orgUserService.getOrgUserById(orgUser.getId()));
+	}
 
+<<<<<<< HEAD
     @Test
     public void updateOrgUserOfBack() {
         OrgUser orgUser = new OrgUser();
@@ -104,7 +78,24 @@ public class OrgUserSeviceTest extends BaseTest {
         Object result = orgUserService.updateOrgUserOfBack(orgUser, org);
         Assert.assertTrue("更新失败", result.equals("SUCCESS"));
     }
+=======
+	@Test
+	public void testGetListOrgUserVO() {
+		PageParameter pageParameter = new PageParameter<>();
+		PageResult pageResult = new PageResult<>();
+		OrgAndOrgUserVO managerVO = new OrgAndOrgUserVO();
+		managerVO.setUsername(null);
+		managerVO.setRealname(null);
+		managerVO.setOrgName(null);
+		pageParameter.setParameter(managerVO);
+		pageParameter.setStart(1);
+		pageParameter.setPageSize(15);
+		pageResult = orgUserService.getListOrgUser(pageParameter);
+		Assert.assertNotNull("获取失败", pageResult);
+	}
+>>>>>>> branch 'develop' of https://github.com/BCSquad/pmph.git
 
+<<<<<<< HEAD
     @Test
     public void updateOrgUserProgressById() {
         List<Long> list = new ArrayList<Long>();
@@ -128,4 +119,62 @@ public class OrgUserSeviceTest extends BaseTest {
     	orgUser.setHandphone(null);
     	Assert.assertNotNull("添加失败",orgUserService.addOrgUserAndOrgOfBack(orgUser, org));
     }
+=======
+	@Test
+	public void testGetOrgUserListByOrgIds() {
+		orgUserService.addOrgUser(orgUser);
+		List<Long> orgIds = new ArrayList<Long>();
+		orgIds.add(5L);
+		List<OrgUser> orgUser = orgUserService.getOrgUserListByOrgIds(orgIds);
+		Assert.assertTrue("获取数据失败", orgUser.size() > 0);
+	}
+
+	@Test
+	public void testAddOrgUserOfBack() {
+		OrgUser orgUser = new OrgUser();
+		orgUser.setUsername("OOO");
+		orgUser.setRealname("BBc");
+		String result = orgUserService.addOrgUserOfBack(orgUser);
+		Assert.assertTrue("添加失败", result.equals("SUCCESS"));
+	}
+
+	@Test
+	public void testUpdateOrgUserOfBack() {
+		OrgUser orgUser = new OrgUser();
+		Org org = new Org();
+		orgUser = orgUserService.getOrgUserById(1040L);
+		org.setOrgName("机构");
+		orgUser.setEmail(null);
+		orgUser.setHandphone(null);
+		org.setOrgTypeId(10L);
+		orgUser.setRealname("名称");
+		Object result = orgUserService.updateOrgUserOfBack(orgUser, org);
+		Assert.assertTrue("更新失败", result.equals("SUCCESS"));
+	}
+
+	@Test
+	public void testUpdateOrgUserProgressById() {
+		orgUserService.addOrgUser(orgUser);
+		List<Long> list = new ArrayList<Long>();
+		list.add(orgUser.getId());
+		Assert.assertTrue("更新审核状态失败", orgUserService.updateOrgUserProgressById(1, list) > 0);
+	}
+
+	@Test
+	public void addOrgUserAndOrgOfBack() {
+		Org org = new Org();
+		OrgUser orgUser = new OrgUser();
+		org.setAreaId(12345L);// 所属区域
+		org.setOrgTypeId(4L);// 机构id
+		orgUser.setRealname("s");
+		org.setSort(null);// 排序码
+		org.setNote(null);// 备注
+		orgUser.setOrgId(org.getId());
+		org.setOrgName("asdasdasdasda");// 管理员姓名
+		orgUser.setUsername("m1001021");// 机构代码
+		orgUser.setEmail(null);
+		orgUser.setHandphone(null);
+		Assert.assertNotNull("添加失败", orgUserService.addOrgUserAndOrgOfBack(orgUser, org));
+	}
+>>>>>>> branch 'develop' of https://github.com/BCSquad/pmph.git
 }

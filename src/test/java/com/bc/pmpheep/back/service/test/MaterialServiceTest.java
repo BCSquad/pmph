@@ -26,48 +26,75 @@ public class MaterialServiceTest extends BaseTest {
 	@Resource
 	private MaterialService materialService;
 	
+	
+	Random random =new Random();
+	Material material=new Material ("materialName",random.nextInt(200),
+			new Long(random.nextInt(200)), new Date(), new Date(),
+			new Date(),"mailAddress",new Long(random.nextInt(200)),
+			new Long(random.nextInt(200)),true,
+			true, true,
+			true, true,
+			true, true,
+			true, true,
+			true, true,
+			true, true,
+			true, true,
+			true, true,
+			true, true,
+			true, true,
+			true, true,
+			true, true,
+			true, true,
+			true, true,
+			true, true, null,
+			new Long(random.nextInt(200)), null, new Long(random.nextInt(200)));
+	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void test() {
-    	Random random =new Random();
-    	Material material=new Material ("materialName",random.nextInt(200),
-    			new Long(random.nextInt(200)), new Date(), new Date(),
-    			new Date(),"mailAddress",new Long(random.nextInt(200)),
-    			new Long(random.nextInt(200)),true,
-    			true, true,
-    			true, true,
-    			true, true,
-    			true, true,
-    			true, true,
-    			true, true,
-    			true, true,
-    			true, true,
-    			true, true,
-    			true, true,
-    			true, true,
-    			true, true,
-    			true, true,
-    			true, true,
-    			true, true, null,
-    			new Long(random.nextInt(200)), null, new Long(random.nextInt(200)));
-    	logger.info("---MaterialService 测试---------------------------------------------------------------------------------");
+    public void testAddMaterial() {
+    	
     	//新增
     	materialService.addMaterial(material);
     	Assert.assertTrue("添加失败",material.getId() > 0 );
-    	//修改
-    	material.setMaterialName(String.valueOf(random.nextInt(200)));
-    	Assert.assertTrue("更新失败", materialService.updateMaterial(material) > 0 );
-    	//删除
-    	Assert.assertTrue("删除失败",materialService.deleteMaterialById(2L)  >= 0 );
-    	//查询
-    	Assert.assertNotNull("获取数据失败",materialService.getMaterialById(3L));
-    	// 获取教材集合
-    	Assert.assertNotNull("获取教材集合失败", materialService.getListMaterial("教材名称"));
+    	
     	
     }
     
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testUpdateMaterial() {
+    	materialService.addMaterial(material);
+    	//修改
+    	material.setMaterialName(String.valueOf(random.nextInt(200)));
+    	Assert.assertTrue("更新失败", materialService.updateMaterial(material) > 0 );
+    	
+    }
     
-    
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testDeleteMaterialById() {
+    	materialService.addMaterial(material);
+    	//删除
+    	Assert.assertTrue("删除失败",materialService.deleteMaterialById(material.getId())  > 0 );
+    	Assert.assertTrue("删除失败",materialService.deleteMaterialById(2L)  >= 0 );
+    	
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testGetMaterialById() {
+    	materialService.addMaterial(material);
+    	//查询
+    	Assert.assertNotNull("获取数据失败",materialService.getMaterialById(material.getId()));
+    	materialService.getMaterialById(random.nextLong());
+    	
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testGetListMaterial() {
+    	// 获取教材集合
+    	Assert.assertNotNull("获取教材集合失败", materialService.getListMaterial(material.getMaterialName()));
+    	Assert.assertNotNull("获取教材集合失败", materialService.getListMaterial(null));
+    }
 }
 
 

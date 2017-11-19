@@ -45,6 +45,30 @@ public class DecPosition implements Serializable {
 		this.id = id;
 	}
 	
+	public DecPosition(Long declarationId, Long textbookId,
+			Integer presetPosition) {
+		super();
+		this.declarationId = declarationId;
+		this.textbookId = textbookId;
+		this.presetPosition = presetPosition;
+	}
+	
+	public DecPosition(Long declarationId, Long textbookId,
+			Integer presetPosition, Integer isOnList, Integer chosenPosition,
+			Integer rank, String syllabusId, String syllabusName,
+			Timestamp gmtCreate, Timestamp gmtUpdate) {
+		super();
+		this.declarationId = declarationId;
+		this.textbookId = textbookId;
+		this.presetPosition = presetPosition;
+		this.isOnList = isOnList;
+		this.chosenPosition = chosenPosition;
+		this.rank = rank;
+		this.syllabusId = syllabusId;
+		this.syllabusName = syllabusName;
+		this.gmtCreate = gmtCreate;
+		this.gmtUpdate = gmtUpdate;
+	}
 	public Long getId() {
 		return id;
 	}

@@ -1,4 +1,6 @@
 package com.bc.pmpheep.back.service.test;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Resource;
@@ -25,27 +27,67 @@ public class TextbookServiceTest extends BaseTest {
 	private TextbookService textbookService;
 	
     @Test
-    @Rollback(Const.ISROLLBACK) 
-    public void test()  {
-    	Random random =new Random();
-    	Textbook textbook=new Textbook(new Long(random.nextInt(200)), "Name", random.nextInt(200), false,false, null,String.valueOf(random.nextInt(200)),1,1L,null)  ;
-    	logger.info("---TextbookService 测试---------------------------------------------------------------------------------");
-    	//新增
-    	textbookService.addTextbook(textbook);
-    	Assert.assertTrue("添加失败",textbook.getId() > 0 );
-    	//修改
-    	textbook.setTextbookName(String.valueOf(random.nextInt(200)));
-    	Assert.assertTrue("更新失败", textbookService.updateTextbook(textbook) > 0 );
-    	//删除
-    	Assert.assertTrue("删除失败",textbookService.deleteTextbookById(2L)  >= 0 );
-    	//查询
-    	Assert.assertNotNull("获取数据失败",textbookService.getTextbookById(6L));
-    	//查询
-    	Assert.assertNotNull("获取数据失败",textbookService.getTextBookByMaterialId(1L));
-    	
+    @Rollback(Const.ISROLLBACK)
+    public void testAddTextbook(){
+    	Textbook textbook = new Textbook();
+    	textbook.setMaterialId(23L);
+    	textbook.setTextbookName("社会心理学");
+    	textbook.setTextbookRound(5);
+    	textbook.setSort(12);
+    	textbook.setFounderId(77L);
+    	textbook = textbookService.addTextbook(textbook);
+    	Assert.assertTrue("数据添加失败", textbook.getId() > 0);
     }
     
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testDeleteTextbook(){
+    	long id = add().getId();
+    	Integer count = textbookService.deleteTextbookById(id);
+    	Assert.assertTrue("数据删除失败", count > 0);
+    }
     
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testUpdateTextbook(){
+    	Textbook textbook = add();
+    	textbook.setMaterialId(17L);
+    	textbook.setSort(6);
+    	Integer count = textbookService.updateTextbook(textbook);
+    	Assert.assertTrue("数据更新失败", count > 0);
+    }
+    
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testGetTextbook(){
+    	long id = add().getId();
+    	Textbook textbook = textbookService.getTextbookById(id);
+    	Assert.assertNotNull("获取教材书籍信息失败", textbook);
+    }
+    
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testListTextbook(){
+    	add();
+    	List<Textbook> list = new ArrayList<>();
+    	list = textbookService.getTextbookByMaterialId(1L);
+    	Assert.assertTrue("获取教材书籍信息集合失败", list.size() > 1);
+    }
+    
+    private Textbook add(){
+    	Textbook textbook = new Textbook();
+    	textbook.setMaterialId(1L);
+    	textbook.setTextbookName("心理诊断学");
+    	textbook.setTextbookRound(5);
+    	textbook.setSort(2);
+    	textbook.setFounderId(2L);
+    	textbookService.addTextbook(textbook);
+    	Textbook textbook2 = new Textbook(2L, "心理统计学", 3, 1, 9L);
+    	textbookService.addTextbook(textbook2);
+    	Textbook textbook3 = new Textbook(1L, "变态心理学", 8, 3, 10L);
+    	textbookService.addTextbook(textbook3);
+    	return textbook3;
+    }
     
 }
 

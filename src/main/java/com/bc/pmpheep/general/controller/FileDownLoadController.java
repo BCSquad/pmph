@@ -142,17 +142,18 @@ public class FileDownLoadController {
 			file_name = new String(file.getFilename().getBytes(), "ISO-8859-1");
 			response.setHeader("Content-Disposition", "attachment;fileName=" + file_name);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.warn("修改编码格式的时候失败");
 		}
 		try (OutputStream out = response.getOutputStream()) {
 			file.writeTo(out);
 			out.flush();
 			out.close();
+			return new ResponseBean(groupFileService.updatePmphGroupFileOfDown(groupId, id));
 		} catch (IOException ex) {
 			logger.warn("文件下载时出现IO异常：{}", ex.getMessage());
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
-		return new ResponseBean(groupFileService.updatePmphGroupFileOfDown(groupId, id));
+
 	}
 }
