@@ -32,7 +32,7 @@ public interface MaterialProjectEditorService {
 	Integer addMaterialProjectEditors(List<MaterialProjectEditor> materialProjectEditors) throws CheckedServiceException;
 	
 	/**
-	 * 根据教材id批量项目编辑
+	 * 根据教材id批量查找项目编辑
 	 * @author Mryang
 	 * @createDate 2017年11月17日 下午3:37:18
 	 * @param materialId
