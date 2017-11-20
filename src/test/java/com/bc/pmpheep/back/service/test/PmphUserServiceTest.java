@@ -239,7 +239,6 @@ public class PmphUserServiceTest extends BaseTest {
 		pmphUser.setPassword("123");
 		pmphUser.setAvatar("110");
 		pmphUser.setRealname("ABC");
-		userService.add(pmphUser);
 		userService.add(pmphUser, ids);
 		Assert.assertTrue("影响行数不为3就为错误", userService.deleteUserAndRole(ids) == 3);
 	}
