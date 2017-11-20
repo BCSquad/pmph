@@ -22,7 +22,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 /**
  * 
  * <pre>
- * 功能描述：社外内容审核 控制器
+ * 功能描述：公告管理 控制器
  * 使用示范：
  * 
  * 
@@ -39,16 +39,16 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 @Controller
 @RequestMapping(value = "/cms")
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class CmsContentCheckController {
-	@Autowired
-	CmsContentService cmsContentService;
-	// 当前业务类型
-	private static final String BUSSINESS_TYPE = "公告管理";
+public class CmsNoticeManagementController {
+    @Autowired
+    CmsContentService           cmsContentService;
+    // 当前业务类型
+    private static final String BUSSINESS_TYPE = "公告管理";
 
-	/**
-	 * 
-	 * <pre>
-	 * 功能描述：分页查询条件查询《社外内容审核》列表
+    /**
+     * 
+     * <pre>
+	 * 功能描述：分页查询条件查询《公告管理》列表
 	 * 使用示范：
 	 *
 	 * &#64;param pageNumber 当前页
@@ -57,42 +57,44 @@ public class CmsContentCheckController {
 	 * &#64;param sessionId
 	 * &#64;return 分页数据集
 	 * </pre>
-	 */
-	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询公告管理列表")
-	@RequestMapping(value = "/check", method = RequestMethod.GET)
-	public ResponseBean check(@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
-			@RequestParam(name = "pageSize") Integer pageSize, CmsContentVO cmsContentVO, HttpServletRequest request) {
-		PageParameter<CmsContentVO> pageParameter = new PageParameter<CmsContentVO>(pageNumber, pageSize, cmsContentVO);
-		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(cmsContentService.listContentCheck(pageParameter, sessionId));
-	}
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询公告管理列表")
+    @RequestMapping(value = "/notice", method = RequestMethod.GET)
+    public ResponseBean notice(
+    @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+    @RequestParam(name = "pageSize") Integer pageSize, CmsContentVO cmsContentVO,
+    HttpServletRequest request) {
+        PageParameter<CmsContentVO> pageParameter =
+        new PageParameter<CmsContentVO>(pageNumber, pageSize, cmsContentVO);
+        String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(cmsContentService.listContentCheck(pageParameter, sessionId));
+    }
 
-	/**
-	 * 
-	 * <pre>
-	 * 功能描述：社外内容审核操作(通过/拒绝)
+    /**
+     * 
+     * <pre>
+	 * 功能描述：公告管理操作(通过/拒绝)
 	 * 使用示范：
 	 *
 	 * &#64;param id 主键ID
 	 * &#64;param authStatus 审核状态
 	 * &#64;return 影响行数
 	 * </pre>
-	 */
-	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
-	@RequestMapping(value = "/check/content", method = RequestMethod.PUT)
-	public ResponseBean content(@RequestParam("id") Long id, @RequestParam("authStatus") Short authStatus,
-			HttpServletRequest request) {
-		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(cmsContentService.checkContentById(id, authStatus, sessionId));
-	}
-
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
+    @RequestMapping(value = "/notice/content", method = RequestMethod.PUT)
+    public ResponseBean content(@RequestParam("id") Long id,
+    @RequestParam("authStatus") Short authStatus, HttpServletRequest request) {
+        String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(cmsContentService.checkContentById(id, authStatus, sessionId));
+    }
 
     /**
      * 
      * <pre>
-     * 功能描述：社外内容审核操作(逻辑删除)
+     * 功能描述：公告管理操作(逻辑删除)
      * 使用示范：
      *
      * @param ids 主键ID集合
@@ -101,14 +103,15 @@ public class CmsContentCheckController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除一条公告管理数据")
-    @RequestMapping(value = "/check/{id}/update", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/notice/{id}/update", method = RequestMethod.DELETE)
     public ResponseBean update(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.deleteCmsContentById(id));
     }
+
     /**
      * 
      * <pre>
-     * 功能描述：社外内容审核操作(批量逻辑删除)
+     * 功能描述：公告管理操作(批量逻辑删除)
      * 使用示范：
      *
      * @param ids 主键ID集合
@@ -117,7 +120,7 @@ public class CmsContentCheckController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除公告管理数据")
-    @RequestMapping(value = "/check/delete", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/notice/delete", method = RequestMethod.DELETE)
     public ResponseBean delete(@RequestParam("ids") List<Long> ids) {
         return new ResponseBean(cmsContentService.deleteCmsContentByIds(ids));
     }

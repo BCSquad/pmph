@@ -265,7 +265,7 @@
 			<if test="sort != null">
 				sort=#{sort},
 			</if>
-			<if test="deadlineStick != null">
+			<if test="deadlineStick != null and deadlineStick !='' ">
 				deadline_stick=#{deadlineStick},
 			</if>
 			<if test="isHot != null">
@@ -274,7 +274,7 @@
 			<if test="sortHot != null">
 				sort_hot=#{sortHot},
 			</if>
-			<if test="deadlineHot != null">
+			<if test="deadlineHot != null and deadlineHot!='' ">
 				deadline_hot=#{deadlineHot},
 			</if>
 			<if test="isPromote != null">
@@ -283,7 +283,7 @@
 			<if test="sortPromote != null">
 				sort_promote=#{sortPromote},
 			</if>
-			<if test="deadlinePromote != null">
+			<if test="deadlinePromote != null and deadlinePromote!='' ">
 				deadline_promote=#{deadlinePromote},
 			</if>
 			<if test="isScheduled != null">
@@ -304,7 +304,7 @@
 			<if test="authUserId != null">
 				auth_user_id=#{authUserId},
 			</if>
-			<if test="authDate != null">
+			<if test="authDate != null and authDate!='' ">
 				auth_date=#{authDate},
 			</if>
 			<if test="isDeleted != null">
@@ -472,7 +472,7 @@
 		</if>
 	</select>
 	
-	<!--分页查询条件查询《社外内容管理》列表 -->
+	<!--分页查询条件查询《信息快报管理》列表 -->
 	<select id="listContentManage" parameterType="PageParameter"
 		resultType="CmsContentVO">
 		SELECT 
@@ -577,7 +577,7 @@
 		</if>
 	</select>
 	
-	<!--分页查询条件查询《社外内容审核》列表 -->
+	<!--分页查询条件查询《公告管理》列表 -->
 	<select id="listContentCheck" parameterType="PageParameter"
 		resultType="CmsContentVO">
 		SELECT 
