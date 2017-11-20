@@ -202,7 +202,9 @@ public class PmphUserController {
 			Long departmentId) {
 		PageParameter pageParameter = new PageParameter<>();
 		PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
-		pmphUserManagerVO.setName(name.replaceAll(" ", ""));//去除空格
+		if(StringUtil.notEmpty(name)){
+			pmphUserManagerVO.setName(name.replaceAll(" ", ""));//去除空格
+		}
 		pmphUserManagerVO.setPath(path);
 		pmphUserManagerVO.setDepartmentId(departmentId);
 		pageParameter.setPageNumber(pageNumber);

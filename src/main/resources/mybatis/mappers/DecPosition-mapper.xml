@@ -134,11 +134,25 @@
 		declaration_id=#{declarationId};
 	</select>
 
-	<!-- 根据书籍id查询申报id -->
-	<select id="listDecPositionsByTextbookId" parameterType="java.lang.Long"
-		resultType="DecPosition">
-		SELECT d.user_id FROM declaration d LEFT JOIN dec_position
-		p ON d.id = p.declaration_id WHERE p.textbook_id =#{textbookId};
+	<!-- 根据书籍id查询申报职位列表 -->
+	<select id="listDecPositionsByTextbookId" parameterType="java.lang.Long" resultType="DecPosition">
+		select 
+			DISTINCT a.* 
+		from 
+			dec_position a 
+		left join 
+			declaration b 
+		on 
+			b.id =a.declaration_id 
+		LEFT JOIN 
+			textbook c 
+		on 
+			c.id=a.textbook_id 
+		where 
+			b.id is not null  
+			and b.is_staging =false 
+			and b.online_progress != 2 
+			and c.id = #{textbookId};
 	</select>
 	
 	<!-- 根据书籍id查询申报id -->
@@ -164,4 +178,21 @@
 		select count(*) from
 		dec_position
 	</select>
+	
+	<!-- 根据orgid和bookid获取该机构某些已公布的书的申报职位 -->
+	<select id="listDecPositionsByTextbookIdAndOrgid" parameterType="java.util.Map" resultType="DecPosition">
+		select  DISTINCT a.* 
+			from dec_position a 
+			LEFT JOIN declaration b on b.id = a.declaration_id
+			LEFT JOIN  textbook C ON C.ID=A.textbook_id 
+      		WHERE B.ID IS NOT NULL and c.id is not null
+	    	AND b.is_staging =false and b.online_progress != 2 
+			AND A.chosen_position IN (1,2,3) AND  C.is_published = true 
+			AND B.org_id = #{orgId} 
+      		AND C.ID IN 
+			<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+       			#{item}
+   			</foreach>
+    </select>
+    
 </mapper>

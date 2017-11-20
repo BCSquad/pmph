@@ -50,10 +50,14 @@ public class OrgUserController {
 	@ResponseBody
 	public ResponseBean orgUser(@RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
-			@RequestParam("realname") String realname) {
+			@RequestParam("orgName") String orgName) {
 		OrgAndOrgUserVO orgUserManagerVO = new OrgAndOrgUserVO();
-		orgUserManagerVO.setName(name.replaceAll(" ", ""));// 去除空格
-		orgUserManagerVO.setRealname(realname.replaceAll(" ", ""));
+		if(StringUtil.notEmpty(orgName)){
+			orgUserManagerVO.setOrgName(orgName.replaceAll(" ", ""));
+		}
+		if(StringUtil.notEmpty(name)){
+			orgUserManagerVO.setName(name.replaceAll(" ", ""));// 去除空格
+		}
 		PageParameter<OrgAndOrgUserVO> pageParameter = new PageParameter<OrgAndOrgUserVO>(pageNumber, pageSize,
 				orgUserManagerVO);
 		return new ResponseBean(orgUserService.getListOrgUser(pageParameter));
