@@ -4,10 +4,10 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
-
+import java.util.Map;
 import org.springframework.stereotype.Repository;
-
 import com.bc.pmpheep.back.po.DecPosition;
+
 
 /**
  * <p>
@@ -66,6 +66,15 @@ public interface DecPositionDao {
      * @Return:DecPosition
      */
     DecPosition getDecPositionById(Long id);
+    
+    /**
+     * 根据orgid和bookid获取该机构某些已公布的书的申报职位
+     * @author Mryang
+     * @createDate 2017年11月19日 上午10:13:40
+     * @param map
+     * @return
+     */
+    List<DecPosition> listDecPositionsByTextbookIdAndOrgid(Map<String, Object> map) ;
 
     /**
      * 
