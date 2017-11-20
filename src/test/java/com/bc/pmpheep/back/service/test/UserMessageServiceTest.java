@@ -46,8 +46,8 @@ public class UserMessageServiceTest extends BaseTest {
 	@Resource
 	private UserMessageService userMessageService;
 
-	@Resource
-	UserMessageDao userMessageDao;
+	/*@Resource
+	UserMessageDao userMessageDao;*/
 
 	/*@Test
 	@Rollback(Const.ISROLLBACK)
