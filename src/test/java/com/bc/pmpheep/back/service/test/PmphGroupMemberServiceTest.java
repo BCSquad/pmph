@@ -28,41 +28,59 @@ public class PmphGroupMemberServiceTest extends BaseTest {
 	@Resource
 	private PmphGroupMemberService pmphGroupMemberService;
 
+	Random random = new Random();
+	PmphGroupMember pmphGroupMember = new PmphGroupMember(new Long(random.nextInt(100)), 1L, false, true, false, false,
+			"aaa", null, null);
+
 	@Test
-	@Rollback(Const.ISROLLBACK)
-	public void test() throws Exception {
-		// Random random = new Random();
-		// PmphGroupMember pmphGroupMember = new PmphGroupMember(new
-		// Long(random.nextInt(200)),
-		// new Long(random.nextInt(200)), true, true, true, "jadskjdkas", null, null);
-		// logger.info(
-		// "---PmphGroupMemberService
-		// 测试---------------------------------------------------------------------------------");
-		// // 新增
-		// pmphGroupMemberService.addPmphGroupMember(pmphGroupMember);
-		// Assert.assertTrue("添加失败", pmphGroupMember.getId() > 0);
-		// // 修改
-		// pmphGroupMember.setDisplayName(String.valueOf(random.nextInt(200)));
-		// Assert.assertTrue("更新失败",
-		// pmphGroupMemberService.updatePmphGroupMember(pmphGroupMember) > 0);
-		// // 删除
-		// Assert.assertTrue("删除失败",
-		// pmphGroupMemberService.deletePmphGroupMemberById(1L) >= 0);
-		// Assert.assertTrue("删除失败",
-		// "SUCCESS".equals(pmphGroupMemberService.deletePmphGroupMemberOnGroup(144L)));
-		// // 查询
-		// Assert.assertNotNull("获取数据失败",
-		// pmphGroupMemberService.getPmphGroupMemberById(2L));
-		// Assert.assertNotNull("获取数据失败",
-		// pmphGroupMemberService.getPmphGroupMemberByMemberId(100L, 1L, false));
-		// PageParameter pageParameter = new PageParameter<>(1, 20);
-		// PmphGroupMemberManagerVO pmphGroupMemberManagerVO = new
-		// PmphGroupMemberManagerVO();
-		// pmphGroupMemberManagerVO.setName(null);
-		// pmphGroupMemberManagerVO.setGroupId(100L);
-		// pageParameter.setParameter(pmphGroupMemberManagerVO);
-		// Assert.assertNotNull("获取数据失败",
-		// pmphGroupMemberService.listGroupMemberManagerVOs(pageParameter));
+	public void testAddPmphGroupMember() {
+		pmphGroupMemberService.addPmphGroupMember(pmphGroupMember);
+		Assert.assertTrue("添加失败", pmphGroupMember.getId() > 0);
+	}
+
+	@Test
+	public void testUpdatePmphGroupMember() {
+		pmphGroupMemberService.addPmphGroupMember(pmphGroupMember);
+		pmphGroupMember.setDisplayName(String.valueOf(random.nextInt(200)));
+		Assert.assertTrue("更新失败", pmphGroupMemberService.updatePmphGroupMember(pmphGroupMember) > 0);
+	}
+
+	@Test
+	public void testDeletePmphGroupMemberById() {
+		pmphGroupMemberService.addPmphGroupMember(pmphGroupMember);
+		Assert.assertTrue("删除失败", pmphGroupMemberService.deletePmphGroupMemberById(pmphGroupMember.getId()) >= 0);
+	}
+
+	@Test
+	public void testDeletePmphGroupMemberOnGroup() {
+		pmphGroupMemberService.addPmphGroupMember(pmphGroupMember);
+		Assert.assertTrue("删除失败",
+				"SUCCESS".equals(pmphGroupMemberService.deletePmphGroupMemberOnGroup(pmphGroupMember.getGroupId())));
+	}
+
+	@Test
+	public void testGetPmphGroupMemberById() {
+		pmphGroupMemberService.addPmphGroupMember(pmphGroupMember);
+		Assert.assertNotNull("获取数据失败", pmphGroupMemberService.getPmphGroupMemberById(pmphGroupMember.getId()));
+	}
+
+	@Test
+	public void testGetPmphGroupMemberByMemberId() {
+		pmphGroupMemberService.addPmphGroupMember(pmphGroupMember);
+		Assert.assertTrue("添加失败", pmphGroupMember.getId() > 0);
+		Assert.assertNotNull("获取数据失败", pmphGroupMemberService.getPmphGroupMemberByMemberId(pmphGroupMember.getGroupId(),
+				pmphGroupMember.getUserId(), pmphGroupMember.getIsWriter()));
+	}
+
+	@Test
+	public void testListGroupMemberManagerVOs() {
+		pmphGroupMemberService.addPmphGroupMember(pmphGroupMember);
+		PageParameter pageParameter = new PageParameter<>(1, 20);
+		PmphGroupMemberManagerVO pmphGroupMemberManagerVO = new PmphGroupMemberManagerVO();
+		pmphGroupMemberManagerVO.setName(null);
+		pmphGroupMemberManagerVO.setGroupId(pmphGroupMember.getGroupId());
+		pageParameter.setParameter(pmphGroupMemberManagerVO);
+		Assert.assertNotNull("获取数据失败", pmphGroupMemberService.listGroupMemberManagerVOs(pageParameter));
 	}
 
 }

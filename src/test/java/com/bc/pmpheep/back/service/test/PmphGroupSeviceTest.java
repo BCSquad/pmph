@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service.test;
 
+import java.io.IOException;
 import java.util.Random;
 
 import javax.annotation.Resource;
@@ -13,6 +14,7 @@ import org.springframework.test.annotation.Rollback;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.service.PmphGroupService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -25,32 +27,41 @@ public class PmphGroupSeviceTest extends BaseTest {
 
 	@Resource
 	private PmphGroupService testService;
+	Random r = new Random();
+	PmphGroup pmphGroup = new PmphGroup("String groupName", "String groupImage",
+			Long.parseLong(String.valueOf(r.nextInt(200))), Long.parseLong(String.valueOf(r.nextInt(200))),
+			" String note", null, null, null);
 
 	@Test
-	@Rollback(Const.ISROLLBACK)
-	public void test() {
-		Random r = new Random();
-		PmphGroup pmphGroup = new PmphGroup("String groupName", "String groupImage",
-				Long.parseLong(String.valueOf(r.nextInt(200))), Long.parseLong(String.valueOf(r.nextInt(200))),
-				" String note", null, null, null);
-		logger.info(
-				"---PmphGroupService测试---------------------------------------------------------------------------------");
-		// 新增
+	public void testAddPmphGroup() {
 		testService.addPmphGroup(pmphGroup);
-		logger.info(pmphGroup.toString());
-		// 修改
-		pmphGroup.setGroupName(String.valueOf(r.nextInt(200)));
-		testService.updatePmphGroup(pmphGroup);
-		// logger.info(testService.updatePmphGroup(pmphGroup));
-		// 删除
-		// logger.info(testService.deletePmphGroupById(1L));
-		// 查询
-		logger.info(testService.getPmphGroupById(30L).toString());
-		// 根据小组名称模糊查询获取当前用户的小组
-		// pmphGroup.setGroupName("1");
-		// logger.info(testService.getList(pmphGroup).toString());
-		testService.listPmphGroup(pmphGroup, "");
+		Assert.assertTrue("添加失败", pmphGroup.getId() > 0);
+	}
 
+	@Test
+	public void testUpdateGroup() {
+		testService.addPmphGroup(pmphGroup);
+		pmphGroup.setGroupName(String.valueOf(r.nextInt(200)));
+		Boolean flag = false;
+		try {
+			testService.updatePmphGroup(pmphGroup);
+		} catch (Exception e) {
+			flag = true;
+		}
+		Assert.assertTrue("修改失败", flag);
+	}
+
+	@Test
+	public void testGetPmphGroupById() {
+		testService.addPmphGroup(pmphGroup);
+		Assert.assertNotNull("获取失败", testService.getPmphGroupById(pmphGroup.getId()));
+	}
+
+	@Test
+	public void testUpdatePmphGroup() throws CheckedServiceException, IOException {
+		testService.addPmphGroup(pmphGroup);
+		pmphGroup.setGroupName(String.valueOf(r.nextInt(200)));
+		Assert.assertTrue("更新失败", testService.updatePmphGroup(null, pmphGroup) > 0);
 	}
 
 }
