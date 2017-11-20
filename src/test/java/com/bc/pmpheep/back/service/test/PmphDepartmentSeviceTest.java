@@ -75,7 +75,7 @@ public class PmphDepartmentSeviceTest extends BaseTest {
 	@Test
 	public void testListPmphDepartment() {
 		pmphDepartmentService.addPmphDepartment(pmphDepartment);
-		PmphUserDepartmentVO departmentVO = pmphDepartmentService.listPmphDepartment(0L);
+		PmphUserDepartmentVO departmentVO = pmphDepartmentService.listPmphDepartment(null);
 		Assert.assertNotNull("获取数据失败", departmentVO);
 	}
 

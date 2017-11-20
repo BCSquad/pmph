@@ -4,17 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.poi.ss.formula.functions.Roman;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.service.PmphRoleService;
-import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -48,7 +45,6 @@ public class PmphRoleServiceTest extends BaseTest {
 	@Test
 	public void testAddUserRole() {
 		Assert.assertTrue("添加失败", roleService.addUserRole(1L, 1L) > 0);
-
 	}
 
 	@Test
