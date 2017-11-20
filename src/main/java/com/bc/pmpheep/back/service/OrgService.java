@@ -15,6 +15,16 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  */
 public interface OrgService {
+	
+	/**
+	 * 根据书籍获取当选了该书籍的人员所属机构
+	 * @author Mryang
+	 * @createDate 2017年11月19日 上午9:17:57
+	 * @param bookIds
+	 * @return  List<Org>
+	 * @throws CheckedServiceException
+	 */
+    List<Org> listBeElectedOrgByBookIds(List<Long> bookIds) throws CheckedServiceException;
 
     /**
      * 

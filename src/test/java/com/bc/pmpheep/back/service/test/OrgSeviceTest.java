@@ -116,4 +116,15 @@ public class OrgSeviceTest extends BaseTest {
 		pageResult = orgService.getSchoolAdminCheckList(pageParameter);
 		Assert.assertNotNull("获取学校管理员审核列表失败", pageResult);
 	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK) 
+	public void testListBeElectedOrgByBookIds() {
+		List<Long> bookIds = new ArrayList<Long>(2);
+		bookIds.add(165L);
+		bookIds.add(158L);
+		List<Org> lstOrg=orgService.listBeElectedOrgByBookIds(bookIds);
+		Assert.assertNotNull("获取学校管理员审核列表失败",lstOrg);
+	}
+	
 }
