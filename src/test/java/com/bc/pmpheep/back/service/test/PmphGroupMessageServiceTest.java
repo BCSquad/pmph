@@ -31,39 +31,45 @@ public class PmphGroupMessageServiceTest extends BaseTest {
 
 	@Resource
 	private PmphGroupMessageService pmphGroupMessageService;
+	Random random = new Random();
+	PmphGroupMessage pmphGroupMessage = new PmphGroupMessage(new Long(random.nextInt(200)),
+			new Long(random.nextInt(200)), "String msgContent");
 
 	@Test
-	@Rollback(Const.ISROLLBACK)
-	public void test() {
-		Random random = new Random();
-		PmphGroupMessage pmphGroupMessage = new PmphGroupMessage(new Long(random.nextInt(200)),
-				new Long(random.nextInt(200)), "String msgContent");
-		;
-		logger.info(
-				"---PmphGroupMessageService 测试---------------------------------------------------------------------------------");
-		// 新增
+	public void testAddPmphGroupMessage() {
 		pmphGroupMessageService.addPmphGroupMessage(pmphGroupMessage);
 		Assert.assertTrue("添加失败", pmphGroupMessage.getId() > 0);
-		// 修改
+	}
+
+	@Test
+	public void testUpdatePmphGroupMessage() {
+		pmphGroupMessageService.addPmphGroupMessage(pmphGroupMessage);
 		pmphGroupMessage.setMsgContent(String.valueOf(random.nextInt(200)));
 		Assert.assertTrue("更新失败", pmphGroupMessageService.updatePmphGroupMessage(pmphGroupMessage) > 0);
-		// try {
-		// // 删除
-		// Assert.assertTrue("删除失败",
-		// "".equals(pmphGroupMessageService.deletePmphGroupMessageById(1L, "")));
-		// } catch (CheckedServiceException e) {
-		// } catch (IOException e) {
-		// }
-		// Assert.fail();
-		// 查询
-		Assert.assertNotNull("获取数据失败", pmphGroupMessageService.getPmphGroupMessageById(2L));
+	}
+
+	@Test
+	public void testGetPmphGroupMessageById() {
+		pmphGroupMessageService.addPmphGroupMessage(pmphGroupMessage);
+		Assert.assertNotNull("获取数据失败", pmphGroupMessageService.getPmphGroupMessageById(pmphGroupMessage.getId()));
+	}
+
+	@Test
+	public void testListPmphGroupMessage() {
+		pmphGroupMessageService.addPmphGroupMessage(pmphGroupMessage);
 		PageParameter<PmphGroupMessageVO> pageParameter = new PageParameter<>(1, 20);
 		PmphGroupMessageVO pmphGroupMessageVO = new PmphGroupMessageVO();
 		pmphGroupMessageVO.setGmtCreate(DateUtil.getCurrentTime());
-		pmphGroupMessageVO.setGroupId(100L);
+		pmphGroupMessageVO.setGroupId(pmphGroupMessage.getGroupId());
 		pageParameter.setParameter(pmphGroupMessageVO);
 		Assert.assertNotNull("获取数据失败", pmphGroupMessageService.listPmphGroupMessage(pageParameter));
-		Assert.assertTrue("删除失败", pmphGroupMessageService.deletePmphGroupMessageByGroupId(100L) >= 0);
+	}
+
+	@Test
+	public void testDeletePmphGroupMessageByGroupId() {
+		pmphGroupMessageService.addPmphGroupMessage(pmphGroupMessage);
+		Assert.assertTrue("删除失败",
+				pmphGroupMessageService.deletePmphGroupMessageByGroupId(pmphGroupMessage.getGroupId()) >= 0);
 	}
 
 }

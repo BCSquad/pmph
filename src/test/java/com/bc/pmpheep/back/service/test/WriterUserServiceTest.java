@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.back.dao.WriterUserDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -19,6 +20,7 @@ import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
@@ -37,20 +39,21 @@ public class WriterUserServiceTest extends BaseTest {
     @Autowired
     WriterUserDao writerUserDao;
     WriterUser        writerUser = new WriterUser();
-    
-    // @Test
-    public void addWriterUserService() {
-        writerUser.setUsername("zasd");
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testAddWriterUserService() {
+        writerUser.setUsername("zasdA");
         writerUser.setPassword("10214");
         writerUser.setRealname("aswwq");
         writerUser.setAvatar("asdadasdasd");
         writerUser = writerUserService.add(writerUser);
         Assert.assertNotNull("不否保存成功", writerUser.getId());
-        logger.info("添加了{}", writerUser.toString());
+        //logger.info("添加了{}", writerUser.toString());
     }
 
-    // @Test
-    public void deleteWriterUserServiceById() {
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testDeleteWriterUserServiceById() {
         int num = -1;
         writerUser.setUsername("zasd");
         writerUser.setPassword("10214");
@@ -63,7 +66,6 @@ public class WriterUserServiceTest extends BaseTest {
             writerUserService.delete(id);
             num = 0;
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         Assert.fail();
@@ -75,8 +77,9 @@ public class WriterUserServiceTest extends BaseTest {
 
     }
 
-    // @Test
-    public void updateWriterUserById() {
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testUpdateWriterUserById() {
         writerUser.setUsername("zasd");
         writerUser.setPassword("10214");
         writerUser.setRealname("aswwq");
@@ -91,7 +94,7 @@ public class WriterUserServiceTest extends BaseTest {
     }
 
     // @Test
-    public void getWriterUserByUsername() {
+    public void testGetWriterUserByUsername() {
         writerUser.setUsername("zasd");
         writerUser.setPassword("10214");
         writerUser.setRealname("aswwq");
@@ -106,7 +109,8 @@ public class WriterUserServiceTest extends BaseTest {
     }
 
     @Test
-    public void getListWriterUserVO() {
+    @Rollback(Const.ISROLLBACK)
+    public void testGetListWriterUserVO() {
         PageParameter pageParameter = new PageParameter<>();
         PageResult pageResult = new PageResult<>();
         WriterUserManagerVO managerVO = new WriterUserManagerVO();
@@ -124,9 +128,9 @@ public class WriterUserServiceTest extends BaseTest {
     /**
      * PmphUser 添加Test
      */
-    // @Test
-    // @Rollback(Const.ISROLLBACK)
-    public void addPmphUserTest() {
+     @Test
+     @Rollback(Const.ISROLLBACK)
+    public void testAddPmphUserTest() {
         List<Long> roleIdList = new ArrayList<Long>();
         roleIdList.add(1L);
         roleIdList.add(2L);
@@ -145,9 +149,9 @@ public class WriterUserServiceTest extends BaseTest {
     /**
      * PmphUser 添加删除
      */
-    // @Test
-    // @Rollback(Const.ISROLLBACK)
-    public void deletePmphUserTest() {
+	@Test
+	@Rollback(Const.ISROLLBACK)
+    public void testDeletePmphUserTest() {
         Integer aInteger = 0;
         try {
             List<Long> userIdList = new ArrayList<Long>();
@@ -165,8 +169,9 @@ public class WriterUserServiceTest extends BaseTest {
     /**
      * 查询
      */
-    // @Test
-    public void getListsTest() {
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testGetListsTest() {
         WriterUser wtUser;
         List<WriterUser> pmUsers;
         List<WriterPermission> listPermissions;
@@ -199,9 +204,9 @@ public class WriterUserServiceTest extends BaseTest {
     /**
      * PmphUser 更新方法
      */
-    // @Test
-    // @Rollback(Const.ISROLLBACK)
-    public void updatePmphUserTest() {
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testUpdatePmphUserTest() {
         WriterUser pmphUser = new WriterUser();
         pmphUser.setId(18L);
         pmphUser.setUsername("admin1");
@@ -217,8 +222,8 @@ public class WriterUserServiceTest extends BaseTest {
     }
 
     @Test
-    public void getWriterUserListByOrgIds() {
-        WriterUser writerUser = new WriterUser();
+    @Rollback(Const.ISROLLBACK)
+    public void testGetWriterUserListByOrgIds() {
         List<Long> orgIds = new ArrayList<Long>();
         orgIds.add(1L);
         orgIds.add(2L);
@@ -239,8 +244,7 @@ public class WriterUserServiceTest extends BaseTest {
     }
 
     @Test
-    public void addWriterUserOfBack() {
-        WriterUser writerUser = new WriterUser();
+    public void testAddWriterUserOfBack() {
         writerUser.setUsername("shuyongqian");
         writerUser.setRealname("用户名");
         writerUser.setNickname("昵称");
@@ -250,8 +254,8 @@ public class WriterUserServiceTest extends BaseTest {
     }
 
     @Test
-    public void updateWriterUserOfBack() {
-        WriterUser writerUser = new WriterUser();
+    @Rollback(Const.ISROLLBACK)
+    public void testUpdateWriterUserOfBack() {
         writerUser.setUsername("XYZ");
         writerUser.setPassword("789");
         writerUser.setRealname("ZZZ");
@@ -263,7 +267,8 @@ public class WriterUserServiceTest extends BaseTest {
         Assert.assertTrue("更新失败", result.equals("SUCCESS"));
     }
     @Test
-    public void getTeacherCheckList(){
+    @Rollback(Const.ISROLLBACK)
+    public void testGetTeacherCheckList(){
     	WriterUserManagerVO writerUserManagerVO=new WriterUserManagerVO();
     	writerUserManagerVO.setRealname(null);
     	PageParameter<WriterUserManagerVO> pageParameter =
