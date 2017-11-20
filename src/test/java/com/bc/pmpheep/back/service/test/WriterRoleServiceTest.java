@@ -33,59 +33,39 @@ public class WriterRoleServiceTest extends BaseTest {
 	@Resource
 	WriterRoleService writerRoleService;
 	
-	WriterRole writerRole = new WriterRole();
-	
-	List<Long> ids = new ArrayList<Long>();
-	
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testAdd() {
-		writerRole.setRoleName("qi");
-		writerRole.setNote("ajsdgahsgdyajd");
-		writerRole.setSort(12);
-		writerRole.setIsDisabled(false);
-		writerRole = writerRoleService.add(writerRole);
+		WriterRole writerRole=this.addWriterRole();
 		Assert.assertNotNull("是否添加成功", writerRole.getId());
 	}
 
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testDelete() {
+		WriterRole writerRole=this.addWriterRole();
 		int num = -1;
-		writerRole.setRoleName("qi");
-		writerRole.setNote("ajsdgahsgdyajd");
-		writerRole.setSort(12);
-		writerRole.setIsDisabled(false);
-		writerRole = writerRoleService.add(writerRole);
-		Assert.assertNotNull("是否添加成功", writerRole.getId());
-		Long id = writerRole.getId();
-		num = writerRoleService.delete(id);
+		num = writerRoleService.delete(writerRole.getId());
 		Assert.assertTrue("是否删除", num > 0 ? true : false);
 	}
 
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testDeleteRoleAndResource() {
+		WriterRole writerRole=this.addWriterRole();
+		List<Long> ids=new ArrayList<>();
 		int num=0;
-		ids.add(1L);
+		ids.add(writerRole.getId());
+		writerRoleService.addRoleResource(writerRole.getId(), ids);
 		num = writerRoleService.deleteRoleAndResource(ids);
 		Assert.assertTrue("删除失败", num > 0 ? true : false);
 	}
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testUpdate() {
+		WriterRole writerRole=this.addWriterRole();
 		int num = -1;
-		writerRole.setRoleName("123");
-		writerRole.setNote("ajsdgahsgdyajd");
-		writerRole.setSort(12);
-		writerRole.setIsDisabled(false);
-		WriterRole writerRole2 = new WriterRole();
-		writerRole2.setIsDisabled(true);
-		writerRole2.setNote("35324354321");
-		writerRole2.setRoleName("123");
-		writerRole2.setSort(22);
-		writerRole = writerRoleService.add(writerRole);
-		Assert.assertNotNull("是否添加成功", writerRole.getId());
+		WriterRole writerRole2 = new WriterRole("角色2", false, null, null, null, null);
 		writerRole2.setId(writerRole.getId());
 		num = writerRoleService.update(writerRole2);
 		Assert.assertTrue("是否更新成功", num > 0 ? true : false);
@@ -94,50 +74,43 @@ public class WriterRoleServiceTest extends BaseTest {
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testGet() {
-		writerRole.setRoleName("qi");
-		writerRole.setNote("ajsdgahsgdyajd");
-		writerRole.setSort(12);
-		writerRole.setIsDisabled(false);
-		WriterRole writerRole2 = new WriterRole();
-		writerRole = writerRoleService.add(writerRole);
-		Assert.assertNotNull("是否添加成功", writerRole.getId());
-		Long id = writerRole.getId();
-		writerRole2 = writerRoleService.get(id);
-		Assert.assertNotNull("是否查询成功", writerRole2);
+		WriterRole writerRole=this.addWriterRole();
+		Assert.assertNotNull("是否查询成功", writerRoleService.get(writerRole.getId()));
 	}
 
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testGetListRole() {
+		WriterRole writerRole=this.addWriterRole();
 		List<WriterRole> list = writerRoleService.getListRole(null);
 		Assert.assertNotNull("是否查询成功", list);
-		logger.info("查询到了{}", list.toString());
 	}
 
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testGetListRoleResource() {
-		List<WriterPermission> list = writerRoleService.getListRoleResource(1L);
+		WriterRole writerRole=this.addWriterRole();
+		List<WriterPermission> list = writerRoleService.getListRoleResource(writerRole.getId());
 		Assert.assertNotNull("是否查询成功", list);
-		List<WriterRolePermission> list1 = writerRoleService.getListWriterRolePermission(1L);
+		List<WriterRolePermission> list1 = writerRoleService.getListWriterRolePermission(writerRole.getId());
 		Assert.assertNotNull("是否查询成功", list1);
-		List<Long> ids = writerRoleService.getListPmphWriterPermissionIdByRoleId(1L);
+		List<Long> ids = writerRoleService.getListPmphWriterPermissionIdByRoleId(writerRole.getId());
 		Assert.assertNotNull("是否查询成功", ids);
 	}
 
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testAddUserRole() {
+		WriterRole writerRole=this.addWriterRole();
 		int num = -1;
-		num = writerRoleService.addUserRole(1L, 2L);
+		num = writerRoleService.addUserRole(writerRole.getId(), writerRole.getId());
 		Assert.assertNotNull("是否添加成功", num >= 0);
 	}
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void testDeleteUserRole() {
+	public void testGetUserRole() {
 		int num = -1;
 		num = writerRoleService.addUserRole(1L, 2L);
-		Assert.assertNotNull("是否添加成功", num >= 0);
 		WriterUserRole writerUserRole = writerRoleService.getUserRole(1L, 2L);
 		Assert.assertNotNull("是否查询成功", writerUserRole);
 		num = writerRoleService.deleteUserRole(1L, 2L);
@@ -147,13 +120,31 @@ public class WriterRoleServiceTest extends BaseTest {
 	}
 	@Test
 	@Rollback(Const.ISROLLBACK)
+	public void testDeleteUserRole() {
+		int num = -1;
+		writerRoleService.addUserRole(1L, 2L);
+		num = writerRoleService.deleteUserRole(1L, 2L);
+		Assert.assertNotNull("是否删除成功", num >= 0);
+		int result = -1;
+		result = writerRoleService.deleteUserRoles(1L);
+		Assert.assertNotNull("是否删除成功", result >= 0);
+	}
+	@Test
+	@Rollback(Const.ISROLLBACK)
 	public void testAddRoleResource() {
 		int num = -1;
 		List<Long> permissionIds = new ArrayList<>();
 		permissionIds.add(1L);
-		num = writerRoleService.addRoleResource(2L, permissionIds);
-		Assert.assertNotNull("是否添加成功", num >= 0);
-		WriterRolePermission writerRolePermission = writerRoleService.getResourceRole(42L, 1L);
+		Integer  writerUserRole= writerRoleService.addRoleResource(new Long(1L), permissionIds);
+		Assert.assertNotNull("是否添加成功", num > 0);
+	}
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testGetResourceRole() {
+		List<Long> permissionIds = new ArrayList<>();
+		permissionIds.add(1L);
+		writerRoleService.addRoleResource(new Long(2L), permissionIds);
+		WriterRolePermission writerRolePermission = writerRoleService.getResourceRole(2L,1L);
 		Assert.assertNotNull("是否查询成功", writerRolePermission);
 	}
 	@Test
@@ -163,12 +154,34 @@ public class WriterRoleServiceTest extends BaseTest {
 		List<Long> permissionIds = new ArrayList<>();
 		permissionIds.add(1L);
 		writerRoleService.addRoleResource(2L, permissionIds);
-		num = writerRoleService.deleteRoleResource(42L, 1L);
+		num = writerRoleService.deleteRoleResource(2L, 1L);
 		Assert.assertNotNull("是否删除成功", num >= 0);
-		num = writerRoleService.deleteRoleResourceByRoleId(1L);
+	}
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testDeleteRoleResourceByRoleId() {
+		int num = -1;
+		List<Long> permissionIds = new ArrayList<>();
+		permissionIds.add(1L);
+		writerRoleService.addRoleResource(2L, permissionIds);
+		num = writerRoleService.deleteRoleResourceByRoleId(2L);
 		Assert.assertNotNull("是否删除成功", num >= 0);
-		ids.add(1L);
-		num = writerRoleService.deleteRoleAndUser(ids);
+		permissionIds.add(1L);
+		num = writerRoleService.deleteRoleAndUser(permissionIds);
 		Assert.assertNotNull("是否删除成功", num >= 0);
+	}
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testDeleteRoleAndUser() {
+		int num = -1;
+		List<Long> permissionIds = new ArrayList<>();
+		permissionIds.add(1L);
+		writerRoleService.addRoleResource(2L, permissionIds);
+		num = writerRoleService.deleteRoleAndUser(permissionIds);
+		Assert.assertNotNull("是否删除成功", num >= 0);
+	}
+	private WriterRole addWriterRole(){
+		WriterRole writerRole=writerRoleService.add(new WriterRole("角色", false, null, null, null, null));
+		return writerRole;
 	}
 }

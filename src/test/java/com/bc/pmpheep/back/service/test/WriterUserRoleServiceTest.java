@@ -26,36 +26,40 @@ public class WriterUserRoleServiceTest extends BaseTest {
     @Resource
     private WriterUserRoleService testService;
     Random r = new Random();
-    WriterUserRole testPar = new WriterUserRole(new Long(r.nextInt(200)), new Long(r.nextInt(200)));
     
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testAddWriterUserRole() throws Exception {
         // 新增
-        testService.addWriterUserRole(testPar);
-        Assert.assertNotNull("是否保存成功", testPar.getId());
+        WriterUserRole writerUserRole=this.addWriterUserRole();
+        Assert.assertNotNull("是否保存成功", writerUserRole.getId());
         //logger.info(testPar.toString());
     }
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testUpdateWriterUserRole(){
-    	testService.addWriterUserRole(testPar);
-    	testPar.setRoleId(new Long(r.nextInt(200)));
-        Integer aInteger = testService.updateWriterUserRole(testPar);
+    	WriterUserRole writerUserRole=this.addWriterUserRole();
+    	writerUserRole.setRoleId(3L);
+    	writerUserRole.setUserId(4L);
+        Integer aInteger = testService.updateWriterUserRole(writerUserRole);
         Assert.assertTrue("是否修改成功", aInteger > 0 ? true : false);
     }
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testDeleteWriterUserRoleById(){
-    	testService.addWriterUserRole(testPar);
-    	Integer bInteger = testService.deleteWriterUserRoleById(1L);
+    	WriterUserRole writerUserRole=this.addWriterUserRole();
+    	Integer bInteger = testService.deleteWriterUserRoleById(writerUserRole.getId());
         Assert.assertTrue("是否删除成功", bInteger > 0 ? true : false);
     }
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testGetWriterUserRoleById(){
-    	testService.addWriterUserRole(testPar);
-    	WriterUserRole wur = testService.getWriterUserRoleById(2L);
+    	WriterUserRole writerUserRole=this.addWriterUserRole();
+    	WriterUserRole wur = testService.getWriterUserRoleById(writerUserRole.getId());
         Assert.assertNotNull("不为空", wur);
+    }
+    private WriterUserRole addWriterUserRole(){
+    	WriterUserRole writerUserRole=testService.addWriterUserRole(new WriterUserRole(1L, 2L));
+    	return writerUserRole;
     }
 }
