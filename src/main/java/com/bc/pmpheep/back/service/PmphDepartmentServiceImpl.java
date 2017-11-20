@@ -159,16 +159,16 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 	}
 
 	@Override
-	public PmphUserDepartmentVO listPmphDepartment(Long parentId) throws CheckedServiceException {
+	public PmphUserDepartmentVO listPmphDepartment(Long id) throws CheckedServiceException {
 		PmphUserDepartmentVO pmphUserDepartmentVO = new PmphUserDepartmentVO();
-		if (null == parentId) {// 初始化列表
+		if (null == id) {// 初始化列表
 			List<PmphUserDepartmentVO> list = pmphDepartmentDao.listPmphDepartment(0L);
 			pmphUserDepartmentVO = list.get(0);
 			pmphUserDepartmentVO.setSonDepartment(pmphDepartmentDao.listPmphDepartment(pmphUserDepartmentVO.getId()));
 		} else {// 获取当前点击的部门id
-			List<PmphUserDepartmentVO> list = pmphDepartmentDao.getDepartmentId(parentId);
+			List<PmphUserDepartmentVO> list = pmphDepartmentDao.getDepartmentId(id);
 			pmphUserDepartmentVO = list.get(0);
-			pmphUserDepartmentVO.setSonDepartment(pmphDepartmentDao.listPmphDepartment(parentId));
+			pmphUserDepartmentVO.setSonDepartment(pmphDepartmentDao.listPmphDepartment(id));
 		}
 		return pmphUserDepartmentVO;
 	}

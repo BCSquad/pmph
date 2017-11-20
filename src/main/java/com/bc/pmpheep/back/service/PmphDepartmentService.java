@@ -65,7 +65,7 @@ public interface PmphDepartmentService {
 	 * @throws CheckedServiceException
 	 * @update Mryang
 	 */
-	PmphUserDepartmentVO listPmphDepartment(Long parentId) throws CheckedServiceException;
+	PmphUserDepartmentVO listPmphDepartment(Long id) throws CheckedServiceException;
 
 	/**
 	 * 
