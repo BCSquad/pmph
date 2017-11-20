@@ -70,11 +70,12 @@ public class SchoolAndTeacherCheckController {
     public ResponseBean orgList(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam("orgName") String orgName,@RequestParam("realname") String realname,
-    @RequestParam(name = "pageSize") Integer pageSize) {
+    @RequestParam(name = "pageSize") Integer pageSize,@RequestParam(name = "progress") Integer progress) {
     	PageParameter pageParameter = new PageParameter<>();
     	OrgVO orgVO=new OrgVO();
     	orgVO.setOrgName(orgName.replaceAll(" ", ""));
     	orgVO.setRealname(realname.replaceAll(" ", ""));
+    	orgVO.setProgress(progress);
 		pageParameter.setPageNumber(pageNumber);
 		pageParameter.setPageSize(pageSize);
 		pageParameter.setParameter(orgVO);
