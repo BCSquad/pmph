@@ -17,20 +17,20 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
  * @createDate 2017年9月27日 上午10:13:25
  *
  */
-@Configuration
-@EnableWebMvc
-@EnableWebSocket
+@Configuration  //指明该类为Spring 配置类
+@EnableWebMvc    // 声明该类支持WebMvc
+@EnableWebSocket  // 声明该类支持WebSocket
 public class MyWebSocketConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer {
 		
 		@Autowired
-		private MyWebSocketHandler handler;
+		private MyWebSocketHandler myWebSocketHandler;
 		
 		@Override
         public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         	//前台 可以使用websocket环境
-            registry.addHandler(handler,"/websocket").addInterceptors(new HandshakeInterceptor()).setAllowedOrigins("*");
+            registry.addHandler(myWebSocketHandler,"/websocket").addInterceptors(new HandshakeInterceptor()).setAllowedOrigins("*");
             //前台 不可以使用websocket环境，则使用sockjs进行模拟连接
-            registry.addHandler(handler, "/sockjs/websocket").addInterceptors(new HandshakeInterceptor()).setAllowedOrigins("*").withSockJS();
+            registry.addHandler(myWebSocketHandler, "/sockjs/websocket").addInterceptors(new HandshakeInterceptor()).setAllowedOrigins("*").withSockJS();
         }
 }
 
