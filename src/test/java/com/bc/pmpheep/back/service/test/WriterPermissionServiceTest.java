@@ -48,7 +48,13 @@ public class WriterPermissionServiceTest extends BaseTest {
 	@Rollback(Const.ISROLLBACK)
 	public void updatePmphPermissionTest() {
 		WriterPermission pp = new WriterPermission();
-		pp.setId(3L);
+		pp.setMenuName("用户管理2");
+		pp.setUrl("admin/user/add");
+		pp.setPermissionName("用户管理添加2");
+		pp.setPath("admin:add");
+		pp.setParentId(2L);
+		writerPermissionService.addWriterPermission(pp);
+		pp.setId(pp.getId());
 		pp.setMenuName("用户管理2");
 		Integer aInteger = writerPermissionService.updateWriterPermissionById(pp);// 按ID更新资源目录
 		Assert.assertTrue("是否更新成功", aInteger > 0 ? true : false);
@@ -61,9 +67,15 @@ public class WriterPermissionServiceTest extends BaseTest {
 	@Rollback(Const.ISROLLBACK)
 	public void deletePmphPermissionTest() {
 		WriterPermission pp = new WriterPermission();
-		pp.setId(2L);
+		pp.setMenuName("用户管理3");
+		pp.setUrl("admin/user/add");
+		pp.setPermissionName("用户管理添加3");
+		pp.setPath("admin:add");
+		pp.setParentId(3L);
+		writerPermissionService.addWriterPermission(pp);
+		pp.setId(pp.getId());
 		//String[] ids = { "2L" };
-		Integer aInteger = writerPermissionService.delete(2L);// 按ID删除资源
+		Integer aInteger = writerPermissionService.delete(pp.getId());// 按ID删除资源
 		Assert.assertTrue("delete是否删除成功", aInteger > 0 ? true : false);
 		//Integer bInteger = writerPermissionService.deleteWriterPermissionById(ids);
 		//Assert.assertTrue("deleteWriterPermissionById是否删除成功", bInteger > 0 ? true : false);
@@ -76,10 +88,16 @@ public class WriterPermissionServiceTest extends BaseTest {
 	@Rollback(Const.ISROLLBACK)
 	public void getPmphPermissionTest() {
 		WriterPermission pp = new WriterPermission();
-		pp.setId(3L);
+		pp.setMenuName("用户管理4");
+		pp.setUrl("admin/user/add");
+		pp.setPermissionName("用户管理添加");
+		pp.setPath("admin:add");
+		pp.setParentId(4L);
+		writerPermissionService.addWriterPermission(pp);
+		pp.setId(pp.getId());
 		Assert.assertNotNull("getWriterPermissionByPermissionName是否为空",
 				writerPermissionService.getWriterPermissionByPermissionName("用户管理添加"));// 按ID查询资源
-		Assert.assertNotNull("get是否为空", writerPermissionService.get(3L));
+		Assert.assertNotNull("get是否为空", writerPermissionService.get(pp.getId()));
 		Assert.assertNotNull("getListResource是否为空", writerPermissionService.getListResource());// 查询所有资源
 		//Assert.assertNotNull("WriterPermission是否为空", writerPermissionService.getListAllParentMenu());
 		//Assert.assertNotNull("WriterPermissionByParentId是否为空", writerPermissionService.getListChildMenuByParentId(0L));
