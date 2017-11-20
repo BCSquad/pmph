@@ -136,10 +136,13 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         if (CollectionUtil.isNotEmpty(orgUserList)) {
             List<OrgUser> orgUsers = new ArrayList<OrgUser>(orgUserList.size());
             for (OrgUser orgUser : orgUserList) {
-                if (Const.ORG_USER_PROGRESS_0 == orgUser.getProgress()
+                if (Const.ORG_USER_PROGRESS_1 == orgUser.getProgress()
                     || Const.ORG_USER_PROGRESS_2 == orgUser.getProgress()) {
-                    orgUsers.add(new OrgUser(orgUser.getId(), progress));
+                    throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                                      CheckedExceptionResult.NULL_PARAM,
+                                                      "当前信息已通过或者已退回");
                 }
+                orgUsers.add(new OrgUser(orgUser.getId(), progress));
             }
             if (CollectionUtil.isNotEmpty(orgUsers)) {
                 count = orgUserDao.updateOrgUserProgressById(orgUsers);

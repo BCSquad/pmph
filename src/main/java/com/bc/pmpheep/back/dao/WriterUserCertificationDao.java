@@ -100,6 +100,6 @@ public interface WriterUserCertificationDao {
      * @param id
      * @return WriterUserCertification
      */
-    List<WriterUserCertification> getWriterUserCertificationByUserIds(List<Long> userIds);
+    List<WriterUserCertification> getWriterUserCertificationByUserIds(Long[] userIds);
 
 }

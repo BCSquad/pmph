@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.controller.cms;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.service.CmsContentService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.vo.CmsContentVO;
@@ -72,6 +75,39 @@ public class CmsInfoLettersManagementController {
     /**
      * 
      * <pre>
+     * 功能描述：CMS-新增信息快报管理
+     * 使用示范：
+     *
+     * @param cmsContent CmsContent对象
+     * @param files 上传附件数组
+     * @param content 内容信息
+     * @param scheduledTime 定时发布时间
+     * @param sessionId sessionId
+     * @param loginType 用户类型
+     * @return CmsContent 对象
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增信息快报")
+    @RequestMapping(value = "/newLetters", method = RequestMethod.POST)
+    public ResponseBean newLetters(CmsContent cmsContent, @RequestParam("file") String[] files,
+    @RequestParam("content") String content, @RequestParam("scheduledTime") String scheduledTime,
+    HttpServletRequest request) {
+        try {
+            String sessionId = CookiesUtil.getSessionId(request);
+            return new ResponseBean(cmsContentService.addCmsContent(cmsContent,
+                                                                    files,
+                                                                    content,
+                                                                    scheduledTime,
+                                                                    sessionId));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
+    }
+
+    /**
+     * 
+     * <pre>
 	 * 功能描述：点击标题查看内容
 	 * 使用示范：
 	 *
@@ -80,7 +116,7 @@ public class CmsInfoLettersManagementController {
 	 * </pre>
      */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询信息快报内容")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查看信息快报内容")
     @RequestMapping(value = "/letters/content/{id}/search", method = RequestMethod.GET)
     public ResponseBean search(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.getCmsContentAndContentAndAttachmentById(id));

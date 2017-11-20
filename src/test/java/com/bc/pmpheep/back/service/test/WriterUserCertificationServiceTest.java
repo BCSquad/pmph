@@ -1,7 +1,5 @@
 package com.bc.pmpheep.back.service.test;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Resource;
@@ -50,12 +48,10 @@ public class WriterUserCertificationServiceTest extends BaseTest {
         writerUserCertificationService.addWriterUserCertification(writerUserCertification);
         // 教师审核按userId更新WriterUserCertification中Progress状态字段
         Short progress = 1;
-        List<Long> list = new ArrayList<Long>();
-        list.add(1L);
-        list.add(2L);
+        Long[] idsLongs = { 1L, 2L };
         Assert.assertTrue("修改失败",
                           writerUserCertificationService.updateWriterUserCertificationProgressByUserId(progress,
-                                                                                                       list) >= 0);
+                                                                                                       idsLongs) >= 0);
     }
 
     @Test
