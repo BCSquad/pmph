@@ -29,6 +29,7 @@ import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.general.service.MessageService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.utils.ExcelHelper;
 
 /**
@@ -139,10 +140,10 @@ public class MigrationStageSeven {
                     receiverid, receivertype, isread, iswithdraw, isdeleted, gt, ut);
             try {
                 userMessage = userMessageSevice.addUserMessage(userMessage);
-            } catch (Exception e) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage() + "。"));
+            } catch (CheckedServiceException ex) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append(ex.getMessage()));
                 excel.add(map);
-                logger.error(e.getMessage());
+                logger.error(ex.getMessage());
                 continue;
             }
             count++;
@@ -155,17 +156,14 @@ public class MigrationStageSeven {
             String msg_id = msgidOldAndNew.get(msgid); //MongoDB对应主键
             if (StringUtil.isEmpty(msg_id)) {//消息主体没有存入
                 String msgcontent = (String) map.get("msgcontent");
-                List<String> srcs = getImgSrc(msgcontent);
-                if (CollectionUtil.isNotEmpty(srcs)) {//内容里面包含图片
+                if (msgcontent.contains("img src=")) {
+                    List<String> srcs = JdbcHelper.getImgSrc(msgcontent);
                     for (String src : srcs) {
-                        String mongoId = null;
                         try {
-                            mongoId = fileService.migrateFile(src.replace("/pmph_imesp", ""), FileType.MSG_PIC, pk);
-                        } catch (Exception e) {
-
-                        }
-                        if (null != mongoId) {
+                            String mongoId = fileService.migrateFile(src.replace("/pmph_imesp", ""), FileType.MSG_IMG, pk);
                             msgcontent = msgcontent.replace(src, "/image/" + mongoId);
+                        } catch (IOException ex) {
+                            logger.warn("无法根据文章内容中的图片路径找到指定文件{}", ex.getMessage());
                         }
                     }
                 }
@@ -210,31 +208,8 @@ public class MigrationStageSeven {
         logger.info("'{}'表迁移完成，异常条目数量：{}", "sys_messages", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
-        Map<String, Object> msg = new HashMap<String, Object>();
+        Map<String, Object> msg = new HashMap<>();
         msg.put("result", "sys_messages  表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
-
-    //抓取HTML中src地址;
-    public static List<String> getImgSrc(String htmlStr) {
-        String img = "";
-        Pattern p_image;
-        Matcher m_image;
-        List<String> pics = new ArrayList<String>();
-        //String regEx_img = "<img.*src=(.*?)[^>]*?>"; //图片链接地址  
-        String regEx_img = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
-        p_image = Pattern.compile(regEx_img, Pattern.CASE_INSENSITIVE);
-        m_image = p_image.matcher(htmlStr);
-        while (m_image.find()) {
-            img = img + "," + m_image.group();
-            // Matcher m =  
-            // Pattern.compile("src=\"?(.*?)(\"|>|\\s+)").matcher(img); //匹配src  
-            Matcher m = Pattern.compile("src\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
-            while (m.find()) {
-                pics.add(m.group(1));
-            }
-        }
-        return pics;
-    }
-
 }
