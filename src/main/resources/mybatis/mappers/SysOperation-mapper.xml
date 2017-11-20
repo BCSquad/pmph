@@ -82,15 +82,15 @@
 				SELECT 
 					count(*) count
 				FROM 
-					`sys_operation`cc
+					`sys_operation`so
 				where
 					1 = 1
 					<if test="parameter !=null ">
 						<if test="parameter.userName != null and parameter.userName !='' ">
 							AND (
-									cc.`user_name` like concat('%',#{parameter.userName},'%') 
+									so.`user_name` like concat('%',#{parameter.userName},'%') 
 								 or
-								 	cc.`user_real_name` like concat('%',#{parameter.userName},'%') 
+								 	so.`user_real_name` like concat('%',#{parameter.userName},'%') 
 								 )
 						</if>
 						<if test="parameter.operateDate !=null ">
@@ -102,9 +102,9 @@
 			<if test="parameter !=null ">
 				<if test="parameter.userName != null and parameter.userName !='' ">
 					AND (
-							cc.`user_name` like concat('%',#{parameter.userName},'%') 
+							so.`user_name` like concat('%',#{parameter.userName},'%') 
 						or
-							cc.`user_real_name` like concat('%',#{parameter.userName},'%') 
+							so.`user_real_name` like concat('%',#{parameter.userName},'%') 
 						)
 				</if>
 				<if test="parameter.operateDate !=null ">
