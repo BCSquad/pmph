@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service.test;
 
+import java.util.Random;
+
 import javax.annotation.Resource;
 
 import org.junit.Assert;
@@ -28,6 +30,7 @@ public class BookUserCommentServiceTest extends BaseTest {
     BookUserCommentService bookUserCommentService;
     @Resource
     BookUserCommentDao     bookUserCommentDao;
+    Random                 random = new Random();
 
     @Test
     public void testListBookUserComment() {
@@ -43,9 +46,9 @@ public class BookUserCommentServiceTest extends BaseTest {
 
     @Test
     public void testDeleteBookUserCommentById() {
-        Long[] ids = { 1L, 2L };
+        Long[] ids = { new Long(random.nextInt(200)), new Long(random.nextInt(200)) };
         String result2 = bookUserCommentService.deleteBookUserCommentById(ids);
-        Assert.assertTrue("删除是否成功", "SUCCESS".equals(result2));
+        Assert.assertTrue("删除是否成功", "FAIL".equals(result2));
     }
 
 }

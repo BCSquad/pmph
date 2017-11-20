@@ -74,7 +74,7 @@ public class CmsCategoryServiceTest extends BaseTest {
 
     private CmsCategory addCmsCategory() {
         CmsCategory category =
-        cmsCategoryService.addCmsCategory(new CmsCategory(1L, "d:/pmph", "类别名称", true));
+        cmsCategoryService.addCmsCategory(new CmsCategory(134324L, "d:/pmph/daf.jpg", "类别名称1", true));
         return category;
     }
 }

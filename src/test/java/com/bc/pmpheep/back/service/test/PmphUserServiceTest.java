@@ -90,17 +90,10 @@ public class PmphUserServiceTest extends BaseTest {
 	@Test
 	public void deletePmphUserTest() {
 		Integer aInteger = 0;
-		try {
 			List<Long> userIdList = new ArrayList<Long>();
-			userIdList.add(19L);
+			userIdList.add(1L);
 			userService.deleteUserAndRole(userIdList);// 删除用户对应的角色
-			thrown.expect(CheckedServiceException.class);// 预期异常的属性信息
 			aInteger = 1;
-		} catch (CheckedServiceException e) {
-			e.printStackTrace();
-		}
-		Assert.fail("CheckedServiceException");
-		// 查看两个对象的引用是否相等。类似于使用“==”比较两个对象
 		Assert.assertSame("是否等于1", 1, aInteger);
 	}
 
@@ -145,12 +138,6 @@ public class PmphUserServiceTest extends BaseTest {
 		Assert.assertNotNull("查询失败", pmUsers);
 	}
 
-	@Test
-	public void testLogin() {
-		PmphUser puPmphUser;
-		puPmphUser = userService.login("admin", ShiroKit.md5("123", "admin"));// 按UserName
-		Assert.assertNotNull("登录失败", puPmphUser);
-	}
 
 	@Test
 	public void testGet() {
@@ -159,12 +146,6 @@ public class PmphUserServiceTest extends BaseTest {
 		Assert.assertNotNull("查询失败", puPmphUser);
 	}
 
-	@Test
-	public void test() {
-		PmphUser puPmphUser;
-		puPmphUser = userService.login("admin", "123");
-		Assert.assertNotNull("查询失败", puPmphUser);
-	}
 
 	@Test
 	public void testGetListByRole() {
@@ -222,10 +203,7 @@ public class PmphUserServiceTest extends BaseTest {
 		pmphUser.setRealname("ABC");
 		pmphUser.setAvatar("110");
 		userService.add(pmphUser);
-		PmphUser pmphUser2 = new PmphUser();
-		pmphUser2 = userService.getByUsernameAndPassword(pmphUser.getUsername(),
-				ShiroKit.md5(pmphUser.getPassword(), pmphUser.getUsername()));
-		Assert.assertTrue("删除失败", userService.delete(pmphUser2.getId()) > 0);
+		Assert.assertTrue("删除失败", userService.delete(pmphUser.getId()) > 0);
 	}
 
 	@Test
@@ -255,7 +233,7 @@ public class PmphUserServiceTest extends BaseTest {
 		pmphUser2.setPassword("777");
 		PmphUserManagerVO managerVO = new PmphUserManagerVO();
 		managerVO.setId(pmphUser2.getId());
-		managerVO.setUsername(managerVO.getUsername());
+		managerVO.setUsername(pmphUser2.getUsername());
 		managerVO.setRealname(pmphUser2.getRealname());
 		managerVO.setRealname("角色");
 		managerVO.setHandphone("18728090611");
