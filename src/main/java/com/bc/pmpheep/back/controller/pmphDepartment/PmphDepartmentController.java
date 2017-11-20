@@ -36,8 +36,8 @@ public class PmphDepartmentController {
 	@RequestMapping(value = "/tree", method = RequestMethod.GET)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据父级id获取整个部门")
 	@ResponseBody
-	public ResponseBean tree(Long parentId) {
-		return new ResponseBean(pmphDepartmentService.listPmphDepartment(parentId));
+	public ResponseBean tree(Long id) {
+		return new ResponseBean(pmphDepartmentService.listPmphDepartment(id));
 	}
 
 	/**

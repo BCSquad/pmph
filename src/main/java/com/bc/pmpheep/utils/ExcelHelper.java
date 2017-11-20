@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -89,6 +90,10 @@ public class ExcelHelper {
      * @throws IOException
      */
     public void exportFromMaps(List<Map<String, Object>> maps, String sheetname, String path) throws FileNotFoundException, IOException {
+    	LinkedHashSet<Map<String,Object>> set = new LinkedHashSet<>();
+    	set.addAll(maps);
+    	maps.clear();
+    	maps.addAll(set);
         Workbook workbook = fromMaps(maps, sheetname);
         if (StringUtil.isEmpty(path)) {
             path = "";
