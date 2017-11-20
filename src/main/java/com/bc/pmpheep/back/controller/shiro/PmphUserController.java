@@ -225,7 +225,7 @@ public class PmphUserController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改社内用户")
-	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
+	@RequestMapping(value = "/update/updateUser", method = RequestMethod.PUT)
 	public ResponseBean updateUser(PmphUserManagerVO pmphUserManagerVO) {
 		return new ResponseBean(userService.updatePmphUserOfBack(pmphUserManagerVO));
 	}
