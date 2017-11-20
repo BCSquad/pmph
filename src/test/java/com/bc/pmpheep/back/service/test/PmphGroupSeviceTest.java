@@ -42,11 +42,11 @@ public class PmphGroupSeviceTest extends BaseTest {
 	public void testUpdateGroup() {
 		testService.addPmphGroup(pmphGroup);
 		pmphGroup.setGroupName(String.valueOf(r.nextInt(200)));
-		Boolean flag = false;
+		Boolean flag = true;
 		try {
 			testService.updatePmphGroup(pmphGroup);
 		} catch (Exception e) {
-			flag = true;
+			flag = false;
 		}
 		Assert.assertTrue("修改失败", flag);
 	}
