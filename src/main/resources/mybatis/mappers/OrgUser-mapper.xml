@@ -246,12 +246,12 @@
 		<foreach item="item" collection="list" index="index" open=""
 			separator=";">
 			update
-			org_user
+				org_user
 			<set>
 				progress = #{item.progress}
 			</set>
 			where
-			id=#{item.id}
+				id=#{item.id}
 		</foreach>
 	</update>
 
@@ -317,11 +317,11 @@
 		where 1=1
 		<if test="parameter.name !=null and parameter.name !='' ">
 			and (u.username like concat('%',#{parameter.name},'%' ) or
-			o.org_name like
+			u.realname like
 			concat('%',#{parameter.name},'%' ) )
 		</if>
-		<if test="parameter.realname !=null and parameter.realname !=''">
-			and u.realname like concat('%',#{parameter.realname},'%')
+		<if test="parameter.orgName !=null and parameter.orgName !=''">
+			and o.org_name like concat('%',#{parameter.orgName},'%')
 		</if>
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}

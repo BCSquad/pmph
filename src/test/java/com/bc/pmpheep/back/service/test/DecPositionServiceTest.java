@@ -30,6 +30,8 @@ public class DecPositionServiceTest extends BaseTest{
      @Resource
      DecPositionService decPositionService;
      
+    
+     
      @Test
      @Rollback(Const.ISROLLBACK)
      public void testAddDecPosition(){
@@ -121,5 +123,16 @@ public class DecPositionServiceTest extends BaseTest{
     	 DecPosition decPosition5 = new DecPosition(2L, 1L, 3);
     	 decPositionService.addDecPosition(decPosition5);
     	 return decPosition3;
+     }
+     
+     
+     @Test
+     @Rollback(Const.ISROLLBACK)
+     public void testListDecPositionsByTextbookIdAndOrgid(){
+    	 List<Long> textBookIds =new ArrayList<Long>();
+    	 textBookIds.add(158L);
+    	 textBookIds.add(165L);
+    	 List<DecPosition> decPositions=decPositionService.listDecPositionsByTextbookIdAndOrgid(textBookIds, 530L);
+    	 Assert.assertNotNull("获取作家申报职位信息失败", decPositions);
      }
 }

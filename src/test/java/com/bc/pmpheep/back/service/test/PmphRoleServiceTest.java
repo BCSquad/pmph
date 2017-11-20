@@ -2,7 +2,9 @@ package com.bc.pmpheep.back.service.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import org.apache.poi.ss.formula.functions.Roman;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -27,65 +29,130 @@ public class PmphRoleServiceTest extends BaseTest {
 
 	@Autowired
 	PmphRoleService roleService;
+	Random random = new Random();
+	PmphRole pmphRole = new PmphRole("不可能的名字" + random.nextInt(100), false, "aa", 999, null, null);
 
-	/**
-	 * PmphRole 添加Test
-	 */
 	@Test
-	@Rollback(Const.ISROLLBACK)
-	public void addPmphRoleTest() {
-		PmphRole role = new PmphRole();
-		role.setRoleName("角色11");
-		role.setNote("角色11");
-		Assert.assertNotNull(roleService.addPmphRole(role));// 添加角色
-		roleService.addUserRole(1L, 4L);// 添加用户角色
+	public void testAddPmphRole() {
+		roleService.addPmphRole(pmphRole);
+		Assert.assertTrue("添加失败", pmphRole.getId() > 0);
+	}
+
+	@Test
+	public void testAdd() {
+		Long[] ids = { 1L, 2L };
+		roleService.add(pmphRole, ids);
+		Assert.assertTrue("添加失败", pmphRole.getId() > 0);
+	}
+
+	@Test
+	public void testAddUserRole() {
+		Assert.assertTrue("添加失败", roleService.addUserRole(1L, 1L) > 0);
+
+	}
+
+	@Test
+	public void testAddRoleResource() {
 		List<Long> list = new ArrayList<>();
-		list.add(4L);
-		list.add(5L);
-		roleService.addRoleResource(1L, list);// 添加角色资源
-	}
-
-	/**
-	 * PmphRole 修改Test
-	 */
-	@Test
-	@Rollback(Const.ISROLLBACK)
-	public void updatePmphRoleTest() {
-		PmphRole pr = new PmphRole();
-		pr.setId(4L);
-		pr.setRoleName("角色");
-		Assert.assertNull(roleService.update(pr));
-	}
-
-	/**
-	 * PmphRole 查询Test
-	 */
-	@Test
-	@Rollback(Const.ISROLLBACK)
-	public void getPmphRoleTest() {
-		Assert.assertNotNull(roleService.get(1L));// 按ID查询
-		Assert.assertNotNull(roleService.getList(""));// 查询所有
-		Assert.assertNotNull(roleService.getListRole());//
-		Assert.assertNotNull(roleService.getUserRole(1L, 2L));// 根据用户ID，角色ID查询
-		Assert.assertNotNull(roleService.getListRoleResource(1L));// 根据角色ID查询资源
-		Assert.assertNotNull(roleService.getResourceRole(1L, 1L));// 根据角色ID查询资源
-	}
-
-	/**
-	 * PmphRole 删除Test
-	 */
-	@Test
-	@Rollback(Const.ISROLLBACK)
-	public void deletePmphRoleTest() {
-		List<Long> list = new ArrayList<Long>();
 		list.add(1L);
-		Integer count = roleService.delete(4L);// 按ID删除
-		Assert.assertTrue("idDelete", count > 0);
-		roleService.deleteRoleAndResource(list);// 根据角色 id 删除对应资源
-		roleService.deleteUserRole(1L, 1L);// 删除用户对应角色
-		roleService.deleteUserRoles(1L);// 删除用户对应所有角色
-		roleService.deleteRoleResource(1L, 1L);// 删除角色对应的资源
-		Integer ins = roleService.deleteRoleAndUser(list);// 删除角色对应所有的用户
-		Assert.assertTrue("idDelete", ins > 0);
+		Assert.assertTrue("添加失败", roleService.addRoleResource(1L, list) > 0);
 	}
+
+	@Test
+	public void testUpdate() {
+		roleService.addPmphRole(pmphRole);
+		pmphRole.setNote("xxa");
+		Assert.assertTrue("修改失败", roleService.update(pmphRole) > 0);
+
+	}
+
+	@Test
+	public void testDelete() {
+		roleService.addPmphRole(pmphRole);
+		Assert.assertTrue("删除失败", roleService.delete(pmphRole.getId()) > 0);
+
+	}
+
+	@Test
+	public void testDeleteRoleResource() {
+		roleService.addUserRole(1L, 1L);
+		Assert.assertTrue("删除失败", roleService.deleteRoleResource(1L, 1L) > 0);
+	}
+
+	@Test
+	public void testDeleteRoleAndResource() {
+		roleService.addPmphRole(pmphRole);
+		List<Long> ids = new ArrayList<>();
+		ids.add(pmphRole.getId());
+		Assert.assertTrue("删除失败", roleService.deleteRoleAndResource(ids) > 0);
+	}
+
+	@Test
+	public void testDeleteRoleAndUser() {
+		roleService.deleteRoleResource(1L, 1L);
+		List<Long> ids = new ArrayList<>();
+		ids.add(1L);
+		Assert.assertTrue("删除失败", roleService.deleteRoleAndUser(ids) > 0);
+	}
+
+	@Test
+	public void testDeleteUserRole() {
+		roleService.addUserRole(1L, 1L);
+		Assert.assertTrue("删除失败", roleService.deleteUserRole(1L, 1L) > 0);
+	}
+
+	@Test
+	public void testDeleteRoleResourceByRoleId() {
+		roleService.addPmphRole(pmphRole);
+		Assert.assertTrue("删除失败", roleService.deleteRoleResourceByRoleId(pmphRole.getId()) > 0);
+	}
+
+	@Test
+	public void testDeleteUserRoles() {
+		roleService.addUserRole(1L, 1L);
+		Assert.assertTrue("删除失败", roleService.deleteUserRoles(1L) > 0);
+	}
+
+	@Test
+	public void testGet() {
+		roleService.addPmphRole(pmphRole);
+		Assert.assertNotNull("获取数据失败", roleService.get(pmphRole.getId()));
+	}
+
+	@Test
+	public void testGetList() {
+		roleService.addPmphRole(pmphRole);
+		Assert.assertNotNull("获取数据失败", roleService.getList(pmphRole.getRoleName()));
+	}
+
+	@Test
+	public void testGetListPmphRolePermission() {
+		roleService.addPmphRole(pmphRole);
+		Assert.assertNotNull("获取数据失败", roleService.getListPmphRolePermission(pmphRole.getId()));
+	}
+
+	@Test
+	public void testGetListRole() {
+		roleService.addPmphRole(pmphRole);
+		Assert.assertNotNull("获取数据失败", roleService.getListRole());
+	}
+
+	@Test
+	public void testGetListPmphRolePermissionIdByRoleId() {
+		roleService.addPmphRole(pmphRole);
+		Assert.assertNotNull("获取数据失败", roleService.getListPmphRolePermissionIdByRoleId(pmphRole.getId()));
+	}
+
+	@Test
+	public void testGetListRoleResource() {
+		roleService.addPmphRole(pmphRole);
+		Assert.assertNotNull("获取数据失败", roleService.getListRoleResource(pmphRole.getId()));
+	}
+
+	@Test
+	public void testGetPmphRoleByUserId() {
+		roleService.addUserRole(1L, 1L);
+		Assert.assertNotNull("获取数据失败", roleService.getPmphRoleByUserId(1L));
+	}
+
 }

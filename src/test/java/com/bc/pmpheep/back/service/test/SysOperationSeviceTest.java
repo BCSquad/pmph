@@ -6,9 +6,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.test.annotation.Rollback;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.SysOperation;
 import com.bc.pmpheep.back.service.SysOperationService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.test.BaseTest;
 
@@ -44,7 +48,8 @@ public class SysOperationSeviceTest extends BaseTest {
      * </pre>
      */
     @Test
-    public void serviceAllMethodTest() {
+    @Rollback(Const.ISROLLBACK)
+    public void testServiceAllMethodTest() {
         // add
         SysOperation sysOperation =
         sysOperationService.addSysOperation(new SysOperation(1L, "a", "a",
@@ -53,6 +58,19 @@ public class SysOperationSeviceTest extends BaseTest {
                                                              "aaaa", "pc"));
         logger.info(sysOperation.toString());
         Assert.assertNotNull("插入内容后返回的sysOperation.id不应为空", sysOperation.getId());
-
+    }
+    
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testGetListSysOperation(){
+    	PageParameter<SysOperation> pageParameter = new PageParameter<SysOperation>();
+    	PageResult<SysOperation> pageResult = new PageResult<SysOperation>();
+    	SysOperation sysOperation = new SysOperation(1L, "a", "a", DateUtil.getCurrentTime(),
+                "/cms/content", "192.168.200.209", "aaaa", "pc");
+    	pageParameter.setPageNumber(1);
+		pageParameter.setPageSize(10);
+		pageParameter.setParameter(sysOperation);
+		pageResult = sysOperationService.getListSysOperation(pageParameter);
+		Assert.assertNotNull("获取SysOperation列表失败", pageResult);
     }
 }

@@ -695,7 +695,12 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 					throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
 							CheckedExceptionResult.NULL_PARAM, "发送者类型不正确！");
 				}
-				myMessageVO.setContent(messageService.get(myMessageVO.getMsgId()).getContent());
+				Message message = messageService.get(myMessageVO.getMsgId());
+				if (ObjectUtil.isNull(message)) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+							CheckedExceptionResult.NULL_PARAM, "没有获取到内容！");
+				}
+				myMessageVO.setContent(message.getContent());
 			}
 			pageResult.setRows(list);
 		}

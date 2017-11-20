@@ -93,44 +93,48 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object object,
     ModelAndView modelAndView) throws Exception {
-        String requestUri = request.getRequestURI();// 完整请求路径
-        String contextPath = request.getContextPath();// 项目路径
-        String url = requestUri.substring(contextPath.length());// 模块路径
-        if (!url.matches(Const.NO_INTERCEPTOR_PATH)) {
-            HandlerMethod handlerMethod = (HandlerMethod) object;
-            Class cls = handlerMethod.getBeanType();// 类名
-            Method[] methods = cls.getMethods();// 类中的所有方法
-            String logRemark = "";// 方法用途
-            String businessType = "";// 业务类型
-            HttpSession session = request.getSession();
-            if (ObjectUtil.notNull(session)) {
-                PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
-                // }
-                // if (StringUtil.notEmpty(sessionId)) {
-                // PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-                if (ObjectUtil.notNull(pmphUser)) {
-                    String subUrl = url.substring(url.lastIndexOf("/") + 1, url.length());// 调用接口方法
-                    for (Method method : methods) {
-                        LogDetail logObj = method.getAnnotation(LogDetail.class);
-                        if (ObjectUtil.notNull(logObj) && method.getName().equals(subUrl)) {
-                            logRemark = logObj.logRemark();
-                            businessType = logObj.businessType();
-                            break;
+        if (object instanceof HandlerMethod) {
+            String requestUri = request.getRequestURI();// 完整请求路径
+            String contextPath = request.getContextPath();// 项目路径
+            String url = requestUri.substring(contextPath.length());// 模块路径
+            if (!url.matches(Const.NO_INTERCEPTOR_PATH)) {
+                HandlerMethod handlerMethod = (HandlerMethod) object;
+                Class cls = handlerMethod.getBeanType();// 类名
+                Method[] methods = cls.getMethods();// 类中的所有方法
+                String logRemark = "";// 方法用途
+                String businessType = "";// 业务类型
+                HttpSession session = request.getSession();
+                if (ObjectUtil.notNull(session)) {
+                    PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
+                    // }
+                    // if (StringUtil.notEmpty(sessionId)) {
+                    // PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+                    if (ObjectUtil.notNull(pmphUser)) {
+                        String subUrl = url.substring(url.lastIndexOf("/") + 1, url.length());// 调用接口方法
+                        for (Method method : methods) {
+                            LogDetail logObj = method.getAnnotation(LogDetail.class);
+                            if (ObjectUtil.notNull(logObj) && method.getName().equals(subUrl)) {
+                                logRemark = logObj.logRemark();
+                                businessType = logObj.businessType();
+                                break;
+                            }
                         }
+                        // 获取用户访问设备类型
+                        String deviceType = DeviceUtils.isMobileDevice(request);
+                        if (StringUtil.isEmpty(deviceType)) {
+                            deviceType = "iPhone";
+                        }
+                        // 此处调用 sysOperationService 保存方法
+                        sysOperationService.addSysOperation(new SysOperation(
+                                                                             pmphUser.getId(),
+                                                                             pmphUser.getUsername(),
+                                                                             pmphUser.getRealname(),
+                                                                             DateUtil.getCurrentTime(),
+                                                                             url + "-" + logRemark,
+                                                                             request.getRemoteHost(),
+                                                                             businessType,
+                                                                             deviceType));
                     }
-                    // 获取用户访问设备类型
-                    String deviceType = DeviceUtils.isMobileDevice(request);
-                    if (StringUtil.isEmpty(deviceType)) {
-                        deviceType = "iPhone";
-                    }
-                    // 此处调用 sysOperationService 保存方法
-                    sysOperationService.addSysOperation(new SysOperation(pmphUser.getId(),
-                                                                         pmphUser.getUsername(),
-                                                                         pmphUser.getRealname(),
-                                                                         DateUtil.getCurrentTime(),
-                                                                         url + "-" + logRemark,
-                                                                         request.getRemoteHost(),
-                                                                         businessType, deviceType));
                 }
             }
         }

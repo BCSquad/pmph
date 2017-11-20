@@ -216,7 +216,7 @@ public class MigrationStageSix {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到审核进度信息。"));
                 excel.add(map);
                 logger.error("未找到审核进度信息，此结果将被记录在Excel中");
-                continue;
+                declaration.setOnlineProgress(0);
             }
             Long authUserId = JdbcHelper.getPrimaryKey("sys_user", "userid", authUserid);
             declaration.setAuthUserId(authUserId);
@@ -238,14 +238,14 @@ public class MigrationStageSix {
                 logger.error("是否暂存的位数大于2位数，此结果将被记录在Excel中");
                 continue;
             }
-            if (ObjectUtil.notNull(isStagingJudge)) {
-                Integer isStaging = isStagingJudge.intValue(); // 是否暂存
-                declaration.setIsStaging(isStaging);
-            } else {
+            if (ObjectUtil.isNull(isStagingJudge)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到是否暂存信息。"));
                 excel.add(map);
                 logger.error("未找到是否暂存信息，此结果将被记录在Excel中");
-                continue;
+                declaration.setIsStaging(0);
+            } else {
+                Integer isStaging = isStagingJudge.intValue(); // 是否暂存
+                declaration.setIsStaging(isStaging);
             }
             try {
                 declaration = declarationService.addDeclaration(declaration);

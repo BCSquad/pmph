@@ -3,6 +3,107 @@
 
 <mapper namespace="com.bc.pmpheep.back.dao.UserMessageDao">
 
+	
+	
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="msgId != null and msgId !=''">
+				msg_id,
+			</if>
+			<if test="msgType != null">
+				msg_type,
+			</if>
+			<if test="title != null and title !='' ">
+				title,
+			</if>
+			<if test="senderId != null ">
+				sender_id,
+			</if>
+			<if test="senderType != null ">
+				sender_type,
+			</if>
+			<if test="receiverId != null ">
+				receiver_id,
+			</if>
+			<if test="receiverType != null ">
+				receiver_type,
+			</if>
+			<if test="isRead != null ">
+				is_read,
+			</if>
+			<if test="isWithdraw != null ">
+				is_withdraw,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted,
+			</if>
+			<if test="gmtCreate != null ">
+				gmt_create,
+			</if>
+			<if test="gmtUpdate != null ">
+				gmt_update,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="msgId != null and msgId !=''">
+				#{msgId},
+			</if>
+			<if test="msgType != null">
+				#{msgType},
+			</if>
+			<if test="title != null and title !='' ">
+				#{title},
+			</if>
+			<if test="senderId != null ">
+				#{senderId},
+			</if>
+			<if test="senderType != null ">
+				#{senderType},
+			</if>
+			<if test="receiverId != null ">
+				#{receiverId},
+			</if>
+			<if test="receiverType != null ">
+				#{receiverType},
+			</if>
+			<if test="isRead != null ">
+				#{isRead},
+			</if>
+			<if test="isWithdraw != null ">
+				#{isWithdraw},
+			</if>
+			<if test="isDeleted != null ">
+				#{isDeleted},
+			</if>
+			<if test="gmtCreate != null ">
+				#{gmtCreate},
+			</if>
+			<if test="gmtUpdate != null ">
+				#{gmtUpdate},
+			</if>
+		</trim>
+	</sql>
+	<!--单条插入 UserMessage -->
+	<insert id="addUserMessage" parameterType="UserMessage">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into
+			user_message(
+				<include refid="key" />
+				)
+		values (
+				<include refid="value" />
+			)
+		
+	</insert>
+
 	<!-- 通过id 查询UserMessage -->
 	<select id="getUserMessageById" parameterType="map" resultType="UserMessage">
 		select * from user_message where id = #{id};
@@ -105,33 +206,6 @@
 		resultType="UserMessage">
 		select * from user_message where msg_id = #{msgId};
 	</select>
-	
-	<!--单条插入 UserMessage -->
-	<insert id="addUserMessage" parameterType="UserMessage">
-		<selectKey resultType="java.lang.Long" order="AFTER"
-			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
-			SELECT LAST_INSERT_ID()
-		</selectKey>
-		insert into
-			user_message(
-				msg_id,msg_type,title,sender_id,sender_type,receiver_id,receiver_type,
-				is_read,is_withdraw,is_deleted,gmt_create,gmt_update
-				)
-		values ( #{msgId},
-			#{msgType},
-			#{title},
-			#{senderId},
-			#{senderType},
-			#{receiverId},
-			#{receiverType},
-			#{isRead},
-			#{isWithdraw},
-			#{isDeleted},
-			#{gmtCreate},
-			#{gmtUpdate}
-			)
-		
-	</insert>
 
 	<!-- 批量插入 UserMessage -->
 	<insert id="addUserMessageBatch" parameterType="java.util.List">

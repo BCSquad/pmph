@@ -17,6 +17,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
  * @createDate 2017年9月27日 上午10:13:25
  *
  */
+
 @Configuration  //指明该类为Spring 配置类
 @EnableWebMvc    // 声明该类支持WebMvc
 @EnableWebSocket  // 声明该类支持WebSocket
