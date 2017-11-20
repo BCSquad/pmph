@@ -147,6 +147,15 @@ public class Const {
     public static final Integer      ORG_USER_PROGRESS_1        = 1;
     public static final Integer      ORG_USER_PROGRESS_2        = 2;
     /**
+     * 教师审核
+     * 
+     * 0=未提交/1=已提交/2=被退回/3=通过
+     */
+    public static final Short        WRITER_PROGRESS_0          = 0;
+    public static final Short        WRITER_PROGRESS_1          = 1;
+    public static final Short        WRITER_PROGRESS_2          = 2;
+    public static final Short        WRITER_PROGRESS_3          = 3;
+    /**
      * CMS
      */
     // CMS 类型
