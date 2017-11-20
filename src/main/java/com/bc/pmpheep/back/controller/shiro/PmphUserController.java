@@ -35,14 +35,14 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  * 使用示范：
  * 
  * 
- * @author (作者) nyz
+ * &#64;author (作者) nyz
  * 
- * @since (该版本支持的JDK版本) ：JDK 1.6或以上
- * @version (版本) 1.0
- * @date (开发日期) 2017-9-20
- * @modify (最后修改时间) 
- * @修改人 ：nyz 
- * @审核人 ：
+ * &#64;since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * &#64;version (版本) 1.0
+ * &#64;date (开发日期) 2017-9-20
+ * &#64;modify (最后修改时间) 
+ * &#64;修改人 ：nyz 
+ * &#64;审核人 ：
  * </pre>
  */
 @SuppressWarnings("all")
@@ -72,9 +72,9 @@ public class PmphUserController {
 	 * 功能描述：添加用户保存的方法
 	 * 使用示范：
 	 *
-	 * @param user
-	 * @param request
-	 * @return
+	 * &#64;param user
+	 * &#64;param request
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -98,8 +98,8 @@ public class PmphUserController {
 	 * 功能描述：
 	 * 使用示范：
 	 *
-	 * @param user
-	 * @return
+	 * &#64;param user
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -116,9 +116,9 @@ public class PmphUserController {
 	 * 功能描述：更新用户的信息（包括更新用户绑定的角色）
 	 * 使用示范：
 	 *
-	 * @param user
-	 * @param request
-	 * @return
+	 * &#64;param user
+	 * &#64;param request
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -140,9 +140,9 @@ public class PmphUserController {
 	 * 功能描述：根据用户 id 跳转到用户权限的列表页面
 	 * 使用示范：
 	 *
-	 * @param userId
-	 * @param model
-	 * @return
+	 * &#64;param userId
+	 * &#64;param model
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -167,8 +167,8 @@ public class PmphUserController {
 	 * 2、删除用户绑定的角色数据
 	 * 使用示范：
 	 *
-	 * @param userIds
-	 * @return
+	 * &#64;param userIds
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -202,8 +202,8 @@ public class PmphUserController {
 			Long departmentId) {
 		PageParameter pageParameter = new PageParameter<>();
 		PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
-		if(StringUtil.notEmpty(name)){
-			pmphUserManagerVO.setName(name.replaceAll(" ", ""));//去除空格
+		if (StringUtil.notEmpty(name)) {
+			pmphUserManagerVO.setName(name.replaceAll(" ", ""));// 去除空格
 		}
 		pmphUserManagerVO.setPath(path);
 		pmphUserManagerVO.setDepartmentId(departmentId);
@@ -241,7 +241,7 @@ public class PmphUserController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "初始化获取社内所有部门")
 	@RequestMapping(value = "/list/pmphDepartment", method = RequestMethod.GET)
-	public ResponseBean pmphDepartment() {
-		return new ResponseBean(pmphDepartmentService.listPmphDepartment(null));
+	public ResponseBean pmphDepartment(Long id) {
+		return new ResponseBean(pmphDepartmentService.listPmphDepartment(id));
 	}
 }
