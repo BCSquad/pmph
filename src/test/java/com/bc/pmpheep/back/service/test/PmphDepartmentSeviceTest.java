@@ -59,7 +59,7 @@ public class PmphDepartmentSeviceTest extends BaseTest {
 		pmphDepartmentService.addPmphDepartment(pmphDepartment);
 		Assert.assertTrue("删除失败", pmphDepartmentService.deletePmphDepartmentById(pmphDepartment.getId()) >= 0);
 	}
-	
+
 	@Test
 	public void testDeletePmphDepartmentBatch() {
 		pmphDepartmentService.addPmphDepartment(pmphDepartment);
