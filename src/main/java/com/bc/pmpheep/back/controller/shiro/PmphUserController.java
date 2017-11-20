@@ -202,7 +202,9 @@ public class PmphUserController {
 			Long departmentId) {
 		PageParameter pageParameter = new PageParameter<>();
 		PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
-		pmphUserManagerVO.setName(name.replaceAll(" ", ""));//去除空格
+		if(StringUtil.notEmpty(name)){
+			pmphUserManagerVO.setName(name.replaceAll(" ", ""));//去除空格
+		}
 		pmphUserManagerVO.setPath(path);
 		pmphUserManagerVO.setDepartmentId(departmentId);
 		pageParameter.setPageNumber(pageNumber);
@@ -223,7 +225,7 @@ public class PmphUserController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改社内用户")
-	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
+	@RequestMapping(value = "/update/updateUser", method = RequestMethod.PUT)
 	public ResponseBean updateUser(PmphUserManagerVO pmphUserManagerVO) {
 		return new ResponseBean(userService.updatePmphUserOfBack(pmphUserManagerVO));
 	}

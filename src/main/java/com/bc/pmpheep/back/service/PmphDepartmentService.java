@@ -30,7 +30,7 @@ public interface PmphDepartmentService {
 	 * @throws CheckedServiceException
 	 */
 	PmphDepartment add(PmphDepartment pmphDepartment) throws CheckedServiceException;
-	
+
 	/**
 	 * 
 	 * @param id
@@ -60,18 +60,20 @@ public interface PmphDepartmentService {
 	 * 
 	 * @author 曾庆峰
 	 * @param parentId
+	 *            父级部门id 为null时初始化
 	 * @return 已经分级的社内部门
 	 * @throws CheckedServiceException
 	 * @update Mryang
 	 */
-	PmphUserDepartmentVO listPmphDepartment(Long parentId) throws CheckedServiceException;
-	
+	PmphUserDepartmentVO listPmphDepartment(Long id) throws CheckedServiceException;
+
 	/**
 	 * 
-	 *  
+	 * 
 	 * 功能描述：模糊查询部门
 	 *
-	 * @param dpName 部门名称
+	 * @param dpName
+	 *            部门名称
 	 * @return 查询的结果集
 	 * @throws CheckedServiceException
 	 *

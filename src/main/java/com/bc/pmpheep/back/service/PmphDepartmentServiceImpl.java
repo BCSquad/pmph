@@ -66,10 +66,11 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 		pmphDepartmentDao.addPmphDepartment(pmphDepartment);
 		return pmphDepartment;
 	}
-  
+
 	/**
 	 * 
 	 * Description:数据迁移工具用，因add方法有改动，未防后续改动新添add方法进行数据迁移工具类调用
+	 * 
 	 * @author:lyc
 	 * @date:2017年11月8日下午5:23:38
 	 * @param pmphDepartment实体对象
@@ -96,7 +97,7 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 		pmphDepartmentDao.addPmphDepartment(pmphDepartment);
 		return pmphDepartment;
 	}
-	
+
 	/**
 	 * 
 	 * @param id
@@ -158,13 +159,17 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 	}
 
 	@Override
-	public PmphUserDepartmentVO listPmphDepartment(Long parentId) throws CheckedServiceException {
-		if (null == parentId) {
-			parentId = Const.PMPH_DEPARTMENT_ROOT_ID;
+	public PmphUserDepartmentVO listPmphDepartment(Long id) throws CheckedServiceException {
+		PmphUserDepartmentVO pmphUserDepartmentVO = new PmphUserDepartmentVO();
+		if (null == id) {// 初始化列表
+			List<PmphUserDepartmentVO> list = pmphDepartmentDao.listPmphDepartment(0L);
+			pmphUserDepartmentVO = list.get(0);
+			pmphUserDepartmentVO.setSonDepartment(pmphDepartmentDao.listPmphDepartment(pmphUserDepartmentVO.getId()));
+		} else {// 获取当前点击的部门id
+			List<PmphUserDepartmentVO> list = pmphDepartmentDao.getDepartmentId(id);
+			pmphUserDepartmentVO = list.get(0);
+			pmphUserDepartmentVO.setSonDepartment(pmphDepartmentDao.listPmphDepartment(id));
 		}
-		Long id = parentId;
-		PmphUserDepartmentVO pmphUserDepartmentVO = new PmphUserDepartmentVO(id);
-		recursionPmphDepartment(pmphUserDepartmentVO, new ArrayList<Long>(16));
 		return pmphUserDepartmentVO;
 	}
 
