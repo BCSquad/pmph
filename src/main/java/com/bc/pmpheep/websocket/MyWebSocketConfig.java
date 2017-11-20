@@ -17,9 +17,9 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
  * @createDate 2017年9月27日 上午10:13:25
  *
  */
-@Configuration
-@EnableWebMvc
-@EnableWebSocket
+//@Configuration
+//@EnableWebMvc
+//@EnableWebSocket
 public class MyWebSocketConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer {
 		
 		@Autowired
