@@ -75,19 +75,19 @@ public class DataTestImportController {
 		}
 		
 		try {
-			migrationStageThree.start();
-			flag3 = true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			e3=e;
-		}
-		
-		try {
 			migrationStageTwo.start();
 			flag2 = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			e2=e;
+		}
+		
+		try {
+			migrationStageThree.start();
+			flag3 = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			e3=e;
 		}
 		try {
 			migrationStageFour.start();

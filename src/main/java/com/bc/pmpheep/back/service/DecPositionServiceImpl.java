@@ -3,7 +3,9 @@
  */
 package com.bc.pmpheep.back.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,6 +80,22 @@ public class DecPositionServiceImpl implements DecPositionService {
                                               CheckedExceptionResult.NULL_PARAM, "id不能为空");
         }
         return decPositionDao.getDecPositionById(id);
+    }
+    
+    @Override
+    public List<DecPosition> listDecPositionsByTextbookIdAndOrgid(List<Long> textBookIds,Long orgId) throws CheckedServiceException{
+    	if(null == textBookIds || textBookIds.size() == 0 || null == orgId ){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		for(Long bookId: textBookIds){
+			if(null == bookId ){
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "书籍参数为空");
+			}
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", textBookIds); //书籍ids
+		map.put("orgId", orgId);      //网址类型机构
+		return decPositionDao.listDecPositionsByTextbookIdAndOrgid(map);
     }
 
     @Override

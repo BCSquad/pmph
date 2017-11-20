@@ -319,4 +319,22 @@
 		resultType="Long">
 		select id from org where org_name=#{orgName} ;
 	</select>
+	
+	<!-- 根据书籍获取当选了该书籍的人员所属机构-->
+	<select id="listBeElectedOrgByBookIds" parameterType="list" resultType="Org">
+		select DISTINCT DISTINCT a.* 
+			from org a 
+			LEFT JOIN declaration b on b.org_id = a.id 
+			LEFT JOIN dec_position c on c.declaration_id=b.id
+			LEFT JOIN textbook     d  on d.id = c.textbook_id
+			where 
+			b.is_staging =false and b.online_progress != 2
+			and c.chosen_position in (1,2,3) and d.is_published = true 
+			and b.id is not null and c.id is not null and d.id is not null 
+			and d.id in 
+			<foreach item="bookId" collection="list" open="(" separator="," close=")">
+            	#{bookId}
+        	</foreach>
+	</select>
+	
 </mapper>
