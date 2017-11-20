@@ -84,8 +84,9 @@ public class CmsContentServiceTest extends BaseTest {
 
     @Test
     public void testDeleteCmsContentById() {
-        CmsContent cmsContent = this.addCmsContent();
-        Assert.assertTrue("是否删除成功", cmsContentService.deleteCmsContentById(cmsContent.getId()) > 0);
+        // CmsContent cmsContent = this.addCmsContent();
+        // Assert.assertTrue("是否删除成功", cmsContentService.deleteCmsContentById(cmsContent.getId()) >
+        // 0);
         CmsContent cc = this.addCmsContent();
         List<Long> idList = new ArrayList<Long>(1);
         idList.add(cc.getId());
@@ -94,13 +95,14 @@ public class CmsContentServiceTest extends BaseTest {
 
     private CmsContent addCmsContent() {
         CmsContent cmsContent =
-        cmsContentService.addCmsContent(new CmsContent(10L, "d:/pmph", "内容id", "标题", "摘要", "关键字",
-                                                       (short) 1, DateUtil.getCurrentTime()
-                                                                          .toString(),
+        cmsContentService.addCmsContent(new CmsContent(165565L, "d:/pmph/dd.jsp", "内容id", "标题",
+                                                       "摘要", "关键字", (short) 32,
                                                        DateUtil.getCurrentTime().toString(),
-                                                       DateUtil.getCurrentTime().toString(), 2L,
                                                        DateUtil.getCurrentTime().toString(),
-                                                       DateUtil.getCurrentTime().toString(), 0L, 3L));
+                                                       DateUtil.getCurrentTime().toString(), 6L,
+                                                       DateUtil.getCurrentTime().toString(),
+                                                       DateUtil.getCurrentTime().toString(), 3L,
+                                                       68L));
         return cmsContent;
     }
 }
