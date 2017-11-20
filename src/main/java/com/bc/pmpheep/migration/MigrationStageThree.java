@@ -4,7 +4,6 @@
 package com.bc.pmpheep.migration;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -17,14 +16,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.bc.pmpheep.back.po.WriterProfile;
-import com.bc.pmpheep.back.po.WriterRole;
-import com.bc.pmpheep.back.po.WriterUserCertification;
-import com.bc.pmpheep.back.po.WriterUserRole;
-import com.bc.pmpheep.back.service.WriterProfileService;
-import com.bc.pmpheep.back.service.WriterRoleService;
-import com.bc.pmpheep.back.service.WriterUserCertificationService;
-import com.bc.pmpheep.back.service.WriterUserRoleService;
+import com.bc.pmpheep.back.po.PmphDepartment;
+import com.bc.pmpheep.back.po.PmphRole;
+import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.PmphUserRole;
+import com.bc.pmpheep.back.service.PmphDepartmentService;
+import com.bc.pmpheep.back.service.PmphRoleService;
+import com.bc.pmpheep.back.service.PmphUserRoleService;
+import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.ImageType;
@@ -35,43 +34,197 @@ import com.bc.pmpheep.utils.ExcelHelper;
 
 /**
  * <p>
- * Title:图三数据迁移工具<p>
+ * Title:迁移工具图二<p>
  * <p>
- * Description:作家用户模块，需作为第二模块进行<p>
+ * Description:社内模块数据迁移<p>
  * @author lyc
- * @date 2017年11月2日 下午4:56:48
+ * @date 2017年11月1日 下午11:18:46
  */
 @Component
 public class MigrationStageThree {
 
     private final Logger logger = LoggerFactory.getLogger(MigrationStageThree.class);
+    private int number = 0;
 
     @Resource
     ExcelHelper excelHelper;
     @Resource
     FileService fileService;
     @Resource
-    WriterRoleService writerRoleService;
+    PmphDepartmentService pmphDepartmentService;
     @Resource
-    WriterUserRoleService writerUserRoleService;
+    PmphUserService pmphUserService;
     @Resource
-    WriterProfileService writerProfileService;
+    PmphRoleService pmphRoleService;
     @Resource
-    WriterUserCertificationService writerCertificationService;
+    PmphUserRoleService pmphUserRoleService;
 
     public void start() {
         Date begin = new Date();
-        writerRole();
-        writerUserRole();
-        writerProfile();
-        writerUserCertification();
-        orgUserRole();
+        pmphDepartment();
+        pmphUser();
+        pmphRole();
+        pmphUserRole();
+        cannotFindUser();
+        cannotFindRole();
         logger.info("迁移第三步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
-    protected void writerRole() {
-        String tableName = "sys_role";
-        JdbcHelper.addColumn(tableName);//增加new_pk字段
+    protected void pmphDepartment() {
+        String tableName = "ba_organize";//图一此表已添加new_pk
+        String sql = "SELECT orgid,parentid,orgname,sortno,remark "
+                + "FROM ba_organize WHERE orgcode "
+                + "LIKE '15%' ORDER BY LENGTH(orgcode),orgcode ;";
+        List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        List<Map<String, Object>> excel = new LinkedList<>();
+        int count = 0;
+        for (Map<String, Object> map : maps) {
+            String departmentId = (String) map.get("orgid");
+            String parentCode = (String) map.get("parentid");
+            String dpName = (String) map.get("orgname");
+            Integer sort = (Integer) map.get("sortno");
+            if (ObjectUtil.notNull(sort) && sort < 0) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
+                excel.add(map);
+                logger.error("显示顺序为负数，此结果将被记录在Excel中");
+            }
+            String note = (String) map.get("remark");
+            PmphDepartment pmphDepartment = new PmphDepartment();
+            Long parentId = 0L;
+            //不为0说明有父节点
+            if (!"0".equals(parentCode)) {
+                parentId = JdbcHelper.getPrimaryKey(tableName, "orgid", parentCode);
+            }
+            pmphDepartment.setParentId(parentId);
+            //因为查询结果是排序了的，所以子节点的新id一定在父节点之后才生成
+            String path = JdbcHelper.getPath(tableName, "orgid", "parentid", parentCode);
+            pmphDepartment.setPath(path);
+            pmphDepartment.setDpName(dpName);
+            pmphDepartment.setSort(sort);
+            pmphDepartment.setNote(note);
+            pmphDepartment = pmphDepartmentService.add(pmphDepartment);
+            Long pk = pmphDepartment.getId();
+            JdbcHelper.updateNewPrimaryKey(tableName, pk, "orgid", departmentId);
+            count++;
+            number++;
+        }
+        if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, "社内部门表", "pmph_department");
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
+        }
+        logger.info("pmph_department表数据迁移完成");
+        logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+        //记录信息
+        Map<String, Object> msg = new HashMap<String, Object>();
+        msg.put("result", "pmph_department表迁移完成" + count + "/" + maps.size());
+        SQLParameters.STATISTICS.add(msg);
+    }
+
+    protected void pmphUser() {
+        String tableName = "sys_user";//此表图一程序中已添加new_pk
+        String sql = "SELECT a.userid,a.usercode,a.`password`,a.isvalid,a.username,d.new_pk,"
+                + "b.handset,b.email,e.filedir,a.memo,a.sortno "
+                + "FROM sys_user a "
+                + "LEFT JOIN sys_userext b ON a.userid = b.userid "
+                + "LEFT JOIN sys_userorganize c ON a.userid = c.userid "
+                + "LEFT JOIN ba_organize d ON c.orgid = d.orgid "
+                + "LEFT JOIN (SELECT * FROM pub_addfileinfo x WHERE x.fileid IN (SELECT MAX(y.fileid) "
+                + "FROM pub_addfileinfo y WHERE y.childsystemname='sys_userext_avatar' "
+                + "GROUP BY y.operuserid))e "
+                + "ON a.userid = e.operuserid "
+                + "WHERE a.sysflag = 0 ;";
+        List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        List<Map<String, Object>> excel = new LinkedList<>();
+        int count = 0;
+        for (Map<String, Object> map : maps) {
+            StringBuilder sb = new StringBuilder();
+            String userId = (String) map.get("userid");
+            String userName = (String) map.get("usercode");
+            if (StringUtil.isEmpty(userName)) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到用户的登陆账号。"));
+                excel.add(map);
+                logger.error("找不到用户的登陆账号，此结果将被记录在Excel中");
+                continue;
+            }
+            String password = "888888";
+            Integer isDisabled = (Integer) map.get("isvalid");
+            String realName = (String) map.get("username");
+            if (StringUtil.isEmpty(realName)) {
+                realName = userName;
+            }
+            Long departmentId = (Long) map.get("new_pk");
+            if (ObjectUtil.isNull(departmentId) || departmentId > number) {
+                departmentId = 0L;
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到对应社内部门或连接的是学校机构。"));
+                excel.add(map);
+                logger.info("找不到对应社内部门或连接的是学校机构，此结果将被记录在Excel中");
+            }
+            String handphone = (String) map.get("handset");
+            String email = (String) map.get("email");
+            String avatar = (String) map.get("filedir");
+            String note = (String) map.get("memo");
+            Integer sort = (Integer) map.get("sortno");
+            if (ObjectUtil.notNull(sort) && sort < 0) {
+                sort = 999;
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("显示顺序为负数。"));
+                excel.add(map);
+                logger.info("显示顺序为负数，此结果将被记录在Excel中");
+            }
+            PmphUser pmphUser = new PmphUser();
+            pmphUser.setUsername(userName);
+            pmphUser.setPassword(password);
+            pmphUser.setIsDisabled(isDisabled == 1);
+            pmphUser.setRealname(realName);
+            pmphUser.setDepartmentId(departmentId);
+            pmphUser.setHandphone(handphone);
+            pmphUser.setEmail(email);
+            pmphUser.setAvatar("DEFAULT");
+            pmphUser.setNote(note);
+            pmphUser.setSort(sort);
+            pmphUser = pmphUserService.add(pmphUser);
+            Long pk = pmphUser.getId();
+            JdbcHelper.updateNewPrimaryKey(tableName, pk, "userid", userId);
+            JdbcHelper.updateNewPrimaryKey("sys_userext", pk, "userid", userId);
+            count++;
+            if (null != avatar) {
+                String mongoId = "";
+                try {
+                    mongoId = fileService.migrateFile(avatar, ImageType.PMPH_USER_AVATAR, pk);
+                } catch (IOException ex) {
+                    mongoId = "DEFAULT";
+                    logger.error("文件读取异常，路径<{}>,异常信息：{}", avatar, ex.getMessage());
+                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("文件读取异常  "));
+                    excel.add(map);
+                } catch (Exception e) {
+                    mongoId = "DEFAULT";
+                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常：" + e.getMessage() + "。"));
+                    excel.add(map);
+                }
+                pmphUser.setAvatar(mongoId);
+                pmphUser.setPassword(null);
+                pmphUserService.update(pmphUser);
+            }
+        }
+        if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, "社内用户表", "pmph_user");
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
+        }
+        logger.info("pmph_user表迁移完成");
+        logger.info("原数据库表共有{}条数据，迁移了{}条数据", maps.size(), count);
+        //记录信息
+        Map<String, Object> msg = new HashMap<String, Object>();
+        msg.put("result", "pmph_user表迁移完成" + count + "/" + maps.size());
+        SQLParameters.STATISTICS.add(msg);
+    }
+
+    protected void pmphRole() {
+        String tableName = "sys_role";//此表在图3中已经添加new_pk，运行顺序是先图3再图2
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
@@ -84,43 +237,41 @@ public class MigrationStageThree {
                 sort = 999;
                 map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
                 excel.add(map);
-                logger.info("显示顺序为负数，此结果将被记录在Excel中");
+                logger.info("显示顺序为负数，此结构将被记录在Excel中");
             }
             String note = (String) map.get("memo");
-            WriterRole writerRole = new WriterRole();
-            writerRole.setRoleName(rolename);
-            writerRole.setIsDisabled(isDisabled == 1);
-            writerRole.setSort(sort);
-            writerRole.setNote(note);
-            writerRole = writerRoleService.add(writerRole);
+            PmphRole pmphRole = new PmphRole();
+            pmphRole.setRoleName(rolename);
+            pmphRole.setIsDisabled(isDisabled == 1);
+            pmphRole.setSort(sort);
+            pmphRole.setNote(note);
+            pmphRole = pmphRoleService.addPmphRole(pmphRole);
             count++;
-            Long pk = writerRole.getId();
+            Long pk = pmphRole.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "roleid", roleId);
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, "作家角色表", "writer_role");
+                excelHelper.exportFromMaps(excel, "社内用户角色表", "pmph_role");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
-        logger.info("writer_role表迁移完成");
+        logger.info("pmph_role表迁移完成");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
-        msg.put("result", "writer_role表迁移完成" + count + "/" + maps.size());
+        msg.put("result", "pmph_role表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
 
-    protected void writerUserRole() {
-        String tableName = "sys_userrole";
-        JdbcHelper.addColumn(tableName);//增加new_pk字段
+    protected void pmphUserRole() {
+        String tableName = "sys_userrole";//此表在图3中已经添加new_pk，运行顺序是先图3再图2
         String sql = "SELECT a.userroleid,b.userid,b.new_pk user_new_pk,c.roleid,c.new_pk role_new_pk "
                 + "FROM sys_userrole a "
                 + "LEFT JOIN sys_user b ON a.userid = b.userid "
                 + "LEFT JOIN sys_role c ON a.roleid = c.roleid "
-                + "LEFT JOIN sys_userext d ON a.userid = d.userid "
-                + "WHERE b.sysflag = 1 AND d.usertype != 2 ;";
+                + "WHERE b.sysflag = 0 ;";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
@@ -134,196 +285,98 @@ public class MigrationStageThree {
                 logger.error("角色被删除，无法被关联到，此结果将被记录在Excel中");
                 continue;
             }
-            WriterUserRole writerUserRole = new WriterUserRole();
-            writerUserRole.setUserId(userId);
-            writerUserRole.setRoleId(roleId);
-            writerUserRole = writerUserRoleService.addWriterUserRole(writerUserRole);
+            PmphUserRole pmphUserRole = new PmphUserRole();
+            pmphUserRole.setUserId(userId);
+            pmphUserRole.setRoleId(roleId);
+            pmphUserRole = pmphUserRoleService.addPmphUserRole(pmphUserRole);
             count++;
-            Long pk = writerUserRole.getId();
+            Long pk = pmphUserRole.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "userroleid", userroleId);
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, "作家-角色关联表", "writer_user_role");
+                excelHelper.exportFromMaps(excel, "社内用户-角色关联表", "pmph_user_role");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
-        logger.info("writer_user_role迁移完成");
-        logger.info("原数据库表共{}条数据，迁移了{}条数据", maps.size(), count);
-        //记录信息
-        Map<String, Object> msg = new HashMap<String, Object>();
-        msg.put("result", "writer_user_role表迁移完成" + count + "/" + maps.size());
-        SQLParameters.STATISTICS.add(msg);
-    }
-
-    protected void writerProfile() {
-        String sql = "SELECT  b.userid,b.new_pk,a.userid tag_userid,c.introduce,"
-                + "GROUP_CONCAT(d.tagname SEPARATOR '%') tag_name,c.usertype "
-                + "FROM sys_usertagmap a LEFT JOIN sys_user b ON a.userid = b.userid "
-                + "LEFT JOIN sys_userext c ON b.userid = c.userid "
-                + "LEFT JOIN book_tag d ON a.tagid = d.tagid GROUP BY a.userid ;";
-        List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
-        List<Map<String, Object>> excel = new LinkedList<>();
-        int count = 0;
-        for (Map<String, Object> map : maps) {
-            Long userId = (Long) map.get("new_pk");
-            Integer usertype = (Integer) map.get("usertype");
-            if (ObjectUtil.notNull(usertype) && 2 == usertype.intValue()) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "此用户为机构用户。");
-                excel.add(map);
-                logger.error("用户为机构用户,此结果将被记录在Excel中");
-                continue;
-            }
-            if (ObjectUtil.isNull(userId) || userId == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "此用户可能被删除或为社内用户。");
-                excel.add(map);
-                logger.error("此用户可能被删除或为社内用户,此结果将被记录在Excel中");
-                continue;
-            }
-            String profile = (String) map.get("introduce");
-            String tagName = (String) map.get("tag_name");
-            WriterProfile writerProfile = new WriterProfile();
-            writerProfile.setUserId(userId);
-            writerProfile.setProfile(profile);
-            writerProfile.setTag(tagName);
-            writerProfile = writerProfileService.addWriterProfile(writerProfile);
-            count++;
-            //此表原系统数据不存在，所以无需反向更新
-        }
-        if (excel.size() > 0) {
-            try {
-                excelHelper.exportFromMaps(excel, "作家标签表", "writer_profile");
-            } catch (IOException ex) {
-                logger.error("异常数据导出到Excel失败", ex);
-            }
-        }
-        logger.info("writer_profile表迁移完成");
-        logger.info("原数据库表共{}条数据，迁移了{}条数据", maps.size(), count);
-        //记录信息
-        Map<String, Object> msg = new HashMap<String, Object>();
-        msg.put("result", "writer_profile表迁移完成" + count + "/" + maps.size());
-        SQLParameters.STATISTICS.add(msg);
-    }
-
-    protected void writerUserCertification() {
-        String sql = "SELECT a.userid,a.new_pk user_new_pk,d.new_pk org_new_pk,b.handset,b.idcard,"
-                + "CASE WHEN b.isteacher = 2 THEN 3 WHEN b.isteacher = 1 THEN 2 WHEN b.isteacher = 0 "
-                + "THEN 1 ELSE 0 END progress,e.filedir,e.operdate "
-                + "FROM sys_user a LEFT JOIN sys_userext b ON a.userid = b.userid "
-                + "LEFT JOIN sys_userorganize c ON a.userid = c.userid "
-                + "LEFT JOIN ba_organize d ON c.orgid = d.orgid "
-                + "LEFT JOIN (SELECT * FROM pub_addfileinfo y WHERE y.fileid IN (SELECT MAX(p.fileid) "
-                + "FROM pub_addfileinfo p WHERE p.childsystemname='sys_userext_teacher' GROUP BY p.operuserid))e "
-                + "ON a.userid = e.operuserid "
-                + "WHERE a.sysflag=1 AND b.usertype !=2;";
-        List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
-        List<Map<String, Object>> excel = new LinkedList<>();
-        int count = 0;
-        for (Map<String, Object> map : maps) {
-            StringBuilder sb = new StringBuilder();
-            Long userId = (Long) map.get("user_new_pk");
-            if (userId == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户为社内用户。"));
-                excel.add(map);
-                logger.error("用户为社内用户，此结果将被记录在Excel中");
-                continue;
-            }
-            Long orgId = (Long) map.get("org_new_pk");
-            if (ObjectUtil.isNull(orgId) || orgId == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("为空则用户没有和机构关联，为0则可能因为"
-                        + "机构重名查询不到。"));
-                excel.add(map);
-                logger.error("未和用户关联，或因机构重名查询不到，此结果将被记录在Excel中");
-                continue;
-            }
-            String handphone = (String) map.get("handset");
-            String idcard = (String) map.get("idcard");
-            Long progressNum = (Long) map.get("progress");
-            short progress = progressNum.shortValue();
-            String cert = (String) map.get("filedir");
-            Timestamp gmtCreate = (Timestamp) map.get("operdate");
-            WriterUserCertification writerUserCertification = new WriterUserCertification();
-            writerUserCertification.setUserId(userId);
-            writerUserCertification.setOrgId(orgId);
-            writerUserCertification.setHandphone(handphone);
-            writerUserCertification.setIdcard(idcard);
-            writerUserCertification.setProgress(progress);
-            writerUserCertification.setGmtCreate(gmtCreate);
-            writerUserCertification = writerCertificationService
-                    .addWriterUserCertification(writerUserCertification);
-            count++;
-            Long pk = writerUserCertification.getId();
-            if (StringUtil.notEmpty(cert)) {
-                String mongoId = "";
-                try {
-                    fileService.migrateFile(cert, ImageType.WRITER_USER_CERT, pk);
-                } catch (IOException ex) {
-                    mongoId = "DEFAULT";
-                    map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常。");
-                    excel.add(map);
-                    logger.error("文件读取异常，路径<{}>,异常信息：{}", cert, ex.getMessage());
-                } catch (Exception e) {
-                    mongoId = "DEFAULT";
-                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常：" + e.getMessage() + "。"));
-                    excel.add(map);
-                }
-                writerUserCertification.setCert(mongoId);
-                writerCertificationService.updateWriterUserCertification(writerUserCertification);
-            }
-        }
-        if (excel.size() > 0) {
-            try {
-                excelHelper.exportFromMaps(excel, "教师资格认证表", "writer_user_certification");
-            } catch (IOException ex) {
-                logger.error("异常数据导出到Excel失败", ex);
-            }
-        }
-        logger.info("writer_user_certification");
+        logger.info("pmph_user_role表迁移完成");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
-        msg.put("result", "writer_user_certification表迁移完成" + count + "/" + maps.size());
+        msg.put("result", "pmph_user_role表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
 
     /**
      *
-     * Description:新库没有机构用户关联表，这部分数据没有意义，只是以防万一查询出导出为Excel
+     * Description:找出拓展表中有但sys_user表中已经不存在的userid的信息，即废数据
      *
      * @author:lyc
-     * @date:2017年11月9日下午5:19:45
+     * @date:2017年11月9日下午6:04:14
      * @param
      * @return void
      */
-    protected void orgUserRole() {
-        String sql = "SELECT a.userroleid,b.userid,b.usercode,b.username,b.new_pk user_new_pk,"
-                + "c.rolename,c.rolecode,c.isvalid,c.roleid,c.new_pk role_new_pk "
-                + "FROM sys_userrole a "
-                + "LEFT JOIN sys_user b ON a.userid = b.userid "
-                + "LEFT JOIN sys_role c ON a.roleid = c.roleid "
-                + "LEFT JOIN sys_userext d ON a.userid = d.userid "
-                + "WHERE b.sysflag = 1 AND d.usertype = 2 ;";
+    protected void cannotFindUser() {
+        String sql = "SELECT a.* "
+                + "FROM sys_userext a "
+                + "WHERE a.userid NOT IN (SELECT b.userid FROM sys_user b) ;";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
         for (Map<String, Object> map : maps) {
-            map.put(SQLParameters.EXCEL_EX_HEADER, "机构用户角色关联");
+            map.put(SQLParameters.EXCEL_EX_HEADER, "这些数据的关联字段在关联表sys_user表中不存在");
             excel.add(map);
-            logger.info("现今没有机构用户角色关联表，暂时导出为Excel");
+            logger.error("这些数据的关联字段在关联表sys_user表中不存在,将被记录在Excel中");
             count++;
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, "机构用户关联", "");
+                excelHelper.exportFromMaps(excel, "拓展表关联字段缺失", "");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
-        logger.info("机构用户关联角色共有{}条数据，导出了{}条数据", maps.size(), count);
+        logger.info("sys_userext缺失关联字段数据共有{}条数据，导出{}条数据", maps.size(), count);
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
-        msg.put("result", "sys_userrole表迁移完成" + count + "/" + maps.size());
+        msg.put("result", "sys_user表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
+
+    /**
+     *
+     * Description:用户角色关联表中部分userid无法在用户表sys_user中找到，可能被删除
+     *
+     * @author:lyc
+     * @date:2017年11月9日下午6:17:36
+     * @param
+     * @return void
+     */
+    protected void cannotFindRole() {
+        String sql = "SELECT a.* FROM sys_userrole a WHERE a.userid NOT IN "
+                + "(SELECT b.userid FROM sys_user b) ;";
+        List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        List<Map<String, Object>> excel = new LinkedList<>();
+        int count = 0;
+        for (Map<String, Object> map : maps) {
+            map.put(SQLParameters.EXCEL_EX_HEADER, "无法在sys_user用户表找到对应用户");
+            excel.add(map);
+            logger.info("用户表可能已将这些用户删除");
+            count++;
+        }
+        if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, "用户角色关联表关联字段缺失", "");
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
+        }
+        logger.info("用户-角色关联表关联字段缺失共{}条数据，导出{}条数据", maps.size(), count);
+        //记录信息
+        Map<String, Object> msg = new HashMap<String, Object>();
+        msg.put("result", "用户-角色关联 表迁移完成" + count + "/" + maps.size());
+        SQLParameters.STATISTICS.add(msg);
+    }
+
 }

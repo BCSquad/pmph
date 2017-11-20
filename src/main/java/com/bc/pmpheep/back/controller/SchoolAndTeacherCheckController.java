@@ -15,6 +15,7 @@ import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.service.WriterUserCertificationService;
 import com.bc.pmpheep.back.service.WriterUserService;
+import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -116,9 +117,16 @@ public class SchoolAndTeacherCheckController {
     @RequestMapping(value = "/writerList", method = RequestMethod.GET)
     public ResponseBean writerList(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
-    @RequestParam(name = "pageSize") Integer pageSize, WriterUserManagerVO writerUserManagerVO) {
-        PageParameter<WriterUserManagerVO> pageParameter =
-        new PageParameter<WriterUserManagerVO>(pageNumber, pageSize, writerUserManagerVO);
+    @RequestParam(name = "pageSize") Integer pageSize, @RequestParam("realname") String realname, 
+    @RequestParam("orgName") String orgName,@RequestParam("progress") Short progress){
+    	PageParameter pageParameter = new PageParameter<>();
+    	WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
+    	writerUserManagerVO.setOrgName(orgName.replaceAll(" ", ""));// 去除空格
+    	writerUserManagerVO.setRealname(realname.replaceAll(" ", ""));
+    	writerUserManagerVO.setProgress(progress);
+    	pageParameter.setPageNumber(pageNumber);
+		pageParameter.setPageSize(pageSize);
+		pageParameter.setParameter(writerUserManagerVO);
         return new ResponseBean(writerUserService.getTeacherCheckList(pageParameter));
     }
 
