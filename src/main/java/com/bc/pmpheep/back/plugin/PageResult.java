@@ -53,12 +53,18 @@ public class PageResult<T> {
 	}
 
 	public void setTotal(Integer total) {
+		if(null == total || total < 1){
+			return;
+		}
 		this.total = total;
-//		if(this.total%this.pageSize==0){
-//			this.pageTotal=this.total/this.pageSize;
-//		}else{
+		if(null == this.pageSize || this.pageSize < 1){
+			return;
+		}
+		if(this.total%this.pageSize == 0){// 总页数和页面大小刚好除尽为整数
+			this.pageTotal=this.total/this.pageSize;
+		}else{
 			this.pageTotal=(this.total/this.pageSize)+1;
-//		}
+		}
 		if(this.pageTotal==this.pageNumber){
 			isLast     = true;
 		}else{

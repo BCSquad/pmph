@@ -310,7 +310,7 @@
 	<select id="getListOrgUser" parameterType="PageParameter"
 		resultType="OrgAndOrgUserVO">
 		select 
-		u.*,o.*,ot.*,ot.type_name orgTypeName
+		u.*,o.*,ot.*,ot.type_name orgTypeName,u.is_disabled isDisabled
 		from org_user u 
 		left join org o on o.id = u.org_id
 		left join org_type ot on ot.id=o.org_type_id 
