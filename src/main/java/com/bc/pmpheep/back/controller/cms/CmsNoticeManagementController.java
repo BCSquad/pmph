@@ -126,21 +126,30 @@ public class CmsNoticeManagementController {
     /**
      * 
      * <pre>
-	 * 功能描述：公告管理操作(通过/拒绝)
-	 * 使用示范：
-	 *
-	 * &#64;param id 主键ID
-	 * &#64;param authStatus 审核状态
-	 * &#64;return 影响行数
-	 * </pre>
+     * 功能描述：公告内容修改
+     * 使用示范：
+     *
+     * @param id 主键ID
+     * @return 影响行数
+     * </pre>
      */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
-    @RequestMapping(value = "/notice/content", method = RequestMethod.PUT)
-    public ResponseBean content(@RequestParam("id") Long id,
-    @RequestParam("authStatus") Short authStatus, HttpServletRequest request) {
-        String sessionId = CookiesUtil.getSessionId(request);
-        return new ResponseBean(cmsContentService.checkContentById(id, authStatus, sessionId));
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "公告修改")
+    @RequestMapping(value = "/notice/update", method = RequestMethod.PUT)
+    public ResponseBean update(CmsContent cmsContent, @RequestParam("file") String[] files,
+    @RequestParam("content") String content, @RequestParam("attachment") String[] attachment,
+    @RequestParam("scheduledTime") String scheduledTime, HttpServletRequest request) {
+        try {
+            String sessionId = CookiesUtil.getSessionId(request);
+            return new ResponseBean(cmsContentService.updateCmsContent(cmsContent,
+                                                                       files,
+                                                                       content,
+                                                                       attachment,
+                                                                       scheduledTime,
+                                                                       sessionId));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
     }
 
     /**
