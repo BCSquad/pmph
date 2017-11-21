@@ -90,7 +90,7 @@ public class MigrationStageSix {
 
     public void start() {
         Date begin = new Date();
-        /*declaration();
+        declaration();
         decEduExp();
         decWorkExp();
         decTeachExp();
@@ -100,7 +100,7 @@ public class MigrationStageSix {
         decNationalPlan();
         decTextbook();
         decResearch();
-        decExtension();*/
+        decExtension();
         decPosition();
         logger.info("迁移第六步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
