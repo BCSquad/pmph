@@ -111,7 +111,7 @@ public class MigrationStageEight {
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, tableName, tableName);
+                excelHelper.exportFromMaps(excel, "后台小组表", "pmph_group");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
@@ -202,7 +202,7 @@ public class MigrationStageEight {
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, tableName, tableName);
+                excelHelper.exportFromMaps(excel, "后台小组成员表", "pmph_group_member");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
@@ -258,7 +258,7 @@ public class MigrationStageEight {
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, tableName, tableName);
+                excelHelper.exportFromMaps(excel, "后台小组消息表", "pmph_group_message");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
@@ -340,7 +340,7 @@ public class MigrationStageEight {
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, tableName, tableName);
+                excelHelper.exportFromMaps(excel, "后台小组文件表", "pmph_group_file");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
