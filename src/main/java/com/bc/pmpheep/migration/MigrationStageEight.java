@@ -58,12 +58,12 @@ public class MigrationStageEight {
     ExcelHelper excelHelper;
 
     public void start() {
-    	Date beforeTime = new Date(System.currentTimeMillis());
+    	Date begin = new Date();
         group();
         groupMember();
         groupMessage();
         groupFile();
-        logger.info(JdbcHelper.migrationTime(beforeTime));
+        logger.info("迁移第八步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
     protected void group() {
@@ -111,7 +111,7 @@ public class MigrationStageEight {
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, tableName, tableName);
+                excelHelper.exportFromMaps(excel, "后台小组表", "pmph_group");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
@@ -121,7 +121,7 @@ public class MigrationStageEight {
       //记录信息
         Map<String,Object> msg= new HashMap<String,Object>();
         msg.put("result",""+tableName+"  表迁移完成"+count+"/"+ maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void groupMember() {
@@ -202,7 +202,7 @@ public class MigrationStageEight {
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, tableName, tableName);
+                excelHelper.exportFromMaps(excel, "后台小组成员表", "pmph_group_member");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
@@ -212,7 +212,7 @@ public class MigrationStageEight {
       //记录信息
         Map<String,Object> msg= new HashMap<String,Object>();
         msg.put("result",""+tableName+"  表迁移完成"+count+"/"+ maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void groupMessage() {
@@ -258,7 +258,7 @@ public class MigrationStageEight {
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, tableName, tableName);
+                excelHelper.exportFromMaps(excel, "后台小组消息表", "pmph_group_message");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
@@ -268,7 +268,7 @@ public class MigrationStageEight {
       //记录信息
         Map<String,Object> msg= new HashMap<String,Object>();
         msg.put("result",""+tableName+"  表迁移完成"+count+"/"+ maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 
     protected void groupFile() {
@@ -340,7 +340,7 @@ public class MigrationStageEight {
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, tableName, tableName);
+                excelHelper.exportFromMaps(excel, "后台小组文件表", "pmph_group_file");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
@@ -350,6 +350,6 @@ public class MigrationStageEight {
       //记录信息
         Map<String,Object> msg= new HashMap<String,Object>();
         msg.put("result",""+tableName+"  表迁移完成"+count+"/"+ maps.size());
-        SQLParameters.msg.add(msg);
+        SQLParameters.STATISTICS.add(msg);
     }
 }

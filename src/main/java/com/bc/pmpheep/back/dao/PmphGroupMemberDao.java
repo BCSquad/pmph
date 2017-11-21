@@ -2,6 +2,9 @@ package com.bc.pmpheep.back.dao;
 
 import java.util.List;
 
+import javax.validation.constraints.Past;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -40,7 +43,8 @@ public interface PmphGroupMemberDao {
 	 * @Param:小组内成员id
 	 * @Return:PmphGroupMember
 	 */
-	PmphGroupMemberVO getPmphGroupMemberByMemberId(Long groupId, Long userId, Boolean isWriter);
+	PmphGroupMemberVO getPmphGroupMemberByMemberId(@Param("groupId") Long groupId, @Param("userId") Long userId,
+			@Param("isWriter")Boolean isWriter);
 
 	/**
 	 * 

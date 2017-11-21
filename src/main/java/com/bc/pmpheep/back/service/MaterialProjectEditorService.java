@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
+
 import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -29,6 +30,16 @@ public interface MaterialProjectEditorService {
 	 * @throws CheckedServiceException
 	 */
 	Integer addMaterialProjectEditors(List<MaterialProjectEditor> materialProjectEditors) throws CheckedServiceException;
+	
+	/**
+	 * 根据教材id批量查找项目编辑
+	 * @author Mryang
+	 * @createDate 2017年11月17日 下午3:37:18
+	 * @param materialId
+	 * @return List<MaterialProjectEditor>
+	 * @throws CheckedServiceException
+	 */
+	List<MaterialProjectEditor> listMaterialProjectEditors(Long materialId) throws CheckedServiceException;
 	
 	/**
 	 * 根据materialId删除materialProjectEditor

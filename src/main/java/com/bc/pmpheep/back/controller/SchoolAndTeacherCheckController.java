@@ -15,6 +15,7 @@ import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.service.WriterUserCertificationService;
 import com.bc.pmpheep.back.service.WriterUserService;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -65,11 +66,23 @@ public class SchoolAndTeacherCheckController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
-    @RequestMapping(value = "/org_list", method = RequestMethod.GET)
-    public ResponseBean org_list(
+    @RequestMapping(value = "/orgList", method = RequestMethod.GET)
+    public ResponseBean orgList(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
-    @RequestParam(name = "pageSize") Integer pageSize, OrgVO orgVO) {
-        PageParameter<OrgVO> pageParameter = new PageParameter<OrgVO>(pageNumber, pageSize, orgVO);
+    @RequestParam("orgName") String orgName, @RequestParam("realname") String realname,
+    @RequestParam("progress") Integer progress, @RequestParam(name = "pageSize") Integer pageSize) {
+        PageParameter pageParameter = new PageParameter<>();
+        OrgVO orgVO = new OrgVO();
+        if (StringUtil.notEmpty(orgName)) {
+            orgVO.setOrgName(orgName.replaceAll(" ", ""));
+        }
+        if (StringUtil.notEmpty(realname)) {
+            orgVO.setRealname(realname.replaceAll(" ", ""));
+        }
+        orgVO.setProgress(progress);
+        pageParameter.setPageNumber(pageNumber);
+        pageParameter.setPageSize(pageSize);
+        pageParameter.setParameter(orgVO);
         return new ResponseBean(orgService.getSchoolAdminCheckList(pageParameter));
     }
 
@@ -86,8 +99,8 @@ public class SchoolAndTeacherCheckController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
-    @RequestMapping(value = "/org_check", method = RequestMethod.PUT)
-    public ResponseBean org_check(@RequestParam(name = "progress") Integer progress,
+    @RequestMapping(value = "/orgCheck", method = RequestMethod.PUT)
+    public ResponseBean orgCheck(@RequestParam(name = "progress") Integer progress,
     @RequestParam(name = "orgUserIds") List<Long> orgUserIds) {
         return new ResponseBean(orgUserService.updateOrgUserProgressById(progress, orgUserIds));
     }
@@ -106,12 +119,23 @@ public class SchoolAndTeacherCheckController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
-    @RequestMapping(value = "/writer_list", method = RequestMethod.GET)
-    public ResponseBean writer_list(
+    @RequestMapping(value = "/writerList", method = RequestMethod.GET)
+    public ResponseBean writerList(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
-    @RequestParam(name = "pageSize") Integer pageSize, WriterUserManagerVO writerUserManagerVO) {
-        PageParameter<WriterUserManagerVO> pageParameter =
-        new PageParameter<WriterUserManagerVO>(pageNumber, pageSize, writerUserManagerVO);
+    @RequestParam(name = "pageSize") Integer pageSize, @RequestParam("realname") String realname,
+    @RequestParam("orgName") String orgName, @RequestParam("progress") Short progress) {
+        PageParameter pageParameter = new PageParameter<>();
+        WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
+        if (StringUtil.notEmpty(orgName)) {
+            writerUserManagerVO.setOrgName(orgName.replaceAll(" ", ""));// 去除空格
+        }
+        if (StringUtil.notEmpty(realname)) {
+            writerUserManagerVO.setRealname(realname.replaceAll(" ", ""));
+        }
+        writerUserManagerVO.setProgress(progress);
+        pageParameter.setPageNumber(pageNumber);
+        pageParameter.setPageSize(pageSize);
+        pageParameter.setParameter(writerUserManagerVO);
         return new ResponseBean(writerUserService.getTeacherCheckList(pageParameter));
     }
 
@@ -128,9 +152,9 @@ public class SchoolAndTeacherCheckController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
-    @RequestMapping(value = "/writer_check", method = RequestMethod.PUT)
-    public ResponseBean writer_check(@RequestParam(name = "progress") Short progress,
-    @RequestParam(name = "userIds") String[] userIds) {
+    @RequestMapping(value = "/writerCheck", method = RequestMethod.PUT)
+    public ResponseBean writerCheck(@RequestParam("progress") Short progress,
+    @RequestParam("userIds") Long[] userIds) {
         return new ResponseBean(
                                 writerUserCertificationService.updateWriterUserCertificationProgressByUserId(progress,
                                                                                                              userIds));

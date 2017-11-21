@@ -110,10 +110,10 @@
 	<select id="getPmphGroupMemberByMemberId" resultType="PmphGroupMemberVO">
 		select *
 		from pmph_group_member where
-		group_id=#{arg0} and
-		user_id= #{arg1}
+		group_id=#{groupId} and
+		user_id= #{userId}
 		and
-		is_writer = #{arg2}
+		is_writer = #{isWriter}
 		;
 	</select>
 
@@ -249,7 +249,7 @@
 		<if test="parameter.name !=null and parameter.name !=''">
 			and (e.username like concat('%',#{parameter.name},'%') or
 			c.username like
-			#{parameter.name} or a.display_name LIKE
+			concat('%',#{parameter.name},'%') or a.display_name LIKE
 			concat('%',#{parameter.name},'%'))
 		</if>
 		order by a.is_founder DESC , a.is_admin DESC

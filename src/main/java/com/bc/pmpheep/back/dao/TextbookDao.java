@@ -1,11 +1,14 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.vo.BookPositionVO;
 
 /**
  * TextbookDao实体类数据访问层接口
@@ -69,6 +72,24 @@ public interface TextbookDao {
      * @return
      * </pre>
      */
-    List<Textbook> getTextBookByMaterialId(@Param("materialId") Long materialId);
+    List<Textbook> getTextbookByMaterialId(@Param("materialId") Long materialId);
+    
+    /**
+     * 职位遴选界面书籍总条数
+     * @author Mryang
+     * @createDate 2017年11月21日 下午5:25:33
+     * @param pageParameter
+     * @return 总条数
+     */
+    Integer listBookPositionTotal(PageParameter<Map<String, Object>> pageParameter);
+    
+    /**
+     * listBookPosition
+     * @author Mryang
+     * @createDate 2017年11月21日 下午5:25:58
+     * @param pageParameter
+     * @return 分页书籍列表数据
+     */
+    List<BookPositionVO> listBookPosition (PageParameter<Map<String, Object>> pageParameter);
 
 }

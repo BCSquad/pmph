@@ -37,6 +37,7 @@ public class Const {
     public static final boolean      ISROLLBACK                 = true;
     // 用户SessionId
     public static final String       USER_SEESION_ID            = "userSessionId";
+    public static final String       SESSION_ID                 = "sessionId";
     // PMPH_USER_TOKEN
     public static final String       SEESION_PMPH_USER_TOKEN    = "sessionPmphUserToken";
     // WRITER_USER_TOKEN
@@ -69,7 +70,7 @@ public class Const {
     public static final String       FILE_PATH_FILE             = "uploadFiles/file/";
     // 不对匹配该值的访问路径拦截（正则）
     public static final String       NO_INTERCEPTOR_PATH        =
-                                                                ".*/((login)|(logout)|(code)|(static)|(websocket)).*";
+                                                                ".*/((login)|(logout)|(code)|(static)|(websocket))";
     // 该值会在web容器启动时由WebAppContextListener初始化
     public static ApplicationContext WEB_APP_CONTEXT            = null;
     // 普通文件下载控制器方法
@@ -145,6 +146,15 @@ public class Const {
     public static final Integer      ORG_USER_PROGRESS_0        = 0;
     public static final Integer      ORG_USER_PROGRESS_1        = 1;
     public static final Integer      ORG_USER_PROGRESS_2        = 2;
+    /**
+     * 教师审核
+     * 
+     * 0=未提交/1=已提交/2=被退回/3=通过
+     */
+    public static final Short        WRITER_PROGRESS_0          = 0;
+    public static final Short        WRITER_PROGRESS_1          = 1;
+    public static final Short        WRITER_PROGRESS_2          = 2;
+    public static final Short        WRITER_PROGRESS_3          = 3;
     /**
      * CMS
      */

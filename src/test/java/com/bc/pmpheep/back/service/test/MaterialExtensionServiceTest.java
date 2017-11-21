@@ -24,27 +24,60 @@ public class MaterialExtensionServiceTest extends BaseTest {
 	@Resource
 	private MaterialExtensionService materialExtensionService;
 	
+	Random r =new Random();
+	MaterialExtension materialExtension=new MaterialExtension (new Long(r.nextInt(200)), "extensionName", true);
+	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void test() {
-    	Random r =new Random();
-    	MaterialExtension materialExtension=new MaterialExtension (new Long(r.nextInt(200)), "extensionName", true);
-    	logger.info("---MaterialExtensionService 测试---------------------------------------------------------------------------------");
+    public void testAddMaterialExtension() {
     	//新增
     	materialExtensionService.addMaterialExtension(materialExtension);
     	Assert.assertTrue("添加失败",materialExtension.getId() > 0 );
+    	
+    }
+    
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testUpdateMaterialExtension() {
+    	materialExtensionService.addMaterialExtension(materialExtension);
     	//修改
     	materialExtension.setExtensionName(String.valueOf(r.nextInt(200)));
     	Assert.assertTrue("更新失败",materialExtensionService.updateMaterialExtension(materialExtension)> 0 );
-    	//删除
-    	Assert.assertTrue("删除失败",materialExtensionService.deleteMaterialExtensionById(16L) >= 0 );
-    	//查询
-    	Assert.assertNotNull("获取数据失败",materialExtensionService.getMaterialExtensionById(7L));
-    	
-    	//查询
-    	Assert.assertNotNull("获取数据失败",materialExtensionService.getMaterialExtensionByMaterialId(23L));
+    	//修改
+    	materialExtension.setId(r.nextLong());
+    	materialExtension.setExtensionName(String.valueOf(r.nextInt(200)));
+    	Assert.assertTrue("更新失败",materialExtensionService.updateMaterialExtension(materialExtension)>= 0 );
     }
     
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testDeleteMaterialExtensionById() {
+    	materialExtensionService.addMaterialExtension(materialExtension);
+    	//删除
+    	Assert.assertTrue("删除失败",materialExtensionService.deleteMaterialExtensionById(materialExtension.getId()) > 0 );
+    	//删除
+    	Assert.assertTrue("删除失败",materialExtensionService.deleteMaterialExtensionById(16L) >= 0 );
+    }
+    	
+    	
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testGetMaterialExtensionById() {
+    	materialExtensionService.addMaterialExtension(materialExtension);
+    	//查询
+    	Assert.assertNotNull("获取数据失败",materialExtensionService.getMaterialExtensionById(materialExtension.getId()));
+    	materialExtensionService.getMaterialExtensionById(r.nextLong());
+    }
+    
+    
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testGetMaterialExtensionByMaterialId() {
+    	materialExtensionService.addMaterialExtension(materialExtension);
+    	//查询
+    	Assert.assertNotNull("获取数据失败",materialExtensionService.getMaterialExtensionByMaterialId(materialExtension.getMaterialId()));
+    	
+    }
     
     
 }

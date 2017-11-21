@@ -477,7 +477,7 @@
 	<select id="getWriterUserPermissionByUserId" parameterType="Long"
 		resultType="Long">
 		SELECT
-		prp.`permission_id`
+		wrp.`permission_id`
 		FROM
 		`writer_user` wu
 		LEFT JOIN
@@ -736,4 +736,15 @@
 		WHERE
 		username = #{username}
 	</select>
+	<delete id="batchDelete" parameterType="list">
+		DELETE FROM
+		writer_role
+		WHERE
+		id
+		IN
+		<foreach collection="ids" separator="," item="id" open="("
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
 </mapper>

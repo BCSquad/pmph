@@ -39,18 +39,6 @@ public class DecLastPositionServiceImpl implements DecLastPositionService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id不能为空");
 		}
-		/*if (null == decLastPosition.getMaterialName()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "教材名称不能为空");
-		}
-		if (null == decLastPosition.getPosition()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "编写职务不能为空");
-		}*/
-		if (null == decLastPosition.getSort()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "显示顺序不能为空");
-		}
 		decLastPositionDao.addDecLastPosition(decLastPosition);
 		return decLastPosition;
 	}

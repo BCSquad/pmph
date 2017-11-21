@@ -2,6 +2,8 @@ package com.bc.pmpheep.back.controller.cms;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,7 @@ import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.service.CmsContentService;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.vo.CmsContentVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -62,9 +65,10 @@ public class CmsContentController {
     public ResponseBean contents(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, CmsContentVO cmsContentVO,
-    @RequestParam("sessionId") String sessionId) {
+    HttpServletRequest request) {
         PageParameter<CmsContentVO> pageParameter =
         new PageParameter<CmsContentVO>(pageNumber, pageSize, cmsContentVO);
+        String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(cmsContentService.listCmsContent(pageParameter, sessionId));
     }
 
@@ -85,11 +89,12 @@ public class CmsContentController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增文章")
-    @RequestMapping(value = "/new_content", method = RequestMethod.POST)
-    public ResponseBean new_content(CmsContent cmsContent, @RequestParam("file") String[] files,
+    @RequestMapping(value = "/newContent", method = RequestMethod.POST)
+    public ResponseBean newContent(CmsContent cmsContent, @RequestParam("file") String[] files,
     @RequestParam("content") String content, @RequestParam("scheduledTime") String scheduledTime,
-    @RequestParam("sessionId") String sessionId) {
+    HttpServletRequest request) {
         try {
+            String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(cmsContentService.addCmsContent(cmsContent,
                                                                     files,
                                                                     content,
@@ -154,6 +159,26 @@ public class CmsContentController {
     /**
      * 
      * <pre>
+     * 功能描述：内容审核(通过/拒绝)
+     * 使用示范：
+     *
+     * &#64;param id 主键ID
+     * &#64;param authStatus 审核状态
+     * &#64;return 影响行数
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "内容审核")
+    @RequestMapping(value = "/content/check", method = RequestMethod.PUT)
+    public ResponseBean check(@RequestParam("id") Long id,
+    @RequestParam("authStatus") Short authStatus, HttpServletRequest request) {
+        String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(cmsContentService.checkContentById(id, authStatus, sessionId));
+    }
+
+    /**
+     * 
+     * <pre>
      * 功能描述：内容修改
      * 使用示范：
      *
@@ -166,8 +191,9 @@ public class CmsContentController {
     @RequestMapping(value = "/content/update", method = RequestMethod.PUT)
     public ResponseBean update(CmsContent cmsContent, @RequestParam("file") String[] files,
     @RequestParam("content") String content, @RequestParam("attachment") String[] attachment,
-    @RequestParam("scheduledTime") String scheduledTime, @RequestParam("sessionId") String sessionId) {
+    @RequestParam("scheduledTime") String scheduledTime, HttpServletRequest request) {
         try {
+            String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(cmsContentService.updateCmsContent(cmsContent,
                                                                        files,
                                                                        content,

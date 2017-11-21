@@ -46,25 +46,39 @@ public class CmsExtraServiceTest extends BaseTest {
      * </pre>
      */
     @Test
-    public void serviceAllMethodTest() {
-        // add
-        CmsExtra cmsExtra = cmsExtraService.addCmsExtra(new CmsExtra(1L, "附件", "附件名称", 10L));
-        logger.info(cmsExtra.getAttachmentName());
+    public void testAddCmsExtra() {
+        CmsExtra cmsExtra = this.addCmsExtra();
+        logger.info(cmsExtra.toString());
         Assert.assertNotNull("插入内容后返回的CmsExtra.id不应为空", cmsExtra.getId());
-        // uddate
+    }
+
+    @Test
+    public void testUpdateCmsExtra() {
+        CmsExtra cmsExtra = this.addCmsExtra();
         Integer count = cmsExtraService.updateCmsExtra(new CmsExtra(cmsExtra.getId(), 2L, "图片路径"));
-        Assert.assertTrue("是否更新CmsExtra成功", count > 0 ? true : false);
-        // getById
+        Assert.assertTrue("是否更新CmsExtra成功", count > 0);
+    }
+
+    @Test
+    public void testGetCmsExtraById() {
+        CmsExtra cmsExtra = this.addCmsExtra();
         CmsExtra cms = cmsExtraService.getCmsExtraById(cmsExtra.getId());
         logger.info(cms.toString());
         Assert.assertNotNull("按ID查询是否该对象", cms);
-        // delete
-        // Assert.assertTrue("是否删除成功",
-        // cmsExtraService.deleteCmsExtraById(cmsExtra.getId()) > 0 ? true : false);
-        List<Long> idList = new ArrayList<Long>(1);
-        idList.add(cmsExtra.getId());
-        Assert.assertTrue("批量删除是否成功",
-                          cmsExtraService.deleteCmsExtraByIds(idList) > 0 ? true : false);
+    }
 
+    @Test
+    public void testDeleteCmsExtraById() {
+        CmsExtra cmsExtra = this.addCmsExtra();
+        Assert.assertTrue("是否删除成功", cmsExtraService.deleteCmsExtraById(cmsExtra.getId()) > 0);
+        CmsExtra ce = this.addCmsExtra();
+        List<Long> idList = new ArrayList<Long>(1);
+        idList.add(ce.getId());
+        Assert.assertTrue("批量删除是否成功", cmsExtraService.deleteCmsExtraByIds(idList) > 0);
+    }
+
+    private CmsExtra addCmsExtra() {
+        CmsExtra cmsExtra = cmsExtraService.addCmsExtra(new CmsExtra(1L, "附件", "附件名称", 10L));
+        return cmsExtra;
     }
 }

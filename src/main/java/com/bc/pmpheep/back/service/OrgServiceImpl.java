@@ -32,8 +32,22 @@ public class OrgServiceImpl extends BaseService implements OrgService {
 
 	@Autowired
 	private OrgDao orgDao;
+	
 	@Autowired
 	OrgUserDao orgUserDao;
+	
+	@Override
+	public List<Org> listBeElectedOrgByBookIds(List<Long> bookIds) throws CheckedServiceException{
+		if(null == bookIds || bookIds.size() == 0){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		for(Long bookId: bookIds){
+			if(null == bookId ){
+				throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "书籍参数为空");
+			}
+		}
+		return orgDao.listBeElectedOrgByBookIds(bookIds);
+	}
 
 	/**
 	 * 

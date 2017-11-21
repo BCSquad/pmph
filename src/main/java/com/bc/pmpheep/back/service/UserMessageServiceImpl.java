@@ -82,7 +82,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     private MessageAttachmentService messageAttachmentService;
 
     @Autowired
-    private MyWebSocketHandler       handler;
+    private MyWebSocketHandler       myWebSocketHandler;
 
     @Autowired
     private DecPositionService       decPositionService;
@@ -126,6 +126,50 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     }
 
     @Override
+    public void addUserMessageBatch(List<UserMessage> userMessageList)
+    throws CheckedServiceException {
+        if (CollectionUtil.isEmpty(userMessageList)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "消息为空");
+        }
+        for (UserMessage userMessage : userMessageList) {
+            if (null == userMessage) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                  CheckedExceptionResult.NULL_PARAM, "消息为空");
+            }
+            if (StringUtil.isEmpty(userMessage.getMsgId())) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                  CheckedExceptionResult.NULL_PARAM, "消息为空");
+            }
+            if (null == userMessage.getMsgType()) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                  CheckedExceptionResult.NULL_PARAM, "消息类型为空");
+            }
+            if (StringUtil.isEmpty(userMessage.getTitle())) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                  CheckedExceptionResult.NULL_PARAM, "消息标题为空");
+            }
+            if (null == userMessage.getSenderId()) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                  CheckedExceptionResult.NULL_PARAM, "发送者id为空");
+            }
+            if (null == userMessage.getSenderType()) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                  CheckedExceptionResult.NULL_PARAM, "发送者类型为空");
+            }
+            if (null == userMessage.getReceiverId()) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                  CheckedExceptionResult.NULL_PARAM, "接收者id为空");
+            }
+            if (null == userMessage.getReceiverType()) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                  CheckedExceptionResult.NULL_PARAM, "接收者类型为空");
+            }
+        }
+        userMessageDao.addUserMessageBatch(userMessageList);
+    }
+
+    @Override
     public PageResult<MessageStateVO> listMessageState(PageParameter<MessageStateVO> pageParameter,
     String sessionId) throws CheckedServiceException {
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -149,7 +193,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         } else {
             pageParameter.getParameter().setName(orgNameOrReceiver.replaceAll(" ", ""));
         }
-        if (Const.FALSE == pmphUser.getIsAdmin()) {
+        if (Const.FALSE.booleanValue() == pmphUser.getIsAdmin().booleanValue()) {
             pageParameter.getParameter().setSenderId(pmphUser.getId());
         }
         PageResult<MessageStateVO> pageResult = new PageResult<MessageStateVO>();
@@ -175,36 +219,40 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                               CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择发送对象!");
         }
         // 1 发送给学校管理员 //2 所有人
-        if (Const.SEND_OBJECT_1 == sendType || Const.SEND_OBJECT_2 == sendType) {
+        if (Const.SEND_OBJECT_1.intValue() == sendType.intValue()
+            || Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
             resultMap.put("orgVo", orgService.listSendToSchoolAdminOrAllUser(orgName));
         }
         // 指定用户
-        if (Const.SEND_OBJECT_3 == sendType) {
+        if (Const.SEND_OBJECT_3.intValue() == sendType.intValue()) {
             // PMPH_User
             // PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
             // pmphUserManagerVO.setName(userNameOrUserCode);
             // PageParameter<PmphUserManagerVO> pmphPageParameter =
-            // new PageParameter<PmphUserManagerVO>(pageNumber, pageSize, pmphUserManagerVO);
+            // new PageParameter<PmphUserManagerVO>(pageNumber, pageSize,
+            // pmphUserManagerVO);
             // Writer_User
             // WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
             // writerUserManagerVO.setName(userNameOrUserCode);
             // writerUserManagerVO.setOrgName(orgName);
             // writerUserManagerVO.setRank(0);
             // PageParameter<WriterUserManagerVO> writerPageParameter =
-            // new PageParameter<WriterUserManagerVO>(pageNumber, pageSize, writerUserManagerVO);
+            // new PageParameter<WriterUserManagerVO>(pageNumber, pageSize,
+            // writerUserManagerVO);
             // Org_User
             // OrgUserManagerVO orgUserManagerVO = new OrgUserManagerVO();
             // orgUserManagerVO.setUsername(userNameOrUserCode);
             // orgUserManagerVO.setOrgName(orgName);
             // PageParameter<OrgUserManagerVO> orgPageParameter =
             // new PageParameter<OrgUserManagerVO>(pageNumber, pageSize, orgUserManagerVO);
-            // resultMap.put("pmphUser", pmphUserService.getListPmphUser(pmphPageParameter));
+            // resultMap.put("pmphUser",
+            // pmphUserService.getListPmphUser(pmphPageParameter));
             // resultMap.put("writerUser",
             // writerUserService.getListWriterUser(writerPageParameter));
             // resultMap.put("orgUser", orgUserService.getListOrgUser(orgPageParameter));
         }
         // 教材所有报名者
-        if (Const.SEND_OBJECT_4 == sendType) {
+        if (Const.SEND_OBJECT_4.intValue() == sendType.intValue()) {
             resultMap.put("Material", materialService.getListMaterial(materialName));
         }
         return resultMap;
@@ -243,7 +291,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         // 装储存数据
         List<UserMessage> userMessageList = new ArrayList<UserMessage>();
         // 1 发送给学校管理员 //2 所有人
-        if (Const.SEND_OBJECT_1 == sendType || Const.SEND_OBJECT_2 == sendType) {
+        if (Const.SEND_OBJECT_1.intValue() == sendType.intValue()
+            || Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
             if (StringUtil.isEmpty(orgIds)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                                   CheckedExceptionResult.NULL_PARAM, "参数错误!");
@@ -263,7 +312,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                     orgUser.getId(), Const.RECEIVER_TYPE_3));
             }
             // 作家用户
-            if (Const.SEND_OBJECT_2 == sendType) {
+            if (Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
                 List<WriterUser> writerUserList =
                 writerUserService.getWriterUserListByOrgIds(orgIds2);
                 for (WriterUser writerUser : writerUserList) {
@@ -274,7 +323,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             }
         }
         // 3 指定用户
-        if (Const.SEND_OBJECT_3 == sendType) {
+        if (Const.SEND_OBJECT_3.intValue() == sendType.intValue()) {
             if (StringUtil.isEmpty(userIds)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                                   CheckedExceptionResult.NULL_PARAM, "没有选中发送人!");
@@ -295,7 +344,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             }
         }
         // 4 发送给教材所有报名者
-        if (Const.SEND_OBJECT_4 == sendType) {
+        if (Const.SEND_OBJECT_4.intValue() == sendType.intValue()) {
             if (StringUtil.isEmpty(bookIds)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                                   CheckedExceptionResult.NULL_PARAM, "书籍为空!");
@@ -331,8 +380,10 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                             isWithdraw = true;
                         }
                     }
-                    if (userMessage.getReceiverId() == uMessage.getReceiverId()
-                        && userMessage.getReceiverType() == uMessage.getReceiverType()) {
+                    if (userMessage.getReceiverId().longValue() == uMessage.getReceiverId()
+                                                                           .longValue()
+                        && userMessage.getReceiverType().shortValue() == uMessage.getReceiverType()
+                                                                                 .shortValue()) {
                         flag = true;
                         break;
                     }
@@ -363,7 +414,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                   pmphUser.getRealname(), Const.SENDER_TYPE_1,
                                   Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, title,
                                   message.getContent(), DateUtil.getCurrentTime());
-            handler.sendWebSocketMessageToUser(websocketUserIds, webScocketMessage);
+            myWebSocketHandler.sendWebSocketMessageToUser(websocketUserIds, webScocketMessage);
             // 添加附件到MongoDB表中
             if (ArrayUtil.isNotEmpty(files)) {
                 for (int i = 0; i < files.length; i++) {
@@ -679,7 +730,12 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                       CheckedExceptionResult.NULL_PARAM,
                                                       "发送者类型不正确！");
                 }
-                myMessageVO.setContent(messageService.get(myMessageVO.getMsgId()).getContent());
+                Message message = messageService.get(myMessageVO.getMsgId());
+                if (ObjectUtil.isNull(message)) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                      CheckedExceptionResult.NULL_PARAM, "没有获取到内容！");
+                }
+                myMessageVO.setContent(message.getContent());
             }
             pageResult.setRows(list);
         }
@@ -718,7 +774,12 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "发送者类型不正确！");
         }
-        myMessageVO.setContent(messageService.get(myMessageVO.getMsgId()).getContent());
+        Message message = messageService.get(myMessageVO.getMsgId());
+        if (ObjectUtil.isNull(message)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "没有获取到消息详情");
+        }
+        myMessageVO.setContent(message.getContent());
         myMessageVO.setMessageAttachments(messageAttachmentService.getMessageAttachmentByMsgId(myMessageVO.getMsgId()));
         UserMessage userMessage = new UserMessage();
         userMessage.setId(id);

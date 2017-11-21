@@ -76,6 +76,9 @@ public class WriterUserServiceImpl implements WriterUserService {
 		if (StringUtil.isEmpty(user.getAvatar())) {
 			user.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);
 		}
+		if(StringUtil.isEmpty(user.getNickname())){
+			user.setNickname(user.getUsername());
+		}
 		// 使用用户名作为盐值，MD5 算法加密
 		user.setPassword(new DesRun("", user.getPassword()).enpsw);
 		writerUserDao.add(user);

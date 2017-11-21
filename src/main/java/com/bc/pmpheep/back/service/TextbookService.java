@@ -1,8 +1,9 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
-
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -58,6 +59,8 @@ public interface TextbookService {
      * @return
      * </pre>
      */
-    List<Textbook> getTextBookByMaterialId(Long materialId) throws CheckedServiceException;
+    List<Textbook> getTextbookByMaterialId(Long materialId) throws CheckedServiceException;
+    
+    PageResult<BookPositionVO> listBookPosition(Integer pageNumber,Integer pageSize,Integer state,String  textBookIds,Long materialId,String sessionId);
 
 }

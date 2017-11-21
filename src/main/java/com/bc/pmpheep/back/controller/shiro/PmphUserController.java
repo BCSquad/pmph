@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphUser;
@@ -34,14 +35,14 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  * 使用示范：
  * 
  * 
- * @author (作者) nyz
+ * &#64;author (作者) nyz
  * 
- * @since (该版本支持的JDK版本) ：JDK 1.6或以上
- * @version (版本) 1.0
- * @date (开发日期) 2017-9-20
- * @modify (最后修改时间) 
- * @修改人 ：nyz 
- * @审核人 ：
+ * &#64;since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * &#64;version (版本) 1.0
+ * &#64;date (开发日期) 2017-9-20
+ * &#64;modify (最后修改时间) 
+ * &#64;修改人 ：nyz 
+ * &#64;审核人 ：
  * </pre>
  */
 @SuppressWarnings("all")
@@ -55,8 +56,11 @@ public class PmphUserController {
 	PmphRoleService roleService;
 	@Autowired
 	PmphDepartmentService pmphDepartmentService;
+	// 当前业务类型
+	private static final String BUSSINESS_TYPE = "社内用户";
 
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询所有的用户对象列表")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ResponseBean list() {
 		return new ResponseBean(userService.getList());
@@ -68,12 +72,13 @@ public class PmphUserController {
 	 * 功能描述：添加用户保存的方法
 	 * 使用示范：
 	 *
-	 * @param user
-	 * @param request
-	 * @return
+	 * &#64;param user
+	 * &#64;param request
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "添加用户角色关联表数据")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseBean add(PmphUser user, @FormParam("roleIds") String roleIds) {
 		logger.debug("添加用户 post 方法");
@@ -93,11 +98,12 @@ public class PmphUserController {
 	 * 功能描述：
 	 * 使用示范：
 	 *
-	 * @param user
-	 * @return
+	 * &#64;param user
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新单个用户信息")
 	@RequestMapping(value = "/updateStatus", method = RequestMethod.PUT)
 	public ResponseBean updateStatus(PmphUser user) {
 		PmphUser pmphUser = userService.update(user);
@@ -110,12 +116,13 @@ public class PmphUserController {
 	 * 功能描述：更新用户的信息（包括更新用户绑定的角色）
 	 * 使用示范：
 	 *
-	 * @param user
-	 * @param request
-	 * @return
+	 * &#64;param user
+	 * &#64;param request
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新用户数据和角色")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	public ResponseBean update(PmphUser user, @FormParam("roleIds") String roleIds) {
 		logger.debug("user => " + user.toString());
@@ -133,14 +140,15 @@ public class PmphUserController {
 	 * 功能描述：根据用户 id 跳转到用户权限的列表页面
 	 * 使用示范：
 	 *
-	 * @param userId
-	 * @param model
-	 * @return
+	 * &#64;param userId
+	 * &#64;param model
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询指定用户 id 所拥有的权限")
 	@RequestMapping(value = "/resources/{id}", method = RequestMethod.GET)
-	public ResponseBean listResources(@PathVariable("id") Long userId) {
+	public ResponseBean resources(@PathVariable("id") Long userId) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		List<PmphPermission> resourceList = userService.getListAllResource(userId);
 		PmphUser user = userService.get(userId);
@@ -159,11 +167,12 @@ public class PmphUserController {
 	 * 2、删除用户绑定的角色数据
 	 * 使用示范：
 	 *
-	 * @param userIds
-	 * @return
+	 * &#64;param userIds
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除用户")
 	@RequestMapping(value = "/delete/{userIds}", method = RequestMethod.DELETE)
 	public ResponseBean delete(@PathVariable("userIds") String userIds) {
 		String[] ids = userIds.split(",");
@@ -187,12 +196,15 @@ public class PmphUserController {
 	 * 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/list/pmphuser", method = RequestMethod.GET)
-	public ResponseBean listPmphUser(Integer pageSize, Integer pageNumber, String name,
-			@RequestParam("path") String path, Long departmentId) {
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页查询社内用户")
+	@RequestMapping(value = "/list/pmphUser", method = RequestMethod.GET)
+	public ResponseBean pmphUser(Integer pageSize, Integer pageNumber, String name, @RequestParam("path") String path,
+			Long departmentId) {
 		PageParameter pageParameter = new PageParameter<>();
 		PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
-		pmphUserManagerVO.setName(StringUtil.isEmpty(name)?null:name.trim());
+		if (StringUtil.notEmpty(name)) {
+			pmphUserManagerVO.setName(name.replaceAll(" ", ""));// 去除空格
+		}
 		pmphUserManagerVO.setPath(path);
 		pmphUserManagerVO.setDepartmentId(departmentId);
 		pageParameter.setPageNumber(pageNumber);
@@ -212,8 +224,9 @@ public class PmphUserController {
 	 * 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/update/pmphuserofback", method = RequestMethod.PUT)
-	public ResponseBean updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO) {
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改社内用户")
+	@RequestMapping(value = "/update/updateUser", method = RequestMethod.PUT)
+	public ResponseBean updateUser(PmphUserManagerVO pmphUserManagerVO) {
 		return new ResponseBean(userService.updatePmphUserOfBack(pmphUserManagerVO));
 	}
 
@@ -226,8 +239,9 @@ public class PmphUserController {
 	 * 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/list/pmphdepartment", method = RequestMethod.GET)
-	public ResponseBean listPmphDepartment() {
-		return new ResponseBean(pmphDepartmentService.listPmphDepartment(null));
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "初始化获取社内所有部门")
+	@RequestMapping(value = "/list/pmphDepartment", method = RequestMethod.GET)
+	public ResponseBean pmphDepartment(Long id) {
+		return new ResponseBean(pmphDepartmentService.listPmphDepartment(id));
 	}
 }

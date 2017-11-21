@@ -47,27 +47,43 @@ public class CmsScheduleServiceTest extends BaseTest {
      * </pre>
      */
     @Test
-    public void serviceAllMethodTest() {
-        // add
-        CmsSchedule cmsSchedule =
-        cmsScheduleService.addCmsSchedule(new CmsSchedule(1L, DateUtil.getCurrentTime()));
+    public void testAddCmsSchedule() {
+        CmsSchedule cmsSchedule = this.addCmsSchedule();
+        logger.info(cmsSchedule.toString());
         Assert.assertNotNull("插入内容后返回的CmsSchedule.id不应为空", cmsSchedule.getId());
-        // uddate
+    }
+
+    @Test
+    public void testUpdateCmsSchedule() {
+        CmsSchedule cmsSchedule = this.addCmsSchedule();
         Integer count =
-        cmsScheduleService.updateCmsSchedule(new CmsSchedule(cmsSchedule.getId(), 3L,
+        cmsScheduleService.updateCmsSchedule(new CmsSchedule(cmsSchedule.getId(), 30809L,
                                                              DateUtil.getCurrentTime()));
-        Assert.assertTrue("是否更新CmsSchedule成功", count > 0 ? true : false);
-        // getById
+        Assert.assertTrue("是否更新CmsSchedule成功", count > 0);
+    }
+
+    @Test
+    public void testGetCmsScheduleById() {
+        CmsSchedule cmsSchedule = this.addCmsSchedule();
         CmsSchedule cms = cmsScheduleService.getCmsScheduleById(cmsSchedule.getId());
         logger.info(cms.toString());
         Assert.assertNotNull("按ID查询是否该对象", cms);
-        // delete
-        // Assert.assertTrue("是否删除成功",
-        // cmsScheduleService.deleteCmsScheduleById(cmsSchedule.getId()) > 0 ? true : false);
-        List<Long> idList = new ArrayList<Long>(1);
-        idList.add(cmsSchedule.getId());
-        Assert.assertTrue("批量删除是否成功",
-                          cmsScheduleService.deleteCmsScheduleByIds(idList) > 0 ? true : false);
+    }
 
+    @Test
+    public void testDeleteCmsScheduleById() {
+        CmsSchedule cmsSchedule = this.addCmsSchedule();
+        Assert.assertTrue("是否删除成功",
+                          cmsScheduleService.deleteCmsScheduleById(cmsSchedule.getId()) > 0);
+        CmsSchedule cs = this.addCmsSchedule();
+        List<Long> idList = new ArrayList<Long>(1);
+        idList.add(cs.getId());
+        Assert.assertTrue("批量删除是否成功", cmsScheduleService.deleteCmsScheduleByIds(idList) > 0);
+    }
+
+    private CmsSchedule addCmsSchedule() {
+        CmsSchedule cmsSchedule =
+        cmsScheduleService.addCmsSchedule(new CmsSchedule(1102L, DateUtil.getCurrentTime()));
+        return cmsSchedule;
     }
 }

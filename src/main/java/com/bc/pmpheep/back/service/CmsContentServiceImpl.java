@@ -185,13 +185,13 @@ public class CmsContentServiceImpl implements CmsContentService {
         // 是否定时发布
         CmsSchedule csmSchedule = cmsScheduleService.getCmsScheduleByContentId(cmsContent.getId());
         // 1.修改时如果不选择定时发布，则查询该数据之前是否有选择定时发布，如果有则删除
-        if (Const.FALSE == cmsContent.getIsScheduled()) {
+        if (Const.FALSE.booleanValue() == cmsContent.getIsScheduled().booleanValue()) {
             if (ObjectUtil.notNull(csmSchedule)) {
                 cmsScheduleService.deleteCmsScheduleByContentId(cmsContent.getId());
             }
         }
         // 2.修改时如果选择定时发布，则查询该数据之前是否有选择定时发布，如果有则更新，没有则新增
-        if (Const.TRUE == cmsContent.getIsScheduled()) {
+        if (Const.TRUE.booleanValue() == cmsContent.getIsScheduled().booleanValue()) {
             if (StringUtil.isEmpty(scheduledTime)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                                   CheckedExceptionResult.NULL_PARAM, "定时发布时间参数为空");
@@ -300,7 +300,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         // 将页面大小和页面页码拷贝
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         // 包含数据总条数的数据集
-        List<CmsContentVO> cmsContentList = cmsContentDao.listCmsContent(pageParameter);
+        List<CmsContentVO> cmsContentList = cmsContentDao.listContentManage(pageParameter);
         if (CollectionUtil.isNotEmpty(cmsContentList)) {
             Integer count = cmsContentList.get(0).getCount();
             pageResult.setTotal(count);
@@ -422,6 +422,15 @@ public class CmsContentServiceImpl implements CmsContentService {
 
         }
         return cmsContentDao.deleteCmsContentByIds(ids);
+    }
+
+    @Override
+    public Integer updateCmsContent(CmsContent cmsContent) throws CheckedServiceException {
+        if (ObjectUtil.isNull(cmsContent)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return cmsContentDao.updateCmsContent(cmsContent);
     }
 
     @Override

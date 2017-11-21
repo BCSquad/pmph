@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
 
+import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.back.po.WriterRolePermission;
 import com.bc.pmpheep.back.service.WriterRolePermissionService;
 import com.bc.pmpheep.back.util.Const;
@@ -25,24 +26,36 @@ public class WriterRolePermissionServiceTest extends BaseTest {
 
     @Resource
     private WriterRolePermissionService writerRolePermissionService;
-
     @Test
     @Rollback(Const.ISROLLBACK)
-    public void addWriterRolePermission() throws Exception {
-        WriterRolePermission a = new WriterRolePermission(6L, 25L);
+    public void testAddWriterRolePermission() throws Exception {
+    	WriterRolePermission writerRolePermission=this.addWriterRolePermission();
         Assert.assertNotNull("addWriterRolePermission是否添加成功",
-                             writerRolePermissionService.addWriterRolePermission(a));
-        logger.info("----WriterRolePermissionService-------------------------------------------------------------------------");
-        logger.info(a.toString());
-        a.setRoleId(15L);
-        Integer aInteger = writerRolePermissionService.updateWriterRolePermission(a);
-        Assert.assertTrue("是否更新成功", aInteger > 0 ? true : false);
-        logger.info(aInteger.toString());
-        Integer bInteger = writerRolePermissionService.deleteWriterRolePermissionById(2L);
-        Assert.assertTrue("是否删除成功", bInteger > 0 ? true : false);
-        logger.info(bInteger.toString());
-        WriterRolePermission wrp = writerRolePermissionService.getWriterRolePermissionById(3L);
-        Assert.assertNotEquals("getWriterRolePermissionById是否为空", null, wrp);
-        logger.info(wrp.toString());
+                             writerRolePermissionService.addWriterRolePermission(writerRolePermission));
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testUpdateWriterRolePermission(){
+    	WriterRolePermission writerRolePermission=this.addWriterRolePermission();
+    	Integer aInteger = writerRolePermissionService.updateWriterRolePermission(writerRolePermission);
+        Assert.assertTrue("更新成功失败", aInteger > 0 ? true : false);
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testDeleteWriterRolePermissionById(){
+    	WriterRolePermission writerRolePermission=this.addWriterRolePermission();
+    	Integer bInteger = writerRolePermissionService.deleteWriterRolePermissionById(writerRolePermission.getId());
+        Assert.assertTrue("删除成功失败", bInteger > 0 ? true : false);
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testGetWriterRolePermissionById(){
+    	WriterRolePermission writerRolePermission=this.addWriterRolePermission();
+    	 WriterRolePermission wrp = writerRolePermissionService.getWriterRolePermissionById(writerRolePermission.getId());
+    	 Assert.assertNotNull("获取失败", wrp);
+    }
+    private WriterRolePermission addWriterRolePermission(){
+    	WriterRolePermission wrp=writerRolePermissionService.addWriterRolePermission(new WriterRolePermission(1L, 2L));
+    	return wrp;
     }
 }

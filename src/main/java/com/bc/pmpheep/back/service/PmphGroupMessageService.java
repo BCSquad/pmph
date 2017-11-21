@@ -2,6 +2,8 @@ package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphGroupMessage;

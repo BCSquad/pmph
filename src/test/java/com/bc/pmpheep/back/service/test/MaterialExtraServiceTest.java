@@ -24,25 +24,48 @@ public class MaterialExtraServiceTest extends BaseTest {
 	@Resource
 	private MaterialExtraService materialExtraService;
 	
+	Random r =new Random();
+	MaterialExtra materialExtra=new MaterialExtra (new Long(r.nextInt(200)),"notice", "note");
+	
     @Test
     @Rollback(Const.ISROLLBACK) 
-    public void test()  {
-    	Random r =new Random();
-    	MaterialExtra materialExtra=new MaterialExtra (new Long(r.nextInt(200)),"notice", "note");
-    	logger.info("---MaterialExtraService 测试---------------------------------------------------------------------------------");
+    public void testAddMaterialExtra()  {
     	//新增
     	materialExtraService.addMaterialExtra(materialExtra);
     	Assert.assertTrue("添加失败",materialExtra.getId() > 0 );
+    }
+    
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testUpdateMaterialExtra()  {
+    	materialExtraService.addMaterialExtra(materialExtra);
     	//修改
     	materialExtra.setNotice(String.valueOf(r.nextInt(200)));
     	Assert.assertTrue("更新失败",materialExtraService.updateMaterialExtra(materialExtra)> 0 );
-    	//删除
-    	Assert.assertTrue("删除失败",materialExtraService.deleteMaterialExtraById(16L) >= 0 );
-    	//查询
-    	Assert.assertNotNull("获取数据失败",materialExtraService.getMaterialExtraById(14L));
+    	//修改
+    	materialExtra.setId(r.nextLong());
+    	materialExtra.setNotice(String.valueOf(r.nextInt(200)));
+    	Assert.assertTrue("更新失败",materialExtraService.updateMaterialExtra(materialExtra)>= 0 );
     	
     }
-    
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testDeleteMaterialExtraById()  {
+    	materialExtraService.addMaterialExtra(materialExtra);
+    	//删除
+    	Assert.assertTrue("删除失败",materialExtraService.deleteMaterialExtraById(materialExtra.getId()) > 0 );
+    	//删除
+    	Assert.assertTrue("删除失败",materialExtraService.deleteMaterialExtraById(r.nextLong()) >= 0 );
+    	
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testGetMaterialExtraById()  {
+    	materialExtraService.addMaterialExtra(materialExtra);
+    	//查询
+    	Assert.assertNotNull("获取数据失败",materialExtraService.getMaterialExtraById(materialExtra.getId()));
+    	materialExtraService.getMaterialExtraById(r.nextLong());
+    }
     
     
 }

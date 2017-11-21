@@ -3,15 +3,20 @@
  */
 package com.bc.pmpheep.back.service.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.service.DecTeachExpService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -28,20 +33,63 @@ public class DecTeachExpServiceTest extends BaseTest {
 	DecTeachExpService decTeachExpService;
 
 	@Test
-	public void test() {
-       logger.info("-----------作家教学经历-----------");
-       DecTeachExp decTeachExp = new DecTeachExp(23L, "西南大学", "心理咨询技术", "第二学位必修课", "2007-02-08", "2017-09-05", 9);
-       decTeachExpService.addDecTeachExp(decTeachExp);
-       Assert.assertTrue("数据添加失败", decTeachExp.getId()>0);
-       logger.info("----------数据添加成功-----------");
-       decTeachExp.setSchoolName("第三军医大学");
-       Assert.assertTrue("数据更新失败", decTeachExpService.updateDecTeachExp(decTeachExp)>0);
-       logger.info("---------数据更新成功----------");
-       Assert.assertNotNull("获取数据失败", decTeachExpService.getDecTeachExpById(3L));
-       logger.info("---------获取单条数据成功-----------");
-       Assert.assertTrue("获取数据集合失败",decTeachExpService.getListDecTeachExpByDeclarationId(23L).size()>0 );
-       logger.info("----------获取数据集合成功----------");
-       Assert.assertTrue("删除数据失败", decTeachExpService.deleteDecTeachExpById(3L) >= 0);
-       logger.info("-----------测试完成------------");
+	@Rollback(Const.ISROLLBACK)
+	public void testAddDecTeachExp(){
+		DecTeachExp decTeachExp = new DecTeachExp(5L, "吉林大学", "管理心理学", null, "2013-02",
+				"至今", 14);
+		decTeachExp = decTeachExpService.addDecTeachExp(decTeachExp);
+		Assert.assertTrue("添加数据失败", decTeachExp.getId() > 0);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testDeleteDecTeachExp(){
+		long id = add().getId();
+		Integer count = decTeachExpService.deleteDecTeachExpById(id);
+		Assert.assertTrue("删除数据失败", count > 0);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testUpdateDecTeachExp(){
+		DecTeachExp decTeachExp = add();
+		decTeachExp.setDeclarationId(2L);
+		decTeachExp.setSort(13);
+		Integer count = decTeachExpService.updateDecTeachExp(decTeachExp);
+		Assert.assertTrue("数据更新失败", count > 0);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testGetDecTeachExp(){
+		long id = add().getId();
+		DecTeachExp decTeachExp = decTeachExpService.getDecTeachExpById(id);
+		Assert.assertNotNull("获取作家教学经历信息失败", decTeachExp);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testListDecTeachExp(){
+		add();
+		List<DecTeachExp> list = new ArrayList<>();
+		list = decTeachExpService.getListDecTeachExpByDeclarationId(1L);
+		Assert.assertTrue("获取作家教学经历信息集合失败", list.size() > 1);
+	}
+	
+	private DecTeachExp add(){
+		DecTeachExp decTeachExp = new DecTeachExp();
+		decTeachExp.setDeclarationId(1L);
+		decTeachExp.setSchoolName("西南大学");
+		decTeachExp.setSubject("人格心理学");
+		decTeachExp.setDateBegin("1997-05");
+		decTeachExp.setDateEnd("至今");
+		decTeachExpService.addDecTeachExp(decTeachExp);
+		DecTeachExp decTeachExp2 = new DecTeachExp(1L, "北京师范大学", "发展心理学", "重点教学科目",
+				"2005-06", "2012-09", 10);
+		decTeachExpService.addDecTeachExp(decTeachExp2);
+		DecTeachExp decTeachExp3 = new DecTeachExp(3L, "华东师范大学", "实验心理学", "国家级建设科目", 
+				"2000-09", "2015-02", null);
+		decTeachExpService.addDecTeachExp(decTeachExp3);
+		return decTeachExp3;
 	}
 }

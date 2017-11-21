@@ -35,72 +35,58 @@ public class PmphGroupFileServiceTest extends BaseTest {
 	@Resource
 	private PmphGroupFileService pmphGroupFileService;
 
-	@Test
-	@Rollback(Const.ISROLLBACK)
-	public void test() throws Exception {
-		pmphGroupFileService.updatePmphGroupFileOfDown(13L, "59e80ffa0c4398e12bd5f772");
-		Random random = new Random();
-		List<Long> ids = new ArrayList<Long>();
-		List<PmphGroupFile> files = new ArrayList<PmphGroupFile>();
-		PmphGroupFile pmphGroupFile = new PmphGroupFile(new Long(random.nextInt(200)), new Long(random.nextInt(200)),
-				String.valueOf(random.nextInt(200)), "String fileName", random.nextInt(200), null);
-		files.add(pmphGroupFile);
-		logger.info(
-				"---PmphGroupFileSevice 测试---------------------------------------------------------------------------------");
-		// 新增
-		File file = new File("C:/Users/Administrator/Desktop/学校信息.xlsx");
-		FileInputStream fis = new FileInputStream(file);
-		MockMultipartFile multipartFile = new MockMultipartFile("C:/Users/Administrator/Desktop", "学校信息.xlsx",
-				"application/vnd_ms-excel", fis);
-		List<MultipartFile> multipartFiles = new ArrayList<MultipartFile>(1);
-		List<Long> goupIds = new ArrayList<Long>(1);
-		goupIds.add(1L);
-		// pmphGroupFileService.addPmphGroupFile(goupIds, multipartFiles, "");
-		Assert.assertTrue("添加失败", pmphGroupFile.getId() > 0);
-		// 修改
-		pmphGroupFile.setFileName(String.valueOf(random.nextInt(200)));
-		Assert.assertTrue("更新失败", pmphGroupFileService.updatePmphGroupFile(pmphGroupFile) > 0);
-		// 删除
-		ids.add(1L);
-		ids.add(2L);
-		ids.add(3L);
-		// Assert.assertTrue("删除失败",
-		// pmphGroupFileService.deletePmphGroupFileById(1L, ids, "")
-		// .equals("SUCCESS"));
-		// 查询
-		Assert.assertNotNull("获取数据失败", pmphGroupFileService.getPmphGroupFileById(5L));
+	Random random = new Random();
+	List<Long> ids = new ArrayList<Long>();
+	PmphGroupFile pmphGroupFile = new PmphGroupFile(new Long(random.nextInt(200)), new Long(random.nextInt(200)),
+			String.valueOf(random.nextInt(200)), "String fileName", random.nextInt(200), null);
 
+	@Test
+	public void testAdd() {
+		pmphGroupFileService.updatePmphGroupFileOfDown(13L, "59e80ffa0c4398e12bd5f772");
+		pmphGroupFileService.add(pmphGroupFile);
+		Assert.assertTrue("添加失败", pmphGroupFile.getId() > 0);
 	}
 
-    // @Test
-    public void getList() {
-        PageResult pageResult = new PageResult<>();
-        PageParameter pageParameter = new PageParameter<>();
-        PmphGroupFileVO fileVO = new PmphGroupFileVO();
-        fileVO.setFileName("555");
-        fileVO.setFileId("7");
-        fileVO.setGroupId(2L);
-        ;
-        pageParameter.setParameter(fileVO);
-        pageParameter.setPageSize(15);
-        pageResult = pmphGroupFileService.listGroupFile(pageParameter);
-        Assert.assertNotNull(pageResult);
-        if (pageResult.getRows().isEmpty()) {
-            logger.info("获取失败");
-        } else {
-            logger.info("获取成功");
-        }
-    }
-    @Test
-    public void add(){
-    	PmphGroupFile pmphGroupFile=new PmphGroupFile();
-    	pmphGroupFile.setGroupId(1L);
-    	pmphGroupFile.setMemberId(2L);
-    	pmphGroupFile.setFileName("文件名");
-    	pmphGroupFile.setFileId("文件id");
-    	PmphGroupFile result=pmphGroupFileService.add(pmphGroupFile);
-    	Assert.assertNotNull("增加对象失败", result);
-    	Assert.assertNotNull("根据小组获取该组所有文件失败",pmphGroupFileService.listPmphGroupFileByGroupId(1L));
-    }
+	@Test
+	public void testUpdate() {
+		pmphGroupFileService.add(pmphGroupFile);
+		pmphGroupFile.setFileName(String.valueOf(random.nextInt(200)));
+		Assert.assertTrue("更新失败", pmphGroupFileService.updatePmphGroupFile(pmphGroupFile) > 0);
+	}
+
+	@Test
+	public void testUpdateDown() {
+		pmphGroupFileService.add(pmphGroupFile);
+		Assert.assertTrue("下载失败", pmphGroupFileService.updatePmphGroupFileOfDown(pmphGroupFile.getGroupId(),
+				pmphGroupFile.getFileId()) > 0);
+	}
+
+	@Test
+	public void testGetPmphGroupFileById() {
+		pmphGroupFileService.add(pmphGroupFile);
+		Assert.assertNotNull("获取数据失败", pmphGroupFileService.getPmphGroupFileById(pmphGroupFile.getId()));
+	}
+
+	@Test
+	public void testListPmphGroupFileByGroupId() {
+		pmphGroupFileService.add(pmphGroupFile);
+		Assert.assertNotNull("获取数据失败", pmphGroupFileService.listPmphGroupFileByGroupId(pmphGroupFile.getGroupId()));
+	}
+
+	@Test
+	public void testGetList() {
+		pmphGroupFileService.add(pmphGroupFile);
+		PageResult pageResult = new PageResult<>();
+		PageParameter pageParameter = new PageParameter<>();
+		PmphGroupFileVO fileVO = new PmphGroupFileVO();
+		fileVO.setFileName(null);
+		fileVO.setFileId(null);
+		fileVO.setGroupId(pmphGroupFile.getGroupId());
+		;
+		pageParameter.setParameter(fileVO);
+		pageParameter.setPageSize(15);
+		pageResult = pmphGroupFileService.listGroupFile(pageParameter);
+		Assert.assertNotNull("没有获取到数据", pageResult.getRows());
+	}
 
 }

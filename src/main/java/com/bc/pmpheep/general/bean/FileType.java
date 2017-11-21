@@ -22,7 +22,7 @@ public enum FileType {
     /**
      * 消息内嵌图片
      */
-    MSG_PIC("消息内嵌图片"),
+    MSG_IMG("消息内嵌图片"),
     /**
      * 教材通知内容附件
      */
@@ -38,7 +38,11 @@ public enum FileType {
     /**
      * CMS附件
      */
-    CMS_ATTACHMENT("CMS附件");
+    CMS_ATTACHMENT("CMS附件"),
+    /**
+     * CMS内嵌图片
+     */
+    CMS_IMG("CMS内嵌图片");
     
     private final String type;
 

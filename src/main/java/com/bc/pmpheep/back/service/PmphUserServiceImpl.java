@@ -394,13 +394,13 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.ILLEGAL_PARAM, "姓名需要小于20字符");
 		}
-		if(!StringUtil.isEmpty(pmphUserManagerVO.getHandphone())){
+		if (!StringUtil.isEmpty(pmphUserManagerVO.getHandphone())) {
 			if (!ValidatUtil.checkMobileNumber(pmphUserManagerVO.getHandphone())) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 						CheckedExceptionResult.ILLEGAL_PARAM, "电话格式不正确");
 			}
 		}
-		if(!StringUtil.isEmpty(pmphUserManagerVO.getEmail())){
+		if (!StringUtil.isEmpty(pmphUserManagerVO.getEmail())) {
 			if (!ValidatUtil.checkEmail(pmphUserManagerVO.getEmail())) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 						CheckedExceptionResult.ILLEGAL_PARAM, "邮箱格式不正确");
@@ -413,11 +413,13 @@ public class PmphUserServiceImpl implements PmphUserService {
 		String result = "FAIL";
 		if (num > 0) {
 			pmphUserRoleDao.deletePmphUserRoleByUserId(pmphUserManagerVO.getId());
-			String pmphRoles = pmphUserManagerVO.getRoleIds();
-			String[] roleIds = pmphRoles.split(",");
-			for (String roleId : roleIds) {
-				PmphUserRole pmphUserRole = new PmphUserRole(pmphUserManagerVO.getId(), Long.valueOf(roleId));
-				pmphUserRoleDao.addPmphUserRole(pmphUserRole);
+			if (!StringUtil.isEmpty(pmphUserManagerVO.getRoleIds())) {
+				String pmphRoles = pmphUserManagerVO.getRoleIds();
+				String[] roleIds = pmphRoles.split(",");
+				for (String roleId : roleIds) {
+					PmphUserRole pmphUserRole = new PmphUserRole(pmphUserManagerVO.getId(), Long.valueOf(roleId));
+					pmphUserRoleDao.addPmphUserRole(pmphUserRole);
+				}
 			}
 			result = "SUCCESS";
 		}

@@ -31,77 +31,100 @@ public class OrgSeviceTest extends BaseTest {
 
 	@Resource
 	private OrgService orgService;
+	Org org = new Org(5L, "zenngqingfeng", 4L, 4L, "ZHANGS", "1234", "BEIZHU", 4, false, null, null);
 
-	/*@Test
+	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void test() {
-		// logger.info("---OrgService-----------------------------------------------------------------------------");
-		// Org org=new Org(5L,"测试", 4L, 4L,"ZHANGS", "1234", "BEIZHU", 4, false,
-		// null, null);
-		// orgService.addOrg(org);
-		// Assert.assertTrue("添加失败",org.getId() > 0 );
-		// org.setOrgName("ceshiwwwwwwww"+org.getId());
-		// Assert.assertTrue("更新失败", orgService.updateOrg(org) > 0 );
-		// Assert.assertTrue("删除失败",orgService.deleteOrgById(4L) >= 0 );
-		// Assert.assertNotNull("获取数据失败",orgService.getOrgById(3L));
-		OrgVO orgVO = new OrgVO();
-		orgVO.setOrgName("w29");
-		PageResult<OrgVO> page = new PageResult<OrgVO>();
-		PageParameter pageParameter = new PageParameter<>();
-		pageParameter.setParameter(orgVO);
-		page = orgService.listOrg(pageParameter);
-		System.out.println(page.getRows());
-	}*/
-	
-	@Test
-	//@Rollback(false)
-	public void testOrg(){
-		logger.info("---OrgService------------------------testOrg----------------------------------------------");
-		Org org = new Org();
-		//org.setParentId(0L);
-		org.setOrgName("测试1");
-		org.setOrgTypeId(4L);
-		org.setAreaId(1L);
-		org.setContactPerson("测试人");
-		org.setContactPhone("13611111111");
-		org.setNote("11111111");
-		org.setSort(999);
-		//org.setIsDeleted(false);
+	public void testUpdateOrg() {
 		orgService.addOrg(org);
-		System.out.println("添加成功并获取数据："+orgService.getOrgById(org.getId()));
-		Long id = org.getId();
-		orgService.deleteOrgById(id);
-		System.out.println("删除成功");
-		Org orgU = orgService.getOrgById(472L);
-		orgU.setOrgName("测试2");
-		orgService.updateOrg(orgU);
-		System.out.println("获取更新后的数据："+orgService.getOrgById(472L));
+		org.setOrgName("ceshiwwwwwwww" + org.getId());
+		Assert.assertTrue("更新失败", orgService.updateOrg(org) > 0);
 	}
-	
+
 	@Test
-	public void listOrg(){
+	@Rollback(Const.ISROLLBACK)
+	public void testAddOrg() {
+		orgService.addOrg(org);
+		Assert.assertTrue("添加失败", org.getId() > 0);
+	}
+
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testDeleteOrgById() {
+		orgService.addOrg(org);
+		Assert.assertTrue("删除失败", orgService.deleteOrgById(org.getId()) >= 0);
+	}
+
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testGetOrgById() {
+		orgService.addOrg(org);
+		Assert.assertNotNull("获取数据失败", orgService.getOrgById(org.getId()));
+	}
+
+	@Test
+	public void testListOrg() {
 		OrgVO orgVO = new OrgVO();
 		orgVO.getOrgName();
 		PageResult<OrgVO> page = new PageResult<OrgVO>();
 		PageParameter<OrgVO> pageParameter = new PageParameter<OrgVO>();
 		pageParameter.setParameter(orgVO);
 		page = orgService.listOrg(pageParameter);
-		System.out.println(page.getRows());
 	}
+
 	@Test
-	public void getSchoolAdminCheckList(){
+	public void testListOrgByOrgName() {
 		PageParameter pageParameter = new PageParameter<>();
 		PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
-		OrgVO orgVO=new OrgVO();
+		OrgVO orgVO = new OrgVO();
 		orgVO.setOrgName(null);
 		orgVO.setAreaId(null);
 		orgVO.setRealname(null);
 		pageParameter.setPageNumber(1);
 		pageParameter.setPageSize(20);
 		pageParameter.setParameter(orgVO);
-		pageResult=orgService.getSchoolAdminCheckList(pageParameter);
-		Assert.assertNotNull("获取学校管理员审核列表失败", pageResult);
+		pageResult = orgService.getSchoolAdminCheckList(pageParameter);
 		Assert.assertNotNull("在新增用户与修改用户时查询机构失败", orgService.listOrgByOrgName("机构名称"));
+	}
+
+	@Test
+	public void testListSendToSchoolAdminOrAllUser() {
+		PageParameter pageParameter = new PageParameter<>();
+		PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
+		OrgVO orgVO = new OrgVO();
+		orgVO.setOrgName(null);
+		orgVO.setAreaId(null);
+		orgVO.setRealname(null);
+		pageParameter.setPageNumber(1);
+		pageParameter.setPageSize(20);
+		pageParameter.setParameter(orgVO);
+		pageResult = orgService.getSchoolAdminCheckList(pageParameter);
 		Assert.assertNotNull("系统消息——发送新消息——发送对象失败", orgService.listSendToSchoolAdminOrAllUser("机构名称"));
 	}
+
+	@Test
+	public void testGetSchoolAdminCheckList() {
+		PageParameter pageParameter = new PageParameter<>();
+		PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
+		OrgVO orgVO = new OrgVO();
+		orgVO.setOrgName(null);
+		orgVO.setAreaId(null);
+		orgVO.setRealname(null);
+		pageParameter.setPageNumber(1);
+		pageParameter.setPageSize(20);
+		pageParameter.setParameter(orgVO);
+		pageResult = orgService.getSchoolAdminCheckList(pageParameter);
+		Assert.assertNotNull("获取学校管理员审核列表失败", pageResult);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK) 
+	public void testListBeElectedOrgByBookIds() {
+		List<Long> bookIds = new ArrayList<Long>(2);
+		bookIds.add(165L);
+		bookIds.add(158L);
+		List<Org> lstOrg=orgService.listBeElectedOrgByBookIds(bookIds);
+		Assert.assertNotNull("获取学校管理员审核列表失败",lstOrg);
+	}
+	
 }

@@ -25,30 +25,41 @@ public class WriterUserRoleServiceTest extends BaseTest {
 
     @Resource
     private WriterUserRoleService testService;
-
+    Random r = new Random();
+    
     @Test
     @Rollback(Const.ISROLLBACK)
-    public void test() throws Exception {
-        Random r = new Random();
-        WriterUserRole testPar =
-        new WriterUserRole(new Long(r.nextInt(200)), new Long(r.nextInt(200)));
-        logger.info("---WriterUserRoleService 测试---------------------------------------------------------------------------------");
+    public void testAddWriterUserRole() throws Exception {
         // 新增
-        testService.addWriterUserRole(testPar);
-        Assert.assertNotNull("是否保存成功", testPar.getId());
+        WriterUserRole writerUserRole=this.addWriterUserRole();
+        Assert.assertNotNull("是否保存成功", writerUserRole.getId());
         //logger.info(testPar.toString());
-        // 修改
-        testPar.setRoleId(new Long(r.nextInt(200)));
-        Integer aInteger = testService.updateWriterUserRole(testPar);
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testUpdateWriterUserRole(){
+    	WriterUserRole writerUserRole=this.addWriterUserRole();
+    	writerUserRole.setRoleId(3L);
+    	writerUserRole.setUserId(4L);
+        Integer aInteger = testService.updateWriterUserRole(writerUserRole);
         Assert.assertTrue("是否修改成功", aInteger > 0 ? true : false);
-        //logger.info(aInteger.toString());
-        // 删除
-        Integer bInteger = testService.deleteWriterUserRoleById(1L);
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testDeleteWriterUserRoleById(){
+    	WriterUserRole writerUserRole=this.addWriterUserRole();
+    	Integer bInteger = testService.deleteWriterUserRoleById(writerUserRole.getId());
         Assert.assertTrue("是否删除成功", bInteger > 0 ? true : false);
-        //logger.info(bInteger.toString());
-        // 查询
-        WriterUserRole wur = testService.getWriterUserRoleById(2L);
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testGetWriterUserRoleById(){
+    	WriterUserRole writerUserRole=this.addWriterUserRole();
+    	WriterUserRole wur = testService.getWriterUserRoleById(writerUserRole.getId());
         Assert.assertNotNull("不为空", wur);
-        //logger.info(wur.toString());
+    }
+    private WriterUserRole addWriterUserRole(){
+    	WriterUserRole writerUserRole=testService.addWriterUserRole(new WriterUserRole(1L, 2L));
+    	return writerUserRole;
     }
 }

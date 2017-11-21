@@ -15,6 +15,15 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * @author mryang
  */
 public interface OrgDao {
+	
+	/**
+	 * 根据书籍获取当选了该书籍的人员所属机构
+	 * @author Mryang
+	 * @createDate 2017年11月19日 上午9:20:57
+	 * @param bookIds
+	 * @return  List<Org>
+	 */
+    List<Org> listBeElectedOrgByBookIds(List<Long> bookIds) ;
 
     /**
      * 

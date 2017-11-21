@@ -54,16 +54,25 @@ public interface DecPositionService {
      * @throws CheckedServiceException
      */
     List<DecPosition> listDecPositions(Long declarationId) throws CheckedServiceException;
+    
+    /**
+     * 根据orgid和bookid获取该机构某些已公布的书的申报职位
+     * @author Mryang
+     * @createDate 2017年11月20日 上午10:13:40
+     * @param textBookIds
+     * @param orgId
+     * @return
+     * @throws CheckedServiceException
+     */
+    List<DecPosition> listDecPositionsByTextbookIdAndOrgid(List<Long> textBookIds,Long orgId) throws CheckedServiceException;
 
     /**
-     * 
-     * 
-     * 功能描述：根据书籍id获取申报表id
-     * 
-     * @param textbookId 书籍id
-     * @return 申报表id结果集
+     * 根据书籍id获取申报职位
+     * @author Mryang
+     * @createDate 2017年11月16日 下午2:37:19
+     * @param textbookId
+     * @return
      * @throws CheckedServiceException
-     * 
      */
     List<DecPosition> listDecPositionsByTextbookId(Long textbookId) throws CheckedServiceException;
 

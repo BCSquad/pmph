@@ -130,6 +130,20 @@
 		select * from Writer_User_Certification where
 		user_id=#{userId} ;
 	</select>
+	<!-- 根据userId集合查询一个WriterUserCertification -->
+	<select id="getWriterUserCertificationByUserIds"
+		resultType="WriterUserCertification">
+		select 
+			* 
+		from 
+			Writer_User_Certification 
+		where
+			user_id
+		in
+		<foreach item="item" collection="array" separator="," open="(" close=")" index="">
+			#{item}
+		</foreach>
+	</select>
 
 	<!-- 查询表单的数据总条数 -->
 	<select id="getWriterUserCertificationCount" resultType="java.lang.Long">

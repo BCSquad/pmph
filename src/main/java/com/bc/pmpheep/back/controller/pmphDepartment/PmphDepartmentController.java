@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.back.service.PmphDepartmentService;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -22,6 +23,8 @@ public class PmphDepartmentController {
 
 	@Autowired
 	private PmphDepartmentService pmphDepartmentService;
+	// 当前业务类型
+	private static final String BUSSINESS_TYPE = "社内部门";
 
 	/**
 	 * 根据父级id获取社内机构下级所有部门 parentId为null 获取整个社内部门树（根节点为0）
@@ -30,10 +33,11 @@ public class PmphDepartmentController {
 	 * @createDate 2017年9月26日 下午3:21:34
 	 * @param parentId
 	 */
-	@RequestMapping(value = "/pmphdepartmenttree", method = RequestMethod.GET)
+	@RequestMapping(value = "/tree", method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据父级id获取整个部门")
 	@ResponseBody
-	public ResponseBean getPmphDepartmentTree(Long parentId) {
-		return new ResponseBean(pmphDepartmentService.listPmphDepartment(parentId));
+	public ResponseBean tree(Long id) {
+		return new ResponseBean(pmphDepartmentService.listPmphDepartment(id));
 	}
 
 	/**
@@ -44,9 +48,10 @@ public class PmphDepartmentController {
 	 * @param pmphDepartment
 	 * @return 带主键的pmphDepartment
 	 */
-	@RequestMapping(value = "/add/pmphdepartment", method = RequestMethod.POST)
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增部门")
 	@ResponseBody
-	public ResponseBean addPmphDepartment(PmphDepartment pmphDepartment) {
+	public ResponseBean add(PmphDepartment pmphDepartment) {
 		return new ResponseBean(pmphDepartmentService.addPmphDepartment(pmphDepartment));
 	}
 
@@ -58,9 +63,10 @@ public class PmphDepartmentController {
 	 * @param pmphDepartment
 	 * @return 影响行数
 	 */
-	@RequestMapping(value = "/update/pmphdepartment", method = RequestMethod.PUT)
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新部门")
 	@ResponseBody
-	public ResponseBean updatePmphDepartment(PmphDepartment pmphDepartment) {
+	public ResponseBean update(PmphDepartment pmphDepartment) {
 		return new ResponseBean(pmphDepartmentService.updatePmphDepartment(pmphDepartment));
 	}
 
@@ -72,24 +78,27 @@ public class PmphDepartmentController {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "/delete/pmphdepartmentbatch", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除部门")
 	@ResponseBody
-	public ResponseBean deletePmphDepartmentBatch(Long id) {
+	public ResponseBean delete(Long id) {
 		return new ResponseBean(pmphDepartmentService.deletePmphDepartmentBatch(id));
 	}
 
 	/**
 	 * 
-	 *  
+	 * 
 	 * 功能描述：根据部门名称模糊查询部门
 	 *
-	 * @param dpName 部门名称
+	 * @param dpName
+	 *            部门名称
 	 * @return 查询出来的结果集
 	 *
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/list/pmphdepartment", method = RequestMethod.GET)
-	public ResponseBean listPmphDepartment(String dpName) {
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据部门名称模糊查询部门")
+	@RequestMapping(value = "/list/department", method = RequestMethod.GET)
+	public ResponseBean department(String dpName) {
 		return new ResponseBean(pmphDepartmentService.listPmphUserDepartmentByDpName(dpName));
 	}
 }

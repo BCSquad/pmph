@@ -37,37 +37,44 @@ public class CmsCategoryServiceTest extends BaseTest {
     @Resource
     CmsCategoryService cmsCategoryService;
 
-    /**
-     * 
-     * <pre>
-     * 功能描述：add 方法测试
-     * 使用示范：
-     *
-     * </pre>
-     */
     @Test
-    public void serviceAllMethodTest() {
-        // add
-        CmsCategory category =
-        cmsCategoryService.addCmsCategory(new CmsCategory(1L, "d:/pmph", "类别名称", true));
-        logger.info(category.getPath());
+    public void testAddCmsCategory() {
+        CmsCategory category = this.addCmsCategory();
+        logger.info(category.toString());
         Assert.assertNotNull("插入内容后返回的CmsCategory.id不应为空", category.getId());
-        // uddate
+    }
+
+    @Test
+    public void testUpdateCmsCategory() {
+        CmsCategory category = this.addCmsCategory();
         Integer count =
         cmsCategoryService.updateCmsCategory(new CmsCategory(category.getId(), "d:/pmph/img",
                                                              "图片路径"));
-        Assert.assertTrue("是否更新CmsCategory成功", count > 0 ? true : false);
-        // getById
+        Assert.assertTrue("是否更新CmsCategory成功", count > 0);
+    }
+
+    @Test
+    public void testGetCmsCategoryById() {
+        CmsCategory category = this.addCmsCategory();
         CmsCategory cms = cmsCategoryService.getCmsCategoryById(category.getId());
         logger.info(cms.toString());
         Assert.assertNotNull("按ID查询是否该对象", cms);
-        // delete
-        // Assert.assertTrue("是否删除成功",
-        // cmsCategoryService.deleteCmsCategoryById(category.getId()) > 0 ? true : false);
-        List<Long> idList = new ArrayList<Long>(1);
-        idList.add(category.getId());
-        Assert.assertTrue("批量删除是否成功",
-                          cmsCategoryService.deleteCmsCategoryByIds(idList) > 0 ? true : false);
+    }
 
+    @Test
+    public void testDeleteCmsCategoryById() {
+        CmsCategory category = this.addCmsCategory();
+        Assert.assertTrue("是否删除成功", cmsCategoryService.deleteCmsCategoryById(category.getId()) > 0);
+        CmsCategory cg = this.addCmsCategory();
+        List<Long> idList = new ArrayList<Long>(1);
+        idList.add(cg.getId());
+        Assert.assertTrue("批量删除是否成功", cmsCategoryService.deleteCmsCategoryByIds(idList) > 0);
+
+    }
+
+    private CmsCategory addCmsCategory() {
+        CmsCategory category =
+        cmsCategoryService.addCmsCategory(new CmsCategory(134324L, "d:/pmph/daf.jpg", "类别名称1", true));
+        return category;
     }
 }

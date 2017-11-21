@@ -175,7 +175,7 @@ public class FileService {
         if (path.startsWith("/")) {
             path = path.substring(1);
         }
-//        path = path.replace("/", "\\");
+        //path = path.replace("/", "\\");
         String fullpath = SQLParameters.FILE_PATH + path;
         File file = new File(fullpath);
         try (InputStream inputStream = new FileInputStream(file)) {
@@ -207,7 +207,7 @@ public class FileService {
         if (path.startsWith("/")) {
             path = path.substring(1);
         }
-//        path = path.replace("/", "\\");
+        //path = path.replace("/", "\\");
         String fullpath = SQLParameters.FILE_PATH + path;
         File file = new File(fullpath);
         try (InputStream inputStream = new FileInputStream(file)) {

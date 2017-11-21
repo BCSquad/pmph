@@ -128,7 +128,8 @@ public class CmsContent implements java.io.Serializable {
 
     public CmsContent(Long parentId, String path, String mid, String title, String summary,
     String keyword, Short authorType, String deadlineStick, String deadlineHot,
-    String deadlinePromote, Long authUserId, String authDate, String gmtReedit, Long materialId) {
+    String deadlinePromote, Long authUserId, String authDate, String gmtReedit, Long materialId,
+    Long categoryId) {
         this.parentId = parentId;
         this.path = path;
         this.mid = mid;
@@ -143,6 +144,7 @@ public class CmsContent implements java.io.Serializable {
         this.authDate = authDate;
         this.gmtReedit = gmtReedit;
         this.materialId = materialId;
+        this.categoryId = categoryId;
     }
 
     /** minimal constructor */

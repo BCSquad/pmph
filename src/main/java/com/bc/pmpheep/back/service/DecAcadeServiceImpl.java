@@ -41,22 +41,6 @@ public class DecAcadeServiceImpl implements DecAcadeService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id不能为空");
 		}
-		/*if (null == decAcade.getOrgName()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "兼职学术组织名称不能为空");
-		}
-		if (null == decAcade.getRank()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "学术组织级别不能为空");
-		}
-		if (null == decAcade.getPosition()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "职务不能为空");
-		}*/
-		if (null == decAcade.getSort()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "显示顺序不能为空");
-		}
 		decAcadeDao.addDecAcade(decAcade);
 		return decAcade;
 	}

@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import com.bc.pmpheep.back.po.WriterUserCertification;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -72,6 +74,20 @@ public interface WriterUserCertificationService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer updateWriterUserCertificationProgressByUserId(Short progress, String[] userIds)
+    Integer updateWriterUserCertificationProgressByUserId(Short progress, Long[] userIds)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按userIds集合查询WriterUserCertification对象
+     * 使用示范：
+     * 
+     * @param userIds userIds集合
+     * @return WriterUserCertification对象
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    List<WriterUserCertification> getWriterUserCertificationByUserIds(Long[] userIds)
     throws CheckedServiceException;
 }

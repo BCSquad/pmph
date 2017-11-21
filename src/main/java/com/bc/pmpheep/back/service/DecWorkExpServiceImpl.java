@@ -39,26 +39,6 @@ public class DecWorkExpServiceImpl implements DecWorkExpService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "申报表id不能为空");
 		}
-		/*if (null == decWorkExp.getOrgName()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "工作单位不能为空");
-		}
-		if (null == decWorkExp.getPosition()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "职务不能为空");
-		}
-		if (null ==decWorkExp.getDateBegin() ){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "工作经历起始时间不能为空");
-		}
-		if (null == decWorkExp.getDateEnd()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "工作经历终止时间不能为空");
-		}*/
-		if (null == decWorkExp.getSort()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "显示顺序不能为空");
-		}
 		decWorkExpDao.addDecWorkExp(decWorkExp);
 		return decWorkExp;
 	}

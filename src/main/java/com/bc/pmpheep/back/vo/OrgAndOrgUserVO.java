@@ -63,6 +63,15 @@ public class OrgAndOrgUserVO implements Serializable{
     private boolean isDisabled;
     // 对应学校机id
     private Long    orgId;
+    //姓名或账号
+    private String     name;
+    
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public String getId() {
 		return id;
 	}
@@ -215,19 +224,21 @@ public class OrgAndOrgUserVO implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "OrgAndOrgUserVo [id=" + id + ", orgName=" + orgName + ", username=" + username + ", realname="
+		return "OrgAndOrgUserVO [id=" + id + ", orgName=" + orgName + ", username=" + username + ", realname="
 				+ realname + ", orgTypeId=" + orgTypeId + ", orgTypeName=" + orgTypeName + ", parentId=" + parentId
 				+ ", areaId=" + areaId + ", areaName=" + areaName + ", contactPerson=" + contactPerson
 				+ ", contactPhone=" + contactPhone + ", progress=" + progress + ", handphone=" + handphone + ", email="
 				+ email + ", position=" + position + ", title=" + title + ", address=" + address + ", postcode="
 				+ postcode + ", proxy=" + proxy + ", note=" + note + ", sort=" + sort + ", count=" + count
-				+ ", gmtCreate=" + gmtCreate + ", isDisabled=" + isDisabled + ", orgId=" + orgId + "]";
+				+ ", gmtCreate=" + gmtCreate + ", isDisabled=" + isDisabled + ", orgId=" + orgId + ", name=" + name
+				+ "]";
 	}
 	public OrgAndOrgUserVO(String id, String orgName, String username, String realname, String orgTypeId,
 			String orgTypeName, String parentId, String areaId, String areaName, String contactPerson,
 			String contactPhone, Integer progress, String handphone, String email, String position, String title,
 			String address, String postcode, String proxy, String note, Integer sort, Integer count,
-			Timestamp gmtCreate, boolean isDisabled, Long orgId) {
+			Timestamp gmtCreate, boolean isDisabled, Long orgId, String name) {
+		super();
 		this.id = id;
 		this.orgName = orgName;
 		this.username = username;
@@ -253,6 +264,7 @@ public class OrgAndOrgUserVO implements Serializable{
 		this.gmtCreate = gmtCreate;
 		this.isDisabled = isDisabled;
 		this.orgId = orgId;
+		this.name = name;
 	}
 	public OrgAndOrgUserVO() {
 		super();
