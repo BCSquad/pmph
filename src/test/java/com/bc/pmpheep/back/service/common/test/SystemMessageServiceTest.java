@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.service.test.common;
+package com.bc.pmpheep.back.service.common.test;
 
 import java.io.IOException;
 import java.util.Arrays;
