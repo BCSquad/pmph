@@ -90,7 +90,7 @@ public class MigrationStageSix {
 
     public void start() {
         Date begin = new Date();
-        declaration();
+        /*declaration();
         decEduExp();
         decWorkExp();
         decTeachExp();
@@ -100,7 +100,7 @@ public class MigrationStageSix {
         decNationalPlan();
         decTextbook();
         decResearch();
-        decExtension();
+        decExtension();*/
         decPosition();
         logger.info("迁移第六步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
@@ -1101,7 +1101,7 @@ public class MigrationStageSix {
                 + "when tp.positiontype=3 then 3 "
                 + "else 0 end chosen_position,tp.mastersort,ta.outlineurl,ta.outlinename,"
                 + "ifnull(wd.updatedate,wd.createdate) gmt_create,"
-                + "tp.new_pk tpid,wd.new_pk wdid,tb.new_pk tbid "
+                + "wd.new_pk wdid,tb.new_pk tbid "
                 + "from teach_applyposition ta "
                 + "left join teach_positionset tp on tp.appposiid=ta.appposiid "
                 + "left join writer_declaration wd on wd.writerid=ta.writerid "
