@@ -117,9 +117,38 @@ public class CmsInfoLettersManagementController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查看信息快报内容")
-    @RequestMapping(value = "/letters/content/{id}/search", method = RequestMethod.GET)
-    public ResponseBean search(@PathVariable("id") Long id) {
+    @RequestMapping(value = "/letters/content/{id}/detail", method = RequestMethod.GET)
+    public ResponseBean detail(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.getCmsContentAndContentAndAttachmentById(id));
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：信息快报内容修改
+     * 使用示范：
+     *
+     * @param id 主键ID
+     * @return 影响行数
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "信息快报内容修改")
+    @RequestMapping(value = "/letters/update", method = RequestMethod.PUT)
+    public ResponseBean update(CmsContent cmsContent, @RequestParam("file") String[] files,
+    @RequestParam("content") String content, @RequestParam("attachment") String[] attachment,
+    @RequestParam("scheduledTime") String scheduledTime, HttpServletRequest request) {
+        try {
+            String sessionId = CookiesUtil.getSessionId(request);
+            return new ResponseBean(cmsContentService.updateCmsContent(cmsContent,
+                                                                       files,
+                                                                       content,
+                                                                       attachment,
+                                                                       scheduledTime,
+                                                                       sessionId));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
     }
 
     /**
