@@ -200,7 +200,7 @@ public class MigrationStageSeven {
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, "sys_messages", "sys_messages");
+                excelHelper.exportFromMaps(excel, "消息-用户映射表（多对多）", "user_message");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
