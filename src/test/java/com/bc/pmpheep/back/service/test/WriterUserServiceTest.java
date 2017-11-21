@@ -219,7 +219,7 @@ public class WriterUserServiceTest extends BaseTest {
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testGetWriterUserListByOrgIds() {
-    	 WriterUser writerUser=writerUserService.add(new WriterUser("test", "123", false, 1L, 
+    	 WriterUser writerUser=writerUserService.add(new WriterUser("test00", "123", false, 1L, 
     			 null, null, null, null, null, null, null, null, null, null, null, null, null,
     			 null, null, false, null, null, null, null, false, false, null, null, null, null, false, null, null));
         List<Long> orgIds = new ArrayList<Long>();
@@ -230,8 +230,8 @@ public class WriterUserServiceTest extends BaseTest {
 
     @Test
     public void testAddWriterUserOfBack() {
-    	WriterUser writerUser=this.addWriterUser();
-        writerUser.setUsername("shuyongqian");
+    	WriterUser writerUser=new WriterUser();
+        writerUser.setUsername("username");
         writerUser.setRealname("用户名");
         writerUser.setNickname("昵称");
         writerUser.setOrgId(727L);
@@ -263,7 +263,7 @@ public class WriterUserServiceTest extends BaseTest {
     	Assert.assertNotNull("获取失败", pageResult);
     }
     private WriterUser addWriterUser(){
-    	WriterUser writerUser =writerUserService.add(new WriterUser("user1", "123"));
+    	WriterUser writerUser =writerUserService.add(new WriterUser("user001", "123"));
 		return writerUser;
     }
     private WriterRole addWriterRole(){
