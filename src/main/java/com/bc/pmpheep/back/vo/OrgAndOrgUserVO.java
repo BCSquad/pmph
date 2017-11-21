@@ -60,7 +60,7 @@ public class OrgAndOrgUserVO implements Serializable{
     // 创建时间
     private Timestamp gmtCreate;
     //是否禁用
-    private boolean isDisabled;
+    private boolean disabled;
     // 对应学校机id
     private Long    orgId;
     //姓名或账号
@@ -210,11 +210,11 @@ public class OrgAndOrgUserVO implements Serializable{
 	public void setGmtCreate(Timestamp gmtCreate) {
 		this.gmtCreate = gmtCreate;
 	}
-	public boolean isDisabled() {
-		return isDisabled;
+	public boolean isdisabled() {
+		return disabled;
 	}
-	public void setDisabled(boolean isDisabled) {
-		this.isDisabled = isDisabled;
+	public void setdisabled(boolean disabled) {
+		this.disabled = disabled;
 	}
 	public Long getOrgId() {
 		return orgId;
@@ -230,14 +230,14 @@ public class OrgAndOrgUserVO implements Serializable{
 				+ ", contactPhone=" + contactPhone + ", progress=" + progress + ", handphone=" + handphone + ", email="
 				+ email + ", position=" + position + ", title=" + title + ", address=" + address + ", postcode="
 				+ postcode + ", proxy=" + proxy + ", note=" + note + ", sort=" + sort + ", count=" + count
-				+ ", gmtCreate=" + gmtCreate + ", isDisabled=" + isDisabled + ", orgId=" + orgId + ", name=" + name
+				+ ", gmtCreate=" + gmtCreate + ", disabled=" + disabled + ", orgId=" + orgId + ", name=" + name
 				+ "]";
 	}
 	public OrgAndOrgUserVO(String id, String orgName, String username, String realname, String orgTypeId,
 			String orgTypeName, String parentId, String areaId, String areaName, String contactPerson,
 			String contactPhone, Integer progress, String handphone, String email, String position, String title,
 			String address, String postcode, String proxy, String note, Integer sort, Integer count,
-			Timestamp gmtCreate, boolean isDisabled, Long orgId, String name) {
+			Timestamp gmtCreate, boolean disabled, Long orgId, String name) {
 		super();
 		this.id = id;
 		this.orgName = orgName;
@@ -262,7 +262,7 @@ public class OrgAndOrgUserVO implements Serializable{
 		this.sort = sort;
 		this.count = count;
 		this.gmtCreate = gmtCreate;
-		this.isDisabled = isDisabled;
+		this.disabled = disabled;
 		this.orgId = orgId;
 		this.name = name;
 	}
