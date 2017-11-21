@@ -102,10 +102,7 @@ public class DecPositionServiceTest extends BaseTest{
     	 String[] a = {"1","2","3"};
     	 List<Long> list = new ArrayList<>();
     	 list = decPositionService.listDecPositionsByTextbookIds(a);
-    	 Assert.assertTrue("获取申报表id集合失败", list.size() == 0);
-    	 /*
-    	  * 同上一个方法相同，将mapper改为右连接后，结果应该大于4，测试结果如预期一样
-    	  */
+    	 Assert.assertTrue("获取申报表id集合失败", list.size() == 5);
      }
      
      private DecPosition add(){
