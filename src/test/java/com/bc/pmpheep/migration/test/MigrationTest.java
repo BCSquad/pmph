@@ -16,7 +16,9 @@ import com.bc.pmpheep.migration.MigrationStageThree;
 import com.bc.pmpheep.migration.MigrationStageTwo;
 import com.bc.pmpheep.test.BaseTest;
 import javax.annotation.Resource;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
@@ -26,6 +28,7 @@ import org.springframework.test.annotation.Rollback;
  *
  * @author L.X <gugia@qq.com>
  */
+@FixMethodOrder(MethodSorters.JVM)
 public class MigrationTest extends BaseTest {
 
     Logger logger = LoggerFactory.getLogger(MigrationTest.class);
@@ -53,16 +56,61 @@ public class MigrationTest extends BaseTest {
 
     @Test
     @Rollback(false)
-    public void testStart() {
+    public void testMigrationStageOne() {
         migrationStageOne.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageTwo() {
         migrationStageTwo.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageThree() {
         migrationStageThree.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageFour() {
         migrationStageFour.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageFive() {
         migrationStageFive.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageSix() {
         migrationStageSix.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageSeven() {
         migrationStageSeven.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageEight() {
         migrationStageEight.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageNine() {
         migrationStageNine.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageTen() {
         migrationStageTen.start();
     }
 }
