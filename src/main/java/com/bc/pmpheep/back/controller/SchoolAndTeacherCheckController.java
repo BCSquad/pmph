@@ -126,8 +126,12 @@ public class SchoolAndTeacherCheckController {
     @RequestParam("orgName") String orgName, @RequestParam("progress") Short progress) {
         PageParameter pageParameter = new PageParameter<>();
         WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
-        writerUserManagerVO.setOrgName(orgName.replaceAll(" ", ""));// 去除空格
-        writerUserManagerVO.setRealname(realname.replaceAll(" ", ""));
+        if (StringUtil.notEmpty(orgName)) {
+            writerUserManagerVO.setOrgName(orgName.replaceAll(" ", ""));// 去除空格
+        }
+        if (StringUtil.notEmpty(realname)) {
+            writerUserManagerVO.setRealname(realname.replaceAll(" ", ""));
+        }
         writerUserManagerVO.setProgress(progress);
         pageParameter.setPageNumber(pageNumber);
         pageParameter.setPageSize(pageSize);
@@ -149,8 +153,8 @@ public class SchoolAndTeacherCheckController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
     @RequestMapping(value = "/writerCheck", method = RequestMethod.PUT)
-    public ResponseBean writerCheck(@RequestParam(name = "progress") Short progress,
-    @RequestParam(name = "userIds") List<Long> userIds) {
+    public ResponseBean writerCheck(@RequestParam("progress") Short progress,
+    @RequestParam("userIds") Long[] userIds) {
         return new ResponseBean(
                                 writerUserCertificationService.updateWriterUserCertificationProgressByUserId(progress,
                                                                                                              userIds));

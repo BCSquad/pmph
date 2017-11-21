@@ -1,37 +1,23 @@
 package com.bc.pmpheep.back.service.test;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpRequest;
 import org.springframework.test.annotation.Rollback;
 
-import com.bc.pmpheep.back.dao.UserMessageDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
-import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.service.UserMessageService;
 import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.CookiesUtil;
-import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.vo.MessageStateVO;
 import com.bc.pmpheep.back.vo.MyMessageVO;
-import com.bc.pmpheep.back.vo.UserMessageVO;
-import com.bc.pmpheep.general.po.Message;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 
 /**

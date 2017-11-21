@@ -1,7 +1,5 @@
 package com.bc.pmpheep.back.service.test;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Resource;
@@ -29,47 +27,30 @@ public class WriterUserCertificationServiceTest extends BaseTest {
     @Resource
     private WriterUserCertificationService writerUserCertificationService;
 
-    Random                                 random                  = new Random();
-    WriterUserCertification                writerUserCertification =
-                                                                   new WriterUserCertification(
-                                                                                               new Long(
-                                                                                                        random.nextInt(200)),
-                                                                                               new Long(
-                                                                                                        random.nextInt(200)),
-                                                                                               String.valueOf(random.nextInt(200)),
-                                                                                               "512345678901111111",
-                                                                                               new Short(
-                                                                                                         "1"),
-                                                                                               "jjj",
-                                                                                               null,
-                                                                                               null);
-
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testUpdateWriterUserCertificationProgressByUserId() {
-        writerUserCertificationService.addWriterUserCertification(writerUserCertification);
+    	WriterUserCertification writerUserCertification=this.addWriterUserCertification();
         // 教师审核按userId更新WriterUserCertification中Progress状态字段
-        Short progress = 1;
-        List<Long> list = new ArrayList<Long>();
-        list.add(1L);
-        list.add(2L);
+        Short progress = 2;
+        Long[] idsLongs = { 1L, 2L };
         Assert.assertTrue("修改失败",
                           writerUserCertificationService.updateWriterUserCertificationProgressByUserId(progress,
-                                                                                                       list) >= 0);
+                                                                                                       idsLongs) >= 0);
     }
 
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testAddWriterUserCertification() {
-        writerUserCertificationService.addWriterUserCertification(writerUserCertification);
+    	WriterUserCertification writerUserCertification=this.addWriterUserCertification();
         Assert.assertTrue("添加失败", writerUserCertification.getId() > 0);
     }
 
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testUpdateWriterUserCertification() {
-        writerUserCertificationService.addWriterUserCertification(writerUserCertification);
-        writerUserCertification.setIdcard(String.valueOf(random.nextInt(200)));
+    	WriterUserCertification writerUserCertification=this.addWriterUserCertification();
+        writerUserCertification.setIdcard("12345678");
         Assert.assertTrue("更新失败",
                           writerUserCertificationService.updateWriterUserCertification(writerUserCertification) > 0);
     }
@@ -77,16 +58,20 @@ public class WriterUserCertificationServiceTest extends BaseTest {
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testDeleteWriterUserCertificationById() {
-        writerUserCertificationService.addWriterUserCertification(writerUserCertification);
+    	WriterUserCertification writerUserCertification=this.addWriterUserCertification();
         Assert.assertTrue("删除失败",
-                          writerUserCertificationService.deleteWriterUserCertificationById(2L) >= 0);
+                          writerUserCertificationService.deleteWriterUserCertificationById(writerUserCertification.getId()) >= 0);
     }
 
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testGetWriterUserCertificationById() {
-        writerUserCertificationService.addWriterUserCertification(writerUserCertification);
+    	WriterUserCertification writerUserCertification=this.addWriterUserCertification();
         Assert.assertNotNull("获取数据失败",
-                             writerUserCertificationService.getWriterUserCertificationById(3L));
+                             writerUserCertificationService.getWriterUserCertificationById(writerUserCertification.getId()));
+    }
+    private WriterUserCertification addWriterUserCertification(){
+    	WriterUserCertification wuc=writerUserCertificationService.addWriterUserCertification(new WriterUserCertification(1L, 2L, null, null, (short) 1, null, null, null));
+    	return wuc;
     }
 }

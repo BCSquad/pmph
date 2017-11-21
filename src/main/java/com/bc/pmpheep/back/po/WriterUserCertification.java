@@ -141,5 +141,10 @@ public class WriterUserCertification implements Serializable {
                + ", idcard:" + idcard + ", progress:" + progress + ", cert:" + cert
                + ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate + "}";
     }
-
+    private WriterUserCertification addWriterUserCertification() {
+    	 this.userId = userId;
+         this.progress = progress;
+		return null;
+		
+	}
 }

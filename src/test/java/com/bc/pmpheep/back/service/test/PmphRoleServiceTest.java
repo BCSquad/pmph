@@ -4,17 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.poi.ss.formula.functions.Roman;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.service.PmphRoleService;
-import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -48,7 +45,6 @@ public class PmphRoleServiceTest extends BaseTest {
 	@Test
 	public void testAddUserRole() {
 		Assert.assertTrue("添加失败", roleService.addUserRole(1L, 1L) > 0);
-
 	}
 
 	@Test
@@ -75,16 +71,18 @@ public class PmphRoleServiceTest extends BaseTest {
 
 	@Test
 	public void testDeleteRoleResource() {
-		roleService.addUserRole(1L, 1L);
+		Long[] ids = { 1L, 2L };
+		roleService.add(pmphRole, ids);
 		Assert.assertTrue("删除失败", roleService.deleteRoleResource(1L, 1L) > 0);
 	}
 
 	@Test
 	public void testDeleteRoleAndResource() {
-		roleService.addPmphRole(pmphRole);
-		List<Long> ids = new ArrayList<>();
-		ids.add(pmphRole.getId());
-		Assert.assertTrue("删除失败", roleService.deleteRoleAndResource(ids) > 0);
+		Long[] ids = { 1L, 2L };
+		roleService.add(pmphRole, ids);
+		List<Long> id = new ArrayList<>();
+		id.add(pmphRole.getId());
+		Assert.assertTrue("删除失败", roleService.deleteRoleAndResource(id) > 0);
 	}
 
 	@Test
@@ -103,7 +101,8 @@ public class PmphRoleServiceTest extends BaseTest {
 
 	@Test
 	public void testDeleteRoleResourceByRoleId() {
-		roleService.addPmphRole(pmphRole);
+		Long[] ids = { 1L, 2L };
+		roleService.add(pmphRole, ids);
 		Assert.assertTrue("删除失败", roleService.deleteRoleResourceByRoleId(pmphRole.getId()) > 0);
 	}
 

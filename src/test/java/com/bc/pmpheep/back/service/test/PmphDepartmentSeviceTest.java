@@ -59,7 +59,7 @@ public class PmphDepartmentSeviceTest extends BaseTest {
 		pmphDepartmentService.addPmphDepartment(pmphDepartment);
 		Assert.assertTrue("删除失败", pmphDepartmentService.deletePmphDepartmentById(pmphDepartment.getId()) >= 0);
 	}
-	
+
 	@Test
 	public void testDeletePmphDepartmentBatch() {
 		pmphDepartmentService.addPmphDepartment(pmphDepartment);
@@ -75,7 +75,7 @@ public class PmphDepartmentSeviceTest extends BaseTest {
 	@Test
 	public void testListPmphDepartment() {
 		pmphDepartmentService.addPmphDepartment(pmphDepartment);
-		PmphUserDepartmentVO departmentVO = pmphDepartmentService.listPmphDepartment(0L);
+		PmphUserDepartmentVO departmentVO = pmphDepartmentService.listPmphDepartment(null);
 		Assert.assertNotNull("获取数据失败", departmentVO);
 	}
 

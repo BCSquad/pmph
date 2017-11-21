@@ -18,9 +18,14 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
+import com.bc.pmpheep.back.po.WriterUserRole;
+import com.bc.pmpheep.back.service.WriterPermissionService;
+import com.bc.pmpheep.back.service.WriterRoleService;
+import com.bc.pmpheep.back.service.WriterUserRoleService;
 import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
@@ -38,15 +43,16 @@ public class WriterUserServiceTest extends BaseTest {
     WriterUserService writerUserService;
     @Autowired
     WriterUserDao writerUserDao;
-    WriterUser        writerUser = new WriterUser();
+    @Resource
+    WriterUserRoleService writerUserRoleService;
+    @Resource
+    WriterRoleService  writerRoleService;
+    @Resource
+    WriterPermissionService writerPermissionService;
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testAddWriterUserService() {
-        writerUser.setUsername("zasdA");
-        writerUser.setPassword("10214");
-        writerUser.setRealname("aswwq");
-        writerUser.setAvatar("asdadasdasd");
-        writerUser = writerUserService.add(writerUser);
+    	WriterUser writerUser=this.addWriterUser();
         Assert.assertNotNull("不否保存成功", writerUser.getId());
         //logger.info("添加了{}", writerUser.toString());
     }
@@ -54,75 +60,40 @@ public class WriterUserServiceTest extends BaseTest {
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testDeleteWriterUserServiceById() {
-        int num = -1;
-        writerUser.setUsername("zasd");
-        writerUser.setPassword("10214");
-        writerUser.setRealname("aswwq");
-        writerUser.setAvatar("asdadasdasd");
-        try {
-            writerUser = writerUserService.add(writerUser);
-            Assert.assertNotNull("不否保存成功", writerUser.getId());
-            Long id = writerUser.getId();
-            writerUserService.delete(id);
-            num = 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Assert.fail();
-        if (-1 != num) {
-            logger.info("删除成功");
-        } else {
-            logger.info("失败了");
-        }
-
+        WriterUser writerUser=this.addWriterUser();
+        Assert.assertNotNull("删除失败",writerUserService.delete(writerUser.getId()));
     }
 
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testUpdateWriterUserById() {
-        writerUser.setUsername("zasd");
-        writerUser.setPassword("10214");
-        writerUser.setRealname("aswwq");
-        writerUser.setAvatar("asdadasdasd");
-        WriterUser writerUser1 = new WriterUser();
-        writerUser = writerUserService.add(writerUser);
-        Assert.assertNotNull("否保存成功", writerUser.getId());
-        // Long id = writerUser.getId();
-        writerUser1 = writerUserService.update(writerUser);
-        Assert.assertNotNull("是否更新成功", writerUser1);
-        logger.info("修改成功{}", writerUser1.toString());
+    	WriterUser writerUser=this.addWriterUser();
+        writerUser.setPassword("1111");
+    	writerUser = writerUserService.update(writerUser);
+        Assert.assertNotNull("是否更新成功", writerUser);
     }
 
-    // @Test
-    public void testGetWriterUserByUsername() {
-        writerUser.setUsername("zasd");
-        writerUser.setPassword("10214");
-        writerUser.setRealname("aswwq");
-        writerUser.setAvatar("asdadasdasd");
+    @Test
+    public void testGet() {
+    	WriterUser writerUser=this.addWriterUser();
         WriterUser writerUser1 = new WriterUser();
-        writerUser = writerUserService.add(writerUser);
-        Assert.assertNotNull("否保存成功", writerUser.getId());
-        Long id = writerUser.getId();
-        writerUser1 = writerUserService.get(id);
+        writerUser1.setRealname("姓名");
+        writerUser1 = writerUserService.get(writerUser.getId());
         Assert.assertNotNull("是否查询成功", writerUser1);
-        logger.info("查找成功{}", writerUser1.toString());
     }
 
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testGetListWriterUserVO() {
+    	WriterUser writerUser=this.addWriterUser();
         PageParameter pageParameter = new PageParameter<>();
         PageResult pageResult = new PageResult<>();
         WriterUserManagerVO managerVO = new WriterUserManagerVO();
-        managerVO.setUsername(null);
-        managerVO.setRealname(null);
-        managerVO.setOrgName(null);
-        managerVO.setRank(null);
         pageParameter.setParameter(managerVO);
         pageParameter.setPageSize(15);
         pageResult = writerUserService.getListWriterUser(pageParameter);
         Assert.assertNotNull("是否查询成功", pageResult);
-        logger.info("查找成功{}", pageResult);
+//        logger.info("查找成功{}", pageResult);
     }
 
     /**
@@ -135,13 +106,6 @@ public class WriterUserServiceTest extends BaseTest {
         roleIdList.add(1L);
         roleIdList.add(2L);
         roleIdList.add(3L);
-        WriterUser user = new WriterUser();
-        user.setUsername("admin");
-        user.setPassword("1");
-        user.setRealname("admin");
-        user.setIsDisabled(false);
-        WriterUser u = writerUserService.add(user);// 添加用户
-        Assert.assertNotNull("否保存成功", u.getId());
         WriterUser ps = writerUserService.add(new WriterUser("test1", "123"), roleIdList);// 给单用户添加多个角色
         Assert.assertNotNull(ps);
     }
@@ -152,116 +116,137 @@ public class WriterUserServiceTest extends BaseTest {
 	@Test
 	@Rollback(Const.ISROLLBACK)
     public void testDeletePmphUserTest() {
-        Integer aInteger = 0;
-        try {
-            List<Long> userIdList = new ArrayList<Long>();
-            userIdList.add(19L);
-            // userService.delete(18L);// 按ID删除
-            writerUserService.deleteUserAndRole(userIdList);// 删除用户对应的角色
-            aInteger = 1;
-            Assert.assertTrue("是否删除成功", aInteger > 0 ? true : false);
-        } catch (CheckedServiceException e) {
-            e.printStackTrace();
-        }
-        Assert.fail();
+		WriterUser writerUser=this.addWriterUser();
+		Assert.assertTrue("删除失败", writerUserService.delete(writerUser.getId()) > 0);
     }
-
+	@Test
+	@Rollback(Const.ISROLLBACK)
+    public void testDelete() {
+		WriterRole WriterRole=this.addWriterRole();
+		WriterUser writerUser=writerUserService.add(new WriterUser("test1", "123"));
+		WriterUserRole writerUserRole=writerUserRoleService.addWriterUserRole(new WriterUserRole(writerUser.getId(), WriterRole.getId()));
+        List<Long> userIdList = new ArrayList<Long>();
+        userIdList.add(writerUserRole.getId());
+        Assert.assertTrue("是否删除成功",  writerUserService.deleteUserAndRole(userIdList)> 0 ? true : false);
+    }
     /**
      * 查询
      */
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testGetListsTest() {
-        WriterUser wtUser;
-        List<WriterUser> pmUsers;
-        List<WriterPermission> listPermissions;
-        pmUsers = writerUserService.getList();// 查询所有
-        Assert.assertNotNull(pmUsers);
-        logger.debug(pmUsers.toString());
-        wtUser = writerUserService.getByUsernameAndPassword("test1", ShiroKit.md5("123", "test1"));// 按UserName
-        Assert.assertNotNull(wtUser);
-        logger.debug(wtUser.toString());
-        wtUser = writerUserService.get(1L);// 按ID查询对象
-        Assert.assertNotNull(wtUser);
-        logger.debug(wtUser.toString());
-        wtUser = writerUserService.login("test1", "123");
-        Assert.assertNotNull(wtUser);
-        logger.debug(wtUser.toString());
-        pmUsers = writerUserService.getListByRole(1L);
-        Assert.assertNotNull(pmUsers);
-        logger.debug(pmUsers.toString());
-        listPermissions = writerUserService.getListAllResource(1L);
-        Assert.assertNotNull(listPermissions);
-        logger.debug(listPermissions.size() == 0 ? "null" : listPermissions.get(0).toString());
-        List<String> listRoleNameList = writerUserService.getListRoleSnByUser(1L);
-        Assert.assertNotNull(listRoleNameList);
-        logger.debug(listRoleNameList.size() == 0 ? "null" : listRoleNameList.get(0));
-        List<WriterRole> pr = writerUserService.getListUserRole(1L);
-        Assert.assertNotNull(pr);
-        logger.debug(pr.size() == 0 ? "null" : pr.get(0).toString());
+    	WriterUser writerUser=this.addWriterUser();
+//        WriterUser wtUser;
+//        List<WriterUser> pmUsers;
+//        List<WriterPermission> listPermissions;
+//        wtUser = writerUserService.login("test1", "123");
+        List<WriterRole> pr = writerUserService.getListUserRole(writerUser.getId());
+        Assert.assertNotNull("获取失败",pr);
     }
-
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testGetListRoleSnByUser(){
+    	WriterUser writerUser=this.addWriterUser();
+    	List<String> listRoleNameList =writerUserService.getListRoleSnByUser(writerUser.getId());
+    	Assert.assertNotNull("查询失败", listRoleNameList);// 查询所有
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testGetListAllResource(){
+    	WriterUser writerUser=this.addWriterUser();
+    	Integer writerPermission =writerPermissionService.addWriterPermission(new WriterPermission(2L, "PATH", "name", "menu_name", "url", false, null, null, null, null));
+    	Assert.assertNotNull("查询失败", writerUserService.getListAllResource(writerUser.getId()));// 查询所有
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testGetListByRole(){
+    	WriterUser writerUser=this.addWriterUser();
+    	Assert.assertNotNull("查询失败", writerUserService.getListByRole(writerUser.getId()));// 查询所有
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testGetList(){
+    	WriterUser writerUser=this.addWriterUser();
+    	Assert.assertNotNull("查询失败",writerUserService.getList());;// 查询所有
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testGetId(){
+    	WriterUser writerUser=this.addWriterUser();
+    	Assert.assertNotNull("查询失败",writerUserService.get(writerUser.getId()));// 查询所有
+    }
+//    @Test
+//    @Rollback(Const.ISROLLBACK)
+//    public void testLogin(){
+//    	WriterUser writerUser=this.addWriterUser();
+//    	Assert.assertNotNull("获取失败",writerUserService.login("user1","123"));// 查询所有
+//    }
+//    @Test
+//	@Rollback(Const.ISROLLBACK)
+//    public void testGetByUsernameAndPassword() {
+//		WriterUser writerUser=this.addWriterUser();
+//		writerUser = writerUserService.getByUsernameAndPassword(writerUser.getUsername(), writerUser.getPassword());// 按UserName
+//	    Assert.assertNotNull("获取失败",writerUser);
+//    }
+    
     /**
      * PmphUser 更新方法
      */
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testUpdatePmphUserTest() {
-        WriterUser pmphUser = new WriterUser();
-        pmphUser.setId(18L);
-        pmphUser.setUsername("admin1");
+    	WriterUser writerUser=this.addWriterUser();
         List<Long> userIdList = new ArrayList<Long>();
         userIdList.add(1L);
         userIdList.add(2L);
-        WriterUser pu = writerUserService.update(pmphUser);
+        writerUser.setRealname("姓名");
+        writerUser.setPassword("1234");
+        WriterUser pu = writerUserService.update(writerUser);
         Assert.assertNotNull("是否更新成功", pu);
-        logger.debug(pu.toString());
-        WriterUser pu1 = writerUserService.update(pmphUser, userIdList);
-        Assert.assertNotNull("是否更新成功", pu1);
-        logger.debug(pu1.toString());
     }
-
+    @Test
+    @Rollback(Const.ISROLLBACK)
+    public void testUpdate() {
+    	WriterUser writerUser=this.addWriterUser();
+        List<Long> userIdList = new ArrayList<Long>();
+        userIdList.add(1L);
+        userIdList.add(2L);
+        writerUser.setRealname("姓名");
+        writerUser.setPassword("1234");
+        WriterUser pu1 = writerUserService.update(writerUser, userIdList);
+        Assert.assertNotNull("是否更新成功", pu1);
+    }
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testGetWriterUserListByOrgIds() {
+    	 WriterUser writerUser=writerUserService.add(new WriterUser("test00", "123", false, 1L, 
+    			 null, null, null, null, null, null, null, null, null, null, null, null, null,
+    			 null, null, false, null, null, null, null, false, false, null, null, null, null, false, null, null));
         List<Long> orgIds = new ArrayList<Long>();
-        orgIds.add(1L);
-        orgIds.add(2L);
-        orgIds.add(3L);
-        writerUser.setUsername("ABC");
-        writerUser.setPassword("123");
-        writerUser.setRealname("ABC");
-        writerUser.setNickname("ABC");
-        writerUser.setAvatar("---");
-        writerUser.setOrgId(2L);
-        writerUserService.add(writerUser);
+        orgIds.add(writerUser.getOrgId());
         List<WriterUser> list = writerUserService.getWriterUserListByOrgIds(orgIds);
         Assert.assertTrue("获取数据失败", list.size() > 0);
-        writerUser.setOrgId(5L);
-        writerUserService.update(writerUser);
-        list = writerUserService.getWriterUserListByOrgIds(orgIds);
-        Assert.assertTrue("不应该能获取数据", list.size() == 0);
     }
 
     @Test
     public void testAddWriterUserOfBack() {
-        writerUser.setUsername("shuyongqian");
+    	WriterUser writerUser=new WriterUser();
+        writerUser.setUsername("username");
         writerUser.setRealname("用户名");
         writerUser.setNickname("昵称");
         writerUser.setOrgId(727L);
         String result = writerUserService.addWriterUserOfBack(writerUser);
         Assert.assertTrue("添加失败", result.equals("SUCCESS"));
     }
-
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testUpdateWriterUserOfBack() {
-        writerUser.setUsername("XYZ");
+    	WriterUser writerUser=this.addWriterUser();
+        writerUser.setUsername(writerUser.getUsername());
         writerUser.setPassword("789");
         writerUser.setRealname("ZZZ");
         writerUser.setNickname("QQQ");
         writerUser.setAvatar("---");
-        writerUserService.addWriterUserOfBack(writerUser);
         writerUser.setRealname("UUU");
         String result = writerUserService.updateWriterUserOfBack(writerUser);
         Assert.assertTrue("更新失败", result.equals("SUCCESS"));
@@ -276,5 +261,17 @@ public class WriterUserServiceTest extends BaseTest {
     	PageResult<WriterUserManagerVO> pageResult = new PageResult<WriterUserManagerVO>();
     	pageResult=writerUserService.getTeacherCheckList(pageParameter);
     	Assert.assertNotNull("获取失败", pageResult);
+    }
+    private WriterUser addWriterUser(){
+    	WriterUser writerUser =writerUserService.add(new WriterUser("user001", "123"));
+		return writerUser;
+    }
+    private WriterRole addWriterRole(){
+    	WriterRole writerRole=writerRoleService.add(new WriterRole("角色", false, null, null, null, null));
+    	return writerRole;
+    }
+    private WriterUserRole addWriterUserRole(){
+    	WriterUserRole writerUserRolew=writerUserRoleService.addWriterUserRole(new WriterUserRole(1L, 2L));
+    	return writerUserRolew;
     }
 }

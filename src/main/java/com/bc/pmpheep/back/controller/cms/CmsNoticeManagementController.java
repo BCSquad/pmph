@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.controller.cms;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.service.CmsContentService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.vo.CmsContentVO;
@@ -69,6 +71,56 @@ public class CmsNoticeManagementController {
         new PageParameter<CmsContentVO>(pageNumber, pageSize, cmsContentVO);
         String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(cmsContentService.listContentCheck(pageParameter, sessionId));
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：CMS-新增公告
+     * 使用示范：
+     *
+     * @param cmsContent CmsContent对象
+     * @param files 上传附件数组
+     * @param content 内容信息
+     * @param scheduledTime 定时发布时间
+     * @param sessionId sessionId
+     * @param loginType 用户类型
+     * @return CmsContent 对象
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增公告")
+    @RequestMapping(value = "/newNotice", method = RequestMethod.POST)
+    public ResponseBean newNotice(CmsContent cmsContent, @RequestParam("file") String[] files,
+    @RequestParam("content") String content, @RequestParam("scheduledTime") String scheduledTime,
+    HttpServletRequest request) {
+        try {
+            String sessionId = CookiesUtil.getSessionId(request);
+            return new ResponseBean(cmsContentService.addCmsContent(cmsContent,
+                                                                    files,
+                                                                    content,
+                                                                    scheduledTime,
+                                                                    sessionId));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：点击标题查看内容
+     * 使用示范：
+     *
+     * @param id CmsContent_id 主键
+     * @return Map<String,Object>
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查看公告")
+    @RequestMapping(value = "/notice/content/{id}/search", method = RequestMethod.GET)
+    public ResponseBean search(@PathVariable("id") Long id) {
+        return new ResponseBean(cmsContentService.getCmsContentAndContentAndAttachmentById(id));
     }
 
     /**

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
 
+import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.back.po.WriterRolePermission;
 import com.bc.pmpheep.back.service.WriterRolePermissionService;
 import com.bc.pmpheep.back.util.Const;
@@ -25,34 +26,36 @@ public class WriterRolePermissionServiceTest extends BaseTest {
 
     @Resource
     private WriterRolePermissionService writerRolePermissionService;
-    WriterRolePermission writerRolePermission = new WriterRolePermission(6L, 25L);
     @Test
     @Rollback(Const.ISROLLBACK)
-    public void addWriterRolePermission() throws Exception {
-    	writerRolePermission.setId(1L);
-    	writerRolePermission.setPermissionId(2L);
+    public void testAddWriterRolePermission() throws Exception {
+    	WriterRolePermission writerRolePermission=this.addWriterRolePermission();
         Assert.assertNotNull("addWriterRolePermission是否添加成功",
                              writerRolePermissionService.addWriterRolePermission(writerRolePermission));
     }
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testUpdateWriterRolePermission(){
-    	writerRolePermission.setId(2L);
-    	writerRolePermission.setPermissionId(3L);
-    	writerRolePermission.setRoleId(4L);
+    	WriterRolePermission writerRolePermission=this.addWriterRolePermission();
     	Integer aInteger = writerRolePermissionService.updateWriterRolePermission(writerRolePermission);
         Assert.assertTrue("更新成功失败", aInteger > 0 ? true : false);
     }
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testDeleteWriterRolePermissionById(){
-    	Integer bInteger = writerRolePermissionService.deleteWriterRolePermissionById(1L);
+    	WriterRolePermission writerRolePermission=this.addWriterRolePermission();
+    	Integer bInteger = writerRolePermissionService.deleteWriterRolePermissionById(writerRolePermission.getId());
         Assert.assertTrue("删除成功失败", bInteger > 0 ? true : false);
     }
     @Test
     @Rollback(Const.ISROLLBACK)
     public void testGetWriterRolePermissionById(){
-    	 WriterRolePermission wrp = writerRolePermissionService.getWriterRolePermissionById(3L);
+    	WriterRolePermission writerRolePermission=this.addWriterRolePermission();
+    	 WriterRolePermission wrp = writerRolePermissionService.getWriterRolePermissionById(writerRolePermission.getId());
     	 Assert.assertNotNull("获取失败", wrp);
+    }
+    private WriterRolePermission addWriterRolePermission(){
+    	WriterRolePermission wrp=writerRolePermissionService.addWriterRolePermission(new WriterRolePermission(1L, 2L));
+    	return wrp;
     }
 }

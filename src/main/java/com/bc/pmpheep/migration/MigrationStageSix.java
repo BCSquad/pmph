@@ -161,16 +161,16 @@ public class MigrationStageSix {
             Long isStagingJudge = (Long) map.get("is_staging"); // 是否暂存
             Declaration declaration = new Declaration();
             if (ObjectUtil.isNull(materialid) || materialid.intValue() == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材id对应的关联结果。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到教材id对应的关联结果，此结果将被记录在Excel中");
+                logger.error("未找到教材对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             declaration.setMaterialId(materialid);
             if (ObjectUtil.isNull(userid) || userid.intValue() == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到作家id对应的关联结果。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到作家对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到作家id对应的关联结果，此结果将被记录在Excel中");
+                logger.error("未找到作家对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             declaration.setUserId(userid);
@@ -195,7 +195,7 @@ public class MigrationStageSix {
             declaration.setAddress((String) map.get("address")); // 联系地址
             if (StringUtil.notEmpty(postCode)) {
                 if (StringUtil.strLength(postCode) > 20) {
-                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("邮编长度过长并不规范"));
+                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("邮编长度过长并不规范。"));
                     excel.add(map);
                     logger.error("邮编长度过长并不规范，此结果将被记录在Excel中");
                     continue;
@@ -295,9 +295,9 @@ public class MigrationStageSix {
             Long declarationid = (Long) map.get("id"); // 申报表id
             DecEduExp decEduExp = new DecEduExp();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表id对应的关联结果"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("找到申报表id对应的关联结果，此结果将被记录在Excel中");
+                logger.error("找到申报表对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             decEduExp.setDeclarationId(declarationid);
@@ -391,9 +391,9 @@ public class MigrationStageSix {
             Long declarationid = (Long) map.get("id"); // 申报表id
             DecWorkExp decWorkExp = new DecWorkExp();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id对应的关联结果。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表id对应的关联结果，此结果将被记录在Excel中");
+                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             decWorkExp.setDeclarationId(declarationid);
@@ -481,9 +481,9 @@ public class MigrationStageSix {
             Long declarationid = (Long) map.get("id"); // 申报表id
             DecTeachExp decTeachExp = new DecTeachExp();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id对应的关联结果。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表id对应的关联结果，此结果将被记录在Excel中");
+                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             decTeachExp.setDeclarationId(declarationid);
@@ -569,9 +569,9 @@ public class MigrationStageSix {
             String rankJudge = (String) map.get("level");
             DecAcade decAcade = new DecAcade();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id对应的关联结果。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表id对应的关联结果，此结果将被记录在Excel中");
+                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             decAcade.setDeclarationId(declarationid);
@@ -654,9 +654,9 @@ public class MigrationStageSix {
             Long positionJudge = (Long) map.get("position");
             DecLastPosition decLastPosition = new DecLastPosition();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id对应的关联结果。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表id对应的关联结果，此结果将被记录在Excel中");
+                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             decLastPosition.setDeclarationId(declarationid);
@@ -667,15 +667,8 @@ public class MigrationStageSix {
                 logger.error("找到教材名称为无，此结果将被记录在Excel中");
             }
             decLastPosition.setMaterialName(materialName);
-            //if (ObjectUtil.notNull(positionJudge)) {
             Integer position = positionJudge.intValue(); // 编写职务
             decLastPosition.setPosition(position);
-            /*} else {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到编写职务。");
-        		excel.add(map);
-        		logger.error("未找到编写职务，此结果将被记录在Excel中");
-                continue;
-			}*/
             decLastPosition.setNote((String) map.get("remark")); // 备注
             decLastPosition.setSort(999); // 显示顺序
             try {
@@ -724,9 +717,9 @@ public class MigrationStageSix {
             String typeJudge = (String) map.get("type");
             DecCourseConstruction decCourseConstruction = new DecCourseConstruction();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id对应的关联结果。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表id对应的关联结果，此结果将被记录在Excel中");
+                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             decCourseConstruction.setDeclarationId(declarationid);
@@ -744,15 +737,8 @@ public class MigrationStageSix {
                 logger.error("找到课程全年课时数为无，此结果将被记录在Excel中");
             }
             decCourseConstruction.setClassHour(classHour);
-            //if (StringUtil.notEmpty(typeJudge)) {
             Integer type = Integer.parseInt(typeJudge); // 职务
             decCourseConstruction.setType(type);
-            /*} else {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到职务。");
-        		excel.add(map);
-        		logger.error("未找到职务，此结果将被记录在Excel中");
-                continue;
-			}*/
             decCourseConstruction.setNote((String) map.get("remark")); // 备注
             decCourseConstruction.setSort(999); // 显示顺序
             try {
@@ -806,9 +792,9 @@ public class MigrationStageSix {
             Long rankJudge = (Long) map.get("rank");
             DecNationalPlan decNationalPlan = new DecNationalPlan();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id对应的关联结果。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表id对应的关联结果，此结果将被记录在Excel中");
+                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             decNationalPlan.setDeclarationId(declarationid);
@@ -830,15 +816,8 @@ public class MigrationStageSix {
                 logger.error("找到标准书号为无，此结果将被记录在Excel中");
             }
             decNationalPlan.setIsbn(isbn);
-            //if (ObjectUtil.notNull(rankJudge)) {
             Integer rank = rankJudge.intValue(); // 教材级别
             decNationalPlan.setRank(rank);
-            /*} else {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到教材级别。");
-        		excel.add(map);
-        		logger.error("未找到教材级别，此结果将被记录在Excel中");
-                continue;
-			}*/
             decNationalPlan.setNote((String) map.get("remark")); // 备注
             decNationalPlan.setSort(999); // 显示顺序
             try {
@@ -896,9 +875,9 @@ public class MigrationStageSix {
             Long positionJudge = (Long) map.get("position");
             DecTextbook decTextbook = new DecTextbook();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id对应的关联结果。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表id对应的关联结果，此结果将被记录在Excel中");
+                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             decTextbook.setDeclarationId(declarationid);
@@ -909,24 +888,10 @@ public class MigrationStageSix {
                 logger.error("找到教材名称为无，此结果将被记录在Excel中");
             }
             decTextbook.setMaterialName(materialName);
-            //if (ObjectUtil.notNull(rankJudge)) {
             Integer rank = rankJudge.intValue(); // 教材级别
             decTextbook.setRank(rank);
-            /*} else {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到教材级别。");
-        		excel.add(map);
-        		logger.error("未找到教材级别，此结果将被记录在Excel中");
-                continue;
-			}*/
-            //if (ObjectUtil.notNull(positionJudge)) {
             Integer position = positionJudge.intValue(); // 编写职务
             decTextbook.setPosition(position);
-            /*} else {
-        		map.put(SQLParameters.EXCEL_EX_HEADER, "未找到编写职务。");
-        		excel.add(map);
-        		logger.error("未找到编写职务，此结果将被记录在Excel中");
-                continue;
-			}*/
             String publisher = (String) map.get("publishing"); // 出版社
             if (("无").equals(publisher)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到出版社为无。"));
@@ -994,9 +959,9 @@ public class MigrationStageSix {
             Long declarationid = (Long) map.get("id"); // 申报表id
             DecResearch decResearch = new DecResearch();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id对应的关联结果。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表id对应的关联结果，此结果将被记录在Excel中");
+                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             decResearch.setDeclarationId(declarationid);
@@ -1072,17 +1037,17 @@ public class MigrationStageSix {
             if (StringUtil.notEmpty(extensionid)) {
                 Long extensionId = JdbcHelper.getPrimaryKey("teach_material_extend", "expendid", extensionid);
                 if (ObjectUtil.isNull(extensionId)) {
-                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材扩展项id对应的关联结果。"));
+                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材扩展项对应的关联结果。"));
                     excel.add(map);
-                    logger.error("未找到教材扩展项id对应的关联结果，此结果将被记录在Excel中");
+                    logger.error("未找到教材扩展项对应的关联结果，此结果将被记录在Excel中");
                     continue;
                 }
                 decExtension.setExtensionId(extensionId);
             }
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id对应的关联结果。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表id对应的关联结果，此结果将被记录在Excel中");
+                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             decExtension.setDeclarationId(declarationid);
@@ -1150,17 +1115,17 @@ public class MigrationStageSix {
             DecPosition decPosition = new DecPosition();
             Long declarationid = (Long) map.get("wdid"); // 申报表id
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表id对应的关联结果。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表id对应的关联结果，此结果将被记录在Excel中");
+                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             decPosition.setDeclarationId(declarationid);
             Long textbookid = (Long) map.get("tbid"); // 书籍id
             if (ObjectUtil.isNull(textbookid) || textbookid.intValue() == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到书籍id对应的关联结果。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到书籍对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到书籍id对应的关联结果，此结果将被记录在Excel中");
+                logger.error("未找到书籍对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             decPosition.setTextbookId(textbookid);

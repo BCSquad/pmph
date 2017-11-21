@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.WriterUserCertificationDao;
 import com.bc.pmpheep.back.po.WriterUserCertification;
+import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -113,7 +114,7 @@ WriterUserCertificationService {
     }
 
     @Override
-    public Integer updateWriterUserCertificationProgressByUserId(Short progress, List<Long> userIds)
+    public Integer updateWriterUserCertificationProgressByUserId(Short progress, Long[] userIds)
     throws CheckedServiceException {
         List<WriterUserCertification> writerUserCertifications =
         this.getWriterUserCertificationByUserIds(userIds);
@@ -125,24 +126,30 @@ WriterUserCertificationService {
         List<WriterUserCertification> wUserCertifications =
         new ArrayList<WriterUserCertification>(writerUserCertifications.size());
         for (WriterUserCertification writerUserCertification : writerUserCertifications) {
-            if (Const.WRITER_PROGRESS_1 == writerUserCertification.getProgress()
-                || Const.WRITER_PROGRESS_2 == writerUserCertification.getProgress()) {
-                wUserCertifications.add(new WriterUserCertification(
-                                                                    writerUserCertification.getId(),
-                                                                    progress));
+            if (Const.WRITER_PROGRESS_0 == writerUserCertification.getProgress()) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                                  CheckedExceptionResult.NULL_PARAM, "当前信息未提交，不能审核");
             }
+            if (Const.WRITER_PROGRESS_2 == writerUserCertification.getProgress()
+                || Const.WRITER_PROGRESS_3 == writerUserCertification.getProgress()) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                                  CheckedExceptionResult.NULL_PARAM, "当前信息已通过或者已退回");
+            }
+            wUserCertifications.add(new WriterUserCertification(
+                                                                writerUserCertification.getUserId(),
+                                                                progress));
         }
         if (CollectionUtil.isNotEmpty(wUserCertifications)) {
             count =
-            writerUserCertificationDao.updateWriterUserCertificationProgressByUserId(writerUserCertifications);
+            writerUserCertificationDao.updateWriterUserCertificationProgressByUserId(wUserCertifications);
         }
         return count;
     }
 
     @Override
-    public List<WriterUserCertification> getWriterUserCertificationByUserIds(List<Long> userIds)
+    public List<WriterUserCertification> getWriterUserCertificationByUserIds(Long[] userIds)
     throws CheckedServiceException {
-        if (CollectionUtil.isEmpty(userIds)) {
+        if (ArrayUtil.isEmpty(userIds)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.TEACHER_CHECK,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }

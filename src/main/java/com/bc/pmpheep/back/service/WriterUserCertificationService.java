@@ -74,7 +74,7 @@ public interface WriterUserCertificationService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer updateWriterUserCertificationProgressByUserId(Short progress, List<Long> userIds)
+    Integer updateWriterUserCertificationProgressByUserId(Short progress, Long[] userIds)
     throws CheckedServiceException;
 
     /**
@@ -88,6 +88,6 @@ public interface WriterUserCertificationService {
      * @throws CheckedServiceException
      * </pre>
      */
-    List<WriterUserCertification> getWriterUserCertificationByUserIds(List<Long> userIds)
+    List<WriterUserCertification> getWriterUserCertificationByUserIds(Long[] userIds)
     throws CheckedServiceException;
 }
