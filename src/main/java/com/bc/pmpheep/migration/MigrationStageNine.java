@@ -196,7 +196,7 @@ public class MigrationStageNine {
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, tableName, tableName);
+                excelHelper.exportFromMaps(excel, "出版图书表", "book");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }

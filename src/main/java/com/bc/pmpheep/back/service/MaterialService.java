@@ -62,7 +62,19 @@ public interface MaterialService {
      * @throws CheckedServiceException
      */
     Material getMaterialById(Long id) throws CheckedServiceException;
-
+    
+    /**
+     * 获取用户在该教材是几本书的策划编辑
+     * @author Mryang
+     * @createDate 2017年11月21日 下午2:26:17
+     * @param  materialId 教材id
+     * @param  pmphUserId 机构用户id
+     * @return 担任策划编辑数目本数
+     * @throws CheckedServiceException
+     */
+    Integer getPlanningEditorSum(Long materialId,Long pmphUserId) throws CheckedServiceException;
+    
+    
     /**
      * 删除Material 通过主键id
      * 

@@ -84,7 +84,7 @@ public class MigrationStageThree {
             String dpName = (String) map.get("orgname");
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数。");
                 excel.add(map);
                 logger.error("显示顺序为负数，此结果将被记录在Excel中");
             }
@@ -158,7 +158,7 @@ public class MigrationStageThree {
             Long departmentId = (Long) map.get("new_pk");
             if (ObjectUtil.isNull(departmentId) || departmentId > number) {
                 departmentId = 0L;
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到对应社内部门或连接的是学校机构。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到对应社内部门或对应的是学校机构。"));
                 excel.add(map);
                 logger.info("找不到对应社内部门或连接的是学校机构，此结果将被记录在Excel中");
             }
@@ -196,7 +196,7 @@ public class MigrationStageThree {
                 } catch (IOException ex) {
                     mongoId = "DEFAULT";
                     logger.error("文件读取异常，路径<{}>,异常信息：{}", avatar, ex.getMessage());
-                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("文件读取异常  "));
+                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("文件读取异常。"));
                     excel.add(map);
                 } catch (Exception e) {
                     mongoId = "DEFAULT";
@@ -235,7 +235,7 @@ public class MigrationStageThree {
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数。");
                 excel.add(map);
                 logger.info("显示顺序为负数，此结构将被记录在Excel中");
             }
@@ -280,7 +280,7 @@ public class MigrationStageThree {
             Long userId = (Long) map.get("user_new_pk");
             Long roleId = (Long) map.get("role_new_pk");
             if (ObjectUtil.isNull(roleId)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "角色被删除，无法关联到");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "角色被删除，无法关联到。");
                 excel.add(map);
                 logger.error("角色被删除，无法被关联到，此结果将被记录在Excel中");
                 continue;

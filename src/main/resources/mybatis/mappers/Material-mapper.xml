@@ -460,6 +460,17 @@
 		order by ma.id desc;
 	</select>
 	
+	<!--获取用户在该教材是几本书的策划编辑  -->
+	<select id="getPlanningEditorSum" resultType="java.lang.Integer" parameterType="java.util.Map" >
+		select 
+			count(*) 
+		from 
+			textbook 
+		where 
+			material_id     = #{materialId}
+		and planning_editor = #{pmphUserId}
+	</select>
+	
 	<!-- 根据id删除一个 -->
 	<delete id="deleteMaterialById" parameterType="java.lang.Long">
 		delete from

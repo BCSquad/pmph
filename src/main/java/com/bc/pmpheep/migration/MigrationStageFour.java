@@ -282,7 +282,7 @@ public class MigrationStageFour {
             }
             Long mender_id = (Long) oldMaterial.get("mender_id");
             if (ObjectUtil.isNull(mender_id)) {
-                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("修改人id为空,设置默认为创建者。"));
+                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("修改人为空,设置默认为创建者。"));
                 excel.add(oldMaterial);
                 mender_id = founder_id;
             }
