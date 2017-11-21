@@ -140,7 +140,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
                     || Const.ORG_USER_PROGRESS_2 == orgUser.getProgress()) {
                     throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                                       CheckedExceptionResult.NULL_PARAM,
-                                                      "当前信息已通过或者已退回");
+                                                      "已审核的用户不能再次审核");
                 }
                 orgUsers.add(new OrgUser(orgUser.getId(), progress));
             }

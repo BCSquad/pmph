@@ -94,7 +94,7 @@ public class CmsContentController {
     @RequestParam("content") String content, @RequestParam("scheduledTime") String scheduledTime,
     HttpServletRequest request) {
         try {
-        	String sessionId = CookiesUtil.getSessionId(request);
+            String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(cmsContentService.addCmsContent(cmsContent,
                                                                     files,
                                                                     content,
@@ -173,7 +173,7 @@ public class CmsContentController {
     @RequestParam("content") String content, @RequestParam("attachment") String[] attachment,
     @RequestParam("scheduledTime") String scheduledTime, HttpServletRequest request) {
         try {
-        	String sessionId = CookiesUtil.getSessionId(request);
+            String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(cmsContentService.updateCmsContent(cmsContent,
                                                                        files,
                                                                        content,

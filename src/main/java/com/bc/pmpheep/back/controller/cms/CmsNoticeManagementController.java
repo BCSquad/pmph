@@ -118,8 +118,8 @@ public class CmsNoticeManagementController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查看公告")
-    @RequestMapping(value = "/notice/content/{id}/search", method = RequestMethod.GET)
-    public ResponseBean search(@PathVariable("id") Long id) {
+    @RequestMapping(value = "/notice/content/{id}/detail", method = RequestMethod.GET)
+    public ResponseBean detail(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.getCmsContentAndContentAndAttachmentById(id));
     }
 

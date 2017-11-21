@@ -399,10 +399,12 @@
 					cc.`is_deleted`= 0 
 				and
 					cc.`is_hide` = 0
+				AND 
+					cc.`category_id` = 1 
 				<if test="parameter !=null ">
-					<if test="parameter.categoryId != null">
+					<!-- <if test="parameter.categoryId != null">
 						AND cc.`category_id` = #{parameter.categoryId} 
-					</if>
+					</if> -->
 					<if test="parameter.isAdmin == false ">
 						AND cc.`author_id`=#{parameter.authorId} 
 					</if>
@@ -435,10 +437,12 @@
 				cc.`is_deleted`= 0 
 			and
 				cc.`is_hide` = 0
+			AND 
+				cc.`category_id` = 1 
 			<if test="parameter !=null ">
-				<if test="parameter.categoryId != null">
+				<!-- <if test="parameter.categoryId != null">
 					AND cc.`category_id` = #{parameter.categoryId} 
-				</if>
+				</if> -->
 				<if test="parameter.isAdmin == false ">
 					AND cc.`author_id`=#{parameter.authorId} 
 				</if>
@@ -505,16 +509,16 @@
 				WHERE
 					cc.`is_deleted`= 0 
 				AND
-					cc.`auth_status`= 2
-				AND
 					cc.`is_hide` = 0
+				AND 
+					cc.`category_id` = 2
 				<if test="parameter !=null ">
 					<if test="parameter.title != null and parameter.title != ''">
 						AND cc.`title` like concat('%',#{parameter.title},'%')
 					</if>
-					<if test="parameter.categoryId != null">
+					<!-- <if test="parameter.categoryId != null">
 						AND cc.`category_id` = #{parameter.categoryId} 
-					</if>
+					</if> -->
 					<if test="parameter.status !=null ">
 						<if test="parameter.status ==0 ">
 							AND cc.`is_published` =true 
@@ -540,16 +544,16 @@
 			WHERE
 				cc.`is_deleted`= 0 
 			AND
-				cc.`auth_status`= 2
-			AND
 				cc.`is_hide` = 0
+			AND 
+				cc.`category_id` = 2
 			<if test="parameter !=null ">
 				<if test="parameter.title != null and parameter.title != ''">
 					AND cc.`title` like concat('%',#{parameter.title},'%')
 				</if>
-				<if test="parameter.categoryId != null">
+				<!-- <if test="parameter.categoryId != null">
 					AND cc.`category_id` = #{parameter.categoryId} 
-				</if>
+				</if> -->
 				<if test="parameter.status !=null ">
 						<if test="parameter.status ==0 ">
 							AND cc.`is_published` =true 
@@ -609,15 +613,15 @@
 					cc.`category_id` = ccg.`id`
 				WHERE
 					cc.`is_deleted`= 0 
-				AND
-					cc.`auth_status`= 0 
+				AND 
+					cc.`category_id` = 3
 				<if test="parameter !=null ">
 					<if test="parameter.title != null and parameter.title != ''">
 						AND cc.`title` like concat('%',#{parameter.title},'%')
 					</if>
-					<if test="parameter.categoryId != null">
+					<!-- <if test="parameter.categoryId != null">
 						AND cc.`category_id` = #{parameter.categoryId} 
-					</if>
+					</if> -->
 					<if test="parameter.status !=null ">
 						<if test="parameter.status ==0 ">
 							AND cc.`is_published` =true 
@@ -642,15 +646,15 @@
 			) t
 			WHERE
 				cc.`is_deleted`= 0 
-			AND
-				cc.`auth_status`= 0 
+			AND 
+				cc.`category_id` = 3
 			<if test="parameter !=null ">
 				<if test="parameter.title != null and parameter.title != ''">
 					AND cc.`title` like concat('%',#{parameter.title},'%')
 				</if>
-				<if test="parameter.categoryId != null">
+				<!-- <if test="parameter.categoryId != null">
 					AND cc.`category_id` = #{parameter.categoryId} 
-				</if>
+				</if> -->
 				<if test="parameter.status !=null ">
 						<if test="parameter.status ==0 ">
 							AND cc.`is_published` =true 

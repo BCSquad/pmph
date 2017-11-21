@@ -117,8 +117,8 @@ public class CmsInfoLettersManagementController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查看信息快报内容")
-    @RequestMapping(value = "/letters/content/{id}/search", method = RequestMethod.GET)
-    public ResponseBean search(@PathVariable("id") Long id) {
+    @RequestMapping(value = "/letters/content/{id}/detail", method = RequestMethod.GET)
+    public ResponseBean detail(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.getCmsContentAndContentAndAttachmentById(id));
     }
 
