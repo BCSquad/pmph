@@ -94,7 +94,7 @@ public class CmsContentController {
     @RequestParam("content") String content, @RequestParam("scheduledTime") String scheduledTime,
     HttpServletRequest request) {
         try {
-        	String sessionId = CookiesUtil.getSessionId(request);
+            String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(cmsContentService.addCmsContent(cmsContent,
                                                                     files,
                                                                     content,
@@ -159,6 +159,26 @@ public class CmsContentController {
     /**
      * 
      * <pre>
+     * 功能描述：内容审核(通过/拒绝)
+     * 使用示范：
+     *
+     * &#64;param id 主键ID
+     * &#64;param authStatus 审核状态
+     * &#64;return 影响行数
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "内容审核")
+    @RequestMapping(value = "/content/check", method = RequestMethod.PUT)
+    public ResponseBean check(@RequestParam("id") Long id,
+    @RequestParam("authStatus") Short authStatus, HttpServletRequest request) {
+        String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(cmsContentService.checkContentById(id, authStatus, sessionId));
+    }
+
+    /**
+     * 
+     * <pre>
      * 功能描述：内容修改
      * 使用示范：
      *
@@ -173,7 +193,7 @@ public class CmsContentController {
     @RequestParam("content") String content, @RequestParam("attachment") String[] attachment,
     @RequestParam("scheduledTime") String scheduledTime, HttpServletRequest request) {
         try {
-        	String sessionId = CookiesUtil.getSessionId(request);
+            String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(cmsContentService.updateCmsContent(cmsContent,
                                                                        files,
                                                                        content,

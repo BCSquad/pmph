@@ -84,13 +84,13 @@ public class MigrationStageOne {
             BigDecimal parentCode = (BigDecimal) map.get("ParentCode");
             String areaName = map.get("AreaName").toString();
             if (StringUtil.isEmpty(areaName)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "区域名称为空");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "区域名称为空。");
                 excel.add(map);
                 logger.error("区域名称为空，此结果将被记录在Excel中");
                 continue;
             }
             if (ObjectUtil.isNull(parentCode)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "父区域编码为空");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "区域父路径为空。");
                 excel.add(map);
                 logger.error("父区域编码为空，此结果将被记录在Excel中");
             }
@@ -137,7 +137,7 @@ public class MigrationStageOne {
             String orgTypeId = (String) map.get("orgid");
             String orgName = (String) map.get("orgname");
             if (StringUtil.isEmpty(orgName)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "机构类型名称为空");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "机构类型名称为空。");
                 excel.add(map);
                 logger.error("机构类型名称为空，此结果将被记录在Excel中");
                 continue;
@@ -145,7 +145,7 @@ public class MigrationStageOne {
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数。");
                 excel.add(map);
                 logger.error("显示顺序为负数，此结果将被记录在Excel中");
             }
@@ -201,7 +201,7 @@ public class MigrationStageOne {
             Integer orgType = (Integer) map.get("orgtype");
             Long areaId = (Long) map.get("new_pk");
             if (ObjectUtil.isNull(orgType) || ObjectUtil.isNull(areaId)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构类型id或区域id为空。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构类型或区域为空。"));
                 excel.add(map);
                 logger.error("机构类型id或区域id为空，此结果将被记录在Excel中");
                 continue;
@@ -281,7 +281,7 @@ public class MigrationStageOne {
             String username = (String) map.get("usercode");
             if (StringUtil.isEmpty(username) || JdbcHelper.nameDuplicate(list, username)
                     || StringUtil.strLength(username) > 20) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构代码不符合规范，可能没有机构代码、"
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构代码不符合规范，可能为空、"
                         + "重复或过长。"));
                 excel.add(map);
                 logger.error("机构代码不符合规范，此结果将被记录在Excel中");
@@ -290,7 +290,7 @@ public class MigrationStageOne {
             list.add(username);
             Long orgId = (Long) map.get("new_pk");
             if (ObjectUtil.isNull(orgId)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("对应学校id理应不能为空。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("对应学校理应不能为空。"));
                 excel.add(map);
                 logger.info("对应学校id理应不能为空，此结果将被记录在Excel中");
                 continue;
@@ -562,7 +562,7 @@ public class MigrationStageOne {
                 } catch (IOException ex) {
                     avatarMongoId = "DEFAULT";
                     logger.error("文件读取异常，路径<{}>,异常信息：{}", avatar, ex.getMessage());
-                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("作家用户头像文件读取异常  "));
+                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("作家用户头像文件读取异常。"));
                     excel.add(map);
                 } catch (Exception e) {
                     avatarMongoId = "DEFAULT";

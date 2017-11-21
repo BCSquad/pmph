@@ -128,12 +128,12 @@ WriterUserCertificationService {
         for (WriterUserCertification writerUserCertification : writerUserCertifications) {
             if (Const.WRITER_PROGRESS_0 == writerUserCertification.getProgress()) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                                  CheckedExceptionResult.NULL_PARAM, "当前信息未提交，不能审核");
+                                                  CheckedExceptionResult.NULL_PARAM, "用户信息未提交，不能审核");
             }
             if (Const.WRITER_PROGRESS_2 == writerUserCertification.getProgress()
                 || Const.WRITER_PROGRESS_3 == writerUserCertification.getProgress()) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                                  CheckedExceptionResult.NULL_PARAM, "当前信息已通过或者已退回");
+                                                  CheckedExceptionResult.NULL_PARAM, "已审核的用户不能再次审核");
             }
             wUserCertifications.add(new WriterUserCertification(
                                                                 writerUserCertification.getUserId(),
