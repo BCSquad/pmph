@@ -82,7 +82,7 @@ public class MigrationStageTwo {
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数。");
                 excel.add(map);
                 logger.info("显示顺序为负数，此结果将被记录在Excel中");
             }
@@ -129,7 +129,7 @@ public class MigrationStageTwo {
             Long userId = (Long) map.get("user_new_pk");
             Long roleId = (Long) map.get("role_new_pk");
             if (ObjectUtil.isNull(roleId)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "角色被删除，无法关联到");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "角色被删除，无法关联到。");
                 excel.add(map);
                 logger.error("角色被删除，无法被关联到，此结果将被记录在Excel中");
                 continue;
