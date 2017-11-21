@@ -216,7 +216,7 @@ public class MigrationStageTen {
         }
         if (excel.size() > 0) {
             try {
-                excelHelper.exportFromMaps(excel, tableName, tableName);
+                excelHelper.exportFromMaps(excel, "CMS内容表", "cms_content");
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }

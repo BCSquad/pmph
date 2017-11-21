@@ -42,6 +42,8 @@ public class CmsContentVO implements Serializable {
     private Long      authUserId;
     // 审核通过时间
     private Timestamp authDate;
+    // 审核状态
+    private Short     authStatus;
     // 条件分页总条数分页查询
     private Integer   count;
     // 页面查询条件（状态）
@@ -375,6 +377,20 @@ public class CmsContentVO implements Serializable {
      */
     public void setIsPublished(Boolean isPublished) {
         this.isPublished = isPublished;
+    }
+
+    /**
+     * @return the authStatus
+     */
+    public Short getAuthStatus() {
+        return authStatus;
+    }
+
+    /**
+     * @param authStatus the authStatus to set
+     */
+    public void setAuthStatus(Short authStatus) {
+        this.authStatus = authStatus;
     }
 
 }
