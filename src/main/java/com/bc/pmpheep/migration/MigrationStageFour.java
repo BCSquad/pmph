@@ -140,13 +140,7 @@ public class MigrationStageFour {
             materialType.setTypeName(typeName);
             materialType.setSort(sort);
             materialType.setNote(note);
-            try {
-                materialType = materialTypeService.addMaterialType(materialType);
-            } catch (Exception e) {
-                excel.add(map);
-                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage() + "。"));
-                continue;
-            }
+            materialType = materialTypeService.addMaterialType(materialType);
             count++;
             long pk = materialType.getId();
             //更新旧表中new_pk字段
@@ -331,15 +325,8 @@ public class MigrationStageFour {
             material.setFounderId(founder_id);//founder_id,
             material.setGmtUpdate((Timestamp) oldMaterial.get("updatedate"));//gmt_update,			
             material.setMenderId((Long) oldMaterial.get("mender_id"));//mender_id
-            try {
-                material = materialService.addMaterial(material);
-                count++;
-            } catch (Exception e) {
-                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage()) + "。");
-                excel.add(oldMaterial);
-                logger.error(e.getMessage());
-                continue;
-            }
+            material = materialService.addMaterial(material);
+            count++;
             long pk = material.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "materid", materialId);//更新旧表中new_pk字段
         }
@@ -391,14 +378,8 @@ public class MigrationStageFour {
             newMaterialExtension.setMaterialId(materid);
             newMaterialExtension.setExtensionName(expendname);
             newMaterialExtension.setIsRequired("1".equals(String.valueOf(materialExtension.get("isfill"))));
-            try {
-                newMaterialExtension = materialExtensionService.addMaterialExtension(newMaterialExtension);
-                count++;
-            } catch (Exception e) {
-                materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage()) + "。");
-                excel.add(materialExtension);
-                logger.error(e.getMessage());
-            }
+            newMaterialExtension = materialExtensionService.addMaterialExtension(newMaterialExtension);
+            count++;
             long pk = newMaterialExtension.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "expendid", oldExpendid);//更新旧表中new_pk字段
         }
@@ -451,12 +432,8 @@ public class MigrationStageFour {
             materialExtra.setMaterialId(materid);
             materialExtra.setNotice(notice);
             materialExtra.setNote(note);
-            try {
-                materialExtra = materialExtraService.addMaterialExtra(materialExtra);
-                count++;
-            } catch (Exception e) {
-                logger.error(e.getMessage());
-            }
+            materialExtra = materialExtraService.addMaterialExtra(materialExtra);
+            count++;
             mps.put(materialExtra.getMaterialId(), materialExtra.getId());
         }
         if (excel.size() > 0) {
@@ -512,11 +489,7 @@ public class MigrationStageFour {
             materialNoticeAttachment.setAttachment("-");
             materialNoticeAttachment.setAttachmentName(fileName);
             materialNoticeAttachment.setDownload(1L);
-            try {
-                materialNoticeAttachment = materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
-            } catch (Exception e) {
-                continue;
-            }
+            materialNoticeAttachment = materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
             if (ObjectUtil.notNull(materialNoticeAttachment.getId())) {
                 String mongoId;
                 try {
@@ -594,12 +567,8 @@ public class MigrationStageFour {
             materialNoteAttachment.setAttachment("-");
             materialNoteAttachment.setAttachmentName(fileName);
             materialNoteAttachment.setDownload(1L);
-            try {
-                materialNoteAttachment = materialNoteAttachmentService.addMaterialNoteAttachment(materialNoteAttachment);
-                count++;
-            } catch (Exception e) {
-                continue;
-            }
+            materialNoteAttachment = materialNoteAttachmentService.addMaterialNoteAttachment(materialNoteAttachment);
+            count++;
             if (ObjectUtil.notNull(materialNoteAttachment.getId())) {
                 String mongoId;
                 try {
@@ -704,14 +673,8 @@ public class MigrationStageFour {
             materialContact.setContactPhone(linkphone);
             materialContact.setContactEmail(email);
             materialContact.setSort(orderno);
-            try {
-                materialContact = materialContactService.addMaterialContact(materialContact);
-                count++;
-            } catch (Exception e) {
-                object.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage()) + "。");
-                excel.add(object);
-                logger.error(e.getMessage());
-            }
+            materialContact = materialContactService.addMaterialContact(materialContact);
+            count++;
             long pk = materialContact.getId();
             if (ObjectUtil.notNull(pk)) {
                 JdbcHelper.updateNewPrimaryKey(tableName, pk, "linkerid", linkId);//更新旧表中new_pk字段
@@ -765,14 +728,8 @@ public class MigrationStageFour {
             MaterialOrg materialOrg = new MaterialOrg();
             materialOrg.setMaterialId(materid);
             materialOrg.setOrgId(orgid);
-            try {
-                materialOrg = materialOrgService.addMaterialOrg(materialOrg);
-                count++;
-            } catch (Exception e) {
-                object.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage() + "。"));
-                excel.add(object);
-                logger.error(e.getMessage());
-            }
+            materialOrg = materialOrgService.addMaterialOrg(materialOrg);
+            count++;
             long pk = materialOrg.getId();
             if (ObjectUtil.notNull(pk)) {
                 JdbcHelper.updateNewPrimaryKey(tableName, pk, "pushschoolid", pushschoolId);//更新旧表中new_pk字段
@@ -829,14 +786,8 @@ public class MigrationStageFour {
             MaterialProjectEditor materialProjectEditor = new MaterialProjectEditor();
             materialProjectEditor.setMaterialId(materid);
             materialProjectEditor.setEditorId(userid);
-            try {
-                materialProjectEditor = materialProjectEditorService.addMaterialProjectEditor(materialProjectEditor);
-                count++;
-            } catch (Exception e) {
-                object.put(SQLParameters.EXCEL_EX_HEADER, exception.append(e.getMessage() + "。"));
-                excel.add(object);
-                logger.error(e.getMessage());
-            }
+            materialProjectEditor = materialProjectEditorService.addMaterialProjectEditor(materialProjectEditor);
+            count++;
         }
         if (excel.size() > 0) {
             try {

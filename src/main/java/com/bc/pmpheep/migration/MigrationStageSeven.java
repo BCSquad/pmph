@@ -58,7 +58,7 @@ public class MigrationStageSeven {
     public void start() {
         Date begin = new Date();
         userMessage_messageAttachment();
-        logger.info("迁移第十步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
+        logger.info("迁移第七步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
     public void userMessage_messageAttachment() {//case WHEN e.sysflag=0 then 1 when e.sysflag=1 and e.usertype=2 then 3 else 2 end
