@@ -29,6 +29,7 @@ import com.bc.pmpheep.utils.ExcelHelper;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -75,6 +76,7 @@ public class MigrationStageEight {
         String groupImg = "DEFAULT";
         String sql = "SELECT sysflag FROM sys_user WHERE userid = ?";
         List<Map<String, Object>> excel = new LinkedList<>();
+        List<String> groupNames = new ArrayList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             /* 根据MySQL字段类型进行类型转换 */
@@ -86,6 +88,12 @@ public class MigrationStageEight {
             String bookid = (String) map.get("bookid");
             /* 开始新增新表对象，并设置属性值 */
             PmphGroup pmphGroup = new PmphGroup();
+            /* 检查重名 */
+            int suffix = 1;
+            while (groupNames.contains(groupTitle)) {
+                groupTitle = groupTitle + suffix;
+                suffix++;
+            }
             pmphGroup.setGroupName(groupTitle);
             pmphGroup.setGroupImage(groupImg);//小组默认头像
             pmphGroup.setFounderId(0L);//留到PmphGroupMember迁移时更新
@@ -99,6 +107,7 @@ public class MigrationStageEight {
                 pmphGroup.setBookId(0L);
             }
             pmphGroup = groupService.addPmphGroup(pmphGroup);
+            groupNames.add(pmphGroup.getGroupName());
             long pk = pmphGroup.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "groupID", groupID);//更新旧表中new_pk字段
             count++;

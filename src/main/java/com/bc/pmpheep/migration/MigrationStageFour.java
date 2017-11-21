@@ -41,6 +41,7 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
+import java.util.ArrayList;
 
 /**
  * @author Mryang
@@ -408,11 +409,17 @@ public class MigrationStageFour {
         List<Map<String, Object>> materialExtraList = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        List<Long> materids = new ArrayList<>();
         for (Map<String, Object> object : materialExtraList) {
             StringBuilder exception = new StringBuilder();
             Long materid = (Long) object.get("new_pk");
             if (ObjectUtil.isNull(materid)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空。"));
+                excel.add(object);
+                continue;
+            }
+            if (materids.contains(materid)) {
+                object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id重复。"));
                 excel.add(object);
                 continue;
             }
@@ -433,6 +440,7 @@ public class MigrationStageFour {
             materialExtra.setNotice(notice);
             materialExtra.setNote(note);
             materialExtra = materialExtraService.addMaterialExtra(materialExtra);
+            materids.add(materid);
             count++;
             mps.put(materialExtra.getMaterialId(), materialExtra.getId());
         }
