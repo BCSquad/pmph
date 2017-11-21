@@ -32,7 +32,7 @@ public class WriterUserCertificationServiceTest extends BaseTest {
     public void testUpdateWriterUserCertificationProgressByUserId() {
     	WriterUserCertification writerUserCertification=this.addWriterUserCertification();
         // 教师审核按userId更新WriterUserCertification中Progress状态字段
-        Short progress = 1;
+        Short progress = 2;
         Long[] idsLongs = { 1L, 2L };
         Assert.assertTrue("修改失败",
                           writerUserCertificationService.updateWriterUserCertificationProgressByUserId(progress,
@@ -71,7 +71,7 @@ public class WriterUserCertificationServiceTest extends BaseTest {
                              writerUserCertificationService.getWriterUserCertificationById(writerUserCertification.getId()));
     }
     private WriterUserCertification addWriterUserCertification(){
-    	WriterUserCertification wuc=writerUserCertificationService.addWriterUserCertification(new WriterUserCertification(1L, 2L, null, null, (short) 3, null, null, null));
+    	WriterUserCertification wuc=writerUserCertificationService.addWriterUserCertification(new WriterUserCertification(1L, 2L, null, null, (short) 1, null, null, null));
     	return wuc;
     }
 }
