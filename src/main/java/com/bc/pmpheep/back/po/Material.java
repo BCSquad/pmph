@@ -103,6 +103,12 @@ public class Material implements java.io.Serializable {
 	private Timestamp gmtUpdate;
 	//修改人id
 	private Long menderId;
+	//消息id
+	private String msgId;
+	//项目编辑权限
+	private Integer projectPermission;
+	//策划编辑权限
+	private Integer planPermission;
 
 	// Constructors
 
@@ -135,7 +141,8 @@ public class Material implements java.io.Serializable {
 			Boolean isPublished, Boolean isPublic,
 			Boolean isAllTextbookPublished, Boolean isForceEnd,
 			Boolean isDeleted, Timestamp gmtCreate, Long founderId,
-			Timestamp gmtUpdate, Long menderId) {
+			Timestamp gmtUpdate, Long menderId, String msgId,
+			Integer projectPermission,Integer planPermission) {
 		super();
 		this.materialName = materialName;
 		this.materialRound = materialRound;
@@ -181,6 +188,9 @@ public class Material implements java.io.Serializable {
 		this.founderId = founderId;
 		this.gmtUpdate = gmtUpdate;
 		this.menderId = menderId;
+		this.msgId = msgId;
+		this.projectPermission = projectPermission;
+		this.planPermission     = planPermission;
 	}
 
 
@@ -551,9 +561,41 @@ public class Material implements java.io.Serializable {
 		this.menderId = menderId;
 	}
 
+	
+	
+	public String getMsgId() {
+		return msgId;
+	}
+
+
+	public void setMsgId(String msgId) {
+		this.msgId = msgId;
+	}
+
+
+	public Integer getProjectPermission() {
+		return projectPermission;
+	}
+
+
+	public void setProjectPermission(Integer projectPermission) {
+		this.projectPermission = projectPermission;
+	}
+
+
+	public Integer getPlanPermission() {
+		return planPermission;
+	}
+
+
+	public void setPlanPermission(Integer planPermission) {
+		this.planPermission = planPermission;
+	}
+
+
 	@Override
 	public String toString() {
-		return " {id:" + id + ", materialName:" + materialName
+		return "{id:" + id + ", materialName:" + materialName
 				+ ", materialRound:" + materialRound + ", materialType:"
 				+ materialType + ", deadline:" + deadline + ", actualDeadline:"
 				+ actualDeadline + ", ageDeadline:" + ageDeadline
@@ -576,17 +618,22 @@ public class Material implements java.io.Serializable {
 				+ isSchoolCourseUsed + ", isSchoolCourseRequired:"
 				+ isSchoolCourseRequired + ", isNationalPlanUsed:"
 				+ isNationalPlanUsed + ", isNationalPlanRequired:"
-				+ isNationalPlanRequired + ", isTextbookUsed:"
-				+ isTextbookUsed + ", isTextbookRequired:"
-				+ isTextbookRequired + ", isOtherTextbookUsed:"
-				+ isOtherTextbookUsed + ", isOtherTextbookRequired:"
-				+ isOtherTextbookRequired + ", isResearchUsed:"
-				+ isResearchUsed + ", isResearchRequired:" + isResearchRequired
+				+ isNationalPlanRequired + ", isTextbookUsed:" + isTextbookUsed
+				+ ", isTextbookRequired:" + isTextbookRequired
+				+ ", isOtherTextbookUsed:" + isOtherTextbookUsed
+				+ ", isOtherTextbookRequired:" + isOtherTextbookRequired
+				+ ", isResearchUsed:" + isResearchUsed
+				+ ", isResearchRequired:" + isResearchRequired
 				+ ", isPublished:" + isPublished + ", isPublic:" + isPublic
 				+ ", isAllTextbookPublished:" + isAllTextbookPublished
 				+ ", isForceEnd:" + isForceEnd + ", isDeleted:" + isDeleted
 				+ ", gmtCreate:" + gmtCreate + ", founderId:" + founderId
-				+ ", gmtUpdate:" + gmtUpdate + ", menderId:" + menderId + "}";
+				+ ", gmtUpdate:" + gmtUpdate + ", menderId:" + menderId
+				+ ", msgId:" + msgId + ", projectPermission:"
+				+ projectPermission + ", planPermission:" + planPermission
+				+ "}";
 	}
+
+	
 
 }
