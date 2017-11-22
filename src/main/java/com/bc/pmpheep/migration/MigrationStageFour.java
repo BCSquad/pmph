@@ -261,9 +261,10 @@ public class MigrationStageFour {
             }
             Long founder_id = (Long) oldMaterial.get("founder_id");
             if (ObjectUtil.isNull(founder_id)) {
-                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建人为空。"));
-                excel.add(oldMaterial);
-                continue;
+//                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建人为空。"));
+//                excel.add(oldMaterial);
+//                continue;
+                founder_id = 0L;
             }
             Integer round = (Integer) oldMaterial.get("round");
             if (ObjectUtil.isNull(round)) {
