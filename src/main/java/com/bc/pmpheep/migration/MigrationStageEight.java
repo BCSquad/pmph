@@ -178,7 +178,14 @@ public class MigrationStageEight {
                 member.setIsFounder(false);
             }
             String userName = map.get("userName").toString();
-            member.setDisplayName(userName);
+            if (StringUtil.notEmpty(userName)) {
+                member.setDisplayName(userName);
+            } else {
+                logger.warn("userid为{}的小组成员没有昵称，将以账号名代替", userID);
+                String query = "SELECT usercode FROM sys_user WHERE userid = ?";
+                userName = JdbcHelper.getJdbcTemplate().queryForObject(query, String.class, userID);
+                member.setDisplayName(userName);
+            }
             /* 旧表的isManager和新表的is_admin疑似刚好相反 */
             int isManager = (Integer) map.get("isManager");
             member.setIsAdmin(isManager == 0);
