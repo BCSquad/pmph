@@ -115,13 +115,13 @@
 				is_published,
 			</if>
 			<if test="isPublic!=null">
-			    is_public,
+				is_public,
 			</if>
 			<if test="isAllTextbookPublished!=null">
-			    is_all_textbook_published,			    
+				is_all_textbook_published,
 			</if>
 			<if test="isForceEnd!=null">
-			    is_force_end,
+				is_force_end,
 			</if>
 			<if test="isDeleted!=null">
 				is_deleted,
@@ -253,13 +253,13 @@
 				#{isPublished},
 			</if>
 			<if test="isPublic!=null">
-			    #{isPublic},
+				#{isPublic},
 			</if>
 			<if test="isAllTextbookPublished!=null">
-			    #{isAllTextbookPublished},
+				#{isAllTextbookPublished},
 			</if>
 			<if test="isForceEnd!=null">
-			    #{isForceEnd},
+				#{isForceEnd},
 			</if>
 			<if test="isDeleted!=null">
 				#{isDeleted},
@@ -295,7 +295,7 @@
 		<include refid="value" />
 		);
 	</insert>
-	
+
 	<!-- 更新Material -->
 	<update id="updateMaterial" parameterType="Material">
 		update material
@@ -387,13 +387,9 @@
 			<if test="isNationalPlanRequired !=null  ">
 				is_national_plan_required=#isNationalPlanRequired},
 			</if>
-			<!-- 
-			<if test="isTextbookWriterUsed !=null  ">
-				is_textbook_writer_used=#{isTextbookWriterUsed},
-			</if>
-			<if test="isTextbookWriterRequired !=null  ">
-				is_textbook_writer_required=#{isTextbookWriterRequired},
-			</if> --> 
+			<!-- <if test="isTextbookWriterUsed !=null "> is_textbook_writer_used=#{isTextbookWriterUsed}, 
+				</if> <if test="isTextbookWriterRequired !=null "> is_textbook_writer_required=#{isTextbookWriterRequired}, 
+				</if> -->
 			<if test="isOtherTextbookUsed !=null  ">
 				is_other_textbook_used=#{isOtherTextbookUsed},
 			</if>
@@ -410,13 +406,13 @@
 				is_published=#{isPublished},
 			</if>
 			<if test="isPublic !=null">
-			    is_public=#{isPublic},
+				is_public=#{isPublic},
 			</if>
 			<if test="isAllTextbookPublished !=null">
-			    is_all_textbook_published=#{isAllTextbookPublished},
+				is_all_textbook_published=#{isAllTextbookPublished},
 			</if>
 			<if test="isForceEnd !=null">
-			    is_force_end=#{isForceEnd},
+				is_force_end=#{isForceEnd},
 			</if>
 			<if test="isDeleted !=null  ">
 				is_deleted=#{isDeleted},
@@ -445,26 +441,192 @@
 		from
 		material
 	</select>
-	
-	<!--获取教材集合  -->
+
+	<!--获取教材集合 -->
 	<select id="getListMaterial" resultType="Material">
 		select
-			 * 
-		from 
-			material ma
-		where 
-			1=1
-			<if test="materialName !=null and materialName !=''">
-				and	material_name  LIKE CONCAT(CONCAT('%',#{materialName},'%'))
-			</if>
+		*
+		from
+		material ma
+		where
+		1=1
+		<if test="materialName !=null and materialName !=''">
+			and material_name LIKE
+			CONCAT(CONCAT('%',#{materialName},'%'))
+		</if>
 		order by ma.id desc;
 	</select>
-	
+
 	<!-- 根据id删除一个 -->
 	<delete id="deleteMaterialById" parameterType="java.lang.Long">
 		delete from
 		material where
 		id=#{id} ;
 	</delete>
+
+
+	<select id="listMaterialTotal" parameterType="PageParameter"
+		resultType="java.lang.Integer">
+		SELECT count(*) FROM
+		(SELECT DISTINCT
+		m.id,
+		m.material_name,
+		m.deadline,
+		m.actual_deadline,
+		m.director,
+		m.is_force_end,
+		m.is_all_textbook_published,
+		m.is_deleted,
+		m.is_published,
+		m.founder_id
+		FROM
+		material m
+		LEFT JOIN material_contact c ON m.id = c.material_id
+		LEFT JOIN material_project_editor p ON p.material_id = m.id
+		LEFT JOIN textbook e ON e.material_id = m.id
+		LEFT JOIN pmph_user u ON m.director = u.id
+		WHERE m.is_deleted = FALSE
+		<if test="parameter.isMy != null">
+		AND (m.director = #{parameter.userId} OR p.editor_id = #{parameter.userId}
+		 OR e.planning_editor = #{parameter.userId})
+		</if>
+		<if test="parameter.materialName != null and parameter.materialName != ''">
+		AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
+		</if>
+		<if test="parameter.contactUserName != null and parameter.contactUserName !=''">
+		AND c.contact_user_name LIKE concat('%',#{parameter.contactUserName},'%')
+		</if>
+		<if test="parameter.state != null and parameter.state != ''">
+		AND m.is_all_textbook_published = #{parameter.isAllTextbookPublished} AND m.is_force_end = #{parameter.isForceEnd} 
+		 AND m.is_published = #{parameter.isPublished}
+		</if>
+		ORDER BY
+		m.actual_deadline DESC,
+		m.gmt_create DESC) t
+	</select>
+
+	<select id="listMaterial" parameterType="PageParameter"
+		resultType="MaterialListVO">
+		SELECT DISTINCT
+		m.id,
+		m.material_name,
+		m.deadline,
+		m.actual_deadline,
+		m.director,
+		m.is_force_end,
+		m.is_all_textbook_published,
+		m.is_deleted,
+		m.is_published,
+		m.founder_id
+		FROM
+		material m
+		LEFT JOIN material_contact c ON m.id = c.material_id
+		LEFT JOIN material_project_editor p ON p.material_id = m.id
+		LEFT JOIN textbook e ON e.material_id = m.id
+		LEFT JOIN pmph_user u ON m.director = u.id
+		WHERE m.is_deleted = FALSE
+		<if test="parameter.isMy != null">
+		AND (m.director = #{parameter.userId} OR p.editor_id = #{parameter.userId}
+		 OR e.planning_editor = #{parameter.userId})
+		</if>
+		<if test="parameter.materialName != null and parameter.materialName != ''">
+		AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
+		</if>
+		<if test="parameter.contactUserName != null and parameter.contactUserName !=''">
+		AND c.contact_user_name LIKE concat('%',#{parameter.contactUserName},'%')
+		</if>
+		<if test="parameter.state != null and parameter.state != ''">
+		AND m.is_all_textbook_published = #{parameter.isAllTextbookPublished} AND m.is_force_end = #{parameter.isForceEnd} 
+		 AND m.is_published = #{parameter.isPublished}
+		</if>
+		ORDER BY
+		m.actual_deadline DESC,
+		m.gmt_create DESC
+		<if test="pageSize != null">
+		LIMIT #{start} , #{pageSize}
+		</if>
+	</select>
+
+	<select id="listMaterialEndTotal" parameterType="PageParameter"
+		resultType="java.lang.Integer">
+		SELECT count(*) FROM
+		(SELECT DISTINCT
+		m.id,
+		m.material_name,
+		m.deadline,
+		m.actual_deadline,
+		m.director,
+		m.is_force_end,
+		m.is_all_textbook_published,
+		m.is_deleted,
+		m.is_published,
+		m.founder_id
+		FROM
+		material m
+		LEFT JOIN material_contact c ON m.id = c.material_id
+		LEFT JOIN material_project_editor p ON p.material_id = m.id
+		LEFT JOIN textbook e ON e.material_id = m.id
+		LEFT JOIN pmph_user u ON m.director = u.id
+		WHERE m.is_deleted = FALSE
+		<if test="parameter.isMy != null">
+		AND (m.director = #{parameter.userId} OR p.editor_id = #{parameter.userId}
+		 OR e.planning_editor = #{parameter.userId})
+		</if>
+		<if test="parameter.materialName != null and parameter.materialName != ''">
+		AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
+		</if>
+		<if test="parameter.contactUserName != null and parameter.contactUserName !=''">
+		AND c.contact_user_name LIKE concat('%',#{parameter.contactUserName},'%')
+		</if>
+		<if test="parameter.state != null and parameter.state != ''">
+		AND (m.is_all_textbook_published = #{parameter.isAllTextbookPublished} OR m.is_force_end = #{parameter.isForceEnd}) 
+		 AND m.is_published = #{parameter.isPublished}
+		</if>
+		ORDER BY
+		m.actual_deadline DESC,
+		m.gmt_create DESC) t
+	</select>
+
+	<select id="listMaterialEnd" parameterType="PageParameter"
+		resultType="MaterialListVO">
+		SELECT DISTINCT
+		m.id,
+		m.material_name,
+		m.deadline,
+		m.actual_deadline,
+		m.director,
+		m.is_force_end,
+		m.is_all_textbook_published,
+		m.is_deleted,
+		m.is_published,
+		m.founder_id
+		FROM
+		material m
+		LEFT JOIN material_contact c ON m.id = c.material_id
+		LEFT JOIN material_project_editor p ON p.material_id = m.id
+		LEFT JOIN textbook e ON e.material_id = m.id
+		LEFT JOIN pmph_user u ON m.director = u.id
+		WHERE m.is_deleted = FALSE
+		<if test="parameter.isMy != null">
+		AND (m.director = #{parameter.userId} OR p.editor_id = #{parameter.userId}
+		 OR e.planning_editor = #{parameter.userId})
+		</if>
+		<if test="parameter.materialName != null and parameter.materialName != ''">
+		AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
+		</if>
+		<if test="parameter.contactUserName != null and parameter.contactUserName !=''">
+		AND c.contact_user_name LIKE concat('%',#{parameter.contactUserName},'%')
+		</if>
+		<if test="parameter.state != null and parameter.state != ''">
+		AND (m.is_all_textbook_published = #{parameter.isAllTextbookPublished} OR m.is_force_end = #{parameter.isForceEnd}) 
+		 AND m.is_published = #{parameter.isPublished}
+		</if>
+		ORDER BY
+		m.actual_deadline DESC,
+		m.gmt_create DESC
+		<if test="pageSize != null">
+		LIMIT #{start} , #{pageSize}
+		</if>
+	</select>
 
 </mapper>

@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -113,5 +115,10 @@ public class MaterialContactServiceImpl extends BaseService implements MaterialC
         }
         return materialContactDao.updateMaterialContact(materialContact);
     }
+
+	@Override
+	public List<MaterialContact> listMaterialContactByMaterialId(Long materialId) throws CheckedServiceException {
+		return materialContactDao.listMaterialContactByMaterialId(materialId);
+	}
 
 }

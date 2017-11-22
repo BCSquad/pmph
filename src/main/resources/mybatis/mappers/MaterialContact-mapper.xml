@@ -72,10 +72,10 @@
 		material_contact where
 		id=#{id} ;
 	</delete>
-	
+
 	<!-- 根据materialId删除多个 -->
 	<delete id="deleteMaterialContactsByMaterialId" parameterType="java.lang.Long">
-		delete  from  material_contact  where  material_id = #{materialId} ;
+		delete from material_contact where material_id = #{materialId} ;
 	</delete>
 
 	<!-- 更新MaterialContact -->
@@ -118,5 +118,12 @@
 		count(*)
 		from
 		material_contact
+	</select>
+
+	<!-- 根据id查询一个MaterialContact -->
+	<select id="listMaterialContactByMaterialId" parameterType="java.lang.Long"
+		resultType="MaterialContact">
+		select * from material_contact where
+		material_id=#{materialId} ;
 	</select>
 </mapper>
