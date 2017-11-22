@@ -26,7 +26,7 @@ public final class StringUtil {
     }
 	
 	/**
-	 * 十进制 非负整数转换成二进制支付串 ,并左补齐8位
+	 * 十进制非负整数 转换成8位二进制字符串，左边不够用0补齐
 	 * @author Mryang
 	 * @createDate 2017年11月22日 上午10:25:40
 	 * @param p
