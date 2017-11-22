@@ -19,39 +19,49 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  */
 public interface MaterialService {
 
-	/**
-	 * 新增一个Material
-	 * 
-	 * @param Material
-	 *            实体对象
-	 * @return 带主键的 Material thorws CheckedServiceException
-	 */
-	Material addMaterial(Material material) throws CheckedServiceException;
+    /**
+     * 新增一个Material
+     * 
+     * @param Material 实体对象
+     * @return 带主键的 Material thorws CheckedServiceException
+     */
+    Material addMaterial(Material material) throws CheckedServiceException;
+    /**
+     * 
+     * 新建遴选公告
+     * @createDate 2017年11月13日 下午2:33:56
+     * @param sessionId
+     * @param material
+     * @param materialContacts
+     * @param materialExtensions
+     * @param materialProjectEditors
+     * @param materialExtra
+     * @param noticeFiles
+     * @param materialNoticeAttachments
+     * @param noteFiles
+     * @param materialNoteAttachments
+     * @param projectEditorPowers 项目编辑权限8位二进制字符串
+	 * @param planningEditorPowers 策划编辑权限8位二进制字符串
+     * @param isUpdate false新增,true更新
+     * 
+     * @return material 主键
+     * @throws CheckedServiceException
+     */
+    Long addOrUpdateMaterial(String sessionId, 
+    		String   materialContacts,
+    		String   materialExtensions, 
+    		String   materialProjectEditors,
+    		Material material,
+		    MaterialExtra     materialExtra,
+		    MultipartFile[]   noticeFiles,
+		    String materialNoticeAttachments,
+		    MultipartFile[]   noteFiles,
+		    String materialNoteAttachments,
+		    String projectEditorPowers,
+		    String planningEditorPowers,
+		    boolean isUpdate) throws CheckedServiceException;
+   
 
-	/**
-	 * 
-	 * 新建遴选公告
-	 * 
-	 * @createDate 2017年11月13日 下午2:33:56
-	 * @param sessionId
-	 * @param material
-	 * @param materialContacts
-	 * @param materialExtensions
-	 * @param materialProjectEditors
-	 * @param materialExtra
-	 * @param noticeFiles
-	 * @param materialNoticeAttachments
-	 * @param noteFiles
-	 * @param materialNoteAttachments
-	 * @param isUpdate
-	 *            false新增,true更新
-	 * @return material 主键
-	 * @throws CheckedServiceException
-	 */
-	Long addOrUpdateMaterial(String sessionId, String materialContacts, String materialExtensions,
-			String materialProjectEditors, Material material, MaterialExtra materialExtra, MultipartFile[] noticeFiles,
-			String materialNoticeAttachments, MultipartFile[] noteFiles, String materialNoteAttachments,
-			boolean isUpdate) throws CheckedServiceException;
 
 	/**
 	 * 查询一个 Material 通过主键id

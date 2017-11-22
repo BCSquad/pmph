@@ -69,17 +69,28 @@ public class MaterialController {
 	 *            多个教材备注
 	 * @param noteFiles
 	 *            备注文件
+	 * @param projectEditorPowers
+	 * 			    项目编辑权限8位二进制字符串
+	 * @param planningEditorPowers   
+	 *            策划编辑权限8位二进制字符串
 	 * @return
 	 */
 	@LogDetail(businessType = Business_Type, logRemark = "新建遴选公告")
 	@RequestMapping(value = "/add/material", method = RequestMethod.POST)
-	public ResponseBean material(MaterialVO materialVO, HttpServletRequest request, MultipartFile[] noticeFiles,
+	public ResponseBean material(
+			MaterialVO materialVO,
+			HttpServletRequest request, 
+			MultipartFile[] noticeFiles,
 			MultipartFile[] noteFiles) {
+		
 		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
 				materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
 				materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-				materialVO.getMaterialNoteAttachments(), true));
+				materialVO.getMaterialNoteAttachments(), 
+				materialVO.getProjectEditorPowers(),
+				materialVO.getPlanningEditorPowers(),
+				true));
 	}
 
 	/**
@@ -104,6 +115,10 @@ public class MaterialController {
 	 *            多个教材备注
 	 * @param noteFiles
 	 *            备注文件
+	 * @param projectEditorPowers
+	 * 			    项目编辑权限8位二进制字符串
+	 * @param planningEditorPowers   
+	 *            策划编辑权限8位二进制字符串
 	 * @return
 	 */
 	@LogDetail(businessType = Business_Type, logRemark = "修改遴选公告")
@@ -114,7 +129,10 @@ public class MaterialController {
 		return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
 				materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
 				materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-				materialVO.getMaterialNoteAttachments(), true));
+				materialVO.getMaterialNoteAttachments(), 
+				materialVO.getProjectEditorPowers(),
+				materialVO.getPlanningEditorPowers(),
+				true));
 	}
 
 	/**
