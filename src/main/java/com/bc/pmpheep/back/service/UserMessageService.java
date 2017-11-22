@@ -249,5 +249,24 @@ public interface UserMessageService {
      * 通过id 动态更新UserMessage
      */
     Integer updateUserMessage(UserMessage userMessage);
+    
+    /**
+     * 向单个用户发送私信
+     * 
+     * @author tyc
+     * @createDate 2017年11月22日 下午5:04:00
+     * @param message
+     * @param sendType
+     * @param senderId
+     * @param userId
+     * @param isSave
+     * @param sessionId
+     * @return
+     * @throws CheckedServiceException
+     * @throws IOException
+     */
+    Integer addOneUserMessage(Message message, Integer sendType, Long senderId, String userId, 
+    		boolean isSave, String sessionId)
+    throws CheckedServiceException, IOException;
 
 }
