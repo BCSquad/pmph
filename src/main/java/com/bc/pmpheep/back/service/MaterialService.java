@@ -120,4 +120,16 @@ public interface MaterialService {
 	PageResult<MaterialListVO> listMaterials(PageParameter<MaterialListVO> pageParameter, String sessionId)
 			throws CheckedServiceException;
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据教材id逻辑删除教材
+	 *
+	 * @param id
+	 *            教材id
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	String updateMaterial(Long id, String sessionId) throws CheckedServiceException;
 }

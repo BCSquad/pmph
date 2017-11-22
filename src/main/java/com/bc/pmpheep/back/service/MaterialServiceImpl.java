@@ -17,7 +17,9 @@ import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
 import com.bc.pmpheep.back.po.MaterialProjectEditor;
+import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
@@ -70,6 +72,12 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
 	@Autowired
 	private DecExtensionService decExtensionService;
+
+	@Autowired
+	TextbookService textbookService;
+
+	@Autowired
+	PmphGroupService pmphGroupService;
 
 	/**
 	 * 
@@ -609,6 +617,32 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					"用户为空");
 		}
 		return materialDao.getPlanningEditorSum(materialId, pmphUserId);
+	}
+
+	@Override
+	public String updateMaterial(Long id, String sessionId) throws CheckedServiceException {
+		Material material = materialDao.getMaterialById(id);
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (pmphUser.getIsAdmin() || pmphUser.getId().equals(material.getDirector())
+				|| pmphUser.getId().equals(material.getFounderId())) {
+			List<Textbook> list = textbookService.getTextbookByMaterialId(id);
+			for (Textbook textbook : list) {
+				PmphGroup group = pmphGroupService.getPmphGroupByTextbookId(textbook.getId());
+				if (ObjectUtil.notNull(group)) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+							CheckedExceptionResult.ILLEGAL_PARAM,
+							"您在" + textbook.getTextbookName() + "书籍下还有未解散的小组，请先解散小组");
+				}
+			}
+			material = new Material();
+			material.setId(id);
+			material.setIsDeleted(true);
+			materialDao.updateMaterial(material);
+		} else {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+					"您没有删除教材" + material.getMaterialName() + "的权限");
+		}
+		return "SUCCESS";
 	}
 
 }

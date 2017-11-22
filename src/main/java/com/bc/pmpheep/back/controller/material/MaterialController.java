@@ -141,9 +141,9 @@ public class MaterialController {
 	@ResponseBody
 	@LogDetail(businessType = Business_Type, logRemark = "查询教材公告列表")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ResponseBean list(HttpServletRequest request, Integer pageSize, Integer pageNumber, Boolean isMy,
-			String state, String materialName, String contactUserName) {
-		String sessionId = CookiesUtil.getSessionId(request);
+	public ResponseBean list(/*HttpServletRequest request,*/ Integer pageSize, Integer pageNumber, Boolean isMy,
+			String state, String materialName, String contactUserName,String sessionId) {
+//		String sessionId = CookiesUtil.getSessionId(request);
 		PageParameter<MaterialListVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		MaterialListVO materialListVO = new MaterialListVO();
 		materialListVO.setIsMy(isMy);
@@ -154,4 +154,22 @@ public class MaterialController {
 		return new ResponseBean(materialService.listMaterials(pageParameter, sessionId));
 	}
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：逻辑删除教材
+	 *
+	 * @param request
+	 * @param id
+	 *            教材id
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = Business_Type, logRemark = "逻辑删除教材")
+	@RequestMapping(value = "/delete", method = RequestMethod.PUT)
+	public ResponseBean delete(/*HttpServletRequest request,*/ Long id,String sessionId) {
+//		String sessionId = CookiesUtil.getSessionId(request);
+		return new ResponseBean(materialService.updateMaterial(id, sessionId));
+	}
 }
