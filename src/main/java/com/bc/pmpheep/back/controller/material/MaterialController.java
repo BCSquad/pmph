@@ -70,27 +70,22 @@ public class MaterialController {
 	 * @param noteFiles
 	 *            备注文件
 	 * @param projectEditorPowers
-	 * 			    项目编辑权限8位二进制字符串
-	 * @param planningEditorPowers   
+	 *            项目编辑权限8位二进制字符串
+	 * @param planningEditorPowers
 	 *            策划编辑权限8位二进制字符串
 	 * @return
 	 */
 	@LogDetail(businessType = Business_Type, logRemark = "新建遴选公告")
 	@RequestMapping(value = "/new/material", method = RequestMethod.POST)
-	public ResponseBean material(
-			MaterialVO materialVO,
-			HttpServletRequest request, 
-			MultipartFile[] noticeFiles,
+	public ResponseBean material(MaterialVO materialVO, HttpServletRequest request, MultipartFile[] noticeFiles,
 			MultipartFile[] noteFiles) {
-		
+
 		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
 				materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
 				materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-				materialVO.getMaterialNoteAttachments(), 
-				materialVO.getProjectEditorPowers(),
-				materialVO.getPlanningEditorPowers(),
-				true));
+				materialVO.getMaterialNoteAttachments(), materialVO.getProjectEditorPowers(),
+				materialVO.getPlanningEditorPowers(), true));
 	}
 
 	/**
@@ -116,8 +111,8 @@ public class MaterialController {
 	 * @param noteFiles
 	 *            备注文件
 	 * @param projectEditorPowers
-	 * 			    项目编辑权限8位二进制字符串
-	 * @param planningEditorPowers   
+	 *            项目编辑权限8位二进制字符串
+	 * @param planningEditorPowers
 	 *            策划编辑权限8位二进制字符串
 	 * @return
 	 */
@@ -129,10 +124,8 @@ public class MaterialController {
 		return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
 				materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
 				materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-				materialVO.getMaterialNoteAttachments(), 
-				materialVO.getProjectEditorPowers(),
-				materialVO.getPlanningEditorPowers(),
-				true));
+				materialVO.getMaterialNoteAttachments(), materialVO.getProjectEditorPowers(),
+				materialVO.getPlanningEditorPowers(), true));
 	}
 
 	/**
@@ -159,9 +152,9 @@ public class MaterialController {
 	@ResponseBody
 	@LogDetail(businessType = Business_Type, logRemark = "查询教材公告列表")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ResponseBean list(/*HttpServletRequest request,*/ Integer pageSize, Integer pageNumber, Boolean isMy,
-			String state, String materialName, String contactUserName,String sessionId) {
-//		String sessionId = CookiesUtil.getSessionId(request);
+	public ResponseBean list(HttpServletRequest request, Integer pageSize, Integer pageNumber, Boolean isMy,
+			String state, String materialName, String contactUserName) {
+		String sessionId = CookiesUtil.getSessionId(request);
 		PageParameter<MaterialListVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		MaterialListVO materialListVO = new MaterialListVO();
 		materialListVO.setIsMy(isMy);
@@ -186,8 +179,8 @@ public class MaterialController {
 	@ResponseBody
 	@LogDetail(businessType = Business_Type, logRemark = "逻辑删除教材")
 	@RequestMapping(value = "/delete", method = RequestMethod.PUT)
-	public ResponseBean delete(/*HttpServletRequest request,*/ Long id,String sessionId) {
-//		String sessionId = CookiesUtil.getSessionId(request);
+	public ResponseBean delete(HttpServletRequest request, Long id) {
+		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(materialService.updateMaterial(id, sessionId));
 	}
 }
