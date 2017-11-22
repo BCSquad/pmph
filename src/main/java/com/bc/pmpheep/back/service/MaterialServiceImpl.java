@@ -532,6 +532,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		PageResult<MaterialListVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		List<MaterialListVO> list = new ArrayList<>();
+		if (pmphUser.getIsAdmin()) {
+			pageParameter.getParameter().setIsMy(null);
+		}
 		if (!ObjectUtil.isNull(pageParameter.getParameter().getIsMy()) && pageParameter.getParameter().getIsMy()) {
 			pageParameter.getParameter().setUserId(pmphUser.getId());
 		}
