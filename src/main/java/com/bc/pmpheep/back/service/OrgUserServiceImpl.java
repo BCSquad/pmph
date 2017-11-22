@@ -258,7 +258,9 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         org.setOrgName(orgAndOrgUserVO.getOrgName());
         org.setOrgTypeId(orgAndOrgUserVO.getOrgTypeId());
         org.setAreaId(orgAndOrgUserVO.getAreaId());
-        orgDao.updateOrg(org);
+        if(ObjectUtil.notNull(org)){
+        	 orgDao.updateOrg(org);
+        }
         OrgUser orgUser=new OrgUser();
         orgUser.setId(orgAndOrgUserVO.getId());
         orgUser.setRealname(orgAndOrgUserVO.getRealname());
@@ -266,12 +268,13 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         orgUser.setHandphone(orgAndOrgUserVO.getHandphone());
         orgUser.setEmail(orgAndOrgUserVO.getEmail());
         orgUser.setNote(orgAndOrgUserVO.getNote());
-        int count = orgUserDao.updateOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
         String result = "FAIL";
-		if (count > 0) {
-
-			result = "SUCCESS";
-		}
+        if(ObjectUtil.notNull(orgUser)){
+        	 int count = orgUserDao.updateOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
+     		if (count > 0) {
+     			result = "SUCCESS";
+     		}
+        }
 		return result;
     }
 
