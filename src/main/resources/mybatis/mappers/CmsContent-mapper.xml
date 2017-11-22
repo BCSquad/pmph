@@ -369,9 +369,9 @@
 	<select id="listCmsContent" parameterType="PageParameter"
 		resultType="CmsContentVO">
 		SELECT 
-			cc.`id`,cc.`title`,pu.username,cc.`auth_status`,cc.`gmt_create`,cc.`clicks`,
+			cc.`id`,cc.`title`,pu.username,cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,
 			cc.`comments`,cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,
-			cc.`is_published`,cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,t.count
+			cc.`is_published`,cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,cc.`is_staging`,t.count
 		FROM 
 			`cms_content`cc
 		LEFT JOIN
@@ -397,77 +397,47 @@
 					cc.`category_id` = ccg.`id`
 				WHERE
 					cc.`is_deleted`= 0 
-				and
-					cc.`is_hide` = 0
-				AND 
-					cc.`category_id` = 1 
 				<if test="parameter !=null ">
-					<!-- <if test="parameter.categoryId != null">
+					<if test="parameter.categoryId != null">
 						AND cc.`category_id` = #{parameter.categoryId} 
-					</if> -->
+					</if>
 					<if test="parameter.isAdmin == false ">
 						AND cc.`author_id`=#{parameter.authorId} 
 					</if>
 					<if test="parameter.title != null and parameter.title != ''">
 						AND cc.`title` like concat('%',#{parameter.title},'%')
 					</if>
-					<if test="parameter.status !=null ">
-						<if test="parameter.status ==0 ">
-							AND cc.`is_published` =true 
-						</if>
-						<if test="parameter.status ==1 ">
-							AND cc.`auth_status`= 2
-						</if>
-						<if test="parameter.status ==2 ">
-							AND cc.`is_stick` = true 
-						</if>
-						<if test="parameter.status ==3 ">
-							AND cc.`is_hot` = true
-						</if>
-						<if test="parameter.status ==4 ">
-							AND cc.`is_promote` = true 
-						</if>
-						<if test="parameter.status ==5 ">
-							AND cc.`is_hide`= true
-						</if>
+					<if test="parameter.authStatus !=null ">
+						AND cc.`auth_status` = #{parameter.authStatus} 
+					</if>
+					<if test="parameter.username !=null and  parameter.username!='' ">
+						AND (
+							pu.`username` like concat('%',#{parameter.username},'%') 
+						OR
+							pu.`realname` like concat('%',#{parameter.username},'%') )
 					</if>
 				</if>
 			) t
 			WHERE
 				cc.`is_deleted`= 0 
-			and
-				cc.`is_hide` = 0
-			AND 
-				cc.`category_id` = 1 
 			<if test="parameter !=null ">
-				<!-- <if test="parameter.categoryId != null">
+				<if test="parameter.categoryId != null">
 					AND cc.`category_id` = #{parameter.categoryId} 
-				</if> -->
+				</if>
 				<if test="parameter.isAdmin == false ">
 					AND cc.`author_id`=#{parameter.authorId} 
 				</if>
 				<if test="parameter.title != null and parameter.title != ''">
 					AND cc.`title` like concat('%',#{parameter.title},'%')
 				</if>
-				<if test="parameter.status !=null ">
-						<if test="parameter.status ==0 ">
-							AND cc.`is_published` =true 
-						</if>
-						<if test="parameter.status ==1 ">
-							AND cc.`auth_status`= 2
-						</if>
-						<if test="parameter.status ==2 ">
-							AND cc.`is_stick` = true 
-						</if>
-						<if test="parameter.status ==3 ">
-							AND cc.`is_hot` = true
-						</if>
-						<if test="parameter.status ==4 ">
-							AND cc.`is_promote` = true 
-						</if>
-						<if test="parameter.status ==5 ">
-							AND cc.`is_hide`= true
-						</if>
+				<if test="parameter.authStatus !=null ">
+						AND cc.`auth_status` = #{parameter.authStatus} 
+				</if>
+				<if test="parameter.username !=null and  parameter.username!='' ">
+						AND (
+							pu.`username` = #{parameter.username} 
+						OR
+							pu.`realname` = #{parameter.username} )
 				</if>
 			</if>
 		order by cc.sort
@@ -476,211 +446,7 @@
 		</if>
 	</select>
 	
-	<!--分页查询条件查询《信息快报管理》列表 -->
-	<select id="listContentManage" parameterType="PageParameter"
-		resultType="CmsContentVO">
-		SELECT 
-			cc.`id`,cc.`title`,pu.username,cc.`auth_status`,cc.`gmt_create`,cc.`clicks`,
-			cc.`comments`,cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,
-			cc.`is_published`,cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,t.count
-		FROM 
-			`cms_content`cc
-		LEFT JOIN
-			`pmph_user` pu 
-		ON
-			cc.auth_user_id = pu.id
-		LEFT JOIN 
-			`cms_category` ccg 
-		ON 
-			cc.`category_id` = ccg.`id`,
-			(
-				SELECT 
-					count(*) `count`
-				FROM 
-					`cms_content`cc
-				LEFT JOIN
-					`pmph_user` pu 
-				ON
-					cc.auth_user_id = pu.id
-				LEFT JOIN 
-					`cms_category` ccg 
-				ON 
-					cc.`category_id` = ccg.`id`
-				WHERE
-					cc.`is_deleted`= 0 
-				AND
-					cc.`is_hide` = 0
-				AND 
-					cc.`category_id` = 2
-				<if test="parameter !=null ">
-					<if test="parameter.title != null and parameter.title != ''">
-						AND cc.`title` like concat('%',#{parameter.title},'%')
-					</if>
-					<!-- <if test="parameter.categoryId != null">
-						AND cc.`category_id` = #{parameter.categoryId} 
-					</if> -->
-					<if test="parameter.status !=null ">
-						<if test="parameter.status ==0 ">
-							AND cc.`is_published` =true 
-						</if>
-						<if test="parameter.status ==1 ">
-							AND cc.`auth_status`= 2
-						</if>
-						<if test="parameter.status ==2 ">
-							AND cc.`is_stick` = true 
-						</if>
-						<if test="parameter.status ==3 ">
-							AND cc.`is_hot` = true
-						</if>
-						<if test="parameter.status ==4 ">
-							AND cc.`is_promote` = true 
-						</if>
-						<if test="parameter.status ==5 ">
-							AND cc.`is_hide`= true
-						</if>
-					</if>
-				</if>
-			) t
-			WHERE
-				cc.`is_deleted`= 0 
-			AND
-				cc.`is_hide` = 0
-			AND 
-				cc.`category_id` = 2
-			<if test="parameter !=null ">
-				<if test="parameter.title != null and parameter.title != ''">
-					AND cc.`title` like concat('%',#{parameter.title},'%')
-				</if>
-				<!-- <if test="parameter.categoryId != null">
-					AND cc.`category_id` = #{parameter.categoryId} 
-				</if> -->
-				<if test="parameter.status !=null ">
-						<if test="parameter.status ==0 ">
-							AND cc.`is_published` =true 
-						</if>
-						<if test="parameter.status ==1 ">
-							AND cc.`auth_status`= 2
-						</if>
-						<if test="parameter.status ==2 ">
-							AND cc.`is_stick` = true 
-						</if>
-						<if test="parameter.status ==3 ">
-							AND cc.`is_hot` = true
-						</if>
-						<if test="parameter.status ==4 ">
-							AND cc.`is_promote` = true 
-						</if>
-						<if test="parameter.status ==5 ">
-							AND cc.`is_hide`= true
-						</if>
-				</if>
-			</if>
-		order by cc.sort
-		<if test="start !=null and pageNumber != null">
-			limit #{start},#{pageSize}
-		</if>
-	</select>
-	
-	<!--分页查询条件查询《公告管理》列表 -->
-	<select id="listContentCheck" parameterType="PageParameter"
-		resultType="CmsContentVO">
-		SELECT 
-			cc.`id`,cc.`title`,pu.username,cc.`auth_status`,cc.`gmt_create`,cc.`clicks`,
-			cc.`comments`,cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,
-			cc.`is_published`,cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,t.count
-		FROM 
-			`cms_content`cc
-		LEFT JOIN
-			`pmph_user` pu 
-		ON
-			cc.author_id = pu.id
-		LEFT JOIN 
-			`cms_category` ccg 
-		ON 
-			cc.`category_id` = ccg.`id`,
-			(
-				SELECT 
-					count(*) count
-				FROM 
-					`cms_content`cc
-				LEFT JOIN
-					`pmph_user` pu 
-				ON
-					cc.author_id = pu.id
-				LEFT JOIN 
-					`cms_category` ccg 
-				ON 
-					cc.`category_id` = ccg.`id`
-				WHERE
-					cc.`is_deleted`= 0 
-				AND 
-					cc.`category_id` = 3
-				<if test="parameter !=null ">
-					<if test="parameter.title != null and parameter.title != ''">
-						AND cc.`title` like concat('%',#{parameter.title},'%')
-					</if>
-					<!-- <if test="parameter.categoryId != null">
-						AND cc.`category_id` = #{parameter.categoryId} 
-					</if> -->
-					<if test="parameter.status !=null ">
-						<if test="parameter.status ==0 ">
-							AND cc.`is_published` =true 
-						</if>
-						<if test="parameter.status ==1 ">
-							AND cc.`auth_status`= 2
-						</if>
-						<if test="parameter.status ==2 ">
-							AND cc.`is_stick` = true 
-						</if>
-						<if test="parameter.status ==3 ">
-							AND cc.`is_hot` = true
-						</if>
-						<if test="parameter.status ==4 ">
-							AND cc.`is_promote` = true 
-						</if>
-						<if test="parameter.status ==5 ">
-							AND cc.`is_hide`= true
-						</if>
-					</if>
-				</if>
-			) t
-			WHERE
-				cc.`is_deleted`= 0 
-			AND 
-				cc.`category_id` = 3
-			<if test="parameter !=null ">
-				<if test="parameter.title != null and parameter.title != ''">
-					AND cc.`title` like concat('%',#{parameter.title},'%')
-				</if>
-				<!-- <if test="parameter.categoryId != null">
-					AND cc.`category_id` = #{parameter.categoryId} 
-				</if> -->
-				<if test="parameter.status !=null ">
-						<if test="parameter.status ==0 ">
-							AND cc.`is_published` =true 
-						</if>
-						<if test="parameter.status ==1 ">
-							AND cc.`auth_status`= 2
-						</if>
-						<if test="parameter.status ==2 ">
-							AND cc.`is_stick` = true 
-						</if>
-						<if test="parameter.status ==3 ">
-							AND cc.`is_hot` = true
-						</if>
-						<if test="parameter.status ==4 ">
-							AND cc.`is_promote` = true 
-						</if>
-						<if test="parameter.status ==5 ">
-							AND cc.`is_hide`= true
-						</if>
-				</if>
-			</if>
-		order by cc.sort
-		<if test="start !=null and pageNumber != null">
-			limit #{start},#{pageSize}
-		</if>
-	</select>
+		
 	<!-- 根据id查询一个CmsContent -->
 	<select id="getCmsContentById" parameterType="java.lang.Long" resultType="CmsContent">
 		select * from cms_content where id=#{id};

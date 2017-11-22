@@ -183,4 +183,11 @@ public class Const {
     public static final Short        CMS_CATEGORY_PERMISSSION_1 = 1;
     public static final Short        CMS_CATEGORY_PERMISSSION_2 = 2;
     public static final Long         CMS_MATERIAL_ID            = 0l;
+    /**
+     * CMS栏目类型（0：评论，1：内容管理，2：信息快报管理，3：公告管理）
+     */
+    public static final Long         CMS_CATEGORY_ID_0          = 0l;
+    public static final Long         CMS_CATEGORY_ID_1          = 1l;
+    public static final Long         CMS_CATEGORY_ID_2          = 2l;
+    public static final Long         CMS_CATEGORY_ID_3          = 3l;
 }

@@ -1,6 +1,5 @@
 package com.bc.pmpheep.back.service.test;
 
-import com.bc.pmpheep.test.BaseTest;
 
 /**
  * 
@@ -19,7 +18,7 @@ import com.bc.pmpheep.test.BaseTest;
  * @审核人 ：
  * </pre>
  */
-public class CmsContentCategoryServiceTest extends BaseTest {
+public class CmsContentCategoryServiceTest {
     // Logger logger = LoggerFactory.getLogger(CmsContentCategoryServiceTest.class);
     //
     // @Resource
