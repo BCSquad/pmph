@@ -138,6 +138,15 @@
 			<if test="menderId!=null">
 				mender_id,
 			</if>
+			<if test="msgId != null and msgId != '' ">
+				msg_id,
+			</if>
+			<if test="projectPermission != null">
+				project_permission,
+			</if>
+			<if test="planPermission != null">
+				plan_permission,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -276,6 +285,15 @@
 			<if test="menderId!=null">
 				#{menderId},
 			</if>
+			<if test="msgId != null and msgId != '' ">
+				#{msgId},
+			</if>
+			<if test="projectPermission != null">
+				#{projectPermission},
+			</if>
+			<if test="planPermission != null">
+				#{planPermission},
+			</if>
 		</trim>
 	</sql>
 
@@ -387,13 +405,6 @@
 			<if test="isNationalPlanRequired !=null  ">
 				is_national_plan_required=#isNationalPlanRequired},
 			</if>
-			<!-- 
-			<if test="isTextbookWriterUsed !=null  ">
-				is_textbook_writer_used=#{isTextbookWriterUsed},
-			</if>
-			<if test="isTextbookWriterRequired !=null  ">
-				is_textbook_writer_required=#{isTextbookWriterRequired},
-			</if> --> 
 			<if test="isOtherTextbookUsed !=null  ">
 				is_other_textbook_used=#{isOtherTextbookUsed},
 			</if>
@@ -426,6 +437,15 @@
 			</if>
 			<if test="menderId !=null  ">
 				mender_id=#{menderId},
+			</if>
+			<if test="msgId != null and msgId != '' ">
+				msg_id = #{msgId},
+			</if>
+			<if test="projectPermission != null">
+				project_permission = #{projectPermission},
+			</if>
+			<if test="planPermission != null">
+				plan_permission  = #{planPermission},
 			</if>
 		</set>
 		where
@@ -467,8 +487,7 @@
 		from 
 			textbook 
 		where 
-		    is_deleted      = 0 
-		and	material_id     = #{materialId}
+			material_id     = #{materialId}
 		and planning_editor = #{pmphUserId}
 	</select>
 	
