@@ -92,6 +92,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		    String materialNoticeAttachments,
 		    MultipartFile[]   noteFiles,
 		    String materialNoteAttachments,
+		    String projectEditorPowers,
+		    String planningEditorPowers,
 		    boolean isUpdate) throws CheckedServiceException {
     	//获取当前用户
     	PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -164,6 +166,14 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     	if(materialExtra.getNote().length()>2000){
     		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,CheckedExceptionResult.ILLEGAL_PARAM, "教材备注内容过长");
     	}
+    	//判断项目编辑权限
+    	if(null == projectEditorPowers || projectEditorPowers.length() != 8){
+    		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,CheckedExceptionResult.ILLEGAL_PARAM, "项目编辑权参数不正确");
+    	}
+    	//判断策划编辑权限
+    	if(null == planningEditorPowers || planningEditorPowers.length() != 8){
+    		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,CheckedExceptionResult.ILLEGAL_PARAM, "策划编辑权参数不正确");
+    	}
     	//获取主任
     	PmphUser director=pmphUserService.get(material.getDirector());
     	if(null  == director ){
@@ -171,7 +181,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     	}else if(null == director.getDepartmentId() ){
     		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,CheckedExceptionResult.ILLEGAL_PARAM, "主任对应的机构为空");
     	}
-    	
+    	//设置项目编辑和策划编辑的权限
+    	material.setProjectPermission(Integer.valueOf(projectEditorPowers, 2));
+    	material.setPlanPermission(Integer.valueOf(planningEditorPowers, 2));
     	//教材所属部门
     	material.setDepartmentId(director.getDepartmentId());
     	//修改人 
@@ -441,6 +453,17 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     @Override
     public List<Material> getListMaterial(String materialName) {
         return materialDao.getListMaterial(materialName);
+    }
+    
+    @Override
+    public Integer getPlanningEditorSum(Long materialId,Long pmphUserId){
+    	if(null == materialId){
+    		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "教材为空");
+    	}
+    	if(null == pmphUserId){
+    		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "用户为空");
+    	}
+    	return materialDao.getPlanningEditorSum(materialId,pmphUserId);
     }
 
 }

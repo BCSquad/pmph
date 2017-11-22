@@ -47,7 +47,9 @@ public class MaterialServiceTest extends BaseTest {
 			true, true,
 			true, true,
 			true, true, null,
-			new Long(random.nextInt(200)), null, new Long(random.nextInt(200)));
+			new Long(random.nextInt(200)), null, new Long(random.nextInt(200)),
+			null,
+			13,12);
 	
     @Test
     @Rollback(Const.ISROLLBACK) 
@@ -94,6 +96,15 @@ public class MaterialServiceTest extends BaseTest {
     	// 获取教材集合
     	Assert.assertNotNull("获取教材集合失败", materialService.getListMaterial(material.getMaterialName()));
     	Assert.assertNotNull("获取教材集合失败", materialService.getListMaterial(null));
+    }
+    
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testGetPlanningEditorSum() {
+    	// 获取教材集合
+    	System.out.println(materialService.getPlanningEditorSum(6L, 985L));
+    	Assert.assertNotNull("策划编辑总数获取失败", materialService.getPlanningEditorSum(6L, 985L));
+
     }
 }
 

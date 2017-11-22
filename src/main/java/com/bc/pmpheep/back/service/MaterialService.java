@@ -37,7 +37,10 @@ public interface MaterialService {
      * @param materialNoticeAttachments
      * @param noteFiles
      * @param materialNoteAttachments
+     * @param projectEditorPowers 项目编辑权限8位二进制字符串
+	 * @param planningEditorPowers 策划编辑权限8位二进制字符串
      * @param isUpdate false新增,true更新
+     * 
      * @return material 主键
      * @throws CheckedServiceException
      */
@@ -51,6 +54,8 @@ public interface MaterialService {
 		    String materialNoticeAttachments,
 		    MultipartFile[]   noteFiles,
 		    String materialNoteAttachments,
+		    String projectEditorPowers,
+		    String planningEditorPowers,
 		    boolean isUpdate) throws CheckedServiceException;
    
 
@@ -62,7 +67,19 @@ public interface MaterialService {
      * @throws CheckedServiceException
      */
     Material getMaterialById(Long id) throws CheckedServiceException;
-
+    
+    /**
+     * 获取用户在该教材是几本书的策划编辑
+     * @author Mryang
+     * @createDate 2017年11月21日 下午2:26:17
+     * @param  materialId 教材id
+     * @param  pmphUserId 机构用户id
+     * @return 担任策划编辑数目本数
+     * @throws CheckedServiceException
+     */
+    Integer getPlanningEditorSum(Long materialId,Long pmphUserId) throws CheckedServiceException;
+    
+    
     /**
      * 删除Material 通过主键id
      * 

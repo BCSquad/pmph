@@ -110,10 +110,10 @@
 	<select id="getPmphGroupMemberByMemberId" resultType="PmphGroupMemberVO">
 		select *
 		from pmph_group_member where
-		group_id=#{arg0} and
-		user_id= #{arg1}
+		group_id=#{groupId} and
+		user_id= #{userId}
 		and
-		is_writer = #{arg2}
+		is_writer = #{isWriter}
 		;
 	</select>
 

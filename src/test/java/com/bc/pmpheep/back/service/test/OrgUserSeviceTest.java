@@ -99,15 +99,22 @@ public class OrgUserSeviceTest extends BaseTest {
 
 	@Test
 	public void testUpdateOrgUserOfBack() {
-		OrgUser orgUser = new OrgUser();
+		OrgAndOrgUserVO orgAndOrgUserVO=new OrgAndOrgUserVO();
 		Org org = new Org();
-		orgUser = orgUserService.getOrgUserById(1040L);
-		org.setOrgName("机构");
-		orgUser.setEmail(null);
-		orgUser.setHandphone(null);
-		org.setOrgTypeId(10L);
-		orgUser.setRealname("名称");
-		Object result = orgUserService.updateOrgUserOfBack(orgUser, org);
+		OrgUser orgUser = new OrgUser();
+		org.setAreaId(12345L);// 所属区域
+		org.setOrgTypeId(4L);// 机构id
+		orgUser.setRealname("s");
+		orgUser.setOrgId(org.getId());
+		org.setOrgName("asdasdasdasda");// 管理员姓名
+		orgUser.setUsername("m1001021");// 机构代码
+		orgUserService.addOrgUserAndOrgOfBack(orgUser, org);
+		orgAndOrgUserVO.setId(orgUser.getId());
+		orgAndOrgUserVO.setRealname("机构");
+		orgAndOrgUserVO.setUsername(orgUser.getUsername());
+		orgAndOrgUserVO.setOrgId(org.getId());
+		orgAndOrgUserVO.setOrgName("name");
+		Object result = orgUserService.updateOrgUserOfBack(orgAndOrgUserVO);
 		Assert.assertTrue("更新失败", result.equals("SUCCESS"));
 	}
 

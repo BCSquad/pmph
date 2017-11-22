@@ -51,15 +51,17 @@ public class OrgUserController {
 	public ResponseBean orgUser(@RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
 			@RequestParam("orgName") String orgName) {
-		OrgAndOrgUserVO orgUserManagerVO = new OrgAndOrgUserVO();
+		PageParameter pageParameter = new PageParameter<>();
+		OrgAndOrgUserVO orgAndOrgUserVO = new OrgAndOrgUserVO();
 		if(StringUtil.notEmpty(orgName)){
-			orgUserManagerVO.setOrgName(orgName.replaceAll(" ", ""));
+			orgAndOrgUserVO.setOrgName(orgName.replaceAll(" ", ""));
 		}
 		if(StringUtil.notEmpty(name)){
-			orgUserManagerVO.setName(name.replaceAll(" ", ""));// 去除空格
+			orgAndOrgUserVO.setName(name.replaceAll(" ", ""));// 去除空格
 		}
-		PageParameter<OrgAndOrgUserVO> pageParameter = new PageParameter<OrgAndOrgUserVO>(pageNumber, pageSize,
-				orgUserManagerVO);
+		pageParameter.setPageNumber(pageNumber);
+		pageParameter.setPageSize(pageSize);
+		pageParameter.setParameter(orgAndOrgUserVO);
 		return new ResponseBean(orgUserService.getListOrgUser(pageParameter));
 	}
 
@@ -154,12 +156,11 @@ public class OrgUserController {
 	 * @return 是否成功
 	 * 
 	 */
-	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
+	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改用户")
 	@ResponseBody
-	public ResponseBean updateUser(OrgUser orgUser,Org org) {
-		System.out.println(orgUser.toString());
-		return new ResponseBean(orgUserService.updateOrgUserOfBack(orgUser,org));
+	public ResponseBean updateUser(OrgAndOrgUserVO orgAndOrgUserVO) {
+		return new ResponseBean(orgUserService.updateOrgUserOfBack(orgAndOrgUserVO));
 	}
 	/**
 	 * 功能描述：在机构用户页面增加机构用户
