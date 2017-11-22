@@ -22,7 +22,7 @@ public class MaterialContact implements java.io.Serializable {
 	private String contactPhone;
 	//联系邮箱
 	private String contactEmail;
-	//教材id
+	//显示顺序
     private Integer sort;
 
 	// Constructors

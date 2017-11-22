@@ -104,6 +104,12 @@
 		select * from pmph_group where id = #{id} ;
 	</select>
 
+	<!-- 根据id获取PmphGroup -->
+	<select id="getPmphGroupByTextbookId" parameterType="java.lang.Long"
+		resultType="PmphGroup">
+		select * from pmph_group where book_id = #{textbookId} ;
+	</select>
+
 	<!-- 查当前用户的小组列表 -->
 	<select id="getList" parameterType="PmphGroup" resultType="PmphGroupListVO">
 		select
@@ -123,7 +129,8 @@
 		in (
 		select DISTINCT
 		group_id from pmph_group_member where user_id = #{id} and
-		is_writer =	false AND is_deleted = FALSE
+		is_writer =
+		false AND is_deleted = FALSE
 		)
 		<if test="pmphGroup.groupName != null and pmphGroup.groupName !=''">
 			and g.group_name like

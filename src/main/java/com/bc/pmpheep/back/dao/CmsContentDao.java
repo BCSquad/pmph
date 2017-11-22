@@ -128,32 +128,6 @@ public interface CmsContentDao {
     /**
      * 
      * <pre>
-     * 功能描述：分页查询条件查询《社外内容管理》列表
-     * 使用示范：
-     *
-     * @param pageParameter 带有分页参数和查询条件参数
-     * @param sessionId 
-     * @return 
-     * </pre>
-     */
-    List<CmsContentVO> listContentManage(PageParameter<CmsContentVO> pageParameter);
-
-    /**
-     * 
-     * <pre>
-     * 功能描述：分页查询条件查询《社外内容审核》列表
-     * 使用示范：
-     *
-     * @param pageParameter 带有分页参数和查询条件参数
-     * @param sessionId 
-     * @return 
-     * </pre>
-     */
-    List<CmsContentVO> listContentCheck(PageParameter<CmsContentVO> pageParameter);
-
-    /**
-     * 
-     * <pre>
      * 功能描述：查询CmsContent列表(全部)
      * 使用示范：
      *

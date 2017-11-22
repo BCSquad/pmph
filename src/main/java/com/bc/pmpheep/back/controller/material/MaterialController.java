@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import com.bc.pmpheep.annotation.LogDetail;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtension;
@@ -25,6 +26,7 @@ import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.PmphGroupService;
 import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.vo.MaterialListVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.google.gson.Gson;
@@ -67,17 +69,23 @@ public class MaterialController {
 	 *            多个教材备注
 	 * @param noteFiles
 	 *            备注文件
+	 * @param projectEditorPowers
+	 *            项目编辑权限8位二进制字符串
+	 * @param planningEditorPowers
+	 *            策划编辑权限8位二进制字符串
 	 * @return
 	 */
 	@LogDetail(businessType = Business_Type, logRemark = "新建遴选公告")
-	@RequestMapping(value = "/add/material", method = RequestMethod.POST)
+	@RequestMapping(value = "/new/material", method = RequestMethod.POST)
 	public ResponseBean material(MaterialVO materialVO, HttpServletRequest request, MultipartFile[] noticeFiles,
 			MultipartFile[] noteFiles) {
+
 		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
 				materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
 				materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-				materialVO.getMaterialNoteAttachments(), true));
+				materialVO.getMaterialNoteAttachments(), materialVO.getProjectEditorPowers(),
+				materialVO.getPlanningEditorPowers(), true));
 	}
 
 	/**
@@ -102,6 +110,10 @@ public class MaterialController {
 	 *            多个教材备注
 	 * @param noteFiles
 	 *            备注文件
+	 * @param projectEditorPowers
+	 *            项目编辑权限8位二进制字符串
+	 * @param planningEditorPowers
+	 *            策划编辑权限8位二进制字符串
 	 * @return
 	 */
 	@LogDetail(businessType = Business_Type, logRemark = "修改遴选公告")
@@ -112,7 +124,63 @@ public class MaterialController {
 		return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
 				materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
 				materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-				materialVO.getMaterialNoteAttachments(), true));
+				materialVO.getMaterialNoteAttachments(), materialVO.getProjectEditorPowers(),
+				materialVO.getPlanningEditorPowers(), true));
 	}
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：初始化/条件查询教材列表
+	 *
+	 * @param request
+	 * @param pageSize
+	 *            当前页条数
+	 * @param pageNumber
+	 *            当前页数
+	 * @param isMy
+	 *            是否我的
+	 * @param state
+	 *            当前状态
+	 * @param materialName
+	 *            教材名称
+	 * @param contactUserName
+	 *            联系人名称
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = Business_Type, logRemark = "查询教材公告列表")
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public ResponseBean list(HttpServletRequest request, Integer pageSize, Integer pageNumber, Boolean isMy,
+			String state, String materialName, String contactUserName) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		PageParameter<MaterialListVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+		MaterialListVO materialListVO = new MaterialListVO();
+		materialListVO.setIsMy(isMy);
+		materialListVO.setState(state);
+		materialListVO.setContactUserName(contactUserName);
+		materialListVO.setMaterialName(materialName);
+		pageParameter.setParameter(materialListVO);
+		return new ResponseBean(materialService.listMaterials(pageParameter, sessionId));
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：逻辑删除教材
+	 *
+	 * @param request
+	 * @param id
+	 *            教材id
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = Business_Type, logRemark = "逻辑删除教材")
+	@RequestMapping(value = "/delete", method = RequestMethod.PUT)
+	public ResponseBean delete(HttpServletRequest request, Long id) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		return new ResponseBean(materialService.updateMaterial(id, sessionId));
+	}
 }

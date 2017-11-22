@@ -72,7 +72,7 @@ public interface PmphGroupService {
 	 * @return List<PmphGroupListVO>
 	 * @throws CheckedServiceException
 	 */
-	List<PmphGroupListVO> listPmphGroup(PmphGroup pmphGroup,String sessionId) throws CheckedServiceException;
+	List<PmphGroupListVO> listPmphGroup(PmphGroup pmphGroup, String sessionId) throws CheckedServiceException;
 
 	/**
 	 *
@@ -87,7 +87,7 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PmphGroup addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup,String sessionId)
+	PmphGroup addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, String sessionId)
 			throws CheckedServiceException, IOException;
 
 	/**
@@ -105,4 +105,17 @@ public interface PmphGroupService {
 	 */
 	PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, String sessionId)
 			throws CheckedServiceException, IOException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：通过书籍id获取小组
+	 *
+	 * @param textbookId
+	 *            书籍id
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	PmphGroup getPmphGroupByTextbookId(Long textbookId) throws CheckedServiceException;
 }
