@@ -247,14 +247,7 @@ public class MigrationStageSix {
                 Integer isStaging = isStagingJudge.intValue(); // 是否暂存
                 declaration.setIsStaging(isStaging);
             }
-            try {
                 declaration = declarationService.addDeclaration(declaration);
-            } catch (Exception e) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
-                excel.add(map);
-                logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
-                declaration.setIsStaging(0);
-            }
             long pk = declaration.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "writerid", id); // 更新旧表中new_pk字段
             count++;
@@ -344,14 +337,7 @@ public class MigrationStageSix {
                 }
             }
             decEduExp.setSort(999); // 显示顺序
-            try {
                 decEduExp = decEduExpService.addDecEduExp(decEduExp);
-            } catch (Exception e) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
-                excel.add(map);
-                logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
-                continue;
-            }
             long pk = decEduExp.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "leamid", id);
             count++;
@@ -434,14 +420,7 @@ public class MigrationStageSix {
                 }
             }
             decWorkExp.setSort(999); // 显示顺序
-            try {
                 decWorkExp = decWorkExpService.addDecWorkExp(decWorkExp);
-            } catch (Exception e) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
-                excel.add(map);
-                logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
-                continue;
-            }
             long pk = decWorkExp.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "workid", id);
             count++;
@@ -523,14 +502,7 @@ public class MigrationStageSix {
                 }
             }
             decTeachExp.setSort(999); // 显示顺序
-            try {
                 decTeachExp = decTeachExpService.addDecTeachExp(decTeachExp);
-            } catch (Exception e) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
-                excel.add(map);
-                logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
-                continue;
-            }
             long pk = decTeachExp.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "teachid", id);
             count++;
@@ -603,14 +575,7 @@ public class MigrationStageSix {
             decAcade.setPosition(position);
             decAcade.setNote((String) map.get("remark")); // 备注
             decAcade.setSort(999);
-            try {
                 decAcade = decAcadeService.addDecAcade(decAcade);
-            } catch (Exception e) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
-                excel.add(map);
-                logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
-                continue;
-            }
             long pk = decAcade.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "acadeid", id);
             count++;
@@ -671,14 +636,7 @@ public class MigrationStageSix {
             decLastPosition.setPosition(position);
             decLastPosition.setNote((String) map.get("remark")); // 备注
             decLastPosition.setSort(999); // 显示顺序
-            try {
                 decLastPosition = decLastPositionService.addDecLastPosition(decLastPosition);
-            } catch (Exception e) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
-                excel.add(map);
-                logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
-                continue;
-            }
             long pk = decLastPosition.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "materpatid", id);
             count++;
@@ -741,14 +699,7 @@ public class MigrationStageSix {
             decCourseConstruction.setType(type);
             decCourseConstruction.setNote((String) map.get("remark")); // 备注
             decCourseConstruction.setSort(999); // 显示顺序
-            try {
                 decCourseConstruction = decCourseConstructionService.addDecCourseConstruction(decCourseConstruction);
-            } catch (Exception e) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
-                excel.add(map);
-                logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
-                continue;
-            }
             long pk = decCourseConstruction.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "constructionid", id);
             count++;
@@ -820,14 +771,7 @@ public class MigrationStageSix {
             decNationalPlan.setRank(rank);
             decNationalPlan.setNote((String) map.get("remark")); // 备注
             decNationalPlan.setSort(999); // 显示顺序
-            try {
                 decNationalPlan = decNationalPlanService.addDecNationalPlan(decNationalPlan);
-            } catch (Exception e) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
-                excel.add(map);
-                logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
-                continue;
-            }
             long pk = decNationalPlan.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "editorbookid", id);
             count++;
@@ -914,14 +858,7 @@ public class MigrationStageSix {
             decTextbook.setIsbn(isbn);
             decTextbook.setNote((String) map.get("remark")); // 备注
             decTextbook.setSort(999); // 显示顺序
-            try {
                 decTextbook = decTextbookService.addDecTextbook(decTextbook);
-            } catch (Exception e) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
-                excel.add(map);
-                logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
-                continue;
-            }
             long pk = decTextbook.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "materwriteid", id);
             count++;
@@ -988,14 +925,7 @@ public class MigrationStageSix {
             decResearch.setAward(award);
             decResearch.setNote((String) map.get("remark")); // 备注
             decResearch.setSort(999); // 显示顺序
-            try {
                 decResearch = decResearchService.addDecResearch(decResearch);
-            } catch (Exception e) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
-                excel.add(map);
-                logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
-                continue;
-            }
             long pk = decResearch.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "scientresearchid", id);
             count++;
@@ -1059,14 +989,7 @@ public class MigrationStageSix {
             }
             String contents = content.trim();
             decExtension.setContent(contents);
-            try {
                 decExtension = decExtensionService.addDecExtension(decExtension);
-            } catch (Exception e) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
-                excel.add(map);
-                logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
-                continue;
-            }
             long pk = decExtension.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "extvalueid", id);
             count++;
@@ -1162,14 +1085,7 @@ public class MigrationStageSix {
             decPosition.setSyllabusName((String) map.get("syllabus_name")); // 教学大纲名称
             decPosition.setGmtCreate((Timestamp) map.get("gmt_create")); // 创建时间
             String outLineUrl = (String) map.get("outlineurl"); // 教学大纲id
-            try {
                 decPosition = decPositionService.addDecPosition(decPosition);
-            } catch (Exception e) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
-                excel.add(map);
-                logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
-                continue;
-            }
             long pk = decPosition.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "materid", id);
             count++;
