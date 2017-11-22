@@ -410,6 +410,9 @@
 					<if test="parameter.authStatus !=null ">
 						AND cc.`auth_status` = #{parameter.authStatus} 
 					</if>
+					<if test="parameter.isPublished !=null ">
+						AND cc.`is_published` = #{parameter.isPublished} 
+					</if>
 					<if test="parameter.username !=null and  parameter.username!='' ">
 						AND (
 							pu.`username` like concat('%',#{parameter.username},'%') 
@@ -431,7 +434,10 @@
 					AND cc.`title` like concat('%',#{parameter.title},'%')
 				</if>
 				<if test="parameter.authStatus !=null ">
-						AND cc.`auth_status` = #{parameter.authStatus} 
+					AND cc.`auth_status` = #{parameter.authStatus} 
+				</if>
+				<if test="parameter.isPublished !=null ">
+					AND cc.`is_published` = #{parameter.isPublished} 
 				</if>
 				<if test="parameter.username !=null and  parameter.username!='' ">
 						AND (
