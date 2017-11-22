@@ -952,7 +952,8 @@ public class MigrationStageSix {
         String tableName = "teach_material_extvalue"; // 要迁移的旧库表名
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
         String sql = "select *,wd.new_pk id from teach_material_extvalue wme "
-                + "left join writer_declaration wd on wd.writerid=wme.writerid";
+                + "left join writer_declaration wd on wd.writerid=wme.writerid "
+                + "left join teach_material_extend tme on tme.expendid=wme.expendid";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0; // 迁移成功的条目数
         List<Map<String, Object>> excel = new LinkedList<>();
@@ -962,7 +963,7 @@ public class MigrationStageSix {
             StringBuilder sb = new StringBuilder();
             Double id = (Double) map.get("extvalueid"); // 旧表主键值
             String extensionid = (String) map.get("expendid"); // 教材扩展项id
-            Long declarationid = (Long) map.get("new_pk"); // 申报表id
+            Long declarationid = (Long) map.get("id"); // 申报表id
             DecExtension decExtension = new DecExtension();
             if (StringUtil.isEmpty(extensionid)) {
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到教材扩展项对应的关联结果为空。"));
