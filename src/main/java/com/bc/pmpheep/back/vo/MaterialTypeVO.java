@@ -1,8 +1,9 @@
 package com.bc.pmpheep.back.vo;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class MaterialTypeVO {
+public class MaterialTypeVO implements Serializable {
 	// 主键
 	private Long id;
 	// 上级类型id

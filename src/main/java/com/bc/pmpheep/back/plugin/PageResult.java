@@ -6,50 +6,51 @@ import java.util.List;
 import org.apache.ibatis.type.Alias;
 
 import com.bc.pmpheep.back.util.Const;
+
 /**
- *分页结果
- *@author Mryang
- *@createDate 2017年10月8日 下午10:14:44
+ * 分页结果
+ * 
+ * @author Mryang
+ * @createDate 2017年10月8日 下午10:14:44
  *
  */
 @Alias("PageResult")
 public class PageResult<T> {
-	//当前页码
-    private Integer pageNumber = 1;
-    //页面大小
-    private Integer pageSize   = Const.PAGE_SIZE;
-    //数据总条数
-    private Integer total      = 0;
-    //总页数
-    private Integer pageTotal  = 0;
-    //是否是第一页
-    private Boolean isFirst    = true;
-    //是否是最后一页
-    private Boolean isLast     = true;
-    //查询开始页
-    private Integer start      = 0; 
-    //数据集
-	private List<T> rows       = new ArrayList<T>(Const.PAGE_SIZE);
-	
-	
+	// 当前页码
+	private Integer pageNumber = 1;
+	// 页面大小
+	private Integer pageSize = Const.PAGE_SIZE;
+	// 数据总条数
+	private Integer total = 0;
+	// 总页数
+	private Integer pageTotal = 0;
+	// 是否是第一页
+	private Boolean isFirst = true;
+	// 是否是最后一页
+	private Boolean isLast = true;
+	// 查询开始页
+	private Integer start = 0;
+	// 数据集
+	private List<T> rows = new ArrayList<T>(Const.PAGE_SIZE);
+
 	public PageResult() {
 		super();
 	}
 
 	public void setPageNumber(Integer pageNumber) {
 		this.pageNumber = pageNumber;
-		if(this.pageNumber==1){
-			isFirst    = true;
-		}else{
-			isFirst    = false;
+		if (this.pageNumber == 1) {
+			isFirst = true;
+		} else {
+			isFirst = false;
 		}
-		this.start=(this.pageNumber-1)*this.pageSize;
+		this.start = (this.pageNumber - 1) * this.pageSize;
 	}
 
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
-		this.start    = (this.pageNumber-1)*this.pageSize;
-		rows          = new ArrayList<T>(this.pageSize);
+		this.start = (this.pageNumber - 1) * this.pageSize;
+		rows = new ArrayList<T>(this.pageSize);
 	}
 
 	public void setTotal(Integer total) {
@@ -92,7 +93,6 @@ public class PageResult<T> {
 		this.rows = rows;
 	}
 
-
 	public Integer getPageNumber() {
 		return pageNumber;
 	}
@@ -125,16 +125,11 @@ public class PageResult<T> {
 		return rows;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "Page [pageNumber=" + pageNumber + ", pageSize=" + pageSize + ", total=" + total + ", pageTotal="
+				+ pageTotal + ", isFirst=" + isFirst + ", isLast=" + isLast + ", start=" + start + ", rows="
+				+ rows.toString() + "]";
+	}
 
-    @Override
-    public String toString() {
-        return "Page [pageNumber=" + pageNumber + ", pageSize=" + pageSize + ", total=" + total
-               + ", pageTotal=" + pageTotal + ", isFirst=" + isFirst + ", isLast=" + isLast
-               + ", start=" + start + ", rows=" + rows.toString() + "]";
-    }
-
-	
-	
-	
 }
