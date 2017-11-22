@@ -156,12 +156,11 @@ public class OrgUserController {
 	 * @return 是否成功
 	 * 
 	 */
-	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
+	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改用户")
 	@ResponseBody
-	public ResponseBean updateUser(OrgUser orgUser,Org org) {
-		System.out.println(orgUser.toString());
-		return new ResponseBean(orgUserService.updateOrgUserOfBack(orgUser,org));
+	public ResponseBean updateUser(OrgAndOrgUserVO orgAndOrgUserVO) {
+		return new ResponseBean(orgUserService.updateOrgUserOfBack(orgAndOrgUserVO));
 	}
 	/**
 	 * 功能描述：在机构用户页面增加机构用户

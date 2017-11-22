@@ -69,7 +69,7 @@ public interface CmsContentService {
     Integer updateCmsContent(CmsContent cmsContent, String[] files, String content,
     String[] attachment, String scheduledTime, String sessionId) throws CheckedServiceException,
     IOException;
-    
+
     /**
      * 更新CmsContent对象
      * 
@@ -149,37 +149,8 @@ public interface CmsContentService {
     String sessionId) throws CheckedServiceException;
 
     /**
-     * 
-     * <pre>
-     * 功能描述：分页查询条件查询《社外内容管理》列表
-     * 使用示范：
-     *
-     * @param pageParameter 带有分页参数和查询条件参数
-     * @param sessionId 
-     * @return 分页结果集
-     * @throws CheckedServiceException
-     * </pre>
-     */
-    PageResult<CmsContentVO> listContentManage(PageParameter<CmsContentVO> pageParameter,
-    String sessionId) throws CheckedServiceException;
-
-    /**
-     * 
-     * <pre>
-     * 功能描述：分页查询条件查询《社外内容审核》列表
-     * 使用示范：
-     *
-     * @param pageParameter 带有分页参数和查询条件参数
-     * @param sessionId 
-     * @return  分页结果集
-     * @throws CheckedServiceException
-     * </pre>
-     */
-    PageResult<CmsContentVO> listContentCheck(PageParameter<CmsContentVO> pageParameter,
-    String sessionId) throws CheckedServiceException;
-    
-    /**
      * 通过id获取 CmsContent
+     * 
      * @author Mryang
      * @createDate 2017年11月17日 下午5:17:23
      * @param id

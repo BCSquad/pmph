@@ -14,7 +14,6 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.CmsExtra;
-import com.bc.pmpheep.back.po.CmsSchedule;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -134,6 +133,25 @@ public class CmsContentServiceImpl implements CmsContentService {
         cmsContent.setMid(contentObj.getId());// 内容id
         cmsContent.setAuthorType(Const.CMS_AUTHOR_TYPE_1);// 作者类型
         cmsContent.setAuthorId(pmphUser.getId());// 作者id
+        // 信息快报/公告管理(发布)，审核时间就为当前时间
+        if (ObjectUtil.notNull(cmsContent.getIsPublished())) {
+            if (Const.TRUE.booleanValue() == cmsContent.getIsPublished().booleanValue()) {
+                cmsContent.setAuthUserId(pmphUser.getId());
+                cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_2);
+                cmsContent.setAuthDate(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                                DateUtil.getCurrentTime()));
+                cmsContent.setIsPublished(true);
+            }
+        }
+        if (ObjectUtil.notNull(cmsContent.getIsStaging())) {
+            if (Const.TRUE.booleanValue() == cmsContent.getIsStaging().booleanValue()) {
+                // 信息快报/公告管理(暂存)
+                cmsContent.setAuthUserId(pmphUser.getId());
+                cmsContent.setAuthStatus(null);
+                cmsContent.setAuthDate(null);
+                cmsContent.setIsPublished(false);
+            }
+        }
         Long contentId = this.addCmsContent(cmsContent).getId();// 获取新增后的主键ID
         if (ObjectUtil.isNull(contentId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
@@ -141,14 +159,14 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               "CmsContent添加内容失败");
         }
         // 定时发布
-        if (true == cmsContent.getIsScheduled()) {
-            if (StringUtil.isEmpty(scheduledTime)) {
-                throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                                  CheckedExceptionResult.NULL_PARAM, "定时发布时间参数为空");
-            }
-            cmsScheduleService.addCmsSchedule(new CmsSchedule(contentId,
-                                                              DateUtil.str2Timestam(scheduledTime)));
-        }
+        // if (Const.TRUE.booleanValue() == cmsContent.getIsScheduled().booleanValue()) {
+        // if (StringUtil.isEmpty(scheduledTime)) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+        // CheckedExceptionResult.NULL_PARAM, "定时发布时间参数为空");
+        // }
+        // cmsScheduleService.addCmsSchedule(new CmsSchedule(contentId,
+        // DateUtil.str2Timestam(scheduledTime)));
+        // }
         // 保存附件到MongoDB
         this.saveFileToMongoDB(files, contentId);
         return cmsContent;
@@ -158,6 +176,7 @@ public class CmsContentServiceImpl implements CmsContentService {
     public Integer updateCmsContent(CmsContent cmsContent, String[] files, String content,
     String[] attachment, String scheduledTime, String sessionId) throws CheckedServiceException,
     IOException {
+        Integer count = 0;
         // 获取当前登陆用户
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
@@ -173,40 +192,68 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
 
         }
-        // 如果是更新,或者退回后修改，审核用户ID，审核时间都清空
-        cmsContent.setAuthUserId(null);// 审核用户
-        cmsContent.setAuthDate(null);// 审核时间
-        cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_0);// 审核状态
+        // 信息快报/公告管理(发布)，审核时间就为当前时间
+        if (Const.TRUE.booleanValue() == cmsContent.getIsPublished().booleanValue()) {
+            cmsContent.setAuthUserId(pmphUser.getId());
+            cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_2);
+            cmsContent.setAuthDate(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                            DateUtil.getCurrentTime()));
+            cmsContent.setIsPublished(true);
+        } else if (Const.TRUE.booleanValue() == cmsContent.getIsStaging().booleanValue()) {
+            // 信息快报/公告管理(暂存)
+            cmsContent.setAuthUserId(pmphUser.getId());
+            cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_0);
+            cmsContent.setAuthDate(null);
+            cmsContent.setIsPublished(false);
+        } else {
+            // 文章管理,退回
+            if (Const.CMS_AUTHOR_STATUS_1.shortValue() == cmsContent.getAuthStatus().shortValue()) {
+                cmsContent.setAuthUserId(pmphUser.getId());
+                cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_1);
+                cmsContent.setAuthDate(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                                DateUtil.getCurrentTime()));
+                cmsContent.setIsDeleted(true);
+                cmsContent.setIsPublished(false);
+            } else if (Const.CMS_AUTHOR_STATUS_2.shortValue() == cmsContent.getAuthStatus()
+                                                                           .shortValue()) {
+                // 文章管理,通过
+                cmsContent.setAuthUserId(pmphUser.getId());
+                cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_2);
+                cmsContent.setAuthDate(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                                DateUtil.getCurrentTime()));
+                cmsContent.setIsPublished(true);
+            }
+        }
         // 再次编辑时间
         cmsContent.setGmtReedit(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                          DateUtil.getCurrentTime()));
-        cmsContentDao.updateCmsContent(cmsContent);
-
+        count = cmsContentDao.updateCmsContent(cmsContent);
         // 是否定时发布
-        CmsSchedule csmSchedule = cmsScheduleService.getCmsScheduleByContentId(cmsContent.getId());
+        // CmsSchedule csmSchedule =
+        // cmsScheduleService.getCmsScheduleByContentId(cmsContent.getId());
         // 1.修改时如果不选择定时发布，则查询该数据之前是否有选择定时发布，如果有则删除
-        if (Const.FALSE.booleanValue() == cmsContent.getIsScheduled().booleanValue()) {
-            if (ObjectUtil.notNull(csmSchedule)) {
-                cmsScheduleService.deleteCmsScheduleByContentId(cmsContent.getId());
-            }
-        }
+        // if (Const.FALSE.booleanValue() == cmsContent.getIsScheduled().booleanValue()) {
+        // if (ObjectUtil.notNull(csmSchedule)) {
+        // cmsScheduleService.deleteCmsScheduleByContentId(cmsContent.getId());
+        // }
+        // }
         // 2.修改时如果选择定时发布，则查询该数据之前是否有选择定时发布，如果有则更新，没有则新增
-        if (Const.TRUE.booleanValue() == cmsContent.getIsScheduled().booleanValue()) {
-            if (StringUtil.isEmpty(scheduledTime)) {
-                throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                                  CheckedExceptionResult.NULL_PARAM, "定时发布时间参数为空");
-            }
-            if (ObjectUtil.notNull(csmSchedule)) {
-                cmsScheduleService.updateCmsSchedule(new CmsSchedule(
-                                                                     csmSchedule.getId(),
-                                                                     cmsContent.getId(),
-                                                                     DateUtil.str2Timestam(scheduledTime)));
-            } else {
-                cmsScheduleService.addCmsSchedule(new CmsSchedule(
-                                                                  cmsContent.getId(),
-                                                                  DateUtil.str2Timestam(scheduledTime)));
-            }
-        }
+        // if (Const.TRUE.booleanValue() == cmsContent.getIsScheduled().booleanValue()) {
+        // if (StringUtil.isEmpty(scheduledTime)) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+        // CheckedExceptionResult.NULL_PARAM, "定时发布时间参数为空");
+        // }
+        // if (ObjectUtil.notNull(csmSchedule)) {
+        // cmsScheduleService.updateCmsSchedule(new CmsSchedule(
+        // csmSchedule.getId(),
+        // cmsContent.getId(),
+        // DateUtil.str2Timestam(scheduledTime)));
+        // } else {
+        // cmsScheduleService.addCmsSchedule(new CmsSchedule(
+        // cmsContent.getId(),
+        // DateUtil.str2Timestam(scheduledTime)));
+        // }
+        // }
         // 删除附件
         if (ArrayUtil.isNotEmpty(attachment)) {
             // 删除CmsExtra 表
@@ -218,7 +265,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         // 保存附件到MongoDB
         this.saveFileToMongoDB(files, cmsContent.getId());
-        return 0;
+        return count;
     }
 
     @Override
@@ -286,52 +333,6 @@ public class CmsContentServiceImpl implements CmsContentService {
     }
 
     @Override
-    public PageResult<CmsContentVO> listContentManage(PageParameter<CmsContentVO> pageParameter,
-    String sessionId) throws CheckedServiceException {
-        // 获取当前登陆用户
-        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-        if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                              CheckedExceptionResult.NULL_PARAM, "用户为空");
-        }
-        // pageParameter.getParameter().setIsAdmin(pmphUser.getIsAdmin());
-        // pageParameter.getParameter().setAuthorId(pmphUser.getId());
-        PageResult<CmsContentVO> pageResult = new PageResult<CmsContentVO>();
-        // 将页面大小和页面页码拷贝
-        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-        // 包含数据总条数的数据集
-        List<CmsContentVO> cmsContentList = cmsContentDao.listContentManage(pageParameter);
-        if (CollectionUtil.isNotEmpty(cmsContentList)) {
-            Integer count = cmsContentList.get(0).getCount();
-            pageResult.setTotal(count);
-            pageResult.setRows(cmsContentList);
-        }
-        return pageResult;
-    }
-
-    @Override
-    public PageResult<CmsContentVO> listContentCheck(PageParameter<CmsContentVO> pageParameter,
-    String sessionId) throws CheckedServiceException {
-        // 获取当前登陆用户
-        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-        if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                              CheckedExceptionResult.NULL_PARAM, "用户为空");
-        }
-        PageResult<CmsContentVO> pageResult = new PageResult<CmsContentVO>();
-        // 将页面大小和页面页码拷贝
-        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-        // 包含数据总条数的数据集
-        List<CmsContentVO> cmsContentList = cmsContentDao.listContentCheck(pageParameter);
-        if (CollectionUtil.isNotEmpty(cmsContentList)) {
-            Integer count = cmsContentList.get(0).getCount();
-            pageResult.setTotal(count);
-            pageResult.setRows(cmsContentList);
-        }
-        return pageResult;
-    }
-
-    @Override
     public List<CmsContent> getCmsContentList(CmsContent cmsContent) throws CheckedServiceException {
         if (ObjectUtil.isNull(cmsContent)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
@@ -371,8 +372,8 @@ public class CmsContentServiceImpl implements CmsContentService {
         resultMap.put("cmsContent", cmsContent);
         // 判断内容是否已经发布或审核通过
         String fileDownLoadType = null;
-        if (Const.TRUE == cmsContent.getIsPublished()
-            || Const.CMS_AUTHOR_STATUS_2 == cmsContent.getAuthStatus()) {
+        if (Const.TRUE.booleanValue() == cmsContent.getIsPublished().booleanValue()
+            || Const.CMS_AUTHOR_STATUS_2.shortValue() == cmsContent.getAuthStatus().shortValue()) {
             fileDownLoadType = Const.CMS_FILE_DOWNLOAD;
         } else {
             fileDownLoadType = Const.FILE_DOWNLOAD;
