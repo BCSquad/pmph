@@ -51,15 +51,17 @@ public class OrgUserController {
 	public ResponseBean orgUser(@RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
 			@RequestParam("orgName") String orgName) {
-		OrgAndOrgUserVO orgUserManagerVO = new OrgAndOrgUserVO();
+		PageParameter pageParameter = new PageParameter<>();
+		OrgAndOrgUserVO orgAndOrgUserVO = new OrgAndOrgUserVO();
 		if(StringUtil.notEmpty(orgName)){
-			orgUserManagerVO.setOrgName(orgName.replaceAll(" ", ""));
+			orgAndOrgUserVO.setOrgName(orgName.replaceAll(" ", ""));
 		}
 		if(StringUtil.notEmpty(name)){
-			orgUserManagerVO.setName(name.replaceAll(" ", ""));// 去除空格
+			orgAndOrgUserVO.setName(name.replaceAll(" ", ""));// 去除空格
 		}
-		PageParameter<OrgAndOrgUserVO> pageParameter = new PageParameter<OrgAndOrgUserVO>(pageNumber, pageSize,
-				orgUserManagerVO);
+		pageParameter.setPageNumber(pageNumber);
+		pageParameter.setPageSize(pageSize);
+		pageParameter.setParameter(orgAndOrgUserVO);
 		return new ResponseBean(orgUserService.getListOrgUser(pageParameter));
 	}
 

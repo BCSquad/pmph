@@ -1,13 +1,12 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.vo.MaterialListVO;
+
 
 /**
  * MaterialDao实体类数据访问层接口
@@ -118,4 +117,15 @@ public interface MaterialDao {
 	 *
 	 */
 	Integer listMaterialEndTotal(PageParameter<MaterialListVO> pageParameter);
+    
+
+    /**
+     * 获取用户在该教材是几本书的策划编辑
+     * @author Mryang
+     * @createDate 2017年11月21日 下午2:26:17
+     * @param  materialId 教材id 
+     * @param  pmphUserId 用户id 
+     * @return 担任策划编辑数目本数
+     */
+    Integer getPlanningEditorSum(@Param("materialId")Long materialId,@Param("pmphUserId")Long pmphUserId) ;
 }

@@ -3,11 +3,9 @@ package com.bc.pmpheep.back.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -502,11 +500,6 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	}
 
 	@Override
-	public List<Material> getListMaterial(String materialName) {
-		return materialDao.getListMaterial(materialName);
-	}
-
-	@Override
 	public PageResult<MaterialListVO> listMaterials(PageParameter<MaterialListVO> pageParameter, String sessionId)
 			throws CheckedServiceException {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -598,6 +591,24 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			}
 		}
 		return list;
+	}
+
+	@Override
+	public List<Material> getListMaterial(String materialName) {
+		return materialDao.getListMaterial(materialName);
+	}
+
+	@Override
+	public Integer getPlanningEditorSum(Long materialId, Long pmphUserId) {
+		if (null == materialId) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"教材为空");
+		}
+		if (null == pmphUserId) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
+		}
+		return materialDao.getPlanningEditorSum(materialId, pmphUserId);
 	}
 
 }

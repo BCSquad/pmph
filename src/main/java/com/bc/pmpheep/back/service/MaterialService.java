@@ -63,6 +63,20 @@ public interface MaterialService {
 	Material getMaterialById(Long id) throws CheckedServiceException;
 
 	/**
+	 * 获取用户在该教材是几本书的策划编辑
+	 * 
+	 * @author Mryang
+	 * @createDate 2017年11月21日 下午2:26:17
+	 * @param materialId
+	 *            教材id
+	 * @param pmphUserId
+	 *            机构用户id
+	 * @return 担任策划编辑数目本数
+	 * @throws CheckedServiceException
+	 */
+	Integer getPlanningEditorSum(Long materialId, Long pmphUserId) throws CheckedServiceException;
+
+	/**
 	 * 删除Material 通过主键id
 	 * 
 	 * @param Material
@@ -86,22 +100,24 @@ public interface MaterialService {
 	 * 功能描述：获取教材集合
 	 * 使用示范：
 	 *
-	 * @param materialName 教材名称
-	 * @return
+	 * &#64;param materialName 教材名称
+	 * &#64;return
 	 * </pre>
 	 */
 	List<Material> getListMaterial(String materialName) throws CheckedServiceException;
-	
+
 	/**
 	 * 
 	 * 
 	 * 功能描述：初始化/条件加载教材申报公告页面
 	 *
-	 * @param pageParameter pageSize 当页条数  pageNumber 当前页数  materialName 教材名称
+	 * @param pageParameter
+	 *            pageSize 当页条数 pageNumber 当前页数 materialName 教材名称
 	 * @return
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PageResult<MaterialListVO> listMaterials(PageParameter<MaterialListVO> pageParameter,String sessionId) throws CheckedServiceException;
+	PageResult<MaterialListVO> listMaterials(PageParameter<MaterialListVO> pageParameter, String sessionId)
+			throws CheckedServiceException;
 
 }

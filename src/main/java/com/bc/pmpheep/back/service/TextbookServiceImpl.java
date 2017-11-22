@@ -1,17 +1,29 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bc.pmpheep.back.dao.TextbookDao;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.Material;
+import com.bc.pmpheep.back.po.MaterialProjectEditor;
+import com.bc.pmpheep.back.po.PmphRole;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * TextbookService 实现
@@ -24,6 +36,15 @@ public class TextbookServiceImpl implements TextbookService {
 
     @Autowired
     private TextbookDao textbookDao;
+    
+    @Autowired
+    private PmphUserService pmphUserService;
+    
+    @Autowired
+    private MaterialService materialService;
+    
+    @Autowired
+    private MaterialProjectEditorService materialProjectEditorService;
 
     /**
      * 
@@ -109,5 +130,80 @@ public class TextbookServiceImpl implements TextbookService {
         }
         return textbookDao.getTextbookByMaterialId(materialId);
     }
-
+    
+    //state 0全部    1名单没有确认 2名单已确认  3 结果已经公布  4强制结束 
+    @Override
+    public PageResult<BookPositionVO> listBookPosition(Integer pageNumber,Integer pageSize,Integer state,String  textBookIds,Long materialId,String sessionId){
+    	//验证用户
+    	PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
+		}
+		//教材权限的检查
+		List<PmphRole> pmphRoles= pmphUserService.getListUserRole(pmphUser.getId());
+		Integer power = null;
+		//系统管理员权限检查
+		for(PmphRole pmphRole: pmphRoles){
+			if(null != pmphRole && null != pmphRole.getRoleName() && "系统管理员".equals(pmphRole.getRoleName())){
+				power =1; //我是系统管理原
+			}
+		}
+		//教材主任检查
+		if(null == power){
+			Material  material = materialService.getMaterialById(materialId);
+			if(null != material && null != material.getDirector() && pmphUser.getId().equals(material.getDirector())){
+				power =2; //我是教材的主任
+			}
+		}
+		//教材项目编辑检查
+		if(null == power){
+			List<MaterialProjectEditor> materialProjectEditors = materialProjectEditorService.listMaterialProjectEditors(materialId);
+			if(null != materialProjectEditors && materialProjectEditors.size() > 0 ){
+				for(MaterialProjectEditor materialProjectEditor:materialProjectEditors){
+					if(null != materialProjectEditor && null != materialProjectEditor.getEditorId() 
+							&& materialProjectEditor.getEditorId().equals(pmphUser.getId())){
+						power =3; //我是教材的项目编辑
+					}
+				}
+			}
+		}
+		//教材策划编辑检查
+		if(null == power){
+			Integer num =  materialService.getPlanningEditorSum(materialId, pmphUser.getId());
+			if(null != num && num > 0){
+				power = 4; //我是教材的策划编辑编辑
+			}
+		}
+		if(null == power){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"该教材您没操作权限");
+		}
+		Gson gson = new Gson();
+		List<Long> bookIds= gson.fromJson(textBookIds,new TypeToken<ArrayList<Long>>() { }.getType());
+		//拼装复合参数
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("materialId", materialId);            //教材id
+		if(null != bookIds && bookIds.size() > 0 ){
+			map.put("list", bookIds);                 //书籍id
+		}
+		if(null != state && !state.equals(0)){
+			map.put("state", state);                  //书籍状态
+		}
+		map.put("pmphUserId", pmphUser.getId());      //用户id
+		PageParameter<Map<String, Object>> pageParameter = new PageParameter<Map<String, Object>>(pageNumber, pageSize, map);
+		PageResult<BookPositionVO> pageResult = new PageResult<>();
+		//获取总数
+		Integer total = textbookDao.listBookPositionTotal(pageParameter);
+		if(null != total && total >0 ){
+			List<BookPositionVO> rows=textbookDao.listBookPosition(pageParameter);
+			pageResult.setRows(rows);
+		}
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+    	return pageResult;
+    	
+    	
+    }
+    
+    
+    
 }
