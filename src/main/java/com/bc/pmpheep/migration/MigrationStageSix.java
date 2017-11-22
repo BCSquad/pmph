@@ -247,7 +247,7 @@ public class MigrationStageSix {
                 Integer isStaging = isStagingJudge.intValue(); // 是否暂存
                 declaration.setIsStaging(isStaging);
             }
-                declaration = declarationService.addDeclaration(declaration);
+            declaration = declarationService.addDeclaration(declaration);
             long pk = declaration.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "writerid", id); // 更新旧表中new_pk字段
             count++;
@@ -337,7 +337,7 @@ public class MigrationStageSix {
                 }
             }
             decEduExp.setSort(999); // 显示顺序
-                decEduExp = decEduExpService.addDecEduExp(decEduExp);
+            decEduExp = decEduExpService.addDecEduExp(decEduExp);
             long pk = decEduExp.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "leamid", id);
             count++;
@@ -420,7 +420,7 @@ public class MigrationStageSix {
                 }
             }
             decWorkExp.setSort(999); // 显示顺序
-                decWorkExp = decWorkExpService.addDecWorkExp(decWorkExp);
+            decWorkExp = decWorkExpService.addDecWorkExp(decWorkExp);
             long pk = decWorkExp.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "workid", id);
             count++;
@@ -502,7 +502,7 @@ public class MigrationStageSix {
                 }
             }
             decTeachExp.setSort(999); // 显示顺序
-                decTeachExp = decTeachExpService.addDecTeachExp(decTeachExp);
+            decTeachExp = decTeachExpService.addDecTeachExp(decTeachExp);
             long pk = decTeachExp.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "teachid", id);
             count++;
@@ -575,7 +575,7 @@ public class MigrationStageSix {
             decAcade.setPosition(position);
             decAcade.setNote((String) map.get("remark")); // 备注
             decAcade.setSort(999);
-                decAcade = decAcadeService.addDecAcade(decAcade);
+            decAcade = decAcadeService.addDecAcade(decAcade);
             long pk = decAcade.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "acadeid", id);
             count++;
@@ -636,7 +636,7 @@ public class MigrationStageSix {
             decLastPosition.setPosition(position);
             decLastPosition.setNote((String) map.get("remark")); // 备注
             decLastPosition.setSort(999); // 显示顺序
-                decLastPosition = decLastPositionService.addDecLastPosition(decLastPosition);
+            decLastPosition = decLastPositionService.addDecLastPosition(decLastPosition);
             long pk = decLastPosition.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "materpatid", id);
             count++;
@@ -699,7 +699,7 @@ public class MigrationStageSix {
             decCourseConstruction.setType(type);
             decCourseConstruction.setNote((String) map.get("remark")); // 备注
             decCourseConstruction.setSort(999); // 显示顺序
-                decCourseConstruction = decCourseConstructionService.addDecCourseConstruction(decCourseConstruction);
+            decCourseConstruction = decCourseConstructionService.addDecCourseConstruction(decCourseConstruction);
             long pk = decCourseConstruction.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "constructionid", id);
             count++;
@@ -771,7 +771,7 @@ public class MigrationStageSix {
             decNationalPlan.setRank(rank);
             decNationalPlan.setNote((String) map.get("remark")); // 备注
             decNationalPlan.setSort(999); // 显示顺序
-                decNationalPlan = decNationalPlanService.addDecNationalPlan(decNationalPlan);
+            decNationalPlan = decNationalPlanService.addDecNationalPlan(decNationalPlan);
             long pk = decNationalPlan.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "editorbookid", id);
             count++;
@@ -858,7 +858,7 @@ public class MigrationStageSix {
             decTextbook.setIsbn(isbn);
             decTextbook.setNote((String) map.get("remark")); // 备注
             decTextbook.setSort(999); // 显示顺序
-                decTextbook = decTextbookService.addDecTextbook(decTextbook);
+            decTextbook = decTextbookService.addDecTextbook(decTextbook);
             long pk = decTextbook.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "materwriteid", id);
             count++;
@@ -925,7 +925,7 @@ public class MigrationStageSix {
             decResearch.setAward(award);
             decResearch.setNote((String) map.get("remark")); // 备注
             decResearch.setSort(999); // 显示顺序
-                decResearch = decResearchService.addDecResearch(decResearch);
+            decResearch = decResearchService.addDecResearch(decResearch);
             long pk = decResearch.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "scientresearchid", id);
             count++;
@@ -964,7 +964,12 @@ public class MigrationStageSix {
             String extensionid = (String) map.get("expendid"); // 教材扩展项id
             Long declarationid = (Long) map.get("new_pk"); // 申报表id
             DecExtension decExtension = new DecExtension();
-            if (StringUtil.notEmpty(extensionid)) {
+            if (StringUtil.isEmpty(extensionid)) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到教材扩展项对应的关联结果为空。"));
+                excel.add(map);
+                logger.error("找到教材扩展项对应的关联结果为空，此结果将被记录在Excel中");
+                continue;
+            } else {
                 Long extensionId = JdbcHelper.getPrimaryKey("teach_material_extend", "expendid", extensionid);
                 if (ObjectUtil.isNull(extensionId)) {
                     map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材扩展项对应的关联结果。"));
@@ -989,7 +994,7 @@ public class MigrationStageSix {
             }
             String contents = content.trim();
             decExtension.setContent(contents);
-                decExtension = decExtensionService.addDecExtension(decExtension);
+            decExtension = decExtensionService.addDecExtension(decExtension);
             long pk = decExtension.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "extvalueid", id);
             count++;
@@ -1085,7 +1090,7 @@ public class MigrationStageSix {
             decPosition.setSyllabusName((String) map.get("syllabus_name")); // 教学大纲名称
             decPosition.setGmtCreate((Timestamp) map.get("gmt_create")); // 创建时间
             String outLineUrl = (String) map.get("outlineurl"); // 教学大纲id
-                decPosition = decPositionService.addDecPosition(decPosition);
+            decPosition = decPositionService.addDecPosition(decPosition);
             long pk = decPosition.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "materid", id);
             count++;
