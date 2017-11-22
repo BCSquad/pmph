@@ -491,14 +491,17 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id
+		m.founder_id,
+		m.plan_permission,
+		m.project_permission,
+		m.msg_id
 		FROM
 		material m
 		LEFT JOIN material_contact c ON m.id = c.material_id
 		LEFT JOIN material_project_editor p ON p.material_id = m.id
 		LEFT JOIN textbook e ON e.material_id = m.id
 		LEFT JOIN pmph_user u ON m.director = u.id
-		WHERE m.is_deleted = FALSE
+		WHERE  m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
 		AND (m.director = #{parameter.userId} OR p.editor_id = #{parameter.userId}
 		 OR e.planning_editor = #{parameter.userId})
@@ -530,7 +533,10 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id
+		m.founder_id,
+		m.plan_permission,
+		m.project_permission,
+		m.msg_id
 		FROM
 		material m
 		LEFT JOIN material_contact c ON m.id = c.material_id
@@ -573,7 +579,10 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id
+		m.founder_id,
+		m.plan_permission,
+		m.project_permission,
+		m.msg_id
 		FROM
 		material m
 		LEFT JOIN material_contact c ON m.id = c.material_id
@@ -612,7 +621,10 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id
+		m.founder_id,
+		m.plan_permission,
+		m.project_permission,
+		m.msg_id
 		FROM
 		material m
 		LEFT JOIN material_contact c ON m.id = c.material_id

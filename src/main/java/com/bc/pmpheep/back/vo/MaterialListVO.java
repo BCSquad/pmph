@@ -44,6 +44,14 @@ public class MaterialListVO implements Serializable {
 	private Boolean isFounder;
 	// 创建者id
 	private Long founderId;
+	// 消息id
+	private String msgId;
+	// 项目编辑权限
+	private Integer projectPermission;
+	// 策划编辑权限
+	private Integer planPermission;
+	// 用户在该教材中的权限
+	private String userPermission;
 
 	public Long getId() {
 		return id;
@@ -179,6 +187,38 @@ public class MaterialListVO implements Serializable {
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	public String getMsgId() {
+		return msgId;
+	}
+
+	public void setMsgId(String msgId) {
+		this.msgId = msgId;
+	}
+
+	public Integer getProjectPermission() {
+		return projectPermission;
+	}
+
+	public void setProjectPermission(Integer projectPermission) {
+		this.projectPermission = projectPermission;
+	}
+
+	public Integer getPlanPermission() {
+		return planPermission;
+	}
+
+	public void setPlanPermission(Integer planPermission) {
+		this.planPermission = planPermission;
+	}
+
+	public String getUserPermission() {
+		return userPermission;
+	}
+
+	public void setUserPermission(String userPermission) {
+		this.userPermission = userPermission;
 	}
 
 }
