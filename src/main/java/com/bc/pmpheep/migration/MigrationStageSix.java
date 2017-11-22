@@ -253,7 +253,7 @@ public class MigrationStageSix {
                 map.put(SQLParameters.EXCEL_EX_HEADER, e.getMessage() + "。");
                 excel.add(map);
                 logger.error("添加字段在关联表中无数据错误，此结果将被记录在Excel中");
-                declaration.setIsStaging(0);
+                continue;
             }
             long pk = declaration.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "writerid", id); // 更新旧表中new_pk字段
