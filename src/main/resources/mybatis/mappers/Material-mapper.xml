@@ -467,7 +467,8 @@
 		from 
 			textbook 
 		where 
-			material_id     = #{materialId}
+		    is_deleted      = 0 
+		and	material_id     = #{materialId}
 		and planning_editor = #{pmphUserId}
 	</select>
 	
