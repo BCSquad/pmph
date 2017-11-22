@@ -247,15 +247,17 @@ public class MigrationStageFour {
             }
             Long DepartmentId = (Long) oldMaterial.get("DepartmentId");
             if (ObjectUtil.isNull(DepartmentId)) {
-                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建部门为空。"));
-                excel.add(oldMaterial);
-                continue;
+//                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建部门为空。"));
+//                excel.add(oldMaterial);
+//                continue;
+                DepartmentId = 0L;
             }
             Long director = (Long) oldMaterial.get("director");
             if (ObjectUtil.isNull(director)) {
-                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("主任为空。"));
-                excel.add(oldMaterial);
-                continue;
+//                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("主任为空。"));
+//                excel.add(oldMaterial);
+//                continue;
+                director = 0L;
             }
             Long founder_id = (Long) oldMaterial.get("founder_id");
             if (ObjectUtil.isNull(founder_id)) {
