@@ -1032,7 +1032,7 @@ public class MigrationStageSix {
             StringBuilder sb = new StringBuilder();
             Double id = (Double) map.get("extvalueid"); // 旧表主键值
             String extensionid = (String) map.get("expendid"); // 教材扩展项id
-            Long declarationid = (Long) map.get("id"); // 申报表id
+            Long declarationid = (Long) map.get("new_pk"); // 申报表id
             DecExtension decExtension = new DecExtension();
             if (StringUtil.notEmpty(extensionid)) {
                 Long extensionId = JdbcHelper.getPrimaryKey("teach_material_extend", "expendid", extensionid);
@@ -1057,7 +1057,8 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.error("找到扩展项内容为无，此结果将被记录在Excel中");
             }
-            decExtension.setContent(content);
+            String contents = content.trim();
+            decExtension.setContent(contents);
             try {
                 decExtension = decExtensionService.addDecExtension(decExtension);
             } catch (Exception e) {
@@ -1100,7 +1101,7 @@ public class MigrationStageSix {
                 + "when tp.positiontype=3 then 3 "
                 + "else 0 end chosen_position,tp.mastersort,ta.outlineurl,ta.outlinename,"
                 + "ifnull(wd.updatedate,wd.createdate) gmt_create,"
-                + "tp.new_pk tpid,wd.new_pk wdid,tb.new_pk tbid "
+                + "wd.new_pk wdid,tb.new_pk tbid "
                 + "from teach_applyposition ta "
                 + "left join teach_positionset tp on tp.appposiid=ta.appposiid "
                 + "left join writer_declaration wd on wd.writerid=ta.writerid "
