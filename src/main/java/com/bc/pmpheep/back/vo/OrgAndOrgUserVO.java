@@ -210,7 +210,7 @@ public class OrgAndOrgUserVO implements Serializable{
 	public void setGmtCreate(Timestamp gmtCreate) {
 		this.gmtCreate = gmtCreate;
 	}
-	public boolean isdisabled() {
+	public boolean disabled() {
 		return disabled;
 	}
 	public void setdisabled(boolean disabled) {
