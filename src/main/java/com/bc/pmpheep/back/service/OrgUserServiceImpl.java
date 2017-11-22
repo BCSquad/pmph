@@ -214,53 +214,65 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
     }
 
     @Override
-    public Object updateOrgUserOfBack(OrgUser orgUser, Org org) throws CheckedServiceException {
-        OrgUser username = orgUserDao.getOrgUserById(orgUser.getId());
-        if (!username.getUsername().equals(orgUser.getUsername())) {
+    public String updateOrgUserOfBack(OrgAndOrgUserVO orgAndOrgUserVO) throws CheckedServiceException {
+        OrgUser username = orgUserDao.getOrgUserById(orgAndOrgUserVO.getId());
+        if (!username.getUsername().equals(orgAndOrgUserVO.getUsername())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.ILLEGAL_PARAM, "机构代码不相同");
         }
-        if (ObjectUtil.isNull(orgUser.getId())) {
+        if (ObjectUtil.isNull(orgAndOrgUserVO.getId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
-        if (StringUtil.strLength(orgUser.getUsername()) > 20) {
+        if (StringUtil.strLength(orgAndOrgUserVO.getUsername()) > 20) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.ILLEGAL_PARAM, "用户名不能超过20个字符");
         }
-        if (StringUtil.isEmpty(orgUser.getUsername())) {
+        if (StringUtil.isEmpty(orgAndOrgUserVO.getUsername())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "机构代码不能为空");
         }
-        if (StringUtil.strLength(orgUser.getRealname()) > 20) {
+        if (StringUtil.strLength(orgAndOrgUserVO.getRealname()) > 20) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.ILLEGAL_PARAM,
                                               "管理员姓名不能超过20个字符");
         }
-        if (StringUtil.strLength(orgUser.getNote()) > 100) {
+        if (StringUtil.strLength(orgAndOrgUserVO.getNote()) > 100) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.ILLEGAL_PARAM, "备注不能超过100个字符");
         }
-        if (!StringUtil.isEmpty(orgUser.getEmail())) {
-            if (!ValidatUtil.checkEmail(orgUser.getEmail())) {
+        if (!StringUtil.isEmpty(orgAndOrgUserVO.getEmail())) {
+            if (!ValidatUtil.checkEmail(orgAndOrgUserVO.getEmail())) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                                   CheckedExceptionResult.ILLEGAL_PARAM, "邮箱不符合规范");
             }
         }
-        if (!StringUtil.isEmpty(orgUser.getHandphone())) {
-            if (!ValidatUtil.checkMobileNumber(orgUser.getHandphone())) {
+        if (!StringUtil.isEmpty(orgAndOrgUserVO.getHandphone())) {
+            if (!ValidatUtil.checkMobileNumber(orgAndOrgUserVO.getHandphone())) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                                   CheckedExceptionResult.ILLEGAL_PARAM, "手机号码不符合规范");
             }
         }
-        org.setId(username.getOrgId());
+        Org org=new Org();
+        org.setId(orgAndOrgUserVO.getOrgId());
+        org.setOrgName(orgAndOrgUserVO.getOrgName());
+        org.setOrgTypeId(orgAndOrgUserVO.getOrgTypeId());
+        org.setAreaId(orgAndOrgUserVO.getAreaId());
         orgDao.updateOrg(org);
-        int num = orgUserDao.updateOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
+        OrgUser orgUser=new OrgUser();
+        orgUser.setId(orgAndOrgUserVO.getId());
+        orgUser.setRealname(orgAndOrgUserVO.getRealname());
+        orgUser.setIsDisabled(orgAndOrgUserVO.isDisabled());
+        orgUser.setHandphone(orgAndOrgUserVO.getHandphone());
+        orgUser.setEmail(orgAndOrgUserVO.getEmail());
+        orgUser.setNote(orgAndOrgUserVO.getNote());
+        int count = orgUserDao.updateOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
         String result = "FAIL";
-        if (num > 0) {
-            result = "SUCCESS";
-        }
-        return result;
+		if (count > 0) {
+
+			result = "SUCCESS";
+		}
+		return result;
     }
 
     @Override

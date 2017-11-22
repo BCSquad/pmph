@@ -98,7 +98,7 @@ public interface OrgUserService {
      * @throws CheckedServiceException
      * 
      */
-    Object updateOrgUserOfBack(OrgUser orgUser,Org org) throws CheckedServiceException;
+    String updateOrgUserOfBack(OrgAndOrgUserVO orgAndOrgUserVO) throws CheckedServiceException;
     
     /**
      * 	功能描述：在机构用户页面增加机构用户
