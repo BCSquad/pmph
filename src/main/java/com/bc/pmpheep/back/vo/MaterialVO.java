@@ -1,7 +1,9 @@
 package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
+
 import org.apache.ibatis.type.Alias;
+
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialExtra;
 
@@ -35,6 +37,24 @@ public class MaterialVO implements Serializable{
 	
 	public MaterialVO() {
 		super();
+	}
+	
+	public MaterialVO(
+			Material material, 
+			MaterialExtra materialExtra,
+			String materialContacts, 
+			String materialExtensions,
+			String materialProjectEditors, 
+			String materialNoticeAttachments,
+			String materialNoteAttachments) {
+		super();
+		this.material = material;
+		this.materialExtra = materialExtra;
+		this.materialContacts = materialContacts;
+		this.materialExtensions = materialExtensions;
+		this.materialProjectEditors = materialProjectEditors;
+		this.materialNoticeAttachments = materialNoticeAttachments;
+		this.materialNoteAttachments = materialNoteAttachments;
 	}
 
 	public Material getMaterial() {
