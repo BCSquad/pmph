@@ -230,7 +230,7 @@ public class OrgAndOrgUserVO implements Serializable{
 			String orgTypeName, String parentId, Long areaId, String areaName, String contactPerson,
 			String contactPhone, Integer progress, String handphone, String email, String position, String title,
 			String address, String postcode, String proxy, String note, Integer sort, Integer count,
-			Timestamp gmtCreate, boolean isDisabled, Long orgId, String name) {
+			Timestamp gmtCreate, Boolean isDisabled, Long orgId, String name) {
 		this.id = id;
 		this.orgName = orgName;
 		this.username = username;
