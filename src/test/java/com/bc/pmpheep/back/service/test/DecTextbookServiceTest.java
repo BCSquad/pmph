@@ -3,7 +3,6 @@
  */
 package com.bc.pmpheep.back.service.test;
 
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,7 +37,7 @@ public class DecTextbookServiceTest extends BaseTest {
 
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void testAddDecTextbook(){
+	public void testAddDecTextbook() {
 		DecTextbook decTextbook = new DecTextbook();
 		decTextbook.setDeclarationId(2L);
 		decTextbook.setMaterialName("社会心理学");
@@ -52,43 +51,43 @@ public class DecTextbookServiceTest extends BaseTest {
 		decTextbook = decTextbookService.addDecTextbook(decTextbook);
 		Assert.assertTrue("添加数据", decTextbook.getId() > 0);
 	}
-	
+
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void testDeleteDecTextbook(){
+	public void testDeleteDecTextbook() {
 		long id = add().getId();
 		Integer count = decTextbookService.deleteDecTextbookById(id);
 		Assert.assertTrue("删除数据失败", count > 0);
 	}
-	
+
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void testUpdateDecTextbook(){
+	public void testUpdateDecTextbook() {
 		DecTextbook decTextbook = add();
 		decTextbook.setIsbn("666");
 		decTextbook.setPublishDate(new Date());
 		Integer count = decTextbookService.updateDecTextbook(decTextbook);
 		Assert.assertTrue("数据更新失败", count > 0);
 	}
-	
+
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void testGetDecTextbook(){
+	public void testGetDecTextbook() {
 		long id = add().getId();
 		DecTextbook decTextbook = decTextbookService.getDecTextbookById(id);
 		Assert.assertNotNull("获取作家教材编写情况信息失败", decTextbook);
 	}
-	
+
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void testListDecTextbook(){
+	public void testListDecTextbook() {
 		add();
 		List<DecTextbook> list = new ArrayList<>();
 		list = decTextbookService.getListDecTextbookByDeclarationId(3L);
 		Assert.assertTrue("获取作家教材编写情况信息集合失败", list.size() > 1);
 	}
-	
-	private DecTextbook add(){
+
+	private DecTextbook add() {
 		DecTextbook decTextbook = new DecTextbook();
 		decTextbook.setDeclarationId(3L);
 		decTextbook.setMaterialName("神经脑科学");
@@ -100,11 +99,9 @@ public class DecTextbookServiceTest extends BaseTest {
 		decTextbook.setNote("重点科目");
 		decTextbook.setSort(7);
 		decTextbookService.addDecTextbook(decTextbook);
-		DecTextbook decTextbook2 = new DecTextbook(2L, "人体解剖学", 1, 2, "人民卫生出版社", 
-				new Date(), "321", "一级学科", null);
+		DecTextbook decTextbook2 = new DecTextbook(2L, "人体解剖学", 1, true, 2, "人民卫生出版社", new Date(), "321", "一级学科", null);
 		decTextbookService.addDecTextbook(decTextbook2);
-		DecTextbook decTextbook3 = new DecTextbook(3L, "内科学", 3, 3, "机械出版社", null, "798",
-				null, 6);
+		DecTextbook decTextbook3 = new DecTextbook(3L, "内科学", 3, true, 3, "机械出版社", null, "798", null, 6);
 		decTextbookService.addDecTextbook(decTextbook3);
 		return decTextbook3;
 	}
