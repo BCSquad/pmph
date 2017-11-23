@@ -9,26 +9,40 @@
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into material_project_editor (material_id,editor_id)  values(#{materialId},#{editorId}) ;
+		insert into material_project_editor (material_id,editor_id)
+		values(#{materialId},#{editorId}) ;
 	</insert>
-	
+
 	<!--批量新增 materialProjectEditor -->
 	<insert id="addMaterialProjectEditors" parameterType="java.util.List">
-		insert into material_project_editor (material_id,editor_id)  values
-		<foreach collection="list" item="item" index="index" separator=",">
-								(#{item.materialId},#{item.editorId}) 
+		insert into material_project_editor (material_id,editor_id) values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.materialId},#{item.editorId})
 		</foreach>
 	</insert>
-	
+
 	<!-- 根据教材id批量项目编辑 -->
-	<select id="listMaterialProjectEditors" parameterType="java.lang.Long"  resultType="MaterialProjectEditor"  >
-		select * from material_project_editor where material_id = #{materialId};
+	<select id="listMaterialProjectEditors" parameterType="java.lang.Long"
+		resultType="MaterialProjectEditor">
+		select * from
+		material_project_editor where material_id =
+		#{materialId};
 	</select>
 
 	<!-- 根据materialId删除 -->
-	<delete id="deleteMaterialProjectEditorByMaterialId" parameterType="java.lang.Long">
-		delete from material_project_editor where material_id=#{materialId} ;
+	<delete id="deleteMaterialProjectEditorByMaterialId"
+		parameterType="java.lang.Long">
+		delete from material_project_editor where
+		material_id=#{materialId} ;
 	</delete>
-	
+
+	<select id="getMaterialProjectEditorByMaterialIdAndUserId"
+		parameterType="MaterialProjectEditor" resultType="MaterialProjectEditor">
+		select * from
+		material_project_editor where material_id =
+		#{materialId} and editor_id
+		= #{editorId};
+	</select>
 
 </mapper>

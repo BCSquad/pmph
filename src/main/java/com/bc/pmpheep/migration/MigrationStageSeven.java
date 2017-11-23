@@ -138,15 +138,8 @@ public class MigrationStageSeven {
             Timestamp ut = (Timestamp) map.get("ut");
             UserMessage userMessage = new UserMessage("---------", title, msgtype, senderid, sendertype,
                     receiverid, receivertype, isread, iswithdraw, isdeleted, gt, ut);
-            try {
-                userMessage = userMessageSevice.addUserMessage(userMessage);
-            } catch (CheckedServiceException ex) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append(ex.getMessage()));
-                excel.add(map);
-                logger.error(ex.getMessage());
-                continue;
-            }
-            count++;
+           userMessage = userMessageSevice.addUserMessage(userMessage);
+           count++;
             long pk = userMessage.getId();
             if (count % 1000 == 0) {//打印进度
                 logger.info("执行了:" + (count * 100.0) / maps.size() + "%");

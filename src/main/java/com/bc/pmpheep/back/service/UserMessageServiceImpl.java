@@ -805,4 +805,12 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         }
         return userMessageDao.updateUserMessageCancelWithdrawByMsgId(msgId);
     }
+
+	@Override
+	public Integer addOneUserMessage(Message message, Integer sendType,
+			Long senderId, String userId, boolean isSave, String sessionId)
+			throws CheckedServiceException, IOException {
+		
+		return null;
+	}
 }
