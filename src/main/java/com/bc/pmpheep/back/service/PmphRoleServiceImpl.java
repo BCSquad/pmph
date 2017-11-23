@@ -61,8 +61,12 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 		for (PmphRole pmphRole : pmphRoles) {
 			List<Long> subList = this.getListPmphRolePermissionIdByRoleId(pmphRole.getId());
 			pmphRole.setPmphRolePermissionChild(subList);
-			pmphRole.setMaterialPermission(StringUtil.tentToBinary(
-					pmphRoleMaterialService.getPmphRoleMaterialByRoleId(pmphRole.getId()).getPermission()));
+			if (ObjectUtil.isNull(pmphRoleMaterialService.getPmphRoleMaterialByRoleId(pmphRole.getId()))) {
+				pmphRole.setMaterialPermission("00000000");
+			} else {
+				pmphRole.setMaterialPermission(StringUtil.tentToBinary(
+						pmphRoleMaterialService.getPmphRoleMaterialByRoleId(pmphRole.getId()).getPermission()));
+			}
 		}
 
 		return pmphRoles;
