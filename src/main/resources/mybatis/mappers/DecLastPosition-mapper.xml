@@ -15,6 +15,9 @@
 			<if test="materialName !=null and materialName !=''">
 				material_name,
 			</if>
+			<if test="isDigitalEditor !=null ">
+				is_digital_editor,
+			</if>
 			<if test="position !=null and position !=''">
 				position,
 			</if>
@@ -37,6 +40,9 @@
 			</if>
 			<if test="materialName !=null and materialName !=''">
 				#{materialName},
+			</if>
+			<if test="isDigitalEditor !=null ">
+				#{isDigitalEditor},
 			</if>
 			<if test="position !=null and position !=''">
 				#{position},
@@ -81,6 +87,9 @@
 			<if test="materialName !=null and materialName !=''">
 				material_name = #{materialName},
 			</if>
+			<if test="isDigitalEditor !=null ">
+				is_digital_editor = #{isDigitalEditor},
+			</if>
 			<if test="position !=null and position !=''">
 				position = #{position},
 			</if>
@@ -101,14 +110,16 @@
 	</select>
 
 	<!-- 根据declarationId查询作家上套教材参编情况信息 -->
-	<select id="getListDecLastPositionByDeclarationId" parameterType="java.lang.Long"
-		resultType="DecLastPosition">
-		select * from dec_last_position where
+	<select id="getListDecLastPositionByDeclarationId"
+		parameterType="java.lang.Long" resultType="DecLastPosition">
+		select * from
+		dec_last_position where
 		declaration_id=#{declarationId};
 	</select>
 
 	<!-- 查询作家上套教材参编情况表的总记录数 -->
 	<select id="getDecLastPosition" resultType="java.lang.Long">
-		select count(*) from dec_last_position
+		select count(*) from
+		dec_last_position
 	</select>
 </mapper>

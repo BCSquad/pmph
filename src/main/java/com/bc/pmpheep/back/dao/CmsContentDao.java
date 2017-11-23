@@ -148,6 +148,18 @@ public interface CmsContentDao {
      * </pre>
      */
     CmsContent getCmsContentById(Long id);
+    
+    /**
+     * 
+     * <pre>
+     * 功能描述：通过materialId获取CmsContent对象
+     * 使用示范：
+     *
+     * @param id 主键ID
+     * @return CmsContent 对象
+     * </pre>
+     */
+    CmsContent getCmsContentByMaterialId(Long materialId);
 
     /**
      * 

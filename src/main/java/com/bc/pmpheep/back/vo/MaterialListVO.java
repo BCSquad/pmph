@@ -53,6 +53,7 @@ public class MaterialListVO implements Serializable {
 	private String materialStep;
 
 
+
 	public Long getId() {
 		return id;
 	}
@@ -205,7 +206,6 @@ public class MaterialListVO implements Serializable {
 		this.projectPermission = projectPermission;
 	}
 
-	
 
 	public String getMaterialStep() {
 		return materialStep;
