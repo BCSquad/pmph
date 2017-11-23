@@ -105,12 +105,14 @@ public final class SystemMessageService {
 	   * @author Mryang
 	   * @createDate 2017年11月17日 上午10:52:13
 	   * @param materialName  教材名称
-	   * @param ids           发送的机构id集合
+	   * @param ids           发送的机构id集合（新增或者增加的机构）
+	   * @param msgId         消息id，没有发布过 则为null
 	   * @throws CheckedServiceException
 	   * @throws IOException
+	   * @return 消息id
 	   */
-	  public  void materialSend(String materialName,List<Long> ids) throws CheckedServiceException, IOException{
-		  this.materialSend(materialName,ids,false);
+	  public  String materialSend(String materialName,List<Long> ids,String msgId) throws CheckedServiceException, IOException{
+		  return this.materialSend(materialName,ids,msgId,false);
 	  }
 	  
 	  /**
@@ -118,16 +120,18 @@ public final class SystemMessageService {
 	   * @author Mryang
 	   * @createDate 2017年11月17日 上午10:52:13
 	   * @param materialId    教材id
-	   * @param ids           发送的机构id集合
+	   * @param ids           发送的机构id集合（新增或者增加的机构）
+	   * @param msgId         消息id，没有发布过 则为null
 	   * @throws CheckedServiceException
 	   * @throws IOException
+	   * @return 消息id
 	   */
-	  public  void materialSend(Long materialId,List<Long> ids) throws CheckedServiceException, IOException{
+	  public  String materialSend(Long materialId,List<Long> ids,String msgId) throws CheckedServiceException, IOException{
 		  Material material =materialService.getMaterialById(materialId);
 		  if(null == material){
 			  throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "没有找到对应的教材");
 		  }
-		  this.materialSend(material.getMaterialName(),ids,false);
+		  return this.materialSend(material.getMaterialName(),ids,msgId,false);
 	  }
 	  
 	  /**
@@ -135,12 +139,14 @@ public final class SystemMessageService {
 	   * @author Mryang
 	   * @createDate 2017年11月17日 上午9:28:13
 	   * @param materialName  教材名称
-	   * @param ids           发送的机构id集合
-	   * @param isOnlyManager 是否只发给管理员
+	   * @param ids           发送的机构id集合（新增或者增加的机构）
+	   * @param msgId         消息id，没有发布过 则为null
+	   * @param isOnlyManager 是否只发给管理员 
 	   * @throws CheckedServiceException
 	   * @throws IOException
+	   * @return 消息id
 	   */
-	  public  void materialSend(String materialName,List<Long> ids,boolean isOnlyManager) throws CheckedServiceException, IOException{
+	  public  String  materialSend(String materialName,List<Long> ids,String msgId,boolean isOnlyManager) throws CheckedServiceException, IOException{
 		  	if(StringUtils.isEmpty(materialName)){
 		  		throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM, "消息体为空");
 		  	}
@@ -150,11 +156,18 @@ public final class SystemMessageService {
 		  	//向教师发送消息
 		  	if(!isOnlyManager){
 		  		String tercherMsg="《<font color='red'>"+materialName+"</font>》已经开始申报，请您留意";
-		  		//mogodb保存消息体
-			  	Message message = new Message (tercherMsg);
-				message = messageService.add(message);
-				String msg_id  = message.getId();
-				//获取这些机构启用的作家用户
+		  		String msg_id = null;
+		  		if(null != msgId){//已经发布过消息了 
+		  			Message message = messageService.get(msgId);
+		  			tercherMsg  = message.getContent();
+		  			msg_id = msgId ;
+		  		}else{
+		  			//mogodb保存消息体
+				  	Message message = new Message (tercherMsg);
+					message = messageService.add(message);
+					msg_id  = message.getId();
+		  		}
+		  		//获取这些机构启用的作家用户
 				List<WriterUser> writerUserList = writerUserService.getWriterUserListByOrgIds(ids); 
 				if(null != writerUserList && writerUserList.size()  > 0){
 					List<UserMessage> userMessageList = new ArrayList<UserMessage>(writerUserList.size());
@@ -203,6 +216,7 @@ public final class SystemMessageService {
 		                                  messageTitle,
 		                                  managerMsg, DateUtil.getCurrentTime());
 		  	myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
+		  	return msgId;
 	 }
 	  
 	  /**
@@ -210,17 +224,19 @@ public final class SystemMessageService {
 	   * @author Mryang
 	   * @createDate 2017年11月17日 上午10:52:13
 	   * @param materialId    教材id
-	   * @param ids           发送的机构id集合
+	   * @param ids           发送的机构id集合（新增或者增加的机构）
+	   * @param msgId         消息id，没有发布过 则为null
 	   * @param isOnlyManager 是否只发给管理员
 	   * @throws CheckedServiceException
 	   * @throws IOException
+	   * @return 消息id
 	   */
-	  public  void materialSend(Long materialId,List<Long> ids,boolean isOnlyManager) throws CheckedServiceException, IOException{
+	  public  String  materialSend(Long materialId,List<Long> ids,String msgId ,boolean isOnlyManager) throws CheckedServiceException, IOException{
 		  Material material =materialService.getMaterialById(materialId);
 		  if(null == material){
 			  throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "没有找到对应的教材");
 		  }
-		  this.materialSend(material.getMaterialName(),ids,isOnlyManager);
+		  return this.materialSend(material.getMaterialName(),ids,msgId,isOnlyManager);
 	  }
 	  
 	  /**

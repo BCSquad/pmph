@@ -4,10 +4,13 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Declaration;
+import com.bc.pmpheep.back.vo.DeclarationListVO;
 
 
 /**
@@ -69,4 +72,23 @@ public interface DeclarationDao {
 	 * @Return 表的总记录数
 	 */
 	Long getDeclaration();
+	
+	/**
+	 * 申报表审核列表总数
+	 * @author Mryang
+	 * @createDate 2017年11月23日 上午10:26:29
+	 * @param pageParameter
+	 * @return 符合条件的记录总数
+	 */
+	Integer listDeclarationTotal(PageParameter<Map<String, Object>> pageParameter);
+	
+	/**
+	 * 申报表审核分页列表
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年11月23日 上午10:27:20
+	 * @param pageParameter
+	 * @return 符合条件的申报表审核分页数据
+	 */
+	List<DeclarationListVO> listDeclaration(PageParameter<Map<String, Object>> pageParameter);
 }
