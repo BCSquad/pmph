@@ -22,7 +22,34 @@ import org.apache.commons.lang3.math.NumberUtils;
  */
 public final class StringUtil {
 	public static void main(String[] args) {
-        System.out.println(tentToBinary(-2));
+		System.out.println(toAllCheck(null));
+		System.out.println(toAllCheck(""));
+		System.out.println(toAllCheck("   "));
+		System.out.println(toAllCheck("a b c  defg"));
+		System.out.println(toAllCheck("abcdefg"));
+    }
+	
+	/**
+	 * 将字符串拼装装成全局可搜索量；如(null/"  "-->null;张-->张;王 麻子-->王%麻%子)
+	 * @author Mryang
+	 * @createDate 2017年11月23日 上午9:41:04
+	 * @param str
+	 * @return
+	 */
+    public static String toAllCheck(String str) {
+        if (null == str || "".equals(str.trim())) {
+            return null;
+        }
+        str = str.replace(" ", "");
+        if(str.length() == 1){
+        	return str;
+        }
+        StringBuilder strTemp = new StringBuilder();
+        for(int i=0 ;i<str.length();i++){
+        	String  temp = str.substring(i,i+1);
+        	strTemp.append(i == 0 ?temp:"%"+temp);
+        }
+        return strTemp.toString();
     }
 	
 	/**
