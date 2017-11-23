@@ -60,7 +60,7 @@ public class OrgAndOrgUserVO implements Serializable{
     // 创建时间
     private Timestamp gmtCreate;
     //是否禁用
-    private boolean isDisabled;
+    private Boolean isDisabled;
     // 对应学校机id
     private Long    orgId;
     //姓名或账号
@@ -210,12 +210,10 @@ public class OrgAndOrgUserVO implements Serializable{
 	public void setGmtCreate(Timestamp gmtCreate) {
 		this.gmtCreate = gmtCreate;
 	}
-	
-	public boolean isDisabled() {
+	public Boolean getIsDisabled() {
 		return isDisabled;
 	}
-	
-	public void setDisabled(boolean isDisabled) {
+	public void setIsDisabled(Boolean isDisabled) {
 		this.isDisabled = isDisabled;
 	}
 	public Long getOrgId() {

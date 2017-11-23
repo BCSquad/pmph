@@ -264,7 +264,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         OrgUser orgUser=new OrgUser();
         orgUser.setId(orgAndOrgUserVO.getId());
         orgUser.setRealname(orgAndOrgUserVO.getRealname());
-        orgUser.setIsDisabled(orgAndOrgUserVO.isDisabled());
+        orgUser.setIsDisabled(orgAndOrgUserVO.getIsDisabled());
         orgUser.setHandphone(orgAndOrgUserVO.getHandphone());
         orgUser.setEmail(orgAndOrgUserVO.getEmail());
         orgUser.setNote(orgAndOrgUserVO.getNote());
