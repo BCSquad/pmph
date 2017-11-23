@@ -69,10 +69,6 @@ public class MaterialController {
 	 *            多个教材备注
 	 * @param noteFiles
 	 *            备注文件
-	 * @param projectEditorPowers
-	 *            项目编辑权限8位二进制字符串
-	 * @param planningEditorPowers
-	 *            策划编辑权限8位二进制字符串
 	 * @return
 	 */
 	@LogDetail(businessType = Business_Type, logRemark = "新建遴选公告")
