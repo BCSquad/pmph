@@ -18,6 +18,9 @@
 			<if test="presetPosition !=null and presetPosition !=''">
 				preset_position,
 			</if>
+			<if test="isDigitalEditor !=null ">
+				is_digital_editor,
+			</if>
 			<if test="isOnList !=null and isOnList !=''">
 				is_on_list,
 			</if>
@@ -46,6 +49,9 @@
 			</if>
 			<if test="textbookId !=null and textbookId !=''">
 				#{textbookId},
+			</if>
+			<if test="isDigitalEditor !=null ">
+				#{isDigitalEditor},
 			</if>
 			<if test="presetPosition !=null and presetPosition !=''">
 				#{presetPosition},
@@ -101,6 +107,9 @@
 			</if>
 			<if test="presetPosition !=null and presetPosition !=''">
 				preset_position = #{presetPosition},
+			</if>
+			<if test="isDigitalEditor !=null ">
+				is_digital_editor = #{isDigitalEditor},
 			</if>
 			<if test="isOnList !=null and isOnList !=''">
 				is_on_list = #{isOnList},

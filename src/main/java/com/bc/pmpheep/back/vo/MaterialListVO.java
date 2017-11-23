@@ -52,6 +52,8 @@ public class MaterialListVO implements Serializable {
 	private Integer planPermission;
 	// 用户在该教材中的权限
 	private String userPermission;
+	// 创建到 哪个步骤
+	private String materialStep;
 
 	public Long getId() {
 		return id;
@@ -219,6 +221,14 @@ public class MaterialListVO implements Serializable {
 
 	public void setUserPermission(String userPermission) {
 		this.userPermission = userPermission;
+	}
+
+	public String getMaterialStep() {
+		return materialStep;
+	}
+
+	public void setMaterialStep(String materialStep) {
+		this.materialStep = materialStep;
 	}
 
 }
