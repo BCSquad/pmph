@@ -28,7 +28,9 @@ public class BookListVO implements Serializable{
 	//教材轮次
 	private Integer materialRound;
 	//教材分类
-	private String materialType;
+	private String[] materialType;
+	//可见性区别
+	private boolean isPublic;
 	//教材书籍集合
 	private List<Textbook> textbooks;
 	
@@ -60,12 +62,20 @@ public class BookListVO implements Serializable{
 		this.materialRound = materialRound;
 	}
 
-	public String getMaterialType() {
+	public String[] getMaterialType() {
 		return materialType;
 	}
 
-	public void setMaterialType(String materialType) {
+	public void setMaterialType(String[] materialType) {
 		this.materialType = materialType;
+	}
+
+	public boolean isPublic() {
+		return isPublic;
+	}
+
+	public void setPublic(boolean isPublic) {
+		this.isPublic = isPublic;
 	}
 
 	public List<Textbook> getTextbooks() {
