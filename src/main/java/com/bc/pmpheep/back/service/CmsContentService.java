@@ -153,11 +153,24 @@ public interface CmsContentService {
      * 
      * @author Mryang
      * @createDate 2017年11月17日 下午5:17:23
-     * @param id
-     * @return CmsContent
+     * @param id 主键ID
+     * @return CmsContent CmsContent对象
      * @throws CheckedServiceException
      */
     CmsContent getCmsContentById(Long id) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：通过materialId获取CmsContent对象
+     * 使用示范：
+     *
+     * @param materialId 教材ID
+     * @return CmsContent对象
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    CmsContent getCmsContentByMaterialId(Long materialId) throws CheckedServiceException;
 
     /**
      * 

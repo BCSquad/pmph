@@ -11,16 +11,22 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialExtraDao;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
+import com.bc.pmpheep.back.po.MaterialOrg;
 import com.bc.pmpheep.back.util.ArrayUtil;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.FileUpload;
 import com.bc.pmpheep.back.util.FileUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.MateriaHistorylVO;
 import com.bc.pmpheep.back.vo.MaterialExtraVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
@@ -49,6 +55,8 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
     private MaterialNoteAttachmentService   materialNoteAttachmentService;
     @Autowired
     private FileService                     fileService;
+    @Autowired
+    private MaterialOrgService              materialOrgService;
     private static final String             NOTICE = "notice";
     private static final String             NOTE   = "note";
 
@@ -275,6 +283,38 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
         return resultMap;
     }
 
+    @Override
+    public PageResult<MateriaHistorylVO> listMaterialHistory(
+    PageParameter<MateriaHistorylVO> pageParameter, String sessionId)
+    throws CheckedServiceException {
+        PageResult<MateriaHistorylVO> pageResult = new PageResult<MateriaHistorylVO>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        List<MateriaHistorylVO> materiaHistorylVOs =
+        materialExtraDao.listMaterialHistory(pageParameter);
+        if (CollectionUtil.isNotEmpty(materiaHistorylVOs)) {
+            Integer count = materiaHistorylVOs.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(materiaHistorylVOs);
+        }
+        return pageResult;
+    }
+
+    @Override
+    public Integer noticePublished(Long materialId, List<Long> orgIds)
+    throws CheckedServiceException {
+        if (CollectionUtil.isEmpty(orgIds)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.NULL_PARAM, "机构为空");
+        }
+        // 根据教材ID查询教材-机构关联表
+        List<MaterialOrg> materialOrgs =
+        materialOrgService.getListMaterialOrgByMaterialId(materialId);
+        if (CollectionUtil.isEmpty(materialOrgs)) {
+
+        }
+        return null;
+    }
+
     /**
      * 
      * <pre>
@@ -339,4 +379,5 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             }
         }
     }
+
 }

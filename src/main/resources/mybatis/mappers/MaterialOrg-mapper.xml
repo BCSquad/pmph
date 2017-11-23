@@ -19,7 +19,12 @@
 								(#{item.materialId},#{item.orgId}) 
 		</foreach>
 	</insert>
-
+	
+	<!-- 根据materialId查询MaterialOrg集合-->
+	<select id="getListMaterialOrgByMaterialId" parameterType="java.lang.Long" resultType="MaterialOrg">
+		select * from material_org where material_id=#{materialId} ;
+	</select>
+	
 	<!-- 根据materialId删除 -->
 	<delete id="deleteMaterialOrgByMaterialId" parameterType="java.lang.Long">
 		delete from material_org where material_id=#{materialId} ;
@@ -29,5 +34,7 @@
 	<delete id="deleteMaterialOrgByOrgId" parameterType="java.lang.Long">
 		delete from material_org where org_id = #{orgId} ;
 	</delete>
+	
+	
 
 </mapper>

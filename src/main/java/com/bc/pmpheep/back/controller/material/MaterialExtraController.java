@@ -1,15 +1,22 @@
 package com.bc.pmpheep.back.controller.material;
 
 import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.MaterialExtraService;
+import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.vo.MateriaHistorylVO;
 import com.bc.pmpheep.back.vo.MaterialExtraVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -66,4 +73,46 @@ public class MaterialExtraController {
         return new ResponseBean(materialExtraService.getMaterialExtraAndNoticeDetail(materialId));
     }
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：查询历史教材通知列表
+     * 使用示范：
+     *
+     * @param pageNumber 当前页数
+     * @param pageSize 当前页条数
+     * @param request
+     * @return
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSINESS_TYPE, logRemark = "查询历史教材通知列表")
+    @RequestMapping(value = "/history", method = RequestMethod.GET)
+    public ResponseBean material(
+    @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
+    @RequestParam(name = "pageSize", defaultValue = "5") Integer pageSize,
+    HttpServletRequest request) {
+        PageParameter<MateriaHistorylVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+        MateriaHistorylVO materiaHistorylVO = new MateriaHistorylVO();
+        pageParameter.setParameter(materiaHistorylVO);
+        String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(materialExtraService.listMaterialHistory(pageParameter, sessionId));
+    }
+
+    /**
+     * 发布教材通知
+     * 
+     * 1：
+     * 
+     * 
+     * 
+     * 
+     * 
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSINESS_TYPE, logRemark = "通知发布")
+    @RequestMapping(value = "/published", method = RequestMethod.GET)
+    public ResponseBean published(HttpServletRequest request, Long materialId, List<Long> orgIds) {
+        return new ResponseBean();
+    }
 }

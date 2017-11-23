@@ -211,8 +211,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Override
     public Map<String, Object> listSendOject(Integer sendType, Integer pageNumber,
-    Integer pageSize, String orgName, String userNameOrUserCode, String materialName)
-    throws CheckedServiceException {
+    Integer pageSize, String orgName, Long materialId, String userNameOrUserCode,
+    String materialName) throws CheckedServiceException {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         if (ObjectUtil.isNull(sendType)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
@@ -221,7 +221,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         // 1 发送给学校管理员 //2 所有人
         if (Const.SEND_OBJECT_1.intValue() == sendType.intValue()
             || Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
-            resultMap.put("orgVo", orgService.listSendToSchoolAdminOrAllUser(orgName));
+            resultMap.put("orgVo", orgService.listSendToSchoolAdminOrAllUser(orgName, materialId));
         }
         // 指定用户
         if (Const.SEND_OBJECT_3.intValue() == sendType.intValue()) {
@@ -806,11 +806,10 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         return userMessageDao.updateUserMessageCancelWithdrawByMsgId(msgId);
     }
 
-	@Override
-	public Integer addOneUserMessage(Message message, Integer sendType,
-			Long senderId, String userId, boolean isSave, String sessionId)
-			throws CheckedServiceException, IOException {
-		
-		return null;
-	}
+    @Override
+    public Integer addOneUserMessage(Message message, Integer sendType, Long senderId,
+    String userId, boolean isSave, String sessionId) throws CheckedServiceException, IOException {
+
+        return null;
+    }
 }

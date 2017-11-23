@@ -1,8 +1,12 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.MaterialExtra;
+import com.bc.pmpheep.back.vo.MateriaHistorylVO;
 
 /**
  * MaterialExtraDao实体类数据访问层接口
@@ -67,5 +71,18 @@ public interface MaterialExtraDao {
      * </pre>
      */
     Long getMartialExtraCount();
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：查询历史教材通知列表
+     * 使用示范：
+     *
+     * @param pageParameter pageSize 当页条数 pageNumber 当前页数
+     * @param sessionId
+     * @return
+     * </pre>
+     */
+    List<MateriaHistorylVO> listMaterialHistory(PageParameter<MateriaHistorylVO> pageParameter);
 
 }

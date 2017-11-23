@@ -406,6 +406,15 @@ public class CmsContentServiceImpl implements CmsContentService {
     }
 
     @Override
+    public CmsContent getCmsContentByMaterialId(Long materialId) throws CheckedServiceException {
+        if (ObjectUtil.isNull(materialId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "教材ID参数为空!");
+        }
+        return cmsContentDao.getCmsContentByMaterialId(materialId);
+    }
+
+    @Override
     public Integer deleteCmsContentById(Long id) throws CheckedServiceException {
         if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
@@ -485,4 +494,5 @@ public class CmsContentServiceImpl implements CmsContentService {
             }
         }
     }
+
 }

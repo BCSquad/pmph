@@ -2,6 +2,8 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Org;
@@ -15,15 +17,16 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  */
 public interface OrgService {
-	
-	/**
-	 * 根据书籍获取当选了该书籍的人员所属机构
-	 * @author Mryang
-	 * @createDate 2017年11月19日 上午9:17:57
-	 * @param bookIds
-	 * @return  List<Org>
-	 * @throws CheckedServiceException
-	 */
+
+    /**
+     * 根据书籍获取当选了该书籍的人员所属机构
+     * 
+     * @author Mryang
+     * @createDate 2017年11月19日 上午9:17:57
+     * @param bookIds
+     * @return List<Org>
+     * @throws CheckedServiceException
+     */
     List<Org> listBeElectedOrgByBookIds(List<Long> bookIds) throws CheckedServiceException;
 
     /**
@@ -97,8 +100,10 @@ public interface OrgService {
      * 使用示范：
      *
      * @param orgName 机构名称
+     * @param materialId 教材ID
      * @return
      * </pre>
      */
-    List<OrgVO> listSendToSchoolAdminOrAllUser(String orgName) throws CheckedServiceException;
+    List<OrgVO> listSendToSchoolAdminOrAllUser(@Param("orgName") String orgName,
+    @Param("materialId") Long materialId) throws CheckedServiceException;
 }

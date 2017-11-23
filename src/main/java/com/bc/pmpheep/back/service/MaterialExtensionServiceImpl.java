@@ -27,11 +27,13 @@ public class MaterialExtensionServiceImpl extends BaseService implements Materia
     private MaterialExtensionDao materialExtensionDao;
 
     @Override
-    public List<MaterialExtension> getMaterialExtensionByMaterialId(Long materialId) throws CheckedServiceException{
-    	if (null == materialId) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION, CheckedExceptionResult.NULL_PARAM, "教材id为空");
+    public List<MaterialExtension> getMaterialExtensionByMaterialId(Long materialId)
+    throws CheckedServiceException {
+        if (null == materialId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,
+                                              CheckedExceptionResult.NULL_PARAM, "教材id为空");
         }
-    	return materialExtensionDao.getMaterialExtensionByMaterialId(materialId);
+        return materialExtensionDao.getMaterialExtensionByMaterialId(materialId);
     }
 
     /**

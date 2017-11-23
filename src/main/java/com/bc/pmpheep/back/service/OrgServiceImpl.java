@@ -30,211 +30,221 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Service
 public class OrgServiceImpl extends BaseService implements OrgService {
 
-	@Autowired
-	private OrgDao orgDao;
-	
-	@Autowired
-	OrgUserDao orgUserDao;
-	
-	@Override
-	public List<Org> listBeElectedOrgByBookIds(List<Long> bookIds) throws CheckedServiceException{
-		if(null == bookIds || bookIds.size() == 0){
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "参数为空");
-		}
-		for(Long bookId: bookIds){
-			if(null == bookId ){
-				throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "书籍参数为空");
-			}
-		}
-		return orgDao.listBeElectedOrgByBookIds(bookIds);
-	}
+    @Autowired
+    private OrgDao orgDao;
 
-	/**
-	 * 
-	 * @param org
-	 *            实体对象
-	 * @return Org 带主键
-	 * @throws CheckedServiceException
-	 */
-	@Override
-	public Org addOrg(Org org) throws CheckedServiceException {
-		if (ObjectUtil.isNull(org)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "参数为空");
-		}
-		// if (null == org.getParentId()) {
-		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-		// CheckedExceptionResult.NULL_PARAM, "上级机构id不能为空");
-		// }
-		if (StringUtil.isEmpty(org.getOrgName())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
-					"机构名称为空");
-		}
-		if (StringUtil.strLength(org.getOrgName()) > 20) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
-					"机构名称过长");
-		}
-		if (orgDao.getOrgByOrgName(org.getOrgName()).size() > 0) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
-					"机构名称重复了");
-		}
-		if (ObjectUtil.isNull(org.getOrgTypeId())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
-					"机构类型不能为空");
-		}
-		if (ObjectUtil.isNull(org.getAreaId())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
-					"机构区域不能为空");
-		}
-		// if (null == org.getContactPerson()) {
-		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-		// CheckedExceptionResult.NULL_PARAM,
-		// "机构联系人不能为空");
-		// }
-		// if (null == org.getContactPhone()) {
-		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-		// CheckedExceptionResult.NULL_PARAM,
-		// "机构联系电话不能为空");
-		// }
-		// if (null == org.getSort()) {
-		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-		// CheckedExceptionResult.NULL_PARAM,
-		// "机构显示顺序为空");
-		// }
-		// if (null == org.getNote()) {
-		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-		// CheckedExceptionResult.NULL_PARAM, "备注为空");
-		// }
-		Long id = org.getId();
-		orgDao.addOrg(org);
-		if (null != id) {
-			org.setId(id);
-		}
-		return org;
-	}
+    @Autowired
+    OrgUserDao     orgUserDao;
 
-	/**
-	 * 
-	 * @param id
-	 * @return Org
-	 * @throws CheckedServiceException
-	 */
-	@Override
-	public Org getOrgById(Long id) throws CheckedServiceException {
-		if (null == id) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "主键为空");
-		}
-		return orgDao.getOrgById(id);
-	}
+    @Override
+    public List<Org> listBeElectedOrgByBookIds(List<Long> bookIds) throws CheckedServiceException {
+        if (null == bookIds || bookIds.size() == 0) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        for (Long bookId : bookIds) {
+            if (null == bookId) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                                  CheckedExceptionResult.NULL_PARAM, "书籍参数为空");
+            }
+        }
+        return orgDao.listBeElectedOrgByBookIds(bookIds);
+    }
 
-	/**
-	 * 
-	 * @param id
-	 * @return 影响行数
-	 * @throws CheckedServiceException
-	 */
-	@Override
-	public Integer deleteOrgById(Long id) throws CheckedServiceException {
-		if (ObjectUtil.isNull(id)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "主键为空");
-		}
-		if (!CollectionUtil.isEmpty(orgUserDao.listOrgUserByOrgId(id))) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
-					"该机构内还有用户哦，请先将用户删除。");
-		}
-		return orgDao.deleteOrgById(id);
-	}
+    /**
+     * 
+     * @param org 实体对象
+     * @return Org 带主键
+     * @throws CheckedServiceException
+     */
+    @Override
+    public Org addOrg(Org org) throws CheckedServiceException {
+        if (ObjectUtil.isNull(org)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        // if (null == org.getParentId()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM, "上级机构id不能为空");
+        // }
+        if (StringUtil.isEmpty(org.getOrgName())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "机构名称为空");
+        }
+        if (StringUtil.strLength(org.getOrgName()) > 20) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "机构名称过长");
+        }
+        if (orgDao.getOrgByOrgName(org.getOrgName()).size() > 0) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "机构名称重复了");
+        }
+        if (ObjectUtil.isNull(org.getOrgTypeId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "机构类型不能为空");
+        }
+        if (ObjectUtil.isNull(org.getAreaId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "机构区域不能为空");
+        }
+        // if (null == org.getContactPerson()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM,
+        // "机构联系人不能为空");
+        // }
+        // if (null == org.getContactPhone()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM,
+        // "机构联系电话不能为空");
+        // }
+        // if (null == org.getSort()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM,
+        // "机构显示顺序为空");
+        // }
+        // if (null == org.getNote()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM, "备注为空");
+        // }
+        Long id = org.getId();
+        orgDao.addOrg(org);
+        if (null != id) {
+            org.setId(id);
+        }
+        return org;
+    }
 
-	/**
-	 * @param org
-	 * @return 影响行数
-	 * @throws CheckedServiceException
-	 */
-	@Override
-	public Integer updateOrg(Org org) throws CheckedServiceException {
-		if (null == org) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "参数为空");
-		}
-		if (null == org.getId()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "主键为空");
-		}
-		// if (null == org.getParentId()) {
-		// throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-		// CheckedExceptionResult.NULL_PARAM,
-		// "上级机构id不能为空");
-		// }
-		if (null == org.getOrgName()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
-					"机构名称为空");
-		}
-		if (null == org.getOrgTypeId()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
-					"机构类型不能为空");
-		}
-		if (null == org.getAreaId()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
-					"机构区域不能为空");
-		}
-		if (null == org.getContactPerson()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG,CheckedExceptionResult.NULL_PARAM,
-					"机构联系人不能为空");
-		}
-		if (null == org.getContactPhone()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG,CheckedExceptionResult.NULL_PARAM,
-					"机构联系电话不能为空");
-		}
-		if (null == org.getSort()) {
-			 throw new CheckedServiceException(CheckedExceptionBusiness.ORG,CheckedExceptionResult.NULL_PARAM,
-					 "机构显示顺序为空");
-		}
-		if (null == org.getNote()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG,CheckedExceptionResult.NULL_PARAM, "备注为空");
-		}
-		return orgDao.updateOrg(org);
-	}
+    /**
+     * 
+     * @param id
+     * @return Org
+     * @throws CheckedServiceException
+     */
+    @Override
+    public Org getOrgById(Long id) throws CheckedServiceException {
+        if (null == id) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "主键为空");
+        }
+        return orgDao.getOrgById(id);
+    }
 
-	@Override
-	public PageResult<OrgVO> listOrg(PageParameter<OrgVO> pageParameter) throws CheckedServiceException {
-		PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
-		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-		List<OrgVO> orgVOList = orgDao.listOrg(pageParameter);
-		if (null != orgVOList && orgVOList.size() > 0) {
-			Integer count = orgVOList.get(0).getCount();
-			pageResult.setTotal(count);
-			pageResult.setRows(orgVOList);
-		}
-		return pageResult;
-	}
+    /**
+     * 
+     * @param id
+     * @return 影响行数
+     * @throws CheckedServiceException
+     */
+    @Override
+    public Integer deleteOrgById(Long id) throws CheckedServiceException {
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "主键为空");
+        }
+        if (!CollectionUtil.isEmpty(orgUserDao.listOrgUserByOrgId(id))) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM,
+                                              "该机构内还有用户哦，请先将用户删除。");
+        }
+        return orgDao.deleteOrgById(id);
+    }
 
-	@Override
-	public PageResult<OrgVO> getSchoolAdminCheckList(PageParameter<OrgVO> pageParameter)
-			throws CheckedServiceException {
-		PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
-		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-		List<OrgVO> orgVOList = orgDao.getSchoolAdminCheckList(pageParameter);
-		if (CollectionUtil.isNotEmpty(orgVOList)) {
-			Integer count = orgVOList.get(0).getCount();
-			pageResult.setTotal(count);
-			pageResult.setRows(orgVOList);
-		}
-		return pageResult;
-	}
+    /**
+     * @param org
+     * @return 影响行数
+     * @throws CheckedServiceException
+     */
+    @Override
+    public Integer updateOrg(Org org) throws CheckedServiceException {
+        if (null == org) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        if (null == org.getId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "主键为空");
+        }
+        // if (null == org.getParentId()) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+        // CheckedExceptionResult.NULL_PARAM,
+        // "上级机构id不能为空");
+        // }
+        if (null == org.getOrgName()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "机构名称为空");
+        }
+        if (null == org.getOrgTypeId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "机构类型不能为空");
+        }
+        if (null == org.getAreaId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "机构区域不能为空");
+        }
+        if (null == org.getContactPerson()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "机构联系人不能为空");
+        }
+        if (null == org.getContactPhone()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "机构联系电话不能为空");
+        }
+        if (null == org.getSort()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "机构显示顺序为空");
+        }
+        if (null == org.getNote()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "备注为空");
+        }
+        return orgDao.updateOrg(org);
+    }
 
-	@Override
-	public List<OrgVO> listOrgByOrgName(String orgName) throws CheckedServiceException {
-		List<OrgVO> list = new ArrayList<>();
-		if (null != orgName) {
-			orgName = orgName.trim();
-			if (!orgName.equals("")) {
-				orgName = "%" + orgName + "%";
-				list = orgDao.listOrgByOrgName(orgName);
-			}
-		}
-		return list;
-	}
+    @Override
+    public PageResult<OrgVO> listOrg(PageParameter<OrgVO> pageParameter)
+    throws CheckedServiceException {
+        PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        List<OrgVO> orgVOList = orgDao.listOrg(pageParameter);
+        if (null != orgVOList && orgVOList.size() > 0) {
+            Integer count = orgVOList.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(orgVOList);
+        }
+        return pageResult;
+    }
 
-	@Override
-	public List<OrgVO> listSendToSchoolAdminOrAllUser(String orgName) throws CheckedServiceException {
-		return orgDao.listSendToSchoolAdminOrAllUser(orgName);
-	}
+    @Override
+    public PageResult<OrgVO> getSchoolAdminCheckList(PageParameter<OrgVO> pageParameter)
+    throws CheckedServiceException {
+        PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        List<OrgVO> orgVOList = orgDao.getSchoolAdminCheckList(pageParameter);
+        if (CollectionUtil.isNotEmpty(orgVOList)) {
+            Integer count = orgVOList.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(orgVOList);
+        }
+        return pageResult;
+    }
+
+    @Override
+    public List<OrgVO> listOrgByOrgName(String orgName) throws CheckedServiceException {
+        List<OrgVO> list = new ArrayList<>();
+        if (null != orgName) {
+            orgName = orgName.trim();
+            if (!orgName.equals("")) {
+                orgName = "%" + orgName + "%";
+                list = orgDao.listOrgByOrgName(orgName);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<OrgVO> listSendToSchoolAdminOrAllUser(String orgName, Long materialId)
+    throws CheckedServiceException {
+        return orgDao.listSendToSchoolAdminOrAllUser(orgName, materialId);
+    }
 
 }

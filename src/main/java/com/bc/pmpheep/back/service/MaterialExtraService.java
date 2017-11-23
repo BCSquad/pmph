@@ -1,9 +1,13 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.MaterialExtra;
+import com.bc.pmpheep.back.vo.MateriaHistorylVO;
 import com.bc.pmpheep.back.vo.MaterialExtraVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -90,5 +94,35 @@ public interface MaterialExtraService {
      */
     Map<String, Object> getMaterialExtraAndNoticeDetail(Long materialId)
     throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：查询历史教材通知列表
+     * 使用示范：
+     *
+     * @param pageParameter pageSize 当页条数 pageNumber 当前页数
+     * @param sessionId
+     * @return
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    PageResult<MateriaHistorylVO> listMaterialHistory(
+    PageParameter<MateriaHistorylVO> pageParameter, String sessionId)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：通知发布
+     * 使用示范：
+     *
+     * @param materialId 教材ID
+     * @param orgIds 机构ID集合
+     * @return
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer noticePublished(Long materialId, List<Long> orgIds) throws CheckedServiceException;
 
 }
