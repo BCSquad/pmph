@@ -6,16 +6,30 @@ import java.sql.Timestamp;
 import org.apache.ibatis.type.Alias;
 
 /**
- * DecPosition
  * 
- * @author mryang
+ * 
+ * 功能描述：作家职位申报表暂存表
+ * 
+ * 
+ * 
+ * @author (作者) 曾庆峰
+ * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2017年11月23日
+ * @modify (最后修改时间)
+ * @修改人 ：曾庆峰
+ * @审核人 ：
  *
  */
-@SuppressWarnings("serial")
-@Alias("DecPosition")
-public class DecPosition implements Serializable {
+@Alias("DecPositionTemp")
+public class DecPositionTemp implements Serializable {
 	// 主键
 	private Long id;
+	// 暂存人id
+	private Long authorId;
+	// 暂存人是否社内用户
+	private Boolean isBackground;
 	// 申报表
 	private Long declarationId;
 	// 书籍id
@@ -39,26 +53,12 @@ public class DecPosition implements Serializable {
 	// 修改时间
 	private Timestamp gmtUpdate;
 
-	public DecPosition() {
+	public DecPositionTemp(Long authorId, Boolean isBackground, Long declarationId, Long textbookId,
+			Integer presetPosition, Boolean isDigitalEditor, Integer isOnList, Integer chosenPosition, Integer rank,
+			String syllabusId, String syllabusName, Timestamp gmtCreate, Timestamp gmtUpdate) {
 		super();
-	}
-
-	public DecPosition(Long id) {
-		super();
-		this.id = id;
-	}
-
-	public DecPosition(Long declarationId, Long textbookId, Integer presetPosition) {
-		super();
-		this.declarationId = declarationId;
-		this.textbookId = textbookId;
-		this.presetPosition = presetPosition;
-	}
-
-	public DecPosition(Long declarationId, Long textbookId, Integer presetPosition, Boolean isDigitalEditor,
-			Integer isOnList, Integer chosenPosition, Integer rank, String syllabusId, String syllabusName,
-			Timestamp gmtCreate, Timestamp gmtUpdate) {
-		super();
+		this.authorId = authorId;
+		this.isBackground = isBackground;
 		this.declarationId = declarationId;
 		this.textbookId = textbookId;
 		this.presetPosition = presetPosition;
@@ -72,20 +72,28 @@ public class DecPosition implements Serializable {
 		this.gmtUpdate = gmtUpdate;
 	}
 
-	public Boolean getIsDigitalEditor() {
-		return isDigitalEditor;
-	}
-
-	public void setIsDigitalEditor(Boolean isDigitalEditor) {
-		this.isDigitalEditor = isDigitalEditor;
-	}
-
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Long getAuthorId() {
+		return authorId;
+	}
+
+	public void setAuthorId(Long authorId) {
+		this.authorId = authorId;
+	}
+
+	public Boolean getIsBackground() {
+		return isBackground;
+	}
+
+	public void setIsBackground(Boolean isBackground) {
+		this.isBackground = isBackground;
 	}
 
 	public Long getDeclarationId() {
@@ -110,6 +118,14 @@ public class DecPosition implements Serializable {
 
 	public void setPresetPosition(Integer presetPosition) {
 		this.presetPosition = presetPosition;
+	}
+
+	public Boolean getIsDigitalEditor() {
+		return isDigitalEditor;
+	}
+
+	public void setIsDigitalEditor(Boolean isDigitalEditor) {
+		this.isDigitalEditor = isDigitalEditor;
 	}
 
 	public Integer getIsOnList() {
@@ -170,9 +186,10 @@ public class DecPosition implements Serializable {
 
 	@Override
 	public String toString() {
-		return "DecPosition [id=" + id + ", declarationId=" + declarationId + ", textbookId=" + textbookId
-				+ ", presetPosition=" + presetPosition + ", isDigitalEditor=" + isDigitalEditor + ", isOnList="
-				+ isOnList + ", chosenPosition=" + chosenPosition + ", rank=" + rank + ", syllabusId=" + syllabusId
+		return "DecPositionTemp [id=" + id + ", authorId=" + authorId + ", isBackground=" + isBackground
+				+ ", declarationId=" + declarationId + ", textbookId=" + textbookId + ", presetPosition="
+				+ presetPosition + ", isDigitalEditor=" + isDigitalEditor + ", isOnList=" + isOnList
+				+ ", chosenPosition=" + chosenPosition + ", rank=" + rank + ", syllabusId=" + syllabusId
 				+ ", syllabusName=" + syllabusName + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
 	}
 
