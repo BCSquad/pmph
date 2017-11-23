@@ -21,6 +21,57 @@ import org.apache.commons.lang3.math.NumberUtils;
  * </pre>
  */
 public final class StringUtil {
+	public static void main(String[] args) {
+		System.out.println(toAllCheck(null));
+		System.out.println(toAllCheck(""));
+		System.out.println(toAllCheck("   "));
+		System.out.println(toAllCheck("a b c  defg"));
+		System.out.println(toAllCheck("abcdefg"));
+    }
+	
+	/**
+	 * 将字符串拼装装成全局可搜索量；如(null/"  "-->null;张-->张;王 麻子-->王%麻%子)
+	 * @author Mryang
+	 * @createDate 2017年11月23日 上午9:41:04
+	 * @param str
+	 * @return
+	 */
+    public static String toAllCheck(String str) {
+        if (null == str || "".equals(str.trim())) {
+            return null;
+        }
+        str = str.replace(" ", "");
+        if(str.length() == 1){
+        	return str;
+        }
+        StringBuilder strTemp = new StringBuilder();
+        for(int i=0 ;i<str.length();i++){
+        	String  temp = str.substring(i,i+1);
+        	strTemp.append(i == 0 ?temp:"%"+temp);
+        }
+        return strTemp.toString();
+    }
+	
+	/**
+	 * 十进制非负整数 转换成8位二进制字符串，左边不够用0补齐
+	 * @author Mryang
+	 * @createDate 2017年11月22日 上午10:25:40
+	 * @param p
+	 * @return
+	 */
+	public static String tentToBinary(Integer p) {
+		int digit  = 8 ; 
+		String str = Integer.toBinaryString(p);
+		if(null == str ){
+			return "00000000";
+		}else {
+			StringBuilder temp=new StringBuilder("");
+			for(int i=0 ; i<digit-str.length();i++){
+				temp.append("0");
+			}
+			return temp.append(str).toString();
+		}
+	}
 
     /**
      * 判断字符串是否为空
@@ -189,7 +240,5 @@ public final class StringUtil {
         return Math.ceil(valueLength);
     }
 
-    public static void main(String[] args) {
-        System.out.println(length("fdsa魂牵梦萦土城"));
-    }
+    
 }

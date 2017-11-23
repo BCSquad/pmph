@@ -92,4 +92,17 @@ public interface PmphGroupDao {
 	 *
 	 */
 	PmphGroup getPmphGroupByGroupName(String groupName);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据书籍id查询小组
+	 *
+	 * @param textbookId
+	 *            书籍id
+	 * @return
+	 *
+	 */
+	PmphGroup getPmphGroupByTextbookId(Long textbookId);
+
 }

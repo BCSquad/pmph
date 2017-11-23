@@ -14,7 +14,7 @@ import org.apache.ibatis.type.Alias;
 @Alias("OrgAndOrgUserVO")
 public class OrgAndOrgUserVO implements Serializable{
 	 // 主键
-    private String    id;
+    private Long    id;
     // 机构名称
     private String    orgName;
     // 机构代码
@@ -22,13 +22,13 @@ public class OrgAndOrgUserVO implements Serializable{
     // 管理员姓名
     private String    realname;
     // 机构类型id
-    private String    orgTypeId;
+    private Long      orgTypeId;
     // 机构类型名称
     private String    orgTypeName;
     // 上级机构id
     private String    parentId;
     // 区域id
-    private String    areaId;
+    private Long    areaId;
     // 所属区域名称
     private String    areaName;
     // 联系人 
@@ -60,7 +60,7 @@ public class OrgAndOrgUserVO implements Serializable{
     // 创建时间
     private Timestamp gmtCreate;
     //是否禁用
-    private boolean disabled;
+    private Boolean isDisabled;
     // 对应学校机id
     private Long    orgId;
     //姓名或账号
@@ -72,10 +72,10 @@ public class OrgAndOrgUserVO implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getOrgName() {
@@ -96,10 +96,10 @@ public class OrgAndOrgUserVO implements Serializable{
 	public void setRealname(String realname) {
 		this.realname = realname;
 	}
-	public String getOrgTypeId() {
+	public Long getOrgTypeId() {
 		return orgTypeId;
 	}
-	public void setOrgTypeId(String orgTypeId) {
+	public void setOrgTypeId(Long orgTypeId) {
 		this.orgTypeId = orgTypeId;
 	}
 	public String getOrgTypeName() {
@@ -114,10 +114,10 @@ public class OrgAndOrgUserVO implements Serializable{
 	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}
-	public String getAreaId() {
+	public Long getAreaId() {
 		return areaId;
 	}
-	public void setAreaId(String areaId) {
+	public void setAreaId(Long areaId) {
 		this.areaId = areaId;
 	}
 	public String getAreaName() {
@@ -210,11 +210,11 @@ public class OrgAndOrgUserVO implements Serializable{
 	public void setGmtCreate(Timestamp gmtCreate) {
 		this.gmtCreate = gmtCreate;
 	}
-	public boolean isdisabled() {
-		return disabled;
+	public Boolean getIsDisabled() {
+		return isDisabled;
 	}
-	public void setdisabled(boolean disabled) {
-		this.disabled = disabled;
+	public void setIsDisabled(Boolean isDisabled) {
+		this.isDisabled = isDisabled;
 	}
 	public Long getOrgId() {
 		return orgId;
@@ -222,23 +222,15 @@ public class OrgAndOrgUserVO implements Serializable{
 	public void setOrgId(Long orgId) {
 		this.orgId = orgId;
 	}
-	@Override
-	public String toString() {
-		return "OrgAndOrgUserVO [id=" + id + ", orgName=" + orgName + ", username=" + username + ", realname="
-				+ realname + ", orgTypeId=" + orgTypeId + ", orgTypeName=" + orgTypeName + ", parentId=" + parentId
-				+ ", areaId=" + areaId + ", areaName=" + areaName + ", contactPerson=" + contactPerson
-				+ ", contactPhone=" + contactPhone + ", progress=" + progress + ", handphone=" + handphone + ", email="
-				+ email + ", position=" + position + ", title=" + title + ", address=" + address + ", postcode="
-				+ postcode + ", proxy=" + proxy + ", note=" + note + ", sort=" + sort + ", count=" + count
-				+ ", gmtCreate=" + gmtCreate + ", disabled=" + disabled + ", orgId=" + orgId + ", name=" + name
-				+ "]";
+	public OrgAndOrgUserVO() {
+		super();
 	}
-	public OrgAndOrgUserVO(String id, String orgName, String username, String realname, String orgTypeId,
-			String orgTypeName, String parentId, String areaId, String areaName, String contactPerson,
+	
+	public OrgAndOrgUserVO(Long id, String orgName, String username, String realname, Long orgTypeId,
+			String orgTypeName, String parentId, Long areaId, String areaName, String contactPerson,
 			String contactPhone, Integer progress, String handphone, String email, String position, String title,
 			String address, String postcode, String proxy, String note, Integer sort, Integer count,
-			Timestamp gmtCreate, boolean disabled, Long orgId, String name) {
-		super();
+			Timestamp gmtCreate, Boolean isDisabled, Long orgId, String name) {
 		this.id = id;
 		this.orgName = orgName;
 		this.username = username;
@@ -262,12 +254,20 @@ public class OrgAndOrgUserVO implements Serializable{
 		this.sort = sort;
 		this.count = count;
 		this.gmtCreate = gmtCreate;
-		this.disabled = disabled;
+		this.isDisabled = isDisabled;
 		this.orgId = orgId;
 		this.name = name;
 	}
-	public OrgAndOrgUserVO() {
-		super();
+	@Override
+	public String toString() {
+		return "OrgAndOrgUserVO [id=" + id + ", orgName=" + orgName + ", username=" + username + ", realname="
+				+ realname + ", orgTypeId=" + orgTypeId + ", orgTypeName=" + orgTypeName + ", parentId=" + parentId
+				+ ", areaId=" + areaId + ", areaName=" + areaName + ", contactPerson=" + contactPerson
+				+ ", contactPhone=" + contactPhone + ", progress=" + progress + ", handphone=" + handphone + ", email="
+				+ email + ", position=" + position + ", title=" + title + ", address=" + address + ", postcode="
+				+ postcode + ", proxy=" + proxy + ", note=" + note + ", sort=" + sort + ", count=" + count
+				+ ", gmtCreate=" + gmtCreate + ", isDisabled=" + isDisabled + ", orgId=" + orgId + ", name=" + name
+				+ "]";
 	}
     
 }

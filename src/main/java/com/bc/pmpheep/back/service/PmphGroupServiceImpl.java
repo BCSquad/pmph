@@ -274,4 +274,9 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		return pmphGroup;
 	}
 
+	@Override
+	public PmphGroup getPmphGroupByTextbookId(Long textbookId) throws CheckedServiceException {
+		return pmphGroupDao.getPmphGroupByTextbookId(textbookId);
+	}
+
 }

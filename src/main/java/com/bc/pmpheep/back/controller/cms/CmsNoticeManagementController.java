@@ -17,6 +17,7 @@ import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.service.CmsContentService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.vo.CmsContentVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -67,10 +68,11 @@ public class CmsNoticeManagementController {
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, CmsContentVO cmsContentVO,
     HttpServletRequest request) {
+        cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_3);
         PageParameter<CmsContentVO> pageParameter =
         new PageParameter<CmsContentVO>(pageNumber, pageSize, cmsContentVO);
         String sessionId = CookiesUtil.getSessionId(request);
-        return new ResponseBean(cmsContentService.listContentCheck(pageParameter, sessionId));
+        return new ResponseBean(cmsContentService.listCmsContent(pageParameter, sessionId));
     }
 
     /**

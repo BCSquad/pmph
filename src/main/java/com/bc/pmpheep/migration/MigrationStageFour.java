@@ -443,9 +443,8 @@ public class MigrationStageFour {
             materialExtra.setNotice(notice);
             materialExtra.setNote(note);
             materialExtra = materialExtraService.addMaterialExtra(materialExtra);
-            materids.add(materid);
             count++;
-            mps.put(materialExtra.getMaterialId(), materialExtra.getId());
+           mps.put(materialExtra.getMaterialId(), materialExtra.getId());
         }
         if (excel.size() > 0) {
             try {

@@ -2,14 +2,11 @@ package com.bc.pmpheep.migration;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -21,7 +18,6 @@ import com.bc.pmpheep.back.po.MessageAttachment;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.service.MessageAttachmentService;
 import com.bc.pmpheep.back.service.UserMessageService;
-import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
@@ -29,7 +25,6 @@ import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.general.service.MessageService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.utils.ExcelHelper;
 
 /**
@@ -138,15 +133,8 @@ public class MigrationStageSeven {
             Timestamp ut = (Timestamp) map.get("ut");
             UserMessage userMessage = new UserMessage("---------", title, msgtype, senderid, sendertype,
                     receiverid, receivertype, isread, iswithdraw, isdeleted, gt, ut);
-            try {
-                userMessage = userMessageSevice.addUserMessage(userMessage);
-            } catch (CheckedServiceException ex) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append(ex.getMessage()));
-                excel.add(map);
-                logger.error(ex.getMessage());
-                continue;
-            }
-            count++;
+           userMessage = userMessageSevice.addUserMessage(userMessage);
+           count++;
             long pk = userMessage.getId();
             if (count % 1000 == 0) {//打印进度
                 logger.info("执行了:" + (count * 100.0) / maps.size() + "%");

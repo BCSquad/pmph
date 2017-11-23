@@ -951,8 +951,9 @@ public class MigrationStageSix {
     protected void decExtension() {
         String tableName = "teach_material_extvalue"; // 要迁移的旧库表名
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
-        String sql = "select *,wd.new_pk id from teach_material_extvalue wme "
-                + "left join writer_declaration wd on wd.writerid=wme.writerid";
+        String sql = "select *,wd.new_pk wdid,tme.new_pk tmeid from teach_material_extvalue wme "
+                + "left join writer_declaration wd on wd.writerid=wme.writerid "
+                + "left join teach_material_extend tme on tme.expendid=wme.expendid";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0; // 迁移成功的条目数
         List<Map<String, Object>> excel = new LinkedList<>();
@@ -961,24 +962,16 @@ public class MigrationStageSix {
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
             Double id = (Double) map.get("extvalueid"); // 旧表主键值
-            String extensionid = (String) map.get("expendid"); // 教材扩展项id
-            Long declarationid = (Long) map.get("new_pk"); // 申报表id
+            Long extensionid = (Long) map.get("tmeid"); // 教材扩展项id
+            Long declarationid = (Long) map.get("wdid"); // 申报表id
             DecExtension decExtension = new DecExtension();
-            if (StringUtil.isEmpty(extensionid)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到教材扩展项对应的关联结果为空。"));
+            if (ObjectUtil.isNull(extensionid) || extensionid.intValue() == 0) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材扩展项对应的关联结果。"));
                 excel.add(map);
-                logger.error("找到教材扩展项对应的关联结果为空，此结果将被记录在Excel中");
+                logger.error("未找到教材扩展项对应的关联结果，此结果将被记录在Excel中");
                 continue;
-            } else {
-                Long extensionId = JdbcHelper.getPrimaryKey("teach_material_extend", "expendid", extensionid);
-                if (ObjectUtil.isNull(extensionId)) {
-                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材扩展项对应的关联结果。"));
-                    excel.add(map);
-                    logger.error("未找到教材扩展项对应的关联结果，此结果将被记录在Excel中");
-                    continue;
-                }
-                decExtension.setExtensionId(extensionId);
             }
+            decExtension.setExtensionId(extensionid);
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
