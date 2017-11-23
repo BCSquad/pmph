@@ -61,5 +61,5 @@ public interface PmphRoleMaterialDao {
 	 * @param 
 	 * @return Long
 	 */
-	Long getPmphRoleMaterial();
+	Long getPmphRoleMaterialTotal();
 }

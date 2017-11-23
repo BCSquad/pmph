@@ -27,14 +27,14 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  * 使用示范：
  * 
  * 
- * &#64;author (作者) nyz
+ * @author (作者) nyz
  * 
- * &#64;since (该版本支持的JDK版本) ：JDK 1.6或以上
- * &#64;version (版本) 1.0
- * &#64;date (开发日期) 2017-9-20
- * &#64;modify (最后修改时间) 
- * &#64;修改人 ：nyz 
- * &#64;审核人 ：
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2017-9-20
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
  * </pre>
  */
 @SuppressWarnings("all")
@@ -55,8 +55,8 @@ public class PmphRoleController {
 	 * 功能描述：跳转到查询所有角色的页面
 	 * 使用示范：
 	 *
-	 * &#64;param model
-	 * &#64;return
+	 * @param model
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -73,9 +73,9 @@ public class PmphRoleController {
 	 * 功能描述：添加用户角色的后台方法
 	 * 使用示范：
 	 *
-	 * &#64;param role 
+	 * @param role 
 	 *        ids 角色默认权限的id
-	 * &#64;return
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -92,9 +92,9 @@ public class PmphRoleController {
 	 * 功能描述：跳转到更新角色的页面
 	 * 使用示范：
 	 *
-	 * &#64;param id
-	 * &#64;param model
-	 * &#64;return
+	 * @param id
+	 * @param model
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -110,8 +110,8 @@ public class PmphRoleController {
 	 * 功能描述：修改角色对象的方法
 	 * 使用示范：
 	 *
-	 * &#64;param role
-	 * &#64;return
+	 * @param role
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -128,9 +128,9 @@ public class PmphRoleController {
 	 * 功能描述：获取资源
 	 * 使用示范：
 	 *
-	 * &#64;param id
-	 * &#64;param model
-	 * &#64;return
+	 * @param id
+	 * @param model
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -147,9 +147,9 @@ public class PmphRoleController {
 	 * 功能描述：
 	 * 使用示范：
 	 *
-	 * &#64;param roleId
-	 * &#64;param permissionIds
-	 * &#64;return
+	 * @param roleId
+	 * @param permissionIds
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -171,8 +171,8 @@ public class PmphRoleController {
 	 * 功能描述：角色删除
 	 * 使用示范：
 	 *
-	 * &#64;param roleIds
-	 * &#64;return
+	 * @param roleIds
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody

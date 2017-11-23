@@ -434,4 +434,20 @@ public class PmphUserServiceImpl implements PmphUserService {
 		}
 		return userDao.getPmphUserPermissionByUserId(userId);
 	}
+
+	@Override
+	public List<String> getMaterialPermissionByUserId(Long userId) {
+		if (ObjectUtil.isNull(userId)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+		}
+		List<String> materialPermissions = new ArrayList<>();
+		List<Integer> integers = userDao.getMaterialPermissionByUserId(userId);
+		for (Integer integer : integers) {
+			String materialPermission = StringUtil.tentToBinary(integer);
+			materialPermissions.add(materialPermission);
+		}
+
+		return materialPermissions;
+	}
 }

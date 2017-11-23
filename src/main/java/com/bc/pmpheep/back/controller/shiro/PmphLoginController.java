@@ -120,6 +120,7 @@ public class PmphLoginController {
 			}
 			// 根据用户Id查询对应权限Id
 			List<Long> pmphUserPermissionIds = pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
+			List<String> materialPermission = pmphUserService.getMaterialPermissionByUserId(pmphUser.getId());
 			// 验证成功在Session中保存用户信息
 			request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
 			// 验证成功在Session中保存用户Token信息
@@ -129,6 +130,7 @@ public class PmphLoginController {
 			resultMap.put(Const.SESSION_PMPH_USER, pmphUser);
 			resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun(password, username).enpsw);
 			resultMap.put("pmphUserPermissionIds", pmphUserPermissionIds);
+			resultMap.put("materialPermission", materialPermission);
 			// 权限资源树集合
 			// permissions = pmphPermissionService.getListAllParentMenu();
 			// 拥有的权限资源
