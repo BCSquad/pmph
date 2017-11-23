@@ -25,8 +25,9 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 @Controller
 @RequestMapping(value = "/position")
 @SuppressWarnings("all")
-public class PositionChoose {
-	private final String BUSSINESS_TYPE ="";
+public class PositionChooseController {
+	
+	private final String BUSSINESS_TYPE ="职位遴选";
 	
 	@Autowired
 	private TextbookService textbookService;
