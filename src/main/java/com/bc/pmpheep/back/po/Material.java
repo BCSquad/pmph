@@ -105,10 +105,6 @@ public class Material implements java.io.Serializable {
 	private Long menderId;
 	//消息id
 	private String msgId;
-	//项目编辑权限
-	private Integer projectPermission;
-	//策划编辑权限
-	private Integer planPermission;
 
 	// Constructors
 
@@ -141,8 +137,7 @@ public class Material implements java.io.Serializable {
 			Boolean isPublished, Boolean isPublic,
 			Boolean isAllTextbookPublished, Boolean isForceEnd,
 			Boolean isDeleted, Timestamp gmtCreate, Long founderId,
-			Timestamp gmtUpdate, Long menderId, String msgId,
-			Integer projectPermission,Integer planPermission) {
+			Timestamp gmtUpdate, Long menderId, String msgId) {
 		super();
 		this.materialName = materialName;
 		this.materialRound = materialRound;
@@ -189,8 +184,6 @@ public class Material implements java.io.Serializable {
 		this.gmtUpdate = gmtUpdate;
 		this.menderId = menderId;
 		this.msgId = msgId;
-		this.projectPermission = projectPermission;
-		this.planPermission     = planPermission;
 	}
 
 
@@ -573,26 +566,6 @@ public class Material implements java.io.Serializable {
 	}
 
 
-	public Integer getProjectPermission() {
-		return projectPermission;
-	}
-
-
-	public void setProjectPermission(Integer projectPermission) {
-		this.projectPermission = projectPermission;
-	}
-
-
-	public Integer getPlanPermission() {
-		return planPermission;
-	}
-
-
-	public void setPlanPermission(Integer planPermission) {
-		this.planPermission = planPermission;
-	}
-
-
 	@Override
 	public String toString() {
 		return "{id:" + id + ", materialName:" + materialName
@@ -629,9 +602,7 @@ public class Material implements java.io.Serializable {
 				+ ", isForceEnd:" + isForceEnd + ", isDeleted:" + isDeleted
 				+ ", gmtCreate:" + gmtCreate + ", founderId:" + founderId
 				+ ", gmtUpdate:" + gmtUpdate + ", menderId:" + menderId
-				+ ", msgId:" + msgId + ", projectPermission:"
-				+ projectPermission + ", planPermission:" + planPermission
-				+ "}";
+				+ ", msgId:" + msgId + "}";
 	}
 
 	
