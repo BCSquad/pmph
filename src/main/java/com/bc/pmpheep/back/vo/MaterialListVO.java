@@ -49,6 +49,8 @@ public class MaterialListVO implements Serializable {
 	private String msgId;
 	// 项目编辑权限
 	private Integer projectPermission;
+	// 创建到 哪个步骤
+	private String materialStep;
 
 
 	public Long getId() {
@@ -204,5 +206,13 @@ public class MaterialListVO implements Serializable {
 	}
 
 	
+
+	public String getMaterialStep() {
+		return materialStep;
+	}
+
+	public void setMaterialStep(String materialStep) {
+		this.materialStep = materialStep;
+	}
 
 }
