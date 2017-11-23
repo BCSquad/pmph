@@ -1,8 +1,10 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
+
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -63,4 +65,23 @@ public interface TextbookService {
     
     PageResult<BookPositionVO> listBookPosition(Integer pageNumber,Integer pageSize,Integer state,String  textBookIds,Long materialId,String sessionId);
 
+    /**
+     * 
+     * Description:根据教材id获取教材书籍列表
+     * @author:lyc
+     * @date:2017年11月23日上午9:56:09
+     * @param 
+     * @return BookListVO
+     */
+    BookListVO getBookListVO(Long materialId) throws CheckedServiceException;
+    
+    /**
+     * 
+     * Description:添加或更新教材书籍
+     * @author:lyc
+     * @date:2017年11月23日下午1:56:50
+     * @param 
+     * @return Integer
+     */
+    List<Textbook> addOrUpdateTextBookList(BookListVO bookListVO) throws CheckedServiceException;
 }

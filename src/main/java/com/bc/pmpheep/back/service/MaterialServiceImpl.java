@@ -99,7 +99,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	public Long addOrUpdateMaterial(String sessionId, String materialContacts, String materialExtensions,
 			String materialProjectEditors, Material material, MaterialExtra materialExtra, MultipartFile[] noticeFiles,
 			String materialNoticeAttachments, MultipartFile[] noteFiles, String materialNoteAttachments,
-			String projectEditorPowers, String planningEditorPowers, boolean isUpdate) throws CheckedServiceException {
+		    boolean isUpdate) throws CheckedServiceException {
 		// 获取当前用户
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser) {
@@ -190,16 +190,6 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材备注内容过长");
 		}
-		// 判断项目编辑权限
-		if (null == projectEditorPowers || projectEditorPowers.length() != 8) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
-					"项目编辑权参数不正确");
-		}
-		// 判断策划编辑权限
-		if (null == planningEditorPowers || planningEditorPowers.length() != 8) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
-					"策划编辑权参数不正确");
-		}
 		// 获取主任
 		PmphUser director = pmphUserService.get(material.getDirector());
 		if (null == director) {
@@ -209,9 +199,6 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"主任对应的机构为空");
 		}
-		// 设置项目编辑和策划编辑的权限
-		material.setProjectPermission(Integer.valueOf(projectEditorPowers, 2));
-		material.setPlanPermission(Integer.valueOf(planningEditorPowers, 2));
 		// 教材所属部门
 		material.setDepartmentId(director.getDepartmentId());
 		// 修改人
@@ -610,23 +597,6 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialListVO.setIsDirector(true);
 			} else {
 				materialListVO.setIsDirector(false);
-			}
-			Integer plan = getPlanningEditorSum(materialListVO.getId(), pmphUser.getId());
-			MaterialProjectEditor materialProjectEditor = materialProjectEditorService
-					.getMaterialProjectEditorByMaterialIdAndUserId(materialListVO.getId(), pmphUser.getId());
-			if (pmphUser.getId().equals(materialListVO.getFounderId())
-					|| pmphUser.getId().equals(materialListVO.getDirector()) || pmphUser.getIsAdmin()) {
-				materialListVO.setUserPermission("11111111");
-			} else {
-				if (ObjectUtil.notNull(materialProjectEditor)) {
-					materialListVO.setUserPermission(StringUtil.tentToBinary(materialListVO.getProjectPermission()));
-				} else {
-					if (plan > 0) {
-						materialListVO.setUserPermission(StringUtil.tentToBinary(materialListVO.getPlanPermission()));
-					} else {
-						materialListVO.setUserPermission("00000000");
-					}
-				}
 			}
 			if (materialListVO.getIsPublished()) {
 				if (materialListVO.getIsForceEnd() || materialListVO.getIsAllTextbookPublished()) {
