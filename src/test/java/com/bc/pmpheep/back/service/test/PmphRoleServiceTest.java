@@ -51,7 +51,8 @@ public class PmphRoleServiceTest extends BaseTest {
 	public void testAddRoleResource() {
 		List<Long> list = new ArrayList<>();
 		list.add(1L);
-		Assert.assertTrue("添加失败", roleService.addRoleResource(1L, list) > 0);
+		String materialId = "00000000";
+		Assert.assertTrue("添加失败", roleService.addRoleResource(1L, list, materialId) > 0);
 	}
 
 	@Test

@@ -153,7 +153,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 	}
 
 	@Override
-	public Integer addRoleResource(Long roleId, List<Long> permissionIds) throws CheckedServiceException {
+	public Integer addRoleResource(Long roleId, List<Long> permissionIds,String materailId) throws CheckedServiceException {
 		// 添加时先删除当前权限
 		deleteRoleResourceByRoleId(roleId);
 		if (ObjectUtil.isNull(roleId) || permissionIds.size() < 0) {
