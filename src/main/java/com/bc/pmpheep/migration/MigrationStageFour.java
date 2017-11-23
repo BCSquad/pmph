@@ -370,9 +370,9 @@ public class MigrationStageFour {
             }
             String expendname = (String) materialExtension.get("expendname");
             if (StringUtil.isEmpty(expendname)) {
-                materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append("扩展名称为空。"));
+                materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append("扩展名称为空。设定默认值\"-\""));
                 excel.add(materialExtension);
-                continue;
+                expendname="-";
             }
             MaterialExtension newMaterialExtension = new MaterialExtension();
             newMaterialExtension.setMaterialId(materid);
