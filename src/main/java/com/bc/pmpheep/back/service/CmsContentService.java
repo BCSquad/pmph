@@ -158,6 +158,17 @@ public interface CmsContentService {
      * @throws CheckedServiceException
      */
     CmsContent getCmsContentById(Long id) throws CheckedServiceException;
+    
+    /**
+     * 通过materialId获取 CmsContent
+     * 
+     * @author Mryang
+     * @createDate 2017年11月17日 下午5:17:23
+     * @param id
+     * @return CmsContent
+     * @throws CheckedServiceException
+     */
+    CmsContent getCmsContentByMaterialId(Long materialId) throws CheckedServiceException;
 
     /**
      * 

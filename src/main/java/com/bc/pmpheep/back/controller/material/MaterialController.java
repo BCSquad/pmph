@@ -76,7 +76,7 @@ public class MaterialController {
 	 * @return
 	 */
 	@LogDetail(businessType = Business_Type, logRemark = "新建遴选公告")
-	@RequestMapping(value = "/new/material", method = RequestMethod.POST)
+	@RequestMapping(value = "/add/material", method = RequestMethod.POST)
 	public ResponseBean material(MaterialVO materialVO, HttpServletRequest request, MultipartFile[] noticeFiles,
 			MultipartFile[] noteFiles) {
 

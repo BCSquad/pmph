@@ -79,6 +79,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	@Autowired
 	PmphGroupService pmphGroupService;
 
+	@Autowired
+	CmsContentService cmsContentService;
+
 	/**
 	 * 
 	 * @param Material
@@ -591,6 +594,13 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	public List<MaterialListVO> addMaterialContact(List<MaterialListVO> list, PmphUser pmphUser) {
 		for (MaterialListVO materialListVO : list) {
 			materialListVO.setContacts(materialContactService.listMaterialContactByMaterialId(materialListVO.getId()));
+			if (textbookService.getTextbookByMaterialId(materialListVO.getId()).size() > 0) {
+				materialListVO.setMaterialStep("设置书目录");
+			} else {
+				if (ObjectUtil.isNull(cmsContentService.getCmsContentByMaterialId(materialListVO.getId()))) {
+					materialListVO.setMaterialStep("编辑通知详情");
+				}
+			}
 			if (pmphUser.getId().equals(materialListVO.getFounderId())) {
 				materialListVO.setIsFounder(true);
 			} else {
