@@ -144,6 +144,8 @@ public class MigrationStageSix {
                 + "group by wd.writerid ;";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql); // 查询所有数据
         int count = 0; // 迁移成功的条目数
+        int materialidCount = 0;
+        int experienceNumCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -163,14 +165,15 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(materialid) || materialid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到教材对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到教材对应的关联结果，此结果将被记录在Excel中");
+                materialidCount++;
                 continue;
             }
             declaration.setMaterialId(materialid);
             if (ObjectUtil.isNull(userid) || userid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到作家对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到作家对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到作家对应的关联结果，此结果将被记录在Excel中");
                 continue;
             }
             declaration.setUserId(userid);
@@ -186,7 +189,8 @@ public class MigrationStageSix {
                 experienceNum = JdbcHelper.correctExperience(experienceNum);
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("教龄数据不符合新表类型规范。"));
                 excel.add(map);
-                logger.info("教龄数据不符合新表类型规范，此结果将被记录在Excel中");
+                logger.debug("教龄数据不符合新表类型规范，此结果将被记录在Excel中");
+                experienceNumCount++;
             }
             declaration.setExperience(Integer.parseInt(experienceNum));
             declaration.setOrgName((String) map.get("workunit")); // 工作单位
@@ -259,6 +263,8 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("未找到教材对应的关联结果数量：{}", materialidCount);
+        logger.info("教龄数据不符合新表类型规范数量：{}", experienceNumCount);
         logger.info("writer_declaration表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
@@ -280,6 +286,7 @@ public class MigrationStageSix {
                 + "left join writer_declaration wd on wd.writerid=wl.writerid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql); //取得该表中所有数据
         int count = 0;//迁移成功的条目数
+        int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -290,7 +297,8 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                declarationidCount++;
                 continue;
             }
             decEduExp.setDeclarationId(declarationid);
@@ -349,6 +357,7 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
         logger.info("writer_learn表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
@@ -369,6 +378,8 @@ public class MigrationStageSix {
         // 此处保存maps里的数据有一条未查询，已单独导出
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0;//迁移成功的条目数
+        int declarationidCount = 0;
+        int positionCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -379,7 +390,8 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                declarationidCount++;
                 continue;
             }
             decWorkExp.setDeclarationId(declarationid);
@@ -394,7 +406,8 @@ public class MigrationStageSix {
             if (("无").equals(position)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到职位为无字。"));
                 excel.add(map);
-                logger.error("找到职位为无字，此结果将被记录在Excel中");
+                logger.debug("找到职位为无字，此结果将被记录在Excel中");
+                positionCount++;
             }
             decWorkExp.setPosition(position);
             decWorkExp.setNote((String) map.get("remark")); // 备注
@@ -432,6 +445,8 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
+        logger.info("找到职位为无字数量：{}", positionCount);
         logger.info("writer_work表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
@@ -452,6 +467,7 @@ public class MigrationStageSix {
         // 此处保存maps里的数据有一条未查询，已单独导出
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0;//迁移成功的条目数
+        int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -462,7 +478,8 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                declarationidCount++;
                 continue;
             }
             decTeachExp.setDeclarationId(declarationid);
@@ -514,6 +531,7 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
         logger.info("writer_teach表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
@@ -532,6 +550,10 @@ public class MigrationStageSix {
                 + "left join writer_declaration wd on wd.writerid=wa.writerid";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);;//取得该表中所有数据
         int count = 0;//迁移成功的条目数
+        int declarationidCount = 0;
+        int positionCount = 0;
+        int rankJudgeCount = 0;
+        int orgNameCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -543,7 +565,8 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                declarationidCount++;
                 continue;
             }
             decAcade.setDeclarationId(declarationid);
@@ -551,12 +574,14 @@ public class MigrationStageSix {
             if (("无").equals(position) || StringUtil.isNumeric(position)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到职务或职务数据不规范。"));
                 excel.add(map);
-                logger.error("未找到职务，此结果将被记录在Excel中");
+                logger.debug("未找到职务或职务数据不规范，此结果将被记录在Excel中");
+                positionCount++;
             }
             if ("nu".equals(rankJudge)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到级别内容是nu。"));
                 excel.add(map);
-                logger.error("找到级别内容是nu，此结果将被记录在Excel中");
+                logger.debug("找到级别内容是nu，此结果将被记录在Excel中");
+                rankJudgeCount++;
             } else {
                 if (StringUtil.isEmpty(rankJudge)) {
                     decAcade.setRank(null);
@@ -569,7 +594,8 @@ public class MigrationStageSix {
             if (("无").equals(orgName)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到兼职学术组织为无字。"));
                 excel.add(map);
-                logger.error("找到兼职学术组织为无字，此结果将被记录在Excel中");
+                logger.debug("找到兼职学术组织为无字，此结果将被记录在Excel中");
+                orgNameCount++;
             }
             decAcade.setOrgName(orgName);
             decAcade.setPosition(position);
@@ -587,6 +613,10 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
+        logger.info("未找到职务或职务数据不规范数量：{}", positionCount);
+        logger.info("找到级别内容是nu数量：{}", rankJudgeCount);
+        logger.info("找到兼职学术组织为无字数量：{}", orgNameCount);
         logger.info("writer_acade表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
@@ -610,6 +640,8 @@ public class MigrationStageSix {
                 + "left join writer_declaration wd on wd.writerid=wm.writerid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0;//迁移成功的条目数
+        int declarationidCount = 0;
+        int materialNameCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -621,7 +653,8 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                declarationidCount++;
                 continue;
             }
             decLastPosition.setDeclarationId(declarationid);
@@ -629,7 +662,8 @@ public class MigrationStageSix {
             if (("无").equals(materialName)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到教材名称为无字。"));
                 excel.add(map);
-                logger.error("找到教材名称为无字，此结果将被记录在Excel中");
+                logger.debug("找到教材名称为无字，此结果将被记录在Excel中");
+                materialNameCount++;
             }
             decLastPosition.setMaterialName(materialName);
             Integer position = positionJudge.intValue(); // 编写职务
@@ -648,6 +682,8 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
+        logger.info("找到教材名称为无字数量：{}", materialNameCount);
         logger.info("writer_materpat表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
@@ -666,6 +702,8 @@ public class MigrationStageSix {
                 + "left join writer_declaration wd on wd.writerid=wc.writerid";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);//取得该表中所有数据
         int count = 0;//迁移成功的条目数
+        int declarationidCount = 0;
+        int courseNameCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -677,7 +715,8 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                declarationidCount++;
                 continue;
             }
             decCourseConstruction.setDeclarationId(declarationid);
@@ -685,7 +724,8 @@ public class MigrationStageSix {
             if (("无").equals(courseName)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到课程名称为无字。"));
                 excel.add(map);
-                logger.error("找到课程名称为无字，此结果将被记录在Excel中");
+                logger.debug("找到课程名称为无字，此结果将被记录在Excel中");
+                courseNameCount++;
             }
             decCourseConstruction.setCourseName(courseName);
             String classHour = (String) map.get("classhour"); // 课程全年课时数
@@ -711,6 +751,8 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
+        logger.info("找到课程名称为无字数量：{}", courseNameCount);
         logger.info("writer_construction表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
@@ -734,6 +776,8 @@ public class MigrationStageSix {
                 + "left join writer_declaration wd on wd.writerid=wa.writerid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0;//迁移成功的条目数
+        int declarationidCount = 0;
+        int materialNameCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -745,7 +789,8 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                declarationidCount++;
                 continue;
             }
             decNationalPlan.setDeclarationId(declarationid);
@@ -753,7 +798,8 @@ public class MigrationStageSix {
             if (("无").equals(materialName)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到教材名称为无字。"));
                 excel.add(map);
-                logger.error("找到教材名称为无字，此结果将被记录在Excel中");
+                logger.debug("找到教材名称为无字，此结果将被记录在Excel中");
+                materialNameCount++;
             }
             decNationalPlan.setMaterialName(materialName);
             String isbn = (String) map.get("booknumber"); // 标准书号
@@ -783,6 +829,8 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
+        logger.info("找到教材名称为无字数量：{}", materialNameCount);
         logger.info("writer_editorbook表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
@@ -809,6 +857,8 @@ public class MigrationStageSix {
         // 此处保存maps里的数据有35条未查询，已单独导出
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0;//迁移成功的条目数
+        int declarationidCount = 0;
+        int materialNameCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -821,7 +871,8 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                declarationidCount++;
                 continue;
             }
             decTextbook.setDeclarationId(declarationid);
@@ -829,7 +880,8 @@ public class MigrationStageSix {
             if (("无").equals(materialName)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到教材名称为无字。"));
                 excel.add(map);
-                logger.error("找到教材名称为无字，此结果将被记录在Excel中");
+                logger.debug("找到教材名称为无字，此结果将被记录在Excel中");
+                materialNameCount++;
             }
             decTextbook.setMaterialName(materialName);
             Integer rank = rankJudge.intValue(); // 教材级别
@@ -870,6 +922,8 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
+        logger.info("找到教材名称为无字数量：{}", materialNameCount);
         logger.info("writer_materwrite表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
@@ -888,6 +942,9 @@ public class MigrationStageSix {
                 + "left join writer_declaration wd on wd.writerid=ws.writerid";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);//取得该表中所有数据
         int count = 0;//迁移成功的条目数
+        int declarationidCount = 0;
+        int researchNameCount = 0;
+        int awardCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -898,7 +955,8 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                declarationidCount++;
                 continue;
             }
             decResearch.setDeclarationId(declarationid);
@@ -906,7 +964,8 @@ public class MigrationStageSix {
             if (("无").equals(researchName)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到课题名称为无字。"));
                 excel.add(map);
-                logger.error("找到课题名称为无字，此结果将被记录在Excel中");
+                logger.debug("找到课题名称为无字，此结果将被记录在Excel中");
+                researchNameCount++;
             }
             decResearch.setResearchName(researchName);
             String approvalUnit = (String) map.get("approvaluntiname"); // 审批单位
@@ -920,7 +979,8 @@ public class MigrationStageSix {
             if (("无").equals(award)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到获奖情况为无字。"));
                 excel.add(map);
-                logger.error("找到获奖情况为无字，此结果将被记录在Excel中");
+                logger.debug("找到获奖情况为无字，此结果将被记录在Excel中");
+                awardCount++;
             }
             decResearch.setAward(award);
             decResearch.setNote((String) map.get("remark")); // 备注
@@ -937,6 +997,9 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
+        logger.info("找到课题名称为无字数量：{}", researchNameCount);
+        logger.info("找到获奖情况为无字数量：{}", awardCount);
         logger.info("writer_scientresearch表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
@@ -956,6 +1019,7 @@ public class MigrationStageSix {
                 + "left join teach_material_extend tme on tme.expendid=wme.expendid";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0; // 迁移成功的条目数
+        int extensionidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         String regular = "^[0-9a-zA-Z]{8,10}$"; // 正则表达式判断
         /* 开始遍历查询结果 */
@@ -968,7 +1032,8 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(extensionid) || extensionid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材扩展项对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到教材扩展项对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到教材扩展项对应的关联结果，此结果将被记录在Excel中");
+                extensionidCount++;
                 continue;
             }
             decExtension.setExtensionId(extensionid);
@@ -999,6 +1064,7 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("未找到教材扩展项对应的关联结果数量：{}", extensionidCount);
         logger.info("teach_material_extvalue表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
@@ -1029,6 +1095,7 @@ public class MigrationStageSix {
                 + "left join teach_bookinfo tb on tb.bookid=ta.bookid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0; // 迁移成功的条目数
+        int textbookidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -1047,7 +1114,8 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(textbookid) || textbookid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到书籍对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到书籍对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到书籍对应的关联结果，此结果将被记录在Excel中");
+                textbookidCount++;
                 continue;
             }
             decPosition.setTextbookId(textbookid);
@@ -1112,6 +1180,7 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("未找到书籍对应的关联结果数量：{}", textbookidCount);
         logger.info("teach_applyposition表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
