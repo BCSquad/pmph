@@ -32,10 +32,6 @@ public class MaterialVO implements Serializable{
 	private String materialNoticeAttachments;
 	//通知备注附件信息 （更新的时候需要）
 	private String materialNoteAttachments;
-	//项目编辑权限8位二进制字符串
-	private String projectEditorPowers;
-	//策划编辑权限8位二进制字符串
-	private String planningEditorPowers;
 	
 	public MaterialVO() {
 		super();
@@ -97,21 +93,16 @@ public class MaterialVO implements Serializable{
 		this.materialNoteAttachments = materialNoteAttachments;
 	}
 
-	public String getProjectEditorPowers() {
-		return projectEditorPowers;
+	@Override
+	public String toString() {
+		return "{material:" + material.toString() + ", materialExtra:" + materialExtra
+				+ ", materialContacts:" + materialContacts
+				+ ", materialExtensions:" + materialExtensions
+				+ ", materialProjectEditors:" + materialProjectEditors
+				+ ", materialNoticeAttachments:" + materialNoticeAttachments
+				+ ", materialNoteAttachments:" + materialNoteAttachments + "}";
 	}
 
-	public void setProjectEditorPowers(String projectEditorPowers) {
-		this.projectEditorPowers = projectEditorPowers;
-	}
-
-	public String getPlanningEditorPowers() {
-		return planningEditorPowers;
-	}
-
-	public void setPlanningEditorPowers(String planningEditorPowers) {
-		this.planningEditorPowers = planningEditorPowers;
-	}
 	
 	
 }

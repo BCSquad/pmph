@@ -55,6 +55,16 @@ public class DecLastPosition implements java.io.Serializable {
 		this.note = note;
 		this.sort = sort;
 	}
+	
+	public DecLastPosition(Long declarationId, String materialName, Integer position, 
+			String note, Integer sort) {
+		super();
+		this.declarationId = declarationId;
+		this.materialName = materialName;
+		this.position = position;
+		this.note = note;
+		this.sort = sort;
+	}
 
 	public Long getId() {
 		return id;

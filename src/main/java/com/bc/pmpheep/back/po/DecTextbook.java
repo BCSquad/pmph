@@ -68,6 +68,20 @@ public class DecTextbook implements java.io.Serializable {
 		this.note = note;
 		this.sort = sort;
 	}
+	
+	public DecTextbook(Long declarationId, String materialName, Integer rank, Integer position,
+			String publisher, Date publishDate, String isbn, String note, Integer sort) {
+		super();
+		this.declarationId = declarationId;
+		this.materialName = materialName;
+		this.rank = rank;
+		this.position = position;
+		this.publisher = publisher;
+		this.publishDate = publishDate;
+		this.isbn = isbn;
+		this.note = note;
+		this.sort = sort;
+	}
 
 	public Long getId() {
 		return id;

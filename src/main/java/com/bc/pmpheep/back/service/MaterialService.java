@@ -41,9 +41,7 @@ public interface MaterialService {
      * @param noteFiles
      * @param materialNoteAttachments
      * @param projectEditorPowers 项目编辑权限8位二进制字符串
-	 * @param planningEditorPowers 策划编辑权限8位二进制字符串
      * @param isUpdate false新增,true更新
-     * 
      * @return material 主键
      * @throws CheckedServiceException
      */
@@ -57,8 +55,6 @@ public interface MaterialService {
 		    String materialNoticeAttachments,
 		    MultipartFile[]   noteFiles,
 		    String materialNoteAttachments,
-		    String projectEditorPowers,
-		    String planningEditorPowers,
 		    boolean isUpdate) throws CheckedServiceException;
    
 
