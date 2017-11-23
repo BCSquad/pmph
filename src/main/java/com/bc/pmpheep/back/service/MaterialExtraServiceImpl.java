@@ -63,6 +63,20 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
         }
         return materialExtraDao.getMaterialExtraById(id);
     }
+    
+    /**
+     * 查询一个 MaterialExtra 通过主键materialId
+     * @param materialId
+     * @return MaterialExtra
+     * @throws CheckedServiceException
+     */
+    @Override
+    public MaterialExtra getMaterialMaterialId(Long materialId) throws CheckedServiceException {
+        if (null == materialId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,CheckedExceptionResult.NULL_PARAM, "教材为空");
+        }
+        return materialExtraDao.getMaterialMaterialId(materialId);
+    }
 
     /**
      * 

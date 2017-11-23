@@ -46,6 +46,15 @@ public interface MaterialExtraDao {
 	MaterialExtra getMaterialExtraById(Long id);
 	
 	/**
+	 * 查询一个 MaterialExtra 通过materialId
+	 * 
+	 * @param id
+	 *            必须包含主键ID
+	 * @return MaterialExtra
+	 */
+	MaterialExtra getMaterialMaterialId(Long materialId);
+	
+	/**
      * 
      * <pre>
      * 功能描述：查询表单的数据总条数

@@ -66,7 +66,14 @@ public class MaterialExtraServiceTest extends BaseTest {
     	Assert.assertNotNull("获取数据失败",materialExtraService.getMaterialExtraById(materialExtra.getId()));
     	materialExtraService.getMaterialExtraById(r.nextLong());
     }
-    
+    @Test
+    @Rollback(Const.ISROLLBACK) 
+    public void testGetMaterialId()  {
+    	materialExtraService.addMaterialExtra(materialExtra);
+    	//查询
+    	Assert.assertNotNull("获取数据失败",materialExtraService.getMaterialMaterialId(materialExtra.getMaterialId()));
+    	materialExtraService.getMaterialMaterialId(r.nextLong());
+    }
     
 }
 

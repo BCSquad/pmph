@@ -29,6 +29,14 @@ public interface MaterialExtraService {
 	MaterialExtra getMaterialExtraById(Long id) throws CheckedServiceException;
 	
 	/**
+	 *  查询一个 MaterialExtra 通过主键materialId
+	 * @param id
+	 * @return  MaterialExtra
+	 * @throws CheckedServiceException
+	 */
+	MaterialExtra getMaterialMaterialId(Long materialId) throws CheckedServiceException;
+	
+	/**
 	 * 删除MaterialExtra 通过主键id
 	 * @param id
 	 * @return  影响行数
