@@ -20,12 +20,12 @@ import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
-import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MaterialListVO;
+import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -655,6 +655,42 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 
 		return "SUCCESS";
+	}
+	
+	@Override
+	public MaterialVO getMaterialVO(Long id) throws CheckedServiceException {
+		if (null  == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"教材主键为空");
+		}
+		//教材主要信息
+		Material material = materialDao.getMaterialById(id);
+		//教材通知备注表
+		MaterialExtra materialExtra = materialExtraService.getMaterialMaterialId(id) ;
+		Gson gson = new Gson();
+		//联系人  
+		List<MaterialContact> materialContactList = materialContactService.listMaterialContactByMaterialId(id);
+		String   materialContacts = gson.toJson(materialContactList);
+		//扩展项 
+		List<MaterialExtension> materialExtensionList = materialExtensionService.getMaterialExtensionByMaterialId(id);
+		String   materialExtensions =gson.toJson(materialExtensionList);
+		//项目编辑 
+		List<MaterialProjectEditor> materialProjectEditorList =materialProjectEditorService.listMaterialProjectEditors(id);
+		 String   materialProjectEditors =gson.toJson(materialProjectEditorList);
+		//通知附件信息 
+		List<MaterialNoticeAttachment> materialNoticeAttachmentList = materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
+		String materialNoticeAttachments =gson.toJson(materialNoticeAttachmentList);
+		//通知备注附件信息 
+		List<MaterialNoteAttachment> materialNoteAttachmentList = materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtra.getId());
+		String materialNoteAttachments =gson.toJson(materialNoteAttachmentList);
+		
+		return new MaterialVO(
+				material,
+				materialExtra,
+				materialContacts, 
+				materialExtensions,
+				materialProjectEditors, 
+				materialNoticeAttachments,
+				materialNoteAttachments);
 	}
 
 }
