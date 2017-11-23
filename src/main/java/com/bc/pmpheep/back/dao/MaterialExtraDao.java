@@ -85,4 +85,15 @@ public interface MaterialExtraDao {
      */
     List<MateriaHistorylVO> listMaterialHistory(PageParameter<MateriaHistorylVO> pageParameter);
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：按attachment修改下载次数 
+     * 使用示范：
+     *
+     * @param attachment  MongoDB附件表的主键
+     * @return 影响行数
+     * </pre>
+     */
+    Integer updateMaterialExtraDownLoadCountsByAttachment(String attachment);
 }

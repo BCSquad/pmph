@@ -87,4 +87,19 @@ public interface MaterialNoteAttachmentService {
      */
     Integer deleteMaterialNoteAttachmentByAttachments(String[] noticeAttachments)
     throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按attachment修改下载次数 
+     * 使用示范：
+     *
+     * @param attachment  MongoDB附件表的主键
+     * @return 影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer updateMaterialNoteAttachmentDownLoadCountsByAttachment(String attachment)
+    throws CheckedServiceException;
+
 }

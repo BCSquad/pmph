@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,22 +14,29 @@ import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialExtraDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
-import com.bc.pmpheep.back.po.MaterialOrg;
+import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.FileUpload;
 import com.bc.pmpheep.back.util.FileUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MateriaHistorylVO;
 import com.bc.pmpheep.back.vo.MaterialExtraVO;
 import com.bc.pmpheep.general.bean.FileType;
+import com.bc.pmpheep.general.po.Content;
+import com.bc.pmpheep.general.service.ContentService;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -57,6 +65,13 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
     private FileService                     fileService;
     @Autowired
     private MaterialOrgService              materialOrgService;
+    @Autowired
+    private SystemMessageService            systemMessageService;
+    @Autowired
+    private CmsContentService               cmsContentService;
+    @Autowired
+    private ContentService                  contentService;
+
     private static final String             NOTICE = "notice";
     private static final String             NOTE   = "note";
 
@@ -164,7 +179,7 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
      * </pre>
      */
     @Override
-    public Map<String, Object> updateMaterialExtraAndNoticeFile(MaterialExtraVO materialExtraVO)
+    public Integer updateMaterialExtraAndNoticeFile(MaterialExtraVO materialExtraVO)
     throws CheckedServiceException, IOException {
         // 教材ID
         Long materialId = materialExtraVO.getMaterialId();
@@ -172,51 +187,69 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.NULL_PARAM, "教材ID为空");
         }
-        // 教材名称
-        String materialName = materialExtraVO.getMaterialName();
-        if (StringUtil.isEmpty(materialName)) {
+        Material material = materialService.getMaterialById(materialId);
+        MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
+        if (StringUtil.isEmpty(materialExtra.getNotice())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
-                                              CheckedExceptionResult.NULL_PARAM, "教材名称为空");
-        }
-        if (materialName.length() > 40) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "教材名称过长");
-        }
-        // 更新教材
-        materialService.updateMaterial(new Material(materialId, materialName));
-        // 教材通知内容验证
-        String notice = materialExtraVO.getNotice();
-        if (StringUtil.isEmpty(notice)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "教材通知内容为空");
         }
-        if (notice.length() > 2000) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "教材通知内容过长");
+        // MongoDB 内容插入
+        Content contentObj = contentService.add(new Content(materialExtra.getNotice()));
+        if (ObjectUtil.isNull(contentObj)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "教材通知保存失败");
         }
+        // 保存CMSContent内容
+        cmsContentService.addCmsContent(new CmsContent(
+                                                       0L,
+                                                       "0",
+                                                       contentObj.getId(),
+                                                       material.getMaterialName(),
+                                                       Const.CMS_AUTHOR_TYPE_1,
+                                                       false,
+                                                       false,
+                                                       material.getFounderId(),
+                                                       DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                                                DateUtil.getCurrentTime()),
+                                                       material.getId(), Const.CMS_CATEGORY_ID_1));
+        // 教材名称
+        // String materialName = materialExtraVO.getMaterialName();
+        // if (StringUtil.isEmpty(materialName)) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+        // CheckedExceptionResult.NULL_PARAM, "教材名称为空");
+        // }
+        // if (materialName.length() > 40) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+        // CheckedExceptionResult.ILLEGAL_PARAM, "教材名称过长");
+        // }
+        // 更新教材
+        // materialService.updateMaterial(new Material(materialId, materialName));
+        // 教材通知内容验证
+        // String notice = materialExtraVO.getNotice();
+        // if (StringUtil.isEmpty(notice)) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+        // CheckedExceptionResult.NULL_PARAM, "教材通知内容为空");
+        // }
+
         // 教材备注内容验证
-        String note = materialExtraVO.getNote();
-        if (StringUtil.isEmpty(note)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.NULL_PARAM, "教材备注内容为空");
-        }
-        if (note.length() > 2000) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "教材备注内容过长");
-        }
+        // String note = materialExtraVO.getNote();
+        // if (StringUtil.isEmpty(note)) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+        // CheckedExceptionResult.NULL_PARAM, "教材备注内容为空");
+        // }
         // 更新教材通知备注
-        MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
-        Long materialExtraId = materialExtra.getId();
-        if (ObjectUtil.isNull(materialExtraId)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "教材信息不存在");
-        }
-        this.updateMaterialExtra(new MaterialExtra(materialExtra.getId(), notice, note));
+        // MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
+        // Long materialExtraId = materialExtra.getId();
+        // if (ObjectUtil.isNull(materialExtraId)) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+        // CheckedExceptionResult.OBJECT_NOT_FOUND, "教材信息不存在");
+        // }
+        // this.updateMaterialExtra(new MaterialExtra(materialExtra.getId(), notice, note));
         // 教材通知附件
-        String[] noticeFiles = materialExtraVO.getNoticeFiles();
-        if (ArrayUtil.isNotEmpty(noticeFiles)) {
-            this.saveFileToMongoDB(noticeFiles, materialExtraId, NOTICE);
-        }
+        // String[] noticeFiles = materialExtraVO.getNoticeFiles();
+        // if (ArrayUtil.isNotEmpty(noticeFiles)) {
+        // this.saveFileToMongoDB(noticeFiles, materialExtraId, NOTICE);
+        // }
         // 教材通知附件MongoDB对应ID
         String[] noticeAttachments = materialExtraVO.getNoticeAttachments();
         if (ArrayUtil.isNotEmpty(noticeAttachments)) {
@@ -228,10 +261,10 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             }
         }
         // 教材备注附件
-        String[] noteFiles = materialExtraVO.getNoteFiles();
-        if (ArrayUtil.isNotEmpty(noteFiles)) {
-            this.saveFileToMongoDB(noteFiles, materialExtraId, NOTE);
-        }
+        // String[] noteFiles = materialExtraVO.getNoteFiles();
+        // if (ArrayUtil.isNotEmpty(noteFiles)) {
+        // this.saveFileToMongoDB(noteFiles, materialExtraId, NOTE);
+        // }
         // 教材备注附件MongoDB对应ID
         String[] noteAttachments = materialExtraVO.getNoteAttachments();
         if (ArrayUtil.isNotEmpty(noteAttachments)) {
@@ -242,7 +275,7 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                 fileService.remove(noteAttachments[i]);
             }
         }
-        return null;
+        return 1;
     }
 
     /**
@@ -263,23 +296,61 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.NULL_PARAM, "教材主键为空");
         }
+        // 教材通知附件
+        List<MaterialNoticeAttachment> materialNoticeAttachments;
+        // 教材备注附件
+        List<MaterialNoteAttachment> materialNoteAttachments;
         Map<String, Object> resultMap = new HashMap<String, Object>();
         Material material = materialService.getMaterialById(materialId);
         resultMap.put("materialName", material.getMaterialName());// 教材名称
         List<MaterialContact> materialContacts =
         materialContactService.listMaterialContactByMaterialId(materialId);
-        resultMap.put("联系人", materialContacts);// 联系人
+        resultMap.put("materialContacts", materialContacts);// 联系人
         MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
-        resultMap.put("教材通知备注", materialExtra);// 教材通知备注
         Long materialExtraId = materialExtra.getId();
-        if (ObjectUtil.notNull(materialExtraId)) {
-            List<MaterialNoticeAttachment> materialNoticeAttachments =
-            materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtraId);
-            List<MaterialNoteAttachment> materialNoteAttachments =
-            materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtraId);
-            resultMap.put("教材通知附件", materialNoticeAttachments);// 教材通知附件
-            resultMap.put("教材备注附件", materialNoteAttachments);// 教材备注附件
+        resultMap.put("materialExtra", materialExtra);// 教材通知备注
+        CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
+        if (ObjectUtil.notNull(cmsContent)) {
+            Content content = contentService.get(cmsContent.getMid());
+            resultMap.put("content", content.getContent());// MongoDB中教材通知
+            // 判断内容是否已经发布或审核通过
+            String fileDownLoadType = null;
+            if (Const.TRUE.booleanValue() == material.getIsPublished().booleanValue()) {
+                fileDownLoadType = Const.MATERIAL_FILE_DOWNLOAD;
+            } else {
+                fileDownLoadType = Const.FILE_DOWNLOAD;
+            }
+            if (ObjectUtil.notNull(materialExtraId)) {
+                // 教材通知附件
+                materialNoticeAttachments =
+                materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtraId);
+                for (MaterialNoticeAttachment materialNoticeAttachment : materialNoticeAttachments) {
+                    String attachment = materialNoticeAttachment.getAttachment();
+                    materialNoticeAttachment.setAttachment(fileDownLoadType + attachment);// 拼接附件下载路径
+                }
+                resultMap.put("materialNoticeAttachments", materialNoticeAttachments);// 教材通知附件
+                // 教材备注附件
+                materialNoteAttachments =
+                materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtraId);
+                for (MaterialNoteAttachment materialNoteAttachment : materialNoteAttachments) {
+                    String attachment = materialNoteAttachment.getAttachment();
+                    materialNoteAttachment.setAttachment(fileDownLoadType + attachment);// 拼接附件下载路径
+                }
+                resultMap.put("materialNoteAttachments", materialNoteAttachments);// 教材备注附件
+            }
+        } else {
+            if (ObjectUtil.notNull(materialExtraId)) {
+                // 教材通知附件
+                materialNoticeAttachments =
+                materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtraId);
+                resultMap.put("materialNoticeAttachments", materialNoticeAttachments);// 教材通知附件
+                // 教材备注附件
+                materialNoteAttachments =
+                materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtraId);
+                resultMap.put("materialNoteAttachments", materialNoteAttachments);// 教材备注附件
+            }
         }
+
         return resultMap;
     }
 
@@ -300,19 +371,48 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
     }
 
     @Override
-    public Integer noticePublished(Long materialId, List<Long> orgIds)
-    throws CheckedServiceException {
+    public Integer noticePublished(Long materialId, List<Long> orgIds, String sessionId)
+    throws CheckedServiceException, IOException {
         if (CollectionUtil.isEmpty(orgIds)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.NULL_PARAM, "机构为空");
         }
-        // 根据教材ID查询教材-机构关联表
-        List<MaterialOrg> materialOrgs =
-        materialOrgService.getListMaterialOrgByMaterialId(materialId);
-        if (CollectionUtil.isEmpty(materialOrgs)) {
-
+        // 获取当前用户
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.NULL_PARAM, "请求用户不存在");
         }
-        return null;
+        Integer count = 0;
+        // 根据教材ID查询教材-机构关联表
+        List<Long> OrgIds = materialOrgService.getListMaterialOrgByMaterialId(materialId);
+        if (CollectionUtil.isEmpty(OrgIds)) {// 为空，初次发布
+            systemMessageService.materialSend(materialId, orgIds, null);
+        } else {// 不为空
+            List<Long> newOrgIds = new ArrayList<Long>();// 新选中的机构
+            for (Long orgId : orgIds) {
+                if (!OrgIds.contains(orgId)) {
+                    newOrgIds.add(orgId);
+                }
+            }
+            Material material = materialService.getMaterialById(materialId);
+            systemMessageService.materialSend(materialId, newOrgIds, material.getMsgId());
+        }
+        CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
+        if (ObjectUtil.isNull(cmsContent)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.NULL_PARAM, "没有找到对应的教材通知信息");
+        }
+        cmsContentService.updateCmsContent(new CmsContent(
+                                                          cmsContent.getId(),
+                                                          true,
+                                                          true,
+                                                          Const.CMS_AUTHOR_STATUS_2,
+                                                          0L,
+                                                          DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                                                   DateUtil.getCurrentTime())));
+        count = materialService.updateMaterial(new Material(materialId, true));
+        return count;
     }
 
     /**

@@ -41,10 +41,10 @@ public interface MaterialOrgDao {
      * 使用示范：
      *
      * @param materialId 教材 ID
-     * @return MaterialOrg对象集合
+     * @return orgId集合
      * </pre>
      */
-    List<MaterialOrg> getListMaterialOrgByMaterialId(Long materialId);
+    List<Long> getListMaterialOrgByMaterialId(Long materialId);
 
     /**
      * 根据materialId删除materialOrg

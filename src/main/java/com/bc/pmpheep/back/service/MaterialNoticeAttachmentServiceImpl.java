@@ -32,15 +32,15 @@ MaterialNoticeAttachmentService {
     public MaterialNoticeAttachment addMaterialNoticeAttachment(
     MaterialNoticeAttachment materialNoticeAttachment) throws CheckedServiceException {
         if (ObjectUtil.isNull(materialNoticeAttachment.getMaterialExtraId())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_NOTICE_ATTACHMENT,
                                               CheckedExceptionResult.NULL_PARAM, "教材通知备注id");
         }
         if (StringUtil.isEmpty(materialNoticeAttachment.getAttachment())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_NOTICE_ATTACHMENT,
                                               CheckedExceptionResult.NULL_PARAM, "通知内容附件");
         }
         if (StringUtil.isEmpty(materialNoticeAttachment.getAttachmentName())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_NOTICE_ATTACHMENT,
                                               CheckedExceptionResult.NULL_PARAM, "附件名称");
         }
         materialNoticeAttachmentDao.addMaterialNoticeAttachment(materialNoticeAttachment);
@@ -51,19 +51,19 @@ MaterialNoticeAttachmentService {
     public Integer updateMaterialNoticeAttachment(MaterialNoticeAttachment materialNoticeAttachment)
     throws CheckedServiceException {
         if (ObjectUtil.isNull(materialNoticeAttachment.getId())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_NOTICE_ATTACHMENT,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
         if (ObjectUtil.isNull(materialNoticeAttachment.getMaterialExtraId())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_NOTICE_ATTACHMENT,
                                               CheckedExceptionResult.NULL_PARAM, "教材通知备注id");
         }
         if (StringUtil.isEmpty(materialNoticeAttachment.getAttachment())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_NOTICE_ATTACHMENT,
                                               CheckedExceptionResult.NULL_PARAM, "通知内容附件");
         }
         if (StringUtil.isEmpty(materialNoticeAttachment.getAttachmentName())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_NOTICE_ATTACHMENT,
                                               CheckedExceptionResult.NULL_PARAM, "附件名称");
         }
         return materialNoticeAttachmentDao.updateMaterialNoticeAttachment(materialNoticeAttachment);
@@ -73,7 +73,7 @@ MaterialNoticeAttachmentService {
     public List<MaterialNoticeAttachment> getMaterialNoticeAttachmentsByMaterialExtraId(
     Long materialExtraId) throws CheckedServiceException {
         if (null == materialExtraId) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_NOTICE_ATTACHMENT,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         return materialNoticeAttachmentDao.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtraId);
@@ -83,7 +83,7 @@ MaterialNoticeAttachmentService {
     public Integer deleteMaterialNoticeAttachmentsByMaterialExtraId(Long materialExtraId)
     throws CheckedServiceException {
         if (null == materialExtraId) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_NOTICE_ATTACHMENT,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         return materialNoticeAttachmentDao.deleteMaterialNoticeAttachmentsByMaterialExtraId(materialExtraId);
@@ -92,7 +92,7 @@ MaterialNoticeAttachmentService {
     @Override
     public Integer deleteMaterialNoticeAttachmentById(Long id) throws CheckedServiceException {
         if (null == id) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_NOTICE_ATTACHMENT,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         return materialNoticeAttachmentDao.deleteMaterialNoticeAttachmentById(id);
@@ -102,10 +102,20 @@ MaterialNoticeAttachmentService {
     public Integer deleteMaterialNoticeAttachmentByAttachments(String[] noticeAttachments)
     throws CheckedServiceException {
         if (ArrayUtil.isEmpty(noticeAttachments)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTENSION,
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_NOTICE_ATTACHMENT,
                                               CheckedExceptionResult.NULL_PARAM, "教材通知附件ID为空");
         }
         return materialNoticeAttachmentDao.deleteMaterialNoticeAttachmentByAttachments(noticeAttachments);
+    }
+
+    @Override
+    public Integer updateMaterialNoticeAttachmentDownLoadCountsByAttachment(String attachment)
+    throws CheckedServiceException {
+        if (StringUtil.isEmpty(attachment)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "attachment参数为空");
+        }
+        return materialNoticeAttachmentDao.updateMaterialNoticeAttachmentDownLoadCountsByAttachment(attachment);
     }
 
 }

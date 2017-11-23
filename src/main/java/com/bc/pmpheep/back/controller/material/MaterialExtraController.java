@@ -100,19 +100,28 @@ public class MaterialExtraController {
     }
 
     /**
-     * 发布教材通知
      * 
-     * 1：
-     * 
-     * 
-     * 
-     * 
-     * 
+     * <pre>
+     * 功能描述：发布教材通知
+     * 使用示范：
+     *
+     * @param request
+     * @param materialId 教材ID
+     * @param orgIds 机构id集合
+     * @return
+     * </pre>
      */
     @ResponseBody
-    @LogDetail(businessType = BUSINESS_TYPE, logRemark = "通知发布")
-    @RequestMapping(value = "/published", method = RequestMethod.GET)
+    @LogDetail(businessType = BUSINESS_TYPE, logRemark = "教材通知发布")
+    @RequestMapping(value = "/published", method = RequestMethod.POST)
     public ResponseBean published(HttpServletRequest request, Long materialId, List<Long> orgIds) {
-        return new ResponseBean();
+        String sessionId = CookiesUtil.getSessionId(request);
+        try {
+            return new ResponseBean(materialExtraService.noticePublished(materialId,
+                                                                         orgIds,
+                                                                         sessionId));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
     }
 }

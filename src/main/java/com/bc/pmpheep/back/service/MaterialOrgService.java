@@ -41,12 +41,11 @@ public interface MaterialOrgService {
      * 使用示范：
      *
      * @param materialId 教材 ID
-     * @return MaterialOrg对象集合
+     * @return orgId集合
      * @throws CheckedServiceException
      * </pre>
      */
-    List<MaterialOrg> getListMaterialOrgByMaterialId(Long materialId)
-    throws CheckedServiceException;
+    List<Long> getListMaterialOrgByMaterialId(Long materialId) throws CheckedServiceException;
 
     /**
      * 根据materialId删除materialOrg

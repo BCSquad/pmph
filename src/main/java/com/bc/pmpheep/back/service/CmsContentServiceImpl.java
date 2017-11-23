@@ -199,12 +199,15 @@ public class CmsContentServiceImpl implements CmsContentService {
             cmsContent.setAuthDate(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                             DateUtil.getCurrentTime()));
             cmsContent.setIsPublished(true);
-        } else if (Const.TRUE.booleanValue() == cmsContent.getIsStaging().booleanValue()) {
-            // 信息快报/公告管理(暂存)
-            cmsContent.setAuthUserId(pmphUser.getId());
-            cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_0);
-            cmsContent.setAuthDate(null);
-            cmsContent.setIsPublished(false);
+        } else if (cmsContent.getCategoryId() == Const.CMS_CATEGORY_ID_2
+                   || cmsContent.getCategoryId() == Const.CMS_CATEGORY_ID_3) {
+            if (Const.TRUE == cmsContent.getIsStaging()) {
+                // 信息快报/公告管理(暂存)
+                cmsContent.setAuthUserId(pmphUser.getId());
+                cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_0);
+                cmsContent.setAuthDate(null);
+                cmsContent.setIsPublished(false);
+            }
         } else {
             // 文章管理,退回
             if (Const.CMS_AUTHOR_STATUS_1.shortValue() == cmsContent.getAuthStatus().shortValue()) {

@@ -21,8 +21,8 @@
 	</insert>
 	
 	<!-- 根据materialId查询MaterialOrg集合-->
-	<select id="getListMaterialOrgByMaterialId" parameterType="java.lang.Long" resultType="MaterialOrg">
-		select * from material_org where material_id=#{materialId} ;
+	<select id="getListMaterialOrgByMaterialId" parameterType="java.lang.Long" resultType="java.lang.Long">
+		select org_id from material_org where material_id=#{materialId} ;
 	</select>
 	
 	<!-- 根据materialId删除 -->

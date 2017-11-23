@@ -74,11 +74,11 @@ public interface MaterialExtraService {
      * 使用示范：
      *
      * @param materialExtraVO MaterialExtraVO
-     * @return Map<String, Object>集合
+     * @return 影响行数 
      * @throws CheckedServiceException
      * </pre>
      */
-    Map<String, Object> updateMaterialExtraAndNoticeFile(MaterialExtraVO materialExtraVO)
+    Integer updateMaterialExtraAndNoticeFile(MaterialExtraVO materialExtraVO)
     throws CheckedServiceException, IOException;
 
     /**
@@ -123,6 +123,7 @@ public interface MaterialExtraService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer noticePublished(Long materialId, List<Long> orgIds) throws CheckedServiceException;
+    Integer noticePublished(Long materialId, List<Long> orgIds, String sessionId)
+    throws CheckedServiceException, IOException;
 
 }

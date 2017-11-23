@@ -127,6 +127,11 @@ public class Material implements java.io.Serializable {
         this.materialName = materialName;
     }
 
+    public Material(Long id, Boolean isPublished) {
+        this.id = id;
+        this.isPublished = isPublished;
+    }
+
     public Material(String materialName, Integer materialRound, Long materialType, Date deadline,
     Date actualDeadline, Date ageDeadline, String mailAddress, Long departmentId, Long director,
     Boolean isMultiBooks, Boolean isMultiPosition, Boolean isEduExpUsed, Boolean isEduExpRequired,

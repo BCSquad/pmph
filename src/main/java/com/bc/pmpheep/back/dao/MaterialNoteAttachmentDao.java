@@ -80,6 +80,18 @@ public interface MaterialNoteAttachmentDao {
     /**
      * 
      * <pre>
+     * 功能描述：按attachment修改下载次数 
+     * 使用示范：
+     *
+     * @param attachment  MongoDB附件表的主键
+     * @return 影响行数
+     * </pre>
+     */
+    Integer updateMaterialNoteAttachmentDownLoadCountsByAttachment(String attachment);
+
+    /**
+     * 
+     * <pre>
      * 功能描述：按教材备注附件MongoDB对应ID删除对应附件
      * 使用示范：
      *

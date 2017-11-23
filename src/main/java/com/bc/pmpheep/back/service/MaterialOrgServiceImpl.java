@@ -39,7 +39,7 @@ public class MaterialOrgServiceImpl extends BaseService implements MaterialOrgSe
     }
 
     @Override
-    public List<MaterialOrg> getListMaterialOrgByMaterialId(Long materialId)
+    public List<Long> getListMaterialOrgByMaterialId(Long materialId)
     throws CheckedServiceException {
         if (ObjectUtil.isNull(materialId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
