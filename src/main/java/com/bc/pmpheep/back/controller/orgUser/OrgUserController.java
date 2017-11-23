@@ -156,7 +156,7 @@ public class OrgUserController {
 	 * @return 是否成功
 	 * 
 	 */
-	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
+	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改用户")
 	@ResponseBody
 	public ResponseBean updateUser(OrgAndOrgUserVO orgAndOrgUserVO) {
