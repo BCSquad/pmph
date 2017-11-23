@@ -91,6 +91,18 @@
 	<select id="getMaterialNoteAttachmentByMaterialExtraId" parameterType="java.lang.Long" resultType="MaterialNoteAttachment">
 		select * from material_note_attachment where material_extra_id = #{materialExtraId};
 	</select>
+	
+	<!-- 通过attachment删除 MaterialNoteAttachment-->
+	<delete id="deleteMaterialNoteAttachmentByAttachments">
+		delete from 
+			material_note_attachment  
+		where 
+			attachment
+		in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+              #{item}
+		</foreach>
+	</delete>
 
 </mapper>
 

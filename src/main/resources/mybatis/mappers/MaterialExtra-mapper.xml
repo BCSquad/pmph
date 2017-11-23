@@ -81,6 +81,16 @@
 		resultType="MaterialExtra">
 		select * from material_extra where id=#{id} ;
 	</select>
+	
+	<!-- 根据materialId查询MaterialExtra -->
+	<select id="getMaterialExtraByMaterialId" parameterType="java.lang.Long" resultType="MaterialExtra">
+		select 
+			* 
+		from 
+			material_extra 
+		where 
+			material_id = #{materialId};
+	</select>
 
 	<!-- 查询表单的数据总数 -->
 	<select id="getMaterialExtraCount" resultType="Long">
