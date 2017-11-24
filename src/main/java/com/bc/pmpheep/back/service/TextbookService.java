@@ -61,6 +61,33 @@ public interface TextbookService {
 	 */
 	Integer updateTextbook(Textbook textbook) throws CheckedServiceException;
 
+    /**
+     * 
+     * Description:根据教材id获取教材书籍列表
+     * @author:lyc
+     * @date:2017年11月23日上午9:56:09
+     * @param 
+     * @return BookListVO
+     */
+    BookListVO getBookListVO(Long materialId) throws CheckedServiceException;
+    
+    /**
+     * 
+     * Description:添加或更新教材书籍
+     * @author:lyc
+     * @date:2017年11月23日下午1:56:50
+     * @param 
+     * @return Integer
+     */
+    List<Textbook> addOrUpdateTextBookList(BookListVO bookListVO) throws CheckedServiceException;
+    
+    /**
+     * 功能描述：批量结果公布（最终结果公布）
+     * @param ids
+     * @return
+     * @throws CheckedServiceException
+     */
+	Integer updateTextbookAndMaterial(Long[] ids) throws CheckedServiceException;
 	/**
 	 * 
 	 * <pre>
@@ -98,25 +125,4 @@ public interface TextbookService {
 	 */
 	Integer updateTextbooks(Long[] ids) throws CheckedServiceException;
 
-	/**
-	 * 
-	 * Description:根据教材id获取教材书籍列表
-	 * 
-	 * @author:lyc
-	 * @date:2017年11月23日上午9:56:09
-	 * @param
-	 * @return BookListVO
-	 */
-	BookListVO getBookListVO(Long materialId) throws CheckedServiceException;
-
-	/**
-	 * 
-	 * Description:添加或更新教材书籍
-	 * 
-	 * @author:lyc
-	 * @date:2017年11月23日下午1:56:50
-	 * @param
-	 * @return Integer
-	 */
-	List<Textbook> addOrUpdateTextBookList(BookListVO bookListVO) throws CheckedServiceException;
 }

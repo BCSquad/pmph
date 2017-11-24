@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -37,21 +39,24 @@ import com.google.gson.reflect.TypeToken;
 @Service
 public class TextbookServiceImpl implements TextbookService {
 
-	@Autowired
-	private TextbookDao textbookDao;
-
-	@Autowired
-	private PmphUserService pmphUserService;
-
-	@Autowired
-	private MaterialService materialService;
-
-	@Autowired
-	private MaterialTypeService materialTypeService;
-
-	@Autowired
-	private MaterialProjectEditorService materialProjectEditorService;
-
+    @Autowired
+    private TextbookDao textbookDao;
+    
+    @Autowired
+    private MaterialDao materialDao;
+    
+    @Autowired
+    private PmphUserService pmphUserService;
+    
+    @Autowired
+    private MaterialService materialService;
+    
+    @Autowired
+    private MaterialTypeService materialTypeService;
+    
+    @Autowired
+    private MaterialProjectEditorService materialProjectEditorService;
+    
 	/**
 	 * 
 	 * @param Textbook
@@ -294,6 +299,33 @@ public class TextbookServiceImpl implements TextbookService {
 			count++;
 		}
 		return null;
+	}
+	@Override
+	public Integer updateTextbookAndMaterial(Long[] ids) throws CheckedServiceException {
+		List<Textbook> textbooks=textbookDao.getTextbooks(ids);
+		List<Textbook> textBooks =new ArrayList<Textbook>(textbooks.size());
+		Material material=new Material();
+		for (Textbook textbook : textbooks) {
+			if(Const.TRUE==textbook.getIsPublished()){
+				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, 
+						CheckedExceptionResult.ILLEGAL_PARAM,"名单已确认");
+			}
+			textBooks.add(new Textbook(textbook.getId()));
+			material.setId(textbook.getMaterialId());
+		}
+		textbookDao.updateBookPublished(textBooks);
+		List<Textbook> books=materialDao.getMaterialAndTextbook(material);
+		Integer count = 0;
+		/*通过遍历查看教材下面所有书籍是否公布，当数据全部公布则该教材改为最终公布*/
+		for (Textbook book : books) {
+			if(book.getIsPublished()){
+				count++;
+			}
+		}
+		if(count==books.size()){
+			count =materialDao.updateMaterialPublished(material);
+		}
+		return count;
 	}
 
 	@Override
