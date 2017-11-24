@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -14,10 +16,12 @@ import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -42,6 +46,9 @@ public class TextbookServiceImpl implements TextbookService {
     
     @Autowired
     private MaterialService materialService;
+    
+    @Autowired
+    private MaterialTypeService materialTypeService;
     
     @Autowired
     private MaterialProjectEditorService materialProjectEditorService;
@@ -203,6 +210,64 @@ public class TextbookServiceImpl implements TextbookService {
     	
     	
     }
+
+	@Override
+	public BookListVO getBookListVO(Long materialId)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(materialId)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
+		}
+		Material material = materialService.getMaterialById(materialId);
+		List<Textbook> bookList = textbookDao.getTextbookByMaterialId(materialId);
+		Long materialType = material.getMaterialType();
+		BookListVO bookListVO = new BookListVO();
+		bookListVO.setMaterialId(material.getMenderId());
+		bookListVO.setMaterialName(material.getMaterialName());
+		bookListVO.setMaterialRound(material.getMaterialRound());
+		String path = materialTypeService.getMaterialTypeById(materialType).getPath();
+		String[] pathType = path.split("-");
+		for (int i = 0; i < pathType.length ; i++){
+			String type = materialTypeService.getMaterialTypeById(Long.valueOf(pathType[i]))
+					.getTypeName();
+			pathType[i].replace(pathType[i], type);
+		}
+		bookListVO.setMaterialType(pathType);
+		bookListVO.setTextbooks(bookList);
+		return bookListVO;
+	}
+
+	@Override
+	public List<Textbook> addOrUpdateTextBookList(BookListVO bookListVO)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(bookListVO)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.NULL_PARAM, "参数不能为空");
+		}
+		List<Map<String,Object>> list = new ArrayList<>();
+		List<Textbook> bookList = bookListVO.getTextbooks();
+		int count = 1; //判断书序号的连续性计数器
+		for (Textbook textbook : bookList){
+			if (count != textbook.getSort()){
+				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+						CheckedExceptionResult.ILLEGAL_PARAM, "书籍序号必须连续");
+			}
+			Map<String,Object> map = new HashMap<>();
+			map.put(textbook.getTextbookName(), textbook.getTextbookRound());
+			if (list.contains(map)){
+				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+						CheckedExceptionResult.ILLEGAL_PARAM, "同一教材下书名和版次不能都相同");
+			}
+			if (ObjectUtil.notNull(textbookDao.getTextbookById(textbook.getId()))){
+				textbookDao.updateTextbook(textbook);
+			} else {
+				textbookDao.addTextbook(textbook);
+			}
+			list.add(map);
+			count ++;
+		}
+		return null;
+	}
     
     
     

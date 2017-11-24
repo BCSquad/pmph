@@ -65,11 +65,23 @@ public interface PmphUserDao {
 	 * 功能描述：根据用户Id查询对应权限
 	 * 使用示范：
 	 *
-	 * &#64;param userId
-	 * &#64;return
+	 * @param userId
+	 * @return
 	 * </pre>
 	 */
 	List<Long> getPmphUserPermissionByUserId(Long userId);
+
+	/**
+	 * 
+	 * <pre>
+	 * 功能描述：根据用户Id查询对应教材权限
+	 * 使用示范：
+	 *
+	 * @param userId
+	 * @return
+	 * </pre>
+	 */
+	List<Integer> getMaterialPermissionByUserId(Long userId);
 
 	/**
 	 * 

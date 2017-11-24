@@ -125,5 +125,4 @@ public interface MaterialExtraService {
      */
     Integer noticePublished(Long materialId, List<Long> orgIds, String sessionId)
     throws CheckedServiceException, IOException;
-
 }

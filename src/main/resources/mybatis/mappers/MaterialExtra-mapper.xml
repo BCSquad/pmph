@@ -82,6 +82,7 @@
 		select * from material_extra where id=#{id} ;
 	</select>
 	
+<<<<<<< HEAD
 	<!-- 根据materialId查询MaterialExtra -->
 	<select id="getMaterialExtraByMaterialId" parameterType="java.lang.Long" resultType="MaterialExtra">
 		select 

@@ -1,7 +1,9 @@
 package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
+
 import org.apache.ibatis.type.Alias;
+
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialExtra;
 
@@ -32,13 +34,27 @@ public class MaterialVO implements Serializable{
 	private String materialNoticeAttachments;
 	//通知备注附件信息 （更新的时候需要）
 	private String materialNoteAttachments;
-	//项目编辑权限8位二进制字符串
-	private String projectEditorPowers;
-	//策划编辑权限8位二进制字符串
-	private String planningEditorPowers;
 	
 	public MaterialVO() {
 		super();
+	}
+	
+	public MaterialVO(
+			Material material, 
+			MaterialExtra materialExtra,
+			String materialContacts, 
+			String materialExtensions,
+			String materialProjectEditors, 
+			String materialNoticeAttachments,
+			String materialNoteAttachments) {
+		super();
+		this.material = material;
+		this.materialExtra = materialExtra;
+		this.materialContacts = materialContacts;
+		this.materialExtensions = materialExtensions;
+		this.materialProjectEditors = materialProjectEditors;
+		this.materialNoticeAttachments = materialNoticeAttachments;
+		this.materialNoteAttachments = materialNoteAttachments;
 	}
 
 	public Material getMaterial() {
@@ -97,21 +113,16 @@ public class MaterialVO implements Serializable{
 		this.materialNoteAttachments = materialNoteAttachments;
 	}
 
-	public String getProjectEditorPowers() {
-		return projectEditorPowers;
+	@Override
+	public String toString() {
+		return "{material:" + material.toString() + ", materialExtra:" + materialExtra
+				+ ", materialContacts:" + materialContacts
+				+ ", materialExtensions:" + materialExtensions
+				+ ", materialProjectEditors:" + materialProjectEditors
+				+ ", materialNoticeAttachments:" + materialNoticeAttachments
+				+ ", materialNoteAttachments:" + materialNoteAttachments + "}";
 	}
 
-	public void setProjectEditorPowers(String projectEditorPowers) {
-		this.projectEditorPowers = projectEditorPowers;
-	}
-
-	public String getPlanningEditorPowers() {
-		return planningEditorPowers;
-	}
-
-	public void setPlanningEditorPowers(String planningEditorPowers) {
-		this.planningEditorPowers = planningEditorPowers;
-	}
 	
 	
 }

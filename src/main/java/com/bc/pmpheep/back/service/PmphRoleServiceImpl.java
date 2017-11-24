@@ -10,6 +10,7 @@ import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.dao.PmphRolePermissionDao;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
+import com.bc.pmpheep.back.po.PmphRoleMaterial;
 import com.bc.pmpheep.back.po.PmphRolePermission;
 import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.util.ArrayUtil;
@@ -33,6 +34,8 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 	PmphRoleDao roleDao;
 	@Autowired
 	PmphRolePermissionDao pmphRolePermissionDao;
+	@Autowired
+	PmphRoleMaterialService pmphRoleMaterialService;
 
 	@Override
 	public PmphRole get(Long id) throws CheckedServiceException {
@@ -58,7 +61,14 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 		for (PmphRole pmphRole : pmphRoles) {
 			List<Long> subList = this.getListPmphRolePermissionIdByRoleId(pmphRole.getId());
 			pmphRole.setPmphRolePermissionChild(subList);
+			if (ObjectUtil.isNull(pmphRoleMaterialService.getPmphRoleMaterialByRoleId(pmphRole.getId()))) {
+				pmphRole.setMaterialPermission("00000000");
+			} else {
+				pmphRole.setMaterialPermission(StringUtil.tentToBinary(
+						pmphRoleMaterialService.getPmphRoleMaterialByRoleId(pmphRole.getId()).getPermission()));
+			}
 		}
+
 		return pmphRoles;
 	}
 
@@ -153,12 +163,19 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 	}
 
 	@Override
-	public Integer addRoleResource(Long roleId, List<Long> permissionIds) throws CheckedServiceException {
+	public Integer addRoleResource(Long roleId, List<Long> permissionIds, String materailId)
+			throws CheckedServiceException {
 		// 添加时先删除当前权限
 		deleteRoleResourceByRoleId(roleId);
 		if (ObjectUtil.isNull(roleId) || permissionIds.size() < 0) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "角色ID或资源ID为空时禁止新增");
+		}
+		PmphRoleMaterial pmphRoleMaterial = new PmphRoleMaterial(roleId, Integer.valueOf(materailId, 2));
+		if (ObjectUtil.isNull(pmphRoleMaterialService.getPmphRoleMaterialByRoleId(roleId))) {
+			pmphRoleMaterialService.addPmphRoleMaterial(pmphRoleMaterial);
+		} else {
+			pmphRoleMaterialService.updatePmphRoleMaterialByRoleId(pmphRoleMaterial);
 		}
 		List<PmphRolePermission> lists = new ArrayList<PmphRolePermission>(permissionIds.size());
 		PmphRolePermission pmphRolePermission;

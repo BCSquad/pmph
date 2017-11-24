@@ -462,6 +462,11 @@
 		select * from cms_content where id=#{id};
 	</select>
 	
+	<!-- 根据materialId查询一个CmsContent -->
+	<select id="getCmsContentByMaterialId" parameterType="java.lang.Long" resultType="CmsContent">
+		select * from cms_content where material_id=#{materialId};
+	</select>
+	
 	<!-- 查询表单的数据总数 -->
 	<select id="getCmsContentCount" parameterType="java.lang.Long"  resultType="java.lang.Integer">
 		select

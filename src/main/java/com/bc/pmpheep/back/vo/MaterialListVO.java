@@ -8,6 +8,7 @@ import org.apache.ibatis.type.Alias;
 
 import com.bc.pmpheep.back.po.MaterialContact;
 
+@SuppressWarnings("serial")
 @Alias("MaterialListVO")
 public class MaterialListVO implements Serializable {
 	// 主键
@@ -48,10 +49,10 @@ public class MaterialListVO implements Serializable {
 	private String msgId;
 	// 项目编辑权限
 	private Integer projectPermission;
-	// 策划编辑权限
-	private Integer planPermission;
-	// 用户在该教材中的权限
-	private String userPermission;
+	// 创建到 哪个步骤
+	private String materialStep;
+
+
 
 	public Long getId() {
 		return id;
@@ -205,20 +206,13 @@ public class MaterialListVO implements Serializable {
 		this.projectPermission = projectPermission;
 	}
 
-	public Integer getPlanPermission() {
-		return planPermission;
+
+	public String getMaterialStep() {
+		return materialStep;
 	}
 
-	public void setPlanPermission(Integer planPermission) {
-		this.planPermission = planPermission;
-	}
-
-	public String getUserPermission() {
-		return userPermission;
-	}
-
-	public void setUserPermission(String userPermission) {
-		this.userPermission = userPermission;
+	public void setMaterialStep(String materialStep) {
+		this.materialStep = materialStep;
 	}
 
 }

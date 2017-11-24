@@ -27,6 +27,7 @@ import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MaterialListVO;
+import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -80,6 +81,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     @Autowired
     PmphGroupService                        pmphGroupService;
 
+    @Autowired
+    CmsContentService                       cmsContentService;
+
     /**
      * 
      * @param Material 实体对象
@@ -96,8 +100,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     public Long addOrUpdateMaterial(String sessionId, String materialContacts,
     String materialExtensions, String materialProjectEditors, Material material,
     MaterialExtra materialExtra, MultipartFile[] noticeFiles, String materialNoticeAttachments,
-    MultipartFile[] noteFiles, String materialNoteAttachments, String projectEditorPowers,
-    String planningEditorPowers, boolean isUpdate) throws CheckedServiceException {
+    MultipartFile[] noteFiles, String materialNoteAttachments, boolean isUpdate)
+    throws CheckedServiceException {
         // 获取当前用户
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (null == pmphUser) {
@@ -191,16 +195,6 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.ILLEGAL_PARAM, "教材备注内容过长");
         }
-        // 判断项目编辑权限
-        if (null == projectEditorPowers || projectEditorPowers.length() != 8) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "项目编辑权参数不正确");
-        }
-        // 判断策划编辑权限
-        if (null == planningEditorPowers || planningEditorPowers.length() != 8) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "策划编辑权参数不正确");
-        }
         // 获取主任
         PmphUser director = pmphUserService.get(material.getDirector());
         if (null == director) {
@@ -210,9 +204,6 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.ILLEGAL_PARAM, "主任对应的机构为空");
         }
-        // 设置项目编辑和策划编辑的权限
-        material.setProjectPermission(Integer.valueOf(projectEditorPowers, 2));
-        material.setPlanPermission(Integer.valueOf(planningEditorPowers, 2));
         // 教材所属部门
         material.setDepartmentId(director.getDepartmentId());
         // 修改人
@@ -609,6 +600,13 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
     public List<MaterialListVO> addMaterialContact(List<MaterialListVO> list, PmphUser pmphUser) {
         for (MaterialListVO materialListVO : list) {
             materialListVO.setContacts(materialContactService.listMaterialContactByMaterialId(materialListVO.getId()));
+            if (textbookService.getTextbookByMaterialId(materialListVO.getId()).size() > 0) {
+                materialListVO.setMaterialStep("设置书目录");
+            } else {
+                if (ObjectUtil.isNull(cmsContentService.getCmsContentByMaterialId(materialListVO.getId()))) {
+                    materialListVO.setMaterialStep("编辑通知详情");
+                }
+            }
             if (pmphUser.getId().equals(materialListVO.getFounderId())) {
                 materialListVO.setIsFounder(true);
             } else {
@@ -618,24 +616,6 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
                 materialListVO.setIsDirector(true);
             } else {
                 materialListVO.setIsDirector(false);
-            }
-            Integer plan = getPlanningEditorSum(materialListVO.getId(), pmphUser.getId());
-            MaterialProjectEditor materialProjectEditor =
-            materialProjectEditorService.getMaterialProjectEditorByMaterialIdAndUserId(materialListVO.getId(),
-                                                                                       pmphUser.getId());
-            if (pmphUser.getId().equals(materialListVO.getFounderId())
-                || pmphUser.getId().equals(materialListVO.getDirector()) || pmphUser.getIsAdmin()) {
-                materialListVO.setUserPermission("11111111");
-            } else {
-                if (ObjectUtil.notNull(materialProjectEditor)) {
-                    materialListVO.setUserPermission(StringUtil.tentToBinary(materialListVO.getProjectPermission()));
-                } else {
-                    if (plan > 0) {
-                        materialListVO.setUserPermission(StringUtil.tentToBinary(materialListVO.getPlanPermission()));
-                    } else {
-                        materialListVO.setUserPermission("00000000");
-                    }
-                }
             }
             if (materialListVO.getIsPublished()) {
                 if (materialListVO.getIsForceEnd() || materialListVO.getIsAllTextbookPublished()) {
@@ -696,5 +676,42 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
         }
 
         return "SUCCESS";
+    }
+
+    @Override
+    public MaterialVO getMaterialVO(Long id) throws CheckedServiceException {
+        if (null == id) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "教材主键为空");
+        }
+        // 教材主要信息
+        Material material = materialDao.getMaterialById(id);
+        // 教材通知备注表
+        MaterialExtra materialExtra = materialExtraService.getMaterialExtraByMaterialId(id);
+        Gson gson = new Gson();
+        // 联系人
+        List<MaterialContact> materialContactList =
+        materialContactService.listMaterialContactByMaterialId(id);
+        String materialContacts = gson.toJson(materialContactList);
+        // 扩展项
+        List<MaterialExtension> materialExtensionList =
+        materialExtensionService.getMaterialExtensionByMaterialId(id);
+        String materialExtensions = gson.toJson(materialExtensionList);
+        // 项目编辑
+        List<MaterialProjectEditor> materialProjectEditorList =
+        materialProjectEditorService.listMaterialProjectEditors(id);
+        String materialProjectEditors = gson.toJson(materialProjectEditorList);
+        // 通知附件信息
+        List<MaterialNoticeAttachment> materialNoticeAttachmentList =
+        materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
+        String materialNoticeAttachments = gson.toJson(materialNoticeAttachmentList);
+        // 通知备注附件信息
+        List<MaterialNoteAttachment> materialNoteAttachmentList =
+        materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtra.getId());
+        String materialNoteAttachments = gson.toJson(materialNoteAttachmentList);
+
+        return new MaterialVO(material, materialExtra, materialContacts, materialExtensions,
+                              materialProjectEditors, materialNoticeAttachments,
+                              materialNoteAttachments);
     }
 }

@@ -42,14 +42,6 @@ public interface MaterialExtraDao {
     Integer updateMaterialExtra(MaterialExtra materialExtra);
 
     /**
-     * 查询一个 MaterialExtra 通过主键id
-     * 
-     * @param id 必须包含主键ID
-     * @return MaterialExtra
-     */
-    MaterialExtra getMaterialExtraById(Long id);
-
-    /**
      * 
      * <pre>
      * 功能描述：根据教材ID查询MaterialExtra对象
@@ -60,6 +52,14 @@ public interface MaterialExtraDao {
      * </pre>
      */
     MaterialExtra getMaterialExtraByMaterialId(Long materialId);
+
+    /**
+     * 查询一个 MaterialExtra 通过主键id
+     * 
+     * @param id 必须包含主键ID
+     * @return MaterialExtra
+     */
+    MaterialExtra getMaterialExtraById(Long id);
 
     /**
      * 
