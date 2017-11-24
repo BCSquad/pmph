@@ -93,7 +93,7 @@ public interface PmphUserService {
 	 * @return
 	 * </pre>
 	 */
-	List<String> getMaterialPermissionByUserId(Long userId);
+	String getMaterialPermissionByUserId(Long userId);
 
 	/**
 	 * 根据主键 id 加载用户对象
