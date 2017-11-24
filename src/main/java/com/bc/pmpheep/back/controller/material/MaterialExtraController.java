@@ -133,7 +133,6 @@ public class MaterialExtraController {
             return new ResponseBean(materialExtraService.noticePublished(materialId,
                                                                          orgIds,
                                                                          sessionId));
-
         } catch (IOException e) {
             return new ResponseBean(e);
         }

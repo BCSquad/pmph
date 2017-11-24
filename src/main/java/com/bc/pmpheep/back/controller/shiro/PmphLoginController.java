@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import small.danfer.sso.http.HttpSingleSignOnService;
-
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.CmsCategoryService;
@@ -56,17 +54,17 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @RequestMapping(value = "/pmph")
 @Controller
 public class PmphLoginController {
-    Logger                  logger  = LoggerFactory.getLogger(PmphLoginController.class);
+    Logger                logger = LoggerFactory.getLogger(PmphLoginController.class);
     @Autowired
-    PmphUserService         pmphUserService;
+    PmphUserService       pmphUserService;
     @Autowired
-    PmphPermissionService   pmphPermissionService;
+    PmphPermissionService pmphPermissionService;
     @Autowired
-    PmphRoleService         pmphRoleService;
+    PmphRoleService       pmphRoleService;
     @Autowired
-    CmsCategoryService      cmsCategoryService;
+    CmsCategoryService    cmsCategoryService;
 
-    HttpSingleSignOnService service = new HttpSingleSignOnService();
+    // HttpSingleSignOnService service = new HttpSingleSignOnService();
 
     /**
      * 

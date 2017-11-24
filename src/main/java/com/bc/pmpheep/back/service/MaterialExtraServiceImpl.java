@@ -205,46 +205,13 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                                                        "0",
                                                        contentObj.getId(),
                                                        material.getMaterialName(),
-                                                       Const.CMS_AUTHOR_TYPE_1,
+                                                       Const.CMS_AUTHOR_TYPE_0,
                                                        false,
                                                        false,
                                                        material.getFounderId(),
                                                        DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                 DateUtil.getCurrentTime()),
                                                        material.getId(), Const.CMS_CATEGORY_ID_1));
-        // 教材名称
-        // String materialName = materialExtraVO.getMaterialName();
-        // if (StringUtil.isEmpty(materialName)) {
-        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
-        // CheckedExceptionResult.NULL_PARAM, "教材名称为空");
-        // }
-        // if (materialName.length() > 40) {
-        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-        // CheckedExceptionResult.ILLEGAL_PARAM, "教材名称过长");
-        // }
-        // 更新教材
-        // materialService.updateMaterial(new Material(materialId, materialName));
-        // 教材通知内容验证
-        // String notice = materialExtraVO.getNotice();
-        // if (StringUtil.isEmpty(notice)) {
-        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-        // CheckedExceptionResult.NULL_PARAM, "教材通知内容为空");
-        // }
-
-        // 教材备注内容验证
-        // String note = materialExtraVO.getNote();
-        // if (StringUtil.isEmpty(note)) {
-        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-        // CheckedExceptionResult.NULL_PARAM, "教材备注内容为空");
-        // }
-        // 更新教材通知备注
-        // MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
-        // Long materialExtraId = materialExtra.getId();
-        // if (ObjectUtil.isNull(materialExtraId)) {
-        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-        // CheckedExceptionResult.OBJECT_NOT_FOUND, "教材信息不存在");
-        // }
-        // this.updateMaterialExtra(new MaterialExtra(materialExtra.getId(), notice, note));
         // 教材通知附件
         // String[] noticeFiles = materialExtraVO.getNoticeFiles();
         // if (ArrayUtil.isNotEmpty(noticeFiles)) {
