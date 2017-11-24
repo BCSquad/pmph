@@ -528,6 +528,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		if (pmphUser.getIsAdmin()) {
 			pageParameter.getParameter().setIsMy(null);
 		}
+		if (null != pageParameter.getParameter().getIsMy() && !pageParameter.getParameter().getIsMy()) {
+			pageParameter.getParameter().setIsMy(null);
+		}
 		if (!ObjectUtil.isNull(pageParameter.getParameter().getIsMy()) && pageParameter.getParameter().getIsMy()) {
 			pageParameter.getParameter().setUserId(pmphUser.getId());
 		}
