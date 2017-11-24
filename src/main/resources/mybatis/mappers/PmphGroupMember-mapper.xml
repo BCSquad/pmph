@@ -181,7 +181,8 @@
 		<if test="parameter.name !=null and parameter.name !=''">
 			and (e.username like concat('%',#{parameter.name},'%') or
 			c.username like
-			#{parameter.name} or a.display_name LIKE
+			concat('%',#{parameter.name},'%') or a.display_name
+			LIKE
 			concat('%',#{parameter.name},'%'))
 		</if>
 		order by is_founder DESC ,is_admin DESC
@@ -249,7 +250,8 @@
 		<if test="parameter.name !=null and parameter.name !=''">
 			and (e.username like concat('%',#{parameter.name},'%') or
 			c.username like
-			concat('%',#{parameter.name},'%') or a.display_name LIKE
+			concat('%',#{parameter.name},'%') or a.display_name
+			LIKE
 			concat('%',#{parameter.name},'%'))
 		</if>
 		order by a.is_founder DESC , a.is_admin DESC
