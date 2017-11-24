@@ -120,7 +120,7 @@ public class PmphLoginController {
 			}
 			// 根据用户Id查询对应权限Id
 			List<Long> pmphUserPermissionIds = pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
-			List<String> materialPermission = pmphUserService.getMaterialPermissionByUserId(pmphUser.getId());
+			String materialPermission = pmphUserService.getMaterialPermissionByUserId(pmphUser.getId());
 			// 验证成功在Session中保存用户信息
 			request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
 			// 验证成功在Session中保存用户Token信息

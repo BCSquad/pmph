@@ -407,7 +407,7 @@
 		SELECT m.permission FROM pmph_user u LEFT JOIN
 		pmph_user_role r ON u.id = r.user_id
 		LEFT JOIN pmph_role_material m ON
-		m.role_id = r.id WHERE u.id = #{userId}
+		m.role_id = r.role_id WHERE u.id = #{userId}
 
 	</select>
 

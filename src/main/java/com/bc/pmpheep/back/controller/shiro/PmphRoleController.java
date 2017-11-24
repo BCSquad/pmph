@@ -156,7 +156,7 @@ public class PmphRoleController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新角色拥有的资源菜单")
 	@RequestMapping(value = "/resource", method = RequestMethod.POST)
 	public ResponseBean resource(@RequestParam("roleId") Long roleId,
-			@RequestParam("permissionIds") String permissionIds, @RequestParam("materialIds") String materialId) {
+			@RequestParam("permissionIds") String permissionIds, @RequestParam("materialId") String materialId) {
 		String[] ids = permissionIds.split(",");
 		List<Long> idLists = new ArrayList<Long>(ids.length);
 		for (String id : ids) {

@@ -47,8 +47,6 @@ public class MaterialListVO implements Serializable {
 	private Long founderId;
 	// 消息id
 	private String msgId;
-	// 项目编辑权限
-	private Integer projectPermission;
 	// 创建到 哪个步骤
 	private String materialStep;
 
@@ -197,15 +195,6 @@ public class MaterialListVO implements Serializable {
 	public void setMsgId(String msgId) {
 		this.msgId = msgId;
 	}
-
-	public Integer getProjectPermission() {
-		return projectPermission;
-	}
-
-	public void setProjectPermission(Integer projectPermission) {
-		this.projectPermission = projectPermission;
-	}
-
 
 	public String getMaterialStep() {
 		return materialStep;
