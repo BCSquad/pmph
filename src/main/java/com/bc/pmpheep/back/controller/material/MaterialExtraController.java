@@ -68,8 +68,8 @@ public class MaterialExtraController {
      * </pre>
      */
     @LogDetail(businessType = BUSINESS_TYPE, logRemark = "查看教材通知内容，备注详情")
-    @RequestMapping(value = "/deatil", method = RequestMethod.GET)
-    public ResponseBean deatil(@RequestParam("materialId") Long materialId) {
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public ResponseBean detail(@RequestParam("materialId") Long materialId) {
         return new ResponseBean(materialExtraService.getMaterialExtraAndNoticeDetail(materialId));
     }
 
