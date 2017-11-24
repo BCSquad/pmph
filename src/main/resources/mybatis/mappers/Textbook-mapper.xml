@@ -248,7 +248,7 @@
        LEFT JOIN  (select * from pmph_user  where is_deleted  =0 and is_disabled =0)    planningEditor on planningEditor.id = a.planning_editor 
        where   d.is_deleted =0 and d.is_published =1 
        and d.id = #{parameter.materialId}
-       <if test="parameter.pmphUserId !=null ">  
+       <if test="parameter.power == 4 and parameter.pmphUserId !=null ">  
 	        and a.planning_editor = #{parameter.pmphUserId}
 	   </if>
 	   <if test="parameter.state !=null ">  
@@ -296,7 +296,7 @@
        LEFT JOIN  (select * from pmph_user  where is_deleted  =0 and is_disabled =0)    planningEditor on planningEditor.id = a.planning_editor 
        where   d.is_deleted =0 and d.is_published =1 
        and d.id = #{parameter.materialId}
-       <if test="parameter.pmphUserId !=null ">  
+       <if test="parameter.power == 4 and parameter.pmphUserId !=null ">  
 	        and a.planning_editor = #{parameter.pmphUserId}
 	   </if>
 	   <if test="parameter.state !=null ">  
