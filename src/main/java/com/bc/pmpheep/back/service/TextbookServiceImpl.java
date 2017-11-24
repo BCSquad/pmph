@@ -210,6 +210,7 @@ public class TextbookServiceImpl implements TextbookService {
 			List<BookPositionVO> rows = textbookDao.listBookPosition(pageParameter);
 			pageResult.setRows(rows);
 		}
+		pageResult.setTotal(total);
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		return pageResult;
 
