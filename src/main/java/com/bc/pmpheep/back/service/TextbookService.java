@@ -62,5 +62,13 @@ public interface TextbookService {
     List<Textbook> getTextbookByMaterialId(Long materialId) throws CheckedServiceException;
     
     PageResult<BookPositionVO> listBookPosition(Integer pageNumber,Integer pageSize,Integer state,String  textBookIds,Long materialId,String sessionId);
+    /**
+     * 功能描述：批量通过（确认名单）
+     * @param textBookIds
+     * @param isLocked
+     * @return
+     * @throws CheckedServiceException
+     */
+    Integer updateTextbooks(Long[] ids) throws CheckedServiceException;
 
 }

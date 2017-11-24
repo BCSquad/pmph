@@ -324,5 +324,21 @@
 	        limit #{start},#{pageSize}  
 	   </if> 
 	</select>
-
+	<!-- 根据书籍id查询textbook -->
+	<select id="getTextbooks"  resultType="Textbook" >
+		select * from textbook 
+			where id in
+	        <foreach collection="array" item="item" index="index" open="(" separator="," close=")" >
+       			#{item}
+   			</foreach>
+	</select>
+	<!-- 根据id进行名单确认 -->
+	<update id="updateTextbooks" parameterType="list">
+		update textbook  
+			set is_locked= true
+			where id in
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item.id}
+		</foreach>
+	</update>
 </mapper>

@@ -91,5 +91,20 @@ public interface TextbookDao {
      * @return 分页书籍列表数据
      */
     List<BookPositionVO> listBookPosition (PageParameter<Map<String, Object>> pageParameter);
+    
+    /**
+     * 
+     * @param textBookIds
+     * @return 获取书籍列表
+     */
+    List<Textbook> getTextbooks(Long[] textBookIds);
+    
+    /**	
+     * 批量通过（名单确认）
+     * @param textbooks
+     * @param isLocked
+     * @return 
+     */
+	Integer updateTextbooks(List<Textbook> textBook);
 
 }
