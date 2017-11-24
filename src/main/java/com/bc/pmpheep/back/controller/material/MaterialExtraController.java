@@ -46,6 +46,7 @@ public class MaterialExtraController {
 
     private static final String BUSINESS_TYPE = "教材通知备注";
 
+    @ResponseBody
     @LogDetail(businessType = BUSINESS_TYPE, logRemark = "更新教材通知内容，备注信息")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseBean update(MaterialExtraVO materialExtraVO) {
@@ -67,6 +68,7 @@ public class MaterialExtraController {
      * @return Map<String, Object> 集合
      * </pre>
      */
+    @ResponseBody
     @LogDetail(businessType = BUSINESS_TYPE, logRemark = "查看教材通知内容，备注详情")
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public ResponseBean detail(@RequestParam("materialId") Long materialId) {
