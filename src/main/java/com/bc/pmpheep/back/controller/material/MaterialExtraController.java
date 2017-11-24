@@ -126,7 +126,8 @@ public class MaterialExtraController {
     @ResponseBody
     @LogDetail(businessType = BUSINESS_TYPE, logRemark = "教材通知发布")
     @RequestMapping(value = "/published", method = RequestMethod.POST)
-    public ResponseBean published(HttpServletRequest request, Long materialId, List<Long> orgIds) {
+    public ResponseBean published(HttpServletRequest request,
+    @RequestParam("materialId") Long materialId, @RequestParam("orgIds") List<Long> orgIds) {
         String sessionId = CookiesUtil.getSessionId(request);
         try {
             return new ResponseBean(materialExtraService.noticePublished(materialId,
