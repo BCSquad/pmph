@@ -40,20 +40,20 @@ public class BookPositionVO implements Serializable{
 	    private String bianWeis;
 	    //编委数目
 		private Integer bianWeisNum;	
-		//是否有进行策划编辑选择操作
-		private boolean  choosePlanningEditor ;
-		//是否有进行主编副主编选择操作
-		private boolean  chooseEditorAndAssociateEditor ;
-		//是否有进行编委选择操作
-		private boolean  chooseBianWei ;
-		//是否有进行名单确认操作
-		private boolean  confirmForm ;
-		//是否有进行结果公布操作
-		private boolean  publishResults ;
-		//是否有进行创建小组操作
-		private boolean  createGroup ;
-		//是否有进行强制结束操作
-		private boolean  settingEnd ;
+//		//是否有进行策划编辑选择操作
+//		private boolean  choosePlanningEditor ;
+//		//是否有进行主编副主编选择操作
+//		private boolean  chooseEditorAndAssociateEditor ;
+//		//是否有进行编委选择操作
+//		private boolean  chooseBianWei ;
+//		//是否有进行名单确认操作
+//		private boolean  confirmForm ;
+//		//是否有进行结果公布操作
+//		private boolean  publishResults ;
+//		//是否有进行创建小组操作
+//		private boolean  createGroup ;
+//		//是否有进行强制结束操作
+//		private boolean  settingEnd ;
 		
 		public BookPositionVO() {
 			super();
@@ -172,62 +172,7 @@ public class BookPositionVO implements Serializable{
 			this.bianWeisNum = bianWeisNum;
 		}
 
-		public boolean isChoosePlanningEditor() {
-			return choosePlanningEditor;
-		}
-
-		public void setChoosePlanningEditor(boolean choosePlanningEditor) {
-			this.choosePlanningEditor = choosePlanningEditor;
-		}
-
-		public boolean isChooseEditorAndAssociateEditor() {
-			return chooseEditorAndAssociateEditor;
-		}
-
-		public void setChooseEditorAndAssociateEditor(
-				boolean chooseEditorAndAssociateEditor) {
-			this.chooseEditorAndAssociateEditor = chooseEditorAndAssociateEditor;
-		}
-
-		public boolean isChooseBianWei() {
-			return chooseBianWei;
-		}
-
-		public void setChooseBianWei(boolean chooseBianWei) {
-			this.chooseBianWei = chooseBianWei;
-		}
-
-		public boolean isConfirmForm() {
-			return confirmForm;
-		}
-
-		public void setConfirmForm(boolean confirmForm) {
-			this.confirmForm = confirmForm;
-		}
-
-		public boolean isPublishResults() {
-			return publishResults;
-		}
-
-		public void setPublishResults(boolean publishResults) {
-			this.publishResults = publishResults;
-		}
-
-		public boolean isCreateGroup() {
-			return createGroup;
-		}
-
-		public void setCreateGroup(boolean createGroup) {
-			this.createGroup = createGroup;
-		}
-
-		public boolean isSettingEnd() {
-			return settingEnd;
-		}
-
-		public void setSettingEnd(boolean settingEnd) {
-			this.settingEnd = settingEnd;
-		}
+		
 
 		@Override
 		public String toString() {
@@ -242,13 +187,7 @@ public class BookPositionVO implements Serializable{
 					+ editorsAndAssociateEditors
 					+ ", editorsAndAssociateEditorsNum:"
 					+ editorsAndAssociateEditorsNum + ", bianWeis:" + bianWeis
-					+ ", bianWeisNum:" + bianWeisNum
-					+ ", choosePlanningEditor:" + choosePlanningEditor
-					+ ", chooseEditorAndAssociateEditor:"
-					+ chooseEditorAndAssociateEditor + ", chooseBianWei:"
-					+ chooseBianWei + ", confirmForm:" + confirmForm
-					+ ", publishResults:" + publishResults + ", createGroup:"
-					+ createGroup + ", settingEnd:" + settingEnd + "}";
+					+ ", bianWeisNum:" + bianWeisNum + "}";
 		}
 		
 		
