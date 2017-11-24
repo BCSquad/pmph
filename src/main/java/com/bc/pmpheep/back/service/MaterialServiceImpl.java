@@ -598,20 +598,20 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			}
 			if (pmphUser.getId().equals(materialListVO.getFounderId())) {// 判断是否是创建者
 				materialListVO.setIsFounder(true);
-				materialListVO.setIsMy(true);
 			} else {
 				materialListVO.setIsFounder(false);
 			}
 			if (pmphUser.getId().equals(materialListVO.getDirector())) {// 判断是否是主任
+				materialListVO.setIsMy(true);
 				materialListVO.setIsDirector(true);
 			} else {
 				materialListVO.setIsDirector(false);
 			}
-			if (ObjectUtil.isNull(materialProjectEditorService
+			if (!ObjectUtil.isNull(materialProjectEditorService
 					.getMaterialProjectEditorByMaterialIdAndUserId(materialListVO.getId(), pmphUser.getId()))) {// 判断是否为项目编辑
 				materialListVO.setIsMy(true);
 			}
-			if (CollectionUtil.isEmpty(
+			if (!CollectionUtil.isEmpty(
 					textbookService.getTextbookByMaterialIdAndUserId(materialListVO.getId(), pmphUser.getId()))) {// 判断是否为策划编辑
 				materialListVO.setIsMy(true);
 			}
