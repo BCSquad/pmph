@@ -48,7 +48,7 @@ public class PositionChooseController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "加载书籍职位列表")
-	@RequestMapping(value = "/list/", method = RequestMethod.GET)
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ResponseBean bookPosition(@RequestParam("pageNumber") Integer pageNumber,
 		    						 @RequestParam("pageSize") Integer pageSize,
 		    						 @RequestParam("state") Integer state,
