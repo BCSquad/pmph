@@ -41,14 +41,14 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 使用示范：
  * 
  * 
- * @author (作者) nyz
+ * &#64;author (作者) nyz
  * 
- * @since (该版本支持的JDK版本) ：JDK 1.6或以上
- * @version (版本) 1.0
- * @date (开发日期) 2017-10-25
- * @modify (最后修改时间) 
- * @修改人 ：nyz 
- * @审核人 ：
+ * &#64;since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * &#64;version (版本) 1.0
+ * &#64;date (开发日期) 2017-10-25
+ * &#64;modify (最后修改时间) 
+ * &#64;修改人 ：nyz 
+ * &#64;审核人 ：
  * </pre>
  */
 @Service
@@ -159,7 +159,8 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               "CmsContent添加内容失败");
         }
         // 定时发布
-        // if (Const.TRUE.booleanValue() == cmsContent.getIsScheduled().booleanValue()) {
+        // if (Const.TRUE.booleanValue() == cmsContent.getIsScheduled().booleanValue())
+        // {
         // if (StringUtil.isEmpty(scheduledTime)) {
         // throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
         // CheckedExceptionResult.NULL_PARAM, "定时发布时间参数为空");
@@ -199,12 +200,15 @@ public class CmsContentServiceImpl implements CmsContentService {
             cmsContent.setAuthDate(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                             DateUtil.getCurrentTime()));
             cmsContent.setIsPublished(true);
-        } else if (Const.TRUE.booleanValue() == cmsContent.getIsStaging().booleanValue()) {
-            // 信息快报/公告管理(暂存)
-            cmsContent.setAuthUserId(pmphUser.getId());
-            cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_0);
-            cmsContent.setAuthDate(null);
-            cmsContent.setIsPublished(false);
+        } else if (cmsContent.getCategoryId() == Const.CMS_CATEGORY_ID_2
+                   || cmsContent.getCategoryId() == Const.CMS_CATEGORY_ID_3) {
+            if (Const.TRUE == cmsContent.getIsStaging()) {
+                // 信息快报/公告管理(暂存)
+                cmsContent.setAuthUserId(pmphUser.getId());
+                cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_0);
+                cmsContent.setAuthDate(null);
+                cmsContent.setIsPublished(false);
+            }
         } else {
             // 文章管理,退回
             if (Const.CMS_AUTHOR_STATUS_1.shortValue() == cmsContent.getAuthStatus().shortValue()) {
@@ -212,7 +216,7 @@ public class CmsContentServiceImpl implements CmsContentService {
                 cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_1);
                 cmsContent.setAuthDate(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                 DateUtil.getCurrentTime()));
-                cmsContent.setIsDeleted(true);
+                cmsContent.setIsDeleted(false);
                 cmsContent.setIsPublished(false);
             } else if (Const.CMS_AUTHOR_STATUS_2.shortValue() == cmsContent.getAuthStatus()
                                                                            .shortValue()) {
@@ -406,11 +410,19 @@ public class CmsContentServiceImpl implements CmsContentService {
     }
 
     @Override
+    public CmsContent getCmsContentByMaterialId(Long materialId) throws CheckedServiceException {
+        if (ObjectUtil.isNull(materialId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "教材ID参数为空!");
+        }
+        return cmsContentDao.getCmsContentByMaterialId(materialId);
+    }
+
+    @Override
     public Integer deleteCmsContentById(Long id) throws CheckedServiceException {
         if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
-
         }
         return cmsContentDao.deleteCmsContentById(id);
     }

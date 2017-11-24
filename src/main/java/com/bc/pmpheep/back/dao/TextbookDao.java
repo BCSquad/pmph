@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
 
 /**
@@ -107,4 +108,13 @@ public interface TextbookDao {
      */
 	Integer updateTextbooks(List<Textbook> textBook);
 
+    /**
+     * 
+     * Description:添加或更新教材书籍
+     * @author:lyc
+     * @date:2017年11月23日上午11:45:18
+     * @param 
+     * @return Integer
+     */
+    Integer addOrUpdateTextBookList(BookListVO bookListVO);
 }

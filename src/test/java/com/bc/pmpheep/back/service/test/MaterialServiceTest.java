@@ -48,8 +48,7 @@ public class MaterialServiceTest extends BaseTest {
 			true, true,
 			true, true, null,
 			new Long(random.nextInt(200)), null, new Long(random.nextInt(200)),
-			null,
-			13,12);
+			null);
 	
     @Test
     @Rollback(Const.ISROLLBACK) 

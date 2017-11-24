@@ -84,7 +84,7 @@ public class UserMessageController {
     public ResponseBean state(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @PathVariable("msgId") String msgId, @RequestParam(name = "pageSize") Integer pageSize,
-    MessageStateVO messageStateVO,HttpServletRequest request) {
+    MessageStateVO messageStateVO, HttpServletRequest request) {
         PageParameter<MessageStateVO> pageParameter =
         new PageParameter<MessageStateVO>(pageNumber, pageSize, messageStateVO);
         String sessionId = CookiesUtil.getSessionId(request);
@@ -101,6 +101,7 @@ public class UserMessageController {
 	 * @param pageNumber
 	 * @param pageSize
 	 * @param orgName 机构名称
+	 * @param materialId 教材ID
 	 * @param userNameOrUserCode 用户姓名/用户账号
 	 * @param materialName 教材名称
 	 * @return
@@ -112,12 +113,14 @@ public class UserMessageController {
     public ResponseBean sendObject(@RequestParam("sendType") Integer sendType,
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, @RequestParam("orgName") String orgName,
+    @RequestParam("materialId") Long materialId,
     @RequestParam("userNameOrUserCode") String userNameOrUserCode,
     @RequestParam("materialName") String materialName) {
         return new ResponseBean(userMessageService.listSendOject(sendType,
                                                                  pageNumber,
                                                                  pageSize,
                                                                  orgName,
+                                                                 materialId,
                                                                  userNameOrUserCode,
                                                                  materialName));
     }
@@ -160,7 +163,7 @@ public class UserMessageController {
     @RequestParam("bookIds") String bookids, @RequestParam("file") String[] files,
     HttpServletRequest request) {
         try {
-        	String sessionId = CookiesUtil.getSessionId(request);
+            String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,
                                                                               title,
                                                                               sendType,
@@ -197,7 +200,7 @@ public class UserMessageController {
     @RequestParam("bookIds") String bookIds, @RequestParam("file") String[] files,
     HttpServletRequest request) {
         try {
-        	String sessionId = CookiesUtil.getSessionId(request);
+            String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,
                                                                               title,
                                                                               sendType,
@@ -398,5 +401,32 @@ public class UserMessageController {
     @RequestMapping(value = "/delete/myMessages", method = RequestMethod.PUT)
     public ResponseBean myMessages(Long[] ids) {
         return new ResponseBean(userMessageService.updateMyMessage(ids));
+    }
+    
+    /**
+     * 向单个用户发送私信
+     * 
+     * @author tyc
+     * @createDate 2017年11月24日 上午11:04:00
+     * @param message
+     * @param title
+     * @param senderId
+     * @param userId	接收者id
+     * @param sessionId
+     * @return
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "向单个用户发送私信")
+    @RequestMapping(value = "/newOneMessage", method = RequestMethod.POST)
+    public ResponseBean newOneUserMessage(Message message, @RequestParam("title") String title,
+    @RequestParam("sendType") Integer sendType, @RequestParam("senderId") Long senderId, 
+    @RequestParam("userId") String userId, HttpServletRequest request) {
+        try {
+            String sessionId = CookiesUtil.getSessionId(request);
+            return new ResponseBean(userMessageService.addOneUserMessage(message, title, 
+            		senderId, userId, sessionId));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
     }
 }

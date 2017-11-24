@@ -5,7 +5,9 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Declaration;
+import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -22,8 +24,7 @@ public interface DeclarationService {
 	 * @Return Declaration带主键
 	 * @throws CheckedServiceException
 	 */
-	Declaration addDeclaration(Declaration declaration)
-			throws CheckedServiceException;
+	Declaration addDeclaration(Declaration declaration) throws CheckedServiceException;
 
 	/**
 	 * @Param id
@@ -37,8 +38,7 @@ public interface DeclarationService {
 	 * @Return 影响行数
 	 * @Throws CheckedServiceException
 	 */
-	Integer updateDeclaration(Declaration declaration)
-			throws CheckedServiceException;
+	Integer updateDeclaration(Declaration declaration) throws CheckedServiceException;
 
 	/**
 	 * @Param id
@@ -52,6 +52,39 @@ public interface DeclarationService {
 	 * @Return Declaration 实体对象集合
 	 * @Throws CheckedServiceException
 	 */
-	List<Declaration> getDeclarationByMaterialId(Long materialId)
-			throws CheckedServiceException;
+	List<Declaration> getDeclarationByMaterialId(Long materialId) throws CheckedServiceException;
+	
+	/**
+	 * 符合条件的申报表审核分页数据
+	 * @author Mryang
+	 * @createDate 2017年11月23日 上午10:31:36
+	 * @param pageNumber 页码
+	 * @param pageSize   页面大小
+	 * @param materialId 教材id
+	 * @param textBookids条件查询的书籍ids [1,2,4,...]
+	 * @param realname   条件查询的账号或者姓名
+	 * @param position   条件查询 职务
+	 * @param title      条件查询 职称
+	 * @param orgName    条件查询 工作单位
+	 * @param unitName   条件查询 申报单位
+	 * @param positionType 条件查询 申报职位 ;null全部  1主编 2副主编 3编委 
+	 * @param onlineProgress 1待审核 3已经审核 
+	 * @param offlineProgress 0 未  2 收到
+	 * @return PageResult<DeclarationListVO>
+	 * @Throws CheckedServiceException
+	 */
+	public PageResult<DeclarationListVO> pageDeclaration   (
+				Integer pageNumber, 
+				Integer pageSize,
+				Long materialId, 
+				String textBookids ,
+				String realname,
+				String position,
+				String title,
+				String orgName,
+				String unitName,
+				Integer positionType,
+				Integer onlineProgress,
+				Integer offlineProgress
+			) throws CheckedServiceException ;
 }

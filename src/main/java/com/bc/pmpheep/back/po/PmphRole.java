@@ -46,6 +46,8 @@ public class PmphRole implements Serializable {
 
 	// 角色对应权限
 	List<Long> pmphRolePermissionChild;
+	// 角色对应的教材权限
+	private String materialPermission;
 
 	public PmphRole() {
 	}
@@ -137,6 +139,22 @@ public class PmphRole implements Serializable {
 	 */
 	public void setPmphRolePermissionChild(List<Long> pmphRolePermissionChild) {
 		this.pmphRolePermissionChild = pmphRolePermissionChild;
+	}
+
+	public boolean isDisabled() {
+		return isDisabled;
+	}
+
+	public void setDisabled(boolean isDisabled) {
+		this.isDisabled = isDisabled;
+	}
+
+	public String getMaterialPermission() {
+		return materialPermission;
+	}
+
+	public void setMaterialPermission(String materialPermission) {
+		this.materialPermission = materialPermission;
 	}
 
 	@Override

@@ -34,7 +34,7 @@ public class DecLastPositionServiceTest extends BaseTest {
 
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void testAddDecLastPosition(){
+	public void testAddDecLastPosition() {
 		DecLastPosition decLastPosition = new DecLastPosition();
 		decLastPosition.setDeclarationId(23L);
 		decLastPosition.setMaterialName("管理心理学");
@@ -44,43 +44,43 @@ public class DecLastPositionServiceTest extends BaseTest {
 		decLastPosition = decLastPositionService.addDecLastPosition(decLastPosition);
 		Assert.assertTrue("添加数据失败", decLastPosition.getId() > 0);
 	}
-	
+
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void testDeleteDecLastPosition(){
+	public void testDeleteDecLastPosition() {
 		long id = add().getId();
 		Integer count = decLastPositionService.deleteDecLastPositionById(id);
 		Assert.assertTrue("删除数据失败", count > 0);
 	}
-	
+
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void testUpdateDecLastPosition(){
+	public void testUpdateDecLastPosition() {
 		DecLastPosition decLastPosition = add();
 		decLastPosition.setDeclarationId(3L);
 		decLastPosition.setMaterialName("心理统计学");
 		Integer count = decLastPositionService.updateDecLastPosition(decLastPosition);
 		Assert.assertTrue("数据更新失败", count > 0);
 	}
-	
+
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void testGetDecLastPosition(){
+	public void testGetDecLastPosition() {
 		long id = add().getId();
 		DecLastPosition decLastPosition = decLastPositionService.getDecLastPositionById(id);
 		Assert.assertNotNull("获取作家上套教材参编情况失败", decLastPosition);
 	}
-	
+
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void testListDecLastPosition(){
+	public void testListDecLastPosition() {
 		add();
 		List<DecLastPosition> list = new ArrayList<>();
 		list = decLastPositionService.getListDecLastPositionByDeclarationId(5L);
 		Assert.assertTrue("获取作家上套教材参编情况集合失败", list.size() > 1);
 	}
-	
-	private DecLastPosition add(){
+
+	private DecLastPosition add() {
 		DecLastPosition decLastPosition = new DecLastPosition();
 		decLastPosition.setDeclarationId(5L);
 		decLastPosition.setMaterialName("心理诊断学");
@@ -88,9 +88,9 @@ public class DecLastPositionServiceTest extends BaseTest {
 		decLastPosition.setNote("研究人员");
 		decLastPosition.setSort(25);
 		decLastPositionService.addDecLastPosition(decLastPosition);
-		DecLastPosition decLastPosition2 = new DecLastPosition(2L, "神经科学", 1, null, 12);
+		DecLastPosition decLastPosition2 = new DecLastPosition(2L, "神经科学", 1, true, null, 12);
 		decLastPositionService.addDecLastPosition(decLastPosition2);
-		DecLastPosition decLastPosition3 = new DecLastPosition(5L, "人格心理学", 1, null, null);
+		DecLastPosition decLastPosition3 = new DecLastPosition(5L, "人格心理学", 1, true, null, null);
 		decLastPositionService.addDecLastPosition(decLastPosition3);
 		return decLastPosition3;
 	}

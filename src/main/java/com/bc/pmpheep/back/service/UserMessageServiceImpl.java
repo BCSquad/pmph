@@ -211,8 +211,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Override
     public Map<String, Object> listSendOject(Integer sendType, Integer pageNumber,
-    Integer pageSize, String orgName, String userNameOrUserCode, String materialName)
-    throws CheckedServiceException {
+    Integer pageSize, String orgName, Long materialId, String userNameOrUserCode,
+    String materialName) throws CheckedServiceException {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         if (ObjectUtil.isNull(sendType)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
@@ -221,7 +221,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         // 1 发送给学校管理员 //2 所有人
         if (Const.SEND_OBJECT_1.intValue() == sendType.intValue()
             || Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
-            resultMap.put("orgVo", orgService.listSendToSchoolAdminOrAllUser(orgName));
+            resultMap.put("orgVo", orgService.listSendToSchoolAdminOrAllUser(orgName, materialId));
         }
         // 指定用户
         if (Const.SEND_OBJECT_3.intValue() == sendType.intValue()) {
@@ -806,11 +806,51 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         return userMessageDao.updateUserMessageCancelWithdrawByMsgId(msgId);
     }
 
-	@Override
-	public Integer addOneUserMessage(Message message, Integer sendType,
-			Long senderId, String userId, boolean isSave, String sessionId)
-			throws CheckedServiceException, IOException {
-		
-		return null;
+    @Override
+	public Integer addOneUserMessage(Message message, String title, Long senderId, String userId,
+			String sessionId) throws CheckedServiceException, IOException {
+        // 发送者id
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "发送人为空!");
+        }
+		// MongoDB 消息插入
+		message = messageService.add(message);
+		if (StringUtil.isEmpty(message.getId())) {
+		    throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+		                                      CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
+		}
+        Long senderUserId = pmphUser.getId();// 新发消息,发送者Id为登陆用户ID
+        // 装储存数据
+        List<UserMessage> userMessageList = new ArrayList<UserMessage>();
+        // 私信发送
+        if (StringUtil.isEmpty(userId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "接收人为空!");
+        } else {
+            if (StringUtil.notEmpty(userId) && StringUtil.isNumeric(userId)) {
+            	userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_2, 
+            			senderUserId, Const.SENDER_TYPE_1, Long.parseLong(userId), 
+            			Const.RECEIVER_TYPE_2));
+            }
+        }
+        // 插入消息发送对象数据
+        userMessageDao.addUserMessageBatch(userMessageList);
+        // websocket发送的id
+        List<String> websocketUserId = new ArrayList<String>();
+        for (UserMessage userMessage : userMessageList) {
+            websocketUserId.add(userMessage.getReceiverType() + "_" + userMessage.getReceiverId());
+        }
+        // webscokt发送消息
+        if (CollectionUtil.isNotEmpty(websocketUserId)) {
+            WebScocketMessage webScocketMessage =
+            new WebScocketMessage(message.getId(), Const.MSG_TYPE_2, senderUserId,
+                                  pmphUser.getRealname(), Const.SENDER_TYPE_1,
+                                  Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, title,
+                                  message.getContent(), DateUtil.getCurrentTime());
+            myWebSocketHandler.sendWebSocketMessageToUser(websocketUserId, webScocketMessage);
+        }
+        return userMessageList.size();
 	}
 }

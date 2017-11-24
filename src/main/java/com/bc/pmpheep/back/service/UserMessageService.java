@@ -21,24 +21,19 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  **/
 public interface UserMessageService {
-	/**
-	 * 批量插入 UserMessage (UserMessage只插入了
-	        UserMessage.msgId
-			UserMessage.msgType
-			UserMessage.title
-			UserMessage.senderId
-			UserMessage.senderType
-			UserMessage.receiverId
-			UserMessage.receiverType
-			字段
-	 * @author Mryang
-	 * @createDate 2017年11月17日 上午10:07:23
-	 * @param userMessageList
-	 * @throws CheckedServiceException
-	 */
-	void addUserMessageBatch(List<UserMessage> userMessageList) throws CheckedServiceException;
-	
-	/**
+    /**
+     * 批量插入 UserMessage (UserMessage只插入了 UserMessage.msgId UserMessage.msgType UserMessage.title
+     * UserMessage.senderId UserMessage.senderType UserMessage.receiverId UserMessage.receiverType
+     * 字段
+     * 
+     * @author Mryang
+     * @createDate 2017年11月17日 上午10:07:23
+     * @param userMessageList
+     * @throws CheckedServiceException
+     */
+    void addUserMessageBatch(List<UserMessage> userMessageList) throws CheckedServiceException;
+
+    /**
      * 单条数据插入 UserMessage
      * 
      * @author Mryang
@@ -77,16 +72,19 @@ public interface UserMessageService {
 	 * 使用示范：
 	 *
 	 * @param sendType //1 发送给学校管理员 //2 所有人 //3指定用户 //4发送给教材所有报名者
-	 * @param pageNumber 
-	 * @param pageSize
-	 * @param orgName
-	 * @param userNameOrUserCode 用户姓名或者用户账号
+	 * @param pageNumber
+     * @param pageSize
+     * @param orgName 机构名称
+     * @param materialId 教材ID
+     * @param userNameOrUserCode 用户姓名/用户账号
+     * @param materialName 教材名称
 	 * @return
 	 * @throws CheckedServiceException
 	 * </pre>
      */
     Map<String, Object> listSendOject(Integer sendType, Integer pageNumber, Integer pageSize,
-    String orgName, String userNameOrUserCode, String materialName) throws CheckedServiceException;
+    String orgName, Long materialId, String userNameOrUserCode, String materialName)
+    throws CheckedServiceException;
 
     /**
      * 向各个对象发送消息
@@ -249,24 +247,22 @@ public interface UserMessageService {
      * 通过id 动态更新UserMessage
      */
     Integer updateUserMessage(UserMessage userMessage);
-    
+
     /**
      * 向单个用户发送私信
      * 
      * @author tyc
      * @createDate 2017年11月22日 下午5:04:00
      * @param message
-     * @param sendType
+     * @param title
      * @param senderId
-     * @param userId
-     * @param isSave
+     * @param userId	接收者id
      * @param sessionId
      * @return
      * @throws CheckedServiceException
      * @throws IOException
      */
-    Integer addOneUserMessage(Message message, Integer sendType, Long senderId, String userId, 
-    		boolean isSave, String sessionId)
+    Integer addOneUserMessage(Message message, String title, Long senderId, String userId,  
+    		String sessionId)
     throws CheckedServiceException, IOException;
-
 }

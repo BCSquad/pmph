@@ -141,12 +141,6 @@
 			<if test="msgId != null and msgId != '' ">
 				msg_id,
 			</if>
-			<if test="projectPermission != null">
-				project_permission,
-			</if>
-			<if test="planPermission != null">
-				plan_permission,
-			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -287,12 +281,6 @@
 			</if>
 			<if test="msgId != null and msgId != '' ">
 				#{msgId},
-			</if>
-			<if test="projectPermission != null">
-				#{projectPermission},
-			</if>
-			<if test="planPermission != null">
-				#{planPermission},
 			</if>
 		</trim>
 	</sql>
@@ -441,12 +429,6 @@
 			<if test="msgId != null and msgId != '' ">
 				msg_id = #{msgId},
 			</if>
-			<if test="projectPermission != null">
-				project_permission = #{projectPermission},
-			</if>
-			<if test="planPermission != null">
-				plan_permission  = #{planPermission},
-			</if>
 		</set>
 		where
 		id=#{id} ;
@@ -515,8 +497,6 @@
 		m.is_deleted,
 		m.is_published,
 		m.founder_id,
-		m.plan_permission,
-		m.project_permission,
 		m.msg_id
 		FROM
 		material m
@@ -557,8 +537,6 @@
 		m.is_deleted,
 		m.is_published,
 		m.founder_id,
-		m.plan_permission,
-		m.project_permission,
 		m.msg_id
 		FROM
 		material m
@@ -603,8 +581,6 @@
 		m.is_deleted,
 		m.is_published,
 		m.founder_id,
-		m.plan_permission,
-		m.project_permission,
 		m.msg_id
 		FROM
 		material m
@@ -645,8 +621,6 @@
 		m.is_deleted,
 		m.is_published,
 		m.founder_id,
-		m.plan_permission,
-		m.project_permission,
 		m.msg_id
 		FROM
 		material m
@@ -676,5 +650,4 @@
 		LIMIT #{start} , #{pageSize}
 		</if>
 	</select>
-
 </mapper>

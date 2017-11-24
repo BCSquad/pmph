@@ -1,13 +1,43 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialExtraDao;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.CmsContent;
+import com.bc.pmpheep.back.po.Material;
+import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtra;
+import com.bc.pmpheep.back.po.MaterialNoteAttachment;
+import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
+import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
+import com.bc.pmpheep.back.util.ArrayUtil;
+import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.back.util.FileUpload;
+import com.bc.pmpheep.back.util.FileUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.MateriaHistorylVO;
+import com.bc.pmpheep.back.vo.MaterialExtraVO;
+import com.bc.pmpheep.general.bean.FileType;
+import com.bc.pmpheep.general.po.Content;
+import com.bc.pmpheep.general.service.ContentService;
+import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -22,7 +52,28 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class MaterialExtraServiceImpl extends BaseService implements MaterialExtraService {
 
     @Autowired
-    private MaterialExtraDao materialExtraDao;
+    private MaterialExtraDao                materialExtraDao;
+    @Autowired
+    private MaterialService                 materialService;
+    @Autowired
+    private MaterialContactService          materialContactService;
+    @Autowired
+    private MaterialNoticeAttachmentService materialNoticeAttachmentService;
+    @Autowired
+    private MaterialNoteAttachmentService   materialNoteAttachmentService;
+    @Autowired
+    private FileService                     fileService;
+    @Autowired
+    private MaterialOrgService              materialOrgService;
+    @Autowired
+    private SystemMessageService            systemMessageService;
+    @Autowired
+    private CmsContentService               cmsContentService;
+    @Autowired
+    private ContentService                  contentService;
+
+    private static final String             NOTICE = "notice";
+    private static final String             NOTE   = "note";
 
     /**
      * 
@@ -66,6 +117,27 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
 
     /**
      * 
+     * <pre>
+     * 功能描述：根据教材ID查询MaterialExtra对象
+     * 使用示范：
+     *
+     * @param materialId 教材ID
+     * @return MaterialExtra对象
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    @Override
+    public MaterialExtra getMaterialExtraByMaterialId(Long materialId)
+    throws CheckedServiceException {
+        if (ObjectUtil.isNull(materialId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.NULL_PARAM, "教材ID不能为空");
+        }
+        return materialExtraDao.getMaterialExtraByMaterialId(materialId);
+    }
+
+    /**
+     * 
      * @param id
      * @return 影响行数
      * @throws CheckedServiceException
@@ -93,6 +165,319 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
         return materialExtraDao.updateMaterialExtra(materialExtra);
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：编辑通知详情
+     * 使用示范：
+     *
+     * @param materialExtraVO MaterialExtraVO
+     * @return Map<String, Object>集合
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    @Override
+    public Integer updateMaterialExtraAndNoticeFile(MaterialExtraVO materialExtraVO)
+    throws CheckedServiceException, IOException {
+        // 教材ID
+        Long materialId = materialExtraVO.getMaterialId();
+        if (ObjectUtil.isNull(materialId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.NULL_PARAM, "教材ID为空");
+        }
+        Material material = materialService.getMaterialById(materialId);
+        MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
+        if (StringUtil.isEmpty(materialExtra.getNotice())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.NULL_PARAM, "教材通知内容为空");
+        }
+        // MongoDB 内容插入
+        Content contentObj = contentService.add(new Content(materialExtra.getNotice()));
+        if (ObjectUtil.isNull(contentObj)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "教材通知保存失败");
+        }
+        // 保存CMSContent内容
+        cmsContentService.addCmsContent(new CmsContent(
+                                                       0L,
+                                                       "0",
+                                                       contentObj.getId(),
+                                                       material.getMaterialName(),
+                                                       Const.CMS_AUTHOR_TYPE_1,
+                                                       false,
+                                                       false,
+                                                       material.getFounderId(),
+                                                       DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                                                DateUtil.getCurrentTime()),
+                                                       material.getId(), Const.CMS_CATEGORY_ID_1));
+        // 教材名称
+        // String materialName = materialExtraVO.getMaterialName();
+        // if (StringUtil.isEmpty(materialName)) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+        // CheckedExceptionResult.NULL_PARAM, "教材名称为空");
+        // }
+        // if (materialName.length() > 40) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+        // CheckedExceptionResult.ILLEGAL_PARAM, "教材名称过长");
+        // }
+        // 更新教材
+        // materialService.updateMaterial(new Material(materialId, materialName));
+        // 教材通知内容验证
+        // String notice = materialExtraVO.getNotice();
+        // if (StringUtil.isEmpty(notice)) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+        // CheckedExceptionResult.NULL_PARAM, "教材通知内容为空");
+        // }
+
+        // 教材备注内容验证
+        // String note = materialExtraVO.getNote();
+        // if (StringUtil.isEmpty(note)) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+        // CheckedExceptionResult.NULL_PARAM, "教材备注内容为空");
+        // }
+        // 更新教材通知备注
+        // MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
+        // Long materialExtraId = materialExtra.getId();
+        // if (ObjectUtil.isNull(materialExtraId)) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+        // CheckedExceptionResult.OBJECT_NOT_FOUND, "教材信息不存在");
+        // }
+        // this.updateMaterialExtra(new MaterialExtra(materialExtra.getId(), notice, note));
+        // 教材通知附件
+        // String[] noticeFiles = materialExtraVO.getNoticeFiles();
+        // if (ArrayUtil.isNotEmpty(noticeFiles)) {
+        // this.saveFileToMongoDB(noticeFiles, materialExtraId, NOTICE);
+        // }
+        // 教材通知附件MongoDB对应ID
+        String[] noticeAttachments = materialExtraVO.getNoticeAttachments();
+        if (ArrayUtil.isNotEmpty(noticeAttachments)) {
+            // 删除MaterialNoticeAttachment 表
+            materialNoticeAttachmentService.deleteMaterialNoticeAttachmentByAttachments(noticeAttachments);
+            // 删除MongoDB对应的文件
+            for (int i = 0; i < noticeAttachments.length; i++) {
+                fileService.remove(noticeAttachments[i]);
+            }
+        }
+        // 教材备注附件
+        // String[] noteFiles = materialExtraVO.getNoteFiles();
+        // if (ArrayUtil.isNotEmpty(noteFiles)) {
+        // this.saveFileToMongoDB(noteFiles, materialExtraId, NOTE);
+        // }
+        // 教材备注附件MongoDB对应ID
+        String[] noteAttachments = materialExtraVO.getNoteAttachments();
+        if (ArrayUtil.isNotEmpty(noteAttachments)) {
+            // 删除MaterialNoteAttachment 表
+            materialNoteAttachmentService.deleteMaterialNoteAttachmentByAttachments(noteAttachments);
+            // 删除MongoDB对应的文件
+            for (int i = 0; i < noteAttachments.length; i++) {
+                fileService.remove(noteAttachments[i]);
+            }
+        }
+        return 1;
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据教材ID查询教材通知详情及附件
+     * 使用示范：
+     *
+     * @param materialId 教材ID
+     * @return Map<String, Object> 集合
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    @Override
+    public Map<String, Object> getMaterialExtraAndNoticeDetail(Long materialId)
+    throws CheckedServiceException {
+        if (ObjectUtil.isNull(materialId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.NULL_PARAM, "教材主键为空");
+        }
+        // 教材通知附件
+        List<MaterialNoticeAttachment> materialNoticeAttachments;
+        // 教材备注附件
+        List<MaterialNoteAttachment> materialNoteAttachments;
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        Material material = materialService.getMaterialById(materialId);
+        resultMap.put("materialName", material.getMaterialName());// 教材名称
+        List<MaterialContact> materialContacts =
+        materialContactService.listMaterialContactByMaterialId(materialId);
+        resultMap.put("materialContacts", materialContacts);// 联系人
+        MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
+        Long materialExtraId = materialExtra.getId();
+        resultMap.put("materialExtra", materialExtra);// 教材通知备注
+        CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
+        if (ObjectUtil.notNull(cmsContent)) {
+            Content content = contentService.get(cmsContent.getMid());
+            resultMap.put("content", content.getContent());// MongoDB中教材通知
+            // 判断内容是否已经发布或审核通过
+            String fileDownLoadType = null;
+            if (Const.TRUE.booleanValue() == material.getIsPublished().booleanValue()) {
+                fileDownLoadType = Const.MATERIAL_FILE_DOWNLOAD;
+            } else {
+                fileDownLoadType = Const.FILE_DOWNLOAD;
+            }
+            if (ObjectUtil.notNull(materialExtraId)) {
+                // 教材通知附件
+                materialNoticeAttachments =
+                materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtraId);
+                for (MaterialNoticeAttachment materialNoticeAttachment : materialNoticeAttachments) {
+                    String attachment = materialNoticeAttachment.getAttachment();
+                    materialNoticeAttachment.setAttachment(fileDownLoadType + attachment);// 拼接附件下载路径
+                }
+                resultMap.put("materialNoticeAttachments", materialNoticeAttachments);// 教材通知附件
+                // 教材备注附件
+                materialNoteAttachments =
+                materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtraId);
+                for (MaterialNoteAttachment materialNoteAttachment : materialNoteAttachments) {
+                    String attachment = materialNoteAttachment.getAttachment();
+                    materialNoteAttachment.setAttachment(fileDownLoadType + attachment);// 拼接附件下载路径
+                }
+                resultMap.put("materialNoteAttachments", materialNoteAttachments);// 教材备注附件
+            }
+        } else {
+            if (ObjectUtil.notNull(materialExtraId)) {
+                // 教材通知附件
+                materialNoticeAttachments =
+                materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtraId);
+                resultMap.put("materialNoticeAttachments", materialNoticeAttachments);// 教材通知附件
+                // 教材备注附件
+                materialNoteAttachments =
+                materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtraId);
+                resultMap.put("materialNoteAttachments", materialNoteAttachments);// 教材备注附件
+            }
+        }
+
+        return resultMap;
+    }
+
+    @Override
+    public PageResult<MateriaHistorylVO> listMaterialHistory(
+    PageParameter<MateriaHistorylVO> pageParameter, String sessionId)
+    throws CheckedServiceException {
+        PageResult<MateriaHistorylVO> pageResult = new PageResult<MateriaHistorylVO>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        List<MateriaHistorylVO> materiaHistorylVOs =
+        materialExtraDao.listMaterialHistory(pageParameter);
+        if (CollectionUtil.isNotEmpty(materiaHistorylVOs)) {
+            Integer count = materiaHistorylVOs.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(materiaHistorylVOs);
+        }
+        return pageResult;
+    }
+
+    @Override
+    public Integer noticePublished(Long materialId, List<Long> orgIds, String sessionId)
+    throws CheckedServiceException, IOException {
+        if (CollectionUtil.isEmpty(orgIds)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.NULL_PARAM, "机构为空");
+        }
+        // 获取当前用户
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.NULL_PARAM, "请求用户不存在");
+        }
+        Integer count = 0;
+        // 根据教材ID查询教材-机构关联表
+        List<Long> OrgIds = materialOrgService.getListMaterialOrgByMaterialId(materialId);
+        if (CollectionUtil.isEmpty(OrgIds)) {// 为空，初次发布
+            systemMessageService.materialSend(materialId, orgIds, null);
+        } else {// 不为空
+            List<Long> newOrgIds = new ArrayList<Long>();// 新选中的机构
+            for (Long orgId : orgIds) {
+                if (!OrgIds.contains(orgId)) {
+                    newOrgIds.add(orgId);
+                }
+            }
+            Material material = materialService.getMaterialById(materialId);
+            systemMessageService.materialSend(materialId, newOrgIds, material.getMsgId());
+        }
+        CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
+        if (ObjectUtil.isNull(cmsContent)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.NULL_PARAM, "没有找到对应的教材通知信息");
+        }
+        cmsContentService.updateCmsContent(new CmsContent(
+                                                          cmsContent.getId(),
+                                                          true,
+                                                          true,
+                                                          Const.CMS_AUTHOR_STATUS_2,
+                                                          0L,
+                                                          DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                                                   DateUtil.getCurrentTime())));
+        count = materialService.updateMaterial(new Material(materialId, true));
+        return count;
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：保存文件到MongoDB
+     * 使用示范：
+     *
+     * @param files 临时文件路径
+     * @param materialExtraId 教材通知备注ID
+     * @param materialType 教材通知/备注
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    private void saveFileToMongoDB(String[] files, Long materialExtraId, String materialType)
+    throws CheckedServiceException, IOException {
+        // 保存附件到MongoDB
+        if (ArrayUtil.isNotEmpty(files)) {
+            for (int i = 0; i < files.length; i++) {
+                File file = FileUpload.getFileByFilePath(files[i]);
+                // 循环获取file数组中得文件
+                if (StringUtil.notEmpty(file.getName())) {
+                    String gridFSFileId =
+                    fileService.saveLocalFile(file, FileType.CMS_ATTACHMENT, materialExtraId);
+                    if (StringUtil.isEmpty(gridFSFileId)) {
+                        throw new CheckedServiceException(
+                                                          CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                                          CheckedExceptionResult.FILE_UPLOAD_FAILED,
+                                                          "文件上传失败!");
+                    }
+                    // 教材备注附件保存
+                    if (NOTE.equals(materialType)) {
+                        MaterialNoteAttachment materialNoteAttachment =
+                        materialNoteAttachmentService.addMaterialNoteAttachment(new MaterialNoteAttachment(
+                                                                                                           materialExtraId,
+                                                                                                           gridFSFileId,
+                                                                                                           file.getName(),
+                                                                                                           null));
+                        if (ObjectUtil.isNull(materialNoteAttachment.getId())) {
+                            throw new CheckedServiceException(
+                                                              CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                                              CheckedExceptionResult.PO_ADD_FAILED,
+                                                              "教材备注附件新增失败");
+                        }
+                    }
+                    // 教材通知附件保存
+                    if (NOTICE.equals(materialType)) {
+                        MaterialNoticeAttachment materialNoticeAttachment =
+                        materialNoticeAttachmentService.addMaterialNoticeAttachment(new MaterialNoticeAttachment(
+                                                                                                                 materialExtraId,
+                                                                                                                 gridFSFileId,
+                                                                                                                 file.getName(),
+                                                                                                                 null));
+                        if (ObjectUtil.isNull(materialNoticeAttachment.getId())) {
+                            throw new CheckedServiceException(
+                                                              CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                                              CheckedExceptionResult.PO_ADD_FAILED,
+                                                              "教材通知附件新增失败");
+                        }
+                    }
+
+                }
+                FileUtil.delFile(files[i]);// 删除本地临时文件
+            }
+        }
     }
 
 }

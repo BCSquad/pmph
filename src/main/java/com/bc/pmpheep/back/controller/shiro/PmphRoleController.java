@@ -41,36 +41,35 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 @Controller
 @RequestMapping("role/pmph")
 public class PmphRoleController {
-    Logger                      logger         = LoggerFactory.getLogger(PmphRoleController.class);
-    @Autowired
-    PmphRoleService             roleService;
-    @Autowired
-    PmphPermissionService       pmphPermissionService;
-    // 当前业务类型
-    private static final String BUSSINESS_TYPE = "角色";
+	Logger logger = LoggerFactory.getLogger(PmphRoleController.class);
+	@Autowired
+	PmphRoleService roleService;
+	@Autowired
+	PmphPermissionService pmphPermissionService;
+	// 当前业务类型
+	private static final String BUSSINESS_TYPE = "角色";
 
-    /**
-     * 
-     * <pre>
+	/**
+	 * 
+	 * <pre>
 	 * 功能描述：跳转到查询所有角色的页面
 	 * 使用示范：
 	 *
 	 * @param model
 	 * @return
 	 * </pre>
-     */
-    @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询角色列表信息")
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ResponseBean list(@RequestParam("roleName") String roleName) {
-        List<PmphRole> roleList =
-        roleService.getList(roleName.replaceAll(" ", ""));
-        return new ResponseBean(roleList);
-    }
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询角色列表信息")
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public ResponseBean list(@RequestParam("roleName") String roleName) {
+		List<PmphRole> roleList = roleService.getList(roleName.replaceAll(" ", ""));
+		return new ResponseBean(roleList);
+	}
 
-    /**
-     * 
-     * <pre>
+	/**
+	 * 
+	 * <pre>
 	 * 功能描述：添加用户角色的后台方法
 	 * 使用示范：
 	 *
@@ -78,18 +77,18 @@ public class PmphRoleController {
 	 *        ids 角色默认权限的id
 	 * @return
 	 * </pre>
-     */
-    @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增角色")
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseBean add(PmphRole role, Long[] ids) {
-        logger.debug(role.toString());
-        return new ResponseBean(roleService.add(role, ids));
-    }
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增角色")
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public ResponseBean add(PmphRole role, Long[] ids) {
+		logger.debug(role.toString());
+		return new ResponseBean(roleService.add(role, ids));
+	}
 
-    /**
-     * 
-     * <pre>
+	/**
+	 * 
+	 * <pre>
 	 * 功能描述：跳转到更新角色的页面
 	 * 使用示范：
 	 *
@@ -97,35 +96,35 @@ public class PmphRoleController {
 	 * @param model
 	 * @return
 	 * </pre>
-     */
-    @ResponseBody
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
-    public ResponseBean update(@PathVariable("id") Long id) {
-        PmphRole role = roleService.get(id);
-        return new ResponseBean(role);
-    }
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
+	public ResponseBean update(@PathVariable("id") Long id) {
+		PmphRole role = roleService.get(id);
+		return new ResponseBean(role);
+	}
 
-    /**
-     * 
-     * <pre>
+	/**
+	 * 
+	 * <pre>
 	 * 功能描述：修改角色对象的方法
 	 * 使用示范：
 	 *
 	 * @param role
 	 * @return
 	 * </pre>
-     */
-    @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改角色")
-    @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public ResponseBean update(PmphRole role) {
-        logger.debug(role.toString());
-        return new ResponseBean(roleService.update(role));
-    }
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改角色")
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
+	public ResponseBean update(PmphRole role) {
+		logger.debug(role.toString());
+		return new ResponseBean(roleService.update(role));
+	}
 
-    /**
-     * 
-     * <pre>
+	/**
+	 * 
+	 * <pre>
 	 * 功能描述：获取资源
 	 * 使用示范：
 	 *
@@ -133,18 +132,18 @@ public class PmphRoleController {
 	 * @param model
 	 * @return
 	 * </pre>
-     */
-    @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询角色拥有的资源菜单列表")
-    @RequestMapping(value = "/{roleId}/resources", method = RequestMethod.GET)
-    public ResponseBean resources(@PathVariable("roleId") Long roleId) {
-        return new ResponseBean(roleService.getListPmphRolePermission(roleId));
-    }
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询角色拥有的资源菜单列表")
+	@RequestMapping(value = "/{roleId}/resources", method = RequestMethod.GET)
+	public ResponseBean resources(@PathVariable("roleId") Long roleId) {
+		return new ResponseBean(roleService.getListPmphRolePermission(roleId));
+	}
 
-    /**
-     * 设置用户权限
-     * 
-     * <pre>
+	/**
+	 * 设置用户权限
+	 * 
+	 * <pre>
 	 * 功能描述：
 	 * 使用示范：
 	 *
@@ -152,59 +151,59 @@ public class PmphRoleController {
 	 * @param permissionIds
 	 * @return
 	 * </pre>
-     */
-    @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新角色拥有的资源菜单")
-    @RequestMapping(value = "/resource", method = RequestMethod.POST)
-    public ResponseBean resource(@RequestParam("roleId") Long roleId,
-    @RequestParam("permissionIds") String permissionIds) {
-        String[] ids = permissionIds.split(",");
-        List<Long> idLists = new ArrayList<Long>(ids.length);
-        for (String id : ids) {
-            idLists.add(Long.valueOf(id));
-        }
-        return new ResponseBean(roleService.addRoleResource(roleId, idLists));
-    }
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新角色拥有的资源菜单")
+	@RequestMapping(value = "/resource", method = RequestMethod.POST)
+	public ResponseBean resource(@RequestParam("roleId") Long roleId,
+			@RequestParam("permissionIds") String permissionIds, @RequestParam("materialId") String materialId) {
+		String[] ids = permissionIds.split(",");
+		List<Long> idLists = new ArrayList<Long>(ids.length);
+		for (String id : ids) {
+			idLists.add(Long.valueOf(id));
+		}
+		return new ResponseBean(roleService.addRoleResource(roleId, idLists, materialId));
+	}
 
-    /**
-     * 
-     * <pre>
+	/**
+	 * 
+	 * <pre>
 	 * 功能描述：角色删除
 	 * 使用示范：
 	 *
 	 * @param roleIds
 	 * @return
 	 * </pre>
-     */
-    @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除角色")
-    @RequestMapping(value = "/{roleIds}/delete", method = RequestMethod.DELETE)
-    public ResponseBean delete(@PathVariable("roleIds") String roleIds) {
-        logger.debug(roleIds);
-        String[] ids = roleIds.split(",");
-        List<Long> idLists = new ArrayList<Long>(ids.length);
-        for (String id : ids) {
-            idLists.add(Long.valueOf(id));
-        }
-        // 先批量删除角色,再从角色资源表中删除角色资源数据
-        roleService.deleteRoleAndResource(idLists);
-        // 用户绑定到这个角色上,也应该删除
-        Integer count = roleService.deleteRoleAndUser(idLists);
-        return new ResponseBean(count);
-    }
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除角色")
+	@RequestMapping(value = "/{roleIds}/delete", method = RequestMethod.DELETE)
+	public ResponseBean delete(@PathVariable("roleIds") String roleIds) {
+		logger.debug(roleIds);
+		String[] ids = roleIds.split(",");
+		List<Long> idLists = new ArrayList<Long>(ids.length);
+		for (String id : ids) {
+			idLists.add(Long.valueOf(id));
+		}
+		// 先批量删除角色,再从角色资源表中删除角色资源数据
+		roleService.deleteRoleAndResource(idLists);
+		// 用户绑定到这个角色上,也应该删除
+		Integer count = roleService.deleteRoleAndUser(idLists);
+		return new ResponseBean(count);
+	}
 
-    /**
-     * 
-     * 
-     * 功能描述：社内用户修改时获取所有角色
-     * 
-     * @return 获取到角色的id与名称
-     * 
-     */
-    @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
-    @RequestMapping(value = "/list/role", method = RequestMethod.GET)
-    public ResponseBean role() {
-        return new ResponseBean(roleService.getListRole());
-    }
+	/**
+	 * 
+	 * 
+	 * 功能描述：社内用户修改时获取所有角色
+	 * 
+	 * @return 获取到角色的id与名称
+	 * 
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
+	@RequestMapping(value = "/list/role", method = RequestMethod.GET)
+	public ResponseBean role() {
+		return new ResponseBean(roleService.getListRole());
+	}
 }

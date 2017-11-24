@@ -15,9 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
 
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -32,7 +34,27 @@ public class DeclarationServiceTest extends BaseTest {
 	Logger logger = LoggerFactory.getLogger(DeclarationServiceTest.class);
 	@Resource
 	DeclarationService declarationService;
-
+	
+	@SuppressWarnings("unused")
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void testPageDeclaration (){
+		Integer pageNumber =null;
+		Integer pageSize=null;
+		Long materialId= 117L; 
+		String textBookids ="[489,491,493,495,505,540]";
+		String realname=null;
+		String position=null;
+		String title=null;
+		String orgName=null;
+		String unitName=null;
+		Integer positionType=null;
+		Integer onlineProgress=null;
+		Integer offlineProgress=null;
+		PageResult<DeclarationListVO> page=declarationService.pageDeclaration(pageNumber, pageSize, materialId, textBookids, realname, position, title, orgName, unitName, positionType, onlineProgress, offlineProgress);
+		
+	}
+	
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testAddDeclaration(){

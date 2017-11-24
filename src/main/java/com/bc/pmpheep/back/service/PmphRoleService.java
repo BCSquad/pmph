@@ -157,7 +157,7 @@ public interface PmphRoleService {
      * @param roleId 角色ID
      * @param permissionIds 权限ID集合
      */
-    Integer addRoleResource(Long roleId, List<Long> permissionIds) throws CheckedServiceException;
+    Integer addRoleResource(Long roleId, List<Long> permissionIds,String materialId) throws CheckedServiceException;
 
     /**
      * 根据角色 id 和权限 id 删除一条用户权限关联数据

@@ -91,6 +91,23 @@
 	<select id="getMaterialNoteAttachmentByMaterialExtraId" parameterType="java.lang.Long" resultType="MaterialNoteAttachment">
 		select * from material_note_attachment where material_extra_id = #{materialExtraId};
 	</select>
+	
+	<!-- 按attachment修改下载次数  -->
+	<update id="updateMaterialNoteAttachmentDownLoadCountsByAttachment" parameterType="java.lang.String">
+		UPDATE material_note_attachment SET download =download+1 WHERE attachment = #{attachment}
+	</update>
+	
+	<!-- 通过attachment删除 MaterialNoteAttachment-->
+	<delete id="deleteMaterialNoteAttachmentByAttachments">
+		delete from 
+			material_note_attachment  
+		where 
+			attachment
+		in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+              #{item}
+		</foreach>
+	</delete>
 
 </mapper>
 

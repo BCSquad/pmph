@@ -20,6 +20,7 @@ import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.PmphUserRole;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
@@ -433,5 +434,33 @@ public class PmphUserServiceImpl implements PmphUserService {
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
 		}
 		return userDao.getPmphUserPermissionByUserId(userId);
+	}
+
+	@Override
+	public String getMaterialPermissionByUserId(Long userId) {
+		if (ObjectUtil.isNull(userId)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+		}
+		String materialPermission = null;
+		List<Integer> integers = userDao.getMaterialPermissionByUserId(userId);
+		if (CollectionUtil.isEmpty(integers)) {
+			materialPermission = "00000000";
+		}
+		if (integers.size() == 1) {
+			materialPermission = StringUtil.tentToBinary(integers.get(0));
+		}
+		if (integers.size() >= 2) {
+			Integer integer = integers.get(0);
+			for (int i = 1; i < integers.size(); i++) {
+				if (null == integers.get(i)) {
+					integer = integer | 0;
+				} else {
+					integer = integer | integers.get(i);
+				}
+			}
+			materialPermission = StringUtil.tentToBinary(integer);
+		}
+		return materialPermission;
 	}
 }

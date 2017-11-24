@@ -446,13 +446,18 @@
 							pu.`realname` = #{parameter.username} )
 				</if>
 			</if>
-		order by cc.sort
+		order by 
+				cc.`auth_date` desc
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
 	</select>
 	
-		
+	<!-- 根据materialId查询一个CmsContent -->
+	<select id="getCmsContentByMaterialId" parameterType="java.lang.Long" resultType="CmsContent">
+		select * from cms_content where material_id=#{materialId};
+	</select>
+	
 	<!-- 根据id查询一个CmsContent -->
 	<select id="getCmsContentById" parameterType="java.lang.Long" resultType="CmsContent">
 		select * from cms_content where id=#{id};

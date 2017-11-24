@@ -4,8 +4,13 @@ import org.apache.ibatis.type.Alias;
 
 /**
  * 
- * <p>Title:作家上版教材参编情况表 实体类<p>
- * <p>Description:作家上版教材参编信息<p>
+ * <p>
+ * Title:作家上版教材参编情况表 实体类
+ * <p>
+ * <p>
+ * Description:作家上版教材参编信息
+ * <p>
+ * 
  * @author lyc
  * @date 2017年9月22日 上午9:55:09
  */
@@ -13,17 +18,19 @@ import org.apache.ibatis.type.Alias;
 @Alias("DecLastPosition")
 public class DecLastPosition implements java.io.Serializable {
 
-	//主键
+	// 主键
 	private Long id;
-	//申报表id
+	// 申报表id
 	private Long declarationId;
-	//教材名称
+	// 教材名称
 	private String materialName;
-	//编写职务
+	// 编写职务
 	private Integer position;
-	//备注
+	// 是否数字编辑
+	private Boolean isDigitalEditor;
+	// 备注
 	private String note;
-	//显示顺序
+	// 显示顺序
 	private Integer sort;
 
 	// 构造器
@@ -32,18 +39,25 @@ public class DecLastPosition implements java.io.Serializable {
 	public DecLastPosition() {
 	}
 
-	
-
 	public DecLastPosition(Long id) {
 		super();
 		this.id = id;
 	}
 
-
-
-	/** full constructor */
-	public DecLastPosition(Long declarationId, String materialName,
-			Integer position, String note, Integer sort) {
+	public DecLastPosition(Long declarationId, String materialName, Integer position, Boolean isDigitalEditor,
+			String note, Integer sort) {
+		super();
+		this.declarationId = declarationId;
+		this.materialName = materialName;
+		this.position = position;
+		this.isDigitalEditor = isDigitalEditor;
+		this.note = note;
+		this.sort = sort;
+	}
+	
+	public DecLastPosition(Long declarationId, String materialName, Integer position, 
+			String note, Integer sort) {
+		super();
 		this.declarationId = declarationId;
 		this.materialName = materialName;
 		this.position = position;
@@ -65,6 +79,14 @@ public class DecLastPosition implements java.io.Serializable {
 
 	public void setDeclarationId(Long declarationId) {
 		this.declarationId = declarationId;
+	}
+
+	public Boolean getIsDigitalEditor() {
+		return isDigitalEditor;
+	}
+
+	public void setIsDigitalEditor(Boolean isDigitalEditor) {
+		this.isDigitalEditor = isDigitalEditor;
 	}
 
 	public String getMaterialName() {
@@ -101,8 +123,8 @@ public class DecLastPosition implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return " {id:" + id + ", declarationId:" + declarationId
-				+ ", materialName:" + materialName + ", position:" + position
-				+ ", note:" + note + ", sort:" + sort + "}";
+		return "DecLastPosition [id=" + id + ", declarationId=" + declarationId + ", materialName=" + materialName
+				+ ", position=" + position + ", isDigitalEditor=" + isDigitalEditor + ", note=" + note + ", sort="
+				+ sort + "]";
 	}
 }

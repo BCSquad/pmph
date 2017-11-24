@@ -160,8 +160,12 @@ public class Const {
      */
     // CMS 类型
     public static final String       CMS_TYPE                   = "cms";
+    // material 教材类型
+    public static final String       MATERIAL_TYPE              = "material";
     // CMS 附件下载Controller方法
     public static final String       CMS_FILE_DOWNLOAD          = "/file/cms/download/";
+    // material教材通知附件下载Controller方法
+    public static final String       MATERIAL_FILE_DOWNLOAD     = "/file/material/download/";
     // 作者类型--系统
     public static final Short        CMS_AUTHOR_TYPE_0          = 0;
     // 作者类型--编辑

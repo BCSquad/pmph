@@ -69,23 +69,19 @@ public class MaterialController {
 	 *            多个教材备注
 	 * @param noteFiles
 	 *            备注文件
-	 * @param projectEditorPowers
-	 *            项目编辑权限8位二进制字符串
-	 * @param planningEditorPowers
-	 *            策划编辑权限8位二进制字符串
 	 * @return
 	 */
 	@LogDetail(businessType = Business_Type, logRemark = "新建遴选公告")
-	@RequestMapping(value = "/new/material", method = RequestMethod.POST)
-	public ResponseBean material(MaterialVO materialVO, HttpServletRequest request, MultipartFile[] noticeFiles,
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public ResponseBean add(MaterialVO materialVO, HttpServletRequest request, MultipartFile[] noticeFiles,
 			MultipartFile[] noteFiles) {
 
 		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
 				materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
 				materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-				materialVO.getMaterialNoteAttachments(), materialVO.getProjectEditorPowers(),
-				materialVO.getPlanningEditorPowers(), true));
+				materialVO.getMaterialNoteAttachments(),
+				true));
 	}
 
 	/**
@@ -110,22 +106,18 @@ public class MaterialController {
 	 *            多个教材备注
 	 * @param noteFiles
 	 *            备注文件
-	 * @param projectEditorPowers
-	 *            项目编辑权限8位二进制字符串
-	 * @param planningEditorPowers
-	 *            策划编辑权限8位二进制字符串
 	 * @return
 	 */
 	@LogDetail(businessType = Business_Type, logRemark = "修改遴选公告")
-	@RequestMapping(value = "/update/material", method = RequestMethod.PUT)
-	public ResponseBean material(HttpServletRequest request, MaterialVO materialVO, MultipartFile[] noticeFiles,
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
+	public ResponseBean update(HttpServletRequest request, MaterialVO materialVO, MultipartFile[] noticeFiles,
 			MultipartFile[] noteFiles) {
 		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
 				materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
 				materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-				materialVO.getMaterialNoteAttachments(), materialVO.getProjectEditorPowers(),
-				materialVO.getPlanningEditorPowers(), true));
+				materialVO.getMaterialNoteAttachments(),
+				true));
 	}
 
 	/**
@@ -182,5 +174,20 @@ public class MaterialController {
 	public ResponseBean delete(HttpServletRequest request, Long id) {
 		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(materialService.updateMaterial(id, sessionId));
+	}
+	
+	/**
+	 * 根据教材id获取更新教材视图数据
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年11月23日 下午5:54:04
+	 * @param id 教材id
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = Business_Type, logRemark = "获取教材视图数据")
+	@RequestMapping(value = "/get", method = RequestMethod.GET)
+	public ResponseBean get(Long id) {
+		return new ResponseBean(materialService.getMaterialVO(id));
 	}
 }

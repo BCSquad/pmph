@@ -87,11 +87,27 @@
 		delete from material_notice_attachment where id = #{id} ;
 	</delete>
 	
-	<!--  根据主键id删除 MaterialNoticeAttachment -->
+	<!--  根据主键material_extra_id查询 MaterialNoticeAttachment -->
 	<select id="getMaterialNoticeAttachmentsByMaterialExtraId" parameterType="java.lang.Long" resultType="MaterialNoticeAttachment">
 		select * from material_notice_attachment where material_extra_id = #{materialExtraId} ;
 	</select>
+	
+	<!-- 通过attachment删除 MaterialNoteAttachment-->
+	<delete id="deleteMaterialNoticeAttachmentByAttachments">
+		delete from 
+			material_notice_attachment  
+		where 
+			attachment
+		in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+              #{item}
+		</foreach>
+	</delete>
 
+	<!-- 按attachment修改下载次数  -->
+	<update id="updateMaterialNoticeAttachmentDownLoadCountsByAttachment" parameterType="java.lang.String">
+		UPDATE material_notice_attachment SET download =download+1 WHERE attachment = #{attachment}
+	</update>
 </mapper>
 
 

@@ -1,15 +1,15 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
-
 import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.back.vo.MaterialListVO;
+import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+
 
 /**
  * MaterialService 接口
@@ -41,9 +41,7 @@ public interface MaterialService {
      * @param noteFiles
      * @param materialNoteAttachments
      * @param projectEditorPowers 项目编辑权限8位二进制字符串
-	 * @param planningEditorPowers 策划编辑权限8位二进制字符串
      * @param isUpdate false新增,true更新
-     * 
      * @return material 主键
      * @throws CheckedServiceException
      */
@@ -57,8 +55,6 @@ public interface MaterialService {
 		    String materialNoticeAttachments,
 		    MultipartFile[]   noteFiles,
 		    String materialNoteAttachments,
-		    String projectEditorPowers,
-		    String planningEditorPowers,
 		    boolean isUpdate) throws CheckedServiceException;
    
 
@@ -142,4 +138,14 @@ public interface MaterialService {
 	 *
 	 */
 	String updateMaterial(Long id, String sessionId) throws CheckedServiceException;
+	
+	/**
+	 * 根据教材id获取更新教材视图数据
+	 * @author Mryang
+	 * @createDate 2017年11月23日 下午5:47:53
+	 * @param id
+	 * @return MaterialVO
+	 * @throws CheckedServiceException
+	 */
+	MaterialVO getMaterialVO(Long id) throws CheckedServiceException ;
 }

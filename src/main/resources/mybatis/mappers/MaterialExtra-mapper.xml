@@ -81,6 +81,16 @@
 		resultType="MaterialExtra">
 		select * from material_extra where id=#{id} ;
 	</select>
+	
+	<!-- 根据materialId查询MaterialExtra -->
+	<select id="getMaterialExtraByMaterialId" parameterType="java.lang.Long" resultType="MaterialExtra">
+		select 
+			* 
+		from 
+			material_extra 
+		where 
+			material_id = #{materialId};
+	</select>
 
 	<!-- 查询表单的数据总数 -->
 	<select id="getMaterialExtraCount" resultType="Long">
@@ -88,5 +98,39 @@
 		count(*)
 		from
 		material_extra
+	</select>
+	
+	
+	<!-- 查询历史教材通知列表 -->
+	<select id="listMaterialHistory" parameterType="PageParameter" resultType="MateriaHistorylVO">
+		SELECT 
+			m.`id`, 
+			m.`material_name`,
+			COUNT(mo.`org_id`) orgCounts,
+			m.`gmt_create`,
+			t.count 
+		FROM 
+			`material` m 
+		LEFT JOIN 
+			`material_org` mo
+		ON 
+			m.`id` = mo.`material_id`,
+			(
+				SELECT 
+					COUNT(*) `count` 
+				FROM 
+					`material` m 
+				WHERE 
+					m.`is_published` = TRUE
+			)t
+		WHERE 
+			m.`is_published` = TRUE
+		GROUP BY 
+			m.`id`
+		ORDER BY 
+			m.`gmt_create` DESC
+		<if test="pageSize != null">
+			LIMIT #{start} , #{pageSize}
+		</if>
 	</select>
 </mapper>

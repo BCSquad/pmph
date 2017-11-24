@@ -15,15 +15,16 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * @author mryang
  */
 public interface OrgDao {
-	
-	/**
-	 * 根据书籍获取当选了该书籍的人员所属机构
-	 * @author Mryang
-	 * @createDate 2017年11月19日 上午9:20:57
-	 * @param bookIds
-	 * @return  List<Org>
-	 */
-    List<Org> listBeElectedOrgByBookIds(List<Long> bookIds) ;
+
+    /**
+     * 根据书籍获取当选了该书籍的人员所属机构
+     * 
+     * @author Mryang
+     * @createDate 2017年11月19日 上午9:20:57
+     * @param bookIds
+     * @return List<Org>
+     */
+    List<Org> listBeElectedOrgByBookIds(List<Long> bookIds);
 
     /**
      * 
@@ -107,11 +108,13 @@ public interface OrgDao {
 	 * 功能描述：系统消息——发送新消息——发送对象（学校管理员、所有人）
 	 * 使用示范：
 	 *
-	 * &#64;param orgName 机构名称
-	 * &#64;return
+	 * @param orgName 机构名称
+	 * @param materialId 教材ID
+	 * @return
 	 * </pre>
      */
-    List<OrgVO> listSendToSchoolAdminOrAllUser(@Param("orgName") String orgName);
+    List<OrgVO> listSendToSchoolAdminOrAllUser(@Param("orgName") String orgName,
+    @Param("materialId") Long materialId);
 
     /**
      * 
@@ -131,12 +134,13 @@ public interface OrgDao {
      * 
      */
     List<Org> listOrgByOrgType(Long typeId);
-    
+
     /**
      * 功能描述：根据orgName去获取id
+     * 
      * @param orgName
      * @return id
      */
-	Long getOrgid(String orgName);
+    Long getOrgid(String orgName);
 
 }

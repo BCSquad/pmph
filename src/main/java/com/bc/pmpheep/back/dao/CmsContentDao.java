@@ -152,6 +152,18 @@ public interface CmsContentDao {
     /**
      * 
      * <pre>
+     * 功能描述：通过materialId获取CmsContent对象
+     * 使用示范：
+     *
+     * @param materialId 教材ID
+     * @return CmsContent对象
+     * </pre>
+     */
+    CmsContent getCmsContentByMaterialId(Long materialId);
+
+    /**
+     * 
+     * <pre>
      * 功能描述：获取总条数
      * 使用示范：
       *@param categoryId CmsCategory 主键ID
