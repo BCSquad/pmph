@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Material;
+import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.vo.MaterialListVO;
 
 /**
@@ -128,4 +129,17 @@ public interface MaterialDao {
      */
     Integer getPlanningEditorSum(@Param("materialId") Long materialId,
     @Param("pmphUserId") Long pmphUserId);
+    
+    /**
+     * 最终结果公布（批量结果公布）
+     * @param material
+     * @return
+     */
+	Integer updateMaterialPublished(Material material);
+	/**
+	 * 通过教材id获取该教材的全部书籍
+	 * @param material
+	 * @return
+	 */
+	List<Textbook> getMaterialAndTextbook(Material material);
 }

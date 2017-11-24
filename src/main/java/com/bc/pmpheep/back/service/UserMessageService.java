@@ -254,16 +254,15 @@ public interface UserMessageService {
      * @author tyc
      * @createDate 2017年11月22日 下午5:04:00
      * @param message
-     * @param sendType
+     * @param title
      * @param senderId
-     * @param userId
-     * @param isSave
+     * @param userId	接收者id
      * @param sessionId
      * @return
      * @throws CheckedServiceException
      * @throws IOException
      */
-    Integer addOneUserMessage(Message message, Integer sendType, Long senderId, String userId,
-    boolean isSave, String sessionId) throws CheckedServiceException, IOException;
-
+    Integer addOneUserMessage(Message message, String title, Long senderId, String userId,  
+    		String sessionId)
+    throws CheckedServiceException, IOException;
 }

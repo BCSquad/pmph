@@ -80,8 +80,7 @@ public class MaterialController {
 		return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
 				materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
 				materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-				materialVO.getMaterialNoteAttachments(),
-				true));
+				materialVO.getMaterialNoteAttachments(), true));
 	}
 
 	/**
@@ -116,8 +115,7 @@ public class MaterialController {
 		return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
 				materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
 				materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-				materialVO.getMaterialNoteAttachments(),
-				true));
+				materialVO.getMaterialNoteAttachments(), true));
 	}
 
 	/**
@@ -175,13 +173,15 @@ public class MaterialController {
 		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(materialService.updateMaterial(id, sessionId));
 	}
-	
+
 	/**
 	 * 根据教材id获取更新教材视图数据
-	 * @introduction 
+	 * 
+	 * @introduction
 	 * @author Mryang
 	 * @createDate 2017年11月23日 下午5:54:04
-	 * @param id 教材id
+	 * @param id
+	 *            教材id
 	 * @return
 	 */
 	@ResponseBody
