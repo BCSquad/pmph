@@ -117,4 +117,11 @@ public interface TextbookDao {
      * @return Integer
      */
     Integer addOrUpdateTextBookList(BookListVO bookListVO);
+    
+    /**
+     * 书籍结果公布
+     * @param textBooks
+     * @return
+     */
+	Integer updateBookPublished(List<Textbook> textBooks);
 }

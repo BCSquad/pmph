@@ -72,7 +72,7 @@ public class PositionChooseController {
 	}
 	/**
 	 * 功能描述：批量通过（名单确认）
-	 * @param textBookIds
+	 * @param ids 
 	 * @return
 	 */
 	@ResponseBody
@@ -80,5 +80,16 @@ public class PositionChooseController {
 	@RequestMapping(value = "/updateTextbook", method = RequestMethod.PUT)
 	public ResponseBean updateTextbook(@RequestParam("ids") Long[] ids){
 		 return new ResponseBean(textbookService.updateTextbooks(ids));
-	}		
+	}
+	/**
+	 * 功能描述：批量结果公布（最终结果公布）
+	 * @param ids 
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量结果公布（最终名单公布）")
+	@RequestMapping(value = "/updateResult", method = RequestMethod.PUT)
+	public ResponseBean updateResult(@RequestParam("ids") Long[] ids){
+		 return new ResponseBean(textbookService.updateTextbookAndMaterial(ids));
+	}	
 }

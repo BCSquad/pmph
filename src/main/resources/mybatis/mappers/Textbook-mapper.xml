@@ -341,4 +341,13 @@
 			#{item.id}
 		</foreach>
 	</update>
+	<!-- 根据id进行结果公布 -->
+	<update id="updateBookPublished" parameterType="list">
+		update textbook  
+			set is_published= true
+			where id in
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item.id}
+		</foreach>
+	</update>
 </mapper>

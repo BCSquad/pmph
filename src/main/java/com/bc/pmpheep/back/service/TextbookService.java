@@ -92,4 +92,12 @@ public interface TextbookService {
      * @return Integer
      */
     List<Textbook> addOrUpdateTextBookList(BookListVO bookListVO) throws CheckedServiceException;
+    
+    /**
+     * 功能描述：批量结果公布（最终结果公布）
+     * @param ids
+     * @return
+     * @throws CheckedServiceException
+     */
+	Integer updateTextbookAndMaterial(Long[] ids) throws CheckedServiceException;
 }

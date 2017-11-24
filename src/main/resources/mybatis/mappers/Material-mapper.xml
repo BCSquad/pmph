@@ -650,4 +650,16 @@
 		LIMIT #{start} , #{pageSize}
 		</if>
 	</select>
+	<!-- 批量结果公布 -->
+	<update id="updateMaterialPublished" parameterType="Material">
+		update material
+			set is_all_textbook_published= true
+			where id = #{id}
+	</update>
+	<!-- 通过教材id查询该教材全部书籍 -->
+	<select id="getMaterialAndTextbook" resultType="Textbook">
+		select * from textbook tk
+		left join material m on m.id=tk.material_id 
+		where m.id=#{id}
+	</select>
 </mapper>
