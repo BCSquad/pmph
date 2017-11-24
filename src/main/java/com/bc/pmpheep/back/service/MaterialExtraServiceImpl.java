@@ -188,13 +188,13 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                                               CheckedExceptionResult.NULL_PARAM, "教材ID为空");
         }
         Material material = materialService.getMaterialById(materialId);
-        MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
-        if (StringUtil.isEmpty(materialExtra.getNotice())) {
+        // MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
+        if (StringUtil.isEmpty(materialExtraVO.getContent())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.NULL_PARAM, "教材通知内容为空");
         }
         // MongoDB 内容插入
-        Content contentObj = contentService.add(new Content(materialExtra.getNotice()));
+        Content contentObj = contentService.add(new Content(materialExtraVO.getContent()));
         if (ObjectUtil.isNull(contentObj)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "教材通知保存失败");
@@ -207,11 +207,11 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                                                        material.getMaterialName(),
                                                        Const.CMS_AUTHOR_TYPE_0,
                                                        false,
-                                                       false,
+                                                       true,
                                                        material.getFounderId(),
                                                        DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                 DateUtil.getCurrentTime()),
-                                                       material.getId(), Const.CMS_CATEGORY_ID_1));
+                                                       materialId, Const.CMS_CATEGORY_ID_1));
         // 教材通知附件
         // String[] noticeFiles = materialExtraVO.getNoticeFiles();
         // if (ArrayUtil.isNotEmpty(noticeFiles)) {
@@ -269,7 +269,7 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
         List<MaterialNoteAttachment> materialNoteAttachments;
         Map<String, Object> resultMap = new HashMap<String, Object>();
         Material material = materialService.getMaterialById(materialId);
-        resultMap.put("materialName", material.getMaterialName());// 教材名称
+        resultMap.put("materialName", material);// 教材
         List<MaterialContact> materialContacts =
         materialContactService.listMaterialContactByMaterialId(materialId);
         resultMap.put("materialContacts", materialContacts);// 联系人
@@ -373,9 +373,9 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
         cmsContentService.updateCmsContent(new CmsContent(
                                                           cmsContent.getId(),
                                                           true,
-                                                          true,
+                                                          false,
                                                           Const.CMS_AUTHOR_STATUS_2,
-                                                          0L,
+                                                          0L,// authUserId 为0代表系统审核
                                                           DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                    DateUtil.getCurrentTime())));
         count = materialService.updateMaterial(new Material(materialId, true));
