@@ -815,6 +815,12 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "发送人为空!");
         }
+		// MongoDB 消息插入
+		message = messageService.add(message);
+		if (StringUtil.isEmpty(message.getId())) {
+		    throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+		                                      CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
+		}
         Long senderUserId = pmphUser.getId();// 新发消息,发送者Id为登陆用户ID
         // 装储存数据
         List<UserMessage> userMessageList = new ArrayList<UserMessage>();
