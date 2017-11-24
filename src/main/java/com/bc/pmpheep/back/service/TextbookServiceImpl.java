@@ -138,7 +138,6 @@ public class TextbookServiceImpl implements TextbookService {
 		return textbookDao.getTextbookByMaterialId(materialId);
 	}
 
-	// state 0全部 1名单没有确认 2名单已确认 3 结果已经公布 4强制结束
 	@Override
 	public PageResult<BookPositionVO> listBookPosition(Integer pageNumber, Integer pageSize, Integer state,
 			String textBookIds, Long materialId, String sessionId) {

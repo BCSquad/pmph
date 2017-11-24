@@ -72,7 +72,19 @@ public interface TextbookService {
 	 * </pre>
 	 */
 	List<Textbook> getTextbookByMaterialId(Long materialId) throws CheckedServiceException;
-
+	
+	/**
+	 *  初始化书籍职位列表 
+	 * @author Mryang
+	 * @createDate 2017年11月24日 下午3:52:23
+	 * @param pageNumber
+	 * @param pageSize
+	 * @param state 0全部 1名单没有确认 2名单已确认 3 结果已经公布 4强制结束
+	 * @param textBookIds   [1,2,3,4,5]
+	 * @param materialId
+	 * @param sessionId
+	 * @return
+	 */
 	PageResult<BookPositionVO> listBookPosition(Integer pageNumber, Integer pageSize, Integer state, String textBookIds,
 			Long materialId, String sessionId);
 
