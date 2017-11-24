@@ -48,12 +48,12 @@ public class PositionChooseController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "加载书籍职位列表")
-	@RequestMapping(value = "/list/", method = RequestMethod.GET)
-	public ResponseBean bookPosition(@RequestParam("pageNumber") Integer pageNumber,
-		    						 @RequestParam("pageSize") Integer pageSize,
-		    						 @RequestParam("state") Integer state,
-		    						 @RequestParam("textBookIds") String  textBookIds, //[1,2,3,4,5]
-		    						 @RequestParam("materialId") Long  materialId,
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public ResponseBean bookPosition(@RequestParam(value="pageNumber",required=true) Integer pageNumber,
+		    						 @RequestParam(value="pageSize",required=true) Integer pageSize,
+		    						 @RequestParam(value="materialId",required=true) Long  materialId,
+		    						 @RequestParam(value="state",required=false) Integer state,
+		    						 @RequestParam(value="textBookIds",required=false) String  textBookIds, //[1,2,3,4,5]
 		    						 HttpServletRequest request){
 		 String sessionId = CookiesUtil.getSessionId(request);
 		 return new ResponseBean(textbookService.listBookPosition(pageNumber, pageSize, state, textBookIds,materialId, sessionId));

@@ -16,62 +16,50 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  */
 public interface TextbookService {
 
-    /**
-     * 新增一个Textbook
-     * 
-     * @param Textbook 实体对象
-     * @return 带主键的 Textbook thorws CheckedServiceException
-     */
-    Textbook addTextbook(Textbook textbook) throws CheckedServiceException;
+	/**
+	 * 新增一个Textbook
+	 * 
+	 * @param Textbook
+	 *            实体对象
+	 * @return 带主键的 Textbook thorws CheckedServiceException
+	 */
+	Textbook addTextbook(Textbook textbook) throws CheckedServiceException;
 
-    /**
-     * 查询一个 Textbook 通过主键id
-     * 
-     * @param id
-     * @return Textbook
-     * @throws CheckedServiceException
-     */
-    Textbook getTextbookById(Long id) throws CheckedServiceException;
+	/**
+	 * 查询一个 Textbook 通过主键id
+	 * 
+	 * @param id
+	 * @return Textbook
+	 * @throws CheckedServiceException
+	 */
+	Textbook getTextbookById(Long id) throws CheckedServiceException;
 
-    /**
-     * 删除Textbook 通过主键id
-     * 
-     * @param Textbook
-     * @return 影响行数
-     * @throws CheckedServiceException
-     */
-    Integer deleteTextbookById(Long id) throws CheckedServiceException;
+	/**
+	 * 判断是否为策划编辑
+	 * 
+	 * @param id
+	 * @return Textbook
+	 * @throws CheckedServiceException
+	 */
+	List<Textbook> getTextbookByMaterialIdAndUserId(Long materialId, Long userId) throws CheckedServiceException;
 
-    /**
-     * 更新一个 Textbook通过主键id
-     * 
-     * @param Textbook
-     * @return 影响行数
-     * @throws CheckedServiceException
-     */
-    Integer updateTextbook(Textbook textbook) throws CheckedServiceException;
+	/**
+	 * 删除Textbook 通过主键id
+	 * 
+	 * @param Textbook
+	 * @return 影响行数
+	 * @throws CheckedServiceException
+	 */
+	Integer deleteTextbookById(Long id) throws CheckedServiceException;
 
-    /**
-     * 
-     * <pre>
-     * 功能描述：根据教材Id查询对应的书籍集合
-     * 使用示范：
-     *
-     * @param materialId 教材Id
-     * @return
-     * </pre>
-     */
-    List<Textbook> getTextbookByMaterialId(Long materialId) throws CheckedServiceException;
-    
-    PageResult<BookPositionVO> listBookPosition(Integer pageNumber,Integer pageSize,Integer state,String  textBookIds,Long materialId,String sessionId);
-    /**
-     * 功能描述：批量通过（确认名单）
-     * @param textBookIds
-     * @param isLocked
-     * @return
-     * @throws CheckedServiceException
-     */
-    Integer updateTextbooks(Long[] ids) throws CheckedServiceException;
+	/**
+	 * 更新一个 Textbook通过主键id
+	 * 
+	 * @param Textbook
+	 * @return 影响行数
+	 * @throws CheckedServiceException
+	 */
+	Integer updateTextbook(Textbook textbook) throws CheckedServiceException;
 
     /**
      * 
@@ -100,4 +88,41 @@ public interface TextbookService {
      * @throws CheckedServiceException
      */
 	Integer updateTextbookAndMaterial(Long[] ids) throws CheckedServiceException;
+	/**
+	 * 
+	 * <pre>
+	 * 功能描述：根据教材Id查询对应的书籍集合
+	 * 使用示范：
+	 *
+	 * &#64;param materialId 教材Id
+	 * &#64;return
+	 * </pre>
+	 */
+	List<Textbook> getTextbookByMaterialId(Long materialId) throws CheckedServiceException;
+	
+	/**
+	 *  初始化书籍职位列表 
+	 * @author Mryang
+	 * @createDate 2017年11月24日 下午3:52:23
+	 * @param pageNumber
+	 * @param pageSize
+	 * @param state 0全部 1名单没有确认 2名单已确认 3 结果已经公布 4强制结束
+	 * @param textBookIds   [1,2,3,4,5]
+	 * @param materialId
+	 * @param sessionId
+	 * @return
+	 */
+	PageResult<BookPositionVO> listBookPosition(Integer pageNumber, Integer pageSize, Integer state, String textBookIds,
+			Long materialId, String sessionId);
+
+	/**
+	 * 功能描述：批量通过（确认名单）
+	 * 
+	 * @param textBookIds
+	 * @param isLocked
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	Integer updateTextbooks(Long[] ids) throws CheckedServiceException;
+
 }
