@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -17,6 +15,7 @@ import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -202,6 +201,7 @@ public class TextbookServiceImpl implements TextbookService {
 			map.put("state", state); // 书籍状态
 		}
 		map.put("pmphUserId", pmphUser.getId()); // 用户id
+		map.put("power", power); // 用户id
 		PageParameter<Map<String, Object>> pageParameter = new PageParameter<Map<String, Object>>(pageNumber, pageSize,
 				map);
 		PageResult<BookPositionVO> pageResult = new PageResult<>();
@@ -217,6 +217,31 @@ public class TextbookServiceImpl implements TextbookService {
 	}
 
 	@Override
+	public Integer updateTextbooks(Long[] ids) {
+		List<Textbook> textbooks = textbookDao.getTextbooks(ids);
+		List<Textbook> textBook = new ArrayList<Textbook>(textbooks.size());
+		for (Textbook textbook : textbooks) {
+			if (Const.FALSE == textbook.getIsPlanningEditorConfirm()) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+						CheckedExceptionResult.ILLEGAL_PARAM, "未分配策划编辑");
+			}
+			if (Const.FALSE == textbook.getIsChiefChosen()) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+						CheckedExceptionResult.ILLEGAL_PARAM, "未确定第一主编");
+			}
+			if (Const.FALSE == textbook.getIsQualifierSelected()) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+						CheckedExceptionResult.ILLEGAL_PARAM, "未确定编委");
+			}
+			textBook.add(new Textbook(textbook.getId()));
+		}
+		Integer count = 0;
+		if (CollectionUtil.isNotEmpty(textBook)) {
+			count = textbookDao.updateTextbooks(textBook);
+		}
+		return count;
+	}
+
 	public BookListVO getBookListVO(Long materialId) throws CheckedServiceException {
 		if (ObjectUtil.isNull(materialId)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
@@ -274,8 +299,6 @@ public class TextbookServiceImpl implements TextbookService {
 	@Override
 	public List<Textbook> getTextbookByMaterialIdAndUserId(Long materialId, Long userId)
 			throws CheckedServiceException {
-		// TODO Auto-generated method stub
-		return null;
+		return textbookDao.getTextbookByMaterialIdAndUserId(materialId, userId);
 	}
-
 }

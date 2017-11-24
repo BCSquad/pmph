@@ -374,15 +374,23 @@
 			GROUP_CONCAT(
 				CONCAT(d.textbook_name,'-',
 				case 
-						 when c.preset_position =7 then '主编,副主编,编委'
-						 when c.preset_position =6 then '主编,副主编'
-						 when c.preset_position =5 then '主编,编委'
-					     when c.preset_position =4 then '主编'
-						 when c.preset_position =3 then '副主编,编委'
-						 when c.preset_position =2 then '副主编'
-						 when c.preset_position =1 then '编委'
+						 when c.preset_position =7 and c.is_digital_editor =1 then '主编,副主编,编委,数字编委'
+						 when c.preset_position =7 and c.is_digital_editor =0 then '主编,副主编,编委'
+						 when c.preset_position =6 and c.is_digital_editor =1 then '主编,副主编,数字编委'
+						 when c.preset_position =6 and c.is_digital_editor =0 then '主编,副主编'
+						 when c.preset_position =5 and c.is_digital_editor =1 then '主编,编委,数字编委'
+						 when c.preset_position =5 and c.is_digital_editor =0 then '主编,编委'
+					     when c.preset_position =4 and c.is_digital_editor =1 then '主编,数字编委'
+						 when c.preset_position =4 and c.is_digital_editor =0 then '主编'
+						 when c.preset_position =3 and c.is_digital_editor =1 then '副主编,编委,数字编委'
+						 when c.preset_position =3 and c.is_digital_editor =0 then '副主编,编委'
+						 when c.preset_position =2 and c.is_digital_editor =1 then '副主编,数字编委'
+                         when c.preset_position =2 and c.is_digital_editor =0 then '副主编'
+						 when c.preset_position =1 and c.is_digital_editor =1 then '编委,数字编委'
+                         when c.preset_position =1 and c.is_digital_editor =0 then '编委'
+						 when c.is_digital_editor =1 then '数字编委'
 						 else null
-				end
+					end
 				) ORDER BY d.sort Separator '&lt;/br&gt;'
 			)chooseBooksAndPostions,
 			a.online_progress ,

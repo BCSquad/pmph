@@ -267,7 +267,7 @@
 		d.is_deleted =0 and d.is_published =1
 		and d.id =
 		#{parameter.materialId}
-		<if test="parameter.pmphUserId !=null ">
+		<if test="parameter.power == 4 and parameter.pmphUserId !=null ">
 			and a.planning_editor = #{parameter.pmphUserId}
 		</if>
 		<if test="parameter.state !=null ">
@@ -334,7 +334,7 @@
 		where d.is_deleted =0 and d.is_published =1
 		and d.id =
 		#{parameter.materialId}
-		<if test="parameter.pmphUserId !=null ">
+		<if test="parameter.power == 4 and parameter.pmphUserId !=null ">
 			and a.planning_editor = #{parameter.pmphUserId}
 		</if>
 		<if test="parameter.state !=null ">
@@ -363,5 +363,23 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
-
+	<!-- 根据书籍id查询textbook -->
+	<select id="getTextbooks" resultType="Textbook">
+		select * from textbook
+		where id in
+		<foreach collection="array" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<!-- 根据id进行名单确认 -->
+	<update id="updateTextbooks" parameterType="list">
+		update textbook
+		set is_locked= true
+		where id in
+		<foreach item="item" collection="list" open="(" separator=","
+			close=")">
+			#{item.id}
+		</foreach>
+	</update>
 </mapper>

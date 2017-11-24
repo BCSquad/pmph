@@ -446,7 +446,8 @@
 							pu.`realname` = #{parameter.username} )
 				</if>
 			</if>
-		order by cc.sort
+		order by 
+				cc.`auth_date` desc
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>

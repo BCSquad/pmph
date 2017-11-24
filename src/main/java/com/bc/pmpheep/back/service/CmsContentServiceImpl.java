@@ -216,7 +216,7 @@ public class CmsContentServiceImpl implements CmsContentService {
                 cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_1);
                 cmsContent.setAuthDate(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                 DateUtil.getCurrentTime()));
-                cmsContent.setIsDeleted(true);
+                cmsContent.setIsDeleted(false);
                 cmsContent.setIsPublished(false);
             } else if (Const.CMS_AUTHOR_STATUS_2.shortValue() == cmsContent.getAuthStatus()
                                                                            .shortValue()) {

@@ -108,6 +108,22 @@ public interface TextbookDao {
 
 	/**
 	 * 
+	 * @param textBookIds
+	 * @return 获取书籍列表
+	 */
+	List<Textbook> getTextbooks(Long[] textBookIds);
+
+	/**
+	 * 批量通过（名单确认）
+	 * 
+	 * @param textbooks
+	 * @param isLocked
+	 * @return
+	 */
+	Integer updateTextbooks(List<Textbook> textBook);
+
+	/**
+	 * 
 	 * Description:添加或更新教材书籍
 	 * 
 	 * @author:lyc

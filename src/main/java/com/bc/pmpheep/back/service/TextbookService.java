@@ -77,6 +77,16 @@ public interface TextbookService {
 			Long materialId, String sessionId);
 
 	/**
+	 * 功能描述：批量通过（确认名单）
+	 * 
+	 * @param textBookIds
+	 * @param isLocked
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	Integer updateTextbooks(Long[] ids) throws CheckedServiceException;
+
+	/**
 	 * 
 	 * Description:根据教材id获取教材书籍列表
 	 * 
