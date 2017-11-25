@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Declaration;
+import com.bc.pmpheep.back.service.DecPositionService;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.vo.BookUserCommentVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -31,6 +33,8 @@ public class DeclarationController {
 	
 	@Autowired
 	private DeclarationService declarationService;
+	@Autowired
+	private DecPositionService decPositionService;
 	
 	/**
 	 * 符合条件的申报表审核分页数据
@@ -87,6 +91,7 @@ public class DeclarationController {
 	 * @createDate 2017年11月24日 下午15:27:36
 	 * @param id
 	 * @param offlineProgress
+	 * @param materialId
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
@@ -105,6 +110,7 @@ public class DeclarationController {
 	 * @createDate 2017年11月24日 下午16:37:36
 	 * @param id
 	 * @param onlineProgress
+	 * @param materialId
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
@@ -115,6 +121,28 @@ public class DeclarationController {
 			@RequestParam("onlineProgress") Integer onlineProgress, 
 			@RequestParam("materialId") Long materialId) throws CheckedServiceException, IOException {
 		return new ResponseBean(declarationService.onlineProgress(id, onlineProgress, materialId));
+	}
+	
+	/**
+	 * 保存图书
+	 * @author tyc
+	 * @createDate 2017年11月25日 晚上21:15:30
+	 * @param declarationId		申报表id
+     * @param textbookId		书籍id
+     * @param presetPosition	申报职务
+	 * @throws CheckedServiceException
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存图书")
+	@RequestMapping(value = "/list/declaration/saveBooks", method = RequestMethod.GET)
+	public ResponseBean saveBooks(@RequestParam("declarationId") Long declarationId, 
+			@RequestParam("textbookId") Long textbookId, 
+			@RequestParam("presetPosition") Integer presetPosition, 
+			@RequestParam("syllabusName") String syllabusName,
+			@RequestParam("file") MultipartFile file) throws IOException{
+		return new ResponseBean(decPositionService.saveBooks(declarationId, textbookId, presetPosition, 
+				syllabusName, file));
 	}
 
 }
