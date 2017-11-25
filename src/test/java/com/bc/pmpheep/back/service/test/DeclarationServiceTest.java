@@ -4,6 +4,7 @@
 package com.bc.pmpheep.back.service.test;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -110,5 +112,37 @@ public class DeclarationServiceTest extends BaseTest {
 		Declaration declaration3 = new Declaration(1L, 3L);
 		declarationService.addDeclaration(declaration3);
 		return declaration3;
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void confirmPaperList() throws CheckedServiceException, IOException{
+		Declaration declaration = new Declaration();
+		declaration.setMaterialId(2L);
+		declaration.setUserId(1L);
+		declaration.setOrgId(6L);
+		declaration.setOfflineProgress(0);
+		declarationService.addDeclaration(declaration);
+		Declaration declarationConf = declarationService.getDeclarationById(declaration.getId());
+		declarationConf.setOfflineProgress(2);
+		Declaration declarations = declarationService.confirmPaperList(declarationConf.getId(), 
+				declarationConf.getOfflineProgress(), declarationConf.getMaterialId());
+		Assert.assertNotNull("确认收到纸质表失败", declarations);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void onlineProgress() throws CheckedServiceException, IOException{
+		Declaration declaration = new Declaration();
+		declaration.setMaterialId(2L);
+		declaration.setUserId(1L);
+		declaration.setOrgId(7L);
+		declaration.setOnlineProgress(0);
+		declarationService.addDeclaration(declaration);
+		Declaration declarationConf = declarationService.getDeclarationById(declaration.getId());
+		declarationConf.setOnlineProgress(3);
+		Declaration declarations = declarationService.onlineProgress(declarationConf.getId(), 
+				declarationConf.getOnlineProgress(), declarationConf.getMaterialId());
+		Assert.assertNotNull("审核进度失败", declarations);
 	}
 }

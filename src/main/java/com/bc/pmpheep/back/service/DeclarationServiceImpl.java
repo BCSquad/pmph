@@ -3,16 +3,21 @@
  */
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.dao.DeclarationDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Declaration;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
@@ -35,6 +40,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 
 	@Autowired
 	private DeclarationDao declarationDao;
+	@Autowired
+	private SystemMessageService systemMessageService;
 
 	@Override
 	public Declaration addDeclaration(Declaration declaration)
@@ -162,5 +169,51 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		pageResult.setTotal(total);
     	return pageResult;
+	}
+	
+	@Override
+	public Declaration confirmPaperList(Long id, Integer offlineProgress, Long materialId) 
+			throws CheckedServiceException, IOException {
+		if (ObjectUtil.isNull(id)) {
+			 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                     CheckedExceptionResult.ILLEGAL_PARAM, "主键不能为空!");
+		}
+		if (ObjectUtil.isNull(offlineProgress)) {
+			 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                    CheckedExceptionResult.ILLEGAL_PARAM, "确认收到纸质表不能为空!");
+		}
+		// 获取当前作家用户申报信息
+		Declaration declarationCon = declarationDao.getDeclarationById(id);
+		declarationCon.setMaterialId(materialId);
+		declarationCon.setOfflineProgress(offlineProgress);
+		declarationDao.updateDeclaration(declarationCon);
+		systemMessageService.sendWhenReceiptAudit(declarationCon.getId(), true); // 发送系统消息
+		return declarationCon;
+	}
+
+	@Override
+	public Declaration onlineProgress(Long id, Integer onlineProgress, Long materialId) 
+			throws CheckedServiceException, IOException {
+		if (ObjectUtil.isNull(id)) {
+			 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                    CheckedExceptionResult.ILLEGAL_PARAM, "主键不能为空!");
+		}
+		if (ObjectUtil.isNull(onlineProgress)) {
+			 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                   CheckedExceptionResult.ILLEGAL_PARAM, "审核进度不能为空!");
+		}
+		// 获取当前作家用户申报信息
+		Declaration declarationCon = declarationDao.getDeclarationById(id);
+		declarationCon.setOnlineProgress(onlineProgress);
+		Integer onlineOne = 2;
+		Integer onlineTwo = 3;
+		if (onlineOne.equals(onlineProgress)){ // 获取审核进度是2则被退回
+			declarationDao.updateDeclaration(declarationCon);
+			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false); // 发送系统消息
+		} else if (onlineTwo.equals(onlineProgress)) { // 获取审核进度是3则通过
+			declarationDao.updateDeclaration(declarationCon);
+			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true); // 发送系统消息
+		}
+		return declarationCon;
 	}
 }

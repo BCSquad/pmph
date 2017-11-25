@@ -725,14 +725,17 @@ public final class SystemMessageService {
                                                 new Short("0"), orgUser.getId(), new Short("3")));
             userIds.add("3_" + orgUser.getId());
         }
-        // 发送消息给管理员
-        userMessageService.addUserMessageBatch(userMessageList);
-        // websocket推送页面消息
-        WebScocketMessage webScocketMessage =
-        new WebScocketMessage(orgMsg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
-                              Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
-                              orgMsgContent, DateUtil.getCurrentTime());
-        myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
+        // 有学校管理员发信息
+        if(null != OrgUserList && OrgUserList.size() > 0){
+        	// 发送消息给管理员
+        	userMessageService.addUserMessageBatch(userMessageList);
+        	// websocket推送页面消息
+            WebScocketMessage webScocketMessage =
+            new WebScocketMessage(orgMsg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+                                  Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
+                                  orgMsgContent, DateUtil.getCurrentTime());
+            myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
+        }
         // ------------------------给申报者发送消息--------------------
         // 存入消息主体
         Message writerUserMessage = new Message(writerMsgContent);
@@ -743,7 +746,7 @@ public final class SystemMessageService {
                                                           new Short("0"), 0L, new Short("0"),
                                                           declaration.getUserId(), new Short("2")));
         // websocket推送页面消息
-        webScocketMessage =
+        WebScocketMessage webScocketMessage =
         new WebScocketMessage(writerMsg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
                               Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
                               writerMsgContent, DateUtil.getCurrentTime());
