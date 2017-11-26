@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.List;
 
 import com.bc.pmpheep.back.plugin.PageResult;
-import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -120,5 +119,5 @@ public interface DeclarationService {
 	 * @createDate 2017年11月25日 上午9:13:09
 	 * @param decPosition
 	 */
-	List<?> exportExcel(Long id, Long declarationId);
+	List<?> exportExcel(Long materialId, Long declarationId);
 }

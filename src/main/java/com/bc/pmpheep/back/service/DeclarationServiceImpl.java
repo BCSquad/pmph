@@ -6,7 +6,6 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -259,10 +258,10 @@ public class DeclarationServiceImpl implements DeclarationService {
 	}
 
 	@Override
-	public List<?> exportExcel(Long id, Long declarationId) {
+	public List<?> exportExcel(Long materialId, Long declarationId) {
 		List<DecPosition> decPositionList = decPositionDao.listDecPositions(declarationId);
 		// 专家信息
-		List<Declaration> declarationList = declarationDao.getDeclarationByMaterialId(declarationId);
+		List<Declaration> declarationList = declarationDao.getDeclarationByMaterialId(materialId);
 		// 学习经历
 		List<DecEduExp> decEduExpList = decEduExpDao.getListDecEduExpByDeclarationId(declarationId);
 		// 工作经历
