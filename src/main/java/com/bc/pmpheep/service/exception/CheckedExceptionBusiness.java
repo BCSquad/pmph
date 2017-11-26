@@ -64,4 +64,6 @@ public class CheckedExceptionBusiness {
     public final static String CMS                        = "内容管理";
 
     public final static String OPERATION                  = "系统操作日志";
+    
+    public final static String EXCEL                      = "Excel文件";
 }
