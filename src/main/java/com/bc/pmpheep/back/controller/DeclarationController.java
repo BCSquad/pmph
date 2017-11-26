@@ -144,5 +144,13 @@ public class DeclarationController {
 		return new ResponseBean(decPositionService.saveBooks(declarationId, textbookId, presetPosition, 
 				syllabusName, file));
 	}
+	
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "显示专家信息")
+	@RequestMapping(value = "/list/declaration/exportExcel", method = RequestMethod.GET)
+	public ResponseBean exportExcel(@RequestParam("id") Long id, 
+			@RequestParam("declarationId") Long declarationId) throws IOException{
+		return new ResponseBean(declarationService.exportExcel(id, declarationId));
+	}
 
 }
