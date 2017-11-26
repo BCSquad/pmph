@@ -4,11 +4,8 @@
 package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.apache.ibatis.type.Alias;
-
-import com.bc.pmpheep.back.po.Textbook;
 
 /**
  * <p>Title:书目录视图层<p>
@@ -31,8 +28,8 @@ public class BookListVO implements Serializable{
 	private String[] materialType;
 	//可见性区别
 	private boolean isPublic;
-	//教材书籍集合
-	private List<Textbook> textbooks;
+    //教材书籍
+	private String textbooks;
 	
 	public BookListVO() {
 		super();
@@ -78,12 +75,11 @@ public class BookListVO implements Serializable{
 		this.isPublic = isPublic;
 	}
 
-	public List<Textbook> getTextbooks() {
+	public String getTextbooks() {
 		return textbooks;
 	}
 
-	public void setTextbooks(List<Textbook> textbooks) {
+	public void setTextbooks(String textbooks) {
 		this.textbooks = textbooks;
-	}	
-	
+	}
 }

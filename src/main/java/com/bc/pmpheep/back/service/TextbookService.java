@@ -1,6 +1,10 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Textbook;
@@ -81,6 +85,15 @@ public interface TextbookService {
      */
     List<Textbook> addOrUpdateTextBookList(BookListVO bookListVO) throws CheckedServiceException;
     
+    /**
+     * 
+     * Description:Excel导入教材书籍
+     * @author:lyc
+     * @date:2017年11月26日下午8:36:21
+     * @param 
+     * @return List<Textbook>
+     */
+    List<Textbook> importExcel(MultipartFile file) throws CheckedServiceException,IOException;
     /**
      * 功能描述：批量结果公布（最终结果公布）
      * @param ids
