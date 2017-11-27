@@ -60,7 +60,7 @@ public class TextBookController {
     @ResponseBody
     @RequestMapping(value = "/add/textbook", method = RequestMethod.POST)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存或修改新增教材书籍")
-    public ResponseBean addTextbooks(@RequestParam(name = "bookListVO")BookListVO bookListVO){
+    public ResponseBean addTextbooks( BookListVO bookListVO){
     	return new ResponseBean(textbookService.addOrUpdateTextBookList(bookListVO));
     }
     
