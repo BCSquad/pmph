@@ -148,9 +148,8 @@ public class DeclarationController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "显示专家信息")
 	@RequestMapping(value = "/list/declaration/exportExcel", method = RequestMethod.GET)
-	public ResponseBean exportExcel(@RequestParam("materialId") Long materialId, 
-			@RequestParam("declarationId") Long declarationId) throws IOException{
-		return new ResponseBean(declarationService.exportExcel(materialId, declarationId));
+	public ResponseBean exportExcel(@RequestParam("declarationId") Long declarationId) throws IOException{
+		return new ResponseBean(declarationService.exportExcel(declarationId));
 	}
 
 }
