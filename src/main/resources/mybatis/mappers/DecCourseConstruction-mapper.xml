@@ -127,13 +127,13 @@
 		declaration_id=#{declarationId} and type=1;
 	</select>
 	<!-- 根据declarationId查询省部级精品课程建设情况//type 2=省部 -->
-	<select id="decNationalCourseConstructionList" parameterType="java.lang.Long"
+	<select id="decProvinceCourseConstructionList" parameterType="java.lang.Long"
 		resultType="DecCourseConstruction">
 		select * from dec_course_construction where
 		declaration_id=#{declarationId} and type=2;
 	</select>
 	<!-- 根据declarationId查询学校精品课程建设情况   //type 3=学校 -->
-	<select id="decNationalCourseConstructionList" parameterType="java.lang.Long"
+	<select id="decSchoolCourseConstructionList" parameterType="java.lang.Long"
 		resultType="DecCourseConstruction">
 		select * from dec_course_construction where
 		declaration_id=#{declarationId} and type=3;
