@@ -97,6 +97,16 @@ public class DecPositionServiceTest extends BaseTest{
      
      @Test
      @Rollback(Const.ISROLLBACK)
+     public void listChosenDecPositionsByTextbookId(){
+    	 List<DecPosition> list = new ArrayList<>();
+    	 list = decPositionService.listChosenDecPositionsByTextbookId(1L);
+    	 boolean flag = list.size() == 0;
+    	 Assert.assertTrue("通过书籍id获取作家申报职位信息集合失败", flag );
+    	 
+     }
+     
+     @Test
+     @Rollback(Const.ISROLLBACK)
      public void testListDecPositionsByTextbookIds(){
     	 add();
     	 String[] a = {"1","2","3"};

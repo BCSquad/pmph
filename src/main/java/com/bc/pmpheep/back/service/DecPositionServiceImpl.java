@@ -124,6 +124,16 @@ public class DecPositionServiceImpl implements DecPositionService {
     }
 
     @Override
+    public List<DecPosition> listChosenDecPositionsByTextbookId(Long textbookId)
+    throws CheckedServiceException {
+        if (null == textbookId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
+        }
+        return decPositionDao.listChosenDecPositionsByTextbookId(textbookId);
+    }
+    
+    @Override
     public List<Long> listDecPositionsByTextbookIds(String[] textbookIds)
     throws CheckedServiceException {
         if (0 == textbookIds.length) {
