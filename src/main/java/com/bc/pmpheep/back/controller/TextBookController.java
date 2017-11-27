@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.annotation.LogDetail;
+import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.FileUpload;
@@ -121,5 +122,19 @@ public class TextBookController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "设置教材书籍选题号")
     public ResponseBean addTopicNumber(@RequestParam(name = "topicTextbooks") String topicTextbooks){
     	return new ResponseBean(textbookService.addTopicNumber(topicTextbooks));
+    }
+    /**
+     * 
+     * 分配策划编辑
+     * @author:mr
+     * @date:2017年11月27日下午17:20:20
+     * @param 
+     * @return ResponseBean
+     */
+    @ResponseBody
+    @RequestMapping(value = "/updateEditor", method = RequestMethod.PUT)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分配策划编辑")
+    public ResponseBean updateEditor(Textbook textbook){
+    	return new ResponseBean(textbookService.updateTextbook(textbook));
     }
 }
