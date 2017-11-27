@@ -158,6 +158,7 @@ public class DecPositionServiceImpl implements DecPositionService {
 		List<NewDecPosition> list = decPositionVO.getLst();
 		List<DecPosition> istDecPositions = null;
 		String newId = ",";
+		
 		for (int i = 0; i < list.size(); i++) {
 			Long id = list.get(i).getId();
 			Long declarationId = list.get(i).getDeclarationId();
