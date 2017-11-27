@@ -135,14 +135,14 @@ public class DeclarationController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存图书")
-	@RequestMapping(value = "/list/declaration/saveBooks", method = RequestMethod.GET)
-	public ResponseBean saveBooks(@RequestParam("declarationId") Long declarationId, 
-			@RequestParam("textbookId") Long textbookId, 
-			@RequestParam("presetPosition") Integer presetPosition, 
-			@RequestParam("syllabusName") String syllabusName,
-			@RequestParam("file") MultipartFile file) throws IOException{
-		return new ResponseBean(decPositionService.saveBooks(declarationId, textbookId, presetPosition, 
-				syllabusName, file));
+	@RequestMapping(value = "/list/declaration/saveBooks", method = RequestMethod.POST)
+	public ResponseBean saveBooks(@RequestParam("ids") Long[] ids, 
+			@RequestParam("declarationId") Long declarationId, 
+			@RequestParam("textbookIds") Long[] textbookIds, 
+			@RequestParam("presetPositions") Integer[] presetPositions, 
+			@RequestParam("files") MultipartFile[] files) throws IOException{
+		return new ResponseBean(decPositionService.saveBooks(ids, declarationId, textbookIds, presetPositions, 
+				files));
 	}
 	
 	@ResponseBody

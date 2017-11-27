@@ -40,6 +40,7 @@ import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.ApplicationVO;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -258,10 +259,11 @@ public class DeclarationServiceImpl implements DeclarationService {
 	}
 
 	@Override
-	public List<?> exportExcel(Long materialId, Long declarationId) {
+	public ApplicationVO exportExcel(Long materialId, Long declarationId) {
+		ApplicationVO applicationVO = new ApplicationVO();
 		List<DecPosition> decPositionList = decPositionDao.listDecPositions(declarationId);
 		// 专家信息
-		List<Declaration> declarationList = declarationDao.getDeclarationByMaterialId(materialId);
+		Declaration declaration = (Declaration) declarationDao.getDeclarationByMaterialId(materialId);
 		// 学习经历
 		List<DecEduExp> decEduExpList = decEduExpDao.getListDecEduExpByDeclarationId(declarationId);
 		// 工作经历
@@ -280,20 +282,16 @@ public class DeclarationServiceImpl implements DeclarationService {
 		List<DecTextbook> decTextbookList = decTextbookDao.getListDecTextbookByDeclarationId(declarationId);
 		// 作家科研
 		List<DecResearch> decResearchList = decResearchDao.getListDecResearchByDeclarationId(declarationId);
-		// 把多个list添加进一个list集合
-		List listAll = new ArrayList<>();
-		listAll.addAll(decPositionList);
-		listAll.addAll(declarationList);
-		listAll.addAll(decEduExpList);
-		listAll.addAll(decWorkExpList);
-		listAll.addAll(decTeachExpList);
-		listAll.addAll(decAcadeList);
-		listAll.addAll(decLastPositionList);
-		listAll.addAll(decCourseConstructionList);
-		listAll.addAll(decNationalPlanList);
-		listAll.addAll(decTextbookList);
-		listAll.addAll(decResearchList);
-		listAll = new ArrayList<>(listAll);
-		return listAll;
+		applicationVO.setDecPositionList(decPositionList);
+		applicationVO.setDeclaration(declaration);
+		applicationVO.setDecEduExpList(decEduExpList);
+		applicationVO.setDecWorkExpList(decWorkExpList);
+		applicationVO.setDecTeachExpList(decTeachExpList);
+		applicationVO.setDecAcadeList(decAcadeList);
+		applicationVO.setDecLastPositionList(decLastPositionList);
+		applicationVO.setDecNationalPlanList(decNationalPlanList);
+		applicationVO.setDecTextbookList(decTextbookList);
+		applicationVO.setDecResearchList(decResearchList);
+		return applicationVO;
 	}
 }
