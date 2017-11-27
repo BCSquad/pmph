@@ -138,4 +138,23 @@ public interface TextbookService {
 	 */
 	Integer updateTextbooks(Long[] ids) throws CheckedServiceException;
 
+	/**
+	 * 
+	 * Description:获取设置选题号书籍列表
+	 * @author:lyc
+	 * @date:2017年11月27日上午9:51:36
+	 * @param 
+	 * @return List<Textbook>
+	 */
+	List<Textbook> listTopicNumber(Long materialId) throws CheckedServiceException;
+	
+	/**
+	 * 
+	 * Description:设置教材书籍选题号
+	 * @author:Administrator
+	 * @date:2017年11月27日上午9:52:25
+	 * @param 
+	 * @return List<Textbook>
+	 */
+	List<Textbook> addTopicNumber(String topicTextbooks) throws CheckedServiceException;
 }
