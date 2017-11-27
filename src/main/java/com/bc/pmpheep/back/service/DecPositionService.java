@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
+import com.bc.pmpheep.back.vo.DecPositionVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -108,18 +109,16 @@ public interface DecPositionService {
 
     /**
      * 保存图书
-     * 
-     * @author tyc
-     * @createDate 2017年11月25日 晚上21:15:30
-     * @param declarationId 申报表id
-     * @param textbookId 书籍id
-     * @param presetPosition 申报职务
-     * @param syllabusName 教学大纲名称
+	 * @author tyc
+	 * @createDate 2017年11月25日 晚上21:15:30
+     * @param declarationId		申报表id
+     * @param textbookId		书籍id
+     * @param presetPosition	申报职务
+     * @param syllabusName		教学大纲名称
      * @return
-     * @throws IOException
+     * @throws IOException 
      */
-    DecPosition saveBooks(Long declarationId, Long textbookId, Integer presetPosition,
-    String syllabusName, MultipartFile file) throws IOException;
+    DecPositionVO saveBooks(DecPositionVO decPositionVO) throws IOException;
 
     /**
      * 

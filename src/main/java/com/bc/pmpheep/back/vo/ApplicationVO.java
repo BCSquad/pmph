@@ -51,8 +51,6 @@ public class ApplicationVO implements Serializable {
 	private List<DecNationalPlan> decNationalPlanList =new ArrayList<DecNationalPlan>(5);
 	//教材编写情况
 	private List<DecTextbook>     decTextbookList =new ArrayList<DecTextbook>(5);
-	//其他教材编写情况
-	private List<DecNationalPlan> decOtherPositionList =new ArrayList<DecNationalPlan>(5);
 	//科研情况
 	private List<DecResearch>   decResearchList =new ArrayList<DecResearch>(5);
 	//作家扩展项
@@ -137,12 +135,6 @@ public class ApplicationVO implements Serializable {
 	}
 	public void setDecTextbookList(List<DecTextbook> decTextbookList) {
 		this.decTextbookList = decTextbookList;
-	}
-	public List<DecNationalPlan> getDecOtherPositionList() {
-		return decOtherPositionList;
-	}
-	public void setDecOtherPositionList(List<DecNationalPlan> decOtherPositionList) {
-		this.decOtherPositionList = decOtherPositionList;
 	}
 	public List<DecResearch> getDecResearchList() {
 		return decResearchList;
