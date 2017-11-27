@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,7 @@ import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.FileUtil;
@@ -402,5 +404,36 @@ public class TextbookServiceImpl implements TextbookService {
 	public List<Textbook> getTextbookByMaterialIdAndUserId(Long materialId, Long userId)
 			throws CheckedServiceException {
 		return textbookDao.getTextbookByMaterialIdAndUserId(materialId, userId);
+	}
+
+	@Override
+	public List<Textbook> listTopicNumber(Long materialId)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(materialId)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
+		}
+		List<Textbook> textbooksList = textbookDao.listTopicNumber(materialId);
+		return textbooksList;
+	}
+
+	@Override
+	public List<Textbook> addTopicNumber(String topicTextbooks) throws CheckedServiceException {
+		Gson gson = new Gson();
+		Type type = new TypeToken<ArrayList<Textbook>>(){
+		}.getType();
+		List<Textbook> textbooks = gson.fromJson(topicTextbooks, type);
+		if (CollectionUtil.isEmpty(textbooks)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.NULL_PARAM, "参数不能为空");
+		}
+		for (Textbook textbook : textbooks){
+			if (!textbook.getIsPublished()){
+				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+						CheckedExceptionResult.ILLEGAL_PARAM, "未公布教材书籍不能设置选题号");
+			}
+			textbookDao.updateTextbook(textbook);
+		}
+		return textbooks;
 	}
 }
