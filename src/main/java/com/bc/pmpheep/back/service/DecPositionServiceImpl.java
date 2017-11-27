@@ -175,9 +175,9 @@ public class DecPositionServiceImpl implements DecPositionService {
 			decPosition.setTextbookId(textbookId);
 			decPosition.setPresetPosition(presetPosition);
 			istDecPositions = decPositionDao.listDecPositions(declarationId);
-			String oldId = ",";
+			String oldId = "";
 			for (int o = 0; o < istDecPositions.size(); o++) {
-				Long oid = list.get(i).getId();
+				Long oid = istDecPositions.get(i).getId();
 				oldId += oid+",";
 			}
 			if (null == id) { // 保存或者修改
