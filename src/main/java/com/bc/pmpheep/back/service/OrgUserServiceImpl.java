@@ -263,7 +263,11 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         }
         OrgUser orgUser=new OrgUser();
         orgUser.setId(orgAndOrgUserVO.getId());
-        orgUser.setRealname(orgAndOrgUserVO.getRealname());
+        if(StringUtil.isEmpty(orgAndOrgUserVO.getRealname())){
+        	orgUser.setRealname(orgAndOrgUserVO.getUsername());
+        }else {
+        	orgUser.setRealname(orgAndOrgUserVO.getRealname());
+		}
         orgUser.setIsDisabled(orgAndOrgUserVO.getIsDisabled());
         orgUser.setHandphone(orgAndOrgUserVO.getHandphone());
         orgUser.setEmail(orgAndOrgUserVO.getEmail());
@@ -335,7 +339,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         // }
         orgDao.addOrg(org);
         if (StringUtil.isEmpty(orgUser.getRealname())) {
-            orgUser.setRealname(org.getOrgName());
+            orgUser.setRealname(orgUser.getUsername());
         }
         orgUser.setOrgId(orgDao.getOrgid(org.getOrgName()));
         orgUser.setPassword(new DesRun("", Const.DEFAULT_PASSWORD).enpsw);// 后台添加用户设置默认密码为123456
