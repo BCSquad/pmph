@@ -6,11 +6,12 @@ package com.bc.pmpheep.back.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.DecPosition;
+import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
-
 
 /**
  * <p>
@@ -69,15 +70,16 @@ public interface DecPositionDao {
      * @Return:DecPosition
      */
     DecPosition getDecPositionById(Long id);
-    
+
     /**
      * 根据orgid和bookid获取该机构某些已公布的书的申报职位
+     * 
      * @author Mryang
      * @createDate 2017年11月19日 上午10:13:40
      * @param map
      * @return
      */
-    List<DecPosition> listDecPositionsByTextbookIdAndOrgid(Map<String, Object> map) ;
+    List<DecPosition> listDecPositionsByTextbookIdAndOrgid(Map<String, Object> map);
 
     /**
      * 
@@ -92,6 +94,7 @@ public interface DecPositionDao {
 
     /**
      * 根据书籍id获取申报职位
+     * 
      * @author Mryang
      * @createDate 2017年11月16日 下午2:37:19
      * @param textbookId
@@ -122,5 +125,32 @@ public interface DecPositionDao {
      * @Return:Long
      */
     Long getDecPosition();
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：教材申报-遴选主编/遴选编委(列表)
+     * 使用示范：
+     *
+     * @param textbookId 书籍ID
+     * @param realName 申报人姓名
+     * @param presetPosition 申报职位
+     * @return
+     * </pre>
+     */
+    List<DecPositionEditorSelectionVO> listEditorSelection(@Param("textbookId") Long textbookId,
+    @Param("realName") String realName, @Param("presetPosition") Integer presetPosition);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：教材申报-遴选主编/遴选编委(更新)
+     * 使用示范：
+     *
+     * @param decPositions DecPosition 对象集合
+     * @return
+     * </pre>
+     */
+    Integer updateDecPositionEditorSelection(List<DecPosition> decPositions);
 
 }

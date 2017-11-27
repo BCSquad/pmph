@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.po.DecPosition;
+import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -57,9 +58,10 @@ public interface DecPositionService {
      * @throws CheckedServiceException
      */
     List<DecPosition> listDecPositions(Long declarationId) throws CheckedServiceException;
-    
+
     /**
      * 根据orgid和bookid获取该机构某些已公布的书的申报职位
+     * 
      * @author Mryang
      * @createDate 2017年11月20日 上午10:13:40
      * @param textBookIds
@@ -67,10 +69,12 @@ public interface DecPositionService {
      * @return
      * @throws CheckedServiceException
      */
-    List<DecPosition> listDecPositionsByTextbookIdAndOrgid(List<Long> textBookIds,Long orgId) throws CheckedServiceException;
+    List<DecPosition> listDecPositionsByTextbookIdAndOrgid(List<Long> textBookIds, Long orgId)
+    throws CheckedServiceException;
 
     /**
      * 根据书籍id获取申报职位
+     * 
      * @author Mryang
      * @createDate 2017年11月16日 下午2:37:19
      * @param textbookId
@@ -91,18 +95,48 @@ public interface DecPositionService {
      * </pre>
      */
     List<Long> listDecPositionsByTextbookIds(String[] textbookIds) throws CheckedServiceException;
-    
+
     /**
      * 保存图书
-	 * @author tyc
-	 * @createDate 2017年11月25日 晚上21:15:30
-     * @param declarationId		申报表id
-     * @param textbookId		书籍id
-     * @param presetPosition	申报职务
-     * @param syllabusName		教学大纲名称
+     * 
+     * @author tyc
+     * @createDate 2017年11月25日 晚上21:15:30
+     * @param declarationId 申报表id
+     * @param textbookId 书籍id
+     * @param presetPosition 申报职务
+     * @param syllabusName 教学大纲名称
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
-    DecPosition saveBooks(Long declarationId, Long textbookId, Integer presetPosition, 
-    		String syllabusName, MultipartFile file) throws IOException;
+    DecPosition saveBooks(Long declarationId, Long textbookId, Integer presetPosition,
+    String syllabusName, MultipartFile file) throws IOException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：教材申报-遴选主编/遴选编委(列表)
+     * 使用示范：
+     *
+     * @param textbookId 书籍ID
+     * @param realName 申报人姓名
+     * @param presetPosition 申报职位
+     * @return
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    List<DecPositionEditorSelectionVO> listEditorSelection(Long textbookId, String realName,
+    Integer presetPosition) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：教材申报-遴选主编/遴选编委(更新)
+     * 使用示范：
+     *
+     * @param decPositions DecPosition 对象集合
+     * @return
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer updateDecPositionEditorSelection(String jsonDecPosition) throws CheckedServiceException;
 }
