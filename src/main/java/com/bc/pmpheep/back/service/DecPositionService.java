@@ -78,6 +78,16 @@ public interface DecPositionService {
      * @throws CheckedServiceException
      */
     List<DecPosition> listDecPositionsByTextbookId(Long textbookId) throws CheckedServiceException;
+    
+    /**
+     * 根据书籍id获取入选的职位职位(主编、副主编、编委、数字编辑)
+     * @author Mryang
+     * @createDate 2017年11月16日 下午2:37:19
+     * @param textbookId
+     * @return
+     * @throws CheckedServiceException
+     */
+    List<DecPosition> listChosenDecPositionsByTextbookId(Long textbookId) throws CheckedServiceException;
 
     /**
      * 
@@ -103,6 +113,6 @@ public interface DecPositionService {
      * @return
      * @throws IOException 
      */
-    DecPosition saveBooks(Long declarationId, Long textbookId, Integer presetPosition, 
-    		String syllabusName, MultipartFile file) throws IOException;
+    String saveBooks(Long[] ids, Long declarationId, Long[] textbookIds, Integer[] presetPositions, 
+    		MultipartFile[] files) throws IOException;
 }

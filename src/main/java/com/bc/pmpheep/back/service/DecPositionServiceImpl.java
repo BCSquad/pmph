@@ -124,6 +124,16 @@ public class DecPositionServiceImpl implements DecPositionService {
     }
 
     @Override
+    public List<DecPosition> listChosenDecPositionsByTextbookId(Long textbookId)
+    throws CheckedServiceException {
+        if (null == textbookId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
+        }
+        return decPositionDao.listChosenDecPositionsByTextbookId(textbookId);
+    }
+    
+    @Override
     public List<Long> listDecPositionsByTextbookIds(String[] textbookIds)
     throws CheckedServiceException {
         if (0 == textbookIds.length) {
@@ -134,21 +144,46 @@ public class DecPositionServiceImpl implements DecPositionService {
     }
 
 	@Override
-	public DecPosition saveBooks(Long declarationId, Long textbookId,
-			Integer presetPosition, String syllabusName, MultipartFile file) throws IOException {
-		DecPosition decPosition = new DecPosition();
-		decPosition.setDeclarationId(declarationId);
-		decPosition.setTextbookId(textbookId);
-		decPosition.setPresetPosition(presetPosition);
-		decPosition.setSyllabusId("---------");
-		decPosition.setSyllabusName(syllabusName);
-		decPositionDao.addDecPosition(decPosition);
-		String mongoId = null;
-		mongoId = fileService.save(file, FileType.SYLLABUS, decPosition.getId());
-		if (null != mongoId) {
-			decPosition.setSyllabusId(mongoId);
-			decPositionDao.updateDecPosition(decPosition);
+	public String saveBooks(Long[] ids, Long declarationId, Long[] textbookIds,
+			Integer[] presetPositions, MultipartFile[] files) throws IOException {
+		List<DecPosition> istDecPositions = decPositionDao.listDecPositions(declarationId);
+		String newIds = ",";
+		for (int i = 0; i < ids.length; i++) { // 遍历主键数组
+			DecPosition decPosition = new DecPosition();
+			Long textbookId = textbookIds[i];
+			Integer presetPosition = presetPositions[i];
+			MultipartFile file = files[i];
+			if (null == file) {
+				decPosition.setSyllabusName(null);
+			} else {
+				String fileName = file.getOriginalFilename(); // 获取原文件名字
+				decPosition.setSyllabusName(fileName);
+			}
+			decPosition.setDeclarationId(declarationId);
+			decPosition.setTextbookId(textbookId);
+			decPosition.setPresetPosition(presetPosition);
+			if (null == ids[i]) { // 保存或者修改
+				decPositionDao.addDecPosition(decPosition);
+				String mongoId = null;
+				if (null == file) {
+					
+				} else {
+					mongoId = fileService.save(file, FileType.SYLLABUS, decPosition.getId());
+					if (null != mongoId) {
+						decPosition.setSyllabusId(mongoId);
+						decPositionDao.updateDecPosition(decPosition);
+					}
+				}
+			} else {
+				decPositionDao.updateDecPosition(decPosition);
+			}
+			newIds += decPosition.getId()+",";
 		}
-		return decPosition;
+		for (DecPosition decPosition : istDecPositions) {
+			if (!newIds.contains("," + decPosition.getId() + ",")) {
+				decPositionDao.deleteDecPosition(decPosition.getId());
+			}
+		}
+		return newIds;
 	}
 }
