@@ -1,21 +1,14 @@
 package com.bc.pmpheep.back.service.test;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import javax.annotation.Resource;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
-
-import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.po.TextbookLog;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.TextbookLogService;
-import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.util.Const;
 /**
  * TextbookLogService 单元测试
