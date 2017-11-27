@@ -92,4 +92,34 @@ public class TextBookController {
 			return new ResponseBean(ex);
 		}
     }
+    
+    /**
+     * 
+     * Description:设置选题号页面获取教材书籍列表
+     * @author:lyc
+     * @date:2017年11月27日上午10:19:15
+     * @param 
+     * @return ResponseBean
+     */
+    @ResponseBody
+    @RequestMapping(value = "/list/topic", method = RequestMethod.GET)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取设置选题号页面教材书籍列表")
+    public ResponseBean listTopicNumber(@RequestParam(name = "materialId") Long materialId){
+    	return new ResponseBean(textbookService.listTopicNumber(materialId));
+    }
+    
+    /**
+     * 
+     * Description:设置教材书籍选题号
+     * @author:lyc
+     * @date:2017年11月27日上午10:29:20
+     * @param 
+     * @return ResponseBean
+     */
+    @ResponseBody
+    @RequestMapping(value = "/add/topic", method = RequestMethod.POST)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "设置教材书籍选题号")
+    public ResponseBean addTopicNumber(@RequestParam(name = "topicTextbooks") String topicTextbooks){
+    	return new ResponseBean(textbookService.addTopicNumber(topicTextbooks));
+    }
 }
