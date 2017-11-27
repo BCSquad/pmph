@@ -47,6 +47,8 @@ public class Textbook implements java.io.Serializable {
 	private String isbn;
 	//图书序号
 	private Integer sort;
+	//选题号
+	private String topic;
 	//创建人id
 	private Long founderId;
 	//创建时间
@@ -80,13 +82,14 @@ public class Textbook implements java.io.Serializable {
 	}
 	public Textbook(Long materialId, String textbookName,
 			Integer textbookRound, Boolean isLocked, Boolean isPublished,
-			Integer sort, Long founderId, Timestamp gmtCreate) {
+			Integer sort, String topic, Long founderId, Timestamp gmtCreate) {
 		this.materialId = materialId;
 		this.textbookName = textbookName;
 		this.textbookRound = textbookRound;
 		this.isLocked = isLocked;
 		this.isPublished = isPublished;
 		this.sort = sort;
+		this.topic = topic;
 		this.founderId = founderId;
 		this.gmtCreate = gmtCreate;
 	}
@@ -193,6 +196,12 @@ public class Textbook implements java.io.Serializable {
 		this.sort = sort;
 	}
 
+	public String getTopic() {
+		return topic;
+	}
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
 	public Long getFounderId() {
 		return this.founderId;
 	}
@@ -274,7 +283,7 @@ public class Textbook implements java.io.Serializable {
 				+ ", isLocked:" + isLocked + ", isPublished:" + isPublished
 				+ ", gmtPublished:" + gmtPublished + ", revisionTimes:"
 				+ revisionTimes + ", republishTimes:" + republishTimes
-				+ ", isbn:" + isbn + ", sort:" + sort + ", founderId:"
+				+ ", isbn:" + isbn + ", sort:" + sort + ",topic:" + topic +", founderId:"
 				+ founderId + ", gmtCreate:" + gmtCreate + ", gmtUpdate:"
 				+ gmtUpdate + "}";
 	}
