@@ -298,7 +298,7 @@ public class TextbookServiceImpl implements TextbookService {
 		List<Map<String,Object>> list = new ArrayList<>();
 		Gson gson = new Gson();
 		List<Textbook> bookList =gson.fromJson(bookListVO.getTextbooks(), 
-				new TypeToken<ArrayList<Textbook>>(){	
+				new TypeToken<ArrayList<Textbook>>(){
 		}.getType()) ;
 		int count = 1; //判断书序号的连续性计数器
 		for (Textbook textbook : bookList){
