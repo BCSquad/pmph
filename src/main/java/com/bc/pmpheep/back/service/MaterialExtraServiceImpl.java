@@ -192,17 +192,28 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.NULL_PARAM, "教材名称为空");
         }
+        String content = materialExtraVO.getContent();
+        if (StringUtil.isEmpty(content)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.NULL_PARAM, "教材通知为空");
+        }
+        // MongoDB 内容插入
+        Content contentObj = contentService.add(new Content(content));
+        if (ObjectUtil.isNull(contentObj)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "教材通知保存失败");
+        }
         Material material = materialService.getMaterialById(materialId);
-        // MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
         if (StringUtil.isEmpty(materialExtraVO.getContent())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.NULL_PARAM, "教材通知内容为空");
         }
-        // MongoDB 内容插入
-        Content contentObj = contentService.add(new Content(materialExtraVO.getContent()));
-        if (ObjectUtil.isNull(contentObj)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
-                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "教材通知保存失败");
+        CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
+        if (ObjectUtil.notNull(cmsContent)) {
+            if (StringUtil.notEmpty(cmsContent.getMid())) {
+                contentService.delete(cmsContent.getMid());
+            }
+            cmsContentService.deleteCmsContentById(cmsContent.getId());
         }
         // 保存CMSContent内容
         cmsContentService.addCmsContent(new CmsContent(
