@@ -274,12 +274,17 @@ public class DeclarationServiceImpl implements DeclarationService {
 		List<DecAcade> decAcadeList = decAcadeDao.getListDecAcadeByDeclarationId(declarationId);
 		// 上套教材
 		List<DecLastPosition> decLastPositionList = decLastPositionDao.getListDecLastPositionByDeclarationId(declarationId);
-		// 精品课程
-		List<DecCourseConstruction> decCourseConstructionList = decCourseConstructionDao.getDecCourseConstructionByDeclarationId(declarationId);
-		// 国家级规划
+		// 国家级精品课程建设情况 //type 1=国家
+		List<DecCourseConstruction> decNationalCourseConstructionList = decCourseConstructionDao.decNationalCourseConstructionList(declarationId);
+		// 省部级精品课程建设情况//type 2=省部
+		List<DecCourseConstruction> decProvinceCourseConstructionList = decCourseConstructionDao.decProvinceCourseConstructionList(declarationId);
+		// 学校精品课程建设情况   //type 3=学校
+		List<DecCourseConstruction> decSchoolCourseConstructionList = decCourseConstructionDao.decSchoolCourseConstructionList(declarationId);
+		// 主编国家级规划
 		List<DecNationalPlan> decNationalPlanList = decNationalPlanDao.getListDecNationalPlanByDeclarationId(declarationId);
 		// 教材编写
 		List<DecTextbook> decTextbookList = decTextbookDao.getListDecTextbookByDeclarationId(declarationId);
+		
 		// 作家科研
 		List<DecResearch> decResearchList = decResearchDao.getListDecResearchByDeclarationId(declarationId);
 		applicationVO.setDecPositionList(decPositionList);
@@ -289,6 +294,9 @@ public class DeclarationServiceImpl implements DeclarationService {
 		applicationVO.setDecTeachExpList(decTeachExpList);
 		applicationVO.setDecAcadeList(decAcadeList);
 		applicationVO.setDecLastPositionList(decLastPositionList);
+		applicationVO.setDecNationalCourseConstructionList(decNationalCourseConstructionList);
+		applicationVO.setDecProvinceCourseConstructionList(decProvinceCourseConstructionList);;
+		applicationVO.setDecSchoolCourseConstructionList(decSchoolCourseConstructionList);
 		applicationVO.setDecNationalPlanList(decNationalPlanList);
 		applicationVO.setDecTextbookList(decTextbookList);
 		applicationVO.setDecResearchList(decResearchList);
