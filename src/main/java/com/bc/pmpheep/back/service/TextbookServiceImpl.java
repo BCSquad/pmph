@@ -3,10 +3,13 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanComparator;
+import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -289,6 +292,7 @@ public class TextbookServiceImpl implements TextbookService {
 		return bookListVO;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Textbook> addOrUpdateTextBookList(BookListVO bookListVO) throws CheckedServiceException {
 		if (ObjectUtil.isNull(bookListVO)) {
@@ -300,6 +304,9 @@ public class TextbookServiceImpl implements TextbookService {
 		List<Textbook> bookList =gson.fromJson(bookListVO.getTextbooks(), 
 				new TypeToken<ArrayList<Textbook>>(){
 		}.getType()) ;
+		ComparatorChain comparatorChain = new ComparatorChain();
+		comparatorChain.addComparator(new BeanComparator<Textbook>("sort"));
+		Collections.sort(bookList, comparatorChain);
 		int count = 1; //判断书序号的连续性计数器
 		for (Textbook textbook : bookList){
 		if (count != textbook.getSort()){
