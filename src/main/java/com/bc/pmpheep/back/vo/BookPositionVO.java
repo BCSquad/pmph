@@ -55,6 +55,27 @@ public class BookPositionVO implements Serializable{
 //		//是否有进行强制结束操作
 //		private boolean  settingEnd ;
 		
+		//是否已公布
+		private Boolean isPublished;
+		//是否锁定（通过）
+		private Boolean isLocked;
+		
+		public Boolean getIsPublished() {
+			return isPublished;
+		}
+
+		public void setIsPublished(Boolean isPublished) {
+			this.isPublished = isPublished;
+		}
+
+		public Boolean getIsLocked() {
+			return isLocked;
+		}
+
+		public void setIsLocked(Boolean isLocked) {
+			this.isLocked = isLocked;
+		}
+
 		public BookPositionVO() {
 			super();
 		}
@@ -176,18 +197,13 @@ public class BookPositionVO implements Serializable{
 
 		@Override
 		public String toString() {
-			return "{materialId:" + materialId + ", isAllTextbookPublished:"
-					+ isAllTextbookPublished + ", isForceEnd:" + isForceEnd
-					+ ", textBookId:" + textBookId + ", sort:" + sort
-					+ ", textbookName:" + textbookName + ", textbookRound:"
-					+ textbookRound + ", applyNum:" + applyNum
-					+ ", planningEditor:" + planningEditor
-					+ ", planningEditorName:" + planningEditorName
-					+ ", editorsAndAssociateEditors:"
-					+ editorsAndAssociateEditors
-					+ ", editorsAndAssociateEditorsNum:"
-					+ editorsAndAssociateEditorsNum + ", bianWeis:" + bianWeis
-					+ ", bianWeisNum:" + bianWeisNum + "}";
+			return "BookPositionVO [materialId=" + materialId + ", isAllTextbookPublished=" + isAllTextbookPublished
+					+ ", isForceEnd=" + isForceEnd + ", textBookId=" + textBookId + ", sort=" + sort + ", textbookName="
+					+ textbookName + ", textbookRound=" + textbookRound + ", applyNum=" + applyNum + ", planningEditor="
+					+ planningEditor + ", planningEditorName=" + planningEditorName + ", editorsAndAssociateEditors="
+					+ editorsAndAssociateEditors + ", editorsAndAssociateEditorsNum=" + editorsAndAssociateEditorsNum
+					+ ", bianWeis=" + bianWeis + ", bianWeisNum=" + bianWeisNum + ", isPublished=" + isPublished
+					+ ", isLocked=" + isLocked + "]";
 		}
 		
 		

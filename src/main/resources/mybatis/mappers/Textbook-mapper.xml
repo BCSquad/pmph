@@ -54,6 +54,9 @@
 			<if test="sort != null ">
 				sort,
 			</if>
+			<if test="topic !=null and topic !=''">
+			    topic,
+			</if>
 			<if test="founderId != null ">
 				founder_id,
 			</if>
@@ -116,6 +119,9 @@
 			</if>
 			<if test="sort != null ">
 				#{sort},
+			</if>
+			<if test="topic !=null and topic !=''">
+			    #{topic},
 			</if>
 			<if test="founderId != null">
 				#{founderId},
@@ -206,6 +212,9 @@
 			<if test=" sort != null">
 				sort = #{sort},
 			</if>
+			<if test="topic !=null and topic !=''">
+			    topic = #{topic},
+			</if>
 			<if test=" founderId != null">
 				founder_id = #{founderId},
 			</if>
@@ -244,7 +253,7 @@
 		textbook tb
 		where
 		tb.`material_id`=#{materialId}
-		order by tb.id desc;
+		order by tb.sort desc;
 	</select>
 
 	<!-- 职位遴选界面书籍总条数 -->
@@ -299,7 +308,10 @@
 	<!-- 职位遴选界面书籍分页列表 -->
 	<select id="listBookPosition" parameterType="PageParameter"
 		resultType="BookPositionVO">
-		select d.id materialId,
+		select
+		a.is_locked,
+		a.is_published, 
+		d.id materialId,
 		d.is_all_textbook_published
 		isAllTextbookPublished,
 		d.is_force_end isForceEnd,
@@ -394,4 +406,10 @@
 			#{item.id}
 		</foreach>
 	</update>
+	<!-- 获取设置选题号页面教材书籍列表 -->
+	<select id="listTopicNumber" parameterType="java.lang.Long"
+	    resultType="Textbook">
+	   SELECT * FROM textbook t 
+	   WHERE t.material_id = #{materialId} ;
+	</select>
 </mapper>

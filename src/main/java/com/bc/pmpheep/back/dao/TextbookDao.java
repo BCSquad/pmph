@@ -138,4 +138,14 @@ public interface TextbookDao {
      * @return
      */
 	Integer updateBookPublished(List<Textbook> textBooks);
+	
+	/**
+	 * 
+	 * Description:设置选题号页面获取书籍列表
+	 * @author:Administrator
+	 * @date:2017年11月27日上午9:48:57
+	 * @param 
+	 * @return List<Textbook>
+	 */
+	List<Textbook> listTopicNumber(Long materialId);
 }

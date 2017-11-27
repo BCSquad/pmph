@@ -164,6 +164,28 @@
 			and c.id = #{textbookId};
 	</select>
 	
+	<!-- 根据书籍id获取入选的职位职位(主编、副主编、编委、数字编辑) -->
+	<select id="listChosenDecPositionsByTextbookId" parameterType="java.lang.Long" resultType="DecPosition">
+		select 
+			DISTINCT a.* 
+		from 
+			dec_position a 
+		left join 
+			declaration b 
+		on 
+			b.id =a.declaration_id 
+		LEFT JOIN 
+			textbook c 
+		on 
+			c.id=a.textbook_id 
+		where 
+		    (a.chosen_position in (1,2,3) or a.is_digital_editor =1 )
+		    and b.id is not null  
+			and b.is_staging =false 
+			and b.online_progress != 2 
+			and c.id = #{textbookId};
+	</select>
+	
 	<!-- 根据书籍id查询申报id -->
 	<select id="listDecPositionsByTextbookIds" resultType="java.lang.Long">
 		SELECT 
