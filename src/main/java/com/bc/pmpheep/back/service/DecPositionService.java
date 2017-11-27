@@ -113,6 +113,6 @@ public interface DecPositionService {
      * @return
      * @throws IOException 
      */
-    DecPosition saveBooks(Long declarationId, Long textbookId, Integer presetPosition, 
-    		String syllabusName, MultipartFile file) throws IOException;
+    String saveBooks(Long[] ids, Long declarationId, Long[] textbookIds, Integer[] presetPositions, 
+    		MultipartFile[] files) throws IOException;
 }
