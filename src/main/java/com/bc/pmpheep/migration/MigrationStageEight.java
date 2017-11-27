@@ -29,6 +29,7 @@ import com.bc.pmpheep.utils.ExcelHelper;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -58,7 +59,7 @@ public class MigrationStageEight {
     ExcelHelper excelHelper;
 
     public void start() {
-    	Date begin = new Date();
+        Date begin = new Date();
         group();
         groupMember();
         groupMessage();
@@ -75,6 +76,7 @@ public class MigrationStageEight {
         String groupImg = "DEFAULT";
         String sql = "SELECT sysflag FROM sys_user WHERE userid = ?";
         List<Map<String, Object>> excel = new LinkedList<>();
+        List<String> groupNames = new ArrayList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             /* 根据MySQL字段类型进行类型转换 */
@@ -86,6 +88,12 @@ public class MigrationStageEight {
             String bookid = (String) map.get("bookid");
             /* 开始新增新表对象，并设置属性值 */
             PmphGroup pmphGroup = new PmphGroup();
+            /* 检查重名 */
+            int suffix = 1;
+            while (groupNames.contains(groupTitle)) {
+                groupTitle = groupTitle + suffix;
+                suffix++;
+            }
             pmphGroup.setGroupName(groupTitle);
             pmphGroup.setGroupImage(groupImg);//小组默认头像
             pmphGroup.setFounderId(0L);//留到PmphGroupMember迁移时更新
@@ -98,13 +106,8 @@ public class MigrationStageEight {
             } else {
                 pmphGroup.setBookId(0L);
             }
-            try {
-            	pmphGroup = groupService.addPmphGroup(pmphGroup);
-			} catch (Exception e) {
-				map.put(SQLParameters.EXCEL_EX_HEADER, "未知错误:"+e.getMessage());
-				excel.add(map);
-				continue;
-			}
+            pmphGroup = groupService.addPmphGroup(pmphGroup);
+            groupNames.add(pmphGroup.getGroupName());
             long pk = pmphGroup.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "groupID", groupID);//更新旧表中new_pk字段
             count++;
@@ -118,9 +121,9 @@ public class MigrationStageEight {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
-      //记录信息
-        Map<String,Object> msg= new HashMap<String,Object>();
-        msg.put("result",""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        //记录信息
+        Map<String, Object> msg = new HashMap<>();
+        msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
 
@@ -171,30 +174,31 @@ public class MigrationStageEight {
             String guid = map.get("GUID").toString();
             if (guid.equals(groupID)) {
                 member.setIsFounder(true);
-            }else{
+            } else {
                 member.setIsFounder(false);
             }
             String userName = map.get("userName").toString();
-            member.setDisplayName(userName);
+            if (StringUtil.notEmpty(userName)) {
+                member.setDisplayName(userName);
+            } else {
+                logger.warn("userid为{}的小组成员没有昵称，将以账号名代替", userID);
+                String query = "SELECT usercode FROM sys_user WHERE userid = ?";
+                userName = JdbcHelper.getJdbcTemplate().queryForObject(query, String.class, userID);
+                member.setDisplayName(userName);
+            }
             /* 旧表的isManager和新表的is_admin疑似刚好相反 */
             int isManager = (Integer) map.get("isManager");
             member.setIsAdmin(isManager == 0);
-            try{
-            	member = groupMemberService.addPmphGroupMember(member);
-            }catch (Exception e) {
-				map.put(SQLParameters.EXCEL_EX_HEADER, "未知错误:"+e.getMessage());
-				excel.add(map);
-				continue;
-			}
+            member = groupMemberService.addPmphGroupMember(member);
             long pk = member.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "GUID", guid);//更新旧表中new_pk字段
             count++;
             if (member.getIsFounder()) {
                 PmphGroup pmphGroup = groupService.getPmphGroupById(groupId);
-                if(null == pmphGroup){
-                	map.put(SQLParameters.EXCEL_EX_HEADER, "小组id为："+groupId+" 的小组没有找到");
-    				excel.add(map);
-                	continue;
+                if (null == pmphGroup) {
+                    map.put(SQLParameters.EXCEL_EX_HEADER, "小组id为：" + groupId + " 的小组没有找到");
+                    excel.add(map);
+                    continue;
                 }
                 pmphGroup.setFounderId(userId);
                 groupService.updatePmphGroup(pmphGroup);
@@ -209,9 +213,9 @@ public class MigrationStageEight {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
-      //记录信息
-        Map<String,Object> msg= new HashMap<String,Object>();
-        msg.put("result",""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        //记录信息
+        Map<String, Object> msg = new HashMap<>();
+        msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
 
@@ -265,9 +269,9 @@ public class MigrationStageEight {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
-      //记录信息
-        Map<String,Object> msg= new HashMap<String,Object>();
-        msg.put("result",""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        //记录信息
+        Map<String, Object> msg = new HashMap<>();
+        msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
 
@@ -330,8 +334,8 @@ public class MigrationStageEight {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
                 excel.add(map);
                 continue;
-            }catch (Exception ex) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "位置错误信息："+ ex.getMessage());
+            } catch (Exception ex) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, "位置错误信息：" + ex.getMessage());
                 excel.add(map);
                 continue;
             }
@@ -347,9 +351,9 @@ public class MigrationStageEight {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
-      //记录信息
-        Map<String,Object> msg= new HashMap<String,Object>();
-        msg.put("result",""+tableName+"  表迁移完成"+count+"/"+ maps.size());
+        //记录信息
+        Map<String, Object> msg = new HashMap<>();
+        msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
 }

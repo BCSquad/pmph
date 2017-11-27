@@ -2,14 +2,11 @@ package com.bc.pmpheep.migration;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -21,7 +18,6 @@ import com.bc.pmpheep.back.po.MessageAttachment;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.service.MessageAttachmentService;
 import com.bc.pmpheep.back.service.UserMessageService;
-import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
@@ -29,7 +25,6 @@ import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.general.service.MessageService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.utils.ExcelHelper;
 
 /**
@@ -58,7 +53,7 @@ public class MigrationStageSeven {
     public void start() {
         Date begin = new Date();
         userMessage_messageAttachment();
-        logger.info("迁移第十步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
+        logger.info("迁移第七步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
     public void userMessage_messageAttachment() {//case WHEN e.sysflag=0 then 1 when e.sysflag=1 and e.usertype=2 then 3 else 2 end
