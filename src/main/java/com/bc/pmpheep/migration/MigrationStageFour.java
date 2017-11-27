@@ -41,6 +41,7 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
+import java.util.ArrayList;
 
 /**
  * @author Mryang
@@ -246,21 +247,24 @@ public class MigrationStageFour {
             }
             Long DepartmentId = (Long) oldMaterial.get("DepartmentId");
             if (ObjectUtil.isNull(DepartmentId)) {
-                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建部门为空。"));
-                excel.add(oldMaterial);
-                continue;
+//                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建部门为空。"));
+//                excel.add(oldMaterial);
+//                continue;
+                DepartmentId = 0L;
             }
             Long director = (Long) oldMaterial.get("director");
             if (ObjectUtil.isNull(director)) {
-                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("主任为空。"));
-                excel.add(oldMaterial);
-                continue;
+//                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("主任为空。"));
+//                excel.add(oldMaterial);
+//                continue;
+                director = 0L;
             }
             Long founder_id = (Long) oldMaterial.get("founder_id");
             if (ObjectUtil.isNull(founder_id)) {
-                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建人为空。"));
-                excel.add(oldMaterial);
-                continue;
+//                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建人为空。"));
+//                excel.add(oldMaterial);
+//                continue;
+                founder_id = 0L;
             }
             Integer round = (Integer) oldMaterial.get("round");
             if (ObjectUtil.isNull(round)) {
@@ -408,11 +412,17 @@ public class MigrationStageFour {
         List<Map<String, Object>> materialExtraList = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        List<Long> materids = new ArrayList<>();
         for (Map<String, Object> object : materialExtraList) {
             StringBuilder exception = new StringBuilder();
             Long materid = (Long) object.get("new_pk");
             if (ObjectUtil.isNull(materid)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空。"));
+                excel.add(object);
+                continue;
+            }
+            if (materids.contains(materid)) {
+                object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id重复。"));
                 excel.add(object);
                 continue;
             }
@@ -788,7 +798,6 @@ public class MigrationStageFour {
             materialProjectEditor.setEditorId(userid);
             materialProjectEditor = materialProjectEditorService.addMaterialProjectEditor(materialProjectEditor);
             count++;
-            
         }
         if (excel.size() > 0) {
             try {

@@ -2,7 +2,9 @@ package com.bc.pmpheep.back.util;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,15 +139,35 @@ public class JsonUtil<T> {
      * @param json
      * @return
      */
-    // public List<T> getArrayListObjectFromStr(Class<T> v, String json) {
-    // try {
-    // return objectMapper.readValue(json.getBytes(),
-    // objectMapper.getTypeFactory()
-    // .constructParametricType(ArrayList.class, v));
-    // } catch (IOException e) {
-    // LOGGER.error("字符串转化为ArrayList对象异常", e);
+    @SuppressWarnings("deprecation")
+    public List<T> getArrayListObjectFromStr(Class<T> v, String json) {
+        try {
+            return objectMapper.readValue(json.getBytes(),
+                                          objectMapper.getTypeFactory()
+                                                      .constructParametricType(ArrayList.class, v));
+        } catch (IOException e) {
+            LOGGER.error("字符串转化为ArrayList对象异常", e);
+        }
+        return null;
+    }
+
+    // public static void main(String[] args) throws Exception {
+    // JavaType javaType = getCollectionType(ArrayList.class, YourBean.class);
+    // List<YourBean> lst = (List<YourBean>) mapper.readValue(jsonString, javaType);
     // }
-    // return null;
+
+    /**
+     * 获取泛型的Collection Type
+     * 
+     * @param collectionClass 泛型的Collection
+     * @param elementClasses 元素类
+     * @return JavaType Java类型
+     * @since 1.0
+     */
+    // public static JavaType getCollectionType(Class<?> collectionClass, Class<?>...
+    // elementClasses) {
+    // return objectMapper.getTypeFactory().constructParametricType(collectionClass,
+    // elementClasses);
     // }
 
     /**

@@ -105,11 +105,13 @@ public class FileDownLoadController {
             file.writeTo(out);
             out.flush();
             out.close();
-            if (Const.CMS_TYPE.equals(type)) {
+            if (Const.CMS_TYPE.equals(type)) {// CMS附件
                 cmsExtraService.updateCmsExtraDownLoadCountsByAttachment(id);
             }
-            if (Const.MATERIAL_TYPE.equals(type)) {
+            if (Const.MATERIAL_NOTICE_TYPE.equals(type)) {// 教材通知
                 materialNoticeAttachmentService.updateMaterialNoticeAttachmentDownLoadCountsByAttachment(id);
+            }
+            if (Const.MATERIAL_NOTE_TYPE.equals(type)) {// 教材备注
                 materialNoteAttachmentService.updateMaterialNoteAttachmentDownLoadCountsByAttachment(id);
             }
         } catch (IOException ex) {

@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
-        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:util="http://www.springframework.org/schema/util"
 
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
@@ -15,7 +15,7 @@
    	 <mvc:annotation-driven/>
    	 <mvc:default-servlet-handler/>
    	
-   	<!-- 使用cglib进行动态代理 -->
+    <!-- 使用cglib进行动态代理 -->
     <aop:aspectj-autoproxy proxy-target-class="true" />
     
     <context:component-scan base-package="com.bc.pmpheep.back.controller;com.bc.pmpheep.general.controller" />
@@ -23,28 +23,28 @@
     <!-- 对静态资源文件的访问  restful-->     
     <mvc:resources mapping="/statics/**" location="/statics/" />
     
-   <!-- 访问拦截  -->  
+    <!-- 访问拦截  -->  
     <mvc:interceptors>  
-     	<!--AXIOS跨域请求访问拦截 -->
-     	<mvc:interceptor>
-			<mvc:mapping path="/**/**"/>
-			<bean class="com.bc.pmpheep.back.interceptor.ProcessInterceptor"></bean>
-		</mvc:interceptor>
+        <!--AXIOS跨域请求访问拦截 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**/**"/>
+            <bean class="com.bc.pmpheep.back.interceptor.ProcessInterceptor"></bean>
+        </mvc:interceptor>
        
-       <!-- 系统操作日志拦截 -->
-		<mvc:interceptor>
-			<!-- 只拦截方法 -->
-			<mvc:mapping path="/**/**"/>
-			<bean class="com.bc.pmpheep.back.interceptor.OperationLogInterceptor">
-			<!-- 不需要拦截的请求方法-->
-			<property name="excludeUrls">
-				<list>
-					<value>/sysOperation/new</value><!-- 登陆日志 -->
-					<value>/sysOperation/operations</value><!-- 操作日志 -->
-				</list>
-			</property>
-		</bean>	
-		</mvc:interceptor>
+        <!-- 系统操作日志拦截 -->
+        <mvc:interceptor>
+            <!-- 只拦截方法 -->
+            <mvc:mapping path="/**/**"/>
+            <bean class="com.bc.pmpheep.back.interceptor.OperationLogInterceptor">
+                <!-- 不需要拦截的请求方法-->
+                <property name="excludeUrls">
+                    <list>
+                        <value>/sysOperation/new</value><!-- 登陆日志 -->
+                        <value>/sysOperation/operations</value><!-- 操作日志 -->
+                    </list>
+                </property>
+            </bean>	
+        </mvc:interceptor>
     </mvc:interceptors> 
    
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
