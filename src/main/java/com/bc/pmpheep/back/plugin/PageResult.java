@@ -50,7 +50,9 @@ public class PageResult<T> {
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
 		this.start = (this.pageNumber - 1) * this.pageSize;
-		rows = new ArrayList<T>(this.pageSize);
+		if(null == rows || rows.size() == 0){
+			rows          = new ArrayList<T>(this.pageSize);
+		}
 	}
 
 	public void setTotal(Integer total) {

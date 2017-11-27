@@ -42,6 +42,8 @@ public class MaterialExtraVO implements Serializable {
     private String[] noteFiles;
     // 教材备注附件MongoDB对应ID
     private String[] noteAttachments;
+    // 完整内容
+    private String   content;
 
     /**
      * @return the id
@@ -167,6 +169,20 @@ public class MaterialExtraVO implements Serializable {
      */
     public void setNoteAttachments(String[] noteAttachments) {
         this.noteAttachments = noteAttachments;
+    }
+
+    /**
+     * @return the content
+     */
+    public String getContent() {
+        return content;
+    }
+
+    /**
+     * @param content the content to set
+     */
+    public void setContent(String content) {
+        this.content = content;
     }
 
 }

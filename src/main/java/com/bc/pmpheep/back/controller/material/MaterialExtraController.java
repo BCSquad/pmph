@@ -46,6 +46,16 @@ public class MaterialExtraController {
 
     private static final String BUSINESS_TYPE = "教材通知备注";
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：更新教材通知内容，备注信息
+     * 使用示范：
+     *
+     * @param materialExtraVO 
+     * @return
+     * </pre>
+     */
     @ResponseBody
     @LogDetail(businessType = BUSINESS_TYPE, logRemark = "更新教材通知内容，备注信息")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
@@ -116,7 +126,8 @@ public class MaterialExtraController {
     @ResponseBody
     @LogDetail(businessType = BUSINESS_TYPE, logRemark = "教材通知发布")
     @RequestMapping(value = "/published", method = RequestMethod.POST)
-    public ResponseBean published(HttpServletRequest request, Long materialId, List<Long> orgIds) {
+    public ResponseBean published(HttpServletRequest request,
+    @RequestParam("materialId") Long materialId, @RequestParam("orgIds") List<Long> orgIds) {
         String sessionId = CookiesUtil.getSessionId(request);
         try {
             return new ResponseBean(materialExtraService.noticePublished(materialId,

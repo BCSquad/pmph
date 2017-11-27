@@ -1,11 +1,20 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.TextbookDao;
@@ -18,6 +27,7 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.FileUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -215,6 +225,7 @@ public class TextbookServiceImpl implements TextbookService {
 			List<BookPositionVO> rows = textbookDao.listBookPosition(pageParameter);
 			pageResult.setRows(rows);
 		}
+		pageResult.setTotal(total);
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		return pageResult;
 
@@ -255,17 +266,26 @@ public class TextbookServiceImpl implements TextbookService {
 		List<Textbook> bookList = textbookDao.getTextbookByMaterialId(materialId);
 		Long materialType = material.getMaterialType();
 		BookListVO bookListVO = new BookListVO();
-		bookListVO.setMaterialId(material.getMenderId());
+		bookListVO.setMaterialId(material.getId());
 		bookListVO.setMaterialName(material.getMaterialName());
 		bookListVO.setMaterialRound(material.getMaterialRound());
 		String path = materialTypeService.getMaterialTypeById(materialType).getPath();
-		String[] pathType = path.split("-");
-		for (int i = 0; i < pathType.length; i++) {
-			String type = materialTypeService.getMaterialTypeById(Long.valueOf(pathType[i])).getTypeName();
-			pathType[i].replace(pathType[i], type);
+		if (StringUtil.isEmpty(path)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,
+					CheckedExceptionResult.NULL_PARAM, "分类路径为空");
 		}
+		if (path.indexOf("0-") != -1){
+			path = path.replace("0-", "");
+		}
+		String[] pathType = path.split("-");
+		for (int i = 0; i < pathType.length ; i++){
+			String type = materialTypeService.getMaterialTypeById(Long.valueOf(pathType[i]))
+					.getTypeName();
+			pathType[i] = pathType[i].replace(pathType[i], type);
+		}
+		Gson gson = new Gson();
 		bookListVO.setMaterialType(pathType);
-		bookListVO.setTextbooks(bookList);
+		bookListVO.setTextbooks(gson.toJson(bookList));
 		return bookListVO;
 	}
 
@@ -275,11 +295,14 @@ public class TextbookServiceImpl implements TextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 					"参数不能为空");
 		}
-		List<Map<String, Object>> list = new ArrayList<>();
-		List<Textbook> bookList = bookListVO.getTextbooks();
-		int count = 1; // 判断书序号的连续性计数器
-		for (Textbook textbook : bookList) {
-			if (count != textbook.getSort()) {
+		List<Map<String,Object>> list = new ArrayList<>();
+		Gson gson = new Gson();
+		List<Textbook> bookList =gson.fromJson(bookListVO.getTextbooks(), 
+				new TypeToken<ArrayList<Textbook>>(){	
+		}.getType()) ;
+		int count = 1; //判断书序号的连续性计数器
+		for (Textbook textbook : bookList){
+		if (count != textbook.getSort()){
 				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 						CheckedExceptionResult.ILLEGAL_PARAM, "书籍序号必须连续");
 			}
@@ -297,8 +320,54 @@ public class TextbookServiceImpl implements TextbookService {
 			list.add(map);
 			count++;
 		}
-		return null;
+		return bookList;
 	}
+	
+	@SuppressWarnings("resource")
+	@Override
+	public List<Textbook> importExcel(MultipartFile file) throws CheckedServiceException,IOException{
+		String fileType = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+		if (!(".xls").equals(fileType)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "读取的不是xls文件");
+		}
+		Workbook workbook = new HSSFWorkbook(file.getInputStream());
+		List<Textbook> bookList = new ArrayList<>();
+		for (int numSheet = 0 ; numSheet < workbook.getNumberOfSheets();numSheet ++){
+			Sheet sheet = workbook.getSheetAt(numSheet);
+			if (null == sheet){
+				continue;
+			}
+			Textbook textbook = new Textbook();
+			for (int rowNum = 1 ; rowNum <= sheet.getLastRowNum();rowNum ++){
+				Row row = sheet.getRow(rowNum);
+				if (null == row){
+					break;
+				}
+				Cell first = row.getCell(0);
+				Cell second = row.getCell(1);
+				Cell third = row.getCell(2);
+				if (ObjectUtil.isNull(first) || ObjectUtil.isNull(second) || ObjectUtil.isNull(third)){
+					break;
+				}
+				if (second.getCellType() != Cell.CELL_TYPE_STRING){
+					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+							CheckedExceptionResult.ILLEGAL_PARAM, "文件内容格式错误");
+				} else {
+					Integer sort = (int) row.getCell(0).getNumericCellValue();
+					String bookName = row.getCell(1).getStringCellValue();
+					Integer round = (int) row.getCell(2).getNumericCellValue();
+					textbook.setSort(sort);
+					textbook.setTextbookName(bookName);
+					textbook.setTextbookRound(round);
+					bookList.add(textbook);
+				}
+			}
+		}
+		FileUtil.delFile(Const.FILE_PATH_FILE + file.getOriginalFilename());;
+		return bookList;
+	}
+	
 	@Override
 	public Integer updateTextbookAndMaterial(Long[] ids) throws CheckedServiceException {
 		List<Textbook> textbooks=textbookDao.getTextbooks(ids);
@@ -331,5 +400,36 @@ public class TextbookServiceImpl implements TextbookService {
 	public List<Textbook> getTextbookByMaterialIdAndUserId(Long materialId, Long userId)
 			throws CheckedServiceException {
 		return textbookDao.getTextbookByMaterialIdAndUserId(materialId, userId);
+	}
+
+	@Override
+	public List<Textbook> listTopicNumber(Long materialId)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(materialId)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
+		}
+		List<Textbook> textbooksList = textbookDao.listTopicNumber(materialId);
+		return textbooksList;
+	}
+
+	@Override
+	public List<Textbook> addTopicNumber(String topicTextbooks) throws CheckedServiceException {
+		Gson gson = new Gson();
+		Type type = new TypeToken<ArrayList<Textbook>>(){
+		}.getType();
+		List<Textbook> textbooks = gson.fromJson(topicTextbooks, type);
+		if (CollectionUtil.isEmpty(textbooks)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.NULL_PARAM, "参数不能为空");
+		}
+		for (Textbook textbook : textbooks){
+			if (!textbook.getIsPublished()){
+				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+						CheckedExceptionResult.ILLEGAL_PARAM, "未公布教材书籍不能设置选题号");
+			}
+			textbookDao.updateTextbook(textbook);
+		}
+		return textbooks;
 	}
 }

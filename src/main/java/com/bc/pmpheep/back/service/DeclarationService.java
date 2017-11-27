@@ -3,6 +3,7 @@
  */
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -87,4 +88,36 @@ public interface DeclarationService {
 				Integer onlineProgress,
 				Integer offlineProgress
 			) throws CheckedServiceException ;
+	
+	/**
+	 * 确认收到纸质表
+	 * @author tyc
+	 * @createDate 2017年11月24日 下午15:27:36
+	 * @param declaration
+	 * @return 
+	 * @throws CheckedServiceException
+	 * @throws IOException
+	 */
+	Declaration confirmPaperList(Long id, Integer offlineProgress, 
+			Long materialId) throws CheckedServiceException, IOException;
+	
+	/**
+	 * 审核进度
+	 * @author tyc
+	 * @createDate 2017年11月24日 下午16:37:36
+	 * @param declaration
+	 * @return 
+	 * @throws CheckedServiceException
+	 * @throws IOException
+	 */
+	Declaration onlineProgress(Long id, Integer onlineProgress, 
+			Long materialId) throws CheckedServiceException, IOException;
+	
+	/**
+	 * 显示专家信息
+	 * @author tyc
+	 * @createDate 2017年11月25日 上午9:13:09
+	 * @param decPosition
+	 */
+	List<?> exportExcel(Long materialId, Long declarationId);
 }

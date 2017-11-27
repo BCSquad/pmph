@@ -1,16 +1,23 @@
 package com.bc.pmpheep.back.controller;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.Declaration;
+import com.bc.pmpheep.back.service.DecPositionService;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.vo.BookUserCommentVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  *@author MrYang 
@@ -26,6 +33,8 @@ public class DeclarationController {
 	
 	@Autowired
 	private DeclarationService declarationService;
+	@Autowired
+	private DecPositionService decPositionService;
 	
 	/**
 	 * 符合条件的申报表审核分页数据
@@ -75,4 +84,73 @@ public class DeclarationController {
 				onlineProgress, 
 				offlineProgress));
 	}
+	
+	/**
+	 * 确认收到纸质表
+	 * @author tyc
+	 * @createDate 2017年11月24日 下午15:27:36
+	 * @param id
+	 * @param offlineProgress
+	 * @param materialId
+	 * @throws CheckedServiceException
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "确认收到纸质表")
+	@RequestMapping(value = "/list/declaration/confirmPaperList", method = RequestMethod.GET)
+	public ResponseBean confirmPaperList(@RequestParam("id") Long id, 
+			@RequestParam("offlineProgress") Integer offlineProgress, 
+			@RequestParam("materialId") Long materialId) throws CheckedServiceException, IOException {
+		return new ResponseBean(declarationService.confirmPaperList(id, offlineProgress, materialId));
+	}
+	
+	/**
+	 * 审核进度
+	 * @author tyc
+	 * @createDate 2017年11月24日 下午16:37:36
+	 * @param id
+	 * @param onlineProgress
+	 * @param materialId
+	 * @throws CheckedServiceException
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "审核进度")
+	@RequestMapping(value = "/list/declaration/onlineProgress", method = RequestMethod.GET)
+	public ResponseBean onlineProgress(@RequestParam("id") Long id, 
+			@RequestParam("onlineProgress") Integer onlineProgress, 
+			@RequestParam("materialId") Long materialId) throws CheckedServiceException, IOException {
+		return new ResponseBean(declarationService.onlineProgress(id, onlineProgress, materialId));
+	}
+	
+	/**
+	 * 保存图书
+	 * @author tyc
+	 * @createDate 2017年11月25日 晚上21:15:30
+	 * @param declarationId		申报表id
+     * @param textbookId		书籍id
+     * @param presetPosition	申报职务
+	 * @throws CheckedServiceException
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存图书")
+	@RequestMapping(value = "/list/declaration/saveBooks", method = RequestMethod.GET)
+	public ResponseBean saveBooks(@RequestParam("declarationId") Long declarationId, 
+			@RequestParam("textbookId") Long textbookId, 
+			@RequestParam("presetPosition") Integer presetPosition, 
+			@RequestParam("syllabusName") String syllabusName,
+			@RequestParam("file") MultipartFile file) throws IOException{
+		return new ResponseBean(decPositionService.saveBooks(declarationId, textbookId, presetPosition, 
+				syllabusName, file));
+	}
+	
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "显示专家信息")
+	@RequestMapping(value = "/list/declaration/exportExcel", method = RequestMethod.GET)
+	public ResponseBean exportExcel(@RequestParam("materialId") Long materialId, 
+			@RequestParam("declarationId") Long declarationId) throws IOException{
+		return new ResponseBean(declarationService.exportExcel(materialId, declarationId));
+	}
+
 }

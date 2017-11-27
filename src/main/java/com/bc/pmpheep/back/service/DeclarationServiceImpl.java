@@ -3,16 +3,41 @@
  */
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.bc.pmpheep.back.dao.DecAcadeDao;
+import com.bc.pmpheep.back.dao.DecCourseConstructionDao;
+import com.bc.pmpheep.back.dao.DecEduExpDao;
+import com.bc.pmpheep.back.dao.DecLastPositionDao;
+import com.bc.pmpheep.back.dao.DecNationalPlanDao;
+import com.bc.pmpheep.back.dao.DecPositionDao;
+import com.bc.pmpheep.back.dao.DecResearchDao;
+import com.bc.pmpheep.back.dao.DecTeachExpDao;
+import com.bc.pmpheep.back.dao.DecTextbookDao;
+import com.bc.pmpheep.back.dao.DecWorkExpDao;
 import com.bc.pmpheep.back.dao.DeclarationDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.DecAcade;
+import com.bc.pmpheep.back.po.DecCourseConstruction;
+import com.bc.pmpheep.back.po.DecEduExp;
+import com.bc.pmpheep.back.po.DecLastPosition;
+import com.bc.pmpheep.back.po.DecNationalPlan;
+import com.bc.pmpheep.back.po.DecPosition;
+import com.bc.pmpheep.back.po.DecResearch;
+import com.bc.pmpheep.back.po.DecTeachExp;
+import com.bc.pmpheep.back.po.DecTextbook;
+import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Declaration;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
@@ -35,6 +60,28 @@ public class DeclarationServiceImpl implements DeclarationService {
 
 	@Autowired
 	private DeclarationDao declarationDao;
+	@Autowired
+	private SystemMessageService systemMessageService;
+	@Autowired
+	private DecPositionDao decPositionDao;
+	@Autowired
+	private DecEduExpDao decEduExpDao;
+	@Autowired
+	private DecWorkExpDao decWorkExpDao;
+	@Autowired
+	private DecTeachExpDao decTeachExpDao;
+	@Autowired
+	private DecAcadeDao decAcadeDao;
+	@Autowired
+	private DecLastPositionDao decLastPositionDao;
+	@Autowired
+	private DecCourseConstructionDao decCourseConstructionDao;
+	@Autowired
+	private DecNationalPlanDao decNationalPlanDao;
+	@Autowired
+	private DecTextbookDao decTextbookDao;
+	@Autowired
+	private DecResearchDao decResearchDao;
 
 	@Override
 	public Declaration addDeclaration(Declaration declaration)
@@ -162,5 +209,91 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		pageResult.setTotal(total);
     	return pageResult;
+	}
+	
+	@Override
+	public Declaration confirmPaperList(Long id, Integer offlineProgress, Long materialId) 
+			throws CheckedServiceException, IOException {
+		if (ObjectUtil.isNull(id)) {
+			 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                     CheckedExceptionResult.ILLEGAL_PARAM, "主键不能为空!");
+		}
+		if (ObjectUtil.isNull(offlineProgress)) {
+			 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                    CheckedExceptionResult.ILLEGAL_PARAM, "确认收到纸质表不能为空!");
+		}
+		// 获取当前作家用户申报信息
+		Declaration declarationCon = declarationDao.getDeclarationById(id);
+		declarationCon.setMaterialId(materialId);
+		declarationCon.setOfflineProgress(offlineProgress);
+		declarationDao.updateDeclaration(declarationCon);
+		systemMessageService.sendWhenReceiptAudit(declarationCon.getId(), true); // 发送系统消息
+		return declarationCon;
+	}
+
+	@Override
+	public Declaration onlineProgress(Long id, Integer onlineProgress, Long materialId) 
+			throws CheckedServiceException, IOException {
+		if (ObjectUtil.isNull(id)) {
+			 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                    CheckedExceptionResult.ILLEGAL_PARAM, "主键不能为空!");
+		}
+		if (ObjectUtil.isNull(onlineProgress)) {
+			 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                   CheckedExceptionResult.ILLEGAL_PARAM, "审核进度不能为空!");
+		}
+		// 获取当前作家用户申报信息
+		Declaration declarationCon = declarationDao.getDeclarationById(id);
+		declarationCon.setOnlineProgress(onlineProgress);
+		Integer onlineOne = 2;
+		Integer onlineTwo = 3;
+		if (onlineOne.equals(onlineProgress)){ // 获取审核进度是2则被退回
+			declarationDao.updateDeclaration(declarationCon);
+			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false); // 发送系统消息
+		} else if (onlineTwo.equals(onlineProgress)) { // 获取审核进度是3则通过
+			declarationDao.updateDeclaration(declarationCon);
+			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true); // 发送系统消息
+		}
+		return declarationCon;
+	}
+
+	@Override
+	public List<?> exportExcel(Long materialId, Long declarationId) {
+		List<DecPosition> decPositionList = decPositionDao.listDecPositions(declarationId);
+		// 专家信息
+		List<Declaration> declarationList = declarationDao.getDeclarationByMaterialId(materialId);
+		// 学习经历
+		List<DecEduExp> decEduExpList = decEduExpDao.getListDecEduExpByDeclarationId(declarationId);
+		// 工作经历
+		List<DecWorkExp> decWorkExpList = decWorkExpDao.getListDecWorkExpByDeclarationId(declarationId);
+		// 教学经历
+		List<DecTeachExp> decTeachExpList = decTeachExpDao.getListDecTeachExpByDeclarationId(declarationId);
+		// 兼职学术
+		List<DecAcade> decAcadeList = decAcadeDao.getListDecAcadeByDeclarationId(declarationId);
+		// 上套教材
+		List<DecLastPosition> decLastPositionList = decLastPositionDao.getListDecLastPositionByDeclarationId(declarationId);
+		// 精品课程
+		List<DecCourseConstruction> decCourseConstructionList = decCourseConstructionDao.getDecCourseConstructionByDeclarationId(declarationId);
+		// 国家级规划
+		List<DecNationalPlan> decNationalPlanList = decNationalPlanDao.getListDecNationalPlanByDeclarationId(declarationId);
+		// 教材编写
+		List<DecTextbook> decTextbookList = decTextbookDao.getListDecTextbookByDeclarationId(declarationId);
+		// 作家科研
+		List<DecResearch> decResearchList = decResearchDao.getListDecResearchByDeclarationId(declarationId);
+		// 把多个list添加进一个list集合
+		List listAll = new ArrayList<>();
+		listAll.addAll(decPositionList);
+		listAll.addAll(declarationList);
+		listAll.addAll(decEduExpList);
+		listAll.addAll(decWorkExpList);
+		listAll.addAll(decTeachExpList);
+		listAll.addAll(decAcadeList);
+		listAll.addAll(decLastPositionList);
+		listAll.addAll(decCourseConstructionList);
+		listAll.addAll(decNationalPlanList);
+		listAll.addAll(decTextbookList);
+		listAll.addAll(decResearchList);
+		listAll = new ArrayList<>(listAll);
+		return listAll;
 	}
 }

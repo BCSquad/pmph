@@ -3,15 +3,19 @@
  */
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.dao.DecPositionDao;
 import com.bc.pmpheep.back.po.DecPosition;
+import com.bc.pmpheep.general.bean.FileType;
+import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -32,6 +36,8 @@ public class DecPositionServiceImpl implements DecPositionService {
 
     @Autowired
     private DecPositionDao decPositionDao;
+    @Autowired
+    private FileService fileService;
 
     @Override
     public DecPosition addDecPosition(DecPosition decPosition) throws CheckedServiceException {
@@ -118,6 +124,16 @@ public class DecPositionServiceImpl implements DecPositionService {
     }
 
     @Override
+    public List<DecPosition> listChosenDecPositionsByTextbookId(Long textbookId)
+    throws CheckedServiceException {
+        if (null == textbookId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
+        }
+        return decPositionDao.listChosenDecPositionsByTextbookId(textbookId);
+    }
+    
+    @Override
     public List<Long> listDecPositionsByTextbookIds(String[] textbookIds)
     throws CheckedServiceException {
         if (0 == textbookIds.length) {
@@ -126,4 +142,23 @@ public class DecPositionServiceImpl implements DecPositionService {
         }
         return decPositionDao.listDecPositionsByTextbookIds(textbookIds);
     }
+
+	@Override
+	public DecPosition saveBooks(Long declarationId, Long textbookId,
+			Integer presetPosition, String syllabusName, MultipartFile file) throws IOException {
+		DecPosition decPosition = new DecPosition();
+		decPosition.setDeclarationId(declarationId);
+		decPosition.setTextbookId(textbookId);
+		decPosition.setPresetPosition(presetPosition);
+		decPosition.setSyllabusId("---------");
+		decPosition.setSyllabusName(syllabusName);
+		decPositionDao.addDecPosition(decPosition);
+		String mongoId = null;
+		mongoId = fileService.save(file, FileType.SYLLABUS, decPosition.getId());
+		if (null != mongoId) {
+			decPosition.setSyllabusId(mongoId);
+			decPositionDao.updateDecPosition(decPosition);
+		}
+		return decPosition;
+	}
 }
