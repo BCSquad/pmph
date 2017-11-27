@@ -27,7 +27,7 @@ public class BookListVO implements Serializable{
 	//教材分类
 	private String[] materialType;
 	//可见性区别
-	private boolean isPublic;
+	private Boolean isPublic;
     //教材书籍
 	private String textbooks;
 	
@@ -67,11 +67,11 @@ public class BookListVO implements Serializable{
 		this.materialType = materialType;
 	}
 
-	public boolean isPublic() {
+	public Boolean getIsPublic() {
 		return isPublic;
 	}
 
-	public void setPublic(boolean isPublic) {
+	public void setIsPublic(Boolean isPublic) {
 		this.isPublic = isPublic;
 	}
 
@@ -82,4 +82,6 @@ public class BookListVO implements Serializable{
 	public void setTextbooks(String textbooks) {
 		this.textbooks = textbooks;
 	}
+
+	
 }
