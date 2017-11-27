@@ -62,4 +62,23 @@ public interface DecCourseConstructionDao {
 	 * @Return 表的总记录数
 	 */
 	Long getDecCourseConstruction(); 
+	
+	/**
+	 * Description:根据申报表id查询国家级精品课程建设情况 //type 1=国家
+	 * @Param declarationId
+	 * @Return 精品课程建设情况信息
+	 */
+	List<DecCourseConstruction> decNationalCourseConstructionList(Long declarationId);
+	/**
+	 * Description:根据申报表id查询省部级精品课程建设情况//type 2=省部
+	 * @Param declarationId
+	 * @Return 精品课程建设情况信息
+	 */
+	List<DecCourseConstruction> decProvinceCourseConstructionList(Long declarationId);
+	/**
+	 * Description:根据申报表id查询学校精品课程建设情况   //type 3=学校
+	 * @Param declarationId
+	 * @Return 精品课程建设情况信息
+	 */
+	List<DecCourseConstruction> decSchoolCourseConstructionList(Long declarationId);
 }

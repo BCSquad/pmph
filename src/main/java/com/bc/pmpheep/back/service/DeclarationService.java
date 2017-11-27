@@ -120,6 +120,6 @@ public interface DeclarationService {
 	 * @createDate 2017年11月25日 上午9:13:09
 	 * @param decPosition
 	 */
-	ApplicationVO exportExcel(Long materialId, Long declarationId);
+	ApplicationVO exportExcel(Long declarationId);
 
 }

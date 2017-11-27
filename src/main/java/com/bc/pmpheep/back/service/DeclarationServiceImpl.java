@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.dao.DecAcadeDao;
 import com.bc.pmpheep.back.dao.DecCourseConstructionDao;
 import com.bc.pmpheep.back.dao.DecEduExpDao;
+import com.bc.pmpheep.back.dao.DecExtensionDao;
 import com.bc.pmpheep.back.dao.DecLastPositionDao;
 import com.bc.pmpheep.back.dao.DecNationalPlanDao;
 import com.bc.pmpheep.back.dao.DecPositionDao;
@@ -28,6 +29,7 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecAcade;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
+import com.bc.pmpheep.back.po.DecExtension;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecNationalPlan;
 import com.bc.pmpheep.back.po.DecPosition;
@@ -83,6 +85,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	private DecTextbookDao decTextbookDao;
 	@Autowired
 	private DecResearchDao decResearchDao;
+	@Autowired
+	private DecExtensionDao decExtensionDao;
 
 	@Override
 	public Declaration addDeclaration(Declaration declaration)
@@ -259,11 +263,11 @@ public class DeclarationServiceImpl implements DeclarationService {
 	}
 
 	@Override
-	public ApplicationVO exportExcel(Long materialId, Long declarationId) {
+	public ApplicationVO exportExcel(Long declarationId) {
 		ApplicationVO applicationVO = new ApplicationVO();
 		List<DecPosition> decPositionList = decPositionDao.listDecPositions(declarationId);
 		// 专家信息
-		Declaration declaration = (Declaration) declarationDao.getDeclarationByMaterialId(materialId);
+		Declaration declaration = declarationDao.getDeclarationById(declarationId);
 		// 学习经历
 		List<DecEduExp> decEduExpList = decEduExpDao.getListDecEduExpByDeclarationId(declarationId);
 		// 工作经历
@@ -274,14 +278,23 @@ public class DeclarationServiceImpl implements DeclarationService {
 		List<DecAcade> decAcadeList = decAcadeDao.getListDecAcadeByDeclarationId(declarationId);
 		// 上套教材
 		List<DecLastPosition> decLastPositionList = decLastPositionDao.getListDecLastPositionByDeclarationId(declarationId);
-		// 精品课程
-		List<DecCourseConstruction> decCourseConstructionList = decCourseConstructionDao.getDecCourseConstructionByDeclarationId(declarationId);
-		// 国家级规划
+		// 国家级精品课程建设情况 //type 1=国家
+		List<DecCourseConstruction> decNationalCourseConstructionList = decCourseConstructionDao.decNationalCourseConstructionList(declarationId);
+		// 省部级精品课程建设情况//type 2=省部
+		List<DecCourseConstruction> decProvinceCourseConstructionList = decCourseConstructionDao.decProvinceCourseConstructionList(declarationId);
+		// 学校精品课程建设情况   //type 3=学校
+		List<DecCourseConstruction> decSchoolCourseConstructionList = decCourseConstructionDao.decSchoolCourseConstructionList(declarationId);
+		// 主编国家级规划
 		List<DecNationalPlan> decNationalPlanList = decNationalPlanDao.getListDecNationalPlanByDeclarationId(declarationId);
 		// 教材编写
 		List<DecTextbook> decTextbookList = decTextbookDao.getListDecTextbookByDeclarationId(declarationId);
+		// 其他教材编写情况
+		
 		// 作家科研
 		List<DecResearch> decResearchList = decResearchDao.getListDecResearchByDeclarationId(declarationId);
+		// 作家扩展项
+		List<DecExtension> decExtensionList = decExtensionDao.getListDecExtensionsByDeclarationId(declarationId);
+		// 把查询出来的信息添加进applicationVO
 		applicationVO.setDecPositionList(decPositionList);
 		applicationVO.setDeclaration(declaration);
 		applicationVO.setDecEduExpList(decEduExpList);
@@ -289,9 +302,13 @@ public class DeclarationServiceImpl implements DeclarationService {
 		applicationVO.setDecTeachExpList(decTeachExpList);
 		applicationVO.setDecAcadeList(decAcadeList);
 		applicationVO.setDecLastPositionList(decLastPositionList);
+		applicationVO.setDecNationalCourseConstructionList(decNationalCourseConstructionList);
+		applicationVO.setDecProvinceCourseConstructionList(decProvinceCourseConstructionList);;
+		applicationVO.setDecSchoolCourseConstructionList(decSchoolCourseConstructionList);
 		applicationVO.setDecNationalPlanList(decNationalPlanList);
 		applicationVO.setDecTextbookList(decTextbookList);
 		applicationVO.setDecResearchList(decResearchList);
+		applicationVO.setDecExtensionList(decExtensionList);
 		return applicationVO;
 	}
 }
