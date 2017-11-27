@@ -30,6 +30,8 @@ public class CheckedExceptionBusiness {
     public final static String MATERIAL_PROJECTER         = "教材项目编辑";
 
     public final static String TEXTBOOK                   = "书籍";
+    
+    public final static String TEXTBOOK_LOG               = "书籍日志";
 
     public final static String MATERIAL                   = "教材申报";
 
