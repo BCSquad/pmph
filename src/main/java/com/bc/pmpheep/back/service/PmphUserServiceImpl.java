@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.dao.PmphDepartmentDao;
 import com.bc.pmpheep.back.dao.PmphPermissionDao;
@@ -29,6 +31,8 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.ValidatUtil;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
+import com.bc.pmpheep.general.bean.ImageType;
+import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -52,6 +56,26 @@ public class PmphUserServiceImpl implements PmphUserService {
 	PmphPermissionDao permissionDao;
 	@Autowired
 	PmphUserRoleDao pmphUserRoleDao;
+	@Autowired
+	private FileService fileService;
+	
+	@Override
+	public boolean updatePersonalData(PmphUser pmphUser,MultipartFile file) throws IOException{
+		Long id = pmphUser.getId();
+		if (null == id ) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT, CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
+		}
+		//头像文件不为空
+		if(null != file){
+			if(StringUtil.notEmpty(pmphUser.getAvatar())){
+				fileService.remove(pmphUser.getAvatar());
+			}
+			String newAvatar = fileService.save(file, ImageType.PMPH_USER_AVATAR, id);
+			pmphUser.setAvatar(newAvatar);
+		}
+		pmphUserDao.update(pmphUser);
+		return true;
+	}
 
 	/**
 	 * 返回新插入用户数据的主键
