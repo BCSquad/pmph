@@ -1,7 +1,10 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
 import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Material;
@@ -44,6 +47,7 @@ public interface MaterialService {
      * @param isUpdate false新增,true更新
      * @return material 主键
      * @throws CheckedServiceException
+     * @throws IOException 
      */
     Long addOrUpdateMaterial(String sessionId, 
     		String   materialContacts,
@@ -55,7 +59,7 @@ public interface MaterialService {
 		    String materialNoticeAttachments,
 		    MultipartFile[]   noteFiles,
 		    String materialNoteAttachments,
-		    boolean isUpdate) throws CheckedServiceException;
+		    boolean isUpdate) throws CheckedServiceException, IOException;
    
 
 
