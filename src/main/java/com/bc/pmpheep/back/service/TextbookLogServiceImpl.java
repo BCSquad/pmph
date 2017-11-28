@@ -36,6 +36,44 @@ public class TextbookLogServiceImpl implements TextbookLogService {
 	
 	@Autowired
 	private  DeclarationService declarationService;
+	
+	@Override
+	public TextbookLog addTextbookLogWhenPub(Long textbookId,Long updaterId,int userType) throws CheckedServiceException {
+		if(null == textbookId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK_LOG, CheckedExceptionResult.NULL_PARAM,
+					"书籍为空！");
+		}
+		if(null == updaterId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK_LOG, CheckedExceptionResult.NULL_PARAM,
+					"修改者为空！");
+		}
+		TextbookLog textbookLog = new TextbookLog();
+		textbookLog.setDetail("发布了该教材最终结果");
+		textbookLog.setIsPmphUpdater(userType==1);
+		textbookLog.setTextbookId(textbookId);
+		textbookLog.setUpdaterId(updaterId);
+		textbookLogDao.addTextbookLog(textbookLog);
+		return textbookLog;
+	}
+	
+	@Override
+	public TextbookLog addTextbookLogWhenPass(Long textbookId,Long updaterId,int userType) throws CheckedServiceException {
+		if(null == textbookId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK_LOG, CheckedExceptionResult.NULL_PARAM,
+					"书籍为空！");
+		}
+		if(null == updaterId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK_LOG, CheckedExceptionResult.NULL_PARAM,
+					"修改者为空！");
+		}
+		TextbookLog textbookLog = new TextbookLog();
+		textbookLog.setDetail("确认了该教材名单");
+		textbookLog.setIsPmphUpdater(userType==1);
+		textbookLog.setTextbookId(textbookId);
+		textbookLog.setUpdaterId(updaterId);
+		textbookLogDao.addTextbookLog(textbookLog);
+		return textbookLog;
+	}
 
 	@Override
 	public TextbookLog addTextbookLog(TextbookLog textbookLog) throws CheckedServiceException {
