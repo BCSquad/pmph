@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import small.danfer.sso.SingleSignOnException;
-import small.danfer.sso.http.HttpSingleSignOnService;
 
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
@@ -58,17 +57,17 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @RequestMapping(value = "/pmph")
 @Controller
 public class PmphLoginController {
-    Logger                  logger  = LoggerFactory.getLogger(PmphLoginController.class);
+    Logger                logger = LoggerFactory.getLogger(PmphLoginController.class);
     @Autowired
-    PmphUserService         pmphUserService;
+    PmphUserService       pmphUserService;
     @Autowired
-    PmphPermissionService   pmphPermissionService;
+    PmphPermissionService pmphPermissionService;
     @Autowired
-    PmphRoleService         pmphRoleService;
+    PmphRoleService       pmphRoleService;
     @Autowired
-    CmsCategoryService      cmsCategoryService;
+    CmsCategoryService    cmsCategoryService;
 
-    HttpSingleSignOnService service = new HttpSingleSignOnService();
+    // HttpSingleSignOnService service = new HttpSingleSignOnService();
 
     /**
      * 
@@ -87,7 +86,7 @@ public class PmphLoginController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ResponseBean login(@RequestParam("username") String username,
     @RequestParam("password") String password, HttpServletRequest request,
-    HttpServletResponse response) throws SingleSignOnException {
+    HttpServletResponse response) {
         // List<Long> permissionsIds = new ArrayList<Long>();// 用户拥有的权限资源ID集合
         // List<PmphPermission> permissions = new ArrayList<PmphPermission>();// 权限资源树集合
         Map<String, Object> resultMap = new HashMap<String, Object>();
