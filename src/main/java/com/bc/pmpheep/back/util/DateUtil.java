@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.util;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -288,10 +289,52 @@ public final class DateUtil {
             return "";
         }
     }
+    
+    /**
+     * 指定时间转换成今天昨天前天
+     * @author Mryang
+     * @createDate 2017年11月28日 上午11:42:25
+     * @param timeStamp
+     * @return
+     */
+    public static String format(Timestamp timeStamp) { 
+    	//1天的毫秒
+    	int oneDayMillis = 24 * 60 * 60 * 1000;
+    	//今天0点的时间错
+    	long todayStartMillis   =  0L;
+    	try {
+    		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+    		String tsStr = sdf.format(new Date());
+    		Date date =    sdf.parse(tsStr);
+			todayStartMillis = date.getTime();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} 
+    	
+    	if(timeStamp.getTime() >= todayStartMillis) { 
+    		return "今天"; 
+    	} 
+    	 
+    	long yesterdayStartMilis = todayStartMillis - oneDayMillis; //昨天
+    	if(timeStamp.getTime() >= yesterdayStartMilis) { 
+    		return "昨天"; 
+    	} 
+    	long yesterdayBeforeStartMilis = yesterdayStartMilis - oneDayMillis; 
+    	if(timeStamp.getTime() >= yesterdayBeforeStartMilis) { 
+    		return "前天"; 
+    	} 
+    	return formatTimeStamp("yyyy-MM-dd HH:mm:ss",timeStamp);
+    }
 
-    public static void main(String[] args) {
-        System.out.println(getDays());
-        System.out.println(getAfterDayWeek("3"));
+    public static void main(String[] args) throws ParseException {
+    	
+    	
+    	Timestamp ts = new Timestamp(System.currentTimeMillis());   
+    	System.out.println(format(ts));
+        
+        
+        
+    	
     }
 
 }
