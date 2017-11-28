@@ -162,7 +162,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 					&& !"".equals(pmphGroupOld.getGroupImage())) {
 				fileService.remove(pmphGroupOld.getGroupImage());
 			}
-			String newGroupImage = fileService.save(file, ImageType.GROUP_AVATAR, 0);
+			String newGroupImage = fileService.save(file, ImageType.GROUP_AVATAR, pmphGroup.getId());
 			pmphGroup.setGroupImage(newGroupImage);
 		}
 		return pmphGroupDao.updatePmphGroup(pmphGroup);
