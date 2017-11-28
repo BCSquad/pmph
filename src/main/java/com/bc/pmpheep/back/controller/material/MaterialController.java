@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.controller.material;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Material;
@@ -29,6 +31,7 @@ import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.vo.MaterialListVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -77,10 +80,16 @@ public class MaterialController {
 			MultipartFile[] noteFiles) {
 
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
-				materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
-				materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-				materialVO.getMaterialNoteAttachments(), true));
+		try {
+			return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
+					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
+					materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
+					materialVO.getMaterialNoteAttachments(), true));
+		} catch (CheckedServiceException e) {
+			return new ResponseBean(e);
+		} catch (IOException e) {
+			return new ResponseBean("上传文件失败");
+		}
 	}
 
 	/**
@@ -112,10 +121,16 @@ public class MaterialController {
 	public ResponseBean update(HttpServletRequest request, MaterialVO materialVO, MultipartFile[] noticeFiles,
 			MultipartFile[] noteFiles) {
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
-				materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
-				materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-				materialVO.getMaterialNoteAttachments(), true));
+		try {
+			return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
+					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
+					materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
+					materialVO.getMaterialNoteAttachments(), true));
+		} catch (CheckedServiceException e) {
+			return new ResponseBean(e);
+		} catch (IOException e) {
+			return new ResponseBean("上传文件失败");
+		}
 	}
 
 	/**

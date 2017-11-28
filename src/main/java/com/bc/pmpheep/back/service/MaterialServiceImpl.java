@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -102,7 +103,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	public Long addOrUpdateMaterial(String sessionId, String materialContacts, String materialExtensions,
 			String materialProjectEditors, Material material, MaterialExtra materialExtra, MultipartFile[] noticeFiles,
 			String materialNoticeAttachments, MultipartFile[] noteFiles, String materialNoteAttachments,
-			boolean isUpdate) throws CheckedServiceException {
+			boolean isUpdate) throws CheckedServiceException, IOException {
 		// 获取当前用户
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser) {
@@ -400,14 +401,10 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				// 保存通知
 				materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
 				String noticeId;
-				try {
-					// 保存通知文件
-					noticeId = fileService.save(notice, FileType.MATERIAL_NOTICE_ATTACHMENT,
+				// 保存通知文件
+			    noticeId = fileService.save(notice, FileType.MATERIAL_NOTICE_ATTACHMENT,
 							materialNoticeAttachment.getId());
-				} catch (Exception e) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-							CheckedExceptionResult.FILE_UPLOAD_FAILED, "上传文件失败");
-				}
+				
 				materialNoticeAttachment.setAttachment(noticeId);
 				// 更新通知
 				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
@@ -441,14 +438,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				// 保存备注
 				materialNoteAttachmentService.addMaterialNoteAttachment(materialNoteAttachment);
 				String noticeId;
-				try {
-					// 保存备注文件
-					noticeId = fileService.save(note, FileType.MATERIAL_NOTICE_ATTACHMENT,
+				// 保存备注文件
+				noticeId = fileService.save(note, FileType.MATERIAL_NOTICE_ATTACHMENT,
 							materialNoteAttachment.getId());
-				} catch (Exception e) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-							CheckedExceptionResult.FILE_UPLOAD_FAILED, "上传文件失败");
-				}
 				materialNoteAttachment.setAttachment(noticeId);
 				// 更新备注
 				materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
