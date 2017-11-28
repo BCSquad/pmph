@@ -43,9 +43,9 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class PmphUserServiceImpl implements PmphUserService {
 
 	@Autowired
-	PmphUserDao userDao;
+	PmphUserDao pmphUserDao;
 	@Autowired
-	PmphRoleDao roleDao;
+	PmphRoleDao pmphRoleDao;
 	@Autowired
 	PmphDepartmentDao pmphDepartmentDao;
 	@Autowired
@@ -77,7 +77,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 		}
 		// 使用用户名作为盐值，MD5 算法加密
 		user.setPassword(new DesRun("", user.getPassword()).enpsw);
-		userDao.add(user);
+		pmphUserDao.add(user);
 		return user;
 	}
 
@@ -94,7 +94,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时不能添加角色！");
 		}
-		roleDao.addUserRoles(userId, rids);
+		pmphRoleDao.addUserRoles(userId, rids);
 		return user;
 	}
 
@@ -109,7 +109,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止删除用户");
 		}
-		return userDao.delete(id);
+		return pmphUserDao.delete(id);
 	}
 
 	@Override
@@ -120,10 +120,10 @@ public class PmphUserServiceImpl implements PmphUserService {
 		}
 		Integer count = 0;
 		// 删除用户列表
-		userDao.batchDelete(ids);
+		pmphUserDao.batchDelete(ids);
 		// 依次删除这些用户所绑定的角色
 		for (Long userId : ids) {
-			roleDao.deleteUserRoles(userId);
+			pmphRoleDao.deleteUserRoles(userId);
 			count++;
 		}
 		return count;
@@ -143,8 +143,8 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
 		}
-		roleDao.deleteUserRoles(userId);
-		roleDao.addUserRoles(userId, rids);
+		pmphRoleDao.deleteUserRoles(userId);
+		pmphRoleDao.addUserRoles(userId, rids);
 		this.update(user);
 		return user;
 	}
@@ -166,7 +166,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 				user.setPassword(new DesRun("", user.getPassword()).enpsw);
 			}
 		}
-		userDao.update(user);
+		pmphUserDao.update(user);
 		return user;
 	}
 
@@ -182,7 +182,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
 		}
-		return userDao.get(id);
+		return pmphUserDao.get(id);
 	}
 
 	/**
@@ -197,7 +197,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户名或密码为空时禁止查询");
 		}
-		PmphUser pmphUser = userDao.getByUsernameAndPassword(username, password);
+		PmphUser pmphUser = pmphUserDao.getByUsernameAndPassword(username, password);
 		if (ObjectUtil.isNull(pmphUser)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.OBJECT_NOT_FOUND, "用户名或密码错误！");
@@ -212,7 +212,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "模糊查询条件为空");
 		}
-		List<PmphUser> pmphUsers = userDao.getListByUsernameAndRealname(name, (number - 1) * size, size);
+		List<PmphUser> pmphUsers = pmphUserDao.getListByUsernameAndRealname(name, (number - 1) * size, size);
 		PageResult<PmphUserManagerVO> page = new PageResult<>();
 		page.setFirst(true);
 		page.setLast(true);
@@ -252,7 +252,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 	 */
 	@Override
 	public PmphUser login(String username, String password) throws CheckedServiceException {
-		PmphUser user = userDao.getByUsernameAndPassword(username, password);
+		PmphUser user = pmphUserDao.getByUsernameAndPassword(username, password);
 		// 密码匹配的工作交给 Shiro 去完成
 		if (ObjectUtil.isNull(user)) {
 			// 因为缓存切面的原因,在这里就抛出用户名不存在的异常
@@ -274,7 +274,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 	 */
 	@Override
 	public List<PmphUser> getList() throws CheckedServiceException {
-		return userDao.getListUser();
+		return pmphUserDao.getListUser();
 	}
 
 	/**
@@ -289,7 +289,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户名为空时禁止查询");
 		}
-		return userDao.getListByRole(id);
+		return pmphUserDao.getListByRole(id);
 	}
 
 	/**
@@ -304,7 +304,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
 		}
-		List<PmphPermission> permissions = userDao.getListAllResources(uid);
+		List<PmphPermission> permissions = pmphUserDao.getListAllResources(uid);
 		// List<PmphPermission> perList = permissions;
 		// for (PmphPermission permission : permissions) {
 		// List<PmphPermission> subList =
@@ -329,7 +329,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
 		}
-		return userDao.getListRoleSnByUser(uid);
+		return pmphUserDao.getListRoleSnByUser(uid);
 	}
 
 	/**
@@ -344,7 +344,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
 		}
-		return userDao.getListUserRole(uid);
+		return pmphUserDao.getListUserRole(uid);
 	}
 
 	@Override
@@ -361,11 +361,11 @@ public class PmphUserServiceImpl implements PmphUserService {
 		}
 		PageResult<PmphUserManagerVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-		int total = userDao.getListPmphUserTotal(pageParameter);
+		int total = pmphUserDao.getListPmphUserTotal(pageParameter);
 		if (total > 0) {
-			List<PmphUserManagerVO> list = userDao.getListPmphUser(pageParameter);
+			List<PmphUserManagerVO> list = pmphUserDao.getListPmphUser(pageParameter);
 			for (PmphUserManagerVO pmphUserManagerVO : list) {
-				List<PmphRoleVO> pmphRoles = roleDao.listPmphUserRoleByUserId(pmphUserManagerVO.getId());
+				List<PmphRoleVO> pmphRoles = pmphRoleDao.listPmphUserRoleByUserId(pmphUserManagerVO.getId());
 				pmphUserManagerVO.setPmphRoles(pmphRoles);
 			}
 			pageResult.setRows(list);
@@ -378,7 +378,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 
 	@Override
 	public String updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO) throws CheckedServiceException {
-		PmphUser username = userDao.get(pmphUserManagerVO.getId());
+		PmphUser username = pmphUserDao.get(pmphUserManagerVO.getId());
 		if (!username.getUsername().equals(pmphUserManagerVO.getUsername())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.ILLEGAL_PARAM, "用户账号不相同");
@@ -410,7 +410,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 		if (StringUtil.isEmpty(pmphUserManagerVO.getRealname())) {
 			pmphUserManagerVO.setRealname(pmphUserManagerVO.getUsername());
 		}
-		int num = userDao.updatePmphUserOfBack(pmphUserManagerVO);
+		int num = pmphUserDao.updatePmphUserOfBack(pmphUserManagerVO);
 		String result = "FAIL";
 		if (num > 0) {
 			pmphUserRoleDao.deletePmphUserRoleByUserId(pmphUserManagerVO.getId());
@@ -433,7 +433,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
 		}
-		return userDao.getPmphUserPermissionByUserId(userId);
+		return pmphUserDao.getPmphUserPermissionByUserId(userId);
 	}
 
 	@Override
@@ -443,7 +443,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
 		}
 		String materialPermission = null;
-		List<Integer> integers = userDao.getMaterialPermissionByUserId(userId);
+		List<Integer> integers = pmphUserDao.getMaterialPermissionByUserId(userId);
 		if (CollectionUtil.isEmpty(integers)) {
 			materialPermission = "00000000";
 		}
