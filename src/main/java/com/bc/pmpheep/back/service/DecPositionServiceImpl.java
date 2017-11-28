@@ -157,8 +157,8 @@ public class DecPositionServiceImpl implements DecPositionService {
 	public DecPositionVO saveBooks(DecPositionVO decPositionVO) throws IOException {
 		List<NewDecPosition> list = decPositionVO.getLst();
 		List<DecPosition> istDecPositions = null;
-		String newId = ",";
-		
+		String newId = "";
+		String oldId = "";
 		for (int i = 0; i < list.size(); i++) {
 			Long id = list.get(i).getId();
 			Long declarationId = list.get(i).getDeclarationId();
@@ -176,9 +176,8 @@ public class DecPositionServiceImpl implements DecPositionService {
 			decPosition.setTextbookId(textbookId);
 			decPosition.setPresetPosition(presetPosition);
 			istDecPositions = decPositionDao.listDecPositions(declarationId);
-			String oldId = "";
 			for (int o = 0; o < istDecPositions.size(); o++) {
-				Long oid = istDecPositions.get(i).getId();
+				Long oid = istDecPositions.get(o).getId();
 				oldId += oid+",";
 			}
 			if (null == id) { // 保存或者修改
@@ -196,10 +195,11 @@ public class DecPositionServiceImpl implements DecPositionService {
 			} else {
 				decPositionDao.updateDecPosition(decPosition);
 			}
-			newId += decPosition.getId()+","+oldId+",";
+			newId += decPosition.getId()+",";
 		}
+		String newCountId = newId + oldId;
 		for (DecPosition decPositions : istDecPositions) {
-			if (!newId.contains("," + decPositions.getId() + ",")) { // 不包含
+			if (!newCountId.contains("," + decPositions.getId() + ",")) { // 不包含
 				decPositionDao.deleteDecPosition(decPositions.getId());
 			}
 		}
