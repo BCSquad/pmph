@@ -215,9 +215,6 @@
 			<if test="topicNumber !=null and topicNumber !=''">
 			    topic_number = #{topicNumber},
 			</if>
-			<if test=" founderId != null">
-				founder_id = #{founderId},
-			</if>
 		</set>
 		where
 		id=#{id} ;
