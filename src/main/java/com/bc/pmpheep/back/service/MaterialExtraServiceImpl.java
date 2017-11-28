@@ -310,7 +310,9 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
         CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
         if (ObjectUtil.notNull(cmsContent)) {
             Content content = contentService.get(cmsContent.getMid());
-            resultMap.put("content", content.getContent());// MongoDB中教材通知
+            if (ObjectUtil.notNull(content)) {
+                resultMap.put("content", content.getContent());// MongoDB中教材通知
+            }
             // 判断内容是否已经发布或审核通过
             String fileNoticeDownLoadType = null;
             String fileNoteDownLoadType = null;
