@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialDao;
+import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Material;
@@ -21,6 +22,7 @@ import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
 import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.PmphGroup;
+import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -46,6 +48,9 @@ import com.google.gson.reflect.TypeToken;
  */
 @Service
 public class MaterialServiceImpl extends BaseService implements MaterialService {
+	
+	@Autowired
+	PmphRoleDao roleDao;
 
 	@Autowired
 	private MaterialDao materialDao;
@@ -203,6 +208,14 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"主任对应的机构为空");
 		}
+		//给主任添加角色
+		String roleName="主任";//通过roleName查询roleid
+		Long roleId=roleDao.getPmphRoleId(roleName);//角色id
+		if (ObjectUtil.isNull(material.getDirector()) || ObjectUtil.isNull(roleId)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "角色ID或主任ID为空时禁止新增");
+		}
+		roleDao.addUserRole(material.getDirector(), roleId);//给主任绑定角色
 		// 教材所属部门
 		material.setDepartmentId(director.getDepartmentId());
 		// 修改人
@@ -325,6 +338,14 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			materialProjectEditor.setMaterialId(materialId);
 			// 保存项目编辑
 			materialProjectEditorService.addMaterialProjectEditor(materialProjectEditor);
+			// 项目编辑绑定角色
+			String rolename="项目编辑";//通过roleName查询roleid
+			Long roleid=roleDao.getPmphRoleId(rolename);//角色id
+			if (ObjectUtil.isNull(materialId) || ObjectUtil.isNull(roleid)) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+						CheckedExceptionResult.NULL_PARAM, "角色ID或项目编辑ID为空时禁止新增");
+			}
+			roleDao.addUserRole(materialId, roleid);//给项目编辑绑定角色
 		}
 		// 保存教材通知备注
 		materialExtra.setMaterialId(materialId);

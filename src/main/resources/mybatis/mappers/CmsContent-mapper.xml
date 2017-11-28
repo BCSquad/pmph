@@ -379,7 +379,7 @@
 		ON
 			cc.author_id = pu.id
 		LEFT JOIN 
-			`cms_category` ccg 
+			`cms_category` ccg
 		ON 
 			cc.`category_id` = ccg.`id`,
 			(
