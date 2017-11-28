@@ -9,7 +9,6 @@ import java.util.List;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.back.vo.DecPositionVO;
-import com.bc.pmpheep.back.vo.NewDecPosition;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -113,14 +112,11 @@ public interface DecPositionService {
      * 
      * @author tyc
      * @createDate 2017年11月25日 晚上21:15:30
-     * @param declarationId 申报表id
-     * @param textbookId 书籍id
-     * @param presetPosition 申报职务
-     * @param syllabusName 教学大纲名称
+     * @param decPositionVO
      * @return
      * @throws IOException
      */
-    List<NewDecPosition> saveBooks(DecPositionVO decPositionVO) throws IOException;
+    long saveBooks(DecPositionVO decPositionVO) throws IOException;
 
     /**
      * 
