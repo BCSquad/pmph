@@ -82,9 +82,10 @@ public class MaterialController {
 		String sessionId = CookiesUtil.getSessionId(request);
 		try {
 			return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
-					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
-					materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-					materialVO.getMaterialNoteAttachments(), true));
+					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(),
+					materialVO.getMaterial(), materialVO.getMaterialExtra(), noticeFiles,
+					materialVO.getMaterialNoticeAttachments(), noteFiles, materialVO.getMaterialNoteAttachments(),
+					true));
 		} catch (CheckedServiceException e) {
 			return new ResponseBean(e);
 		} catch (IOException e) {
@@ -123,9 +124,10 @@ public class MaterialController {
 		String sessionId = CookiesUtil.getSessionId(request);
 		try {
 			return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
-					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
-					materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-					materialVO.getMaterialNoteAttachments(), true));
+					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(),
+					materialVO.getMaterial(), materialVO.getMaterialExtra(), noticeFiles,
+					materialVO.getMaterialNoticeAttachments(), noteFiles, materialVO.getMaterialNoteAttachments(),
+					true));
 		} catch (CheckedServiceException e) {
 			return new ResponseBean(e);
 		} catch (IOException e) {
