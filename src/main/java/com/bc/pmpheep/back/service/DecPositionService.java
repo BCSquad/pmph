@@ -6,8 +6,6 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.back.vo.DecPositionVO;
@@ -152,7 +150,4 @@ public interface DecPositionService {
      */
     Integer updateDecPositionEditorSelection(String jsonDecPosition, String sessionId)
     throws CheckedServiceException;
-
-    String saveBooks(Long[] ids, Long declarationId, Long[] textbookIds, Integer[] presetPositions,
-    MultipartFile[] files) throws IOException;
 }

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.dao.MaterialDao;
+import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -52,6 +53,9 @@ import com.google.gson.reflect.TypeToken;
 @Service
 public class TextbookServiceImpl implements TextbookService {
 
+	@Autowired
+	PmphRoleDao roleDao;
+	
     @Autowired
     private TextbookDao textbookDao;
     
@@ -144,6 +148,13 @@ public class TextbookServiceImpl implements TextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
 		}
+		String roleName="策划编辑";//通过roleName查询roleid
+		Long roleId=roleDao.getPmphRoleId(roleName);//角色id
+		if (ObjectUtil.isNull(textbook.getPlanningEditor()) || ObjectUtil.isNull(roleId)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "角色ID或策划编辑ID为空时禁止新增");
+		}
+		roleDao.addUserRole(textbook.getPlanningEditor(), roleId);//给策划编辑绑定权限
 		return textbookDao.updateTextbook(textbook);
 	}
 
