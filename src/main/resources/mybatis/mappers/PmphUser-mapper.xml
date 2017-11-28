@@ -108,6 +108,10 @@
 	<update id="update" parameterType="PmphUser">
 		UPDATE pmph_user
 		<set>
+			<!-- 写这个的目的是保证一个 id不为空的空对象来不会报错  ：update pmph_user set id =1 where id =1 -->
+			<if test="id != null ">
+				id =  #{id},
+			</if>
 			<if test="username != null and username!=''">
 				username = #{username},
 			</if>
@@ -120,7 +124,7 @@
 			<if test=" realname!= null and realname !=''">
 				realname= #{realname},
 			</if>
-			<if test=" departmentId!= null and departmentId !=''">
+			<if test=" departmentId!= null">
 				department_id = #{departmentId},
 			</if>
 			<if test=" handphone!= null and handphone !=''">

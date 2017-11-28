@@ -807,8 +807,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     }
 
     @Override
-	public Integer addOneUserMessage(Message message, String title, Long senderId, String userId,
-			String sessionId) throws CheckedServiceException, IOException {
+	public Integer addOneUserMessage(Message message, String title, Long receiverId, String sessionId) 
+			throws CheckedServiceException, IOException {
         // 发送者id
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
@@ -825,15 +825,12 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         // 装储存数据
         List<UserMessage> userMessageList = new ArrayList<UserMessage>();
         // 私信发送
-        if (StringUtil.isEmpty(userId)) {
+        if (null == receiverId) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "接收人为空!");
         } else {
-            if (StringUtil.notEmpty(userId) && StringUtil.isNumeric(userId)) {
-            	userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_2, 
-            			senderUserId, Const.SENDER_TYPE_1, Long.parseLong(userId), 
-            			Const.RECEIVER_TYPE_2));
-            }
+            userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_2, 
+            		senderUserId, Const.SENDER_TYPE_1, receiverId, Const.RECEIVER_TYPE_2));
         }
         // 插入消息发送对象数据
         userMessageDao.addUserMessageBatch(userMessageList);

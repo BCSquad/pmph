@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.controller.shiro;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -58,6 +60,27 @@ public class PmphUserController {
 	PmphDepartmentService pmphDepartmentService;
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "社内用户";
+	
+	/**
+	 * 修改个人信息
+	 * @author Mryang
+	 * @createDate 2017年11月28日 下午3:33:44
+	 * @param pmphUser
+	 * @param file
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改个人信息")
+	@RequestMapping(value = "/updatePersonalData", method = RequestMethod.PUT)
+	public ResponseBean updatePersonalData(PmphUser pmphUser,MultipartFile file) {
+		try {
+			return new ResponseBean(userService.updatePersonalData(pmphUser,file));
+		} catch (IOException e) {
+			return new ResponseBean("文件上传失败");
+		} catch (Exception e) {
+			return new ResponseBean("未知错误");
+		}
+	}
 
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询所有的用户对象列表")
