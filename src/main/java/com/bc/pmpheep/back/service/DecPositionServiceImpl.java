@@ -47,6 +47,10 @@ public class DecPositionServiceImpl implements DecPositionService {
     private DecPositionDao decPositionDao;
     @Autowired
     private FileService    fileService;
+    @Autowired
+    private DecPositionService decPositionService;
+    @Autowired
+    private TextbookLogService textbookLogService;
 
     @Override
     public DecPosition addDecPosition(DecPosition decPosition) throws CheckedServiceException {
@@ -161,12 +165,12 @@ public class DecPositionServiceImpl implements DecPositionService {
         List<DecPosition> istDecPositions = null;
         String newId = "";
         String oldId = "";
-        for (int i = 0; i < list.size(); i++) {
-            Long id = list.get(i).getId();
-            Long declarationId = list.get(i).getDeclarationId();
-            Long textbookId = list.get(i).getTextbookId();
-            Integer presetPosition = list.get(i).getPresetPosition();
-            MultipartFile file = list.get(i).getFile();
+        for (NewDecPosition newDecPosition : list) {
+            Long id = newDecPosition.getId();
+            Long declarationId = newDecPosition.getDeclarationId();
+            Long textbookId = newDecPosition.getTextbookId();
+            Integer presetPosition = newDecPosition.getPresetPosition();
+            MultipartFile file = newDecPosition.getFile();
             DecPosition decPosition = new DecPosition();
             if (null == file) {
                 decPosition.setSyllabusName(null);
@@ -240,6 +244,15 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer count = 0;
         List<DecPosition> decPositions =
         new JsonUtil().getArrayListObjectFromStr(DecPosition.class, jsonDecPosition);// json字符串转List对象集合
+    	Long textbookId = decPositions.get(0).getTextbookId(); // 获取书籍id
+    	List<DecPosition> oldlist = decPositionService.listChosenDecPositionsByTextbookId(textbookId);
+    	Long updaterId = pmphUser.getId(); // 获取修改者id
+    	if(null == updaterId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"修改者为空！");
+		}
+    	int userType = 1;
+    	textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
         if (CollectionUtil.isNotEmpty(decPositions)) {
             count = decPositionDao.updateDecPositionEditorSelection(decPositions);
         }
