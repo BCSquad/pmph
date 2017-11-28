@@ -20,7 +20,7 @@ public class TextbookLog implements java.io.Serializable {
 	 */
 	private Long id;
 	/**
-	 * 教材id
+	 * 教材书籍id
 	 */
 	private Long textbookId;
 	/**

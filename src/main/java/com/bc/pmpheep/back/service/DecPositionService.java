@@ -112,14 +112,11 @@ public interface DecPositionService {
      * 
      * @author tyc
      * @createDate 2017年11月25日 晚上21:15:30
-     * @param declarationId 申报表id
-     * @param textbookId 书籍id
-     * @param presetPosition 申报职务
-     * @param syllabusName 教学大纲名称
+     * @param decPositionVO
      * @return
      * @throws IOException
      */
-    DecPositionVO saveBooks(DecPositionVO decPositionVO) throws IOException;
+    long saveBooks(DecPositionVO decPositionVO) throws IOException;
 
     /**
      * 

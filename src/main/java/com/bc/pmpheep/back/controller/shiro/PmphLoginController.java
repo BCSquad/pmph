@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.controller.shiro;
 
+import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import small.danfer.sso.SingleSignOnException;
+import small.danfer.sso.http.HttpSingleSignOnService;
 
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
@@ -54,17 +61,17 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @RequestMapping(value = "/pmph")
 @Controller
 public class PmphLoginController {
-    Logger                logger = LoggerFactory.getLogger(PmphLoginController.class);
+    Logger                  logger  = LoggerFactory.getLogger(PmphLoginController.class);
     @Autowired
-    PmphUserService       pmphUserService;
+    PmphUserService         pmphUserService;
     @Autowired
-    PmphPermissionService pmphPermissionService;
+    PmphPermissionService   pmphPermissionService;
     @Autowired
-    PmphRoleService       pmphRoleService;
+    PmphRoleService         pmphRoleService;
     @Autowired
-    CmsCategoryService    cmsCategoryService;
+    CmsCategoryService      cmsCategoryService;
 
-    // HttpSingleSignOnService service = new HttpSingleSignOnService();
+    HttpSingleSignOnService service = new HttpSingleSignOnService();
 
     /**
      * 
@@ -76,22 +83,26 @@ public class PmphLoginController {
 	 * &#64;param model
 	 * &#64;return
 	 * </pre>
+     * 
+     * @throws SingleSignOnException
      */
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ResponseBean login(@RequestParam("username") String username,
     @RequestParam("password") String password, HttpServletRequest request,
-    HttpServletResponse response) {
+    HttpServletResponse response) throws SingleSignOnException {
         // List<Long> permissionsIds = new ArrayList<Long>();// 用户拥有的权限资源ID集合
         // List<PmphPermission> permissions = new ArrayList<PmphPermission>();// 权限资源树集合
         Map<String, Object> resultMap = new HashMap<String, Object>();
         logger.info("username => " + username);
         logger.info("password => " + password);
         try {
-            // Principal principal = service.singleSignOn(request);
-            // String userName = principal.getName();
-            PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
-            // PmphUser pmphUser = pmphUserService.login(userName, null);
+            HttpServletRequest request1 =
+            ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            Principal principal = service.singleSignOn(request1);
+            String userName = principal.getName();
+            // PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
+            PmphUser pmphUser = pmphUserService.login(userName, null);
             pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
             if (!RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUser.getAvatar())) {
                 pmphUser.setAvatar(RouteUtil.userAvatar(pmphUser.getAvatar()));
@@ -168,6 +179,60 @@ public class PmphLoginController {
         }
     }
 
+    public String ssoLogin(HttpServletRequest request) {
+        try {
+            Map<String, Object> resultMap = new HashMap<String, Object>();
+            Principal principle = request.getUserPrincipal();
+            // Principal principle =
+            // (Principal) request.getSession().getAttribute("SSO_LOGON_PRINCIPLE");
+            String userName = principle.getName();
+            assert userName != null;
+            PmphUser pmphUser = pmphUserService.login(userName, null);
+
+            pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
+            if (!RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUser.getAvatar())) {
+                pmphUser.setAvatar(RouteUtil.userAvatar(pmphUser.getAvatar()));
+            }
+            // 根据用户Id查询对应角色(是否为管理员)
+            List<PmphRole> pmphRoles = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
+            List<Long> roleIds = new ArrayList<Long>(pmphRoles.size());
+            for (PmphRole pmphRole : pmphRoles) {
+                roleIds.add(pmphRole.getId());
+                if (ObjectUtil.notNull(pmphRole)) {
+                    if (Const.LOGIN_USER_IS_ADMIN.equals(pmphRole.getRoleName())
+                        || Const.LOGIN_USER_IS_ADMINS.equals(pmphRole.getRoleName())
+                        || Const.LOGIN_SYS_USER_IS_ADMIN.equals(pmphRole.getRoleName())) {
+                        pmphUser.setIsAdmin(true);
+                    } else {
+                        pmphUser.setIsAdmin(false);
+                    }
+                }
+                if (Const.TRUE == pmphUser.getIsAdmin()) {
+                    break;
+                }
+            }
+            // 根据用户Id查询对应权限Id
+            List<Long> pmphUserPermissionIds =
+            pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
+            String materialPermission =
+            pmphUserService.getMaterialPermissionByUserId(pmphUser.getId());
+            // 验证成功在Session中保存用户信息
+            request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
+            // 验证成功在Session中保存用户Token信息
+            request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
+                                              new DesRun(userName, userName).enpsw);
+            // pmphUserSessionId
+            resultMap.put(Const.USER_SEESION_ID, request.getSession().getId());
+            resultMap.put(Const.SESSION_PMPH_USER, pmphUser);
+            resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun(userName, userName).enpsw);
+            resultMap.put("pmphUserPermissionIds", pmphUserPermissionIds);
+            resultMap.put("materialPermission", materialPermission);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "mainP";
+    }
+
     /**
      * 
      * <pre>
@@ -177,11 +242,15 @@ public class PmphLoginController {
 	 * &#64;param model
 	 * &#64;return
 	 * </pre>
+     * 
+     * @throws IOException
      */
-    @ResponseBody
+    // @ResponseBody
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ResponseBean logout(HttpServletRequest request,
-    @RequestParam("loginType") Short loginType) {
+    public void logout(HttpServletRequest request, HttpServletResponse response,
+    @RequestParam("loginType") Short loginType) throws IOException {
+        // HttpSingleSignOnService service = new HttpSingleSignOnService();
+
         String sessionId = CookiesUtil.getSessionId(request);
         HttpSession session = SessionContext.getSession(sessionId);
         if (ObjectUtil.notNull(session)) {
@@ -191,7 +260,8 @@ public class PmphLoginController {
                 session.invalidate();
             }
         }
-        return new ResponseBean();
+        // return new ResponseBean();
+        response.sendRedirect(service.getSingleSignOnURL());
     }
 
     /**

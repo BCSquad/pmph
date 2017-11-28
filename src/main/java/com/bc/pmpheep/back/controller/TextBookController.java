@@ -61,7 +61,7 @@ public class TextBookController {
     @ResponseBody
     @RequestMapping(value = "/add/textbook", method = RequestMethod.POST)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存或修改新增教材书籍")
-    public ResponseBean addTextbooks( BookListVO bookListVO){
+    public ResponseBean textbook( BookListVO bookListVO){
     	return new ResponseBean(textbookService.addOrUpdateTextBookList(bookListVO));
     }
     
@@ -74,16 +74,16 @@ public class TextBookController {
      * @return ResponseBean
      */
     @ResponseBody
-    @RequestMapping(value = "/list/textbook", method = RequestMethod.GET)
+    @RequestMapping(value = "/list/textbooks", method = RequestMethod.GET)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "加载教材书籍列表")
-    public ResponseBean listTextbooks(@RequestParam(name = "materialId") Long materialId){
+    public ResponseBean textbooks(@RequestParam(name = "materialId") Long materialId){
     	return new ResponseBean(textbookService.getBookListVO(materialId));
     }
     
     @ResponseBody
-    @RequestMapping(value = "/import/textbook", method = RequestMethod.POST)
+    @RequestMapping(value = "/import/excel", method = RequestMethod.POST)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "通过Excel文档批量导入教材书籍")
-    public ResponseBean importTextbooks(@RequestParam(name = "file") MultipartFile file){
+    public ResponseBean excel(@RequestParam(name = "file") MultipartFile file){
     	FileUpload.fileUp(file, Const.FILE_PATH_FILE, file.getName());
     	try {
 			return new ResponseBean(textbookService.importExcel(file));
@@ -103,9 +103,9 @@ public class TextBookController {
      * @return ResponseBean
      */
     @ResponseBody
-    @RequestMapping(value = "/list/topic", method = RequestMethod.GET)
+    @RequestMapping(value = "/list/topics", method = RequestMethod.GET)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取设置选题号页面教材书籍列表")
-    public ResponseBean listTopicNumber(@RequestParam(name = "materialId") Long materialId){
+    public ResponseBean topics(@RequestParam(name = "materialId") Long materialId){
     	return new ResponseBean(textbookService.listTopicNumber(materialId));
     }
     
@@ -120,7 +120,7 @@ public class TextBookController {
     @ResponseBody
     @RequestMapping(value = "/add/topic", method = RequestMethod.POST)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "设置教材书籍选题号")
-    public ResponseBean addTopicNumber(@RequestParam(name = "topicTextbooks") String topicTextbooks){
+    public ResponseBean topic(@RequestParam(name = "topicTextbooks") String topicTextbooks){
     	return new ResponseBean(textbookService.addTopicNumber(topicTextbooks));
     }
     /**

@@ -55,6 +55,44 @@
 		<include refid="value" />
 		);
 	</insert>
-
+	
+	<!-- 根据书籍id和更新者分页查询日志总数 -->
+	<select id="listTotalTextbookLogByTextBookId" parameterType="PageParameter" resultType="java.lang.Integer">
+		SELECT 
+			count(a.id)
+		FROM
+			textbook_log  a
+		LEFT JOIN
+			 pmph_user  b ON b.id = a.updater_id 
+		LEFT JOIN
+			 writer_user  c ON c.id = a.updater_id  
+		where 
+			a.textbook_id = #{parameter.textbookId} 
+			<if test="parameter != null and parameter.updaterName != null ">
+				and IF(a.is_pmph_updater,b.realname like CONCAT('%',#{parameter.updaterName},'%'),c.realname like CONCAT('%',#{parameter.updaterName},'%')) 
+			</if>
+	</select>
+	
+	<!-- 根据书籍id和更新者分页查询日志  -->
+	<select id="listTextbookLogByTextBookId" parameterType="PageParameter" resultType="TextbookLog">
+		SELECT 
+			a.id,a.textbook_id,a.updater_id,a.is_pmph_updater,
+			CONCAT('[',IF(a.is_pmph_updater,b.realname,c.realname),']','于[{gmt_create}]',a.detail) detail,
+			a.gmt_create
+		FROM
+			textbook_log  a
+		LEFT JOIN 
+			pmph_user  b ON b.id = a.updater_id 
+		LEFT JOIN 
+			writer_user  c ON c.id = a.updater_id  
+		where 
+			a.textbook_id = #{parameter.textbookId} 
+			<if test="parameter != null and parameter.updaterName != null ">
+				and IF(a.is_pmph_updater,b.realname like CONCAT('%',#{parameter.updaterName},'%'),c.realname like CONCAT('%',#{parameter.updaterName},'%')) 
+			</if>
+		ORDER BY 
+			a.gmt_create desc,a.id asc 
+		LIMIT #{start},#{pageSize}
+	</select>
 
 </mapper>
