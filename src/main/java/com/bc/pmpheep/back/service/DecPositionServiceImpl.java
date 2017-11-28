@@ -44,9 +44,9 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class DecPositionServiceImpl implements DecPositionService {
 
     @Autowired
-    private DecPositionDao decPositionDao;
+    private DecPositionDao     decPositionDao;
     @Autowired
-    private FileService    fileService;
+    private FileService        fileService;
     @Autowired
     private DecPositionService decPositionService;
     @Autowired
@@ -162,7 +162,8 @@ public class DecPositionServiceImpl implements DecPositionService {
     @Override
     public DecPositionVO saveBooks(DecPositionVO decPositionVO) throws IOException {
         List<NewDecPosition> list = decPositionVO.getLst();
-        List<DecPosition> istDecPositions = decPositionDao.listDecPositions(list.get(0).getDeclarationId());
+        List<DecPosition> istDecPositions =
+        decPositionDao.listDecPositions(list.get(0).getDeclarationId());
         String newId = ",";
         for (NewDecPosition newDecPosition : list) {
             Long id = newDecPosition.getId();
@@ -238,11 +239,12 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer count = 0;
         List<DecPosition> decPositions =
         new JsonUtil().getArrayListObjectFromStr(DecPosition.class, jsonDecPosition);// json字符串转List对象集合
-    	Long textbookId = decPositions.get(0).getTextbookId(); // 获取书籍id
-    	List<DecPosition> oldlist = decPositionService.listChosenDecPositionsByTextbookId(textbookId);
-    	Long updaterId = pmphUser.getId(); // 获取修改者id
-    	int userType = 1;
-    	textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
+        Long textbookId = decPositions.get(0).getTextbookId(); // 获取书籍id
+        List<DecPosition> oldlist =
+        decPositionService.listChosenDecPositionsByTextbookId(textbookId);
+        Long updaterId = pmphUser.getId(); // 获取修改者id
+        int userType = 1;
+        textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
         if (CollectionUtil.isNotEmpty(decPositions)) {
             count = decPositionDao.updateDecPositionEditorSelection(decPositions);
         }
