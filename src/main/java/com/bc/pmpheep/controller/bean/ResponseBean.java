@@ -37,6 +37,10 @@ public class ResponseBean<T> implements Serializable {
      * 类型转换异常ClassCastException
      */
     public static final int CLASS_CAST          = 40;
+    /**
+     * MongoDB连接超时
+     */
+    public static final int MONGODB_TIME_OUT    = 90;
 
     /**
      * 未知错误

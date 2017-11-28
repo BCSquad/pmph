@@ -120,7 +120,7 @@
 			<if test=" realname!= null and realname !=''">
 				realname= #{realname},
 			</if>
-			<if test=" departmentId!= null and departmentId !=''">
+			<if test=" departmentId!= null">
 				department_id = #{departmentId},
 			</if>
 			<if test=" handphone!= null and handphone !=''">
