@@ -247,10 +247,6 @@ public class DecPositionServiceImpl implements DecPositionService {
     	Long textbookId = decPositions.get(0).getTextbookId(); // 获取书籍id
     	List<DecPosition> oldlist = decPositionService.listChosenDecPositionsByTextbookId(textbookId);
     	Long updaterId = pmphUser.getId(); // 获取修改者id
-    	if(null == updaterId){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"修改者为空！");
-		}
     	int userType = 1;
     	textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
         if (CollectionUtil.isNotEmpty(decPositions)) {
