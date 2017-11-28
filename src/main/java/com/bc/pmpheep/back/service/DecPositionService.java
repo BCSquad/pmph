@@ -6,8 +6,6 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.back.vo.DecPositionVO;
@@ -83,16 +81,18 @@ public interface DecPositionService {
      * @throws CheckedServiceException
      */
     List<DecPosition> listDecPositionsByTextbookId(Long textbookId) throws CheckedServiceException;
-    
+
     /**
      * 根据书籍id获取入选的职位职位(主编、副主编、编委、数字编辑)
+     * 
      * @author Mryang
      * @createDate 2017年11月16日 下午2:37:19
      * @param textbookId
      * @return
      * @throws CheckedServiceException
      */
-    List<DecPosition> listChosenDecPositionsByTextbookId(Long textbookId) throws CheckedServiceException;
+    List<DecPosition> listChosenDecPositionsByTextbookId(Long textbookId)
+    throws CheckedServiceException;
 
     /**
      * 
@@ -109,14 +109,15 @@ public interface DecPositionService {
 
     /**
      * 保存图书
-	 * @author tyc
-	 * @createDate 2017年11月25日 晚上21:15:30
-     * @param declarationId		申报表id
-     * @param textbookId		书籍id
-     * @param presetPosition	申报职务
-     * @param syllabusName		教学大纲名称
+     * 
+     * @author tyc
+     * @createDate 2017年11月25日 晚上21:15:30
+     * @param declarationId 申报表id
+     * @param textbookId 书籍id
+     * @param presetPosition 申报职务
+     * @param syllabusName 教学大纲名称
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     DecPositionVO saveBooks(DecPositionVO decPositionVO) throws IOException;
 
@@ -147,7 +148,6 @@ public interface DecPositionService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer updateDecPositionEditorSelection(String jsonDecPosition) throws CheckedServiceException;
-    String saveBooks(Long[] ids, Long declarationId, Long[] textbookIds, Integer[] presetPositions, 
-    		MultipartFile[] files) throws IOException;
+    Integer updateDecPositionEditorSelection(String jsonDecPosition, String sessionId)
+    throws CheckedServiceException;
 }

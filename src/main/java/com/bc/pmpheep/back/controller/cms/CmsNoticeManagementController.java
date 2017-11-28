@@ -30,14 +30,14 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  * 使用示范：
  * 
  * 
- * &#64;author (作者) nyz
+ * @author (作者) nyz
  * 
- * &#64;since (该版本支持的JDK版本) ：JDK 1.6或以上
- * &#64;version (版本) 1.0
- * &#64;date (开发日期) 2017-11-2
- * &#64;modify (最后修改时间) 
- * &#64;修改人 ：nyz 
- * &#64;审核人 ：
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2017-11-2
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
  * </pre>
  */
 @Controller
@@ -55,11 +55,11 @@ public class CmsNoticeManagementController {
 	 * 功能描述：分页查询条件查询《公告管理》列表
 	 * 使用示范：
 	 *
-	 * &#64;param pageNumber 当前页
-	 * &#64;param pageSize 页面数据条数
-	 * &#64;param cmsContentVO
-	 * &#64;param sessionId
-	 * &#64;return 分页数据集
+	 * @param pageNumber 当前页
+	 * @param pageSize 页面数据条数
+	 * @param cmsContentVO
+	 * @param sessionId
+	 * @return 分页数据集
 	 * </pre>
      */
     @ResponseBody
