@@ -2,8 +2,11 @@ package com.bc.pmpheep.back.service;
 
 
 import java.util.List;
+
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.TextbookLog;
+import com.bc.pmpheep.back.vo.TextbookLogVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -14,6 +17,21 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  *
  **/
 public interface TextbookLogService {
+	
+	/**
+	 *
+	 * 根据书籍id分页查询日志 
+	 * @author Mryang
+	 * @createDate 2017年11月28日 上午11:56:40
+	 * @param textbookId
+	 * @param pageSize
+	 * @param pageNumber
+	 * @param updaterName
+	 * @return PageResult<TextbookLogVO>
+	 * @throws CheckedServiceException
+	 */
+	PageResult<TextbookLogVO> listTextbookLogByTextBookId(Long textbookId,Integer pageSize,Integer pageNumber,String updaterName) throws CheckedServiceException;
+	
 	/**
 	 * 
 	 * @introduction 书籍最终结果发布时插入日志

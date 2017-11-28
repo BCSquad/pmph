@@ -1,15 +1,23 @@
 package com.bc.pmpheep.back.service;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.alibaba.druid.util.StringUtils;
 import com.bc.pmpheep.back.dao.TextbookLogDao;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.po.TextbookLog;
+import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.TextbookLogVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -36,6 +44,42 @@ public class TextbookLogServiceImpl implements TextbookLogService {
 	
 	@Autowired
 	private  DeclarationService declarationService;
+	
+	@Override
+	public PageResult<TextbookLogVO> listTextbookLogByTextBookId(Long textbookId,Integer pageSize,Integer pageNumber,String updaterName) throws CheckedServiceException{
+		if(null == textbookId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK_LOG, CheckedExceptionResult.NULL_PARAM,
+					"书籍为空！");
+		}
+		Map<String,Object> map = new HashMap<String,Object>(2);
+		map.put("textbookId", textbookId);
+		updaterName = StringUtil.toAllCheck(updaterName);
+		if(null != updaterName){
+			map.put("updaterName", updaterName) ;
+		}
+		// 包装参数实体
+        PageParameter<Map<String,Object>> pageParameter = new PageParameter<Map<String,Object>>(pageNumber, pageSize, map);
+        // 返回实体
+        PageResult<TextbookLogVO> pageResult = new PageResult<TextbookLogVO>();
+        //参数拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 获取总数
+        Integer total = textbookLogDao.listTotalTextbookLogByTextBookId(pageParameter);
+        if (null != total && total > 0) {
+            List<TextbookLog> rows = textbookLogDao.listTextbookLogByTextBookId(pageParameter);
+            List<TextbookLogVO> newRows = new ArrayList<TextbookLogVO>(rows.size());
+            for(TextbookLog textbookLog : rows){
+            	Long id = textbookLog.getId();
+            	String detail = textbookLog.getDetail();
+            	Timestamp gmtCreate = textbookLog.getGmtCreate();
+            	detail = detail.replace("{gmt_create}",DateUtil.format(gmtCreate));
+            	newRows.add(new TextbookLogVO(id,detail));
+            }
+            pageResult.setRows(newRows);
+        }
+        pageResult.setTotal(total);
+        return pageResult;
+	}
 	
 	@Override
 	public TextbookLog addTextbookLogWhenPub(Long textbookId,Long updaterId,int userType) throws CheckedServiceException {
