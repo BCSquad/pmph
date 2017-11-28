@@ -261,6 +261,11 @@
         <!-- https://mvnrepository.com/artifact/com.thetransactioncompany/java-property-utils -->
         <!-- <dependency> <groupId>com.thetransactioncompany</groupId> <artifactId>java-property-utils</artifactId> 
         <version>1.9</version> </dependency> -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.ver}</version>
+        </dependency>
 
     </dependencies>
 

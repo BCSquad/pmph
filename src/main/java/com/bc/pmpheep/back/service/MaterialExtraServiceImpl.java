@@ -192,31 +192,48 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.NULL_PARAM, "教材名称为空");
         }
-        Material material = materialService.getMaterialById(materialId);
-        // MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
-        if (StringUtil.isEmpty(materialExtraVO.getContent())) {
+        String content = materialExtraVO.getContent();
+        if (StringUtil.isEmpty(content)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
-                                              CheckedExceptionResult.NULL_PARAM, "教材通知内容为空");
+                                              CheckedExceptionResult.NULL_PARAM, "教材通知为空");
         }
         // MongoDB 内容插入
-        Content contentObj = contentService.add(new Content(materialExtraVO.getContent()));
+        Content contentObj = contentService.add(new Content(content));
         if (ObjectUtil.isNull(contentObj)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "教材通知保存失败");
         }
-        // 保存CMSContent内容
-        cmsContentService.addCmsContent(new CmsContent(
-                                                       0L,
-                                                       "0",
-                                                       contentObj.getId(),
-                                                       materialName,
-                                                       Const.CMS_AUTHOR_TYPE_0,
-                                                       false,
-                                                       true,
-                                                       material.getFounderId(),
-                                                       DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
-                                                                                DateUtil.getCurrentTime()),
-                                                       materialId, Const.CMS_CATEGORY_ID_1));
+        Material material = materialService.getMaterialById(materialId);
+        if (StringUtil.isEmpty(materialExtraVO.getContent())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.NULL_PARAM, "教材通知内容为空");
+        }
+        CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
+        if (ObjectUtil.notNull(cmsContent)) {
+            if (StringUtil.notEmpty(cmsContent.getMid())) {
+                contentService.delete(cmsContent.getMid());// 删除之前教材通知内容
+            }
+            // 存在就更新
+            cmsContentService.updateCmsContent(new CmsContent(
+                                                              cmsContent.getId(),
+                                                              contentObj.getId(),
+                                                              DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                                                       DateUtil.getCurrentTime())));
+        } else {
+            // 保存CMSContent内容
+            cmsContentService.addCmsContent(new CmsContent(
+                                                           0L,
+                                                           "0",
+                                                           contentObj.getId(),
+                                                           materialName,
+                                                           Const.CMS_AUTHOR_TYPE_0,
+                                                           false,
+                                                           true,
+                                                           material.getFounderId(),
+                                                           DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                                                    DateUtil.getCurrentTime()),
+                                                           materialId, Const.CMS_CATEGORY_ID_1));
+        }
         // 教材通知附件
         // String[] noticeFiles = materialExtraVO.getNoticeFiles();
         // if (ArrayUtil.isNotEmpty(noticeFiles)) {

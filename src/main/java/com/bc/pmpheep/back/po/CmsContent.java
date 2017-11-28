@@ -104,6 +104,12 @@ public class CmsContent implements java.io.Serializable {
     public CmsContent() {
     }
 
+    public CmsContent(Long id, String mid, String gmtReedit) {
+        this.id = id;
+        this.mid = mid;
+        this.gmtReedit = gmtReedit;
+    }
+
     public CmsContent(Long id, Boolean isPublished, Timestamp gmtUpdate) {
         this.id = id;
         this.isPublished = isPublished;
