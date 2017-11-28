@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import small.danfer.sso.SingleSignOnException;
-
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.CmsCategoryService;
@@ -67,8 +65,6 @@ public class PmphLoginController {
     @Autowired
     CmsCategoryService    cmsCategoryService;
 
-    // HttpSingleSignOnService service = new HttpSingleSignOnService();
-
     /**
      * 
      * <pre>
@@ -80,26 +76,28 @@ public class PmphLoginController {
 	 * &#64;return
 	 * </pre>
      * 
-     * @throws SingleSignOnException
+     * , method = RequestMethod.GET
+     * 
      */
     @ResponseBody
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/login")
     public ResponseBean login(@RequestParam("username") String username,
-    @RequestParam("password") String password, HttpServletRequest request,
-    HttpServletResponse response) {
+    @RequestParam("password") String password, HttpServletRequest request) {
         // List<Long> permissionsIds = new ArrayList<Long>();// 用户拥有的权限资源ID集合
         // List<PmphPermission> permissions = new ArrayList<PmphPermission>();// 权限资源树集合
         Map<String, Object> resultMap = new HashMap<String, Object>();
         logger.info("username => " + username);
         logger.info("password => " + password);
+        // HttpSingleSignOnService service = new HttpSingleSignOnService();
         try {
-            // String userName = principal.getName();
             PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
             // PmphUser pmphUser = pmphUserService.login(userName, null);
             pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
             if (!RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUser.getAvatar())) {
                 pmphUser.setAvatar(RouteUtil.userAvatar(pmphUser.getAvatar()));
             }
+            // Principal principal = service.singleSignOn(request);
+            // String userName = principal.getName();
             // 根据用户Id查询对应角色(是否为管理员)
             List<PmphRole> pmphRoles = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
             List<Long> roleIds = new ArrayList<Long>(pmphRoles.size());
@@ -187,7 +185,7 @@ public class PmphLoginController {
     @ResponseBody
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public ResponseBean logout(HttpServletRequest request, HttpServletResponse response,
-    @RequestParam("loginType") Short loginType) throws IOException {
+    @RequestParam("loginType") Short loginType) {
         // HttpSingleSignOnService service = new HttpSingleSignOnService();
 
         String sessionId = CookiesUtil.getSessionId(request);
