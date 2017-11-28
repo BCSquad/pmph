@@ -44,9 +44,9 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class DecPositionServiceImpl implements DecPositionService {
 
     @Autowired
-    private DecPositionDao decPositionDao;
+    private DecPositionDao     decPositionDao;
     @Autowired
-    private FileService    fileService;
+    private FileService        fileService;
     @Autowired
     private DecPositionService decPositionService;
     @Autowired
@@ -163,10 +163,11 @@ public class DecPositionServiceImpl implements DecPositionService {
     public long saveBooks(DecPositionVO decPositionVO) throws IOException {
         List<NewDecPosition> list = decPositionVO.getLst();
         if (null == list) {
-        	throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                    CheckedExceptionResult.NULL_PARAM, "list不能为空");
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "list不能为空");
         }
-        List<DecPosition> istDecPositions = decPositionDao.listDecPositions(list.get(0).getDeclarationId());
+        List<DecPosition> istDecPositions =
+        decPositionDao.listDecPositions(list.get(0).getDeclarationId());
         String newId = ",";
         for (NewDecPosition newDecPosition : list) {
             Long id = newDecPosition.getId();
@@ -207,7 +208,7 @@ public class DecPositionServiceImpl implements DecPositionService {
                 decPositionDao.deleteDecPosition(decPositions.getId());
             }
         }
-		return list.size();
+        return list.size();
     }
 
     @Override
@@ -242,19 +243,20 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer count = 0;
         List<DecPosition> decPositions =
         new JsonUtil().getArrayListObjectFromStr(DecPosition.class, jsonDecPosition);// json字符串转List对象集合
-    	Long textbookId = decPositions.get(0).getTextbookId(); // 获取书籍id
-    	if (null == textbookId) {
-    		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                    CheckedExceptionResult.NULL_PARAM, "书籍id为空");
-    	}
-    	List<DecPosition> oldlist = decPositionService.listChosenDecPositionsByTextbookId(textbookId);
-    	Long updaterId = pmphUser.getId(); // 获取修改者id
-    	int userType = 1;
+        Long textbookId = decPositions.get(0).getTextbookId(); // 获取书籍id
+        if (null == textbookId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "书籍id为空");
+        }
+        List<DecPosition> oldlist =
+        decPositionService.listChosenDecPositionsByTextbookId(textbookId);
+        Long updaterId = pmphUser.getId(); // 获取修改者id
+        int userType = 1;
         if (CollectionUtil.isNotEmpty(decPositions)) {
             count = decPositionDao.updateDecPositionEditorSelection(decPositions);
         }
         if (count != 0 && count > 0) {
-        	textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
+            textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
         }
         return count;
     }

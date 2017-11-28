@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.controller.shiro;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import small.danfer.sso.SingleSignOnException;
+import small.danfer.sso.http.HttpSingleSignOnService;
 
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
@@ -54,17 +58,17 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @RequestMapping(value = "/pmph")
 @Controller
 public class PmphLoginController {
-    Logger                logger = LoggerFactory.getLogger(PmphLoginController.class);
+    Logger                  logger  = LoggerFactory.getLogger(PmphLoginController.class);
     @Autowired
-    PmphUserService       pmphUserService;
+    PmphUserService         pmphUserService;
     @Autowired
-    PmphPermissionService pmphPermissionService;
+    PmphPermissionService   pmphPermissionService;
     @Autowired
-    PmphRoleService       pmphRoleService;
+    PmphRoleService         pmphRoleService;
     @Autowired
-    CmsCategoryService    cmsCategoryService;
+    CmsCategoryService      cmsCategoryService;
 
-    // HttpSingleSignOnService service = new HttpSingleSignOnService();
+    HttpSingleSignOnService service = new HttpSingleSignOnService();
 
     /**
      * 
@@ -76,19 +80,20 @@ public class PmphLoginController {
 	 * &#64;param model
 	 * &#64;return
 	 * </pre>
+     * 
+     * @throws SingleSignOnException
      */
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ResponseBean login(@RequestParam("username") String username,
     @RequestParam("password") String password, HttpServletRequest request,
-    HttpServletResponse response) {
+    HttpServletResponse response) throws SingleSignOnException {
         // List<Long> permissionsIds = new ArrayList<Long>();// 用户拥有的权限资源ID集合
         // List<PmphPermission> permissions = new ArrayList<PmphPermission>();// 权限资源树集合
         Map<String, Object> resultMap = new HashMap<String, Object>();
         logger.info("username => " + username);
         logger.info("password => " + password);
         try {
-            // Principal principal = service.singleSignOn(request);
             // String userName = principal.getName();
             PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
             // PmphUser pmphUser = pmphUserService.login(userName, null);
@@ -177,11 +182,15 @@ public class PmphLoginController {
 	 * &#64;param model
 	 * &#64;return
 	 * </pre>
+     * 
+     * @throws IOException
      */
     @ResponseBody
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ResponseBean logout(HttpServletRequest request,
-    @RequestParam("loginType") Short loginType) {
+    public ResponseBean logout(HttpServletRequest request, HttpServletResponse response,
+    @RequestParam("loginType") Short loginType) throws IOException {
+        // HttpSingleSignOnService service = new HttpSingleSignOnService();
+
         String sessionId = CookiesUtil.getSessionId(request);
         HttpSession session = SessionContext.getSession(sessionId);
         if (ObjectUtil.notNull(session)) {
@@ -192,6 +201,7 @@ public class PmphLoginController {
             }
         }
         return new ResponseBean();
+        // response.sendRedirect(service.getSingleSignOnURL());
     }
 
     /**
