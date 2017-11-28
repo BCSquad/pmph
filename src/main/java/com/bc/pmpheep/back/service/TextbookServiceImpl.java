@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -330,15 +331,19 @@ public class TextbookServiceImpl implements TextbookService {
 		return bookList;
 	}
 	
-	@SuppressWarnings("resource")
+	@SuppressWarnings({ "resource", "deprecation" })
 	@Override
 	public List<Textbook> importExcel(MultipartFile file) throws CheckedServiceException,IOException{
 		String fileType = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-		if (!(".xls").equals(fileType)){
+		Workbook workbook = null;
+		if ((".xls").equals(fileType)){
+			workbook = new HSSFWorkbook(file.getInputStream());
+		} else if ((".xlsx").equals(fileType)){
+			workbook = new XSSFWorkbook(file.getInputStream());
+		} else{
 			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "读取的不是xls文件");
+					CheckedExceptionResult.ILLEGAL_PARAM, "读取的不是Excel文件");
 		}
-		Workbook workbook = new HSSFWorkbook(file.getInputStream());
 		List<Textbook> bookList = new ArrayList<>();
 		for (int numSheet = 0 ; numSheet < workbook.getNumberOfSheets();numSheet ++){
 			Sheet sheet = workbook.getSheetAt(numSheet);
