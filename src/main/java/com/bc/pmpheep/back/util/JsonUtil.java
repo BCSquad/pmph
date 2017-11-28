@@ -151,11 +151,11 @@ public class JsonUtil<T> {
         return null;
     }
 
-    // public static void main(String[] args) throws Exception {
-    // JavaType javaType = getCollectionType(ArrayList.class, YourBean.class);
-    // List<YourBean> lst = (List<YourBean>) mapper.readValue(jsonString, javaType);
-    // }
+    public static void main(String[] args) throws Exception {
+        // String jsonDecPosition =
+        // "[{'id':4,'chosenPosition':1,'rank':1,'isDigitalEditor':true},{'id':3,'chosenPosition':2,'rank':3,'isDigitalEditor':true},{'id':1,'chosenPosition':3,'rank':'','isDigitalEditor':false}]";
 
+    }
     /**
      * 获取泛型的Collection Type
      * 
