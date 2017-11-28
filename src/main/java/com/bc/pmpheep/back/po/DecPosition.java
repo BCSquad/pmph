@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * DecPosition
  * 
@@ -23,7 +25,8 @@ public class DecPosition implements Serializable {
     // 申报职务
     private Integer   presetPosition;
     // 是否为数字编辑
-    private Integer   isDigitalEditor;
+    @JsonProperty("isDigitalEditor")
+    private Boolean   isDigitalEditor;
     // 是否进入预选名单
     private Integer   isOnList;
     // 遴选职务
@@ -56,7 +59,7 @@ public class DecPosition implements Serializable {
     }
 
     public DecPosition(Long declarationId, Long textbookId, Integer presetPosition,
-    Integer isDigitalEditor, Integer isOnList, Integer chosenPosition, Integer rank,
+    Boolean isDigitalEditor, Integer isOnList, Integer chosenPosition, Integer rank,
     String syllabusId, String syllabusName, Timestamp gmtCreate, Timestamp gmtUpdate) {
         super();
         this.declarationId = declarationId;
@@ -72,11 +75,11 @@ public class DecPosition implements Serializable {
         this.gmtUpdate = gmtUpdate;
     }
 
-    public Integer getIsDigitalEditor() {
+    public Boolean getIsDigitalEditor() {
         return isDigitalEditor;
     }
 
-    public void setIsDigitalEditor(Integer isDigitalEditor) {
+    public void setIsDigitalEditor(Boolean isDigitalEditor) {
         this.isDigitalEditor = isDigitalEditor;
     }
 

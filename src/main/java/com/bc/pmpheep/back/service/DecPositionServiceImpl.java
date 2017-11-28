@@ -243,12 +243,12 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer count = 0;
         List<DecPosition> decPositions =
         new JsonUtil().getArrayListObjectFromStr(DecPosition.class, jsonDecPosition);// json字符串转List对象集合
-        if (null == decPositions) {
-    		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                    CheckedExceptionResult.NULL_PARAM, "decPositions为空");
-    	}
+        if (CollectionUtil.isEmpty(decPositions)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "decPositions为空");
+        }
         Long textbookId = decPositions.get(0).getTextbookId(); // 获取书籍id
-        if (null == textbookId) {
+        if (ObjectUtil.isNull(textbookId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "书籍id为空");
         }
@@ -259,7 +259,7 @@ public class DecPositionServiceImpl implements DecPositionService {
         if (CollectionUtil.isNotEmpty(decPositions)) {
             count = decPositionDao.updateDecPositionEditorSelection(decPositions);
         }
-        if (count != 0 && count > 0) {
+        if (count > 0) {
             textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
         }
         return count;
