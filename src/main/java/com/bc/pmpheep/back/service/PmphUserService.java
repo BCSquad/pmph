@@ -1,6 +1,9 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -17,6 +20,17 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  */
 public interface PmphUserService {
+	
+	/**
+	 * 更新个人资料
+	 * @author Mryang
+	 * @createDate 2017年11月28日 下午3:36:13
+	 * @param pmphUser
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	boolean updatePersonalData(PmphUser pmphUser,MultipartFile file) throws IOException;
 
 	/**
 	 * 添加单个用户

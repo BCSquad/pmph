@@ -115,7 +115,7 @@ public class MigrationStageSix {
                 + "wd.duties,wd.positional,wd.address,wd.postcode,wd.handset,wd.email,wd.idcardtype,"
                 + "IFNULL(wd.idcardtype,0) idcardtype,"
                 + "wd.idcard,wd.linktel,wd.fax,tm.new_pk tm_materid,s.new_pk sys_userid,"
-                + "bo.new_pk org_id, "
+                + "bo.new_pk org_id,wr.workunit, "
                 + "case when wd.submittype=10 then 0 "
                 + "when wd.submittype=11 or ta.auditstate=10 then 1 "
                 + "when ta.auditstate=12 or wd.submittype is null then 2 "

@@ -243,6 +243,10 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer count = 0;
         List<DecPosition> decPositions =
         new JsonUtil().getArrayListObjectFromStr(DecPosition.class, jsonDecPosition);// json字符串转List对象集合
+        if (null == decPositions) {
+    		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                    CheckedExceptionResult.NULL_PARAM, "decPositions为空");
+    	}
         Long textbookId = decPositions.get(0).getTextbookId(); // 获取书籍id
         if (null == textbookId) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
