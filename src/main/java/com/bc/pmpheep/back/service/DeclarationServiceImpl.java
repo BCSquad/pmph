@@ -247,64 +247,51 @@ public class DeclarationServiceImpl implements DeclarationService {
         return declarationCon;
     }
 
-    @Override
-    public ApplicationVO exportExcel(Long declarationId) {
-        ApplicationVO applicationVO = new ApplicationVO();
-        List<DecPosition> decPositionList = decPositionDao.listDecPositions(declarationId);
-        // 专家信息
-        Declaration declaration = declarationDao.getDeclarationById(declarationId);
-        // 学习经历
-        List<DecEduExp> decEduExpList = decEduExpDao.getListDecEduExpByDeclarationId(declarationId);
-        // 工作经历
-        List<DecWorkExp> decWorkExpList =
-        decWorkExpDao.getListDecWorkExpByDeclarationId(declarationId);
-        // 教学经历
-        List<DecTeachExp> decTeachExpList =
-        decTeachExpDao.getListDecTeachExpByDeclarationId(declarationId);
-        // 兼职学术
-        List<DecAcade> decAcadeList = decAcadeDao.getListDecAcadeByDeclarationId(declarationId);
-        // 上套教材
-        List<DecLastPosition> decLastPositionList =
-        decLastPositionDao.getListDecLastPositionByDeclarationId(declarationId);
-        // 国家级精品课程建设情况 //type 1=国家
-        List<DecCourseConstruction> decNationalCourseConstructionList =
-        decCourseConstructionDao.decNationalCourseConstructionList(declarationId);
-        // 省部级精品课程建设情况//type 2=省部
-        List<DecCourseConstruction> decProvinceCourseConstructionList =
-        decCourseConstructionDao.decProvinceCourseConstructionList(declarationId);
-        // 学校精品课程建设情况 //type 3=学校
-        List<DecCourseConstruction> decSchoolCourseConstructionList =
-        decCourseConstructionDao.decSchoolCourseConstructionList(declarationId);
-        // 主编国家级规划
-        List<DecNationalPlan> decNationalPlanList =
-        decNationalPlanDao.getListDecNationalPlanByDeclarationId(declarationId);
-        // 教材编写
-        List<DecTextbook> decTextbookList =
-        decTextbookDao.getListDecTextbookByDeclarationId(declarationId);
-        // 其他教材编写情况
-
-        // 作家科研
-        List<DecResearch> decResearchList =
-        decResearchDao.getListDecResearchByDeclarationId(declarationId);
-        // 作家扩展项
-        List<DecExtension> decExtensionList =
-        decExtensionDao.getListDecExtensionsByDeclarationId(declarationId);
-        // 把查询出来的信息添加进applicationVO
-        applicationVO.setDecPositionList(decPositionList);
-        applicationVO.setDeclaration(declaration);
-        applicationVO.setDecEduExpList(decEduExpList);
-        applicationVO.setDecWorkExpList(decWorkExpList);
-        applicationVO.setDecTeachExpList(decTeachExpList);
-        applicationVO.setDecAcadeList(decAcadeList);
-        applicationVO.setDecLastPositionList(decLastPositionList);
-        applicationVO.setDecNationalCourseConstructionList(decNationalCourseConstructionList);
-        applicationVO.setDecProvinceCourseConstructionList(decProvinceCourseConstructionList);
-        ;
-        applicationVO.setDecSchoolCourseConstructionList(decSchoolCourseConstructionList);
-        applicationVO.setDecNationalPlanList(decNationalPlanList);
-        applicationVO.setDecTextbookList(decTextbookList);
-        applicationVO.setDecResearchList(decResearchList);
-        applicationVO.setDecExtensionList(decExtensionList);
-        return applicationVO;
-    }
+	@Override
+	public ApplicationVO exportExcel(Long declarationId) {
+		ApplicationVO applicationVO = new ApplicationVO();
+		List<DecPosition> decPositionList = decPositionDao.listDecPositions(declarationId);
+		// 专家信息
+		Declaration declaration = declarationDao.getDeclarationById(declarationId);
+		// 学习经历
+		List<DecEduExp> decEduExpList = decEduExpDao.getListDecEduExpByDeclarationId(declarationId);
+		// 工作经历
+		List<DecWorkExp> decWorkExpList = decWorkExpDao.getListDecWorkExpByDeclarationId(declarationId);
+		// 教学经历
+		List<DecTeachExp> decTeachExpList = decTeachExpDao.getListDecTeachExpByDeclarationId(declarationId);
+		// 兼职学术
+		List<DecAcade> decAcadeList = decAcadeDao.getListDecAcadeByDeclarationId(declarationId);
+		// 上套教材
+		List<DecLastPosition> decLastPositionList = decLastPositionDao.getListDecLastPositionByDeclarationId(declarationId);
+		// 国家级精品课程建设情况 //type 1=国家
+		List<DecCourseConstruction> decNationalCourseConstructionList = decCourseConstructionDao.decNationalCourseConstructionList(declarationId);
+		// 省部级精品课程建设情况//type 2=省部
+		List<DecCourseConstruction> decProvinceCourseConstructionList = decCourseConstructionDao.decProvinceCourseConstructionList(declarationId);
+		// 学校精品课程建设情况   //type 3=学校
+		List<DecCourseConstruction> decSchoolCourseConstructionList = decCourseConstructionDao.decSchoolCourseConstructionList(declarationId);
+		// 主编国家级规划
+		List<DecNationalPlan> decNationalPlanList = decNationalPlanDao.getListDecNationalPlanByDeclarationId(declarationId);
+		// 教材编写
+		List<DecTextbook> decTextbookList = decTextbookDao.getListDecTextbookByDeclarationId(declarationId);
+		// 作家科研
+		List<DecResearch> decResearchList = decResearchDao.getListDecResearchByDeclarationId(declarationId);
+		// 作家扩展项
+		List<DecExtension> decExtensionList = decExtensionDao.getListDecExtensionsByDeclarationId(declarationId);
+		// 把查询出来的信息添加进applicationVO
+		applicationVO.setDecPositionList(decPositionList);
+		applicationVO.setDeclaration(declaration);
+		applicationVO.setDecEduExpList(decEduExpList);
+		applicationVO.setDecWorkExpList(decWorkExpList);
+		applicationVO.setDecTeachExpList(decTeachExpList);
+		applicationVO.setDecAcadeList(decAcadeList);
+		applicationVO.setDecLastPositionList(decLastPositionList);
+		applicationVO.setDecNationalCourseConstructionList(decNationalCourseConstructionList);
+		applicationVO.setDecProvinceCourseConstructionList(decProvinceCourseConstructionList);;
+		applicationVO.setDecSchoolCourseConstructionList(decSchoolCourseConstructionList);
+		applicationVO.setDecNationalPlanList(decNationalPlanList);
+		applicationVO.setDecTextbookList(decTextbookList);
+		applicationVO.setDecResearchList(decResearchList);
+		applicationVO.setDecExtensionList(decExtensionList);
+		return applicationVO;
+	}
 }
