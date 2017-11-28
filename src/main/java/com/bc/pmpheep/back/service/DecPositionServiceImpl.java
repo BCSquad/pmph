@@ -162,9 +162,8 @@ public class DecPositionServiceImpl implements DecPositionService {
     @Override
     public DecPositionVO saveBooks(DecPositionVO decPositionVO) throws IOException {
         List<NewDecPosition> list = decPositionVO.getLst();
-        List<DecPosition> istDecPositions = null;
-        String newId = "";
-        String oldId = "";
+        List<DecPosition> istDecPositions = decPositionDao.listDecPositions(list.get(0).getDeclarationId());
+        String newId = ",";
         for (NewDecPosition newDecPosition : list) {
             Long id = newDecPosition.getId();
             Long declarationId = newDecPosition.getDeclarationId();
@@ -181,11 +180,7 @@ public class DecPositionServiceImpl implements DecPositionService {
             decPosition.setDeclarationId(declarationId);
             decPosition.setTextbookId(textbookId);
             decPosition.setPresetPosition(presetPosition);
-            istDecPositions = decPositionDao.listDecPositions(declarationId);
-            for (int o = 0; o < istDecPositions.size(); o++) {
-                Long oid = istDecPositions.get(o).getId();
-                oldId += oid + ",";
-            }
+            decPosition.setId(id);
             if (null == id) { // 保存或者修改
                 decPositionDao.addDecPosition(decPosition);
                 String mongoId = null;
@@ -203,9 +198,8 @@ public class DecPositionServiceImpl implements DecPositionService {
             }
             newId += decPosition.getId() + ",";
         }
-        String newCountId = newId + oldId;
         for (DecPosition decPositions : istDecPositions) {
-            if (!newCountId.contains("," + decPositions.getId() + ",")) { // 不包含
+            if (!newId.contains("," + decPositions.getId() + ",")) { // 不包含
                 decPositionDao.deleteDecPosition(decPositions.getId());
             }
         }
