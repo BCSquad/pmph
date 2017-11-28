@@ -7,6 +7,7 @@ package com.bc.pmpheep.controller.bean;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessResourceFailureException;
 
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -50,6 +51,10 @@ public class ResponseBeanAop {
         } else if (ex instanceof ClassCastException) {
             responseBean.setMsg("类型转换异常");
             responseBean.setCode(ResponseBean.CLASS_CAST);
+            logger.error(sb.toString(), ex.toString());
+        } else if (ex instanceof DataAccessResourceFailureException) {
+            responseBean.setMsg("数据库连接超时");
+            responseBean.setCode(ResponseBean.MONGODB_TIME_OUT);
             logger.error(sb.toString(), ex.toString());
         } else {
             responseBean.setMsg(ex.toString());
