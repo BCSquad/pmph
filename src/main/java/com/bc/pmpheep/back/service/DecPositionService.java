@@ -9,6 +9,7 @@ import java.util.List;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.back.vo.DecPositionVO;
+import com.bc.pmpheep.back.vo.NewDecPosition;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -119,7 +120,7 @@ public interface DecPositionService {
      * @return
      * @throws IOException
      */
-    DecPositionVO saveBooks(DecPositionVO decPositionVO) throws IOException;
+    List<NewDecPosition> saveBooks(DecPositionVO decPositionVO) throws IOException;
 
     /**
      * 

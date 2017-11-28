@@ -160,9 +160,17 @@ public class DecPositionServiceImpl implements DecPositionService {
     }
 
     @Override
-    public DecPositionVO saveBooks(DecPositionVO decPositionVO) throws IOException {
+    public List<NewDecPosition> saveBooks(DecPositionVO decPositionVO) throws IOException {
         List<NewDecPosition> list = decPositionVO.getLst();
+        if (null == list) {
+        	throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                    CheckedExceptionResult.NULL_PARAM, "list不能为空");
+        }
         List<DecPosition> istDecPositions = decPositionDao.listDecPositions(list.get(0).getDeclarationId());
+        if (null == istDecPositions) {
+        	throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                    CheckedExceptionResult.NULL_PARAM, "istDecPositions不能为空");
+        }
         String newId = ",";
         for (NewDecPosition newDecPosition : list) {
             Long id = newDecPosition.getId();
@@ -203,7 +211,7 @@ public class DecPositionServiceImpl implements DecPositionService {
                 decPositionDao.deleteDecPosition(decPositions.getId());
             }
         }
-        return decPositionVO;
+		return list;
     }
 
     @Override
@@ -242,9 +250,11 @@ public class DecPositionServiceImpl implements DecPositionService {
     	List<DecPosition> oldlist = decPositionService.listChosenDecPositionsByTextbookId(textbookId);
     	Long updaterId = pmphUser.getId(); // 获取修改者id
     	int userType = 1;
-    	textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
         if (CollectionUtil.isNotEmpty(decPositions)) {
             count = decPositionDao.updateDecPositionEditorSelection(decPositions);
+        }
+        if (count != 0 && count > 0) {
+        	textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
         }
         return count;
     }
