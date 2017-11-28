@@ -82,9 +82,10 @@ public class MaterialController {
 		String sessionId = CookiesUtil.getSessionId(request);
 		try {
 			return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
-					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
-					materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-					materialVO.getMaterialNoteAttachments(), true));
+					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(),
+					materialVO.getMaterial(), materialVO.getMaterialExtra(), noticeFiles,
+					materialVO.getMaterialNoticeAttachments(), noteFiles, materialVO.getMaterialNoteAttachments(),
+					true));
 		} catch (CheckedServiceException e) {
 			return new ResponseBean(e);
 		} catch (IOException e) {
@@ -123,9 +124,10 @@ public class MaterialController {
 		String sessionId = CookiesUtil.getSessionId(request);
 		try {
 			return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
-					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(), materialVO.getMaterial(),
-					materialVO.getMaterialExtra(), noticeFiles, materialVO.getMaterialNoticeAttachments(), noteFiles,
-					materialVO.getMaterialNoteAttachments(), true));
+					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(),
+					materialVO.getMaterial(), materialVO.getMaterialExtra(), noticeFiles,
+					materialVO.getMaterialNoticeAttachments(), noteFiles, materialVO.getMaterialNoteAttachments(),
+					true));
 		} catch (CheckedServiceException e) {
 			return new ResponseBean(e);
 		} catch (IOException e) {
@@ -157,9 +159,9 @@ public class MaterialController {
 	@ResponseBody
 	@LogDetail(businessType = Business_Type, logRemark = "查询教材公告列表")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ResponseBean list(/*HttpServletRequest request*/String sessionId, Integer pageSize, Integer pageNumber, Boolean isMy,
+	public ResponseBean list(HttpServletRequest request, Integer pageSize, Integer pageNumber, Boolean isMy,
 			String state, String materialName, String contactUserName) {
-//		String sessionId = CookiesUtil.getSessionId(request);
+		String sessionId = CookiesUtil.getSessionId(request);
 		PageParameter<MaterialListVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		MaterialListVO materialListVO = new MaterialListVO();
 		materialListVO.setIsMy(isMy);
