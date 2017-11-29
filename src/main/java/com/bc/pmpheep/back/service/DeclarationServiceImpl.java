@@ -45,6 +45,7 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.ApplicationVO;
 import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
+import com.bc.pmpheep.back.vo.DeclarationOrDisplayVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -260,7 +261,9 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 		}
 		// 专家信息
-		Declaration declaration = declarationDao.getDeclarationById(declarationId);
+		DeclarationOrDisplayVO declaration = declarationDao.getDeclarationByIdOrOrgName(declarationId);
+		String orgName = declaration.getOrgName();
+		declaration.setOrgName(orgName);
 		// 学习经历
 		List<DecEduExp> decEduExpList = decEduExpDao.getListDecEduExpByDeclarationId(declarationId);
 		// 工作经历

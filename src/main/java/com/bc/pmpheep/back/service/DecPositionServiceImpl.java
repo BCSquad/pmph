@@ -161,8 +161,8 @@ public class DecPositionServiceImpl implements DecPositionService {
 
     @Override
     public long saveBooks(DecPositionVO decPositionVO) throws IOException {
-        List<NewDecPosition> list = decPositionVO.getLst();
-        if (null == list) {
+        List<NewDecPosition> list = decPositionVO.getList();
+        if (CollectionUtil.isEmpty(list)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "list不能为空");
         }
@@ -175,6 +175,7 @@ public class DecPositionServiceImpl implements DecPositionService {
             Long textbookId = newDecPosition.getTextbookId();
             Integer presetPosition = newDecPosition.getPresetPosition();
             MultipartFile file = newDecPosition.getFile();
+            Boolean isDigitalEditor = newDecPosition.getIsDigitalEditor();
             DecPosition decPosition = new DecPosition();
             if (null == file) {
                 decPosition.setSyllabusName(null);
@@ -185,8 +186,9 @@ public class DecPositionServiceImpl implements DecPositionService {
             decPosition.setDeclarationId(declarationId);
             decPosition.setTextbookId(textbookId);
             decPosition.setPresetPosition(presetPosition);
+            decPosition.setIsDigitalEditor(isDigitalEditor);
             decPosition.setId(id);
-            if (null == id) { // 保存或者修改
+            if (ObjectUtil.isNull(id)) { // 保存或者修改
                 decPositionDao.addDecPosition(decPosition);
                 String mongoId = null;
                 if (null == file) {
