@@ -5,6 +5,8 @@ import java.io.Serializable;
 import org.apache.ibatis.type.Alias;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  *@author MrYang 
  *@CreateDate 2017年11月27日 下午2:42:41
@@ -19,6 +21,15 @@ public class NewDecPosition implements Serializable {
 	private Long textbookId;
 	private Integer presetPosition;
 	private MultipartFile file;
+	// 是否为数字编辑
+    @JsonProperty("isDigitalEditor")
+    private Boolean   isDigitalEditor;
+	public Boolean getIsDigitalEditor() {
+		return isDigitalEditor;
+	}
+	public void setIsDigitalEditor(Boolean isDigitalEditor) {
+		this.isDigitalEditor = isDigitalEditor;
+	}
 	public NewDecPosition() {
 		super();
 	}

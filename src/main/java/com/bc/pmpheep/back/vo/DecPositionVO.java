@@ -9,14 +9,14 @@ import org.apache.ibatis.type.Alias;
 @Alias("DecPositionVO")
 public class DecPositionVO implements Serializable {
 	
-	private List<NewDecPosition> lst;
-	
-	public List<NewDecPosition> getLst() {
-		return lst;
+	private List<NewDecPosition> list;
+
+	public List<NewDecPosition> getList() {
+		return list;
 	}
 
-	public void setLst(List<NewDecPosition> lst) {
-		this.lst = lst;
+	public void setList(List<NewDecPosition> list) {
+		this.list = list;
 	}
 
 	public DecPositionVO() {

@@ -295,8 +295,10 @@
 	<!-- 根据declarationId查询作家申报职位信息并显示图书名字 -->
 	<select id="listDecPositionsOrBook" parameterType="java.lang.Long"
 		resultType="DecPositionDisplayVO">
-		select *,tb.textbook_name from dec_position dp 
+		select *,tb.textbook_name,o.org_name from dec_position dp 
 		left join (select id,textbook_name from textbook) tb on (tb.id=dp.textbook_id)
+		left join (select id,org_id from declaration) d on (d.id=dp.declaration_id)
+		left join (select id,org_name from org) o on (d.org_id=o.id)
 		where
 		declaration_id=#{declarationId};
 	</select>
