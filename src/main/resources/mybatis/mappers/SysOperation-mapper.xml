@@ -112,5 +112,7 @@
 			</if>
 			order by 
 				so.id desc
+			LIMIT
+			#{start},#{pageSize}
 	</select>
 </mapper>
