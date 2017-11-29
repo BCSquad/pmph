@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialProjectEditorDao;
 import com.bc.pmpheep.back.po.MaterialProjectEditor;
+import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -49,7 +50,7 @@ public class MaterialProjectEditorServiceImpl extends BaseService implements Mat
 	}
 
 	@Override
-	public List<MaterialProjectEditor> listMaterialProjectEditors(Long materialId) throws CheckedServiceException {
+	public List<MaterialProjectEditorVO> listMaterialProjectEditors(Long materialId) throws CheckedServiceException {
 		if (null == materialId) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PROJECTER,
 					CheckedExceptionResult.NULL_PARAM, "教材id为空");

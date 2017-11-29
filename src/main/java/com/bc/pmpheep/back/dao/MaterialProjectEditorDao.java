@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.MaterialProjectEditor;
+import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 
 /**
  * @author MrYang
@@ -51,7 +52,7 @@ public interface MaterialProjectEditorDao {
 	 * @param materialId
 	 * @return List<MaterialProjectEditor>
 	 */
-	List<MaterialProjectEditor> listMaterialProjectEditors(Long materialId);
+	List<MaterialProjectEditorVO> listMaterialProjectEditors(Long materialId);
 
 	/**
 	 * 
