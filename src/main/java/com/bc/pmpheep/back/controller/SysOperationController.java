@@ -30,7 +30,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  * </pre>
  */
 @Controller
-@RequestMapping(value = "/sysOperation")
+@RequestMapping(value = "/sys/operation")
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class SysOperationController {
     @Autowired
@@ -55,7 +55,7 @@ public class SysOperationController {
     /**
      * 
      * <pre>
-     * 功能描述：分页查询条件查询SysOperation 内容发布列表
+     * 功能描述：分页查询条件查询SysOperation 系统日志列表
      * 使用示范：
      *
      * @param pageNumber 当前页
