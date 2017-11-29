@@ -15,6 +15,25 @@ public final class DateUtil {
     private final static SimpleDateFormat sdfDays = new SimpleDateFormat("yyyyMMdd");
 
     private final static SimpleDateFormat sdfTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    
+    /**
+     * 按照yyyy-MM-dd的格式，字符串转日期
+     * 
+     * @param date
+     * @return
+     */
+    public static Date str3Date(String date) {
+        if (StringUtil.notEmpty(date)) {
+            try {
+                return sdfDay.parse(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return new Date();
+        } else {
+            return null;
+        }
+    }
 
     /**
      * 获取YYYY格式
