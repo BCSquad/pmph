@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.DecPosition;
+import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -161,5 +162,16 @@ public interface DecPositionDao {
      * </pre>
      */
     Integer updateDecPositionEditorSelection(List<DecPosition> decPositions);
+    
+    /**
+     * 
+     * Description:根据申报表id查询申报职位信息并显示图书名字
+     * 
+     * @author:tyc
+     * @date:2017年11月29日上午8:40:37
+     * @Param:
+     * @Return:List<DecPosition>
+     */
+    List<DecPositionDisplayVO> listDecPositionsOrBook(Long declarationId);
 
 }
