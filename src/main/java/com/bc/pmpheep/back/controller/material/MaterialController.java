@@ -28,6 +28,7 @@ import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.PmphGroupService;
 import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.vo.MaterialListVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -74,13 +75,17 @@ public class MaterialController {
 	 *            备注文件
 	 * @return
 	 */
+	@ResponseBody
 	@LogDetail(businessType = Business_Type, logRemark = "新建遴选公告")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseBean add(MaterialVO materialVO, HttpServletRequest request, MultipartFile[] noticeFiles,
-			MultipartFile[] noteFiles) {
+			MultipartFile[] noteFiles,String deadline,String actualDeadline,String ageDeadline) {
 
 		String sessionId = CookiesUtil.getSessionId(request);
 		try {
+			materialVO.getMaterial().setDeadline(DateUtil.str3Date(deadline));
+			materialVO.getMaterial().setActualDeadline(DateUtil.str3Date(actualDeadline));
+			materialVO.getMaterial().setAgeDeadline(DateUtil.str3Date(ageDeadline));
 			return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
 					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(),
 					materialVO.getMaterial(), materialVO.getMaterialExtra(), noticeFiles,
@@ -117,12 +122,16 @@ public class MaterialController {
 	 *            备注文件
 	 * @return
 	 */
+	@ResponseBody
 	@LogDetail(businessType = Business_Type, logRemark = "修改遴选公告")
-	@RequestMapping(value = "/update", method = RequestMethod.PUT)
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public ResponseBean update(HttpServletRequest request, MaterialVO materialVO, MultipartFile[] noticeFiles,
-			MultipartFile[] noteFiles) {
+			MultipartFile[] noteFiles,String deadline,String actualDeadline,String ageDeadline) {
 		String sessionId = CookiesUtil.getSessionId(request);
 		try {
+			materialVO.getMaterial().setDeadline(DateUtil.str3Date(deadline));
+			materialVO.getMaterial().setActualDeadline(DateUtil.str3Date(actualDeadline));
+			materialVO.getMaterial().setAgeDeadline(DateUtil.str3Date(ageDeadline));
 			return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
 					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(),
 					materialVO.getMaterial(), materialVO.getMaterialExtra(), noticeFiles,
