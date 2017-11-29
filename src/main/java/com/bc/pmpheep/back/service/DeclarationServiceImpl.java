@@ -254,10 +254,12 @@ public class DeclarationServiceImpl implements DeclarationService {
 		List<DecPositionDisplayVO> decPositionList = decPositionDao.listDecPositionsOrBook(declarationId);
 		for (DecPositionDisplayVO decPositions : decPositionList) {
 			String syllabusId = decPositions.getSyllabusId();
+			String orgName = decPositions.getOrgName();
 			if (StringUtil.notEmpty(syllabusId)) {
 				String syllabusIds = RouteUtil.MONGODB_FILE + syllabusId;
 				decPositions.setSyllabusId(syllabusIds);
 			}
+			decPositions.setOrgName(orgName);
 		}
 		// 专家信息
 		Declaration declaration = declarationDao.getDeclarationById(declarationId);
