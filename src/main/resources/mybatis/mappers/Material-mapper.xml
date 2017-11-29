@@ -439,6 +439,11 @@
 		resultType="Material">
 		select * from material where id=#{id} ;
 	</select>
+	
+	<!-- 根据id查询  教材名字-->
+	<select id="getMaterialNameById" parameterType="java.lang.Long" resultType="java.lang.String">
+		select material_name  from material where id=#{id} ;
+	</select>
 
 	<!-- 查询表单的数据总数 -->
 	<select id="getMaterialCount" resultType="Long">

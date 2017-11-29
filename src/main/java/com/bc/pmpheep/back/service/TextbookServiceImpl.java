@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -347,10 +348,11 @@ public class TextbookServiceImpl implements TextbookService {
 	public List<Textbook> importExcel(MultipartFile file) throws CheckedServiceException,IOException{
 		String fileType = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 		Workbook workbook = null;
+		InputStream in = file.getInputStream();
 		if ((".xls").equals(fileType)){
-			workbook = new HSSFWorkbook(file.getInputStream());
+			workbook = new HSSFWorkbook(in);
 		} else if ((".xlsx").equals(fileType)){
-			workbook = new XSSFWorkbook(file.getInputStream());
+			workbook = new XSSFWorkbook(in);
 		} else{
 			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
 					CheckedExceptionResult.ILLEGAL_PARAM, "读取的不是Excel文件");
@@ -361,8 +363,8 @@ public class TextbookServiceImpl implements TextbookService {
 			if (null == sheet){
 				continue;
 			}
-			Textbook textbook = new Textbook();
 			for (int rowNum = 1 ; rowNum <= sheet.getLastRowNum();rowNum ++){
+				Textbook textbook = new Textbook();
 				Row row = sheet.getRow(rowNum);
 				if (null == row){
 					break;
