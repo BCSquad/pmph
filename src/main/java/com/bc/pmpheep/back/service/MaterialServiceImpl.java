@@ -717,9 +717,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		List<MaterialExtension> materialExtensionList = materialExtensionService.getMaterialExtensionByMaterialId(id);
 		String materialExtensions = gson.toJson(materialExtensionList);
 		// 项目编辑
-		List<MaterialProjectEditor> materialProjectEditorList = materialProjectEditorService
+		List<MaterialProjectEditorVO> materialProjectEditorVOList = materialProjectEditorService
 				.listMaterialProjectEditors(id);
-		String materialProjectEditors = gson.toJson(materialProjectEditorList);
+		String materialProjectEditorVOs = gson.toJson(materialProjectEditorVOList);
 		// 通知附件信息
 		List<MaterialNoticeAttachment> materialNoticeAttachmentList = materialNoticeAttachmentService
 				.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
@@ -734,7 +734,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialExtra, 
 				materialContacts, 
 				materialExtensions, 
-				materialProjectEditors,
+				materialProjectEditorVOs,
 				materialNoticeAttachments,
 				materialNoteAttachments);
 	}
