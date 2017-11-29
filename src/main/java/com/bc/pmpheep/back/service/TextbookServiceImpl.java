@@ -363,8 +363,8 @@ public class TextbookServiceImpl implements TextbookService {
 			if (null == sheet){
 				continue;
 			}
-			Textbook textbook = new Textbook();
 			for (int rowNum = 1 ; rowNum <= sheet.getLastRowNum();rowNum ++){
+				Textbook textbook = new Textbook();
 				Row row = sheet.getRow(rowNum);
 				if (null == row){
 					break;
