@@ -14,8 +14,6 @@ public class DecPositionDisplayVO implements Serializable {
     private Long      id;
     // 申报表
     private Long      declarationId;
-	// 机构名称
-    private String    orgName;
     // 书籍id
     private Long      textbookId;
     // 书籍名称
@@ -58,14 +56,6 @@ public class DecPositionDisplayVO implements Serializable {
 
 	public void setDeclarationId(Long declarationId) {
 		this.declarationId = declarationId;
-	}
-
-	public String getOrgName() {
-		return orgName;
-	}
-
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
 	}
 
 	public Long getTextbookId() {
@@ -159,14 +149,13 @@ public class DecPositionDisplayVO implements Serializable {
 	@Override
 	public String toString() {
 		return "DecPositionDisplayVO [id=" + id + ", declarationId="
-				+ declarationId + ", orgName=" + orgName + ", textbookId="
-				+ textbookId + ", textbookName=" + textbookName
-				+ ", presetPosition=" + presetPosition + ", isDigitalEditor="
-				+ isDigitalEditor + ", isOnList=" + isOnList
-				+ ", chosenPosition=" + chosenPosition + ", rank=" + rank
-				+ ", syllabusId=" + syllabusId + ", syllabusName="
-				+ syllabusName + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
-				+ gmtUpdate + "]";
+				+ declarationId + ", textbookId=" + textbookId
+				+ ", textbookName=" + textbookName + ", presetPosition="
+				+ presetPosition + ", isDigitalEditor=" + isDigitalEditor
+				+ ", isOnList=" + isOnList + ", chosenPosition="
+				+ chosenPosition + ", rank=" + rank + ", syllabusId="
+				+ syllabusId + ", syllabusName=" + syllabusName
+				+ ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
 	}
     
     

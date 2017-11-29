@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
+import com.bc.pmpheep.back.vo.DeclarationOrDisplayVO;
 
 
 /**
@@ -91,4 +92,13 @@ public interface DeclarationDao {
 	 * @return 符合条件的申报表审核分页数据
 	 */
 	List<DeclarationListVO> listDeclaration(PageParameter<Map<String, Object>> pageParameter);
+	
+	/**
+	 * 通过主键id查询一个作家申报信息并包含申报机构名称
+	 * 
+	 * @Param id
+	 * 
+	 * @Return Declaration
+	 */
+	DeclarationOrDisplayVO getDeclarationByIdOrOrgName(Long id);
 }

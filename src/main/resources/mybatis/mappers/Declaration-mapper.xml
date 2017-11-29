@@ -458,4 +458,12 @@
 		limit #{start},#{pageSize}
 	</select>
 	
+	<!-- 根据id查询一个作家申报信息并包含申报机构名称 -->
+	<select id="getDeclarationByIdOrOrgName" parameterType="java.lang.Long"
+		resultType="DeclarationOrDisplayVO">
+		select *,o.org_name from declaration d 
+		left join (select id,org_name from org) o on (o.id=d.org_id) 
+		where id=#{id};
+	</select>
+	
 </mapper>

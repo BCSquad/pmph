@@ -16,7 +16,6 @@ import com.bc.pmpheep.back.po.DecResearch;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
-import com.bc.pmpheep.back.po.Declaration;
 
 /**
  *@author MrYang 
@@ -29,7 +28,7 @@ public class ApplicationVO implements Serializable {
 	//申报职位
 	private List<DecPositionDisplayVO> decPositionList =new ArrayList<DecPositionDisplayVO>(5);
 	//作家申报表
-	private Declaration       declaration     =new Declaration();
+	private DeclarationOrDisplayVO       declaration     =new DeclarationOrDisplayVO();
 	//主要学习经历
 	private List<DecEduExp>   decEduExpList   =new ArrayList<DecEduExp>(5);
 	//主要工作经历
@@ -66,10 +65,10 @@ public class ApplicationVO implements Serializable {
 	public void setDecPositionList(List<DecPositionDisplayVO> decPositionList) {
 		this.decPositionList = decPositionList;
 	}
-	public Declaration getDeclaration() {
+	public DeclarationOrDisplayVO getDeclaration() {
 		return declaration;
 	}
-	public void setDeclaration(Declaration declaration) {
+	public void setDeclaration(DeclarationOrDisplayVO declaration) {
 		this.declaration = declaration;
 	}
 	public List<DecEduExp> getDecEduExpList() {
