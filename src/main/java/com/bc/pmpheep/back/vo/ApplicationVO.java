@@ -12,7 +12,6 @@ import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecExtension;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecNationalPlan;
-import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.DecResearch;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
@@ -28,7 +27,7 @@ import com.bc.pmpheep.back.po.Declaration;
 @Alias("ApplicationVO")
 public class ApplicationVO implements Serializable {
 	//申报职位
-	private List<DecPosition> decPositionList =new ArrayList<DecPosition>(5);
+	private List<DecPositionDisplayVO> decPositionList =new ArrayList<DecPositionDisplayVO>(5);
 	//作家申报表
 	private Declaration       declaration     =new Declaration();
 	//主要学习经历
@@ -61,10 +60,10 @@ public class ApplicationVO implements Serializable {
 		super();
 	}
 	
-	public List<DecPosition> getDecPositionList() {
+	public List<DecPositionDisplayVO> getDecPositionList() {
 		return decPositionList;
 	}
-	public void setDecPositionList(List<DecPosition> decPositionList) {
+	public void setDecPositionList(List<DecPositionDisplayVO> decPositionList) {
 		this.decPositionList = decPositionList;
 	}
 	public Declaration getDeclaration() {
