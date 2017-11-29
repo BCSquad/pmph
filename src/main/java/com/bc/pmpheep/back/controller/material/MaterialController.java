@@ -181,10 +181,17 @@ public class MaterialController {
 		return new ResponseBean(materialService.listMaterials(pageParameter, sessionId));
 	}
 	
+	/**
+	 * 获取教材名称  通过主键id 
+	 * @author Mryang
+	 * @createDate 2017年11月29日 上午11:22:16
+	 * @param id 教材id
+	 * @return
+	 */
 	@ResponseBody
 	@LogDetail(businessType = Business_Type, logRemark = "根据id获取教材名称")
 	@RequestMapping(value = "/materialName", method = RequestMethod.GET)
-	public ResponseBean materialName(Long id) {
+	public ResponseBean materialName(@RequestParam(value = "id", required = true) Long id) {
 		return new ResponseBean(materialService.getMaterialNameById(id));
 	}
 
