@@ -90,7 +90,7 @@ public class MaterialController {
 					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(),
 					materialVO.getMaterial(), materialVO.getMaterialExtra(), noticeFiles,
 					materialVO.getMaterialNoticeAttachments(), noteFiles, materialVO.getMaterialNoteAttachments(),
-					true));
+					false));
 		} catch (CheckedServiceException e) {
 			return new ResponseBean(e);
 		} catch (IOException e) {
