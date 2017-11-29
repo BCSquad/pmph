@@ -91,6 +91,14 @@ public class MaterialServiceTest extends BaseTest {
     }
     @Test
     @Rollback(Const.ISROLLBACK) 
+    public void testGetMaterialNameById() {
+    	materialService.addMaterial(material);
+    	//查询
+    	String name = materialService.getMaterialNameById(material.getId());
+    	Assert.assertNotNull("获取数据失败",name);
+    }
+    @Test
+    @Rollback(Const.ISROLLBACK) 
     public void testGetListMaterial() {
     	// 获取教材集合
     	Assert.assertNotNull("获取教材集合失败", materialService.getListMaterial(material.getMaterialName()));

@@ -180,6 +180,13 @@ public class MaterialController {
 		pageParameter.setParameter(materialListVO);
 		return new ResponseBean(materialService.listMaterials(pageParameter, sessionId));
 	}
+	
+	@ResponseBody
+	@LogDetail(businessType = Business_Type, logRemark = "根据id获取教材名称")
+	@RequestMapping(value = "/materialName", method = RequestMethod.GET)
+	public ResponseBean materialName(Long id) {
+		return new ResponseBean(materialService.getMaterialNameById(id));
+	}
 
 	/**
 	 * 

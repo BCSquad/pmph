@@ -1,10 +1,8 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.Textbook;
@@ -50,6 +48,14 @@ public interface MaterialDao {
      * @return Material
      */
     Material getMaterialById(Long id);
+    
+    /**
+   	 * 获取教材名称  通过主键id
+   	 * @param id
+   	 * @return Material
+   	 * @return 教材名称
+   	 */
+   	String getMaterialNameById(Long id);
 
     /**
      * 
