@@ -262,8 +262,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		// 专家信息
 		DeclarationOrDisplayVO declaration = declarationDao.getDeclarationByIdOrOrgName(declarationId);
-		String orgName = declaration.getOrgName();
-		declaration.setOrgName(orgName);
+		String orgNameOne = declaration.getOrgNameOne();
+		declaration.setOrgName(orgNameOne);
 		// 学习经历
 		List<DecEduExp> decEduExpList = decEduExpDao.getListDecEduExpByDeclarationId(declarationId);
 		// 工作经历

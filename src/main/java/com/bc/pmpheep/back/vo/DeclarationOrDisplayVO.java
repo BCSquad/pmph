@@ -70,7 +70,12 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 	
 	public DeclarationOrDisplayVO() {
 	}
-
+	
+	public DeclarationOrDisplayVO(Long id) {
+		super();
+		this.id = id;
+	}
+	
 	public Long getId() {
 		return id;
 	}
