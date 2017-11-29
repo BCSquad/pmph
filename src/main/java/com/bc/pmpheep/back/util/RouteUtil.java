@@ -25,9 +25,9 @@ public class RouteUtil {
 	// mongoDB图片的前缀
 	public static final String MONGODB_IMAGE = "/pmpheep/image/";
 	// mongoDB文件的前缀(小组)
-	public static final String MONGODB_GROUP_FILE = "/groupfile/download/";
+	public static final String MONGODB_GROUP_FILE = "/pmpheep/groupfile/download/";
 	// mongoDB文件的前缀(普通)
-	public static final String MONGODB_FILE = "/file/download/";
+	public static final String MONGODB_FILE = "/pmpheep/file/download/";
 
 	/**
 	 * 

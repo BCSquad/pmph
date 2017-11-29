@@ -416,36 +416,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                   message.getContent(), DateUtil.getCurrentTime());
             myWebSocketHandler.sendWebSocketMessageToUser(websocketUserIds, webScocketMessage);
             // 添加附件到MongoDB表中
-            if (ArrayUtil.isNotEmpty(files)) {
-                for (int i = 0; i < files.length; i++) {
-                    File file = FileUpload.getFileByFilePath(files[i]);
-                    // 循环获取file数组中得文件
-                    if (StringUtil.notEmpty(file.getName())) {
-                        String gridFSFileId =
-                        fileService.saveLocalFile(file,
-                                                  FileType.MSG_FILE,
-                                                  CastUtil.castLong(message.getId()));// 上传文件到MongoDB
-                        if (StringUtil.isEmpty(gridFSFileId)) {
-                            throw new CheckedServiceException(
-                                                              CheckedExceptionBusiness.MESSAGE,
-                                                              CheckedExceptionResult.FILE_UPLOAD_FAILED,
-                                                              "文件上传失败!");
-                        }
-                        // 保存对应数据
-                        MessageAttachment mAttachment =
-                        messageAttachmentService.addMessageAttachment(new MessageAttachment(
-                                                                                            message.getId(),
-                                                                                            gridFSFileId,
-                                                                                            file.getName()));
-                        if (ObjectUtil.isNull(mAttachment.getId())) {
-                            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                                              CheckedExceptionResult.NULL_PARAM,
-                                                              "MessageAttachment对象保存失败!");
-                        }
-                    }
-                    FileUtil.delFile(files[i]);// 删除本地临时文件
-                }
-            }
+            saveFileToMongoDB(files, message.getId());
         }
         return userMessageList.size();
     }
@@ -464,32 +435,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         if (StringUtil.notEmpty(msgId) && StringUtil.notEmpty(msgTitle)) {
             count = userMessageDao.updateUserMessageTitleByMsgId(new UserMessage(msgId, msgTitle));
         }
-        // 是否有消息附件上传
-        if (ArrayUtil.isNotEmpty(files)) {
-            for (int i = 0; i < files.length; i++) {
-                File file = FileUpload.getFileByFilePath(files[i]);
-                // 循环获取file数组中得文件
-                if (StringUtil.notEmpty(file.getName())) {
-                    String gridFSFileId =
-                    fileService.saveLocalFile(file,
-                                              FileType.MSG_FILE,
-                                              CastUtil.castLong(message.getId()));
-                    if (StringUtil.isEmpty(gridFSFileId)) {
-                        throw new CheckedServiceException(
-                                                          CheckedExceptionBusiness.MESSAGE,
-                                                          CheckedExceptionResult.FILE_UPLOAD_FAILED,
-                                                          "文件上传失败!");
-                    }
-                    // 保存对应数据
-                    MessageAttachment mAttachment =
-                    messageAttachmentService.addMessageAttachment(new MessageAttachment(
-                                                                                        message.getId(),
-                                                                                        gridFSFileId,
-                                                                                        file.getName()));
-                }
-                FileUtil.delFile(files[i]);// 删除本地临时文件
-            }
-            count = 1;
+        // 添加附件到MongoDB表中
+        if (StringUtil.notEmpty(msgId)) {
+            saveFileToMongoDB(files, msgId);
         }
         // 是否有消息附件删除
         if (ArrayUtil.isNotEmpty(attachment)) {
@@ -500,6 +448,51 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             count = 1;
         }
         return count;
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：保存文件到MongoDB
+     * 使用示范：
+     *
+     * @param files 临时文件路径
+     * @param msgId messageId
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    private void saveFileToMongoDB(String[] files, String msgId) throws IOException {
+        // 添加附件到MongoDB表中
+        if (ArrayUtil.isNotEmpty(files)) {
+            for (int i = 0; i < files.length; i++) {
+                File file = FileUpload.getFileByFilePath(files[i]);
+                if (file.isFile()) {
+                    // 循环获取file数组中得文件
+                    if (StringUtil.notEmpty(file.getName())) {
+                        String gridFSFileId =
+                        fileService.saveLocalFile(file, FileType.MSG_FILE, CastUtil.castLong(msgId));// 上传文件到MongoDB
+                        if (StringUtil.isEmpty(gridFSFileId)) {
+                            throw new CheckedServiceException(
+                                                              CheckedExceptionBusiness.MESSAGE,
+                                                              CheckedExceptionResult.FILE_UPLOAD_FAILED,
+                                                              "文件上传失败!");
+                        }
+                        // 保存对应数据
+                        MessageAttachment mAttachment =
+                        messageAttachmentService.addMessageAttachment(new MessageAttachment(
+                                                                                            msgId,
+                                                                                            gridFSFileId,
+                                                                                            file.getName()));
+                        if (ObjectUtil.isNull(mAttachment.getId())) {
+                            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                              CheckedExceptionResult.NULL_PARAM,
+                                                              "MessageAttachment对象保存失败!");
+                        }
+                    }
+                    FileUtil.delFile(files[i]);// 删除本地临时文件
+                }
+            }
+        }
     }
 
     @Override
@@ -807,20 +800,20 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     }
 
     @Override
-	public Integer addOneUserMessage(Message message, String title, Long receiverId, String sessionId) 
-			throws CheckedServiceException, IOException {
+    public Integer addOneUserMessage(Message message, String title, Long receiverId,
+    String sessionId) throws CheckedServiceException, IOException {
         // 发送者id
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "发送人为空!");
         }
-		// MongoDB 消息插入
-		message = messageService.add(message);
-		if (StringUtil.isEmpty(message.getId())) {
-		    throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-		                                      CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
-		}
+        // MongoDB 消息插入
+        message = messageService.add(message);
+        if (StringUtil.isEmpty(message.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
+        }
         Long senderUserId = pmphUser.getId();// 新发消息,发送者Id为登陆用户ID
         // 装储存数据
         List<UserMessage> userMessageList = new ArrayList<UserMessage>();
@@ -829,8 +822,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "接收人为空!");
         } else {
-            userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_2, 
-            		senderUserId, Const.SENDER_TYPE_1, receiverId, Const.RECEIVER_TYPE_2));
+            userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_2,
+                                                senderUserId, Const.SENDER_TYPE_1, receiverId,
+                                                Const.RECEIVER_TYPE_2));
         }
         // 插入消息发送对象数据
         userMessageDao.addUserMessageBatch(userMessageList);
@@ -849,5 +843,5 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             myWebSocketHandler.sendWebSocketMessageToUser(websocketUserId, webScocketMessage);
         }
         return userMessageList.size();
-	}
+    }
 }

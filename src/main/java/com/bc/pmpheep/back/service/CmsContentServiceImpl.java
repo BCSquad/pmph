@@ -473,27 +473,30 @@ public class CmsContentServiceImpl implements CmsContentService {
         if (ArrayUtil.isNotEmpty(files)) {
             for (int i = 0; i < files.length; i++) {
                 File file = FileUpload.getFileByFilePath(files[i]);
-                // 循环获取file数组中得文件
-                if (StringUtil.notEmpty(file.getName())) {
-                    String gridFSFileId =
-                    fileService.saveLocalFile(file, FileType.CMS_ATTACHMENT, contentId);
-                    if (StringUtil.isEmpty(gridFSFileId)) {
-                        throw new CheckedServiceException(
-                                                          CheckedExceptionBusiness.CMS,
-                                                          CheckedExceptionResult.FILE_UPLOAD_FAILED,
-                                                          "文件上传失败!");
+                if (file.isFile()) {
+                    // 循环获取file数组中得文件
+                    if (StringUtil.notEmpty(file.getName())) {
+                        System.out.println(file.getName());
+                        String gridFSFileId =
+                        fileService.saveLocalFile(file, FileType.CMS_ATTACHMENT, contentId);
+                        if (StringUtil.isEmpty(gridFSFileId)) {
+                            throw new CheckedServiceException(
+                                                              CheckedExceptionBusiness.CMS,
+                                                              CheckedExceptionResult.FILE_UPLOAD_FAILED,
+                                                              "文件上传失败!");
+                        }
+                        // 保存对应数据
+                        CmsExtra cmsExtra =
+                        cmsExtraService.addCmsExtra(new CmsExtra(contentId, gridFSFileId,
+                                                                 file.getName(), null));
+                        if (ObjectUtil.isNull(cmsExtra.getId())) {
+                            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                                              CheckedExceptionResult.PO_ADD_FAILED,
+                                                              "CmsExtra对象新增失败");
+                        }
                     }
-                    // 保存对应数据
-                    CmsExtra cmsExtra =
-                    cmsExtraService.addCmsExtra(new CmsExtra(contentId, gridFSFileId,
-                                                             file.getName(), null));
-                    if (ObjectUtil.isNull(cmsExtra.getId())) {
-                        throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                                          CheckedExceptionResult.PO_ADD_FAILED,
-                                                          "CmsExtra对象新增失败");
-                    }
+                    FileUtil.delFile(files[i]);// 删除本地临时文件
                 }
-                FileUtil.delFile(files[i]);// 删除本地临时文件
             }
         }
     }
