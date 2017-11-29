@@ -273,8 +273,7 @@
     
     <!-- 教材申报-遴选主编/遴选编委(更新) -->
 	<update id="updateDecPositionEditorSelection" parameterType="java.util.List">
-		<foreach item="item" collection="list" index="index" open=""
-			separator=";">
+		<foreach item="item" collection="list" index="index" open="" separator=";">
 			update
 				dec_position
 			<set>
@@ -285,7 +284,7 @@
 					rank = #{item.rank},
 				</if>
 				<if test="item.isDigitalEditor !=null">
-					isDigitalEditor = #{item.isDigitalEditor},
+					is_digital_editor = #{item.isDigitalEditor},
 				</if>
 			</set>
 			where
