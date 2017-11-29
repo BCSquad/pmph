@@ -60,7 +60,16 @@ public interface MaterialService {
 		    MultipartFile[]   noteFiles,
 		    String materialNoteAttachments,
 		    boolean isUpdate) throws CheckedServiceException, IOException;
-   
+    
+    /**
+	 * 获取教材名称  通过主键id
+	 * 
+	 * @param id
+	 * @return Material
+	 * @throws CheckedServiceException
+	 * @return 教材名称
+	 */
+	String getMaterialNameById(Long id) throws CheckedServiceException;
 
 
 	/**

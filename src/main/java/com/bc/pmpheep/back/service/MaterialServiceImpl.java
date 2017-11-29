@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
@@ -22,7 +20,6 @@ import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
 import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.PmphGroup;
-import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -490,6 +487,15 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					"主键为空");
 		}
 		return materialDao.getMaterialById(id);
+	}
+	
+	@Override
+	public String  getMaterialNameById(Long id) throws CheckedServiceException {
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"主键为空");
+		}
+		return materialDao.getMaterialNameById(id);
 	}
 
 	/**
