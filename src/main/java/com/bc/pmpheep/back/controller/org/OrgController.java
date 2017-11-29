@@ -1,5 +1,20 @@
 package com.bc.pmpheep.back.controller.org;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -7,11 +22,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.service.OrgService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -22,7 +39,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  **/
 @Controller
 @RequestMapping(value = "/orgs")
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@SuppressWarnings( "all")
 public class OrgController {
 
 	@Autowired
@@ -104,5 +121,128 @@ public class OrgController {
 	public ResponseBean orgByOrgName(@RequestParam("orgName") String orgName) {
 		return new ResponseBean(orgService.listOrgByOrgName(orgName));
 	}
+	
 
+ 	@ResponseBody
+    @RequestMapping(value = "/orgExport", method = RequestMethod.POST)
+    public ResponseBean excel(MultipartFile file,HttpServletRequest req){
+ 		String realpath = req.getSession().getServletContext().getRealPath( Const.FILE_PATH_FILE); 
+ 		File dir = new File(realpath);
+ 		if(!dir.exists()){
+ 			dir.mkdirs();
+ 		}
+ 	    // 文件保存路径  
+        String filePath =realpath+ file.getOriginalFilename();  
+        File tempFile =  new File(filePath) ;
+        // 转存文件  
+        try {
+			file.transferTo(tempFile);
+		} catch (Exception e) {
+			return new ResponseBean("文件上传失败");
+		}
+        //文件名称
+        String name =file.getOriginalFilename();
+    	//文件类型
+        String fileType = name.substring(name.lastIndexOf("."));
+        
+		FileInputStream in = null;
+		try {
+			in = new FileInputStream(filePath);
+		} catch (FileNotFoundException e) {
+			return new ResponseBean("未获取到文件");
+		} catch (Exception e) {
+			return new ResponseBean("未知异常");
+		}
+		Workbook workbook = null;
+		try {
+			if ((".xls").equals(fileType)){
+    			workbook = new HSSFWorkbook(in);
+    		} else if ((".xlsx").equals(fileType)){
+    			workbook = new XSSFWorkbook(in);
+    		} else{
+    			return new ResponseBean("读取的不是Excel文件");
+    		}
+		} catch (IOException e) {
+			return new ResponseBean("读取文件异常");
+		} catch(Exception e){
+			return new ResponseBean("未知异常");
+		}
+		
+		//sheet数目
+		//int sheetTotal = workbook.getNumberOfSheets() ;
+		Sheet sheet = workbook.getSheetAt(0);
+		List<String> orgs = new ArrayList<String>(sheet.getLastRowNum());
+		for (int rowNum = 1 ; rowNum <= sheet.getLastRowNum();rowNum ++){
+			Row row = sheet.getRow(rowNum);
+			if (null == row){
+				break;
+			}
+			Cell cell1 = row.getCell(0);
+			Cell cell2 = row.getCell(1);
+			Cell cell3 = row.getCell(2);
+			String value1 = getValue(cell1);
+			String value2 = getValue(cell2);
+			String value3 = getValue(cell3);
+			orgs.add("{\"xuhao\":\""+value1+",\"orgName\":\""+value2+",\"orgCode\":\""+value3+"}");
+		}
+		if(null != workbook){
+			try {
+				workbook.close();
+			} catch (Exception e) {
+				
+			}finally{
+				workbook = null;
+			}
+		}
+		if(null != in ){
+			try {
+				in.close();
+			} catch (Exception e) {
+				
+			}finally{
+				in = null;
+			}
+		}
+		//删除文件
+		if(tempFile.exists()){
+			tempFile.delete();
+		}
+		return new ResponseBean(orgs);
+	}
+ 	
+ 	
+ 	
+ 	private String getValue(Cell cell) {
+ 		if(null == cell){
+ 			return "";
+ 		}
+ 		int type = cell.getCellType();
+ 		String value = "";
+ 		switch (type) {
+		case 0://数字 Cell.CELL_TYPE_NUMERIC	
+			value = String.valueOf(cell.getNumericCellValue());
+			break;
+		case 1://字符串Cell.CELL_TYPE_STRING
+			value = cell.getStringCellValue();
+			break;
+		case 2://公式 Cell.CELL_TYPE_FORMULA
+			value = cell.getCellFormula();
+			break;
+		case 3://空值 Cell.CELL_TYPE_BLANK
+			value = "";
+			break;
+		case 4://Boolean Cell.CELL_TYPE_BOOLEAN
+			Boolean v = cell.getBooleanCellValue() ;
+			value = v == null ? "":String.valueOf(v);
+			break;
+		case 5://错误 Cell.CELL_TYPE_ERROR
+			value = "";
+			break;
+		default:
+			value = "";
+			break;
+		}
+ 		
+        return value;
+    }
 }

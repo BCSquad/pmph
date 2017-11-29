@@ -418,7 +418,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			for (MultipartFile notice : noticeFiles) {
 				MaterialNoticeAttachment materialNoticeAttachment = new MaterialNoticeAttachment();
 				materialNoticeAttachment.setAttachment("---------");
-				materialNoticeAttachment.setAttachmentName(notice.getName());
+				materialNoticeAttachment.setAttachmentName(notice.getOriginalFilename());
 				materialNoticeAttachment.setDownload(0L);
 				materialNoticeAttachment.setMaterialExtraId(materialExtra.getId());
 				// 保存通知
@@ -455,7 +455,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			for (MultipartFile note : noteFiles) {
 				MaterialNoteAttachment materialNoteAttachment = new MaterialNoteAttachment();
 				materialNoteAttachment.setAttachment("---------");
-				materialNoteAttachment.setAttachmentName(note.getName());
+				materialNoteAttachment.setAttachmentName(note.getOriginalFilename());
 				materialNoteAttachment.setDownload(0L);
 				materialNoteAttachment.setMaterialExtraId(materialExtra.getId());
 				// 保存备注
