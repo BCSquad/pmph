@@ -250,7 +250,7 @@
 		textbook tb
 		where
 		tb.`material_id`=#{materialId}
-		order by tb.sort desc;
+		order by tb.sort asc;
 	</select>
 
 	<!-- 职位遴选界面书籍总条数 -->
