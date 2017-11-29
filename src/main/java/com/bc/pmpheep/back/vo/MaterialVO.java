@@ -22,6 +22,8 @@ import com.bc.pmpheep.back.po.MaterialExtra;
 public class MaterialVO implements Serializable{
 	//教材
 	private Material material;
+	//教材主任
+	private String directorName; 
 	//教材通知备注
 	private MaterialExtra materialExtra;
 	//联系人
@@ -41,6 +43,7 @@ public class MaterialVO implements Serializable{
 	
 	public MaterialVO(
 			Material material, 
+			String directorName,
 			MaterialExtra materialExtra,
 			String materialContacts, 
 			String materialExtensions,
@@ -49,6 +52,7 @@ public class MaterialVO implements Serializable{
 			String materialNoteAttachments) {
 		super();
 		this.material = material;
+		this.directorName = directorName;
 		this.materialExtra = materialExtra;
 		this.materialContacts = materialContacts;
 		this.materialExtensions = materialExtensions;
@@ -63,6 +67,14 @@ public class MaterialVO implements Serializable{
 
 	public void setMaterial(Material material) {
 		this.material = material;
+	}
+	
+	public String getDirectorName() {
+		return directorName;
+	}
+
+	public void setDirectorName(String directorName) {
+		this.directorName = directorName;
 	}
 
 	public MaterialExtra getMaterialExtra() {

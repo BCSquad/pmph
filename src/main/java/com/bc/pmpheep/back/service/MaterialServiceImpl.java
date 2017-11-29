@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
@@ -28,6 +30,7 @@ import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MaterialListVO;
+import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
@@ -324,14 +327,16 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材项目编辑参数有误");
 		}
-		List<MaterialProjectEditor> materialProjectEditorlist = gson.fromJson(materialProjectEditors,
-				new TypeToken<ArrayList<MaterialProjectEditor>>() {
+		List<MaterialProjectEditorVO> materialProjectEditorVOlist = gson.fromJson(materialProjectEditors,
+				new TypeToken<ArrayList<MaterialProjectEditorVO>>() {
 				}.getType());
-		for (MaterialProjectEditor materialProjectEditor : materialProjectEditorlist) {
-			if (null == materialProjectEditor || null == materialProjectEditor.getEditorId()) {
+		for (MaterialProjectEditorVO materialProjectEditorVO : materialProjectEditorVOlist) {
+			if (null == materialProjectEditorVO || null == materialProjectEditorVO.getEditorId()) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 						"项目编辑为空");
 			}
+			MaterialProjectEditor materialProjectEditor =new MaterialProjectEditor();
+			materialProjectEditor.setEditorId(materialProjectEditorVO.getEditorId());
 			materialProjectEditor.setMaterialId(materialId);
 			// 保存项目编辑
 			materialProjectEditorService.addMaterialProjectEditor(materialProjectEditor);
@@ -700,6 +705,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		// 教材主要信息
 		Material material = materialDao.getMaterialById(id);
+		//教材主任
+		PmphUser director = pmphUserService.get(material.getDirector());
 		// 教材通知备注表
 		MaterialExtra materialExtra = materialExtraService.getMaterialExtraByMaterialId(id);
 		Gson gson = new Gson();
@@ -710,9 +717,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		List<MaterialExtension> materialExtensionList = materialExtensionService.getMaterialExtensionByMaterialId(id);
 		String materialExtensions = gson.toJson(materialExtensionList);
 		// 项目编辑
-		List<MaterialProjectEditor> materialProjectEditorList = materialProjectEditorService
+		List<MaterialProjectEditorVO> materialProjectEditorVOList = materialProjectEditorService
 				.listMaterialProjectEditors(id);
-		String materialProjectEditors = gson.toJson(materialProjectEditorList);
+		String materialProjectEditorVOs = gson.toJson(materialProjectEditorVOList);
 		// 通知附件信息
 		List<MaterialNoticeAttachment> materialNoticeAttachmentList = materialNoticeAttachmentService
 				.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
@@ -722,7 +729,13 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				.getMaterialNoteAttachmentByMaterialExtraId(materialExtra.getId());
 		String materialNoteAttachments = gson.toJson(materialNoteAttachmentList);
 
-		return new MaterialVO(material, materialExtra, materialContacts, materialExtensions, materialProjectEditors,
-				materialNoticeAttachments, materialNoteAttachments);
+		return new MaterialVO(material,
+				director.getRealname(),
+				materialExtra, 
+				materialContacts, 
+				materialExtensions, 
+				materialProjectEditorVOs,
+				materialNoticeAttachments,
+				materialNoteAttachments);
 	}
 }

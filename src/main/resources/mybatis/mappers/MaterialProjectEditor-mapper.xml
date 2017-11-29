@@ -24,10 +24,15 @@
 
 	<!-- 根据教材id批量项目编辑 -->
 	<select id="listMaterialProjectEditors" parameterType="java.lang.Long"
-		resultType="MaterialProjectEditor">
-		select * from
-		material_project_editor where material_id =
-		#{materialId};
+		resultType="MaterialProjectEditorVO">
+		select 
+			a.*,b.realname  
+		from
+			material_project_editor a
+		LEFT JOIN 
+			pmph_user b on b.id = a.editor_id
+ 		where material_id = 
+			#{materialId};
 	</select>
 
 	<!-- 根据materialId删除 -->

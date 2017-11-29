@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -20,14 +19,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Material;
-import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
@@ -40,6 +37,7 @@ import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
+import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -196,10 +194,10 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 		// 教材项目编辑检查
 		if (null == power) {
-			List<MaterialProjectEditor> materialProjectEditors = materialProjectEditorService
+			List<MaterialProjectEditorVO> materialProjectEditors = materialProjectEditorService
 					.listMaterialProjectEditors(materialId);
 			if (null != materialProjectEditors && materialProjectEditors.size() > 0) {
-				for (MaterialProjectEditor materialProjectEditor : materialProjectEditors) {
+				for (MaterialProjectEditorVO materialProjectEditor : materialProjectEditors) {
 					if (null != materialProjectEditor && null != materialProjectEditor.getEditorId()
 							&& materialProjectEditor.getEditorId().equals(pmphUser.getId())) {
 						power = 3; // 我是教材的项目编辑
