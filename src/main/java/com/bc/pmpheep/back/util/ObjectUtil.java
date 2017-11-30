@@ -113,8 +113,7 @@ public final class ObjectUtil {
 			value = Double.valueOf(cell.getStringCellValue().trim());
 			} catch(NumberFormatException e){
 				throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
-						CheckedExceptionResult.ILLEGAL_PARAM, cell.getStringCellValue().trim() 
-						+ ":单元格内容格式错误");
+						CheckedExceptionResult.ILLEGAL_PARAM, "单元格内容需为数字");
 			}
 			break;
 		case 3://空值 Cell.CELL_TYPE_BLANK

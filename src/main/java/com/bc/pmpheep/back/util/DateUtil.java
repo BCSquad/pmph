@@ -9,7 +9,6 @@ import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Cell;
 
-import com.sun.tools.internal.xjc.generator.bean.ImplStructureStrategy.Result;
 
 public final class DateUtil {
     private final static SimpleDateFormat sdfYear = new SimpleDateFormat("yyyy");

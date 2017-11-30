@@ -20,6 +20,7 @@ import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMember;
+import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.PmphGroupMemberService;
 import com.bc.pmpheep.back.service.PmphGroupMessageService;
@@ -397,5 +398,29 @@ public class GroupController {
 		pageParameter.setParameter(pmphGroupMessageVO);
 		return new ResponseBean(pmphGroupMessageService.listPmphGroupMessage(pageParameter));
 	}
-
+	
+	/**
+	 * 功能描述：职位遴选页面新建小组
+	 * @param file 上传头像
+	 * @param groupName 小组名称
+	 * @param textbook 书籍信息
+	 * @param request sessionId
+	 * @return 是否成功
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "职位遴选页面新建小组")
+	@RequestMapping(value = "/addEditorGroup", method = RequestMethod.POST)
+	public ResponseBean addEditorGroup(Long  textbookId,String pmphGroupMembers,
+			HttpServletRequest request) {
+		try {
+			String sessionId = CookiesUtil.getSessionId(request);
+			Gson gson = new Gson();
+			Type type = new TypeToken<ArrayList<PmphGroupMember>>() {
+			}.getType();
+			List<PmphGroupMember> list = gson.fromJson(pmphGroupMembers, type);
+			return new ResponseBean(pmphGroupService.addEditorSelcetionGroup(sessionId,list,textbookId));
+		} catch (IOException e) {
+			return new ResponseBean(e);
+		}
+	}
 }

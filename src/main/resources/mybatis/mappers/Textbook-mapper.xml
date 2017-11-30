@@ -409,4 +409,37 @@
 	   SELECT * FROM textbook t 
 	   WHERE t.material_id = #{materialId} ;
 	</select>
+	<!-- 根据书籍id查询已通过的主编和编委 -->
+	<select id="getTextbookDecTotal" parameterType="PageParameter"
+		resultType="java.lang.Integer">
+			SELECT 
+    			count(*)
+			FROM `dec_position` dp 
+			LEFT JOIN `declaration` dc ON dp.`declaration_id` = dc.`id`
+			LEFT JOIN `org` org ON dc.`org_id`= org.`id`
+			LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
+			WHERE	dc.`online_progress`=3
+		<if test="parameter.textbookId !=null and parameter.textbookId !='' ">
+			 and dp.`textbook_id` =#{textbookId}
+		</if>
+	</select>
+	<select id="getTextbookDecVOList" parameterType="PageParameter"
+		resultType="TextbookDecVO">
+	 	SELECT 
+    		dc.`user_id`, wu.`username`,dc.`realname`,wu.`is_writer`,
+			dc.`org_name`,dp.`preset_position`,dp.`chosen_position`,
+			dp.`is_digital_editor`,wu.`rank`,dp.`textbook_id`
+		FROM `dec_position` dp 
+		LEFT JOIN `declaration` dc ON dp.`declaration_id` = dc.`id`
+		LEFT JOIN `org` org ON dc.`org_id`= org.`id`
+		LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
+		WHERE	
+			dc.`online_progress`=3
+		<if test="parameter.textbookId !=null and parameter.textbookId !='' ">
+			and dp.`textbook_id` =#{textbookId}
+		</if>
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
 </mapper>

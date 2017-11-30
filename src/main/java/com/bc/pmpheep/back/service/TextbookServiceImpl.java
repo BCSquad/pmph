@@ -40,6 +40,7 @@ import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
+import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -486,5 +487,22 @@ public class TextbookServiceImpl implements TextbookService {
 			textbookDao.updateTextbook(textbook);
 		}
 		return textbooks;
+	}
+
+	@Override
+	public PageResult<TextbookDecVO> listEditorSelection(PageParameter<TextbookDecVO> pageParameter) {
+		if(ObjectUtil.isNull(pageParameter.getParameter().getTextbookId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.NULL_PARAM, "参数不能为空");
+		}
+		PageResult<TextbookDecVO> pageResult = new PageResult<TextbookDecVO>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        int total = textbookDao.getTextbookDecTotal(pageParameter);
+        if (total > 0) {
+            pageResult.setTotal(total);
+            List<TextbookDecVO>  list= textbookDao.getTextbookDecVOList(pageParameter);
+            pageResult.setRows(list);
+        }
+        return pageResult;
 	}
 }

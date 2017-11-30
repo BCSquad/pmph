@@ -10,6 +10,8 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
+import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
+import com.bc.pmpheep.back.vo.TextbookDecVO;
 
 /**
  * TextbookDao实体类数据访问层接口
@@ -148,4 +150,18 @@ public interface TextbookDao {
 	 * @return List<Textbook>
 	 */
 	List<Textbook> listTopicNumber(Long materialId);
+	
+	/**
+	 * 通过书籍id 查询该书籍对应关系
+	 * @param textbookId
+	 * @return
+	 */
+	List<TextbookDecVO> getTextbookDecVOList(PageParameter<TextbookDecVO> pageParameter);
+	
+	/**
+	 * 通过书籍id 查询该书籍对应主编和编委的总条数
+	 * @param pageParameter
+	 * @return
+	 */
+	Integer getTextbookDecTotal(PageParameter<TextbookDecVO> pageParameter);
 }
