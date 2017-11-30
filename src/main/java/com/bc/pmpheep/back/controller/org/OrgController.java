@@ -136,7 +136,7 @@ public class OrgController {
         File tempFile =  new File(filePath) ;
         // 转存文件  
         try {
-			file.transferTo(tempFile);
+			file.transferTo(tempFile);//file.getInputStream() ;
 		} catch (Exception e) {
 			return new ResponseBean("文件上传失败");
 		}
@@ -183,6 +183,12 @@ public class OrgController {
 			String value1 = getValue(cell1);
 			String value2 = getValue(cell2);
 			String value3 = getValue(cell3);
+			if(   null == value1 ||"".equals(value1.trim())  
+		       || null == value2 ||"".equals(value2.trim()) 
+			   //|| null == value3 ||"".equals(value3.trim())
+		       ){
+				break;
+			}
 			orgs.add("{\"xuhao\":\""+value1+",\"orgName\":\""+value2+",\"orgCode\":\""+value3+"}");
 		}
 		if(null != workbook){
@@ -220,13 +226,13 @@ public class OrgController {
  		String value = "";
  		switch (type) {
 		case 0://数字 Cell.CELL_TYPE_NUMERIC	
-			value = String.valueOf(cell.getNumericCellValue());
+			value = String.valueOf(cell.getNumericCellValue()).trim();
 			break;
 		case 1://字符串Cell.CELL_TYPE_STRING
-			value = cell.getStringCellValue();
+			value = cell.getStringCellValue().trim();
 			break;
 		case 2://公式 Cell.CELL_TYPE_FORMULA
-			value = cell.getCellFormula();
+			value = cell.getCellFormula().trim();
 			break;
 		case 3://空值 Cell.CELL_TYPE_BLANK
 			value = "";
