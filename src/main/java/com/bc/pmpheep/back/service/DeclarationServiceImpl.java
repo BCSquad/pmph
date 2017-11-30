@@ -256,7 +256,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		for (DecPositionDisplayVO decPositions : decPositionList) {
 			String syllabusId = decPositions.getSyllabusId();
 			if (StringUtil.notEmpty(syllabusId)) {
-				String syllabusIds = RouteUtil.MONGODB_FILE + syllabusId;
+				String syllabusIds = RouteUtil.MONGODB_FILE + syllabusId; // 下载路径
 				decPositions.setSyllabusId(syllabusIds);
 			}
 		}
