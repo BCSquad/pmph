@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,7 @@ import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.PmphGroupService;
+import com.bc.pmpheep.back.service.test.BookServiceTest;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.vo.MaterialListVO;
@@ -45,6 +48,8 @@ import com.google.gson.reflect.TypeToken;
 @RequestMapping(value = "/material")
 @SuppressWarnings("all")
 public class MaterialController {
+	
+	Logger              logger = LoggerFactory.getLogger(BookServiceTest.class);
 
 	@Autowired
 	private MaterialService materialService;
@@ -104,7 +109,8 @@ public class MaterialController {
 		} catch (IOException e) {
 			return new ResponseBean("上传文件失败");
 		} catch (Exception e){
-			return new ResponseBean("未知异常");
+			logger.info(e.getMessage());
+			return new ResponseBean("未知异常"+e.getMessage());
 		}
 	}
 
