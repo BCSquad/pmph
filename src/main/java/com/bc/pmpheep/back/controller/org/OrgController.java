@@ -123,40 +123,44 @@ public class OrgController {
 		return new ResponseBean(orgService.listOrgByOrgName(orgName));
 	}
 	
-
- 	@ResponseBody
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "解析批量导入的发布学校数据")
     @RequestMapping(value = "/orgExport", method = RequestMethod.POST)
     public ResponseBean excel(MultipartFile file,HttpServletRequest req){
- 		if(file.isEmpty()){
- 			return new ResponseBean("文件上传失败");
+ 		if(null == file || file.isEmpty()){
+ 			return new ResponseBean("没有文件");
  		}
- 		String realpath = req.getSession().getServletContext().getRealPath( Const.FILE_PATH_FILE); 
- 		File dir = new File(realpath);
- 		if(!dir.exists()){
- 			dir.mkdirs();
- 		}
- 	    // 文件保存路径  
-        String filePath =realpath+ file.getOriginalFilename();  
-        File tempFile =  new File(filePath) ;
-        // 转存文件  
-        try {
-			//file.transferTo(tempFile);
-		} catch (Exception e) {
-			return new ResponseBean("文件上传失败");
-		}
-        //文件名称
+ 		//文件名称
         String name =file.getOriginalFilename();
     	//文件类型
         String fileType = name.substring(name.lastIndexOf("."));
         
 		InputStream in = null;
 		try {
-			in = file.getInputStream();//new FileInputStream(filePath);
+			in = file.getInputStream();
 		} catch (FileNotFoundException e) {
+			if(null != in ){
+				try {
+					in.close();
+				} catch (Exception ee) {
+					
+				}finally{
+					in = null;
+				}
+			}
 			return new ResponseBean("未获取到文件");
 		} catch (Exception e) {
+			if(null != in ){
+				try {
+					in.close();
+				} catch (Exception ee) {
+					
+				}finally{
+					in = null;
+				}
+			}
 			return new ResponseBean("未知异常");
-		}
+		} 
 		Workbook workbook = null;
 		try {
 			if ((".xls").equals(fileType)){
@@ -164,13 +168,58 @@ public class OrgController {
     		} else if ((".xlsx").equals(fileType)){
     			workbook = new XSSFWorkbook(in);
     		} else{
+    			if(null != in ){
+    				try {
+    					in.close();
+    				} catch (Exception ee) {
+    					
+    				}finally{
+    					in = null;
+    				}
+    			}
     			return new ResponseBean("读取的不是Excel文件");
     		}
 		} catch (IOException e) {
+			if(null != workbook){
+				try {
+					workbook.close();
+				} catch (Exception ee) {
+					
+				}finally{
+					workbook = null;
+				}
+			}
+			if(null != in ){
+				try {
+					in.close();
+				} catch (Exception ee) {
+					
+				}finally{
+					in = null;
+				}
+			}
 			return new ResponseBean("读取文件异常");
 		} catch(Exception e){
+			if(null != workbook){
+				try {
+					workbook.close();
+				} catch (Exception ee) {
+					
+				}finally{
+					workbook = null;
+				}
+			}
+			if(null != in ){
+				try {
+					in.close();
+				} catch (Exception ee) {
+					
+				}finally{
+					in = null;
+				}
+			}
 			return new ResponseBean("未知异常");
-		}
+		} 
 		
 		//sheet数目
 		//int sheetTotal = workbook.getNumberOfSheets() ;
@@ -213,10 +262,7 @@ public class OrgController {
 				in = null;
 			}
 		}
-		//删除文件
-		if(tempFile.exists()){
-			tempFile.delete();
-		}
+		
 		return new ResponseBean(orgs);
 	}
  	
@@ -252,7 +298,6 @@ public class OrgController {
 			value = "";
 			break;
 		}
- 		
-        return value;
+ 		return value;
     }
 }
