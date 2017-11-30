@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.po.PmphGroup;
+import com.bc.pmpheep.back.po.PmphGroupMember;
+import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -118,4 +120,16 @@ public interface PmphGroupService {
 	 *
 	 */
 	PmphGroup getPmphGroupByTextbookId(Long textbookId) throws CheckedServiceException;
+	
+	/**
+	 * 职位遴选页面确认名单后新建小组
+	 * @param sessionId
+	 * @param list
+	 * @param textbookId
+	 * @return
+	 * @throws CheckedServiceException
+	 * @throws IOException
+	 */
+	PmphGroup addEditorSelcetionGroup(String sessionId, List<PmphGroupMember> list, Long textbookId) 
+			throws CheckedServiceException, IOException;
 }
