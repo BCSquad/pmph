@@ -49,8 +49,6 @@ import com.google.gson.reflect.TypeToken;
 @SuppressWarnings("all")
 public class MaterialController {
 	
-	Logger              logger = LoggerFactory.getLogger(BookServiceTest.class);
-
 	@Autowired
 	private MaterialService materialService;
 
@@ -109,8 +107,7 @@ public class MaterialController {
 		} catch (IOException e) {
 			return new ResponseBean("上传文件失败");
 		} catch (Exception e){
-			logger.info(e.getMessage());
-			return new ResponseBean("未知异常"+e.getMessage());
+			return new ResponseBean("未知异常");
 		}
 	}
 

@@ -359,7 +359,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		// 保存教材通知备注
 		materialExtra.setMaterialId(materialId);
-		if (null == materialExtra.getId()) {
+		if (!isUpdate) {
 			materialExtraService.addMaterialExtra(materialExtra);
 		} else {
 			materialExtraService.updateMaterialExtra(materialExtra);
