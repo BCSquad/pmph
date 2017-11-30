@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
@@ -39,6 +40,7 @@ import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
+import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -364,20 +366,34 @@ public class TextbookServiceImpl implements TextbookService {
 		return bookList;
 	}
 	
-	@SuppressWarnings({ "resource", "deprecation" })
+	@SuppressWarnings({ "resource"})
 	@Override
-	public List<Textbook> importExcel(MultipartFile file) throws CheckedServiceException,IOException{
+	public List<Textbook> importExcel(MultipartFile file) throws CheckedServiceException {
 		String fileType = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 		Workbook workbook = null;
-		InputStream in = file.getInputStream();
-		if ((".xls").equals(fileType)){
-			workbook = new HSSFWorkbook(in);
-		} else if ((".xlsx").equals(fileType)){
-			workbook = new XSSFWorkbook(in);
-		} else{
+		InputStream in = null ;
+		try {
+			in = file.getInputStream();
+		} catch (FileNotFoundException e) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "读取的不是Excel文件");
+					CheckedExceptionResult.NULL_PARAM, "未获取到文件");
+		} catch (IOException e){
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "读取文件失败");
 		}
+		try {
+			if ((".xls").equals(fileType)){
+				workbook = new HSSFWorkbook(in);
+			} else if ((".xlsx").equals(fileType)){
+				workbook = new XSSFWorkbook(in);
+			} else{
+				throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+						CheckedExceptionResult.ILLEGAL_PARAM, "读取的不是Excel文件");
+			}
+			} catch (IOException e) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+						CheckedExceptionResult.ILLEGAL_PARAM, "读取文件失败");
+			}
 		List<Textbook> bookList = new ArrayList<>();
 		for (int numSheet = 0 ; numSheet < workbook.getNumberOfSheets();numSheet ++){
 			Sheet sheet = workbook.getSheetAt(numSheet);
@@ -396,33 +412,15 @@ public class TextbookServiceImpl implements TextbookService {
 				if (ObjectUtil.isNull(first) || ObjectUtil.isNull(second) || ObjectUtil.isNull(third)){
 					break;
 				}
-				String bookName = "";
-				switch (second.getCellType()) {
-				case Cell.CELL_TYPE_BOOLEAN:
-					bookName = String.valueOf(second.getBooleanCellValue()).trim();
-					break;
-				case Cell.CELL_TYPE_STRING:
-					bookName = second.getRichStringCellValue().getString().trim();
-					break;
-				case Cell.CELL_TYPE_NUMERIC:
-					bookName = String.valueOf(second.getNumericCellValue()).toString();
-					break;
-				case Cell.CELL_TYPE_FORMULA:
-					bookName = second.getCellFormula();
-					break;
-				default:
-					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-							CheckedExceptionResult.ILLEGAL_PARAM, "数据格式错误");
-				}
-					Integer sort = (int) row.getCell(0).getNumericCellValue();
-					Integer round = (int) row.getCell(2).getNumericCellValue();
-					textbook.setSort(sort);
-					textbook.setTextbookName(bookName);
-					textbook.setTextbookRound(round);
-					bookList.add(textbook);			
+				String bookName = StringUtil.getCellValue(second);
+				Integer sort = ObjectUtil.getCellValue(first);
+				Integer round = ObjectUtil.getCellValue(third);
+				textbook.setSort(sort);
+				textbook.setTextbookName(bookName);
+				textbook.setTextbookRound(round);
+				bookList.add(textbook);			
 			}
 		}
-		FileUtil.delFile(Const.FILE_PATH_FILE + file.getOriginalFilename());
 		return bookList;
 	}
 	
@@ -489,5 +487,22 @@ public class TextbookServiceImpl implements TextbookService {
 			textbookDao.updateTextbook(textbook);
 		}
 		return textbooks;
+	}
+
+	@Override
+	public PageResult<TextbookDecVO> listEditorSelection(PageParameter<TextbookDecVO> pageParameter) {
+		if(ObjectUtil.isNull(pageParameter.getParameter().getTextbookId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.NULL_PARAM, "参数不能为空");
+		}
+		PageResult<TextbookDecVO> pageResult = new PageResult<TextbookDecVO>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        int total = textbookDao.getTextbookDecTotal(pageParameter);
+        if (total > 0) {
+            pageResult.setTotal(total);
+            List<TextbookDecVO>  list= textbookDao.getTextbookDecVOList(pageParameter);
+            pageResult.setRows(list);
+        }
+        return pageResult;
 	}
 }

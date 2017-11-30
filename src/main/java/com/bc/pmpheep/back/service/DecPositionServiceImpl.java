@@ -13,15 +13,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.dao.DecPositionDao;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.JsonUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.back.vo.DecPositionVO;
+import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.back.vo.NewDecPosition;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
@@ -266,4 +270,22 @@ public class DecPositionServiceImpl implements DecPositionService {
         }
         return count;
     }
+
+	@Override
+	public PageResult<DeclarationSituationSchoolResultVO> listDeclarationSituationSchoolResultVOs
+	(PageParameter<DeclarationSituationSchoolResultVO> pageParameter) throws CheckedServiceException {
+		if (ObjectUtil.isNull(pageParameter.getParameter().getMaterialId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
+		}
+		String schoolName = pageParameter.getParameter().getSchoolName();
+		if (StringUtil.notEmpty(schoolName)){
+			pageParameter.getParameter().setSchoolName(schoolName);
+		}
+		PageResult<DeclarationSituationSchoolResultVO> pageResult = 
+				new PageResult<DeclarationSituationSchoolResultVO>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        
+		return null;
+	}
 }

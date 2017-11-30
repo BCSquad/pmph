@@ -39,6 +39,10 @@ public class DeclarationSituationSchoolResultVO implements Serializable{
 	private Integer chosenPositionEditorial;
 	//数字编委当选数
 	private Boolean isDigitalEditor;
+	//申报人数
+	private Integer declarationPersons;
+	//当选人数
+	private Integer presetPersons;
 	
 	public DeclarationSituationSchoolResultVO() {
 		super();
@@ -110,5 +114,21 @@ public class DeclarationSituationSchoolResultVO implements Serializable{
 	public void setIsDigitalEditor(Boolean isDigitalEditor) {
 		this.isDigitalEditor = isDigitalEditor;
 	}
-	
+
+	public Integer getDeclarationPersons() {
+		return declarationPersons;
+	}
+
+	public void setDeclarationPersons(Integer declarationPersons) {
+		this.declarationPersons = declarationPersons;
+	}
+
+	public Integer getPresetPersons() {
+		return presetPersons;
+	}
+
+	public void setPresetPersons(Integer presetPersons) {
+		this.presetPersons = presetPersons;
+	}
+
 }

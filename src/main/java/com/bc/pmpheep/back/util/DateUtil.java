@@ -7,6 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.poi.ss.usermodel.Cell;
+
+
 public final class DateUtil {
     private final static SimpleDateFormat sdfYear = new SimpleDateFormat("yyyy");
 
@@ -354,6 +357,32 @@ public final class DateUtil {
         
         
     	
+    }
+    
+    /**
+     * 
+     * Description:解析Excel文件时动态判断单元格类型并返回时间数据
+     * @author:lyc
+     * @date:2017年11月30日下午12:58:00
+     * @param 
+     * @return String
+     */
+    @SuppressWarnings("deprecation")
+	public static String getCellValue(Cell cell){
+    	if (null == cell){
+    		return sdfTime.format(new Date());
+    	}
+    	String result = "";
+    	if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC){
+    		short format = cell.getCellStyle().getDataFormat();
+    		if (format == 14 || format == 31 || format == 57 || format == 58){
+    			result = sdfDay.format(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(cell
+    					.getNumericCellValue()));
+    		}else{
+    			result = sdfTime.format(new Date());
+    		}
+    	}
+    	return result;
     }
 
 }

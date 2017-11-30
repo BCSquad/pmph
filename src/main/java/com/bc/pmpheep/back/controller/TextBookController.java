@@ -84,7 +84,6 @@ public class TextBookController {
     @RequestMapping(value = "/import/excel", method = RequestMethod.POST)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "通过Excel文档批量导入教材书籍")
     public ResponseBean excel(@RequestParam(name = "file") MultipartFile file){
-    	FileUpload.fileUp(file, Const.FILE_PATH_FILE, file.getName());
     	try {
 			return new ResponseBean(textbookService.importExcel(file));
 		} catch (CheckedServiceException e) {
