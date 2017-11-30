@@ -396,30 +396,13 @@ public class TextbookServiceImpl implements TextbookService {
 				if (ObjectUtil.isNull(first) || ObjectUtil.isNull(second) || ObjectUtil.isNull(third)){
 					break;
 				}
-				String bookName = "";
-				switch (second.getCellType()) {
-				case Cell.CELL_TYPE_BOOLEAN:
-					bookName = String.valueOf(second.getBooleanCellValue()).trim();
-					break;
-				case Cell.CELL_TYPE_STRING:
-					bookName = second.getRichStringCellValue().getString().trim();
-					break;
-				case Cell.CELL_TYPE_NUMERIC:
-					bookName = String.valueOf(second.getNumericCellValue()).toString();
-					break;
-				case Cell.CELL_TYPE_FORMULA:
-					bookName = second.getCellFormula();
-					break;
-				default:
-					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-							CheckedExceptionResult.ILLEGAL_PARAM, "数据格式错误");
-				}
-					Integer sort = (int) row.getCell(0).getNumericCellValue();
-					Integer round = (int) row.getCell(2).getNumericCellValue();
-					textbook.setSort(sort);
-					textbook.setTextbookName(bookName);
-					textbook.setTextbookRound(round);
-					bookList.add(textbook);			
+				String bookName = StringUtil.getCellValue(second);
+				Integer sort = ObjectUtil.getCellValue(first);
+				Integer round = ObjectUtil.getCellValue(third);
+				textbook.setSort(sort);
+				textbook.setTextbookName(bookName);
+				textbook.setTextbookRound(round);
+				bookList.add(textbook);			
 			}
 		}
 		FileUtil.delFile(Const.FILE_PATH_FILE + file.getOriginalFilename());
