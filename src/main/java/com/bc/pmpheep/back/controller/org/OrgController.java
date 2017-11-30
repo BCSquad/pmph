@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,6 +127,9 @@ public class OrgController {
  	@ResponseBody
     @RequestMapping(value = "/orgExport", method = RequestMethod.POST)
     public ResponseBean excel(MultipartFile file,HttpServletRequest req){
+ 		if(file.isEmpty()){
+ 			return new ResponseBean("文件上传失败");
+ 		}
  		String realpath = req.getSession().getServletContext().getRealPath( Const.FILE_PATH_FILE); 
  		File dir = new File(realpath);
  		if(!dir.exists()){
@@ -136,7 +140,7 @@ public class OrgController {
         File tempFile =  new File(filePath) ;
         // 转存文件  
         try {
-			file.transferTo(tempFile);//file.getInputStream() ;
+			//file.transferTo(tempFile);
 		} catch (Exception e) {
 			return new ResponseBean("文件上传失败");
 		}
@@ -145,9 +149,9 @@ public class OrgController {
     	//文件类型
         String fileType = name.substring(name.lastIndexOf("."));
         
-		FileInputStream in = null;
+		InputStream in = null;
 		try {
-			in = new FileInputStream(filePath);
+			in = file.getInputStream();//new FileInputStream(filePath);
 		} catch (FileNotFoundException e) {
 			return new ResponseBean("未获取到文件");
 		} catch (Exception e) {
@@ -189,7 +193,7 @@ public class OrgController {
 		       ){
 				break;
 			}
-			orgs.add("{\"xuhao\":\""+value1+",\"orgName\":\""+value2+",\"orgCode\":\""+value3+"}");
+			orgs.add("{\"xuhao\":\""+value1+"\",\"orgName\":\""+value2+"\",\"orgCode\":\""+value3+"\"}");
 		}
 		if(null != workbook){
 			try {
