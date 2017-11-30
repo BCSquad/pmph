@@ -179,11 +179,11 @@
 		on 
 			c.id=a.textbook_id 
 		where 
-		    (a.chosen_position in (1,2,3) or a.is_digital_editor =1 )
-		    and b.id is not null  
-			and b.is_staging =false 
+		    b.id is not null
+		    and (a.chosen_position in (1,2,3,4,5,6,7) or a.is_digital_editor =1 )
+		    and b.is_staging =false 
 			and b.online_progress != 2 
-			and c.id = #{textbookId};
+			and c.id = 491
 	</select>
 	
 	<!-- 根据书籍id查询申报id -->
@@ -245,6 +245,8 @@
 		ON 
 			dc.`org_id`= org.`id`
 		WHERE
+			dc.`is_staging`= FALSE
+		AND
 			dp.`textbook_id` = #{textbookId}
 			<if test="realName !=null and realName !=''">
 				AND

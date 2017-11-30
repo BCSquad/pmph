@@ -224,7 +224,7 @@ public class OrgController {
 		//sheet数目
 		//int sheetTotal = workbook.getNumberOfSheets() ;
 		Sheet sheet = workbook.getSheetAt(0);
-		List<String> orgs = new ArrayList<String>(sheet.getLastRowNum());
+		List<Org> orgs = new ArrayList<Org>(sheet.getLastRowNum());
 		for (int rowNum = 1 ; rowNum <= sheet.getLastRowNum();rowNum ++){
 			Row row = sheet.getRow(rowNum);
 			if (null == row){
@@ -242,7 +242,10 @@ public class OrgController {
 		       ){
 				break;
 			}
-			orgs.add("{\"xuhao\":\""+value1+"\",\"orgName\":\""+value2+"\",\"orgCode\":\""+value3+"\"}");
+			Org org = new Org();
+			org.setOrgName(value2);
+			//orgs.add("{\"xuhao\":\""+value1+"\",\"orgName\":\""+value2+"\",\"orgCode\":\""+value3+"\"}");
+			orgs.add(org);
 		}
 		if(null != workbook){
 			try {

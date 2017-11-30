@@ -86,15 +86,25 @@ public class MaterialController {
 			materialVO.getMaterial().setDeadline(DateUtil.str3Date(deadline));
 			materialVO.getMaterial().setActualDeadline(DateUtil.str3Date(actualDeadline));
 			materialVO.getMaterial().setAgeDeadline(DateUtil.str3Date(ageDeadline));
-			return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
-					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(),
-					materialVO.getMaterial(), materialVO.getMaterialExtra(), noticeFiles,
-					materialVO.getMaterialNoticeAttachments(), noteFiles, materialVO.getMaterialNoteAttachments(),
+			return new ResponseBean(materialService.addOrUpdateMaterial(
+					sessionId,
+					materialVO.getMaterialType(),
+					materialVO.getMaterialContacts(),
+					materialVO.getMaterialExtensions(), 
+					materialVO.getMaterialProjectEditors(),
+					materialVO.getMaterial(), 
+					materialVO.getMaterialExtra(), 
+					noticeFiles,
+					materialVO.getMaterialNoticeAttachments(), 
+					noteFiles, 
+					materialVO.getMaterialNoteAttachments(),
 					false));
 		} catch (CheckedServiceException e) {
 			return new ResponseBean(e);
 		} catch (IOException e) {
 			return new ResponseBean("上传文件失败");
+		} catch (Exception e){
+			return new ResponseBean("未知异常");
 		}
 	}
 
@@ -132,15 +142,25 @@ public class MaterialController {
 			materialVO.getMaterial().setDeadline(DateUtil.str3Date(deadline));
 			materialVO.getMaterial().setActualDeadline(DateUtil.str3Date(actualDeadline));
 			materialVO.getMaterial().setAgeDeadline(DateUtil.str3Date(ageDeadline));
-			return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
-					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(),
-					materialVO.getMaterial(), materialVO.getMaterialExtra(), noticeFiles,
-					materialVO.getMaterialNoticeAttachments(), noteFiles, materialVO.getMaterialNoteAttachments(),
+			return new ResponseBean(materialService.addOrUpdateMaterial(
+					sessionId, 
+					materialVO.getMaterialType(),
+					materialVO.getMaterialContacts(),
+					materialVO.getMaterialExtensions(), 
+					materialVO.getMaterialProjectEditors(),
+					materialVO.getMaterial(), 
+					materialVO.getMaterialExtra(), 
+					noticeFiles,
+					materialVO.getMaterialNoticeAttachments(), 
+					noteFiles, 
+					materialVO.getMaterialNoteAttachments(),
 					true));
 		} catch (CheckedServiceException e) {
 			return new ResponseBean(e);
 		} catch (IOException e) {
 			return new ResponseBean("上传文件失败");
+		} catch (Exception e){
+			return new ResponseBean("未知异常");
 		}
 	}
 
