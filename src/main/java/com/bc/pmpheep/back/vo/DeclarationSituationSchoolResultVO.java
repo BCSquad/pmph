@@ -39,16 +39,10 @@ public class DeclarationSituationSchoolResultVO implements Serializable{
 	private Integer chosenPositionEditorial;
 	//数字编委当选数
 	private Boolean isDigitalEditor;
-	//院校申报总数
-	private Integer declarationSchoolCount;
-	//院校申报平均数
-	private Integer declarationSchoolAverage;
-	//主编申报总数
-	private Integer editorCount;
-	//副主编申报总数
-	private Integer subEditorCount;
-	//编委申报总数
-	private Integer editorial;
+	//申报人数
+	private Integer declarationPersons;
+	//当选人数
+	private Integer presetPersons;
 	
 	public DeclarationSituationSchoolResultVO() {
 		super();
@@ -121,43 +115,20 @@ public class DeclarationSituationSchoolResultVO implements Serializable{
 		this.isDigitalEditor = isDigitalEditor;
 	}
 
-	public Integer getDeclarationSchoolCount() {
-		return declarationSchoolCount;
+	public Integer getDeclarationPersons() {
+		return declarationPersons;
 	}
 
-	public void setDeclarationSchoolCount(Integer declarationSchoolCount) {
-		this.declarationSchoolCount = declarationSchoolCount;
+	public void setDeclarationPersons(Integer declarationPersons) {
+		this.declarationPersons = declarationPersons;
 	}
 
-	public Integer getDeclarationSchoolAverage() {
-		return declarationSchoolAverage;
+	public Integer getPresetPersons() {
+		return presetPersons;
 	}
 
-	public void setDeclarationSchoolAverage(Integer declarationSchoolAverage) {
-		this.declarationSchoolAverage = declarationSchoolAverage;
+	public void setPresetPersons(Integer presetPersons) {
+		this.presetPersons = presetPersons;
 	}
 
-	public Integer getEditorCount() {
-		return editorCount;
-	}
-
-	public void setEditorCount(Integer editorCount) {
-		this.editorCount = editorCount;
-	}
-
-	public Integer getSubEditorCount() {
-		return subEditorCount;
-	}
-
-	public void setSubEditorCount(Integer subEditorCount) {
-		this.subEditorCount = subEditorCount;
-	}
-
-	public Integer getEditorial() {
-		return editorial;
-	}
-
-	public void setEditorial(Integer editorial) {
-		this.editorial = editorial;
-	}
 }

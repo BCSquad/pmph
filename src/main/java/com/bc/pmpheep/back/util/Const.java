@@ -74,7 +74,7 @@ public class Const {
     // 该值会在web容器启动时由WebAppContextListener初始化
     public static ApplicationContext WEB_APP_CONTEXT               = null;
     // 普通文件下载控制器方法
-    public static final String       FILE_DOWNLOAD                 = "/file/download/";
+    public static final String       FILE_DOWNLOAD                 = "/pmpheep/file/download/";
     /**
      * 系统消息类型
      */
@@ -164,10 +164,11 @@ public class Const {
     public static final String       MATERIAL_NOTICE_TYPE          = "notice";
     public static final String       MATERIAL_NOTE_TYPE            = "note";
     // CMS 附件下载Controller方法
-    public static final String       CMS_FILE_DOWNLOAD             = "/file/cms/download/";
+    public static final String       CMS_FILE_DOWNLOAD             = "/pmpheep/file/cms/download/";
     // material教材通知附件下载Controller方法
-    public static final String       MATERIAL_NOTICE_FILE_DOWNLOAD = "/file/notice/download/";
-    public static final String       MATERIAL_NOTE_FILE_DOWNLOAD   = "/file/note/download/";
+    public static final String       MATERIAL_NOTICE_FILE_DOWNLOAD =
+                                                                   "/pmpheep/file/notice/download/";
+    public static final String       MATERIAL_NOTE_FILE_DOWNLOAD   = "/pmpheep/file/note/download/";
     // 作者类型--系统
     public static final Short        CMS_AUTHOR_TYPE_0             = 0;
     // 作者类型--编辑
@@ -185,6 +186,7 @@ public class Const {
     public static final Short        CMS_AUTHOR_STATUS_0           = 0;
     public static final Short        CMS_AUTHOR_STATUS_1           = 1;
     public static final Short        CMS_AUTHOR_STATUS_2           = 2;
+
     // Cms_Category_Role permissionType字段(1:后台操作权限,2:审核权限)
     public static final Short        CMS_CATEGORY_PERMISSSION_1    = 1;
     public static final Short        CMS_CATEGORY_PERMISSSION_2    = 2;

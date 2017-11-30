@@ -33,7 +33,6 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.FileUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -327,6 +326,12 @@ public class TextbookServiceImpl implements TextbookService {
 		ComparatorChain comparatorChain = new ComparatorChain();
 		comparatorChain.addComparator(new BeanComparator<Textbook>("sort"));
 		Collections.sort(bookList, comparatorChain);
+		List<Textbook> textbookList = textbookDao.getTextbookByMaterialId(bookListVO.getMaterialId());
+		List<Long> ids = new ArrayList<>();
+		for (Textbook textbook : textbookList){
+			ids.add(textbook.getId());
+		}
+		List<Long> delBook = new ArrayList<>();//装数据库中本来已经有的书籍id
 		int count = 1; //判断书序号的连续性计数器
 		for (Textbook textbook : bookList){
 		if (ObjectUtil.isNull(textbook.getMaterialId())){
@@ -361,13 +366,18 @@ public class TextbookServiceImpl implements TextbookService {
 			}
 			if (ObjectUtil.notNull(textbookDao.getTextbookById(textbook.getId()))) {
 				textbookDao.updateTextbook(textbook);
+				delBook.add(textbook.getId());
 			} else {
 				textbookDao.addTextbook(textbook);
 			}
 			list.add(map);
 			count++;
 		}
-		return bookList;
+		ids.removeAll(delBook);
+		for (Long id : ids){
+			textbookDao.deleteTextbookById(id);
+		}
+		return textbookDao.getTextbookByMaterialId(bookListVO.getMaterialId());
 	}
 	
 	@SuppressWarnings({ "resource"})
