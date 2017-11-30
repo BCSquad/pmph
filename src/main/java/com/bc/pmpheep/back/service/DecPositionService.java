@@ -6,9 +6,12 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.util.List;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.back.vo.DecPositionVO;
+import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -147,4 +150,15 @@ public interface DecPositionService {
      */
     Integer updateDecPositionEditorSelection(String jsonDecPosition, String sessionId)
     throws CheckedServiceException;
+    
+    /**
+     * 
+     * Description:加载申请情况按学校统计界面
+     * @author:lyc
+     * @date:2017年11月29日下午5:04:52
+     * @param 
+     * @return PageResult<DeclarationSituationSchoolResultVO>
+     */
+    PageResult<DeclarationSituationSchoolResultVO> listDeclarationSituationSchoolResultVOs
+    (PageParameter<DeclarationSituationSchoolResultVO> parameter) throws CheckedServiceException;
 }
