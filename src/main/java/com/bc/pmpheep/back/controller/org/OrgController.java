@@ -30,6 +30,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -233,9 +234,9 @@ public class OrgController {
 			Cell cell1 = row.getCell(0);
 			Cell cell2 = row.getCell(1);
 			Cell cell3 = row.getCell(2);
-			String value1 = getValue(cell1);
-			String value2 = getValue(cell2);
-			String value3 = getValue(cell3);
+			String value1 = StringUtil.getCellValue(cell1);
+			String value2 = StringUtil.getCellValue(cell2);
+			String value3 = StringUtil.getCellValue(cell3);
 			if(   null == value1 ||"".equals(value1.trim())  
 		       || null == value2 ||"".equals(value2.trim()) 
 			   //|| null == value3 ||"".equals(value3.trim())
@@ -268,39 +269,4 @@ public class OrgController {
 		
 		return new ResponseBean(orgs);
 	}
- 	
- 	
- 	
- 	private String getValue(Cell cell) {
- 		if(null == cell){
- 			return "";
- 		}
- 		int type = cell.getCellType();
- 		String value = "";
- 		switch (type) {
-		case 0://数字 Cell.CELL_TYPE_NUMERIC	
-			value = String.valueOf(cell.getNumericCellValue()).trim();
-			break;
-		case 1://字符串Cell.CELL_TYPE_STRING
-			value = cell.getStringCellValue().trim();
-			break;
-		case 2://公式 Cell.CELL_TYPE_FORMULA
-			value = cell.getCellFormula().trim();
-			break;
-		case 3://空值 Cell.CELL_TYPE_BLANK
-			value = "";
-			break;
-		case 4://Boolean Cell.CELL_TYPE_BOOLEAN
-			Boolean v = cell.getBooleanCellValue() ;
-			value = v == null ? "":String.valueOf(v);
-			break;
-		case 5://错误 Cell.CELL_TYPE_ERROR
-			value = "";
-			break;
-		default:
-			value = "";
-			break;
-		}
- 		return value;
-    }
 }
