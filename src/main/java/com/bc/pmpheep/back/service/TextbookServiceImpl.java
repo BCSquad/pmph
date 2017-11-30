@@ -158,7 +158,11 @@ public class TextbookServiceImpl implements TextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "角色ID或策划编辑ID为空时禁止新增");
 		}
-		roleDao.addUserRole(textbook.getPlanningEditor(), roleId);//给策划编辑绑定权限
+		// 判断该用户是否已有策划编辑的角色 没有则新加
+		List<PmphRole> list=roleDao.getPmphRoleByUserId(textbook.getPlanningEditor());
+		if(!roleName.equals(list.get(0).getRoleName())){
+			roleDao.addUserRole(textbook.getPlanningEditor(), roleId);//给策划编辑绑定权限
+		}
 		return textbookDao.updateTextbook(textbook);
 	}
 
@@ -323,10 +327,11 @@ public class TextbookServiceImpl implements TextbookService {
 		comparatorChain.addComparator(new BeanComparator<Textbook>("sort"));
 		Collections.sort(bookList, comparatorChain);
 		List<Textbook> textbookList = textbookDao.getTextbookByMaterialId(bookListVO.getMaterialId());
-		textbookList.removeAll(bookList);
+		List<Long> ids = new ArrayList<>();
 		for (Textbook textbook : textbookList){
-			textbookDao.deleteTextbookById(textbook.getId());
+			ids.add(textbook.getId());
 		}
+		List<Long> delBook = new ArrayList<>();//装数据库中本来已经有的书籍id
 		int count = 1; //判断书序号的连续性计数器
 		for (Textbook textbook : bookList){
 		if (ObjectUtil.isNull(textbook.getMaterialId())){
@@ -361,11 +366,16 @@ public class TextbookServiceImpl implements TextbookService {
 			}
 			if (ObjectUtil.notNull(textbookDao.getTextbookById(textbook.getId()))) {
 				textbookDao.updateTextbook(textbook);
+				delBook.add(textbook.getId());
 			} else {
 				textbookDao.addTextbook(textbook);
 			}
 			list.add(map);
 			count++;
+		}
+		ids.removeAll(delBook);
+		for (Long id : ids){
+			textbookDao.deleteTextbookById(id);
 		}
 		return textbookDao.getTextbookByMaterialId(bookListVO.getMaterialId());
 	}
