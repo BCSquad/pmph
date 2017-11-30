@@ -369,9 +369,13 @@ public class TextbookServiceImpl implements TextbookService {
 			list.add(map);
 			count++;
 		}
-		ids.removeAll(delBook);
-		for (Long id : ids){
-			textbookDao.deleteTextbookById(id);
+		if (CollectionUtil.isNotEmpty(delBook)){
+			ids.removeAll(delBook);
+			if (CollectionUtil.isNotEmpty(ids)){
+				for (Long id : ids){
+					textbookDao.deleteTextbookById(id);
+				}
+			}
 		}
 		return textbookDao.getTextbookByMaterialId(bookListVO.getMaterialId());
 	}
