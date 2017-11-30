@@ -34,6 +34,7 @@ public interface MaterialService {
      * 新建遴选公告
      * @createDate 2017年11月13日 下午2:33:56
      * @param sessionId
+     * @param materialType
      * @param material
      * @param materialContacts
      * @param materialExtensions
@@ -50,6 +51,7 @@ public interface MaterialService {
      * @throws IOException 
      */
     Long addOrUpdateMaterial(String sessionId, 
+    		String   materialType,
     		String   materialContacts,
     		String   materialExtensions, 
     		String   materialProjectEditors,

@@ -21,6 +21,7 @@ import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
 import com.bc.pmpheep.back.po.MaterialProjectEditor;
+import com.bc.pmpheep.back.po.MaterialType;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
@@ -90,6 +91,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
 	@Autowired
 	CmsContentService cmsContentService;
+	
+	@Autowired
+	private MaterialTypeService materialTypeService;
 
 	/**
 	 * 
@@ -105,7 +109,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	}
 
 	@Override
-	public Long addOrUpdateMaterial(String sessionId, String materialContacts, String materialExtensions,
+	public Long addOrUpdateMaterial(String sessionId,String materialType, String materialContacts, String materialExtensions,
 			String materialProjectEditors, Material material, MaterialExtra materialExtra, MultipartFile[] noticeFiles,
 			String materialNoticeAttachments, MultipartFile[] noteFiles, String materialNoteAttachments,
 			boolean isUpdate) throws CheckedServiceException, IOException {
@@ -199,6 +203,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材备注内容过长");
 		}
+		Gson gson = new Gson();
 		// 获取主任
 		PmphUser director = pmphUserService.get(material.getDirector());
 		if (null == director) {
@@ -220,6 +225,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		material.setDepartmentId(director.getDepartmentId());
 		// 修改人
 		material.setMenderId(pmphUser.getId());
+		//教材类型
+		List<Long> materialTypeList = gson.fromJson(materialType, new TypeToken<ArrayList<Long>>() { }.getType());
+		material.setMaterialType(materialTypeList.get(materialTypeList.size()-1));
 		// 保存或者更新教材
 		if (isUpdate) {
 			materialDao.updateMaterial(material);
@@ -229,7 +237,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			materialDao.addMaterial(material);
 		}
 		Long materialId = material.getId();
-		Gson gson = new Gson();
+		
 		// 扩展项转换
 		List<MaterialExtension> oldMaterialExtensionlist = materialExtensionService
 				.getMaterialExtensionByMaterialId(materialId);
@@ -707,6 +715,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		Material material = materialDao.getMaterialById(id);
 		//教材主任
 		PmphUser director = pmphUserService.get(material.getDirector());
+		//教材类型字符串
+		MaterialType materialType =materialTypeService.getMaterialTypeById(material.getMaterialType());
 		// 教材通知备注表
 		MaterialExtra materialExtra = materialExtraService.getMaterialExtraByMaterialId(id);
 		Gson gson = new Gson();
@@ -731,6 +741,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
 		return new MaterialVO(material,
 				director.getRealname(),
+				"["+materialType.getPath().replace("-", ",")+"]",
 				materialExtra, 
 				materialContacts, 
 				materialExtensions, 
