@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
@@ -366,18 +367,32 @@ public class TextbookServiceImpl implements TextbookService {
 	
 	@SuppressWarnings({ "resource"})
 	@Override
-	public List<Textbook> importExcel(MultipartFile file) throws CheckedServiceException,IOException{
+	public List<Textbook> importExcel(MultipartFile file) throws CheckedServiceException {
 		String fileType = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 		Workbook workbook = null;
-		InputStream in = file.getInputStream();
-		if ((".xls").equals(fileType)){
-			workbook = new HSSFWorkbook(in);
-		} else if ((".xlsx").equals(fileType)){
-			workbook = new XSSFWorkbook(in);
-		} else{
+		InputStream in = null ;
+		try {
+			in = file.getInputStream();
+		} catch (FileNotFoundException e) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "读取的不是Excel文件");
+					CheckedExceptionResult.NULL_PARAM, "未获取到文件");
+		} catch (IOException e){
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "读取文件失败");
 		}
+		try {
+			if ((".xls").equals(fileType)){
+				workbook = new HSSFWorkbook(in);
+			} else if ((".xlsx").equals(fileType)){
+				workbook = new XSSFWorkbook(in);
+			} else{
+				throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+						CheckedExceptionResult.ILLEGAL_PARAM, "读取的不是Excel文件");
+			}
+			} catch (IOException e) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+						CheckedExceptionResult.ILLEGAL_PARAM, "读取文件失败");
+			}
 		List<Textbook> bookList = new ArrayList<>();
 		for (int numSheet = 0 ; numSheet < workbook.getNumberOfSheets();numSheet ++){
 			Sheet sheet = workbook.getSheetAt(numSheet);
@@ -405,7 +420,6 @@ public class TextbookServiceImpl implements TextbookService {
 				bookList.add(textbook);			
 			}
 		}
-		FileUtil.delFile(Const.FILE_PATH_FILE + file.getOriginalFilename());
 		return bookList;
 	}
 	
