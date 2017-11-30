@@ -159,7 +159,11 @@ public class TextbookServiceImpl implements TextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "角色ID或策划编辑ID为空时禁止新增");
 		}
-		roleDao.addUserRole(textbook.getPlanningEditor(), roleId);//给策划编辑绑定权限
+		// 判断该用户是否已有策划编辑的角色 没有则新加
+		List<PmphRole> list=roleDao.getPmphRoleByUserId(textbook.getPlanningEditor());
+		if(!roleName.equals(list.get(0).getRoleName())){
+			roleDao.addUserRole(textbook.getPlanningEditor(), roleId);//给策划编辑绑定权限
+		}
 		return textbookDao.updateTextbook(textbook);
 	}
 

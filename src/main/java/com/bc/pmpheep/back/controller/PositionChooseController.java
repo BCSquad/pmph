@@ -110,7 +110,7 @@ public class PositionChooseController {
 	@RequestMapping(value = "/editorList", method = RequestMethod.GET)
 	public ResponseBean editorList(@RequestParam("textbookId")Long  textbookId,
 			@RequestParam("pageSize") Integer pageSize,
-			@RequestParam("pageNumber") Integer pageNumber){
+			@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber){
 		PageParameter pageParameter = new PageParameter<>();
 		TextbookDecVO textbookDecVO = new TextbookDecVO();
 		textbookDecVO.setTextbookId(textbookId);
