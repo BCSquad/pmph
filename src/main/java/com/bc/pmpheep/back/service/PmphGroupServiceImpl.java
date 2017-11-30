@@ -4,21 +4,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphGroupDao;
+import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupFile;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.ArrayUtil;
-import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -39,6 +37,8 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Service
 public class PmphGroupServiceImpl extends BaseService implements PmphGroupService {
 
+	@Autowired
+	private TextbookDao textbookDao;
 	@Autowired
 	private PmphGroupDao pmphGroupDao;
 	@Autowired
@@ -283,4 +283,34 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		return pmphGroupDao.getPmphGroupByTextbookId(textbookId);
 	}
 
+	@Override
+	public PmphGroup addEditorSelcetionGroup(String sessionId, List<PmphGroupMember> list, Long textbookId)
+			throws CheckedServiceException, IOException {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
+		}
+		Textbook textbook=textbookDao.getTextbookById(textbookId);
+		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
+		PmphGroup pmphGroup=new PmphGroup();
+		pmphGroup.setGroupName(textbook.getTextbookName());
+		pmphGroup.setGroupImage(groupImage);
+		pmphGroup.setFounderId(pmphUser.getId());
+		pmphGroupDao.addPmphGroup(pmphGroup);
+		if (null != pmphGroup.getId()) {// 判断是否新增小组成功，如果成功则调用PmphGroupMemberService添加小组成员的方法将创建者添加到小组中
+			PmphGroupMember pmphGroupMember = new PmphGroupMember();
+			pmphGroupMember.setGroupId(pmphGroup.getId());
+			pmphGroupMember.setIsFounder(true);
+			pmphGroupMember.setUserId(pmphUser.getId());
+			pmphGroupMember.setDisplayName(pmphUser.getRealname());
+			pmphGroupMemberService.addPmphGroupMember(pmphGroupMember);
+			//批量把前台传入的作家用户添加到该小组
+			pmphGroupMemberService.addPmphGroupMemberOnGroup(pmphGroup.getId(), list, sessionId);
+		} else {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.OBJECT_NOT_FOUND,
+					"添加小组和成员失败");
+		}
+		return pmphGroup;
+	}
 }

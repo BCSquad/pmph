@@ -1,18 +1,22 @@
 package com.bc.pmpheep.back.controller;
 
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.bc.pmpheep.annotation.LogDetail;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
+import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
 /**
@@ -91,5 +95,28 @@ public class PositionChooseController {
 	@RequestMapping(value = "/updateResult", method = RequestMethod.PUT)
 	public ResponseBean updateResult(@RequestParam("ids") Long[] ids){
 		 return new ResponseBean(textbookService.updateTextbookAndMaterial(ids));
-	}	
+	}
+	
+	/**
+	 * 分页查询该书籍下的已选主编和编委
+	 * @param textbookId
+	 * @param pageSize
+	 * @param pageNumber
+	 * @return
+	 */
+	
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询该书籍下的已选主编和编委")
+	@RequestMapping(value = "/editorList", method = RequestMethod.GET)
+	public ResponseBean editorList(@RequestParam("textbookId")Long  textbookId,
+			@RequestParam("pageSize") Integer pageSize,
+			@RequestParam("pageNumber") Integer pageNumber){
+		PageParameter pageParameter = new PageParameter<>();
+		TextbookDecVO textbookDecVO = new TextbookDecVO();
+		textbookDecVO.setTextbookId(textbookId);
+		pageParameter.setPageNumber(pageNumber);
+		pageParameter.setPageSize(pageSize);
+		pageParameter.setParameter(textbookDecVO);
+		return new ResponseBean(textbookService.listEditorSelection(pageParameter));
+	}
 }

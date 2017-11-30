@@ -5,10 +5,13 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
+import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
+import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -156,4 +159,11 @@ public interface TextbookService {
 	 * @return List<Textbook>
 	 */
 	List<Textbook> addTopicNumber(String topicTextbooks) throws CheckedServiceException;
+	
+	/**
+	 *  通过书籍id查询对应已通过的主编和编委
+	 * @param textbookId
+	 * @return
+	 */
+	PageResult<TextbookDecVO> listEditorSelection(PageParameter<TextbookDecVO> pageParameter) throws CheckedServiceException;
 }

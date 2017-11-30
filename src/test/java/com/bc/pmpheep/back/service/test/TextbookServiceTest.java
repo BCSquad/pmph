@@ -1,20 +1,16 @@
 package com.bc.pmpheep.back.service.test;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 import javax.annotation.Resource;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
-
 import com.bc.pmpheep.back.po.Textbook;
-import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.test.BaseTest;
 /**
  * AreaDao 单元测试
  *
@@ -73,7 +69,6 @@ public class TextbookServiceTest extends BaseTest {
     	list = textbookService.getTextbookByMaterialId(1L);
     	Assert.assertTrue("获取教材书籍信息集合失败", list.size() > 1);
     }
-    
     private Textbook add(){
     	Textbook textbook = new Textbook();
     	textbook.setMaterialId(1L);
