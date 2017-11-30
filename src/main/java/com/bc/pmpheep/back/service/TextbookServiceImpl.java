@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -19,6 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.dao.TextbookDao;
@@ -42,6 +44,7 @@ import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 /**
@@ -311,7 +314,7 @@ public class TextbookServiceImpl implements TextbookService {
 					"参数不能为空");
 		}
 		List<Map<String,Object>> list = new ArrayList<>();
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().serializeNulls().create();
 		List<Textbook> bookList =gson.fromJson(bookListVO.getTextbooks(), 
 				new TypeToken<ArrayList<Textbook>>(){
 		}.getType()) ;
@@ -320,10 +323,30 @@ public class TextbookServiceImpl implements TextbookService {
 		Collections.sort(bookList, comparatorChain);
 		int count = 1; //判断书序号的连续性计数器
 		for (Textbook textbook : bookList){
+		if (ObjectUtil.isNull(textbook.getMaterialId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+						CheckedExceptionResult.ILLEGAL_PARAM, "教材id不能为空");
+		}
+		if (StringUtil.isEmpty(textbook.getTextbookName())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.ILLEGAL_PARAM, "书籍名称不能为空");
+		}
+		if (ObjectUtil.isNull(textbook.getTextbookRound())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.ILLEGAL_PARAM, "书籍轮次不能为空");
+		}
+		if (ObjectUtil.isNull(textbook.getSort())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.ILLEGAL_PARAM, "图书序号不能为空");
+		}
+		if (ObjectUtil.isNull(textbook.getFounderId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.ILLEGAL_PARAM, "创建人id不能为空");
+		}
 		if (count != textbook.getSort()){
-				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 						CheckedExceptionResult.ILLEGAL_PARAM, "书籍序号必须连续");
-			}
+		}
 			Map<String, Object> map = new HashMap<>();
 			map.put(textbook.getTextbookName(), textbook.getTextbookRound());
 			if (list.contains(map)) {
@@ -373,21 +396,33 @@ public class TextbookServiceImpl implements TextbookService {
 				if (ObjectUtil.isNull(first) || ObjectUtil.isNull(second) || ObjectUtil.isNull(third)){
 					break;
 				}
-				if (second.getCellType() != Cell.CELL_TYPE_STRING){
-					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
-							CheckedExceptionResult.ILLEGAL_PARAM, "文件内容格式错误");
-				} else {
+				String bookName = "";
+				switch (second.getCellType()) {
+				case Cell.CELL_TYPE_BOOLEAN:
+					bookName = String.valueOf(second.getBooleanCellValue()).trim();
+					break;
+				case Cell.CELL_TYPE_STRING:
+					bookName = second.getRichStringCellValue().getString().trim();
+					break;
+				case Cell.CELL_TYPE_NUMERIC:
+					bookName = String.valueOf(second.getNumericCellValue()).toString();
+					break;
+				case Cell.CELL_TYPE_FORMULA:
+					bookName = second.getCellFormula();
+					break;
+				default:
+					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+							CheckedExceptionResult.ILLEGAL_PARAM, "数据格式错误");
+				}
 					Integer sort = (int) row.getCell(0).getNumericCellValue();
-					String bookName = row.getCell(1).getStringCellValue();
 					Integer round = (int) row.getCell(2).getNumericCellValue();
 					textbook.setSort(sort);
 					textbook.setTextbookName(bookName);
 					textbook.setTextbookRound(round);
-					bookList.add(textbook);
-				}
+					bookList.add(textbook);			
 			}
 		}
-		FileUtil.delFile(Const.FILE_PATH_FILE + file.getOriginalFilename());;
+		FileUtil.delFile(Const.FILE_PATH_FILE + file.getOriginalFilename());
 		return bookList;
 	}
 	

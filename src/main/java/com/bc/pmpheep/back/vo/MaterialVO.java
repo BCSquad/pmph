@@ -24,6 +24,8 @@ public class MaterialVO implements Serializable{
 	private Material material;
 	//教材主任
 	private String directorName; 
+	//教材类型字符串 [1,2,3,4]
+	private String materialType;
 	//教材通知备注
 	private MaterialExtra materialExtra;
 	//联系人
@@ -44,6 +46,7 @@ public class MaterialVO implements Serializable{
 	public MaterialVO(
 			Material material, 
 			String directorName,
+			String materialType,
 			MaterialExtra materialExtra,
 			String materialContacts, 
 			String materialExtensions,
@@ -53,6 +56,7 @@ public class MaterialVO implements Serializable{
 		super();
 		this.material = material;
 		this.directorName = directorName;
+		this.materialType = materialType;
 		this.materialExtra = materialExtra;
 		this.materialContacts = materialContacts;
 		this.materialExtensions = materialExtensions;
@@ -123,6 +127,14 @@ public class MaterialVO implements Serializable{
 
 	public void setMaterialNoteAttachments(String materialNoteAttachments) {
 		this.materialNoteAttachments = materialNoteAttachments;
+	}
+	
+	public String getMaterialType() {
+		return materialType;
+	}
+
+	public void setMaterialType(String materialType) {
+		this.materialType = materialType;
 	}
 
 	@Override
