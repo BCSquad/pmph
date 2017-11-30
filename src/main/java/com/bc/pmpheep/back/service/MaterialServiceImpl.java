@@ -178,7 +178,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					"邮寄地址过长");
 		}
 		// 教材类型验证
-		if (null == material.getMaterialType()) {
+		if (StringUtil.isEmpty(materialType)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"教材类型为空");
 		}
@@ -717,6 +717,11 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		PmphUser director = pmphUserService.get(material.getDirector());
 		//教材类型字符串
 		MaterialType materialType =materialTypeService.getMaterialTypeById(material.getMaterialType());
+		String mtype="[]";
+		if(null != materialType){
+			mtype = "["+materialType.getPath().replace("-", ",")+","+material.getMaterialType()+"]";
+			mtype = mtype.replace("[0,", "[").replace("[0", "[");  // 去掉 0
+		}
 		// 教材通知备注表
 		MaterialExtra materialExtra = materialExtraService.getMaterialExtraByMaterialId(id);
 		Gson gson = new Gson();
@@ -741,7 +746,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
 		return new MaterialVO(material,
 				director.getRealname(),
-				"["+materialType.getPath().replace("-", ",")+"]",
+				mtype,
 				materialExtra, 
 				materialContacts, 
 				materialExtensions, 
