@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.back.service.MaterialProjectEditorService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 
 /**
  * AreaDao 单元测试
@@ -59,9 +60,9 @@ public class MaterialProjectEditorServiceTest extends BaseTest {
 		materialProjectEditorService.addMaterialProjectEditor(materialProjectEditor1);
 		materialProjectEditorService.addMaterialProjectEditor(materialProjectEditor1);
 		// 根据教材id批量查找项目编辑
-		List<MaterialProjectEditor> materialProjectEditor = materialProjectEditorService.listMaterialProjectEditors(1L);
+		List<MaterialProjectEditorVO> materialProjectEditor = materialProjectEditorService.listMaterialProjectEditors(128L);
 		Assert.assertTrue("listMaterialProjectEditors查询失败",materialProjectEditor.size()>0 );
-		List<MaterialProjectEditor> materialProjectEditor2 = materialProjectEditorService.listMaterialProjectEditors(12345678987654L);
+		List<MaterialProjectEditorVO> materialProjectEditor2 = materialProjectEditorService.listMaterialProjectEditors(12345678987654L);
 		Assert.assertTrue("listMaterialProjectEditors查询失败",materialProjectEditor2 != null );
 	}
 	

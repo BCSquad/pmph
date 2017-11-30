@@ -39,8 +39,8 @@
                 <!-- 不需要拦截的请求方法-->
                 <property name="excludeUrls">
                     <list>
-                        <value>/sysOperation/new</value><!-- 登陆日志 -->
-                        <value>/sysOperation/operations</value><!-- 操作日志 -->
+                        <value>/sys/operation/new</value><!-- 登陆日志 -->
+                        <value>/sys/operation/operations</value><!-- 操作日志 -->
                     </list>
                 </property>
             </bean>	

@@ -32,7 +32,6 @@ import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecExtension;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecNationalPlan;
-import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.DecResearch;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
@@ -41,9 +40,12 @@ import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.ApplicationVO;
+import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
+import com.bc.pmpheep.back.vo.DeclarationOrDisplayVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -250,9 +252,18 @@ public class DeclarationServiceImpl implements DeclarationService {
 	@Override
 	public ApplicationVO exportExcel(Long declarationId) {
 		ApplicationVO applicationVO = new ApplicationVO();
-		List<DecPosition> decPositionList = decPositionDao.listDecPositions(declarationId);
+		List<DecPositionDisplayVO> decPositionList = decPositionDao.listDecPositionsOrBook(declarationId);
+		for (DecPositionDisplayVO decPositions : decPositionList) {
+			String syllabusId = decPositions.getSyllabusId();
+			if (StringUtil.notEmpty(syllabusId)) {
+				String syllabusIds = RouteUtil.MONGODB_FILE + syllabusId;
+				decPositions.setSyllabusId(syllabusIds);
+			}
+		}
 		// 专家信息
-		Declaration declaration = declarationDao.getDeclarationById(declarationId);
+		DeclarationOrDisplayVO declaration = declarationDao.getDeclarationByIdOrOrgName(declarationId);
+		String orgNameOne = declaration.getOrgNameOne();
+		declaration.setOrgName(orgNameOne);
 		// 学习经历
 		List<DecEduExp> decEduExpList = decEduExpDao.getListDecEduExpByDeclarationId(declarationId);
 		// 工作经历

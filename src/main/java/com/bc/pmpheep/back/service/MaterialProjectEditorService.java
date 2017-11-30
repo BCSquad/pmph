@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 import java.util.List;
 
 import com.bc.pmpheep.back.po.MaterialProjectEditor;
+import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -44,7 +45,7 @@ public interface MaterialProjectEditorService {
 	 * @return List<MaterialProjectEditor>
 	 * @throws CheckedServiceException
 	 */
-	List<MaterialProjectEditor> listMaterialProjectEditors(Long materialId) throws CheckedServiceException;
+	List<MaterialProjectEditorVO> listMaterialProjectEditors(Long materialId) throws CheckedServiceException;
 
 	/**
 	 * 根据materialId删除materialProjectEditor

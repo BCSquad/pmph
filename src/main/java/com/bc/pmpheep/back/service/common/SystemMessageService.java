@@ -3,16 +3,13 @@ package com.bc.pmpheep.back.service.common;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.po.Material;
-import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.po.PmphGroup;
@@ -35,6 +32,7 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
 import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.general.service.MessageService;
@@ -545,7 +543,7 @@ public final class SystemMessageService {
             // 主任id
             Long directorId = material.getDirector();
             // 项目编辑列表
-            List<MaterialProjectEditor> materialProjectEditorList =
+            List<MaterialProjectEditorVO> materialProjectEditorList =
             materialProjectEditorService.listMaterialProjectEditors(material.getId());
             // 批量保存的消息集合
             List<UserMessage> userMessageList =
@@ -554,7 +552,7 @@ public final class SystemMessageService {
             userMessageList.add(new UserMessage(msg_id, messageTitle, new Short("0"), 0L,
                                                 new Short("0"), directorId, new Short("1")));
             userIds.add("1_" + directorId);
-            for (MaterialProjectEditor materialProjectEditor : materialProjectEditorList) {
+            for (MaterialProjectEditorVO materialProjectEditor : materialProjectEditorList) {
                 UserMessage userMessage =
                 new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
                                 materialProjectEditor.getEditorId(), new Short("1"));

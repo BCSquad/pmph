@@ -21,8 +21,8 @@ import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
 import com.bc.pmpheep.back.po.MaterialProjectEditor;
+import com.bc.pmpheep.back.po.MaterialType;
 import com.bc.pmpheep.back.po.PmphGroup;
-import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -31,6 +31,7 @@ import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MaterialListVO;
+import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
@@ -90,6 +91,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
 	@Autowired
 	CmsContentService cmsContentService;
+	
+	@Autowired
+	private MaterialTypeService materialTypeService;
 
 	/**
 	 * 
@@ -105,7 +109,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	}
 
 	@Override
-	public Long addOrUpdateMaterial(String sessionId, String materialContacts, String materialExtensions,
+	public Long addOrUpdateMaterial(String sessionId,String materialType, String materialContacts, String materialExtensions,
 			String materialProjectEditors, Material material, MaterialExtra materialExtra, MultipartFile[] noticeFiles,
 			String materialNoticeAttachments, MultipartFile[] noteFiles, String materialNoteAttachments,
 			boolean isUpdate) throws CheckedServiceException, IOException {
@@ -174,7 +178,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					"邮寄地址过长");
 		}
 		// 教材类型验证
-		if (null == material.getMaterialType()) {
+		if (StringUtil.isEmpty(materialType)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"教材类型为空");
 		}
@@ -199,6 +203,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材备注内容过长");
 		}
+		Gson gson = new Gson();
 		// 获取主任
 		PmphUser director = pmphUserService.get(material.getDirector());
 		if (null == director) {
@@ -220,6 +225,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		material.setDepartmentId(director.getDepartmentId());
 		// 修改人
 		material.setMenderId(pmphUser.getId());
+		//教材类型
+		List<Long> materialTypeList = gson.fromJson(materialType, new TypeToken<ArrayList<Long>>() { }.getType());
+		material.setMaterialType(materialTypeList.get(materialTypeList.size()-1));
 		// 保存或者更新教材
 		if (isUpdate) {
 			materialDao.updateMaterial(material);
@@ -229,7 +237,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			materialDao.addMaterial(material);
 		}
 		Long materialId = material.getId();
-		Gson gson = new Gson();
+		
 		// 扩展项转换
 		List<MaterialExtension> oldMaterialExtensionlist = materialExtensionService
 				.getMaterialExtensionByMaterialId(materialId);
@@ -327,14 +335,16 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材项目编辑参数有误");
 		}
-		List<MaterialProjectEditor> materialProjectEditorlist = gson.fromJson(materialProjectEditors,
-				new TypeToken<ArrayList<MaterialProjectEditor>>() {
+		List<MaterialProjectEditorVO> materialProjectEditorVOlist = gson.fromJson(materialProjectEditors,
+				new TypeToken<ArrayList<MaterialProjectEditorVO>>() {
 				}.getType());
-		for (MaterialProjectEditor materialProjectEditor : materialProjectEditorlist) {
-			if (null == materialProjectEditor || null == materialProjectEditor.getEditorId()) {
+		for (MaterialProjectEditorVO materialProjectEditorVO : materialProjectEditorVOlist) {
+			if (null == materialProjectEditorVO || null == materialProjectEditorVO.getEditorId()) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 						"项目编辑为空");
 			}
+			MaterialProjectEditor materialProjectEditor =new MaterialProjectEditor();
+			materialProjectEditor.setEditorId(materialProjectEditorVO.getEditorId());
 			materialProjectEditor.setMaterialId(materialId);
 			// 保存项目编辑
 			materialProjectEditorService.addMaterialProjectEditor(materialProjectEditor);
@@ -416,7 +426,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			for (MultipartFile notice : noticeFiles) {
 				MaterialNoticeAttachment materialNoticeAttachment = new MaterialNoticeAttachment();
 				materialNoticeAttachment.setAttachment("---------");
-				materialNoticeAttachment.setAttachmentName(notice.getName());
+				materialNoticeAttachment.setAttachmentName(notice.getOriginalFilename());
 				materialNoticeAttachment.setDownload(0L);
 				materialNoticeAttachment.setMaterialExtraId(materialExtra.getId());
 				// 保存通知
@@ -453,7 +463,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			for (MultipartFile note : noteFiles) {
 				MaterialNoteAttachment materialNoteAttachment = new MaterialNoteAttachment();
 				materialNoteAttachment.setAttachment("---------");
-				materialNoteAttachment.setAttachmentName(note.getName());
+				materialNoteAttachment.setAttachmentName(note.getOriginalFilename());
 				materialNoteAttachment.setDownload(0L);
 				materialNoteAttachment.setMaterialExtraId(materialExtra.getId());
 				// 保存备注
@@ -490,6 +500,15 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					"主键为空");
 		}
 		return materialDao.getMaterialById(id);
+	}
+	
+	@Override
+	public String  getMaterialNameById(Long id) throws CheckedServiceException {
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"主键为空");
+		}
+		return materialDao.getMaterialNameById(id);
 	}
 
 	/**
@@ -694,6 +713,15 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		// 教材主要信息
 		Material material = materialDao.getMaterialById(id);
+		//教材主任
+		PmphUser director = pmphUserService.get(material.getDirector());
+		//教材类型字符串
+		MaterialType materialType =materialTypeService.getMaterialTypeById(material.getMaterialType());
+		String mtype="[]";
+		if(null != materialType){
+			mtype = "["+materialType.getPath().replace("-", ",")+","+material.getMaterialType()+"]";
+			mtype = mtype.replace("[0,", "[").replace("[0", "[");  // 去掉 0
+		}
 		// 教材通知备注表
 		MaterialExtra materialExtra = materialExtraService.getMaterialExtraByMaterialId(id);
 		Gson gson = new Gson();
@@ -704,9 +732,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		List<MaterialExtension> materialExtensionList = materialExtensionService.getMaterialExtensionByMaterialId(id);
 		String materialExtensions = gson.toJson(materialExtensionList);
 		// 项目编辑
-		List<MaterialProjectEditor> materialProjectEditorList = materialProjectEditorService
+		List<MaterialProjectEditorVO> materialProjectEditorVOList = materialProjectEditorService
 				.listMaterialProjectEditors(id);
-		String materialProjectEditors = gson.toJson(materialProjectEditorList);
+		String materialProjectEditorVOs = gson.toJson(materialProjectEditorVOList);
 		// 通知附件信息
 		List<MaterialNoticeAttachment> materialNoticeAttachmentList = materialNoticeAttachmentService
 				.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
@@ -716,7 +744,14 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				.getMaterialNoteAttachmentByMaterialExtraId(materialExtra.getId());
 		String materialNoteAttachments = gson.toJson(materialNoteAttachmentList);
 
-		return new MaterialVO(material, materialExtra, materialContacts, materialExtensions, materialProjectEditors,
-				materialNoticeAttachments, materialNoteAttachments);
+		return new MaterialVO(material,
+				director.getRealname(),
+				mtype,
+				materialExtra, 
+				materialContacts, 
+				materialExtensions, 
+				materialProjectEditorVOs,
+				materialNoticeAttachments,
+				materialNoteAttachments);
 	}
 }

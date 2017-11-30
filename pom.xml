@@ -61,7 +61,7 @@
         <!--commons-lang -->
         <commons-lang.version>3.4</commons-lang.version>
         <!--commons-collections -->
-        <commons-collections.version>4.0</commons-collections.version>
+        <commons-collections.version>4.1</commons-collections.version>
         <!--commons-codec -->
         <commons-codec.version>1.10</commons-codec.version>
         <!--MongoDB -->
@@ -266,7 +266,6 @@
             <artifactId>poi-ooxml</artifactId>
             <version>${poi.ver}</version>
         </dependency>
-
     </dependencies>
 
     <repositories>

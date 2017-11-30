@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +29,9 @@ import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.PmphGroupService;
+import com.bc.pmpheep.back.service.test.BookServiceTest;
 import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.vo.MaterialListVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -44,6 +48,8 @@ import com.google.gson.reflect.TypeToken;
 @RequestMapping(value = "/material")
 @SuppressWarnings("all")
 public class MaterialController {
+	
+	Logger              logger = LoggerFactory.getLogger(BookServiceTest.class);
 
 	@Autowired
 	private MaterialService materialService;
@@ -74,22 +80,37 @@ public class MaterialController {
 	 *            备注文件
 	 * @return
 	 */
+	@ResponseBody
 	@LogDetail(businessType = Business_Type, logRemark = "新建遴选公告")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseBean add(MaterialVO materialVO, HttpServletRequest request, MultipartFile[] noticeFiles,
-			MultipartFile[] noteFiles) {
+			MultipartFile[] noteFiles,String deadline,String actualDeadline,String ageDeadline) {
 
 		String sessionId = CookiesUtil.getSessionId(request);
 		try {
-			return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
-					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(),
-					materialVO.getMaterial(), materialVO.getMaterialExtra(), noticeFiles,
-					materialVO.getMaterialNoticeAttachments(), noteFiles, materialVO.getMaterialNoteAttachments(),
-					true));
+			materialVO.getMaterial().setDeadline(DateUtil.str3Date(deadline));
+			materialVO.getMaterial().setActualDeadline(DateUtil.str3Date(actualDeadline));
+			materialVO.getMaterial().setAgeDeadline(DateUtil.str3Date(ageDeadline));
+			return new ResponseBean(materialService.addOrUpdateMaterial(
+					sessionId,
+					materialVO.getMaterialType(),
+					materialVO.getMaterialContacts(),
+					materialVO.getMaterialExtensions(), 
+					materialVO.getMaterialProjectEditors(),
+					materialVO.getMaterial(), 
+					materialVO.getMaterialExtra(), 
+					noticeFiles,
+					materialVO.getMaterialNoticeAttachments(), 
+					noteFiles, 
+					materialVO.getMaterialNoteAttachments(),
+					false));
 		} catch (CheckedServiceException e) {
 			return new ResponseBean(e);
 		} catch (IOException e) {
 			return new ResponseBean("上传文件失败");
+		} catch (Exception e){
+			logger.info(e.getMessage());
+			return new ResponseBean("未知异常"+e.getMessage());
 		}
 	}
 
@@ -117,21 +138,35 @@ public class MaterialController {
 	 *            备注文件
 	 * @return
 	 */
+	@ResponseBody
 	@LogDetail(businessType = Business_Type, logRemark = "修改遴选公告")
-	@RequestMapping(value = "/update", method = RequestMethod.PUT)
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public ResponseBean update(HttpServletRequest request, MaterialVO materialVO, MultipartFile[] noticeFiles,
-			MultipartFile[] noteFiles) {
+			MultipartFile[] noteFiles,String deadline,String actualDeadline,String ageDeadline) {
 		String sessionId = CookiesUtil.getSessionId(request);
 		try {
-			return new ResponseBean(materialService.addOrUpdateMaterial(sessionId, materialVO.getMaterialContacts(),
-					materialVO.getMaterialExtensions(), materialVO.getMaterialProjectEditors(),
-					materialVO.getMaterial(), materialVO.getMaterialExtra(), noticeFiles,
-					materialVO.getMaterialNoticeAttachments(), noteFiles, materialVO.getMaterialNoteAttachments(),
+			materialVO.getMaterial().setDeadline(DateUtil.str3Date(deadline));
+			materialVO.getMaterial().setActualDeadline(DateUtil.str3Date(actualDeadline));
+			materialVO.getMaterial().setAgeDeadline(DateUtil.str3Date(ageDeadline));
+			return new ResponseBean(materialService.addOrUpdateMaterial(
+					sessionId, 
+					materialVO.getMaterialType(),
+					materialVO.getMaterialContacts(),
+					materialVO.getMaterialExtensions(), 
+					materialVO.getMaterialProjectEditors(),
+					materialVO.getMaterial(), 
+					materialVO.getMaterialExtra(), 
+					noticeFiles,
+					materialVO.getMaterialNoticeAttachments(), 
+					noteFiles, 
+					materialVO.getMaterialNoteAttachments(),
 					true));
 		} catch (CheckedServiceException e) {
 			return new ResponseBean(e);
 		} catch (IOException e) {
 			return new ResponseBean("上传文件失败");
+		} catch (Exception e){
+			return new ResponseBean("未知异常");
 		}
 	}
 
@@ -170,6 +205,20 @@ public class MaterialController {
 		materialListVO.setMaterialName(materialName);
 		pageParameter.setParameter(materialListVO);
 		return new ResponseBean(materialService.listMaterials(pageParameter, sessionId));
+	}
+	
+	/**
+	 * 获取教材名称  通过主键id 
+	 * @author Mryang
+	 * @createDate 2017年11月29日 上午11:22:16
+	 * @param id 教材id
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = Business_Type, logRemark = "根据id获取教材名称")
+	@RequestMapping(value = "/materialName", method = RequestMethod.GET)
+	public ResponseBean materialName(@RequestParam(value = "id", required = true) Long id) {
+		return new ResponseBean(materialService.getMaterialNameById(id));
 	}
 
 	/**

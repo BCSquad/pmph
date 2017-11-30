@@ -1,6 +1,8 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +28,6 @@ import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Material;
-import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
@@ -40,10 +41,12 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
+import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 /**
@@ -196,10 +199,10 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 		// 教材项目编辑检查
 		if (null == power) {
-			List<MaterialProjectEditor> materialProjectEditors = materialProjectEditorService
+			List<MaterialProjectEditorVO> materialProjectEditors = materialProjectEditorService
 					.listMaterialProjectEditors(materialId);
 			if (null != materialProjectEditors && materialProjectEditors.size() > 0) {
-				for (MaterialProjectEditor materialProjectEditor : materialProjectEditors) {
+				for (MaterialProjectEditorVO materialProjectEditor : materialProjectEditors) {
 					if (null != materialProjectEditor && null != materialProjectEditor.getEditorId()
 							&& materialProjectEditor.getEditorId().equals(pmphUser.getId())) {
 						power = 3; // 我是教材的项目编辑
@@ -313,7 +316,7 @@ public class TextbookServiceImpl implements TextbookService {
 					"参数不能为空");
 		}
 		List<Map<String,Object>> list = new ArrayList<>();
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().serializeNulls().create();
 		List<Textbook> bookList =gson.fromJson(bookListVO.getTextbooks(), 
 				new TypeToken<ArrayList<Textbook>>(){
 		}.getType()) ;
@@ -322,10 +325,30 @@ public class TextbookServiceImpl implements TextbookService {
 		Collections.sort(bookList, comparatorChain);
 		int count = 1; //判断书序号的连续性计数器
 		for (Textbook textbook : bookList){
+		if (ObjectUtil.isNull(textbook.getMaterialId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+						CheckedExceptionResult.ILLEGAL_PARAM, "教材id不能为空");
+		}
+		if (StringUtil.isEmpty(textbook.getTextbookName())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.ILLEGAL_PARAM, "书籍名称不能为空");
+		}
+		if (ObjectUtil.isNull(textbook.getTextbookRound())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.ILLEGAL_PARAM, "书籍轮次不能为空");
+		}
+		if (ObjectUtil.isNull(textbook.getSort())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.ILLEGAL_PARAM, "图书序号不能为空");
+		}
+		if (ObjectUtil.isNull(textbook.getFounderId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.ILLEGAL_PARAM, "创建人id不能为空");
+		}
 		if (count != textbook.getSort()){
-				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 						CheckedExceptionResult.ILLEGAL_PARAM, "书籍序号必须连续");
-			}
+		}
 			Map<String, Object> map = new HashMap<>();
 			map.put(textbook.getTextbookName(), textbook.getTextbookRound());
 			if (list.contains(map)) {
@@ -343,27 +366,42 @@ public class TextbookServiceImpl implements TextbookService {
 		return bookList;
 	}
 	
-	@SuppressWarnings({ "resource", "deprecation" })
+	@SuppressWarnings({ "resource"})
 	@Override
-	public List<Textbook> importExcel(MultipartFile file) throws CheckedServiceException,IOException{
+	public List<Textbook> importExcel(MultipartFile file) throws CheckedServiceException {
 		String fileType = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 		Workbook workbook = null;
-		if ((".xls").equals(fileType)){
-			workbook = new HSSFWorkbook(file.getInputStream());
-		} else if ((".xlsx").equals(fileType)){
-			workbook = new XSSFWorkbook(file.getInputStream());
-		} else{
+		InputStream in = null ;
+		try {
+			in = file.getInputStream();
+		} catch (FileNotFoundException e) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "读取的不是Excel文件");
+					CheckedExceptionResult.NULL_PARAM, "未获取到文件");
+		} catch (IOException e){
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "读取文件失败");
 		}
+		try {
+			if ((".xls").equals(fileType)){
+				workbook = new HSSFWorkbook(in);
+			} else if ((".xlsx").equals(fileType)){
+				workbook = new XSSFWorkbook(in);
+			} else{
+				throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+						CheckedExceptionResult.ILLEGAL_PARAM, "读取的不是Excel文件");
+			}
+			} catch (IOException e) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+						CheckedExceptionResult.ILLEGAL_PARAM, "读取文件失败");
+			}
 		List<Textbook> bookList = new ArrayList<>();
 		for (int numSheet = 0 ; numSheet < workbook.getNumberOfSheets();numSheet ++){
 			Sheet sheet = workbook.getSheetAt(numSheet);
 			if (null == sheet){
 				continue;
 			}
-			Textbook textbook = new Textbook();
 			for (int rowNum = 1 ; rowNum <= sheet.getLastRowNum();rowNum ++){
+				Textbook textbook = new Textbook();
 				Row row = sheet.getRow(rowNum);
 				if (null == row){
 					break;
@@ -374,21 +412,15 @@ public class TextbookServiceImpl implements TextbookService {
 				if (ObjectUtil.isNull(first) || ObjectUtil.isNull(second) || ObjectUtil.isNull(third)){
 					break;
 				}
-				if (second.getCellType() != Cell.CELL_TYPE_STRING){
-					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
-							CheckedExceptionResult.ILLEGAL_PARAM, "文件内容格式错误");
-				} else {
-					Integer sort = (int) row.getCell(0).getNumericCellValue();
-					String bookName = row.getCell(1).getStringCellValue();
-					Integer round = (int) row.getCell(2).getNumericCellValue();
-					textbook.setSort(sort);
-					textbook.setTextbookName(bookName);
-					textbook.setTextbookRound(round);
-					bookList.add(textbook);
-				}
+				String bookName = StringUtil.getCellValue(second);
+				Integer sort = ObjectUtil.getCellValue(first);
+				Integer round = ObjectUtil.getCellValue(third);
+				textbook.setSort(sort);
+				textbook.setTextbookName(bookName);
+				textbook.setTextbookRound(round);
+				bookList.add(textbook);			
 			}
 		}
-		FileUtil.delFile(Const.FILE_PATH_FILE + file.getOriginalFilename());;
 		return bookList;
 	}
 	
@@ -472,5 +504,5 @@ public class TextbookServiceImpl implements TextbookService {
             pageResult.setRows(list);
         }
         return pageResult;
-}
+	}
 }

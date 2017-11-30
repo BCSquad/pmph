@@ -17,6 +17,7 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
@@ -196,6 +197,9 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 		int total = pmphGroupFileDao.getGroupFileTotal(pageParameter);
 		if (total > 0) {
 			List<PmphGroupFileVO> list = pmphGroupFileDao.listGroupFile(pageParameter);
+			for (PmphGroupFileVO pmphGroupFileVO : list) {
+				pmphGroupFileVO.setFileId(RouteUtil.MONGODB_GROUP_FILE + pmphGroupFileVO.getFileId());
+			}
 			pageResult.setRows(list);
 		}
 		pageResult.setTotal(total);

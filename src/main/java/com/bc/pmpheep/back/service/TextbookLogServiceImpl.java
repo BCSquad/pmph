@@ -124,9 +124,6 @@ public class TextbookLogServiceImpl implements TextbookLogService {
         return textbookLog;
     }
 
-    // 是否是数字编委
-    private static Integer IsDigitalEditor = 1; // 0:否,1：是
-
     @Override
     public TextbookLog addTextbookLog(TextbookLog textbookLog) throws CheckedServiceException {
         if (null == textbookLog) {
@@ -304,15 +301,15 @@ public class TextbookLogServiceImpl implements TextbookLogService {
                 detail.append("移除了" + redSumZhuBian + "位主编:[" + redZhuBian.toString().substring(1)
                               + "]");
             }
-            if (redSumZhuBian > 0) {
+            if (redSumFuZhuBian > 0) {
                 detail.append("移除了" + redSumFuZhuBian + "位副主编:["
                               + redFuZhuBian.toString().substring(1) + "]");
             }
-            if (redSumZhuBian > 0) {
+            if (redSumBianWei > 0) {
                 detail.append("移除了" + redSumBianWei + "位编委:[" + redBianWei.toString().substring(1)
                               + "]");
             }
-            if (redSumZhuBian > 0) {
+            if (redSumShuZiBianWei > 0) {
                 detail.append("移除了" + redSumShuZiBianWei + "位数字编辑:["
                               + redShuZiBianWei.toString().substring(1) + "]");
             }
@@ -320,15 +317,15 @@ public class TextbookLogServiceImpl implements TextbookLogService {
                 detail.append("增加了" + addSumZhuBian + "位主编:[" + addZhuBian.toString().substring(1)
                               + "]");
             }
-            if (addSumZhuBian > 0) {
+            if (addSumFuZhuBian > 0) {
                 detail.append("增加了" + addSumFuZhuBian + "位副主编:["
                               + addFuZhuBian.toString().substring(1) + "]");
             }
-            if (addSumZhuBian > 0) {
+            if (addSumBianWei > 0) {
                 detail.append("增加了" + addSumBianWei + "位编委:[" + addBianWei.toString().substring(1)
                               + "]");
             }
-            if (addSumZhuBian > 0) {
+            if (addSumShuZiBianWei > 0) {
                 detail.append("增加了" + addSumShuZiBianWei + "位数字编辑:["
                               + addShuZiBianWei.toString().substring(1) + "]");
             }

@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.poi.ss.usermodel.Cell;
 
 /**
  * 
@@ -248,4 +249,45 @@ public final class StringUtil {
 		return Math.ceil(valueLength);
 	}
 
+	/**
+	 * 
+	 * Description:解析Excel文件时动态判断单元格类型并返回String字符串
+	 * @author:lyc
+	 * @date:2017年11月30日上午10:47:52
+	 * @param 
+	 * @return String
+	 */
+	@SuppressWarnings("deprecation")
+	public static String getCellValue(Cell cell){
+		if(null == cell){
+ 			return "";
+ 		}
+ 		int type = cell.getCellType();
+ 		String value = "";
+ 		switch (type) {
+		case 0://数字 Cell.CELL_TYPE_NUMERIC	
+			value = String.valueOf(cell.getNumericCellValue()).trim();
+			break;
+		case 1://字符串Cell.CELL_TYPE_STRING
+			value = cell.getStringCellValue().trim();
+			break;
+		case 2://公式 Cell.CELL_TYPE_FORMULA
+			value = cell.getCellFormula().trim();
+			break;
+		case 3://空值 Cell.CELL_TYPE_BLANK
+			value = "";
+			break;
+		case 4://Boolean Cell.CELL_TYPE_BOOLEAN
+			Boolean v = cell.getBooleanCellValue() ;
+			value = v == null ? "":String.valueOf(v);
+			break;
+		case 5://错误 Cell.CELL_TYPE_ERROR
+			value = "";
+			break;
+		default:
+			value = "";
+			break;
+		}
+ 		return value;
+	}
 }

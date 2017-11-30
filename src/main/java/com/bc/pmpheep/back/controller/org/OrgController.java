@@ -1,5 +1,21 @@
 package com.bc.pmpheep.back.controller.org;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -7,11 +23,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.service.OrgService;
+import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -22,7 +41,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  **/
 @Controller
 @RequestMapping(value = "/orgs")
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@SuppressWarnings( "all")
 public class OrgController {
 
 	@Autowired
@@ -104,5 +123,150 @@ public class OrgController {
 	public ResponseBean orgByOrgName(@RequestParam("orgName") String orgName) {
 		return new ResponseBean(orgService.listOrgByOrgName(orgName));
 	}
-
+	
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "解析批量导入的发布学校数据")
+    @RequestMapping(value = "/orgExport", method = RequestMethod.POST)
+    public ResponseBean excel(MultipartFile file,HttpServletRequest req){
+ 		if(null == file || file.isEmpty()){
+ 			return new ResponseBean("没有文件");
+ 		}
+ 		//文件名称
+        String name =file.getOriginalFilename();
+    	//文件类型
+        String fileType = name.substring(name.lastIndexOf("."));
+        
+		InputStream in = null;
+		try {
+			in = file.getInputStream();
+		} catch (FileNotFoundException e) {
+			if(null != in ){
+				try {
+					in.close();
+				} catch (Exception ee) {
+					
+				}finally{
+					in = null;
+				}
+			}
+			return new ResponseBean("未获取到文件");
+		} catch (Exception e) {
+			if(null != in ){
+				try {
+					in.close();
+				} catch (Exception ee) {
+					
+				}finally{
+					in = null;
+				}
+			}
+			return new ResponseBean("未知异常");
+		} 
+		Workbook workbook = null;
+		try {
+			if ((".xls").equals(fileType)){
+    			workbook = new HSSFWorkbook(in);
+    		} else if ((".xlsx").equals(fileType)){
+    			workbook = new XSSFWorkbook(in);
+    		} else{
+    			if(null != in ){
+    				try {
+    					in.close();
+    				} catch (Exception ee) {
+    					
+    				}finally{
+    					in = null;
+    				}
+    			}
+    			return new ResponseBean("读取的不是Excel文件");
+    		}
+		} catch (IOException e) {
+			if(null != workbook){
+				try {
+					workbook.close();
+				} catch (Exception ee) {
+					
+				}finally{
+					workbook = null;
+				}
+			}
+			if(null != in ){
+				try {
+					in.close();
+				} catch (Exception ee) {
+					
+				}finally{
+					in = null;
+				}
+			}
+			return new ResponseBean("读取文件异常");
+		} catch(Exception e){
+			if(null != workbook){
+				try {
+					workbook.close();
+				} catch (Exception ee) {
+					
+				}finally{
+					workbook = null;
+				}
+			}
+			if(null != in ){
+				try {
+					in.close();
+				} catch (Exception ee) {
+					
+				}finally{
+					in = null;
+				}
+			}
+			return new ResponseBean("未知异常");
+		} 
+		
+		//sheet数目
+		//int sheetTotal = workbook.getNumberOfSheets() ;
+		Sheet sheet = workbook.getSheetAt(0);
+		List<Org> orgs = new ArrayList<Org>(sheet.getLastRowNum());
+		for (int rowNum = 1 ; rowNum <= sheet.getLastRowNum();rowNum ++){
+			Row row = sheet.getRow(rowNum);
+			if (null == row){
+				break;
+			}
+			Cell cell1 = row.getCell(0);
+			Cell cell2 = row.getCell(1);
+			Cell cell3 = row.getCell(2);
+			String value1 = StringUtil.getCellValue(cell1);
+			String value2 = StringUtil.getCellValue(cell2);
+			String value3 = StringUtil.getCellValue(cell3);
+			if(   null == value1 ||"".equals(value1.trim())  
+		       || null == value2 ||"".equals(value2.trim()) 
+			   //|| null == value3 ||"".equals(value3.trim())
+		       ){
+				break;
+			}
+			Org org = new Org();
+			org.setOrgName(value2);
+			//orgs.add("{\"xuhao\":\""+value1+"\",\"orgName\":\""+value2+"\",\"orgCode\":\""+value3+"\"}");
+			orgs.add(org);
+		}
+		if(null != workbook){
+			try {
+				workbook.close();
+			} catch (Exception e) {
+				
+			}finally{
+				workbook = null;
+			}
+		}
+		if(null != in ){
+			try {
+				in.close();
+			} catch (Exception e) {
+				
+			}finally{
+				in = null;
+			}
+		}
+		
+		return new ResponseBean(orgs);
+	}
 }
