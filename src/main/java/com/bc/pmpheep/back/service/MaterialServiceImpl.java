@@ -223,8 +223,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					CheckedExceptionResult.NULL_PARAM, "角色ID或主任ID为空时禁止新增");
 		}
 		//先查看该主任是否已有主任角色 没有则新加
-		List<PmphRole> list=roleDao.getPmphRoleByUserId(material.getDirector());
-		if(!roleName.equals(list.get(0).getRoleName())){
+		PmphUserRole pmphUserRole=roleDao.getUserRole(material.getDirector(), roleId);
+		if(ObjectUtil.isNull(pmphUserRole)){
 			roleDao.addUserRole(material.getDirector(), roleId);//给主任绑定角色
 		}
 		// 教材所属部门
@@ -362,8 +362,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 						CheckedExceptionResult.NULL_PARAM, "角色ID或项目编辑ID为空时禁止新增");
 			}
 			//判断该用户是否有项目编辑角色 若没有则新加
-			List<PmphRole> pmphRoles=roleDao.getPmphRoleByUserId(materialId);
-			if(!rolename.equals(pmphRoles.get(0).getRoleName())){
+			PmphUserRole UserRole=roleDao.getUserRole(materialId, roleid);
+			if(ObjectUtil.isNull(UserRole)){
 				roleDao.addUserRole(materialId, roleid);//给项目编辑绑定角色
 			}
 		}
