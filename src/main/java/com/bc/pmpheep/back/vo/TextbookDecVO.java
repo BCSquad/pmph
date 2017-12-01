@@ -145,4 +145,37 @@ public class TextbookDecVO implements java.io.Serializable{
 	public TextbookDecVO() {
 		super();
 	}
+	
+	public TextbookDecVO(Long userId, Boolean isWriter, Long textbookId, Integer presetPosition, Integer chosenPosition,
+			Boolean isDigitalEditor, String realname, String orgName, Long orgId, Integer onlineProgress,
+			Integer offlineProgress, Timestamp gmtCreate, Long director, Long planningEditor, Long editorId,
+			Integer rank) {
+		super();
+		this.userId = userId;
+		this.isWriter = isWriter;
+		this.textbookId = textbookId;
+		this.presetPosition = presetPosition;
+		this.chosenPosition = chosenPosition;
+		this.isDigitalEditor = isDigitalEditor;
+		this.realname = realname;
+		this.orgName = orgName;
+		this.orgId = orgId;
+		this.onlineProgress = onlineProgress;
+		this.offlineProgress = offlineProgress;
+		this.gmtCreate = gmtCreate;
+		this.director = director;
+		this.planningEditor = planningEditor;
+		this.editorId = editorId;
+		this.rank = rank;
+	}
+	@Override
+	public String toString() {
+		return "TextbookDecVO [userId=" + userId + ", isWriter=" + isWriter + ", textbookId=" + textbookId
+				+ ", presetPosition=" + presetPosition + ", chosenPosition=" + chosenPosition + ", isDigitalEditor="
+				+ isDigitalEditor + ", realname=" + realname + ", orgName=" + orgName + ", orgId=" + orgId
+				+ ", onlineProgress=" + onlineProgress + ", offlineProgress=" + offlineProgress + ", gmtCreate="
+				+ gmtCreate + ", director=" + director + ", planningEditor=" + planningEditor + ", editorId=" + editorId
+				+ ", rank=" + rank + "]";
+	}
+	
 }
