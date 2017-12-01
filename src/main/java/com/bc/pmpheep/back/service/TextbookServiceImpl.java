@@ -177,7 +177,7 @@ public class TextbookServiceImpl implements TextbookService {
 
 	@Override
 	public PageResult<BookPositionVO> listBookPosition(Integer pageNumber, Integer pageSize, Integer state,
-			String textBookIds, Long materialId, String sessionId) {
+			String textBookIds,String bookName, Long materialId, String sessionId) {
 		// 验证用户
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
@@ -224,22 +224,27 @@ public class TextbookServiceImpl implements TextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"该教材您没操作权限");
 		}
-		Gson gson = new Gson();
-		List<Long> bookIds = gson.fromJson(textBookIds, new TypeToken<ArrayList<Long>>() {
-		}.getType());
+		
 		// 拼装复合参数
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("materialId", materialId); // 教材id
-		if (null != bookIds && bookIds.size() > 0) {
-			map.put("list", bookIds); // 书籍id
+		if(StringUtil.notEmpty(textBookIds)){
+			Gson gson = new Gson();
+			List<Long> bookIds =gson.fromJson(textBookIds, new TypeToken<ArrayList<Long>>() { }.getType());
+			if (null != bookIds && bookIds.size() > 0) {
+				map.put("list", bookIds);    // 书籍id
+			}
 		}
 		if (null != state && !state.equals(0)) {
-			map.put("state", state); // 书籍状态
+			map.put("state", state);         // 书籍状态
+		}
+		String bookNameTemp =  StringUtil.toAllCheck(bookName) ;
+		if (null != bookNameTemp) {
+			map.put("bookName", bookNameTemp); // 书籍名称
 		}
 		map.put("pmphUserId", pmphUser.getId()); // 用户id
 		map.put("power", power); // 用户id
-		PageParameter<Map<String, Object>> pageParameter = new PageParameter<Map<String, Object>>(pageNumber, pageSize,
-				map);
+		PageParameter<Map<String, Object>> pageParameter = new PageParameter<Map<String, Object>>(pageNumber, pageSize, map);
 		PageResult<BookPositionVO> pageResult = new PageResult<>();
 		// 获取总数
 		Integer total = textbookDao.listBookPositionTotal(pageParameter);
