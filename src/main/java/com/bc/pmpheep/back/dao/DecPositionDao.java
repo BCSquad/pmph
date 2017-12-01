@@ -240,6 +240,16 @@ public interface DecPositionDao {
     
     /**
      * 
+     * Description:获取书本总数
+     * @author:lyc
+     * @date:2017年12月1日下午5:22:39
+     * @param 
+     * @return Integer
+     */
+    Integer getBooks(Long materialId);
+    
+    /**
+     * 
      * Description:根据教材id（和书本名称）查询学校申报情况
      * @author:lyc
      * @date:2017年12月1日下午5:20:08

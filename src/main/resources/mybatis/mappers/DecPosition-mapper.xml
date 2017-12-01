@@ -383,6 +383,10 @@
 			limit #{start},#{pageSize}
 		</if>
     </select>
+    <select id="getBooks" parameterType="java.lang.Long" 
+        resultType="java.lang.Ingeter">
+        SELECT COUNT(a.id) FROM textbook a WHERE a.material_id = #{materialId};
+    </select>
     <!-- 申报情况按书籍统计 -->
     <select id="getBookResult" parameterType="pageParameter" 
         resultType="DeclarationSituationBookResultVO">

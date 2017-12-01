@@ -292,7 +292,6 @@ public class DecPositionServiceImpl implements DecPositionService {
         // 得到申报单位的总数
         int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
         if (total > 0) {
-            pageResult.setTotal(total);
             List<DeclarationSituationSchoolResultVO> declarationSituationSchoolResultVOs =
             decPositionDao.getSchoolResult(pageParameter);
             List<DeclarationSituationSchoolResultVO> list = new ArrayList<>();
@@ -340,7 +339,38 @@ public class DecPositionServiceImpl implements DecPositionService {
 	public PageResult<DeclarationSituationBookResultVO> listDeclarationSituationBookResultVOs(
 			PageParameter<DeclarationSituationBookResultVO> pageParameter)
 			throws CheckedServiceException {
-		
-		return null;
+		if (ObjectUtil.isNull(pageParameter.getParameter().getMaterialId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
+		}
+		String bookName = pageParameter.getParameter().getBookName();
+		if (StringUtil.notEmpty(bookName)){
+			pageParameter.getParameter().setBookName(bookName);
+		}
+		PageResult<DeclarationSituationBookResultVO> pageResult = 
+				new PageResult<DeclarationSituationBookResultVO>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
+		if (total > 0){
+			List<DeclarationSituationBookResultVO> declarationSituationBookResultVOs = 
+					decPositionDao.getBookResult(pageParameter);
+			List<DeclarationSituationBookResultVO> list = new ArrayList<>();
+			for (DeclarationSituationBookResultVO declarationSituationBookResultVO : declarationSituationBookResultVOs){
+				//计算申报人数和当选人数
+				Integer presetPersons = declarationSituationBookResultVO.getPresetPositionEditor()
+						+declarationSituationBookResultVO.getPresetPositionSubeditor()
+						+declarationSituationBookResultVO.getPresetPositionEditorial();
+				Integer chosenPersons = declarationSituationBookResultVO.getChosenPositionEditor()
+						+declarationSituationBookResultVO.getChosenPositionSubeditor()
+						+declarationSituationBookResultVO.getChosenPositionEditorial()
+						+declarationSituationBookResultVO.getIsDigitalEditor();
+				declarationSituationBookResultVO.setPresetPersons(presetPersons);
+				declarationSituationBookResultVO.setChosenPersons(chosenPersons);
+				list.add(declarationSituationBookResultVO);
+			}
+			pageResult.setRows(list);
+			pageResult.setTotal(total);
+		}
+		return pageResult;
 	}
 }
