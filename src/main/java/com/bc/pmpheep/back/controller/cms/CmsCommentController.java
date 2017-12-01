@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.CmsContentService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.CmsContentVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -67,6 +68,14 @@ public class CmsCommentController {
     @RequestParam(name = "pageSize") Integer pageSize, CmsContentVO cmsContentVO,
     HttpServletRequest request) {
         cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_0);
+        String title = cmsContentVO.getTitle();
+        String userName = cmsContentVO.getUsername();
+        if (StringUtil.notEmpty(title)) {
+            cmsContentVO.setTitle(StringUtil.toAllCheck(title));
+        }
+        if (StringUtil.notEmpty(userName)) {
+            cmsContentVO.setTitle(StringUtil.toAllCheck(userName));
+        }
         PageParameter<CmsContentVO> pageParameter =
         new PageParameter<CmsContentVO>(pageNumber, pageSize, cmsContentVO);
         String sessionId = CookiesUtil.getSessionId(request);

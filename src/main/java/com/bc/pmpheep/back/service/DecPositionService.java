@@ -12,6 +12,7 @@ import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.back.vo.DecPositionVO;
 import com.bc.pmpheep.back.vo.DeclarationCountVO;
+import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -172,4 +173,15 @@ public interface DecPositionService {
      */
     PageResult<DeclarationSituationSchoolResultVO> listDeclarationSituationSchoolResultVOs
     (PageParameter<DeclarationSituationSchoolResultVO> parameter) throws CheckedServiceException;
+    
+    /**
+     * 
+     * Description:加载申请情况按书本统计界面
+     * @author:lyc
+     * @date:2017年12月1日下午5:18:52
+     * @param 
+     * @return PageResult<DeclarationSituationBookResultVO>
+     */
+    PageResult<DeclarationSituationBookResultVO> listDeclarationSituationBookResultVOs
+    (PageParameter<DeclarationSituationBookResultVO> pageParameter)throws CheckedServiceException;
 }

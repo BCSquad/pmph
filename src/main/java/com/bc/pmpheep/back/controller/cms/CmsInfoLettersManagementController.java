@@ -70,8 +70,12 @@ public class CmsInfoLettersManagementController {
     HttpServletRequest request) {
         cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_2);
         String title = cmsContentVO.getTitle();
+        String userName = cmsContentVO.getUsername();
         if (StringUtil.notEmpty(title)) {
-            cmsContentVO.setTitle(title.replaceAll(" ", ""));
+            cmsContentVO.setTitle(StringUtil.toAllCheck(title));
+        }
+        if (StringUtil.notEmpty(userName)) {
+            cmsContentVO.setTitle(StringUtil.toAllCheck(userName));
         }
         PageParameter<CmsContentVO> pageParameter =
         new PageParameter<CmsContentVO>(pageNumber, pageSize, cmsContentVO);
