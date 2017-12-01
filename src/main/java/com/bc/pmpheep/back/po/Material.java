@@ -118,9 +118,10 @@ public class Material implements java.io.Serializable {
         this.id = id;
     }
 
-    public Material(Long id, Boolean isPublished) {
+    public Material(Long id, String msgId,Boolean isPublished) {
         super();
         this.id = id;
+        this.msgId = msgId;
         this.isPublished = isPublished;
     }
 
