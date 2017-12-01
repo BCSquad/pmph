@@ -27,7 +27,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * @CreateDate 2017年11月14日 下午2:05:32
  * 
  **/
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @Controller
 @RequestMapping(value = "/material")
 public class MaterialController {
@@ -52,7 +52,6 @@ public class MaterialController {
      * @param noteFiles 备注文件
      * @return
      */
-
     @ResponseBody
     @LogDetail(businessType = Business_Type, logRemark = "新建遴选公告")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
