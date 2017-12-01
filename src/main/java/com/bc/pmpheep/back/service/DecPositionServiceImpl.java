@@ -252,7 +252,7 @@ public class DecPositionServiceImpl implements DecPositionService {
         new JsonUtil().getArrayListObjectFromStr(DecPosition.class, jsonDecPosition);// json字符串转List对象集合
         if (CollectionUtil.isEmpty(decPositions)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.NULL_PARAM, "decPositions为空");
+                                              CheckedExceptionResult.NULL_PARAM, "还未选中人员信息");
         }
         Long textbookId = decPositions.get(0).getTextbookId(); // 获取书籍id
         if (ObjectUtil.isNull(textbookId)) {
@@ -272,38 +272,39 @@ public class DecPositionServiceImpl implements DecPositionService {
         return count;
     }
 
-	@Override
-	public PageResult<DeclarationSituationSchoolResultVO> listDeclarationSituationSchoolResultVOs
-	(PageParameter<DeclarationSituationSchoolResultVO> pageParameter) throws CheckedServiceException {
-		if (ObjectUtil.isNull(pageParameter.getParameter().getMaterialId())){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
-		}
-		String schoolName = pageParameter.getParameter().getSchoolName();
-		if (StringUtil.notEmpty(schoolName)){
-			pageParameter.getParameter().setSchoolName(schoolName);
-		}
-		PageResult<DeclarationSituationSchoolResultVO> pageResult = 
-				new PageResult<DeclarationSituationSchoolResultVO>();
-		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-        
-		return null;
-	}
+    @Override
+    public PageResult<DeclarationSituationSchoolResultVO> listDeclarationSituationSchoolResultVOs(
+    PageParameter<DeclarationSituationSchoolResultVO> pageParameter) throws CheckedServiceException {
+        if (ObjectUtil.isNull(pageParameter.getParameter().getMaterialId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
+        }
+        String schoolName = pageParameter.getParameter().getSchoolName();
+        if (StringUtil.notEmpty(schoolName)) {
+            pageParameter.getParameter().setSchoolName(schoolName);
+        }
+        PageResult<DeclarationSituationSchoolResultVO> pageResult =
+        new PageResult<DeclarationSituationSchoolResultVO>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 
-	@Override
-	public DeclarationCountVO getDeclarationCountVO(Long materialId)
-			throws CheckedServiceException {
-		DeclarationCountVO declarationCountVO = new DeclarationCountVO();
-		Integer schoolDeclarationCount = decPositionDao.getSchoolDeclarationCount(materialId);
-		Integer schoolDeclarationAverage = decPositionDao.getSchoolDeclarationAverage(materialId);
-		Integer editorCount = decPositionDao.getEditorCount(materialId);
-		Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);
-		Integer editorialCount = decPositionDao.getEditorialCount(materialId);
-		declarationCountVO.setSchoolDeclarationCount(schoolDeclarationCount);
-		declarationCountVO.setSchoolDeclarationAverage(schoolDeclarationAverage);;
-		declarationCountVO.setEditorCount(editorCount);;
-		declarationCountVO.setSubEditorCount(subEditorCount);
-		declarationCountVO.setEditorialCount(editorialCount);
-		return declarationCountVO;
-	}
+        return null;
+    }
+
+    @Override
+    public DeclarationCountVO getDeclarationCountVO(Long materialId) throws CheckedServiceException {
+        DeclarationCountVO declarationCountVO = new DeclarationCountVO();
+        Integer schoolDeclarationCount = decPositionDao.getSchoolDeclarationCount(materialId);
+        Integer schoolDeclarationAverage = decPositionDao.getSchoolDeclarationAverage(materialId);
+        Integer editorCount = decPositionDao.getEditorCount(materialId);
+        Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);
+        Integer editorialCount = decPositionDao.getEditorialCount(materialId);
+        declarationCountVO.setSchoolDeclarationCount(schoolDeclarationCount);
+        declarationCountVO.setSchoolDeclarationAverage(schoolDeclarationAverage);
+        ;
+        declarationCountVO.setEditorCount(editorCount);
+        ;
+        declarationCountVO.setSubEditorCount(subEditorCount);
+        declarationCountVO.setEditorialCount(editorialCount);
+        return declarationCountVO;
+    }
 }
