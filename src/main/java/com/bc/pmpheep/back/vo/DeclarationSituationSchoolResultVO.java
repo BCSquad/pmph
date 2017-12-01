@@ -38,11 +38,11 @@ public class DeclarationSituationSchoolResultVO implements Serializable{
 	//编委当选数
 	private Integer chosenPositionEditorial;
 	//数字编委当选数
-	private Boolean isDigitalEditor;
+	private Integer isDigitalEditor;
 	//申报人数
-	private Integer declarationPersons;
-	//当选人数
 	private Integer presetPersons;
+	//当选人数
+	private Integer chosenPersons;
 	
 	public DeclarationSituationSchoolResultVO() {
 		super();
@@ -51,76 +51,89 @@ public class DeclarationSituationSchoolResultVO implements Serializable{
 	public Long getMaterialId() {
 		return materialId;
 	}
+	
 	public void setMaterialId(Long materialId) {
 		this.materialId = materialId;
 	}
+	
 	public Long getOrgId() {
 		return orgId;
 	}
+	
 	public void setOrgId(Long orgId) {
 		this.orgId = orgId;
 	}
+	
 	public Long getRow() {
 		return row;
 	}
+	
 	public void setRow(Long row) {
 		this.row = row;
 	}
+	
 	public String getSchoolName() {
 		return schoolName;
 	}
+	
 	public void setSchoolName(String schoolName) {
 		this.schoolName = schoolName;
 	}
+	
 	public Integer getPresetPositionEditor() {
 		return presetPositionEditor;
 	}
+	
 	public void setPresetPositionEditor(Integer presetPositionEditor) {
 		this.presetPositionEditor = presetPositionEditor;
 	}
+	
 	public Integer getPresetPositionSubeditor() {
 		return presetPositionSubeditor;
 	}
+	
 	public void setPresetPositionSubeditor(Integer presetPositionSubeditor) {
 		this.presetPositionSubeditor = presetPositionSubeditor;
 	}
+	
 	public Integer getPresetPositionEditorial() {
 		return presetPositionEditorial;
 	}
+	
 	public void setPresetPositionEditorial(Integer presetPositionEditorial) {
 		this.presetPositionEditorial = presetPositionEditorial;
 	}
+	
 	public Integer getChosenPositionEditor() {
 		return chosenPositionEditor;
 	}
+	
 	public void setChosenPositionEditor(Integer chosenPositionEditor) {
 		this.chosenPositionEditor = chosenPositionEditor;
 	}
+	
 	public Integer getChosenPositionSubeditor() {
 		return chosenPositionSubeditor;
 	}
+	
 	public void setChosenPositionSubeditor(Integer chosenPositionSubeditor) {
 		this.chosenPositionSubeditor = chosenPositionSubeditor;
 	}
+	
 	public Integer getChosenPositionEditorial() {
 		return chosenPositionEditorial;
 	}
+	
 	public void setChosenPositionEditorial(Integer chosenPositionEditorial) {
 		this.chosenPositionEditorial = chosenPositionEditorial;
 	}
-	public Boolean getIsDigitalEditor() {
+	
+	public Integer getIsDigitalEditor() {
 		return isDigitalEditor;
 	}
-	public void setIsDigitalEditor(Boolean isDigitalEditor) {
+
+	public void setIsDigitalEditor(Integer isDigitalEditor) {
 		this.isDigitalEditor = isDigitalEditor;
-	}
-
-	public Integer getDeclarationPersons() {
-		return declarationPersons;
-	}
-
-	public void setDeclarationPersons(Integer declarationPersons) {
-		this.declarationPersons = declarationPersons;
 	}
 
 	public Integer getPresetPersons() {
@@ -129,6 +142,14 @@ public class DeclarationSituationSchoolResultVO implements Serializable{
 
 	public void setPresetPersons(Integer presetPersons) {
 		this.presetPersons = presetPersons;
+	}
+
+	public Integer getChosenPersons() {
+		return chosenPersons;
+	}
+	
+	public void setChosenPersons(Integer chosenPersons) {
+		this.chosenPersons = chosenPersons;
 	}
 
 }

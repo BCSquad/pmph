@@ -96,7 +96,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	
 	@Autowired
 	private MaterialTypeService materialTypeService;
-
+	
+	@Autowired
+	private PmphRoleService pmphRoleService;
 	/**
 	 * 
 	 * @param Material
@@ -215,17 +217,18 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"主任对应的机构为空");
 		}
+		
 		//给主任添加角色
 		String roleName="主任";//通过roleName查询roleid
-		Long roleId=roleDao.getPmphRoleId(roleName);//角色id
-		if (ObjectUtil.isNull(material.getDirector()) || ObjectUtil.isNull(roleId)) {
+		List<PmphRole> pmphRoles=pmphRoleService.getList(roleName);
+		if (ObjectUtil.isNull(material.getDirector()) || ObjectUtil.isNull(pmphRoles.get(0).getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "角色ID或主任ID为空时禁止新增");
 		}
 		//先查看该主任是否已有主任角色 没有则新加
-		PmphUserRole pmphUserRole=roleDao.getUserRole(material.getDirector(), roleId);
-		if(ObjectUtil.isNull(pmphUserRole)){
-			roleDao.addUserRole(material.getDirector(), roleId);//给主任绑定角色
+		List<PmphUserRole> pmphUserRoles=pmphRoleService.getUserRoleList(material.getDirector(),pmphRoles.get(0).getId());
+		if(ObjectUtil.isNull(pmphUserRoles)&&pmphUserRoles.size() == 0){
+			pmphRoleService.addUserRole(material.getDirector(), pmphRoles.get(0).getId());
 		}
 		// 教材所属部门
 		material.setDepartmentId(director.getDepartmentId());
@@ -356,15 +359,15 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			materialProjectEditorService.addMaterialProjectEditor(materialProjectEditor);
 			// 项目编辑绑定角色
 			String rolename="项目编辑";//通过roleName查询roleid
-			Long roleid=roleDao.getPmphRoleId(rolename);//角色id
-			if (ObjectUtil.isNull(materialId) || ObjectUtil.isNull(roleid)) {
+			List<PmphRole> pmphRoleList=pmphRoleService.getList(rolename);
+			if (ObjectUtil.isNull(materialId) || ObjectUtil.isNull(pmphRoleList.get(0).getId())) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
 						CheckedExceptionResult.NULL_PARAM, "角色ID或项目编辑ID为空时禁止新增");
 			}
 			//判断该用户是否有项目编辑角色 若没有则新加
-			PmphUserRole UserRole=roleDao.getUserRole(materialId, roleid);
-			if(ObjectUtil.isNull(UserRole)){
-				roleDao.addUserRole(materialId, roleid);//给项目编辑绑定角色
+			List<PmphUserRole> pmphUserRoles2=pmphRoleService.getUserRoleList(materialId, pmphRoleList.get(0).getId());
+			if(ObjectUtil.isNull(pmphUserRoles2) && pmphUserRoles2.size() == 0){
+				roleDao.addUserRole(materialId, pmphRoleList.get(0).getId());//给项目编辑绑定角色
 			}
 		}
 		// 保存教材通知备注
@@ -589,12 +592,12 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		} else {
 			if (!StringUtil.isEmpty(state)) {
 				switch (state) {
-				case "未公布":
+				case "未发布":
 					pageParameter.getParameter().setIsAllTextbookPublished(false);
 					pageParameter.getParameter().setIsForceEnd(false);
 					pageParameter.getParameter().setIsPublished(false);
 					break;
-				case "已公布":
+				case "已发布":
 					pageParameter.getParameter().setIsAllTextbookPublished(false);
 					pageParameter.getParameter().setIsForceEnd(false);
 					pageParameter.getParameter().setIsPublished(true);

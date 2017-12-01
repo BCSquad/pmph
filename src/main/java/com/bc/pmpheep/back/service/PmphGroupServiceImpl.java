@@ -17,6 +17,7 @@ import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.ArrayUtil;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -294,11 +295,12 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		Textbook textbook=textbookDao.getTextbookById(textbookId);
 		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		PmphGroup pmphGroup=new PmphGroup();
-		//小组名称已存在则加一个尾缀变量
-		if (ObjectUtil.notNull(pmphGroupDao.getPmphGroupByGroupName(textbook.getTextbookName()))) {
+		// 查询小组名称是否已存在 不存在直接用书名
+		if (ObjectUtil.isNull(pmphGroupDao.getPmphGroupByGroupName(textbook.getTextbookName()))) {
 			pmphGroup.setGroupName(textbook.getTextbookName());
-		}else {
-			pmphGroup.setGroupName(textbook.getTextbookName());
+		}else {//存在则用书名加当前小组总数进行区分
+			Long count=pmphGroupDao.getPmphGroupCount();
+			pmphGroup.setGroupName(textbook.getTextbookName()+count);
 		}
 		pmphGroup.setGroupImage(groupImage);
 		pmphGroup.setFounderId(pmphUser.getId());

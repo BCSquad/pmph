@@ -1,9 +1,7 @@
 package com.bc.pmpheep.back.controller.material;
 
 import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.MaterialService;
@@ -20,7 +17,6 @@ import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.vo.MaterialListVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * @author MrYang
@@ -77,12 +73,14 @@ public class MaterialController {
                                                                         noteFiles,
                                                                         materialVO.getMaterialNoteAttachments(),
                                                                         false));
-        } catch (CheckedServiceException e) {
-            return new ResponseBean(e);
         } catch (IOException e) {
-            return new ResponseBean("上传文件失败");
+        	ResponseBean responseBean = new ResponseBean(e);
+        	responseBean.setData("上传文件失败");
+            return responseBean;
         } catch (Exception e) {
-            return new ResponseBean("未知异常");
+        	ResponseBean responseBean = new ResponseBean(e);
+        	responseBean.setData(e.getMessage());
+            return responseBean;
         }
     }
 
@@ -125,12 +123,14 @@ public class MaterialController {
                                                                         noteFiles,
                                                                         materialVO.getMaterialNoteAttachments(),
                                                                         true));
-        } catch (CheckedServiceException e) {
-            return new ResponseBean(e);
         } catch (IOException e) {
-            return new ResponseBean("上传文件失败");
+        	ResponseBean responseBean = new ResponseBean(e);
+        	responseBean.setData("上传文件失败");
+            return responseBean;
         } catch (Exception e) {
-            return new ResponseBean("未知异常");
+        	ResponseBean responseBean = new ResponseBean(e);
+        	responseBean.setData(e.getMessage());
+            return responseBean;
         }
     }
 

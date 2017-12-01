@@ -172,6 +172,7 @@ public final class SystemMessageService {
                 Message message = new Message(tercherMsg);
                 message = messageService.add(message);
                 msg_id = message.getId();
+                msgId  = msg_id;
             }
             // 获取这些机构启用的作家用户
             List<WriterUser> writerUserList = writerUserService.getWriterUserListByOrgIds(ids);
@@ -204,23 +205,25 @@ public final class SystemMessageService {
         String msg_id = message.getId();
         // 获取这些机构的管理员
         List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(ids);
-        List<UserMessage> userMessageList = new ArrayList<UserMessage>(orgUserList.size());
-        List<String> userIds = new ArrayList<String>(orgUserList.size());
-        for (OrgUser orgUser : orgUserList) {
-            UserMessage userMessage =
-            new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
-                            orgUser.getId(), new Short("3"));
-            userMessageList.add(userMessage);
-            userIds.add("3_" + orgUser.getId());
+        if(null != orgUserList && orgUserList.size() >0 ){
+        	 List<UserMessage> userMessageList = new ArrayList<UserMessage>(orgUserList.size());
+             List<String> userIds = new ArrayList<String>(orgUserList.size());
+             for (OrgUser orgUser : orgUserList) {
+                 UserMessage userMessage =
+                 new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+                                 orgUser.getId(), new Short("3"));
+                 userMessageList.add(userMessage);
+                 userIds.add("3_" + orgUser.getId());
+             }
+             // 批量插入消息
+             userMessageService.addUserMessageBatch(userMessageList);
+             // websocket推送页面消息
+             WebScocketMessage webScocketMessage =
+             new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+                                   Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
+                                   managerMsg, DateUtil.getCurrentTime());
+             myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
         }
-        // 批量插入消息
-        userMessageService.addUserMessageBatch(userMessageList);
-        // websocket推送页面消息
-        WebScocketMessage webScocketMessage =
-        new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
-                              Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
-                              managerMsg, DateUtil.getCurrentTime());
-        myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
         return msgId;
     }
 

@@ -18,7 +18,7 @@ public class TextbookDecVO implements java.io.Serializable{
 	// 是否作家
 	private Boolean isWriter;
 	 // 书籍id
-    private Long      textbookId;
+    private Long      textBookId;
     // 申报职务
     private Integer   presetPosition;
     // 遴选职务
@@ -63,12 +63,6 @@ public class TextbookDecVO implements java.io.Serializable{
 	}
 	public void setIsWriter(Boolean isWriter) {
 		this.isWriter = isWriter;
-	}
-	public Long getTextbookId() {
-		return textbookId;
-	}
-	public void setTextbookId(Long textbookId) {
-		this.textbookId = textbookId;
 	}
 	public Integer getPresetPosition() {
 		return presetPosition;
@@ -142,7 +136,47 @@ public class TextbookDecVO implements java.io.Serializable{
 	public void setEditorId(Long editorId) {
 		this.editorId = editorId;
 	}
+	
+	public Long getTextBookId() {
+		return textBookId;
+	}
+	public void setTextBookId(Long textBookId) {
+		this.textBookId = textBookId;
+	}
 	public TextbookDecVO() {
 		super();
 	}
+	
+	public TextbookDecVO(Long userId, Boolean isWriter, Long textBookId, Integer presetPosition, Integer chosenPosition,
+			Boolean isDigitalEditor, String realname, String orgName, Long orgId, Integer onlineProgress,
+			Integer offlineProgress, Timestamp gmtCreate, Long director, Long planningEditor, Long editorId,
+			Integer rank) {
+		super();
+		this.userId = userId;
+		this.isWriter = isWriter;
+		this.textBookId = textBookId;
+		this.presetPosition = presetPosition;
+		this.chosenPosition = chosenPosition;
+		this.isDigitalEditor = isDigitalEditor;
+		this.realname = realname;
+		this.orgName = orgName;
+		this.orgId = orgId;
+		this.onlineProgress = onlineProgress;
+		this.offlineProgress = offlineProgress;
+		this.gmtCreate = gmtCreate;
+		this.director = director;
+		this.planningEditor = planningEditor;
+		this.editorId = editorId;
+		this.rank = rank;
+	}
+	@Override
+	public String toString() {
+		return "TextbookDecVO [userId=" + userId + ", isWriter=" + isWriter + ", textBookId=" + textBookId
+				+ ", presetPosition=" + presetPosition + ", chosenPosition=" + chosenPosition + ", isDigitalEditor="
+				+ isDigitalEditor + ", realname=" + realname + ", orgName=" + orgName + ", orgId=" + orgId
+				+ ", onlineProgress=" + onlineProgress + ", offlineProgress=" + offlineProgress + ", gmtCreate="
+				+ gmtCreate + ", director=" + director + ", planningEditor=" + planningEditor + ", editorId=" + editorId
+				+ ", rank=" + rank + "]";
+	}
+	
 }
