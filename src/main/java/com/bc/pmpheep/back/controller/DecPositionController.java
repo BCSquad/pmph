@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.DecPositionService;
+import com.bc.pmpheep.back.vo.DeclarationResultBookVO;
+import com.bc.pmpheep.back.vo.DeclarationResultSchoolVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -90,4 +92,47 @@ public class DecPositionController {
 		pageParameter.setParameter(declarationSituationBookResultVO);
 		return new ResponseBean(decPositionService.listDeclarationSituationBookResultVOs(pageParameter));
 	}
+	
+	/**
+	 * 
+	 * Description:加载学校统计结果
+	 * @author:lyc
+	 * @date:2017年12月1日下午6:50:23
+	 * @param 
+	 * @return ResponseBean
+	 */
+	@ResponseBody
+	@RequestMapping(value ="/list/schoolList",method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "加载学校统计结果")
+	public ResponseBean schoolList(Integer pageSize, Integer pageNumber, Long materialId, String schoolName){
+		PageParameter<DeclarationResultSchoolVO> pageParameter = 
+				new PageParameter<>(pageNumber, pageSize);
+		DeclarationResultSchoolVO declarationResultSchoolVO = new DeclarationResultSchoolVO();
+		declarationResultSchoolVO.setMaterialId(materialId);
+		declarationResultSchoolVO.setSchoolName(schoolName);
+		pageParameter.setParameter(declarationResultSchoolVO);
+		return new ResponseBean(decPositionService.listDeclarationResultSchoolVOs(pageParameter));
+	}
+	
+	/**
+	 * 
+	 * Description:加载书本统计结果
+	 * @author:lyc
+	 * @date:2017年12月1日下午6:50:46
+	 * @param 
+	 * @return ResponseBean
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/list/bookList",method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "加载书本统计结果")
+	public ResponseBean bookList(Integer pageSize, Integer pageNumber, Long materialId, String bookName){
+		PageParameter<DeclarationResultBookVO> pageParameter = 
+				new PageParameter<>(pageNumber, pageSize);
+		DeclarationResultBookVO declarationResultBookVO = new DeclarationResultBookVO();
+		declarationResultBookVO.setMaterialId(materialId);
+		declarationResultBookVO.setBookName(bookName);
+		pageParameter.setParameter(declarationResultBookVO);
+		return new ResponseBean(decPositionService.listDeclarationResultBookVOs(pageParameter));
+	}
+	
 }
