@@ -137,4 +137,12 @@ public interface PmphRoleDao {
      * 
      */
     Long getPmphRoleId(String roleName);
+    
+    /**
+     * 根据用户 id 和角色 id 加载一条用户角色关系数据集合
+     * @param userid
+     * @param roleId
+     * @return
+     */
+	List<PmphUserRole> getUserRoleList(@Param("userId") Long userId, @Param("roleId") Long roleId);
 }

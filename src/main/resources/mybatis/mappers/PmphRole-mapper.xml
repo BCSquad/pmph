@@ -325,4 +325,15 @@
 		pmph_role r ON p.role_id =r.id WHERE 
 		p.user_id = #{id}
 	</select>
+	<!-- 根据用户 id 和角色 id 加载一条用户角色关系数据集合 -->
+	<select id="getUserRoleList" parameterType="Long" resultType="PmphUserRole">
+		SELECT
+		id,
+		user_id,
+		role_id
+		FROM
+		pmph_user_role
+		WHERE
+		user_id = #{userId} AND role_id = #{roleId}
+	</select>
 </mapper>
