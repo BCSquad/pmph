@@ -415,4 +415,32 @@
 			limit #{start},#{pageSize}
 		</if>
     </select>
+    <!-- 申报结果按学校统计 -->
+    <select id="getSchoolList" parameterType="pageParameter" 
+        resultType="DeclarationResultSchoolVO">
+        SELECT @rowno:=@rowno+1 AS row,t1.id,t1.orgid,t1.org_name,t1.presetpositioneditor,
+		t1.presetpositionsubeditor,t1.presetpositioneditorial,t1.chosenpositioneditor,
+		t1.chosenpositionsubeditor,t1.chosenpositioneditorial,t1.isdigitaleditor    
+		FROM (SELECT GROUP_CONCAT(if((d.preset_position in (4,5,6,7)),b.realname,null)) presetpositioneditor,
+		GROUP_CONCAT(if((d.preset_position in (2,3,6,7)),b.realname,null)) presetpositionsubeditor,
+		GROUP_CONCAT(if((d.preset_position in (1,3,5,7)),b.realname,null)) presetpositioneditorial,
+		GROUP_CONCAT(if((d.chosen_position in (1)),b.realname,null)) chosenpositioneditor,
+		GROUP_CONCAT(if((d.chosen_position in (2)),b.realname,null)) chosenpositionsubeditor,
+		GROUP_CONCAT(if((d.chosen_position in (3)),b.realname,null)) chosenpositioneditorial,
+		GROUP_CONCAT(if((d.is_digital_editor is not null and d.is_digital_editor !=0),b.realname,null)) isdigitaleditor,
+		c.id,a.id orgid,a.org_name FROM org a 
+		LEFT JOIN declaration b ON a.id = b.org_id 
+		LEFT JOIN material c ON b.material_id = c.id 
+		LEFT JOIN dec_position d ON b.id = d.declaration_id 
+		WHERE d.preset_position IS NOT NULL AND c.id = 97
+		AND b.is_staging = 0 AND b.online_progress >0 
+		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
+		    and a.org_name like concat ('%',#{parameter.schoolName},'%') 
+		</if>
+		GROUP BY a.id ORDER BY CONVERT(a.org_name USING gbk)COLLATE gbk_chinese_ci ASC)t1,
+		(SELECT @rowno:=0)t2;
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+    </select>
 </mapper>
