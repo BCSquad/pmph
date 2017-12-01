@@ -30,6 +30,7 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
@@ -39,8 +40,8 @@ import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
-import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
+import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -159,8 +160,8 @@ public class TextbookServiceImpl implements TextbookService {
 					CheckedExceptionResult.NULL_PARAM, "角色ID或策划编辑ID为空时禁止新增");
 		}
 		// 判断该用户是否已有策划编辑的角色 没有则新加
-		List<PmphRole> list=roleDao.getPmphRoleByUserId(textbook.getPlanningEditor());
-		if(!roleName.equals(list.get(0).getRoleName())){
+		PmphUserRole pmphUserRole=roleDao.getUserRole(textbook.getPlanningEditor(), roleId);
+		if(ObjectUtil.isNull(pmphUserRole)){
 			roleDao.addUserRole(textbook.getPlanningEditor(), roleId);//给策划编辑绑定权限
 		}
 		return textbookDao.updateTextbook(textbook);
