@@ -109,12 +109,13 @@ public class PositionChooseController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询该书籍下的已选主编和编委")
 	@RequestMapping(value = "/editorList", method = RequestMethod.GET)
-	public ResponseBean editorList(@RequestParam("textbookId")Long  textbookId,
+	public ResponseBean editorList(
+			@RequestParam("textbookId")Long  textbookId,
 			@RequestParam("pageSize") Integer pageSize,
 			@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber){
-		PageParameter pageParameter = new PageParameter<>();
+		PageParameter<TextbookDecVO> pageParameter = new PageParameter<>();
 		TextbookDecVO textbookDecVO = new TextbookDecVO();
-		textbookDecVO.setTextbookId(textbookId);
+		textbookDecVO.setTextBookId(textbookId);
 		pageParameter.setPageNumber(pageNumber);
 		pageParameter.setPageSize(pageSize);
 		pageParameter.setParameter(textbookDecVO);
