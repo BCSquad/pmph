@@ -83,6 +83,9 @@ public class TextbookServiceImpl implements TextbookService {
     @Autowired
     private MaterialProjectEditorService materialProjectEditorService;
     
+	@Autowired
+	private PmphRoleService pmphRoleService;
+    
 	/**
 	 * 
 	 * @param Textbook
@@ -163,15 +166,15 @@ public class TextbookServiceImpl implements TextbookService {
 //					CheckedExceptionResult.ILLEGAL_PARAM, "该用户未启用时禁止选择");
 //		}
 		String roleName="策划编辑";//通过roleName查询roleid
-		Long roleId=roleDao.getPmphRoleId(roleName);//角色id
-		if (ObjectUtil.isNull(textbook.getPlanningEditor()) || ObjectUtil.isNull(roleId)) {
+		List<PmphRole> list=pmphRoleService.getList(roleName);//角色id
+		if (ObjectUtil.isNull(textbook.getPlanningEditor()) || ObjectUtil.isNull(list.get(0).getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "角色ID或策划编辑ID为空时禁止新增");
 		}
 		// 判断该用户是否已有策划编辑的角色 没有则新加
-		PmphUserRole pmphUserRole=roleDao.getUserRole(textbook.getPlanningEditor(), roleId);
-		if(ObjectUtil.isNull(pmphUserRole)){
-			roleDao.addUserRole(textbook.getPlanningEditor(), roleId);//给策划编辑绑定权限
+		List<PmphUserRole> pmphUserRoles=pmphRoleService.getUserRoleList(textbook.getPlanningEditor(), list.get(0).getId());
+		if(ObjectUtil.isNull(pmphUserRoles) && pmphUserRoles.size() == 0){
+			roleDao.addUserRole(textbook.getPlanningEditor(), list.get(0).getId());//给策划编辑绑定权限
 		}
 		return textbookDao.updateTextbook(textbook);
 	}

@@ -287,4 +287,13 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 		return role;
 	}
 
+	@Override
+	public List<PmphUserRole> getUserRoleList(Long userId, Long roleId) {
+		if (ObjectUtil.isNull(userId) || ObjectUtil.isNull(roleId)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "角色ID或用户ID为空时禁止查询");
+		}
+		return roleDao.getUserRoleList(userId, roleId);
+	}
+
 }

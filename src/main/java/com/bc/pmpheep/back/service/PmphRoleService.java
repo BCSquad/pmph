@@ -196,4 +196,11 @@ public interface PmphRoleService {
      * </pre>
      */
     Integer deleteRoleAndUser(List<Long> ids) throws CheckedServiceException;
+    /**
+     * 根据用户 id 和角色 id 加载一条用户角色关系数据集合
+     * @param userid
+     * @param roleId
+     * @return
+     */
+	List<PmphUserRole> getUserRoleList(Long userId, Long roleId) throws CheckedServiceException;
 }
