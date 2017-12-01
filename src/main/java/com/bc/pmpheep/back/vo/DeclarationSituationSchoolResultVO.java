@@ -51,60 +51,79 @@ public class DeclarationSituationSchoolResultVO implements Serializable{
 	public Long getMaterialId() {
 		return materialId;
 	}
+	
 	public void setMaterialId(Long materialId) {
 		this.materialId = materialId;
 	}
+	
 	public Long getOrgId() {
 		return orgId;
 	}
+	
 	public void setOrgId(Long orgId) {
 		this.orgId = orgId;
 	}
+	
 	public Long getRow() {
 		return row;
 	}
+	
 	public void setRow(Long row) {
 		this.row = row;
 	}
+	
 	public String getSchoolName() {
 		return schoolName;
 	}
+	
 	public void setSchoolName(String schoolName) {
 		this.schoolName = schoolName;
 	}
+	
 	public Integer getPresetPositionEditor() {
 		return presetPositionEditor;
 	}
+	
 	public void setPresetPositionEditor(Integer presetPositionEditor) {
 		this.presetPositionEditor = presetPositionEditor;
 	}
+	
 	public Integer getPresetPositionSubeditor() {
 		return presetPositionSubeditor;
 	}
+	
 	public void setPresetPositionSubeditor(Integer presetPositionSubeditor) {
 		this.presetPositionSubeditor = presetPositionSubeditor;
 	}
+	
 	public Integer getPresetPositionEditorial() {
 		return presetPositionEditorial;
 	}
+	
 	public void setPresetPositionEditorial(Integer presetPositionEditorial) {
 		this.presetPositionEditorial = presetPositionEditorial;
 	}
+	
 	public Integer getChosenPositionEditor() {
 		return chosenPositionEditor;
 	}
+	
 	public void setChosenPositionEditor(Integer chosenPositionEditor) {
 		this.chosenPositionEditor = chosenPositionEditor;
 	}
+	
 	public Integer getChosenPositionSubeditor() {
 		return chosenPositionSubeditor;
 	}
+	
 	public void setChosenPositionSubeditor(Integer chosenPositionSubeditor) {
 		this.chosenPositionSubeditor = chosenPositionSubeditor;
 	}
+	
 	public Integer getChosenPositionEditorial() {
 		return chosenPositionEditorial;
 	}
+	
 	public void setChosenPositionEditorial(Integer chosenPositionEditorial) {
 		this.chosenPositionEditorial = chosenPositionEditorial;
 	}
