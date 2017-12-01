@@ -424,9 +424,9 @@
 			LEFT JOIN `declaration` dc ON dp.`declaration_id` = dc.`id`
 			LEFT JOIN `org` org ON dc.`org_id`= org.`id`
 			LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
-			WHERE	dc.`online_progress`=3
+			WHERE	
 		<if test="parameter.textBookId !=null  ">
-			and dp.`textbook_id` =#{parameter.textBookId}
+			dp.`textbook_id` =#{parameter.textBookId}
 		</if>
 	</select>
 	<select id="getTextbookDecVOList" parameterType="PageParameter"
@@ -440,9 +440,8 @@
 		LEFT JOIN `org` org ON dc.`org_id`= org.`id`
 		LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
 		WHERE	
-			dc.`online_progress`=3
 		<if test="parameter.textBookId !=null  ">
-			and dp.`textbook_id` =#{parameter.textBookId}
+			dp.`textbook_id` =#{parameter.textBookId}
 		</if>
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
