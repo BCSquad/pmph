@@ -9,9 +9,11 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
+import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -223,4 +225,15 @@ public interface DecPositionDao {
      * @return Integer
      */
     Integer getEditorialCount(Long materialId);
+    
+    /**
+     * 
+     * Description:根据教材id（和学校名称）查询学校申报情况
+     * @author:lyc
+     * @date:2017年12月1日下午2:30:41
+     * @param 
+     * @return List<DeclarationSituationSchoolResultVO>
+     */
+    List<DeclarationSituationSchoolResultVO> getSchoolResult(
+    		PageParameter<DeclarationSituationSchoolResultVO> pageParameter);
 }

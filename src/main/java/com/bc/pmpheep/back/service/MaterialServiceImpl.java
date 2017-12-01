@@ -589,12 +589,12 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		} else {
 			if (!StringUtil.isEmpty(state)) {
 				switch (state) {
-				case "未公布":
+				case "未发布":
 					pageParameter.getParameter().setIsAllTextbookPublished(false);
 					pageParameter.getParameter().setIsForceEnd(false);
 					pageParameter.getParameter().setIsPublished(false);
 					break;
-				case "已公布":
+				case "已发布":
 					pageParameter.getParameter().setIsAllTextbookPublished(false);
 					pageParameter.getParameter().setIsForceEnd(false);
 					pageParameter.getParameter().setIsPublished(true);
