@@ -418,13 +418,9 @@
     <!-- 申报结果按学校统计 -->
     <select id="getSchoolList" parameterType="pageParameter" 
         resultType="DeclarationResultSchoolVO">
-        SELECT @rowno:=@rowno+1 AS row,t1.id,t1.orgid,t1.org_name,t1.presetpositioneditor,
-		t1.presetpositionsubeditor,t1.presetpositioneditorial,t1.chosenpositioneditor,
+        SELECT @rowno:=@rowno+1 AS row,t1.id,t1.orgid,t1.org_name,t1.chosenpositioneditor,
 		t1.chosenpositionsubeditor,t1.chosenpositioneditorial,t1.isdigitaleditor    
-		FROM (SELECT GROUP_CONCAT(if((d.preset_position in (4,5,6,7)),b.realname,null)) presetpositioneditor,
-		GROUP_CONCAT(if((d.preset_position in (2,3,6,7)),b.realname,null)) presetpositionsubeditor,
-		GROUP_CONCAT(if((d.preset_position in (1,3,5,7)),b.realname,null)) presetpositioneditorial,
-		GROUP_CONCAT(if((d.chosen_position in (1)),b.realname,null)) chosenpositioneditor,
+		FROM (SELECT GROUP_CONCAT(if((d.chosen_position in (1)),b.realname,null)) chosenpositioneditor,
 		GROUP_CONCAT(if((d.chosen_position in (2)),b.realname,null)) chosenpositionsubeditor,
 		GROUP_CONCAT(if((d.chosen_position in (3)),b.realname,null)) chosenpositioneditorial,
 		GROUP_CONCAT(if((d.is_digital_editor is not null and d.is_digital_editor !=0),b.realname,null)) isdigitaleditor,
@@ -440,6 +436,30 @@
 		GROUP BY a.id ORDER BY CONVERT(a.org_name USING gbk)COLLATE gbk_chinese_ci ASC)t1,
 		(SELECT @rowno:=0)t2;
 		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+    </select>
+    <!-- 查询结果按书籍统计 -->
+    <select id="getBookList" parameterType="pageParameter" 
+        resultType="DeclarationResultBookVO">
+        SELECT @rowno:=@rowno+1 AS row,t1.materialid,t1.id,t1.textbook_name,t1.chosenpositioneditor,
+		t1.chosenpositionsubeditor,t1.chosenpositioneditorial,t1.isdigitaleditor 
+		FROM (SELECT GROUP_CONCAT(if((d.chosen_position in (1)),c.realname,null)) chosenpositioneditor,
+		GROUP_CONCAT(if((d.chosen_position in (2)),c.realname,null)) chosenpositionsubeditor,
+		GROUP_CONCAT(if((d.chosen_position in (3)),c.realname,null)) chosenpositioneditorial,
+ 		GROUP_CONCAT(if((d.is_digital_editor is not null and d.is_digital_editor !=0),c.realname,null)) isdigitaleditor,
+		b.id materialid,a.id id,a.textbook_name FROM textbook a 
+		LEFT JOIN material b ON a.material_id = b.id 
+        LEFT JOIN declaration c ON b.id = c.material_id 
+		LEFT JOIN dec_position d ON c.id = d.declaration_id 
+		WHERE d.preset_position IS NOT NULL AND b.id = 97 
+		AND c.is_staging = 0 AND c.online_progress >0 
+		<if test="parameter.bookName !=null and parameter.bookName !=''">
+		    and a.textbook_name like concat ('%',#{parameter.bookName},'%') 
+		</if>
+        GROUP BY a.id ORDER BY a.id ASC)t1,
+	    (SELECT @rowno:=0)t2;
+	    <if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
     </select>
