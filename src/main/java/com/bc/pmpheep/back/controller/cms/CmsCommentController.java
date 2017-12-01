@@ -74,7 +74,7 @@ public class CmsCommentController {
             cmsContentVO.setTitle(StringUtil.toAllCheck(title));
         }
         if (StringUtil.notEmpty(userName)) {
-            cmsContentVO.setTitle(StringUtil.toAllCheck(userName));
+            cmsContentVO.setUsername(StringUtil.toAllCheck(userName));
         }
         PageParameter<CmsContentVO> pageParameter =
         new PageParameter<CmsContentVO>(pageNumber, pageSize, cmsContentVO);
