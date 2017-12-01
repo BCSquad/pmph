@@ -304,7 +304,7 @@
 	</select>
 	<!-- 根据materialId查询学校申报总数 -->
     <select id="getSchoolDeclarationCount" parameterType="java.lang.Long" 
-        resultType="java.lang.Long">
+        resultType="java.lang.Integer">
         SELECT count(d.preset_position)
 		FROM org a 
 		LEFT JOIN declaration b ON a.id = b.org_id 
@@ -315,7 +315,7 @@
     </select>
     <!-- 根据materialId查询学校总数 -->
     <select id="getSchoolCount" parameterType="java.lang.Long" 
-        resultType="java.lang.Long">
+        resultType="java.lang.Integer">
         SELECT count(t.counts) FROM (SELECT count(d.preset_position) counts
 		FROM org a 
 		LEFT JOIN declaration b ON a.id = b.org_id 
@@ -327,7 +327,7 @@
     </select>
     <!-- 根据materialId查询主编申报总数 -->
     <select id="getEditorCount" parameterType="java.lang.Long" 
-        resultType="java.lang.Long">
+        resultType="java.lang.Integer">
         select count(d.id) from dec_position dp 
         left join (select * from declaration) d on (d.id=dp.declaration_id) 
         left join (select id from material) m on (m.id=d.material_id) 
@@ -337,7 +337,7 @@
     </select>
     <!-- 根据materialId查询副主编申报总数 -->
     <select id="getSubEditorCount" parameterType="java.lang.Long" 
-        resultType="java.lang.Long">
+        resultType="java.lang.Integer">
         select count(d.id) from dec_position dp 
         left join (select * from declaration) d on (d.id=dp.declaration_id) 
         left join (select id from material) m on (m.id=d.material_id) 
@@ -347,7 +347,7 @@
     </select>
     <!-- 根据materialId查询编委申报数 -->
     <select id="getEditorialCount" parameterType="java.lang.Long" 
-        resultType="java.lang.Long">
+        resultType="java.lang.Integer">
         select count(d.id) from dec_position dp 
         left join (select * from declaration) d on (d.id=dp.declaration_id) 
         left join (select id from material) m on (m.id=d.material_id) 
@@ -380,6 +380,34 @@
 		GROUP BY a.id ORDER BY CONVERT(a.org_name USING gbk)COLLATE gbk_chinese_ci ASC)t1,
 		(SELECT @rowno:=0)t2;
 		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+    </select>
+    <!-- 申报情况按书籍统计 -->
+    <select id="getBookResult" parameterType="pageParameter" 
+        resultType="DeclarationSituationBookResultVO">
+        SELECT @rowno:=@rowno+1 AS row,t1.materialid,t1.id,t1.textbook_name,t1.presetpositioneditor,
+		t1.presetpositionsubeditor,t1.presetpositioneditorial,t1.chosenpositioneditor,
+		t1.chosenpositionsubeditor,t1.chosenpositioneditorial,t1.isdigitaleditor 
+		FROM (SELECT sum(if((d.preset_position in (4,5,6,7)),1,0)) presetpositioneditor,
+		SUM(if((d.preset_position in (2,3,6,7)),1,0)) presetpositionsubeditor,
+		SUM(if((d.preset_position in (1,3,5,7)),1,0)) presetpositioneditorial,
+		SUM(if((d.chosen_position in (1)),1,0)) chosenpositioneditor,
+		SUM(if((d.chosen_position in (2)),1,0)) chosenpositionsubeditor,
+		SUM(if((d.chosen_position in (3)),1,0)) chosenpositioneditorial,
+ 		SUM(if((d.is_digital_editor is not null and d.is_digital_editor !=0),1,0)) isdigitaleditor,
+		b.id materialid,a.id id,a.textbook_name FROM textbook a 
+		LEFT JOIN material b ON a.material_id = b.id 
+        LEFT JOIN declaration c ON b.id = c.material_id 
+		LEFT JOIN dec_position d ON c.id = d.declaration_id 
+		WHERE d.preset_position IS NOT NULL AND b.id = 97 
+		AND c.is_staging = 0 AND c.online_progress >0 
+		<if test="parameter.bookName !=null and parameter.bookName !=''">
+		    and a.textbook_name like concat ('%',#{parameter.bookName},'%') 
+		</if>
+        GROUP BY a.id ORDER BY a.id ASC)t1,
+	    (SELECT @rowno:=0)t2;
+	    <if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
     </select>
