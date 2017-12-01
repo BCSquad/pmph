@@ -535,7 +535,7 @@
 		`org`
 		o ON wuc.`org_id` = o.`id`
 		where
-		wu.`is_deleted`=0
+		wu.`is_deleted`=0 and wuc.`progress` !=0
 		<if test="parameter !=null ">
 			<!-- 学校名称 -->
 			<if test="parameter.orgName !=null and  parameter.orgName != '' ">
@@ -560,7 +560,7 @@
 		</if>
 		)t
 		WHERE
-		wu.`is_deleted`=0
+		wu.`is_deleted`=0 and wuc.`progress` !=0
 		<if test="parameter !=null ">
 			<!-- 学校名称 -->
 			<if test="parameter.orgName !=null and  parameter.orgName != '' ">
