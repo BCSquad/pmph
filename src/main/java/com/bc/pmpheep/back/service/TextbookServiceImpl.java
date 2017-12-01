@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
+import com.bc.pmpheep.back.dao.PmphUserDao;
 import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -57,6 +58,9 @@ import com.google.gson.reflect.TypeToken;
  */
 @Service
 public class TextbookServiceImpl implements TextbookService {
+	
+	@Autowired
+	PmphUserDao pmphUserDao;
 
 	@Autowired
 	PmphRoleDao roleDao;
@@ -153,6 +157,11 @@ public class TextbookServiceImpl implements TextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
 		}
+		PmphUser pmphUser =pmphUserDao.get(textbook.getPlanningEditor());
+//		if(pmphUser.getIsDisabled()){
+//			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+//					CheckedExceptionResult.ILLEGAL_PARAM, "该用户未启用时禁止选择");
+//		}
 		String roleName="策划编辑";//通过roleName查询roleid
 		Long roleId=roleDao.getPmphRoleId(roleName);//角色id
 		if (ObjectUtil.isNull(textbook.getPlanningEditor()) || ObjectUtil.isNull(roleId)) {
@@ -515,7 +524,7 @@ public class TextbookServiceImpl implements TextbookService {
 
 	@Override
 	public PageResult<TextbookDecVO> listEditorSelection(PageParameter<TextbookDecVO> pageParameter) {
-		if(ObjectUtil.isNull(pageParameter.getParameter().getTextbookId())){
+		if(ObjectUtil.isNull(pageParameter.getParameter().getTextBookId())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 					CheckedExceptionResult.NULL_PARAM, "参数不能为空");
 		}
