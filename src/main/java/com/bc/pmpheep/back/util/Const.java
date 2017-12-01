@@ -186,6 +186,7 @@ public class Const {
     public static final Short        CMS_AUTHOR_STATUS_0           = 0;
     public static final Short        CMS_AUTHOR_STATUS_1           = 1;
     public static final Short        CMS_AUTHOR_STATUS_2           = 2;
+
     // Cms_Category_Role permissionType字段(1:后台操作权限,2:审核权限)
     public static final Short        CMS_CATEGORY_PERMISSSION_1    = 1;
     public static final Short        CMS_CATEGORY_PERMISSSION_2    = 2;

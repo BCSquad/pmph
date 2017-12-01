@@ -391,7 +391,13 @@
 				is_national_plan_used=#{isNationalPlanUsed},
 			</if>
 			<if test="isNationalPlanRequired !=null  ">
-				is_national_plan_required=#isNationalPlanRequired},
+				is_national_plan_required=#{isNationalPlanRequired},
+			</if>
+				<if test="isTextbookUsed !=null  ">
+				is_Textbook_Used=#{isTextbookUsed},
+			</if>
+			<if test="isTextbookRequired !=null  ">
+				is_Textbook_Required=#{isTextbookRequired},
 			</if>
 			<if test="isOtherTextbookUsed !=null  ">
 				is_other_textbook_used=#{isOtherTextbookUsed},

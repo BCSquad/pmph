@@ -255,77 +255,79 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
 		return 1;
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 功能描述：根据教材ID查询教材通知详情及附件
-	 * 使用示范：
-	 *
-	 * &#64;param materialId 教材ID
-	 * &#64;return Map<String, Object> 集合
-	 * &#64;throws CheckedServiceException
-	 * </pre>
-	 */
-	@Override
-	public Map<String, Object> getMaterialExtraAndNoticeDetail(Long materialId) throws CheckedServiceException {
-		if (ObjectUtil.isNull(materialId)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
-					CheckedExceptionResult.NULL_PARAM, "教材主键为空");
-		}
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		// 教材通知附件
-		List<MaterialNoticeAttachment> materialNoticeAttachments = null;
-		// 教材备注附件
-		List<MaterialNoteAttachment> materialNoteAttachments = null;
-		// 教材
-		Material material = materialService.getMaterialById(materialId);
-		resultMap.put("materialName", material);// 教材
-		List<MaterialContact> materialContacts = materialContactService.listMaterialContactByMaterialId(materialId);
-		resultMap.put("materialContacts", materialContacts);// 联系人
-		MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
-		resultMap.put("materialExtra", materialExtra);// 教材通知备注
-		Long materialExtraId = materialExtra.getId();
-		if (ObjectUtil.notNull(materialExtraId)) {
-			// 教材通知附件
-			materialNoticeAttachments = materialNoticeAttachmentService
-					.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtraId);
-			// 教材备注附件
-			materialNoteAttachments = materialNoteAttachmentService
-					.getMaterialNoteAttachmentByMaterialExtraId(materialExtraId);
-		}
-		CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
-		if (ObjectUtil.notNull(cmsContent)) {
-			Content content = contentService.get(cmsContent.getMid());
-			if (ObjectUtil.notNull(content)) {
-				resultMap.put("content", content.getContent());// MongoDB中教材通知
-			}
-			// 判断内容是否已经发布或审核通过
-			String fileNoticeDownLoadType = null;
-			String fileNoteDownLoadType = null;
-			if (Const.TRUE.booleanValue() == material.getIsPublished().booleanValue()) {
-				fileNoticeDownLoadType = Const.MATERIAL_NOTICE_FILE_DOWNLOAD;
-				fileNoteDownLoadType = Const.MATERIAL_NOTE_FILE_DOWNLOAD;
-			} else {
-				fileNoticeDownLoadType = Const.FILE_DOWNLOAD;
-				fileNoteDownLoadType = Const.FILE_DOWNLOAD;
-			}
-			if (CollectionUtil.isNotEmpty(materialNoticeAttachments)) {
-				for (MaterialNoticeAttachment materialNoticeAttachment : materialNoticeAttachments) {
-					String attachment = materialNoticeAttachment.getAttachment();
-					materialNoticeAttachment.setAttachment(fileNoticeDownLoadType + attachment);// 拼接附件下载路径
-				}
-			}
-			if (CollectionUtil.isNotEmpty(materialNoteAttachments)) {
-				for (MaterialNoteAttachment materialNoteAttachment : materialNoteAttachments) {
-					String attachment = materialNoteAttachment.getAttachment();
-					materialNoteAttachment.setAttachment(fileNoteDownLoadType + attachment);// 拼接附件下载路径
-				}
-			}
-		}
-		resultMap.put("materialNoticeAttachments", materialNoticeAttachments);// 教材通知附件
-		resultMap.put("materialNoteAttachments", materialNoteAttachments);// 教材备注附件
-		return resultMap;
-	}
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据教材ID查询教材通知详情及附件
+     * 使用示范：
+     *
+     * @param materialId 教材ID
+     * @return Map<String, Object> 集合
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    @Override
+    public Map<String, Object> getMaterialExtraAndNoticeDetail(Long materialId)
+    throws CheckedServiceException {
+        if (ObjectUtil.isNull(materialId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                              CheckedExceptionResult.NULL_PARAM, "教材主键为空");
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        // 教材通知附件
+        List<MaterialNoticeAttachment> materialNoticeAttachments = null;
+        // 教材备注附件
+        List<MaterialNoteAttachment> materialNoteAttachments = null;
+        // 教材
+        Material material = materialService.getMaterialById(materialId);
+        resultMap.put("materialName", material);// 教材
+        List<MaterialContact> materialContacts =
+        materialContactService.listMaterialContactByMaterialId(materialId);
+        resultMap.put("materialContacts", materialContacts);// 联系人
+        MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
+        resultMap.put("materialExtra", materialExtra);// 教材通知备注
+        Long materialExtraId = materialExtra.getId();
+        if (ObjectUtil.notNull(materialExtraId)) {
+            // 教材通知附件
+            materialNoticeAttachments =
+            materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtraId);
+            // 教材备注附件
+            materialNoteAttachments =
+            materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtraId);
+        }
+        // 判断内容是否已经发布或审核通过
+        String fileNoticeDownLoadType = null;
+        String fileNoteDownLoadType = null;
+        if (Const.TRUE.booleanValue() == material.getIsPublished().booleanValue()) {
+            fileNoticeDownLoadType = Const.MATERIAL_NOTICE_FILE_DOWNLOAD;
+            fileNoteDownLoadType = Const.MATERIAL_NOTE_FILE_DOWNLOAD;
+        } else {
+            fileNoticeDownLoadType = Const.FILE_DOWNLOAD;
+            fileNoteDownLoadType = Const.FILE_DOWNLOAD;
+        }
+        CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
+        if (ObjectUtil.notNull(cmsContent)) {
+            Content content = contentService.get(cmsContent.getMid());
+            if (ObjectUtil.notNull(content)) {
+                resultMap.put("content", content.getContent());// MongoDB中教材通知
+            }
+        }
+        if (CollectionUtil.isNotEmpty(materialNoticeAttachments)) {
+            for (MaterialNoticeAttachment materialNoticeAttachment : materialNoticeAttachments) {
+                String attachment = materialNoticeAttachment.getAttachment();
+                materialNoticeAttachment.setAttachment(fileNoticeDownLoadType + attachment);// 拼接附件下载路径
+            }
+        }
+        if (CollectionUtil.isNotEmpty(materialNoteAttachments)) {
+            for (MaterialNoteAttachment materialNoteAttachment : materialNoteAttachments) {
+                String attachment = materialNoteAttachment.getAttachment();
+                materialNoteAttachment.setAttachment(fileNoteDownLoadType + attachment);// 拼接附件下载路径
+            }
+        }
+        resultMap.put("materialNoticeAttachments", materialNoticeAttachments);// 教材通知附件
+        resultMap.put("materialNoteAttachments", materialNoteAttachments);// 教材备注附件
+        return resultMap;
+    }
 
 	@Override
 	public PageResult<MateriaHistorylVO> listMaterialHistory(PageParameter<MateriaHistorylVO> pageParameter,
