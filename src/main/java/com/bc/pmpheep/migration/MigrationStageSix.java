@@ -1081,19 +1081,18 @@ public class MigrationStageSix {
         String tableName = "teach_applyposition"; // 要迁移的旧库表名
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
         String sql = "select ta.materid,ta.writerid,ta.bookid,"
-                + "case when ta.positiontype=1 then 1 when ta.positiontype=2 then 2 "
-                + "when ta.positiontype=3 then 3 "
-                + "else 0 end preset_position,"
-                + "if(tp.appposiid is not null,true,false) is_on_list,"
-                + "case when tp.positiontype=1 then 1 when tp.positiontype=2 then 2 "
-                + "when tp.positiontype=3 then 3 "
-                + "else 0 end chosen_position,tp.mastersort,ta.outlineurl,ta.outlinename,"
+                + "GROUP_CONCAT(case when ta.positiontype=1 then 'a' when ta.positiontype=2 then 'b' when ta.positiontype=3 then 'c' else 'c'  end ORDER BY ta.positiontype) preset_position,"
+                + "if(sum(if(tp.positiontype in (1,2,3),1,0))>0,true,false) is_on_list,"
+                + "GROUP_CONCAT(case when tp.positiontype=1 then 'a' when tp.positiontype=2 then 'b' when tp.positiontype=3 then 'c' else 'd'  end ORDER BY tp.positiontype) chosen_position, "
+                + "min(tp.mastersort) mastersort,ta.outlineurl,ta.outlinename,"
                 + "ifnull(wd.updatedate,wd.createdate) gmt_create,"
                 + "wd.new_pk wdid,tb.new_pk tbid "
                 + "from teach_applyposition ta "
                 + "left join teach_positionset tp on tp.appposiid=ta.appposiid "
                 + "left join writer_declaration wd on wd.writerid=ta.writerid "
-                + "left join teach_bookinfo tb on tb.bookid=ta.bookid ";
+                + "left join teach_bookinfo tb on tb.bookid=ta.bookid  "
+                + "WHERE ta.positiontype in (1,2,3) and wd.writerid is not null and tb.bookid is not null  "
+                + "GROUP BY wd.writerid,tb.bookid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0; // 迁移成功的条目数
         int textbookidCount = 0;
@@ -1120,15 +1119,25 @@ public class MigrationStageSix {
                 continue;
             }
             decPosition.setTextbookId(textbookid);
-            Long presetPosition = (Long) map.get("preset_position"); // 申报职务
-            if (ObjectUtil.isNull(presetPosition)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报职务为空值。"));
-                excel.add(map);
-                logger.error("找到申报职务为空值，此结果将被记录在Excel中");
-                continue;
+            String temppresetPosition = (String) map.get("preset_position"); // 申报职务
+            temppresetPosition += ","+temppresetPosition+",";
+            String Position2    ="";
+            if(temppresetPosition.contains(",a,")){
+            	Position2 += "1" ;
+            }else{
+            	Position2 += "0" ;
             }
-            Integer preset = (Integer) presetPosition.intValue();
-            decPosition.setPresetPosition(preset);
+            if(temppresetPosition.contains(",b,")){
+            	Position2 += "1" ;
+            }else{
+            	Position2 += "0" ;
+            }
+            if(temppresetPosition.contains(",c,")){
+            	Position2 += "1" ;
+            }else{
+            	Position2 += "0" ;
+            }
+            decPosition.setPresetPosition(Integer.valueOf(Position2, 2));//转成10进制
             Long isOnList = (Long) map.get("is_on_list"); // 是否进入预选名单
             if (ObjectUtil.isNull(isOnList)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到是否进入预选名单为空值。"));
@@ -1138,14 +1147,16 @@ public class MigrationStageSix {
             }
             Integer isOn = isOnList.intValue();
             decPosition.setIsOnList(isOn);
-            Long chosenPosition = (Long) map.get("chosen_position"); // 遴选职务
-            if (ObjectUtil.isNull(chosenPosition)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到遴选职务为空值。"));
-                excel.add(map);
-                logger.error("找到遴选职务为空值，此结果将被记录在Excel中");
-                continue;
+            String tempchosenPosition = (String) map.get("chosen_position"); // 遴选职务
+            tempchosenPosition += ","+tempchosenPosition+",";
+            Integer chosen =0 ;
+            if(tempchosenPosition.contains(",a,")){
+            	chosen = 1 ;
+            }else if(tempchosenPosition.contains(",b,")){
+            	chosen = 2 ;
+            }else if (tempchosenPosition.contains(",c,")){
+            	chosen = 3 ;
             }
-            Integer chosen = chosenPosition.intValue();
             decPosition.setChosenPosition(chosen);
             Integer mastersort = (Integer) map.get("mastersort"); // 排位
             decPosition.setRank(mastersort);
