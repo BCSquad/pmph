@@ -58,9 +58,11 @@ public class FileDownLoadController {
      * 
      * @param id 文件在MongoDB中的id
      * @param response 服务响应
+     * @throws UnsupportedEncodingException
      */
     @RequestMapping(value = "/file/download/{id}", method = RequestMethod.GET)
-    public void download(@PathVariable("id") String id, HttpServletResponse response) {
+    public void download(@PathVariable("id") String id, HttpServletResponse response)
+    throws UnsupportedEncodingException {
 
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/force-download");
@@ -69,7 +71,9 @@ public class FileDownLoadController {
             logger.warn("未找到id为'{}'的文件", id);
             return;
         }
-        response.setHeader("Content-Disposition", "attachment;fileName=" + file.getFilename());
+        response.setHeader("Content-Disposition",
+                           "attachment;fileName="
+                           + new String(file.getFilename().getBytes("utf-8"), "ISO8859-1"));
         try (OutputStream out = response.getOutputStream()) {
             file.writeTo(out);
             out.flush();
@@ -89,10 +93,12 @@ public class FileDownLoadController {
 	 * &#64;param id 文件在MongoDB中的id
 	 * &#64;param response 服务响应
 	 * </pre>
+     * 
+     * @throws UnsupportedEncodingException
      */
     @RequestMapping(value = "/file/{type}/download/{id}", method = RequestMethod.GET)
     public void download(@PathVariable("type") String type, @PathVariable("id") String id,
-    HttpServletResponse response) {
+    HttpServletResponse response) throws UnsupportedEncodingException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/force-download");
         GridFSDBFile file = fileService.get(id);
@@ -100,7 +106,9 @@ public class FileDownLoadController {
             logger.warn("未找到id为'{}'的文件", id);
             return;
         }
-        response.setHeader("Content-Disposition", "attachment;fileName=" + file.getFilename());
+        response.setHeader("Content-Disposition",
+                           "attachment;fileName="
+                           + new String(file.getFilename().getBytes("utf-8"), "ISO8859-1"));
         try (OutputStream out = response.getOutputStream()) {
             file.writeTo(out);
             out.flush();
