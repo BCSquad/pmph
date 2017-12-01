@@ -40,10 +40,10 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * Title:DecPositionServiceImpl
  * <p>
  * <p>
- * Description:TODO
+ * Description:作家职位遴选信息
  * <p>
  * 
- * @author Administrator
+ * @author lyc
  * @date 2017年10月9日 下午6:05:54
  */
 @Service
@@ -310,6 +310,7 @@ public class DecPositionServiceImpl implements DecPositionService {
         		list.add(declarationSituationSchoolResultVO);
         	}
         	pageResult.setRows(list);
+        	pageResult.setTotal(total);
         }
 		return pageResult;
 	}
