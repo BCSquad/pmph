@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.DecPositionService;
+import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -66,5 +67,27 @@ public class DecPositionController {
 	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "加载总体统计情况")
 	public ResponseBean count(Long materialId){
 		return new ResponseBean(decPositionService.getDeclarationCountVO(materialId));
+	}
+	
+	/**
+	 * 
+	 * Description:加载书本申报情况统计结果
+	 * @author:lyc
+	 * @date:2017年12月1日下午5:44:16
+	 * @param 
+	 * @return ResponseBean
+	 */
+	@ResponseBody
+	@RequestMapping(value="/list/bookResults",method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "加载书本申报情况统计结果")
+	public ResponseBean bookResults(Integer pageSize, Integer pageNumber, Long materialId, String bookName){
+		PageParameter<DeclarationSituationBookResultVO> pageParameter = 
+				new PageParameter<>(pageNumber, pageSize);
+		DeclarationSituationBookResultVO declarationSituationBookResultVO = 
+				new DeclarationSituationBookResultVO();
+		declarationSituationBookResultVO.setMaterialId(materialId);
+		declarationSituationBookResultVO.setBookName(bookName);
+		pageParameter.setParameter(declarationSituationBookResultVO);
+		return new ResponseBean(decPositionService.listDeclarationSituationBookResultVOs(pageParameter));
 	}
 }
