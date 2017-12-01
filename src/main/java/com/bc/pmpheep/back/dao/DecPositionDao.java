@@ -13,6 +13,8 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
+import com.bc.pmpheep.back.vo.DeclarationResultBookVO;
+import com.bc.pmpheep.back.vo.DeclarationResultSchoolVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -258,4 +260,26 @@ public interface DecPositionDao {
      */
     List<DeclarationSituationBookResultVO> getBookResult(
     		PageParameter<DeclarationSituationBookResultVO> pageParameter);
+    
+    /**
+     * 
+     * Description:根据教材id（和学校名）查询统计结果
+     * @author:lyc
+     * @date:2017年12月1日下午5:56:59
+     * @param 
+     * @return List<DeclarationResultSchoolVO>
+     */
+    List<DeclarationResultSchoolVO> getSchoolList(
+    		PageParameter<DeclarationResultSchoolVO> pageParameter);
+    
+    /**
+     * 
+     * Description:根据教材id（和书名）查询统计结果
+     * @author:lyc
+     * @date:2017年12月1日下午6:35:54
+     * @param 
+     * @return List<DeclarationResultBookVO>
+     */
+    List<DeclarationResultBookVO> getBookList(
+    		PageParameter<DeclarationResultBookVO> pageParameter);
 }
