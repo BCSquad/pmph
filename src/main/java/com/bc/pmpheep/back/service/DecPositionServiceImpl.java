@@ -279,6 +279,7 @@ public class DecPositionServiceImpl implements DecPositionService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
 		}
+		//如果机构名称不为空，则为模糊查询
 		String schoolName = pageParameter.getParameter().getSchoolName();
 		if (StringUtil.notEmpty(schoolName)){
 			pageParameter.getParameter().setSchoolName(schoolName);
@@ -286,8 +287,14 @@ public class DecPositionServiceImpl implements DecPositionService {
 		PageResult<DeclarationSituationSchoolResultVO> pageResult = 
 				new PageResult<DeclarationSituationSchoolResultVO>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-        
-		return null;
+		//得到申报单位的总数
+        int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
+        if (total > 0){
+        	pageResult.setTotal(total);
+        	List<DeclarationSituationSchoolResultVO> list = decPositionDao.getSchoolResult(pageParameter);
+        	pageResult.setRows(list);
+        }
+		return pageResult;
 	}
 
 	@Override
