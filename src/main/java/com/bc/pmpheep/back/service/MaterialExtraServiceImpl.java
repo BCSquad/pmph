@@ -359,8 +359,9 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
 		Integer count = 0;
 		// 根据教材ID查询教材-机构关联表
 		List<Long> OrgIds = materialOrgService.getListMaterialOrgByMaterialId(materialId);
+		String msgId =null;
 		if (CollectionUtil.isEmpty(OrgIds)) {// 为空，初次发布
-			systemMessageService.materialSend(materialId, orgIds, null);
+			msgId=systemMessageService.materialSend(materialId, orgIds, null);
 		} else {// 不为空
 			List<Long> newOrgIds = new ArrayList<Long>();// 新选中的机构
 			for (Long orgId : orgIds) {
@@ -369,7 +370,7 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
 				}
 			}
 			Material material = materialService.getMaterialById(materialId);
-			systemMessageService.materialSend(materialId, newOrgIds, material.getMsgId());
+			msgId=systemMessageService.materialSend(materialId, newOrgIds, material.getMsgId());
 		}
 		CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
 		if (ObjectUtil.isNull(cmsContent)) {
@@ -380,7 +381,7 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
 				.updateCmsContent(new CmsContent(cmsContent.getId(), true, false, Const.CMS_AUTHOR_STATUS_2, 0L, // authUserId
 																													// 为0代表系统审核
 						DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss", DateUtil.getCurrentTime())));
-		count = materialService.updateMaterial(new Material(materialId, true));
+		count = materialService.updateMaterial(new Material(materialId, msgId,true));
 		return count;
 	}
 
