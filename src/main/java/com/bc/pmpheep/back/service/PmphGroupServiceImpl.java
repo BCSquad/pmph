@@ -295,12 +295,6 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		Textbook textbook=textbookDao.getTextbookById(textbookId);
 		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		PmphGroup pmphGroup=new PmphGroup();
-		
-		for (int i = 0; i <pmphGroupDao.getPmphGroupCount(); i++) {
-			pmphGroup=pmphGroupDao.getPmphGroupByGroupName(textbook.getTextbookName()+i);
-			if(pmphGroup.getGroupName().equals(textbook.getTextbookName()+i)){
-			}
-		}
 		// 查询小组名称是否已存在 不存在直接用书名
 		if (ObjectUtil.isNull(pmphGroupDao.getPmphGroupByGroupName(textbook.getTextbookName()))) {
 			pmphGroup.setGroupName(textbook.getTextbookName());
