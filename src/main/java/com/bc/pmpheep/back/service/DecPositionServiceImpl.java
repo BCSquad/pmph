@@ -27,6 +27,7 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.back.vo.DecPositionVO;
 import com.bc.pmpheep.back.vo.DeclarationCountVO;
+import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.back.vo.NewDecPosition;
 import com.bc.pmpheep.general.bean.FileType;
@@ -334,4 +335,12 @@ public class DecPositionServiceImpl implements DecPositionService {
         declarationCountVO.setEditorialCount(editorialCount);
         return declarationCountVO;
     }
+
+	@Override
+	public PageResult<DeclarationSituationBookResultVO> listDeclarationSituationBookResultVOs(
+			PageParameter<DeclarationSituationBookResultVO> pageParameter)
+			throws CheckedServiceException {
+		
+		return null;
+	}
 }

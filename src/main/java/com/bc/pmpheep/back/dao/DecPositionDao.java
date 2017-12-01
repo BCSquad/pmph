@@ -13,6 +13,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
+import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -236,4 +237,15 @@ public interface DecPositionDao {
      */
     List<DeclarationSituationSchoolResultVO> getSchoolResult(
     		PageParameter<DeclarationSituationSchoolResultVO> pageParameter);
+    
+    /**
+     * 
+     * Description:根据教材id（和书本名称）查询学校申报情况
+     * @author:lyc
+     * @date:2017年12月1日下午5:20:08
+     * @param 
+     * @return List<DeclarationSituationBookResultVO>
+     */
+    List<DeclarationSituationBookResultVO> getBookResult(
+    		PageParameter<DeclarationSituationBookResultVO> pageParameter);
 }
