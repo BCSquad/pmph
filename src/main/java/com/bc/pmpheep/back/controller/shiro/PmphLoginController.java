@@ -78,6 +78,7 @@ public class PmphLoginController {
      * 
      * , method = RequestMethod.GET
      * 
+     * //* @throws SingleSignOnException
      */
     @ResponseBody
     @RequestMapping(value = "/login")
@@ -96,8 +97,6 @@ public class PmphLoginController {
             if (!RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUser.getAvatar())) {
                 pmphUser.setAvatar(RouteUtil.userAvatar(pmphUser.getAvatar()));
             }
-            // Principal principal = service.singleSignOn(request);
-            // String userName = principal.getName();
             // 根据用户Id查询对应角色(是否为管理员)
             List<PmphRole> pmphRoles = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
             List<Long> roleIds = new ArrayList<Long>(pmphRoles.size());
@@ -187,7 +186,6 @@ public class PmphLoginController {
     public ResponseBean logout(HttpServletRequest request, HttpServletResponse response,
     @RequestParam("loginType") Short loginType) {
         // HttpSingleSignOnService service = new HttpSingleSignOnService();
-
         String sessionId = CookiesUtil.getSessionId(request);
         HttpSession session = SessionContext.getSession(sessionId);
         if (ObjectUtil.notNull(session)) {

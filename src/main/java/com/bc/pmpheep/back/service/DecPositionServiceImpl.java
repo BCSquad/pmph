@@ -253,7 +253,7 @@ public class DecPositionServiceImpl implements DecPositionService {
         new JsonUtil().getArrayListObjectFromStr(DecPosition.class, jsonDecPosition);// json字符串转List对象集合
         if (CollectionUtil.isEmpty(decPositions)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.NULL_PARAM, "decPositions为空");
+                                              CheckedExceptionResult.NULL_PARAM, "遴选职位为空");
         }
         Long textbookId = decPositions.get(0).getTextbookId(); // 获取书籍id
         if (ObjectUtil.isNull(textbookId)) {
@@ -273,63 +273,65 @@ public class DecPositionServiceImpl implements DecPositionService {
         return count;
     }
 
-	@Override
-	public PageResult<DeclarationSituationSchoolResultVO> listDeclarationSituationSchoolResultVOs
-	(PageParameter<DeclarationSituationSchoolResultVO> pageParameter) throws CheckedServiceException {
-		if (ObjectUtil.isNull(pageParameter.getParameter().getMaterialId())){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-					CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
-		}
-		//如果机构名称不为空，则为模糊查询
-		String schoolName = pageParameter.getParameter().getSchoolName();
-		if (StringUtil.notEmpty(schoolName)){
-			pageParameter.getParameter().setSchoolName(schoolName);
-		}
-		PageResult<DeclarationSituationSchoolResultVO> pageResult = 
-				new PageResult<DeclarationSituationSchoolResultVO>();
-		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-		//得到申报单位的总数
-        int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
-        if (total > 0){
-        	pageResult.setTotal(total);
-        	List<DeclarationSituationSchoolResultVO> declarationSituationSchoolResultVOs 
-        	= decPositionDao.getSchoolResult(pageParameter);
-        	List<DeclarationSituationSchoolResultVO> list = new ArrayList<>();
-        	for (DeclarationSituationSchoolResultVO declarationSituationSchoolResultVO : declarationSituationSchoolResultVOs){
-        		//计算申报人数
-        		Integer presetPersons = declarationSituationSchoolResultVO.getPresetPositionEditor()
-        				+ declarationSituationSchoolResultVO.getPresetPositionSubeditor() 
-        				+ declarationSituationSchoolResultVO.getPresetPositionEditorial();
-        		//计算当选人数
-        		Integer chosenPersons = declarationSituationSchoolResultVO.getChosenPositionEditor()
-        				+declarationSituationSchoolResultVO.getChosenPositionSubeditor()
-        				+declarationSituationSchoolResultVO.getChosenPositionEditorial()
-        				+declarationSituationSchoolResultVO.getIsDigitalEditor();
-        		declarationSituationSchoolResultVO.setPresetPersons(presetPersons);
-        		declarationSituationSchoolResultVO.setChosenPersons(chosenPersons);
-        		list.add(declarationSituationSchoolResultVO);
-        	}
-        	pageResult.setRows(list);
-        	pageResult.setTotal(total);
+    @Override
+    public PageResult<DeclarationSituationSchoolResultVO> listDeclarationSituationSchoolResultVOs(
+    PageParameter<DeclarationSituationSchoolResultVO> pageParameter) throws CheckedServiceException {
+        if (ObjectUtil.isNull(pageParameter.getParameter().getMaterialId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
         }
-		return pageResult;
-	}
+        // 如果机构名称不为空，则为模糊查询
+        String schoolName = pageParameter.getParameter().getSchoolName();
+        if (StringUtil.notEmpty(schoolName)) {
+            pageParameter.getParameter().setSchoolName(schoolName);
+        }
+        PageResult<DeclarationSituationSchoolResultVO> pageResult =
+        new PageResult<DeclarationSituationSchoolResultVO>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 得到申报单位的总数
+        int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
+        if (total > 0) {
+            pageResult.setTotal(total);
+            List<DeclarationSituationSchoolResultVO> declarationSituationSchoolResultVOs =
+            decPositionDao.getSchoolResult(pageParameter);
+            List<DeclarationSituationSchoolResultVO> list = new ArrayList<>();
+            for (DeclarationSituationSchoolResultVO declarationSituationSchoolResultVO : declarationSituationSchoolResultVOs) {
+                // 计算申报人数
+                Integer presetPersons =
+                declarationSituationSchoolResultVO.getPresetPositionEditor()
+                + declarationSituationSchoolResultVO.getPresetPositionSubeditor()
+                + declarationSituationSchoolResultVO.getPresetPositionEditorial();
+                // 计算当选人数
+                Integer chosenPersons =
+                declarationSituationSchoolResultVO.getChosenPositionEditor()
+                + declarationSituationSchoolResultVO.getChosenPositionSubeditor()
+                + declarationSituationSchoolResultVO.getChosenPositionEditorial()
+                + declarationSituationSchoolResultVO.getIsDigitalEditor();
+                declarationSituationSchoolResultVO.setPresetPersons(presetPersons);
+                declarationSituationSchoolResultVO.setChosenPersons(chosenPersons);
+                list.add(declarationSituationSchoolResultVO);
+            }
+            pageResult.setRows(list);
+            pageResult.setTotal(total);
+        }
+        return pageResult;
+    }
 
-	@Override
-	public DeclarationCountVO getDeclarationCountVO(Long materialId)
-			throws CheckedServiceException {
-		DeclarationCountVO declarationCountVO = new DeclarationCountVO();
-		Integer schoolDeclarationCount = decPositionDao.getSchoolDeclarationCount(materialId);
-		Integer schoolDeclarationAverage = 
-				decPositionDao.getSchoolDeclarationCount(materialId)/decPositionDao.getSchoolCount(materialId);
-		Integer editorCount = decPositionDao.getEditorCount(materialId);
-		Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);
-		Integer editorialCount = decPositionDao.getEditorialCount(materialId);
-		declarationCountVO.setSchoolDeclarationCount(schoolDeclarationCount);
-		declarationCountVO.setSchoolDeclarationAverage(schoolDeclarationAverage);;
-		declarationCountVO.setEditorCount(editorCount);;
-		declarationCountVO.setSubEditorCount(subEditorCount);
-		declarationCountVO.setEditorialCount(editorialCount);
-		return declarationCountVO;
-	}
+    @Override
+    public DeclarationCountVO getDeclarationCountVO(Long materialId) throws CheckedServiceException {
+        DeclarationCountVO declarationCountVO = new DeclarationCountVO();
+        Integer schoolDeclarationCount = decPositionDao.getSchoolDeclarationCount(materialId);
+        Integer schoolDeclarationAverage =
+        decPositionDao.getSchoolDeclarationCount(materialId)
+        / decPositionDao.getSchoolCount(materialId);
+        Integer editorCount = decPositionDao.getEditorCount(materialId);
+        Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);
+        Integer editorialCount = decPositionDao.getEditorialCount(materialId);
+        declarationCountVO.setSchoolDeclarationCount(schoolDeclarationCount);
+        declarationCountVO.setSchoolDeclarationAverage(schoolDeclarationAverage);
+        declarationCountVO.setEditorCount(editorCount);
+        declarationCountVO.setSubEditorCount(subEditorCount);
+        declarationCountVO.setEditorialCount(editorialCount);
+        return declarationCountVO;
+    }
 }
