@@ -307,33 +307,33 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             materialNoteAttachments =
             materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtraId);
         }
+        // 判断内容是否已经发布或审核通过
+        String fileNoticeDownLoadType = null;
+        String fileNoteDownLoadType = null;
+        if (Const.TRUE.booleanValue() == material.getIsPublished().booleanValue()) {
+            fileNoticeDownLoadType = Const.MATERIAL_NOTICE_FILE_DOWNLOAD;
+            fileNoteDownLoadType = Const.MATERIAL_NOTE_FILE_DOWNLOAD;
+        } else {
+            fileNoticeDownLoadType = Const.FILE_DOWNLOAD;
+            fileNoteDownLoadType = Const.FILE_DOWNLOAD;
+        }
         CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
         if (ObjectUtil.notNull(cmsContent)) {
             Content content = contentService.get(cmsContent.getMid());
             if (ObjectUtil.notNull(content)) {
                 resultMap.put("content", content.getContent());// MongoDB中教材通知
             }
-            // 判断内容是否已经发布或审核通过
-            String fileNoticeDownLoadType = null;
-            String fileNoteDownLoadType = null;
-            if (Const.TRUE.booleanValue() == material.getIsPublished().booleanValue()) {
-                fileNoticeDownLoadType = Const.MATERIAL_NOTICE_FILE_DOWNLOAD;
-                fileNoteDownLoadType = Const.MATERIAL_NOTE_FILE_DOWNLOAD;
-            } else {
-                fileNoticeDownLoadType = Const.FILE_DOWNLOAD;
-                fileNoteDownLoadType = Const.FILE_DOWNLOAD;
+        }
+        if (CollectionUtil.isNotEmpty(materialNoticeAttachments)) {
+            for (MaterialNoticeAttachment materialNoticeAttachment : materialNoticeAttachments) {
+                String attachment = materialNoticeAttachment.getAttachment();
+                materialNoticeAttachment.setAttachment(fileNoticeDownLoadType + attachment);// 拼接附件下载路径
             }
-            if (CollectionUtil.isNotEmpty(materialNoticeAttachments)) {
-                for (MaterialNoticeAttachment materialNoticeAttachment : materialNoticeAttachments) {
-                    String attachment = materialNoticeAttachment.getAttachment();
-                    materialNoticeAttachment.setAttachment(fileNoticeDownLoadType + attachment);// 拼接附件下载路径
-                }
-            }
-            if (CollectionUtil.isNotEmpty(materialNoteAttachments)) {
-                for (MaterialNoteAttachment materialNoteAttachment : materialNoteAttachments) {
-                    String attachment = materialNoteAttachment.getAttachment();
-                    materialNoteAttachment.setAttachment(fileNoteDownLoadType + attachment);// 拼接附件下载路径
-                }
+        }
+        if (CollectionUtil.isNotEmpty(materialNoteAttachments)) {
+            for (MaterialNoteAttachment materialNoteAttachment : materialNoteAttachments) {
+                String attachment = materialNoteAttachment.getAttachment();
+                materialNoteAttachment.setAttachment(fileNoteDownLoadType + attachment);// 拼接附件下载路径
             }
         }
         resultMap.put("materialNoticeAttachments", materialNoticeAttachments);// 教材通知附件
