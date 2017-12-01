@@ -302,5 +302,57 @@
 		where
 		declaration_id=#{declarationId};
 	</select>
-    
+	<!-- 根据materialId查询学校申报总数 -->
+    <select id="getSchoolDeclarationCount" parameterType="java.lang.Long" 
+        resultType="java.lang.Long">
+        SELECT count(d.preset_position)
+		FROM org a 
+		LEFT JOIN declaration b ON a.id = b.org_id 
+		LEFT JOIN material c ON b.material_id = c.id 
+		LEFT JOIN dec_position d ON b.id = d.declaration_id 
+		WHERE d.preset_position IS NOT NULL AND c.id = #{materialId}  
+		AND b.is_staging = 0 AND b.online_progress >0;
+    </select>
+    <!-- 根据materialId查询学校总数 -->
+    <select id="getSchoolCount" parameterType="java.lang.Long" 
+        resultType="java.lang.Long">
+        SELECT count(t.counts) FROM (SELECT count(d.preset_position) counts
+		FROM org a 
+		LEFT JOIN declaration b ON a.id = b.org_id 
+		LEFT JOIN material c ON b.material_id = c.id 
+		LEFT JOIN dec_position d ON b.id = d.declaration_id 
+		WHERE d.preset_position IS NOT NULL AND c.id = #{materialId} 
+		AND b.is_staging = 0 AND b.online_progress >0 
+		GROUP BY a.id)t ;
+    </select>
+    <!-- 根据materialId查询主编申报总数 -->
+    <select id="getEditorCount" parameterType="java.lang.Long" 
+        resultType="java.lang.Long">
+        select count(d.id) from dec_position dp 
+        left join (select * from declaration) d on (d.id=dp.declaration_id) 
+        left join (select id from material) m on (m.id=d.material_id) 
+        where d.is_staging = 0 AND d.online_progress >0 AND dp.preset_position=4 
+        or dp.preset_position = 5 or dp.preset_position = 6 or dp.preset_position = 7 
+        and m.id=#{materialId};
+    </select>
+    <!-- 根据materialId查询副主编申报总数 -->
+    <select id="getSubEditorCount" parameterType="java.lang.Long" 
+        resultType="java.lang.Long">
+        select count(d.id) from dec_position dp 
+        left join (select * from declaration) d on (d.id=dp.declaration_id) 
+        left join (select id from material) m on (m.id=d.material_id) 
+        where d.is_staging = 0 AND d.online_progress >0 AND dp.preset_position=2 
+        or dp.preset_position = 3 or dp.preset_position = 6 or dp.preset_position = 7 
+        and m.id=#{materialId};
+    </select>
+    <!-- 根据materialId查询编委申报数 -->
+    <select id="getEditorialCount" parameterType="java.lang.Long" 
+        resultType="java.lang.Long">
+        select count(d.id) from dec_position dp 
+        left join (select * from declaration) d on (d.id=dp.declaration_id) 
+        left join (select id from material) m on (m.id=d.material_id) 
+        where d.is_staging = 0 AND d.online_progress >0 AND dp.preset_position=1 
+        or dp.preset_position = 3 or dp.preset_position = 5 or dp.preset_position = 7 
+        and m.id=#{materialId};
+    </select>
 </mapper>
