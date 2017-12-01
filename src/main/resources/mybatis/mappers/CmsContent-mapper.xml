@@ -441,9 +441,9 @@
 				</if>
 				<if test="parameter.username !=null and  parameter.username!='' ">
 						AND (
-							pu.`username` = #{parameter.username} 
+							pu.`username` like concat('%',#{parameter.username},'%')
 						OR
-							pu.`realname` = #{parameter.username} )
+							pu.`realname`like concat('%',#{parameter.username},'%') )
 				</if>
 			</if>
 		order by 
