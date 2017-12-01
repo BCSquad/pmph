@@ -32,11 +32,11 @@ public class DeclarationSituationBookResultVO {
 		//编委当选数
 		private Integer chosenPositionEditorial;
 		//数字编委当选数
-		private Boolean isDigitalEditor;
+		private Integer isDigitalEditor;
 		//申报人数
-		private Integer declarationPersons;
-		//当选人数
 		private Integer presetPersons;
+		//当选人数
+		private Integer chosenPersons;
 		
 		public DeclarationSituationBookResultVO() {
 			super();
@@ -122,20 +122,12 @@ public class DeclarationSituationBookResultVO {
 			this.chosenPositionEditorial = chosenPositionEditorial;
 		}
 
-		public Boolean getIsDigitalEditor() {
+		public Integer getIsDigitalEditor() {
 			return isDigitalEditor;
 		}
 
-		public void setIsDigitalEditor(Boolean isDigitalEditor) {
+		public void setIsDigitalEditor(Integer isDigitalEditor) {
 			this.isDigitalEditor = isDigitalEditor;
-		}
-
-		public Integer getDeclarationPersons() {
-			return declarationPersons;
-		}
-
-		public void setDeclarationPersons(Integer declarationPersons) {
-			this.declarationPersons = declarationPersons;
 		}
 
 		public Integer getPresetPersons() {
@@ -144,6 +136,14 @@ public class DeclarationSituationBookResultVO {
 
 		public void setPresetPersons(Integer presetPersons) {
 			this.presetPersons = presetPersons;
+		}
+
+		public Integer getChosenPersons() {
+			return chosenPersons;
+		}
+
+		public void setChosenPersons(Integer chosenPersons) {
+			this.chosenPersons = chosenPersons;
 		}
 		
 }
