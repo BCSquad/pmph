@@ -11,6 +11,7 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.back.vo.DecPositionVO;
+import com.bc.pmpheep.back.vo.DeclarationCountVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -150,6 +151,16 @@ public interface DecPositionService {
      */
     Integer updateDecPositionEditorSelection(String jsonDecPosition, String sessionId)
     throws CheckedServiceException;
+    
+    /**
+     * 
+     * Description:获取申报情况统计数据
+     * @author:lyc
+     * @date:2017年11月30日下午6:19:48
+     * @param 
+     * @return DeclarationCountVO
+     */
+    DeclarationCountVO getDeclarationCountVO(Long materialId) throws CheckedServiceException;
     
     /**
      * 

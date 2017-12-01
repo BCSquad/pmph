@@ -58,9 +58,10 @@ public class PositionChooseController {
 		    						 @RequestParam(value="materialId",required=true) Long  materialId,
 		    						 @RequestParam(value="state",required=false) Integer state,
 		    						 @RequestParam(value="textBookIds",required=false) String  textBookIds, //[1,2,3,4,5]
+		    						 @RequestParam(value="bookName",required=false) String  bookName, //[1,2,3,4,5]
 		    						 HttpServletRequest request){
 		 String sessionId = CookiesUtil.getSessionId(request);
-		 return new ResponseBean(textbookService.listBookPosition(pageNumber, pageSize, state, textBookIds,materialId, sessionId));
+		 return new ResponseBean(textbookService.listBookPosition(pageNumber, pageSize, state, textBookIds,bookName,materialId, sessionId));
 	}
 	/**
 	 * 功能描述：通过教材id 修改是否强制结束

@@ -298,6 +298,9 @@
 					#{item}
 				</foreach>
 			</if>
+			<if test="parameter.bookName !=null ">
+				and a.textbook_name like concat ('%',#{parameter.bookName},'%')
+			</if>
 			GROUP BY a.id
 		)temp
 	</select>
@@ -370,6 +373,9 @@
 				#{item}
 			</foreach>
 		</if>
+		<if test="parameter.bookName !=null ">
+				and a.textbook_name like concat ('%',#{parameter.bookName},'%')
+			</if>
 		GROUP BY a.id ORDER BY a.sort
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}

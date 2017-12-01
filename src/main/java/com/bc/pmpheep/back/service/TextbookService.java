@@ -2,15 +2,12 @@ package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
 import java.util.List;
-
 import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
-import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -127,7 +124,7 @@ public interface TextbookService {
 	 * @param sessionId
 	 * @return
 	 */
-	PageResult<BookPositionVO> listBookPosition(Integer pageNumber, Integer pageSize, Integer state, String textBookIds,
+	PageResult<BookPositionVO> listBookPosition(Integer pageNumber, Integer pageSize, Integer state, String textBookIds,String bookName,
 			Long materialId, String sessionId);
 
 	/**

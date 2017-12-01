@@ -25,6 +25,7 @@ import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.back.vo.DecPositionVO;
+import com.bc.pmpheep.back.vo.DeclarationCountVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.back.vo.NewDecPosition;
 import com.bc.pmpheep.general.bean.FileType;
@@ -287,5 +288,22 @@ public class DecPositionServiceImpl implements DecPositionService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         
 		return null;
+	}
+
+	@Override
+	public DeclarationCountVO getDeclarationCountVO(Long materialId)
+			throws CheckedServiceException {
+		DeclarationCountVO declarationCountVO = new DeclarationCountVO();
+		Integer schoolDeclarationCount = decPositionDao.getSchoolDeclarationCount(materialId);
+		Integer schoolDeclarationAverage = decPositionDao.getSchoolDeclarationAverage(materialId);
+		Integer editorCount = decPositionDao.getEditorCount(materialId);
+		Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);
+		Integer editorialCount = decPositionDao.getEditorialCount(materialId);
+		declarationCountVO.setSchoolDeclarationCount(schoolDeclarationCount);
+		declarationCountVO.setSchoolDeclarationAverage(schoolDeclarationAverage);;
+		declarationCountVO.setEditorCount(editorCount);;
+		declarationCountVO.setSubEditorCount(subEditorCount);
+		declarationCountVO.setEditorialCount(editorialCount);
+		return declarationCountVO;
 	}
 }
