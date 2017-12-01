@@ -174,4 +174,53 @@ public interface DecPositionDao {
      */
     List<DecPositionDisplayVO> listDecPositionsOrBook(Long declarationId);
 
+    /**
+     * 
+     * Description:根据教材id获取院校申报总数
+     * @author:lyc
+     * @date:2017年11月30日下午6:08:56
+     * @param 
+     * @return Integer
+     */
+    Integer getSchoolDeclarationCount(Long materialId);
+    
+    /**
+     * 
+     * Description:根据教材id获取院校申报平均数
+     * @author:lyc
+     * @date:2017年11月30日下午6:09:49
+     * @param 
+     * @return Integer
+     */
+    Integer getSchoolDeclarationAverage(Long materialId);
+    
+    /**
+     * 
+     * Description:根据教材id获取主编申报总数
+     * @author:lyc
+     * @date:2017年11月30日下午6:10:40
+     * @param 
+     * @return Integer
+     */
+    Integer getEditorCount(Long materialId);
+    
+    /**
+     * 
+     * Description:根据教材id获取副主编申报总数
+     * @author:lyc
+     * @date:2017年11月30日下午6:11:35
+     * @param 
+     * @return Integer
+     */
+    Integer getSubEditorCount(Long materialId);
+    
+    /**
+     * 
+     * Description:根据教材id获取编委申报总数
+     * @author:lyc
+     * @date:2017年11月30日下午6:12:13
+     * @param 
+     * @return Integer
+     */
+    Integer getEditorialCount(Long materialId);
 }
