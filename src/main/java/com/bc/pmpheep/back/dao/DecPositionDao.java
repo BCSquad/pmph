@@ -186,13 +186,13 @@ public interface DecPositionDao {
     
     /**
      * 
-     * Description:根据教材id获取院校申报平均数
+     * Description:根据教材id获取院校总数
      * @author:lyc
      * @date:2017年11月30日下午6:09:49
      * @param 
      * @return Integer
      */
-    Integer getSchoolDeclarationAverage(Long materialId);
+    Integer getSchoolCount(Long materialId);
     
     /**
      * 
