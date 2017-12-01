@@ -37,8 +37,8 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  * @审核人 ：
  * </pre>
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @Controller
-@SuppressWarnings("all")
 @RequestMapping(value = "/material/extra")
 public class MaterialExtraController {
     @Autowired
