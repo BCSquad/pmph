@@ -384,7 +384,7 @@
 		</if>
     </select>
     <select id="getBooks" parameterType="java.lang.Long" 
-        resultType="java.lang.Ingeter">
+        resultType="java.lang.Integer">
         SELECT COUNT(a.id) FROM textbook a WHERE a.material_id = #{materialId};
     </select>
     <!-- 申报情况按书籍统计 -->
