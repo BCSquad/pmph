@@ -51,12 +51,12 @@
 	<update id="update" parameterType="PmphRoleMaterial">
 		update pmph_role_material
 		<set>
-			<if test="permission != null and permission !='' ">
+			<if test="permission != null ">
 				permission = #{permission},
 			</if>
 		</set>
 		where
-		role_id=#{roleId} ;
+		role_id = #{roleId} ;
 	</update>
 
 	<select id="getPmphRoleMaterial" parameterType="java.lang.Long"
