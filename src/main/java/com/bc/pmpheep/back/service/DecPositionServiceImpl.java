@@ -27,6 +27,8 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.back.vo.DecPositionVO;
 import com.bc.pmpheep.back.vo.DeclarationCountVO;
+import com.bc.pmpheep.back.vo.DeclarationResultBookVO;
+import com.bc.pmpheep.back.vo.DeclarationResultSchoolVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.back.vo.NewDecPosition;
@@ -370,6 +372,52 @@ public class DecPositionServiceImpl implements DecPositionService {
 			}
 			pageResult.setRows(list);
 			pageResult.setTotal(total);
+		}
+		return pageResult;
+	}
+
+	@Override
+	public PageResult<DeclarationResultSchoolVO> listDeclarationResultSchoolVOs(
+			PageParameter<DeclarationResultSchoolVO> pageParameter)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(pageParameter.getParameter().getMaterialId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
+		}
+		String schoolName = pageParameter.getParameter().getSchoolName();
+		if (StringUtil.notEmpty(schoolName)){
+			pageParameter.getParameter().setSchoolName(schoolName);
+		}
+		PageResult<DeclarationResultSchoolVO> pageResult = new PageResult<DeclarationResultSchoolVO>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
+		if (total > 0){
+			List<DeclarationResultSchoolVO> list = decPositionDao.getSchoolList(pageParameter);	
+			pageResult.setRows(list);
+			pageResult.setTotal(total);
+		}
+		return pageResult;
+	}
+
+	@Override
+	public PageResult<DeclarationResultBookVO> listDeclarationResultBookVOs(
+			PageParameter<DeclarationResultBookVO> pageParameter)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(pageParameter.getParameter().getMaterialId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
+		}
+		String bookName = pageParameter.getParameter().getBookName();
+		if (StringUtil.notEmpty(bookName)){
+			pageParameter.getParameter().setBookName(bookName);
+		}
+		PageResult<DeclarationResultBookVO> pageResult = new PageResult<DeclarationResultBookVO>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
+		if (total > 0){
+			List<DeclarationResultBookVO> list = decPositionDao.getBookList(pageParameter);
+			pageResult.setTotal(total);
+			pageResult.setRows(list);
 		}
 		return pageResult;
 	}
