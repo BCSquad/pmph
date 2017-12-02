@@ -374,8 +374,8 @@ public class MigrationStageSix {
         String tableName = "writer_work"; //要迁移的旧库表名
         JdbcHelper.addColumn(tableName); //增加new_pk字段
         String sql = "select *,wd.new_pk id from writer_work w "
-                + "left join writer_declaration wd on wd.writerid=w.writerid "
-                + "where w.enddate != '0000-00-00 00:00:00' or w.enddate is null ";
+                + "left join writer_declaration wd on wd.writerid=w.writerid ";
+                //+ "where w.enddate != '0000-00-00 00:00:00' or w.enddate is null ";
         // 此处保存maps里的数据有一条未查询，已单独导出
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0;//迁移成功的条目数
@@ -424,9 +424,9 @@ public class MigrationStageSix {
             Timestamp endDate = (Timestamp) map.get("enddate"); // 终止时间
             if (ObjectUtil.isNull(endDate)) {
                 logger.error("未找到终止时间");
-                continue;
             } else {
-                if (endDate.equals(createDate) || endDate.equals("2017-07-29 15:25:03.0")) {
+                if (endDate.equals(createDate) || endDate.equals("2017-07-29 15:25:03.0") || 
+                		endDate.equals("0000-00-00 00:00:00")) {
                     decWorkExp.setDateEnd("至今");
                 } else {
                     String dateEnd = dateChange.format(endDate);
@@ -463,8 +463,8 @@ public class MigrationStageSix {
         String tableName = "writer_teach"; //要迁移的旧库表名
         JdbcHelper.addColumn(tableName); //增加new_pk字段
         String sql = "select *,wd.new_pk id from writer_teach w "
-                + "left join writer_declaration wd on wd.writerid=w.writerid "
-                + "where w.enddate != '0000-00-00 00:00:00' or w.enddate is null";
+                + "left join writer_declaration wd on wd.writerid=w.writerid ";
+                //+ "where w.enddate != '0000-00-00 00:00:00' or w.enddate is null";
         // 此处保存maps里的数据有一条未查询，已单独导出
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0;//迁移成功的条目数
@@ -512,7 +512,8 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(endDate)) {
                 logger.error("未找到终止时间");
             } else {
-                if (endDate.equals(createDate) || endDate.equals("2017-07-29 15:25:03.0")) {
+                if (endDate.equals(createDate) || endDate.equals("2017-07-29 15:25:03.0") || 
+                		endDate.equals("0000-00-00 00:00:00")) {
                     decTeachExp.setDateEnd("至今");
                 } else {
                     String dateEnd = dateChange.format(endDate);
@@ -549,7 +550,7 @@ public class MigrationStageSix {
         JdbcHelper.addColumn(tableName); //增加new_pk字段
         String sql = "select *,wd.new_pk id from writer_acade wa "
                 + "left join writer_declaration wd on wd.writerid=wa.writerid";
-        List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);;//取得该表中所有数据
+        List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);//取得该表中所有数据
         int count = 0;//迁移成功的条目数
         int declarationidCount = 0;
         int positionCount = 0;
@@ -853,8 +854,8 @@ public class MigrationStageSix {
                 + "case when wm.duty like '%1%' then 1 when wm.duty like '%2%' then 2 "
                 + "else 3 end position,wm.booknumber,wm.remark,wm.publisdate,wd.new_pk id "
                 + "from writer_materwrite wm "
-                + "left join writer_declaration wd on wd.writerid=wm.writerid "
-                + "where wm.publisdate != '0000-00-00 00:00:00' or wm.publisdate is null ";
+                + "left join writer_declaration wd on wd.writerid=wm.writerid ";
+                //+ "where wm.publisdate != '0000-00-00 00:00:00' or wm.publisdate is null ";
         // 此处保存maps里的数据有35条未查询，已单独导出
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0;//迁移成功的条目数
@@ -897,6 +898,9 @@ public class MigrationStageSix {
             }
             decTextbook.setPublisher(publisher);
             Date publishDate = (Date) map.get("publisdate"); // 出版时间
+            if (publishDate.equals("0000-00-00 00:00:00")) {
+            	decTextbook.setPublishDate(null);
+            }
             decTextbook.setPublishDate(publishDate);
             String isbn = (String) map.get("booknumber"); // 标准书号
             if (StringUtil.notEmpty(isbn)) {
@@ -1081,9 +1085,13 @@ public class MigrationStageSix {
         String tableName = "teach_applyposition"; // 要迁移的旧库表名
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
         String sql = "select ta.materid,ta.writerid,ta.bookid,"
-                + "GROUP_CONCAT(case when ta.positiontype=1 then 'a' when ta.positiontype=2 then 'b' when ta.positiontype=3 then 'c' else 'c'  end ORDER BY ta.positiontype) preset_position,"
+                + "GROUP_CONCAT(case when ta.positiontype=1 then 'a' when ta.positiontype=2 "
+                + "then 'b' when ta.positiontype=3 then 'c' else 'c' "
+                + "end ORDER BY ta.positiontype) preset_position,"
                 + "if(sum(if(tp.positiontype in (1,2,3),1,0))>0,true,false) is_on_list,"
-                + "GROUP_CONCAT(case when tp.positiontype=1 then 'a' when tp.positiontype=2 then 'b' when tp.positiontype=3 then 'c' else 'd'  end ORDER BY tp.positiontype) chosen_position, "
+                + "GROUP_CONCAT(case when tp.positiontype=1 then 'a' when tp.positiontype=2 "
+                + "then 'b' when tp.positiontype=3 then 'c' else 'd' "
+                + "end ORDER BY tp.positiontype) chosen_position, "
                 + "min(tp.mastersort) mastersort,ta.outlineurl,ta.outlinename,"
                 + "ifnull(wd.updatedate,wd.createdate) gmt_create,"
                 + "wd.new_pk wdid,tb.new_pk tbid "
@@ -1121,23 +1129,23 @@ public class MigrationStageSix {
             decPosition.setTextbookId(textbookid);
             String temppresetPosition = (String) map.get("preset_position"); // 申报职务
             temppresetPosition += ","+temppresetPosition+",";
-            String Position2    ="";
+            String Positions    ="";
             if(temppresetPosition.contains(",a,")){
-            	Position2 += "1" ;
+            	Positions += "1" ;
             }else{
-            	Position2 += "0" ;
+            	Positions += "0" ;
             }
             if(temppresetPosition.contains(",b,")){
-            	Position2 += "1" ;
+            	Positions += "1" ;
             }else{
-            	Position2 += "0" ;
+            	Positions += "0" ;
             }
             if(temppresetPosition.contains(",c,")){
-            	Position2 += "1" ;
+            	Positions += "1" ;
             }else{
-            	Position2 += "0" ;
+            	Positions += "0" ;
             }
-            decPosition.setPresetPosition(Integer.valueOf(Position2, 2));//转成10进制
+            decPosition.setPresetPosition(Integer.valueOf(Positions, 2));//转成10进制
             Long isOnList = (Long) map.get("is_on_list"); // 是否进入预选名单
             if (ObjectUtil.isNull(isOnList)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到是否进入预选名单为空值。"));
