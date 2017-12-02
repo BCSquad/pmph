@@ -250,9 +250,12 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
 					"小组id不能为空");
 		}
-		if (pmphGroupDao.getPmphGroupByGroupName(pmphGroup.getGroupName()).getId().equals(pmphGroup.getId())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
-					"小组名称重复");
+		PmphGroup group = pmphGroupDao.getPmphGroupByGroupName(pmphGroup.getGroupName());
+		if (ObjectUtil.notNull(group)) {
+			if (pmphGroup.getId().equals(group.getId())) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+						"小组名称重复");
+			}
 		}
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
@@ -292,15 +295,15 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		Textbook textbook=textbookDao.getTextbookById(textbookId);
+		Textbook textbook = textbookDao.getTextbookById(textbookId);
 		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
-		PmphGroup pmphGroup=new PmphGroup();
+		PmphGroup pmphGroup = new PmphGroup();
 		// 查询小组名称是否已存在 不存在直接用书名
 		if (ObjectUtil.isNull(pmphGroupDao.getPmphGroupByGroupName(textbook.getTextbookName()))) {
 			pmphGroup.setGroupName(textbook.getTextbookName());
-		}else {//存在则用书名加当前小组总数进行区分
-			Long count=pmphGroupDao.getPmphGroupCount();
-			pmphGroup.setGroupName(textbook.getTextbookName()+count);
+		} else {// 存在则用书名加当前小组总数进行区分
+			Long count = pmphGroupDao.getPmphGroupCount();
+			pmphGroup.setGroupName(textbook.getTextbookName() + count);
 		}
 		pmphGroup.setGroupImage(groupImage);
 		pmphGroup.setFounderId(pmphUser.getId());
@@ -312,7 +315,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			pmphGroupMember.setUserId(pmphUser.getId());
 			pmphGroupMember.setDisplayName(pmphUser.getRealname());
 			pmphGroupMemberService.addPmphGroupMember(pmphGroupMember);
-			//批量把前台传入的作家用户添加到该小组
+			// 批量把前台传入的作家用户添加到该小组
 			pmphGroupMemberService.addPmphGroupMemberOnGroup(pmphGroup.getId(), list, sessionId);
 		} else {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.OBJECT_NOT_FOUND,
