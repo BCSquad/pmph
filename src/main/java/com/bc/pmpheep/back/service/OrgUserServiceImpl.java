@@ -284,6 +284,10 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 
     @Override
     public Object addOrgUserAndOrgOfBack(OrgUser orgUser, Org org) {
+    	if(orgUserDao.getOrgUsername(orgUser.getUsername()).size()>0){
+    		 throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                     CheckedExceptionResult.ILLEGAL_PARAM, "该机构代码已被使用，请重新输入");
+    	}
         if (StringUtil.isEmpty(orgUser.getUsername())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "机构代码不能为空");
@@ -309,15 +313,15 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         // }
         if (StringUtil.isEmpty(org.getOrgName())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-                                              CheckedExceptionResult.NULL_PARAM, "机构名称为空");
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "机构名称为空");
         }
         if (StringUtil.strLength(org.getOrgName()) > 20) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-                                              CheckedExceptionResult.NULL_PARAM, "机构名称过长");
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "机构名称过长");
         }
         if (orgDao.getOrgByOrgName(org.getOrgName()).size() > 0) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
-                                              CheckedExceptionResult.NULL_PARAM, "机构名称重复了");
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "该机构名称已被使用，请重新输入");
         }
         if (ObjectUtil.isNull(org.getOrgTypeId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.ORG,

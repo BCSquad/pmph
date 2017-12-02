@@ -341,4 +341,10 @@
 		resultType="OrgUser">
 		select * from org_user where org_id=#{orgId} ;
 	</select>
+	
+	<!-- 根据机构username查询OrgUser -->
+	<select id="listOrgUserByOrgId" parameterType="java.lang.String"
+		resultType="OrgUser">
+		select * from org_user where username=#{username} ;
+	</select>
 </mapper>
