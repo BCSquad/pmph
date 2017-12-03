@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,7 @@ public class ExcelHelperTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void fromDeclarationEtcBOList() throws CheckedServiceException, FileNotFoundException, IOException,
             IllegalArgumentException, IllegalAccessException {
         List<DeclarationEtcBO> list = new ArrayList();
