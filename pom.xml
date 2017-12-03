@@ -249,6 +249,11 @@
             <artifactId>poi</artifactId>
             <version>${poi.ver}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.ver}</version>
+        </dependency>
         <!-- ueditor -->
         <dependency>
             <groupId>cn.songxinqiang</groupId>
