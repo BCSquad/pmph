@@ -849,7 +849,8 @@ public class MigrationStageSix {
         JdbcHelper.addColumn(tableName); //增加new_pk字段
         String sql = "select wm.materwriteid,wm.writerid,wm.matername,wm.publishing,"
                 + "case when level like '%1%' then 1 when level like '%2%' then 2 "
-                + "when level like '%3%' then 3 when level like '%4%' then 4 "
+                + "when level like '%3%,%4%' then 4 "
+                + "when level like '%3%' then 5 when level like '%4%' then 4 "
                 + "else 5 end rank,"
                 + "case when wm.duty like '%1%' then 1 when wm.duty like '%2%' then 2 "
                 + "else 3 end position,wm.booknumber,wm.remark,wm.publisdate,wd.new_pk id "
