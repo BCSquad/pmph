@@ -49,14 +49,10 @@
 
 	<!-- 更新Area -->
 	<update id="update" parameterType="PmphRoleMaterial">
-		update pmph_role_material
-		<set>
-			<if test="permission != null and permission !='' ">
-				permission = #{permission},
-			</if>
-		</set>
+		update pmph_role_material set
+		permission = #{permission}
 		where
-		role_id=#{roleId} ;
+		role_id = #{roleId} ;
 	</update>
 
 	<select id="getPmphRoleMaterial" parameterType="java.lang.Long"

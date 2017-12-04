@@ -114,5 +114,12 @@ public interface OrgUserDao {
      * 
      */
     List<OrgUser> listOrgUserByOrgId(Long orgId);
+    
+    /**
+     * 根据username查询是否存在该机构名称
+     * @param username
+     * @return
+     */
+	List<OrgUser> getOrgUsername(String username);
 
 }

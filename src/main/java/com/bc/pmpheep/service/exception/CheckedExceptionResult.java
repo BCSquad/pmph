@@ -32,9 +32,9 @@ public enum CheckedExceptionResult {
      */
     VO_CONVERSION_FAILED(5, "视图对象转换失败"),
     /**
-     * 创建文件夹失败
+     * 创建文件失败
      */
-    CREATE_FILE_FAILED(6, "创建文件夹失败"),
+    CREATE_FILE_FAILED(6, "创建文件失败"),
     /**
      * 文件上传失败
      */
