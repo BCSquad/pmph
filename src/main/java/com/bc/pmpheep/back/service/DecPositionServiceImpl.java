@@ -323,9 +323,10 @@ public class DecPositionServiceImpl implements DecPositionService {
     public DeclarationCountVO getDeclarationCountVO(Long materialId) throws CheckedServiceException {
         DeclarationCountVO declarationCountVO = new DeclarationCountVO();
         Integer schoolDeclarationCount = decPositionDao.getSchoolDeclarationCount(materialId);
-        Integer schoolDeclarationAverage =
-        decPositionDao.getSchoolDeclarationCount(materialId)
-        / decPositionDao.getSchoolCount(materialId);
+        Integer schoolDeclarationAverage = 0;
+        if (decPositionDao.getSchoolCount(materialId) > 0){
+        	schoolDeclarationAverage = schoolDeclarationCount/ decPositionDao.getSchoolCount(materialId);
+        }      
         Integer editorCount = decPositionDao.getEditorCount(materialId);
         Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);
         Integer editorialCount = decPositionDao.getEditorialCount(materialId);
