@@ -167,14 +167,25 @@ public interface DecPositionService {
     
     /**
      * 
-     * Description:加载申请情况按学校统计界面
+     * Description:加载申请情况按学校统计界面（按当选数排序）
      * @author:lyc
      * @date:2017年11月29日下午5:04:52
      * @param 
      * @return PageResult<DeclarationSituationSchoolResultVO>
      */
-    PageResult<DeclarationSituationSchoolResultVO> listDeclarationSituationSchoolResultVOs
-    (PageParameter<DeclarationSituationSchoolResultVO> parameter) throws CheckedServiceException;
+    PageResult<DeclarationSituationSchoolResultVO> listChosenDeclarationSituationSchoolResultVOs
+    (PageParameter<DeclarationSituationSchoolResultVO> pageParameter) throws CheckedServiceException;
+    
+    /**
+     * 
+     * Description:加载申请情况按学校统计界面（按申报数排序）
+     * @author:lyc
+     * @date:2017年12月5日上午11:29:03
+     * @param 
+     * @return PageResult<DeclarationSituationSchoolResultVO>
+     */
+    PageResult<DeclarationSituationSchoolResultVO> listPresetDeclarationSituationSchoolResultVOs
+    (PageParameter<DeclarationSituationSchoolResultVO> pageParameter)throws CheckedServiceException;
     
     /**
      * 
@@ -189,13 +200,24 @@ public interface DecPositionService {
     
     /**
      * 
-     * Description:加载按学校统计申报结果界面
+     * Description:加载按学校统计申报结果界面（按当选数排序）
      * @author:lyc
      * @date:2017年12月1日下午6:28:07
      * @param 
      * @return PageResult<DeclarationResultSchoolVO>
      */
-    PageResult<DeclarationResultSchoolVO> listDeclarationResultSchoolVOs
+    PageResult<DeclarationResultSchoolVO> listChosenDeclarationResultSchoolVOs
+    (PageParameter<DeclarationResultSchoolVO> pageParameter)throws CheckedServiceException;
+    
+    /**
+     * 
+     * Description:加载按学校统计申报结果界面（按申报数排序）
+     * @author:lyc
+     * @date:2017年12月5日上午11:30:31
+     * @param 
+     * @return PageResult<DeclarationResultSchoolVO>
+     */
+    PageResult<DeclarationResultSchoolVO> listPresetDeclarationResultSchoolVOs
     (PageParameter<DeclarationResultSchoolVO> pageParameter)throws CheckedServiceException;
     
     /**

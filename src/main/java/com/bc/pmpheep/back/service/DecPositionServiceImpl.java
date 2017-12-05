@@ -277,25 +277,25 @@ public class DecPositionServiceImpl implements DecPositionService {
     }
 
     @Override
-    public PageResult<DeclarationSituationSchoolResultVO> listDeclarationSituationSchoolResultVOs(
+    public PageResult<DeclarationSituationSchoolResultVO> listChosenDeclarationSituationSchoolResultVOs(
     PageParameter<DeclarationSituationSchoolResultVO> pageParameter) throws CheckedServiceException {
         if (ObjectUtil.isNull(pageParameter.getParameter().getMaterialId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
+            		CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
         }
         // 如果机构名称不为空，则为模糊查询
         String schoolName = pageParameter.getParameter().getSchoolName();
         if (StringUtil.notEmpty(schoolName)) {
             pageParameter.getParameter().setSchoolName(schoolName);
         }
-        PageResult<DeclarationSituationSchoolResultVO> pageResult =
-        new PageResult<DeclarationSituationSchoolResultVO>();
+        PageResult<DeclarationSituationSchoolResultVO> pageResult = 
+        		new PageResult<DeclarationSituationSchoolResultVO>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         // 得到申报单位的总数
         int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
         if (total > 0) {
-            List<DeclarationSituationSchoolResultVO> declarationSituationSchoolResultVOs =
-            decPositionDao.getSchoolResult(pageParameter);
+            List<DeclarationSituationSchoolResultVO> declarationSituationSchoolResultVOs = 
+            		decPositionDao.getSchoolResultChosen(pageParameter);
             List<DeclarationSituationSchoolResultVO> list = new ArrayList<>();
             for (DeclarationSituationSchoolResultVO declarationSituationSchoolResultVO : declarationSituationSchoolResultVOs) {
                 // 计算申报人数
@@ -319,6 +319,47 @@ public class DecPositionServiceImpl implements DecPositionService {
         return pageResult;
     }
 
+	@Override
+	public PageResult<DeclarationSituationSchoolResultVO> listPresetDeclarationSituationSchoolResultVOs(
+			PageParameter<DeclarationSituationSchoolResultVO> pageParameter)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(pageParameter.getParameter().getMaterialId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
+		}
+		String schoolName = pageParameter.getParameter().getSchoolName();
+		//如果机构名称不为空，则为模糊查询
+		if (StringUtil.notEmpty(schoolName)){
+			pageParameter.getParameter().setSchoolName(schoolName);
+		}
+		PageResult<DeclarationSituationSchoolResultVO> pageResult = 
+				new PageResult<DeclarationSituationSchoolResultVO>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
+		if (total > 0){
+			List<DeclarationSituationSchoolResultVO> declarationSituationSchoolResultVOs = 
+					decPositionDao.getSchoolResultPreset(pageParameter);
+			List<DeclarationSituationSchoolResultVO> list = new ArrayList<>();
+			for (DeclarationSituationSchoolResultVO declarationSituationSchoolResultVO : declarationSituationSchoolResultVOs){
+				//计算申报人数
+				Integer presetPersons = declarationSituationSchoolResultVO.getPresetPositionEditor()
+						+declarationSituationSchoolResultVO.getPresetPositionSubeditor()
+						+declarationSituationSchoolResultVO.getPresetPositionEditorial();
+				//计算当选人数
+				Integer chosenPersons = declarationSituationSchoolResultVO.getPresetPositionEditor()
+						+declarationSituationSchoolResultVO.getChosenPositionSubeditor()
+						+declarationSituationSchoolResultVO.getChosenPositionEditorial()
+						+declarationSituationSchoolResultVO.getIsDigitalEditor();
+				declarationSituationSchoolResultVO.setPresetPersons(presetPersons);
+				declarationSituationSchoolResultVO.setChosenPersons(chosenPersons);
+				list.add(declarationSituationSchoolResultVO);
+			}
+			pageResult.setRows(list);
+			pageResult.setTotal(total);
+		}
+		return pageResult;
+	}
+    
     @Override
     public DeclarationCountVO getDeclarationCountVO(Long materialId) throws CheckedServiceException {
         DeclarationCountVO declarationCountVO = new DeclarationCountVO();
@@ -378,7 +419,7 @@ public class DecPositionServiceImpl implements DecPositionService {
 	}
 
 	@Override
-	public PageResult<DeclarationResultSchoolVO> listDeclarationResultSchoolVOs(
+	public PageResult<DeclarationResultSchoolVO> listChosenDeclarationResultSchoolVOs(
 			PageParameter<DeclarationResultSchoolVO> pageParameter)
 			throws CheckedServiceException {
 		if (ObjectUtil.isNull(pageParameter.getParameter().getMaterialId())){
@@ -393,13 +434,36 @@ public class DecPositionServiceImpl implements DecPositionService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
 		if (total > 0){
-			List<DeclarationResultSchoolVO> list = decPositionDao.getSchoolList(pageParameter);	
+			List<DeclarationResultSchoolVO> list = decPositionDao.getSchoolListChosen(pageParameter);	
 			pageResult.setRows(list);
 			pageResult.setTotal(total);
 		}
 		return pageResult;
 	}
 
+	@Override
+	public PageResult<DeclarationResultSchoolVO> listPresetDeclarationResultSchoolVOs(
+			PageParameter<DeclarationResultSchoolVO> pageParameter)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(pageParameter.getParameter().getMaterialId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
+		}
+		String schoolName = pageParameter.getParameter().getSchoolName();
+		if (StringUtil.notEmpty(schoolName)){
+			pageParameter.getParameter().setSchoolName(schoolName);
+		}
+		PageResult<DeclarationResultSchoolVO> pageResult = new PageResult<DeclarationResultSchoolVO>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
+		if (total > 0){
+			List<DeclarationResultSchoolVO> list = decPositionDao.getSchoolListPreset(pageParameter);
+			pageResult.setRows(list);
+			pageResult.setTotal(total);
+		}
+		return pageResult;
+	}
+	
 	@Override
 	public PageResult<DeclarationResultBookVO> listDeclarationResultBookVOs(
 			PageParameter<DeclarationResultBookVO> pageParameter)
@@ -422,4 +486,5 @@ public class DecPositionServiceImpl implements DecPositionService {
 		}
 		return pageResult;
 	}
+	
 }

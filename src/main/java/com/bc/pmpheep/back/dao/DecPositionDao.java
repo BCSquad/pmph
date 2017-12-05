@@ -231,13 +231,24 @@ public interface DecPositionDao {
     
     /**
      * 
-     * Description:根据教材id（和学校名称）查询学校申报情况
+     * Description:根据教材id（和学校名称）查询学校申报情况（按当选结果排序）
      * @author:lyc
      * @date:2017年12月1日下午2:30:41
      * @param 
      * @return List<DeclarationSituationSchoolResultVO>
      */
-    List<DeclarationSituationSchoolResultVO> getSchoolResult(
+    List<DeclarationSituationSchoolResultVO> getSchoolResultChosen(
+    		PageParameter<DeclarationSituationSchoolResultVO> pageParameter);
+    
+    /**
+     * 
+     * Description:根据教材id（和学校名称）查询学校申报情况（按申报结果排序）
+     * @author:lyc
+     * @date:2017年12月5日上午10:15:13
+     * @param 
+     * @return List<DeclarationSituationSchoolResultVO>
+     */
+    List<DeclarationSituationSchoolResultVO> getSchoolResultPreset(
     		PageParameter<DeclarationSituationSchoolResultVO> pageParameter);
     
     /**
@@ -263,13 +274,24 @@ public interface DecPositionDao {
     
     /**
      * 
-     * Description:根据教材id（和学校名）查询统计结果
+     * Description:根据教材id（和学校名）查询统计结果（按当选人数排名）
      * @author:lyc
      * @date:2017年12月1日下午5:56:59
      * @param 
      * @return List<DeclarationResultSchoolVO>
      */
-    List<DeclarationResultSchoolVO> getSchoolList(
+    List<DeclarationResultSchoolVO> getSchoolListChosen(
+    		PageParameter<DeclarationResultSchoolVO> pageParameter);
+    
+    /**
+     * 
+     * Description:根据教材id（和学校名）查询统计结果（按申报人数排名）
+     * @author:lyc
+     * @date:2017年12月5日上午11:15:38
+     * @param 
+     * @return List<DeclarationResultSchoolVO>
+     */
+    List<DeclarationResultSchoolVO> getSchoolListPreset(
     		PageParameter<DeclarationResultSchoolVO> pageParameter);
     
     /**
