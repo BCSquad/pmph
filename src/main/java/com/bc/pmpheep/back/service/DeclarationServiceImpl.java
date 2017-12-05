@@ -274,12 +274,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 		List<DecAcade> decAcadeList = decAcadeDao.getListDecAcadeByDeclarationId(declarationId);
 		// 上套教材
 		List<DecLastPosition> decLastPositionList = decLastPositionDao.getListDecLastPositionByDeclarationId(declarationId);
-		// 国家级精品课程建设情况 //type 1=国家
-		List<DecCourseConstruction> decNationalCourseConstructionList = decCourseConstructionDao.decNationalCourseConstructionList(declarationId);
-		// 省部级精品课程建设情况//type 2=省部
-		List<DecCourseConstruction> decProvinceCourseConstructionList = decCourseConstructionDao.decProvinceCourseConstructionList(declarationId);
-		// 学校精品课程建设情况   //type 3=学校
-		List<DecCourseConstruction> decSchoolCourseConstructionList = decCourseConstructionDao.decSchoolCourseConstructionList(declarationId);
+		// 精品课程建设情况
+		List<DecCourseConstruction> decCourseConstruction = decCourseConstructionDao.decCourseConstruction(declarationId);
 		// 主编国家级规划
 		List<DecNationalPlan> decNationalPlanList = decNationalPlanDao.getListDecNationalPlanByDeclarationId(declarationId);
 		// 教材编写
@@ -296,9 +292,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		applicationVO.setDecTeachExpList(decTeachExpList);
 		applicationVO.setDecAcadeList(decAcadeList);
 		applicationVO.setDecLastPositionList(decLastPositionList);
-		applicationVO.setDecNationalCourseConstructionList(decNationalCourseConstructionList);
-		applicationVO.setDecProvinceCourseConstructionList(decProvinceCourseConstructionList);;
-		applicationVO.setDecSchoolCourseConstructionList(decSchoolCourseConstructionList);
+		applicationVO.setDecCourseConstruction(decCourseConstruction);
 		applicationVO.setDecNationalPlanList(decNationalPlanList);
 		applicationVO.setDecTextbookList(decTextbookList);
 		applicationVO.setDecResearchList(decResearchList);
