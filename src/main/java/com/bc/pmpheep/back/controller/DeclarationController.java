@@ -211,11 +211,12 @@ public class DeclarationController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出excel表格")
-	@RequestMapping(value = "/down/excel/#{materialId}", method = RequestMethod.GET)
-	public void downExcel(@PathVariable("materialId") Long materialId) {
+	@RequestMapping(value = "/down/excel", method = RequestMethod.GET)
+	public void downExcel(Long materialId) {
 		try {
 			declarationService.declarationExcel(materialId);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
