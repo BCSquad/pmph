@@ -61,12 +61,5 @@ public interface DecCourseConstructionDao {
 	 * Description:查询精品课程建设情况表的总记录数
 	 * @Return 表的总记录数
 	 */
-	Long getDecCourseConstruction(); 
-	
-	/**
-	 * Description:根据申报表id查询精品课程建设情况
-	 * @Param declarationId
-	 * @Return 精品课程建设情况信息
-	 */
-	List<DecCourseConstruction> decCourseConstruction(Long declarationId);
+	Long getDecCourseConstruction();
 }

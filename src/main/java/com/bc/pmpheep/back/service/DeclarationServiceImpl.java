@@ -275,7 +275,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 上套教材
 		List<DecLastPosition> decLastPositionList = decLastPositionDao.getListDecLastPositionByDeclarationId(declarationId);
 		// 精品课程建设情况
-		List<DecCourseConstruction> decCourseConstruction = decCourseConstructionDao.decCourseConstruction(declarationId);
+		List<DecCourseConstruction> decCourseConstruction = decCourseConstructionDao.getDecCourseConstructionByDeclarationId(declarationId);
 		// 主编国家级规划
 		List<DecNationalPlan> decNationalPlanList = decNationalPlanDao.getListDecNationalPlanByDeclarationId(declarationId);
 		// 教材编写
