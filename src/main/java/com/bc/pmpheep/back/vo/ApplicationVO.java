@@ -39,12 +39,8 @@ public class ApplicationVO implements Serializable {
 	private List<DecAcade>    decAcadeList =new ArrayList<DecAcade>(5);
 	//上版教材参编情况
 	private List<DecLastPosition> decLastPositionList =new ArrayList<DecLastPosition>(5);
-	//国家级精品课程建设情况 //type 1=国家
-	private List<DecCourseConstruction> decNationalCourseConstructionList =new ArrayList<DecCourseConstruction>(5);
-	//省部级精品课程建设情况//type 2=省部
-	private List<DecCourseConstruction> decProvinceCourseConstructionList =new ArrayList<DecCourseConstruction>(5);
-	//学校精品课程建设情况   //type 3=学校
-	private List<DecCourseConstruction> decSchoolCourseConstructionList =new ArrayList<DecCourseConstruction>(5);
+	//精品课程建设情况
+	private List<DecCourseConstruction> decCourseConstruction = new ArrayList<DecCourseConstruction>(5);
 	//主编国家规划教材情况
 	private List<DecNationalPlan> decNationalPlanList =new ArrayList<DecNationalPlan>(5);
 	//教材编写情况
@@ -101,26 +97,12 @@ public class ApplicationVO implements Serializable {
 	public void setDecLastPositionList(List<DecLastPosition> decLastPositionList) {
 		this.decLastPositionList = decLastPositionList;
 	}
-	public List<DecCourseConstruction> getDecNationalCourseConstructionList() {
-		return decNationalCourseConstructionList;
+	public List<DecCourseConstruction> getDecCourseConstruction() {
+		return decCourseConstruction;
 	}
-	public void setDecNationalCourseConstructionList(
-			List<DecCourseConstruction> decNationalCourseConstructionList) {
-		this.decNationalCourseConstructionList = decNationalCourseConstructionList;
-	}
-	public List<DecCourseConstruction> getDecProvinceCourseConstructionList() {
-		return decProvinceCourseConstructionList;
-	}
-	public void setDecProvinceCourseConstructionList(
-			List<DecCourseConstruction> decProvinceCourseConstructionList) {
-		this.decProvinceCourseConstructionList = decProvinceCourseConstructionList;
-	}
-	public List<DecCourseConstruction> getDecSchoolCourseConstructionList() {
-		return decSchoolCourseConstructionList;
-	}
-	public void setDecSchoolCourseConstructionList(
-			List<DecCourseConstruction> decSchoolCourseConstructionList) {
-		this.decSchoolCourseConstructionList = decSchoolCourseConstructionList;
+	public void setDecCourseConstruction(
+			List<DecCourseConstruction> decCourseConstruction) {
+		this.decCourseConstruction = decCourseConstruction;
 	}
 	public List<DecNationalPlan> getDecNationalPlanList() {
 		return decNationalPlanList;

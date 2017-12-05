@@ -3,6 +3,7 @@
  */
 package com.bc.pmpheep.back.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +12,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.dao.DecPositionDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -184,13 +184,13 @@ public class DecPositionServiceImpl implements DecPositionService {
             Long declarationId = newDecPosition.getDeclarationId();
             Long textbookId = newDecPosition.getTextbookId();
             Integer presetPosition = newDecPosition.getPresetPosition();
-            MultipartFile file = newDecPosition.getFile();
+            File file = newDecPosition.getFile();
             Boolean isDigitalEditor = newDecPosition.getIsDigitalEditor();
             DecPosition decPosition = new DecPosition();
             if (null == file) {
                 decPosition.setSyllabusName(null);
             } else {
-                String fileName = file.getOriginalFilename(); // 获取原文件名字
+                String fileName = file.getName(); // 获取原文件名字
                 decPosition.setSyllabusName(fileName);
             }
             decPosition.setDeclarationId(declarationId);
@@ -204,7 +204,7 @@ public class DecPositionServiceImpl implements DecPositionService {
                 if (null == file) {
 
                 } else {
-                    mongoId = fileService.save(file, FileType.SYLLABUS, decPosition.getId());
+                    mongoId = fileService.saveLocalFile(file, FileType.SYLLABUS, decPosition.getId());
                     if (null != mongoId) {
                         decPosition.setSyllabusId(mongoId);
                         decPositionDao.updateDecPosition(decPosition);
