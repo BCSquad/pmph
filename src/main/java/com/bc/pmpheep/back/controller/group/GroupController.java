@@ -401,10 +401,9 @@ public class GroupController {
 	
 	/**
 	 * 功能描述：职位遴选页面新建小组
-	 * @param file 上传头像
-	 * @param groupName 小组名称
-	 * @param textbook 书籍信息
-	 * @param request sessionId
+	 * @param textbookId
+	 * @param pmphGroupMembers
+	 * @param request
 	 * @return 是否成功
 	 */
 	@ResponseBody
@@ -422,5 +421,19 @@ public class GroupController {
 		} catch (IOException e) {
 			return new ResponseBean(e);
 		}
+	}
+	
+	/**
+	 * 职位遴选页面更新小组成员
+	 * @param textbookId
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "职位遴选页面更新小组成员")
+	@RequestMapping(value = "/addEditors", method = RequestMethod.POST)
+	public ResponseBean addEditors(Long  textbookId,HttpServletRequest request) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		return new ResponseBean(pmphGroupMemberService.addEditorBookGroup(textbookId,sessionId));
 	}
 }

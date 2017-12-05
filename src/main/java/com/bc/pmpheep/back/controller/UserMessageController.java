@@ -409,7 +409,6 @@ public class UserMessageController {
      * @author tyc
      * @createDate 2017年11月24日 上午11:04:00
      * @param message
-     * @param title
      * @param userId	接收者id
      * @param sessionId
      * @return
@@ -417,11 +416,11 @@ public class UserMessageController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "向单个用户发送私信")
     @RequestMapping(value = "/newOneMessage", method = RequestMethod.POST)
-    public ResponseBean newOneUserMessage(Message message, @RequestParam("title") String title, 
+    public ResponseBean newOneUserMessage(Message message, 
     		@RequestParam("receiverId") Long receiverId, HttpServletRequest request) {
         try {
             String sessionId = CookiesUtil.getSessionId(request);
-            return new ResponseBean(userMessageService.addOneUserMessage(message, title, receiverId, sessionId));
+            return new ResponseBean(userMessageService.addOneUserMessage(message, receiverId, sessionId));
         } catch (IOException e) {
             return new ResponseBean(e);
         }

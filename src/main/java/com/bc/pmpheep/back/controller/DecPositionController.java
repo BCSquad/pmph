@@ -36,16 +36,16 @@ public class DecPositionController {
 	
 	/**
 	 * 
-	 * Description:加载学校申报情况统计结果
+	 * Description:加载学校申报情况统计结果（按当选数排序）
 	 * @author:lyc
 	 * @date:2017年12月1日下午3:03:36
 	 * @param 
 	 * @return ResponseBean
 	 */
 	@ResponseBody
-	@RequestMapping(value="/list/schoolResults",method = RequestMethod.GET)
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark="加载学校申报情况统计结果")
-    public ResponseBean schoolResults(Integer pageSize, Integer pageNumber, Long materialId, String schoolName){
+	@RequestMapping(value="/list/schoolResultsChosen",method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark="加载学校申报情况统计结果（按当选数排序）")
+    public ResponseBean schoolResultsChosen(Integer pageSize, Integer pageNumber, Long materialId, String schoolName){
 		PageParameter<DeclarationSituationSchoolResultVO> pageParameter = 
 				new PageParameter<>(pageNumber, pageSize);
 		DeclarationSituationSchoolResultVO declarationSituationSchoolResultVO = 
@@ -53,9 +53,29 @@ public class DecPositionController {
 		declarationSituationSchoolResultVO.setMaterialId(materialId);
 		declarationSituationSchoolResultVO.setSchoolName(schoolName);
 		pageParameter.setParameter(declarationSituationSchoolResultVO);
-		return new ResponseBean(decPositionService.listDeclarationSituationSchoolResultVOs(pageParameter));
+		return new ResponseBean(decPositionService.listChosenDeclarationSituationSchoolResultVOs(pageParameter));
 	}
 	
+	/**
+	 * 
+	 * Description:加载学校申报情况统计结果（按申报数排序）
+	 * @author:lyc
+	 * @date:2017年12月5日下午2:47:07
+	 * @param 
+	 * @return ResponseBean
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/list/schoolResultsPreset",method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark="加载学校申报情况统计结果（按申报数排序）")
+	public ResponseBean schoolResultsPreset(Integer pageSize, Integer pageNumber, Long materialId, String schoolName){
+		PageParameter<DeclarationSituationSchoolResultVO> pageParameter = 
+				new PageParameter<>(pageNumber, pageSize);
+		DeclarationSituationSchoolResultVO declarationSituationSchoolResultVO = 
+				new DeclarationSituationSchoolResultVO();
+		declarationSituationSchoolResultVO.setMaterialId(materialId);
+		declarationSituationSchoolResultVO.setSchoolName(schoolName);
+		return new ResponseBean(decPositionService.listPresetDeclarationSituationSchoolResultVOs(pageParameter));
+	}
 	/**
 	 * 
 	 * Description:获取总体统计情况
@@ -95,23 +115,44 @@ public class DecPositionController {
 	
 	/**
 	 * 
-	 * Description:加载学校统计结果
+	 * Description:加载学校统计结果（按当选数排序）
 	 * @author:lyc
 	 * @date:2017年12月1日下午6:50:23
 	 * @param 
 	 * @return ResponseBean
 	 */
 	@ResponseBody
-	@RequestMapping(value ="/list/schoolList",method = RequestMethod.GET)
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "加载学校统计结果")
-	public ResponseBean schoolList(Integer pageSize, Integer pageNumber, Long materialId, String schoolName){
+	@RequestMapping(value ="/list/schoolListChosen",method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "加载学校统计结果（按当选数排序）")
+	public ResponseBean schoolListChosen(Integer pageSize, Integer pageNumber, Long materialId, String schoolName){
 		PageParameter<DeclarationResultSchoolVO> pageParameter = 
 				new PageParameter<>(pageNumber, pageSize);
 		DeclarationResultSchoolVO declarationResultSchoolVO = new DeclarationResultSchoolVO();
 		declarationResultSchoolVO.setMaterialId(materialId);
 		declarationResultSchoolVO.setSchoolName(schoolName);
 		pageParameter.setParameter(declarationResultSchoolVO);
-		return new ResponseBean(decPositionService.listDeclarationResultSchoolVOs(pageParameter));
+		return new ResponseBean(decPositionService.listChosenDeclarationResultSchoolVOs(pageParameter));
+	}
+	
+	/**
+	 * 
+	 * Description:加载学校统计结果（按申报数排序）
+	 * @author:lyc
+	 * @date:2017年12月5日下午2:57:51
+	 * @param 
+	 * @return ResponseBean
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/list/schoolListPreset",method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "加载学校统计结果（按申报数排序）")
+	public ResponseBean schoolListPreset(Integer pageSize, Integer pageNumber, Long materialId, String schoolName){
+		PageParameter<DeclarationResultSchoolVO> pageParameter = 
+				new PageParameter<>(pageNumber, pageSize);
+		DeclarationResultSchoolVO declarationResultSchoolVO = new DeclarationResultSchoolVO();
+		declarationResultSchoolVO.setMaterialId(materialId);
+		declarationResultSchoolVO.setSchoolName(schoolName);
+		pageParameter.setParameter(declarationResultSchoolVO);
+		return new ResponseBean(decPositionService.listPresetDeclarationResultSchoolVOs(pageParameter));
 	}
 	
 	/**

@@ -800,8 +800,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     }
 
     @Override
-    public Integer addOneUserMessage(Message message, String title, Long receiverId,
-    String sessionId) throws CheckedServiceException, IOException {
+    public Integer addOneUserMessage(Message message, Long receiverId, String sessionId) 
+    		throws CheckedServiceException, IOException {
         // 发送者id
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
@@ -822,7 +822,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "接收人为空!");
         } else {
-            userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_2,
+            userMessageList.add(new UserMessage(message.getId(), Const.MSG_TYPE_2,
                                                 senderUserId, Const.SENDER_TYPE_1, receiverId,
                                                 Const.RECEIVER_TYPE_2));
         }
@@ -838,7 +838,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             WebScocketMessage webScocketMessage =
             new WebScocketMessage(message.getId(), Const.MSG_TYPE_2, senderUserId,
                                   pmphUser.getRealname(), Const.SENDER_TYPE_1,
-                                  Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, title,
+                                  Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, 
                                   message.getContent(), DateUtil.getCurrentTime());
             myWebSocketHandler.sendWebSocketMessageToUser(websocketUserId, webScocketMessage);
         }

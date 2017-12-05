@@ -17,6 +17,7 @@ import com.bc.pmpheep.back.vo.DeclarationResultBookVO;
 import com.bc.pmpheep.back.vo.DeclarationResultSchoolVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
+import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -144,16 +145,6 @@ public interface DecPositionDao {
 	 */
 	List<Long> listDecPositionsByTextbookIds(String[] textbookIds);
 
-	/**
-	 * 
-	 * Description:查询表的总记录数
-	 * 
-	 * @author:lyc
-	 * @date:2017年10月9日下午4:55:26
-	 * @Param:
-	 * @Return:Long
-	 */
-	Long getDecPosition();
 
 	/**
 	 * 
@@ -193,60 +184,6 @@ public interface DecPositionDao {
 	 */
 	List<DecPositionDisplayVO> listDecPositionsOrBook(Long declarationId);
 
-	/**
-	 * 
-	 * Description:根据教材id获取院校申报总数
-	 * 
-	 * @author:lyc
-	 * @date:2017年11月30日下午6:08:56
-	 * @param
-	 * @return Integer
-	 */
-	Integer getSchoolDeclarationCount(Long materialId);
-
-	/**
-	 * 
-	 * Description:根据教材id获取院校总数
-	 * 
-	 * @author:lyc
-	 * @date:2017年11月30日下午6:09:49
-	 * @param
-	 * @return Integer
-	 */
-	Integer getSchoolCount(Long materialId);
-
-	/**
-	 * 
-	 * Description:根据教材id获取主编申报总数
-	 * 
-	 * @author:lyc
-	 * @date:2017年11月30日下午6:10:40
-	 * @param
-	 * @return Integer
-	 */
-	Integer getEditorCount(Long materialId);
-
-	/**
-	 * 
-	 * Description:根据教材id获取副主编申报总数
-	 * 
-	 * @author:lyc
-	 * @date:2017年11月30日下午6:11:35
-	 * @param
-	 * @return Integer
-	 */
-	Integer getSubEditorCount(Long materialId);
-
-	/**
-	 * 
-	 * Description:根据教材id获取编委申报总数
-	 * 
-	 * @author:lyc
-	 * @date:2017年11月30日下午6:12:13
-	 * @param
-	 * @return Integer
-	 */
-	Integer getEditorialCount(Long materialId);
 
 	/**
 	 * 
@@ -260,27 +197,6 @@ public interface DecPositionDao {
 	List<DeclarationSituationSchoolResultVO> getSchoolResult(
 			PageParameter<DeclarationSituationSchoolResultVO> pageParameter);
 
-	/**
-	 * 
-	 * Description:获取书本总数
-	 * 
-	 * @author:lyc
-	 * @date:2017年12月1日下午5:22:39
-	 * @param
-	 * @return Integer
-	 */
-	Integer getBooks(Long materialId);
-
-	/**
-	 * 
-	 * Description:根据教材id（和书本名称）查询学校申报情况
-	 * 
-	 * @author:lyc
-	 * @date:2017年12月1日下午5:20:08
-	 * @param
-	 * @return List<DeclarationSituationBookResultVO>
-	 */
-	List<DeclarationSituationBookResultVO> getBookResult(PageParameter<DeclarationSituationBookResultVO> pageParameter);
 
 	/**
 	 * 
@@ -293,14 +209,136 @@ public interface DecPositionDao {
 	 */
 	List<DeclarationResultSchoolVO> getSchoolList(PageParameter<DeclarationResultSchoolVO> pageParameter);
 
-	/**
-	 * 
-	 * Description:根据教材id（和书名）查询统计结果
-	 * 
-	 * @author:lyc
-	 * @date:2017年12月1日下午6:35:54
-	 * @param
-	 * @return List<DeclarationResultBookVO>
-	 */
-	List<DeclarationResultBookVO> getBookList(PageParameter<DeclarationResultBookVO> pageParameter);
+    /**
+     * 
+     * Description:根据教材id获取院校申报总数
+     * @author:lyc
+     * @date:2017年11月30日下午6:08:56
+     * @param 
+     * @return Integer
+     */
+    Integer getSchoolDeclarationCount(Long materialId);
+    
+    /**
+     * 
+     * Description:根据教材id获取院校总数
+     * @author:lyc
+     * @date:2017年11月30日下午6:09:49
+     * @param 
+     * @return Integer
+     */
+    Integer getSchoolCount(Long materialId);
+    
+    /**
+     * 
+     * Description:根据教材id获取主编申报总数
+     * @author:lyc
+     * @date:2017年11月30日下午6:10:40
+     * @param 
+     * @return Integer
+     */
+    Integer getEditorCount(Long materialId);
+    
+    /**
+     * 
+     * Description:根据教材id获取副主编申报总数
+     * @author:lyc
+     * @date:2017年11月30日下午6:11:35
+     * @param 
+     * @return Integer
+     */
+    Integer getSubEditorCount(Long materialId);
+    
+    /**
+     * 
+     * Description:根据教材id获取编委申报总数
+     * @author:lyc
+     * @date:2017年11月30日下午6:12:13
+     * @param 
+     * @return Integer
+     */
+    Integer getEditorialCount(Long materialId);
+    
+    /**
+     * 
+     * Description:根据教材id（和学校名称）查询学校申报情况（按当选结果排序）
+     * @author:lyc
+     * @date:2017年12月1日下午2:30:41
+     * @param 
+     * @return List<DeclarationSituationSchoolResultVO>
+     */
+    List<DeclarationSituationSchoolResultVO> getSchoolResultChosen(
+    		PageParameter<DeclarationSituationSchoolResultVO> pageParameter);
+    
+    /**
+     * 
+     * Description:根据教材id（和学校名称）查询学校申报情况（按申报结果排序）
+     * @author:lyc
+     * @date:2017年12月5日上午10:15:13
+     * @param 
+     * @return List<DeclarationSituationSchoolResultVO>
+     */
+    List<DeclarationSituationSchoolResultVO> getSchoolResultPreset(
+    		PageParameter<DeclarationSituationSchoolResultVO> pageParameter);
+    
+    /**
+     * 
+     * Description:获取书本总数
+     * @author:lyc
+     * @date:2017年12月1日下午5:22:39
+     * @param 
+     * @return Integer
+     */
+    Integer getBooks(Long materialId);
+    
+    /**
+     * 
+     * Description:根据教材id（和书本名称）查询学校申报情况
+     * @author:lyc
+     * @date:2017年12月1日下午5:20:08
+     * @param 
+     * @return List<DeclarationSituationBookResultVO>
+     */
+    List<DeclarationSituationBookResultVO> getBookResult(
+    		PageParameter<DeclarationSituationBookResultVO> pageParameter);
+    
+    /**
+     * 
+     * Description:根据教材id（和学校名）查询统计结果（按当选人数排名）
+     * @author:lyc
+     * @date:2017年12月1日下午5:56:59
+     * @param 
+     * @return List<DeclarationResultSchoolVO>
+     */
+    List<DeclarationResultSchoolVO> getSchoolListChosen(
+    		PageParameter<DeclarationResultSchoolVO> pageParameter);
+    
+    /**
+     * 
+     * Description:根据教材id（和学校名）查询统计结果（按申报人数排名）
+     * @author:lyc
+     * @date:2017年12月5日上午11:15:38
+     * @param 
+     * @return List<DeclarationResultSchoolVO>
+     */
+    List<DeclarationResultSchoolVO> getSchoolListPreset(
+    		PageParameter<DeclarationResultSchoolVO> pageParameter);
+    
+    /**
+     * 
+     * Description:根据教材id（和书名）查询统计结果
+     * @author:lyc
+     * @date:2017年12月1日下午6:35:54
+     * @param 
+     * @return List<DeclarationResultBookVO>
+     */
+    List<DeclarationResultBookVO> getBookList(
+    		PageParameter<DeclarationResultBookVO> pageParameter);
+    
+    /**
+     * 根据书籍id查询该书的主编、副编委、编委
+     * @param textbookId
+     * @return
+     */
+	List<TextbookDecVO> getTextbookEditorList(Long textbookId);
 }

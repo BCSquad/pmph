@@ -131,5 +131,12 @@ public interface PmphGroupMemberDao {
 	 * @Return:List<PmphGroupMemberManagerVO>小组成员信息集合
 	 */
 	List<PmphGroupMemberManagerVO> listGroupMemberManagerVOs(PageParameter<PmphGroupMemberManagerVO> pageParameter);
+	
+	/**
+	 * 根据小组id获取该小组所有成员
+	 * @param id
+	 * @return
+	 */
+	List<PmphGroupMember> listPmphGroupMembers(Long groupId);
 
 }

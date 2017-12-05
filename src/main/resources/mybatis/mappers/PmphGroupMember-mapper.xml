@@ -265,5 +265,12 @@
 		update
 		pmph_group_member set is_deleted = true where id = #{id}
 	</update>
-
+	<!-- 根据小组id查询小组所有成员 -->
+	<select id="listPmphGroupMembers" parameterType="java.lang.Long"
+		resultType="PmphGroupMember">
+		select * from pmph_group_member where
+		group_id=#{groupId}
+		and is_deleted = false
+		order by is_founder DESC ,is_admin DESC;
+	</select>
 </mapper>
