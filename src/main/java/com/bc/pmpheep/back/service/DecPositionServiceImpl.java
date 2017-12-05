@@ -32,6 +32,7 @@ import com.bc.pmpheep.back.vo.DeclarationResultSchoolVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.back.vo.NewDecPosition;
+import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -421,5 +422,14 @@ public class DecPositionServiceImpl implements DecPositionService {
 			pageResult.setRows(list);
 		}
 		return pageResult;
+	}
+
+	@Override
+	public List<TextbookDecVO> getTextbookEditorList(Long textbookId) throws CheckedServiceException {
+		if(textbookId == null){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
+		}
+		return	decPositionDao.getTextbookEditorList(textbookId);
 	}
 }

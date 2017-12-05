@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.vo.DeclarationResultBookVO;
 import com.bc.pmpheep.back.vo.DeclarationResultSchoolVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
+import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -208,4 +209,11 @@ public interface DecPositionService {
      */
     PageResult<DeclarationResultBookVO> listDeclarationResultBookVOs
     (PageParameter<DeclarationResultBookVO> pageParameter)throws CheckedServiceException;
+    /**
+     * 根据书籍id查询该书的主编、副主编、编委
+     * @param textbookId
+     * @return
+     * @throws CheckedServiceException
+     */
+	List<TextbookDecVO> getTextbookEditorList(Long textbookId)throws CheckedServiceException;
 }
