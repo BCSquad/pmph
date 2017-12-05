@@ -13,7 +13,7 @@
 				material_id,
 			</if>
 			<if test="userId !=null and userId !=''">
-			    user_id,
+				user_id,
 			</if>
 			<if test="realname !=null and realname !=''">
 				realname,
@@ -22,19 +22,19 @@
 				sex,
 			</if>
 			<if test="birthday !=null ">
-			    birthday,
+				birthday,
 			</if>
 			<if test="experience !=null and experience !=''">
-			    experience,
+				experience,
 			</if>
 			<if test="orgName !=null and orgName !=''">
-			    org_name,
+				org_name,
 			</if>
 			<if test="position !=null and position !=''">
 				position,
 			</if>
 			<if test="title !=null and title !=''">
-			    title,
+				title,
 			</if>
 			<if test="address !=null and address !=''">
 				address,
@@ -96,7 +96,7 @@
 				#{materialId},
 			</if>
 			<if test="userId !=null and userId !=''">
-			    #{userId},
+				#{userId},
 			</if>
 			<if test="realname !=null and realname !=''">
 				#{realname},
@@ -105,19 +105,19 @@
 				#{sex},
 			</if>
 			<if test="birthday !=null">
-			    #{birthday},
+				#{birthday},
 			</if>
 			<if test="experience !=null and experience !=''">
-			    #{experience},
+				#{experience},
 			</if>
 			<if test="orgName !=null and orgName !=''">
-			    #{orgName},
+				#{orgName},
 			</if>
 			<if test="position !=null and position !=''">
 				#{position},
 			</if>
 			<if test="title !=null and title !=''">
-			    #{title},
+				#{title},
 			</if>
 			<if test="address !=null and address !=''">
 				#{address},
@@ -199,7 +199,7 @@
 				material_id = #{materialId},
 			</if>
 			<if test="userId !=null and userId !=''">
-			    user_id = #{userId},
+				user_id = #{userId},
 			</if>
 			<if test="realname !=null and realname !=''">
 				realname = #{realname},
@@ -208,19 +208,19 @@
 				sex = #{sex},
 			</if>
 			<if test="birthday !=null">
-			    birthday = #{birthday},
+				birthday = #{birthday},
 			</if>
 			<if test="experience !=null and experience !=''">
-			    experience = #{experience},
+				experience = #{experience},
 			</if>
 			<if test="orgName !=null and orgName !=''">
-			    org_name = #{orgName},
+				org_name = #{orgName},
 			</if>
 			<if test="position !=null and position !=''">
 				position = #{position},
 			</if>
 			<if test="title !=null and title !=''">
-			    title = #{title},
+				title = #{title},
 			</if>
 			<if test="address !=null and address !=''">
 				address = #{address},
@@ -287,183 +287,204 @@
 		material_id=#{materialId};
 	</select>
 
+	<!-- 根据MaterialId查询作家申报信息 -->
+	<select id="getDeclarationOrDisplayVOByMaterialId" parameterType="java.lang.Long"
+		resultType="DeclarationOrDisplayVO">
+		SELECT
+		w.username,d.*
+		FROM
+		declaration d
+		LEFT JOIN writer_user w ON w.id=d.user_id
+		WHERE
+		d.material_id =#{materialId};
+	</select>
+
 	<!-- 查询兼职学术信息表的总记录数 -->
 	<select id="getDeclaration" resultType="java.lang.Long">
-		select count(*) from declaration
+		select count(*) from
+		declaration
 	</select>
-	
+
 	<!-- 申报表审核列表总数 -->
-	<select id="listDeclarationTotal"  parameterType="PageParameter"  resultType="java.lang.Integer">
-	    select count(*) from (
-	    	select
-				a.id
-			from declaration a 
-			LEFT JOIN material b on b.id= a.material_id
-			LEFT JOIN dec_position c on c.declaration_id = a.id
-			LEFT JOIN textbook  d on d.id = c.textbook_id
-			LEFT JOIN writer_user e on e.id=a.user_id 
-			LEFT JOIN org         f on f.id=a.org_id
-			where 
-				a.online_progress in (1,3) and a.is_deleted = 0
-				and b.is_deleted =0  and b.id = #{parameter.materialId} 
-				<!-- 下面是动态条件 -->
-				<!-- 书籍 -->
-				<if  test="parameter.bookIds != null ">
-					and d.id in 
-					<foreach collection="parameter.bookIds" item="item" index="index" open="(" close=")" separator=",">
-	       				#{item}
-	   				</foreach>
-				</if>
-				<!-- 账号或者姓名 -->
-				<if  test="parameter.realname != null ">
-					and (a.realname like concat('%',#{parameter.realname},'%') or  e.username like concat('%',#{parameter.realname},'%') )
-				</if>
-				<!-- 职务  -->
-				<if  test="parameter.position != null ">
-					and  a.position like concat('%',#{parameter.position},'%') 
-				</if>
-				<!-- 职称  -->
-				<if  test="parameter.title != null ">
-					and  a.title like concat('%',#{parameter.title},'%') 
-				</if>
-				<!-- 工作单位  -->
-				<if  test="parameter.orgName != null ">
-					and  a.org_name like concat('%',#{parameter.orgName},'%') 
-				</if>
-				<!-- 申报单位  -->
-				<if  test="parameter.unitName != null ">
-					and  f.org_name like concat('%',#{parameter.unitName},'%') 
-				</if>
-				<!-- 申报职位  -->
-				<if  test="parameter.positionType != null ">
-					<if  test="parameter.positionType == 1 "> <!-- 主编 -->
-						and  c.preset_position in (4,5,6,7) 
-					</if>
-					<if  test="parameter.positionType == 2 "> <!-- 副主编 -->
-						and  c.preset_position in (2,3,6,7) 
-					</if>
-					<if  test="parameter.positionType == 3 "> <!-- 编委 -->
-						and  c.preset_position in (1,3,5,7) 
-					</if>
-				</if>
-				<!-- 学校审核  -->
-				<if  test="parameter.onlineProgress != null ">
-					and  a.online_progress = #{parameter.onlineProgress}
-				</if>
-				<!-- 纸质表进度  -->
-				<if  test="parameter.offlineProgress != null ">
-					and  a.offline_progress = #{parameter.offlineProgress}
-				</if>
-			GROUP BY a.id			 
-		) temp
-	</select>
-	
-	<!-- 申报表审核分页列表 -->
-	<select id="listDeclaration"  parameterType="PageParameter"  resultType="DeclarationListVO">
-		select 
-			a.id,
-			a.material_id,
-			a.realname,
-			e.username,
-			f.org_name unitName,
-			a.org_name,
-			a.position,
-			a.title,
-			a.handphone,
-			a.email,
-			GROUP_CONCAT(
-				CONCAT(d.textbook_name,'-',
-				case 
-						 when c.preset_position =7 and c.is_digital_editor =1 then '主编,副主编,编委,数字编委'
-						 when c.preset_position =7 and c.is_digital_editor =0 then '主编,副主编,编委'
-						 when c.preset_position =6 and c.is_digital_editor =1 then '主编,副主编,数字编委'
-						 when c.preset_position =6 and c.is_digital_editor =0 then '主编,副主编'
-						 when c.preset_position =5 and c.is_digital_editor =1 then '主编,编委,数字编委'
-						 when c.preset_position =5 and c.is_digital_editor =0 then '主编,编委'
-					     when c.preset_position =4 and c.is_digital_editor =1 then '主编,数字编委'
-						 when c.preset_position =4 and c.is_digital_editor =0 then '主编'
-						 when c.preset_position =3 and c.is_digital_editor =1 then '副主编,编委,数字编委'
-						 when c.preset_position =3 and c.is_digital_editor =0 then '副主编,编委'
-						 when c.preset_position =2 and c.is_digital_editor =1 then '副主编,数字编委'
-                         when c.preset_position =2 and c.is_digital_editor =0 then '副主编'
-						 when c.preset_position =1 and c.is_digital_editor =1 then '编委,数字编委'
-                         when c.preset_position =1 and c.is_digital_editor =0 then '编委'
-						 when c.is_digital_editor =1 then '数字编委'
-						 else null
-					end
-				) ORDER BY d.sort Separator '&lt;/br&gt;'
-			)chooseBooksAndPostions,
-			a.online_progress ,
-			a.offline_progress
-		from declaration a 
+	<select id="listDeclarationTotal" parameterType="PageParameter"
+		resultType="java.lang.Integer">
+		select count(*) from (
+		select
+		a.id
+		from declaration a
 		LEFT JOIN material b on b.id= a.material_id
 		LEFT JOIN dec_position c on c.declaration_id = a.id
-		LEFT JOIN textbook  d on d.id = c.textbook_id
-		LEFT JOIN writer_user e on e.id=a.user_id 
-		LEFT JOIN org         f on f.id=a.org_id
-		where 
-			a.online_progress in (1,3) and a.is_deleted = 0
-			and b.is_deleted =0  and b.id = #{parameter.materialId} 
-			<!-- 下面是动态条件 -->
-			<!-- 书籍 -->
-			<if  test="parameter.bookIds != null ">
-				and d.id in 
-				<foreach collection="parameter.bookIds" item="item" index="index" open="(" close=")" separator=",">
-       				#{item}
-   				</foreach>
+		LEFT JOIN textbook d on d.id = c.textbook_id
+		LEFT JOIN writer_user e on e.id=a.user_id
+		LEFT JOIN org f on f.id=a.org_id
+		where
+		a.online_progress in (1,3) and a.is_deleted = 0
+		and b.is_deleted =0 and b.id = #{parameter.materialId}
+		<!-- 下面是动态条件 -->
+		<!-- 书籍 -->
+		<if test="parameter.bookIds != null ">
+			and d.id in
+			<foreach collection="parameter.bookIds" item="item" index="index"
+				open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<!-- 账号或者姓名 -->
+		<if test="parameter.realname != null ">
+			and (a.realname like concat('%',#{parameter.realname},'%') or e.username
+			like concat('%',#{parameter.realname},'%') )
+		</if>
+		<!-- 职务 -->
+		<if test="parameter.position != null ">
+			and a.position like concat('%',#{parameter.position},'%')
+		</if>
+		<!-- 职称 -->
+		<if test="parameter.title != null ">
+			and a.title like concat('%',#{parameter.title},'%')
+		</if>
+		<!-- 工作单位 -->
+		<if test="parameter.orgName != null ">
+			and a.org_name like concat('%',#{parameter.orgName},'%')
+		</if>
+		<!-- 申报单位 -->
+		<if test="parameter.unitName != null ">
+			and f.org_name like concat('%',#{parameter.unitName},'%')
+		</if>
+		<!-- 申报职位 -->
+		<if test="parameter.positionType != null ">
+			<if test="parameter.positionType == 1 "> <!-- 主编 -->
+				and c.preset_position in (4,5,6,7)
 			</if>
-			<!-- 账号或者姓名 -->
-			<if  test="parameter.realname != null ">
-				and (a.realname like concat('%',#{parameter.realname},'%') or  e.username like concat('%',#{parameter.realname},'%') )
+			<if test="parameter.positionType == 2 "> <!-- 副主编 -->
+				and c.preset_position in (2,3,6,7)
 			</if>
-			<!-- 职务  -->
-			<if  test="parameter.position != null ">
-				and  a.position like concat('%',#{parameter.position},'%') 
+			<if test="parameter.positionType == 3 "> <!-- 编委 -->
+				and c.preset_position in (1,3,5,7)
 			</if>
-			<!-- 职称  -->
-			<if  test="parameter.title != null ">
-				and  a.title like concat('%',#{parameter.title},'%') 
+		</if>
+		<!-- 学校审核 -->
+		<if test="parameter.onlineProgress != null ">
+			and a.online_progress = #{parameter.onlineProgress}
+		</if>
+		<!-- 纸质表进度 -->
+		<if test="parameter.offlineProgress != null ">
+			and a.offline_progress = #{parameter.offlineProgress}
+		</if>
+		GROUP BY a.id
+		) temp
+	</select>
+
+	<!-- 申报表审核分页列表 -->
+	<select id="listDeclaration" parameterType="PageParameter"
+		resultType="DeclarationListVO">
+		select
+		a.id,
+		a.material_id,
+		a.realname,
+		e.username,
+		f.org_name unitName,
+		a.org_name,
+		a.position,
+		a.title,
+		a.handphone,
+		a.email,
+		GROUP_CONCAT(
+		CONCAT(d.textbook_name,'-',
+		case
+		when c.preset_position =7 and c.is_digital_editor =1 then '主编,副主编,编委,数字编委'
+		when c.preset_position =7 and c.is_digital_editor =0 then '主编,副主编,编委'
+		when c.preset_position =6 and c.is_digital_editor =1 then
+		'主编,副主编,数字编委'
+		when c.preset_position =6 and c.is_digital_editor =0 then '主编,副主编'
+		when c.preset_position =5 and c.is_digital_editor =1 then '主编,编委,数字编委'
+		when c.preset_position =5 and c.is_digital_editor =0 then '主编,编委'
+		when c.preset_position =4 and c.is_digital_editor =1 then '主编,数字编委'
+		when c.preset_position =4 and c.is_digital_editor =0 then '主编'
+		when c.preset_position =3 and c.is_digital_editor =1 then '副主编,编委,数字编委'
+		when c.preset_position =3 and c.is_digital_editor =0 then '副主编,编委'
+		when c.preset_position =2 and c.is_digital_editor =1 then '副主编,数字编委'
+		when c.preset_position =2 and c.is_digital_editor =0 then '副主编'
+		when c.preset_position =1 and c.is_digital_editor =1 then '编委,数字编委'
+		when c.preset_position =1 and c.is_digital_editor =0 then '编委'
+		when c.is_digital_editor =1 then '数字编委'
+		else null
+		end
+		) ORDER BY d.sort Separator '&lt;/br&gt;'
+		)chooseBooksAndPostions,
+		a.online_progress ,
+		a.offline_progress
+		from declaration a
+		LEFT JOIN material b on b.id= a.material_id
+		LEFT JOIN dec_position c on
+		c.declaration_id = a.id
+		LEFT JOIN textbook d on d.id = c.textbook_id
+		LEFT JOIN writer_user e on e.id=a.user_id
+		LEFT JOIN org f on f.id=a.org_id
+		where
+		a.online_progress in (1,3) and a.is_deleted = 0
+		and b.is_deleted =0 and b.id = #{parameter.materialId}
+		<!-- 下面是动态条件 -->
+		<!-- 书籍 -->
+		<if test="parameter.bookIds != null ">
+			and d.id in
+			<foreach collection="parameter.bookIds" item="item" index="index"
+				open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<!-- 账号或者姓名 -->
+		<if test="parameter.realname != null ">
+			and (a.realname like concat('%',#{parameter.realname},'%') or e.username
+			like concat('%',#{parameter.realname},'%') )
+		</if>
+		<!-- 职务 -->
+		<if test="parameter.position != null ">
+			and a.position like concat('%',#{parameter.position},'%')
+		</if>
+		<!-- 职称 -->
+		<if test="parameter.title != null ">
+			and a.title like concat('%',#{parameter.title},'%')
+		</if>
+		<!-- 工作单位 -->
+		<if test="parameter.orgName != null ">
+			and a.org_name like concat('%',#{parameter.orgName},'%')
+		</if>
+		<!-- 申报单位 -->
+		<if test="parameter.unitName != null ">
+			and f.org_name like concat('%',#{parameter.unitName},'%')
+		</if>
+		<!-- 申报职位 -->
+		<if test="parameter.positionType != null ">
+			<if test="parameter.positionType == 1 "> <!-- 主编 -->
+				and c.preset_position in (4,5,6,7)
 			</if>
-			<!-- 工作单位  -->
-			<if  test="parameter.orgName != null ">
-				and  a.org_name like concat('%',#{parameter.orgName},'%') 
+			<if test="parameter.positionType == 2 "> <!-- 副主编 -->
+				and c.preset_position in (2,3,6,7)
 			</if>
-			<!-- 申报单位  -->
-			<if  test="parameter.unitName != null ">
-				and  f.org_name like concat('%',#{parameter.unitName},'%') 
+			<if test="parameter.positionType == 3 "> <!-- 编委 -->
+				and c.preset_position in (1,3,5,7)
 			</if>
-			<!-- 申报职位  -->
-			<if  test="parameter.positionType != null ">
-				<if  test="parameter.positionType == 1 "> <!-- 主编 -->
-					and  c.preset_position in (4,5,6,7) 
-				</if>
-				<if  test="parameter.positionType == 2 "> <!-- 副主编 -->
-					and  c.preset_position in (2,3,6,7) 
-				</if>
-				<if  test="parameter.positionType == 3 "> <!-- 编委 -->
-					and  c.preset_position in (1,3,5,7) 
-				</if>
-			</if>
-			<!-- 学校审核  -->
-			<if  test="parameter.onlineProgress != null ">
-				and  a.online_progress = #{parameter.onlineProgress}
-			</if>
-			<!-- 纸质表进度  -->
-			<if  test="parameter.offlineProgress != null ">
-				and  a.offline_progress = #{parameter.offlineProgress}
-			</if>
-		GROUP BY a.id 
+		</if>
+		<!-- 学校审核 -->
+		<if test="parameter.onlineProgress != null ">
+			and a.online_progress = #{parameter.onlineProgress}
+		</if>
+		<!-- 纸质表进度 -->
+		<if test="parameter.offlineProgress != null ">
+			and a.offline_progress = #{parameter.offlineProgress}
+		</if>
+		GROUP BY a.id
 		<!-- 排序和分页条件 -->
 		order by a.realname
 		limit #{start},#{pageSize}
 	</select>
-	
+
 	<!-- 根据id查询一个作家申报信息并包含申报机构名称 -->
 	<select id="getDeclarationByIdOrOrgName" parameterType="java.lang.Long"
 		resultType="DeclarationOrDisplayVO">
-		select *,o.org_name orgNameOne from declaration d 
-		left join (select id,org_name from org) o on (o.id=d.org_id) 
+		select *,o.org_name orgNameOne from declaration d
+		left join (select id,org_name from org) o on (o.id=d.org_id)
 		where d.id=#{id};
 	</select>
-	
+
 </mapper>

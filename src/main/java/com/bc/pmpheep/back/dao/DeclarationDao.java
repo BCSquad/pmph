@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
@@ -66,6 +67,16 @@ public interface DeclarationDao {
 	 * @Return 作家申报信息
 	 */
 	List<Declaration> getDeclarationByMaterialId(Long materialId);
+	
+	/**
+	 * Description: 根据教材id查询作家申报信息
+	 * 
+	 * @Param materialId 教材id
+	 * 
+	 * @Return 作家申报信息
+	 */
+	List<DeclarationOrDisplayVO> getDeclarationOrDisplayVOByMaterialId(Long materialId);
+	
 
 	/**
 	 * Description:查询表的数据总记录数
