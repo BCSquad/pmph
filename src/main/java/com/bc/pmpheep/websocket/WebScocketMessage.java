@@ -51,6 +51,21 @@ public class WebScocketMessage {
         this.content = content;
         this.time = time;
     }
+    
+    public WebScocketMessage(String id, Short msgType, Long senderId, String senderName,
+    	    Short senderType, Short sendType, String senderIcon, String content,
+    	    Timestamp time) {
+    	        super();
+    	        this.id = id;
+    	        this.msgType = msgType;
+    	        this.senderId = senderId;
+    	        this.senderName = senderName;
+    	        this.senderType = senderType;
+    	        this.sendType = sendType;
+    	        this.senderIcon = senderIcon;
+    	        this.content = content;
+    	        this.time = time;
+    	    }
 
     public String getSenderIcon() {
         return senderIcon;

@@ -119,6 +119,17 @@ public class UserMessage implements java.io.Serializable {
         this.receiverId = receiverId;
         this.receiverType = receiverType;
     }
+    
+    public UserMessage(String msgId, Short msgType, Long senderId, Short senderType,
+    	    Long receiverId, Short receiverType) {
+    	        super();
+    	        this.msgId = msgId;
+    	        this.msgType = msgType;
+    	        this.senderId = senderId;
+    	        this.senderType = senderType;
+    	        this.receiverId = receiverId;
+    	        this.receiverType = receiverType;
+    	    }
 
     public Long getId() {
         return id;
