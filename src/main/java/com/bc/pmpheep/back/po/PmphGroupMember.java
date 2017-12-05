@@ -165,4 +165,10 @@ public class PmphGroupMember implements Serializable {
 				+ ", gmtUpdate:" + gmtUpdate + "}";
 	}
 
+	public PmphGroupMember(Long userId, Boolean isWriter) {
+		super();
+		this.userId = userId;
+		this.isWriter = isWriter;
+	}
+
 }

@@ -17,6 +17,7 @@ import com.bc.pmpheep.back.vo.DeclarationResultBookVO;
 import com.bc.pmpheep.back.vo.DeclarationResultSchoolVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
+import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -304,4 +305,11 @@ public interface DecPositionDao {
      */
     List<DeclarationResultBookVO> getBookList(
     		PageParameter<DeclarationResultBookVO> pageParameter);
+    
+    /**
+     * 根据书籍id查询该书的主编、副编委、编委
+     * @param textbookId
+     * @return
+     */
+	List<TextbookDecVO> getTextbookEditorList(Long textbookId);
 }

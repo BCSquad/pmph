@@ -415,7 +415,7 @@
 	   SELECT * FROM textbook t 
 	   WHERE t.material_id = #{materialId} ;
 	</select>
-	<!-- 根据书籍id查询已通过的主编和编委 -->
+	<!-- 根据书籍id查询已通过的主编和编委数 -->
 	<select id="getTextbookDecTotal" parameterType="PageParameter" 
 		resultType="java.lang.Integer">
 			SELECT 
@@ -424,11 +424,13 @@
 			LEFT JOIN `declaration` dc ON dp.`declaration_id` = dc.`id`
 			LEFT JOIN `org` org ON dc.`org_id`= org.`id`
 			LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
-			WHERE	
+			WHERE
+				dc.is_staging=false and dc.online_progress!=2
 		<if test="parameter.textBookId !=null  ">
-			dp.`textbook_id` =#{parameter.textBookId}
+			and dp.`textbook_id` =#{parameter.textBookId}
 		</if>
 	</select>
+	<!-- 根据书籍id查询已通过的主编和编委 -->
 	<select id="getTextbookDecVOList" parameterType="PageParameter"
 		resultType="TextbookDecVO">
 	 	SELECT 
@@ -439,9 +441,10 @@
 		LEFT JOIN `declaration` dc ON dp.`declaration_id` = dc.`id`
 		LEFT JOIN `org` org ON dc.`org_id`= org.`id`
 		LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
-		WHERE	
+		WHERE
+			dc.is_staging=false and dc.online_progress!=2
 		<if test="parameter.textBookId !=null  ">
-			dp.`textbook_id` =#{parameter.textBookId}
+			and dp.`textbook_id` =#{parameter.textBookId}
 		</if>
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}

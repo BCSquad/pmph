@@ -1,8 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +23,7 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
+import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -44,7 +44,10 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	private PmphUserService pmphUserService;
 	@Autowired
 	private WriterUserService writerUserService;
-
+	@Autowired
+	private DecPositionService decPositionService;
+	@Autowired
+	private PmphGroupMemberService pmphGroupMemberService;
 	/**
 	 * 
 	 * @param pmphGroupMember
@@ -409,6 +412,48 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 
 		return result;
 
+	}
+
+	@Override
+	public String addEditorBookGroup(Long textbookId, String sessionId)
+			throws CheckedServiceException {
+		String result = "FAIL";
+		// 通过书籍id查询小组
+		PmphGroup pmphGroup=pmphGroupService.getPmphGroupByTextbookId(textbookId);
+		// 获取用户信息 进行判断用户是否有权限操作
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"该用户为空");
+		}
+		if (!pmphUser.getIsAdmin()) {
+			if (!isFounderOrisAdmin(pmphGroup.getId(), sessionId)) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+						"该用户没有操作权限");
+			}
+		}
+		// 通过书籍id查询所有主编、副主编、编委
+		List<TextbookDecVO> textbookDecVOs=decPositionService.getTextbookEditorList(textbookId);
+		// 通过小组id查询小组现有成员
+		List<PmphGroupMember> pmphGroupMembers=pmphGroupMemberDao.listPmphGroupMembers(pmphGroup.getId());
+		List<PmphGroupMember> list = new ArrayList<PmphGroupMember>(textbookDecVOs.size());
+		// 通过遍历把不存在的成员添加到list中
+		for (TextbookDecVO textbookDecVO : textbookDecVOs) {
+			for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
+				if(pmphGroupMember.getUserId() != textbookDecVO.getUserId()){
+					list.add(new PmphGroupMember(textbookDecVOs.get(0).getUserId(), textbookDecVOs.get(0).getIsWriter()));
+				}
+			}
+		}
+		// 批量把没有加入的小组的传入作家用户添加到该小组
+		if(list.size() == 0 || list == null){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"添加成员失败 ");
+		}else{
+			pmphGroupMemberService.addPmphGroupMemberOnGroup(pmphGroup.getId(), list, sessionId);
+			result = "SUCCESS";
+		}
+		return result;
 	}
 
 }

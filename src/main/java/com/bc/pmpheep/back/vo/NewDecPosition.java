@@ -1,9 +1,9 @@
 package com.bc.pmpheep.back.vo;
 
+import java.io.File;
 import java.io.Serializable;
 
 import org.apache.ibatis.type.Alias;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,7 +20,7 @@ public class NewDecPosition implements Serializable {
 	private Long declarationId;
 	private Long textbookId;
 	private Integer presetPosition;
-	private MultipartFile file;
+	private File file;
 	// 是否为数字编辑
     @JsonProperty("isDigitalEditor")
     private Boolean   isDigitalEditor;
@@ -57,10 +57,10 @@ public class NewDecPosition implements Serializable {
 	public void setPresetPosition(Integer presetPosition) {
 		this.presetPosition = presetPosition;
 	}
-	public MultipartFile getFile() {
+	public File getFile() {
 		return file;
 	}
-	public void setFile(MultipartFile file) {
+	public void setFile(File file) {
 		this.file = file;
 	}
 	

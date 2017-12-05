@@ -50,7 +50,8 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	private PmphGroupMessageService pmphGroupMessageService;
 	@Autowired
 	private PmphGroupFileService pmphGroupFileService;
-
+	@Autowired
+	private TextbookService textbookService;
 	/**
 	 *
 	 * @param pmphGroup
@@ -295,7 +296,11 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		Textbook textbook = textbookDao.getTextbookById(textbookId);
+		if(null == list || list.size() == 0){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"名单为空，创建小组失败");
+		}
+		Textbook textbook =textbookService.getTextbookById(textbookId);
 		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		PmphGroup pmphGroup = new PmphGroup();
 		// 查询小组名称是否已存在 不存在直接用书名
@@ -306,6 +311,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			pmphGroup.setGroupName(textbook.getTextbookName() + count);
 		}
 		pmphGroup.setGroupImage(groupImage);
+		pmphGroup.setBookId(textbookId);
 		pmphGroup.setFounderId(pmphUser.getId());
 		pmphGroupDao.addPmphGroup(pmphGroup);
 		if (null != pmphGroup.getId()) {// 判断是否新增小组成功，如果成功则调用PmphGroupMemberService添加小组成员的方法将创建者添加到小组中

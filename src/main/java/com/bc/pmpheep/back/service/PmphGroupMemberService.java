@@ -170,5 +170,14 @@ public interface PmphGroupMemberService {
 	 */
 	String updateMemberIdentity(Long groupId, List<PmphGroupMember> members, String sessionId)
 			throws CheckedServiceException;
+	
+	/**
+	 * 功能描述：职位遴选页面更新小组成员
+	 * @param textbookId
+	 * @param sessionId
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	String addEditorBookGroup(Long textbookId, String sessionId) throws CheckedServiceException;
 
 }
