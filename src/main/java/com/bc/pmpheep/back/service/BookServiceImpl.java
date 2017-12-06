@@ -283,7 +283,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 		if (StringUtil.isEmpty(isbn) || "".equals(isbn)) {
 			isbn = "-";
 		}
-		if (ObjectUtil.isNull(item.getJSONArray("gdsDescList").getJSONObject(0))) {// 内容简介
+		if (CollectionUtil.isEmpty(item.getJSONArray("gdsDescList"))) {// 内容简介
 			model.setContent("暂缺"); // 内容简介
 		} else {
 			model.setContent(item.getJSONArray("gdsDescList").getJSONObject(0).getString("gdsDescContent"));

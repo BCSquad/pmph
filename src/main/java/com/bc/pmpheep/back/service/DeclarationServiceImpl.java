@@ -42,6 +42,7 @@ import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.RouteUtil;
@@ -359,6 +360,11 @@ public class DeclarationServiceImpl implements DeclarationService {
 				break;
 			}
 			Map<String, String> map = decPositionDao.getTextbookNameAndPresetPosition(declarationOrDisplayVO.getId());
+			if (CollectionUtil.isEmpty(map)) {
+				map = new HashMap<>();
+				map.put("textbookName", "暂无");
+				map.put("presetPosition", "暂无");
+			}
 			// 学习经历
 			List<DecEduExp> decEduExps = decEduExpDao.getListDecEduExpByDeclarationId(declarationOrDisplayVO.getId());
 			// 工作经历
