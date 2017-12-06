@@ -20,7 +20,10 @@ import org.springframework.context.ApplicationContext;
  * </pre>
  */
 public class Const {
-
+	
+	//临时文件上传的目录
+	public static final String       FILE_TEMP_PATH                = "/upload/temp";
+	
     public static final String       DEFAULT_PASSWORD              = "123456";
     public static final String       WEB_PROJECT_NAME              = "PMPH_PROJECT";
     // 社内部门根节点id

@@ -58,18 +58,10 @@ public class Material implements java.io.Serializable {
     private Boolean   isLastPositionUsed;
     // 上版教材参编情况必填
     private Boolean   isLastPositionRequired;
-    // 国家级课程建设情况
-    private Boolean   isNationalCourseUsed;
-    // 国家级课程建设情况必填
-    private Boolean   isNationalCourseRequired;
-    // 省部级课程建设情况
-    private Boolean   isProvincialCourseUsed;
-    // 省部级课程建设情况必填
-    private Boolean   isProvincialCourseRequired;
-    // 学校课程建设情况
-    private Boolean   isSchoolCourseUsed;
-    // 学校课程建设情况必填
-    private Boolean   isSchoolCourseRequired;
+    // 课程建设情况
+    private Boolean   isCourseUsed;
+    // 课程建设情况必填
+    private Boolean   isCourseRequired;
     // 主编国家规划教材情况
     private Boolean   isNationalPlanUsed;
     // 主编国家规划教材情况必填
@@ -104,8 +96,17 @@ public class Material implements java.io.Serializable {
     private Timestamp gmtUpdate;
     // 修改人id
     private Long      menderId;
-    // 消息id
-    private String    msgId;
+    //项目编辑权限
+    private Integer projectPermission ;
+    //策划编辑权限
+    private Integer planPermission ;
+    //个人成就
+    private Boolean isAchievementUsed    ;
+    //个人成就可用
+    private Boolean isAchievementRequired;
+    //
+    private Boolean isDigitalEditorOptional ;
+    
 
     // Constructors
 
@@ -118,26 +119,61 @@ public class Material implements java.io.Serializable {
         this.id = id;
     }
 
-    public Material(Long id, String msgId,Boolean isPublished) {
+    public Material(Long id,Boolean isPublished) {
         super();
         this.id = id;
-        this.msgId = msgId;
         this.isPublished = isPublished;
     }
+    
+    
+    /**
+     * @param materialName
+     * @param materialRound
+     * @param materialType
+     * @param deadline
+     * @param actualDeadline
+     * @param ageDeadline
+     * @param mailAddress
+     * @param departmentId
+     * @param director
+     * @param founderId
+     * @param menderId
+     * @param projectPermission
+     * @param planPermission
+     */
+    public Material(String materialName, Integer materialRound,
+			Long materialType, Date deadline, Date actualDeadline,
+			Date ageDeadline, String mailAddress, Long departmentId,
+			Long director, Long founderId, Long menderId,
+			Integer projectPermission, Integer planPermission) {
+		super();
+		this.materialName = materialName;
+		this.materialRound = materialRound;
+		this.materialType = materialType;
+		this.deadline = deadline;
+		this.actualDeadline = actualDeadline;
+		this.ageDeadline = ageDeadline;
+		this.mailAddress = mailAddress;
+		this.departmentId = departmentId;
+		this.director = director;
+		this.founderId = founderId;
+		this.menderId = menderId;
+		this.projectPermission = projectPermission;
+		this.planPermission = planPermission;
+	}
 
-    public Material(String materialName, Integer materialRound, Long materialType, Date deadline,
+	public Material(String materialName, Integer materialRound, Long materialType, Date deadline,
     Date actualDeadline, Date ageDeadline, String mailAddress, Long departmentId, Long director,
     Boolean isMultiBooks, Boolean isMultiPosition, Boolean isEduExpUsed, Boolean isEduExpRequired,
     Boolean isWorkExpUsed, Boolean isWorkExpRequired, Boolean isTeachExpUsed,
     Boolean isTeachExpRequired, Boolean isAcadeUsed, Boolean isAcadeRequired,
-    Boolean isLastPositionUsed, Boolean isLastPositionRequired, Boolean isNationalCourseUsed,
-    Boolean isNationalCourseRequired, Boolean isProvincialCourseUsed,
-    Boolean isProvincialCourseRequired, Boolean isSchoolCourseUsed, Boolean isSchoolCourseRequired,
+    Boolean isLastPositionUsed, Boolean isLastPositionRequired,
+    Boolean isCourseUsed,Boolean isCourseRequired, 
     Boolean isNationalPlanUsed, Boolean isNationalPlanRequired, Boolean isTextbookUsed,
     Boolean isTextbookRequired, Boolean isOtherTextbookUsed, Boolean isOtherTextbookRequired,
     Boolean isResearchUsed, Boolean isResearchRequired, Boolean isPublished, Boolean isPublic,
     Boolean isAllTextbookPublished, Boolean isForceEnd, Boolean isDeleted, Timestamp gmtCreate,
-    Long founderId, Timestamp gmtUpdate, Long menderId, String msgId) {
+    Long founderId, Timestamp gmtUpdate, Long menderId) {
         super();
         this.materialName = materialName;
         this.materialRound = materialRound;
@@ -160,12 +196,8 @@ public class Material implements java.io.Serializable {
         this.isAcadeRequired = isAcadeRequired;
         this.isLastPositionUsed = isLastPositionUsed;
         this.isLastPositionRequired = isLastPositionRequired;
-        this.isNationalCourseUsed = isNationalCourseUsed;
-        this.isNationalCourseRequired = isNationalCourseRequired;
-        this.isProvincialCourseUsed = isProvincialCourseUsed;
-        this.isProvincialCourseRequired = isProvincialCourseRequired;
-        this.isSchoolCourseUsed = isSchoolCourseUsed;
-        this.isSchoolCourseRequired = isSchoolCourseRequired;
+        this.isCourseUsed = isCourseUsed;
+        this.isCourseRequired = isCourseRequired;
         this.isNationalPlanUsed = isNationalPlanUsed;
         this.isNationalPlanRequired = isNationalPlanRequired;
         this.isTextbookUsed = isTextbookUsed;
@@ -183,9 +215,9 @@ public class Material implements java.io.Serializable {
         this.founderId = founderId;
         this.gmtUpdate = gmtUpdate;
         this.menderId = menderId;
-        this.msgId = msgId;
     }
 
+    
     public Long getId() {
         return this.id;
     }
@@ -362,55 +394,23 @@ public class Material implements java.io.Serializable {
         this.isLastPositionRequired = isLastPositionRequired;
     }
 
-    public Boolean getIsNationalCourseUsed() {
-        return this.isNationalCourseUsed;
-    }
+    public Boolean getIsCourseUsed() {
+		return isCourseUsed;
+	}
 
-    public void setIsNationalCourseUsed(Boolean isNationalCourseUsed) {
-        this.isNationalCourseUsed = isNationalCourseUsed;
-    }
+	public void setIsCourseUsed(Boolean isCourseUsed) {
+		this.isCourseUsed = isCourseUsed;
+	}
 
-    public Boolean getIsNationalCourseRequired() {
-        return this.isNationalCourseRequired;
-    }
+	public Boolean getIsCourseRequired() {
+		return isCourseRequired;
+	}
 
-    public void setIsNationalCourseRequired(Boolean isNationalCourseRequired) {
-        this.isNationalCourseRequired = isNationalCourseRequired;
-    }
+	public void setIsCourseRequired(Boolean isCourseRequired) {
+		this.isCourseRequired = isCourseRequired;
+	}
 
-    public Boolean getIsProvincialCourseUsed() {
-        return this.isProvincialCourseUsed;
-    }
-
-    public void setIsProvincialCourseUsed(Boolean isProvincialCourseUsed) {
-        this.isProvincialCourseUsed = isProvincialCourseUsed;
-    }
-
-    public Boolean getIsProvincialCourseRequired() {
-        return this.isProvincialCourseRequired;
-    }
-
-    public void setIsProvincialCourseRequired(Boolean isProvincialCourseRequired) {
-        this.isProvincialCourseRequired = isProvincialCourseRequired;
-    }
-
-    public Boolean getIsSchoolCourseUsed() {
-        return this.isSchoolCourseUsed;
-    }
-
-    public void setIsSchoolCourseUsed(Boolean isSchoolCourseUsed) {
-        this.isSchoolCourseUsed = isSchoolCourseUsed;
-    }
-
-    public Boolean getIsSchoolCourseRequired() {
-        return this.isSchoolCourseRequired;
-    }
-
-    public void setIsSchoolCourseRequired(Boolean isSchoolCourseRequired) {
-        this.isSchoolCourseRequired = isSchoolCourseRequired;
-    }
-
-    public Boolean getIsNationalPlanUsed() {
+	public Boolean getIsNationalPlanUsed() {
         return this.isNationalPlanUsed;
     }
 
@@ -546,40 +546,137 @@ public class Material implements java.io.Serializable {
         this.menderId = menderId;
     }
 
-    public String getMsgId() {
-        return msgId;
-    }
+    
+	public Integer getProjectPermission() {
+		return projectPermission;
+	}
 
-    public void setMsgId(String msgId) {
-        this.msgId = msgId;
-    }
+	public void setProjectPermission(Integer projectPermission) {
+		this.projectPermission = projectPermission;
+	}
 
-    @Override
-    public String toString() {
-        return "{id:" + id + ", materialName:" + materialName + ", materialRound:" + materialRound
-               + ", materialType:" + materialType + ", deadline:" + deadline + ", actualDeadline:"
-               + actualDeadline + ", ageDeadline:" + ageDeadline + ", mailAddress:" + mailAddress
-               + ", departmentId:" + departmentId + ", director:" + director + ", isMultiBooks:"
-               + isMultiBooks + ", isMultiPosition:" + isMultiPosition + ", isEduExpUsed:"
-               + isEduExpUsed + ", isEduExpRequired:" + isEduExpRequired + ", isWorkExpUsed:"
-               + isWorkExpUsed + ", isWorkExpRequired:" + isWorkExpRequired + ", isTeachExpUsed:"
-               + isTeachExpUsed + ", isTeachExpRequired:" + isTeachExpRequired + ", isAcadeUsed:"
-               + isAcadeUsed + ", isAcadeRequired:" + isAcadeRequired + ", isLastPositionUsed:"
-               + isLastPositionUsed + ", isLastPositionRequired:" + isLastPositionRequired
-               + ", isNationalCourseUsed:" + isNationalCourseUsed + ", isNationalCourseRequired:"
-               + isNationalCourseRequired + ", isProvincialCourseUsed:" + isProvincialCourseUsed
-               + ", isProvincialCourseRequired:" + isProvincialCourseRequired
-               + ", isSchoolCourseUsed:" + isSchoolCourseUsed + ", isSchoolCourseRequired:"
-               + isSchoolCourseRequired + ", isNationalPlanUsed:" + isNationalPlanUsed
-               + ", isNationalPlanRequired:" + isNationalPlanRequired + ", isTextbookUsed:"
-               + isTextbookUsed + ", isTextbookRequired:" + isTextbookRequired
-               + ", isOtherTextbookUsed:" + isOtherTextbookUsed + ", isOtherTextbookRequired:"
-               + isOtherTextbookRequired + ", isResearchUsed:" + isResearchUsed
-               + ", isResearchRequired:" + isResearchRequired + ", isPublished:" + isPublished
-               + ", isPublic:" + isPublic + ", isAllTextbookPublished:" + isAllTextbookPublished
-               + ", isForceEnd:" + isForceEnd + ", isDeleted:" + isDeleted + ", gmtCreate:"
-               + gmtCreate + ", founderId:" + founderId + ", gmtUpdate:" + gmtUpdate
-               + ", menderId:" + menderId + ", msgId:" + msgId + "}";
-    }
+	public Integer getPlanPermission() {
+		return planPermission;
+	}
+
+	public void setPlanPermission(Integer planPermission) {
+		this.planPermission = planPermission;
+	}
+
+	public Boolean getIsAchievementUsed() {
+		return isAchievementUsed;
+	}
+
+	public void setIsAchievementUsed(Boolean isAchievementUsed) {
+		this.isAchievementUsed = isAchievementUsed;
+	}
+
+	public Boolean getIsAchievementRequired() {
+		return isAchievementRequired;
+	}
+
+	public void setIsAchievementRequired(Boolean isAchievementRequired) {
+		this.isAchievementRequired = isAchievementRequired;
+	}
+	
+	
+
+	public Boolean getIsDigitalEditorOptional() {
+		return isDigitalEditorOptional;
+	}
+
+	public void setIsDigitalEditorOptional(Boolean isDigitalEditorOptional) {
+		this.isDigitalEditorOptional = isDigitalEditorOptional;
+	}
+
+	@Override
+	public String toString() {
+		return "{id:" + id + ", materialName:" + materialName
+				+ ", materialRound:" + materialRound + ", materialType:"
+				+ materialType + ", deadline:" + deadline + ", actualDeadline:"
+				+ actualDeadline + ", ageDeadline:" + ageDeadline
+				+ ", mailAddress:" + mailAddress + ", departmentId:"
+				+ departmentId + ", director:" + director + ", isMultiBooks:"
+				+ isMultiBooks + ", isMultiPosition:" + isMultiPosition
+				+ ", isEduExpUsed:" + isEduExpUsed + ", isEduExpRequired:"
+				+ isEduExpRequired + ", isWorkExpUsed:" + isWorkExpUsed
+				+ ", isWorkExpRequired:" + isWorkExpRequired
+				+ ", isTeachExpUsed:" + isTeachExpUsed
+				+ ", isTeachExpRequired:" + isTeachExpRequired
+				+ ", isAcadeUsed:" + isAcadeUsed + ", isAcadeRequired:"
+				+ isAcadeRequired + ", isLastPositionUsed:"
+				+ isLastPositionUsed + ", isLastPositionRequired:"
+				+ isLastPositionRequired + ", isCourseUsed:" + isCourseUsed
+				+ ", isCourseRequired:" + isCourseRequired
+				+ ", isNationalPlanUsed:" + isNationalPlanUsed
+				+ ", isNationalPlanRequired:" + isNationalPlanRequired
+				+ ", isTextbookUsed:" + isTextbookUsed
+				+ ", isTextbookRequired:" + isTextbookRequired
+				+ ", isOtherTextbookUsed:" + isOtherTextbookUsed
+				+ ", isOtherTextbookRequired:" + isOtherTextbookRequired
+				+ ", isResearchUsed:" + isResearchUsed
+				+ ", isResearchRequired:" + isResearchRequired
+				+ ", isPublished:" + isPublished + ", isPublic:" + isPublic
+				+ ", isAllTextbookPublished:" + isAllTextbookPublished
+				+ ", isForceEnd:" + isForceEnd + ", isDeleted:" + isDeleted
+				+ ", gmtCreate:" + gmtCreate + ", founderId:" + founderId
+				+ ", gmtUpdate:" + gmtUpdate + ", menderId:" + menderId
+				+ ", projectPermission:" + projectPermission
+				+ ", planPermission:" + planPermission + ", isAchievementUsed:"
+				+ isAchievementUsed + ", isAchievementRequired:"
+				+ isAchievementRequired + ", isDigitalEditorOptional:"
+				+ isDigitalEditorOptional + ", getId():" + getId()
+				+ ", getMaterialName():" + getMaterialName()
+				+ ", getMaterialRound():" + getMaterialRound()
+				+ ", getMaterialType():" + getMaterialType()
+				+ ", getDeadline():" + getDeadline() + ", getActualDeadline():"
+				+ getActualDeadline() + ", getAgeDeadline():"
+				+ getAgeDeadline() + ", getMailAddress():" + getMailAddress()
+				+ ", getDepartmentId():" + getDepartmentId()
+				+ ", getDirector():" + getDirector() + ", getIsMultiBooks():"
+				+ getIsMultiBooks() + ", getIsMultiPosition():"
+				+ getIsMultiPosition() + ", getIsEduExpUsed():"
+				+ getIsEduExpUsed() + ", getIsEduExpRequired():"
+				+ getIsEduExpRequired() + ", getIsWorkExpUsed():"
+				+ getIsWorkExpUsed() + ", getIsWorkExpRequired():"
+				+ getIsWorkExpRequired() + ", getIsTeachExpUsed():"
+				+ getIsTeachExpUsed() + ", getIsTeachExpRequired():"
+				+ getIsTeachExpRequired() + ", getIsAcadeUsed():"
+				+ getIsAcadeUsed() + ", getIsAcadeRequired():"
+				+ getIsAcadeRequired() + ", getIsLastPositionUsed():"
+				+ getIsLastPositionUsed() + ", getIsLastPositionRequired():"
+				+ getIsLastPositionRequired() + ", getIsCourseUsed():"
+				+ getIsCourseUsed() + ", getIsCourseRequired():"
+				+ getIsCourseRequired() + ", getIsNationalPlanUsed():"
+				+ getIsNationalPlanUsed() + ", getIsNationalPlanRequired():"
+				+ getIsNationalPlanRequired() + ", getIsTextbookUsed():"
+				+ getIsTextbookUsed() + ", getIsTextbookRequired():"
+				+ getIsTextbookRequired() + ", getIsOtherTextbookUsed():"
+				+ getIsOtherTextbookUsed() + ", getIsOtherTextbookRequired():"
+				+ getIsOtherTextbookRequired() + ", getIsResearchUsed():"
+				+ getIsResearchUsed() + ", getIsResearchRequired():"
+				+ getIsResearchRequired() + ", getIsPublished():"
+				+ getIsPublished() + ", getIsPublic():" + getIsPublic()
+				+ ", getIsAllTextbookPublished():"
+				+ getIsAllTextbookPublished() + ", getIsForceEnd():"
+				+ getIsForceEnd() + ", getIsDeleted():" + getIsDeleted()
+				+ ", getGmtCreate():" + getGmtCreate() + ", getFounderId():"
+				+ getFounderId() + ", getGmtUpdate():" + getGmtUpdate()
+				+ ", getMenderId():" + getMenderId()
+				+ ", getProjectPermission():" + getProjectPermission()
+				+ ", getPlanPermission():" + getPlanPermission()
+				+ ", getIsAchievementUsed():" + getIsAchievementUsed()
+				+ ", getIsAchievementRequired():" + getIsAchievementRequired()
+				+ ", getIsDigitalEditorOptional():"
+				+ getIsDigitalEditorOptional() + ", getClass():" + getClass()
+				+ ", hashCode():" + hashCode() + ", toString():"
+				+ super.toString() + "}";
+	}
+
+	
+
+    
+
+    
 
 }

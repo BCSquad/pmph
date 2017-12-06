@@ -275,21 +275,33 @@ public class BookServiceImpl extends BaseService implements BookService {
 			}
 			model = model == null ? new Book() : model;
 		}
+		String revison = item.getString("edition");
+		if (null == revison || "".equals(revison)) {
+			revison = "0";
+		}
+		String isbn = item.getString("isbn");
+		if (StringUtil.isEmpty(isbn) || "".equals(isbn)) {
+			isbn = "-";
+		}
+		if (CollectionUtil.isEmpty(item.getJSONArray("gdsDescList"))) {// 内容简介
+			model.setContent("暂缺"); // 内容简介
+		} else {
+			model.setContent(item.getJSONArray("gdsDescList").getJSONObject(0).getString("gdsDescContent"));
+		}
+		model.setRevision(Integer.parseInt(revison)); // 版次 ,印次
 		model.setBookname(item.getString("gdsName")); // 书名
 		model.setAuthor(item.getString("author")); // 作者
 		model.setReader(item.getString("reader")); // 读者对象
-		model.setPublishDate(DateUtil.str2Date(item.getString("publicDate") + " 00:00:00")); // 出版时间
+		model.setPublishDate(DateUtil.str3Date(item.getString("publicDate"))); // 出版时间
 		model.setPublisher(item.getString("publicCompany")); // 出版社
-		model.setRevision(Integer.parseInt(item.getString("edition"))); // 版次 ,印次
 		model.setLang(item.getString("language")); // 语言
-		model.setContent(item.getJSONArray("gdsDescList").getJSONObject(0).getString("gdsDescContent")); // 内容简介
 		model.setImageUrl(item.getJSONArray("imageList").size() > 0
 				? item.getJSONArray("imageList").getJSONObject(0).getString("imgUrl")
 				: ""); // 图片地址
 		model.setPdfUrl(item.getString("pdfFile"));
 		model.setBuyUrl(item.getString("webGdsDetailUrl"));
 		model.setVn(item.getString("versionNumber"));
-		model.setIsbn(item.getString("isbn"));
+		model.setIsbn(isbn);
 		return model;
 	}
 

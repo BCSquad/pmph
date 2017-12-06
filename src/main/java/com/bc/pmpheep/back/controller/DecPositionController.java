@@ -74,6 +74,7 @@ public class DecPositionController {
 				new DeclarationSituationSchoolResultVO();
 		declarationSituationSchoolResultVO.setMaterialId(materialId);
 		declarationSituationSchoolResultVO.setSchoolName(schoolName);
+		pageParameter.setParameter(declarationSituationSchoolResultVO);
 		return new ResponseBean(decPositionService.listPresetDeclarationSituationSchoolResultVOs(pageParameter));
 	}
 	/**

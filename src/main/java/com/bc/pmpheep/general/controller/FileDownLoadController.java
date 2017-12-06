@@ -89,9 +89,9 @@ public class FileDownLoadController {
 	 * 功能描述：普通文件下载(更新下载数)
 	 * 使用示范：
 	 *
-	 * &#64;param type 模块类型
-	 * &#64;param id 文件在MongoDB中的id
-	 * &#64;param response 服务响应
+	 * @param type 模块类型
+	 * @param id 文件在MongoDB中的id
+	 * @param response 服务响应
 	 * </pre>
      * 
      * @throws UnsupportedEncodingException

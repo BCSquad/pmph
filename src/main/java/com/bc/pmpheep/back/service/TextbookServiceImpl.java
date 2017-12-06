@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -21,7 +20,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.dao.PmphUserDao;
@@ -31,7 +29,6 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
-import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
@@ -207,8 +204,8 @@ public class TextbookServiceImpl implements TextbookService {
 			}
 		}
 		// 教材主任检查
+		Material material = materialService.getMaterialById(materialId);
 		if (null == power) {
-			Material material = materialService.getMaterialById(materialId);
 			if (null != material && null != material.getDirector() && pmphUser.getId().equals(material.getDirector())) {
 				power = 2; // 我是教材的主任
 			}
@@ -263,6 +260,18 @@ public class TextbookServiceImpl implements TextbookService {
 		Integer total = textbookDao.listBookPositionTotal(pageParameter);
 		if (null != total && total > 0) {
 			List<BookPositionVO> rows = textbookDao.listBookPosition(pageParameter);
+			//下面进行授权
+			String oprPower = "00000000";
+			if(power == 1 || power ==2 ){//管理员或者主任
+				oprPower = "11111111";
+			}else if(power == 3){ //教材项目编辑
+				oprPower = StringUtil.tentToBinary(material.getProjectPermission());
+			}else if(power == 4){ //教材策划编辑
+				oprPower = StringUtil.tentToBinary(material.getPlanPermission());
+			}
+			for(BookPositionVO row:rows){
+				row.setMyPower(oprPower);
+			}
 			pageResult.setRows(rows);
 		}
 		pageResult.setTotal(total);

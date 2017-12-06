@@ -23,7 +23,7 @@ public class SQLParameters {
      * 现有平台数据库地址
      */
     public static final String              DB_URL          =
-                                                            "jdbc:mysql://localhost:3306/pmph_imesp";
+                                                            "jdbc:mysql://localhost:3306/pmph_out";
 
     /**
      * 现有平台数据库用户名
@@ -34,7 +34,7 @@ public class SQLParameters {
      * 现有平台数据库密码
      */
     // public static final String DB_PASSWORD = "root";
-    public static final String              DB_PASSWORD     = "bcit2017=pmph";
+    public static final String              DB_PASSWORD     = "root";
 
     /**
      * 专家平台数据库地址

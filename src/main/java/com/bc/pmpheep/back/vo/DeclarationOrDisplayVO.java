@@ -9,73 +9,105 @@ import org.apache.ibatis.type.Alias;
 @Alias("DeclarationOrDisplayVO")
 public class DeclarationOrDisplayVO implements java.io.Serializable {
 
-    //主键
+	// 主键
 	private Long id;
-	//教材id
+	// 教材id
 	private Long materialId;
-	//作家id
+	// 作家id
 	private Long userId;
-	//作家真实姓名
+	// 作家用户名
+	private String username;
+	// 作家真实姓名
 	private String realname;
-	//作家性别
+	// 作家性别
 	private Integer sex;
-	//作家生日
+	// 作家生日
 	private Date birthday;
-	//作家教龄
+	// 作家教龄
 	private Integer experience;
-	//作家工作单位
+	// 作家工作单位
 	private String orgName;
-	//作家职务
+	// 作家职务
 	private String position;
-	//作家职称
+	// 作家职称
 	private String title;
-	//作家地址
+	// 作家地址
 	private String address;
-	//作家邮编
+	// 作家邮编
 	private String postcode;
-	//作家手机
+	// 作家手机
 	private String handphone;
-	//作家邮箱
+	// 作家邮箱
 	private String email;
-	//作家证件类型
+	// 作家证件类型
 	private Short idtype;
-	//作家证件号码
+	// 作家证件号码
 	private String idcard;
-	//作家电话
+	// 作家电话
 	private String telephone;
-	//作家传真
+	// 作家传真
 	private String fax;
-	//作家申报单位id
+	// 作家申报单位id
 	private Long orgId;
 	// 机构名称
-    private String orgNameOne;
-	//审核进度
+	private String orgNameOne;
+	// 审核进度
 	private Integer onlineProgress;
-	//审核人id
+	// 审核人id
 	private Long authUserId;
-	//审核通过时间
+	// 审核通过时间
 	private Timestamp authDate;
-	//纸质表进度
+	// 纸质表进度
 	private Integer offlineProgress;
-	//纸质表收到时间
+	// 纸质表收到时间
 	private Timestamp paperDate;
-	//是否暂存
+	// 是否暂存
 	private Integer isStaging;
-	//是否逻辑删除
+	// 是否逻辑删除
 	private Integer isDeleted;
-	//创建时间
+	// 创建时间
 	private Timestamp gmtCreate;
-	//修改时间
+	// 修改时间
 	private Timestamp gmtUpdate;
-	
+    // 是否书籍多选
+    private Boolean   isMultiBooks;
+    // 是否职位多选
+    private Boolean   isMultiPosition;
+    // 是否可选数字编委
+    private Boolean isDigitalEditorOptional;
+
+	public Boolean getIsDigitalEditorOptional() {
+		return isDigitalEditorOptional;
+	}
+
+	public void setIsDigitalEditorOptional(Boolean isDigitalEditorOptional) {
+		this.isDigitalEditorOptional = isDigitalEditorOptional;
+	}
+
+	public Boolean getIsMultiBooks() {
+		return isMultiBooks;
+	}
+
+	public void setIsMultiBooks(Boolean isMultiBooks) {
+		this.isMultiBooks = isMultiBooks;
+	}
+
+	public Boolean getIsMultiPosition() {
+		return isMultiPosition;
+	}
+
+	public void setIsMultiPosition(Boolean isMultiPosition) {
+		this.isMultiPosition = isMultiPosition;
+	}
+
 	public DeclarationOrDisplayVO() {
 	}
-	
+
 	public DeclarationOrDisplayVO(Long id) {
 		super();
 		this.id = id;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -98,6 +130,14 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getRealname() {
@@ -311,20 +351,22 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "DeclarationOrDisplayVO [id=" + id + ", materialId="
-				+ materialId + ", userId=" + userId + ", realname=" + realname
-				+ ", sex=" + sex + ", birthday=" + birthday + ", experience="
-				+ experience + ", orgName=" + orgName + ", position="
-				+ position + ", title=" + title + ", address=" + address
-				+ ", postcode=" + postcode + ", handphone=" + handphone
-				+ ", email=" + email + ", idtype=" + idtype + ", idcard="
-				+ idcard + ", telephone=" + telephone + ", fax=" + fax
-				+ ", orgId=" + orgId + ", orgNameOne=" + orgNameOne
-				+ ", onlineProgress=" + onlineProgress + ", authUserId="
-				+ authUserId + ", authDate=" + authDate + ", offlineProgress="
-				+ offlineProgress + ", paperDate=" + paperDate + ", isStaging="
-				+ isStaging + ", isDeleted=" + isDeleted + ", gmtCreate="
-				+ gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
+				+ materialId + ", userId=" + userId + ", username=" + username
+				+ ", realname=" + realname + ", sex=" + sex + ", birthday="
+				+ birthday + ", experience=" + experience + ", orgName="
+				+ orgName + ", position=" + position + ", title=" + title
+				+ ", address=" + address + ", postcode=" + postcode
+				+ ", handphone=" + handphone + ", email=" + email + ", idtype="
+				+ idtype + ", idcard=" + idcard + ", telephone=" + telephone
+				+ ", fax=" + fax + ", orgId=" + orgId + ", orgNameOne="
+				+ orgNameOne + ", onlineProgress=" + onlineProgress
+				+ ", authUserId=" + authUserId + ", authDate=" + authDate
+				+ ", offlineProgress=" + offlineProgress + ", paperDate="
+				+ paperDate + ", isStaging=" + isStaging + ", isDeleted="
+				+ isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
+				+ gmtUpdate + ", isMultiBooks=" + isMultiBooks
+				+ ", isMultiPosition=" + isMultiPosition
+				+ ", isDigitalEditorOptional=" + isDigitalEditorOptional + "]";
 	}
-	
-	
+
 }

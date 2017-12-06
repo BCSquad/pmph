@@ -66,6 +66,16 @@ public interface DeclarationDao {
 	 * @Return 作家申报信息
 	 */
 	List<Declaration> getDeclarationByMaterialId(Long materialId);
+	
+	/**
+	 * Description: 根据教材id查询作家申报信息
+	 * 
+	 * @Param materialId 教材id
+	 * 
+	 * @Return 作家申报信息
+	 */
+	List<DeclarationOrDisplayVO> getDeclarationOrDisplayVOByMaterialId(Long materialId);
+	
 
 	/**
 	 * Description:查询表的数据总记录数
@@ -94,7 +104,7 @@ public interface DeclarationDao {
 	List<DeclarationListVO> listDeclaration(PageParameter<Map<String, Object>> pageParameter);
 	
 	/**
-	 * 通过主键id查询一个作家申报信息并包含申报机构名称
+	 * 通过主键id查询一个作家申报信息并包含申报机构名称，是否多选
 	 * 
 	 * @Param id
 	 * 

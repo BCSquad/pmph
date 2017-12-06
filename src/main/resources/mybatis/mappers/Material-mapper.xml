@@ -69,23 +69,11 @@
 			<if test="isLastPositionRequired!=null">
 				is_last_position_required,
 			</if>
-			<if test="isNationalCourseUsed!=null">
-				is_national_course_used,
+			<if test="isCourseUsed!=null">
+				is_course_used,
 			</if>
-			<if test="isNationalCourseRequired!=null">
-				is_national_course_required,
-			</if>
-			<if test="isProvincialCourseUsed!=null">
-				is_provincial_course_used,
-			</if>
-			<if test="isProvincialCourseRequired!=null">
-				is_provincial_course_required,
-			</if>
-			<if test="isSchoolCourseUsed!=null">
-				is_school_course_used,
-			</if>
-			<if test="isSchoolCourseRequired!=null">
-				is_school_course_required,
+			<if test="isCourseRequired!=null">
+				is_course_required,
 			</if>
 			<if test="isNationalPlanUsed!=null">
 				is_national_plan_used,
@@ -138,8 +126,20 @@
 			<if test="menderId!=null">
 				mender_id,
 			</if>
-			<if test="msgId != null and msgId != '' ">
-				msg_id,
+			<if test="projectPermission != null ">
+				project_permission,
+			</if>
+			<if test="planPermission != null">
+				plan_permission,
+			</if>
+			<if test="isAchievementUsed != null">
+				is_achievement_used,
+			</if>
+			<if test="isAchievementRequired != null">
+				is_achievement_required,
+			</if>
+			<if test="isDigitalEditorOptional != null">
+				is_digital_editor_optional,
 			</if>
 		</trim>
 	</sql>
@@ -210,23 +210,11 @@
 			<if test="isLastPositionRequired!=null">
 				#{isLastPositionRequired},
 			</if>
-			<if test="isNationalCourseUsed!=null">
-				#{isNationalCourseUsed},
+			<if test="isCourseUsed!=null">
+				#{isCourseUsed},
 			</if>
-			<if test="isNationalCourseRequired!=null">
-				#{isNationalCourseRequired},
-			</if>
-			<if test="isProvincialCourseUsed!=null">
-				#{isProvincialCourseUsed},
-			</if>
-			<if test="isProvincialCourseRequired!=null">
-				#{isProvincialCourseRequired},
-			</if>
-			<if test="isSchoolCourseUsed!=null">
-				#{isSchoolCourseUsed},
-			</if>
-			<if test="isSchoolCourseRequired!=null">
-				#{isSchoolCourseRequired},
+			<if test="isCourseRequired!=null">
+				#{isCourseRequired},
 			</if>
 			<if test="isNationalPlanUsed!=null">
 				#{isNationalPlanUsed},
@@ -279,8 +267,20 @@
 			<if test="menderId!=null">
 				#{menderId},
 			</if>
-			<if test="msgId != null and msgId != '' ">
-				#{msgId},
+			<if test="projectPermission != null ">
+				#{projectPermission},
+			</if>
+			<if test="planPermission != null">
+				#{planPermission},
+			</if>
+			<if test="isAchievementUsed != null">
+				#{isAchievementUsed},
+			</if>
+			<if test="isAchievementRequired != null">
+				#{isAchievementRequired},
+			</if>
+			<if test="isDigitalEditorOptional != null">
+				#{isDigitalEditorOptional},
 			</if>
 		</trim>
 	</sql>
@@ -369,23 +369,11 @@
 			<if test="isLastPositionRequired !=null ">
 				is_last_position_required=#{isLastPositionRequired},
 			</if>
-			<if test="isNationalCourseUsed !=null  ">
-				is_national_course_used=#{isNationalCourseUsed},
+			<if test="isCourseUsed !=null  ">
+				is_course_used=#{isCourseUsed},
 			</if>
-			<if test="isNationalCourseRequired !=null  ">
-				is_national_course_required=#{isNationalCourseRequired},
-			</if>
-			<if test="isProvincialCourseUsed !=null  ">
-				is_provincial_course_used=#{isProvincialCourseUsed},
-			</if>
-			<if test="isProvincialCourseRequired !=null  ">
-				is_provincial_course_required=#{isProvincialCourseRequired},
-			</if>
-			<if test="isSchoolCourseUsed !=null  ">
-				is_school_course_used=#{isSchoolCourseUsed},
-			</if>
-			<if test="isSchoolCourseRequired !=null  ">
-				is_school_course_required=#{isSchoolCourseRequired},
+			<if test="isCourseRequired !=null  ">
+				is_course_required=#{isCourseRequired},
 			</if>
 			<if test="isNationalPlanUsed !=null  ">
 				is_national_plan_used=#{isNationalPlanUsed},
@@ -432,8 +420,20 @@
 			<if test="menderId !=null  ">
 				mender_id=#{menderId},
 			</if>
-			<if test="msgId != null and msgId != '' ">
-				msg_id = #{msgId},
+			<if test="projectPermission != null ">
+				project_permission = #{projectPermission} ,
+			</if>
+			<if test="planPermission != null">
+				plan_permission = #{planPermission} ,
+			</if>
+			<if test="isAchievementUsed != null">
+				is_achievement_used = #{isAchievementUsed},
+			</if>
+			<if test="isAchievementRequired != null">
+				is_achievement_required = #{isAchievementRequired},
+			</if>
+			<if test="isDigitalEditorOptional != null">
+				is_digital_editor_optional = #{isDigitalEditorOptional},
 			</if>
 		</set>
 		where
@@ -507,8 +507,7 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id,
-		m.msg_id
+		m.founder_id
 		FROM
 		material m
 		LEFT JOIN material_contact c ON m.id = c.material_id
@@ -547,8 +546,7 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id,
-		m.msg_id
+		m.founder_id
 		FROM
 		material m
 		LEFT JOIN material_contact c ON m.id = c.material_id
@@ -591,8 +589,7 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id,
-		m.msg_id
+		m.founder_id
 		FROM
 		material m
 		LEFT JOIN material_contact c ON m.id = c.material_id
@@ -631,8 +628,7 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id,
-		m.msg_id
+		m.founder_id
 		FROM
 		material m
 		LEFT JOIN material_contact c ON m.id = c.material_id
