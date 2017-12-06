@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
@@ -105,7 +104,7 @@ public interface DeclarationDao {
 	List<DeclarationListVO> listDeclaration(PageParameter<Map<String, Object>> pageParameter);
 	
 	/**
-	 * 通过主键id查询一个作家申报信息并包含申报机构名称
+	 * 通过主键id查询一个作家申报信息并包含申报机构名称，是否多选
 	 * 
 	 * @Param id
 	 * 
