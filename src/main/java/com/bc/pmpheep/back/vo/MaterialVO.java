@@ -32,9 +32,9 @@ public class MaterialVO implements Serializable{
 	private String   materialExtensions;
 	//项目编辑
 	private String   materialProjectEditors;
-	//通知附件信息         （更新的时候需要）
+	//通知附件信息       
 	private String materialNoticeAttachments;
-	//通知备注附件信息 （更新的时候需要）
+	//通知备注附件信息 
 	private String materialNoteAttachments;
 	//策划编辑权限  项目编辑权限8位二进制字符串
 	private String cehuaPowers;
