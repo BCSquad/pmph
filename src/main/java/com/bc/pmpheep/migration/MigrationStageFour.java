@@ -306,12 +306,16 @@ public class MigrationStageFour {
             material.setIsAcadeRequired("1".equals(String.valueOf(oldMaterial.get("isfillacadeexp"))));//is_acade_required,
             material.setIsLastPositionUsed("1".equals(String.valueOf(oldMaterial.get("isusematerpartexp"))));//is_last_position_used,
             material.setIsLastPositionRequired("1".equals(String.valueOf(oldMaterial.get("isfillmaterpartexp"))));//is_last_position_required,
-            material.setIsNationalCourseUsed("1".equals(String.valueOf(oldMaterial.get("isusecountry"))));//is_national_course_used,
-            material.setIsNationalCourseRequired("1".equals(String.valueOf(oldMaterial.get("isfillcountry"))));//is_national_course_required,
-            material.setIsProvincialCourseUsed("1".equals(String.valueOf(oldMaterial.get("isuseprovexce"))));//is_provincial_course_used,
-            material.setIsProvincialCourseRequired("1".equals(String.valueOf(oldMaterial.get("isfillprovexce"))));//is_provincial_course_required,
-            material.setIsSchoolCourseUsed("1".equals(String.valueOf(oldMaterial.get("isuseschoolconstr"))));//is_school_course_used,
-            material.setIsSchoolCourseRequired("1".equals(String.valueOf(oldMaterial.get("isfillschoolconstr"))));//is_school_course_required,
+            material.setIsCourseUsed(
+            		"1".equals(String.valueOf(oldMaterial.get("isusecountry")))
+            		||"1".equals(String.valueOf(oldMaterial.get("isuseprovexce")))
+            		||"1".equals(String.valueOf(oldMaterial.get("isuseschoolconstr")))
+            		);//is_course_used,
+            material.setIsCourseRequired(
+            		"1".equals(String.valueOf(oldMaterial.get("isfillcountry")))
+            		||"1".equals(String.valueOf(oldMaterial.get("isfillprovexce")))
+            		||"1".equals(String.valueOf(oldMaterial.get("isfillschoolconstr")))
+            		);//is_course_required,
             material.setIsNationalPlanUsed("1".equals(String.valueOf(oldMaterial.get("isuseeditormater"))));//is_national_plan_used,
             material.setIsNationalPlanRequired("1".equals(String.valueOf(oldMaterial.get("isfilleditormater"))));//is_national_plan_required,
             material.setIsTextbookUsed("1".equals(String.valueOf(oldMaterial.get("isusematerwrite"))));//is_textbook_writer_used,
