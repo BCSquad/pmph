@@ -72,7 +72,7 @@ public class MaterialController {
                     		materialVO,
 //                    		noticeFiles,
 //                            noteFiles,
-                            true)
+                            false)
             						);
         } catch (IOException e) {
         	ResponseBean responseBean = new ResponseBean(e);
