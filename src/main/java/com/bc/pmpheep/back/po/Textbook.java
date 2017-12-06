@@ -26,7 +26,7 @@ public class Textbook implements java.io.Serializable {
 	//是否已选定第一主编
 	private Boolean isChiefChosen;
 	//是否已预选编委
-	private Boolean isQualifierSelected;
+	private Boolean  isChiefPublished;
 	//主编是否选定编委
 	private Boolean isListSelected;
 	//策划编辑是否确定名单
@@ -229,12 +229,7 @@ public class Textbook implements java.io.Serializable {
 	public void setIsChiefChosen(Boolean isChiefChosen) {
 		this.isChiefChosen = isChiefChosen;
 	}
-	public Boolean getIsQualifierSelected() {
-		return isQualifierSelected;
-	}
-	public void setIsQualifierSelected(Boolean isQualifierSelected) {
-		this.isQualifierSelected = isQualifierSelected;
-	}
+
 	public Boolean getIsListSelected() {
 		return isListSelected;
 	}
@@ -271,21 +266,29 @@ public class Textbook implements java.io.Serializable {
 	public void setGmtUpdate(Timestamp gmtUpdate) {
 		this.gmtUpdate = gmtUpdate;
 	}
+	
+	public Boolean getIsChiefPublished() {
+		return isChiefPublished;
+	}
+	public void setIsChiefPublished(Boolean isChiefPublished) {
+		this.isChiefPublished = isChiefPublished;
+	}
+	
 	@Override
 	public String toString() {
 		return "{id:" + id + ", materialId:" + materialId + ", textbookName:"
 				+ textbookName + ", textbookRound:" + textbookRound
 				+ ", planningEditor:" + planningEditor + ", isChiefChosen:"
-				+ isChiefChosen + ", isQualifierSelected:"
-				+ isQualifierSelected + ", isListSelected:" + isListSelected
+				+ isChiefChosen + ", isChiefPublished:" + isChiefPublished
+				+ ", isListSelected:" + isListSelected
 				+ ", isPlanningEditorConfirm:" + isPlanningEditorConfirm
 				+ ", isProjectEditorConfirm:" + isProjectEditorConfirm
 				+ ", isLocked:" + isLocked + ", isPublished:" + isPublished
 				+ ", gmtPublished:" + gmtPublished + ", revisionTimes:"
 				+ revisionTimes + ", republishTimes:" + republishTimes
-				+ ", isbn:" + isbn + ", sort:" + sort + ",topicNumber:" + topicNumber +", founderId:"
-				+ founderId + ", gmtCreate:" + gmtCreate + ", gmtUpdate:"
-				+ gmtUpdate + "}";
+				+ ", isbn:" + isbn + ", sort:" + sort + ", topicNumber:"
+				+ topicNumber + ", founderId:" + founderId + ", gmtCreate:"
+				+ gmtCreate + ", gmtUpdate:" + gmtUpdate + "}";
 	}
 
 	
