@@ -1,7 +1,9 @@
 package com.bc.pmpheep.back.controller.material;
 
 import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.MaterialService;
@@ -52,21 +55,23 @@ public class MaterialController {
     @ResponseBody
     @LogDetail(businessType = Business_Type, logRemark = "新建遴选公告")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseBean add(MaterialVO materialVO, HttpServletRequest request,
-    MultipartFile[] noticeFiles, MultipartFile[] noteFiles, String deadline, String actualDeadline,
-    String ageDeadline) {
+    public ResponseBean add( HttpServletRequest request,MaterialVO materialVO,
+//						    MultipartFile[] noticeFiles, 
+//						    MultipartFile[] noteFiles, 
+						    String deadline, String actualDeadline,
+						    String ageDeadline) {
 
-        String sessionId = CookiesUtil.getSessionId(request);
+        
         try {
             materialVO.getMaterial().setDeadline(DateUtil.str3Date(deadline));
             materialVO.getMaterial().setActualDeadline(DateUtil.str3Date(actualDeadline));
             materialVO.getMaterial().setAgeDeadline(DateUtil.str3Date(ageDeadline));
             return new ResponseBean(
             			materialService.addOrUpdateMaterial(
-                    		sessionId,
+            				request,
                     		materialVO,
-                    		noticeFiles,
-                            noteFiles,
+//                    		noticeFiles,
+//                            noteFiles,
                             true)
             						);
         } catch (IOException e) {
@@ -98,10 +103,11 @@ public class MaterialController {
     @ResponseBody
     @LogDetail(businessType = Business_Type, logRemark = "修改遴选公告")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseBean update(HttpServletRequest request, MaterialVO materialVO,
-    MultipartFile[] noticeFiles, MultipartFile[] noteFiles, String deadline, String actualDeadline,
+    public ResponseBean update( MaterialVO materialVO,HttpServletRequest request,
+//    					MultipartFile[] noticeFiles, 
+//    					MultipartFile[] noteFiles,
+    					String deadline, String actualDeadline,
     String ageDeadline) {
-        String sessionId = CookiesUtil.getSessionId(request);
         try {
             materialVO.getMaterial().setDeadline(DateUtil.str3Date(deadline));
             materialVO.getMaterial().setActualDeadline(DateUtil.str3Date(actualDeadline));
@@ -109,10 +115,10 @@ public class MaterialController {
             
             return new ResponseBean(
             				materialService.addOrUpdateMaterial(
-                    		sessionId,
+            				request,
                     		materialVO,
-                    		noticeFiles,
-                            noteFiles,
+//                    		noticeFiles,
+//                            noteFiles,
                             true)
                             );
         } catch (IOException e) {
