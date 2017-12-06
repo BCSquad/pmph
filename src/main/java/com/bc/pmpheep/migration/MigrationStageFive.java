@@ -135,11 +135,11 @@ public class MigrationStageFive {
              * 40：第一主编已选编委；50：策划编辑审核通过编委；60：项目编辑审核通过编委；70：主任审核通过；80：已发布
              */
             Integer dealtype = Integer.parseInt((String) map.get("dealtype"));
-            if (dealtype >= 12) {
+            if (dealtype >= 11) {
                 textbook.setIsChiefChosen(true);// 是否已选定第一主编
             }
-            if (dealtype >= 30) {
-                textbook.setIsQualifierSelected(true);// 是否已预选编委
+            if (dealtype >= 12) {
+                textbook.setIsChiefPublished(true);// 是否已预选编委
             }
             if (dealtype >= 40) {
                 textbook.setIsListSelected(true);// 主编是否选定编委
