@@ -150,6 +150,9 @@
 			<if test="isAchievementRequired != null">
 				is_achievement_required,
 			</if>
+			<if test="isDigitalEditorOptional != null">
+				is_digital_editor_optional,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -299,6 +302,9 @@
 			</if>
 			<if test="isAchievementRequired != null">
 				#{isAchievementRequired},
+			</if>
+			<if test="isDigitalEditorOptional != null">
+				#{isDigitalEditorOptional},
 			</if>
 		</trim>
 	</sql>
@@ -461,6 +467,9 @@
 			</if>
 			<if test="isAchievementRequired != null">
 				is_achievement_required = #{isAchievementRequired},
+			</if>
+			<if test="isDigitalEditorOptional != null">
+				is_digital_editor_optional = #{isDigitalEditorOptional},
 			</if>
 		</set>
 		where

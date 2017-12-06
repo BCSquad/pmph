@@ -112,6 +112,8 @@ public class Material implements java.io.Serializable {
     private Boolean isAchievementUsed    ;
     //个人成就可用
     private Boolean isAchievementRequired;
+    //
+    private Boolean isDigitalEditorOptional ;
     
 
     // Constructors
@@ -621,6 +623,16 @@ public class Material implements java.io.Serializable {
 	public void setIsAchievementRequired(Boolean isAchievementRequired) {
 		this.isAchievementRequired = isAchievementRequired;
 	}
+	
+	
+
+	public Boolean getIsDigitalEditorOptional() {
+		return isDigitalEditorOptional;
+	}
+
+	public void setIsDigitalEditorOptional(Boolean isDigitalEditorOptional) {
+		this.isDigitalEditorOptional = isDigitalEditorOptional;
+	}
 
 	@Override
 	public String toString() {
@@ -661,55 +673,11 @@ public class Material implements java.io.Serializable {
 				+ ", projectPermission:" + projectPermission
 				+ ", planPermission:" + planPermission + ", isAchievementUsed:"
 				+ isAchievementUsed + ", isAchievementRequired:"
-				+ isAchievementRequired + ", getId():" + getId()
-				+ ", getMaterialName():" + getMaterialName()
-				+ ", getMaterialRound():" + getMaterialRound()
-				+ ", getMaterialType():" + getMaterialType()
-				+ ", getDeadline():" + getDeadline() + ", getActualDeadline():"
-				+ getActualDeadline() + ", getAgeDeadline():"
-				+ getAgeDeadline() + ", getMailAddress():" + getMailAddress()
-				+ ", getDepartmentId():" + getDepartmentId()
-				+ ", getDirector():" + getDirector() + ", getIsMultiBooks():"
-				+ getIsMultiBooks() + ", getIsMultiPosition():"
-				+ getIsMultiPosition() + ", getIsEduExpUsed():"
-				+ getIsEduExpUsed() + ", getIsEduExpRequired():"
-				+ getIsEduExpRequired() + ", getIsWorkExpUsed():"
-				+ getIsWorkExpUsed() + ", getIsWorkExpRequired():"
-				+ getIsWorkExpRequired() + ", getIsTeachExpUsed():"
-				+ getIsTeachExpUsed() + ", getIsTeachExpRequired():"
-				+ getIsTeachExpRequired() + ", getIsAcadeUsed():"
-				+ getIsAcadeUsed() + ", getIsAcadeRequired():"
-				+ getIsAcadeRequired() + ", getIsLastPositionUsed():"
-				+ getIsLastPositionUsed() + ", getIsLastPositionRequired():"
-				+ getIsLastPositionRequired() + ", getIsNationalCourseUsed():"
-				+ getIsNationalCourseUsed()
-				+ ", getIsNationalCourseRequired():"
-				+ getIsNationalCourseRequired()
-				+ ", getIsProvincialCourseUsed():"
-				+ getIsProvincialCourseUsed()
-				+ ", getIsProvincialCourseRequired():"
-				+ getIsProvincialCourseRequired()
-				+ ", getIsSchoolCourseUsed():" + getIsSchoolCourseUsed()
-				+ ", getIsSchoolCourseRequired():"
-				+ getIsSchoolCourseRequired() + ", getIsNationalPlanUsed():"
-				+ getIsNationalPlanUsed() + ", getIsNationalPlanRequired():"
-				+ getIsNationalPlanRequired() + ", getIsTextbookUsed():"
-				+ getIsTextbookUsed() + ", getIsTextbookRequired():"
-				+ getIsTextbookRequired() + ", getIsOtherTextbookUsed():"
-				+ getIsOtherTextbookUsed() + ", getIsOtherTextbookRequired():"
-				+ getIsOtherTextbookRequired() + ", getIsResearchUsed():"
-				+ getIsResearchUsed() + ", getIsResearchRequired():"
-				+ getIsResearchRequired() + ", getIsPublished():"
-				+ getIsPublished() + ", getIsPublic():" + getIsPublic()
-				+ ", getIsAllTextbookPublished():"
-				+ getIsAllTextbookPublished() + ", getIsForceEnd():"
-				+ getIsForceEnd() + ", getIsDeleted():" + getIsDeleted()
-				+ ", getGmtCreate():" + getGmtCreate() + ", getFounderId():"
-				+ getFounderId() + ", getGmtUpdate():" + getGmtUpdate()
-				+ ", getMenderId():" + getMenderId() + ", getClass():"
-				+ getClass() + ", hashCode():" + hashCode() + ", toString():"
-				+ super.toString() + "}";
+				+ isAchievementRequired + ", isDigitalEditorOptional:"
+				+ isDigitalEditorOptional + "}";
 	}
+
+	
 
     
 
