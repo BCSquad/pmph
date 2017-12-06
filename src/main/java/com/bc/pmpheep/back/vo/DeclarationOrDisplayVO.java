@@ -69,6 +69,26 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 	private Timestamp gmtCreate;
 	// 修改时间
 	private Timestamp gmtUpdate;
+    // 是否书籍多选
+    private Boolean   isMultiBooks;
+    // 是否职位多选
+    private Boolean   isMultiPosition;
+
+	public Boolean getIsMultiBooks() {
+		return isMultiBooks;
+	}
+
+	public void setIsMultiBooks(Boolean isMultiBooks) {
+		this.isMultiBooks = isMultiBooks;
+	}
+
+	public Boolean getIsMultiPosition() {
+		return isMultiPosition;
+	}
+
+	public void setIsMultiPosition(Boolean isMultiPosition) {
+		this.isMultiPosition = isMultiPosition;
+	}
 
 	public DeclarationOrDisplayVO() {
 	}
@@ -320,15 +340,22 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "DeclarationOrDisplayVO [id=" + id + ", materialId=" + materialId + ", userId=" + userId + ", realname="
-				+ realname + ", sex=" + sex + ", birthday=" + birthday + ", experience=" + experience + ", orgName="
-				+ orgName + ", position=" + position + ", title=" + title + ", address=" + address + ", postcode="
-				+ postcode + ", handphone=" + handphone + ", email=" + email + ", idtype=" + idtype + ", idcard="
-				+ idcard + ", telephone=" + telephone + ", fax=" + fax + ", orgId=" + orgId + ", orgNameOne="
-				+ orgNameOne + ", onlineProgress=" + onlineProgress + ", authUserId=" + authUserId + ", authDate="
-				+ authDate + ", offlineProgress=" + offlineProgress + ", paperDate=" + paperDate + ", isStaging="
-				+ isStaging + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate
-				+ "]";
+		return "DeclarationOrDisplayVO [id=" + id + ", materialId="
+				+ materialId + ", userId=" + userId + ", username=" + username
+				+ ", realname=" + realname + ", sex=" + sex + ", birthday="
+				+ birthday + ", experience=" + experience + ", orgName="
+				+ orgName + ", position=" + position + ", title=" + title
+				+ ", address=" + address + ", postcode=" + postcode
+				+ ", handphone=" + handphone + ", email=" + email + ", idtype="
+				+ idtype + ", idcard=" + idcard + ", telephone=" + telephone
+				+ ", fax=" + fax + ", orgId=" + orgId + ", orgNameOne="
+				+ orgNameOne + ", onlineProgress=" + onlineProgress
+				+ ", authUserId=" + authUserId + ", authDate=" + authDate
+				+ ", offlineProgress=" + offlineProgress + ", paperDate="
+				+ paperDate + ", isStaging=" + isStaging + ", isDeleted="
+				+ isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
+				+ gmtUpdate + ", isMultiBooks=" + isMultiBooks
+				+ ", isMultiPosition=" + isMultiPosition + "]";
 	}
 
 }
