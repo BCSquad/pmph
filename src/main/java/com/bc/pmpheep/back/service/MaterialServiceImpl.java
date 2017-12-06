@@ -407,8 +407,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			if(null == materialNoticeAttachment.getId()){
 				String tempPath = realpath + materialNoticeAttachment.getAttachment() ;
 				File file = new File(tempPath);
+				String fileName = file.getName();
 				materialNoticeAttachment.setAttachment(String.valueOf(new Date().getTime()));
-				materialNoticeAttachment.setAttachmentName(file.getName());
+				materialNoticeAttachment.setAttachmentName(fileName);
 				materialNoticeAttachment.setDownload(0L);
 				materialNoticeAttachment.setMaterialExtraId(materialExtra.getId());
 				// 保存通知
@@ -419,6 +420,10 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialNoticeAttachment.setAttachment(noticeId);
 				// 更新通知
 				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
+				//删除文件
+				file.delete();
+				//删除目录
+				new File(tempPath.replace(fileName, "")).delete();
 			}else{
 				newTempNoticeFileIds += materialNoticeAttachment.getId()+",";
 			}
@@ -443,8 +448,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			if(null == materialNoteAttachment.getId()){
 				String tempPath = realpath + materialNoteAttachment.getAttachment() ;
 				File file = new File(tempPath);
+				String fileName =file.getName() ;
 				materialNoteAttachment.setAttachment(String.valueOf(new Date().getTime()));
-				materialNoteAttachment.setAttachmentName(file.getName());
+				materialNoteAttachment.setAttachmentName(fileName);
 				materialNoteAttachment.setDownload(0L);
 				materialNoteAttachment.setMaterialExtraId(materialExtra.getId());
 				// 保存备注
@@ -455,6 +461,10 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialNoteAttachment.setAttachment(noticeId);
 				// 更新备注
 				materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
+				//删除文件
+				file.delete();
+				//删除目录
+				new File(tempPath.replace(fileName, "")).delete();
 			}else{
 				newTempNoteFileIds += materialNoteAttachment.getId()+",";
 			}
