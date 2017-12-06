@@ -407,6 +407,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			if(null == materialNoticeAttachment.getId()){
 				String tempPath = realpath + materialNoticeAttachment.getAttachment() ;
 				File file = new File(tempPath);
+				if(!file.exists()){//先放过吧
+					continue;
+				}
 				String fileName = file.getName();
 				materialNoticeAttachment.setAttachment(String.valueOf(new Date().getTime()));
 				materialNoticeAttachment.setAttachmentName(fileName);
@@ -421,9 +424,14 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				// 更新通知
 				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
 				//删除文件
-				file.delete();
+				if(file.exists()){
+					file.delete();
+				}
 				//删除目录
-				new File(tempPath.replace(fileName, "")).delete();
+				File dir =  new File(tempPath.replace(fileName, "")) ;
+				if(dir.exists()){
+					dir.delete();
+				}
 			}else{
 				newTempNoticeFileIds += materialNoticeAttachment.getId()+",";
 			}
@@ -448,6 +456,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			if(null == materialNoteAttachment.getId()){
 				String tempPath = realpath + materialNoteAttachment.getAttachment() ;
 				File file = new File(tempPath);
+				if(!file.exists()){//先放过吧
+					continue;
+				}
 				String fileName =file.getName() ;
 				materialNoteAttachment.setAttachment(String.valueOf(new Date().getTime()));
 				materialNoteAttachment.setAttachmentName(fileName);
@@ -462,9 +473,14 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				// 更新备注
 				materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
 				//删除文件
-				file.delete();
+				if(file.exists()){
+					file.delete();
+				}
 				//删除目录
-				new File(tempPath.replace(fileName, "")).delete();
+				File dir =  new File(tempPath.replace(fileName, "")) ;
+				if(dir.exists()){
+					dir.delete();
+				}
 			}else{
 				newTempNoteFileIds += materialNoteAttachment.getId()+",";
 			}
