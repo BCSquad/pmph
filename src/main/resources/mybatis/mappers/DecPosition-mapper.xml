@@ -569,10 +569,11 @@
 		SUM(if((d.is_digital_editor is not null and d.is_digital_editor
 		!=0),1,0)) DESC)t1,
 		(SELECT
-		@rowno:=0)t2;
+		@rowno:=0)t2 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
+		;
 	</select>
 	<!-- 申报情况按学校统计（按申报数数排序） -->
 	<select id="getSchoolResultPreset" parameterType="pageParameter"
@@ -611,10 +612,11 @@
 		</if>
 		GROUP BY a.id ORDER BY SUM(if((d.preset_position in
 		(1,2,3,4,5,6,7)),1,0)) DESC)t1,
-		(SELECT @rowno:=0)t2;
+		(SELECT @rowno:=0)t2 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
+		;
 	</select>
 	<select id="getBooks" parameterType="java.lang.Long" resultType="java.lang.Integer">
 		SELECT COUNT(a.id) FROM textbook a WHERE a.material_id =
@@ -656,10 +658,11 @@
 			('%',#{parameter.bookName},'%')
 		</if>
 		GROUP BY a.id ORDER BY a.sort ASC)t1,
-		(SELECT @rowno:=0)t2;
+		(SELECT @rowno:=0)t2 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
+		;
 	</select>
 	<!-- 申报结果按学校统计（按当选数排序） -->
 	<select id="getSchoolListChosen" parameterType="pageParameter"
@@ -694,9 +697,10 @@
 		SUM(if((d.is_digital_editor is not null and d.is_digital_editor
 		!=0),1,0)) DESC)t1,
 		(SELECT
-		@rowno:=0)t2;
+		@rowno:=0)t2 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
+		;
 	</select>
 </mapper>
