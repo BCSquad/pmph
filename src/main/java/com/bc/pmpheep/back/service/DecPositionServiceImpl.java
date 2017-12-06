@@ -300,16 +300,16 @@ public class DecPositionServiceImpl implements DecPositionService {
             List<DeclarationSituationSchoolResultVO> list = new ArrayList<>();
             for (DeclarationSituationSchoolResultVO declarationSituationSchoolResultVO : declarationSituationSchoolResultVOs) {
                 // 计算申报人数
-                Integer presetPersons =
-                declarationSituationSchoolResultVO.getPresetPositionEditor()
-                + declarationSituationSchoolResultVO.getPresetPositionSubeditor()
-                + declarationSituationSchoolResultVO.getPresetPositionEditorial();
+                Integer presetPersons = 
+                		declarationSituationSchoolResultVO.getPresetPositionEditor()
+                		+ declarationSituationSchoolResultVO.getPresetPositionSubeditor()
+                		+ declarationSituationSchoolResultVO.getPresetPositionEditorial();
                 // 计算当选人数
-                Integer chosenPersons =
-                declarationSituationSchoolResultVO.getChosenPositionEditor()
-                + declarationSituationSchoolResultVO.getChosenPositionSubeditor()
-                + declarationSituationSchoolResultVO.getChosenPositionEditorial()
-                + declarationSituationSchoolResultVO.getIsDigitalEditor();
+                Integer chosenPersons = 
+                		declarationSituationSchoolResultVO.getChosenPositionEditor()
+                		+ declarationSituationSchoolResultVO.getChosenPositionSubeditor()
+                		+ declarationSituationSchoolResultVO.getChosenPositionEditorial()
+                		+ declarationSituationSchoolResultVO.getIsDigitalEditor();
                 declarationSituationSchoolResultVO.setPresetPersons(presetPersons);
                 declarationSituationSchoolResultVO.setChosenPersons(chosenPersons);
                 list.add(declarationSituationSchoolResultVO);

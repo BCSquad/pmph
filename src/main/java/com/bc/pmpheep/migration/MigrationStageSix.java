@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.bc.pmpheep.back.po.DecAcade;
+import com.bc.pmpheep.back.po.DecAchievement;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecExtension;
@@ -28,6 +29,7 @@ import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.service.DecAcadeService;
+import com.bc.pmpheep.back.service.DecAchievementService;
 import com.bc.pmpheep.back.service.DecCourseConstructionService;
 import com.bc.pmpheep.back.service.DecEduExpService;
 import com.bc.pmpheep.back.service.DecExtensionService;
@@ -82,6 +84,8 @@ public class MigrationStageSix {
     @Resource
     DecResearchService decResearchService;
     @Resource
+    DecAchievementService decAchievementService;
+    @Resource
     DecExtensionService decExtensionService;
     @Resource
     FileService fileService;
@@ -100,6 +104,7 @@ public class MigrationStageSix {
         decNationalPlan();
         decTextbook();
         decResearch();
+        decAchievement();
         decExtension();
         decPosition();
         logger.info("迁移第六步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
@@ -1015,6 +1020,60 @@ public class MigrationStageSix {
     }
 
     /**
+     * 作家个人成就表
+     */
+    protected void decAchievement() {
+        String tableName = "teach_material_extvalue"; // 要迁移的旧库表名
+        JdbcHelper.addColumn(tableName); // 增加new_pk字段
+        String sql = "select *,wd.new_pk wdid from teach_material_extvalue wme "
+                + "left join writer_declaration wd on wd.writerid=wme.writerid "
+                + "where tme.expendname = '个人成就'";
+        List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        int count = 0; // 迁移成功的条目数
+        List<Map<String, Object>> excel = new LinkedList<>();
+        String regular = "^[0-9a-zA-Z]{8,10}$"; // 正则表达式判断
+        /* 开始遍历查询结果 */
+        for (Map<String, Object> map : maps) {
+            StringBuilder sb = new StringBuilder();
+            Double id = (Double) map.get("extvalueid"); // 旧表主键值
+            Long declarationid = (Long) map.get("wdid"); // 申报表id
+            DecAchievement decAchievement = new DecAchievement();
+            if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
+                excel.add(map);
+                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                continue;
+            }
+            decAchievement.setDeclarationId(declarationid);
+            String content = (String) map.get("content"); // 个人成就内容
+            if (("无").equals(content) || regular.equals(content)) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到个人成就内容为无字。"));
+                excel.add(map);
+                logger.error("找到个人成就内容为无字，此结果将被记录在Excel中");
+            }
+            String contents = content.trim();
+            decAchievement.setContent(contents);
+            decAchievement = decAchievementService.addDecAchievement(decAchievement);
+            long pk = decAchievement.getId();
+            JdbcHelper.updateNewPrimaryKey(tableName, pk, "extvalueid", id);
+            count++;
+        }
+        if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, "作家个人成就表", "dec_achievement");
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
+        }
+        logger.info("teach_material_extvalue表迁移完成，异常条目数量：{}", excel.size());
+        logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+        //记录信息
+        Map<String, Object> msg = new HashMap<String, Object>();
+        msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + maps.size());
+        SQLParameters.STATISTICS.add(msg);
+    }
+    
+    /**
      * 作家扩展项填报表
      */
     protected void decExtension() {
@@ -1022,7 +1081,8 @@ public class MigrationStageSix {
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
         String sql = "select *,wd.new_pk wdid,tme.new_pk tmeid from teach_material_extvalue wme "
                 + "left join writer_declaration wd on wd.writerid=wme.writerid "
-                + "left join teach_material_extend tme on tme.expendid=wme.expendid";
+                + "left join teach_material_extend tme on tme.expendid=wme.expendid "
+                + "where tme.expendname != '个人成就'";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0; // 迁移成功的条目数
         int extensionidCount = 0;
