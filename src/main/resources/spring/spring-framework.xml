@@ -127,7 +127,7 @@
             write-timeout="${mongo.writeTimeout}"
             write-fsync="${mongo.writeFsync}" />
     </mongo:mongo>
-    <mongo:db-factory id="mongoDbFactory" dbname="${mongo.dbName}" mongo-ref="mongo" authentication-dbname="admin" username="${mongo.username}" password="${mongo.password}"/>
+    <mongo:db-factory id="mongoDbFactory" dbname="${mongo.dbName}" mongo-ref="mongo" authentication-dbname="${mongo.authenticationDbname}" username="${mongo.username}" password="${mongo.password}"/>
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
     </bean>
