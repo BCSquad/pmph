@@ -23,6 +23,16 @@ public class NewDecPosition implements Serializable {
 	// 是否为数字编辑
     @JsonProperty("isDigitalEditor")
     private Boolean   isDigitalEditor;
+    // 显示
+    private String showPosition;
+
+    public String getShowPosition() {
+		return showPosition;
+	}
+
+	public void setShowPosition(String showPosition) {
+		this.showPosition = showPosition;
+	}
 	public Boolean getIsDigitalEditor() {
 		return isDigitalEditor;
 	}

@@ -183,20 +183,63 @@ public class DecPositionServiceImpl implements DecPositionService {
             Long id = newDecPosition.getId();
             Long declarationId = newDecPosition.getDeclarationId();
             Long textbookId = newDecPosition.getTextbookId();
-            Integer presetPosition = newDecPosition.getPresetPosition();
+            //Integer presetPosition = newDecPosition.getPresetPosition();
             String file = newDecPosition.getFile();
-            Boolean isDigitalEditor = newDecPosition.getIsDigitalEditor();
+            //Boolean isDigitalEditor = newDecPosition.getIsDigitalEditor();
+            String showPosition = newDecPosition.getShowPosition();
             DecPosition decPosition = new DecPosition();
-            String mongoId = null;
+            if (showPosition.equals("编委")) {
+            	decPosition.setPresetPosition(1);
+            	decPosition.setIsDigitalEditor(false);
+            } else if (showPosition.equals("编委,数字编委")) {
+            	decPosition.setPresetPosition(1);
+            	decPosition.setIsDigitalEditor(true);
+			} else if (showPosition.equals("副主编")) {
+				decPosition.setPresetPosition(2);
+				decPosition.setIsDigitalEditor(false);
+			} else if (showPosition.equals("副主编,数字编委")) {
+				decPosition.setPresetPosition(2);
+				decPosition.setIsDigitalEditor(true);
+			} else if (showPosition.equals("副主编,编委")) {
+				decPosition.setPresetPosition(3);
+				decPosition.setIsDigitalEditor(false);
+			} else if (showPosition.equals("副主编,编委,数字编委")) {
+				decPosition.setPresetPosition(3);
+				decPosition.setIsDigitalEditor(true);
+			} else if (showPosition.equals("主编")) {
+				decPosition.setPresetPosition(4);
+				decPosition.setIsDigitalEditor(false);
+			} else if (showPosition.equals("主编,数字编委")) {
+				decPosition.setPresetPosition(4);
+				decPosition.setIsDigitalEditor(true);
+			} else if (showPosition.equals("主编,编委")) {
+				decPosition.setPresetPosition(5);
+				decPosition.setIsDigitalEditor(false);
+			} else if (showPosition.equals("主编,编委,数字编委")) {
+				decPosition.setPresetPosition(5);
+				decPosition.setIsDigitalEditor(true);
+			} else if (showPosition.equals("主编,副主编")) {
+				decPosition.setPresetPosition(6);
+				decPosition.setIsDigitalEditor(false);
+			} else if (showPosition.equals("主编,副主编,数字编委")) {
+				decPosition.setPresetPosition(6);
+				decPosition.setIsDigitalEditor(true);
+			} else if (showPosition.equals("主编,副主编,编委")) {
+				decPosition.setPresetPosition(7);
+				decPosition.setIsDigitalEditor(false);
+			} else if (showPosition.equals("主编,副主编,编委,数字编委")) {
+				decPosition.setPresetPosition(7);
+				decPosition.setIsDigitalEditor(true);
+			}
+            File files = null;
             if (StringUtil.isEmpty(file)) {
             	decPosition.setSyllabusId(null);
                 decPosition.setSyllabusName(null);
             } else {
-            	File files = new File(file);
+            	files = new File(file);
             	if (files.exists()) {
             		String fileName = files.getName(); // 获取原文件名字
                     decPosition.setSyllabusName(fileName);
-                    mongoId = fileService.saveLocalFile(files, FileType.SYLLABUS, decPosition.getId());
             	} else {
             		decPosition.setSyllabusId(null);
             		decPosition.setSyllabusName(null);
@@ -204,12 +247,14 @@ public class DecPositionServiceImpl implements DecPositionService {
             }
             decPosition.setDeclarationId(declarationId);
             decPosition.setTextbookId(textbookId);
-            decPosition.setPresetPosition(presetPosition);
-            decPosition.setIsDigitalEditor(isDigitalEditor);
+            //decPosition.setPresetPosition(presetPosition);
+            //decPosition.setIsDigitalEditor(isDigitalEditor);
             decPosition.setId(id);
             if (ObjectUtil.isNull(id)) { // 保存或者修改
                 decPositionDao.addDecPosition(decPosition);
+                String mongoId = null;
                 if (StringUtil.notEmpty(mongoId)) {
+                    mongoId = fileService.saveLocalFile(files, FileType.SYLLABUS, decPosition.getId());
                     decPosition.setSyllabusId(mongoId);
                     decPositionDao.updateDecPosition(decPosition);
                 }
