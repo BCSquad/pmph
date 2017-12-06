@@ -3,7 +3,10 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.multipart.MultipartFile;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Material;
@@ -146,4 +149,17 @@ public interface MaterialService {
 	 * @throws CheckedServiceException
 	 */
 	MaterialVO getMaterialVO(Long id) throws CheckedServiceException ;
+	
+	/**
+	 * 教材附件上传为临时文件，并返回相对路径
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年12月6日 上午11:35:13
+	 * @param request
+	 * @param files
+	 * @return
+	 * @throws CheckedServiceException
+	 * @throws IOException
+	 */
+	List<String> upTempFile(HttpServletRequest request, MultipartFile[] files)throws CheckedServiceException, IOException ;
 }

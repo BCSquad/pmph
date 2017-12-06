@@ -17,6 +17,7 @@ import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.vo.MaterialListVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * @author MrYang
@@ -204,4 +205,28 @@ public class MaterialController {
     public ResponseBean get(Long id) {
         return new ResponseBean(materialService.getMaterialVO(id));
     }
+    
+    /**
+     * 教材上传临时附件
+     * @introduction 
+     * @author Mryang
+     * @createDate 2017年12月6日 上午11:38:32
+     * @param request
+     * @param files
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/upTempFile", method = RequestMethod.POST)
+    public ResponseBean upTempFile(HttpServletRequest request, MultipartFile[] files) {
+    	try {
+			return new ResponseBean(materialService.upTempFile(request, files));
+		} catch (CheckedServiceException e) {
+			return new ResponseBean(e);
+		} catch (IOException e) {
+			return new ResponseBean(e);
+		} catch (Exception e){
+			return new ResponseBean(e);
+		}
+    }
+    
 }

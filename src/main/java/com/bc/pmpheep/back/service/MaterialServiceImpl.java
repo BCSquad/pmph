@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
@@ -26,6 +26,8 @@ import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.FileUpload;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -779,4 +781,25 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				StringUtil.tentToBinary(material.getProjectPermission())
 				);
 	}
+	
+	@Override
+	public List<String> upTempFile(HttpServletRequest request, MultipartFile[] files)throws CheckedServiceException, IOException {
+    	if( null == files || files.length == 0 ){
+    		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"没有文件");
+    	}
+    	for(MultipartFile file: files){
+    		if (file.getOriginalFilename().length() > 80) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM, "附件名称超出80个字符长度，请修改后上传！");
+            }
+    	}
+    	List<String> filsRelativePaths = new ArrayList<String>(files.length);
+    	String path = Const.FILE_TEMP_PATH ; //临时文件大目录
+    	for(MultipartFile file: files){
+    		UUID uuid = UUID.randomUUID();
+    		String tempPath = path+"/"+uuid.toString()+"/";   //保证路径唯一
+    		FileUpload.upMultipartFile(file,tempPath,request);//上传文件
+    		filsRelativePaths.add(tempPath+file.getOriginalFilename());//返回相对路径
+    	}
+        return filsRelativePaths;
+    }
 }
