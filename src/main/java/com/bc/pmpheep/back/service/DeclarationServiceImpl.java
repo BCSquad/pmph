@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.dao.DecAcadeDao;
+import com.bc.pmpheep.back.dao.DecAchievementDao;
 import com.bc.pmpheep.back.dao.DecCourseConstructionDao;
 import com.bc.pmpheep.back.dao.DecEduExpDao;
 import com.bc.pmpheep.back.dao.DecExtensionDao;
@@ -30,6 +31,7 @@ import com.bc.pmpheep.back.dao.DeclarationDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecAcade;
+import com.bc.pmpheep.back.po.DecAchievement;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecExtension;
@@ -80,6 +82,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	private DecWorkExpDao decWorkExpDao;
 	@Autowired
 	private DecTeachExpDao decTeachExpDao;
+	@Autowired
+	private DecAchievementDao decAchievementDao;
 	@Autowired
 	private DecAcadeDao decAcadeDao;
 	@Autowired
@@ -326,6 +330,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 		List<DecWorkExp> decWorkExpList = decWorkExpDao.getListDecWorkExpByDeclarationId(declarationId);
 		// 教学经历
 		List<DecTeachExp> decTeachExpList = decTeachExpDao.getListDecTeachExpByDeclarationId(declarationId);
+		// 个人成就
+		List<DecAchievement> decAchievementList = decAchievementDao.getDecAchievementByDeclarationId(declarationId);
 		// 兼职学术
 		List<DecAcade> decAcadeList = decAcadeDao.getListDecAcadeByDeclarationId(declarationId);
 		// 上套教材
@@ -349,6 +355,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		applicationVO.setDecEduExpList(decEduExpList);
 		applicationVO.setDecWorkExpList(decWorkExpList);
 		applicationVO.setDecTeachExpList(decTeachExpList);
+		applicationVO.setDecAchievementList(decAchievementList);
 		applicationVO.setDecAcadeList(decAcadeList);
 		applicationVO.setDecLastPositionList(decLastPositionList);
 		applicationVO.setDecCourseConstruction(decCourseConstruction);
