@@ -391,7 +391,56 @@
 	<!-- 根据declarationId查询作家申报职位信息并显示图书名字 -->
 	<select id="listDecPositionsOrBook" parameterType="java.lang.Long"
 		resultType="DecPositionDisplayVO">
-		select *,tb.textbook_name from dec_position dp
+		select *,CONCAT( CASE WHEN
+		dp.preset_position = 7
+		AND dp.is_digital_editor = 1 THEN
+		'主编,副主编,编委,数字编委'
+		WHEN dp.preset_position = 7
+		AND dp.is_digital_editor = 0
+		THEN
+		'主编,副主编,编委'
+		WHEN dp.preset_position = 6
+		AND dp.is_digital_editor = 1 THEN
+		'主编,副主编,数字编委'
+		WHEN dp.preset_position = 6
+		AND dp.is_digital_editor = 0
+		THEN
+		'主编,副主编'
+		WHEN dp.preset_position = 5
+		AND dp.is_digital_editor = 1 THEN
+		'主编,编委,数字编委'
+		WHEN dp.preset_position = 5
+		AND dp.is_digital_editor = 0 THEN
+		'主编,编委'
+		WHEN dp.preset_position = 4
+		AND dp.is_digital_editor = 1 THEN
+		'主编,数字编委'
+		WHEN dp.preset_position = 4
+		AND dp.is_digital_editor = 0 THEN
+		'主编'
+		WHEN dp.preset_position = 3
+		AND dp.is_digital_editor = 1 THEN
+		'副主编,编委,数字编委'
+		WHEN dp.preset_position = 3
+		AND dp.is_digital_editor = 0
+		THEN
+		'副主编,编委'
+		WHEN dp.preset_position = 2
+		AND dp.is_digital_editor = 1 THEN
+		'副主编,数字编委'
+		WHEN dp.preset_position = 2
+		AND dp.is_digital_editor = 0 THEN
+		'副主编'
+		WHEN dp.preset_position = 1
+		AND dp.is_digital_editor = 1 THEN
+		'编委,数字编委'
+		WHEN dp.preset_position = 1
+		AND dp.is_digital_editor = 0 THEN
+		'编委'
+		WHEN dp.is_digital_editor = 1 THEN
+		'数字编委'
+		ELSE NULL END ) presetPosition 
+		from dec_position dp
 		left join
 		(select id,textbook_name from textbook) tb on
 		(tb.id=dp.textbook_id)
