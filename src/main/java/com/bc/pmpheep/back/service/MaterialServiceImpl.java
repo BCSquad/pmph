@@ -1,14 +1,18 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
@@ -27,6 +31,7 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.FileUpload;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
@@ -113,12 +118,13 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	}
 
 	@Override
-	public Long addOrUpdateMaterial(String sessionId, 
+	public Long addOrUpdateMaterial(HttpServletRequest request,
     		MaterialVO materialVO,
-		    MultipartFile[]   noticeFiles,
-		    MultipartFile[]   noteFiles,
+//		    MultipartFile[]   noticeFiles,
+//		    MultipartFile[]   noteFiles,
 		    boolean isUpdate) throws CheckedServiceException, IOException {
 		// 获取当前用户
+		String sessionId = CookiesUtil.getSessionId(request);
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -386,6 +392,81 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		} else {
 			materialExtraService.updateMaterialExtra(materialExtra);
 		}
+		//保存通知附件
+		String materialNoticeAttachments=materialVO.getMaterialNoticeAttachments();
+		if(StringUtil.isEmpty(materialNoticeAttachments)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"教材通知附件为空");
+		}
+		List<MaterialNoticeAttachment> materialNoticeAttachmentlist = gson.fromJson(materialNoticeAttachments,
+				new TypeToken<ArrayList<MaterialNoticeAttachment>>() { }.getType());
+		//原来有的通知附件
+		List<MaterialNoticeAttachment> oldMaterialNoticeAttachmentlist = materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
+		String newTempNoticeFileIds = ",";
+		String realpath = request.getSession().getServletContext().getRealPath("/");
+		for(MaterialNoticeAttachment materialNoticeAttachment: materialNoticeAttachmentlist){
+			if(null == materialNoticeAttachment.getId()){
+				String tempPath = realpath + materialNoticeAttachment.getAttachment() ;
+				File file = new File(tempPath);
+				materialNoticeAttachment.setAttachment(String.valueOf(new Date().getTime()));
+				materialNoticeAttachment.setAttachmentName(file.getName());
+				materialNoticeAttachment.setDownload(0L);
+				materialNoticeAttachment.setMaterialExtraId(materialExtra.getId());
+				// 保存通知
+				materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
+				String noticeId;
+				// 保存通知文件
+			    noticeId = fileService.saveLocalFile(file, FileType.MATERIAL_NOTICE_ATTACHMENT,materialNoticeAttachment.getId());
+				materialNoticeAttachment.setAttachment(noticeId);
+				// 更新通知
+				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
+			}else{
+				newTempNoticeFileIds += materialNoticeAttachment.getId()+",";
+			}
+		}
+		for(MaterialNoticeAttachment materialNoticeAttachment:oldMaterialNoticeAttachmentlist){
+			if (!newTempNoticeFileIds.contains("," + materialNoticeAttachment.getId() + ",")) {// 不包含
+				fileService.remove(materialNoticeAttachment.getAttachment()); // 删除文件
+				materialNoticeAttachmentService.deleteMaterialNoticeAttachmentById(materialNoticeAttachment.getId());
+			}
+		}
+		//备注附件保存
+		String materialNoteAttachments = materialVO.getMaterialNoteAttachments();
+		if(StringUtil.isEmpty(materialNoteAttachments)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"教材备注附件为空");
+		}
+	    List<MaterialNoteAttachment> materialNoteAttachmentList = gson.fromJson(materialNoteAttachments,
+					new TypeToken<ArrayList<MaterialNoteAttachment>>() { }.getType());
+	    //原来的备注文件
+	    List<MaterialNoteAttachment> oldMaterialNoteAttachmentlist = materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtra.getId());
+		String newTempNoteFileIds = ",";
+		for(MaterialNoteAttachment materialNoteAttachment: materialNoteAttachmentList){
+			if(null == materialNoteAttachment.getId()){
+				String tempPath = realpath + materialNoteAttachment.getAttachment() ;
+				File file = new File(tempPath);
+				materialNoteAttachment.setAttachment(String.valueOf(new Date().getTime()));
+				materialNoteAttachment.setAttachmentName(file.getName());
+				materialNoteAttachment.setDownload(0L);
+				materialNoteAttachment.setMaterialExtraId(materialExtra.getId());
+				// 保存备注
+				materialNoteAttachmentService.addMaterialNoteAttachment(materialNoteAttachment);
+				String noticeId;
+				// 保存备注文件
+				noticeId = fileService.saveLocalFile(file, FileType.MATERIAL_NOTICE_ATTACHMENT,materialNoteAttachment.getId());
+				materialNoteAttachment.setAttachment(noticeId);
+				// 更新备注
+				materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
+			}else{
+				newTempNoteFileIds += materialNoteAttachment.getId()+",";
+			}
+		}
+		for (MaterialNoteAttachment materialNoteAttachment : oldMaterialNoteAttachmentlist) {
+			if (!newTempNoteFileIds.contains("," + materialNoteAttachment.getId() + ",")) {// 不包含
+				fileService.remove(materialNoteAttachment.getAttachment()); // 删除文件
+				materialNoteAttachmentService.deleteMaterialNoteAttachmentById(materialNoteAttachment.getId());
+			}
+		}
+		
+		/**
 		// 判断教材备注附件和教材通知附件
 		List<MaterialNoticeAttachment> materialNoticeAttachmentlist = new ArrayList<MaterialNoticeAttachment>(5);
 		String materialNoticeAttachments=materialVO.getMaterialNoticeAttachments();
@@ -508,6 +589,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialNoteAttachmentService.deleteMaterialNoteAttachmentById(materialNoteAttachment.getId());
 			}
 		}
+		*/
 		return material.getId();
 	}
 

@@ -34,7 +34,7 @@ public interface MaterialService {
      * 
      * 新建遴选公告
      * @createDate 2017年11月13日 下午2:33:56
-     * @param sessionId
+     * @param request
      * @param MaterialVO materialVO
      * @param noticeFiles
      * @param noteFiles
@@ -43,10 +43,10 @@ public interface MaterialService {
      * @throws CheckedServiceException
      * @throws IOException 
      */
-    Long addOrUpdateMaterial(String sessionId, 
+    Long addOrUpdateMaterial(HttpServletRequest request, 
     		MaterialVO materialVO,
-		    MultipartFile[]   noticeFiles,
-		    MultipartFile[]   noteFiles,
+//		    MultipartFile[]   noticeFiles,
+//		    MultipartFile[]   noteFiles,
 		    boolean isUpdate) throws CheckedServiceException, IOException;
     
     /**
