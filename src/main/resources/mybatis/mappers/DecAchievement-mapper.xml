@@ -5,7 +5,7 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="declarationId != null and declarationId !=''">
+			<if test="declarationId != null">
 				declaration_id,
 			</if>
 			<if test=" content != null and content !=''">
@@ -17,7 +17,7 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="declarationId != null and declarationId !=''">
+			<if test="declarationId != null">
 				#{declarationId},
 			</if>
 			<if test=" content != null and content !=''">
@@ -38,5 +38,10 @@
 		<include refid="value" />
 		) ;
 	</insert>
+	
+	<!-- 根据declarationId查询  -->
+	<select id="getDecAchievementByDeclarationId" parameterType ="java.lang.Long" resultType="DecAchievement" > 
+		SELECT * from dec_achievement where declaration_id = #{declarationId}
+	</select>
 
 </mapper>
