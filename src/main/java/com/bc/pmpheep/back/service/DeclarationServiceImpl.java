@@ -264,6 +264,59 @@ public class DeclarationServiceImpl implements DeclarationService {
 				String syllabusIds = RouteUtil.MONGODB_FILE + syllabusId; // 下载路径
 				decPositions.setSyllabusId(syllabusIds);
 			}
+			switch (decPositions.getPresetPosition()) {
+			case 1:
+				if (decPositions.getIsDigitalEditor().equals(false)) {
+					decPositions.setShowPosition("编委");
+				} else {
+					decPositions.setShowPosition("编委,数字编委");
+				}
+				break;
+			case 2:
+				if (decPositions.getIsDigitalEditor().equals(false)) {
+					decPositions.setShowPosition("副主编");
+				} else {
+					decPositions.setShowPosition("副主编,数字编委");
+				}
+				break;
+			case 3:
+				if (decPositions.getIsDigitalEditor().equals(false)) {
+					decPositions.setShowPosition("副主编,编委");
+				} else {
+					decPositions.setShowPosition("副主编,编委,数字编委");
+				}
+				break;
+			case 4:
+				if (decPositions.getIsDigitalEditor().equals(false)) {
+					decPositions.setShowPosition("主编");
+				} else {
+					decPositions.setShowPosition("主编,数字编委");
+				}
+				break;
+			case 5:
+				if (decPositions.getIsDigitalEditor().equals(false)) {
+					decPositions.setShowPosition("主编,编委");
+				} else {
+					decPositions.setShowPosition("主编,编委,数字编委");
+				}
+				break;
+			case 6:
+				if (decPositions.getIsDigitalEditor().equals(false)) {
+					decPositions.setShowPosition("主编,副主编");
+				} else {
+					decPositions.setShowPosition("主编,副主编,数字编委");
+				}
+				break;
+			case 7:
+				if (decPositions.getIsDigitalEditor().equals(false)) {
+					decPositions.setShowPosition("主编,副主编,编委");
+				} else {
+					decPositions.setShowPosition("主编,副主编,编委,数字编委");
+				}
+				break;
+			default:
+				break;
+			}
 		}
 		// 专家信息
 		DeclarationOrDisplayVO declaration = declarationDao.getDeclarationByIdOrOrgName(declarationId);
