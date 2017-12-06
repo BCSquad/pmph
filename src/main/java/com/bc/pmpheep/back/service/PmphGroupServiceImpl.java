@@ -311,7 +311,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			pmphGroup.setGroupName(textbook.getTextbookName() + count);
 		}
 		pmphGroup.setGroupImage(groupImage);
-		pmphGroup.setBookId(textbookId);
+		//pmphGroup.setBookId(textbookId);
 		pmphGroup.setFounderId(pmphUser.getId());
 		pmphGroupDao.addPmphGroup(pmphGroup);
 		if (null != pmphGroup.getId()) {// 判断是否新增小组成功，如果成功则调用PmphGroupMemberService添加小组成员的方法将创建者添加到小组中
