@@ -23,9 +23,7 @@ import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
 import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.MaterialType;
 import com.bc.pmpheep.back.po.PmphGroup;
-import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
-import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -113,16 +111,18 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	}
 
 	@Override
-	public Long addOrUpdateMaterial(String sessionId,String materialType, String materialContacts, String materialExtensions,
-			String materialProjectEditors, Material material, MaterialExtra materialExtra, MultipartFile[] noticeFiles,
-			String materialNoticeAttachments, MultipartFile[] noteFiles, String materialNoteAttachments,
-			boolean isUpdate) throws CheckedServiceException, IOException {
+	public Long addOrUpdateMaterial(String sessionId, 
+    		MaterialVO materialVO,
+		    MultipartFile[]   noticeFiles,
+		    MultipartFile[]   noteFiles,
+		    boolean isUpdate) throws CheckedServiceException, IOException {
 		// 获取当前用户
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"请求用户不存在");
 		}
+		Material material =materialVO.getMaterial();
 		// 如果是更新教材，判断主键
 		if (isUpdate && (null == material.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -182,6 +182,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					"邮寄地址过长");
 		}
 		// 教材类型验证
+		String materialType = materialVO.getMaterialType();
 		if (StringUtil.isEmpty(materialType)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"教材类型为空");
@@ -191,6 +192,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					"教材主任为空");
 		}
 		// 教材通知备注内容验证
+		MaterialExtra materialExtra =materialVO.getMaterialExtra();
 		if (StringUtil.isEmpty(materialExtra.getNotice())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"教材通知内容为空");
@@ -237,6 +239,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		//教材类型
 		List<Long> materialTypeList = gson.fromJson(materialType, new TypeToken<ArrayList<Long>>() { }.getType());
 		material.setMaterialType(materialTypeList.get(materialTypeList.size()-1));
+		//设置权限
+		material.setPlanPermission(Integer.valueOf(materialVO.getCehuaPowers(),2));
+		material.setProjectPermission(Integer.valueOf(materialVO.getProjectEditorPowers(),2));
 		// 保存或者更新教材
 		if (isUpdate) {
 			materialDao.updateMaterial(material);
@@ -248,9 +253,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		Long materialId = material.getId();
 		
 		// 扩展项转换
-		List<MaterialExtension> oldMaterialExtensionlist = materialExtensionService
-				.getMaterialExtensionByMaterialId(materialId);
+		List<MaterialExtension> oldMaterialExtensionlist = materialExtensionService .getMaterialExtensionByMaterialId(materialId);
 		String newMaterialExtensionIds = ",";
+		String materialExtensions=materialVO.getMaterialExtensions();
 		if (!StringUtil.isEmpty(materialExtensions)) {
 			List<MaterialExtension> materialExtensionlist = gson.fromJson(materialExtensions,
 					new TypeToken<ArrayList<MaterialExtension>>() {
@@ -286,6 +291,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			}
 		}
 		// 联系人转换
+		String materialContacts =materialVO.getMaterialContacts();
 		materialContactService.deleteMaterialContactsByMaterialId(materialId); // 删除已经有的联系人
 		if (StringUtil.isEmpty(materialContacts)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
@@ -340,6 +346,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		// 项目编辑转换
 		materialProjectEditorService.deleteMaterialProjectEditorByMaterialId(materialId); // 先删除该教材下的项目编辑
+		String materialProjectEditors=materialVO.getMaterialProjectEditors();
 		if (StringUtil.isEmpty(materialProjectEditors)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材项目编辑参数有误");
@@ -379,6 +386,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		// 判断教材备注附件和教材通知附件
 		List<MaterialNoticeAttachment> materialNoticeAttachmentlist = new ArrayList<MaterialNoticeAttachment>(5);
+		String materialNoticeAttachments=materialVO.getMaterialNoticeAttachments();
 		if (!StringUtil.isEmpty(materialNoticeAttachments)) {
 			materialNoticeAttachmentlist = gson.fromJson(materialNoticeAttachments,
 					new TypeToken<ArrayList<MaterialNoticeAttachment>>() {
@@ -402,6 +410,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					"教材通知附件为空");
 		}
 		List<MaterialNoteAttachment> materialNoteAttachmentList = new ArrayList<MaterialNoteAttachment>(5);
+		String materialNoteAttachments = materialVO.getMaterialNoteAttachments();
 		if (!StringUtil.isEmpty(materialNoteAttachments)) {
 			materialNoteAttachmentList = gson.fromJson(materialNoteAttachments,
 					new TypeToken<ArrayList<MaterialNoteAttachment>>() {
@@ -765,6 +774,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialExtensions, 
 				materialProjectEditorVOs,
 				materialNoticeAttachments,
-				materialNoteAttachments);
+				materialNoteAttachments,
+				StringUtil.tentToBinary(material.getPlanPermission()),
+				StringUtil.tentToBinary(material.getProjectPermission())
+				);
 	}
 }

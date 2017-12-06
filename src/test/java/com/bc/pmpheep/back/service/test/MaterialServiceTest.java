@@ -28,27 +28,11 @@ public class MaterialServiceTest extends BaseTest {
 	
 	
 	Random random =new Random();
-	Material material=new Material ("materialName",random.nextInt(200),
+	Material material=new Material("materialName",random.nextInt(200),
 			new Long(random.nextInt(200)), new Date(), new Date(),
-			new Date(),"mailAddress",new Long(random.nextInt(200)),
-			new Long(random.nextInt(200)),true,
-			true, true,
-			true, true,
-			true, true,
-			true, true,
-			true, true,
-			true, true,
-			true, true,
-			true, true,
-			true, true,
-			true, true,
-			true, true,
-			true, true,
-			true, true,
-			true, true,
-			true, true, null,
-			new Long(random.nextInt(200)), null, new Long(random.nextInt(200)),
-			null);
+			new Date(), "String mailAddress"+new Date(),new Long(random.nextInt(200)),
+			new Long(random.nextInt(200)), new Long(random.nextInt(200)),new Long(random.nextInt(200)),
+			Integer.valueOf("11111101",2), Integer.valueOf("00011101",2));
 	
     @Test
     @Rollback(Const.ISROLLBACK) 

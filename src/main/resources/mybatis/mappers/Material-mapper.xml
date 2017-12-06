@@ -138,8 +138,17 @@
 			<if test="menderId!=null">
 				mender_id,
 			</if>
-			<if test="msgId != null and msgId != '' ">
-				msg_id,
+			<if test="projectPermission != null ">
+				project_permission,
+			</if>
+			<if test="planPermission != null">
+				plan_permission,
+			</if>
+			<if test="isAchievementUsed != null">
+				is_achievement_used,
+			</if>
+			<if test="isAchievementRequired != null">
+				is_achievement_required,
 			</if>
 		</trim>
 	</sql>
@@ -279,8 +288,17 @@
 			<if test="menderId!=null">
 				#{menderId},
 			</if>
-			<if test="msgId != null and msgId != '' ">
-				#{msgId},
+			<if test="projectPermission != null ">
+				#{projectPermission},
+			</if>
+			<if test="planPermission != null">
+				#{planPermission},
+			</if>
+			<if test="isAchievementUsed != null">
+				#{isAchievementUsed},
+			</if>
+			<if test="isAchievementRequired != null">
+				#{isAchievementRequired},
 			</if>
 		</trim>
 	</sql>
@@ -432,8 +450,17 @@
 			<if test="menderId !=null  ">
 				mender_id=#{menderId},
 			</if>
-			<if test="msgId != null and msgId != '' ">
-				msg_id = #{msgId},
+			<if test="projectPermission != null ">
+				project_permission = #{projectPermission} ,
+			</if>
+			<if test="planPermission != null">
+				plan_permission = #{planPermission} ,
+			</if>
+			<if test="isAchievementUsed != null">
+				is_achievement_used = #{isAchievementUsed},
+			</if>
+			<if test="isAchievementRequired != null">
+				is_achievement_required = #{isAchievementRequired},
 			</if>
 		</set>
 		where
@@ -507,8 +534,7 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id,
-		m.msg_id
+		m.founder_id
 		FROM
 		material m
 		LEFT JOIN material_contact c ON m.id = c.material_id
@@ -547,8 +573,7 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id,
-		m.msg_id
+		m.founder_id
 		FROM
 		material m
 		LEFT JOIN material_contact c ON m.id = c.material_id
@@ -591,8 +616,7 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id,
-		m.msg_id
+		m.founder_id
 		FROM
 		material m
 		LEFT JOIN material_contact c ON m.id = c.material_id
@@ -631,8 +655,7 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id,
-		m.msg_id
+		m.founder_id
 		FROM
 		material m
 		LEFT JOIN material_contact c ON m.id = c.material_id

@@ -61,18 +61,13 @@ public class MaterialController {
             materialVO.getMaterial().setActualDeadline(DateUtil.str3Date(actualDeadline));
             materialVO.getMaterial().setAgeDeadline(DateUtil.str3Date(ageDeadline));
             return new ResponseBean(
-                                    materialService.addOrUpdateMaterial(sessionId,
-                                                                        materialVO.getMaterialType(),
-                                                                        materialVO.getMaterialContacts(),
-                                                                        materialVO.getMaterialExtensions(),
-                                                                        materialVO.getMaterialProjectEditors(),
-                                                                        materialVO.getMaterial(),
-                                                                        materialVO.getMaterialExtra(),
-                                                                        noticeFiles,
-                                                                        materialVO.getMaterialNoticeAttachments(),
-                                                                        noteFiles,
-                                                                        materialVO.getMaterialNoteAttachments(),
-                                                                        false));
+            			materialService.addOrUpdateMaterial(
+                    		sessionId,
+                    		materialVO,
+                    		noticeFiles,
+                            noteFiles,
+                            true)
+            						);
         } catch (IOException e) {
         	ResponseBean responseBean = new ResponseBean(e);
         	responseBean.setData("上传文件失败");
@@ -110,19 +105,15 @@ public class MaterialController {
             materialVO.getMaterial().setDeadline(DateUtil.str3Date(deadline));
             materialVO.getMaterial().setActualDeadline(DateUtil.str3Date(actualDeadline));
             materialVO.getMaterial().setAgeDeadline(DateUtil.str3Date(ageDeadline));
+            
             return new ResponseBean(
-                                    materialService.addOrUpdateMaterial(sessionId,
-                                                                        materialVO.getMaterialType(),
-                                                                        materialVO.getMaterialContacts(),
-                                                                        materialVO.getMaterialExtensions(),
-                                                                        materialVO.getMaterialProjectEditors(),
-                                                                        materialVO.getMaterial(),
-                                                                        materialVO.getMaterialExtra(),
-                                                                        noticeFiles,
-                                                                        materialVO.getMaterialNoticeAttachments(),
-                                                                        noteFiles,
-                                                                        materialVO.getMaterialNoteAttachments(),
-                                                                        true));
+            				materialService.addOrUpdateMaterial(
+                    		sessionId,
+                    		materialVO,
+                    		noticeFiles,
+                            noteFiles,
+                            true)
+                            );
         } catch (IOException e) {
         	ResponseBean responseBean = new ResponseBean(e);
         	responseBean.setData("上传文件失败");

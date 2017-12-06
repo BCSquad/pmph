@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Material;
-import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.back.vo.MaterialListVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -34,33 +32,18 @@ public interface MaterialService {
      * 新建遴选公告
      * @createDate 2017年11月13日 下午2:33:56
      * @param sessionId
-     * @param materialType
-     * @param material
-     * @param materialContacts
-     * @param materialExtensions
-     * @param materialProjectEditors
-     * @param materialExtra
+     * @param MaterialVO materialVO
      * @param noticeFiles
-     * @param materialNoticeAttachments
      * @param noteFiles
-     * @param materialNoteAttachments
-     * @param projectEditorPowers 项目编辑权限8位二进制字符串
      * @param isUpdate false新增,true更新
      * @return material 主键
      * @throws CheckedServiceException
      * @throws IOException 
      */
     Long addOrUpdateMaterial(String sessionId, 
-    		String   materialType,
-    		String   materialContacts,
-    		String   materialExtensions, 
-    		String   materialProjectEditors,
-    		Material material,
-		    MaterialExtra     materialExtra,
+    		MaterialVO materialVO,
 		    MultipartFile[]   noticeFiles,
-		    String materialNoticeAttachments,
 		    MultipartFile[]   noteFiles,
-		    String materialNoteAttachments,
 		    boolean isUpdate) throws CheckedServiceException, IOException;
     
     /**

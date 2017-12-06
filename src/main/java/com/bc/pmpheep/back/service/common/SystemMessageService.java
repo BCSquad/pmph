@@ -31,7 +31,6 @@ import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
-import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
 import com.bc.pmpheep.general.po.Message;
@@ -107,11 +106,11 @@ public final class SystemMessageService {
      * @param msgId 消息id，没有发布过 则为null
      * @throws CheckedServiceException
      * @throws IOException
-     * @return 消息id
+     * @return 
      */
-    public String materialSend(String materialName, List<Long> ids, String msgId)
+    public void materialSend(String materialName, List<Long> ids)
     throws CheckedServiceException, IOException {
-        return this.materialSend(materialName, ids, msgId, false);
+        this.materialSend(materialName, ids, false);
     }
 
     /**
@@ -121,19 +120,18 @@ public final class SystemMessageService {
      * @createDate 2017年11月17日 上午10:52:13
      * @param materialId 教材id
      * @param ids 发送的机构id集合（新增或者增加的机构）
-     * @param msgId 消息id，没有发布过 则为null
      * @throws CheckedServiceException
      * @throws IOException
-     * @return 消息id
+     * @return 
      */
-    public String materialSend(Long materialId, List<Long> ids, String msgId)
+    public void materialSend(Long materialId, List<Long> ids)
     throws CheckedServiceException, IOException {
         Material material = materialService.getMaterialById(materialId);
         if (null == material) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "没有找到对应的教材");
         }
-        return this.materialSend(material.getMaterialName(), ids, msgId, false);
+        this.materialSend(material.getMaterialName(), ids, false);
     }
 
     /**
@@ -147,9 +145,9 @@ public final class SystemMessageService {
      * @param isOnlyManager 是否只发给管理员
      * @throws CheckedServiceException
      * @throws IOException
-     * @return 消息id
+     * @return 
      */
-    public String materialSend(String materialName, List<Long> ids, String msgId,
+    public void materialSend(String materialName, List<Long> ids,
     boolean isOnlyManager) throws CheckedServiceException, IOException {
         if (StringUtils.isEmpty(materialName)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
@@ -163,17 +161,10 @@ public final class SystemMessageService {
         if (!isOnlyManager) {
             String tercherMsg = "《<font color='red'>" + materialName + "</font>》已经开始申报，请您留意";
             String msg_id = null;
-            if (StringUtil.notEmpty(msgId)) {// 已经发布过消息了
-                Message message = messageService.get(msgId);
-                tercherMsg = message.getContent();
-                msg_id = msgId;
-            } else {
-                // mogodb保存消息体
-                Message message = new Message(tercherMsg);
-                message = messageService.add(message);
-                msg_id = message.getId();
-                msgId  = msg_id;
-            }
+            // mogodb保存消息体
+            Message message = new Message(tercherMsg);
+            message = messageService.add(message);
+            msg_id = message.getId();
             // 获取这些机构启用的作家用户
             List<WriterUser> writerUserList = writerUserService.getWriterUserListByOrgIds(ids);
             if (null != writerUserList && writerUserList.size() > 0) {
@@ -224,7 +215,7 @@ public final class SystemMessageService {
                                    managerMsg, DateUtil.getCurrentTime());
              myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
         }
-        return msgId;
+        return ;
     }
 
     /**
@@ -238,16 +229,16 @@ public final class SystemMessageService {
      * @param isOnlyManager 是否只发给管理员
      * @throws CheckedServiceException
      * @throws IOException
-     * @return 消息id
+     * @return 
      */
-    public String materialSend(Long materialId, List<Long> ids, String msgId, boolean isOnlyManager)
+    public void materialSend(Long materialId, List<Long> ids,  boolean isOnlyManager)
     throws CheckedServiceException, IOException {
         Material material = materialService.getMaterialById(materialId);
         if (null == material) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "没有找到对应的教材");
         }
-        return this.materialSend(material.getMaterialName(), ids, msgId, isOnlyManager);
+        this.materialSend(material.getMaterialName(), ids, isOnlyManager);
     }
 
     /**
