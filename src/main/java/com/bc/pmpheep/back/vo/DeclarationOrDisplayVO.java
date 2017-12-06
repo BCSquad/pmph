@@ -73,6 +73,16 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
     private Boolean   isMultiBooks;
     // 是否职位多选
     private Boolean   isMultiPosition;
+    // 是否可选数字编委
+    private Boolean isDigitalEditorOptional;
+
+	public Boolean getIsDigitalEditorOptional() {
+		return isDigitalEditorOptional;
+	}
+
+	public void setIsDigitalEditorOptional(Boolean isDigitalEditorOptional) {
+		this.isDigitalEditorOptional = isDigitalEditorOptional;
+	}
 
 	public Boolean getIsMultiBooks() {
 		return isMultiBooks;
@@ -355,7 +365,8 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 				+ paperDate + ", isStaging=" + isStaging + ", isDeleted="
 				+ isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
 				+ gmtUpdate + ", isMultiBooks=" + isMultiBooks
-				+ ", isMultiPosition=" + isMultiPosition + "]";
+				+ ", isMultiPosition=" + isMultiPosition
+				+ ", isDigitalEditorOptional=" + isDigitalEditorOptional + "]";
 	}
 
 }

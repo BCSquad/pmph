@@ -482,9 +482,11 @@
 	<!-- 根据id查询一个作家申报信息并包含申报机构名称，是否多选 -->
 	<select id="getDeclarationByIdOrOrgName" parameterType="java.lang.Long"
 		resultType="DeclarationOrDisplayVO">
-		select *,o.org_name orgNameOne,m.is_multi_books,m.is_multi_position from declaration d
+		select *,o.org_name orgNameOne,m.is_multi_books,m.is_multi_position,m.is_digital_editor_optional 
+		from declaration d
 		left join (select id,org_name from org) o on (o.id=d.org_id) 
-		left join (select id,is_multi_books,is_multi_position from material) m on (m.id=d.material_id) 
+		left join (select id,is_multi_books,is_multi_position,is_digital_editor_optional 
+		from material) m on (m.id=d.material_id) 
 		where d.id=#{id};
 	</select>
 

@@ -380,6 +380,7 @@ public class DecPositionServiceImpl implements DecPositionService {
         declarationCountVO.setEditorCount(editorCount);
         declarationCountVO.setSubEditorCount(subEditorCount);
         declarationCountVO.setEditorialCount(editorialCount);
+        declarationCountVO.setMaterialId(materialId);
         return declarationCountVO;
     }
 
