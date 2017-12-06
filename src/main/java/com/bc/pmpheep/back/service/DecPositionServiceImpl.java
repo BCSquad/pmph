@@ -184,14 +184,23 @@ public class DecPositionServiceImpl implements DecPositionService {
             Long declarationId = newDecPosition.getDeclarationId();
             Long textbookId = newDecPosition.getTextbookId();
             Integer presetPosition = newDecPosition.getPresetPosition();
-            File file = newDecPosition.getFile();
+            String file = newDecPosition.getFile();
             Boolean isDigitalEditor = newDecPosition.getIsDigitalEditor();
             DecPosition decPosition = new DecPosition();
-            if (null == file) {
+            String mongoId = null;
+            if (StringUtil.isEmpty(file)) {
+            	decPosition.setSyllabusId(null);
                 decPosition.setSyllabusName(null);
             } else {
-                String fileName = file.getName(); // 获取原文件名字
-                decPosition.setSyllabusName(fileName);
+            	File files = new File(file);
+            	if (files.exists()) {
+            		String fileName = files.getName(); // 获取原文件名字
+                    decPosition.setSyllabusName(fileName);
+                    mongoId = fileService.saveLocalFile(files, FileType.SYLLABUS, decPosition.getId());
+            	} else {
+            		decPosition.setSyllabusId(null);
+            		decPosition.setSyllabusName(null);
+				}
             }
             decPosition.setDeclarationId(declarationId);
             decPosition.setTextbookId(textbookId);
@@ -200,15 +209,9 @@ public class DecPositionServiceImpl implements DecPositionService {
             decPosition.setId(id);
             if (ObjectUtil.isNull(id)) { // 保存或者修改
                 decPositionDao.addDecPosition(decPosition);
-                String mongoId = null;
-                if (null == file) {
-
-                } else {
-                    mongoId = fileService.saveLocalFile(file, FileType.SYLLABUS, decPosition.getId());
-                    if (null != mongoId) {
-                        decPosition.setSyllabusId(mongoId);
-                        decPositionDao.updateDecPosition(decPosition);
-                    }
+                if (StringUtil.notEmpty(mongoId)) {
+                    decPosition.setSyllabusId(mongoId);
+                    decPositionDao.updateDecPosition(decPosition);
                 }
             } else {
                 decPositionDao.updateDecPosition(decPosition);

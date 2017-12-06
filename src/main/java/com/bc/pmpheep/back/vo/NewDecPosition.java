@@ -1,6 +1,5 @@
 package com.bc.pmpheep.back.vo;
 
-import java.io.File;
 import java.io.Serializable;
 
 import org.apache.ibatis.type.Alias;
@@ -20,7 +19,7 @@ public class NewDecPosition implements Serializable {
 	private Long declarationId;
 	private Long textbookId;
 	private Integer presetPosition;
-	private File file;
+	private String file;
 	// 是否为数字编辑
     @JsonProperty("isDigitalEditor")
     private Boolean   isDigitalEditor;
@@ -57,10 +56,10 @@ public class NewDecPosition implements Serializable {
 	public void setPresetPosition(Integer presetPosition) {
 		this.presetPosition = presetPosition;
 	}
-	public File getFile() {
+	public String getFile() {
 		return file;
 	}
-	public void setFile(File file) {
+	public void setFile(String file) {
 		this.file = file;
 	}
 	
