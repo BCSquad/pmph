@@ -401,6 +401,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		List<MaterialNoticeAttachment> oldMaterialNoticeAttachmentlist = materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
 		String newTempNoticeFileIds = ",";
 //		String realpath = request.getSession().getServletContext().getRealPath("/");
+		if(null == request.getSession(false)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"会话过期");
+		}
 		for(MaterialNoticeAttachment materialNoticeAttachment: materialNoticeAttachmentlist){
 			if(null == materialNoticeAttachment.getId()){
 //				String tempPath = realpath + materialNoticeAttachment.getAttachment() ;
