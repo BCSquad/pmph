@@ -176,9 +176,10 @@ public class DeclarationController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询遴选主编/遴选编委")
     @RequestMapping(value = "/list/editor/selection", method = RequestMethod.GET)
     public ResponseBean selection(@RequestParam("textbookId") Long textbookId,
-    @RequestParam("realName") String realName,
+    @RequestParam("materialId") Long materialId, @RequestParam("realName") String realName,
     @RequestParam("presetPosition") Integer presetPosition) {
         return new ResponseBean(decPositionService.listEditorSelection(textbookId,
+                                                                       materialId,
                                                                        realName,
                                                                        presetPosition));
     }

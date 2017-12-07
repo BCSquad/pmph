@@ -17,6 +17,7 @@ import com.bc.pmpheep.back.dao.DecPositionDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecPosition;
+import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -64,6 +65,8 @@ public class DecPositionServiceImpl implements DecPositionService {
     private TextbookLogService textbookLogService;
     @Autowired
     private TextbookService    textbookService;
+    @Autowired
+    private MaterialService    materialService;
 
     @Override
     public DecPosition addDecPosition(DecPosition decPosition) throws CheckedServiceException {
@@ -274,15 +277,25 @@ public class DecPositionServiceImpl implements DecPositionService {
     }
 
     @Override
-    public List<DecPositionEditorSelectionVO> listEditorSelection(Long textbookId, String realName,
-    Integer presetPosition) throws CheckedServiceException {
+    public Map<String, Object> listEditorSelection(Long textbookId, Long materialId,
+    String realName, Integer presetPosition) throws CheckedServiceException {
         if (ObjectUtil.isNull(textbookId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
         }
-        return decPositionDao.listEditorSelection(textbookId,
-                                                  StringUtil.toAllCheck(realName),
-                                                  presetPosition);
+        if (ObjectUtil.isNull(materialId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        List<DecPositionEditorSelectionVO> listEditorSelectionVOs =
+        decPositionDao.listEditorSelection(textbookId,
+                                           StringUtil.toAllCheck(realName),
+                                           presetPosition);
+        resultMap.put("DecPositionEditorSelectionVO", listEditorSelectionVOs);
+        Material material = materialService.getMaterialById(materialId);
+        resultMap.put("IsDigitalEditorOptional", material.getIsDigitalEditorOptional());
+        return resultMap;
     }
 
     @Override

@@ -39,6 +39,8 @@ public class DecPositionEditorSelectionVO implements Serializable {
     private Integer   rank;
     // 是否为数字编辑
     private Boolean   isDigitalEditor;
+    // 是否可选数字编委
+    private Boolean   isDigitalEditorOptional;
 
     // 作家id
     private Long      userId;
@@ -281,6 +283,20 @@ public class DecPositionEditorSelectionVO implements Serializable {
      */
     public void setRank(Integer rank) {
         this.rank = rank;
+    }
+
+    /**
+     * @return the isDigitalEditorOptional
+     */
+    public Boolean getIsDigitalEditorOptional() {
+        return isDigitalEditorOptional;
+    }
+
+    /**
+     * @param isDigitalEditorOptional the isDigitalEditorOptional to set
+     */
+    public void setIsDigitalEditorOptional(Boolean isDigitalEditorOptional) {
+        this.isDigitalEditorOptional = isDigitalEditorOptional;
     }
 
 }

@@ -5,11 +5,11 @@ package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecPosition;
-import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.back.vo.DecPositionVO;
 import com.bc.pmpheep.back.vo.DeclarationCountVO;
 import com.bc.pmpheep.back.vo.DeclarationResultBookVO;
@@ -139,7 +139,7 @@ public interface DecPositionService {
      * @throws CheckedServiceException
      * </pre>
      */
-    List<DecPositionEditorSelectionVO> listEditorSelection(Long textbookId, String realName,
+    Map<String, Object> listEditorSelection(Long textbookId, Long materialId, String realName,
     Integer presetPosition) throws CheckedServiceException;
 
     /**
