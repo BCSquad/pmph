@@ -177,7 +177,7 @@ public class DecPositionServiceImpl implements DecPositionService {
         List<NewDecPosition> list = decPositionVO.getList();
         if (CollectionUtil.isEmpty(list)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.NULL_PARAM, "list不能为空");
+                                              CheckedExceptionResult.NULL_PARAM, "添加内容不能为空");
         }
         List<DecPosition> istDecPositions =
         decPositionDao.listDecPositions(list.get(0).getDeclarationId());
@@ -186,51 +186,49 @@ public class DecPositionServiceImpl implements DecPositionService {
             Long id = newDecPosition.getId();
             Long declarationId = newDecPosition.getDeclarationId();
             Long textbookId = newDecPosition.getTextbookId();
-            // Integer presetPosition = newDecPosition.getPresetPosition();
             String file = newDecPosition.getFile();
-            // Boolean isDigitalEditor = newDecPosition.getIsDigitalEditor();
             String showPosition = newDecPosition.getShowPosition();
             DecPosition decPosition = new DecPosition();
-            if (showPosition.equals("编委")) {
+            if ("编委".equals(showPosition)) {
                 decPosition.setPresetPosition(1);
                 decPosition.setIsDigitalEditor(false);
-            } else if (showPosition.equals("编委,数字编委")) {
+            } else if ("编委,数字编委".equals(showPosition)) {
                 decPosition.setPresetPosition(1);
                 decPosition.setIsDigitalEditor(true);
-            } else if (showPosition.equals("副主编")) {
+            } else if ("副主编".equals(showPosition)) {
                 decPosition.setPresetPosition(2);
                 decPosition.setIsDigitalEditor(false);
-            } else if (showPosition.equals("副主编,数字编委")) {
+            } else if ("副主编,数字编委".equals(showPosition)) {
                 decPosition.setPresetPosition(2);
                 decPosition.setIsDigitalEditor(true);
-            } else if (showPosition.equals("副主编,编委")) {
+            } else if ("副主编,编委".equals(showPosition)) {
                 decPosition.setPresetPosition(3);
                 decPosition.setIsDigitalEditor(false);
-            } else if (showPosition.equals("副主编,编委,数字编委")) {
+            } else if ("副主编,编委,数字编委".equals(showPosition)) {
                 decPosition.setPresetPosition(3);
                 decPosition.setIsDigitalEditor(true);
-            } else if (showPosition.equals("主编")) {
+            } else if ("主编".equals(showPosition)) {
                 decPosition.setPresetPosition(4);
                 decPosition.setIsDigitalEditor(false);
-            } else if (showPosition.equals("主编,数字编委")) {
+            } else if ("主编,数字编委".equals(showPosition)) {
                 decPosition.setPresetPosition(4);
                 decPosition.setIsDigitalEditor(true);
-            } else if (showPosition.equals("主编,编委")) {
+            } else if ("主编,编委".equals(showPosition)) {
                 decPosition.setPresetPosition(5);
                 decPosition.setIsDigitalEditor(false);
-            } else if (showPosition.equals("主编,编委,数字编委")) {
+            } else if ("主编,编委,数字编委".equals(showPosition)) {
                 decPosition.setPresetPosition(5);
                 decPosition.setIsDigitalEditor(true);
-            } else if (showPosition.equals("主编,副主编")) {
+            } else if ("主编,副主编".equals(showPosition)) {
                 decPosition.setPresetPosition(6);
                 decPosition.setIsDigitalEditor(false);
-            } else if (showPosition.equals("主编,副主编,数字编委")) {
+            } else if ("主编,副主编,数字编委".equals(showPosition)) {
                 decPosition.setPresetPosition(6);
                 decPosition.setIsDigitalEditor(true);
-            } else if (showPosition.equals("主编,副主编,编委")) {
+            } else if ("主编,副主编,编委".equals(showPosition)) {
                 decPosition.setPresetPosition(7);
                 decPosition.setIsDigitalEditor(false);
-            } else if (showPosition.equals("主编,副主编,编委,数字编委")) {
+            } else if ("主编,副主编,编委,数字编委".equals(showPosition)) {
                 decPosition.setPresetPosition(7);
                 decPosition.setIsDigitalEditor(true);
             }
@@ -250,15 +248,15 @@ public class DecPositionServiceImpl implements DecPositionService {
             }
             decPosition.setDeclarationId(declarationId);
             decPosition.setTextbookId(textbookId);
-            // decPosition.setPresetPosition(presetPosition);
-            // decPosition.setIsDigitalEditor(isDigitalEditor);
             decPosition.setId(id);
             if (ObjectUtil.isNull(id)) { // 保存或者修改
                 decPositionDao.addDecPosition(decPosition);
                 String mongoId = null;
-                if (StringUtil.notEmpty(mongoId)) {
+                if (ObjectUtil.notNull(decPosition.getId()) && StringUtil.notEmpty(file)) {
                     mongoId =
                     fileService.saveLocalFile(files, FileType.SYLLABUS, decPosition.getId());
+                }
+                if (StringUtil.notEmpty(mongoId)) {
                     decPosition.setSyllabusId(mongoId);
                     decPositionDao.updateDecPosition(decPosition);
                 }

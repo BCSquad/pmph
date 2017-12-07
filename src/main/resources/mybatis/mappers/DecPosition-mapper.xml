@@ -15,7 +15,7 @@
 			<if test="textbookId !=null and textbookId !=''">
 				textbook_id,
 			</if>
-			<if test="presetPosition !=null and presetPosition !=''">
+			<if test="presetPosition !=null ">
 				preset_position,
 			</if>
 			<if test="isDigitalEditor !=null ">
@@ -50,11 +50,11 @@
 			<if test="textbookId !=null and textbookId !=''">
 				#{textbookId},
 			</if>
+			<if test="presetPosition !=null ">
+				#{presetPosition},
+			</if>
 			<if test="isDigitalEditor !=null ">
 				#{isDigitalEditor},
-			</if>
-			<if test="presetPosition !=null and presetPosition !=''">
-				#{presetPosition},
 			</if>
 			<if test="isOnList !=null and isOnList !=''">
 				#{isOnList},
@@ -105,7 +105,7 @@
 			<if test="textbookId !=null and textbookId !=''">
 				textbook_id = #{textbookId},
 			</if>
-			<if test="presetPosition !=null and presetPosition !=''">
+			<if test="presetPosition !=null ">
 				preset_position = #{presetPosition},
 			</if>
 			<if test="isDigitalEditor !=null ">
