@@ -174,7 +174,7 @@ public class DecPositionServiceImpl implements DecPositionService {
         List<NewDecPosition> list = decPositionVO.getList();
         if (CollectionUtil.isEmpty(list)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.NULL_PARAM, "list不能为空");
+                                              CheckedExceptionResult.NULL_PARAM, "添加内容不能为空");
         }
         List<DecPosition> istDecPositions =
         decPositionDao.listDecPositions(list.get(0).getDeclarationId());
