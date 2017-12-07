@@ -20,7 +20,6 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.DeviceUtils;
 import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.StringUtil;
 
 /**
  * 
@@ -118,9 +117,6 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
                         }
                         // 获取用户访问设备类型
                         String deviceType = DeviceUtils.isMobileDevice(request);
-                        if (StringUtil.isEmpty(deviceType)) {
-                            deviceType = "iPhone";
-                        }
                         // 此处调用 sysOperationService 保存方法
                         sysOperationService.addSysOperation(new SysOperation(
                                                                              pmphUser.getId(),

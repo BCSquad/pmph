@@ -138,11 +138,8 @@ public class DeviceUtils {
         for (int i = 0; !mobileFlag && userAgent != null && !userAgent.trim().equals("")
                         && i < mobileUserAgents.length; i++) {
             if (userAgent.contains(mobileUserAgents[i])) {
-                if (userAgent.equals(pcHeaders[i])) {
-                    deviceType = userAgent;
-                    pcFlag = true;
-                    break;
-                }
+                mobileFlag = true;
+                break;
             }
         }
         for (int i = 0; userAgent != null && !userAgent.trim().equals("") && i < pcHeaders.length; i++) {
@@ -154,6 +151,8 @@ public class DeviceUtils {
         }
         if (mobileFlag == true && pcFlag == false) {
             isMobile = true;
+            deviceType = iOSDeviceType(request);
+
         }
         return deviceType;// false pc true mobile
 
@@ -177,6 +176,31 @@ public class DeviceUtils {
             }
         }
         return isMobile;//
+    }
+
+    /**
+     * 判断是否为IOS系统访问
+     * 
+     * @param request
+     * @return
+     */
+    public static String iOSDeviceType(HttpServletRequest request) {
+        boolean isMobile = false;
+        String iOSDeviceType = "";
+        final String[] ios_sys = { "iPhone", "iPad", "iPod" };
+        String userAgent = request.getHeader("user-agent");
+        for (int i = 0; !isMobile && userAgent != null && !userAgent.trim().equals("")
+                        && i < ios_sys.length; i++) {
+            if (userAgent.contains(ios_sys[i])) {
+                isMobile = true;
+                iOSDeviceType = ios_sys[i];
+                break;
+            }
+        }
+        if (StringUtil.isEmpty(iOSDeviceType)) {
+            iOSDeviceType = "Android";
+        }
+        return iOSDeviceType;//
     }
 
     /**
