@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -582,8 +583,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                   "附件名称超出80个字符长度，请修改后上传！");
             }
             String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));// 去掉后缀的文件名称
-            FileUpload.fileUp(file, Const.MSG_FILE_PATH_FILE, fileName);// 上传文件
-            filePath = Const.MSG_FILE_PATH_FILE + fullFileName;
+            String beforeDate = DateUtil.date2Str(new Date(), "yyyyMMddHHmmss") + "/";// 获取当前时间拼接路径
+            FileUpload.fileUp(file, Const.MSG_FILE_PATH_FILE + beforeDate, fileName);// 上传文件
+            filePath = Const.MSG_FILE_PATH_FILE + beforeDate + fullFileName;
         }
         return filePath;
     }
@@ -800,8 +802,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     }
 
     @Override
-    public Integer addOneUserMessage(Message message, Long receiverId, String sessionId) 
-    		throws CheckedServiceException, IOException {
+    public Integer addOneUserMessage(Message message, Long receiverId, String sessionId)
+    throws CheckedServiceException, IOException {
         // 发送者id
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
@@ -822,8 +824,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "接收人为空!");
         } else {
-            userMessageList.add(new UserMessage(message.getId(), Const.MSG_TYPE_2,
-                                                senderUserId, Const.SENDER_TYPE_1, receiverId,
+            userMessageList.add(new UserMessage(message.getId(), Const.MSG_TYPE_2, senderUserId,
+                                                Const.SENDER_TYPE_1, receiverId,
                                                 Const.RECEIVER_TYPE_2));
         }
         // 插入消息发送对象数据
@@ -838,7 +840,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             WebScocketMessage webScocketMessage =
             new WebScocketMessage(message.getId(), Const.MSG_TYPE_2, senderUserId,
                                   pmphUser.getRealname(), Const.SENDER_TYPE_1,
-                                  Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, 
+                                  Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
                                   message.getContent(), DateUtil.getCurrentTime());
             myWebSocketHandler.sendWebSocketMessageToUser(websocketUserId, webScocketMessage);
         }

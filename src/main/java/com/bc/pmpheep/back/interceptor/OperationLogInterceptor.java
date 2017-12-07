@@ -97,7 +97,7 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
             String requestUri = request.getRequestURI();// 完整请求路径
             String contextPath = request.getContextPath();// 项目路径
             String url = requestUri.substring(contextPath.length());// 模块路径
-            if (!url.matches(Const.NO_INTERCEPTOR_PATH)) {
+            if (!excludeUrls.contains(url)) {
                 HandlerMethod handlerMethod = (HandlerMethod) object;
                 Class cls = handlerMethod.getBeanType();// 类名
                 Method[] methods = cls.getMethods();// 类中的所有方法
@@ -106,9 +106,6 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
                 HttpSession session = request.getSession();
                 if (ObjectUtil.notNull(session)) {
                     PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
-                    // }
-                    // if (StringUtil.notEmpty(sessionId)) {
-                    // PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
                     if (ObjectUtil.notNull(pmphUser)) {
                         String subUrl = url.substring(url.lastIndexOf("/") + 1, url.length());// 调用接口方法
                         for (Method method : methods) {
