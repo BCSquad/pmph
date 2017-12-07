@@ -131,13 +131,7 @@ public class DeclarationController {
 	 * 
 	 * @author tyc
 	 * @createDate 2017年11月25日 晚上21:15:30
-	 * @param declarationId
-	 *            申报表id
-	 * @param textbookId
-	 *            书籍id
-	 * @param presetPosition
-	 *            申报职务
-	 * @throws CheckedServiceException
+	 * @param decPositionVO
 	 * @throws IOException
 	 */
 	@ResponseBody

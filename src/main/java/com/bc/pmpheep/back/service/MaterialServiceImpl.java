@@ -1,6 +1,6 @@
 package com.bc.pmpheep.back.service;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,9 +30,7 @@ import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.CookiesUtil;
-import com.bc.pmpheep.back.util.FileUpload;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -402,15 +400,17 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		//原来有的通知附件
 		List<MaterialNoticeAttachment> oldMaterialNoticeAttachmentlist = materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
 		String newTempNoticeFileIds = ",";
-		String realpath = request.getSession().getServletContext().getRealPath("/");
+//		String realpath = request.getSession().getServletContext().getRealPath("/");
 		for(MaterialNoticeAttachment materialNoticeAttachment: materialNoticeAttachmentlist){
 			if(null == materialNoticeAttachment.getId()){
-				String tempPath = realpath + materialNoticeAttachment.getAttachment() ;
-				File file = new File(tempPath);
-				if(!file.exists()){//先放过吧
-					continue;
-				}
-				String fileName = file.getName();
+//				String tempPath = realpath + materialNoticeAttachment.getAttachment() ;
+//				File file = new File(tempPath);
+//				if(!file.exists()){//先放过吧
+//					continue;
+//				}
+//				String fileName =file.getName() ;
+				MultipartFile file =(MultipartFile) request.getSession().getAttribute(materialNoticeAttachment.getAttachment());
+				String fileName = file.getOriginalFilename();
 				materialNoticeAttachment.setAttachment(String.valueOf(new Date().getTime()));
 				materialNoticeAttachment.setAttachmentName(fileName);
 				materialNoticeAttachment.setDownload(0L);
@@ -419,19 +419,22 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
 				String noticeId;
 				// 保存通知文件
-			    noticeId = fileService.saveLocalFile(file, FileType.MATERIAL_NOTICE_ATTACHMENT,materialNoticeAttachment.getId());
+			    noticeId = //fileService.saveLocalFile(file, FileType.MATERIAL_NOTICE_ATTACHMENT,materialNoticeAttachment.getId());
+			    		fileService.save(file, FileType.MATERIAL_NOTICE_ATTACHMENT, materialNoticeAttachment.getId()) ;
 				materialNoticeAttachment.setAttachment(noticeId);
 				// 更新通知
 				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
-				//删除文件
-				if(file.exists()){
-					file.delete();
-				}
-				//删除目录
-				File dir =  new File(tempPath.replace(fileName, "")) ;
-				if(dir.exists()){
-					dir.delete();
-				}
+				//移除session的文件
+				request.getSession().removeAttribute(materialNoticeAttachment.getAttachment());
+//				//删除文件
+//				if(file.exists()){
+//					file.delete();
+//				}
+//				//删除目录
+//				File dir =  new File(tempPath.replace(fileName, "")) ;
+//				if(dir.exists()){
+//					dir.delete();
+//				}
 			}else{
 				newTempNoticeFileIds += materialNoticeAttachment.getId()+",";
 			}
@@ -454,12 +457,14 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		String newTempNoteFileIds = ",";
 		for(MaterialNoteAttachment materialNoteAttachment: materialNoteAttachmentList){
 			if(null == materialNoteAttachment.getId()){
-				String tempPath = realpath + materialNoteAttachment.getAttachment() ;
-				File file = new File(tempPath);
-				if(!file.exists()){//先放过吧
-					continue;
-				}
-				String fileName =file.getName() ;
+//				String tempPath = realpath + materialNoteAttachment.getAttachment() ;
+//				File file = new File(tempPath);
+//				if(!file.exists()){//先放过吧
+//					continue;
+//				}
+//				String fileName =file.getName() ;
+				MultipartFile file =(MultipartFile) request.getSession().getAttribute(materialNoteAttachment.getAttachment());
+				String fileName =file.getOriginalFilename() ;
 				materialNoteAttachment.setAttachment(String.valueOf(new Date().getTime()));
 				materialNoteAttachment.setAttachmentName(fileName);
 				materialNoteAttachment.setDownload(0L);
@@ -468,19 +473,22 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialNoteAttachmentService.addMaterialNoteAttachment(materialNoteAttachment);
 				String noticeId;
 				// 保存备注文件
-				noticeId = fileService.saveLocalFile(file, FileType.MATERIAL_NOTICE_ATTACHMENT,materialNoteAttachment.getId());
+				noticeId = //fileService.saveLocalFile(file, FileType.MATERIAL_NOTICE_ATTACHMENT,materialNoteAttachment.getId());
+						  fileService.save(file, FileType.MATERIAL_NOTICE_ATTACHMENT,materialNoteAttachment.getId());
 				materialNoteAttachment.setAttachment(noticeId);
 				// 更新备注
 				materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
-				//删除文件
-				if(file.exists()){
-					file.delete();
-				}
-				//删除目录
-				File dir =  new File(tempPath.replace(fileName, "")) ;
-				if(dir.exists()){
-					dir.delete();
-				}
+				//移除session的文件
+				request.getSession().removeAttribute(materialNoteAttachment.getAttachment());
+//				//删除文件
+//				if(file.exists()){
+//					file.delete();
+//				}
+//				//删除目录
+//				File dir =  new File(tempPath.replace(fileName, "")) ;
+//				if(dir.exists()){
+//					dir.delete();
+//				}
 			}else{
 				newTempNoteFileIds += materialNoteAttachment.getId()+",";
 			}
@@ -892,6 +900,12 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	
 	@Override
 	public List<String> upTempFile(HttpServletRequest request, MultipartFile[] files)throws CheckedServiceException, IOException {
+		String sessionId = CookiesUtil.getSessionId(request);
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"用户没有登录!");
+		}
     	if( null == files || files.length == 0 ){
     		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"没有文件");
     	}
@@ -901,12 +915,15 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
             }
     	}
     	List<String> filsRelativePaths = new ArrayList<String>(files.length);
-    	String path = Const.FILE_TEMP_PATH ; //临时文件大目录
+//    	String path = Const.FILE_TEMP_PATH ; //临时文件大目录
     	for(MultipartFile file: files){
     		UUID uuid = UUID.randomUUID();
-    		String tempPath = path+"/"+uuid.toString()+"/";   //保证路径唯一
-    		FileUpload.upMultipartFile(file,tempPath,request);//上传文件
-    		filsRelativePaths.add(tempPath+file.getOriginalFilename());//返回相对路径
+//    		String tempPath = path+"/"+uuid.toString()+"/";   //保证路径唯一
+//    		FileUpload.upMultipartFile(file,tempPath,request);//上传文件
+//    		filsRelativePaths.add(tempPath+file.getOriginalFilename());//返回相对路径
+    		//先放置在session里面 有空再来解决存储路径的问题
+    		request.getSession().setAttribute(uuid.toString(),file);
+    		filsRelativePaths.add(uuid.toString());
     	}
         return filsRelativePaths;
     }
