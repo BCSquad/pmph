@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.ibatis.type.Alias;
 
 import com.bc.pmpheep.back.po.DecAcade;
+import com.bc.pmpheep.back.po.DecAchievement;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecExtension;
@@ -35,6 +36,8 @@ public class ApplicationVO implements Serializable {
 	private List<DecWorkExp>  decWorkExpList  =new ArrayList<DecWorkExp>(5);
 	//主要教学经历
 	private List<DecTeachExp> decTeachExpList =new ArrayList<DecTeachExp>(5);
+	//个人成就
+	private List<DecAchievement> decAchievementList = new ArrayList<DecAchievement>(5);
 	//主要学术兼职
 	private List<DecAcade>    decAcadeList =new ArrayList<DecAcade>(5);
 	//上版教材参编情况
@@ -84,6 +87,12 @@ public class ApplicationVO implements Serializable {
 	}
 	public void setDecTeachExpList(List<DecTeachExp> decTeachExpList) {
 		this.decTeachExpList = decTeachExpList;
+	}
+	public List<DecAchievement> getDecAchievementList() {
+		return decAchievementList;
+	}
+	public void setDecAchievementList(List<DecAchievement> decAchievementList) {
+		this.decAchievementList = decAchievementList;
 	}
 	public List<DecAcade> getDecAcadeList() {
 		return decAcadeList;

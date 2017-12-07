@@ -21,8 +21,8 @@
 			<if test="isChiefChosen != null ">
 				is_chief_chosen,
 			</if>
-			<if test="isQualifierSelected != null ">
-				is_qualifier_selected,
+			<if test="isChiefPublished != null ">
+				is_chief_published,
 			</if>
 			<if test="isListSelected != null ">
 				is_list_selected,
@@ -87,8 +87,8 @@
 			<if test="isChiefChosen != null ">
 				#{isChiefChosen},
 			</if>
-			<if test="isQualifierSelected != null ">
-				#{isQualifierSelected},
+			<if test="isChiefPublished != null ">
+				#{isChiefPublished},
 			</if>
 			<if test="isListSelected != null ">
 				#{isListSelected},
@@ -179,8 +179,8 @@
 			<if test="isChiefChosen != null ">
 				is_chief_chosen = #{isChiefChosen},
 			</if>
-			<if test="isQualifierSelected != null ">
-				is_qualifier_selected = #{isQualifierSelected},
+			<if test="isChiefPublished != null ">
+				is_chief_published = #{isChiefPublished},
 			</if>
 			<if test="isListSelected != null ">
 				is_list_selected = #{isListSelected},

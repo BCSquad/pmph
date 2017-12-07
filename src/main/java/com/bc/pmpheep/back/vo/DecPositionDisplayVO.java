@@ -37,8 +37,18 @@ public class DecPositionDisplayVO implements Serializable {
     private Timestamp gmtCreate;
     // 修改时间
     private Timestamp gmtUpdate;
+    // 显示
+    private String showPosition;
 
-    public DecPositionDisplayVO() {
+    public String getShowPosition() {
+		return showPosition;
+	}
+
+	public void setShowPosition(String showPosition) {
+		this.showPosition = showPosition;
+	}
+
+	public DecPositionDisplayVO() {
         super();
     }
 
@@ -155,9 +165,8 @@ public class DecPositionDisplayVO implements Serializable {
 				+ ", isOnList=" + isOnList + ", chosenPosition="
 				+ chosenPosition + ", rank=" + rank + ", syllabusId="
 				+ syllabusId + ", syllabusName=" + syllabusName
-				+ ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
+				+ ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate
+				+ ", showPosition=" + showPosition + "]";
 	}
-    
-    
     
 }

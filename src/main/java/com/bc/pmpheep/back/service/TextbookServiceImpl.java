@@ -293,10 +293,6 @@ public class TextbookServiceImpl implements TextbookService {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 						CheckedExceptionResult.ILLEGAL_PARAM, "未确定第一主编");
 			}
-			if (Const.FALSE == textbook.getIsQualifierSelected()) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-						CheckedExceptionResult.ILLEGAL_PARAM, "未确定编委");
-			}
 			textBook.add(new Textbook(textbook.getId()));
 		}
 		Integer count = 0;
