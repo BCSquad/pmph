@@ -5,11 +5,11 @@ package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecPosition;
-import com.bc.pmpheep.back.vo.DecPositionEditorSelectionVO;
 import com.bc.pmpheep.back.vo.DecPositionVO;
 import com.bc.pmpheep.back.vo.DeclarationCountVO;
 import com.bc.pmpheep.back.vo.DeclarationResultBookVO;
@@ -139,7 +139,7 @@ public interface DecPositionService {
      * @throws CheckedServiceException
      * </pre>
      */
-    List<DecPositionEditorSelectionVO> listEditorSelection(Long textbookId, String realName,
+    Map<String, Object> listEditorSelection(Long textbookId, Long materialId, String realName,
     Integer presetPosition) throws CheckedServiceException;
 
     /**
@@ -153,89 +153,98 @@ public interface DecPositionService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer updateDecPositionEditorSelection(String jsonDecPosition, String sessionId)
-    throws CheckedServiceException;
-    
+    Integer updateDecPositionEditorSelection(String jsonDecPosition, Integer selectionType,
+    String sessionId) throws CheckedServiceException;
+
     /**
      * 
      * Description:获取申报情况统计数据
+     * 
      * @author:lyc
      * @date:2017年11月30日下午6:19:48
-     * @param 
+     * @param
      * @return DeclarationCountVO
      */
     DeclarationCountVO getDeclarationCountVO(Long materialId) throws CheckedServiceException;
-    
+
     /**
      * 
      * Description:加载申请情况按学校统计界面（按当选数排序）
+     * 
      * @author:lyc
      * @date:2017年11月29日下午5:04:52
-     * @param 
+     * @param
      * @return PageResult<DeclarationSituationSchoolResultVO>
      */
-    PageResult<DeclarationSituationSchoolResultVO> listChosenDeclarationSituationSchoolResultVOs
-    (PageParameter<DeclarationSituationSchoolResultVO> pageParameter) throws CheckedServiceException;
-    
+    PageResult<DeclarationSituationSchoolResultVO> listChosenDeclarationSituationSchoolResultVOs(
+    PageParameter<DeclarationSituationSchoolResultVO> pageParameter) throws CheckedServiceException;
+
     /**
      * 
      * Description:加载申请情况按学校统计界面（按申报数排序）
+     * 
      * @author:lyc
      * @date:2017年12月5日上午11:29:03
-     * @param 
+     * @param
      * @return PageResult<DeclarationSituationSchoolResultVO>
      */
-    PageResult<DeclarationSituationSchoolResultVO> listPresetDeclarationSituationSchoolResultVOs
-    (PageParameter<DeclarationSituationSchoolResultVO> pageParameter)throws CheckedServiceException;
-    
+    PageResult<DeclarationSituationSchoolResultVO> listPresetDeclarationSituationSchoolResultVOs(
+    PageParameter<DeclarationSituationSchoolResultVO> pageParameter) throws CheckedServiceException;
+
     /**
      * 
      * Description:加载申请情况按书本统计界面
+     * 
      * @author:lyc
      * @date:2017年12月1日下午5:18:52
-     * @param 
+     * @param
      * @return PageResult<DeclarationSituationBookResultVO>
      */
-    PageResult<DeclarationSituationBookResultVO> listDeclarationSituationBookResultVOs
-    (PageParameter<DeclarationSituationBookResultVO> pageParameter)throws CheckedServiceException;
-    
+    PageResult<DeclarationSituationBookResultVO> listDeclarationSituationBookResultVOs(
+    PageParameter<DeclarationSituationBookResultVO> pageParameter) throws CheckedServiceException;
+
     /**
      * 
      * Description:加载按学校统计申报结果界面（按当选数排序）
+     * 
      * @author:lyc
      * @date:2017年12月1日下午6:28:07
-     * @param 
+     * @param
      * @return PageResult<DeclarationResultSchoolVO>
      */
-    PageResult<DeclarationResultSchoolVO> listChosenDeclarationResultSchoolVOs
-    (PageParameter<DeclarationResultSchoolVO> pageParameter)throws CheckedServiceException;
-    
+    PageResult<DeclarationResultSchoolVO> listChosenDeclarationResultSchoolVOs(
+    PageParameter<DeclarationResultSchoolVO> pageParameter) throws CheckedServiceException;
+
     /**
      * 
      * Description:加载按学校统计申报结果界面（按申报数排序）
+     * 
      * @author:lyc
      * @date:2017年12月5日上午11:30:31
-     * @param 
+     * @param
      * @return PageResult<DeclarationResultSchoolVO>
      */
-    PageResult<DeclarationResultSchoolVO> listPresetDeclarationResultSchoolVOs
-    (PageParameter<DeclarationResultSchoolVO> pageParameter)throws CheckedServiceException;
-    
+    PageResult<DeclarationResultSchoolVO> listPresetDeclarationResultSchoolVOs(
+    PageParameter<DeclarationResultSchoolVO> pageParameter) throws CheckedServiceException;
+
     /**
      * 
      * Description:加载按书籍统计申报结果界面
+     * 
      * @author:lyc
      * @date:2017年12月1日下午6:40:00
-     * @param 
+     * @param
      * @return PageResult<DeclarationResultBookVO>
      */
-    PageResult<DeclarationResultBookVO> listDeclarationResultBookVOs
-    (PageParameter<DeclarationResultBookVO> pageParameter)throws CheckedServiceException;
+    PageResult<DeclarationResultBookVO> listDeclarationResultBookVOs(
+    PageParameter<DeclarationResultBookVO> pageParameter) throws CheckedServiceException;
+
     /**
      * 根据书籍id查询该书的主编、副主编、编委
+     * 
      * @param textbookId
      * @return
      * @throws CheckedServiceException
      */
-	List<TextbookDecVO> getTextbookEditorList(Long textbookId)throws CheckedServiceException;
+    List<TextbookDecVO> getTextbookEditorList(Long textbookId) throws CheckedServiceException;
 }

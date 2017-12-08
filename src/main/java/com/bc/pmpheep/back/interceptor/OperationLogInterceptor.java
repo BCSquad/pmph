@@ -20,7 +20,6 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.DeviceUtils;
 import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.StringUtil;
 
 /**
  * 
@@ -97,7 +96,7 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
             String requestUri = request.getRequestURI();// 完整请求路径
             String contextPath = request.getContextPath();// 项目路径
             String url = requestUri.substring(contextPath.length());// 模块路径
-            if (!url.matches(Const.NO_INTERCEPTOR_PATH)) {
+            if (!excludeUrls.contains(url)) {
                 HandlerMethod handlerMethod = (HandlerMethod) object;
                 Class cls = handlerMethod.getBeanType();// 类名
                 Method[] methods = cls.getMethods();// 类中的所有方法
@@ -106,9 +105,6 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
                 HttpSession session = request.getSession();
                 if (ObjectUtil.notNull(session)) {
                     PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
-                    // }
-                    // if (StringUtil.notEmpty(sessionId)) {
-                    // PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
                     if (ObjectUtil.notNull(pmphUser)) {
                         String subUrl = url.substring(url.lastIndexOf("/") + 1, url.length());// 调用接口方法
                         for (Method method : methods) {
@@ -121,9 +117,6 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
                         }
                         // 获取用户访问设备类型
                         String deviceType = DeviceUtils.isMobileDevice(request);
-                        if (StringUtil.isEmpty(deviceType)) {
-                            deviceType = "iPhone";
-                        }
                         // 此处调用 sysOperationService 保存方法
                         sysOperationService.addSysOperation(new SysOperation(
                                                                              pmphUser.getId(),

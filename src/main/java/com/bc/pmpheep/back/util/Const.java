@@ -20,10 +20,10 @@ import org.springframework.context.ApplicationContext;
  * </pre>
  */
 public class Const {
-	
-	//临时文件上传的目录
-	public static final String       FILE_TEMP_PATH                = "/upload/temp";
-	
+
+    // 临时文件上传的目录
+    public static final String       FILE_TEMP_PATH                = "/upload/temp";
+
     public static final String       DEFAULT_PASSWORD              = "123456";
     public static final String       WEB_PROJECT_NAME              = "PMPH_PROJECT";
     // 社内部门根节点id
@@ -73,7 +73,7 @@ public class Const {
     public static final String       FILE_PATH_FILE                = "uploadFiles/file/";
     // 不对匹配该值的访问路径拦截（正则）
     public static final String       NO_INTERCEPTOR_PATH           =
-                                                                   ".*/((login)|(logout)|(code)|(static)|(websocket))";
+                                                                   ".*/((login)|(logout)|(code)|(statics)|(websocket)|(operation/*))";
     // 该值会在web容器启动时由WebAppContextListener初始化
     public static ApplicationContext WEB_APP_CONTEXT               = null;
     // 普通文件下载控制器方法

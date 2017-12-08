@@ -5,293 +5,309 @@ import java.sql.Timestamp;
 import org.apache.ibatis.type.Alias;
 
 /**
- * Textbook  教材书籍表     实体类 
- * @author mryang 
- *
+ * Textbook 教材书籍表 实体类
+ * 
+ * @author mryang
+ * 
  */
 @SuppressWarnings("serial")
 @Alias("Textbook")
 public class Textbook implements java.io.Serializable {
 
-	//主键
-	private Long id;
-	//教材id
-	private Long materialId;
-	//书籍名称
-	private String textbookName;
-	//书籍轮次
-	private Integer textbookRound;
-	//策划编辑id
-	private Long planningEditor;
-	//是否已选定第一主编
-	private Boolean isChiefChosen;
-	//是否已预选编委
-	private Boolean  isChiefPublished;
-	//主编是否选定编委
-	private Boolean isListSelected;
-	//策划编辑是否确定名单
-	private Boolean isPlanningEditorConfirm;
-	//项目编辑是否确定名单
-	private Boolean isProjectEditorConfirm ;
-	//是否锁定
-	private Boolean isLocked;
-	//是否已公布
-	private Boolean isPublished;
-	//公布时间
-	private Timestamp gmtPublished;
-	//公布后再次修改次数
-	private Integer revisionTimes;
-	//公布后再次公布次数
-	private Integer republishTimes; 
-	//ISBN号
-	private String isbn;
-	//图书序号
-	private Integer sort;
-	//选题号
-	private String topicNumber;
-	//创建人id
-	private Long founderId;
-	//创建时间
-	private Timestamp gmtCreate;
-	//修改时间
-	private Timestamp gmtUpdate;
+    // 主键
+    private Long      id;
+    // 教材id
+    private Long      materialId;
+    // 书籍名称
+    private String    textbookName;
+    // 书籍轮次
+    private Integer   textbookRound;
+    // 策划编辑id
+    private Long      planningEditor;
+    // 是否已选定第一主编
+    private Boolean   isChiefChosen;
+    // 是否已预选编委
+    private Boolean   isChiefPublished;
+    // 主编是否选定编委
+    private Boolean   isListSelected;
+    // 策划编辑是否确定名单
+    private Boolean   isPlanningEditorConfirm;
+    // 项目编辑是否确定名单
+    private Boolean   isProjectEditorConfirm;
+    // 是否锁定
+    private Boolean   isLocked;
+    // 是否已公布
+    private Boolean   isPublished;
+    // 公布时间
+    private Timestamp gmtPublished;
+    // 公布后再次修改次数
+    private Integer   revisionTimes;
+    // 公布后再次公布次数
+    private Integer   republishTimes;
+    // ISBN号
+    private String    isbn;
+    // 图书序号
+    private Integer   sort;
+    // 选题号
+    private String    topicNumber;
+    // 创建人id
+    private Long      founderId;
+    // 创建时间
+    private Timestamp gmtCreate;
+    // 修改时间
+    private Timestamp gmtUpdate;
 
+    // Constructors
 
-	// Constructors
+    /** default constructor */
+    public Textbook() {
+    }
 
-	/** default constructor */
-	public Textbook() {
-	}
-	/**
+    /**
 	 * 
 	 */
-	public Textbook(Long id){
-		this.id=id;
-	}
-	
-	
-	
-	public Textbook(Long materialId, String textbookName,
-			Integer textbookRound, Integer sort, Long founderId) {
-		super();
-		this.materialId = materialId;
-		this.textbookName = textbookName;
-		this.textbookRound = textbookRound;
-		this.sort = sort;
-		this.founderId = founderId;
-	}
-	public Textbook(Long materialId, String textbookName,
-			Integer textbookRound, Boolean isLocked, Boolean isPublished,
-			Integer sort, String topicNumber, Long founderId, Timestamp gmtCreate) {
-		this.materialId = materialId;
-		this.textbookName = textbookName;
-		this.textbookRound = textbookRound;
-		this.isLocked = isLocked;
-		this.isPublished = isPublished;
-		this.sort = sort;
-		this.topicNumber = topicNumber;
-		this.founderId = founderId;
-		this.gmtCreate = gmtCreate;
-	}
+    public Textbook(Long id) {
+        this.id = id;
+    }
 
-	/** minimal constructor 
-	 * 
-	 * @param materialId
-	 * @param textbookName
-	 * @param textbookRound
-	 * @param isLocked
-	 * @param isPublished
-	 * @param gmtPublished
-	 * @param isbn
-	 * @param sort
-	 * @param founderId
-	 * @param gmtCreate
-	 */
-	public Textbook(Long materialId, String textbookName,
-			Integer textbookRound, Boolean isLocked, Boolean isPublished,
-			Timestamp gmtPublished, String isbn, Integer sort, Long founderId,
-			Timestamp gmtCreate) {
-		this.materialId = materialId;
-		this.textbookName = textbookName;
-		this.textbookRound = textbookRound;
-		this.isLocked = isLocked;
-		this.isPublished = isPublished;
-		this.gmtPublished = gmtPublished;
-		this.isbn = isbn;
-		this.sort = sort;
-		this.founderId = founderId;
-		this.gmtCreate = gmtCreate;
-	}
+    public Textbook(Long id, Boolean isChiefPublished) {
+        this.id = id;
+        this.isChiefPublished = isChiefPublished;
+    }
 
-	// Property accessors
-	public Long getId() {
-		return this.id;
-	}
+    public Textbook(Long materialId, String textbookName, Integer textbookRound, Integer sort,
+    Long founderId) {
+        super();
+        this.materialId = materialId;
+        this.textbookName = textbookName;
+        this.textbookRound = textbookRound;
+        this.sort = sort;
+        this.founderId = founderId;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Textbook(Long materialId, String textbookName, Integer textbookRound, Boolean isLocked,
+    Boolean isPublished, Integer sort, String topicNumber, Long founderId, Timestamp gmtCreate) {
+        this.materialId = materialId;
+        this.textbookName = textbookName;
+        this.textbookRound = textbookRound;
+        this.isLocked = isLocked;
+        this.isPublished = isPublished;
+        this.sort = sort;
+        this.topicNumber = topicNumber;
+        this.founderId = founderId;
+        this.gmtCreate = gmtCreate;
+    }
 
-	public Long getMaterialId() {
-		return this.materialId;
-	}
+    /**
+     * minimal constructor
+     * 
+     * @param materialId
+     * @param textbookName
+     * @param textbookRound
+     * @param isLocked
+     * @param isPublished
+     * @param gmtPublished
+     * @param isbn
+     * @param sort
+     * @param founderId
+     * @param gmtCreate
+     */
+    public Textbook(Long materialId, String textbookName, Integer textbookRound, Boolean isLocked,
+    Boolean isPublished, Timestamp gmtPublished, String isbn, Integer sort, Long founderId,
+    Timestamp gmtCreate) {
+        this.materialId = materialId;
+        this.textbookName = textbookName;
+        this.textbookRound = textbookRound;
+        this.isLocked = isLocked;
+        this.isPublished = isPublished;
+        this.gmtPublished = gmtPublished;
+        this.isbn = isbn;
+        this.sort = sort;
+        this.founderId = founderId;
+        this.gmtCreate = gmtCreate;
+    }
 
-	public void setMaterialId(Long materialId) {
-		this.materialId = materialId;
-	}
+    // Property accessors
+    public Long getId() {
+        return this.id;
+    }
 
-	public String getTextbookName() {
-		return this.textbookName;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setTextbookName(String textbookName) {
-		this.textbookName = textbookName;
-	}
+    public Long getMaterialId() {
+        return this.materialId;
+    }
 
-	public Integer getTextbookRound() {
-		return this.textbookRound;
-	}
+    public void setMaterialId(Long materialId) {
+        this.materialId = materialId;
+    }
 
-	public void setTextbookRound(Integer textbookRound) {
-		this.textbookRound = textbookRound;
-	}
+    public String getTextbookName() {
+        return this.textbookName;
+    }
 
-	public Boolean getIsLocked() {
-		return this.isLocked;
-	}
+    public void setTextbookName(String textbookName) {
+        this.textbookName = textbookName;
+    }
 
-	public void setIsLocked(Boolean isLocked) {
-		this.isLocked = isLocked;
-	}
+    public Integer getTextbookRound() {
+        return this.textbookRound;
+    }
 
-	public Boolean getIsPublished() {
-		return this.isPublished;
-	}
+    public void setTextbookRound(Integer textbookRound) {
+        this.textbookRound = textbookRound;
+    }
 
-	public void setIsPublished(Boolean isPublished) {
-		this.isPublished = isPublished;
-	}
+    public Boolean getIsLocked() {
+        return this.isLocked;
+    }
 
-	public Timestamp getGmtPublished() {
-		return this.gmtPublished;
-	}
+    public void setIsLocked(Boolean isLocked) {
+        this.isLocked = isLocked;
+    }
 
-	public void setGmtPublished(Timestamp gmtPublished) {
-		this.gmtPublished = gmtPublished;
-	}
+    public Boolean getIsPublished() {
+        return this.isPublished;
+    }
 
-	public String getIsbn() {
-		return this.isbn;
-	}
+    public void setIsPublished(Boolean isPublished) {
+        this.isPublished = isPublished;
+    }
 
-	public void setIsbn(String isbn) {
-		this.isbn = isbn;
-	}
+    public Timestamp getGmtPublished() {
+        return this.gmtPublished;
+    }
 
-	public Integer getSort() {
-		return this.sort;
-	}
+    public void setGmtPublished(Timestamp gmtPublished) {
+        this.gmtPublished = gmtPublished;
+    }
 
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
+    public String getIsbn() {
+        return this.isbn;
+    }
 
-	public String getTopicNumber() {
-		return topicNumber;
-	}
-	public void setTopicNumber(String topicNumber) {
-		this.topicNumber = topicNumber;
-	}
-	public Long getFounderId() {
-		return this.founderId;
-	}
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 
-	public void setFounderId(Long founderId) {
-		this.founderId = founderId;
-	}
+    public Integer getSort() {
+        return this.sort;
+    }
 
-	public Timestamp getGmtCreate() {
-		return this.gmtCreate;
-	}
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 
-	public void setGmtCreate(Timestamp gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
-	public Long getPlanningEditor() {
-		return planningEditor;
-	}
-	public void setPlanningEditor(Long planningEditor) {
-		this.planningEditor = planningEditor;
-	}
-	public Boolean getIsChiefChosen() {
-		return isChiefChosen;
-	}
-	public void setIsChiefChosen(Boolean isChiefChosen) {
-		this.isChiefChosen = isChiefChosen;
-	}
+    public String getTopicNumber() {
+        return topicNumber;
+    }
 
-	public Boolean getIsListSelected() {
-		return isListSelected;
-	}
-	public void setIsListSelected(Boolean isListSelected) {
-		this.isListSelected = isListSelected;
-	}
-	public Boolean getIsPlanningEditorConfirm() {
-		return isPlanningEditorConfirm;
-	}
-	public void setIsPlanningEditorConfirm(Boolean isPlanningEditorConfirm) {
-		this.isPlanningEditorConfirm = isPlanningEditorConfirm;
-	}
-	public Boolean getIsProjectEditorConfirm() {
-		return isProjectEditorConfirm;
-	}
-	public void setIsProjectEditorConfirm(Boolean isProjectEditorConfirm) {
-		this.isProjectEditorConfirm = isProjectEditorConfirm;
-	}
-	public Integer getRevisionTimes() {
-		return revisionTimes;
-	}
-	public void setRevisionTimes(Integer revisionTimes) {
-		this.revisionTimes = revisionTimes;
-	}
-	public Integer getRepublishTimes() {
-		return republishTimes;
-	}
-	public void setRepublishTimes(Integer republishTimes) {
-		this.republishTimes = republishTimes;
-	}
-	public Timestamp getGmtUpdate() {
-		return gmtUpdate;
-	}
-	public void setGmtUpdate(Timestamp gmtUpdate) {
-		this.gmtUpdate = gmtUpdate;
-	}
-	
-	public Boolean getIsChiefPublished() {
-		return isChiefPublished;
-	}
-	public void setIsChiefPublished(Boolean isChiefPublished) {
-		this.isChiefPublished = isChiefPublished;
-	}
-	
-	@Override
-	public String toString() {
-		return "{id:" + id + ", materialId:" + materialId + ", textbookName:"
-				+ textbookName + ", textbookRound:" + textbookRound
-				+ ", planningEditor:" + planningEditor + ", isChiefChosen:"
-				+ isChiefChosen + ", isChiefPublished:" + isChiefPublished
-				+ ", isListSelected:" + isListSelected
-				+ ", isPlanningEditorConfirm:" + isPlanningEditorConfirm
-				+ ", isProjectEditorConfirm:" + isProjectEditorConfirm
-				+ ", isLocked:" + isLocked + ", isPublished:" + isPublished
-				+ ", gmtPublished:" + gmtPublished + ", revisionTimes:"
-				+ revisionTimes + ", republishTimes:" + republishTimes
-				+ ", isbn:" + isbn + ", sort:" + sort + ", topicNumber:"
-				+ topicNumber + ", founderId:" + founderId + ", gmtCreate:"
-				+ gmtCreate + ", gmtUpdate:" + gmtUpdate + "}";
-	}
+    public void setTopicNumber(String topicNumber) {
+        this.topicNumber = topicNumber;
+    }
 
-	
-	
-	
+    public Long getFounderId() {
+        return this.founderId;
+    }
+
+    public void setFounderId(Long founderId) {
+        this.founderId = founderId;
+    }
+
+    public Timestamp getGmtCreate() {
+        return this.gmtCreate;
+    }
+
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Long getPlanningEditor() {
+        return planningEditor;
+    }
+
+    public void setPlanningEditor(Long planningEditor) {
+        this.planningEditor = planningEditor;
+    }
+
+    public Boolean getIsChiefChosen() {
+        return isChiefChosen;
+    }
+
+    public void setIsChiefChosen(Boolean isChiefChosen) {
+        this.isChiefChosen = isChiefChosen;
+    }
+
+    public Boolean getIsListSelected() {
+        return isListSelected;
+    }
+
+    public void setIsListSelected(Boolean isListSelected) {
+        this.isListSelected = isListSelected;
+    }
+
+    public Boolean getIsPlanningEditorConfirm() {
+        return isPlanningEditorConfirm;
+    }
+
+    public void setIsPlanningEditorConfirm(Boolean isPlanningEditorConfirm) {
+        this.isPlanningEditorConfirm = isPlanningEditorConfirm;
+    }
+
+    public Boolean getIsProjectEditorConfirm() {
+        return isProjectEditorConfirm;
+    }
+
+    public void setIsProjectEditorConfirm(Boolean isProjectEditorConfirm) {
+        this.isProjectEditorConfirm = isProjectEditorConfirm;
+    }
+
+    public Integer getRevisionTimes() {
+        return revisionTimes;
+    }
+
+    public void setRevisionTimes(Integer revisionTimes) {
+        this.revisionTimes = revisionTimes;
+    }
+
+    public Integer getRepublishTimes() {
+        return republishTimes;
+    }
+
+    public void setRepublishTimes(Integer republishTimes) {
+        this.republishTimes = republishTimes;
+    }
+
+    public Timestamp getGmtUpdate() {
+        return gmtUpdate;
+    }
+
+    public void setGmtUpdate(Timestamp gmtUpdate) {
+        this.gmtUpdate = gmtUpdate;
+    }
+
+    public Boolean getIsChiefPublished() {
+        return isChiefPublished;
+    }
+
+    public void setIsChiefPublished(Boolean isChiefPublished) {
+        this.isChiefPublished = isChiefPublished;
+    }
+
+    @Override
+    public String toString() {
+        return "{id:" + id + ", materialId:" + materialId + ", textbookName:" + textbookName
+               + ", textbookRound:" + textbookRound + ", planningEditor:" + planningEditor
+               + ", isChiefChosen:" + isChiefChosen + ", isChiefPublished:" + isChiefPublished
+               + ", isListSelected:" + isListSelected + ", isPlanningEditorConfirm:"
+               + isPlanningEditorConfirm + ", isProjectEditorConfirm:" + isProjectEditorConfirm
+               + ", isLocked:" + isLocked + ", isPublished:" + isPublished + ", gmtPublished:"
+               + gmtPublished + ", revisionTimes:" + revisionTimes + ", republishTimes:"
+               + republishTimes + ", isbn:" + isbn + ", sort:" + sort + ", topicNumber:"
+               + topicNumber + ", founderId:" + founderId + ", gmtCreate:" + gmtCreate
+               + ", gmtUpdate:" + gmtUpdate + "}";
+    }
+
 }
