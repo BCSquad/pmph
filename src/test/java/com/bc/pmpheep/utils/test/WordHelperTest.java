@@ -2,6 +2,8 @@ package com.bc.pmpheep.utils.test;
 
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.po.DecEduExp;
+import com.bc.pmpheep.back.service.DeclarationService;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.utils.WordHelper;
 import java.io.FileNotFoundException;
@@ -28,6 +30,8 @@ public class WordHelperTest extends BaseTest {
 
     @Resource
     WordHelper wordHelper;
+    @Resource
+    DeclarationService declarationService;
 
     @Test
     public void fromDeclarationEtcBOList() throws FileNotFoundException, IOException {
@@ -60,6 +64,21 @@ public class WordHelperTest extends BaseTest {
         declarationEtcBO.setChosenOrgName("首都医科大学");
         list.add(declarationEtcBO);
         HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(list);
+        for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
+            FileOutputStream out = new FileOutputStream(entry.getKey());
+            entry.getValue().write(out);
+            out.flush();
+            out.close();
+        }
+    }
+
+    @Test
+    public void fromDeclarationEtcBOListAlpha() throws FileNotFoundException, IOException {
+        List<DeclarationEtcBO> declarationEtcBOs = declarationService.getDeclarationEtcBOs(120L);
+        if (CollectionUtil.isEmpty(declarationEtcBOs)) {
+            return;
+        }
+        HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(declarationEtcBOs);
         for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
             FileOutputStream out = new FileOutputStream(entry.getKey());
             entry.getValue().write(out);
