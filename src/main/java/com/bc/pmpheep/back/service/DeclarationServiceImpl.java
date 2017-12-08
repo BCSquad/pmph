@@ -5,10 +5,13 @@ package com.bc.pmpheep.back.service;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +47,7 @@ import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.RouteUtil;
@@ -367,27 +371,33 @@ public class DeclarationServiceImpl implements DeclarationService {
 	}
 
 	@Override
-	public void declarationExcel(Long materialId)
+	public void declarationExcel(Long materialId, String textBookids, String realname, String position, String title,
+			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
+			HttpServletResponse response)
 			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException, IOException {
 		List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
-		List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao
-				.getDeclarationOrDisplayVOByMaterialId(materialId);
+		Gson gson = new Gson();
+		List<Long> bookIds = gson.fromJson(textBookids, new TypeToken<ArrayList<Long>>() {
+		}.getType());
+		List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao.getDeclarationOrDisplayVOByMaterialId(
+				materialId, bookIds, realname, position, title, orgName, unitName, positionType, onlineProgress,
+				offlineProgress);
 		for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
-			String onlineProgress = "";
-			String offlineProgress = "";
+			String strOnlineProgress = "";
+			String strOfflineProgress = "";
 			String sex = "";
 			switch (declarationOrDisplayVO.getOnlineProgress()) {
 			case 0:
-				onlineProgress = "未提交";
+				strOnlineProgress = "未提交";
 				break;
 			case 1:
-				onlineProgress = "已提交";
+				strOnlineProgress = "已提交";
 				break;
 			case 2:
-				onlineProgress = "被退回";
+				strOnlineProgress = "被退回";
 				break;
 			case 3:
-				onlineProgress = "已通过";
+				strOnlineProgress = "已通过";
 				break;
 			default:
 				break;
@@ -407,13 +417,13 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			switch (declarationOrDisplayVO.getOfflineProgress()) {
 			case 0:
-				offlineProgress = "未收到";
+				strOfflineProgress = "未收到";
 				break;
 			case 1:
-				offlineProgress = "被退回";
+				strOfflineProgress = "被退回";
 				break;
 			case 2:
-				offlineProgress = "已收到";
+				strOfflineProgress = "已收到";
 				break;
 			default:
 				break;
@@ -423,6 +433,13 @@ public class DeclarationServiceImpl implements DeclarationService {
 				map = new HashMap<>();
 				map.put("textbookName", "暂无");
 				map.put("presetPosition", "暂无");
+			}
+			String birthday = "";
+			if (null != declarationOrDisplayVO.getBirthday()) {
+				birthday = DateUtil.date2Str(declarationOrDisplayVO.getBirthday(), "yyyy-MM-dd");
+			}
+			if (null == declarationOrDisplayVO.getPosition() || "".equals(declarationOrDisplayVO.getPosition())) {
+				declarationOrDisplayVO.setPosition("无");
 			}
 			// 学习经历
 			List<DecEduExp> decEduExps = decEduExpDao.getListDecEduExpByDeclarationId(declarationOrDisplayVO.getId());
@@ -450,14 +467,13 @@ public class DeclarationServiceImpl implements DeclarationService {
 			List<DecResearch> decResearchs = decResearchDao
 					.getListDecResearchByDeclarationId(declarationOrDisplayVO.getId());
 			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(map.get("textbookName"), map.get("presetPosition"),
-					declarationOrDisplayVO.getRealname(), declarationOrDisplayVO.getUsername(), sex,
-					declarationOrDisplayVO.getBirthday().toString(), declarationOrDisplayVO.getExperience(),
-					declarationOrDisplayVO.getOrgName(), declarationOrDisplayVO.getPosition(),
-					declarationOrDisplayVO.getTitle(), declarationOrDisplayVO.getAddress(),
-					declarationOrDisplayVO.getPostcode(), declarationOrDisplayVO.getTelephone(),
-					declarationOrDisplayVO.getFax(), declarationOrDisplayVO.getHandphone(),
-					declarationOrDisplayVO.getEmail(), onlineProgress, offlineProgress,
-					declarationOrDisplayVO.getOrgNameOne(), (ArrayList<DecEduExp>) decEduExps,
+					declarationOrDisplayVO.getRealname(), declarationOrDisplayVO.getUsername(), sex, birthday,
+					declarationOrDisplayVO.getExperience(), declarationOrDisplayVO.getOrgName(),
+					declarationOrDisplayVO.getPosition(), declarationOrDisplayVO.getTitle(),
+					declarationOrDisplayVO.getAddress(), declarationOrDisplayVO.getPostcode(),
+					declarationOrDisplayVO.getTelephone(), declarationOrDisplayVO.getFax(),
+					declarationOrDisplayVO.getHandphone(), declarationOrDisplayVO.getEmail(), strOnlineProgress,
+					strOfflineProgress, declarationOrDisplayVO.getOrgNameOne(), (ArrayList<DecEduExp>) decEduExps,
 					(ArrayList<DecWorkExp>) decWorkExps, (ArrayList<DecTeachExp>) decTeachExps,
 					(ArrayList<DecAcade>) decAcades, (ArrayList<DecLastPosition>) decLastPositions,
 					(ArrayList<DecCourseConstruction>) decCourseConstructions,
@@ -466,7 +482,11 @@ public class DeclarationServiceImpl implements DeclarationService {
 			declarationEtcBOs.add(declarationEtcBO);
 		}
 		Workbook workbook = excelHelper.fromDeclarationEtcBOList(declarationEtcBOs, "专家信息表");
-		FileOutputStream out = new FileOutputStream("DeclarationEtcBOList.xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition",
+				"attachment;fileName=" + new String("DeclarationEtcBOList.xls".getBytes("utf-8"), "ISO8859-1"));
+		OutputStream out = response.getOutputStream();
 		workbook.write(out);
 		out.flush();
 		out.close();

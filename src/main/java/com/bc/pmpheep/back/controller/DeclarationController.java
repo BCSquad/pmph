@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.controller;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -207,22 +208,25 @@ public class DeclarationController {
                                                                                     sessionId));
     }
 
-    /**
-     * 
-     * 
-     * 功能描述：批量导出excel
-     * 
-     * @param materialId
-     * 
-     */
-    @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出excel表格")
-    @RequestMapping(value = "/down/excel", method = RequestMethod.GET)
-    public void downExcel(Long materialId) {
-        try {
-            declarationService.declarationExcel(materialId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	/**
+	 * 
+	 * 
+	 * 功能描述：批量导出excel
+	 *
+	 * @param materialId
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出excel表格")
+	@RequestMapping(value = "/down/excel", method = RequestMethod.GET)
+	public void downExcel(Long materialId, String textBookids, String realname, String position, String title,
+			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
+			HttpServletResponse response) {
+		try {
+			declarationService.declarationExcel(materialId, textBookids, realname, position, title, orgName, unitName,
+					positionType, onlineProgress, offlineProgress,response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
