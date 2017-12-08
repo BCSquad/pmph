@@ -6,6 +6,7 @@ package com.bc.pmpheep.back.bo;
 
 import com.bc.pmpheep.annotation.ExcelHeader;
 import com.bc.pmpheep.back.po.DecAcade;
+import com.bc.pmpheep.back.po.DecAchievement;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecLastPosition;
@@ -88,6 +89,8 @@ public class DeclarationEtcBO {
 
 	@ExcelHeader(header = "教学经历")
 	private ArrayList<DecTeachExp> decTeachExps;
+        
+	private DecAchievement decAchievement;
 
 	@ExcelHeader(header = "学术兼职")
 	private ArrayList<DecAcade> decAcades;
@@ -477,6 +480,20 @@ public class DeclarationEtcBO {
 	public void setDecTeachExps(ArrayList<DecTeachExp> decTeachExps) {
 		this.decTeachExps = decTeachExps;
 	}
+
+    /**
+     * @return the decAchievement
+     */
+    public DecAchievement getDecAchievement() {
+        return decAchievement;
+    }
+
+    /**
+     * @param decAchievement the decAchievement to set
+     */
+    public void setDecAchievement(DecAchievement decAchievement) {
+        this.decAchievement = decAchievement;
+    }
 
 	/**
 	 * @return the decAcades
