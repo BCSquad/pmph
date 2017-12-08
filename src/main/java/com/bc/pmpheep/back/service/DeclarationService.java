@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.vo.ApplicationVO;
@@ -136,7 +138,9 @@ public interface DeclarationService {
 	 * @param materialId
 	 *
 	 */
-	void declarationExcel(Long materialId)
-			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException, FileNotFoundException, IOException;
+	void declarationExcel(Long materialId, String textBookids, String realname, String position, String title,
+			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
+			HttpServletResponse response) throws CheckedServiceException, IllegalArgumentException,
+			IllegalAccessException, FileNotFoundException, IOException;
 
 }
