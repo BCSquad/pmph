@@ -494,106 +494,66 @@ public class DeclarationServiceImpl implements DeclarationService {
     @Override
     public List<DeclarationEtcBO> getDeclarationEtcBOs(Long materialId) {
         List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
-        List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao.getDeclarationOrDisplayVOByMaterialId(
-                materialId, null, null, null, null, null, null, null, null, null);
-        for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
-            String strOnlineProgress = "";
-            String strOfflineProgress = "";
-            String sex = "";
-            switch (declarationOrDisplayVO.getOnlineProgress()) {
-                case 0:
-                    strOnlineProgress = "未提交";
-                    break;
-                case 1:
-                    strOnlineProgress = "已提交";
-                    break;
-                case 2:
-                    strOnlineProgress = "被退回";
-                    break;
-                case 3:
-                    strOnlineProgress = "已通过";
-                    break;
-                default:
-                    break;
-            }
-            switch (declarationOrDisplayVO.getSex()) {
-                case 0:
-                    sex = "保密";
-                    break;
-                case 1:
-                    sex = "男";
-                    break;
-                case 2:
-                    sex = "女";
-                    break;
-                default:
-                    break;
-            }
-            switch (declarationOrDisplayVO.getOfflineProgress()) {
-                case 0:
-                    strOfflineProgress = "未收到";
-                    break;
-                case 1:
-                    strOfflineProgress = "被退回";
-                    break;
-                case 2:
-                    strOfflineProgress = "已收到";
-                    break;
-                default:
-                    break;
-            }
-            Map<String, String> map = decPositionDao.getTextbookNameAndPresetPosition(declarationOrDisplayVO.getId());
-            if (CollectionUtil.isEmpty(map)) {
-                map = new HashMap<>();
-                map.put("textbookName", "暂无");
-                map.put("presetPosition", "暂无");
-            }
-            String birthday = "";
-            if (null != declarationOrDisplayVO.getBirthday()) {
-                birthday = DateUtil.date2Str(declarationOrDisplayVO.getBirthday(), "yyyy-MM-dd");
-            }
-            if (null == declarationOrDisplayVO.getPosition() || "".equals(declarationOrDisplayVO.getPosition())) {
-                declarationOrDisplayVO.setPosition("无");
-            }
+        List<Declaration> declarations = declarationDao.getDeclarationByMaterialId(materialId);
+        int count = 1;
+        for (Declaration declaration : declarations) {
             // 学习经历
-            List<DecEduExp> decEduExps = decEduExpDao.getListDecEduExpByDeclarationId(declarationOrDisplayVO.getId());
+            ArrayList<DecEduExp> decEduExps = (ArrayList<DecEduExp>) decEduExpDao.getListDecEduExpByDeclarationId(declaration.getId());
             // 工作经历
-            List<DecWorkExp> decWorkExps = decWorkExpDao
-                    .getListDecWorkExpByDeclarationId(declarationOrDisplayVO.getId());
+            ArrayList<DecWorkExp> decWorkExps = (ArrayList<DecWorkExp>) decWorkExpDao
+                    .getListDecWorkExpByDeclarationId(declaration.getId());
             // 教学经历
-            List<DecTeachExp> decTeachExps = decTeachExpDao
-                    .getListDecTeachExpByDeclarationId(declarationOrDisplayVO.getId());
+            ArrayList<DecTeachExp> decTeachExps = (ArrayList<DecTeachExp>) decTeachExpDao
+                    .getListDecTeachExpByDeclarationId(declaration.getId());
             // 兼职学术
-            List<DecAcade> decAcades = decAcadeDao.getListDecAcadeByDeclarationId(declarationOrDisplayVO.getId());
+            ArrayList<DecAcade> decAcades = (ArrayList<DecAcade>) decAcadeDao.getListDecAcadeByDeclarationId(declaration.getId());
             // 上套教材
-            List<DecLastPosition> decLastPositions = decLastPositionDao
-                    .getListDecLastPositionByDeclarationId(declarationOrDisplayVO.getId());
+            ArrayList<DecLastPosition> decLastPositions = (ArrayList<DecLastPosition>) decLastPositionDao
+                    .getListDecLastPositionByDeclarationId(declaration.getId());
             // 精品课程建设情况
-            List<DecCourseConstruction> decCourseConstructions = decCourseConstructionDao
-                    .getDecCourseConstructionByDeclarationId(declarationOrDisplayVO.getId());
+            ArrayList<DecCourseConstruction> decCourseConstructions = (ArrayList<DecCourseConstruction>) decCourseConstructionDao
+                    .getDecCourseConstructionByDeclarationId(declaration.getId());
             // 主编国家级规划
-            List<DecNationalPlan> decNationalPlans = decNationalPlanDao
-                    .getListDecNationalPlanByDeclarationId(declarationOrDisplayVO.getId());
+            ArrayList<DecNationalPlan> decNationalPlans = (ArrayList<DecNationalPlan>) decNationalPlanDao
+                    .getListDecNationalPlanByDeclarationId(declaration.getId());
             // 教材编写
-            List<DecTextbook> decTextbooks = decTextbookDao
-                    .getListDecTextbookByDeclarationId(declarationOrDisplayVO.getId());
+            ArrayList<DecTextbook> decTextbooks = (ArrayList<DecTextbook>) decTextbookDao
+                    .getListDecTextbookByDeclarationId(declaration.getId());
             // 作家科研
-            List<DecResearch> decResearchs = decResearchDao
-                    .getListDecResearchByDeclarationId(declarationOrDisplayVO.getId());
-            DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(map.get("textbookName"), map.get("presetPosition"),
-                    declarationOrDisplayVO.getRealname(), declarationOrDisplayVO.getUsername(), sex, birthday,
-                    declarationOrDisplayVO.getExperience(), declarationOrDisplayVO.getOrgName(),
-                    declarationOrDisplayVO.getPosition(), declarationOrDisplayVO.getTitle(),
-                    declarationOrDisplayVO.getAddress(), declarationOrDisplayVO.getPostcode(),
-                    declarationOrDisplayVO.getTelephone(), declarationOrDisplayVO.getFax(),
-                    declarationOrDisplayVO.getHandphone(), declarationOrDisplayVO.getEmail(), strOnlineProgress,
-                    strOfflineProgress, declarationOrDisplayVO.getOrgNameOne(), (ArrayList<DecEduExp>) decEduExps,
-                    (ArrayList<DecWorkExp>) decWorkExps, (ArrayList<DecTeachExp>) decTeachExps,
-                    (ArrayList<DecAcade>) decAcades, (ArrayList<DecLastPosition>) decLastPositions,
-                    (ArrayList<DecCourseConstruction>) decCourseConstructions,
-                    (ArrayList<DecNationalPlan>) decNationalPlans, (ArrayList<DecTextbook>) decTextbooks,
-                    (ArrayList<DecResearch>) decResearchs);
+            ArrayList<DecResearch> decResearchs = (ArrayList<DecResearch>) decResearchDao
+                    .getListDecResearchByDeclarationId(declaration.getId());
+            /*ArrayList<DecAchievement> decAchievements = (ArrayList<DecAchievement>) decAchievementDao
+                    .getDecAchievementByDeclarationId(declaration.getId());*/
+            DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO();
+            declarationEtcBO.setRealname("欧阳望月".concat(String.valueOf(count)));
+            declarationEtcBO.setUsername("Smith");
+            declarationEtcBO.setTextbookName("人体解剖学与组织胚胎学");
+            declarationEtcBO.setPresetPosition("副主编");
+            declarationEtcBO.setChosenOrgName("人民卫生出版社");
+            declarationEtcBO.setSex("女");
+            declarationEtcBO.setBirthday("1975年11月22日");
+            declarationEtcBO.setAddress("浙江省金华市婺城区婺州街1188号");
+            declarationEtcBO.setExperience(23);
+            declarationEtcBO.setOrgName("金华职业技术学院医学院");
+            declarationEtcBO.setPosition("教师");
+            declarationEtcBO.setTitle("教授");
+            declarationEtcBO.setPostcode("321017");
+            declarationEtcBO.setHandphone("13857989881");
+            declarationEtcBO.setEmail("test10001test@163.com");
+            declarationEtcBO.setFax("01065930013");
+            declarationEtcBO.setTelephone("010-65930013");
+            declarationEtcBO.setDecEduExps(decEduExps);
+            declarationEtcBO.setDecWorkExps(decWorkExps);
+            declarationEtcBO.setDecTeachExps(decTeachExps);
+            declarationEtcBO.setDecAcades(decAcades);
+            declarationEtcBO.setDecLastPositions(decLastPositions);
+            declarationEtcBO.setDecCourseConstructions(decCourseConstructions);
+            declarationEtcBO.setDecNationalPlans(decNationalPlans);
+            declarationEtcBO.setDecTextbooks(decTextbooks);
+            declarationEtcBO.setDecResearchs(decResearchs);
+            //declarationEtcBO.setDecAchievement(decAchievements.get(0));
             declarationEtcBOs.add(declarationEtcBO);
+            count++;
         }
         return declarationEtcBOs;
     }

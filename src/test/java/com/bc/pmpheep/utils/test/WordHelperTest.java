@@ -74,7 +74,7 @@ public class WordHelperTest extends BaseTest {
 
     @Test
     public void fromDeclarationEtcBOListAlpha() throws FileNotFoundException, IOException {
-        List<DeclarationEtcBO> declarationEtcBOs = declarationService.getDeclarationEtcBOs(120L);
+        List<DeclarationEtcBO> declarationEtcBOs = declarationService.getDeclarationEtcBOs(128L);
         if (CollectionUtil.isEmpty(declarationEtcBOs)) {
             return;
         }
