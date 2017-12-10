@@ -4,8 +4,10 @@ import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.RandomUtil;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.utils.WordHelper;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +37,7 @@ public class WordHelperTest extends BaseTest {
     DeclarationService declarationService;
 
     @Test
+    @Ignore
     public void fromDeclarationEtcBOList() throws FileNotFoundException, IOException {
         List<DeclarationEtcBO> list = new ArrayList<>();
         DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO();
@@ -63,7 +67,8 @@ public class WordHelperTest extends BaseTest {
         declarationEtcBO.setPresetPosition("编委");
         declarationEtcBO.setChosenOrgName("首都医科大学");
         list.add(declarationEtcBO);
-        HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(list);
+        String textbook = "全国高等学校健康服务与管理专业第一轮规划教材";
+        HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(textbook, list);
         for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
             FileOutputStream out = new FileOutputStream(entry.getKey());
             entry.getValue().write(out);
@@ -73,18 +78,45 @@ public class WordHelperTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void fromDeclarationEtcBOListAlpha() throws FileNotFoundException, IOException {
-        List<DeclarationEtcBO> declarationEtcBOs = declarationService.getDeclarationEtcBOs(128L);
+        List<DeclarationEtcBO> declarationEtcBOs = declarationService.getDeclarationEtcBOs(125L);
         if (CollectionUtil.isEmpty(declarationEtcBOs)) {
             return;
         }
-        HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(declarationEtcBOs);
+        String textbook = "全国高等学校健康服务与管理专业第一轮规划教材";
+        HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(textbook, declarationEtcBOs);
         for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
             FileOutputStream out = new FileOutputStream(entry.getKey());
             entry.getValue().write(out);
             out.flush();
             out.close();
         }
+    }
+
+    @Test
+    public void export() {
+        /* 生成唯一临时目录名 */
+        String tempDir = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
+        List<DeclarationEtcBO> declarationEtcBOs = declarationService.getDeclarationEtcBOs(125L);
+        if (CollectionUtil.isEmpty(declarationEtcBOs)) {
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        String src = this.getClass().getResource("/").getPath();
+        src = src.substring(1);
+        sb.append(src);
+        if (!src.endsWith(File.separator)) {
+            sb.append(File.separator);
+        }
+        sb.append(tempDir);
+        sb.append(File.separator);
+        sb.append("全国高等学校健康服务与管理专业第一轮规划教材");
+        sb.append(File.separator);
+        sb.append("1.人体解剖学与组织胚胎学");
+        sb.append(File.separator);
+        logger.info("获取到的路径地址是 {}", sb.toString());
+        wordHelper.export("全国高等学校健康服务与管理专业第一轮规划教材", sb.toString(), declarationEtcBOs);
     }
 
     private ArrayList<DecEduExp> makeFakeDecEduExpList() {

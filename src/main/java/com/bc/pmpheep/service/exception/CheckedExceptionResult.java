@@ -34,19 +34,23 @@ public enum CheckedExceptionResult {
     /**
      * 创建文件失败
      */
-    CREATE_FILE_FAILED(6, "创建文件失败"),
+    FILE_CREATION_FAILED(6, "创建文件失败"),
+    /**
+     * 创建目录失败
+     */
+    DIRECTORY_CREATION_FAILED(7, "创建目录失败"),
     /**
      * 文件上传失败
      */
-    FILE_UPLOAD_FAILED(7, "文件上传失败"),
+    FILE_UPLOAD_FAILED(8, "文件上传失败"),
     /**
      * 文件下载失败
      */
-    FILE_DOWNLOAD_FAILED(8, "文件下载失败"),
+    FILE_DOWNLOAD_FAILED(9, "文件下载失败"),
     /**
      * 文件下载失败
      */
-    PO_ADD_FAILED(9, "持久化对象保存失败"),
+    PO_ADD_FAILED(10, "持久化对象保存失败"),
     /**
      * 用户SESSION为空
      */

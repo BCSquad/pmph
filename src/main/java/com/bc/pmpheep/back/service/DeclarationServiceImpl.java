@@ -377,7 +377,8 @@ public class DeclarationServiceImpl implements DeclarationService {
             throws CheckedServiceException, IllegalArgumentException, IllegalAccessException, IOException {
         List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
         Gson gson = new Gson();
-        List<Long> bookIds = gson.fromJson(textBookids, new TypeToken<ArrayList<Long>>() {}.getType());
+        List<Long> bookIds = gson.fromJson(textBookids, new TypeToken<ArrayList<Long>>() {
+        }.getType());
         List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao.getDeclarationOrDisplayVOByMaterialId(
                 materialId, bookIds, realname, position, title, orgName, unitName, positionType, onlineProgress,
                 offlineProgress);
@@ -493,8 +494,11 @@ public class DeclarationServiceImpl implements DeclarationService {
 
     @Override
     public List<DeclarationEtcBO> getDeclarationEtcBOs(Long materialId) {
-        List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
+        List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>(20);
         List<Declaration> declarations = declarationDao.getDeclarationByMaterialId(materialId);
+        if (CollectionUtil.isEmpty(declarations)) {
+            return null;
+        }
         int count = 1;
         for (Declaration declaration : declarations) {
             // 学习经历
@@ -554,6 +558,9 @@ public class DeclarationServiceImpl implements DeclarationService {
             //declarationEtcBO.setDecAchievement(decAchievements.get(0));
             declarationEtcBOs.add(declarationEtcBO);
             count++;
+            if (count > 21) {
+                break;
+            }
         }
         return declarationEtcBOs;
     }
