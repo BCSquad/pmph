@@ -3,6 +3,8 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -122,11 +124,21 @@ public interface PmphUserService {
 	 * @introduction 
 	 * @author Mryang
 	 * @createDate 2017年12月11日 下午5:26:04
-	 * @param id
+	 * @param request
 	 * @return
 	 * @throws CheckedServiceException
 	 */
-	PmphUser getInfo(Long id) throws CheckedServiceException;
+	PmphUser getInfo(HttpServletRequest request) throws CheckedServiceException;
+	
+	/**
+	 * 更新密码
+	 * @author Mryang
+	 * @createDate 2017年12月11日 下午5:47:44
+	 * @param oldPassword
+	 * @param newPassword
+	 * @return
+	 */
+	Integer updatePassword (HttpServletRequest request,String oldPassword,String newPassword);
 
 	/**
 	 * 根据用户名加载用户对象（用于登录使用）
