@@ -9,7 +9,6 @@ import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Cell;
 
-
 public final class DateUtil {
     private final static SimpleDateFormat sdfYear = new SimpleDateFormat("yyyy");
 
@@ -18,7 +17,7 @@ public final class DateUtil {
     private final static SimpleDateFormat sdfDays = new SimpleDateFormat("yyyyMMdd");
 
     private final static SimpleDateFormat sdfTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    
+
     /**
      * 按照yyyy-MM-dd的格式，字符串转日期
      * 
@@ -282,15 +281,16 @@ public final class DateUtil {
         Timestamp currentTime = Timestamp.valueOf(ret);
         return currentTime;
     }
+
     /**
-     *  字符串转时间戳
+     * 字符串转时间戳
      */
     public static Timestamp str2Timestam(String date) {
         String ret;
         ret = sdfTime.format(fomatDate(date));
         Timestamp currentTime = Timestamp.valueOf(ret);
         return currentTime;
-    } 
+    }
 
     /**
      * 
@@ -311,78 +311,76 @@ public final class DateUtil {
             return "";
         }
     }
-    
+
     /**
      * 指定时间转换成今天昨天前天
+     * 
      * @author Mryang
      * @createDate 2017年11月28日 上午11:42:25
      * @param timeStamp
      * @return
      */
-    public static String format(Timestamp timeStamp) { 
-    	//1天的毫秒
-    	int oneDayMillis = 24 * 60 * 60 * 1000;
-    	//今天0点的时间错
-    	long todayStartMillis   =  0L;
-    	try {
-    		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
-    		String tsStr = sdf.format(new Date());
-    		Date date =    sdf.parse(tsStr);
-			todayStartMillis = date.getTime();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		} 
-    	
-    	if(timeStamp.getTime() >= todayStartMillis) { 
-    		return "今天"; 
-    	} 
-    	 
-    	long yesterdayStartMilis = todayStartMillis - oneDayMillis; //昨天
-    	if(timeStamp.getTime() >= yesterdayStartMilis) { 
-    		return "昨天"; 
-    	} 
-    	long yesterdayBeforeStartMilis = yesterdayStartMilis - oneDayMillis; 
-    	if(timeStamp.getTime() >= yesterdayBeforeStartMilis) { 
-    		return "前天"; 
-    	} 
-    	return formatTimeStamp("yyyy-MM-dd HH:mm:ss",timeStamp);
+    public static String format(Timestamp timeStamp) {
+        // 1天的毫秒
+        int oneDayMillis = 24 * 60 * 60 * 1000;
+        // 今天0点的时间错
+        long todayStartMillis = 0L;
+        try {
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String tsStr = sdf.format(new Date());
+            Date date = sdf.parse(tsStr);
+            todayStartMillis = date.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (timeStamp.getTime() >= todayStartMillis) {
+            return "今天";
+        }
+
+        long yesterdayStartMilis = todayStartMillis - oneDayMillis; // 昨天
+        if (timeStamp.getTime() >= yesterdayStartMilis) {
+            return "昨天";
+        }
+        long yesterdayBeforeStartMilis = yesterdayStartMilis - oneDayMillis;
+        if (timeStamp.getTime() >= yesterdayBeforeStartMilis) {
+            return "前天";
+        }
+        return formatTimeStamp("yyyy-MM-dd HH:mm:ss", timeStamp);
     }
 
     public static void main(String[] args) throws ParseException {
-    	
-    	
-    	Timestamp ts = new Timestamp(System.currentTimeMillis());   
-    	System.out.println(format(ts));
-        
-        
-        
-    	
+
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        System.out.println(format(ts));
+
     }
-    
+
     /**
      * 
      * Description:解析Excel文件时动态判断单元格类型并返回时间数据
+     * 
      * @author:lyc
      * @date:2017年11月30日下午12:58:00
-     * @param 
+     * @param
      * @return String
      */
     @SuppressWarnings("deprecation")
-	public static String getCellValue(Cell cell){
-    	if (null == cell){
-    		return sdfTime.format(new Date());
-    	}
-    	String result = "";
-    	if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC){
-    		short format = cell.getCellStyle().getDataFormat();
-    		if (format == 14 || format == 31 || format == 57 || format == 58){
-    			result = sdfDay.format(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(cell
-    					.getNumericCellValue()));
-    		}else{
-    			result = sdfTime.format(new Date());
-    		}
-    	}
-    	return result;
+    public static String getCellValue(Cell cell) {
+        if (null == cell) {
+            return sdfTime.format(new Date());
+        }
+        String result = "";
+        if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+            short format = cell.getCellStyle().getDataFormat();
+            if (format == 14 || format == 31 || format == 57 || format == 58) {
+                result =
+                sdfDay.format(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(cell.getNumericCellValue()));
+            } else {
+                result = sdfTime.format(new Date());
+            }
+        }
+        return result;
     }
 
 }

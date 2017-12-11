@@ -20,6 +20,7 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.DeviceUtils;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 
 /**
  * 
@@ -124,7 +125,7 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
                                                                              pmphUser.getRealname(),
                                                                              DateUtil.getCurrentTime(),
                                                                              url + "-" + logRemark,
-                                                                             request.getRemoteHost(),
+                                                                             StringUtil.getClientIP(request),
                                                                              businessType,
                                                                              deviceType));
                     }
