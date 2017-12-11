@@ -32,6 +32,6 @@ public interface DecAchievementService {
 	 * @return
 	 * @throws CheckedServiceException
 	 */
-	List<DecAchievement> getDecAchievementByDeclarationId (Long declarationId) throws CheckedServiceException;
+	DecAchievement getDecAchievementByDeclarationId (Long declarationId) throws CheckedServiceException;
 
 }
