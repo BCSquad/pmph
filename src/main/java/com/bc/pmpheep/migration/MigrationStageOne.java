@@ -401,7 +401,7 @@ public class MigrationStageOne {
     protected void writerUser() {
         String tableName = "sys_user";
         String sql = "SELECT a.userid,a.usercode,a.`password`,a.isvalid,d.new_pk org_new_pk,a.username,b.sex,"
-                + "b.birthdate,b.seniority,b.duties,b.positional,b.fax,b.handset,b.phone,b.idcard,b.email,"
+                + "b.birthdate,b.seniority,b.unitid,b.duties,b.positional,b.fax,b.handset,b.phone,b.idcard,b.email,"
                 + "b.address,b.postcode,"
                 + "CASE WHEN b.usertype=4 THEN 1 WHEN b.usertype=1 OR b.usertype=6 THEN 2 "
                 + "WHEN b.usertype=5 OR b.usertype=7 THEN 3 ELSE 0 END rank,"
@@ -464,6 +464,7 @@ public class MigrationStageOne {
                 logger.info("教龄数据不符合新表类型规范，此结果将被记录在Excel中");
             }
             Integer experience = Integer.parseInt(experienceNum);
+            String workPlace = (String) map.get("unitid");
             String position = (String) map.get("duties");
             String title = (String) map.get("positional");
             String fax = (String) map.get("fax");
@@ -509,6 +510,7 @@ public class MigrationStageOne {
             writerUser.setSex(sex);
             writerUser.setBirthday(birthday);
             writerUser.setExperience(experience);
+            writerUser.setWorkPlace(workPlace);
             writerUser.setPosition(position);
             writerUser.setTitle(title);
             writerUser.setFax(fax);

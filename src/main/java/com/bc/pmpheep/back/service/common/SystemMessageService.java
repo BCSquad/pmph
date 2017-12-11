@@ -96,11 +96,12 @@ public final class SystemMessageService {
     @Autowired
     private OrgService                   orgService;
 
+    
     /**
      * 遴选公告发布时，给学校管理员和学校教师发送消息，通知他们留意报名情况或者是参加报名
      * 
      * @author Mryang
-     * @createDate 2017年11月17日 上午10:52:13
+     * @createDate 2017年11月17日 上午9:28:13
      * @param materialName 教材名称
      * @param ids 发送的机构id集合（新增或者增加的机构）
      * @param msgId 消息id，没有发布过 则为null
@@ -108,32 +109,10 @@ public final class SystemMessageService {
      * @throws IOException
      * @return 
      */
-    public void materialSend(String materialName, List<Long> ids)
-    throws CheckedServiceException, IOException {
-        this.materialSend(materialName, ids, false);
-    }
-
-    /**
-     * 遴选公告发布时，给学校管理员和学校教师发送消息，通知他们留意报名情况或者是参加报名
-     * 
-     * @author Mryang
-     * @createDate 2017年11月17日 上午10:52:13
-     * @param materialId 教材id
-     * @param ids 发送的机构id集合（新增或者增加的机构）
-     * @throws CheckedServiceException
-     * @throws IOException
-     * @return 
-     */
-    public void materialSend(Long materialId, List<Long> ids)
-    throws CheckedServiceException, IOException {
-        Material material = materialService.getMaterialById(materialId);
-        if (null == material) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.NULL_PARAM, "没有找到对应的教材");
-        }
-        this.materialSend(material.getMaterialName(), ids, false);
-    }
-
+    public void materialSend(Long materialId, List<Long> ids) throws CheckedServiceException, IOException {
+    		this.materialSend(materialId,ids,false);
+	}
+    
     /**
      * 遴选公告发布时，给学校管理员和学校教师发送消息，通知他们留意报名情况或者是参加报名
      * 
@@ -147,8 +126,9 @@ public final class SystemMessageService {
      * @throws IOException
      * @return 
      */
-    public void materialSend(String materialName, List<Long> ids,
+    public void materialSend(Long materialId, List<Long> ids,
     boolean isOnlyManager) throws CheckedServiceException, IOException {
+    	String materialName =  materialService.getMaterialNameById(materialId); 
         if (StringUtils.isEmpty(materialName)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息体为空");
@@ -173,9 +153,8 @@ public final class SystemMessageService {
                 List<String> userIds = new ArrayList<String>(writerUserList.size());
                 for (WriterUser writerUser : writerUserList) {
                     // 信息是由系统发出
-                    UserMessage userMessage =
-                    new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
-                                    writerUser.getId(), new Short("2"));
+                    UserMessage userMessage = new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+                                               writerUser.getId(), new Short("2"),materialId);
                     userMessageList.add(userMessage);
                     userIds.add("2_" + writerUser.getId());
                 }
@@ -202,7 +181,7 @@ public final class SystemMessageService {
              for (OrgUser orgUser : orgUserList) {
                  UserMessage userMessage =
                  new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
-                                 orgUser.getId(), new Short("3"));
+                                 orgUser.getId(), new Short("3"),materialId);
                  userMessageList.add(userMessage);
                  userIds.add("3_" + orgUser.getId());
              }
@@ -218,29 +197,7 @@ public final class SystemMessageService {
         return ;
     }
 
-    /**
-     * 遴选公告发布时，给学校管理员学校教师发送消息，通知他们留意报名情况或者是参加报名
-     * 
-     * @author Mryang
-     * @createDate 2017年11月17日 上午10:52:13
-     * @param materialId 教材id
-     * @param ids 发送的机构id集合（新增或者增加的机构）
-     * @param msgId 消息id，没有发布过 则为null
-     * @param isOnlyManager 是否只发给管理员
-     * @throws CheckedServiceException
-     * @throws IOException
-     * @return 
-     */
-    public void materialSend(Long materialId, List<Long> ids,  boolean isOnlyManager)
-    throws CheckedServiceException, IOException {
-        Material material = materialService.getMaterialById(materialId);
-        if (null == material) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.NULL_PARAM, "没有找到对应的教材");
-        }
-        this.materialSend(material.getMaterialName(), ids, isOnlyManager);
-    }
-
+    
     /**
      * 遴选主编副主编时点击确认按钮之后向第一主编发送消息
      * 
@@ -277,7 +234,7 @@ public final class SystemMessageService {
                 String msg_id = message.getId();
                 UserMessage userMessage =
                 new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
-                                declaration.getUserId(), new Short("2"));
+                                declaration.getUserId(), new Short("2"),null);
                 userMessageService.addUserMessage(userMessage);
                 // websocket推送页面消息
                 WebScocketMessage webScocketMessage =
@@ -333,7 +290,7 @@ public final class SystemMessageService {
         for (Long id : invitedPersonIds) {
             UserMessage userMessage =
             new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"), id,
-                            invitedPersonType);
+                            invitedPersonType,null);
             userMessageList.add(userMessage);
             userIds.add(invitedPersonType + "_" + id);
         }
@@ -389,7 +346,7 @@ public final class SystemMessageService {
             if (pmphGroupMemberVO.getIsFounder() || pmphGroupMemberVO.getIsAdmin()) {// 给创建者和管理员发送
                 UserMessage userMessage =
                 new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
-                                pmphGroupMemberVO.getUserId(), pmphGroupMemberVO.getUserType());
+                                pmphGroupMemberVO.getUserId(), pmphGroupMemberVO.getUserType(),null);
                 userMessageList.add(userMessage);
                 userIds.add(pmphGroupMemberVO.getUserType() + "_" + pmphGroupMemberVO.getUserId());
             }
@@ -443,7 +400,7 @@ public final class SystemMessageService {
         for (Long id : teacherIds) {
             UserMessage userMessage =
             new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"), id,
-                            new Short("2"));
+                            new Short("2"),null);
             userMessageList.add(userMessage);
             userIds.add("2_" + id);
         }
@@ -489,7 +446,7 @@ public final class SystemMessageService {
         for (Long id : orguserIds) {
             UserMessage userMessage =
             new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"), id,
-                            new Short("3"));
+                            new Short("3"),null);
             userMessageList.add(userMessage);
             userIds.add("3_" + id);
         }
@@ -544,12 +501,12 @@ public final class SystemMessageService {
             new ArrayList<UserMessage>(materialProjectEditorList.size() + 1);
             List<String> userIds = new ArrayList<String>(materialProjectEditorList.size() + 1);
             userMessageList.add(new UserMessage(msg_id, messageTitle, new Short("0"), 0L,
-                                                new Short("0"), directorId, new Short("1")));
+                                                new Short("0"), directorId, new Short("1"),null));
             userIds.add("1_" + directorId);
             for (MaterialProjectEditorVO materialProjectEditor : materialProjectEditorList) {
                 UserMessage userMessage =
                 new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
-                                materialProjectEditor.getEditorId(), new Short("1"));
+                                materialProjectEditor.getEditorId(), new Short("1"),null);
                 userMessageList.add(userMessage);
                 userIds.add("1_" + materialProjectEditor.getEditorId());
             }
@@ -560,7 +517,7 @@ public final class SystemMessageService {
                 if (null != textbook && null != textbook.getPlanningEditor()) {
                     UserMessage userMessage =
                     new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
-                                    textbook.getPlanningEditor(), new Short("1"));
+                                    textbook.getPlanningEditor(), new Short("1"),null);
                     userMessageList.add(userMessage);
                     userIds.add("1_" + textbook.getPlanningEditor());
                 }
@@ -591,7 +548,7 @@ public final class SystemMessageService {
             for (OrgUser orgUser : orgUserList) {
                 UserMessage userMessage =
                 new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
-                                orgUser.getId(), new Short("3"));
+                                orgUser.getId(), new Short("3"),null);
                 userMessageList.add(userMessage);
                 userIds.add("3_" + orgUser.getId());
             }
@@ -657,7 +614,7 @@ public final class SystemMessageService {
         // 发送消息
         userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L,
                                                           new Short("0"), declaration.getUserId(),
-                                                          new Short("2")));
+                                                          new Short("2"),null));
         // websocket推送页面消息
         WebScocketMessage webScocketMessage =
         new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
@@ -714,7 +671,7 @@ public final class SystemMessageService {
         List<String> userIds = new ArrayList<String>(1);
         for (OrgUser orgUser : OrgUserList) {
             userMessageList.add(new UserMessage(orgMsg_id, messageTitle, new Short("0"), 0L,
-                                                new Short("0"), orgUser.getId(), new Short("3")));
+                                                new Short("0"), orgUser.getId(), new Short("3"),null));
             userIds.add("3_" + orgUser.getId());
         }
         // 有学校管理员发信息
@@ -736,7 +693,7 @@ public final class SystemMessageService {
         // 发送消息给申报者
         userMessageService.addUserMessage(new UserMessage(writerMsg_id, messageTitle,
                                                           new Short("0"), 0L, new Short("0"),
-                                                          declaration.getUserId(), new Short("2")));
+                                                          declaration.getUserId(), new Short("2"),null));
         // websocket推送页面消息
         WebScocketMessage webScocketMessage =
         new WebScocketMessage(writerMsg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
@@ -777,7 +734,7 @@ public final class SystemMessageService {
         // 发送消息给申报者
         userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L,
                                                           new Short("0"), cmsContent.getAuthorId(),
-                                                          new Short("2")));
+                                                          new Short("2"),null));
         // websocket推送页面消息
         WebScocketMessage webScocketMessage =
         new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
@@ -824,7 +781,7 @@ public final class SystemMessageService {
                                                                   new Short("0"), 0L,
                                                                   new Short("0"),
                                                                   declaration.getUserId(),
-                                                                  new Short("2")));
+                                                                  new Short("2"),null));
                 // websocket推送页面消息
                 WebScocketMessage webScocketMessage =
                 new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
@@ -858,7 +815,7 @@ public final class SystemMessageService {
                                                                   new Short("0"), 0L,
                                                                   new Short("0"),
                                                                   declaration.getUserId(),
-                                                                  new Short("2")));
+                                                                  new Short("2"),null));
                 // websocket推送页面消息
                 WebScocketMessage webScocketMessage =
                 new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
@@ -891,7 +848,7 @@ public final class SystemMessageService {
                                                                   new Short("0"), 0L,
                                                                   new Short("0"),
                                                                   declaration.getUserId(),
-                                                                  new Short("2")));
+                                                                  new Short("2"),null));
                 // websocket推送页面消息
                 WebScocketMessage webScocketMessage =
                 new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
@@ -957,7 +914,7 @@ public final class SystemMessageService {
                     userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle,
                                                                       new Short("0"), 0L,
                                                                       new Short("0"), org.getId(),
-                                                                      new Short("3")));
+                                                                      new Short("3"),null));
                     // websocket推送页面消息
                     WebScocketMessage webScocketMessage =
                     new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
@@ -1025,7 +982,7 @@ public final class SystemMessageService {
                     userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle,
                                                                       new Short("0"), 0L,
                                                                       new Short("0"), org.getId(),
-                                                                      new Short("3")));
+                                                                      new Short("3"),null));
                     // websocket推送页面消息
                     WebScocketMessage webScocketMessage =
                     new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,

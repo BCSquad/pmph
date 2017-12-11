@@ -116,7 +116,7 @@
 		ON
 		o.`id`=ou.`org_id`
 		where
-		ou.is_deleted = 0
+		ou.is_deleted = 0 and ou.is_proxy_upload=1
 		<if test="parameter !=null ">
 			<!-- 学校名称 -->
 			<if test="parameter.orgName !=null and  parameter.orgName != '' ">
@@ -140,7 +140,7 @@
 		</if>
 		)t
 		where
-		ou.is_deleted = 0
+		ou.is_deleted = 0 and ou.is_proxy_upload=1
 		<if test="parameter !=null ">
 			<!-- 学校名称 -->
 			<if test="parameter.orgName !=null and  parameter.orgName != '' ">

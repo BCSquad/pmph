@@ -238,7 +238,7 @@ public class WriterUserServiceTest extends BaseTest {
     public void testGetWriterUserListByOrgIds() {
         WriterUser writerUser =
         writerUserService.add(new WriterUser("test00", "123", false, 1L, null, null, null, null,
-                                             null, null, null, null, null, null, null, null, null,
+                                             null,null, null, null, null, null, null, null, null, null,
                                              null, null, false, null, null, null, null, false,
                                              false, null, null, null, null, false, null, null));
         List<Long> orgIds = new ArrayList<Long>();

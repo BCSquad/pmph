@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Workbook;
@@ -88,9 +89,9 @@ public class FileDownLoadController {
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = "/file/download/{id}", method = RequestMethod.GET)
-	public void download(@PathVariable("id") String id, HttpServletResponse response)
+	public void download(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response)
 			throws UnsupportedEncodingException {
-
+		String userAgent = request.getHeader("User-Agent");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		GridFSDBFile file = fileService.get(id);
@@ -98,8 +99,15 @@ public class FileDownLoadController {
 			logger.warn("未找到id为'{}'的文件", id);
 			return;
 		}
-		response.setHeader("Content-Disposition",
-				"attachment;fileName=" + new String(file.getFilename().getBytes("utf-8"), "ISO8859-1"));
+		String fileName = file.getFilename();
+		// 针对IE或者以IE为内核的浏览器：
+		if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
+			fileName = java.net.URLEncoder.encode(fileName, "UTF-8");
+		} else {
+			// 非IE浏览器的处理：
+			fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+		}
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			file.writeTo(out);
 			out.flush();

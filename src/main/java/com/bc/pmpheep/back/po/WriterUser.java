@@ -55,6 +55,10 @@ public class WriterUser implements Serializable {
      */
     private Integer experience;
     /**
+     * 工作单位
+     */
+    private String workPlace;
+    /**
      * 职务
      */
     private String  position;
@@ -273,7 +277,15 @@ public class WriterUser implements Serializable {
         this.experience = experience;
     }
 
-    /**
+    public String getWorkPlace() {
+		return workPlace;
+	}
+
+	public void setWorkPlace(String workPlace) {
+		this.workPlace = workPlace;
+	}
+
+	/**
      * @return the position
      */
     public String getPosition() {
@@ -617,7 +629,7 @@ public class WriterUser implements Serializable {
     }
 
     public WriterUser(String username, String password, Boolean isDisabled, Long orgId,
-    String nickname, String realname, Integer sex, Date birthday, Integer experience,
+    String nickname, String realname, Integer sex, Date birthday, Integer experience, String workPlace,
     String position, String title, String fax, String handphone, String telephone, String idcard,
     String email, String address, String postcode, Integer rank, Boolean isTeacher, String cert,
     Date authTime, Integer authUserType, Long authUserId, Boolean isWriter, Boolean isExpert,
@@ -631,6 +643,7 @@ public class WriterUser implements Serializable {
         this.sex = sex;
         this.birthday = birthday;
         this.experience = experience;
+        this.workPlace = workPlace;
         this.position = position;
         this.title = title;
         this.fax = fax;
@@ -662,7 +675,7 @@ public class WriterUser implements Serializable {
         return "WriterUser [id=" + id + ", username=" + username + ", password=" + password
                + ", isDisabled=" + isDisabled + ", orgId=" + orgId + ", nickname=" + nickname
                + ", realname=" + realname + ", sex=" + sex + ", birthday=" + birthday
-               + ", experience=" + experience + ", position=" + position + ", title=" + title
+               + ", experience=" + experience + ", workPlace =" + workPlace +", position=" + position + ", title=" + title
                + ", fax=" + fax + ", handphone=" + handphone + ", telephone=" + telephone
                + ", idcard=" + idcard + ", email=" + email + ", address=" + address + ", postcode="
                + postcode + ", rank=" + rank + ", isTeacher=" + isTeacher + ", cert=" + cert

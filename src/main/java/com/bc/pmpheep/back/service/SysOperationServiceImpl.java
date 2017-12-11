@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.SysOperation;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -70,6 +72,22 @@ public class SysOperationServiceImpl implements SysOperationService {
     public PageResult<SysOperation> getListSysOperation(PageParameter<SysOperation> pageParameter)
     throws CheckedServiceException {
         PageResult<SysOperation> pageResult = new PageResult<SysOperation>();
+        String startTime = pageParameter.getParameter().getStartTime();
+        String endTime = pageParameter.getParameter().getEndTime();
+        // 查询近一个月操作日志
+        String startDate = DateUtil.date2Str(new Date());
+        String endDate = DateUtil.getAfterDayDate("-30");
+        if (StringUtil.isEmpty(startTime) && StringUtil.isEmpty(endTime)) {
+            pageParameter.getParameter().setStartTime(endDate);
+            pageParameter.getParameter().setEndTime(startDate);
+        } else {
+            if (StringUtil.isEmpty(startTime)) {
+                pageParameter.getParameter().setStartTime(startDate);
+            }
+            if (StringUtil.isEmpty(endTime)) {
+                pageParameter.getParameter().setEndTime(endDate);
+            }
+        }
         // 将页面大小和页面页码拷贝
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         // 包含数据总条数的数据集
@@ -81,5 +99,4 @@ public class SysOperationServiceImpl implements SysOperationService {
         }
         return pageResult;
     }
-
 }

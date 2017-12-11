@@ -258,157 +258,171 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 		return resultMap;
 	}
 
-	@Override
-	public Integer addOrUpdateUserMessage(Message message, String title, Integer sendType, String orgIds, Long senderId,
-			String userIds, String bookIds, boolean isSave, String[] files, String sessionId)
-			throws CheckedServiceException, IOException {
-		if (ObjectUtil.isNull(sendType)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
-					"发送对象未选择，请选择!");
-		}
-		// 如果 补发不进行消息插入
-		if (isSave) {
-			// MongoDB 消息插入
-			message = messageService.add(message);
-		}
-		if (StringUtil.isEmpty(message.getId())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.OBJECT_NOT_FOUND,
-					"储存失败!");
-		}
-		// 发送者id
-		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-		if (ObjectUtil.isNull(pmphUser)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.OBJECT_NOT_FOUND,
-					"操作人为空!");
-		}
-		// 是否为补发消息设置（发送者ID）
-		Long senderUserId;
-		if (ObjectUtil.isNull(senderId)) {// 新发消息,发送者Id为登陆用户ID
-			senderUserId = pmphUser.getId();
-		} else {
-			senderUserId = senderId;// 补发消息,发送者Id为当前补发消息的发送者ID
-		}
-		// 装储存数据
-		List<UserMessage> userMessageList = new ArrayList<UserMessage>();
-		// 1 发送给学校管理员 //2 所有人
-		if (Const.SEND_OBJECT_1.intValue() == sendType.intValue()
-				|| Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
-			if (StringUtil.isEmpty(orgIds)) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
-						"参数错误!");
-			}
-			String[] orgIds1 = StringUtil.str2StrArray(orgIds);
-			List<Long> orgIds2 = new ArrayList<Long>(orgIds1.length);
-			for (String id : orgIds1) {
-				if (StringUtil.notEmpty(id)) {
-					orgIds2.add(Long.parseLong(id));
-				}
-			}
-			List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(orgIds2);
-			// 机构用户
-			for (OrgUser orgUser : orgUserList) {
-				userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1, senderUserId,
-						Const.SENDER_TYPE_1, orgUser.getId(), Const.RECEIVER_TYPE_3));
-			}
-			// 作家用户
-			if (Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
-				List<WriterUser> writerUserList = writerUserService.getWriterUserListByOrgIds(orgIds2);
-				for (WriterUser writerUser : writerUserList) {
-					userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1, senderUserId,
-							Const.SENDER_TYPE_1, writerUser.getId(), Const.RECEIVER_TYPE_2));
-				}
-			}
-		}
-		// 3 指定用户
-		if (Const.SEND_OBJECT_3.intValue() == sendType.intValue()) {
-			if (StringUtil.isEmpty(userIds)) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
-						"没有选中发送人!");
-			}
-			String[] ids = StringUtil.str2StrArray(userIds);
-			for (String id : ids) {
-				if (StringUtil.notEmpty(id)) {
-					String userType = id.split("_")[0];
-					String userId = id.split("_")[1];
-					if (StringUtil.notEmpty(userId) && StringUtil.isNumeric(userId)) {
-						userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1, senderUserId,
-								Const.SENDER_TYPE_1, Long.parseLong(userId), new Short(userType)));
-					}
-				}
-			}
-		}
-		// 4 发送给教材所有报名者
-		if (Const.SEND_OBJECT_4.intValue() == sendType.intValue()) {
-			if (StringUtil.isEmpty(bookIds)) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
-						"书籍为空!");
-			}
-			String[] ids = StringUtil.str2StrArray(bookIds);
-			for (String id : ids) {
-				List<Long> userIdList = decPositionService.listDecPositionsByTextbookIds(ids);
-				for (Long userId : userIdList) {
-					userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1, senderUserId,
-							Const.SENDER_TYPE_1, userId, Const.RECEIVER_TYPE_2));
-				}
-				// 获取到书籍id然后根据书籍id在dec_position表中获取到申报表id根据申报表id在declaration表中获取作家id放入userMessage的接收人中
-			}
-		}
-		// 如果是补发,进入下面操作 进行已发人员筛出
-		if (!isSave) {
-			// 查询当前消息内容
-			Message msg = messageService.get(message.getId());
-			if (ObjectUtil.notNull(msg)) {
-				message.setContent(msg.getContent());
-			}
-			List<UserMessage> temp = new ArrayList<UserMessage>();
-			// 已经发送的人员列表
-			List<UserMessage> sendedList = userMessageDao.getMessageByMsgId(message.getId());
-			// 已发送消息是否撤回
-			Boolean isWithdraw = false;
-			for (UserMessage userMessage : userMessageList) {
-				boolean flag = false;// 没有发送
-				for (UserMessage uMessage : sendedList) {
-					if (!isWithdraw) {
-						if (uMessage.getIsWithdraw()) {// 判断消息是否撤回
-							isWithdraw = true;
-						}
-					}
-					if (userMessage.getReceiverId().longValue() == uMessage.getReceiverId().longValue()
-							&& userMessage.getReceiverType().shortValue() == uMessage.getReceiverType().shortValue()) {
-						flag = true;
-						break;
-					}
-				}
-				if (!flag) {
-					temp.add(userMessage);
-				}
-			}
-			userMessageList = temp;
-			// 补发，取消撤回当前已发送的消息
-			if (isWithdraw) {
-				this.updateCancelToWithdraw(message.getId());
-			}
-		}
-		// 插入消息发送对象数据
-		if (CollectionUtil.isNotEmpty(userMessageList)) {
-			userMessageDao.addUserMessageBatch(userMessageList);
-		}
-		// websocket发送的id集合
-		List<String> websocketUserIds = new ArrayList<String>();
-		for (UserMessage userMessage : userMessageList) {
-			websocketUserIds.add(userMessage.getReceiverType() + "_" + userMessage.getReceiverId());
-		}
-		// webscokt发送消息
-		if (CollectionUtil.isNotEmpty(websocketUserIds)) {
-			WebScocketMessage webScocketMessage = new WebScocketMessage(message.getId(), Const.MSG_TYPE_1, senderUserId,
-					pmphUser.getRealname(), Const.SENDER_TYPE_1, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
-					title, message.getContent(), DateUtil.getCurrentTime());
-			myWebSocketHandler.sendWebSocketMessageToUser(websocketUserIds, webScocketMessage);
-			// 添加附件到MongoDB表中
-			saveFileToMongoDB(files, message.getId());
-		}
-		return userMessageList.size();
-	}
+    @Override
+    public Integer addOrUpdateUserMessage(Message message, String title, Integer sendType,
+    String orgIds, Long senderId, String userIds, String bookIds, boolean isSave, String[] files,
+    String sessionId) throws CheckedServiceException, IOException {
+        if (ObjectUtil.isNull(sendType)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择!");
+        }
+        // 如果 补发不进行消息插入
+        if (isSave) {
+            // MongoDB 消息插入
+            message = messageService.add(message);
+        }
+        if (StringUtil.isEmpty(message.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
+        }
+        // 发送者id
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "操作人为空!");
+        }
+        // 是否为补发消息设置（发送者ID）
+        Long senderUserId;
+        if (ObjectUtil.isNull(senderId)) {// 新发消息,发送者Id为登陆用户ID
+            senderUserId = pmphUser.getId();
+        } else {
+            senderUserId = senderId;// 补发消息,发送者Id为当前补发消息的发送者ID
+        }
+        // 装储存数据
+        List<UserMessage> userMessageList = new ArrayList<UserMessage>();
+        // 1 发送给学校管理员 //2 所有人
+        if (Const.SEND_OBJECT_1.intValue() == sendType.intValue()
+            || Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
+            if (StringUtil.isEmpty(orgIds)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                  CheckedExceptionResult.NULL_PARAM, "参数错误!");
+            }
+            String[] orgIds1 = StringUtil.str2StrArray(orgIds);
+            List<Long> orgIds2 = new ArrayList<Long>(orgIds1.length);
+            for (String id : orgIds1) {
+                if (StringUtil.notEmpty(id)) {
+                    orgIds2.add(Long.parseLong(id));
+                }
+            }
+            List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(orgIds2);
+            // 机构用户
+            for (OrgUser orgUser : orgUserList) {
+                userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
+                                                    senderUserId, Const.SENDER_TYPE_1,
+                                                    orgUser.getId(), Const.RECEIVER_TYPE_3,null));
+            }
+            // 作家用户
+            if (Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
+                List<WriterUser> writerUserList =
+                writerUserService.getWriterUserListByOrgIds(orgIds2);
+                for (WriterUser writerUser : writerUserList) {
+                    userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
+                                                        senderUserId, Const.SENDER_TYPE_1,
+                                                        writerUser.getId(), Const.RECEIVER_TYPE_2,
+                                                        null));
+                }
+            }
+        }
+        // 3 指定用户
+        if (Const.SEND_OBJECT_3.intValue() == sendType.intValue()) {
+            if (StringUtil.isEmpty(userIds)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                  CheckedExceptionResult.NULL_PARAM, "没有选中发送人!");
+            }
+            String[] ids = StringUtil.str2StrArray(userIds);
+            for (String id : ids) {
+                if (StringUtil.notEmpty(id)) {
+                    String userType = id.split("_")[0];
+                    String userId = id.split("_")[1];
+                    if (StringUtil.notEmpty(userId) && StringUtil.isNumeric(userId)) {
+                        userMessageList.add(new UserMessage(message.getId(), title,
+                                                            Const.MSG_TYPE_1, senderUserId,
+                                                            Const.SENDER_TYPE_1,
+                                                            Long.parseLong(userId),
+                                                            new Short(userType),
+                                                            null));
+                    }
+                }
+            }
+        }
+        // 4 发送给教材所有报名者
+        if (Const.SEND_OBJECT_4.intValue() == sendType.intValue()) {
+            if (StringUtil.isEmpty(bookIds)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                  CheckedExceptionResult.NULL_PARAM, "书籍为空!");
+            }
+            String[] ids = StringUtil.str2StrArray(bookIds);
+            for (String id : ids) {
+                List<Long> userIdList = decPositionService.listDecPositionsByTextbookIds(ids);
+                for (Long userId : userIdList) {
+                    userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
+                                                        senderUserId, Const.SENDER_TYPE_1, userId,
+                                                        Const.RECEIVER_TYPE_2,
+                                                        null));
+                }
+                // 获取到书籍id然后根据书籍id在dec_position表中获取到申报表id根据申报表id在declaration表中获取作家id放入userMessage的接收人中
+            }
+        }
+        // 如果是补发,进入下面操作 进行已发人员筛出
+        if (!isSave) {
+            // 查询当前消息内容
+            Message msg = messageService.get(message.getId());
+            if (ObjectUtil.notNull(msg)) {
+                message.setContent(msg.getContent());
+            }
+            List<UserMessage> temp = new ArrayList<UserMessage>();
+            // 已经发送的人员列表
+            List<UserMessage> sendedList = userMessageDao.getMessageByMsgId(message.getId());
+            // 已发送消息是否撤回
+            Boolean isWithdraw = false;
+            for (UserMessage userMessage : userMessageList) {
+                boolean flag = false;// 没有发送
+                for (UserMessage uMessage : sendedList) {
+                    if (!isWithdraw) {
+                        if (uMessage.getIsWithdraw()) {// 判断消息是否撤回
+                            isWithdraw = true;
+                        }
+                    }
+                    if (userMessage.getReceiverId().longValue() == uMessage.getReceiverId()
+                                                                           .longValue()
+                        && userMessage.getReceiverType().shortValue() == uMessage.getReceiverType()
+                                                                                 .shortValue()) {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag) {
+                    temp.add(userMessage);
+                }
+            }
+            userMessageList = temp;
+            // 补发，取消撤回当前已发送的消息
+            if (isWithdraw) {
+                this.updateCancelToWithdraw(message.getId());
+            }
+        }
+        // 插入消息发送对象数据
+        if (CollectionUtil.isNotEmpty(userMessageList)) {
+            userMessageDao.addUserMessageBatch(userMessageList);
+        }
+        // websocket发送的id集合
+        List<String> websocketUserIds = new ArrayList<String>();
+        for (UserMessage userMessage : userMessageList) {
+            websocketUserIds.add(userMessage.getReceiverType() + "_" + userMessage.getReceiverId());
+        }
+        // webscokt发送消息
+        if (CollectionUtil.isNotEmpty(websocketUserIds)) {
+            WebScocketMessage webScocketMessage =
+            new WebScocketMessage(message.getId(), Const.MSG_TYPE_1, senderUserId,
+                                  pmphUser.getRealname(), Const.SENDER_TYPE_1,
+                                  Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, title,
+                                  message.getContent(), DateUtil.getCurrentTime());
+            myWebSocketHandler.sendWebSocketMessageToUser(websocketUserIds, webScocketMessage);
+            // 添加附件到MongoDB表中
+            saveFileToMongoDB(files, message.getId());
+        }
+        return userMessageList.size();
+    }
 
 	@Override
 	public Integer updateUserMessage(Message message, String msgId, String msgTitle, String[] files,
