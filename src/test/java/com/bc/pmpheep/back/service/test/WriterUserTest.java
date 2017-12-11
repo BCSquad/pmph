@@ -194,7 +194,7 @@ public class WriterUserTest extends BaseTest {
 	}
 	private WriterUser addWriterUser(){
 		WriterUser writerUser =userService.add(new WriterUser("user", "123", false, 123L, null, null,
-				null, null, null, null, null, null, null, null, null, null, null, null, null, false, 
+				null,null, null, null, null, null, null, null, null, null, null, null, null, null, false, 
 				null, null, null, null, false, false, null, null, null, null, false, null, null)); 
 		return writerUser;
 	}
