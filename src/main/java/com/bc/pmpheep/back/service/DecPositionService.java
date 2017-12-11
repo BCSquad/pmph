@@ -154,7 +154,7 @@ public interface DecPositionService {
      * </pre>
      */
     Integer updateDecPositionEditorSelection(String jsonDecPosition, Integer selectionType,
-    String sessionId) throws CheckedServiceException;
+    String sessionId) throws CheckedServiceException, IOException;
 
     /**
      * 

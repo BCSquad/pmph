@@ -20,6 +20,7 @@ import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.JsonUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -56,17 +57,19 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class DecPositionServiceImpl implements DecPositionService {
 
     @Autowired
-    private DecPositionDao     decPositionDao;
+    private DecPositionDao       decPositionDao;
     @Autowired
-    private FileService        fileService;
+    private FileService          fileService;
     @Autowired
-    private DecPositionService decPositionService;
+    private DecPositionService   decPositionService;
     @Autowired
-    private TextbookLogService textbookLogService;
+    private TextbookLogService   textbookLogService;
     @Autowired
-    private TextbookService    textbookService;
+    private TextbookService      textbookService;
     @Autowired
-    private MaterialService    materialService;
+    private MaterialService      materialService;
+    @Autowired
+    private SystemMessageService systemMessageService;
 
     @Override
     public DecPosition addDecPosition(DecPosition decPosition) throws CheckedServiceException {
@@ -301,7 +304,7 @@ public class DecPositionServiceImpl implements DecPositionService {
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public Integer updateDecPositionEditorSelection(String jsonDecPosition, Integer selectionType,
-    String sessionId) throws CheckedServiceException {
+    String sessionId) throws CheckedServiceException, IOException {
         if (StringUtil.isEmpty(jsonDecPosition)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "遴选职位不能为空");
@@ -330,6 +333,18 @@ public class DecPositionServiceImpl implements DecPositionService {
             if (CollectionUtil.isNotEmpty(decPositions)) {
                 count = decPositionDao.updateDecPositionEditorSelection(decPositions);
             }
+            Long textbookId = decPositions.get(0).getTextbookId(); // 获取书籍id
+            if (ObjectUtil.isNull(textbookId)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                                  CheckedExceptionResult.NULL_PARAM, "书籍id为空");
+            }
+            Integer userType = 1;
+            List<DecPosition> oldlist =
+            decPositionService.listChosenDecPositionsByTextbookId(textbookId);
+            Long updaterId = pmphUser.getId(); // 获取修改者id
+            if (CollectionUtil.isNotEmpty(oldlist)) {
+                textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
+            }
         }
         // 2：发布
         if (selectionType_2.intValue() == selectionType) {
@@ -339,12 +354,9 @@ public class DecPositionServiceImpl implements DecPositionService {
                                                   CheckedExceptionResult.NULL_PARAM, "书籍id为空");
             }
             count = textbookService.updateTextbook(new Textbook(textbookId, true));
-            Integer userType = 1;
-            List<DecPosition> oldlist =
-            decPositionService.listChosenDecPositionsByTextbookId(textbookId);
-            Long updaterId = pmphUser.getId(); // 获取修改者id
-            if (CollectionUtil.isNotEmpty(oldlist)) {
-                textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
+            if (count > 0) {
+                // 发送消息
+                systemMessageService.sendWhenConfirmFirstEditor(textbookId);
             }
         }
         return count;
