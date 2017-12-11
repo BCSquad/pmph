@@ -202,31 +202,44 @@ public class DeclarationController {
     public ResponseBean update(@RequestParam("jsonDecPosition") String jsonDecPosition,
     @RequestParam("selectionType") Integer selectionType, HttpServletRequest request) {
         String sessionId = CookiesUtil.getSessionId(request);
-        return new ResponseBean(
-                                decPositionService.updateDecPositionEditorSelection(jsonDecPosition,
-                                                                                    selectionType,
-                                                                                    sessionId));
+        try {
+            return new ResponseBean(
+                                    decPositionService.updateDecPositionEditorSelection(jsonDecPosition,
+                                                                                        selectionType,
+                                                                                        sessionId));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
     }
 
-	/**
-	 * 
-	 * 
-	 * 功能描述：批量导出excel
-	 *
-	 * @param materialId
-	 *
-	 */
-	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出excel表格")
-	@RequestMapping(value = "/down/excel", method = RequestMethod.GET)
-	public void downExcel(Long materialId, String textBookids, String realname, String position, String title,
-			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
-			HttpServletResponse response) {
-		try {
-			declarationService.declarationExcel(materialId, textBookids, realname, position, title, orgName, unitName,
-					positionType, onlineProgress, offlineProgress,response);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * 
+     * 
+     * 功能描述：批量导出excel
+     * 
+     * @param materialId
+     * 
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出excel表格")
+    @RequestMapping(value = "/down/excel", method = RequestMethod.GET)
+    public void downExcel(Long materialId, String textBookids, String realname, String position,
+    String title, String orgName, String unitName, Integer positionType, Integer onlineProgress,
+    Integer offlineProgress, HttpServletResponse response) {
+        try {
+            declarationService.declarationExcel(materialId,
+                                                textBookids,
+                                                realname,
+                                                position,
+                                                title,
+                                                orgName,
+                                                unitName,
+                                                positionType,
+                                                onlineProgress,
+                                                offlineProgress,
+                                                response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
