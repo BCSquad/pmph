@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -61,9 +62,9 @@ public class FileDownLoadController {
      * @throws UnsupportedEncodingException
      */
     @RequestMapping(value = "/file/download/{id}", method = RequestMethod.GET)
-    public void download(@PathVariable("id") String id, HttpServletResponse response)
-    throws UnsupportedEncodingException {
-
+    public void download(@PathVariable("id") String id, HttpServletRequest request,
+    HttpServletResponse response) throws UnsupportedEncodingException {
+        String userAgent = request.getHeader("User-Agent");
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/force-download");
         GridFSDBFile file = fileService.get(id);
@@ -71,9 +72,15 @@ public class FileDownLoadController {
             logger.warn("未找到id为'{}'的文件", id);
             return;
         }
-        response.setHeader("Content-Disposition",
-                           "attachment;fileName="
-                           + new String(file.getFilename().getBytes("utf-8"), "ISO8859-1"));
+        String fileName = file.getFilename();
+        // 针对IE或者以IE为内核的浏览器：
+        if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
+            fileName = java.net.URLEncoder.encode(fileName, "UTF-8");
+        } else {
+            // 非IE浏览器的处理：
+            fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+        }
+        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
         try (OutputStream out = response.getOutputStream()) {
             file.writeTo(out);
             out.flush();
@@ -98,7 +105,8 @@ public class FileDownLoadController {
      */
     @RequestMapping(value = "/file/{type}/download/{id}", method = RequestMethod.GET)
     public void download(@PathVariable("type") String type, @PathVariable("id") String id,
-    HttpServletResponse response) throws UnsupportedEncodingException {
+    HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+        String userAgent = request.getHeader("User-Agent");
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/force-download");
         GridFSDBFile file = fileService.get(id);
@@ -106,9 +114,15 @@ public class FileDownLoadController {
             logger.warn("未找到id为'{}'的文件", id);
             return;
         }
-        response.setHeader("Content-Disposition",
-                           "attachment;fileName="
-                           + new String(file.getFilename().getBytes("utf-8"), "ISO8859-1"));
+        String fileName = file.getFilename();
+        // 针对IE或者以IE为内核的浏览器：
+        if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
+            fileName = java.net.URLEncoder.encode(fileName, "UTF-8");
+        } else {
+            // 非IE浏览器的处理：
+            fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+        }
+        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
         try (OutputStream out = response.getOutputStream()) {
             file.writeTo(out);
             out.flush();
@@ -137,7 +151,8 @@ public class FileDownLoadController {
      */
     @RequestMapping(value = "/groupfile/download/{id}", method = RequestMethod.GET)
     public ResponseBean download(@PathVariable("id") String id,
-    @RequestParam("groupId") long groupId, HttpServletResponse response) {
+    @RequestParam("groupId") long groupId, HttpServletRequest request, HttpServletResponse response) {
+        String userAgent = request.getHeader("User-Agent");
         if (groupId < 1) {
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
                                               CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
@@ -152,10 +167,16 @@ public class FileDownLoadController {
                                               CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
                                               "未找到对应文件");
         }
-        String file_name;
+        String fileName = file.getFilename();
         try {
-            file_name = new String(file.getFilename().getBytes(), "ISO-8859-1");
-            response.setHeader("Content-Disposition", "attachment;fileName=" + file_name);
+            // 针对IE或者以IE为内核的浏览器：
+            if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
+                fileName = java.net.URLEncoder.encode(fileName, "UTF-8");
+            } else {
+                // 非IE浏览器的处理：
+                fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+            }
+            response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
         } catch (UnsupportedEncodingException e) {
             logger.warn("修改编码格式的时候失败");
         }

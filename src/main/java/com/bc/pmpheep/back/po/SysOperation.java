@@ -43,6 +43,10 @@ public class SysOperation implements java.io.Serializable {
     private String    businessType;
     // 设备类型
     private String    deviceType;
+    // 开始时间
+    private String    startTime;
+    // 结束时间
+    private String    endTime;
 
     private Integer   count;
 
@@ -169,6 +173,34 @@ public class SysOperation implements java.io.Serializable {
      */
     public void setCount(Integer count) {
         this.count = count;
+    }
+
+    /**
+     * @return the startTime
+     */
+    public String getStartTime() {
+        return startTime;
+    }
+
+    /**
+     * @param startTime the startTime to set
+     */
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    /**
+     * @return the endTime
+     */
+    public String getEndTime() {
+        return endTime;
+    }
+
+    /**
+     * @param endTime the endTime to set
+     */
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     /**
