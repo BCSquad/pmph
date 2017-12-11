@@ -44,6 +44,9 @@
 			<if test="gmtUpdate != null ">
 				gmt_update,
 			</if>
+			<if test="materialId != null ">
+				material_id,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -85,6 +88,9 @@
 			</if>
 			<if test="gmtUpdate != null ">
 				#{gmtUpdate},
+			</if>
+			<if test="materialId != null ">
+				#{materialId},
 			</if>
 		</trim>
 	</sql>
@@ -162,6 +168,9 @@
 			<if test="gmtUpdate != null">
 				gmt_update =#{gmtUpdate},
 			</if>
+			<if test="materialId != null ">
+				material_id = #{materialId},
+			</if>
 		</set>
 		where id = #{id} ;
 	</update>
@@ -217,7 +226,8 @@
 			user_message(
 					msg_id,msg_type,title,
 					sender_id,sender_type,
-					receiver_id,receiver_type
+					receiver_id,receiver_type,
+					material_id
 				)
 		values
 		<foreach collection="list" item="UserMessage" index="index"
@@ -228,7 +238,8 @@
 			#{UserMessage.senderId},
 			#{UserMessage.senderType},
 			#{UserMessage.receiverId},
-			#{UserMessage.receiverType}
+			#{UserMessage.receiverType},
+			#{UserMessage.materialId}
 			)
 		</foreach>
 	</insert>

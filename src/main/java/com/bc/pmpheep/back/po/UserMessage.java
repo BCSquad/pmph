@@ -42,8 +42,20 @@ public class UserMessage implements java.io.Serializable {
     private Timestamp gmtCreate;
     // 修改时间
     private Timestamp gmtUpdate;
+    //教材id
+    private Long materialId ;
+    
+    
 
-    public UserMessage() {
+    public Long getMaterialId() {
+		return materialId;
+	}
+
+	public void setMaterialId(Long materialId) {
+		this.materialId = materialId;
+	}
+
+	public UserMessage() {
         super();
     }
 
@@ -107,9 +119,10 @@ public class UserMessage implements java.io.Serializable {
      * @param senderType 发送者类型
      * @param receiverId 收收人id
      * @param receiverType 收收人类型
+     * @param materialId 教材id
      */
     public UserMessage(String msgId, String title, Short msgType, Long senderId, Short senderType,
-    Long receiverId, Short receiverType) {
+    Long receiverId, Short receiverType,Long materialId) {
         super();
         this.msgId = msgId;
         this.title = title;
@@ -118,6 +131,7 @@ public class UserMessage implements java.io.Serializable {
         this.senderType = senderType;
         this.receiverId = receiverId;
         this.receiverType = receiverType;
+        this.materialId = materialId ;
     }
     
     public UserMessage(String msgId, Short msgType, Long senderId, Short senderType,
@@ -236,12 +250,25 @@ public class UserMessage implements java.io.Serializable {
     }
 
     @Override
-    public String toString() {
-        return "{id:" + id + ", msgId:" + msgId + ", title:" + title + ", msgType:" + msgType
-               + ", senderId:" + senderId + ", senderType:" + senderType + ", receiverId:"
-               + receiverId + ", receiverType:" + receiverType + ", isRead:" + isRead
-               + ", isWithdraw:" + isWithdraw + ", isDeleted:" + isDeleted + ", gmtCreate:"
-               + gmtCreate + ", gmtUpdate:" + gmtUpdate + "}";
-    }
+	public String toString() {
+		return "{id:" + id + ", msgId:" + msgId + ", title:" + title
+				+ ", msgType:" + msgType + ", senderId:" + senderId
+				+ ", senderType:" + senderType + ", receiverId:" + receiverId
+				+ ", receiverType:" + receiverType + ", isRead:" + isRead
+				+ ", isWithdraw:" + isWithdraw + ", isDeleted:" + isDeleted
+				+ ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate
+				+ ", materialId:" + materialId + ", getMaterialId():"
+				+ getMaterialId() + ", getId():" + getId() + ", getMsgId():"
+				+ getMsgId() + ", getTitle():" + getTitle() + ", getMsgType():"
+				+ getMsgType() + ", getSenderId():" + getSenderId()
+				+ ", getSenderType():" + getSenderType() + ", getReceiverId():"
+				+ getReceiverId() + ", getReceiverType():" + getReceiverType()
+				+ ", getIsRead():" + getIsRead() + ", getIsWithdraw():"
+				+ getIsWithdraw() + ", getIsDeleted():" + getIsDeleted()
+				+ ", getGmtCreate():" + getGmtCreate() + ", getGmtUpdate():"
+				+ getGmtUpdate() + ", getClass():" + getClass()
+				+ ", hashCode():" + hashCode() + ", toString():"
+				+ super.toString() + "}";
+	}
 
 }
