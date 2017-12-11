@@ -329,7 +329,7 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer selectionType_1 = 1;
         Integer selectionType_2 = 2;
         // 1:确定
-        if (selectionType_1.intValue() == selectionType) {
+        if (selectionType_1.intValue() == selectionType.intValue()) {
             if (CollectionUtil.isNotEmpty(decPositions)) {
                 count = decPositionDao.updateDecPositionEditorSelection(decPositions);
             }
@@ -338,21 +338,24 @@ public class DecPositionServiceImpl implements DecPositionService {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                                   CheckedExceptionResult.NULL_PARAM, "书籍id为空");
             }
-            Integer userType = 1;
+            Integer userType = 1;// 用户类型
+            // 历史遴选记录
             List<DecPosition> oldlist =
             decPositionService.listChosenDecPositionsByTextbookId(textbookId);
             Long updaterId = pmphUser.getId(); // 获取修改者id
             if (CollectionUtil.isNotEmpty(oldlist)) {
+                // 添加新的遴选记录
                 textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
             }
         }
         // 2：发布
-        if (selectionType_2.intValue() == selectionType) {
+        if (selectionType_2.intValue() == selectionType.intValue()) {
             Long textbookId = decPositions.get(0).getTextbookId(); // 获取书籍id
             if (ObjectUtil.isNull(textbookId)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                                   CheckedExceptionResult.NULL_PARAM, "书籍id为空");
             }
+            // 发布时更新textbook表中is_chief_published（是否已公布主编/副主编）字段
             count = textbookService.updateTextbook(new Textbook(textbookId, true));
             if (count > 0) {
                 // 发送消息
