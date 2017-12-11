@@ -53,7 +53,8 @@ public class ExcelHelperTest extends BaseTest {
         declarationBO.setPresetPosition("副主编");
         list.add(declarationBO);
         Workbook workbook = excelHelper.fromBusinessObjectList(list, "专家信息表");
-        FileOutputStream out = new FileOutputStream("book.xls");
+        String path = this.getClass().getResource("/").getPath().concat("book.xls");
+        FileOutputStream out = new FileOutputStream(path);
         workbook.write(out);
         out.flush();
         out.close();
@@ -102,7 +103,8 @@ public class ExcelHelperTest extends BaseTest {
         declarationEtcBO.setPresetPosition("副主编");
         list.add(declarationEtcBO);
         Workbook workbook = excelHelper.fromDeclarationEtcBOList(list, "专家信息表");
-        FileOutputStream out = new FileOutputStream("DeclarationEtcBOList.xls");
+        String path = this.getClass().getResource("/").getPath().concat("DeclarationEtcBOList.xls");
+        FileOutputStream out = new FileOutputStream(path);
         workbook.write(out);
         out.flush();
         out.close();
@@ -116,7 +118,8 @@ public class ExcelHelperTest extends BaseTest {
             map.put("exception", "数据异常原因");
         }
         Workbook workbook = excelHelper.fromMaps(maps, "bbs_groupusers");
-        FileOutputStream out = new FileOutputStream("bbs_groupusers.xls");
+        String path = this.getClass().getResource("/").getPath().concat("bbs_groupusers.xls");
+        FileOutputStream out = new FileOutputStream(path);
         workbook.write(out);
         out.flush();
         out.close();
