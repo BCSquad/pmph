@@ -32,6 +32,9 @@
 			<if test="experience!=null and experience !=''">
 				experience,
 			</if>
+			<if test="workPlace!=null and workPlace !=''">
+			    workplace,
+			</if>
 			<if test="position!=null and position !=''">
 				position,
 			</if>
@@ -135,6 +138,9 @@
 			</if>
 			<if test="experience!=null and experience !=''">
 				#{experience},
+			</if>
+			<if test="workPlace!=null and workPlace !=''">
+			    #{workPlace},
 			</if>
 			<if test="position!=null and position !=''">
 				#{position},
@@ -271,6 +277,9 @@
 			</if>
 			<if test=" experience!= null and  experience!=''">
 				experience = #{experience},
+			</if>
+			<if test="workPlace !=null and workPlace !=''">
+			    workplace = #{workPlace},
 			</if>
 			<if test=" position!= null and  position!=''">
 				position= #{position},

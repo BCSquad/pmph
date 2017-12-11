@@ -188,14 +188,10 @@ public class JdbcHelper {
         if (experience.contains("岁")) {
             experience = experience.substring(0, experience.lastIndexOf("岁"));
             Integer age = Integer.parseInt(experience);
-            age = age - 20;
             experience = String.valueOf(age);
         } else {
             experience = experience.replace("年", "").replace("五", "5").replace("s", "").replace(" ", "")
                     .replace("内", "");
-            if (StringUtil.strLength(experience) > 2) {
-                experience = experience.substring(0, 2);
-            }
         }
         return experience;
     }
