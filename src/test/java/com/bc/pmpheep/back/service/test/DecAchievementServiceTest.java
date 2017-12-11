@@ -15,26 +15,25 @@ import com.bc.pmpheep.back.service.DecAchievementService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.test.BaseTest;
 
-
 public class DecAchievementServiceTest extends BaseTest {
 	Logger logger = LoggerFactory.getLogger(DecAchievementServiceTest.class);
-	
+
 	@Resource
 	DecAchievementService decAchievementService;
 
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void testAddDecAchievement(){
+	public void testAddDecAchievement() {
 		DecAchievement decAchievement = new DecAchievement();
 		decAchievement.setDeclarationId(2L);
 		decAchievement.setContent("djaskdjlasjdk");
 		decAchievementService.addDecAchievement(decAchievement);
 		Assert.assertTrue("添加数据失败", decAchievement.getId() > 0);
 	}
-	
+
 	@Test
 	@Rollback(Const.ISROLLBACK)
-	public void testGetDecAchievementByDeclarationId(){
+	public void testGetDecAchievementByDeclarationId() {
 		DecAchievement decAchievement = new DecAchievement();
 		decAchievement.setDeclarationId(2L);
 		decAchievement.setContent("djaskdjlasjdk");
@@ -42,9 +41,8 @@ public class DecAchievementServiceTest extends BaseTest {
 		decAchievementService.addDecAchievement(decAchievement);
 		decAchievementService.addDecAchievement(decAchievement);
 		decAchievementService.addDecAchievement(decAchievement);
-		List<DecAchievement> lst = decAchievementService.getDecAchievementByDeclarationId (2L);
-		Assert.assertTrue("添加数据失败", lst.size() > 0);
+		DecAchievement lst = decAchievementService.getDecAchievementByDeclarationId(2L);
+		Assert.assertTrue("添加数据失败", null != lst);
 	}
-	
-	
+
 }
