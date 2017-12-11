@@ -208,25 +208,4 @@ public class DeclarationController {
                                                                                     sessionId));
     }
 
-	/**
-	 * 
-	 * 
-	 * 功能描述：批量导出excel
-	 *
-	 * @param materialId
-	 *
-	 */
-	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出excel表格")
-	@RequestMapping(value = "/down/excel", method = RequestMethod.GET)
-	public void downExcel(Long materialId, String textBookids, String realname, String position, String title,
-			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
-			HttpServletResponse response) {
-		try {
-			declarationService.declarationExcel(materialId, textBookids, realname, position, title, orgName, unitName,
-					positionType, onlineProgress, offlineProgress,response);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }
