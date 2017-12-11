@@ -208,6 +208,28 @@ public class PmphUserServiceImpl implements PmphUserService {
 		}
 		return pmphUserDao.get(id);
 	}
+	
+	/**
+	 * 根据主键 id 加载用户对象
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public PmphUser getInfo(Long id) throws CheckedServiceException {
+		if (ObjectUtil.isNull(id)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+		}
+		PmphUser pmphUser = pmphUserDao.getInfo(id) ; 
+		if(null == pmphUser){ 
+			pmphUser =  new PmphUser();
+		}
+		String avatar = pmphUser.getAvatar() ;
+		pmphUser.setAvatar(RouteUtil.userAvatar(avatar));
+		return pmphUser;
+	}
+
 
 	/**
 	 * 根据用户名加载用户对象（用于登录使用）

@@ -29,6 +29,7 @@ import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * 
@@ -60,6 +61,22 @@ public class PmphUserController {
 	PmphDepartmentService pmphDepartmentService;
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "社内用户";
+	
+	/**
+	 * 获取社内用户
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年12月11日 下午5:19:15
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据主键 获取用户要更新的信息")
+	@RequestMapping(value = "/getInfo", method = RequestMethod.GET)
+	public ResponseBean getInfo(@RequestParam("id")Long id){
+		return new ResponseBean(userService.getInfo(id));
+	}
+	
 	
 	/**
 	 * 修改个人信息

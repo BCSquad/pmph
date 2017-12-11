@@ -116,6 +116,17 @@ public interface PmphUserService {
 	 * @return
 	 */
 	PmphUser get(Long id) throws CheckedServiceException;
+	
+	/**
+	 * 根据主键 获取用户要更新的信息
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年12月11日 下午5:26:04
+	 * @param id
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	PmphUser getInfo(Long id) throws CheckedServiceException;
 
 	/**
 	 * 根据用户名加载用户对象（用于登录使用）
