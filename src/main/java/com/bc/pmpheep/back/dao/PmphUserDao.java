@@ -37,6 +37,17 @@ public interface PmphUserDao {
 	Integer batchDelete(@Param("ids") List<Long> ids);
 
 	PmphUser get(Long id);
+	
+	/**
+	 * 根据主键 获取用户要更新的信息 
+	 * @author Mryang
+	 * @createDate 2017年12月11日 下午5:27:20
+	 * @param id
+	 * @return
+	 */
+	PmphUser getInfo(Long id);
+	
+	
 
 	List<PmphUser> getListUser();
 

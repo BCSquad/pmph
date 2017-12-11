@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +25,12 @@ import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.RouteUtil;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.ValidatUtil;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
@@ -208,7 +212,53 @@ public class PmphUserServiceImpl implements PmphUserService {
 		}
 		return pmphUserDao.get(id);
 	}
-
+	
+	/**
+	 * 根据主键 id 加载用户对象
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public PmphUser getInfo(HttpServletRequest request) throws CheckedServiceException {
+		// 获取当前用户
+		String sessionId = CookiesUtil.getSessionId(request);
+		PmphUser sessionPmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == sessionPmphUser) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"请求用户不存在");
+		}
+		Long id =  sessionPmphUser.getId();
+		if (ObjectUtil.isNull(id)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+		}
+		PmphUser pmphUser = pmphUserDao.getInfo(id) ; 
+		if(null == pmphUser){ 
+			pmphUser =  new PmphUser();
+		}
+		String avatar = pmphUser.getAvatar() ;
+		pmphUser.setAvatar(RouteUtil.userAvatar(avatar));
+		return pmphUser;
+	}
+	
+	@Override
+	public Integer updatePassword (HttpServletRequest request,String oldPassword,String newPassword){
+		// 获取当前用户
+		String sessionId = CookiesUtil.getSessionId(request);
+		PmphUser sessionPmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == sessionPmphUser) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"请求用户不存在");
+		}
+		Long id =  sessionPmphUser.getId();
+		if (ObjectUtil.isNull(id)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+		}
+		return 1;
+	}
+	
 	/**
 	 * 根据用户名加载用户对象（用于登录使用）
 	 * 

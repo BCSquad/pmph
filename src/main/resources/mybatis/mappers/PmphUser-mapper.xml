@@ -170,6 +170,21 @@
 			#{id}
 		</foreach>
 	</delete>
+	
+	<!-- 根据主键 获取用户要更新的信息 -->
+	<select id="getInfo" parameterType="Long" resultType="PmphUser">
+		SELECT
+			id,
+			username,
+			realname,
+			handphone,
+			email,
+			avatar
+		FROM
+			pmph_user
+		WHERE
+			id = #{id} and is_deleted =0 and is_disabled = 0
+	</select>
 
 	<select id="get" parameterType="Long" resultType="PmphUser">
 		SELECT
