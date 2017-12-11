@@ -333,7 +333,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 教学经历
 		List<DecTeachExp> decTeachExpList = decTeachExpDao.getListDecTeachExpByDeclarationId(declarationId);
 		// 个人成就
-//		DecAchievement decAchievement = decAchievementDao.getDecAchievementByDeclarationId(declarationId);
+		DecAchievement decAchievement = decAchievementDao.getDecAchievementByDeclarationId(declarationId);
 		// 兼职学术
 		List<DecAcade> decAcadeList = decAcadeDao.getListDecAcadeByDeclarationId(declarationId);
 		// 上套教材
@@ -357,7 +357,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		applicationVO.setDecEduExpList(decEduExpList);
 		applicationVO.setDecWorkExpList(decWorkExpList);
 		applicationVO.setDecTeachExpList(decTeachExpList);
-//		applicationVO.setDecAchievementList(decAchievement);
+		applicationVO.setDecAchievementList(decAchievement);
 		applicationVO.setDecAcadeList(decAcadeList);
 		applicationVO.setDecLastPositionList(decLastPositionList);
 		applicationVO.setDecCourseConstruction(decCourseConstruction);
