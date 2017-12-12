@@ -369,6 +369,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String position, String title, String orgName, String unitName, Integer positionType,
 			Integer onlineProgress, Integer offlineProgress, HttpServletResponse response)
 			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
+		long startTime = System.currentTimeMillis();// 获取当前时间
 		List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
 		Gson gson = new Gson();
 		List<Long> bookIds = gson.fromJson(textBookids, new TypeToken<ArrayList<Long>>() {
@@ -479,6 +480,9 @@ public class DeclarationServiceImpl implements DeclarationService {
 					(ArrayList<DecResearch>) decResearchs, decAchievement);
 			declarationEtcBOs.add(declarationEtcBO);
 		}
+		long endTime = System.currentTimeMillis();
+		System.err.println("------------------------------------------");
+		System.err.println("查询时间：" + (endTime - startTime) + "ms");
 		return declarationEtcBOs;
 	}
 
