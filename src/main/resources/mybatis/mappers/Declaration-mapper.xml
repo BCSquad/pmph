@@ -355,7 +355,7 @@
 		ORDER BY
 		t.textbook_name
 		) presetPosition,
-        o.org_name orgName
+        o.org_name orgNameOne
 		FROM
 		declaration d
 		LEFT JOIN writer_user w ON w.id = d.user_id

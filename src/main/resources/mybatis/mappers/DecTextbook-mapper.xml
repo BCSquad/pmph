@@ -152,6 +152,16 @@
 		declaration_id=#{declarationId};
 	</select>
 
+	<!-- 根据declarationId查询作家教材编写情况信息 -->
+	<select id="getListDecTextbookByDeclarationIds" resultType="DecTextbook">
+		select * from dec_textbook where
+		declaration_id in
+		<foreach collection="list" item="declarationId" open="("
+			close=")" separator="," index="index">
+			#{declarationId}
+		</foreach>
+	</select>
+
 	<!-- 查询作家教材编写情况表的总记录数 -->
 	<select id="getDecTextbook" resultType="java.lang.Long">
 		select count(*) from

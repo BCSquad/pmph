@@ -22,10 +22,10 @@
 				note,
 			</if>
 			<if test="dateBegin !=null and dateBegin !=''">
-			    date_begin,
+				date_begin,
 			</if>
 			<if test="dateEnd !=null and dateEnd !=''">
-			    date_end,
+				date_end,
 			</if>
 			<if test="sort !=null and sort !=''">
 				sort,
@@ -51,10 +51,10 @@
 				#{note},
 			</if>
 			<if test="dateBegin !=null and dateBegin !=''">
-			    #{dateBegin},
+				#{dateBegin},
 			</if>
 			<if test="dateEnd !=null and dateEnd !=''">
-			    #{dateEnd},
+				#{dateEnd},
 			</if>
 			<if test="sort !=null and sort !=''">
 				#{sort},
@@ -100,10 +100,10 @@
 				note = #{note},
 			</if>
 			<if test="dateBegin !=null and dateBegin !=''">
-			    date_begin = #{dateBegin},
+				date_begin = #{dateBegin},
 			</if>
 			<if test="dateEnd !=null and dateEnd !=''">
-			    date_end = #{dateEnd},
+				date_end = #{dateEnd},
 			</if>
 			<if test="sort !=null and sort !=''">
 				sort = #{sort},
@@ -125,8 +125,19 @@
 		declaration_id=#{declarationId};
 	</select>
 
+	<!-- 根据declarationId查询作家教学经历信息 -->
+	<select id="getListDecTeachExpByDeclarationIds" resultType="DecTeachExp">
+		select * from dec_teach_exp where
+		declaration_id in
+		<foreach collection="list" item="declarationId" open="("
+			close=")" separator="," index="index">
+			#{declarationId}
+		</foreach>
+	</select>
+
 	<!-- 查询作家教学经历表的总记录数 -->
 	<select id="getDecTeachExp" resultType="java.lang.Long">
-		select count(*) from dec_teach_exp
+		select count(*) from
+		dec_teach_exp
 	</select>
 </mapper>

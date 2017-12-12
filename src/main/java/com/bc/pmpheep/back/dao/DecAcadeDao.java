@@ -63,6 +63,15 @@ public interface DecAcadeDao {
 	 * 
 	 * @Return 兼职学术组织信息
 	 */
+	List<DecAcade> getListDecAcadeByDeclarationIds(List<Long> declarationId);
+	
+	/**
+	 * Description: 根据申报表id查询学术兼职组织信息
+	 * 
+	 * @Param declarationId 申报表id
+	 * 
+	 * @Return 兼职学术组织信息
+	 */
 	List<DecAcade> getListDecAcadeByDeclarationId(Long declarationId);
 
 	/**

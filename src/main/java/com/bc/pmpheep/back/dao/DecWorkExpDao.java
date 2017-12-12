@@ -61,6 +61,15 @@ public interface DecWorkExpDao {
 	 * 
 	 * @Return 作家作家工作经历信息
 	 */
+	List<DecWorkExp> getListDecWorkExpByDeclarationIds(List<Long> declarationId);
+	
+	/**
+	 * Description: 根据申报表id查询作家工作经历信息
+	 * 
+	 * @Param declarationId 申报表id
+	 * 
+	 * @Return 作家作家工作经历信息
+	 */
 	List<DecWorkExp> getListDecWorkExpByDeclarationId(Long declarationId);
 
 	/**
