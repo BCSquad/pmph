@@ -4,8 +4,12 @@
  */
 package com.bc.pmpheep.general.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -44,6 +48,7 @@ import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.utils.ExcelHelper;
 import com.bc.pmpheep.utils.WordHelper;
+import com.bc.pmpheep.utils.ZipHelper;
 import com.mongodb.gridfs.GridFSDBFile;
 
 /**
@@ -77,6 +82,8 @@ public class FileDownLoadController {
 	MaterialService materialService;
 	@Resource
 	TextbookService textbookService;
+	@Resource
+	ZipHelper zipHelper;
 
 	/**
 	 * 普通文件下载
@@ -315,9 +322,14 @@ public class FileDownLoadController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/word/declaration", method = RequestMethod.GET)
-	public void declarationWord(Long materialId, String textBookids, String realname, String position, String title,
+	public String declarationWord(Long materialId, String textBookids, String realname, String position, String title,
 			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
 			HttpServletResponse response) {
+		String src = this.getClass().getResource("/").getPath();
+		src = src.substring(1);
+		if (!src.endsWith(File.separator)) {
+			src += File.separator;
+		}
 		String tempDir = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
 		String materialName = materialService.getMaterialNameById(materialId);
 		List<Textbook> textbooks = textbookService.getTextbookByMaterialId(materialId);
@@ -337,23 +349,68 @@ public class FileDownLoadController {
 				}
 			}
 			StringBuilder sb = new StringBuilder();
-			String src = this.getClass().getResource("/").getPath();
-			src = src.substring(1);
 			sb.append(src);
-			if (!src.endsWith(File.separator)) {
-				sb.append(File.separator);
-			}
 			sb.append(tempDir);
 			sb.append(File.separator);
 			sb.append(materialName);
 			sb.append(File.separator);
-			sb.append(i + "." + textbooks.get(i).getTextbookName());
+			sb.append((i + 1) + "." + textbooks.get(i).getTextbookName());
 			sb.append(File.separator);
 			wordHelper.export(materialName, sb.toString(), list);
 		}
 		long endTime = System.currentTimeMillis();
 		System.err.println("------------------------------------------");
-		System.err.println("打包下载时间：" + (endTime - startTime) + "ms");
+		System.err.println("生成文件夹时间：" + (endTime - startTime) + "ms");
+		String dest = src + tempDir;
+		zipHelper.zip(dest + File.separator + materialName, dest, true, null);
+		return tempDir;
+	}
+
+	/**
+	 * 普通文件下载
+	 * 
+	 * @param id
+	 *            生成的唯一标识符
+	 * @param response
+	 *            服务响应
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping(value = "/zip/download", method = RequestMethod.GET)
+	public void downloadZip(@RequestParam("id") String id, HttpServletRequest request, HttpServletResponse response) {
+		String src = this.getClass().getResource("/").getPath();
+		src = src.substring(1);
+		if (!src.endsWith(File.separator)) {
+			src += File.separator;
+		}
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		String filePath = src + id + File.separator;
+		String fileName = returnFileName(request, id + ".zip");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		BufferedInputStream bis = null;
+		BufferedOutputStream bos = null;
+		OutputStream fos = null;
+		InputStream fis = null;
+		try {
+			fis = new FileInputStream(filePath);
+			bis = new BufferedInputStream(fis);
+			fos = response.getOutputStream();
+			bos = new BufferedOutputStream(fos);
+			int byteRead = 0;
+			byte[] buffer = new byte[1024];
+			while ((byteRead = bis.read(buffer, 0, 1024)) != -1) {
+				bos.write(buffer, 0, byteRead);
+			}
+			bos.flush();
+			fis.close();
+			bis.close();
+			fos.close();
+			bos.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
 	}
 
 }
