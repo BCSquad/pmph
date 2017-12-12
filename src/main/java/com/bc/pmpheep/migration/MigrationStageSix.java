@@ -298,21 +298,21 @@ public class MigrationStageSix {
             decEduExp.setNote((String) map.get("remark")); // 备注
             SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
             Timestamp startstopDate = (Timestamp) map.get("startstopdate"); // 起始时间
-            if (ObjectUtil.isNull(startstopDate)) {
+        	String dateBegin = dateChange.format(startstopDate);
+            if (StringUtil.isEmpty(dateBegin)) {
             	decEduExp.setDateBegin(null);
             } else {
-            	String dateBegin = dateChange.format(startstopDate);
                 decEduExp.setDateBegin(dateBegin);
 			}
             Timestamp createDate = (Timestamp) map.get("createdate"); // 获取对比时间
             Timestamp endDate = (Timestamp) map.get("enddate"); // 终止时间
-            if (ObjectUtil.isNull(endDate)) {
+            String dateEnd = dateChange.format(endDate);
+            if (StringUtil.isEmpty(dateEnd)) {
             	decEduExp.setDateEnd(null);
             } else {
-            	if (endDate.equals(createDate) || endDate.equals("2017-07-29 15:25:03.0")) {
+            	if (endDate.equals(createDate) || dateEnd.equals("2017-07-29 15:25:03.0")) {
                     decEduExp.setDateEnd("至今");
                 } else {
-                    String dateEnd = dateChange.format(endDate);
                     decEduExp.setDateEnd(dateEnd);
                 }
 			}
@@ -371,22 +371,22 @@ public class MigrationStageSix {
             decWorkExp.setNote((String) map.get("remark")); // 备注
             SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
             Timestamp startstopDate = (Timestamp) map.get("startstopdate"); // 起始时间
-            if (ObjectUtil.isNull(startstopDate)) {
+        	String dateBegin = dateChange.format(startstopDate);
+            if (StringUtil.isEmpty(dateBegin)) {
             	decWorkExp.setDateBegin(null);
             } else {
-            	String dateBegin = dateChange.format(startstopDate);
                 decWorkExp.setDateBegin(dateBegin);
 			}
             Timestamp createDate = (Timestamp) map.get("createdate"); // 获取对比时间
             Timestamp endDate = (Timestamp) map.get("enddate"); // 终止时间
-            if (ObjectUtil.isNull(endDate)) {
+            String dateEnd = dateChange.format(endDate);
+            if (StringUtil.isEmpty(dateEnd)) {
             	decWorkExp.setDateEnd(null);
             } else {
-            	if (endDate.equals(createDate) || endDate.equals("2017-07-29 15:25:03.0") || 
-                		endDate.equals("0000-00-00 00:00:00")) {
+            	if (endDate.equals(createDate) || dateEnd.equals("2017-07-29 15:25:03.0") || 
+            			dateEnd.equals("0000-00-00 00:00:00")) {
                     decWorkExp.setDateEnd("至今");
                 } else {
-                    String dateEnd = dateChange.format(endDate);
                     decWorkExp.setDateEnd(dateEnd);
                 }
 			}
@@ -445,22 +445,22 @@ public class MigrationStageSix {
             decTeachExp.setNote((String) map.get("remark")); // 备注
             SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
             Timestamp startstopDate = (Timestamp) map.get("startstopdate"); // 起始时间
-            if (ObjectUtil.isNull(startstopDate)) {
+        	String dateBegin = dateChange.format(startstopDate);
+            if (StringUtil.isEmpty(dateBegin)) {
             	decTeachExp.setDateBegin(null);
             } else {
-            	String dateBegin = dateChange.format(startstopDate);
                 decTeachExp.setDateBegin(dateBegin);
 			}
             Timestamp createDate = (Timestamp) map.get("createdate"); // 获取对比时间
             Timestamp endDate = (Timestamp) map.get("enddate"); // 终止时间
-            if (ObjectUtil.isNull(endDate)) {
+            String dateEnd = dateChange.format(endDate);
+            if (StringUtil.isEmpty(dateEnd)) {
             	decTeachExp.setDateEnd(null);
             } else {
-            	if (endDate.equals(createDate) || endDate.equals("2017-07-29 15:25:03.0") || 
-                		endDate.equals("0000-00-00 00:00:00")) {
+            	if (endDate.equals(createDate) || dateEnd.equals("2017-07-29 15:25:03.0") || 
+            			dateEnd.equals("0000-00-00 00:00:00")) {
                     decTeachExp.setDateEnd("至今");
                 } else {
-                    String dateEnd = dateChange.format(endDate);
                     decTeachExp.setDateEnd(dateEnd);
                 }
 			}
