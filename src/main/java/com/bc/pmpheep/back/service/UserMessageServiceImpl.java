@@ -809,22 +809,20 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 		}
 		Long senderUserId = pmphUser.getId();// 新发消息,发送者Id为登陆用户ID
 		// 装储存数据
-		List<UserMessage> userMessageList = new ArrayList<UserMessage>();
+		UserMessage userMessage = new UserMessage();
 		// 私信发送
 		if (null == receiverId) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
 					"接收人为空!");
 		} else {
-			userMessageList.add(new UserMessage(message.getId(), Const.MSG_TYPE_2, senderUserId, Const.SENDER_TYPE_1,
-					receiverId, Const.RECEIVER_TYPE_2));
+			userMessage = new UserMessage(message.getId(), Const.MSG_TYPE_2, senderUserId, Const.SENDER_TYPE_1,
+					receiverId, Const.RECEIVER_TYPE_2);
 		}
 		// 插入消息发送对象数据
-		userMessageDao.addUserMessageBatch(userMessageList);
+		userMessageDao.addUserMessage(userMessage);
 		// websocket发送的id
 		List<String> websocketUserId = new ArrayList<String>();
-		for (UserMessage userMessage : userMessageList) {
-			websocketUserId.add(userMessage.getReceiverType() + "_" + userMessage.getReceiverId());
-		}
+		websocketUserId.add(userMessage.getReceiverType() + "_" + userMessage.getReceiverId());
 		// webscokt发送消息
 		if (CollectionUtil.isNotEmpty(websocketUserId)) {
 			WebScocketMessage webScocketMessage = new WebScocketMessage(message.getId(), Const.MSG_TYPE_2, senderUserId,
@@ -832,6 +830,6 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 					message.getContent(), DateUtil.getCurrentTime());
 			myWebSocketHandler.sendWebSocketMessageToUser(websocketUserId, webScocketMessage);
 		}
-		return userMessageList.size();
+		return userMessageDao.addUserMessage(userMessage);
 	}
 }

@@ -34,7 +34,6 @@ import com.bc.pmpheep.back.po.DecAcade;
 import com.bc.pmpheep.back.po.DecAchievement;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
-import com.bc.pmpheep.back.po.DecExtension;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecNationalPlan;
 import com.bc.pmpheep.back.po.DecResearch;
@@ -50,6 +49,7 @@ import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.ApplicationVO;
+import com.bc.pmpheep.back.vo.DecExtensionVO;
 import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.back.vo.DeclarationOrDisplayVO;
@@ -346,7 +346,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 作家科研
 		List<DecResearch> decResearchList = decResearchDao.getListDecResearchByDeclarationId(declarationId);
 		// 作家扩展项
-		List<DecExtension> decExtensionList = decExtensionDao.getListDecExtensionsByDeclarationId(declarationId);
+		List<DecExtensionVO> decExtensionList = decExtensionDao.getListDecExtensionByDeclarationId(declarationId);
 		// 把查询出来的信息添加进applicationVO
 		applicationVO.setDecPositionList(decPositionList);
 		applicationVO.setDeclaration(declaration);

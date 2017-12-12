@@ -10,7 +10,6 @@ import com.bc.pmpheep.back.po.DecAcade;
 import com.bc.pmpheep.back.po.DecAchievement;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
-import com.bc.pmpheep.back.po.DecExtension;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecNationalPlan;
 import com.bc.pmpheep.back.po.DecResearch;
@@ -51,7 +50,7 @@ public class ApplicationVO implements Serializable {
 	// 科研情况
 	private List<DecResearch> decResearchList = new ArrayList<DecResearch>(5);
 	// 作家扩展项
-	private List<DecExtension> decExtensionList = new ArrayList<DecExtension>(5);
+	private List<DecExtensionVO> decExtensionList = new ArrayList<DecExtensionVO>(5);
 
 	public ApplicationVO() {
 		super();
@@ -153,11 +152,11 @@ public class ApplicationVO implements Serializable {
 		this.decResearchList = decResearchList;
 	}
 
-	public List<DecExtension> getDecExtensionList() {
+	public List<DecExtensionVO> getDecExtensionList() {
 		return decExtensionList;
 	}
 
-	public void setDecExtensionList(List<DecExtension> decExtensionList) {
+	public void setDecExtensionList(List<DecExtensionVO> decExtensionList) {
 		this.decExtensionList = decExtensionList;
 	}
 
