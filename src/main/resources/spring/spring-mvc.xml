@@ -27,22 +27,24 @@
     <mvc:interceptors>  
         <!--AXIOS跨域请求访问拦截 -->
         <mvc:interceptor>
-            <mvc:mapping path="/**/**"/>
+            <mvc:mapping path="/**"/>
             <bean class="com.bc.pmpheep.back.interceptor.ProcessInterceptor"></bean>
         </mvc:interceptor>
        
         <!-- 系统操作日志拦截 -->
         <mvc:interceptor>
             <!-- 只拦截方法 -->
-            <mvc:mapping path="/**/**"/>
+            <mvc:mapping path="/**"/>
             <bean class="com.bc.pmpheep.back.interceptor.OperationLogInterceptor">
                 <!-- 不需要拦截的请求方法-->
-                <property name="excludeUrls">
+                <property name="excludeUrls"> 
                     <list>
                     	<value>/pmph/login</value><!-- 登陆  -->
                     	<value>/pmph/logout</value><!-- 退出  -->
                         <value>/sys/operation/new</value><!-- 操作日志  -->
                         <value>/sys/operation/operations</value><!-- 操作日志 -->
+                        <value>/file/**</value><!-- 文件下载 -->
+                        <value>/image/**</value><!-- 图片加载 -->
                     </list>
                 </property>
             </bean>	
