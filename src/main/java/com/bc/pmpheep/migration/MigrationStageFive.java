@@ -77,28 +77,28 @@ public class MigrationStageFive {
             }
             Long c = (Long) map.get("newmaterid");
             if (ObjectUtil.isNull(c)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("该教材id为空。"));
                 //因教材id不能为空，默认为0
                 c=constant;
                 excel.add(map);
-                logger.error("教材id为空，此结果将将被记录在Excel中");
+                logger.error("该教材id为空，此结果将将被记录在Excel中");
                 //continue;
             }
             Long createuserid = (Long) map.get("bookcreateuserid");
             Long newcreateuseid = (Long) map.get("newcreateuserid");
             if (ObjectUtil.isNull(createuserid) && ObjectUtil.isNull(newcreateuseid)) {
                 /*记录教材书籍表没有的创建者id为空*/
-                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建者id为空。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("该教材的创建者id为空。"));
                 newcreateuseid=constant;
                 excel.add(map);
-                logger.error("创建者id为空，此结果将将被记录在Excel中");
+                logger.error("该教材的创建者id为空，此结果将将被记录在Excel中");
                 //continue;
             }
             String bookname = (String) map.get("bookname");
             if (StringUtil.isEmpty(bookname)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("书籍名称为空。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("该书籍名称为空。"));
                 excel.add(map);
-                logger.error("书籍名称为空，此结果将将被记录在Excel中");
+                logger.error("该书籍名称为空，此结果将将被记录在Excel中");
                 continue;
             }
             java.util.Date ceDate = (java.util.Date) map.get("createdate");
