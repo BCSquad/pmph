@@ -6,9 +6,16 @@ package com.bc.pmpheep.migration;
 
 import com.bc.pmpheep.back.po.CmsCategory;
 import com.bc.pmpheep.back.po.CmsContent;
+import com.bc.pmpheep.back.po.Material;
+import com.bc.pmpheep.back.po.MaterialContact;
+import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.back.service.CmsCategoryService;
 import com.bc.pmpheep.back.service.CmsContentCategoryService;
 import com.bc.pmpheep.back.service.CmsContentService;
+import com.bc.pmpheep.back.service.MaterialContactService;
+import com.bc.pmpheep.back.service.MaterialExtraService;
+import com.bc.pmpheep.back.service.MaterialService;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.po.Content;
@@ -22,7 +29,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,7 +49,7 @@ import org.springframework.stereotype.Component;
 public class MigrationStageTen {
 
     private final Logger logger = LoggerFactory.getLogger(MigrationStageTen.class);
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 
     @Resource
     CmsContentService cmsContentService;
@@ -57,6 +63,12 @@ public class MigrationStageTen {
     ExcelHelper excelHelper;
     @Resource
     ContentService contentService;
+    @Resource
+    MaterialService materialService;
+    @Resource
+    MaterialContactService materialContactService;
+    @Resource
+    MaterialExtraService materialExtraService;
 
     public void start() {
         Date begin = new Date();
@@ -223,5 +235,58 @@ public class MigrationStageTen {
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+    }
+
+    public void materialNotice() {
+        List<Material> materials = materialService.getListMaterial("轮");
+        List<CmsCategory> categorys = cmsCategoryService.getCmsCategoryListByCategoryName("公告");
+        Long categoryId = categorys.get(0).getId();
+        final String html = "<p><strong><span style=\"box-sizing: border-box; margin: 0px; padding: 0px;\">$f</span></strong>$d</p>";
+        final String htmlS1 = "<p><strong><span style=\"box-sizing: border-box; margin: 0px; padding: 0px;\">$d</span></strong></p>";
+        final String htmlS2 = "<p style=\"box-sizing: border-box; margin-top: 0px; margin-bottom: 10px; padding: 0px;\">$d</p>";
+        for (Material material : materials) {
+            CmsContent cmsContent = new CmsContent();
+            cmsContent.setParentId(0L);
+            cmsContent.setCategoryId(categoryId);
+            cmsContent.setPath("0");
+            cmsContent.setTitle(material.getMaterialName());
+            cmsContent.setAuthorType((short) 0);
+            cmsContent.setMaterialId(material.getId());
+            /* 生成通知内容 */
+            StringBuilder sb = new StringBuilder();
+            String str = html.replace("$f", "截止日期：");
+            str = str.replace("$d", sdf.format(material.getDeadline()));
+            sb.append(str);
+            /* 获取教材联系人 */
+            List<MaterialContact> contacts = materialContactService.listMaterialContactByMaterialId(categoryId);
+            if (CollectionUtil.isNotEmpty(contacts)) {
+                str = htmlS1.replace("$f", "联系人：");
+                sb.append(str);
+                for (MaterialContact contact : contacts) {
+                    /* 裴中惠&nbsp;(电话：010-59787110&nbsp;,&nbsp;Email：pzh@pmph.com) */
+                    StringBuilder builder = new StringBuilder(contact.getContactUserName());
+                    builder.append("&nbsp;(电话：");
+                    builder.append(contact.getContactPhone());
+                    builder.append("&nbsp;,&nbsp;Email：");
+                    builder.append(contact.getContactEmail());
+                    builder.append(")");
+                    str = htmlS2.replace("$d", builder.toString());
+                    sb.append(str);
+                }
+            }
+            str = html.replace("$f", "邮寄地址：");
+            str = str.replace("$d", material.getMailAddress());
+            sb.append(str);
+            /* 获取通知内容和备注 */
+            MaterialExtra extra = materialExtraService.getMaterialExtraByMaterialId(material.getId());
+            str = htmlS1.replace("$d", "简&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;介：");
+            sb.append(str);
+            if (null != extra) {
+                //str = htmlS2.replace("$d", extra.getNotice()) /* 存入MongoDB */
+            }
+            Content content = new Content(sb.toString());
+            content = contentService.add(content);
+            cmsContent.setMid(content.getId());
+        }
     }
 }
