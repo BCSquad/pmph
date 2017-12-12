@@ -1,5 +1,6 @@
 package com.bc.pmpheep.migration;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -41,6 +42,7 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
+
 import java.util.ArrayList;
 
 /**
@@ -79,6 +81,8 @@ public class MigrationStageFour {
     private MaterialOrgService materialOrgService;
     @Autowired
     private MaterialProjectEditorService materialProjectEditorService;
+    
+    private List<Map<TitleEnum, Object>> excptionMap = new LinkedList<Map<TitleEnum, Object>>( );
 
     public void start() {
         Date begin = new Date();
@@ -91,6 +95,13 @@ public class MigrationStageFour {
         transferMaterialContact();
         materialOrg();
         materialPprojectEeditor();
+        try {
+        	excelHelper.exportFromMaps(trans(), "教材块问题数据导出", "for客户");
+		}catch (IOException e) {
+			logger.error("异常数据导出到Excel失败", e);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
         logger.info("迁移第四步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
@@ -267,21 +278,23 @@ public class MigrationStageFour {
                 founder_id = 0L;
             }
             Integer round = (Integer) oldMaterial.get("round");
-            if (ObjectUtil.isNull(round)) {
-                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("轮次为空,设默认值1。"));
-                excel.add(oldMaterial);
-                round = 1;
+            if (ObjectUtil.isNull(round)) {//没有轮次的设置默认值为0。
+//                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("轮次为空,设默认值1。"));
+//                excel.add(oldMaterial);
+                round = 0;
+                saveProblem(matername,"教材没有轮次","导入新库表,设默认值0");
             }
             Long booktypesid = (Long) oldMaterial.get("booktypesid");
             if (ObjectUtil.isNull(booktypesid)) {
                 oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("架构为空，设为默认0。"));
                 excel.add(oldMaterial);
                 booktypesid = 0L;
+                saveProblem(matername,"教材没有分类","导入新库表,设为默认0");
             }
             Long mender_id = (Long) oldMaterial.get("mender_id");
             if (ObjectUtil.isNull(mender_id)) {
-                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("修改人为空,设置默认为创建者。"));
-                excel.add(oldMaterial);
+//                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("修改人为空,设置默认为创建者。"));
+//                excel.add(oldMaterial);
                 mender_id = founder_id;
             }
             Material material = new Material();
@@ -371,6 +384,7 @@ public class MigrationStageFour {
             String oldExpendid = (String) materialExtension.get("expendid");
             StringBuilder exception = new StringBuilder();
             Long materid = (Long) materialExtension.get("materid");
+            String matername = materialService.getMaterialNameById(materid);
             if (ObjectUtil.isNull(materid)) {
                 materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空。"));
                 excel.add(materialExtension);
@@ -381,6 +395,8 @@ public class MigrationStageFour {
                 materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append("扩展名称为空。设定默认值\"-\""));
                 excel.add(materialExtension);
                 expendname="-";
+                saveProblem(matername,"教材有扩展项，但是扩展项名称为空","未处理");
+                continue;
             }
             MaterialExtension newMaterialExtension = new MaterialExtension();
             newMaterialExtension.setMaterialId(materid);
@@ -431,15 +447,18 @@ public class MigrationStageFour {
                 continue;
             }
             String notice = (String) object.get("introduction");
+            String matername = materialService.getMaterialNameById(materid);
             if (StringUtil.isEmpty(notice)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("通知内容为空。"));
                 excel.add(object);
+                saveProblem(matername,"教材通知内容为空","未处理");
                 continue;
             }
             String note = (String) object.get("remark");
             if (StringUtil.isEmpty(note)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("备注。"));
                 excel.add(object);
+                saveProblem(matername,"教材通知备注为空","未处理");
                 continue;
             }
             MaterialExtra materialExtra = new MaterialExtra();
@@ -505,7 +524,11 @@ public class MigrationStageFour {
             materialNoticeAttachment.setDownload(1L);
             materialNoticeAttachment = materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
             if (ObjectUtil.notNull(materialNoticeAttachment.getId())) {
-                String mongoId;
+            	if(!new File((String) map.get("filedir")).exists()){
+            		saveProblem(materialService.getMaterialNameById(newMaterid),"教材通知内容附件'"+fileName+"'找不到","未处理");
+            		continue;
+            	}
+            	String mongoId;
                 try {
                     mongoId = fileService.migrateFile((String) map.get("filedir"), FileType.MATERIAL_NOTICE_ATTACHMENT, materialNoticeAttachment.getId());
                 } catch (IOException ex) {
@@ -584,6 +607,10 @@ public class MigrationStageFour {
             materialNoteAttachment = materialNoteAttachmentService.addMaterialNoteAttachment(materialNoteAttachment);
             count++;
             if (ObjectUtil.notNull(materialNoteAttachment.getId())) {
+            	if(!new File((String) map.get("filedir")).exists()){
+            		saveProblem(materialService.getMaterialNameById(newMaterid),"教材通知备注附件'"+fileName+"'找不到","未处理");
+            		continue;
+            	}
                 String mongoId;
                 try {
                     mongoId = fileService.migrateFile((String) map.get("filedir"), FileType.MATERIAL_NOTE_ATTACHMENT, materialNoteAttachment.getId());
@@ -713,7 +740,8 @@ public class MigrationStageFour {
         String sql = "select  "
                 + "a.pushschoolid , "
                 + "b.new_pk materid, "
-                + "c.new_pk orgid "
+                + "c.new_pk orgid, "
+                + "a.orgid  oldorgid "
                 + "from teach_pushschool  a  "
                 + "LEFT JOIN teach_material  b on b.materid = a.materid "
                 + "LEFT JOIN ba_organize c on c.orgid = a.orgid "
@@ -735,8 +763,9 @@ public class MigrationStageFour {
             }
             Long orgid = (Long) object.get("orgid");
             if (ObjectUtil.isNull(orgid)) {
-                object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("结构id为空。"));
+                object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("机构id为空。"));
                 excel.add(object);
+                saveProblem(materialService.getMaterialNameById(materid),"教材找不到id为'"+object.get("oldorgid")+"'的发布学校","该条数据没有迁移至新的数据库");
                 continue;
             }
             MaterialOrg materialOrg = new MaterialOrg();
@@ -817,5 +846,48 @@ public class MigrationStageFour {
         msg.put("result", "MaterialProjectEditor  表迁移完成" + count + "/" + materialProjectEditorList.size());
         SQLParameters.STATISTICS.add(msg);
     }
-
+    /***********************************下面是辅助方法******************************************************/
+    
+    public  List<Map<String, Object>>  trans(){
+    	List<Map<String, Object>> temp = new LinkedList<Map<String, Object>>( );
+    	for(Map<TitleEnum, Object> map:excptionMap){
+    		Map<String, Object> tempMap = new HashMap<>();
+    		for (TitleEnum in : map.keySet()) {  //map.keySet()返回的是所有key的值           
+    	        Object obj = map.get(in);        //得到每个key多对用value的值
+    	        tempMap.put(in.getName(), obj) ;
+    		}
+    		temp.add(tempMap);
+    	}
+    	return temp ;
+    }
+    
+    
+    public  void saveProblem(Object matername,Object problem ,Object dealWay){
+    	 Map<TitleEnum, Object> tempMap = new HashMap<TitleEnum, Object>();
+         tempMap.put(TitleEnum.MATERIAL, matername);
+         tempMap.put(TitleEnum.PROBLEM,  problem);
+         tempMap.put(TitleEnum.DEALWAY,  dealWay);
+         excptionMap.add(tempMap);
+    }
+    
 }
+
+enum TitleEnum {
+	MATERIAL("教材名称"),PROBLEM("问题"),DEALWAY("处理方式");
+	// 成员变量  
+    private String name;   
+    // 构造方法  
+    private TitleEnum(String name) {  
+        this.name = name;  
+    }  
+    // get 方法  
+    public String getName() {  
+        return name;  
+    }  
+}
+
+
+
+
+
+
