@@ -778,9 +778,6 @@ public class MigrationStageSix {
             Integer position = positionJudge.intValue();
             decTextbook.setPosition(position);
             decTextbook.setPublisher(publisher);
-            if (publishDate.equals("0000-00-00 00:00:00")) {
-                decTextbook.setPublishDate(null);
-            }
             decTextbook.setPublishDate(publishDate);
             if (StringUtil.notEmpty(isbn)) {
                 isbn = isbn.trim();
