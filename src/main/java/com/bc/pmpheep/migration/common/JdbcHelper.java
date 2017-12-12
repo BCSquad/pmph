@@ -196,7 +196,11 @@ public class JdbcHelper {
             experience = experience.replace("年", "").replace("五", "5").replace("s", "").replace(" ", "")
                     .replace("内", "").replace("多", "");
         }
-        if (Integer.parseInt(experience) > 128) {
+        try {
+            if (Integer.parseInt(experience) > 128) {
+                experience = "0";
+            }
+        } catch (NumberFormatException ex) {
             experience = "0";
         }
         return experience;
