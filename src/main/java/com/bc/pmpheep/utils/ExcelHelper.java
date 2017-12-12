@@ -178,6 +178,9 @@ public class ExcelHelper {
 	 */
 	public void exportFromMaps(List<Map<String, Object>> maps, String sheetname, String path)
 			throws FileNotFoundException, IOException {
+		if(maps.size() < 1 ){
+			return ;
+		}
 		LinkedHashSet<Map<String, Object>> set = new LinkedHashSet<>();
 		set.addAll(maps);
 		maps.clear();
