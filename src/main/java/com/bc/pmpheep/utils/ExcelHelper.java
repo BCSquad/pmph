@@ -178,6 +178,9 @@ public class ExcelHelper {
 	 */
 	public void exportFromMaps(List<Map<String, Object>> maps, String sheetname, String path)
 			throws FileNotFoundException, IOException {
+		if(maps.size() < 1 ){
+			return ;
+		}
 		LinkedHashSet<Map<String, Object>> set = new LinkedHashSet<>();
 		set.addAll(maps);
 		maps.clear();
@@ -265,6 +268,7 @@ public class ExcelHelper {
 	 */
 	public Workbook fromDeclarationEtcBOList(List<DeclarationEtcBO> dataSource, String sheetName)
 			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
+		long startTime = System.currentTimeMillis();// 获取当前时间
 		if (null == dataSource || dataSource.isEmpty()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"用于导出Excel的数据源为空");
@@ -358,6 +362,9 @@ public class ExcelHelper {
 			}
 			rowCount++;
 		}
+		long endTime = System.currentTimeMillis();
+		System.err.println("------------------------------------------");
+		System.err.println("导入excel时间：" + (endTime - startTime) + "ms");
 		/* 样式调整 */
 		return dataStyleSetup(workbook, 2, rowCount, columnProperties);
 	}

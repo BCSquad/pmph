@@ -318,7 +318,6 @@ public class FileDownLoadController {
 	public void declarationWord(Long materialId, String textBookids, String realname, String position, String title,
 			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
 			HttpServletResponse response) {
-		long startTime = System.currentTimeMillis();// 获取当前时间
 		String tempDir = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
 		String materialName = materialService.getMaterialNameById(materialId);
 		List<Textbook> textbooks = textbookService.getTextbookByMaterialId(materialId);
@@ -329,6 +328,7 @@ public class FileDownLoadController {
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
+		long startTime = System.currentTimeMillis();// 获取当前时间
 		for (int i = 0; i < textbooks.size(); i++) {
 			List<DeclarationEtcBO> list = new ArrayList<>();
 			for (DeclarationEtcBO declarationEtcBO : declarationEtcBOs) {
@@ -352,7 +352,8 @@ public class FileDownLoadController {
 			wordHelper.export(materialName, sb.toString(), list);
 		}
 		long endTime = System.currentTimeMillis();
-		System.err.println("程序运行时间：" + (endTime - startTime) + "ms");
+		System.err.println("------------------------------------------");
+		System.err.println("打包下载时间：" + (endTime - startTime) + "ms");
 	}
 
 }
