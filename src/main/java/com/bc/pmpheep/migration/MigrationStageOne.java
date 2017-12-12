@@ -450,6 +450,10 @@ public class MigrationStageOne {
             if (JdbcHelper.judgeExperience(experienceNum)) {
                 //如果教龄数据不符合规范，调用公共方法将其转变为合乎规范的数据
                 experienceNum = JdbcHelper.correctExperience(experienceNum);
+                if ("其他".equals(experienceNum)){
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("此教龄数据无法通过合适方法修改插入新数据库，"));
+                	excel.add(map);
+                }
             }
             Integer experience = Integer.parseInt(experienceNum);
             String workPlace = (String) map.get("unitid");
