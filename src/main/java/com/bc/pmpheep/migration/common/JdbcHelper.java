@@ -191,7 +191,7 @@ public class JdbcHelper {
             experience = String.valueOf(age);
         } else {
             experience = experience.replace("年", "").replace("五", "5").replace("s", "").replace(" ", "")
-                    .replace("内", "");
+                    .replace("内", "").replace("个", "").replace("月", "");
         }
         return experience;
     }
