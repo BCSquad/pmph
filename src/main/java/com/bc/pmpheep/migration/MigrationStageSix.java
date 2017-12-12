@@ -199,10 +199,8 @@ public class MigrationStageSix {
             declaration.setPosition((String) map.get("duties")); // 职务
             declaration.setTitle((String) map.get("positional")); // 职称
             declaration.setAddress((String) map.get("address")); // 联系地址
-            if (StringUtil.notEmpty(postCode)) {
-                if (StringUtil.strLength(postCode) > 20) {
-                	declaration.setPostcode("100000");
-                }
+            if (StringUtil.strLength(postCode) > 20) {
+            	declaration.setPostcode("100000");
             }
             declaration.setPostcode(postCode); // 邮编
             declaration.setHandphone((String) map.get("handset")); // 手机
