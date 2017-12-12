@@ -43,7 +43,9 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     SysOperationService  sysOperationService;
-
+    /**
+     * 不需要拦截的url请求方法集合
+     */
     private List<String> excludeUrls;
 
     public List<String> getExcludeUrls() {
