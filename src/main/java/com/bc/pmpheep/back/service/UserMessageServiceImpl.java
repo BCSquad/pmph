@@ -311,7 +311,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             for (OrgUser orgUser : orgUserList) {
                 userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
                                                     senderUserId, Const.SENDER_TYPE_1,
-                                                    orgUser.getId(), Const.RECEIVER_TYPE_3, null));
+                                                    orgUser.getId(), Const.RECEIVER_TYPE_3, 0L));
             }
             // 作家用户
             if (Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
@@ -321,7 +321,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                     userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
                                                         senderUserId, Const.SENDER_TYPE_1,
                                                         writerUser.getId(), Const.RECEIVER_TYPE_2,
-                                                        null));
+                                                        0L));
                 }
             }
         }
