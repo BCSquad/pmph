@@ -37,7 +37,7 @@ public class ApplicationVO implements Serializable {
 	// 主要教学经历
 	private List<DecTeachExp> decTeachExpList = new ArrayList<DecTeachExp>(5);
 	// 个人成就
-	private DecAchievement decAchievementList;
+	private DecAchievement decAchievement = new DecAchievement();
 	// 主要学术兼职
 	private List<DecAcade> decAcadeList = new ArrayList<DecAcade>(5);
 	// 上版教材参编情况
@@ -97,12 +97,12 @@ public class ApplicationVO implements Serializable {
 		this.decTeachExpList = decTeachExpList;
 	}
 
-	public DecAchievement getDecAchievementList() {
-		return decAchievementList;
+	public DecAchievement getDecAchievement() {
+		return decAchievement;
 	}
 
-	public void setDecAchievementList(DecAchievement decAchievementList) {
-		this.decAchievementList = decAchievementList;
+	public void setDecAchievement(DecAchievement decAchievement) {
+		this.decAchievement = decAchievement;
 	}
 
 	public List<DecAcade> getDecAcadeList() {

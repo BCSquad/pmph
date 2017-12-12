@@ -3,9 +3,7 @@
  */
 package com.bc.pmpheep.back.service;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +11,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +56,6 @@ import com.bc.pmpheep.back.vo.DeclarationOrDisplayVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
-import com.bc.pmpheep.utils.ExcelHelper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -357,7 +353,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		applicationVO.setDecEduExpList(decEduExpList);
 		applicationVO.setDecWorkExpList(decWorkExpList);
 		applicationVO.setDecTeachExpList(decTeachExpList);
-		applicationVO.setDecAchievementList(decAchievement);
+		applicationVO.setDecAchievement(decAchievement);
 		applicationVO.setDecAcadeList(decAcadeList);
 		applicationVO.setDecLastPositionList(decLastPositionList);
 		applicationVO.setDecCourseConstruction(decCourseConstruction);
