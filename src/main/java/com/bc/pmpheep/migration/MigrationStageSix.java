@@ -205,7 +205,7 @@ public class MigrationStageSix {
                 	declaration.setPostcode("100000");
                 }
             }
-            declaration.setPostcode(postCode); // 邮编
+            //declaration.setPostcode(postCode); // 邮编
             declaration.setHandphone((String) map.get("handset")); // 手机
             declaration.setEmail((String) map.get("email")); // 邮箱
             declaration.setIdtype((Short) map.get("idcardtype1")); // 证件类型
