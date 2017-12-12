@@ -102,4 +102,12 @@
 		from
 		dec_extension
 	</select>
+	
+	<!-- 获取DecExtension集包含名称通过declarationId -->
+	<select id="getListDecExtensionByDeclarationId" parameterType="java.lang.Long" 
+	resultType="DecExtensionVO" >  
+	    select *,me.extension_name from dec_extension de 
+		left join (select * from material_extension) me on (me.id=de.extension_id) 
+	    where declaration_id=#{declarationId};
+	</select> 
 </mapper>

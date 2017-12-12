@@ -17,7 +17,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public interface DecExtensionService {
 
 	/**
-	 * @param DecExtension 实体对象
+	 * @param DecExtensionVO 实体对象
 	 * @return DecExtension带主键
 	 * @throws CheckedServiceException
 	 */
@@ -41,7 +41,7 @@ public interface DecExtensionService {
 	Integer  deleteDecExtensionByExtensionId(Long extensionId) throws CheckedServiceException;
 	
 	/**
-	 * @param DecExtension 实体对象
+	 * @param DecExtensionVO 实体对象
 	 * @return Integer影响行数
 	 * @throws CheckedServiceException
 	 */
