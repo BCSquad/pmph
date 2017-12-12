@@ -183,7 +183,7 @@ public class JdbcHelper {
      */
     public static String correctExperience(String experience) {
         if (StringUtil.isEmpty(experience) || "无".equals(experience) || "、".equals(experience)
-        		|| "其他".equals(experience) || Integer.parseInt(experience) > 128) {
+        		|| "其他".equals(experience)) {
             experience = "0";
         }
         if (experience.contains("岁")) {
@@ -195,6 +195,9 @@ public class JdbcHelper {
         } else {
             experience = experience.replace("年", "").replace("五", "5").replace("s", "").replace(" ", "")
                     .replace("内", "");
+        }
+        if (Integer.parseInt(experience) > 128){
+        	experience = "0";
         }
         return experience;
     }
