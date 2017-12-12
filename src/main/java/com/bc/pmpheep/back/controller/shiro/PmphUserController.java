@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * 
@@ -60,6 +62,37 @@ public class PmphUserController {
 	PmphDepartmentService pmphDepartmentService;
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "社内用户";
+	
+	/**
+	 * 获取社内用户
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年12月11日 下午5:19:15
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据主键 获取用户要更新的信息")
+	@RequestMapping(value = "/getInfo", method = RequestMethod.GET)
+	public ResponseBean getInfo(HttpServletRequest request){
+		return new ResponseBean(userService.getInfo(request));
+	}
+	
+	/**
+	 * 获取社内用户
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年12月11日 下午5:19:15
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新密码")
+	@RequestMapping(value = "/updatePassword", method = RequestMethod.PUT)
+	public ResponseBean updatePassword(HttpServletRequest request,@RequestParam("oldPassword")String oldPassword,@RequestParam("newPassword")String newPassword){
+		return new ResponseBean(userService.updatePassword(request,oldPassword, newPassword));
+	}
+	
 	
 	/**
 	 * 修改个人信息

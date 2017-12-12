@@ -121,6 +121,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 //		    MultipartFile[]   noticeFiles,
 //		    MultipartFile[]   noteFiles,
 		    boolean isUpdate) throws CheckedServiceException, IOException {
+		if(null == request.getSession(false)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"会话过期");
+		}
 		// 获取当前用户
 		String sessionId = CookiesUtil.getSessionId(request);
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -401,9 +404,6 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		List<MaterialNoticeAttachment> oldMaterialNoticeAttachmentlist = materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
 		String newTempNoticeFileIds = ",";
 //		String realpath = request.getSession().getServletContext().getRealPath("/");
-		if(null == request.getSession(false)){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"会话过期");
-		}
 		for(MaterialNoticeAttachment materialNoticeAttachment: materialNoticeAttachmentlist){
 			if(null == materialNoticeAttachment.getId()){
 //				String tempPath = realpath + materialNoticeAttachment.getAttachment() ;
@@ -412,7 +412,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 //					continue;
 //				}
 //				String fileName =file.getName() ;
-				MultipartFile file =(MultipartFile) request.getSession().getAttribute(materialNoticeAttachment.getAttachment());
+				String tempFileId = materialNoticeAttachment.getAttachment();
+				MultipartFile file =(MultipartFile) request.getSession(false).getAttribute(tempFileId);
 				String fileName = file.getOriginalFilename();
 				materialNoticeAttachment.setAttachment(String.valueOf(new Date().getTime()));
 				materialNoticeAttachment.setAttachmentName(fileName);
@@ -428,7 +429,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				// 更新通知
 				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
 				//移除session的文件
-				request.getSession().removeAttribute(materialNoticeAttachment.getAttachment());
+				request.getSession(false).removeAttribute(tempFileId);
 //				//删除文件
 //				if(file.exists()){
 //					file.delete();
@@ -466,7 +467,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 //					continue;
 //				}
 //				String fileName =file.getName() ;
-				MultipartFile file =(MultipartFile) request.getSession().getAttribute(materialNoteAttachment.getAttachment());
+				String tempFileId  =  materialNoteAttachment.getAttachment() ;
+				MultipartFile file =(MultipartFile) request.getSession().getAttribute(tempFileId);
 				String fileName =file.getOriginalFilename() ;
 				materialNoteAttachment.setAttachment(String.valueOf(new Date().getTime()));
 				materialNoteAttachment.setAttachmentName(fileName);
@@ -482,7 +484,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				// 更新备注
 				materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
 				//移除session的文件
-				request.getSession().removeAttribute(materialNoteAttachment.getAttachment());
+				request.getSession().removeAttribute(tempFileId);
 //				//删除文件
 //				if(file.exists()){
 //					file.delete();
@@ -925,7 +927,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 //    		FileUpload.upMultipartFile(file,tempPath,request);//上传文件
 //    		filsRelativePaths.add(tempPath+file.getOriginalFilename());//返回相对路径
     		//先放置在session里面 有空再来解决存储路径的问题
-    		request.getSession().setAttribute(uuid.toString(),file);
+    		request.getSession(false).setAttribute(uuid.toString(),file);
     		filsRelativePaths.add(uuid.toString());
     	}
         return filsRelativePaths;

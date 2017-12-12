@@ -55,6 +55,13 @@ public interface DecCourseConstructionDao {
 	 * @Param declarationId
 	 * @Return 精品课程建设情况信息
 	 */
+	List<DecCourseConstruction> getDecCourseConstructionByDeclarationIds(List<Long> declarationId);
+	
+	/**
+	 * Description:根据申报表id查询精品课程建设情况信息
+	 * @Param declarationId
+	 * @Return 精品课程建设情况信息
+	 */
 	List<DecCourseConstruction> getDecCourseConstructionByDeclarationId(Long declarationId);
 	
 	/**

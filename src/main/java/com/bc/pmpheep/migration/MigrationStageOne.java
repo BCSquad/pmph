@@ -145,9 +145,6 @@ public class MigrationStageOne {
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数。");
-                excel.add(map);
-                logger.error("显示顺序为负数，此结果将被记录在Excel中");
             }
             OrgType orgType = new OrgType();
             orgType.setTypeName(orgName);
@@ -212,9 +209,6 @@ public class MigrationStageOne {
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("显示顺序为负数。"));
-                excel.add(map);
-                logger.error("显示顺序为负数，此结果将被记录在Excel中");
             }
             String note = (String) map.get("remark");
             Integer isDeleted = (Integer) map.get("isdelete");
@@ -330,9 +324,6 @@ public class MigrationStageOne {
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("显示顺序为负数。"));
-                excel.add(map);
-                logger.error("显示顺序为负数，此结果将被记录在Excel中");
             }
             OrgUser orgUser = new OrgUser();
             orgUser.setUsername(username);
@@ -401,7 +392,7 @@ public class MigrationStageOne {
     protected void writerUser() {
         String tableName = "sys_user";
         String sql = "SELECT a.userid,a.usercode,a.`password`,a.isvalid,d.new_pk org_new_pk,a.username,b.sex,"
-                + "b.birthdate,b.seniority,b.duties,b.positional,b.fax,b.handset,b.phone,b.idcard,b.email,"
+                + "b.birthdate,b.seniority,b.unitid,b.duties,b.positional,b.fax,b.handset,b.phone,b.idcard,b.email,"
                 + "b.address,b.postcode,"
                 + "CASE WHEN b.usertype=4 THEN 1 WHEN b.usertype=1 OR b.usertype=6 THEN 2 "
                 + "WHEN b.usertype=5 OR b.usertype=7 THEN 3 ELSE 0 END rank,"
@@ -459,11 +450,14 @@ public class MigrationStageOne {
             if (JdbcHelper.judgeExperience(experienceNum)) {
                 //如果教龄数据不符合规范，调用公共方法将其转变为合乎规范的数据
                 experienceNum = JdbcHelper.correctExperience(experienceNum);
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("教龄数据不符合新表类型规范。"));
-                excel.add(map);
-                logger.info("教龄数据不符合新表类型规范，此结果将被记录在Excel中");
+                if ("0".equals(experienceNum)){
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("此教龄数据没有值，为“无”，“、”，"
+                			+ "“其他”或数字远远超出人的寿命，无法通过合适方法修改插入新数据库，"));
+                	excel.add(map);
+                } 
             }
             Integer experience = Integer.parseInt(experienceNum);
+            String workPlace = (String) map.get("unitid");
             String position = (String) map.get("duties");
             String title = (String) map.get("positional");
             String fax = (String) map.get("fax");
@@ -495,9 +489,6 @@ public class MigrationStageOne {
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("显示顺序数据为负数。"));
-                excel.add(map);
-                logger.info("显示顺序数据为负数，此结果将被记录在Excel中");
             }
             WriterUser writerUser = new WriterUser();
             writerUser.setUsername(username);
@@ -509,6 +500,7 @@ public class MigrationStageOne {
             writerUser.setSex(sex);
             writerUser.setBirthday(birthday);
             writerUser.setExperience(experience);
+            writerUser.setWorkPlace(workPlace);
             writerUser.setPosition(position);
             writerUser.setTitle(title);
             writerUser.setFax(fax);

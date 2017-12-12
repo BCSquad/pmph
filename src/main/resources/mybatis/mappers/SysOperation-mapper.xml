@@ -71,7 +71,7 @@
 		) ;
 	</insert>
 
-	<!--SysOperation模糊查询获取列表 -->
+	<!--SysOperation模糊查询获取列表  -->
 	<select id="getListSysOperation" parameterType="PageParameter" resultType="SysOperation">
 		SELECT 
 			so.*,
@@ -93,7 +93,12 @@
 								 	so.`user_real_name` like concat('%',#{parameter.userName},'%') 
 								 )
 						</if>
-						<if test="parameter.operateDate !=null ">
+						<if test="parameter.startTime !=null and parameter.startTime !='' ">
+							and so.`operate_date` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+							
+						</if>
+						<if test="parameter.endTime !=null and parameter.endTime !='' ">
+							and so.`operate_date` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
 						</if>
 				   </if>
 			)t
@@ -107,9 +112,13 @@
 							so.`user_real_name` like concat('%',#{parameter.userName},'%') 
 						)
 				</if>
-				<if test="parameter.operateDate !=null ">
+				<if test="parameter.startTime !=null and parameter.startTime !='' ">
+					and so.`operate_date` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
 				</if>
-			</if>
+				<if test="parameter.endTime !=null and parameter.endTime !='' ">
+					and so.`operate_date` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+			 </if>
 			order by 
 				so.id desc
 			LIMIT

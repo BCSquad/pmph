@@ -100,7 +100,7 @@ public class MaterialExtraController {
     @ResponseBody
     @LogDetail(businessType = BUSINESS_TYPE, logRemark = "查询历史教材通知列表")
     @RequestMapping(value = "/history", method = RequestMethod.GET)
-    public ResponseBean material(
+    public ResponseBean history(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize", defaultValue = "5") Integer pageSize,
     HttpServletRequest request) {

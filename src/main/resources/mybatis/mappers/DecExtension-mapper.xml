@@ -48,11 +48,12 @@
 
 	<!-- 根据id删除一个 -->
 	<delete id="deleteDecExtension" parameterType="java.lang.Long">
-		delete from dec_extension where
+		delete from
+		dec_extension where
 		id=#{id} ;
 	</delete>
-	
-	<!-- 根据extensionId 删除 DecExtension-->
+
+	<!-- 根据extensionId 删除 DecExtension -->
 	<delete id="deleteDecExtensionByExtensionId" parameterType="java.lang.Long">
 		delete from dec_extension where extension_id = #{extensionId} ;
 	</delete>
@@ -80,26 +81,36 @@
 		resultType="DecExtension">
 		select * from dec_extension where id=#{id} ;
 	</select>
-	
+
 	<!-- 获取DecExtension集通过extensionId -->
-	<select id="getListDecExtensionsByExtensionId" parameterType="java.lang.Long" 
-	resultType="DecExtension" >  
-	    select * from dec_extension where
+	<select id="getListDecExtensionsByExtensionId" parameterType="java.lang.Long"
+		resultType="DecExtension">
+		select * from dec_extension where
 		extension_id=#{extensionId};
-	</select> 
-	
+	</select>
+
 	<!-- 获取DecExtension集通过declarationId -->
-	<select id="getListDecExtensionsByDeclarationId" parameterType="java.lang.Long" 
-	resultType="DecExtension" >  
-	    select * from dec_extension where
+	<select id="getListDecExtensionsByDeclarationId" parameterType="java.lang.Long"
+		resultType="DecExtension">
+		select * from dec_extension where
 		declaration_id=#{declarationId};
-	</select> 
-	
+	</select>
+
 	<!-- 查询表单的数据总数 -->
 	<select id="getDecExtensionCount" resultType="Long">
 		select
 		count(*)
 		from
 		dec_extension
+	</select>
+
+	<!-- 获取DecExtension集包含名称通过declarationId -->
+	<select id="getListDecExtensionByDeclarationId" parameterType="java.lang.Long"
+		resultType="DecExtensionVO">
+		select *,me.extension_name from dec_extension de
+		left join
+		(select * from material_extension) me on (me.id=de.extension_id)
+		where
+		declaration_id=#{declarationId};
 	</select>
 </mapper>

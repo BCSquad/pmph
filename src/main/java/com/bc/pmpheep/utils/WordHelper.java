@@ -21,14 +21,18 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
@@ -48,10 +52,53 @@ public class WordHelper {
     private final Logger logger = LoggerFactory.getLogger(WordHelper.class);
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-    public HashMap<String, XWPFDocument> fromDeclarationEtcBOList(List<DeclarationEtcBO> list) throws CheckedServiceException {
+    /**
+     * 将某套教材单本书籍下的多个专家信息批量导出Word到指定目录
+     *
+     * @param materialName 教材名称
+     * @param textbookPath 系统唯一临时文件目录/教材名/书序和书名的组合，例如"/home/temp35723882/五年九轮/1.心理学"
+     * @param list DeclarationEtcBO对象集合
+     * @throws CheckedServiceException 已检查的异常
+     */
+    public void export(String materialName, String textbookPath, List<DeclarationEtcBO> list) throws CheckedServiceException {
+        HashMap<String, XWPFDocument> map = fromDeclarationEtcBOList(materialName, list);
+        if (createPath(textbookPath)) {
+            if (!textbookPath.endsWith(File.separator)) {
+                textbookPath = textbookPath.concat(File.separator);
+            }
+            File file;
+            for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
+                file = new File(textbookPath.concat(entry.getKey()));
+                try {
+                    FileOutputStream out = new FileOutputStream(file);
+                    entry.getValue().write(out);
+                    out.flush();
+                    out.close();
+                } catch (IOException ex) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                            CheckedExceptionResult.FILE_CREATION_FAILED, "未能创建Word文件");
+                }
+            }
+        } else {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                    CheckedExceptionResult.DIRECTORY_CREATION_FAILED, "未能创建目录");
+        }
+    }
+
+    /**
+     * 从一个或多个专家信息对象中读取数据，转化成若干Word文档
+     *
+     * @param materialName 教材名称
+     * @param list DeclarationEtcBO实例集合
+     * @return 包含文档名称和Word格式文档的键值对
+     * @throws CheckedServiceException 已检查的异常
+     */
+    public HashMap<String, XWPFDocument> fromDeclarationEtcBOList(String materialName, List<DeclarationEtcBO> list)
+            throws CheckedServiceException {
         InputStream is;
         XWPFDocument document;
         String path = this.getClass().getClassLoader().getResource("ResumeTemplate.docx").getPath();
+        path = path.replaceAll("%20", " ");
         HashMap<String, XWPFDocument> map = new HashMap<>(list.size());
         for (DeclarationEtcBO bo : list) {
             try {
@@ -60,7 +107,11 @@ public class WordHelper {
             } catch (IOException ex) {
                 logger.error("读取Word模板文件'ResumeTemplate.docx'时出现错误：{}", ex.getMessage());
                 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                        CheckedExceptionResult.CREATE_FILE_FAILED, "未找到模板文件");
+                        CheckedExceptionResult.FILE_CREATION_FAILED, "未找到模板文件");
+            }
+            if (StringUtil.notEmpty(materialName)) {
+                List<XWPFRun> runs = document.getParagraphs().get(0).getRuns();
+                runs.get(0).setText(materialName.concat("专家申报表"), 0);
             }
             /* 申报单位 */
             String chosenOrgName = bo.getChosenOrgName();
@@ -73,13 +124,13 @@ public class WordHelper {
             fillDecEduExpData(tables.get(1), bo.getDecEduExps());
             fillDecWorkExpData(tables.get(2), bo.getDecWorkExps());
             fillDecTeachExpData(tables.get(3), bo.getDecTeachExps());
-            fillDecAchievementData(tables.get(4),bo.getDecAchievement());
-            fillDecAcadeData(tables.get(5),bo.getDecAcades());
-            fillDecLastPositionData(tables.get(6),bo.getDecLastPositions());
-            fillDecCourseConstructionData(tables.get(7),bo.getDecCourseConstructions());
-            fillDecNationalPlanData(tables.get(8),bo.getDecNationalPlans());
+            fillDecAchievementData(tables.get(4), bo.getDecAchievement());
+            fillDecAcadeData(tables.get(5), bo.getDecAcades());
+            fillDecLastPositionData(tables.get(6), bo.getDecLastPositions());
+            fillDecCourseConstructionData(tables.get(7), bo.getDecCourseConstructions());
+            fillDecNationalPlanData(tables.get(8), bo.getDecNationalPlans());
             fillDecTextbookData(tables.get(9), bo.getDecTextbooks());
-            fillDecResearchData(tables.get(10),bo.getDecResearchs());
+            fillDecResearchData(tables.get(10), bo.getDecResearchs());
             map.put(filename, document);
         }
         return map;
@@ -186,8 +237,9 @@ public class WordHelper {
             return table;
         }
         if (decEduExps.size() > 1) {
+            int height = table.getRow(1).getHeight();
             for (int i = 1; i < decEduExps.size(); i++) {
-                table.createRow();
+                table.createRow().setHeight(height);
             }
         }
         List<XWPFTableRow> rows = table.getRows();
@@ -195,16 +247,32 @@ public class WordHelper {
         int rowCount = 1;
         for (DecEduExp decEduExp : decEduExps) {
             cells = rows.get(rowCount).getTableCells();
-            String value = decEduExp.getDateBegin().concat("～").concat(decEduExp.getDateEnd());
+            String dateBegin = decEduExp.getDateBegin();
+            if (StringUtil.isEmpty(dateBegin)) {
+                dateBegin = "未知";
+            }
+            String dateEnd = decEduExp.getDateEnd();
+            if (StringUtil.isEmpty(dateEnd)) {
+                dateEnd = "至今";
+            }
+            String value = dateBegin.concat("～").concat(dateEnd);
             cells.get(0).setText(value);
             value = decEduExp.getSchoolName();
-            cells.get(1).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(1).setText(value);
+            }
             value = decEduExp.getMajor();
-            cells.get(2).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(2).setText(value);
+            }
             value = decEduExp.getDegree();
-            cells.get(3).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(3).setText(value);
+            }
             value = decEduExp.getNote();
-            cells.get(4).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(4).setText(value);
+            }
             for (XWPFTableCell cell : cells) {
                 cell.setVerticalAlignment(XWPFVertAlign.CENTER);
             }
@@ -218,8 +286,9 @@ public class WordHelper {
             return table;
         }
         if (decWorkExps.size() > 1) {
+            int height = table.getRow(1).getHeight();
             for (int i = 1; i < decWorkExps.size(); i++) {
-                table.createRow();
+                table.createRow().setHeight(height);
             }
         }
         List<XWPFTableRow> rows = table.getRows();
@@ -227,14 +296,28 @@ public class WordHelper {
         int rowCount = 1;
         for (DecWorkExp decWorkExp : decWorkExps) {
             cells = rows.get(rowCount).getTableCells();
-            String value = decWorkExp.getDateBegin().concat("～").concat(decWorkExp.getDateEnd());
+            String dateBegin = decWorkExp.getDateBegin();
+            if (StringUtil.isEmpty(dateBegin)) {
+                dateBegin = "未知";
+            }
+            String dateEnd = decWorkExp.getDateEnd();
+            if (StringUtil.isEmpty(dateEnd)) {
+                dateEnd = "至今";
+            }
+            String value = dateBegin.concat("～").concat(dateEnd);
             cells.get(0).setText(value);
             value = decWorkExp.getOrgName();
-            cells.get(1).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(1).setText(value);
+            }
             value = decWorkExp.getPosition();
-            cells.get(2).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(2).setText(value);
+            }
             value = decWorkExp.getNote();
-            cells.get(3).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(3).setText(value);
+            }
             for (XWPFTableCell cell : cells) {
                 cell.setVerticalAlignment(XWPFVertAlign.CENTER);
             }
@@ -248,8 +331,9 @@ public class WordHelper {
             return table;
         }
         if (decTeachExps.size() > 1) {
+            int height = table.getRow(1).getHeight();
             for (int i = 1; i < decTeachExps.size(); i++) {
-                table.createRow();
+                table.createRow().setHeight(height);
             }
         }
         List<XWPFTableRow> rows = table.getRows();
@@ -257,14 +341,28 @@ public class WordHelper {
         int rowCount = 1;
         for (DecTeachExp decTeachExp : decTeachExps) {
             cells = rows.get(rowCount).getTableCells();
-            String value = decTeachExp.getDateBegin().concat("～").concat(decTeachExp.getDateEnd());
+            String dateBegin = decTeachExp.getDateBegin();
+            if (StringUtil.isEmpty(dateBegin)) {
+                dateBegin = "未知";
+            }
+            String dateEnd = decTeachExp.getDateEnd();
+            if (StringUtil.isEmpty(dateEnd)) {
+                dateEnd = "至今";
+            }
+            String value = dateBegin.concat("～").concat(dateEnd);
             cells.get(0).setText(value);
             value = decTeachExp.getSchoolName();
-            cells.get(1).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(1).setText(value);
+            }
             value = decTeachExp.getSubject();
-            cells.get(2).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(2).setText(value);
+            }
             value = decTeachExp.getNote();
-            cells.get(3).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(3).setText(value);
+            }
             for (XWPFTableCell cell : cells) {
                 cell.setVerticalAlignment(XWPFVertAlign.CENTER);
             }
@@ -278,7 +376,10 @@ public class WordHelper {
             return table;
         }
         List<XWPFTableRow> rows = table.getRows();
-        rows.get(0).getCell(0).setText(decAchievement.getContent());
+        String value = decAchievement.getContent();
+        if (StringUtil.notEmpty(value)) {
+            rows.get(0).getCell(0).setText(value);
+        }
         return table;
     }
 
@@ -287,8 +388,9 @@ public class WordHelper {
             return table;
         }
         if (decAcades.size() > 1) {
+            int height = table.getRow(1).getHeight();
             for (int i = 1; i < decAcades.size(); i++) {
-                table.createRow();
+                table.createRow().setHeight(height);
             }
         }
         List<XWPFTableRow> rows = table.getRows();
@@ -297,30 +399,38 @@ public class WordHelper {
         for (DecAcade decAcade : decAcades) {
             cells = rows.get(rowCount).getTableCells();
             String value = decAcade.getOrgName();
-            cells.get(0).setText(value);
-            int rank = decAcade.getRank();//1=国际/2=国家/3=省部/4=其他
-            switch (rank) {
-                case 1:
-                    value = "国际";
-                    break;
-                case 2:
-                    value = "国家";
-                    break;
-                case 3:
-                    value = "省部";
-                    break;
-                case 4:
-                    value = "其他";
-                    break;
-                default:
-                    value = "无";
-                    break;
+            if (StringUtil.notEmpty(value)) {
+                cells.get(0).setText(value);
             }
-            cells.get(1).setText(value);
+            Integer rank = decAcade.getRank();//1=国际/2=国家/3=省部/4=其他
+            if (null != rank) {
+                switch (rank) {
+                    case 1:
+                        value = "国际";
+                        break;
+                    case 2:
+                        value = "国家";
+                        break;
+                    case 3:
+                        value = "省部";
+                        break;
+                    case 4:
+                        value = "其他";
+                        break;
+                    default:
+                        value = "无";
+                        break;
+                }
+                cells.get(1).setText(value);
+            }
             value = decAcade.getPosition();
-            cells.get(2).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(2).setText(value);
+            }
             value = decAcade.getNote();
-            cells.get(3).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(3).setText(value);
+            }
             for (XWPFTableCell cell : cells) {
                 cell.setVerticalAlignment(XWPFVertAlign.CENTER);
             }
@@ -328,14 +438,15 @@ public class WordHelper {
         }
         return table;
     }
-    
+
     private XWPFTable fillDecLastPositionData(XWPFTable table, List<DecLastPosition> decLastPositions) {
         if (CollectionUtil.isEmpty(decLastPositions)) {
             return table;
         }
         if (decLastPositions.size() > 1) {
+            int height = table.getRow(1).getHeight();
             for (int i = 1; i < decLastPositions.size(); i++) {
-                table.createRow();
+                table.createRow().setHeight(height);
             }
         }
         List<XWPFTableRow> rows = table.getRows();
@@ -344,25 +455,31 @@ public class WordHelper {
         for (DecLastPosition decLastPosition : decLastPositions) {
             cells = rows.get(rowCount).getTableCells();
             String value = decLastPosition.getMaterialName();
-            cells.get(0).setText(value);
-            int position = decLastPosition.getPosition();//0=无/1=主编/2=副主编/3=编委
-            switch (position) {
-                case 1:
-                    value = "主编";
-                    break;
-                case 2:
-                    value = "副主编";
-                    break;
-                case 3:
-                    value = "编委";
-                    break;
-                default:
-                    value = "无";
-                    break;
+            if (StringUtil.notEmpty(value)) {
+                cells.get(0).setText(value);
             }
-            cells.get(1).setText(value);
+            Integer position = decLastPosition.getPosition();//0=无/1=主编/2=副主编/3=编委
+            if (null != position) {
+                switch (position) {
+                    case 1:
+                        value = "主编";
+                        break;
+                    case 2:
+                        value = "副主编";
+                        break;
+                    case 3:
+                        value = "编委";
+                        break;
+                    default:
+                        value = "无";
+                        break;
+                }
+                cells.get(1).setText(value);
+            }
             value = decLastPosition.getNote();
-            cells.get(2).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(2).setText(value);
+            }
             for (XWPFTableCell cell : cells) {
                 cell.setVerticalAlignment(XWPFVertAlign.CENTER);
             }
@@ -370,14 +487,15 @@ public class WordHelper {
         }
         return table;
     }
-    
+
     private XWPFTable fillDecCourseConstructionData(XWPFTable table, List<DecCourseConstruction> decCourseConstructions) {
         if (CollectionUtil.isEmpty(decCourseConstructions)) {
             return table;
         }
         if (decCourseConstructions.size() > 1) {
+            int height = table.getRow(1).getHeight();
             for (int i = 1; i < decCourseConstructions.size(); i++) {
-                table.createRow();
+                table.createRow().setHeight(height);
             }
         }
         List<XWPFTableRow> rows = table.getRows();
@@ -386,27 +504,35 @@ public class WordHelper {
         for (DecCourseConstruction decCourseConstruction : decCourseConstructions) {
             cells = rows.get(rowCount).getTableCells();
             String value = decCourseConstruction.getCourseName();
-            cells.get(0).setText(value);
-            int type = decCourseConstruction.getType();//1=国家/2=省部/3=学校
-            switch (type) {
-                case 1:
-                    value = "国家";
-                    break;
-                case 2:
-                    value = "省部";
-                    break;
-                case 3:
-                    value = "学校";
-                    break;
-                default:
-                    value = "其他";
-                    break;
+            if (StringUtil.notEmpty(value)) {
+                cells.get(0).setText(value);
             }
-            cells.get(1).setText(value);
+            Integer type = decCourseConstruction.getType();//1=国家/2=省部/3=学校
+            if (null != type) {
+                switch (type) {
+                    case 1:
+                        value = "国家";
+                        break;
+                    case 2:
+                        value = "省部";
+                        break;
+                    case 3:
+                        value = "学校";
+                        break;
+                    default:
+                        value = "其他";
+                        break;
+                }
+                cells.get(1).setText(value);
+            }
             value = decCourseConstruction.getClassHour();
-            cells.get(2).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(2).setText(value);
+            }
             value = decCourseConstruction.getNote();
-            cells.get(3).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(3).setText(value);
+            }
             for (XWPFTableCell cell : cells) {
                 cell.setVerticalAlignment(XWPFVertAlign.CENTER);
             }
@@ -414,14 +540,15 @@ public class WordHelper {
         }
         return table;
     }
-    
+
     private XWPFTable fillDecNationalPlanData(XWPFTable table, List<DecNationalPlan> decNationalPlans) {
         if (CollectionUtil.isEmpty(decNationalPlans)) {
             return table;
         }
         if (decNationalPlans.size() > 1) {
+            int height = table.getRow(1).getHeight();
             for (int i = 1; i < decNationalPlans.size(); i++) {
-                table.createRow();
+                table.createRow().setHeight(height);
             }
         }
         List<XWPFTableRow> rows = table.getRows();
@@ -430,27 +557,35 @@ public class WordHelper {
         for (DecNationalPlan decNationalPlan : decNationalPlans) {
             cells = rows.get(rowCount).getTableCells();
             String value = decNationalPlan.getMaterialName();
-            cells.get(0).setText(value);
-            value = decNationalPlan.getIsbn();
-            cells.get(1).setText(value);
-            int rank = decNationalPlan.getRank();//1=教育部十二五/2=国家卫计委十二五/3=both
-            switch (rank) {
-                case 1:
-                    value = "教育部十二五";
-                    break;
-                case 2:
-                    value = "国家卫计委十二五";
-                    break;
-                case 3:
-                    value = "教育部和国家卫计委十二五";
-                    break;
-                default:
-                    value = "其他";
-                    break;
+            if (StringUtil.notEmpty(value)) {
+                cells.get(0).setText(value);
             }
-            cells.get(2).setText(value);
+            value = decNationalPlan.getIsbn();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(1).setText(value);
+            }
+            Integer rank = decNationalPlan.getRank();//1=教育部十二五/2=国家卫计委十二五/3=both
+            if (null != rank) {
+                switch (rank) {
+                    case 1:
+                        value = "教育部十二五";
+                        break;
+                    case 2:
+                        value = "国家卫计委十二五";
+                        break;
+                    case 3:
+                        value = "教育部和国家卫计委十二五";
+                        break;
+                    default:
+                        value = "其他";
+                        break;
+                }
+                cells.get(2).setText(value);
+            }
             value = decNationalPlan.getNote();
-            cells.get(3).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(3).setText(value);
+            }
             for (XWPFTableCell cell : cells) {
                 cell.setVerticalAlignment(XWPFVertAlign.CENTER);
             }
@@ -458,14 +593,15 @@ public class WordHelper {
         }
         return table;
     }
-    
+
     private XWPFTable fillDecTextbookData(XWPFTable table, List<DecTextbook> decTextbooks) {
         if (CollectionUtil.isEmpty(decTextbooks)) {
             return table;
         }
         if (decTextbooks.size() > 1) {
+            int height = table.getRow(1).getHeight();
             for (int i = 1; i < decTextbooks.size(); i++) {
-                table.createRow();
+                table.createRow().setHeight(height);
             }
         }
         List<XWPFTableRow> rows = table.getRows();
@@ -474,65 +610,77 @@ public class WordHelper {
         for (DecTextbook decTextbook : decTextbooks) {
             cells = rows.get(rowCount).getTableCells();
             String value = decTextbook.getMaterialName();
-            cells.get(0).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(0).setText(value);
+            }
             /* 1=国家/2=省部/3=协编/4=/5=其他教材/6=教育部规划/7=卫计委规划/8=区域规划/9=创新教材 */
-            int rank = decTextbook.getRank();
-            switch (rank) {
-                case 1:
-                    value = "国家";
-                    break;
-                case 2:
-                    value = "省部";
-                    break;
-                case 3:
-                    value = "协编";
-                    break;
-                case 4:
-                    value = "校本";
-                    break;
-                case 5:
-                    value = "其他教材";
-                    break;
-                case 6:
-                    value = "教育部规划";
-                    break;
-                case 7:
-                    value = "卫计委规划";
-                    break;
-                case 8:
-                    value = "区域规划";
-                    break;
-                case 9:
-                    value = "创新教材";
-                    break;
-                default:
-                    value = "其他";
-                    break;
+            Integer rank = decTextbook.getRank();
+            if (null != rank) {
+                switch (rank) {
+                    case 1:
+                        value = "国家";
+                        break;
+                    case 2:
+                        value = "省部";
+                        break;
+                    case 3:
+                        value = "协编";
+                        break;
+                    case 4:
+                        value = "校本";
+                        break;
+                    case 5:
+                        value = "其他教材";
+                        break;
+                    case 6:
+                        value = "教育部规划";
+                        break;
+                    case 7:
+                        value = "卫计委规划";
+                        break;
+                    case 8:
+                        value = "区域规划";
+                        break;
+                    case 9:
+                        value = "创新教材";
+                        break;
+                    default:
+                        value = "其他";
+                        break;
+                }
+                cells.get(1).setText(value);
             }
-            cells.get(1).setText(value);
-            int position = decTextbook.getPosition();//0=无/1=主编/2=副主编/3=编委
-            switch (position) {
-                case 1:
-                    value = "主编";
-                    break;
-                case 2:
-                    value = "副主编";
-                    break;
-                case 3:
-                    value = "编委";
-                    break;
-                default:
-                    value = "无";
-                    break;
+            Integer position = decTextbook.getPosition();//0=无/1=主编/2=副主编/3=编委
+            if (null != position) {
+                switch (position) {
+                    case 1:
+                        value = "主编";
+                        break;
+                    case 2:
+                        value = "副主编";
+                        break;
+                    case 3:
+                        value = "编委";
+                        break;
+                    default:
+                        value = "无";
+                        break;
+                }
+                cells.get(2).setText(value);
             }
-            cells.get(2).setText(value);
             Date publishDate = decTextbook.getPublishDate();
-            value = sdf.format(publishDate);
-            cells.get(3).setText(value);
+            if (null != publishDate) {
+                value = sdf.format(publishDate);
+                cells.get(3).setText(value);
+            }
             value = decTextbook.getIsbn();
-            cells.get(4).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(4).setText(value);
+            }
             value = decTextbook.getNote();
-            cells.get(5).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(5).setText(value);
+            }
             for (XWPFTableCell cell : cells) {
                 cell.setVerticalAlignment(XWPFVertAlign.CENTER);
             }
@@ -540,14 +688,15 @@ public class WordHelper {
         }
         return table;
     }
-    
+
     private XWPFTable fillDecResearchData(XWPFTable table, List<DecResearch> decResearchs) {
         if (CollectionUtil.isEmpty(decResearchs)) {
             return table;
         }
         if (decResearchs.size() > 1) {
+            int height = table.getRow(1).getHeight();
             for (int i = 1; i < decResearchs.size(); i++) {
-                table.createRow();
+                table.createRow().setHeight(height);
             }
         }
         List<XWPFTableRow> rows = table.getRows();
@@ -556,18 +705,44 @@ public class WordHelper {
         for (DecResearch decResearch : decResearchs) {
             cells = rows.get(rowCount).getTableCells();
             String value = decResearch.getResearchName();
-            cells.get(0).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(0).setText(value);
+            }
             value = decResearch.getApprovalUnit();
-            cells.get(1).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(1).setText(value);
+            }
             value = decResearch.getAward();
-            cells.get(2).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(2).setText(value);
+            }
             value = decResearch.getNote();
-            cells.get(3).setText(value);
+            if (StringUtil.notEmpty(value)) {
+                cells.get(3).setText(value);
+            }
             for (XWPFTableCell cell : cells) {
                 cell.setVerticalAlignment(XWPFVertAlign.CENTER);
             }
             rowCount++;
         }
         return table;
+    }
+
+    /**
+     * 路径创建
+     *
+     * @param dest 要创建的路径地址
+     */
+    private boolean createPath(String dest) {
+        File destDir;
+        if (dest.endsWith(File.separator)) {
+            destDir = new File(dest);//给出的是路径时
+        } else {
+            destDir = new File(dest.substring(0, dest.lastIndexOf(File.separator)));
+        }
+        if (!destDir.exists()) {
+            return destDir.mkdirs();
+        }
+        return true;
     }
 }

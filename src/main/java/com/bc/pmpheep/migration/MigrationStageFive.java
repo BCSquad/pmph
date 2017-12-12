@@ -54,14 +54,20 @@ public class MigrationStageFive {
                 + " left join teach_material b on b.materid=a.materid "
                 + " left join sys_user c on c.userid=a.createuserid "
                 + " left join sys_user d on d.userid=b.createuserid "
-                + " left join sys_user e on e.userid=a.userid  ";
+                + " left join sys_user e on e.userid=a.userid "
+                + "	where a.bookname not like '%测%' and b.matername not like '%测%'"
+                + " and b.matername not like '%sd%' "
+                + "	and b.matername not like '%7%' and b.matername not like '%1%'"; 
         String tableName = "teach_bookinfo";// 要迁移的旧表名称
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;//迁移成功的条目数
+        //默认值
+        Long constant=0L;
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
+        	StringBuilder exception = new StringBuilder();
             /* 根据MySQL字段类型进行类型转换 */
             String id = (String) map.get("bookid");// 旧表主键
 
@@ -71,42 +77,46 @@ public class MigrationStageFive {
             }
             Long c = (Long) map.get("newmaterid");
             if (ObjectUtil.isNull(c)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "教材id为空。");
+                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("该教材id为空。"));
+                //因教材id不能为空，默认为0
+                c=constant;
                 excel.add(map);
-                logger.error("教材id为空，此结果将将被记录在Excel中");
-                continue;
+                logger.error("该教材id为空，此结果将将被记录在Excel中");
+                //continue;
             }
             Long createuserid = (Long) map.get("bookcreateuserid");
             Long newcreateuseid = (Long) map.get("newcreateuserid");
             if (ObjectUtil.isNull(createuserid) && ObjectUtil.isNull(newcreateuseid)) {
                 /*记录教材书籍表没有的创建者id为空*/
-                map.put(SQLParameters.EXCEL_EX_HEADER, "创建者id为空。");
+                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("该教材的创建者id为空。"));
+                newcreateuseid=constant;
                 excel.add(map);
-                logger.error("创建者id为空，此结果将将被记录在Excel中");
-                continue;
+                logger.error("该教材的创建者id为空，此结果将将被记录在Excel中");
+                //continue;
             }
             String bookname = (String) map.get("bookname");
             if (StringUtil.isEmpty(bookname)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "书籍名称为空。");
+                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("该书籍名称为空。"));
                 excel.add(map);
-                logger.error("书籍名称为空，此结果将将被记录在Excel中");
+                logger.error("该书籍名称为空，此结果将将被记录在Excel中");
                 continue;
             }
             java.util.Date ceDate = (java.util.Date) map.get("createdate");
             /*教材表对应书籍创建时间*/
             java.util.Date createdate = (java.util.Date) map.get("newcreatedate");
             if (ObjectUtil.isNull(ceDate) && ObjectUtil.isNull(createdate)) {//如果没有创建时间 就查找关联教材创建时间
-                map.put(SQLParameters.EXCEL_EX_HEADER, "创建时间为空。");
+                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建时间为空。"));
                 excel.add(map);
                 logger.error("创建时间为空，因新库不能插入null，去教材表找对应创建时间，此结果将将被记录在Excel中");
                 continue;
             }
             Integer xnumber = (Integer) map.get("xnumber");
             if (ObjectUtil.isNull(xnumber)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "图书序号为空。");
+                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("图书序号为空。"));
+                xnumber=(int) constant.longValue();
                 excel.add(map);
                 logger.error("图书序号为空，此结果将将被记录在Excel中");
-                continue;
+                //continue;
             }
             Textbook textbook = new Textbook();
             textbook.setTextbookRound(revision); //书籍轮次
@@ -173,4 +183,5 @@ public class MigrationStageFive {
         msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
+
 }

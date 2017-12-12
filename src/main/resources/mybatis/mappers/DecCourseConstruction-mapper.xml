@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bc.pmpheep.back.dao.DecCourseConstructionDao">
 
-	<sql id="key"> 
+	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
 			<if test="id !=null">
@@ -71,7 +71,8 @@
 
 	<!-- 根据id删除一个精品课程建设情况信息 -->
 	<delete id="deleteDecCourseConstrction" parameterType="java.lang.Long">
-		delete from
+		delete
+		from
 		dec_course_construction where
 		id=#{id};
 	</delete>
@@ -109,14 +110,27 @@
 	</select>
 
 	<!-- 根据declarationId查询精品课程建设情况信息 -->
-	<select id="getDecCourseConstructionByDeclarationId" parameterType="java.lang.Long"
-		resultType="DecCourseConstruction">
-		select * from dec_course_construction where
+	<select id="getDecCourseConstructionByDeclarationId"
+		parameterType="java.lang.Long" resultType="DecCourseConstruction">
+		select * from
+		dec_course_construction where
 		declaration_id=#{declarationId};
+	</select>
+
+	<!-- 根据declarationId查询精品课程建设情况信息 -->
+	<select id="getDecCourseConstructionByDeclarationIds"
+	resultType="DecCourseConstruction">
+	select * from dec_course_construction where
+	declaration_id in
+		<foreach collection="list" item="declarationId" open="("
+			close=")" separator="," index="index">
+			#{declarationId}
+		</foreach>
 	</select>
 
 	<!-- 查询精品课程建设情况信息总记录数 -->
 	<select id="getDecCourseConstruction" resultType="java.lang.Long">
-		select count(*) from dec_course_construction
+		select count(*)
+		from dec_course_construction
 	</select>
 </mapper>

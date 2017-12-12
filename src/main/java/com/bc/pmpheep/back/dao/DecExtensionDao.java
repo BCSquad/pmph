@@ -4,8 +4,11 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+
 import org.springframework.stereotype.Repository;
+
 import com.bc.pmpheep.back.po.DecExtension;
+import com.bc.pmpheep.back.vo.DecExtensionVO;
 
 /**
  * <p>Title:教材扩展项填报表<p>
@@ -94,4 +97,14 @@ public interface DecExtensionDao {
    * @return 数据总数
    */
   Long getDecExtensionCount();
+  
+  /**
+   * 
+   * Description:根据申报表id获取教材扩展项信息集合包含扩展项名称
+   * @author:tyc
+   * @date:2017年12月12日上午10:44:24
+   * @param 申报表id
+   * @return DecExtension对象集合
+   */
+  List<DecExtensionVO> getListDecExtensionByDeclarationId(Long declarationId);
 }

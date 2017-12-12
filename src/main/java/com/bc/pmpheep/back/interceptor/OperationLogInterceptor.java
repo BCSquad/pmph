@@ -20,6 +20,7 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.DeviceUtils;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 
 /**
  * 
@@ -42,7 +43,9 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     SysOperationService  sysOperationService;
-
+    /**
+     * 不需要拦截的url请求方法集合
+     */
     private List<String> excludeUrls;
 
     public List<String> getExcludeUrls() {
@@ -96,7 +99,20 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
             String requestUri = request.getRequestURI();// 完整请求路径
             String contextPath = request.getContextPath();// 项目路径
             String url = requestUri.substring(contextPath.length());// 模块路径
-            if (!excludeUrls.contains(url)) {
+            Boolean isAccess = false;
+            // 不拦截excludeUrls中配置的url请求
+            for (String requestUrl : excludeUrls) {
+                if (requestUrl.endsWith("/**")) {
+                    if (url.startsWith(requestUrl.substring(0, requestUrl.length() - 3))) {
+                        isAccess = true;
+                        break;
+                    }
+                } else if (url.startsWith(requestUrl)) {
+                    isAccess = true;
+                    break;
+                }
+            }
+            if (!isAccess) {
                 HandlerMethod handlerMethod = (HandlerMethod) object;
                 Class cls = handlerMethod.getBeanType();// 类名
                 Method[] methods = cls.getMethods();// 类中的所有方法
@@ -124,7 +140,7 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
                                                                              pmphUser.getRealname(),
                                                                              DateUtil.getCurrentTime(),
                                                                              url + "-" + logRemark,
-                                                                             request.getRemoteHost(),
+                                                                             StringUtil.getClientIP(request),
                                                                              businessType,
                                                                              deviceType));
                     }

@@ -60,6 +60,15 @@ public interface DecNationalPlanDao {
 	 * 
 	 * @Return 兼职学术组织信息
 	 */
+	List<DecNationalPlan> getListDecNationalPlanByDeclarationIds(List<Long> declarationId);
+	
+	/**
+	 * Description: 根据申报表id查询作家主编国家级规划教材情况信息
+	 * 
+	 * @Param declarationId 申报表id
+	 * 
+	 * @Return 兼职学术组织信息
+	 */
 	List<DecNationalPlan> getListDecNationalPlanByDeclarationId(Long declarationId);
 
 	/**

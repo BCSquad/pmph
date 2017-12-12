@@ -182,7 +182,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        if (StringUtil.isEmpty(pageParameter.getParameter().getMsgId())) {
+        if (StringUtil.isEmpty(pageParameter.getParameter().getMsgId())
+            && ObjectUtil.isNull(pageParameter.getParameter().getMaterialId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "消息为空");
         }
@@ -310,7 +311,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             for (OrgUser orgUser : orgUserList) {
                 userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
                                                     senderUserId, Const.SENDER_TYPE_1,
-                                                    orgUser.getId(), Const.RECEIVER_TYPE_3));
+                                                    orgUser.getId(), Const.RECEIVER_TYPE_3, 0L));
             }
             // 作家用户
             if (Const.SEND_OBJECT_2.intValue() == sendType.intValue()) {
@@ -319,7 +320,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 for (WriterUser writerUser : writerUserList) {
                     userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
                                                         senderUserId, Const.SENDER_TYPE_1,
-                                                        writerUser.getId(), Const.RECEIVER_TYPE_2));
+                                                        writerUser.getId(), Const.RECEIVER_TYPE_2,
+                                                        0L));
                 }
             }
         }
@@ -339,7 +341,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                             Const.MSG_TYPE_1, senderUserId,
                                                             Const.SENDER_TYPE_1,
                                                             Long.parseLong(userId),
-                                                            new Short(userType)));
+                                                            new Short(userType), 0L));
                     }
                 }
             }
@@ -356,7 +358,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 for (Long userId : userIdList) {
                     userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
                                                         senderUserId, Const.SENDER_TYPE_1, userId,
-                                                        Const.RECEIVER_TYPE_2));
+                                                        Const.RECEIVER_TYPE_2, 0L));
                 }
                 // 获取到书籍id然后根据书籍id在dec_position表中获取到申报表id根据申报表id在declaration表中获取作家id放入userMessage的接收人中
             }
@@ -454,13 +456,13 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     /**
      * 
      * <pre>
-     * 功能描述：保存文件到MongoDB
-     * 使用示范：
-     *
-     * @param files 临时文件路径
-     * @param msgId messageId
-     * @throws CheckedServiceException
-     * </pre>
+	 * 功能描述：保存文件到MongoDB
+	 * 使用示范：
+	 *
+	 * &#64;param files 临时文件路径
+	 * &#64;param msgId messageId
+	 * &#64;throws CheckedServiceException
+	 * </pre>
      */
     private void saveFileToMongoDB(String[] files, String msgId) throws IOException {
         // 添加附件到MongoDB表中
@@ -818,23 +820,21 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         }
         Long senderUserId = pmphUser.getId();// 新发消息,发送者Id为登陆用户ID
         // 装储存数据
-        List<UserMessage> userMessageList = new ArrayList<UserMessage>();
+        UserMessage userMessage = new UserMessage();
         // 私信发送
         if (null == receiverId) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "接收人为空!");
         } else {
-            userMessageList.add(new UserMessage(message.getId(), Const.MSG_TYPE_2, senderUserId,
-                                                Const.SENDER_TYPE_1, receiverId,
-                                                Const.RECEIVER_TYPE_2));
+            userMessage =
+            new UserMessage(message.getId(), Const.MSG_TYPE_2, senderUserId, Const.SENDER_TYPE_1,
+                            receiverId, Const.RECEIVER_TYPE_2);
         }
         // 插入消息发送对象数据
-        userMessageDao.addUserMessageBatch(userMessageList);
+        userMessageDao.addUserMessage(userMessage);
         // websocket发送的id
         List<String> websocketUserId = new ArrayList<String>();
-        for (UserMessage userMessage : userMessageList) {
-            websocketUserId.add(userMessage.getReceiverType() + "_" + userMessage.getReceiverId());
-        }
+        websocketUserId.add(userMessage.getReceiverType() + "_" + userMessage.getReceiverId());
         // webscokt发送消息
         if (CollectionUtil.isNotEmpty(websocketUserId)) {
             WebScocketMessage webScocketMessage =
@@ -844,6 +844,6 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                   message.getContent(), DateUtil.getCurrentTime());
             myWebSocketHandler.sendWebSocketMessageToUser(websocketUserId, webScocketMessage);
         }
-        return userMessageList.size();
+        return userMessageDao.addUserMessage(userMessage);
     }
 }
