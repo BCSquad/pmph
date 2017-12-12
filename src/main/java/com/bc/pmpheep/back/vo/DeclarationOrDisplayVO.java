@@ -69,12 +69,20 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 	private Timestamp gmtCreate;
 	// 修改时间
 	private Timestamp gmtUpdate;
-    // 是否书籍多选
-    private Boolean   isMultiBooks;
-    // 是否职位多选
-    private Boolean   isMultiPosition;
-    // 是否可选数字编委
-    private Boolean isDigitalEditorOptional;
+	// 是否书籍多选
+	private Boolean isMultiBooks;
+	// 是否职位多选
+	private Boolean isMultiPosition;
+	// 是否可选数字编委
+	private Boolean isDigitalEditorOptional;
+	/**
+	 * 书籍名称
+	 */
+	private String textbookName;
+	/**
+	 * 申报职位
+	 */
+	private String presetPosition;
 
 	public Boolean getIsDigitalEditorOptional() {
 		return isDigitalEditorOptional;
@@ -348,24 +356,33 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 		this.gmtUpdate = gmtUpdate;
 	}
 
+	public String getTextbookName() {
+		return textbookName;
+	}
+
+	public void setTextbookName(String textbookName) {
+		this.textbookName = textbookName;
+	}
+
+	public String getPresetPosition() {
+		return presetPosition;
+	}
+
+	public void setPresetPosition(String presetPosition) {
+		this.presetPosition = presetPosition;
+	}
+
 	@Override
 	public String toString() {
-		return "DeclarationOrDisplayVO [id=" + id + ", materialId="
-				+ materialId + ", userId=" + userId + ", username=" + username
-				+ ", realname=" + realname + ", sex=" + sex + ", birthday="
-				+ birthday + ", experience=" + experience + ", orgName="
-				+ orgName + ", position=" + position + ", title=" + title
-				+ ", address=" + address + ", postcode=" + postcode
-				+ ", handphone=" + handphone + ", email=" + email + ", idtype="
-				+ idtype + ", idcard=" + idcard + ", telephone=" + telephone
-				+ ", fax=" + fax + ", orgId=" + orgId + ", orgNameOne="
-				+ orgNameOne + ", onlineProgress=" + onlineProgress
-				+ ", authUserId=" + authUserId + ", authDate=" + authDate
-				+ ", offlineProgress=" + offlineProgress + ", paperDate="
-				+ paperDate + ", isStaging=" + isStaging + ", isDeleted="
-				+ isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
-				+ gmtUpdate + ", isMultiBooks=" + isMultiBooks
-				+ ", isMultiPosition=" + isMultiPosition
+		return "DeclarationOrDisplayVO [id=" + id + ", materialId=" + materialId + ", userId=" + userId + ", username="
+				+ username + ", realname=" + realname + ", sex=" + sex + ", birthday=" + birthday + ", experience="
+				+ experience + ", orgName=" + orgName + ", position=" + position + ", title=" + title + ", address="
+				+ address + ", postcode=" + postcode + ", handphone=" + handphone + ", email=" + email + ", idtype="
+				+ idtype + ", idcard=" + idcard + ", telephone=" + telephone + ", fax=" + fax + ", orgId=" + orgId
+				+ ", orgNameOne=" + orgNameOne + ", onlineProgress=" + onlineProgress + ", authUserId=" + authUserId
+				+ ", authDate=" + authDate + ", offlineProgress=" + offlineProgress + ", paperDate=" + paperDate
+				+ ", isStaging=" + isStaging + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
+				+ gmtUpdate + ", isMultiBooks=" + isMultiBooks + ", isMultiPosition=" + isMultiPosition
 				+ ", isDigitalEditorOptional=" + isDigitalEditorOptional + "]";
 	}
 

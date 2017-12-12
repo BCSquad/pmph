@@ -98,6 +98,7 @@ public class WordHelper {
         InputStream is;
         XWPFDocument document;
         String path = this.getClass().getClassLoader().getResource("ResumeTemplate.docx").getPath();
+        path = path.replaceAll("%20", " ");
         HashMap<String, XWPFDocument> map = new HashMap<>(list.size());
         for (DeclarationEtcBO bo : list) {
             try {

@@ -49,7 +49,7 @@ public class DecAchievementServiceImpl implements DecAchievementService{
 	}
 	
 	@Override
-	public List<DecAchievement> getDecAchievementByDeclarationId (Long declarationId) throws CheckedServiceException{
+	public DecAchievement getDecAchievementByDeclarationId (Long declarationId) throws CheckedServiceException{
 		if (null == declarationId){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "申报表id不能为空");
 		}

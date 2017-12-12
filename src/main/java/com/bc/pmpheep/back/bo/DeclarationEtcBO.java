@@ -89,7 +89,7 @@ public class DeclarationEtcBO {
 
 	@ExcelHeader(header = "教学经历")
 	private ArrayList<DecTeachExp> decTeachExps;
-        
+
 	private DecAchievement decAchievement;
 
 	@ExcelHeader(header = "学术兼职")
@@ -120,7 +120,7 @@ public class DeclarationEtcBO {
 			ArrayList<DecWorkExp> decWorkExps, ArrayList<DecTeachExp> decTeachExps, ArrayList<DecAcade> decAcades,
 			ArrayList<DecLastPosition> decLastPositions, ArrayList<DecCourseConstruction> decCourseConstructions,
 			ArrayList<DecNationalPlan> decNationalPlans, ArrayList<DecTextbook> decTextbooks,
-			ArrayList<DecResearch> decResearchs) {
+			ArrayList<DecResearch> decResearchs, DecAchievement decAchievement) {
 		this.textbookName = textbookName;
 		this.presetPosition = presetPosition;
 		this.realname = realname;
@@ -149,6 +149,7 @@ public class DeclarationEtcBO {
 		this.decNationalPlans = decNationalPlans;
 		this.decTextbooks = decTextbooks;
 		this.decResearchs = decResearchs;
+		this.decAchievement = decAchievement;
 	}
 
 	/**
@@ -481,19 +482,20 @@ public class DeclarationEtcBO {
 		this.decTeachExps = decTeachExps;
 	}
 
-    /**
-     * @return the decAchievement
-     */
-    public DecAchievement getDecAchievement() {
-        return decAchievement;
-    }
+	/**
+	 * @return the decAchievement
+	 */
+	public DecAchievement getDecAchievement() {
+		return decAchievement;
+	}
 
-    /**
-     * @param decAchievement the decAchievement to set
-     */
-    public void setDecAchievement(DecAchievement decAchievement) {
-        this.decAchievement = decAchievement;
-    }
+	/**
+	 * @param decAchievement
+	 *            the decAchievement to set
+	 */
+	public void setDecAchievement(DecAchievement decAchievement) {
+		this.decAchievement = decAchievement;
+	}
 
 	/**
 	 * @return the decAcades

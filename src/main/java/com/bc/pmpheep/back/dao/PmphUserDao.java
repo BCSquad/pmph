@@ -5,6 +5,7 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -37,6 +38,25 @@ public interface PmphUserDao {
 	Integer batchDelete(@Param("ids") List<Long> ids);
 
 	PmphUser get(Long id);
+	
+	/**
+	 * 根据主键 获取用户要更新的信息 
+	 * @author Mryang
+	 * @createDate 2017年12月11日 下午5:27:20
+	 * @param id
+	 * @return
+	 */
+	PmphUser getInfo(Long id);
+	
+	/**
+	 * 根据id和原密码修改密码
+	 * @author Mryang
+	 * @createDate 2017年12月12日 上午8:46:44
+	 * @param map
+	 * @return
+	 */
+	Integer updatePassword (Map<String,Object> map);
+	
 
 	List<PmphUser> getListUser();
 

@@ -170,6 +170,26 @@
 			#{id}
 		</foreach>
 	</delete>
+	
+	<!-- 根据主键 获取用户要更新的信息 -->
+	<select id="getInfo" parameterType="Long" resultType="PmphUser">
+		SELECT
+			id,
+			username,
+			realname,
+			handphone,
+			email,
+			avatar
+		FROM
+			pmph_user
+		WHERE
+			id = #{id} and is_deleted =0 and is_disabled = 0
+	</select>
+	
+	<!--根据id和原密码修改密码 -->
+	<update id="updatePassword" >
+		update pmph_user set password = #{newPassword} where id = #{id} and  password = #{oldPassword}
+	</update>
 
 	<select id="get" parameterType="Long" resultType="PmphUser">
 		SELECT
