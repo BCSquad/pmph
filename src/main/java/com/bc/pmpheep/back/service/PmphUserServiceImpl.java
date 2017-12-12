@@ -2,7 +2,9 @@ package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -252,9 +254,33 @@ public class PmphUserServiceImpl implements PmphUserService {
 					"请求用户不存在");
 		}
 		Long id =  sessionPmphUser.getId();
-		if (ObjectUtil.isNull(id)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+		if (null == id ) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+		}
+		if(StringUtil.isEmpty(oldPassword)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,CheckedExceptionResult.NULL_PARAM, "原密码为空");
+		}
+		if(StringUtil.isEmpty(newPassword)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,CheckedExceptionResult.NULL_PARAM, "新密码为空");
+		}
+		oldPassword = oldPassword.trim();
+		newPassword = newPassword.trim();
+		if(newPassword.length() > 50 ){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,CheckedExceptionResult.ILLEGAL_PARAM, "新密码长度不能超过50");
+		}
+		if(oldPassword.equals(newPassword)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,CheckedExceptionResult.ILLEGAL_PARAM, "新旧密码不能一致");
+		}
+		//先修改SSO
+		//---------------------------------
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("id", id);
+		//加密密码
+		map.put("oldPassword", new DesRun("",oldPassword).enpsw);
+		map.put("newPassword", new DesRun("",newPassword).enpsw);
+		Integer res = pmphUserDao.updatePassword(map);
+		if(null == res || res == 0){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,CheckedExceptionResult.NULL_PARAM, "原密码错误");
 		}
 		return 1;
 	}

@@ -185,6 +185,11 @@
 		WHERE
 			id = #{id} and is_deleted =0 and is_disabled = 0
 	</select>
+	
+	<!--根据id和原密码修改密码 -->
+	<update id="updatePassword" >
+		update pmph_user set password = #{newPassword} where id = #{id} and  password = #{oldPassword}
+	</update>
 
 	<select id="get" parameterType="Long" resultType="PmphUser">
 		SELECT
