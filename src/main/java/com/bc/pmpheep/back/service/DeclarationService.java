@@ -4,13 +4,10 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.poi.ss.usermodel.Workbook;
 
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Declaration;
@@ -124,7 +121,7 @@ public interface DeclarationService {
 	 */
 	Declaration onlineProgress(Long id, Integer onlineProgress, Long materialId)
 			throws CheckedServiceException, IOException;
-
+	
 	/**
 	 * 显示专家信息
 	 *

@@ -1,5 +1,8 @@
 package com.bc.pmpheep.back.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -122,6 +125,7 @@ public class DeviceUtils {
      * @param request http请求
      * @return 如果命中手机特征规则，则返回对应的特征字符串
      */
+    @SuppressWarnings("unused")
     public static String isMobileDevice(HttpServletRequest request) {
         boolean isMobile = false;
         boolean pcFlag = false;
@@ -186,21 +190,48 @@ public class DeviceUtils {
      */
     public static String iOSDeviceType(HttpServletRequest request) {
         boolean isMobile = false;
-        String iOSDeviceType = "";
+        String iOSOrAndroidDeviceType = "";
         final String[] ios_sys = { "iPhone", "iPad", "iPod" };
         String userAgent = request.getHeader("user-agent");
         for (int i = 0; !isMobile && userAgent != null && !userAgent.trim().equals("")
                         && i < ios_sys.length; i++) {
             if (userAgent.contains(ios_sys[i])) {
                 isMobile = true;
-                iOSDeviceType = ios_sys[i];
+                iOSOrAndroidDeviceType = ios_sys[i];
                 break;
             }
         }
-        if (StringUtil.isEmpty(iOSDeviceType)) {
-            iOSDeviceType = "Android";
+        if (StringUtil.isEmpty(iOSOrAndroidDeviceType)) {
+            String androidType = androidDeviceType(request);
+            iOSOrAndroidDeviceType = androidType;
         }
-        return iOSDeviceType;//
+        return iOSOrAndroidDeviceType;
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：判断是否为Android系统访问
+     * 使用示范：
+     *
+     * @param request
+     * @return Android 手机品牌
+     * </pre>
+     */
+    public static String androidDeviceType(HttpServletRequest request) {
+        String userAgent = request.getHeader("user-agent");
+        String androidType = "Android";
+        String re = "BUILD";
+        // 存放正则表达式
+        String rex = ".*" + ";" + "(.*)" + re;
+        Pattern p = Pattern.compile(rex, Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(userAgent);
+        boolean rs = m.find();
+        if (rs) {
+            // System.out.println("Mobil Model is" + m.group(1));
+            androidType = m.group(1);
+        }
+        return androidType;
     }
 
     /**
