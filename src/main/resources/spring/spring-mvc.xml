@@ -27,7 +27,7 @@
     <mvc:interceptors>  
         <!--AXIOS跨域请求访问拦截 -->
         <mvc:interceptor>
-            <mvc:mapping path="/**"/>
+            <mvc:mapping path="/**/**"/>
             <bean class="com.bc.pmpheep.back.interceptor.ProcessInterceptor"></bean>
         </mvc:interceptor>
        
