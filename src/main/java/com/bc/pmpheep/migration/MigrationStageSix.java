@@ -200,7 +200,8 @@ public class MigrationStageSix {
             declaration.setTitle((String) map.get("positional")); // 职称
             declaration.setAddress((String) map.get("address")); // 联系地址
             if (StringUtil.notEmpty(postCode)) {
-                if (StringUtil.strLength(postCode) > 20) {
+                if (StringUtil.strLength(postCode) > 20 || 
+                		"55894b98-6b15-4210-9460-11bdf6e8e89c".equals(id)) {
                 	declaration.setPostcode("100000");
                 }
             }
@@ -228,13 +229,13 @@ public class MigrationStageSix {
                 declaration.setOfflineProgress(0);
             }
             declaration.setPaperDate((Timestamp) map.get("editauditdate")); // 纸质表收到时间
-            String submitType = (String) map.get("submittype"); // 旧表字段：是否暂存
+            /*String submitType = (String) map.get("submittype"); // 旧表字段：是否暂存
             if (StringUtil.strLength(submitType) > 2) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("是否暂存的位数大于2位数。"));
                 excel.add(map);
                 logger.error("是否暂存的位数大于2位数，此结果将被记录在Excel中");
                 continue;
-            }
+            }*/
             if (ObjectUtil.isNull(isStagingJudge)) {
                 declaration.setIsStaging(0);
             } else {
@@ -282,6 +283,9 @@ public class MigrationStageSix {
             StringBuilder sb = new StringBuilder();
             String id = (String) map.get("leamid"); // 旧表主键值
             Long declarationid = (Long) map.get("id"); // 申报表id
+            String schoolName = (String) map.get("schoolname"); // 学校名称
+            String major = (String) map.get("speciality"); // 所学专业
+            String degree = (String) map.get("record");  // 学历
             DecEduExp decEduExp = new DecEduExp();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
@@ -291,11 +295,8 @@ public class MigrationStageSix {
                 continue;
             }
             decEduExp.setDeclarationId(declarationid);
-            String schoolName = (String) map.get("schoolname"); // 学校名称
             decEduExp.setSchoolName(schoolName);
-            String major = (String) map.get("speciality"); // 所学专业
             decEduExp.setMajor(major);
-            String degree = (String) map.get("record");  // 学历
             decEduExp.setDegree(degree);
             decEduExp.setNote((String) map.get("remark")); // 备注
             SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
@@ -349,6 +350,8 @@ public class MigrationStageSix {
             StringBuilder sb = new StringBuilder();
             String id = (String) map.get("workid"); // 旧表主键值
             Long declarationid = (Long) map.get("id"); // 申报表id
+            String orgName = (String) map.get("workunitname"); // 工作单位
+            String position = (String) map.get("position"); // 职位
             DecWorkExp decWorkExp = new DecWorkExp();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
@@ -358,9 +361,7 @@ public class MigrationStageSix {
                 continue;
             }
             decWorkExp.setDeclarationId(declarationid);
-            String orgName = (String) map.get("workunitname"); // 工作单位
             decWorkExp.setOrgName(orgName);
-            String position = (String) map.get("position"); // 职位
             decWorkExp.setPosition(position);
             decWorkExp.setNote((String) map.get("remark")); // 备注
             SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
@@ -415,6 +416,8 @@ public class MigrationStageSix {
             StringBuilder sb = new StringBuilder();
             String id = (String) map.get("teachid"); // 旧表主键值
             Long declarationid = (Long) map.get("id"); // 申报表id
+            String schoolName = (String) map.get("schoolname"); // 学校名称
+            String subject = (String) map.get("subjects"); // 教学科目
             DecTeachExp decTeachExp = new DecTeachExp();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
@@ -424,9 +427,7 @@ public class MigrationStageSix {
                 continue;
             }
             decTeachExp.setDeclarationId(declarationid);
-            String schoolName = (String) map.get("schoolname"); // 学校名称
             decTeachExp.setSchoolName(schoolName);
-            String subject = (String) map.get("subjects"); // 教学科目
             decTeachExp.setSubject(subject);
             decTeachExp.setNote((String) map.get("remark")); // 备注
             SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
@@ -868,6 +869,7 @@ public class MigrationStageSix {
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
         String sql = "select *,wd.new_pk wdid from teach_material_extvalue wme "
                 + "left join writer_declaration wd on wd.writerid=wme.writerid "
+                + "left join teach_material_extend tme on tme.expendid=wme.expendid "
                 + "where tme.expendname = '个人成就'";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0; // 迁移成功的条目数
