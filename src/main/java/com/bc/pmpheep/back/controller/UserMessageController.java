@@ -85,8 +85,8 @@ public class UserMessageController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息状态列表")
 	@RequestMapping(value = "/message/state", method = RequestMethod.GET)
 	public ResponseBean state(@RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
-			@RequestParam("msgId") String msgId, @RequestParam(name = "pageSize") Integer pageSize,
-			MessageStateVO messageStateVO, HttpServletRequest request) {
+			@RequestParam(name = "pageSize") Integer pageSize, MessageStateVO messageStateVO,
+			HttpServletRequest request) {
 		PageParameter<MessageStateVO> pageParameter = new PageParameter<MessageStateVO>(pageNumber, pageSize,
 				messageStateVO);
 		String sessionId = CookiesUtil.getSessionId(request);

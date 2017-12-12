@@ -320,7 +320,7 @@ public class FileDownLoadController {
 				}
 			}
 			StringBuilder sb = new StringBuilder();
-			String src = "D:/";
+			String src = this.getClass().getResource("/").getPath();
 			src = src.substring(1);
 			sb.append(src);
 			if (!src.endsWith(File.separator)) {
