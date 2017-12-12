@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.CmsExtraService;
@@ -36,8 +35,8 @@ import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -91,7 +90,6 @@ public class FileDownLoadController {
 	@RequestMapping(value = "/file/download/{id}", method = RequestMethod.GET)
 	public void download(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response)
 			throws UnsupportedEncodingException {
-		String userAgent = request.getHeader("User-Agent");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		GridFSDBFile file = fileService.get(id);
@@ -99,14 +97,7 @@ public class FileDownLoadController {
 			logger.warn("未找到id为'{}'的文件", id);
 			return;
 		}
-		String fileName = file.getFilename();
-		// 针对IE或者以IE为内核的浏览器：
-		if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
-			fileName = java.net.URLEncoder.encode(fileName, "UTF-8");
-		} else {
-			// 非IE浏览器的处理：
-			fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
-		}
+		String fileName = returnFileName(request, file.getFilename());
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			file.writeTo(out);
@@ -131,8 +122,8 @@ public class FileDownLoadController {
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = "/file/{type}/download/{id}", method = RequestMethod.GET)
-	public void download(@PathVariable("type") String type, @PathVariable("id") String id, HttpServletResponse response)
-			throws UnsupportedEncodingException {
+	public void download(@PathVariable("type") String type, @PathVariable("id") String id, HttpServletRequest request,
+			HttpServletResponse response) throws UnsupportedEncodingException {
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		GridFSDBFile file = fileService.get(id);
@@ -140,8 +131,8 @@ public class FileDownLoadController {
 			logger.warn("未找到id为'{}'的文件", id);
 			return;
 		}
-		response.setHeader("Content-Disposition",
-				"attachment;fileName=" + new String(file.getFilename().getBytes("utf-8"), "ISO8859-1"));
+		String fileName = returnFileName(request, file.getFilename());
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			file.writeTo(out);
 			out.flush();
@@ -173,7 +164,7 @@ public class FileDownLoadController {
 	 */
 	@RequestMapping(value = "/groupfile/download/{id}", method = RequestMethod.GET)
 	public ResponseBean download(@PathVariable("id") String id, @RequestParam("groupId") long groupId,
-			HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response) {
 		if (groupId < 1) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "小组id错误（负数或零）");
@@ -186,13 +177,8 @@ public class FileDownLoadController {
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "未找到对应文件");
 		}
-		String file_name;
-		try {
-			file_name = new String(file.getFilename().getBytes(), "ISO-8859-1");
-			response.setHeader("Content-Disposition", "attachment;fileName=" + file_name);
-		} catch (UnsupportedEncodingException e) {
-			logger.warn("修改编码格式的时候失败");
-		}
+		String fileName = returnFileName(request, file.getFilename());
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			file.writeTo(out);
 			out.flush();
@@ -203,14 +189,45 @@ public class FileDownLoadController {
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
+	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 功能描述：处理不同浏览器下载文件乱码问题
+	 * 使用示范：
+	 *
+	 * &#64;param request
+	 * &#64;param fileName 文件名
+	 * &#64;return 编码后的文件名
+	 * </pre>
+	 */
+	private String returnFileName(HttpServletRequest request, String fileName) {
+		String userAgent = request.getHeader("User-Agent");
+		String reFileName = "";
+		if (StringUtil.isEmpty(fileName)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "未找到对应文件");
+		}
+		try {
+			// 针对IE或者以IE为内核的浏览器：
+			if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
+				reFileName = java.net.URLEncoder.encode(fileName, "UTF-8");
+			} else {
+				// 非IE浏览器的处理：
+				reFileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+			}
+		} catch (UnsupportedEncodingException e) {
+			logger.warn("修改编码格式的时候失败");
+		}
+		return reFileName;
 	}
 
 	/**
 	 * 
 	 * 
 	 * 功能描述：申报表批量导出excel
-	 *
+	 * 
 	 * @param materialId
 	 *            教材id
 	 * @param textBookids
@@ -232,7 +249,7 @@ public class FileDownLoadController {
 	 * @param offlineProgress
 	 *            0 未 2 收到
 	 * @param response
-	 *
+	 * 
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/excel/declaration", method = RequestMethod.GET)

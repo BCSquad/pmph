@@ -5,6 +5,7 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -47,6 +48,14 @@ public interface PmphUserDao {
 	 */
 	PmphUser getInfo(Long id);
 	
+	/**
+	 * 根据id和原密码修改密码
+	 * @author Mryang
+	 * @createDate 2017年12月12日 上午8:46:44
+	 * @param map
+	 * @return
+	 */
+	Integer updatePassword (Map<String,Object> map);
 	
 
 	List<PmphUser> getListUser();
