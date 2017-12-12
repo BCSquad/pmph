@@ -183,7 +183,7 @@ public class JdbcHelper {
      */
     public static String correctExperience(String experience) {
         if (StringUtil.isEmpty(experience) || "无".equals(experience) || "、".equals(experience)
-        		|| "其他".equals(experience)) {
+                || "其他".equals(experience)) {
             experience = "0";
         }
         String reg = "[^\u4e00-\u9fa5]";
@@ -192,8 +192,12 @@ public class JdbcHelper {
         } else {
             experience = experience.replace("五", "5").replace(reg, "").replace("s", "").replace(" ", "");
         }
-        if (Integer.parseInt(experience) > 128){
-        	experience = "0";
+        try {
+            if (Integer.parseInt(experience) > 128) {
+                experience = "0";
+            }
+        } catch (NumberFormatException ex) {
+            experience = "0";
         }
         return experience;
     }
@@ -240,7 +244,7 @@ public class JdbcHelper {
         sb.append("秒");
         return sb.toString();
     }
-    
+
     /**
      * 抓取HTML中src地址
      *

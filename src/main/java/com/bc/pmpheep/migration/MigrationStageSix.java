@@ -48,6 +48,7 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
+import java.text.ParseException;
 
 /**
  * 作家申报与遴选迁移工具类
@@ -60,6 +61,9 @@ import com.bc.pmpheep.utils.ExcelHelper;
 public class MigrationStageSix {
 
     private final Logger logger = LoggerFactory.getLogger(MigrationStageSix.class);
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+    Date split;
+    Date blank;
 
     @Resource
     DeclarationService declarationService;
@@ -93,6 +97,13 @@ public class MigrationStageSix {
     ExcelHelper excelHelper;
 
     public void start() {
+        try {
+            split = sdf.parse("2017-07-29 15:25:03");
+            blank = sdf.parse("0000-00-00 00:00:00");
+        } catch (ParseException ex) {
+            logger.error("日期转换错误，错误信息：{}", ex.getMessage());
+            return;
+        }
         Date begin = new Date();
         declaration();
         decEduExp();
@@ -200,9 +211,9 @@ public class MigrationStageSix {
             declaration.setTitle((String) map.get("positional")); // 职称
             declaration.setAddress((String) map.get("address")); // 联系地址
             if (StringUtil.strLength(postCode) > 20) {
-            	declaration.setPostcode("100000");
+                declaration.setPostcode("100000");
             }
-            declaration.setPostcode(postCode); // 邮编
+            //declaration.setPostcode(postCode); // 邮编
             declaration.setHandphone((String) map.get("handset")); // 手机
             declaration.setEmail((String) map.get("email")); // 邮箱
             declaration.setIdtype((Short) map.get("idcardtype1")); // 证件类型
@@ -296,26 +307,22 @@ public class MigrationStageSix {
             decEduExp.setMajor(major);
             decEduExp.setDegree(degree);
             decEduExp.setNote((String) map.get("remark")); // 备注
-            SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
             Timestamp startstopDate = (Timestamp) map.get("startstopdate"); // 起始时间
-            if (ObjectUtil.isNull(startstopDate)) {
-            	decEduExp.setDateBegin(null);
+            if (null != startstopDate) {
+                decEduExp.setDateBegin(sdf.format(startstopDate));
             } else {
-            	String dateBegin = dateChange.format(startstopDate);
-                decEduExp.setDateBegin(dateBegin);
-			}
-            Timestamp createDate = (Timestamp) map.get("createdate"); // 获取对比时间
+                decEduExp.setDateBegin("未知");
+            }
             Timestamp endDate = (Timestamp) map.get("enddate"); // 终止时间
-            if (ObjectUtil.isNull(endDate)) {
-            	decEduExp.setDateEnd(null);
-            } else {
-                String dateEnd = dateChange.format(endDate);
-            	if (endDate.equals(createDate) || dateEnd.equals("2017-07-29 15:25:03.0")) {
+            if (null != endDate) {
+                if (endDate.getTime() >= split.getTime() || endDate.getTime() == blank.getTime()) {
                     decEduExp.setDateEnd("至今");
                 } else {
-                    decEduExp.setDateEnd(dateEnd);
+                    decEduExp.setDateEnd(sdf.format(endDate));
                 }
-			}
+            } else {
+                decEduExp.setDateEnd("至今");
+            }
             decEduExp.setSort(999); // 显示顺序
             decEduExp = decEduExpService.addDecEduExp(decEduExp);
             long pk = decEduExp.getId();
@@ -371,25 +378,21 @@ public class MigrationStageSix {
             decWorkExp.setNote((String) map.get("remark")); // 备注
             SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
             Timestamp startstopDate = (Timestamp) map.get("startstopdate"); // 起始时间
-            if (ObjectUtil.isNull(startstopDate)) {
-            	decWorkExp.setDateBegin(null);
+            if (null != startstopDate) {
+                decWorkExp.setDateBegin(sdf.format(startstopDate));
             } else {
-            	String dateBegin = dateChange.format(startstopDate);
-                decWorkExp.setDateBegin(dateBegin);
-			}
-            Timestamp createDate = (Timestamp) map.get("createdate"); // 获取对比时间
+                decWorkExp.setDateBegin("未知");
+            }
             Timestamp endDate = (Timestamp) map.get("enddate"); // 终止时间
-            if (ObjectUtil.isNull(endDate)) {
-            	decWorkExp.setDateEnd(null);
-            } else {
-                String dateEnd = dateChange.format(endDate);
-            	if (endDate.equals(createDate) || dateEnd.equals("2017-07-29 15:25:03.0") || 
-            			dateEnd.equals("0000-00-00 00:00:00")) {
+            if (null != endDate) {
+                if (endDate.getTime() >= split.getTime() || endDate.getTime() == blank.getTime()) {
                     decWorkExp.setDateEnd("至今");
                 } else {
-                    decWorkExp.setDateEnd(dateEnd);
+                    decWorkExp.setDateEnd(sdf.format(endDate));
                 }
-			}
+            } else {
+                decWorkExp.setDateEnd("至今");
+            }
             decWorkExp.setSort(999); // 显示顺序
             decWorkExp = decWorkExpService.addDecWorkExp(decWorkExp);
             long pk = decWorkExp.getId();
@@ -443,27 +446,22 @@ public class MigrationStageSix {
             decTeachExp.setSchoolName(schoolName);
             decTeachExp.setSubject(subject);
             decTeachExp.setNote((String) map.get("remark")); // 备注
-            SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
             Timestamp startstopDate = (Timestamp) map.get("startstopdate"); // 起始时间
-            if (ObjectUtil.isNull(startstopDate)) {
-            	decTeachExp.setDateBegin(null);
+            if (null != startstopDate) {
+                decTeachExp.setDateBegin(sdf.format(startstopDate));
             } else {
-            	String dateBegin = dateChange.format(startstopDate);
-                decTeachExp.setDateBegin(dateBegin);
-			}
-            Timestamp createDate = (Timestamp) map.get("createdate"); // 获取对比时间
+                decTeachExp.setDateBegin("未知");
+            }
             Timestamp endDate = (Timestamp) map.get("enddate"); // 终止时间
-            if (ObjectUtil.isNull(endDate)) {
-            	decTeachExp.setDateEnd(null);
-            } else {
-                String dateEnd = dateChange.format(endDate);
-            	if (endDate.equals(createDate) || dateEnd.equals("2017-07-29 15:25:03.0") || 
-            			dateEnd.equals("0000-00-00 00:00:00")) {
+            if (null != endDate) {
+                if (endDate.getTime() >= split.getTime() || endDate.getTime() == blank.getTime()) {
                     decTeachExp.setDateEnd("至今");
                 } else {
-                    decTeachExp.setDateEnd(dateEnd);
+                    decTeachExp.setDateEnd(sdf.format(endDate));
                 }
-			}
+            } else {
+                decTeachExp.setDateEnd("至今");
+            }
             decTeachExp.setSort(999); // 显示顺序
             decTeachExp = decTeachExpService.addDecTeachExp(decTeachExp);
             long pk = decTeachExp.getId();
@@ -516,7 +514,7 @@ public class MigrationStageSix {
             }
             decAcade.setDeclarationId(declarationid);
             if ("nu".equals(rankJudge)) {
-            	decAcade.setRank(null);
+                decAcade.setRank(null);
             } else {
                 if (StringUtil.isEmpty(rankJudge)) {
                     decAcade.setRank(null);
@@ -780,9 +778,6 @@ public class MigrationStageSix {
             Integer position = positionJudge.intValue();
             decTextbook.setPosition(position);
             decTextbook.setPublisher(publisher);
-            if (publishDate.equals("0000-00-00 00:00:00")) {
-            	decTextbook.setPublishDate(null);
-            }
             decTextbook.setPublishDate(publishDate);
             if (StringUtil.notEmpty(isbn)) {
                 isbn = isbn.trim();
@@ -931,7 +926,7 @@ public class MigrationStageSix {
         msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
-    
+
     /**
      * 作家扩展项填报表
      */
@@ -1051,37 +1046,37 @@ public class MigrationStageSix {
                 continue;
             }
             decPosition.setTextbookId(textbookid);
-            temppresetPosition += ","+temppresetPosition+",";
-            String Positions    ="";
-            if(temppresetPosition.contains(",a,")){
-            	Positions += "1" ;
-            }else{
-            	Positions += "0" ;
+            temppresetPosition += "," + temppresetPosition + ",";
+            String Positions = "";
+            if (temppresetPosition.contains(",a,")) {
+                Positions += "1";
+            } else {
+                Positions += "0";
             }
-            if(temppresetPosition.contains(",b,")){
-            	Positions += "1" ;
-            }else{
-            	Positions += "0" ;
+            if (temppresetPosition.contains(",b,")) {
+                Positions += "1";
+            } else {
+                Positions += "0";
             }
-            if(temppresetPosition.contains(",c,")){
-            	Positions += "1" ;
-            }else{
-            	Positions += "0" ;
+            if (temppresetPosition.contains(",c,")) {
+                Positions += "1";
+            } else {
+                Positions += "0";
             }
             decPosition.setPresetPosition(Integer.valueOf(Positions, 2));//转成10进制
             if (ObjectUtil.isNull(isOnList)) {
-            	decPosition.setIsOnList(1);
+                decPosition.setIsOnList(1);
             }
             Integer isOn = isOnList.intValue();
             decPosition.setIsOnList(isOn);
-            tempchosenPosition += ","+tempchosenPosition+",";
-            Integer chosen =0 ;
-            if(tempchosenPosition.contains(",a,")){
-            	chosen = 1 ;
-            }else if(tempchosenPosition.contains(",b,")){
-            	chosen = 2 ;
-            }else if (tempchosenPosition.contains(",c,")){
-            	chosen = 3 ;
+            tempchosenPosition += "," + tempchosenPosition + ",";
+            Integer chosen = 0;
+            if (tempchosenPosition.contains(",a,")) {
+                chosen = 1;
+            } else if (tempchosenPosition.contains(",b,")) {
+                chosen = 2;
+            } else if (tempchosenPosition.contains(",c,")) {
+                chosen = 3;
             }
             decPosition.setChosenPosition(chosen);
             decPosition.setRank(mastersort);
