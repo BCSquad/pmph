@@ -148,7 +148,7 @@ public class MigrationStageSix {
                 + "left join sys_userext su on su.userid=wd.userid "
                 + "left join teach_applyposition ta on ta.writerid=wd.writerid "
                 + "where su.userid is not null "
-                + "group by wd.writerid ;";
+                + "group by wd.writerid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql); // 查询所有数据
         int count = 0; // 迁移成功的条目数
         int materialidCount = 0;
@@ -200,8 +200,7 @@ public class MigrationStageSix {
             declaration.setTitle((String) map.get("positional")); // 职称
             declaration.setAddress((String) map.get("address")); // 联系地址
             if (StringUtil.notEmpty(postCode)) {
-                if (StringUtil.strLength(postCode) > 20 || 
-                		"55894b98-6b15-4210-9460-11bdf6e8e89c".equals(id)) {
+                if (StringUtil.strLength(postCode) > 20) {
                 	declaration.setPostcode("100000");
                 }
             }
