@@ -62,6 +62,15 @@ public interface DecLastPositionDao {
 	 * 
 	 * @Return 作家上套教材参编情况信息
 	 */
+	List<DecLastPosition> getListDecLastPositionByDeclarationIds(List<Long> declarationId);
+	
+	/**
+	 * Description: 根据申报表id查询作家上套教材参编情况信息
+	 * 
+	 * @Param declarationId 申报表id
+	 * 
+	 * @Return 作家上套教材参编情况信息
+	 */
 	List<DecLastPosition> getListDecLastPositionByDeclarationId(Long declarationId);
 
 	/**

@@ -64,6 +64,15 @@ public interface DecTeachExpDao {
 	 * 
 	 * @Return 作家学习经历信息
 	 */
+	List<DecTeachExp> getListDecTeachExpByDeclarationIds(List<Long> declarationId);
+	
+	/**
+	 * Description: 根据申报表id查询作家教学经历信息
+	 * 
+	 * @Param declarationId 申报表id
+	 * 
+	 * @Return 作家学习经历信息
+	 */
 	List<DecTeachExp> getListDecTeachExpByDeclarationId(Long declarationId);
 
 	/**

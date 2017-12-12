@@ -169,10 +169,10 @@ public class DeclarationController {
 	* 功能描述：教材申报-遴选主编/遴选编委
 	* 使用示范：
 	* 
-	* &#64;param textbookId 书籍ID
-	* &#64;param realName 申报人姓名
-	* &#64;param presetPosition 申报职位
-	* &#64;return
+	* @param textbookId 书籍ID
+	* @param realName 申报人姓名
+	* @param presetPosition 申报职位
+	* @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -191,9 +191,9 @@ public class DeclarationController {
 	 * 功能描述：更新遴选主编/遴选编委(确定/发布)
 	 * 使用示范：
 	 *
-	 * &#64;param decPositions DecPosition对象集合
-	 * &#64;param selectionType (1:确定，2：发布)
-	 * &#64;return
+	 * @param decPositions DecPosition对象集合
+	 * @param selectionType (1:确定，2：发布)
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody

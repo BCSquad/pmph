@@ -110,14 +110,27 @@
 	</select>
 
 	<!-- 根据declarationId查询作家主编国家级规划教材情况信息 -->
-	<select id="getListDecNationalPlanByDeclarationId" parameterType="java.lang.Long"
-		resultType="DecNationalPlan">
-		select * from dec_national_plan where
+	<select id="getListDecNationalPlanByDeclarationId"
+		parameterType="java.lang.Long" resultType="DecNationalPlan">
+		select * from
+		dec_national_plan where
 		declaration_id=#{declarationId};
+	</select>
+
+	<!-- 根据declarationId查询作家主编国家级规划教材情况信息 -->
+	<select id="getListDecNationalPlanByDeclarationIds" resultType="DecNationalPlan">
+		select * from
+		dec_national_plan where
+		declaration_id in
+		<foreach collection="list" item="declarationId" open="("
+			close=")" separator="," index="index">
+			#{declarationId}
+		</foreach>
 	</select>
 
 	<!-- 查询兼职学术信息表的总记录数 -->
 	<select id="getDecNationalPlan" resultType="java.lang.Long">
-		select count(*) from dec_national_plan
+		select count(*) from
+		dec_national_plan
 	</select>
 </mapper>

@@ -117,6 +117,17 @@
 		declaration_id=#{declarationId};
 	</select>
 
+	<!-- 根据declarationId查询作家上套教材参编情况信息 -->
+	<select id="getListDecLastPositionByDeclarationIds" resultType="DecLastPosition">
+		select * from
+		dec_last_position where
+		declaration_id in
+		<foreach collection="list" item="declarationId" open="("
+			close=")" separator="," index="index">
+			#{declarationId}
+		</foreach>
+	</select>
+
 	<!-- 查询作家上套教材参编情况表的总记录数 -->
 	<select id="getDecLastPosition" resultType="java.lang.Long">
 		select count(*) from
