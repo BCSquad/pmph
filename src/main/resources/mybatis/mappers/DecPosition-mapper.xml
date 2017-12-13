@@ -434,13 +434,13 @@
     <!-- 申报结果按学校统计（按申报数排序） -->
     <select id="getSchoolListPreset" parameterType="pageParameter" 
         resultType="DeclarationResultSchoolVO">
-        SELECT @rowno:=@rowno+1 AS row,t1.id,t1.orgid,t1.org_name,t1.chosenpositioneditor,
+        SELECT @rowno:=@rowno+1 AS row,t1.id,t1.orgid,t1.schoolname,t1.chosenpositioneditor,
 		t1.chosenpositionsubeditor,t1.chosenpositioneditorial,t1.isdigitaleditor    
 		FROM (SELECT GROUP_CONCAT(if((d.chosen_position in (1)),b.realname,null)) chosenpositioneditor,
 		GROUP_CONCAT(if((d.chosen_position in (2)),b.realname,null)) chosenpositionsubeditor,
 		GROUP_CONCAT(if((d.chosen_position in (3)),b.realname,null)) chosenpositioneditorial,
 		GROUP_CONCAT(if((d.is_digital_editor is not null and d.is_digital_editor !=0),b.realname,null)) isdigitaleditor,
-		c.id,a.id orgid,a.org_name FROM org a 
+		c.id,a.id orgid,a.org_name schoolname FROM org a 
 		LEFT JOIN declaration b ON a.id = b.org_id 
 		LEFT JOIN material c ON b.material_id = c.id 
 		LEFT JOIN dec_position d ON b.id = d.declaration_id 
@@ -459,13 +459,13 @@
     <!-- 查询结果按书籍统计 -->
     <select id="getBookList" parameterType="pageParameter" 
         resultType="DeclarationResultBookVO">
-        SELECT @rowno:=@rowno+1 AS row,t1.materialid,t1.id,t1.textbook_name,t1.chosenpositioneditor,
+        SELECT @rowno:=@rowno+1 AS row,t1.materialid,t1.id,t1.bookname,t1.chosenpositioneditor,
 		t1.chosenpositionsubeditor,t1.chosenpositioneditorial,t1.isdigitaleditor 
 		FROM (SELECT GROUP_CONCAT(if((c.chosen_position in (1)),d.realname,null)) chosenpositioneditor,
 		GROUP_CONCAT(if((c.chosen_position in (2)),d.realname,null)) chosenpositionsubeditor,
 		GROUP_CONCAT(if((c.chosen_position in (3)),d.realname,null)) chosenpositioneditorial,
  		GROUP_CONCAT(if((c.is_digital_editor is not null and c.is_digital_editor !=0),d.realname,null)) isdigitaleditor,
-		b.id materialid,a.id id,a.textbook_name FROM textbook a 
+		b.id materialid,a.id id,a.textbook_name bookname FROM textbook a 
 		LEFT JOIN material b ON a.material_id = b.id 
         LEFT JOIN dec_position c ON a.id = c.textbook_id  
         LEFT JOIN declaration d ON c.declaration_id = d.id 
@@ -533,7 +533,7 @@
 	<select id="getSchoolResultChosen" parameterType="pageParameter"
 		resultType="DeclarationSituationSchoolResultVO">
 		SELECT @rowno:=@rowno+1 AS
-		row,t1.id,t1.orgid,t1.org_name,t1.presetpositioneditor,
+		row,t1.id,t1.orgid,t1.schoolname,t1.presetpositioneditor,
 		t1.presetpositionsubeditor,t1.presetpositioneditorial,t1.chosenpositioneditor,
 		t1.chosenpositionsubeditor,t1.chosenpositioneditorial,t1.isdigitaleditor
 		FROM (SELECT sum(if((d.preset_position in (4,5,6,7)),1,0))
@@ -551,7 +551,7 @@
 		SUM(if((d.is_digital_editor is not null and
 		d.is_digital_editor !=0),1,0)) isdigitaleditor,
 		c.id,a.id
-		orgid,a.org_name FROM org a
+		orgid,a.org_name schoolname FROM org a
 		LEFT JOIN declaration b ON a.id = b.org_id
 		LEFT JOIN material c ON b.material_id = c.id
 		LEFT JOIN dec_position d
@@ -579,7 +579,7 @@
 	<select id="getSchoolResultPreset" parameterType="pageParameter"
 		resultType="DeclarationSituationSchoolResultVO">
 		SELECT @rowno:=@rowno+1 AS
-		row,t1.id,t1.orgid,t1.org_name,t1.presetpositioneditor,
+		row,t1.id,t1.orgid,t1.schoolname,t1.presetpositioneditor,
 		t1.presetpositionsubeditor,t1.presetpositioneditorial,t1.chosenpositioneditor,
 		t1.chosenpositionsubeditor,t1.chosenpositioneditorial,t1.isdigitaleditor
 		FROM (SELECT sum(if((d.preset_position in (4,5,6,7)),1,0))
@@ -597,7 +597,7 @@
 		SUM(if((d.is_digital_editor is not null and
 		d.is_digital_editor !=0),1,0)) isdigitaleditor,
 		c.id,a.id
-		orgid,a.org_name FROM org a
+		orgid,a.org_name schoolname FROM org a
 		LEFT JOIN declaration b ON a.id = b.org_id
 		LEFT JOIN material c ON b.material_id = c.id
 		LEFT JOIN dec_position d
@@ -626,7 +626,7 @@
 	<select id="getBookResult" parameterType="pageParameter"
 		resultType="DeclarationSituationBookResultVO">
 		SELECT @rowno:=@rowno+1 AS
-		row,t1.materialid,t1.id,t1.textbook_name,t1.presetpositioneditor,
+		row,t1.materialid,t1.id,t1.bookname,t1.presetpositioneditor,
 		t1.presetpositionsubeditor,t1.presetpositioneditorial,t1.chosenpositioneditor,
 		t1.chosenpositionsubeditor,t1.chosenpositioneditorial,t1.isdigitaleditor
 		FROM (SELECT sum(if((c.preset_position in (4,5,6,7)),1,0))
@@ -645,7 +645,7 @@
 		c.is_digital_editor !=0),1,0)) isdigitaleditor,
 		b.id
 		materialid,a.id
-		id,a.textbook_name FROM textbook a
+		id,a.textbook_name bookname FROM textbook a
 		LEFT JOIN material b ON
 		a.material_id = b.id
 		LEFT JOIN dec_position c ON a.id = c.textbook_id
@@ -668,7 +668,7 @@
 	<select id="getSchoolListChosen" parameterType="pageParameter"
 		resultType="DeclarationResultSchoolVO">
 		SELECT @rowno:=@rowno+1 AS
-		row,t1.id,t1.orgid,t1.org_name,t1.chosenpositioneditor,
+		row,t1.id,t1.orgid,t1.schoolname,t1.chosenpositioneditor,
 		t1.chosenpositionsubeditor,t1.chosenpositioneditorial,t1.isdigitaleditor
 		FROM (SELECT GROUP_CONCAT(if((d.chosen_position in
 		(1)),b.realname,null)) chosenpositioneditor,
@@ -679,7 +679,7 @@
 		GROUP_CONCAT(if((d.is_digital_editor is not null and
 		d.is_digital_editor !=0),b.realname,null)) isdigitaleditor,
 		c.id,a.id
-		orgid,a.org_name FROM org a
+		orgid,a.org_name schoolname FROM org a
 		LEFT JOIN declaration b ON a.id = b.org_id
 		LEFT JOIN material c ON b.material_id = c.id
 		LEFT JOIN dec_position d
