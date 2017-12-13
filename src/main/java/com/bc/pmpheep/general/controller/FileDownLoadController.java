@@ -4,8 +4,12 @@
  */
 package com.bc.pmpheep.general.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -46,6 +50,7 @@ import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.utils.ExcelHelper;
 import com.bc.pmpheep.utils.WordHelper;
+import com.bc.pmpheep.utils.ZipHelper;
 import com.mongodb.gridfs.GridFSDBFile;
 
 /**
@@ -80,6 +85,8 @@ public class FileDownLoadController {
     @Resource
     TextbookService                 textbookService;
     @Resource
+    ZipHelper                       zipHelper;
+    @Resource
     MaterialOrgService              materialOrgService;
 
     /**
@@ -113,13 +120,13 @@ public class FileDownLoadController {
     /**
      * 
      * <pre>
-	 * 功能描述：普通文件下载(更新下载数)
-	 * 使用示范：
-	 *
-	 * &#64;param type 模块类型
-	 * &#64;param id 文件在MongoDB中的id
-	 * &#64;param response 服务响应
-	 * </pre>
+     * 功能描述：普通文件下载(更新下载数)
+     * 使用示范：
+     *
+     * &#64;param type 模块类型
+     * &#64;param id 文件在MongoDB中的id
+     * &#64;param response 服务响应
+     * </pre>
      * 
      * @throws UnsupportedEncodingException
      */
@@ -196,13 +203,13 @@ public class FileDownLoadController {
     /**
      * 
      * <pre>
-	 * 功能描述：处理不同浏览器下载文件乱码问题
-	 * 使用示范：
-	 *
-	 * &#64;param request
-	 * &#64;param fileName 文件名
-	 * &#64;return 编码后的文件名
-	 * </pre>
+     * 功能描述：处理不同浏览器下载文件乱码问题
+     * 使用示范：
+     *
+     * &#64;param request
+     * &#64;param fileName 文件名
+     * &#64;return 编码后的文件名
+     * </pre>
      */
     private String returnFileName(HttpServletRequest request, String fileName) {
         String userAgent = request.getHeader("User-Agent");
@@ -224,46 +231,6 @@ public class FileDownLoadController {
             logger.warn("修改编码格式的时候失败");
         }
         return reFileName;
-    }
-
-    /**
-     * 
-     * <pre>
-     * 功能描述：导出已发布教材下的学校
-     * 使用示范：
-     *
-     * @param materialId 教材ID
-     * @param request
-     * @param response
-     * </pre>
-     */
-    @ResponseBody
-    @RequestMapping(value = "/excel/published/org", method = RequestMethod.GET)
-    public void org(@RequestParam("materialId") Long materialId, HttpServletRequest request,
-    HttpServletResponse response) {
-        Workbook workbook = null;
-        List<OrgExclVO> orgList = null;
-        try {
-            orgList = materialOrgService.getOutPutExclOrgByMaterialId(materialId);
-            workbook = excelHelper.fromBusinessObjectList(orgList, "学校信息");
-        } catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
-            logger.warn("数据表格化的时候失败");
-        }
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("application/force-download");
-        String materialName = orgList.get(0).getMaterialName();// 教材名称
-        String fileName = returnFileName(request, materialName + ".xls");
-        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
-        try (OutputStream out = response.getOutputStream()) {
-            workbook.write(out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            logger.warn("文件下载时出现IO异常：{}", e.getMessage());
-            throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
-                                              "文件在传输时中断");
-        }
     }
 
     /**
@@ -349,9 +316,14 @@ public class FileDownLoadController {
      */
     @ResponseBody
     @RequestMapping(value = "/word/declaration", method = RequestMethod.GET)
-    public void declarationWord(Long materialId, String textBookids, String realname,
+    public String declarationWord(Long materialId, String textBookids, String realname,
     String position, String title, String orgName, String unitName, Integer positionType,
     Integer onlineProgress, Integer offlineProgress, HttpServletResponse response) {
+        String src = this.getClass().getResource("/").getPath();
+        src = src.substring(1);
+        if (!src.endsWith(File.separator)) {
+            src += File.separator;
+        }
         String tempDir =
         String.valueOf(System.currentTimeMillis())
               .concat(String.valueOf(RandomUtil.getRandomNum()));
@@ -383,23 +355,107 @@ public class FileDownLoadController {
                 }
             }
             StringBuilder sb = new StringBuilder();
-            String src = this.getClass().getResource("/").getPath();
-            src = src.substring(1);
             sb.append(src);
-            if (!src.endsWith(File.separator)) {
-                sb.append(File.separator);
-            }
             sb.append(tempDir);
             sb.append(File.separator);
             sb.append(materialName);
             sb.append(File.separator);
-            sb.append(i + "." + textbooks.get(i).getTextbookName());
+            sb.append((i + 1) + "." + textbooks.get(i).getTextbookName());
             sb.append(File.separator);
             wordHelper.export(materialName, sb.toString(), list);
         }
         long endTime = System.currentTimeMillis();
         System.err.println("------------------------------------------");
-        System.err.println("打包下载时间：" + (endTime - startTime) + "ms");
+        System.err.println("生成文件夹时间：" + (endTime - startTime) + "ms");
+        String dest = src + tempDir;
+        zipHelper.zip(dest + File.separator + materialName, dest, true, null);
+        return tempDir;
     }
 
+    /**
+     * 普通文件下载
+     * 
+     * @param id 生成的唯一标识符
+     * @param response 服务响应
+     * @throws UnsupportedEncodingException
+     */
+    @RequestMapping(value = "/zip/download", method = RequestMethod.GET)
+    public void downloadZip(@RequestParam("id") String id, HttpServletRequest request,
+    HttpServletResponse response) {
+        String src = this.getClass().getResource("/").getPath();
+        src = src.substring(1);
+        if (!src.endsWith(File.separator)) {
+            src += File.separator;
+        }
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/force-download");
+        String filePath = src + id + File.separator;
+        String fileName = returnFileName(request, id + ".zip");
+        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        OutputStream fos = null;
+        InputStream fis = null;
+        try {
+            fis = new FileInputStream(filePath);
+            bis = new BufferedInputStream(fis);
+            fos = response.getOutputStream();
+            bos = new BufferedOutputStream(fos);
+            int byteRead = 0;
+            byte[] buffer = new byte[1024];
+            while ((byteRead = bis.read(buffer, 0, 1024)) != -1) {
+                bos.write(buffer, 0, byteRead);
+            }
+            bos.flush();
+            fis.close();
+            bis.close();
+            fos.close();
+            bos.close();
+        } catch (Exception e) {
+            logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+            throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
+        }
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：导出已发布教材下的学校
+     * 使用示范：
+     *
+     * @param materialId 教材ID
+     * @param request
+     * @param response
+     * </pre>
+     */
+    @ResponseBody
+    @RequestMapping(value = "/excel/published/org", method = RequestMethod.GET)
+    public void org(@RequestParam("materialId") Long materialId, HttpServletRequest request,
+    HttpServletResponse response) {
+        Workbook workbook = null;
+        List<OrgExclVO> orgList = null;
+        try {
+            orgList = materialOrgService.getOutPutExclOrgByMaterialId(materialId);
+            workbook = excelHelper.fromBusinessObjectList(orgList, "学校信息");
+        } catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+            logger.warn("数据表格化的时候失败");
+        }
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/force-download");
+        String materialName = orgList.get(0).getMaterialName();// 教材名称
+        String fileName = returnFileName(request, materialName + ".xls");
+        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        try (OutputStream out = response.getOutputStream()) {
+            workbook.write(out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+            throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
+        }
+    }
 }

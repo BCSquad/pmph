@@ -136,13 +136,14 @@
 
 	<!-- 根据declarationId查询作家学习经历信息 -->
 	<select id="getListDecEduExpByDeclarationIds" resultType="DecEduExp">
-		select
-		* from dec_edu_exp where
-		declaration_id in
-		<foreach collection="list" item="declarationId" open="("
-			close=")" separator="," index="index">
-			#{declarationId}
-		</foreach>
+		select * from dec_edu_exp
+		<if test="list != null ">
+			where declaration_id in
+			<foreach collection="list" item="declarationId" open="("
+				close=")" separator="," index="index">
+				#{declarationId}
+			</foreach>
+		</if>
 	</select>
 
 	<!-- 查询作家学习经历表的总记录数 -->

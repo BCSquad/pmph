@@ -634,7 +634,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		long endTime = System.currentTimeMillis();
 		System.err.println("------------------------------------------");
-		System.err.println("查询时间：" + (endTime - startTime) + "ms");
+		System.err.println("查询时间：" + (endTime - startTime) + "ms， 一共" + declarationEtcBOs.size() + "条数据");
 		return declarationEtcBOs;
 	}
 }
