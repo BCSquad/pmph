@@ -21,6 +21,7 @@ import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
+import com.bc.pmpheep.back.po.MaterialOrg;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.ArrayUtil;
@@ -374,18 +375,29 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                                               CheckedExceptionResult.NULL_PARAM, "请求用户不存在");
         }
         Integer count = 0;
+        List<MaterialOrg> materialOrgList = new ArrayList<MaterialOrg>(orgIds.size());
         // 根据教材ID查询教材-机构关联表
         List<Long> OrgIds = materialOrgService.getListMaterialOrgByMaterialId(materialId);
         if (CollectionUtil.isEmpty(OrgIds)) {// 为空，初次发布
-            systemMessageService.materialSend(materialId, orgIds);
+            for (Long orgId : orgIds) {
+                materialOrgList.add(new MaterialOrg(materialId, orgId));
+            }
+            count = materialOrgService.addMaterialOrgs(materialOrgList);
+            if (count > 0) {
+                systemMessageService.materialSend(materialId, orgIds);
+            }
         } else {// 不为空
             List<Long> newOrgIds = new ArrayList<Long>();// 新选中的机构
             for (Long orgId : orgIds) {
                 if (!OrgIds.contains(orgId)) {
                     newOrgIds.add(orgId);
+                    materialOrgList.add(new MaterialOrg(materialId, orgId));
                 }
             }
-            systemMessageService.materialSend(materialId, newOrgIds);
+            count = materialOrgService.addMaterialOrgs(materialOrgList);
+            if (count > 0) {
+                systemMessageService.materialSend(materialId, newOrgIds);
+            }
         }
         CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
         if (ObjectUtil.isNull(cmsContent)) {

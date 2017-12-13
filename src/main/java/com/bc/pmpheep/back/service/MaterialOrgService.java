@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 import java.util.List;
 
 import com.bc.pmpheep.back.po.MaterialOrg;
+import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -46,6 +47,19 @@ public interface MaterialOrgService {
      * </pre>
      */
     List<Long> getListMaterialOrgByMaterialId(Long materialId) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据教材 ID导出已发布的学校
+     * 使用示范：
+     *
+     * @param materialId 教材 ID
+     * @return OrgExclVO
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    List<OrgExclVO> getOutPutExclOrgByMaterialId(Long materialId) throws CheckedServiceException;
 
     /**
      * 根据materialId删除materialOrg
