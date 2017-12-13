@@ -883,7 +883,7 @@ public class MigrationStageSix {
     protected void decAchievement() {
         String tableName = "teach_material_extvalue"; // 要迁移的旧库表名
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
-        String sql = "select *,wd.new_pk wdid from teach_material_extvalue wme "
+        String sql = "select *,tme.expendname,wd.new_pk wdid from teach_material_extvalue wme "
                 + "left join writer_declaration wd on wd.writerid=wme.writerid "
                 + "left join teach_material_extend tme on tme.expendid=wme.expendid "
                 + "where tme.expendname = '个人成就'";
@@ -938,7 +938,8 @@ public class MigrationStageSix {
     protected void decExtension() {
         String tableName = "teach_material_extvalue"; // 要迁移的旧库表名
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
-        String sql = "select *,wd.new_pk wdid,tme.new_pk tmeid from teach_material_extvalue wme "
+        String sql = "select *,tme.expendname,wd.new_pk wdid,tme.new_pk tmeid "
+        		+ "from teach_material_extvalue wme "
                 + "left join writer_declaration wd on wd.writerid=wme.writerid "
                 + "left join teach_material_extend tme on tme.expendid=wme.expendid "
                 + "where tme.expendname != '个人成就'";
