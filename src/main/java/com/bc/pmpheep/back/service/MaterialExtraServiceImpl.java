@@ -290,6 +290,12 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                                               CheckedExceptionResult.NULL_PARAM, "教材主键为空");
         }
         Map<String, Object> resultMap = new HashMap<String, Object>();
+        // 教材通知备注
+        MaterialExtra materialExtra = null;
+        // MongoDB中教材通知
+        String contentText = null;
+        // 联系人
+        List<MaterialContact> materialContacts = null;
         // 教材通知附件
         List<MaterialNoticeAttachment> materialNoticeAttachments = null;
         // 教材备注附件
@@ -297,13 +303,9 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
         // 教材
         Material material = materialService.getMaterialById(materialId);
         if (ObjectUtil.notNull(material)) {
-            resultMap.put("materialName", material);// 教材
-            List<MaterialContact> materialContacts =
-            materialContactService.listMaterialContactByMaterialId(materialId);
-            resultMap.put("materialContacts", materialContacts);// 联系人
-            MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
+            materialContacts = materialContactService.listMaterialContactByMaterialId(materialId);// 联系人
+            materialExtra = this.getMaterialExtraByMaterialId(materialId);
             if (ObjectUtil.notNull(materialExtra)) {
-                resultMap.put("materialExtra", materialExtra);// 教材通知备注
                 Long materialExtraId = materialExtra.getId();
                 if (ObjectUtil.notNull(materialExtraId)) {
                     // 教材通知附件
@@ -328,7 +330,7 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             if (ObjectUtil.notNull(cmsContent)) {
                 Content content = contentService.get(cmsContent.getMid());
                 if (ObjectUtil.notNull(content)) {
-                    resultMap.put("content", content.getContent());// MongoDB中教材通知
+                    contentText = content.getContent();
                 }
             }
             if (CollectionUtil.isNotEmpty(materialNoticeAttachments)) {
@@ -344,6 +346,10 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                 }
             }
         }
+        resultMap.put("materialName", material);// 教材
+        resultMap.put("materialContacts", materialContacts);// 联系人
+        resultMap.put("materialExtra", materialExtra);// 教材通知备注
+        resultMap.put("content", contentText);// MongoDB中教材通知
         resultMap.put("materialNoticeAttachments", materialNoticeAttachments);// 教材通知附件
         resultMap.put("materialNoteAttachments", materialNoteAttachments);// 教材备注附件
         return resultMap;
