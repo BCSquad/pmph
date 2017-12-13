@@ -36,6 +36,7 @@ import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecNationalPlan;
+import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.DecResearch;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
@@ -243,13 +244,22 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		// 获取当前作家用户申报信息
 		Declaration declarationCon = declarationDao.getDeclarationById(id);
-		declarationCon.setOnlineProgress(onlineProgress);
-		Integer onlineOne = 2;
-		Integer onlineTwo = 3;
-		if (onlineOne.equals(onlineProgress)) { // 获取审核进度是2则被退回
+		if (2 == onlineProgress.intValue()) { // 获取审核进度是2则被退回
+			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
+			for (DecPosition decPositions : decPosition) {
+				Integer chosenPosition = decPositions.getChosenPosition();
+				Boolean isDigitalEditor = decPositions.getIsDigitalEditor();
+				if (1 == chosenPosition.intValue() || 2 == chosenPosition.intValue() || 
+						3 == chosenPosition.intValue() || isDigitalEditor) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+							CheckedExceptionResult.NULL_PARAM, "已遴选职务，不可退回给个人!");
+				}
+			}
+			declarationCon.setOnlineProgress(onlineProgress);
 			declarationDao.updateDeclaration(declarationCon);
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false); // 发送系统消息
-		} else if (onlineTwo.equals(onlineProgress)) { // 获取审核进度是3则通过
+		} else if (3 == onlineProgress.intValue()) { // 获取审核进度是3则通过
+			declarationCon.setOnlineProgress(onlineProgress);
 			declarationDao.updateDeclaration(declarationCon);
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true); // 发送系统消息
 		}
