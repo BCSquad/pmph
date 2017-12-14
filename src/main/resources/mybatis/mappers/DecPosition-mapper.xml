@@ -449,7 +449,9 @@
 		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
 		    and a.org_name like concat ('%',#{parameter.schoolName},'%') 
 		</if>
-		GROUP BY a.id ORDER BY SUM(if((d.preset_position in (1,2,3,4,5,6,7)),1,0)) DESC)t1,
+		GROUP BY a.id ORDER BY SUM(if((d.preset_position in (4,5,6,7)),1,0)) +
+		SUM(if((d.preset_position in (2,3,6,7)),1,0)) +
+		SUM(if((d.preset_position in (1,3,5,7)),1,0)) DESC)t1,
 		(SELECT @rowno:=0)t2 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
@@ -461,16 +463,19 @@
         resultType="DeclarationResultBookVO">
         SELECT @rowno:=@rowno+1 AS row,t1.materialid,t1.id,t1.bookname,t1.editorlist,
 		t1.subeditorlist,t1.editoriallist,t1.isdigitaleditorlist 
-		FROM (SELECT GROUP_CONCAT(if((c.chosen_position in (1)),d.realname,null)) editorlist,
-		GROUP_CONCAT(if((c.chosen_position in (2)),d.realname,null)) subeditorlist,
-		GROUP_CONCAT(if((c.chosen_position in (3)),d.realname,null)) editoriallist,
- 		GROUP_CONCAT(if((c.is_digital_editor is not null and c.is_digital_editor !=0),d.realname,null)) isdigitaleditorlist,
+		FROM (SELECT GROUP_CONCAT(if((d.is_staging = 0 AND d.online_progress >0 AND 
+        c.preset_position IS NOT NULL AND c.chosen_position in (1)),d.realname,null)) editorlist,
+		GROUP_CONCAT(if((d.is_staging = 0 AND d.online_progress >0 AND 
+        c.preset_position IS NOT NULL AND c.chosen_position in (2)),d.realname,null)) subeditorlist,
+		GROUP_CONCAT(if((d.is_staging = 0 AND d.online_progress >0 AND 
+        c.preset_position IS NOT NULL AND c.chosen_position in (3)),d.realname,null)) editoriallist,
+ 		GROUP_CONCAT(if((d.is_staging = 0 AND d.online_progress >0 AND 
+        c.preset_position IS NOT NULL AND c.is_digital_editor is not null and c.is_digital_editor !=0),d.realname,null)) isdigitaleditorlist,
 		b.id materialid,a.id id,a.textbook_name bookname FROM textbook a 
 		LEFT JOIN material b ON a.material_id = b.id 
         LEFT JOIN dec_position c ON a.id = c.textbook_id  
         LEFT JOIN declaration d ON c.declaration_id = d.id 
-		WHERE c.preset_position IS NOT NULL AND b.id = #{parameter.materialId} 
-		AND d.is_staging = 0 AND d.online_progress >0 
+		WHERE b.id = #{parameter.materialId} 
 		<if test="parameter.bookName !=null and parameter.bookName !=''">
 		    and a.textbook_name like concat ('%',#{parameter.bookName},'%') 
 		</if>
@@ -552,7 +557,7 @@
 		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
 			and a.org_name like concat ('%',#{parameter.schoolName},'%') 
 		</if>
-		GROUP BY a.id ORDER BY SUM(if((d.chosen_position in (1,2,3)),1,0)) DESC,
+		GROUP BY a.id ORDER BY SUM(if((d.chosen_position in (1,2,3)),1,0)) + 
 		SUM(if((d.is_digital_editor is not null and d.is_digital_editor !=0),1,0)) DESC)t1,
 		(SELECT @rowno:=0)t2 
 		<if test="start !=null and pageNumber != null">
@@ -583,7 +588,9 @@
 		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
 			and a.org_name like concat ('%',#{parameter.schoolName},'%') 
 		</if>
-		GROUP BY a.id ORDER BY SUM(if((d.preset_position in (1,2,3,4,5,6,7)),1,0)) DESC)t1,
+		GROUP BY a.id ORDER BY SUM(if((d.preset_position in (4,5,6,7)),1,0)) +
+		SUM(if((d.preset_position in (2,3,6,7)),1,0)) +
+		SUM(if((d.preset_position in (1,3,5,7)),1,0)) DESC)t1,
 		(SELECT @rowno:=0)t2 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize} 
@@ -600,19 +607,26 @@
 		SELECT @rowno:=@rowno+1 AS row,t1.materialid,t1.id,t1.bookname,t1.presetpositioneditor,
 		t1.presetpositionsubeditor,t1.presetpositioneditorial,t1.chosenpositioneditor,
 		t1.chosenpositionsubeditor,t1.chosenpositioneditorial,t1.isdigitaleditor 
-		FROM (SELECT sum(if((c.preset_position in (4,5,6,7)),1,0)) presetpositioneditor,
-		SUM(if((c.preset_position in (2,3,6,7)),1,0)) presetpositionsubeditor,
-		SUM(if((c.preset_position in (1,3,5,7)),1,0)) presetpositioneditorial,
-		SUM(if((c.chosen_position in (1)),1,0)) chosenpositioneditor,
-		SUM(if((c.chosen_position in (2)),1,0)) chosenpositionsubeditor,
-		SUM(if((c.chosen_position in (3)),1,0)) chosenpositioneditorial,
-		SUM(if((c.is_digital_editor is not null and c.is_digital_editor !=0),1,0)) isdigitaleditor,
+		FROM (SELECT sum(if((d.is_staging = 0 AND d.online_progress >0 AND 
+        c.preset_position IS NOT NULL AND c.preset_position in (4,5,6,7)),1,0)) presetpositioneditor,
+		SUM(if((d.is_staging = 0 AND d.online_progress >0 AND 
+        c.preset_position IS NOT NULL AND c.preset_position in (2,3,6,7)),1,0)) presetpositionsubeditor,
+		SUM(if((d.is_staging = 0 AND d.online_progress >0 AND 
+        c.preset_position IS NOT NULL AND c.preset_position in (1,3,5,7)),1,0)) presetpositioneditorial,
+		SUM(if((d.is_staging = 0 AND d.online_progress >0 AND 
+        c.preset_position IS NOT NULL AND c.chosen_position in (1)),1,0)) chosenpositioneditor,
+		SUM(if((d.is_staging = 0 AND d.online_progress >0 AND 
+        c.preset_position IS NOT NULL AND c.chosen_position in (2)),1,0)) chosenpositionsubeditor,
+		SUM(if((d.is_staging = 0 AND d.online_progress >0 AND 
+        c.preset_position IS NOT NULL AND c.chosen_position in (3)),1,0)) chosenpositioneditorial,
+		SUM(if((d.is_staging = 0 AND d.online_progress >0 AND 
+        c.preset_position IS NOT NULL AND c.is_digital_editor is not null and 
+        c.is_digital_editor !=0),1,0)) isdigitaleditor,
 		b.id materialid,a.id id,a.textbook_name bookname FROM textbook a 
 		LEFT JOIN material b ON a.material_id = b.id 
 		LEFT JOIN dec_position c ON a.id = c.textbook_id 
 		LEFT JOIN declaration d ON c.declaration_id = d.id 
-		WHERE c.preset_position IS NOT NULL AND b.id = #{parameter.materialId} 
-		AND d.is_staging = 0 AND d.online_progress >0 
+		WHERE a.material_id = #{parameter.materialId} 
 		<if test="parameter.bookName !=null and parameter.bookName !=''">
 			and a.textbook_name like concat ('%',#{parameter.bookName},'%') 
 		</if>
@@ -640,7 +654,7 @@
 		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
 			and a.org_name like concat ('%',#{parameter.schoolName},'%') 
 		</if>
-		GROUP BY a.id ORDER BY SUM(if((d.chosen_position in (1,2,3)),1,0)) DESC,
+		GROUP BY a.id ORDER BY SUM(if((d.chosen_position in (1,2,3)),1,0)) + 
 		SUM(if((d.is_digital_editor is not null and d.is_digital_editor !=0),1,0)) DESC)t1,
 		(SELECT @rowno:=0)t2 
 		<if test="start !=null and pageNumber != null">
