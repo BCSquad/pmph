@@ -13,7 +13,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +41,11 @@ import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.general.bean.ZipDownload;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -59,7 +63,7 @@ import com.mongodb.gridfs.GridFSDBFile;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Controller
 public class FileDownLoadController {
-
+	public static Map<String, ZipDownload> map = new HashMap<>();
 	Logger logger = LoggerFactory.getLogger(FileDownLoadController.class);
 
 	@Resource
@@ -265,11 +269,9 @@ public class FileDownLoadController {
 			HttpServletResponse response) {
 		Workbook workbook = null;
 		try {
-			workbook = excelHelper
-					.fromDeclarationEtcBOList(
-							declarationService.declarationEtcBO(materialId, textBookids, realname, position, title,
-									orgName, unitName, positionType, onlineProgress, offlineProgress, response),
-							"专家信息表");
+			workbook = excelHelper.fromDeclarationEtcBOList(declarationService.declarationEtcBO(materialId, textBookids,
+					realname, position, title, orgName, unitName, positionType, onlineProgress, offlineProgress),
+					"专家信息表");
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
@@ -322,25 +324,30 @@ public class FileDownLoadController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/word/declaration", method = RequestMethod.GET)
-	public String declarationWord(Long materialId, String textBookids, String realname, String position, String title,
+	public void declarationWord(Long materialId, String textBookids, String realname, String position, String title,
 			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
-			HttpServletResponse response) {
+			String id) {
 		String src = this.getClass().getResource("/").getPath();
 		src = src.substring(1);
 		if (!src.endsWith(File.separator)) {
 			src += File.separator;
 		}
-		String tempDir = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
+		ZipDownload zipDownload = new ZipDownload();
 		String materialName = materialService.getMaterialNameById(materialId);
 		List<Textbook> textbooks = textbookService.getTextbookByMaterialId(materialId);
 		List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
+		String dest = src + id;
+		zipDownload.setId(id);
+		zipDownload.setMaterialName(materialName);
+		zipDownload.setState("正在准备...");
+		zipDownload.setCreateTime(DateUtil.getCurrentTime());
+		map.put(id, zipDownload);
 		try {
 			declarationEtcBOs = declarationService.declarationEtcBO(materialId, textBookids, realname, position, title,
-					orgName, unitName, positionType, onlineProgress, offlineProgress, response);
+					orgName, unitName, positionType, onlineProgress, offlineProgress);
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
-		long startTime = System.currentTimeMillis();// 获取当前时间
 		for (int i = 0; i < textbooks.size(); i++) {
 			List<DeclarationEtcBO> list = new ArrayList<>();
 			for (DeclarationEtcBO declarationEtcBO : declarationEtcBOs) {
@@ -350,7 +357,7 @@ public class FileDownLoadController {
 			}
 			StringBuilder sb = new StringBuilder();
 			sb.append(src);
-			sb.append(tempDir);
+			sb.append(id);
 			sb.append(File.separator);
 			sb.append(materialName);
 			sb.append(File.separator);
@@ -358,12 +365,46 @@ public class FileDownLoadController {
 			sb.append(File.separator);
 			wordHelper.export(materialName, sb.toString(), list);
 		}
-		long endTime = System.currentTimeMillis();
-		System.err.println("------------------------------------------");
-		System.err.println("生成文件夹时间：" + (endTime - startTime) + "ms");
-		String dest = src + tempDir;
-		zipHelper.zip(dest + File.separator + materialName, dest, true, null);
-		return tempDir;
+		map.put(id, zipDownload);
+		new Thread(zipDownload).start();
+		zipHelper.zip(dest + File.separator + materialName, dest + File.separator, true, null);
+		zipDownload.setState("可以下载");
+		map.put(id, zipDownload);
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：查询进度
+	 *
+	 * @param id
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/word/progress", method = RequestMethod.GET)
+	public String progress(String id) {
+		String state = "文件还没有生成";
+		if (map.containsKey(id)) {
+			state = map.get(id).getState();
+		}
+		return state;
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：返回唯一标识
+	 *
+	 * @param id
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/word/identification", method = RequestMethod.GET)
+	public String identification() {
+		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
+		return id;
 	}
 
 	/**
@@ -382,10 +423,11 @@ public class FileDownLoadController {
 		if (!src.endsWith(File.separator)) {
 			src += File.separator;
 		}
+		String materialName = map.get(id).getMaterialName();
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
-		String filePath = src + id + File.separator;
-		String fileName = returnFileName(request, id + ".zip");
+		String filePath = src + id + File.separator + materialName + ".zip";
+		String fileName = returnFileName(request, materialName + ".zip");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		BufferedInputStream bis = null;
 		BufferedOutputStream bos = null;
@@ -407,9 +449,13 @@ public class FileDownLoadController {
 			fos.close();
 			bos.close();
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		} finally {
+			map.remove(id);
+			ZipDownload.DeleteFolder(src + id);
 		}
 	}
 

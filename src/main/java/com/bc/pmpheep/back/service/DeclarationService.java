@@ -140,8 +140,7 @@ public interface DeclarationService {
 	 *
 	 */
 	List<DeclarationEtcBO> declarationEtcBO(Long materialId, String textBookids, String realname, String position, String title,
-			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
-			HttpServletResponse response)
+			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress)
 			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException;
 	
 	/**
