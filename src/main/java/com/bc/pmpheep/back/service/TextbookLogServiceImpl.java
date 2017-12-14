@@ -161,8 +161,7 @@ public class TextbookLogServiceImpl implements TextbookLogService {
             throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK_LOG,
                                               CheckedExceptionResult.NULL_PARAM, "修改者为空！");
         }
-        List<DecPosition> newlist =
-        decPositionService.listChosenDecPositionsByTextbookId(textbookId);
+        List<DecPosition> newlist = decPositionService.listChosenDecPositionsByTextbookId(textbookId);
         int addSumZhuBian = 0;
         StringBuilder addZhuBian = new StringBuilder("");
         int redSumZhuBian = 0;
@@ -179,12 +178,27 @@ public class TextbookLogServiceImpl implements TextbookLogService {
         StringBuilder addShuZiBianWei = new StringBuilder("");
         int redSumShuZiBianWei = 0;
         StringBuilder redShuZiBianWei = new StringBuilder("");
+        //新旧申报的id
+        List<Long> ids = new ArrayList<>(oldlist.size()+ newlist.size()); 
+        for (DecPosition oldDecPosition : oldlist) {
+        	ids.add(oldDecPosition.getDeclarationId());
+        }
+        for (DecPosition newDecPosition : newlist) {
+        	ids.add(newDecPosition.getDeclarationId());
+        }
+        List<Declaration> declarations = declarationService.getDeclarationByIds(ids);
         // 增加的
         for (DecPosition newDecPosition : newlist) {
             // 申报者
             Long declarationId = newDecPosition.getDeclarationId();
             // 新的申报表
-            Declaration declaration = declarationService.getDeclarationById(declarationId);
+            Declaration declaration = new Declaration();
+            for(Declaration tempDeclaration: declarations){
+            	if(tempDeclaration.getId().intValue() == declarationId.intValue()){
+            		declaration = tempDeclaration;
+            		break ;
+            	}
+            }
             // 新选的职位
             Integer newChosenPosition = newDecPosition.getChosenPosition();
             // 如果现在是主编
@@ -242,7 +256,13 @@ public class TextbookLogServiceImpl implements TextbookLogService {
             // 申报者
             Long declarationId = oldDecPosition.getDeclarationId();
             // 老的申报表
-            Declaration declaration = declarationService.getDeclarationById(declarationId);
+            Declaration declaration = new Declaration();
+            for(Declaration tempDeclaration: declarations){
+            	if(tempDeclaration.getId().intValue() == declarationId.intValue()){
+            		declaration = tempDeclaration;
+            		break ;
+            	}
+            }
             // 老的的职位
             Integer oldChosenPosition = oldDecPosition.getChosenPosition();
             // 如果以前是主编

@@ -60,6 +60,16 @@ public interface DeclarationDao {
 	 * @Return Declaration
 	 */
 	Declaration getDeclarationById(Long id);
+	
+	/**
+	 * 查询多个申报
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年12月14日 下午4:41:09
+	 * @param ids
+	 * @return
+	 */
+	List<Declaration>  getDeclarationByIds(@Param("ids")List<Long> ids);
 
 	/**
 	 * Description: 根据教材id查询作家申报信息

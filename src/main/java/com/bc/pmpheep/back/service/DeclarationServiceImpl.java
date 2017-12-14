@@ -8,12 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.dao.DecAcadeDao;
 import com.bc.pmpheep.back.dao.DecAchievementDao;
@@ -646,5 +642,14 @@ public class DeclarationServiceImpl implements DeclarationService {
 		System.err.println("------------------------------------------");
 		System.err.println("查询时间：" + (endTime - startTime) + "ms， 一共" + declarationEtcBOs.size() + "条数据");
 		return declarationEtcBOs;
+	}
+
+	@Override
+	public List<Declaration> getDeclarationByIds(List<Long> ids) throws CheckedServiceException {
+		if(null == ids || ids.size() == 0){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"参数为空!");
+		}
+		List<Declaration>   declarations=  declarationDao.getDeclarationByIds(ids);
+		return declarations;
 	}
 }
