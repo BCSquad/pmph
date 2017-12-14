@@ -656,7 +656,7 @@
 		LEFT JOIN declaration b ON a.id = b.org_id 
 		LEFT JOIN material c ON b.material_id = c.id 
 		LEFT JOIN dec_position d ON b.id = d.declaration_id 
-		WHERE d.preset_position IS NOT NULL AND c.id = #{pageParameter.materialId} 
+		WHERE d.preset_position IS NOT NULL AND c.id = #{parameter.materialId} 
 		AND b.is_staging = 0 AND b.online_progress >0 
 		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
 			and a.org_name like concat ('%',#{parameter.schoolName},'%') 

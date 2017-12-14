@@ -45,6 +45,15 @@ public class TextbookDecVO implements java.io.Serializable{
 	private Long editorId;
 	// 级别  0=普通用户/1=教师/2=作家/3=专家
 	private Integer rank;
+	// 申报单位
+	private String declarationUnit;
+	
+	public String getDeclarationUnit() {
+		return declarationUnit;
+	}
+	public void setDeclarationUnit(String declarationUnit) {
+		this.declarationUnit = declarationUnit;
+	}
 	public Long getUserId() {
 		return userId;
 	}
