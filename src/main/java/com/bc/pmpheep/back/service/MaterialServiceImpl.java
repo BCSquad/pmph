@@ -429,7 +429,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				// 更新通知
 				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
 				//移除session的文件
-				request.getSession(false).removeAttribute(tempFileId);
+//				request.getSession(false).removeAttribute(tempFileId);
 //				//删除文件
 //				if(file.exists()){
 //					file.delete();
@@ -484,7 +484,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				// 更新备注
 				materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
 				//移除session的文件
-				request.getSession().removeAttribute(tempFileId);
+//				request.getSession().removeAttribute(tempFileId);
 //				//删除文件
 //				if(file.exists()){
 //					file.delete();
