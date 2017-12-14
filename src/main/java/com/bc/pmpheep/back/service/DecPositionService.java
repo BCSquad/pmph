@@ -158,6 +158,32 @@ public interface DecPositionService {
 
     /**
      * 
+     * <pre>
+     * 功能描述：教材申报-遴选主编/遴选编委 (根据书籍Id查询所有申报id)
+     * 使用示范：
+     *
+     * @param textbookId  书籍Id
+     * @return 所有申报id
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    List<Long> getDecPositionIdByBookId(Long textbookId) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：教材申报-遴选主编/遴选编委 (更新前先初始化)
+     * 使用示范：
+     *
+     * @param ids 主键ID集合
+     * @return 影响行数 
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer updateDecPositionSetDefault(List<Long> ids) throws CheckedServiceException;
+
+    /**
+     * 
      * Description:获取申报情况统计数据
      * 
      * @author:lyc

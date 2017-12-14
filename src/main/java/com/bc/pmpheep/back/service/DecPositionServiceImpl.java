@@ -590,4 +590,22 @@ public class DecPositionServiceImpl implements DecPositionService {
         }
         return decPositionDao.getTextbookEditorList(textbookId);
     }
+
+    @Override
+    public List<Long> getDecPositionIdByBookId(Long textbookId) throws CheckedServiceException {
+        if (ObjectUtil.isNull(textbookId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
+        }
+        return decPositionDao.getDecPositionIdByBookId(textbookId);
+    }
+
+    @Override
+    public Integer updateDecPositionSetDefault(List<Long> ids) throws CheckedServiceException {
+        if (CollectionUtil.isEmpty(ids)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "主键id不能为空");
+        }
+        return decPositionDao.updateDecPositionSetDefault(ids);
+    }
 }
