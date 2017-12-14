@@ -61,6 +61,15 @@ public interface DecTextbookDao {
 	 * 
 	 * @Return 作家教材编写情况信息
 	 */
+	List<DecTextbook> getListDecTextbookByDeclarationIds(List<Long> declarationId);
+	
+	/**
+	 * Description: 根据申报表id查询作家教材编写情况信息
+	 * 
+	 * @Param declarationId 申报表id
+	 * 
+	 * @Return 作家教材编写情况信息
+	 */
 	List<DecTextbook> getListDecTextbookByDeclarationId(Long declarationId);
 
 	/**

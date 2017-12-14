@@ -41,6 +41,17 @@ public interface DecAchievementDao {
 	 * @param declarationId
 	 * @return
 	 */
+	List<DecAchievement> getDecAchievementByDeclarationIds(List<Long> declarationId);
+
+	/**
+	 * 根据declarationId查询
+	 * 
+	 * @introduction
+	 * @author Mryang
+	 * @createDate 2017年12月6日 上午10:42:22
+	 * @param declarationId
+	 * @return
+	 */
 	DecAchievement getDecAchievementByDeclarationId(Long declarationId);
 
 }

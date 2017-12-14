@@ -143,7 +143,7 @@ public interface DeclarationService {
 			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
 			HttpServletResponse response)
 			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException;
-
+	
 	/**
 	 * 根据教材id获取导出Excel所需的申报表数据
 	 *

@@ -82,10 +82,16 @@ public class SysOperationServiceImpl implements SysOperationService {
             pageParameter.getParameter().setEndTime(startDate);
         } else {
             if (StringUtil.isEmpty(startTime)) {
-                pageParameter.getParameter().setStartTime(startDate);
+                pageParameter.getParameter()
+                             .setStartTime(DateUtil.date2Str(DateUtil.getDateBefore(DateUtil.str2Date(endTime),
+                                                                                    30)));
+                pageParameter.getParameter().setEndTime(endTime);
             }
             if (StringUtil.isEmpty(endTime)) {
-                pageParameter.getParameter().setEndTime(endDate);
+                pageParameter.getParameter().setStartTime(startTime);
+                pageParameter.getParameter()
+                             .setEndTime(DateUtil.date2Str(DateUtil.getDateBefore(DateUtil.str2Date(startTime),
+                                                                                  -30)));
             }
         }
         // 将页面大小和页面页码拷贝

@@ -145,9 +145,6 @@ public class MigrationStageOne {
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数。");
-                excel.add(map);
-                logger.error("显示顺序为负数，此结果将被记录在Excel中");
             }
             OrgType orgType = new OrgType();
             orgType.setTypeName(orgName);
@@ -212,9 +209,6 @@ public class MigrationStageOne {
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("显示顺序为负数。"));
-                excel.add(map);
-                logger.error("显示顺序为负数，此结果将被记录在Excel中");
             }
             String note = (String) map.get("remark");
             Integer isDeleted = (Integer) map.get("isdelete");
@@ -330,9 +324,6 @@ public class MigrationStageOne {
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("显示顺序为负数。"));
-                excel.add(map);
-                logger.error("显示顺序为负数，此结果将被记录在Excel中");
             }
             OrgUser orgUser = new OrgUser();
             orgUser.setUsername(username);
@@ -459,9 +450,11 @@ public class MigrationStageOne {
             if (JdbcHelper.judgeExperience(experienceNum)) {
                 //如果教龄数据不符合规范，调用公共方法将其转变为合乎规范的数据
                 experienceNum = JdbcHelper.correctExperience(experienceNum);
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("教龄数据不符合新表类型规范。"));
-                excel.add(map);
-                logger.info("教龄数据不符合新表类型规范，此结果将被记录在Excel中");
+                if ("0".equals(experienceNum)){
+                	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("此教龄数据没有值，为“无”，“、”，"
+                			+ "“其他”或数字远远超出人的寿命，无法通过合适方法修改插入新数据库，"));
+                	excel.add(map);
+                } 
             }
             Integer experience = Integer.parseInt(experienceNum);
             String workPlace = (String) map.get("unitid");
@@ -496,9 +489,6 @@ public class MigrationStageOne {
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("显示顺序数据为负数。"));
-                excel.add(map);
-                logger.info("显示顺序数据为负数，此结果将被记录在Excel中");
             }
             WriterUser writerUser = new WriterUser();
             writerUser.setUsername(username);

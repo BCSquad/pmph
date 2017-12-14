@@ -172,6 +172,24 @@ public final class DateUtil {
     }
 
     /**
+     * 
+     * <pre>
+     * 功能描述：获取几天前日期
+     * 使用示范：
+     *
+     * @param d 基准时间
+     * @param day 几天前
+     * @return 几天前日期
+     * </pre>
+     */
+    public static java.util.Date getDateBefore(Date d, int day) {
+        Calendar now = Calendar.getInstance();
+        now.setTime(d);
+        now.set(Calendar.DATE, now.get(Calendar.DATE) - day);
+        return now.getTime();
+    }
+
+    /**
      * 得到n天之后是周几
      * 
      * @param days

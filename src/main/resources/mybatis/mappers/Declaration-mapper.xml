@@ -355,7 +355,7 @@
 		ORDER BY
 		t.textbook_name
 		) presetPosition,
-        o.org_name orgName
+        o.org_name orgNameOne
 		FROM
 		declaration d
 		LEFT JOIN writer_user w ON w.id = d.user_id
@@ -376,25 +376,25 @@
 			</foreach>
 		</if>
 		<!-- 账号或者姓名 -->
-		<if test="realname != null ">
+		<if test="realname != null and realname != ''">
 			and (d.realname like concat('%',#{realname},'%') or
 			w.username
 			like concat('%',#{realname},'%') )
 		</if>
 		<!-- 职务 -->
-		<if test="position != null ">
+		<if test="position != null and position != ''  ">
 			and d.position like concat('%',#{position},'%')
 		</if>
 		<!-- 职称 -->
-		<if test="title != null ">
+		<if test="title != null and title != '' ">
 			and d.title like concat('%',#{title},'%')
 		</if>
 		<!-- 工作单位 -->
-		<if test="orgName != null ">
+		<if test="orgName != null and orgName != '' ">
 			and d.org_name like concat('%',#{orgName},'%')
 		</if>
 		<!-- 申报单位 -->
-		<if test="unitName != null ">
+		<if test="unitName != null and unitName != ''">
 			and o.org_name like concat('%',#{unitName},'%')
 		</if>
 		<!-- 申报职位 -->

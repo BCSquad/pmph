@@ -182,16 +182,18 @@ public class JdbcHelper {
      * @return 合乎规范的教龄数据
      */
     public static String correctExperience(String experience) {
-        if (StringUtil.isEmpty(experience) || "无".equals(experience) || "、".equals(experience)) {
+        if (StringUtil.isEmpty(experience) || "无".equals(experience) || "、".equals(experience)
+        		|| "其他".equals(experience)) {
             experience = "0";
         }
-        if (experience.contains("岁")) {
-            experience = experience.substring(0, experience.lastIndexOf("岁"));
-            Integer age = Integer.parseInt(experience);
-            experience = String.valueOf(age);
+        String reg = "[\u4e00-\u9fa5]";
+        if ("5年9个月".equals(experience)){
+        	experience = "6";
         } else {
-            experience = experience.replace("年", "").replace("五", "5").replace("s", "").replace(" ", "")
-                    .replace("内", "");
+            experience = experience.replace("五", "5").replaceAll(reg, "").replace("s", "").replace(" ", "");
+        }
+        if (Integer.parseInt(experience) > 128){
+        	experience = "0";
         }
         return experience;
     }

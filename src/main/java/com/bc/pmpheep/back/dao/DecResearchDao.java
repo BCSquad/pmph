@@ -58,6 +58,15 @@ public interface DecResearchDao {
 	 * 
 	 * @Return 作家科研情况信息
 	 */
+	List<DecResearch> getListDecResearchByDeclarationIds(List<Long> declarationId);
+	
+	/**
+	 * Description: 根据申报表id查询作家科研情况信息
+	 * 
+	 * @Param declarationId 申报表id
+	 * 
+	 * @Return 作家科研情况信息
+	 */
 	List<DecResearch> getListDecResearchByDeclarationId(Long declarationId);
 
 	/**
