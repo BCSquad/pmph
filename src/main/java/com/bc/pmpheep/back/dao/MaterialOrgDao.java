@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.MaterialOrg;
+import com.bc.pmpheep.back.vo.OrgExclVO;
 
 /**
  * @author MrYang
@@ -45,6 +46,18 @@ public interface MaterialOrgDao {
      * </pre>
      */
     List<Long> getListMaterialOrgByMaterialId(Long materialId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据教材 ID导出已发布的学校
+     * 使用示范：
+     *
+     * @param materialId 教材 ID
+     * @return OrgExclVO
+     * </pre>
+     */
+    List<OrgExclVO> getOutPutExclOrgByMaterialId(Long materialId);
 
     /**
      * 根据materialId删除materialOrg

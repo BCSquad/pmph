@@ -37,6 +37,7 @@ import com.bc.pmpheep.back.service.CmsExtraService;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.service.MaterialNoteAttachmentService;
 import com.bc.pmpheep.back.service.MaterialNoticeAttachmentService;
+import com.bc.pmpheep.back.service.MaterialOrgService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.TextbookService;
@@ -44,6 +45,7 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.bean.ZipDownload;
 import com.bc.pmpheep.general.service.FileService;
@@ -88,6 +90,8 @@ public class FileDownLoadController {
 	TextbookService textbookService;
 	@Resource
 	ZipHelper zipHelper;
+	@Resource
+	MaterialOrgService materialOrgService;
 
 	/**
 	 * 普通文件下载
@@ -125,9 +129,9 @@ public class FileDownLoadController {
 	 * 功能描述：普通文件下载(更新下载数)
 	 * 使用示范：
 	 *
-	 * &#64;param type 模块类型
-	 * &#64;param id 文件在MongoDB中的id
-	 * &#64;param response 服务响应
+	 * @param type 模块类型
+	 * @param id 文件在MongoDB中的id
+	 * @param response 服务响应
 	 * </pre>
 	 * 
 	 * @throws UnsupportedEncodingException
@@ -208,9 +212,9 @@ public class FileDownLoadController {
 	 * 功能描述：处理不同浏览器下载文件乱码问题
 	 * 使用示范：
 	 *
-	 * &#64;param request
-	 * &#64;param fileName 文件名
-	 * &#64;return 编码后的文件名
+	 * @param request
+	 * @param fileName 文件名
+	 * @return 编码后的文件名
 	 * </pre>
 	 */
 	private String returnFileName(HttpServletRequest request, String fileName) {
@@ -297,7 +301,7 @@ public class FileDownLoadController {
 	/**
 	 * 
 	 * 
-	 * 功能描述：申报表批量导出excel
+	 * 功能描述：申报表批量导出word
 	 *
 	 * @param materialId
 	 *            教材id
@@ -459,4 +463,42 @@ public class FileDownLoadController {
 		}
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 功能描述：导出已发布教材下的学校
+	 * 使用示范：
+	 *
+	 * @param materialId 教材ID
+	 * @param request
+	 * @param response
+	 * </pre>
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/excel/published/org", method = RequestMethod.GET)
+	public void org(@RequestParam("materialId") Long materialId, HttpServletRequest request,
+			HttpServletResponse response) {
+		Workbook workbook = null;
+		List<OrgExclVO> orgList = null;
+		try {
+			orgList = materialOrgService.getOutPutExclOrgByMaterialId(materialId);
+			workbook = excelHelper.fromBusinessObjectList(orgList, "学校信息");
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		String materialName = orgList.get(0).getMaterialName();// 教材名称
+		String fileName = returnFileName(request, materialName + ".xls");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
 }

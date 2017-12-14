@@ -319,8 +319,8 @@ public class TextbookServiceImpl implements TextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,
 					CheckedExceptionResult.NULL_PARAM, "分类路径为空");
 		}
-		if (path.indexOf("0-") != -1){
-			path = path.replace("0-", "");
+		if (path.indexOf("0-") != -1 ){
+			path = path.replaceFirst("0-", "");
 		}
 		String[] pathType = path.split("-");
 		for (int i = 0; i < pathType.length ; i++){

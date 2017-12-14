@@ -25,6 +25,32 @@
 		select org_id from material_org where material_id=#{materialId} ;
 	</select>
 	
+	<!-- 根据materialId导出已发布的学校-->
+	<select id="getOutPutExclOrgByMaterialId" parameterType="java.lang.Long" resultType="OrgExclVO">
+		SELECT 
+			o.`org_name`,
+		 	ou.`username`,
+		 	m.`material_name`
+		FROM
+			`material` m
+	 	LEFT JOIN 
+	  		`material_org` mo 
+	  	ON 
+	  		m.`id`= mo.`material_id`
+	  	LEFT JOIN 
+	  		org o 
+	    ON 
+	    	mo.`org_id` = o.`id` 
+	  	LEFT JOIN 
+	  		`org_user` ou
+	    ON 
+	    	o.`id` = ou.`org_id` 
+		WHERE 
+			m.`is_published`=TRUE
+		AND 
+			material_id=#{materialId}
+	</select>
+	
 	<!-- 根据materialId删除 -->
 	<delete id="deleteMaterialOrgByMaterialId" parameterType="java.lang.Long">
 		delete from material_org where material_id=#{materialId} ;

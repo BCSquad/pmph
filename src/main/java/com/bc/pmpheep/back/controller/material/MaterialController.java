@@ -1,9 +1,7 @@
 package com.bc.pmpheep.back.controller.material;
 
 import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.MaterialService;
@@ -176,6 +173,23 @@ public class MaterialController {
     @RequestMapping(value = "/materialName", method = RequestMethod.GET)
     public ResponseBean materialName(@RequestParam(value = "id", required = true) Long id) {
         return new ResponseBean(materialService.getMaterialNameById(id));
+    }
+    
+    /**
+     * 获取教材主要信息，如教材名称，当前用户的权限菜单,以及教材的其他信息
+     * @introduction  
+     * @author Mryang
+     * @createDate 2017年12月14日 上午9:52:42
+     * @param materialId
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @LogDetail(businessType = Business_Type, logRemark = "获取教材主要信息，如教材名称，当前用户的权限菜单,以及教材的其他信息")
+    @RequestMapping(value = "/getMaterialMainInfoById", method = RequestMethod.GET)
+    public ResponseBean  getMaterialMainInfoById (@RequestParam(value = "id", required = true) Long id,HttpServletRequest request) {
+    	String sessionId = CookiesUtil.getSessionId(request);
+    	return new ResponseBean(materialService.getMaterialMainInfoById(id, sessionId));
     }
 
     /**

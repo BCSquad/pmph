@@ -186,11 +186,11 @@ public class JdbcHelper {
         		|| "其他".equals(experience)) {
             experience = "0";
         }
-        String reg = "[^\u4e00-\u9fa5]";
+        String reg = "[\u4e00-\u9fa5]";
         if ("5年9个月".equals(experience)){
         	experience = "6";
         } else {
-            experience = experience.replace("五", "5").replace(reg, "").replace("s", "").replace(" ", "");
+            experience = experience.replace("五", "5").replaceAll(reg, "").replace("s", "").replace(" ", "");
         }
         if (Integer.parseInt(experience) > 128){
         	experience = "0";
