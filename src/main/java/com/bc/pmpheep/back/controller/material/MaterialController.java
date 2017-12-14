@@ -186,7 +186,7 @@ public class MaterialController {
      */
     @ResponseBody
     @LogDetail(businessType = Business_Type, logRemark = "获取教材主要信息，如教材名称，当前用户的权限菜单,以及教材的其他信息")
-    @RequestMapping(value = "/getMaterialMainInfoById", method = RequestMethod.PUT)
+    @RequestMapping(value = "/getMaterialMainInfoById", method = RequestMethod.GET)
     public ResponseBean  getMaterialMainInfoById (@RequestParam(value = "id", required = true) Long id,HttpServletRequest request) {
     	String sessionId = CookiesUtil.getSessionId(request);
     	return new ResponseBean(materialService.getMaterialMainInfoById(id, sessionId));
