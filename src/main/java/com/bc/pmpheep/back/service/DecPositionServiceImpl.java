@@ -343,10 +343,9 @@ public class DecPositionServiceImpl implements DecPositionService {
             List<DecPosition> oldlist =
             decPositionService.listChosenDecPositionsByTextbookId(textbookId);
             Long updaterId = pmphUser.getId(); // 获取修改者id
-            if (CollectionUtil.isNotEmpty(oldlist)) {
-                // 添加新的遴选记录
-                textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
-            }
+            // 添加新的遴选记录
+            textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
+            
         }
         // 2：发布
         if (selectionType_2.intValue() == selectionType.intValue()) {
