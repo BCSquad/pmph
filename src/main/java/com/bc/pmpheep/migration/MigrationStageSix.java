@@ -94,7 +94,7 @@ public class MigrationStageSix {
 
     public void start() {
         Date begin = new Date();
-        /*declaration();
+        declaration();
         decEduExp();
         decWorkExp();
         decTeachExp();
@@ -103,7 +103,7 @@ public class MigrationStageSix {
         decCourseConstruction();
         decNationalPlan();
         decTextbook();
-        decResearch();*/
+        decResearch();
         decAchievement();
         decExtension();
         decPosition();
