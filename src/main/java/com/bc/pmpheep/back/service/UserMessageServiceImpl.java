@@ -268,6 +268,10 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择!");
         }
+        if (title.length() > 50) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "消息标题不能超过50个字");
+        }
         // 如果 补发不进行消息插入
         if (isSave) {
             // MongoDB 消息插入
