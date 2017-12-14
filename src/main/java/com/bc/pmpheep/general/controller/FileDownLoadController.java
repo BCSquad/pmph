@@ -129,9 +129,9 @@ public class FileDownLoadController {
 	 * 功能描述：普通文件下载(更新下载数)
 	 * 使用示范：
 	 *
-	 * @param type 模块类型
-	 * @param id 文件在MongoDB中的id
-	 * @param response 服务响应
+	 * &#64;param type 模块类型
+	 * &#64;param id 文件在MongoDB中的id
+	 * &#64;param response 服务响应
 	 * </pre>
 	 * 
 	 * @throws UnsupportedEncodingException
@@ -212,9 +212,9 @@ public class FileDownLoadController {
 	 * 功能描述：处理不同浏览器下载文件乱码问题
 	 * 使用示范：
 	 *
-	 * @param request
-	 * @param fileName 文件名
-	 * @return 编码后的文件名
+	 * &#64;param request
+	 * &#64;param fileName 文件名
+	 * &#64;return 编码后的文件名
 	 * </pre>
 	 */
 	private String returnFileName(HttpServletRequest request, String fileName) {
@@ -357,6 +357,7 @@ public class FileDownLoadController {
 			for (DeclarationEtcBO declarationEtcBO : declarationEtcBOs) {
 				if (textbooks.get(i).getTextbookName().equals(declarationEtcBO.getTextbookName())) {
 					list.add(declarationEtcBO);
+					list.remove(declarationEtcBO);
 				}
 			}
 			StringBuilder sb = new StringBuilder();
@@ -469,9 +470,9 @@ public class FileDownLoadController {
 	 * 功能描述：导出已发布教材下的学校
 	 * 使用示范：
 	 *
-	 * @param materialId 教材ID
-	 * @param request
-	 * @param response
+	 * &#64;param materialId 教材ID
+	 * &#64;param request
+	 * &#64;param response
 	 * </pre>
 	 */
 	@ResponseBody
