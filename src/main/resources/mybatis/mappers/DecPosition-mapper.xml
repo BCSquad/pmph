@@ -408,7 +408,7 @@
 					dp.`chosen_position`=3
 			</if>
 			AND 
-				textbook_id=#{textbookId};
+				dp.`textbook_id` = #{textbookId};
 	</select>
 	
 	<!-- 教材申报-遴选主编/遴选编委 (更新前先初始化) -->
@@ -540,7 +540,7 @@
 		LEFT JOIN `org` org ON dc.`org_id`= org.`id`
 		LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
 		WHERE
-		d.preset_position IS NOT NULL AND c.id = #{materialId}
+		dp.preset_position IS NOT NULL AND c.id = #{materialId}
 		AND b.is_staging
 		= 0 AND b.online_progress >0;
 	</select>
