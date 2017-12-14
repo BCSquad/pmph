@@ -62,7 +62,6 @@ public class ZipHelper {
 	 *            压缩密码
 	 */
 	public void zip(String src, String dest, boolean isCreateDir, String passwd) {
-		long startTime = System.currentTimeMillis();// 获取当前时间
 		File srcfile = new File(src);
 		// 创建目标文件
 		String destname = buildDestFileName(srcfile, dest);
@@ -89,10 +88,8 @@ public class ZipHelper {
 			}
 		} catch (ZipException ex) {
 			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		}
-		long endTime = System.currentTimeMillis();
-		System.err.println("------------------------------------------");
-		System.err.println("打包时间：" + (endTime - startTime) + "ms");
 	}
 
 	/**

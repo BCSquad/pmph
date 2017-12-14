@@ -454,7 +454,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 	@Override
 	public List<DeclarationEtcBO> declarationEtcBO(Long materialId, String textBookids, String realname,
 			String position, String title, String orgName, String unitName, Integer positionType,
-			Integer onlineProgress, Integer offlineProgress, HttpServletResponse response)
+			Integer onlineProgress, Integer offlineProgress)
 			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
 		long startTime = System.currentTimeMillis();// 获取当前时间
 		List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
