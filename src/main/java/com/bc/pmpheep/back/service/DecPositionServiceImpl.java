@@ -328,20 +328,21 @@ public class DecPositionServiceImpl implements DecPositionService {
         // (1:确定，2：发布)
         Integer selectionType_1 = 1;
         Integer selectionType_2 = 2;
+        // 获取书籍id
+        Long textbookId = decPositions.get(0).getTextbookId(); 
+        // 原来的历史遴选记录
+        List<DecPosition> oldlist =  decPositionService.listChosenDecPositionsByTextbookId(textbookId);
         // 1:确定
         if (selectionType_1.intValue() == selectionType.intValue()) {
             if (CollectionUtil.isNotEmpty(decPositions)) {
                 count = decPositionDao.updateDecPositionEditorSelection(decPositions);
             }
-            Long textbookId = decPositions.get(0).getTextbookId(); // 获取书籍id
             if (ObjectUtil.isNull(textbookId)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                                   CheckedExceptionResult.NULL_PARAM, "书籍id为空");
             }
             Integer userType = 1;// 用户类型
-            // 历史遴选记录
-            List<DecPosition> oldlist =
-            decPositionService.listChosenDecPositionsByTextbookId(textbookId);
+            
             Long updaterId = pmphUser.getId(); // 获取修改者id
             // 添加新的遴选记录
             textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
@@ -349,7 +350,6 @@ public class DecPositionServiceImpl implements DecPositionService {
         }
         // 2：发布
         if (selectionType_2.intValue() == selectionType.intValue()) {
-            Long textbookId = decPositions.get(0).getTextbookId(); // 获取书籍id
             if (ObjectUtil.isNull(textbookId)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                                   CheckedExceptionResult.NULL_PARAM, "书籍id为空");
