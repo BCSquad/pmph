@@ -27,6 +27,7 @@ import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
 import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.MaterialType;
 import com.bc.pmpheep.back.po.PmphGroup;
+import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -36,6 +37,7 @@ import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MaterialListVO;
+import com.bc.pmpheep.back.vo.MaterialMainInfoVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.general.bean.FileType;
@@ -654,6 +656,61 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					"主键为空");
 		}
 		return materialDao.getMaterialNameById(id);
+	}
+	
+	
+	@Override
+	public MaterialMainInfoVO getMaterialMainInfoById (Long materialId,String sessionId) throws CheckedServiceException{
+		// 验证用户
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
+		}
+		// 教材权限的检查
+		List<PmphRole> pmphRoles = pmphUserService.getListUserRole(pmphUser.getId());
+		//下面进行授权
+		Integer projectEditorPowers = 0 ;
+		// 系统管理员权限检查
+		for (PmphRole pmphRole : pmphRoles) {
+			if (null != pmphRole && null != pmphRole.getRoleName() && "系统管理员".equals(pmphRole.getRoleName())) {
+			   // 我是系统管理原
+				projectEditorPowers = 255; //"11111111";
+			}
+		}
+		// 教材主任检查
+		Material material = this.getMaterialById(materialId);
+		if (null != material && null != material.getDirector() && pmphUser.getId().equals(material.getDirector())) {
+			projectEditorPowers = 255; // 我是教材的主任
+		}
+		// 教材项目编辑检查
+		List<MaterialProjectEditorVO> materialProjectEditors = materialProjectEditorService.listMaterialProjectEditors(materialId);
+		if (null != materialProjectEditors && materialProjectEditors.size() > 0) {
+			for (MaterialProjectEditorVO materialProjectEditor : materialProjectEditors) {
+				if (null != materialProjectEditor && null != materialProjectEditor.getEditorId() && materialProjectEditor.getEditorId().equals(pmphUser.getId())) {
+					// 我是教材的项目编辑
+					projectEditorPowers = ( projectEditorPowers | material.getProjectPermission() ) ;
+				}
+			}
+		}
+		// 教材策划编辑检查
+		Integer num = this.getPlanningEditorSum(materialId, pmphUser.getId());
+		if (null != num && num.intValue() > 0) {
+			// 我是教材的策划编辑编辑
+			projectEditorPowers = ( projectEditorPowers | material.getProjectPermission() ) ;
+		}
+		if (0 == projectEditorPowers.intValue() ) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"该教材您没操作权限");
+		}
+		
+		MaterialMainInfoVO   materialMainInfoVO   =  new MaterialMainInfoVO(materialId, 
+																	material.getMaterialName(),
+																	material.getIsPublished(),											
+																	material.getIsAllTextbookPublished(),											
+																	material.getIsForceEnd(),											 
+																	material.getIsDeleted() ,									
+															        StringUtil.tentToBinary(projectEditorPowers));
+		return materialMainInfoVO; 
 	}
 
 	/**
