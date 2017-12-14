@@ -343,7 +343,7 @@ public class FileDownLoadController {
 		String dest = src + id;
 		zipDownload.setId(id);
 		zipDownload.setMaterialName(materialName);
-		zipDownload.setState("正在准备...");
+		zipDownload.setState(false);
 		zipDownload.setCreateTime(DateUtil.getCurrentTime());
 		map.put(id, zipDownload);
 		try {
@@ -373,7 +373,7 @@ public class FileDownLoadController {
 		map.put(id, zipDownload);
 		new Thread(zipDownload).start();
 		zipHelper.zip(dest + File.separator + materialName, dest + File.separator, true, null);
-		zipDownload.setState("可以下载");
+		zipDownload.setState(true);
 		map.put(id, zipDownload);
 	}
 
@@ -388,8 +388,8 @@ public class FileDownLoadController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/word/progress", method = RequestMethod.GET)
-	public String progress(String id) {
-		String state = "文件还没有生成";
+	public Boolean progress(String id) {
+		Boolean state = false;
 		if (map.containsKey(id)) {
 			state = map.get(id).getState();
 		}
