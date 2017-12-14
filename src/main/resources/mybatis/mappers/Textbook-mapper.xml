@@ -438,7 +438,8 @@
 		resultType="TextbookDecVO">
 	 	SELECT 
 			dc.`org_name`,dp.`preset_position`,dp.`chosen_position`,
-			dp.`is_digital_editor`,wu.`rank`,dp.`textbook_id`
+			dp.`is_digital_editor`,wu.`rank`,dp.`textbook_id`,
+			wu.`id` userId,wu.`realname`,wu.`is_writer`,org.`org_name` declarationUnit
 		FROM `dec_position` dp 
 		LEFT JOIN `declaration` dc ON dp.`declaration_id` = dc.`id`
 		LEFT JOIN `org` org ON dc.`org_id`= org.`id`
