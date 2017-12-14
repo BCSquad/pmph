@@ -146,10 +146,10 @@ public class PmphRoleServiceImpl implements PmphRoleService {
             throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
                                               CheckedExceptionResult.ILLEGAL_PARAM, "备注不能超过20个字符");
         }
-        roleDao.add(role);
+        this.addPmphRole(role);
+        // roleDao.add(role);
         for (Long id : ids) {
-            PmphRolePermission pmphRolePermission = new PmphRolePermission(role.getId(), id);
-            pmphRolePermissionDao.addPmphRolePermission(pmphRolePermission);
+            pmphRolePermissionDao.addPmphRolePermission(new PmphRolePermission(role.getId(), id));
         }
         return role;
     }
