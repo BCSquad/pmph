@@ -94,7 +94,7 @@ public class MigrationStageSix {
 
     public void start() {
         Date begin = new Date();
-        declaration();
+        /*declaration();
         decEduExp();
         decWorkExp();
         decTeachExp();
@@ -103,7 +103,7 @@ public class MigrationStageSix {
         decCourseConstruction();
         decNationalPlan();
         decTextbook();
-        decResearch();
+        decResearch();*/
         decAchievement();
         decExtension();
         decPosition();
@@ -199,10 +199,11 @@ public class MigrationStageSix {
             declaration.setPosition((String) map.get("duties")); // 职务
             declaration.setTitle((String) map.get("positional")); // 职称
             declaration.setAddress((String) map.get("address")); // 联系地址
-            if (StringUtil.strLength(postCode) > 20) {
+            if (StringUtil.strLength(postCode) > 20 && "55894b98-6b15-4210-9460-11bdf6e8e89c".equals(id)) {
             	declaration.setPostcode("100000");
+            } else {
+            	declaration.setPostcode(postCode); // 邮编
             }
-            declaration.setPostcode(postCode); // 邮编
             declaration.setHandphone((String) map.get("handset")); // 手机
             declaration.setEmail((String) map.get("email")); // 邮箱
             declaration.setIdtype((Short) map.get("idcardtype1")); // 证件类型
@@ -704,11 +705,11 @@ public class MigrationStageSix {
                 isbn = isbn.trim();
                 isbn = isbn.replace("ISBN", "").replace("isbn", "").replace(":", "").replace("：", "");
             }
-            if (("无").equals(isbn)) {
+            /*if (("无").equals(isbn)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到标准书号为无字。"));
                 excel.add(map);
                 logger.error("找到标准书号为无字，此结果将被记录在Excel中");
-            }
+            }*/
             decNationalPlan.setIsbn(isbn);
             Integer rank = rankJudge.intValue();
             decNationalPlan.setRank(rank);
@@ -780,19 +781,22 @@ public class MigrationStageSix {
             Integer position = positionJudge.intValue();
             decTextbook.setPosition(position);
             decTextbook.setPublisher(publisher);
-            if (publishDate.equals("0000-00-00 00:00:00")) {
+            /*String zore = "0000-00-00 00:00:00";
+            if (zore.equals(publishDate.toString())) {
             	decTextbook.setPublishDate(null);
-            }
+            } else {
+            	
+			}*/
             decTextbook.setPublishDate(publishDate);
             if (StringUtil.notEmpty(isbn)) {
                 isbn = isbn.trim();
                 isbn = isbn.replace("ISBN", "").replace("isbn", "").replace(":", "").replace("：", "");
             }
-            if (("无").equals(isbn)) {
+            /*if (("无").equals(isbn)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到标准书号为无字。"));
                 excel.add(map);
                 logger.error("找到标准书号为无字，此结果将被记录在Excel中");
-            }
+            }*/
             decTextbook.setIsbn(isbn);
             decTextbook.setNote((String) map.get("remark")); // 备注
             decTextbook.setSort(999); // 显示顺序
@@ -847,11 +851,11 @@ public class MigrationStageSix {
             }
             decResearch.setDeclarationId(declarationid);
             decResearch.setResearchName(researchName);
-            if (("无").equals(approvalUnit)) {
+            /*if (("无").equals(approvalUnit)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到审批单位为无字。"));
                 excel.add(map);
                 logger.error("找到审批单位为无字，此结果将被记录在Excel中");
-            }
+            }*/
             decResearch.setApprovalUnit(approvalUnit);
             decResearch.setAward(award);
             decResearch.setNote((String) map.get("remark")); // 备注
@@ -889,6 +893,7 @@ public class MigrationStageSix {
                 + "where tme.expendname = '个人成就'";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0; // 迁移成功的条目数
+        int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         String regular = "^[0-9a-zA-Z]{8,10}$"; // 正则表达式判断
         /* 开始遍历查询结果 */
@@ -902,6 +907,7 @@ public class MigrationStageSix {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
                 logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                declarationidCount++;
                 continue;
             }
             decAchievement.setDeclarationId(declarationid);
@@ -924,6 +930,7 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
         logger.info("teach_material_extvalue表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
@@ -1024,6 +1031,7 @@ public class MigrationStageSix {
                 + "GROUP BY wd.writerid,tb.bookid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0; // 迁移成功的条目数
+        int extensionidCount = 0;
         int textbookidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
@@ -1041,6 +1049,7 @@ public class MigrationStageSix {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
                 logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                extensionidCount++;
                 continue;
             }
             decPosition.setDeclarationId(declarationid);
@@ -1118,6 +1127,7 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("未找到教材扩展项对应的关联结果数量：{}", extensionidCount);
         logger.info("未找到书籍对应的关联结果数量：{}", textbookidCount);
         logger.info("teach_applyposition表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
