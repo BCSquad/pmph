@@ -11,6 +11,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.vo.MaterialListVO;
+import com.bc.pmpheep.back.vo.MaterialMainInfoVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -58,6 +59,18 @@ public interface MaterialService {
 	 * @return 教材名称
 	 */
 	String getMaterialNameById(Long id) throws CheckedServiceException;
+	
+	/**
+	 * 获取教材主要信息，如教材名称，当前用户的权限菜单,以及教材的其他信息
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年12月14日 上午8:56:43
+	 * @param id
+	 * @param sessionId
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	MaterialMainInfoVO getMaterialMainInfoById (Long id,String sessionId) throws CheckedServiceException;
 
 
 	/**
