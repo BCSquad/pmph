@@ -370,6 +370,7 @@ public class FileDownLoadController {
 				sb.append((i + 1) + "." + textbooks.get(i).getTextbookName());
 				sb.append(File.separator);
 				wordHelper.export(materialName, sb.toString(), list);
+				list.clear();
 			}
 		} catch (Exception e) {
 			return e.getMessage();
