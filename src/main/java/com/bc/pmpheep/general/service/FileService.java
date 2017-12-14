@@ -48,6 +48,8 @@ public class FileService {
 
     @Resource
     GridFsTemplate gridFsTemplate;
+    
+   
 
     /**
      * 保存图片
@@ -74,6 +76,28 @@ public class FileService {
         }
         return gridFSFile.getId().toString();
     }
+    
+    /**
+     * 保存图片
+     * @introduction 
+     * @author Mryang
+     * @createDate 2017年12月14日 下午1:44:35
+     * @param inputStream
+     * @param fileName
+     * @param imageType
+     * @param pk
+     * @return
+     * @throws IOException
+     */
+    public String save(InputStream inputStream,String fileName, ImageType imageType, long pk) throws IOException {
+        DBObject metaData = new BasicDBObject();
+        metaData.put(IS_IMAGE, true);
+        metaData.put(TYPE, imageType.getType());
+        metaData.put(PK, pk);
+        GridFSFile gridFSFile = gridFsTemplate.store(inputStream, fileName, "multipart/form-data",  metaData);
+        inputStream.close();
+        return gridFSFile.getId().toString();
+    }
 
     /**
      * 保存文件
@@ -98,6 +122,27 @@ public class FileService {
                             metaData);
             inputStream.close();
         }
+        return gridFSFile.getId().toString();
+    }
+    
+    /**
+     * 保存文件
+     * @author Mryang
+     * @createDate 2017年12月14日 下午1:41:33
+     * @param inputStream
+     * @param fileName
+     * @param fileType
+     * @param pk
+     * @return
+     * @throws IOException
+     */
+    public String save(InputStream inputStream, String fileName,FileType fileType, long pk) throws IOException {
+        DBObject metaData = new BasicDBObject();
+        metaData.put(IS_IMAGE, false);
+        metaData.put(TYPE, fileType.getType());
+        metaData.put(PK, pk);
+        GridFSFile gridFSFile = gridFsTemplate.store(inputStream, fileName, "multipart/form-data", metaData);
+        inputStream.close();
         return gridFSFile.getId().toString();
     }
 
