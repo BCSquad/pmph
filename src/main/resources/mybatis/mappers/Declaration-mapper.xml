@@ -273,6 +273,17 @@
 		</set>
 		where id=#{id} ;
 	</update>
+	
+	<!-- 根据id查询一个作家申报信息 -->
+	<select id="getDeclarationByIds" parameterType="java.util.List" resultType="Declaration">
+		select * from declaration where true 
+		<if test="ids != null and ids.size() > 0 ">
+			and id in 
+			<foreach collection="ids" open="("  item="id" close=")" separator=",">
+				#{id}
+			</foreach>
+		</if>
+	</select>
 
 	<!-- 根据id查询一个作家申报信息 -->
 	<select id="getDeclarationById" parameterType="java.lang.Long"

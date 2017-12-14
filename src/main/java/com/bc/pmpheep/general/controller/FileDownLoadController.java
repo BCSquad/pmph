@@ -129,9 +129,9 @@ public class FileDownLoadController {
 	 * 功能描述：普通文件下载(更新下载数)
 	 * 使用示范：
 	 *
-	 * &#64;param type 模块类型
-	 * &#64;param id 文件在MongoDB中的id
-	 * &#64;param response 服务响应
+	 * @param type 模块类型
+	 * @param id 文件在MongoDB中的id
+	 * @param response 服务响应
 	 * </pre>
 	 * 
 	 * @throws UnsupportedEncodingException
@@ -212,9 +212,9 @@ public class FileDownLoadController {
 	 * 功能描述：处理不同浏览器下载文件乱码问题
 	 * 使用示范：
 	 *
-	 * &#64;param request
-	 * &#64;param fileName 文件名
-	 * &#64;return 编码后的文件名
+	 * @param request
+	 * @param fileName 文件名
+	 * @return 编码后的文件名
 	 * </pre>
 	 */
 	private String returnFileName(HttpServletRequest request, String fileName) {
@@ -328,7 +328,7 @@ public class FileDownLoadController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/word/declaration", method = RequestMethod.GET)
-	public void declarationWord(Long materialId, String textBookids, String realname, String position, String title,
+	public String declarationWord(Long materialId, String textBookids, String realname, String position, String title,
 			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
 			String id) {
 		String src = this.getClass().getResource("/").getPath();
@@ -351,30 +351,40 @@ public class FileDownLoadController {
 					orgName, unitName, positionType, onlineProgress, offlineProgress);
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
+			return e.getMessage();
 		}
-		for (int i = 0; i < textbooks.size(); i++) {
-			List<DeclarationEtcBO> list = new ArrayList<>();
-			for (DeclarationEtcBO declarationEtcBO : declarationEtcBOs) {
-				if (textbooks.get(i).getTextbookName().equals(declarationEtcBO.getTextbookName())) {
-					list.add(declarationEtcBO);
-					list.remove(declarationEtcBO);
+		try {
+			for (int i = 0; i < textbooks.size(); i++) {
+				List<DeclarationEtcBO> list = new ArrayList<>();
+				for (DeclarationEtcBO declarationEtcBO : declarationEtcBOs) {
+					if (textbooks.get(i).getTextbookName().equals(declarationEtcBO.getTextbookName())) {
+						list.add(declarationEtcBO);
+					}
 				}
+				StringBuilder sb = new StringBuilder();
+				sb.append(src);
+				sb.append(id);
+				sb.append(File.separator);
+				sb.append(materialName);
+				sb.append(File.separator);
+				sb.append((i + 1) + "." + textbooks.get(i).getTextbookName());
+				sb.append(File.separator);
+				wordHelper.export(materialName, sb.toString(), list);
+				list.clear();
 			}
-			StringBuilder sb = new StringBuilder();
-			sb.append(src);
-			sb.append(id);
-			sb.append(File.separator);
-			sb.append(materialName);
-			sb.append(File.separator);
-			sb.append((i + 1) + "." + textbooks.get(i).getTextbookName());
-			sb.append(File.separator);
-			wordHelper.export(materialName, sb.toString(), list);
+		} catch (Exception e) {
+			return e.getMessage();
 		}
 		map.put(id, zipDownload);
 		new Thread(zipDownload).start();
-		zipHelper.zip(dest + File.separator + materialName, dest + File.separator, true, null);
+		try {
+			zipHelper.zip(dest + File.separator + materialName, dest + File.separator, true, null);
+		} catch (Exception e) {
+			return e.getMessage();
+		}
 		zipDownload.setState(true);
 		map.put(id, zipDownload);
+		return "SUCCESS";
 	}
 
 	/**
@@ -470,9 +480,9 @@ public class FileDownLoadController {
 	 * 功能描述：导出已发布教材下的学校
 	 * 使用示范：
 	 *
-	 * &#64;param materialId 教材ID
-	 * &#64;param request
-	 * &#64;param response
+	 * @param materialId 教材ID
+	 * @param request
+	 * @param response
 	 * </pre>
 	 */
 	@ResponseBody

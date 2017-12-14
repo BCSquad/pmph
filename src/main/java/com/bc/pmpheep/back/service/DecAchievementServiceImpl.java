@@ -39,9 +39,9 @@ public class DecAchievementServiceImpl implements DecAchievementService{
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.NULL_PARAM, "申报表id不能为空");
 		}
-		if (StringUtil.isEmpty(decAchievement.getContent())){
+		/*if (StringUtil.isEmpty(decAchievement.getContent())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "内容为空");
-		}
+		}*/
 		
 		decAchievementDao.addDecAchievement(decAchievement);
 		
