@@ -148,13 +148,15 @@ public interface DecPositionService {
      * 功能描述：教材申报-遴选主编/遴选编委(更新)
      * 使用示范：
      *
-     * @param decPositions DecPosition 对象集合
-     * @return
+     * @param decPositions DecPosition对象集合
+     * @param selectionType (1:确定，2：发布)
+     * @param editorOrSubeditorType 主编，副主编/编委(1:主编，副主编，2：编委)
+     * @return 影响行数
      * @throws CheckedServiceException
      * </pre>
      */
     Integer updateDecPositionEditorSelection(String jsonDecPosition, Integer selectionType,
-    String sessionId) throws CheckedServiceException, IOException;
+    Integer editorOrSubeditorType, String sessionId) throws CheckedServiceException, IOException;
 
     /**
      * 
@@ -164,10 +166,12 @@ public interface DecPositionService {
      *
      * @param textbookId  书籍Id
      * @return 所有申报id
+     * @param editorOrSubeditorType 主编，副主编/编委(1:主编，副主编，2：编委)
      * @throws CheckedServiceException
      * </pre>
      */
-    List<Long> getDecPositionIdByBookId(Long textbookId) throws CheckedServiceException;
+    List<Long> getDecPositionIdByBookId(Long textbookId, Integer editorOrSubeditorType)
+    throws CheckedServiceException;
 
     /**
      * 
@@ -176,11 +180,13 @@ public interface DecPositionService {
      * 使用示范：
      *
      * @param ids 主键ID集合
+     * @param editorOrSubeditorType 主编，副主编/编委(1:主编，副主编，2：编委)
      * @return 影响行数 
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer updateDecPositionSetDefault(List<Long> ids) throws CheckedServiceException;
+    Integer updateDecPositionSetDefault(List<Long> ids, Integer editorOrSubeditorType)
+    throws CheckedServiceException;
 
     /**
      * 

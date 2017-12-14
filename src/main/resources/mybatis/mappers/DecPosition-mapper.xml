@@ -389,23 +389,49 @@
 	</update>
 	
 	<!-- 教材申报-遴选主编/遴选编委 (根据书籍Id查询所有申报id) -->
-	<select id="getDecPositionIdByBookId" parameterType="java.lang.Long" resultType="java.lang.Long">
-		select id from dec_position where textbook_id=#{textbookId};
+	<select id="getDecPositionIdByBookId" parameterType="java.util.Map" resultType="java.lang.Long">
+		select 
+			dp.`id`
+		FROM 
+			`dec_position` dp
+		WHERE 
+			1=1
+			<if test="editorOrSubeditorType ==1">
+				AND(
+					dp.`chosen_position`=1
+				OR
+					dp.`chosen_position`=2
+				)
+			</if>
+			<if test="editorOrSubeditorType ==2">
+				AND
+					dp.`chosen_position`=3
+			</if>
+			AND 
+				textbook_id=#{textbookId};
 	</select>
+	
 	<!-- 教材申报-遴选主编/遴选编委 (更新前先初始化) -->
-	<update id="updateDecPositionSetDefault" parameterType="java.util.List">
+	<update id="updateDecPositionSetDefault" parameterType="java.util.Map">
 		UPDATE 
 			`dec_position` dp 
-		SET
-			dp.`chosen_position`=0 
-		AND 
-			dp.`rank`=NULL
-		AND 
-			dp.`is_digital_editor`=0
+			<set>
+				<if test="editorOrSubeditorType !=null">
+					<if test="editorOrSubeditorType ==1">
+						dp.`chosen_position`=0,
+						dp.`rank`=NULL,
+						dp.`is_digital_editor`=0
+					</if>
+					<if test="editorOrSubeditorType ==2">
+						dp.`chosen_position`=0,
+						dp.`is_digital_editor`=0
+					</if>
+				</if>
+			</set>
 		WHERE 
 			dp.`id` IN 
-		 	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
-           		#{item}
+		 	<foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
+           		#{id}
         	</foreach>
 	</update>
 

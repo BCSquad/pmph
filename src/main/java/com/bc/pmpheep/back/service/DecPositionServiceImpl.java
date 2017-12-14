@@ -304,7 +304,7 @@ public class DecPositionServiceImpl implements DecPositionService {
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public Integer updateDecPositionEditorSelection(String jsonDecPosition, Integer selectionType,
-    String sessionId) throws CheckedServiceException, IOException {
+    Integer editorOrSubeditorType, String sessionId) throws CheckedServiceException, IOException {
         if (StringUtil.isEmpty(jsonDecPosition)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "遴选职位不能为空");
@@ -329,11 +329,17 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer selectionType_1 = 1;
         Integer selectionType_2 = 2;
         // 获取书籍id
-        Long textbookId = decPositions.get(0).getTextbookId(); 
+        Long textbookId = decPositions.get(0).getTextbookId();
         // 原来的历史遴选记录
-        List<DecPosition> oldlist =  decPositionService.listChosenDecPositionsByTextbookId(textbookId);
+        List<DecPosition> oldlist =
+        decPositionService.listChosenDecPositionsByTextbookId(textbookId);
         // 1:确定
         if (selectionType_1.intValue() == selectionType.intValue()) {
+            // 查询书籍下所有申报id
+            List<Long> ids =
+            decPositionService.getDecPositionIdByBookId(textbookId, editorOrSubeditorType);
+            // 初始化作家职位申报表
+            decPositionService.updateDecPositionSetDefault(ids, editorOrSubeditorType);
             if (CollectionUtil.isNotEmpty(decPositions)) {
                 count = decPositionDao.updateDecPositionEditorSelection(decPositions);
             }
@@ -342,11 +348,10 @@ public class DecPositionServiceImpl implements DecPositionService {
                                                   CheckedExceptionResult.NULL_PARAM, "书籍id为空");
             }
             Integer userType = 1;// 用户类型
-            
             Long updaterId = pmphUser.getId(); // 获取修改者id
             // 添加新的遴选记录
             textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
-            
+
         }
         // 2：发布
         if (selectionType_2.intValue() == selectionType.intValue()) {
@@ -591,20 +596,22 @@ public class DecPositionServiceImpl implements DecPositionService {
     }
 
     @Override
-    public List<Long> getDecPositionIdByBookId(Long textbookId) throws CheckedServiceException {
+    public List<Long> getDecPositionIdByBookId(Long textbookId, Integer editorOrSubeditorType)
+    throws CheckedServiceException {
         if (ObjectUtil.isNull(textbookId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
         }
-        return decPositionDao.getDecPositionIdByBookId(textbookId);
+        return decPositionDao.getDecPositionIdByBookId(textbookId, editorOrSubeditorType);
     }
 
     @Override
-    public Integer updateDecPositionSetDefault(List<Long> ids) throws CheckedServiceException {
+    public Integer updateDecPositionSetDefault(List<Long> ids, Integer editorOrSubeditorType)
+    throws CheckedServiceException {
         if (CollectionUtil.isEmpty(ids)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "主键id不能为空");
         }
-        return decPositionDao.updateDecPositionSetDefault(ids);
+        return decPositionDao.updateDecPositionSetDefault(ids, editorOrSubeditorType);
     }
 }

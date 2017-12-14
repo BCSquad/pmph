@@ -98,7 +98,8 @@ public interface DecPositionDao {
      * @return 所有申报id
      * </pre>
      */
-    List<Long> getDecPositionIdByBookId(Long textbookId);
+    List<Long> getDecPositionIdByBookId(@Param("textbookId") Long textbookId,
+    @Param("editorOrSubeditorType") Integer editorOrSubeditorType);
 
     /**
      * 
@@ -107,10 +108,12 @@ public interface DecPositionDao {
      * 使用示范：
      *
      * @param ids 主键ID集合
+     * @param editorOrSubeditorType 主编，副主编/编委(1:主编，副主编，2：编委)
      * @return 影响行数 
      * </pre>
      */
-    Integer updateDecPositionSetDefault(List<Long> ids);
+    Integer updateDecPositionSetDefault(@Param("ids") List<Long> ids,
+    @Param("editorOrSubeditorType") Integer editorOrSubeditorType);
 
     /**
      * 
