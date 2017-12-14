@@ -1,7 +1,9 @@
 package com.bc.pmpheep.back.service;
 
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -405,18 +407,11 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		//原来有的通知附件
 		List<MaterialNoticeAttachment> oldMaterialNoticeAttachmentlist = materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
 		String newTempNoticeFileIds = ",";
-//		String realpath = request.getSession().getServletContext().getRealPath("/");
 		for(MaterialNoticeAttachment materialNoticeAttachment: materialNoticeAttachmentlist){
 			if(null == materialNoticeAttachment.getId()){
-//				String tempPath = realpath + materialNoticeAttachment.getAttachment() ;
-//				File file = new File(tempPath);
-//				if(!file.exists()){//先放过吧
-//					continue;
-//				}
-//				String fileName =file.getName() ;
 				String tempFileId = materialNoticeAttachment.getAttachment();
-				MultipartFile file =(MultipartFile) request.getSession(false).getAttribute(tempFileId);
-				String fileName = file.getOriginalFilename();
+				byte[] fileByte = (byte[]) request.getSession(false).getAttribute(tempFileId);
+				String fileName = (String) request.getSession(false).getAttribute("fileName_"+tempFileId);;
 				materialNoticeAttachment.setAttachment(String.valueOf(new Date().getTime()));
 				materialNoticeAttachment.setAttachmentName(fileName);
 				materialNoticeAttachment.setDownload(0L);
@@ -425,22 +420,14 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
 				String noticeId;
 				// 保存通知文件
-			    noticeId = //fileService.saveLocalFile(file, FileType.MATERIAL_NOTICE_ATTACHMENT,materialNoticeAttachment.getId());
-			    		fileService.save(file, FileType.MATERIAL_NOTICE_ATTACHMENT, materialNoticeAttachment.getId()) ;
+				InputStream sbs = new ByteArrayInputStream(fileByte); 
+			    noticeId = fileService.save(sbs, fileName,FileType.MATERIAL_NOTICE_ATTACHMENT, materialNoticeAttachment.getId()) ;
 				materialNoticeAttachment.setAttachment(noticeId);
 				// 更新通知
 				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
 				//移除session的文件
-//				request.getSession(false).removeAttribute(tempFileId);
-//				//删除文件
-//				if(file.exists()){
-//					file.delete();
-//				}
-//				//删除目录
-//				File dir =  new File(tempPath.replace(fileName, "")) ;
-//				if(dir.exists()){
-//					dir.delete();
-//				}
+				request.getSession(false).removeAttribute(tempFileId);
+				request.getSession(false).removeAttribute("fileName_"+tempFileId);
 			}else{
 				newTempNoticeFileIds += materialNoticeAttachment.getId()+",";
 			}
@@ -463,15 +450,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		String newTempNoteFileIds = ",";
 		for(MaterialNoteAttachment materialNoteAttachment: materialNoteAttachmentList){
 			if(null == materialNoteAttachment.getId()){
-//				String tempPath = realpath + materialNoteAttachment.getAttachment() ;
-//				File file = new File(tempPath);
-//				if(!file.exists()){//先放过吧
-//					continue;
-//				}
-//				String fileName =file.getName() ;
 				String tempFileId  =  materialNoteAttachment.getAttachment() ;
-				MultipartFile file =(MultipartFile) request.getSession().getAttribute(tempFileId);
-				String fileName =file.getOriginalFilename() ;
+				byte[] file     =(byte[]) request.getSession(false).getAttribute(tempFileId);
+				String fileName =(String) request.getSession(false).getAttribute("fileName_"+tempFileId);
 				materialNoteAttachment.setAttachment(String.valueOf(new Date().getTime()));
 				materialNoteAttachment.setAttachmentName(fileName);
 				materialNoteAttachment.setDownload(0L);
@@ -479,23 +460,15 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				// 保存备注
 				materialNoteAttachmentService.addMaterialNoteAttachment(materialNoteAttachment);
 				String noticeId;
+				InputStream sbs = new ByteArrayInputStream(file); 
 				// 保存备注文件
-				noticeId = //fileService.saveLocalFile(file, FileType.MATERIAL_NOTICE_ATTACHMENT,materialNoteAttachment.getId());
-						  fileService.save(file, FileType.MATERIAL_NOTICE_ATTACHMENT,materialNoteAttachment.getId());
+				noticeId = fileService.save(sbs, fileName,FileType.MATERIAL_NOTICE_ATTACHMENT,materialNoteAttachment.getId());
 				materialNoteAttachment.setAttachment(noticeId);
 				// 更新备注
 				materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
 				//移除session的文件
-//				request.getSession().removeAttribute(tempFileId);
-//				//删除文件
-//				if(file.exists()){
-//					file.delete();
-//				}
-//				//删除目录
-//				File dir =  new File(tempPath.replace(fileName, "")) ;
-//				if(dir.exists()){
-//					dir.delete();
-//				}
+				request.getSession().removeAttribute(tempFileId);
+				request.getSession().removeAttribute("fileName_"+tempFileId);
 			}else{
 				newTempNoteFileIds += materialNoteAttachment.getId()+",";
 			}
@@ -977,15 +950,13 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
             }
     	}
     	List<String> filsRelativePaths = new ArrayList<String>(files.length);
-//    	String path = Const.FILE_TEMP_PATH ; //临时文件大目录
     	for(MultipartFile file: files){
     		UUID uuid = UUID.randomUUID();
-//    		String tempPath = path+"/"+uuid.toString()+"/";   //保证路径唯一
-//    		FileUpload.upMultipartFile(file,tempPath,request);//上传文件
-//    		filsRelativePaths.add(tempPath+file.getOriginalFilename());//返回相对路径
-    		//先放置在session里面 有空再来解决存储路径的问题
-    		request.getSession(false).setAttribute(uuid.toString(),file);
-    		filsRelativePaths.add(uuid.toString());
+    		String tempFileId = uuid.toString() ;
+    		request.getSession(false).setAttribute("fileName_"+tempFileId,file.getOriginalFilename());
+    		byte[] fileByte =file.getBytes();
+    		request.getSession(false).setAttribute(tempFileId,fileByte);
+    		filsRelativePaths.add(tempFileId);
     	}
         return filsRelativePaths;
     }
