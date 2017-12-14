@@ -49,8 +49,8 @@ public class MaterialListVO implements Serializable {
 	private String msgId;
 	// 创建到 哪个步骤
 	private String materialStep;
-
-
+	// 我对这本教材的权限 (八位数二进制)
+	private String myPower;
 
 	public Long getId() {
 		return id;
@@ -202,6 +202,14 @@ public class MaterialListVO implements Serializable {
 
 	public void setMaterialStep(String materialStep) {
 		this.materialStep = materialStep;
+	}
+
+	public String getMyPower() {
+		return myPower;
+	}
+
+	public void setMyPower(String myPower) {
+		this.myPower = myPower;
 	}
 
 }

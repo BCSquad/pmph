@@ -387,6 +387,53 @@
 			id=#{item.id}
 		</foreach>
 	</update>
+	
+	<!-- 教材申报-遴选主编/遴选编委 (根据书籍Id查询所有申报id) -->
+	<select id="getDecPositionIdByBookId" parameterType="java.util.Map" resultType="java.lang.Long">
+		select 
+			dp.`id`
+		FROM 
+			`dec_position` dp
+		WHERE 
+			1=1
+			<if test="editorOrSubeditorType ==1">
+				AND(
+					dp.`chosen_position`=1
+				OR
+					dp.`chosen_position`=2
+				)
+			</if>
+			<if test="editorOrSubeditorType ==2">
+				AND
+					dp.`chosen_position`=3
+			</if>
+			AND 
+				dp.`textbook_id` = #{textbookId};
+	</select>
+	
+	<!-- 教材申报-遴选主编/遴选编委 (更新前先初始化) -->
+	<update id="updateDecPositionSetDefault" parameterType="java.util.Map">
+		UPDATE 
+			`dec_position` dp 
+			<set>
+				<if test="editorOrSubeditorType !=null">
+					<if test="editorOrSubeditorType ==1">
+						dp.`chosen_position`=0,
+						dp.`rank`=NULL,
+						dp.`is_digital_editor`=0
+					</if>
+					<if test="editorOrSubeditorType ==2">
+						dp.`chosen_position`=0,
+						dp.`is_digital_editor`=0
+					</if>
+				</if>
+			</set>
+		WHERE 
+			dp.`id` IN 
+		 	<foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
+           		#{id}
+        	</foreach>
+	</update>
 
 	<!-- 根据declarationId查询作家申报职位信息并显示图书名字 -->
 	<select id="listDecPositionsOrBook" parameterType="java.lang.Long"
@@ -498,7 +545,7 @@
 		LEFT JOIN `org` org ON dc.`org_id`= org.`id`
 		LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
 		WHERE
-		d.preset_position IS NOT NULL AND c.id = #{materialId}
+		dp.preset_position IS NOT NULL AND c.id = #{materialId}
 		AND b.is_staging
 		= 0 AND b.online_progress >0;
 	</select>
