@@ -947,7 +947,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		String materialNoteAttachments = gson.toJson(materialNoteAttachmentList);
 
 		return new MaterialVO(material,
-				director.getRealname(),
+				director == null ? null:director.getRealname(),
 				mtype,
 				materialExtra, 
 				materialContacts, 
