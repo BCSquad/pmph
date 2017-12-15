@@ -569,7 +569,7 @@
 		a.offline_progress
 		from
 		declaration a
-		LEFT JOIN material b on b.id= a.material_id
+		<!-- LEFT JOIN material b on b.id= a.material_id -->
 		LEFT JOIN
 		dec_position c on
 		c.declaration_id = a.id
@@ -579,8 +579,9 @@
 		LEFT JOIN org f
 		on f.id=a.org_id
 		where
-		a.online_progress in (1,3) and a.is_deleted = 0
-		and b.is_deleted =0 and b.id = #{parameter.materialId}
+		a.online_progress in (1,3) and a.is_deleted = 0 
+		<!-- and b.is_deleted =0 and b.id = #{parameter.materialId} -->
+		and a.material_id = #{parameter.materialId}
 		<!-- 下面是动态条件 -->
 		<!-- 书籍 -->
 		<if test="parameter.bookIds != null ">
