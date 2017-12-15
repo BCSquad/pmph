@@ -45,9 +45,8 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
                 }
                 userId = userType + "_" + fonrtUserId;
                 //验证前台是否登录过了
-                Boolean flag =  MyWebSocketHandler.loginFlag.get(userId);
-                if(null == flag || !flag){
- //               	return false;
+                if(!MyWebSocketHandler.isLogin(userId)){
+                	return false;
                 }
             } else if ("3".equals(userType)) {
 
