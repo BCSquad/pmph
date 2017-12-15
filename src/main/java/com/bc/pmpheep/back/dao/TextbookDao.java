@@ -10,7 +10,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
-import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
+import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 
 /**
@@ -164,4 +164,10 @@ public interface TextbookDao {
 	 * @return
 	 */
 	Integer getTextbookDecTotal(PageParameter<TextbookDecVO> pageParameter);
+	/**
+	 * 通过书籍id查询该书籍下面的主编、编委
+	 * @param textbookId
+	 * @return
+	 */
+	List<DeclarationListVO> getDecList(Long textbookId);
 }

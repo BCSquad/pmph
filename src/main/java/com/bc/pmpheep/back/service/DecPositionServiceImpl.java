@@ -339,7 +339,9 @@ public class DecPositionServiceImpl implements DecPositionService {
             List<Long> ids =
             decPositionService.getDecPositionIdByBookId(textbookId, editorOrSubeditorType);
             // 初始化作家职位申报表
-            decPositionService.updateDecPositionSetDefault(ids, editorOrSubeditorType);
+            if (CollectionUtil.isNotEmpty(ids)) {
+                decPositionService.updateDecPositionSetDefault(ids, editorOrSubeditorType);
+            }
             if (CollectionUtil.isNotEmpty(decPositions)) {
                 count = decPositionDao.updateDecPositionEditorSelection(decPositions);
             }
@@ -579,8 +581,8 @@ public class DecPositionServiceImpl implements DecPositionService {
         int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
         if (total > 0) {
             List<DeclarationResultBookVO> list = decPositionDao.getBookList(pageParameter);
-            pageResult.setTotal(total);
             pageResult.setRows(list);
+            pageResult.setTotal(total);
         }
         return pageResult;
     }
