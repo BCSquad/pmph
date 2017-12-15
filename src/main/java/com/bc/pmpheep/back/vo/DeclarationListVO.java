@@ -39,7 +39,17 @@ public class DeclarationListVO implements java.io.Serializable {
 	private Integer onlineProgress;
 	//纸质表进度
     private Integer offlineProgress;
+    //书籍名称
+    private String textbookName;
     
+	public String getTextbookName() {
+		return textbookName;
+	}
+
+	public void setTextbookName(String textbookName) {
+		this.textbookName = textbookName;
+	}
+
 	public DeclarationListVO() {
 		super();
 	}
