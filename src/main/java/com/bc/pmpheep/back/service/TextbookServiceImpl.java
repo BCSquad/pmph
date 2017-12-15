@@ -34,11 +34,14 @@ import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
+import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
+import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -553,13 +556,93 @@ public class TextbookServiceImpl implements TextbookService {
 	}
 
 	@Override
-	public Textbook exportExcel(Long textbookId) throws CheckedServiceException, Exception {
-		//查询出要导出的人员
-		List<DeclarationListVO> list=textbookDao.getDecList(textbookId);
-		String sheetname=list.get(0).getTextbookName();
-		//装入到excel
-		ExcelHelper excelHelper=new ExcelHelper();
-		excelHelper.fromBusinessObjectList(list, sheetname);
-		return null;
+	public List<ExcelDecAndTextbookVO> getExcelDecAndTextbooks(Long[] textbookIds) 
+			throws CheckedServiceException {
+		if(null==textbookIds){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
+                    CheckedExceptionResult.NULL_PARAM, "书籍id为空");
+		}
+		List<ExcelDecAndTextbookVO> list=textbookDao.getExcelDecAndTextbooks(textbookIds);
+		for (ExcelDecAndTextbookVO excelDecAndTextbookVO : list) {
+//				switch (excelDecAndTextbookVO.getChosenPosition()) {
+//				case 1:
+//						excelDecAndTextbookVO.setShowChosenPosition("编委");
+//					break;
+//				case 2:
+//						excelDecAndTextbookVO.setShowChosenPosition("副主编");
+//					break;
+//				case 3:
+//						excelDecAndTextbookVO.setShowChosenPosition("副主编,编委");
+//					break;
+//				case 4:
+//						excelDecAndTextbookVO.setShowChosenPosition("主编");
+//					break;
+//				case 5:
+//						excelDecAndTextbookVO.setShowChosenPosition("主编,编委");
+//					break;
+//				case 6:
+//						excelDecAndTextbookVO.setShowChosenPosition("主编,副主编");
+//					break;
+//				case 7:
+//						excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,编委");
+//					break;
+//				default:
+//					break;
+//			}
+			switch (excelDecAndTextbookVO.getChosenPosition()) {
+			case 1:
+					excelDecAndTextbookVO.setShowChosenPosition("主编");
+				break;
+			case 2:
+					excelDecAndTextbookVO.setShowChosenPosition("副主编");
+				break;
+			default:
+				excelDecAndTextbookVO.setShowChosenPosition("编委");
+				break;
+		}
+		if(excelDecAndTextbookVO.getIsDigitalEditor()){
+			excelDecAndTextbookVO.setShowIsDigitalEditor("是");
+		}else {
+			excelDecAndTextbookVO.setShowIsDigitalEditor("否");
+		}
+		switch (excelDecAndTextbookVO.getOnlineProgress()) {
+		case 0:
+			excelDecAndTextbookVO.setShowOnlineProgress("未提交");
+			break;
+		case 1:
+			excelDecAndTextbookVO.setShowOnlineProgress("已提交");
+			break;
+		case 2:
+			excelDecAndTextbookVO.setShowOnlineProgress("被退回");
+			break;
+		default:
+			excelDecAndTextbookVO.setShowOnlineProgress("通过");
+			break;
+		}
+		switch (excelDecAndTextbookVO.getOfflineProgress()) {
+		case 0:
+			excelDecAndTextbookVO.setShowOfflineProgress("未收到");
+			break;
+		case 1:
+			excelDecAndTextbookVO.setShowOfflineProgress("被退回");
+			break;
+		default:
+			excelDecAndTextbookVO.setShowOfflineProgress("通过");
+			break;
+		}
+		switch (excelDecAndTextbookVO.getIdtype()) {
+		case 0:
+			excelDecAndTextbookVO.setShowIdtype("身份证");
+			break;
+		case 1:
+			excelDecAndTextbookVO.setShowIdtype("护照");
+			break;
+		default:
+			excelDecAndTextbookVO.setShowIdtype("军官证");
+			break;
+		}
+	}
+	return list;
 	}
 }
+

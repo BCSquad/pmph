@@ -1,9 +1,10 @@
 package com.bc.pmpheep.back.controller;
 
-import java.io.IOException;
-
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.bc.pmpheep.utils.ExcelHelper;
 
 /**
  * 
@@ -34,13 +35,15 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @RequestMapping(value = "/position")
 @SuppressWarnings("all")
 public class PositionChooseController {
-
+	Logger logger = LoggerFactory.getLogger(PositionChooseController.class);
     private final String    BUSSINESS_TYPE = "职位遴选";
 
     @Autowired
     private TextbookService textbookService;
     @Autowired
     private MaterialService materialService;
+    @Resource
+	ExcelHelper excelHelper;
 
     /**
      * 功能描述： 初始化书籍职位列表
@@ -137,23 +140,5 @@ public class PositionChooseController {
         pageParameter.setParameter(textbookDecVO);
         return new ResponseBean(textbookService.listEditorSelection(pageParameter));
     }
-    
-	/**
-	 * 
-	 * 导出主编、副主编 、编委
-	 * @author mr
-	 * @createDate 2017年12月14日 上午
-	 * @param textbookId
-	 * @return
-	 * @throws Exception 
-	 * @throws CheckedServiceException 
-	 */
-	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "职位遴选页面导出")
-	@RequestMapping(value = "/exportExcel", method = RequestMethod.GET)
-	public ResponseBean exportExcel(
-			@RequestParam("textbookId") Long textbookId) throws CheckedServiceException, Exception {
-		return new ResponseBean(textbookService.exportExcel(textbookId));
-	}
 
 }

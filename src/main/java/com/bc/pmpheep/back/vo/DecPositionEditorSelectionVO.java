@@ -33,6 +33,8 @@ public class DecPositionEditorSelectionVO implements Serializable {
     private Long      textbookId;
     // 申报职务
     private Integer   presetPosition;
+    // 申报职务
+    private String    strPresetPosition;
     // 遴选职务
     private Integer   chosenPosition;
     // 排位
@@ -297,6 +299,20 @@ public class DecPositionEditorSelectionVO implements Serializable {
      */
     public void setIsDigitalEditorOptional(Boolean isDigitalEditorOptional) {
         this.isDigitalEditorOptional = isDigitalEditorOptional;
+    }
+
+    /**
+     * @return the strPresetPosition
+     */
+    public String getStrPresetPosition() {
+        return strPresetPosition;
+    }
+
+    /**
+     * @param strPresetPosition the strPresetPosition to set
+     */
+    public void setStrPresetPosition(String strPresetPosition) {
+        this.strPresetPosition = strPresetPosition;
     }
 
 }
