@@ -1,15 +1,12 @@
 package com.bc.pmpheep.websocket;
 
 import java.util.Map;
-
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
-
 import com.bc.pmpheep.back.po.PmphUser;
-import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.util.SessionUtil;
 
 public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
@@ -23,18 +20,15 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
             ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) serverHttpRequest;
             String userType = servletRequest.getServletRequest().getParameter("userType");
             String sessionId = servletRequest.getServletRequest().getParameter("sessionId");
-
+            
             if (null == userType || "".equals(userType)) {
                 return false;
             }
-            // HttpSession session = servletRequest.getServletRequest().getSession(false);
+
             String userId = null;
-            // if (null == session) {
-            // return false;
-            // }
+
             // userType 1=社内用户/2=作家/3=机构用户
             if ("1".equals(userType)) {
-                // PmphUser pmphUser = SessionUtil.getPmphUser();
                 PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
                 if (null == pmphUser) {
                     return false;
@@ -45,15 +39,15 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
                 }
                 userId = userType + "_" + pmphUserId;
             } else if ("2".equals(userType)) {
-                WriterUser writerUser = SessionUtil.getWriterUserBySessionId(sessionId);
-                if (null == writerUser) {
+            	String fonrtUserId = servletRequest.getServletRequest().getParameter("userId");
+            	if (null == fonrtUserId || "".equals(fonrtUserId.trim())) {
                     return false;
                 }
-                Long writerUserId = writerUser.getId();
-                if (null == writerUserId) {
-                    return false;
+                userId = userType + "_" + fonrtUserId;
+                //验证前台是否登录过了
+                if(!MyWebSocketHandler.isLogin(userId)){
+                	return false;
                 }
-                userId = userType + "_" + writerUserId;
             } else if ("3".equals(userType)) {
 
             } else {

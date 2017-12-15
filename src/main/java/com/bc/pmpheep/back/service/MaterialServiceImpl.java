@@ -659,10 +659,6 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			// 我是教材的策划编辑编辑
 			projectEditorPowers = (projectEditorPowers | material.getProjectPermission());
 		}
-		if (0 == projectEditorPowers.intValue()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"该教材您没操作权限");
-		}
 
 		MaterialMainInfoVO materialMainInfoVO = new MaterialMainInfoVO(materialId, material.getMaterialName(),
 				material.getIsPublished(), material.getIsAllTextbookPublished(), material.getIsForceEnd(),

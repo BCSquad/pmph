@@ -127,7 +127,42 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 		}
 		return pmphGroupMessageDao.updatePmphGroupMessage(pmphGroupMessage);
 	}
-
+	
+	@Override
+	public String addGroupMessage(String msgConrent, Long groupId, Long senderId, Short senderType)
+			throws CheckedServiceException, IOException {
+		if (null == senderId ) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,"用户为空");
+		}
+		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(groupId, senderId,senderType.intValue() == 2);// 获取用户
+		PmphGroupMessage pmphGroupMessage;
+		if (senderType == 0) {
+			pmphGroupMessage = new PmphGroupMessage(groupId, 0L, msgConrent);
+		} else {
+			pmphGroupMessage = new PmphGroupMessage(groupId, pmphGroupMemberVO.getId(), msgConrent);
+		}
+		pmphGroupMessageDao.addPmphGroupMessage(pmphGroupMessage);
+		pmphGroupMessage = pmphGroupMessageDao.getPmphGroupMessageById(pmphGroupMessage.getId());
+		PmphGroup pmphGroup = new PmphGroup();// 将该条消息创建时间作为最后一条消息时间放入该小组中
+		pmphGroup.setId(groupId);
+		pmphGroup.setGmtLastMessage(pmphGroupMessage.getGmtCreate());
+		pmphGroupDao.updatePmphGroup(pmphGroup);
+		// 进行推送消息步骤1.查询接收人的id 2.进行推送
+		List<PmphGroupMemberVO> list = pmphGroupMemberService.listPmphGroupMember(groupId, null);
+		List<String> ids = new ArrayList<String>();
+		for (PmphGroupMemberVO groupMemberVO : list) {
+			String tempId = (groupMemberVO.getIsWriter() ? "2" : "1") + "_" + groupMemberVO.getUserId();
+			ids.add(tempId);
+		}
+		WebScocketMessage webScocketMessage = new WebScocketMessage(String.valueOf(pmphGroupMessage.getId()),
+				Const.MSG_TYPE_3, senderId, pmphGroupMemberVO.getDisplayName(), senderType, Const.SEND_MSG_TYPE_0, null,
+				null, msgConrent, pmphGroupMessage.getGmtCreate());
+		webScocketMessage.setGroupId(groupId);
+		webScocketMessage.setSenderIcon(pmphGroupMemberVO.getAvatar());
+		handler.sendWebSocketMessageToUser(ids, webScocketMessage);
+		return "SUCCESS";
+	}
+	
 	@Override
 	public String addGroupMessage(String msgConrent, Long groupId, String sessionId, Short senderType)
 			throws CheckedServiceException, IOException {

@@ -1,9 +1,6 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphGroupMessage;
@@ -69,6 +66,21 @@ public interface PmphGroupMessageService {
 	 *
 	 */
 	String addGroupMessage(String msgConrent, Long groupId, String sessionId, Short senderType)
+			throws CheckedServiceException, IOException;
+	
+	/**
+	 * 新增小组消息
+	 * @author Mryang
+	 * @createDate 2017年12月15日 下午2:49:53
+	 * @param msgConrent
+	 * @param groupId
+	 * @param senderId
+	 * @param senderType
+	 * @return
+	 * @throws CheckedServiceException
+	 * @throws IOException
+	 */
+	String addGroupMessage(String msgConrent, Long groupId, Long senderId, Short senderType)
 			throws CheckedServiceException, IOException;
 
 	/**

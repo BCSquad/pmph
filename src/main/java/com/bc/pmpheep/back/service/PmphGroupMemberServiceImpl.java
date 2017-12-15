@@ -361,7 +361,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"你不是该小组的组员");
 		}
-		pmphGroupMemberVO.setAvatar(pmphUserService.get(userId).getAvatar());
+		pmphGroupMemberVO.setAvatar(isWriter?writerUserService.get(userId).getAvatar():pmphUserService.get(userId).getAvatar());
 		return pmphGroupMemberVO;
 	}
 
