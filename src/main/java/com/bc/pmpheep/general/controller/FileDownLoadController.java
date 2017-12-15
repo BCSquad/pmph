@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.CmsExtraService;
@@ -45,6 +46,7 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
 import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.bean.ZipDownload;
@@ -500,6 +502,43 @@ public class FileDownLoadController {
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		String materialName = orgList.get(0).getMaterialName();// 教材名称
+		String fileName = returnFileName(request, materialName + ".xls");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+	
+	/**
+	 * 导出 遴选名单
+	 * @param request
+	 * @param response
+	 * @param textbookIds
+	 * @throws CheckedServiceException
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/position/exportExcel", method = RequestMethod.GET)
+	public void exportExcel(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam("textbookIds") Long[] textbookIds)
+		throws CheckedServiceException, Exception {
+		Workbook workbook = null;
+		List<ExcelDecAndTextbookVO> list = null;
+		try {
+			
+			list=textbookService.getExcelDecAndTextbooks(textbookIds);
+			workbook = excelHelper.fromBusinessObjectList(list, "遴选名单");
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		String materialName =list.get(0).getMaterialName() ;// 教材名称
 		String fileName = returnFileName(request, materialName + ".xls");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {

@@ -8,6 +8,8 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
+import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
+import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -164,5 +166,11 @@ public interface TextbookService {
 	 */
 	PageResult<TextbookDecVO> listEditorSelection(PageParameter<TextbookDecVO> pageParameter) throws CheckedServiceException;
 
-	Textbook exportExcel(Long textbookId) throws CheckedServiceException, Exception;
+	/**
+	 * 通过书籍id查询对应的主编和编委
+	 * @param textbookIds
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	List<ExcelDecAndTextbookVO> getExcelDecAndTextbooks(Long[] textbookIds)throws CheckedServiceException;
 }

@@ -39,6 +39,7 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
+import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -553,13 +554,14 @@ public class TextbookServiceImpl implements TextbookService {
 	}
 
 	@Override
-	public Textbook exportExcel(Long textbookId) throws CheckedServiceException, Exception {
-		//查询出要导出的人员
-		List<DeclarationListVO> list=textbookDao.getDecList(textbookId);
-		String sheetname=list.get(0).getTextbookName();
-		//装入到excel
-		ExcelHelper excelHelper=new ExcelHelper();
-		excelHelper.fromBusinessObjectList(list, sheetname);
-		return null;
+	public List<ExcelDecAndTextbookVO> getExcelDecAndTextbooks(Long[] textbookIds) 
+			throws CheckedServiceException {
+		if(null==textbookIds){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
+                    CheckedExceptionResult.NULL_PARAM, "书籍id为空");
+		}
+		return textbookDao.getExcelDecAndTextbooks(textbookIds);
 	}
+
 }
+
