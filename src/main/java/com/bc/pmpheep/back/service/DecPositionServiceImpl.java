@@ -581,8 +581,8 @@ public class DecPositionServiceImpl implements DecPositionService {
         int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
         if (total > 0) {
             List<DeclarationResultBookVO> list = decPositionDao.getBookList(pageParameter);
-            pageResult.setTotal(total);
             pageResult.setRows(list);
+            pageResult.setTotal(total);
         }
         return pageResult;
     }
