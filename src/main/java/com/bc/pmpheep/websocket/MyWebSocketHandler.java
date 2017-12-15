@@ -24,6 +24,9 @@ import com.bc.pmpheep.back.util.JsonUtil;
 @Component
 // 自动注入需要加的注解
 public class MyWebSocketHandler implements WebSocketHandler {
+	
+	//用来服务前台，登录标识
+	public static Map<String, Boolean> loginFlag = new HashMap<String, Boolean>(16); 
 
     // 当MyWebSocketHandler类被加载时就会创建该Map，随类而生
     private static Map<String, WebSocketSession> userSocketSessionMap;
@@ -97,6 +100,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
     public void handleMessage(WebSocketSession webSocketSession,
     WebSocketMessage<?> webSocketMessage) throws Exception {
         // 信息内容String msgText=webSocketMessage.getPayload().toString();
+    	System.out.println(webSocketMessage.getPayload().toString());
     }
 
     @Override
