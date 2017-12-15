@@ -453,4 +453,16 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
+	<select id="getDecList"  resultType="DeclarationListVO" parameterType="Long">
+		SELECT 
+			wu.realname,dp.preset_position,dc.org_name,dc.position,dc.title,dc.address,
+			dc.email,dc.handphone,dc.idtype,dc.idcard,dc.online_progress,dc.offline_progress
+		FROM `dec_position` dp 
+		LEFT JOIN `declaration` dc ON dp.`declaration_id` = dc.`id`
+		LEFT JOIN `org` org ON dc.`org_id`= org.`id`
+		LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
+		WHERE
+			dc.is_staging=false and dc.online_progress!=2
+			and dp.`textbook_id`=#{textbookId}
+	</select>
 </mapper>

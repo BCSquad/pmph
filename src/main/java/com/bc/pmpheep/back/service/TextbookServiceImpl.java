@@ -38,11 +38,13 @@ import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
+import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.bc.pmpheep.utils.ExcelHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -545,5 +547,16 @@ public class TextbookServiceImpl implements TextbookService {
             pageResult.setRows(list);
         }
         return pageResult;
+	}
+
+	@Override
+	public Textbook exportExcel(Long textbookId) throws CheckedServiceException, Exception {
+		//查询出要导出的人员
+		List<DeclarationListVO> list=textbookDao.getDecList(textbookId);
+		String sheetname=list.get(0).getTextbookName();
+		//装入到excel
+		ExcelHelper excelHelper=new ExcelHelper();
+		excelHelper.fromBusinessObjectList(list, sheetname);
+		return null;
 	}
 }

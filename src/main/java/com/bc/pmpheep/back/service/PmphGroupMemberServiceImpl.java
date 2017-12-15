@@ -436,13 +436,17 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		List<TextbookDecVO> textbookDecVOs=decPositionService.getTextbookEditorList(textbookId);
 		// 通过小组id查询小组现有成员
 		List<PmphGroupMember> pmphGroupMembers=pmphGroupMemberDao.listPmphGroupMembers(pmphGroup.getId());
-		List<PmphGroupMember> list = new ArrayList<PmphGroupMember>(textbookDecVOs.size());
+		//用于装已存在小组内的userid
+		String s= ",";
+		for(PmphGroupMember pmphGroupMember : pmphGroupMembers){
+			s += pmphGroupMember.getUserId()+",";
+		}
+		List<PmphGroupMember>  list= new ArrayList<PmphGroupMember>(textbookDecVOs.size());
 		// 通过遍历把不存在的成员添加到list中
 		for (TextbookDecVO textbookDecVO : textbookDecVOs) {
-			for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
-				if(pmphGroupMember.getUserId() != textbookDecVO.getUserId()){
-					list.add(new PmphGroupMember(textbookDecVOs.get(0).getUserId(), textbookDecVOs.get(0).getIsWriter()));
-				}
+			String str=textbookDecVO.getUserId().toString();
+			if(!s.contains(textbookDecVO.getUserId().toString())){
+				list.add(new PmphGroupMember(textbookDecVO.getUserId(), Const.TRUE));
 			}
 		}
 		// 批量把没有加入的小组的传入作家用户添加到该小组
