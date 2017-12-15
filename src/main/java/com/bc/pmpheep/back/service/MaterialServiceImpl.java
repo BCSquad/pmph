@@ -399,7 +399,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		// 保存教材通知备注
 		materialExtra.setMaterialId(materialId);
-		if (!isUpdate) {
+		if (null == materialExtra.getId()) {
 			materialExtraService.addMaterialExtra(materialExtra);
 		} else {
 			materialExtraService.updateMaterialExtra(materialExtra);
@@ -897,12 +897,16 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				.listMaterialProjectEditors(id);
 		String materialProjectEditorVOs = gson.toJson(materialProjectEditorVOList);
 		// 通知附件信息
-		List<MaterialNoticeAttachment> materialNoticeAttachmentList = materialNoticeAttachmentService
-				.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
+		List<MaterialNoticeAttachment> materialNoticeAttachmentList = new ArrayList<MaterialNoticeAttachment>(5);
+		if(null != materialExtra){
+			materialNoticeAttachmentList=materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
+		}
 		String materialNoticeAttachments = gson.toJson(materialNoticeAttachmentList);
 		// 通知备注附件信息
-		List<MaterialNoteAttachment> materialNoteAttachmentList = materialNoteAttachmentService
-				.getMaterialNoteAttachmentByMaterialExtraId(materialExtra.getId());
+		List<MaterialNoteAttachment> materialNoteAttachmentList = new ArrayList<MaterialNoteAttachment>(5);
+		if(null != materialExtra){
+			materialNoteAttachmentList = materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtra.getId());
+		}
 		String materialNoteAttachments = gson.toJson(materialNoteAttachmentList);
 
 		return new MaterialVO(material, director == null ? null : director.getRealname(), mtype, materialExtra,

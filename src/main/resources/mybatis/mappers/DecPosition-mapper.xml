@@ -354,7 +354,7 @@
 			`org` org
 		ON
 			dc.`org_id`= org.`id`
-		WHERE
+		WHERE dc.online_progress in (1,3) and
 			dc.`is_staging`= FALSE
 		AND
 			dp.`textbook_id` = #{textbookId}
