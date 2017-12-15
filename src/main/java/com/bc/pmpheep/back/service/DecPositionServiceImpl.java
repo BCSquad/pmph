@@ -339,7 +339,9 @@ public class DecPositionServiceImpl implements DecPositionService {
             List<Long> ids =
             decPositionService.getDecPositionIdByBookId(textbookId, editorOrSubeditorType);
             // 初始化作家职位申报表
-            decPositionService.updateDecPositionSetDefault(ids, editorOrSubeditorType);
+            if (CollectionUtil.isNotEmpty(ids)) {
+                decPositionService.updateDecPositionSetDefault(ids, editorOrSubeditorType);
+            }
             if (CollectionUtil.isNotEmpty(decPositions)) {
                 count = decPositionDao.updateDecPositionEditorSelection(decPositions);
             }
