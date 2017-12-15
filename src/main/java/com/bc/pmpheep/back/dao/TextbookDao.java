@@ -11,6 +11,7 @@ import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
+import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 
 /**
@@ -169,5 +170,5 @@ public interface TextbookDao {
 	 * @param textbookId
 	 * @return
 	 */
-	List<DeclarationListVO> getDecList(Long textbookId);
+	List<ExcelDecAndTextbookVO> getExcelDecAndTextbooks(Long[] textbookIds);
 }
