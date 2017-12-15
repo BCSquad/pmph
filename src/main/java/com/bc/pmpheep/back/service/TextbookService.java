@@ -163,4 +163,6 @@ public interface TextbookService {
 	 * @return
 	 */
 	PageResult<TextbookDecVO> listEditorSelection(PageParameter<TextbookDecVO> pageParameter) throws CheckedServiceException;
+
+	Textbook exportExcel(Long textbookId) throws CheckedServiceException, Exception;
 }

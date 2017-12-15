@@ -296,7 +296,6 @@ public class MigrationStageOne {
                 excel.add(map);
                 logger.error("机构用户登陆密码为空，此结果将被记录在Excel中");
             }
-            Integer isDisabled = (Integer) map.get("isvalid");
             String realName = (String) map.get("username");
             String orgName = (String) map.get("orgname");
             if (StringUtil.isEmpty(realName)) {
@@ -328,7 +327,7 @@ public class MigrationStageOne {
             OrgUser orgUser = new OrgUser();
             orgUser.setUsername(username);
             orgUser.setPassword(password);
-            orgUser.setIsDisabled(isDisabled == 1);
+            orgUser.setIsDisabled(false);
             orgUser.setOrgId(orgId);
             orgUser.setRealname(realName);
             orgUser.setSex(sex);
@@ -430,7 +429,6 @@ public class MigrationStageOne {
             }
             list.add(username);
             String password = "888888";
-            Integer isDisabled = (Integer) map.get("isvalid");
             Long orgid = (Long) map.get("org_new_pk");
             String realName = (String) map.get("username");
             if (StringUtil.isEmpty(realName)) {
@@ -494,7 +492,7 @@ public class MigrationStageOne {
             writerUser.setUsername(username);
             writerUser.setNickname(username);
             writerUser.setPassword(password);
-            writerUser.setIsDisabled(isDisabled == 1);
+            writerUser.setIsDisabled(false);
             writerUser.setOrgId(orgid);
             writerUser.setRealname(realName);
             writerUser.setSex(sex);
