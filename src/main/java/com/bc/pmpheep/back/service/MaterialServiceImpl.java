@@ -778,6 +778,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					"用户为空");
 		}
 		for (MaterialListVO materialListVO : list) {
+			materialListVO.setIsMy(false);
 			materialListVO.setContacts(materialContactService.listMaterialContactByMaterialId(materialListVO.getId()));// 获取联系人
 			if (textbookService.getTextbookByMaterialId(materialListVO.getId()).size() == 0) {// 判断新建教材时是否到了书目录页面
 				materialListVO.setMaterialStep("设置书目录");
