@@ -462,8 +462,8 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer schoolDeclarationCount = decPositionDao.getSchoolDeclarationCount(materialId);
         Integer schoolDeclarationAverage = 0;
         if (decPositionDao.getSchoolCount(materialId) > 0) {
-            schoolDeclarationAverage =
-            schoolDeclarationCount / decPositionDao.getSchoolCount(materialId);
+            schoolDeclarationAverage =(int) Math.round((double)schoolDeclarationCount 
+            		/ decPositionDao.getSchoolCount(materialId));
         }
         Integer editorCount = decPositionDao.getEditorCount(materialId);
         Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);

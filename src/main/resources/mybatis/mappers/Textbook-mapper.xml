@@ -292,7 +292,7 @@
 					and d.is_force_end =1
 				</if>
 			</if>
-			<if test="parameter.list !=null ">
+			<if test="parameter.list !=null and  parameter.list.size() > 0 ">
 				and a.id in
 				<foreach collection="parameter.list" item="item" index="index"
 					open="(" close=")" separator=",">
@@ -330,10 +330,10 @@
 		editorsAndAssociateEditors,
 		sum(IF(b.chosen_position in (1,2),1,0))
 		editorsAndAssociateEditorsNum,
-		GROUP_CONCAT(IF(b.chosen_position in (3)
+		GROUP_CONCAT(IF(b.chosen_position in (3) or is_digital_editor 
 		,c.realname,null) ORDER BY
 		b.chosen_position,b.rank) bianWeis,
-		sum(IF(b.chosen_position in (3),1,0)) bianWeisNum ,
+		sum(IF(b.chosen_position in (3) or is_digital_editor ,1,0)) bianWeisNum ,
 		e.id groupId
 		from textbook a
 		LEFT
@@ -369,7 +369,7 @@
 				and d.is_force_end =1
 			</if>
 		</if>
-		<if test="parameter.list !=null ">
+		<if test="parameter.list !=null and  parameter.list.size() > 0 ">
 			and a.id in
 			<foreach collection="parameter.list" item="item" index="index"
 				open="(" close=")" separator=",">
