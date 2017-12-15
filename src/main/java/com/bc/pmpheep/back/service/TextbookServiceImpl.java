@@ -263,16 +263,19 @@ public class TextbookServiceImpl implements TextbookService {
 		if (null != total && total > 0) {
 			List<BookPositionVO> rows = textbookDao.listBookPosition(pageParameter);
 			//下面进行授权
-			String oprPower = "00000000";
-			if(power == 1 || power ==2 ){//管理员或者主任
-				oprPower = "11111111";
-			}else if(power == 3){ //教材项目编辑
-				oprPower = StringUtil.tentToBinary(material.getProjectPermission());
-			}else if(power == 4){ //教材策划编辑
-				oprPower = StringUtil.tentToBinary(material.getPlanPermission());
-			}
 			for(BookPositionVO row:rows){
-				row.setMyPower(oprPower);
+				if(power == 1 || power ==2 ){ //管理员或者主任
+					row.setMyPower("11111111");
+				}else if (power == 3){        //教材项目编辑
+					//因为项目编辑的权限不是全部  ，因此要检查我是不是这本书的策划编辑，如果是  ，这本书我的权利就是项目编辑+策划编辑的权利
+					Integer tempProjectPermission =  material.getProjectPermission() ;
+					if(row.getPlanningEditor().intValue() == pmphUser.getId().intValue() ){ //我又是策划编辑 
+						tempProjectPermission = (tempProjectPermission | material.getPlanPermission() );
+					}
+					row.setMyPower(StringUtil.tentToBinary(tempProjectPermission)) ;
+				}else if (power == 4){ //教材策划编辑
+					row.setMyPower(StringUtil.tentToBinary(material.getPlanPermission()));
+				}
 			}
 			pageResult.setRows(rows);
 		}

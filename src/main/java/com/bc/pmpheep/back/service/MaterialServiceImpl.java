@@ -1,7 +1,8 @@
 package com.bc.pmpheep.back.service;
 
-
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,7 +57,7 @@ import com.google.gson.reflect.TypeToken;
  */
 @Service
 public class MaterialServiceImpl extends BaseService implements MaterialService {
-	
+
 	@Autowired
 	PmphRoleDao roleDao;
 
@@ -98,12 +99,13 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
 	@Autowired
 	CmsContentService cmsContentService;
-	
+
 	@Autowired
 	private MaterialTypeService materialTypeService;
-	
+
 	@Autowired
 	private PmphRoleService pmphRoleService;
+
 	/**
 	 * 
 	 * @param Material
@@ -118,13 +120,13 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	}
 
 	@Override
-	public Long addOrUpdateMaterial(HttpServletRequest request,
-    		MaterialVO materialVO,
-//		    MultipartFile[]   noticeFiles,
-//		    MultipartFile[]   noteFiles,
-		    boolean isUpdate) throws CheckedServiceException, IOException {
-		if(null == request.getSession(false)){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"会话过期");
+	public Long addOrUpdateMaterial(HttpServletRequest request, MaterialVO materialVO,
+			// MultipartFile[] noticeFiles,
+			// MultipartFile[] noteFiles,
+			boolean isUpdate) throws CheckedServiceException, IOException {
+		if (null == request.getSession(false)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"会话过期");
 		}
 		// 获取当前用户
 		String sessionId = CookiesUtil.getSessionId(request);
@@ -133,7 +135,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"请求用户不存在");
 		}
-		Material material =materialVO.getMaterial();
+		Material material = materialVO.getMaterial();
 		// 如果是更新教材，判断主键
 		if (isUpdate && (null == material.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -203,7 +205,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					"教材主任为空");
 		}
 		// 教材通知备注内容验证
-		MaterialExtra materialExtra =materialVO.getMaterialExtra();
+		MaterialExtra materialExtra = materialVO.getMaterialExtra();
 		if (StringUtil.isEmpty(materialExtra.getNotice())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"教材通知内容为空");
@@ -230,29 +232,33 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"主任对应的机构为空");
 		}
-		
-//		//给主任添加角色
-//		String roleName="主任";//通过roleName查询roleid
-//		List<PmphRole> pmphRoles=pmphRoleService.getList(roleName);
-//		if (ObjectUtil.isNull(material.getDirector()) || ObjectUtil.isNull(pmphRoles.get(0).getId())) {
-//			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
-//					CheckedExceptionResult.NULL_PARAM, "角色ID或主任ID为空时禁止新增");
-//		}
-//		//先查看该主任是否已有主任角色 没有则新加
-//		List<PmphUserRole> pmphUserRoles=pmphRoleService.getUserRoleList(material.getDirector(),pmphRoles.get(0).getId());
-//		if(ObjectUtil.isNull(pmphUserRoles)&&pmphUserRoles.size() == 0){
-//			pmphRoleService.addUserRole(material.getDirector(), pmphRoles.get(0).getId());
-//		}
+
+		// //给主任添加角色
+		// String roleName="主任";//通过roleName查询roleid
+		// List<PmphRole> pmphRoles=pmphRoleService.getList(roleName);
+		// if (ObjectUtil.isNull(material.getDirector()) ||
+		// ObjectUtil.isNull(pmphRoles.get(0).getId())) {
+		// throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+		// CheckedExceptionResult.NULL_PARAM, "角色ID或主任ID为空时禁止新增");
+		// }
+		// //先查看该主任是否已有主任角色 没有则新加
+		// List<PmphUserRole>
+		// pmphUserRoles=pmphRoleService.getUserRoleList(material.getDirector(),pmphRoles.get(0).getId());
+		// if(ObjectUtil.isNull(pmphUserRoles)&&pmphUserRoles.size() == 0){
+		// pmphRoleService.addUserRole(material.getDirector(),
+		// pmphRoles.get(0).getId());
+		// }
 		// 教材所属部门
 		material.setDepartmentId(director.getDepartmentId());
 		// 修改人
 		material.setMenderId(pmphUser.getId());
-		//教材类型
-		List<Long> materialTypeList = gson.fromJson(materialType, new TypeToken<ArrayList<Long>>() { }.getType());
-		material.setMaterialType(materialTypeList.get(materialTypeList.size()-1));
-		//设置权限
-		material.setPlanPermission(Integer.valueOf(materialVO.getCehuaPowers(),2));
-		material.setProjectPermission(Integer.valueOf(materialVO.getProjectEditorPowers(),2));
+		// 教材类型
+		List<Long> materialTypeList = gson.fromJson(materialType, new TypeToken<ArrayList<Long>>() {
+		}.getType());
+		material.setMaterialType(materialTypeList.get(materialTypeList.size() - 1));
+		// 设置权限
+		material.setPlanPermission(Integer.valueOf(materialVO.getCehuaPowers(), 2));
+		material.setProjectPermission(Integer.valueOf(materialVO.getProjectEditorPowers(), 2));
 		// 保存或者更新教材
 		if (isUpdate) {
 			materialDao.updateMaterial(material);
@@ -262,11 +268,12 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			materialDao.addMaterial(material);
 		}
 		Long materialId = material.getId();
-		
+
 		// 扩展项转换
-		List<MaterialExtension> oldMaterialExtensionlist = materialExtensionService .getMaterialExtensionByMaterialId(materialId);
+		List<MaterialExtension> oldMaterialExtensionlist = materialExtensionService
+				.getMaterialExtensionByMaterialId(materialId);
 		String newMaterialExtensionIds = ",";
-		String materialExtensions=materialVO.getMaterialExtensions();
+		String materialExtensions = materialVO.getMaterialExtensions();
 		if (!StringUtil.isEmpty(materialExtensions)) {
 			List<MaterialExtension> materialExtensionlist = gson.fromJson(materialExtensions,
 					new TypeToken<ArrayList<MaterialExtension>>() {
@@ -302,7 +309,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			}
 		}
 		// 联系人转换
-		String materialContacts =materialVO.getMaterialContacts();
+		String materialContacts = materialVO.getMaterialContacts();
 		materialContactService.deleteMaterialContactsByMaterialId(materialId); // 删除已经有的联系人
 		if (StringUtil.isEmpty(materialContacts)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
@@ -357,7 +364,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		// 项目编辑转换
 		materialProjectEditorService.deleteMaterialProjectEditorByMaterialId(materialId); // 先删除该教材下的项目编辑
-		String materialProjectEditors=materialVO.getMaterialProjectEditors();
+		String materialProjectEditors = materialVO.getMaterialProjectEditors();
 		if (StringUtil.isEmpty(materialProjectEditors)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材项目编辑参数有误");
@@ -370,23 +377,25 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 						"项目编辑为空");
 			}
-			MaterialProjectEditor materialProjectEditor =new MaterialProjectEditor();
+			MaterialProjectEditor materialProjectEditor = new MaterialProjectEditor();
 			materialProjectEditor.setEditorId(materialProjectEditorVO.getEditorId());
 			materialProjectEditor.setMaterialId(materialId);
 			// 保存项目编辑
 			materialProjectEditorService.addMaterialProjectEditor(materialProjectEditor);
-//			// 项目编辑绑定角色
-//			String rolename="项目编辑";//通过roleName查询roleid
-//			List<PmphRole> pmphRoleList=pmphRoleService.getList(rolename);
-//			if (ObjectUtil.isNull(materialId) || ObjectUtil.isNull(pmphRoleList.get(0).getId())) {
-//				throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
-//						CheckedExceptionResult.NULL_PARAM, "角色ID或项目编辑ID为空时禁止新增");
-//			}
-//			//判断该用户是否有项目编辑角色 若没有则新加
-//			List<PmphUserRole> pmphUserRoles2=pmphRoleService.getUserRoleList(materialId, pmphRoleList.get(0).getId());
-//			if(ObjectUtil.isNull(pmphUserRoles2) && pmphUserRoles2.size() == 0){
-//				roleDao.addUserRole(materialId, pmphRoleList.get(0).getId());//给项目编辑绑定角色
-//			}
+			// // 项目编辑绑定角色
+			// String rolename="项目编辑";//通过roleName查询roleid
+			// List<PmphRole> pmphRoleList=pmphRoleService.getList(rolename);
+			// if (ObjectUtil.isNull(materialId) ||
+			// ObjectUtil.isNull(pmphRoleList.get(0).getId())) {
+			// throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,
+			// CheckedExceptionResult.NULL_PARAM, "角色ID或项目编辑ID为空时禁止新增");
+			// }
+			// //判断该用户是否有项目编辑角色 若没有则新加
+			// List<PmphUserRole> pmphUserRoles2=pmphRoleService.getUserRoleList(materialId,
+			// pmphRoleList.get(0).getId());
+			// if(ObjectUtil.isNull(pmphUserRoles2) && pmphUserRoles2.size() == 0){
+			// roleDao.addUserRole(materialId, pmphRoleList.get(0).getId());//给项目编辑绑定角色
+			// }
 		}
 		// 保存教材通知备注
 		materialExtra.setMaterialId(materialId);
@@ -395,28 +404,25 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		} else {
 			materialExtraService.updateMaterialExtra(materialExtra);
 		}
-		//保存通知附件
-		String materialNoticeAttachments=materialVO.getMaterialNoticeAttachments();
-		if(StringUtil.isEmpty(materialNoticeAttachments)){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"教材通知附件为空");
+		// 保存通知附件
+		String materialNoticeAttachments = materialVO.getMaterialNoticeAttachments();
+		if (StringUtil.isEmpty(materialNoticeAttachments)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"教材通知附件为空");
 		}
 		List<MaterialNoticeAttachment> materialNoticeAttachmentlist = gson.fromJson(materialNoticeAttachments,
-				new TypeToken<ArrayList<MaterialNoticeAttachment>>() { }.getType());
-		//原来有的通知附件
-		List<MaterialNoticeAttachment> oldMaterialNoticeAttachmentlist = materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
+				new TypeToken<ArrayList<MaterialNoticeAttachment>>() {
+				}.getType());
+		// 原来有的通知附件
+		List<MaterialNoticeAttachment> oldMaterialNoticeAttachmentlist = materialNoticeAttachmentService
+				.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
 		String newTempNoticeFileIds = ",";
-//		String realpath = request.getSession().getServletContext().getRealPath("/");
-		for(MaterialNoticeAttachment materialNoticeAttachment: materialNoticeAttachmentlist){
-			if(null == materialNoticeAttachment.getId()){
-//				String tempPath = realpath + materialNoticeAttachment.getAttachment() ;
-//				File file = new File(tempPath);
-//				if(!file.exists()){//先放过吧
-//					continue;
-//				}
-//				String fileName =file.getName() ;
+		for (MaterialNoticeAttachment materialNoticeAttachment : materialNoticeAttachmentlist) {
+			if (null == materialNoticeAttachment.getId()) {
 				String tempFileId = materialNoticeAttachment.getAttachment();
-				MultipartFile file =(MultipartFile) request.getSession(false).getAttribute(tempFileId);
-				String fileName = file.getOriginalFilename();
+				byte[] fileByte = (byte[]) request.getSession(false).getAttribute(tempFileId);
+				String fileName = (String) request.getSession(false).getAttribute("fileName_" + tempFileId);
+				;
 				materialNoticeAttachment.setAttachment(String.valueOf(new Date().getTime()));
 				materialNoticeAttachment.setAttachmentName(fileName);
 				materialNoticeAttachment.setDownload(0L);
@@ -425,53 +431,43 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
 				String noticeId;
 				// 保存通知文件
-			    noticeId = //fileService.saveLocalFile(file, FileType.MATERIAL_NOTICE_ATTACHMENT,materialNoticeAttachment.getId());
-			    		fileService.save(file, FileType.MATERIAL_NOTICE_ATTACHMENT, materialNoticeAttachment.getId()) ;
+				InputStream sbs = new ByteArrayInputStream(fileByte);
+				noticeId = fileService.save(sbs, fileName, FileType.MATERIAL_NOTICE_ATTACHMENT,
+						materialNoticeAttachment.getId());
 				materialNoticeAttachment.setAttachment(noticeId);
 				// 更新通知
 				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
-				//移除session的文件
-//				request.getSession(false).removeAttribute(tempFileId);
-//				//删除文件
-//				if(file.exists()){
-//					file.delete();
-//				}
-//				//删除目录
-//				File dir =  new File(tempPath.replace(fileName, "")) ;
-//				if(dir.exists()){
-//					dir.delete();
-//				}
-			}else{
-				newTempNoticeFileIds += materialNoticeAttachment.getId()+",";
+				// 移除session的文件
+				request.getSession(false).removeAttribute(tempFileId);
+				request.getSession(false).removeAttribute("fileName_" + tempFileId);
+			} else {
+				newTempNoticeFileIds += materialNoticeAttachment.getId() + ",";
 			}
 		}
-		for(MaterialNoticeAttachment materialNoticeAttachment:oldMaterialNoticeAttachmentlist){
+		for (MaterialNoticeAttachment materialNoticeAttachment : oldMaterialNoticeAttachmentlist) {
 			if (!newTempNoticeFileIds.contains("," + materialNoticeAttachment.getId() + ",")) {// 不包含
 				fileService.remove(materialNoticeAttachment.getAttachment()); // 删除文件
 				materialNoticeAttachmentService.deleteMaterialNoticeAttachmentById(materialNoticeAttachment.getId());
 			}
 		}
-		//备注附件保存
+		// 备注附件保存
 		String materialNoteAttachments = materialVO.getMaterialNoteAttachments();
-		if(StringUtil.isEmpty(materialNoteAttachments)){
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"教材备注附件为空");
+		if (StringUtil.isEmpty(materialNoteAttachments)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"教材备注附件为空");
 		}
-	    List<MaterialNoteAttachment> materialNoteAttachmentList = gson.fromJson(materialNoteAttachments,
-					new TypeToken<ArrayList<MaterialNoteAttachment>>() { }.getType());
-	    //原来的备注文件
-	    List<MaterialNoteAttachment> oldMaterialNoteAttachmentlist = materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtra.getId());
+		List<MaterialNoteAttachment> materialNoteAttachmentList = gson.fromJson(materialNoteAttachments,
+				new TypeToken<ArrayList<MaterialNoteAttachment>>() {
+				}.getType());
+		// 原来的备注文件
+		List<MaterialNoteAttachment> oldMaterialNoteAttachmentlist = materialNoteAttachmentService
+				.getMaterialNoteAttachmentByMaterialExtraId(materialExtra.getId());
 		String newTempNoteFileIds = ",";
-		for(MaterialNoteAttachment materialNoteAttachment: materialNoteAttachmentList){
-			if(null == materialNoteAttachment.getId()){
-//				String tempPath = realpath + materialNoteAttachment.getAttachment() ;
-//				File file = new File(tempPath);
-//				if(!file.exists()){//先放过吧
-//					continue;
-//				}
-//				String fileName =file.getName() ;
-				String tempFileId  =  materialNoteAttachment.getAttachment() ;
-				MultipartFile file =(MultipartFile) request.getSession().getAttribute(tempFileId);
-				String fileName =file.getOriginalFilename() ;
+		for (MaterialNoteAttachment materialNoteAttachment : materialNoteAttachmentList) {
+			if (null == materialNoteAttachment.getId()) {
+				String tempFileId = materialNoteAttachment.getAttachment();
+				byte[] file = (byte[]) request.getSession(false).getAttribute(tempFileId);
+				String fileName = (String) request.getSession(false).getAttribute("fileName_" + tempFileId);
 				materialNoteAttachment.setAttachment(String.valueOf(new Date().getTime()));
 				materialNoteAttachment.setAttachmentName(fileName);
 				materialNoteAttachment.setDownload(0L);
@@ -479,25 +475,18 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				// 保存备注
 				materialNoteAttachmentService.addMaterialNoteAttachment(materialNoteAttachment);
 				String noticeId;
+				InputStream sbs = new ByteArrayInputStream(file);
 				// 保存备注文件
-				noticeId = //fileService.saveLocalFile(file, FileType.MATERIAL_NOTICE_ATTACHMENT,materialNoteAttachment.getId());
-						  fileService.save(file, FileType.MATERIAL_NOTICE_ATTACHMENT,materialNoteAttachment.getId());
+				noticeId = fileService.save(sbs, fileName, FileType.MATERIAL_NOTICE_ATTACHMENT,
+						materialNoteAttachment.getId());
 				materialNoteAttachment.setAttachment(noticeId);
 				// 更新备注
 				materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
-				//移除session的文件
-//				request.getSession().removeAttribute(tempFileId);
-//				//删除文件
-//				if(file.exists()){
-//					file.delete();
-//				}
-//				//删除目录
-//				File dir =  new File(tempPath.replace(fileName, "")) ;
-//				if(dir.exists()){
-//					dir.delete();
-//				}
-			}else{
-				newTempNoteFileIds += materialNoteAttachment.getId()+",";
+				// 移除session的文件
+				request.getSession().removeAttribute(tempFileId);
+				request.getSession().removeAttribute("fileName_" + tempFileId);
+			} else {
+				newTempNoteFileIds += materialNoteAttachment.getId() + ",";
 			}
 		}
 		for (MaterialNoteAttachment materialNoteAttachment : oldMaterialNoteAttachmentlist) {
@@ -506,131 +495,100 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialNoteAttachmentService.deleteMaterialNoteAttachmentById(materialNoteAttachment.getId());
 			}
 		}
-		
+
 		/**
-		// 判断教材备注附件和教材通知附件
-		List<MaterialNoticeAttachment> materialNoticeAttachmentlist = new ArrayList<MaterialNoticeAttachment>(5);
-		String materialNoticeAttachments=materialVO.getMaterialNoticeAttachments();
-		if (!StringUtil.isEmpty(materialNoticeAttachments)) {
-			materialNoticeAttachmentlist = gson.fromJson(materialNoticeAttachments,
-					new TypeToken<ArrayList<MaterialNoticeAttachment>>() {
-					}.getType());
-		}
-		if (null != noticeFiles && noticeFiles.length > 0) {
-			for (MultipartFile notice : noticeFiles) {
-				if (null == notice || !(notice instanceof MultipartFile)) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-							CheckedExceptionResult.NULL_PARAM, "教材通知附件为空");
-				}
-				if (notice.getName().length() > 80) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-							CheckedExceptionResult.ILLEGAL_PARAM, "教材通知附件文件名过长");
-				}
-			}
-		}
-		if ((null == noticeFiles && materialNoticeAttachmentlist.size() == 0)
-				|| (materialNoticeAttachmentlist.size() + noticeFiles.length == 0)) {// 已有的数量加上新增的数量
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"教材通知附件为空");
-		}
-		List<MaterialNoteAttachment> materialNoteAttachmentList = new ArrayList<MaterialNoteAttachment>(5);
-		String materialNoteAttachments = materialVO.getMaterialNoteAttachments();
-		if (!StringUtil.isEmpty(materialNoteAttachments)) {
-			materialNoteAttachmentList = gson.fromJson(materialNoteAttachments,
-					new TypeToken<ArrayList<MaterialNoteAttachment>>() {
-					}.getType());
-		}
-		if (null != noteFiles && noteFiles.length > 0) {
-			for (MultipartFile note : noteFiles) {
-				if (null == note || !(note instanceof MultipartFile)) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-							CheckedExceptionResult.NULL_PARAM, "教材备注附件为空");
-				}
-				if (note.getName().length() > 80) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-							CheckedExceptionResult.ILLEGAL_PARAM, "教材备注附件文件名过长");
-				}
-			}
-		}
-		if ((null == noteFiles && materialNoteAttachmentList.size() == 0)
-				|| (materialNoteAttachmentList.size() + noteFiles.length == 0)) {// 已有的数量加上新增的数量
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"教材备注附件为空");
-		}
-		// 保存教材通知附件
-		List<MaterialNoticeAttachment> oldMaterialNoticeAttachmentlist = materialNoticeAttachmentService
-				.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId());
-		String newMaterialNoticeAttachmentIds = ",";
-		for (MaterialNoticeAttachment materialNoticeAttachment : materialNoticeAttachmentlist) {
-			if (null == materialNoticeAttachment.getId()) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-						"教材通知id为空");
-			}
-			newMaterialNoticeAttachmentIds += materialNoticeAttachment.getId() + ",";
-		}
-		if (null != noticeFiles && noticeFiles.length > 0) {
-			for (MultipartFile notice : noticeFiles) {
-				MaterialNoticeAttachment materialNoticeAttachment = new MaterialNoticeAttachment();
-				materialNoticeAttachment.setAttachment("---------");
-				materialNoticeAttachment.setAttachmentName(notice.getOriginalFilename());
-				materialNoticeAttachment.setDownload(0L);
-				materialNoticeAttachment.setMaterialExtraId(materialExtra.getId());
-				// 保存通知
-				materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
-				String noticeId;
-				// 保存通知文件
-			    noticeId = fileService.save(notice, FileType.MATERIAL_NOTICE_ATTACHMENT,
-							materialNoticeAttachment.getId());
-				
-				materialNoticeAttachment.setAttachment(noticeId);
-				// 更新通知
-				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
-				newMaterialNoticeAttachmentIds += materialNoticeAttachment.getId() + ",";
-			}
-		}
-		for (MaterialNoticeAttachment materialNoticeAttachment : oldMaterialNoticeAttachmentlist) {
-			if (!newMaterialNoticeAttachmentIds.contains("," + materialNoticeAttachment.getId() + ",")) {// 不包含
-				fileService.remove(materialNoticeAttachment.getAttachment()); // 删除文件
-				materialNoticeAttachmentService.deleteMaterialNoticeAttachmentById(materialNoticeAttachment.getId());
-			}
-		}
-		// 保存教材备注附件
-		List<MaterialNoteAttachment> oldMaterialNoteAttachmentlist = materialNoteAttachmentService
-				.getMaterialNoteAttachmentByMaterialExtraId(materialExtra.getId());
-		String newMaterialNoteAttachmentIds = ",";
-		for (MaterialNoteAttachment materialNoteAttachment : materialNoteAttachmentList) {
-			if (null == materialNoteAttachment.getId()) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-						"教材备注id为空");
-			}
-			newMaterialNoteAttachmentIds += materialNoteAttachment.getId() + ",";
-		}
-		if (null != noteFiles && noteFiles.length > 0) {
-			for (MultipartFile note : noteFiles) {
-				MaterialNoteAttachment materialNoteAttachment = new MaterialNoteAttachment();
-				materialNoteAttachment.setAttachment("---------");
-				materialNoteAttachment.setAttachmentName(note.getOriginalFilename());
-				materialNoteAttachment.setDownload(0L);
-				materialNoteAttachment.setMaterialExtraId(materialExtra.getId());
-				// 保存备注
-				materialNoteAttachmentService.addMaterialNoteAttachment(materialNoteAttachment);
-				String noticeId;
-				// 保存备注文件
-				noticeId = fileService.save(note, FileType.MATERIAL_NOTICE_ATTACHMENT,
-							materialNoteAttachment.getId());
-				materialNoteAttachment.setAttachment(noticeId);
-				// 更新备注
-				materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
-				newMaterialNoteAttachmentIds += materialNoteAttachment.getId() + ",";
-			}
-		}
-		for (MaterialNoteAttachment materialNoteAttachment : oldMaterialNoteAttachmentlist) {
-			if (!newMaterialNoteAttachmentIds.contains("," + materialNoteAttachment.getId() + ",")) {// 不包含
-				fileService.remove(materialNoteAttachment.getAttachment()); // 删除文件
-				materialNoteAttachmentService.deleteMaterialNoteAttachmentById(materialNoteAttachment.getId());
-			}
-		}
-		*/
+		 * // 判断教材备注附件和教材通知附件 List<MaterialNoticeAttachment>
+		 * materialNoticeAttachmentlist = new ArrayList<MaterialNoticeAttachment>(5);
+		 * String materialNoticeAttachments=materialVO.getMaterialNoticeAttachments();
+		 * if (!StringUtil.isEmpty(materialNoticeAttachments)) {
+		 * materialNoticeAttachmentlist = gson.fromJson(materialNoticeAttachments, new
+		 * TypeToken<ArrayList<MaterialNoticeAttachment>>() { }.getType()); } if (null
+		 * != noticeFiles && noticeFiles.length > 0) { for (MultipartFile notice :
+		 * noticeFiles) { if (null == notice || !(notice instanceof MultipartFile)) {
+		 * throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+		 * CheckedExceptionResult.NULL_PARAM, "教材通知附件为空"); } if
+		 * (notice.getName().length() > 80) { throw new
+		 * CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+		 * CheckedExceptionResult.ILLEGAL_PARAM, "教材通知附件文件名过长"); } } } if ((null ==
+		 * noticeFiles && materialNoticeAttachmentlist.size() == 0) ||
+		 * (materialNoticeAttachmentlist.size() + noticeFiles.length == 0)) {//
+		 * 已有的数量加上新增的数量 throw new
+		 * CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+		 * CheckedExceptionResult.NULL_PARAM, "教材通知附件为空"); }
+		 * List<MaterialNoteAttachment> materialNoteAttachmentList = new
+		 * ArrayList<MaterialNoteAttachment>(5); String materialNoteAttachments =
+		 * materialVO.getMaterialNoteAttachments(); if
+		 * (!StringUtil.isEmpty(materialNoteAttachments)) { materialNoteAttachmentList =
+		 * gson.fromJson(materialNoteAttachments, new
+		 * TypeToken<ArrayList<MaterialNoteAttachment>>() { }.getType()); } if (null !=
+		 * noteFiles && noteFiles.length > 0) { for (MultipartFile note : noteFiles) {
+		 * if (null == note || !(note instanceof MultipartFile)) { throw new
+		 * CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+		 * CheckedExceptionResult.NULL_PARAM, "教材备注附件为空"); } if (note.getName().length()
+		 * > 80) { throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+		 * CheckedExceptionResult.ILLEGAL_PARAM, "教材备注附件文件名过长"); } } } if ((null ==
+		 * noteFiles && materialNoteAttachmentList.size() == 0) ||
+		 * (materialNoteAttachmentList.size() + noteFiles.length == 0)) {// 已有的数量加上新增的数量
+		 * throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+		 * CheckedExceptionResult.NULL_PARAM, "教材备注附件为空"); } // 保存教材通知附件
+		 * List<MaterialNoticeAttachment> oldMaterialNoticeAttachmentlist =
+		 * materialNoticeAttachmentService
+		 * .getMaterialNoticeAttachmentsByMaterialExtraId(materialExtra.getId()); String
+		 * newMaterialNoticeAttachmentIds = ","; for (MaterialNoticeAttachment
+		 * materialNoticeAttachment : materialNoticeAttachmentlist) { if (null ==
+		 * materialNoticeAttachment.getId()) { throw new
+		 * CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+		 * CheckedExceptionResult.NULL_PARAM, "教材通知id为空"); }
+		 * newMaterialNoticeAttachmentIds += materialNoticeAttachment.getId() + ","; }
+		 * if (null != noticeFiles && noticeFiles.length > 0) { for (MultipartFile
+		 * notice : noticeFiles) { MaterialNoticeAttachment materialNoticeAttachment =
+		 * new MaterialNoticeAttachment();
+		 * materialNoticeAttachment.setAttachment("---------");
+		 * materialNoticeAttachment.setAttachmentName(notice.getOriginalFilename());
+		 * materialNoticeAttachment.setDownload(0L);
+		 * materialNoticeAttachment.setMaterialExtraId(materialExtra.getId()); // 保存通知
+		 * materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
+		 * String noticeId; // 保存通知文件 noticeId = fileService.save(notice,
+		 * FileType.MATERIAL_NOTICE_ATTACHMENT, materialNoticeAttachment.getId());
+		 * 
+		 * materialNoticeAttachment.setAttachment(noticeId); // 更新通知
+		 * materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
+		 * newMaterialNoticeAttachmentIds += materialNoticeAttachment.getId() + ","; } }
+		 * for (MaterialNoticeAttachment materialNoticeAttachment :
+		 * oldMaterialNoticeAttachmentlist) { if
+		 * (!newMaterialNoticeAttachmentIds.contains("," +
+		 * materialNoticeAttachment.getId() + ",")) {// 不包含
+		 * fileService.remove(materialNoticeAttachment.getAttachment()); // 删除文件
+		 * materialNoticeAttachmentService.deleteMaterialNoticeAttachmentById(materialNoticeAttachment.getId());
+		 * } } // 保存教材备注附件 List<MaterialNoteAttachment> oldMaterialNoteAttachmentlist =
+		 * materialNoteAttachmentService
+		 * .getMaterialNoteAttachmentByMaterialExtraId(materialExtra.getId()); String
+		 * newMaterialNoteAttachmentIds = ","; for (MaterialNoteAttachment
+		 * materialNoteAttachment : materialNoteAttachmentList) { if (null ==
+		 * materialNoteAttachment.getId()) { throw new
+		 * CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+		 * CheckedExceptionResult.NULL_PARAM, "教材备注id为空"); }
+		 * newMaterialNoteAttachmentIds += materialNoteAttachment.getId() + ","; } if
+		 * (null != noteFiles && noteFiles.length > 0) { for (MultipartFile note :
+		 * noteFiles) { MaterialNoteAttachment materialNoteAttachment = new
+		 * MaterialNoteAttachment(); materialNoteAttachment.setAttachment("---------");
+		 * materialNoteAttachment.setAttachmentName(note.getOriginalFilename());
+		 * materialNoteAttachment.setDownload(0L);
+		 * materialNoteAttachment.setMaterialExtraId(materialExtra.getId()); // 保存备注
+		 * materialNoteAttachmentService.addMaterialNoteAttachment(materialNoteAttachment);
+		 * String noticeId; // 保存备注文件 noticeId = fileService.save(note,
+		 * FileType.MATERIAL_NOTICE_ATTACHMENT, materialNoteAttachment.getId());
+		 * materialNoteAttachment.setAttachment(noticeId); // 更新备注
+		 * materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
+		 * newMaterialNoteAttachmentIds += materialNoteAttachment.getId() + ","; } } for
+		 * (MaterialNoteAttachment materialNoteAttachment :
+		 * oldMaterialNoteAttachmentlist) { if
+		 * (!newMaterialNoteAttachmentIds.contains("," + materialNoteAttachment.getId()
+		 * + ",")) {// 不包含 fileService.remove(materialNoteAttachment.getAttachment());
+		 * // 删除文件
+		 * materialNoteAttachmentService.deleteMaterialNoteAttachmentById(materialNoteAttachment.getId());
+		 * } }
+		 */
 		return material.getId();
 	}
 
@@ -648,19 +606,19 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		return materialDao.getMaterialById(id);
 	}
-	
+
 	@Override
-	public String  getMaterialNameById(Long id) throws CheckedServiceException {
+	public String getMaterialNameById(Long id) throws CheckedServiceException {
 		if (null == id) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
 		}
 		return materialDao.getMaterialNameById(id);
 	}
-	
-	
+
 	@Override
-	public MaterialMainInfoVO getMaterialMainInfoById (Long materialId,String sessionId) throws CheckedServiceException{
+	public MaterialMainInfoVO getMaterialMainInfoById(Long materialId, String sessionId)
+			throws CheckedServiceException {
 		// 验证用户
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
@@ -669,13 +627,13 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		// 教材权限的检查
 		List<PmphRole> pmphRoles = pmphUserService.getListUserRole(pmphUser.getId());
-		//下面进行授权
-		Integer projectEditorPowers = 0 ;
+		// 下面进行授权
+		Integer projectEditorPowers = 0;
 		// 系统管理员权限检查
 		for (PmphRole pmphRole : pmphRoles) {
 			if (null != pmphRole && null != pmphRole.getRoleName() && "系统管理员".equals(pmphRole.getRoleName())) {
-			   // 我是系统管理原
-				projectEditorPowers = 255; //"11111111";
+				// 我是系统管理原
+				projectEditorPowers = 255; // "11111111";
 			}
 		}
 		// 教材主任检查
@@ -684,12 +642,14 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			projectEditorPowers = 255; // 我是教材的主任
 		}
 		// 教材项目编辑检查
-		List<MaterialProjectEditorVO> materialProjectEditors = materialProjectEditorService.listMaterialProjectEditors(materialId);
+		List<MaterialProjectEditorVO> materialProjectEditors = materialProjectEditorService
+				.listMaterialProjectEditors(materialId);
 		if (null != materialProjectEditors && materialProjectEditors.size() > 0) {
 			for (MaterialProjectEditorVO materialProjectEditor : materialProjectEditors) {
-				if (null != materialProjectEditor && null != materialProjectEditor.getEditorId() && materialProjectEditor.getEditorId().equals(pmphUser.getId())) {
+				if (null != materialProjectEditor && null != materialProjectEditor.getEditorId()
+						&& materialProjectEditor.getEditorId().equals(pmphUser.getId())) {
 					// 我是教材的项目编辑
-					projectEditorPowers = ( projectEditorPowers | material.getProjectPermission() ) ;
+					projectEditorPowers = (projectEditorPowers | material.getProjectPermission());
 				}
 			}
 		}
@@ -697,20 +657,17 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		Integer num = this.getPlanningEditorSum(materialId, pmphUser.getId());
 		if (null != num && num.intValue() > 0) {
 			// 我是教材的策划编辑编辑
-			projectEditorPowers = ( projectEditorPowers | material.getProjectPermission() ) ;
+			projectEditorPowers = (projectEditorPowers | material.getProjectPermission());
 		}
-		if (0 == projectEditorPowers.intValue() ) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"该教材您没操作权限");
+		if (0 == projectEditorPowers.intValue()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"该教材您没操作权限");
 		}
-		
-		MaterialMainInfoVO   materialMainInfoVO   =  new MaterialMainInfoVO(materialId, 
-																	material.getMaterialName(),
-																	material.getIsPublished(),											
-																	material.getIsAllTextbookPublished(),											
-																	material.getIsForceEnd(),											 
-																	material.getIsDeleted() ,									
-															        StringUtil.tentToBinary(projectEditorPowers));
-		return materialMainInfoVO; 
+
+		MaterialMainInfoVO materialMainInfoVO = new MaterialMainInfoVO(materialId, material.getMaterialName(),
+				material.getIsPublished(), material.getIsAllTextbookPublished(), material.getIsForceEnd(),
+				material.getIsDeleted(), StringUtil.tentToBinary(projectEditorPowers));
+		return materialMainInfoVO;
 	}
 
 	/**
@@ -802,7 +759,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				list = materialDao.listMaterial(pageParameter);
 			}
 		}
-		list = addMaterialContact(list, pmphUser);
+		list = addMaterialContact(list, sessionId);
 		pageResult.setRows(list);
 		pageResult.setTotal(total);
 		return pageResult;
@@ -818,7 +775,12 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	 * @return
 	 * 
 	 */
-	public List<MaterialListVO> addMaterialContact(List<MaterialListVO> list, PmphUser pmphUser) {
+	public List<MaterialListVO> addMaterialContact(List<MaterialListVO> list, String sessionId) {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (ObjectUtil.isNull(pmphUser)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
+		}
 		for (MaterialListVO materialListVO : list) {
 			materialListVO.setContacts(materialContactService.listMaterialContactByMaterialId(materialListVO.getId()));// 获取联系人
 			if (textbookService.getTextbookByMaterialId(materialListVO.getId()).size() == 0) {// 判断新建教材时是否到了书目录页面
@@ -858,6 +820,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			} else {
 				materialListVO.setState("未发布");
 			}
+			materialListVO.setMyPower(getMaterialMainInfoById(materialListVO.getId(), sessionId).getMyPower());
 		}
 		return list;
 	}
@@ -915,14 +878,14 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		// 教材主要信息
 		Material material = materialDao.getMaterialById(id);
-		//教材主任
+		// 教材主任
 		PmphUser director = pmphUserService.get(material.getDirector());
-		//教材类型字符串
-		MaterialType materialType =materialTypeService.getMaterialTypeById(material.getMaterialType());
-		String mtype="[]";
-		if(null != materialType){
-			mtype = "["+materialType.getPath().replace("-", ",")+","+material.getMaterialType()+"]";
-			mtype = mtype.replace("[0,", "[").replace("[0", "[");  // 去掉 0
+		// 教材类型字符串
+		MaterialType materialType = materialTypeService.getMaterialTypeById(material.getMaterialType());
+		String mtype = "[]";
+		if (null != materialType) {
+			mtype = "[" + materialType.getPath().replace("-", ",") + "," + material.getMaterialType() + "]";
+			mtype = mtype.replace("[0,", "[").replace("[0", "["); // 去掉 0
 		}
 		// 教材通知备注表
 		MaterialExtra materialExtra = materialExtraService.getMaterialExtraByMaterialId(id);
@@ -946,47 +909,40 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				.getMaterialNoteAttachmentByMaterialExtraId(materialExtra.getId());
 		String materialNoteAttachments = gson.toJson(materialNoteAttachmentList);
 
-		return new MaterialVO(material,
-				director.getRealname(),
-				mtype,
-				materialExtra, 
-				materialContacts, 
-				materialExtensions, 
-				materialProjectEditorVOs,
-				materialNoticeAttachments,
-				materialNoteAttachments,
-				StringUtil.tentToBinary(material.getPlanPermission()),
-				StringUtil.tentToBinary(material.getProjectPermission())
-				);
+		return new MaterialVO(material, director == null ? null : director.getRealname(), mtype, materialExtra,
+				materialContacts, materialExtensions, materialProjectEditorVOs, materialNoticeAttachments,
+				materialNoteAttachments, StringUtil.tentToBinary(material.getPlanPermission()),
+				StringUtil.tentToBinary(material.getProjectPermission()));
 	}
-	
+
 	@Override
-	public List<String> upTempFile(HttpServletRequest request, MultipartFile[] files)throws CheckedServiceException, IOException {
+	public List<String> upTempFile(HttpServletRequest request, MultipartFile[] files)
+			throws CheckedServiceException, IOException {
 		String sessionId = CookiesUtil.getSessionId(request);
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"用户没有登录!");
 		}
-    	if( null == files || files.length == 0 ){
-    		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"没有文件");
-    	}
-    	for(MultipartFile file: files){
-    		if (file.getOriginalFilename().length() > 80) {
-                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM, "附件名称超出80个字符长度，请修改后上传！");
-            }
-    	}
-    	List<String> filsRelativePaths = new ArrayList<String>(files.length);
-//    	String path = Const.FILE_TEMP_PATH ; //临时文件大目录
-    	for(MultipartFile file: files){
-    		UUID uuid = UUID.randomUUID();
-//    		String tempPath = path+"/"+uuid.toString()+"/";   //保证路径唯一
-//    		FileUpload.upMultipartFile(file,tempPath,request);//上传文件
-//    		filsRelativePaths.add(tempPath+file.getOriginalFilename());//返回相对路径
-    		//先放置在session里面 有空再来解决存储路径的问题
-    		request.getSession(false).setAttribute(uuid.toString(),file);
-    		filsRelativePaths.add(uuid.toString());
-    	}
-        return filsRelativePaths;
-    }
+		if (null == files || files.length == 0) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"没有文件");
+		}
+		for (MultipartFile file : files) {
+			if (file.getOriginalFilename().length() > 80) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+						CheckedExceptionResult.ILLEGAL_PARAM, "附件名称超出80个字符长度，请修改后上传！");
+			}
+		}
+		List<String> filsRelativePaths = new ArrayList<String>(files.length);
+		for (MultipartFile file : files) {
+			UUID uuid = UUID.randomUUID();
+			String tempFileId = uuid.toString();
+			request.getSession(false).setAttribute("fileName_" + tempFileId, file.getOriginalFilename());
+			byte[] fileByte = file.getBytes();
+			request.getSession(false).setAttribute(tempFileId, fileByte);
+			filsRelativePaths.add(tempFileId);
+		}
+		return filsRelativePaths;
+	}
 }

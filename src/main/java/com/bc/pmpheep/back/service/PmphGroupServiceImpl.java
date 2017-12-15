@@ -254,7 +254,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		}
 		PmphGroup group = pmphGroupDao.getPmphGroupByGroupName(pmphGroup.getGroupName());
 		if (ObjectUtil.notNull(group)) {
-			if (pmphGroup.getId().equals(group.getId())) {
+			if (!pmphGroup.getId().equals(group.getId())) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
 						"小组名称重复");
 			}

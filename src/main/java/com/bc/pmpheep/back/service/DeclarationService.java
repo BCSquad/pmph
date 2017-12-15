@@ -6,9 +6,6 @@ package com.bc.pmpheep.back.service;
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import java.io.IOException;
 import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.vo.ApplicationVO;
@@ -52,6 +49,17 @@ public interface DeclarationService {
 	 * @Throws CheckedServiceException
 	 */
 	Declaration getDeclarationById(Long id) throws CheckedServiceException;
+	
+	/**
+	 * 查询多个申报
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年12月14日 下午4:35:32
+	 * @param ids
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	List<Declaration> getDeclarationByIds(List<Long> ids) throws CheckedServiceException;
 
 	/**
 	 * @Param materialId
@@ -140,8 +148,7 @@ public interface DeclarationService {
 	 *
 	 */
 	List<DeclarationEtcBO> declarationEtcBO(Long materialId, String textBookids, String realname, String position, String title,
-			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
-			HttpServletResponse response)
+			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress)
 			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException;
 	
 	/**
