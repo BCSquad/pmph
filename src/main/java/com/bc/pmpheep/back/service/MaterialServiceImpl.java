@@ -660,8 +660,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			projectEditorPowers = (projectEditorPowers | material.getProjectPermission());
 		}
 		if (0 == projectEditorPowers.intValue()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"该教材您没操作权限");
+			projectEditorPowers = 0;
 		}
 
 		MaterialMainInfoVO materialMainInfoVO = new MaterialMainInfoVO(materialId, material.getMaterialName(),
