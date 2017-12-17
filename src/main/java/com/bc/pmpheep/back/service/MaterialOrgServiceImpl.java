@@ -9,6 +9,7 @@ import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.MaterialOrgDao;
 import com.bc.pmpheep.back.po.MaterialOrg;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -55,6 +56,16 @@ public class MaterialOrgServiceImpl extends BaseService implements MaterialOrgSe
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         return materialOrgDao.addMaterialOrgs(materialOrgs);
+    }
+
+    @Override
+    public List<OrgExclVO> getOutPutExclOrgByMaterialId(Long materialId)
+    throws CheckedServiceException {
+        if (null == materialId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
+                                              CheckedExceptionResult.NULL_PARAM, "教材id为空");
+        }
+        return materialOrgDao.getOutPutExclOrgByMaterialId(materialId);
     }
 
     @Override

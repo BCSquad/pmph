@@ -34,15 +34,20 @@ import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
+import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
+import com.bc.pmpheep.back.vo.DeclarationListVO;
+import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.bc.pmpheep.utils.ExcelHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -261,16 +266,19 @@ public class TextbookServiceImpl implements TextbookService {
 		if (null != total && total > 0) {
 			List<BookPositionVO> rows = textbookDao.listBookPosition(pageParameter);
 			//下面进行授权
-			String oprPower = "00000000";
-			if(power == 1 || power ==2 ){//管理员或者主任
-				oprPower = "11111111";
-			}else if(power == 3){ //教材项目编辑
-				oprPower = StringUtil.tentToBinary(material.getProjectPermission());
-			}else if(power == 4){ //教材策划编辑
-				oprPower = StringUtil.tentToBinary(material.getPlanPermission());
-			}
 			for(BookPositionVO row:rows){
-				row.setMyPower(oprPower);
+				if(power == 1 || power ==2 ){ //管理员或者主任
+					row.setMyPower("11111111");
+				}else if (power == 3){        //教材项目编辑
+					//因为项目编辑的权限不是全部  ，因此要检查我是不是这本书的策划编辑，如果是  ，这本书我的权利就是项目编辑+策划编辑的权利
+					Integer tempProjectPermission =  material.getProjectPermission() ;
+					if(row.getPlanningEditor().intValue() == pmphUser.getId().intValue() ){ //我又是策划编辑 
+						tempProjectPermission = (tempProjectPermission | material.getPlanPermission() );
+					}
+					row.setMyPower(StringUtil.tentToBinary(tempProjectPermission)) ;
+				}else if (power == 4){ //教材策划编辑
+					row.setMyPower(StringUtil.tentToBinary(material.getPlanPermission()));
+				}
 			}
 			pageResult.setRows(rows);
 		}
@@ -319,8 +327,8 @@ public class TextbookServiceImpl implements TextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,
 					CheckedExceptionResult.NULL_PARAM, "分类路径为空");
 		}
-		if (path.indexOf("0-") != -1){
-			path = path.replace("0-", "");
+		if (path.indexOf("0-") != -1 ){
+			path = path.replaceFirst("0-", "");
 		}
 		String[] pathType = path.split("-");
 		for (int i = 0; i < pathType.length ; i++){
@@ -546,4 +554,95 @@ public class TextbookServiceImpl implements TextbookService {
         }
         return pageResult;
 	}
+
+	@Override
+	public List<ExcelDecAndTextbookVO> getExcelDecAndTextbooks(Long[] textbookIds) 
+			throws CheckedServiceException {
+		if(null==textbookIds){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
+                    CheckedExceptionResult.NULL_PARAM, "书籍id为空");
+		}
+		List<ExcelDecAndTextbookVO> list=textbookDao.getExcelDecAndTextbooks(textbookIds);
+		for (ExcelDecAndTextbookVO excelDecAndTextbookVO : list) {
+//				switch (excelDecAndTextbookVO.getChosenPosition()) {
+//				case 1:
+//						excelDecAndTextbookVO.setShowChosenPosition("编委");
+//					break;
+//				case 2:
+//						excelDecAndTextbookVO.setShowChosenPosition("副主编");
+//					break;
+//				case 3:
+//						excelDecAndTextbookVO.setShowChosenPosition("副主编,编委");
+//					break;
+//				case 4:
+//						excelDecAndTextbookVO.setShowChosenPosition("主编");
+//					break;
+//				case 5:
+//						excelDecAndTextbookVO.setShowChosenPosition("主编,编委");
+//					break;
+//				case 6:
+//						excelDecAndTextbookVO.setShowChosenPosition("主编,副主编");
+//					break;
+//				case 7:
+//						excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,编委");
+//					break;
+//				default:
+//					break;
+//			}
+			switch (excelDecAndTextbookVO.getChosenPosition()) {
+			case 1:
+					excelDecAndTextbookVO.setShowChosenPosition("主编");
+				break;
+			case 2:
+					excelDecAndTextbookVO.setShowChosenPosition("副主编");
+				break;
+			default:
+				excelDecAndTextbookVO.setShowChosenPosition("编委");
+				break;
+		}
+		if(excelDecAndTextbookVO.getIsDigitalEditor()){
+			excelDecAndTextbookVO.setShowIsDigitalEditor("是");
+		}else {
+			excelDecAndTextbookVO.setShowIsDigitalEditor("否");
+		}
+		switch (excelDecAndTextbookVO.getOnlineProgress()) {
+		case 0:
+			excelDecAndTextbookVO.setShowOnlineProgress("未提交");
+			break;
+		case 1:
+			excelDecAndTextbookVO.setShowOnlineProgress("已提交");
+			break;
+		case 2:
+			excelDecAndTextbookVO.setShowOnlineProgress("被退回");
+			break;
+		default:
+			excelDecAndTextbookVO.setShowOnlineProgress("通过");
+			break;
+		}
+		switch (excelDecAndTextbookVO.getOfflineProgress()) {
+		case 0:
+			excelDecAndTextbookVO.setShowOfflineProgress("未收到");
+			break;
+		case 1:
+			excelDecAndTextbookVO.setShowOfflineProgress("被退回");
+			break;
+		default:
+			excelDecAndTextbookVO.setShowOfflineProgress("通过");
+			break;
+		}
+		switch (excelDecAndTextbookVO.getIdtype()) {
+		case 0:
+			excelDecAndTextbookVO.setShowIdtype("身份证");
+			break;
+		case 1:
+			excelDecAndTextbookVO.setShowIdtype("护照");
+			break;
+		default:
+			excelDecAndTextbookVO.setShowIdtype("军官证");
+			break;
+		}
+	}
+	return list;
+	}
 }
+

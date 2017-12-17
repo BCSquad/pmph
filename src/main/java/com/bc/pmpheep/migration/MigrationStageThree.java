@@ -150,7 +150,6 @@ public class MigrationStageThree {
                 continue;
             }
             String password = "888888";
-            Integer isDisabled = (Integer) map.get("isvalid");
             String realName = (String) map.get("username");
             if (StringUtil.isEmpty(realName)) {
                 realName = userName;
@@ -176,7 +175,7 @@ public class MigrationStageThree {
             PmphUser pmphUser = new PmphUser();
             pmphUser.setUsername(userName);
             pmphUser.setPassword(password);
-            pmphUser.setIsDisabled(isDisabled == 1);
+            pmphUser.setIsDisabled(false);
             pmphUser.setRealname(realName);
             pmphUser.setDepartmentId(departmentId);
             pmphUser.setHandphone(handphone);

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -13,7 +14,9 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.bc.pmpheep.back.service.PmphGroupMessageService;
 import com.bc.pmpheep.back.util.JsonUtil;
+import com.google.gson.Gson;
 
 /**
  * WebSocketSession 一个页面new了几个webSocket 后台就应该有几个WebSocketSession
@@ -24,6 +27,24 @@ import com.bc.pmpheep.back.util.JsonUtil;
 @Component
 // 自动注入需要加的注解
 public class MyWebSocketHandler implements WebSocketHandler {
+	
+	
+	
+	//用来服务前台，登录标识
+	public static Map<String, Boolean> loginFlag = new HashMap<String, Boolean>(16); 
+	
+	//用来验正前台是否登录 key = 'userType + "_" + userId' 形式 ;
+	public static boolean isLogin(String key){
+		Boolean flag =  MyWebSocketHandler.loginFlag.get(key);
+	    if(null == flag || !flag){
+	           	//return false;
+	    }
+		return true ;
+	}
+	//--------------------------------------
+    
+    @Autowired
+	private PmphGroupMessageService pmphGroupMessageService;
 
     // 当MyWebSocketHandler类被加载时就会创建该Map，随类而生
     private static Map<String, WebSocketSession> userSocketSessionMap;
@@ -79,8 +100,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
      * @param webScocketMessage
      * @throws IOException
      */
-    public void sendWebSocketMessageToUser(List<String> userIds, WebScocketMessage webScocketMessage)
-    throws IOException {
+    public void sendWebSocketMessageToUser(List<String> userIds, WebScocketMessage webScocketMessage) throws IOException {
         TextMessage textMessage = new TextMessage(JsonUtil.toJSon(webScocketMessage), true);
         for (String userId : userIds) {
             if (null != userId && !"".equals(userId)) {
@@ -97,6 +117,16 @@ public class MyWebSocketHandler implements WebSocketHandler {
     public void handleMessage(WebSocketSession webSocketSession,
     WebSocketMessage<?> webSocketMessage) throws Exception {
         // 信息内容String msgText=webSocketMessage.getPayload().toString();
+    	Gson gson = new Gson();
+    	WebScocketMessage webScocketMessage = gson.fromJson(webSocketMessage.getPayload().toString(), WebScocketMessage.class);
+    	if(!MyWebSocketHandler.isLogin(webScocketMessage.getSenderType() + "_" + webScocketMessage.getSenderType())){
+               	return ;
+        }
+    	pmphGroupMessageService.addGroupMessage(
+    			webScocketMessage.getContent(), 
+    			webScocketMessage.getGroupId(), 
+    			webScocketMessage.getSenderId(), 
+    			webScocketMessage.getSenderType()) ;
     }
 
     @Override

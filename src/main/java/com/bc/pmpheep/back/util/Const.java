@@ -40,7 +40,7 @@ public class Const {
     public static final boolean      ISROLLBACK                    = true;
     // 用户SessionId
     public static final String       USER_SEESION_ID               = "userSessionId";
-    public static final String       SESSION_ID                    = "JSESSIONID";
+    public static final String       SESSION_ID                    = "sessionId";
     // PMPH_USER_TOKEN
     public static final String       SEESION_PMPH_USER_TOKEN       = "sessionPmphUserToken";
     // WRITER_USER_TOKEN

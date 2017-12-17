@@ -8,12 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.dao.DecAcadeDao;
 import com.bc.pmpheep.back.dao.DecAchievementDao;
@@ -36,6 +32,7 @@ import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecNationalPlan;
+import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.DecResearch;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
@@ -243,13 +240,22 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		// 获取当前作家用户申报信息
 		Declaration declarationCon = declarationDao.getDeclarationById(id);
-		declarationCon.setOnlineProgress(onlineProgress);
-		Integer onlineOne = 2;
-		Integer onlineTwo = 3;
-		if (onlineOne.equals(onlineProgress)) { // 获取审核进度是2则被退回
+		if (2 == onlineProgress.intValue()) { // 获取审核进度是2则被退回
+			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
+			for (DecPosition decPositions : decPosition) {
+				Integer chosenPosition = decPositions.getChosenPosition();
+				Boolean isDigitalEditor = decPositions.getIsDigitalEditor();
+				if (1 == chosenPosition.intValue() || 2 == chosenPosition.intValue() || 
+						3 == chosenPosition.intValue() || isDigitalEditor) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+							CheckedExceptionResult.NULL_PARAM, "已遴选职务，不可退回给个人!");
+				}
+			}
+			declarationCon.setOnlineProgress(onlineProgress);
 			declarationDao.updateDeclaration(declarationCon);
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false); // 发送系统消息
-		} else if (onlineTwo.equals(onlineProgress)) { // 获取审核进度是3则通过
+		} else if (3 == onlineProgress.intValue()) { // 获取审核进度是3则通过
+			declarationCon.setOnlineProgress(onlineProgress);
 			declarationDao.updateDeclaration(declarationCon);
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true); // 发送系统消息
 		}
@@ -444,7 +450,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 	@Override
 	public List<DeclarationEtcBO> declarationEtcBO(Long materialId, String textBookids, String realname,
 			String position, String title, String orgName, String unitName, Integer positionType,
-			Integer onlineProgress, Integer offlineProgress, HttpServletResponse response)
+			Integer onlineProgress, Integer offlineProgress)
 			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
 		long startTime = System.currentTimeMillis();// 获取当前时间
 		List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
@@ -634,7 +640,16 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		long endTime = System.currentTimeMillis();
 		System.err.println("------------------------------------------");
-		System.err.println("查询时间：" + (endTime - startTime) + "ms");
+		System.err.println("查询时间：" + (endTime - startTime) + "ms， 一共" + declarationEtcBOs.size() + "条数据");
 		return declarationEtcBOs;
+	}
+
+	@Override
+	public List<Declaration> getDeclarationByIds(List<Long> ids) throws CheckedServiceException {
+		if(null == ids || ids.size() == 0){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,"参数为空!");
+		}
+		List<Declaration>   declarations=  declarationDao.getDeclarationByIds(ids);
+		return declarations;
 	}
 }

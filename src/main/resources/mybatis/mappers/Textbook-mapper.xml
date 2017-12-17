@@ -292,7 +292,7 @@
 					and d.is_force_end =1
 				</if>
 			</if>
-			<if test="parameter.list !=null ">
+			<if test="parameter.list !=null and  parameter.list.size() > 0 ">
 				and a.id in
 				<foreach collection="parameter.list" item="item" index="index"
 					open="(" close=")" separator=",">
@@ -326,14 +326,14 @@
 		planningEditor.realname
 		planningEditorName ,
 		GROUP_CONCAT(IF(b.chosen_position in
-		(2,3,4,5,6,7),c.realname,null) ORDER BY b.chosen_position,b.rank)
+		(1,2),c.realname,null) ORDER BY b.chosen_position,b.rank)
 		editorsAndAssociateEditors,
-		sum(IF(b.chosen_position in (2,3,4,5,6,7),1,0))
+		sum(IF(b.chosen_position in (1,2),1,0))
 		editorsAndAssociateEditorsNum,
-		GROUP_CONCAT(IF(b.chosen_position in (1,3,5,7)
+		GROUP_CONCAT(IF(b.chosen_position in (3) or is_digital_editor 
 		,c.realname,null) ORDER BY
 		b.chosen_position,b.rank) bianWeis,
-		sum(IF(b.chosen_position in (1,3,5,7),1,0)) bianWeisNum ,
+		sum(IF(b.chosen_position in (3) or is_digital_editor ,1,0)) bianWeisNum ,
 		e.id groupId
 		from textbook a
 		LEFT
@@ -369,7 +369,7 @@
 				and d.is_force_end =1
 			</if>
 		</if>
-		<if test="parameter.list !=null ">
+		<if test="parameter.list !=null and  parameter.list.size() > 0 ">
 			and a.id in
 			<foreach collection="parameter.list" item="item" index="index"
 				open="(" close=")" separator=",">
@@ -437,9 +437,9 @@
 	<select id="getTextbookDecVOList" parameterType="PageParameter"
 		resultType="TextbookDecVO">
 	 	SELECT 
-    		dc.`user_id`, wu.`username`,dc.`realname`,wu.`is_writer`,
 			dc.`org_name`,dp.`preset_position`,dp.`chosen_position`,
-			dp.`is_digital_editor`,wu.`rank`,dp.`textbook_id`
+			dp.`is_digital_editor`,wu.`rank`,dp.`textbook_id`,
+			wu.`id` userId,wu.`realname`,wu.`is_writer`,org.`org_name` declarationUnit
 		FROM `dec_position` dp 
 		LEFT JOIN `declaration` dc ON dp.`declaration_id` = dc.`id`
 		LEFT JOIN `org` org ON dc.`org_id`= org.`id`
@@ -452,5 +452,25 @@
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
+	</select>
+	<select id="getExcelDecAndTextbooks"  resultType="ExcelDecAndTextbookVO">
+		SELECT 
+			dp.chosen_position,wu.realname,wu.username,org.org_name unitName,
+			dc.org_name,dc.position,dp.rank,dp.is_digital_editor,dc.title,dc.address,
+			dc.email,dc.handphone,dc.idtype,dc.idcard,dc.online_progress,dc.offline_progress,
+			t.textbook_name,m.material_name
+		FROM `dec_position` dp 
+		LEFT JOIN `declaration` dc ON dp.`declaration_id` = dc.`id`
+		LEFT JOIN `org` org ON dc.`org_id`= org.`id`
+		LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
+		LEFT JOIN `textbook` t ON t.`id`= dp.`textbook_id`
+		LEFT JOIN `material` m ON m.`id`= t.`material_id`
+		WHERE
+			dc.is_staging=false and dc.online_progress!=2
+			and dp.`textbook_id` in
+		<foreach collection="array" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
 	</select>
 </mapper>
