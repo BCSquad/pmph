@@ -322,6 +322,9 @@ public class DeclarationServiceImpl implements DeclarationService {
 					decPositions.setShowPosition("主编,副主编,编委,数字编委");
 				}
 				break;
+			case 8:
+				decPositions.setShowPosition("数字编委");
+				break;
 			default:
 				break;
 			}
