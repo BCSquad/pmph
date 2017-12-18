@@ -325,6 +325,31 @@ public class DeclarationServiceImpl implements DeclarationService {
 			default:
 				break;
 			}
+			switch (decPositions.getChosenPosition()) {
+			case 1:
+				decPositions.setShowPosition("编委");
+				break;
+			case 2:
+				decPositions.setShowPosition("副主编");
+				break;
+			case 4:
+				decPositions.setShowPosition("主编");
+				break;
+			case 8:
+				decPositions.setShowPosition("数字编委");
+				break;
+			case 9:
+				decPositions.setShowPosition("编委,数字编委");
+				break;
+			case 10:
+				decPositions.setShowPosition("副主编,数字编委");
+				break;
+			case 12:
+				decPositions.setShowPosition("主编,数字编委");
+				break;
+			default:
+				break;
+			}
 		}
 		// 专家信息
 		DeclarationOrDisplayVO declaration = declarationDao.getDeclarationByIdOrOrgName(declarationId);
