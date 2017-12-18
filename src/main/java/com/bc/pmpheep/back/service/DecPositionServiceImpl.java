@@ -237,6 +237,9 @@ public class DecPositionServiceImpl implements DecPositionService {
             } else if ("主编,副主编,编委,数字编委".equals(showPosition)) {
                 decPosition.setPresetPosition(7);
                 decPosition.setIsDigitalEditor(true);
+            } else if ("数字编委".equals(showPosition)) {
+            	decPosition.setPresetPosition(8);
+                decPosition.setIsDigitalEditor(false);
             }
             File files = null;
             if (StringUtil.isEmpty(file)) {
