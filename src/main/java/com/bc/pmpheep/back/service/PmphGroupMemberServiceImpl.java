@@ -170,7 +170,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 						if (groupMember.getIsDeleted()) {
 							pmphGroupMember.setGroupId(groupId);
 							pmphGroupMember.setIsDeleted(false);
-							pmphGroupMemberDao.updatePmphGroupMember(pmphGroupMember);
+							pmphGroupMemberDao.update(pmphGroupMember);
 						} else {
 							throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 									CheckedExceptionResult.ILLEGAL_PARAM, "已经有用户加入该小组了");
