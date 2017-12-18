@@ -21,9 +21,6 @@
 			<if test="position !=null and position !=''">
 				position,
 			</if>
-			<if test="isDigitalEditor !=null ">
-				is_digital_editor,
-			</if>
 			<if test="publisher !=null and publisher !=''">
 				publisher,
 			</if>
@@ -113,9 +110,6 @@
 			</if>
 			<if test="rank !=null and rank !=''">
 				rank = #{rank},
-			</if>
-			<if test="isDigitalEditor !=null ">
-				is_digital_editor = #{isDigitalEditor},
 			</if>
 			<if test="position !=null and position !=''">
 				position = #{position},
