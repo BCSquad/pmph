@@ -23,6 +23,8 @@ public class DeclarationCountVO {
 	private Integer subEditorCount;
 	//编委申报总数
 	private Integer editorialCount;
+	//数字编委申报数
+	private Integer digitalCount;
 	
 	public DeclarationCountVO() {
 		super();
@@ -74,6 +76,14 @@ public class DeclarationCountVO {
 	
 	public void setEditorialCount(Integer editorialCount) {
 		this.editorialCount = editorialCount;
+	}
+
+	public Integer getDigitalCount() {
+		return digitalCount;
+	}
+
+	public void setDigitalCount(Integer digitalCount) {
+		this.digitalCount = digitalCount;
 	}
 	
 }
