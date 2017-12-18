@@ -284,26 +284,71 @@
 			org.`org_name` reportName,dc.`org_name`,
 			dp.`preset_position`,
 			( CASE
-		      WHEN dp.`preset_position` = 7 
-		      THEN '主编,副主编,编委' 
-		      WHEN dp.`preset_position` = 6 
-		      THEN '主编,副主编' 
-		      WHEN dp.`preset_position` = 5 
-		      THEN '主编,编委' 
-		      WHEN dp.`preset_position` = 4 
-		      THEN '主编' 
-		      WHEN dp.`preset_position` = 3 
-		      THEN '副主编,编委' 
-		      WHEN dp.`preset_position` = 2 
-		      THEN '副主编' 
-		      WHEN dp.`preset_position` = 1 
-		      THEN '编委' 
+		      	WHEN 
+		      		dp.`preset_position` =15 
+		      	THEN 
+		      		'主编,副主编,编委,数字编委'      
+				WHEN 
+					dp.`preset_position` =14 
+				THEN 
+					'主编,副主编,数字编委'          
+				WHEN 
+					dp.`preset_position` =13 
+				THEN 
+					'主编,编委,数字编委'            
+				WHEN 
+					dp.`preset_position` =12 
+				THEN 
+					'主编,数字编委'               
+				WHEN 
+					dp.`preset_position` =11 
+				THEN 
+					'副主编,编委,数字编委'         
+				WHEN 
+					dp.`preset_position` =10 
+				THEN 
+					'副主编,数字编委'              
+				WHEN 
+					dp.`preset_position` =9  
+				THEN 
+					'编委,数字编委'               
+				WHEN 
+					dp.`preset_position` =8  
+				THEN 
+					'数字编委'                   
+				WHEN 
+					dp.`preset_position` =7  
+				THEN 
+					'主编,副主编,编委'             
+				WHEN 
+					dp.`preset_position` =6  
+				THEN 
+					'主编,副主编'              
+				WHEN 
+					dp.`preset_position` =5  
+				THEN 
+					'主编,编委'                  
+				WHEN 
+					dp.`preset_position` =4  
+				THEN 
+					'主编'                      
+				WHEN 
+					dp.`preset_position` =3  
+				THEN 
+					'副主编,编委'                 
+				WHEN 
+					dp.`preset_position` =2  
+				THEN 
+					'副主编'                    
+				WHEN 
+					dp.`preset_position` =1  
+				THEN 
+					'编委'              
 		      ELSE NULL 
 		    END) strPresetPosition,
 			dc.`online_progress`,
 			dc.`id` declarationId, dc.`offline_progress`,
-			dp.`chosen_position`, dp.`rank`,
-			dp.`is_digital_editor`
+			dp.`chosen_position`, dp.`rank`
 		FROM
 			`dec_position` dp
 		LEFT JOIN
@@ -314,7 +359,9 @@
 			`org` org
 		ON
 			dc.`org_id`= org.`id`
-		WHERE dc.online_progress in (1,3) and
+		WHERE 
+			dc.`online_progress` in (1,3) 
+		AND
 			dc.`is_staging`= FALSE
 		AND
 			dp.`textbook_id` = #{textbookId}
@@ -322,23 +369,6 @@
 			AND
 				dc.`realname` like concat('%',#{realName},'%')
 		</if>
-		<!-- <if test="presetPosition !=null">
-			主编
-			<if test="presetPosition =='1'">
-				AND
-					dp.`preset_position` IN(4,5,6,7)
-			</if>
-			副主编
-			<if test="presetPosition =='2'">
-				AND
-					dp.`preset_position` IN(2,3,6,7)
-			</if>
-			编委
-			<if test="presetPosition =='3'">
-				AND
-					dp.`preset_position` IN(1,3,5,7)
-			</if>
-		</if> -->
 		ORDER BY
 			dp.`gmt_create` DESC
 	</select>
@@ -356,9 +386,9 @@
 				<if test="item.rank !=null">
 					rank = #{item.rank},
 				</if>
-				<if test="item.isDigitalEditor !=null">
+				<!-- <if test="item.isDigitalEditor !=null">
 					is_digital_editor = #{item.isDigitalEditor},
-				</if>
+				</if> -->
 			</set>
 			where
 			id=#{item.id}
@@ -374,15 +404,12 @@
 		WHERE 
 			1=1
 			<if test="editorOrSubeditorType ==1">
-				AND(
-					dp.`chosen_position`=1
-				OR
-					dp.`chosen_position`=2
-				)
+			AND	
+				dp.`chosen_position` IN (4,2,8)
 			</if>
 			<if test="editorOrSubeditorType ==2">
-				AND
-					dp.`chosen_position`=3
+			AND
+				dp.`chosen_position`IN (1,8)
 			</if>
 			AND 
 				dp.`textbook_id` = #{textbookId};
@@ -396,12 +423,10 @@
 				<if test="editorOrSubeditorType !=null">
 					<if test="editorOrSubeditorType ==1">
 						dp.`chosen_position`=0,
-						dp.`rank`=NULL,
-						dp.`is_digital_editor`=0
+						dp.`rank`=NULL
 					</if>
 					<if test="editorOrSubeditorType ==2">
-						dp.`chosen_position`=0,
-						dp.`is_digital_editor`=0
+						dp.`chosen_position`=0
 					</if>
 				</if>
 			</set>
@@ -415,11 +440,36 @@
 	<!-- 根据declarationId查询作家申报职位信息并显示图书名字 -->
 	<select id="listDecPositionsOrBook" parameterType="java.lang.Long"
 		resultType="DecPositionDisplayVO">
-		select *,tb.textbook_name from dec_position dp
-		left join
-		(select id,textbook_name from textbook) tb on
-		(tb.id=dp.textbook_id)
-		where
+		select *,tb.textbook_name 
+		<!-- case 
+		when dp.preset_position = 15 then '主编,副主编,编委,数字编委' 
+		when dp.preset_position = 14 then '主编,副主编,数字编委' 
+		when dp.preset_position = 13 then '主编,编委,数字编委' 
+		when dp.preset_position = 12 then '主编,数字编委' 
+		when dp.preset_position = 11 then '副主编,编委,数字编委' 
+		when dp.preset_position = 10 then '副主编,数字编委' 
+		when dp.preset_position = 9 then '编委,数字编委' 
+		when dp.preset_position = 8 then '数字编委' 
+		when dp.preset_position = 7 then '主编,副主编,编委' 
+		when dp.preset_position = 6 then '主编,副主编' 
+		when dp.preset_position = 5 then '主编,编委' 
+		when dp.preset_position = 4 then '主编' 
+		when dp.preset_position = 3 then '副主编,编委' 
+		when dp.preset_position = 2 then '副主编' 
+		when dp.preset_position = 1 then '编委' 
+		else null end preset_positions,
+		case 
+		when dp.chosen_position = 12 then '主编,数字编委' 
+		when dp.chosen_position = 10 then '副主编,数字编委' 
+		when dp.chosen_position = 9 then '编委,数字编委' 
+		when dp.chosen_position = 8 then '数字编委' 
+		when dp.chosen_position = 4 then '主编' 
+		when dp.chosen_position = 2 then '副主编' 
+		when dp.chosen_position = 1 then '编委' 
+		else null end chosen_positions  -->
+		from dec_position dp 
+		left join textbook tb on tb.id=dp.textbook_id 
+		where 
 		declaration_id=#{declarationId};
 	</select>
 	<!-- 根据materialId查询学校申报总数 -->

@@ -56,6 +56,10 @@ public class PmphGroupMemberVO implements Serializable {
 	 * 小组显示名称
 	 */
 	private String displayName;
+	/**
+	 * 是否被逻辑删除
+	 */
+	private Boolean isDeleted;
 
 	public Long getId() {
 		return id;
@@ -127,6 +131,14 @@ public class PmphGroupMemberVO implements Serializable {
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
 }
