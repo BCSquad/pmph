@@ -272,56 +272,49 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			switch (decPositions.getPresetPosition()) {
 			case 1:
-				if (decPositions.getIsDigitalEditor().equals(false)) {
-					decPositions.setShowPosition("编委");
-				} else {
-					decPositions.setShowPosition("编委,数字编委");
-				}
+				decPositions.setShowPosition("编委");
 				break;
 			case 2:
-				if (decPositions.getIsDigitalEditor().equals(false)) {
-					decPositions.setShowPosition("副主编");
-				} else {
-					decPositions.setShowPosition("副主编,数字编委");
-				}
+				decPositions.setShowPosition("副主编");
 				break;
 			case 3:
-				if (decPositions.getIsDigitalEditor().equals(false)) {
-					decPositions.setShowPosition("副主编,编委");
-				} else {
-					decPositions.setShowPosition("副主编,编委,数字编委");
-				}
+				decPositions.setShowPosition("副主编,编委");
 				break;
 			case 4:
-				if (decPositions.getIsDigitalEditor().equals(false)) {
-					decPositions.setShowPosition("主编");
-				} else {
-					decPositions.setShowPosition("主编,数字编委");
-				}
+				decPositions.setShowPosition("主编");
 				break;
 			case 5:
-				if (decPositions.getIsDigitalEditor().equals(false)) {
-					decPositions.setShowPosition("主编,编委");
-				} else {
-					decPositions.setShowPosition("主编,编委,数字编委");
-				}
+				decPositions.setShowPosition("主编,编委");
 				break;
 			case 6:
-				if (decPositions.getIsDigitalEditor().equals(false)) {
-					decPositions.setShowPosition("主编,副主编");
-				} else {
-					decPositions.setShowPosition("主编,副主编,数字编委");
-				}
+				decPositions.setShowPosition("主编,副主编");
 				break;
 			case 7:
-				if (decPositions.getIsDigitalEditor().equals(false)) {
-					decPositions.setShowPosition("主编,副主编,编委");
-				} else {
-					decPositions.setShowPosition("主编,副主编,编委,数字编委");
-				}
+				decPositions.setShowPosition("主编,副主编,编委");
 				break;
 			case 8:
 				decPositions.setShowPosition("数字编委");
+				break;
+			case 9:
+				decPositions.setShowPosition("编委,数字编委");
+				break;
+			case 10:
+				decPositions.setShowPosition("副主编,数字编委");
+				break;
+			case 11:
+				decPositions.setShowPosition("副主编,编委,数字编委");
+				break;
+			case 12:
+				decPositions.setShowPosition("主编,数字编委");
+				break;
+			case 13:
+				decPositions.setShowPosition("主编,编委,数字编委");
+				break;
+			case 14:
+				decPositions.setShowPosition("主编,副主编,数字编委");
+				break;
+			case 15:
+				decPositions.setShowPosition("主编,副主编,编委,数字编委");
 				break;
 			default:
 				break;
