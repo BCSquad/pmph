@@ -385,7 +385,8 @@ public class DecPositionServiceImpl implements DecPositionService {
                 Integer presetPersons =
                 declarationSituationSchoolResultVO.getPresetPositionEditor()
                 + declarationSituationSchoolResultVO.getPresetPositionSubeditor()
-                + declarationSituationSchoolResultVO.getPresetPositionEditorial();
+                + declarationSituationSchoolResultVO.getPresetPositionEditorial()
+                + declarationSituationSchoolResultVO.getPresetDigitalEditor();
                 // 计算当选人数
                 Integer chosenPersons =
                 declarationSituationSchoolResultVO.getChosenPositionEditor()
@@ -427,7 +428,8 @@ public class DecPositionServiceImpl implements DecPositionService {
                 Integer presetPersons =
                 declarationSituationSchoolResultVO.getPresetPositionEditor()
                 + declarationSituationSchoolResultVO.getPresetPositionSubeditor()
-                + declarationSituationSchoolResultVO.getPresetPositionEditorial();
+                + declarationSituationSchoolResultVO.getPresetPositionEditorial()
+                + declarationSituationSchoolResultVO.getPresetDigitalEditor();
                 // 计算当选人数
                 Integer chosenPersons =
                 declarationSituationSchoolResultVO.getPresetPositionEditor()
@@ -456,11 +458,13 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer editorCount = decPositionDao.getEditorCount(materialId);
         Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);
         Integer editorialCount = decPositionDao.getEditorialCount(materialId);
+        Integer digitalCount = decPositionDao.getDigitalCount(materialId);
         declarationCountVO.setSchoolDeclarationCount(schoolDeclarationCount);
         declarationCountVO.setSchoolDeclarationAverage(schoolDeclarationAverage);
         declarationCountVO.setEditorCount(editorCount);
         declarationCountVO.setSubEditorCount(subEditorCount);
         declarationCountVO.setEditorialCount(editorialCount);
+        declarationCountVO.setDigitalCount(digitalCount);
         declarationCountVO.setMaterialId(materialId);
         return declarationCountVO;
     }
@@ -489,7 +493,8 @@ public class DecPositionServiceImpl implements DecPositionService {
                 Integer presetPersons =
                 declarationSituationBookResultVO.getPresetPositionEditor()
                 + declarationSituationBookResultVO.getPresetPositionSubeditor()
-                + declarationSituationBookResultVO.getPresetPositionEditorial();
+                + declarationSituationBookResultVO.getPresetPositionEditorial()
+                + declarationSituationBookResultVO.getPresetDigitalEditor();
                 Integer chosenPersons =
                 declarationSituationBookResultVO.getChosenPositionEditor()
                 + declarationSituationBookResultVO.getChosenPositionSubeditor()
