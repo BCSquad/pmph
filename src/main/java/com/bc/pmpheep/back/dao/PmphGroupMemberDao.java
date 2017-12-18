@@ -44,7 +44,7 @@ public interface PmphGroupMemberDao {
 	 * @Return:PmphGroupMember
 	 */
 	PmphGroupMemberVO getPmphGroupMemberByMemberId(@Param("groupId") Long groupId, @Param("userId") Long userId,
-			@Param("isWriter")Boolean isWriter);
+			@Param("isWriter") Boolean isWriter);
 
 	/**
 	 * 
@@ -69,6 +69,12 @@ public interface PmphGroupMemberDao {
 	 * @return 影响行数
 	 */
 	Integer updatePmphGroupMember(PmphGroupMember pmphGroupMember);
+
+	/**
+	 * @param pmphGroupMember
+	 * @return 影响行数
+	 */
+	Integer update(PmphGroupMember pmphGroupMember);
 
 	/**
 	 * 逻辑移出小组成员
@@ -131,9 +137,10 @@ public interface PmphGroupMemberDao {
 	 * @Return:List<PmphGroupMemberManagerVO>小组成员信息集合
 	 */
 	List<PmphGroupMemberManagerVO> listGroupMemberManagerVOs(PageParameter<PmphGroupMemberManagerVO> pageParameter);
-	
+
 	/**
 	 * 根据小组id获取该小组所有成员
+	 * 
 	 * @param id
 	 * @return
 	 */

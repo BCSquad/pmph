@@ -99,6 +99,15 @@
 		where id=#{id} ;
 	</update>
 
+	<!-- 逻辑恢复 -->
+	<update id="update" parameterType="PmphGroupMember">
+		update
+		pmph_group_member set
+		is_deleted = false
+		where user_id =#{userId} and group_id =#{groupId}
+		and is_writer = #{isWriter} ;
+	</update>
+
 	<!-- 根据id查询一个 PmphGroupMember -->
 	<select id="getPmphGroupMemberById" parameterType="java.lang.Long"
 		resultType="PmphGroupMember">
