@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.dao.DecAcadeDao;
 import com.bc.pmpheep.back.dao.DecAchievementDao;
@@ -50,6 +52,7 @@ import com.bc.pmpheep.back.vo.DecExtensionVO;
 import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.back.vo.DeclarationOrDisplayVO;
+import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -95,6 +98,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	private DecResearchDao decResearchDao;
 	@Autowired
 	private DecExtensionDao decExtensionDao;
+	@Autowired
+	private FileService fileService;
 
 	@Override
 	public Declaration addDeclaration(Declaration declaration) throws CheckedServiceException {
@@ -267,6 +272,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		for (DecPositionDisplayVO decPositions : decPositionList) {
 			String syllabusId = decPositions.getSyllabusId();
 			if (StringUtil.notEmpty(syllabusId)) {
+				fileService.get(syllabusId);
 				String syllabusIds = RouteUtil.MONGODB_FILE + syllabusId; // 下载路径
 				decPositions.setSyllabusId(syllabusIds);
 			}
