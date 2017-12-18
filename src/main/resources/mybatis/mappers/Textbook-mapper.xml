@@ -330,10 +330,10 @@
 		editorsAndAssociateEditors,
 		sum(IF(b.chosen_position in (1,2),1,0))
 		editorsAndAssociateEditorsNum,
-		GROUP_CONCAT(IF(b.chosen_position in (3) or is_digital_editor 
+		GROUP_CONCAT(IF(b.chosen_position in (3) 
 		,c.realname,null) ORDER BY
 		b.chosen_position,b.rank) bianWeis,
-		sum(IF(b.chosen_position in (3) or is_digital_editor ,1,0)) bianWeisNum ,
+		sum(IF(b.chosen_position in (3),1,0)) bianWeisNum ,
 		e.id groupId
 		from textbook a
 		LEFT
