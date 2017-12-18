@@ -167,7 +167,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 						pmphGroupMemberDao.addPmphGroupMember(pmphGroupMember);
 
 					} else {
-						if (groupMember.getIsDelete()) {
+						if (groupMember.getIsDeleted()) {
 							pmphGroupMember.setGroupId(groupId);
 							pmphGroupMember.setIsDeleted(false);
 							pmphGroupMemberDao.updatePmphGroupMember(pmphGroupMember);
