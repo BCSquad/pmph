@@ -5,8 +5,6 @@ import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 @SuppressWarnings("serial")
 @Alias("DecPositionDisplayVO")
 public class DecPositionDisplayVO implements Serializable {
@@ -20,9 +18,6 @@ public class DecPositionDisplayVO implements Serializable {
     private String    textbookName;
     // 申报职务
     private Integer   presetPosition;
-    // 是否为数字编辑
-    @JsonProperty("isDigitalEditor")
-    private Boolean   isDigitalEditor;
     // 是否进入预选名单
     private Integer   isOnList;
     // 遴选职务
@@ -39,28 +34,8 @@ public class DecPositionDisplayVO implements Serializable {
     private Timestamp gmtUpdate;
     // 显示
     private String showPosition;
-    // 申报职务
-    private Integer   presetPositions;
-    // 遴选职务
-    private Integer   chosenPositions;
 
-    public Integer getPresetPositions() {
-		return presetPositions;
-	}
-
-	public void setPresetPositions(Integer presetPositions) {
-		this.presetPositions = presetPositions;
-	}
-
-	public Integer getChosenPositions() {
-		return chosenPositions;
-	}
-
-	public void setChosenPositions(Integer chosenPositions) {
-		this.chosenPositions = chosenPositions;
-	}
-
-	public String getShowPosition() {
+    public String getShowPosition() {
 		return showPosition;
 	}
 
@@ -110,14 +85,6 @@ public class DecPositionDisplayVO implements Serializable {
 
 	public void setPresetPosition(Integer presetPosition) {
 		this.presetPosition = presetPosition;
-	}
-
-	public Boolean getIsDigitalEditor() {
-		return isDigitalEditor;
-	}
-
-	public void setIsDigitalEditor(Boolean isDigitalEditor) {
-		this.isDigitalEditor = isDigitalEditor;
 	}
 
 	public Integer getIsOnList() {
@@ -181,14 +148,11 @@ public class DecPositionDisplayVO implements Serializable {
 		return "DecPositionDisplayVO [id=" + id + ", declarationId="
 				+ declarationId + ", textbookId=" + textbookId
 				+ ", textbookName=" + textbookName + ", presetPosition="
-				+ presetPosition + ", isDigitalEditor=" + isDigitalEditor
-				+ ", isOnList=" + isOnList + ", chosenPosition="
-				+ chosenPosition + ", rank=" + rank + ", syllabusId="
-				+ syllabusId + ", syllabusName=" + syllabusName
-				+ ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate
-				+ ", showPosition=" + showPosition + ", presetPositions="
-				+ presetPositions + ", chosenPositions=" + chosenPositions
-				+ "]";
+				+ presetPosition + ", isOnList=" + isOnList
+				+ ", chosenPosition=" + chosenPosition + ", rank=" + rank
+				+ ", syllabusId=" + syllabusId + ", syllabusName="
+				+ syllabusName + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
+				+ gmtUpdate + ", showPosition=" + showPosition + "]";
 	}
     
 }
