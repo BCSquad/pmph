@@ -95,6 +95,9 @@
 			<if test=" displayName != null and displayName !=''">
 				display_name= #{displayName},
 			</if>
+			<if test="isDeleted != null">
+				is_deleted = #{isDeleted}
+			</if>
 		</set>
 		where id=#{id} ;
 	</update>
