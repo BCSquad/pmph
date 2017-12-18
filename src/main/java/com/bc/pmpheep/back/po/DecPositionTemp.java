@@ -22,6 +22,7 @@ import org.apache.ibatis.type.Alias;
  * @审核人 ：
  *
  */
+@SuppressWarnings("serial")
 @Alias("DecPositionTemp")
 public class DecPositionTemp implements Serializable {
 	// 主键
@@ -36,8 +37,6 @@ public class DecPositionTemp implements Serializable {
 	private Long textbookId;
 	// 申报职务
 	private Integer presetPosition;
-	// 是否为数字编辑
-	private Boolean isDigitalEditor;
 	// 是否进入预选名单
 	private Integer isOnList;
 	// 遴选职务
@@ -54,7 +53,7 @@ public class DecPositionTemp implements Serializable {
 	private Timestamp gmtUpdate;
 
 	public DecPositionTemp(Long authorId, Boolean isBackground, Long declarationId, Long textbookId,
-			Integer presetPosition, Boolean isDigitalEditor, Integer isOnList, Integer chosenPosition, Integer rank,
+			Integer presetPosition,  Integer isOnList, Integer chosenPosition, Integer rank,
 			String syllabusId, String syllabusName, Timestamp gmtCreate, Timestamp gmtUpdate) {
 		super();
 		this.authorId = authorId;
@@ -62,7 +61,6 @@ public class DecPositionTemp implements Serializable {
 		this.declarationId = declarationId;
 		this.textbookId = textbookId;
 		this.presetPosition = presetPosition;
-		this.isDigitalEditor = isDigitalEditor;
 		this.isOnList = isOnList;
 		this.chosenPosition = chosenPosition;
 		this.rank = rank;
@@ -120,14 +118,7 @@ public class DecPositionTemp implements Serializable {
 		this.presetPosition = presetPosition;
 	}
 
-	public Boolean getIsDigitalEditor() {
-		return isDigitalEditor;
-	}
-
-	public void setIsDigitalEditor(Boolean isDigitalEditor) {
-		this.isDigitalEditor = isDigitalEditor;
-	}
-
+	
 	public Integer getIsOnList() {
 		return isOnList;
 	}
@@ -186,11 +177,14 @@ public class DecPositionTemp implements Serializable {
 
 	@Override
 	public String toString() {
-		return "DecPositionTemp [id=" + id + ", authorId=" + authorId + ", isBackground=" + isBackground
-				+ ", declarationId=" + declarationId + ", textbookId=" + textbookId + ", presetPosition="
-				+ presetPosition + ", isDigitalEditor=" + isDigitalEditor + ", isOnList=" + isOnList
-				+ ", chosenPosition=" + chosenPosition + ", rank=" + rank + ", syllabusId=" + syllabusId
-				+ ", syllabusName=" + syllabusName + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
+		return "{id:" + id + ", authorId:" + authorId + ", isBackground:"
+				+ isBackground + ", declarationId:" + declarationId
+				+ ", textbookId:" + textbookId + ", presetPosition:"
+				+ presetPosition + ", isOnList:" + isOnList
+				+ ", chosenPosition:" + chosenPosition + ", rank:" + rank
+				+ ", syllabusId:" + syllabusId + ", syllabusName:"
+				+ syllabusName + ", gmtCreate:" + gmtCreate + ", gmtUpdate:"
+				+ gmtUpdate + "}";
 	}
 
 }

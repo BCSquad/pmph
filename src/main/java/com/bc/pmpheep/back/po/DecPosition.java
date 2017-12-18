@@ -24,9 +24,6 @@ public class DecPosition implements Serializable {
     private Long      textbookId;
     // 申报职务
     private Integer   presetPosition;
-    // 是否为数字编辑
-    @JsonProperty("isDigitalEditor")
-    private Boolean   isDigitalEditor;
     // 是否进入预选名单
     private Integer   isOnList;
     // 遴选职务
@@ -59,13 +56,12 @@ public class DecPosition implements Serializable {
     }
 
     public DecPosition(Long declarationId, Long textbookId, Integer presetPosition,
-    Boolean isDigitalEditor, Integer isOnList, Integer chosenPosition, Integer rank,
+    Integer isOnList, Integer chosenPosition, Integer rank,
     String syllabusId, String syllabusName, Timestamp gmtCreate, Timestamp gmtUpdate) {
         super();
         this.declarationId = declarationId;
         this.textbookId = textbookId;
         this.presetPosition = presetPosition;
-        this.isDigitalEditor = isDigitalEditor;
         this.isOnList = isOnList;
         this.chosenPosition = chosenPosition;
         this.rank = rank;
@@ -75,13 +71,6 @@ public class DecPosition implements Serializable {
         this.gmtUpdate = gmtUpdate;
     }
 
-    public Boolean getIsDigitalEditor() {
-        return isDigitalEditor;
-    }
-
-    public void setIsDigitalEditor(Boolean isDigitalEditor) {
-        this.isDigitalEditor = isDigitalEditor;
-    }
 
     public Long getId() {
         return id;
@@ -172,12 +161,14 @@ public class DecPosition implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "DecPosition [id=" + id + ", declarationId=" + declarationId + ", textbookId="
-               + textbookId + ", presetPosition=" + presetPosition + ", isDigitalEditor="
-               + isDigitalEditor + ", isOnList=" + isOnList + ", chosenPosition=" + chosenPosition
-               + ", rank=" + rank + ", syllabusId=" + syllabusId + ", syllabusName=" + syllabusName
-               + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
-    }
+	public String toString() {
+		return "{id:" + id + ", declarationId:" + declarationId
+				+ ", textbookId:" + textbookId + ", presetPosition:"
+				+ presetPosition + ", isOnList:" + isOnList
+				+ ", chosenPosition:" + chosenPosition + ", rank:" + rank
+				+ ", syllabusId:" + syllabusId + ", syllabusName:"
+				+ syllabusName + ", gmtCreate:" + gmtCreate + ", gmtUpdate:"
+				+ gmtUpdate + "}";
+	}
 
 }
