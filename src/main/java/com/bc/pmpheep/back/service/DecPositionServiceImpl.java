@@ -197,49 +197,34 @@ public class DecPositionServiceImpl implements DecPositionService {
             DecPosition decPosition = new DecPosition();
             if ("编委".equals(showPosition)) {
                 decPosition.setPresetPosition(1);
-                decPosition.setIsDigitalEditor(false);
             } else if ("编委,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(1);
-                decPosition.setIsDigitalEditor(true);
+                decPosition.setPresetPosition(9);
             } else if ("副主编".equals(showPosition)) {
                 decPosition.setPresetPosition(2);
-                decPosition.setIsDigitalEditor(false);
             } else if ("副主编,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(2);
-                decPosition.setIsDigitalEditor(true);
+                decPosition.setPresetPosition(10);
             } else if ("副主编,编委".equals(showPosition)) {
                 decPosition.setPresetPosition(3);
-                decPosition.setIsDigitalEditor(false);
             } else if ("副主编,编委,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(3);
-                decPosition.setIsDigitalEditor(true);
+                decPosition.setPresetPosition(11);
             } else if ("主编".equals(showPosition)) {
                 decPosition.setPresetPosition(4);
-                decPosition.setIsDigitalEditor(false);
             } else if ("主编,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(4);
-                decPosition.setIsDigitalEditor(true);
+                decPosition.setPresetPosition(12);
             } else if ("主编,编委".equals(showPosition)) {
                 decPosition.setPresetPosition(5);
-                decPosition.setIsDigitalEditor(false);
             } else if ("主编,编委,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(5);
-                decPosition.setIsDigitalEditor(true);
+                decPosition.setPresetPosition(13);
             } else if ("主编,副主编".equals(showPosition)) {
                 decPosition.setPresetPosition(6);
-                decPosition.setIsDigitalEditor(false);
             } else if ("主编,副主编,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(6);
-                decPosition.setIsDigitalEditor(true);
+                decPosition.setPresetPosition(14);
             } else if ("主编,副主编,编委".equals(showPosition)) {
                 decPosition.setPresetPosition(7);
-                decPosition.setIsDigitalEditor(false);
             } else if ("主编,副主编,编委,数字编委".equals(showPosition)) {
-                decPosition.setPresetPosition(7);
-                decPosition.setIsDigitalEditor(true);
+                decPosition.setPresetPosition(15);
             } else if ("数字编委".equals(showPosition)) {
-            	decPosition.setPresetPosition(8);
-                decPosition.setIsDigitalEditor(false);
+            	decPosition.setPresetPosition(9);
             }
             File files = null;
             if (StringUtil.isEmpty(file)) {
