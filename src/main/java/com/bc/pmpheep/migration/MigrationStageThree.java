@@ -84,12 +84,13 @@ public class MigrationStageThree {
             String dpName = (String) map.get("orgname");
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数。");
-                excel.add(map);
-                logger.error("显示顺序为负数，此结果将被记录在Excel中");
+            	sort = 999;
             }
             String note = (String) map.get("remark");
             PmphDepartment pmphDepartment = new PmphDepartment();
+            if ("人民卫生出版社".equals(dpName)){
+            	pmphDepartment.setId(0L);
+            }
             Long parentId = 0L;
             //不为0说明有父节点
             if (!"0".equals(parentCode)) {
