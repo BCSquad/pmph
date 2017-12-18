@@ -35,11 +35,6 @@ public class ExcelDecAndTextbookVO{
     // 排位
 	@ExcelHeader(header = "排位")
     private Integer rank;
-    //是否为数字编辑
-    private Boolean isDigitalEditor;
-	//显示的数字编委
-    @ExcelHeader(header = "是否数字编委")
-	private String showIsDigitalEditor;
 	//作家职称
 	@ExcelHeader(header = "职称")
 	private String title;
@@ -151,12 +146,6 @@ public class ExcelDecAndTextbookVO{
 	public void setRank(Integer rank) {
 		this.rank = rank;
 	}
-	public Boolean getIsDigitalEditor() {
-		return isDigitalEditor;
-	}
-	public void setIsDigitalEditor(Boolean isDigitalEditor) {
-		this.isDigitalEditor = isDigitalEditor;
-	}
 	public String getTitle() {
 		return title;
 	}
@@ -216,14 +205,6 @@ public class ExcelDecAndTextbookVO{
 		this.showChosenPosition = showChosenPosition;
 	}
 
-	public String getShowIsDigitalEditor() {
-		return showIsDigitalEditor;
-	}
-
-	public void setShowIsDigitalEditor(String showIsDigitalEditor) {
-		this.showIsDigitalEditor = showIsDigitalEditor;
-	}
-
 	public String getShowOnlineProgress() {
 		return showOnlineProgress;
 	}
@@ -245,10 +226,10 @@ public class ExcelDecAndTextbookVO{
 	}
 
 	public ExcelDecAndTextbookVO(Long textbookId, Integer chosenPosition, String showChosenPosition, String realname,
-			String username, String unitName, String orgName, String position, Integer rank, Boolean isDigitalEditor,
-			String showIsDigitalEditor, String title, String handphone, String email, String chooseBooksAndPostions,
-			Integer onlineProgress, String showOnlineProgress, Integer offlineProgress, String showOfflineProgress,
-			String textbookName, String materialName, Short idtype, String showIdtype, String idcard) {
+			String username, String unitName, String orgName, String position, Integer rank, String title,
+			String handphone, String email, String chooseBooksAndPostions, Integer onlineProgress,
+			String showOnlineProgress, Integer offlineProgress, String showOfflineProgress, String textbookName,
+			String materialName, Short idtype, String showIdtype, String idcard) {
 		this.textbookId = textbookId;
 		this.chosenPosition = chosenPosition;
 		this.showChosenPosition = showChosenPosition;
@@ -258,8 +239,6 @@ public class ExcelDecAndTextbookVO{
 		this.orgName = orgName;
 		this.position = position;
 		this.rank = rank;
-		this.isDigitalEditor = isDigitalEditor;
-		this.showIsDigitalEditor = showIsDigitalEditor;
 		this.title = title;
 		this.handphone = handphone;
 		this.email = email;
@@ -280,14 +259,12 @@ public class ExcelDecAndTextbookVO{
 		return "ExcelDecAndTextbookVO [textbookId=" + textbookId + ", chosenPosition=" + chosenPosition
 				+ ", showChosenPosition=" + showChosenPosition + ", realname=" + realname + ", username=" + username
 				+ ", unitName=" + unitName + ", orgName=" + orgName + ", position=" + position + ", rank=" + rank
-				+ ", isDigitalEditor=" + isDigitalEditor + ", showIsDigitalEditor=" + showIsDigitalEditor + ", title="
-				+ title + ", handphone=" + handphone + ", email=" + email + ", chooseBooksAndPostions="
+				+ ", title=" + title + ", handphone=" + handphone + ", email=" + email + ", chooseBooksAndPostions="
 				+ chooseBooksAndPostions + ", onlineProgress=" + onlineProgress + ", showOnlineProgress="
 				+ showOnlineProgress + ", offlineProgress=" + offlineProgress + ", showOfflineProgress="
 				+ showOfflineProgress + ", textbookName=" + textbookName + ", materialName=" + materialName
 				+ ", idtype=" + idtype + ", showIdtype=" + showIdtype + ", idcard=" + idcard + "]";
 	}
-	
 
 
 }

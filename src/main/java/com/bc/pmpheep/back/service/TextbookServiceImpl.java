@@ -564,47 +564,53 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 		List<ExcelDecAndTextbookVO> list=textbookDao.getExcelDecAndTextbooks(textbookIds);
 		for (ExcelDecAndTextbookVO excelDecAndTextbookVO : list) {
-//				switch (excelDecAndTextbookVO.getChosenPosition()) {
-//				case 1:
-//						excelDecAndTextbookVO.setShowChosenPosition("编委");
-//					break;
-//				case 2:
-//						excelDecAndTextbookVO.setShowChosenPosition("副主编");
-//					break;
-//				case 3:
-//						excelDecAndTextbookVO.setShowChosenPosition("副主编,编委");
-//					break;
-//				case 4:
-//						excelDecAndTextbookVO.setShowChosenPosition("主编");
-//					break;
-//				case 5:
-//						excelDecAndTextbookVO.setShowChosenPosition("主编,编委");
-//					break;
-//				case 6:
-//						excelDecAndTextbookVO.setShowChosenPosition("主编,副主编");
-//					break;
-//				case 7:
-//						excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,编委");
-//					break;
-//				default:
-//					break;
-//			}
-			switch (excelDecAndTextbookVO.getChosenPosition()) {
-			case 1:
-					excelDecAndTextbookVO.setShowChosenPosition("主编");
-				break;
-			case 2:
-					excelDecAndTextbookVO.setShowChosenPosition("副主编");
-				break;
-			default:
-				excelDecAndTextbookVO.setShowChosenPosition("编委");
-				break;
-		}
-		if(excelDecAndTextbookVO.getIsDigitalEditor()){
-			excelDecAndTextbookVO.setShowIsDigitalEditor("是");
-		}else {
-			excelDecAndTextbookVO.setShowIsDigitalEditor("否");
-		}
+				switch (excelDecAndTextbookVO.getChosenPosition()) {
+				case 1:
+						excelDecAndTextbookVO.setShowChosenPosition("编委");
+					break;
+				case 2:
+						excelDecAndTextbookVO.setShowChosenPosition("副主编");
+					break;
+				case 3:
+						excelDecAndTextbookVO.setShowChosenPosition("副主编,编委");
+					break;
+				case 4:
+						excelDecAndTextbookVO.setShowChosenPosition("主编");
+					break;
+				case 5:
+						excelDecAndTextbookVO.setShowChosenPosition("主编,编委");
+					break;
+				case 6:
+						excelDecAndTextbookVO.setShowChosenPosition("主编,副主编");
+					break;
+				case 7:
+						excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,编委");
+					break;
+				case 8:
+					excelDecAndTextbookVO.setShowChosenPosition("数字编委");
+					break;
+				case 9:
+					excelDecAndTextbookVO.setShowChosenPosition("编委，数字编委");
+					break;
+				case 10:
+					excelDecAndTextbookVO.setShowChosenPosition("副主编,数字编委");
+					break;
+				case 11:
+					excelDecAndTextbookVO.setShowChosenPosition("副主编,编委,数字编委");
+					break;
+				case 12:
+					excelDecAndTextbookVO.setShowChosenPosition("主编,数字编委");
+					break;
+				case 13:
+					excelDecAndTextbookVO.setShowChosenPosition("主编,编委,数字编委");
+					break;
+				case 14:
+					excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,数字编委");
+					break;
+				default:
+					excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,编委,数字编委");
+					break;
+			}
 		switch (excelDecAndTextbookVO.getOnlineProgress()) {
 		case 0:
 			excelDecAndTextbookVO.setShowOnlineProgress("未提交");

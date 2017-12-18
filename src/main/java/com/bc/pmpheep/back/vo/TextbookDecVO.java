@@ -23,8 +23,6 @@ public class TextbookDecVO implements java.io.Serializable{
     private Integer   presetPosition;
     // 遴选职务
     private Integer   chosenPosition;
-    // 是否为数字编辑
-    private Boolean   isDigitalEditor;
     // 作家真实姓名
     private String    realname;
     // 作家工作单位
@@ -83,12 +81,6 @@ public class TextbookDecVO implements java.io.Serializable{
 	}
 	public void setChosenPosition(Integer chosenPosition) {
 		this.chosenPosition = chosenPosition;
-	}
-	public Boolean getIsDigitalEditor() {
-		return isDigitalEditor;
-	}
-	public void setIsDigitalEditor(Boolean isDigitalEditor) {
-		this.isDigitalEditor = isDigitalEditor;
 	}
 	public String getRealname() {
 		return realname;
