@@ -15,9 +15,6 @@
 			<if test="materialName !=null and materialName !=''">
 				material_name,
 			</if>
-			<if test="isDigitalEditor !=null ">
-				is_digital_editor,
-			</if>
 			<if test="position !=null and position !=''">
 				position,
 			</if>
@@ -27,6 +24,9 @@
 			<if test="sort !=null and sort !=''">
 				sort,
 			</if>
+			<if test="isDigitalEditor !=null ">
+ 				is_digital_editor,
+ 			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -53,6 +53,9 @@
 			<if test="sort !=null and sort !=''">
 				#{sort},
 			</if>
+			<if test="isDigitalEditor !=null ">
+ 				is_digital_editor = #{isDigitalEditor},
+ 			</if>
 		</trim>
 	</sql>
 
@@ -86,9 +89,6 @@
 			</if>
 			<if test="materialName !=null and materialName !=''">
 				material_name = #{materialName},
-			</if>
-			<if test="isDigitalEditor !=null ">
-				is_digital_editor = #{isDigitalEditor},
 			</if>
 			<if test="position !=null and position !=''">
 				position = #{position},

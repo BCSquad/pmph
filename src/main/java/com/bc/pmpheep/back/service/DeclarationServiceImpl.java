@@ -244,9 +244,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
 				Integer chosenPosition = decPositions.getChosenPosition();
-				Boolean isDigitalEditor = decPositions.getIsDigitalEditor();
-				if (1 == chosenPosition.intValue() || 2 == chosenPosition.intValue() || 
-						3 == chosenPosition.intValue() || isDigitalEditor) {
+				if (null != chosenPosition && chosenPosition.intValue() > 0 ) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
 							CheckedExceptionResult.NULL_PARAM, "已遴选职务，不可退回给个人!");
 				}

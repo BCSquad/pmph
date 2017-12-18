@@ -36,6 +36,9 @@
 			<if test="sort !=null and sort !=''">
 				sort,
 			</if>
+			<if test="isDigitalEditor !=null ">
+ 				is_digital_editor,
+ 			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -74,6 +77,9 @@
 			<if test="sort !=null and sort !=''">
 				#{sort},
 			</if>
+			<if test="isDigitalEditor !=null ">
+ 				is_digital_editor = #{isDigitalEditor},
+ 			</if>
 		</trim>
 	</sql>
 

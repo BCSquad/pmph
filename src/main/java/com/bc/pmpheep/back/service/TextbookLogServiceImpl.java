@@ -202,7 +202,16 @@ public class TextbookLogServiceImpl implements TextbookLogService {
             // 新选的职位
             Integer newChosenPosition = newDecPosition.getChosenPosition();
             // 如果现在是主编
-            if (null != newChosenPosition && newChosenPosition == 1) {
+            if (null != newChosenPosition && (
+            		newChosenPosition == 4  || 
+            		newChosenPosition == 5  || 
+            		newChosenPosition == 6  || 
+            		newChosenPosition == 7  ||
+            		newChosenPosition == 12 ||
+            		newChosenPosition == 13 ||
+            		newChosenPosition == 14 ||
+            		newChosenPosition == 15 
+            		)) {
                 StringBuilder temp = new StringBuilder(",");
                 // 遍历出所有的主编信息
                 for (DecPosition oldDecPosition : oldlist) {
@@ -213,8 +222,18 @@ public class TextbookLogServiceImpl implements TextbookLogService {
                     addSumZhuBian++;
                     addZhuBian.append("," + declaration.getRealname());
                 }
-                // 副主编
-            } else if (null != newChosenPosition && newChosenPosition == 2) {
+            }
+            // 副主编
+            if (null != newChosenPosition && (
+            		newChosenPosition == 2  || 
+            		newChosenPosition == 3  || 
+            		newChosenPosition == 6  || 
+            		newChosenPosition == 7  || 
+            		newChosenPosition == 10 || 
+            		newChosenPosition == 11 || 
+            		newChosenPosition == 14 || 
+            		newChosenPosition == 15 
+            		)) {
                 StringBuilder temp = new StringBuilder(",");
                 for (DecPosition oldDecPosition : oldlist) {
                     temp.append(oldDecPosition.getDeclarationId() + "_"
@@ -224,8 +243,18 @@ public class TextbookLogServiceImpl implements TextbookLogService {
                     addSumFuZhuBian++;
                     addFuZhuBian.append("," + declaration.getRealname());
                 }
-                // 编委
-            } else if (null != newChosenPosition && newChosenPosition == 3) {
+           }
+           // 编委
+           if (null != newChosenPosition && (
+        		   newChosenPosition == 1  ||
+        		   newChosenPosition == 3  ||
+        		   newChosenPosition == 5  ||
+        		   newChosenPosition == 7  ||
+        		   newChosenPosition == 9  ||
+        		   newChosenPosition == 11  ||
+        		   newChosenPosition == 13  ||
+        		   newChosenPosition == 15  
+        		   )) {
                 StringBuilder temp = new StringBuilder(",");
                 for (DecPosition oldDecPosition : oldlist) {
                     temp.append(oldDecPosition.getDeclarationId() + "_"
@@ -237,10 +266,29 @@ public class TextbookLogServiceImpl implements TextbookLogService {
                 }
             }
             // 数字编辑
-            if (newDecPosition.getIsDigitalEditor()) {
+            if (null != newChosenPosition && (
+            		newChosenPosition == 8   || 
+            		newChosenPosition == 9   || 
+            		newChosenPosition == 10  || 
+            		newChosenPosition == 11  ||
+            		newChosenPosition == 12  ||
+            		newChosenPosition == 13  ||
+            		newChosenPosition == 14  ||
+            		newChosenPosition == 15 
+            		)) {
                 StringBuilder temp = new StringBuilder(",");
                 for (DecPosition oldDecPosition : oldlist) {
-                    if (oldDecPosition.getIsDigitalEditor()) {
+                	Integer oldChosenPosition =  oldDecPosition.getChosenPosition() ;
+                	if (null != oldChosenPosition && (
+                			oldChosenPosition == 8   || 
+        					oldChosenPosition == 9   || 
+							oldChosenPosition == 10  || 
+							oldChosenPosition == 11  ||
+							oldChosenPosition == 12  ||
+							oldChosenPosition == 13  ||
+							oldChosenPosition == 14  ||
+							oldChosenPosition == 15 
+                    		)) { 
                         temp.append(oldDecPosition.getDeclarationId() + ",");
                     }
 
@@ -266,7 +314,16 @@ public class TextbookLogServiceImpl implements TextbookLogService {
             // 老的的职位
             Integer oldChosenPosition = oldDecPosition.getChosenPosition();
             // 如果以前是主编
-            if (null != oldChosenPosition && oldChosenPosition == 1) {
+            if (null != oldChosenPosition && (
+            		oldChosenPosition == 4  || 
+    				oldChosenPosition == 5  || 
+					oldChosenPosition == 6  || 
+					oldChosenPosition == 7  ||
+					oldChosenPosition == 12 ||
+					oldChosenPosition == 13 ||
+					oldChosenPosition == 14 ||
+					oldChosenPosition == 15 
+            		)) {
                 StringBuilder temp = new StringBuilder(",");
                 for (DecPosition newDecPosition : newlist) {
                     temp.append(newDecPosition.getDeclarationId() + "_"
@@ -276,8 +333,19 @@ public class TextbookLogServiceImpl implements TextbookLogService {
                     redSumZhuBian++;
                     redZhuBian.append("," + declaration.getRealname());
                 }
-                // 副主编
-            } else if (null != oldChosenPosition && oldChosenPosition == 2) {
+               
+            }
+            // 副主编
+            if (null != oldChosenPosition && (
+            		oldChosenPosition == 2  || 
+            		oldChosenPosition == 3  || 
+            		oldChosenPosition == 6  || 
+            		oldChosenPosition == 7  || 
+            		oldChosenPosition == 10 || 
+            		oldChosenPosition == 11 || 
+            		oldChosenPosition == 14 || 
+            		oldChosenPosition == 15 
+            		)) {
                 StringBuilder temp = new StringBuilder(",");
                 for (DecPosition newDecPosition : newlist) {
                     temp.append(newDecPosition.getDeclarationId() + "_"
@@ -287,8 +355,19 @@ public class TextbookLogServiceImpl implements TextbookLogService {
                     redSumFuZhuBian++;
                     redFuZhuBian.append("," + declaration.getRealname());
                 }
-                // 编委
-            } else if (null != oldChosenPosition && oldChosenPosition == 3) {
+                
+            }
+           // 编委
+            if (null != oldChosenPosition && (
+            		oldChosenPosition == 1  ||
+            		oldChosenPosition == 3  ||
+            		oldChosenPosition == 5  ||
+            		oldChosenPosition == 7  ||
+            		oldChosenPosition == 9  ||
+            		oldChosenPosition == 11  ||
+            		oldChosenPosition == 13  ||
+            		oldChosenPosition == 15  
+         		   )) {
                 StringBuilder temp = new StringBuilder(",");
                 for (DecPosition newDecPosition : newlist) {
                     temp.append(newDecPosition.getDeclarationId() + "_"
@@ -300,10 +379,29 @@ public class TextbookLogServiceImpl implements TextbookLogService {
                 }
             }
             // 数字编辑
-            if (oldDecPosition.getIsDigitalEditor()) {
+            if (null != oldChosenPosition && (
+            		oldChosenPosition == 8   || 
+            		oldChosenPosition == 9   || 
+            		oldChosenPosition == 10  || 
+            		oldChosenPosition == 11  ||
+            		oldChosenPosition == 12  ||
+            		oldChosenPosition == 13  ||
+            		oldChosenPosition == 14  ||
+            		oldChosenPosition == 15 
+            		)) {
                 StringBuilder temp = new StringBuilder(",");
                 for (DecPosition newDecPosition : newlist) {
-                    if (newDecPosition.getIsDigitalEditor()) {
+                	Integer newChosenPosition =  newDecPosition.getChosenPosition() ;
+                    if (null != newChosenPosition && (
+                    		newChosenPosition == 8   || 
+                    		newChosenPosition == 9   || 
+                    		newChosenPosition == 10  || 
+                    		newChosenPosition == 11  ||
+                    		newChosenPosition == 12  ||
+                    		newChosenPosition == 13  ||
+                    		newChosenPosition == 14  ||
+                    		newChosenPosition == 15 
+                    		)) {
                         temp.append(newDecPosition.getDeclarationId() + ",");
                     }
                 }
