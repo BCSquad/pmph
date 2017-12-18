@@ -440,11 +440,36 @@
 	<!-- 根据declarationId查询作家申报职位信息并显示图书名字 -->
 	<select id="listDecPositionsOrBook" parameterType="java.lang.Long"
 		resultType="DecPositionDisplayVO">
-		select *,tb.textbook_name from dec_position dp
-		left join
-		(select id,textbook_name from textbook) tb on
-		(tb.id=dp.textbook_id)
-		where
+		select *,tb.textbook_name 
+		case 
+		when dp.preset_position = 15 then '主编,副主编,编委,数字编委' 
+		when dp.preset_position = 14 then '主编,副主编,数字编委' 
+		when dp.preset_position = 13 then '主编,编委,数字编委' 
+		when dp.preset_position = 12 then '主编,数字编委' 
+		when dp.preset_position = 11 then '副主编,编委,数字编委' 
+		when dp.preset_position = 10 then '副主编,数字编委' 
+		when dp.preset_position = 9 then '编委,数字编委' 
+		when dp.preset_position = 8 then '数字编委' 
+		when dp.preset_position = 7 then '主编,副主编,编委' 
+		when dp.preset_position = 6 then '主编,副主编' 
+		when dp.preset_position = 5 then '主编,编委' 
+		when dp.preset_position = 4 then '主编' 
+		when dp.preset_position = 3 then '副主编,编委' 
+		when dp.preset_position = 2 then '副主编' 
+		when dp.preset_position = 1 then '编委' 
+		else null end preset_positions,
+		case 
+		when dp.chosen_position = 12 then '主编,数字编委' 
+		when dp.chosen_position = 10 then '副主编,数字编委' 
+		when dp.chosen_position = 9 then '编委,数字编委' 
+		when dp.chosen_position = 8 then '数字编委' 
+		when dp.chosen_position = 4 then '主编' 
+		when dp.chosen_position = 2 then '副主编' 
+		when dp.chosen_position = 1 then '编委' 
+		else null end chosen_positions 
+		from dec_position dp 
+		left join textbook tb on tb.id=dp.textbook_id 
+		where 
 		declaration_id=#{declarationId};
 	</select>
 	<!-- 根据materialId查询学校申报总数 -->
