@@ -64,16 +64,17 @@ public class PmphUserServiceImpl implements PmphUserService {
 	PmphUserRoleDao pmphUserRoleDao;
 	@Autowired
 	private FileService fileService;
-	
+
 	@Override
-	public boolean updatePersonalData(PmphUser pmphUser,MultipartFile file) throws IOException{
+	public boolean updatePersonalData(PmphUser pmphUser, MultipartFile file) throws IOException {
 		Long id = pmphUser.getId();
-		if (null == id ) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT, CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
 		}
-		//头像文件不为空
-		if(null != file){
-			if(StringUtil.notEmpty(pmphUser.getAvatar())){
+		// 头像文件不为空
+		if (null != file) {
+			if (StringUtil.notEmpty(pmphUser.getAvatar())) {
 				fileService.remove(pmphUser.getAvatar());
 			}
 			String newAvatar = fileService.save(file, ImageType.PMPH_USER_AVATAR, id);
@@ -214,7 +215,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 		}
 		return pmphUserDao.get(id);
 	}
-	
+
 	/**
 	 * 根据主键 id 加载用户对象
 	 * 
@@ -230,22 +231,22 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"请求用户不存在");
 		}
-		Long id =  sessionPmphUser.getId();
+		Long id = sessionPmphUser.getId();
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
 		}
-		PmphUser pmphUser = pmphUserDao.getInfo(id) ; 
-		if(null == pmphUser){ 
-			pmphUser =  new PmphUser();
+		PmphUser pmphUser = pmphUserDao.getInfo(id);
+		if (null == pmphUser) {
+			pmphUser = new PmphUser();
 		}
-		String avatar = pmphUser.getAvatar() ;
+		String avatar = pmphUser.getAvatar();
 		pmphUser.setAvatar(RouteUtil.userAvatar(avatar));
 		return pmphUser;
 	}
-	
+
 	@Override
-	public Integer updatePassword (HttpServletRequest request,String oldPassword,String newPassword){
+	public Integer updatePassword(HttpServletRequest request, String oldPassword, String newPassword) {
 		// 获取当前用户
 		String sessionId = CookiesUtil.getSessionId(request);
 		PmphUser sessionPmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -253,38 +254,44 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"请求用户不存在");
 		}
-		Long id =  sessionPmphUser.getId();
-		if (null == id ) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
+		Long id = sessionPmphUser.getId();
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
 		}
-		if(StringUtil.isEmpty(oldPassword)){
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,CheckedExceptionResult.NULL_PARAM, "原密码为空");
+		if (StringUtil.isEmpty(oldPassword)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "原密码为空");
 		}
-		if(StringUtil.isEmpty(newPassword)){
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,CheckedExceptionResult.NULL_PARAM, "新密码为空");
+		if (StringUtil.isEmpty(newPassword)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "新密码为空");
 		}
 		oldPassword = oldPassword.trim();
 		newPassword = newPassword.trim();
-		if(newPassword.length() > 50 ){
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,CheckedExceptionResult.ILLEGAL_PARAM, "新密码长度不能超过50");
+		if (newPassword.length() > 50) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "新密码长度不能超过50");
 		}
-		if(oldPassword.equals(newPassword)){
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,CheckedExceptionResult.ILLEGAL_PARAM, "新旧密码不能一致");
+		if (oldPassword.equals(newPassword)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "新旧密码不能一致");
 		}
-		//先修改SSO
-		//---------------------------------
-		Map<String,Object> map = new HashMap<String,Object>();
+		// 先修改SSO
+		// ---------------------------------
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", id);
-		//加密密码
-		map.put("oldPassword", new DesRun("",oldPassword).enpsw);
-		map.put("newPassword", new DesRun("",newPassword).enpsw);
+		// 加密密码
+		map.put("oldPassword", new DesRun("", oldPassword).enpsw);
+		map.put("newPassword", new DesRun("", newPassword).enpsw);
 		Integer res = pmphUserDao.updatePassword(map);
-		if(null == res || res == 0){
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,CheckedExceptionResult.NULL_PARAM, "原密码错误");
+		if (null == res || res == 0) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "原密码错误");
 		}
 		return 1;
 	}
-	
+
 	/**
 	 * 根据用户名加载用户对象（用于登录使用）
 	 * 
@@ -513,18 +520,24 @@ public class PmphUserServiceImpl implements PmphUserService {
 		int num = pmphUserDao.updatePmphUserOfBack(pmphUserManagerVO);
 		String result = "FAIL";
 		if (num > 0) {
+			PmphRole pmphRole = pmphRoleDao.getListRole("编辑").get(0);
 			pmphUserRoleDao.deletePmphUserRoleByUserId(pmphUserManagerVO.getId());
-			if (!StringUtil.isEmpty(pmphUserManagerVO.getRoleIds())) {
-				String pmphRoles = pmphUserManagerVO.getRoleIds();
+			String pmphRoles = pmphUserManagerVO.getRoleIds();
+			if (!StringUtil.isEmpty(pmphRoles)) {
+				if (!pmphRoles.contains(pmphRole.getId().toString())) {
+					pmphRoles += "," + pmphRole.getId();
+				}
 				String[] roleIds = pmphRoles.split(",");
 				for (String roleId : roleIds) {
 					PmphUserRole pmphUserRole = new PmphUserRole(pmphUserManagerVO.getId(), Long.valueOf(roleId));
 					pmphUserRoleDao.addPmphUserRole(pmphUserRole);
 				}
 			}
+
 			result = "SUCCESS";
 		}
 		return result;
+
 	}
 
 	@Override

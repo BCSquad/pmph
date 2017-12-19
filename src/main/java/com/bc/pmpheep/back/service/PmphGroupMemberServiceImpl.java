@@ -48,6 +48,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	private DecPositionService decPositionService;
 	@Autowired
 	private PmphGroupMemberService pmphGroupMemberService;
+
 	/**
 	 * 
 	 * @param pmphGroupMember
@@ -111,8 +112,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public List<PmphGroupMemberVO> listPmphGroupMember(Long groupId, String sessionId)
-			throws CheckedServiceException {
+	public List<PmphGroupMemberVO> listPmphGroupMember(Long groupId, String sessionId) throws CheckedServiceException {
 
 		if (null == groupId || groupId == 0) {
 			List<PmphGroupListVO> myPmphGroupListVOList = pmphGroupService.listPmphGroup(new PmphGroup(), sessionId);
@@ -149,8 +149,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		if (pmphUser.getIsAdmin() || isFounderOrisAdmin(groupId, sessionId)) {// 是超级管理员或者该小组的创建人和管理员才可以添加成员
 			if (pmphGroupMembers.size() > 0) {
 				for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
-					if (null == pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId, pmphGroupMember.getUserId(),
-							pmphGroupMember.getIsWriter())) {
+					PmphGroupMemberVO groupMember = pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId,
+							pmphGroupMember.getUserId(), pmphGroupMember.getIsWriter());
+					if (null == groupMember) {
 						if (null == pmphGroupMember.getUserId()) {
 							throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 									CheckedExceptionResult.ILLEGAL_PARAM, "成员id为空");
@@ -165,7 +166,14 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 						pmphGroupMember.setGroupId(groupId);
 						pmphGroupMemberDao.addPmphGroupMember(pmphGroupMember);
 
+					} else {
+						if (groupMember.getIsDeleted()) {
+							pmphGroupMember.setGroupId(groupId);
+							pmphGroupMember.setIsDeleted(false);
+							pmphGroupMemberDao.update(pmphGroupMember);
+						}
 					}
+
 				}
 				result = "SUCCESS";
 			} else {
@@ -361,7 +369,8 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"你不是该小组的组员");
 		}
-		pmphGroupMemberVO.setAvatar(isWriter?writerUserService.get(userId).getAvatar():pmphUserService.get(userId).getAvatar());
+		pmphGroupMemberVO.setAvatar(
+				isWriter ? writerUserService.get(userId).getAvatar() : pmphUserService.get(userId).getAvatar());
 		return pmphGroupMemberVO;
 	}
 
@@ -415,11 +424,10 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public String addEditorBookGroup(Long textbookId, String sessionId)
-			throws CheckedServiceException {
+	public String addEditorBookGroup(Long textbookId, String sessionId) throws CheckedServiceException {
 		String result = "FAIL";
 		// 通过书籍id查询小组
-		PmphGroup pmphGroup=pmphGroupService.getPmphGroupByTextbookId(textbookId);
+		PmphGroup pmphGroup = pmphGroupService.getPmphGroupByTextbookId(textbookId);
 		// 获取用户信息 进行判断用户是否有权限操作
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
@@ -433,27 +441,27 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			}
 		}
 		// 通过书籍id查询所有主编、副主编、编委
-		List<TextbookDecVO> textbookDecVOs=decPositionService.getTextbookEditorList(textbookId);
+		List<TextbookDecVO> textbookDecVOs = decPositionService.getTextbookEditorList(textbookId);
 		// 通过小组id查询小组现有成员
-		List<PmphGroupMember> pmphGroupMembers=pmphGroupMemberDao.listPmphGroupMembers(pmphGroup.getId());
-		//用于装已存在小组内的userid
-		String s= ",";
-		for(PmphGroupMember pmphGroupMember : pmphGroupMembers){
-			s += pmphGroupMember.getUserId()+",";
+		List<PmphGroupMember> pmphGroupMembers = pmphGroupMemberDao.listPmphGroupMembers(pmphGroup.getId());
+		// 用于装已存在小组内的userid
+		String s = ",";
+		for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
+			s += pmphGroupMember.getUserId() + ",";
 		}
-		List<PmphGroupMember>  list= new ArrayList<PmphGroupMember>(textbookDecVOs.size());
+		List<PmphGroupMember> list = new ArrayList<PmphGroupMember>(textbookDecVOs.size());
 		// 通过遍历把不存在的成员添加到list中
 		for (TextbookDecVO textbookDecVO : textbookDecVOs) {
-			String str=textbookDecVO.getUserId().toString();
-			if(!s.contains(textbookDecVO.getUserId().toString())){
+			String str = textbookDecVO.getUserId().toString();
+			if (!s.contains(textbookDecVO.getUserId().toString())) {
 				list.add(new PmphGroupMember(textbookDecVO.getUserId(), Const.TRUE));
 			}
 		}
 		// 批量把没有加入的小组的传入作家用户添加到该小组
-		if(list.size() == 0 || list == null){
+		if (list.size() == 0 || list == null) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"添加成员失败 ");
-		}else{
+		} else {
 			pmphGroupMemberService.addPmphGroupMemberOnGroup(pmphGroup.getId(), list, sessionId);
 			result = "SUCCESS";
 		}

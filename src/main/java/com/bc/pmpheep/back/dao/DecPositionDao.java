@@ -290,6 +290,16 @@ public interface DecPositionDao {
 
     /**
      * 
+     * Description:根据教材id获取数字编委申报总数
+     * @author:lyc
+     * @date:2017年12月18日下午3:13:09
+     * @param 
+     * @return Integer
+     */
+    Integer getDigitalCount(Long materialId);
+    
+    /**
+     * 
      * Description:根据教材id（和学校名称）查询学校申报情况（按当选结果排序）
      * 
      * @author:lyc

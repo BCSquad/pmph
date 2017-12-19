@@ -31,6 +31,8 @@ public class DeclarationSituationSchoolResultVO implements Serializable{
 	private Integer presetPositionSubeditor;
 	//编委申报数
 	private Integer presetPositionEditorial;
+	//数字编委申报数
+	private Integer presetDigitalEditor;
 	//主编当选数
 	private Integer chosenPositionEditor;
 	//副主编当选数
@@ -104,6 +106,14 @@ public class DeclarationSituationSchoolResultVO implements Serializable{
 		this.presetPositionEditorial = presetPositionEditorial;
 	}
 	
+	public Integer getPresetDigitalEditor() {
+		return presetDigitalEditor;
+	}
+
+	public void setPresetDigitalEditor(Integer presetDigitalEditor) {
+		this.presetDigitalEditor = presetDigitalEditor;
+	}
+
 	public Integer getChosenPositionEditor() {
 		return chosenPositionEditor;
 	}

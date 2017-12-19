@@ -377,7 +377,7 @@ public class MigrationStageSix {
             decWorkExp.setOrgName(orgName);
             decWorkExp.setPosition(position);
             decWorkExp.setNote((String) map.get("remark")); // 备注
-            SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
+            //SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
             Timestamp startstopDate = (Timestamp) map.get("startstopdate"); // 起始时间
             if (null != startstopDate) {
                 decWorkExp.setDateBegin(sdf.format(startstopDate));
@@ -1054,7 +1054,7 @@ public class MigrationStageSix {
             }
             decPosition.setTextbookId(textbookid);
             temppresetPosition += "," + temppresetPosition + ",";
-            String Positions = "";
+            String Positions = "0";
             if (temppresetPosition.contains(",a,")) {
                 Positions += "1";
             } else {
@@ -1079,11 +1079,11 @@ public class MigrationStageSix {
             tempchosenPosition += "," + tempchosenPosition + ",";
             Integer chosen = 0;
             if (tempchosenPosition.contains(",a,")) {
-                chosen = 1;
+                chosen = 4;
             } else if (tempchosenPosition.contains(",b,")) {
                 chosen = 2;
             } else if (tempchosenPosition.contains(",c,")) {
-                chosen = 3;
+                chosen = 1;
             }
             decPosition.setChosenPosition(chosen);
             decPosition.setRank(mastersort);
