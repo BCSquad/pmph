@@ -75,13 +75,7 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 	@Override
 	public List<PmphRoleVO> getListRole() throws CheckedServiceException {
 		List<PmphRoleVO> list = roleDao.listRole();
-		List<PmphRoleVO> pmphRoleVOs = new ArrayList<>();
-		for (PmphRoleVO pmphRoleVO : list) {
-			if (!pmphRoleVO.getRoleName().equals("编辑")) {
-				pmphRoleVOs.add(pmphRoleVO);
-			}
-		}
-		return pmphRoleVOs;
+		return list;
 	}
 
 	@Override
