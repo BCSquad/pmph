@@ -272,7 +272,6 @@ public class DeclarationServiceImpl implements DeclarationService {
 		for (DecPositionDisplayVO decPositions : decPositionList) {
 			String syllabusId = decPositions.getSyllabusId();
 			if (StringUtil.notEmpty(syllabusId)) {
-				fileService.get(syllabusId);
 				String syllabusIds = RouteUtil.MONGODB_FILE + syllabusId; // 下载路径
 				decPositions.setSyllabusId(syllabusIds);
 			}
@@ -324,6 +323,57 @@ public class DeclarationServiceImpl implements DeclarationService {
 				break;
 			default:
 				break;
+			}
+			if (decPositions.getChosenPosition() != 0) {
+				switch (decPositions.getChosenPosition()) {
+				case 1:
+					decPositions.setShowChosenPosition("编委");
+					break;
+				case 2:
+					decPositions.setShowChosenPosition("副主编");
+					break;
+				case 3:
+					decPositions.setShowChosenPosition("副主编,编委");
+					break;
+				case 4:
+					decPositions.setShowChosenPosition("主编");
+					break;
+				case 5:
+					decPositions.setShowChosenPosition("主编,编委");
+					break;
+				case 6:
+					decPositions.setShowChosenPosition("主编,副主编");
+					break;
+				case 7:
+					decPositions.setShowChosenPosition("主编,副主编,编委");
+					break;
+				case 8:
+					decPositions.setShowChosenPosition("数字编委");
+					break;
+				case 9:
+					decPositions.setShowChosenPosition("编委,数字编委");
+					break;
+				case 10:
+					decPositions.setShowChosenPosition("副主编,数字编委");
+					break;
+				case 11:
+					decPositions.setShowChosenPosition("副主编,编委,数字编委");
+					break;
+				case 12:
+					decPositions.setShowChosenPosition("主编,数字编委");
+					break;
+				case 13:
+					decPositions.setShowChosenPosition("主编,编委,数字编委");
+					break;
+				case 14:
+					decPositions.setShowChosenPosition("主编,副主编,数字编委");
+					break;
+				case 15:
+					decPositions.setShowChosenPosition("主编,副主编,编委,数字编委");
+					break;
+				default:
+					break;
+				}
 			}
 		}
 		// 专家信息
