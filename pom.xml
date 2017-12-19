@@ -295,6 +295,7 @@
                     <excludes>
                         <exclude>com/bc/pmpheep/back/**</exclude>
                         <exclude>com/bc/pmpheep/utils/**</exclude>
+                        <exclude>com/bc/pmpheep/general/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
