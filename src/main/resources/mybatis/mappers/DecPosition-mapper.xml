@@ -50,9 +50,6 @@
 			<if test="presetPosition !=null ">
 				#{presetPosition},
 			</if>
-			<if test="isDigitalEditor !=null ">
-				#{isDigitalEditor},
-			</if>
 			<if test="isOnList !=null and isOnList !=''">
 				#{isOnList},
 			</if>
