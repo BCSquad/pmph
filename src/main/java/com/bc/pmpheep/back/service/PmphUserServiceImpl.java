@@ -520,13 +520,9 @@ public class PmphUserServiceImpl implements PmphUserService {
 		int num = pmphUserDao.updatePmphUserOfBack(pmphUserManagerVO);
 		String result = "FAIL";
 		if (num > 0) {
-			PmphRole pmphRole = pmphRoleDao.getListRole("编辑").get(0);
 			pmphUserRoleDao.deletePmphUserRoleByUserId(pmphUserManagerVO.getId());
 			String pmphRoles = pmphUserManagerVO.getRoleIds();
 			if (!StringUtil.isEmpty(pmphRoles)) {
-				if (!pmphRoles.contains(pmphRole.getId().toString())) {
-					pmphRoles += "," + pmphRole.getId();
-				}
 				String[] roleIds = pmphRoles.split(",");
 				for (String roleId : roleIds) {
 					PmphUserRole pmphUserRole = new PmphUserRole(pmphUserManagerVO.getId(), Long.valueOf(roleId));
