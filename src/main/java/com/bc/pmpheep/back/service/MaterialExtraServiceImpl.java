@@ -212,15 +212,20 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
         }
         CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
         if (ObjectUtil.notNull(cmsContent)) {
+            String mid = null;
             if (StringUtil.notEmpty(cmsContent.getMid())) {
-                contentService.delete(cmsContent.getMid());// 删除之前教材通知内容
+                mid = cmsContent.getMid();
             }
             // 存在就更新
+            Integer count =
             cmsContentService.updateCmsContent(new CmsContent(
                                                               cmsContent.getId(),
                                                               contentObj.getId(),
                                                               DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                        DateUtil.getCurrentTime())));
+            if (count > 0) {
+                contentService.delete(mid);// 删除之前教材通知内容
+            }
         } else {
             // 保存CMSContent内容
             cmsContentService.addCmsContent(new CmsContent(
