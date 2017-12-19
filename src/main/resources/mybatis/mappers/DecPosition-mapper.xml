@@ -517,7 +517,7 @@
      	SELECT 
      		dc.`user_id`, wu.`username`,dc.`realname`,wu.`is_writer`,
  			dc.`org_name`,dp.`preset_position`,dp.`chosen_position`,
- 			dp.`is_digital_editor`,wu.`rank`,dp.`textbook_id`
+ 			wu.`rank`,dp.`textbook_id`
  		FROM `dec_position` dp 
  		LEFT JOIN `declaration` dc ON dp.`declaration_id` = dc.`id`
  		LEFT JOIN `org` org ON dc.`org_id`= org.`id`
