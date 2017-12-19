@@ -233,13 +233,6 @@ public class MigrationStageSix {
                 declaration.setOfflineProgress(0);
             }
             declaration.setPaperDate((Timestamp) map.get("editauditdate")); // 纸质表收到时间
-            /*String submitType = (String) map.get("submittype"); // 旧表字段：是否暂存
-            if (StringUtil.strLength(submitType) > 2) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("是否暂存的位数大于2位数。"));
-                excel.add(map);
-                logger.error("是否暂存的位数大于2位数，此结果将被记录在Excel中");
-                continue;
-            }*/
             if (ObjectUtil.isNull(isStagingJudge)) {
                 declaration.setIsStaging(0);
             } else {
@@ -372,7 +365,6 @@ public class MigrationStageSix {
             decWorkExp.setOrgName(orgName);
             decWorkExp.setPosition(position);
             decWorkExp.setNote((String) map.get("remark")); // 备注
-            //SimpleDateFormat dateChange = new SimpleDateFormat("yyyy-MM"); //时间转换
             Timestamp startstopDate = (Timestamp) map.get("startstopdate"); // 起始时间
             if (null != startstopDate) {
                 decWorkExp.setDateBegin(sdf.format(startstopDate));
@@ -698,11 +690,6 @@ public class MigrationStageSix {
                 isbn = isbn.trim();
                 isbn = isbn.replace("ISBN", "").replace("isbn", "").replace(":", "").replace("：", "");
             }
-            /*if (("无").equals(isbn)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到标准书号为无字。"));
-                excel.add(map);
-                logger.error("找到标准书号为无字，此结果将被记录在Excel中");
-            }*/
             decNationalPlan.setIsbn(isbn);
             Integer rank = rankJudge.intValue();
             decNationalPlan.setRank(rank);
@@ -779,11 +766,6 @@ public class MigrationStageSix {
                 isbn = isbn.trim();
                 isbn = isbn.replace("ISBN", "").replace("isbn", "").replace(":", "").replace("：", "");
             }
-            /*if (("无").equals(isbn)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到标准书号为无字。"));
-                excel.add(map);
-                logger.error("找到标准书号为无字，此结果将被记录在Excel中");
-            }*/
             decTextbook.setIsbn(isbn);
             decTextbook.setNote((String) map.get("remark")); // 备注
             decTextbook.setSort(999); // 显示顺序
@@ -838,11 +820,6 @@ public class MigrationStageSix {
             }
             decResearch.setDeclarationId(declarationid);
             decResearch.setResearchName(researchName);
-            /*if (("无").equals(approvalUnit)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到审批单位为无字。"));
-                excel.add(map);
-                logger.error("找到审批单位为无字，此结果将被记录在Excel中");
-            }*/
             decResearch.setApprovalUnit(approvalUnit);
             decResearch.setAward(award);
             decResearch.setNote((String) map.get("remark")); // 备注
@@ -884,7 +861,6 @@ public class MigrationStageSix {
         int extensionidCount = 0;
         int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
-        String regular = "^[0-9a-zA-Z]{8,10}$"; // 正则表达式判断
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -892,6 +868,7 @@ public class MigrationStageSix {
             Long extensionid = (Long) map.get("tmeid"); // 教材扩展项id
             Long declarationid = (Long) map.get("wdid"); // 申报表id
             String content = (String) map.get("content"); // 扩展项内容
+            String contents = content.trim();
             DecExtension decExtension = new DecExtension();
             if (ObjectUtil.isNull(extensionid) || extensionid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材扩展项对应的关联结果。"));
@@ -909,12 +886,6 @@ public class MigrationStageSix {
                 continue;
             }
             decExtension.setDeclarationId(declarationid);
-            if (regular.equals(content)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到扩展项内容为数字或者字母。"));
-                excel.add(map);
-                logger.error("找到扩展项内容为数字或者字母，此结果将被记录在Excel中");
-            }
-            String contents = content.trim();
             decExtension.setContent(contents);
             decExtension = decExtensionService.addDecExtension(decExtension);
             long pk = decExtension.getId();
