@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -24,6 +26,8 @@ import org.apache.poi.ss.usermodel.Cell;
  * </pre>
  */
 public final class StringUtil {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StringUtil.class);
+
     public static void main(String[] args) {
         System.out.println(toAllCheck(null));
         System.out.println(toAllCheck(""));
@@ -298,29 +302,47 @@ public final class StringUtil {
      * @return
      */
     public static String getClientIP(HttpServletRequest request) {
-        String fromSource = "X-Real-IP";
-        String ip = request.getHeader("X-Real-IP");
+        // String fromSource = "X-Real-IP";
+        // String ip = request.getHeader("X-Real-IP");
+        // if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        // fromSource = "X-Forwarded-For";
+        // ip = request.getHeader(fromSource);
+        // if (!StringUtils.isEmpty(ip)) {
+        // String[] tmps = ip.split(",");
+        // if (tmps.length > 0) {
+        // ip = tmps[0];
+        // }
+        // }
+        // }
+        // if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        // fromSource = "Proxy-Client-IP";
+        // ip = request.getHeader(fromSource);
+        // }
+        // if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        // fromSource = "WL-Proxy-Client-IP";
+        // ip = request.getHeader(fromSource);
+        // }
+        // if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        // ip = request.getRemoteAddr();
+        // fromSource = "request.getRemoteAddr";
+        // }
+        // return ip;
+        String ip = request.getHeader("x-forwarded-for");
+        LOGGER.info("x-forwarded-for={}", ip);
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            fromSource = "X-Forwarded-For";
-            ip = request.getHeader(fromSource);
-            if (!StringUtils.isEmpty(ip)) {
-                String[] tmps = ip.split(",");
-                if (tmps.length > 0) {
-                    ip = tmps[0];
-                }
-            }
+            ip = request.getHeader("Proxy-Client-IP");
+            LOGGER.info("Proxy-Client-IP={}", ip);
         }
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            fromSource = "Proxy-Client-IP";
-            ip = request.getHeader(fromSource);
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            fromSource = "WL-Proxy-Client-IP";
-            ip = request.getHeader(fromSource);
+            ip = request.getHeader("WL-Proxy-Client-IP");
+            LOGGER.info("WL-Proxy-Client-IP={}", ip);
         }
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
-            fromSource = "request.getRemoteAddr";
+            LOGGER.info("RemoteAddr-IP={}", ip);
+        }
+        if (StringUtil.notEmpty(ip)) {
+            ip = ip.split(",")[0];
         }
         return ip;
     }

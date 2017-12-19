@@ -210,7 +210,7 @@ public class DecPositionServiceImpl implements DecPositionService {
             } else if ("主编,副主编,编委".equals(showPosition)) {
                 decPosition.setPresetPosition(7);
             } else if ("数字编委".equals(showPosition)) {
-            	decPosition.setPresetPosition(8);
+                decPosition.setPresetPosition(8);
             } else if ("编委,数字编委".equals(showPosition)) {
                 decPosition.setPresetPosition(9);
             } else if ("副主编,数字编委".equals(showPosition)) {
@@ -341,7 +341,6 @@ public class DecPositionServiceImpl implements DecPositionService {
             Long updaterId = pmphUser.getId(); // 获取修改者id
             // 添加新的遴选记录
             textbookLogService.addTextbookLog(oldlist, textbookId, updaterId, userType);
-
         }
         // 2：发布
         if (selectionType_2.intValue() == selectionType.intValue()) {
@@ -452,8 +451,9 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer schoolDeclarationCount = decPositionDao.getSchoolDeclarationCount(materialId);
         Integer schoolDeclarationAverage = 0;
         if (decPositionDao.getSchoolCount(materialId) > 0) {
-            schoolDeclarationAverage =(int) Math.round((double)schoolDeclarationCount 
-            		/ decPositionDao.getSchoolCount(materialId));
+            schoolDeclarationAverage =
+            (int) Math.round((double) schoolDeclarationCount
+                             / decPositionDao.getSchoolCount(materialId));
         }
         Integer editorCount = decPositionDao.getEditorCount(materialId);
         Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);
