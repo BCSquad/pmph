@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.vo.TopicDirectorVO;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
 
 /**
@@ -97,4 +98,8 @@ public interface TopicDao {
 	 *
 	 */
 	Integer listTotal(@Param("bookname") String bookname, @Param("submitTime") Timestamp submitTime);
+	
+	List<TopicDirectorVO> listTopicDirectorVOs(@Param("userId") Long userId,
+			@Param("departmentId") Long departmentId,@Param("bookName") String bookName,
+			@Param("start") Integer start,@Param("pageSize") Integer pageSize);
 }
