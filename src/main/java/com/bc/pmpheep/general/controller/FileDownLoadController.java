@@ -100,6 +100,8 @@ public class FileDownLoadController {
     ZipHelper                              zipHelper;
     @Resource
     MaterialOrgService                     materialOrgService;
+    @Autowired
+	BookCorrectionService bookCorrectionService;
 
     /**
      * 普通文件下载
@@ -562,10 +564,20 @@ public class FileDownLoadController {
 		}
 	}
 	
-	@Autowired
-	BookCorrectionService bookCorrectionService;
 	
 	
+	/**
+	 * 导出纠错信息
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年12月20日 下午5:01:53
+	 * @param request
+	 * @param response
+	 * @param bookname
+	 * @param isEditorReplied
+	 * @throws CheckedServiceException
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/bookCorrectionTrack/exportExcel", method = RequestMethod.GET)
 	public void exportExcel(
 			HttpServletRequest request,
