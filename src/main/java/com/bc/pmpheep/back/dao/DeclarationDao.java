@@ -89,7 +89,8 @@ public interface DeclarationDao {
 	 * 
 	 * @Return 作家申报信息
 	 */
-	Declaration getDeclarationByMaterialIdAndUserId(Long materialId, Long userId);
+	Declaration getDeclarationByMaterialIdAndUserId(@Param("materialId")Long materialId, 
+                @Param("userId")Long userId);
 
 	/**
 	 * Description: 根据教材id查询作家申报信息
