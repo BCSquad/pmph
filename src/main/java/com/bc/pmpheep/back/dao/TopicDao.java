@@ -99,7 +99,26 @@ public interface TopicDao {
 	 */
 	Integer listTotal(@Param("bookname") String bookname, @Param("submitTime") Timestamp submitTime);
 	
+    /**
+     * 
+     * Description:部门主任查看被运维人员分配的选题
+     * @author:lyc
+     * @date:2017年12月20日下午4:26:38
+     * @param 
+     * @return List<TopicDirectorVO>
+     */
 	List<TopicDirectorVO> listTopicDirectorVOs(@Param("userId") Long userId,
 			@Param("departmentId") Long departmentId,@Param("bookName") String bookName,
 			@Param("start") Integer start,@Param("pageSize") Integer pageSize);
+	
+	/**
+	 * 
+	 * Description:统计部门主任被分配的选题总数
+	 * @author:lyc
+	 * @date:2017年12月20日下午4:28:58
+	 * @param 
+	 * @return Integer
+	 */
+	Integer totalTopicDirectorVOs(@Param("userId") Long userId, @Param("departmentId") Long departmentId,
+			@Param("bookName") String bookName);
 }
