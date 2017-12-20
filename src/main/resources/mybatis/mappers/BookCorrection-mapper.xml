@@ -247,4 +247,69 @@
 		limit #{start} ,#{pageSize}
 	</select>
 	
+	<!-- 获取审核纠错跟踪页面的数据总数  -->
+	<select id="listBookCorrectionTrackTotal"  resultType="java.lang.Integer">
+		SELECT 
+			count(a.id)
+		FROM  
+			book_correction a
+		LEFT JOIN 
+			book b on b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = b.id
+		LEFT JOIN 
+			pmph_user d on d.id = c.editor_id
+		LEFT JOIN 
+			pmph_department e on e.id = d.department_id
+		LEFT JOIN 
+			material_type   f  on f.id = b.type 
+		where 
+			!a.is_deleted and b.id is not null 
+		<if test="bookname != null and bookname != '' ">
+			and b.bookname like CONCAT('%',#{bookname},'%')
+		</if>
+		<if test="isEditorReplied != null ">
+			a.is_editor_replied = #{isEditorReplied}
+		</if>
+	</select>
+	
+	<!-- 获取审核纠错跟踪页面的分页数据 -->
+	<select id="listBookCorrectionTrack"       resultType="BookCorrectionTrackVO">
+		SELECT 
+			a.id ,
+			b.bookname,
+			e.dp_name ,
+			f.type_name ,
+			d.realname ,
+			a.result ,
+			a.page,
+			a.line,
+			a.content,
+			a.author_reply,
+			a.is_editor_replied 
+		FROM  
+			book_correction a
+		LEFT JOIN 
+			book b on b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = b.id
+		LEFT JOIN 
+			pmph_user d on d.id = c.editor_id
+		LEFT JOIN 
+			pmph_department e on e.id = d.department_id
+		LEFT JOIN 
+			material_type   f  on f.id = b.type 
+		where 
+			!a.is_deleted and b.id is not null 
+		<if test="bookname != null and bookname != '' ">
+			and b.bookname like CONCAT('%',#{bookname},'%')
+		</if>
+		<if test="isEditorReplied != null ">
+			a.is_editor_replied = #{isEditorReplied}
+		</if>
+		ORDER BY 
+			a.gmt_update desc 
+		limit #{start} ,#{pageSize}
+	</select>
+	
 </mapper>
