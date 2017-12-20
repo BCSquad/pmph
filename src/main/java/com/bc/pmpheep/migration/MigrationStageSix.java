@@ -154,8 +154,8 @@ public class MigrationStageSix {
                 + "left join sys_user s on s.userid=wd.userid "
                 + "left join sys_userext su on su.userid=wd.userid "
                 + "left join teach_applyposition ta on ta.writerid=wd.writerid "
-                + "where su.userid is not null "
-                + "group by wd.writerid order by s.sysflag ";
+                + "where su.userid is not null ";
+        //+ "group by wd.writerid order by s.sysflag ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql); // 查询所有数据
         int count = 0; // 迁移成功的条目数
         int materialidCount = 0;
@@ -176,7 +176,7 @@ public class MigrationStageSix {
             Integer isStagingJudge = (Integer) map.get("is_staging"); // 是否暂存
             Integer sysflag = (Integer) map.get("sysflag"); // 0为后台用户，1为前台用户
             if (ObjectUtil.isNull(sysflag) || sysflag.intValue() == 0) {
-            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为后台用户申请教材。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为后台用户申请教材。"));
                 excel.add(map);
                 logger.debug("找到为后台用户申请教材，此结果将被记录在Excel中");
                 continue;
@@ -214,9 +214,9 @@ public class MigrationStageSix {
             declaration.setTitle((String) map.get("positional")); // 职称
             declaration.setAddress((String) map.get("address")); // 联系地址
             if (StringUtil.strLength(postCode) > 20 && "55894b98-6b15-4210-9460-11bdf6e8e89c".equals(id)) {
-            	declaration.setPostcode("100000");
+                declaration.setPostcode("100000");
             } else {
-            	declaration.setPostcode(postCode); // 邮编
+                declaration.setPostcode(postCode); // 邮编
             }
             declaration.setHandphone((String) map.get("handset")); // 手机
             declaration.setEmail((String) map.get("email")); // 邮箱
@@ -246,6 +246,15 @@ public class MigrationStageSix {
             } else {
                 Integer isStaging = isStagingJudge.intValue(); // 是否暂存
                 declaration.setIsStaging(isStaging);
+            }
+            Declaration dec = declarationService.getDeclarationByMaterialIdAndUserId(declaration.getMaterialId(),
+                    declaration.getUserId());
+            if (dec != null) {
+                logger.warn("已存在教材id和作家id均相同的记录，本条数据放弃插入，material_id={}，user_id={}",
+                        declaration.getMaterialId(), declaration.getUserId());
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("已存在教材id和作家id均相同的记录。"));
+                excel.add(map);
+                continue;
             }
             declaration = declarationService.addDeclaration(declaration);
             long pk = declaration.getId();
@@ -860,10 +869,10 @@ public class MigrationStageSix {
         String tableName = "teach_material_extvalue"; // 要迁移的旧库表名
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
         String sql = "select *,tme.expendname,wd.new_pk wdid,tme.new_pk tmeid "
-        		+ "from teach_material_extvalue wme "
+                + "from teach_material_extvalue wme "
                 + "left join writer_declaration wd on wd.writerid=wme.writerid "
                 + "left join teach_material_extend tme on tme.expendid=wme.expendid ";
-                //+ "where tme.expendname != '个人成就'";
+        //+ "where tme.expendname != '个人成就'";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0; // 迁移成功的条目数
         int extensionidCount = 0;
