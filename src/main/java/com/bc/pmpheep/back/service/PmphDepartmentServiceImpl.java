@@ -9,10 +9,14 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphDepartmentDao;
 import com.bc.pmpheep.back.dao.PmphUserDao;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.DepartmentOptsVO;
 import com.bc.pmpheep.back.vo.PmphUserDepartmentVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -228,6 +232,20 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 		}
 		List<PmphUserDepartmentVO> list = pmphDepartmentDao.listPmphDepartmentByDpName(dpName);
 		return list;
+	}
+
+	@Override
+	public PageResult<DepartmentOptsVO> listOpts(PageParameter<DepartmentOptsVO> pageParameter)
+			throws CheckedServiceException {
+		PageResult<DepartmentOptsVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total = pmphDepartmentDao.listOptsTotal(pageParameter.getParameter().getDpName());
+		if (total > 0) {
+			pageResult.setRows(pmphDepartmentDao.listOpts(pageParameter.getParameter().getDpName(),
+					pageParameter.getPageSize(), pageParameter.getStart()));
+		}
+		pageResult.setTotal(total);
+		return pageResult;
 	}
 
 }

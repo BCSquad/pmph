@@ -2,4 +2,93 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bc.pmpheep.back.dao.TopicDao">
+
+	<!-- 运维人员获取可以操作的选题 -->
+	<select id="listOpts" resultType="TopicOPtsManagerVO">
+		SELECT
+		*
+		FROM
+		topic t
+		LEFT JOIN pmph_user_role r ON r.role_id =
+		t.opts_role_id
+		LEFT JOIN pmph_user u ON u.id = r.user_id
+		WHERE u.id =
+		#{userId}
+		AND t.is_opts_handling = TRUE
+		AND t.is_director_handling =
+		FALSE
+		<if test="bookname != null and bookname !=''">
+			AND t.bookname like concat('%',#{bookname},'%')
+		</if>
+		<if test="submitTime != null">
+			AND t.submit_time = #{submitTime}
+		</if>
+		ORDER BY t.submit_time
+		LIMIT
+		#{start},#{pageSize}
+	</select>
+
+	<!-- 查询运维人员可以操作的数量 -->
+	<select id="listOptsTotal" resultType="Integer">
+		SELECT
+		count(*)
+		FROM
+		topic t
+		LEFT JOIN pmph_user_role r ON r.role_id =
+		t.opts_role_id
+		LEFT JOIN pmph_user u ON u.id = r.user_id
+		WHERE u.id =
+		#{userId}
+		AND t.is_opts_handling = TRUE
+		AND t.is_director_handling =
+		FALSE
+		<if test="bookname != null and bookname !=''">
+			AND t.bookname like concat('%',#{bookname},'%')
+		</if>
+		<if test="submitTime != null">
+			AND t.submit_time = #{submitTime}
+		</if>
+		ORDER BY t.submit_time
+	</select>
+
+	<!-- 系统管理员获取可以操作的选题 -->
+	<select id="list" resultType="TopicOPtsManagerVO">
+		SELECT
+		*
+		FROM
+		topic t
+		WHERE
+		t.is_opts_handling = TRUE
+		AND
+		t.is_director_handling = FALSE
+		<if test="bookname != null and bookname !=''">
+			AND t.bookname like concat('%',#{bookname},'%')
+		</if>
+		<if test="submitTime != null">
+			AND t.submit_time = #{submitTime}
+		</if>
+		ORDER BY t.submit_time
+		LIMIT
+		#{start},#{pageSize}
+	</select>
+
+	<!-- 系统管理员可以操作的数量 -->
+	<select id="listTotal" resultType="Integer">
+		SELECT
+		count(*)
+		FROM
+		topic t
+		WHERE
+		AND t.is_opts_handling = TRUE
+		AND
+		t.is_director_handling =
+		FALSE
+		<if test="bookname != null and bookname !=''">
+			AND t.bookname like concat('%',#{bookname},'%')
+		</if>
+		<if test="submitTime != null">
+			AND t.submit_time = #{submitTime}
+		</if>
+		ORDER BY t.submit_time
+	</select>
 </mapper>

@@ -2,9 +2,11 @@ package com.bc.pmpheep.back.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.PmphDepartment;
+import com.bc.pmpheep.back.vo.DepartmentOptsVO;
 import com.bc.pmpheep.back.vo.PmphUserDepartmentVO;
 
 /**
@@ -87,12 +89,37 @@ public interface PmphDepartmentDao {
 	 *
 	 */
 	List<PmphDepartment> getPmphDepartmentByDpNameAndParentId(PmphDepartment pmphDepartment);
-	
+
 	/**
 	 * 根据主键id查询
+	 * 
 	 * @param id
 	 * @return
 	 */
 	List<PmphUserDepartmentVO> getDepartmentId(Long id);
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：选题申报获取分配的部门以及主任名称
+	 *
+	 * @param dpName
+	 *            部门名称
+	 * @return
+	 *
+	 */
+	List<DepartmentOptsVO> listOpts(@Param("dpName") String dpName, @Param("pageSize") Integer pageSize,
+			@Param("start") Integer start);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：选题申报获取分配的部门以及主任名称
+	 *
+	 * @param dpName
+	 *            部门名称
+	 * @return
+	 *
+	 */
+	Integer listOptsTotal(@Param("dpName") String dpName);
 }

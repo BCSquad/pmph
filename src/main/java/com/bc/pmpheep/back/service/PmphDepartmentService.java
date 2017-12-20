@@ -2,7 +2,12 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphDepartment;
+import com.bc.pmpheep.back.vo.DepartmentOptsVO;
 import com.bc.pmpheep.back.vo.PmphUserDepartmentVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -89,5 +94,16 @@ public interface PmphDepartmentService {
 	 * @return 删除条数
 	 */
 	Integer deletePmphDepartmentBatch(Long id);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：选题申报获取分配的部门以及主任名称
+	 *
+	 * @param pageParameter 
+	 * @return
+	 *
+	 */
+	PageResult<DepartmentOptsVO> listOpts(PageParameter<DepartmentOptsVO> pageParameter) throws CheckedServiceException;
 
 }
