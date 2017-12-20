@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.SurveyQuestionnaireStagingDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="questionnaireId != null">
+				questionnaire_id,
+			</if>
+			<if test="orgId != null">
+				org_id,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="questionnaireId != null">
+				#{questionnaireId},
+			</if>
+			<if test="orgId != null">
+				#{orgId},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增一个SurveyQuestionnaireStaging -->
+	<insert id="addSurveyQuestionnaireStaging" parameterType="SurveyQuestionnaireStaging">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into survey_questionnaire_staging (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+	<!-- 删除SurveyQuestionnaireStaging通过主键id -->
+	<delete id="deleteSurveyQuestionnaireStagingById" parameterType="java.lang.Long">
+		delete from survey_questionnaire_staging where id=#{id};
+	</delete>
+	<!-- 更新一个 SurveyQuestionnaireStaging通过主键id -->
+	<update id="updateSurveyQuestionnaireStaging" parameterType="SurveyQuestionnaireStaging">
+		update survey_questionnaire_staging
+		<set>
+			<if test="id != null">
+				id=#{id},
+			</if>
+			<if test="userId != null">
+				user_id=#{userId},
+			</if>
+			<if test="questionnaireId != null">
+				questionnaire_id=#{questionnaireId},
+			</if>
+			<if test="orgId != null">
+				org_id=#{orgId},
+			</if>
+		</set>
+		where
+		id=#{id} ;
+	</update>
+	<!-- 查找SurveyQuestionnaireStaging通过主键id -->
+	<select id="selectSurveyQuestionnaireStagingById" parameterType="java.lang.Long" 
+	resultType="SurveyQuestionnaireStaging">
+		select * from survey_questionnaire_staging where id=#{id};
+	</select>
+</mapper>

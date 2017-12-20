@@ -297,6 +297,13 @@
 		select * from declaration where
 		material_id=#{materialId};
 	</select>
+        
+        <!-- 根据MaterialId和UserId查询作家申报信息 -->
+	<select id="getDeclarationByMaterialIdAndUserId" parameterType="java.lang.Long"
+		resultType="Declaration">
+		select * from declaration where
+		material_id=#{materialId} and user_id=#{userId};
+	</select>
 
 	<!-- 根据MaterialId查询作家申报信息 -->
 	<select id="getDeclarationOrDisplayVOByMaterialId"

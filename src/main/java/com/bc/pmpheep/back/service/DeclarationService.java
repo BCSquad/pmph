@@ -67,6 +67,14 @@ public interface DeclarationService {
 	 * @Throws CheckedServiceException
 	 */
 	List<Declaration> getDeclarationByMaterialId(Long materialId) throws CheckedServiceException;
+        
+        /**
+	 * @Param materialId
+         * @Param userId
+	 * @Return Declaration 实体对象
+	 * @Throws CheckedServiceException
+	 */
+        Declaration getDeclarationByMaterialIdAndUserId(Long materialId, Long userId) throws CheckedServiceException;
 
 	/**
 	 * 符合条件的申报表审核分页数据
