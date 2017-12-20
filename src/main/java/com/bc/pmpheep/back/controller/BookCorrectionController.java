@@ -69,6 +69,17 @@ public class BookCorrectionController {
 		return new ResponseBean(bookCorrectionService.listBookCorrectionTrack(request,pageNumber,pageSize,bookname ,isEditorReplied));
 	}
 	
+	/**
+	 * 回复作家用户
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年12月20日 下午4:05:21
+	 * @param request
+	 * @param id
+	 * @param result
+	 * @param editorReply
+	 * @return
+	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "回复作家用户")
 	@RequestMapping(value = "/replyWriter", method = RequestMethod.PUT)
@@ -78,6 +89,24 @@ public class BookCorrectionController {
 			@RequestParam(value = "editorReply", 		 required = true)  String editorReply) {
 		return new ResponseBean(bookCorrectionService.replyWriter(id , result , editorReply));
 	}
+	
+	/**
+	 * 将状态更新至受理中
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年12月20日 下午4:05:29
+	 * @param request
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "将状态更新至受理中")
+	@RequestMapping(value = "/updateToAcceptancing", method = RequestMethod.PUT)
+	public ResponseBean updateToAcceptancing(HttpServletRequest request,
+			@RequestParam(value = "id", 		         required = true)  Long id ) {
+		return new ResponseBean(bookCorrectionService.updateToAcceptancing(id ));
+	}
+	
 
 	
 }
