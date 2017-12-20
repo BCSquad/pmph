@@ -68,4 +68,6 @@ public class CheckedExceptionBusiness {
     public final static String OPERATION                  = "系统操作日志";
     
     public final static String EXCEL                      = "Excel文件";
+    
+    public final static String BOOK_CORRECTION            = "教材纠错";
 }
