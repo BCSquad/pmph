@@ -175,14 +175,14 @@ public class MigrationStageSix {
             Integer offlineProgressJudge = (Integer) map.get("offline_progress"); // 纸质表进度
             Integer isStagingJudge = (Integer) map.get("is_staging"); // 是否暂存
             Integer sysflag = (Integer) map.get("sysflag"); // 0为后台用户，1为前台用户
-            if (ObjectUtil.isNull(sysflag) || sysflag.intValue() == 0) {
+            if (ObjectUtil.isNull(sysflag) || sysflag == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为后台用户申请教材。"));
                 excel.add(map);
                 logger.debug("找到为后台用户申请教材，此结果将被记录在Excel中");
                 continue;
             }
             Declaration declaration = new Declaration();
-            if (ObjectUtil.isNull(materialid) || materialid.intValue() == 0) {
+            if (ObjectUtil.isNull(materialid) || materialid == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材对应的关联结果。"));
                 excel.add(map);
                 logger.debug("未找到教材对应的关联结果，此结果将被记录在Excel中");
@@ -190,7 +190,7 @@ public class MigrationStageSix {
                 continue;
             }
             declaration.setMaterialId(materialid);
-            if (ObjectUtil.isNull(userid) || userid.intValue() == 0) {
+            if (ObjectUtil.isNull(userid) || userid == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到作家对应的关联结果。"));
                 excel.add(map);
                 logger.debug("未找到作家对应的关联结果，此结果将被记录在Excel中");
@@ -226,7 +226,7 @@ public class MigrationStageSix {
             declaration.setFax((String) map.get("fax")); // 传真
             declaration.setOrgId((Long) map.get("org_id")); // 申报单位id
             if (ObjectUtil.notNull(onlineProgressJudge)) {
-                Integer onlineProgress = onlineProgressJudge.intValue(); // 审核进度
+                Integer onlineProgress = onlineProgressJudge; // 审核进度
                 declaration.setOnlineProgress(onlineProgress);
             } else {
                 declaration.setOnlineProgress(0);
@@ -235,7 +235,7 @@ public class MigrationStageSix {
             declaration.setAuthUserId(authUserId);
             declaration.setAuthDate((Timestamp) map.get("auditdate")); // 审核通过时间
             if (ObjectUtil.notNull(offlineProgressJudge)) {
-                Integer offlineProgress = offlineProgressJudge.intValue(); // 纸质表进度
+                Integer offlineProgress = offlineProgressJudge; // 纸质表进度
                 declaration.setOfflineProgress(offlineProgress);
             } else {
                 declaration.setOfflineProgress(0);
@@ -244,7 +244,7 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(isStagingJudge)) {
                 declaration.setIsStaging(0);
             } else {
-                Integer isStaging = isStagingJudge.intValue(); // 是否暂存
+                Integer isStaging = isStagingJudge; // 是否暂存
                 declaration.setIsStaging(isStaging);
             }
             Declaration dec = declarationService.getDeclarationByMaterialIdAndUserId(declaration.getMaterialId(),
@@ -272,7 +272,7 @@ public class MigrationStageSix {
         logger.info("writer_declaration表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
-        Map<String, Object> msg = new HashMap<String, Object>();
+        Map<String, Object> msg = new HashMap<>();
         msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
