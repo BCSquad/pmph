@@ -17,6 +17,16 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public interface BookCorrectionService {
 	
 	/**
+	 * 将状态更新至受理中
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年12月20日 下午3:50:46
+	 * @param id
+	 * @return 更新行数
+	 */
+	Integer updateToAcceptancing(Long id )throws CheckedServiceException;
+	
+	/**
 	 * 回复作家用户
 	 * @introduction 
 	 * @author Mryang
@@ -26,7 +36,7 @@ public interface BookCorrectionService {
 	 * @param editorReply
 	 * @return 更新行数
 	 */
-	Integer replyWriter(Long id ,Boolean result , String editorReply);
+	Integer replyWriter(Long id ,Boolean result , String editorReply)throws CheckedServiceException;
 	
 	/**
 	 * 获取审核纠错跟踪页面的分页数据

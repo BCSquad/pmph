@@ -39,7 +39,20 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 	private PmphUserService pmphUserService;
 	
 	@Override
-	public Integer replyWriter(Long id ,Boolean result , String editorReply){
+	public Integer updateToAcceptancing(Long id )throws CheckedServiceException{
+		if (null == id ) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "主键为空");
+		}
+		BookCorrection bookCorrection= this.getBookCorrectionById(id);
+		if(bookCorrection.getIsAuthorReplied() ){
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "请先主编审核");
+		}
+		bookCorrection.setIsEditorHandling(true);
+		return this.updateBookCorrection(bookCorrection);
+	}
+	
+	@Override
+	public Integer replyWriter(Long id ,Boolean result , String editorReply)throws CheckedServiceException{
 		if (null == id ) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
@@ -64,7 +77,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		bookCorrection.setResult(result);
 		bookCorrection.setIsEditorReplied(true);
 		bookCorrection.setEditorReply(editorReply);
-		return bookCorrectionDao.updateBookCorrection(bookCorrection);
+		return this.updateBookCorrection(bookCorrection);
 	}
 	
 	@Override
