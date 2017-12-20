@@ -29,7 +29,8 @@ public class JdbcHelper {
     private static DriverManagerDataSource dataSource;
     private static final Logger LOG = LoggerFactory.getLogger(JdbcHelper.class);
 
-    private static final String ADD_NEW_PK_COLUMN = "ALTER TABLE ? ADD new_pk BIGINT(20) NOT NULL COMMENT '新表主键'";
+    private static final String ADD_NEW_PK_COLUMN = "ALTER TABLE ? ADD new_pk BIGINT(20) COMMENT '新表主键'";
+    private static final String UPDATE_NEW_PK_COLUMN = "UPDATE ? SET new_pk = NULL";
     private static final String UPDATE_NEW_PK = "UPDATE # SET new_pk = ? WHERE $ = ?";
     private static final String QUERY = "SELECT * FROM ?";
     private static final String GET_PARENT_PK = "SELECT new_pk FROM # WHERE $ = ?";
@@ -57,7 +58,9 @@ public class JdbcHelper {
             getJdbcTemplate().execute(sql);
         } catch (DataAccessException ex) {
             LOG.info(ex.getMessage());
-            LOG.warn("执行SQL时发生异常，可能表<{}>已存在'new_pk'字段", tableName);
+            LOG.warn("执行SQL时发生异常，可能表<{}>已存在'new_pk'字段，将尝试全部置空", tableName);
+            sql = UPDATE_NEW_PK_COLUMN.replace("?", tableName);
+            getJdbcTemplate().execute(sql);
         }
     }
 
