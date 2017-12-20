@@ -4,7 +4,6 @@
 package com.bc.pmpheep.back.service.test;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,6 @@ import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
