@@ -46,6 +46,7 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
+
 import java.text.ParseException;
 
 /**
@@ -154,7 +155,7 @@ public class MigrationStageSix {
                 + "left join sys_userext su on su.userid=wd.userid "
                 + "left join teach_applyposition ta on ta.writerid=wd.writerid "
                 + "where su.userid is not null "
-                + "group by wd.writerid ";
+                + "group by wd.writerid order by s.sysflag ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql); // 查询所有数据
         int count = 0; // 迁移成功的条目数
         int materialidCount = 0;
@@ -169,10 +170,17 @@ public class MigrationStageSix {
             String sexJudge = (String) map.get("sex"); // 性别
             String experienceNum = (String) map.get("seniority"); // 教龄
             String postCode = (String) map.get("postcode"); // 邮编
-            Long onlineProgressJudge = (Long) map.get("online_progress"); // 审核进度
+            Integer onlineProgressJudge = (Integer) map.get("online_progress"); // 审核进度
             String authUserid = (String) map.get("auth_user_id"); // 审核人id
-            Long offlineProgressJudge = (Long) map.get("offline_progress"); // 纸质表进度
-            Long isStagingJudge = (Long) map.get("is_staging"); // 是否暂存
+            Integer offlineProgressJudge = (Integer) map.get("offline_progress"); // 纸质表进度
+            Integer isStagingJudge = (Integer) map.get("is_staging"); // 是否暂存
+            Integer sysflag = (Integer) map.get("sysflag"); // 0为后台用户，1为前台用户
+            if (ObjectUtil.isNull(sysflag) || sysflag.intValue() == 0) {
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为后台用户申请教材。"));
+                excel.add(map);
+                logger.debug("找到为后台用户申请教材，此结果将被记录在Excel中");
+                continue;
+            }
             Declaration declaration = new Declaration();
             if (ObjectUtil.isNull(materialid) || materialid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材对应的关联结果。"));

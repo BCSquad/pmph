@@ -39,6 +39,14 @@ public class BookEditor implements Serializable {
 		super();
 	}
 
+	public BookEditor(Long bookId, Long authorId, Long editorId) {
+		super();
+		this.bookId = bookId;
+		this.authorId = authorId;
+		this.editorId = editorId;
+	}
+
+
 
 	public Long getId() {
 		return id;

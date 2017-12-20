@@ -91,6 +91,30 @@ public class BookCorrection implements Serializable {
 		super();
 	}
 
+	public BookCorrection(Long bookId, Long userId, Integer page, Integer line,
+			String content, String attachment, String attachmentName,
+			Boolean isEditorHandling, Boolean isAuthorReplied,
+			String authorReply, Boolean isEditorReplied, String editorReply,
+			Boolean result, Date replyDate) {
+		super();
+		this.bookId = bookId;
+		this.userId = userId;
+		this.page = page;
+		this.line = line;
+		this.content = content;
+		this.attachment = attachment;
+		this.attachmentName = attachmentName;
+		this.isEditorHandling = isEditorHandling;
+		this.isAuthorReplied = isAuthorReplied;
+		this.authorReply = authorReply;
+		this.isEditorReplied = isEditorReplied;
+		this.editorReply = editorReply;
+		this.result = result;
+		this.replyDate = replyDate;
+	}
+
+
+
 	public Long getId() {
 		return id;
 	}

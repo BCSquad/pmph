@@ -43,7 +43,7 @@ public class ImageController {
      * @param id 图片在MongoDB中的id
      * @param response 服务响应
      */
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes" })
     @RequestMapping(value = "/image/{id}", method = RequestMethod.GET)
     public ResponseBean avatar(@PathVariable("id") String id, HttpServletResponse response) {
         response.setContentType("image/png");
@@ -61,6 +61,14 @@ public class ImageController {
         } catch (IOException ex) {
             return new ResponseBean(ex);
             // logger.error("文件下载时出现IO异常：{}", ex.getMessage());
+        } catch (Exception ex) {
+            logger.warn("图片查看时出现异常：{}", ex.getMessage());
+            throw new CheckedServiceException(CheckedExceptionBusiness.TEACHER_CHECK,
+                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "图片不存在");
+            // ResponseBean responseBean = new ResponseBean(ex);
+            // responseBean.setMsg("图片不存在");
+            // responseBean.setCode(ResponseBean.MONGO_EXCEPTION);
+            // return responseBean;
         }
         return new ResponseBean();
     }

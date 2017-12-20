@@ -228,20 +228,16 @@ public class MigrationStageThree {
     }
 
     protected void pmphRole() {
-        String tableName = "sys_role";//此表在图3中已经添加new_pk，运行顺序是先图3再图2
+        String tableName = "sys_role";
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
         for (Map<String, Object> map : maps) {
             Double roleId = (Double) map.get("roleid");
             String rolename = (String) map.get("rolename");
-           // Integer isDisabled = (Integer) map.get("isvalid");
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数。");
-                excel.add(map);
-                logger.info("显示顺序为负数，此结构将被记录在Excel中");
             }
             String note = (String) map.get("memo");
             PmphRole pmphRole = new PmphRole();
