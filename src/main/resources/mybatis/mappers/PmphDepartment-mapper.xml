@@ -139,10 +139,15 @@
 		#{dpName} and
 		parent_id = #{parentId};
 	</select>
-	
+
 	<!-- 根据主键id查询 -->
 	<select id="getDepartmentId" parameterType="java.lang.Long"
 		resultType="PmphUserDepartmentVO">
+		select * from pmph_department where id = #{id}
+	</select>
+
+	<!-- 根据主键id查询 -->
+	<select id="listOpts" 	resultType="DepartmentOptsVO">
 		select * from pmph_department where id = #{id}
 	</select>
 </mapper>

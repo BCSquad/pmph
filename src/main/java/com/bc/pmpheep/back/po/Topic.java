@@ -184,6 +184,10 @@ public class Topic implements Serializable {
 	 * 本版号
 	 */
 	private String vn;
+	/**
+	 * 提交日期(前台到后台的日期)
+	 */
+	private Timestamp submitTime;
 
 	public Topic() {
 		super();
@@ -557,6 +561,14 @@ public class Topic implements Serializable {
 
 	public void setVn(String vn) {
 		this.vn = vn;
+	}
+
+	public Timestamp getSubmitTime() {
+		return submitTime;
+	}
+
+	public void setSubmitTime(Timestamp submitTime) {
+		this.submitTime = submitTime;
 	}
 
 }
