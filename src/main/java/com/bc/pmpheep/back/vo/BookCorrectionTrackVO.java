@@ -1,7 +1,10 @@
 package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
+
 import org.apache.ibatis.type.Alias;
+
+import com.bc.pmpheep.annotation.ExcelHeader;
 
 /**
  * 纠错跟踪VO
@@ -19,43 +22,61 @@ public class BookCorrectionTrackVO implements Serializable {
     /**
      * 图书名称
      */
+    @ExcelHeader(header = "图书名称")
     private String    bookname;
     /**
      * 编辑部门 
      */
+    @ExcelHeader(header = "编辑部门")
     private String    dpName;
     /**
      * 分类
      */
+    @ExcelHeader(header = "分类")
     private String    typeName ;
     /**
      * 策划编辑名字
      */
+    @ExcelHeader(header = "策划编辑")
     private String    realname ;
     /**
      * 检查结构 
      */
     private Boolean   result ;
     /**
+     * 检查结构（转成的字符串） 
+     */
+    @ExcelHeader(header = "检查结果")
+    private String   resultString ;
+    /**
      * 页码
      */
+    @ExcelHeader(header = "页码")
     private Integer page;
     /**
      * 行数
      */
+    @ExcelHeader(header = "行数")
     private Integer line;
     /**
      * 纠错内容
      */
+    @ExcelHeader(header = "纠错内容")
     private String content ;
     /**
      * 主编回复 
      */
+    @ExcelHeader(header = "主编回复")
     private String authorReply;
     /**
      * 策划编辑是否回复
      */
     private Boolean  isEditorReplied;
+    /**
+     * 策划编辑是否回复(转换成显示字符串)
+     */
+    @ExcelHeader(header = "是否回复")
+    private String   isEditorRepliedString ;
     
     public BookCorrectionTrackVO() {
 		super();
@@ -131,6 +152,9 @@ public class BookCorrectionTrackVO implements Serializable {
 
 	public void setResult(Boolean result) {
 		this.result = result;
+		if(null != result){
+			resultString = result?"存在问题":"无问题";
+		}
 	}
 
 
@@ -191,6 +215,34 @@ public class BookCorrectionTrackVO implements Serializable {
 
 	public void setIsEditorReplied(Boolean isEditorReplied) {
 		this.isEditorReplied = isEditorReplied;
+		if(null != isEditorReplied){
+			this.isEditorRepliedString = isEditorReplied?"是":"否";
+		}
+		
+	}
+
+	
+
+	public String getResultString() {
+		return resultString;
+	}
+
+
+
+	public void setResultString(String resultString) {
+		this.resultString = resultString;
+	}
+
+
+
+	public String getIsEditorRepliedString() {
+		return isEditorRepliedString;
+	}
+
+
+
+	public void setIsEditorRepliedString(String isEditorRepliedString) {
+		this.isEditorRepliedString = isEditorRepliedString;
 	}
 
 
@@ -199,9 +251,11 @@ public class BookCorrectionTrackVO implements Serializable {
 	public String toString() {
 		return "{id:" + id + ", bookname:" + bookname + ", dpName:" + dpName
 				+ ", typeName:" + typeName + ", realname:" + realname
-				+ ", result:" + result + ", page:" + page + ", line:" + line
-				+ ", content:" + content + ", authorReply:" + authorReply
-				+ ", isEditorReplied:" + isEditorReplied + "}";
+				+ ", result:" + result + ", resultString:" + resultString
+				+ ", page:" + page + ", line:" + line + ", content:" + content
+				+ ", authorReply:" + authorReply + ", isEditorReplied:"
+				+ isEditorReplied + ", isEditorRepliedString:"
+				+ isEditorRepliedString + "}";
 	}
     
 	
