@@ -93,7 +93,7 @@ public class GroupController {
 	 * @createDate 2017年9月21日 下午4:02:57
 	 */
 	@RequestMapping(value = "/list/pmphGroupFile", method = RequestMethod.GET)
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "根据小组名称模糊查询获取当前用户的小组")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "上传文件时的小组列表")
 	@ResponseBody
 	public ResponseBean pmphGroupFile(HttpServletRequest request) {
 		PmphGroup pmphGroup = new PmphGroup();
