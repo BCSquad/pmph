@@ -30,7 +30,7 @@ public interface BookCorrectionService {
 	Integer   deleteBookCorrectionById (Long id) throws CheckedServiceException;
     
 	 /**
-     * 更新一个BookCorrection
+     * 更新BookCorrection不为null的字段
      * @param bookCorrection 实体对象
      * @return 影响行数
      */

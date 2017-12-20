@@ -7,7 +7,7 @@ import com.bc.pmpheep.back.po.BookCorrection;
 
 
 /**
- * BookCorrectionDao  实体类数据访问层接口
+ * BookCorrection  实体类数据访问层接口
  * 
  * @author mryang
  */

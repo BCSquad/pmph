@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.BookCorrectionDao;
@@ -16,6 +17,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  *@CreateDate 2017年12月19日 下午5:10:35
  *
  **/
+@Service
 public class BookCorrectionServiceImpl extends BaseService implements BookCorrectionService {
 	
 	@Autowired
@@ -59,18 +61,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		if (null == bookCorrection.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "更新主键为空");
 		}
-		if (null == bookCorrection.getBookId()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "纠错图书为空");
-		}
-		if (null == bookCorrection.getUserId()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "纠错用户为空");
-		}
-		if (StringUtil.isEmpty(bookCorrection.getContent())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "纠错内容为空");
-		}
-		if (bookCorrection.getContent().length() > 500 ) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.ILLEGAL_PARAM, "纠错内容长度超过500");
-		}
+		//因为是动态更新 ，因此不必验证其他字段了
 		return bookCorrectionDao.updateBookCorrection(bookCorrection);
 	}
 	

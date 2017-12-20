@@ -122,6 +122,9 @@
 	<update id="updateBookCorrection" parameterType="BookCorrection">
 		update book_correction
 		<set>
+			<if test="id != null "> <!-- set id=#{id} 为了保证不出现语法错误 -->
+				id = #{id},
+			</if>
 			<if test="bookId != null ">
 				book_id = #{bookId},
 			</if>
