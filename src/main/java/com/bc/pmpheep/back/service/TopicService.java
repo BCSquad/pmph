@@ -19,6 +19,7 @@ package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.Topic;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -36,5 +37,17 @@ public interface TopicService {
 	 */
 	PageResult<TopicOPtsManagerVO> listOpts(String sessionId, PageParameter<TopicOPtsManagerVO> pageParameter)
 			throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：修改选题申报
+	 *
+	 * @param topic
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	String update(Topic topic) throws CheckedServiceException;
 
 }

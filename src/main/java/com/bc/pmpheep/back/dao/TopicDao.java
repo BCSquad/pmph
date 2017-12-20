@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.po.Topic;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
 
 /**
@@ -97,4 +98,15 @@ public interface TopicDao {
 	 *
 	 */
 	Integer listTotal(@Param("bookname") String bookname, @Param("submitTime") Timestamp submitTime);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：修改选题申报
+	 *
+	 * @param topic
+	 * @return
+	 *
+	 */
+	Integer update(Topic topic);
 }
