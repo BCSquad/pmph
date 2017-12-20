@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
 
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.mongodb.MongoException;
 
 /**
  * 异常AOP拦截器
@@ -54,7 +55,11 @@ public class ResponseBeanAop {
             logger.error(sb.toString(), ex.toString());
         } else if (ex instanceof DataAccessResourceFailureException) {
             responseBean.setMsg("数据库连接超时");
-            responseBean.setCode(ResponseBean.MONGODB_TIME_OUT);
+            responseBean.setCode(ResponseBean.DATABASE_TIME_OUT);
+            logger.error(sb.toString(), ex.toString());
+        } else if (ex instanceof MongoException) {
+            responseBean.setMsg("图片或文件不存在");
+            responseBean.setCode(ResponseBean.MONGO_EXCEPTION);
             logger.error(sb.toString(), ex.toString());
         } else {
             responseBean.setMsg(ex.toString());
