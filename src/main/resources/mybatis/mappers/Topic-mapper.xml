@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.TopicDao">
+
+	<!-- 运维人员获取可以操作的选题 -->
+	<select id="listOpts" resultType="TopicOPtsManagerVO">
+		SELECT
+		t.*,w.realname
+		FROM
+		topic t
+		LEFT JOIN pmph_user_role r ON r.role_id
+		=
+		t.opts_role_id
+		LEFT JOIN pmph_user u ON u.id = r.user_id
+		LEFT JOIN
+		writer_user w ON t.user_id = w.id
+		WHERE u.id =
+		#{userId}
+		AND
+		t.is_opts_handling = TRUE
+		AND t.is_director_handling =
+		FALSE
+		<if test="bookname != null and bookname !=''">
+			AND t.bookname like concat('%',#{bookname},'%')
+		</if>
+		<if test="submitTime != null">
+			AND t.submit_time = #{submitTime}
+		</if>
+		ORDER BY t.submit_time
+		LIMIT
+		#{start},#{pageSize}
+	</select>
+
+	<!-- 查询运维人员可以操作的数量 -->
+	<select id="listOptsTotal" resultType="Integer">
+		SELECT
+		count(*)
+		FROM
+		topic t
+		LEFT JOIN pmph_user_role r ON r.role_id =
+		t.opts_role_id
+		LEFT JOIN pmph_user u ON u.id = r.user_id
+		LEFT JOIN
+		writer_user w ON t.user_id = w.id
+		WHERE u.id =
+		#{userId}
+		AND
+		t.is_opts_handling = TRUE
+		AND t.is_director_handling =
+		FALSE
+		<if test="bookname != null and bookname !=''">
+			AND t.bookname like concat('%',#{bookname},'%')
+		</if>
+		<if test="submitTime != null">
+			AND t.submit_time = #{submitTime}
+		</if>
+		ORDER BY t.submit_time
+	</select>
+
+	<!-- 系统管理员获取可以操作的选题 -->
+	<select id="list" resultType="TopicOPtsManagerVO">
+		SELECT
+		t.*,w.realname
+		FROM
+		topic t
+		LEFT JOIN
+		writer_user w ON t.user_id =
+		w.id
+		WHERE
+		t.is_opts_handling = TRUE
+		AND
+		t.is_director_handling = FALSE
+		<if test="bookname != null and bookname !=''">
+			AND t.bookname like concat('%',#{bookname},'%')
+		</if>
+		<if test="submitTime != null">
+			AND t.submit_time = #{submitTime}
+		</if>
+		ORDER BY t.submit_time
+		LIMIT
+		#{start},#{pageSize}
+	</select>
+
+	<!-- 系统管理员可以操作的数量 -->
+	<select id="listTotal" resultType="Integer">
+		SELECT
+		count(*)
+		FROM
+		topic t
+		LEFT JOIN
+		writer_user w ON t.user_id = w.id
+		WHERE
+		t.is_opts_handling = TRUE
+		AND
+		t.is_director_handling =
+		FALSE
+		<if test="bookname != null and bookname !=''">
+			AND t.bookname like concat('%',#{bookname},'%')
+		</if>
+		<if test="submitTime != null">
+			AND t.submit_time = #{submitTime}
+		</if>
+		ORDER BY t.submit_time
+	</select>
+	<!-- 动态修改选题申报 -->
+	<update id="update" parameterType="Topic">
+		UPDATE topic
+		<set>
+			<if test="userId != null">
+				user_id = #{userId},
+			</if>
+			<if test="bookname != null and bookname !='' ">
+				bookname = #{bookname},
+			</if>
+			<if test="reader != null ">
+				reader = #{reader},
+			</if>
+			<if test="deadline != null ">
+				deadline = #{deadline},
+			</if>
+			<if test="source != null">
+				source = #{source},
+			</if>
+			<if test="wordNumber != null">
+				word_number =#{wordNumber},
+			</if>
+			<if test="pictureNumber != null">
+				picture_number =#{pictureNumber},
+			</if>
+			<if test="subject != null and subject !='' ">
+				subject = #{subject},
+			</if>
+			<if test="rank != null">
+				rank = #{rank},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="bankAccountId != null">
+				bank_account_id = #{bankAccountId},
+			</if>
+			<if test="purchase != null">
+				purchase = #{purchase},
+			</if>
+			<if test="sponsorship != null">
+				sponsorship = #{sponsorship},
+			</if>
+			<if test="isTranslation != null">
+				is_translation = #{isTranslation},
+			</if>
+			<if test="originalBookname != null and originalBookname !='' ">
+				original_bookname = #{originalBookname},
+			</if>
+			<if test="originalAuthor != null and originalAuthor !='' ">
+				original_author = #{originalAuthor},
+			</if>
+			<if test="nation != null and nation !='' ">
+				nation = #{nation},
+			</if>
+			<if test="edition != null and edition !='' ">
+				edition = #{edition},
+			</if>
+			<if test="authProgress != null">
+				auth_progress = #{authProgress},
+			</if>
+			<if test="authFeedback != null and authFeedback !='' ">
+				auth_feedback = #{authFeedback},
+			</if>
+			<if test="authDate != null">
+				auth_date = #{authDate},
+			</if>
+			<if test="isOptsHandling != null">
+				is_opts_handling = #{isOptsHandling},
+			</if>
+			<if test="optsRoleId != null">
+				opts_role_id = #{optsRoleId},
+			</if>
+			<if test="isRejectedByDirector != null">
+				is_rejected_by_director = #{isRejectedByDirector},
+			</if>
+			<if test="reasonDirector != null and reasonDirector !='' ">
+				reason_director = #{reasonDirector},
+			</if>
+			<if test="isDirectorHandling != null">
+				is_director_handling = #{isDirectorHandling},
+			</if>
+			<if test="departmentId != null">
+				department_id = #{departmentId},
+			</if>
+			<if test="isRejectedByEditor != null">
+				is_rejected_by_editor = #{isRejectedByEditor},
+			</if>
+			<if test="reasonEditor != null and reasonEditor !='' ">
+				reason_editor = #{reasonEditor},
+			</if>
+			<if test="isEditorHandling != null">
+				is_editor_handling = #{isEditorHandling},
+			</if>
+			<if test="editorId != null">
+				editor_id = #{editorId},
+			</if>
+			<if test="isAccepted != null">
+				is_accepted = #{isAccepted},
+			</if>
+			<if test="isStaging != null">
+				is_staging = #{isStaging},
+			</if>
+			<if test="isDeleted != null">
+				is_deleted = #{isDeleted},
+			</if>
+			<if test="note != null and note !='' ">
+				note = #{note},
+			</if>
+			<if test="gmtCreate != null">
+				gmt_create = #{gmtCreate},
+			</if>
+			<if test="gmtUpdate != null">
+				gmt_update = #{gmtUpdate},
+			</if>
+			<if test="vn != null and vn !='' ">
+				vn = #{vn},
+			</if>
+			<if test="tn != null and tn !='' ">
+				tn = #{tn},
+			</if>
+			<if test="submitTime != null">
+				submit_time = #{submitTime},
+			</if>
+		</set>
+		WHERE id = #{id};
+	</update>
+
+</mapper>

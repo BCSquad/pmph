@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.BookCorrectionDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="bookId != null ">
+				book_id ,
+			</if>
+			<if test="userId != null ">
+				user_id ,
+			</if>
+			<if test="page != null ">
+				page ,
+			</if>
+			<if test="line != null ">
+				line,
+			</if>
+			<if test="content != null and content != ''  ">
+				content ,
+			</if>
+			<if test="attachment != null and attachment != '' ">
+				attachment,
+			</if>
+			<if test="attachmentName != null and attachmentName != '' ">
+				attachment_name,
+			</if>
+			<if test="isEditorHandling != null ">
+				is_editor_handling ,
+			</if>
+			<if test="isAuthorReplied != null ">
+				is_author_replied ,
+			</if>
+			<if test="authorReply != null and authorReply != '' ">
+				author_reply,
+			</if>
+			<if test="isEditorReplied != null ">
+				is_editor_replied ,
+			</if>
+			<if test="editorReply != null and editorReply != '' ">
+				editor_reply ,
+			</if>
+			<if test="result != null ">
+				result ,
+			</if>
+			<if test="replyDate != null ">
+				reply_date ,
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="bookId != null ">
+				 #{bookId},
+			</if>
+			<if test="userId != null ">
+				 #{userId},
+			</if>
+			<if test="page != null ">
+				#{page},
+			</if>
+			<if test="line != null ">
+				#{line},
+			</if>
+			<if test="content != null and content != ''  ">
+				#{content},
+			</if>
+			<if test="attachment != null and attachment != '' ">
+				 #{attachment},
+			</if>
+			<if test="attachmentName != null and attachmentName != '' ">
+				#{attachmentName},
+			</if>
+			<if test="isEditorHandling != null ">
+				#{isEditorHandling},
+			</if>
+			<if test="isAuthorReplied != null ">
+				 #{isAuthorReplied},
+			</if>
+			<if test="authorReply != null and authorReply != '' ">
+				#{authorReply},
+			</if>
+			<if test="isEditorReplied != null ">
+				 #{isEditorReplied},
+			</if>
+			<if test="editorReply != null and editorReply != '' ">
+				#{editorReply},
+			</if>
+			<if test="result != null ">
+				 #{result},
+			</if>
+			<if test="replyDate != null ">
+				 #{replyDate},
+			</if>
+			<if test="isDeleted != null ">
+				 #{isDeleted},
+			</if>
+		</trim>
+	</sql>
+	<!--新增一个    BookCorrection -->
+	<insert id="addBookCorrection" parameterType="BookCorrection">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into book_correction ( <include refid="key" /> )
+			values( <include refid="value" /> ) ;
+	</insert>
+
+
+	<!-- 根据主键删除BookCorrection -->
+	<delete id="deleteBookCorrectionById" parameterType="java.lang.Long">
+		delete from book_correction where id=#{id} ;
+	</delete>
+
+	<!-- 更新一个BookCorrection -->
+	<update id="updateBookCorrection" parameterType="BookCorrection">
+		update book_correction
+		<set>
+			<if test="id != null "> <!-- set id=#{id} 为了保证不出现语法错误 -->
+				id = #{id},
+			</if>
+			<if test="bookId != null ">
+				book_id = #{bookId},
+			</if>
+			<if test="userId != null ">
+				user_id = #{userId},
+			</if>
+			<if test="page != null ">
+				page = #{page},
+			</if>
+			<if test="line != null ">
+				line = #{line},
+			</if>
+			<if test="content != null and content != ''  ">
+				content = #{content},
+			</if>
+			<if test="attachment != null and attachment != '' ">
+				attachment = #{attachment},
+			</if>
+			<if test="attachmentName != null and attachmentName != '' ">
+				attachment_name = #{attachmentName},
+			</if>
+			<if test="isEditorHandling != null ">
+				is_editor_handling = #{isEditorHandling},
+			</if>
+			<if test="isAuthorReplied != null ">
+				is_author_replied = #{isAuthorReplied},
+			</if>
+			<if test="authorReply != null and authorReply != '' ">
+				author_reply = #{authorReply},
+			</if>
+			<if test="isEditorReplied != null ">
+				is_editor_replied = #{isEditorReplied},
+			</if>
+			<if test="editorReply != null and editorReply != '' ">
+				editor_reply = #{editorReply},
+			</if>
+			<if test="result != null ">
+				result = #{result},
+			</if>
+			<if test="replyDate != null ">
+				reply_date = #{replyDate},
+			</if>
+			<if test="isDeleted != null ">
+				is_deleted = #{isDeleted},
+			</if>
+		</set>
+		where id=#{id} ;
+	</update>
+
+	<!-- 根据主键获取BookCorrection -->
+	<select id="getBookCorrectionById" parameterType="java.lang.Long" resultType="BookCorrection">
+		select * from book_correction where id=#{id} ;
+	</select>
+	
+	<!-- 获取审核纠错页面的数据总数 -->
+	<select id="listBookCorrectionAuditTotal"  resultType="java.lang.Integer">
+		select 
+			count(a.id) 
+		from 
+			book_correction a
+		LEFT JOIN 
+			book b on  b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = a.book_id
+		LEFT JOIN 
+			writer_user d on d.id    = a.user_id
+		where 
+			b.id is not null and c.id is not null and !a.is_deleted 
+		<if test="editorId != null">
+			and c.editor_id  = #{editorId}
+		</if>
+		<if test="bookname != null and bookname != '' ">
+			and b.bookname like CONCAT('%',#{bookname},'%')
+		</if>
+		<if test="result   != null  ">
+			<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来  -->
+			and ((is_editor_replied and a.result  = #{result} ) or (!is_editor_replied))  
+		</if>
+	</select>
+	
+	<!-- 获取审核纠错页面的分页数据-->
+	<select id="listBookCorrectionAudit"  resultType="BookCorrectionAuditVO">
+		select 
+			a.id,
+			b.bookname,
+			a.page,
+			a.line ,
+			a.content ,
+			a.attachment,
+			a.attachment_name,
+			d.realname,
+			a.gmt_create ,
+			a.author_reply ,
+			a.is_editor_handling ,
+			a.is_editor_replied ,
+			a.editor_reply,
+			a.result  
+		from 
+			book_correction a
+		LEFT JOIN 
+			book b on  b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = a.book_id
+		LEFT JOIN 
+			writer_user d on d.id    = a.user_id
+		where 
+			b.id is not null and c.id is not null and !a.is_deleted 
+		<if test="editorId != null">
+			and c.editor_id  = #{editorId}
+		</if>
+		<if test="bookname != null and bookname != '' ">
+			and b.bookname like CONCAT('%',#{bookname},'%')
+		</if>
+		<if test="result   != null  ">
+			<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来  -->
+			and ((is_editor_replied and a.result  = #{result} ) or (!is_editor_replied))  
+		</if>
+		ORDER BY 
+			a.gmt_update desc 
+		limit #{start} ,#{pageSize}
+	</select>
+	
+	<!-- 获取审核纠错跟踪页面的数据总数  -->
+	<select id="listBookCorrectionTrackTotal"  resultType="java.lang.Integer">
+		SELECT 
+			count(a.id)
+		FROM  
+			book_correction a
+		LEFT JOIN 
+			book b on b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = b.id
+		LEFT JOIN 
+			pmph_user d on d.id = c.editor_id
+		LEFT JOIN 
+			pmph_department e on e.id = d.department_id
+		LEFT JOIN 
+			material_type   f  on f.id = b.type 
+		where 
+			!a.is_deleted and b.id is not null 
+		<if test="bookname != null and bookname != '' ">
+			and b.bookname like CONCAT('%',#{bookname},'%')
+		</if>
+		<if test="isEditorReplied != null ">
+			a.is_editor_replied = #{isEditorReplied}
+		</if>
+	</select>
+	
+	<!-- 获取审核纠错跟踪页面的分页数据 -->
+	<select id="listBookCorrectionTrack"       resultType="BookCorrectionTrackVO">
+		SELECT 
+			a.id ,
+			b.bookname,
+			e.dp_name ,
+			f.type_name ,
+			d.realname ,
+			a.result ,
+			a.page,
+			a.line,
+			a.content,
+			a.author_reply,
+			a.is_editor_replied 
+		FROM  
+			book_correction a
+		LEFT JOIN 
+			book b on b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = b.id
+		LEFT JOIN 
+			pmph_user d on d.id = c.editor_id
+		LEFT JOIN 
+			pmph_department e on e.id = d.department_id
+		LEFT JOIN 
+			material_type   f  on f.id = b.type 
+		where 
+			!a.is_deleted and b.id is not null 
+		<if test="bookname != null and bookname != '' ">
+			and b.bookname like CONCAT('%',#{bookname},'%')
+		</if>
+		<if test="isEditorReplied != null ">
+			a.is_editor_replied = #{isEditorReplied}
+		</if>
+		ORDER BY 
+			a.gmt_update desc 
+		limit #{start} ,#{pageSize}
+	</select>
+	
+</mapper>

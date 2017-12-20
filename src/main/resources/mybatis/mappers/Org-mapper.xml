@@ -130,8 +130,11 @@
 			</if>
 			<!-- 管理员姓名 -->
 			<if test="parameter.realname != null and parameter.realname !='' ">
-				and ou.`realname` like
-				concat(concat('%',#{parameter.realname}),'%')
+				and (
+						ou.`realname` like concat(concat('%',#{parameter.realname}),'%')
+					OR  
+						ou.username LIKE CONCAT(CONCAT('%',#{parameter.realname}),'%')
+				)
 			</if>
 			<!-- 审核状态 -->
 			<if test="parameter.progress != null">
@@ -154,8 +157,11 @@
 			</if>
 			<!-- 管理员姓名 -->
 			<if test="parameter.realname != null and parameter.realname !='' ">
-				and ou.`realname` like
-				concat(concat('%',#{parameter.realname}),'%')
+				and (
+						ou.`realname` like concat(concat('%',#{parameter.realname}),'%')
+					OR  
+						ou.username LIKE CONCAT(CONCAT('%',#{parameter.realname}),'%')
+				)
 			</if>
 			<!-- 审核状态 -->
 			<if test="parameter.progress != null">

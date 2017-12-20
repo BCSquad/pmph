@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.BookEditorDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="bookId != null ">
+				book_id ,
+			</if>
+			<if test="authorId != null ">
+				author_id ,
+			</if>
+			<if test="editorId != null ">
+				editor_id ,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="bookId != null ">
+				#{bookId},
+			</if>
+			<if test="authorId != null ">
+				 #{authorId},
+			</if>
+			<if test="editorId != null ">
+				#{editorId},
+			</if>
+		</trim>
+	</sql>
+	<!--新增一个    BookEditor -->
+	<insert id="addBookEditor" parameterType="BookEditor">
+		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into book_editor ( <include refid="key" /> )
+			              values( <include refid="value" /> ) ;
+	</insert>
+
+
+	<!-- 根据主键删除BookEditor -->
+	<delete id="deleteBookEditorById" parameterType="java.lang.Long">
+		delete from book_editor where id=#{id} ;
+	</delete>
+
+	<!-- 更新一个BookEditor -->
+	<update id="updateBookEditor" parameterType="BookEditor">
+		update book_editor
+		<set>
+			<if test="id != null "> <!-- set id=#{id} 为了保证不出现语法错误 -->
+				id = #{id},
+			</if>
+			<if test="bookId != null ">
+				book_id = #{bookId},
+			</if>
+			<if test="authorId != null ">
+				author_id = #{authorId},
+			</if>
+			<if test="editorId != null ">
+				editor_id = #{editorId},
+			</if>
+		</set>
+		where id=#{id} ;
+	</update>
+
+	<!-- 根据主键获取BookEditor -->
+	<select id="getBookEditorById" parameterType="java.lang.Long" resultType="BookEditor">
+		select * from book_editor where id=#{id} ;
+	</select>
+	
+</mapper>

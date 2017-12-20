@@ -502,8 +502,17 @@
 	</select>
 	<!-- 根据机构id集查询用户 -->
 	<select id="getWriterUserListByOrgIds" resultType="WriterUser">
-		select * from writer_user where is_disabled =0 and is_deleted =0 and
-		org_id in
+		select 
+			* 
+		from 
+			writer_user 
+		where 
+			<!-- is_disabled =0 
+		and  -->
+			is_deleted =0 
+		and
+			org_id 
+		in
 		<foreach item="orgId" collection="list" open="(" separator=","
 			close=")">
 			#{orgId}

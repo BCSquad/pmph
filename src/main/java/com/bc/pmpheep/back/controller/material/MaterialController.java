@@ -1,7 +1,9 @@
 package com.bc.pmpheep.back.controller.material;
 
 import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.MaterialService;
@@ -52,32 +55,26 @@ public class MaterialController {
     @ResponseBody
     @LogDetail(businessType = Business_Type, logRemark = "新建遴选公告")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseBean add( HttpServletRequest request,MaterialVO materialVO,
-//						    MultipartFile[] noticeFiles, 
-//						    MultipartFile[] noteFiles, 
-						    String deadline, String actualDeadline,
-						    String ageDeadline) {
+    public ResponseBean add(HttpServletRequest request, MaterialVO materialVO,
+    // MultipartFile[] noticeFiles,
+    // MultipartFile[] noteFiles,
+    String deadline, String actualDeadline, String ageDeadline) {
 
-        
         try {
             materialVO.getMaterial().setDeadline(DateUtil.str3Date(deadline));
             materialVO.getMaterial().setActualDeadline(DateUtil.str3Date(actualDeadline));
             materialVO.getMaterial().setAgeDeadline(DateUtil.str3Date(ageDeadline));
-            return new ResponseBean(
-            			materialService.addOrUpdateMaterial(
-            				request,
-                    		materialVO,
-//                    		noticeFiles,
-//                            noteFiles,
-                            false)
-            						);
+            return new ResponseBean(materialService.addOrUpdateMaterial(request, materialVO,
+            // noticeFiles,
+            // noteFiles,
+                                                                        false));
         } catch (IOException e) {
-        	ResponseBean responseBean = new ResponseBean(e);
-        	responseBean.setData("上传文件失败");
+            ResponseBean responseBean = new ResponseBean(e);
+            responseBean.setData("上传文件失败");
             return responseBean;
         } catch (Exception e) {
-        	ResponseBean responseBean = new ResponseBean(e);
-        	responseBean.setData(e.getMessage());
+            ResponseBean responseBean = new ResponseBean(e);
+            responseBean.setData(e.getMessage());
             return responseBean;
         }
     }
@@ -100,31 +97,26 @@ public class MaterialController {
     @ResponseBody
     @LogDetail(businessType = Business_Type, logRemark = "修改遴选公告")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseBean update( MaterialVO materialVO,HttpServletRequest request,
-//    					MultipartFile[] noticeFiles, 
-//    					MultipartFile[] noteFiles,
-    					String deadline, String actualDeadline,
-    String ageDeadline) {
+    public ResponseBean update(MaterialVO materialVO, HttpServletRequest request,
+    // MultipartFile[] noticeFiles,
+    // MultipartFile[] noteFiles,
+    String deadline, String actualDeadline, String ageDeadline) {
         try {
             materialVO.getMaterial().setDeadline(DateUtil.str3Date(deadline));
             materialVO.getMaterial().setActualDeadline(DateUtil.str3Date(actualDeadline));
             materialVO.getMaterial().setAgeDeadline(DateUtil.str3Date(ageDeadline));
-            
-            return new ResponseBean(
-            				materialService.addOrUpdateMaterial(
-            				request,
-                    		materialVO,
-//                    		noticeFiles,
-//                            noteFiles,
-                            true)
-                            );
+
+            return new ResponseBean(materialService.addOrUpdateMaterial(request, materialVO,
+            // noticeFiles,
+            // noteFiles,
+                                                                        true));
         } catch (IOException e) {
-        	ResponseBean responseBean = new ResponseBean(e);
-        	responseBean.setData("上传文件失败");
+            ResponseBean responseBean = new ResponseBean(e);
+            responseBean.setData("上传文件失败");
             return responseBean;
         } catch (Exception e) {
-        	ResponseBean responseBean = new ResponseBean(e);
-        	responseBean.setData(e.getMessage());
+            ResponseBean responseBean = new ResponseBean(e);
+            responseBean.setData(e.getMessage());
             return responseBean;
         }
     }
@@ -174,10 +166,11 @@ public class MaterialController {
     public ResponseBean materialName(@RequestParam(value = "id", required = true) Long id) {
         return new ResponseBean(materialService.getMaterialNameById(id));
     }
-    
+
     /**
      * 获取教材主要信息，如教材名称，当前用户的权限菜单,以及教材的其他信息
-     * @introduction  
+     * 
+     * @introduction
      * @author Mryang
      * @createDate 2017年12月14日 上午9:52:42
      * @param materialId
@@ -187,9 +180,10 @@ public class MaterialController {
     @ResponseBody
     @LogDetail(businessType = Business_Type, logRemark = "获取教材主要信息，如教材名称，当前用户的权限菜单,以及教材的其他信息")
     @RequestMapping(value = "/getMaterialMainInfoById", method = RequestMethod.GET)
-    public ResponseBean  getMaterialMainInfoById (@RequestParam(value = "id", required = true) Long id,HttpServletRequest request) {
-    	String sessionId = CookiesUtil.getSessionId(request);
-    	return new ResponseBean(materialService.getMaterialMainInfoById(id, sessionId));
+    public ResponseBean getMaterialMainInfoById(
+    @RequestParam(value = "id", required = true) Long id, HttpServletRequest request) {
+        String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(materialService.getMaterialMainInfoById(id, sessionId));
     }
 
     /**
@@ -225,10 +219,11 @@ public class MaterialController {
     public ResponseBean get(Long id) {
         return new ResponseBean(materialService.getMaterialVO(id));
     }
-    
+
     /**
      * 教材上传临时附件
-     * @introduction 
+     * 
+     * @introduction
      * @author Mryang
      * @createDate 2017年12月6日 上午11:38:32
      * @param request
@@ -238,15 +233,15 @@ public class MaterialController {
     @ResponseBody
     @RequestMapping(value = "/upTempFile", method = RequestMethod.POST)
     public ResponseBean upTempFile(HttpServletRequest request, MultipartFile[] files) {
-    	try {
-			return new ResponseBean(materialService.upTempFile(request, files));
-		} catch (CheckedServiceException e) {
-			return new ResponseBean(e);
-		} catch (IOException e) {
-			return new ResponseBean(e);
-		} catch (Exception e){
-			return new ResponseBean(e);
-		}
+        try {
+            return new ResponseBean(materialService.upTempFile(request, files));
+        } catch (CheckedServiceException e) {
+            return new ResponseBean(e);
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        } catch (Exception e) {
+            return new ResponseBean(e);
+        }
     }
-    
+
 }

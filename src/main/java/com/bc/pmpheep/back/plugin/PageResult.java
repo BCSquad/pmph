@@ -51,7 +51,7 @@ public class PageResult<T> {
 		this.pageSize = pageSize;
 		this.start = (this.pageNumber - 1) * this.pageSize;
 		if(null == rows || rows.size() == 0){
-			rows          = new ArrayList<T>(this.pageSize);
+			rows          = new ArrayList<T>(16);
 		}
 	}
 

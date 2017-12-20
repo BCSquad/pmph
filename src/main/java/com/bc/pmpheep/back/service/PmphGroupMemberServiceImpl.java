@@ -332,10 +332,11 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		} else {
 			for (Long id : ids) {
 				PmphGroupMember pmphGroupMember = pmphGroupMemberDao.getPmphGroupMemberById(id);
-				if (userid == pmphGroupMember.getUserId() && !pmphGroupMember.getIsWriter()) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-							CheckedExceptionResult.ILLEGAL_PARAM, "您无权限删除管理员，请重新选择");
-				}
+				// if (userid == pmphGroupMember.getUserId() && !pmphGroupMember.getIsWriter())
+				// {
+				// throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+				// CheckedExceptionResult.ILLEGAL_PARAM, "您无权限删除管理员，请重新选择");
+				// }
 				if (pmphUser.getIsAdmin() || currentUser.getIsFounder()) {// 只有小组创建者和超级管理员可以删除小组成员
 					if (pmphGroupMemberDao.getPmphGroupMemberById(id).getIsFounder()) {
 						throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
