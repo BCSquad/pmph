@@ -109,7 +109,7 @@ public interface TopicDao {
      */
 	List<TopicDirectorVO> listTopicDirectorVOs(@Param("userId") Long userId,
 			@Param("departmentId") Long departmentId,@Param("bookName") String bookName,
-			@Param("start") Integer start,@Param("pageSize") Integer pageSize);
+			@Param("submitTime") Timestamp submitTime,@Param("start") Integer start,@Param("pageSize") Integer pageSize);
 	
 	/**
 	 * 
@@ -120,5 +120,5 @@ public interface TopicDao {
 	 * @return Integer
 	 */
 	Integer totalTopicDirectorVOs(@Param("userId") Long userId, @Param("departmentId") Long departmentId,
-			@Param("bookName") String bookName);
+			@Param("bookName") String bookName,@Param("submitTime") Timestamp submitTime);
 }
