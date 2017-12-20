@@ -29,7 +29,7 @@ public class JdbcHelper {
     private static DriverManagerDataSource dataSource;
     private static final Logger LOG = LoggerFactory.getLogger(JdbcHelper.class);
 
-    private static final String ADD_NEW_PK_COLUMN = "ALTER TABLE ? ADD new_pk BIGINT(20) NOT NULL COMMENT '新表主键'";
+    private static final String ADD_NEW_PK_COLUMN = "ALTER TABLE ? ADD new_pk BIGINT(20) COMMENT '新表主键'";
     private static final String UPDATE_NEW_PK = "UPDATE # SET new_pk = ? WHERE $ = ?";
     private static final String QUERY = "SELECT * FROM ?";
     private static final String GET_PARENT_PK = "SELECT new_pk FROM # WHERE $ = ?";
