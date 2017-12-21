@@ -313,21 +313,21 @@
 		d.*,w.username,
 		GROUP_CONCAT(
 		CASE
-				when c.preset_position =15  then '主编,副主编,编委,数字编委'       <!-- 1111 -->
-				when c.preset_position =14  then '主编,副主编,数字编委'          <!-- 1110 -->
-				when c.preset_position =13  then '主编,编委,数字编委'            <!-- 1101 -->
-				when c.preset_position =12  then '主编,数字编委'               <!-- 1100 -->
-				when c.preset_position =11  then '副主编,编委,数字编委'          <!-- 1011 -->
-				when c.preset_position =10  then '副主编,数字编委'              <!-- 1010 -->
-				when c.preset_position =9   then '编委,数字编委'               <!-- 1001 -->
-				when c.preset_position =8   then '数字编委'                   <!-- 1000 -->
-				when c.preset_position =7   then '主编,副主编,编委'             <!-- 0111 -->
-				when c.preset_position =6   then '主编,副主编'                 <!-- 0110 -->
-				when c.preset_position =5   then '主编,编委'                  <!-- 0101 -->
-				when c.preset_position =4   then '主编'                      <!-- 0100 -->
-				when c.preset_position =3   then '副主编,编委'                 <!-- 0011 -->
-				when c.preset_position =2   then '副主编'                     <!-- 0010 -->
-				when c.preset_position =1   then '编委'                      <!-- 0001 -->
+				when d.preset_position =15  then '主编,副主编,编委,数字编委'       <!-- 1111 -->
+				when d.preset_position =14  then '主编,副主编,数字编委'          <!-- 1110 -->
+				when d.preset_position =13  then '主编,编委,数字编委'            <!-- 1101 -->
+				when d.preset_position =12  then '主编,数字编委'               <!-- 1100 -->
+				when d.preset_position =11  then '副主编,编委,数字编委'          <!-- 1011 -->
+				when d.preset_position =10  then '副主编,数字编委'              <!-- 1010 -->
+				when d.preset_position =9   then '编委,数字编委'               <!-- 1001 -->
+				when d.preset_position =8   then '数字编委'                   <!-- 1000 -->
+				when d.preset_position =7   then '主编,副主编,编委'             <!-- 0111 -->
+				when d.preset_position =6   then '主编,副主编'                 <!-- 0110 -->
+				when d.preset_position =5   then '主编,编委'                  <!-- 0101 -->
+				when d.preset_position =4   then '主编'                      <!-- 0100 -->
+				when d.preset_position =3   then '副主编,编委'                 <!-- 0011 -->
+				when d.preset_position =2   then '副主编'                     <!-- 0010 -->
+				when d.preset_position =1   then '编委'                      <!-- 0001 -->
 				else null              
 		END
 		ORDER BY
