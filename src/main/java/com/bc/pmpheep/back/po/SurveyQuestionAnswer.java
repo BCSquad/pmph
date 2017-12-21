@@ -21,29 +21,50 @@ import org.apache.ibatis.type.Alias;
  * @审核人 ：
  * </pre>
  */
-@Alias("SurveyAnswer")
-public class SurveyAnswer implements java.io.Serializable {
+@Alias("SurveyQuestionAnswer")
+public class SurveyQuestionAnswer implements java.io.Serializable {
 
     // Fields
 
     //
     private static final long serialVersionUID = 8608362154676560544L;
+    /**
+     * 主键
+     */
     private Long              id;
+    /**
+     * 用户id
+     */
     private Long              userId;
+    /**
+     * 问题id
+     */
     private Long              questionId;
+    /**
+     * 选项id
+     */
     private Long              optionsId;
+    /**
+     * 选项内容
+     */
     private String            optionContent;
+    /**
+     * 附件
+     */
     private String            attachment;
+    /**
+     * 创建时间
+     */
     private Timestamp         gmtCreate;
 
     // Constructors
 
     /** default constructor */
-    public SurveyAnswer() {
+    public SurveyQuestionAnswer() {
     }
 
     /** full constructor */
-    public SurveyAnswer(Long userId, Long questionId, Long optionsId, String optionContent,
+    public SurveyQuestionAnswer(Long userId, Long questionId, Long optionsId, String optionContent,
     String attachment, Timestamp gmtCreate) {
         this.userId = userId;
         this.questionId = questionId;
