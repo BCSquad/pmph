@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.po;
 
+import java.sql.Timestamp;
+
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -26,9 +28,34 @@ public class SurveyTemplate implements java.io.Serializable {
 
     //
     private static final long serialVersionUID = -7095331687874274350L;
+    /**
+     * 主键
+     */
     private Long              id;
+    /**
+     * 模版名称
+     */
     private String            templateName;
+    /**
+     * 排序
+     */
     private Integer           sort;
+    /**
+     * 模板创建人
+     */
+    private Long              userId;
+    /**
+     * 是否被逻辑删除
+     */
+    private Boolean           isDeleted;
+    /**
+     * 创建时间
+     */
+    private Timestamp         gmtCreate;
+    /**
+     * 修改时间
+     */
+    private Timestamp         gmtUpdate;
 
     // Constructors
 
@@ -37,34 +64,112 @@ public class SurveyTemplate implements java.io.Serializable {
     }
 
     /** full constructor */
-    public SurveyTemplate(String templateName, Integer sort) {
+    public SurveyTemplate(String templateName, Integer sort, Long userId, Boolean isDeleted,
+    Timestamp gmtCreate, Timestamp gmtUpdate) {
         this.templateName = templateName;
         this.sort = sort;
+        this.userId = userId;
+        this.isDeleted = isDeleted;
+        this.gmtCreate = gmtCreate;
+        this.gmtUpdate = gmtUpdate;
     }
 
-    // Property accessors
+    /**
+     * @return the id
+     */
     public Long getId() {
-        return this.id;
+        return id;
     }
 
+    /**
+     * @param id the id to set
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * @return the templateName
+     */
     public String getTemplateName() {
-        return this.templateName;
+        return templateName;
     }
 
+    /**
+     * @param templateName the templateName to set
+     */
     public void setTemplateName(String templateName) {
         this.templateName = templateName;
     }
 
+    /**
+     * @return the sort
+     */
     public Integer getSort() {
-        return this.sort;
+        return sort;
     }
 
+    /**
+     * @param sort the sort to set
+     */
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    /**
+     * @return the userId
+     */
+    public Long getUserId() {
+        return userId;
+    }
+
+    /**
+     * @param userId the userId to set
+     */
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * @return the isDeleted
+     */
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    /**
+     * @param isDeleted the isDeleted to set
+     */
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    /**
+     * @return the gmtCreate
+     */
+    public Timestamp getGmtCreate() {
+        return gmtCreate;
+    }
+
+    /**
+     * @param gmtCreate the gmtCreate to set
+     */
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    /**
+     * @return the gmtUpdate
+     */
+    public Timestamp getGmtUpdate() {
+        return gmtUpdate;
+    }
+
+    /**
+     * @param gmtUpdate the gmtUpdate to set
+     */
+    public void setGmtUpdate(Timestamp gmtUpdate) {
+        this.gmtUpdate = gmtUpdate;
     }
 
 }

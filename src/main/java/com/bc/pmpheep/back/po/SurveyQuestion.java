@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.po;
 
+import java.sql.Timestamp;
+
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -29,84 +31,217 @@ public class SurveyQuestion implements java.io.Serializable {
 
     //
     private static final long serialVersionUID = 6476408942311873206L;
+    /**
+     * 主键
+     */
     private Long              id;
+    /**
+     * 问题分类id
+     */
+    private Long              categoryId;
+    /**
+     * 题目
+     */
     private String            title;
-    private String            type;
+    /**
+     * 问题类型
+     */
+    private Short             type;
+    /**
+     * 问题序号
+     */
     private Integer           sort;
+    /**
+     * 问题说明
+     */
     private String            direction;
+    /**
+     * 问题是否必答
+     */
     private Boolean           isAnswer;
-
-    // Constructors
+    /**
+     * 是否被逻辑删除
+     */
+    private Boolean           isDeleted;
+    /**
+     * 创建时间
+     */
+    private Timestamp         gmtCreate;
+    /**
+     * 修改时间
+     */
+    private Timestamp         gmtUpdate;
 
     /** default constructor */
     public SurveyQuestion() {
     }
 
     /** minimal constructor */
-    public SurveyQuestion(String title, String type, Integer sort, Boolean isAnswer) {
+    public SurveyQuestion(Long categoryId, String title, Short type, Integer sort,
+    Boolean isAnswer, Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate) {
+        this.categoryId = categoryId;
         this.title = title;
         this.type = type;
         this.sort = sort;
         this.isAnswer = isAnswer;
+        this.isDeleted = isDeleted;
+        this.gmtCreate = gmtCreate;
+        this.gmtUpdate = gmtUpdate;
     }
 
     /** full constructor */
-    public SurveyQuestion(String title, String type, Integer sort, String direction,
-    Boolean isAnswer) {
+    public SurveyQuestion(Long categoryId, String title, Short type, Integer sort,
+    String direction, Boolean isAnswer, Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate) {
+        this.categoryId = categoryId;
         this.title = title;
         this.type = type;
         this.sort = sort;
         this.direction = direction;
         this.isAnswer = isAnswer;
+        this.isDeleted = isDeleted;
+        this.gmtCreate = gmtCreate;
+        this.gmtUpdate = gmtUpdate;
     }
 
     // Property accessors
+    /**
+     * @return the id
+     */
     public Long getId() {
-        return this.id;
+        return id;
     }
 
+    /**
+     * @param id the id to set
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
-    public String getTitle() {
-        return this.title;
+    /**
+     * @return the categoryId
+     */
+    public Long getCategoryId() {
+        return categoryId;
     }
 
+    /**
+     * @param categoryId the categoryId to set
+     */
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    /**
+     * @return the title
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @param title the title to set
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getType() {
-        return this.type;
+    /**
+     * @return the type
+     */
+    public Short getType() {
+        return type;
     }
 
-    public void setType(String type) {
+    /**
+     * @param type the type to set
+     */
+    public void setType(Short type) {
         this.type = type;
     }
 
+    /**
+     * @return the sort
+     */
     public Integer getSort() {
-        return this.sort;
+        return sort;
     }
 
+    /**
+     * @param sort the sort to set
+     */
     public void setSort(Integer sort) {
         this.sort = sort;
     }
 
+    /**
+     * @return the direction
+     */
     public String getDirection() {
-        return this.direction;
+        return direction;
     }
 
+    /**
+     * @param direction the direction to set
+     */
     public void setDirection(String direction) {
         this.direction = direction;
     }
 
+    /**
+     * @return the isAnswer
+     */
     public Boolean getIsAnswer() {
-        return this.isAnswer;
+        return isAnswer;
     }
 
+    /**
+     * @param isAnswer the isAnswer to set
+     */
     public void setIsAnswer(Boolean isAnswer) {
         this.isAnswer = isAnswer;
+    }
+
+    /**
+     * @return the isDeleted
+     */
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    /**
+     * @param isDeleted the isDeleted to set
+     */
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    /**
+     * @return the gmtCreate
+     */
+    public Timestamp getGmtCreate() {
+        return gmtCreate;
+    }
+
+    /**
+     * @param gmtCreate the gmtCreate to set
+     */
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    /**
+     * @return the gmtUpdate
+     */
+    public Timestamp getGmtUpdate() {
+        return gmtUpdate;
+    }
+
+    /**
+     * @param gmtUpdate the gmtUpdate to set
+     */
+    public void setGmtUpdate(Timestamp gmtUpdate) {
+        this.gmtUpdate = gmtUpdate;
     }
 
 }

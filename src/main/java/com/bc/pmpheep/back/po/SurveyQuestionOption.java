@@ -19,27 +19,43 @@ import org.apache.ibatis.type.Alias;
  * @审核人 ：
  * </pre>
  */
-@Alias("SurveyOptions")
-public class SurveyOptions implements java.io.Serializable {
+@Alias("SurveyQuestionOption")
+public class SurveyQuestionOption implements java.io.Serializable {
 
     // Fields
 
     //
     private static final long serialVersionUID = 7331413291591376250L;
+    /**
+     * 主键
+     */
     private Long              id;
+    /**
+     * 问题表id
+     */
     private Long              questionId;
+    /**
+     * 选项内容
+     */
     private String            optionContent;
+    /**
+     * 是否有其他
+     */
     private Boolean           isOther;
+    /**
+     * 备注
+     */
     private String            remark;
 
     // Constructors
 
     /** default constructor */
-    public SurveyOptions() {
+    public SurveyQuestionOption() {
     }
 
     /** full constructor */
-    public SurveyOptions(Long questionId, String optionContent, Boolean isOther, String remark) {
+    public SurveyQuestionOption(Long questionId, String optionContent, Boolean isOther,
+    String remark) {
         this.questionId = questionId;
         this.optionContent = optionContent;
         this.isOther = isOther;
