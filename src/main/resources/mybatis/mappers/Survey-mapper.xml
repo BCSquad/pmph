@@ -38,12 +38,6 @@
 			<if test="isDeleted != null and isDeleted !=''">
 				is_deleted,
 			</if>
-			<if test="gmtCreate != null and gmtCreate !=''">
-				gmt_create,
-			</if>
-			<if test="gmtUpdate != null and gmtUpdate !=''">
-				gmt_update,
-			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -83,12 +77,6 @@
 			<if test="isDeleted != null and isDeleted !=''">
 				#{isDeleted},
 			</if>
-			<if test="gmtCreate != null and gmtCreate !=''">
-				#{gmtCreate},
-			</if>
-			<if test="gmtUpdate != null and gmtUpdate !=''">
-				#{gmtUpdate},
-			</if>
 		</trim>
 	</sql>
 	<!-- 新增一个Survey -->
@@ -104,10 +92,10 @@
 		<include refid="value" />
 		);
 	</insert>
-	<!-- 删除Survey通过主键id -->
-	<delete id="deleteSurveyById" parameterType="java.lang.Long">
-		delete from survey where id=#{id};
-	</delete>
+	<!-- 逻辑删除Survey通过主键id -->
+	<update id="deleteSurveyById" parameterType="java.lang.Long">
+		update survey set is_deleted = true where id=#{id};
+	</update>
 	<!-- 更新一个 SurveyQuestionnaire通过主键id -->
 	<update id="updateSurvey" parameterType="Survey">
 		update survey
@@ -144,12 +132,6 @@
 			</if>
 			<if test="isDeleted != null and isDeleted !=''">
 				is_deleted=#{isDeleted},
-			</if>
-			<if test="gmtCreate != null and gmtCreate !=''">
-				gmt_create=#{gmtCreate},
-			</if>
-			<if test="gmtUpdate != null and gmtUpdate !=''">
-				gmt_update=#{gmtUpdate},
 			</if>
 		</set>
 		where

@@ -56,10 +56,10 @@
 		<include refid="value" />
 		);
 	</insert>
-	<!-- 删除SurveyTemplate通过主键id -->
-	<delete id="deleteSurveyTemplateById" parameterType="java.lang.Long">
-		delete from survey_template where id=#{id};
-	</delete>
+	<!-- 逻辑删除SurveyTemplate通过主键id -->
+	<update id="deleteSurveyTemplateById" parameterType="java.lang.Long">
+		update survey_template set is_deleted = true where id=#{id};
+	</update>
 	<!-- 更新一个 SurveyTemplate通过主键id -->
 	<update id="updateSurveyTemplate" parameterType="SurveyTemplate">
 		update survey_template
@@ -88,4 +88,33 @@
 	resultType="SurveyTemplate">
 		select * from survey_template where id=#{id};
 	</select>
+	
+	<!-- 根据模版Id查询下面的所有问题 -->
+	<select id="getSurveyTemplateQuestionByTemplateId" parameterType="java.lang.Long" resultType="SurveyQuestionOptionCategoryVO">
+		SELECT 
+			sq.`id`,sq.`title`,
+			GROUP_CONCAT(sqo.`id`) optionIdString,
+			GROUP_CONCAT(sqo.`option_content`) optionContent
+		FROM 
+			`survey_template` st 
+		LEFT JOIN 
+			`survey_template_question` stq 
+		ON 
+			st.`id` = stq.`template_id`
+		LEFT JOIN 
+			`survey_question` sq 
+		ON 
+			sq.`id`= stq.`question_id`
+		LEFT JOIN 
+			`survey_question_option`sqo 
+		ON 
+			sqo.`question_id`= sq.`id`
+		WHERE 
+			st.`is_deleted` =FALSE
+			<if test="templateId != null">
+				AND 
+					st.`id`=#{templateId}
+			</if>
+	</select>
+	
 </mapper>

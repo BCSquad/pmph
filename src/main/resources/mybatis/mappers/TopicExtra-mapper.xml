@@ -2,4 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bc.pmpheep.back.dao.TopicExtraDao">
+
+	<!-- 根据选题申报查询额外信息 -->
+	<select id="getTopicExtraByTopicId" parameterType="java.lang.Long"
+		resultType="TopicExtra">
+		SELECT * FROM
+		topic_extra e WHERE e.topic_id = #{topicId};
+	</select>
+
 </mapper>

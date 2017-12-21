@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,13 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Topic;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
+import com.bc.pmpheep.back.vo.TopicTextVO;
+import com.bc.pmpheep.erp.db.SqlHelper;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -40,6 +44,10 @@ public class TopicServiceImpl implements TopicService {
 
 	@Autowired
 	TopicDao topicDao;
+	@Autowired
+	TopicExtraService topicExtraService;
+	@Autowired
+	TopicWriertService topicWriertService;
 
 	@Override
 	public PageResult<TopicOPtsManagerVO> listOpts(String sessionId, PageParameter<TopicOPtsManagerVO> pageParameter)
@@ -130,7 +138,120 @@ public class TopicServiceImpl implements TopicService {
 		if (topicDao.update(topic) > 0) {
 			result = "SUCCESS";
 		}
+		if (3 == topic.getAuthProgress()) {
+			// 审核通过可以将数据插入到erp的中间表去了
+			String remark = topic.getAuthFeedback();
+			TopicTextVO topicTextVO = getTopicTextVO(topic.getId());
+			String sql = "insert into i_declarestates (editionnum,rwusercode,rwusername,topicname,readerpeople,sources,fontcount,piccount,timetohand,subject,booktype,levels,depositbank,bankaccount,selectreason,publishingvalue,content,authorbuybooks,authorsponsor,originalname,originalauthor,originalnationality,originalpress,publishagerevision,topicnumber,auditstates,remark,creattime,states)";
+			sql += "values('','" + topicTextVO.getUsername() + "','" + topicTextVO.getRealname() + "','"
+					+ topicTextVO.getBookname() + "','" + topicTextVO.getReadType() + "','"
+					+ topicTextVO.getSourceType() + "','" + topicTextVO.getWordNumber() + "','"
+					+ topicTextVO.getPictureNumber() + "','"
+					+ DateUtil.formatTimeStamp("yyyy-MM-dd", topicTextVO.getDeadline()) + "','"
+					+ topicTextVO.getSubject() + "','" + topicTextVO.getTypeName() + "','" + topicTextVO.getRank()
+					+ "','" + topicTextVO.getBank() + "','" + topicTextVO.getAccount_number() + "','"
+					+ topicTextVO.getTopicExtra().getReason() + "','" + topicTextVO.getTopicExtra().getPrice() + "','"
+					+ topicTextVO.getTopicExtra().getScore() + "','" + topicTextVO.getPurchase() + "','"
+					+ topicTextVO.getSponsorship() + "','" + topicTextVO.getOriginalBookname() + "','"
+					+ topicTextVO.getOriginalAuthor() + "','" + topicTextVO.getNation() + "','','"
+					+ topicTextVO.getEdition() + "','','','" + remark + "',GETDATE(),1)";
+			SqlHelper.executeUpdate(sql, null);
+		}
 		return result;
+	}
+
+	@Override
+	public TopicTextVO getTopicTextVO(Long id) throws CheckedServiceException {
+		if (ObjectUtil.isNull(id)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"选题申报的id为空！");
+		}
+		TopicTextVO topicTextVO = topicDao.getTopicTextVO(id);
+		topicTextVO.setTopicExtra(topicExtraService.getTopicExtraByTopicId(id));
+		topicTextVO.setTopicWriters(topicWriertService.listTopicWriterByTopicId(id));
+		switch (topicTextVO.getRank()) {
+		case 0:
+			topicTextVO.setRankType("低");
+			break;
+		case 1:
+			topicTextVO.setRankType("中");
+			break;
+		case 2:
+			topicTextVO.setRankType("高");
+			break;
+
+		default:
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"没有这个级别");
+		}
+		switch (topicTextVO.getSource()) {
+		case 0:
+			topicTextVO.setSourceType("社策划");
+			break;
+		case 1:
+			topicTextVO.setSourceType("编辑策划");
+			break;
+
+		case 2:
+			topicTextVO.setSourceType("专家策划");
+			break;
+		case 3:
+			topicTextVO.setSourceType("离退休编审策划");
+			break;
+		case 4:
+			topicTextVO.setSourceType("上级交办");
+			break;
+		case 5:
+			topicTextVO.setSourceType("作者投稿");
+			break;
+
+		default:
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"没有这个选题来源");
+		}
+		switch (topicTextVO.getReader()) {
+		case 0:
+			topicTextVO.setReadType("医务工作者");
+			break;
+		case 1:
+			topicTextVO.setReadType("医学院校师生");
+			break;
+		case 2:
+			topicTextVO.setReadType("大众");
+			break;
+
+		default:
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"没有这个阅读人群");
+		}
+		switch (topicTextVO.getType()) {
+		case 0:
+			topicTextVO.setTypeName("专著");
+			break;
+		case 1:
+			topicTextVO.setTypeName("基础理论");
+			break;
+		case 2:
+			topicTextVO.setTypeName("论文集");
+			break;
+		case 3:
+			topicTextVO.setTypeName("科普");
+			break;
+		case 4:
+			topicTextVO.setTypeName("应用技术");
+			break;
+		case 5:
+			topicTextVO.setTypeName("工具书");
+			break;
+		case 6:
+			topicTextVO.setTypeName("其他");
+			break;
+
+		default:
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
+					"没有这个图书类别");
+		}
+		return topicTextVO;
 	}
 
 }

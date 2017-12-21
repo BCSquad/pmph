@@ -23,7 +23,7 @@ public interface SurveyDao {
     Integer addSurvey(Survey survey);
 
     /**
-     * 删除Survey通过主键id
+     * 逻辑删除Survey通过主键id
      * 
      * @author:tyc
      * @date:2017年12月20日下午16:55:35

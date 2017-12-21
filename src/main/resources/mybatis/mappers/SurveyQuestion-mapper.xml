@@ -29,12 +29,6 @@
 			<if test="isDeleted != null">
 				is_deleted,
 			</if>
-			<if test="gmtCreate != null and gmtCreate !=''">
-				gmt_create,
-			</if>
-			<if test="gmtUpdate != null and gmtUpdate !=''">
-				gmt_update,
-			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -65,12 +59,6 @@
 			<if test="isDeleted != null">
 				#{isDeleted},
 			</if>
-			<if test="gmtCreate != null and gmtCreate !=''">
-				#{gmtCreate},
-			</if>
-			<if test="gmtUpdate != null and gmtUpdate !=''">
-				#{gmtUpdate},
-			</if>
 		</trim>
 	</sql>
 	<!-- 新增一个SurveyQuestion -->
@@ -86,10 +74,10 @@
 		<include refid="value" />
 		);
 	</insert>
-	<!-- 删除SurveyQuestion 通过主键id -->
-	<delete id="deleteSurveyQuestionById" parameterType="java.lang.Long">
-		delete from survey_question where id=#{id};
-	</delete>
+	<!-- 逻辑删除SurveyQuestion通过主键id -->
+	<update id="deleteSurveyQuestionById" parameterType="java.lang.Long">
+		update survey_question set is_deleted = true where id=#{id};
+	</update>
 	<!-- 更新一个 SurveyQuestion通过主键id -->
 	<update id="updateSurveyQuestion" parameterType="SurveyQuestion">
 		update survey_question
@@ -118,12 +106,6 @@
 			<if test="isDeleted != null">
 				is_deleted=#{isDeleted},
 			</if>
-			<if test="gmtCreate != null and gmtCreate !=''">
-				gmt_create=#{gmtCreate},
-			</if>
-			<if test="gmtUpdate != null and gmtUpdate !=''">
-				gmt_update=#{gmtUpdate},
-			</if>
 		</set>
 		where
 		id=#{id};
@@ -131,6 +113,31 @@
 	<!-- 查找SurveyQuestion通过主键id -->
 	<select id="selectSurveyQuestionById" parameterType="java.lang.Long" resultType="SurveyQuestion">
 		select * from survey_question where id=#{id};
+	</select>
+	
+	<!-- 根据问题id/问题类型Id查询问题选项-->
+	<select id="getQuestionOptionByQuestionIdOrCategoryId" parameterType="java.util.Map" resultType="SurveyQuestionOptionCategoryVO">
+		SELECT 
+			sq.`id` questionId,
+			sq.`title`,
+			GROUP_CONCAT(sqo.`id`) optionIdString,
+			GROUP_CONCAT(sqo.`option_content`) optionContent 
+		FROM 
+			`survey_question` sq 
+		LEFT JOIN 
+			`survey_question_option` sqo 
+  		ON 
+  			sq.`id` = sqo.`question_id` 
+  		WHERE 
+  			sq.`is_deleted` = FALSE 
+  			<if test="questionId !=null ">
+				AND 
+					sq.`id` =#{questionId}
+			</if>
+			<if test="categoryId !=null ">
+				AND 
+					sq.`category_id` =#{categoryId}
+			</if>
 	</select>
 	
 </mapper>

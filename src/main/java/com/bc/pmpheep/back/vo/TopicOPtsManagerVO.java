@@ -53,6 +53,14 @@ public class TopicOPtsManagerVO implements Serializable {
 	 * 提交日期(前台到后台的日期)
 	 */
 	private Timestamp submitTime;
+	/**
+	 * 是否被主任退回
+	 */
+	private Boolean isRejectedByDirector;
+	/**
+	 * 退回原因
+	 */
+	private String reasonDirector;
 
 	public Long getId() {
 		return id;
@@ -108,6 +116,22 @@ public class TopicOPtsManagerVO implements Serializable {
 
 	public void setSubmitTime(Timestamp submitTime) {
 		this.submitTime = submitTime;
+	}
+
+	public Boolean getIsRejectedByDirector() {
+		return isRejectedByDirector;
+	}
+
+	public void setIsRejectedByDirector(Boolean isRejectedByDirector) {
+		this.isRejectedByDirector = isRejectedByDirector;
+	}
+
+	public String getReasonDirector() {
+		return reasonDirector;
+	}
+
+	public void setReasonDirector(String reasonDirector) {
+		this.reasonDirector = reasonDirector;
 	}
 
 }
