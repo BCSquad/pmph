@@ -77,6 +77,10 @@ public class TopicTextVO implements Serializable {
 	 */
 	private Integer rank;
 	/**
+	 * 级别
+	 */
+	private String rankType;
+	/**
 	 * 图书类别 0=专著/1=基础理论/2=论文集/3=科普/4=应用技术/5=工具书/6=其他
 	 */
 	private Integer type;
@@ -399,6 +403,14 @@ public class TopicTextVO implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getRankType() {
+		return rankType;
+	}
+
+	public void setRankType(String rankType) {
+		this.rankType = rankType;
 	}
 
 }

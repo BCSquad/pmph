@@ -241,7 +241,7 @@
 		LEFT JOIN
 		writer_bank_account a ON a.id = t.bank_account_id
 		LEFT JOIN writer_user
-		w ON a.user_id = w.id t.id = #{id};
+		w ON a.user_id = w.id WHERE t.id = #{id};
 	</select>
 
 </mapper>
