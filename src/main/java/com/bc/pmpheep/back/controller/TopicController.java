@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.controller;
 
+import java.sql.Timestamp;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.Topic;
 import com.bc.pmpheep.back.service.TopicService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
@@ -62,13 +65,36 @@ public class TopicController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "维护人员查询可操作的选题")
 	@RequestMapping(value = "/listOpts", method = RequestMethod.GET)
 	public ResponseBean listOpts(HttpServletRequest request, Integer pageSize, Integer pageNumber, String bookname,
-			String submitTime) {
+			Timestamp submitTime) {
 		PageParameter<TopicOPtsManagerVO> pageParameter = new PageParameter(pageNumber, pageSize);
 		TopicOPtsManagerVO topicOPtsManagerVO = new TopicOPtsManagerVO();
 		topicOPtsManagerVO.setBookname(bookname);
-		topicOPtsManagerVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		topicOPtsManagerVO.setSubmitTime(submitTime);
 		String sessionId = CookiesUtil.getSessionId(request);
 		pageParameter.setParameter(topicOPtsManagerVO);
 		return new ResponseBean(topicService.listOpts(sessionId, pageParameter));
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：运维人员分配选题申报给部门
+	 *
+	 * @param id
+	 *            选题id
+	 * @param departmentId
+	 *            部门id
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "运维人员分配选题给部门")
+	@RequestMapping(value = "/optsHandling", method = RequestMethod.PUT)
+	public ResponseBean optsHandling(Long id, Long departmentId) {
+		Topic topic = new Topic();
+		topic.setId(id);
+		topic.setDepartmentId(departmentId);
+		topic.setIsDirectorHandling(true);
+		return new ResponseBean(topicService.update(topic));
 	}
 }

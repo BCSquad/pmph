@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.po.Topic;
 import com.bc.pmpheep.back.vo.TopicDirectorVO;
 import com.bc.pmpheep.back.vo.TopicEditorVO;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
@@ -99,47 +100,63 @@ public interface TopicDao {
 	 *
 	 */
 	Integer listTotal(@Param("bookname") String bookname, @Param("submitTime") Timestamp submitTime);
-	
-    /**
-     * 
-     * Description:部门主任查看被运维人员分配的选题
-     * @author:lyc
-     * @date:2017年12月20日下午4:26:38
-     * @param 
-     * @return List<TopicDirectorVO>
-     */
-	List<TopicDirectorVO> listTopicDirectorVOs(@Param("departmentId") Long departmentId,@Param("bookName") String bookName,
-			@Param("submitTime") Timestamp submitTime,@Param("start") Integer start,@Param("pageSize") Integer pageSize);
-	
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：修改选题申报
+	 *
+	 * @param topic
+	 * @return
+	 *
+	 */
+	Integer update(Topic topic);
+
+	/**
+	 * 
+	 * Description:部门主任查看被运维人员分配的选题
+	 * 
+	 * @author:lyc
+	 * @date:2017年12月20日下午4:26:38
+	 * @param
+	 * @return List<TopicDirectorVO>
+	 */
+	List<TopicDirectorVO> listTopicDirectorVOs(@Param("departmentId") Long departmentId,
+			@Param("bookName") String bookName, @Param("submitTime") Timestamp submitTime,
+			@Param("start") Integer start, @Param("pageSize") Integer pageSize);
+
 	/**
 	 * 
 	 * Description:统计部门主任被分配的选题总数
+	 * 
 	 * @author:lyc
 	 * @date:2017年12月20日下午4:28:58
-	 * @param 
+	 * @param
 	 * @return Integer
 	 */
-	Integer totalTopicDirectorVOs(@Param("departmentId") Long departmentId,
-			@Param("bookName") String bookName,@Param("submitTime") Timestamp submitTime);
-	
+	Integer totalTopicDirectorVOs(@Param("departmentId") Long departmentId, @Param("bookName") String bookName,
+			@Param("submitTime") Timestamp submitTime);
+
 	/**
 	 * 
 	 * Description:部门编辑获取被分配的选题
+	 * 
 	 * @author:lyc
 	 * @date:2017年12月20日下午4:47:20
-	 * @param 
+	 * @param
 	 * @return List<TopicEditorVO>
 	 */
 	List<TopicEditorVO> listTopicEditorVOs(@Param("userId") Long userId, @Param("bookName") String bookName,
 			@Param("submitTime") Timestamp submitTime, @Param("start") Integer start,
 			@Param("pageSize") Integer pageSize);
-	
+
 	/**
 	 * 
 	 * Description:部门编辑获取被分配的选题的总数
+	 * 
 	 * @author:lyc
 	 * @date:2017年12月20日下午4:49:53
-	 * @param 
+	 * @param
 	 * @return Integer
 	 */
 	Integer totalTopicEditorVOs(@Param("userId") Long userId, @Param("bookName") String bookName,

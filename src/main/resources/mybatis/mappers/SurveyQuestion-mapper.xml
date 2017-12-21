@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.SurveyQuestionDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="title != null and title !=''">
+				title,
+			</if>
+			<if test="type != null and type !=''">
+				type,
+			</if>
+			<if test="sort != null">
+				sort,
+			</if>
+			<if test="direction != null and direction !=''">
+				direction,
+			</if>
+			<if test="isAnswer != null">
+				is_answer,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="title != null and title !=''">
+				#{title},
+			</if>
+			<if test="type != null and type !=''">
+				#{type},
+			</if>
+			<if test="sort != null">
+				#{sort},
+			</if>
+			<if test="direction != null and direction !=''">
+				#{direction},
+			</if>
+			<if test="isAnswer != null">
+				#{isAnswer},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增一个SurveyQuestion -->
+	<insert id="addSurveyQuestion" parameterType="SurveyQuestion">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into survey_question (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+	<!-- 删除SurveyQuestion 通过主键id -->
+	<delete id="deleteSurveyQuestionById" parameterType="java.lang.Long">
+		delete from survey_question where id=#{id};
+	</delete>
+	<!-- 更新一个 SurveyQuestion通过主键id -->
+	<update id="updateSurveyQuestion" parameterType="SurveyQuestion">
+		update survey_question
+		<set>
+			<if test="id != null">
+				id=#{id},
+			</if>
+			<if test="title != null and title !=''">
+				title=#{title},
+			</if>
+			<if test="type != null and type !=''">
+				type=#{type},
+			</if>
+			<if test="sort != null">
+				sort=#{sort},
+			</if>
+			<if test="direction != null and direction !=''">
+				direction=#{direction},
+			</if>
+			<if test="isAnswer != null">
+				is_answer=#{isAnswer},
+			</if>
+		</set>
+		where
+		id=#{id};
+	</update>
+	<!-- 查找SurveyQuestion通过主键id -->
+	<select id="selectSurveyQuestionById" parameterType="java.lang.Long" resultType="SurveyQuestion">
+		select * from survey_question where id=#{id};
+	</select>
+	
+</mapper>

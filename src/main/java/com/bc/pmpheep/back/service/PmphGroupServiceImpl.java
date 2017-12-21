@@ -53,6 +53,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	private PmphGroupFileService pmphGroupFileService;
 	@Autowired
 	private TextbookService textbookService;
+
 	/**
 	 *
 	 * @param pmphGroup
@@ -297,7 +298,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		Textbook textbook =textbookService.getTextbookById(textbookId);
+		Textbook textbook = textbookService.getTextbookById(textbookId);
 		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		PmphGroup pmphGroup = new PmphGroup();
 		// 查询小组名称是否已存在 不存在直接用书名
@@ -325,5 +326,26 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 					"添加小组和成员失败");
 		}
 		return pmphGroup;
+	}
+
+	@Override
+	public List<PmphGroupListVO> listPmphGroupFile(PmphGroup pmphGroup, String sessionId)
+			throws CheckedServiceException {
+		if (null == pmphGroup) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"参数对象为空");
+		}
+		// session PmphUser用户验证
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
+		}
+		List<PmphGroupListVO> list = new ArrayList<>();
+		list = pmphGroupDao.getList(pmphGroup, pmphUser.getId());
+		for (PmphGroupListVO pmphGroupListVO : list) {
+			pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
+		}
+		return list;
 	}
 }

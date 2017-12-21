@@ -4,7 +4,6 @@
 package com.bc.pmpheep.back.service.test;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,6 @@ import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -101,6 +99,13 @@ public class DeclarationServiceTest extends BaseTest {
 		list = declarationService.getDeclarationByMaterialId(2L);
 		Assert.assertTrue("获取作家申报表信息集合失败", list.size() > 1);
 	}
+        
+        @Test
+        public void getDeclarationByMaterialIdAndUserId() {
+            add();
+            Declaration declaration = declarationService.getDeclarationByMaterialIdAndUserId(2L, 1L);
+            Assert.assertNotNull("获取作家申报表信息失败", declaration);
+        }
 	
 	private Declaration add(){
 		Declaration declaration = new Declaration();

@@ -46,6 +46,10 @@ public class TopicOPtsManagerVO implements Serializable {
 	 */
 	private Integer type;
 	/**
+	 * 图书类别
+	 */
+	private String typeName;
+	/**
 	 * 提交日期(前台到后台的日期)
 	 */
 	private Timestamp submitTime;
@@ -88,6 +92,14 @@ public class TopicOPtsManagerVO implements Serializable {
 
 	public void setType(Integer type) {
 		this.type = type;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
 
 	public Timestamp getSubmitTime() {

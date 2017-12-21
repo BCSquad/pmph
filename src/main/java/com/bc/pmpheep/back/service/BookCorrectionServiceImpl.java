@@ -44,7 +44,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "主键为空");
 		}
 		BookCorrection bookCorrection= this.getBookCorrectionById(id);
-		if(bookCorrection.getIsAuthorReplied() ){
+		if(!bookCorrection.getIsAuthorReplied() ){
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "请先主编审核");
 		}
 		bookCorrection.setIsEditorHandling(true);
@@ -66,10 +66,10 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "回复内容超过最长限制500");
 		}
 		BookCorrection bookCorrection= this.getBookCorrectionById(id);
-		if(bookCorrection.getIsAuthorReplied() ){
+		if(!bookCorrection.getIsAuthorReplied() ){
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "请先主编审核");
 		}
-		if(bookCorrection.getIsEditorHandling() ){
+		if(!bookCorrection.getIsEditorHandling() ){
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "策划编辑未受理");
 		}
 		bookCorrection = new BookCorrection();
