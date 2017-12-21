@@ -116,4 +116,9 @@
 	<delete id="deleteCmsAdvertisementById" parameterType="Long">
 		delete from cms_advertisement where id=#{id}
 	</delete>
+	
+	<!-- 根据id批量修改图片-->
+	<update id="deleteCmsAdvertisementByImage" parameterType="Long">
+		update cms_advertisement set image='-' where id=#{id}
+	</update>
 </mapper>
