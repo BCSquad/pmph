@@ -56,10 +56,10 @@
 		<include refid="value" />
 		);
 	</insert>
-	<!-- 删除SurveyTemplate通过主键id -->
-	<delete id="deleteSurveyTemplateById" parameterType="java.lang.Long">
-		delete from survey_template where id=#{id};
-	</delete>
+	<!-- 逻辑删除SurveyTemplate通过主键id -->
+	<update id="deleteSurveyTemplateById" parameterType="java.lang.Long">
+		update survey_template set is_deleted = true where id=#{id};
+	</update>
 	<!-- 更新一个 SurveyTemplate通过主键id -->
 	<update id="updateSurveyTemplate" parameterType="SurveyTemplate">
 		update survey_template

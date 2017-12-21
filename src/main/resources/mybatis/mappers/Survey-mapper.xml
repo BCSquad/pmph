@@ -104,10 +104,10 @@
 		<include refid="value" />
 		);
 	</insert>
-	<!-- 删除Survey通过主键id -->
-	<delete id="deleteSurveyById" parameterType="java.lang.Long">
-		delete from survey where id=#{id};
-	</delete>
+	<!-- 逻辑删除Survey通过主键id -->
+	<update id="deleteSurveyById" parameterType="java.lang.Long">
+		update survey set is_deleted = true where id=#{id};
+	</update>
 	<!-- 更新一个 SurveyQuestionnaire通过主键id -->
 	<update id="updateSurvey" parameterType="Survey">
 		update survey

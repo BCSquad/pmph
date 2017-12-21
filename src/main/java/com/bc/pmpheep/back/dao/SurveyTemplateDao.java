@@ -23,7 +23,7 @@ public interface SurveyTemplateDao {
     Integer addSurveyTemplate(SurveyTemplate surveyTemplate);
 
     /**
-     * 删除SurveyTemplate通过主键id
+     * 逻辑删除SurveyTemplate通过主键id
      * 
      * @author:tyc
      * @date:2017年12月20日下午17:03:01
