@@ -17,7 +17,7 @@
 			<if test="orgId != null">
 				org_id,
 			</if>
-			<if test="gmtCreate != null">
+			<if test="gmtCreate != null and gmtCreate != ''">
 				gmt_create,
 			</if>
 		</trim>
@@ -38,13 +38,13 @@
 			<if test="orgId != null">
 				#{orgId},
 			</if>
-			<if test="gmtCreate != null">
+			<if test="gmtCreate != null and gmtCreate != ''">
 				#{gmtCreate},
 			</if>
 		</trim>
 	</sql>
 	<!-- 新增一个SurveySurveyTarget -->
-	<insert id="addSurveyTarget" parameterType="SurveySurveyTarget">
+	<insert id="addSurveyTarget" parameterType="SurveyTarget">
 		<selectKey resultType="java.lang.Long" order="AFTER"
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
@@ -76,7 +76,7 @@
 			<if test="orgId != null">
 				org_id=#{orgId},
 			</if>
-			<if test="gmtCreate != null">
+			<if test="gmtCreate != null and gmtCreate != ''">
 				gmt_create=#{gmtCreate},
 			</if>
 		</set>
