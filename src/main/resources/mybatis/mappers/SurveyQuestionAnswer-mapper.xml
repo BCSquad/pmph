@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bc.pmpheep.back.dao.SurveyAnswerDao">
+<mapper namespace="com.bc.pmpheep.back.dao.SurveyQuestionAnswerDao">
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
@@ -55,8 +55,8 @@
 			</if>
 		</trim>
 	</sql>
-	<!-- 新增一个SurveyAnswer -->
-	<insert id="addSurveyAnswer" parameterType="SurveyAnswer">
+	<!-- 新增一个SurveyQuestionAnswer -->
+	<insert id="addSurveyQuestionAnswer" parameterType="SurveyQuestionAnswer">
 		<selectKey resultType="java.lang.Long" order="AFTER"
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
@@ -68,12 +68,12 @@
 		<include refid="value" />
 		);
 	</insert>
-	<!-- 删除SurveyAnswer通过主键id -->
-	<delete id="deleteSurveyAnswerById" parameterType="java.lang.Long">
+	<!-- 删除SurveyQuestionAnswer通过主键id -->
+	<delete id="deleteSurveyQuestionAnswerById" parameterType="java.lang.Long">
 		delete from survey_answer where id=#{id};
 	</delete>
-	<!-- 更新一个 SurveyAnswer通过主键id -->
-	<update id="updateSurveyAnswer" parameterType="SurveyAnswer">
+	<!-- 更新一个 SurveyQuestionAnswer通过主键id -->
+	<update id="updateSurveyQuestionAnswer" parameterType="SurveyQuestionAnswer">
 		update survey_answer
 		<set>
 			<if test="id != null">
@@ -101,8 +101,8 @@
 		where
 		id=#{id};
 	</update>
-	<!-- 查找SurveyAnswer通过主键id -->
-	<select id="selectSurveyAnswerById" parameterType="java.lang.Long" resultType="SurveyAnswer">
+	<!-- 查找SurveyQuestionAnswer通过主键id -->
+	<select id="selectSurveyQuestionAnswerById" parameterType="java.lang.Long" resultType="SurveyQuestionAnswer">
 		select * from survey_answer where id=#{id};
 	</select>
 	

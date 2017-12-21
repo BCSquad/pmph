@@ -396,7 +396,7 @@ public class FileDownLoadController {
         }
         zipDownload.setState(true);
         map.put(id, zipDownload);
-        return "SUCCESS";
+        return "/zip/download?"+id;
     }
 
     /**
