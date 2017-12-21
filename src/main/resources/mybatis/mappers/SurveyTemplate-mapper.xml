@@ -14,6 +14,12 @@
 			<if test="sort != null">
 				sort,
 			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="isDeleted != null">
+				is_deleted,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -28,6 +34,12 @@
 			</if>
 			<if test="sort != null">
 				#{sort},
+			</if>
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted},
 			</if>
 		</trim>
 	</sql>
@@ -60,6 +72,12 @@
 			</if>
 			<if test="sort != null">
 				sort=#{sort},
+			</if>
+			<if test="userId != null">
+				user_id=#{userId},
+			</if>
+			<if test="isDeleted != null">
+				is_deleted=#{isDeleted},
 			</if>
 		</set>
 		where
