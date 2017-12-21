@@ -45,6 +45,10 @@ public class TopicTextVO implements Serializable {
 	 */
 	private Integer reader;
 	/**
+	 * 读者对象
+	 */
+	private String readType;
+	/**
 	 * 预计交稿时间
 	 */
 	private Timestamp deadline;
@@ -52,6 +56,10 @@ public class TopicTextVO implements Serializable {
 	 * 选题来源 0=社策划/1=编辑策划/2=专家策划/3=离退休编审策划/4=上级交办/5=作者投稿
 	 */
 	private Integer source;
+	/**
+	 * 选题来源
+	 */
+	private String sourceType;
 	/**
 	 * 估计字数（千字）
 	 */
@@ -73,9 +81,21 @@ public class TopicTextVO implements Serializable {
 	 */
 	private Integer type;
 	/**
-	 * 银行账户
+	 * 图书类别
+	 */
+	private String typeName;
+	/**
+	 * 银行账户id
 	 */
 	private Long bankAccountId;
+	/**
+	 * 开户行
+	 */
+	private String bank;
+	/**
+	 * 银行帐号
+	 */
+	private String account_number;
 	/**
 	 * 作者购书
 	 */
@@ -108,6 +128,30 @@ public class TopicTextVO implements Serializable {
 	 * 选题申报编者情况
 	 */
 	private List<TopicWriter> topicWriters;
+	/**
+	 * 编辑id
+	 */
+	private Long editorId;
+	/**
+	 * 编辑真实姓名
+	 */
+	private String realname;
+	/**
+	 * 编辑用户名
+	 */
+	private String username;
+	/**
+	 * 是否由主任受理
+	 */
+	private Boolean isDirectorHandling;
+	/**
+	 * 是否由编辑受理
+	 */
+	private Boolean isEditorHandling;
+	/**
+	 * 编辑是否接受办理
+	 */
+	private Boolean isAccepted;
 
 	public Long getId() {
 		return id;
@@ -159,6 +203,22 @@ public class TopicTextVO implements Serializable {
 
 	public Integer getWordNumber() {
 		return wordNumber;
+	}
+
+	public String getBank() {
+		return bank;
+	}
+
+	public void setBank(String bank) {
+		this.bank = bank;
+	}
+
+	public String getAccount_number() {
+		return account_number;
+	}
+
+	public void setAccount_number(String account_number) {
+		this.account_number = account_number;
 	}
 
 	public void setWordNumber(Integer wordNumber) {
@@ -267,6 +327,78 @@ public class TopicTextVO implements Serializable {
 
 	public void setTopicWriters(List<TopicWriter> topicWriters) {
 		this.topicWriters = topicWriters;
+	}
+
+	public String getReadType() {
+		return readType;
+	}
+
+	public void setReadType(String readType) {
+		this.readType = readType;
+	}
+
+	public String getSourceType() {
+		return sourceType;
+	}
+
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
+	public Long getEditorId() {
+		return editorId;
+	}
+
+	public void setEditorId(Long editorId) {
+		this.editorId = editorId;
+	}
+
+	public String getRealname() {
+		return realname;
+	}
+
+	public void setRealname(String realname) {
+		this.realname = realname;
+	}
+
+	public Boolean getIsDirectorHandling() {
+		return isDirectorHandling;
+	}
+
+	public void setIsDirectorHandling(Boolean isDirectorHandling) {
+		this.isDirectorHandling = isDirectorHandling;
+	}
+
+	public Boolean getIsEditorHandling() {
+		return isEditorHandling;
+	}
+
+	public void setIsEditorHandling(Boolean isEditorHandling) {
+		this.isEditorHandling = isEditorHandling;
+	}
+
+	public Boolean getIsAccepted() {
+		return isAccepted;
+	}
+
+	public void setIsAccepted(Boolean isAccepted) {
+		this.isAccepted = isAccepted;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 }

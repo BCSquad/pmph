@@ -10,6 +10,7 @@ import com.bc.pmpheep.back.po.Topic;
 import com.bc.pmpheep.back.vo.TopicDirectorVO;
 import com.bc.pmpheep.back.vo.TopicEditorVO;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
+import com.bc.pmpheep.back.vo.TopicTextVO;
 
 /**
  * 
@@ -161,4 +162,15 @@ public interface TopicDao {
 	 */
 	Integer totalTopicEditorVOs(@Param("userId") Long userId, @Param("bookName") String bookName,
 			@Param("submitTime") Timestamp submitTime);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取选题申报详情
+	 *
+	 * @param id
+	 * @return
+	 *
+	 */
+	TopicTextVO getTopicTextVO(Long id);
 }

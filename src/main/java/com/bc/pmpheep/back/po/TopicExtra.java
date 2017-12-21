@@ -42,18 +42,18 @@ public class TopicExtra implements Serializable {
 	/**
 	 * 主要内容
 	 */
-	private String sorce;
+	private String score;
 
 	public TopicExtra() {
 		super();
 	}
 
-	public TopicExtra(Long topicId, String reason, String price, String sorce) {
+	public TopicExtra(Long topicId, String reason, String price, String score) {
 		super();
 		this.topicId = topicId;
 		this.reason = reason;
 		this.price = price;
-		this.sorce = sorce;
+		this.score = score;
 	}
 
 	public Long getId() {
@@ -88,12 +88,12 @@ public class TopicExtra implements Serializable {
 		this.price = price;
 	}
 
-	public String getSorce() {
-		return sorce;
+	public String getScore() {
+		return score;
 	}
 
-	public void setSorce(String sorce) {
-		this.sorce = sorce;
+	public void setScore(String score) {
+		this.score = score;
 	}
 
 }

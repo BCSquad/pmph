@@ -38,6 +38,7 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  */
 @Controller
 @RequestMapping(value = "/topic")
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class TopicController {
 	@Autowired
 	TopicService topicService;
@@ -89,12 +90,100 @@ public class TopicController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "运维人员分配选题给部门")
-	@RequestMapping(value = "/optsHandling", method = RequestMethod.PUT)
+	@RequestMapping(value = "/put/optsHandling", method = RequestMethod.PUT)
 	public ResponseBean optsHandling(Long id, Long departmentId) {
 		Topic topic = new Topic();
 		topic.setId(id);
 		topic.setDepartmentId(departmentId);
 		topic.setIsDirectorHandling(true);
 		return new ResponseBean(topicService.update(topic));
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：主任操作选题流程
+	 *
+	 * @param id
+	 *            选题申报id
+	 * @param editorId
+	 *            部门编辑id
+	 * @param isRejectedByDirector
+	 *            主任是否退回
+	 * @param reasonDirector
+	 *            退回原因
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "主任分配选题给部门编辑")
+	@RequestMapping(value = "/put/directorHandling", method = RequestMethod.PUT)
+	public ResponseBean directorHandling(Long id, Long editorId, Boolean isRejectedByDirector, String reasonDirector) {
+		Topic topic = new Topic();
+		topic.setId(id);
+		topic.setIsRejectedByDirector(isRejectedByDirector);
+		if (isRejectedByDirector) {
+			topic.setIsDirectorHandling(false);
+			topic.setReasonDirector(reasonDirector);
+		} else {
+			topic.setEditorId(editorId);
+			topic.setIsEditorHandling(true);
+		}
+		return new ResponseBean(topicService.update(topic));
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：编辑操作选题申报
+	 *
+	 * @param id
+	 *            选题申报id
+	 * @param authProgress
+	 *            审核进度
+	 * @param authFeedback
+	 *            审核意见
+	 * @param authDate
+	 *            审核时间
+	 * @param isRejectedByEditor
+	 *            是否退回上级
+	 * @param reasonEditor
+	 *            退回原因
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "编辑对选题进行操作")
+	@RequestMapping(value = "/put/editorHandling", method = RequestMethod.PUT)
+	public ResponseBean editorHandling(Long id, Integer authProgress, String authFeedback, Boolean isRejectedByEditor,
+			String reasonEditor) {
+		Topic topic = new Topic();
+		topic.setId(id);
+		topic.setIsRejectedByEditor(isRejectedByEditor);
+		if (isRejectedByEditor) {
+			topic.setIsDirectorHandling(false);
+			topic.setReasonEditor(reasonEditor);
+		} else {
+			topic.setAuthDate(DateUtil.getCurrentTime());
+			topic.setAuthFeedback(authFeedback);
+			topic.setAuthProgress(authProgress);
+		}
+		return new ResponseBean(topicService.update(topic));
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取选题申报详情
+	 *
+	 * @param id
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取选题申报详情")
+	@RequestMapping(value = "/get/topicText", method = RequestMethod.GET)
+	public ResponseBean topicText(Long id) {
+		return new ResponseBean(topicService.getTopicTextVO(id));
 	}
 }

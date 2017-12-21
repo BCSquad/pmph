@@ -1,6 +1,10 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
+
+import com.bc.pmpheep.back.po.TopicWriter;
 
 /**
  * 
@@ -21,5 +25,14 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TopicWriterDao {
-
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据选题申报id获取编者情况
+	 *
+	 * @param topicId
+	 * @return
+	 *
+	 */
+	List<TopicWriter> listTopicWriterByTopicId(Long topicId);
 }
