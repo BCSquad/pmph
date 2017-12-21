@@ -29,12 +29,6 @@
 			<if test="isDeleted != null">
 				is_deleted,
 			</if>
-			<if test="gmtCreate != null and gmtCreate !=''">
-				gmt_create,
-			</if>
-			<if test="gmtUpdate != null and gmtUpdate !=''">
-				gmt_update,
-			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -64,12 +58,6 @@
 			</if>
 			<if test="isDeleted != null">
 				#{isDeleted},
-			</if>
-			<if test="gmtCreate != null and gmtCreate !=''">
-				#{gmtCreate},
-			</if>
-			<if test="gmtUpdate != null and gmtUpdate !=''">
-				#{gmtUpdate},
 			</if>
 		</trim>
 	</sql>
@@ -117,12 +105,6 @@
 			</if>
 			<if test="isDeleted != null">
 				is_deleted=#{isDeleted},
-			</if>
-			<if test="gmtCreate != null and gmtCreate !=''">
-				gmt_create=#{gmtCreate},
-			</if>
-			<if test="gmtUpdate != null and gmtUpdate !=''">
-				gmt_update=#{gmtUpdate},
 			</if>
 		</set>
 		where

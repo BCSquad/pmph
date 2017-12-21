@@ -23,9 +23,6 @@
 			<if test="attachment != null and attachment !=''">
 				attachment,
 			</if>
-			<if test="gmtCreate != null and gmtCreate !=''">
-				gmt_create,
-			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -49,9 +46,6 @@
 			</if>
 			<if test="attachment != null and attachment !=''">
 				#{attachment},
-			</if>
-			<if test="gmtCreate != null and gmtCreate !=''">
-				#{gmtCreate},
 			</if>
 		</trim>
 	</sql>
@@ -93,9 +87,6 @@
 			</if>
 			<if test="attachment != null and attachment !=''">
 				attachment=#{attachment},
-			</if>
-			<if test="gmtCreate != null and gmtCreate !=''">
-				gmt_create=#{gmtCreate},
 			</if>
 		</set>
 		where
