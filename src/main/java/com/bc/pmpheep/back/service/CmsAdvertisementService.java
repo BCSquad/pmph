@@ -71,4 +71,12 @@ public interface CmsAdvertisementService {
 	 * @throws CheckedServiceException
 	 */
 	CmsAdvertisement getCmsAdvertisementById(Long id) throws CheckedServiceException;
+	/**
+	 * 批量删除图片
+	 * @param ids
+	 * @param session
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	Integer deleteCmsAdvertisementByImage(Long id,String sessionId)throws CheckedServiceException;
 }

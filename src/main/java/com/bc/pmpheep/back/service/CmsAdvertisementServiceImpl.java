@@ -155,4 +155,22 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		return cmsAdvertisement;
 	}
 
+	@Override
+	public Integer deleteCmsAdvertisementByImage(Long id, String sessionId) throws CheckedServiceException {
+		Integer count=0;
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
+		}
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		CmsAdvertisement cmsAdvertisement=this.getCmsAdvertisementById(id);
+		// 移除广告图片
+		fileService.remove(cmsAdvertisement.getImage());
+		count=cmsAdvertisementDao.deleteCmsAdvertisementByImage(id);
+		return count;
+	}
+
 }

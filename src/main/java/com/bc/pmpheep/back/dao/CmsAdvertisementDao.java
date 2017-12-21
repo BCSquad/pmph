@@ -53,5 +53,11 @@ public interface CmsAdvertisementDao {
 	 * @return
 	 */
 	CmsAdvertisement getCmsAdvertisementById(@Param("id") Long id);
+	/**
+	 * 批量删除图片
+	 * @param id
+	 * @return
+	 */
+	Integer deleteCmsAdvertisementByImage(Long id);
 	
 }

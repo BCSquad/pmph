@@ -223,10 +223,9 @@ public class MigrationStageTwo {
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
             Long userId = (Long) map.get("user_new_pk");
-            if (userId == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户为社内用户。"));
+            if (ObjectUtil.isNull(userId) || userId == 0) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户不存在或为社内用户。"));
                 excel.add(map);
-                logger.error("用户为社内用户，此结果将被记录在Excel中");
                 continue;
             }
             Long orgId = (Long) map.get("org_new_pk");
@@ -234,7 +233,6 @@ public class MigrationStageTwo {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("为空则用户没有和机构关联，为0则可能因为"
                         + "机构重名查询不到。"));
                 excel.add(map);
-                logger.error("未和用户关联，或因机构重名查询不到，此结果将被记录在Excel中");
                 continue;
             }
             String handphone = (String) map.get("handset");
