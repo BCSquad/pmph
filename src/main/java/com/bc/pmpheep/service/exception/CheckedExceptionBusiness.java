@@ -72,4 +72,6 @@ public class CheckedExceptionBusiness {
 	public final static String EXCEL = "Excel文件";
 
 	public final static String BOOK_CORRECTION = "教材纠错";
+	
+	public final static String QUESTIONNAIRE_SURVEY = "问卷调查";
 }
