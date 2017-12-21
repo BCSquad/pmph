@@ -6,50 +6,50 @@ import java.sql.Timestamp;
 import org.apache.ibatis.type.Alias;
 
 /**
- *@author MrYang 
- *@CreateDate 2017年12月19日 下午4:50:46
+ * @author MrYang
+ * @CreateDate 2017年12月19日 下午4:50:46
  *
  **/
 @SuppressWarnings("serial")
 @Alias("CmsAdvertisement")
 public class CmsAdvertisement implements Serializable {
 	/**
-     * 主键
-     */
-    private Long    id;
-    /**
-     * 广告名
-     */
-    private String  adname ;
-    /**
-     * 图片id
-     */
-    private String  image ;
-    /**
-     * 链接地址
-     */
-    private String  url ;
-    /**
-     * 是否禁用
-     */
-    private Boolean isDisabled ;
-    /**
-     * 显示顺序
-     */
-    private Integer sort ;
-    /**
-     * 备注
-     */
-    private String  note ;
-    /**
-     * 创建时间
-     */
-    private Timestamp gmtCreate;
-    /**
-     * 修改时间
-     */
-    private Timestamp gmtUpdate;
-    
+	 * 主键
+	 */
+	private Long id;
+	/**
+	 * 广告名
+	 */
+	private String adname;
+	/**
+	 * 图片id
+	 */
+	private String image;
+	/**
+	 * 链接地址
+	 */
+	private String url;
+	/**
+	 * 是否禁用
+	 */
+	private Boolean isDisabled;
+	/**
+	 * 显示顺序
+	 */
+	private Integer sort;
+	/**
+	 * 备注
+	 */
+	private String note;
+	/**
+	 * 创建时间
+	 */
+	private Timestamp gmtCreate;
+	/**
+	 * 修改时间
+	 */
+	private Timestamp gmtUpdate;
+
 	public CmsAdvertisement() {
 		super();
 	}
@@ -128,13 +128,21 @@ public class CmsAdvertisement implements Serializable {
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ", adname:" + adname + ", image:" + image
-				+ ", url:" + url + ", isDisabled:" + isDisabled + ", sort:"
-				+ sort + ", note:" + note + ", gmtCreate:" + gmtCreate
-				+ ", gmtUpdate:" + gmtUpdate + "}";
+		return "{id:" + id + ", adname:" + adname + ", image:" + image + ", url:" + url + ", isDisabled:" + isDisabled
+				+ ", sort:" + sort + ", note:" + note + ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate + "}";
 	}
-    
-    
-    
+
+	public CmsAdvertisement(Long id, String adname, String image, String url, Boolean isDisabled, Integer sort,
+			String note, Timestamp gmtCreate, Timestamp gmtUpdate) {
+		this.id = id;
+		this.adname = adname;
+		this.image = image;
+		this.url = url;
+		this.isDisabled = isDisabled;
+		this.sort = sort;
+		this.note = note;
+		this.gmtCreate = gmtCreate;
+		this.gmtUpdate = gmtUpdate;
+	}
 
 }
