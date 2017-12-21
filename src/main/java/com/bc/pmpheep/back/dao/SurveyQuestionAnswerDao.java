@@ -30,7 +30,7 @@ public interface SurveyQuestionAnswerDao {
      * @param SurveyQuestionAnswer
      * @return 影响行数
      */
-    Integer deleteSurveyAnswerById(Long id);
+    Integer deleteSurveyQuestionAnswerById(Long id);
 
     /**
      * 更新一个 SurveyQuestionAnswer通过主键id
