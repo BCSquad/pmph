@@ -385,6 +385,7 @@ public class FileDownLoadController {
                 list.clear();
             }
         } catch (Exception e) {
+        	e.printStackTrace();
             return e.getMessage();
         }
         map.put(id, zipDownload);

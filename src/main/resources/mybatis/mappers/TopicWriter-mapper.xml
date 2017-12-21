@@ -2,4 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bc.pmpheep.back.dao.TopicWriterDao">
+	<select id="listTopicWriterByTopicId" parameterType="java.lang.Long"
+		resultType="TopicWriter">
+		SELECT * FROM topic_writer w WHERE w.topic_id = #{topicId};
+	</select>
 </mapper>

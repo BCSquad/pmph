@@ -231,4 +231,17 @@
 		WHERE id = #{id};
 	</update>
 
+	<select id="getTopicTextVO" parameterType="java.lang.Long"
+		resultType="TopicTextVO">
+		SELECT
+		t.*, u.realname,u.username,a.bank,a.account_number
+		FROM
+		topic t
+		LEFT JOIN pmph_user u ON u.id = t.editor_id
+		LEFT JOIN
+		writer_bank_account a ON a.id = t.bank_account_id
+		LEFT JOIN writer_user
+		w ON a.user_id = w.id t.id = #{id};
+	</select>
+
 </mapper>
