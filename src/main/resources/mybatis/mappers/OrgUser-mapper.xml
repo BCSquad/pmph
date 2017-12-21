@@ -281,8 +281,8 @@
 		from
 			org_user
 		where
-			is_disabled =0
-		and
+			<!-- is_disabled =0
+		and -->
 			is_deleted =0
 		and
 			org_id

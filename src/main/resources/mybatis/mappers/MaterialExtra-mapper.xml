@@ -122,9 +122,13 @@
 					`material` m 
 				WHERE 
 					m.`is_published` = TRUE
+				AND 
+					m.`is_deleted`=FALSE
 			)t
 		WHERE 
 			m.`is_published` = TRUE
+		AND 
+			m.`is_deleted`=FALSE
 		GROUP BY 
 			m.`id`
 		ORDER BY 

@@ -122,6 +122,9 @@
 	<update id="updateBookCorrection" parameterType="BookCorrection">
 		update book_correction
 		<set>
+			<if test="id != null "> <!-- set id=#{id} 为了保证不出现语法错误 -->
+				id = #{id},
+			</if>
 			<if test="bookId != null ">
 				book_id = #{bookId},
 			</if>
@@ -174,6 +177,139 @@
 	<!-- 根据主键获取BookCorrection -->
 	<select id="getBookCorrectionById" parameterType="java.lang.Long" resultType="BookCorrection">
 		select * from book_correction where id=#{id} ;
+	</select>
+	
+	<!-- 获取审核纠错页面的数据总数 -->
+	<select id="listBookCorrectionAuditTotal"  resultType="java.lang.Integer">
+		select 
+			count(a.id) 
+		from 
+			book_correction a
+		LEFT JOIN 
+			book b on  b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = a.book_id
+		LEFT JOIN 
+			writer_user d on d.id    = a.user_id
+		where 
+			b.id is not null and c.id is not null and !a.is_deleted 
+		<if test="editorId != null">
+			and c.editor_id  = #{editorId}
+		</if>
+		<if test="bookname != null and bookname != '' ">
+			and b.bookname like CONCAT('%',#{bookname},'%')
+		</if>
+		<if test="result   != null  ">
+			<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来  -->
+			and ((is_editor_replied and a.result  = #{result} ) or (!is_editor_replied))  
+		</if>
+	</select>
+	
+	<!-- 获取审核纠错页面的分页数据-->
+	<select id="listBookCorrectionAudit"  resultType="BookCorrectionAuditVO">
+		select 
+			a.id,
+			b.bookname,
+			a.page,
+			a.line ,
+			a.content ,
+			a.attachment,
+			a.attachment_name,
+			d.realname,
+			a.gmt_create ,
+			a.author_reply ,
+			a.is_editor_handling ,
+			a.is_editor_replied ,
+			a.editor_reply,
+			a.result  
+		from 
+			book_correction a
+		LEFT JOIN 
+			book b on  b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = a.book_id
+		LEFT JOIN 
+			writer_user d on d.id    = a.user_id
+		where 
+			b.id is not null and c.id is not null and !a.is_deleted 
+		<if test="editorId != null">
+			and c.editor_id  = #{editorId}
+		</if>
+		<if test="bookname != null and bookname != '' ">
+			and b.bookname like CONCAT('%',#{bookname},'%')
+		</if>
+		<if test="result   != null  ">
+			<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来  -->
+			and ((is_editor_replied and a.result  = #{result} ) or (!is_editor_replied))  
+		</if>
+		ORDER BY 
+			a.gmt_update desc 
+		limit #{start} ,#{pageSize}
+	</select>
+	
+	<!-- 获取审核纠错跟踪页面的数据总数  -->
+	<select id="listBookCorrectionTrackTotal"  resultType="java.lang.Integer">
+		SELECT 
+			count(a.id)
+		FROM  
+			book_correction a
+		LEFT JOIN 
+			book b on b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = b.id
+		LEFT JOIN 
+			pmph_user d on d.id = c.editor_id
+		LEFT JOIN 
+			pmph_department e on e.id = d.department_id
+		LEFT JOIN 
+			material_type   f  on f.id = b.type 
+		where 
+			!a.is_deleted and b.id is not null 
+		<if test="bookname != null and bookname != '' ">
+			and b.bookname like CONCAT('%',#{bookname},'%')
+		</if>
+		<if test="isEditorReplied != null ">
+			a.is_editor_replied = #{isEditorReplied}
+		</if>
+	</select>
+	
+	<!-- 获取审核纠错跟踪页面的分页数据 -->
+	<select id="listBookCorrectionTrack"       resultType="BookCorrectionTrackVO">
+		SELECT 
+			a.id ,
+			b.bookname,
+			e.dp_name ,
+			f.type_name ,
+			d.realname ,
+			a.result ,
+			a.page,
+			a.line,
+			a.content,
+			a.author_reply,
+			a.is_editor_replied 
+		FROM  
+			book_correction a
+		LEFT JOIN 
+			book b on b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = b.id
+		LEFT JOIN 
+			pmph_user d on d.id = c.editor_id
+		LEFT JOIN 
+			pmph_department e on e.id = d.department_id
+		LEFT JOIN 
+			material_type   f  on f.id = b.type 
+		where 
+			!a.is_deleted and b.id is not null 
+		<if test="bookname != null and bookname != '' ">
+			and b.bookname like CONCAT('%',#{bookname},'%')
+		</if>
+		<if test="isEditorReplied != null ">
+			a.is_editor_replied = #{isEditorReplied}
+		</if>
+		ORDER BY 
+			a.gmt_update desc 
+		limit #{start} ,#{pageSize}
 	</select>
 	
 </mapper>

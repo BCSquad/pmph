@@ -323,7 +323,7 @@
 		resultType="PmphRoleVO">
 		SELECT r.id,r.role_name FROM pmph_user_role p LEFT JOIN
 		pmph_role r ON p.role_id =r.id WHERE 
-		p.user_id = #{id}
+		p.user_id = #{id} AND r.is_disabled = false
 	</select>
 	<!-- 根据用户 id 和角色 id 加载一条用户角色关系数据集合 -->
 	<select id="getUserRoleList" parameterType="Long" resultType="PmphUserRole">

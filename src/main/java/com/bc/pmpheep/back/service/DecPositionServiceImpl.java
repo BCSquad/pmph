@@ -188,6 +188,16 @@ public class DecPositionServiceImpl implements DecPositionService {
         List<DecPosition> istDecPositions =
         decPositionDao.listDecPositions(list.get(0).getDeclarationId());
         String newId = ",";
+        for (NewDecPosition newDecPosition : list) { // 遍历所有的id
+        	newId += newDecPosition.getId() + ",";
+        }
+        for (DecPosition DecPosition : istDecPositions) { // 遍历原数据
+	    	if (!newId.contains("," + DecPosition.getId() + ",")) {
+	    		if (ObjectUtil.notNull(DecPosition.getId())) {
+	    			decPositionDao.deleteDecPosition(DecPosition.getId());
+	    		}
+	        }
+        }
         for (NewDecPosition newDecPosition : list) {
             Long id = newDecPosition.getId();
             Long declarationId = newDecPosition.getDeclarationId();
@@ -256,12 +266,6 @@ public class DecPositionServiceImpl implements DecPositionService {
                 }
             } else {
                 decPositionDao.updateDecPosition(decPosition);
-            }
-            newId += decPosition.getId() + ",";
-        }
-        for (DecPosition decPositions : istDecPositions) {
-            if (!newId.contains("," + decPositions.getId() + ",")) { // 不包含
-                decPositionDao.deleteDecPosition(decPositions.getId());
             }
         }
         return list.size();

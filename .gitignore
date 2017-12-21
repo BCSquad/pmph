@@ -42,3 +42,9 @@ hs_err_pid*
 /nbactions.xml
 /target/
 /bin
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr

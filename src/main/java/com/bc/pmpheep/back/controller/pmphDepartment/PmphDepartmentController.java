@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.back.service.PmphDepartmentService;
+import com.bc.pmpheep.back.vo.DepartmentOptsVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
 /**
@@ -101,4 +103,30 @@ public class PmphDepartmentController {
 	public ResponseBean department(String dpName) {
 		return new ResponseBean(pmphDepartmentService.listPmphUserDepartmentByDpName(dpName));
 	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：选题申报运维人员获取部门和部门负责人
+	 *
+	 * @param dpName
+	 *            部门名称
+	 * @param pageSize
+	 *            当页条数
+	 * @param pageNumber
+	 *            当前页数
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取部门与部门负责人")
+	@RequestMapping(value = "listOpts", method = RequestMethod.GET)
+	public ResponseBean listOpts(String dpName, Integer pageSize, Integer pageNumber) {
+		PageParameter<DepartmentOptsVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+		DepartmentOptsVO departmentOptsVO = new DepartmentOptsVO();
+		departmentOptsVO.setDpName(dpName);
+		pageParameter.setParameter(departmentOptsVO);
+		return new ResponseBean(pmphDepartmentService.listOpts(pageParameter));
+	}
+
 }

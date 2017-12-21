@@ -85,6 +85,23 @@ public class GroupController {
 	}
 
 	/**
+	 * 上传文件时的小组列表
+	 * 
+	 * @author Mryang
+	 * @param pmphGroup
+	 * @return
+	 * @createDate 2017年9月21日 下午4:02:57
+	 */
+	@RequestMapping(value = "/list/pmphGroupFile", method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "上传文件时的小组列表")
+	@ResponseBody
+	public ResponseBean pmphGroupFile(HttpServletRequest request) {
+		PmphGroup pmphGroup = new PmphGroup();
+		String sessionId = CookiesUtil.getSessionId(request);
+		return new ResponseBean(pmphGroupService.listPmphGroupFile(pmphGroup, sessionId));
+	}
+
+	/**
 	 * 
 	 * 
 	 * 功能描述：根据小组id查询小组成员
@@ -398,9 +415,10 @@ public class GroupController {
 		pageParameter.setParameter(pmphGroupMessageVO);
 		return new ResponseBean(pmphGroupMessageService.listPmphGroupMessage(pageParameter));
 	}
-	
+
 	/**
 	 * 功能描述：职位遴选页面新建小组
+	 * 
 	 * @param textbookId
 	 * @param pmphGroupMembers
 	 * @param request
@@ -409,22 +427,22 @@ public class GroupController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "职位遴选页面新建小组")
 	@RequestMapping(value = "/addEditorGroup", method = RequestMethod.POST)
-	public ResponseBean addEditorGroup(Long  textbookId,String pmphGroupMembers,
-			HttpServletRequest request) {
+	public ResponseBean addEditorGroup(Long textbookId, String pmphGroupMembers, HttpServletRequest request) {
 		try {
 			String sessionId = CookiesUtil.getSessionId(request);
 			Gson gson = new Gson();
 			Type type = new TypeToken<ArrayList<PmphGroupMember>>() {
 			}.getType();
 			List<PmphGroupMember> list = gson.fromJson(pmphGroupMembers, type);
-			return new ResponseBean(pmphGroupService.addEditorSelcetionGroup(sessionId,list,textbookId));
+			return new ResponseBean(pmphGroupService.addEditorSelcetionGroup(sessionId, list, textbookId));
 		} catch (IOException e) {
 			return new ResponseBean(e);
 		}
 	}
-	
+
 	/**
 	 * 职位遴选页面更新小组成员
+	 * 
 	 * @param textbookId
 	 * @param request
 	 * @return
@@ -432,8 +450,8 @@ public class GroupController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "职位遴选页面更新小组成员")
 	@RequestMapping(value = "/addEditors", method = RequestMethod.POST)
-	public ResponseBean addEditors(Long  textbookId,HttpServletRequest request) {
+	public ResponseBean addEditors(Long textbookId, HttpServletRequest request) {
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(pmphGroupMemberService.addEditorBookGroup(textbookId,sessionId));
+		return new ResponseBean(pmphGroupMemberService.addEditorBookGroup(textbookId, sessionId));
 	}
 }

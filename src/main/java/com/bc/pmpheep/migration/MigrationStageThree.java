@@ -18,9 +18,11 @@ import org.springframework.stereotype.Component;
 
 import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.back.po.PmphRole;
+import com.bc.pmpheep.back.po.PmphRolePermission;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.service.PmphDepartmentService;
+import com.bc.pmpheep.back.service.PmphRolePermissionService;
 import com.bc.pmpheep.back.service.PmphRoleService;
 import com.bc.pmpheep.back.service.PmphUserRoleService;
 import com.bc.pmpheep.back.service.PmphUserService;
@@ -58,6 +60,8 @@ public class MigrationStageThree {
     PmphRoleService pmphRoleService;
     @Resource
     PmphUserRoleService pmphUserRoleService;
+    @Resource
+    PmphRolePermissionService pmphRolePermissionService;
 
     public void start() {
         Date begin = new Date();
@@ -224,25 +228,21 @@ public class MigrationStageThree {
     }
 
     protected void pmphRole() {
-        String tableName = "sys_role";//此表在图3中已经添加new_pk，运行顺序是先图3再图2
+        String tableName = "sys_role";
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
         for (Map<String, Object> map : maps) {
             Double roleId = (Double) map.get("roleid");
             String rolename = (String) map.get("rolename");
-            Integer isDisabled = (Integer) map.get("isvalid");
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数。");
-                excel.add(map);
-                logger.info("显示顺序为负数，此结构将被记录在Excel中");
             }
             String note = (String) map.get("memo");
             PmphRole pmphRole = new PmphRole();
             pmphRole.setRoleName(rolename);
-            pmphRole.setIsDisabled(isDisabled == 1);
+            pmphRole.setIsDisabled(false);
             pmphRole.setSort(sort);
             pmphRole.setNote(note);
             pmphRole = pmphRoleService.addPmphRole(pmphRole);
@@ -308,6 +308,41 @@ public class MigrationStageThree {
         SQLParameters.STATISTICS.add(msg);
     }
 
+    /**
+     * 
+     * Description:角色权限表
+     * @author:lyc
+     * @date:2017年12月19日下午6:28:40
+     * @param 
+     * @return void
+     */
+    protected void pmphRolePermission() {
+    	String tableName = "sys_role";
+		List<Map<String,Object>> maps = JdbcHelper.queryForList(tableName);
+		List<Map<String,Object>> excel = new LinkedList<>();
+		for (Map<String,Object> map : maps){
+			Long newpk = (Long) map.get("new_pk");
+			if (newpk == 0){
+				map.put(SQLParameters.EXCEL_EX_HEADER, "角色找不到");
+				excel.add(map);
+				continue;
+			}
+			PmphRolePermission pmphRolePermission = new PmphRolePermission();
+			for (int i = 1 ; i< 26 ; i++){
+				pmphRolePermission.setRoleId(newpk);
+				pmphRolePermission.setPermissionId(Long.parseLong(String.valueOf(i)));
+				pmphRolePermissionService.addPmphRolePermission(pmphRolePermission);
+			}
+		}
+		if (excel.size() > 0){
+			try {
+                excelHelper.exportFromMaps(excel, "社内用户-权限关联表", "pmph_role_permission");
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
+		}
+	}
+    
     /**
      *
      * Description:找出拓展表中有但sys_user表中已经不存在的userid的信息，即废数据

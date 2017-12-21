@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +34,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.service.BookCorrectionService;
 import com.bc.pmpheep.back.service.CmsExtraService;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.service.MaterialNoteAttachmentService;
@@ -47,6 +50,7 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.BookCorrectionTrackVO;
 import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
 import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -96,6 +100,8 @@ public class FileDownLoadController {
     ZipHelper                              zipHelper;
     @Resource
     MaterialOrgService                     materialOrgService;
+    @Autowired
+	BookCorrectionService bookCorrectionService;
 
     /**
      * 普通文件下载
@@ -390,7 +396,7 @@ public class FileDownLoadController {
         }
         zipDownload.setState(true);
         map.put(id, zipDownload);
-        return "SUCCESS";
+        return "/zip/download?"+id;
     }
 
     /**
@@ -555,6 +561,49 @@ public class FileDownLoadController {
 			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+	
+	
+	
+	/**
+	 * 导出纠错信息
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2017年12月20日 下午5:01:53
+	 * @param request
+	 * @param response
+	 * @param bookname
+	 * @param isEditorReplied
+	 * @throws CheckedServiceException
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/bookCorrectionTrack/exportExcel", method = RequestMethod.GET)
+	public void exportExcel(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(value = "bookname",            required = false)	String  bookname ,
+			@RequestParam(value = "isEditorReplied",     required = false)	Boolean isEditorReplied)
+					throws CheckedServiceException, Exception {
+		Workbook workbook = null;
+		List<BookCorrectionTrackVO> list= null ;
+		try {
+			list =  bookCorrectionService.listBookCorrectionTrack(request,null,null,bookname ,isEditorReplied).getRows();
+			workbook = excelHelper.fromBusinessObjectList(list, "sheet1");
+		} catch (CheckedServiceException | IllegalArgumentException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		String fileName = returnFileName(request,"纠错跟踪" +DateUtil.getTime() + ".xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE, CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
 	}
    

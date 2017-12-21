@@ -38,9 +38,13 @@ public class ResponseBean<T> implements Serializable {
      */
     public static final int CLASS_CAST          = 40;
     /**
-     * MongoDB连接超时
+     * 数据库连接超时
      */
-    public static final int MONGODB_TIME_OUT    = 90;
+    public static final int DATABASE_TIME_OUT   = 90;
+    /**
+     * MongoDBException
+     */
+    public static final int MONGO_EXCEPTION     = 95;
 
     /**
      * 未知错误

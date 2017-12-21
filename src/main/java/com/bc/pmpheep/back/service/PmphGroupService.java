@@ -78,6 +78,17 @@ public interface PmphGroupService {
 
 	/**
 	 *
+	 * @introduction 上传文件时的小组列表
+	 * @author Mryang
+	 * @createDate 2017年9月20日 下午4:45:48
+	 * @param pmphGroup
+	 * @return List<PmphGroupListVO>
+	 * @throws CheckedServiceException
+	 */
+	List<PmphGroupListVO> listPmphGroupFile(PmphGroup pmphGroup, String sessionId) throws CheckedServiceException;
+
+	/**
+	 *
 	 *
 	 * 功能描述：新增小组
 	 *
@@ -120,9 +131,10 @@ public interface PmphGroupService {
 	 *
 	 */
 	PmphGroup getPmphGroupByTextbookId(Long textbookId) throws CheckedServiceException;
-	
+
 	/**
 	 * 职位遴选页面确认名单后新建小组
+	 * 
 	 * @param sessionId
 	 * @param list
 	 * @param textbookId
@@ -130,6 +142,6 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	PmphGroup addEditorSelcetionGroup(String sessionId, List<PmphGroupMember> list, Long textbookId) 
+	PmphGroup addEditorSelcetionGroup(String sessionId, List<PmphGroupMember> list, Long textbookId)
 			throws CheckedServiceException, IOException;
 }
