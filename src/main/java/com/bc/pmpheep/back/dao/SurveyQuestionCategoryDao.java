@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import com.bc.pmpheep.back.po.SurveyQuestionCategory;
 
 /**
- * SurveyClassify实体类数据访问层接口
+ * SurveyQuestionCategory问题分类实体类数据访问层接口
  * 
  * @author tyc
  */

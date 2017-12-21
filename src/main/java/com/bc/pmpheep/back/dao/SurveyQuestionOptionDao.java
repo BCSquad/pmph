@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import com.bc.pmpheep.back.po.SurveyQuestionOption;
 
 /**
- * SurveyOptions实体类数据访问层接口
+ * SurveyQuestionOption问题选项实体类数据访问层接口
  * 
  * @author tyc
  */

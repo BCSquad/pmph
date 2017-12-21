@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import com.bc.pmpheep.back.po.SurveyTarget;
 
 /**
- * SurveyQuestionnaireStaging实体类数据访问层接口
+ * SurveyTarget发起问卷关联实体类数据访问层接口
  * 
  * @author tyc
  */
