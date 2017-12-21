@@ -17,6 +17,9 @@
 			<if test="orgId != null">
 				org_id,
 			</if>
+			<if test="gmtCreate != null">
+				gmt_create,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -34,6 +37,9 @@
 			</if>
 			<if test="orgId != null">
 				#{orgId},
+			</if>
+			<if test="gmtCreate != null">
+				#{gmtCreate},
 			</if>
 		</trim>
 	</sql>
@@ -69,6 +75,9 @@
 			</if>
 			<if test="orgId != null">
 				org_id=#{orgId},
+			</if>
+			<if test="gmtCreate != null">
+				gmt_create=#{gmtCreate},
 			</if>
 		</set>
 		where
