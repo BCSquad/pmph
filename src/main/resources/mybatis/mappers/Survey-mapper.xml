@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bc.pmpheep.back.dao.SurveyQuestionnaireDao">
+<mapper namespace="com.bc.pmpheep.back.dao.SurveyDao">
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
@@ -20,29 +20,29 @@
 			<if test="templateId != null">
 				template_id,
 			</if>
-			<if test="surveyId != null">
-				survey_id,
+			<if test="typeId != null">
+				type_id,
 			</if>
 			<if test="userId != null">
 				user_id,
 			</if>
-			<if test="createrType != null">
-				creater_type,
+			<if test="beginDate != null and beginDate !=''">
+				begin_date,
+			</if>
+			<if test="endDate != null and endDate !=''">
+				end_date,
+			</if>
+			<if test="sort != null">
+				sort,
+			</if>
+			<if test="isDeleted != null and isDeleted !=''">
+				is_deleted,
 			</if>
 			<if test="gmtCreate != null and gmtCreate !=''">
 				gmt_create,
 			</if>
 			<if test="gmtUpdate != null and gmtUpdate !=''">
 				gmt_update,
-			</if>
-			<if test="questionnaireStartDate != null and questionnaireStartDate !=''">
-				questionnaire_start_date,
-			</if>
-			<if test="questionnaireEndDate != null and questionnaireEndDate !=''">
-				questionnaire_end_date,
-			</if>
-			<if test="sort != null">
-				sort,
 			</if>
 		</trim>
 	</sql>
@@ -65,14 +65,23 @@
 			<if test="templateId != null">
 				#{templateId},
 			</if>
-			<if test="surveyId != null">
-				#{surveyId},
+			<if test="typeId != null">
+				#{typeId},
 			</if>
 			<if test="userId != null">
 				#{userId},
 			</if>
-			<if test="createrType != null">
-				#{createrType},
+			<if test="beginDate != null and beginDate !=''">
+				#{beginDate},
+			</if>
+			<if test="endDate != null and endDate !=''">
+				#{endDate},
+			</if>
+			<if test="sort != null">
+				#{sort},
+			</if>
+			<if test="isDeleted != null and isDeleted !=''">
+				#{isDeleted},
 			</if>
 			<if test="gmtCreate != null and gmtCreate !=''">
 				#{gmtCreate},
@@ -80,37 +89,28 @@
 			<if test="gmtUpdate != null and gmtUpdate !=''">
 				#{gmtUpdate},
 			</if>
-			<if test="questionnaireStartDate != null and questionnaireStartDate !=''">
-				#{questionnaireStartDate},
-			</if>
-			<if test="questionnaireEndDate != null and questionnaireEndDate !=''">
-				#{questionnaireEndDate},
-			</if>
-			<if test="sort != null">
-				#{sort},
-			</if>
 		</trim>
 	</sql>
-	<!-- 新增一个SurveyQuestionnaire -->
-	<insert id="addSurveyQuestionnaire" parameterType="SurveyQuestionnaire">
+	<!-- 新增一个Survey -->
+	<insert id="addSurvey" parameterType="Survey">
 		<selectKey resultType="java.lang.Long" order="AFTER"
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into survey_questionnaire (
+		insert into survey (
 		<include refid="key" />
 		)
 		values(
 		<include refid="value" />
 		);
 	</insert>
-	<!-- 删除SurveyQuestionnaire通过主键id -->
-	<delete id="deleteSurveyQuestionnaireById" parameterType="java.lang.Long">
-		delete from survey_questionnaire where id=#{id};
+	<!-- 删除Survey通过主键id -->
+	<delete id="deleteSurveyById" parameterType="java.lang.Long">
+		delete from survey where id=#{id};
 	</delete>
 	<!-- 更新一个 SurveyQuestionnaire通过主键id -->
-	<update id="updateSurveyQuestionnaire" parameterType="SurveyQuestionnaire">
-		update survey_questionnaire
+	<update id="updateSurvey" parameterType="Survey">
+		update survey
 		<set>
 			<if test="id != null">
 				id=#{id},
@@ -127,14 +127,23 @@
 			<if test="templateId != null">
 				template_id=#{templateId},
 			</if>
-			<if test="surveyId != null">
-				survey_id=#{surveyId},
+			<if test="typeId != null">
+				type_id=#{typeId},
 			</if>
 			<if test="userId != null">
 				user_id=#{userId},
 			</if>
-			<if test="createrType != null">
-				creater_type=#{createrType},
+			<if test="beginDate != null and beginDate !=''">
+				begin_date=#{beginDate},
+			</if>
+			<if test="endDate != null and endDate !=''">
+				end_date=#{endDate},
+			</if>
+			<if test="sort != null">
+				sort=#{sort},
+			</if>
+			<if test="isDeleted != null and isDeleted !=''">
+				is_deleted=#{isDeleted},
 			</if>
 			<if test="gmtCreate != null and gmtCreate !=''">
 				gmt_create=#{gmtCreate},
@@ -142,21 +151,12 @@
 			<if test="gmtUpdate != null and gmtUpdate !=''">
 				gmt_update=#{gmtUpdate},
 			</if>
-			<if test="questionnaireStartDate != null and questionnaireStartDate !=''">
-				questionnaire_start_date=#{questionnaireStartDate},
-			</if>
-			<if test="questionnaireEndDate != null and questionnaireEndDate !=''">
-				questionnaire_end_date=#{questionnaireEndDate},
-			</if>
-			<if test="sort != null">
-				sort=#{sort},
-			</if>
 		</set>
 		where
 		id=#{id};
 	</update>
-	<!-- 查找SurveyQuestionnaire通过主键id -->
-	<select id="selectSurveyQuestionnaireById" parameterType="java.lang.Long" resultType="SurveyQuestionnaire">
-		select * from survey_questionnaire where id=#{id};
+	<!-- 查找Survey通过主键id -->
+	<select id="selectSurveyById" parameterType="java.lang.Long" resultType="Survey">
+		select * from survey where id=#{id};
 	</select>
 </mapper>

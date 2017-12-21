@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bc.pmpheep.back.dao.SurveyOptionsDao">
+<mapper namespace="com.bc.pmpheep.back.dao.SurveyQuestionOptionDao">
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
@@ -43,26 +43,26 @@
 			</if>
 		</trim>
 	</sql>
-	<!-- 新增一个SurveyOptions -->
-	<insert id="addSurveyOptions" parameterType="SurveyOptions">
+	<!-- 新增一个SurveyQuestionOption -->
+	<insert id="addSurveyQuestionOption" parameterType="SurveyQuestionOption">
 		<selectKey resultType="java.lang.Long" order="AFTER"
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into survey_options (
+		insert into survey_question_option (
 		<include refid="key" />
 		)
 		values(
 		<include refid="value" />
 		) ;
 	</insert>
-	<!-- 删除SurveyOptions通过主键id -->
-	<delete id="deleteSurveyOptionsById" parameterType="java.lang.Long">
-		delete from survey_options where id=#{id};
+	<!-- 删除SurveyQuestionOption通过主键id -->
+	<delete id="deleteSurveyQuestionOptionById" parameterType="java.lang.Long">
+		delete from survey_question_option where id=#{id};
 	</delete>
 	<!-- 更新一个 SurveyOptions通过主键id -->
-	<update id="updateSurveyOptions" parameterType="SurveyOptions">
-		update survey_options
+	<update id="updateSurveyQuestionOption" parameterType="SurveyQuestionOption">
+		update survey_question_option
 		<set>
 			<if test="id != null">
 				id=#{id},
@@ -83,9 +83,9 @@
 		where
 		id=#{id} ;
 	</update>
-	<!-- 查找SurveyOptions通过主键id -->
-	<select id="selectSurveyOptionsById" parameterType="java.lang.Long" resultType="SurveyOptions">
-		select * from survey_options where id=#{id};
+	<!-- 查找SurveyQuestionOption通过主键id -->
+	<select id="selectSurveyQuestionOptionById" parameterType="java.lang.Long" resultType="SurveyQuestionOption">
+		select * from survey_question_option where id=#{id};
 	</select>
 	
 </mapper>
