@@ -270,7 +270,7 @@
 			and b.bookname like CONCAT('%',#{bookname},'%')
 		</if>
 		<if test="isEditorReplied != null ">
-			a.is_editor_replied = #{isEditorReplied}
+			and a.is_editor_replied = #{isEditorReplied}
 		</if>
 	</select>
 	
@@ -306,7 +306,7 @@
 			and b.bookname like CONCAT('%',#{bookname},'%')
 		</if>
 		<if test="isEditorReplied != null ">
-			a.is_editor_replied = #{isEditorReplied}
+			and a.is_editor_replied = #{isEditorReplied}
 		</if>
 		ORDER BY 
 			a.gmt_update desc 
