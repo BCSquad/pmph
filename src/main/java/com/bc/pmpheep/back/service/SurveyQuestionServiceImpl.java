@@ -101,45 +101,31 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Integer addSurveyQuestionListVOList(String jsonDecPosition) {
-		if (ObjectUtil.isNull(jsonDecPosition)) {
+	public Integer addSurveyQuestionListVOList(String jsonSurveyQuestion) {
+		if (ObjectUtil.isNull(jsonSurveyQuestion)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		// json字符串转List对象集合
 		List<SurveyQuestionListVO> SurveyQuestionListVO = 
-				new JsonUtil().getArrayListObjectFromStr(SurveyQuestionListVO.class, jsonDecPosition);
+				new JsonUtil().getArrayListObjectFromStr(SurveyQuestionListVO.class, jsonSurveyQuestion);
 		if (CollectionUtil.isEmpty(SurveyQuestionListVO)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		for (SurveyQuestionListVO SurveyQuestionLists : SurveyQuestionListVO) { //遍历获取问题的集合
-			Long categoryId = SurveyQuestionLists.getCategoryId();
-			String title = SurveyQuestionLists.getTitle();
-			Short type = SurveyQuestionLists.getType();
-			Integer sort = SurveyQuestionLists.getSort();
-			String direction = SurveyQuestionLists.getDirection();
-			Boolean isAnswer = SurveyQuestionLists.getIsAnswer();
-			List<SurveyQuestionOption> surveyQuestionOptionList = 
-					SurveyQuestionLists.getSurveyQuestionOptionList();
-			SurveyQuestion surveyQuestion = new SurveyQuestion(); // 问题实体
-			surveyQuestion.setCategoryId(categoryId);
-			surveyQuestion.setTitle(title);
-			surveyQuestion.setType(type);
-			surveyQuestion.setSort(sort);
-			surveyQuestion.setDirection(direction);
-			surveyQuestion.setIsAnswer(isAnswer);
+			SurveyQuestion surveyQuestion = new SurveyQuestion(SurveyQuestionLists.getCategoryId(), 
+					SurveyQuestionLists.getTitle(), SurveyQuestionLists.getType(), 
+					SurveyQuestionLists.getSort(), SurveyQuestionLists.getDirection(), 
+					SurveyQuestionLists.getIsAnswer()); // 问题实体
 			SurveyQuestion surveyQuestions = addSurveyQuestion(surveyQuestion); // 先保存问题
 			Long id = surveyQuestions.getId(); // 获取问题id
+			List<SurveyQuestionOption> surveyQuestionOptionList = 
+					SurveyQuestionLists.getSurveyQuestionOptionList(); // 获取问题选项list
 			for (SurveyQuestionOption surveyQuestionOptions : surveyQuestionOptionList) { // 遍历问题选项
-				String optionContent = surveyQuestionOptions.getOptionContent();
-				Boolean isOther = surveyQuestionOptions.getIsOther();
-				String remark = surveyQuestionOptions.getRemark();
-				SurveyQuestionOption surveyQuestionOption = new SurveyQuestionOption(); // 问题选项实体
-				surveyQuestionOption.setQuestionId(id);
-				surveyQuestionOption.setOptionContent(optionContent);
-				surveyQuestionOption.setIsOther(isOther);
-				surveyQuestionOption.setRemark(remark);
+				SurveyQuestionOption surveyQuestionOption = new SurveyQuestionOption(id, 
+						surveyQuestionOptions.getOptionContent(), surveyQuestionOptions.getIsOther(), 
+						surveyQuestionOptions.getRemark()); // 问题选项实体
 				surveyQuestionOptionDao.addSurveyQuestionOption(surveyQuestionOption); // 再保存问题选项
 			}
 		}
