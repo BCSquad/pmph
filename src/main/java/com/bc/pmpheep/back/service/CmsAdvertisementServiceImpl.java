@@ -136,27 +136,6 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		return cmsAdvertisement;
 	}
 
-//	@Override
-//	public Integer deleteCmsAdvertisementById(String[] images, String sessionId) throws CheckedServiceException {
-//		Integer count=0;
-//		// session PmphUser用户验证
-//		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-//		if (null == pmphUser || null == pmphUser.getId()) {
-//			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-//					"用户为空");
-//		}
-//		if (null == images) {
-//			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
-//		}
-//		//先移除广告表的图片id
-//		cmsAdvertisementImageDao.deleteCmsAdvertisementByImage(images);
-//		
-//		// 移除对应的广告图片
-//		fileService.remove(images);
-//		count=cmsAdvertisementDao.deleteCmsAdvertisementById(id);
-//		return count;
-//	}
-
 	@Override
 	public CmsAdvertisement getCmsAdvertisementById(Long id) throws CheckedServiceException {
 		if (null == id) {
@@ -164,6 +143,52 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		}
 		CmsAdvertisement cmsAdvertisement = cmsAdvertisementDao.getCmsAdvertisementById(id);
 		return cmsAdvertisement;
+	}
+
+	@Override
+	public CmsAdvertisementImage addCmsAdevertisementImage(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, MultipartFile file,
+			String sessionId) throws CheckedServiceException,IOException {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
+		}
+		if (ObjectUtil.isNull(cmsAdvertisementOrImageVO)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		if(null==file){
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "图片为空");
+		}
+		CmsAdvertisementImage cmsAdvertisementImage=new CmsAdvertisementImage();
+		cmsAdvertisementImage.setAdvertId(cmsAdvertisementOrImageVO.getAdvertId());
+		cmsAdvertisementImage.setIsDisabled(cmsAdvertisementOrImageVO.getIsDisplay());
+		// 保存图片到 MongoDB 返回id存入图片id
+		String newImage=fileService.save(file, ImageType.CMS_ADVERTISEMENT_IMAGE,cmsAdvertisementOrImageVO.getImageId());
+		cmsAdvertisementImage.setImage(newImage);
+		cmsAdvertisementImageDao.addCmsAdvertisementImage(cmsAdvertisementImage);
+		return cmsAdvertisementImage;
+	}
+
+	@Override
+	public Integer deleteCmsAdvertisementImageById(Long advertId, String[] image, String sessionId) {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,"用户为空");
+		}
+		if(null==advertId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		if(null==image){
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		Integer count=0;
+		//遍历数组 进行删除MongoDB的图
+		for (int i = 0; i < image.length; i++) {
+			fileService.remove(image[i]);
+		}
+		// 删除本地相对应的图片信息
+		count=cmsAdvertisementImageDao.deleteCmsAdvertisementByImage(advertId);
+		return count;
 	}
 
 }
