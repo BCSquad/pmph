@@ -173,4 +173,11 @@ public interface TextbookService {
 	 * @throws CheckedServiceException
 	 */
 	List<ExcelDecAndTextbookVO> getExcelDecAndTextbooks(Long[] textbookIds)throws CheckedServiceException;
+	
+	/**
+	 * 通过教材id获取所有书籍name
+	 * @param materialId
+	 * @return
+	 */
+	List<Textbook> getTextbooknameList(Long materialId);
 }

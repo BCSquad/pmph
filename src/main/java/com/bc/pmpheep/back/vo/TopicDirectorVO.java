@@ -36,6 +36,8 @@ public class TopicDirectorVO implements Serializable {
 	private Timestamp deadline;
 	// 图书类别：0=专著，1=基础理论，2=论文集，3=科普，4=应用技术，5=工具书，6=其他
 	private Integer type;
+	// 图书类别
+	private String typeName;
 	// 提交时间
 	private Timestamp submitTime;
 	/**
@@ -117,6 +119,14 @@ public class TopicDirectorVO implements Serializable {
 
 	public void setReasonEditor(String reasonEditor) {
 		this.reasonEditor = reasonEditor;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
 
 }

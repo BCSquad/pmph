@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.po.CmsAdvertisement;
+import com.bc.pmpheep.back.po.CmsAdvertisementImage;
+import com.bc.pmpheep.back.vo.CmsAdvertisementOrImageVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -21,7 +23,7 @@ public interface CmsAdvertisementService {
 	 * @param sessionId
 	 * @return
 	 */
-	List<CmsAdvertisement> getAdvertisementList(String sessionId) throws CheckedServiceException;
+	List<CmsAdvertisementOrImageVO> getAdvertisementList(String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 更新广告内容
@@ -33,35 +35,29 @@ public interface CmsAdvertisementService {
 
 	/**
 	 * 修改广告
-	 * 
-	 * @param cmsAdvertisement
-	 * @param image
-	 * @param url
-	 * @param id必传
+	 * @param cmsAdvertisementOrImageVO
+	 * @param file
+	 * @param sessionId
 	 * @return
-	 * @throws CheckedServiceException,IOException
+	 * @throws CheckedServiceException
+	 * @throws IOException
 	 */
-	Integer updateCmsAdvertisement(CmsAdvertisement cmsAdvertisement, MultipartFile file, String sessionId)
+	Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, MultipartFile file, String sessionId)
 			throws CheckedServiceException, IOException;
 
 	/**
 	 * 增加广告
-	 * 
 	 * @param cmsAdvertisement
-	 * @return
-	 * @throws CheckedServiceException,IOException
-	 */
-	CmsAdvertisement addCmsAdvertisement(CmsAdvertisement cmsAdvertisement, MultipartFile file, String sessionId)
-			throws CheckedServiceException, IOException;
-
-	/**
-	 * 根据广告位置id删除广告
-	 * 
-	 * @param id
+	 * @param cmsAdvertisementImage
+	 * @param file
+	 * @param sessionId
 	 * @return
 	 * @throws CheckedServiceException
+	 * @throws IOException
 	 */
-	Integer deleteCmsAdvertisementById(Long id, String sessionId) throws CheckedServiceException;
+	CmsAdvertisement addCmsAdvertisement(CmsAdvertisement cmsAdvertisement,CmsAdvertisementImage cmsAdvertisementImage, 
+			MultipartFile file, String sessionId)
+			throws CheckedServiceException, IOException;
 
 	/**
 	 * 根据id获取广告
@@ -71,12 +67,17 @@ public interface CmsAdvertisementService {
 	 * @throws CheckedServiceException
 	 */
 	CmsAdvertisement getCmsAdvertisementById(Long id) throws CheckedServiceException;
+	
 	/**
-	 * 批量删除图片
-	 * @param ids
-	 * @param session
+	 * 增加图片
+	 * @param cmsAdvertisementOrImageVO
+	 * @param file
+	 * @param sessionId
 	 * @return
-	 * @throws CheckedServiceException
+	 * @throws CheckedServiceException,IOException 
 	 */
-	Integer deleteCmsAdvertisementByImage(Long id,String sessionId)throws CheckedServiceException;
+	CmsAdvertisementImage addCmsAdevertisementImage(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, 
+			MultipartFile file, String sessionId)throws CheckedServiceException, IOException;
+
+	Integer deleteCmsAdvertisementImageById(Long advertId, String[] image, String sessionId);
 }

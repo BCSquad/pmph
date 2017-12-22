@@ -6,6 +6,8 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Topic;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
+import com.bc.pmpheep.back.vo.TopicDirectorVO;
+import com.bc.pmpheep.back.vo.TopicEditorVO;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
 import com.bc.pmpheep.back.vo.TopicTextVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -79,4 +81,26 @@ public interface TopicService {
 	PageResult<TopicDeclarationVO> listCheckTopic(List<Long> authProgress,
 			PageParameter<TopicDeclarationVO> pageParameter) throws CheckedServiceException;
 
+	/**
+	 * Description:获取主任可以查询到的选题申报信息*
+	 * 
+	 * @author:lyc
+	 * @date:2017年12月22日上午9:16:27
+	 * @param
+	 * @return PageResult<TopicDirectorVO>
+	 */
+	PageResult<TopicDirectorVO> listTopicDirectorVOs(String sessionId, PageParameter<TopicDirectorVO> pageParameter)
+			throws CheckedServiceException;
+
+	/**
+	 * 
+	 * Description:获取主任可以查询到的选题申报信息
+	 * 
+	 * @author:lyc
+	 * @date:2017年12月22日上午9:18:19
+	 * @param
+	 * @return PageResult<TopicEditorVO>
+	 */
+	PageResult<TopicEditorVO> listTopicEditorVOs(String sessionId, PageParameter<TopicEditorVO> pageParameter)
+			throws CheckedServiceException;
 }

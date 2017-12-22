@@ -579,8 +579,11 @@ public class FileDownLoadController {
 		Workbook workbook = null;
 		List<BookCorrectionTrackVO> list = null;
 		try {
-			list = bookCorrectionService.listBookCorrectionTrack(request, null, null, bookname, isEditorReplied)
-					.getRows();
+			list = bookCorrectionService.listBookCorrectionTrack(request, null, null, bookname, isEditorReplied).getRows();
+			if(list.size() == 0){
+				//设置表头 ，放置初始化表出错
+				list.add(new BookCorrectionTrackVO());
+			}
 			workbook = excelHelper.fromBusinessObjectList(list, "sheet1");
 		} catch (CheckedServiceException | IllegalArgumentException e) {
 			logger.warn("数据表格化的时候失败");

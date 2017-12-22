@@ -9,13 +9,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.po.CmsAdvertisement;
+import com.bc.pmpheep.back.po.CmsAdvertisementImage;
 import com.bc.pmpheep.back.service.CmsAdvertisementService;
 import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.vo.CmsAdvertisementOrImageVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -59,10 +62,10 @@ public class CmsAdvertisementController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改广告")
 	@RequestMapping(value = "/cmsAdvertisement/update", method = RequestMethod.PUT)
-	public ResponseBean update(CmsAdvertisement cmsAdvertisement, MultipartFile file, HttpServletRequest request)
+	public ResponseBean update(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, MultipartFile file, HttpServletRequest request)
 			throws CheckedServiceException, IOException {
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(cmsAdvertisementService.updateCmsAdvertisement(cmsAdvertisement, file, sessionId));
+		return new ResponseBean(cmsAdvertisementService.updateCmsAdvertisement(cmsAdvertisementOrImageVO, file, sessionId));
 	}
 
 	/**
@@ -95,25 +98,37 @@ public class CmsAdvertisementController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增广告")
 	@RequestMapping(value = "/cmsAdvertisement/add", method = RequestMethod.POST)
-	public ResponseBean add(CmsAdvertisement cmsAdvertisement, MultipartFile file, HttpServletRequest request)
+	public ResponseBean add(CmsAdvertisement cmsAdvertisement,CmsAdvertisementImage cmsAdvertisementImage, MultipartFile file, HttpServletRequest request)
 			throws CheckedServiceException, IOException {
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(cmsAdvertisementService.addCmsAdvertisement(cmsAdvertisement, file, sessionId));
+		return new ResponseBean(cmsAdvertisementService.addCmsAdvertisement(cmsAdvertisement,cmsAdvertisementImage, file, sessionId));
 	}
 
 	/**
-	 * 广告管理页面删除广告
-	 * 
-	 * @param id
+	 * 广告编辑页面增加图片
+	 * @param cmsAdvertisementOrImageVO
 	 * @param request
-	 * @return	影响行数
+	 * @param file
+	 * @return
 	 * @throws CheckedServiceException
+	 * @throws IOException
 	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "广告编辑页面增加图片")
+	@RequestMapping(value = "/cmsAdvertisement/addimage", method = RequestMethod.DELETE)
+	public ResponseBean addimage(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO,
+			HttpServletRequest request,MultipartFile file) throws CheckedServiceException, IOException {
+		String sessionId = CookiesUtil.getSessionId(request);
+		return new ResponseBean(cmsAdvertisementService.addCmsAdevertisementImage(cmsAdvertisementOrImageVO,file,sessionId));
+	}
+	
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除广告")
 	@RequestMapping(value = "/cmsAdvertisement/{id}/delete", method = RequestMethod.DELETE)
-	public ResponseBean delete(@PathVariable("id") Long id, HttpServletRequest request) throws CheckedServiceException {
+	public ResponseBean delete(@RequestParam(name = "image") String[] image,
+			@RequestParam(name = "advertId") Long advertId,
+			HttpServletRequest request) throws CheckedServiceException {
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(cmsAdvertisementService.deleteCmsAdvertisementById(id, sessionId));
+		return new ResponseBean(cmsAdvertisementService.deleteCmsAdvertisementImageById(advertId,image, sessionId));
 	}
 }

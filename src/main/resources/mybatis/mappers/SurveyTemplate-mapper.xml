@@ -117,4 +117,12 @@
 			</if>
 	</select>
 	
+	<!-- 根据模版id获取问卷表标题和简介 -->
+	<select id="selectSurveyTemplateGetVOById" parameterType="java.lang.Long" 
+	resultType="SurveyTemplateGetVO">
+		select s.title,s.subhead,s.intro from survey_template st 
+		left join survey s on s.template_id = st.id 
+		where id = #{id};
+	</select>
+	
 </mapper>

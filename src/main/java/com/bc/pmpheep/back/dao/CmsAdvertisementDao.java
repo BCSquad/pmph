@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.CmsAdvertisement;
+import com.bc.pmpheep.back.po.CmsAdvertisementImage;
+import com.bc.pmpheep.back.vo.CmsAdvertisementOrImageVO;
 
 /**
  * CmsAdvertisement 实体类数据访问层接口
@@ -20,7 +22,7 @@ public interface CmsAdvertisementDao {
 	 * 
 	 * @return
 	 */
-	List<CmsAdvertisement> getAdvertisementList();
+	List<CmsAdvertisementOrImageVO> getAdvertisementList();
 
 	/**
 	 * 更新广告
@@ -28,7 +30,7 @@ public interface CmsAdvertisementDao {
 	 * @param cmsAdvertisement
 	 * @return
 	 */
-	Integer updateCmsAdvertisement(CmsAdvertisement cmsAdvertisement);
+	Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO);
 
 	/**
 	 * 增加广告
@@ -59,5 +61,17 @@ public interface CmsAdvertisementDao {
 	 * @return
 	 */
 	Integer deleteCmsAdvertisementByImage(Long id);
+	/**
+	 * 保存图片id和关联广告id
+	 * @param cmsAdvertisementImage
+	 * @return
+	 */
+	CmsAdvertisementImage addCmsAdvertisementImage(CmsAdvertisementImage cmsAdvertisementImage);
+	/**
+	 * 更新广告
+	 * @param cmsAdvertisement
+	 * @return
+	 */
+	Integer updateCmsAdvertisement(CmsAdvertisement cmsAdvertisement);
 	
 }
