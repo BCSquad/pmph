@@ -29,9 +29,13 @@ public class ZipDownload implements Runnable {
 	 */
 	private String id;
 	/**
+	 * 状态详情
+	 */
+	private String detail;
+	/**
 	 * 状态
 	 */
-	private Boolean state;
+	private Integer state;
 	/**
 	 * 教材名称
 	 */
@@ -49,11 +53,19 @@ public class ZipDownload implements Runnable {
 		this.id = id;
 	}
 
-	public Boolean getState() {
+	public String getDetail() {
+		return detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+
+	public Integer getState() {
 		return state;
 	}
 
-	public void setState(Boolean state) {
+	public void setState(Integer state) {
 		this.state = state;
 	}
 
