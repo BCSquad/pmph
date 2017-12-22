@@ -33,35 +33,35 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 	
 	@Override
 	public SurveyQuestion addSurveyQuestion(SurveyQuestion surveyQuestion) throws CheckedServiceException {
-		if (ObjectUtil.notNull(surveyQuestion)) {
+		if (ObjectUtil.isNull(surveyQuestion)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		if (ObjectUtil.notNull(surveyQuestion.getCategoryId())) {
+		if (ObjectUtil.isNull(surveyQuestion.getCategoryId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "问题分类为空");
 		}
-		if (StringUtil.notEmpty(surveyQuestion.getTitle())) {
+		if (StringUtil.isEmpty(surveyQuestion.getTitle())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "题目为空");
 		}
-		if (ObjectUtil.notNull(surveyQuestion.getType())) {
+		if (ObjectUtil.isNull(surveyQuestion.getType())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "问题类型为空");
 		}
-		if (ObjectUtil.notNull(surveyQuestion.getSort())) {
+		if (ObjectUtil.isNull(surveyQuestion.getSort())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "问题序号为空");
 		}
-		if (ObjectUtil.notNull(surveyQuestion.getIsAnswer())) {
+		if (ObjectUtil.isNull(surveyQuestion.getIsAnswer())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "问题是否必答为空");
 		}
 		surveyQuestionDao.addSurveyQuestion(surveyQuestion);
 		Long id = surveyQuestion.getId();
-		if (ObjectUtil.notNull(id)) {
+		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                    CheckedExceptionResult.NULL_PARAM, "id不能为空");
+                    CheckedExceptionResult.NULL_PARAM, "id为空");
 		}
 		if (ObjectUtil.notNull(id)) {
 			surveyQuestion.setId(id);
@@ -72,7 +72,7 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 	@Override
 	public Integer updateSurveyQuestion(SurveyQuestion surveyQuestion)
 			throws CheckedServiceException {
-		if (ObjectUtil.notNull(surveyQuestion)) {
+		if (ObjectUtil.isNull(surveyQuestion)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
@@ -82,7 +82,7 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 	@Override
 	public SurveyQuestion selectSurveyQuestionById(Long id)
 			throws CheckedServiceException {
-		if (ObjectUtil.notNull(id)) {
+		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
@@ -92,7 +92,7 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 	@Override
 	public Integer deleteSurveyQuestionById(Long id)
 			throws CheckedServiceException {
-		if (ObjectUtil.notNull(id)) {
+		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
@@ -101,7 +101,7 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Integer addSurveyQuestionListVOList(String jsonSurveyQuestion) {
+	public Integer addSurveyQuestionListVOList(String jsonSurveyQuestion) throws CheckedServiceException {
 		if (ObjectUtil.isNull(jsonSurveyQuestion)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
