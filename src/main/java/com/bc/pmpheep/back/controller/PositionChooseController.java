@@ -141,4 +141,17 @@ public class PositionChooseController {
         return new ResponseBean(textbookService.listEditorSelection(pageParameter));
     }
 
+    /**
+     * 功能描述：获取教材下的所有书籍
+     * 
+     * @param materialId
+     * @return
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取教材下的所有书籍")
+    @RequestMapping(value = "/getTextbookName", method = RequestMethod.GET)
+    public ResponseBean getTextbookName(@RequestParam("materialId") Long materialId) {
+        return new ResponseBean(textbookService.getTextbooknameList(materialId));
+    }
+
 }
