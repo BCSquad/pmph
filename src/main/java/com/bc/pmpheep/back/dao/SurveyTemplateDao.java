@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
+import com.bc.pmpheep.back.vo.SurveyTemplateGetVO;
 
 /**
  * SurveyTemplate模版实体类数据访问层接口
@@ -66,4 +67,14 @@ public interface SurveyTemplateDao {
      * </pre>
      */
     List<SurveyQuestionOptionCategoryVO> getSurveyTemplateQuestionByTemplateId(Long templateId);
+    
+    /**
+     * 根据模版id获取问卷表标题和简介
+     * 
+     * @author:tyc
+     * @date:2017年12月22日上午09:34:40
+     * @param 
+     * @return 影响行数
+     */
+    SurveyTemplateGetVO selectSurveyTemplateGetVOById(Long id);
 }

@@ -152,8 +152,10 @@ public class BookCorrectionTrackVO implements Serializable {
 
 	public void setResult(Boolean result) {
 		this.result = result;
-		if(null != result){
-			resultString = result?"存在问题":"无问题";
+		//设置显示的检查结果
+		this.resultString = null ;
+		if(null != this.result && null != this.isEditorReplied && this.isEditorReplied){
+			resultString = this.result?"存在问题":"无问题";
 		}
 	}
 
@@ -217,6 +219,11 @@ public class BookCorrectionTrackVO implements Serializable {
 		this.isEditorReplied = isEditorReplied;
 		if(null != isEditorReplied){
 			this.isEditorRepliedString = isEditorReplied?"是":"否";
+		}
+		//设置显示的检查结果
+		this.resultString = null ;
+		if(null != this.result && null != this.isEditorReplied && this.isEditorReplied){
+			resultString = this.result?"存在问题":"无问题";
 		}
 		
 	}

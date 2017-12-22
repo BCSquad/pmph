@@ -1,6 +1,5 @@
 package com.bc.pmpheep.back.service;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,8 @@ import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.vo.TopicDirectorVO;
+import com.bc.pmpheep.back.vo.TopicEditorVO;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
 import com.bc.pmpheep.back.vo.TopicTextVO;
 import com.bc.pmpheep.erp.db.SqlHelper;
@@ -97,6 +98,90 @@ public class TopicServiceImpl implements TopicService {
 	 */
 	public List<TopicOPtsManagerVO> addTypeName(List<TopicOPtsManagerVO> list) {
 		for (TopicOPtsManagerVO vo : list) {
+			switch (vo.getType()) {
+			case 0:
+				vo.setTypeName("专著");
+				break;
+			case 1:
+				vo.setTypeName("基础理论");
+				break;
+			case 2:
+				vo.setTypeName("论文集");
+				break;
+			case 3:
+				vo.setTypeName("科普");
+				break;
+			case 4:
+				vo.setTypeName("应用技术");
+				break;
+			case 5:
+				vo.setTypeName("工具书");
+				break;
+			case 6:
+				vo.setTypeName("其他");
+				break;
+
+			default:
+				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
+						"没有这个图书类别");
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * 功能描述：向VO中添加图书类别名称
+	 *
+	 * @param list
+	 * @return
+	 *
+	 */
+	public List<TopicDirectorVO> addTypeNameDirector(List<TopicDirectorVO> list) {
+		for (TopicDirectorVO vo : list) {
+			switch (vo.getType()) {
+			case 0:
+				vo.setTypeName("专著");
+				break;
+			case 1:
+				vo.setTypeName("基础理论");
+				break;
+			case 2:
+				vo.setTypeName("论文集");
+				break;
+			case 3:
+				vo.setTypeName("科普");
+				break;
+			case 4:
+				vo.setTypeName("应用技术");
+				break;
+			case 5:
+				vo.setTypeName("工具书");
+				break;
+			case 6:
+				vo.setTypeName("其他");
+				break;
+
+			default:
+				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
+						"没有这个图书类别");
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * 功能描述：向VO中添加图书类别名称
+	 *
+	 * @param list
+	 * @return
+	 *
+	 */
+	public List<TopicEditorVO> addTypeNameEditor(List<TopicEditorVO> list) {
+		for (TopicEditorVO vo : list) {
 			switch (vo.getType()) {
 			case 0:
 				vo.setTypeName("专著");
@@ -252,6 +337,61 @@ public class TopicServiceImpl implements TopicService {
 					"没有这个图书类别");
 		}
 		return topicTextVO;
+	}
+
+	@Override
+	public PageResult<TopicDirectorVO> listTopicDirectorVOs(String sessionId,
+			PageParameter<TopicDirectorVO> pageParameter)
+			throws CheckedServiceException {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (ObjectUtil.isNull(pmphUser)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC,
+					CheckedExceptionResult.NULL_PARAM, "用户为空");
+		}
+		PageResult<TopicDirectorVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		int total = 0;
+		if (pmphUser.getIsAdmin()){
+			total = topicDao.totalDirectorView(pageParameter.getParameter().getBookName(),
+					pageParameter.getParameter().getSubmitTime());
+			if (total > 0){
+				List<TopicDirectorVO> list = topicDao.listDirectorView(pageParameter.getParameter().getBookName(),
+						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(), pageParameter.getPageSize());
+				list = addTypeNameDirector(list);
+				pageResult.setRows(list);
+			}
+		}else{
+			total = topicDao.totalTopicDirectorVOs(pageParameter.getParameter().getDepartmentId(),
+					pageParameter.getParameter().getBookName(), pageParameter.getParameter().getSubmitTime());
+			if (total > 0){
+				List<TopicDirectorVO> list = topicDao.listTopicDirectorVOs(pageParameter.getParameter().getDepartmentId(),
+						pageParameter.getParameter().getBookName(), pageParameter.getParameter().getSubmitTime(),
+						pageParameter.getStart(), pageParameter.getPageSize());
+				list = addTypeNameDirector(list);
+				pageResult.setRows(list);
+			}
+		}
+		pageResult.setTotal(total);
+		return pageResult;
+	}
+
+	@Override
+	public PageResult<TopicEditorVO> listTopicEditorVOs(String sessionId,
+			PageParameter<TopicEditorVO> pageParameter)
+			throws CheckedServiceException {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (ObjectUtil.isNull(pmphUser)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC,
+					CheckedExceptionResult.NULL_PARAM, "用户为空");
+		}
+		PageResult<TopicEditorVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		int total = 0;
+		if (pmphUser.getIsAdmin()){
+			total = topicDao.totalEditorView(pageParameter.getParameter().getBookName(),
+					pageParameter.getParameter().getSubmitTime());
+		}
+		return pageResult;
 	}
 
 }

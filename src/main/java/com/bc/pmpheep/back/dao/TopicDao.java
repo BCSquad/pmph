@@ -173,4 +173,46 @@ public interface TopicDao {
 	 *
 	 */
 	TopicTextVO getTopicTextVO(Long id);
+	
+	/**
+	 * 
+	 * Description:系统管理员查询选题申报（主任界面）
+	 * @author:lyc
+	 * @date:2017年12月22日上午9:22:09
+	 * @param 
+	 * @return List<TopicDirectorVO>
+	 */
+	List<TopicDirectorVO> listDirectorView(@Param("bookName") String bookName, @Param("submitTime")Timestamp submitTime,
+			@Param("start") Integer start, @Param("pageSize") Integer pageSize);
+	
+	/**
+	 * 
+	 * Description:系统管路员查询的选题申报数（主任界面）
+	 * @author:lyc
+	 * @date:2017年12月22日上午9:27:23
+	 * @param 
+	 * @return Integer
+	 */
+	Integer totalDirectorView(@Param("bookName") String bookName, @Param("submitTime") Timestamp submitTime);
+	
+	/**
+	 * 
+	 * Description:系统管理员查询选题申报（编辑界面）
+	 * @author:lyc
+	 * @date:2017年12月22日上午9:24:14
+	 * @param 
+	 * @return List<TopicEditorVO>
+	 */
+	List<TopicEditorVO> listEditorView(@Param("bookName") String boonName,@Param("submitTime") Timestamp submitTime,
+			@Param("start") Integer start, @Param("pageSize") Integer pageSize);
+	
+	/**
+	 * 
+	 * Description:系统管理员查询选题申报数（编辑界面）
+	 * @author:lyc
+	 * @date:2017年12月22日上午9:28:37
+	 * @param 
+	 * @return Integer
+	 */
+	Integer totalEditorView(@Param("bookName") String bookName, @Param("submitTime") Timestamp submitTime);
 }
