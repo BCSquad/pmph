@@ -50,6 +50,16 @@
 		<include refid="value" />
 		);
 	</insert>
+	
+	<!-- 批量插入SurveyTarget -->
+	<insert id="batchSaveSurveyTargetByList" parameterType="java.util.List">
+        insert into survey_target (user_id,survey_id,org_id)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId}, #{item.surveyId},#{item.orgId})
+        </foreach>
+    </insert>
+	
 	<!-- 删除SurveyTarget通过主键id -->
 	<delete id="deleteSurveyTargetById" parameterType="java.lang.Long">
 		delete from survey_target where id=#{id};

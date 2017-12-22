@@ -103,6 +103,7 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
+		//
 		for (SurveyQuestionListVO SurveyQuestionLists : surveyQuestionListVO) { //遍历获取的集合
 			Long categoryId = SurveyQuestionLists.getCategoryId();
 			String title = SurveyQuestionLists.getTitle();

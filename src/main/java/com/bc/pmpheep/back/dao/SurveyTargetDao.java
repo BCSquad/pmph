@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.SurveyTarget;
@@ -51,4 +53,16 @@ public interface SurveyTargetDao {
      * @return 影响行数
      */
     SurveyTarget selectSurveyTargetById(Long id);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：批量插入SurveyTarget
+     * 使用示范：
+     *
+     * @param list SurveyTarget对象集合
+     * @return 影响行数
+     * </pre>
+     */
+    Integer batchSaveSurveyTargetByList(List<SurveyTarget> list);
 }
