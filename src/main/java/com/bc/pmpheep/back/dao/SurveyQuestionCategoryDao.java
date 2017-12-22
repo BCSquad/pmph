@@ -50,5 +50,5 @@ public interface SurveyQuestionCategoryDao {
      * @param SurveyQuestionCategory
      * @return 影响行数
      */
-    SurveyQuestionCategory selectSurveyQuestionCategoryById(Long id);
+    SurveyQuestionCategory getSurveyQuestionCategoryById(Long id);
 }

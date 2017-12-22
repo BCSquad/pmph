@@ -38,5 +38,5 @@ public interface SurveyQuestionOptionService {
      * @param SurveyQuestionOption
      * @return 影响行数
      */
-    SurveyQuestionOption selectSurveyQuestionOptionById(Long id) throws CheckedServiceException;
+    SurveyQuestionOption getSurveyQuestionOptionById(Long id) throws CheckedServiceException;
 }
