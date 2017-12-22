@@ -86,7 +86,7 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		return surveyQuestionDao.selectSurveyQuestionById(id);
+		return surveyQuestionDao.getSurveyQuestionById(id);
 	}
 
 	@Override

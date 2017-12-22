@@ -54,7 +54,7 @@ public interface SurveyQuestionDao {
      * @param SurveyQuestion
      * @return 影响行数
      */
-    SurveyQuestion selectSurveyQuestionById(Long id);
+    SurveyQuestion getSurveyQuestionById(Long id);
 
     /**
      * 

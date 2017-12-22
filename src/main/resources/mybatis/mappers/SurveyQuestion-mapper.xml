@@ -111,7 +111,7 @@
 		id=#{id};
 	</update>
 	<!-- 查找SurveyQuestion通过主键id -->
-	<select id="selectSurveyQuestionById" parameterType="java.lang.Long" resultType="SurveyQuestion">
+	<select id="getSurveyQuestionById" parameterType="java.lang.Long" resultType="SurveyQuestion">
 		select * from survey_question where id=#{id};
 	</select>
 	
