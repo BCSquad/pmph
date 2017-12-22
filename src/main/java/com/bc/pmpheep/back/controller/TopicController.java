@@ -103,7 +103,7 @@ public class TopicController {
 
 	/**
 	 * 
-	 * Description:后台选题申报部门主任页面
+	 * Description:后台部门主任查看可操作的选题
 	 * @author:lyc
 	 * @date:2017年12月22日下午2:59:37
 	 * @param request
@@ -164,6 +164,22 @@ public class TopicController {
 		return new ResponseBean(topicService.update(topic));
 	}
 
+	/**
+	 * 
+	 * Description:后台部门编辑查看可操作的申报选题
+	 * @author:lyc
+	 * @date:2017年12月22日下午3:10:12
+	 * @param request
+	 * @param pageSize
+	 *            当前页条数
+	 * @param pageNumber
+	 *            当前页数
+	 * @param bookname
+	 *            选题名称
+	 * @param submitTime
+	 *            提交时间 
+	 * @return ResponseBean
+	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "部门编辑查看可操作的申报选题")
 	@RequestMapping(value = "/listEditor",method = RequestMethod.GET)
