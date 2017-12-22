@@ -264,7 +264,7 @@
     </select>
     
     <!-- 计算主任可以操作的选题数 -->
-    <select id="totalTopicDirectorVOs" resultType="java.lang.Ingeter">
+    <select id="totalTopicDirectorVOs" resultType="Ingeter">
         SELECT count(a.*) 
 		FROM topic a LEFT JOIN pmph_user b ON a.department_id = b.department_id 
 		LEFT JOIN writer_user c ON a.user_id = c.id 
@@ -301,7 +301,7 @@
     </select>
     
     <!-- 计算编辑可以操作的选题数 -->
-    <select id="totalTopicEditorVOs" resultType="java.lang.Ingeter">
+    <select id="totalTopicEditorVOs" resultType="Ingeter">
         SELECT count(a.*) 
 		FROM topic a 
 		LEFT JOIN pmph_user b ON a.editor_id = b.id 
@@ -337,7 +337,7 @@
     </select>
     
     <!-- 系统管路员查询的选题申报数（主任界面） -->
-    <select id="totalDirectorView" resultType="java.lang.Ingeter">
+    <select id="totalDirectorView" resultType="Ingeter">
         SELECT count(*) 
 		FROM topic a 
 		LEFT JOIN writer_user b ON a.user_id = b.id 
@@ -371,7 +371,7 @@
     </select>
     
     <!-- 系统管理员查询选题申报数（编辑界面） -->
-    <select id="totalEditorView" resultType="java.lang.Ingeter">
+    <select id="totalEditorView" resultType="Ingeter">
         SELECT count(*) 
 		FROM topic a 
 		LEFT JOIN writer_user b ON a.user_id = b.id 
