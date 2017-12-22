@@ -60,15 +60,6 @@ public interface CmsAdvertisementService {
 			throws CheckedServiceException, IOException;
 
 	/**
-	 * 根据广告位置id删除广告
-	 * 
-	 * @param id
-	 * @return
-	 * @throws CheckedServiceException
-	 */
-	//Integer deleteCmsAdvertisementById(String[] images,String sessionId) throws CheckedServiceException;
-
-	/**
 	 * 根据id获取广告
 	 * 
 	 * @param id
@@ -76,4 +67,17 @@ public interface CmsAdvertisementService {
 	 * @throws CheckedServiceException
 	 */
 	CmsAdvertisement getCmsAdvertisementById(Long id) throws CheckedServiceException;
+	
+	/**
+	 * 增加图片
+	 * @param cmsAdvertisementOrImageVO
+	 * @param file
+	 * @param sessionId
+	 * @return
+	 * @throws CheckedServiceException,IOException 
+	 */
+	CmsAdvertisementImage addCmsAdevertisementImage(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, 
+			MultipartFile file, String sessionId)throws CheckedServiceException, IOException;
+
+	Integer deleteCmsAdvertisementImageById(Long advertId, String[] image, String sessionId);
 }
