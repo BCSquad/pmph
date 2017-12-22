@@ -538,6 +538,10 @@ public class FileDownLoadController {
 		try {
 
 			list = textbookService.getExcelDecAndTextbooks(textbookIds);
+			if(list.size() == 0){
+				//设置表头 ，放置初始化表出错
+				list.add(new ExcelDecAndTextbookVO());
+			}
 			workbook = excelHelper.fromBusinessObjectList(list, "遴选名单");
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");

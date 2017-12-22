@@ -138,7 +138,7 @@
 		id=#{id};
 	</update>
 	<!-- 查找Survey通过主键id -->
-	<select id="selectSurveyById" parameterType="java.lang.Long" resultType="Survey">
+	<select id="getSurveyById" parameterType="java.lang.Long" resultType="Survey">
 		select * from survey where id=#{id};
 	</select>
 </mapper>

@@ -84,7 +84,7 @@
 		id=#{id} ;
 	</update>
 	<!-- 查找SurveyTemplate通过主键id -->
-	<select id="selectSurveyTemplateById" parameterType="java.lang.Long" 
+	<select id="getSurveyTemplateById" parameterType="java.lang.Long" 
 	resultType="SurveyTemplate">
 		select * from survey_template where id=#{id};
 	</select>
@@ -118,7 +118,7 @@
 	</select>
 	
 	<!-- 根据模版id获取问卷表标题和简介 -->
-	<select id="selectSurveyTemplateGetVOById" parameterType="java.lang.Long" 
+	<select id="getSurveyTemplateGetVOById" parameterType="java.lang.Long" 
 	resultType="SurveyTemplateGetVO">
 		select s.title,s.subhead,s.intro from survey_template st 
 		left join survey s on s.template_id = st.id 

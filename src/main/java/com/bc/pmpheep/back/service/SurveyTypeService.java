@@ -1,5 +1,8 @@
 package com.bc.pmpheep.back.service;
 
+import com.bc.pmpheep.back.po.SurveyType;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
+
 /**
  * 
  * <pre>
@@ -18,5 +21,43 @@ package com.bc.pmpheep.back.service;
  * </pre>
  */
 public interface SurveyTypeService {
+	/**
+     * 新增一个SurveyType
+     * 
+     * @author:tyc
+     * @date:2017年12月22日下午17:16:45
+     * @param SurveyType 实体对象
+     * @return 影响行数
+     */
+	SurveyType addSurveyType(SurveyType surveyType) throws CheckedServiceException;
 
+    /**
+     * 删除SurveyType通过主键id
+     * 
+     * @author:tyc
+     * @date:2017年12月22日下午17:19:22
+     * @param SurveyType
+     * @return 影响行数
+     */
+    Integer deleteSurveyTypeById(Long id) throws CheckedServiceException;
+
+    /**
+     * 更新一个 SurveyType通过主键id
+     * 
+     * @author:tyc
+     * @date:2017年12月22日下午17:25:07
+     * @param SurveyType
+     * @return 影响行数
+     */
+    Integer updateSurveyType(SurveyType surveyType) throws CheckedServiceException;
+
+    /**
+     * 查找SurveyType通过主键id
+     * 
+     * @author:tyc
+     * @date:2017年12月22日下午17:32:58
+     * @param SurveyType
+     * @return 影响行数
+     */
+    SurveyType getSurveyTypeById(Long id) throws CheckedServiceException;
 }

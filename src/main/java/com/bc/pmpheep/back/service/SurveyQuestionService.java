@@ -57,5 +57,5 @@ public interface SurveyQuestionService {
      * @param SurveyQuestionListVO
      * @return 影响行数
      */
-    Integer addSurveyQuestionListVOList(String jsonDecPosition);
+    Integer addSurveyQuestionListVOList(String jsonSurveyQuestion) throws CheckedServiceException;
 }

@@ -93,7 +93,7 @@
 		id=#{id};
 	</update>
 	<!-- 查找SurveyQuestionAnswer通过主键id -->
-	<select id="selectSurveyQuestionAnswerById" parameterType="java.lang.Long" resultType="SurveyQuestionAnswer">
+	<select id="getSurveyQuestionAnswerById" parameterType="java.lang.Long" resultType="SurveyQuestionAnswer">
 		select * from survey_answer where id=#{id};
 	</select>
 	

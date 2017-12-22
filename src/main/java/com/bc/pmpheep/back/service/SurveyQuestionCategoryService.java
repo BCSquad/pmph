@@ -1,5 +1,8 @@
 package com.bc.pmpheep.back.service;
 
+import com.bc.pmpheep.back.po.SurveyQuestionCategory;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
+
 /**
  * 
  * <pre>
@@ -18,5 +21,45 @@ package com.bc.pmpheep.back.service;
  * </pre>
  */
 public interface SurveyQuestionCategoryService {
+	/**
+     * 新增一个SurveyQuestionCategory
+     * 
+     * @author:tyc
+     * @date:2017年12月22日下午16:33:43
+     * @param SurveyQuestionCategory 实体对象
+     * @return 影响行数
+     */
+	SurveyQuestionCategory addSurveyQuestionCategory(SurveyQuestionCategory surveyQuestionCategory) 
+			throws CheckedServiceException;
 
+    /**
+     * 删除SurveyQuestionCategory通过主键id
+     * 
+     * @author:tyc
+     * @date:2017年12月22日下午16:36:15
+     * @param SurveyQuestionCategory
+     * @return 影响行数
+     */
+    Integer deleteSurveyQuestionCategoryById(Long id) throws CheckedServiceException;
+
+    /**
+     * 更新一个 SurveyQuestionCategory通过主键id
+     * 
+     * @author:tyc
+     * @date:2017年12月22日下午16:38:34
+     * @param SurveyQuestionCategory
+     * @return 影响行数
+     */
+    Integer updateSurveyQuestionCategory(SurveyQuestionCategory surveyQuestionCategory) 
+    		throws CheckedServiceException;
+
+    /**
+     * 查找SurveyQuestionCategory通过主键id
+     * 
+     * @author:tyc
+     * @date:2017年12月22日下午16:41:57
+     * @param SurveyQuestionCategory
+     * @return 影响行数
+     */
+    SurveyQuestionCategory getSurveyQuestionCategoryById(Long id) throws CheckedServiceException;
 }
