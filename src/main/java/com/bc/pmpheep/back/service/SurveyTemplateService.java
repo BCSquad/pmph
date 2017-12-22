@@ -1,5 +1,8 @@
 package com.bc.pmpheep.back.service;
 
+import com.bc.pmpheep.back.po.SurveyTemplate;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
+
 /**
  * 
  * <pre>
@@ -18,5 +21,43 @@ package com.bc.pmpheep.back.service;
  * </pre>
  */
 public interface SurveyTemplateService {
+	/**
+     * 新增一个SurveyTemplate
+     * 
+     * @author:tyc
+     * @date:2017年12月22日下午17:51:22
+     * @param SurveyTemplate 实体对象
+     * @return 影响行数
+     */
+	SurveyTemplate addSurveyTemplate(SurveyTemplate surveyTemplate) throws CheckedServiceException;
 
+    /**
+     * 逻辑删除SurveyTemplate通过主键id
+     * 
+     * @author:tyc
+     * @date:2017年12月22日下午17:53:06
+     * @param SurveyTemplate
+     * @return 影响行数
+     */
+    Integer deleteSurveyTemplateById(Long id) throws CheckedServiceException;
+
+    /**
+     * 更新一个 SurveyTemplate通过主键id
+     * 
+     * @author:tyc
+     * @date:2017年12月22日下午17:57:43
+     * @param SurveyTemplate
+     * @return 影响行数
+     */
+    Integer updateSurveyTemplate(SurveyTemplate surveyTemplate) throws CheckedServiceException;
+
+    /**
+     * 查找SurveyTemplate通过主键id
+     * 
+     * @author:tyc
+     * @date:2017年12月22日下午17:59:13
+     * @param SurveyTemplate
+     * @return 影响行数
+     */
+    SurveyTemplate getSurveyTemplateById(Long id) throws CheckedServiceException;
 }
