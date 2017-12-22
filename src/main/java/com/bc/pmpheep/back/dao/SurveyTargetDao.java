@@ -50,5 +50,5 @@ public interface SurveyTargetDao {
      * @param SurveyTarget
      * @return 影响行数
      */
-    SurveyTarget selectSurveyTargetById(Long id);
+    SurveyTarget getSurveyTargetById(Long id);
 }

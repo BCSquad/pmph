@@ -186,7 +186,7 @@ public interface TopicDao {
 	 *
 	 */
 	List<TopicDeclarationVO> listCheckTopic(@Param("authProgress") List<Long> authProgress,
-			@Param("pageSize") Integer pageSize, @Param("start") Integer start, @Param("bookName") String bookName,
+			@Param("pageSize") Integer pageSize, @Param("start") Integer start, @Param("bookname") String bookname,
 			@Param("submitTime") Timestamp submitTime);
 
 	/**
@@ -199,7 +199,7 @@ public interface TopicDao {
 	 * @return
 	 *
 	 */
-	Integer listCheckTopicTotal(@Param("authProgress") List<Long> authProgress, @Param("bookName") String bookName,
+	Integer listCheckTopicTotal(@Param("authProgress") List<Long> authProgress, @Param("bookname") String bookname,
 			@Param("submitTime") Timestamp submitTime);
 
 	/**

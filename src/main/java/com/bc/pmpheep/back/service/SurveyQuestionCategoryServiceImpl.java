@@ -1,6 +1,14 @@
 package com.bc.pmpheep.back.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.bc.pmpheep.back.dao.SurveyQuestionCategoryDao;
+import com.bc.pmpheep.back.po.SurveyQuestionCategory;
+import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * 
@@ -21,5 +29,53 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SurveyQuestionCategoryServiceImpl implements SurveyQuestionCategoryService {
+
+	@Autowired
+	private SurveyQuestionCategoryDao surveyQuestionCategoryDao;
+	
+	@Override
+	public SurveyQuestionCategory addSurveyQuestionCategory(SurveyQuestionCategory surveyQuestionCategory)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(surveyQuestionCategory)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		if (ObjectUtil.isNull(surveyQuestionCategory.getCategoryName())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                    CheckedExceptionResult.NULL_PARAM, "分类名称为空");
+		}
+		surveyQuestionCategoryDao.addSurveyQuestionCategory(surveyQuestionCategory);
+		return surveyQuestionCategory;
+	}
+
+	@Override
+	public Integer deleteSurveyQuestionCategoryById(Long id)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(id)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return surveyQuestionCategoryDao.deleteSurveyQuestionCategoryById(id);
+	}
+
+	@Override
+	public Integer updateSurveyQuestionCategory(SurveyQuestionCategory surveyQuestionCategory)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(surveyQuestionCategory)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return surveyQuestionCategoryDao.updateSurveyQuestionCategory(surveyQuestionCategory);
+	}
+
+	@Override
+	public SurveyQuestionCategory getSurveyQuestionCategoryById(Long id)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(id)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return surveyQuestionCategoryDao.getSurveyQuestionCategoryById(id);
+	}
 
 }

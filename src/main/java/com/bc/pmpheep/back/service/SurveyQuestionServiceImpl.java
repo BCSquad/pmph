@@ -33,35 +33,35 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 	
 	@Override
 	public SurveyQuestion addSurveyQuestion(SurveyQuestion surveyQuestion) throws CheckedServiceException {
-		if (ObjectUtil.notNull(surveyQuestion)) {
+		if (ObjectUtil.isNull(surveyQuestion)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		if (ObjectUtil.notNull(surveyQuestion.getCategoryId())) {
+		if (ObjectUtil.isNull(surveyQuestion.getCategoryId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "问题分类为空");
 		}
-		if (StringUtil.notEmpty(surveyQuestion.getTitle())) {
+		if (StringUtil.isEmpty(surveyQuestion.getTitle())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "题目为空");
 		}
-		if (ObjectUtil.notNull(surveyQuestion.getType())) {
+		if (ObjectUtil.isNull(surveyQuestion.getType())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "问题类型为空");
 		}
-		if (ObjectUtil.notNull(surveyQuestion.getSort())) {
+		if (ObjectUtil.isNull(surveyQuestion.getSort())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "问题序号为空");
 		}
-		if (ObjectUtil.notNull(surveyQuestion.getIsAnswer())) {
+		if (ObjectUtil.isNull(surveyQuestion.getIsAnswer())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "问题是否必答为空");
 		}
 		surveyQuestionDao.addSurveyQuestion(surveyQuestion);
 		Long id = surveyQuestion.getId();
-		if (ObjectUtil.notNull(id)) {
+		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                    CheckedExceptionResult.NULL_PARAM, "id不能为空");
+                    CheckedExceptionResult.NULL_PARAM, "id为空");
 		}
 		if (ObjectUtil.notNull(id)) {
 			surveyQuestion.setId(id);
@@ -72,7 +72,7 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 	@Override
 	public Integer updateSurveyQuestion(SurveyQuestion surveyQuestion)
 			throws CheckedServiceException {
-		if (ObjectUtil.notNull(surveyQuestion)) {
+		if (ObjectUtil.isNull(surveyQuestion)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
@@ -82,17 +82,17 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 	@Override
 	public SurveyQuestion selectSurveyQuestionById(Long id)
 			throws CheckedServiceException {
-		if (ObjectUtil.notNull(id)) {
+		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		return surveyQuestionDao.selectSurveyQuestionById(id);
+		return surveyQuestionDao.getSurveyQuestionById(id);
 	}
 
 	@Override
 	public Integer deleteSurveyQuestionById(Long id)
 			throws CheckedServiceException {
-		if (ObjectUtil.notNull(id)) {
+		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
@@ -101,45 +101,31 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Integer addSurveyQuestionListVOList(String jsonDecPosition) {
-		if (ObjectUtil.isNull(jsonDecPosition)) {
+	public Integer addSurveyQuestionListVOList(String jsonSurveyQuestion) throws CheckedServiceException {
+		if (ObjectUtil.isNull(jsonSurveyQuestion)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		// json字符串转List对象集合
 		List<SurveyQuestionListVO> SurveyQuestionListVO = 
-				new JsonUtil().getArrayListObjectFromStr(SurveyQuestionListVO.class, jsonDecPosition);
+				new JsonUtil().getArrayListObjectFromStr(SurveyQuestionListVO.class, jsonSurveyQuestion);
 		if (CollectionUtil.isEmpty(SurveyQuestionListVO)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		for (SurveyQuestionListVO SurveyQuestionLists : SurveyQuestionListVO) { //遍历获取问题的集合
-			Long categoryId = SurveyQuestionLists.getCategoryId();
-			String title = SurveyQuestionLists.getTitle();
-			Short type = SurveyQuestionLists.getType();
-			Integer sort = SurveyQuestionLists.getSort();
-			String direction = SurveyQuestionLists.getDirection();
-			Boolean isAnswer = SurveyQuestionLists.getIsAnswer();
-			List<SurveyQuestionOption> surveyQuestionOptionList = 
-					SurveyQuestionLists.getSurveyQuestionOptionList();
-			SurveyQuestion surveyQuestion = new SurveyQuestion(); // 问题实体
-			surveyQuestion.setCategoryId(categoryId);
-			surveyQuestion.setTitle(title);
-			surveyQuestion.setType(type);
-			surveyQuestion.setSort(sort);
-			surveyQuestion.setDirection(direction);
-			surveyQuestion.setIsAnswer(isAnswer);
+			SurveyQuestion surveyQuestion = new SurveyQuestion(SurveyQuestionLists.getCategoryId(), 
+					SurveyQuestionLists.getTitle(), SurveyQuestionLists.getType(), 
+					SurveyQuestionLists.getSort(), SurveyQuestionLists.getDirection(), 
+					SurveyQuestionLists.getIsAnswer()); // 问题实体
 			SurveyQuestion surveyQuestions = addSurveyQuestion(surveyQuestion); // 先保存问题
 			Long id = surveyQuestions.getId(); // 获取问题id
+			List<SurveyQuestionOption> surveyQuestionOptionList = 
+					SurveyQuestionLists.getSurveyQuestionOptionList(); // 获取问题选项list
 			for (SurveyQuestionOption surveyQuestionOptions : surveyQuestionOptionList) { // 遍历问题选项
-				String optionContent = surveyQuestionOptions.getOptionContent();
-				Boolean isOther = surveyQuestionOptions.getIsOther();
-				String remark = surveyQuestionOptions.getRemark();
-				SurveyQuestionOption surveyQuestionOption = new SurveyQuestionOption(); // 问题选项实体
-				surveyQuestionOption.setQuestionId(id);
-				surveyQuestionOption.setOptionContent(optionContent);
-				surveyQuestionOption.setIsOther(isOther);
-				surveyQuestionOption.setRemark(remark);
+				SurveyQuestionOption surveyQuestionOption = new SurveyQuestionOption(id, 
+						surveyQuestionOptions.getOptionContent(), surveyQuestionOptions.getIsOther(), 
+						surveyQuestionOptions.getRemark()); // 问题选项实体
 				surveyQuestionOptionDao.addSurveyQuestionOption(surveyQuestionOption); // 再保存问题选项
 			}
 		}

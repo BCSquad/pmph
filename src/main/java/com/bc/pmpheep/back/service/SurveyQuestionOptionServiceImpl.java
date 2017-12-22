@@ -57,13 +57,13 @@ public class SurveyQuestionOptionServiceImpl implements SurveyQuestionOptionServ
 	}
 
 	@Override
-	public SurveyQuestionOption selectSurveyQuestionOptionById(Long id)
+	public SurveyQuestionOption getSurveyQuestionOptionById(Long id)
 			throws CheckedServiceException {
 		if (ObjectUtil.notNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		return surveyQuestionOptionDao.selectSurveyQuestionOptionById(id);
+		return surveyQuestionOptionDao.getSurveyQuestionOptionById(id);
 	}
 	
 }
