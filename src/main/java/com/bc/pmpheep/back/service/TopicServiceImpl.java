@@ -11,10 +11,12 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Topic;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.vo.TopicDeclarationVO;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
 import com.bc.pmpheep.back.vo.TopicTextVO;
 import com.bc.pmpheep.erp.db.SqlHelper;
@@ -252,6 +254,68 @@ public class TopicServiceImpl implements TopicService {
 					"没有这个图书类别");
 		}
 		return topicTextVO;
+	}
+
+	@Override
+	public PageResult<TopicDeclarationVO> listCheckTopic(List<Long> authProgress,
+			PageParameter<TopicDeclarationVO> pageParameter) throws CheckedServiceException {
+		if (CollectionUtil.isEmpty(authProgress)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
+					"选题申报状态不对");
+		}
+		PageResult<TopicDeclarationVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total = topicDao.listCheckTopicTotal(authProgress, pageParameter.getParameter().getBookname(),
+				pageParameter.getParameter().getSubmitTime());
+		if (total > 0) {
+			List<TopicDeclarationVO> list = topicDao.listCheckTopic(authProgress, pageParameter.getPageSize(),
+					pageParameter.getStart(), pageParameter.getParameter().getBookname(),
+					pageParameter.getParameter().getSubmitTime());
+			list = addState(list);
+			pageResult.setRows(list);
+		}
+		pageResult.setTotal(total);
+		return pageResult;
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：向查看选题申报中插入状态详情
+	 *
+	 * @param list
+	 * @return
+	 *
+	 */
+	public List<TopicDeclarationVO> addState(List<TopicDeclarationVO> list) {
+		for (TopicDeclarationVO vo : list) {
+			if (1 == vo.getAuthProgress()) {
+				if (vo.getIsOptsHandling()) {
+					vo.setState("作者已提交");
+					vo.setStateDeail("待管理员分配");
+					if (vo.getIsDirectorHandling()) {
+						vo.setState("主任已受理");
+						vo.setStateDeail("待主任分配");
+						if (vo.getIsEditorHandling()) {
+							vo.setState("主任已分配");
+							vo.setStateDeail("待编辑受理");
+							if (vo.getIsAccepted()) {
+								vo.setState("编辑已受理");
+								vo.setStateDeail("待编辑处理");
+							}
+						}
+					}
+				}
+			} else {
+				if (2 == vo.getAuthProgress()) {
+					vo.setState("不通过");
+				}
+				if (3 == vo.getAuthProgress()) {
+					vo.setState("通过");
+				}
+			}
+		}
+		return list;
 	}
 
 }

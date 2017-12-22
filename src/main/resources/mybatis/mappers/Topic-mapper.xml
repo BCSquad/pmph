@@ -244,4 +244,41 @@
 		w ON a.user_id = w.id WHERE t.id = #{id};
 	</select>
 
+	<select id="listCheckTopic" resultType="TopicDeclarationVO">
+		SELECT t.*,w.realname
+		FROM topic t LEFT JOIN writer_user w ON w.id =
+		t.user_id WHERE
+		t.auth_progress IN
+		<foreach collection="list" index="index" close=")" open="("
+			separator="," item="authProgress">
+			#{authProgress}
+		</foreach>
+		<if test="bookname != null and bookname !=''">
+			AND t.bookname like concat('%',#{bookname},'%')
+		</if>
+		<if test="submitTime != null">
+			AND t.submit_time = #{submitTime}
+		</if>
+		ORDER BY t.submit_time
+		limit
+		#{start},#{pageSize}
+	</select>
+
+	<select id="listCheckTopicTotal" resultType="TopicDeclarationVO">
+		SELECT count(*)
+		FROM topic t LEFT JOIN writer_user w ON w.id =
+		t.user_id WHERE
+		t.auth_progress IN
+		<foreach collection="list" index="index" close=")" open="("
+			separator="," item="authProgress">
+			#{authProgress}
+		</foreach>
+		<if test="bookname != null and bookname !=''">
+			AND t.bookname like concat('%',#{bookname},'%')
+		</if>
+		<if test="submitTime != null">
+			AND t.submit_time = #{submitTime}
+		</if>
+		ORDER BY t.submit_time
+	</select>
 </mapper>

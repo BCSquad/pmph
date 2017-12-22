@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.Topic;
+import com.bc.pmpheep.back.vo.TopicDeclarationVO;
 import com.bc.pmpheep.back.vo.TopicDirectorVO;
 import com.bc.pmpheep.back.vo.TopicEditorVO;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
@@ -173,4 +174,31 @@ public interface TopicDao {
 	 *
 	 */
 	TopicTextVO getTopicTextVO(Long id);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：查看选题申报
+	 *
+	 * @param authProgress
+	 *            审核进度
+	 * @return
+	 *
+	 */
+	List<TopicDeclarationVO> listCheckTopic(@Param("authProgress") List<Long> authProgress,
+			@Param("pageSize") Integer pageSize, @Param("start") Integer start, @Param("bookName") String bookName,
+			@Param("submitTime") Timestamp submitTime);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：查看选题申报数量
+	 *
+	 * @param authProgress
+	 *            审核进度
+	 * @return
+	 *
+	 */
+	Integer listCheckTopicTotal(@Param("authProgress") List<Long> authProgress, @Param("bookName") String bookName,
+			@Param("submitTime") Timestamp submitTime);
 }

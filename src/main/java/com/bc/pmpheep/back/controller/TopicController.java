@@ -1,6 +1,8 @@
 package com.bc.pmpheep.back.controller;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,7 +18,9 @@ import com.bc.pmpheep.back.po.Topic;
 import com.bc.pmpheep.back.service.TopicService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.back.vo.TopicDeclarationVO;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
+import com.bc.pmpheep.back.vo.TopicTextVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
 /**
@@ -185,5 +189,59 @@ public class TopicController {
 	@RequestMapping(value = "/get/topicText", method = RequestMethod.GET)
 	public ResponseBean topicText(Long id) {
 		return new ResponseBean(topicService.getTopicTextVO(id));
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：查看选题申报
+	 * 
+	 * @param authProgress
+	 *            申报状态
+	 * @param bookname
+	 *            申报标题
+	 * @param submitTime
+	 *            提交日期
+	 * @param pageSize
+	 * @param pageNumber
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查看选题申报")
+	@RequestMapping(value = "/list/checkTopic", method = RequestMethod.GET)
+	public ResponseBean checkTopic(String authProgress, String bookname, Timestamp submitTime, Integer pageSize,
+			Integer pageNumber) {
+		String[] strs = authProgress.split(",");
+		List<Long> progress = new ArrayList<>();
+		for (String str : strs) {
+			progress.add(Long.valueOf(str));
+		}
+		PageParameter<TopicDeclarationVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+		TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
+		topicDeclarationVO.setBookname(bookname);
+		topicDeclarationVO.setSubmitTime(submitTime);
+		pageParameter.setParameter(topicDeclarationVO);
+		return new ResponseBean(topicService.listCheckTopic(progress, pageParameter));
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：查看选题申报详情
+	 *
+	 * @param id
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查看选题申报详情")
+	@RequestMapping(value = "/get/detail", method = RequestMethod.GET)
+	public ResponseBean detail(Long id) {
+		TopicTextVO topicTextVO = topicService.getTopicTextVO(id);
+		topicTextVO.setIsAccepted(null);
+		topicTextVO.setIsDirectorHandling(null);
+		topicTextVO.setIsEditorHandling(null);
+		return new ResponseBean(topicTextVO);
 	}
 }
