@@ -9,9 +9,9 @@ import java.sql.Timestamp;
 import org.apache.ibatis.type.Alias;
 
 /**
- * <p>Title:TopicEditorVO<p>
- * <p>Description:TODO<p>
- * @author Administrator
+ * <p>Title:后台选题申报编辑界面<p>
+ * <p>Description:受理审核选题<p>
+ * @author lyc
  * @date 2017年12月20日 下午4:37:58
  */
 @SuppressWarnings("serial")
@@ -30,8 +30,12 @@ public class TopicEditorVO implements Serializable{
 	private Timestamp deadline;
 	//图书类别：0=专著，1=基础理论，2=论文集，3=科普，4=应用技术，5=工具书，6=其他
 	private Integer type;
+	// 图书类别
+	private String typeName;
 	//提交时间
 	private Timestamp submitTime;
+	//编辑是否接受办理
+	private Boolean isAccepted;
 	
 	public Long getId() {
 		return id;
@@ -74,6 +78,18 @@ public class TopicEditorVO implements Serializable{
 	}
 	public void setSubmitTime(Timestamp submitTime) {
 		this.submitTime = submitTime;
+	}
+	public String getTypeName() {
+		return typeName;
+	}
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+	public Boolean getIsAccepted() {
+		return isAccepted;
+	}
+	public void setIsAccepted(Boolean isAccepted) {
+		this.isAccepted = isAccepted;
 	}
 	
 }
