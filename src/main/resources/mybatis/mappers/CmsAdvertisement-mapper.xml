@@ -26,6 +26,30 @@
 			<if test="note != null and note != ''">
 				note,
 			</if>
+			<if test="style != null and style != ''">
+				style,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="autoPlay != null">
+				auto_play,
+			</if>
+			<if test="navigationColor != null and navigationColor != ''">
+				navigation_color,
+			</if>
+			<if test="isNavigation != null">
+				isNavigation,
+			</if>
+			<if test="animationInterval != null">
+				animation_interval,
+			</if>
+			<if test="animationEffect != null and animationEffect != ''">
+				animation_effect,
+			</if>
+			<if test="isShowHeading != null">
+				is_show_heading,
+			</if>
 			<if test="gmtCreate!=null">
 				gmt_create,
 			</if>
@@ -59,6 +83,30 @@
 			<if test="note != null and note != ''">
 				#{note},
 			</if>
+			<if test="style != null and style != ''">
+				#{style},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="autoPlay != null">
+				#{auto_play},
+			</if>
+			<if test="navigationColor != null and navigationColor != ''">
+				#{navigation_color},
+			</if>
+			<if test="isNavigation != null">
+				#{isNavigation},
+			</if>
+			<if test="animationInterval != null">
+				#{animation_interval},
+			</if>
+			<if test="animationEffect != null and animationEffect != ''">
+				#{animation_effect},
+			</if>
+			<if test="isShowHeading != null">
+				#{is_show_heading},
+			</if>
 			<if test="gmtCreate!=null">
 				#{gmtCreate},
 			</if>
@@ -79,8 +127,10 @@
 	</insert>
 	
 	<!-- 获取广告列表 -->
-	<select id="getAdvertisementList"  resultType="CmsAdvertisement" >
-		select * from cms_advertisement;
+	<select id="getAdvertisementList"  resultType="CmsAdvertisementOrImageVO" >
+		select ca.*,cai.id imageId,cai.image,cai.advert_id,cai.is_disabled isDisplay  
+			from cms_advertisement ca
+			left join cms_advertisement_image cai on cai.advert_id =ca.id;
 	</select>
 	
 	<!-- 根据id查询一个CmsAdvertisement -->
@@ -92,9 +142,6 @@
 	<update id="updateCmsAdvertisement" parameterType="CmsAdvertisement">
 		update cms_advertisement 
 			<set>
-				<if test="image != null and image !=''">
-					image=#{image},
-				</if>
 				<if test="url != null and url !=''">
 					url=#{url},
 				</if>
