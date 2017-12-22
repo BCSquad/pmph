@@ -1,6 +1,10 @@
 package com.bc.pmpheep.back.vo;
 
+import java.util.List;
+
 import org.apache.ibatis.type.Alias;
+
+import com.bc.pmpheep.back.po.SurveyQuestionOption;
 
 /**
  * 问题集合VO
@@ -40,17 +44,9 @@ public class SurveyQuestionListVO implements java.io.Serializable {
      */
     private Boolean isAnswer;
     /**
-     * 选项内容
+     * 问题选项集合
      */
-    private String optionContent;
-    /**
-     * 是否有其他
-     */
-    private Boolean isOther;
-    /**
-     * 备注
-     */
-    private String remark;
+    private List<SurveyQuestionOption> surveyQuestionOptionList;
     
     public SurveyQuestionListVO() {
     }
@@ -110,29 +106,14 @@ public class SurveyQuestionListVO implements java.io.Serializable {
 	public void setIsAnswer(Boolean isAnswer) {
 		this.isAnswer = isAnswer;
 	}
-
-	public String getOptionContent() {
-		return optionContent;
+	
+	public List<SurveyQuestionOption> getSurveyQuestionOptionList() {
+		return surveyQuestionOptionList;
 	}
 
-	public void setOptionContent(String optionContent) {
-		this.optionContent = optionContent;
-	}
-
-	public Boolean getIsOther() {
-		return isOther;
-	}
-
-	public void setIsOther(Boolean isOther) {
-		this.isOther = isOther;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setSurveyQuestionOptionList(
+			List<SurveyQuestionOption> surveyQuestionOptionList) {
+		this.surveyQuestionOptionList = surveyQuestionOptionList;
 	}
 
 	@Override
@@ -140,7 +121,7 @@ public class SurveyQuestionListVO implements java.io.Serializable {
 		return "SurveyQuestionListVO [id=" + id + ", categoryId=" + categoryId
 				+ ", title=" + title + ", type=" + type + ", sort=" + sort
 				+ ", direction=" + direction + ", isAnswer=" + isAnswer
-				+ ", optionContent=" + optionContent + ", isOther=" + isOther
-				+ ", remark=" + remark + "]";
+				+ ", surveyQuestionOptionList=" + surveyQuestionOptionList
+				+ "]";
 	}
 }

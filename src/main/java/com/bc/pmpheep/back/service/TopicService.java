@@ -1,8 +1,11 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Topic;
+import com.bc.pmpheep.back.vo.TopicDeclarationVO;
 import com.bc.pmpheep.back.vo.TopicDirectorVO;
 import com.bc.pmpheep.back.vo.TopicEditorVO;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
@@ -67,23 +70,41 @@ public interface TopicService {
 
 	/**
 	 * 
-	 * Description:获取主任可以查询到的选题申报信息
+	 * 
+	 * 功能描述：查看选题申报
+	 *
+	 * @param authProgress
+	 *            审核进度
+	 * @return
+	 *
+	 */
+	PageResult<TopicDeclarationVO> listCheckTopic(List<Long> authProgress,
+			PageParameter<TopicDeclarationVO> pageParameter) throws CheckedServiceException;
+
+	/**
+	 * Description:获取主任可以查询到的选题申报信息*
+	 * 
 	 * @author:lyc
 	 * @date:2017年12月22日上午9:16:27
-	 * @param 
+	 * @param
 	 * @return PageResult<TopicDirectorVO>
 	 */
-	PageResult<TopicDirectorVO> listTopicDirectorVOs(String sessionId,PageParameter<TopicDirectorVO>pageParameter) 
+	PageResult<TopicDirectorVO> listTopicDirectorVOs(String sessionId, PageParameter<TopicDirectorVO> pageParameter)
 			throws CheckedServiceException;
-	
+
 	/**
 	 * 
+<<<<<<< HEAD
 	 * Description:获取主任可以查询到的选题申报信息
+	 * 
+=======
+	 * Description:获取编辑可以查询到的选题申报信息
+>>>>>>> branch 'develop' of https://zqf050217@github.com/BCSquad/pmph.git
 	 * @author:lyc
 	 * @date:2017年12月22日上午9:18:19
-	 * @param 
+	 * @param
 	 * @return PageResult<TopicEditorVO>
 	 */
-	PageResult<TopicEditorVO> listTopicEditorVOs(String sessionId, PageParameter<TopicEditorVO> pageParameter) 
+	PageResult<TopicEditorVO> listTopicEditorVOs(String sessionId, PageParameter<TopicEditorVO> pageParameter)
 			throws CheckedServiceException;
 }
