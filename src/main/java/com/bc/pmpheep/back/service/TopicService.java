@@ -78,7 +78,7 @@ public interface TopicService {
 	
 	/**
 	 * 
-	 * Description:获取主任可以查询到的选题申报信息
+	 * Description:获取编辑可以查询到的选题申报信息
 	 * @author:lyc
 	 * @date:2017年12月22日上午9:18:19
 	 * @param 
