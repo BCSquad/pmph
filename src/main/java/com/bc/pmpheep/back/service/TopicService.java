@@ -94,8 +94,12 @@ public interface TopicService {
 
 	/**
 	 * 
+<<<<<<< HEAD
 	 * Description:获取主任可以查询到的选题申报信息
 	 * 
+=======
+	 * Description:获取编辑可以查询到的选题申报信息
+>>>>>>> branch 'develop' of https://zqf050217@github.com/BCSquad/pmph.git
 	 * @author:lyc
 	 * @date:2017年12月22日上午9:18:19
 	 * @param

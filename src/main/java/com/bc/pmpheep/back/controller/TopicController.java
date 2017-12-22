@@ -19,6 +19,8 @@ import com.bc.pmpheep.back.service.TopicService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
+import com.bc.pmpheep.back.vo.TopicDirectorVO;
+import com.bc.pmpheep.back.vo.TopicEditorVO;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
 import com.bc.pmpheep.back.vo.TopicTextVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -105,6 +107,37 @@ public class TopicController {
 
 	/**
 	 * 
+	 * Description:后台部门主任查看可操作的选题
+	 * 
+	 * @author:lyc
+	 * @date:2017年12月22日下午2:59:37
+	 * @param request
+	 * @param pageSize
+	 *            当前页条数
+	 * @param pageNumber
+	 *            当前页数
+	 * @param bookname
+	 *            选题名称
+	 * @param submitTime
+	 *            提交时间
+	 * @return ResponseBean
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "部门主任查看可操作的选题")
+	@RequestMapping(value = "/listDirector", method = RequestMethod.GET)
+	public ResponseBean listDirector(HttpServletRequest request, Integer pageSize, Integer pageNumber, String bookName,
+			Timestamp submitTime) {
+		PageParameter<TopicDirectorVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+		TopicDirectorVO topicDirectorVO = new TopicDirectorVO();
+		topicDirectorVO.setBookName(bookName);
+		topicDirectorVO.setSubmitTime(submitTime);
+		String sessionId = CookiesUtil.getSessionId(request);
+		pageParameter.setParameter(topicDirectorVO);
+		return new ResponseBean(topicService.listTopicDirectorVOs(sessionId, pageParameter));
+	}
+
+	/**
+	 * 
 	 * 
 	 * 功能描述：主任操作选题流程
 	 *
@@ -134,6 +167,37 @@ public class TopicController {
 			topic.setIsEditorHandling(true);
 		}
 		return new ResponseBean(topicService.update(topic));
+	}
+
+	/**
+	 * 
+	 * Description:后台部门编辑查看可操作的申报选题
+	 * 
+	 * @author:lyc
+	 * @date:2017年12月22日下午3:10:12
+	 * @param request
+	 * @param pageSize
+	 *            当前页条数
+	 * @param pageNumber
+	 *            当前页数
+	 * @param bookname
+	 *            选题名称
+	 * @param submitTime
+	 *            提交时间
+	 * @return ResponseBean
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "部门编辑查看可操作的申报选题")
+	@RequestMapping(value = "/listEditor", method = RequestMethod.GET)
+	public ResponseBean listEditor(HttpServletRequest request, Integer pageSize, Integer pageNumber, String bookName,
+			Timestamp submitTime) {
+		PageParameter<TopicEditorVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+		TopicEditorVO topicEditorVO = new TopicEditorVO();
+		topicEditorVO.setBookName(bookName);
+		topicEditorVO.setSubmitTime(submitTime);
+		String sessionId = CookiesUtil.getSessionId(request);
+		pageParameter.setParameter(topicEditorVO);
+		return new ResponseBean(topicService.listTopicEditorVOs(sessionId, pageParameter));
 	}
 
 	/**
