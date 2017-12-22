@@ -3,7 +3,7 @@ package com.bc.pmpheep.back.vo;
 import org.apache.ibatis.type.Alias;
 
 /**
- * SurveyTemplate模版实体类
+ * SurveyTemplate模版VO获取标题和简介
  * 
  * @author tyc
  */
