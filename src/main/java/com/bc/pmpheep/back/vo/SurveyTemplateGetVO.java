@@ -12,7 +12,7 @@ public class SurveyTemplateGetVO implements java.io.Serializable {
 
     private static final long serialVersionUID = -7095331687874274350L;
     /**
-     * 主键
+     * 模版主键
      */
     private Long id;
     /**
