@@ -349,7 +349,8 @@ public class FileDownLoadController {
 		String dest = src + id;
 		zipDownload.setId(id);
 		zipDownload.setMaterialName(materialName);
-		zipDownload.setState("打包中");
+		zipDownload.setState(0);
+		zipDownload.setDetail("数据生成中...");
 		zipDownload.setCreateTime(DateUtil.getCurrentTime());
 		map.put(id, zipDownload);
 		try {
@@ -387,7 +388,8 @@ public class FileDownLoadController {
 		} catch (Exception e) {
 			e.getMessage();
 		}
-		zipDownload.setState("/zip/download?" + id);
+		zipDownload.setState(1);
+		zipDownload.setDetail("/zip/download?" + id);
 		map.put(id, zipDownload);
 	}
 
@@ -403,11 +405,13 @@ public class FileDownLoadController {
 	@ResponseBody
 	@RequestMapping(value = "/word/progress", method = RequestMethod.GET)
 	public String progress(String id) {
-		String state = "数据生成中...";
+		Integer state = 0;
+		String detail = "数据生成中...";
 		if (map.containsKey(id)) {
 			state = map.get(id).getState();
+			detail = map.get(id).getDetail();
 		}
-		return "{\"state\":\"" + state + "\"}";
+		return "{\"" + state + "\":\"" + detail + "\"}";
 	}
 
 	/**
