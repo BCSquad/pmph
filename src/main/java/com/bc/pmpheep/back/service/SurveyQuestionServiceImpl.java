@@ -114,16 +114,21 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		for (SurveyQuestionListVO SurveyQuestionLists : SurveyQuestionListVO) { //遍历获取问题的集合
-			SurveyQuestion surveyQuestion = new SurveyQuestion(SurveyQuestionLists.getCategoryId(), 
+			Long id = SurveyQuestionLists.getId(); // 获取问题id
+			if (ObjectUtil.notNull(id)) { // 如果id不为空，则先删除
+				surveyQuestionDao.deleteSurveyQuestionById(id);
+				surveyQuestionOptionDao.deleteSurveyQuestionOptionByQuestionId(id);
+			}
+			SurveyQuestion surveyQuestion = new SurveyQuestion(null, SurveyQuestionLists.getCategoryId(), 
 					SurveyQuestionLists.getTitle(), SurveyQuestionLists.getType(), 
 					SurveyQuestionLists.getSort(), SurveyQuestionLists.getDirection(), 
 					SurveyQuestionLists.getIsAnswer()); // 问题实体
 			SurveyQuestion surveyQuestions = addSurveyQuestion(surveyQuestion); // 先保存问题
-			Long id = surveyQuestions.getId(); // 获取问题id
+			Long newId = surveyQuestions.getId(); // 获取数据库新生成的问题id
 			List<SurveyQuestionOption> surveyQuestionOptionList = 
 					SurveyQuestionLists.getSurveyQuestionOptionList(); // 获取问题选项list
 			for (SurveyQuestionOption surveyQuestionOptions : surveyQuestionOptionList) { // 遍历问题选项
-				SurveyQuestionOption surveyQuestionOption = new SurveyQuestionOption(id, 
+				SurveyQuestionOption surveyQuestionOption = new SurveyQuestionOption(newId, 
 						surveyQuestionOptions.getOptionContent(), surveyQuestionOptions.getIsOther(), 
 						surveyQuestionOptions.getRemark()); // 问题选项实体
 				surveyQuestionOptionDao.addSurveyQuestionOption(surveyQuestionOption); // 再保存问题选项

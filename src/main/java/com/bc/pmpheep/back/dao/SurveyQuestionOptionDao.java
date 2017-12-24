@@ -51,4 +51,14 @@ public interface SurveyQuestionOptionDao {
      * @return 影响行数
      */
     SurveyQuestionOption getSurveyQuestionOptionById(Long id);
+    
+    /**
+     * 删除SurveyQuestionOption通过问题id
+     * 
+     * @author:tyc
+     * @date:2017年12月24日下午14:06:34
+     * @param SurveyQuestionOption
+     * @return 影响行数
+     */
+    Integer deleteSurveyQuestionOptionByQuestionId(Long questionId);
 }

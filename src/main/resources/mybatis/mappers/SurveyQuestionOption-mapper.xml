@@ -88,4 +88,9 @@
 		select * from survey_question_option where id=#{id};
 	</select>
 	
+	<!-- 删除SurveyQuestionOption通过问题id -->
+	<delete id="deleteSurveyQuestionOptionByQuestionId" parameterType="java.lang.Long">
+		delete from survey_question_option where question_id=#{questionId};
+	</delete>
+	
 </mapper>
