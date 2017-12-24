@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.po.SurveyTemplate;
+import com.bc.pmpheep.back.vo.SurveyTemplateVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -60,4 +61,15 @@ public interface SurveyTemplateService {
      * @return 影响行数
      */
     SurveyTemplate getSurveyTemplateById(Long id) throws CheckedServiceException;
+    
+    /**
+     * 添加SurveyTemplate模版
+     * 
+     * @author:tyc
+     * @date:2017年12月24日下午14:23:07
+     * @param SurveyTemplateVO
+     * @return 影响行数
+     */
+    SurveyTemplateVO addSurveyTemplateVO(SurveyTemplateVO surveyTemplateVO) 
+    		throws CheckedServiceException;
 }
