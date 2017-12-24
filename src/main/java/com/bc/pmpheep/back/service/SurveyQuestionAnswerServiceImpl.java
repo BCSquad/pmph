@@ -48,7 +48,7 @@ public class SurveyQuestionAnswerServiceImpl implements SurveyQuestionAnswerServ
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "问题为空");
 		}
-		if (ObjectUtil.isNull(surveyQuestionAnswer.getOptionsId())) {
+		if (ObjectUtil.isNull(surveyQuestionAnswer.getOptionId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "问题选项为空");
 		}
