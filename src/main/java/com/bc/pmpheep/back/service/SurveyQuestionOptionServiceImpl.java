@@ -26,19 +26,19 @@ public class SurveyQuestionOptionServiceImpl implements SurveyQuestionOptionServ
 	@Override
 	public SurveyQuestionOption addSurveyQuestionOption(SurveyQuestionOption surveyQuestionOption) 
 			throws CheckedServiceException {
-		if (ObjectUtil.notNull(surveyQuestionOption)) {
+		if (ObjectUtil.isNull(surveyQuestionOption)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		if (ObjectUtil.notNull(surveyQuestionOption.getQuestionId())) {
+		if (ObjectUtil.isNull(surveyQuestionOption.getQuestionId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "问题对应为空");
 		}
-		if (StringUtil.notEmpty(surveyQuestionOption.getOptionContent())) {
+		if (StringUtil.isEmpty(surveyQuestionOption.getOptionContent())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "选项内容为空");
 		}
-		if (ObjectUtil.notNull(surveyQuestionOption.getIsOther())) {
+		if (ObjectUtil.isNull(surveyQuestionOption.getIsOther())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "是否有其他为空");
 		}
@@ -49,7 +49,7 @@ public class SurveyQuestionOptionServiceImpl implements SurveyQuestionOptionServ
 	@Override
 	public Integer updateSurveyQuestionOption(SurveyQuestionOption surveyQuestionOption)
 			throws CheckedServiceException {
-		if (ObjectUtil.notNull(surveyQuestionOption)) {
+		if (ObjectUtil.isNull(surveyQuestionOption)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
@@ -59,7 +59,7 @@ public class SurveyQuestionOptionServiceImpl implements SurveyQuestionOptionServ
 	@Override
 	public SurveyQuestionOption getSurveyQuestionOptionById(Long id)
 			throws CheckedServiceException {
-		if (ObjectUtil.notNull(id)) {
+		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}

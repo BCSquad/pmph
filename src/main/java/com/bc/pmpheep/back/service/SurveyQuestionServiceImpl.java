@@ -80,7 +80,7 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 	}
 
 	@Override
-	public SurveyQuestion selectSurveyQuestionById(Long id)
+	public SurveyQuestion getSurveyQuestionById(Long id)
 			throws CheckedServiceException {
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
