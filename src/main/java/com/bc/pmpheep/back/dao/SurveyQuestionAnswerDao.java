@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.SurveyQuestionAnswer;
@@ -21,6 +23,18 @@ public interface SurveyQuestionAnswerDao {
      * @return 影响行数
      */
     Integer addSurveyQuestionAnswer(SurveyQuestionAnswer surveyQuestionAnswer);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：批量保存SurveyQuestionAnswer
+     * 使用示范：
+     *
+     * @param surveyQuestionAnswers
+     * @return  影响行数
+     * </pre>
+     */
+    Integer batchAddSurveyQuestionAnswer(List<SurveyQuestionAnswer> surveyQuestionAnswers);
 
     /**
      * 删除SurveyQuestionAnswer通过主键id
