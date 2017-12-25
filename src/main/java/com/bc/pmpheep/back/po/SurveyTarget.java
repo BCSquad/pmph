@@ -54,6 +54,12 @@ public class SurveyTarget implements java.io.Serializable {
     public SurveyTarget() {
     }
 
+    public SurveyTarget(Long userId, Long surveyId, Long orgId) {
+        this.userId = userId;
+        this.surveyId = surveyId;
+        this.orgId = orgId;
+    }
+
     /** full constructor */
     public SurveyTarget(Long userId, Long surveyId, Long orgId, Timestamp gmtCreate) {
         this.userId = userId;

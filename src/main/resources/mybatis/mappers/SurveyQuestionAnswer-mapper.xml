@@ -62,6 +62,15 @@
 		<include refid="value" />
 		);
 	</insert>
+	
+	<!-- 批量新增SurveyQuestionAnswer -->
+	<insert id="batchAddSurveyQuestionAnswer" parameterType="java.util.List">
+		insert into survey_question_answer (user_id,question_id,option_id,option_content,attachment)
+		<foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId}, #{item.questionId},#{item.optionId},#{item.optionContent},#{item.attachment})
+        </foreach>
+	</insert>
+	
 	<!-- 删除SurveyQuestionAnswer通过主键id -->
 	<delete id="deleteSurveyQuestionAnswerById" parameterType="java.lang.Long">
 		delete from survey_question_answer where id=#{id};

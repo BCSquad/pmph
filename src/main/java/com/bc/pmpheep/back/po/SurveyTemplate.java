@@ -63,6 +63,11 @@ public class SurveyTemplate implements java.io.Serializable {
     public SurveyTemplate() {
     }
 
+    public SurveyTemplate(Long id, Boolean isDeleted) {
+        this.id = id;
+        this.isDeleted = isDeleted;
+    }
+
     /** full constructor */
     public SurveyTemplate(String templateName, Integer sort, Long userId, Boolean isDeleted,
     Timestamp gmtCreate, Timestamp gmtUpdate) {
@@ -73,7 +78,7 @@ public class SurveyTemplate implements java.io.Serializable {
         this.gmtCreate = gmtCreate;
         this.gmtUpdate = gmtUpdate;
     }
-    
+
     public SurveyTemplate(String templateName, Integer sort, Long userId) {
         this.templateName = templateName;
         this.sort = sort;

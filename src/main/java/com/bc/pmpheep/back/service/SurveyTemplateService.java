@@ -1,6 +1,12 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.SurveyTemplate;
+import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
+import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -22,7 +28,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * </pre>
  */
 public interface SurveyTemplateService {
-	/**
+    /**
      * 新增一个SurveyTemplate
      * 
      * @author:tyc
@@ -30,7 +36,7 @@ public interface SurveyTemplateService {
      * @param SurveyTemplate 实体对象
      * @return 影响行数
      */
-	SurveyTemplate addSurveyTemplate(SurveyTemplate surveyTemplate) throws CheckedServiceException;
+    SurveyTemplate addSurveyTemplate(SurveyTemplate surveyTemplate) throws CheckedServiceException;
 
     /**
      * 逻辑删除SurveyTemplate通过主键id
@@ -61,7 +67,7 @@ public interface SurveyTemplateService {
      * @return 影响行数
      */
     SurveyTemplate getSurveyTemplateById(Long id) throws CheckedServiceException;
-    
+
     /**
      * 添加SurveyTemplate模版
      * 
@@ -70,6 +76,31 @@ public interface SurveyTemplateService {
      * @param SurveyTemplateVO
      * @return 影响行数
      */
-    Integer addSurveyTemplateVO(SurveyTemplateVO surveyTemplateVO) 
-    		throws CheckedServiceException;
+    Integer addSurveyTemplateVO(SurveyTemplateVO surveyTemplateVO) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据模版Id查询下面的所有问题
+     * 使用示范：
+     *
+     * @param templateId SurveyTemplate主键
+     * @return
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    List<SurveyQuestionOptionCategoryVO> getSurveyTemplateQuestionByTemplateId(Long templateId)
+    throws CheckedServiceException;
+
+    /**
+     * 模版表分页列表（同时查询分页数据和总条数）
+     * 
+     * @author:tyc
+     * @date:2017年12月25日下午16:38:12
+     * @param pageParameter
+     * @return
+     * @throws CheckedServiceException
+     */
+    PageResult<SurveyTemplateListVO> listSurveyTemplateList(
+    PageParameter<SurveyTemplateListVO> pageParameter) throws CheckedServiceException;
 }
