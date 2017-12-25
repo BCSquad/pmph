@@ -1,8 +1,12 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Survey;
+import com.bc.pmpheep.back.vo.SurveyVO;
 
 /**
  * Survey问卷实体类数据访问层接口
@@ -51,4 +55,13 @@ public interface SurveyDao {
      * @return 影响行数
      */
     Survey getSurveyById(Long id);
+    
+    /**
+     * 问卷表分页列表（同时查询分页数据和总条数）
+     * @author:tyc
+     * @date:2017年12月25日上午10:28:56 
+     * @param pageParameter
+     * @return
+     */
+    List<SurveyVO> listSurvey(PageParameter<SurveyVO> pageParameter);
 }
