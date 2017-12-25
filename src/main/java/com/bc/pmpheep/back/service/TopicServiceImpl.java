@@ -10,10 +10,12 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Topic;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.vo.TopicDeclarationVO;
 import com.bc.pmpheep.back.vo.TopicDirectorVO;
 import com.bc.pmpheep.back.vo.TopicEditorVO;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
@@ -128,7 +130,7 @@ public class TopicServiceImpl implements TopicService {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 
 	 * 
@@ -170,7 +172,7 @@ public class TopicServiceImpl implements TopicService {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 
 	 * 
@@ -340,33 +342,95 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
+	public PageResult<TopicDeclarationVO> listCheckTopic(List<Long> authProgress,
+			PageParameter<TopicDeclarationVO> pageParameter) throws CheckedServiceException {
+		if (CollectionUtil.isEmpty(authProgress)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
+					"选题申报状态不对");
+		}
+		PageResult<TopicDeclarationVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total = topicDao.listCheckTopicTotal(authProgress, pageParameter.getParameter().getBookname(),
+				pageParameter.getParameter().getSubmitTime());
+		if (total > 0) {
+			List<TopicDeclarationVO> list = topicDao.listCheckTopic(authProgress, pageParameter.getPageSize(),
+					pageParameter.getStart(), pageParameter.getParameter().getBookname(),
+					pageParameter.getParameter().getSubmitTime());
+			list = addState(list);
+			pageResult.setRows(list);
+		}
+		pageResult.setTotal(total);
+		return pageResult;
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：向查看选题申报中插入状态详情
+	 *
+	 * @param list
+	 * @return
+	 *
+	 */
+	public List<TopicDeclarationVO> addState(List<TopicDeclarationVO> list) {
+		for (TopicDeclarationVO vo : list) {
+			if (1 == vo.getAuthProgress()) {
+				if (vo.getIsOptsHandling()) {
+					vo.setState("作者已提交");
+					vo.setStateDeail("待管理员分配");
+					if (vo.getIsDirectorHandling()) {
+						vo.setState("主任已受理");
+						vo.setStateDeail("待主任分配");
+						if (vo.getIsEditorHandling()) {
+							vo.setState("主任已分配");
+							vo.setStateDeail("待编辑受理");
+							if (vo.getIsAccepted()) {
+								vo.setState("编辑已受理");
+								vo.setStateDeail("待编辑处理");
+							}
+						}
+					}
+				}
+			} else {
+				if (2 == vo.getAuthProgress()) {
+					vo.setState("不通过");
+				}
+				if (3 == vo.getAuthProgress()) {
+					vo.setState("通过");
+				}
+			}
+		}
+		return list;
+	}
+
 	public PageResult<TopicDirectorVO> listTopicDirectorVOs(String sessionId,
-			PageParameter<TopicDirectorVO> pageParameter)
-			throws CheckedServiceException {
+			PageParameter<TopicDirectorVO> pageParameter) throws CheckedServiceException {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-		if (ObjectUtil.isNull(pmphUser)){
-			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC,
-					CheckedExceptionResult.NULL_PARAM, "用户为空");
+		if (ObjectUtil.isNull(pmphUser)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
 		}
 		PageResult<TopicDirectorVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-		int total = 0;
-		if (pmphUser.getIsAdmin()){
+		Integer total = 0;
+		if (pmphUser.getIsAdmin()) {
 			total = topicDao.totalDirectorView(pageParameter.getParameter().getBookName(),
 					pageParameter.getParameter().getSubmitTime());
-			if (total > 0){
+			if (total > 0) {
 				List<TopicDirectorVO> list = topicDao.listDirectorView(pageParameter.getParameter().getBookName(),
-						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(), pageParameter.getPageSize());
+						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(),
+						pageParameter.getPageSize());
 				list = addTypeNameDirector(list);
 				pageResult.setRows(list);
 			}
-		}else{
+		} else {
 			total = topicDao.totalTopicDirectorVOs(pageParameter.getParameter().getDepartmentId(),
 					pageParameter.getParameter().getBookName(), pageParameter.getParameter().getSubmitTime());
-			if (total > 0){
-				List<TopicDirectorVO> list = topicDao.listTopicDirectorVOs(pageParameter.getParameter().getDepartmentId(),
-						pageParameter.getParameter().getBookName(), pageParameter.getParameter().getSubmitTime(),
-						pageParameter.getStart(), pageParameter.getPageSize());
+			if (total > 0) {
+				List<TopicDirectorVO> list = topicDao.listTopicDirectorVOs(
+						pageParameter.getParameter().getDepartmentId(), pageParameter.getParameter().getBookName(),
+						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(),
+						pageParameter.getPageSize());
 				list = addTypeNameDirector(list);
 				pageResult.setRows(list);
 			}
@@ -376,21 +440,37 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public PageResult<TopicEditorVO> listTopicEditorVOs(String sessionId,
-			PageParameter<TopicEditorVO> pageParameter)
+	public PageResult<TopicEditorVO> listTopicEditorVOs(String sessionId, PageParameter<TopicEditorVO> pageParameter)
 			throws CheckedServiceException {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-		if (ObjectUtil.isNull(pmphUser)){
-			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC,
-					CheckedExceptionResult.NULL_PARAM, "用户为空");
+		if (ObjectUtil.isNull(pmphUser)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
 		}
 		PageResult<TopicEditorVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-		int total = 0;
+		Integer total = 0;
 		if (pmphUser.getIsAdmin()){
 			total = topicDao.totalEditorView(pageParameter.getParameter().getBookName(),
 					pageParameter.getParameter().getSubmitTime());
+			if (total > 0){
+				List<TopicEditorVO> list = topicDao.listEditorView(pageParameter.getParameter().getBookName(),
+						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(), pageParameter.getPageSize());
+				list = addTypeNameEditor(list);
+				pageResult.setRows(list);
+			}
+		}else{
+			total = topicDao.totalTopicEditorVOs(pmphUser.getId(), pageParameter.getParameter().getBookName(),
+					pageParameter.getParameter().getSubmitTime());
+			if (total > 0){
+				List<TopicEditorVO> list = topicDao.listTopicEditorVOs(pmphUser.getId(),
+						pageParameter.getParameter().getBookName(), pageParameter.getParameter().getSubmitTime(),
+						pageParameter.getStart(), pageParameter.getPageSize());
+				list = addTypeNameEditor(list);
+				pageResult.setRows(list);
+			}
 		}
+		pageResult.setTotal(total);
 		return pageResult;
 	}
 

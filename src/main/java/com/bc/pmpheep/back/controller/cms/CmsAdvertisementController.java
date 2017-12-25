@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -104,18 +105,30 @@ public class CmsAdvertisementController {
 	}
 
 	/**
-	 * 广告管理页面删除广告
-	 * 
-	 * @param id
+	 * 广告编辑页面增加图片
+	 * @param cmsAdvertisementOrImageVO
 	 * @param request
-	 * @return	影响行数
+	 * @param file
+	 * @return
 	 * @throws CheckedServiceException
+	 * @throws IOException
 	 */
-//	@ResponseBody
-//	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除广告")
-//	@RequestMapping(value = "/cmsAdvertisement/{id}/delete", method = RequestMethod.DELETE)
-//	public ResponseBean delete(@PathVariable("id") Long id, HttpServletRequest request) throws CheckedServiceException {
-//		String sessionId = CookiesUtil.getSessionId(request);
-//		return new ResponseBean(cmsAdvertisementService.deleteCmsAdvertisementById(id, sessionId));
-//	}
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "广告编辑页面增加图片")
+	@RequestMapping(value = "/cmsAdvertisement/addimage", method = RequestMethod.DELETE)
+	public ResponseBean addimage(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO,
+			HttpServletRequest request,MultipartFile file) throws CheckedServiceException, IOException {
+		String sessionId = CookiesUtil.getSessionId(request);
+		return new ResponseBean(cmsAdvertisementService.addCmsAdevertisementImage(cmsAdvertisementOrImageVO,file,sessionId));
+	}
+	
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除广告")
+	@RequestMapping(value = "/cmsAdvertisement/{id}/delete", method = RequestMethod.DELETE)
+	public ResponseBean delete(@RequestParam(name = "image") String[] image,
+			@RequestParam(name = "advertId") Long advertId,
+			HttpServletRequest request) throws CheckedServiceException {
+		String sessionId = CookiesUtil.getSessionId(request);
+		return new ResponseBean(cmsAdvertisementService.deleteCmsAdvertisementImageById(advertId,image, sessionId));
+	}
 }

@@ -1,9 +1,6 @@
 package com.bc.pmpheep.back.service;
 
-import java.util.List;
-
 import com.bc.pmpheep.back.po.SurveyQuestion;
-import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -60,5 +57,5 @@ public interface SurveyQuestionService {
      * @param SurveyQuestionListVO
      * @return 影响行数
      */
-    List<SurveyQuestionListVO> addSurveyQuestionListVOList(List<SurveyQuestionListVO> surveyQuestionListVO);
+    Integer addSurveyQuestionListVOList(String jsonDecPosition);
 }
