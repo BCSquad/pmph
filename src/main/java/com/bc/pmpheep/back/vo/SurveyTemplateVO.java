@@ -7,7 +7,7 @@ import org.apache.ibatis.type.Alias;
  * @author tyc
  *
  */
-@Alias("SurveyTemplateListVO")
+@Alias("SurveyTemplateVO")
 public class SurveyTemplateVO implements java.io.Serializable {
 
     private static final long serialVersionUID = -7095331687874274350L;

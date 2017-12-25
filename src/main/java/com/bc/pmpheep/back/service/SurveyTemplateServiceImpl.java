@@ -1,14 +1,21 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.SurveyTemplateDao;
 import com.bc.pmpheep.back.dao.SurveyTemplateQuestionDao;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.po.SurveyTemplateQuestion;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -112,6 +119,27 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 				surveyTemplateVO.getQuestionId());
 		surveyTemplateQuestionDao.addSurveyTemplateQuestion(surveyTemplateQuestion); // 添加中间
 		return surveyTemplateQuestionDao.addSurveyTemplateQuestion(surveyTemplateQuestion);
+	}
+
+	@Override
+	public PageResult<SurveyTemplateListVO> listSurveyTemplateList(
+			PageParameter<SurveyTemplateListVO> pageParameter)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(pageParameter)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		PageResult<SurveyTemplateListVO> pageResult = new PageResult<SurveyTemplateListVO>();
+		// 将页面大小和页面页码拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 包含数据总条数的数据集
+        List<SurveyTemplateListVO> surveyTemplateList = surveyTemplateDao.listSurveyTemplateList(pageParameter);
+        if (CollectionUtil.isNotEmpty(surveyTemplateList)) {
+        	Integer count = surveyTemplateList.get(0).getCount();
+        	pageResult.setTotal(count);
+        	pageResult.setRows(surveyTemplateList);
+        }
+		return pageResult;
 	}
 
 }

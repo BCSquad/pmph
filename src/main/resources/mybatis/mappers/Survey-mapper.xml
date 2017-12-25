@@ -142,8 +142,8 @@
 		select * from survey where id=#{id};
 	</select>
 	
-	<!-- 问卷表分页列表 -->
-	<select id="listSurvey" parameterType="PageParameter" resultType="Survey">
+	<!-- 问卷表分页列表（同时查询分页数据和总条数） -->
+	<select id="listSurvey" parameterType="PageParameter" resultType="SurveyVO">
 		select s.*,stp.survey_name,ppu.username,ppu.realname,t.count 
 		from survey s 
 		left join survey_type stp on stp.id=s.type_id 
@@ -160,14 +160,14 @@
 			</if>
 			<!-- 问卷调查类型 -->
 			<if test="parameter.typeId != null">
-				and s.type_id like concat('%',#{parameter.typeId},'%')
+				and s.type_id = #{parameter.typeId}
 			</if>
 			<if test="parameter.surveyName != null and parameter.surveyName != ''">
 				and stp.survey_name like concat('%',#{parameter.surveyName},'%')
 			</if>
 			<!-- 问卷创建人(0=系统) -->
 			<if test="parameter.userId != null">
-				and s.user_id like concat('%',#{parameter.userId},'%')
+				and s.user_id = #{parameter.userId}
 			</if>
 			<if test="parameter.username !=null and parameter.username!=''">
 				and (
@@ -186,14 +186,14 @@
 			</if>
 			<!-- 问卷调查类型 -->
 			<if test="parameter.typeId != null">
-				and s.type_id like concat('%',#{parameter.typeId},'%')
+				and s.type_id = #{parameter.typeId}
 			</if>
 			<if test="parameter.surveyName != null and parameter.surveyName != ''">
 				and stp.survey_name like concat('%',#{parameter.surveyName},'%')
 			</if>
 			<!-- 问卷创建人(0=系统) -->
 			<if test="parameter.userId != null">
-				and s.user_id like concat('%',#{parameter.userId},'%')
+				and s.user_id = #{parameter.userId}
 			</if>
 			<if test="parameter.username !=null and parameter.username!=''">
 				and (
@@ -202,7 +202,7 @@
 					ppu.realname like concat('%',#{parameter.username},'%') )
 			</if>
 		</if>
-		order by s.title desc 
+		group by s.title desc 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
