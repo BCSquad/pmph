@@ -5,8 +5,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.SurveyQuestion;
 import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
+import com.bc.pmpheep.back.vo.SurveyQuestionVO;
 
 /**
  * SurveyQuestion问题实体类数据访问层接口
@@ -79,4 +81,13 @@ public interface SurveyQuestionDao {
      */
     List<SurveyQuestionOptionCategoryVO> getQuestionOptionByQuestionIdOrCategoryId(
     @Param("questionId") Long questionId, @Param("categoryId") Long categoryId);
+    
+    /**
+     * 问题表分页列表（同时查询分页数据和总条数）
+     * @author:tyc
+     * @date:2017年12月25日下午15:51:07 
+     * @param pageParameter
+     * @return
+     */
+    List<SurveyQuestionVO> listSurveyQuestion(PageParameter<SurveyQuestionVO> pageParameter);
 }
