@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Component;
 
 /**
  * 
@@ -27,7 +26,6 @@ import org.springframework.stereotype.Component;
  * @审核人 ：
  * </pre>
  */
-@Component
 public class JavaMailSenderUtil {
     Logger                            logger     =
                                                  LoggerFactory.getLogger(JavaMailSenderUtil.class);
