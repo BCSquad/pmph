@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.service.common;
+package com.bc.pmpheep.back.util.mail;
 
 import java.util.Properties;
 
@@ -28,9 +28,9 @@ import org.springframework.stereotype.Component;
  * </pre>
  */
 @Component
-public class JavaMailSenderService {
+public class JavaMailSenderUtil {
     Logger                            logger     =
-                                                 LoggerFactory.getLogger(JavaMailSenderService.class);
+                                                 LoggerFactory.getLogger(JavaMailSenderUtil.class);
     // 创建邮件发送类
     private static JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
 
@@ -48,7 +48,7 @@ public class JavaMailSenderService {
         // 端口号，腾讯邮箱使用SSL协议端口号：465/587，腾讯邮箱使用非SSL协议,163邮箱,新浪邮箱端口号都是：25
         senderImpl.setPort(465);
         senderImpl.setUsername("281235538@qq.com"); // 用户名
-        senderImpl.setPassword("kcgewfmviiiqbjcd"); // 密码
+        senderImpl.setPassword("********"); // 密码
 
         Properties prop = new Properties();// 参数配置
         prop.put("mail.smtp.ssl.enable", "true");// 使用SSL协议
@@ -109,7 +109,7 @@ public class JavaMailSenderService {
     }
 
     public static void main(String[] args) {
-        JavaMailSenderService jss = new JavaMailSenderService();
+        JavaMailSenderUtil jss = new JavaMailSenderUtil();
         try {
             jss.sendMail("aaa", "bbbb", new String[] { "nyz526@163.com" });
         } catch (Exception e) {

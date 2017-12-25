@@ -12,12 +12,12 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.SurveyTarget;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.po.WriterUser;
-import com.bc.pmpheep.back.service.common.JavaMailSenderService;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.util.mail.JavaMailSenderUtil;
 import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.general.service.MessageService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -44,15 +44,13 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Service
 public class SurveyTargetServiceImpl implements SurveyTargetService {
     @Autowired
-    SurveyTargetDao       surveyTargetDao;
+    SurveyTargetDao   surveyTargetDao;
     @Autowired
-    OrgUserService        orgUserService;
+    OrgUserService    orgUserService;
     @Autowired
-    JavaMailSenderService javaMailSenderService;
+    WriterUserService writerUserService;
     @Autowired
-    WriterUserService     writerUserService;
-    @Autowired
-    MessageService        messageService;
+    MessageService    messageService;
 
     @Override
     public SurveyTarget addSurveyTarget(SurveyTarget surveyTarget) throws CheckedServiceException {
@@ -141,7 +139,7 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
                                                     userId, Const.SENDER_TYPE_1,
                                                     writerUser.getId(), Const.RECEIVER_TYPE_2, 0L));
             }
-            // 发送邮件
+
             List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(orgIds);// 获取学校管理员集合
             List<String> orgUserEmail = new ArrayList<String>(orgUserList.size());// 收件人邮箱
             for (OrgUser orgUser : orgUserList) {
@@ -149,11 +147,13 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
             }
             Integer size = orgUserEmail.size();
             String[] toEmail = (String[]) orgUserEmail.toArray(new String[size]);
+            // 发送邮件
+            JavaMailSenderUtil javaMailSenderUtil = new JavaMailSenderUtil();
             try {
                 // 给学校管理员发送邮件
-                javaMailSenderService.sendMail(title,
-                                               "<p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>您好：</span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>&nbsp; &nbsp; 现有一份《XXXX问卷调查》需要您登陆下面地址，填写您宝贵意见。</span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>&nbsp;&nbsp;&nbsp;&nbsp;登陆地址：<a href='http://www.baidu.com'>人卫E教平台</a><br/></span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;'><br/></p>",
-                                               toEmail);
+                javaMailSenderUtil.sendMail(title,
+                                            "<p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>您好：</span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>&nbsp; &nbsp; 现有一份《XXXX问卷调查》需要您登陆下面地址，填写您宝贵意见。</span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>&nbsp;&nbsp;&nbsp;&nbsp;登陆地址：<a href='http://www.baidu.com'>人卫E教平台</a><br/></span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;'><br/></p>",
+                                            toEmail);
             } catch (Exception e) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                                   CheckedExceptionResult.OBJECT_NOT_FOUND, "邮件发送失败");
@@ -161,5 +161,4 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
         }
         return 1;
     }
-
 }
