@@ -162,9 +162,6 @@
 			<if test="parameter.typeId != null">
 				and s.type_id = #{parameter.typeId}
 			</if>
-			<if test="parameter.surveyName != null and parameter.surveyName != ''">
-				and stp.survey_name like concat('%',#{parameter.surveyName},'%')
-			</if>
 			<!-- 问卷创建人(0=系统) -->
 			<if test="parameter.userId != null">
 				and s.user_id = #{parameter.userId}
@@ -187,9 +184,6 @@
 			<!-- 问卷调查类型 -->
 			<if test="parameter.typeId != null">
 				and s.type_id = #{parameter.typeId}
-			</if>
-			<if test="parameter.surveyName != null and parameter.surveyName != ''">
-				and stp.survey_name like concat('%',#{parameter.surveyName},'%')
 			</if>
 			<!-- 问卷创建人(0=系统) -->
 			<if test="parameter.userId != null">

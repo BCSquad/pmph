@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ import com.bc.pmpheep.back.service.MaterialOrgService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.TextbookService;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
@@ -367,16 +369,18 @@ public class FileDownLoadController {
 						list.add(declarationEtcBO);
 					}
 				}
-				StringBuilder sb = new StringBuilder();
-				sb.append(src);
-				sb.append(id);
-				sb.append(File.separator);
-				sb.append(materialName);
-				sb.append(File.separator);
-				sb.append((i + 1) + "." + textbooks.get(i).getTextbookName());
-				sb.append(File.separator);
-				wordHelper.export(materialName, sb.toString(), list);
-				list.clear();
+				if (!CollectionUtil.isEmpty(list)) {
+					StringBuilder sb = new StringBuilder();
+					sb.append(src);
+					sb.append(id);
+					sb.append(File.separator);
+					sb.append(materialName);
+					sb.append(File.separator);
+					sb.append((i + 1) + "." + textbooks.get(i).getTextbookName());
+					sb.append(File.separator);
+					wordHelper.export(materialName, sb.toString(), list);
+					list.clear();
+				}
 			}
 		} catch (Exception e) {
 			e.getMessage();
@@ -405,18 +409,14 @@ public class FileDownLoadController {
 	@ResponseBody
 	@RequestMapping(value = "/word/progress", method = RequestMethod.GET)
 	public String progress(String id) {
-		Integer state = 0;
-		String detail = "数据生成中...";
+		ZipDownload zipDownload = new ZipDownload();
+		zipDownload.setState(0);
+		zipDownload.setDetail("数据生成中...");
 		if (map.containsKey(id)) {
-			state = map.get(id).getState();
-			detail = map.get(id).getDetail();
+			zipDownload.setState(map.get(id).getState());
+			zipDownload.setDetail(map.get(id).getDetail());
 		}
-		try {
-			detail = new String(detail.getBytes("gbk"), "utf-8");
-			return "{\"" + state + "\":\"" + detail + "\"}";
-		} catch (UnsupportedEncodingException e) {
-			return "{\"" + state + "\":\"" + e.getMessage() + "\"}";
-		}
+		return JSONObject.valueToString(zipDownload);
 
 	}
 

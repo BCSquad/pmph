@@ -172,4 +172,11 @@ public class ZipDownload implements Runnable {
 			DeleteFolder(src + id);
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "ZipDownload [id=" + id + ", detail=" + detail + ", state=" + state + ", materialName=" + materialName
+				+ ", createTime=" + createTime + "]";
+	}
+
 }

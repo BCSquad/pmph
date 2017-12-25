@@ -61,16 +61,6 @@ public interface SurveyQuestionDao {
     /**
      * 
      * <pre>
-     * 功能描述：根据问题id查询问题选项
-     * 使用示范：
-     *
-     * @param id Question主键ID
-     * @return
-     * </pre>
-     */
-    /**
-     * 
-     * <pre>
      * 功能描述：根据问题id/问题类型Id查询问题选项
      * 使用示范：
      *

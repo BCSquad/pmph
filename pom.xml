@@ -74,8 +74,12 @@
         <ueditor.ver>1.1.2-edit-1.0</ueditor.ver>
         <!-- quartz -->
         <quartz.ver>2.2.3</quartz.ver>
+        <!-- javax-mail -->
+        <java-mail.ver>1.5.5</java-mail.ver>
+        <!-- commons-email -->
+        <commons-email.ver>1.4</commons-email.ver>
     </properties>
-
+	
     <dependencies>
         <dependency>
             <groupId>javax</groupId>
@@ -260,6 +264,17 @@
             <artifactId>com.baidu.ueditor</artifactId>
             <version>${ueditor.ver}</version>
         </dependency>
+        <!-- java-mail -->
+        <dependency>
+	        <groupId>javax.mail</groupId>
+	        <artifactId>javax.mail-api</artifactId>
+	        <version>${java-mail.ver}</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.apache.commons</groupId>
+	        <artifactId>commons-email</artifactId>
+	        <version>${commons-email.ver}</version>
+	    </dependency>
     </dependencies>
 
     <repositories>
