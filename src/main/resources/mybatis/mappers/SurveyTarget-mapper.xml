@@ -85,7 +85,7 @@
 		id=#{id} ;
 	</update>
 	<!-- 查找SurveyTarget通过主键id -->
-	<select id="selectSurveyTargetById" parameterType="java.lang.Long" 
+	<select id="getSurveyTargetById" parameterType="java.lang.Long" 
 	resultType="SurveyTarget">
 		select * from survey_target where id=#{id};
 	</select>

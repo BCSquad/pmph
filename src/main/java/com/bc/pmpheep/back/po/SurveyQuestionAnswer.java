@@ -43,7 +43,7 @@ public class SurveyQuestionAnswer implements java.io.Serializable {
     /**
      * 选项id
      */
-    private Long              optionsId;
+    private Long              optionId;
     /**
      * 选项内容
      */
@@ -64,11 +64,11 @@ public class SurveyQuestionAnswer implements java.io.Serializable {
     }
 
     /** full constructor */
-    public SurveyQuestionAnswer(Long userId, Long questionId, Long optionsId, String optionContent,
+    public SurveyQuestionAnswer(Long userId, Long questionId, Long optionId, String optionContent,
     String attachment, Timestamp gmtCreate) {
         this.userId = userId;
         this.questionId = questionId;
-        this.optionsId = optionsId;
+        this.optionId = optionId;
         this.optionContent = optionContent;
         this.attachment = attachment;
         this.gmtCreate = gmtCreate;
@@ -99,12 +99,12 @@ public class SurveyQuestionAnswer implements java.io.Serializable {
         this.questionId = questionId;
     }
 
-    public Long getOptionsId() {
-        return this.optionsId;
+    public Long getOptionId() {
+        return this.optionId;
     }
 
-    public void setOptionsId(Long optionsId) {
-        this.optionsId = optionsId;
+    public void setOptionId(Long optionId) {
+        this.optionId = optionId;
     }
 
     public String getOptionContent() {

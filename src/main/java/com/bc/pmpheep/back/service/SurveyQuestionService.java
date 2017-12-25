@@ -37,7 +37,7 @@ public interface SurveyQuestionService {
      * @param SurveyQuestion
      * @return 影响行数
      */
-    SurveyQuestion selectSurveyQuestionById(Long id) throws CheckedServiceException;
+    SurveyQuestion getSurveyQuestionById(Long id) throws CheckedServiceException;
     
     /**
      * 逻辑删除SurveyQuestion通过主键id
@@ -57,5 +57,5 @@ public interface SurveyQuestionService {
      * @param SurveyQuestionListVO
      * @return 影响行数
      */
-    Integer addSurveyQuestionListVOList(String jsonDecPosition);
+    Integer addSurveyQuestionListVOList(String jsonSurveyQuestion) throws CheckedServiceException;
 }

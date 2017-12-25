@@ -22,7 +22,7 @@ public interface CmsAdvertisementImageDao {
 	 * @param id
 	 * @return
 	 */
-	Integer deleteCmsAdvertisementByImage(Long id);
+	Integer deleteCmsAdvertisementByImage(@Param("advertId") Long advertId);
 	/**
 	 * 保存图片id和关联广告id
 	 * @param cmsAdvertisementImage

@@ -45,6 +45,10 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "用户为空");
 		}
+		if (!pmphUser.getIsAdmin()) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM,
+						"该用户没有操作权限");
+		}
 		List<CmsAdvertisementOrImageVO> cmsAdvertisementOrImageVOs=cmsAdvertisementDao.getAdvertisementList();
 		return cmsAdvertisementOrImageVOs;
 	}
@@ -58,6 +62,10 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
+		}
+		if (!pmphUser.getIsAdmin()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM,
+					"该用户没有操作权限");
 		}
 		if (ObjectUtil.isNull(cmsAdvertisement)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
@@ -77,6 +85,10 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
+		}
+		if (!pmphUser.getIsAdmin()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM,
+					"该用户没有操作权限");
 		}
 		if (ObjectUtil.isNull(cmsAdvertisementOrImageVO)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
@@ -116,6 +128,10 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
+		if (!pmphUser.getIsAdmin()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM,
+					"该用户没有操作权限");
+		}
 		if (ObjectUtil.isNull(cmsAdvertisement)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
@@ -153,6 +169,10 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
+		if (!pmphUser.getIsAdmin()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM,
+					"该用户没有操作权限");
+		}
 		if (ObjectUtil.isNull(cmsAdvertisementOrImageVO)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
@@ -174,6 +194,10 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,"用户为空");
+		}
+		if (!pmphUser.getIsAdmin()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM,
+					"该用户没有操作权限");
 		}
 		if(null==advertId){
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");

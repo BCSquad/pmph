@@ -14,8 +14,8 @@
 			<if test="questionId != null">
 				question_id,
 			</if>
-			<if test="optionsId != null">
-				options_id,
+			<if test="optionId != null">
+				option_id,
 			</if>
 			<if test="optionContent != null and optionContent !=''">
 				option_content,
@@ -38,8 +38,8 @@
 			<if test="questionId != null">
 				#{questionId},
 			</if>
-			<if test="optionsId != null">
-				#{optionsId},
+			<if test="optionId != null">
+				#{optionId},
 			</if>
 			<if test="optionContent != null and optionContent !=''">
 				#{optionContent},
@@ -55,7 +55,7 @@
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into survey_answer (
+		insert into survey_question_answer (
 		<include refid="key" />
 		)
 		values(
@@ -64,11 +64,11 @@
 	</insert>
 	<!-- 删除SurveyQuestionAnswer通过主键id -->
 	<delete id="deleteSurveyQuestionAnswerById" parameterType="java.lang.Long">
-		delete from survey_answer where id=#{id};
+		delete from survey_question_answer where id=#{id};
 	</delete>
 	<!-- 更新一个 SurveyQuestionAnswer通过主键id -->
 	<update id="updateSurveyQuestionAnswer" parameterType="SurveyQuestionAnswer">
-		update survey_answer
+		update survey_question_answer
 		<set>
 			<if test="id != null">
 				id=#{id},
@@ -79,8 +79,8 @@
 			<if test="questionId != null">
 				question_id=#{questionId},
 			</if>
-			<if test="optionsId != null">
-				options_id=#{optionsId},
+			<if test="optionId != null">
+				option_id=#{optionId},
 			</if>
 			<if test="optionContent != null and optionContent !=''">
 				option_content=#{optionContent},
@@ -93,8 +93,8 @@
 		id=#{id};
 	</update>
 	<!-- 查找SurveyQuestionAnswer通过主键id -->
-	<select id="selectSurveyQuestionAnswerById" parameterType="java.lang.Long" resultType="SurveyQuestionAnswer">
-		select * from survey_answer where id=#{id};
+	<select id="getSurveyQuestionAnswerById" parameterType="java.lang.Long" resultType="SurveyQuestionAnswer">
+		select * from survey_question_answer where id=#{id};
 	</select>
 	
 </mapper>

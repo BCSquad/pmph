@@ -229,7 +229,7 @@ public class TopicController {
 		topic.setId(id);
 		topic.setIsRejectedByEditor(isRejectedByEditor);
 		if (isRejectedByEditor) {
-			topic.setIsDirectorHandling(false);
+			topic.setIsEditorHandling(false);
 			topic.setReasonEditor(reasonEditor);
 		} else {
 			topic.setAuthDate(DateUtil.getCurrentTime());

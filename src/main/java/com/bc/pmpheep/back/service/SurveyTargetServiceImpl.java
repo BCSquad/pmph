@@ -48,6 +48,55 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
     CmsContentService     cmsContentService;
 
     @Override
+    public SurveyTarget addSurveyTarget(SurveyTarget surveyTarget) throws CheckedServiceException {
+        if (ObjectUtil.isNull(surveyTarget)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        if (ObjectUtil.isNull(surveyTarget.getUserId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "发起人为空");
+        }
+        if (ObjectUtil.isNull(surveyTarget.getSurveyId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷为空");
+        }
+        if (ObjectUtil.isNull(surveyTarget.getOrgId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "机构为空");
+        }
+        surveyTargetDao.addSurveyTarget(surveyTarget);
+        return surveyTarget;
+    }
+
+    @Override
+    public Integer deleteSurveyTargetById(Long id) throws CheckedServiceException {
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return surveyTargetDao.deleteSurveyTargetById(id);
+    }
+
+    @Override
+    public Integer updateSurveyTarget(SurveyTarget surveyTarget) throws CheckedServiceException {
+        if (ObjectUtil.isNull(surveyTarget)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return surveyTargetDao.updateSurveyTarget(surveyTarget);
+    }
+
+    @Override
+    public SurveyTarget getSurveyTargetById(Long id) throws CheckedServiceException {
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return surveyTargetDao.getSurveyTargetById(id);
+    }
+
+    @Override
     public Integer batchSaveSurveyTargetByList(Long surveyId, List<Long> orgIds, String sessionId)
     throws CheckedServiceException {
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -92,4 +141,5 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
         }
         return 1;
     }
+
 }

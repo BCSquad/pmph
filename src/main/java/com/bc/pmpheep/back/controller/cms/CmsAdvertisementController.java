@@ -121,9 +121,16 @@ public class CmsAdvertisementController {
 		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(cmsAdvertisementService.addCmsAdevertisementImage(cmsAdvertisementOrImageVO,file,sessionId));
 	}
-	
+	/**
+	 * 广告编辑页面批量删除图片
+	 * @param image
+	 * @param advertId
+	 * @param request
+	 * @return
+	 * @throws CheckedServiceException
+	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除广告")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除图片")
 	@RequestMapping(value = "/cmsAdvertisement/{id}/delete", method = RequestMethod.DELETE)
 	public ResponseBean delete(@RequestParam(name = "image") String[] image,
 			@RequestParam(name = "advertId") Long advertId,
