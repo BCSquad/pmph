@@ -14,6 +14,7 @@ import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.service.SurveyTargetService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.general.po.Message;
 
 /**
  * 
@@ -48,18 +49,23 @@ public class SurveyTargetController {
      * 功能描述：发起问卷
      * 使用示范：
      *
+     * @param message 系统消息
+     * @param title 消息标题
      * @param surveyId 问卷表Id
-     * @param orgIds 学校集合
-     * @param request
+     * @param orgIds 机构id
+     * @param sessionId 
      * @return 影响行数
      * </pre>
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "发起问卷")
     @RequestMapping(value = "/send", method = RequestMethod.POST)
-    public ResponseBean send(Long surveyId, List<Long> orgIds, HttpServletRequest request) {
+    public ResponseBean send(Message message, String title, Long surveyId, List<Long> orgIds,
+    HttpServletRequest request) {
         String sessionId = CookiesUtil.getSessionId(request);
-        return new ResponseBean(surveyTargetService.batchSaveSurveyTargetByList(surveyId,
+        return new ResponseBean(surveyTargetService.batchSaveSurveyTargetByList(message,
+                                                                                title,
+                                                                                surveyId,
                                                                                 orgIds,
                                                                                 sessionId));
     }

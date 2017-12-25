@@ -6,10 +6,9 @@ import javax.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /**
  * 
@@ -28,11 +27,12 @@ import org.springframework.stereotype.Service;
  * @审核人 ：
  * </pre>
  */
-@Service
+@Component
 public class JavaMailSenderService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JavaMailSenderService.class);
-    @Autowired
-    JavaMailSenderImpl          senderImpl;
+    Logger                            logger     =
+                                                 LoggerFactory.getLogger(JavaMailSenderService.class);
+    // 创建邮件发送类
+    private static JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
 
     /**
      * 
@@ -48,7 +48,7 @@ public class JavaMailSenderService {
         // 端口号，腾讯邮箱使用SSL协议端口号：465/587，腾讯邮箱使用非SSL协议,163邮箱,新浪邮箱端口号都是：25
         senderImpl.setPort(465);
         senderImpl.setUsername("281235538@qq.com"); // 用户名
-        senderImpl.setPassword("kcgewfmviiiqbjcd"); // 密码(腾讯/163邮箱都要使用授权码，新浪邮箱使用密码)
+        senderImpl.setPassword("kcgewfmviiiqbjcd"); // 密码
 
         Properties prop = new Properties();// 参数配置
         prop.put("mail.smtp.ssl.enable", "true");// 使用SSL协议
@@ -92,19 +92,28 @@ public class JavaMailSenderService {
             // 发送邮件
             senderImpl.send(mailMessage);
             isOk = true;
-            LOGGER.info("邮件发送成功..");
+            logger.info("邮件发送成功...");
         } catch (Exception e) {
-            LOGGER.error("邮件发送发生异常");
-            LOGGER.error(e.getMessage());
-            LOGGER.info("进行重发");
+            logger.error("邮件发送时发生异常");
+            logger.error(e.getMessage());
+            logger.info("邮件进行重发");
             try {
                 Thread.sleep(2000);
                 senderImpl.send(JavaMailSenderConfig());
             } catch (InterruptedException ie) {
-                LOGGER.info("重发邮件发生异常");
-                LOGGER.error(ie.getMessage());
+                logger.error("重发邮件时发生异常");
+                logger.error(ie.getMessage());
             }
         }
         return isOk;
+    }
+
+    public static void main(String[] args) {
+        JavaMailSenderService jss = new JavaMailSenderService();
+        try {
+            jss.sendMail("aaa", "bbbb", new String[] { "nyz526@163.com" });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

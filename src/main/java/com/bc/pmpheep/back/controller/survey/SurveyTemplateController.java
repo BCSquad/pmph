@@ -1,15 +1,17 @@
 package com.bc.pmpheep.back.controller.survey;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.service.SurveyTemplateService;
+import com.bc.pmpheep.back.vo.SurveyTemplateVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
 /**
@@ -42,7 +44,7 @@ public class SurveyTemplateController {
     /**
      * 
      * <pre>
-     * 功能描述：发起问卷
+     * 功能描述：问卷模版添加
      * 使用示范：
      *
      * @param surveyId 问卷表Id
@@ -52,9 +54,44 @@ public class SurveyTemplateController {
      * </pre>
      */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "发起问卷")
-    @RequestMapping(value = "/send", method = RequestMethod.POST)
-    public ResponseBean send(Long surveyId, List<Long> orgId) {
-        return new ResponseBean();
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增问卷模版")
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    public ResponseBean save(SurveyTemplateVO surveyTemplateVO, HttpServletRequest request) {
+        return new ResponseBean(surveyTemplateService.addSurveyTemplateVO(surveyTemplateVO));
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：查询模版下的所有问题
+     * 使用示范：
+     *
+     * @param templateId SurveyTemplate模版ID
+     * @return
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询模版下的所有问题")
+    @RequestMapping(value = "/question/look", method = RequestMethod.POST)
+    public ResponseBean look(Long templateId) {
+        return new ResponseBean(
+                                surveyTemplateService.getSurveyTemplateQuestionByTemplateId(templateId));
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：删除模版
+     * 使用示范：
+     *
+     * @param templateId SurveyTemplate主键ID
+     * @return
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除模版")
+    @RequestMapping(value = "/{templateId}/remove", method = RequestMethod.DELETE)
+    public ResponseBean remove(@PathVariable("templateId") Long templateId) {
+        return new ResponseBean(surveyTemplateService.deleteSurveyTemplateById(templateId));
     }
 }
