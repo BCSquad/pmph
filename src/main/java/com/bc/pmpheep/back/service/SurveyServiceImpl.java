@@ -1,12 +1,19 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.SurveyDao;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Survey;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -72,6 +79,26 @@ public class SurveyServiceImpl implements SurveyService {
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		return surveyDao.getSurveyById(id);
+	}
+
+	@Override
+	public PageResult<SurveyVO> listSurvey(PageParameter<SurveyVO> pageParameter) 
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(pageParameter)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+        PageResult<SurveyVO> pageResult = new PageResult<SurveyVO>();
+        // 将页面大小和页面页码拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 包含数据总条数的数据集
+        List<SurveyVO> surveyList = surveyDao.listSurvey(pageParameter);
+        if (CollectionUtil.isNotEmpty(surveyList)) {
+        	Integer count = surveyList.get(0).getCount();
+        	pageResult.setTotal(count);
+        	pageResult.setRows(surveyList);
+        }
+		return pageResult;
 	}
 
 }
