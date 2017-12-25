@@ -24,6 +24,18 @@ public interface TopicExtraService {
 	/**
 	 * 
 	 * 
+	 * 功能描述：新增TopicExtra
+	 *
+	 * @param topicExtra
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	TopicExtra add(TopicExtra topicExtra) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
 	 * 功能描述：根据选题申报id获取额外信息
 	 *
 	 * @param topicId

@@ -26,6 +26,17 @@ public interface TopicWriertService {
 	/**
 	 * 
 	 * 
+	 * 功能描述：添加TopicWriter
+	 *
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	TopicWriter add(TopicWriter topicWriter) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
 	 * 功能描述：根据选题申报id获取编者信息
 	 *
 	 * @param topicId

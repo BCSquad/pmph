@@ -42,4 +42,14 @@ public class TopicExtraServiceImpl implements TopicExtraService {
 		return topicExtraDao.getTopicExtraByTopicId(topicId);
 	}
 
+	@Override
+	public TopicExtra add(TopicExtra topicExtra) throws CheckedServiceException {
+		if (ObjectUtil.isNull(topicExtra)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"选题申报为空！");
+		}
+		topicExtraDao.add(topicExtra);
+		return topicExtra;
+	}
+
 }

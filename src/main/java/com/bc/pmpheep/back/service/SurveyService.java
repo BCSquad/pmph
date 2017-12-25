@@ -1,6 +1,9 @@
 package com.bc.pmpheep.back.service;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Survey;
+import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -50,4 +53,14 @@ public interface SurveyService {
      * @return 影响行数
      */
     Survey getSurveyById(Long id) throws CheckedServiceException;
+    
+    /**
+     * 问卷表分页列表（同时查询分页数据和总条数）
+     * @author:tyc
+     * @date:2017年12月25日下午15:02:14
+     * @param pageParameter
+     * @return
+     */
+    PageResult<SurveyVO> listSurvey(PageParameter<SurveyVO> pageParameter) 
+    		throws CheckedServiceException;
 }

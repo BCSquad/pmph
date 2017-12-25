@@ -200,7 +200,7 @@ public class Topic implements Serializable {
 			Long optsRoleId, Boolean isRejectedByDirector, String reasonDirector, Boolean isDirectorHandling,
 			Long departmentId, Boolean isRejectedByEditor, String reasonEditor, Boolean isEditorHandling, Long editorId,
 			Boolean isAccepted, Boolean isStaging, Boolean isDeleted, String note, Timestamp gmtCreate,
-			Timestamp gmtUpdate, String tn, String vn) {
+			Timestamp gmtUpdate, String tn, String vn, Timestamp submitTime) {
 		super();
 		this.userId = userId;
 		this.bookname = bookname;
@@ -241,6 +241,7 @@ public class Topic implements Serializable {
 		this.gmtUpdate = gmtUpdate;
 		this.tn = tn;
 		this.vn = vn;
+		this.submitTime = submitTime;
 	}
 
 	public Long getId() {

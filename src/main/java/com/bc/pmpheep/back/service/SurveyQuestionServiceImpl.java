@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.SurveyQuestionDao;
-import com.bc.pmpheep.back.dao.SurveyQuestionOptionDao;
 import com.bc.pmpheep.back.po.SurveyQuestion;
 import com.bc.pmpheep.back.po.SurveyQuestionOption;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -29,7 +28,7 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 	@Autowired
 	private SurveyQuestionDao surveyQuestionDao;
 	@Autowired
-	private SurveyQuestionOptionDao surveyQuestionOptionDao;
+	private SurveyQuestionOptionService surveyQuestionOptionService;
 	
 	@Override
 	public SurveyQuestion addSurveyQuestion(SurveyQuestion surveyQuestion) throws CheckedServiceException {
@@ -61,10 +60,7 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 		Long id = surveyQuestion.getId();
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                    CheckedExceptionResult.NULL_PARAM, "id为空");
-		}
-		if (ObjectUtil.notNull(id)) {
-			surveyQuestion.setId(id);
+                    CheckedExceptionResult.NULL_PARAM, "新增id为空");
 		}
 		return surveyQuestion;
 	}
@@ -113,17 +109,22 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
+		int count = 0;
 		for (SurveyQuestionListVO SurveyQuestionLists : SurveyQuestionListVO) { //遍历获取问题的集合
 			Long id = SurveyQuestionLists.getId(); // 获取问题id
 			if (ObjectUtil.notNull(id)) { // 如果id不为空，则先删除
-				surveyQuestionDao.deleteSurveyQuestionById(id);
-				surveyQuestionOptionDao.deleteSurveyQuestionOptionByQuestionId(id);
+				deleteSurveyQuestionById(id);
+				surveyQuestionOptionService.deleteSurveyQuestionOptionByQuestionId(id);
 			}
 			SurveyQuestion surveyQuestion = new SurveyQuestion(null, SurveyQuestionLists.getCategoryId(), 
 					SurveyQuestionLists.getTitle(), SurveyQuestionLists.getType(), 
 					SurveyQuestionLists.getSort(), SurveyQuestionLists.getDirection(), 
 					SurveyQuestionLists.getIsAnswer()); // 问题实体
 			SurveyQuestion surveyQuestions = addSurveyQuestion(surveyQuestion); // 先保存问题
+			if (ObjectUtil.isNull(surveyQuestions)) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+	                    CheckedExceptionResult.NULL_PARAM, "新增数据为空");
+			}
 			Long newId = surveyQuestions.getId(); // 获取数据库新生成的问题id
 			List<SurveyQuestionOption> surveyQuestionOptionList = 
 					SurveyQuestionLists.getSurveyQuestionOptionList(); // 获取问题选项list
@@ -131,10 +132,11 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 				SurveyQuestionOption surveyQuestionOption = new SurveyQuestionOption(newId, 
 						surveyQuestionOptions.getOptionContent(), surveyQuestionOptions.getIsOther(), 
 						surveyQuestionOptions.getRemark()); // 问题选项实体
-				surveyQuestionOptionDao.addSurveyQuestionOption(surveyQuestionOption); // 再保存问题选项
+				surveyQuestionOptionService.addSurveyQuestionOption(surveyQuestionOption); // 再保存问题选项
 			}
+			count++;
 		}
-		return SurveyQuestionListVO.size();
+		return count;
 	}
 
 }
