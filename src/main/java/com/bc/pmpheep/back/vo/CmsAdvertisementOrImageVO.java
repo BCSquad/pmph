@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
+
 /**
  * @author mr
  * @CreateDate 2017年12月22日 下午10:10:46
@@ -119,12 +120,12 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 		this.advertId = advertId;
 	}
 
-	public String getImage() {
-		return image;
-	}
-
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public Object getImage() {
+		return image;
 	}
 
 	public Long getId() {
@@ -254,7 +255,6 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 	public void setIsShowHeading(Boolean isShowHeading) {
 		this.isShowHeading = isShowHeading;
 	}
-	
 	
 	public CmsAdvertisementOrImageVO() {
 		super();

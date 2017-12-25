@@ -26,6 +26,17 @@ public interface TopicExtraDao {
 	/**
 	 * 
 	 * 
+	 * 功能描述：新增TopicExtra
+	 *
+	 * @param topicExtra
+	 * @return
+	 *
+	 */
+	Long add(TopicExtra topicExtra);
+
+	/**
+	 * 
+	 * 
 	 * 功能描述：根据选题申报id获取额外信息
 	 *
 	 * @param topicId

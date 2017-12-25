@@ -12,6 +12,7 @@ import com.bc.pmpheep.back.vo.TopicDirectorVO;
 import com.bc.pmpheep.back.vo.TopicEditorVO;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
 import com.bc.pmpheep.back.vo.TopicTextVO;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * 
@@ -248,4 +249,16 @@ public interface TopicDao {
 	 * @return Integer
 	 */
 	Integer totalEditorView(@Param("bookName") String bookName, @Param("submitTime") Timestamp submitTime);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：新增topic
+	 *
+	 * @param topic
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	Long add(Topic topic) throws CheckedServiceException;
 }

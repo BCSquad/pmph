@@ -28,6 +28,17 @@ public interface TopicWriterDao {
 	/**
 	 * 
 	 * 
+	 * 功能描述：新增TopicWriter
+	 *
+	 * @param topicWriter
+	 * @return
+	 *
+	 */
+	Long add(TopicWriter topicWriter);
+
+	/**
+	 * 
+	 * 
 	 * 功能描述：根据选题申报id获取编者情况
 	 *
 	 * @param topicId
