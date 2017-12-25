@@ -73,6 +73,12 @@ public class SurveyTemplate implements java.io.Serializable {
         this.gmtCreate = gmtCreate;
         this.gmtUpdate = gmtUpdate;
     }
+    
+    public SurveyTemplate(String templateName, Integer sort, Long userId) {
+        this.templateName = templateName;
+        this.sort = sort;
+        this.userId = userId;
+    }
 
     /**
      * @return the id

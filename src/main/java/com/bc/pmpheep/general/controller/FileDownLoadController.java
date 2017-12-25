@@ -411,7 +411,13 @@ public class FileDownLoadController {
 			state = map.get(id).getState();
 			detail = map.get(id).getDetail();
 		}
-		return "{\"" + state + "\":\"" + detail + "\"}";
+		try {
+			detail = new String(detail.getBytes("gbk"), "utf-8");
+			return "{\"" + state + "\":\"" + detail + "\"}";
+		} catch (UnsupportedEncodingException e) {
+			return "{\"" + state + "\":\"" + e.getMessage() + "\"}";
+		}
+
 	}
 
 	/**
@@ -538,8 +544,8 @@ public class FileDownLoadController {
 		try {
 
 			list = textbookService.getExcelDecAndTextbooks(textbookIds);
-			if(list.size() == 0){
-				//设置表头 ，放置初始化表出错
+			if (list.size() == 0) {
+				// 设置表头 ，放置初始化表出错
 				list.add(new ExcelDecAndTextbookVO());
 			}
 			workbook = excelHelper.fromBusinessObjectList(list, "遴选名单");
@@ -583,9 +589,10 @@ public class FileDownLoadController {
 		Workbook workbook = null;
 		List<BookCorrectionTrackVO> list = null;
 		try {
-			list = bookCorrectionService.listBookCorrectionTrack(request, null, null, bookname, isEditorReplied).getRows();
-			if(list.size() == 0){
-				//设置表头 ，放置初始化表出错
+			list = bookCorrectionService.listBookCorrectionTrack(request, null, null, bookname, isEditorReplied)
+					.getRows();
+			if (list.size() == 0) {
+				// 设置表头 ，放置初始化表出错
 				list.add(new BookCorrectionTrackVO());
 			}
 			workbook = excelHelper.fromBusinessObjectList(list, "sheet1");

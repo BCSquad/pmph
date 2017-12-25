@@ -103,8 +103,9 @@ public class SurveyQuestion implements java.io.Serializable {
         this.gmtUpdate = gmtUpdate;
     }
     
-    public SurveyQuestion(Long categoryId, String title, Short type, Integer sort,
+    public SurveyQuestion(Long id, Long categoryId, String title, Short type, Integer sort,
     	    String direction, Boolean isAnswer) {
+    	this.id = id;
         this.categoryId = categoryId;
         this.title = title;
         this.type = type;

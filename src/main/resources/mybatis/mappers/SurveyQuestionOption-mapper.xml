@@ -84,8 +84,13 @@
 		id=#{id} ;
 	</update>
 	<!-- 查找SurveyQuestionOption通过主键id -->
-	<select id="selectSurveyQuestionOptionById" parameterType="java.lang.Long" resultType="SurveyQuestionOption">
+	<select id="getSurveyQuestionOptionById" parameterType="java.lang.Long" resultType="SurveyQuestionOption">
 		select * from survey_question_option where id=#{id};
 	</select>
+	
+	<!-- 删除SurveyQuestionOption通过问题id -->
+	<delete id="deleteSurveyQuestionOptionByQuestionId" parameterType="java.lang.Long">
+		delete from survey_question_option where question_id=#{questionId};
+	</delete>
 	
 </mapper>

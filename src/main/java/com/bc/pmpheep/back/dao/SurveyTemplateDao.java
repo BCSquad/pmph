@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateGetVO;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * SurveyTemplate模版实体类数据访问层接口
@@ -24,7 +25,7 @@ public interface SurveyTemplateDao {
      * @param SurveyTemplate 实体对象
      * @return 影响行数
      */
-    Integer addSurveyTemplate(SurveyTemplate surveyTemplate);
+    Integer addSurveyTemplate(SurveyTemplate surveyTemplate) throws CheckedServiceException;
 
     /**
      * 逻辑删除SurveyTemplate通过主键id
@@ -34,7 +35,7 @@ public interface SurveyTemplateDao {
      * @param SurveyTemplate
      * @return 影响行数
      */
-    Integer deleteSurveyTemplateById(Long id);
+    Integer deleteSurveyTemplateById(Long id) throws CheckedServiceException;
 
     /**
      * 更新一个 SurveyTemplate通过主键id
@@ -44,7 +45,7 @@ public interface SurveyTemplateDao {
      * @param SurveyTemplate
      * @return 影响行数
      */
-    Integer updateSurveyTemplate(SurveyTemplate surveyTemplate);
+    Integer updateSurveyTemplate(SurveyTemplate surveyTemplate) throws CheckedServiceException;
 
     /**
      * 查找SurveyTemplate通过主键id
@@ -54,7 +55,7 @@ public interface SurveyTemplateDao {
      * @param SurveyTemplate
      * @return 影响行数
      */
-    SurveyTemplate selectSurveyTemplateById(Long id);
+    SurveyTemplate getSurveyTemplateById(Long id) throws CheckedServiceException;
 
     /**
      * 
@@ -76,5 +77,5 @@ public interface SurveyTemplateDao {
      * @param 
      * @return 影响行数
      */
-    SurveyTemplateGetVO selectSurveyTemplateGetVOById(Long id);
+    SurveyTemplateGetVO getSurveyTemplateGetVOById(Long id);
 }
