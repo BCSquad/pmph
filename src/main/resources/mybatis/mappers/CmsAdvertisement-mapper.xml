@@ -131,7 +131,7 @@
 		select t.*,CONCAT('[',GROUP_CONCAT(t.temp),']') image
 	 		from(
 				select ca.*,
-				CONCAT('{imageId:',cai.id,',','image:"',cai.image,'",','isDisplay:',cai.is_disabled,',',
+				CONCAT('{id:',cai.id,',','image:"',cai.image,'",','isDisplay:',cai.is_disabled,',',
 				'advertId:',cai.advert_id,'}') temp		 
 				from cms_advertisement ca
 				left join cms_advertisement_image cai on cai.advert_id =ca.id 

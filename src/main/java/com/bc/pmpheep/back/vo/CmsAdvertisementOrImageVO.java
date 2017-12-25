@@ -2,8 +2,15 @@ package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.type.Alias;
+
+import com.bc.pmpheep.back.po.CmsAdvertisementImage;
+import com.bc.pmpheep.back.util.StringUtil;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 
 /**
@@ -89,7 +96,7 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 	/**
 	 * 图片id
 	 */
-	private String image;
+	private List<CmsAdvertisementImage> image;
 	/**
 	 * 图片是否启用
 	 */
@@ -121,7 +128,13 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 	}
 
 	public void setImage(String image) {
-		this.image = image;
+		if(StringUtil.isEmpty(image)){
+			this.image = new ArrayList<>() ;
+			return ;
+		}
+		Gson gson = new Gson();
+		this.image = gson.fromJson(image,new TypeToken<ArrayList<CmsAdvertisementImage>>() {}.getType() );
+
 	}
 
 	public Object getImage() {

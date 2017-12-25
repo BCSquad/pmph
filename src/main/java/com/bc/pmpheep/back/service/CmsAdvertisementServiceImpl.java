@@ -14,6 +14,7 @@ import com.bc.pmpheep.back.dao.CmsAdvertisementImageDao;
 import com.bc.pmpheep.back.po.CmsAdvertisement;
 import com.bc.pmpheep.back.po.CmsAdvertisementImage;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.CmsAdvertisementOrImageVO;
@@ -22,6 +23,7 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.google.gson.Gson;
 
 /**
  * 广告管理实现
@@ -182,7 +184,8 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		}
 		CmsAdvertisementImage cmsAdvertisementImage=new CmsAdvertisementImage();
 		cmsAdvertisementImage.setAdvertId(cmsAdvertisementOrImageVO.getAdvertId());
-		cmsAdvertisementImage.setIsDisabled(cmsAdvertisementOrImageVO.getIsDisplay());
+		// 新增图片默认不启用
+		cmsAdvertisementImage.setIsDisabled(Const.FALSE);
 		// 保存图片到 MongoDB 返回id存入图片id
 		String newImage=fileService.save(file, ImageType.CMS_ADVERTISEMENT_IMAGE,cmsAdvertisementOrImageVO.getImageId());
 		cmsAdvertisementImage.setImage(newImage);
