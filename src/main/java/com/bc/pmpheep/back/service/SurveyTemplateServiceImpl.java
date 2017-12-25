@@ -58,10 +58,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 		Long id =  surveyTemplate.getId();
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                    CheckedExceptionResult.NULL_PARAM, "id为空");
-		}
-		if (ObjectUtil.notNull(id)) {
-			surveyTemplate.setId(id);
+                    CheckedExceptionResult.NULL_PARAM, "新增id为空");
 		}
 		return surveyTemplate;
 	}
@@ -97,24 +94,24 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 	}
 
 	@Override
-	public SurveyTemplateVO addSurveyTemplateVO(SurveyTemplateVO surveyTemplateVO) 
+	public Long addSurveyTemplateVO(SurveyTemplateVO surveyTemplateVO) 
 			throws CheckedServiceException {
 		if (ObjectUtil.isNull(surveyTemplateVO)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		SurveyTemplate surveyTemplate = new SurveyTemplate(surveyTemplateVO.getTemplateName(), 
-				surveyTemplateVO.getSort(), surveyTemplateVO.getUserId());
-		addSurveyTemplate(surveyTemplate); // 添加
+		SurveyTemplate surveyTemplate = addSurveyTemplate(new SurveyTemplate(
+				surveyTemplateVO.getTemplateName(), surveyTemplateVO.getSort(), 
+				surveyTemplateVO.getUserId())); // 添加
 		Long id = surveyTemplate.getId(); // 获取模版id
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                    CheckedExceptionResult.NULL_PARAM, "id为空");
+                    CheckedExceptionResult.NULL_PARAM, "新增id为空");
 		}
 		SurveyTemplateQuestion surveyTemplateQuestion = new SurveyTemplateQuestion(id, 
 				surveyTemplateVO.getQuestionId());
 		surveyTemplateQuestionDao.addSurveyTemplateQuestion(surveyTemplateQuestion); // 添加中间
-		return surveyTemplateVO;
+		return surveyTemplate.getId();
 	}
 
 }
