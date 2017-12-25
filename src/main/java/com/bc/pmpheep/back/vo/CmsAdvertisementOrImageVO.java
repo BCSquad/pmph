@@ -1,4 +1,4 @@
-package com.bc.pmpheep.back.po;
+package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -6,13 +6,13 @@ import java.sql.Timestamp;
 import org.apache.ibatis.type.Alias;
 
 /**
- * @author MrYang
- * @CreateDate 2017年12月19日 下午4:50:46
+ * @author mr
+ * @CreateDate 2017年12月22日 下午10:10:46
  *
  **/
 @SuppressWarnings("serial")
-@Alias("CmsAdvertisement")
-public class CmsAdvertisement implements Serializable {
+@Alias("CmsAdvertisementOrImageVO")
+public class CmsAdvertisementOrImageVO implements Serializable {
 	/**
 	 * 主键
 	 */
@@ -77,6 +77,55 @@ public class CmsAdvertisement implements Serializable {
 	 * 修改时间
 	 */
 	private Timestamp gmtUpdate;
+	/**
+	 * 图片表id
+	 */
+	private Long imageId;
+	/**
+	 * 广告管理id
+	 */
+	private Long advertId;
+	/**
+	 * 图片id
+	 */
+	private String image;
+	/**
+	 * 图片是否启用
+	 */
+	private Boolean isDisplay;
+	
+	
+	public Long getImageId() {
+		return imageId;
+	}
+
+	public void setImageId(Long imageId) {
+		this.imageId = imageId;
+	}
+
+	public Boolean getIsDisplay() {
+		return isDisplay;
+	}
+
+	public void setIsDisplay(Boolean isDisplay) {
+		this.isDisplay = isDisplay;
+	}
+
+	public Long getAdvertId() {
+		return advertId;
+	}
+
+	public void setAdvertId(Long advertId) {
+		this.advertId = advertId;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 
 	public Long getId() {
 		return id;
@@ -207,39 +256,9 @@ public class CmsAdvertisement implements Serializable {
 	}
 	
 	
-	public CmsAdvertisement() {
+	public CmsAdvertisementOrImageVO() {
 		super();
 	}
 
-	public CmsAdvertisement(Long id, String adname, String url, Boolean isDisabled, Integer sort, String note,
-			String style, Integer type, Boolean autoPlay, String navigationColor, Boolean isNavigation,
-			Integer animationInterval, String animationEffect, Boolean isShowHeading, Timestamp gmtCreate,
-			Timestamp gmtUpdate) {
-		this.id = id;
-		this.adname = adname;
-		this.url = url;
-		this.isDisabled = isDisabled;
-		this.sort = sort;
-		this.note = note;
-		this.style = style;
-		this.type = type;
-		this.autoPlay = autoPlay;
-		this.navigationColor = navigationColor;
-		this.isNavigation = isNavigation;
-		this.animationInterval = animationInterval;
-		this.animationEffect = animationEffect;
-		this.isShowHeading = isShowHeading;
-		this.gmtCreate = gmtCreate;
-		this.gmtUpdate = gmtUpdate;
-	}
-
-	@Override
-	public String toString() {
-		return "CmsAdvertisement [id=" + id + ", adname=" + adname + ", url=" + url + ", isDisabled=" + isDisabled
-				+ ", sort=" + sort + ", note=" + note + ", style=" + style + ", type=" + type + ", autoPlay=" + autoPlay
-				+ ", navigationColor=" + navigationColor + ", isNavigation=" + isNavigation + ", animationInterval="
-				+ animationInterval + ", animationEffect=" + animationEffect + ", isShowHeading=" + isShowHeading
-				+ ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
-	}
 	
 }

@@ -244,4 +244,198 @@
 		w ON a.user_id = w.id WHERE t.id = #{id};
 	</select>
 
+	<select id="listCheckTopic" resultType="TopicDeclarationVO">
+		SELECT t.*,w.realname
+		FROM topic t LEFT JOIN writer_user w ON w.id =
+		t.user_id WHERE
+		t.auth_progress IN
+		<foreach collection="authProgress" index="index" close=")" open="("
+			separator="," item="authProgress">
+			#{authProgress}
+		</foreach>
+		<if test="bookname != null and bookname !=''">
+			AND t.bookname like concat('%',#{bookname},'%')
+		</if>
+		<if test="submitTime != null">
+			AND t.submit_time = #{submitTime}
+		</if>
+		ORDER BY t.submit_time
+		limit
+		#{start},#{pageSize}
+	</select>
+
+	<select id="listCheckTopicTotal" resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM topic t LEFT JOIN writer_user w ON w.id =
+		t.user_id WHERE
+		t.auth_progress IN
+		<foreach collection="authProgress" index="index" close=")" open="("
+			separator="," item="authProgress">
+			#{authProgress}
+		</foreach>
+		<if test="bookname != null and bookname !=''">
+			AND t.bookname like concat('%',#{bookname},'%')
+		</if>
+		<if test="submitTime != null">
+			AND t.submit_time = #{submitTime}
+		</if>
+		ORDER BY t.submit_time
+	</select>
+	<!-- 获取主任可以操作的选题 -->
+	<select id="listTopicDirectorVOs" resultType="TopicDirectorVO">
+		SELECT a.*,c.realname
+		FROM topic a LEFT JOIN pmph_user b ON
+		a.department_id = b.department_id
+		LEFT JOIN writer_user c ON a.user_id
+		= c.id
+		WHERE b.department_id = #{departmentId}
+		AND
+		a.is_director_handling = TRUE
+		AND a.is_editor_handling = FALSE
+		<if test="bookName != null and bookName !=''">
+			AND a.bookname like concat('%',#{bookName},'%')
+		</if>
+		<if test="submitTime != null">
+			AND a.submit_time = #{submitTime}
+		</if>
+		ORDER BY a.submit_time
+		LIMIT
+		#{start},#{pageSize}
+	</select>
+
+	<!-- 计算主任可以操作的选题数 -->
+	<select id="totalTopicDirectorVOs" resultType="Integer">
+		SELECT count(a.*)
+		FROM topic a LEFT JOIN pmph_user b ON a.department_id
+		= b.department_id
+		LEFT JOIN writer_user c ON a.user_id = c.id
+		WHERE
+		b.department_id = #{departmentId}
+		AND a.is_director_handling = TRUE
+		AND
+		a.is_editor_handling = FALSE
+		<if test="bookName != null and bookName !=''">
+			AND a.bookname like concat('%',#{bookName},'%')
+		</if>
+		<if test="submitTime != null">
+			AND a.submit_time = #{submitTime}
+		</if>
+		ORDER BY a.submit_time
+	</select>
+
+	<!-- 获取编辑可以操作的申报选题 -->
+	<select id="listTopicEditorVOs" resultType="TopicEditorVO">
+		SELECT a.*,c.realname
+		FROM topic a
+		LEFT JOIN pmph_user b ON a.editor_id
+		= b.id
+		LEFT JOIN writer_user c ON a.user_id = c.id
+		WHERE a.editor_id =
+		#{userId}
+		AND a.is_editor_handling = TRUE
+		AND a.is_rejected_by_editor =
+		FALSE
+		<if test="bookName != null and bookName !=''">
+			AND a.bookname like concat('%',#{bookName},'%')
+		</if>
+		<if test="submitTime != null">
+			AND a.submit_time = #{submitTime}
+		</if>
+		ORDER BY a.submit_time
+		LIMIT
+		#{start},#{pageSize}
+	</select>
+
+	<!-- 计算编辑可以操作的选题数 -->
+	<select id="totalTopicEditorVOs" resultType="Integer">
+		SELECT count(a.*)
+		FROM topic a
+		LEFT JOIN pmph_user b ON a.editor_id =
+		b.id
+		LEFT JOIN writer_user c ON a.user_id = c.id
+		WHERE a.editor_id =
+		#{userId}
+		AND a.is_editor_handling = TRUE
+		AND a.is_rejected_by_editor =
+		FALSE
+		<if test="bookName != null and bookName !=''">
+			AND a.bookname like concat('%',#{bookName},'%')
+		</if>
+		<if test="submitTime != null">
+			AND a.submit_time = #{submitTime}
+		</if>
+		ORDER BY a.submit_time
+	</select>
+
+	<!-- 系统管理员查询选题申报（主任界面） -->
+	<select id="listDirectorView" resultType="TopicDirectorVO">
+		SELECT a.*,b.realname
+		FROM topic a
+		LEFT JOIN writer_user b ON a.user_id
+		= b.id
+		WHERE a.is_director_handling = TRUE
+		AND a.is_editor_handling =
+		FALSE
+		<if test="bookName != null and bookName !=''">
+			AND a.bookname like concat('%',#{bookName},'%')
+		</if>
+		<if test="submitTime != null">
+			AND a.submit_time = #{submitTime}
+		</if>
+		ORDER BY a.submit_time
+		LIMIT
+		#{start},#{pageSize}
+	</select>
+
+	<!-- 系统管路员查询的选题申报数（主任界面） -->
+	<select id="totalDirectorView" resultType="Integer">
+		SELECT count(*)
+		FROM topic a
+		LEFT JOIN writer_user b ON a.user_id = b.id
+		WHERE a.is_director_handling = TRUE
+		AND a.is_editor_handling = FALSE
+		<if test="bookName != null and bookName !=''">
+			AND a.bookname like concat('%',#{bookName},'%')
+		</if>
+		<if test="submitTime != null">
+			AND a.submit_time = #{submitTime}
+		</if>
+		ORDER BY a.submit_time
+	</select>
+
+	<!-- 系统管理员查询选题申报（编辑界面） -->
+	<select id="listEditorView" resultType="TopicEditorVO">
+		SELECT a.*,b.realname
+		FROM topic a
+		LEFT JOIN writer_user b ON a.user_id
+		= b.id
+		WHERE a.is_editor_handling = TRUE
+		AND a.is_rejected_by_editor =
+		FALSE
+		<if test="bookName != null and bookName !=''">
+			AND a.bookname like concat('%',#{bookName},'%')
+		</if>
+		<if test="submitTime != null">
+			AND a.submit_time = #{submitTime}
+		</if>
+		ORDER BY a.submit_time
+		LIMIT
+		#{start},#{pageSize}
+	</select>
+
+	<!-- 系统管理员查询选题申报数（编辑界面） -->
+	<select id="totalEditorView" resultType="Integer">
+		SELECT count(*)
+		FROM topic a
+		LEFT JOIN writer_user b ON a.user_id = b.id
+		WHERE a.is_editor_handling = TRUE
+		AND a.is_rejected_by_editor = FALSE
+		<if test="bookName != null and bookName !=''">
+			AND a.bookname like concat('%',#{bookName},'%')
+		</if>
+		<if test="submitTime != null">
+			AND a.submit_time = #{submitTime}
+		</if>
+		ORDER BY a.submit_time
+	</select>
 </mapper>
