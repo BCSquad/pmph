@@ -2,8 +2,11 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
+import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -88,4 +91,16 @@ public interface SurveyTemplateService {
      */
     List<SurveyQuestionOptionCategoryVO> getSurveyTemplateQuestionByTemplateId(Long templateId)
     throws CheckedServiceException;
+
+    /**
+     * 模版表分页列表（同时查询分页数据和总条数）
+     * 
+     * @author:tyc
+     * @date:2017年12月25日下午16:38:12
+     * @param pageParameter
+     * @return
+     * @throws CheckedServiceException
+     */
+    PageResult<SurveyTemplateListVO> listSurveyTemplateList(
+    PageParameter<SurveyTemplateListVO> pageParameter) throws CheckedServiceException;
 }

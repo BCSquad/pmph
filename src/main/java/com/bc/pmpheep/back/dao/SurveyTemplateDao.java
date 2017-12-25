@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateGetVO;
+import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -78,4 +80,13 @@ public interface SurveyTemplateDao {
      * @return 影响行数
      */
     SurveyTemplateGetVO getSurveyTemplateGetVOById(Long id);
+    
+    /**
+     * 模版表分页列表（同时查询分页数据和总条数）
+     * @author:tyc
+     * @date:2017年12月25日下午16:18:46
+     * @param pageParameter
+     * @return
+     */
+    List<SurveyTemplateListVO> listSurveyTemplateList(PageParameter<SurveyTemplateListVO> pageParameter);
 }
