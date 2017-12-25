@@ -43,4 +43,14 @@ public class TopicWriertServiceImpl implements TopicWriertService {
 		return topicWriterDao.listTopicWriterByTopicId(topicId);
 	}
 
+	@Override
+	public TopicWriter add(TopicWriter topicWriter) throws CheckedServiceException {
+		if (ObjectUtil.isNull(topicWriter)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"选题申报为空！");
+		}
+		topicWriterDao.add(topicWriter);
+		return topicWriter;
+	}
+
 }

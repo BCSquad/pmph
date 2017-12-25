@@ -450,19 +450,20 @@ public class TopicServiceImpl implements TopicService {
 		PageResult<TopicEditorVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		Integer total = 0;
-		if (pmphUser.getIsAdmin()){
+		if (pmphUser.getIsAdmin()) {
 			total = topicDao.totalEditorView(pageParameter.getParameter().getBookName(),
 					pageParameter.getParameter().getSubmitTime());
-			if (total > 0){
+			if (total > 0) {
 				List<TopicEditorVO> list = topicDao.listEditorView(pageParameter.getParameter().getBookName(),
-						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(), pageParameter.getPageSize());
+						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(),
+						pageParameter.getPageSize());
 				list = addTypeNameEditor(list);
 				pageResult.setRows(list);
 			}
-		}else{
+		} else {
 			total = topicDao.totalTopicEditorVOs(pmphUser.getId(), pageParameter.getParameter().getBookName(),
 					pageParameter.getParameter().getSubmitTime());
-			if (total > 0){
+			if (total > 0) {
 				List<TopicEditorVO> list = topicDao.listTopicEditorVOs(pmphUser.getId(),
 						pageParameter.getParameter().getBookName(), pageParameter.getParameter().getSubmitTime(),
 						pageParameter.getStart(), pageParameter.getPageSize());
@@ -472,6 +473,16 @@ public class TopicServiceImpl implements TopicService {
 		}
 		pageResult.setTotal(total);
 		return pageResult;
+	}
+
+	@Override
+	public Topic add(Topic topic) throws CheckedServiceException {
+		if (ObjectUtil.isNull(topic)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"教材申报为空");
+		}
+		topicDao.add(topic);
+		return topic;
 	}
 
 }

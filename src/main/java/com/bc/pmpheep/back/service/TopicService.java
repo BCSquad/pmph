@@ -103,4 +103,16 @@ public interface TopicService {
 	 */
 	PageResult<TopicEditorVO> listTopicEditorVOs(String sessionId, PageParameter<TopicEditorVO> pageParameter)
 			throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：新增topic
+	 *
+	 * @param topic
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	Topic add(Topic topic) throws CheckedServiceException;
 }
