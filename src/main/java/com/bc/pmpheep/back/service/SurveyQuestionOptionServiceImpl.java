@@ -65,5 +65,14 @@ public class SurveyQuestionOptionServiceImpl implements SurveyQuestionOptionServ
 		}
 		return surveyQuestionOptionDao.getSurveyQuestionOptionById(id);
 	}
+
+	@Override
+	public Integer deleteSurveyQuestionOptionByQuestionId(Long questionId) {
+		if (ObjectUtil.isNull(questionId)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return surveyQuestionOptionDao.deleteSurveyQuestionOptionByQuestionId(questionId);
+	}
 	
 }

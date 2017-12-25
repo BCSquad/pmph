@@ -39,4 +39,14 @@ public interface SurveyQuestionOptionService {
      * @return 影响行数
      */
     SurveyQuestionOption getSurveyQuestionOptionById(Long id) throws CheckedServiceException;
+    
+    /**
+     * 删除SurveyQuestionOption通过问题id
+     * 
+     * @author:tyc
+     * @date:2017年12月25日上午11:19:03
+     * @param SurveyQuestionOption
+     * @return 影响行数
+     */
+    Integer deleteSurveyQuestionOptionByQuestionId(Long questionId);
 }
