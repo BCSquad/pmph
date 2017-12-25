@@ -61,10 +61,7 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService{
 		Long id = surveyQuestion.getId();
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                    CheckedExceptionResult.NULL_PARAM, "id为空");
-		}
-		if (ObjectUtil.notNull(id)) {
-			surveyQuestion.setId(id);
+                    CheckedExceptionResult.NULL_PARAM, "新增id为空");
 		}
 		return surveyQuestion;
 	}
