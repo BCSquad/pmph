@@ -105,15 +105,15 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 		}
 		SurveyTemplate surveyTemplate = new SurveyTemplate(surveyTemplateVO.getTemplateName(), 
 				surveyTemplateVO.getSort(), surveyTemplateVO.getUserId());
-		addSurveyTemplate(surveyTemplate);
-		Long id = surveyTemplate.getId();
+		addSurveyTemplate(surveyTemplate); // 添加
+		Long id = surveyTemplate.getId(); // 获取模版id
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                     CheckedExceptionResult.NULL_PARAM, "id为空");
 		}
 		SurveyTemplateQuestion surveyTemplateQuestion = new SurveyTemplateQuestion(id, 
 				surveyTemplateVO.getQuestionId());
-		surveyTemplateQuestionDao.addSurveyTemplateQuestion(surveyTemplateQuestion);
+		surveyTemplateQuestionDao.addSurveyTemplateQuestion(surveyTemplateQuestion); // 添加中间
 		return surveyTemplateVO;
 	}
 
