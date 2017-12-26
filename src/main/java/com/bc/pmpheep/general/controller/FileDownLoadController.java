@@ -528,7 +528,7 @@ public class FileDownLoadController {
 	}
 
 	/**
-	 * 导出 遴选名单
+	 * 导出书籍遴选名单/批量导出
 	 * 
 	 * @param request
 	 * @param response
@@ -542,7 +542,6 @@ public class FileDownLoadController {
 		Workbook workbook = null;
 		List<ExcelDecAndTextbookVO> list = null;
 		try {
-
 			list = textbookService.getExcelDecAndTextbooks(textbookIds);
 			if (list.size() == 0) {
 				// 设置表头 ，放置初始化表出错
@@ -554,8 +553,14 @@ public class FileDownLoadController {
 		}
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
-		String materialName = list.get(0).getMaterialName();// 教材名称
-		String fileName = returnFileName(request, materialName + ".xls");
+		String fileName = null;
+		if(textbookIds.length>1){//当批量导出的时候 文件名为教材名称
+			String materialName = list.get(0).getMaterialName();// 书籍名称
+			fileName = returnFileName(request, materialName + ".xls");
+		}else{//当单个导出的时候 文件名为书籍名称
+			String TextbookName = list.get(0).getTextbookName();// 书籍名称
+			fileName = returnFileName(request, TextbookName + ".xls");
+		}
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			workbook.write(out);
@@ -613,5 +618,4 @@ public class FileDownLoadController {
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
 	}
-
 }
