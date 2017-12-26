@@ -102,9 +102,6 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		if (null == cmsAdvertisementOrImageVO.getAdname()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "广告名称为空");
 		}
-		if(null == file){
-			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "图片为空");
-		}
 		Integer count = 0;
 		// 当有图片的时候
 		if (null != file) {
@@ -115,7 +112,7 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		}
 		CmsAdvertisementImage cmsAdvertisementImage=new CmsAdvertisementImage();
 		cmsAdvertisementImage.setAdvertId(cmsAdvertisementOrImageVO.getId());
-		cmsAdvertisementImage.setIsDisabled(cmsAdvertisementOrImageVO.getIsDisplay());
+		cmsAdvertisementImage.setIsDisabled((Boolean) cmsAdvertisementOrImageVO.getImage());
 		//修改图片是否显示
 		cmsAdvertisementImageDao.updateCmsAdvertisementImage(cmsAdvertisementImage);
 		count = cmsAdvertisementDao.updateCmsAdvertisement(cmsAdvertisementOrImageVO);
