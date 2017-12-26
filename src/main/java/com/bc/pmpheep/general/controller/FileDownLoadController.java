@@ -616,4 +616,32 @@ public class FileDownLoadController {
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
 	}
+	
+	@RequestMapping(value = "/position/ExportEditor", method = RequestMethod.GET)
+	public void ExportEditor(@RequestParam("materialId") Long materialId, HttpServletRequest request,
+			HttpServletResponse response) {
+		Workbook workbook = null;
+		List<ExcelDecAndTextbookVO> list = null;
+		try {
+			list = textbookService.getExcelDecByMaterialId(materialId);
+			workbook = excelHelper.fromBusinessObjectList(list, "主编/副主编");
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		String materialName = list.get(0).getMaterialName();// 教材名称
+		String fileName = returnFileName(request, materialName + ".xls");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
 }

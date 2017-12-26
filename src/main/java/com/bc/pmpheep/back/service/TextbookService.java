@@ -180,4 +180,11 @@ public interface TextbookService {
 	 * @return
 	 */
 	List<Textbook> getTextbooknameList(Long materialId);
+	
+	/**
+	 * 通过教材id查询该教材的主编/副主编
+	 * @param materialId
+	 * @return
+	 */
+	List<ExcelDecAndTextbookVO> getExcelDecByMaterialId(Long materialId);
 }

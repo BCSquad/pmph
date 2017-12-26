@@ -660,5 +660,15 @@ public class TextbookServiceImpl implements TextbookService {
 		List<Textbook> textbooks=textbookDao.getTextbookByMaterialId(materialId);
 		return textbooks;
 	}
+
+	@Override
+	public List<ExcelDecAndTextbookVO> getExcelDecByMaterialId(Long materialId) {
+		if(null==materialId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
+                    CheckedExceptionResult.NULL_PARAM, "教材id为空");
+		}
+		List<ExcelDecAndTextbookVO> excelDecAndTextbookVOs=textbookDao.getExcelDecByMaterialId(materialId);
+		return excelDecAndTextbookVOs;
+	}
 }
 

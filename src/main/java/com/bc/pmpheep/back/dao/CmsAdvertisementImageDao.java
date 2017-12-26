@@ -28,7 +28,7 @@ public interface CmsAdvertisementImageDao {
 	 * @param cmsAdvertisementImage
 	 * @return
 	 */
-	CmsAdvertisementImage addCmsAdvertisementImage(CmsAdvertisementImage cmsAdvertisementImage);
+	Integer addCmsAdvertisementImage(CmsAdvertisementImage cmsAdvertisementImage);
 	/**
 	 * 通过广告id修改图片
 	 * @param cmsAdvertisementImage
