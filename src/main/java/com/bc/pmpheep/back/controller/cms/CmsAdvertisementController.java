@@ -115,7 +115,7 @@ public class CmsAdvertisementController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "广告编辑页面增加图片")
-	@RequestMapping(value = "/cmsAdvertisement/addimage", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/cmsAdvertisement/addimage", method = RequestMethod.POST)
 	public ResponseBean addimage(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO,
 			HttpServletRequest request,MultipartFile file) throws CheckedServiceException, IOException {
 		String sessionId = CookiesUtil.getSessionId(request);
