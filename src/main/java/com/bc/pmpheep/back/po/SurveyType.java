@@ -76,4 +76,10 @@ public class SurveyType implements java.io.Serializable {
         this.sort = sort;
     }
 
+	@Override
+	public String toString() {
+		return "SurveyType [id=" + id + ", surveyName=" + surveyName
+				+ ", sort=" + sort + "]";
+	}
+
 }

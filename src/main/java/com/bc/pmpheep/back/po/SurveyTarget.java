@@ -138,4 +138,11 @@ public class SurveyTarget implements java.io.Serializable {
         this.gmtCreate = gmtCreate;
     }
 
+	@Override
+	public String toString() {
+		return "SurveyTarget [id=" + id + ", userId=" + userId + ", surveyId="
+				+ surveyId + ", orgId=" + orgId + ", gmtCreate=" + gmtCreate
+				+ "]";
+	}
+
 }

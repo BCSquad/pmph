@@ -300,4 +300,14 @@ public class Survey implements java.io.Serializable {
         this.gmtUpdate = gmtUpdate;
     }
 
+	@Override
+	public String toString() {
+		return "Survey [id=" + id + ", title=" + title + ", subhead=" + subhead
+				+ ", intro=" + intro + ", templateId=" + templateId
+				+ ", typeId=" + typeId + ", userId=" + userId + ", beginDate="
+				+ beginDate + ", endDate=" + endDate + ", sort=" + sort
+				+ ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
+				+ ", gmtUpdate=" + gmtUpdate + "]";
+	}
+
 }
