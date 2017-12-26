@@ -408,22 +408,14 @@ public class FileDownLoadController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/word/progress", method = RequestMethod.GET)
-	public String progress(String id, HttpServletResponse response) {
-		response.setHeader("Content-type", "text/html;charset=UTF-8");
+	public String progress(String id) {
 		Integer state = 0;
 		String detail = "loading...";
 		if (map.containsKey(id)) {
 			state = map.get(id).getState();
 			detail = map.get(id).getDetail();
 		}
-		try {
-			detail = new String(detail.getBytes(), "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			detail = e.getMessage();
-		}
-		JSONObject object = new JSONObject("{'" + state + "':'" + detail + "'}");
-		return object.toString();
-
+		return "{code:" + state + ",detail:'" + detail + "'}";
 	}
 
 	/**
