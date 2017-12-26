@@ -128,15 +128,16 @@
 	
 	<!-- 获取广告列表 -->
 	<select id="getAdvertisementList"  resultType="CmsAdvertisementOrImageVO" >
-		select t.*,CONCAT('[',GROUP_CONCAT(t.temp),']') image
+		select t.*,
+		CONCAT('[',GROUP_CONCAT(t.temp),']') image
 	 		from(
-				select ca.*,
-				CONCAT('{id:',cai.id,',','image:"',cai.image,'",','isDisabled:',cai.is_disabled,',',
-				'advertId:',cai.advert_id,'}') temp		 
+				select ca.*,cai.id imageId,
+				CONCAT('{id:',cai.id,',','image:"',cai.image,'",','advertId:',cai.advert_id,',','isDisabled:',if(cai.is_disabled,'true','false'),'}') temp,
+				cai.advert_id,cai.is_disabled isDisplay  
 				from cms_advertisement ca
 				left join cms_advertisement_image cai on cai.advert_id =ca.id 
 	 			)t
-			GROUP BY t.id
+			GROUP BY t.id 
 	</select>
 	
 	<!-- 根据id查询一个CmsAdvertisement -->
