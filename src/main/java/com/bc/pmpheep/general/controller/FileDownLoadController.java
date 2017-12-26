@@ -352,7 +352,7 @@ public class FileDownLoadController {
 		zipDownload.setId(id);
 		zipDownload.setMaterialName(materialName);
 		zipDownload.setState(0);
-		zipDownload.setDetail("数据生成中...");
+		zipDownload.setDetail("loading...");
 		zipDownload.setCreateTime(DateUtil.getCurrentTime());
 		map.put(id, zipDownload);
 		try {
