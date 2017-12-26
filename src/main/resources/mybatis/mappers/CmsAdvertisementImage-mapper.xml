@@ -33,7 +33,7 @@
 				#{id},
 			</if>
 			<if test="advertId != null" >
-				#{advert_id},
+				#{advertId},
 			</if>
 			<if test="image != null and image !=''">
 				#{image},
@@ -51,8 +51,11 @@
 	</sql>
 	
 	<!-- 新增CmsAdvertisement -->
-	<insert id="addCmsAdvertisementImage" parameterType="CmsAdvertisementImage" useGeneratedKeys="true"
-		keyProperty="id">
+	<insert id="addCmsAdvertisementImage" parameterType="CmsAdvertisementImage">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
 		insert into cms_advertisement_image (
 		<include refid="key" />
 		)

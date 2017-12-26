@@ -94,4 +94,10 @@ public class SurveyQuestionCategory implements java.io.Serializable {
         this.sort = sort;
     }
 
+	@Override
+	public String toString() {
+		return "SurveyQuestionCategory [id=" + id + ", categoryName="
+				+ categoryName + ", sort=" + sort + "]";
+	}
+
 }

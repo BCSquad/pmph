@@ -103,4 +103,11 @@ public class SurveyQuestionOption implements java.io.Serializable {
         this.remark = remark;
     }
 
+	@Override
+	public String toString() {
+		return "SurveyQuestionOption [id=" + id + ", questionId=" + questionId
+				+ ", optionContent=" + optionContent + ", isOther=" + isOther
+				+ ", remark=" + remark + "]";
+	}
+
 }

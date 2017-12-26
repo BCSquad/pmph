@@ -140,4 +140,12 @@ public class SurveyQuestionAnswer implements java.io.Serializable {
         this.gmtCreate = gmtCreate;
     }
 
+	@Override
+	public String toString() {
+		return "SurveyQuestionAnswer [id=" + id + ", userId=" + userId
+				+ ", questionId=" + questionId + ", optionId=" + optionId
+				+ ", optionContent=" + optionContent + ", attachment="
+				+ attachment + ", gmtCreate=" + gmtCreate + "]";
+	}
+
 }

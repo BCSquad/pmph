@@ -15,46 +15,54 @@ public class ExcelDecAndTextbookVO{
 	//遴选的职务
 	private Integer chosenPosition;
 	//显示职务
-	@ExcelHeader(header = "遴选的职务")
+	@ExcelHeader(header = "本书担任职务")
 	private String showChosenPosition;
 	//作家真实姓名
 	@ExcelHeader(header = "姓名")
 	private String realname;
 	//作家账号
-	@ExcelHeader(header = "作家账号")
+	@ExcelHeader(header = "申报账号")
 	private String username;
 	//申报单位
-	@ExcelHeader(header = "申报单位")
 	private String unitName;
 	//工作单位
-	@ExcelHeader(header = "工作单位")
+	@ExcelHeader(header = "单位")
 	private String orgName;
 	//作家职务
-	@ExcelHeader(header = "作家职务")
+	@ExcelHeader(header = "职务")
 	private String position;
-    // 排位
-	@ExcelHeader(header = "排位")
-    private Integer rank;
 	//作家职称
 	@ExcelHeader(header = "职称")
 	private String title;
+	//通讯地址
+	@ExcelHeader(header = "通讯地址")
+	private String address;
+	//邮编
+	@ExcelHeader(header = "邮编")
+	private String postcode;
 	//作家手机
-	@ExcelHeader(header = "手机")
+	@ExcelHeader(header = "手机号")
 	private String handphone;
 	//作家邮箱
-	@ExcelHeader(header = "邮箱")
-	private String email;	
+	@ExcelHeader(header = "电子邮箱")
+	private String email;
+	  //显示的证件类型
+    @ExcelHeader(header = "证件类型")
+    private String showIdtype;
+  	//作家证件号码
+    @ExcelHeader(header = "证件号码")
+  	private String idcard;
 	//所选书籍与职务
 	private String chooseBooksAndPostions;
 	//学校审核进度
 	private Integer onlineProgress;
 	// 显示的审核进度
-	@ExcelHeader(header = "审核进度")
+	@ExcelHeader(header = "学校审核")
 	private String showOnlineProgress;
 	//纸质表进度
     private Integer offlineProgress;
 	//纸质表进度
-	@ExcelHeader(header = "纸质表进度")
+	@ExcelHeader(header = "纸质表审核")
     private String showOfflineProgress;
     //书籍名称
     private String textbookName;
@@ -62,14 +70,23 @@ public class ExcelDecAndTextbookVO{
     private String materialName;
     //作家证件类型
   	private Short idtype;
-    //显示的证件类型
-    @ExcelHeader(header = "证件类型")
-    private String showIdtype;
-  	//作家证件号码
-    @ExcelHeader(header = "证件号码")
-  	private String idcard;
+  
+	public String getAddress() {
+		return address;
+	}
 
-    
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPostcode() {
+		return postcode;
+	}
+
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
+	}
+
 	public String getShowIdtype() {
 		return showIdtype;
 	}
@@ -139,12 +156,6 @@ public class ExcelDecAndTextbookVO{
 	}
 	public void setPosition(String position) {
 		this.position = position;
-	}
-	public Integer getRank() {
-		return rank;
-	}
-	public void setRank(Integer rank) {
-		this.rank = rank;
 	}
 	public String getTitle() {
 		return title;
@@ -226,10 +237,10 @@ public class ExcelDecAndTextbookVO{
 	}
 
 	public ExcelDecAndTextbookVO(Long textbookId, Integer chosenPosition, String showChosenPosition, String realname,
-			String username, String unitName, String orgName, String position, Integer rank, String title,
-			String handphone, String email, String chooseBooksAndPostions, Integer onlineProgress,
-			String showOnlineProgress, Integer offlineProgress, String showOfflineProgress, String textbookName,
-			String materialName, Short idtype, String showIdtype, String idcard) {
+			String username, String unitName, String orgName, String position, String title, String address,
+			String postcode, String handphone, String email, String showIdtype, String idcard,
+			String chooseBooksAndPostions, Integer onlineProgress, String showOnlineProgress, Integer offlineProgress,
+			String showOfflineProgress, String textbookName, String materialName, Short idtype) {
 		this.textbookId = textbookId;
 		this.chosenPosition = chosenPosition;
 		this.showChosenPosition = showChosenPosition;
@@ -238,10 +249,13 @@ public class ExcelDecAndTextbookVO{
 		this.unitName = unitName;
 		this.orgName = orgName;
 		this.position = position;
-		this.rank = rank;
 		this.title = title;
+		this.address = address;
+		this.postcode = postcode;
 		this.handphone = handphone;
 		this.email = email;
+		this.showIdtype = showIdtype;
+		this.idcard = idcard;
 		this.chooseBooksAndPostions = chooseBooksAndPostions;
 		this.onlineProgress = onlineProgress;
 		this.showOnlineProgress = showOnlineProgress;
@@ -250,20 +264,19 @@ public class ExcelDecAndTextbookVO{
 		this.textbookName = textbookName;
 		this.materialName = materialName;
 		this.idtype = idtype;
-		this.showIdtype = showIdtype;
-		this.idcard = idcard;
 	}
 
 	@Override
 	public String toString() {
 		return "ExcelDecAndTextbookVO [textbookId=" + textbookId + ", chosenPosition=" + chosenPosition
 				+ ", showChosenPosition=" + showChosenPosition + ", realname=" + realname + ", username=" + username
-				+ ", unitName=" + unitName + ", orgName=" + orgName + ", position=" + position + ", rank=" + rank
-				+ ", title=" + title + ", handphone=" + handphone + ", email=" + email + ", chooseBooksAndPostions="
+				+ ", unitName=" + unitName + ", orgName=" + orgName + ", position=" + position + ", title=" + title
+				+ ", address=" + address + ", postcode=" + postcode + ", handphone=" + handphone + ", email=" + email
+				+ ", showIdtype=" + showIdtype + ", idcard=" + idcard + ", chooseBooksAndPostions="
 				+ chooseBooksAndPostions + ", onlineProgress=" + onlineProgress + ", showOnlineProgress="
 				+ showOnlineProgress + ", offlineProgress=" + offlineProgress + ", showOfflineProgress="
 				+ showOfflineProgress + ", textbookName=" + textbookName + ", materialName=" + materialName
-				+ ", idtype=" + idtype + ", showIdtype=" + showIdtype + ", idcard=" + idcard + "]";
+				+ ", idtype=" + idtype + "]";
 	}
 
 

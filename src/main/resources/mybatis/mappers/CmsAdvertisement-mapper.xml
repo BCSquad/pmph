@@ -90,22 +90,22 @@
 				#{type},
 			</if>
 			<if test="autoPlay != null">
-				#{auto_play},
+				#{autoPlay},
 			</if>
 			<if test="navigationColor != null and navigationColor != ''">
-				#{navigation_color},
+				#{navigationColor},
 			</if>
 			<if test="isNavigation != null">
 				#{isNavigation},
 			</if>
 			<if test="animationInterval != null">
-				#{animation_interval},
+				#{animationInterval},
 			</if>
 			<if test="animationEffect != null and animationEffect != ''">
-				#{animation_effect},
+				#{animationEffect},
 			</if>
 			<if test="isShowHeading != null">
-				#{is_show_heading},
+				#{isShowHeading},
 			</if>
 			<if test="gmtCreate!=null">
 				#{gmtCreate},
@@ -118,6 +118,7 @@
 	<!-- 新增CmsAdvertisement -->
 	<insert id="addCmsAdvertisement" parameterType="CmsAdvertisement" useGeneratedKeys="true"
 		keyProperty="id">
+		
 		insert into cms_advertisement (
 		<include refid="key" />
 		)

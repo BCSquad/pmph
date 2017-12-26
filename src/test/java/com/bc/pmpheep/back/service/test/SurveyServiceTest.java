@@ -8,9 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.service.SurveyService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -24,8 +27,14 @@ public class SurveyServiceTest extends BaseTest {
 	
 	@Resource
 	SurveyService surveyService;
-	Survey survey = new Survey("测试标题", "测试副标题", "测试简介", 1L, 2L, 1L, null, null, 999, false,
-		    null, null);
+	Survey survey = new Survey("测试标题", "测试副标题", "测试简介", 1L, 2L, 
+			1L, null, null, 999, false, null, null);
+	private Survey addSurveys(){
+		Survey survey = surveyService.addSurvey(new Survey("测试标题1", 
+				"测试副标题1", "测试简介1", 3L, 5L, 7L, null, null, 977, false, 
+				null, null));
+		return survey;
+	}
 	
 	@Test
 	@Rollback(Const.ISROLLBACK)
@@ -49,6 +58,28 @@ public class SurveyServiceTest extends BaseTest {
 		surveyService.addSurvey(survey);
 		Assert.assertNotNull("获取数据失败", 
 				surveyService.getSurveyById(survey.getId()));
+	}
+	
+	@SuppressWarnings({ "unused", "rawtypes", "unchecked" })
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void listSurvey(){
+		Survey survey = this.addSurveys();
+		PageParameter pageParameter = new PageParameter<>();
+        PageResult pageResult = new PageResult<>();
+        SurveyVO surveyVO = new SurveyVO();
+        pageParameter.setParameter(surveyVO);
+		pageParameter.setPageSize(10);
+		pageResult = surveyService.listSurvey(pageParameter);
+		Assert.assertNotNull("分页数据失败", pageResult);
+	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void deleteSurveyById(){
+		surveyService.addSurvey(survey);
+		Integer deleteInteger = surveyService.deleteSurveyById(survey.getId());
+		Assert.assertTrue("删除失败", deleteInteger > 0);
 	}
 	
 }
