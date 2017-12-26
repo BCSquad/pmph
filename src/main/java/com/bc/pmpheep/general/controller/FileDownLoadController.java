@@ -415,6 +415,11 @@ public class FileDownLoadController {
 			state = map.get(id).getState();
 			detail = map.get(id).getDetail();
 		}
+		try {
+			detail = new String(detail.getBytes("GBK"), "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			detail = e.getMessage();
+		}
 		JSONObject object = new JSONObject("{'" + state + "':'" + detail + "'}");
 		return object.toString();
 
