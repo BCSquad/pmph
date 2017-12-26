@@ -24,7 +24,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * </pre>
  */
 public interface SurveyService {
-	/**
+    /**
      * 新增一个Survey
      * 
      * @author:tyc
@@ -32,9 +32,23 @@ public interface SurveyService {
      * @param Survey 实体对象
      * @return 影响行数
      */
-	Survey addSurvey(Survey survey) throws CheckedServiceException;
-	
-	/**
+    Survey addSurvey(Survey survey) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：新增一个Survey
+     * 使用示范：
+     *
+     * @param survey Survey 实体对象
+     * @param sessionId
+     * @return
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Survey addSurvey(Survey survey, String sessionId) throws CheckedServiceException;
+
+    /**
      * 更新一个 Survey通过主键id
      * 
      * @author:tyc
@@ -53,14 +67,26 @@ public interface SurveyService {
      * @return 影响行数
      */
     Survey getSurveyById(Long id) throws CheckedServiceException;
-    
+
     /**
      * 问卷表分页列表（同时查询分页数据和总条数）
+     * 
      * @author:tyc
      * @date:2017年12月25日下午15:02:14
      * @param pageParameter
      * @return
      */
-    PageResult<SurveyVO> listSurvey(PageParameter<SurveyVO> pageParameter) 
-    		throws CheckedServiceException;
+    PageResult<SurveyVO> listSurvey(PageParameter<SurveyVO> pageParameter)
+    throws CheckedServiceException;
+
+    /**
+     * 逻辑删除Survey通过主键id
+     * 
+     * @author:tyc
+     * @date:2017年12月20日下午16:55:35
+     * @param Survey
+     * @return 影响行数
+     */
+    Integer deleteSurveyById(Long id) throws CheckedServiceException;
+
 }

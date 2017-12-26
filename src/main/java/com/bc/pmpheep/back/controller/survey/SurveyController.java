@@ -1,7 +1,10 @@
 package com.bc.pmpheep.back.controller.survey;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,7 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.service.SurveyService;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -63,5 +68,41 @@ public class SurveyController {
         PageParameter<SurveyVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
         pageParameter.setParameter(surveyVO);
         return new ResponseBean(surveyService.listSurvey(pageParameter));
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：新增问卷信息
+     * 使用示范：
+     *
+     * @param survey Survey问卷对象
+     * @param request
+     * @return Survey问卷对象
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增问卷信息")
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public ResponseBean create(Survey survey, HttpServletRequest request) {
+        String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(surveyService.addSurvey(survey, sessionId));
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按主键ID删除问卷信息
+     * 使用示范：
+     *
+     * @param id Survey主键
+     * @return 影响行数
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "按主键ID删除问卷信息")
+    @RequestMapping(value = "/{id}/remove", method = RequestMethod.DELETE)
+    public ResponseBean remove(@PathVariable("id") Long id) {
+        return new ResponseBean(surveyService.deleteSurveyById(id));
     }
 }

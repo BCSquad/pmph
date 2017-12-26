@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.SurveyType;
@@ -51,4 +53,15 @@ public interface SurveyTypeDao {
      * @return 影响行数
      */
     SurveyType getSurveyTypeById(Long id);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取所有问卷调查类型
+     * 使用示范：
+     *
+     * @return SurveyType对象集合
+     * </pre>
+     */
+    List<SurveyType> listSurveyType();
 }

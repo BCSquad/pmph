@@ -89,4 +89,22 @@
 	resultType="SurveyTarget">
 		select * from survey_target where id=#{id};
 	</select>
+	
+	<!-- 根据发起人id查询问卷表 -->
+	<select id="getSurveyTargetByUserId" parameterType="list" 
+	resultType="Survey">
+		select * from survey_target stg 
+		left join pmph_user ppu on ppu.id=stg.user_id 
+		left join survey s on s.id=stg.survey_id 
+		where user_id=#{userId};
+	</select>
+	
+	<!-- 根据机构id查询问卷表 -->
+	<select id="getSurveyTargetByOrgId" parameterType="list" 
+	resultType="Survey">
+		select * from survey_target stg 
+		left join survey s on s.id=stg.survey_id 
+		left join org o on o.id=stg.org_id  
+		where org_id=#{orgId};
+	</select>
 </mapper>
