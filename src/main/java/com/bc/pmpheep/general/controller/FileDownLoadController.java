@@ -408,7 +408,8 @@ public class FileDownLoadController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/word/progress", method = RequestMethod.GET)
-	public String progress(String id) {
+	public String progress(String id, HttpServletResponse response) {
+		response.setHeader("Content-type", "text/html;charset=UTF-8");
 		Integer state = 0;
 		String detail = "loading...";
 		if (map.containsKey(id)) {
@@ -416,7 +417,7 @@ public class FileDownLoadController {
 			detail = map.get(id).getDetail();
 		}
 		try {
-			detail = new String(detail.getBytes("ISO8859-1"), "utf-8");
+			detail = new String(detail.getBytes(), "utf-8");
 		} catch (UnsupportedEncodingException e) {
 			detail = e.getMessage();
 		}
