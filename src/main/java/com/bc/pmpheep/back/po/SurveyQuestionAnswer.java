@@ -73,6 +73,15 @@ public class SurveyQuestionAnswer implements java.io.Serializable {
         this.attachment = attachment;
         this.gmtCreate = gmtCreate;
     }
+    
+    public SurveyQuestionAnswer(Long userId, Long questionId, Long optionId, String optionContent,
+    	    String attachment) {
+    	        this.userId = userId;
+    	        this.questionId = questionId;
+    	        this.optionId = optionId;
+    	        this.optionContent = optionContent;
+    	        this.attachment = attachment;
+    	    }
 
     // Property accessors
     public Long getId() {

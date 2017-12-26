@@ -1,5 +1,8 @@
 package com.bc.pmpheep.back.service.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.junit.Assert;
@@ -24,7 +27,8 @@ public class SurveyQuestionAnswerServiceTest extends BaseTest {
 	
 	@Resource
 	SurveyQuestionAnswerService surveyQuestionAnswerService;
-	SurveyQuestionAnswer surveyQuestionAnswer = new SurveyQuestionAnswer(1L, 2L, 2L, null, null, null);
+	SurveyQuestionAnswer surveyQuestionAnswer = new SurveyQuestionAnswer(1L, 2L, 2L, null, null);
+	SurveyQuestionAnswer surveyQuestionAnswer2 = new SurveyQuestionAnswer(7L, 8L, 9L, null, null);
 	
 	 @Test
 	 @Rollback(Const.ISROLLBACK)
@@ -48,5 +52,16 @@ public class SurveyQuestionAnswerServiceTest extends BaseTest {
 		 surveyQuestionAnswerService.addSurveyQuestionAnswer(surveyQuestionAnswer);
 		 Assert.assertNotNull("获取数据失败", 
 				 surveyQuestionAnswerService.getSurveyQuestionAnswerById(surveyQuestionAnswer.getId()));
+	 }
+	 
+	 @Test
+	 @Rollback(Const.ISROLLBACK)
+	 public void batchAddSurveyQuestionAnswer(){
+		 List<SurveyQuestionAnswer> surveyQuestionAnswers = new ArrayList<SurveyQuestionAnswer>();
+		 surveyQuestionAnswers.add(surveyQuestionAnswer);
+		 surveyQuestionAnswers.add(surveyQuestionAnswer2);
+		 surveyQuestionAnswerService.batchAddSurveyQuestionAnswer(surveyQuestionAnswers);
+		 Assert.assertNotNull("插入内容后返回的不应为空", 
+				 surveyQuestionAnswerService.batchAddSurveyQuestionAnswer(surveyQuestionAnswers));
 	 }
 }
