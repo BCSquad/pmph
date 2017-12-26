@@ -11,6 +11,7 @@ import org.springframework.test.annotation.Rollback;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.service.SurveyTemplateService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.vo.SurveyTemplateVO;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -57,4 +58,16 @@ public class SurveyTemplateServiceTest extends BaseTest {
 		Assert.assertNotNull("逻辑删除数据失败", 
 				surveyTemplateService.deleteSurveyTemplateById(surveyTemplate.getId()));
 	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void addSurveyTemplateVO(){
+		SurveyTemplateVO surveyTemplateVO = new SurveyTemplateVO();
+		surveyTemplateVO.setTemplateName("测试2");
+		surveyTemplateVO.setSort(3);
+		surveyTemplateVO.setUserId(7L);
+		surveyTemplateVO.setQuestionId(9L);
+		Assert.assertNotNull("添加数据失败", surveyTemplateService.addSurveyTemplateVO(surveyTemplateVO));
+	}
+	
 }
