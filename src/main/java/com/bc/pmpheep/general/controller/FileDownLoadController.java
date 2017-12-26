@@ -416,7 +416,7 @@ public class FileDownLoadController {
 			detail = map.get(id).getDetail();
 		}
 		try {
-			detail = new String(detail.getBytes("GBK"), "utf-8");
+			detail = new String(detail.getBytes("utf-8"), "ISO8859-1");
 		} catch (UnsupportedEncodingException e) {
 			detail = e.getMessage();
 		}
