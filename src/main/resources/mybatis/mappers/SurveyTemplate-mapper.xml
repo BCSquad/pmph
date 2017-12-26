@@ -132,7 +132,7 @@
 		left join pmph_user ppu on ppu.id=stl.user_id,
 		(select count(*) count from survey_template stl 
 		left join pmph_user ppu on ppu.id=stl.user_id 
-		where is_deleted = 0 
+		where stl.is_deleted = false 
 		<!-- 下面是动态条件 -->
 		<if test="parameter !=null ">
 			<!-- 模版名称 -->
@@ -151,7 +151,7 @@
 			</if>
 		</if>
 		) t 
-		where is_deleted = 0 
+		where stl.is_deleted = false 
 		<!-- 下面是动态条件 -->
 		<if test="parameter !=null ">
 			<!-- 模版名称 -->

@@ -76,7 +76,7 @@ public interface SurveyTemplateService {
      * @param SurveyTemplateVO
      * @return 影响行数
      */
-    Integer addSurveyTemplateVO(SurveyTemplateVO surveyTemplateVO) throws CheckedServiceException;
+    SurveyTemplate addSurveyTemplateVO(SurveyTemplateVO surveyTemplateVO) throws CheckedServiceException;
 
     /**
      * 
