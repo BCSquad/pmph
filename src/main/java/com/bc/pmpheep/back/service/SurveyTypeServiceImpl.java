@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,50 +33,53 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Service
 public class SurveyTypeServiceImpl implements SurveyTypeService {
 
-	@Autowired
-	private SurveyTypeDao surveyTypeDao;
-	
-	@Override
-	public SurveyType addSurveyType(SurveyType surveyType)
-			throws CheckedServiceException {
-		if (ObjectUtil.isNull(surveyType)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                    CheckedExceptionResult.NULL_PARAM, "参数为空");
-		}
-		if (StringUtil.isEmpty(surveyType.getSurveyName())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                    CheckedExceptionResult.NULL_PARAM, "问卷调查类型名称为空");
-		}
-		surveyTypeDao.addSurveyType(surveyType);
-		return surveyType;
-	}
+    @Autowired
+    private SurveyTypeDao surveyTypeDao;
 
-	@Override
-	public Integer deleteSurveyTypeById(Long id) throws CheckedServiceException {
-		if (ObjectUtil.isNull(id)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                    CheckedExceptionResult.NULL_PARAM, "参数为空");
-		}
-		return surveyTypeDao.deleteSurveyTypeById(id);
-	}
+    @Override
+    public SurveyType addSurveyType(SurveyType surveyType) throws CheckedServiceException {
+        if (ObjectUtil.isNull(surveyType)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        if (StringUtil.isEmpty(surveyType.getSurveyName())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷调查类型名称为空");
+        }
+        surveyTypeDao.addSurveyType(surveyType);
+        return surveyType;
+    }
 
-	@Override
-	public Integer updateSurveyType(SurveyType surveyType)
-			throws CheckedServiceException {
-		if (ObjectUtil.isNull(surveyType)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                    CheckedExceptionResult.NULL_PARAM, "参数为空");
-		}
-		return surveyTypeDao.updateSurveyType(surveyType);
-	}
+    @Override
+    public Integer deleteSurveyTypeById(Long id) throws CheckedServiceException {
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return surveyTypeDao.deleteSurveyTypeById(id);
+    }
 
-	@Override
-	public SurveyType getSurveyTypeById(Long id) throws CheckedServiceException {
-		if (ObjectUtil.isNull(id)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                    CheckedExceptionResult.NULL_PARAM, "参数为空");
-		}
-		return surveyTypeDao.getSurveyTypeById(id);
-	}
+    @Override
+    public Integer updateSurveyType(SurveyType surveyType) throws CheckedServiceException {
+        if (ObjectUtil.isNull(surveyType)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return surveyTypeDao.updateSurveyType(surveyType);
+    }
+
+    @Override
+    public SurveyType getSurveyTypeById(Long id) throws CheckedServiceException {
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return surveyTypeDao.getSurveyTypeById(id);
+    }
+
+    @Override
+    public List<SurveyType> listSurveyType() throws CheckedServiceException {
+        return surveyTypeDao.listSurveyType();
+    }
 
 }

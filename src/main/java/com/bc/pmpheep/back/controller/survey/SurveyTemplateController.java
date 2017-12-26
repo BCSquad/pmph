@@ -7,10 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.SurveyTemplateService;
+import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -40,6 +44,31 @@ public class SurveyTemplateController {
 
     // 当前业务类型
     private static final String BUSSINESS_TYPE = "问卷模版";
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：查询问卷模版列表
+     * 使用示范：
+     *
+     * @param surveyTemplateListVO 
+     * @param pageNumber 当前页
+     * @param pageSize 页面数据条数
+     * @return 分页数据集
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询问卷模版列表")
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public ResponseBean create(SurveyTemplateListVO surveyTemplateListVO,
+    @RequestParam("pageNumber") Integer pageNumber, @RequestParam("pageSize") Integer pageSize) {
+        surveyTemplateListVO.setUsername(StringUtil.toAllCheck(surveyTemplateListVO.getUsername()));// 模版创建人
+        surveyTemplateListVO.setTemplateName(StringUtil.toAllCheck(surveyTemplateListVO.getTemplateName()));// 模版名称
+        PageParameter<SurveyTemplateListVO> pageParameter =
+        new PageParameter<>(pageNumber, pageSize);
+        pageParameter.setParameter(surveyTemplateListVO);
+        return new ResponseBean(surveyTemplateService.listSurveyTemplateList(pageParameter));
+    }
 
     /**
      * 

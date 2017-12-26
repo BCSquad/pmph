@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
+import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
 import com.bc.pmpheep.back.vo.SurveyQuestionVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -146,24 +147,31 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService {
         return count;
     }
 
-	@Override
-	public PageResult<SurveyQuestionVO> listSurveyQuestion(PageParameter<SurveyQuestionVO> pageParameter) 
-			throws CheckedServiceException {
-		if (ObjectUtil.isNull(pageParameter)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                    CheckedExceptionResult.NULL_PARAM, "参数为空");
-		}
-		PageResult<SurveyQuestionVO> pageResult = new PageResult<SurveyQuestionVO>();
-		// 将页面大小和页面页码拷贝
+    @Override
+    public PageResult<SurveyQuestionVO> listSurveyQuestion(
+    PageParameter<SurveyQuestionVO> pageParameter) throws CheckedServiceException {
+        if (ObjectUtil.isNull(pageParameter)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        PageResult<SurveyQuestionVO> pageResult = new PageResult<SurveyQuestionVO>();
+        // 将页面大小和页面页码拷贝
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         // 包含数据总条数的数据集
-        List<SurveyQuestionVO> surveyQuestionList = surveyQuestionDao.listSurveyQuestion(pageParameter);
+        List<SurveyQuestionVO> surveyQuestionList =
+        surveyQuestionDao.listSurveyQuestion(pageParameter);
         if (CollectionUtil.isNotEmpty(surveyQuestionList)) {
-        	Integer count = surveyQuestionList.get(0).getCount();
-        	pageResult.setTotal(count);
-        	pageResult.setRows(surveyQuestionList);
+            Integer count = surveyQuestionList.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(surveyQuestionList);
         }
-		return pageResult;
-	}
+        return pageResult;
+    }
+
+    @Override
+    public List<SurveyQuestionOptionCategoryVO> getQuestionOptionByQuestionIdOrCategoryId(
+    Long questionId, Long categoryId) throws CheckedServiceException {
+        return surveyQuestionDao.getQuestionOptionByQuestionIdOrCategoryId(questionId, categoryId);
+    }
 
 }

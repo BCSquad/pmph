@@ -14,7 +14,7 @@ import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
 @Controller
-@RequestMapping(value = "/survey/question")
+@RequestMapping(value = "/survey/question/answer")
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class SurveyQuestionAnswerController {
     @Autowired

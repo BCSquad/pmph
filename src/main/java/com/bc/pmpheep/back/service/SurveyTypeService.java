@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import com.bc.pmpheep.back.po.SurveyType;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -21,7 +23,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * </pre>
  */
 public interface SurveyTypeService {
-	/**
+    /**
      * 新增一个SurveyType
      * 
      * @author:tyc
@@ -29,7 +31,7 @@ public interface SurveyTypeService {
      * @param SurveyType 实体对象
      * @return 影响行数
      */
-	SurveyType addSurveyType(SurveyType surveyType) throws CheckedServiceException;
+    SurveyType addSurveyType(SurveyType surveyType) throws CheckedServiceException;
 
     /**
      * 删除SurveyType通过主键id
@@ -60,4 +62,16 @@ public interface SurveyTypeService {
      * @return 影响行数
      */
     SurveyType getSurveyTypeById(Long id) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取所有问卷调查类型
+     * 使用示范：
+     *
+     * @return SurveyType对象集合
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    List<SurveyType> listSurveyType() throws CheckedServiceException;
 }

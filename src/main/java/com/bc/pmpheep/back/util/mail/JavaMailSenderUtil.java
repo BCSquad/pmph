@@ -27,10 +27,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
  * </pre>
  */
 public class JavaMailSenderUtil {
-    Logger                            logger     =
-                                                 LoggerFactory.getLogger(JavaMailSenderUtil.class);
-    // 创建邮件发送类
-    private static JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
+    Logger logger = LoggerFactory.getLogger(JavaMailSenderUtil.class);
 
     /**
      * 
@@ -41,12 +38,12 @@ public class JavaMailSenderUtil {
      * @return
      * </pre>
      */
-    private MimeMessage JavaMailSenderConfig() {
+    private MimeMessage JavaMailSenderConfig(JavaMailSenderImpl senderImpl) {
         senderImpl.setHost("smtp.qq.com");// 发送邮件服务器
         // 端口号，腾讯邮箱使用SSL协议端口号：465/587，腾讯邮箱使用非SSL协议,163邮箱,新浪邮箱端口号都是：25
         senderImpl.setPort(465);
         senderImpl.setUsername("281235538@qq.com"); // 用户名
-        senderImpl.setPassword("********"); // 密码
+        senderImpl.setPassword("*********"); // 密码
 
         Properties prop = new Properties();// 参数配置
         prop.put("mail.smtp.ssl.enable", "true");// 使用SSL协议
@@ -75,9 +72,12 @@ public class JavaMailSenderUtil {
      */
     public boolean sendMail(String title, String content, String[] toMail) throws Exception {
         Boolean isOk = false;
+        // 创建邮件发送类
+        JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
+        // 设置邮件
+        MimeMessage mailMessage = JavaMailSenderConfig(senderImpl);
         try {
             // 设置邮件
-            MimeMessage mailMessage = JavaMailSenderConfig();
             MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage, true, "UTF-8");
             // 收件人
             messageHelper.setTo(toMail);
@@ -97,7 +97,7 @@ public class JavaMailSenderUtil {
             logger.info("邮件进行重发");
             try {
                 Thread.sleep(2000);
-                senderImpl.send(JavaMailSenderConfig());
+                senderImpl.send(mailMessage);
             } catch (InterruptedException ie) {
                 logger.error("重发邮件时发生异常");
                 logger.error(ie.getMessage());
@@ -109,7 +109,8 @@ public class JavaMailSenderUtil {
     public static void main(String[] args) {
         JavaMailSenderUtil jss = new JavaMailSenderUtil();
         try {
-            jss.sendMail("aaa", "bbbb", new String[] { "nyz526@163.com" });
+            jss.sendMail("邮件发送测试", "<html><head></head><body><h1>hello!!邮件发送测试</h1>"
+                                   + "</body></html>", new String[] { "nyz526@163.com" });
         } catch (Exception e) {
             e.printStackTrace();
         }
