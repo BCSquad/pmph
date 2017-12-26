@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -408,14 +409,15 @@ public class FileDownLoadController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/word/progress", method = RequestMethod.GET)
-	public String progress(String id) {
-		Integer state = 0;
-		String detail = "loading...";
+	public ZipDownload progress(String id) {
+		ZipDownload zipDownload = new ZipDownload();
+		zipDownload.setState(0);
+		zipDownload.setDetail("loading...");
 		if (map.containsKey(id)) {
-			state = map.get(id).getState();
-			detail = map.get(id).getDetail();
+			zipDownload.setState(map.get(id).getState());
+			zipDownload.setDetail(map.get(id).getDetail());
 		}
-		return "{code:" + state + ",detail:'" + detail + "'}";
+		return zipDownload;
 	}
 
 	/**

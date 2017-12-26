@@ -118,7 +118,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
         SurveyTemplateQuestion surveyTemplateQuestion =
         new SurveyTemplateQuestion(id, surveyTemplateVO.getQuestionId());
         surveyTemplateQuestionDao.addSurveyTemplateQuestion(surveyTemplateQuestion); // 添加中间
-        return surveyTemplateQuestionDao.addSurveyTemplateQuestion(surveyTemplateQuestion);
+        return 1;
     }
 
     @Override

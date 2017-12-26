@@ -295,4 +295,16 @@ public class SurveyQuestionOptionCategoryVO implements Serializable {
         this.optionIdString = optionIdString;
     }
 
+	@Override
+	public String toString() {
+		return "SurveyQuestionOptionCategoryVO [categoryName=" + categoryName
+				+ ", categoryId=" + categoryId + ", title=" + title + ", type="
+				+ type + ", sort=" + sort + ", direction=" + direction
+				+ ", isAnswer=" + isAnswer + ", isDeleted=" + isDeleted
+				+ ", gmtCreate=" + gmtCreate + ", optionId=" + optionId
+				+ ", optionIdString=" + optionIdString + ", questionId="
+				+ questionId + ", optionContent=" + optionContent
+				+ ", isOther=" + isOther + ", remark=" + remark + "]";
+	}
+
 }
