@@ -76,4 +76,10 @@ public class SurveyTemplateQuestion implements java.io.Serializable {
         this.questionId = questionId;
     }
 
+	@Override
+	public String toString() {
+		return "SurveyTemplateQuestion [id=" + id + ", templateId="
+				+ templateId + ", questionId=" + questionId + "]";
+	}
+
 }
