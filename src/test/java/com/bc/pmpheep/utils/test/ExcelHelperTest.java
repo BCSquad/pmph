@@ -1,7 +1,9 @@
 package com.bc.pmpheep.utils.test;
 
+import com.bc.pmpheep.back.bo.DecPositionBO;
 import com.bc.pmpheep.back.bo.DeclarationBO;
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
+import com.bc.pmpheep.back.bo.WriterBO;
 import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecTeachExp;
@@ -36,6 +38,17 @@ public class ExcelHelperTest extends BaseTest {
     ExcelHelper excelHelper;
     @Resource
     DecTeachExpService decTeachExpService;
+
+    @Test
+    public void fromDecPositionBOList() throws IOException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        List<DecPositionBO> list = makeDecPositionBOList();
+        Workbook workbook = excelHelper.fromDecPositionBOList(list, "遴选表");
+        String path = this.getClass().getResource("/").getPath().concat("position.xls");
+        FileOutputStream out = new FileOutputStream(path);
+        workbook.write(out);
+        out.flush();
+        out.close();
+    }
 
     @Test
     public void fromBusinessObjectList() throws IOException, SecurityException, IllegalArgumentException, IllegalAccessException {
@@ -133,5 +146,40 @@ public class ExcelHelperTest extends BaseTest {
             map.put("exception", "数据异常原因");
         }
         excelHelper.exportFromMaps(maps, "bbs_group", null);
+    }
+
+    private List<DecPositionBO> makeDecPositionBOList() {
+        List<DecPositionBO> list = new ArrayList<>(3);
+        for (int i = 1; i < 4; i++) {
+            DecPositionBO bo = new DecPositionBO();
+            bo.setSort(i);
+            bo.setTextbookName("书" + i);
+            bo.setTextbookRound(i + 5);
+            List<WriterBO> writers = new ArrayList<>();
+            for (int j = 0; j < 10; j++) {
+                WriterBO writer = new WriterBO();
+                writer.setRealname("随机姓名" + j);
+                writer.setChosenOrgName("随机学校" + j);
+                switch (j % 4) {
+                    case 0:
+                        writer.setChosenPosition(1);
+                        break;
+                    case 1:
+                        writer.setChosenPosition(2);
+                        break;
+                    case 2:
+                        writer.setChosenPosition(4);
+                        break;
+                    case 3:
+                        writer.setChosenPosition(8);
+                        break;
+                }
+                writer.setRank(j + 1);
+                writers.add(writer);
+            }
+            bo.setWriters(writers);
+            list.add(bo);
+        }
+        return list;
     }
 }
