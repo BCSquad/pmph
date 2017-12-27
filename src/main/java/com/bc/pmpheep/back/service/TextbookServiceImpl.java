@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.bo.DecPositionBO;
+import com.bc.pmpheep.back.bo.WriterBO;
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.dao.PmphUserDao;
@@ -677,13 +678,14 @@ public class TextbookServiceImpl implements TextbookService {
 		for (ExportDecPositionVO exportDecPositionVO : exportDecPositionVOs) {
 			decPositionBO.setTextbookName(exportDecPositionVO.getTextbookName());
 			decPositionBO.setTextbookRound(exportDecPositionVO.getTextbookRound());
-			List<WriterVO> writerVOs=new ArrayList<>();
-			for (WriterVO writerVO : writerVOs) {
-				if(exportDecPositionVO.getWriters().equals(writerVO)){
-					writerVOs.add(writerVO);
-				}
+			List<WriterBO> writerBO=new ArrayList<>();
+			for (WriterBO writeBO : writerBO) {
+				writeBO.setRealname(exportDecPositionVO.getWriters().get(0).getRealname());
+				writeBO.setRank(exportDecPositionVO.getWriters().get(0).getRank());
+				writeBO.setChosenPosition(exportDecPositionVO.getWriters().get(0).getChosenPosition());
+				writeBO.setChosenOrgName(exportDecPositionVO.getWriters().get(0).getChosenOrgName());
 			}
-			//decPositionBO.setWriters(writerVOs);
+			decPositionBO.setWriters(writerBO);
 			decPositionBOs.add(decPositionBO);
 		}
 		return decPositionBOs;
