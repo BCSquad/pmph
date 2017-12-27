@@ -313,6 +313,14 @@ public class TopicController {
 		return new ResponseBean(topicTextVO);
 	}
 	
+	/**
+	 * 
+	 * Description:部门主任获取部门人员信息列表
+	 * @author:lyc
+	 * @date:2017年12月27日下午5:02:46
+	 * @param 
+	 * @return ResponseBean
+	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取部门编辑列表")
 	@RequestMapping(value = "/listEditors", method = RequestMethod.GET)
