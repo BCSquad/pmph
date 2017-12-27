@@ -192,6 +192,8 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		// 替换之前图片id的临时值
 		cmsAdvertisementImage.setImage(newImage);
 		cmsAdvertisementImageDao.updateCmsAdvertisementImage(cmsAdvertisementImage);
+		//拼接芒果DB图片路径
+		cmsAdvertisementImage.setImage(RouteUtil.MONGODB_IMAGE.concat(newImage));
 		return cmsAdvertisementImage;
 	}
 
