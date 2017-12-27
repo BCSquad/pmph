@@ -162,7 +162,6 @@ public class MigrationStageSix {
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
-            logger.info("111111111111111");
             StringBuilder sb = new StringBuilder();
             String id = (String) map.get("writerid"); // 旧表主键值
             Long materialid = (Long) map.get("tm_materid"); // 教材id
@@ -175,8 +174,7 @@ public class MigrationStageSix {
             String authUserid = (String) map.get("auth_user_id"); // 审核人id
             Long offlineProgressJudge = (Long) map.get("offline_progress"); // 纸质表进度
             Long isStagingJudge = (Long) map.get("is_staging"); // 是否暂存
-            Integer sysflag = (Integer) map.get("sysflag"); // 0为后台用户，1为前台用户            
-            logger.info("222222222222222");
+            Integer sysflag = (Integer) map.get("sysflag"); // 0为后台用户，1为前台用户
             if (ObjectUtil.isNull(sysflag) || sysflag == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为后台用户申请教材。"));
                 excel.add(map);
@@ -207,7 +205,6 @@ public class MigrationStageSix {
                 declaration.setSex(sex);
             }
             declaration.setBirthday((Date) map.get("birthdate")); // 生日
-            logger.info("33333333333333");
             if (JdbcHelper.judgeExperience(experienceNum)) {
                 experienceNum = JdbcHelper.correctExperience(experienceNum);
             }
@@ -234,7 +231,6 @@ public class MigrationStageSix {
             } else {
                 declaration.setOnlineProgress(0);
             }
-            logger.info("4444444444444");
             Long authUserId = JdbcHelper.getPrimaryKey("sys_user", "userid", authUserid);
             declaration.setAuthUserId(authUserId);
             declaration.setAuthDate((Timestamp) map.get("auditdate")); // 审核通过时间
