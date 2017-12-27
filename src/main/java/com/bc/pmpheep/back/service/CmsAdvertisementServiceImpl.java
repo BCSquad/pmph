@@ -219,7 +219,7 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 			fileService.remove(image[i]);
 		}
 		// 删除本地相对应的图片信息
-		count=cmsAdvertisementImageDao.deleteCmsAdvertisementByImage(advertId);
+		count=cmsAdvertisementImageDao.deleteCmsAdvertisementByImages(image);
 		return count;
 	}
 
