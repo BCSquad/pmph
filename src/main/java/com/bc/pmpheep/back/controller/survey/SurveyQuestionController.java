@@ -49,7 +49,7 @@ public class SurveyQuestionController {
      * </pre>
      */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取问卷调查列表")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询问题")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseBean list(@RequestParam("questionId") Long questionId,
     @RequestParam("categoryId") Long categoryId) {
