@@ -395,7 +395,7 @@ public class FileDownLoadController {
 			e.getMessage();
 		}
 		zipDownload.setState(1);
-		zipDownload.setDetail("/zip/download?" + id);
+		zipDownload.setDetail("/zip/download?id=" + id);
 		map.put(id, zipDownload);
 	}
 
