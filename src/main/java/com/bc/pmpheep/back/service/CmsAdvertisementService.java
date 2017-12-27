@@ -32,18 +32,19 @@ public interface CmsAdvertisementService {
 	 * @return
 	 */
 	Integer updateCmsAdvertisement(CmsAdvertisement cmsAdvertisement, String sessionId) throws CheckedServiceException;
-
+	
 	/**
 	 * 修改广告
 	 * @param cmsAdvertisementOrImageVO
 	 * @param file
 	 * @param sessionId
+	 * @param imageId
 	 * @return
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, MultipartFile file, String sessionId)
-			throws CheckedServiceException, IOException;
+	Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, MultipartFile file,
+			String sessionId, Long[] imageId) throws CheckedServiceException, IOException;
 
 	/**
 	 * 增加广告
@@ -78,6 +79,13 @@ public interface CmsAdvertisementService {
 	 */
 	CmsAdvertisementImage addCmsAdevertisementImage(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, 
 			MultipartFile file, String sessionId)throws CheckedServiceException, IOException;
-
+	/**
+	 * 删除图片
+	 * @param id
+	 * @param image
+	 * @param sessionId
+	 * @return
+	 */
 	Integer deleteCmsAdvertisementImageById(Long id, String[] image, String sessionId);
+
 }
