@@ -147,7 +147,7 @@
 		left join survey_question_category sqc on sqc.id=sq.category_id,
 		(select count(*) count from survey_question sq 
 		left join survey_question_category sqc on sqc.id=sq.category_id 
-		where is_deleted = 0 
+		where sq.is_deleted = false 
 		<!-- 下面是动态条件 -->
 		<if test="parameter !=null ">
 			<!-- 题目 -->
@@ -164,7 +164,7 @@
 			</if>
 		</if>
 		) t 
-		where is_deleted = 0 
+		where sq.is_deleted = false 
 		<!-- 下面是动态条件 -->
 		<if test="parameter !=null ">
 			<!-- 题目 -->

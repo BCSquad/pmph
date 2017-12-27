@@ -255,4 +255,13 @@ public class SurveyQuestion implements java.io.Serializable {
         this.gmtUpdate = gmtUpdate;
     }
 
+	@Override
+	public String toString() {
+		return "SurveyQuestion [id=" + id + ", categoryId=" + categoryId
+				+ ", title=" + title + ", type=" + type + ", sort=" + sort
+				+ ", direction=" + direction + ", isAnswer=" + isAnswer
+				+ ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
+				+ ", gmtUpdate=" + gmtUpdate + "]";
+	}
+
 }

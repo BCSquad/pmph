@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -352,7 +353,7 @@ public class FileDownLoadController {
 		zipDownload.setId(id);
 		zipDownload.setMaterialName(materialName);
 		zipDownload.setState(0);
-		zipDownload.setDetail("数据生成中...");
+		zipDownload.setDetail("loading...");
 		zipDownload.setCreateTime(DateUtil.getCurrentTime());
 		map.put(id, zipDownload);
 		try {
@@ -408,16 +409,15 @@ public class FileDownLoadController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/word/progress", method = RequestMethod.GET)
-	public String progress(String id) {
+	public ZipDownload progress(String id) {
 		ZipDownload zipDownload = new ZipDownload();
 		zipDownload.setState(0);
-		zipDownload.setDetail("数据生成中...");
+		zipDownload.setDetail("loading...");
 		if (map.containsKey(id)) {
 			zipDownload.setState(map.get(id).getState());
 			zipDownload.setDetail(map.get(id).getDetail());
 		}
-		return JSONObject.valueToString(zipDownload);
-
+		return zipDownload;
 	}
 
 	/**
@@ -528,7 +528,7 @@ public class FileDownLoadController {
 	}
 
 	/**
-	 * 导出 遴选名单
+	 * 导出书籍遴选名单/批量导出
 	 * 
 	 * @param request
 	 * @param response
@@ -542,7 +542,6 @@ public class FileDownLoadController {
 		Workbook workbook = null;
 		List<ExcelDecAndTextbookVO> list = null;
 		try {
-
 			list = textbookService.getExcelDecAndTextbooks(textbookIds);
 			if (list.size() == 0) {
 				// 设置表头 ，放置初始化表出错
@@ -554,8 +553,14 @@ public class FileDownLoadController {
 		}
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
-		String materialName = list.get(0).getMaterialName();// 教材名称
-		String fileName = returnFileName(request, materialName + ".xls");
+		String fileName = null;
+		if(textbookIds.length>1){//当批量导出的时候 文件名为教材名称
+			String materialName = list.get(0).getMaterialName();// 书籍名称
+			fileName = returnFileName(request, materialName + ".xls");
+		}else{//当单个导出的时候 文件名为书籍名称
+			String TextbookName = list.get(0).getTextbookName();// 书籍名称
+			fileName = returnFileName(request, TextbookName + ".xls");
+		}
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			workbook.write(out);
@@ -602,6 +607,33 @@ public class FileDownLoadController {
 		String fileName = returnFileName(request, "纠错跟踪" + DateUtil.getTime() + ".xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+	
+	@RequestMapping(value = "/position/ExportEditor", method = RequestMethod.GET)
+	public void ExportEditor(@RequestParam("materialId") Long materialId, HttpServletRequest request,
+			HttpServletResponse response) {
+		Workbook workbook = null;
+		List<ExcelDecAndTextbookVO> list = null;
+		try {
+			list = textbookService.getExcelDecByMaterialId(materialId);
+			workbook = excelHelper.fromBusinessObjectList(list, "主编/副主编");
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		String materialName = list.get(0).getMaterialName();// 教材名称
+		String fileName = returnFileName(request, materialName + ".xls");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			workbook.write(out);

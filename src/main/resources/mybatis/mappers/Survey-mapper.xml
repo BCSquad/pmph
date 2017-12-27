@@ -171,7 +171,7 @@
 				on 
 					ppu.id=s.user_id 
 				where 
-					is_deleted = 0 
+					s.is_deleted = false 
 				<!-- 下面是动态条件 -->
 				<if test="parameter !=null ">
 					<!-- 问卷标题 -->
@@ -194,7 +194,7 @@
 					</if>
 				</if>
 				) t 
-		where is_deleted = 0 
+		where s.is_deleted = false 
 		<!-- 下面是动态条件 -->
 		<if test="parameter !=null ">
 			<!-- 问卷标题 -->

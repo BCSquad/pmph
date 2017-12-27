@@ -622,18 +622,18 @@ public class TextbookServiceImpl implements TextbookService {
 			excelDecAndTextbookVO.setShowOnlineProgress("被退回");
 			break;
 		default:
-			excelDecAndTextbookVO.setShowOnlineProgress("通过");
+			excelDecAndTextbookVO.setShowOnlineProgress("审核通过");
 			break;
 		}
 		switch (excelDecAndTextbookVO.getOfflineProgress()) {
 		case 0:
-			excelDecAndTextbookVO.setShowOfflineProgress("未收到");
+			excelDecAndTextbookVO.setShowOfflineProgress("未收到纸质表");
 			break;
 		case 1:
-			excelDecAndTextbookVO.setShowOfflineProgress("被退回");
+			excelDecAndTextbookVO.setShowOfflineProgress("被退回纸质表");
 			break;
 		default:
-			excelDecAndTextbookVO.setShowOfflineProgress("通过");
+			excelDecAndTextbookVO.setShowOfflineProgress("已收到纸质表");
 			break;
 		}
 		switch (excelDecAndTextbookVO.getIdtype()) {
@@ -659,6 +659,16 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 		List<Textbook> textbooks=textbookDao.getTextbookByMaterialId(materialId);
 		return textbooks;
+	}
+
+	@Override
+	public List<ExcelDecAndTextbookVO> getExcelDecByMaterialId(Long materialId) {
+		if(null==materialId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
+                    CheckedExceptionResult.NULL_PARAM, "教材id为空");
+		}
+		List<ExcelDecAndTextbookVO> excelDecAndTextbookVOs=textbookDao.getExcelDecByMaterialId(materialId);
+		return excelDecAndTextbookVOs;
 	}
 }
 

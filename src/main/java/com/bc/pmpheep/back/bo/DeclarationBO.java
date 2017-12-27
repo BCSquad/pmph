@@ -5,8 +5,6 @@
 package com.bc.pmpheep.back.bo;
 
 import com.bc.pmpheep.annotation.ExcelHeader;
-import com.bc.pmpheep.back.po.DecEduExp;
-import java.util.ArrayList;
 
 /**
  * 教材申报表业务对象，用于Excel/Word(批量)导出

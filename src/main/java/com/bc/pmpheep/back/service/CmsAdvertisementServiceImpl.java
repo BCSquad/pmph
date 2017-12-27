@@ -183,10 +183,14 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		cmsAdvertisementImage.setAdvertId(cmsAdvertisementOrImageVO.getAdvertId());
 		// 新增图片默认不启用
 		cmsAdvertisementImage.setIsDisabled(Const.FALSE);
-		// 保存图片到 MongoDB 返回id存入图片id
-		String newImage=fileService.save(file, ImageType.CMS_ADVERTISEMENT_IMAGE,cmsAdvertisementOrImageVO.getImageId());
-		cmsAdvertisementImage.setImage(newImage);
+		// 因新建图片信息，未有图片id，先插入一个临时值 
+		cmsAdvertisementImage.setImage("temp");
 		cmsAdvertisementImageDao.addCmsAdvertisementImage(cmsAdvertisementImage);
+		// 保存图片到 MongoDB 返回id存入图片id
+		String newImage=fileService.save(file, ImageType.CMS_ADVERTISEMENT_IMAGE,cmsAdvertisementImage.getId());
+		// 替换之前图片id的临时值
+		cmsAdvertisementImage.setImage(newImage);
+		cmsAdvertisementImageDao.updateCmsAdvertisementImage(cmsAdvertisementImage);
 		return cmsAdvertisementImage;
 	}
 

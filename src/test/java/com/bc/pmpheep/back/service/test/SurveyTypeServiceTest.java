@@ -57,4 +57,11 @@ public class SurveyTypeServiceTest extends BaseTest {
 		Assert.assertNotNull("删除数据失败", 
 				surveyTypeService.deleteSurveyTypeById(surveyType.getId()));
 	}
+	
+	@Test
+	@Rollback(Const.ISROLLBACK)
+	public void listSurveyType(){
+		surveyTypeService.addSurveyType(surveyType);
+		Assert.assertNotNull("获取数据失败", surveyTypeService.listSurveyType());
+	}
 }

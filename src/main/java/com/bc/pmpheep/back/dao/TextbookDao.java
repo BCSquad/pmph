@@ -171,4 +171,11 @@ public interface TextbookDao {
 	 * @return
 	 */
 	List<ExcelDecAndTextbookVO> getExcelDecAndTextbooks(Long[] textbookIds);
+	
+	/**
+	 * 通过教材id查询该教材的主编/副主编
+	 * @param materialId
+	 * @return
+	 */
+	List<ExcelDecAndTextbookVO> getExcelDecByMaterialId(Long materialId);
 }

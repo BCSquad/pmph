@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.po.SurveyTarget;
 
 /**
@@ -65,4 +66,22 @@ public interface SurveyTargetDao {
      * </pre>
      */
     Integer batchSaveSurveyTargetByList(List<SurveyTarget> list);
+    
+    /**
+     * 根据发起人id查询问卷表
+     * @author:tyc
+     * @date:2017年12月26日上午09:47:56
+     * @param surveyTargetList
+     * @return
+     */
+    List<Survey> getSurveyTargetByUserId(Long userId);
+    
+    /**
+     * 根据机构id查询问卷表
+     * @author:tyc
+     * @date:2017年12月26日上午10:36:30
+     * @param orgId
+     * @return
+     */
+    List<Survey> getSurveyTargetByOrgId(Long orgId);
 }

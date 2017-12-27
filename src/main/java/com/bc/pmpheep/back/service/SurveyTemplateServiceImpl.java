@@ -100,7 +100,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
     }
 
     @Override
-    public Integer addSurveyTemplateVO(SurveyTemplateVO surveyTemplateVO)
+    public SurveyTemplate addSurveyTemplateVO(SurveyTemplateVO surveyTemplateVO)
     throws CheckedServiceException {
         if (ObjectUtil.isNull(surveyTemplateVO)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
@@ -118,7 +118,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
         SurveyTemplateQuestion surveyTemplateQuestion =
         new SurveyTemplateQuestion(id, surveyTemplateVO.getQuestionId());
         surveyTemplateQuestionDao.addSurveyTemplateQuestion(surveyTemplateQuestion); // 添加中间
-        return surveyTemplateQuestionDao.addSurveyTemplateQuestion(surveyTemplateQuestion);
+        return surveyTemplate;
     }
 
     @Override

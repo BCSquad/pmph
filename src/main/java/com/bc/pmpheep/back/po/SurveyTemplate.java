@@ -183,4 +183,12 @@ public class SurveyTemplate implements java.io.Serializable {
         this.gmtUpdate = gmtUpdate;
     }
 
+	@Override
+	public String toString() {
+		return "SurveyTemplate [id=" + id + ", templateName=" + templateName
+				+ ", sort=" + sort + ", userId=" + userId + ", isDeleted="
+				+ isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
+				+ gmtUpdate + "]";
+	}
+
 }
