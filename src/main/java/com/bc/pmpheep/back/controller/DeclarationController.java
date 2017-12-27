@@ -91,7 +91,6 @@ public class DeclarationController {
      * @createDate 2017年11月24日 下午15:27:36
      * @param id
      * @param offlineProgress
-     * @param materialId
      * @throws CheckedServiceException
      * @throws IOException
      */
@@ -99,10 +98,8 @@ public class DeclarationController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "确认收到纸质表")
     @RequestMapping(value = "/list/declaration/confirmPaperList", method = RequestMethod.GET)
     public ResponseBean confirmPaperList(@RequestParam("id") Long id,
-    @RequestParam("offlineProgress") Integer offlineProgress,
-    @RequestParam("materialId") Long materialId) throws CheckedServiceException, IOException {
-        return new ResponseBean(
-                                declarationService.confirmPaperList(id, offlineProgress, materialId));
+    @RequestParam("offlineProgress") Integer offlineProgress) throws CheckedServiceException, IOException {
+        return new ResponseBean(declarationService.confirmPaperList(id, offlineProgress));
     }
 
     /**
@@ -112,7 +109,6 @@ public class DeclarationController {
      * @createDate 2017年11月24日 下午16:37:36
      * @param id
      * @param onlineProgress
-     * @param materialId
      * @throws CheckedServiceException
      * @throws IOException
      */
@@ -120,9 +116,9 @@ public class DeclarationController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "审核进度")
     @RequestMapping(value = "/list/declaration/onlineProgress", method = RequestMethod.GET)
     public ResponseBean onlineProgress(@RequestParam("id") Long id,
-    @RequestParam("onlineProgress") Integer onlineProgress,
-    @RequestParam("materialId") Long materialId) throws CheckedServiceException, IOException {
-        return new ResponseBean(declarationService.onlineProgress(id, onlineProgress, materialId));
+    @RequestParam("onlineProgress") Integer onlineProgress) 
+    		throws CheckedServiceException, IOException {
+        return new ResponseBean(declarationService.onlineProgress(id, onlineProgress));
     }
 
     /**

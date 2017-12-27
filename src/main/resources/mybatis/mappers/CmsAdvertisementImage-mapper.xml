@@ -74,10 +74,10 @@
 					is_disabled=#{isDisabled}
 				</if>
 			</set>
-		where advert_id=#{advertId}
+		where id=#{id}
 	</update>
-	<!-- 根据id删除广告-->
-	<delete id="deleteCmsAdvertisementById" parameterType="Long">
-		delete from cms_advertisement_image where advert_id=#{advertId};
+	<!-- 根据id删除图片信息-->
+	<delete id="deleteCmsAdvertisementByImages" parameterType="Long">
+		delete from cms_advertisement_image where id=#{id}
 	</delete>
 </mapper>

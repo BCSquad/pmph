@@ -120,7 +120,7 @@ public class PmphDepartmentController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取部门与部门负责人")
-	@RequestMapping(value = "listOpts", method = RequestMethod.GET)
+	@RequestMapping(value = "/listOpts", method = RequestMethod.GET)
 	public ResponseBean listOpts(String dpName, Integer pageSize, Integer pageNumber) {
 		PageParameter<DepartmentOptsVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		DepartmentOptsVO departmentOptsVO = new DepartmentOptsVO();

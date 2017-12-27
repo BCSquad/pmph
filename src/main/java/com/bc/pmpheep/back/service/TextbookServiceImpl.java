@@ -20,6 +20,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.bc.pmpheep.back.bo.DecPositionBO;
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.dao.PmphUserDao;
@@ -42,8 +44,10 @@ import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
+import com.bc.pmpheep.back.vo.ExportDecPositionVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
+import com.bc.pmpheep.back.vo.WriterVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -662,13 +666,27 @@ public class TextbookServiceImpl implements TextbookService {
 	}
 
 	@Override
-	public List<ExcelDecAndTextbookVO> getExcelDecByMaterialId(Long materialId) {
-		if(null==materialId){
+	public List<DecPositionBO> getExcelDecByMaterialId(Long[] textbookIds) {
+		if(null==textbookIds){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
                     CheckedExceptionResult.NULL_PARAM, "教材id为空");
 		}
-		List<ExcelDecAndTextbookVO> excelDecAndTextbookVOs=textbookDao.getExcelDecByMaterialId(materialId);
-		return excelDecAndTextbookVOs;
+		List<DecPositionBO> decPositionBOs=new ArrayList<>();
+		DecPositionBO decPositionBO=new DecPositionBO();
+		List<ExportDecPositionVO> exportDecPositionVOs=textbookDao.getExcelDecByMaterialId(textbookIds);
+		for (ExportDecPositionVO exportDecPositionVO : exportDecPositionVOs) {
+			decPositionBO.setTextbookName(exportDecPositionVO.getTextbookName());
+			decPositionBO.setTextbookRound(exportDecPositionVO.getTextbookRound());
+			List<WriterVO> writerVOs=new ArrayList<>();
+			for (WriterVO writerVO : writerVOs) {
+				if(exportDecPositionVO.getWriters().equals(writerVO)){
+					writerVOs.add(writerVO);
+				}
+			}
+			//decPositionBO.setWriters(writerVOs);
+			decPositionBOs.add(decPositionBO);
+		}
+		return decPositionBOs;
 	}
 }
 

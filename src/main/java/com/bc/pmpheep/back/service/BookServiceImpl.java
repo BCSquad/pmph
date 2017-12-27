@@ -35,6 +35,7 @@ import com.bc.pmpheep.back.util.MD5;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.BookPreferenceAnalysisVO;
 import com.bc.pmpheep.back.vo.BookVO;
 import com.bc.pmpheep.erp.service.BookInfoWorking;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -367,5 +368,23 @@ public class BookServiceImpl extends BaseService implements BookService {
 		}
 
 		return "SUCCESS";
+	}
+
+	@Override
+	public PageResult<BookPreferenceAnalysisVO> getBookPreferenceAnalysis(
+			PageParameter<BookPreferenceAnalysisVO> pageParameter) throws CheckedServiceException {
+		if (ObjectUtil.isNull(pageParameter.getParameter())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"查询出现问题，请重新加载");
+		}
+		PageResult<BookPreferenceAnalysisVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total = bookDao.getBookPreferenceAnalysisTotal(pageParameter.getParameter().getBookname());
+		if (total > 0) {
+			pageResult.setRows(bookDao.getBookPreferenceAnalysis(pageParameter.getParameter().getBookname(),
+					pageParameter.getStart(), pageParameter.getPageSize()));
+		}
+		pageResult.setTotal(total);
+		return pageResult;
 	}
 }
