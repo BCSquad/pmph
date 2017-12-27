@@ -99,7 +99,7 @@ public class TopicTextVO implements Serializable {
 	/**
 	 * 银行帐号
 	 */
-	private String account_number;
+	private String accountNumber;
 	/**
 	 * 作者购书
 	 */
@@ -217,12 +217,12 @@ public class TopicTextVO implements Serializable {
 		this.bank = bank;
 	}
 
-	public String getAccount_number() {
-		return account_number;
+	public String getAccountNumber() {
+		return accountNumber;
 	}
 
-	public void setAccount_number(String account_number) {
-		this.account_number = account_number;
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
 	}
 
 	public void setWordNumber(Integer wordNumber) {
