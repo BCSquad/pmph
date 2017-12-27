@@ -59,8 +59,8 @@ public class SurveyTemplateController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询问卷模版列表")
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseBean create(SurveyTemplateListVO surveyTemplateListVO,
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public ResponseBean list(SurveyTemplateListVO surveyTemplateListVO,
     @RequestParam("pageNumber") Integer pageNumber, @RequestParam("pageSize") Integer pageSize) {
         surveyTemplateListVO.setUsername(StringUtil.toAllCheck(surveyTemplateListVO.getUsername()));// 模版创建人
         surveyTemplateListVO.setTemplateName(StringUtil.toAllCheck(surveyTemplateListVO.getTemplateName()));// 模版名称
@@ -84,8 +84,8 @@ public class SurveyTemplateController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增问卷模版")
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ResponseBean save(SurveyTemplateVO surveyTemplateVO, HttpServletRequest request) {
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public ResponseBean create(SurveyTemplateVO surveyTemplateVO, HttpServletRequest request) {
         return new ResponseBean(surveyTemplateService.addSurveyTemplateVO(surveyTemplateVO));
     }
 
@@ -101,8 +101,8 @@ public class SurveyTemplateController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询模版下的所有问题")
-    @RequestMapping(value = "/question/look", method = RequestMethod.POST)
-    public ResponseBean look(Long templateId) {
+    @RequestMapping(value = "/question/look", method = RequestMethod.GET)
+    public ResponseBean look(@RequestParam("templateId") Long templateId) {
         return new ResponseBean(
                                 surveyTemplateService.getSurveyTemplateQuestionByTemplateId(templateId));
     }
