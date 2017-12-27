@@ -3,13 +3,20 @@
  */
 package com.bc.pmpheep.back.vo;
 
+import java.io.Serializable;
+
+import org.apache.ibatis.type.Alias;
+
 /**
  * <p>Title:DeclarationResultBookVO<p>
  * <p>Description:申报结果按书名统计<p>
  * @author lyc
  * @date 2017年11月30日 下午4:30:33
  */
-public class DeclarationResultBookVO {
+
+@SuppressWarnings("serial")
+@Alias("DeclarationResultBookVO")
+public class DeclarationResultBookVO implements Serializable{
 
 	    //教材id
 		private Long materialId;
