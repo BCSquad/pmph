@@ -81,7 +81,8 @@ public interface SurveyQuestionAnswerService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer addUserToAnswer(String answerJosn, String sessionId) throws CheckedServiceException;
+    Integer addUserToAnswer(List<SurveyQuestionAnswer> answerJosn, String sessionId)
+    throws CheckedServiceException;
 
     /**
      * 
