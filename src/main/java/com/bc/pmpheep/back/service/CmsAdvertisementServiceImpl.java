@@ -112,7 +112,7 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 			cmsAdvertisementOrImageVO.setImage(newImage);
 		}
 		CmsAdvertisementImage cmsAdvertisementImage=new CmsAdvertisementImage();
-		cmsAdvertisementImage.setAdvertId(cmsAdvertisementOrImageVO.getId());
+		cmsAdvertisementImage.setId(cmsAdvertisementOrImageVO.getImageId());
 		cmsAdvertisementImage.setIsDisabled((Boolean) cmsAdvertisementOrImageVO.getImage());
 		//修改图片是否显示
 		cmsAdvertisementImageDao.updateCmsAdvertisementImage(cmsAdvertisementImage);
@@ -183,7 +183,7 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		CmsAdvertisementImage cmsAdvertisementImage=new CmsAdvertisementImage();
 		cmsAdvertisementImage.setAdvertId(cmsAdvertisementOrImageVO.getAdvertId());
 		// 新增图片默认不启用
-		cmsAdvertisementImage.setIsDisabled(Const.FALSE);
+		cmsAdvertisementImage.setIsDisabled(Const.TRUE);
 		// 因新建图片信息，未有图片id，先插入芒果DB默认路径
 		cmsAdvertisementImage.setImage(RouteUtil.MONGODB_IMAGE);
 		cmsAdvertisementImageDao.addCmsAdvertisementImage(cmsAdvertisementImage);
@@ -198,7 +198,7 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 	}
 
 	@Override
-	public Integer deleteCmsAdvertisementImageById(Long advertId, String[] image, String sessionId) {
+	public Integer deleteCmsAdvertisementImageById(Long id, String[] image, String sessionId) {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,"用户为空");
@@ -207,7 +207,7 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM,
 					"该用户没有操作权限");
 		}
-		if(null==advertId){
+		if(null==id){
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		if(null==image){
@@ -219,7 +219,7 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 			fileService.remove(image[i]);
 		}
 		// 删除本地相对应的图片信息
-		count=cmsAdvertisementImageDao.deleteCmsAdvertisementByImages(image);
+		count=cmsAdvertisementImageDao.deleteCmsAdvertisementByImages(id);
 		return count;
 	}
 

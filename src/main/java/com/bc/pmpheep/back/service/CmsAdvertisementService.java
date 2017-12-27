@@ -79,5 +79,5 @@ public interface CmsAdvertisementService {
 	CmsAdvertisementImage addCmsAdevertisementImage(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, 
 			MultipartFile file, String sessionId)throws CheckedServiceException, IOException;
 
-	Integer deleteCmsAdvertisementImageById(Long advertId, String[] image, String sessionId);
+	Integer deleteCmsAdvertisementImageById(Long id, String[] image, String sessionId);
 }

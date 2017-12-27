@@ -40,6 +40,6 @@ public interface CmsAdvertisementImageDao {
 	 * @param image
 	 * @return
 	 */
-	Integer deleteCmsAdvertisementByImages(String[] image);
+	Integer deleteCmsAdvertisementByImages(Long id);
 	
 }
