@@ -171,10 +171,10 @@ public class MigrationStageSix {
             String sexJudge = (String) map.get("sex"); // 性别
             String experienceNum = (String) map.get("seniority"); // 教龄
             String postCode = (String) map.get("postcode"); // 邮编
-            Integer onlineProgressJudge = (Integer) map.get("online_progress"); // 审核进度
+            Long onlineProgressJudge = (Long) map.get("online_progress"); // 审核进度
             String authUserid = (String) map.get("auth_user_id"); // 审核人id
-            Integer offlineProgressJudge = (Integer) map.get("offline_progress"); // 纸质表进度
-            Integer isStagingJudge = (Integer) map.get("is_staging"); // 是否暂存
+            Long offlineProgressJudge = (Long) map.get("offline_progress"); // 纸质表进度
+            Long isStagingJudge = (Long) map.get("is_staging"); // 是否暂存
             Integer sysflag = (Integer) map.get("sysflag"); // 0为后台用户，1为前台用户            
             logger.info("222222222222222");
             if (ObjectUtil.isNull(sysflag) || sysflag == 0) {
@@ -229,7 +229,7 @@ public class MigrationStageSix {
             declaration.setFax((String) map.get("fax")); // 传真
             declaration.setOrgId((Long) map.get("org_id")); // 申报单位id
             if (ObjectUtil.notNull(onlineProgressJudge)) {
-                Integer onlineProgress = onlineProgressJudge; // 审核进度
+                Integer onlineProgress = onlineProgressJudge.intValue(); // 审核进度
                 declaration.setOnlineProgress(onlineProgress);
             } else {
                 declaration.setOnlineProgress(0);
@@ -239,7 +239,7 @@ public class MigrationStageSix {
             declaration.setAuthUserId(authUserId);
             declaration.setAuthDate((Timestamp) map.get("auditdate")); // 审核通过时间
             if (ObjectUtil.notNull(offlineProgressJudge)) {
-                Integer offlineProgress = offlineProgressJudge; // 纸质表进度
+                Integer offlineProgress = offlineProgressJudge.intValue(); // 纸质表进度
                 declaration.setOfflineProgress(offlineProgress);
             } else {
                 declaration.setOfflineProgress(0);
@@ -248,7 +248,7 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(isStagingJudge)) {
                 declaration.setIsStaging(0);
             } else {
-                Integer isStaging = isStagingJudge; // 是否暂存
+                Integer isStaging = isStagingJudge.intValue(); // 是否暂存
                 declaration.setIsStaging(isStaging);
             }
             Declaration dec = declarationService.getDeclarationByMaterialIdAndUserId(declaration.getMaterialId(),
