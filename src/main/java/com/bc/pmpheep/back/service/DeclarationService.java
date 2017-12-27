@@ -122,7 +122,7 @@ public interface DeclarationService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	Declaration confirmPaperList(Long id, Integer offlineProgress, Long materialId)
+	Declaration confirmPaperList(Long id, Integer offlineProgress) 
 			throws CheckedServiceException, IOException;
 
 	/**
@@ -135,7 +135,7 @@ public interface DeclarationService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	Declaration onlineProgress(Long id, Integer onlineProgress, Long materialId)
+	Declaration onlineProgress(Long id, Integer onlineProgress) 
 			throws CheckedServiceException, IOException;
 	
 	/**
