@@ -236,7 +236,7 @@ public class TopicServiceImpl implements TopicService {
 					+ topicTextVO.getPictureNumber() + "','"
 					+ DateUtil.formatTimeStamp("yyyy-MM-dd", topicTextVO.getDeadline()) + "','"
 					+ topicTextVO.getSubject() + "','" + topicTextVO.getTypeName() + "','" + topicTextVO.getRank()
-					+ "','" + topicTextVO.getBank() + "','" + topicTextVO.getAccount_number() + "','"
+					+ "','" + topicTextVO.getBank() + "','" + topicTextVO.getAccountNumber() + "','"
 					+ topicTextVO.getTopicExtra().getReason() + "','" + topicTextVO.getTopicExtra().getPrice() + "','"
 					+ topicTextVO.getTopicExtra().getScore() + "','" + topicTextVO.getPurchase() + "','"
 					+ topicTextVO.getSponsorship() + "','" + topicTextVO.getOriginalBookname() + "','"
