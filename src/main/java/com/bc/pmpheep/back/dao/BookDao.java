@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -96,7 +97,8 @@ public interface BookDao {
 	 * @return
 	 *
 	 */
-	List<BookPreferenceAnalysisVO> getBookPreferenceAnalysis(String bookname, Integer start, Integer pageSize);
+	List<BookPreferenceAnalysisVO> getBookPreferenceAnalysis(@Param("bookname") String bookname,
+			@Param("start") Integer start, @Param("pageSize") Integer pageSize);
 
 	/**
 	 * 
@@ -107,5 +109,5 @@ public interface BookDao {
 	 * @return
 	 *
 	 */
-	Integer getBookPreferenceAnalysisTotal(String bookname);
+	Integer getBookPreferenceAnalysisTotal(@Param("bookname") String bookname);
 }
