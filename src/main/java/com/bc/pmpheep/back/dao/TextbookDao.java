@@ -10,8 +10,8 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
-import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
+import com.bc.pmpheep.back.vo.ExportDecPositionVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 
 /**
@@ -177,5 +177,5 @@ public interface TextbookDao {
 	 * @param materialId
 	 * @return
 	 */
-	List<ExcelDecAndTextbookVO> getExcelDecByMaterialId(Long materialId);
+	List<ExportDecPositionVO> getExcelDecByMaterialId(Long[] textbookIds);
 }

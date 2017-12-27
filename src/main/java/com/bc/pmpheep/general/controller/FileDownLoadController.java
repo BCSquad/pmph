@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.back.bo.DecPositionBO;
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.BookCorrectionService;
@@ -618,22 +619,28 @@ public class FileDownLoadController {
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
 	}
-	
+	/**
+	 * 角色遴选 批量导出主编、副主编
+	 * @param textbookIds
+	 * @param request
+	 * @param response
+	 * @throws IllegalAccessException
+	 */
 	@RequestMapping(value = "/position/ExportEditor", method = RequestMethod.GET)
-	public void ExportEditor(@RequestParam("materialId") Long materialId, HttpServletRequest request,
-			HttpServletResponse response) {
+	public void ExportEditor(@RequestParam("textbookIds") Long[] textbookIds, HttpServletRequest request,
+			HttpServletResponse response) throws IllegalAccessException {
 		Workbook workbook = null;
-		List<ExcelDecAndTextbookVO> list = null;
+		List<DecPositionBO> list = null;
 		try {
-			list = textbookService.getExcelDecByMaterialId(materialId);
-			workbook = excelHelper.fromBusinessObjectList(list, "主编/副主编");
-		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			list = textbookService.getExcelDecByMaterialId(textbookIds);
+			workbook = excelHelper.fromDecPositionBOList(list, "主编/副主编");
+		} catch (CheckedServiceException | IllegalArgumentException e) {
 			logger.warn("数据表格化的时候失败");
 		}
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
-		String materialName = list.get(0).getMaterialName();// 教材名称
-		String fileName = returnFileName(request, materialName + ".xls");
+		String textbookName = list.get(0).getTextbookName();// 教材名称
+		String fileName = returnFileName(request, textbookName + ".xls");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			workbook.write(out);
