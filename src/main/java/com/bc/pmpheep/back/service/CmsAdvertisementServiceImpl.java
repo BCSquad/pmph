@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.po.CmsAdvertisementImage;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.CmsAdvertisementOrImageVO;
 import com.bc.pmpheep.general.bean.ImageType;
@@ -183,8 +184,8 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		cmsAdvertisementImage.setAdvertId(cmsAdvertisementOrImageVO.getAdvertId());
 		// 新增图片默认不启用
 		cmsAdvertisementImage.setIsDisabled(Const.FALSE);
-		// 因新建图片信息，未有图片id，先插入一个临时值 
-		cmsAdvertisementImage.setImage("temp");
+		// 因新建图片信息，未有图片id，先插入芒果DB默认路径
+		cmsAdvertisementImage.setImage(RouteUtil.MONGODB_IMAGE);
 		cmsAdvertisementImageDao.addCmsAdvertisementImage(cmsAdvertisementImage);
 		// 保存图片到 MongoDB 返回id存入图片id
 		String newImage=fileService.save(file, ImageType.CMS_ADVERTISEMENT_IMAGE,cmsAdvertisementImage.getId());

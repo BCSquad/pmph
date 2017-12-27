@@ -77,7 +77,7 @@
 		where advert_id=#{advertId}
 	</update>
 	<!-- 根据id删除广告-->
-	<delete id="deleteCmsAdvertisementById" parameterType="Long">
+	<delete id="deleteCmsAdvertisementByImage" parameterType="Long">
 		delete from cms_advertisement_image where advert_id=#{advertId};
 	</delete>
 </mapper>
