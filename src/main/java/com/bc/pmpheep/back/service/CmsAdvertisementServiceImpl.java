@@ -183,7 +183,7 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		CmsAdvertisementImage cmsAdvertisementImage=new CmsAdvertisementImage();
 		cmsAdvertisementImage.setAdvertId(cmsAdvertisementOrImageVO.getAdvertId());
 		// 新增图片默认不启用
-		cmsAdvertisementImage.setIsDisabled(Const.FALSE);
+		cmsAdvertisementImage.setIsDisabled(Const.TRUE);
 		// 因新建图片信息，未有图片id，先插入芒果DB默认路径
 		cmsAdvertisementImage.setImage(RouteUtil.MONGODB_IMAGE);
 		cmsAdvertisementImageDao.addCmsAdvertisementImage(cmsAdvertisementImage);
