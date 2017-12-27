@@ -133,9 +133,9 @@ public class CmsAdvertisementController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除图片")
 	@RequestMapping(value = "/cmsAdvertisement/delete", method = RequestMethod.DELETE)
 	public ResponseBean delete(@RequestParam(name = "image") String[] image,
-			@RequestParam(name = "advertId") Long advertId,
+			@RequestParam(name = "id") Long id,
 			HttpServletRequest request) throws CheckedServiceException {
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(cmsAdvertisementService.deleteCmsAdvertisementImageById(advertId,image, sessionId));
+		return new ResponseBean(cmsAdvertisementService.deleteCmsAdvertisementImageById(id,image, sessionId));
 	}
 }

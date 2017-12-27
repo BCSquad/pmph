@@ -74,20 +74,15 @@
 					is_disabled=#{isDisabled}
 				</if>
 			</set>
-		where advert_id=#{advertId}
+		where id=#{id}
 	</update>
 	<!-- 根据id删除广告-->
 	<delete id="deleteCmsAdvertisementByImage" parameterType="Long">
 		delete from cms_advertisement_image where advert_id=#{advertId};
 	</delete>
 	
-	<!-- 根据图片id删除图片-->
-	<delete id="deleteCmsAdvertisementByImages">
-		delete from cms_advertisement_image 
-		where image in
-		<foreach collection="array" item="item" index="index" open="("
-			separator="," close=")">
-			#{item}
-		</foreach>
+	<!-- 根据id删除图片信息-->
+	<delete id="deleteCmsAdvertisementByImages" parameterType="Long">
+		delete from cms_advertisement_image where id=#{id}
 	</delete>
 </mapper>
