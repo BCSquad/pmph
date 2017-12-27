@@ -411,5 +411,86 @@
 		</if>
 	</select>
 
+	<!-- 查询总数 -->
+	<select id="getBookPreferenceAnalysisTotal" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM
+		(SELECT
+		b.*,
+		(
+		CASE
+		WHEN t.count != '' THEN
+		t.count
+		ELSE
+		0
+		END
+		) count
+		FROM
+		book b
+		LEFT JOIN (
+		SELECT
+		b.id,
+		count(*) count
+		FROM
+		book_user_comment c
+		LEFT JOIN
+		book b ON c.book_id = b.id
+		WHERE
+		c.is_auth =
+		TRUE
+		AND c.is_deleted =
+		FALSE
+		AND c.is_hide = FALSE
+		AND c.score > 3
+		) t ON
+		t.id = b.id
+		WHERE
+		1=1
+		<if test="bookname != null and bookname != ''">
+			AND b.bookname LIKE CONCAT('%', #{bookname}, '%')
+		</if>
+		ORDER BY
+		b.bookmarks DESC) t
+	</select>
+
+	<!-- 查询总数 -->
+	<select id="getBookPreferenceAnalysis" resultType="BookPreferenceAnalysisVO">
+		SELECT
+		b.*,
+		(
+		CASE
+		WHEN t.count != '' THEN
+		t.count
+		ELSE
+		0
+		END
+		) count
+		FROM
+		book b
+		LEFT JOIN (
+		SELECT
+		b.id,
+		count(*) count
+		FROM
+		book_user_comment c
+		LEFT JOIN
+		book b ON c.book_id = b.id
+		WHERE
+		c.is_auth = TRUE
+		AND c.is_deleted =
+		FALSE
+		AND c.is_hide = FALSE
+		AND c.score > 3
+		) t ON t.id = b.id
+		WHERE
+		1=1
+		<if test="bookname != null and bookname != ''">
+			AND b.bookname LIKE CONCAT('%', #{bookname}, '%')
+		</if>
+		ORDER BY
+		b.bookmarks DESC
+		limit #{start},#{pageSize}
+	</select>
+
 
 </mapper>

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Book;
+import com.bc.pmpheep.back.vo.BookPreferenceAnalysisVO;
 import com.bc.pmpheep.back.vo.BookVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -85,4 +86,26 @@ public interface BookDao {
 	 *
 	 */
 	Book getBookByVn(String vn);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取图书偏好分析
+	 *
+	 * @param bookname
+	 * @return
+	 *
+	 */
+	List<BookPreferenceAnalysisVO> getBookPreferenceAnalysis(String bookname, Integer start, Integer pageSize);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取图书偏好分析总数
+	 *
+	 * @param bookname
+	 * @return
+	 *
+	 */
+	Integer getBookPreferenceAnalysisTotal(String bookname);
 }
