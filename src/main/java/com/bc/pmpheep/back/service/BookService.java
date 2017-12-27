@@ -6,6 +6,7 @@ import com.bc.pmpheep.back.po.Book;
 import com.bc.pmpheep.back.po.BookDetail;
 import com.bc.pmpheep.back.po.BookUserLike;
 import com.bc.pmpheep.back.po.BookUserMark;
+import com.bc.pmpheep.back.vo.BookPreferenceAnalysisVO;
 import com.bc.pmpheep.back.vo.BookVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -120,4 +121,16 @@ public interface BookService {
 	 *
 	 */
 	String AllSynchronization(Integer type) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取图书偏好分析数据
+	 *
+	 * @param bookname
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	PageResult<BookPreferenceAnalysisVO> getBookPreferenceAnalysis(PageParameter<BookPreferenceAnalysisVO> pageParameter) throws CheckedServiceException;
 }

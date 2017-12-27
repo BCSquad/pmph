@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Topic;
+import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.TopicService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
 import com.bc.pmpheep.back.vo.TopicDirectorVO;
 import com.bc.pmpheep.back.vo.TopicEditorVO;
@@ -48,6 +50,8 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
 public class TopicController {
 	@Autowired
 	TopicService topicService;
+	@Autowired
+	PmphUserService pmphUserService;
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "选题申报";
 
@@ -307,5 +311,25 @@ public class TopicController {
 		topicTextVO.setIsDirectorHandling(null);
 		topicTextVO.setIsEditorHandling(null);
 		return new ResponseBean(topicTextVO);
+	}
+	
+	/**
+	 * 
+	 * Description:部门主任获取部门人员信息列表
+	 * @author:lyc
+	 * @date:2017年12月27日下午5:02:46
+	 * @param 
+	 * @return ResponseBean
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取部门编辑列表")
+	@RequestMapping(value = "/listEditors", method = RequestMethod.GET)
+	public ResponseBean listEditors(Long departmentId, String realName, Integer pageSize, Integer pageNumber){
+		PageParameter<PmphEditorVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+		PmphEditorVO pmphEditorVO = new PmphEditorVO();
+		pmphEditorVO.setDepartmentId(departmentId);
+		pmphEditorVO.setRealName(realName);
+		pageParameter.setParameter(pmphEditorVO);
+		return new ResponseBean(pmphUserService.listEditors(pageParameter));
 	}
 }

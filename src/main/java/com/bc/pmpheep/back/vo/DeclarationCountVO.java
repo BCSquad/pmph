@@ -3,13 +3,20 @@
  */
 package com.bc.pmpheep.back.vo;
 
+import java.io.Serializable;
+
+import org.apache.ibatis.type.Alias;
+
 /**
  * <p>Title:DeclarationCountVO<p>
  * <p>Description:申请报情况总数统计<p>
  * @author lyc
  * @date 2017年11月30日 下午4:08:07
  */
-public class DeclarationCountVO {
+
+@SuppressWarnings("serial")
+@Alias("DeclarationCountVO")
+public class DeclarationCountVO implements Serializable{
 
 	//教材id
 	private Long materialId;

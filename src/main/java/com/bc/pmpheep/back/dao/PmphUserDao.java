@@ -13,6 +13,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 
 /**
@@ -156,5 +157,25 @@ public interface PmphUserDao {
 	 *
 	 */
 	List<PmphUser> getPmphUserByDepartmentId(Long departmentId);
+	
+	/**
+	 * 
+	 * Description:统计部门下的编辑数量
+	 * @author:lyc
+	 * @date:2017年12月27日下午4:14:53
+	 * @param 
+	 * @return Integer
+	 */
+	Integer totalEditors(@Param("departmentId") Long departmentId, @Param("realName") String realName);
 
+	/**
+	 * 
+	 * Description:选题申报部门主任获取部门编辑列表
+	 * @author:lyc
+	 * @date:2017年12月27日下午4:03:55
+	 * @param 
+	 * @return List<PmphEditorVO>
+	 */
+	List<PmphEditorVO> listEditors(@Param("departmentId") Long departmentId, @Param("realName") String realName,
+			@Param("pageSize") Integer pageSize, @Param("start") Integer start);
 }
