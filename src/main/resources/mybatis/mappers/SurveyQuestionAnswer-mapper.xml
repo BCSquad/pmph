@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.SurveyQuestionAnswerDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="questionId != null">
+				question_id,
+			</if>
+			<if test="optionId != null">
+				option_id,
+			</if>
+			<if test="optionContent != null and optionContent !=''">
+				option_content,
+			</if>
+			<if test="attachment != null and attachment !=''">
+				attachment,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="questionId != null">
+				#{questionId},
+			</if>
+			<if test="optionId != null">
+				#{optionId},
+			</if>
+			<if test="optionContent != null and optionContent !=''">
+				#{optionContent},
+			</if>
+			<if test="attachment != null and attachment !=''">
+				#{attachment},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增一个SurveyQuestionAnswer -->
+	<insert id="addSurveyQuestionAnswer" parameterType="SurveyQuestionAnswer">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into survey_question_answer (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+	
+	<!-- 批量新增SurveyQuestionAnswer -->
+	<insert id="batchAddSurveyQuestionAnswer" parameterType="java.util.List">
+		insert into survey_question_answer (user_id,question_id,option_id,option_content,attachment)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId}, #{item.questionId},#{item.optionId},#{item.optionContent},#{item.attachment})
+        </foreach>
+	</insert>
+	
+	<!-- 删除SurveyQuestionAnswer通过主键id -->
+	<delete id="deleteSurveyQuestionAnswerById" parameterType="java.lang.Long">
+		delete from survey_question_answer where id=#{id};
+	</delete>
+	<!-- 更新一个 SurveyQuestionAnswer通过主键id -->
+	<update id="updateSurveyQuestionAnswer" parameterType="SurveyQuestionAnswer">
+		update survey_question_answer
+		<set>
+			<if test="id != null">
+				id=#{id},
+			</if>
+			<if test="userId != null">
+				user_id=#{userId},
+			</if>
+			<if test="questionId != null">
+				question_id=#{questionId},
+			</if>
+			<if test="optionId != null">
+				option_id=#{optionId},
+			</if>
+			<if test="optionContent != null and optionContent !=''">
+				option_content=#{optionContent},
+			</if>
+			<if test="attachment != null and attachment !=''">
+				attachment=#{attachment},
+			</if>
+		</set>
+		where
+		id=#{id};
+	</update>
+	<!-- 查找SurveyQuestionAnswer通过主键id -->
+	<select id="getSurveyQuestionAnswerById" parameterType="java.lang.Long" resultType="SurveyQuestionAnswer">
+		select * from survey_question_answer where id=#{id};
+	</select>
+	
+</mapper>

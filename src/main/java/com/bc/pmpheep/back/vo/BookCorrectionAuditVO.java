@@ -53,6 +53,10 @@ public class BookCorrectionAuditVO implements Serializable {
      */
     private String authorReply ;
     /**
+     * 第一主编是否回复
+     */
+    private Boolean isAuthorReplied ;
+    /** 
      * 策划编辑是否受理
      */
     private Boolean isEditorHandling ;
@@ -213,6 +217,16 @@ public class BookCorrectionAuditVO implements Serializable {
 	public void setResult(Boolean result) {
 		this.result = result;
 	}
+	
+
+	public Boolean getIsAuthorReplied() {
+		return isAuthorReplied;
+	}
+
+
+	public void setIsAuthorReplied(Boolean isAuthorReplied) {
+		this.isAuthorReplied = isAuthorReplied;
+	}
 
 
 	@Override
@@ -221,9 +235,10 @@ public class BookCorrectionAuditVO implements Serializable {
 				+ ", line:" + line + ", content:" + content + ", attachment:"
 				+ attachment + ", attachmentName:" + attachmentName
 				+ ", realname:" + realname + ", gmtCreate:" + gmtCreate
-				+ ", authorReply:" + authorReply + ", isEditorHandling:"
-				+ isEditorHandling + ", isEditorReplied:" + isEditorReplied
-				+ ", editorReply:" + editorReply + ", result:" + result + "}";
+				+ ", authorReply:" + authorReply + ", isAuthorReplied:"
+				+ isAuthorReplied + ", isEditorHandling:" + isEditorHandling
+				+ ", isEditorReplied:" + isEditorReplied + ", editorReply:"
+				+ editorReply + ", result:" + result + "}";
 	}
     
 	

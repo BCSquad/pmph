@@ -217,6 +217,7 @@
 			a.attachment_name,
 			d.realname,
 			a.gmt_create ,
+			a.is_author_replied,
 			a.author_reply ,
 			a.is_editor_handling ,
 			a.is_editor_replied ,
@@ -269,7 +270,7 @@
 			and b.bookname like CONCAT('%',#{bookname},'%')
 		</if>
 		<if test="isEditorReplied != null ">
-			a.is_editor_replied = #{isEditorReplied}
+			and a.is_editor_replied = #{isEditorReplied}
 		</if>
 	</select>
 	
@@ -305,7 +306,7 @@
 			and b.bookname like CONCAT('%',#{bookname},'%')
 		</if>
 		<if test="isEditorReplied != null ">
-			a.is_editor_replied = #{isEditorReplied}
+			and a.is_editor_replied = #{isEditorReplied}
 		</if>
 		ORDER BY 
 			a.gmt_update desc 

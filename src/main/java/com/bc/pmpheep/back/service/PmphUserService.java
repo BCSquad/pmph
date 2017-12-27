@@ -12,6 +12,7 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -231,4 +232,14 @@ public interface PmphUserService {
 	 * 
 	 */
 	String updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO) throws CheckedServiceException;
+	
+	/**
+	 * 
+	 * Description:选题申报部门主任获取部门编辑列表
+	 * @author:lyc
+	 * @date:2017年12月27日下午4:07:05
+	 * @param 
+	 * @return PageResult<PmphEditorVO>
+	 */
+	PageResult<PmphEditorVO> listEditors(PageParameter<PmphEditorVO> pageParameter) throws CheckedServiceException;
 }

@@ -478,4 +478,29 @@
 		u.department_id =
 		#{departmentId}
 	</select>
+	
+	<!-- 统计部门下的编辑数量 -->
+	<select id="totalEditors" resultType="java.lang.Integer">
+	SELECT count(*) 
+	FROM pmph_user a 
+	LEFT JOIN pmph_department b ON a.department_id = b.id 
+	WHERE a.department_id = #{departmentId} 
+	<if test="realName !=null and realName !=''">
+		AND a.realname like concat('%',#{realName},'%') 
+	</if>
+	;
+	</select>
+	
+	<!-- 选题申报部门主任获取部门编辑列表 -->
+	<select id="listEditors" resultType="PmphEditorVO">
+	SELECT a.id,a.department_id,a.realname,a.handphone 
+	FROM pmph_user a 
+	LEFT JOIN pmph_department b ON a.department_id = b.id 
+	WHERE a.department_id = #{departmentId} 
+	<if test="realName !=null and realName !=''">
+		AND a.realname like concat('%',#{realName},'%') 
+	</if>
+	LIMIT 
+	#{start},#{pageSize};
+	</select>
 </mapper>

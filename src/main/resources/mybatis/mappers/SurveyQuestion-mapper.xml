@@ -8,6 +8,9 @@
 			<if test="id != null">
 				id,
 			</if>
+			<if test="categoryId != null">
+				category_id,
+			</if>
 			<if test="title != null and title !=''">
 				title,
 			</if>
@@ -23,6 +26,9 @@
 			<if test="isAnswer != null">
 				is_answer,
 			</if>
+			<if test="isDeleted != null">
+				is_deleted,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -31,6 +37,9 @@
 		<trim suffixOverrides=",">
 			<if test="id != null">
 				#{id},
+			</if>
+			<if test="categoryId != null">
+				#{categoryId},
 			</if>
 			<if test="title != null and title !=''">
 				#{title},
@@ -47,6 +56,9 @@
 			<if test="isAnswer != null">
 				#{isAnswer},
 			</if>
+			<if test="isDeleted != null">
+				#{isDeleted},
+			</if>
 		</trim>
 	</sql>
 	<!-- 新增一个SurveyQuestion -->
@@ -62,16 +74,19 @@
 		<include refid="value" />
 		);
 	</insert>
-	<!-- 删除SurveyQuestion 通过主键id -->
-	<delete id="deleteSurveyQuestionById" parameterType="java.lang.Long">
-		delete from survey_question where id=#{id};
-	</delete>
+	<!-- 逻辑删除SurveyQuestion通过主键id -->
+	<update id="deleteSurveyQuestionById" parameterType="java.lang.Long">
+		update survey_question set is_deleted = true where id=#{id};
+	</update>
 	<!-- 更新一个 SurveyQuestion通过主键id -->
 	<update id="updateSurveyQuestion" parameterType="SurveyQuestion">
 		update survey_question
 		<set>
 			<if test="id != null">
 				id=#{id},
+			</if>
+			<if test="categoryId != null">
+				category_id=#{categoryId},
 			</if>
 			<if test="title != null and title !=''">
 				title=#{title},
@@ -88,13 +103,87 @@
 			<if test="isAnswer != null">
 				is_answer=#{isAnswer},
 			</if>
+			<if test="isDeleted != null">
+				is_deleted=#{isDeleted},
+			</if>
 		</set>
 		where
 		id=#{id};
 	</update>
 	<!-- 查找SurveyQuestion通过主键id -->
-	<select id="selectSurveyQuestionById" parameterType="java.lang.Long" resultType="SurveyQuestion">
+	<select id="getSurveyQuestionById" parameterType="java.lang.Long" resultType="SurveyQuestion">
 		select * from survey_question where id=#{id};
+	</select>
+	
+	<!-- 根据问题id/问题类型Id查询问题选项-->
+	<select id="getQuestionOptionByQuestionIdOrCategoryId" parameterType="java.util.Map" resultType="SurveyQuestionOptionCategoryVO">
+		SELECT 
+			sq.`id` questionId,
+			sq.`title`,
+			GROUP_CONCAT(sqo.`id`) optionIdString,
+			GROUP_CONCAT(sqo.`option_content`) optionContent 
+		FROM 
+			`survey_question` sq 
+		LEFT JOIN 
+			`survey_question_option` sqo 
+  		ON 
+  			sq.`id` = sqo.`question_id` 
+  		WHERE 
+  			sq.`is_deleted` = FALSE 
+  			<if test="questionId !=null ">
+				AND 
+					sq.`id` =#{questionId}
+			</if>
+			<if test="categoryId !=null ">
+				AND 
+					sq.`category_id` =#{categoryId}
+			</if>
+	</select>
+	
+	<!-- 问题表分页列表（同时查询分页数据和总条数） -->
+	<select id="listSurveyQuestion" parameterType="PageParameter" resultType="SurveyQuestionVO">
+		select sq.*,t.count 
+		from survey_question sq 
+		left join survey_question_category sqc on sqc.id=sq.category_id,
+		(select count(*) count from survey_question sq 
+		left join survey_question_category sqc on sqc.id=sq.category_id 
+		where sq.is_deleted = false 
+		<!-- 下面是动态条件 -->
+		<if test="parameter !=null ">
+			<!-- 题目 -->
+			<if test="parameter.title != null and parameter.title != ''">
+				and sq.title like concat('%',#{parameter.title},'%')
+			</if>
+			<!-- 问题类型 -->
+			<if test="parameter.type != null and parameter.type != ''">
+				and sq.type like concat('%',#{parameter.type},'%')
+			</if>
+			<!-- 问题类型 -->
+			<if test="parameter.sort != null and parameter.sort != ''">
+				and sq.sort like concat('%',#{parameter.sort},'%')
+			</if>
+		</if>
+		) t 
+		where sq.is_deleted = false 
+		<!-- 下面是动态条件 -->
+		<if test="parameter !=null ">
+			<!-- 题目 -->
+			<if test="parameter.title != null and parameter.title != ''">
+				and sq.title like concat('%',#{parameter.title},'%')
+			</if>
+			<!-- 问题类型 -->
+			<if test="parameter.type != null and parameter.type != ''">
+				and sq.type like concat('%',#{parameter.type},'%')
+			</if>
+			<!-- 问题类型 -->
+			<if test="parameter.sort != null and parameter.sort != ''">
+				and sq.sort like concat('%',#{parameter.sort},'%')
+			</if>
+		</if>
+		group by sq.title desc 
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
 	</select>
 	
 </mapper>

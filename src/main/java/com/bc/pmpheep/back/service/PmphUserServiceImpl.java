@@ -35,6 +35,7 @@ import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.ValidatUtil;
+import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.general.bean.ImageType;
@@ -571,5 +572,26 @@ public class PmphUserServiceImpl implements PmphUserService {
 			materialPermission = StringUtil.tentToBinary(integer);
 		}
 		return materialPermission;
+	}
+
+	@Override
+	public PageResult<PmphEditorVO> listEditors(
+			PageParameter<PmphEditorVO> pageParameter)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(pageParameter.getParameter().getDepartmentId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC,
+					CheckedExceptionResult.NULL_PARAM, "部门id为空");
+		}
+		PageResult<PmphEditorVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total = pmphUserDao.totalEditors(pageParameter.getParameter().getDepartmentId(),
+				pageParameter.getParameter().getRealName());
+		if (total > 0){
+			List<PmphEditorVO> list = pmphUserDao.listEditors(pageParameter.getParameter().getDepartmentId(),
+					pageParameter.getParameter().getRealName(), pageParameter.getPageSize(), pageParameter.getStart());
+			pageResult.setRows(list);
+		}
+		pageResult.setTotal(total);
+		return pageResult;
 	}
 }

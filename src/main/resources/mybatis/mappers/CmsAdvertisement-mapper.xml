@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.CmsAdvertisementDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="adname != null and adname !=''" >
+				adname,
+			</if>
+			<if test="image != null and image !=''">
+				image,
+			</if>
+			<if test="url != null and url !=''">
+				url,
+			</if>
+			<if test="sort != null">
+				sort,
+			</if>
+			<if test="isDisabled != null">
+				is_disabled,
+			</if>
+			<if test="note != null and note != ''">
+				note,
+			</if>
+			<if test="style != null and style != ''">
+				style,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="autoPlay != null">
+				auto_play,
+			</if>
+			<if test="navigationColor != null and navigationColor != ''">
+				navigation_color,
+			</if>
+			<if test="isNavigation != null">
+				isNavigation,
+			</if>
+			<if test="animationInterval != null">
+				animation_interval,
+			</if>
+			<if test="animationEffect != null and animationEffect != ''">
+				animation_effect,
+			</if>
+			<if test="isShowHeading != null">
+				is_show_heading,
+			</if>
+			<if test="gmtCreate!=null">
+				gmt_create,
+			</if>
+			<if test="gmtUpdate!=null">
+				gmt_update,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="adname != null and adname !=''" >
+				#{adname},
+			</if>
+			<if test="image != null and image !=''">
+				#{image},
+			</if>
+			<if test="url != null and url !=''">
+				#{url},
+			</if>
+			<if test="sort != null">
+				#{sort},
+			</if>
+			<if test="isDisabled != null">
+				#{isDisabled},
+			</if>
+			<if test="note != null and note != ''">
+				#{note},
+			</if>
+			<if test="style != null and style != ''">
+				#{style},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="autoPlay != null">
+				#{autoPlay},
+			</if>
+			<if test="navigationColor != null and navigationColor != ''">
+				#{navigationColor},
+			</if>
+			<if test="isNavigation != null">
+				#{isNavigation},
+			</if>
+			<if test="animationInterval != null">
+				#{animationInterval},
+			</if>
+			<if test="animationEffect != null and animationEffect != ''">
+				#{animationEffect},
+			</if>
+			<if test="isShowHeading != null">
+				#{isShowHeading},
+			</if>
+			<if test="gmtCreate!=null">
+				#{gmtCreate},
+			</if>
+			<if test="gmtUpdate!=null">
+				#{gmtUpdate}
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增CmsAdvertisement -->
+	<insert id="addCmsAdvertisement" parameterType="CmsAdvertisement" useGeneratedKeys="true"
+		keyProperty="id">
+		
+		insert into cms_advertisement (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+	
+	<!-- 获取广告列表 -->
+	<select id="getAdvertisementList"  resultType="CmsAdvertisementOrImageVO" >
+			select t.*,
+		CONCAT('[',GROUP_CONCAT(t.temp),']') image
+	 		from(
+				select ca.*,cai.id imageId,
+				CONCAT('{id:',cai.id,',','image:"',CONCAT('/pmpheep/image/',cai.image),'",','advertId:',cai.advert_id,',','isDisabled:',if(cai.is_disabled,'true','false'),'}') temp,
+				cai.advert_id,cai.is_disabled isDisplay  
+				from cms_advertisement ca
+				left join cms_advertisement_image cai on cai.advert_id =ca.id 
+	 			)t
+			GROUP BY t.id
+	</select>
+	
+	<!-- 根据id查询一个CmsAdvertisement -->
+	<select id="getCmsAdvertisementById" parameterType="java.lang.Long" resultType="CmsAdvertisement">
+		select * from cms_advertisement where id=#{id};
+	</select>
+	
+	<!-- 修改广告 -->	
+	<update id="updateCmsAdvertisement" parameterType="CmsAdvertisement">
+		update cms_advertisement 
+			<set>
+				<if test="url != null and url !=''">
+					url=#{url},
+				</if>
+				<if test="sort != null">
+					sort=#{sort},
+				</if>
+				<if test="isDisabled != null">
+					is_disabled=#{isDisabled},
+				</if>
+				<if test="note != null and note != ''">
+					note=#{note}
+				</if>
+			</set>
+			 where
+			 	 id = #{id};
+	</update>
+	
+	<!-- 根据id删除广告-->
+	<delete id="deleteCmsAdvertisementById" parameterType="Long">
+		delete from cms_advertisement where id=#{id}
+	</delete>
+	
+	<!-- 根据id批量修改图片-->
+	<update id="deleteCmsAdvertisementByImage" parameterType="Long">
+		update cms_advertisement set image='-' where id=#{id}
+	</update>
+</mapper>

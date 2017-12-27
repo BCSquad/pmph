@@ -20,6 +20,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.bc.pmpheep.back.bo.DecPositionBO;
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.dao.PmphUserDao;
@@ -42,8 +44,10 @@ import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
+import com.bc.pmpheep.back.vo.ExportDecPositionVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
+import com.bc.pmpheep.back.vo.WriterVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -622,18 +626,18 @@ public class TextbookServiceImpl implements TextbookService {
 			excelDecAndTextbookVO.setShowOnlineProgress("被退回");
 			break;
 		default:
-			excelDecAndTextbookVO.setShowOnlineProgress("通过");
+			excelDecAndTextbookVO.setShowOnlineProgress("审核通过");
 			break;
 		}
 		switch (excelDecAndTextbookVO.getOfflineProgress()) {
 		case 0:
-			excelDecAndTextbookVO.setShowOfflineProgress("未收到");
+			excelDecAndTextbookVO.setShowOfflineProgress("未收到纸质表");
 			break;
 		case 1:
-			excelDecAndTextbookVO.setShowOfflineProgress("被退回");
+			excelDecAndTextbookVO.setShowOfflineProgress("被退回纸质表");
 			break;
 		default:
-			excelDecAndTextbookVO.setShowOfflineProgress("通过");
+			excelDecAndTextbookVO.setShowOfflineProgress("已收到纸质表");
 			break;
 		}
 		switch (excelDecAndTextbookVO.getIdtype()) {
@@ -649,6 +653,40 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 	}
 	return list;
+	}
+
+	@Override
+	public List<Textbook> getTextbooknameList(Long materialId) {
+		if(null==materialId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
+                    CheckedExceptionResult.NULL_PARAM, "教材id为空");
+		}
+		List<Textbook> textbooks=textbookDao.getTextbookByMaterialId(materialId);
+		return textbooks;
+	}
+
+	@Override
+	public List<DecPositionBO> getExcelDecByMaterialId(Long[] textbookIds) {
+		if(null==textbookIds){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
+                    CheckedExceptionResult.NULL_PARAM, "教材id为空");
+		}
+		List<DecPositionBO> decPositionBOs=new ArrayList<>();
+		DecPositionBO decPositionBO=new DecPositionBO();
+		List<ExportDecPositionVO> exportDecPositionVOs=textbookDao.getExcelDecByMaterialId(textbookIds);
+		for (ExportDecPositionVO exportDecPositionVO : exportDecPositionVOs) {
+			decPositionBO.setTextbookName(exportDecPositionVO.getTextbookName());
+			decPositionBO.setTextbookRound(exportDecPositionVO.getTextbookRound());
+			List<WriterVO> writerVOs=new ArrayList<>();
+			for (WriterVO writerVO : writerVOs) {
+				if(exportDecPositionVO.getWriters().equals(writerVO)){
+					writerVOs.add(writerVO);
+				}
+			}
+			//decPositionBO.setWriters(writerVOs);
+			decPositionBOs.add(decPositionBO);
+		}
+		return decPositionBOs;
 	}
 }
 

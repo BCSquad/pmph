@@ -26,8 +26,17 @@ public class SurveyTemplateQuestion implements java.io.Serializable {
 
     //
     private static final long serialVersionUID = -1288144395734966965L;
+    /**
+     * 主键
+     */
     private Long              id;
+    /**
+     * 模版表主键
+     */
     private Long              templateId;
+    /**
+     * 问题表主键
+     */
     private Long              questionId;
 
     // Constructors
@@ -66,5 +75,11 @@ public class SurveyTemplateQuestion implements java.io.Serializable {
     public void setQuestionId(Long questionId) {
         this.questionId = questionId;
     }
+
+	@Override
+	public String toString() {
+		return "SurveyTemplateQuestion [id=" + id + ", templateId="
+				+ templateId + ", questionId=" + questionId + "]";
+	}
 
 }

@@ -213,8 +213,8 @@ public class DeclarationServiceImpl implements DeclarationService {
     }
 
     @Override
-    public Declaration confirmPaperList(Long id, Integer offlineProgress, Long materialId)
-            throws CheckedServiceException, IOException {
+    public Declaration confirmPaperList(Long id, Integer offlineProgress) 
+    		throws CheckedServiceException, IOException {
         if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
                     "主键不能为空!");
@@ -225,7 +225,6 @@ public class DeclarationServiceImpl implements DeclarationService {
         }
         // 获取当前作家用户申报信息
         Declaration declarationCon = declarationDao.getDeclarationById(id);
-        declarationCon.setMaterialId(materialId);
         declarationCon.setOfflineProgress(offlineProgress);
         declarationDao.updateDeclaration(declarationCon);
         systemMessageService.sendWhenReceiptAudit(declarationCon.getId(), true); // 发送系统消息
@@ -233,8 +232,8 @@ public class DeclarationServiceImpl implements DeclarationService {
     }
 
     @Override
-    public Declaration onlineProgress(Long id, Integer onlineProgress, Long materialId)
-            throws CheckedServiceException, IOException {
+    public Declaration onlineProgress(Long id, Integer onlineProgress) 
+    		throws CheckedServiceException, IOException {
         if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
                     "主键不能为空!");

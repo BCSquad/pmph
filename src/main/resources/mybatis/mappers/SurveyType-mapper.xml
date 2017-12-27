@@ -66,8 +66,18 @@
 		id=#{id};
 	</update>
 	<!-- 查找SurveyType通过主键id -->
-	<select id="selectSurveyTypeById" parameterType="java.lang.Long" 
+	<select id="getSurveyTypeById" parameterType="java.lang.Long" 
 	resultType="SurveyType">
 		select * from survey_type where id=#{id};
+	</select>
+	
+	<!-- 获取SurveyType集合 -->
+	<select id="listSurveyType"  resultType="SurveyType">
+		SELECT 
+			id,survey_name 
+		FROM 
+			survey_type 
+		ORDER BY 
+			sort ASC;
 	</select>
 </mapper>

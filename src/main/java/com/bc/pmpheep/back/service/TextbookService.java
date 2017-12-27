@@ -3,6 +3,8 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.bc.pmpheep.back.bo.DecPositionBO;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Textbook;
@@ -173,4 +175,18 @@ public interface TextbookService {
 	 * @throws CheckedServiceException
 	 */
 	List<ExcelDecAndTextbookVO> getExcelDecAndTextbooks(Long[] textbookIds)throws CheckedServiceException;
+	
+	/**
+	 * 通过教材id获取所有书籍name
+	 * @param materialId
+	 * @return
+	 */
+	List<Textbook> getTextbooknameList(Long materialId);
+	
+	/**
+	 * 通过教材id查询该教材的主编/副主编
+	 * @param materialId
+	 * @return
+	 */
+	List<DecPositionBO> getExcelDecByMaterialId(Long[] textbookIds);
 }

@@ -253,6 +253,22 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
                                                   CheckedExceptionResult.ILLEGAL_PARAM, "手机号码不符合规范");
             }
         }
+        if (StringUtil.isEmpty(orgAndOrgUserVO.getOrgName())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "机构名称为空");
+        }
+        if (StringUtil.strLength(orgAndOrgUserVO.getOrgName()) > 20) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "机构名称过长");
+        }
+        // 通过id查询机构用户来判断该机构名称是否被使用或者用户名等于数据库的机构
+        Org orgname=orgDao.getOrgById(orgAndOrgUserVO.getOrgId());
+        if(!orgname.getOrgName().equals(orgAndOrgUserVO.getOrgName())){
+        	 if (orgDao.getOrgByOrgName(orgAndOrgUserVO.getOrgName()).size() > 0) {
+                 throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                                   CheckedExceptionResult.ILLEGAL_PARAM, "该机构名称已被使用，请重新输入");
+             }
+        }
         Org org=new Org();
         org.setId(orgAndOrgUserVO.getOrgId());
         org.setOrgName(orgAndOrgUserVO.getOrgName());

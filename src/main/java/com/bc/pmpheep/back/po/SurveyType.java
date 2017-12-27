@@ -26,8 +26,17 @@ public class SurveyType implements java.io.Serializable {
 
     //
     private static final long serialVersionUID = -6852705084817228169L;
+    /**
+     * 主键
+     */
     private Long              id;
+    /**
+     * 问卷调查类型名称
+     */
     private String            surveyName;
+    /**
+     * 排序
+     */
     private Integer           sort;
 
     // Constructors
@@ -66,5 +75,11 @@ public class SurveyType implements java.io.Serializable {
     public void setSort(Integer sort) {
         this.sort = sort;
     }
+
+	@Override
+	public String toString() {
+		return "SurveyType [id=" + id + ", surveyName=" + surveyName
+				+ ", sort=" + sort + "]";
+	}
 
 }
