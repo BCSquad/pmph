@@ -74,7 +74,7 @@ public class SurveyQuestionAnswerController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "问卷结果统计")
-    @RequestMapping(value = "/count", method = RequestMethod.POST)
+    @RequestMapping(value = "/count", method = RequestMethod.GET)
     public ResponseBean count(SurveyQuestionAnswerCountsVO questionAnswerCountsVO) {
         return new ResponseBean(
                                 surveyQuestionAnswerService.getSurveyQuestionAnswerCounts(questionAnswerCountsVO));
