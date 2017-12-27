@@ -131,7 +131,7 @@ public class CmsAdvertisementController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除图片")
-	@RequestMapping(value = "/cmsAdvertisement/{id}/delete", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/cmsAdvertisement/delete", method = RequestMethod.DELETE)
 	public ResponseBean delete(@RequestParam(name = "image") String[] image,
 			@RequestParam(name = "advertId") Long advertId,
 			HttpServletRequest request) throws CheckedServiceException {
