@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.service.SurveyQuestionAnswerService;
 import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.vo.SurveyQuestionAnswerCountsVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
 /**
@@ -59,5 +60,23 @@ public class SurveyQuestionAnswerController {
     HttpServletRequest request) {
         String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(surveyQuestionAnswerService.addUserToAnswer(answerJson, sessionId));
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：问卷结果统计
+     * 使用示范：
+     *
+     * @param questionAnswerCountsVO
+     * @return
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "问卷结果统计")
+    @RequestMapping(value = "/count", method = RequestMethod.POST)
+    public ResponseBean count(SurveyQuestionAnswerCountsVO questionAnswerCountsVO) {
+        return new ResponseBean(
+                                surveyQuestionAnswerService.getSurveyQuestionAnswerCounts(questionAnswerCountsVO));
     }
 }

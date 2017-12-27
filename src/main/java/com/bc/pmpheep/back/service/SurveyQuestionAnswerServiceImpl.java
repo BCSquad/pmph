@@ -13,6 +13,7 @@ import com.bc.pmpheep.back.util.JsonUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.SurveyQuestionAnswerCountsVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -117,5 +118,11 @@ public class SurveyQuestionAnswerServiceImpl implements SurveyQuestionAnswerServ
         Integer count = 0;
         count = this.batchAddSurveyQuestionAnswer(surveyQuestionAnswerList);
         return count;
+    }
+
+    @Override
+    public List<SurveyQuestionAnswerCountsVO> getSurveyQuestionAnswerCounts(
+    SurveyQuestionAnswerCountsVO questionAnswerCountsVO) throws CheckedServiceException {
+        return surveyQuestionAnswerDao.getSurveyQuestionAnswerCounts(questionAnswerCountsVO);
     }
 }
