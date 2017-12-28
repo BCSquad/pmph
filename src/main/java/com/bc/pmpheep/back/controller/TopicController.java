@@ -19,6 +19,7 @@ import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.TopicService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
 import com.bc.pmpheep.back.vo.TopicDirectorVO;
@@ -80,7 +81,11 @@ public class TopicController {
 		PageParameter<TopicOPtsManagerVO> pageParameter = new PageParameter(pageNumber, pageSize);
 		TopicOPtsManagerVO topicOPtsManagerVO = new TopicOPtsManagerVO();
 		topicOPtsManagerVO.setBookname(bookname);
+		if (StringUtil.isEmpty(submitTime)){
+			topicOPtsManagerVO.setSubmitTime(null);
+		}else{
 		topicOPtsManagerVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		}
 		String sessionId = CookiesUtil.getSessionId(request);
 		pageParameter.setParameter(topicOPtsManagerVO);
 		return new ResponseBean(topicService.listOpts(sessionId, pageParameter));
