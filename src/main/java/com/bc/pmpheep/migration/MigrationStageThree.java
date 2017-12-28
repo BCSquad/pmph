@@ -46,7 +46,7 @@ import com.bc.pmpheep.utils.ExcelHelper;
 public class MigrationStageThree {
 
     private final Logger logger = LoggerFactory.getLogger(MigrationStageThree.class);
-    private int number = 0;
+    private Long number = 0L;
 
     @Resource
     ExcelHelper excelHelper;
@@ -111,7 +111,7 @@ public class MigrationStageThree {
             Long pk = pmphDepartment.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "orgid", departmentId);
             count++;
-            number++;
+            number = pk;
         }
         if (excel.size() > 0) {
             try {
