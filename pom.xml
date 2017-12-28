@@ -78,6 +78,12 @@
         <java-mail.ver>1.5.5</java-mail.ver>
         <!-- commons-email -->
         <commons-email.ver>1.4</commons-email.ver>
+        <!-- 百度统计 -->
+        <httpclient.ver>4.5</httpclient.ver>
+        <httpmime.ver>4.5</httpmime.ver>
+        <httpcore.ver>4.4.1</httpcore.ver>
+        <fastjson.ver>1.2.7</fastjson.ver>
+        <bcprov-jdk16.ver>1.46</bcprov-jdk16.ver>
     </properties>
 	
     <dependencies>
@@ -275,6 +281,32 @@
 	        <artifactId>commons-email</artifactId>
 	        <version>${commons-email.ver}</version>
 	    </dependency>
+	    <!-- 百度统计 -->
+	    <dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${httpclient.ver}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>${httpmime.ver}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>${httpcore.ver}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>${fastjson.ver}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk16</artifactId>
+			<version>${bcprov-jdk16.ver}</version>
+		</dependency>
     </dependencies>
 
     <repositories>
