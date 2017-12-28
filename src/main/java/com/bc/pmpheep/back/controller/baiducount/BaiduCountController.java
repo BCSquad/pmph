@@ -90,7 +90,7 @@ public class BaiduCountController {
      */
     private String requestJson(String method, String startDate, String endDate, String metrics) {
         // 默认前一个月
-        String start_date = DateUtil.date2Str(DateUtil.getDateBefore(new Date(), 10), "yyyyMMdd");
+        String start_date = DateUtil.date2Str(DateUtil.getDateBefore(new Date(), 15), "yyyyMMdd");
         if (StringUtil.notEmpty(startDate)) {
             start_date = startDate;
         }
@@ -104,7 +104,19 @@ public class BaiduCountController {
         if (StringUtil.notEmpty(method)) {
             methods = method;
         }
-        // 默认对比指标
+        /**
+         * 默认对比指标
+         * 
+         * pv_count(浏览量(PV))
+         * 
+         * visitor_count(访客数(UV))
+         * 
+         * ip_count(IP数)
+         * 
+         * bounce_ratio(跳出率，%)
+         * 
+         * avg_visit_time(平均访问时长，秒)
+         */
         String metric = "pv_count,visitor_count,ip_count,bounce_ratio,avg_visit_time";
         if (StringUtil.notEmpty(metrics)) {
             metric = metrics;
@@ -119,13 +131,16 @@ public class BaiduCountController {
         Map<String, String> body = new LinkedHashMap<String, String>();
         body.put("siteId", "11461884");
         body.put("method", methods);
-        logger.info("请求的method为：{}", methods);
         body.put("start_date", start_date);
-        logger.info("请求的start_date为：{}", start_date);
         body.put("end_date", end_date);
-        logger.info("请求的end_date为：{}", end_date);
         body.put("metrics", metric);
+        logger.info("请求的method为：{}", methods);
+        logger.info("请求的start_date为：{}", start_date);
+        logger.info("请求的end_date为：{}", end_date);
         logger.info("请求的metrics为：{}", metric);
+        // 分页
+        body.put("start_index", "0");// 页码
+        body.put("max_results", "20");// 显示条数
         Map<String, Object> params = new LinkedHashMap<String, Object>();
         params.put("header", header);
         params.put("body", body);
