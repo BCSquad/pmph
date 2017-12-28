@@ -74,4 +74,6 @@ public class CheckedExceptionBusiness {
 	public final static String BOOK_CORRECTION = "教材纠错";
 	
 	public final static String QUESTIONNAIRE_SURVEY = "问卷调查";
+	
+	public final static String WRITER_POINT_MANAGEMENT = "积分管理";
 }
