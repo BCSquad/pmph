@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -37,22 +38,17 @@ import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
-import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
-import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
-import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
 import com.bc.pmpheep.back.vo.ExportDecPositionVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
-import com.bc.pmpheep.back.vo.WriterVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
-import com.bc.pmpheep.utils.ExcelHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -680,10 +676,10 @@ public class TextbookServiceImpl implements TextbookService {
 			decPositionBO.setTextbookRound(exportDecPositionVO.getTextbookRound());
 			List<WriterBO> writerBO=new ArrayList<>();
 			for (WriterBO writeBO : writerBO) {
-				writeBO.setRealname(exportDecPositionVO.getWriters().get(0).getRealname());
-				writeBO.setRank(exportDecPositionVO.getWriters().get(0).getRank());
-				writeBO.setChosenPosition(exportDecPositionVO.getWriters().get(0).getChosenPosition());
-				writeBO.setChosenOrgName(exportDecPositionVO.getWriters().get(0).getChosenOrgName());
+				writeBO.setRealname(exportDecPositionVO.getRealname());
+				writeBO.setRank(exportDecPositionVO.getRank());
+				writeBO.setChosenPosition(exportDecPositionVO.getChosenPosition());
+				writeBO.setChosenOrgName(exportDecPositionVO.getChosenOrgName());
 			}
 			decPositionBO.setWriters(writerBO);
 			decPositionBOs.add(decPositionBO);
