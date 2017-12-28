@@ -119,4 +119,68 @@
 		select * from writer_point_rule where id=#{id};
 	</select>
 	
+	<!-- 积分规则表分页列表（同时查询分页数据和总条数）积分规则管理 -->
+	<select id="listWriterPointRule" parameterType="PageParameter" resultType="WriterPointRuleVO">
+		select wpr.*,t.count 
+		from writer_point_rule wpr ,
+		(select count(*) count from writer_point_rule wpr 
+			where wpr.is_exchange = false 
+				<!-- 下面是动态条件 -->
+				<if test="parameter !=null ">
+					<!-- 积分规则名称 -->
+					<if test="parameter.ruleName != null and parameter.ruleName != ''">
+						and wpr.rule_name = #{parameter.ruleName}
+					</if>
+					<!-- 积分规则标识 -->
+					<if test="parameter.ruleCode != null and parameter.ruleCode != ''">
+						and wpr.rule_code = #{parameter.ruleCode}
+					</if>
+				</if>
+				) t 
+		wpr.is_exchange = false 
+		<!-- 下面是动态条件 -->
+		<if test="parameter !=null ">
+			<!-- 积分规则名称 -->
+			<if test="parameter.ruleName != null and parameter.ruleName != ''">
+				and wpr.rule_name = #{parameter.ruleName}
+			</if>
+			<!-- 积分规则标识 -->
+			<if test="parameter.ruleCode != null and parameter.ruleCode != ''">
+				and wpr.rule_code = #{parameter.ruleCode}
+			</if>
+		</if>
+		group by wpr.rule_name desc 
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
+	<!-- 积分规则表分页列表（同时查询分页数据和总条数）积分兑换规则 -->
+	<select id="listWriterPointRulePoint" parameterType="PageParameter" resultType="WriterPointRuleVO">
+		select wpr.*,t.count 
+		from writer_point_rule wpr ,
+		(select count(*) count from writer_point_rule wpr 
+			where wpr.is_exchange = true 
+				<!-- 下面是动态条件 -->
+				<if test="parameter !=null ">
+					<!-- 目标平台名称 -->
+					<if test="parameter.thirdName != null and parameter.thirdName != ''">
+						and wpr.third_name = #{parameter.thirdName}
+					</if>
+				</if>
+				) t 
+		wpr.is_exchange = true 
+		<!-- 下面是动态条件 -->
+		<if test="parameter !=null ">
+			<!-- 目标平台名称 -->
+			<if test="parameter.thirdName != null and parameter.thirdName != ''">
+				and wpr.third_name = #{parameter.thirdName}
+			</if>
+		</if>
+		group by wpr.third_name desc 
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
 </mapper>

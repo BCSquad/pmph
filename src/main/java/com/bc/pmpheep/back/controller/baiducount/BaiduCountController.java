@@ -72,9 +72,9 @@ public class BaiduCountController {
 	@RequestMapping(value = "/rpt/trend", method = RequestMethod.GET)
 	public ResponseBean trend(@RequestParam("method") String method, @RequestParam("startDate") String startDate,
 			@RequestParam("endDate") String endDate, @RequestParam("metrics") String metrics,
-			@RequestParam("startIndex") String startIndex, @RequestParam("maxResults") String maxResults) {
+			@RequestParam("pageNum") String pageNum, @RequestParam("pageSize") String pageSize) {
 		return new ResponseBean(
-				HttpUtil.doPostSSL(getData, requestJson(method, startDate, endDate, metrics, startIndex, maxResults)));
+				HttpUtil.doPostSSL(getData, requestJson(method, startDate, endDate, metrics, pageNum, pageSize)));
 	}
 
 	/**
@@ -112,11 +112,13 @@ public class BaiduCountController {
 	 * @param startDate 查询起始时间
 	 * @param endDate 查询结束时间
 	 * @param metrics 所要获取的指标
+	 * @param pageNum 页码
+	 * @param pageSize 显示条数
 	 * @return
 	 * </pre>
 	 */
-	private String requestJson(String method, String startDate, String endDate, String metrics, String startIndex,
-			String maxResults) {
+	private String requestJson(String method, String startDate, String endDate, String metrics, String pageNum,
+			String pageSize) {
 		// 默认前一个月
 		String start_date = DateUtil.date2Str(DateUtil.getDateBefore(new Date(), 30), "yyyyMMdd");
 		if (StringUtil.notEmpty(startDate)) {
@@ -132,19 +134,32 @@ public class BaiduCountController {
 		if (StringUtil.notEmpty(method)) {
 			methods = method;
 		}
-		// 默认对比指标
+		/**
+		 * 默认对比指标
+		 * 
+		 * pv_count(浏览量(PV))
+		 * 
+		 * visitor_count(访客数(UV))
+		 * 
+		 * ip_count(IP数)
+		 * 
+		 * bounce_ratio(跳出率，%)
+		 * 
+		 * avg_visit_time(平均访问时长，秒)
+		 */
 		String metric = "pv_count,visitor_count,ip_count,bounce_ratio,avg_visit_time";
 		if (StringUtil.notEmpty(metrics)) {
 			metric = metrics;
 		}
-		//默认分页
-		String start_index = "0";
-		if (StringUtil.notEmpty(startIndex)) {
-			start_index = startIndex;
+		// 页码
+		String page_num = "0";
+		if (StringUtil.notEmpty(pageNum)) {
+			page_num = pageNum;
 		}
-		String max_results = "20";
-		if (StringUtil.notEmpty(maxResults)) {
-			max_results = maxResults;
+		// 显示条数
+		String page_size = "0";
+		if (StringUtil.notEmpty(pageSize)) {
+			page_size = pageSize;
 		}
 		// 登陆配置
 		Map<String, String> header = new LinkedHashMap<String, String>();
@@ -156,15 +171,16 @@ public class BaiduCountController {
 		Map<String, String> body = new LinkedHashMap<String, String>();
 		body.put("siteId", "11461884");
 		body.put("method", methods);
-		logger.info("请求的method为：{}", methods);
 		body.put("start_date", start_date);
-		logger.info("请求的start_date为：{}", start_date);
 		body.put("end_date", end_date);
-		logger.info("请求的end_date为：{}", end_date);
 		body.put("metrics", metric);
+		logger.info("请求的method为：{}", methods);
+		logger.info("请求的start_date为：{}", start_date);
+		logger.info("请求的end_date为：{}", end_date);
 		logger.info("请求的metrics为：{}", metric);
-		body.put("start_index", start_index);
-		body.put("max_results", max_results);
+		// 分页
+		body.put("start_index", page_num);
+		body.put("max_results", page_size);
 		Map<String, Object> params = new LinkedHashMap<String, Object>();
 		params.put("header", header);
 		params.put("body", body);

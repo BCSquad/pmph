@@ -12,6 +12,8 @@ public interface WriterPointLogDao {
 
 	/**
 	 * 添加
+     * @author:tyc
+     * @date:2017年12月28日上午09:19:01
 	 * @param writerPointLog
 	 * @return
 	 */
@@ -19,6 +21,8 @@ public interface WriterPointLogDao {
 	
 	/**
 	 * 删除
+     * @author:tyc
+     * @date:2017年12月28日上午09:23:22
 	 * @param id
 	 * @return
 	 */
@@ -26,6 +30,8 @@ public interface WriterPointLogDao {
 	
 	/**
 	 * 修改
+     * @author:tyc
+     * @date:2017年12月28日上午09:26:15
 	 * @param writerPointLog
 	 * @return
 	 */
@@ -33,6 +39,8 @@ public interface WriterPointLogDao {
 	
 	/**
 	 * 查询
+     * @author:tyc
+     * @date:2017年12月28日上午09:30:09
 	 * @param id
 	 * @return
 	 */
