@@ -19,6 +19,7 @@ import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.TopicService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
 import com.bc.pmpheep.back.vo.TopicDirectorVO;
@@ -76,11 +77,15 @@ public class TopicController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "维护人员查询可操作的选题")
 	@RequestMapping(value = "/listOpts", method = RequestMethod.GET)
 	public ResponseBean listOpts(HttpServletRequest request, Integer pageSize, Integer pageNumber, String bookname,
-			Timestamp submitTime) {
+			String submitTime) {
 		PageParameter<TopicOPtsManagerVO> pageParameter = new PageParameter(pageNumber, pageSize);
 		TopicOPtsManagerVO topicOPtsManagerVO = new TopicOPtsManagerVO();
 		topicOPtsManagerVO.setBookname(bookname);
-		topicOPtsManagerVO.setSubmitTime(submitTime);
+		if (StringUtil.isEmpty(submitTime)){
+			topicOPtsManagerVO.setSubmitTime(null);
+		} else{
+		    topicOPtsManagerVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		}
 		String sessionId = CookiesUtil.getSessionId(request);
 		pageParameter.setParameter(topicOPtsManagerVO);
 		return new ResponseBean(topicService.listOpts(sessionId, pageParameter));
@@ -130,11 +135,15 @@ public class TopicController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "部门主任查看可操作的选题")
 	@RequestMapping(value = "/listDirector", method = RequestMethod.GET)
 	public ResponseBean listDirector(HttpServletRequest request, Integer pageSize, Integer pageNumber, String bookName,
-			Timestamp submitTime) {
+			String submitTime) {
 		PageParameter<TopicDirectorVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		TopicDirectorVO topicDirectorVO = new TopicDirectorVO();
 		topicDirectorVO.setBookName(bookName);
-		topicDirectorVO.setSubmitTime(submitTime);
+		if (StringUtil.isEmpty(submitTime)){
+			topicDirectorVO.setSubmitTime(null);
+		} else{
+			topicDirectorVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		}
 		String sessionId = CookiesUtil.getSessionId(request);
 		pageParameter.setParameter(topicDirectorVO);
 		return new ResponseBean(topicService.listTopicDirectorVOs(sessionId, pageParameter));
@@ -194,11 +203,15 @@ public class TopicController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "部门编辑查看可操作的申报选题")
 	@RequestMapping(value = "/listEditor", method = RequestMethod.GET)
 	public ResponseBean listEditor(HttpServletRequest request, Integer pageSize, Integer pageNumber, String bookName,
-			Timestamp submitTime) {
+			String submitTime) {
 		PageParameter<TopicEditorVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		TopicEditorVO topicEditorVO = new TopicEditorVO();
 		topicEditorVO.setBookName(bookName);
-		topicEditorVO.setSubmitTime(submitTime);
+		if (StringUtil.isEmpty(submitTime)){
+			topicEditorVO.setSubmitTime(null);
+		} else{
+			topicEditorVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		}
 		String sessionId = CookiesUtil.getSessionId(request);
 		pageParameter.setParameter(topicEditorVO);
 		return new ResponseBean(topicService.listTopicEditorVOs(sessionId, pageParameter));
@@ -278,7 +291,7 @@ public class TopicController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查看选题申报")
 	@RequestMapping(value = "/list/checkTopic", method = RequestMethod.GET)
-	public ResponseBean checkTopic(String authProgress, String bookname, Timestamp submitTime, Integer pageSize,
+	public ResponseBean checkTopic(String authProgress, String bookname, String submitTime, Integer pageSize,
 			Integer pageNumber) {
 		String[] strs = authProgress.split(",");
 		List<Long> progress = new ArrayList<>();
@@ -288,7 +301,11 @@ public class TopicController {
 		PageParameter<TopicDeclarationVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
 		topicDeclarationVO.setBookname(bookname);
-		topicDeclarationVO.setSubmitTime(submitTime);
+		if (StringUtil.isEmpty(submitTime)){
+			topicDeclarationVO.setSubmitTime(null);
+		} else{
+			topicDeclarationVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		}
 		pageParameter.setParameter(topicDeclarationVO);
 		return new ResponseBean(topicService.listCheckTopic(progress, pageParameter));
 	}
@@ -313,6 +330,14 @@ public class TopicController {
 		return new ResponseBean(topicTextVO);
 	}
 	
+	/**
+	 * 
+	 * Description:部门主任获取部门人员信息列表
+	 * @author:lyc
+	 * @date:2017年12月27日下午5:02:46
+	 * @param 
+	 * @return ResponseBean
+	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取部门编辑列表")
 	@RequestMapping(value = "/listEditors", method = RequestMethod.GET)

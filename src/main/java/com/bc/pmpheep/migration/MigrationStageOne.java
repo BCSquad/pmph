@@ -17,11 +17,13 @@ import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.OrgType;
 import com.bc.pmpheep.back.po.OrgUser;
+import com.bc.pmpheep.back.po.WriterPoint;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.AreaService;
 import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.service.OrgTypeService;
 import com.bc.pmpheep.back.service.OrgUserService;
+import com.bc.pmpheep.back.service.WriterPointService;
 import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -59,6 +61,8 @@ public class MigrationStageOne {
     @Resource
     WriterUserService writerUserService;
     @Resource
+    WriterPointService writerPointService;
+    @Resource
     ExcelHelper excelHelper;
 
     public void start() {
@@ -68,6 +72,7 @@ public class MigrationStageOne {
         org();
         orgUser();
         writerUser();
+        writerPoint();
         logger.info("迁移第一步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
@@ -576,6 +581,49 @@ public class MigrationStageOne {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "writer_user表迁移完成" + count + "/" + maps.size());
+        SQLParameters.STATISTICS.add(msg);
+    }
+    
+    protected void writerPoint(){
+        String tableName = "sys_user";
+        String sql = "select sysu.*,sysu.new_pk id from sys_user sysu "
+        		+ "left join sys_userext sysue ON sysu.userid = sysue.userid "
+        		+ "where sysu.sysflag=1 and sysue.usertype !=2";
+        List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        int count = 0;//迁移成功的条目数
+        List<Map<String, Object>> excel = new LinkedList<>();
+        for (Map<String, Object> map : maps) {
+        	StringBuilder sb = new StringBuilder();
+            String id = (String) map.get("userid"); // 旧表主键值
+            Long userId = (Long) map.get("id"); // 用户id
+            WriterPoint writerPoint = new WriterPoint();
+            if (ObjectUtil.isNull(userId) || userId.intValue() == 0) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到用户id对应的关联结果。"));
+                excel.add(map);
+                logger.debug("未找到用户id对应的关联结果，此结果将被记录在Excel中");
+                continue;
+            }
+            writerPoint.setUserId(userId);
+            writerPoint.setTotal(0);
+            writerPoint.setGain(0);
+            writerPoint.setLoss(0);
+            writerPoint = writerPointService.addWriterPoint(writerPoint);
+            long pk = writerPoint.getId();
+            JdbcHelper.updateNewPrimaryKey(tableName, pk, "userid", id);
+            count++;
+        }
+        if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, "用户积分表", "writer_point");
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
+        }
+        logger.info("writer_point表迁移完成");
+        logger.info("原数据库表共有{}条数据，迁移了{}条数据", maps.size(), count);
+        //记录信息
+        Map<String, Object> msg = new HashMap<String, Object>();
+        msg.put("result", "writer_point表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
 

@@ -82,8 +82,8 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 	}
 
 	@Override
-	public Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, MultipartFile file, String sessionId)
-			throws CheckedServiceException, IOException {
+	public Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, String sessionId,Long[] imageId)
+			throws CheckedServiceException {
 		// session PmphUser用户验证
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
@@ -103,19 +103,22 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		if (null == cmsAdvertisementOrImageVO.getAdname()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "广告名称为空");
 		}
-		Integer count = 0;
-		// 当有图片的时候
-		if (null != file) {
-			// 先保存上传的广告图片返回MongoDBid
-			String newImage = fileService.save(file, ImageType.CMS_ADVERTISEMENT_IMAGE, cmsAdvertisementOrImageVO.getImageId());
-			// 保存本次上传图片的MongoDBid
-			cmsAdvertisementOrImageVO.setImage(newImage);
+		if (null==imageId) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
+		Integer count = 0;
 		CmsAdvertisementImage cmsAdvertisementImage=new CmsAdvertisementImage();
-		cmsAdvertisementImage.setId(cmsAdvertisementOrImageVO.getImageId());
-		cmsAdvertisementImage.setIsDisabled((Boolean) cmsAdvertisementOrImageVO.getImage());
-		//修改图片是否显示
-		cmsAdvertisementImageDao.updateCmsAdvertisementImage(cmsAdvertisementImage);
+		if(imageId.length != 0 ){
+			for (int i = 0; i < imageId.length; i++) {
+				cmsAdvertisementImage.setId(imageId[i]);
+				cmsAdvertisementImage.setIsDisabled((Boolean) cmsAdvertisementOrImageVO.getIsDisplay());
+				//修改图片是否显示
+				cmsAdvertisementImageDao.updateCmsAdvertisementImage(cmsAdvertisementImage);
+			}
+			//把不启用的图片更改禁用
+			cmsAdvertisementImage.setAdvertId(cmsAdvertisementOrImageVO.getId());
+			cmsAdvertisementImageDao.updateImageIsDisabled(cmsAdvertisementImage);
+		}
 		count = cmsAdvertisementDao.updateCmsAdvertisement(cmsAdvertisementOrImageVO);
 		return count;
 	}

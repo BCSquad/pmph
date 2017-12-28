@@ -273,5 +273,4 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 		super();
 	}
 
-	
 }

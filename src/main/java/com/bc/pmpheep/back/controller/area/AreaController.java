@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.back.service.AreaService;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -21,6 +23,8 @@ public class AreaController {
 
 	@Autowired
 	private AreaService areaService;
+	// 当前业务类型
+	private static final String BUSSINESS_TYPE = "地区";
 
 	/**
 	 * 根据父级id获取下一级子节点
@@ -31,6 +35,7 @@ public class AreaController {
 	 * @return
 	 */
 	@RequestMapping(value = "/areachirldren", method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取当前地区的下级区域")
 	@ResponseBody
 	public ResponseBean getAreaChirldren(Long parentId) {
 		return new ResponseBean(areaService.getAreaChirldren(parentId));

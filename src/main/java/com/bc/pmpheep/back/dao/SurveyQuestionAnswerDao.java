@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.SurveyQuestionAnswer;
+import com.bc.pmpheep.back.vo.SurveyQuestionAnswerCountsVO;
 
 /**
  * SurveyQuestionAnswer问题回答实体类数据访问层接口
@@ -65,4 +66,18 @@ public interface SurveyQuestionAnswerDao {
      * @return 影响行数
      */
     SurveyQuestionAnswer getSurveyQuestionAnswerById(Long id);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：问卷结果统计
+     * 使用示范：
+     *
+     * @param questionAnswerCountsVO SurveyQuestionAnswerCountsVO对象
+     * @return 
+     * </pre>
+     */
+    List<SurveyQuestionAnswerCountsVO> getSurveyQuestionAnswerCounts(
+    SurveyQuestionAnswerCountsVO questionAnswerCountsVO);
+
 }

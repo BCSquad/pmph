@@ -63,7 +63,7 @@
 		<include refid="value" />
 		) ;
 	</insert>
-	<!-- 通过广告id修改图片 -->
+	<!-- 通过id修改图片 信息-->
 	<update id="updateCmsAdvertisementImage" parameterType="Long">
 		update cms_advertisement_image 
 			<set>
@@ -80,4 +80,10 @@
 	<delete id="deleteCmsAdvertisementByImages" parameterType="Long">
 		delete from cms_advertisement_image where id=#{id}
 	</delete>
+	
+	<!-- 通过广告id修改图片 -->
+	<update id="updateImageIsDisabled" parameterType="Long">
+		update cms_advertisement_image set is_disabled=0 
+		where advert_id=#{advertId} and id !=#{id}
+	</update>
 </mapper>

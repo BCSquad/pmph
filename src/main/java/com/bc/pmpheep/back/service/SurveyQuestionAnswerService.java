@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 import java.util.List;
 
 import com.bc.pmpheep.back.po.SurveyQuestionAnswer;
+import com.bc.pmpheep.back.vo.SurveyQuestionAnswerCountsVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -80,5 +81,21 @@ public interface SurveyQuestionAnswerService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer addUserToAnswer(String answerJosn, String sessionId) throws CheckedServiceException;
+    Integer addUserToAnswer(List<SurveyQuestionAnswer> answerJosn, String sessionId)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：问卷结果统计
+     * 使用示范：
+     *
+     * @param questionAnswerCountsVO SurveyQuestionAnswerCountsVO对象
+     * @return 
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    List<SurveyQuestionAnswerCountsVO> getSurveyQuestionAnswerCounts(
+    SurveyQuestionAnswerCountsVO questionAnswerCountsVO) throws CheckedServiceException;
+
 }

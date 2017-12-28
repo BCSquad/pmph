@@ -107,4 +107,56 @@
 		select * from survey_question_answer where id=#{id};
 	</select>
 	
+	<!-- 问卷结果统计 -->
+	<select id="getSurveyQuestionAnswerCounts" parameterType="SurveyQuestionAnswerCountsVO" resultType="SurveyQuestionAnswerCountsVO">
+		SELECT 
+		  c.id questionId,
+		  c.title,
+		  GROUP_CONCAT(c.option_id)optionId,
+		  GROUP_CONCAT(c.option_content)optionContent,
+		  GROUP_CONCAT(c.counts) optionCount,
+		  SUM(c.counts) questionSum
+		FROM
+		  (SELECT 
+		    a.id,
+		    a.title,
+		    a.option_id,
+		    a.option_content,
+		    COUNT(b.optId) counts 
+		  FROM(
+		  	SELECT 
+		    	sq.`id`,
+		      	sq.`title`,
+		      	sqo.`id` option_id,
+		      	sqo.`option_content` 
+		    FROM
+		      	`survey_question` sq 
+		    JOIN 
+		    	`survey_question_option` sqo 
+		    ON 
+		    	sq.`id` = sqo.`question_id` 
+		    ORDER BY 
+		    	sq.id ASC
+		   ) a 
+    		LEFT JOIN (
+    			SELECT 
+			        sqa.`question_id`,
+			        sqa.`option_id` optId,
+			        sqa.`option_content` optCont 
+			    FROM
+        			`survey_question_answer` sqa
+        	) b 
+	      	ON 
+	      		a.id = b.question_id 
+	      	AND 
+	      		a.option_id = b.optId 
+	  		GROUP BY 
+	  			a.option_content
+	  		ORDER BY 
+	  			a.id ASC,
+	    		a.option_id ASC
+	    ) c 
+		GROUP BY 
+			c.title
+	</select>
 </mapper>

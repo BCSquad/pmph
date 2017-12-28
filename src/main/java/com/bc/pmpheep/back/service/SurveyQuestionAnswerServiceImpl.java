@@ -9,10 +9,9 @@ import com.bc.pmpheep.back.dao.SurveyQuestionAnswerDao;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.SurveyQuestionAnswer;
 import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.JsonUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.SurveyQuestionAnswerCountsVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -91,31 +90,34 @@ public class SurveyQuestionAnswerServiceImpl implements SurveyQuestionAnswerServ
         return surveyQuestionAnswerDao.getSurveyQuestionAnswerById(id);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public Integer addUserToAnswer(String answerJosn, String sessionId)
+    public Integer addUserToAnswer(List<SurveyQuestionAnswer> answerJosn, String sessionId)
     throws CheckedServiceException {
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        if (StringUtil.isEmpty(answerJosn)) {
+        if (CollectionUtil.isEmpty(answerJosn)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "未选择问题选项");
         }
         // json字符串转List对象集合
-        List<SurveyQuestionAnswer> surveyQuestionAnswerList =
-        new JsonUtil().getArrayListObjectFromStr(SurveyQuestionAnswer.class, answerJosn);
-        if (CollectionUtil.isEmpty(surveyQuestionAnswerList)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
-        }
-        for (SurveyQuestionAnswer surveyQuestionAnswer : surveyQuestionAnswerList) { // 设置用户
+        // List<SurveyQuestionAnswer> surveyQuestionAnswerList =
+        // new JsonUtil().getArrayListObjectFromStr(SurveyQuestionAnswer.class, answerJosn);
+        // if (CollectionUtil.isEmpty(surveyQuestionAnswerList)) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+        // CheckedExceptionResult.NULL_PARAM, "参数为空");
+        // }
+        for (SurveyQuestionAnswer surveyQuestionAnswer : answerJosn) { // 设置用户
             surveyQuestionAnswer.setUserId(pmphUser.getId());
         }
-        Integer count = 0;
-        count = this.batchAddSurveyQuestionAnswer(surveyQuestionAnswerList);
-        return count;
+        return this.batchAddSurveyQuestionAnswer(answerJosn);
+    }
+
+    @Override
+    public List<SurveyQuestionAnswerCountsVO> getSurveyQuestionAnswerCounts(
+    SurveyQuestionAnswerCountsVO questionAnswerCountsVO) throws CheckedServiceException {
+        return surveyQuestionAnswerDao.getSurveyQuestionAnswerCounts(questionAnswerCountsVO);
     }
 }

@@ -41,5 +41,11 @@ public interface CmsAdvertisementImageDao {
 	 * @return
 	 */
 	Integer deleteCmsAdvertisementByImages(Long id);
+	/**
+	 * 修改图片状态
+	 * @param cmsAdvertisementImage
+	 * @return
+	 */
+	Integer updateImageIsDisabled(CmsAdvertisementImage cmsAdvertisementImage);
 	
 }
