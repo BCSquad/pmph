@@ -1,7 +1,5 @@
 package com.bc.pmpheep.back.vo;
 
-import java.sql.Date;
-
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -30,11 +28,7 @@ public class WriterPointRuleVO implements java.io.Serializable{
 	//规则描述
 	private String description;
 	//是否禁用
-	private Boolean isDisabled;
-	//创建时间
-	private Date gmtCreate;
-	//修改时间
-	private Date gmtUpdate;    
+	private Boolean isDisabled;  
 	//条件分页总条数分页查询
     private Integer count;
     //页面查询条件（状态）
@@ -136,22 +130,6 @@ public class WriterPointRuleVO implements java.io.Serializable{
 		this.isDisabled = isDisabled;
 	}
 
-	public Date getGmtCreate() {
-		return gmtCreate;
-	}
-
-	public void setGmtCreate(Date gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
-
-	public Date getGmtUpdate() {
-		return gmtUpdate;
-	}
-
-	public void setGmtUpdate(Date gmtUpdate) {
-		this.gmtUpdate = gmtUpdate;
-	}
-
 	public Integer getCount() {
 		return count;
 	}
@@ -174,8 +152,7 @@ public class WriterPointRuleVO implements java.io.Serializable{
 				+ ", ruleCode=" + ruleCode + ", point=" + point
 				+ ", isExchange=" + isExchange + ", thirdName=" + thirdName
 				+ ", exchangePoint=" + exchangePoint + ", description="
-				+ description + ", isDisabled=" + isDisabled + ", gmtCreate="
-				+ gmtCreate + ", gmtUpdate=" + gmtUpdate + ", count=" + count
-				+ ", status=" + status + "]";
+				+ description + ", isDisabled=" + isDisabled + ", count="
+				+ count + ", status=" + status + "]";
 	}
 }

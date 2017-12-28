@@ -1,7 +1,5 @@
 package com.bc.pmpheep.back.vo;
 
-import java.sql.Date;
-
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -22,11 +20,7 @@ public class WriterPointVO implements java.io.Serializable{
 	//获取积分合计
 	private Integer gain;
 	//消费积分合计
-	private Integer loss;
-	//创建时间
-	private Date gmtCreate;
-	//修改时间
-	private Date gmtUpdate;    
+	private Integer loss;    
 	//条件分页总条数分页查询
     private Integer count;
     //页面查询条件（状态）
@@ -95,22 +89,6 @@ public class WriterPointVO implements java.io.Serializable{
 		this.loss = loss;
 	}
 
-	public Date getGmtCreate() {
-		return gmtCreate;
-	}
-
-	public void setGmtCreate(Date gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
-
-	public Date getGmtUpdate() {
-		return gmtUpdate;
-	}
-
-	public void setGmtUpdate(Date gmtUpdate) {
-		this.gmtUpdate = gmtUpdate;
-	}
-
 	public String getUsername() {
 		return username;
 	}
@@ -146,9 +124,8 @@ public class WriterPointVO implements java.io.Serializable{
 	@Override
 	public String toString() {
 		return "WriterPointVO [id=" + id + ", userId=" + userId + ", total="
-				+ total + ", gain=" + gain + ", loss=" + loss + ", gmtCreate="
-				+ gmtCreate + ", gmtUpdate=" + gmtUpdate + ", count=" + count
-				+ ", status=" + status + ", username=" + username
+				+ total + ", gain=" + gain + ", loss=" + loss + ", count="
+				+ count + ", status=" + status + ", username=" + username
 				+ ", realname=" + realname + "]";
 	}
 }
