@@ -19,6 +19,7 @@ import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.TopicService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
 import com.bc.pmpheep.back.vo.TopicDirectorVO;
@@ -80,7 +81,11 @@ public class TopicController {
 		PageParameter<TopicOPtsManagerVO> pageParameter = new PageParameter(pageNumber, pageSize);
 		TopicOPtsManagerVO topicOPtsManagerVO = new TopicOPtsManagerVO();
 		topicOPtsManagerVO.setBookname(bookname);
-		topicOPtsManagerVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		if (StringUtil.isEmpty(submitTime)){
+			topicOPtsManagerVO.setSubmitTime(null);
+		} else{
+		    topicOPtsManagerVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		}
 		String sessionId = CookiesUtil.getSessionId(request);
 		pageParameter.setParameter(topicOPtsManagerVO);
 		return new ResponseBean(topicService.listOpts(sessionId, pageParameter));
@@ -134,7 +139,11 @@ public class TopicController {
 		PageParameter<TopicDirectorVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		TopicDirectorVO topicDirectorVO = new TopicDirectorVO();
 		topicDirectorVO.setBookName(bookName);
-		topicDirectorVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		if (StringUtil.isEmpty(submitTime)){
+			topicDirectorVO.setSubmitTime(null);
+		} else{
+			topicDirectorVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		}
 		String sessionId = CookiesUtil.getSessionId(request);
 		pageParameter.setParameter(topicDirectorVO);
 		return new ResponseBean(topicService.listTopicDirectorVOs(sessionId, pageParameter));
@@ -198,7 +207,11 @@ public class TopicController {
 		PageParameter<TopicEditorVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		TopicEditorVO topicEditorVO = new TopicEditorVO();
 		topicEditorVO.setBookName(bookName);
-		topicEditorVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		if (StringUtil.isEmpty(submitTime)){
+			topicEditorVO.setSubmitTime(null);
+		} else{
+			topicEditorVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		}
 		String sessionId = CookiesUtil.getSessionId(request);
 		pageParameter.setParameter(topicEditorVO);
 		return new ResponseBean(topicService.listTopicEditorVOs(sessionId, pageParameter));
@@ -288,7 +301,11 @@ public class TopicController {
 		PageParameter<TopicDeclarationVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
 		topicDeclarationVO.setBookname(bookname);
-		topicDeclarationVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		if (StringUtil.isEmpty(submitTime)){
+			topicDeclarationVO.setSubmitTime(null);
+		} else{
+			topicDeclarationVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		}
 		pageParameter.setParameter(topicDeclarationVO);
 		return new ResponseBean(topicService.listCheckTopic(progress, pageParameter));
 	}
