@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.bo.DecPositionBO;
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.po.Textbook;
@@ -102,6 +103,8 @@ public class FileDownLoadController {
 	MaterialOrgService materialOrgService;
 	@Autowired
 	BookCorrectionService bookCorrectionService;
+	// 当前业务类型
+	private static final String BUSSINESS_TYPE = "文件下载";
 
 	/**
 	 * 普通文件下载
@@ -112,6 +115,7 @@ public class FileDownLoadController {
 	 *            服务响应
 	 * @throws UnsupportedEncodingException
 	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "普通文件下载")
 	@RequestMapping(value = "/file/download/{id}", method = RequestMethod.GET)
 	public void download(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response)
 			throws UnsupportedEncodingException {
@@ -146,6 +150,7 @@ public class FileDownLoadController {
 	 * 
 	 * @throws UnsupportedEncodingException
 	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "普通文件下载(更新下载数)")
 	@RequestMapping(value = "/file/{type}/download/{id}", method = RequestMethod.GET)
 	public void download(@PathVariable("type") String type, @PathVariable("id") String id, HttpServletRequest request,
 			HttpServletResponse response) throws UnsupportedEncodingException {
@@ -187,6 +192,7 @@ public class FileDownLoadController {
 	 *            服务响应
 	 * @return ResponseBean对象
 	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "小组文件下载")
 	@RequestMapping(value = "/groupfile/download/{id}", method = RequestMethod.GET)
 	public ResponseBean download(@PathVariable("id") String id, @RequestParam("groupId") long groupId,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -277,6 +283,7 @@ public class FileDownLoadController {
 	 * 
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报表批量导出excel")
 	@RequestMapping(value = "/excel/declaration", method = RequestMethod.GET)
 	public void declarationExcel(Long materialId, String textBookids, String realname, String position, String title,
 			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
@@ -337,6 +344,7 @@ public class FileDownLoadController {
 	 * 
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报表批量导出word")
 	@RequestMapping(value = "/word/declaration", method = RequestMethod.GET)
 	public void declarationWord(Long materialId, String textBookids, String realname, String position, String title,
 			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
@@ -409,6 +417,7 @@ public class FileDownLoadController {
 	 * 
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询word打包进度")
 	@RequestMapping(value = "/word/progress", method = RequestMethod.GET)
 	public ZipDownload progress(String id) {
 		ZipDownload zipDownload = new ZipDownload();
@@ -431,6 +440,7 @@ public class FileDownLoadController {
 	 * 
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "返回word导出唯一标识")
 	@RequestMapping(value = "/word/identification", method = RequestMethod.GET)
 	public String identification() {
 		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
@@ -438,7 +448,7 @@ public class FileDownLoadController {
 	}
 
 	/**
-	 * 普通文件下载
+	 * word打包文件
 	 * 
 	 * @param id
 	 *            生成的唯一标识符
@@ -446,6 +456,7 @@ public class FileDownLoadController {
 	 *            服务响应
 	 * @throws UnsupportedEncodingException
 	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "word打包文件")
 	@RequestMapping(value = "/zip/download", method = RequestMethod.GET)
 	public void downloadZip(@RequestParam("id") String id, HttpServletRequest request, HttpServletResponse response) {
 		String src = this.getClass().getResource("/").getPath();
@@ -501,6 +512,7 @@ public class FileDownLoadController {
 	 * </pre>
 	 */
 	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出已发布教材下的学校")
 	@RequestMapping(value = "/excel/published/org", method = RequestMethod.GET)
 	public void org(@RequestParam("materialId") Long materialId, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -537,6 +549,7 @@ public class FileDownLoadController {
 	 * @throws CheckedServiceException
 	 * @throws Exception
 	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出书籍遴选名单/批量导出")
 	@RequestMapping(value = "/position/exportExcel", method = RequestMethod.GET)
 	public void exportExcel(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("textbookIds") Long[] textbookIds) throws CheckedServiceException, Exception {
@@ -555,10 +568,10 @@ public class FileDownLoadController {
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		String fileName = null;
-		if(textbookIds.length>1){//当批量导出的时候 文件名为教材名称
+		if (textbookIds.length > 1) {// 当批量导出的时候 文件名为教材名称
 			String materialName = list.get(0).getMaterialName();// 书籍名称
 			fileName = returnFileName(request, materialName + ".xls");
-		}else{//当单个导出的时候 文件名为书籍名称
+		} else {// 当单个导出的时候 文件名为书籍名称
 			String TextbookName = list.get(0).getTextbookName();// 书籍名称
 			fileName = returnFileName(request, TextbookName + ".xls");
 		}
@@ -587,6 +600,7 @@ public class FileDownLoadController {
 	 * @throws CheckedServiceException
 	 * @throws Exception
 	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出纠错信息")
 	@RequestMapping(value = "/bookCorrectionTrack/exportExcel", method = RequestMethod.GET)
 	public void exportExcel(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value = "bookname", required = false) String bookname,
@@ -619,13 +633,16 @@ public class FileDownLoadController {
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
 	}
+
 	/**
 	 * 角色遴选 批量导出主编、副主编
+	 * 
 	 * @param textbookIds
 	 * @param request
 	 * @param response
 	 * @throws IllegalAccessException
 	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "角色遴选 批量导出主编、副主编")
 	@RequestMapping(value = "/position/ExportEditor", method = RequestMethod.GET)
 	public void ExportEditor(@RequestParam("textbookIds") Long[] textbookIds, HttpServletRequest request,
 			HttpServletResponse response) throws IllegalAccessException {
