@@ -26,15 +26,15 @@ public class WriterPointServiceImpl implements WriterPointService{
 	@Override
 	public PageResult<WriterPoint> getListWriterPoint(PageParameter<WriterPoint> pageParameter)
 			throws CheckedServiceException {
-		 PageResult<WriterPoint> pageResult = new PageResult<WriterPoint>();
-	        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-//	        int total = writerPointDao.getWriterPoint();
-//	        if (total > 0) {
-//	            pageResult.setTotal(total);
-//	            List<WriterPoint> list = writerPointDao.getListOrgUser(pageParameter);
-//	            pageResult.setRows(list);
-//	        }
-	        return pageResult;
+		PageResult<WriterPoint> pageResult = new PageResult<WriterPoint>();
+	    PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+//	    int total = writerPointDao.getWriterPoint();
+//	    if (total > 0) {
+//	    	pageResult.setTotal(total);
+//	        List<WriterPoint> list = writerPointDao.getListOrgUser(pageParameter);
+//	        pageResult.setRows(list);
+//	    }
+	    return pageResult;
 	}
 
 	@Override
@@ -65,9 +65,7 @@ public class WriterPointServiceImpl implements WriterPointService{
 			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		Integer count=0;
-		count=writerPointDao.updateWriterPoint(writerPoint);
-		return count;
+		return writerPointDao.updateWriterPoint(writerPoint);
 	}
 
 	@Override
@@ -76,9 +74,7 @@ public class WriterPointServiceImpl implements WriterPointService{
 			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		Integer count=0;
-		count=writerPointDao.deleteWriterPoint(id);
-		return count;
+		return writerPointDao.deleteWriterPoint(id);
 	}
 
 	@Override
@@ -87,8 +83,7 @@ public class WriterPointServiceImpl implements WriterPointService{
 			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		WriterPoint writerPoint=writerPointDao.getWriterPoint(id);
-		return writerPoint;
+		return writerPointDao.getWriterPoint(id);
 	}
 
 }
