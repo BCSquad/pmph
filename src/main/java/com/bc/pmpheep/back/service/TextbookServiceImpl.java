@@ -674,14 +674,7 @@ public class TextbookServiceImpl implements TextbookService {
 		for (ExportDecPositionVO exportDecPositionVO : exportDecPositionVOs) {
 			decPositionBO.setTextbookName(exportDecPositionVO.getTextbookName());
 			decPositionBO.setTextbookRound(exportDecPositionVO.getTextbookRound());
-			List<WriterBO> writerBO=new ArrayList<>();
-			for (WriterBO writeBO : writerBO) {
-				writeBO.setRealname(exportDecPositionVO.getRealname());
-				writeBO.setRank(exportDecPositionVO.getRank());
-				writeBO.setChosenPosition(exportDecPositionVO.getChosenPosition());
-				writeBO.setChosenOrgName(exportDecPositionVO.getChosenOrgName());
-			}
-			decPositionBO.setWriters(writerBO);
+			//decPositionBO.setWriters();
 			decPositionBOs.add(decPositionBO);
 		}
 		return decPositionBOs;

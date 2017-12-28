@@ -83,7 +83,7 @@
 	
 	<!-- 通过广告id修改图片 -->
 	<update id="updateImageIsDisabled" parameterType="Long">
-		update cms_advertisement_image set is_disabled=#{isDisabled} 
-		where advert_id=#{advert_id} and id !=#{id}
+		update cms_advertisement_image set is_disabled=0 
+		where advert_id=#{advertId} and id !=#{id}
 	</update>
 </mapper>

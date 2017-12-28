@@ -115,12 +115,10 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 				//修改图片是否显示
 				cmsAdvertisementImageDao.updateCmsAdvertisementImage(cmsAdvertisementImage);
 			}
-			//把不启用的图片更改
+			//把不启用的图片更改禁用
 			cmsAdvertisementImage.setAdvertId(cmsAdvertisementOrImageVO.getId());
-			cmsAdvertisementImage.setIsDisabled((Boolean) !cmsAdvertisementOrImageVO.getIsDisplay());
 			cmsAdvertisementImageDao.updateImageIsDisabled(cmsAdvertisementImage);
 		}
-		
 		count = cmsAdvertisementDao.updateCmsAdvertisement(cmsAdvertisementOrImageVO);
 		return count;
 	}
