@@ -72,6 +72,7 @@ public class MigrationStageOne {
         org();
         orgUser();
         writerUser();
+        writerPoint();
         logger.info("迁移第一步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
@@ -583,7 +584,7 @@ public class MigrationStageOne {
         SQLParameters.STATISTICS.add(msg);
     }
     
-    protected void writerPoint() {
+    protected void writerPoint(){
         String tableName = "sys_user";
         String sql = "select sysu.*,sysu.new_pk id from sys_user sysu "
         		+ "left join sys_userext sysue ON sysu.userid = sysue.userid "
