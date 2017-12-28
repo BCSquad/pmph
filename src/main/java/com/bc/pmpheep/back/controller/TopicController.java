@@ -76,11 +76,11 @@ public class TopicController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "维护人员查询可操作的选题")
 	@RequestMapping(value = "/listOpts", method = RequestMethod.GET)
 	public ResponseBean listOpts(HttpServletRequest request, Integer pageSize, Integer pageNumber, String bookname,
-			Timestamp submitTime) {
+			String submitTime) {
 		PageParameter<TopicOPtsManagerVO> pageParameter = new PageParameter(pageNumber, pageSize);
 		TopicOPtsManagerVO topicOPtsManagerVO = new TopicOPtsManagerVO();
 		topicOPtsManagerVO.setBookname(bookname);
-		topicOPtsManagerVO.setSubmitTime(submitTime);
+		topicOPtsManagerVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
 		String sessionId = CookiesUtil.getSessionId(request);
 		pageParameter.setParameter(topicOPtsManagerVO);
 		return new ResponseBean(topicService.listOpts(sessionId, pageParameter));
@@ -130,11 +130,11 @@ public class TopicController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "部门主任查看可操作的选题")
 	@RequestMapping(value = "/listDirector", method = RequestMethod.GET)
 	public ResponseBean listDirector(HttpServletRequest request, Integer pageSize, Integer pageNumber, String bookName,
-			Timestamp submitTime) {
+			String submitTime) {
 		PageParameter<TopicDirectorVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		TopicDirectorVO topicDirectorVO = new TopicDirectorVO();
 		topicDirectorVO.setBookName(bookName);
-		topicDirectorVO.setSubmitTime(submitTime);
+		topicDirectorVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
 		String sessionId = CookiesUtil.getSessionId(request);
 		pageParameter.setParameter(topicDirectorVO);
 		return new ResponseBean(topicService.listTopicDirectorVOs(sessionId, pageParameter));
@@ -194,11 +194,11 @@ public class TopicController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "部门编辑查看可操作的申报选题")
 	@RequestMapping(value = "/listEditor", method = RequestMethod.GET)
 	public ResponseBean listEditor(HttpServletRequest request, Integer pageSize, Integer pageNumber, String bookName,
-			Timestamp submitTime) {
+			String submitTime) {
 		PageParameter<TopicEditorVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		TopicEditorVO topicEditorVO = new TopicEditorVO();
 		topicEditorVO.setBookName(bookName);
-		topicEditorVO.setSubmitTime(submitTime);
+		topicEditorVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
 		String sessionId = CookiesUtil.getSessionId(request);
 		pageParameter.setParameter(topicEditorVO);
 		return new ResponseBean(topicService.listTopicEditorVOs(sessionId, pageParameter));
@@ -278,7 +278,7 @@ public class TopicController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查看选题申报")
 	@RequestMapping(value = "/list/checkTopic", method = RequestMethod.GET)
-	public ResponseBean checkTopic(String authProgress, String bookname, Timestamp submitTime, Integer pageSize,
+	public ResponseBean checkTopic(String authProgress, String bookname, String submitTime, Integer pageSize,
 			Integer pageNumber) {
 		String[] strs = authProgress.split(",");
 		List<Long> progress = new ArrayList<>();
@@ -288,7 +288,7 @@ public class TopicController {
 		PageParameter<TopicDeclarationVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
 		topicDeclarationVO.setBookname(bookname);
-		topicDeclarationVO.setSubmitTime(submitTime);
+		topicDeclarationVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
 		pageParameter.setParameter(topicDeclarationVO);
 		return new ResponseBean(topicService.listCheckTopic(progress, pageParameter));
 	}
