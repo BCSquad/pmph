@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.ibatis.type.Alias;
 
+import com.bc.pmpheep.back.bo.WriterBO;
+
 /**
  * 
  * @author 主编/副主编
@@ -20,14 +22,8 @@ public class ExportDecPositionVO implements Serializable{
 	private String textbookName;
    	// 书籍轮次
 	private Integer textbookRound;
-	// 真实姓名
-    private String realname;
-    // 申报单位
-    private String chosenOrgName;
-    // 职务
-    private Integer chosenPosition;
-    // 排位
-    private Integer rank;
+	
+	private List<WriterBO> writers;
 	
 	public Integer getSort() {
 		return sort;
@@ -47,29 +43,11 @@ public class ExportDecPositionVO implements Serializable{
 	public void setTextbookRound(Integer textbookRound) {
 		this.textbookRound = textbookRound;
 	}
-	public String getRealname() {
-		return realname;
+	public List<WriterBO> getWriters() {
+		return writers;
 	}
-	public void setRealname(String realname) {
-		this.realname = realname;
-	}
-	public String getChosenOrgName() {
-		return chosenOrgName;
-	}
-	public void setChosenOrgName(String chosenOrgName) {
-		this.chosenOrgName = chosenOrgName;
-	}
-	public Integer getChosenPosition() {
-		return chosenPosition;
-	}
-	public void setChosenPosition(Integer chosenPosition) {
-		this.chosenPosition = chosenPosition;
-	}
-	public Integer getRank() {
-		return rank;
-	}
-	public void setRank(Integer rank) {
-		this.rank = rank;
+	public void setWriters(List<WriterBO> writers) {
+		this.writers = writers;
 	}
 	   
 }

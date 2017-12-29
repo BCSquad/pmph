@@ -132,7 +132,7 @@
 			select t.*,
 		CONCAT('[',GROUP_CONCAT(t.temp),']') image
 	 		from(
-				select ca.*,cai.id imageId,
+				select ca.*,
 				CONCAT('{id:',cai.id,',','image:"',CONCAT('/pmpheep/image/',cai.image),'",','advertId:',cai.advert_id,',','isDisabled:',if(cai.is_disabled,'true','false'),'}') temp,
 				cai.advert_id,cai.is_disabled isDisplay  
 				from cms_advertisement ca

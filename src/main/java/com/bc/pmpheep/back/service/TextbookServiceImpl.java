@@ -670,11 +670,18 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 		List<DecPositionBO> decPositionBOs=new ArrayList<>();
 		DecPositionBO decPositionBO=new DecPositionBO();
+		WriterBO writerBO=new WriterBO();
+		List<WriterBO> writerBOs=new ArrayList<>();
 		List<ExportDecPositionVO> exportDecPositionVOs=textbookDao.getExcelDecByMaterialId(textbookIds);
 		for (ExportDecPositionVO exportDecPositionVO : exportDecPositionVOs) {
 			decPositionBO.setTextbookName(exportDecPositionVO.getTextbookName());
 			decPositionBO.setTextbookRound(exportDecPositionVO.getTextbookRound());
-			//decPositionBO.setWriters();
+//			writerBO.setChosenOrgName(exportDecPositionVO.getWriters().get(0).getChosenOrgName());
+//			writerBO.setChosenPosition(exportDecPositionVO.getWriters().get(0).getChosenPosition());
+//			writerBO.setRank(exportDecPositionVO.getWriters().get(0).getRank());
+//			writerBO.setRealname(exportDecPositionVO.getWriters().get(0).getRealname());
+//			writerBOs.add(writerBO);
+			decPositionBO.setWriters(exportDecPositionVO.getWriters());
 			decPositionBOs.add(decPositionBO);
 		}
 		return decPositionBOs;
