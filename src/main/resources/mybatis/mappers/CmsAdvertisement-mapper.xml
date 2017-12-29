@@ -147,7 +147,7 @@
 	</select>
 	
 	<!-- 修改广告 -->	
-	<update id="updateCmsAdvertisement" parameterType="CmsAdvertisement">
+	<update id="updateCmsAdvertisement" parameterType="CmsAdvertisementOrImageVO">
 		update cms_advertisement 
 			<set>
 				<if test="url != null and url !=''">
@@ -160,7 +160,31 @@
 					is_disabled=#{isDisabled},
 				</if>
 				<if test="note != null and note != ''">
-					note=#{note}
+					note=#{note},
+				</if>
+				<if test="style != null and style != ''">
+					style=#{style},
+				</if>
+				<if test="type != null">
+					type=#{type},
+				</if>
+				<if test="autoPlay != null">
+					auto_play=#{autoPlay},
+				</if>
+				<if test="navigationColor != null and navigationColor != ''">
+					navigation_color=#{navigationColor},
+				</if>
+				<if test="isNavigation != null">
+					isNavigation=#{isNavigation},
+				</if>
+				<if test="animationInterval != null">
+					animation_interval=#{animationInterval},
+				</if>
+				<if test="animationEffect != null and animationEffect != ''">
+					animation_effect=#{animationEffect},
+				</if>
+				<if test="isShowHeading != null">
+					is_show_heading=#{isShowHeading},
 				</if>
 			</set>
 			 where
