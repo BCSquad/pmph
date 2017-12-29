@@ -239,7 +239,7 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                                                            material.getFounderId(),
                                                            DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                     DateUtil.getCurrentTime()),
-                                                           materialId, Const.CMS_CATEGORY_ID_1));
+                                                           materialId, Const.CMS_CATEGORY_ID_3));
         }
         // 教材通知附件
         // String[] noticeFiles = materialExtraVO.getNoticeFiles();
