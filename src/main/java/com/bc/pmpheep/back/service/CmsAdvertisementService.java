@@ -43,8 +43,8 @@ public interface CmsAdvertisementService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, MultipartFile file,
-			String sessionId, Long[] imageId) throws CheckedServiceException, IOException;
+	Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO,
+			String sessionId,Long[] imageId,Long[] disable) throws CheckedServiceException;
 
 	/**
 	 * 增加广告

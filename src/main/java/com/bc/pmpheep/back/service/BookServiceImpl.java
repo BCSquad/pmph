@@ -377,12 +377,19 @@ public class BookServiceImpl extends BaseService implements BookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
 					"查询出现问题，请重新加载");
 		}
+		String path = pageParameter.getParameter().getPath();
+		Long type = pageParameter.getParameter().getType();
+		if (StringUtil.notEmpty(path) && ObjectUtil.notNull(type)) {
+			path = path + "-" + String.valueOf(type);
+		}
 		PageResult<BookPreferenceAnalysisVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-		Integer total = bookDao.getBookPreferenceAnalysisTotal(pageParameter.getParameter().getBookname());
+		Integer total = bookDao.getBookPreferenceAnalysisTotal(pageParameter.getParameter().getBookname(),
+				pageParameter.getParameter().getType(), pageParameter.getParameter().getPath());
 		if (total > 0) {
 			pageResult.setRows(bookDao.getBookPreferenceAnalysis(pageParameter.getParameter().getBookname(),
-					pageParameter.getStart(), pageParameter.getPageSize()));
+					pageParameter.getStart(), pageParameter.getPageSize(), pageParameter.getParameter().getType(),
+					pageParameter.getParameter().getPath()));
 		}
 		pageResult.setTotal(total);
 		return pageResult;

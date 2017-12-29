@@ -88,7 +88,7 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 	/**
 	 * 图片表id
 	 */
-	private Long imageId;
+//	private Long imageId;
 	/**
 	 * 广告管理id
 	 */
@@ -103,13 +103,13 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 	private Boolean isDisplay;
 	
 	
-	public Long getImageId() {
-		return imageId;
-	}
-
-	public void setImageId(Long imageId) {
-		this.imageId = imageId;
-	}
+//	public Long getImageId() {
+//		return imageId;
+//	}
+//
+//	public void setImageId(Long imageId) {
+//		this.imageId = imageId;
+//	}
 
 	public Boolean getIsDisplay() {
 		return isDisplay;
@@ -273,5 +273,4 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 		super();
 	}
 
-	
 }
