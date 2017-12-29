@@ -15,6 +15,22 @@ public class BookPreferenceAnalysisVO implements Serializable {
 	 */
 	private String bookname;
 	/**
+	 * 图书isbn
+	 */
+	private String isbn;
+	/**
+	 * 图书类别
+	 */
+	private Long type;
+	/**
+	 * 书籍类别根路径
+	 */
+	private String path;
+	/**
+	 * 类别名称
+	 */
+	private String typeName;
+	/**
 	 * 点击数
 	 */
 	private Long clicks;
@@ -65,6 +81,38 @@ public class BookPreferenceAnalysisVO implements Serializable {
 
 	public void setCount(Long count) {
 		this.count = count;
+	}
+
+	public Long getType() {
+		return type;
+	}
+
+	public void setType(Long type) {
+		this.type = type;
+	}
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 }
