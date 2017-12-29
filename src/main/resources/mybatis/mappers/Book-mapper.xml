@@ -416,38 +416,43 @@
 		resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM
 		(SELECT
-		b.*,
-		(
+		b.*, (
 		CASE
 		WHEN t.count != '' THEN
 		t.count
 		ELSE
 		0
 		END
-		) count
+		) count,
+		m.type_name
 		FROM
 		book b
 		LEFT JOIN (
 		SELECT
 		b.id,
-		count(*) count
+		count(*)
+		count
 		FROM
 		book_user_comment c
-		LEFT JOIN
-		book b ON c.book_id = b.id
+		LEFT JOIN book b ON c.book_id = b.id
 		WHERE
-		c.is_auth =
-		TRUE
-		AND c.is_deleted =
-		FALSE
+		c.is_auth = TRUE
+		AND c.is_deleted = FALSE
 		AND c.is_hide = FALSE
-		AND c.score > 3
-		) t ON
-		t.id = b.id
+		AND
+		c.score > 3
+		) t ON t.id = b.id
+		LEFT JOIN material_type m ON m.id =
+		b.type
 		WHERE
-		1=1
+		1 = 1
 		<if test="bookname != null and bookname != ''">
-			AND b.bookname LIKE CONCAT('%', #{bookname}, '%')
+			AND (b.bookname LIKE CONCAT('%', #{bookname}, '%') OR
+			b.isbn LIKE CONCAT('%', #{bookname}, '%'))
+		</if>
+		<if test="path !=null and path != ''">
+			and (t.path like concat(#{path},'%') or
+			t.id=#{type})
 		</if>
 		ORDER BY
 		b.bookmarks DESC) t
@@ -456,15 +461,15 @@
 	<!-- 查询总数 -->
 	<select id="getBookPreferenceAnalysis" resultType="BookPreferenceAnalysisVO">
 		SELECT
-		b.*,
-		(
+		b.*, (
 		CASE
 		WHEN t.count != '' THEN
 		t.count
 		ELSE
 		0
 		END
-		) count
+		) count,
+		m.type_name
 		FROM
 		book b
 		LEFT JOIN (
@@ -473,19 +478,25 @@
 		count(*) count
 		FROM
 		book_user_comment c
-		LEFT JOIN
-		book b ON c.book_id = b.id
+		LEFT JOIN book b ON c.book_id = b.id
 		WHERE
-		c.is_auth = TRUE
-		AND c.is_deleted =
-		FALSE
+		c.is_auth
+		= TRUE
+		AND c.is_deleted = FALSE
 		AND c.is_hide = FALSE
 		AND c.score > 3
-		) t ON t.id = b.id
+		) t
+		ON t.id = b.id
+		LEFT JOIN material_type m ON m.id = b.type
 		WHERE
-		1=1
+		1 = 1
 		<if test="bookname != null and bookname != ''">
-			AND b.bookname LIKE CONCAT('%', #{bookname}, '%')
+			AND (b.bookname LIKE CONCAT('%', #{bookname}, '%') OR
+			b.isbn LIKE CONCAT('%', #{bookname}, '%'))
+		</if>
+		<if test="path !=null and path != ''">
+			and (t.path like concat(#{path},'%') or
+			t.id=#{type})
 		</if>
 		ORDER BY
 		b.bookmarks DESC
