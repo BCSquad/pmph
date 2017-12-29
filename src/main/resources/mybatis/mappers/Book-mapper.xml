@@ -451,8 +451,8 @@
 			b.isbn LIKE CONCAT('%', #{bookname}, '%'))
 		</if>
 		<if test="path !=null and path != ''">
-			and (t.path like concat(#{path},'%') or
-			t.id=#{type})
+			and (m.path like concat(#{path},'%') or
+			m.id=#{type})
 		</if>
 		ORDER BY
 		b.bookmarks DESC) t
@@ -495,8 +495,8 @@
 			b.isbn LIKE CONCAT('%', #{bookname}, '%'))
 		</if>
 		<if test="path !=null and path != ''">
-			and (t.path like concat(#{path},'%') or
-			t.id=#{type})
+			and (m.path like concat(#{path},'%') or
+			m.id=#{type})
 		</if>
 		ORDER BY
 		b.bookmarks DESC
