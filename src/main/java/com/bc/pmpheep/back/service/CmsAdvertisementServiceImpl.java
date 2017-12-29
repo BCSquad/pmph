@@ -82,7 +82,7 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 	}
 
 	@Override
-	public Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, String sessionId,Long[] imageId)
+	public Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, String sessionId,Long[] imageId,Long[] disable)
 			throws CheckedServiceException {
 		// session PmphUser用户验证
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -115,9 +115,13 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 				//修改图片是否显示
 				cmsAdvertisementImageDao.updateCmsAdvertisementImage(cmsAdvertisementImage);
 			}
-			//把不启用的图片更改禁用
-			cmsAdvertisementImage.setAdvertId(cmsAdvertisementOrImageVO.getId());
-			cmsAdvertisementImageDao.updateImageIsDisabled(cmsAdvertisementImage);
+		}
+		if(disable.length !=0 ){
+			for (int i = 0; i < disable.length; i++) {
+				//把不启用的图片更改禁用
+				cmsAdvertisementImage.setId(disable[i]);
+				cmsAdvertisementImageDao.updateImageIsDisabled(cmsAdvertisementImage);
+			}
 		}
 		count = cmsAdvertisementDao.updateCmsAdvertisement(cmsAdvertisementOrImageVO);
 		return count;

@@ -44,7 +44,7 @@ public interface CmsAdvertisementService {
 	 * @throws IOException
 	 */
 	Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO,
-			String sessionId,Long[] imageId) throws CheckedServiceException;
+			String sessionId,Long[] imageId,Long[] disable) throws CheckedServiceException;
 
 	/**
 	 * 增加广告
