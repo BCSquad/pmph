@@ -6,6 +6,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.vo.OrgVO;
+import com.bc.pmpheep.back.vo.WriterPointRuleVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -19,7 +20,17 @@ public interface WriterPointRuleService {
 	 * @return
 	 * @throws CheckedServiceException
 	 */
-	PageResult<WriterPointRule> getListWriterPointRule(PageParameter<WriterPointRule> pageParameter) throws CheckedServiceException;
+	PageResult<WriterPointRuleVO> getListWriterPointRule(PageParameter<WriterPointRuleVO> pageParameter) 
+			throws CheckedServiceException;
+	
+	/**
+	 * 分页查询积分兑换规则列表
+	 * @param pageParameter
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	PageResult<WriterPointRuleVO> getlistWriterPointRulePoint(PageParameter<WriterPointRuleVO> pageParameter) 
+			throws CheckedServiceException;
     
     /**
      * 修改积分规则

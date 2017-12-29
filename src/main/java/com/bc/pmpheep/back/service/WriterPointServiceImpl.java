@@ -2,12 +2,14 @@ package com.bc.pmpheep.back.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.dao.WriterPointDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.WriterPoint;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.vo.WriterPointVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -24,17 +26,18 @@ public class WriterPointServiceImpl implements WriterPointService{
 	WriterPointDao writerPointDao;
 	
 	@Override
-	public PageResult<WriterPoint> getListWriterPoint(PageParameter<WriterPoint> pageParameter)
+	public PageResult<WriterPointVO> getListWriterPoint(PageParameter<WriterPointVO> pageParameter)
 			throws CheckedServiceException {
-		PageResult<WriterPoint> pageResult = new PageResult<WriterPoint>();
-	    PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-//	    int total = writerPointDao.getWriterPoint();
-//	    if (total > 0) {
-//	    	pageResult.setTotal(total);
-//	        List<WriterPoint> list = writerPointDao.getListOrgUser(pageParameter);
-//	        pageResult.setRows(list);
-//	    }
-	    return pageResult;
+		PageResult<WriterPointVO> pageResult = new PageResult<WriterPointVO>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+//        List<WriterPointVO> writerPointRuleVOs = writerPointRuleDao.L(pageParameter);
+//        if (CollectionUtil.isNotEmpty(writerPointRuleVOs)) {
+//            Integer count = writerPointRuleVOs.get(0).getCount();
+//            pageResult.setTotal(count);
+//            pageResult.setRows(writerPointRuleVOs);
+//        }
+        return pageResult;
+	  
 	}
 
 	@Override

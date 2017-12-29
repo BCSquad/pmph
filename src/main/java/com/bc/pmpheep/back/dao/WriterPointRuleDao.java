@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.dao;
 import java.util.List;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.WriterPoint;
 import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.vo.WriterPointRuleVO;
 
