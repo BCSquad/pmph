@@ -82,7 +82,7 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 	}
 
 	@Override
-	public Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, String sessionId,Long[] imageId)
+	public Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, String sessionId,Long[] imageId,Long[] disable)
 			throws CheckedServiceException {
 		// session PmphUser用户验证
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -108,12 +108,19 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		}
 		Integer count = 0;
 		CmsAdvertisementImage cmsAdvertisementImage=new CmsAdvertisementImage();
-		if(imageId.length != 0 ){
+		if( 0 != imageId.length){
 			for (int i = 0; i < imageId.length; i++) {
 				cmsAdvertisementImage.setId(imageId[i]);
 				cmsAdvertisementImage.setIsDisabled((Boolean) cmsAdvertisementOrImageVO.getIsDisplay());
-				//修改图片是否显示
+				//修改图片为显示
 				cmsAdvertisementImageDao.updateCmsAdvertisementImage(cmsAdvertisementImage);
+			}
+		}
+		if( 0 !=disable.length  ){
+			for (int i = 0; i < disable.length; i++) {
+				//把不启用的图片更改禁用
+				cmsAdvertisementImage.setId(disable[i]);
+				cmsAdvertisementImageDao.updateImageIsDisabled(cmsAdvertisementImage);
 			}
 		}
 		count = cmsAdvertisementDao.updateCmsAdvertisement(cmsAdvertisementOrImageVO);
