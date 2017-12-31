@@ -37,10 +37,9 @@ public class WriterPoint implements java.io.Serializable{
 		this.id = id;
 	}
 	
-	public WriterPoint(Long id, Long userId, Integer total, Integer gain, 
+	public WriterPoint(Long userId, Integer total, Integer gain, 
 			Integer loss){
 		super();
-		this.id = id;
 		this.userId = userId;
 		this.total = total;
 		this.gain = gain;
