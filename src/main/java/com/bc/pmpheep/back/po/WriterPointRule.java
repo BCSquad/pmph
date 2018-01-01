@@ -45,11 +45,10 @@ public class WriterPointRule implements java.io.Serializable{
 		this.id = id;
 	}
 	
-	public WriterPointRule(Long id, String ruleName, String ruleCode, Integer point, 
+	public WriterPointRule(String ruleName, String ruleCode, Integer point, 
 			Boolean isExchange, String thirdName, Integer exchangePoint, String description, 
 			Boolean isDisabled){
 		super();
-		this.id = id;
 		this.ruleName = ruleName;
 		this.ruleCode = ruleCode;
 		this.point = point;
