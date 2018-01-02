@@ -22,8 +22,12 @@ public class DeclarationCountVO implements Serializable{
 	private Long materialId;
 	//院校申报总数
 	private Integer schoolDeclarationCount;
+	//院校当选总数
+	private Integer schoolDeclarationChosenCount;
 	//院校申报平均数
 	private Integer schoolDeclarationAverage;
+	//院校当选平均数
+	private Integer schoolDeclarationChosenAverage;
 	//主编申报总数
 	private Integer editorCount;
 	//副主编申报总数
@@ -37,7 +41,7 @@ public class DeclarationCountVO implements Serializable{
 	//副主编当选总数
 	private Integer chosenSubeditorCount;
 	//编委当选总数
-	private Integer chosenEditoralCount;
+	private Integer chosenEditorialCount;
 	//数字编委当选总数
 	private Integer chosenDigitalCount;
 	
@@ -61,6 +65,14 @@ public class DeclarationCountVO implements Serializable{
 		this.schoolDeclarationCount = schoolDeclarationCount;
 	}
 	
+	public Integer getSchoolDeclarationChosenCount() {
+		return schoolDeclarationChosenCount;
+	}
+
+	public void setSchoolDeclarationChosenCount(Integer schoolDeclarationChosenCount) {
+		this.schoolDeclarationChosenCount = schoolDeclarationChosenCount;
+	}
+
 	public Integer getSchoolDeclarationAverage() {
 		return schoolDeclarationAverage;
 	}
@@ -69,6 +81,15 @@ public class DeclarationCountVO implements Serializable{
 		this.schoolDeclarationAverage = schoolDeclarationAverage;
 	}
 	
+	public Integer getSchoolDeclarationChosenAverage() {
+		return schoolDeclarationChosenAverage;
+	}
+
+	public void setSchoolDeclarationChosenAverage(
+			Integer schoolDeclarationChosenAverage) {
+		this.schoolDeclarationChosenAverage = schoolDeclarationChosenAverage;
+	}
+
 	public Integer getEditorCount() {
 		return editorCount;
 	}
@@ -117,12 +138,12 @@ public class DeclarationCountVO implements Serializable{
 		this.chosenSubeditorCount = chosenSubeditorCount;
 	}
 
-	public Integer getChosenEditoralCount() {
-		return chosenEditoralCount;
+	public Integer getChosenEditorialCount() {
+		return chosenEditorialCount;
 	}
 
-	public void setChosenEditoralCount(Integer chosenEditoralCount) {
-		this.chosenEditoralCount = chosenEditoralCount;
+	public void setChosenEditorialCount(Integer chosenEditorialCount) {
+		this.chosenEditorialCount = chosenEditorialCount;
 	}
 
 	public Integer getChosenDigitalCount() {

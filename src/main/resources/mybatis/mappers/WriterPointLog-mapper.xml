@@ -76,7 +76,7 @@
 	
 	<!-- 用户积分记录分页列表（同时查询分页数据和总条数） -->
 	<select id="listWriterPointLogVO" parameterType="PageParameter" resultType="WriterPointLogVO">
-		select wpl.*,t.count 
+		select wpl.*,wu.username,wu.realname,t.count 
 		from writer_point_log wpl 
 		left join writer_user wu on wu.id=wpl.user_id
 		left join writer_point_rule wpr on wpr.id=wpl.rule_id,
