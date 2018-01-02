@@ -246,6 +246,16 @@ public interface DecPositionDao {
 
     /**
      * 
+     * Description:根据教材id获取院校当选总数
+     * @author:lyc
+     * @date:2018年1月2日下午4:12:15
+     * @param 
+     * @return Integer
+     */
+    Integer getSchoolDeclarationChosenCount(Long materialId);
+    
+    /**
+     * 
      * Description:根据教材id获取院校总数
      * 
      * @author:lyc
