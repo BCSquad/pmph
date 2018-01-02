@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,6 +9,7 @@ import com.bc.pmpheep.back.dao.WriterPointDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.WriterPoint;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.vo.WriterPointVO;
@@ -30,12 +33,12 @@ public class WriterPointServiceImpl implements WriterPointService{
 			throws CheckedServiceException {
 		PageResult<WriterPointVO> pageResult = new PageResult<WriterPointVO>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-//        List<WriterPointVO> writerPointRuleVOs = writerPointRuleDao.L(pageParameter);
-//        if (CollectionUtil.isNotEmpty(writerPointRuleVOs)) {
-//            Integer count = writerPointRuleVOs.get(0).getCount();
-//            pageResult.setTotal(count);
-//            pageResult.setRows(writerPointRuleVOs);
-//        }
+        List<WriterPointVO> writerPointRuleVOs = writerPointDao.listWriterPointVO(pageParameter);
+        if (CollectionUtil.isNotEmpty(writerPointRuleVOs)) {
+            Integer count = writerPointRuleVOs.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(writerPointRuleVOs);
+        }
         return pageResult;
 	  
 	}

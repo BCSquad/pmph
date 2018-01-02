@@ -8,9 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.annotation.Rollback;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.WriterPoint;
 import com.bc.pmpheep.back.service.WriterPointService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.vo.WriterPointVO;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -64,7 +67,7 @@ public class WriterPointServiceTest extends BaseTest {
 				writerPointService.getWriterPoint(writerPoint.getId()));
 	}
 	
-	/*@SuppressWarnings({ "unused", "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unused", "rawtypes", "unchecked" })
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void getListWriterPoint(){
@@ -76,6 +79,6 @@ public class WriterPointServiceTest extends BaseTest {
 		pageParameter.setPageSize(10);
 		pageResult = writerPointService.getListWriterPoint(pageParameter);
 		Assert.assertNotNull("分页数据失败", pageResult);
-	}*/
+	}
 	
 }
