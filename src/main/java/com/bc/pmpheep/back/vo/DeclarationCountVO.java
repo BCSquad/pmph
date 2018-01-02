@@ -37,7 +37,7 @@ public class DeclarationCountVO implements Serializable{
 	//副主编当选总数
 	private Integer chosenSubeditorCount;
 	//编委当选总数
-	private Integer chosenEditoralCount;
+	private Integer chosenEditorialCount;
 	//数字编委当选总数
 	private Integer chosenDigitalCount;
 	
@@ -117,12 +117,12 @@ public class DeclarationCountVO implements Serializable{
 		this.chosenSubeditorCount = chosenSubeditorCount;
 	}
 
-	public Integer getChosenEditoralCount() {
-		return chosenEditoralCount;
+	public Integer getChosenEditorialCount() {
+		return chosenEditorialCount;
 	}
 
-	public void setChosenEditoralCount(Integer chosenEditoralCount) {
-		this.chosenEditoralCount = chosenEditoralCount;
+	public void setChosenEditorialCount(Integer chosenEditorialCount) {
+		this.chosenEditorialCount = chosenEditorialCount;
 	}
 
 	public Integer getChosenDigitalCount() {
