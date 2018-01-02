@@ -470,6 +470,19 @@
 		WHERE d.preset_position IS NOT NULL AND c.id = #{materialId}  
 		AND b.is_staging = 0 AND b.online_progress >0;
     </select>
+    
+    <!-- 根据materialId查询学校当选总数 -->
+    <select id="getSchoolDeclarationChosenCount" parameterType="java.lang.Long"
+        resultType="java.lang.Integer">
+        SELECT count(d.id) count 
+		FROM org a 
+		LEFT JOIN declaration b ON a.id = b.org_id 
+		LEFT JOIN material c ON b.material_id = c.id 
+		LEFT JOIN dec_position d ON b.id = d.declaration_id 
+		WHERE d.chosen_position IS NOT NULL AND c.id = #{materialId}  
+		AND b.is_staging = 0 AND b.online_progress =3;
+    </select>
+    
     <!-- 根据materialId查询学校总数 -->
     <select id="getSchoolCount" parameterType="java.lang.Long" 
         resultType="java.lang.Integer">
