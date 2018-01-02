@@ -457,11 +457,14 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer schoolDeclarationAverage = 0;
         Integer schoolDeclarationChosenAverage = 0;
         if (decPositionDao.getSchoolCount(materialId) > 0) {
+        	/*
+        	 * 若院校数量大于0，计算院校申报平均数以及当选平均数
+        	 */
             schoolDeclarationAverage =
             		(int) Math.round((double) schoolDeclarationCount
                              / decPositionDao.getSchoolCount(materialId));
             schoolDeclarationChosenAverage = 
-            		(int)Math.round((double)schoolDeclarationChosenCount
+            		(int) Math.round((double)schoolDeclarationChosenCount
             				/decPositionDao.getSchoolCount(materialId));
         }
         Integer editorCount = decPositionDao.getEditorCount(materialId);
