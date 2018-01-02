@@ -59,7 +59,7 @@ public class WriterPointRuleServiceImpl implements WriterPointRuleService{
 		}
 		if(ObjectUtil.isNull(writerPointRule.getRuleName())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "积分规则名称为空");
+					CheckedExceptionResult.NULL_PARAM, "积分或兑换规则名称为空");
 		}
 		writerPointRuleDao.addWriterPointRule(writerPointRule);
 		return writerPointRule;
