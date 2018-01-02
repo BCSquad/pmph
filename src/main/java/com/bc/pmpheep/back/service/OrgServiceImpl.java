@@ -128,7 +128,18 @@ public class OrgServiceImpl extends BaseService implements OrgService {
         }
         return orgDao.getOrgById(id);
     }
-
+    
+    @Override
+    public Org getOrgByNameAndUserName(String name,String username) throws CheckedServiceException{
+    	if(StringUtil.isEmpty(name)){
+    		throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构名称为空");
+    	}
+    	if(StringUtil.isEmpty(username)){
+    		throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构代码为空");
+    	}
+    	return orgDao.getOrgByNameAndUserName( name.trim(), username.trim());
+    }
+    
     /**
      * 
      * @param id

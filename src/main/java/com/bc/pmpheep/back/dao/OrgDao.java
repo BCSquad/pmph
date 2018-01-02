@@ -41,7 +41,16 @@ public interface OrgDao {
      * @throws CheckedServiceException
      */
     Org getOrgById(Long id);
-
+    
+    /**
+     * 根据学校名称和学校机构代码获取机构
+     * @param name  学校名称
+     * @param username 机构代码
+     * @return Org
+     * @throws CheckedServiceException
+     */
+    Org getOrgByNameAndUserName(@Param("name")String name,@Param("username")String username);
+    
     /**
      * 
      * @param id

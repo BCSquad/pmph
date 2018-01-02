@@ -44,6 +44,18 @@ public interface OrgService {
      * @throws CheckedServiceException
      */
     Org getOrgById(Long id) throws CheckedServiceException;
+    
+    /**
+     * 根据学校名称和学校机构代码获取机构
+     * @introduction 
+     * @author Mryang
+     * @createDate 2018年1月2日 下午2:33:48
+     * @param name   学校名称
+     * @param username 机构代码
+     * @return
+     * @throws CheckedServiceException
+     */
+    Org getOrgByNameAndUserName(String name,String username) throws CheckedServiceException;
 
     /**
      * 
