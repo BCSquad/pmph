@@ -98,7 +98,8 @@ public interface BookDao {
 	 *
 	 */
 	List<BookPreferenceAnalysisVO> getBookPreferenceAnalysis(@Param("bookname") String bookname,
-			@Param("start") Integer start, @Param("pageSize") Integer pageSize);
+			@Param("start") Integer start, @Param("pageSize") Integer pageSize, @Param("type") Long type,
+			@Param("path") String path);
 
 	/**
 	 * 
@@ -109,5 +110,6 @@ public interface BookDao {
 	 * @return
 	 *
 	 */
-	Integer getBookPreferenceAnalysisTotal(@Param("bookname") String bookname);
+	Integer getBookPreferenceAnalysisTotal(@Param("bookname") String bookname, @Param("type") Long type,
+			@Param("path") String path);
 }

@@ -1,5 +1,8 @@
 package com.bc.pmpheep.back.service;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.WriterPointLog;
+import com.bc.pmpheep.back.vo.WriterPointLogVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -40,4 +43,11 @@ public interface WriterPointLogService {
 	 * @throws CheckedServiceException
 	 */
 	Integer delete(Long id)throws CheckedServiceException;
+	
+	/**
+	 * 分页查询积分记录
+	 * @param pageParameter
+	 * @return
+	 */
+	PageResult<WriterPointLogVO> getListWriterPointLog (PageParameter<WriterPointLogVO> pageParameter);
 }

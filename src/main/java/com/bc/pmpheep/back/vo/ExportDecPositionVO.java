@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.ibatis.type.Alias;
 
+import com.bc.pmpheep.back.bo.WriterBO;
+
 /**
  * 
  * @author 主编/副主编
@@ -29,24 +31,6 @@ public class ExportDecPositionVO implements Serializable{
     // 排位
     private Integer rank;
 	
-	public Integer getSort() {
-		return sort;
-	}
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
-	public String getTextbookName() {
-		return textbookName;
-	}
-	public void setTextbookName(String textbookName) {
-		this.textbookName = textbookName;
-	}
-	public Integer getTextbookRound() {
-		return textbookRound;
-	}
-	public void setTextbookRound(Integer textbookRound) {
-		this.textbookRound = textbookRound;
-	}
 	public String getRealname() {
 		return realname;
 	}
@@ -70,6 +54,32 @@ public class ExportDecPositionVO implements Serializable{
 	}
 	public void setRank(Integer rank) {
 		this.rank = rank;
+	}
+	private List<WriterVO> writers;
+	
+	public Integer getSort() {
+		return sort;
+	}
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+	public String getTextbookName() {
+		return textbookName;
+	}
+	public void setTextbookName(String textbookName) {
+		this.textbookName = textbookName;
+	}
+	public Integer getTextbookRound() {
+		return textbookRound;
+	}
+	public void setTextbookRound(Integer textbookRound) {
+		this.textbookRound = textbookRound;
+	}
+	public List<WriterVO> getWriters() {
+		return writers;
+	}
+	public void setWriters(List<WriterVO> writers) {
+		this.writers = writers;
 	}
 	   
 }

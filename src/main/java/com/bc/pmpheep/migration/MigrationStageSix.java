@@ -154,7 +154,7 @@ public class MigrationStageSix {
                 + "left join sys_user s on s.userid=wd.userid "
                 + "left join sys_userext su on su.userid=wd.userid "
                 + "left join teach_applyposition ta on ta.writerid=wd.writerid "
-                + "where su.userid is not null ";
+                + "where su.userid is not null and su.usertype !=2";
         //+ "group by wd.writerid order by s.sysflag ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql); // 查询所有数据
         int count = 0; // 迁移成功的条目数

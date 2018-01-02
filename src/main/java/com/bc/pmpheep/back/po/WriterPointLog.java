@@ -33,9 +33,8 @@ public class WriterPointLog implements java.io.Serializable{
 		this.id = id;
 	}
 	
-	public WriterPointLog(Long id, Long userId, Long ruleId, Integer point){
+	public WriterPointLog(Long userId, Long ruleId, Integer point){
 		super();
-		this.id = id;
 		this.userId = userId;
 		this.ruleId = ruleId;
 		this.point = point;

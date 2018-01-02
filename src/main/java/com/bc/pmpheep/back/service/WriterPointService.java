@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.WriterPoint;
+import com.bc.pmpheep.back.vo.WriterPointVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -18,7 +19,7 @@ public interface WriterPointService {
 	 * @return
 	 * @throws CheckedServiceException
 	 */
-	PageResult<WriterPoint> getListWriterPoint(PageParameter<WriterPoint> pageParameter) throws CheckedServiceException;
+	PageResult<WriterPointVO> getListWriterPoint(PageParameter<WriterPointVO> pageParameter) throws CheckedServiceException;
 	
 	/**
 	 * 添加用户积分

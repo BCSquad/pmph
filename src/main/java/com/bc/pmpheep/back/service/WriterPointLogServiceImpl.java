@@ -1,10 +1,19 @@
 package com.bc.pmpheep.back.service;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.WriterPointLogDao;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.WriterPointLog;
+import com.bc.pmpheep.back.po.WriterPointRule;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.vo.OrgVO;
+import com.bc.pmpheep.back.vo.WriterPointLogVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -55,6 +64,20 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		return writerPointLogDao.deleteWriterPointLog(id);
+	}
+
+	@Override
+	public PageResult<WriterPointLogVO> getListWriterPointLog(PageParameter<WriterPointLogVO> pageParameter) {
+		PageResult<WriterPointLogVO> pageResult = new PageResult<WriterPointLogVO>();
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        List<WriterPointLogVO> writerPointLogVOs = writerPointLogDao.listWriterPointLogVO(pageParameter);
+        if (CollectionUtil.isNotEmpty(writerPointLogVOs)) {
+            Integer count = writerPointLogVOs.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(writerPointLogVOs);
+        }
+        return pageResult;
+	    
 	}
 
 }

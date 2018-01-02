@@ -46,6 +46,7 @@ import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
 import com.bc.pmpheep.back.vo.ExportDecPositionVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
+import com.bc.pmpheep.back.vo.WriterVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -669,12 +670,17 @@ public class TextbookServiceImpl implements TextbookService {
                     CheckedExceptionResult.NULL_PARAM, "教材id为空");
 		}
 		List<DecPositionBO> decPositionBOs=new ArrayList<>();
-		DecPositionBO decPositionBO=new DecPositionBO();
 		List<ExportDecPositionVO> exportDecPositionVOs=textbookDao.getExcelDecByMaterialId(textbookIds);
+		DecPositionBO decPositionBO=new DecPositionBO();
+		WriterBO writerBO=new WriterBO();
 		for (ExportDecPositionVO exportDecPositionVO : exportDecPositionVOs) {
 			decPositionBO.setTextbookName(exportDecPositionVO.getTextbookName());
 			decPositionBO.setTextbookRound(exportDecPositionVO.getTextbookRound());
-			//decPositionBO.setWriters();
+			writerBO.setChosenOrgName(exportDecPositionVO.getChosenOrgName());
+			writerBO.setChosenPosition(exportDecPositionVO.getChosenPosition());
+			writerBO.setRealname(exportDecPositionVO.getRealname());
+			writerBO.setRank(exportDecPositionVO.getRank());
+			decPositionBO.setWriters((List<WriterBO>) writerBO);
 			decPositionBOs.add(decPositionBO);
 		}
 		return decPositionBOs;

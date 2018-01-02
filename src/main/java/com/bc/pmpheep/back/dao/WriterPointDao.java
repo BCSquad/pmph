@@ -58,4 +58,5 @@ public interface WriterPointDao {
 	 * @return
 	 */
 	List<WriterPointVO> listWriterPointVO(PageParameter<WriterPointVO> pageParameter);
+	
 }

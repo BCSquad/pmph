@@ -81,9 +81,8 @@
 		delete from cms_advertisement_image where id=#{id}
 	</delete>
 	
-	<!-- 通过广告id修改图片 -->
+	<!-- 通过广告id修改图片为禁用 -->
 	<update id="updateImageIsDisabled" parameterType="Long">
-		update cms_advertisement_image set is_disabled=0 
-		where advert_id=#{advertId} and id !=#{id}
+		update cms_advertisement_image set is_disabled=true where id=#{id}
 	</update>
 </mapper>
