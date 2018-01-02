@@ -88,7 +88,7 @@
 				<if test="parameter !=null ">
 					<!-- 用户id -->
 					<if test="parameter.userId != null">
-						and wu.user_id = #{parameter.userId}
+						and wu.id = #{parameter.userId}
 					</if>
 				</if>) t 
 		where 1 = 1 
@@ -96,7 +96,7 @@
 		<if test="parameter !=null ">
 			<!-- 用户id -->
 			<if test="parameter.userId != null">
-				and wu.user_id = #{parameter.userId}
+				and wu.id = #{parameter.userId}
 			</if>
 		</if>
 		group by wpl.id desc 
