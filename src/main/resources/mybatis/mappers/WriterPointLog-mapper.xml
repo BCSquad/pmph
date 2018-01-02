@@ -90,13 +90,6 @@
 					<if test="parameter.userId != null">
 						and wu.user_id = #{parameter.userId}
 					</if>
-					<!-- 用户名称 -->
-					<if test="parameter.username !=null and parameter.username!=''">
-						and (
-							wu.username like concat('%',#{parameter.username},'%')
-						or
-							wu.realname like concat('%',#{parameter.username},'%') )
-					</if>
 				</if>) t 
 		where 1 = 1 
 		<!-- 下面是动态条件 -->
@@ -104,13 +97,6 @@
 			<!-- 用户id -->
 			<if test="parameter.userId != null">
 				and wu.user_id = #{parameter.userId}
-			</if>
-			<!-- 用户名称 -->
-			<if test="parameter.username !=null and parameter.username!=''">
-				and (
-					wu.username like concat('%',#{parameter.username},'%')
-				or
-					wu.realname like concat('%',#{parameter.username},'%') )
 			</if>
 		</if>
 		group by wpl.id desc 
