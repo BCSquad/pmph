@@ -91,6 +91,15 @@
 		resultType="Org">
 		select * from org where id=#{id} ;
 	</select>
+	
+	<!-- 根据机构名称机构代码查询一个Org -->
+	<select id="getOrgByNameAndUserName"  resultType="Org">
+		select DISTINCT a.* 
+		from org a 
+		LEFT JOIN org_user b on b.org_id = a.id 
+		where  !a.is_deleted and !b.is_deleted and !b.is_disabled  
+		and  a.org_name = #{name} and b.username = #{username}  ;
+	</select>
 
 	<!--获取学校管理员审核列表 -->
 	<select id="getSchoolAdminCheckList" parameterType="PageParameter"
