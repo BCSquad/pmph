@@ -300,6 +300,46 @@ public interface DecPositionDao {
     
     /**
      * 
+     * Description:根据教材id获取主编当选总数
+     * @author:lyc
+     * @date:2018年1月2日下午3:38:02
+     * @param 
+     * @return Integer
+     */
+    Integer getChosenEditorCount(Long materialId);
+    
+    /**
+     * 
+     * Description:根据教材id获取副主编当选总数
+     * @author:lyc
+     * @date:2018年1月2日下午3:38:44
+     * @param 
+     * @return Integer
+     */
+    Integer getChosenSubeditorCount(Long materialId);
+    
+    /**
+     * 
+     * Description:根据教材id获取编委当选总数
+     * @author:lyc
+     * @date:2018年1月2日下午3:39:09
+     * @param 
+     * @return Integer
+     */
+    Integer getChosenEditorialCount(Long materialId);
+    
+    /**
+     * 
+     * Description:根据教材id获取数字编委当选总数
+     * @author:lyc
+     * @date:2018年1月2日下午3:39:36
+     * @param 
+     * @return Integer
+     */
+    Integer getChosenDigitalCount(Long materialId);
+    
+    /**
+     * 
      * Description:根据教材id（和学校名称）查询学校申报情况（按当选结果排序）
      * 
      * @author:lyc
