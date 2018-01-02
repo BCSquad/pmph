@@ -83,8 +83,36 @@
 		(select count(*) count from writer_point_log wpl 
 			left join writer_user wu on wu.id=wpl.user_id 
 			left join writer_point_rule wpr on wpr.id=wpl.rule_id 
-			where 1 = 1 ) t 
+			where 1 = 1 
+			<!-- 下面是动态条件 -->
+				<if test="parameter !=null ">
+					<!-- 用户id -->
+					<if test="parameter.userId != null">
+						and wu.user_id = #{parameter.userId}
+					</if>
+					<!-- 用户名称 -->
+					<if test="parameter.username !=null and parameter.username!=''">
+						and (
+							wu.username like concat('%',#{parameter.username},'%')
+						or
+							wu.realname like concat('%',#{parameter.username},'%') )
+					</if>
+				</if>) t 
 		where 1 = 1 
+		<!-- 下面是动态条件 -->
+		<if test="parameter !=null ">
+			<!-- 用户id -->
+			<if test="parameter.userId != null">
+				and wu.user_id = #{parameter.userId}
+			</if>
+			<!-- 用户名称 -->
+			<if test="parameter.username !=null and parameter.username!=''">
+				and (
+					wu.username like concat('%',#{parameter.username},'%')
+				or
+					wu.realname like concat('%',#{parameter.username},'%') )
+			</if>
+		</if>
 		group by wpl.id desc 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}

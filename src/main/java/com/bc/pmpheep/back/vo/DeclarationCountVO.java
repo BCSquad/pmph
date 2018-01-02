@@ -32,6 +32,14 @@ public class DeclarationCountVO implements Serializable{
 	private Integer editorialCount;
 	//数字编委申报数
 	private Integer digitalCount;
+	//主编当选总数
+	private Integer chosenEditorCount;
+	//副主编当选总数
+	private Integer chosenSubeditorCount;
+	//编委当选总数
+	private Integer chosenEditoralCount;
+	//数字编委当选总数
+	private Integer chosenDigitalCount;
 	
 	public DeclarationCountVO() {
 		super();
@@ -91,6 +99,38 @@ public class DeclarationCountVO implements Serializable{
 
 	public void setDigitalCount(Integer digitalCount) {
 		this.digitalCount = digitalCount;
+	}
+
+	public Integer getChosenEditorCount() {
+		return chosenEditorCount;
+	}
+
+	public void setChosenEditorCount(Integer chosenEditorCount) {
+		this.chosenEditorCount = chosenEditorCount;
+	}
+
+	public Integer getChosenSubeditorCount() {
+		return chosenSubeditorCount;
+	}
+
+	public void setChosenSubeditorCount(Integer chosenSubeditorCount) {
+		this.chosenSubeditorCount = chosenSubeditorCount;
+	}
+
+	public Integer getChosenEditoralCount() {
+		return chosenEditoralCount;
+	}
+
+	public void setChosenEditoralCount(Integer chosenEditoralCount) {
+		this.chosenEditoralCount = chosenEditoralCount;
+	}
+
+	public Integer getChosenDigitalCount() {
+		return chosenDigitalCount;
+	}
+
+	public void setChosenDigitalCount(Integer chosenDigitalCount) {
+		this.chosenDigitalCount = chosenDigitalCount;
 	}
 	
 }
