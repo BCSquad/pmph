@@ -453,11 +453,16 @@ public class DecPositionServiceImpl implements DecPositionService {
     public DeclarationCountVO getDeclarationCountVO(Long materialId) throws CheckedServiceException {
         DeclarationCountVO declarationCountVO = new DeclarationCountVO();
         Integer schoolDeclarationCount = decPositionDao.getSchoolDeclarationCount(materialId);
+        Integer schoolDeclarationChosenCount = decPositionDao.getSchoolDeclarationChosenCount(materialId);
         Integer schoolDeclarationAverage = 0;
+        Integer schoolDeclarationChosenAverage = 0;
         if (decPositionDao.getSchoolCount(materialId) > 0) {
             schoolDeclarationAverage =
-            (int) Math.round((double) schoolDeclarationCount
+            		(int) Math.round((double) schoolDeclarationCount
                              / decPositionDao.getSchoolCount(materialId));
+            schoolDeclarationChosenAverage = 
+            		(int)Math.round((double)schoolDeclarationChosenCount
+            				/decPositionDao.getSchoolCount(materialId));
         }
         Integer editorCount = decPositionDao.getEditorCount(materialId);
         Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);
@@ -468,7 +473,9 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer chosenEditorialCount = decPositionDao.getChosenEditorialCount(materialId);
         Integer chosenDigitalCount = decPositionDao.getChosenDigitalCount(materialId);
         declarationCountVO.setSchoolDeclarationCount(schoolDeclarationCount);
+        declarationCountVO.setSchoolDeclarationChosenCount(schoolDeclarationChosenCount);
         declarationCountVO.setSchoolDeclarationAverage(schoolDeclarationAverage);
+        declarationCountVO.setSchoolDeclarationChosenAverage(schoolDeclarationChosenAverage);
         declarationCountVO.setEditorCount(editorCount);
         declarationCountVO.setSubEditorCount(subEditorCount);
         declarationCountVO.setEditorialCount(editorialCount);
