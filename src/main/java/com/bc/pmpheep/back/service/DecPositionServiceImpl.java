@@ -463,12 +463,20 @@ public class DecPositionServiceImpl implements DecPositionService {
         Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);
         Integer editorialCount = decPositionDao.getEditorialCount(materialId);
         Integer digitalCount = decPositionDao.getDigitalCount(materialId);
+        Integer chosenEditorCount = decPositionDao.getChosenEditorCount(materialId);
+        Integer chosenSubeditorCount = decPositionDao.getChosenSubeditorCount(materialId);
+        Integer chosenEditorialCount = decPositionDao.getChosenEditorialCount(materialId);
+        Integer chosenDigitalCount = decPositionDao.getChosenDigitalCount(materialId);
         declarationCountVO.setSchoolDeclarationCount(schoolDeclarationCount);
         declarationCountVO.setSchoolDeclarationAverage(schoolDeclarationAverage);
         declarationCountVO.setEditorCount(editorCount);
         declarationCountVO.setSubEditorCount(subEditorCount);
         declarationCountVO.setEditorialCount(editorialCount);
         declarationCountVO.setDigitalCount(digitalCount);
+        declarationCountVO.setChosenEditorCount(chosenEditorCount);
+        declarationCountVO.setChosenSubeditorCount(chosenSubeditorCount);
+        declarationCountVO.setChosenEditorialCount(chosenEditorialCount);
+        declarationCountVO.setChosenDigitalCount(chosenDigitalCount);
         declarationCountVO.setMaterialId(materialId);
         return declarationCountVO;
     }
