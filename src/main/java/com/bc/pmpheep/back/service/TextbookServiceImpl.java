@@ -46,7 +46,6 @@ import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
 import com.bc.pmpheep.back.vo.ExportDecPositionVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
-import com.bc.pmpheep.back.vo.WriterVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -663,8 +662,28 @@ public class TextbookServiceImpl implements TextbookService {
 		return textbooks;
 	}
 
+//	@Override
+//	public List<DecPositionBO> getExcelDecByMaterialId(Long[] textbookIds) {
+//		if(null==textbookIds){
+//			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
+//                    CheckedExceptionResult.NULL_PARAM, "教材id为空");
+//		}
+//		List<DecPositionBO> decPositionBOs=new ArrayList<>();
+//		List<ExportDecPositionVO> exportDecPositionVOs=textbookDao.getExcelDecByMaterialId(textbookIds);
+//		DecPositionBO decPositionBO=new DecPositionBO();
+//		List<WriterBO> writerBOs=textbookDao.getWriterBOTextbooks(textbookIds);
+//		for (ExportDecPositionVO exportDecPositionVO : exportDecPositionVOs) {
+//			decPositionBO.setTextbookName(exportDecPositionVO.getTextbookName());
+//			decPositionBO.setTextbookRound(exportDecPositionVO.getTextbookRound());
+//			decPositionBOs.add(decPositionBO);
+//		}
+//		decPositionBO.setWriters(writerBOs);
+//		decPositionBOs.add(decPositionBO);
+//		return decPositionBOs;
+//	}
+
 	@Override
-	public List<DecPositionBO> getExcelDecByMaterialId(Long[] textbookIds) {
+	public List<DecPositionBO> getExcelDecByMaterialId(Long[] textbookIds, String textbookName, Integer textbookRoun) {
 		if(null==textbookIds){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
                     CheckedExceptionResult.NULL_PARAM, "教材id为空");
@@ -672,17 +691,14 @@ public class TextbookServiceImpl implements TextbookService {
 		List<DecPositionBO> decPositionBOs=new ArrayList<>();
 		List<ExportDecPositionVO> exportDecPositionVOs=textbookDao.getExcelDecByMaterialId(textbookIds);
 		DecPositionBO decPositionBO=new DecPositionBO();
-		WriterBO writerBO=new WriterBO();
+		List<WriterBO> writerBOs=textbookDao.getWriterBOTextbooks(textbookIds);
 		for (ExportDecPositionVO exportDecPositionVO : exportDecPositionVOs) {
 			decPositionBO.setTextbookName(exportDecPositionVO.getTextbookName());
 			decPositionBO.setTextbookRound(exportDecPositionVO.getTextbookRound());
-			writerBO.setChosenOrgName(exportDecPositionVO.getChosenOrgName());
-			writerBO.setChosenPosition(exportDecPositionVO.getChosenPosition());
-			writerBO.setRealname(exportDecPositionVO.getRealname());
-			writerBO.setRank(exportDecPositionVO.getRank());
-			decPositionBO.setWriters((List<WriterBO>) writerBO);
 			decPositionBOs.add(decPositionBO);
 		}
+		decPositionBO.setWriters(writerBOs);
+		decPositionBOs.add(decPositionBO);
 		return decPositionBOs;
 	}
 }

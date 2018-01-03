@@ -6,6 +6,8 @@ package com.bc.pmpheep.back.bo;
 
 import java.util.List;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
+
 /**
  * 教材遴选表业务对象，用于Excel/Word(批量)导出
  *
@@ -13,10 +15,10 @@ import java.util.List;
  */
 public class DecPositionBO {
 
-    private Integer sort;
+	private Integer sort;
 
-    private String textbookName;
-
+	private String textbookName;
+	
     private Integer textbookRound;
 
     private List<WriterBO> writers;
