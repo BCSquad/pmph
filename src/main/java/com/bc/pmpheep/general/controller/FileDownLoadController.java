@@ -576,9 +576,11 @@ public class FileDownLoadController {
 	@RequestMapping(value = "/position/ExportEditor", method = RequestMethod.GET)
 	public void ExportEditor(Long[] textbookIds,String textbookName,Integer textbookRoun,
 			HttpServletRequest request,HttpServletResponse response) throws IllegalAccessException {
+		List<DecPositionBO> list;
 		Workbook workbook = null;
 		try {
-			workbook = excelHelper.fromDecPositionBOList(textbookService.getExcelDecByMaterialId(textbookIds), "主编/副主编");
+			list=textbookService.getExcelDecByMaterialId(textbookIds,textbookName,textbookRoun);
+			workbook = excelHelper.fromDecPositionBOList(list, "主编/副主编");
 		} catch (CheckedServiceException | IllegalArgumentException e) {
 			logger.warn("数据表格化的时候失败");
 		}

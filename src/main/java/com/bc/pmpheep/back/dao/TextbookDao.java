@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.bo.WriterBO;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.vo.BookListVO;
@@ -180,4 +181,11 @@ public interface TextbookDao {
 	 * @return
 	 */
 	List<ExportDecPositionVO> getExcelDecByMaterialId(Long[] textbookIds);
+	
+	/**
+	 * 查询作家
+	 * @param textbookIds
+	 * @return
+	 */
+	List<WriterBO> getWriterBOTextbooks(Long[] textbookIds);
 }
