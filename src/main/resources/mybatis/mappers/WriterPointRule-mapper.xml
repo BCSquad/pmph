@@ -122,8 +122,10 @@
 	<!-- 积分规则表分页列表（同时查询分页数据和总条数）积分规则管理 -->
 	<select id="listWriterPointRule" parameterType="PageParameter" resultType="WriterPointRuleVO">
 		select wpr.*,t.count 
-		from writer_point_rule wpr ,
+		from writer_point_rule wpr 
+		left join writer_point_log wpl on wpl.rule_id = wpr.id,
 		(select count(*) count from writer_point_rule wpr 
+			left join writer_point_log wpl on wpl.rule_id = wpr.id
 			where wpr.is_exchange = false 
 				<!-- 下面是动态条件 -->
 				<if test="parameter !=null ">
@@ -137,7 +139,7 @@
 					</if>
 				</if>
 				) t 
-		wpr.is_exchange = false 
+		where wpr.is_exchange = false 
 		<!-- 下面是动态条件 -->
 		<if test="parameter !=null ">
 			<!-- 积分规则名称 -->
@@ -158,8 +160,10 @@
 	<!-- 积分规则表分页列表（同时查询分页数据和总条数）积分兑换规则 -->
 	<select id="listWriterPointRulePoint" parameterType="PageParameter" resultType="WriterPointRuleVO">
 		select wpr.*,t.count 
-		from writer_point_rule wpr ,
+		from writer_point_rule wpr 
+		left join writer_point_log wpl on wpl.rule_id = wpr.id,
 		(select count(*) count from writer_point_rule wpr 
+			left join writer_point_log wpl on wpl.rule_id = wpr.id
 			where wpr.is_exchange = true 
 				<!-- 下面是动态条件 -->
 				<if test="parameter !=null ">
@@ -169,7 +173,7 @@
 					</if>
 				</if>
 				) t 
-		wpr.is_exchange = true 
+		where wpr.is_exchange = true 
 		<!-- 下面是动态条件 -->
 		<if test="parameter !=null ">
 			<!-- 目标平台名称 -->

@@ -19,6 +19,7 @@ import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.TopicService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
@@ -171,6 +172,9 @@ public class TopicController {
 	public ResponseBean directorHandling(Long id, Long editorId, Boolean isRejectedByDirector, String reasonDirector) {
 		Topic topic = new Topic();
 		topic.setId(id);
+		if (ObjectUtil.isNull(isRejectedByDirector)){
+			isRejectedByDirector = false ;
+		}
 		topic.setIsRejectedByDirector(isRejectedByDirector);
 		if (isRejectedByDirector) {
 			topic.setIsDirectorHandling(false);
@@ -241,9 +245,13 @@ public class TopicController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "编辑对选题进行操作")
 	@RequestMapping(value = "/put/editorHandling", method = RequestMethod.PUT)
 	public ResponseBean editorHandling(Long id, Integer authProgress, String authFeedback, Boolean isRejectedByEditor,
-			String reasonEditor) {
+			Boolean isEditorHandling, String reasonEditor) {
 		Topic topic = new Topic();
 		topic.setId(id);
+		topic.setIsEditorHandling(isEditorHandling);
+		if (ObjectUtil.isNull(isRejectedByEditor)){
+			isEditorHandling = false ;
+		}
 		topic.setIsRejectedByEditor(isRejectedByEditor);
 		if (isRejectedByEditor) {
 			topic.setIsEditorHandling(false);

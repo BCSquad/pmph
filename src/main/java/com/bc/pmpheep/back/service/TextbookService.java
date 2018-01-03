@@ -185,6 +185,8 @@ public interface TextbookService {
 	
 	/**
 	 * 通过教材id查询该教材的主编/副主编
+	 * @param textbookRoun 
+	 * @param textbookName 
 	 * @param materialId
 	 * @return
 	 */

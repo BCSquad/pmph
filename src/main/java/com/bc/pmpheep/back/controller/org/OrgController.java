@@ -6,7 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,6 +35,7 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.google.gson.Gson;
 
 /**
  * @author MrYang
@@ -225,11 +228,12 @@ public class OrgController {
 		//sheet数目
 		//int sheetTotal = workbook.getNumberOfSheets() ;
 		Sheet sheet = workbook.getSheetAt(0);
-		List<Org> orgs = new ArrayList<Org>(sheet.getLastRowNum());
+		List<Org>    orgs  = new ArrayList<Org>(sheet.getLastRowNum());
+		List<String> erros = new ArrayList<String>(sheet.getLastRowNum());
 		for (int rowNum = 1 ; rowNum <= sheet.getLastRowNum();rowNum ++){
 			Row row = sheet.getRow(rowNum);
 			if (null == row){
-				break;
+				continue;
 			}
 			Cell cell1 = row.getCell(0);
 			Cell cell2 = row.getCell(1);
@@ -237,16 +241,20 @@ public class OrgController {
 			String value1 = StringUtil.getCellValue(cell1);
 			String value2 = StringUtil.getCellValue(cell2);
 			String value3 = StringUtil.getCellValue(cell3);
-			if(   null == value1 ||"".equals(value1.trim())  
-		       || null == value2 ||"".equals(value2.trim()) 
-			   //|| null == value3 ||"".equals(value3.trim())
-		       ){
-				break;
-			}
-			Org org = new Org();
-			org.setOrgName(value2);
-			//orgs.add("{\"xuhao\":\""+value1+"\",\"orgName\":\""+value2+"\",\"orgCode\":\""+value3+"\"}");
-			orgs.add(org);
+			if(StringUtil.notEmpty(value2)&&StringUtil.notEmpty(value3)){
+				Org org=orgService.getOrgByNameAndUserName(value2, value3);
+				if(null != org){
+					orgs.add(org);
+				}else{
+					erros.add("系统找不到机构名称为\""+value2+"\",机构代码为\""+value3+"\"的机构");
+				}
+			}else {
+				if(StringUtil.isEmpty(value1)&&StringUtil.isEmpty(value2)&&StringUtil.isEmpty(value3)){
+					
+				}else{
+					erros.add("第"+rowNum+"条数据填写不完整 ");
+				}
+			}			
 		}
 		if(null != workbook){
 			try {
@@ -266,7 +274,9 @@ public class OrgController {
 				in = null;
 			}
 		}
-		
-		return new ResponseBean(orgs);
+		Map<String,Object> res=  new HashMap<String,Object>();
+		res.put("orgs", orgs);
+		res.put("erros", erros);
+		return new ResponseBean(res);
 	}
 }
