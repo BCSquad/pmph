@@ -116,14 +116,14 @@ public class MigrationStageSeven {
             Long senderid = (Long) map.get("senderid");
             if (ObjectUtil.isNull(senderid)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("发送者id查询到为空值。"));
-                excptionList.add(new Object[]{title,"找不到对应的发送者","清理测试了用户","不导入该条数据"});
+                excptionList.add(new Object[]{title,"找不到对应的发送者","清理了测试用户引起","不导入该条数据"});
                 excel.add(map);
                 continue;
             }
             Long receiverid = (Long) map.get("receiverid");
             if (ObjectUtil.isNull(receiverid)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("接收者id查询到为空值。"));
-                excptionList.add(new Object[]{title,"找不到对应的接收者","清理测试了用户","不导入该条数据"});
+                excptionList.add(new Object[]{title,"找不到对应的接收者","清理了测试用户引起","不导入该条数据"});
                 excel.add(map);
                 continue;
             }
