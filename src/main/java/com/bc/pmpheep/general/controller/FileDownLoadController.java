@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,11 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Workbook;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +34,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.bo.DecPositionBO;
-import com.bc.pmpheep.back.bo.DeclarationEtcBO;
-import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.BookCorrectionService;
 import com.bc.pmpheep.back.service.CmsExtraService;
 import com.bc.pmpheep.back.service.DeclarationService;
@@ -47,7 +43,6 @@ import com.bc.pmpheep.back.service.MaterialOrgService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.TextbookService;
-import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
@@ -103,6 +98,8 @@ public class FileDownLoadController {
 	MaterialOrgService materialOrgService;
 	@Autowired
 	BookCorrectionService bookCorrectionService;
+	@Resource(name = "taskExecutor")
+	private ThreadPoolTaskExecutor taskExecutor;
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "文件下载";
 
@@ -143,9 +140,9 @@ public class FileDownLoadController {
 	 * 功能描述：普通文件下载(更新下载数)
 	 * 使用示范：
 	 *
-	 * &#64;param type 模块类型
-	 * &#64;param id 文件在MongoDB中的id
-	 * &#64;param response 服务响应
+	 * @param type 模块类型
+	 * @param id 文件在MongoDB中的id
+	 * @param response 服务响应
 	 * </pre>
 	 * 
 	 * @throws UnsupportedEncodingException
@@ -228,9 +225,9 @@ public class FileDownLoadController {
 	 * 功能描述：处理不同浏览器下载文件乱码问题
 	 * 使用示范：
 	 *
-	 * &#64;param request
-	 * &#64;param fileName 文件名
-	 * &#64;return 编码后的文件名
+	 * @param request
+	 * @param fileName 文件名
+	 * @return 编码后的文件名
 	 * </pre>
 	 */
 	private String returnFileName(HttpServletRequest request, String fileName) {
@@ -346,65 +343,14 @@ public class FileDownLoadController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报表批量导出word")
 	@RequestMapping(value = "/word/declaration", method = RequestMethod.GET)
-	public void declarationWord(Long materialId, String textBookids, String realname, String position, String title,
-			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
-			String id) {
-		String src = this.getClass().getResource("/").getPath();
-		src = src.substring(1);
-		if (!src.endsWith(File.separator)) {
-			src += File.separator;
-		}
-		ZipDownload zipDownload = new ZipDownload();
-		String materialName = materialService.getMaterialNameById(materialId);
-		List<Textbook> textbooks = textbookService.getTextbookByMaterialId(materialId);
-		List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
-		String dest = src + id;
-		zipDownload.setId(id);
-		zipDownload.setMaterialName(materialName);
-		zipDownload.setState(0);
-		zipDownload.setDetail("loading...");
-		zipDownload.setCreateTime(DateUtil.getCurrentTime());
-		map.put(id, zipDownload);
-		try {
-			declarationEtcBOs = declarationService.declarationEtcBO(materialId, textBookids, realname, position, title,
-					orgName, unitName, positionType, onlineProgress, offlineProgress);
-		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
-			logger.warn("数据表格化的时候失败");
-		}
-		try {
-			for (int i = 0; i < textbooks.size(); i++) {
-				List<DeclarationEtcBO> list = new ArrayList<>();
-				for (DeclarationEtcBO declarationEtcBO : declarationEtcBOs) {
-					if (textbooks.get(i).getTextbookName().equals(declarationEtcBO.getTextbookName())) {
-						list.add(declarationEtcBO);
-					}
-				}
-				if (!CollectionUtil.isEmpty(list)) {
-					StringBuilder sb = new StringBuilder();
-					sb.append(src);
-					sb.append(id);
-					sb.append(File.separator);
-					sb.append(materialName);
-					sb.append(File.separator);
-					sb.append((i + 1) + "." + textbooks.get(i).getTextbookName());
-					sb.append(File.separator);
-					wordHelper.export(materialName, sb.toString(), list);
-					list.clear();
-				}
-			}
-		} catch (Exception e) {
-			e.getMessage();
-		}
-		map.put(id, zipDownload);
-		new Thread(zipDownload).start();
-		try {
-			zipHelper.zip(dest + File.separator + materialName, dest + File.separator, true, null);
-		} catch (Exception e) {
-			e.getMessage();
-		}
-		zipDownload.setState(1);
-		zipDownload.setDetail("/zip/download?id=" + id);
-		map.put(id, zipDownload);
+	public String declarationWord(Long materialId, String textBookids, String realname, String position, String title,
+			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress
+			) {
+		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
+		taskExecutor.execute(new SpringThread(zipHelper, wordHelper, materialService, textbookService,
+				declarationService, materialId, textBookids, realname, position, title, orgName, unitName, positionType,
+				onlineProgress, offlineProgress, id));
+		return id;
 	}
 
 	/**
@@ -430,22 +376,6 @@ public class FileDownLoadController {
 		return zipDownload;
 	}
 
-	/**
-	 * 
-	 * 
-	 * 功能描述：返回唯一标识
-	 * 
-	 * @param id
-	 * @return
-	 * 
-	 */
-	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "返回word导出唯一标识")
-	@RequestMapping(value = "/word/identification", method = RequestMethod.GET)
-	public String identification() {
-		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
-		return id;
-	}
 
 	/**
 	 * word打包文件
@@ -506,9 +436,9 @@ public class FileDownLoadController {
 	 * 功能描述：导出已发布教材下的学校
 	 * 使用示范：
 	 *
-	 * &#64;param materialId 教材ID
-	 * &#64;param request
-	 * &#64;param response
+	 * @param materialId 教材ID
+	 * @param request
+	 * @param response
 	 * </pre>
 	 */
 	@ResponseBody

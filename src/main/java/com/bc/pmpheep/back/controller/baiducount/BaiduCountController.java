@@ -30,14 +30,14 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  * 使用示范：
  * 
  * 
- * &#64;author (作者) nyz
+ * @author (作者) nyz
  * 
- * &#64;since (该版本支持的JDK版本) ：JDK 1.6或以上
- * &#64;version (版本) 1.0
- * &#64;date (开发日期) 2017-12-28
- * &#64;modify (最后修改时间) 
- * &#64;修改人 ：nyz 
- * &#64;审核人 ：
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2017-12-28
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
  * </pre>
  */
 @Controller
@@ -60,11 +60,11 @@ public class BaiduCountController {
 	 * 功能描述：获取网站概况(趋势数据)
 	 * 使用示范：
 	 *
-	 * &#64;param method 请求方法
-	 * &#64;param startDate 对比查询起始时间
-	 * &#64;param endDate 对比查询结束时间
-	 * &#64;param metrics 所要获取的指标
-	 * &#64;return
+	 * @param method 请求方法
+	 * @param startDate 对比查询起始时间
+	 * @param endDate 对比查询结束时间
+	 * @param metrics 所要获取的指标
+	 * @return
 	 * </pre>
 	 */
 	@ResponseBody
@@ -110,13 +110,13 @@ public class BaiduCountController {
 	 * 功能描述：配置登陆、请求参数
 	 * 使用示范：
 	 *
-	 * &#64;param method 请求方法
-	 * &#64;param startDate 查询起始时间
-	 * &#64;param endDate 查询结束时间
-	 * &#64;param metrics 所要获取的指标
-	 * &#64;param pageNum 页码
-	 * &#64;param pageSize 显示条数
-	 * &#64;return
+	 * @param method 请求方法
+	 * @param startDate 查询起始时间
+	 * @param endDate 查询结束时间
+	 * @param metrics 所要获取的指标
+	 * @param pageNum 页码
+	 * @param pageSize 显示条数
+	 * @return
 	 * </pre>
 	 */
 	private String requestJson(String method, String startDate, String endDate, String metrics, String pageNum,
