@@ -2,6 +2,7 @@ package com.bc.pmpheep.migration;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -49,10 +50,20 @@ public class MigrationStageSeven {
     private MessageAttachmentService messageAttachmentService;
     @Resource
     private ExcelHelper excelHelper;
+    
+   //用来装载向客户导出的信息
+    private List<Object[]> excptionList = new ArrayList<Object[]>( );
 
     public void start() {
         Date begin = new Date();
         userMessage_messageAttachment();
+        try {
+        	excelHelper.exportFromList(excptionList, "消息块问题数据导出", "For客户");
+		}catch (IOException e) {
+			logger.error("异常数据导出到Excel失败", e);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
         logger.info("迁移第七步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
@@ -86,6 +97,11 @@ public class MigrationStageSeven {
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         Map<String, String> msgidOldAndNew = new HashMap<String, String>(maps.size());
+        //模块名称 
+        excptionList.add(new Object[]{"消息"});
+        //模块标题
+        excptionList.add(new Object[]{"消息标题","问题","原因分析","处理方式"});
+        int excptionListOldSize = excptionList.size();
         int count = 0;
         for (Map<String, Object> map : maps) {
             StringBuilder exception = new StringBuilder("");
@@ -93,36 +109,42 @@ public class MigrationStageSeven {
             String title = (String) map.get("title");
             if (StringUtil.isEmpty(title)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("消息标题查询到为空值。"));
+                excptionList.add(new Object[]{"","消息标题为空","","不导入该条数据"});
                 excel.add(map);
                 continue;
             }
             Long senderid = (Long) map.get("senderid");
             if (ObjectUtil.isNull(senderid)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("发送者id查询到为空值。"));
+                excptionList.add(new Object[]{title,"找不到对应的发送者","清理测试了用户","不导入该条数据"});
                 excel.add(map);
                 continue;
             }
             Long receiverid = (Long) map.get("receiverid");
             if (ObjectUtil.isNull(receiverid)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("接收者id查询到为空值。"));
+                excptionList.add(new Object[]{title,"找不到对应的接收者","清理测试了用户","不导入该条数据"});
                 excel.add(map);
                 continue;
             }
             Short msgtype = new Short(String.valueOf(map.get("msgtype")));
             if (ObjectUtil.isNull(msgtype)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("消息类型查询到为空值。"));
+                excptionList.add(new Object[]{title,"找不到对应的消息类型","原平台最开始没有分类消息","设置为'系统消息'类型导入新库表"});
                 excel.add(map);
                 msgtype = 0;
             }
             Short sendertype = new Short(String.valueOf(map.get("sendertype")));
             if (ObjectUtil.isNull(sendertype)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("发送者类型查询到为空值。"));
+                excptionList.add(new Object[]{title,"找不到对应的发送者类型","","设置为'系统消息'类型导入新库表"});
                 excel.add(map);
                 sendertype = 0;
             }
             Short receivertype = new Short(String.valueOf((map.get("receivertype"))));
             if (ObjectUtil.isNull(receivertype)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("接收者类型查询到为空值。"));
+                excptionList.add(new Object[]{title,"找不到对应的接收者类型","","设置为'系统消息'类型导入新库表"});
                 excel.add(map);
                 receivertype = 0;
             }
@@ -185,6 +207,11 @@ public class MigrationStageSeven {
             }
             userMessage.setMsgId(msg_id);
             userMessageSevice.updateUserMessage(userMessage);
+        }
+        //没有错误数据
+        if(excptionList.size() == excptionListOldSize ){
+        	excptionList.remove(excptionList.size() -1) ;
+        	excptionList.remove(excptionList.size() -1) ;
         }
         if (excel.size() > 0) {
             try {

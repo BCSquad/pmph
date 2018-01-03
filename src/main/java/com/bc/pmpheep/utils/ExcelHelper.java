@@ -120,6 +120,50 @@ public class ExcelHelper {
 
     private final Logger logger = LoggerFactory.getLogger(ExcelHelper.class);
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    
+    /**
+     *  根据List 的object[] 集合创建工作簿
+     * @introduction 
+     * @author Mryang
+     * @createDate 2018年1月2日 下午4:34:41
+     * @param lst 
+     * @param sheetname
+     * @param path
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public void exportFromList(List<Object[]> lst, String sheetname, String path)  throws FileNotFoundException, IOException {
+    	if (lst.size() < 1) {
+            return;
+        }
+         /* 创建工作簿 */
+        Workbook workbook = new HSSFWorkbook();
+        /* 创建工作表 */
+        Sheet sheet = workbook.createSheet(sheetname);
+        //装入数据
+        for(int i=0;i<lst.size();i++){
+        	//创建行
+        	Row row = sheet.createRow(i);
+        	//本行数据
+            Object[] objArray = lst.get(i);
+            //放置列数据
+        	for(int j=0;j<objArray.length;j++){
+        		//创建单元格
+        		Cell cell = row.createCell(j);
+                cell.setCellValue(String.valueOf(objArray[j]));
+        	}
+        }
+        if (StringUtil.isEmpty(path)) {
+            path = "";
+        }
+        StringBuilder sb = new StringBuilder(path);
+        sb.append(sheetname);
+        sb.append(".xls");
+        try (FileOutputStream out = new FileOutputStream(sb.toString())) {
+            workbook.write(out);
+            out.flush();
+        }
+    }
 
     /**
      * 根据Map集合创建工作簿
