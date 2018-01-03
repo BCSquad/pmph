@@ -82,7 +82,9 @@ public class MigrationStageFour {
     @Autowired
     private MaterialProjectEditorService materialProjectEditorService;
     
-    private List<Map<TitleEnum, Object>> excptionMap = new LinkedList<Map<TitleEnum, Object>>( );
+    //用来装载向客户导出的信息
+    private List<Object[]> excptionList = new ArrayList<Object[]>( );
+
 
     public void start() {
         Date begin = new Date();
@@ -96,7 +98,7 @@ public class MigrationStageFour {
         materialOrg();
         materialPprojectEeditor();
         try {
-        	excelHelper.exportFromMaps(trans(), "教材块问题数据导出", "for客户");
+        	excelHelper.exportFromList(excptionList, "教材块问题数据导出", "For客户");
 		}catch (IOException e) {
 			logger.error("异常数据导出到Excel失败", e);
 		}catch (Exception e){
@@ -111,6 +113,11 @@ public class MigrationStageFour {
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);//取得该表中所有数据
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
+        //模块名称 
+        excptionList.add(new Object[]{"教材类别"});
+        //模块标题
+        excptionList.add(new Object[]{"类别名称","问题","原因分析","处理方式"});
+        int excptionListOldSize = excptionList.size();
         //插入除parentid和path的字段；
         for (Map<String, Object> map : maps) {
             /*因此表有主要级字段和次要级字段，次要级字段插入新表同时也需导出Excel，因此异常信息不止一条，
@@ -122,6 +129,7 @@ public class MigrationStageFour {
             String typeName = (String) map.get("TypeName");
             if (StringUtil.isEmpty(typeName)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("类型名称为空。"));
+                excptionList.add(new Object[]{"","类型名称为空","导入的数据错误","不导入该条数据"});
                 excel.add(map);
                 continue;
             }
@@ -136,6 +144,7 @@ public class MigrationStageFour {
             Integer sort = (Integer) map.get("Sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("排序为负数。"));
+                excptionList.add(new Object[]{typeName,"排序不正确","导入的数据错误","设置为'999'导入新库表"}); 
                 sort = 999;
                 excel.add(map);
             }
@@ -143,6 +152,7 @@ public class MigrationStageFour {
             //书籍分类备注信息比较重要，虽然有默认值，但仍认为是次要级字段
             if (StringUtil.isEmpty(note)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("备注为空。"));
+                excptionList.add(new Object[]{typeName,"备注为空","导入的数据错误","设置为和类型名称一样导入新库表"}); 
                 note = typeName;
                 excel.add(map);
             }
@@ -157,6 +167,14 @@ public class MigrationStageFour {
             long pk = materialType.getId();
             //更新旧表中new_pk字段
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "BookTypesID", bookTypesID);
+        }
+        //没有错误数据
+        if(excptionList.size() == excptionListOldSize ){
+        	excptionList.remove(excptionList.size() -1) ;
+        	excptionList.remove(excptionList.size() -1) ;
+        }else{
+        	//插入一个空行
+            excptionList.add(new String[]{""});
         }
         if (excel.size() > 0) {
             try {
@@ -241,6 +259,11 @@ public class MigrationStageFour {
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
+        //模块名称 
+        excptionList.add(new Object[]{"教材"});
+        //模块标题
+        excptionList.add(new Object[]{"教材名称","问题","原因分析","处理方式"});
+        int excptionListOldSize = excptionList.size();
         for (Map<String, Object> oldMaterial : maps) {
             StringBuilder exception = new StringBuilder();
             String materialId = String.valueOf(oldMaterial.get("materid"));
@@ -282,14 +305,14 @@ public class MigrationStageFour {
 //                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("轮次为空,设默认值1。"));
 //                excel.add(oldMaterial);
                 round = 0;
-                saveProblem(matername,"教材没有轮次","导入新库表,设默认值0");
+                excptionList.add(new Object[]{matername,"教材没有对应的轮次","专家库没有轮次字段","导入新库表,设默认值0"});
             }
             Long booktypesid = (Long) oldMaterial.get("booktypesid");
             if (ObjectUtil.isNull(booktypesid)) {
                 oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("架构为空，设为默认0。"));
                 excel.add(oldMaterial);
                 booktypesid = 0L;
-                saveProblem(matername,"教材没有分类","导入新库表,设为默认0");
+                excptionList.add(new Object[]{matername,"教材没有分类","专家库没有分类字段","导入新库表,设为默认0"});
             }
             Long mender_id = (Long) oldMaterial.get("mender_id");
             if (ObjectUtil.isNull(mender_id)) {
@@ -351,6 +374,14 @@ public class MigrationStageFour {
             long pk = material.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "materid", materialId);//更新旧表中new_pk字段
         }
+        //没有错误数据
+        if(excptionList.size() == excptionListOldSize ){
+        	excptionList.remove(excptionList.size() -1) ;
+        	excptionList.remove(excptionList.size() -1) ;
+        }else{
+        	//插入一个空行
+            excptionList.add(new String[]{""});
+        }
         if (excel.size() > 0) {
             try {
                 excelHelper.exportFromMaps(excel, "教材信息表", "material");
@@ -365,7 +396,7 @@ public class MigrationStageFour {
         msg.put("result", "" + tableName + " 表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
-
+    
     protected void materialExtension() {
         String tableName = "teach_material_extend";
         String sql = "select "
@@ -380,14 +411,20 @@ public class MigrationStageFour {
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
+        //模块名称 
+        excptionList.add(new Object[]{"教材扩展项"});
+        //模块标题
+        excptionList.add(new Object[]{"教材名称","扩展项名称","问题","原因分析","处理方式"});
+        int excptionListOldSize = excptionList.size();
         for (Map<String, Object> materialExtension : maps) {
             String oldExpendid = (String) materialExtension.get("expendid");
             StringBuilder exception = new StringBuilder();
             Long materid = (Long) materialExtension.get("materid");
-            String matername = materialService.getMaterialNameById(materid);
+            String matername = (materid==null?"": materialService.getMaterialNameById(materid));
             if (ObjectUtil.isNull(materid)) {
                 materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空。"));
                 excel.add(materialExtension);
+                excptionList.add(new Object[]{matername,(String) materialExtension.get("expendname"),"找不到对应教材","新建的教材被删除","不导入该条数据"});
                 continue;
             }
             String expendname = (String) materialExtension.get("expendname");
@@ -395,7 +432,7 @@ public class MigrationStageFour {
                 materialExtension.put(SQLParameters.EXCEL_EX_HEADER, exception.append("扩展名称为空。设定默认值\"-\""));
                 excel.add(materialExtension);
                 expendname="-";
-                saveProblem(matername,"教材有扩展项，但是扩展项名称为空","未处理");
+                excptionList.add(new Object[]{matername,expendname,"扩展项名称为空","专家平台为空","设置为'-'导入新库表"});
                 continue;
             }
             MaterialExtension newMaterialExtension = new MaterialExtension();
@@ -406,6 +443,14 @@ public class MigrationStageFour {
             count++;
             long pk = newMaterialExtension.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "expendid", oldExpendid);//更新旧表中new_pk字段
+        }
+        //没有错误数据
+        if(excptionList.size() == excptionListOldSize ){
+        	excptionList.remove(excptionList.size() -1) ;
+        	excptionList.remove(excptionList.size() -1) ;
+        }else{
+        	//插入一个空行
+            excptionList.add(new String[]{""});
         }
         if (excel.size() > 0) {
             try {
@@ -433,12 +478,19 @@ public class MigrationStageFour {
         int count = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         List<Long> materids = new ArrayList<>();
+        //模块名称 
+        excptionList.add(new Object[]{"教材通知备注"});
+        //模块标题
+        excptionList.add(new Object[]{"教材名称","问题","原因分析","处理方式"});
+        int excptionListOldSize = excptionList.size();
         for (Map<String, Object> object : materialExtraList) {
             StringBuilder exception = new StringBuilder();
             Long materid = (Long) object.get("new_pk");
+            String matername = (materid==null?"": materialService.getMaterialNameById(materid));
             if (ObjectUtil.isNull(materid)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空。"));
                 excel.add(object);
+                excptionList.add(new Object[]{matername,"找不到对应的教材","新建的教材已删除","不导入该条数据"});
                 continue;
             }
             if (materids.contains(materid)) {
@@ -447,19 +499,18 @@ public class MigrationStageFour {
                 continue;
             }
             String notice = (String) object.get("introduction");
-            String matername = materialService.getMaterialNameById(materid);
             if (StringUtil.isEmpty(notice)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("通知内容为空。"));
                 excel.add(object);
-                saveProblem(matername,"教材通知内容为空","未处理");
-                continue;
+                notice="-";
+                excptionList.add(new Object[]{matername,"教材通知内容为空","原专家平台为空","设置为'-'导入新库表"});
             }
             String note = (String) object.get("remark");
             if (StringUtil.isEmpty(note)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("备注。"));
                 excel.add(object);
-                saveProblem(matername,"教材通知备注为空","未处理");
-                continue;
+                note="-";
+                excptionList.add(new Object[]{matername,"教材备注内容为空","原专家平台为空","设置为'-'导入新库表"});
             }
             MaterialExtra materialExtra = new MaterialExtra();
             materialExtra.setMaterialId(materid);
@@ -468,6 +519,14 @@ public class MigrationStageFour {
             materialExtra = materialExtraService.addMaterialExtra(materialExtra);
             count++;
            mps.put(materialExtra.getMaterialId(), materialExtra.getId());
+        }
+        //没有错误数据
+        if(excptionList.size() == excptionListOldSize ){
+        	excptionList.remove(excptionList.size() -1) ;
+        	excptionList.remove(excptionList.size() -1) ;
+        }else{
+        	//插入一个空行
+            excptionList.add(new String[]{""});
         }
         if (excel.size() > 0) {
             try {
@@ -495,24 +554,35 @@ public class MigrationStageFour {
         List<Map<String, Object>> materialNoticeAttachmentList = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
+        //模块名称 
+        excptionList.add(new Object[]{"教材通知附件"});
+        //模块标题
+        excptionList.add(new Object[]{"所属教材名称","通知附件名称","问题","原因分析","处理方式"});
+        int excptionListOldSize = excptionList.size();
         for (Map<String, Object> map : materialNoticeAttachmentList) {
             StringBuilder exception = new StringBuilder();
+            Long newMaterid = (Long) map.get("new_pk");
+            String matername = (newMaterid==null?"": materialService.getMaterialNameById(newMaterid));
+            if (ObjectUtil.isNull(newMaterid)) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空。"));
+                excel.add(map);
+                excptionList.add(new Object[]{matername,(String) map.get("filename"),"找不到对应教材","新建的教材被删除","不导入该条信息"});
+                continue;
+            }
+            
             //文件名
             String fileName = (String) map.get("filename");
             if (StringUtil.isEmpty(fileName)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("文件名称为空。"));
                 excel.add(map);
-                continue;
+                fileName ="-";
+                excptionList.add(new Object[]{matername,fileName,"文件名称为空","","设置为'-'导入新库表"}); 
             }
-            Long newMaterid = (Long) map.get("new_pk");
-            if (ObjectUtil.isNull(newMaterid)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空。"));
-                excel.add(map);
-                continue;
-            }
+            
             Long materialExtraId = mps.get(newMaterid);
             if (ObjectUtil.isNull(materialExtraId)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材通知备注id。"));
+                excptionList.add(new Object[]{matername,fileName,"找不到关联的通知","新建的教材被删除","不导入该条信息"}); 
                 excel.add(map);
                 continue;
             }
@@ -525,7 +595,8 @@ public class MigrationStageFour {
             materialNoticeAttachment = materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
             if (ObjectUtil.notNull(materialNoticeAttachment.getId())) {
             	if(!new File((String) map.get("filedir")).exists()){
-            		saveProblem(materialService.getMaterialNameById(newMaterid),"教材通知内容附件'"+fileName+"'找不到","未处理");
+            		materialNoticeAttachmentService.deleteMaterialNoticeAttachmentById(materialNoticeAttachment.getId());
+            		excptionList.add(new Object[]{matername,fileName,"找不到通知文件","文件丢失","不导入该条信息"});
             		continue;
             	}
             	String mongoId;
@@ -552,6 +623,14 @@ public class MigrationStageFour {
                 }
             }
         }
+        //没有错误数据
+        if(excptionList.size() == excptionListOldSize ){
+        	excptionList.remove(excptionList.size() -1) ;
+        	excptionList.remove(excptionList.size() -1) ;
+        }else{
+        	//插入一个空行
+            excptionList.add(new String[]{""});
+        }
         if (excel.size() > 0) {
             try {
                 excelHelper.exportFromMaps(excel, "教材通知附件表", "material_notice_attachment");
@@ -577,24 +656,34 @@ public class MigrationStageFour {
         List<Map<String, Object>> materialMaterialNoteAttachmentList = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
+        //模块名称 
+        excptionList.add(new Object[]{"教材备注附件"});
+        //模块标题
+        excptionList.add(new Object[]{"所属教材名称","备注附件名称","问题","原因分析","处理方式"});
+        int excptionListOldSize = excptionList.size();
         for (Map<String, Object> map : materialMaterialNoteAttachmentList) {
             StringBuilder exception = new StringBuilder();
-            //文件名
-            String fileName = (String) map.get("filename");
-            if (StringUtil.isEmpty(fileName)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("文件名称为空。"));
-                excel.add(map);
-                continue;
-            }
             Long newMaterid = (Long) map.get("materid");
+            String matername = (newMaterid==null?"": materialService.getMaterialNameById(newMaterid));
             if (ObjectUtil.isNull(newMaterid)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空。"));
                 excel.add(map);
+                excptionList.add(new Object[]{matername,(String) map.get("filename"),"找不到对应教材","新建的教材被删除","不导入该条信息"});
                 continue;
             }
+            
+            //文件名
+            String fileName = (String) map.get("filename");
+            if (StringUtil.isEmpty(fileName)) {
+            	fileName ="-";
+                excptionList.add(new Object[]{matername,fileName,"文件名称为空","","设置为'-'导入新库表"}); 
+                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("文件名称为空。设置为'-'导入新库表"));
+                excel.add(map);
+            }
+            
             Long materialExtraId = mps.get(newMaterid);
             if (ObjectUtil.isNull(materialExtraId)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材通知备注id。"));
+            	excptionList.add(new Object[]{matername,fileName,"找不到关联的通知","新建的教材被删除","不导入该条信息"}); 
                 excel.add(map);
                 continue;
             }
@@ -608,7 +697,8 @@ public class MigrationStageFour {
             count++;
             if (ObjectUtil.notNull(materialNoteAttachment.getId())) {
             	if(!new File((String) map.get("filedir")).exists()){
-            		saveProblem(materialService.getMaterialNameById(newMaterid),"教材通知备注附件'"+fileName+"'找不到","未处理");
+            		materialNoteAttachmentService.deleteMaterialNoteAttachmentById(materialNoteAttachment.getId());
+            		excptionList.add(new Object[]{matername,fileName,"找不到备注文件","文件丢失","不导入该条信息"});
             		continue;
             	}
                 String mongoId;
@@ -633,6 +723,14 @@ public class MigrationStageFour {
                     continue;
                 }
             }
+        }
+        //没有错误数据
+        if(excptionList.size() == excptionListOldSize ){
+        	excptionList.remove(excptionList.size() -1) ;
+        	excptionList.remove(excptionList.size() -1) ;
+        }else{
+        	//插入一个空行
+            excptionList.add(new String[]{""});
         }
         if (excel.size() > 0) {
             try {
@@ -667,37 +765,48 @@ public class MigrationStageFour {
         List<Map<String, Object>> materialContactList = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
+        //模块名称 
+        excptionList.add(new Object[]{"教材联系人"});
+        //模块标题
+        excptionList.add(new Object[]{"所属教材名称","问题","原因分析","处理方式"});
+        int excptionListOldSize = excptionList.size();
         for (Map<String, Object> object : materialContactList) {
             String linkId = (String) object.get("linkerid");
             StringBuilder exception = new StringBuilder();
             Long materid = (Long) object.get("materid");
+            String matername = (materid==null?"": materialService.getMaterialNameById(materid));
             if (ObjectUtil.isNull(materid)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空。"));
                 excel.add(object);
+                excptionList.add(new Object[]{matername,"找不到对应的教材","新建的教材被删除","不导入该条数据"});
                 continue;
             }
             Long userid = (Long) object.get("userid");
             if (ObjectUtil.isNull(userid)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("联系人id为空。"));
                 excel.add(object);
+                excptionList.add(new Object[]{matername,"找不到对应的联系人"," ","不导入该条数据"});
                 continue;
             }
             String username = (String) object.get("username");
             if (StringUtil.isEmpty(username)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("联系人姓名为空。"));
                 excel.add(object);
+                excptionList.add(new Object[]{matername,"联系人姓名为空","用户没有填写姓名","不导入该条数据"});
                 continue;
             }
             String linkphone = (String) object.get("linkphone");
             if (StringUtil.isEmpty(linkphone)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("联系人电话为空。"));
                 excel.add(object);
+                excptionList.add(new Object[]{matername,"联系人电话为空","源数据没有填写电话","不导入该条数据"});
                 continue;
             }
             String email = (String) object.get("email");
             if (StringUtil.isEmpty(email)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("联系人邮箱为空。"));
                 excel.add(object);
+                excptionList.add(new Object[]{matername,"联系人邮箱为空","源数据没有填写邮箱","不导入该条数据"});
                 continue;
             }
             Integer orderno = null;
@@ -720,6 +829,14 @@ public class MigrationStageFour {
             if (ObjectUtil.notNull(pk)) {
                 JdbcHelper.updateNewPrimaryKey(tableName, pk, "linkerid", linkId);//更新旧表中new_pk字段
             }
+        }
+        //没有错误数据
+        if(excptionList.size() == excptionListOldSize ){
+        	excptionList.remove(excptionList.size() -1) ;
+        	excptionList.remove(excptionList.size() -1) ;
+        }else{
+        	//插入一个空行
+            excptionList.add(new String[]{""});
         }
         if (excel.size() > 0) {
             try {
@@ -752,12 +869,19 @@ public class MigrationStageFour {
         List<Map<String, Object>> pubList = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
+        //模块名称 
+        excptionList.add(new Object[]{"教材发布学校"});
+        //模块标题
+        excptionList.add(new Object[]{"所属教材名称","问题","原因分析","处理方式"});
+        int excptionListOldSize = excptionList.size();
         for (Map<String, Object> object : pubList) {
             String pushschoolId = (String) object.get("pushschoolid");
             StringBuilder exception = new StringBuilder();
             Long materid = (Long) object.get("materid");
+            String matername = (materid==null?"": materialService.getMaterialNameById(materid));
             if (ObjectUtil.isNull(materid)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空。"));
+                excptionList.add(new Object[]{matername,"找不到对应教材","新建的教材被删除","不导入该条数据"});
                 excel.add(object);
                 continue;
             }
@@ -765,7 +889,7 @@ public class MigrationStageFour {
             if (ObjectUtil.isNull(orgid)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("机构id为空。"));
                 excel.add(object);
-                saveProblem(materialService.getMaterialNameById(materid),"教材找不到id为'"+object.get("oldorgid")+"'的发布学校","该条数据没有迁移至新的数据库");
+                excptionList.add(new Object[]{matername,"找不到对应的发布学校","","不导入该条数据"});
                 continue;
             }
             MaterialOrg materialOrg = new MaterialOrg();
@@ -777,6 +901,14 @@ public class MigrationStageFour {
             if (ObjectUtil.notNull(pk)) {
                 JdbcHelper.updateNewPrimaryKey(tableName, pk, "pushschoolid", pushschoolId);//更新旧表中new_pk字段
             }
+        }
+        //没有错误数据
+        if(excptionList.size() == excptionListOldSize ){
+        	excptionList.remove(excptionList.size() -1) ;
+        	excptionList.remove(excptionList.size() -1) ;
+        }else{
+        	//插入一个空行
+            excptionList.add(new String[]{""});
         }
         if (excel.size() > 0) {
             try {
@@ -846,8 +978,10 @@ public class MigrationStageFour {
         msg.put("result", "MaterialProjectEditor  表迁移完成" + count + "/" + materialProjectEditorList.size());
         SQLParameters.STATISTICS.add(msg);
     }
-    /***********************************下面是辅助方法******************************************************/
-    
+/***********************************下面是辅助方法******************************************************/
+
+    private List<Map<TitleEnum, Object>> excptionMap = new LinkedList<Map<TitleEnum, Object>>( );
+     
     public  List<Map<String, Object>>  trans(){
     	List<Map<String, Object>> temp = new LinkedList<Map<String, Object>>( );
     	for(Map<TitleEnum, Object> map:excptionMap){
