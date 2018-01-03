@@ -103,7 +103,7 @@ public class MigrationStageSix {
         }
         Date begin = new Date();
         declaration();
-        decEduExp();
+        /*decEduExp();
         decWorkExp();
         decTeachExp();
         decAcade();
@@ -113,7 +113,7 @@ public class MigrationStageSix {
         decTextbook();
         decResearch();
         decExtension();
-        decPosition();
+        decPosition();*/
         logger.info("迁移第六步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
@@ -147,15 +147,14 @@ public class MigrationStageSix {
                 + "when ta.isreceivedpaper=0 or ta.editauditstate=10 then 0 "
                 + "end offline_progress,ta.isreceivedpaper,ta.editauditstate,"
                 + "case when wd.submittype=10 then 1 "
-                + "else 0 end is_staging,wd.submittype,ta.editauditdate,wd.userid,s.sysflag "
+                + "else 0 end is_staging,wd.submittype,ta.editauditdate,wd.userid,s.sysflag,su.usertype "
                 + "from writer_declaration wd "
                 + "left join teach_material tm on tm.materid=wd.materid "
                 + "left join ba_organize bo on bo.orgid=wd.unitid "
                 + "left join sys_user s on s.userid=wd.userid "
                 + "left join sys_userext su on su.userid=wd.userid "
-                + "left join teach_applyposition ta on ta.writerid=wd.writerid "
-                + "where su.userid is not null and su.usertype !=2 "
-                + "group by wd.writerid ";
+                + "left join (select * from teach_applyposition group by writerid) ta "
+                + "on ta.writerid=wd.writerid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql); // 查询所有数据
         int count = 0; // 迁移成功的条目数
         int materialidCount = 0;
