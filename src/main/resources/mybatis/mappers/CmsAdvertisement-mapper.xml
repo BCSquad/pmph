@@ -39,7 +39,7 @@
 				navigation_color,
 			</if>
 			<if test="isNavigation != null">
-				isNavigation,
+				is_navigation,
 			</if>
 			<if test="animationInterval != null">
 				animation_interval,
@@ -175,7 +175,7 @@
 					navigation_color=#{navigationColor},
 				</if>
 				<if test="isNavigation != null">
-					isNavigation=#{isNavigation},
+					is_navigation=#{isNavigation},
 				</if>
 				<if test="animationInterval != null">
 					animation_interval=#{animationInterval},

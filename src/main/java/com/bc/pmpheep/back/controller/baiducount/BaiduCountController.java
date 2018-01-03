@@ -64,6 +64,7 @@ public class BaiduCountController {
 	 * @param startDate 对比查询起始时间
 	 * @param endDate 对比查询结束时间
 	 * @param metrics 所要获取的指标
+	 * @param siteId 
 	 * @return
 	 * </pre>
 	 */
@@ -72,16 +73,17 @@ public class BaiduCountController {
 	@RequestMapping(value = "/rpt/trend", method = RequestMethod.GET)
 	public ResponseBean trend(@RequestParam("method") String method, @RequestParam("startDate") String startDate,
 			@RequestParam("endDate") String endDate, @RequestParam("metrics") String metrics,
-			@RequestParam("pageNum") String pageNum, @RequestParam("pageSize") String pageSize) {
-		return new ResponseBean(
-				HttpUtil.doPostSSL(getData, requestJson(method, startDate, endDate, metrics, pageNum, pageSize)));
+			@RequestParam("pageNum") String pageNum, @RequestParam("pageSize") String pageSize,
+			@RequestParam("siteId") String siteId) {
+		return new ResponseBean(HttpUtil.doPostSSL(getData,
+				requestJson(method, startDate, endDate, metrics, pageNum, pageSize, siteId)));
 	}
 
 	/**
 	 * 
 	 * 
 	 * 功能描述：获取图书偏好分析
-	 *
+	 * 
 	 * @param pageSize
 	 *            当前页的数据条数
 	 * @param pageNumber
@@ -89,7 +91,7 @@ public class BaiduCountController {
 	 * @param bookname
 	 *            书籍名称/isbn
 	 * @return
-	 *
+	 * 
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取图书偏好分析")
@@ -114,13 +116,14 @@ public class BaiduCountController {
 	 * @param startDate 查询起始时间
 	 * @param endDate 查询结束时间
 	 * @param metrics 所要获取的指标
+	 * @param siteId 
 	 * @param pageNum 页码
 	 * @param pageSize 显示条数
 	 * @return
 	 * </pre>
 	 */
 	private String requestJson(String method, String startDate, String endDate, String metrics, String pageNum,
-			String pageSize) {
+			String pageSize, String siteId) {
 		// 默认前一个月
 		String start_date = DateUtil.date2Str(DateUtil.getDateBefore(new Date(), 30), "yyyyMMdd");
 		if (StringUtil.notEmpty(startDate)) {
@@ -135,6 +138,11 @@ public class BaiduCountController {
 		String methods = "overview/getTimeTrendRpt";
 		if (StringUtil.notEmpty(method)) {
 			methods = method;
+		}
+		// siteId
+		String site_id = "11461884";
+		if (StringUtil.notEmpty(siteId)) {
+			site_id = siteId;
 		}
 		/**
 		 * 默认对比指标
@@ -171,7 +179,7 @@ public class BaiduCountController {
 		header.put("username", "a406317048");
 		// 请求参数
 		Map<String, String> body = new LinkedHashMap<String, String>();
-		body.put("siteId", "11461884");
+		body.put("siteId", site_id);
 		body.put("method", methods);
 		body.put("start_date", start_date);
 		body.put("end_date", end_date);

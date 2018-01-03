@@ -453,22 +453,40 @@ public class DecPositionServiceImpl implements DecPositionService {
     public DeclarationCountVO getDeclarationCountVO(Long materialId) throws CheckedServiceException {
         DeclarationCountVO declarationCountVO = new DeclarationCountVO();
         Integer schoolDeclarationCount = decPositionDao.getSchoolDeclarationCount(materialId);
+        Integer schoolDeclarationChosenCount = decPositionDao.getSchoolDeclarationChosenCount(materialId);
         Integer schoolDeclarationAverage = 0;
+        Integer schoolDeclarationChosenAverage = 0;
         if (decPositionDao.getSchoolCount(materialId) > 0) {
+        	/*
+        	 * 若院校数量大于0，计算院校申报平均数以及当选平均数
+        	 */
             schoolDeclarationAverage =
-            (int) Math.round((double) schoolDeclarationCount
+            		(int) Math.round((double) schoolDeclarationCount
                              / decPositionDao.getSchoolCount(materialId));
+            schoolDeclarationChosenAverage = 
+            		(int) Math.round((double)schoolDeclarationChosenCount
+            				/decPositionDao.getSchoolCount(materialId));
         }
         Integer editorCount = decPositionDao.getEditorCount(materialId);
         Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);
         Integer editorialCount = decPositionDao.getEditorialCount(materialId);
         Integer digitalCount = decPositionDao.getDigitalCount(materialId);
+        Integer chosenEditorCount = decPositionDao.getChosenEditorCount(materialId);
+        Integer chosenSubeditorCount = decPositionDao.getChosenSubeditorCount(materialId);
+        Integer chosenEditorialCount = decPositionDao.getChosenEditorialCount(materialId);
+        Integer chosenDigitalCount = decPositionDao.getChosenDigitalCount(materialId);
         declarationCountVO.setSchoolDeclarationCount(schoolDeclarationCount);
+        declarationCountVO.setSchoolDeclarationChosenCount(schoolDeclarationChosenCount);
         declarationCountVO.setSchoolDeclarationAverage(schoolDeclarationAverage);
+        declarationCountVO.setSchoolDeclarationChosenAverage(schoolDeclarationChosenAverage);
         declarationCountVO.setEditorCount(editorCount);
         declarationCountVO.setSubEditorCount(subEditorCount);
         declarationCountVO.setEditorialCount(editorialCount);
         declarationCountVO.setDigitalCount(digitalCount);
+        declarationCountVO.setChosenEditorCount(chosenEditorCount);
+        declarationCountVO.setChosenSubeditorCount(chosenSubeditorCount);
+        declarationCountVO.setChosenEditorialCount(chosenEditorialCount);
+        declarationCountVO.setChosenDigitalCount(chosenDigitalCount);
         declarationCountVO.setMaterialId(materialId);
         return declarationCountVO;
     }
