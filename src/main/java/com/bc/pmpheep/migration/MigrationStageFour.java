@@ -26,6 +26,7 @@ import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
 import com.bc.pmpheep.back.po.MaterialOrg;
 import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.MaterialType;
+import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.service.MaterialContactService;
 import com.bc.pmpheep.back.service.MaterialExtensionService;
 import com.bc.pmpheep.back.service.MaterialExtraService;
@@ -35,6 +36,7 @@ import com.bc.pmpheep.back.service.MaterialOrgService;
 import com.bc.pmpheep.back.service.MaterialProjectEditorService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.MaterialTypeService;
+import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
@@ -81,6 +83,8 @@ public class MigrationStageFour {
     private MaterialOrgService materialOrgService;
     @Autowired
     private MaterialProjectEditorService materialProjectEditorService;
+    @Autowired
+    private OrgService orgService;
     
     //用来装载向客户导出的信息
     private List<Object[]> excptionList = new ArrayList<Object[]>( );
@@ -304,14 +308,14 @@ public class MigrationStageFour {
 //                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("轮次为空,设默认值1。"));
 //                excel.add(oldMaterial);
                 round = 0;
-                excptionList.add(new Object[]{matername,"教材没有对应的轮次","专家库没有轮次字段","导入新库表,设默认值0"});
+                excptionList.add(new Object[]{matername,"教材没有对应的轮次","原专家库没有轮次信息","导入新库表,设默认值0"});
             }
             Long booktypesid = (Long) oldMaterial.get("booktypesid");
             if (ObjectUtil.isNull(booktypesid)) {
                 oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("架构为空，设为默认0。"));
                 excel.add(oldMaterial);
                 booktypesid = 0L;
-                excptionList.add(new Object[]{matername,"教材没有分类","专家库没有分类字段","导入新库表,设为默认0"});
+                excptionList.add(new Object[]{matername,"教材没有分类","原专家库没有分类信息","导入新库表,设为默认0"});
             }
             Long mender_id = (Long) oldMaterial.get("mender_id");
             if (ObjectUtil.isNull(mender_id)) {
@@ -502,14 +506,14 @@ public class MigrationStageFour {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("通知内容为空。"));
                 excel.add(object);
                 notice="-";
-                excptionList.add(new Object[]{matername,"教材通知内容为空","原专家平台为空","设置为'-'导入新库表"});
+                excptionList.add(new Object[]{matername,"教材通知内容为空","原专家平台没有填写通知内容","设置为'-'导入新库表"});
             }
             String note = (String) object.get("remark");
             if (StringUtil.isEmpty(note)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("备注。"));
                 excel.add(object);
                 note="-";
-                excptionList.add(new Object[]{matername,"教材备注内容为空","原专家平台为空","设置为'-'导入新库表"});
+                excptionList.add(new Object[]{matername,"教材备注内容为空","原专家平台没有填写通知备注","设置为'-'导入新库表"});
             }
             MaterialExtra materialExtra = new MaterialExtra();
             materialExtra.setMaterialId(materid);
@@ -871,24 +875,30 @@ public class MigrationStageFour {
         //模块名称 
         excptionList.add(new Object[]{"教材发布学校"});
         //模块标题
-        excptionList.add(new Object[]{"所属教材名称","问题","原因分析","处理方式"});
+        excptionList.add(new Object[]{"机构名称","问题","原因分析","处理方式"});
         int excptionListOldSize = excptionList.size();
         for (Map<String, Object> object : pubList) {
             String pushschoolId = (String) object.get("pushschoolid");
             StringBuilder exception = new StringBuilder();
             Long materid = (Long) object.get("materid");
-            String matername = (materid==null?"": materialService.getMaterialNameById(materid));
+            Long orgid = (Long) object.get("orgid");
             if (ObjectUtil.isNull(materid)) {
+            	 //查询机构名称
+                Org org = (orgid==null?null: orgService.getOrgById(orgid));
+                String orgName = (org==null?"": org.getOrgName());
+                
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("教材id为空。"));
-                excptionList.add(new Object[]{matername,"找不到对应教材","新建的教材被删除","不导入该条数据"});
+                excptionList.add(new Object[]{orgName,"找不到对应教材","新建的教材被删除","不导入该条数据"});
                 excel.add(object);
                 continue;
             }
-            Long orgid = (Long) object.get("orgid");
             if (ObjectUtil.isNull(orgid)) {
+            	 //查询机构名称
+                Org org = (orgid==null?null: orgService.getOrgById(orgid));
+                String orgName = (org==null?"": org.getOrgName());
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("机构id为空。"));
                 excel.add(object);
-                excptionList.add(new Object[]{matername,"找不到对应的发布学校","","不导入该条数据"});
+                excptionList.add(new Object[]{orgName,"找不到对应的发布学校","","不导入该条数据"});
                 continue;
             }
             MaterialOrg materialOrg = new MaterialOrg();
