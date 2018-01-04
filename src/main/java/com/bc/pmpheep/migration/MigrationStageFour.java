@@ -436,7 +436,6 @@ public class MigrationStageFour {
                 excel.add(materialExtension);
                 expendname="-";
                 excptionList.add(new Object[]{matername,expendname,"扩展项名称为空","专家平台为空","设置为'-'导入新库表"});
-                continue;
             }
             MaterialExtension newMaterialExtension = new MaterialExtension();
             newMaterialExtension.setMaterialId(materid);
