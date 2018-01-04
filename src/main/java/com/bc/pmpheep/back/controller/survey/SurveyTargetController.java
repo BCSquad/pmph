@@ -1,7 +1,5 @@
 package com.bc.pmpheep.back.controller.survey;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.service.SurveyTargetService;
 import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.vo.SurveyTargetVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.po.Message;
 
@@ -60,13 +59,11 @@ public class SurveyTargetController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "发起问卷")
     @RequestMapping(value = "/send", method = RequestMethod.POST)
-    public ResponseBean send(Message message, String title, Long surveyId, List<Long> orgIds,
+    public ResponseBean send(Message message, SurveyTargetVO surveyTargetVO,
     HttpServletRequest request) {
         String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(surveyTargetService.batchSaveSurveyTargetByList(message,
-                                                                                title,
-                                                                                surveyId,
-                                                                                orgIds,
+                                                                                surveyTargetVO,
                                                                                 sessionId));
     }
 }

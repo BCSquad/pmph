@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import com.bc.pmpheep.back.po.SurveyTemplateQuestion;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -21,7 +23,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * </pre>
  */
 public interface SurveyTemplateQuestionService {
-	/**
+    /**
      * 新增一个SurveyTemplateQuestion
      * 
      * @author:tyc
@@ -29,8 +31,21 @@ public interface SurveyTemplateQuestionService {
      * @param SurveyTemplateQuestion 实体对象
      * @return 影响行数
      */
-	SurveyTemplateQuestion addSurveyTemplateQuestion(SurveyTemplateQuestion surveyTemplateQuestion) 
-			throws CheckedServiceException;
+    SurveyTemplateQuestion addSurveyTemplateQuestion(SurveyTemplateQuestion surveyTemplateQuestion)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：批量新增
+     * 使用示范：
+     *
+     * @param surveyTemplateQuestions SurveyTemplateQuestion对象集合
+     * @return 影响行数
+     * </pre>
+     */
+    Integer batchInsertSurveyTemplateQuestion(List<SurveyTemplateQuestion> surveyTemplateQuestions)
+    throws CheckedServiceException;
 
     /**
      * 删除SurveyTemplateQuestion通过主键id
@@ -50,8 +65,8 @@ public interface SurveyTemplateQuestionService {
      * @param SurveyTemplateQuestion
      * @return 影响行数
      */
-    Integer updateSurveyTemplateQuestion(SurveyTemplateQuestion surveyTemplateQuestion) 
-    		throws CheckedServiceException;
+    Integer updateSurveyTemplateQuestion(SurveyTemplateQuestion surveyTemplateQuestion)
+    throws CheckedServiceException;
 
     /**
      * 查找SurveyTemplateQuestion通过主键id
@@ -62,4 +77,30 @@ public interface SurveyTemplateQuestionService {
      * @return 影响行数
      */
     SurveyTemplateQuestion getSurveyTemplateQuestionById(Long id) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：通过templateId查询对象集合
+     * 使用示范：
+     *
+     * @param templateId 模版ID
+     * @return SurveyTemplateQuestion 对象集合
+     * </pre>
+     */
+    List<SurveyTemplateQuestion> getSurveyTemplateQuestionByTemplateId(Long templateId)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：通过templateId删除
+     * 使用示范：
+     *
+     * @param templateId 模版ID
+     * @return 影响行数
+     * </pre>
+     */
+    Integer deleteSurveyTemplateQuestionByTemplateId(Long templateId)
+    throws CheckedServiceException;
 }

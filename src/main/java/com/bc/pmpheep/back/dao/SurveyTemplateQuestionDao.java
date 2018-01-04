@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.SurveyTemplateQuestion;
@@ -21,6 +23,18 @@ public interface SurveyTemplateQuestionDao {
      * @return 影响行数
      */
     Integer addSurveyTemplateQuestion(SurveyTemplateQuestion surveyTemplateQuestion);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：批量新增
+     * 使用示范：
+     *
+     * @param surveyTemplateQuestions SurveyTemplateQuestion对象集合
+     * @return 影响行数
+     * </pre>
+     */
+    Integer batchInsertSurveyTemplateQuestion(List<SurveyTemplateQuestion> surveyTemplateQuestions);
 
     /**
      * 删除SurveyTemplateQuestion通过主键id
@@ -51,4 +65,28 @@ public interface SurveyTemplateQuestionDao {
      * @return 影响行数
      */
     SurveyTemplateQuestion getSurveyTemplateQuestionById(Long id);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：通过templateId查询对象集合
+     * 使用示范：
+     *
+     * @param templateId 模版ID
+     * @return SurveyTemplateQuestion 对象集合
+     * </pre>
+     */
+    List<SurveyTemplateQuestion> getSurveyTemplateQuestionByTemplateId(Long templateId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：通过templateId删除
+     * 使用示范：
+     *
+     * @param templateId 模版ID
+     * @return 影响行数
+     * </pre>
+     */
+    Integer deleteSurveyTemplateQuestionByTemplateId(Long templateId);
 }

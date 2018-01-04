@@ -5,6 +5,7 @@ import java.util.List;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.SurveyTemplate;
+import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
 import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateVO;
@@ -76,7 +77,8 @@ public interface SurveyTemplateService {
      * @param SurveyTemplateVO
      * @return 影响行数
      */
-    SurveyTemplate addSurveyTemplateVO(SurveyTemplateVO surveyTemplateVO) throws CheckedServiceException;
+    SurveyTemplate addSurveyTemplateVO(List<SurveyQuestionListVO> questionAnswerJosn,
+    SurveyTemplateVO surveyTemplateVO) throws CheckedServiceException;
 
     /**
      * 
