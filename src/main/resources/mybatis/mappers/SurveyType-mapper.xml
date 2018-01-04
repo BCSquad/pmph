@@ -74,7 +74,7 @@
 	<!-- 获取SurveyType集合 -->
 	<select id="listSurveyType"  resultType="SurveyType">
 		SELECT 
-			id,survey_name 
+			id,survey_name,sort
 		FROM 
 			survey_type 
 		ORDER BY 
