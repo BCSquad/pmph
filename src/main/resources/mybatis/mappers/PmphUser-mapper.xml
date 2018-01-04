@@ -38,6 +38,9 @@
 			<if test="isDeleted!=null">
 				is_deleted,
 			</if>
+			<if test="isDirector != null">
+				is_director,
+			</if>
 			<if test="gmtCreate!=null">
 				gmt_create,
 			</if>
@@ -82,6 +85,9 @@
 			</if>
 			<if test="isDeleted!=null">
 				#{isDeleted},
+			</if>
+			<if test="isDirector!=null">
+				#{isDirector}
 			</if>
 			<if test="gmtCreate!=null">
 				#{gmtCreate},
@@ -144,6 +150,9 @@
 			</if>
 			<if test=" isDeleted!= null ">
 				is_deleted= #{isDeleted}
+			</if>
+			<if test="isDirector!=null">
+				is_director = #{isDirector}
 			</if>
 		</set>
 		WHERE
@@ -251,7 +260,8 @@
 		department_id,
 		note,
 		avatar,
-		is_deleted
+		is_deleted,
+		is_director
 		FROM
 		pmph_user
 		WHERE
