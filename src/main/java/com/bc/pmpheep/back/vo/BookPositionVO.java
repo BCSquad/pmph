@@ -15,9 +15,9 @@ public class BookPositionVO implements Serializable{
 	    //教材id
 		private Long materialId;
 		//是否所有书籍已公布
-		private boolean isAllTextbookPublished;
+		private Boolean isAllTextbookPublished;
 		//是否被强制结束
-		private boolean isForceEnd;
+		private Boolean isForceEnd;
 	    //书籍主键
 		private Long textBookId;
 		//图书序号
@@ -58,7 +58,32 @@ public class BookPositionVO implements Serializable{
 //		private boolean  createGroup ;
 //		//是否有进行强制结束操作
 //		private boolean  settingEnd ;
+		//是否已公布
+		private Boolean isPublished;
+		//是否锁定（通过）
+		private Boolean isLocked;
+		//公布后再次修改次数
+		private Integer revisionTimes;
+		//公布后再次公布次数
+		private Integer republishTimes;
 		
+
+		public Integer getRevisionTimes() {
+			return revisionTimes;
+		}
+
+		public void setRevisionTimes(Integer revisionTimes) {
+			this.revisionTimes = revisionTimes;
+		}
+
+		public Integer getRepublishTimes() {
+			return republishTimes;
+		}
+
+		public void setRepublishTimes(Integer republishTimes) {
+			this.republishTimes = republishTimes;
+		}
+
 		public String getMyPower() {
 			return myPower;
 		}
@@ -67,11 +92,6 @@ public class BookPositionVO implements Serializable{
 			this.myPower = myPower;
 		}
 
-		//是否已公布
-		private Boolean isPublished;
-		//是否锁定（通过）
-		private Boolean isLocked;
-		
 		public Boolean getIsPublished() {
 			return isPublished;
 		}
@@ -100,19 +120,19 @@ public class BookPositionVO implements Serializable{
 			this.materialId = materialId;
 		}
 
-		public boolean isAllTextbookPublished() {
+		public Boolean isAllTextbookPublished() {
 			return isAllTextbookPublished;
 		}
 
-		public void setAllTextbookPublished(boolean isAllTextbookPublished) {
+		public void setAllTextbookPublished(Boolean isAllTextbookPublished) {
 			this.isAllTextbookPublished = isAllTextbookPublished;
 		}
 
-		public boolean isForceEnd() {
+		public Boolean isForceEnd() {
 			return isForceEnd;
 		}
 
-		public void setForceEnd(boolean isForceEnd) {
+		public void setForceEnd(Boolean isForceEnd) {
 			this.isForceEnd = isForceEnd;
 		}
 

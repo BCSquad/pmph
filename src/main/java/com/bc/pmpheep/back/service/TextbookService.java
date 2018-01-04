@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
 import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.bo.DecPositionBO;
@@ -11,7 +12,6 @@ import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
-import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -192,5 +192,5 @@ public interface TextbookService {
 	 * @param materialId
 	 * @return
 	 */
-	List<DecPositionBO> getExcelDecByMaterialId(Long[] textbookIds, String textbookName, Integer textbookRoun);
+	List<DecPositionBO> getExcelDecByMaterialId(Long[] textbookIds);
 }
