@@ -543,7 +543,11 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止查询");
 		}
-		return pmphUserDao.getPmphUserPermissionByUserId(userId);
+		List<Long> list = pmphUserDao.getPmphUserPermissionByUserId(userId);
+		if (CollectionUtil.isEmpty(list)) {
+			list.add(1L);
+		}
+		return list;
 	}
 
 	@Override
@@ -575,18 +579,17 @@ public class PmphUserServiceImpl implements PmphUserService {
 	}
 
 	@Override
-	public PageResult<PmphEditorVO> listEditors(
-			PageParameter<PmphEditorVO> pageParameter)
+	public PageResult<PmphEditorVO> listEditors(PageParameter<PmphEditorVO> pageParameter)
 			throws CheckedServiceException {
-		if (ObjectUtil.isNull(pageParameter.getParameter().getDepartmentId())){
-			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC,
-					CheckedExceptionResult.NULL_PARAM, "部门id为空");
+		if (ObjectUtil.isNull(pageParameter.getParameter().getDepartmentId())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"部门id为空");
 		}
 		PageResult<PmphEditorVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		Integer total = pmphUserDao.totalEditors(pageParameter.getParameter().getDepartmentId(),
 				pageParameter.getParameter().getRealName());
-		if (total > 0){
+		if (total > 0) {
 			List<PmphEditorVO> list = pmphUserDao.listEditors(pageParameter.getParameter().getDepartmentId(),
 					pageParameter.getParameter().getRealName(), pageParameter.getPageSize(), pageParameter.getStart());
 			pageResult.setRows(list);

@@ -367,8 +367,6 @@ public class FileDownLoadController {
 	@RequestMapping(value = "/word/progress", method = RequestMethod.GET)
 	public ZipDownload progress(String id) {
 		ZipDownload zipDownload = new ZipDownload();
-		zipDownload.setState(0);
-		zipDownload.setDetail("loading...");
 		if (map.containsKey(id)) {
 			zipDownload.setState(map.get(id).getState());
 			zipDownload.setDetail(map.get(id).getDetail());

@@ -156,6 +156,10 @@ public class TopicTextVO implements Serializable {
 	 * 编辑是否接受办理
 	 */
 	private Boolean isAccepted;
+	/**
+	 * 审核意见
+	 */
+	private String authFeedback;
 
 	public Long getId() {
 		return id;
@@ -411,6 +415,14 @@ public class TopicTextVO implements Serializable {
 
 	public void setRankType(String rankType) {
 		this.rankType = rankType;
+	}
+
+	public String getAuthFeedback() {
+		return authFeedback;
+	}
+
+	public void setAuthFeedback(String authFeedback) {
+		this.authFeedback = authFeedback;
 	}
 
 }

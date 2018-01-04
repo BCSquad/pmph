@@ -204,7 +204,6 @@ public class SpringThread implements Runnable {
 		} catch (Exception e) {
 			e.getMessage();
 		}
-		FileDownLoadController.map.put(this.id, zipDownload);
 		new Thread(zipDownload).start();
 		try {
 			this.zipHelper.zip(dest + File.separator + materialName, dest + File.separator, true, null);
