@@ -136,6 +136,8 @@
 			and g.group_name like
 			concat(concat('%',#{pmphGroup.groupName}),'%')
 		</if>
+		GROUP BY
+		g.id
 		order by
 		gmt_last_message desc , group_name ;
 	</select>
@@ -151,25 +153,27 @@
 	<!-- 查当前用户的小组列表 -->
 	<select id="listPmphGroup" parameterType="java.lang.String"
 		resultType="PmphGroupListVO">
-		select
+		SELECT
 		g.id,
 		g.group_name,
 		g.group_image,
 		g.gmt_last_message
 		gmtLastMessage,
 		g.book_id,
-		t.textbook_name bookName
-		from
+		t.textbook_name bookName,
+		COUNT(f.id) files
+		FROM
 		pmph_group g
-		LEFT
-		JOIN textbook t ON
-		g.book_id = t.id
+		LEFT JOIN textbook t ON g.book_id = t.id
+		LEFT JOIN
+		pmph_group_file f ON f.group_id = g.id
 		where
 		1=1
 		<if test="_parameter != null and _parameter !=''">
 			and g.group_name like
 			concat('%',#{groupName},'%')
 		</if>
+		GROUP BY g.id
 		order by
 		gmt_last_message desc
 		, group_Name ;
