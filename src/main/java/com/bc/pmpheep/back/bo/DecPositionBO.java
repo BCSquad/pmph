@@ -93,5 +93,5 @@ public class DecPositionBO {
 //	public void setWriters(List<WriterBO> writers) {
 //		this.writers = writers;
 //	}
-    
+//    
 }

@@ -946,4 +946,13 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		return filsRelativePaths;
 	}
+
+	@Override
+	public Material getMaterialByName(Long[] textbookIds) {
+		if(null==textbookIds){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"书籍id为空");
+		}
+		return materialDao.getMaterialByName(textbookIds);
+	}
 }

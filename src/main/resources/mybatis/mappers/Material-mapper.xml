@@ -669,4 +669,16 @@
 		left join material m on m.id=tk.material_id 
 		where m.id=#{id}
 	</select>
+	
+	<!-- 通过书籍id获取教材信息 -->
+	<select id="getMaterialByName" resultType="Material">
+			select * from material m
+				left join textbook t on t.material_id=m.id
+				where t.id in 
+		<foreach collection="array" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+				GROUP BY m.id
+	</select>
 </mapper>

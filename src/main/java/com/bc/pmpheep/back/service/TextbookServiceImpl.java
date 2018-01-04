@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.bo.DecPositionBO;
+import com.bc.pmpheep.back.bo.WriterBO;
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.dao.PmphUserDao;
@@ -667,7 +668,13 @@ public class TextbookServiceImpl implements TextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
                     CheckedExceptionResult.NULL_PARAM, "教材id为空");
 		}
-		return textbookDao.getExcelDecByMaterialId(textbookIds);
+		List<DecPositionBO> list=textbookDao.getExcelDecByMaterialId(textbookIds);
+//		Gson gson = new Gson();
+//		for (DecPositionBO decPositionBO : list) {
+//			Object writers=new ArrayList<>();
+//			writers = gson.toJson(decPositionBO.getWriters(),new TypeToken<ArrayList<WriterBO>>() {}.getType() );
+//		}
+		return list;
 	}
 }
 

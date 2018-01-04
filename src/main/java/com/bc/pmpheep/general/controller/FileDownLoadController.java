@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.bo.DecPositionBO;
+import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.service.BookCorrectionService;
 import com.bc.pmpheep.back.service.CmsExtraService;
 import com.bc.pmpheep.back.service.DeclarationService;
@@ -584,7 +585,9 @@ public class FileDownLoadController {
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_CREATION_FAILED, "数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request, list.get(0).getTextbookName() + ".xls");
+		//通过书籍id获取教材信息
+		Material material=materialService.getMaterialByName(textbookIds);
+		String fileName = returnFileName(request, material.getMaterialName() + ".xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);

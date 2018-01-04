@@ -148,4 +148,11 @@ public interface MaterialDao {
 	 * @return
 	 */
 	List<Textbook> getMaterialAndTextbook(Material material);
+	
+	/**
+	 * 通过书籍id获取教材信息
+	 * @param textbookIds
+	 * @return
+	 */
+	Material getMaterialByName(Long[] textbookIds);
 }
