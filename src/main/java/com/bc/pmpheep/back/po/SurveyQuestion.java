@@ -102,16 +102,23 @@ public class SurveyQuestion implements java.io.Serializable {
         this.gmtCreate = gmtCreate;
         this.gmtUpdate = gmtUpdate;
     }
-    
+
     public SurveyQuestion(Long id, Long categoryId, String title, Short type, Integer sort,
-    	    String direction, Boolean isAnswer) {
-    	this.id = id;
+    String direction, Boolean isAnswer) {
+        this.id = id;
         this.categoryId = categoryId;
         this.title = title;
         this.type = type;
         this.sort = sort;
         this.direction = direction;
         this.isAnswer = isAnswer;
+    }
+
+    public SurveyQuestion(String title, Short type, Integer sort, String direction) {
+        this.title = title;
+        this.type = type;
+        this.sort = sort;
+        this.direction = direction;
     }
 
     // Property accessors
@@ -255,13 +262,12 @@ public class SurveyQuestion implements java.io.Serializable {
         this.gmtUpdate = gmtUpdate;
     }
 
-	@Override
-	public String toString() {
-		return "SurveyQuestion [id=" + id + ", categoryId=" + categoryId
-				+ ", title=" + title + ", type=" + type + ", sort=" + sort
-				+ ", direction=" + direction + ", isAnswer=" + isAnswer
-				+ ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
-				+ ", gmtUpdate=" + gmtUpdate + "]";
-	}
+    @Override
+    public String toString() {
+        return "SurveyQuestion [id=" + id + ", categoryId=" + categoryId + ", title=" + title
+               + ", type=" + type + ", sort=" + sort + ", direction=" + direction + ", isAnswer="
+               + isAnswer + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
+               + ", gmtUpdate=" + gmtUpdate + "]";
+    }
 
 }

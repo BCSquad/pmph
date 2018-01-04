@@ -1,10 +1,13 @@
 package com.bc.pmpheep.back.controller.survey;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +17,7 @@ import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.SurveyTemplateService;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -62,7 +66,6 @@ public class SurveyTemplateController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseBean list(SurveyTemplateListVO surveyTemplateListVO,
     @RequestParam("pageNumber") Integer pageNumber, @RequestParam("pageSize") Integer pageSize) {
-        surveyTemplateListVO.setUsername(StringUtil.toAllCheck(surveyTemplateListVO.getUsername()));// 模版创建人
         surveyTemplateListVO.setTemplateName(StringUtil.toAllCheck(surveyTemplateListVO.getTemplateName()));// 模版名称
         PageParameter<SurveyTemplateListVO> pageParameter =
         new PageParameter<>(pageNumber, pageSize);
@@ -85,8 +88,10 @@ public class SurveyTemplateController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增问卷模版")
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseBean create(SurveyTemplateVO surveyTemplateVO, HttpServletRequest request) {
-        return new ResponseBean(surveyTemplateService.addSurveyTemplateVO(surveyTemplateVO));
+    public ResponseBean create(@RequestBody List<SurveyQuestionListVO> questionAnswerJosn,
+    SurveyTemplateVO surveyTemplateVO, HttpServletRequest request) {
+        return new ResponseBean(surveyTemplateService.addSurveyTemplateVO(questionAnswerJosn,
+                                                                          surveyTemplateVO));
     }
 
     /**

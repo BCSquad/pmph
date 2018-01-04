@@ -174,4 +174,39 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService {
         return surveyQuestionDao.getQuestionOptionByQuestionIdOrCategoryId(questionId, categoryId);
     }
 
+    @Override
+    public Integer batchUpdateSurveyQuestion(List<SurveyQuestion> surveyQuestions)
+    throws CheckedServiceException {
+        if (CollectionUtil.isEmpty(surveyQuestions)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return surveyQuestionDao.batchUpdateSurveyQuestion(surveyQuestions);
+    }
+
+    @Override
+    public List<Long> batchInsertSurveyQuestion(List<SurveyQuestion> surveyQuestions)
+    throws CheckedServiceException {
+        if (CollectionUtil.isEmpty(surveyQuestions)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        List<Long> newIds = surveyQuestionDao.batchInsertSurveyQuestion(surveyQuestions);
+        if (CollectionUtil.isEmpty(newIds)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问题批量新增失败");
+        }
+        return newIds;
+    }
+
+    @Override
+    public Integer batchDeleteSurveyQuestionByQuestionIds(List<Long> questionIds)
+    throws CheckedServiceException {
+        if (CollectionUtil.isEmpty(questionIds)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return surveyQuestionDao.batchDeleteSurveyQuestionByQuestionIds(questionIds);
+    }
+
 }

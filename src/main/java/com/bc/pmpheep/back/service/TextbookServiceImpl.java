@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.bo.DecPositionBO;
-import com.bc.pmpheep.back.bo.WriterBO;
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.dao.PmphUserDao;
@@ -43,7 +42,6 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
-import com.bc.pmpheep.back.vo.ExportDecPositionVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -662,44 +660,14 @@ public class TextbookServiceImpl implements TextbookService {
 		return textbooks;
 	}
 
-//	@Override
-//	public List<DecPositionBO> getExcelDecByMaterialId(Long[] textbookIds) {
-//		if(null==textbookIds){
-//			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
-//                    CheckedExceptionResult.NULL_PARAM, "教材id为空");
-//		}
-//		List<DecPositionBO> decPositionBOs=new ArrayList<>();
-//		List<ExportDecPositionVO> exportDecPositionVOs=textbookDao.getExcelDecByMaterialId(textbookIds);
-//		DecPositionBO decPositionBO=new DecPositionBO();
-//		List<WriterBO> writerBOs=textbookDao.getWriterBOTextbooks(textbookIds);
-//		for (ExportDecPositionVO exportDecPositionVO : exportDecPositionVOs) {
-//			decPositionBO.setTextbookName(exportDecPositionVO.getTextbookName());
-//			decPositionBO.setTextbookRound(exportDecPositionVO.getTextbookRound());
-//			decPositionBOs.add(decPositionBO);
-//		}
-//		decPositionBO.setWriters(writerBOs);
-//		decPositionBOs.add(decPositionBO);
-//		return decPositionBOs;
-//	}
 
 	@Override
-	public List<DecPositionBO> getExcelDecByMaterialId(Long[] textbookIds, String textbookName, Integer textbookRoun) {
+	public List<DecPositionBO> getExcelDecByMaterialId(Long[] textbookIds) {
 		if(null==textbookIds){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_PUB,
                     CheckedExceptionResult.NULL_PARAM, "教材id为空");
 		}
-		List<DecPositionBO> decPositionBOs=new ArrayList<>();
-		List<ExportDecPositionVO> exportDecPositionVOs=textbookDao.getExcelDecByMaterialId(textbookIds);
-		DecPositionBO decPositionBO=new DecPositionBO();
-		List<WriterBO> writerBOs=textbookDao.getWriterBOTextbooks(textbookIds);
-		for (ExportDecPositionVO exportDecPositionVO : exportDecPositionVOs) {
-			decPositionBO.setTextbookName(exportDecPositionVO.getTextbookName());
-			decPositionBO.setTextbookRound(exportDecPositionVO.getTextbookRound());
-			decPositionBOs.add(decPositionBO);
-		}
-		decPositionBO.setWriters(writerBOs);
-		decPositionBOs.add(decPositionBO);
-		return decPositionBOs;
+		return textbookDao.getExcelDecByMaterialId(textbookIds);
 	}
 }
 

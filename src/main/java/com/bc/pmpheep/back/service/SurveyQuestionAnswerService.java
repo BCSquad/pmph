@@ -1,9 +1,14 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
+import java.util.Map;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.SurveyQuestionAnswer;
 import com.bc.pmpheep.back.vo.SurveyQuestionAnswerCountsVO;
+import com.bc.pmpheep.back.vo.SurveyQuestionFillVO;
+import com.bc.pmpheep.back.vo.SurveyRecoveryVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -95,7 +100,75 @@ public interface SurveyQuestionAnswerService {
      * @throws CheckedServiceException
      * </pre>
      */
-    List<SurveyQuestionAnswerCountsVO> getSurveyQuestionAnswerCounts(
+    PageResult<SurveyQuestionAnswerCountsVO> listSurveyQuestionAnswer(
+    PageParameter<SurveyQuestionAnswerCountsVO> pageParameter) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：问卷结果统计详情
+     * 使用示范：
+     *
+     * @param questionAnswerCountsVO SurveyQuestionAnswerCountsVO对象
+     * @return 
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Map<String, Object> getSurveyQuestionAnswerCounts(
     SurveyQuestionAnswerCountsVO questionAnswerCountsVO) throws CheckedServiceException;
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：问卷回收列表
+     * 使用示范：
+     *
+     * @param pageParameter
+     * @return
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    PageResult<SurveyRecoveryVO> listSurveyRecovery(PageParameter<SurveyRecoveryVO> pageParameter)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：查询问卷详情
+     * 使用示范：
+     *
+     * @param surveyId 问卷ID
+     * @return  SurveyQuestionAnswer 对象集合
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Map<String, Object> listSurveyQuestionAnswerBySurveyId(Long surveyId)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：填空题详情
+     * 使用示范：
+     *
+     * @param pageParameter
+     * @return 分页数据集
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    PageResult<SurveyQuestionFillVO> listFillQuestion(
+    PageParameter<SurveyQuestionFillVO> pageParameter) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：填空题统计
+     * 使用示范：
+     *
+     * @param surveyId 问卷ID
+     * @throws CheckedServiceException
+     * @return
+     * </pre>
+     */
+    List<SurveyQuestionFillVO> listFillQuestionCounts(Long surveyId) throws CheckedServiceException;
 }

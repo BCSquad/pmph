@@ -1,15 +1,20 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.bc.pmpheep.back.po.SurveyQuestionOption;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * SurveyQuestionOptionService接口
+ * 
  * @author tyc
- *
+ * 
  */
 public interface SurveyQuestionOptionService {
-	/**
+    /**
      * 新增一个SurveyQuestionOption
      * 
      * @author:tyc
@@ -17,10 +22,23 @@ public interface SurveyQuestionOptionService {
      * @param SurveyQuestionOption 实体对象
      * @return 影响行数
      */
-	SurveyQuestionOption addSurveyQuestionOption(SurveyQuestionOption surveyQuestionOption) 
-			throws CheckedServiceException;
-	
-	/**
+    SurveyQuestionOption addSurveyQuestionOption(SurveyQuestionOption surveyQuestionOption)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：批量插入
+     * 使用示范：
+     *
+     * @param surveyQuestionOptions  SurveyQuestionOption对象集合
+     * @return 影响行数
+     * </pre>
+     */
+    Integer batchInsertSurveyQuestionOption(List<SurveyQuestionOption> surveyQuestionOptions)
+    throws CheckedServiceException;
+
+    /**
      * 更新一个 SurveyOptions通过主键id
      * 
      * @author:tyc
@@ -28,8 +46,22 @@ public interface SurveyQuestionOptionService {
      * @param SurveyOptions
      * @return 影响行数
      */
-    Integer updateSurveyQuestionOption(SurveyQuestionOption surveyQuestionOption) throws CheckedServiceException;
-    
+    Integer updateSurveyQuestionOption(SurveyQuestionOption surveyQuestionOption)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：批量更新
+     * 使用示范：
+     *
+     * @param surveyQuestionOptions  SurveyQuestionOption 集合
+     * @return 影响行数
+     * </pre>
+     */
+    Integer batchUpdateSurveyOption(List<SurveyQuestionOption> surveyQuestionOptions)
+    throws CheckedServiceException;
+
     /**
      * 查找SurveyQuestionOption通过主键id
      * 
@@ -39,7 +71,7 @@ public interface SurveyQuestionOptionService {
      * @return 影响行数
      */
     SurveyQuestionOption getSurveyQuestionOptionById(Long id) throws CheckedServiceException;
-    
+
     /**
      * 删除SurveyQuestionOption通过问题id
      * 
@@ -48,5 +80,18 @@ public interface SurveyQuestionOptionService {
      * @param SurveyQuestionOption
      * @return 影响行数
      */
-    Integer deleteSurveyQuestionOptionByQuestionId(Long questionId);
+    Integer deleteSurveyQuestionOptionByQuestionId(Long questionId) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按问题Id批量删除
+     * 使用示范：
+     *
+     * @param questionIds  问题id
+     * @return 影响行数 
+     * </pre>
+     */
+    Integer batchDeleteSurveyQuestionOptionByQuestionIds(
+    @Param("questionIds") List<Long> questionIds) throws CheckedServiceException;
 }

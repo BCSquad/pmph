@@ -310,6 +310,8 @@
 	<select id="listBookPosition" parameterType="PageParameter"
 		resultType="BookPositionVO">
 		select
+		a.revision_times,
+		a.republish_times,
 		a.is_locked,
 		a.is_published, 
 		d.id materialId,
@@ -320,6 +322,7 @@
 		a.sort sort,
 		a.textbook_name,
 		a.textbook_round textbookRound,
+		a.is_chief_published,
 		sum(IF(b.id is not null ,1,0))
 		applyNum,
 		a.planning_editor planningEditor,
@@ -475,15 +478,19 @@
 		</foreach>
 	</select>
 	<!-- 角色遴选页面批量导出主编/副主编 -->
-	<select id="getExcelDecByMaterialId" resultType="ExportDecPositionVO">
-		select tk.textbook_name,tk.textbook_round,dc.realname,org.org_name chosenOrgName,dp.chosen_position,dp.rank
-				from dec_position dp
-				left join declaration dc on dp.declaration_id=dc.id
-				left join org org on dc.org_id=org.id
-				left join writer_user wu on wu.id=dc.user_id
-				left join textbook tk on tk.id=dp.textbook_id
-				left join material m on m.id=tk.material_id
-			WHERE
+	<select id="getExcelDecByMaterialId" resultType="com.bc.pmpheep.back.bo.DecPositionBO">
+			SELECT 
+					t.*,CONCAT('[',GROUP_CONCAT(t.temp),']') writers from(
+					select tk.sort,tk.textbook_name,tk.textbook_round,CONCAT('{realname:',dc.realname,',',
+					'chosenOrgName:',org.org_name,',','chosen_position:',dp.chosen_position,',',
+					'rank:',dp.rank,'}') temp 
+					from dec_position dp
+					left join declaration dc on dp.declaration_id=dc.id
+					left join org org on dc.org_id=org.id
+					left join writer_user wu on wu.id=dc.user_id
+					left join textbook tk on tk.id=dp.textbook_id
+					left join material m on m.id=tk.material_id
+						WHERE
 				dc.is_staging=false and dc.online_progress!=2
 				and dp.chosen_position in(2,3,4,5,6,10,11,12,13,14,15,16,17)
 				and dp.`textbook_id` in
@@ -491,25 +498,6 @@
 			separator="," close=")">
 			#{item}
 		</foreach>
-	</select>
-	
-	
-	<!-- 角色遴选页面批量导出主编/副主编 -->
-	<select id="getWriterBOTextbooks" resultType="com.bc.pmpheep.back.bo.WriterBO">
-		select dc.realname,org.org_name chosenOrgName,dp.chosen_position,dp.rank
-				from dec_position dp
-				left join declaration dc on dp.declaration_id=dc.id
-				left join org org on dc.org_id=org.id
-				left join writer_user wu on wu.id=dc.user_id
-				left join textbook tk on tk.id=dp.textbook_id
-				left join material m on m.id=tk.material_id
-			WHERE
-				dc.is_staging=false and dc.online_progress!=2
-				and dp.chosen_position in(2,3,4,5,6,10,11,12,13,14,15,16,17)
-				and dp.`textbook_id` in
-		<foreach collection="array" item="item" index="index" open="("
-			separator="," close=")">
-			#{item}
-		</foreach>
+			)t
 	</select>
 </mapper>

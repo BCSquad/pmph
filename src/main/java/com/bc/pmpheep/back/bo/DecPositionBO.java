@@ -4,9 +4,14 @@
  */
 package com.bc.pmpheep.back.bo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bc.pmpheep.annotation.ExcelHeader;
+import com.bc.pmpheep.back.po.CmsAdvertisementImage;
+import com.bc.pmpheep.back.util.StringUtil;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * 教材遴选表业务对象，用于Excel/Word(批量)导出
@@ -14,9 +19,9 @@ import com.bc.pmpheep.annotation.ExcelHeader;
  * @author L.X <gugia@qq.com>
  */
 public class DecPositionBO {
-
+	
 	private Integer sort;
-
+	
 	private String textbookName;
 	
     private Integer textbookRound;
@@ -75,7 +80,18 @@ public class DecPositionBO {
     /**
      * @param writers the writers to set
      */
-    public void setWriters(List<WriterBO> writers) {
-        this.writers = writers;
-    }
+    public void setWriters(String writers) {
+		if(StringUtil.isEmpty(writers)){
+			this.writers = new ArrayList<>() ;
+			return ;
+		}
+		Gson gson = new Gson();
+		this.writers = gson.fromJson(writers,new TypeToken<ArrayList<WriterBO>>() {}.getType() );
+
+	}
+
+//	public void setWriters(List<WriterBO> writers) {
+//		this.writers = writers;
+//	}
+    
 }

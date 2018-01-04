@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.SurveyQuestionAnswer;
 import com.bc.pmpheep.back.vo.SurveyQuestionAnswerCountsVO;
+import com.bc.pmpheep.back.vo.SurveyQuestionFillVO;
+import com.bc.pmpheep.back.vo.SurveyRecoveryVO;
 
 /**
  * SurveyQuestionAnswer问题回答实体类数据访问层接口
@@ -77,7 +80,67 @@ public interface SurveyQuestionAnswerDao {
      * @return 
      * </pre>
      */
+    List<SurveyQuestionAnswerCountsVO> listSurveyQuestionAnswer(
+    PageParameter<SurveyQuestionAnswerCountsVO> pageParameter);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：问卷结果统计详情
+     * 使用示范：
+     *
+     * @param questionAnswerCountsVO SurveyQuestionAnswerCountsVO对象
+     * @return  
+     * </pre>
+     */
     List<SurveyQuestionAnswerCountsVO> getSurveyQuestionAnswerCounts(
     SurveyQuestionAnswerCountsVO questionAnswerCountsVO);
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：填空题详情
+     * 使用示范：
+     *
+     * @param pageParameter
+     * @return 分页数据集
+     * </pre>
+     */
+    List<SurveyQuestionFillVO> listFillQuestion(PageParameter<SurveyQuestionFillVO> pageParameter);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：填空题统计
+     * 使用示范：
+     *
+     * @param surveyId 问卷ID
+     * @return
+     * </pre>
+     */
+    List<SurveyQuestionFillVO> listFillQuestionCounts(Long surveyId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：问卷回收列表
+     * 使用示范：
+     *
+     * @param pageParameter
+     * @return
+     * </pre>
+     */
+    List<SurveyRecoveryVO> listSurveyRecovery(PageParameter<SurveyRecoveryVO> pageParameter);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：查询问卷详情
+     * 使用示范：
+     *
+     * @param surveyId 问卷ID
+     * @return  SurveyQuestionAnswer 对象集合
+     * </pre>
+     */
+    List<SurveyQuestionAnswer> listSurveyQuestionAnswerBySurveyId(Long surveyId);
 }

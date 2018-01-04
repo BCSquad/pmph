@@ -22,6 +22,14 @@ public class SurveyTemplateListVO implements java.io.Serializable {
      */
     private String            templateName;
     /**
+     * 简介
+     */
+    private String            intro;
+    /**
+     * 调查类型
+     */
+    private Long              surveyName;
+    /**
      * 排序
      */
     private Integer           sort;
@@ -53,6 +61,18 @@ public class SurveyTemplateListVO implements java.io.Serializable {
      * 模版创建人
      */
     private String            username;
+    /**
+     * 模版创建人
+     */
+    private String            realname;
+    /**
+     * 开始时间
+     */
+    private String            startDate;
+    /**
+     * 结束时间
+     */
+    private String            endDate;
 
     /** default constructor */
     public SurveyTemplateListVO() {
@@ -142,6 +162,76 @@ public class SurveyTemplateListVO implements java.io.Serializable {
      */
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    /**
+     * @return the intro
+     */
+    public String getIntro() {
+        return intro;
+    }
+
+    /**
+     * @param intro the intro to set
+     */
+    public void setIntro(String intro) {
+        this.intro = intro;
+    }
+
+    /**
+     * @return the surveyName
+     */
+    public Long getSurveyName() {
+        return surveyName;
+    }
+
+    /**
+     * @param surveyName the surveyName to set
+     */
+    public void setSurveyName(Long surveyName) {
+        this.surveyName = surveyName;
+    }
+
+    /**
+     * @return the realname
+     */
+    public String getRealname() {
+        return realname;
+    }
+
+    /**
+     * @param realname the realname to set
+     */
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
+
+    /**
+     * @return the startDate
+     */
+    public String getStartDate() {
+        return startDate;
+    }
+
+    /**
+     * @param startDate the startDate to set
+     */
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    /**
+     * @return the endDate
+     */
+    public String getEndDate() {
+        return endDate;
+    }
+
+    /**
+     * @param endDate the endDate to set
+     */
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     @Override
