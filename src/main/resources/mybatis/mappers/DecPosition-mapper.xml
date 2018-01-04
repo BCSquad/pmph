@@ -509,10 +509,10 @@
         resultType="DeclarationResultSchoolVO">
         SELECT @rowno:=@rowno+1 AS row,t1.id,t1.orgid,t1.schoolname,t1.editorlist,
 		t1.subeditorlist,t1.editoriallist,t1.isdigitaleditorlist    
-		FROM (SELECT GROUP_CONCAT(if((d.chosen_position in (1)),b.realname,null)) editorlist,
+		FROM (SELECT GROUP_CONCAT(if((d.chosen_position in (4)),b.realname,null)) editorlist,
 		GROUP_CONCAT(if((d.chosen_position in (2)),b.realname,null)) subeditorlist,
-		GROUP_CONCAT(if((d.chosen_position in (3)),b.realname,null)) editoriallist,
-		GROUP_CONCAT(if((d.chosen_position in (4)),b.realname,null)) isdigitaleditorlist,
+		GROUP_CONCAT(if((d.chosen_position in (1)),b.realname,null)) editoriallist,
+		GROUP_CONCAT(if((d.chosen_position in (8,9,10,11,12,13,14,15)),b.realname,null)) isdigitaleditorlist,
 		c.id,a.id orgid,a.org_name schoolname FROM org a 
 		LEFT JOIN declaration b ON a.id = b.org_id 
 		LEFT JOIN material c ON b.material_id = c.id 
@@ -538,13 +538,13 @@
         SELECT @rowno:=@rowno+1 AS row,t1.materialid,t1.id,t1.bookname,t1.editorlist,
 		t1.subeditorlist,t1.editoriallist,t1.isdigitaleditorlist 
 		FROM (SELECT GROUP_CONCAT(if((d.is_staging = 0 AND d.online_progress >0 AND 
-        c.preset_position IS NOT NULL AND c.chosen_position in (1)),d.realname,null)) editorlist,
+        c.preset_position IS NOT NULL AND c.chosen_position in (4)),d.realname,null)) editorlist,
 		GROUP_CONCAT(if((d.is_staging = 0 AND d.online_progress >0 AND 
         c.preset_position IS NOT NULL AND c.chosen_position in (2)),d.realname,null)) subeditorlist,
 		GROUP_CONCAT(if((d.is_staging = 0 AND d.online_progress >0 AND 
-        c.preset_position IS NOT NULL AND c.chosen_position in (3)),d.realname,null)) editoriallist,
+        c.preset_position IS NOT NULL AND c.chosen_position in (1)),d.realname,null)) editoriallist,
  		GROUP_CONCAT(if((d.is_staging = 0 AND d.online_progress >0 AND 
-        c.preset_position IS NOT NULL AND c.chosen_position in (4)),d.realname,null)) isdigitaleditorlist,
+        c.preset_position IS NOT NULL AND c.chosen_position in (8,9,10,11,12,13,14,15)),d.realname,null)) isdigitaleditorlist,
 		b.id materialid,a.id id,a.textbook_name bookname FROM textbook a 
 		LEFT JOIN material b ON a.material_id = b.id 
         LEFT JOIN dec_position c ON a.id = c.textbook_id  
@@ -609,7 +609,7 @@
 	<!-- 根据materialId查询主编当选数 -->
 	<select id="getChosenEditorCount" parameterType="java.lang.Long" 
 	    resultType="java.lang.Integer">
-	    select sum(if((dp.chosen_position = 1),1,0)) count from dec_position dp 
+	    select sum(if((dp.chosen_position = 4),1,0)) count from dec_position dp 
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
 		where d.is_staging = 0 AND d.online_progress >0 
@@ -629,7 +629,7 @@
 	<!-- 根据materialId查询编委当选数 -->
 	<select id="getChosenEditorialCount" parameterType="java.lang.Long" 
 	    resultType="java.lang.Integer">
-	    select sum(if((dp.chosen_position = 3),1,0)) count from dec_position dp 
+	    select sum(if((dp.chosen_position = 1),1,0)) count from dec_position dp 
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
 		where d.is_staging = 0 AND d.online_progress >0 
@@ -639,7 +639,7 @@
 	<!-- 根据materialId查询数字编委当选数 -->
 	<select id="getChosenDigitalCount" parameterType="java.lang.Long" 
 	    resultType="java.lang.Integer">
-	    select sum(if((dp.chosen_position = 4),1,0)) count from dec_position dp 
+	    select sum(if((c.chosen_position in (8,9,10,11,12,13,14,15)),1,0)) count from dec_position dp 
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
 		where d.is_staging = 0 AND d.online_progress >0 
@@ -656,10 +656,10 @@
 		SUM(if((d.preset_position in (2,3,6,7,10,11,14,15)),1,0)) presetpositionsubeditor,
 		SUM(if((d.preset_position in (1,3,5,7,9,11,13,15)),1,0)) presetpositioneditorial,
 		SUM(if((d.preset_position in (8,9,10,11,12,13,14,15)),1,0)) presetdigitaleditor,
-		SUM(if((d.chosen_position in (1)),1,0)) chosenpositioneditor,
+		SUM(if((d.chosen_position in (4)),1,0)) chosenpositioneditor,
 		SUM(if((d.chosen_position in (2)),1,0)) chosenpositionsubeditor,
-		SUM(if((d.chosen_position in (3)),1,0)) chosenpositioneditorial,
-		SUM(if((d.chosen_position in (4)),1,0)) isdigitaleditor,
+		SUM(if((d.chosen_position in (1)),1,0)) chosenpositioneditorial,
+		SUM(if((d.chosen_position in (8,9,10,11,12,13,14,15)),1,0)) isdigitaleditor,
 		c.id,a.id orgid,a.org_name schoolname FROM org a 
 		LEFT JOIN declaration b ON a.id = b.org_id 
 		LEFT JOIN material c ON b.material_id = c.id 
@@ -670,10 +670,10 @@
 		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
 			and a.org_name like concat ('%',#{parameter.schoolName},'%') 
 		</if>
-		GROUP BY a.id ORDER BY SUM(if((d.chosen_position in (1)),1,0)) DESC, 
+		GROUP BY a.id ORDER BY SUM(if((d.chosen_position in (4)),1,0)) DESC, 
 		SUM(if((d.chosen_position in (2)),1,0)) DESC, 
-		SUM(if((d.chosen_position in (3)),1,0)) DESC, 
-		SUM(if((d.chosen_position in (4)),1,0)) DESC)t1,
+		SUM(if((d.chosen_position in (1)),1,0)) DESC, 
+		SUM(if((d.chosen_position in (8,9,10,11,12,13,14,15)),1,0)) DESC)t1,
 		(SELECT @rowno:=0)t2 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize} 
@@ -690,10 +690,10 @@
 		SUM(if((d.preset_position in (2,3,6,7,10,11,14,15)),1,0)) presetpositionsubeditor,
 		SUM(if((d.preset_position in (1,3,5,7,9,11,13,15)),1,0)) presetpositioneditorial,
 		SUM(if((d.preset_position in (8,9,10,11,12,13,14,15)),1,0)) presetdigitaleditor,
-		SUM(if((d.chosen_position in (1)),1,0)) chosenpositioneditor,
+		SUM(if((d.chosen_position in (4)),1,0)) chosenpositioneditor,
 		SUM(if((d.chosen_position in (2)),1,0)) chosenpositionsubeditor,
-		SUM(if((d.chosen_position in (3)),1,0)) chosenpositioneditorial,
-		SUM(if((d.chosen_position in (4)),1,0)) isdigitaleditor,
+		SUM(if((d.chosen_position in (1)),1,0)) chosenpositioneditorial,
+		SUM(if((d.chosen_position in (8,9,10,11,12,13,14,15)),1,0)) isdigitaleditor,
 		c.id,a.id orgid,a.org_name schoolname FROM org a 
 		LEFT JOIN declaration b ON a.id = b.org_id 
 		LEFT JOIN material c ON b.material_id = c.id 
@@ -733,13 +733,13 @@
         SUM(if((d.is_staging = 0 AND d.online_progress >0 AND 
         c.preset_position IS NOT NULL AND c.preset_position in (8,9,10,11,12,13,14,15)),1,0)) presetdigitaleditor,
 		SUM(if((d.is_staging = 0 AND d.online_progress >0 AND 
-        c.preset_position IS NOT NULL AND c.chosen_position in (1)),1,0)) chosenpositioneditor,
+        c.preset_position IS NOT NULL AND c.chosen_position in (4)),1,0)) chosenpositioneditor,
 		SUM(if((d.is_staging = 0 AND d.online_progress >0 AND 
         c.preset_position IS NOT NULL AND c.chosen_position in (2)),1,0)) chosenpositionsubeditor,
 		SUM(if((d.is_staging = 0 AND d.online_progress >0 AND 
-        c.preset_position IS NOT NULL AND c.chosen_position in (3)),1,0)) chosenpositioneditorial,
+        c.preset_position IS NOT NULL AND c.chosen_position in (1)),1,0)) chosenpositioneditorial,
 		SUM(if((d.is_staging = 0 AND d.online_progress >0 AND 
-        c.preset_position IS NOT NULL AND c.chosen_position in (4)),1,0)) isdigitaleditor,
+        c.preset_position IS NOT NULL AND c.chosen_position in (8,9,10,11,12,13,14,15)),1,0)) isdigitaleditor,
 		b.id materialid,a.id id,a.textbook_name bookname FROM textbook a 
 		LEFT JOIN material b ON a.material_id = b.id 
 		LEFT JOIN dec_position c ON a.id = c.textbook_id 
@@ -759,10 +759,10 @@
 		resultType="DeclarationResultSchoolVO">
 		SELECT @rowno:=@rowno+1 AS row,t1.id,t1.orgid,t1.schoolname,t1.editorlist,
 		t1.subeditorlist,t1.editoriallist,t1.isdigitaleditorlist 
-		FROM (SELECT GROUP_CONCAT(if((d.chosen_position in (1)),b.realname,null)) editorlist,
+		FROM (SELECT GROUP_CONCAT(if((d.chosen_position in (4)),b.realname,null)) editorlist,
 		GROUP_CONCAT(if((d.chosen_position in (2)),b.realname,null)) subeditorlist,
-		GROUP_CONCAT(if((d.chosen_position in (3)),b.realname,null)) editoriallist,
-		GROUP_CONCAT(if((d.chosen_position in (4)),b.realname,null)) isdigitaleditorlist,
+		GROUP_CONCAT(if((d.chosen_position in (1)),b.realname,null)) editoriallist,
+		GROUP_CONCAT(if((d.chosen_position in (8,9,10,11,12,13,14,15)),b.realname,null)) isdigitaleditorlist,
 		c.id,a.id orgid,a.org_name schoolname FROM org a 
 		LEFT JOIN declaration b ON a.id = b.org_id 
 		LEFT JOIN material c ON b.material_id = c.id 
@@ -772,10 +772,10 @@
 		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
 			and a.org_name like concat ('%',#{parameter.schoolName},'%') 
 		</if>
-		GROUP BY a.id ORDER BY SUM(if((d.chosen_position in (1)),1,0)) DESC,
+		GROUP BY a.id ORDER BY SUM(if((d.chosen_position in (4)),1,0)) DESC,
 		SUM(if((d.chosen_position in (2)),1,0)) DESC,
-		SUM(if((d.chosen_position in (3)),1,0)) DESC,
-		SUM(if((d.chosen_position in (4)),1,0)) DESC)t1,
+		SUM(if((d.chosen_position in (1)),1,0)) DESC,
+		SUM(if((d.chosen_position in (8,9,10,11,12,13,14,15)),1,0)) DESC)t1,
 		(SELECT @rowno:=0)t2 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize} 
