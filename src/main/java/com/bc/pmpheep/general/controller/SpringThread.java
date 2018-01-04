@@ -2,9 +2,7 @@ package com.bc.pmpheep.general.controller;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -26,7 +24,7 @@ import com.bc.pmpheep.utils.WordHelper;
 import com.bc.pmpheep.utils.ZipHelper;
 
 public class SpringThread implements Runnable {
-	public static Map<String, ZipDownload> map = new HashMap<>();
+
 	Logger logger = LoggerFactory.getLogger(SpringThread.class);
 	ZipHelper zipHelper;
 	WordHelper wordHelper;
@@ -174,7 +172,7 @@ public class SpringThread implements Runnable {
 		zipDownload.setState(0);
 		zipDownload.setDetail("loading...");
 		zipDownload.setCreateTime(DateUtil.getCurrentTime());
-		map.put(this.id, zipDownload);
+		FileDownLoadController.map.put(this.id, zipDownload);
 		try {
 			declarationEtcBOs = this.declarationService.declarationEtcBO(this.materialId, this.textBookids,
 					this.realname, this.position, this.title, this.orgName, this.unitName, this.positionType,
@@ -214,7 +212,7 @@ public class SpringThread implements Runnable {
 		}
 		zipDownload.setState(1);
 		zipDownload.setDetail("/zip/download?id=" + this.id);
-		map.put(this.id, zipDownload);
+		FileDownLoadController.map.put(this.id, zipDownload);
 	}
 
 }

@@ -7,7 +7,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.general.controller.FileDownLoadController;
-import com.bc.pmpheep.general.controller.SpringThread;
 
 /**
  * 
@@ -165,13 +164,13 @@ public class ZipDownload implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		if (SpringThread.map.containsKey(id)) {
+		if (FileDownLoadController.map.containsKey(id)) {
 			String src = this.getClass().getResource("/").getPath();
 			src = src.substring(1);
 			if (!src.endsWith(File.separator)) {
 				src += File.separator;
 			}
-			SpringThread.map.remove(id);
+			FileDownLoadController.map.remove(id);
 			DeleteFolder(src + id);
 		}
 	}
