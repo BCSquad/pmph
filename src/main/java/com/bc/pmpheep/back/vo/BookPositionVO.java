@@ -36,6 +36,8 @@ public class BookPositionVO implements Serializable{
 		private String editorsAndAssociateEditors;
 		//主编副主编数目
 	    private Integer editorsAndAssociateEditorsNum;
+	    //是否已公布主编/副主编
+	    private Boolean isChiefPublished;
 	    //编委名字
 	    private String bianWeis;
 	    //编委数目
@@ -67,6 +69,9 @@ public class BookPositionVO implements Serializable{
 		//公布后再次公布次数
 		private Integer republishTimes;
 		
+		public BookPositionVO() {
+			super();
+		}
 
 		public Integer getRevisionTimes() {
 			return revisionTimes;
@@ -108,9 +113,7 @@ public class BookPositionVO implements Serializable{
 			this.isLocked = isLocked;
 		}
 
-		public BookPositionVO() {
-			super();
-		}
+		
 
 		public Long getMaterialId() {
 			return materialId;
@@ -234,41 +237,51 @@ public class BookPositionVO implements Serializable{
 		public void setGroupId(Long groupId) {
 			this.groupId = groupId;
 		}
+		
+		
+		
+		public Boolean getIsChiefPublished() {
+			return isChiefPublished;
+		}
+
+		public void setIsChiefPublished(Boolean isChiefPublished) {
+			this.isChiefPublished = isChiefPublished;
+		}
+				
+		public Boolean getIsAllTextbookPublished() {
+			return isAllTextbookPublished;
+		}
+
+		public void setIsAllTextbookPublished(Boolean isAllTextbookPublished) {
+			this.isAllTextbookPublished = isAllTextbookPublished;
+		}
+
+		public Boolean getIsForceEnd() {
+			return isForceEnd;
+		}
+
+		public void setIsForceEnd(Boolean isForceEnd) {
+			this.isForceEnd = isForceEnd;
+		}
 
 		@Override
 		public String toString() {
-			return "{materialId:" + materialId + ", isAllTextbookPublished:"
-					+ isAllTextbookPublished + ", isForceEnd:" + isForceEnd
-					+ ", textBookId:" + textBookId + ", sort:" + sort
-					+ ", textbookName:" + textbookName + ", textbookRound:"
-					+ textbookRound + ", applyNum:" + applyNum
-					+ ", planningEditor:" + planningEditor
-					+ ", planningEditorName:" + planningEditorName
-					+ ", editorsAndAssociateEditors:"
+			return "{materialId:" + materialId + ",isAllTextbookPublished:"
+					+ isAllTextbookPublished + ",isForceEnd:" + isForceEnd
+					+ ",textBookId:" + textBookId + ",sort:" + sort
+					+ ",textbookName:" + textbookName + ",textbookRound:"
+					+ textbookRound + ",applyNum:" + applyNum
+					+ ",planningEditor:" + planningEditor
+					+ ",planningEditorName:" + planningEditorName
+					+ ",editorsAndAssociateEditors:"
 					+ editorsAndAssociateEditors
-					+ ", editorsAndAssociateEditorsNum:"
-					+ editorsAndAssociateEditorsNum + ", bianWeis:" + bianWeis
-					+ ", bianWeisNum:" + bianWeisNum + ", groupId:" + groupId
-					+ ", myPower:" + myPower + ", isPublished:" + isPublished
-					+ ", isLocked:" + isLocked + ", getMyPower():"
-					+ getMyPower() + ", getIsPublished():" + getIsPublished()
-					+ ", getIsLocked():" + getIsLocked() + ", getMaterialId():"
-					+ getMaterialId() + ", isAllTextbookPublished():"
-					+ isAllTextbookPublished() + ", isForceEnd():"
-					+ isForceEnd() + ", getTextBookId():" + getTextBookId()
-					+ ", getSort():" + getSort() + ", getTextbookName():"
-					+ getTextbookName() + ", getTextbookRound():"
-					+ getTextbookRound() + ", getApplyNum():" + getApplyNum()
-					+ ", getPlanningEditor():" + getPlanningEditor()
-					+ ", getPlanningEditorName():" + getPlanningEditorName()
-					+ ", getEditorsAndAssociateEditors():"
-					+ getEditorsAndAssociateEditors()
-					+ ", getEditorsAndAssociateEditorsNum():"
-					+ getEditorsAndAssociateEditorsNum() + ", getBianWeis():"
-					+ getBianWeis() + ", getBianWeisNum():" + getBianWeisNum()
-					+ ", getGroupId():" + getGroupId() + ", getClass():"
-					+ getClass() + ", hashCode():" + hashCode()
-					+ ", toString():" + super.toString() + "}";
+					+ ",editorsAndAssociateEditorsNum:"
+					+ editorsAndAssociateEditorsNum + ",isChiefPublished:"
+					+ isChiefPublished + ",bianWeis:" + bianWeis
+					+ ",bianWeisNum:" + bianWeisNum + ",groupId:" + groupId
+					+ ",myPower:" + myPower + ",isPublished:" + isPublished
+					+ ",isLocked:" + isLocked + ",revisionTimes:"
+					+ revisionTimes + ",republishTimes:" + republishTimes + "}";
 		}
 		
 		
