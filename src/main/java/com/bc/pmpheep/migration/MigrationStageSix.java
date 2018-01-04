@@ -158,6 +158,10 @@ public class MigrationStageSix {
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql); // 查询所有数据
         int count = 0; // 迁移成功的条目数
         int materialidCount = 0;
+        int sysflagCount = 0;
+        int usertypeCount = 0;
+        int useridCount = 0;
+        int decCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -179,12 +183,14 @@ public class MigrationStageSix {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为后台用户申报教材。"));
                 excel.add(map);
                 logger.debug("找到为后台用户申报教材，此结果将被记录在Excel中");
+                sysflagCount++;
                 continue;
             }
             if (usertype == 2) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为用户类型为学校管理员申报教材。"));
                 excel.add(map);
                 logger.debug("找到为用户类型为学校管理员申报教材，此结果将被记录在Excel中");
+                usertypeCount++;
                 continue;
             }
             Declaration declaration = new Declaration();
@@ -200,6 +206,7 @@ public class MigrationStageSix {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到作家对应的关联结果。"));
                 excel.add(map);
                 logger.debug("未找到作家对应的关联结果，此结果将被记录在Excel中");
+                useridCount++;
                 continue;
             }
             declaration.setUserId(userid);
@@ -260,6 +267,7 @@ public class MigrationStageSix {
                         declaration.getMaterialId(), declaration.getUserId());
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("已存在教材id和作家id均相同的记录。"));
                 excel.add(map);
+                decCount++;
                 continue;
             }
             declaration = declarationService.addDeclaration(declaration);
@@ -274,6 +282,10 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("后台用户申报教材数量：{}", sysflagCount);
+        logger.info("用户类型为学校管理员申报教材数量：{}", usertypeCount);
+        logger.info("未找到作家对应的关联结果数量：{}", useridCount);
+        logger.info("教材id和作家id均相同的记录数量：{}", decCount);
         logger.info("未找到教材对应的关联结果数量：{}", materialidCount);
         logger.info("writer_declaration表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
