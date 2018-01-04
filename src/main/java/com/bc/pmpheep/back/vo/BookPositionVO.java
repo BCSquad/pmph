@@ -15,9 +15,9 @@ public class BookPositionVO implements Serializable{
 	    //教材id
 		private Long materialId;
 		//是否所有书籍已公布
-		private boolean isAllTextbookPublished;
+		private Boolean isAllTextbookPublished;
 		//是否被强制结束
-		private boolean isForceEnd;
+		private Boolean isForceEnd;
 	    //书籍主键
 		private Long textBookId;
 		//图书序号
@@ -36,6 +36,8 @@ public class BookPositionVO implements Serializable{
 		private String editorsAndAssociateEditors;
 		//主编副主编数目
 	    private Integer editorsAndAssociateEditorsNum;
+	    //是否已公布主编/副主编
+	    private Boolean isChiefPublished;
 	    //编委名字
 	    private String bianWeis;
 	    //编委数目
@@ -58,7 +60,35 @@ public class BookPositionVO implements Serializable{
 //		private boolean  createGroup ;
 //		//是否有进行强制结束操作
 //		private boolean  settingEnd ;
+		//是否已公布
+		private Boolean isPublished;
+		//是否锁定（通过）
+		private Boolean isLocked;
+		//公布后再次修改次数
+		private Integer revisionTimes;
+		//公布后再次公布次数
+		private Integer republishTimes;
 		
+		public BookPositionVO() {
+			super();
+		}
+
+		public Integer getRevisionTimes() {
+			return revisionTimes;
+		}
+
+		public void setRevisionTimes(Integer revisionTimes) {
+			this.revisionTimes = revisionTimes;
+		}
+
+		public Integer getRepublishTimes() {
+			return republishTimes;
+		}
+
+		public void setRepublishTimes(Integer republishTimes) {
+			this.republishTimes = republishTimes;
+		}
+
 		public String getMyPower() {
 			return myPower;
 		}
@@ -67,11 +97,6 @@ public class BookPositionVO implements Serializable{
 			this.myPower = myPower;
 		}
 
-		//是否已公布
-		private Boolean isPublished;
-		//是否锁定（通过）
-		private Boolean isLocked;
-		
 		public Boolean getIsPublished() {
 			return isPublished;
 		}
@@ -88,9 +113,7 @@ public class BookPositionVO implements Serializable{
 			this.isLocked = isLocked;
 		}
 
-		public BookPositionVO() {
-			super();
-		}
+		
 
 		public Long getMaterialId() {
 			return materialId;
@@ -100,19 +123,19 @@ public class BookPositionVO implements Serializable{
 			this.materialId = materialId;
 		}
 
-		public boolean isAllTextbookPublished() {
+		public Boolean isAllTextbookPublished() {
 			return isAllTextbookPublished;
 		}
 
-		public void setAllTextbookPublished(boolean isAllTextbookPublished) {
+		public void setAllTextbookPublished(Boolean isAllTextbookPublished) {
 			this.isAllTextbookPublished = isAllTextbookPublished;
 		}
 
-		public boolean isForceEnd() {
+		public Boolean isForceEnd() {
 			return isForceEnd;
 		}
 
-		public void setForceEnd(boolean isForceEnd) {
+		public void setForceEnd(Boolean isForceEnd) {
 			this.isForceEnd = isForceEnd;
 		}
 
@@ -214,41 +237,51 @@ public class BookPositionVO implements Serializable{
 		public void setGroupId(Long groupId) {
 			this.groupId = groupId;
 		}
+		
+		
+		
+		public Boolean getIsChiefPublished() {
+			return isChiefPublished;
+		}
+
+		public void setIsChiefPublished(Boolean isChiefPublished) {
+			this.isChiefPublished = isChiefPublished;
+		}
+				
+		public Boolean getIsAllTextbookPublished() {
+			return isAllTextbookPublished;
+		}
+
+		public void setIsAllTextbookPublished(Boolean isAllTextbookPublished) {
+			this.isAllTextbookPublished = isAllTextbookPublished;
+		}
+
+		public Boolean getIsForceEnd() {
+			return isForceEnd;
+		}
+
+		public void setIsForceEnd(Boolean isForceEnd) {
+			this.isForceEnd = isForceEnd;
+		}
 
 		@Override
 		public String toString() {
-			return "{materialId:" + materialId + ", isAllTextbookPublished:"
-					+ isAllTextbookPublished + ", isForceEnd:" + isForceEnd
-					+ ", textBookId:" + textBookId + ", sort:" + sort
-					+ ", textbookName:" + textbookName + ", textbookRound:"
-					+ textbookRound + ", applyNum:" + applyNum
-					+ ", planningEditor:" + planningEditor
-					+ ", planningEditorName:" + planningEditorName
-					+ ", editorsAndAssociateEditors:"
+			return "{materialId:" + materialId + ",isAllTextbookPublished:"
+					+ isAllTextbookPublished + ",isForceEnd:" + isForceEnd
+					+ ",textBookId:" + textBookId + ",sort:" + sort
+					+ ",textbookName:" + textbookName + ",textbookRound:"
+					+ textbookRound + ",applyNum:" + applyNum
+					+ ",planningEditor:" + planningEditor
+					+ ",planningEditorName:" + planningEditorName
+					+ ",editorsAndAssociateEditors:"
 					+ editorsAndAssociateEditors
-					+ ", editorsAndAssociateEditorsNum:"
-					+ editorsAndAssociateEditorsNum + ", bianWeis:" + bianWeis
-					+ ", bianWeisNum:" + bianWeisNum + ", groupId:" + groupId
-					+ ", myPower:" + myPower + ", isPublished:" + isPublished
-					+ ", isLocked:" + isLocked + ", getMyPower():"
-					+ getMyPower() + ", getIsPublished():" + getIsPublished()
-					+ ", getIsLocked():" + getIsLocked() + ", getMaterialId():"
-					+ getMaterialId() + ", isAllTextbookPublished():"
-					+ isAllTextbookPublished() + ", isForceEnd():"
-					+ isForceEnd() + ", getTextBookId():" + getTextBookId()
-					+ ", getSort():" + getSort() + ", getTextbookName():"
-					+ getTextbookName() + ", getTextbookRound():"
-					+ getTextbookRound() + ", getApplyNum():" + getApplyNum()
-					+ ", getPlanningEditor():" + getPlanningEditor()
-					+ ", getPlanningEditorName():" + getPlanningEditorName()
-					+ ", getEditorsAndAssociateEditors():"
-					+ getEditorsAndAssociateEditors()
-					+ ", getEditorsAndAssociateEditorsNum():"
-					+ getEditorsAndAssociateEditorsNum() + ", getBianWeis():"
-					+ getBianWeis() + ", getBianWeisNum():" + getBianWeisNum()
-					+ ", getGroupId():" + getGroupId() + ", getClass():"
-					+ getClass() + ", hashCode():" + hashCode()
-					+ ", toString():" + super.toString() + "}";
+					+ ",editorsAndAssociateEditorsNum:"
+					+ editorsAndAssociateEditorsNum + ",isChiefPublished:"
+					+ isChiefPublished + ",bianWeis:" + bianWeis
+					+ ",bianWeisNum:" + bianWeisNum + ",groupId:" + groupId
+					+ ",myPower:" + myPower + ",isPublished:" + isPublished
+					+ ",isLocked:" + isLocked + ",revisionTimes:"
+					+ revisionTimes + ",republishTimes:" + republishTimes + "}";
 		}
 		
 		

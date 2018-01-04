@@ -11,8 +11,8 @@ package com.bc.pmpheep.back.bo;
  */
 public class WriterBO {
 
-    private String realname;
-
+	private String realname;
+			
     private String chosenOrgName;
 
     private Integer chosenPosition;

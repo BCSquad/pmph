@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
 import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.bo.DecPositionBO;
@@ -11,7 +12,6 @@ import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
-import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -185,6 +185,8 @@ public interface TextbookService {
 	
 	/**
 	 * 通过教材id查询该教材的主编/副主编
+	 * @param textbookRoun 
+	 * @param textbookName 
 	 * @param textbookRoun 
 	 * @param textbookName 
 	 * @param materialId
