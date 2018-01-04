@@ -26,6 +26,10 @@ public class PmphGroupListVO implements Serializable {
 	private String bookId;
 	// 小组书籍名称
 	private String bookName;
+	/**
+	 * 该小组的文件数量
+	 */
+	private Integer files;
 
 	public PmphGroupListVO() {
 		super();
@@ -77,6 +81,14 @@ public class PmphGroupListVO implements Serializable {
 
 	public void setGmtLastMessage(Timestamp gmtLastMessage) {
 		this.gmtLastMessage = gmtLastMessage;
+	}
+
+	public Integer getFiles() {
+		return files;
+	}
+
+	public void setFiles(Integer files) {
+		this.files = files;
 	}
 
 }

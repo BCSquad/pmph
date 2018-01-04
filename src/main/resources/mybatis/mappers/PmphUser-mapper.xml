@@ -421,7 +421,9 @@
 		`pmph_role_permission` prp
 		ON
 		pur.`role_id` = prp.`role_id`
+		LEFT JOIN `pmph_role` pr ON pur.`role_id`=pr.`id`
 		WHERE
+		pr.`is_disabled` = 0 AND
 		pu.`id`
 		= #{userId}
 	</select>

@@ -24,6 +24,9 @@ public class MaterialMainInfoVO implements java.io.Serializable {
     private Boolean   isDeleted;
     // 我对这本教材的权限 (八位数二进制)
     private String myPower;
+    // 我在这套教材充当的角色   ，null/0--什么都不是  1--系统管理员 ， 2--这套教材的主任 ，3--这套教材的项目编辑，4某[几]本书的策划编辑   
+    private Integer role;
+    
     
 	public MaterialMainInfoVO() {
 		super();
@@ -35,7 +38,8 @@ public class MaterialMainInfoVO implements java.io.Serializable {
 							Boolean isAllTextbookPublished,
 							Boolean isForceEnd, 
 							Boolean isDeleted, 
-							String myPower) {
+							String myPower,
+							Integer role) {
 		super();
 		this.id = id;
 		this.materialName = materialName;
@@ -44,6 +48,17 @@ public class MaterialMainInfoVO implements java.io.Serializable {
 		this.isForceEnd = isForceEnd;
 		this.isDeleted = isDeleted;
 		this.myPower = myPower;
+		this.role    = role;
+	}
+	
+	
+	
+	public Integer getRole() {
+		return role;
+	}
+
+	public void setRole(Integer role) {
+		this.role = role;
 	}
 
 	public Long getId() {
@@ -104,10 +119,11 @@ public class MaterialMainInfoVO implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ", materialName:" + materialName
-				+ ", isPublished:" + isPublished + ", isAllTextbookPublished:"
-				+ isAllTextbookPublished + ", isForceEnd:" + isForceEnd
-				+ ", isDeleted:" + isDeleted + ", myPower:" + myPower + "}";
+		return "{id:" + id + ",materialName:" + materialName + ",isPublished:"
+				+ isPublished + ",isAllTextbookPublished:"
+				+ isAllTextbookPublished + ",isForceEnd:" + isForceEnd
+				+ ",isDeleted:" + isDeleted + ",myPower:" + myPower + ",role:"
+				+ role + "}";
 	}
     
     
