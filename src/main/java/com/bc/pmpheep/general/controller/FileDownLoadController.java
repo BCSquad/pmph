@@ -572,24 +572,22 @@ public class FileDownLoadController {
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "角色遴选 批量导出主编、副主编")
 	@RequestMapping(value = "/position/ExportEditor", method = RequestMethod.GET)
-	public void ExportEditor(Long[] textbookIds,String textbookName,Integer textbookRoun,
-			HttpServletRequest request,HttpServletResponse response) throws IllegalAccessException {
+	public void ExportEditor(Long[] textbookIds,HttpServletRequest request,HttpServletResponse response) 
+			throws IllegalAccessException ,Exception{
 		List<DecPositionBO> list;
 		Workbook workbook = null;
 		try {
-			list=textbookService.getExcelDecByMaterialId(textbookIds,textbookName,textbookRoun);
-			workbook = excelHelper.fromDecPositionBOList(list, "主编/副主编");
+			list=textbookService.getExcelDecByMaterialId(textbookIds);
+			workbook = excelHelper.fromDecPositionBOList(list, "主编-副主编");
 		} catch (CheckedServiceException | IllegalArgumentException e) {
 			logger.warn("数据表格化的时候失败");
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_CREATION_FAILED, "数据表格化的时候失败");
 		}
+		String fileName = returnFileName(request, list.get(0).getTextbookName() + ".xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
-		try {
-			response.setHeader("Content-Disposition",
-					"attachment;fileName=" + new String("DecPositionBOList.xls".getBytes("utf-8"), "ISO8859-1"));
-		} catch (UnsupportedEncodingException e) {
-			logger.warn("修改编码格式的时候失败");
-		}
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			workbook.write(out);
 			out.flush();

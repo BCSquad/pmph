@@ -4,8 +4,6 @@
  */
 package com.bc.pmpheep.back.bo;
 
-import com.bc.pmpheep.annotation.ExcelHeader;
-
 /**
  * 教材遴选表业务对象，用于Excel/Word(批量)导出
  *

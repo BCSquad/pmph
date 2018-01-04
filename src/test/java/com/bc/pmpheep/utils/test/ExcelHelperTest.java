@@ -177,7 +177,7 @@ public class ExcelHelperTest extends BaseTest {
                 writer.setRank(j + 1);
                 writers.add(writer);
             }
-            bo.setWriters(writers);
+            bo.setWriters(writers.toString());
             list.add(bo);
         }
         return list;
