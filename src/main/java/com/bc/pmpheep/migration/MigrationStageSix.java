@@ -103,7 +103,7 @@ public class MigrationStageSix {
         }
         Date begin = new Date();
         declaration();
-        /*decEduExp();
+        decEduExp();
         decWorkExp();
         decTeachExp();
         decAcade();
@@ -113,7 +113,7 @@ public class MigrationStageSix {
         decTextbook();
         decResearch();
         decExtension();
-        decPosition();*/
+        decPosition();
         logger.info("迁移第六步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
@@ -174,10 +174,17 @@ public class MigrationStageSix {
             Long offlineProgressJudge = (Long) map.get("offline_progress"); // 纸质表进度
             Long isStagingJudge = (Long) map.get("is_staging"); // 是否暂存
             Integer sysflag = (Integer) map.get("sysflag"); // 0为后台用户，1为前台用户
+            Integer usertype = (Integer) map.get("usertype"); // 2为学校管理员
             if (ObjectUtil.isNull(sysflag) || sysflag == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为后台用户申请教材。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为后台用户申报教材。"));
                 excel.add(map);
-                logger.debug("找到为后台用户申请教材，此结果将被记录在Excel中");
+                logger.debug("找到为后台用户申报教材，此结果将被记录在Excel中");
+                continue;
+            }
+            if (usertype == 2) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为用户类型为学校管理员申报教材。"));
+                excel.add(map);
+                logger.debug("找到为用户类型为学校管理员申报教材，此结果将被记录在Excel中");
                 continue;
             }
             Declaration declaration = new Declaration();
@@ -871,7 +878,6 @@ public class MigrationStageSix {
                 + "from teach_material_extvalue wme "
                 + "left join writer_declaration wd on wd.writerid=wme.writerid "
                 + "left join teach_material_extend tme on tme.expendid=wme.expendid ";
-        //+ "where tme.expendname != '个人成就'";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0; // 迁移成功的条目数
         int extensionidCount = 0;
@@ -897,7 +903,7 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 declarationidCount++;
                 continue;
             }
@@ -952,6 +958,8 @@ public class MigrationStageSix {
         int count = 0; // 迁移成功的条目数
         int extensionidCount = 0;
         int textbookidCount = 0;
+        int outListUrlCount = 0;
+        int outListCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -967,7 +975,7 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
-                logger.error("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 extensionidCount++;
                 continue;
             }
@@ -1027,13 +1035,15 @@ public class MigrationStageSix {
                 try {
                     mongoId = fileService.migrateFile(outLineUrl, FileType.SYLLABUS, pk);
                 } catch (IOException ex) {
-                    logger.error("文件读取异常，路径<{}>，异常信息：{}", outLineUrl, ex.getMessage());
                     map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
                     excel.add(map);
+                    logger.debug("文件读取异常，路径<{}>，异常信息：{}", outLineUrl, ex.getMessage());
+                    outListUrlCount++;
                 } catch (Exception e) {
                     map.put(SQLParameters.EXCEL_EX_HEADER, "存文件未知异常：" + e.getMessage() + "。");
                     excel.add(map);
-                    logger.error("更新mongoDB的id错误，此结果将被记录在Excel中");
+                    logger.debug("更新mongoDB的id错误，此结果将被记录在Excel中");
+                    outListCount++;
                 }
                 decPosition.setSyllabusId(mongoId);
                 decPositionService.updateDecPosition(decPosition);
@@ -1046,6 +1056,8 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("文件读取异常数量：{}", outListUrlCount);
+        logger.info("更新mongoDB的id错误数量：{}", outListCount);
         logger.info("未找到教材扩展项对应的关联结果数量：{}", extensionidCount);
         logger.info("未找到书籍对应的关联结果数量：{}", textbookidCount);
         logger.info("teach_applyposition表迁移完成，异常条目数量：{}", excel.size());
