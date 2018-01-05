@@ -334,6 +334,9 @@
 			<if test=" isOnSale != null ">
 				is_on_sale=#{isOnSale},
 			</if>
+			<if test="materialId != null">
+				material_id=#{materialId}
+			</if>
 			<if test="gmtCreate != null ">
 				gmt_create=#{gmtCreate},
 			</if>
@@ -365,10 +368,12 @@
 		b.*, t.type_name,
 		t.path,m.material_name,m.id materialId
 		FROM
-		book b
+		book
+		b
 		LEFT JOIN
 		material_type t ON t.id = b.type
-		LEFT JOIN material m ON m.id =
+		LEFT JOIN material m ON m.id
+		=
 		b.material_id WHERE 1 = 1
 		<if test="parameter.name !=null and parameter.name !='' ">
 			and (b.isbn like concat('%',#{parameter.name},'%') or

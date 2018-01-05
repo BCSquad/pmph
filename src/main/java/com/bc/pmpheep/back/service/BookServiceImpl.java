@@ -79,8 +79,8 @@ public class BookServiceImpl extends BaseService implements BookService {
 	}
 
 	@Override
-	public String updateBookById(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote)
-			throws CheckedServiceException {
+	public String updateBookById(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote,
+			Long materialId) throws CheckedServiceException {
 		if (ArrayUtil.isEmpty(ids)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "id为空");
 		}
@@ -108,6 +108,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 			book.setIsNew(isNew);
 			book.setIsOnSale(isOnSale);
 			book.setIsPromote(isPromote);
+			book.setMaterialId(materialId);
 			bookDao.updateBook(book);
 		}
 		result = "SUCCESS";

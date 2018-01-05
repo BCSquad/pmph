@@ -178,12 +178,6 @@
 		ON a.user_id = e.id LEFT JOIN org
 		f ON f.id =
 		e.org_id
-		LEFT JOIN
-		declaration g
-		ON g.user_id = e.id LEFT JOIN
-		dec_position h ON
-		g.id =
-		h.declaration_id
 		WHERE a.group_id =
 		#{parameter.groupId} and
 		a.is_deleted = false
