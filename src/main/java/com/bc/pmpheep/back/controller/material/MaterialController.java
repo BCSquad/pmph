@@ -244,4 +244,19 @@ public class MaterialController {
         }
     }
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取已经发布教材信息
+     * 使用示范：
+     *
+     * @return Material对象集合
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = Business_Type, logRemark = "获取已经发布教材信息")
+    @RequestMapping(value = "/published", method = RequestMethod.GET)
+    public ResponseBean published() {
+        return new ResponseBean(materialService.listPublishedMaterial());
+    }
 }

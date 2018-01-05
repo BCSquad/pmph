@@ -681,4 +681,19 @@
 		</foreach>
 				GROUP BY m.id
 	</select>
+	
+	<!-- 获取已经发布教材信息 -->
+	<select id="listPublishedMaterial" resultType="Material">
+		SELECT 
+  			m.`id`,
+  			m.`material_name` 
+		FROM
+  			`material` m 
+		WHERE 
+			m.`is_published` = TRUE 
+  		AND 
+  			m.`is_deleted` = FALSE 
+  		AND 
+  			m.`is_force_end` = FALSE 
+	</select>
 </mapper>
