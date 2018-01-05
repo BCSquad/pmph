@@ -629,17 +629,20 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		List<PmphRole> pmphRoles = pmphUserService.getListUserRole(pmphUser.getId());
 		// 下面进行授权
 		Integer projectEditorPowers = 0;
+		Integer role = 0;
 		// 系统管理员权限检查
 		for (PmphRole pmphRole : pmphRoles) {
 			if (null != pmphRole && null != pmphRole.getRoleName() && "系统管理员".equals(pmphRole.getRoleName())) {
 				// 我是系统管理原
 				projectEditorPowers = 255; // "11111111";
+				role = 1;
 			}
 		}
 		// 教材主任检查
 		Material material = this.getMaterialById(materialId);
 		if (null != material && null != material.getDirector() && pmphUser.getId().equals(material.getDirector())) {
 			projectEditorPowers = 255; // 我是教材的主任
+			role = (0 == role.intValue()?2:role);
 		}
 		// 教材项目编辑检查
 		List<MaterialProjectEditorVO> materialProjectEditors = materialProjectEditorService
@@ -650,6 +653,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 						&& materialProjectEditor.getEditorId().equals(pmphUser.getId())) {
 					// 我是教材的项目编辑
 					projectEditorPowers = (projectEditorPowers | material.getProjectPermission());
+					role = (0 == role.intValue()?3:role);
 				}
 			}
 		}
@@ -658,11 +662,12 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		if (null != num && num.intValue() > 0) {
 			// 我是教材的策划编辑编辑
 			projectEditorPowers = (projectEditorPowers | material.getProjectPermission());
+			role = (0 == role.intValue()?4:role);
 		}
 
 		MaterialMainInfoVO materialMainInfoVO = new MaterialMainInfoVO(materialId, material.getMaterialName(),
 				material.getIsPublished(), material.getIsAllTextbookPublished(), material.getIsForceEnd(),
-				material.getIsDeleted(), StringUtil.tentToBinary(projectEditorPowers));
+				material.getIsDeleted(), StringUtil.tentToBinary(projectEditorPowers),role);
 		return materialMainInfoVO;
 	}
 

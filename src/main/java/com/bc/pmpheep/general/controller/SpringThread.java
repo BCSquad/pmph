@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.general.bean.ZipDownload;
 import com.bc.pmpheep.general.controller.FileDownLoadController;
@@ -172,7 +173,7 @@ public class SpringThread implements Runnable {
 		zipDownload.setState(0);
 		zipDownload.setDetail("loading...");
 		zipDownload.setCreateTime(DateUtil.getCurrentTime());
-		FileDownLoadController.map.put(this.id, zipDownload);
+		Const.map.put(this.id, zipDownload);
 		try {
 			declarationEtcBOs = this.declarationService.declarationEtcBO(this.materialId, this.textBookids,
 					this.realname, this.position, this.title, this.orgName, this.unitName, this.positionType,
@@ -181,8 +182,8 @@ public class SpringThread implements Runnable {
 			logger.warn("数据表格化的时候失败");
 		}
 		try {
+			List<DeclarationEtcBO> list = new ArrayList<>();
 			for (int i = 0; i < textbooks.size(); i++) {
-				List<DeclarationEtcBO> list = new ArrayList<>();
 				for (DeclarationEtcBO declarationEtcBO : declarationEtcBOs) {
 					if (textbooks.get(i).getTextbookName().equals(declarationEtcBO.getTextbookName())) {
 						list.add(declarationEtcBO);
@@ -198,7 +199,7 @@ public class SpringThread implements Runnable {
 					sb.append((i + 1) + "." + textbooks.get(i).getTextbookName());
 					sb.append(File.separator);
 					this.wordHelper.export(materialName, sb.toString(), list);
-					list.clear();
+					list.removeAll(list);
 				}
 			}
 		} catch (Exception e) {
@@ -212,7 +213,7 @@ public class SpringThread implements Runnable {
 		}
 		zipDownload.setState(1);
 		zipDownload.setDetail("/zip/download?id=" + this.id);
-		FileDownLoadController.map.put(this.id, zipDownload);
+		Const.map.put(this.id, zipDownload);
 	}
 
 }

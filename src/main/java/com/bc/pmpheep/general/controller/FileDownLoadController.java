@@ -70,7 +70,6 @@ import com.mongodb.gridfs.GridFSDBFile;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Controller
 public class FileDownLoadController {
-	public static Map<String, ZipDownload> map = new HashMap<>();
 	Logger logger = LoggerFactory.getLogger(FileDownLoadController.class);
 
 	@Resource
@@ -368,9 +367,9 @@ public class FileDownLoadController {
 	@RequestMapping(value = "/word/progress", method = RequestMethod.GET)
 	public ZipDownload progress(String id) {
 		ZipDownload zipDownload = new ZipDownload();
-		if (map.containsKey(id)) {
-			zipDownload.setState(map.get(id).getState());
-			zipDownload.setDetail(map.get(id).getDetail());
+		if (Const.map.containsKey(id)) {
+			zipDownload.setState(Const.map.get(id).getState());
+			zipDownload.setDetail(Const.map.get(id).getDetail());
 		}
 		return zipDownload;
 	}
@@ -393,7 +392,7 @@ public class FileDownLoadController {
 		if (!src.endsWith(File.separator)) {
 			src += File.separator;
 		}
-		String materialName = map.get(id).getMaterialName();
+		String materialName = Const.map.get(id).getMaterialName();
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		String filePath = src + id + File.separator + materialName + ".zip";
@@ -424,7 +423,7 @@ public class FileDownLoadController {
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		} finally {
-			map.remove(id);
+			Const.map.remove(id);
 			ZipDownload.DeleteFolder(src + id);
 		}
 	}
@@ -562,6 +561,7 @@ public class FileDownLoadController {
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
 	}
+
 
 	/**
 	 * 角色遴选 批量导出主编、副主编
