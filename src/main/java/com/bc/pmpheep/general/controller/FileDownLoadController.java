@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.bo.DecPositionBO;
+import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.service.BookCorrectionService;
 import com.bc.pmpheep.back.service.CmsExtraService;
 import com.bc.pmpheep.back.service.DeclarationService;
@@ -346,10 +347,12 @@ public class FileDownLoadController {
 			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress
 			) {
 		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
+		logger.info("--------------{}-------",id);
 		taskExecutor.execute(new SpringThread(zipHelper, wordHelper, materialService, textbookService,
 				declarationService, materialId, textBookids, realname, position, title, orgName, unitName, positionType,
 				onlineProgress, offlineProgress, id));
-		return id;
+		logger.info("--------------{}-------",id);
+		return '"'+id+'"';
 	}
 
 	/**
@@ -561,6 +564,7 @@ public class FileDownLoadController {
 		}
 	}
 
+
 	/**
 	 * 角色遴选 批量导出主编、副主编
 	 * 
@@ -579,11 +583,12 @@ public class FileDownLoadController {
 			list=textbookService.getExcelDecByMaterialId(textbookIds);
 			workbook = excelHelper.fromDecPositionBOList(list, "主编-副主编");
 		} catch (CheckedServiceException | IllegalArgumentException e) {
-			logger.warn("数据表格化的时候失败");
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_CREATION_FAILED, "数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request, list.get(0).getTextbookName() + ".xls");
+		//通过书籍id获取教材信息
+		Material material=materialService.getMaterialByName(textbookIds);
+		String fileName = returnFileName(request, material.getMaterialName() + ".xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);

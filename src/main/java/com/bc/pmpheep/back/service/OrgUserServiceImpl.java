@@ -173,6 +173,11 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         if (StringUtil.notEmpty(orgName)) {
             pageParameter.getParameter().setOrgName(orgName);
         }
+        if(ObjectUtil.notNull(pageParameter.getParameter().getIsHospital())){
+        	if(pageParameter.getParameter().getIsHospital()){
+        		pageParameter.getParameter().setOrgTypeName("医院");
+        	}
+        }
         PageResult<OrgAndOrgUserVO> pageResult = new PageResult<OrgAndOrgUserVO>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         int total = orgUserDao.getListOrgUserTotal(pageParameter);

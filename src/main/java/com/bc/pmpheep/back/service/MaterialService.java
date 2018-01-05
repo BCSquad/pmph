@@ -175,4 +175,11 @@ public interface MaterialService {
 	 * @throws IOException
 	 */
 	List<String> upTempFile(HttpServletRequest request, MultipartFile[] files)throws CheckedServiceException, IOException ;
+	
+	/**
+	 * 通过书籍id获取教材信息
+	 * @param textbookIds
+	 * @return
+	 */
+	Material getMaterialByName(Long[] textbookIds);
 }
