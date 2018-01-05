@@ -29,6 +29,18 @@ public interface SurveyQuestionDao {
     Integer addSurveyQuestion(SurveyQuestion surveyQuestion);
 
     /**
+     * 
+     * <pre>
+     * 功能描述：批量插入
+     * 使用示范：
+     *
+     * @param surveyQuestions SurveyQuestion 对象集合
+     * @return 影响行数
+     * </pre>
+     */
+    List<Long> batchInsertSurveyQuestion(List<SurveyQuestion> surveyQuestions);
+
+    /**
      * 逻辑删除SurveyQuestion通过主键id
      * 
      * @author:tyc
@@ -47,6 +59,18 @@ public interface SurveyQuestionDao {
      * @return 影响行数
      */
     Integer updateSurveyQuestion(SurveyQuestion surveyQuestion);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：批量更新
+     * 使用示范：
+     *
+     * @param SurveyQuestion  SurveyQuestion 集合
+     * @return 影响行数
+     * </pre>
+     */
+    Integer batchUpdateSurveyQuestion(List<SurveyQuestion> surveyQuestions);
 
     /**
      * 查找SurveyQuestion通过主键id
@@ -71,13 +95,27 @@ public interface SurveyQuestionDao {
      */
     List<SurveyQuestionOptionCategoryVO> getQuestionOptionByQuestionIdOrCategoryId(
     @Param("questionId") Long questionId, @Param("categoryId") Long categoryId);
-    
+
     /**
      * 问题表分页列表（同时查询分页数据和总条数）
+     * 
      * @author:tyc
-     * @date:2017年12月25日下午15:51:07 
+     * @date:2017年12月25日下午15:51:07
      * @param pageParameter
      * @return
      */
     List<SurveyQuestionVO> listSurveyQuestion(PageParameter<SurveyQuestionVO> pageParameter);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按问题Id批量删除
+     * 使用示范：
+     *
+     * @param questionIds  问题id
+     * @return 影响行数 
+     * </pre>
+     */
+    Integer batchDeleteSurveyQuestionByQuestionIds(@Param("questionIds") List<Long> questionIds);
+
 }

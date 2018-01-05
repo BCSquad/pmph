@@ -44,10 +44,21 @@
 		<include refid="value" />
 		);
 	</insert>
+	
+	<!-- 批量插入SurveyTemplateQuestion -->
+	<insert id="batchInsertSurveyTemplateQuestion" parameterType="java.util.List">
+        insert into survey_template_question (template_id,question_id)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.templateId},#{item.questionId})
+        </foreach>
+    </insert>
+    
 	<!-- 删除SurveyTemplateQuestion通过主键id -->
 	<delete id="deleteSurveyTemplateQuestionById" parameterType="java.lang.Long">
 		delete from survey_template_question where id=#{id};
 	</delete>
+	
 	<!-- 更新一个 SurveyTemplateQuestion通过主键id -->
 	<update id="updateSurveyTemplateQuestion" parameterType="SurveyTemplateQuestion">
 		update survey_template_question
@@ -65,9 +76,20 @@
 		where
 		id=#{id} ;
 	</update>
+	
 	<!-- 查找SurveyTemplateQuestion通过主键id -->
-	<select id="getSurveyTemplateQuestionById" parameterType="java.lang.Long" 
-	resultType="SurveyTemplateQuestion">
+	<select id="getSurveyTemplateQuestionById" parameterType="java.lang.Long" resultType="SurveyTemplateQuestion">
 		select * from survey_template_question where id=#{id};
 	</select>
+	
+	<!--查找SurveyTemplateQuestion通过templateId  -->
+	<select id="getSurveyTemplateQuestionByTemplateId" parameterType="java.lang.Long" resultType="SurveyTemplateQuestion">
+		select * from survey_template_question where template_id = #{templateId};
+	</select>
+	
+	<!-- 删除SurveyTemplateQuestion通过TemplateId -->
+	<delete id="deleteSurveyTemplateQuestionByTemplateId" parameterType="java.lang.Long">
+		delete from survey_template_question where template_id = #{templateId};
+	</delete>
+	
 </mapper>

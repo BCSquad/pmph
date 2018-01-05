@@ -2,6 +2,8 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.SurveyQuestion;
@@ -27,6 +29,19 @@ public interface SurveyQuestionService {
     SurveyQuestion addSurveyQuestion(SurveyQuestion surveyQuestion) throws CheckedServiceException;
 
     /**
+     * 
+     * <pre>
+     * 功能描述：批量插入
+     * 使用示范：
+     *
+     * @param surveyQuestions SurveyQuestion 对象集合
+     * @return 影响行数
+     * </pre>
+     */
+    List<Long> batchInsertSurveyQuestion(List<SurveyQuestion> surveyQuestions)
+    throws CheckedServiceException;
+
+    /**
      * 更新一个 SurveyQuestion通过主键id
      * 
      * @author:tyc
@@ -35,6 +50,19 @@ public interface SurveyQuestionService {
      * @return 影响行数
      */
     Integer updateSurveyQuestion(SurveyQuestion surveyQuestion) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：批量更新
+     * 使用示范：
+     *
+     * @param SurveyQuestion  SurveyQuestion 集合
+     * @return 影响行数
+     * </pre>
+     */
+    Integer batchUpdateSurveyQuestion(List<SurveyQuestion> surveyQuestions)
+    throws CheckedServiceException;
 
     /**
      * 查找SurveyQuestion通过主键id
@@ -92,4 +120,17 @@ public interface SurveyQuestionService {
      */
     List<SurveyQuestionOptionCategoryVO> getQuestionOptionByQuestionIdOrCategoryId(Long questionId,
     Long categoryId) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按问题Id批量删除
+     * 使用示范：
+     *
+     * @param questionIds  问题id
+     * @return 影响行数 
+     * </pre>
+     */
+    Integer batchDeleteSurveyQuestionByQuestionIds(@Param("questionIds") List<Long> questionIds)
+    throws CheckedServiceException;
 }

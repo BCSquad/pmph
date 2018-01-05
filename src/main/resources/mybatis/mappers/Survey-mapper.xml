@@ -178,19 +178,12 @@
 					<if test="parameter.title != null and parameter.title != ''">
 						and s.title like concat('%',#{parameter.title},'%')
 					</if>
-					<!-- 问卷调查类型 -->
-					<if test="parameter.typeId != null">
-						and s.type_id = #{parameter.typeId}
-					</if>
-					<!-- 问卷创建人(0=系统) -->
-					<if test="parameter.userId != null">
-						and s.user_id = #{parameter.userId}
-					</if>
-					<if test="parameter.username !=null and parameter.username!=''">
-						and (
-							ppu.username like concat('%',#{parameter.username},'%')
-						or
-							ppu.realname like concat('%',#{parameter.username},'%') )
+					<if test="parameter.startTime !=null and parameter.startTime !='' ">
+							and so.`operate_date` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+							
+						</if>
+						<if test="parameter.endTime !=null and parameter.endTime !='' ">
+							and so.`operate_date` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
 					</if>
 				</if>
 				) t 
@@ -201,25 +194,42 @@
 			<if test="parameter.title != null and parameter.title != ''">
 				and s.title like concat('%',#{parameter.title},'%')
 			</if>
-			<!-- 问卷调查类型 -->
-			<if test="parameter.typeId != null">
-				and s.type_id = #{parameter.typeId}
+			<if test="parameter.startTime !=null and parameter.startTime !='' ">
+				and so.`operate_date` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+							
 			</if>
-			<!-- 问卷创建人(0=系统) -->
-			<if test="parameter.userId != null">
-				and s.user_id = #{parameter.userId}
-			</if>
-			<if test="parameter.username !=null and parameter.username!=''">
-				and (
-					ppu.username like concat('%',#{parameter.username},'%')
-				or
-					ppu.realname like concat('%',#{parameter.username},'%') )
+			<if test="parameter.endTime !=null and parameter.endTime !='' ">
+				and so.`operate_date` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
 			</if>
 		</if>
 		group by s.title desc 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
+	</select>
+	
+	<!-- 查询问卷和问卷对应的类型 -->
+	<select id="getSurveyAndSurveyTypeById" parameterType="java.lang.Long" resultType="SurveyVO">
+		select 
+			s.*,
+			stp.survey_name,
+			ppu.username,
+			ppu.realname
+		from 
+			survey s 
+		left join 
+			survey_type stp 
+		on 
+			stp.id = s.type_id
+		left join 
+			pmph_user ppu 
+		on 
+			ppu.id=s.user_id
+		<where>
+			<if test="id !=null">
+				s.`id`= #{id}
+			</if>
+		</where>
 	</select>
 	
 </mapper>

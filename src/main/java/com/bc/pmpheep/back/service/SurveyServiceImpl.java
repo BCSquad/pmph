@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +11,16 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Survey;
+import com.bc.pmpheep.back.po.SurveyQuestion;
+import com.bc.pmpheep.back.po.SurveyQuestionOption;
+import com.bc.pmpheep.back.po.SurveyTemplate;
+import com.bc.pmpheep.back.po.SurveyTemplateQuestion;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -41,7 +47,15 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class SurveyServiceImpl implements SurveyService {
 
     @Autowired
-    private SurveyDao surveyDao;
+    SurveyDao                     surveyDao;
+    @Autowired
+    SurveyTemplateService         surveyTemplateService;
+    @Autowired
+    SurveyQuestionService         surveyQuestionService;
+    @Autowired
+    SurveyQuestionOptionService   surveyQuestionOptionService;
+    @Autowired
+    SurveyTemplateQuestionService surveyTemplateQuestionService;
 
     @Override
     public Survey addSurvey(Survey survey) throws CheckedServiceException {
@@ -127,4 +141,106 @@ public class SurveyServiceImpl implements SurveyService {
         return surveyDao.deleteSurveyById(id);
     }
 
+    @Override
+    public SurveyVO getSurveyAndSurveyTypeById(Long id) throws CheckedServiceException {
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷id为空");
+
+        }
+        return surveyDao.getSurveyAndSurveyTypeById(id);
+    }
+
+    @Override
+    public Integer updateSurveyAndTemplate(List<SurveyQuestionListVO> questionAnswerJosn,
+    SurveyVO surveyVO) throws CheckedServiceException {
+        if (CollectionUtil.isEmpty(questionAnswerJosn)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问题为空");
+        }
+        if (ObjectUtil.isNull(surveyVO)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "对象为空");
+        }
+        if (ObjectUtil.isNull(surveyVO.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷ID为空");
+        }
+        if (ObjectUtil.isNull(surveyVO.getTemplateId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "模版ID为空");
+        }
+        Long surveyId = surveyVO.getId();// 问卷ID
+        String title = surveyVO.getTitle();// 问卷名称
+        String intro = surveyVO.getIntro();// 问卷概述
+        Long typeId = surveyVO.getTypeId();// 问卷调查对象
+        Long templateId = surveyVO.getTemplateId();// 模版ID
+        Integer count = 0;
+        count = this.updateSurvey(new Survey(surveyId, title, intro, typeId));// 更新问卷表
+        surveyTemplateService.updateSurveyTemplate(new SurveyTemplate(templateId, title, intro,
+                                                                      typeId));// 更新模版表
+
+        // 查询模版下的所有问题
+        List<SurveyTemplateQuestion> lists =
+        surveyTemplateQuestionService.getSurveyTemplateQuestionByTemplateId(templateId);
+        List<Long> questionIdList = new ArrayList<Long>(lists.size());
+        for (SurveyTemplateQuestion surveyTemplateQuestion : lists) {
+            questionIdList.add(surveyTemplateQuestion.getQuestionId());
+        }
+        // 删除模版问题中间表下模版对应的所有问题
+        surveyTemplateQuestionService.deleteSurveyTemplateQuestionByTemplateId(templateId);
+        // 删除问题表
+        surveyQuestionService.batchDeleteSurveyQuestionByQuestionIds(questionIdList);
+        // 删除问题选项表
+        surveyQuestionOptionService.batchDeleteSurveyQuestionOptionByQuestionIds(questionIdList);
+        // 重新添加问题
+        List<Long> newIds = this.addQuestionAndOption(questionAnswerJosn);
+        // 模版问题中间表
+        List<SurveyTemplateQuestion> surveyTemplateQuestions =
+        new ArrayList<SurveyTemplateQuestion>(newIds.size());
+        for (Long questionId : newIds) {
+            surveyTemplateQuestions.add(new SurveyTemplateQuestion(templateId, questionId));
+        }
+        // 重新添加模版问题中间表
+        count =
+        surveyTemplateQuestionService.batchInsertSurveyTemplateQuestion(surveyTemplateQuestions);
+        return count;
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：添加问题及问题选项
+     * 使用示范：
+     *
+     * @param surveyQuestionListVO
+     * @return
+     * </pre>
+     */
+    private List<Long> addQuestionAndOption(List<SurveyQuestionListVO> surveyQuestionListVO) {
+        List<Long> questionIds = new ArrayList<Long>(surveyQuestionListVO.size());
+        for (SurveyQuestionListVO surveyQuestionLists : surveyQuestionListVO) { // 遍历获取问题的集合
+            SurveyQuestion surveyQuestion =
+            new SurveyQuestion(surveyQuestionLists.getTitle(), surveyQuestionLists.getType(),
+                               surveyQuestionLists.getSort(), surveyQuestionLists.getDirection()); // 问题实体
+            SurveyQuestion surveyQuestions =
+            surveyQuestionService.addSurveyQuestion(surveyQuestion); // 先保存问题
+            if (ObjectUtil.isNull(surveyQuestions)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                                  CheckedExceptionResult.NULL_PARAM, "新增数据为空");
+            }
+            Long newId = surveyQuestions.getId(); // 获取数据库新生成的问题id
+            questionIds.add(newId);
+            List<SurveyQuestionOption> surveyQuestionOptionList =
+            surveyQuestionLists.getSurveyQuestionOptionList(); // 获取问题选项list
+            for (SurveyQuestionOption surveyQuestionOptions : surveyQuestionOptionList) { // 遍历问题选项
+                SurveyQuestionOption surveyQuestionOption =
+                new SurveyQuestionOption(newId, surveyQuestionOptions.getOptionContent(),
+                                         surveyQuestionOptions.getIsOther(),
+                                         surveyQuestionOptions.getRemark()); // 问题选项实体
+                surveyQuestionOptionService.addSurveyQuestionOption(surveyQuestionOption); // 再保存问题选项
+            }
+        }
+        return questionIds;
+    }
 }
