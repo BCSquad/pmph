@@ -583,7 +583,6 @@ public class FileDownLoadController {
 			list=textbookService.getExcelDecByMaterialId(textbookIds);
 			workbook = excelHelper.fromDecPositionBOList(list, "主编-副主编");
 		} catch (CheckedServiceException | IllegalArgumentException e) {
-			logger.warn("数据表格化的时候失败");
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_CREATION_FAILED, "数据表格化的时候失败");
 		}

@@ -50,7 +50,8 @@ public class OrgUserController {
 	@ResponseBody
 	public ResponseBean orgUser(@RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
-			@RequestParam("orgName") String orgName) {
+			@RequestParam("orgName") String orgName,@RequestParam("orgTypeName") String orgTypeName,
+			@RequestParam("isHospital") Boolean isHospital) {
 		PageParameter pageParameter = new PageParameter<>();
 		OrgAndOrgUserVO orgAndOrgUserVO = new OrgAndOrgUserVO();
 		if(StringUtil.notEmpty(orgName)){
@@ -59,6 +60,10 @@ public class OrgUserController {
 		if(StringUtil.notEmpty(name)){
 			orgAndOrgUserVO.setName(name.replaceAll(" ", ""));// 去除空格
 		}
+		if(StringUtil.notEmpty(orgTypeName)){
+			orgAndOrgUserVO.setOrgTypeName(orgTypeName.replaceAll(" ", ""));// 去除空格
+		}
+		orgAndOrgUserVO.setIsHospital(isHospital);
 		pageParameter.setPageNumber(pageNumber);
 		pageParameter.setPageSize(pageSize);
 		pageParameter.setParameter(orgAndOrgUserVO);
