@@ -30,6 +30,7 @@ import com.bc.pmpheep.back.dao.PmphUserDao;
 import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
@@ -88,6 +89,8 @@ public class TextbookServiceImpl implements TextbookService {
 	@Autowired
 	private PmphRoleService pmphRoleService;
     
+	@Autowired
+	private DecPositionService decPositionService;
 	/**
 	 * 
 	 * @param Textbook
@@ -304,15 +307,16 @@ public class TextbookServiceImpl implements TextbookService {
 							"还未选择策划编辑，不能名单确认");
 				}
 				// 是否发布主编
-				if(textbook.getIsChiefPublished()){
+				if(!textbook.getIsChiefPublished()){
 					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 							"还未发布主编/副主编，不能名单确认");
 				}
-				
+				DecPosition decPosition=decPositionService.getDecPositionByTextbookId(textbook.getId());
 				// 是否确认编委
-//				if(){
-//					
-//				}
+				if(null==decPosition){
+					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
+							"还未确认编委，不能名单确认");
+				}
 			}
 		}
 		Integer count = 0;
@@ -681,11 +685,6 @@ public class TextbookServiceImpl implements TextbookService {
                     CheckedExceptionResult.NULL_PARAM, "教材id为空");
 		}
 		List<DecPositionBO> list=textbookDao.getExcelDecByMaterialId(textbookIds);
-//		Gson gson = new Gson();
-//		for (DecPositionBO decPositionBO : list) {
-//			Object writers=new ArrayList<>();
-//			writers = gson.toJson(decPositionBO.getWriters(),new TypeToken<ArrayList<WriterBO>>() {}.getType() );
-//		}
 		return list;
 	}
 }

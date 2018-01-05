@@ -437,4 +437,11 @@ public interface DecPositionDao {
      * @return
      */
     List<TextbookDecVO> getTextbookEditorList(Long textbookId);
+    
+    /**
+     * 根据书籍id查询编委
+     * @param textbookId
+     * @return
+     */
+	DecPosition getDecPositionByTextbookId(Long textbookId);
 }
