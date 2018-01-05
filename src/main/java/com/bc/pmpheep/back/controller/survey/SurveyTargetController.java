@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.controller.survey;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +63,13 @@ public class SurveyTargetController {
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     public ResponseBean send(Message message, SurveyTargetVO surveyTargetVO,
     HttpServletRequest request) {
-        String sessionId = CookiesUtil.getSessionId(request);
-        return new ResponseBean(surveyTargetService.batchSaveSurveyTargetByList(message,
-                                                                                surveyTargetVO,
-                                                                                sessionId));
+        try {
+            String sessionId = CookiesUtil.getSessionId(request);
+            return new ResponseBean(surveyTargetService.batchSaveSurveyTargetByList(message,
+                                                                                    surveyTargetVO,
+                                                                                    sessionId));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
     }
 }

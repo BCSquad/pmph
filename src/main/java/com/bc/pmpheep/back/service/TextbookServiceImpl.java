@@ -290,22 +290,34 @@ public class TextbookServiceImpl implements TextbookService {
 
 	@Override
 	public Integer updateTextbooks(Long[] ids) {
+		if(null==ids){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
+					"书籍id为空");
+		}
 		List<Textbook> textbooks = textbookDao.getTextbooks(ids);
-		List<Textbook> textBook = new ArrayList<Textbook>(textbooks.size());
-		for (Textbook textbook : textbooks) {
-			if (Const.FALSE == textbook.getIsPlanningEditorConfirm()) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-						CheckedExceptionResult.ILLEGAL_PARAM, "未分配策划编辑");
+		//判断书籍是否存在
+		if(textbooks.size()>0){
+			for (Textbook textbook : textbooks) {
+				//是否存在策划编辑
+				if(ObjectUtil.isNull(textbook.getPlanningEditor())){
+					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
+							"还未选择策划编辑，不能名单确认");
+				}
+				// 是否发布主编
+				if(textbook.getIsChiefPublished()){
+					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
+							"还未发布主编/副主编，不能名单确认");
+				}
+				
+				// 是否确认编委
+//				if(){
+//					
+//				}
 			}
-			if (Const.FALSE == textbook.getIsChiefChosen()) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-						CheckedExceptionResult.ILLEGAL_PARAM, "未确定第一主编");
-			}
-			textBook.add(new Textbook(textbook.getId()));
 		}
 		Integer count = 0;
-		if (CollectionUtil.isNotEmpty(textBook)) {
-			count = textbookDao.updateTextbooks(textBook);
+		if (CollectionUtil.isNotEmpty(textbooks)) {
+			count = textbookDao.updateTextbooks(textbooks);
 		}
 		return count;
 	}

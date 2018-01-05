@@ -328,18 +328,18 @@ public final class StringUtil {
         // }
         // return ip;
         String ip = request.getHeader("x-forwarded-for");
-        LOGGER.info("x-forwarded-for={}", ip);
+        // LOGGER.info("x-forwarded-for={}", ip);
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
-            LOGGER.info("Proxy-Client-IP={}", ip);
+            // LOGGER.info("Proxy-Client-IP={}", ip);
         }
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
-            LOGGER.info("WL-Proxy-Client-IP={}", ip);
+            // LOGGER.info("WL-Proxy-Client-IP={}", ip);
         }
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
-            LOGGER.info("RemoteAddr-IP={}", ip);
+            // LOGGER.info("RemoteAddr-IP={}", ip);
         }
         if (StringUtil.notEmpty(ip)) {
             ip = ip.split(",")[0];

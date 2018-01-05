@@ -98,6 +98,7 @@ public class JavaMailSenderUtil {
             try {
                 Thread.sleep(2000);
                 senderImpl.send(mailMessage);
+                isOk = true;
             } catch (InterruptedException ie) {
                 logger.error("重发邮件时发生异常");
                 logger.error(ie.getMessage());

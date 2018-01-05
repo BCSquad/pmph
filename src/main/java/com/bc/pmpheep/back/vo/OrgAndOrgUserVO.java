@@ -65,7 +65,16 @@ public class OrgAndOrgUserVO implements Serializable{
     private Long    orgId;
     //姓名或账号
     private String     name;
+    // 医院或者学校
+    private Boolean isHospital;
     
+    
+	public Boolean getIsHospital() {
+		return isHospital;
+	}
+	public void setIsHospital(Boolean isHospital) {
+		this.isHospital = isHospital;
+	}
 	public String getName() {
 		return name;
 	}
