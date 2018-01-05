@@ -258,8 +258,8 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 				}
 			}
 			pageResult.setRows(list);
-			pageResult.setTotal(total);
 		}
+		pageResult.setTotal(total);
 		return pageResult;
 	}
 

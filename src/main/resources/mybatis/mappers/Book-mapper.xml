@@ -334,6 +334,9 @@
 			<if test=" isOnSale != null ">
 				is_on_sale=#{isOnSale},
 			</if>
+			<if test="materialId != null">
+				material_id=#{materialId}
+			</if>
 			<if test="gmtCreate != null ">
 				gmt_create=#{gmtCreate},
 			</if>
@@ -361,9 +364,17 @@
 	<!-- 分页查询 -->
 	<select id="listBookVO" parameterType="PageParameter"
 		resultType="BookVO">
-		SELECT b.*,t.type_name,t.path FROM book b LEFT JOIN material_type t
-		ON
-		t.id = b.type WHERE 1 = 1
+		SELECT
+		b.*, t.type_name,
+		t.path,m.material_name,m.id materialId
+		FROM
+		book
+		b
+		LEFT JOIN
+		material_type t ON t.id = b.type
+		LEFT JOIN material m ON m.id
+		=
+		b.material_id WHERE 1 = 1
 		<if test="parameter.name !=null and parameter.name !='' ">
 			and (b.isbn like concat('%',#{parameter.name},'%') or
 			b.bookname like
@@ -390,6 +401,7 @@
 		resultType="Integer">
 		SELECT count(*) FROM book b LEFT JOIN material_type t ON t.id =
 		b.type
+		LEFT JOIN material m ON m.id = b.material_id
 		WHERE 1 = 1
 		<if test="parameter.name !=null and parameter.name !='' ">
 			and (b.isbn like concat('%',#{parameter.name},'%') or
@@ -502,6 +514,4 @@
 		b.bookmarks DESC
 		limit #{start},#{pageSize}
 	</select>
-
-
 </mapper>
