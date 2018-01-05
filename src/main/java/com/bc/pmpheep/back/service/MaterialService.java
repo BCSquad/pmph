@@ -115,7 +115,7 @@ public interface MaterialService {
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */
-	Integer updateMaterial(Material material) throws CheckedServiceException;
+	Integer updateMaterial(Material material,String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 

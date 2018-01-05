@@ -427,7 +427,7 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                                                               // 为0代表系统审核
                                                           DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                    DateUtil.getCurrentTime())));
-        count = materialService.updateMaterial(new Material(materialId, true));
+        count = materialService.updateMaterial(new Material(materialId, true), sessionId);
         return count;
     }
 

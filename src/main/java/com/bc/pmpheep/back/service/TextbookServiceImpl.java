@@ -37,6 +37,7 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -292,7 +293,17 @@ public class TextbookServiceImpl implements TextbookService {
 	}
 
 	@Override
-	public Integer updateTextbooks(Long[] ids) {
+	public Integer updateTextbooks(Long[] ids,String sessionId) {
+		//获取当前用户
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"请求用户不存在");
+		}
+		if (!pmphUser.getIsAdmin()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"该用户没有操作权限");
+		}
 		if(null==ids){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 					"书籍id为空");
@@ -490,7 +501,17 @@ public class TextbookServiceImpl implements TextbookService {
 	}
 	
 	@Override
-	public Integer updateTextbookAndMaterial(Long[] ids) throws CheckedServiceException {
+	public Integer updateTextbookAndMaterial(Long[] ids,String sessionId) throws CheckedServiceException {
+		//获取当前用户
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"请求用户不存在");
+		}
+		if (!pmphUser.getIsAdmin()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"该用户没有操作权限");
+		}
 		List<Textbook> textbooks=textbookDao.getTextbooks(ids);
 		List<Textbook> textBooks =new ArrayList<Textbook>(textbooks.size());
 		Material material=new Material();

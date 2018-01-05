@@ -87,8 +87,9 @@ public class PositionChooseController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "强制结束该教材")
     @RequestMapping(value = "/updateMaterial", method = RequestMethod.PUT)
-    public ResponseBean updateMaterial(Material material) {
-        return new ResponseBean(materialService.updateMaterial(material));
+    public ResponseBean updateMaterial(Material material,HttpServletRequest request) {
+    	String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(materialService.updateMaterial(material,sessionId));
     }
 
     /**
@@ -100,8 +101,9 @@ public class PositionChooseController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量通过（名单确认）")
     @RequestMapping(value = "/updateTextbook", method = RequestMethod.PUT)
-    public ResponseBean updateTextbook(@RequestParam("ids") Long[] ids) {
-        return new ResponseBean(textbookService.updateTextbooks(ids));
+    public ResponseBean updateTextbook(@RequestParam("ids") Long[] ids,HttpServletRequest request) {
+    	String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(textbookService.updateTextbooks(ids,sessionId));
     }
 
     /**
@@ -113,8 +115,9 @@ public class PositionChooseController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量结果公布（最终名单公布）")
     @RequestMapping(value = "/updateResult", method = RequestMethod.PUT)
-    public ResponseBean updateResult(@RequestParam("ids") Long[] ids) {
-        return new ResponseBean(textbookService.updateTextbookAndMaterial(ids));
+    public ResponseBean updateResult(@RequestParam("ids") Long[] ids,HttpServletRequest request) {
+    	String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(textbookService.updateTextbookAndMaterial(ids,sessionId));
     }
 
     /**
