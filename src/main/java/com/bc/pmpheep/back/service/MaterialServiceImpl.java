@@ -960,4 +960,10 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		return materialDao.getMaterialByName(textbookIds);
 	}
+
+	@Override
+	public List<Material> listBook(String materialName) throws CheckedServiceException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

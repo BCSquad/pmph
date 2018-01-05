@@ -15,7 +15,6 @@ import com.bc.pmpheep.back.vo.MaterialMainInfoVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
-
 /**
  * MaterialService 接口
  * 
@@ -24,34 +23,38 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  */
 public interface MaterialService {
 
-    /**
-     * 新增一个Material
-     * 
-     * @param Material 实体对象
-     * @return 带主键的 Material thorws CheckedServiceException
-     */
-    Material addMaterial(Material material) throws CheckedServiceException;
-    /**
-     * 
-     * 新建遴选公告
-     * @createDate 2017年11月13日 下午2:33:56
-     * @param request
-     * @param MaterialVO materialVO
-     * @param noticeFiles
-     * @param noteFiles
-     * @param isUpdate false新增,true更新
-     * @return material 主键
-     * @throws CheckedServiceException
-     * @throws IOException 
-     */
-    Long addOrUpdateMaterial(HttpServletRequest request, 
-    		MaterialVO materialVO,
-//		    MultipartFile[]   noticeFiles,
-//		    MultipartFile[]   noteFiles,
-		    boolean isUpdate) throws CheckedServiceException, IOException;
-    
-    /**
-	 * 获取教材名称  通过主键id
+	/**
+	 * 新增一个Material
+	 * 
+	 * @param Material
+	 *            实体对象
+	 * @return 带主键的 Material thorws CheckedServiceException
+	 */
+	Material addMaterial(Material material) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 新建遴选公告
+	 * 
+	 * @createDate 2017年11月13日 下午2:33:56
+	 * @param request
+	 * @param MaterialVO
+	 *            materialVO
+	 * @param noticeFiles
+	 * @param noteFiles
+	 * @param isUpdate
+	 *            false新增,true更新
+	 * @return material 主键
+	 * @throws CheckedServiceException
+	 * @throws IOException
+	 */
+	Long addOrUpdateMaterial(HttpServletRequest request, MaterialVO materialVO,
+			// MultipartFile[] noticeFiles,
+			// MultipartFile[] noteFiles,
+			boolean isUpdate) throws CheckedServiceException, IOException;
+
+	/**
+	 * 获取教材名称 通过主键id
 	 * 
 	 * @param id
 	 * @return Material
@@ -59,10 +62,11 @@ public interface MaterialService {
 	 * @return 教材名称
 	 */
 	String getMaterialNameById(Long id) throws CheckedServiceException;
-	
+
 	/**
 	 * 获取教材主要信息，如教材名称，当前用户的权限菜单,以及教材的其他信息
-	 * @introduction 
+	 * 
+	 * @introduction
 	 * @author Mryang
 	 * @createDate 2017年12月14日 上午8:56:43
 	 * @param id
@@ -70,8 +74,7 @@ public interface MaterialService {
 	 * @return
 	 * @throws CheckedServiceException
 	 */
-	MaterialMainInfoVO getMaterialMainInfoById (Long id,String sessionId) throws CheckedServiceException;
-
+	MaterialMainInfoVO getMaterialMainInfoById(Long id, String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 查询一个 Material 通过主键id
@@ -152,20 +155,22 @@ public interface MaterialService {
 	 *
 	 */
 	String updateMaterial(Long id, String sessionId) throws CheckedServiceException;
-	
+
 	/**
 	 * 根据教材id获取更新教材视图数据
+	 * 
 	 * @author Mryang
 	 * @createDate 2017年11月23日 下午5:47:53
 	 * @param id
 	 * @return MaterialVO
 	 * @throws CheckedServiceException
 	 */
-	MaterialVO getMaterialVO(Long id) throws CheckedServiceException ;
-	
+	MaterialVO getMaterialVO(Long id) throws CheckedServiceException;
+
 	/**
 	 * 教材附件上传为临时文件，并返回相对路径
-	 * @introduction 
+	 * 
+	 * @introduction
 	 * @author Mryang
 	 * @createDate 2017年12月6日 上午11:35:13
 	 * @param request
@@ -174,12 +179,27 @@ public interface MaterialService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	List<String> upTempFile(HttpServletRequest request, MultipartFile[] files)throws CheckedServiceException, IOException ;
-	
+	List<String> upTempFile(HttpServletRequest request, MultipartFile[] files)
+			throws CheckedServiceException, IOException;
+
 	/**
 	 * 通过书籍id获取教材信息
+	 * 
 	 * @param textbookIds
 	 * @return
 	 */
 	Material getMaterialByName(Long[] textbookIds);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：书籍页面获取所有已经结束的教材
+	 *
+	 * @param materialName
+	 *            教材名称
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	List<Material> listBook(String materialName) throws CheckedServiceException;
 }

@@ -381,7 +381,7 @@
 			<if test="isNationalPlanRequired !=null  ">
 				is_national_plan_required=#{isNationalPlanRequired},
 			</if>
-				<if test="isTextbookUsed !=null  ">
+			<if test="isTextbookUsed !=null  ">
 				is_Textbook_Used=#{isTextbookUsed},
 			</if>
 			<if test="isTextbookRequired !=null  ">
@@ -445,10 +445,11 @@
 		resultType="Material">
 		select * from material where id=#{id} ;
 	</select>
-	
-	<!-- 根据id查询  教材名字-->
-	<select id="getMaterialNameById" parameterType="java.lang.Long" resultType="java.lang.String">
-		select material_name  from material where id=#{id} ;
+
+	<!-- 根据id查询 教材名字 -->
+	<select id="getMaterialNameById" parameterType="java.lang.Long"
+		resultType="java.lang.String">
+		select material_name from material where id=#{id} ;
 	</select>
 
 	<!-- 查询表单的数据总数 -->
@@ -474,18 +475,19 @@
 		order by ma.id desc;
 	</select>
 
-	
-	<!--获取用户在该教材是几本书的策划编辑  -->
-	<select id="getPlanningEditorSum" resultType="java.lang.Integer" parameterType="java.util.Map" >
-		select 
-			count(*) 
-		from 
-			textbook 
-		where 
-			material_id     = #{materialId}
+
+	<!--获取用户在该教材是几本书的策划编辑 -->
+	<select id="getPlanningEditorSum" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select
+		count(*)
+		from
+		textbook
+		where
+		material_id = #{materialId}
 		and planning_editor = #{pmphUserId}
 	</select>
-	
+
 	<!-- 根据id删除一个 -->
 	<delete id="deleteMaterialById" parameterType="java.lang.Long">
 		delete from
@@ -512,22 +514,28 @@
 		material m
 		LEFT JOIN material_contact c ON m.id = c.material_id
 		LEFT JOIN material_project_editor p ON p.material_id = m.id
-		LEFT JOIN textbook e ON e.material_id = m.id
-		LEFT JOIN pmph_user u ON m.director = u.id
-		WHERE  m.is_deleted = FALSE
+		LEFT JOIN
+		textbook e ON e.material_id = m.id
+		LEFT JOIN pmph_user u ON m.director
+		= u.id
+		WHERE m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
-		AND (m.director = #{parameter.userId} OR p.editor_id = #{parameter.userId}
-		 OR e.planning_editor = #{parameter.userId})
+			AND (m.director = #{parameter.userId} OR p.editor_id =
+			#{parameter.userId}
+			OR e.planning_editor = #{parameter.userId})
 		</if>
 		<if test="parameter.materialName != null and parameter.materialName != ''">
-		AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
+			AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
 		</if>
-		<if test="parameter.contactUserName != null and parameter.contactUserName !=''">
-		AND c.contact_user_name LIKE concat('%',#{parameter.contactUserName},'%')
+		<if
+			test="parameter.contactUserName != null and parameter.contactUserName !=''">
+			AND c.contact_user_name LIKE
+			concat('%',#{parameter.contactUserName},'%')
 		</if>
 		<if test="parameter.state != null and parameter.state != ''">
-		AND m.is_all_textbook_published = #{parameter.isAllTextbookPublished} AND m.is_force_end = #{parameter.isForceEnd} 
-		 AND m.is_published = #{parameter.isPublished}
+			AND m.is_all_textbook_published = #{parameter.isAllTextbookPublished}
+			AND m.is_force_end = #{parameter.isForceEnd}
+			AND m.is_published = #{parameter.isPublished}
 		</if>
 		ORDER BY
 		m.actual_deadline DESC,
@@ -549,30 +557,37 @@
 		m.founder_id
 		FROM
 		material m
-		LEFT JOIN material_contact c ON m.id = c.material_id
-		LEFT JOIN material_project_editor p ON p.material_id = m.id
+		LEFT JOIN material_contact c
+		ON m.id = c.material_id
+		LEFT JOIN material_project_editor p ON
+		p.material_id = m.id
 		LEFT JOIN textbook e ON e.material_id = m.id
-		LEFT JOIN pmph_user u ON m.director = u.id
+		LEFT
+		JOIN pmph_user u ON m.director = u.id
 		WHERE m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
-		AND (m.director = #{parameter.userId} OR p.editor_id = #{parameter.userId}
-		 OR e.planning_editor = #{parameter.userId})
+			AND (m.director = #{parameter.userId} OR p.editor_id =
+			#{parameter.userId}
+			OR e.planning_editor = #{parameter.userId})
 		</if>
 		<if test="parameter.materialName != null and parameter.materialName != ''">
-		AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
+			AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
 		</if>
-		<if test="parameter.contactUserName != null and parameter.contactUserName !=''">
-		AND c.contact_user_name LIKE concat('%',#{parameter.contactUserName},'%')
+		<if
+			test="parameter.contactUserName != null and parameter.contactUserName !=''">
+			AND c.contact_user_name LIKE
+			concat('%',#{parameter.contactUserName},'%')
 		</if>
 		<if test="parameter.state != null and parameter.state != ''">
-		AND m.is_all_textbook_published = #{parameter.isAllTextbookPublished} AND m.is_force_end = #{parameter.isForceEnd} 
-		 AND m.is_published = #{parameter.isPublished}
+			AND m.is_all_textbook_published = #{parameter.isAllTextbookPublished}
+			AND m.is_force_end = #{parameter.isForceEnd}
+			AND m.is_published = #{parameter.isPublished}
 		</if>
 		ORDER BY
 		m.actual_deadline DESC,
 		m.gmt_create DESC
 		<if test="pageSize != null">
-		LIMIT #{start} , #{pageSize}
+			LIMIT #{start} , #{pageSize}
 		</if>
 	</select>
 
@@ -594,22 +609,28 @@
 		material m
 		LEFT JOIN material_contact c ON m.id = c.material_id
 		LEFT JOIN material_project_editor p ON p.material_id = m.id
-		LEFT JOIN textbook e ON e.material_id = m.id
-		LEFT JOIN pmph_user u ON m.director = u.id
+		LEFT JOIN
+		textbook e ON e.material_id = m.id
+		LEFT JOIN pmph_user u ON m.director
+		= u.id
 		WHERE m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
-		AND (m.director = #{parameter.userId} OR p.editor_id = #{parameter.userId}
-		 OR e.planning_editor = #{parameter.userId})
+			AND (m.director = #{parameter.userId} OR p.editor_id =
+			#{parameter.userId}
+			OR e.planning_editor = #{parameter.userId})
 		</if>
 		<if test="parameter.materialName != null and parameter.materialName != ''">
-		AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
+			AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
 		</if>
-		<if test="parameter.contactUserName != null and parameter.contactUserName !=''">
-		AND c.contact_user_name LIKE concat('%',#{parameter.contactUserName},'%')
+		<if
+			test="parameter.contactUserName != null and parameter.contactUserName !=''">
+			AND c.contact_user_name LIKE
+			concat('%',#{parameter.contactUserName},'%')
 		</if>
 		<if test="parameter.state != null and parameter.state != ''">
-		AND (m.is_all_textbook_published = #{parameter.isAllTextbookPublished} OR m.is_force_end = #{parameter.isForceEnd}) 
-		 AND m.is_published = #{parameter.isPublished}
+			AND (m.is_all_textbook_published = #{parameter.isAllTextbookPublished}
+			OR m.is_force_end = #{parameter.isForceEnd})
+			AND m.is_published = #{parameter.isPublished}
 		</if>
 		ORDER BY
 		m.actual_deadline DESC,
@@ -631,54 +652,81 @@
 		m.founder_id
 		FROM
 		material m
-		LEFT JOIN material_contact c ON m.id = c.material_id
-		LEFT JOIN material_project_editor p ON p.material_id = m.id
+		LEFT JOIN material_contact c
+		ON m.id = c.material_id
+		LEFT JOIN material_project_editor p ON
+		p.material_id = m.id
 		LEFT JOIN textbook e ON e.material_id = m.id
-		LEFT JOIN pmph_user u ON m.director = u.id
+		LEFT
+		JOIN pmph_user u ON m.director = u.id
 		WHERE m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
-		AND (m.director = #{parameter.userId} OR p.editor_id = #{parameter.userId}
-		 OR e.planning_editor = #{parameter.userId})
+			AND (m.director = #{parameter.userId} OR p.editor_id =
+			#{parameter.userId}
+			OR e.planning_editor = #{parameter.userId})
 		</if>
 		<if test="parameter.materialName != null and parameter.materialName != ''">
-		AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
+			AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
 		</if>
-		<if test="parameter.contactUserName != null and parameter.contactUserName !=''">
-		AND c.contact_user_name LIKE concat('%',#{parameter.contactUserName},'%')
+		<if
+			test="parameter.contactUserName != null and parameter.contactUserName !=''">
+			AND c.contact_user_name LIKE
+			concat('%',#{parameter.contactUserName},'%')
 		</if>
 		<if test="parameter.state != null and parameter.state != ''">
-		AND (m.is_all_textbook_published = #{parameter.isAllTextbookPublished} OR m.is_force_end = #{parameter.isForceEnd}) 
-		 AND m.is_published = #{parameter.isPublished}
+			AND (m.is_all_textbook_published = #{parameter.isAllTextbookPublished}
+			OR m.is_force_end = #{parameter.isForceEnd})
+			AND m.is_published = #{parameter.isPublished}
 		</if>
 		ORDER BY
 		m.actual_deadline DESC,
 		m.gmt_create DESC
 		<if test="pageSize != null">
-		LIMIT #{start} , #{pageSize}
+			LIMIT #{start} , #{pageSize}
 		</if>
 	</select>
 	<!-- 批量结果公布 -->
 	<update id="updateMaterialPublished" parameterType="Material">
-		update material
-			set is_all_textbook_published= true
-			where id = #{id}
+		update
+		material
+		set is_all_textbook_published= true
+		where id = #{id}
 	</update>
 	<!-- 通过教材id查询该教材全部书籍 -->
 	<select id="getMaterialAndTextbook" resultType="Textbook">
-		select * from textbook tk
-		left join material m on m.id=tk.material_id 
+		select * from
+		textbook tk
+		left join material m on m.id=tk.material_id
 		where m.id=#{id}
 	</select>
-	
+
 	<!-- 通过书籍id获取教材信息 -->
 	<select id="getMaterialByName" resultType="Material">
-			select * from material m
-				left join textbook t on t.material_id=m.id
-				where t.id in 
+		select * from material m
+		left join textbook t on t.material_id=m.id
+		where t.id in
 		<foreach collection="array" item="item" index="index" open="("
 			separator="," close=")">
 			#{item}
 		</foreach>
-				GROUP BY m.id
+		GROUP BY m.id
+	</select>
+
+	<select id="listBook" parameterType="java.lang.String"
+		resultType="Material">
+		SELECT
+		id,
+		material_name
+		FROM
+		material
+		WHERE
+		1 = 1
+		AND (
+		is_all_textbook_published = TRUE
+		OR is_force_end = TRUE
+		)
+		<if test="materialName != null">
+			AND CONCAT('%',#{materialName},'%')
+		</if>
 	</select>
 </mapper>

@@ -514,6 +514,4 @@
 		b.bookmarks DESC
 		limit #{start},#{pageSize}
 	</select>
-
-
 </mapper>
