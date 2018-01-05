@@ -694,10 +694,19 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	 * @throws CheckedServiceException
 	 */
 	@Override
-	public Integer updateMaterial(Material material) throws CheckedServiceException {
+	public Integer updateMaterial(Material material,String sessionId) throws CheckedServiceException {
 		if (null == material.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"主键为空");
+		}
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (ObjectUtil.isNull(pmphUser)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
+		}
+		if (!pmphUser.getIsAdmin()) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+						"该用户没有操作权限");
 		}
 		return materialDao.updateMaterial(material);
 	}
