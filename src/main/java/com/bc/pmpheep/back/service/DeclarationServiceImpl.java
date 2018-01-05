@@ -157,7 +157,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 
     @Override
     public PageResult<DeclarationListVO> pageDeclaration(Integer pageNumber, Integer pageSize, Long materialId,
-            String textBookids, String realname, String position, String title, String orgName, String unitName,
+            String textBookids, String realname, String position, String title, String orgName,Long orgId, String unitName,
             Integer positionType, Integer onlineProgress, Integer offlineProgress) throws CheckedServiceException {
         if (null == materialId) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -183,6 +183,9 @@ public class DeclarationServiceImpl implements DeclarationService {
         }
         if (StringUtil.notEmpty(orgName)) {
             map.put("orgName", StringUtil.toAllCheck(orgName)); // 工作单位
+        }
+        if (null != orgId) {
+            map.put("orgId", orgId); // 申报单位
         }
         if (StringUtil.notEmpty(unitName)) {
             map.put("unitName", StringUtil.toAllCheck(unitName)); // 申报单位

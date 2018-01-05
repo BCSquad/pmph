@@ -432,6 +432,7 @@
 			LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
 			WHERE
 				dc.is_staging=false and dc.online_progress!=2
+				and dp.chosen_position!=0
 		<if test="parameter.textBookId !=null  ">
 			and dp.`textbook_id` =#{parameter.textBookId}
 		</if>
@@ -449,6 +450,7 @@
 		LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
 		WHERE
 			dc.is_staging=false and dc.online_progress!=2
+			and dp.chosen_position!=0
 		<if test="parameter.textBookId !=null  ">
 			and dp.`textbook_id` =#{parameter.textBookId}
 		</if>
@@ -498,4 +500,5 @@
 		</foreach>
 			GROUP BY dp.`textbook_id`
 	</select>
+	
 </mapper>

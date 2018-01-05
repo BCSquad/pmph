@@ -279,4 +279,13 @@ public interface DecPositionService {
      * @throws CheckedServiceException
      */
     List<TextbookDecVO> getTextbookEditorList(Long textbookId) throws CheckedServiceException;
+    
+    /**
+     * 通过书籍id 查询编委
+     * @param id
+     * @return
+     * @throws CheckedServiceException
+     */
+	DecPosition getDecPositionByTextbookId(Long textbookId)throws CheckedServiceException;;
+    
 }

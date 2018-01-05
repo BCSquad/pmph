@@ -87,8 +87,8 @@ public class BookController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "修改单个/多个书籍详情")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	public ResponseBean update(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote) {
-		return new ResponseBean(bookService.updateBookById(ids, type, isOnSale, isNew, isPromote));
+	public ResponseBean update(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote,Long materialId) {
+		return new ResponseBean(bookService.updateBookById(ids, type, isOnSale, isNew, isPromote,materialId));
 	}
 
 	/**

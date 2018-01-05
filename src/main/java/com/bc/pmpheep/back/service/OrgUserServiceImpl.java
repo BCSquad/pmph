@@ -173,10 +173,13 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         if (StringUtil.notEmpty(orgName)) {
             pageParameter.getParameter().setOrgName(orgName);
         }
-        if(ObjectUtil.notNull(pageParameter.getParameter().getIsHospital())){
-        	if(pageParameter.getParameter().getIsHospital()){
-        		pageParameter.getParameter().setOrgTypeName("医院");
-        	}
+        String orgTypeName = pageParameter.getParameter().getOrgTypeName();
+        if (StringUtil.notEmpty(orgTypeName)) {
+            pageParameter.getParameter().setOrgTypeName(orgTypeName);
+        }
+        Boolean isHospital = pageParameter.getParameter().getIsHospital();
+        if (ObjectUtil.notNull(isHospital)) {
+            pageParameter.getParameter().setIsHospital(isHospital);
         }
         PageResult<OrgAndOrgUserVO> pageResult = new PageResult<OrgAndOrgUserVO>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
