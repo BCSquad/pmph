@@ -162,24 +162,18 @@
 	<!-- 根据小组id查询到的数据总数 -->
 	<select id="groupMemberTotal" parameterType="pageParameter"
 		resultType="java.lang.Integer">
-		SELECT count(*)
+		SELECT DISTINCT
+		COUNT(*)
 		FROM
-		pmph_group_member a LEFT
-		JOIN pmph_group b ON
-		a.group_id = b.id
-		LEFT
-		JOIN
-		(SELECT a.* FROM pmph_user a)c ON c.id =
-		a.user_id LEFT JOIN
-		pmph_department d
-		ON c.department_id = d.id LEFT
-		JOIN (SELECT a.* FROM
-		writer_user a)e
-		ON a.user_id = e.id LEFT JOIN org
-		f ON f.id =
-		e.org_id
+		pmph_group_member a
+		LEFT JOIN pmph_group b ON a.group_id = b.id
+		LEFT JOIN (SELECT a.* FROM pmph_user a) c ON c.id = a.user_id
+		LEFT JOIN pmph_department d ON c.department_id = d.id
+		LEFT JOIN (SELECT a.* FROM writer_user a) e ON a.user_id = e.id
+		LEFT JOIN org f ON f.id = e.org_id
 		WHERE a.group_id =
-		#{parameter.groupId} and
+		#{parameter.groupId}
+		and
 		a.is_deleted = false
 		<if test="parameter.name !=null and parameter.name !=''">
 			and (e.username like concat('%',#{parameter.name},'%') or
