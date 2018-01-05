@@ -47,6 +47,14 @@ public class BookVO implements Serializable {
 	 * 类别名称
 	 */
 	private String typeName;
+	/**
+	 * 教材名称
+	 */
+	private String materialName;
+	/**
+	 * 教材id
+	 */
+	private Long materialId;
 
 	public Long getId() {
 		return id;
@@ -126,6 +134,22 @@ public class BookVO implements Serializable {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public String getMaterialName() {
+		return materialName;
+	}
+
+	public void setMaterialName(String materialName) {
+		this.materialName = materialName;
+	}
+
+	public Long getMaterialId() {
+		return materialId;
+	}
+
+	public void setMaterialId(Long materialId) {
+		this.materialId = materialId;
 	}
 
 }
