@@ -347,10 +347,12 @@ public class FileDownLoadController {
 			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress
 			) {
 		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
+		logger.info("--------------{}-------",id);
 		taskExecutor.execute(new SpringThread(zipHelper, wordHelper, materialService, textbookService,
 				declarationService, materialId, textBookids, realname, position, title, orgName, unitName, positionType,
 				onlineProgress, offlineProgress, id));
-		return id;
+		logger.info("--------------{}-------",id);
+		return '"'+id+'"';
 	}
 
 	/**
