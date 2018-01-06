@@ -1,11 +1,8 @@
 package com.bc.pmpheep.back.service;
 
-import java.util.List;
-
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Survey;
-import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -76,7 +73,7 @@ public interface SurveyService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer updateSurveyAndTemplate(List<SurveyQuestionListVO> questionAnswerJosn, SurveyVO surveyVO)
+    Integer updateSurveyAndTemplate(String questionAnswerJosn, SurveyVO surveyVO)
     throws CheckedServiceException;
 
     /**

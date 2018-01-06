@@ -11,6 +11,12 @@
 			<if test="templateName != null and templateName != ''">
 				template_name,
 			</if>
+			<if test="intro != null and intro != ''">
+				intro,
+			</if>
+			<if test="typeId != null">
+				type_id,
+			</if>
 			<if test="sort != null">
 				sort,
 			</if>
@@ -31,6 +37,12 @@
 			</if>
 			<if test="templateName != null and templateName != ''">
 				#{templateName},
+			</if>
+			<if test="intro != null and intro != ''">
+				#{intro},
+			</if>
+			<if test="typeId != null">
+				#{typeId},
 			</if>
 			<if test="sort != null">
 				#{sort},

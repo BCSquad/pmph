@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -139,9 +140,18 @@ public class JsonUtil<T> {
      * @param json
      * @return
      */
-    @SuppressWarnings("deprecation")
     public List<T> getArrayListObjectFromStr(Class<T> v, String json) {
         try {
+            // JavaType javaType =
+            // objectMapper.getTypeFactory().constructParametricType(List.class, Bean.class);
+            // // Map类型
+            // objectMapper.getTypeFactory().constructParametricType(HashMap.class,
+            // String.class,
+            // Bean.class);
+            // return objectMapper.readValue(json,
+            // new TypeReference<List<org.springframework.context.annotation.Bean>>() {
+            // });
+            objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
             return objectMapper.readValue(json.getBytes(),
                                           objectMapper.getTypeFactory()
                                                       .constructParametricType(ArrayList.class, v));
