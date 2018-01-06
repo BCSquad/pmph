@@ -60,6 +60,9 @@
 			<if test="fax !=null and fax !=''">
 				fax,
 			</if>
+			<if test="isDispensed !=null">
+				is_dispensed,
+			</if>
 			<if test="orgId !=null and orgId !=''">
 				org_id,
 			</if>
@@ -142,6 +145,9 @@
 			</if>
 			<if test="fax !=null and fax !=''">
 				#{fax},
+			</if>
+			<if test="isDispensed !=null">
+				#{isDispensed},
 			</if>
 			<if test="orgId !=null and orgId !=''">
 				#{orgId},
@@ -245,6 +251,9 @@
 			</if>
 			<if test="fax !=null and fax !=''">
 				fax = #{fax},
+			</if>
+			<if test="isDispensed !=null">
+				is_dispensed = #{isDispensed},
 			</if>
 			<if test="orgId !=null and orgId !=''">
 				org_id = #{orgId},
