@@ -38,7 +38,7 @@ public interface CmsAdvertisementDao {
 	 * @param cmsAdvertisement
 	 * @return
 	 */
-	CmsAdvertisement addCmsAdvertisement(CmsAdvertisement cmsAdvertisement);
+	Integer addCmsAdvertisement(CmsAdvertisement cmsAdvertisement);
 
 	/**
 	 * 删除广告

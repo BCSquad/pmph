@@ -42,7 +42,11 @@ public enum FileType {
     /**
      * CMS内嵌图片
      */
-    CMS_IMG("CMS内嵌图片");
+    CMS_IMG("CMS内嵌图片"),
+    /**
+     * CMS附件
+     */
+    CMS_ADVERTISEMENT("CMS广告图片");
     
     private final String type;
 
