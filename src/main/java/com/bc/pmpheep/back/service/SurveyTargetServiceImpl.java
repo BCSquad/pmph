@@ -171,6 +171,8 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
                 orgUserEmail.add(orgUser.getEmail());// 获取学校管理员邮箱地址
             }
             Integer size = orgUserEmail.size();
+            String[] emails =
+            new String[] { "fen1326219542@qq.com", "heyu.1993@qq.com", "1240413812@qq.com" };
             String[] toEmail = (String[]) orgUserEmail.toArray(new String[size]);
             // 发送邮件
             JavaMailSenderUtil javaMailSenderUtil = new JavaMailSenderUtil();
@@ -178,7 +180,7 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
                 // 给学校管理员发送邮件
                 javaMailSenderUtil.sendMail(surveyTargetVO.getTitle(), message.getContent(),
                 // "<p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>您好：</span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>&nbsp; &nbsp; 现有一份《XXXX问卷调查》需要您登陆下面地址，填写您宝贵意见。</span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>&nbsp;&nbsp;&nbsp;&nbsp;登陆地址：<a href='http://www.baidu.com'>人卫E教平台</a><br/></span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;'><br/></p>",
-                                            toEmail);
+                                            emails);
             } catch (Exception e) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                                   CheckedExceptionResult.OBJECT_NOT_FOUND, "邮件发送失败");
