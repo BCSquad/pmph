@@ -9,13 +9,13 @@
 			<if test="id !=null">
 				id,
 			</if>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				declaration_id,
 			</if>
 			<if test="orgName !=null and orgName !=''">
 				org_name,
 			</if>
-			<if test="rank !=null and rank !=''">
+			<if test="rank !=null">
 				rank,
 			</if>
 			<if test="position !=null and position !=''">
@@ -24,7 +24,7 @@
 			<if test="note !=null and note !=''">
 				note,
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				sort,
 			</if>
 		</trim>
@@ -35,13 +35,13 @@
 			<if test="id !=null">
 				#{id},
 			</if>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				#{declarationId},
 			</if>
 			<if test="orgName !=null and orgName !=''">
 				#{orgName},
 			</if>
-			<if test="rank !=null and rank !=''">
+			<if test="rank !=null">
 				#{rank},
 			</if>
 			<if test="position !=null and position !=''">
@@ -50,7 +50,7 @@
 			<if test="note !=null and note !=''">
 				#{note},
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				#{sort},
 			</if>
 		</trim>
@@ -81,13 +81,13 @@
 	<update id="updateDecAcade" parameterType="DecAcade">
 		update dec_acade
 		<set>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				declaration_id = #{declarationId},
 			</if>
 			<if test="orgName !=null and orgName !=''">
 				org_name = #{orgName},
 			</if>
-			<if test="rank !=null and rank !=''">
+			<if test="rank !=null">
 				rank = #{rank},
 			</if>
 			<if test="position !=null and position !=''">
@@ -96,7 +96,7 @@
 			<if test="note !=null and note !=''">
 				note = #{note},
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				sort = #{sort},
 			</if>
 		</set>

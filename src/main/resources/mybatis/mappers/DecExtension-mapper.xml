@@ -5,10 +5,10 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="extensionId != null and extensionId !=''">
+			<if test="extensionId != null">
 				extension_id,
 			</if>
-			<if test="declarationId != null and declarationId !=''">
+			<if test="declarationId != null">
 				declaration_id,
 			</if>
 			<if test=" content != null and content !=''">
@@ -20,10 +20,10 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="extensionId != null and extensionId !=''">
+			<if test="extensionId != null">
 				#{extensionId},
 			</if>
-			<if test="declarationId != null and declarationId !=''">
+			<if test="declarationId != null">
 				#{declarationId},
 			</if>
 			<if test=" content != null and content !=''">
@@ -62,10 +62,10 @@
 	<update id="updateDecExtension" parameterType="DecExtension">
 		update dec_extension
 		<set>
-			<if test="extensionId != null and extensionId !=''">
+			<if test="extensionId != null">
 				extension_id = #{extensionId},
 			</if>
-			<if test="declarationId != null and declarationId !='' ">
+			<if test="declarationId != null">
 				declaration_id = #{declarationId},
 			</if>
 			<if test=" content != null and content !=''">

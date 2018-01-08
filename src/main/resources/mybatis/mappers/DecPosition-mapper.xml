@@ -9,22 +9,22 @@
 			<if test="id !=null">
 				id,
 			</if>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				declaration_id,
 			</if>
-			<if test="textbookId !=null and textbookId !=''">
+			<if test="textbookId !=null">
 				textbook_id,
 			</if>
 			<if test="presetPosition !=null ">
 				preset_position,
 			</if>
-			<if test="isOnList !=null and isOnList !=''">
+			<if test="isOnList !=null">
 				is_on_list,
 			</if>
-			<if test="chosenPosition !=null and chosenPosition !=''">
+			<if test="chosenPosition !=null">
 				chosen_position,
 			</if>
-			<if test="rank !=null and rank !=''">
+			<if test="rank !=null">
 				rank,
 			</if>
 			<if test="syllabusId !=null and syllabusId !=''">
@@ -41,22 +41,22 @@
 			<if test="id !=null">
 				#{id},
 			</if>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				#{declarationId},
 			</if>
-			<if test="textbookId !=null and textbookId !=''">
+			<if test="textbookId !=null">
 				#{textbookId},
 			</if>
 			<if test="presetPosition !=null ">
 				#{presetPosition},
 			</if>
-			<if test="isOnList !=null and isOnList !=''">
+			<if test="isOnList !=null">
 				#{isOnList},
 			</if>
-			<if test="chosenPosition !=null and chosenPosition !=''">
+			<if test="chosenPosition !=null">
 				#{chosenPosition},
 			</if>
-			<if test="rank !=null and rank !=''">
+			<if test="rank !=null">
 				#{rank},
 			</if>
 			<if test="syllabusId !=null and syllabusId !=''">
@@ -93,22 +93,22 @@
 	<update id="updateDecPosition" parameterType="DecPosition">
 		update dec_position
 		<set>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				declaration_id = #{declarationId},
 			</if>
-			<if test="textbookId !=null and textbookId !=''">
+			<if test="textbookId !=null">
 				textbook_id = #{textbookId},
 			</if>
 			<if test="presetPosition !=null ">
 				preset_position = #{presetPosition},
 			</if>
-			<if test="isOnList !=null and isOnList !=''">
+			<if test="isOnList !=null">
 				is_on_list = #{isOnList},
 			</if>
-			<if test="chosenPosition !=null and chosenPosition !=''">
+			<if test="chosenPosition !=null">
 				chosen_position = #{chosenPosition},
 			</if>
-			<if test="rank !=null and rank !=''">
+			<if test="rank !=null">
 				rank = #{rank},
 			</if>
 			<if test="syllabusId !=null and syllabusId !=''">
