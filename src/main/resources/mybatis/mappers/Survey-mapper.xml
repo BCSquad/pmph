@@ -200,12 +200,12 @@
 			<!-- 问卷创建日期 %H:%i:%s--> 
 					<if test="parameter.startTime !=null and parameter.startTime !='' ">
 						and 
-							so.`operate_date` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d') 
+							s.`gmt_create` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d') 
 							
 					</if>
 					<if test="parameter.endTime !=null and parameter.endTime !='' ">
 						and 
-							so.`operate_date` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d')
+							s.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d')
 					</if>
 		</if>
 		group by s.title desc 
