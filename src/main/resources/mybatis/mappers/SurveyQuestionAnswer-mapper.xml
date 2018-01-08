@@ -229,7 +229,7 @@
 		 ON 
 		 	 s.`type_id` = st.`id`
 		 JOIN 
-		 	 `pmph_user` pu ON pu.`id`= sqa.`user_id`,
+		 	 `pmph_user` pu ON pu.`id`= sta.`user_id`,
 		 (
 		 	SELECT 
 			  COUNT(DISTINCT sqa.`user_id`) `count`
@@ -242,7 +242,7 @@
 			  JOIN `survey_type` st 
 			    ON s.`type_id` = st.`id` 
 			  JOIN `pmph_user` pu 
-			    ON pu.`id` = sqa.`user_id`
+			    ON pu.`id` = sta.`user_id`
 			  <where>
 				  	<if test="parameter.surveyTitle != null and parameter.surveyTitle != ''">
 						s.`title` like concat('%',#{parameter.surveyTitle},'%')
@@ -255,7 +255,7 @@
 				</if>
 		 </where>
 		 GROUP BY 
-		 	  s.`title` 
+		 	  sqa.`survey_id`
 		 <if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
