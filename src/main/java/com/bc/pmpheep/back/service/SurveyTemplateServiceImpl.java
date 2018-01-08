@@ -10,6 +10,7 @@ import com.bc.pmpheep.back.dao.SurveyTemplateDao;
 import com.bc.pmpheep.back.dao.SurveyTemplateQuestionDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.po.SurveyQuestion;
 import com.bc.pmpheep.back.po.SurveyQuestionOption;
@@ -19,6 +20,7 @@ import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.JsonUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
 import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
@@ -114,7 +116,12 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public SurveyTemplate addSurveyTemplateVO(String questionAnswerJosn,
-    SurveyTemplateVO surveyTemplateVO) throws CheckedServiceException {
+    SurveyTemplateVO surveyTemplateVO, String sessionId) throws CheckedServiceException {
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
         if (ObjectUtil.isNull(surveyTemplateVO)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
@@ -133,7 +140,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
         String templateName = surveyTemplateVO.getTemplateName();// 问卷名称
         String intro = surveyTemplateVO.getIntro();// 问卷概述
         Long typeId = surveyTemplateVO.getTypeId();// 问卷调查类型
-        Long userId = surveyTemplateVO.getUserId();// 问卷创建人
+        Long userId = pmphUser.getId();// 问卷创建人
         SurveyTemplate surveyTemplate =
         addSurveyTemplate(new SurveyTemplate(templateName, intro, typeId, userId)); // 添加模版表
         Long templateId = surveyTemplate.getId(); // 获取模版id
@@ -156,6 +163,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
             surveyTemplateQuestions.add(new SurveyTemplateQuestion(templateId, questionId));
         }
         surveyTemplateQuestionDao.batchInsertSurveyTemplateQuestion(surveyTemplateQuestions); // 添加模版问题中间表
+        System.out.println(surveyTemplate.toString());
         return surveyTemplate;
     }
 

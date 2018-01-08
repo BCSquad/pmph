@@ -178,12 +178,15 @@
 					<if test="parameter.title != null and parameter.title != ''">
 						and s.title like concat('%',#{parameter.title},'%')
 					</if>
+					<!-- 问卷创建日期 %H:%i:%s--> 
 					<if test="parameter.startTime !=null and parameter.startTime !='' ">
-							and so.`operate_date` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+						and 
+							so.`operate_date` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d') 
 							
-						</if>
-						<if test="parameter.endTime !=null and parameter.endTime !='' ">
-							and so.`operate_date` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
+					</if>
+					<if test="parameter.endTime !=null and parameter.endTime !='' ">
+						and 
+							so.`operate_date` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d')
 					</if>
 				</if>
 				) t 
@@ -194,13 +197,16 @@
 			<if test="parameter.title != null and parameter.title != ''">
 				and s.title like concat('%',#{parameter.title},'%')
 			</if>
-			<if test="parameter.startTime !=null and parameter.startTime !='' ">
-				and so.`operate_date` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+			<!-- 问卷创建日期 %H:%i:%s--> 
+					<if test="parameter.startTime !=null and parameter.startTime !='' ">
+						and 
+							so.`operate_date` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d') 
 							
-			</if>
-			<if test="parameter.endTime !=null and parameter.endTime !='' ">
-				and so.`operate_date` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
-			</if>
+					</if>
+					<if test="parameter.endTime !=null and parameter.endTime !='' ">
+						and 
+							so.`operate_date` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d')
+					</if>
 		</if>
 		group by s.title desc 
 		<if test="start !=null and pageNumber != null">

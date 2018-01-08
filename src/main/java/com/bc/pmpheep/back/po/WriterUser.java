@@ -5,6 +5,8 @@ import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
 
+import com.bc.pmpheep.back.util.Const;
+
 /**
  * WriterUser 实体类
  * 
@@ -57,7 +59,7 @@ public class WriterUser implements Serializable {
     /**
      * 工作单位
      */
-    private String workPlace;
+    private String  workPlace;
     /**
      * 职务
      */
@@ -155,7 +157,7 @@ public class WriterUser implements Serializable {
      */
     private Date    gmtUpdate;
 
-    private Short   loginType;
+    private Short   loginType = Const.LOGIN_TYPE_WRITER;
 
     /**
      * @return the id
@@ -278,14 +280,14 @@ public class WriterUser implements Serializable {
     }
 
     public String getWorkPlace() {
-		return workPlace;
-	}
+        return workPlace;
+    }
 
-	public void setWorkPlace(String workPlace) {
-		this.workPlace = workPlace;
-	}
+    public void setWorkPlace(String workPlace) {
+        this.workPlace = workPlace;
+    }
 
-	/**
+    /**
      * @return the position
      */
     public String getPosition() {
@@ -498,19 +500,19 @@ public class WriterUser implements Serializable {
     /**
      * @return the signature
      */
-    
+
     public String getSignature() {
-		return signature;
-	}
+        return signature;
+    }
 
     /**
      * @param signature the signature to set
      */
-	public void setSignature(String signature) {
-		this.signature = signature;
-	}
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
 
-	/**
+    /**
      * @return the note
      */
     public String getNote() {
@@ -629,11 +631,12 @@ public class WriterUser implements Serializable {
     }
 
     public WriterUser(String username, String password, Boolean isDisabled, Long orgId,
-    String nickname, String realname, Integer sex, Date birthday, Integer experience, String workPlace,
-    String position, String title, String fax, String handphone, String telephone, String idcard,
-    String email, String address, String postcode, Integer rank, Boolean isTeacher, String cert,
-    Date authTime, Integer authUserType, Long authUserId, Boolean isWriter, Boolean isExpert,
-    String avatar, String signature, String note, Integer sort, Boolean isDeleted, Date gmtCreate, Date gmtUpdate) {
+    String nickname, String realname, Integer sex, Date birthday, Integer experience,
+    String workPlace, String position, String title, String fax, String handphone,
+    String telephone, String idcard, String email, String address, String postcode, Integer rank,
+    Boolean isTeacher, String cert, Date authTime, Integer authUserType, Long authUserId,
+    Boolean isWriter, Boolean isExpert, String avatar, String signature, String note, Integer sort,
+    Boolean isDeleted, Date gmtCreate, Date gmtUpdate) {
         this.username = username;
         this.password = password;
         this.isDisabled = isDisabled;
@@ -675,13 +678,14 @@ public class WriterUser implements Serializable {
         return "WriterUser [id=" + id + ", username=" + username + ", password=" + password
                + ", isDisabled=" + isDisabled + ", orgId=" + orgId + ", nickname=" + nickname
                + ", realname=" + realname + ", sex=" + sex + ", birthday=" + birthday
-               + ", experience=" + experience + ", workPlace =" + workPlace +", position=" + position + ", title=" + title
-               + ", fax=" + fax + ", handphone=" + handphone + ", telephone=" + telephone
-               + ", idcard=" + idcard + ", email=" + email + ", address=" + address + ", postcode="
-               + postcode + ", rank=" + rank + ", isTeacher=" + isTeacher + ", cert=" + cert
-               + ", authTime=" + authTime + ", authUserType=" + authUserType + ", authUserId="
-               + authUserId + ", isWriter=" + isWriter + ", isExpert=" + isExpert + ", avatar="
-               + avatar + ", signature=" + signature + ", note=" + note + ", sort=" + sort + ", isDeleted=" + isDeleted
+               + ", experience=" + experience + ", workPlace =" + workPlace + ", position="
+               + position + ", title=" + title + ", fax=" + fax + ", handphone=" + handphone
+               + ", telephone=" + telephone + ", idcard=" + idcard + ", email=" + email
+               + ", address=" + address + ", postcode=" + postcode + ", rank=" + rank
+               + ", isTeacher=" + isTeacher + ", cert=" + cert + ", authTime=" + authTime
+               + ", authUserType=" + authUserType + ", authUserId=" + authUserId + ", isWriter="
+               + isWriter + ", isExpert=" + isExpert + ", avatar=" + avatar + ", signature="
+               + signature + ", note=" + note + ", sort=" + sort + ", isDeleted=" + isDeleted
                + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
     }
 
