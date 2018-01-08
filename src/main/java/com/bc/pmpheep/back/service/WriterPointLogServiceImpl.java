@@ -48,13 +48,13 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
 	}
 
 	@Override
-	public WriterPointLog add(WriterPointLog writerPointLog) throws CheckedServiceException {
+	public Integer add(WriterPointLog writerPointLog) throws CheckedServiceException {
 		if(ObjectUtil.isNull(writerPointLog)){
 			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		writerPointLogDao.addWriterPointLog(writerPointLog);
-		return writerPointLog;
+		
+		return writerPointLogDao.addWriterPointLog(writerPointLog);
 	}
 
 	@Override
