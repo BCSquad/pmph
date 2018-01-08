@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
+
 /**
  * 
  * <pre>
@@ -38,6 +40,7 @@ public class SurveyQuestionFillVO implements Serializable {
     /**
      * 用户姓名
      */
+    @ExcelHeader(header = "填写人")
     private String            realname;
     /**
      * 问题id
@@ -58,6 +61,7 @@ public class SurveyQuestionFillVO implements Serializable {
     /**
      * 选项内容
      */
+    @ExcelHeader(header = "调查结果")
     private String            optionContent;
     /**
      * 分页总数
@@ -66,6 +70,7 @@ public class SurveyQuestionFillVO implements Serializable {
     /**
      * 创建时间
      */
+    @ExcelHeader(header = "时间")
     private Timestamp         gmtCreate;
 
     /**
