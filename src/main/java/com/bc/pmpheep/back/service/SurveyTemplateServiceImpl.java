@@ -163,6 +163,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
             surveyTemplateQuestions.add(new SurveyTemplateQuestion(templateId, questionId));
         }
         surveyTemplateQuestionDao.batchInsertSurveyTemplateQuestion(surveyTemplateQuestions); // 添加模版问题中间表
+        System.out.println(surveyTemplate.toString());
         return surveyTemplate;
     }
 
