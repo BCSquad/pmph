@@ -37,7 +37,7 @@ import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookPreferenceAnalysisVO;
 import com.bc.pmpheep.back.vo.BookVO;
-import com.bc.pmpheep.erp.service.BookInfoWorking;
+import com.bc.pmpheep.erp.service.InfoWorking;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -350,7 +350,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
 					"同步中产生了错误，请重新同步");
 		}
-		String[] vns = new BookInfoWorking().listBookInfo();
+		String[] vns = new InfoWorking().listBookInfo();
 		if (1 == type) {
 			AbuttingJoint(vns, type);
 		} else {
