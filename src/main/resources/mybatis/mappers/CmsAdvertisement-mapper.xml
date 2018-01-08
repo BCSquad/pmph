@@ -11,9 +11,6 @@
 			<if test="adname != null and adname !=''" >
 				adname,
 			</if>
-			<if test="image != null and image !=''">
-				image,
-			</if>
 			<if test="url != null and url !=''">
 				url,
 			</if>
@@ -67,9 +64,6 @@
 			</if>
 			<if test="adname != null and adname !=''" >
 				#{adname},
-			</if>
-			<if test="image != null and image !=''">
-				#{image},
 			</if>
 			<if test="url != null and url !=''">
 				#{url},
