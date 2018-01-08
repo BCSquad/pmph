@@ -9,19 +9,19 @@
 			<if test="id !=null">
 				id,
 			</if>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				declaration_id,
 			</if>
 			<if test="materialName !=null and materialName !=''">
 				material_name,
 			</if>
-			<if test="position !=null and position !=''">
+			<if test="position !=null">
 				position,
 			</if>
 			<if test="note !=null and note !=''">
 				note,
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				sort,
 			</if>
 			<if test="isDigitalEditor !=null ">
@@ -35,7 +35,7 @@
 			<if test="id !=null">
 				#{id},
 			</if>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				#{declarationId},
 			</if>
 			<if test="materialName !=null and materialName !=''">
@@ -44,17 +44,17 @@
 			<if test="isDigitalEditor !=null ">
 				#{isDigitalEditor},
 			</if>
-			<if test="position !=null and position !=''">
+			<if test="position !=null">
 				#{position},
 			</if>
 			<if test="note !=null and note !=''">
 				#{note},
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				#{sort},
 			</if>
 			<if test="isDigitalEditor !=null ">
- 				is_digital_editor = #{isDigitalEditor},
+ 				#{isDigitalEditor},
  			</if>
 		</trim>
 	</sql>
@@ -84,21 +84,24 @@
 	<update id="updateDecLastPosition" parameterType="DecLastPosition">
 		update dec_last_position
 		<set>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				declaration_id = #{declarationId},
 			</if>
 			<if test="materialName !=null and materialName !=''">
 				material_name = #{materialName},
 			</if>
-			<if test="position !=null and position !=''">
+			<if test="position !=null">
 				position = #{position},
 			</if>
 			<if test="note !=null and note !=''">
 				note = #{note},
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				sort = #{sort},
 			</if>
+			<if test="isDigitalEditor !=null ">
+ 				is_digital_editor = #{isDigitalEditor},
+ 			</if>
 		</set>
 		where id=#{id} ;
 	</update>
