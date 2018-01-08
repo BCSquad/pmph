@@ -730,7 +730,9 @@ public class MigrationStageSix {
             decNationalPlan.setMaterialName(materialName);
             if (StringUtil.notEmpty(isbn)) {
                 isbn = isbn.trim();
-                isbn = isbn.replace("ISBN", "").replace("isbn", "").replace(":", "").replace("：", "");
+                isbn = isbn.replace("ISBN", "ISBN ").replace("isbn", "ISBN ").replace(":", "")
+                		.replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
+                		.replace("•", "·");
             }
             decNationalPlan.setIsbn(isbn);
             Integer rank = rankJudge.intValue();
@@ -806,7 +808,9 @@ public class MigrationStageSix {
             decTextbook.setPublishDate(publishDate);
             if (StringUtil.notEmpty(isbn)) {
                 isbn = isbn.trim();
-                isbn = isbn.replace("ISBN", "").replace("isbn", "").replace(":", "").replace("：", "");
+                isbn = isbn.replace("ISBN", "ISBN ").replace("isbn", "ISBN ").replace(":", "")
+                		.replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
+                		.replace("•", "·");
             }
             decTextbook.setIsbn(isbn);
             decTextbook.setNote((String) map.get("remark")); // 备注
