@@ -54,12 +54,14 @@ public class JsonUtil<T> {
     }
 
     public JsonUtil() {
+        objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setDateFormat(new SimpleDateFormat(DEFAULT_DATE_FORMAT));
     }
 
     public JsonUtil(String timeFormat) {
+        objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setDateFormat(new SimpleDateFormat(timeFormat));
@@ -151,7 +153,6 @@ public class JsonUtil<T> {
             // return objectMapper.readValue(json,
             // new TypeReference<List<org.springframework.context.annotation.Bean>>() {
             // });
-            objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
             return objectMapper.readValue(json.getBytes(),
                                           objectMapper.getTypeFactory()
                                                       .constructParametricType(ArrayList.class, v));
