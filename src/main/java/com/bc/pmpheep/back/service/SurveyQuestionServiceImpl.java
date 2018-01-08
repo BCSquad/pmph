@@ -41,7 +41,7 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService {
     throws CheckedServiceException {
         if (ObjectUtil.isNull(surveyQuestion)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空1");
         }
         // if (ObjectUtil.isNull(surveyQuestion.getCategoryId())) {
         // throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
