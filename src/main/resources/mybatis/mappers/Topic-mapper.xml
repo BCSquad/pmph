@@ -703,4 +703,133 @@
 		</if>
 		ORDER BY a.submit_time
 	</select>
+
+	<select id="getMaxTopicVn" resultType="java.lang.String">
+		select max(vn) from topic
+	</select>
+
+	<!-- 动态修改选题申报 -->
+	<update id="updateByVn" parameterType="Topic">
+		UPDATE topic
+		<set>
+			<if test="userId != null">
+				user_id = #{userId},
+			</if>
+			<if test="bookname != null and bookname !='' ">
+				bookname = #{bookname},
+			</if>
+			<if test="reader != null ">
+				reader = #{reader},
+			</if>
+			<if test="deadline != null ">
+				deadline = #{deadline},
+			</if>
+			<if test="source != null">
+				source = #{source},
+			</if>
+			<if test="wordNumber != null">
+				word_number =#{wordNumber},
+			</if>
+			<if test="pictureNumber != null">
+				picture_number =#{pictureNumber},
+			</if>
+			<if test="subject != null and subject !='' ">
+				subject = #{subject},
+			</if>
+			<if test="rank != null">
+				rank = #{rank},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="bankAccountId != null">
+				bank_account_id = #{bankAccountId},
+			</if>
+			<if test="purchase != null">
+				purchase = #{purchase},
+			</if>
+			<if test="sponsorship != null">
+				sponsorship = #{sponsorship},
+			</if>
+			<if test="isTranslation != null">
+				is_translation = #{isTranslation},
+			</if>
+			<if test="originalBookname != null and originalBookname !='' ">
+				original_bookname = #{originalBookname},
+			</if>
+			<if test="originalAuthor != null and originalAuthor !='' ">
+				original_author = #{originalAuthor},
+			</if>
+			<if test="nation != null and nation !='' ">
+				nation = #{nation},
+			</if>
+			<if test="edition != null and edition !='' ">
+				edition = #{edition},
+			</if>
+			<if test="authProgress != null">
+				auth_progress = #{authProgress},
+			</if>
+			<if test="authFeedback != null and authFeedback !='' ">
+				auth_feedback = #{authFeedback},
+			</if>
+			<if test="authDate != null">
+				auth_date = #{authDate},
+			</if>
+			<if test="isOptsHandling != null">
+				is_opts_handling = #{isOptsHandling},
+			</if>
+			<if test="optsRoleId != null">
+				opts_role_id = #{optsRoleId},
+			</if>
+			<if test="isRejectedByDirector != null">
+				is_rejected_by_director = #{isRejectedByDirector},
+			</if>
+			<if test="reasonDirector != null and reasonDirector !='' ">
+				reason_director = #{reasonDirector},
+			</if>
+			<if test="isDirectorHandling != null">
+				is_director_handling = #{isDirectorHandling},
+			</if>
+			<if test="departmentId != null">
+				department_id = #{departmentId},
+			</if>
+			<if test="isRejectedByEditor != null">
+				is_rejected_by_editor = #{isRejectedByEditor},
+			</if>
+			<if test="reasonEditor != null and reasonEditor !='' ">
+				reason_editor = #{reasonEditor},
+			</if>
+			<if test="isEditorHandling != null">
+				is_editor_handling = #{isEditorHandling},
+			</if>
+			<if test="editorId != null">
+				editor_id = #{editorId},
+			</if>
+			<if test="isAccepted != null">
+				is_accepted = #{isAccepted},
+			</if>
+			<if test="isStaging != null">
+				is_staging = #{isStaging},
+			</if>
+			<if test="isDeleted != null">
+				is_deleted = #{isDeleted},
+			</if>
+			<if test="note != null and note !='' ">
+				note = #{note},
+			</if>
+			<if test="gmtCreate != null">
+				gmt_create = #{gmtCreate},
+			</if>
+			<if test="gmtUpdate != null">
+				gmt_update = #{gmtUpdate},
+			</if>
+			<if test="tn != null and tn !='' ">
+				tn = #{tn},
+			</if>
+			<if test="submitTime != null">
+				submit_time = #{submitTime},
+			</if>
+		</set>
+		WHERE vn = #{vn};
+	</update>
 </mapper>

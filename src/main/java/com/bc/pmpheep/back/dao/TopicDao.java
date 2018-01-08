@@ -261,4 +261,25 @@ public interface TopicDao {
 	 *
 	 */
 	Long add(Topic topic) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取最大的本版号
+	 *
+	 * @return
+	 *
+	 */
+	String getMaxTopicVn();
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据本版号vn修改选题信息
+	 *
+	 * @param topic
+	 * @return
+	 *
+	 */
+	Integer updateByVn(Topic topic);
 }
