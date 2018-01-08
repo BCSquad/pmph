@@ -5,8 +5,6 @@ import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
 
-import com.bc.pmpheep.back.util.Const;
-
 /**
  * WriterUser 实体类
  * 
@@ -157,7 +155,7 @@ public class WriterUser implements Serializable {
      */
     private Date    gmtUpdate;
 
-    private Short   loginType = Const.LOGIN_TYPE_WRITER;
+    private Short   loginType;
 
     /**
      * @return the id

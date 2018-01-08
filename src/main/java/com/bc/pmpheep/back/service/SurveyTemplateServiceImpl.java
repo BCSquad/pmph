@@ -1,7 +1,9 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,6 @@ import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
-import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -168,13 +169,21 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
     }
 
     @Override
-    public List<SurveyQuestionOptionCategoryVO> getSurveyTemplateQuestionByTemplateId(
-    Long templateId) throws CheckedServiceException {
+    public Map<String, Object> getSurveyTemplateQuestionByTemplateId(Long surveyId, Long templateId)
+    throws CheckedServiceException {
         if (ObjectUtil.isNull(templateId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "模版ID为空");
         }
-        return surveyTemplateDao.getSurveyTemplateQuestionByTemplateId(templateId);
+        if (ObjectUtil.isNull(surveyId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷ID为空");
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("survey", surveyService.getSurveyById(surveyId));
+        resultMap.put("qestionAndOption",
+                      surveyTemplateDao.getSurveyTemplateQuestionByTemplateId(templateId));
+        return resultMap;
     }
 
     @Override
