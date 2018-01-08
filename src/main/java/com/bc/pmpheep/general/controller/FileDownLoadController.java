@@ -611,7 +611,7 @@ public class FileDownLoadController {
 	/**
 	 * 
 	 * <pre>
-	 * 功能描述：导出填空题调查结果
+	 * 功能描述：导出填空题调查结果Excel
 	 * 使用示范：
 	 * @user  tyc
 	 * @param request
@@ -621,8 +621,8 @@ public class FileDownLoadController {
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出填空题调查结果")
-	@RequestMapping(value = "/excel/surveyQuestionFile", method = RequestMethod.GET)
-	public void surveyQuestionFile(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/excel/surveyQuestionExcel", method = RequestMethod.GET)
+	public void surveyQuestionExcel(HttpServletRequest request, HttpServletResponse response) {
 		Workbook workbook = null;
 		List<SurveyQuestionFillVO> surveyQuestionFillVO = null;
 		try {
