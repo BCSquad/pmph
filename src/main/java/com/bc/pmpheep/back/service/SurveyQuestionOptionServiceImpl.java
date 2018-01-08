@@ -41,10 +41,10 @@ public class SurveyQuestionOptionServiceImpl implements SurveyQuestionOptionServ
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "选项内容为空");
         }
-        if (ObjectUtil.isNull(surveyQuestionOption.getIsOther())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "是否有其他为空");
-        }
+        // if (ObjectUtil.isNull(surveyQuestionOption.getIsOther())) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+        // CheckedExceptionResult.NULL_PARAM, "是否有其他为空");
+        // }
         surveyQuestionOptionDao.addSurveyQuestionOption(surveyQuestionOption);
         return surveyQuestionOption;
     }

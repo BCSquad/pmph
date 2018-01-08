@@ -43,10 +43,10 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        if (ObjectUtil.isNull(surveyQuestion.getCategoryId())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "问题分类为空");
-        }
+        // if (ObjectUtil.isNull(surveyQuestion.getCategoryId())) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+        // CheckedExceptionResult.NULL_PARAM, "问题分类为空");
+        // }
         if (StringUtil.isEmpty(surveyQuestion.getTitle())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "题目为空");
@@ -55,14 +55,14 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问题类型为空");
         }
-        if (ObjectUtil.isNull(surveyQuestion.getSort())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "问题序号为空");
-        }
-        if (ObjectUtil.isNull(surveyQuestion.getIsAnswer())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "问题是否必答为空");
-        }
+        // if (ObjectUtil.isNull(surveyQuestion.getSort())) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+        // CheckedExceptionResult.NULL_PARAM, "问题序号为空");
+        // }
+        // if (ObjectUtil.isNull(surveyQuestion.getIsAnswer())) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+        // CheckedExceptionResult.NULL_PARAM, "问题是否必答为空");
+        // }
         surveyQuestionDao.addSurveyQuestion(surveyQuestion);
         Long id = surveyQuestion.getId();
         if (ObjectUtil.isNull(id)) {

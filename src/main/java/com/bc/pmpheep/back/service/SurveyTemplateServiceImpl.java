@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.po.SurveyQuestionOption;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.po.SurveyTemplateQuestion;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.JsonUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -110,16 +111,24 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
         return surveyTemplateDao.getSurveyTemplateById(id);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public SurveyTemplate addSurveyTemplateVO(List<SurveyQuestionListVO> questionAnswerJosn,
+    public SurveyTemplate addSurveyTemplateVO(String questionAnswerJosn,
     SurveyTemplateVO surveyTemplateVO) throws CheckedServiceException {
         if (ObjectUtil.isNull(surveyTemplateVO)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        if (CollectionUtil.isEmpty(questionAnswerJosn)) {
+        if (StringUtil.isEmpty(questionAnswerJosn)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问题及问题选项为空");
+        }
+        // json字符串转List对象集合
+        List<SurveyQuestionListVO> SurveyQuestionListVO =
+        new JsonUtil().getArrayListObjectFromStr(SurveyQuestionListVO.class, questionAnswerJosn);
+        if (CollectionUtil.isEmpty(SurveyQuestionListVO)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         String templateName = surveyTemplateVO.getTemplateName();// 问卷名称
         String intro = surveyTemplateVO.getIntro();// 问卷概述
@@ -139,7 +148,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
                                               CheckedExceptionResult.NULL_PARAM, "新增问卷失败");
         }
         // 添加问题及问题选项
-        List<Long> newIds = addQuestionAndOption(questionAnswerJosn);
+        List<Long> newIds = addQuestionAndOption(SurveyQuestionListVO);
         // 模版问题中间表
         List<SurveyTemplateQuestion> surveyTemplateQuestions =
         new ArrayList<SurveyTemplateQuestion>(newIds.size());
