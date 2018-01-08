@@ -125,7 +125,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
         }
         if (ObjectUtil.isNull(surveyTemplateVO)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空11");
         }
         if (StringUtil.isEmpty(questionAnswerJosn)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
@@ -136,7 +136,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
         new JsonUtil().getArrayListObjectFromStr(SurveyQuestionListVO.class, questionAnswerJosn);
         if (CollectionUtil.isEmpty(SurveyQuestionListVO)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空22");
         }
         String templateName = surveyTemplateVO.getTemplateName();// 问卷名称
         String intro = surveyTemplateVO.getIntro();// 问卷概述

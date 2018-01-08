@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -76,5 +77,5 @@ public interface SurveyDao {
      * @return SurveyVO 对象
      * </pre>
      */
-    SurveyVO getSurveyAndSurveyTypeById(Long id);
+    SurveyVO getSurveyAndSurveyTypeById(@Param("id") Long id);
 }
