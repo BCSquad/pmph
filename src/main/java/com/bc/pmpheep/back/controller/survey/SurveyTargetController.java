@@ -65,9 +65,10 @@ public class SurveyTargetController {
     HttpServletRequest request) {
         try {
             String sessionId = CookiesUtil.getSessionId(request);
-            return new ResponseBean(surveyTargetService.batchSaveSurveyTargetByList(message,
+            return new ResponseBean(
+                                    surveyTargetService.batchSaveSurveyTargetByList(message,
                                                                                     surveyTargetVO,
-                                                                                    sessionId));
+                                                                                    "07D65188206E2DAD2E8C283A35B30903"));
         } catch (IOException e) {
             return new ResponseBean(e);
         }

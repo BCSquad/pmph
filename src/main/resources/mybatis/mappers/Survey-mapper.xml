@@ -65,16 +65,16 @@
 			<if test="userId != null">
 				#{userId},
 			</if>
-			<if test="beginDate != null and beginDate !=''">
+			<if test="beginDate != null">
 				#{beginDate},
 			</if>
-			<if test="endDate != null and endDate !=''">
+			<if test="endDate != null ">
 				#{endDate},
 			</if>
 			<if test="sort != null">
 				#{sort},
 			</if>
-			<if test="isDeleted != null and isDeleted !=''">
+			<if test="isDeleted != null">
 				#{isDeleted},
 			</if>
 		</trim>
@@ -121,16 +121,16 @@
 			<if test="userId != null">
 				user_id=#{userId},
 			</if>
-			<if test="beginDate != null and beginDate !=''">
+			<if test="beginDate != null">
 				begin_date=#{beginDate},
 			</if>
-			<if test="endDate != null and endDate !=''">
+			<if test="endDate != null ">
 				end_date=#{endDate},
 			</if>
 			<if test="sort != null">
 				sort=#{sort},
 			</if>
-			<if test="isDeleted != null and isDeleted !=''">
+			<if test="isDeleted != null">
 				is_deleted=#{isDeleted},
 			</if>
 		</set>
