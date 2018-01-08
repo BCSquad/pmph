@@ -53,6 +53,8 @@ public class Declaration implements java.io.Serializable {
 	private String telephone;
 	//作家传真
 	private String fax;
+	// 服从调剂
+	private Integer isDispensed;
 	//作家申报单位id
 	private Long orgId;
 	//审核进度
@@ -166,6 +168,43 @@ public class Declaration implements java.io.Serializable {
 		this.isDeleted = isDeleted;
 		this.gmtCreate = gmtCreate;
 		this.gmtUpdate = gmtUpdate;
+	}
+	
+	public Declaration(Long materialId, Long userId, String realname,
+			Integer sex, Date birthday, Integer experience, String orgName,
+			String position, String title, String address, String postcode,
+			String handphone, String email, Short idtype, String idcard,
+			String telephone, String fax, Integer isDispensed, Long orgId, 
+			Integer onlineProgress, Long authUserId, Timestamp authDate, 
+			Integer offlineProgress, Timestamp paperDate, Integer isStaging, 
+			Integer isDeleted) {
+		super();
+		this.materialId = materialId;
+		this.userId = userId;
+		this.realname = realname;
+		this.sex = sex;
+		this.birthday = birthday;
+		this.experience = experience;
+		this.orgName = orgName;
+		this.position = position;
+		this.title = title;
+		this.address = address;
+		this.postcode = postcode;
+		this.handphone = handphone;
+		this.email = email;
+		this.idtype = idtype;
+		this.idcard = idcard;
+		this.telephone = telephone;
+		this.fax = fax;
+		this.isDispensed = isDispensed;
+		this.orgId = orgId;
+		this.onlineProgress = onlineProgress;
+		this.authUserId = authUserId;
+		this.authDate = authDate;
+		this.offlineProgress = offlineProgress;
+		this.paperDate = paperDate;
+		this.isStaging = isStaging;
+		this.isDeleted = isDeleted;
 	}
 
 	public Long getId() {
@@ -392,21 +431,30 @@ public class Declaration implements java.io.Serializable {
 		this.gmtUpdate = gmtUpdate;
 	}
 
+	public Integer getIsDispensed() {
+		return isDispensed;
+	}
+
+	public void setIsDispensed(Integer isDispensed) {
+		this.isDispensed = isDispensed;
+	}
+	
 	@Override
 	public String toString() {
-		return " {id:" + id + ", materialId:" + materialId + ", userId:"
-				+ userId + ", realname:" + realname + ", sex:" + sex
-				+ ", birthday:" + birthday + ", experience:" + experience
-				+ ", orgName:" + orgName + ", position:" + position
-				+ ", title:" + title + ", address:" + address + ", postcode:"
-				+ postcode + ", handphone:" + handphone + ", email:" + email
-				+ ", idtype:" + idtype + ", idcard:" + idcard + ", telephone:"
-				+ telephone + ", fax:" + fax + ", orgId:" + orgId
-				+ ", onlineProgress:" + onlineProgress + ", authUserId:"
-				+ authUserId + ", authDate:" + authDate + ", offlineProgress:"
-				+ offlineProgress + ", paperDate:" + paperDate + ", isStaging:"
-				+ isStaging + ", isDeleted:" + isDeleted + ", gmtCreate:"
-				+ gmtCreate + ", gmtUpdate:" + gmtUpdate + "}";
+		return "Declaration [id=" + id + ", materialId=" + materialId
+				+ ", userId=" + userId + ", realname=" + realname + ", sex="
+				+ sex + ", birthday=" + birthday + ", experience=" + experience
+				+ ", orgName=" + orgName + ", position=" + position
+				+ ", title=" + title + ", address=" + address + ", postcode="
+				+ postcode + ", handphone=" + handphone + ", email=" + email
+				+ ", idtype=" + idtype + ", idcard=" + idcard + ", telephone="
+				+ telephone + ", fax=" + fax + ", isDispensed=" + isDispensed
+				+ ", orgId=" + orgId + ", onlineProgress=" + onlineProgress
+				+ ", authUserId=" + authUserId + ", authDate=" + authDate
+				+ ", offlineProgress=" + offlineProgress + ", paperDate="
+				+ paperDate + ", isStaging=" + isStaging + ", isDeleted="
+				+ isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
+				+ gmtUpdate + "]";
 	}
 
 }

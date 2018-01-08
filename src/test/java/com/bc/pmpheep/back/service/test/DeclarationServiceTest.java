@@ -47,11 +47,14 @@ public class DeclarationServiceTest extends BaseTest {
 		String position=null;
 		String title=null;
 		String orgName=null;
+		Long orgId=null;
 		String unitName=null;
 		Integer positionType=null;
 		Integer onlineProgress=null;
 		Integer offlineProgress=null;
-		PageResult<DeclarationListVO> page=declarationService.pageDeclaration(pageNumber, pageSize, materialId, textBookids, realname, position, title, orgName, unitName, positionType, onlineProgress, offlineProgress);
+		PageResult<DeclarationListVO> page=declarationService.pageDeclaration(
+					pageNumber, pageSize, materialId, textBookids, realname, position, title, orgName, orgId,unitName, positionType, onlineProgress, offlineProgress
+				);
 		
 	}
 	

@@ -4,8 +4,10 @@
 package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
+
 import java.io.IOException;
 import java.util.List;
+
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.vo.ApplicationVO;
@@ -97,6 +99,8 @@ public interface DeclarationService {
 	 *            条件查询 职称
 	 * @param orgName
 	 *            条件查询 工作单位
+	 * @param orgId
+	 *            条件查询 申报单位id 
 	 * @param unitName
 	 *            条件查询 申报单位
 	 * @param positionType
@@ -109,7 +113,7 @@ public interface DeclarationService {
 	 * @Throws CheckedServiceException
 	 */
 	public PageResult<DeclarationListVO> pageDeclaration(Integer pageNumber, Integer pageSize, Long materialId,
-			String textBookids, String realname, String position, String title, String orgName, String unitName,
+			String textBookids, String realname, String position, String title, String orgName,Long orgId, String unitName,
 			Integer positionType, Integer onlineProgress, Integer offlineProgress) throws CheckedServiceException;
 
 	/**

@@ -29,12 +29,12 @@ public interface WriterPointLogService {
 	Integer update(WriterPointLog writerPointLog)throws CheckedServiceException;
 	
 	/**
-	 * 添加积分日志
+	 * 添加积分记录
 	 * @param writerPointLog
 	 * @return
 	 * @throws CheckedServiceException
 	 */
-	WriterPointLog add(WriterPointLog writerPointLog)throws CheckedServiceException;
+	Integer add(WriterPointLog writerPointLog)throws CheckedServiceException;
 	
 	/**
 	 * 删除积分日志

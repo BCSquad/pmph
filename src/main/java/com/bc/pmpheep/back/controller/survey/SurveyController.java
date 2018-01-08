@@ -1,13 +1,10 @@
 package com.bc.pmpheep.back.controller.survey;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +16,6 @@ import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.service.SurveyService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -109,8 +105,7 @@ public class SurveyController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改问卷信息")
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
-    public ResponseBean modify(@RequestBody List<SurveyQuestionListVO> questionAnswerJosn,
-    SurveyVO surveyVO) {
+    public ResponseBean modify(String questionAnswerJosn, SurveyVO surveyVO) {
         return new ResponseBean(surveyService.updateSurveyAndTemplate(questionAnswerJosn, surveyVO));
     }
 

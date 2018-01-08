@@ -1,12 +1,10 @@
 package com.bc.pmpheep.back.service;
 
-import java.util.List;
+import java.util.Map;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.SurveyTemplate;
-import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
-import com.bc.pmpheep.back.vo.SurveyQuestionOptionCategoryVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -77,8 +75,8 @@ public interface SurveyTemplateService {
      * @param SurveyTemplateVO
      * @return 影响行数
      */
-    SurveyTemplate addSurveyTemplateVO(List<SurveyQuestionListVO> questionAnswerJosn,
-    SurveyTemplateVO surveyTemplateVO) throws CheckedServiceException;
+    SurveyTemplate addSurveyTemplateVO(String questionAnswerJosn,
+    SurveyTemplateVO surveyTemplateVO, String sessionId) throws CheckedServiceException;
 
     /**
      * 
@@ -91,7 +89,7 @@ public interface SurveyTemplateService {
      * @throws CheckedServiceException
      * </pre>
      */
-    List<SurveyQuestionOptionCategoryVO> getSurveyTemplateQuestionByTemplateId(Long templateId)
+    Map<String, Object> getSurveyTemplateQuestionByTemplateId(Long surveyId, Long templateId)
     throws CheckedServiceException;
 
     /**

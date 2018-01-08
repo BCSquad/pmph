@@ -30,12 +30,14 @@ import com.bc.pmpheep.back.dao.PmphUserDao;
 import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -88,6 +90,8 @@ public class TextbookServiceImpl implements TextbookService {
 	@Autowired
 	private PmphRoleService pmphRoleService;
     
+	@Autowired
+	private DecPositionService decPositionService;
 	/**
 	 * 
 	 * @param Textbook
@@ -289,7 +293,17 @@ public class TextbookServiceImpl implements TextbookService {
 	}
 
 	@Override
-	public Integer updateTextbooks(Long[] ids) {
+	public Integer updateTextbooks(Long[] ids,String sessionId) {
+		//获取当前用户
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"请求用户不存在");
+		}
+		if (!pmphUser.getIsAdmin()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"该用户没有操作权限");
+		}
 		if(null==ids){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 					"书籍id为空");
@@ -304,15 +318,16 @@ public class TextbookServiceImpl implements TextbookService {
 							"还未选择策划编辑，不能名单确认");
 				}
 				// 是否发布主编
-				if(textbook.getIsChiefPublished()){
+				if(!textbook.getIsChiefPublished()){
 					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 							"还未发布主编/副主编，不能名单确认");
 				}
-				
+				DecPosition decPosition=decPositionService.getDecPositionByTextbookId(textbook.getId());
 				// 是否确认编委
-//				if(){
-//					
-//				}
+				if(null==decPosition){
+					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
+							"还未确认编委，不能名单确认");
+				}
 			}
 		}
 		Integer count = 0;
@@ -486,7 +501,17 @@ public class TextbookServiceImpl implements TextbookService {
 	}
 	
 	@Override
-	public Integer updateTextbookAndMaterial(Long[] ids) throws CheckedServiceException {
+	public Integer updateTextbookAndMaterial(Long[] ids,String sessionId) throws CheckedServiceException {
+		//获取当前用户
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"请求用户不存在");
+		}
+		if (!pmphUser.getIsAdmin()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"该用户没有操作权限");
+		}
 		List<Textbook> textbooks=textbookDao.getTextbooks(ids);
 		List<Textbook> textBooks =new ArrayList<Textbook>(textbooks.size());
 		Material material=new Material();
@@ -576,91 +601,91 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 		List<ExcelDecAndTextbookVO> list=textbookDao.getExcelDecAndTextbooks(textbookIds);
 		for (ExcelDecAndTextbookVO excelDecAndTextbookVO : list) {
-				switch (excelDecAndTextbookVO.getChosenPosition()) {
-				case 1:
-						excelDecAndTextbookVO.setShowChosenPosition("编委");
-					break;
-				case 2:
-						excelDecAndTextbookVO.setShowChosenPosition("副主编");
-					break;
-				case 3:
-						excelDecAndTextbookVO.setShowChosenPosition("副主编,编委");
-					break;
-				case 4:
-						excelDecAndTextbookVO.setShowChosenPosition("主编");
-					break;
-				case 5:
-						excelDecAndTextbookVO.setShowChosenPosition("主编,编委");
-					break;
-				case 6:
-						excelDecAndTextbookVO.setShowChosenPosition("主编,副主编");
-					break;
-				case 7:
-						excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,编委");
-					break;
-				case 8:
-					excelDecAndTextbookVO.setShowChosenPosition("数字编委");
-					break;
-				case 9:
-					excelDecAndTextbookVO.setShowChosenPosition("编委，数字编委");
-					break;
-				case 10:
-					excelDecAndTextbookVO.setShowChosenPosition("副主编,数字编委");
-					break;
-				case 11:
-					excelDecAndTextbookVO.setShowChosenPosition("副主编,编委,数字编委");
-					break;
-				case 12:
-					excelDecAndTextbookVO.setShowChosenPosition("主编,数字编委");
-					break;
-				case 13:
-					excelDecAndTextbookVO.setShowChosenPosition("主编,编委,数字编委");
-					break;
-				case 14:
-					excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,数字编委");
-					break;
-				default:
-					excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,编委,数字编委");
-					break;
+			switch (excelDecAndTextbookVO.getChosenPosition()) {
+			case 1:
+					excelDecAndTextbookVO.setShowChosenPosition("编委");
+				break;
+			case 2:
+					excelDecAndTextbookVO.setShowChosenPosition("副主编");
+				break;
+			case 3:
+					excelDecAndTextbookVO.setShowChosenPosition("副主编,编委");
+				break;
+			case 4:
+					excelDecAndTextbookVO.setShowChosenPosition("主编");
+				break;
+			case 5:
+					excelDecAndTextbookVO.setShowChosenPosition("主编,编委");
+				break;
+			case 6:
+					excelDecAndTextbookVO.setShowChosenPosition("主编,副主编");
+				break;
+			case 7:
+					excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,编委");
+				break;
+			case 8:
+				excelDecAndTextbookVO.setShowChosenPosition("数字编委");
+				break;
+			case 9:
+				excelDecAndTextbookVO.setShowChosenPosition("编委，数字编委");
+				break;
+			case 10:
+				excelDecAndTextbookVO.setShowChosenPosition("副主编,数字编委");
+				break;
+			case 11:
+				excelDecAndTextbookVO.setShowChosenPosition("副主编,编委,数字编委");
+				break;
+			case 12:
+				excelDecAndTextbookVO.setShowChosenPosition("主编,数字编委");
+				break;
+			case 13:
+				excelDecAndTextbookVO.setShowChosenPosition("主编,编委,数字编委");
+				break;
+			case 14:
+				excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,数字编委");
+				break;
+			default:
+				excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,编委,数字编委");
+				break;
 			}
-		switch (excelDecAndTextbookVO.getOnlineProgress()) {
-		case 0:
-			excelDecAndTextbookVO.setShowOnlineProgress("未提交");
-			break;
-		case 1:
-			excelDecAndTextbookVO.setShowOnlineProgress("已提交");
-			break;
-		case 2:
-			excelDecAndTextbookVO.setShowOnlineProgress("被退回");
-			break;
-		default:
-			excelDecAndTextbookVO.setShowOnlineProgress("审核通过");
-			break;
+			switch (excelDecAndTextbookVO.getOnlineProgress()) {
+			case 0:
+				excelDecAndTextbookVO.setShowOnlineProgress("未提交");
+				break;
+			case 1:
+				excelDecAndTextbookVO.setShowOnlineProgress("已提交");
+				break;
+			case 2:
+				excelDecAndTextbookVO.setShowOnlineProgress("被退回");
+				break;
+			default:
+				excelDecAndTextbookVO.setShowOnlineProgress("审核通过");
+				break;
+			}
+			switch (excelDecAndTextbookVO.getOfflineProgress()) {
+			case 0:
+				excelDecAndTextbookVO.setShowOfflineProgress("未收到纸质表");
+				break;
+			case 1:
+				excelDecAndTextbookVO.setShowOfflineProgress("被退回纸质表");
+				break;
+			default:
+				excelDecAndTextbookVO.setShowOfflineProgress("已收到纸质表");
+				break;
+			}
+			switch (excelDecAndTextbookVO.getIdtype()) {
+			case 0:
+				excelDecAndTextbookVO.setShowIdtype("身份证");
+				break;
+			case 1:
+				excelDecAndTextbookVO.setShowIdtype("护照");
+				break;
+			default:
+				excelDecAndTextbookVO.setShowIdtype("军官证");
+				break;
+			}
 		}
-		switch (excelDecAndTextbookVO.getOfflineProgress()) {
-		case 0:
-			excelDecAndTextbookVO.setShowOfflineProgress("未收到纸质表");
-			break;
-		case 1:
-			excelDecAndTextbookVO.setShowOfflineProgress("被退回纸质表");
-			break;
-		default:
-			excelDecAndTextbookVO.setShowOfflineProgress("已收到纸质表");
-			break;
-		}
-		switch (excelDecAndTextbookVO.getIdtype()) {
-		case 0:
-			excelDecAndTextbookVO.setShowIdtype("身份证");
-			break;
-		case 1:
-			excelDecAndTextbookVO.setShowIdtype("护照");
-			break;
-		default:
-			excelDecAndTextbookVO.setShowIdtype("军官证");
-			break;
-		}
-	}
-	return list;
+		return list;
 	}
 
 	@Override
@@ -681,11 +706,6 @@ public class TextbookServiceImpl implements TextbookService {
                     CheckedExceptionResult.NULL_PARAM, "教材id为空");
 		}
 		List<DecPositionBO> list=textbookDao.getExcelDecByMaterialId(textbookIds);
-//		Gson gson = new Gson();
-//		for (DecPositionBO decPositionBO : list) {
-//			Object writers=new ArrayList<>();
-//			writers = gson.toJson(decPositionBO.getWriters(),new TypeToken<ArrayList<WriterBO>>() {}.getType() );
-//		}
 		return list;
 	}
 }

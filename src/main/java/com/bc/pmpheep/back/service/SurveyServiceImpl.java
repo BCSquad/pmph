@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.po.SurveyQuestionOption;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.po.SurveyTemplateQuestion;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.JsonUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -151,10 +152,11 @@ public class SurveyServiceImpl implements SurveyService {
         return surveyDao.getSurveyAndSurveyTypeById(id);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public Integer updateSurveyAndTemplate(List<SurveyQuestionListVO> questionAnswerJosn,
-    SurveyVO surveyVO) throws CheckedServiceException {
-        if (CollectionUtil.isEmpty(questionAnswerJosn)) {
+    public Integer updateSurveyAndTemplate(String questionAnswerJosn, SurveyVO surveyVO)
+    throws CheckedServiceException {
+        if (StringUtil.isEmpty(questionAnswerJosn)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问题为空");
         }
@@ -169,6 +171,13 @@ public class SurveyServiceImpl implements SurveyService {
         if (ObjectUtil.isNull(surveyVO.getTemplateId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "模版ID为空");
+        }
+        // json字符串转List对象集合
+        List<SurveyQuestionListVO> SurveyQuestionListVO =
+        new JsonUtil().getArrayListObjectFromStr(SurveyQuestionListVO.class, questionAnswerJosn);
+        if (CollectionUtil.isEmpty(SurveyQuestionListVO)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         Long surveyId = surveyVO.getId();// 问卷ID
         String title = surveyVO.getTitle();// 问卷名称
@@ -194,7 +203,7 @@ public class SurveyServiceImpl implements SurveyService {
         // 删除问题选项表
         surveyQuestionOptionService.batchDeleteSurveyQuestionOptionByQuestionIds(questionIdList);
         // 重新添加问题
-        List<Long> newIds = this.addQuestionAndOption(questionAnswerJosn);
+        List<Long> newIds = this.addQuestionAndOption(SurveyQuestionListVO);
         // 模版问题中间表
         List<SurveyTemplateQuestion> surveyTemplateQuestions =
         new ArrayList<SurveyTemplateQuestion>(newIds.size());

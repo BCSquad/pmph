@@ -39,15 +39,16 @@ public class JavaMailSenderUtil {
      * </pre>
      */
     private MimeMessage JavaMailSenderConfig(JavaMailSenderImpl senderImpl) {
-        senderImpl.setHost("smtp.qq.com");// 发送邮件服务器
+        // senderImpl.setHost("smtp.qq.com");// 发送邮件服务器
+        senderImpl.setHost("smtp.sina.com");// 发送邮件服务器
         // 端口号，腾讯邮箱使用SSL协议端口号：465/587，腾讯邮箱使用非SSL协议,163邮箱,新浪邮箱端口号都是：25
-        senderImpl.setPort(465);
-        senderImpl.setUsername("281235538@qq.com"); // 用户名
-        senderImpl.setPassword("*********"); // 密码
+        senderImpl.setPort(25);
+        senderImpl.setUsername("sccdbc@sina.com"); // 用户名
+        senderImpl.setPassword("sccdbc"); // 密码
 
         Properties prop = new Properties();// 参数配置
-        prop.put("mail.smtp.ssl.enable", "true");// 使用SSL协议
-        prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        // prop.put("mail.smtp.ssl.enable", "true");// 使用SSL协议
+        // prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         prop.put("mail.smtp.auth", "true"); // 是否需要验证密码
         prop.put("mail.smtp.timeout", "20000");// 超时时间
         senderImpl.setJavaMailProperties(prop);
@@ -82,7 +83,7 @@ public class JavaMailSenderUtil {
             // 收件人
             messageHelper.setTo(toMail);
             // 发件人
-            messageHelper.setFrom("281235538@qq.com");
+            messageHelper.setFrom("sccdbc@sina.com");
             // 标题
             messageHelper.setSubject(title);
             // 内容，true 表示启动HTML格式的邮件
