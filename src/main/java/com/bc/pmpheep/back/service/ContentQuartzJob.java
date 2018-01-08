@@ -32,7 +32,7 @@ public class ContentQuartzJob {
 	@Autowired
 	TopicService topicService;
 
-	public void run() throws CheckedServiceException {
+	public void execute() throws CheckedServiceException {
 		topicService.updateByErp();
 	}
 }
