@@ -295,7 +295,7 @@
 		    ORDER BY 
 		    	sq.id ASC
 		   ) a 
-    		LEFT JOIN (
+    		 JOIN (
     			SELECT 
 			        sqa.`question_id`,
 			        sqa.`option_id` optId,
