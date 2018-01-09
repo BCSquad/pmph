@@ -194,4 +194,8 @@
 	<update id="deleteCmsAdvertisementByImage" parameterType="Long">
 		update cms_advertisement set image='-' where id=#{id}
 	</update>
+	<!-- 根据广告名称查询一个CmsAdvertisement -->
+	<select id="getCmsAdvertisementByName" parameterType="java.lang.String" resultType="CmsAdvertisement">
+		select * from cms_advertisement where adname=#{adname};
+	</select>
 </mapper>

@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,6 +37,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.service.BookCorrectionService;
 import com.bc.pmpheep.back.service.CmsExtraService;
+import com.bc.pmpheep.back.service.DecPositionService;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.service.MaterialNoteAttachmentService;
 import com.bc.pmpheep.back.service.MaterialNoticeAttachmentService;
@@ -49,6 +51,10 @@ import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookCorrectionTrackVO;
+import com.bc.pmpheep.back.vo.DeclarationResultBookVO;
+import com.bc.pmpheep.back.vo.DeclarationResultSchoolVO;
+import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
+import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
 import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.back.vo.SurveyQuestionFillVO;
@@ -71,41 +77,42 @@ import com.mongodb.gridfs.GridFSDBFile;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Controller
 public class FileDownLoadController {
-    Logger                          logger         =
-                                                   LoggerFactory.getLogger(FileDownLoadController.class);
+    Logger logger = LoggerFactory.getLogger(FileDownLoadController.class);
 
-    @Resource
-    FileService                     fileService;
-    @Resource
-    PmphGroupFileService            groupFileService;
-    @Resource
-    CmsExtraService                 cmsExtraService;
-    @Resource
-    MaterialNoticeAttachmentService materialNoticeAttachmentService;
-    @Resource
-    MaterialNoteAttachmentService   materialNoteAttachmentService;
-    @Resource
-    DeclarationService              declarationService;
-    @Resource
-    ExcelHelper                     excelHelper;
-    @Resource
-    WordHelper                      wordHelper;
-    @Resource
-    MaterialService                 materialService;
-    @Resource
-    TextbookService                 textbookService;
-    @Resource
-    ZipHelper                       zipHelper;
-    @Resource
-    MaterialOrgService              materialOrgService;
-    @Autowired
-    BookCorrectionService           bookCorrectionService;
-    @Autowired
-    SurveyQuestionAnswerService     surveyQuestionAnswerService;
-    @Resource(name = "taskExecutor")
-    private ThreadPoolTaskExecutor  taskExecutor;
-    // 当前业务类型
-    private static final String     BUSSINESS_TYPE = "文件下载";
+	@Resource
+	FileService fileService;
+	@Resource
+	PmphGroupFileService groupFileService;
+	@Resource
+	CmsExtraService cmsExtraService;
+	@Resource
+	MaterialNoticeAttachmentService materialNoticeAttachmentService;
+	@Resource
+	MaterialNoteAttachmentService materialNoteAttachmentService;
+	@Resource
+	DeclarationService declarationService;
+	@Resource
+	ExcelHelper excelHelper;
+	@Resource
+	WordHelper wordHelper;
+	@Resource
+	MaterialService materialService;
+	@Resource
+	TextbookService textbookService;
+	@Resource
+	ZipHelper zipHelper;
+	@Resource
+	MaterialOrgService materialOrgService;
+	@Autowired
+	BookCorrectionService bookCorrectionService;
+	@Autowired
+	SurveyQuestionAnswerService surveyQuestionAnswerService;
+	@Autowired
+	DecPositionService decPositionService;
+	@Resource(name = "taskExecutor")
+	private ThreadPoolTaskExecutor taskExecutor;
+	// 当前业务类型
+	private static final String BUSSINESS_TYPE = "文件下载";
 
     /**
      * 普通文件下载
@@ -609,9 +616,52 @@ public class FileDownLoadController {
         }
     }
 
+	/**
+	 * 角色遴选 批量导出主编、副主编
+	 * 
+	 * @param textbookIds
+	 * @param request
+	 * @param response
+	 * @throws IllegalAccessException
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "角色遴选 批量导出主编、副主编")
+	@RequestMapping(value = "/position/ExportEditor", method = RequestMethod.GET)
+	public void exportEditor(Long[] textbookIds,HttpServletRequest request,HttpServletResponse response) 
+			throws IllegalAccessException ,Exception{
+		List<DecPositionBO> list;
+		Workbook workbook = null;
+		try {
+			list=textbookService.getExcelDecByMaterialId(textbookIds);
+			workbook = excelHelper.fromDecPositionBOList(list, "主编-副主编");
+		} catch (CheckedServiceException | IllegalArgumentException e) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_CREATION_FAILED, "数据表格化的时候失败");
+		}
+		//通过书籍id获取教材信息
+		Material material=materialService.getMaterialByName(textbookIds);
+		String fileName = returnFileName(request, material.getMaterialName() + ".xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+	
+	/**
+	 * 
+	 * <pre>
+=======
     /**
      * 
      * <pre>
+>>>>>>> branch 'develop' of https://github.com/BCSquad/pmph
 	 * 功能描述：导出填空题调查结果Excel
 	 * 使用示范：
 	 * @user  tyc
@@ -619,7 +669,236 @@ public class FileDownLoadController {
 	 * @param response
 	 * 2018.01.08 18:31
 	 * </pre>
-     */
+<<<<<<< HEAD
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出填空题调查结果")
+	@RequestMapping(value = "/excel/surveyQuestionExcel", method = RequestMethod.GET)
+	public void surveyQuestionExcel(HttpServletRequest request, HttpServletResponse response) {
+		Workbook workbook = null;
+		List<SurveyQuestionFillVO> surveyQuestionFillVO = null;
+		try {
+			PageParameter<SurveyQuestionFillVO> pageParameter = new PageParameter<>(null, null);
+			surveyQuestionFillVO = (List<SurveyQuestionFillVO>) 
+					surveyQuestionAnswerService.listFillQuestion(pageParameter);
+			workbook = excelHelper.fromBusinessObjectList(surveyQuestionFillVO, "填空题调查结果");
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		String name = "填空题调查结果";
+		String fileName = returnFileName(request, name + ".xls");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+
+	/**
+	 * 
+	 * Description:申报情况统计页面按申报单位统计导出统计结果
+	 * @author:lyc
+	 * @date:2018年1月9日上午10:29:21
+	 * @param 
+	 * @return void
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报情况统计页面按申报单位统计导出统计结果")
+	@RequestMapping(value = "/result/exportSituationSchool", method = RequestMethod.GET)
+	public void exportSituationSchool(Long materialId, String schoolName, Integer state,
+			HttpServletRequest request, HttpServletResponse response){
+		PageParameter<DeclarationSituationSchoolResultVO> pageParameter = new PageParameter<>(1, 50000);
+		DeclarationSituationSchoolResultVO declarationSituationSchoolResultVO = 
+				new DeclarationSituationSchoolResultVO();
+		declarationSituationSchoolResultVO.setMaterialId(materialId);
+		declarationSituationSchoolResultVO.setSchoolName(schoolName);
+		pageParameter.setParameter(declarationSituationSchoolResultVO);
+		Workbook workbook = null;
+		List<DeclarationSituationSchoolResultVO> list = null;
+		String sheetName = "";
+		if (state.intValue() == 1){
+			list = decPositionService.listChosenDeclarationSituationSchoolResultVOs(pageParameter).getRows();
+			sheetName = "申报情况按单位统计（按当选数排序）";
+		} else if (state.intValue() == 2){
+			list = decPositionService.listPresetDeclarationSituationSchoolResultVOs(pageParameter).getRows();
+			sheetName = "申报情况按单位统计（按申报数排序）";
+		} else {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "未知的排序方式");
+		}
+		if (list.size() == 0){
+			list.add(new DeclarationSituationSchoolResultVO());
+		}
+		try {
+			workbook = excelHelper.fromBusinessObjectList(list, sheetName);
+		}catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e){
+			logger.warn("数据表格化的时候失败");
+		}
+		Material material = materialService.getMaterialById(materialId);
+		String fileName = returnFileName(request, material.getMaterialName() + ".xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        try(OutputStream out = response.getOutputStream()){
+        	workbook.write(out);
+        	out.flush();
+        	out.close();
+        }catch (Exception e){
+        	logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+        	throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+        			CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+        }
+	}
+	
+	/**
+	 * 
+	 * Description:申报结果统计页面按申报单位统计导出统计结果
+	 * @author:lyc
+	 * @date:2018年1月9日上午11:16:01
+	 * @param 
+	 * @return void
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报结果统计页面按申报单位统计导出统计结果")
+	@RequestMapping(value = "/result/exportResultSchool", method = RequestMethod.GET)
+	public void exportResultSchool(Long materialId, String schoolName, Integer state,
+			HttpServletRequest request, HttpServletResponse response){
+		PageParameter<DeclarationResultSchoolVO> pageParameter = new PageParameter<>(1, 50000);
+		DeclarationResultSchoolVO declarationResultSchoolVO = new DeclarationResultSchoolVO();
+		declarationResultSchoolVO.setMaterialId(materialId);
+		declarationResultSchoolVO.setSchoolName(schoolName);
+		pageParameter.setParameter(declarationResultSchoolVO);
+		Workbook workbook = null;
+		List<DeclarationResultSchoolVO> list = null;
+		String sheetName = "";
+		if (state.intValue() == 1){
+			list = decPositionService.listChosenDeclarationResultSchoolVOs(pageParameter).getRows();
+			sheetName = "申报结果按单位统计（按当选数排序）";
+		}else if (state.intValue() == 2){
+			list = decPositionService.listPresetDeclarationResultSchoolVOs(pageParameter).getRows();
+			sheetName = "申报结果按单位统计（按申报数排序）";
+		}else {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "未知的排序方式");
+		}
+		if (list.size() == 0){
+			list.add(new DeclarationResultSchoolVO());
+		}
+		try{
+			workbook = excelHelper.fromBusinessObjectList(list, sheetName);
+		}catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e){
+			logger.warn("数据表格化的时候失败");
+		}
+		Material material = materialService.getMaterialById(materialId);
+		String fileName = returnFileName(request, material.getMaterialName() + ".xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        try(OutputStream out = response.getOutputStream()){
+        	workbook.write(out);
+        	out.flush();
+        	out.close();
+        }catch (Exception e){
+        	logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+        	throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+        			CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+        }
+	}
+	
+	/**
+	 * 
+	 * Description:申报情况统计页面按书名统计导出统计结果
+	 * @author:lyc
+	 * @date:2018年1月9日上午11:41:10
+	 * @param 
+	 * @return void
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报情况统计页面按书名统计导出统计结果")
+	@RequestMapping(value = "/result/exportSituationBook", method = RequestMethod.GET)
+	public void exportSituationBook(Long materialId, String bookName,HttpServletRequest request,
+			HttpServletResponse response){
+		PageParameter<DeclarationSituationBookResultVO> pageParameter = new PageParameter<>(1, 50000);
+		DeclarationSituationBookResultVO declarationSituationBookResultVO = 
+				new DeclarationSituationBookResultVO();
+		declarationSituationBookResultVO.setMaterialId(materialId);
+		declarationSituationBookResultVO.setBookName(bookName);
+		pageParameter.setParameter(declarationSituationBookResultVO);
+		Workbook workbook = null;
+		List<DeclarationSituationBookResultVO> list = null;
+		list = decPositionService.listDeclarationSituationBookResultVOs(pageParameter).getRows();
+		if (list.size() == 0){
+			list.add(new DeclarationSituationBookResultVO());
+		}
+		try{
+			workbook = excelHelper.fromBusinessObjectList(list, "申报情况按书名统计");
+		}catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e){
+			logger.warn("数据表格化的时候失败");
+		}
+		Material material = materialService.getMaterialById(materialId);
+		String fileName = returnFileName(request, material.getMaterialName() + ".xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        try(OutputStream out = response.getOutputStream()){
+        	workbook.write(out);
+        	out.flush();
+        	out.close();
+        }catch (Exception e){
+        	logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+        	throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+        			CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+        }
+	}
+	
+	/**
+	 * 
+	 * Description:申报结果统计页面按书名统计导出统计结果
+	 * @author:lyc
+	 * @date:2018年1月9日下午2:42:26
+	 * @param 
+	 * @return void
+	 */
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报结果统计页面按书名统计导出统计结果")
+	@RequestMapping(value = "/result/exportResultBook", method = RequestMethod.GET)
+	public void exportResultBook(Long materialId, String bookName, HttpServletRequest request, 
+			HttpServletResponse response){
+		PageParameter<DeclarationResultBookVO> pageParameter = new PageParameter<>(1, 50000);
+		DeclarationResultBookVO declarationResultBookVO = new DeclarationResultBookVO();
+		declarationResultBookVO.setMaterialId(materialId);
+		declarationResultBookVO.setBookName(bookName);
+		pageParameter.setParameter(declarationResultBookVO);
+		Workbook workbook = null;
+		List<DeclarationResultBookVO> list = null;
+		list = decPositionService.listDeclarationResultBookVOs(pageParameter).getRows();
+		if (list.size() == 0){
+			list.add(new DeclarationResultBookVO());
+		}
+		try{
+			workbook = excelHelper.fromBusinessObjectList(list, "申报结果按书名统计");
+		}catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e){
+			logger.warn("数据表格化的时候失败");
+		}
+		Material material = materialService.getMaterialById(materialId);
+		String fileName = returnFileName(request, material.getMaterialName() + ".xls");
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        try(OutputStream out = response.getOutputStream()){
+        	workbook.write(out);
+        	out.flush();
+        	out.close();
+        }catch (Exception e){
+        	logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+        	throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+        			CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+        }
+	}
+
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出填空题调查结果")
     @RequestMapping(value = "/excel/surveyQuestionExcel", method = RequestMethod.GET)

@@ -98,6 +98,17 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		if (ObjectUtil.isNull(cmsAdvertisementOrImageVO)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
+		if(null != cmsAdvertisementOrImageVO.getAdname()){
+			if(StringUtil.strLength(cmsAdvertisementOrImageVO.getAdname()) > 25){
+				throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM, "最多只能输入25个字符");
+			}
+			CmsAdvertisement cmsAdvertisement=cmsAdvertisementDao.getCmsAdvertisementById(cmsAdvertisementOrImageVO.getId());
+			if(!cmsAdvertisementOrImageVO.getAdname().equals(cmsAdvertisement.getAdname())){
+				if(cmsAdvertisementDao.getCmsAdvertisementByName(cmsAdvertisementOrImageVO.getAdname()).size() > 0){
+					throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM, "广告位置名称已存在，请重新输入");
+				}
+			}
+		}
 		if (null == cmsAdvertisementOrImageVO.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "广告id为空");
 		}
@@ -110,6 +121,11 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		if (null != cmsAdvertisementOrImageVO.getUrl()) {
 			if(StringUtil.strLength(cmsAdvertisementOrImageVO.getUrl()) > 150){
 				throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM, "最多只能输入150个字符");
+			}
+		}
+		if(null!=cmsAdvertisementOrImageVO.getNote()){
+			if(StringUtil.strLength(cmsAdvertisementOrImageVO.getNote()) > 20){
+				throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM, "备注最多只能输入20个字符");
 			}
 		}
 		Integer count = 0;
