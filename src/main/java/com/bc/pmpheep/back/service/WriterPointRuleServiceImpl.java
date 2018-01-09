@@ -13,6 +13,7 @@ import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.WriterPointLogVO;
 import com.bc.pmpheep.back.vo.WriterPointRuleVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -44,10 +45,28 @@ public class WriterPointRuleServiceImpl implements WriterPointRuleService{
 			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "积分规则名称为空");
 		}
-//		if(ObjectUtil.isNull(writerPointRule.getPoint())){
-//			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
-//					CheckedExceptionResult.NULL_PARAM, "积分值为空");
-//		}
+		if(StringUtil.strLength(writerPointRule.getRuleName()) > 25){
+			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "积分或兑换规则名称不能超过25个字符");
+		}
+		if(StringUtil.strLength(writerPointRule.getRuleCode()) > 25){
+			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "积分或兑换规则标识不能超过25个字符");
+		}
+		if (writerPointRuleDao.getWriterPointRuleByName(writerPointRule.getRuleName()).size() > 0) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "该名称已被使用，请重新输入");
+		}
+		if(null != writerPointRule.getDescription()){
+			if(StringUtil.strLength(writerPointRule.getDescription()) > 50){
+				throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+						CheckedExceptionResult.ILLEGAL_PARAM, "规则描述不能超过25个字符");
+			}
+		}
+		if(ObjectUtil.isNull(writerPointRule.getPoint())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "积分值为空");
+		}
 		return writerPointRuleDao.updateWriterPointRule(writerPointRule);
 	}
 
@@ -60,6 +79,28 @@ public class WriterPointRuleServiceImpl implements WriterPointRuleService{
 		if(ObjectUtil.isNull(writerPointRule.getRuleName())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "积分或兑换规则名称为空");
+		}
+		if(StringUtil.strLength(writerPointRule.getRuleName()) > 25){
+			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "积分或兑换规则名称不能超过25个字符");
+		}
+		if (writerPointRuleDao.getWriterPointRuleByName(writerPointRule.getRuleName()).size() > 0) {
+	            throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+	                                              CheckedExceptionResult.ILLEGAL_PARAM, "该名称已被使用，请重新输入");
+	    }
+		if(StringUtil.strLength(writerPointRule.getRuleCode()) > 25){
+			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "积分或兑换规则标识不能超过25个字符");
+		}
+		if(null != writerPointRule.getDescription()){
+			if(StringUtil.strLength(writerPointRule.getDescription()) > 50){
+				throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+						CheckedExceptionResult.ILLEGAL_PARAM, "规则描述不能超过25个字符");
+			}
+		}
+		if(ObjectUtil.isNull(writerPointRule.getPoint())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "积分值为空");
 		}
 		writerPointRuleDao.addWriterPointRule(writerPointRule);
 		return writerPointRule;
