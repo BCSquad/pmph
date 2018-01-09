@@ -2,8 +2,6 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.bc.pmpheep.back.po.SurveyQuestionOption;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -92,6 +90,6 @@ public interface SurveyQuestionOptionService {
      * @return 影响行数 
      * </pre>
      */
-    Integer batchDeleteSurveyQuestionOptionByQuestionIds(
-    @Param("questionIds") List<Long> questionIds) throws CheckedServiceException;
+    Integer batchDeleteSurveyQuestionOptionByQuestionIds(List<Long> questionIds)
+    throws CheckedServiceException;
 }

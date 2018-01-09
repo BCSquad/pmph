@@ -116,6 +116,6 @@ public interface SurveyQuestionDao {
      * @return 影响行数 
      * </pre>
      */
-    Integer batchDeleteSurveyQuestionByQuestionIds(@Param("questionIds") List<Long> questionIds);
+    Integer batchDeleteSurveyQuestionByQuestionIds(List<Long> questionIds);
 
 }

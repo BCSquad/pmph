@@ -180,7 +180,7 @@ public class SurveyServiceImpl implements SurveyService {
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         Long surveyId = surveyVO.getId();// 问卷ID
-        String title = surveyVO.getTitle();// 问卷名称
+        String title = surveyVO.getTemplateName();// 问卷名称
         String intro = surveyVO.getIntro();// 问卷概述
         Long typeId = surveyVO.getTypeId();// 问卷调查对象
         Long templateId = surveyVO.getTemplateId();// 模版ID
