@@ -14,6 +14,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Topic;
 import com.bc.pmpheep.back.service.TopicService;
+import com.bc.pmpheep.back.service.TopicServiceImpl;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
 import com.bc.pmpheep.back.vo.TopicTextVO;
@@ -70,20 +71,7 @@ public class TopicServiceTest extends BaseTest {
 	}
 
 	@Test
-	public void testGetTopicTextVO() {
-		Topic topic = topicService.add(this.topic);
-		TopicTextVO topicTextVO = topicService.getTopicTextVO(topic.getId());
-		logger.info("详细情况=" + topicTextVO.toString());
-		Assert.assertNotNull("查询内容后返回的TopicTextVO不应为空", topicTextVO);
-	}
-
-	@Test
-	public void testUpdate() {
-		Topic topic = topicService.add(this.topic);
-		topic.setUserId(999L);
-		topic.setBookname("cba");
-		String result = topicService.update(topic);
-		logger.info("修改" + result);
-		Assert.assertTrue("修改失败", result.equals("SUCCESS"));
+	public void testUpdateTopic() {
+		topicService.updateByErp();
 	}
 }

@@ -7,6 +7,8 @@ import java.io.Serializable;
 
 import org.apache.ibatis.type.Alias;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
+
 /**
  * <p>Title:DeclarationSituationBookResultVO<p>
  * <p>Description:申报情况按书名统计<p>
@@ -24,23 +26,32 @@ public class DeclarationSituationBookResultVO implements Serializable{
 		private Long id;
 		//序号
 		private Long row;
-		//申报学校
+		//书名
+		@ExcelHeader(header = "书名")
 		private String bookName;
 		//主编申报数
+		@ExcelHeader(header = "主编申报数")
 		private Integer presetPositionEditor;
 		//副主编申报数
+		@ExcelHeader(header = "副主编申报数")
 		private Integer presetPositionSubeditor;
 		//编委申报数
+		@ExcelHeader(header = "编委申报数")
 		private Integer presetPositionEditorial;
 		//数字编委申报数
+		@ExcelHeader(header = "数字编委申报数")
 		private Integer presetDigitalEditor;
 		//主编当选数
+		@ExcelHeader(header = "主编当选数")
 		private Integer chosenPositionEditor;
 		//副主编当选数
+		@ExcelHeader(header = "副主编当选数")
 		private Integer chosenPositionSubeditor;
 		//编委当选数
+		@ExcelHeader(header = "编委当选数")
 		private Integer chosenPositionEditorial;
 		//数字编委当选数
+		@ExcelHeader(header = "数字编委当选数")
 		private Integer isDigitalEditor;
 		//申报人数
 		private Integer presetPersons;

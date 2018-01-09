@@ -105,6 +105,7 @@ public class Survey implements java.io.Serializable {
 
     public Survey(String title, String intro, Long templateId, Long typeId, Long userId) {
         this.title = title;
+        this.intro = intro;
         this.templateId = templateId;
         this.typeId = typeId;
         this.userId = userId;

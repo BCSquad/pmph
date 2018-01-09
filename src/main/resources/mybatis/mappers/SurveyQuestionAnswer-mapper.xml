@@ -8,6 +8,9 @@
 			<if test="id != null">
 				id,
 			</if>
+			<if test="surveyId != null">
+				survey_id,
+			</if>
 			<if test="userId != null">
 				user_id,
 			</if>
@@ -31,6 +34,9 @@
 		<trim suffixOverrides=",">
 			<if test="id != null">
 				#{id},
+			</if>
+			<if test="surveyId != null">
+				#{surveyId},
 			</if>
 			<if test="userId != null">
 				#{userId},
@@ -83,6 +89,9 @@
 			<if test="id != null">
 				id=#{id},
 			</if>
+			<if test="surveyId != null">
+				survey_id = #{surveyId},
+			</if>
 			<if test="userId != null">
 				user_id=#{userId},
 			</if>
@@ -112,8 +121,9 @@
 		SELECT 
 			s.`title`,
 		  	wu.`realname`,
-		  	org.`org_name`,
+		  	org.`org_name` ,
 		  	sqa.`gmt_create`,
+		  	sqa.`survey_id`,
 		  	t.`count`
 		FROM
   			`survey_question_answer` sqa 
@@ -219,7 +229,7 @@
 		 ON 
 		 	 s.`type_id` = st.`id`
 		 JOIN 
-		 	 `pmph_user` pu ON pu.`id`= sqa.`user_id`,
+		 	 `pmph_user` pu ON pu.`id`= sta.`user_id`,
 		 (
 		 	SELECT 
 			  COUNT(DISTINCT sqa.`user_id`) `count`
@@ -232,7 +242,7 @@
 			  JOIN `survey_type` st 
 			    ON s.`type_id` = st.`id` 
 			  JOIN `pmph_user` pu 
-			    ON pu.`id` = sqa.`user_id`
+			    ON pu.`id` = sta.`user_id`
 			  <where>
 				  	<if test="parameter.surveyTitle != null and parameter.surveyTitle != ''">
 						s.`title` like concat('%',#{parameter.surveyTitle},'%')
@@ -245,7 +255,7 @@
 				</if>
 		 </where>
 		 GROUP BY 
-		 	  s.`title` 
+		 	  sqa.`survey_id`
 		 <if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
@@ -285,7 +295,7 @@
 		    ORDER BY 
 		    	sq.id ASC
 		   ) a 
-    		LEFT JOIN (
+    		 JOIN (
     			SELECT 
 			        sqa.`question_id`,
 			        sqa.`option_id` optId,
@@ -325,7 +335,7 @@
 		ON 
 			sqa.`question_id` = sq.`id` 
 		<where>
-			sq.`type` IN (4, 5) 
+			sq.`type` IN (4,5) 
 			<if test="surveyId != null">
 				AND 
 					sqa.`survey_id` = #{surveyId}

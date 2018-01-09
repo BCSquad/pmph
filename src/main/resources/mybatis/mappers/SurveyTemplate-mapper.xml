@@ -82,6 +82,12 @@
 			<if test="templateName != null and templateName != ''">
 				template_name=#{templateName},
 			</if>
+			<if test="intro != null and intro != ''">
+				intro = #{intro},
+			</if>
+			<if test="typeId != null">
+				type_id = #{typeId},
+			</if>
 			<if test="sort != null">
 				sort=#{sort},
 			</if>
@@ -105,6 +111,7 @@
 	<select id="getSurveyTemplateQuestionByTemplateId" parameterType="java.lang.Long" resultType="SurveyQuestionOptionCategoryVO">
 		SELECT 
 			sq.`id`,sq.`title`,
+			sq.`type`, sq.`sort`,
 			GROUP_CONCAT(sqo.`id`) optionIdString,
 			GROUP_CONCAT(sqo.`option_content`) optionContent
 		FROM 
@@ -127,6 +134,8 @@
 				AND 
 					st.`id`=#{templateId}
 			</if>
+		  GROUP BY 
+		  	stq.`question_id`
 	</select>
 	
 	<!-- 根据模版id获取问卷表标题和简介 -->

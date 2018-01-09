@@ -601,91 +601,91 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 		List<ExcelDecAndTextbookVO> list=textbookDao.getExcelDecAndTextbooks(textbookIds);
 		for (ExcelDecAndTextbookVO excelDecAndTextbookVO : list) {
-				switch (excelDecAndTextbookVO.getChosenPosition()) {
-				case 1:
-						excelDecAndTextbookVO.setShowChosenPosition("编委");
-					break;
-				case 2:
-						excelDecAndTextbookVO.setShowChosenPosition("副主编");
-					break;
-				case 3:
-						excelDecAndTextbookVO.setShowChosenPosition("副主编,编委");
-					break;
-				case 4:
-						excelDecAndTextbookVO.setShowChosenPosition("主编");
-					break;
-				case 5:
-						excelDecAndTextbookVO.setShowChosenPosition("主编,编委");
-					break;
-				case 6:
-						excelDecAndTextbookVO.setShowChosenPosition("主编,副主编");
-					break;
-				case 7:
-						excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,编委");
-					break;
-				case 8:
-					excelDecAndTextbookVO.setShowChosenPosition("数字编委");
-					break;
-				case 9:
-					excelDecAndTextbookVO.setShowChosenPosition("编委，数字编委");
-					break;
-				case 10:
-					excelDecAndTextbookVO.setShowChosenPosition("副主编,数字编委");
-					break;
-				case 11:
-					excelDecAndTextbookVO.setShowChosenPosition("副主编,编委,数字编委");
-					break;
-				case 12:
-					excelDecAndTextbookVO.setShowChosenPosition("主编,数字编委");
-					break;
-				case 13:
-					excelDecAndTextbookVO.setShowChosenPosition("主编,编委,数字编委");
-					break;
-				case 14:
-					excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,数字编委");
-					break;
-				default:
-					excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,编委,数字编委");
-					break;
+			switch (excelDecAndTextbookVO.getChosenPosition()) {
+			case 1:
+					excelDecAndTextbookVO.setShowChosenPosition("编委");
+				break;
+			case 2:
+					excelDecAndTextbookVO.setShowChosenPosition("副主编");
+				break;
+			case 3:
+					excelDecAndTextbookVO.setShowChosenPosition("副主编,编委");
+				break;
+			case 4:
+					excelDecAndTextbookVO.setShowChosenPosition("主编");
+				break;
+			case 5:
+					excelDecAndTextbookVO.setShowChosenPosition("主编,编委");
+				break;
+			case 6:
+					excelDecAndTextbookVO.setShowChosenPosition("主编,副主编");
+				break;
+			case 7:
+					excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,编委");
+				break;
+			case 8:
+				excelDecAndTextbookVO.setShowChosenPosition("数字编委");
+				break;
+			case 9:
+				excelDecAndTextbookVO.setShowChosenPosition("编委，数字编委");
+				break;
+			case 10:
+				excelDecAndTextbookVO.setShowChosenPosition("副主编,数字编委");
+				break;
+			case 11:
+				excelDecAndTextbookVO.setShowChosenPosition("副主编,编委,数字编委");
+				break;
+			case 12:
+				excelDecAndTextbookVO.setShowChosenPosition("主编,数字编委");
+				break;
+			case 13:
+				excelDecAndTextbookVO.setShowChosenPosition("主编,编委,数字编委");
+				break;
+			case 14:
+				excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,数字编委");
+				break;
+			default:
+				excelDecAndTextbookVO.setShowChosenPosition("主编,副主编,编委,数字编委");
+				break;
 			}
-		switch (excelDecAndTextbookVO.getOnlineProgress()) {
-		case 0:
-			excelDecAndTextbookVO.setShowOnlineProgress("未提交");
-			break;
-		case 1:
-			excelDecAndTextbookVO.setShowOnlineProgress("已提交");
-			break;
-		case 2:
-			excelDecAndTextbookVO.setShowOnlineProgress("被退回");
-			break;
-		default:
-			excelDecAndTextbookVO.setShowOnlineProgress("审核通过");
-			break;
+			switch (excelDecAndTextbookVO.getOnlineProgress()) {
+			case 0:
+				excelDecAndTextbookVO.setShowOnlineProgress("未提交");
+				break;
+			case 1:
+				excelDecAndTextbookVO.setShowOnlineProgress("已提交");
+				break;
+			case 2:
+				excelDecAndTextbookVO.setShowOnlineProgress("被退回");
+				break;
+			default:
+				excelDecAndTextbookVO.setShowOnlineProgress("审核通过");
+				break;
+			}
+			switch (excelDecAndTextbookVO.getOfflineProgress()) {
+			case 0:
+				excelDecAndTextbookVO.setShowOfflineProgress("未收到纸质表");
+				break;
+			case 1:
+				excelDecAndTextbookVO.setShowOfflineProgress("被退回纸质表");
+				break;
+			default:
+				excelDecAndTextbookVO.setShowOfflineProgress("已收到纸质表");
+				break;
+			}
+			switch (excelDecAndTextbookVO.getIdtype()) {
+			case 0:
+				excelDecAndTextbookVO.setShowIdtype("身份证");
+				break;
+			case 1:
+				excelDecAndTextbookVO.setShowIdtype("护照");
+				break;
+			default:
+				excelDecAndTextbookVO.setShowIdtype("军官证");
+				break;
+			}
 		}
-		switch (excelDecAndTextbookVO.getOfflineProgress()) {
-		case 0:
-			excelDecAndTextbookVO.setShowOfflineProgress("未收到纸质表");
-			break;
-		case 1:
-			excelDecAndTextbookVO.setShowOfflineProgress("被退回纸质表");
-			break;
-		default:
-			excelDecAndTextbookVO.setShowOfflineProgress("已收到纸质表");
-			break;
-		}
-		switch (excelDecAndTextbookVO.getIdtype()) {
-		case 0:
-			excelDecAndTextbookVO.setShowIdtype("身份证");
-			break;
-		case 1:
-			excelDecAndTextbookVO.setShowIdtype("护照");
-			break;
-		default:
-			excelDecAndTextbookVO.setShowIdtype("军官证");
-			break;
-		}
-	}
-	return list;
+		return list;
 	}
 
 	@Override

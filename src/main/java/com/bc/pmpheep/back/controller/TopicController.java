@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Topic;
+import com.bc.pmpheep.back.po.TopicLog;
 import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.TopicService;
 import com.bc.pmpheep.back.util.CookiesUtil;
@@ -82,10 +83,10 @@ public class TopicController {
 		PageParameter<TopicOPtsManagerVO> pageParameter = new PageParameter(pageNumber, pageSize);
 		TopicOPtsManagerVO topicOPtsManagerVO = new TopicOPtsManagerVO();
 		topicOPtsManagerVO.setBookname(bookname);
-		if (StringUtil.isEmpty(submitTime)){
+		if (StringUtil.isEmpty(submitTime)) {
 			topicOPtsManagerVO.setSubmitTime(null);
-		} else{
-		    topicOPtsManagerVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
+		} else {
+			topicOPtsManagerVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
 		}
 		String sessionId = CookiesUtil.getSessionId(request);
 		pageParameter.setParameter(topicOPtsManagerVO);
@@ -107,12 +108,16 @@ public class TopicController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "运维人员分配选题给部门")
 	@RequestMapping(value = "/put/optsHandling", method = RequestMethod.PUT)
-	public ResponseBean optsHandling(Long id, Long departmentId) {
+	public ResponseBean optsHandling(HttpServletRequest request, Long id, Long departmentId) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		TopicLog topicLog = new TopicLog();
+		topicLog.setTopicId(id);
+		topicLog.setTopicEvent("运维人员分配选题给部门");
 		Topic topic = new Topic();
 		topic.setId(id);
 		topic.setDepartmentId(departmentId);
 		topic.setIsDirectorHandling(true);
-		return new ResponseBean(topicService.update(topic));
+		return new ResponseBean(topicService.update(topicLog, sessionId, topic));
 	}
 
 	/**
@@ -140,9 +145,9 @@ public class TopicController {
 		PageParameter<TopicDirectorVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		TopicDirectorVO topicDirectorVO = new TopicDirectorVO();
 		topicDirectorVO.setBookName(bookName);
-		if (StringUtil.isEmpty(submitTime)){
+		if (StringUtil.isEmpty(submitTime)) {
 			topicDirectorVO.setSubmitTime(null);
-		} else{
+		} else {
 			topicDirectorVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
 		}
 		String sessionId = CookiesUtil.getSessionId(request);
@@ -169,21 +174,27 @@ public class TopicController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "主任分配选题给部门编辑")
 	@RequestMapping(value = "/put/directorHandling", method = RequestMethod.PUT)
-	public ResponseBean directorHandling(Long id, Long editorId, Boolean isRejectedByDirector, String reasonDirector) {
+	public ResponseBean directorHandling(HttpServletRequest request, Long id, Long editorId,
+			Boolean isRejectedByDirector, String reasonDirector) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		TopicLog topicLog = new TopicLog();
+		topicLog.setTopicId(id);
 		Topic topic = new Topic();
 		topic.setId(id);
-		if (ObjectUtil.isNull(isRejectedByDirector)){
-			isRejectedByDirector = false ;
+		if (ObjectUtil.isNull(isRejectedByDirector)) {
+			isRejectedByDirector = false;
 		}
 		topic.setIsRejectedByDirector(isRejectedByDirector);
 		if (isRejectedByDirector) {
+			topicLog.setTopicEvent("主任退回选题给运维人员");
 			topic.setIsDirectorHandling(false);
 			topic.setReasonDirector(reasonDirector);
 		} else {
+			topicLog.setTopicEvent("主任分配选题给部门编辑");
 			topic.setEditorId(editorId);
 			topic.setIsEditorHandling(true);
 		}
-		return new ResponseBean(topicService.update(topic));
+		return new ResponseBean(topicService.update(topicLog, sessionId, topic));
 	}
 
 	/**
@@ -211,9 +222,9 @@ public class TopicController {
 		PageParameter<TopicEditorVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		TopicEditorVO topicEditorVO = new TopicEditorVO();
 		topicEditorVO.setBookName(bookName);
-		if (StringUtil.isEmpty(submitTime)){
+		if (StringUtil.isEmpty(submitTime)) {
 			topicEditorVO.setSubmitTime(null);
-		} else{
+		} else {
 			topicEditorVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
 		}
 		String sessionId = CookiesUtil.getSessionId(request);
@@ -234,6 +245,8 @@ public class TopicController {
 	 *            审核意见
 	 * @param authDate
 	 *            审核时间
+	 * @param isAccepted
+	 *            编辑是否受理
 	 * @param isRejectedByEditor
 	 *            是否退回上级
 	 * @param reasonEditor
@@ -244,24 +257,31 @@ public class TopicController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "编辑对选题进行操作")
 	@RequestMapping(value = "/put/editorHandling", method = RequestMethod.PUT)
-	public ResponseBean editorHandling(Long id, Integer authProgress, String authFeedback, Boolean isRejectedByEditor,
-			Boolean isEditorHandling, String reasonEditor) {
+	public ResponseBean editorHandling(HttpServletRequest request, Long id, Integer authProgress, String authFeedback,
+			Boolean isRejectedByEditor, Boolean isAccepted, String reasonEditor) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		TopicLog topicLog = new TopicLog();
+		topicLog.setTopicId(id);
 		Topic topic = new Topic();
 		topic.setId(id);
-		topic.setIsEditorHandling(isEditorHandling);
-		if (ObjectUtil.isNull(isRejectedByEditor)){
-			isEditorHandling = false ;
+		topic.setIsAccepted(isAccepted);
+		if (ObjectUtil.isNull(isAccepted)) {
+			if (ObjectUtil.isNull(isRejectedByEditor)) {
+				isRejectedByEditor = false;
+			}
+			topic.setIsRejectedByEditor(isRejectedByEditor);
+			if (isRejectedByEditor) {
+				topicLog.setTopicEvent("编辑退回选题给主任");
+				topic.setIsEditorHandling(false);
+				topic.setReasonEditor(reasonEditor);
+			} else {
+				topicLog.setTopicEvent("编辑审核选题申报");
+				topic.setAuthDate(DateUtil.getCurrentTime());
+				topic.setAuthFeedback(authFeedback);
+				topic.setAuthProgress(authProgress);
+			}
 		}
-		topic.setIsRejectedByEditor(isRejectedByEditor);
-		if (isRejectedByEditor) {
-			topic.setIsEditorHandling(false);
-			topic.setReasonEditor(reasonEditor);
-		} else {
-			topic.setAuthDate(DateUtil.getCurrentTime());
-			topic.setAuthFeedback(authFeedback);
-			topic.setAuthProgress(authProgress);
-		}
-		return new ResponseBean(topicService.update(topic));
+		return new ResponseBean(topicService.update(topicLog, sessionId, topic));
 	}
 
 	/**
@@ -276,8 +296,12 @@ public class TopicController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取选题申报详情")
 	@RequestMapping(value = "/get/topicText", method = RequestMethod.GET)
-	public ResponseBean topicText(Long id) {
-		return new ResponseBean(topicService.getTopicTextVO(id));
+	public ResponseBean topicText(HttpServletRequest request, Long id) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		TopicLog topicLog = new TopicLog();
+		topicLog.setTopicId(id);
+		topicLog.setTopicEvent("获取选题申报详情");
+		return new ResponseBean(topicService.getTopicTextVO(topicLog, sessionId, id));
 	}
 
 	/**
@@ -309,9 +333,9 @@ public class TopicController {
 		PageParameter<TopicDeclarationVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
 		topicDeclarationVO.setBookname(bookname);
-		if (StringUtil.isEmpty(submitTime)){
+		if (StringUtil.isEmpty(submitTime)) {
 			topicDeclarationVO.setSubmitTime(null);
-		} else{
+		} else {
 			topicDeclarationVO.setSubmitTime(DateUtil.str2Timestam(submitTime));
 		}
 		pageParameter.setParameter(topicDeclarationVO);
@@ -330,26 +354,31 @@ public class TopicController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查看选题申报详情")
 	@RequestMapping(value = "/get/detail", method = RequestMethod.GET)
-	public ResponseBean detail(Long id) {
-		TopicTextVO topicTextVO = topicService.getTopicTextVO(id);
+	public ResponseBean detail(HttpServletRequest request, Long id) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		TopicLog topicLog = new TopicLog();
+		topicLog.setTopicId(id);
+		topicLog.setTopicEvent("查看选题申报详情");
+		TopicTextVO topicTextVO = topicService.getTopicTextVO(topicLog, sessionId, id);
 		topicTextVO.setIsAccepted(null);
 		topicTextVO.setIsDirectorHandling(null);
 		topicTextVO.setIsEditorHandling(null);
 		return new ResponseBean(topicTextVO);
 	}
-	
+
 	/**
 	 * 
 	 * Description:部门主任获取部门人员信息列表
+	 * 
 	 * @author:lyc
 	 * @date:2017年12月27日下午5:02:46
-	 * @param 
+	 * @param
 	 * @return ResponseBean
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取部门编辑列表")
 	@RequestMapping(value = "/listEditors", method = RequestMethod.GET)
-	public ResponseBean listEditors(Long departmentId, String realName, Integer pageSize, Integer pageNumber){
+	public ResponseBean listEditors(Long departmentId, String realName, Integer pageSize, Integer pageNumber) {
 		PageParameter<PmphEditorVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		PmphEditorVO pmphEditorVO = new PmphEditorVO();
 		pmphEditorVO.setDepartmentId(departmentId);

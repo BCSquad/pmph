@@ -1,5 +1,8 @@
 package com.bc.pmpheep.back.service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,20 +13,26 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Topic;
+import com.bc.pmpheep.back.po.TopicLog;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
 import com.bc.pmpheep.back.vo.TopicDirectorVO;
 import com.bc.pmpheep.back.vo.TopicEditorVO;
 import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
 import com.bc.pmpheep.back.vo.TopicTextVO;
 import com.bc.pmpheep.erp.db.SqlHelper;
+import com.bc.pmpheep.erp.service.InfoWorking;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * 
@@ -45,6 +54,8 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Service
 public class TopicServiceImpl implements TopicService {
 
+	@Autowired
+	TopicLogService topicLogService;
 	@Autowired
 	TopicDao topicDao;
 	@Autowired
@@ -216,43 +227,69 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public String update(Topic topic) throws CheckedServiceException {
+	public String update(TopicLog topicLog, String sessionId, Topic topic) throws CheckedServiceException {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (ObjectUtil.isNull(pmphUser)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"用户为空！");
+		}
+		topicLog.setUserId(pmphUser.getId());
 		if (ObjectUtil.isNull(topic) || ObjectUtil.isNull(topic.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
 					"该选题不存在");
 		}
 		String result = "FIAL";
 		if (topicDao.update(topic) > 0) {
+			topicLogService.add(topicLog);
 			result = "SUCCESS";
 		}
-		if (3 == topic.getAuthProgress()) {
-			// 审核通过可以将数据插入到erp的中间表去了
-			String remark = topic.getAuthFeedback();
-			TopicTextVO topicTextVO = getTopicTextVO(topic.getId());
-			String sql = "insert into i_declarestates (editionnum,rwusercode,rwusername,topicname,readerpeople,sources,fontcount,piccount,timetohand,subject,booktype,levels,depositbank,bankaccount,selectreason,publishingvalue,content,authorbuybooks,authorsponsor,originalname,originalauthor,originalnationality,originalpress,publishagerevision,topicnumber,auditstates,remark,creattime,states)";
-			sql += "values('','" + topicTextVO.getUsername() + "','" + topicTextVO.getRealname() + "','"
-					+ topicTextVO.getBookname() + "','" + topicTextVO.getReadType() + "','"
-					+ topicTextVO.getSourceType() + "','" + topicTextVO.getWordNumber() + "','"
-					+ topicTextVO.getPictureNumber() + "','"
-					+ DateUtil.formatTimeStamp("yyyy-MM-dd", topicTextVO.getDeadline()) + "','"
-					+ topicTextVO.getSubject() + "','" + topicTextVO.getTypeName() + "','" + topicTextVO.getRank()
-					+ "','" + topicTextVO.getBank() + "','" + topicTextVO.getAccountNumber() + "','"
-					+ topicTextVO.getTopicExtra().getReason() + "','" + topicTextVO.getTopicExtra().getPrice() + "','"
-					+ topicTextVO.getTopicExtra().getScore() + "','" + topicTextVO.getPurchase() + "','"
-					+ topicTextVO.getSponsorship() + "','" + topicTextVO.getOriginalBookname() + "','"
-					+ topicTextVO.getOriginalAuthor() + "','" + topicTextVO.getNation() + "','','"
-					+ topicTextVO.getEdition() + "','','','" + remark + "',GETDATE(),1)";
-			SqlHelper.executeUpdate(sql, null);
+		if (ObjectUtil.notNull(topic.getAuthProgress())) {
+			if (3 == topic.getAuthProgress()) {
+				// 创建本版号并将本版号放入数据中
+				String editionnum = "10" + new SimpleDateFormat("yyyy").format(new Date());
+				String vn = topicDao.getMaxTopicVn();
+				if (StringUtil.isEmpty(vn)) {
+					vn = "000001";
+				} else {
+					vn = Integer.parseInt(vn.substring(7)) + 1000000 + 1 + "";
+				}
+				topic.setNote("选题通过");
+				topic.setVn(editionnum + vn);
+				topicDao.update(topic);
+				String remark = topic.getAuthFeedback();
+				TopicTextVO topicTextVO = getTopicTextVO(topicLog, sessionId, topic.getId());
+				String sql = "insert into i_declarestates (editionnum,rwusercode,rwusername,topicname,readerpeople,sources,fontcount,piccount,timetohand,subject,booktype,levels,depositbank,bankaccount,selectreason,publishingvalue,content,authorbuybooks,authorsponsor,originalname,originalauthor,originalnationality,originalpress,publishagerevision,topicnumber,auditstates,remark,creattime,states)";
+				sql += "values('" + editionnum + vn + "','" + topicTextVO.getUsername() + "','"
+						+ topicTextVO.getRealname() + "','','" + topicTextVO.getReadType() + "','"
+						+ topicTextVO.getSourceType() + "','" + topicTextVO.getWordNumber() + "','"
+						+ topicTextVO.getPictureNumber() + "','"
+						+ DateUtil.formatTimeStamp("yyyy-MM-dd", topicTextVO.getDeadline()) + "','"
+						+ topicTextVO.getSubject() + "','" + topicTextVO.getTypeName() + "','" + topicTextVO.getRank()
+						+ "','" + topicTextVO.getBank() + "','" + topicTextVO.getAccountNumber() + "','"
+						+ topicTextVO.getTopicExtra().getReason() + "','" + topicTextVO.getTopicExtra().getPrice()
+						+ "','" + topicTextVO.getTopicExtra().getScore() + "','" + topicTextVO.getPurchase() + "','"
+						+ topicTextVO.getSponsorship() + "','" + topicTextVO.getOriginalBookname() + "','"
+						+ topicTextVO.getOriginalAuthor() + "','" + topicTextVO.getNation() + "','','"
+						+ topicTextVO.getEdition() + "','','11','" + remark + "',GETDATE(),1)";
+				SqlHelper.executeUpdate(sql, null);
+			}
 		}
 		return result;
 	}
 
 	@Override
-	public TopicTextVO getTopicTextVO(Long id) throws CheckedServiceException {
+	public TopicTextVO getTopicTextVO(TopicLog topicLog, String sessionId, Long id) throws CheckedServiceException {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (ObjectUtil.isNull(pmphUser)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"用户为空！");
+		}
+		topicLog.setUserId(pmphUser.getId());
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
 					"选题申报的id为空！");
 		}
+		topicLogService.add(topicLog);
 		TopicTextVO topicTextVO = topicDao.getTopicTextVO(id);
 		topicTextVO.setTopicExtra(topicExtraService.getTopicExtraByTopicId(id));
 		topicTextVO.setTopicWriters(topicWriertService.listTopicWriterByTopicId(id));
@@ -485,4 +522,50 @@ public class TopicServiceImpl implements TopicService {
 		return topic;
 	}
 
+	@Override
+	public void updateByErp() {
+		InfoWorking bookInfoWorking = new InfoWorking();
+		JSONArray topicInfo = bookInfoWorking.listTopicInfo();
+		Long[] recordIds = new Long[topicInfo.size()];
+		Integer total = 0;
+		for (int i = 0; i < topicInfo.size(); i++) {
+			JSONObject job = topicInfo.getJSONObject(i);
+			String auditstates = job.getString("auditstates");
+			String topicnumber = job.getString("topicnumber");
+			String topicname = job.getString("topicname");
+			String vn = job.getString("editionnum");
+			recordIds[i] = job.getLong("record_id");
+			switch (auditstates) {
+			case "11":
+				auditstates = "选题通过";
+				break;
+			case "12":
+				auditstates = "转稿";
+				break;
+			case "13":
+				auditstates = "发稿";
+				break;
+			case "14":
+				auditstates = "即将出书";
+				break;
+
+			default:
+				auditstates = "状态出现错误";
+				break;
+			}
+			Topic topic = new Topic();
+			topic.setNote(auditstates);
+			topic.setTn(topicnumber);
+			topic.setBookname(topicname);
+			topic.setVn(vn);
+			total += topicDao.updateByVn(topic);
+		}
+		if (total == topicInfo.size()) {
+			bookInfoWorking.updateTopic(recordIds);
+		} else {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"从erp更新教材申报信息失败请查看原因");
+		}
+
+	}
 }

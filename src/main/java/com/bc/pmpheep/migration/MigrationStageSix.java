@@ -111,6 +111,7 @@ public class MigrationStageSix {
         decCourseConstruction();
         decNationalPlan();
         decTextbook();
+        //decTextbookOther();
         decResearch();
         decExtension();
         decPosition();
@@ -730,7 +731,9 @@ public class MigrationStageSix {
             decNationalPlan.setMaterialName(materialName);
             if (StringUtil.notEmpty(isbn)) {
                 isbn = isbn.trim();
-                isbn = isbn.replace("ISBN", "").replace("isbn", "").replace(":", "").replace("：", "");
+                isbn = isbn.replace("ISBN", "ISBN ").replace("isbn", "ISBN ").replace(":", "")
+                		.replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
+                		.replace("•", "·");
             }
             decNationalPlan.setIsbn(isbn);
             Integer rank = rankJudge.intValue();
@@ -806,7 +809,9 @@ public class MigrationStageSix {
             decTextbook.setPublishDate(publishDate);
             if (StringUtil.notEmpty(isbn)) {
                 isbn = isbn.trim();
-                isbn = isbn.replace("ISBN", "").replace("isbn", "").replace(":", "").replace("：", "");
+                isbn = isbn.replace("ISBN", "ISBN ").replace("isbn", "ISBN ").replace(":", "")
+                		.replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
+                		.replace("•", "·");
             }
             decTextbook.setIsbn(isbn);
             decTextbook.setNote((String) map.get("remark")); // 备注
@@ -825,6 +830,90 @@ public class MigrationStageSix {
         }
         logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
         logger.info("writer_materwrite表迁移完成，异常条目数量：{}", excel.size());
+        logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+        //记录信息
+        Map<String, Object> msg = new HashMap<String, Object>();
+        msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + maps.size());
+        SQLParameters.STATISTICS.add(msg);
+    }
+    
+    protected void decTextbookOther() {
+        String tableName = "writer_othermaterwrite "; //要迁移的旧库表名
+        JdbcHelper.addColumn(tableName); //增加new_pk字段
+        String sql = "select wo.othermaterwriteid,wo.writerid,wo.matername,"
+        		+ "case when wo.duty like '%1%' then 1 when wo.duty like '%2%' then 2 "
+        		+ "else 3 end position,"
+        		+ "wo.publishing,wo.publisdate"
+        		//+ "case when wo.publisdate like '0000-00-00 00:00:00' then '2017-01-01 23:59:59'"
+        		//+ "end publisdates,"
+        		+ "wo.booknumber,wo.remark,wd.new_pk id "
+        		+ "from writer_othermaterwrite wo "
+        		+ "left join writer_declaration wd on wd.writerid=wo.writerid ";
+        List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        int count = 0;//迁移成功的条目数
+        int declarationidCount = 0;
+        int publisherCount = 0;
+        int publishDateCount = 0;
+        List<Map<String, Object>> excel = new LinkedList<>();
+        /* 开始遍历查询结果 */
+        for (Map<String, Object> map : maps) {
+            StringBuilder sb = new StringBuilder();
+            String id = (String) map.get("othermaterwriteid"); // 旧表主键值
+            Long declarationid = (Long) map.get("id"); // 申报表id
+            String materialName = (String) map.get("matername"); // 教材名称
+            Long positionJudge = (Long) map.get("position"); // 编写职务
+            String publisher = (String) map.get("publishing"); // 出版社
+            Date publishDate = (Date) map.get("publisdate"); // 出版时间
+            String isbn = (String) map.get("booknumber"); // 标准书号
+            DecTextbook decTextbook = new DecTextbook();
+            if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
+                excel.add(map);
+                logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                declarationidCount++;
+                continue;
+            }
+            decTextbook.setDeclarationId(declarationid);
+            decTextbook.setMaterialName(materialName);
+            decTextbook.setRank(5); // 教材级别
+            Integer position = positionJudge.intValue();
+            decTextbook.setPosition(position);
+            String publishers = publisher.trim();
+            if (publishers.length() > 50) {
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("出版社名称长度大于50。"));
+                excel.add(map);
+                logger.debug("出版社名称长度大于50，此结果将被记录在Excel中");
+                publisherCount++;
+                continue;
+            } else {
+            	decTextbook.setPublisher(publishers);
+			}
+            decTextbook.setPublishDate(publishDate);
+            if (StringUtil.notEmpty(isbn)) {
+                isbn = isbn.trim();
+                isbn = isbn.replace("ISBN", "ISBN ").replace("isbn", "ISBN ").replace(":", "")
+                		.replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
+                		.replace("•", "·");
+            }
+            decTextbook.setIsbn(isbn);
+            decTextbook.setNote((String) map.get("remark")); // 备注
+            decTextbook.setSort(999); // 显示顺序
+            decTextbook = decTextbookService.addDecTextbook(decTextbook);
+            long pk = decTextbook.getId();
+            JdbcHelper.updateNewPrimaryKey(tableName, pk, "othermaterwriteid", id);
+            count++;
+        }
+        if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, "作家教材其它编写情况表", "dec_textbookOther");
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
+        }
+        logger.info("出版时间需更改数量：{}", publishDateCount);
+        logger.info("出版社名称长度大于50数量：{}", publisherCount);
+        logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
+        logger.info("writer_othermaterwrite表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();

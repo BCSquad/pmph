@@ -9,7 +9,7 @@
 			<if test="id !=null">
 				id,
 			</if>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				declaration_id,
 			</if>
 			<if test="schoolName !=null and schoolName !=''">
@@ -30,7 +30,7 @@
 			<if test="dateEnd !=null and dateEnd !=''">
 				date_end,
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				sort,
 			</if>
 		</trim>
@@ -41,7 +41,7 @@
 			<if test="id !=null">
 				#{id},
 			</if>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				#{declarationId},
 			</if>
 			<if test="schoolName !=null and schoolName !=''">
@@ -62,7 +62,7 @@
 			<if test="dateEnd !=null and dateEnd !=''">
 				#{dateEnd},
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				#{sort},
 			</if>
 		</trim>
@@ -93,7 +93,7 @@
 	<update id="updateDecEduExp" parameterType="DecEduExp">
 		update dec_edu_exp
 		<set>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				declaration_id = #{declarationId},
 			</if>
 			<if test="schoolName !=null and schoolName !=''">
@@ -114,7 +114,7 @@
 			<if test="dateEnd !=null and dateEnd !=''">
 				date_end = #{dateEnd},
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				sort = #{sort},
 			</if>
 		</set>

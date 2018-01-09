@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -69,24 +70,27 @@ public interface SurveyTemplateDao {
      * @return
      * </pre>
      */
-    List<SurveyQuestionOptionCategoryVO> getSurveyTemplateQuestionByTemplateId(Long templateId);
-    
+    List<SurveyQuestionOptionCategoryVO> getSurveyTemplateQuestionByTemplateId(
+    @Param("templateId") Long templateId);
+
     /**
      * 根据模版id获取问卷表标题和简介
      * 
      * @author:tyc
      * @date:2017年12月22日上午09:34:40
-     * @param 
+     * @param
      * @return 影响行数
      */
     SurveyTemplateGetVO getSurveyTemplateGetVOById(Long id);
-    
+
     /**
      * 模版表分页列表（同时查询分页数据和总条数）
+     * 
      * @author:tyc
      * @date:2017年12月25日下午16:18:46
      * @param pageParameter
      * @return
      */
-    List<SurveyTemplateListVO> listSurveyTemplateList(PageParameter<SurveyTemplateListVO> pageParameter);
+    List<SurveyTemplateListVO> listSurveyTemplateList(
+    PageParameter<SurveyTemplateListVO> pageParameter);
 }

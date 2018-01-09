@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.SurveyTemplateService;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.SurveyTemplateListVO;
 import com.bc.pmpheep.back.vo.SurveyTemplateVO;
@@ -86,8 +87,10 @@ public class SurveyTemplateController {
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ResponseBean create(@RequestParam("questionAnswerJosn") String questionAnswerJosn,
     SurveyTemplateVO surveyTemplateVO, HttpServletRequest request) {
+        String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(surveyTemplateService.addSurveyTemplateVO(questionAnswerJosn,
-                                                                          surveyTemplateVO));
+                                                                          surveyTemplateVO,
+                                                                          sessionId));
     }
 
     /**
@@ -103,9 +106,11 @@ public class SurveyTemplateController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询模版下的所有问题")
     @RequestMapping(value = "/question/look", method = RequestMethod.GET)
-    public ResponseBean look(@RequestParam("templateId") Long templateId) {
+    public ResponseBean look(@RequestParam("surveyId") Long surveyId,
+    @RequestParam("templateId") Long templateId) {
         return new ResponseBean(
-                                surveyTemplateService.getSurveyTemplateQuestionByTemplateId(templateId));
+                                surveyTemplateService.getSurveyTemplateQuestionByTemplateId(surveyId,
+                                                                                            templateId));
     }
 
     /**

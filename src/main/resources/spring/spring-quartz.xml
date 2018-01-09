@@ -17,7 +17,7 @@
     <description>Quartz计划任务调度配置</description>
     <!-- <context:property-placeholder location="classpath:spring/job.properties" ignore-unresolvable="true"/> -->
     <!-- 数据分析定时下发工作类 -->
-    <bean id="quartzJob" class="com.bc.pmpheep.back.service.CmsContentQuartzJob"/>
+    <bean id="quartzJob" class="com.bc.pmpheep.back.service.ContentQuartzJob"/>
     <!-- 定义调用对象和调用对象的方法 -->
     <bean id="jobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <!-- 调用的类 -->
@@ -38,7 +38,7 @@
         <!-- cron表达式 -->
         <property name="cronExpression">
            <!--  <value>${trigger.cron.start_jobTask}</value> -->
-          	<value> 0 0/5 * * * ?</value>
+          	<value>0 0 2 * * ?</value>
         </property>
     </bean>
     <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 -->

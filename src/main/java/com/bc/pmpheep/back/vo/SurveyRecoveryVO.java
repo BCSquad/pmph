@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
+import com.bc.pmpheep.back.util.Const;
+
 /**
  * 
  * <pre>
@@ -39,6 +41,8 @@ public class SurveyRecoveryVO implements Serializable {
      * 提交 人
      */
     private String            userName;
+
+    private String            realname;
     /**
      * 用户类别
      */
@@ -55,6 +59,10 @@ public class SurveyRecoveryVO implements Serializable {
      * 条件分页总条数
      */
     private Integer           count;
+    /**
+     * 用户登陆类型（默认作家用户）
+     */
+    private Short             loginType        = Const.LOGIN_TYPE_WRITER;
 
     /**
      * @return the surveyId
@@ -152,6 +160,34 @@ public class SurveyRecoveryVO implements Serializable {
      */
     public void setCount(Integer count) {
         this.count = count;
+    }
+
+    /**
+     * @return the loginType
+     */
+    public Short getLoginType() {
+        return loginType;
+    }
+
+    /**
+     * @param loginType the loginType to set
+     */
+    public void setLoginType(Short loginType) {
+        this.loginType = loginType;
+    }
+
+    /**
+     * @return the realname
+     */
+    public String getRealname() {
+        return realname;
+    }
+
+    /**
+     * @param realname the realname to set
+     */
+    public void setRealname(String realname) {
+        this.realname = realname;
     }
 
 }

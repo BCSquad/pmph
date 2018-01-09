@@ -151,34 +151,39 @@
 		SELECT
 		d.id,
 		d.dp_name,
-		u.id userId,
 		u.realname
 		FROM
 		pmph_department d
-		LEFT JOIN pmph_user u ON u.department_id = d.id
-		LEFT JOIN pmph_user_role p ON p.user_id = u.id
+		LEFT
+		JOIN pmph_user u ON u.department_id = d.id
+		LEFT JOIN pmph_user_role p
+		ON p.user_id = u.id
 		LEFT JOIN pmph_role r ON r.id = p.role_id
-		WHERE r.role_name = '主任'
+		WHERE
+		r.role_name = '主任'
 		<if test="dpName != null and dpName !=''">
 			AND d.dp_name like concat('%',#{dpName},'%')
 		</if>
-		LIMIT 
+		GROUP BY d.id
+		LIMIT
 		#{start},#{pageSize};
 	</select>
-	
-		<!-- 根据主键id查询 -->
+
+	<!-- 根据主键id查询 -->
 	<select id="listOptsTotal" resultType="Integer">
 		SELECT
 		count(*)
 		FROM
 		pmph_department d
-		LEFT JOIN pmph_user u ON u.department_id = d.id
+		LEFT JOIN pmph_user u ON
+		u.department_id = d.id
 		LEFT JOIN pmph_user_role p ON p.user_id = u.id
 		LEFT JOIN pmph_role r ON r.id = p.role_id
 		WHERE r.role_name = '主任'
 		<if test="dpName != null and dpName !=''">
 			AND d.dp_name like concat('%',#{dpName},'%')
 		</if>
+		GROUP BY d.id
 		;
 	</select>
 </mapper>
