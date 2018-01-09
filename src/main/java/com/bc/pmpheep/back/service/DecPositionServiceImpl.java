@@ -398,6 +398,7 @@ public class DecPositionServiceImpl implements DecPositionService {
                 + declarationSituationSchoolResultVO.getIsDigitalEditor();
                 declarationSituationSchoolResultVO.setPresetPersons(presetPersons);
                 declarationSituationSchoolResultVO.setChosenPersons(chosenPersons);
+                declarationSituationSchoolResultVO.setState(1);
                 list.add(declarationSituationSchoolResultVO);
             }
             pageResult.setRows(list);
@@ -441,6 +442,7 @@ public class DecPositionServiceImpl implements DecPositionService {
                 + declarationSituationSchoolResultVO.getIsDigitalEditor();
                 declarationSituationSchoolResultVO.setPresetPersons(presetPersons);
                 declarationSituationSchoolResultVO.setChosenPersons(chosenPersons);
+                declarationSituationSchoolResultVO.setState(2);
                 list.add(declarationSituationSchoolResultVO);
             }
             pageResult.setRows(list);
@@ -548,8 +550,13 @@ public class DecPositionServiceImpl implements DecPositionService {
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
         if (total > 0) {
-            List<DeclarationResultSchoolVO> list =
+            List<DeclarationResultSchoolVO> VOs =
             decPositionDao.getSchoolListChosen(pageParameter);
+            List<DeclarationResultSchoolVO> list = new ArrayList<>();
+            for (DeclarationResultSchoolVO declarationResultSchoolVO : VOs){
+            	declarationResultSchoolVO.setState(1);
+            	list.add(declarationResultSchoolVO);
+            }
             pageResult.setRows(list);
             pageResult.setTotal(total);
         }
@@ -572,8 +579,13 @@ public class DecPositionServiceImpl implements DecPositionService {
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
         if (total > 0) {
-            List<DeclarationResultSchoolVO> list =
+            List<DeclarationResultSchoolVO> VOs =
             decPositionDao.getSchoolListPreset(pageParameter);
+            List<DeclarationResultSchoolVO> list = new ArrayList<>();
+            for (DeclarationResultSchoolVO declarationResultSchoolVO : VOs){
+            	declarationResultSchoolVO.setState(2);
+            	list.add(declarationResultSchoolVO);
+            }
             pageResult.setRows(list);
             pageResult.setTotal(total);
         }
