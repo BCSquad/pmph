@@ -32,10 +32,6 @@ public class DepartmentOptsVO implements Serializable {
 	 */
 	private String dpName;
 	/**
-	 * 主任id
-	 */
-	private Long userId;
-	/**
 	 * 主任名称
 	 */
 	private String realname;
@@ -51,13 +47,6 @@ public class DepartmentOptsVO implements Serializable {
 	public void setDpName(String dpName) {
 		this.dpName = dpName;
 	}
-	public Long getUserId() {
-		return userId;
-	}
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
 	public String getRealname() {
 		return realname;
 	}
