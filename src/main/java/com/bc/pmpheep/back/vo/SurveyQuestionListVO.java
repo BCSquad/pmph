@@ -51,6 +51,33 @@ public class SurveyQuestionListVO {
     public SurveyQuestionListVO() {
     }
 
+    /**
+     * <pre>
+     * 构造器描述：
+     *
+     * @param id
+     * @param categoryId
+     * @param title
+     * @param type
+     * @param sort
+     * @param direction
+     * @param isAnswer
+     * @param surveyQuestionOptionList
+     *</pre>
+     */
+    public SurveyQuestionListVO(Long id, Long categoryId, String title, Short type, Integer sort,
+    String direction, Boolean isAnswer, List<SurveyQuestionOption> surveyQuestionOptionList) {
+        super();
+        this.id = id;
+        this.categoryId = categoryId;
+        this.title = title;
+        this.type = type;
+        this.sort = sort;
+        this.direction = direction;
+        this.isAnswer = isAnswer;
+        this.surveyQuestionOptionList = surveyQuestionOptionList;
+    }
+
     public Long getId() {
         return id;
     }

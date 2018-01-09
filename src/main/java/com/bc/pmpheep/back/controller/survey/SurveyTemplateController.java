@@ -88,9 +88,10 @@ public class SurveyTemplateController {
     public ResponseBean create(@RequestParam("questionAnswerJosn") String questionAnswerJosn,
     SurveyTemplateVO surveyTemplateVO, HttpServletRequest request) {
         String sessionId = CookiesUtil.getSessionId(request);
-        return new ResponseBean(surveyTemplateService.addSurveyTemplateVO(questionAnswerJosn,
+        return new ResponseBean(
+                                surveyTemplateService.addSurveyTemplateVO(questionAnswerJosn,
                                                                           surveyTemplateVO,
-                                                                          sessionId));
+                                                                          "F9965207927F6B3C8CB2F9048F7791AF"));
     }
 
     /**

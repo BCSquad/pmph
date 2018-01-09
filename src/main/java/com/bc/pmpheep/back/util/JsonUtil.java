@@ -9,9 +9,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -44,6 +46,17 @@ public class JsonUtil<T> {
     private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
     private String              timeFormat;
 
+    static {
+        objectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
+        objectMapper.configure(JsonParser.Feature.IGNORE_UNDEFINED, true);
+        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+    }
+
     public String getTimeFormat() {
         return timeFormat;
     }
@@ -54,15 +67,9 @@ public class JsonUtil<T> {
     }
 
     public JsonUtil() {
-        objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.setDateFormat(new SimpleDateFormat(DEFAULT_DATE_FORMAT));
     }
 
     public JsonUtil(String timeFormat) {
-        objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setDateFormat(new SimpleDateFormat(timeFormat));
     }
@@ -153,7 +160,7 @@ public class JsonUtil<T> {
             // return objectMapper.readValue(json,
             // new TypeReference<List<org.springframework.context.annotation.Bean>>() {
             // });
-            return objectMapper.readValue(json.getBytes(),
+            return objectMapper.readValue(json,
                                           objectMapper.getTypeFactory()
                                                       .constructParametricType(ArrayList.class, v));
         } catch (IOException e) {
@@ -165,8 +172,14 @@ public class JsonUtil<T> {
     public static void main(String[] args) throws Exception {
         // String jsonDecPosition =
         // "[{'id':4,'chosenPosition':1,'rank':1,'isDigitalEditor':true},{'id':3,'chosenPosition':2,'rank':3,'isDigitalEditor':true},{'id':1,'chosenPosition':3,'rank':'','isDigitalEditor':false}]";
-
+        String jsonString =
+        "{'title':'你是否使用过XX社交网站','type':1,'direction':'','sort':1,'surveyQuestionOptionList':[{'optionContent':'是'},{'optionContent':'否'}]}";
+        JavaType javaType = getCollectionType(ArrayList.class, SurveyQuestionListVO.class);
+        List<SurveyQuestionListVO> lst =
+        (List<SurveyQuestionListVO>) objectMapper.readValue(jsonString, javaType);
+        System.out.println(lst.toString());
     }
+
     /**
      * 获取泛型的Collection Type
      * 
@@ -175,11 +188,10 @@ public class JsonUtil<T> {
      * @return JavaType Java类型
      * @since 1.0
      */
-    // public static JavaType getCollectionType(Class<?> collectionClass, Class<?>...
-    // elementClasses) {
-    // return objectMapper.getTypeFactory().constructParametricType(collectionClass,
-    // elementClasses);
-    // }
+    public static JavaType getCollectionType(Class<?> collectionClass, Class<?>... elementClasses) {
+        return objectMapper.getTypeFactory().constructParametricType(collectionClass,
+                                                                     elementClasses);
+    }
 
     /**
      * 字符串转化为ArrayList的HashMap对象
