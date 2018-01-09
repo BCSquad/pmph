@@ -212,6 +212,13 @@ public class MigrationStageThree {
                 pmphUserService.update(pmphUser);
             }
         }
+        //手动添加一个系统管理员
+        PmphUser pmphUserAdmin = new PmphUser();
+        pmphUserAdmin.setUsername("admin");
+        pmphUserAdmin.setPassword("888888");
+        pmphUserAdmin.setRealname("系统管理员");
+        pmphUserAdmin.setAvatar("DEFAULT");
+        pmphUserService.add(pmphUserAdmin);
         if (excel.size() > 0) {
             try {
                 excelHelper.exportFromMaps(excel, "社内用户表", "pmph_user");

@@ -7,6 +7,8 @@ import java.io.Serializable;
 
 import org.apache.ibatis.type.Alias;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
+
 /**
  * <p>Title:DeclarationResultBookVO<p>
  * <p>Description:申报结果按书名统计<p>
@@ -25,14 +27,19 @@ public class DeclarationResultBookVO implements Serializable{
 		//书籍id
 		private Long id;
 		//书籍名称
+		@ExcelHeader(header = "书名")
 		private String bookName;
 		//主编名单
+		@ExcelHeader(header = "主编名单")
 		private String editorList;
 		//副主编名单
+		@ExcelHeader(header = "副主编名单")
 		private String subEditorList;
 		//编委名单
+		@ExcelHeader(header = "编委名单")
 		private String editorialList;
 		//数字编委名单
+		@ExcelHeader(header = "数字编委名单")
 		private String isDigitalEditorList;
 		
 		public DeclarationResultBookVO() {
