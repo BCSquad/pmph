@@ -74,4 +74,11 @@ public interface CmsAdvertisementDao {
 	 */
 	Integer updateCmsAdvertisement(CmsAdvertisement cmsAdvertisement);
 	
+	/**
+	 * 通过广告名称获取广告
+	 * @param adname
+	 * @return
+	 */
+	List<CmsAdvertisement> getCmsAdvertisementByName(String adname);
+	
 }
