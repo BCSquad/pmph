@@ -630,12 +630,14 @@ public class FileDownLoadController {
         Workbook workbook = null;
         List<SurveyQuestionFillVO> surveyQuestionFillVO = null;
         try {
-            PageParameter<SurveyQuestionFillVO> pageParameter = new PageParameter<>(null, null);
-            pageParameter.getParameter().setOptionId(questionId);
-            pageParameter.getParameter().setSurveyId(surveyId);
+            SurveyQuestionFillVO sqfFillVO = new SurveyQuestionFillVO();
+            sqfFillVO.setQuestionId(questionId);
+            sqfFillVO.setSurveyId(surveyId);
+            PageParameter<SurveyQuestionFillVO> pageParameter =
+            new PageParameter<SurveyQuestionFillVO>(null, null, sqfFillVO);
             surveyQuestionFillVO =
-            (List<SurveyQuestionFillVO>) surveyQuestionAnswerService.listFillQuestion(pageParameter);
-            workbook = excelHelper.fromBusinessObjectList(surveyQuestionFillVO, "填空题调查结果");
+            surveyQuestionAnswerService.listFillQuestion(pageParameter).getRows();
+            workbook = excelHelper.fromBusinessObjectList(surveyQuestionFillVO, title + "主观题调查结果");
         } catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
             logger.warn("数据表格化的时候失败");
         }
