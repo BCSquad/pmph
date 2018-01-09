@@ -67,7 +67,7 @@ public interface TopicService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	TopicTextVO getTopicTextVO(TopicLog topicLog, String sessionId, Long id) throws CheckedServiceException;
+	TopicTextVO topicTextVO(TopicLog topicLog, String sessionId, Long id) throws CheckedServiceException;
 
 	/**
 	 * 

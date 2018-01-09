@@ -257,7 +257,7 @@ public class TopicServiceImpl implements TopicService {
 				topic.setVn(editionnum + vn);
 				topicDao.update(topic);
 				String remark = topic.getAuthFeedback();
-				TopicTextVO topicTextVO = getTopicTextVO(topicLog, sessionId, topic.getId());
+				TopicTextVO topicTextVO = topicTextVO(topicLog, sessionId, topic.getId());
 				String sql = "insert into i_declarestates (editionnum,rwusercode,rwusername,topicname,readerpeople,sources,fontcount,piccount,timetohand,subject,booktype,levels,depositbank,bankaccount,selectreason,publishingvalue,content,authorbuybooks,authorsponsor,originalname,originalauthor,originalnationality,originalpress,publishagerevision,topicnumber,auditstates,remark,creattime,states)";
 				sql += "values('" + editionnum + vn + "','" + topicTextVO.getUsername() + "','"
 						+ topicTextVO.getRealname() + "','','" + topicTextVO.getReadType() + "','"
@@ -278,7 +278,7 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public TopicTextVO getTopicTextVO(TopicLog topicLog, String sessionId, Long id) throws CheckedServiceException {
+	public TopicTextVO topicTextVO(TopicLog topicLog, String sessionId, Long id) throws CheckedServiceException {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (ObjectUtil.isNull(pmphUser)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,

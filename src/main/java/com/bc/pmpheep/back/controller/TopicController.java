@@ -301,7 +301,7 @@ public class TopicController {
 		TopicLog topicLog = new TopicLog();
 		topicLog.setTopicId(id);
 		topicLog.setTopicEvent("获取选题申报详情");
-		return new ResponseBean(topicService.getTopicTextVO(topicLog, sessionId, id));
+		return new ResponseBean(topicService.topicTextVO(topicLog, sessionId, id));
 	}
 
 	/**
@@ -359,7 +359,7 @@ public class TopicController {
 		TopicLog topicLog = new TopicLog();
 		topicLog.setTopicId(id);
 		topicLog.setTopicEvent("查看选题申报详情");
-		TopicTextVO topicTextVO = topicService.getTopicTextVO(topicLog, sessionId, id);
+		TopicTextVO topicTextVO = topicService.topicTextVO(topicLog, sessionId, id);
 		topicTextVO.setIsAccepted(null);
 		topicTextVO.setIsDirectorHandling(null);
 		topicTextVO.setIsEditorHandling(null);

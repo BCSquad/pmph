@@ -189,7 +189,6 @@
 		<if test="dpName != null and dpName !=''">
 			AND d.dp_name like concat('%',#{dpName},'%')
 		</if>
-		GROUP BY d.id
-		;)t
+		GROUP BY d.id) t
 	</select>
 </mapper>
