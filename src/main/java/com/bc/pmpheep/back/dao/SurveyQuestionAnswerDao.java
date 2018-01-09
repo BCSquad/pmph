@@ -143,5 +143,5 @@ public interface SurveyQuestionAnswerDao {
      * @return  SurveyQuestionAnswer 对象集合
      * </pre>
      */
-    List<SurveyQuestionAnswer> listSurveyQuestionAnswerBySurveyId(Long surveyId);
+    List<SurveyQuestionAnswer> listSurveyQuestionAnswerBySurveyId(@Param("surveyId") Long surveyId);
 }

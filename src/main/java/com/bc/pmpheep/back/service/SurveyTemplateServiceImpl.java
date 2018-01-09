@@ -132,9 +132,16 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
                                               CheckedExceptionResult.NULL_PARAM, "问题及问题选项为空");
         }
         // json字符串转List对象集合
-        List<SurveyQuestionListVO> SurveyQuestionListVO =
-        new JsonUtil().getArrayListObjectFromStr(SurveyQuestionListVO.class, questionAnswerJosn);
-        if (CollectionUtil.isEmpty(SurveyQuestionListVO)) {
+        List<SurveyQuestionListVO> surveyQuestionListVO;
+        try {
+            surveyQuestionListVO =
+            new JsonUtil().getArrayListObjectFromStr(SurveyQuestionListVO.class, questionAnswerJosn);
+        } catch (Exception e) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.VO_CONVERSION_FAILED,
+                                              "json字符串转List对象失败");
+        }
+        if (CollectionUtil.isEmpty(surveyQuestionListVO)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
@@ -156,7 +163,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
                                               CheckedExceptionResult.NULL_PARAM, "新增问卷失败");
         }
         // 添加问题及问题选项
-        List<Long> newIds = addQuestionAndOption(SurveyQuestionListVO);
+        List<Long> newIds = addQuestionAndOption(surveyQuestionListVO);
         // 模版问题中间表
         List<SurveyTemplateQuestion> surveyTemplateQuestions =
         new ArrayList<SurveyTemplateQuestion>(newIds.size());

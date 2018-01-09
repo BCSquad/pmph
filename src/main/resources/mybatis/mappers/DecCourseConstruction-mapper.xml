@@ -8,7 +8,7 @@
 			<if test="id !=null">
 				id,
 			</if>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				declaration_id,
 			</if>
 			<if test="courseName !=null and courseName !=''">
@@ -17,13 +17,13 @@
 			<if test="classHour !=null and classHour !=''">
 				class_hour,
 			</if>
-			<if test="type !=null and type !=''">
+			<if test="type !=null">
 				type,
 			</if>
 			<if test="note !=null and note !=''">
 				note,
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				sort,
 			</if>
 		</trim>
@@ -34,7 +34,7 @@
 			<if test="id !=null">
 				#{id},
 			</if>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				#{declarationId},
 			</if>
 			<if test="courseName !=null and courseName !=''">
@@ -43,13 +43,13 @@
 			<if test="classHour !=null and classHour !=''">
 				#{classHour},
 			</if>
-			<if test="type !=null and type !=''">
+			<if test="type !=null">
 				#{type},
 			</if>
 			<if test="note !=null and note !=''">
 				#{note},
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				#{sort},
 			</if>
 		</trim>
@@ -81,7 +81,7 @@
 	<update id="updateDecCourseCnstruction" parameterType="DecCourseConstruction">
 		update dec_course_construction
 		<set>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				declaration_id = #{declarationId},
 			</if>
 			<if test="courseName !=null and courseName !=''">
@@ -90,13 +90,13 @@
 			<if test="classHour !=null and classHour !=''">
 				class_hour = #{classHour},
 			</if>
-			<if test="type !=null and type !=''">
+			<if test="type !=null">
 				type = #{type},
 			</if>
 			<if test="note !=null and note !=''">
 				note = #{note},
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				sort = #{sort},
 			</if>
 		</set>

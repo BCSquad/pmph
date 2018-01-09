@@ -121,7 +121,7 @@
 		SELECT 
 			s.`title`,
 		  	wu.`realname`,
-		  	org.`org_name`,
+		  	org.`org_name` ,
 		  	sqa.`gmt_create`,
 		  	sqa.`survey_id`,
 		  	t.`count`

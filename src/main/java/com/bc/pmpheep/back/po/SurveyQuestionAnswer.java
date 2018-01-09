@@ -57,6 +57,8 @@ public class SurveyQuestionAnswer implements java.io.Serializable {
      */
     private Timestamp         gmtCreate;
 
+    private String            title;
+
     // Constructors
 
     /** default constructor */
@@ -65,23 +67,24 @@ public class SurveyQuestionAnswer implements java.io.Serializable {
 
     /** full constructor */
     public SurveyQuestionAnswer(Long userId, Long questionId, Long optionId, String optionContent,
-    String attachment, Timestamp gmtCreate) {
+    String attachment, String title, Timestamp gmtCreate) {
         this.userId = userId;
         this.questionId = questionId;
         this.optionId = optionId;
         this.optionContent = optionContent;
         this.attachment = attachment;
+        this.title = title;
         this.gmtCreate = gmtCreate;
     }
-    
+
     public SurveyQuestionAnswer(Long userId, Long questionId, Long optionId, String optionContent,
-    	    String attachment) {
-    	        this.userId = userId;
-    	        this.questionId = questionId;
-    	        this.optionId = optionId;
-    	        this.optionContent = optionContent;
-    	        this.attachment = attachment;
-    	    }
+    String attachment) {
+        this.userId = userId;
+        this.questionId = questionId;
+        this.optionId = optionId;
+        this.optionContent = optionContent;
+        this.attachment = attachment;
+    }
 
     // Property accessors
     public Long getId() {
@@ -140,12 +143,25 @@ public class SurveyQuestionAnswer implements java.io.Serializable {
         this.gmtCreate = gmtCreate;
     }
 
-	@Override
-	public String toString() {
-		return "SurveyQuestionAnswer [id=" + id + ", userId=" + userId
-				+ ", questionId=" + questionId + ", optionId=" + optionId
-				+ ", optionContent=" + optionContent + ", attachment="
-				+ attachment + ", gmtCreate=" + gmtCreate + "]";
-	}
+    /**
+     * @return the title
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @param title the title to set
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public String toString() {
+        return "SurveyQuestionAnswer [id=" + id + ", userId=" + userId + ", questionId="
+               + questionId + ", optionId=" + optionId + ", optionContent=" + optionContent
+               + ", attachment=" + attachment + ", gmtCreate=" + gmtCreate + "]";
+    }
 
 }

@@ -18,6 +18,7 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.CmsAdvertisementOrImageVO;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
@@ -103,8 +104,13 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		if (null == cmsAdvertisementOrImageVO.getAdname()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "广告名称为空");
 		}
-		if (null==imageId) {
+		if (null == imageId) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		if (null != cmsAdvertisementOrImageVO.getUrl()) {
+			if(StringUtil.strLength(cmsAdvertisementOrImageVO.getUrl()) > 150){
+				throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM, "最多只能输入150个字符");
+			}
 		}
 		Integer count = 0;
 		CmsAdvertisementImage cmsAdvertisementImage=new CmsAdvertisementImage();

@@ -41,6 +41,8 @@ public class SurveyRecoveryVO implements Serializable {
      * 提交 人
      */
     private String            userName;
+
+    private String            realname;
     /**
      * 用户类别
      */
@@ -172,6 +174,20 @@ public class SurveyRecoveryVO implements Serializable {
      */
     public void setLoginType(Short loginType) {
         this.loginType = loginType;
+    }
+
+    /**
+     * @return the realname
+     */
+    public String getRealname() {
+        return realname;
+    }
+
+    /**
+     * @param realname the realname to set
+     */
+    public void setRealname(String realname) {
+        this.realname = realname;
     }
 
 }
