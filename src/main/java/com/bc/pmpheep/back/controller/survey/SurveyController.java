@@ -104,7 +104,7 @@ public class SurveyController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改问卷信息")
-    @RequestMapping(value = "/modify", method = RequestMethod.POST)
+    @RequestMapping(value = "/modify", method = RequestMethod.PUT)
     public ResponseBean modify(String questionAnswerJosn, SurveyVO surveyVO) {
         return new ResponseBean(surveyService.updateSurveyAndTemplate(questionAnswerJosn, surveyVO));
     }
