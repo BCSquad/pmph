@@ -121,7 +121,7 @@
 		SELECT 
 			s.`title`,
 		  	wu.`realname`,
-		  	org.`org_name`,
+		  	org.`org_name` ,
 		  	sqa.`gmt_create`,
 		  	sqa.`survey_id`,
 		  	t.`count`
@@ -335,7 +335,7 @@
 		ON 
 			sqa.`question_id` = sq.`id` 
 		<where>
-			sq.`type` IN (4, 5) 
+			sq.`type` IN (4,5) 
 			<if test="surveyId != null">
 				AND 
 					sqa.`survey_id` = #{surveyId}
