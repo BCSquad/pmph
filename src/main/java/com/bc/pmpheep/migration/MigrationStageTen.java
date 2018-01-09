@@ -85,8 +85,8 @@ public class MigrationStageTen {
 
     public void start() {
         Date begin = new Date();
-        cmsCategory();
-        cmsContent();
+        //cmsCategory();
+        //cmsContent();
         initCmsAdvertisementData();
         logger.info("迁移第十步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
@@ -308,18 +308,23 @@ public class MigrationStageTen {
     	//初始化的数据
     	String dataJson= 
     			  "["
-    			+ "{adname:'首页轮播',         autoPlay:true, animationInterval:3,image:[{image:'/upload/initCmsAdvertisementData/homeBanner1.jpg'},{image:'/upload/initCmsAdvertisementData/homeBanner2.jpg'},{image:'/upload/initCmsAdvertisementData/homeBanner3.jpg'}]} ,"
-    			+ "{adname:'首页中部',         autoPlay:false,animationInterval:0,image:[{image:'/upload/initCmsAdvertisementData/homeCenter1.jpg'},{image:'/upload/initCmsAdvertisementData/homeCenter2.jpg'},{image:'/upload/initCmsAdvertisementData/homeCenter3.jpg'},{image:'/upload/initCmsAdvertisementData/homeCenter4.jpg'}]} ,"
-    			+ "{adname:'信息快报和遴选公告列表',autoPlay:false,animationInterval:0,image:[{image:'/upload/initCmsAdvertisementData/notice.jpg'}]} ,"
-    			+ "{adname:'读书首页轮播 ',      autoPlay:true ,animationInterval:3,image:[{image:'/upload/initCmsAdvertisementData/readHomeBanner1.jpg'},{image:'/upload/initCmsAdvertisementData/readHomeBanner2.jpg'},{image:'/upload/initCmsAdvertisementData/readHomeBanner3.jpg'}]} ,"
+    			+ "{adname:'首页轮播',         type:1,autoPlay:true, animationInterval:3000,image:[{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'},{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'},{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'}]} ,"
+    			+ "{adname:'首页中部',         type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/2670f031-35da-4dd6-b079-8f295c51a339.png'},{image:'/upload/site/af598f9e-ae9e-48a0-a3e4-17acc363051a.png'},{image:'/upload/site/a4160c1e-8beb-4530-9f2b-df022a6f751d.png'},{image:'/upload/site/a69b782d-f1ad-42e6-a91a-08432963b54a.png'}]} ,"
+    			+ "{adname:'信息快报和遴选公告列表',type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/article/20170328/wenzhang10.jpg'}]} ,"
+    			+ "{adname:'读书首页轮播 ',      type:1,autoPlay:true ,animationInterval:3000,image:[{image:'/upload/article/20170328/xiaoxi1.jpg'},{image:'/upload/article/20170328/xiaoxi2.jpg'},{image:'/upload/article/20170328/xiaoxi3.jpg'}]} ,"
     			+ "]";
     	 Gson gson = new Gson();
     	 List<CmsAdvertisementOrImageVO> lst  =  gson.fromJson(dataJson,new TypeToken<ArrayList<CmsAdvertisementOrImageVO>>() {}.getType());
     	 for(CmsAdvertisementOrImageVO cmsAdvertisementAndImages:lst){
     		 CmsAdvertisement cmsAdvertisement = new CmsAdvertisement() ;
+    		 //广告名称
     		 cmsAdvertisement.setAdname(cmsAdvertisementAndImages.getAdname());
+    		 //是否自动播放
     		 cmsAdvertisement.setAutoPlay(cmsAdvertisementAndImages.getAutoPlay());
+    		 //循环间隔时间
     		 cmsAdvertisement.setAnimationInterval(cmsAdvertisementAndImages.getAnimationInterval());
+    		 //类型    0 普通  1 轮播
+    		 cmsAdvertisement.setType(cmsAdvertisementAndImages.getType());
     		 //保存广告
     		 cmsAdvertisementDao.addCmsAdvertisement(cmsAdvertisement);
     		 List<CmsAdvertisementImage> images =(List<CmsAdvertisementImage>)(cmsAdvertisementAndImages.getImage());
