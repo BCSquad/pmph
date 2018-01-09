@@ -130,12 +130,11 @@
 				<!-- 下面是动态条件 -->
 				<if test="parameter !=null ">
 					<!-- 积分规则名称 -->
-					<if test="parameter.ruleName != null and parameter.ruleName != ''">
-						and wpr.rule_name = #{parameter.ruleName}
-					</if>
-					<!-- 积分规则标识 -->
 					<if test="parameter.ruleCode != null and parameter.ruleCode != ''">
-						and wpr.rule_code = #{parameter.ruleCode}
+						and wpr.rule_code like concat('%', #{parameter.ruleCode},'%')
+					</if>
+					<if test="parameter.ruleName != null and parameter.ruleName != ''">
+						and wpr.rule_name like concat('%', #{parameter.ruleName},'%')
 					</if>
 				</if>
 				) t 
@@ -143,12 +142,11 @@
 		<!-- 下面是动态条件 -->
 		<if test="parameter !=null ">
 			<!-- 积分规则名称 -->
-			<if test="parameter.ruleName != null and parameter.ruleName != ''">
-				and wpr.rule_name = #{parameter.ruleName}
-			</if>
-			<!-- 积分规则标识 -->
 			<if test="parameter.ruleCode != null and parameter.ruleCode != ''">
-				and wpr.rule_code = #{parameter.ruleCode}
+				and wpr.rule_code like concat('%', #{parameter.ruleCode},'%')
+			</if>
+			<if test="parameter.ruleName != null and parameter.ruleName != ''">
+				and wpr.rule_name like concat('%', #{parameter.ruleName},'%')
 			</if>
 		</if>
 		group by wpr.rule_name desc 
@@ -171,6 +169,12 @@
 					<if test="parameter.thirdName != null and parameter.thirdName != ''">
 						and wpr.third_name = #{parameter.thirdName}
 					</if>
+					<if test="parameter.ruleCode != null and parameter.ruleCode != ''">
+						and wpr.rule_code like concat('%', #{parameter.ruleCode},'%')
+					</if>
+					<if test="parameter.ruleName != null and parameter.ruleName != ''">
+						and wpr.rule_name like concat('%', #{parameter.ruleName},'%')
+					</if>
 				</if>
 				) t 
 		where wpr.is_exchange = true 
@@ -180,11 +184,20 @@
 			<if test="parameter.thirdName != null and parameter.thirdName != ''">
 				and wpr.third_name = #{parameter.thirdName}
 			</if>
+			<if test="parameter.ruleCode != null and parameter.ruleCode != ''">
+				and wpr.rule_code like concat('%', #{parameter.ruleCode},'%')
+			</if>
+			<if test="parameter.ruleName != null and parameter.ruleName != ''">
+				and wpr.rule_name like concat('%', #{parameter.ruleName},'%')
+			</if>
 		</if>
 		group by wpr.third_name desc 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
 	</select>
-	
+	<!--  -->
+	<select id="getWriterPointRuleByName" parameterType="java.lang.String" resultType="WriterPointRule">
+		select * from writer_point_rule where rule_name=#{ruleName};
+	</select>
 </mapper>

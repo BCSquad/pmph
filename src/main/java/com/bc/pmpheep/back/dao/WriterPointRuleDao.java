@@ -68,4 +68,11 @@ public interface WriterPointRuleDao {
 	 * @return
 	 */
 	List<WriterPointRuleVO> listWriterPointRulePoint(PageParameter<WriterPointRuleVO> pageParameter);
+	
+	/**
+	 * 通过名称查询 积分规则
+	 * @param ruleName
+	 * @return
+	 */
+	List<WriterPointRuleVO> getWriterPointRuleByName(String ruleName);
 }

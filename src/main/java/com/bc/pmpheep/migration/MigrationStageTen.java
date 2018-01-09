@@ -13,7 +13,6 @@ import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtra;
-import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
 import com.bc.pmpheep.back.service.CmsCategoryService;
 import com.bc.pmpheep.back.service.CmsContentCategoryService;
 import com.bc.pmpheep.back.service.CmsContentService;
@@ -81,7 +80,7 @@ public class MigrationStageTen {
     @Resource
     CmsAdvertisementImageDao cmsAdvertisementImageDao;
     @Resource
-    CmsAdvertisementDao      cmsAdvertisementDao;
+    CmsAdvertisementDao cmsAdvertisementDao;
 
     public void start() {
         Date begin = new Date();
@@ -102,12 +101,12 @@ public class MigrationStageTen {
         category1.setIsClicksVisible(true);
         category1 = cmsCategoryService.addCmsCategory(category1);
         long pk = category1.getId();
-        JdbcHelper.updateNewPrimaryKey(tableName, pk, "name", "公告管理");//更新旧表中new_pk字段
+        JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1003");//更新旧表中new_pk字段
         CmsCategory category2 = new CmsCategory(0L, "0", "快报管理", true);
         category2.setIsClicksVisible(true);
         category2 = cmsCategoryService.addCmsCategory(category2);
         pk = category2.getId();
-        JdbcHelper.updateNewPrimaryKey(tableName, pk, "name", "快报管理");//更新旧表中new_pk字
+        JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1004");//更新旧表中new_pk字
         CmsCategory category3 = new CmsCategory(0L, "0", "医学随笔", false);
         category3.setIsAuthRequired(true);
         category3.setIsAuthorVisible(true);
@@ -118,7 +117,7 @@ public class MigrationStageTen {
         category3.setIsBookmarksVisible(true);
         category3 = cmsCategoryService.addCmsCategory(category3);
         pk = category3.getId();
-        JdbcHelper.updateNewPrimaryKey(tableName, pk, "name", "医学随笔");//更新旧表中new_pk字
+        JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1005");//更新旧表中new_pk字
         logger.info("'{}'表迁移完成", tableName);
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
     }
@@ -303,53 +302,52 @@ public class MigrationStageTen {
             cmsContent.setMid(content.getId());
         }
     }
-    
-    public void initCmsAdvertisementData(){
-    	//初始化的数据
-    	String dataJson= 
-    			  "["
-    			+ "{adname:'首页轮播',         autoPlay:true, animationInterval:3,image:[{image:'/upload/initCmsAdvertisementData/homeBanner1.jpg'},{image:'/upload/initCmsAdvertisementData/homeBanner2.jpg'},{image:'/upload/initCmsAdvertisementData/homeBanner3.jpg'}]} ,"
-    			+ "{adname:'首页中部',         autoPlay:false,animationInterval:0,image:[{image:'/upload/initCmsAdvertisementData/homeCenter1.jpg'},{image:'/upload/initCmsAdvertisementData/homeCenter2.jpg'},{image:'/upload/initCmsAdvertisementData/homeCenter3.jpg'},{image:'/upload/initCmsAdvertisementData/homeCenter4.jpg'}]} ,"
-    			+ "{adname:'信息快报和遴选公告列表',autoPlay:false,animationInterval:0,image:[{image:'/upload/initCmsAdvertisementData/notice.jpg'}]} ,"
-    			+ "{adname:'读书首页轮播 ',      autoPlay:true ,animationInterval:3,image:[{image:'/upload/initCmsAdvertisementData/readHomeBanner1.jpg'},{image:'/upload/initCmsAdvertisementData/readHomeBanner2.jpg'},{image:'/upload/initCmsAdvertisementData/readHomeBanner3.jpg'}]} ,"
-    			+ "]";
-    	 Gson gson = new Gson();
-    	 List<CmsAdvertisementOrImageVO> lst  =  gson.fromJson(dataJson,new TypeToken<ArrayList<CmsAdvertisementOrImageVO>>() {}.getType());
-    	 for(CmsAdvertisementOrImageVO cmsAdvertisementAndImages:lst){
-    		 CmsAdvertisement cmsAdvertisement = new CmsAdvertisement() ;
-    		 cmsAdvertisement.setAdname(cmsAdvertisementAndImages.getAdname());
-    		 cmsAdvertisement.setAutoPlay(cmsAdvertisementAndImages.getAutoPlay());
-    		 cmsAdvertisement.setAnimationInterval(cmsAdvertisementAndImages.getAnimationInterval());
-    		 //保存广告
-    		 cmsAdvertisementDao.addCmsAdvertisement(cmsAdvertisement);
-    		 List<CmsAdvertisementImage> images =(List<CmsAdvertisementImage>)(cmsAdvertisementAndImages.getImage());
-    		 for(CmsAdvertisementImage image:images){
-    			 String filePath = image.getImage();
-    			 image.setAdvertId(cmsAdvertisement.getId());
-    			 image.setImage("----");
-    			 //保存图片文件 
-    			 cmsAdvertisementImageDao.addCmsAdvertisementImage(image);
-    			 String mongoId = null;
-    			 try {
-    				 //保存图片至mongo
-                     mongoId = fileService.migrateFile(filePath, FileType.CMS_ADVERTISEMENT, image.getId());
-                 } catch (Exception ex) {
-                     logger.warn("文件上传失败 :{}", ex.getMessage());
-                     //文件保存失败删除这条记录
-                     cmsAdvertisementImageDao.deleteCmsAdvertisementByImages(image.getId());
-                     continue;
-                 }
-    			 image.setImage(mongoId);
-    			 //修改图片文件地址
-    			 cmsAdvertisementImageDao.updateCmsAdvertisementImage(image);
-    		 }
-    	 }
-    	 
-    	 
-    	 
-    	   
-    	 
-    	
-    	
+
+    public void initCmsAdvertisementData() {
+        //初始化的数据
+        String dataJson
+                = "["
+                + "{adname:'首页轮播',         type:1,autoPlay:true, animationInterval:3000,image:[{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'},{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'},{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'}]} ,"
+                + "{adname:'首页中部',         type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/2670f031-35da-4dd6-b079-8f295c51a339.png'},{image:'/upload/site/af598f9e-ae9e-48a0-a3e4-17acc363051a.png'},{image:'/upload/site/a4160c1e-8beb-4530-9f2b-df022a6f751d.png'},{image:'/upload/site/a69b782d-f1ad-42e6-a91a-08432963b54a.png'}]} ,"
+                + "{adname:'信息快报和遴选公告列表',type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/article/20170328/wenzhang10.jpg'}]} ,"
+                + "{adname:'读书首页轮播 ',      type:1,autoPlay:true ,animationInterval:3000,image:[{image:'/upload/article/20170328/xiaoxi1.jpg'},{image:'/upload/article/20170328/xiaoxi2.jpg'},{image:'/upload/article/20170328/xiaoxi3.jpg'}]} ,"
+                + "]";
+        Gson gson = new Gson();
+        List<CmsAdvertisementOrImageVO> lst = gson.fromJson(dataJson, new TypeToken<ArrayList<CmsAdvertisementOrImageVO>>() {
+        }.getType());
+        for (CmsAdvertisementOrImageVO cmsAdvertisementAndImages : lst) {
+            CmsAdvertisement cmsAdvertisement = new CmsAdvertisement();
+            //广告名称
+            cmsAdvertisement.setAdname(cmsAdvertisementAndImages.getAdname());
+            //是否自动播放
+            cmsAdvertisement.setAutoPlay(cmsAdvertisementAndImages.getAutoPlay());
+            //循环间隔时间
+            cmsAdvertisement.setAnimationInterval(cmsAdvertisementAndImages.getAnimationInterval());
+            //类型    0 普通  1 轮播
+            cmsAdvertisement.setType(cmsAdvertisementAndImages.getType());
+            //保存广告
+            cmsAdvertisementDao.addCmsAdvertisement(cmsAdvertisement);
+            List<CmsAdvertisementImage> images = (List<CmsAdvertisementImage>) (cmsAdvertisementAndImages.getImage());
+            for (CmsAdvertisementImage image : images) {
+                String filePath = image.getImage();
+                image.setAdvertId(cmsAdvertisement.getId());
+                image.setImage("----");
+                //保存图片文件 
+                cmsAdvertisementImageDao.addCmsAdvertisementImage(image);
+                String mongoId = null;
+                try {
+                    //保存图片至mongo
+                    mongoId = fileService.migrateFile(filePath, FileType.CMS_ADVERTISEMENT, image.getId());
+                } catch (Exception ex) {
+                    logger.warn("文件上传失败 :{}", ex.getMessage());
+                    //文件保存失败删除这条记录
+                    cmsAdvertisementImageDao.deleteCmsAdvertisementByImages(image.getId());
+                    continue;
+                }
+                image.setImage(mongoId);
+                //修改图片文件地址
+                cmsAdvertisementImageDao.updateCmsAdvertisementImage(image);
+            }
+        }
     }
 }
