@@ -111,7 +111,7 @@ public class MigrationStageSix {
         decCourseConstruction();
         decNationalPlan();
         decTextbook();
-        decTextbookOther();
+        //decTextbookOther();
         decResearch();
         decExtension();
         decPosition();
@@ -843,9 +843,9 @@ public class MigrationStageSix {
         String sql = "select wo.othermaterwriteid,wo.writerid,wo.matername,"
         		+ "case when wo.duty like '%1%' then 1 when wo.duty like '%2%' then 2 "
         		+ "else 3 end position,"
-        		+ "wo.publishing,"
-        		+ "case when wo.publisdate like '0000-00-00 00:00:00' then '2017-01-01 23:59:59'"
-        		+ "end publisdates,"
+        		+ "wo.publishing,wo.publisdate"
+        		//+ "case when wo.publisdate like '0000-00-00 00:00:00' then '2017-01-01 23:59:59'"
+        		//+ "end publisdates,"
         		+ "wo.booknumber,wo.remark,wd.new_pk id "
         		+ "from writer_othermaterwrite wo "
         		+ "left join writer_declaration wd on wd.writerid=wo.writerid ";
@@ -863,7 +863,7 @@ public class MigrationStageSix {
             String materialName = (String) map.get("matername"); // 教材名称
             Long positionJudge = (Long) map.get("position"); // 编写职务
             String publisher = (String) map.get("publishing"); // 出版社
-            Date publishDate = (Date) map.get("publisdates"); // 出版时间
+            Date publishDate = (Date) map.get("publisdate"); // 出版时间
             String isbn = (String) map.get("booknumber"); // 标准书号
             DecTextbook decTextbook = new DecTextbook();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
@@ -888,15 +888,7 @@ public class MigrationStageSix {
             } else {
             	decTextbook.setPublisher(publishers);
 			}
-            if (publishDate.equals("2017-01-01 23:59:59")) {
-            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("出版时间需更改。"));
-                excel.add(map);
-                logger.debug("出版时间需更改，此结果将被记录在Excel中");
-                publishDateCount++;
-                continue;
-            } else {
-            	decTextbook.setPublishDate(publishDate);
-			}
+            decTextbook.setPublishDate(publishDate);
             if (StringUtil.notEmpty(isbn)) {
                 isbn = isbn.trim();
                 isbn = isbn.replace("ISBN", "ISBN ").replace("isbn", "ISBN ").replace(":", "")
