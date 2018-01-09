@@ -47,6 +47,8 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 	private String telephone;
 	// 作家传真
 	private String fax;
+	// 服从调剂
+	private Integer isDispensed;
 	// 作家申报单位id
 	private Long orgId;
 	// 机构名称
@@ -372,18 +374,35 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 		this.presetPosition = presetPosition;
 	}
 
+	public Integer getIsDispensed() {
+		return isDispensed;
+	}
+
+	public void setIsDispensed(Integer isDispensed) {
+		this.isDispensed = isDispensed;
+	}
+
 	@Override
 	public String toString() {
-		return "DeclarationOrDisplayVO [id=" + id + ", materialId=" + materialId + ", userId=" + userId + ", username="
-				+ username + ", realname=" + realname + ", sex=" + sex + ", birthday=" + birthday + ", experience="
-				+ experience + ", orgName=" + orgName + ", position=" + position + ", title=" + title + ", address="
-				+ address + ", postcode=" + postcode + ", handphone=" + handphone + ", email=" + email + ", idtype="
-				+ idtype + ", idcard=" + idcard + ", telephone=" + telephone + ", fax=" + fax + ", orgId=" + orgId
-				+ ", orgNameOne=" + orgNameOne + ", onlineProgress=" + onlineProgress + ", authUserId=" + authUserId
-				+ ", authDate=" + authDate + ", offlineProgress=" + offlineProgress + ", paperDate=" + paperDate
-				+ ", isStaging=" + isStaging + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
-				+ gmtUpdate + ", isMultiBooks=" + isMultiBooks + ", isMultiPosition=" + isMultiPosition
-				+ ", isDigitalEditorOptional=" + isDigitalEditorOptional + "]";
+		return "DeclarationOrDisplayVO [id=" + id + ", materialId="
+				+ materialId + ", userId=" + userId + ", username=" + username
+				+ ", realname=" + realname + ", sex=" + sex + ", birthday="
+				+ birthday + ", experience=" + experience + ", orgName="
+				+ orgName + ", position=" + position + ", title=" + title
+				+ ", address=" + address + ", postcode=" + postcode
+				+ ", handphone=" + handphone + ", email=" + email + ", idtype="
+				+ idtype + ", idcard=" + idcard + ", telephone=" + telephone
+				+ ", fax=" + fax + ", isDispensed=" + isDispensed + ", orgId="
+				+ orgId + ", orgNameOne=" + orgNameOne + ", onlineProgress="
+				+ onlineProgress + ", authUserId=" + authUserId + ", authDate="
+				+ authDate + ", offlineProgress=" + offlineProgress
+				+ ", paperDate=" + paperDate + ", isStaging=" + isStaging
+				+ ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
+				+ ", gmtUpdate=" + gmtUpdate + ", isMultiBooks=" + isMultiBooks
+				+ ", isMultiPosition=" + isMultiPosition
+				+ ", isDigitalEditorOptional=" + isDigitalEditorOptional
+				+ ", textbookName=" + textbookName + ", presetPosition="
+				+ presetPosition + "]";
 	}
 
 }

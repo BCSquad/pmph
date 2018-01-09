@@ -63,7 +63,6 @@ public class SurveyController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseBean list(SurveyVO surveyVO, @RequestParam("pageNumber") Integer pageNumber,
     @RequestParam("pageSize") Integer pageSize) {
-        surveyVO.setUsername(StringUtil.toAllCheck(surveyVO.getUsername()));// 发起人
         surveyVO.setTitle(StringUtil.toAllCheck(surveyVO.getTitle()));// 问卷标题
         PageParameter<SurveyVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
         pageParameter.setParameter(surveyVO);
@@ -87,6 +86,27 @@ public class SurveyController {
     public ResponseBean create(Survey survey, HttpServletRequest request) {
         String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(surveyService.addSurvey(survey, sessionId));
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：修改问卷信息
+     * 使用示范：
+     *
+     * @param questionAnswerJosn 问题Json字符串
+     * @param templateId 模版Id
+     * @param title 问卷名称
+     * @param typeId 调查对象
+     * @param intro 问卷概述
+     * @return 影响行数
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改问卷信息")
+    @RequestMapping(value = "/modify", method = RequestMethod.POST)
+    public ResponseBean modify(String questionAnswerJosn, SurveyVO surveyVO) {
+        return new ResponseBean(surveyService.updateSurveyAndTemplate(questionAnswerJosn, surveyVO));
     }
 
     /**

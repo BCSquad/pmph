@@ -296,6 +296,7 @@
 	<select id="getListOrgUserTotal" parameterType="PageParameter"
 		resultType="java.lang.Integer">
 		select count(*) from org_user u left join org o on o.id = u.org_id
+		left join org_type ot on ot.id=o.org_type_id
 		where 1=1
 		<if test="parameter.username !=null and parameter.username !='' ">
 			and u.username like concat('%',#{parameter.username},'%')
@@ -305,6 +306,17 @@
 		</if>
 		<if test="parameter.orgName !=null and parameter.orgName !=''">
 			and o.org_name like concat('%',#{parameter.orgName},'%')
+		</if>
+		<if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
+			and ot.type_name like concat('%',#{parameter.orgTypeName},'%')
+		</if>
+		<if test="parameter.isHospital !=null">
+			<if test="parameter.isHospital" >
+				and ot.type_name='医院'
+			</if>
+			<if test="parameter.isHospital=false" >
+				and ot.type_name!='医院'
+			</if>
 		</if>
 	</select>
 	<select id="getListOrgUser" parameterType="PageParameter"
@@ -323,6 +335,17 @@
 		</if>
 		<if test="parameter.orgName !=null and parameter.orgName !=''">
 			and o.org_name like concat('%',#{parameter.orgName},'%')
+		</if>
+		<if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
+			and ot.type_name like concat('%',#{parameter.orgTypeName},'%')
+		</if>
+		<if test="parameter.isHospital !=null">
+			<if test="parameter.isHospital" >
+				and ot.type_name='医院'
+			</if>
+			<if test="parameter.isHospital=false" >
+				and ot.type_name!='医院'
+			</if>
 		</if>
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}

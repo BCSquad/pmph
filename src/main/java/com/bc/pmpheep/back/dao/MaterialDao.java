@@ -1,8 +1,10 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.Textbook;
@@ -48,14 +50,15 @@ public interface MaterialDao {
      * @return Material
      */
     Material getMaterialById(Long id);
-    
+
     /**
-   	 * 获取教材名称  通过主键id
-   	 * @param id
-   	 * @return Material
-   	 * @return 教材名称
-   	 */
-   	String getMaterialNameById(Long id);
+     * 获取教材名称 通过主键id
+     * 
+     * @param id
+     * @return Material
+     * @return 教材名称
+     */
+    String getMaterialNameById(Long id);
 
     /**
      * 
@@ -135,17 +138,50 @@ public interface MaterialDao {
      */
     Integer getPlanningEditorSum(@Param("materialId") Long materialId,
     @Param("pmphUserId") Long pmphUserId);
-    
+
     /**
      * 最终结果公布（批量结果公布）
+     * 
      * @param material
      * @return
      */
-	Integer updateMaterialPublished(Material material);
-	/**
-	 * 通过教材id获取该教材的全部书籍
-	 * @param material
-	 * @return
-	 */
-	List<Textbook> getMaterialAndTextbook(Material material);
+    Integer updateMaterialPublished(Material material);
+
+    /**
+     * 通过教材id获取该教材的全部书籍
+     * 
+     * @param material
+     * @return
+     */
+    List<Textbook> getMaterialAndTextbook(Material material);
+
+    /**
+     * 通过书籍id获取教材信息
+     * 
+     * @param textbookIds
+     * @return
+     */
+    Material getMaterialByName(Long[] textbookIds);
+
+    /**
+     * 
+     * 
+     * 功能描述：书籍页面获取所有已经结束的教材
+     * 
+     * @param materialName 教材名称
+     * @return
+     * 
+     */
+    List<Material> listBook(String materialName);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取已经发布教材信息
+     * 使用示范：
+     *
+     * @return Material 对象集合
+     * </pre>
+     */
+    List<Material> listPublishedMaterial();
 }

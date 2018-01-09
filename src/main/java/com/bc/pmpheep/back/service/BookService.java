@@ -93,7 +93,7 @@ public interface BookService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String updateBookById(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote)
+	String updateBookById(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote,Long materialId)
 			throws CheckedServiceException;
 
 	/**

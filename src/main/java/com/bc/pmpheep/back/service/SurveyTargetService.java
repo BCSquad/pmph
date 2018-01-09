@@ -1,8 +1,9 @@
 package com.bc.pmpheep.back.service;
 
-import java.util.List;
+import java.io.IOException;
 
 import com.bc.pmpheep.back.po.SurveyTarget;
+import com.bc.pmpheep.back.vo.SurveyTargetVO;
 import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -50,8 +51,8 @@ public interface SurveyTargetService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer batchSaveSurveyTargetByList(Message message, String title, Long surveyId,
-    List<Long> orgIds, String sessionId) throws CheckedServiceException;
+    Integer batchSaveSurveyTargetByList(Message message, SurveyTargetVO surveyTargetVO,
+    String sessionId) throws CheckedServiceException, IOException;
 
     /**
      * 删除SurveyTarget通过主键id

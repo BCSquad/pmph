@@ -59,6 +59,24 @@ public interface SurveyService {
     Integer updateSurvey(Survey survey) throws CheckedServiceException;
 
     /**
+     * 
+     * <pre>
+     * 功能描述：修改问卷信息
+     * 使用示范：
+     *
+     * @param answerJosn 问题Json字符串
+     * @param templateId 模版Id
+     * @param title 问卷名称
+     * @param typeId 调查对象
+     * @param intro 问卷概述
+     * @return 影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer updateSurveyAndTemplate(String questionAnswerJosn, SurveyVO surveyVO)
+    throws CheckedServiceException;
+
+    /**
      * 查找Survey通过主键id
      * 
      * @author:tyc
@@ -88,5 +106,17 @@ public interface SurveyService {
      * @return 影响行数
      */
     Integer deleteSurveyById(Long id) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：查询问卷和问卷对应的类型
+     * 使用示范：
+     *
+     * @param id 问卷id
+     * @return SurveyVO 对象
+     * </pre>
+     */
+    SurveyVO getSurveyAndSurveyTypeById(Long id) throws CheckedServiceException;
 
 }

@@ -41,12 +41,12 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService {
     throws CheckedServiceException {
         if (ObjectUtil.isNull(surveyQuestion)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空1");
         }
-        if (ObjectUtil.isNull(surveyQuestion.getCategoryId())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "问题分类为空");
-        }
+        // if (ObjectUtil.isNull(surveyQuestion.getCategoryId())) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+        // CheckedExceptionResult.NULL_PARAM, "问题分类为空");
+        // }
         if (StringUtil.isEmpty(surveyQuestion.getTitle())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "题目为空");
@@ -55,14 +55,14 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问题类型为空");
         }
-        if (ObjectUtil.isNull(surveyQuestion.getSort())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "问题序号为空");
-        }
-        if (ObjectUtil.isNull(surveyQuestion.getIsAnswer())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "问题是否必答为空");
-        }
+        // if (ObjectUtil.isNull(surveyQuestion.getSort())) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+        // CheckedExceptionResult.NULL_PARAM, "问题序号为空");
+        // }
+        // if (ObjectUtil.isNull(surveyQuestion.getIsAnswer())) {
+        // throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+        // CheckedExceptionResult.NULL_PARAM, "问题是否必答为空");
+        // }
         surveyQuestionDao.addSurveyQuestion(surveyQuestion);
         Long id = surveyQuestion.getId();
         if (ObjectUtil.isNull(id)) {
@@ -172,6 +172,41 @@ public class SurveyQuestionServiceImpl implements SurveyQuestionService {
     public List<SurveyQuestionOptionCategoryVO> getQuestionOptionByQuestionIdOrCategoryId(
     Long questionId, Long categoryId) throws CheckedServiceException {
         return surveyQuestionDao.getQuestionOptionByQuestionIdOrCategoryId(questionId, categoryId);
+    }
+
+    @Override
+    public Integer batchUpdateSurveyQuestion(List<SurveyQuestion> surveyQuestions)
+    throws CheckedServiceException {
+        if (CollectionUtil.isEmpty(surveyQuestions)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return surveyQuestionDao.batchUpdateSurveyQuestion(surveyQuestions);
+    }
+
+    @Override
+    public List<Long> batchInsertSurveyQuestion(List<SurveyQuestion> surveyQuestions)
+    throws CheckedServiceException {
+        if (CollectionUtil.isEmpty(surveyQuestions)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        List<Long> newIds = surveyQuestionDao.batchInsertSurveyQuestion(surveyQuestions);
+        if (CollectionUtil.isEmpty(newIds)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问题批量新增失败");
+        }
+        return newIds;
+    }
+
+    @Override
+    public Integer batchDeleteSurveyQuestionByQuestionIds(List<Long> questionIds)
+    throws CheckedServiceException {
+        if (CollectionUtil.isEmpty(questionIds)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return surveyQuestionDao.batchDeleteSurveyQuestionByQuestionIds(questionIds);
     }
 
 }

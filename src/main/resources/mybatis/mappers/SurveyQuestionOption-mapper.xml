@@ -43,6 +43,7 @@
 			</if>
 		</trim>
 	</sql>
+	
 	<!-- 新增一个SurveyQuestionOption -->
 	<insert id="addSurveyQuestionOption" parameterType="SurveyQuestionOption">
 		<selectKey resultType="java.lang.Long" order="AFTER"
@@ -56,10 +57,21 @@
 		<include refid="value" />
 		) ;
 	</insert>
+	
+	<!-- 批量插入 -->
+	<insert id="batchInsertSurveyQuestionOption" parameterType="java.util.List">
+        insert into survey_question_option (question_id,option_content,is_other,remark)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.questionId}, #{item.optionContent},#{item.isOther},#{item.remark})
+        </foreach>
+    </insert>
+	
 	<!-- 删除SurveyQuestionOption通过主键id -->
 	<delete id="deleteSurveyQuestionOptionById" parameterType="java.lang.Long">
 		delete from survey_question_option where id=#{id};
 	</delete>
+	
 	<!-- 更新一个 SurveyOptions通过主键id -->
 	<update id="updateSurveyQuestionOption" parameterType="SurveyQuestionOption">
 		update survey_question_option
@@ -83,6 +95,29 @@
 		where
 		id=#{id} ;
 	</update>
+	
+	<!-- 批量更新一个 SurveyOptions-->
+	<update id="batchUpdateSurveyOption" parameterType="java.util.List">  
+          <foreach collection="list" item="item" index="index" open="" close="" separator=";">  
+                update survey_question_option
+				<set>
+					<if test="questionId != null">
+						question_id=#{item.questionId},
+					</if>
+					<if test="optionContent != null and optionContent !=''">
+						option_content=#{item.optionContent},
+					</if>
+					<if test="isOther != null">
+						is_other=#{item.isOther},
+					</if>
+					<if test="remark != null and remark !=''">
+						remark=#{item.remark},
+					</if>
+				</set>
+                where id = ${item.id}  
+         </foreach>  
+    </update> 
+	
 	<!-- 查找SurveyQuestionOption通过主键id -->
 	<select id="getSurveyQuestionOptionById" parameterType="java.lang.Long" resultType="SurveyQuestionOption">
 		select * from survey_question_option where id=#{id};
@@ -93,4 +128,11 @@
 		delete from survey_question_option where question_id=#{questionId};
 	</delete>
 	
+	 <!-- 批量删SurveyQuestionOption通过问题id -->
+    <delete id="batchDeleteSurveyQuestionOptionByQuestionIds" parameterType="java.util.List">
+       delete from survey_question_option where question_id in
+        <foreach collection="list" item="questionId" index="index" open="(" close=")" separator=",">
+			#{questionId}
+		</foreach>
+    </delete>
 </mapper>

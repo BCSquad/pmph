@@ -68,6 +68,10 @@ public class Survey implements java.io.Serializable {
      */
     private Integer           sort;
     /**
+     * 状态 0=未发送/1=发送/2=回收
+     */
+    private Short             status;
+    /**
      * 是否被逻辑删除
      */
     private Boolean           isDeleted;
@@ -99,10 +103,31 @@ public class Survey implements java.io.Serializable {
         this.gmtUpdate = gmtUpdate;
     }
 
+    public Survey(String title, String intro, Long templateId, Long typeId, Long userId) {
+        this.title = title;
+        this.intro = intro;
+        this.templateId = templateId;
+        this.typeId = typeId;
+        this.userId = userId;
+    }
+
+    public Survey(Long id, String title, String intro, Long typeId) {
+        this.id = id;
+        this.title = title;
+        this.typeId = typeId;
+    }
+
+    public Survey(Long id, Short status, Timestamp beginDate, Timestamp endDate) {
+        this.id = id;
+        this.status = status;
+        this.beginDate = beginDate;
+        this.endDate = endDate;
+    }
+
     /** full constructor */
     public Survey(String title, String subhead, String intro, Long templateId, Long typeId,
-    Long userId, Timestamp beginDate, Timestamp endDate, Integer sort, Boolean isDeleted,
-    Timestamp gmtCreate, Timestamp gmtUpdate) {
+    Long userId, Timestamp beginDate, Timestamp endDate, Integer sort, Short status,
+    Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate) {
         this.title = title;
         this.subhead = subhead;
         this.intro = intro;
@@ -112,6 +137,7 @@ public class Survey implements java.io.Serializable {
         this.beginDate = beginDate;
         this.endDate = endDate;
         this.sort = sort;
+        this.status = status;
         this.isDeleted = isDeleted;
         this.gmtCreate = gmtCreate;
         this.gmtUpdate = gmtUpdate;
@@ -259,6 +285,20 @@ public class Survey implements java.io.Serializable {
     }
 
     /**
+     * @return the status
+     */
+    public Short getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    /**
      * @return the isDeleted
      */
     public Boolean getIsDeleted() {
@@ -300,14 +340,13 @@ public class Survey implements java.io.Serializable {
         this.gmtUpdate = gmtUpdate;
     }
 
-	@Override
-	public String toString() {
-		return "Survey [id=" + id + ", title=" + title + ", subhead=" + subhead
-				+ ", intro=" + intro + ", templateId=" + templateId
-				+ ", typeId=" + typeId + ", userId=" + userId + ", beginDate="
-				+ beginDate + ", endDate=" + endDate + ", sort=" + sort
-				+ ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
-				+ ", gmtUpdate=" + gmtUpdate + "]";
-	}
+    @Override
+    public String toString() {
+        return "Survey [id=" + id + ", title=" + title + ", subhead=" + subhead + ", intro="
+               + intro + ", templateId=" + templateId + ", typeId=" + typeId + ", userId=" + userId
+               + ", beginDate=" + beginDate + ", endDate=" + endDate + ", sort=" + sort
+               + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
+               + gmtUpdate + "]";
+    }
 
 }

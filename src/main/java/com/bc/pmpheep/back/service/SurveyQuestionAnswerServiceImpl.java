@@ -1,17 +1,24 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.SurveyQuestionAnswerDao;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.SurveyQuestionAnswer;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.SurveyQuestionAnswerCountsVO;
+import com.bc.pmpheep.back.vo.SurveyQuestionFillVO;
+import com.bc.pmpheep.back.vo.SurveyRecoveryVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -38,6 +45,8 @@ public class SurveyQuestionAnswerServiceImpl implements SurveyQuestionAnswerServ
 
     @Autowired
     private SurveyQuestionAnswerDao surveyQuestionAnswerDao;
+    @Autowired
+    SurveyService                   surveyService;
 
     @Override
     public SurveyQuestionAnswer addSurveyQuestionAnswer(SurveyQuestionAnswer surveyQuestionAnswer)
@@ -116,8 +125,100 @@ public class SurveyQuestionAnswerServiceImpl implements SurveyQuestionAnswerServ
     }
 
     @Override
-    public List<SurveyQuestionAnswerCountsVO> getSurveyQuestionAnswerCounts(
-    SurveyQuestionAnswerCountsVO questionAnswerCountsVO) throws CheckedServiceException {
-        return surveyQuestionAnswerDao.getSurveyQuestionAnswerCounts(questionAnswerCountsVO);
+    public PageResult<SurveyQuestionAnswerCountsVO> listSurveyQuestionAnswer(
+    PageParameter<SurveyQuestionAnswerCountsVO> pageParameter) throws CheckedServiceException {
+        PageResult<SurveyQuestionAnswerCountsVO> pageResult =
+        new PageResult<SurveyQuestionAnswerCountsVO>();
+        // 将页面大小和页面页码拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 包含数据总条数的数据集
+        List<SurveyQuestionAnswerCountsVO> surveyQuestionAnswerList =
+        surveyQuestionAnswerDao.listSurveyQuestionAnswer(pageParameter);
+        if (CollectionUtil.isNotEmpty(surveyQuestionAnswerList)) {
+            Integer count = surveyQuestionAnswerList.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(surveyQuestionAnswerList);
+        }
+        return pageResult;
     }
+
+    @Override
+    public Map<String, Object> getSurveyQuestionAnswerCounts(
+    SurveyQuestionAnswerCountsVO questionAnswerCountsVO) throws CheckedServiceException {
+        Long surveyId = questionAnswerCountsVO.getSurveyId();
+        if (ObjectUtil.isNull(surveyId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷ID为空");
+        }
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("questionOne",
+                      surveyQuestionAnswerDao.getSurveyQuestionAnswerCounts(questionAnswerCountsVO));
+        resultMap.put("questionMore", this.listFillQuestionCounts(surveyId));
+        return resultMap;
+    }
+
+    @Override
+    public PageResult<SurveyRecoveryVO> listSurveyRecovery(
+    PageParameter<SurveyRecoveryVO> pageParameter) throws CheckedServiceException {
+        PageResult<SurveyRecoveryVO> pageResult = new PageResult<SurveyRecoveryVO>();
+        // 将页面大小和页面页码拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 包含数据总条数的数据集
+        List<SurveyRecoveryVO> surveyRecoveryList =
+        surveyQuestionAnswerDao.listSurveyRecovery(pageParameter);
+        if (CollectionUtil.isNotEmpty(surveyRecoveryList)) {
+            Integer count = surveyRecoveryList.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(surveyRecoveryList);
+        }
+        return pageResult;
+    }
+
+    @Override
+    public Map<String, Object> listSurveyQuestionAnswerBySurveyId(Long surveyId)
+    throws CheckedServiceException {
+        if (ObjectUtil.isNull(surveyId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷ID为空");
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("Survey", surveyService.getSurveyAndSurveyTypeById(surveyId));
+        resultMap.put("SurveyQuestionAnswer",
+                      surveyQuestionAnswerDao.listSurveyQuestionAnswerBySurveyId(surveyId));
+        return resultMap;
+    }
+
+    @Override
+    public PageResult<SurveyQuestionFillVO> listFillQuestion(
+    PageParameter<SurveyQuestionFillVO> pageParameter) throws CheckedServiceException {
+        Long surveyId = pageParameter.getParameter().getSurveyId();
+        Long questionId = pageParameter.getParameter().getQuestionId();
+        if (ObjectUtil.isNull(surveyId) || ObjectUtil.isNull(questionId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷ID或问题ID为空");
+        }
+        PageResult<SurveyQuestionFillVO> pageResult = new PageResult<SurveyQuestionFillVO>();
+        // 将页面大小和页面页码拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 包含数据总条数的数据集
+        List<SurveyQuestionFillVO> surveyQuestionFillList =
+        surveyQuestionAnswerDao.listFillQuestion(pageParameter);
+        if (CollectionUtil.isNotEmpty(surveyQuestionFillList)) {
+            Integer count = surveyQuestionFillList.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(surveyQuestionFillList);
+        }
+        return pageResult;
+    }
+
+    @Override
+    public List<SurveyQuestionFillVO> listFillQuestionCounts(Long surveyId)
+    throws CheckedServiceException {
+        if (ObjectUtil.isNull(surveyId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷ID为空");
+        }
+        return surveyQuestionAnswerDao.listFillQuestionCounts(surveyId);
+    }
+
 }

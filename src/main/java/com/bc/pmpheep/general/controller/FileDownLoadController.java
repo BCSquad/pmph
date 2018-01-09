@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.bo.DecPositionBO;
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.service.BookCorrectionService;
 import com.bc.pmpheep.back.service.CmsExtraService;
 import com.bc.pmpheep.back.service.DeclarationService;
@@ -42,6 +44,7 @@ import com.bc.pmpheep.back.service.MaterialNoticeAttachmentService;
 import com.bc.pmpheep.back.service.MaterialOrgService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
+import com.bc.pmpheep.back.service.SurveyQuestionAnswerService;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
@@ -50,6 +53,7 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookCorrectionTrackVO;
 import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
 import com.bc.pmpheep.back.vo.OrgExclVO;
+import com.bc.pmpheep.back.vo.SurveyQuestionFillVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.bean.ZipDownload;
 import com.bc.pmpheep.general.service.FileService;
@@ -69,7 +73,6 @@ import com.mongodb.gridfs.GridFSDBFile;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Controller
 public class FileDownLoadController {
-	public static Map<String, ZipDownload> map = new HashMap<>();
 	Logger logger = LoggerFactory.getLogger(FileDownLoadController.class);
 
 	@Resource
@@ -98,6 +101,8 @@ public class FileDownLoadController {
 	MaterialOrgService materialOrgService;
 	@Autowired
 	BookCorrectionService bookCorrectionService;
+	@Autowired
+	SurveyQuestionAnswerService surveyQuestionAnswerService;
 	@Resource(name = "taskExecutor")
 	private ThreadPoolTaskExecutor taskExecutor;
 	// 当前业务类型
@@ -347,10 +352,12 @@ public class FileDownLoadController {
 			String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress
 			) {
 		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
+		logger.info("--------------{}-------",id);
 		taskExecutor.execute(new SpringThread(zipHelper, wordHelper, materialService, textbookService,
 				declarationService, materialId, textBookids, realname, position, title, orgName, unitName, positionType,
 				onlineProgress, offlineProgress, id));
-		return id;
+		logger.info("--------------{}-------",id);
+		return '"'+id+'"';
 	}
 
 	/**
@@ -367,9 +374,9 @@ public class FileDownLoadController {
 	@RequestMapping(value = "/word/progress", method = RequestMethod.GET)
 	public ZipDownload progress(String id) {
 		ZipDownload zipDownload = new ZipDownload();
-		if (map.containsKey(id)) {
-			zipDownload.setState(map.get(id).getState());
-			zipDownload.setDetail(map.get(id).getDetail());
+		if (Const.map.containsKey(id)) {
+			zipDownload.setState(Const.map.get(id).getState());
+			zipDownload.setDetail(Const.map.get(id).getDetail());
 		}
 		return zipDownload;
 	}
@@ -392,7 +399,7 @@ public class FileDownLoadController {
 		if (!src.endsWith(File.separator)) {
 			src += File.separator;
 		}
-		String materialName = map.get(id).getMaterialName();
+		String materialName = Const.map.get(id).getMaterialName();
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		String filePath = src + id + File.separator + materialName + ".zip";
@@ -423,7 +430,7 @@ public class FileDownLoadController {
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		} finally {
-			map.remove(id);
+			Const.map.remove(id);
 			ZipDownload.DeleteFolder(src + id);
 		}
 	}
@@ -562,6 +569,7 @@ public class FileDownLoadController {
 		}
 	}
 
+
 	/**
 	 * 角色遴选 批量导出主编、副主编
 	 * 
@@ -580,13 +588,55 @@ public class FileDownLoadController {
 			list=textbookService.getExcelDecByMaterialId(textbookIds);
 			workbook = excelHelper.fromDecPositionBOList(list, "主编-副主编");
 		} catch (CheckedServiceException | IllegalArgumentException e) {
-			logger.warn("数据表格化的时候失败");
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_CREATION_FAILED, "数据表格化的时候失败");
 		}
-		String fileName = returnFileName(request, list.get(0).getTextbookName() + ".xls");
+		//通过书籍id获取教材信息
+		Material material=materialService.getMaterialByName(textbookIds);
+		String fileName = returnFileName(request, material.getMaterialName() + ".xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+	
+	/**
+	 * 
+	 * <pre>
+	 * 功能描述：导出填空题调查结果Excel
+	 * 使用示范：
+	 * @user  tyc
+	 * @param request
+	 * @param response
+	 * 2018.01.08 18:31
+	 * </pre>
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出填空题调查结果")
+	@RequestMapping(value = "/excel/surveyQuestionExcel", method = RequestMethod.GET)
+	public void surveyQuestionExcel(HttpServletRequest request, HttpServletResponse response) {
+		Workbook workbook = null;
+		List<SurveyQuestionFillVO> surveyQuestionFillVO = null;
+		try {
+			PageParameter<SurveyQuestionFillVO> pageParameter = new PageParameter<>(null, null);
+			surveyQuestionFillVO = (List<SurveyQuestionFillVO>) 
+					surveyQuestionAnswerService.listFillQuestion(pageParameter);
+			workbook = excelHelper.fromBusinessObjectList(surveyQuestionFillVO, "填空题调查结果");
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		String name = "填空题调查结果";
+		String fileName = returnFileName(request, name + ".xls");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			workbook.write(out);

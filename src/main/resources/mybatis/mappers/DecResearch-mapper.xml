@@ -9,7 +9,7 @@
 			<if test="id !=null">
 				id,
 			</if>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				declaration_id,
 			</if>
 			<if test="researchName !=null and researchName !=''">
@@ -24,7 +24,7 @@
 			<if test="note !=null and note !=''">
 				note,
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				sort,
 			</if>
 		</trim>
@@ -35,7 +35,7 @@
 			<if test="id !=null">
 				#{id},
 			</if>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				#{declarationId},
 			</if>
 			<if test="researchName !=null and researchName !=''">
@@ -50,7 +50,7 @@
 			<if test="note !=null and note !=''">
 				#{note},
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				#{sort},
 			</if>
 		</trim>
@@ -81,7 +81,7 @@
 	<update id="updateDecResearch" parameterType="DecResearch">
 		update dec_research
 		<set>
-			<if test="declarationId !=null and declarationId !=''">
+			<if test="declarationId !=null">
 				declaration_id = #{declarationId},
 			</if>
 			<if test="researchName !=null and researchName !=''">
@@ -96,7 +96,7 @@
 			<if test="note !=null and note !=''">
 				note = #{note},
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				sort = #{sort},
 			</if>
 		</set>

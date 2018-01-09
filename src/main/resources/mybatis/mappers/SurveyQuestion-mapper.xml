@@ -74,6 +74,16 @@
 		<include refid="value" />
 		);
 	</insert>
+	
+	<!-- 批量插入SurveyQuestion -->
+	<insert id="batchInsertSurveyQuestion" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into survey_question (title,type,sort,direction)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.title},#{item.type},#{item.sort},#{item.direction})
+        </foreach>
+    </insert>
+	
 	<!-- 逻辑删除SurveyQuestion通过主键id -->
 	<update id="deleteSurveyQuestionById" parameterType="java.lang.Long">
 		update survey_question set is_deleted = true where id=#{id};
@@ -110,6 +120,38 @@
 		where
 		id=#{id};
 	</update>
+	
+	<!-- 批量更新一个 SurveyQuestion-->
+	<update id="batchUpdateSurveyQuestion" parameterType="java.util.List">  
+          <foreach collection="list" item="item" index="index" open="" close="" separator=",">  
+				update survey_question
+				<set>
+					<if test="categoryId != null">
+						category_id=#{item.categoryId},
+					</if>
+					<if test="title != null and title !=''">
+						title=#{item.title},
+					</if>
+					<if test="type != null">
+						type=#{item.type},
+					</if>
+					<if test="sort != null">
+						sort=#{item.sort},
+					</if>
+					<if test="direction != null and direction !=''">
+						direction=#{item.direction},
+					</if>
+					<if test="isAnswer != null">
+						is_answer=#{item.isAnswer},
+					</if>
+					<if test="isDeleted != null">
+						is_deleted=#{item.isDeleted},
+					</if>
+				</set>
+                where id = ${item.id}  
+         </foreach>  
+    </update> 
+	
 	<!-- 查找SurveyQuestion通过主键id -->
 	<select id="getSurveyQuestionById" parameterType="java.lang.Long" resultType="SurveyQuestion">
 		select * from survey_question where id=#{id};
@@ -186,4 +228,11 @@
 		</if>
 	</select>
 	
+	 <!-- 批量删SurveyQuestion通过id -->
+    <delete id="batchDeleteSurveyQuestionByQuestionIds" parameterType="java.util.List">
+       delete from survey_question where id in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+    </delete>
 </mapper>

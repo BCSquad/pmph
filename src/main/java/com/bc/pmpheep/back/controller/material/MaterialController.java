@@ -244,4 +244,35 @@ public class MaterialController {
         }
     }
 
+    /**
+     * 
+     * 
+     * 功能描述：书籍页面获取所有已经结束的教材
+     * 
+     * @param materialName 教材名称
+     * @return
+     * 
+     */
+    @ResponseBody
+    @LogDetail(businessType = Business_Type, logRemark = "书籍页面获取所有已经结束的教材")
+    @RequestMapping(value = "/book", method = RequestMethod.GET)
+    public ResponseBean book(String materialName) {
+        return new ResponseBean(materialService.listBook(materialName));
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取已经发布教材信息
+     * 使用示范：
+     *
+     * @return Material对象集合
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = Business_Type, logRemark = "获取已经发布教材信息")
+    @RequestMapping(value = "/published", method = RequestMethod.GET)
+    public ResponseBean published() {
+        return new ResponseBean(materialService.listPublishedMaterial());
+    }
 }

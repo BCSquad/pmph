@@ -28,8 +28,8 @@ public class WriterPointLogServiceTest extends BaseTest {
 	@Resource
 	WriterPointLogService writerPointLogService;
 	WriterPointLog writerPointLog = new WriterPointLog(3L, 1L, 5);
-	public WriterPointLog addWriterPointLogs(){
-		WriterPointLog writerPointLog = writerPointLogService.add(
+	public Integer addWriterPointLogs(){
+		Integer writerPointLog = writerPointLogService.add(
 				new WriterPointLog(3L, 1L, 5));
 		return writerPointLog;
 	}
@@ -71,7 +71,7 @@ public class WriterPointLogServiceTest extends BaseTest {
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void getListWriterPointLog(){
-		WriterPointLog writerPointLog = this.addWriterPointLogs();
+		Integer writerPointLog = this.addWriterPointLogs();
 		PageParameter pageParameter = new PageParameter<>();
         PageResult pageResult = new PageResult<>();
         WriterPointLogVO writerPointLogVO = new WriterPointLogVO();

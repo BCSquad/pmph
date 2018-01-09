@@ -631,4 +631,14 @@ public class DecPositionServiceImpl implements DecPositionService {
         }
         return decPositionDao.updateDecPositionSetDefault(ids, editorOrSubeditorType);
     }
+
+	@Override
+	public DecPosition getDecPositionByTextbookId(Long textbookId) throws CheckedServiceException {
+		if(null == textbookId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+                    CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
+		}
+		return decPositionDao.getDecPositionByTextbookId(textbookId);
+	}
+
 }

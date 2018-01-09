@@ -6,6 +6,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import com.bc.pmpheep.back.common.service.BaseService;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.erp.db.SqlHelper;
 
 import java.util.ArrayList;
@@ -96,17 +97,54 @@ public class BaseWorking extends BaseService {
 	// SqlHelper.executeUpdate("update " + tabName + " set states =1 where record_id
 	// in (" + record_ids + ")", null);
 	// }
-	
+
 	/**
 	 * 
 	 * 
 	 * 功能描述：获取所有的数据
 	 * 
-	 * @param tabName 表名
+	 * @param tabName
+	 *            表名
 	 * @return
 	 *
 	 */
-	protected JSONArray list(String tabName) {
+	protected JSONArray listBook(String tabName) {
 		return SqlHelper.executeQuery("select editionnum from " + tabName, null);
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取所有的数据
+	 * 
+	 * @param tabName
+	 *            表名
+	 * @return
+	 *
+	 */
+	protected JSONArray listTopic(String tabName) {
+		return SqlHelper.executeQuery("select * from " + tabName + " where states = '11'", null);
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：修改
+	 * 
+	 * @param tabName
+	 *            表名
+	 * @return
+	 *
+	 */
+	protected void updateTopic(String tabName, Long[] recordIds) {
+		String ids = "";
+		for (Long recordId : recordIds) {
+			ids += "," + recordId;
+		}
+		if (!StringUtil.isEmpty(ids)) {
+			ids = ids.substring(1);
+		}
+		SqlHelper.executeUpdate(
+				"update " + tabName + " set states = 12 , gettime = GETDATE() where record_id in (" + ids + ")", null);
 	}
 }

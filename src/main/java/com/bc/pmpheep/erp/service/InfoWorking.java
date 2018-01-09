@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+
+import com.bc.pmpheep.back.po.Topic;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -25,7 +28,7 @@ import net.sf.json.JSONObject;
  *
  */
 @Service
-public class BookInfoWorking extends BaseWorking implements ErpWorking {
+public class InfoWorking extends BaseWorking implements ErpWorking {
 	/**
 	 * 对应I_BOOKINFO的ERP对接工作
 	 */
@@ -43,7 +46,7 @@ public class BookInfoWorking extends BaseWorking implements ErpWorking {
 	 *
 	 */
 	public String[] listBookInfo() {
-		JSONArray bookInfo = list("i_bookinfo");
+		JSONArray bookInfo = listBook("i_bookinfo");
 		String[] vns = new String[bookInfo.size()];
 		for (int i = 0; i < bookInfo.size(); i++) {
 			JSONObject job = bookInfo.getJSONObject(i);
@@ -52,4 +55,26 @@ public class BookInfoWorking extends BaseWorking implements ErpWorking {
 		return vns;
 	}
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：
+	 *
+	 * @return
+	 *
+	 */
+	public JSONArray listTopicInfo() {
+		JSONArray topicInfo = listTopic("i_declarestates");
+		return topicInfo;
+	}
+
+	public String updateTopic(Long[] recordIds) {
+		String result = "SUCCESS";
+		try {
+			updateTopic("i_declarestates", recordIds);
+			return result;
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
 }

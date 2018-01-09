@@ -65,16 +65,16 @@
 			<if test="userId != null">
 				#{userId},
 			</if>
-			<if test="beginDate != null and beginDate !=''">
+			<if test="beginDate != null">
 				#{beginDate},
 			</if>
-			<if test="endDate != null and endDate !=''">
+			<if test="endDate != null ">
 				#{endDate},
 			</if>
 			<if test="sort != null">
 				#{sort},
 			</if>
-			<if test="isDeleted != null and isDeleted !=''">
+			<if test="isDeleted != null">
 				#{isDeleted},
 			</if>
 		</trim>
@@ -121,16 +121,16 @@
 			<if test="userId != null">
 				user_id=#{userId},
 			</if>
-			<if test="beginDate != null and beginDate !=''">
+			<if test="beginDate != null">
 				begin_date=#{beginDate},
 			</if>
-			<if test="endDate != null and endDate !=''">
+			<if test="endDate != null ">
 				end_date=#{endDate},
 			</if>
 			<if test="sort != null">
 				sort=#{sort},
 			</if>
-			<if test="isDeleted != null and isDeleted !=''">
+			<if test="isDeleted != null">
 				is_deleted=#{isDeleted},
 			</if>
 		</set>
@@ -178,19 +178,15 @@
 					<if test="parameter.title != null and parameter.title != ''">
 						and s.title like concat('%',#{parameter.title},'%')
 					</if>
-					<!-- 问卷调查类型 -->
-					<if test="parameter.typeId != null">
-						and s.type_id = #{parameter.typeId}
+					<!-- 问卷创建日期 %H:%i:%s--> 
+					<if test="parameter.startTime !=null and parameter.startTime !='' ">
+						and 
+							s.`gmt_create` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d') 
+							
 					</if>
-					<!-- 问卷创建人(0=系统) -->
-					<if test="parameter.userId != null">
-						and s.user_id = #{parameter.userId}
-					</if>
-					<if test="parameter.username !=null and parameter.username!=''">
-						and (
-							ppu.username like concat('%',#{parameter.username},'%')
-						or
-							ppu.realname like concat('%',#{parameter.username},'%') )
+					<if test="parameter.endTime !=null and parameter.endTime !='' ">
+						and 
+							s.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d')
 					</if>
 				</if>
 				) t 
@@ -201,25 +197,45 @@
 			<if test="parameter.title != null and parameter.title != ''">
 				and s.title like concat('%',#{parameter.title},'%')
 			</if>
-			<!-- 问卷调查类型 -->
-			<if test="parameter.typeId != null">
-				and s.type_id = #{parameter.typeId}
-			</if>
-			<!-- 问卷创建人(0=系统) -->
-			<if test="parameter.userId != null">
-				and s.user_id = #{parameter.userId}
-			</if>
-			<if test="parameter.username !=null and parameter.username!=''">
-				and (
-					ppu.username like concat('%',#{parameter.username},'%')
-				or
-					ppu.realname like concat('%',#{parameter.username},'%') )
-			</if>
+			<!-- 问卷创建日期 %H:%i:%s--> 
+					<if test="parameter.startTime !=null and parameter.startTime !='' ">
+						and 
+							s.`gmt_create` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d') 
+							
+					</if>
+					<if test="parameter.endTime !=null and parameter.endTime !='' ">
+						and 
+							s.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d')
+					</if>
 		</if>
 		group by s.title desc 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
+	</select>
+	
+	<!-- 查询问卷和问卷对应的类型 -->
+	<select id="getSurveyAndSurveyTypeById" parameterType="java.lang.Long" resultType="SurveyVO">
+		select 
+			s.*,
+			stp.survey_name,
+			ppu.username,
+			ppu.realname
+		from 
+			survey s 
+		left join 
+			survey_type stp 
+		on 
+			stp.id = s.type_id
+		left join 
+			pmph_user ppu 
+		on 
+			ppu.id=s.user_id
+		<where>
+			<if test="id !=null">
+				s.`id`= #{id}
+			</if>
+		</where>
 	</select>
 	
 </mapper>

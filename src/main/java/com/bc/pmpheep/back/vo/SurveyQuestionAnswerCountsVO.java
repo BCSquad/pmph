@@ -27,6 +27,30 @@ public class SurveyQuestionAnswerCountsVO implements Serializable {
     //
     private static final long serialVersionUID = -5909293452223028325L;
     /**
+     * 问卷ID
+     */
+    private Long              surveyId;
+    /**
+     * 问卷名称
+     */
+    private String            surveyTitle;
+    /**
+     * 问卷调查对象
+     */
+    private String            surveyName;
+    /**
+     * 问卷概述
+     */
+    private String            intro;
+    /**
+     * 问卷发起人
+     */
+    private String            realname;
+    /**
+     * 问卷参与人数
+     */
+    private Integer           surveyUsers;
+    /**
      * 问题ID
      */
     private Long              questionId;
@@ -59,6 +83,18 @@ public class SurveyQuestionAnswerCountsVO implements Serializable {
      * 结束时间
      */
     private Timestamp         endDate;
+    /**
+     * 问题排序
+     */
+    private Integer           questionSort;
+    /**
+     * 问题排序
+     */
+    private Integer           questionType;
+    /**
+     * 条件分页总条数
+     */
+    private Integer           count;
 
     /**
      * @return the questionId
@@ -170,6 +206,132 @@ public class SurveyQuestionAnswerCountsVO implements Serializable {
      */
     public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
+    }
+
+    /**
+     * @return the surveyId
+     */
+    public Long getSurveyId() {
+        return surveyId;
+    }
+
+    /**
+     * @param surveyId the surveyId to set
+     */
+    public void setSurveyId(Long surveyId) {
+        this.surveyId = surveyId;
+    }
+
+    /**
+     * @return the surveyTitle
+     */
+    public String getSurveyTitle() {
+        return surveyTitle;
+    }
+
+    /**
+     * @param surveyTitle the surveyTitle to set
+     */
+    public void setSurveyTitle(String surveyTitle) {
+        this.surveyTitle = surveyTitle;
+    }
+
+    /**
+     * @return the surveyName
+     */
+    public String getSurveyName() {
+        return surveyName;
+    }
+
+    /**
+     * @param surveyName the surveyName to set
+     */
+    public void setSurveyName(String surveyName) {
+        this.surveyName = surveyName;
+    }
+
+    /**
+     * @return the intro
+     */
+    public String getIntro() {
+        return intro;
+    }
+
+    /**
+     * @param intro the intro to set
+     */
+    public void setIntro(String intro) {
+        this.intro = intro;
+    }
+
+    /**
+     * @return the realname
+     */
+    public String getRealname() {
+        return realname;
+    }
+
+    /**
+     * @param realname the realname to set
+     */
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
+
+    /**
+     * @return the surveyUsers
+     */
+    public Integer getSurveyUsers() {
+        return surveyUsers;
+    }
+
+    /**
+     * @param surveyUsers the surveyUsers to set
+     */
+    public void setSurveyUsers(Integer surveyUsers) {
+        this.surveyUsers = surveyUsers;
+    }
+
+    /**
+     * @return the count
+     */
+    public Integer getCount() {
+        return count;
+    }
+
+    /**
+     * @param count the count to set
+     */
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    /**
+     * @return the questionSort
+     */
+    public Integer getQuestionSort() {
+        return questionSort;
+    }
+
+    /**
+     * @param questionSort the questionSort to set
+     */
+    public void setQuestionSort(Integer questionSort) {
+        this.questionSort = questionSort;
+    }
+
+    /**
+     * @return the questionType
+     */
+    public Integer getQuestionType() {
+        return questionType;
+    }
+
+    /**
+     * @param questionType the questionType to set
+     */
+    public void setQuestionType(Integer questionType) {
+        this.questionType = questionType;
     }
 
 }

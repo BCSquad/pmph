@@ -4,11 +4,16 @@
  */
 package com.bc.pmpheep.migration;
 
+import com.bc.pmpheep.back.dao.CmsAdvertisementDao;
+import com.bc.pmpheep.back.dao.CmsAdvertisementImageDao;
+import com.bc.pmpheep.back.po.CmsAdvertisement;
+import com.bc.pmpheep.back.po.CmsAdvertisementImage;
 import com.bc.pmpheep.back.po.CmsCategory;
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtra;
+import com.bc.pmpheep.back.po.MaterialNoticeAttachment;
 import com.bc.pmpheep.back.service.CmsCategoryService;
 import com.bc.pmpheep.back.service.CmsContentCategoryService;
 import com.bc.pmpheep.back.service.CmsContentService;
@@ -17,6 +22,7 @@ import com.bc.pmpheep.back.service.MaterialExtraService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.CmsAdvertisementOrImageVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.po.Content;
 import com.bc.pmpheep.general.service.ContentService;
@@ -24,11 +30,14 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
-import java.io.IOException;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,11 +78,16 @@ public class MigrationStageTen {
     MaterialContactService materialContactService;
     @Resource
     MaterialExtraService materialExtraService;
+    @Resource
+    CmsAdvertisementImageDao cmsAdvertisementImageDao;
+    @Resource
+    CmsAdvertisementDao      cmsAdvertisementDao;
 
     public void start() {
         Date begin = new Date();
         cmsCategory();
         cmsContent();
+        initCmsAdvertisementData();
         logger.info("迁移第十步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
@@ -288,5 +302,54 @@ public class MigrationStageTen {
             content = contentService.add(content);
             cmsContent.setMid(content.getId());
         }
+    }
+    
+    public void initCmsAdvertisementData(){
+    	//初始化的数据
+    	String dataJson= 
+    			  "["
+    			+ "{adname:'首页轮播',         autoPlay:true, animationInterval:3,image:[{image:'/upload/initCmsAdvertisementData/homeBanner1.jpg'},{image:'/upload/initCmsAdvertisementData/homeBanner2.jpg'},{image:'/upload/initCmsAdvertisementData/homeBanner3.jpg'}]} ,"
+    			+ "{adname:'首页中部',         autoPlay:false,animationInterval:0,image:[{image:'/upload/initCmsAdvertisementData/homeCenter1.jpg'},{image:'/upload/initCmsAdvertisementData/homeCenter2.jpg'},{image:'/upload/initCmsAdvertisementData/homeCenter3.jpg'},{image:'/upload/initCmsAdvertisementData/homeCenter4.jpg'}]} ,"
+    			+ "{adname:'信息快报和遴选公告列表',autoPlay:false,animationInterval:0,image:[{image:'/upload/initCmsAdvertisementData/notice.jpg'}]} ,"
+    			+ "{adname:'读书首页轮播 ',      autoPlay:true ,animationInterval:3,image:[{image:'/upload/initCmsAdvertisementData/readHomeBanner1.jpg'},{image:'/upload/initCmsAdvertisementData/readHomeBanner2.jpg'},{image:'/upload/initCmsAdvertisementData/readHomeBanner3.jpg'}]} ,"
+    			+ "]";
+    	 Gson gson = new Gson();
+    	 List<CmsAdvertisementOrImageVO> lst  =  gson.fromJson(dataJson,new TypeToken<ArrayList<CmsAdvertisementOrImageVO>>() {}.getType());
+    	 for(CmsAdvertisementOrImageVO cmsAdvertisementAndImages:lst){
+    		 CmsAdvertisement cmsAdvertisement = new CmsAdvertisement() ;
+    		 cmsAdvertisement.setAdname(cmsAdvertisementAndImages.getAdname());
+    		 cmsAdvertisement.setAutoPlay(cmsAdvertisementAndImages.getAutoPlay());
+    		 cmsAdvertisement.setAnimationInterval(cmsAdvertisementAndImages.getAnimationInterval());
+    		 //保存广告
+    		 cmsAdvertisementDao.addCmsAdvertisement(cmsAdvertisement);
+    		 List<CmsAdvertisementImage> images =(List<CmsAdvertisementImage>)(cmsAdvertisementAndImages.getImage());
+    		 for(CmsAdvertisementImage image:images){
+    			 String filePath = image.getImage();
+    			 image.setAdvertId(cmsAdvertisement.getId());
+    			 image.setImage("----");
+    			 //保存图片文件 
+    			 cmsAdvertisementImageDao.addCmsAdvertisementImage(image);
+    			 String mongoId = null;
+    			 try {
+    				 //保存图片至mongo
+                     mongoId = fileService.migrateFile(filePath, FileType.CMS_ADVERTISEMENT, image.getId());
+                 } catch (Exception ex) {
+                     logger.warn("文件上传失败 :{}", ex.getMessage());
+                     //文件保存失败删除这条记录
+                     cmsAdvertisementImageDao.deleteCmsAdvertisementByImages(image.getId());
+                     continue;
+                 }
+    			 image.setImage(mongoId);
+    			 //修改图片文件地址
+    			 cmsAdvertisementImageDao.updateCmsAdvertisementImage(image);
+    		 }
+    	 }
+    	 
+    	 
+    	 
+    	   
+    	 
+    	
+    	
     }
 }

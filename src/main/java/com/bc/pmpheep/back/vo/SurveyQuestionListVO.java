@@ -8,120 +8,144 @@ import com.bc.pmpheep.back.po.SurveyQuestionOption;
 
 /**
  * 问题集合VO
+ * 
  * @author tyc
- *
+ * 
  */
 @Alias("SurveyQuestionListVO")
-public class SurveyQuestionListVO implements java.io.Serializable {
+public class SurveyQuestionListVO {
 
-    private static final long serialVersionUID = 6476408942311873206L;
     /**
      * 主键
      */
-    private Long id;
+    private Long                       id;
     /**
      * 问题分类id
      */
-    private Long categoryId;
+    private Long                       categoryId;
     /**
      * 题目
      */
-    private String title;
+    private String                     title;
     /**
      * 问题类型
      */
-    private Short type;
+    private Short                      type;
     /**
      * 问题序号
      */
-    private Integer sort;
+    private Integer                    sort;
     /**
      * 问题说明
      */
-    private String direction;
+    private String                     direction;
     /**
      * 问题是否必答
      */
-    private Boolean isAnswer;
+    private Boolean                    isAnswer;
     /**
      * 问题选项集合
      */
     private List<SurveyQuestionOption> surveyQuestionOptionList;
-    
+
     public SurveyQuestionListVO() {
     }
 
-	public Long getId() {
-		return id;
-	}
+    /**
+     * <pre>
+     * 构造器描述：
+     *
+     * @param id
+     * @param categoryId
+     * @param title
+     * @param type
+     * @param sort
+     * @param direction
+     * @param isAnswer
+     * @param surveyQuestionOptionList
+     *</pre>
+     */
+    public SurveyQuestionListVO(Long id, Long categoryId, String title, Short type, Integer sort,
+    String direction, Boolean isAnswer, List<SurveyQuestionOption> surveyQuestionOptionList) {
+        super();
+        this.id = id;
+        this.categoryId = categoryId;
+        this.title = title;
+        this.type = type;
+        this.sort = sort;
+        this.direction = direction;
+        this.isAnswer = isAnswer;
+        this.surveyQuestionOptionList = surveyQuestionOptionList;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Long getCategoryId() {
-		return categoryId;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setCategoryId(Long categoryId) {
-		this.categoryId = categoryId;
-	}
+    public Long getCategoryId() {
+        return categoryId;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public Short getType() {
-		return type;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setType(Short type) {
-		this.type = type;
-	}
+    public Short getType() {
+        return type;
+    }
 
-	public Integer getSort() {
-		return sort;
-	}
+    public void setType(Short type) {
+        this.type = type;
+    }
 
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
+    public Integer getSort() {
+        return sort;
+    }
 
-	public String getDirection() {
-		return direction;
-	}
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 
-	public void setDirection(String direction) {
-		this.direction = direction;
-	}
+    public String getDirection() {
+        return direction;
+    }
 
-	public Boolean getIsAnswer() {
-		return isAnswer;
-	}
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
 
-	public void setIsAnswer(Boolean isAnswer) {
-		this.isAnswer = isAnswer;
-	}
-	
-	public List<SurveyQuestionOption> getSurveyQuestionOptionList() {
-		return surveyQuestionOptionList;
-	}
+    public Boolean getIsAnswer() {
+        return isAnswer;
+    }
 
-	public void setSurveyQuestionOptionList(
-			List<SurveyQuestionOption> surveyQuestionOptionList) {
-		this.surveyQuestionOptionList = surveyQuestionOptionList;
-	}
+    public void setIsAnswer(Boolean isAnswer) {
+        this.isAnswer = isAnswer;
+    }
 
-	@Override
-	public String toString() {
-		return "SurveyQuestionListVO [id=" + id + ", categoryId=" + categoryId
-				+ ", title=" + title + ", type=" + type + ", sort=" + sort
-				+ ", direction=" + direction + ", isAnswer=" + isAnswer
-				+ ", surveyQuestionOptionList=" + surveyQuestionOptionList
-				+ "]";
-	}
+    public List<SurveyQuestionOption> getSurveyQuestionOptionList() {
+        return surveyQuestionOptionList;
+    }
+
+    public void setSurveyQuestionOptionList(List<SurveyQuestionOption> surveyQuestionOptionList) {
+        this.surveyQuestionOptionList = surveyQuestionOptionList;
+    }
+
+    @Override
+    public String toString() {
+        return "SurveyQuestionListVO [id=" + id + ", categoryId=" + categoryId + ", title=" + title
+               + ", type=" + type + ", sort=" + sort + ", direction=" + direction + ", isAnswer="
+               + isAnswer + ", surveyQuestionOptionList=" + surveyQuestionOptionList + "]";
+    }
 }

@@ -9,22 +9,22 @@
 			<if test="id !=null">
 				id,
 			</if>
-			<if test="materialId !=null and materialId !=''">
+			<if test="materialId !=null">
 				material_id,
 			</if>
-			<if test="userId !=null and userId !=''">
+			<if test="userId !=null">
 				user_id,
 			</if>
 			<if test="realname !=null and realname !=''">
 				realname,
 			</if>
-			<if test="sex !=null and sex !=''">
+			<if test="sex !=null">
 				sex,
 			</if>
 			<if test="birthday !=null ">
 				birthday,
 			</if>
-			<if test="experience !=null and experience !=''">
+			<if test="experience !=null">
 				experience,
 			</if>
 			<if test="orgName !=null and orgName !=''">
@@ -60,19 +60,22 @@
 			<if test="fax !=null and fax !=''">
 				fax,
 			</if>
-			<if test="orgId !=null and orgId !=''">
+			<if test="isDispensed !=null">
+				is_dispensed,
+			</if>
+			<if test="orgId != null">
 				org_id,
 			</if>
-			<if test="onlineProgress !=null and onlineProgress !=''">
+			<if test="onlineProgress !=null">
 				online_progress,
 			</if>
-			<if test="authUserId !=null and authUserId !=''">
+			<if test="authUserId !=null">
 				auth_user_id,
 			</if>
-			<if test="authDate !=null ">
+			<if test="authDate !=null">
 				auth_date,
 			</if>
-			<if test="offlineProgress !=null and offlineProgress !=''">
+			<if test="offlineProgress !=null">
 				offline_progress,
 			</if>
 			<if test="paperDate !=null ">
@@ -92,22 +95,22 @@
 			<if test="id !=null">
 				#{id},
 			</if>
-			<if test="materialId !=null and materialId !=''">
+			<if test="materialId !=null">
 				#{materialId},
 			</if>
-			<if test="userId !=null and userId !=''">
+			<if test="userId !=null">
 				#{userId},
 			</if>
 			<if test="realname !=null and realname !=''">
 				#{realname},
 			</if>
-			<if test="sex !=null and sex !=''">
+			<if test="sex !=null">
 				#{sex},
 			</if>
 			<if test="birthday !=null">
 				#{birthday},
 			</if>
-			<if test="experience !=null and experience !=''">
+			<if test="experience !=null">
 				#{experience},
 			</if>
 			<if test="orgName !=null and orgName !=''">
@@ -143,19 +146,22 @@
 			<if test="fax !=null and fax !=''">
 				#{fax},
 			</if>
-			<if test="orgId !=null and orgId !=''">
+			<if test="isDispensed !=null">
+				#{isDispensed},
+			</if>
+			<if test="orgId != null">
 				#{orgId},
 			</if>
-			<if test="onlineProgress !=null and onlineProgress !=''">
+			<if test="onlineProgress !=null">
 				#{onlineProgress},
 			</if>
-			<if test="authUserId !=null and authUserId !=''">
+			<if test="authUserId !=null">
 				#{authUserId},
 			</if>
 			<if test="authDate !=null">
 				#{authDate},
 			</if>
-			<if test="offlineProgress !=null and offlineProgress !=''">
+			<if test="offlineProgress !=null">
 				#{offlineProgress},
 			</if>
 			<if test="paperDate !=null">
@@ -195,22 +201,22 @@
 	<update id="updateDeclaration" parameterType="Declaration">
 		update declaration
 		<set>
-			<if test="materialId !=null and materialId !=''">
+			<if test="materialId !=null">
 				material_id = #{materialId},
 			</if>
-			<if test="userId !=null and userId !=''">
+			<if test="userId !=null">
 				user_id = #{userId},
 			</if>
 			<if test="realname !=null and realname !=''">
 				realname = #{realname},
 			</if>
-			<if test="sex !=null and sex !=''">
+			<if test="sex !=null">
 				sex = #{sex},
 			</if>
 			<if test="birthday !=null">
 				birthday = #{birthday},
 			</if>
-			<if test="experience !=null and experience !=''">
+			<if test="experience !=null">
 				experience = #{experience},
 			</if>
 			<if test="orgName !=null and orgName !=''">
@@ -246,19 +252,22 @@
 			<if test="fax !=null and fax !=''">
 				fax = #{fax},
 			</if>
-			<if test="orgId !=null and orgId !=''">
+			<if test="isDispensed !=null">
+				is_dispensed = #{isDispensed},
+			</if>
+			<if test="orgId != null">
 				org_id = #{orgId},
 			</if>
-			<if test="onlineProgress !=null and onlineProgress !=''">
+			<if test="onlineProgress !=null">
 				online_progress = #{onlineProgress},
 			</if>
-			<if test="authUserId !=null and authUserId !=''">
+			<if test="authUserId !=null">
 				auth_user_id = #{authUserId},
 			</if>
 			<if test="authDate !=null">
 				auth_date = #{authDate},
 			</if>
-			<if test="offlineProgress !=null and offlineProgress !=''">
+			<if test="offlineProgress !=null">
 				offline_progress = #{offlineProgress},
 			</if>
 			<if test="paperDate !=null">
@@ -419,18 +428,15 @@
 		select
 		a.id
 		from declaration a
-		LEFT JOIN material b
-		on b.id= a.material_id
-		LEFT JOIN dec_position c on c.declaration_id =
-		a.id
+		<!--  LEFT JOIN material b     on b.id= a.material_id -->
+		LEFT JOIN dec_position c on c.declaration_id = a.id
 		LEFT JOIN textbook d on d.id = c.textbook_id
-		LEFT JOIN writer_user
-		e on e.id=a.user_id
-		LEFT JOIN org f on f.id=a.org_id
+		LEFT JOIN writer_user e on e.id=a.user_id
+		LEFT JOIN (SELECT id,org_name from org UNION  SELECT 0,'人民卫生出版社' from org ) f on f.id=a.org_id
 		where
 		a.online_progress in (1,3) and a.is_deleted = 0
-		and b.is_deleted =0 and
-		b.id = #{parameter.materialId}
+		<!--  and b.is_deleted =0 -->
+		and a.material_id = #{parameter.materialId}
 		<!-- 下面是动态条件 -->
 		<!-- 书籍 -->
 		<if test="parameter.bookIds != null ">
@@ -457,6 +463,10 @@
 		<!-- 工作单位 -->
 		<if test="parameter.orgName != null ">
 			and a.org_name like concat('%',#{parameter.orgName},'%')
+		</if>
+		<!-- 申报单位id -->
+		<if test="parameter.orgId != null ">
+			and a.org_id = #{parameter.orgId}
 		</if>
 		<!-- 申报单位 -->
 		<if test="parameter.unitName != null ">
@@ -525,13 +535,10 @@
 		from declaration a
 		<!-- LEFT JOIN material b on b.id= a.material_id -->
 		LEFT JOIN dec_position c on c.declaration_id = a.id
-		LEFT JOIN textbook
-		d on d.id = c.textbook_id
-		LEFT JOIN writer_user e on e.id=a.user_id
-		LEFT JOIN org f on f.id=a.org_id
-		where
-		a.online_progress in (1,3) and
-		a.is_deleted = 0
+		LEFT JOIN textbook     d on d.id = c.textbook_id
+		LEFT JOIN writer_user  e on e.id=a.user_id
+		LEFT JOIN (SELECT id,org_name from org UNION  SELECT 0,'人民卫生出版社' from org ) f on f.id=a.org_id
+		where a.online_progress in (1,3) and a.is_deleted = 0
 		<!-- and b.is_deleted =0 and b.id = #{parameter.materialId} -->
 		and a.material_id = #{parameter.materialId}
 		<!-- 下面是动态条件 -->
@@ -560,6 +567,10 @@
 		<!-- 工作单位 -->
 		<if test="parameter.orgName != null ">
 			and a.org_name like concat('%',#{parameter.orgName},'%')
+		</if>
+		<!-- 申报单位id -->
+		<if test="parameter.orgId != null ">
+			and a.org_id = #{parameter.orgId}
 		</if>
 		<!-- 申报单位 -->
 		<if test="parameter.unitName != null ">

@@ -1,5 +1,8 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.SurveyQuestionOption;
@@ -23,6 +26,18 @@ public interface SurveyQuestionOptionDao {
     Integer addSurveyQuestionOption(SurveyQuestionOption surveyQuestionOption);
 
     /**
+     * 
+     * <pre>
+     * 功能描述：批量插入
+     * 使用示范：
+     *
+     * @param surveyQuestionOptions  SurveyQuestionOption对象集合
+     * @return 影响行数
+     * </pre>
+     */
+    Integer batchInsertSurveyQuestionOption(List<SurveyQuestionOption> surveyQuestionOptions);
+
+    /**
      * 删除SurveyQuestionOption通过主键id
      * 
      * @author:tyc
@@ -43,6 +58,18 @@ public interface SurveyQuestionOptionDao {
     Integer updateSurveyQuestionOption(SurveyQuestionOption surveyQuestionOption);
 
     /**
+     * 
+     * <pre>
+     * 功能描述：批量更新
+     * 使用示范：
+     *
+     * @param surveyQuestionOptions  SurveyQuestionOption 集合
+     * @return 影响行数
+     * </pre>
+     */
+    Integer batchUpdateSurveyOption(List<SurveyQuestionOption> surveyQuestionOptions);
+
+    /**
      * 查找SurveyQuestionOption通过主键id
      * 
      * @author:tyc
@@ -51,7 +78,7 @@ public interface SurveyQuestionOptionDao {
      * @return 影响行数
      */
     SurveyQuestionOption getSurveyQuestionOptionById(Long id);
-    
+
     /**
      * 删除SurveyQuestionOption通过问题id
      * 
@@ -61,4 +88,18 @@ public interface SurveyQuestionOptionDao {
      * @return 影响行数
      */
     Integer deleteSurveyQuestionOptionByQuestionId(Long questionId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按问题Id批量删除
+     * 使用示范：
+     *
+     * @param questionIds  问题id
+     * @return 影响行数 
+     * </pre>
+     */
+    Integer batchDeleteSurveyQuestionOptionByQuestionIds(
+    @Param("questionIds") List<Long> questionIds);
+
 }

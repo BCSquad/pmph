@@ -51,7 +51,7 @@ public class MaterialServiceTest extends BaseTest {
     	materialService.addMaterial(material);
     	//修改
     	material.setMaterialName(String.valueOf(random.nextInt(200)));
-    	Assert.assertTrue("更新失败", materialService.updateMaterial(material) > 0 );
+    	Assert.assertTrue("更新失败", materialService.updateMaterial(material, null) > 0 );
     	
     }
     

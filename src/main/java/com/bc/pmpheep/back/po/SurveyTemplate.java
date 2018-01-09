@@ -56,6 +56,14 @@ public class SurveyTemplate implements java.io.Serializable {
      * 修改时间
      */
     private Timestamp         gmtUpdate;
+    /**
+     * 简介
+     */
+    private String            intro;
+    /**
+     * 调查类型
+     */
+    private Long              typeId;
 
     // Constructors
 
@@ -69,20 +77,30 @@ public class SurveyTemplate implements java.io.Serializable {
     }
 
     /** full constructor */
-    public SurveyTemplate(String templateName, Integer sort, Long userId, Boolean isDeleted,
-    Timestamp gmtCreate, Timestamp gmtUpdate) {
+    public SurveyTemplate(String templateName, Integer sort, Long userId, String intro,
+    Long typeId, Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate) {
         this.templateName = templateName;
         this.sort = sort;
         this.userId = userId;
+        this.intro = intro;
+        this.typeId = typeId;
         this.isDeleted = isDeleted;
         this.gmtCreate = gmtCreate;
         this.gmtUpdate = gmtUpdate;
     }
 
-    public SurveyTemplate(String templateName, Integer sort, Long userId) {
+    public SurveyTemplate(String templateName, String intro, Long typeId, Long userId) {
         this.templateName = templateName;
-        this.sort = sort;
+        this.intro = intro;
+        this.typeId = typeId;
         this.userId = userId;
+    }
+
+    public SurveyTemplate(Long id, String templateName, String intro, Long typeId) {
+        this.id = id;
+        this.templateName = templateName;
+        this.intro = intro;
+        this.typeId = typeId;
     }
 
     /**
@@ -183,12 +201,39 @@ public class SurveyTemplate implements java.io.Serializable {
         this.gmtUpdate = gmtUpdate;
     }
 
-	@Override
-	public String toString() {
-		return "SurveyTemplate [id=" + id + ", templateName=" + templateName
-				+ ", sort=" + sort + ", userId=" + userId + ", isDeleted="
-				+ isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
-				+ gmtUpdate + "]";
-	}
+    /**
+     * @return the intro
+     */
+    public String getIntro() {
+        return intro;
+    }
+
+    /**
+     * @param intro the intro to set
+     */
+    public void setIntro(String intro) {
+        this.intro = intro;
+    }
+
+    /**
+     * @return the typeId
+     */
+    public Long getTypeId() {
+        return typeId;
+    }
+
+    /**
+     * @param typeId the typeId to set
+     */
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
+    }
+
+    @Override
+    public String toString() {
+        return "SurveyTemplate [id=" + id + ", templateName=" + templateName + ", sort=" + sort
+               + ", userId=" + userId + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
+               + ", gmtUpdate=" + gmtUpdate + "]";
+    }
 
 }
