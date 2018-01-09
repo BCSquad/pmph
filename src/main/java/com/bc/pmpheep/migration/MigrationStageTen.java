@@ -85,8 +85,8 @@ public class MigrationStageTen {
 
     public void start() {
         Date begin = new Date();
-        //cmsCategory();
-        //cmsContent();
+        cmsCategory();
+        cmsContent();
         initCmsAdvertisementData();
         logger.info("迁移第十步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
