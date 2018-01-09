@@ -5,6 +5,7 @@ import java.util.List;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Topic;
+import com.bc.pmpheep.back.po.TopicLog;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
 import com.bc.pmpheep.back.vo.TopicDirectorVO;
 import com.bc.pmpheep.back.vo.TopicEditorVO;
@@ -54,7 +55,7 @@ public interface TopicService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String update(Topic topic) throws CheckedServiceException;
+	String update(TopicLog topicLog, String sessionId, Topic topic) throws CheckedServiceException;
 
 	/**
 	 * 
@@ -66,7 +67,7 @@ public interface TopicService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	TopicTextVO getTopicTextVO(Long id) throws CheckedServiceException;
+	TopicTextVO getTopicTextVO(TopicLog topicLog, String sessionId, Long id) throws CheckedServiceException;
 
 	/**
 	 * 
@@ -115,6 +116,7 @@ public interface TopicService {
 	 *
 	 */
 	Topic add(Topic topic) throws CheckedServiceException;
+
 	/**
 	 * 
 	 * 

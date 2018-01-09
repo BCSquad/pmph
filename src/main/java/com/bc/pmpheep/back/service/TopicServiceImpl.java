@@ -13,6 +13,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Topic;
+import com.bc.pmpheep.back.po.TopicLog;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -53,6 +54,8 @@ import net.sf.json.JSONObject;
 @Service
 public class TopicServiceImpl implements TopicService {
 
+	@Autowired
+	TopicLogService topicLogService;
 	@Autowired
 	TopicDao topicDao;
 	@Autowired
@@ -224,13 +227,20 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public String update(Topic topic) throws CheckedServiceException {
+	public String update(TopicLog topicLog, String sessionId, Topic topic) throws CheckedServiceException {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (ObjectUtil.isNull(pmphUser)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"用户为空！");
+		}
+		topicLog.setUserId(pmphUser.getId());
 		if (ObjectUtil.isNull(topic) || ObjectUtil.isNull(topic.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
 					"该选题不存在");
 		}
 		String result = "FIAL";
 		if (topicDao.update(topic) > 0) {
+			topicLogService.add(topicLog);
 			result = "SUCCESS";
 		}
 		if (ObjectUtil.notNull(topic.getAuthProgress())) {
@@ -247,7 +257,7 @@ public class TopicServiceImpl implements TopicService {
 				topic.setVn(editionnum + vn);
 				topicDao.update(topic);
 				String remark = topic.getAuthFeedback();
-				TopicTextVO topicTextVO = getTopicTextVO(topic.getId());
+				TopicTextVO topicTextVO = getTopicTextVO(topicLog, sessionId, topic.getId());
 				String sql = "insert into i_declarestates (editionnum,rwusercode,rwusername,topicname,readerpeople,sources,fontcount,piccount,timetohand,subject,booktype,levels,depositbank,bankaccount,selectreason,publishingvalue,content,authorbuybooks,authorsponsor,originalname,originalauthor,originalnationality,originalpress,publishagerevision,topicnumber,auditstates,remark,creattime,states)";
 				sql += "values('" + editionnum + vn + "','" + topicTextVO.getUsername() + "','"
 						+ topicTextVO.getRealname() + "','','" + topicTextVO.getReadType() + "','"
@@ -268,11 +278,18 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public TopicTextVO getTopicTextVO(Long id) throws CheckedServiceException {
+	public TopicTextVO getTopicTextVO(TopicLog topicLog, String sessionId, Long id) throws CheckedServiceException {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (ObjectUtil.isNull(pmphUser)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"用户为空！");
+		}
+		topicLog.setUserId(pmphUser.getId());
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
 					"选题申报的id为空！");
 		}
+		topicLogService.add(topicLog);
 		TopicTextVO topicTextVO = topicDao.getTopicTextVO(id);
 		topicTextVO.setTopicExtra(topicExtraService.getTopicExtraByTopicId(id));
 		topicTextVO.setTopicWriters(topicWriertService.listTopicWriterByTopicId(id));
