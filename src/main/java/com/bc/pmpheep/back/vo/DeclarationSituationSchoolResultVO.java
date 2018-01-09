@@ -7,6 +7,8 @@ import java.io.Serializable;
 
 import org.apache.ibatis.type.Alias;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
+
 /**
  * <p>Title:DeclarationSituationSchoolResult<p>
  * <p>Description:申报情况按学校统计界面<p>
@@ -24,27 +26,38 @@ public class DeclarationSituationSchoolResultVO implements Serializable{
 	//序号
 	private Long row;
 	//申报学校
+	@ExcelHeader(header = "申报单位")
 	private String schoolName;
 	//主编申报数
+	@ExcelHeader(header = "主编申报数")
 	private Integer presetPositionEditor;
 	//副主编申报数
+	@ExcelHeader(header = "副主编申报数")
 	private Integer presetPositionSubeditor;
 	//编委申报数
+	@ExcelHeader(header = "编委申报数")
 	private Integer presetPositionEditorial;
 	//数字编委申报数
+	@ExcelHeader(header = "数字编委申报数")
 	private Integer presetDigitalEditor;
 	//主编当选数
+	@ExcelHeader(header = "主编当选数")
 	private Integer chosenPositionEditor;
 	//副主编当选数
+	@ExcelHeader(header = "副主编当选数")
 	private Integer chosenPositionSubeditor;
 	//编委当选数
+	@ExcelHeader(header = "编委当选数")
 	private Integer chosenPositionEditorial;
 	//数字编委当选数
+	@ExcelHeader(header = "数字编委当选数")
 	private Integer isDigitalEditor;
 	//申报人数
 	private Integer presetPersons;
 	//当选人数
 	private Integer chosenPersons;
+	//当前页面排序方式   1 按当选数/2 按申报数
+	private Integer state;
 	
 	public DeclarationSituationSchoolResultVO() {
 		super();
@@ -160,6 +173,14 @@ public class DeclarationSituationSchoolResultVO implements Serializable{
 	
 	public void setChosenPersons(Integer chosenPersons) {
 		this.chosenPersons = chosenPersons;
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
 	}
 
 }
