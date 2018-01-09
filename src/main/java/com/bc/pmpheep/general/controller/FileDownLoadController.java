@@ -576,46 +576,6 @@ public class FileDownLoadController {
         }
     }
 
-    /**
-     * 角色遴选 批量导出主编、副主编
-     * 
-     * @param textbookIds
-     * @param request
-     * @param response
-     * @throws IllegalAccessException
-     */
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "角色遴选 批量导出主编、副主编")
-    @RequestMapping(value = "/position/ExportEditor", method = RequestMethod.GET)
-    public void ExportEditor(Long[] textbookIds, HttpServletRequest request,
-    HttpServletResponse response) throws IllegalAccessException, Exception {
-        List<DecPositionBO> list;
-        Workbook workbook = null;
-        try {
-            list = textbookService.getExcelDecByMaterialId(textbookIds);
-            workbook = excelHelper.fromDecPositionBOList(list, "主编-副主编");
-        } catch (CheckedServiceException | IllegalArgumentException e) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                                              CheckedExceptionResult.FILE_CREATION_FAILED,
-                                              "数据表格化的时候失败");
-        }
-        // 通过书籍id获取教材信息
-        Material material = materialService.getMaterialByName(textbookIds);
-        String fileName = returnFileName(request, material.getMaterialName() + ".xls");
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("application/force-download");
-        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
-        try (OutputStream out = response.getOutputStream()) {
-            workbook.write(out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            logger.warn("文件下载时出现IO异常：{}", e.getMessage());
-            throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
-                                              "文件在传输时中断");
-        }
-    }
-
 	/**
 	 * 角色遴选 批量导出主编、副主编
 	 * 
@@ -654,22 +614,15 @@ public class FileDownLoadController {
 		}
 	}
 	
-	/**
-	 * 
-	 * <pre>
-=======
     /**
      * 
      * <pre>
->>>>>>> branch 'develop' of https://github.com/BCSquad/pmph
 	 * 功能描述：导出填空题调查结果Excel
 	 * 使用示范：
 	 * @user  tyc
 	 * @param request
 	 * @param response
 	 * 2018.01.08 18:31
-	 * </pre>
-<<<<<<< HEAD
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出填空题调查结果")
@@ -898,41 +851,4 @@ public class FileDownLoadController {
         			CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
         }
 	}
-
-    @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出填空题调查结果")
-    @RequestMapping(value = "/excel/surveyQuestionExcel", method = RequestMethod.GET)
-    public void surveyQuestionExcel(
-    @RequestParam(value = "title", defaultValue = "主观题调查结果") String title,
-    @RequestParam("surveyId") Long surveyId, @RequestParam("questionId") Long questionId,
-    HttpServletRequest request, HttpServletResponse response) {
-        Workbook workbook = null;
-        List<SurveyQuestionFillVO> surveyQuestionFillVO = null;
-        try {
-            SurveyQuestionFillVO sqfFillVO = new SurveyQuestionFillVO();
-            sqfFillVO.setQuestionId(questionId);
-            sqfFillVO.setSurveyId(surveyId);
-            PageParameter<SurveyQuestionFillVO> pageParameter =
-            new PageParameter<SurveyQuestionFillVO>(null, null, sqfFillVO);
-            surveyQuestionFillVO =
-            surveyQuestionAnswerService.listFillQuestion(pageParameter).getRows();
-            workbook = excelHelper.fromBusinessObjectList(surveyQuestionFillVO, title + "主观题调查结果");
-        } catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
-            logger.warn("数据表格化的时候失败");
-        }
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("application/force-download");
-        String fileName = returnFileName(request, title + ".xls");
-        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
-        try (OutputStream out = response.getOutputStream()) {
-            workbook.write(out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            logger.warn("文件下载时出现IO异常：{}", e.getMessage());
-            throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
-                                              "文件在传输时中断");
-        }
-    }
 }
