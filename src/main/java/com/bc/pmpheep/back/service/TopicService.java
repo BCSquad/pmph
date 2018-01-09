@@ -115,4 +115,13 @@ public interface TopicService {
 	 *
 	 */
 	Topic add(Topic topic) throws CheckedServiceException;
+	/**
+	 * 
+	 * 
+	 * 功能描述：定期获取中间表的申报进度
+	 *
+	 * @throws CheckedServiceException
+	 *
+	 */
+	void updateByErp() throws CheckedServiceException;
 }

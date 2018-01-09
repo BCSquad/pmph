@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.bo.DecPositionBO;
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.service.BookCorrectionService;
 import com.bc.pmpheep.back.service.CmsExtraService;
@@ -43,6 +44,7 @@ import com.bc.pmpheep.back.service.MaterialNoticeAttachmentService;
 import com.bc.pmpheep.back.service.MaterialOrgService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
+import com.bc.pmpheep.back.service.SurveyQuestionAnswerService;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
@@ -51,6 +53,7 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookCorrectionTrackVO;
 import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
 import com.bc.pmpheep.back.vo.OrgExclVO;
+import com.bc.pmpheep.back.vo.SurveyQuestionFillVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.bean.ZipDownload;
 import com.bc.pmpheep.general.service.FileService;
@@ -98,6 +101,8 @@ public class FileDownLoadController {
 	MaterialOrgService materialOrgService;
 	@Autowired
 	BookCorrectionService bookCorrectionService;
+	@Autowired
+	SurveyQuestionAnswerService surveyQuestionAnswerService;
 	@Resource(name = "taskExecutor")
 	private ThreadPoolTaskExecutor taskExecutor;
 	// 当前业务类型
@@ -591,6 +596,47 @@ public class FileDownLoadController {
 		String fileName = returnFileName(request, material.getMaterialName() + ".xls");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()) {
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+	
+	/**
+	 * 
+	 * <pre>
+	 * 功能描述：导出填空题调查结果Excel
+	 * 使用示范：
+	 * @user  tyc
+	 * @param request
+	 * @param response
+	 * 2018.01.08 18:31
+	 * </pre>
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出填空题调查结果")
+	@RequestMapping(value = "/excel/surveyQuestionExcel", method = RequestMethod.GET)
+	public void surveyQuestionExcel(HttpServletRequest request, HttpServletResponse response) {
+		Workbook workbook = null;
+		List<SurveyQuestionFillVO> surveyQuestionFillVO = null;
+		try {
+			PageParameter<SurveyQuestionFillVO> pageParameter = new PageParameter<>(null, null);
+			surveyQuestionFillVO = (List<SurveyQuestionFillVO>) 
+					surveyQuestionAnswerService.listFillQuestion(pageParameter);
+			workbook = excelHelper.fromBusinessObjectList(surveyQuestionFillVO, "填空题调查结果");
+		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+			logger.warn("数据表格化的时候失败");
+		}
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		String name = "填空题调查结果";
+		String fileName = returnFileName(request, name + ".xls");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			workbook.write(out);

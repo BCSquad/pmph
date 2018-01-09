@@ -106,9 +106,11 @@ public class SurveyTemplateController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询模版下的所有问题")
     @RequestMapping(value = "/question/look", method = RequestMethod.GET)
-    public ResponseBean look(@RequestParam("templateId") Long templateId) {
+    public ResponseBean look(@RequestParam("surveyId") Long surveyId,
+    @RequestParam("templateId") Long templateId) {
         return new ResponseBean(
-                                surveyTemplateService.getSurveyTemplateQuestionByTemplateId(templateId));
+                                surveyTemplateService.getSurveyTemplateQuestionByTemplateId(surveyId,
+                                                                                            templateId));
     }
 
     /**
