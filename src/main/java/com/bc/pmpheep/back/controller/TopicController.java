@@ -245,6 +245,8 @@ public class TopicController {
 	 *            审核意见
 	 * @param authDate
 	 *            审核时间
+	 * @param isAccepted
+	 *            编辑是否受理
 	 * @param isRejectedByEditor
 	 *            是否退回上级
 	 * @param reasonEditor
@@ -256,26 +258,28 @@ public class TopicController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "编辑对选题进行操作")
 	@RequestMapping(value = "/put/editorHandling", method = RequestMethod.PUT)
 	public ResponseBean editorHandling(HttpServletRequest request, Long id, Integer authProgress, String authFeedback,
-			Boolean isRejectedByEditor, Boolean isEditorHandling, String reasonEditor) {
+			Boolean isRejectedByEditor, Boolean isAccepted, String reasonEditor) {
 		String sessionId = CookiesUtil.getSessionId(request);
 		TopicLog topicLog = new TopicLog();
 		topicLog.setTopicId(id);
 		Topic topic = new Topic();
 		topic.setId(id);
-		topic.setIsEditorHandling(isEditorHandling);
-		if (ObjectUtil.isNull(isRejectedByEditor)) {
-			isEditorHandling = false;
-		}
-		topic.setIsRejectedByEditor(isRejectedByEditor);
-		if (isRejectedByEditor) {
-			topicLog.setTopicEvent("编辑退回选题给主任");
-			topic.setIsEditorHandling(false);
-			topic.setReasonEditor(reasonEditor);
-		} else {
-			topicLog.setTopicEvent("编辑审核选题申报");
-			topic.setAuthDate(DateUtil.getCurrentTime());
-			topic.setAuthFeedback(authFeedback);
-			topic.setAuthProgress(authProgress);
+		topic.setIsAccepted(isAccepted);
+		if (ObjectUtil.isNull(isAccepted)) {
+			if (ObjectUtil.isNull(isRejectedByEditor)) {
+				isRejectedByEditor = false;
+			}
+			topic.setIsRejectedByEditor(isRejectedByEditor);
+			if (isRejectedByEditor) {
+				topicLog.setTopicEvent("编辑退回选题给主任");
+				topic.setIsEditorHandling(false);
+				topic.setReasonEditor(reasonEditor);
+			} else {
+				topicLog.setTopicEvent("编辑审核选题申报");
+				topic.setAuthDate(DateUtil.getCurrentTime());
+				topic.setAuthFeedback(authFeedback);
+				topic.setAuthProgress(authProgress);
+			}
 		}
 		return new ResponseBean(topicService.update(topicLog, sessionId, topic));
 	}
