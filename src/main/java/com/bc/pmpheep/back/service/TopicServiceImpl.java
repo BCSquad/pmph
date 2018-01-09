@@ -233,33 +233,36 @@ public class TopicServiceImpl implements TopicService {
 		if (topicDao.update(topic) > 0) {
 			result = "SUCCESS";
 		}
-		if (3 == topic.getAuthProgress()) {
-			// 创建本版号并将本版号放入数据中
-			String editionnum = "10" + new SimpleDateFormat("yyyy").format(new Date());
-			String vn = topicDao.getMaxTopicVn();
-			if (StringUtil.isEmpty(vn)) {
-				vn = "000001";
-			} else {
-				vn = Integer.parseInt(vn.substring(7)) + 1000000 + 1 + "";
+		if (ObjectUtil.notNull(topic.getAuthProgress())) {
+			if (3 == topic.getAuthProgress()) {
+				// 创建本版号并将本版号放入数据中
+				String editionnum = "10" + new SimpleDateFormat("yyyy").format(new Date());
+				String vn = topicDao.getMaxTopicVn();
+				if (StringUtil.isEmpty(vn)) {
+					vn = "000001";
+				} else {
+					vn = Integer.parseInt(vn.substring(7)) + 1000000 + 1 + "";
+				}
+				topic.setNote("选题通过");
+				topic.setVn(editionnum + vn);
+				topicDao.update(topic);
+				String remark = topic.getAuthFeedback();
+				TopicTextVO topicTextVO = getTopicTextVO(topic.getId());
+				String sql = "insert into i_declarestates (editionnum,rwusercode,rwusername,topicname,readerpeople,sources,fontcount,piccount,timetohand,subject,booktype,levels,depositbank,bankaccount,selectreason,publishingvalue,content,authorbuybooks,authorsponsor,originalname,originalauthor,originalnationality,originalpress,publishagerevision,topicnumber,auditstates,remark,creattime,states)";
+				sql += "values('" + editionnum + vn + "','" + topicTextVO.getUsername() + "','"
+						+ topicTextVO.getRealname() + "','','" + topicTextVO.getReadType() + "','"
+						+ topicTextVO.getSourceType() + "','" + topicTextVO.getWordNumber() + "','"
+						+ topicTextVO.getPictureNumber() + "','"
+						+ DateUtil.formatTimeStamp("yyyy-MM-dd", topicTextVO.getDeadline()) + "','"
+						+ topicTextVO.getSubject() + "','" + topicTextVO.getTypeName() + "','" + topicTextVO.getRank()
+						+ "','" + topicTextVO.getBank() + "','" + topicTextVO.getAccountNumber() + "','"
+						+ topicTextVO.getTopicExtra().getReason() + "','" + topicTextVO.getTopicExtra().getPrice()
+						+ "','" + topicTextVO.getTopicExtra().getScore() + "','" + topicTextVO.getPurchase() + "','"
+						+ topicTextVO.getSponsorship() + "','" + topicTextVO.getOriginalBookname() + "','"
+						+ topicTextVO.getOriginalAuthor() + "','" + topicTextVO.getNation() + "','','"
+						+ topicTextVO.getEdition() + "','','11','" + remark + "',GETDATE(),1)";
+				SqlHelper.executeUpdate(sql, null);
 			}
-			topic.setNote("选题通过");
-			topic.setVn(editionnum + vn);
-			topicDao.update(topic);
-			String remark = topic.getAuthFeedback();
-			TopicTextVO topicTextVO = getTopicTextVO(topic.getId());
-			String sql = "insert into i_declarestates (editionnum,rwusercode,rwusername,topicname,readerpeople,sources,fontcount,piccount,timetohand,subject,booktype,levels,depositbank,bankaccount,selectreason,publishingvalue,content,authorbuybooks,authorsponsor,originalname,originalauthor,originalnationality,originalpress,publishagerevision,topicnumber,auditstates,remark,creattime,states)";
-			sql += "values('" + editionnum + vn + "','" + topicTextVO.getUsername() + "','" + topicTextVO.getRealname()
-					+ "','','" + topicTextVO.getReadType() + "','" + topicTextVO.getSourceType() + "','"
-					+ topicTextVO.getWordNumber() + "','" + topicTextVO.getPictureNumber() + "','"
-					+ DateUtil.formatTimeStamp("yyyy-MM-dd", topicTextVO.getDeadline()) + "','"
-					+ topicTextVO.getSubject() + "','" + topicTextVO.getTypeName() + "','" + topicTextVO.getRank()
-					+ "','" + topicTextVO.getBank() + "','" + topicTextVO.getAccountNumber() + "','"
-					+ topicTextVO.getTopicExtra().getReason() + "','" + topicTextVO.getTopicExtra().getPrice() + "','"
-					+ topicTextVO.getTopicExtra().getScore() + "','" + topicTextVO.getPurchase() + "','"
-					+ topicTextVO.getSponsorship() + "','" + topicTextVO.getOriginalBookname() + "','"
-					+ topicTextVO.getOriginalAuthor() + "','" + topicTextVO.getNation() + "','','"
-					+ topicTextVO.getEdition() + "','','11','" + remark + "',GETDATE(),1)";
-			SqlHelper.executeUpdate(sql, null);
 		}
 		return result;
 	}
