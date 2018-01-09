@@ -151,7 +151,6 @@
 		SELECT
 		d.id,
 		d.dp_name,
-		u.id userId,
 		u.realname
 		FROM
 		pmph_department d
