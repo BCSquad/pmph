@@ -44,7 +44,7 @@ public class BookUserCommentController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页初始化/模糊查询图书评论")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ResponseBean list(Integer pageSize, Integer pageNumber, String name, Boolean isAuth) {
+	public ResponseBean list(Integer pageSize, Integer pageNumber, String name, Integer isAuth) {
 		PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
 		bookUserCommentVO.setIsAuth(isAuth);
@@ -70,7 +70,7 @@ public class BookUserCommentController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量审核图书评论")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	public ResponseBean update(Long[] ids, Boolean isAuth, HttpServletRequest request) {
+	public ResponseBean update(Long[] ids, Integer isAuth, HttpServletRequest request) {
 		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(bookUserCommentService.updateBookUserCommentByAuth(ids, isAuth, sessionId));
 	}
