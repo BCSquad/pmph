@@ -144,7 +144,7 @@ WriterUserCertificationService {
                                                                 progress));
             writerUsers.add(new WriterUser(writerUserCertification.getUserId()));
         }
-        if (CollectionUtil.isNotEmpty(wUserCertifications)) {
+        if (CollectionUtil.isNotEmpty(wUserCertifications)) {//教师审核通过的同时修改作家用户级别为教师
             count =
             writerUserCertificationDao.updateWriterUserCertificationProgressByUserId(wUserCertifications);
             writerUserService.updateWriterUserRank(writerUsers);
