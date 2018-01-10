@@ -142,6 +142,22 @@ public class Survey implements java.io.Serializable {
         this.gmtCreate = gmtCreate;
         this.gmtUpdate = gmtUpdate;
     }
+    
+    public Survey(String title, String subhead, String intro, Long templateId, Long typeId,
+    	    Long userId, Timestamp beginDate, Timestamp endDate, Integer sort, Short status,
+    	    Boolean isDeleted) {
+        this.title = title;
+        this.subhead = subhead;
+        this.intro = intro;
+        this.templateId = templateId;
+        this.typeId = typeId;
+        this.userId = userId;
+        this.beginDate = beginDate;
+        this.endDate = endDate;
+        this.sort = sort;
+        this.status = status;
+        this.isDeleted = isDeleted;
+    }
 
     // Property accessors
     /**
