@@ -38,6 +38,9 @@
 			<if test="isDeleted != null and isDeleted !=''">
 				is_deleted,
 			</if>
+			<if test="status != null">
+				status,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -76,6 +79,9 @@
 			</if>
 			<if test="isDeleted != null">
 				#{isDeleted},
+			</if>
+			<if test="status != null">
+				#{status},
 			</if>
 		</trim>
 	</sql>
@@ -132,6 +138,9 @@
 			</if>
 			<if test="isDeleted != null">
 				is_deleted=#{isDeleted},
+			</if>
+			<if test="status != null">
+				status=#{status},
 			</if>
 		</set>
 		where
