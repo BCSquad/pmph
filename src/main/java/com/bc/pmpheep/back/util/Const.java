@@ -223,4 +223,13 @@ public class Const {
     public static final Short              SURVEY_STATUS_0               = 0;
     public static final Short              SURVEY_STATUS_1               = 1;
     public static final Short              SURVEY_STATUS_2               = 2;
+    /**
+     * 问卷问题类型(1:单选,2:多选,3:下拉,4:单行文本,5:多行文本,6:附件)
+     */
+    public static final Short              SURVEY_QUESTION_TYPE_1        = 1;
+    public static final Short              SURVEY_QUESTION_TYPE_2        = 2;
+    public static final Short              SURVEY_QUESTION_TYPE_3        = 3;
+    public static final Short              SURVEY_QUESTION_TYPE_4        = 4;
+    public static final Short              SURVEY_QUESTION_TYPE_5        = 5;
+    public static final Short              SURVEY_QUESTION_TYPE_6        = 6;
 }
