@@ -246,4 +246,12 @@ public interface PmphUserService {
 	 * @return PageResult<PmphEditorVO>
 	 */
 	PageResult<PmphEditorVO> listEditors(PageParameter<PmphEditorVO> pageParameter) throws CheckedServiceException;
+
+	/**
+	 * 根据用户名获取用户
+	 * tyc
+	 * @param username
+	 * @return
+	 */
+	PmphUser getPmphUser(String username);
 }

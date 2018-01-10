@@ -597,4 +597,14 @@ public class PmphUserServiceImpl implements PmphUserService {
 		pageResult.setTotal(total);
 		return pageResult;
 	}
+
+	@Override
+	public PmphUser getPmphUser(String username) {
+		if (StringUtil.isEmpty(username)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "用户名为空");
+		}
+		PmphUser pmphUser = pmphUserDao.getPmphUser(username);
+		return pmphUser;
+	}
 }
