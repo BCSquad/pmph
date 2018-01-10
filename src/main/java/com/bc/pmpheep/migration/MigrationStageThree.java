@@ -215,7 +215,7 @@ public class MigrationStageThree {
         //手动添加一个系统管理员
         PmphUser pmphUserAdmin = new PmphUser();
         pmphUserAdmin.setUsername("admin");
-        pmphUserAdmin.setPassword("888888");
+        pmphUserAdmin.setPassword("123");
         pmphUserAdmin.setRealname("系统管理员");
         pmphUserAdmin.setAvatar("DEFAULT");
         pmphUserService.add(pmphUserAdmin);
