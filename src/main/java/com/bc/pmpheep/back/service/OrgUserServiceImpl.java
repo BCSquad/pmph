@@ -177,17 +177,37 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         if (StringUtil.notEmpty(orgTypeName)) {
             pageParameter.getParameter().setOrgTypeName(orgTypeName);
         }
-        Boolean isHospital = pageParameter.getParameter().getIsHospital();
-        if (ObjectUtil.notNull(isHospital)) {
-            pageParameter.getParameter().setIsHospital(isHospital);
-        }
         PageResult<OrgAndOrgUserVO> pageResult = new PageResult<OrgAndOrgUserVO>();
-        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-        int total = orgUserDao.getListOrgUserTotal(pageParameter);
-        if (total > 0) {
-            pageResult.setTotal(total);
-            List<OrgAndOrgUserVO> list = orgUserDao.getListOrgUser(pageParameter);
-            pageResult.setRows(list);
+        if(StringUtil.isEmpty(orgTypeName)){//当没有机构类型的时候   学校和医院生效
+        	if (pageParameter.getParameter().getIsHospital()) {
+            	pageParameter.getParameter().setHospital("医院");
+    	        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+    	        int total = orgUserDao.getListOrgUserTotal(pageParameter);
+    	        if (total > 0) {
+    	            pageResult.setTotal(total);
+    	            List<OrgAndOrgUserVO> list = orgUserDao.getListOrgUser(pageParameter);
+    	            pageResult.setRows(list);
+    	        }
+            }else{
+            	pageParameter.getParameter().setSchool("医院");
+            	PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+                int total = orgUserDao.getListOrgUserTotal(pageParameter);
+                if (total > 0) {
+                    pageResult.setTotal(total);
+                    List<OrgAndOrgUserVO> list = orgUserDao.getListOrgUser(pageParameter);
+                    pageResult.setRows(list);
+                }
+            }
+        }else{//当有机构类型的时候   学校和医院失效
+        	pageParameter.getParameter().setHospital(null);
+        	pageParameter.getParameter().setSchool(null);
+        	PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+            int total = orgUserDao.getListOrgUserTotal(pageParameter);
+            if (total > 0) {
+                pageResult.setTotal(total);
+                List<OrgAndOrgUserVO> list = orgUserDao.getListOrgUser(pageParameter);
+                pageResult.setRows(list);
+            }
         }
         return pageResult;
     }
