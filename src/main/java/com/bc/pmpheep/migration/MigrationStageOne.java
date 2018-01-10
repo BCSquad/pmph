@@ -208,7 +208,7 @@ public class MigrationStageOne {
                 logger.error("机构类型id或区域id为空，此结果将被记录在Excel中");
                 continue;
             }
-            Long orgTypeId = Long.valueOf(orgType);
+            Long orgTypeId = JdbcHelper.getPrimaryKey(tableName, "orgtype", orgType);
             String contactPerson = (String) map.get("linker");
             String contactPhone = (String) map.get("linktel");
             Integer sort = (Integer) map.get("sortno");
