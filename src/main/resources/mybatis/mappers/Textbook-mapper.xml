@@ -472,12 +472,13 @@
 		LEFT JOIN `textbook` t ON t.`id`= dp.`textbook_id`
 		LEFT JOIN `material` m ON m.`id`= t.`material_id`
 		WHERE
-			dc.is_staging=false and dc.online_progress!=2
+			dc.is_staging=false and dc.online_progress!=2 and dp.chosen_position !=0
 			and dp.`textbook_id` in
 		<foreach collection="array" item="item" index="index" open="("
 			separator="," close=")">
 			#{item}
 		</foreach>
+		ORDER BY dp.chosen_position desc,dp.rank asc
 	</select>
 	<!-- 角色遴选页面批量导出主编/副主编 -->
 	<select id="getExcelDecByMaterialId" resultType="com.bc.pmpheep.back.bo.DecPositionBO">
