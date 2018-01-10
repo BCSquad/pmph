@@ -534,4 +534,13 @@ public class WriterUserServiceImpl implements WriterUserService {
 		return pageResult;
 	}
 
+	@Override
+	public Integer updateWriterUserRank(List<WriterUser> writerUsers) {
+		if(null==writerUsers){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return writerUserDao.updateWriterUserRank(writerUsers);
+	}
+
 }
