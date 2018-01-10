@@ -515,4 +515,9 @@
 	LIMIT 
 	#{start},#{pageSize};
 	</select>
+	
+	<!-- 根据用户名获取用户 -->
+	<select id="getPmphUser" resultType="PmphUser">
+		select * from pmph_user where username = #{username}
+	</select>
 </mapper>
