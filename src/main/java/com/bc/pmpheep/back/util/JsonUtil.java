@@ -160,7 +160,7 @@ public class JsonUtil<T> {
             // return objectMapper.readValue(json,
             // new TypeReference<List<org.springframework.context.annotation.Bean>>() {
             // });
-            return objectMapper.readValue(json.getBytes(),
+            return objectMapper.readValue(json,
                                           objectMapper.getTypeFactory()
                                                       .constructParametricType(ArrayList.class, v));
         } catch (IOException e) {
