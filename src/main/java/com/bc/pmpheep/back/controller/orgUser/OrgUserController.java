@@ -62,6 +62,7 @@ public class OrgUserController {
 		}
 		if(StringUtil.notEmpty(orgTypeName)){
 			orgAndOrgUserVO.setOrgTypeName(orgTypeName.replaceAll(" ", ""));// 去除空格
+			orgAndOrgUserVO.setOrgTypeName(orgTypeName.replaceAll("&","、"));
 		}
 		orgAndOrgUserVO.setIsHospital(isHospital);
 		pageParameter.setPageNumber(pageNumber);
