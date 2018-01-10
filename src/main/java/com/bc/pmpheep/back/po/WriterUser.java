@@ -623,6 +623,9 @@ public class WriterUser implements Serializable {
     public WriterUser() {
     }
 
+    public WriterUser(Long id){
+    	this.id=id;
+    }
     public WriterUser(String username, String password) {
         this.username = username;
         this.password = password;

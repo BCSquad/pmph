@@ -102,6 +102,16 @@ public class SurveyTemplate implements java.io.Serializable {
         this.intro = intro;
         this.typeId = typeId;
     }
+    
+    public SurveyTemplate(String templateName, Integer sort, Long userId, String intro,
+    	    Long typeId, Boolean isDeleted) {
+        this.templateName = templateName;
+        this.sort = sort;
+        this.userId = userId;
+        this.intro = intro;
+        this.typeId = typeId;
+        this.isDeleted = isDeleted;
+    }
 
     /**
      * @return the id

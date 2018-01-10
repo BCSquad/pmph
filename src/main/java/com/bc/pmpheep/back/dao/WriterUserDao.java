@@ -139,6 +139,13 @@ public interface WriterUserDao {
      * @return 查询的username
      */
 	WriterUser getUsername(String username);
+	
+	/**
+	 * 通过作家用户id 审核后  修改为教师用户
+	 * @param writerUsers
+	 * @return
+	 */
+	Integer updateWriterUserRank(List<WriterUser> writerUsers);
 
     // /**
     // *
