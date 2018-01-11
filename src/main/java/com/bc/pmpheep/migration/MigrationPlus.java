@@ -79,7 +79,7 @@ public class MigrationPlus {
 	 
 	 public void start() {
 		 Date begin = new Date();
-		 initCmsAdvertisementData();
+		 //initCmsAdvertisementData();
 		 survey();
 		 logger.info("数据填充运行结束，用时：{}", JdbcHelper.getPastTime(begin));
 	 }
@@ -141,14 +141,16 @@ public class MigrationPlus {
 		 surveyTypeService.addSurveyType(surveyType2);
 		 SurveyType surveyType3 = new SurveyType("医生", 3);
 		 surveyTypeService.addSurveyType(surveyType3);
-		 PmphUser pmphUser = pmphUserService.getPmphUser("admin");
+		 /*PmphUser pmphUser = pmphUserService.getPmphUser("admin");
 		 SurveyTemplate surveyTemplate = new SurveyTemplate("人卫e教平台满意度问卷模板", 999, pmphUser.getId(), 
+				 "该问卷只针对教师", surveyType2.getId(), false);*/
+		 SurveyTemplate surveyTemplate = new SurveyTemplate("人卫e教平台满意度问卷模板", 999, 610L, 
 				 "该问卷只针对教师", surveyType2.getId(), false);
 		 surveyTemplateService.addSurveyTemplate(surveyTemplate);
 		 Survey survey = new Survey("人卫e教平台满意度问卷模板", 
 				 "希望您能抽出几分钟时间，将您的感受和建议告诉我们，我们非常重视每位教师的宝贵意见，期待您的参与！", 
 				 "该问卷只针对教师", surveyTemplate.getId(), surveyType2.getId(), 
-				 pmphUser.getId(), null, null, 999, (short) 0);
+				 610L, null, null, 999, (short) 0);
 		 surveyService.addSurvey(survey);
 		 SurveyQuestion surveyQuestion = new SurveyQuestion(0L, "您是否使用过人卫e教平台网站？", (short) 1,
 				 1, null, true);
