@@ -60,7 +60,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 	}
 
 	@Override
-	public String updateBookUserCommentByAuth(Long[] ids, Integer isAuth, String sessionId)
+	public String updateBookUserCommentByAuth(Long[] ids, Integer isAuth, Boolean isHot, String sessionId)
 			throws CheckedServiceException {
 		String result = "FAIL";
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -84,6 +84,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			}
 			bookUserComment.setId(id);
 			bookUserComment.setIsAuth(isAuth);
+			bookUserComment.setIsHot(isHot);
 			bookUserComment.setAuthUserId(pmphUser.getId());
 			bookUserComment.setAuthDate(DateUtil.getCurrentTime());
 			num += bookUserCommentDao.updateBookUserComment(bookUserComment);
