@@ -626,7 +626,7 @@
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
 		LEFT JOIN (SELECT id,is_published FROM textbook) n ON (n.id = dp.textbook_id)
-		where d.is_staging = 0 AND d.online_progress >0 
+		where d.is_staging = 0 AND d.online_progress = 3 
 		and m.id= #{materialId};
 	</select>
 	
@@ -638,7 +638,7 @@
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
 		LEFT JOIN (SELECT id,is_published FROM textbook) n ON (n.id = dp.textbook_id)
-		where d.is_staging = 0 AND d.online_progress >0 
+		where d.is_staging = 0 AND d.online_progress = 3 
 		and m.id= #{materialId};
 	</select>
 	
@@ -650,7 +650,7 @@
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
 		LEFT JOIN (SELECT id,is_published FROM textbook) n ON (n.id = dp.textbook_id)
-		where d.is_staging = 0 AND d.online_progress >0 
+		where d.is_staging = 0 AND d.online_progress = 3 
 		and m.id= #{materialId};
 	</select>
 	
@@ -662,7 +662,7 @@
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
 		LEFT JOIN (SELECT id,is_published FROM textbook) n ON (n.id = dp.textbook_id)
-		where d.is_staging = 0 AND d.online_progress >0 
+		where d.is_staging = 0 AND d.online_progress = 3 
 		and m.id= #{materialId};
 	</select>
 	
