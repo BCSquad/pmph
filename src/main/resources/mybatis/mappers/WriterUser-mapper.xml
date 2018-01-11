@@ -621,6 +621,7 @@
 	<select id="getListWriterUserTotal" parameterType="PageParameter"
 		resultType="java.lang.Integer">
 		select count(*) from writer_user w left join org o on o.id = w.org_id
+		left join Writer_User_Certification wuc on wuc.user_id=w.id
 		where 1=1
 		<if test="parameter.name !=null and parameter.name !='' ">
 			and (w.username like concat('%',#{parameter.name},'%' ) or
@@ -638,7 +639,9 @@
 		resultType="WriterUserManagerVO">
 		select
 		*
-		from writer_user w left join org o on o.id = w.org_id where
+		from writer_user w left join org o on o.id = w.org_id 
+		left join Writer_User_Certification wuc on wuc.user_id=w.id
+		where
 		1=1
 		<if test="parameter.name !=null and parameter.name !='' ">
 			and (w.username like concat('%',#{parameter.name},'%' ) or
@@ -766,4 +769,19 @@
 			#{id}
 		</foreach>
 	</delete>
+	<!-- 教师审核后WriterUser中Rank字段 -->
+	<update id="updateWriterUserRank"
+		parameterType="java.util.List">
+		<foreach item="item" collection="list" index="index" open=""
+			separator=";">
+			update
+			writer_user
+			<set>
+				rank=1
+			</set>
+			where
+			id=#{item.id}
+		</foreach>
+	</update>
+	
 </mapper>

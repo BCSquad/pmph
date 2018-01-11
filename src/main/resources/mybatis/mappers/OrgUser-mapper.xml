@@ -310,13 +310,11 @@
 		<if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
 			and ot.type_name like concat('%',#{parameter.orgTypeName},'%')
 		</if>
-		<if test="parameter.isHospital !=null">
-			<if test="parameter.isHospital" >
-				and ot.type_name='医院'
-			</if>
-			<if test="parameter.isHospital=false" >
-				and ot.type_name!='医院'
-			</if>
+		<if test="parameter.school !=null and parameter.school !='' ">
+			and ot.type_name!=#{parameter.school}
+		</if>
+		<if test="parameter.hospital !=null and parameter.hospital !='' ">
+			and ot.type_name =#{parameter.hospital}
 		</if>
 	</select>
 	<select id="getListOrgUser" parameterType="PageParameter"
@@ -339,13 +337,11 @@
 		<if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
 			and ot.type_name like concat('%',#{parameter.orgTypeName},'%')
 		</if>
-		<if test="parameter.isHospital !=null">
-			<if test="parameter.isHospital" >
-				and ot.type_name='医院'
-			</if>
-			<if test="parameter.isHospital=false" >
-				and ot.type_name!='医院'
-			</if>
+		<if test="parameter.school !=null and parameter.school !='' ">
+			and ot.type_name!=#{parameter.school}
+		</if>
+		<if test="parameter.hospital !=null and parameter.hospital !='' ">
+			and ot.type_name =#{parameter.hospital}
 		</if>
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}

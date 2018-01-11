@@ -486,7 +486,7 @@ public class FileDownLoadController {
      * @throws Exception
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出书籍遴选名单/批量导出")
-    @RequestMapping(value = "/position/exportExcel", method = RequestMethod.GET)
+    @RequestMapping(value = "/chosenPosition/exportExcel", method = RequestMethod.GET)
     public void exportExcel(HttpServletRequest request, HttpServletResponse response,
     @RequestParam("textbookIds") Long[] textbookIds) throws CheckedServiceException, Exception {
         Workbook workbook = null;
@@ -506,9 +506,15 @@ public class FileDownLoadController {
         String fileName = null;
         if (textbookIds.length > 1) {// 当批量导出的时候 文件名为教材名称
             String materialName = list.get(0).getMaterialName();// 书籍名称
+            if(null==materialName){
+            	materialName="遴选名单导出";
+            }
             fileName = returnFileName(request, materialName + ".xls");
         } else {// 当单个导出的时候 文件名为书籍名称
             String TextbookName = list.get(0).getTextbookName();// 书籍名称
+            if(null==TextbookName){
+            	TextbookName="遴选名单导出";
+            }
             fileName = returnFileName(request, TextbookName + ".xls");
         }
         response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -585,8 +591,8 @@ public class FileDownLoadController {
 	 * @throws IllegalAccessException
 	 */
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "角色遴选 批量导出主编、副主编")
-	@RequestMapping(value = "/position/ExportEditor", method = RequestMethod.GET)
-	public void exportEditor(Long[] textbookIds,HttpServletRequest request,HttpServletResponse response) 
+	@RequestMapping(value = "/position/exportEditors", method = RequestMethod.GET)
+	public void exportEditors(Long[] textbookIds,HttpServletRequest request,HttpServletResponse response) 
 			throws IllegalAccessException ,Exception{
 		List<DecPositionBO> list;
 		Workbook workbook = null;

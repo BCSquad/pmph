@@ -4,6 +4,7 @@
  */
 package com.bc.pmpheep.migration.test;
 
+import com.bc.pmpheep.migration.MigrationPlus;
 import com.bc.pmpheep.migration.MigrationStageEight;
 import com.bc.pmpheep.migration.MigrationStageFive;
 import com.bc.pmpheep.migration.MigrationStageFour;
@@ -15,7 +16,9 @@ import com.bc.pmpheep.migration.MigrationStageTen;
 import com.bc.pmpheep.migration.MigrationStageThree;
 import com.bc.pmpheep.migration.MigrationStageTwo;
 import com.bc.pmpheep.test.BaseTest;
+
 import javax.annotation.Resource;
+
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -53,6 +56,8 @@ public class MigrationTest extends BaseTest {
     MigrationStageNine migrationStageNine;
     @Resource
     MigrationStageTen migrationStageTen;
+    @Resource
+    MigrationPlus migrationPlus;
 
     @Test
     @Rollback(false)
@@ -112,5 +117,11 @@ public class MigrationTest extends BaseTest {
     @Rollback(false)
     public void testMigrationStageTen() {
         migrationStageTen.start();
+    }
+    
+    @Test
+    @Rollback(false)
+    public void testMigrationPlus() {
+    	migrationPlus.start();
     }
 }
