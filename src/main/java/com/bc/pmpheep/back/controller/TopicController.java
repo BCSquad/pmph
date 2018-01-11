@@ -192,6 +192,7 @@ public class TopicController {
 		} else {
 			topicLog.setTopicEvent("主任分配选题给部门编辑");
 			topic.setEditorId(editorId);
+			topic.setIsRejectedByEditor(false);
 			topic.setIsEditorHandling(true);
 		}
 		return new ResponseBean(topicService.update(topicLog, sessionId, topic));
