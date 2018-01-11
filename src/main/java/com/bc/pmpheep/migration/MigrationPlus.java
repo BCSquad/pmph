@@ -3,6 +3,7 @@ package com.bc.pmpheep.migration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -141,16 +142,20 @@ public class MigrationPlus {
 		 surveyTypeService.addSurveyType(surveyType2);
 		 SurveyType surveyType3 = new SurveyType("医生", 3);
 		 surveyTypeService.addSurveyType(surveyType3);
+		 String sql = "select * from sys_user where userid = '1496375695709123-789241'";
+		 List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+		 Map<String, Object> map = maps.get(0);
+		 Long id = (Long) map.get("new_pk");
 		 /*PmphUser pmphUser = pmphUserService.getPmphUser("admin");
 		 SurveyTemplate surveyTemplate = new SurveyTemplate("人卫e教平台满意度问卷模板", 999, pmphUser.getId(), 
 				 "该问卷只针对教师", surveyType2.getId(), false);*/
-		 SurveyTemplate surveyTemplate = new SurveyTemplate("人卫e教平台满意度问卷模板", 999, 610L, 
+		 SurveyTemplate surveyTemplate = new SurveyTemplate("人卫e教平台满意度问卷模板", 999, id, 
 				 "该问卷只针对教师", surveyType2.getId(), false);
 		 surveyTemplateService.addSurveyTemplate(surveyTemplate);
 		 Survey survey = new Survey("人卫e教平台满意度问卷模板", 
 				 "希望您能抽出几分钟时间，将您的感受和建议告诉我们，我们非常重视每位教师的宝贵意见，期待您的参与！", 
 				 "该问卷只针对教师", surveyTemplate.getId(), surveyType2.getId(), 
-				 610L, null, null, 999, (short) 0);
+				 id, null, null, 999, (short) 0);
 		 surveyService.addSurvey(survey);
 		 SurveyQuestion surveyQuestion = new SurveyQuestion(0L, "您是否使用过人卫e教平台网站？", (short) 1,
 				 1, null, true);
