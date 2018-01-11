@@ -207,5 +207,12 @@ public interface WriterUserService {
 	 * 
 	 */
 	String updateWriterUserOfBack(WriterUser WriterUser) throws CheckedServiceException;
+	
+	/**
+	 * 通过作家用户id修改 级别为教师
+	 * @param writerUsers
+	 * @return
+	 */
+	Integer updateWriterUserRank(List<WriterUser> writerUsers);
 
 }

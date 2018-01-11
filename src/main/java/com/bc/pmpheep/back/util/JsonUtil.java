@@ -173,10 +173,21 @@ public class JsonUtil<T> {
         // String jsonDecPosition =
         // "[{'id':4,'chosenPosition':1,'rank':1,'isDigitalEditor':true},{'id':3,'chosenPosition':2,'rank':3,'isDigitalEditor':true},{'id':1,'chosenPosition':3,'rank':'','isDigitalEditor':false}]";
         String jsonString =
-        "{'title':'你是否使用过XX社交网站','type':1,'direction':'','sort':1,'surveyQuestionOptionList':[{'optionContent':'是'},{'optionContent':'否'}]}";
-        JavaType javaType = getCollectionType(ArrayList.class, SurveyQuestionListVO.class);
+        "[{'title':'你会网上冲浪吗？','type':1,'direction':null,'sort':1,'surveyQuestionOptionList':[{'optionContent':'不会'},{'optionContent':'会'}]},{'title':'你最喜欢的运动是什么','type':2,'direction':'','sort':'2','surveyQuestionOptionList':[{'optionContent':'篮球'},{'optionContent':'足球'},{'optionContent':'乒乓球'},{'optionContent':'羽毛球'},{'optionContent':'棒球'},{'optionContent':'网球'}]}]";
+        // JavaType javaType = getCollectionType(ArrayList.class, SurveyQuestionListVO.class);
+        // List<SurveyQuestionListVO> lst =
+        // (List<SurveyQuestionListVO>) objectMapper.readValue(jsonString, javaType);
+        // System.out.println(lst.toString());
+        // System.out.println(decode(jsonString, new TypeReference<SurveyQuestionListVO>() {
+        // }).toString());
+        JavaType javaType =
+        objectMapper.getTypeFactory().constructParametricType(List.class,
+                                                              SurveyQuestionListVO.class);
         List<SurveyQuestionListVO> lst =
         (List<SurveyQuestionListVO>) objectMapper.readValue(jsonString, javaType);
+        // List<SurveyQuestionListVO> beanList =
+        // objectMapper.readValue(jsonString, new TypeReference<List<SurveyQuestionListVO>>() {
+        // });
         System.out.println(lst.toString());
     }
 
@@ -188,10 +199,11 @@ public class JsonUtil<T> {
      * @return JavaType Java类型
      * @since 1.0
      */
-    public static JavaType getCollectionType(Class<?> collectionClass, Class<?>... elementClasses) {
-        return objectMapper.getTypeFactory().constructParametricType(collectionClass,
-                                                                     elementClasses);
-    }
+    // public static JavaType getCollectionType(Class<?> collectionClass, Class<?>...
+    // elementClasses) {
+    // return objectMapper.getTypeFactory().constructParametricType(collectionClass,
+    // elementClasses);
+    // }
 
     /**
      * 字符串转化为ArrayList的HashMap对象

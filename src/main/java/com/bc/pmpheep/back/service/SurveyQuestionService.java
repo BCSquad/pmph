@@ -2,8 +2,6 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.SurveyQuestion;
@@ -131,6 +129,6 @@ public interface SurveyQuestionService {
      * @return 影响行数 
      * </pre>
      */
-    Integer batchDeleteSurveyQuestionByQuestionIds(@Param("questionIds") List<Long> questionIds)
+    Integer batchDeleteSurveyQuestionByQuestionIds(List<Long> questionIds)
     throws CheckedServiceException;
 }

@@ -22,6 +22,10 @@ public class SurveyVO implements java.io.Serializable {
      */
     private String            title;
     /**
+     * 模版名称
+     */
+    private String            templateName;
+    /**
      * 问卷副标题
      */
     private String            subhead;
@@ -287,6 +291,20 @@ public class SurveyVO implements java.io.Serializable {
      */
     public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
+    }
+
+    /**
+     * @return the templateName
+     */
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    /**
+     * @param templateName the templateName to set
+     */
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
 }

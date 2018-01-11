@@ -161,9 +161,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
         }
         // 如果是新建教材，显示报名截止时间必须大于当前时间
         if (!isUpdate && material.getDeadline().getTime() <= new Date().getTime()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.ILLEGAL_PARAM,
-                                              "显示报名截止时间必须大于当前时间");
+//            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+//                                              CheckedExceptionResult.ILLEGAL_PARAM,
+//                                              "显示报名截止时间必须大于当前时间");
         }
         // 实际报名截止日期
         if (null == material.getActualDeadline()) {
@@ -172,9 +172,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
         }
         // 如果是新建教材，实际报名截止日期必须大于当前时间
         if (!isUpdate && material.getActualDeadline().getTime() <= new Date().getTime()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.ILLEGAL_PARAM,
-                                              "实际报名截止日期必须大于当前时间");
+//            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+//                                              CheckedExceptionResult.ILLEGAL_PARAM,
+//                                              "实际报名截止日期必须大于当前时间");
         }
         // 实际报名截止日期和显示报名截止时间比较
         if (material.getActualDeadline().getTime() < material.getDeadline().getTime()) {

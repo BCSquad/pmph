@@ -292,6 +292,19 @@
 		    	`survey_question_option` sqo 
 		    ON 
 		    	sq.`id` = sqo.`question_id`
+		    JOIN 
+		    	`survey_template_question` stq 
+        	ON 
+        		sq.`id` = stq.`question_id` 
+      		JOIN 
+      			`survey` s 
+        	ON 
+        		stq.`template_id` = s.`template_id` 
+        		<where>
+        			<if test="surveyId !=null ">
+        				s.`id`=#{surveyId}
+        			</if>
+        		</where>
 		    ORDER BY 
 		    	sq.id ASC
 		   ) a 
@@ -302,11 +315,6 @@
 			        sqa.`option_content` optCont 
 			    FROM
         			`survey_question_answer` sqa
-        		<where>
-        			<if test="surveyId !=null ">
-        				sqa.`survey_id`=#{surveyId}
-        			</if>
-        		</where>
         	) b 
 	      	ON 
 	      		a.id = b.question_id 

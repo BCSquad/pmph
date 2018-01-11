@@ -38,7 +38,7 @@ public class OrgTypeController {
 	@RequestMapping(value = "/list/orgtype", method = RequestMethod.GET)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取机构类型")
 	@ResponseBody
-	public ResponseBean listOrgTypeByTypeName(String typeName) {
+	public ResponseBean orgtype(String typeName) {
 		return new ResponseBean(orgTypeService.listOrgTypeByTypeName(typeName));
 	}
 

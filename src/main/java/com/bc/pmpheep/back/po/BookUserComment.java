@@ -33,13 +33,37 @@ public class BookUserComment implements Serializable {
 	 */
 	private Long writerId;
 	/**
+	 * 是否长评
+	 */
+	private Boolean isLong;
+	/**
 	 * 评分
 	 */
 	private Double score;
 	/**
+	 * 标题
+	 */
+	private String title;
+	/**
 	 * 评价内容
 	 */
 	private String content;
+	/**
+	 * 是否热门
+	 */
+	private Boolean isHot;
+	/**
+	 * 热门显示顺序
+	 */
+	private Integer sortHot;
+	/**
+	 * 是否推荐
+	 */
+	private Boolean isPromote;
+	/**
+	 * 推荐显示顺序
+	 */
+	private Integer sortPromote;
 	/**
 	 * 是否隐藏
 	 */
@@ -101,6 +125,46 @@ public class BookUserComment implements Serializable {
 		return bookId;
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public Boolean getIsHot() {
+		return isHot;
+	}
+
+	public void setIsHot(Boolean isHot) {
+		this.isHot = isHot;
+	}
+
+	public Integer getSortHot() {
+		return sortHot;
+	}
+
+	public void setSortHot(Integer sortHot) {
+		this.sortHot = sortHot;
+	}
+
+	public Boolean getIsPromote() {
+		return isPromote;
+	}
+
+	public void setIsPromote(Boolean isPromote) {
+		this.isPromote = isPromote;
+	}
+
+	public Integer getSortPromote() {
+		return sortPromote;
+	}
+
+	public void setSortPromote(Integer sortPromote) {
+		this.sortPromote = sortPromote;
+	}
+
 	public void setBookId(Long bookId) {
 		this.bookId = bookId;
 	}
@@ -135,6 +199,14 @@ public class BookUserComment implements Serializable {
 
 	public void setIsHide(Boolean isHide) {
 		this.isHide = isHide;
+	}
+
+	public Boolean getIsLong() {
+		return isLong;
+	}
+
+	public void setIsLong(Boolean isLong) {
+		this.isLong = isLong;
 	}
 
 	public Integer getIsAuth() {

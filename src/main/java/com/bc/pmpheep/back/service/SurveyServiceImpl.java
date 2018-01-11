@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.po.SurveyQuestionOption;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.po.SurveyTemplateQuestion;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.JsonUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
@@ -180,7 +181,7 @@ public class SurveyServiceImpl implements SurveyService {
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         Long surveyId = surveyVO.getId();// 问卷ID
-        String title = surveyVO.getTitle();// 问卷名称
+        String title = surveyVO.getTemplateName();// 问卷名称
         String intro = surveyVO.getIntro();// 问卷概述
         Long typeId = surveyVO.getTypeId();// 问卷调查对象
         Long templateId = surveyVO.getTemplateId();// 模版ID
@@ -240,14 +241,17 @@ public class SurveyServiceImpl implements SurveyService {
             }
             Long newId = surveyQuestions.getId(); // 获取数据库新生成的问题id
             questionIds.add(newId);
-            List<SurveyQuestionOption> surveyQuestionOptionList =
-            surveyQuestionLists.getSurveyQuestionOptionList(); // 获取问题选项list
-            for (SurveyQuestionOption surveyQuestionOptions : surveyQuestionOptionList) { // 遍历问题选项
-                SurveyQuestionOption surveyQuestionOption =
-                new SurveyQuestionOption(newId, surveyQuestionOptions.getOptionContent(),
-                                         surveyQuestionOptions.getIsOther(),
-                                         surveyQuestionOptions.getRemark()); // 问题选项实体
-                surveyQuestionOptionService.addSurveyQuestionOption(surveyQuestionOption); // 再保存问题选项
+            if (Const.SURVEY_QUESTION_TYPE_1 == surveyQuestionLists.getType()
+                || Const.SURVEY_QUESTION_TYPE_2 == surveyQuestionLists.getType()) {
+                List<SurveyQuestionOption> surveyQuestionOptionList =
+                surveyQuestionLists.getSurveyQuestionOptionList(); // 获取问题选项list
+                for (SurveyQuestionOption surveyQuestionOptions : surveyQuestionOptionList) { // 遍历问题选项
+                    SurveyQuestionOption surveyQuestionOption =
+                    new SurveyQuestionOption(newId, surveyQuestionOptions.getOptionContent(),
+                                             surveyQuestionOptions.getIsOther(),
+                                             surveyQuestionOptions.getRemark()); // 问题选项实体
+                    surveyQuestionOptionService.addSurveyQuestionOption(surveyQuestionOption); // 再保存问题选项
+                }
             }
         }
         return questionIds;

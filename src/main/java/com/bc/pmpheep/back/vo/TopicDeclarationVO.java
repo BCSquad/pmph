@@ -54,6 +54,10 @@ public class TopicDeclarationVO implements Serializable {
 	 */
 	private Timestamp submitTime;
 	/**
+	 * 审核编辑的真实姓名
+	 */
+	private String editorName;
+	/**
 	 * 审核时间
 	 */
 	private Timestamp authDate;
@@ -89,6 +93,14 @@ public class TopicDeclarationVO implements Serializable {
 	 * 详细状态
 	 */
 	private String stateDeail;
+
+	public String getEditorName() {
+		return editorName;
+	}
+
+	public void setEditorName(String editorName) {
+		this.editorName = editorName;
+	}
 
 	public Long getId() {
 		return id;
@@ -169,7 +181,6 @@ public class TopicDeclarationVO implements Serializable {
 	public void setIsDirectorHandling(Boolean isDirectorHandling) {
 		this.isDirectorHandling = isDirectorHandling;
 	}
-
 
 	public Boolean getIsEditorHandling() {
 		return isEditorHandling;

@@ -178,4 +178,12 @@ public interface PmphUserDao {
 	 */
 	List<PmphEditorVO> listEditors(@Param("departmentId") Long departmentId, @Param("realName") String realName,
 			@Param("pageSize") Integer pageSize, @Param("start") Integer start);
+	
+	/**
+	 * 根据用户名获取用户
+	 * tyc
+	 * @param username
+	 * @return
+	 */
+	PmphUser getPmphUser(String username);
 }

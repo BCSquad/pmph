@@ -101,7 +101,7 @@ public class SurveyTypeController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除问卷调查类型")
-    @RequestMapping(value = "/{id}/remove", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/remove", method = RequestMethod.DELETE)
     public ResponseBean remove(@PathVariable("id") Long id) {
         return new ResponseBean(surveyTypeService.deleteSurveyTypeById(id));
     }

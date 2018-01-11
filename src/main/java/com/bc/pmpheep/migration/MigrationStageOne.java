@@ -178,7 +178,7 @@ public class MigrationStageOne {
         String tableName = "ba_organize";//机构类型方法已添加过new_pk，此处无需再添加
         String sql = "SELECT a.*,b.new_pk FROM ba_organize a "
                 + "LEFT JOIN ba_areacode b ON b.AreaID =a.orgprovince "
-                + "WHERE a.orgcode NOT LIKE '15%' AND a.parentid !=0 ORDER BY a.orgcode";
+                + "WHERE a.orgcode NOT LIKE '15%' AND a.parentid !=0 ORDER BY a.isdelete，a.orgcode";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         /*除主键外有其他列有唯一值约束，用此集合放此列已经插入新表的值作为判断重复的条件*/
@@ -191,10 +191,21 @@ public class MigrationStageOne {
             StringBuilder sb = new StringBuilder();
             String orgId = (String) map.get("orgid");
             String orgName = (String) map.get("orgname");
-            if (StringUtil.isEmpty(orgName) || JdbcHelper.nameDuplicate(list, orgName)
-                    || StringUtil.strLength(orgName) > 20) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构名称不符合规范，可能为空、"
+            if (StringUtil.isEmpty(orgName)) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构名称为空。"
                         + "重复或过长。"));
+                excel.add(map);
+                logger.error("机构名称不符合规范，此结果将被记录在Excel中");
+                continue;
+            }
+            if (JdbcHelper.nameDuplicate(list, orgName)){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构名称重复。"));
+                excel.add(map);
+                logger.error("机构名称不符合规范，此结果将被记录在Excel中");
+                continue;
+            }
+            if (StringUtil.strLength(orgName) > 20){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构名称过长。"));
                 excel.add(map);
                 logger.error("机构名称不符合规范，此结果将被记录在Excel中");
                 continue;
@@ -208,7 +219,7 @@ public class MigrationStageOne {
                 logger.error("机构类型id或区域id为空，此结果将被记录在Excel中");
                 continue;
             }
-            Long orgTypeId = Long.valueOf(orgType);
+            Long orgTypeId = JdbcHelper.getPrimaryKey(tableName, "orgtype", orgType);
             String contactPerson = (String) map.get("linker");
             String contactPhone = (String) map.get("linktel");
             Integer sort = (Integer) map.get("sortno");
@@ -269,7 +280,7 @@ public class MigrationStageOne {
                 + "WHERE a.sysflag=1 AND b.usertype=2 "
                 + "AND NOT EXISTS (SELECT * FROM pub_addfileinfo p WHERE e.operdate<p.operdate "
                 + "AND e.operuserid=p.operuserid) "
-                + "ORDER BY a.userid ;";
+                + "GROUP BY a.usercode ORDER BY a.userid ;";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         List<String> list = new ArrayList<>();
@@ -278,20 +289,30 @@ public class MigrationStageOne {
             StringBuilder sb = new StringBuilder();
             String userId = map.get("userid").toString();
             String username = (String) map.get("usercode");
-            if (StringUtil.isEmpty(username) || JdbcHelper.nameDuplicate(list, username)
-                    || StringUtil.strLength(username) > 20) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构代码不符合规范，可能为空、"
+            if (StringUtil.isEmpty(username)) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构代码为空。"
                         + "重复或过长。"));
                 excel.add(map);
-                logger.error("机构代码不符合规范，此结果将被记录在Excel中");
+                logger.error("机构名称不符合规范，此结果将被记录在Excel中");
+                continue;
+            }
+            if (JdbcHelper.nameDuplicate(list, username)){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构代码重复。"));
+                excel.add(map);
+                logger.error("机构名称不符合规范，此结果将被记录在Excel中");
+                continue;
+            }
+            if (StringUtil.strLength(username) > 20){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构代码过长。"));
+                excel.add(map);
+                logger.error("机构名称不符合规范，此结果将被记录在Excel中");
                 continue;
             }
             list.add(username);
             Long orgId = (Long) map.get("new_pk");
             if (ObjectUtil.isNull(orgId)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("对应学校理应不能为空。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到对应的学校。"));
                 excel.add(map);
-                logger.info("对应学校id理应不能为空，此结果将被记录在Excel中");
                 continue;
             }
             String password = (String) map.get("password");
@@ -299,7 +320,6 @@ public class MigrationStageOne {
                 password = "888888";
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构用户登陆密码为空。"));
                 excel.add(map);
-                logger.error("机构用户登陆密码为空，此结果将被记录在Excel中");
             }
             String realName = (String) map.get("username");
             String orgName = (String) map.get("orgname");
@@ -353,7 +373,6 @@ public class MigrationStageOne {
             if (orgUser.getProgress() == 1 && ObjectUtil.isNull(orgUser.getReviewDate())) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("审核通过，但审核时间为空。"));
                 excel.add(map);
-                logger.info("审核通过，但审核时间为空，此结果将被记录在Excel中进行二次确认核对");
             }
             orgUser = orgUserService.addOrgUser(orgUser);
             Long pk = orgUser.getId();
@@ -426,10 +445,14 @@ public class MigrationStageOne {
             StringBuilder sb = new StringBuilder();
             String userId = (String) map.get("userid");
             String username = (String) map.get("usercode");
-            if (StringUtil.isEmpty(username) || JdbcHelper.nameDuplicate(list, username)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到用户的登陆名或登录名重复。"));
+            if (StringUtil.isEmpty(username)) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到用户的登陆名"));
                 excel.add(map);
-                logger.error("未找到用户的登录名或登录名重复，此结果将被记录在Excel中");
+                continue;
+            }
+            if (JdbcHelper.nameDuplicate(list, username)){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户的登陆名重复。"));
+                excel.add(map);
                 continue;
             }
             list.add(username);
@@ -438,10 +461,6 @@ public class MigrationStageOne {
             String realName = (String) map.get("username");
             if (StringUtil.isEmpty(realName)) {
                 realName = username;
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户真实姓名为必填项，"
-                        + "此处真实姓名找不到。"));
-                excel.add(map);
-                logger.info("找不到真实姓名");
             }
             String sexNum = (String) map.get("sex");
             Integer sex = 0;
@@ -527,7 +546,6 @@ public class MigrationStageOne {
             if (writerUser.getIsTeacher() && ObjectUtil.isNull(writerUser.getAuthTime())) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("认证通过但认证时间为空。"));
                 excel.add(map);
-                logger.info("认证通过但认证时间为空，此结果将被记录在Excel中");
             }
             writerUser = writerUserService.add(writerUser);
             Long pk = writerUser.getId();

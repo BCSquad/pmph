@@ -142,6 +142,20 @@ public class Survey implements java.io.Serializable {
         this.gmtCreate = gmtCreate;
         this.gmtUpdate = gmtUpdate;
     }
+    
+    public Survey(String title, String subhead, String intro, Long templateId, Long typeId,
+    	    Long userId, Timestamp beginDate, Timestamp endDate, Integer sort, Short status) {
+        this.title = title;
+        this.subhead = subhead;
+        this.intro = intro;
+        this.templateId = templateId;
+        this.typeId = typeId;
+        this.userId = userId;
+        this.beginDate = beginDate;
+        this.endDate = endDate;
+        this.sort = sort;
+        this.status = status;
+    }
 
     // Property accessors
     /**
@@ -340,13 +354,14 @@ public class Survey implements java.io.Serializable {
         this.gmtUpdate = gmtUpdate;
     }
 
-    @Override
-    public String toString() {
-        return "Survey [id=" + id + ", title=" + title + ", subhead=" + subhead + ", intro="
-               + intro + ", templateId=" + templateId + ", typeId=" + typeId + ", userId=" + userId
-               + ", beginDate=" + beginDate + ", endDate=" + endDate + ", sort=" + sort
-               + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
-               + gmtUpdate + "]";
-    }
+	@Override
+	public String toString() {
+		return "Survey [id=" + id + ", title=" + title + ", subhead=" + subhead
+				+ ", intro=" + intro + ", templateId=" + templateId
+				+ ", typeId=" + typeId + ", userId=" + userId + ", beginDate="
+				+ beginDate + ", endDate=" + endDate + ", sort=" + sort
+				+ ", status=" + status + ", isDeleted=" + isDeleted
+				+ ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
+	}
 
 }

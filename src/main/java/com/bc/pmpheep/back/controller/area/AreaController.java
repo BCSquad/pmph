@@ -37,7 +37,7 @@ public class AreaController {
 	@RequestMapping(value = "/areachirldren", method = RequestMethod.GET)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取当前地区的下级区域")
 	@ResponseBody
-	public ResponseBean getAreaChirldren(Long parentId) {
+	public ResponseBean areachirldren(Long parentId) {
 		return new ResponseBean(areaService.getAreaChirldren(parentId));
 	}
 

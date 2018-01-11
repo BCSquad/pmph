@@ -4,10 +4,6 @@
  */
 package com.bc.pmpheep.migration;
 
-import com.bc.pmpheep.back.dao.CmsAdvertisementDao;
-import com.bc.pmpheep.back.dao.CmsAdvertisementImageDao;
-import com.bc.pmpheep.back.po.CmsAdvertisement;
-import com.bc.pmpheep.back.po.CmsAdvertisementImage;
 import com.bc.pmpheep.back.po.CmsCategory;
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.Material;
@@ -21,7 +17,6 @@ import com.bc.pmpheep.back.service.MaterialExtraService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.vo.CmsAdvertisementOrImageVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.po.Content;
 import com.bc.pmpheep.general.service.ContentService;
@@ -29,21 +24,15 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -77,16 +66,13 @@ public class MigrationStageTen {
     MaterialContactService materialContactService;
     @Resource
     MaterialExtraService materialExtraService;
-    @Resource
-    CmsAdvertisementImageDao cmsAdvertisementImageDao;
-    @Resource
-    CmsAdvertisementDao cmsAdvertisementDao;
+    
+   
 
     public void start() {
         Date begin = new Date();
         cmsCategory();
         cmsContent();
-        initCmsAdvertisementData();
         logger.info("迁移第十步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
@@ -96,17 +82,6 @@ public class MigrationStageTen {
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);//取得该表中所有数据
         int count = 3;//迁移成功的条目数
         /* 只有三条有效数据，直接新建CmsCategory保存 */
-        CmsCategory category1 = new CmsCategory(0L, "0", "公告管理", true);
-        category1.setIsMaterialNotice(true);
-        category1.setIsClicksVisible(true);
-        category1 = cmsCategoryService.addCmsCategory(category1);
-        long pk = category1.getId();
-        JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1003");//更新旧表中new_pk字段
-        CmsCategory category2 = new CmsCategory(0L, "0", "快报管理", true);
-        category2.setIsClicksVisible(true);
-        category2 = cmsCategoryService.addCmsCategory(category2);
-        pk = category2.getId();
-        JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1004");//更新旧表中new_pk字
         CmsCategory category3 = new CmsCategory(0L, "0", "医学随笔", false);
         category3.setIsAuthRequired(true);
         category3.setIsAuthorVisible(true);
@@ -116,8 +91,19 @@ public class MigrationStageTen {
         category3.setIsLikesVisible(true);
         category3.setIsBookmarksVisible(true);
         category3 = cmsCategoryService.addCmsCategory(category3);
-        pk = category3.getId();
+        long pk = category3.getId();
         JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1005");//更新旧表中new_pk字
+        CmsCategory category2 = new CmsCategory(0L, "0", "快报管理", true);
+        category2.setIsClicksVisible(true);
+        category2 = cmsCategoryService.addCmsCategory(category2);
+        pk = category2.getId();
+        JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1004");//更新旧表中new_pk字
+        CmsCategory category1 = new CmsCategory(0L, "0", "公告管理", true);
+        category1.setIsMaterialNotice(true);
+        category1.setIsClicksVisible(true);
+        category1 = cmsCategoryService.addCmsCategory(category1);
+        pk = category1.getId();
+        JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1003");//更新旧表中new_pk字段
         logger.info("'{}'表迁移完成", tableName);
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
     }
@@ -303,51 +289,4 @@ public class MigrationStageTen {
         }
     }
 
-    public void initCmsAdvertisementData() {
-        //初始化的数据
-        String dataJson
-                = "["
-                + "{adname:'首页轮播',         type:1,autoPlay:true, animationInterval:3000,image:[{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'},{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'},{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'}]} ,"
-                + "{adname:'首页中部',         type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/2670f031-35da-4dd6-b079-8f295c51a339.png'},{image:'/upload/site/af598f9e-ae9e-48a0-a3e4-17acc363051a.png'},{image:'/upload/site/a4160c1e-8beb-4530-9f2b-df022a6f751d.png'},{image:'/upload/site/a69b782d-f1ad-42e6-a91a-08432963b54a.png'}]} ,"
-                + "{adname:'信息快报和遴选公告列表',type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/article/20170328/wenzhang10.jpg'}]} ,"
-                + "{adname:'读书首页轮播 ',      type:1,autoPlay:true ,animationInterval:3000,image:[{image:'/upload/article/20170328/xiaoxi1.jpg'},{image:'/upload/article/20170328/xiaoxi2.jpg'},{image:'/upload/article/20170328/xiaoxi3.jpg'}]} ,"
-                + "]";
-        Gson gson = new Gson();
-        List<CmsAdvertisementOrImageVO> lst = gson.fromJson(dataJson, new TypeToken<ArrayList<CmsAdvertisementOrImageVO>>() {
-        }.getType());
-        for (CmsAdvertisementOrImageVO cmsAdvertisementAndImages : lst) {
-            CmsAdvertisement cmsAdvertisement = new CmsAdvertisement();
-            //广告名称
-            cmsAdvertisement.setAdname(cmsAdvertisementAndImages.getAdname());
-            //是否自动播放
-            cmsAdvertisement.setAutoPlay(cmsAdvertisementAndImages.getAutoPlay());
-            //循环间隔时间
-            cmsAdvertisement.setAnimationInterval(cmsAdvertisementAndImages.getAnimationInterval());
-            //类型    0 普通  1 轮播
-            cmsAdvertisement.setType(cmsAdvertisementAndImages.getType());
-            //保存广告
-            cmsAdvertisementDao.addCmsAdvertisement(cmsAdvertisement);
-            List<CmsAdvertisementImage> images = (List<CmsAdvertisementImage>) (cmsAdvertisementAndImages.getImage());
-            for (CmsAdvertisementImage image : images) {
-                String filePath = image.getImage();
-                image.setAdvertId(cmsAdvertisement.getId());
-                image.setImage("----");
-                //保存图片文件 
-                cmsAdvertisementImageDao.addCmsAdvertisementImage(image);
-                String mongoId = null;
-                try {
-                    //保存图片至mongo
-                    mongoId = fileService.migrateFile(filePath, FileType.CMS_ADVERTISEMENT, image.getId());
-                } catch (Exception ex) {
-                    logger.warn("文件上传失败 :{}", ex.getMessage());
-                    //文件保存失败删除这条记录
-                    cmsAdvertisementImageDao.deleteCmsAdvertisementByImages(image.getId());
-                    continue;
-                }
-                image.setImage(mongoId);
-                //修改图片文件地址
-                cmsAdvertisementImageDao.updateCmsAdvertisementImage(image);
-            }
-        }
-    }
 }

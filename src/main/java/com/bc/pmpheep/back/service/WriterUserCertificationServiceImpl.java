@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.WriterUserCertificationDao;
+import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.po.WriterUserCertification;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -32,6 +33,8 @@ WriterUserCertificationService {
 
     @Autowired
     private WriterUserCertificationDao writerUserCertificationDao;
+    @Autowired
+    WriterUserService writerUserService;
 
     /**
      * 
@@ -125,6 +128,7 @@ WriterUserCertificationService {
         Integer count = 0;
         List<WriterUserCertification> wUserCertifications =
         new ArrayList<WriterUserCertification>(writerUserCertifications.size());
+        List<WriterUser> writerUsers=new ArrayList<>();
         for (WriterUserCertification writerUserCertification : writerUserCertifications) {
             if (Const.WRITER_PROGRESS_0 == writerUserCertification.getProgress()) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
@@ -138,10 +142,12 @@ WriterUserCertificationService {
             wUserCertifications.add(new WriterUserCertification(
                                                                 writerUserCertification.getUserId(),
                                                                 progress));
+            writerUsers.add(new WriterUser(writerUserCertification.getUserId()));
         }
-        if (CollectionUtil.isNotEmpty(wUserCertifications)) {
+        if (CollectionUtil.isNotEmpty(wUserCertifications)) {//教师审核通过的同时修改作家用户级别为教师
             count =
             writerUserCertificationDao.updateWriterUserCertificationProgressByUserId(wUserCertifications);
+            writerUserService.updateWriterUserRank(writerUsers);
         }
         return count;
     }
