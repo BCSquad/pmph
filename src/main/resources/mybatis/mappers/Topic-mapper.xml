@@ -559,10 +559,12 @@
 		a.department_id = b.department_id
 		LEFT JOIN writer_user c ON a.user_id
 		= c.id
-		WHERE b.department_id = #{departmentId}
+		WHERE b.id = #{userId}
 		AND
 		a.is_director_handling = TRUE
-		AND a.is_editor_handling = FALSE
+		AND
+		a.is_editor_handling = FALSE
+		AND b.is_director = TRUE
 		<if test="bookName != null and bookName !=''">
 			AND a.bookname like concat('%',#{bookName},'%')
 		</if>
@@ -583,11 +585,13 @@
 		LEFT JOIN writer_user c
 		ON a.user_id = c.id
 		WHERE
-		b.department_id = #{departmentId}
+		b.id = #{userId}
 		AND
-		a.is_director_handling = TRUE
+		a.is_director_handling =
+		TRUE
 		AND
 		a.is_editor_handling = FALSE
+		AND b.is_director = TRUE
 		<if test="bookName != null and bookName !=''">
 			AND a.bookname like concat('%',#{bookName},'%')
 		</if>
