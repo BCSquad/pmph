@@ -576,13 +576,16 @@
 
 	<!-- 计算主任可以操作的选题数 -->
 	<select id="totalTopicDirectorVOs" resultType="Integer">
-		SELECT count(a.*)
-		FROM topic a LEFT JOIN pmph_user b ON a.department_id
+		SELECT count(*) FROM (SELECT a.*,c.realname
+		FROM topic a LEFT JOIN
+		pmph_user b ON a.department_id
 		= b.department_id
-		LEFT JOIN writer_user c ON a.user_id = c.id
+		LEFT JOIN writer_user c
+		ON a.user_id = c.id
 		WHERE
 		b.department_id = #{departmentId}
-		AND a.is_director_handling = TRUE
+		AND
+		a.is_director_handling = TRUE
 		AND
 		a.is_editor_handling = FALSE
 		<if test="bookName != null and bookName !=''">
@@ -591,7 +594,7 @@
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
 		</if>
-		ORDER BY a.submit_time
+		ORDER BY a.submit_time) t
 	</select>
 
 	<!-- 获取编辑可以操作的申报选题 -->
