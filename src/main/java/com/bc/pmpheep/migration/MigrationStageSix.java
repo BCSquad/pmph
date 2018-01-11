@@ -1047,7 +1047,7 @@ public class MigrationStageSix {
         		+ "when tp.positiontype=3 and tp.directoraudit>=41 then 'c' else 'd' "
         		+ "end ORDER BY tp.positiontype) chosen_position,"
         		+ "min(tp.mastersort) mastersort,ta.outlineurl,ta.outlinename,"
-        		+ "ifnull(wd.updatedate,wd.createdate) gmt_create"
+        		+ "ifnull(wd.updatedate,wd.createdate) gmt_create,"
         		+ "wd.new_pk wdid,tb.new_pk tbid "
         		+ "from teach_applyposition ta "
         		+ "left join teach_positionset tp on tp.appposiid=ta.appposiid "
