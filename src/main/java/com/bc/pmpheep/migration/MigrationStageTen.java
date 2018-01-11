@@ -96,17 +96,6 @@ public class MigrationStageTen {
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);//取得该表中所有数据
         int count = 3;//迁移成功的条目数
         /* 只有三条有效数据，直接新建CmsCategory保存 */
-        CmsCategory category1 = new CmsCategory(0L, "0", "公告管理", true);
-        category1.setIsMaterialNotice(true);
-        category1.setIsClicksVisible(true);
-        category1 = cmsCategoryService.addCmsCategory(category1);
-        long pk = category1.getId();
-        JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1003");//更新旧表中new_pk字段
-        CmsCategory category2 = new CmsCategory(0L, "0", "快报管理", true);
-        category2.setIsClicksVisible(true);
-        category2 = cmsCategoryService.addCmsCategory(category2);
-        pk = category2.getId();
-        JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1004");//更新旧表中new_pk字
         CmsCategory category3 = new CmsCategory(0L, "0", "医学随笔", false);
         category3.setIsAuthRequired(true);
         category3.setIsAuthorVisible(true);
@@ -116,8 +105,19 @@ public class MigrationStageTen {
         category3.setIsLikesVisible(true);
         category3.setIsBookmarksVisible(true);
         category3 = cmsCategoryService.addCmsCategory(category3);
-        pk = category3.getId();
+        long pk = category3.getId();
         JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1005");//更新旧表中new_pk字
+        CmsCategory category2 = new CmsCategory(0L, "0", "快报管理", true);
+        category2.setIsClicksVisible(true);
+        category2 = cmsCategoryService.addCmsCategory(category2);
+        pk = category2.getId();
+        JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1004");//更新旧表中new_pk字
+        CmsCategory category1 = new CmsCategory(0L, "0", "公告管理", true);
+        category1.setIsMaterialNotice(true);
+        category1.setIsClicksVisible(true);
+        category1 = cmsCategoryService.addCmsCategory(category1);
+        pk = category1.getId();
+        JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1003");//更新旧表中new_pk字段
         logger.info("'{}'表迁移完成", tableName);
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
     }
