@@ -510,9 +510,15 @@
 	</select>
 
 	<select id="listCheckTopic" resultType="TopicDeclarationVO">
-		SELECT t.*,w.realname
-		FROM topic t LEFT JOIN writer_user w ON w.id =
-		t.user_id WHERE
+		SELECT
+		t.*, w.realname,p.realname editorName
+		FROM
+		topic t
+		LEFT JOIN
+		writer_user w ON w.id = t.user_id
+		LEFT JOIN pmph_user p ON p.id =
+		t.editor_id
+		WHERE
 		t.auth_progress IN
 		<foreach collection="authProgress" index="index" close=")"
 			open="(" separator="," item="authProgress">
@@ -532,7 +538,7 @@
 	<select id="listCheckTopicTotal" resultType="java.lang.Integer">
 		SELECT count(*)
 		FROM topic t LEFT JOIN writer_user w ON w.id =
-		t.user_id WHERE
+		t.user_id LEFT JOIN pmph_user p ON p.id = t.editor_id WHERE
 		t.auth_progress IN
 		<foreach collection="authProgress" index="index" close=")"
 			open="(" separator="," item="authProgress">
