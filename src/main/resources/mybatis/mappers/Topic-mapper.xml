@@ -619,15 +619,18 @@
 
 	<!-- 计算编辑可以操作的选题数 -->
 	<select id="totalTopicEditorVOs" resultType="Integer">
-		SELECT count(a.*)
+		SELECT count(*) FROM (SELECT a.*,b.realname
 		FROM topic a
-		LEFT JOIN pmph_user b ON a.editor_id =
+		LEFT JOIN
+		pmph_user b ON a.editor_id =
 		b.id
-		LEFT JOIN writer_user c ON a.user_id = c.id
+		LEFT JOIN writer_user c ON a.user_id =
+		c.id
 		WHERE a.editor_id =
 		#{userId}
 		AND a.is_editor_handling = TRUE
-		AND a.is_rejected_by_editor =
+		AND
+		a.is_rejected_by_editor =
 		FALSE
 		<if test="bookName != null and bookName !=''">
 			AND a.bookname like concat('%',#{bookName},'%')
@@ -635,7 +638,7 @@
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
 		</if>
-		ORDER BY a.submit_time
+		ORDER BY a.submit_time) t
 	</select>
 
 	<!-- 系统管理员查询选题申报（主任界面） -->
