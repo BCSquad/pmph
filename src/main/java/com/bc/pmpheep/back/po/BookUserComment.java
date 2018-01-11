@@ -33,6 +33,10 @@ public class BookUserComment implements Serializable {
 	 */
 	private Long writerId;
 	/**
+	 * 是否长评
+	 */
+	private Boolean isLong;
+	/**
 	 * 评分
 	 */
 	private Double score;
@@ -195,6 +199,14 @@ public class BookUserComment implements Serializable {
 
 	public void setIsHide(Boolean isHide) {
 		this.isHide = isHide;
+	}
+
+	public Boolean getIsLong() {
+		return isLong;
+	}
+
+	public void setIsLong(Boolean isLong) {
+		this.isLong = isLong;
 	}
 
 	public Integer getIsAuth() {
