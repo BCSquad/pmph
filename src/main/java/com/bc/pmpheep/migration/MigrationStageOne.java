@@ -178,7 +178,7 @@ public class MigrationStageOne {
         String tableName = "ba_organize";//机构类型方法已添加过new_pk，此处无需再添加
         String sql = "SELECT a.*,b.new_pk FROM ba_organize a "
                 + "LEFT JOIN ba_areacode b ON b.AreaID =a.orgprovince "
-                + "WHERE a.orgcode NOT LIKE '15%' AND a.parentid !=0 ORDER BY a.isdelete，a.orgcode";
+                + "WHERE a.orgcode NOT LIKE '15%' AND a.parentid !=0 ORDER BY a.isdelete,a.orgcode";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         /*除主键外有其他列有唯一值约束，用此集合放此列已经插入新表的值作为判断重复的条件*/
