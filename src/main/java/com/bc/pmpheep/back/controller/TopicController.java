@@ -192,6 +192,7 @@ public class TopicController {
 		} else {
 			topicLog.setTopicEvent("主任分配选题给部门编辑");
 			topic.setEditorId(editorId);
+			topic.setIsRejectedByEditor(false);
 			topic.setIsEditorHandling(true);
 		}
 		return new ResponseBean(topicService.update(topicLog, sessionId, topic));
@@ -262,6 +263,7 @@ public class TopicController {
 		String sessionId = CookiesUtil.getSessionId(request);
 		TopicLog topicLog = new TopicLog();
 		topicLog.setTopicId(id);
+		topicLog.setTopicEvent("编辑受理选题");
 		Topic topic = new Topic();
 		topic.setId(id);
 		topic.setIsAccepted(isAccepted);

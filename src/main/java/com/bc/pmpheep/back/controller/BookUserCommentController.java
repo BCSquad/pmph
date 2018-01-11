@@ -70,9 +70,9 @@ public class BookUserCommentController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量审核图书评论")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	public ResponseBean update(Long[] ids, Integer isAuth, HttpServletRequest request) {
+	public ResponseBean update(Long[] ids, Integer isAuth, Boolean isHot,HttpServletRequest request) {
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(bookUserCommentService.updateBookUserCommentByAuth(ids, isAuth, sessionId));
+		return new ResponseBean(bookUserCommentService.updateBookUserCommentByAuth(ids, isAuth,isHot, sessionId));
 	}
 
 	/**

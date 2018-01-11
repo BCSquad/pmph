@@ -461,13 +461,12 @@ public class TopicServiceImpl implements TopicService {
 				pageResult.setRows(list);
 			}
 		} else {
-			total = topicDao.totalTopicDirectorVOs(pageParameter.getParameter().getDepartmentId(),
-					pageParameter.getParameter().getBookName(), pageParameter.getParameter().getSubmitTime());
+			total = topicDao.totalTopicDirectorVOs(pmphUser.getId(), pageParameter.getParameter().getBookName(),
+					pageParameter.getParameter().getSubmitTime());
 			if (total > 0) {
-				List<TopicDirectorVO> list = topicDao.listTopicDirectorVOs(
-						pageParameter.getParameter().getDepartmentId(), pageParameter.getParameter().getBookName(),
-						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(),
-						pageParameter.getPageSize());
+				List<TopicDirectorVO> list = topicDao.listTopicDirectorVOs(pmphUser.getId(),
+						pageParameter.getParameter().getBookName(), pageParameter.getParameter().getSubmitTime(),
+						pageParameter.getStart(), pageParameter.getPageSize());
 				list = addTypeNameDirector(list);
 				pageResult.setRows(list);
 			}

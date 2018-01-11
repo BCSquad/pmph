@@ -33,6 +33,10 @@ public class BookUserCommentVO implements Serializable {
 	 */
 	private Long bookId;
 	/**
+	 * 是否长评
+	 */
+	private Boolean isLong;
+	/**
 	 * 书籍名称
 	 */
 	private String bookname;
@@ -44,6 +48,10 @@ public class BookUserCommentVO implements Serializable {
 	 * isbn/书籍名称
 	 */
 	private String name;
+	/**
+	 * 标题
+	 */
+	private String title;
 	/**
 	 * 用户id
 	 */
@@ -60,6 +68,22 @@ public class BookUserCommentVO implements Serializable {
 	 * 评价内容
 	 */
 	private String content;
+	/**
+	 * 是否热门
+	 */
+	private Boolean isHot;
+	/**
+	 * 热门显示顺序
+	 */
+	private Integer sortHot;
+	/**
+	 * 是否推荐
+	 */
+	private Boolean isPromote;
+	/**
+	 * 推荐显示顺序
+	 */
+	private Integer sortPromote;
 	/**
 	 * 是否隐藏
 	 */
@@ -191,6 +215,54 @@ public class BookUserCommentVO implements Serializable {
 
 	public void setGmtCreate(Timestamp gmtCreate) {
 		this.gmtCreate = gmtCreate;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public Boolean getIsHot() {
+		return isHot;
+	}
+
+	public void setIsHot(Boolean isHot) {
+		this.isHot = isHot;
+	}
+
+	public Integer getSortHot() {
+		return sortHot;
+	}
+
+	public void setSortHot(Integer sortHot) {
+		this.sortHot = sortHot;
+	}
+
+	public Boolean getIsPromote() {
+		return isPromote;
+	}
+
+	public void setIsPromote(Boolean isPromote) {
+		this.isPromote = isPromote;
+	}
+
+	public Integer getSortPromote() {
+		return sortPromote;
+	}
+
+	public void setSortPromote(Integer sortPromote) {
+		this.sortPromote = sortPromote;
+	}
+
+	public Boolean getIsLong() {
+		return isLong;
+	}
+
+	public void setIsLong(Boolean isLong) {
+		this.isLong = isLong;
 	}
 
 }
