@@ -1038,22 +1038,24 @@ public class MigrationStageSix {
         String tableName = "teach_applyposition"; // 要迁移的旧库表名
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
         String sql = "select ta.materid,ta.writerid,ta.bookid,"
-                + "GROUP_CONCAT(case when ta.positiontype=1 then 'a' when ta.positiontype=2 "
-                + "then 'b' when ta.positiontype=3 then 'c' else 'c' "
-                + "end ORDER BY ta.positiontype) preset_position,"
-                + "if(sum(if(tp.positiontype in (1,2,3),1,0))>0,true,false) is_on_list,"
-                + "GROUP_CONCAT(case when tp.positiontype=1 then 'a' when tp.positiontype=2 "
-                + "then 'b' when tp.positiontype=3 then 'c' else 'd' "
-                + "end ORDER BY tp.positiontype) chosen_position, "
-                + "min(tp.mastersort) mastersort,ta.outlineurl,ta.outlinename,"
-                + "ifnull(wd.updatedate,wd.createdate) gmt_create,"
-                + "wd.new_pk wdid,tb.new_pk tbid "
-                + "from teach_applyposition ta "
-                + "left join teach_positionset tp on tp.appposiid=ta.appposiid "
-                + "left join writer_declaration wd on wd.writerid=ta.writerid "
-                + "left join teach_bookinfo tb on tb.bookid=ta.bookid  "
-                + "WHERE ta.positiontype in (1,2,3) and wd.writerid is not null and tb.bookid is not null  "
-                + "GROUP BY wd.writerid,tb.bookid ";
+        		+ "GROUP_CONCAT(case when ta.positiontype=1 then 'a' when ta.positiontype=2 "
+        		+ "then 'b' when ta.positiontype=3 then 'c' else 'c' "
+        		+ "end ORDER BY ta.positiontype) preset_position,"
+        		+ "if(sum(if(tp.positiontype in (1,2,3),1,0))>0,true,false) is_on_list,"
+        		+ "GROUP_CONCAT(case when tp.positiontype=1 and tp.directoraudit>=11 then 'a' "
+        		+ "when tp.positiontype=2 and tp.directoraudit>=11 then 'b' "
+        		+ "when tp.positiontype=3 and tp.directoraudit>=41 then 'c' else 'd' "
+        		+ "end ORDER BY tp.positiontype) chosen_position,"
+        		+ "min(tp.mastersort) mastersort,ta.outlineurl,ta.outlinename,"
+        		+ "ifnull(wd.updatedate,wd.createdate) gmt_create,"
+        		+ "wd.new_pk wdid,tb.new_pk tbid "
+        		+ "from teach_applyposition ta "
+        		+ "left join teach_positionset tp on tp.appposiid=ta.appposiid "
+        		+ "left join writer_declaration wd on wd.writerid=ta.writerid "
+        		+ "left join teach_bookinfo tb on tb.bookid=ta.bookid "
+        		+ "WHERE ta.positiontype in (1,2,3) and wd.writerid is not null "
+        		+ "and tb.bookid is not null "
+        		+ "GROUP BY wd.writerid,tb.bookid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0; // 迁移成功的条目数
         int extensionidCount = 0;
@@ -1119,6 +1121,8 @@ public class MigrationStageSix {
                 chosen = 2;
             } else if (tempchosenPosition.contains(",c,")) {
                 chosen = 1;
+            } else if (tempchosenPosition.contains(",d,")) {
+            	chosen = 0;
             }
             decPosition.setChosenPosition(chosen);
             decPosition.setRank(mastersort);

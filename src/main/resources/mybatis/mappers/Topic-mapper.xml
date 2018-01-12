@@ -510,9 +510,15 @@
 	</select>
 
 	<select id="listCheckTopic" resultType="TopicDeclarationVO">
-		SELECT t.*,w.realname
-		FROM topic t LEFT JOIN writer_user w ON w.id =
-		t.user_id WHERE
+		SELECT
+		t.*, w.realname,p.realname editorName
+		FROM
+		topic t
+		LEFT JOIN
+		writer_user w ON w.id = t.user_id
+		LEFT JOIN pmph_user p ON p.id =
+		t.editor_id
+		WHERE
 		t.auth_progress IN
 		<foreach collection="authProgress" index="index" close=")"
 			open="(" separator="," item="authProgress">
@@ -532,7 +538,7 @@
 	<select id="listCheckTopicTotal" resultType="java.lang.Integer">
 		SELECT count(*)
 		FROM topic t LEFT JOIN writer_user w ON w.id =
-		t.user_id WHERE
+		t.user_id LEFT JOIN pmph_user p ON p.id = t.editor_id WHERE
 		t.auth_progress IN
 		<foreach collection="authProgress" index="index" close=")"
 			open="(" separator="," item="authProgress">
@@ -553,10 +559,12 @@
 		a.department_id = b.department_id
 		LEFT JOIN writer_user c ON a.user_id
 		= c.id
-		WHERE b.department_id = #{departmentId}
+		WHERE b.id = #{userId}
 		AND
 		a.is_director_handling = TRUE
-		AND a.is_editor_handling = FALSE
+		AND
+		a.is_editor_handling = FALSE
+		AND b.is_director = TRUE
 		<if test="bookName != null and bookName !=''">
 			AND a.bookname like concat('%',#{bookName},'%')
 		</if>
@@ -570,22 +578,27 @@
 
 	<!-- 计算主任可以操作的选题数 -->
 	<select id="totalTopicDirectorVOs" resultType="Integer">
-		SELECT count(a.*)
-		FROM topic a LEFT JOIN pmph_user b ON a.department_id
+		SELECT count(*) FROM (SELECT a.*,c.realname
+		FROM topic a LEFT JOIN
+		pmph_user b ON a.department_id
 		= b.department_id
-		LEFT JOIN writer_user c ON a.user_id = c.id
+		LEFT JOIN writer_user c
+		ON a.user_id = c.id
 		WHERE
-		b.department_id = #{departmentId}
-		AND a.is_director_handling = TRUE
+		b.id = #{userId}
+		AND
+		a.is_director_handling =
+		TRUE
 		AND
 		a.is_editor_handling = FALSE
+		AND b.is_director = TRUE
 		<if test="bookName != null and bookName !=''">
 			AND a.bookname like concat('%',#{bookName},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
 		</if>
-		ORDER BY a.submit_time
+		ORDER BY a.submit_time) t
 	</select>
 
 	<!-- 获取编辑可以操作的申报选题 -->
@@ -613,15 +626,18 @@
 
 	<!-- 计算编辑可以操作的选题数 -->
 	<select id="totalTopicEditorVOs" resultType="Integer">
-		SELECT count(a.*)
+		SELECT count(*) FROM (SELECT a.*,b.realname
 		FROM topic a
-		LEFT JOIN pmph_user b ON a.editor_id =
+		LEFT JOIN
+		pmph_user b ON a.editor_id =
 		b.id
-		LEFT JOIN writer_user c ON a.user_id = c.id
+		LEFT JOIN writer_user c ON a.user_id =
+		c.id
 		WHERE a.editor_id =
 		#{userId}
 		AND a.is_editor_handling = TRUE
-		AND a.is_rejected_by_editor =
+		AND
+		a.is_rejected_by_editor =
 		FALSE
 		<if test="bookName != null and bookName !=''">
 			AND a.bookname like concat('%',#{bookName},'%')
@@ -629,7 +645,7 @@
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
 		</if>
-		ORDER BY a.submit_time
+		ORDER BY a.submit_time) t
 	</select>
 
 	<!-- 系统管理员查询选题申报（主任界面） -->

@@ -276,7 +276,9 @@ public class TextbookServiceImpl implements TextbookService {
 				}else if (power == 3){        //教材项目编辑
 					//因为项目编辑的权限不是全部  ，因此要检查我是不是这本书的策划编辑，如果是  ，这本书我的权利就是项目编辑+策划编辑的权利
 					Integer tempProjectPermission =  material.getProjectPermission() ;
-					if(row.getPlanningEditor().intValue() == pmphUser.getId().intValue() ){ //我又是策划编辑 
+					if(null != row && 
+							null != row.getPlanningEditor() && null != pmphUser.getId() && 
+							   row.getPlanningEditor().intValue() == pmphUser.getId().intValue() ){ //我又是策划编辑 
 						tempProjectPermission = (tempProjectPermission | material.getPlanPermission() );
 					}
 					row.setMyPower(StringUtil.tentToBinary(tempProjectPermission)) ;

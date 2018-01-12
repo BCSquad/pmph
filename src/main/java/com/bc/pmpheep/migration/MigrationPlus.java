@@ -1,6 +1,9 @@
 package com.bc.pmpheep.migration;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -8,6 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.bc.pmpheep.back.dao.CmsAdvertisementDao;
+import com.bc.pmpheep.back.dao.CmsAdvertisementImageDao;
+import com.bc.pmpheep.back.po.CmsAdvertisement;
+import com.bc.pmpheep.back.po.CmsAdvertisementImage;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.po.SurveyQuestion;
@@ -25,7 +32,12 @@ import com.bc.pmpheep.back.service.SurveyTargetService;
 import com.bc.pmpheep.back.service.SurveyTemplateQuestionService;
 import com.bc.pmpheep.back.service.SurveyTemplateService;
 import com.bc.pmpheep.back.service.SurveyTypeService;
+import com.bc.pmpheep.back.vo.CmsAdvertisementOrImageVO;
+import com.bc.pmpheep.general.bean.FileType;
+import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * 数据填充工具类
@@ -59,12 +71,69 @@ public class MigrationPlus {
 	 SurveyTypeService surveyTypeService;
 	 @Resource
 	 PmphUserService pmphUserService;
+	 @Resource
+	 CmsAdvertisementDao cmsAdvertisementDao;
+	 @Resource
+	 CmsAdvertisementImageDao cmsAdvertisementImageDao;
+	 @Resource
+	 FileService fileService;
 	 
 	 public void start() {
 		 Date begin = new Date();
+		 //initCmsAdvertisementData();
 		 survey();
 		 logger.info("数据填充运行结束，用时：{}", JdbcHelper.getPastTime(begin));
 	 }
+	 
+	 //初始化广告数据
+	 @SuppressWarnings("unchecked")
+	 public void initCmsAdvertisementData() {
+	        //初始化的数据
+	        String dataJson
+	                = "["
+	                + "{adname:'首页轮播',         type:1,autoPlay:true, animationInterval:3000,image:[{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'},{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'},{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'}]} ,"
+	                + "{adname:'首页中部',         type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/2670f031-35da-4dd6-b079-8f295c51a339.png'},{image:'/upload/site/af598f9e-ae9e-48a0-a3e4-17acc363051a.png'},{image:'/upload/site/a4160c1e-8beb-4530-9f2b-df022a6f751d.png'},{image:'/upload/site/a69b782d-f1ad-42e6-a91a-08432963b54a.png'}]} ,"
+	                + "{adname:'信息快报和遴选公告列表',type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/article/20170328/wenzhang10.jpg'}]} ,"
+	                + "{adname:'读书首页轮播 ',      type:1,autoPlay:true ,animationInterval:3000,image:[{image:'/upload/article/20170328/xiaoxi1.jpg'},{image:'/upload/article/20170328/xiaoxi2.jpg'},{image:'/upload/article/20170328/xiaoxi3.jpg'}]} ,"
+	                + "]";
+	        Gson gson = new Gson();
+	        List<CmsAdvertisementOrImageVO> lst = gson.fromJson(dataJson, new TypeToken<ArrayList<CmsAdvertisementOrImageVO>>() {
+	        }.getType());
+	        for (CmsAdvertisementOrImageVO cmsAdvertisementAndImages : lst) {
+	            CmsAdvertisement cmsAdvertisement = new CmsAdvertisement();
+	            //广告名称
+	            cmsAdvertisement.setAdname(cmsAdvertisementAndImages.getAdname());
+	            //是否自动播放
+	            cmsAdvertisement.setAutoPlay(cmsAdvertisementAndImages.getAutoPlay());
+	            //循环间隔时间
+	            cmsAdvertisement.setAnimationInterval(cmsAdvertisementAndImages.getAnimationInterval());
+	            //类型    0 普通  1 轮播
+	            cmsAdvertisement.setType(cmsAdvertisementAndImages.getType());
+	            //保存广告
+	            cmsAdvertisementDao.addCmsAdvertisement(cmsAdvertisement);
+	            List<CmsAdvertisementImage> images = (List<CmsAdvertisementImage>) (cmsAdvertisementAndImages.getImage());
+	            for (CmsAdvertisementImage image : images) {
+	                String filePath = image.getImage();
+	                image.setAdvertId(cmsAdvertisement.getId());
+	                image.setImage("----");
+	                //保存图片文件 
+	                cmsAdvertisementImageDao.addCmsAdvertisementImage(image);
+	                String mongoId = null;
+	                try {
+	                    //保存图片至mongo
+	                    mongoId = fileService.migrateFile(filePath, FileType.CMS_ADVERTISEMENT, image.getId());
+	                } catch (Exception ex) {
+	                    logger.warn("文件上传失败 :{}", ex.getMessage());
+	                    //文件保存失败删除这条记录
+	                    cmsAdvertisementImageDao.deleteCmsAdvertisementByImages(image.getId());
+	                    continue;
+	                }
+	                image.setImage(mongoId);
+	                //修改图片文件地址
+	                cmsAdvertisementImageDao.updateCmsAdvertisementImage(image);
+	            }
+	        }
+	    }
 	 
 	 protected void survey() {
 		 SurveyType surveyType = new SurveyType("学生", 1);
@@ -73,14 +142,20 @@ public class MigrationPlus {
 		 surveyTypeService.addSurveyType(surveyType2);
 		 SurveyType surveyType3 = new SurveyType("医生", 3);
 		 surveyTypeService.addSurveyType(surveyType3);
-		 PmphUser pmphUser = pmphUserService.getPmphUser("admin");
+		 String sql = "select * from sys_user where userid = '1496375695709123-789241'";
+		 List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+		 Map<String, Object> map = maps.get(0);
+		 Long id = (Long) map.get("new_pk");
+		 /*PmphUser pmphUser = pmphUserService.getPmphUser("admin");
 		 SurveyTemplate surveyTemplate = new SurveyTemplate("人卫e教平台满意度问卷模板", 999, pmphUser.getId(), 
+				 "该问卷只针对教师", surveyType2.getId(), false);*/
+		 SurveyTemplate surveyTemplate = new SurveyTemplate("人卫e教平台满意度问卷模板", 999, id, 
 				 "该问卷只针对教师", surveyType2.getId(), false);
 		 surveyTemplateService.addSurveyTemplate(surveyTemplate);
 		 Survey survey = new Survey("人卫e教平台满意度问卷模板", 
 				 "希望您能抽出几分钟时间，将您的感受和建议告诉我们，我们非常重视每位教师的宝贵意见，期待您的参与！", 
 				 "该问卷只针对教师", surveyTemplate.getId(), surveyType2.getId(), 
-				 pmphUser.getId(), null, null, 999, (short) 0);
+				 id, null, null, 999, (short) 0);
 		 surveyService.addSurvey(survey);
 		 SurveyQuestion surveyQuestion = new SurveyQuestion(0L, "您是否使用过人卫e教平台网站？", (short) 1,
 				 1, null, true);

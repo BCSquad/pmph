@@ -123,8 +123,23 @@
 			<if test="score != null and score !=''">
 				score = #{score} ,
 			</if>
+			<if test="title != null and title != ''">
+				title = #{title},
+			</if>
 			<if test="content != null and content !=''">
 				content= #{content} ,
+			</if>
+			<if test="isHot != null">
+				is_hot = #{isHot},
+			</if>
+			<if test="sortHot != null">
+				sort_hot = #{sortHot},
+			</if>
+			<if test="isPromote != null">
+				is_peomote = #{isPromote},
+			</if>
+			<if test="sortPromote != null">
+				sort_promote = #{sortPromote},
 			</if>
 			<if test=" isHide != null ">
 				is_hide = #{isHide} ,
@@ -196,7 +211,8 @@
 		writer_user u ON u.id =
 		c.writer_id
 		WHERE
-		c.is_deleted =
+		c.is_deleted
+		=
 		FALSE
 		<if test="parameter.name != null and parameter.name != ''">
 			and (b.bookname like concat("%",#{parameter.name},"%") or
