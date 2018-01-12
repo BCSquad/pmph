@@ -5,6 +5,9 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
 			<if test="parentId != null">
 				parent_id,
 			</if>
@@ -56,6 +59,9 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
 			<if test="parentId != null">
 				#{parentId},
 			</if>
