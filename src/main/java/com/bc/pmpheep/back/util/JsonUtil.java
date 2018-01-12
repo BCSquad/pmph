@@ -149,17 +149,9 @@ public class JsonUtil<T> {
      * @param json
      * @return
      */
+    @SuppressWarnings("deprecation")
     public List<T> getArrayListObjectFromStr(Class<T> v, String json) {
         try {
-            // JavaType javaType =
-            // objectMapper.getTypeFactory().constructParametricType(List.class, Bean.class);
-            // // Map类型
-            // objectMapper.getTypeFactory().constructParametricType(HashMap.class,
-            // String.class,
-            // Bean.class);
-            // return objectMapper.readValue(json,
-            // new TypeReference<List<org.springframework.context.annotation.Bean>>() {
-            // });
             return objectMapper.readValue(json,
                                           objectMapper.getTypeFactory()
                                                       .constructParametricType(ArrayList.class, v));
@@ -169,6 +161,7 @@ public class JsonUtil<T> {
         return null;
     }
 
+    @SuppressWarnings({ "deprecation", "unchecked" })
     public static void main(String[] args) throws Exception {
         // String jsonDecPosition =
         // "[{'id':4,'chosenPosition':1,'rank':1,'isDigitalEditor':true},{'id':3,'chosenPosition':2,'rank':3,'isDigitalEditor':true},{'id':1,'chosenPosition':3,'rank':'','isDigitalEditor':false}]";

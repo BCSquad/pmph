@@ -104,6 +104,7 @@ public class OrgController {
 	 * @param id
 	 * @return 影响的行数
 	 */
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "在新增或者修改用户页面查询机构")
 	@RequestMapping(value = "/delete/org/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public ResponseBean deleteOrgById(@PathVariable Long id) {

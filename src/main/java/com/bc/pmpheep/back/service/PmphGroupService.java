@@ -103,8 +103,18 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PmphGroup addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, String sessionId)
+	PmphGroup addPmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId)
 			throws CheckedServiceException, IOException;
+
+	/**
+	 * 
+	 * 功能描述：小组头像上传
+	 *
+	 * @param request
+	 * @param files
+	 * @return
+	 */
+	String msgUploadFiles(MultipartFile file) throws CheckedServiceException;
 
 	/**
 	 *
@@ -119,7 +129,7 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, String sessionId)
+	PmphGroup updatePmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId)
 			throws CheckedServiceException, IOException;
 
 	/**
@@ -147,14 +157,15 @@ public interface PmphGroupService {
 	 */
 	PmphGroup addEditorSelcetionGroup(String sessionId, List<PmphGroupMember> list, Long textbookId)
 			throws CheckedServiceException, IOException;
-	
+
 	/**
 	 * 分页查询小组
+	 * 
 	 * @param pageParameter
 	 * @param sessionId
 	 * @return
 	 * @throws CheckedServiceException
 	 */
-	PageResult<PmphGroupListVO> getlistPmphGroup(PageParameter<PmphGroupListVO> pageParameter,
-		    String sessionId) throws CheckedServiceException;
+	PageResult<PmphGroupListVO> getlistPmphGroup(PageParameter<PmphGroupListVO> pageParameter, String sessionId)
+			throws CheckedServiceException;
 }
