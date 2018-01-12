@@ -3,6 +3,8 @@ package com.bc.pmpheep.back.controller;
 import java.io.File;
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.FileUpload;
 import com.bc.pmpheep.back.vo.BookListVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -61,8 +64,9 @@ public class TextBookController {
     @ResponseBody
     @RequestMapping(value = "/add/textbook", method = RequestMethod.POST)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存或修改新增教材书籍")
-    public ResponseBean textbook( BookListVO bookListVO){
-    	return new ResponseBean(textbookService.addOrUpdateTextBookList(bookListVO));
+    public ResponseBean textbook( BookListVO bookListVO, HttpServletRequest request){
+    	String sessionId = CookiesUtil.getSessionId(request);
+    	return new ResponseBean(textbookService.addOrUpdateTextBookList(bookListVO, sessionId));
     }
     
     /**
