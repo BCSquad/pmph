@@ -208,14 +208,14 @@ public class Const {
     // Cms_Category_Role permissionType字段(1:后台操作权限,2:审核权限)
     public static final Short              CMS_CATEGORY_PERMISSSION_1    = 1;
     public static final Short              CMS_CATEGORY_PERMISSSION_2    = 2;
-    public static final Long               CMS_MATERIAL_ID               = 0l;
+    public static final Long               CMS_MATERIAL_ID               = 0L;
     /**
      * CMS栏目类型（0：评论，1：内容管理，2：信息快报管理，3：公告管理）
      */
-    public static final Long               CMS_CATEGORY_ID_0             = 0l;
-    public static final Long               CMS_CATEGORY_ID_1             = 1l;
-    public static final Long               CMS_CATEGORY_ID_2             = 2l;
-    public static final Long               CMS_CATEGORY_ID_3             = 3l;
+    public static final Long               CMS_CATEGORY_ID_0             = 0L;
+    public static final Long               CMS_CATEGORY_ID_1             = 1L;
+    public static final Long               CMS_CATEGORY_ID_2             = 2L;
+    public static final Long               CMS_CATEGORY_ID_3             = 3L;
 
     /**
      * 问卷状态(0=未发送/1=发送/2=回收)
