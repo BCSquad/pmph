@@ -7,9 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.vo.MaterialListVO;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -100,8 +103,18 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PmphGroup addPmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, String sessionId)
+	PmphGroup addPmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId)
 			throws CheckedServiceException, IOException;
+
+	/**
+	 * 
+	 * 功能描述：小组头像上传
+	 *
+	 * @param request
+	 * @param files
+	 * @return
+	 */
+	String msgUploadFiles(MultipartFile file) throws CheckedServiceException;
 
 	/**
 	 *
@@ -116,7 +129,7 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PmphGroup updatePmphGroupOnGroup(MultipartFile file, PmphGroup pmphGroup, String sessionId)
+	PmphGroup updatePmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId)
 			throws CheckedServiceException, IOException;
 
 	/**
@@ -144,4 +157,15 @@ public interface PmphGroupService {
 	 */
 	PmphGroup addEditorSelcetionGroup(String sessionId, List<PmphGroupMember> list, Long textbookId)
 			throws CheckedServiceException, IOException;
+
+	/**
+	 * 分页查询小组
+	 * 
+	 * @param pageParameter
+	 * @param sessionId
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	PageResult<PmphGroupListVO> getlistPmphGroup(PageParameter<PmphGroupListVO> pageParameter, String sessionId)
+			throws CheckedServiceException;
 }

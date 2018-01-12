@@ -276,7 +276,9 @@ public class TextbookServiceImpl implements TextbookService {
 				}else if (power == 3){        //教材项目编辑
 					//因为项目编辑的权限不是全部  ，因此要检查我是不是这本书的策划编辑，如果是  ，这本书我的权利就是项目编辑+策划编辑的权利
 					Integer tempProjectPermission =  material.getProjectPermission() ;
-					if(row.getPlanningEditor().intValue() == pmphUser.getId().intValue() ){ //我又是策划编辑 
+					if(null != row && 
+							null != row.getPlanningEditor() && null != pmphUser.getId() && 
+							   row.getPlanningEditor().intValue() == pmphUser.getId().intValue() ){ //我又是策划编辑 
 						tempProjectPermission = (tempProjectPermission | material.getPlanPermission() );
 					}
 					row.setMyPower(StringUtil.tentToBinary(tempProjectPermission)) ;
@@ -371,7 +373,8 @@ public class TextbookServiceImpl implements TextbookService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Textbook> addOrUpdateTextBookList(BookListVO bookListVO) throws CheckedServiceException {
+	public List<Textbook> addOrUpdateTextBookList(BookListVO bookListVO, String sessionId)
+			throws CheckedServiceException {
 		if (ObjectUtil.isNull(bookListVO)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 					"参数不能为空");
@@ -422,6 +425,8 @@ public class TextbookServiceImpl implements TextbookService {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 						CheckedExceptionResult.ILLEGAL_PARAM, "同一教材下书名和版次不能都相同");
 			}
+			/* 设置书目录时保存操作传回来的对象里可能有已经存在的书籍，已经存在的修改
+			 相关信息，没有的进行新增操作 */
 			if (ObjectUtil.notNull(textbookDao.getTextbookById(textbook.getId()))) {
 				textbookDao.updateTextbook(textbook);
 				delBook.add(textbook.getId());
@@ -431,6 +436,7 @@ public class TextbookServiceImpl implements TextbookService {
 			list.add(map);
 			count++;
 		}
+		/* 设置书目录时若删除了部分书籍，找出这些书籍的id并将表中的相关数据删除掉 */
 		if (CollectionUtil.isNotEmpty(delBook)){
 			ids.removeAll(delBook);
 			if (CollectionUtil.isNotEmpty(ids)){
@@ -439,6 +445,11 @@ public class TextbookServiceImpl implements TextbookService {
 				}
 			}
 		}
+		/* 修改对应的教材的可见性区别 */
+		Material material = new Material();
+		material.setId(bookListVO.getMaterialId());
+		material.setIsPublic(bookListVO.getIsPublic());
+		materialService.updateMaterial(material, sessionId);
 		return textbookDao.getTextbookByMaterialId(bookListVO.getMaterialId());
 	}
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 
@@ -104,5 +105,19 @@ public interface PmphGroupDao {
 	 *
 	 */
 	PmphGroup getPmphGroupByTextbookId(Long textbookId);
+	
+	/**
+	 * 分页查询小组
+	 * @param pageParameter
+	 * @return
+	 */
+	List<PmphGroupListVO> getListPmphGroup(PageParameter<PmphGroupListVO> pageParameter);
+	
+	/**
+	 * admin权限分页查询小组
+	 * @param pageParameter
+	 * @return
+	 */
+	List<PmphGroupListVO> getPmphGroupList(PageParameter<PmphGroupListVO> pageParameter);
 
 }

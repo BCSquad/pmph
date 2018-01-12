@@ -22,15 +22,24 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.service.CmsContentService;
+import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.PmphDepartmentService;
+import com.bc.pmpheep.back.service.PmphGroupService;
 import com.bc.pmpheep.back.service.PmphRoleService;
 import com.bc.pmpheep.back.service.PmphUserService;
+import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.BookUserCommentVO;
+import com.bc.pmpheep.back.vo.CmsContentVO;
+import com.bc.pmpheep.back.vo.MaterialListVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * 
@@ -62,7 +71,6 @@ public class PmphUserController {
 	PmphDepartmentService pmphDepartmentService;
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "社内用户";
-	
 	/**
 	 * 获取社内用户
 	 * @introduction 
@@ -299,5 +307,18 @@ public class PmphUserController {
 	@RequestMapping(value = "/list/pmphDepartment", method = RequestMethod.GET)
 	public ResponseBean pmphDepartment(Long id) {
 		return new ResponseBean(pmphDepartmentService.listPmphDepartment(id));
+	}
+	/**
+	 * 个人中心（首页）
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "个人中心首页")
+	@RequestMapping(value = "/personal/center", method = RequestMethod.GET)
+	public ResponseBean materiallist(HttpServletRequest request,String state,String materialName,
+			String groupName,String bookname,String name,String title) {
+		return new ResponseBean(userService.getPersonalCenter(request,state,materialName,groupName,
+				title,bookname,name));
 	}
 }

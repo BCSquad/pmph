@@ -409,6 +409,11 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                     materialOrgList.add(new MaterialOrg(materialId, orgId));
                 }
             }
+            if (CollectionUtil.isEmpty(materialOrgList)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                                  CheckedExceptionResult.ILLEGAL_PARAM,
+                                                  "当前选中的学校已收到消息，无需要再次发送");
+            }
             count = materialOrgService.addMaterialOrgs(materialOrgList);
             if (count > 0) {
                 systemMessageService.materialSend(materialId, newOrgIds);
