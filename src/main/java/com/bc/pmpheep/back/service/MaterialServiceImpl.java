@@ -664,7 +664,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
         Integer num = this.getPlanningEditorSum(materialId, pmphUser.getId());
         if (null != num && num.intValue() > 0) {
             // 我是教材的策划编辑编辑
-            projectEditorPowers = (projectEditorPowers | material.getProjectPermission());
+            projectEditorPowers = (projectEditorPowers | material.getPlanPermission());
             role = (0 == role.intValue() ? 4 : role);
         }
 
