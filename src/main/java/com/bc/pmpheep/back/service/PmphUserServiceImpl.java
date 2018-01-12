@@ -22,11 +22,13 @@ import com.bc.pmpheep.back.dao.PmphUserRoleDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphDepartment;
+import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -35,7 +37,12 @@ import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.ValidatUtil;
+import com.bc.pmpheep.back.vo.BookCorrectionAuditVO;
+import com.bc.pmpheep.back.vo.BookUserCommentVO;
+import com.bc.pmpheep.back.vo.CmsContentVO;
+import com.bc.pmpheep.back.vo.MaterialListVO;
 import com.bc.pmpheep.back.vo.PmphEditorVO;
+import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.general.bean.ImageType;
@@ -65,7 +72,16 @@ public class PmphUserServiceImpl implements PmphUserService {
 	PmphUserRoleDao pmphUserRoleDao;
 	@Autowired
 	private FileService fileService;
-
+	@Autowired
+	MaterialService materialService;
+	@Autowired
+	private PmphGroupService pmphGroupService;
+	@Autowired
+	CmsContentService cmsContentService;
+	@Autowired
+	BookCorrectionService bookCorrectionService;
+	@Autowired
+	BookUserCommentService bookUserCommentService;
 	@Override
 	public boolean updatePersonalData(PmphUser pmphUser, MultipartFile file) throws IOException {
 		Long id = pmphUser.getId();
@@ -465,7 +481,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 		String path = pageParameter.getParameter().getPath();
 		Long departmentId = pageParameter.getParameter().getDepartmentId();
 		if (StringUtil.notEmpty(path) && ObjectUtil.notNull(departmentId)) {
-			pageParameter.getParameter().setPath(path + "-" + String.valueOf(departmentId));
+			pageParameter.getParameter().setPath(path + "-" +java.lang.String.valueOf(departmentId));
 		}
 		PageResult<PmphUserManagerVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
@@ -607,4 +623,54 @@ public class PmphUserServiceImpl implements PmphUserService {
 		PmphUser pmphUser = pmphUserDao.getPmphUser(username);
 		return pmphUser;
 	}
+
+	@Override
+	public Map<String,Object> getPersonalCenter(HttpServletRequest request, String state, String materialName,
+			String groupName, String title, String bookname, String name) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		//用于装所有的数据map 
+		Map<String, Object> map=new HashMap<>();
+		//小组
+		PmphGroupListVO pmphGroup = new PmphGroupListVO();
+		if (ObjectUtil.notNull(groupName)) {
+			pmphGroup.setGroupName(groupName.trim());
+		}
+		PageParameter<PmphGroupListVO> pageParameterPmphGroup=new PageParameter<>();
+		pageParameterPmphGroup.setParameter(pmphGroup);
+		//小组结果
+		PageResult<PmphGroupListVO> pageResultPmphGroup=pmphGroupService.getlistPmphGroup(pageParameterPmphGroup, sessionId);
+		//教材申报
+		PageParameter<MaterialListVO> pageParameter2=new PageParameter<>();
+		MaterialListVO materialListVO=new MaterialListVO();
+		materialListVO.setState(state);
+		materialListVO.setMaterialName(materialName);
+		pageParameter2.setParameter(materialListVO);
+		//教材申报的结果
+		PageResult<MaterialListVO> pageResultMaterialListVO=materialService.listMaterials(pageParameter2, sessionId);
+		//文章审核
+		PageParameter<CmsContentVO> pageParameter1 =new PageParameter<>();
+		CmsContentVO cmsContentVO=new CmsContentVO();
+		cmsContentVO.setTitle(title);
+		cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_1);
+		pageParameter1.setParameter(cmsContentVO);
+		// 文章审核的结果
+		PageResult<CmsContentVO> pageResultCmsContentVO=cmsContentService.listCmsContent(pageParameter1, sessionId);
+		//图书纠错审核
+		PageResult<BookCorrectionAuditVO> pageResultBookCorrectionAuditVO=bookCorrectionService.listBookCorrectionAudit(
+				request,Const.PAGE_NUMBER,Const.PAGE_SIZE,bookname ,null);
+		//图书评论审核
+		PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
+		BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
+		bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
+		pageParameter.setParameter(bookUserCommentVO);
+		PageResult<BookUserCommentVO> pageResultBookUserCommentVO=bookUserCommentService.listBookUserComment(pageParameter);
+		//图书附件审核
+		map.put("materialList", pageResultMaterialListVO);
+		map.put("cmsContent", pageResultCmsContentVO);
+		map.put("bookCorrectionAudit", pageResultBookCorrectionAuditVO);
+		map.put("bookUserComment", pageResultBookUserCommentVO);
+		map.put("pmphGroup", pageResultPmphGroup);
+		return map;
+	}
+
 }
