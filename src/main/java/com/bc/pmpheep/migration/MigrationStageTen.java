@@ -93,17 +93,20 @@ public class MigrationStageTen {
         category3.setIsCommentsVisible(true);
         category3.setIsLikesVisible(true);
         category3.setIsBookmarksVisible(true);
+        category3.setId(1L);
         category3 = cmsCategoryService.addCmsCategory(category3);
         long pk = category3.getId();
         JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1005");//更新旧表中new_pk字
         CmsCategory category2 = new CmsCategory(0L, "0", "快报管理", true);
         category2.setIsClicksVisible(true);
+        category2.setId(2L);
         category2 = cmsCategoryService.addCmsCategory(category2);
         pk = category2.getId();
         JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1004");//更新旧表中new_pk字
         CmsCategory category1 = new CmsCategory(0L, "0", "公告管理", true);
         category1.setIsMaterialNotice(true);
         category1.setIsClicksVisible(true);
+        category1.setId(3L);
         category1 = cmsCategoryService.addCmsCategory(category1);
         pk = category1.getId();
         JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1003");//更新旧表中new_pk字段
