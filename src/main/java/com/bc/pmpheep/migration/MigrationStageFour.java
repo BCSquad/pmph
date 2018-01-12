@@ -37,6 +37,7 @@ import com.bc.pmpheep.back.service.MaterialProjectEditorService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.MaterialTypeService;
 import com.bc.pmpheep.back.service.OrgService;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
@@ -46,6 +47,8 @@ import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Mryang
@@ -307,8 +310,13 @@ public class MigrationStageFour {
             if (ObjectUtil.isNull(round)) {//没有轮次的设置默认值为0。
 //                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("轮次为空,设默认值1。"));
 //                excel.add(oldMaterial);
-                round = 0;
-                excptionList.add(new Object[]{matername,"教材没有对应的轮次","原专家库没有轮次信息","导入新库表,设默认值0"});
+            	 //------------------------------------------------------------------------------------------
+            	Matcher  m = Pattern.compile("第(.*?)轮").matcher(matername);
+            	round = m.find() ? SystemMessageService.rank(m.group(1)) : 0 ;
+                if(null == round ){ 
+					round = 0;
+                	excptionList.add(new Object[]{matername,"教材没有对应的轮次","原专家库没有轮次信息","导入新库表,设默认值0"});
+                }
             }
             Long booktypesid = (Long) oldMaterial.get("booktypesid");
             if (ObjectUtil.isNull(booktypesid)) {

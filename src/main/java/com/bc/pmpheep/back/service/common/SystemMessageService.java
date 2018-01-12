@@ -1002,10 +1002,10 @@ public final class SystemMessageService {
      * 
      * @author Mryang
      * @createDate 2017年11月20日 下午3:23:59
-     * @param rank 大于0的正整数
+     * @param rank  (1,2,3,4,5,6,7,8,9,10) 数字之一
      * @return
      */
-    private String rank(int rank) {
+    private static String rank(int rank) {
         String res = "";
         switch (rank) {
         case 1:
@@ -1040,6 +1040,54 @@ public final class SystemMessageService {
             break;
         default:
             res = String.valueOf(rank);
+            break;
+        }
+        return res;
+    }
+    
+    /**
+     * 
+     * 主编排位中文转数字
+     * 
+     * @author Mryang
+     * @createDate 2017年11月20日 下午3:23:59
+     * @param rank ("一","二","三","四","五","六","七","八","九","十") 之一
+     * @return
+     */
+    public static int rank(String rank) {
+        int res = 0;
+        switch (rank) {
+        case "一":
+            res = 1;
+            break;
+        case "二":
+            res = 2;
+            break;
+        case "三":
+            res = 3;
+            break;
+        case "四":
+            res = 4;
+            break;
+        case "五":
+            res = 5;
+            break;
+        case "六":
+            res = 6;
+            break;
+        case "七":
+            res = 7;
+            break;
+        case "八":
+            res = 8;
+            break;
+        case "九":
+            res = 9;
+            break;
+        case "十":
+            res = 10;
+            break;
+        default:
             break;
         }
         return res;
