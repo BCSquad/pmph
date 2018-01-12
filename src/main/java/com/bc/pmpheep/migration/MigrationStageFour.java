@@ -513,14 +513,14 @@ public class MigrationStageFour {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("通知内容为空。"));
                 excel.add(object);
                 notice="-";
-                excptionList.add(new Object[]{matername,"教材通知内容为空","原专家平台没有填写通知内容","设置为'-'导入新库表"});
+                excptionList.add(new Object[]{matername,"教材通知内容为空","原专家平台或者在运平台没有填写通知内容","设置为'-'导入新库表"});
             }
             String note = (String) object.get("remark");
             if (StringUtil.isEmpty(note)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("备注。"));
                 excel.add(object);
                 note="-";
-                excptionList.add(new Object[]{matername,"教材备注内容为空","原专家平台没有填写通知备注","设置为'-'导入新库表"});
+                excptionList.add(new Object[]{matername,"教材备注内容为空","原专家平台或者在运平台没有填写通知备注","设置为'-'导入新库表"});
             }
             MaterialExtra materialExtra = new MaterialExtra();
             materialExtra.setMaterialId(materid);
@@ -604,32 +604,24 @@ public class MigrationStageFour {
             materialNoticeAttachment.setDownload(1L);
             materialNoticeAttachment = materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
             if (ObjectUtil.notNull(materialNoticeAttachment.getId())) {
-            	if(!new File((String) map.get("filedir")).exists()){
-            		materialNoticeAttachmentService.deleteMaterialNoticeAttachmentById(materialNoticeAttachment.getId());
-            		excptionList.add(new Object[]{matername,fileName,"找不到通知文件","文件丢失","不导入该条信息"});
-            		continue;
-            	}
-            	String mongoId;
+            	String mongoId = null;
                 try {
                     mongoId = fileService.migrateFile((String) map.get("filedir"), FileType.MATERIAL_NOTICE_ATTACHMENT, materialNoticeAttachment.getId());
                 } catch (IOException ex) {
                     logger.error("文件读取异常，路径<{}>，异常信息：{}", (String) map.get("filedir"), ex.getMessage());
                     map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常。");
                     excel.add(map);
-                    continue;
                 } catch (Exception e) {
                     map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("未知异常：" + e.getMessage() + "。"));
                     excel.add(map);
-                    continue;
                 }
-                if (StringUtil.notEmpty(mongoId)) {
+                if (null != mongoId) {
                     materialNoticeAttachment.setAttachment(mongoId);
                     materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
                     count++;
                 } else {
-                    map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("文件保存失败或者文件不存在。"));
-                    excel.add(map);
-                    continue;
+                	materialNoticeAttachmentService.deleteMaterialNoticeAttachmentById(materialNoticeAttachment.getId());
+            		excptionList.add(new Object[]{matername,fileName,"找不到通知文件","文件丢失","不导入该条信息"});
                 }
             }
         }
@@ -706,31 +698,23 @@ public class MigrationStageFour {
             materialNoteAttachment = materialNoteAttachmentService.addMaterialNoteAttachment(materialNoteAttachment);
             count++;
             if (ObjectUtil.notNull(materialNoteAttachment.getId())) {
-            	if(!new File((String) map.get("filedir")).exists()){
-            		materialNoteAttachmentService.deleteMaterialNoteAttachmentById(materialNoteAttachment.getId());
-            		excptionList.add(new Object[]{matername,fileName,"找不到备注文件","文件丢失","不导入该条信息"});
-            		continue;
-            	}
-                String mongoId;
+            	String mongoId = null ;
                 try {
                     mongoId = fileService.migrateFile((String) map.get("filedir"), FileType.MATERIAL_NOTE_ATTACHMENT, materialNoteAttachment.getId());
                 } catch (IOException ex) {
                     logger.error("文件读取异常，路径<{}>，异常信息：{}", (String) map.get("filedir"), ex.getMessage());
                     map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常。");
                     excel.add(map);
-                    continue;
                 } catch (Exception e) {
                     map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("未知异常：" + e.getMessage() + "。"));
                     excel.add(map);
-                    continue;
                 }
-                if (StringUtil.notEmpty(mongoId)) {
+                if (null != mongoId) {
                     materialNoteAttachment.setAttachment(mongoId);
                     materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
                 } else {
-                    map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("文件保存失败或者文件不存在。"));
-                    excel.add(map);
-                    continue;
+                	materialNoteAttachmentService.deleteMaterialNoteAttachmentById(materialNoteAttachment.getId());
+            		excptionList.add(new Object[]{matername,fileName,"找不到备注文件","文件丢失","不导入该条信息"});
                 }
             }
         }
