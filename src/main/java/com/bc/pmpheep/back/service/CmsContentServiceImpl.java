@@ -54,15 +54,21 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Service
 public class CmsContentServiceImpl implements CmsContentService {
     @Autowired
-    CmsContentDao       cmsContentDao;
+    CmsContentDao                   cmsContentDao;
     @Autowired
-    ContentService      contentService;
+    ContentService                  contentService;
     @Autowired
-    CmsScheduleService  cmsScheduleService;
+    CmsScheduleService              cmsScheduleService;
     @Autowired
-    private FileService fileService;
+    private FileService             fileService;
     @Autowired
-    CmsExtraService     cmsExtraService;
+    CmsExtraService                 cmsExtraService;
+    @Autowired
+    MaterialExtraService            materialExtraService;
+    @Autowired
+    MaterialNoticeAttachmentService materialNoticeAttachmentService;
+    @Autowired
+    MaterialNoteAttachmentService   materialNoteAttachmentService;
 
     @Override
     public CmsContent addCmsContent(CmsContent cmsContent) throws CheckedServiceException {
