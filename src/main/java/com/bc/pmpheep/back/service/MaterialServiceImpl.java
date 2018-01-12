@@ -806,6 +806,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialListVO.setIsMy(true);
 			}
 			if (pmphUser.getId().equals(materialListVO.getFounderId())) {// 判断是否是创建者
+				materialListVO.setIsMy(true);
 				materialListVO.setIsFounder(true);
 			} else {
 				materialListVO.setIsFounder(false);
