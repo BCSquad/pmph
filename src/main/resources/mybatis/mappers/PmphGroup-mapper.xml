@@ -184,5 +184,68 @@
 		resultType="PmphGroup">
 		select * from pmph_group where group_name = #{groupName} ;
 	</select>
-
+	<!--分页查询小组 -->
+	<select id="getListPmphGroup" parameterType="PageParameter" resultType="PmphGroupListVO"> 
+		select
+		g.id,
+		g.group_name,
+		g.group_image,
+		g.gmt_last_message
+		gmtLastMessage,
+		g.book_id,
+		t.textbook_name bookName
+		from
+		pmph_group g
+		LEFT
+		JOIN textbook t ON g.book_id = t.id
+		where
+		g.id
+		in (
+		select DISTINCT
+		group_id from pmph_group_member where user_id = #{id} and
+		is_writer =
+		false AND is_deleted = FALSE
+		)
+		<if test="parameter.groupName != null and parameter.groupName !=''">
+			and g.group_name like
+			concat(concat('%',#{parameter.groupName}),'%')
+		</if>
+		GROUP BY
+		g.id
+		order by
+		gmt_last_message desc , group_name 
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	<!--admin分页查询小组 -->
+	<select id="getPmphGroupList" parameterType="PageParameter" resultType="PmphGroupListVO">
+		SELECT
+		g.id,
+		g.group_name,
+		g.group_image,
+		g.gmt_last_message
+		gmtLastMessage,
+		g.book_id,
+		t.textbook_name bookName,
+		COUNT(f.id) files
+		FROM
+		pmph_group g
+		LEFT JOIN textbook t ON g.book_id = t.id
+		LEFT JOIN
+		pmph_group_file f ON f.group_id = g.id
+		where
+		1=1
+		<if test="parameter.groupName != null and parameter.groupName !=''">
+			and g.group_name like
+			concat('%',#{parameter.groupName},'%')
+		</if>
+		GROUP BY g.id
+		order by
+		gmt_last_message desc
+		, group_Name 
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
 </mapper>

@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -254,4 +255,18 @@ public interface PmphUserService {
 	 * @return
 	 */
 	PmphUser getPmphUser(String username);
+	
+	/**
+	 * 个人中心首页
+	 * @param request
+	 * @param state
+	 * @param materialName
+	 * @param groupName
+	 * @param title
+	 * @param bookname
+	 * @param name
+	 * @return
+	 */
+	Map<String, Object> getPersonalCenter(HttpServletRequest request, String state, String materialName, String groupName,
+			String title, String bookname, String name);
 }
