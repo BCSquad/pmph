@@ -265,10 +265,12 @@ public interface PmphUserService {
      * @param title
      * @param bookname
      * @param name
+     * @param topicBookname 
+     * @param authProgress 
      * @return
      */
     Map<String, Object> getPersonalCenter(HttpServletRequest request, String state,
-    String materialName, String groupName, String title, String bookname, String name);
+    String materialName, String groupName, String title, String bookname, String name, String authProgress, String topicBookname);
 
     /**
      * 
