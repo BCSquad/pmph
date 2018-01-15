@@ -795,12 +795,15 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		for (MaterialListVO materialListVO : list) {
 			materialListVO.setIsMy(false);
-			materialListVO.setContacts(materialContactService.listMaterialContactByMaterialId(materialListVO.getId()));// 获取联系人
-			if (textbookService.getTextbookByMaterialId(materialListVO.getId()).size() == 0) {// 判断新建教材时是否到了书目录页面
-				materialListVO.setMaterialStep("设置书目录");
-			}
-			if (ObjectUtil.isNull(cmsContentService.getCmsContentByMaterialId(materialListVO.getId()))) {// 判断新建教材时是否到了编辑通知详情页面
-				materialListVO.setMaterialStep("编辑通知详情");
+			if (!materialListVO.getIsPublished()) {
+				materialListVO
+						.setContacts(materialContactService.listMaterialContactByMaterialId(materialListVO.getId()));// 获取联系人
+				if (textbookService.getTextbookByMaterialId(materialListVO.getId()).size() == 0) {// 判断新建教材时是否到了书目录页面
+					materialListVO.setMaterialStep("设置书目录");
+				}
+				if (ObjectUtil.isNull(cmsContentService.getCmsContentByMaterialId(materialListVO.getId()))) {// 判断新建教材时是否到了编辑通知详情页面
+					materialListVO.setMaterialStep("编辑通知详情");
+				}
 			}
 			if (pmphUser.getIsAdmin()) {// 如果是超级管理员则为所欲为
 				materialListVO.setIsMy(true);
