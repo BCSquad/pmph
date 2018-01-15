@@ -123,6 +123,7 @@ public class MigrationStageSix {
         decResearch();
         decExtension();
         decPosition();
+        decPositionPublished();
         logger.info("迁移第六步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
