@@ -455,7 +455,7 @@
 	
 	<!-- 根据materialId查询一个CmsContent -->
 	<select id="getCmsContentByMaterialId" parameterType="java.lang.Long" resultType="CmsContent">
-		select * from cms_content where material_id=#{materialId};
+		SELECT * FROM cms_content t WHERE t.`category_id`=3 AND t.`material_id` =#{materialId};
 	</select>
 	
 	<!-- 根据id查询一个CmsContent -->
