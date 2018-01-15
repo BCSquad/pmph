@@ -23,6 +23,7 @@ import com.bc.pmpheep.back.po.DecExtension;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecNationalPlan;
 import com.bc.pmpheep.back.po.DecPosition;
+import com.bc.pmpheep.back.po.DecPositionPublished;
 import com.bc.pmpheep.back.po.DecResearch;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
@@ -34,6 +35,7 @@ import com.bc.pmpheep.back.service.DecEduExpService;
 import com.bc.pmpheep.back.service.DecExtensionService;
 import com.bc.pmpheep.back.service.DecLastPositionService;
 import com.bc.pmpheep.back.service.DecNationalPlanService;
+import com.bc.pmpheep.back.service.DecPositionPublishedService;
 import com.bc.pmpheep.back.service.DecPositionService;
 import com.bc.pmpheep.back.service.DecResearchService;
 import com.bc.pmpheep.back.service.DecTeachExpService;
@@ -90,6 +92,8 @@ public class MigrationStageSix {
     DecResearchService decResearchService;
     @Resource
     DecExtensionService decExtensionService;
+    @Resource
+    DecPositionPublishedService decPositionPublishedService;
     @Resource
     FileService fileService;
     @Resource
@@ -1221,14 +1225,14 @@ public class MigrationStageSix {
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
             String id = (String) map.get("positionid"); // 旧表主键值
-            DecPosition decPosition = new DecPosition();
+            DecPositionPublished decPositionPublished = new DecPositionPublished();
             Long materid = (Long) map.get("newmaterid"); // 教材id
             Long publisherId = publisherIdMap.get(materid); 
-            if(null == publisherId ){
+            if(ObjectUtil.isNull(publisherId)){
             	publisherId = materialService.getMaterialById(materid).getDirector() ;
             	publisherIdMap.put(materid, publisherId);
             }
-            
+            decPositionPublished.setPublisherId(publisherId); // 公布人id
             Long declarationid = (Long) map.get("wdid"); // 申报表id
             Long textbookid = (Long) map.get("tbid"); // 书籍id
             String temppresetPosition = (String) map.get("preset_position"); // 申报职务
@@ -1242,7 +1246,7 @@ public class MigrationStageSix {
                 extensionidCount++;
                 continue;
             }
-            decPosition.setDeclarationId(declarationid);
+            decPositionPublished.setDeclarationId(declarationid);
             if (ObjectUtil.isNull(textbookid) || textbookid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到书籍对应的关联结果。"));
                 excel.add(map);
@@ -1250,7 +1254,7 @@ public class MigrationStageSix {
                 textbookidCount++;
                 continue;
             }
-            decPosition.setTextbookId(textbookid);
+            decPositionPublished.setTextbookId(textbookid);
             temppresetPosition += "," + temppresetPosition + ",";
             String Positions = "0";
             if (temppresetPosition.contains(",a,")) {
@@ -1268,12 +1272,12 @@ public class MigrationStageSix {
             } else {
                 Positions += "0";
             }
-            decPosition.setPresetPosition(Integer.valueOf(Positions, 2));//转成10进制
+            decPositionPublished.setPresetPosition(Integer.valueOf(Positions, 2));//转成10进制
             if (ObjectUtil.isNull(isOnList)) {
-                decPosition.setIsOnList(1);
+            	decPositionPublished.setIsOnList(1);
             }
             Integer isOn = isOnList.intValue();
-            decPosition.setIsOnList(isOn);
+            decPositionPublished.setIsOnList(isOn);
             tempchosenPosition += "," + tempchosenPosition + ",";
             Integer chosen = 0;
             if (tempchosenPosition.contains(",a,")) {
@@ -1285,13 +1289,13 @@ public class MigrationStageSix {
             } else if (tempchosenPosition.contains(",d,")) {
             	chosen = 0;
             }
-            decPosition.setChosenPosition(chosen);
-            decPosition.setRank(mastersort);
-            decPosition.setSyllabusName((String) map.get("syllabus_name")); // 教学大纲名称
-            decPosition.setGmtCreate((Timestamp) map.get("gmt_create")); // 创建时间
+            decPositionPublished.setChosenPosition(chosen);
+            decPositionPublished.setRank(mastersort);
+            decPositionPublished.setSyllabusName((String) map.get("syllabus_name")); // 教学大纲名称
+            decPositionPublished.setGmtCreate((Timestamp) map.get("gmt_create")); // 创建时间
             String outLineUrl = (String) map.get("outlineurl"); // 教学大纲id
-            decPosition = decPositionService.addDecPosition(decPosition);
-            long pk = decPosition.getId();
+            decPositionPublished = decPositionPublishedService.addDecPositionPublished(decPositionPublished);
+            long pk = decPositionPublished.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "positionid", id);
             count++;
             if (StringUtil.notEmpty(outLineUrl)) {
@@ -1310,8 +1314,8 @@ public class MigrationStageSix {
                     logger.debug("更新mongoDB的id错误，此结果将被记录在Excel中");
                     outListCount++;
                 }
-                decPosition.setSyllabusId(mongoId);
-                decPositionService.updateDecPosition(decPosition);
+                decPositionPublished.setSyllabusId(mongoId);
+                decPositionPublishedService.updateDecPositionPublished(decPositionPublished);
             }
         }
         if (excel.size() > 0) {
