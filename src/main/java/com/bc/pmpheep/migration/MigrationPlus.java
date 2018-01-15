@@ -15,7 +15,6 @@ import com.bc.pmpheep.back.dao.CmsAdvertisementDao;
 import com.bc.pmpheep.back.dao.CmsAdvertisementImageDao;
 import com.bc.pmpheep.back.po.CmsAdvertisement;
 import com.bc.pmpheep.back.po.CmsAdvertisementImage;
-import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.po.SurveyQuestion;
 import com.bc.pmpheep.back.po.SurveyQuestionOption;
@@ -80,7 +79,7 @@ public class MigrationPlus {
 	 
 	 public void start() {
 		 Date begin = new Date();
-		 //initCmsAdvertisementData();
+		 initCmsAdvertisementData();
 		 survey();
 		 logger.info("数据填充运行结束，用时：{}", JdbcHelper.getPastTime(begin));
 	 }
@@ -142,13 +141,10 @@ public class MigrationPlus {
 		 surveyTypeService.addSurveyType(surveyType2);
 		 SurveyType surveyType3 = new SurveyType("医生", 3);
 		 surveyTypeService.addSurveyType(surveyType3);
-		 String sql = "select * from sys_user where userid = '1496375695709123-789241'";
+		 String sql = "select * from sys_user where userid = '1496375695709123-789241'"; // 查询武震的new_pk
 		 List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
 		 Map<String, Object> map = maps.get(0);
 		 Long id = (Long) map.get("new_pk");
-		 /*PmphUser pmphUser = pmphUserService.getPmphUser("admin");
-		 SurveyTemplate surveyTemplate = new SurveyTemplate("人卫e教平台满意度问卷模板", 999, pmphUser.getId(), 
-				 "该问卷只针对教师", surveyType2.getId(), false);*/
 		 SurveyTemplate surveyTemplate = new SurveyTemplate("人卫e教平台满意度问卷模板", 999, id, 
 				 "该问卷只针对教师", surveyType2.getId(), false);
 		 surveyTemplateService.addSurveyTemplate(surveyTemplate);
