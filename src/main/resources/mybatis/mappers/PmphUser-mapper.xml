@@ -520,4 +520,10 @@
 	<select id="getPmphUser" resultType="PmphUser">
 		select * from pmph_user where username = #{username}
 	</select>
+	
+	<!-- 根据部门ID查询用户列表 -->
+	<select id="listPmphUserByDepartmentId" parameterType="java.lang.Long" resultType="PmphUser">
+		select * from pmph_user where department_id = #{departmentId}
+	</select>
+	
 </mapper>
