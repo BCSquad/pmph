@@ -65,7 +65,6 @@ public class MigrationStageTwo {
         writerUserRole();
         writerProfile();
         writerUserCertification();
-        orgUserRole();
         logger.info("迁移第二步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
@@ -82,14 +81,11 @@ public class MigrationStageTwo {
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, "显示顺序为负数。");
-                excel.add(map);
-                logger.info("显示顺序为负数，此结果将被记录在Excel中");
             }
             String note = (String) map.get("memo");
             WriterRole writerRole = new WriterRole();
             writerRole.setRoleName(rolename);
-            writerRole.setIsDisabled(isDisabled == 1);
+            writerRole.setIsDisabled(isDisabled != 1);
             writerRole.setSort(sort);
             writerRole.setNote(note);
             writerRole = writerRoleService.add(writerRole);
@@ -128,10 +124,14 @@ public class MigrationStageTwo {
             Double userroleId = (Double) map.get("userroleid");
             Long userId = (Long) map.get("user_new_pk");
             Long roleId = (Long) map.get("role_new_pk");
-            if (ObjectUtil.isNull(roleId)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "角色被删除，无法关联到。");
+            if (ObjectUtil.isNull(userId)){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "此用户不存在。");
                 excel.add(map);
-                logger.error("角色被删除，无法被关联到，此结果将被记录在Excel中");
+                continue;
+            }
+            if (ObjectUtil.isNull(roleId)) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, "用户所属角色被删除。");
+                excel.add(map);
                 continue;
             }
             WriterUserRole writerUserRole = new WriterUserRole();
@@ -158,9 +158,9 @@ public class MigrationStageTwo {
     }
 
     protected void writerProfile() {
-        String sql = "SELECT  b.userid,b.new_pk,a.userid tag_userid,c.introduce,"
-                + "GROUP_CONCAT(d.tagname SEPARATOR '%') tag_name,c.usertype "
-                + "FROM sys_usertagmap a LEFT JOIN sys_user b ON a.userid = b.userid "
+        String sql = "SELECT b.userid,b.new_pk,b.usercode,b.username,c.seniority,"
+        		+ "a.userid tag_userid,c.introduce,GROUP_CONCAT(d.tagname SEPARATOR '%') tag_name,"
+        		+ "c.usertype FROM sys_usertagmap a LEFT JOIN sys_user b ON a.userid = b.userid "
                 + "LEFT JOIN sys_userext c ON b.userid = c.userid "
                 + "LEFT JOIN book_tag d ON a.tagid = d.tagid GROUP BY a.userid ;";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
@@ -168,21 +168,28 @@ public class MigrationStageTwo {
         int count = 0;
         for (Map<String, Object> map : maps) {
             Long userId = (Long) map.get("new_pk");
+            if (ObjectUtil.isNull(userId)){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "此用户不存在");
+            	excel.add(map);
+            	continue;
+            }
             Integer usertype = (Integer) map.get("usertype");
             if (ObjectUtil.notNull(usertype) && 2 == usertype.intValue()) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "此用户为机构用户。");
                 excel.add(map);
-                logger.error("用户为机构用户,此结果将被记录在Excel中");
                 continue;
             }
-            if (ObjectUtil.isNull(userId) || userId == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "此用户可能被删除或为社内用户。");
+            if (userId == 0) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, "此用户为社内用户。");
                 excel.add(map);
-                logger.error("此用户可能被删除或为社内用户,此结果将被记录在Excel中");
                 continue;
             }
             String profile = (String) map.get("introduce");
             String tagName = (String) map.get("tag_name");
+            if (StringUtil.isEmpty(tagName)){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "此标签不存在");
+            	excel.add(map);
+            }
             WriterProfile writerProfile = new WriterProfile();
             writerProfile.setUserId(userId);
             writerProfile.setProfile(profile);
@@ -216,22 +223,33 @@ public class MigrationStageTwo {
                 + "LEFT JOIN (SELECT * FROM pub_addfileinfo y WHERE y.fileid IN (SELECT MAX(p.fileid) "
                 + "FROM pub_addfileinfo p WHERE p.childsystemname='sys_userext_teacher' GROUP BY p.operuserid))e "
                 + "ON a.userid = e.operuserid "
-                + "WHERE a.sysflag=1 AND b.usertype !=2;";
+                + "WHERE a.sysflag=1 AND b.usertype !=2 AND e.filedir IS NOT NULL ;";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
             Long userId = (Long) map.get("user_new_pk");
-            if (ObjectUtil.isNull(userId) || userId == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户不存在或为社内用户。"));
+            if (ObjectUtil.isNull(userId)) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("此用户不存在。"));
+                excel.add(map);
+                continue;
+            }
+            if (userId == 0){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户为社内用户。"));
                 excel.add(map);
                 continue;
             }
             Long orgId = (Long) map.get("org_new_pk");
             if (ObjectUtil.isNull(orgId) || orgId == 0) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("为空则用户没有和机构关联，为0则可能因为"
-                        + "机构重名查询不到。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户没有教师认证单位，可以"
+                		+ "通过申报表和专家平台再次确定"));
+                excel.add(map);
+                continue;
+            }
+            if (orgId == 0){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户认证单位为社内部门"
+            			+ "或认证单位在表里存在重复情况，可以通过申报表及专家平台再次确定"));
                 excel.add(map);
                 continue;
             }
@@ -282,46 +300,6 @@ public class MigrationStageTwo {
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
         msg.put("result", "writer_user_certification表迁移完成" + count + "/" + maps.size());
-        SQLParameters.STATISTICS.add(msg);
-    }
-
-    /**
-     *
-     * Description:新库没有机构用户关联表，这部分数据没有意义，只是以防万一查询出导出为Excel
-     *
-     * @author:lyc
-     * @date:2017年11月9日下午5:19:45
-     * @param
-     * @return void
-     */
-    protected void orgUserRole() {
-        String sql = "SELECT a.userroleid,b.userid,b.usercode,b.username,b.new_pk user_new_pk,"
-                + "c.rolename,c.rolecode,c.isvalid,c.roleid,c.new_pk role_new_pk "
-                + "FROM sys_userrole a "
-                + "LEFT JOIN sys_user b ON a.userid = b.userid "
-                + "LEFT JOIN sys_role c ON a.roleid = c.roleid "
-                + "LEFT JOIN sys_userext d ON a.userid = d.userid "
-                + "WHERE b.sysflag = 1 AND d.usertype = 2 ;";
-        List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
-        List<Map<String, Object>> excel = new LinkedList<>();
-        int count = 0;
-        for (Map<String, Object> map : maps) {
-            map.put(SQLParameters.EXCEL_EX_HEADER, "机构用户角色关联");
-            excel.add(map);
-            logger.info("现今没有机构用户角色关联表，暂时导出为Excel");
-            count++;
-        }
-        if (excel.size() > 0) {
-            try {
-                excelHelper.exportFromMaps(excel, "机构用户关联", "");
-            } catch (IOException ex) {
-                logger.error("异常数据导出到Excel失败", ex);
-            }
-        }
-        logger.info("机构用户关联角色共有{}条数据，导出了{}条数据", maps.size(), count);
-        //记录信息
-        Map<String, Object> msg = new HashMap<String, Object>();
-        msg.put("result", "sys_userrole表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
 }
