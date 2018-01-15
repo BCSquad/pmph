@@ -40,6 +40,11 @@ public class BookCorrectionTrackVO implements Serializable {
     @ExcelHeader(header = "策划编辑")
     private String    realname ;
     /**
+     * 责任编辑名字
+     */
+    @ExcelHeader(header = "责任编辑名")
+    private String dutyName;
+    /**
      * 检查结构 
      */
     private Boolean   result ;
@@ -252,17 +257,27 @@ public class BookCorrectionTrackVO implements Serializable {
 		this.isEditorRepliedString = isEditorRepliedString;
 	}
 
+	
 
+	public String getDutyName() {
+		return dutyName;
+	}
+
+
+
+	public void setDutyName(String dutyName) {
+		this.dutyName = dutyName;
+	}
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ", bookname:" + bookname + ", dpName:" + dpName
-				+ ", typeName:" + typeName + ", realname:" + realname
-				+ ", result:" + result + ", resultString:" + resultString
-				+ ", page:" + page + ", line:" + line + ", content:" + content
-				+ ", authorReply:" + authorReply + ", isEditorReplied:"
-				+ isEditorReplied + ", isEditorRepliedString:"
-				+ isEditorRepliedString + "}";
+		return "{id:" + id + ",bookname:" + bookname + ",dpName:" + dpName
+				+ ",typeName:" + typeName + ",realname:" + realname
+				+ ",dutyName:" + dutyName + ",result:" + result
+				+ ",resultString:" + resultString + ",page:" + page + ",line:"
+				+ line + ",content:" + content + ",authorReply:" + authorReply
+				+ ",isEditorReplied:" + isEditorReplied
+				+ ",isEditorRepliedString:" + isEditorRepliedString + "}";
 	}
     
 	
