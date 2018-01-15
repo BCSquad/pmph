@@ -146,6 +146,12 @@ public interface WriterUserDao {
 	 * @return
 	 */
 	Integer updateWriterUserRank(List<WriterUser> writerUsers);
+	
+	/**
+	 * 查询教师认证总数量
+	 * @return
+	 */
+	Integer getCount();
 
     // /**
     // *

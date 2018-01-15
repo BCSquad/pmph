@@ -399,4 +399,9 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         return result;
     }
 
+	@Override
+	public Integer getCount() {
+		return orgUserDao.geCount();
+	}
+
 }

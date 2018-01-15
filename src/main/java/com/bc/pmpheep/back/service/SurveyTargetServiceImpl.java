@@ -172,7 +172,7 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
             }
             Integer size = orgUserEmail.size();
             String[] emails =
-            new String[] { "fen1326219542@qq.com", "heyu.1993@qq.com", "1240413812@qq.com" };
+            new String[] { "515944204@qq.com", "869389545@qq.com", "nyz526@163.com" };
             String[] toEmail = (String[]) orgUserEmail.toArray(new String[size]);
             // 发送邮件
             JavaMailSenderUtil javaMailSenderUtil = new JavaMailSenderUtil();

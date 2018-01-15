@@ -121,5 +121,11 @@ public interface OrgUserDao {
      * @return
      */
 	List<OrgUser> getOrgUsername(String username);
+	
+	/**
+	 * 查询机构认证总数
+	 * @return
+	 */
+	Integer geCount();
 
 }

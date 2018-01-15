@@ -367,4 +367,18 @@
 		resultType="OrgUser">
 		select * from org_user where username=#{username} ;
 	</select>
+	<!-- 机构认证总数量 -->
+	<select id="geCount" resultType="java.lang.Integer">
+		select
+		count(*) count
+		from
+		org o
+		left
+		join
+		`org_user` ou
+		ON
+		o.`id`=ou.`org_id`
+		where
+		ou.is_deleted = 0 and ou.is_proxy_upload=1
+	</select>
 </mapper>

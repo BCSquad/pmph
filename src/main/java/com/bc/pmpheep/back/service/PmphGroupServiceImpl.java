@@ -15,14 +15,12 @@ import com.bc.pmpheep.back.dao.PmphGroupDao;
 import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
-import com.bc.pmpheep.back.po.MessageAttachment;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupFile;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.ArrayUtil;
-import com.bc.pmpheep.back.util.CastUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.FileUpload;
@@ -32,9 +30,7 @@ import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
-import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -376,25 +372,28 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		List<PmphGroupListVO> list = new ArrayList<>();
 		PageResult<PmphGroupListVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total=0;
 		if (pmphUser.getIsAdmin()) {
+			total=pmphGroupDao.getAdminCount();
 			list = pmphGroupDao.getPmphGroupList(pageParameter);
-			// list =
-			// pmphGroupDao.listPmphGroup(pageParameter.getParameter().getGroupName());
 			for (PmphGroupListVO pmphGroupListVO : list) {
 				pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
 			}
 			pageResult.setRows(list);
+			pageResult.setTotal(total);
 
 		} else {
-			PmphGroup pmphGroup = new PmphGroup();
+			
+			PmphGroup pmphGroup=new PmphGroup();
 			pmphGroup.setGroupName(pageParameter.getParameter().getGroupName());
 			pmphGroup.setId(pmphUser.getId());
+			total=pmphGroupDao.getPmphGroupTotal(pageParameter);
 			list = pmphGroupDao.getListPmphGroup(pageParameter);
-			// list = pmphGroupDao.getList(pmphGroup, pmphUser.getId());
 			for (PmphGroupListVO pmphGroupListVO : list) {
 				pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
 			}
 			pageResult.setRows(list);
+			pageResult.setTotal(total);
 		}
 		return pageResult;
 	}

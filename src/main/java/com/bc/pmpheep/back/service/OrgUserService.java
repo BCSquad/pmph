@@ -109,4 +109,10 @@ public interface OrgUserService {
      * @throws CheckedServiceException
      */
     Object addOrgUserAndOrgOfBack(OrgUser orgUser, Org org) throws CheckedServiceException;
+    
+    /**
+     * 机构认证总数量
+     * @return
+     */
+	Integer getCount();
 }
