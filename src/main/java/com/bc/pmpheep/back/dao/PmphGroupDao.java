@@ -119,5 +119,17 @@ public interface PmphGroupDao {
 	 * @return
 	 */
 	List<PmphGroupListVO> getPmphGroupList(PageParameter<PmphGroupListVO> pageParameter);
+	
+	/**
+	 * 查询小组总条数
+	 * @return
+	 */
+	Integer getAdminCount();
+	
+	/**
+	 * 查询总条数
+	 * @return
+	 */
+	Integer getPmphGroupTotal(PageParameter<PmphGroupListVO> pageParameter);
 
 }

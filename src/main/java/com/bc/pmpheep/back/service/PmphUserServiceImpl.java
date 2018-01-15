@@ -45,6 +45,7 @@ import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
+import com.bc.pmpheep.back.vo.TopicDeclarationVO;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -82,6 +83,13 @@ public class PmphUserServiceImpl implements PmphUserService {
 	BookCorrectionService bookCorrectionService;
 	@Autowired
 	BookUserCommentService bookUserCommentService;
+	@Autowired
+	WriterUserService  writerUserService;
+	@Autowired
+	OrgUserService orgUserService;
+	@Autowired
+	TopicService topicService;
+	
 	@Override
 	public boolean updatePersonalData(PmphUser pmphUser, MultipartFile file) throws IOException {
 		Long id = pmphUser.getId();
@@ -630,6 +638,10 @@ public class PmphUserServiceImpl implements PmphUserService {
 		String sessionId = CookiesUtil.getSessionId(request);
 		//用于装所有的数据map 
 		Map<String, Object> map=new HashMap<>();
+		//教师认证总数量
+		Integer writerUserCount=writerUserService.getCount();
+		//机构认证数量orgList
+		Integer orgerCount=orgUserService.getCount();
 		//小组
 		PmphGroupListVO pmphGroup = new PmphGroupListVO();
 		if (ObjectUtil.notNull(groupName)) {
@@ -664,12 +676,22 @@ public class PmphUserServiceImpl implements PmphUserService {
 		bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
 		pageParameter.setParameter(bookUserCommentVO);
 		PageResult<BookUserCommentVO> pageResultBookUserCommentVO=bookUserCommentService.listBookUserComment(pageParameter);
-		//图书附件审核
+		//图书附件审核 暂时没有
+		//选题申报
+		PageParameter<TopicDeclarationVO> pageParameter3 = new PageParameter<>();
+		TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
+		topicDeclarationVO.setBookname(bookname);
+		pageParameter3.setParameter(topicDeclarationVO);
+		List<Long> progress = new ArrayList<>();
+		PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO=topicService.listCheckTopic(progress, pageParameter3);
+		map.put("topicList", pageResultTopicDeclarationVO);
 		map.put("materialList", pageResultMaterialListVO);
 		map.put("cmsContent", pageResultCmsContentVO);
 		map.put("bookCorrectionAudit", pageResultBookCorrectionAuditVO);
 		map.put("bookUserComment", pageResultBookUserCommentVO);
 		map.put("pmphGroup", pageResultPmphGroup);
+		map.put("writerUserCount", writerUserCount);
+		map.put("orgUserCount", orgerCount);
 		return map;
 	}
 

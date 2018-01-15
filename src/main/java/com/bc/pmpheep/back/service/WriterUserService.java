@@ -214,5 +214,10 @@ public interface WriterUserService {
 	 * @return
 	 */
 	Integer updateWriterUserRank(List<WriterUser> writerUsers);
+	/**
+	 * 查询教师认证数量
+	 * @return
+	 */
+	Integer getCount();
 
 }
