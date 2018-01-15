@@ -442,9 +442,12 @@
 		m.is_deleted = 0
 		AND
 		m.msg_type = 1
-		<if test="parameter.senderId != null">
+		<if test="parameter.senderIds != null">
 			AND
-			m.sender_id = #{parameter.senderId}
+			m.sender_id in
+			<foreach collection="parameter.senderIds" item="userId" index="index" open="(" close=")" separator=",">
+				#{userId}
+			</foreach>
 		</if>
 		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
@@ -476,9 +479,12 @@
 		m.is_deleted = 0
 		AND
 		m.msg_type = 1
-		<if test="parameter.senderId != null">
+		<if test="parameter.senderIds != null">
 			AND
-			m.sender_id = #{parameter.senderId}
+			m.sender_id in
+			<foreach collection="parameter.senderIds" item="userId" index="index" open="(" close=")" separator=",">
+				#{userId}
+			</foreach>
 		</if>
 		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')

@@ -231,6 +231,7 @@ public class MaterialController {
      * @return
      */
     @ResponseBody
+    @LogDetail(businessType = Business_Type, logRemark = "上传临时附件")
     @RequestMapping(value = "/upTempFile", method = RequestMethod.POST)
     public ResponseBean upTempFile(HttpServletRequest request, MultipartFile[] files) {
         try {
@@ -263,11 +264,11 @@ public class MaterialController {
     /**
      * 
      * <pre>
-     * 功能描述：获取已经发布教材信息
-     * 使用示范：
-     *
-     * @return Material对象集合
-     * </pre>
+	 * 功能描述：获取已经发布教材信息
+	 * 使用示范：
+	 *
+	 * &#64;return Material对象集合
+	 * </pre>
      */
     @ResponseBody
     @LogDetail(businessType = Business_Type, logRemark = "获取已经发布教材信息")

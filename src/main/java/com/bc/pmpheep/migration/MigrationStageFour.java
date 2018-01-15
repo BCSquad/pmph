@@ -1,6 +1,5 @@
 package com.bc.pmpheep.migration;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -9,14 +8,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtension;
@@ -37,6 +33,7 @@ import com.bc.pmpheep.back.service.MaterialProjectEditorService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.MaterialTypeService;
 import com.bc.pmpheep.back.service.OrgService;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
@@ -44,8 +41,9 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
-
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Mryang
@@ -307,8 +305,13 @@ public class MigrationStageFour {
             if (ObjectUtil.isNull(round)) {//没有轮次的设置默认值为0。
 //                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("轮次为空,设默认值1。"));
 //                excel.add(oldMaterial);
-                round = 0;
-                excptionList.add(new Object[]{matername,"教材没有对应的轮次","原专家库没有轮次信息","导入新库表,设默认值0"});
+            	 //------------------------------------------------------------------------------------------
+            	Matcher  m = Pattern.compile("第(.*?)轮").matcher(matername);
+            	round = m.find() ? SystemMessageService.rank(m.group(1)) : 0 ;
+                if(null == round ){ 
+					round = 0;
+                	excptionList.add(new Object[]{matername,"教材没有对应的轮次","原专家库没有轮次信息","导入新库表,设默认值0"});
+                }
             }
             Long booktypesid = (Long) oldMaterial.get("booktypesid");
             if (ObjectUtil.isNull(booktypesid)) {
@@ -364,7 +367,7 @@ public class MigrationStageFour {
             material.setIsResearchUsed("1".equals(String.valueOf(oldMaterial.get("isusescientresearch"))));//is_research_used,
             material.setIsResearchRequired("1".equals(String.valueOf(oldMaterial.get("isfillscientresearch"))));//is_research_required,
             material.setIsPublished("1".equals(String.valueOf(oldMaterial.get("is_published"))));//is_published,
-            material.setIsPublic(false);//is_public
+            material.setIsPublic(true);//is_public
             material.setIsAllTextbookPublished("1".equals(String.valueOf(oldMaterial.get("is_all_textbook_published"))));//is_all_textbook_published
             material.setIsForceEnd(false);//is_force_end
             material.setIsDeleted("1".equals(String.valueOf(oldMaterial.get("isdelete"))));//is_deleted,
@@ -505,14 +508,14 @@ public class MigrationStageFour {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("通知内容为空。"));
                 excel.add(object);
                 notice="-";
-                excptionList.add(new Object[]{matername,"教材通知内容为空","原专家平台没有填写通知内容","设置为'-'导入新库表"});
+                excptionList.add(new Object[]{matername,"教材通知内容为空","原专家平台或者在运平台没有填写通知内容","设置为'-'导入新库表"});
             }
             String note = (String) object.get("remark");
             if (StringUtil.isEmpty(note)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("备注。"));
                 excel.add(object);
                 note="-";
-                excptionList.add(new Object[]{matername,"教材备注内容为空","原专家平台没有填写通知备注","设置为'-'导入新库表"});
+                excptionList.add(new Object[]{matername,"教材备注内容为空","原专家平台或者在运平台没有填写通知备注","设置为'-'导入新库表"});
             }
             MaterialExtra materialExtra = new MaterialExtra();
             materialExtra.setMaterialId(materid);
@@ -596,32 +599,24 @@ public class MigrationStageFour {
             materialNoticeAttachment.setDownload(1L);
             materialNoticeAttachment = materialNoticeAttachmentService.addMaterialNoticeAttachment(materialNoticeAttachment);
             if (ObjectUtil.notNull(materialNoticeAttachment.getId())) {
-            	if(!new File((String) map.get("filedir")).exists()){
-            		materialNoticeAttachmentService.deleteMaterialNoticeAttachmentById(materialNoticeAttachment.getId());
-            		excptionList.add(new Object[]{matername,fileName,"找不到通知文件","文件丢失","不导入该条信息"});
-            		continue;
-            	}
-            	String mongoId;
+            	String mongoId = null;
                 try {
                     mongoId = fileService.migrateFile((String) map.get("filedir"), FileType.MATERIAL_NOTICE_ATTACHMENT, materialNoticeAttachment.getId());
                 } catch (IOException ex) {
                     logger.error("文件读取异常，路径<{}>，异常信息：{}", (String) map.get("filedir"), ex.getMessage());
                     map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常。");
                     excel.add(map);
-                    continue;
                 } catch (Exception e) {
                     map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("未知异常：" + e.getMessage() + "。"));
                     excel.add(map);
-                    continue;
                 }
-                if (StringUtil.notEmpty(mongoId)) {
+                if (null != mongoId) {
                     materialNoticeAttachment.setAttachment(mongoId);
                     materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
                     count++;
                 } else {
-                    map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("文件保存失败或者文件不存在。"));
-                    excel.add(map);
-                    continue;
+                	materialNoticeAttachmentService.deleteMaterialNoticeAttachmentById(materialNoticeAttachment.getId());
+            		excptionList.add(new Object[]{matername,fileName,"找不到通知文件","文件丢失","不导入该条信息"});
                 }
             }
         }
@@ -698,31 +693,23 @@ public class MigrationStageFour {
             materialNoteAttachment = materialNoteAttachmentService.addMaterialNoteAttachment(materialNoteAttachment);
             count++;
             if (ObjectUtil.notNull(materialNoteAttachment.getId())) {
-            	if(!new File((String) map.get("filedir")).exists()){
-            		materialNoteAttachmentService.deleteMaterialNoteAttachmentById(materialNoteAttachment.getId());
-            		excptionList.add(new Object[]{matername,fileName,"找不到备注文件","文件丢失","不导入该条信息"});
-            		continue;
-            	}
-                String mongoId;
+            	String mongoId = null ;
                 try {
                     mongoId = fileService.migrateFile((String) map.get("filedir"), FileType.MATERIAL_NOTE_ATTACHMENT, materialNoteAttachment.getId());
                 } catch (IOException ex) {
                     logger.error("文件读取异常，路径<{}>，异常信息：{}", (String) map.get("filedir"), ex.getMessage());
                     map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常。");
                     excel.add(map);
-                    continue;
                 } catch (Exception e) {
                     map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("未知异常：" + e.getMessage() + "。"));
                     excel.add(map);
-                    continue;
                 }
-                if (StringUtil.notEmpty(mongoId)) {
+                if (null != mongoId) {
                     materialNoteAttachment.setAttachment(mongoId);
                     materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
                 } else {
-                    map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("文件保存失败或者文件不存在。"));
-                    excel.add(map);
-                    continue;
+                	materialNoteAttachmentService.deleteMaterialNoteAttachmentById(materialNoteAttachment.getId());
+            		excptionList.add(new Object[]{matername,fileName,"找不到备注文件","文件丢失","不导入该条信息"});
                 }
             }
         }
@@ -856,7 +843,9 @@ public class MigrationStageFour {
     }
 
     protected void materialOrg() {
-        String sql = "select  "
+    	String sql = 
+    			 "select * from ( "
+                +"select   "
                 + "a.pushschoolid , "
                 + "b.new_pk materid, "
                 + "c.new_pk orgid, "
@@ -864,11 +853,14 @@ public class MigrationStageFour {
                 + "from teach_pushschool  a  "
                 + "LEFT JOIN teach_material  b on b.materid = a.materid "
                 + "LEFT JOIN ba_organize c on c.orgid = a.orgid "
-                + "where 1=1 ";
+                + "where 1=1 "
+    			+ ") temp  ";
         //获取到所有数据表
         String tableName = "teach_pushschool";
         JdbcHelper.addColumn(tableName); //增加new_pk字段
-        List<Map<String, Object>> pubList = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        List<Map<String, Object>> pubList = JdbcHelper.getJdbcTemplate().queryForList(
+        		sql+" where materid is not null  GROUP BY CONCAT(materid,'_',orgid) UNION  "+sql +" where materid is  null "
+        		);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
         //模块名称 

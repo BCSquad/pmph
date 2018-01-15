@@ -439,9 +439,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 	 * 功能描述：保存文件到MongoDB
 	 * 使用示范：
 	 *
-	 * &#64;param files 临时文件路径
-	 * &#64;param msgId messageId
-	 * &#64;throws CheckedServiceException
+	 * @param files 临时文件路径
+	 * @param msgId messageId
+	 * @throws CheckedServiceException
 	 * </pre>
      */
     private void saveFileToMongoDB(String[] files, String msgId) throws IOException {
@@ -529,7 +529,21 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         }
         // 如果是系统管理员，则查询所有，否则查询对应的消息
         if (Const.FALSE == pmphUser.getIsAdmin()) {
-            pageParameter.getParameter().setSenderId(pmphUser.getId());
+            List<Long> ids = new ArrayList<Long>();
+            // 如果是主任，获取主任所在部门下的所有用户
+            if (Const.TRUE == pmphUser.getIsDirector()) {
+                List<PmphUser> pmphUsers =
+                pmphUserService.listPmphUserByDepartmentId(pmphUser.getDepartmentId());
+                if (CollectionUtil.isNotEmpty(pmphUsers)) {
+                    for (PmphUser user : pmphUsers) {
+                        ids.add(user.getId());
+                    }
+                    pageParameter.getParameter().setSenderIds(ids);
+                }
+            } else {
+                ids.add(pmphUser.getId());
+                pageParameter.getParameter().setSenderIds(ids);
+            }
         }
         PageResult<UserMessageVO> pageResult = new PageResult<>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);

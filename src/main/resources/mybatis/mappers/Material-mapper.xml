@@ -484,7 +484,8 @@
 		from
 		textbook
 		where
-		material_id = #{materialId}
+		material_id =
+		#{materialId}
 		and planning_editor = #{pmphUserId}
 	</select>
 
@@ -522,10 +523,12 @@
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
 			#{parameter.userId}
-			OR e.planning_editor = #{parameter.userId})
+			OR e.planning_editor = #{parameter.userId} OR
+			m.founder_id = #{parameter.userId})
 		</if>
 		<if test="parameter.materialName != null and parameter.materialName != ''">
-			AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
+			AND m.material_name LIKE
+			concat('%',#{parameter.materialName},'%')
 		</if>
 		<if
 			test="parameter.contactUserName != null and parameter.contactUserName !=''">
@@ -533,8 +536,10 @@
 			concat('%',#{parameter.contactUserName},'%')
 		</if>
 		<if test="parameter.state != null and parameter.state != ''">
-			AND m.is_all_textbook_published = #{parameter.isAllTextbookPublished}
-			AND m.is_force_end = #{parameter.isForceEnd}
+			AND m.is_all_textbook_published =
+			#{parameter.isAllTextbookPublished}
+			AND m.is_force_end =
+			#{parameter.isForceEnd}
 			AND m.is_published = #{parameter.isPublished}
 		</if>
 		ORDER BY
@@ -568,10 +573,12 @@
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
 			#{parameter.userId}
-			OR e.planning_editor = #{parameter.userId})
+			OR e.planning_editor = #{parameter.userId} OR
+			m.founder_id = #{parameter.userId})
 		</if>
 		<if test="parameter.materialName != null and parameter.materialName != ''">
-			AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
+			AND m.material_name LIKE
+			concat('%',#{parameter.materialName},'%')
 		</if>
 		<if
 			test="parameter.contactUserName != null and parameter.contactUserName !=''">
@@ -579,13 +586,15 @@
 			concat('%',#{parameter.contactUserName},'%')
 		</if>
 		<if test="parameter.state != null and parameter.state != ''">
-			AND m.is_all_textbook_published = #{parameter.isAllTextbookPublished}
-			AND m.is_force_end = #{parameter.isForceEnd}
+			AND m.is_all_textbook_published =
+			#{parameter.isAllTextbookPublished}
+			AND m.is_force_end =
+			#{parameter.isForceEnd}
 			AND m.is_published = #{parameter.isPublished}
 		</if>
 		ORDER BY
-		m.actual_deadline DESC,
-		m.gmt_create DESC
+		m.gmt_create DESC,
+		m.actual_deadline DESC
 		<if test="pageSize != null">
 			LIMIT #{start} , #{pageSize}
 		</if>
@@ -617,10 +626,12 @@
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
 			#{parameter.userId}
-			OR e.planning_editor = #{parameter.userId})
+			OR e.planning_editor = #{parameter.userId} OR
+			m.founder_id = #{parameter.userId})
 		</if>
 		<if test="parameter.materialName != null and parameter.materialName != ''">
-			AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
+			AND m.material_name LIKE
+			concat('%',#{parameter.materialName},'%')
 		</if>
 		<if
 			test="parameter.contactUserName != null and parameter.contactUserName !=''">
@@ -628,8 +639,10 @@
 			concat('%',#{parameter.contactUserName},'%')
 		</if>
 		<if test="parameter.state != null and parameter.state != ''">
-			AND (m.is_all_textbook_published = #{parameter.isAllTextbookPublished}
-			OR m.is_force_end = #{parameter.isForceEnd})
+			AND (m.is_all_textbook_published =
+			#{parameter.isAllTextbookPublished}
+			OR m.is_force_end =
+			#{parameter.isForceEnd})
 			AND m.is_published = #{parameter.isPublished}
 		</if>
 		ORDER BY
@@ -663,10 +676,12 @@
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
 			#{parameter.userId}
-			OR e.planning_editor = #{parameter.userId})
+			OR e.planning_editor = #{parameter.userId} OR
+			m.founder_id = #{parameter.userId})
 		</if>
 		<if test="parameter.materialName != null and parameter.materialName != ''">
-			AND m.material_name LIKE concat('%',#{parameter.materialName},'%')
+			AND m.material_name LIKE
+			concat('%',#{parameter.materialName},'%')
 		</if>
 		<if
 			test="parameter.contactUserName != null and parameter.contactUserName !=''">
@@ -674,13 +689,15 @@
 			concat('%',#{parameter.contactUserName},'%')
 		</if>
 		<if test="parameter.state != null and parameter.state != ''">
-			AND (m.is_all_textbook_published = #{parameter.isAllTextbookPublished}
-			OR m.is_force_end = #{parameter.isForceEnd})
+			AND (m.is_all_textbook_published =
+			#{parameter.isAllTextbookPublished}
+			OR m.is_force_end =
+			#{parameter.isForceEnd})
 			AND m.is_published = #{parameter.isPublished}
 		</if>
 		ORDER BY
-		m.actual_deadline DESC,
-		m.gmt_create DESC
+		m.gmt_create DESC,
+		m.actual_deadline DESC
 		<if test="pageSize != null">
 			LIMIT #{start} , #{pageSize}
 		</if>
@@ -729,19 +746,19 @@
 			AND CONCAT('%',#{materialName},'%')
 		</if>
 	</select>
-	
+
 	<!-- 获取已经发布教材信息 -->
 	<select id="listPublishedMaterial" resultType="Material">
-		SELECT 
-  			m.`id`,
-  			m.`material_name` 
+		SELECT
+		m.`id`,
+		m.`material_name`
 		FROM
-  			`material` m 
-		WHERE 
-			m.`is_published` = TRUE 
-  		AND 
-  			m.`is_deleted` = FALSE 
-  		AND 
-  			m.`is_force_end` = FALSE 
+		`material` m
+		WHERE
+		m.`is_published` = TRUE
+		AND
+		m.`is_deleted` = FALSE
+		AND
+		m.`is_force_end` = FALSE
 	</select>
 </mapper>

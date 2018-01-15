@@ -54,15 +54,21 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Service
 public class CmsContentServiceImpl implements CmsContentService {
     @Autowired
-    CmsContentDao       cmsContentDao;
+    CmsContentDao                   cmsContentDao;
     @Autowired
-    ContentService      contentService;
+    ContentService                  contentService;
     @Autowired
-    CmsScheduleService  cmsScheduleService;
+    CmsScheduleService              cmsScheduleService;
     @Autowired
-    private FileService fileService;
+    private FileService             fileService;
     @Autowired
-    CmsExtraService     cmsExtraService;
+    CmsExtraService                 cmsExtraService;
+    @Autowired
+    MaterialExtraService            materialExtraService;
+    @Autowired
+    MaterialNoticeAttachmentService materialNoticeAttachmentService;
+    @Autowired
+    MaterialNoteAttachmentService   materialNoteAttachmentService;
 
     @Override
     public CmsContent addCmsContent(CmsContent cmsContent) throws CheckedServiceException {
@@ -120,6 +126,11 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               CheckedExceptionResult.NULL_PARAM, "所属栏目不能为空");
 
         }
+        if (ObjectUtil.isNull(cmsContent.getMaterialId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "教材ID不能为空");
+
+        }
         // MongoDB 内容插入
         Content contentObj = contentService.add(new Content(content));
         if (StringUtil.isEmpty(contentObj.getId())) {
@@ -129,10 +140,11 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         // 内容保存
         cmsContent.setParentId(cmsContent.getCategoryId());// 上级id
-        cmsContent.setPath(cmsContent.getPath());// 根节点路径
+        // cmsContent.setPath(cmsContent.getPath());// 根节点路径
         cmsContent.setMid(contentObj.getId());// 内容id
         cmsContent.setAuthorType(Const.CMS_AUTHOR_TYPE_1);// 作者类型
         cmsContent.setAuthorId(pmphUser.getId());// 作者id
+        // cmsContent.setMaterialId(cmsContent.getMaterialId());// 教材ID，为0表示未选择教材
         // 信息快报/公告管理(发布)，审核时间就为当前时间
         if (ObjectUtil.notNull(cmsContent.getIsPublished())) {
             if (Const.TRUE.booleanValue() == cmsContent.getIsPublished().booleanValue()) {
@@ -192,6 +204,10 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
 
+        }
+        if (ObjectUtil.isNull(cmsContent.getMaterialId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "教材ID为空");
         }
         // 信息快报/公告管理(发布)，审核时间就为当前时间
         if (Const.TRUE.booleanValue() == cmsContent.getIsPublished().booleanValue()) {
