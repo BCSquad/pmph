@@ -47,8 +47,6 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class PmphGroupServiceImpl extends BaseService implements PmphGroupService {
 
 	@Autowired
-	private TextbookDao textbookDao;
-	@Autowired
 	private PmphGroupDao pmphGroupDao;
 	@Autowired
 	private FileService fileService;

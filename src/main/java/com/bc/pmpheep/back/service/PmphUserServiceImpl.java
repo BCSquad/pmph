@@ -635,7 +635,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 
 	@Override
 	public Map<String,Object> getPersonalCenter(HttpServletRequest request, String state, String materialName,
-			String groupName, String title, String bookname, String name) {
+			String groupName, String title, String bookname, String name, String authProgress, String topicBookname) {
 		String sessionId = CookiesUtil.getSessionId(request);
 		//用于装所有的数据map 
 		Map<String, Object> map=new HashMap<>();
@@ -678,13 +678,19 @@ public class PmphUserServiceImpl implements PmphUserService {
 		pageParameter.setParameter(bookUserCommentVO);
 		PageResult<BookUserCommentVO> pageResultBookUserCommentVO=bookUserCommentService.listBookUserComment(pageParameter);
 		//图书附件审核 暂时没有
+		
 		//选题申报
 		PageParameter<TopicDeclarationVO> pageParameter3 = new PageParameter<>();
 		TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
-		topicDeclarationVO.setBookname(bookname);
-		pageParameter3.setParameter(topicDeclarationVO);
+		String[] strs = authProgress.split(",");
 		List<Long> progress = new ArrayList<>();
+		for (String str : strs) {
+			progress.add(Long.valueOf(str));
+		}
+		topicDeclarationVO.setBookname(topicBookname);
+		pageParameter3.setParameter(topicDeclarationVO);
 		PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO=topicService.listCheckTopic(progress, pageParameter3);
+		// 把其他模块的数据都装入map中返回给前端
 		map.put("topicList", pageResultTopicDeclarationVO);
 		map.put("materialList", pageResultMaterialListVO);
 		map.put("cmsContent", pageResultCmsContentVO);
