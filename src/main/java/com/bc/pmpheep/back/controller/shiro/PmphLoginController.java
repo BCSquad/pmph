@@ -1,6 +1,5 @@
 package com.bc.pmpheep.back.controller.shiro;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import small.danfer.sso.SingleSignOnException;
-import small.danfer.sso.http.HttpSingleSignOnService;
-
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.CmsCategoryService;
@@ -34,10 +30,7 @@ import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
-import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.controller.bean.ResponseBean;
-import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
-import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -151,62 +144,62 @@ public class PmphLoginController {
      * @return
      * </pre>
      */
-    public ResponseBean ssoLogin(HttpServletRequest request, HttpServletResponse response) {
-        String sessionId = CookiesUtil.getSessionId(request);
-        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-        if (ObjectUtil.isNull(pmphUser)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                              CheckedExceptionResult.NULL_PARAM, "用户为空");
-        }
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        HttpSingleSignOnService service = new HttpSingleSignOnService();
-        // String url = service.getSingleSignOnURL();
-        try {
-            Principal principal = service.singleSignOn(request);
-            String userName = principal.getName();
-            PmphUser pmUser = pmphUserService.login(userName, null);
-            pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
-            if (!RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUser.getAvatar())) {
-                pmphUser.setAvatar(RouteUtil.userAvatar(pmphUser.getAvatar()));
-            }
-            // 根据用户Id查询对应角色(是否为管理员)
-            List<PmphRole> pmphRoles = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
-            List<Long> roleIds = new ArrayList<Long>(pmphRoles.size());
-            for (PmphRole pmphRole : pmphRoles) {
-                roleIds.add(pmphRole.getId());
-                if (ObjectUtil.notNull(pmphRole)) {
-                    if (Const.LOGIN_USER_IS_ADMIN.equals(pmphRole.getRoleName())
-                        || Const.LOGIN_USER_IS_ADMINS.equals(pmphRole.getRoleName())
-                        || Const.LOGIN_SYS_USER_IS_ADMIN.equals(pmphRole.getRoleName())) {
-                        pmphUser.setIsAdmin(true);
-                    } else {
-                        pmphUser.setIsAdmin(false);
-                    }
-                }
-                if (Const.TRUE == pmphUser.getIsAdmin()) {
-                    break;
-                }
-            }
-            // 根据用户Id查询对应权限Id
-            List<Long> pmphUserPermissionIds =
-            pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
-            // String materialPermission =
-            // pmphUserService.getMaterialPermissionByUserId(pmphUser.getId()); 根据用户返回书籍
-            // 验证成功在Session中保存用户信息
-            request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
-            // 验证成功在Session中保存用户Token信息
-            request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
-                                              new DesRun("", userName).enpsw);
-            // pmphUserSessionId
-            resultMap.put(Const.USER_SEESION_ID, request.getSession().getId());
-            resultMap.put(Const.SESSION_PMPH_USER, pmphUser);
-            resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun("", userName).enpsw);
-            resultMap.put("pmphUserPermissionIds", pmphUserPermissionIds);
-            return new ResponseBean(resultMap);
-        } catch (SingleSignOnException e) {
-            return new ResponseBean(e);
-        }
-    }
+    // public ResponseBean ssoLogin(HttpServletRequest request, HttpServletResponse response) {
+    // String sessionId = CookiesUtil.getSessionId(request);
+    // PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+    // if (ObjectUtil.isNull(pmphUser)) {
+    // throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+    // CheckedExceptionResult.NULL_PARAM, "用户为空");
+    // }
+    // Map<String, Object> resultMap = new HashMap<String, Object>();
+    // HttpSingleSignOnService service = new HttpSingleSignOnService();
+    // // String url = service.getSingleSignOnURL();
+    // try {
+    // Principal principal = service.singleSignOn(request);
+    // String userName = principal.getName();
+    // PmphUser pmUser = pmphUserService.login(userName, null);
+    // pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
+    // if (!RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUser.getAvatar())) {
+    // pmphUser.setAvatar(RouteUtil.userAvatar(pmphUser.getAvatar()));
+    // }
+    // // 根据用户Id查询对应角色(是否为管理员)
+    // List<PmphRole> pmphRoles = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
+    // List<Long> roleIds = new ArrayList<Long>(pmphRoles.size());
+    // for (PmphRole pmphRole : pmphRoles) {
+    // roleIds.add(pmphRole.getId());
+    // if (ObjectUtil.notNull(pmphRole)) {
+    // if (Const.LOGIN_USER_IS_ADMIN.equals(pmphRole.getRoleName())
+    // || Const.LOGIN_USER_IS_ADMINS.equals(pmphRole.getRoleName())
+    // || Const.LOGIN_SYS_USER_IS_ADMIN.equals(pmphRole.getRoleName())) {
+    // pmphUser.setIsAdmin(true);
+    // } else {
+    // pmphUser.setIsAdmin(false);
+    // }
+    // }
+    // if (Const.TRUE == pmphUser.getIsAdmin()) {
+    // break;
+    // }
+    // }
+    // // 根据用户Id查询对应权限Id
+    // List<Long> pmphUserPermissionIds =
+    // pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
+    // // String materialPermission =
+    // // pmphUserService.getMaterialPermissionByUserId(pmphUser.getId()); 根据用户返回书籍
+    // // 验证成功在Session中保存用户信息
+    // request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
+    // // 验证成功在Session中保存用户Token信息
+    // request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
+    // new DesRun("", userName).enpsw);
+    // // pmphUserSessionId
+    // resultMap.put(Const.USER_SEESION_ID, request.getSession().getId());
+    // resultMap.put(Const.SESSION_PMPH_USER, pmphUser);
+    // resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun("", userName).enpsw);
+    // resultMap.put("pmphUserPermissionIds", pmphUserPermissionIds);
+    // return new ResponseBean(resultMap);
+    // } catch (SingleSignOnException e) {
+    // return new ResponseBean(e);
+    // }
+    // }
 
     /**
      * 
