@@ -89,13 +89,13 @@ public class MigrationStageOne {
             BigDecimal parentCode = (BigDecimal) map.get("ParentCode");
             String areaName = map.get("AreaName").toString();
             if (StringUtil.isEmpty(areaName)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "区域名称为空。");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "找不到区域名称。");
                 excel.add(map);
                 logger.error("区域名称为空，此结果将被记录在Excel中");
                 continue;
             }
             if (ObjectUtil.isNull(parentCode)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "区域父路径为空。");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "找不到区域省-市-县路径。");
                 excel.add(map);
                 logger.error("父区域编码为空，此结果将被记录在Excel中");
             }
@@ -142,7 +142,7 @@ public class MigrationStageOne {
             String orgTypeId = (String) map.get("orgid");
             String orgName = (String) map.get("orgname");
             if (StringUtil.isEmpty(orgName)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "机构类型名称为空。");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "找不到机构类型名称。");
                 excel.add(map);
                 logger.error("机构类型名称为空，此结果将被记录在Excel中");
                 continue;
@@ -189,34 +189,44 @@ public class MigrationStageOne {
 			 * 用StringBulider进行拼接成最终的异常信息
              */
             StringBuilder sb = new StringBuilder();
+            Integer isDeleted = (Integer) map.get("isdelete");
+            if (ObjectUtil.isNull(isDeleted)) {
+            	isDeleted = 0;
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("是否逻辑删除数据为空。"));
+            	excel.add(map);
+            }
+            /* 此数据为被逻辑删除的数据，待客户反馈再决定是否迁移，现阶段暂时不迁移 */
+            if (isDeleted.intValue() == 1){
+            	continue;
+            }
             String orgId = (String) map.get("orgid");
             String orgName = (String) map.get("orgname");
             if (StringUtil.isEmpty(orgName)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构名称为空。"
-                        + "重复或过长。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到机构名称。"));
                 excel.add(map);
-                logger.error("机构名称不符合规范，此结果将被记录在Excel中");
                 continue;
             }
             if (JdbcHelper.nameDuplicate(list, orgName)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构名称重复。"));
                 excel.add(map);
-                logger.error("机构名称不符合规范，此结果将被记录在Excel中");
                 continue;
             }
             if (StringUtil.strLength(orgName) > 20){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构名称过长。"));
                 excel.add(map);
-                logger.error("机构名称不符合规范，此结果将被记录在Excel中");
                 continue;
             }
             list.add(orgName);
             Integer orgType = (Integer) map.get("orgtype");
             Long areaId = (Long) map.get("new_pk");
             if (ObjectUtil.isNull(orgType) || ObjectUtil.isNull(areaId)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构类型或区域为空。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到机构所属类型。"));
                 excel.add(map);
-                logger.error("机构类型id或区域id为空，此结果将被记录在Excel中");
+                continue;
+            }
+            if (ObjectUtil.isNull(areaId)){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到机构所属区域。"));
+                excel.add(map);
                 continue;
             }
             Long orgTypeId = JdbcHelper.getPrimaryKey(tableName, "orgid", String.valueOf(orgType));
@@ -227,13 +237,6 @@ public class MigrationStageOne {
                 sort = 999;
             }
             String note = (String) map.get("remark");
-            Integer isDeleted = (Integer) map.get("isdelete");
-            if (ObjectUtil.isNull(isDeleted)) {
-                isDeleted = 0;
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("是否逻辑删除数据为空。"));
-                excel.add(map);
-                logger.error("是否逻辑删除数据为空，此结果将被记录在Excel中");
-            }
             Org org = new Org();
             org.setOrgName(orgName);
             org.setOrgTypeId(orgTypeId);
@@ -290,22 +293,18 @@ public class MigrationStageOne {
             String userId = map.get("userid").toString();
             String username = (String) map.get("usercode");
             if (StringUtil.isEmpty(username)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构代码为空。"
-                        + "重复或过长。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到机构代码。"));
                 excel.add(map);
-                logger.error("机构名称不符合规范，此结果将被记录在Excel中");
                 continue;
             }
             if (JdbcHelper.nameDuplicate(list, username)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构代码重复。"));
                 excel.add(map);
-                logger.error("机构名称不符合规范，此结果将被记录在Excel中");
                 continue;
             }
             if (StringUtil.strLength(username) > 20){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构代码过长。"));
                 excel.add(map);
-                logger.error("机构名称不符合规范，此结果将被记录在Excel中");
                 continue;
             }
             list.add(username);
@@ -445,6 +444,9 @@ public class MigrationStageOne {
             StringBuilder sb = new StringBuilder();
             String userId = (String) map.get("userid");
             String username = (String) map.get("usercode");
+            if ("admin".equals(username)){
+            	continue;
+            }
             if (StringUtil.isEmpty(username)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到用户的登陆名"));
                 excel.add(map);
@@ -457,6 +459,7 @@ public class MigrationStageOne {
             }
             list.add(username);
             String password = "888888";
+            Integer isDisabled = (Integer) map.get("isvalid");
             Long orgid = (Long) map.get("org_new_pk");
             String realName = (String) map.get("username");
             if (StringUtil.isEmpty(realName)) {
@@ -516,7 +519,7 @@ public class MigrationStageOne {
             writerUser.setUsername(username);
             writerUser.setNickname(username);
             writerUser.setPassword(password);
-            writerUser.setIsDisabled(false);
+            writerUser.setIsDisabled(isDisabled != 1);
             writerUser.setOrgId(orgid);
             writerUser.setRealname(realName);
             writerUser.setSex(sex);

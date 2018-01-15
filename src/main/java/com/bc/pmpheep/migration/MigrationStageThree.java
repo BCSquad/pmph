@@ -69,6 +69,7 @@ public class MigrationStageThree {
         pmphUser();
         pmphRole();
         pmphUserRole();
+        pmphRolePermission();
         cannotFindUser();
         cannotFindRole();
         logger.info("迁移第三步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
@@ -140,7 +141,7 @@ public class MigrationStageThree {
                 + "FROM pub_addfileinfo y WHERE y.childsystemname='sys_userext_avatar' "
                 + "GROUP BY y.operuserid))e "
                 + "ON a.userid = e.operuserid "
-                + "WHERE a.sysflag = 0 ;";
+                + "WHERE a.sysflag = 0 OR a.usercode = 'admin';";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
@@ -151,20 +152,27 @@ public class MigrationStageThree {
             if (StringUtil.isEmpty(userName)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到用户的登陆账号。"));
                 excel.add(map);
-                logger.error("找不到用户的登陆账号，此结果将被记录在Excel中");
                 continue;
             }
             String password = "888888";
+            if ("admin".equals(userName)){
+            	password = "123";
+            }
+            Integer isDisabled = (Integer) map.get("isvalid");
             String realName = (String) map.get("username");
             if (StringUtil.isEmpty(realName)) {
                 realName = userName;
             }
             Long departmentId = (Long) map.get("new_pk");
-            if (ObjectUtil.isNull(departmentId) || departmentId > number) {
+            if (ObjectUtil.isNull(departmentId)) {
                 departmentId = 0L;
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到对应社内部门或对应的是学校机构。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("此用户没有所属的社内部门。"));
                 excel.add(map);
-                logger.info("找不到对应社内部门或连接的是学校机构，此结果将被记录在Excel中");
+            }
+            if (departmentId > number){
+            	departmentId = 0L;
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("此用户所属部门为学校机构。"));
+                excel.add(map);
             }
             String handphone = (String) map.get("handset");
             String email = (String) map.get("email");
@@ -173,14 +181,11 @@ public class MigrationStageThree {
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("显示顺序为负数。"));
-                excel.add(map);
-                logger.info("显示顺序为负数，此结果将被记录在Excel中");
             }
             PmphUser pmphUser = new PmphUser();
             pmphUser.setUsername(userName);
             pmphUser.setPassword(password);
-            pmphUser.setIsDisabled(false);
+            pmphUser.setIsDisabled(isDisabled != 1);
             pmphUser.setRealname(realName);
             pmphUser.setDepartmentId(departmentId);
             pmphUser.setHandphone(handphone);
@@ -212,13 +217,6 @@ public class MigrationStageThree {
                 pmphUserService.update(pmphUser);
             }
         }
-        //手动添加一个系统管理员
-        PmphUser pmphUserAdmin = new PmphUser();
-        pmphUserAdmin.setUsername("admin");
-        pmphUserAdmin.setPassword("123");
-        pmphUserAdmin.setRealname("系统管理员");
-        pmphUserAdmin.setAvatar("DEFAULT");
-        pmphUserService.add(pmphUserAdmin);
         if (excel.size() > 0) {
             try {
                 excelHelper.exportFromMaps(excel, "社内用户表", "pmph_user");
@@ -242,6 +240,7 @@ public class MigrationStageThree {
         for (Map<String, Object> map : maps) {
             Double roleId = (Double) map.get("roleid");
             String rolename = (String) map.get("rolename");
+            Integer isDisabled = (Integer) map.get("isvalid");
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
@@ -249,7 +248,7 @@ public class MigrationStageThree {
             String note = (String) map.get("memo");
             PmphRole pmphRole = new PmphRole();
             pmphRole.setRoleName(rolename);
-            pmphRole.setIsDisabled(false);
+            pmphRole.setIsDisabled(isDisabled != 1);
             pmphRole.setSort(sort);
             pmphRole.setNote(note);
             pmphRole = pmphRoleService.addPmphRole(pmphRole);
@@ -278,7 +277,7 @@ public class MigrationStageThree {
                 + "FROM sys_userrole a "
                 + "LEFT JOIN sys_user b ON a.userid = b.userid "
                 + "LEFT JOIN sys_role c ON a.roleid = c.roleid "
-                + "WHERE b.sysflag = 0 ;";
+                + "WHERE b.sysflag = 0 OR b.usercode = 'admin';";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
@@ -287,9 +286,8 @@ public class MigrationStageThree {
             Long userId = (Long) map.get("user_new_pk");
             Long roleId = (Long) map.get("role_new_pk");
             if (ObjectUtil.isNull(roleId)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "角色被删除，无法关联到。");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "用户所属角色被删除。");
                 excel.add(map);
-                logger.error("角色被删除，无法被关联到，此结果将被记录在Excel中");
                 continue;
             }
             PmphUserRole pmphUserRole = new PmphUserRole();
@@ -330,7 +328,7 @@ public class MigrationStageThree {
 		for (Map<String,Object> map : maps){
 			Long newpk = (Long) map.get("new_pk");
 			if (newpk == 0){
-				map.put(SQLParameters.EXCEL_EX_HEADER, "角色找不到");
+				map.put(SQLParameters.EXCEL_EX_HEADER, "此角色未迁移成功。");
 				excel.add(map);
 				continue;
 			}
@@ -369,7 +367,6 @@ public class MigrationStageThree {
         for (Map<String, Object> map : maps) {
             map.put(SQLParameters.EXCEL_EX_HEADER, "这些数据的关联字段在关联表sys_user表中不存在");
             excel.add(map);
-            logger.error("这些数据的关联字段在关联表sys_user表中不存在,将被记录在Excel中");
             count++;
         }
         if (excel.size() > 0) {
@@ -404,7 +401,6 @@ public class MigrationStageThree {
         for (Map<String, Object> map : maps) {
             map.put(SQLParameters.EXCEL_EX_HEADER, "无法在sys_user用户表找到对应用户");
             excel.add(map);
-            logger.info("用户表可能已将这些用户删除");
             count++;
         }
         if (excel.size() > 0) {
