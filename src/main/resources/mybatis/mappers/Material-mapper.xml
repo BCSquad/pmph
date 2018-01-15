@@ -523,7 +523,8 @@
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
 			#{parameter.userId}
-			OR e.planning_editor = #{parameter.userId})
+			OR e.planning_editor = #{parameter.userId} OR
+			m.founder_id = #{parameter.userId})
 		</if>
 		<if test="parameter.materialName != null and parameter.materialName != ''">
 			AND m.material_name LIKE
@@ -572,7 +573,8 @@
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
 			#{parameter.userId}
-			OR e.planning_editor = #{parameter.userId})
+			OR e.planning_editor = #{parameter.userId} OR
+			m.founder_id = #{parameter.userId})
 		</if>
 		<if test="parameter.materialName != null and parameter.materialName != ''">
 			AND m.material_name LIKE
