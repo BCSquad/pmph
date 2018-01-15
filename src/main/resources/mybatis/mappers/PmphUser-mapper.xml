@@ -475,6 +475,9 @@
 			<if test=" sort!= null and  sort!=''">
 				sort = #{sort},
 			</if>
+			<if test=" isDirector!= null ">
+				is_director= #{isDirector},
+			</if>
 		</set>
 		WHERE
 		id = #{id}
