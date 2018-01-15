@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.bc.pmpheep.back.po.DecAcade;
@@ -39,6 +40,7 @@ import com.bc.pmpheep.back.service.DecTeachExpService;
 import com.bc.pmpheep.back.service.DecTextbookService;
 import com.bc.pmpheep.back.service.DecWorkExpService;
 import com.bc.pmpheep.back.service.DeclarationService;
+import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
@@ -92,6 +94,8 @@ public class MigrationStageSix {
     FileService fileService;
     @Resource
     ExcelHelper excelHelper;
+    @Autowired
+    private MaterialService materialService;
 
     public void start() {
         try {
@@ -241,6 +245,9 @@ public class MigrationStageSix {
             declaration.setTelephone((String) map.get("linktel")); // 联系电话
             declaration.setFax((String) map.get("fax")); // 传真
             declaration.setIsDispensed(0); // 服从调剂
+            declaration.setIsUtec(0); // 参与本科教学评估认证
+            declaration.setDegree(0); // 学历
+            declaration.setExpertise(null); // 专业特长
             if ("5".equals(unitid)) { // 旧表申报单位id为5的话orgid设置成0
             	declaration.setOrgId(0L); // 0为人民卫生出版社
             } else {
@@ -1165,6 +1172,160 @@ public class MigrationStageSix {
         logger.info("未找到教材扩展项对应的关联结果数量：{}", extensionidCount);
         logger.info("未找到书籍对应的关联结果数量：{}", textbookidCount);
         logger.info("teach_applyposition表迁移完成，异常条目数量：{}", excel.size());
+        logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+        //记录信息
+        Map<String, Object> msg = new HashMap<String, Object>();
+        msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + maps.size());
+        SQLParameters.STATISTICS.add(msg);
+    }
+
+    private Map<Long, Long> publisherIdMap = new HashMap<Long, Long>(); // 教材id和主任id
+    /**
+     * 已公布作家申报职位表
+     */
+    protected void decPositionPublished() {
+        String tableName = "teach_positionset"; // 要迁移的旧库表名
+        JdbcHelper.addColumn(tableName); // 增加new_pk字段
+        String sql = "select tp.positionid,tp.materid,tp.writerid,tp.bookid,"
+        		+ "GROUP_CONCAT(case when tp.applypositiontype=1 then 'a' when tp.applypositiontype=2 "
+        		+ "then 'b' when tp.applypositiontype=3 then 'c' else 'c' "
+        		+ "end ORDER BY tp.applypositiontype) preset_position,"
+        		+ "if(sum(if(tp.positiontype in (1,2,3),1,0))>0,true,false) is_on_list,"
+        		+ "GROUP_CONCAT(case when tp.positiontype=1 and tp.directoraudit>=11 then 'a' "
+        		+ "when tp.positiontype=2 and tp.directoraudit>=11 then 'b' "
+        		+ "when tp.positiontype=3 and tp.directoraudit>=41 then 'c' else 'd' "
+        		+ "end ORDER BY tp.positiontype) chosen_position,"
+        		+ "min(tp.mastersort) mastersort,ta.outlineurl,ta.outlinename,"
+        		+ "ifnull(wd.updatedate,wd.createdate) gmt_create,"
+        		+ "wd.new_pk wdid,tb.new_pk tbid,tm.new_pk newmaterid "
+        		+ "from teach_positionset tp "
+        		+ "left join teach_applyposition ta on ta.appposiid=tp.appposiid "
+        		+ "left join writer_declaration wd on wd.writerid=ta.writerid "
+        		+ "left join teach_bookinfo tb on tb.bookid=ta.bookid "
+        		+ "left join teach_material tm on tm.materid=ta.materid "
+        		+ "WHERE ta.positiontype in (1,2,3) and wd.writerid is not null "
+        		+ "and tb.bookid is not null "
+        		+ "and tb.dealtype >= 70 "
+        		+ "and ((tp.positiontype =1 and tp.directoraudit >=11) "
+        		+ "or (tp.positiontype =2 and tp.directoraudit >=11) "
+        		+ "or (tp.positiontype =3 and tp.directoraudit >=41)) "
+        		+ "GROUP BY wd.writerid,tb.bookid ";
+        List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        int count = 0; // 迁移成功的条目数
+        int extensionidCount = 0;
+        int textbookidCount = 0;
+        int outListUrlCount = 0;
+        int outListCount = 0;
+        List<Map<String, Object>> excel = new LinkedList<>();
+        /* 开始遍历查询结果 */
+        for (Map<String, Object> map : maps) {
+            StringBuilder sb = new StringBuilder();
+            String id = (String) map.get("positionid"); // 旧表主键值
+            DecPosition decPosition = new DecPosition();
+            Long materid = (Long) map.get("newmaterid"); // 教材id
+            Long publisherId = publisherIdMap.get(materid); 
+            if(null == publisherId ){
+            	publisherId = materialService.getMaterialById(materid).getDirector() ;
+            	publisherIdMap.put(materid, publisherId);
+            }
+            
+            Long declarationid = (Long) map.get("wdid"); // 申报表id
+            Long textbookid = (Long) map.get("tbid"); // 书籍id
+            String temppresetPosition = (String) map.get("preset_position"); // 申报职务
+            Long isOnList = (Long) map.get("is_on_list"); // 是否进入预选名单
+            String tempchosenPosition = (String) map.get("chosen_position"); // 遴选职务
+            Integer mastersort = (Integer) map.get("mastersort"); // 排位
+            if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
+                excel.add(map);
+                logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
+                extensionidCount++;
+                continue;
+            }
+            decPosition.setDeclarationId(declarationid);
+            if (ObjectUtil.isNull(textbookid) || textbookid.intValue() == 0) {
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到书籍对应的关联结果。"));
+                excel.add(map);
+                logger.debug("未找到书籍对应的关联结果，此结果将被记录在Excel中");
+                textbookidCount++;
+                continue;
+            }
+            decPosition.setTextbookId(textbookid);
+            temppresetPosition += "," + temppresetPosition + ",";
+            String Positions = "0";
+            if (temppresetPosition.contains(",a,")) {
+                Positions += "1";
+            } else {
+                Positions += "0";
+            }
+            if (temppresetPosition.contains(",b,")) {
+                Positions += "1";
+            } else {
+                Positions += "0";
+            }
+            if (temppresetPosition.contains(",c,")) {
+                Positions += "1";
+            } else {
+                Positions += "0";
+            }
+            decPosition.setPresetPosition(Integer.valueOf(Positions, 2));//转成10进制
+            if (ObjectUtil.isNull(isOnList)) {
+                decPosition.setIsOnList(1);
+            }
+            Integer isOn = isOnList.intValue();
+            decPosition.setIsOnList(isOn);
+            tempchosenPosition += "," + tempchosenPosition + ",";
+            Integer chosen = 0;
+            if (tempchosenPosition.contains(",a,")) {
+                chosen = 4;
+            } else if (tempchosenPosition.contains(",b,")) {
+                chosen = 2;
+            } else if (tempchosenPosition.contains(",c,")) {
+                chosen = 1;
+            } else if (tempchosenPosition.contains(",d,")) {
+            	chosen = 0;
+            }
+            decPosition.setChosenPosition(chosen);
+            decPosition.setRank(mastersort);
+            decPosition.setSyllabusName((String) map.get("syllabus_name")); // 教学大纲名称
+            decPosition.setGmtCreate((Timestamp) map.get("gmt_create")); // 创建时间
+            String outLineUrl = (String) map.get("outlineurl"); // 教学大纲id
+            decPosition = decPositionService.addDecPosition(decPosition);
+            long pk = decPosition.getId();
+            JdbcHelper.updateNewPrimaryKey(tableName, pk, "positionid", id);
+            count++;
+            if (StringUtil.notEmpty(outLineUrl)) {
+                /* 以下读取教学大纲id并保存在mongoDB中，读取失败时导出到Excel中 */
+                String mongoId = "";
+                try {
+                    mongoId = fileService.migrateFile(outLineUrl, FileType.SYLLABUS, pk);
+                } catch (IOException ex) {
+                    map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
+                    excel.add(map);
+                    logger.debug("文件读取异常，路径<{}>，异常信息：{}", outLineUrl, ex.getMessage());
+                    outListUrlCount++;
+                } catch (Exception e) {
+                    map.put(SQLParameters.EXCEL_EX_HEADER, "存文件未知异常：" + e.getMessage() + "。");
+                    excel.add(map);
+                    logger.debug("更新mongoDB的id错误，此结果将被记录在Excel中");
+                    outListCount++;
+                }
+                decPosition.setSyllabusId(mongoId);
+                decPositionService.updateDecPosition(decPosition);
+            }
+        }
+        if (excel.size() > 0) {
+            try {
+                excelHelper.exportFromMaps(excel, "已公布作家申报职位表", "dec_position_published");
+            } catch (IOException ex) {
+                logger.error("异常数据导出到Excel失败", ex);
+            }
+        }
+        logger.info("文件读取异常数量：{}", outListUrlCount);
+        logger.info("更新mongoDB的id错误数量：{}", outListCount);
+        logger.info("未找到教材扩展项对应的关联结果数量：{}", extensionidCount);
+        logger.info("未找到书籍对应的关联结果数量：{}", textbookidCount);
+        logger.info("teach_positionset表迁移完成，异常条目数量：{}", excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();

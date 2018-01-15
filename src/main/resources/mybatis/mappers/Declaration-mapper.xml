@@ -63,6 +63,15 @@
 			<if test="isDispensed !=null">
 				is_dispensed,
 			</if>
+			<if test="isUtec !=null">
+				is_utec,
+			</if>
+			<if test="degree !=null">
+				degree,
+			</if>
+			<if test="expertise !=null and expertise !=''">
+				expertise,
+			</if>
 			<if test="orgId != null">
 				org_id,
 			</if>
@@ -148,6 +157,15 @@
 			</if>
 			<if test="isDispensed !=null">
 				#{isDispensed},
+			</if>
+			<if test="isUtec !=null">
+				#{isUtec},
+			</if>
+			<if test="degree !=null">
+				#{degree},
+			</if>
+			<if test="expertise !=null and expertise !=''">
+				#{expertise},
 			</if>
 			<if test="orgId != null">
 				#{orgId},
@@ -254,6 +272,15 @@
 			</if>
 			<if test="isDispensed !=null">
 				is_dispensed = #{isDispensed},
+			</if>
+			<if test="isUtec !=null">
+				is_utec = #{isUtec},
+			</if>
+			<if test="degree !=null">
+				degree = #{degree},
+			</if>
+			<if test="expertise !=null and expertise !=''">
+				expertise = #{expertise},
 			</if>
 			<if test="orgId != null">
 				org_id = #{orgId},

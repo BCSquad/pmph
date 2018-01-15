@@ -49,6 +49,12 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 	private String fax;
 	// 服从调剂
 	private Integer isDispensed;
+	// 参与本科教学评估认证
+	private Integer isUtec;
+	// 学历
+	private Integer degree;
+	// 专业特长
+	private String expertise;
 	// 作家申报单位id
 	private Long orgId;
 	// 机构名称
@@ -382,6 +388,30 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 		this.isDispensed = isDispensed;
 	}
 
+	public Integer getIsUtec() {
+		return isUtec;
+	}
+
+	public void setIsUtec(Integer isUtec) {
+		this.isUtec = isUtec;
+	}
+
+	public Integer getDegree() {
+		return degree;
+	}
+
+	public void setDegree(Integer degree) {
+		this.degree = degree;
+	}
+
+	public String getExpertise() {
+		return expertise;
+	}
+
+	public void setExpertise(String expertise) {
+		this.expertise = expertise;
+	}
+
 	@Override
 	public String toString() {
 		return "DeclarationOrDisplayVO [id=" + id + ", materialId="
@@ -392,14 +422,15 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 				+ ", address=" + address + ", postcode=" + postcode
 				+ ", handphone=" + handphone + ", email=" + email + ", idtype="
 				+ idtype + ", idcard=" + idcard + ", telephone=" + telephone
-				+ ", fax=" + fax + ", isDispensed=" + isDispensed + ", orgId="
-				+ orgId + ", orgNameOne=" + orgNameOne + ", onlineProgress="
-				+ onlineProgress + ", authUserId=" + authUserId + ", authDate="
-				+ authDate + ", offlineProgress=" + offlineProgress
-				+ ", paperDate=" + paperDate + ", isStaging=" + isStaging
-				+ ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
-				+ ", gmtUpdate=" + gmtUpdate + ", isMultiBooks=" + isMultiBooks
-				+ ", isMultiPosition=" + isMultiPosition
+				+ ", fax=" + fax + ", isDispensed=" + isDispensed + ", isUtec="
+				+ isUtec + ", degree=" + degree + ", expertise=" + expertise
+				+ ", orgId=" + orgId + ", orgNameOne=" + orgNameOne
+				+ ", onlineProgress=" + onlineProgress + ", authUserId="
+				+ authUserId + ", authDate=" + authDate + ", offlineProgress="
+				+ offlineProgress + ", paperDate=" + paperDate + ", isStaging="
+				+ isStaging + ", isDeleted=" + isDeleted + ", gmtCreate="
+				+ gmtCreate + ", gmtUpdate=" + gmtUpdate + ", isMultiBooks="
+				+ isMultiBooks + ", isMultiPosition=" + isMultiPosition
 				+ ", isDigitalEditorOptional=" + isDigitalEditorOptional
 				+ ", textbookName=" + textbookName + ", presetPosition="
 				+ presetPosition + "]";
