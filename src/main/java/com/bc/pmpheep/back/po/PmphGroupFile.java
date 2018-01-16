@@ -14,39 +14,43 @@ import org.apache.ibatis.type.Alias;
 @SuppressWarnings("serial")
 @Alias("PmphGroupFile")
 public class PmphGroupFile implements Serializable {
-    /**
-     * 主键
-     */
-    private Long id;
-    /**
-     * 小组id
-     */
-    private Long groupId;
-    /**
-     * 上传者id
-     */
-    private Long memberId;
-    /**
-     * 文件id
-     */
-    private String fileId;
-    /**
-     * 文件名称
-     */
-    private String fileName;
-    /**
-     * 下载次数
-     */
-    private Integer download;
-    /**
-     * 上传时间
-     */
-    private Timestamp gmtCreate;
-    
-    public PmphGroupFile() {
+	/**
+	 * 主键
+	 */
+	private Long id;
+	/**
+	 * 小组id
+	 */
+	private Long groupId;
+	/**
+	 * 上传者id
+	 */
+	private Long memberId;
+	/**
+	 * 文件id
+	 */
+	private String fileId;
+	/**
+	 * 文件名称
+	 */
+	private String fileName;
+	/**
+	 * 
+	 */
+	private Double fileSize;
+	/**
+	 * 下载次数
+	 */
+	private Integer download;
+	/**
+	 * 上传时间
+	 */
+	private Timestamp gmtCreate;
+
+	public PmphGroupFile() {
 		super();
 	}
-    
+
 	public PmphGroupFile(Long id) {
 		super();
 		this.id = id;
@@ -54,74 +58,82 @@ public class PmphGroupFile implements Serializable {
 
 	public PmphGroupFile(Long groupId, Long memberId, String fileId, String fileName, Integer download,
 			Timestamp gmtCreate) {
-	this.groupId = groupId;
-	this.memberId = memberId;
-	this.fileId = fileId;
-	this.fileName = fileName;
-	this.download = download;
-	this.gmtCreate = gmtCreate;
-    }
+		this.groupId = groupId;
+		this.memberId = memberId;
+		this.fileId = fileId;
+		this.fileName = fileName;
+		this.download = download;
+		this.gmtCreate = gmtCreate;
+	}
 
-    public Long getId() {
-	return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-	this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Long getGroupId() {
-	return groupId;
-    }
+	public Long getGroupId() {
+		return groupId;
+	}
 
-    public void setGroupId(Long groupId) {
-	this.groupId = groupId;
-    }
+	public void setGroupId(Long groupId) {
+		this.groupId = groupId;
+	}
 
-    public Long getMemberId() {
-	return memberId;
-    }
+	public Long getMemberId() {
+		return memberId;
+	}
 
-    public void setMemberId(Long memberId) {
-	this.memberId = memberId;
-    }
+	public void setMemberId(Long memberId) {
+		this.memberId = memberId;
+	}
 
-    public String getFileId() {
-	return fileId;
-    }
+	public String getFileId() {
+		return fileId;
+	}
 
-    public void setFileId(String fileId) {
-	this.fileId = fileId;
-    }
+	public void setFileId(String fileId) {
+		this.fileId = fileId;
+	}
 
-    public String getFileName() {
-	return fileName;
-    }
+	public String getFileName() {
+		return fileName;
+	}
 
-    public void setFileName(String fileName) {
-	this.fileName = fileName;
-    }
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
 
-    public Integer getDownload() {
-	return download;
-    }
+	public Double getFileSize() {
+		return fileSize;
+	}
 
-    public void setDownload(Integer download) {
-	this.download = download;
-    }
+	public void setFileSize(Double fileSize) {
+		this.fileSize = fileSize;
+	}
 
-    public Timestamp getGmtCreate() {
-	return gmtCreate;
-    }
+	public Integer getDownload() {
+		return download;
+	}
 
-    public void setGmtCreate(Timestamp gmtCreate) {
-	this.gmtCreate = gmtCreate;
-    }
+	public void setDownload(Integer download) {
+		this.download = download;
+	}
 
-    @Override
-    public String toString() {
-	return "{id:" + id + ", groupId:" + groupId + ", memberId:" + memberId + ", fileId:" + fileId
-		+ ", fileName:" + fileName + ", download:" + download + ", gmtCreate:" + gmtCreate + "}";
-    }
+	public Timestamp getGmtCreate() {
+		return gmtCreate;
+	}
+
+	public void setGmtCreate(Timestamp gmtCreate) {
+		this.gmtCreate = gmtCreate;
+	}
+
+	@Override
+	public String toString() {
+		return "{id:" + id + ", groupId:" + groupId + ", memberId:" + memberId + ", fileId:" + fileId + ", fileName:"
+				+ fileName + ", download:" + download + ", gmtCreate:" + gmtCreate + "}";
+	}
 
 }
