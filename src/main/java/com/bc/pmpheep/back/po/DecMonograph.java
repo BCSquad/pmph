@@ -19,7 +19,7 @@ public class DecMonograph implements Serializable {
     private Long declarationId;
     // 教材名称
     private String monographName;
-    // 是否自费
+    // 是否自费（0=自费/1=公费）
     private Integer isSelfPaid;
     // 出版单位
     private String publisher;
