@@ -170,9 +170,7 @@
 		a.group_id = b.group_id
 		WHERE
 		b.group_id =
-		#{parameter.groupId} AND
-		b.id
-		= a.member_id
+		#{parameter.groupId} 
 		<if test="parameter.fileName !=null and parameter.fileName !=''">
 			and a.file_name like concat('%',#{parameter.fileName},'%')
 		</if>

@@ -39,6 +39,8 @@ public class CheckedExceptionBusiness {
 
 	public final static String WRITER_USER_MANAGEMENT = "作家用户管理";
 
+	public final static String WRITER_USER_TRENDST = "作家用户动态";
+
 	public final static String USER_MANAGEMENT = "用户管理";
 
 	public final static String RESOUCE_MANAGEMENT = "资源管理";
@@ -72,8 +74,8 @@ public class CheckedExceptionBusiness {
 	public final static String EXCEL = "Excel文件";
 
 	public final static String BOOK_CORRECTION = "教材纠错";
-	
+
 	public final static String QUESTIONNAIRE_SURVEY = "问卷调查";
-	
+
 	public final static String WRITER_POINT_MANAGEMENT = "积分管理";
 }
