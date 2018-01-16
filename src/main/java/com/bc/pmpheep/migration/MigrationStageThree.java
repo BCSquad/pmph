@@ -4,6 +4,7 @@
 package com.bc.pmpheep.migration;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -132,7 +133,10 @@ public class MigrationStageThree {
     protected void pmphUser() {
         String tableName = "sys_user";//此表图一程序中已添加new_pk
         String sql = "SELECT a.userid,a.usercode,a.`password`,a.isvalid,a.username,d.new_pk,"
-                + "b.handset,b.email,e.filedir,a.memo,a.sortno "
+                + "b.handset,b.email,e.filedir,a.memo,a.sortno, "
+        		+ "(SELECT q.rolename FROM sys_userrole p "
+        		+ "LEFT JOIN sys_role q ON p.roleid = q.roleid "
+                + "WHERE p.userid = a.userid AND q.rolename='主任')rolename "
                 + "FROM sys_user a "
                 + "LEFT JOIN sys_userext b ON a.userid = b.userid "
                 + "LEFT JOIN sys_userorganize c ON a.userid = c.userid "
@@ -182,6 +186,7 @@ public class MigrationStageThree {
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
             }
+            String director = (String) map.get("rolename");
             PmphUser pmphUser = new PmphUser();
             pmphUser.setUsername(userName);
             pmphUser.setPassword(password);
@@ -193,6 +198,7 @@ public class MigrationStageThree {
             pmphUser.setAvatar("DEFAULT");
             pmphUser.setNote(note);
             pmphUser.setSort(sort);
+            pmphUser.setIsDirector("主任".equals(director));
             pmphUser = pmphUserService.add(pmphUser);
             Long pk = pmphUser.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "userid", userId);
