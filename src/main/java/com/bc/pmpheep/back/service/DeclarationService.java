@@ -139,7 +139,7 @@ public interface DeclarationService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	Declaration onlineProgress(Long id, Integer onlineProgress) 
+	Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause) 
 			throws CheckedServiceException, IOException;
 	
 	/**

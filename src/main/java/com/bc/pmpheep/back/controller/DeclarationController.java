@@ -118,9 +118,10 @@ public class DeclarationController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "审核进度")
     @RequestMapping(value = "/list/declaration/onlineProgress", method = RequestMethod.GET)
     public ResponseBean onlineProgress(@RequestParam("id") Long id,
-    @RequestParam("onlineProgress") Integer onlineProgress) 
+    @RequestParam("onlineProgress") Integer onlineProgress, 
+    @RequestParam("returnCause") String returnCause) 
     		throws CheckedServiceException, IOException {
-        return new ResponseBean(declarationService.onlineProgress(id, onlineProgress));
+        return new ResponseBean(declarationService.onlineProgress(id, onlineProgress, returnCause));
     }
 
     /**
