@@ -117,5 +117,12 @@
 		resultType="DecMonograph">
 		select * from dec_monograph where id=#{id};
 	</select>
+	
+	<!-- 根据申报表id查询 -->
+	<select id="getListDecMonographByDeclarationId" parameterType="java.lang.Long"
+		resultType="DecMonograph">
+		select * from dec_monograph where
+		declaration_id=#{declarationId};
+	</select>
 
 </mapper>
