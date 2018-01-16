@@ -480,8 +480,9 @@
 		LEFT JOIN textbook c ON a.textbook_id = c.id 
 		LEFT JOIN material d ON b.material_id = d.id 
 		LEFT JOIN org e ON b.org_id = e.id 
-		WHERE a.chosen_position IS NOT NULL AND c.is_published IS TRUE 
-		AND d.id = #{materialId} AND b.is_staging = 0 AND b.online_progress = 3 ;
+		WHERE a.chosen_position IS NOT NULL AND a.chosen_position !=0 
+		AND c.is_published IS TRUE AND d.id = #{materialId} 
+		AND b.is_staging = 0 AND b.online_progress = 3 ;
     </select>
     
     <!-- 根据materialId查询学校总数 -->

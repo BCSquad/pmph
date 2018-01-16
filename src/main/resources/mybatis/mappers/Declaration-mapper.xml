@@ -90,6 +90,9 @@
 			<if test="paperDate !=null ">
 				paper_date,
 			</if>
+			<if test="returnCause !=null and returnCause !=''">
+				return_cause,
+			</if>
 			<if test="isStaging !=null ">
 				is_staging,
 			</if>
@@ -184,6 +187,9 @@
 			</if>
 			<if test="paperDate !=null">
 				#{paperDate},
+			</if>
+			<if test="returnCause !=null and returnCause !=''">
+				#{returnCause},
 			</if>
 			<if test="isStaging !=null">
 				#{isStaging},
@@ -299,6 +305,9 @@
 			</if>
 			<if test="paperDate !=null">
 				paper_date = #{paperDate},
+			</if>
+			<if test="returnCause !=null and returnCause !=''">
+				return_cause = #{returnCause},
 			</if>
 			<if test="isStaging !=null and isStaging !=''">
 				is_staging = #{isStaging},
