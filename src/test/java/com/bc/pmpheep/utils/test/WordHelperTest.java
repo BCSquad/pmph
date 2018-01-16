@@ -2,9 +2,12 @@ package com.bc.pmpheep.utils.test;
 
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.po.DecEduExp;
+import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.service.DeclarationService;
+import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.utils.WordHelper;
 import java.io.File;
@@ -33,6 +36,8 @@ public class WordHelperTest extends BaseTest {
 
     @Resource
     WordHelper wordHelper;
+    @Resource
+    MaterialService materialService;
     @Resource
     DeclarationService declarationService;
 
@@ -68,7 +73,7 @@ public class WordHelperTest extends BaseTest {
         declarationEtcBO.setChosenOrgName("首都医科大学");
         list.add(declarationEtcBO);
         String textbook = "全国高等学校健康服务与管理专业第一轮规划教材";
-        HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(textbook, list);
+        HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(textbook, list, 65535);
         for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
             FileOutputStream out = new FileOutputStream(entry.getKey());
             entry.getValue().write(out);
@@ -85,7 +90,7 @@ public class WordHelperTest extends BaseTest {
             return;
         }
         String textbook = "全国高等学校健康服务与管理专业第一轮规划教材";
-        HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(textbook, declarationEtcBOs);
+        HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(textbook, declarationEtcBOs, 65535);
         for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
             FileOutputStream out = new FileOutputStream(entry.getKey());
             entry.getValue().write(out);
@@ -95,10 +100,12 @@ public class WordHelperTest extends BaseTest {
     }
 
     @Test
-    public void export() {
+    public void export() throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
         /* 生成唯一临时目录名 */
         String tempDir = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
-        List<DeclarationEtcBO> declarationEtcBOs = declarationService.getDeclarationEtcBOs(125L);
+        List<Material> materials = materialService.getListMaterial("四川重庆中等卫生职业教育规划教材（护理、助产专业） 第二轮修订");
+        List<DeclarationEtcBO> declarationEtcBOs = declarationService.declarationEtcBO(materials.get(0).getId(),
+                null, null, null, null, null, null, null, null, null);
         if (CollectionUtil.isEmpty(declarationEtcBOs)) {
             return;
         }
@@ -116,7 +123,7 @@ public class WordHelperTest extends BaseTest {
         sb.append("1.人体解剖学与组织胚胎学");
         sb.append(File.separator);
         logger.info("获取到的路径地址是 {}", sb.toString());
-        wordHelper.export("全国高等学校健康服务与管理专业第一轮规划教材", sb.toString(), declarationEtcBOs);
+        wordHelper.export("四川重庆中等卫生职业教育规划教材（护理、助产专业） 第二轮修订", sb.toString(), declarationEtcBOs, 21983);
     }
 
     private ArrayList<DecEduExp> makeFakeDecEduExpList() {
