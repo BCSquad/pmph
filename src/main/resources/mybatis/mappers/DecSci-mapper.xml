@@ -117,5 +117,12 @@
 		resultType="DecSci">
 		select * from dec_sci where id=#{id};
 	</select>
+	
+	<!-- 根据申报表id查询 -->
+	<select id="getListDecSciByDeclarationId" parameterType="java.lang.Long"
+		resultType="DecSci">
+		select * from dec_sci where
+		declaration_id=#{declarationId};
+	</select>
 
 </mapper>

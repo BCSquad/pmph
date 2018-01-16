@@ -7,12 +7,17 @@ import java.util.List;
 import org.apache.ibatis.type.Alias;
 
 import com.bc.pmpheep.back.po.DecAcade;
+import com.bc.pmpheep.back.po.DecAcadeReward;
 import com.bc.pmpheep.back.po.DecAchievement;
+import com.bc.pmpheep.back.po.DecClinicalReward;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecLastPosition;
+import com.bc.pmpheep.back.po.DecMonograph;
 import com.bc.pmpheep.back.po.DecNationalPlan;
+import com.bc.pmpheep.back.po.DecPublishReward;
 import com.bc.pmpheep.back.po.DecResearch;
+import com.bc.pmpheep.back.po.DecSci;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
@@ -49,6 +54,16 @@ public class ApplicationVO implements Serializable {
 	private List<DecTextbook> decTextbookList = new ArrayList<DecTextbook>(5);
 	// 科研情况
 	private List<DecResearch> decResearchList = new ArrayList<DecResearch>(5);
+	// 主编学术专著情况
+	private List<DecMonograph> decMonographList = new ArrayList<DecMonograph>(5);
+	// 出版行业获奖情况
+	private List<DecPublishReward> decPublishRewardList = new ArrayList<DecPublishReward>(5);
+	// SCI论文投稿及影响因子情况
+	private List<DecSci> decSciList = new ArrayList<DecSci>(5);
+	// 临床医学获奖情况
+	private List<DecClinicalReward> decClinicalRewardList = new ArrayList<DecClinicalReward>(5);
+	// 学术荣誉授予情况
+	private List<DecAcadeReward> decAcadeRewardList = new ArrayList<DecAcadeReward>(5);
 	// 作家扩展项
 	private List<DecExtensionVO> decExtensionList = new ArrayList<DecExtensionVO>(5);
 
@@ -158,6 +173,47 @@ public class ApplicationVO implements Serializable {
 
 	public void setDecExtensionList(List<DecExtensionVO> decExtensionList) {
 		this.decExtensionList = decExtensionList;
+	}
+
+	public List<DecMonograph> getDecMonographList() {
+		return decMonographList;
+	}
+
+	public void setDecMonographList(List<DecMonograph> decMonographList) {
+		this.decMonographList = decMonographList;
+	}
+
+	public List<DecPublishReward> getDecPublishRewardList() {
+		return decPublishRewardList;
+	}
+
+	public void setDecPublishRewardList(List<DecPublishReward> decPublishRewardList) {
+		this.decPublishRewardList = decPublishRewardList;
+	}
+
+	public List<DecSci> getDecSciList() {
+		return decSciList;
+	}
+
+	public void setDecSciList(List<DecSci> decSciList) {
+		this.decSciList = decSciList;
+	}
+
+	public List<DecClinicalReward> getDecClinicalRewardList() {
+		return decClinicalRewardList;
+	}
+
+	public void setDecClinicalRewardList(
+			List<DecClinicalReward> decClinicalRewardList) {
+		this.decClinicalRewardList = decClinicalRewardList;
+	}
+
+	public List<DecAcadeReward> getDecAcadeRewardList() {
+		return decAcadeRewardList;
+	}
+
+	public void setDecAcadeRewardList(List<DecAcadeReward> decAcadeRewardList) {
+		this.decAcadeRewardList = decAcadeRewardList;
 	}
 
 }

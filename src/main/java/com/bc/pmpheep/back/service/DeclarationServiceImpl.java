@@ -14,14 +14,19 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.dao.DecAcadeDao;
+import com.bc.pmpheep.back.dao.DecAcadeRewardDao;
 import com.bc.pmpheep.back.dao.DecAchievementDao;
+import com.bc.pmpheep.back.dao.DecClinicalRewardDao;
 import com.bc.pmpheep.back.dao.DecCourseConstructionDao;
 import com.bc.pmpheep.back.dao.DecEduExpDao;
 import com.bc.pmpheep.back.dao.DecExtensionDao;
 import com.bc.pmpheep.back.dao.DecLastPositionDao;
+import com.bc.pmpheep.back.dao.DecMonographDao;
 import com.bc.pmpheep.back.dao.DecNationalPlanDao;
 import com.bc.pmpheep.back.dao.DecPositionDao;
+import com.bc.pmpheep.back.dao.DecPublishRewardDao;
 import com.bc.pmpheep.back.dao.DecResearchDao;
+import com.bc.pmpheep.back.dao.DecSciDao;
 import com.bc.pmpheep.back.dao.DecTeachExpDao;
 import com.bc.pmpheep.back.dao.DecTextbookDao;
 import com.bc.pmpheep.back.dao.DecWorkExpDao;
@@ -29,13 +34,18 @@ import com.bc.pmpheep.back.dao.DeclarationDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecAcade;
+import com.bc.pmpheep.back.po.DecAcadeReward;
 import com.bc.pmpheep.back.po.DecAchievement;
+import com.bc.pmpheep.back.po.DecClinicalReward;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecLastPosition;
+import com.bc.pmpheep.back.po.DecMonograph;
 import com.bc.pmpheep.back.po.DecNationalPlan;
 import com.bc.pmpheep.back.po.DecPosition;
+import com.bc.pmpheep.back.po.DecPublishReward;
 import com.bc.pmpheep.back.po.DecResearch;
+import com.bc.pmpheep.back.po.DecSci;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
@@ -98,6 +108,16 @@ public class DeclarationServiceImpl implements DeclarationService {
 	private DecResearchDao decResearchDao;
 	@Autowired
 	private DecExtensionDao decExtensionDao;
+	@Autowired
+	private DecMonographDao decMonographDao;
+	@Autowired
+	private DecPublishRewardDao decPublishRewardDao;
+	@Autowired
+	private DecSciDao decSciDao;
+	@Autowired
+	private DecClinicalRewardDao decClinicalRewardDao;
+	@Autowired
+	private DecAcadeRewardDao decAcadeRewardDao;
 	@Autowired
 	private FileService fileService;
 
@@ -404,6 +424,20 @@ public class DeclarationServiceImpl implements DeclarationService {
 		List<DecTextbook> decTextbookList = decTextbookDao.getListDecTextbookByDeclarationId(declarationId);
 		// 作家科研
 		List<DecResearch> decResearchList = decResearchDao.getListDecResearchByDeclarationId(declarationId);
+		// 主编学术专著情况
+		List<DecMonograph> decMonographList = 
+				decMonographDao.getListDecMonographByDeclarationId(declarationId);
+		// 出版行业获奖情况
+		List<DecPublishReward> decPublishRewardList = 
+				decPublishRewardDao.getListDecPublishRewardByDeclarationId(declarationId);
+		// SCI论文投稿及影响因子情况
+		List<DecSci> decSciList = decSciDao.getListDecSciByDeclarationId(declarationId);
+		// 临床医学获奖情况
+		List<DecClinicalReward> decClinicalRewardList = 
+				decClinicalRewardDao.getListDecClinicalRewardByDeclarationId(declarationId);
+		// 学术荣誉授予情况
+		List<DecAcadeReward> decAcadeRewardList = 
+				decAcadeRewardDao.getListDecAcadeRewardByDeclarationId(declarationId);
 		// 作家扩展项
 		List<DecExtensionVO> decExtensionList = decExtensionDao.getListDecExtensionByDeclarationId(declarationId);
 		// 把查询出来的信息添加进applicationVO
@@ -419,6 +453,11 @@ public class DeclarationServiceImpl implements DeclarationService {
 		applicationVO.setDecNationalPlanList(decNationalPlanList);
 		applicationVO.setDecTextbookList(decTextbookList);
 		applicationVO.setDecResearchList(decResearchList);
+		applicationVO.setDecMonographList(decMonographList);
+		applicationVO.setDecPublishRewardList(decPublishRewardList);
+		applicationVO.setDecSciList(decSciList);
+		applicationVO.setDecClinicalRewardList(decClinicalRewardList);
+		applicationVO.setDecAcadeRewardList(decAcadeRewardList);
 		applicationVO.setDecExtensionList(decExtensionList);
 		return applicationVO;
 	}
