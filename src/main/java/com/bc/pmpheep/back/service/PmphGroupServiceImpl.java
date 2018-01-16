@@ -215,7 +215,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 
 	@Override
 	public PmphGroup addPmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId)
-			throws CheckedServiceException, IOException {
+			throws CheckedServiceException {
 
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
@@ -228,7 +228,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		}
 		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		if (!StringUtil.isEmpty(file)) {
-			groupImage = saveFileToMongoDB(file);
+			groupImage = file;
 		}
 		pmphGroup.setGroupImage(groupImage);
 		pmphGroup.setFounderId(pmphUser.getId());
@@ -249,7 +249,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 
 	@Override
 	public PmphGroup updatePmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId)
-			throws CheckedServiceException, IOException {
+			throws CheckedServiceException {
 		if (null == pmphGroup) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"参数对象不能为空");
@@ -279,7 +279,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 						&& !RouteUtil.DEFAULT_USER_AVATAR.equals(pmphGroupOld.getGroupImage())) {
 					fileService.remove(pmphGroupOld.getGroupImage());
 				}
-				String newGroupImage = saveFileToMongoDB(file);
+				String newGroupImage = file;
 				pmphGroup.setGroupImage(newGroupImage);
 			}
 			pmphGroupDao.updatePmphGroup(pmphGroup);
@@ -370,9 +370,9 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		List<PmphGroupListVO> list = new ArrayList<>();
 		PageResult<PmphGroupListVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-		Integer total=0;
+		Integer total = 0;
 		if (pmphUser.getIsAdmin()) {
-			total=pmphGroupDao.getAdminCount();
+			total = pmphGroupDao.getAdminCount();
 			list = pmphGroupDao.getPmphGroupList(pageParameter);
 			for (PmphGroupListVO pmphGroupListVO : list) {
 				pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
@@ -381,11 +381,11 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			pageResult.setTotal(total);
 
 		} else {
-			
-			PmphGroup pmphGroup=new PmphGroup();
+
+			PmphGroup pmphGroup = new PmphGroup();
 			pmphGroup.setGroupName(pageParameter.getParameter().getGroupName());
 			pmphGroup.setId(pmphUser.getId());
-			total=pmphGroupDao.getPmphGroupTotal(pageParameter);
+			total = pmphGroupDao.getPmphGroupTotal(pageParameter);
 			list = pmphGroupDao.getListPmphGroup(pageParameter);
 			for (PmphGroupListVO pmphGroupListVO : list) {
 				pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
@@ -397,53 +397,10 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	}
 
 	@Override
-	public String msgUploadFiles(MultipartFile file) throws CheckedServiceException {
-		if (file.isEmpty()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
-					"附件为空！");
-		}
-		String filePath = "";
-		// 循环获取file数组中得文件
-		if (StringUtil.notEmpty(file.getOriginalFilename())) {
-			String fullFileName = file.getOriginalFilename();// 完整文件名
-			if (fullFileName.length() > 80) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
-						"附件名称超出80个字符长度，请修改后上传！");
-			}
-			String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));// 去掉后缀的文件名称
-			String beforeDate = DateUtil.date2Str(new Date(), "yyyyMMddHHmmss") + "/";// 获取当前时间拼接路径
-			FileUpload.fileUp(file, Const.MSG_FILE_PATH_FILE + beforeDate, fileName);// 上传文件
-			filePath = Const.MSG_FILE_PATH_FILE + beforeDate + fullFileName;
-		}
-		return filePath;
-	}
-
-	/**
-	 * 
-	 * 功能描述：保存文件到MongoDB
-	 *
-	 * @param files
-	 *            临时文件路径
-	 * @param msgId
-	 *            messageId
-	 * @throws CheckedServiceException
-	 */
-	private String saveFileToMongoDB(String file) throws IOException {
-		String gridFSFileId = RouteUtil.DEFAULT_GROUP_IMAGE;
-		// 添加附件到MongoDB表中
-		File f = FileUpload.getFileByFilePath(file);
-		if (f.isFile()) {
-			// 循环获取file数组中得文件
-			if (StringUtil.notEmpty(f.getName())) {
-				gridFSFileId = fileService.saveLocalFile(f, ImageType.GROUP_AVATAR, 0);// 上传文件到MongoDB
-				if (StringUtil.isEmpty(gridFSFileId)) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-							CheckedExceptionResult.FILE_UPLOAD_FAILED, "文件上传失败!");
-				}
-			}
-			FileUtil.delFile(file);// 删除本地临时文件
-		}
-		return gridFSFileId;
+	public String addGroupImage(MultipartFile file) throws CheckedServiceException, IOException {
+		String gruopImage = fileService.save(file, ImageType.GROUP_AVATAR, 0);
+		gruopImage = RouteUtil.gruopImage(gruopImage);
+		return gruopImage;
 	}
 
 }

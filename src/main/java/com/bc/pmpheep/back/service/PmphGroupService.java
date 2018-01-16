@@ -103,18 +103,19 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PmphGroup addPmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId)
-			throws CheckedServiceException, IOException;
+	PmphGroup addPmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 
-	 * 功能描述：小组头像上传
+	 * 
+	 * 功能描述：小组上传头像
 	 *
-	 * @param request
-	 * @param files
+	 * @param file
 	 * @return
+	 * @throws CheckedServiceException
+	 *
 	 */
-	String msgUploadFiles(MultipartFile file) throws CheckedServiceException;
+	String addGroupImage(MultipartFile file) throws CheckedServiceException, IOException;
 
 	/**
 	 *
@@ -129,8 +130,7 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PmphGroup updatePmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId)
-			throws CheckedServiceException, IOException;
+	PmphGroup updatePmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 
