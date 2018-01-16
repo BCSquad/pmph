@@ -16,7 +16,7 @@ public interface DecSciDao {
 	 * 新增
 	 * @author:tyc
      * @date:2018年1月16日下午14:11:09
-	 * @param decMonograph
+	 * @param decSci
 	 * @return
 	 */
 	Integer addDecSci(DecSci decSci);
@@ -34,7 +34,7 @@ public interface DecSciDao {
 	 * 更新
 	 * @author:tyc
      * @date:2018年1月16日下午14:11:47
-	 * @param decMonograph
+	 * @param decSci
 	 * @return
 	 */
 	Integer updateDecSci(DecSci decSci);

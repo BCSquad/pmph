@@ -14,7 +14,7 @@ public interface DecSciService {
 	 * 新增
 	 * @author:tyc
      * @date:2018年1月16日下午14:15:21
-	 * @param decMonograph
+	 * @param decSci
 	 * @return
 	 * @throws CheckedServiceException
 	 */
@@ -33,7 +33,7 @@ public interface DecSciService {
 	 * 更新
 	 * @author:tyc
      * @date:2018年1月16日下午14:16:11
-	 * @param decMonograph
+	 * @param decSci
 	 * @return
 	 */
 	Integer updateDecSci(DecSci decSci) throws CheckedServiceException;
