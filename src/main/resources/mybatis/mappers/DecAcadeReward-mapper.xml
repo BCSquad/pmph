@@ -108,5 +108,12 @@
 		resultType="DecAcadeReward">
 		select * from dec_acade_reward where id=#{id};
 	</select>
+	
+	<!-- 根据申报表id查询 -->
+	<select id="getListDecAcadeRewardByDeclarationId" parameterType="java.lang.Long"
+		resultType="DecAcadeReward">
+		select * from dec_acade_reward where
+		declaration_id=#{declarationId};
+	</select>
 
 </mapper>
