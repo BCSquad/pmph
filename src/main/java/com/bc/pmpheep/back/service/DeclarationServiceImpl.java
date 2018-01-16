@@ -235,7 +235,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	}
 
 	@Override
-	public Declaration onlineProgress(Long id, Integer onlineProgress) throws CheckedServiceException, IOException {
+	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause) 
+			throws CheckedServiceException, IOException {
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"主键不能为空!");
@@ -256,6 +257,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 				}
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
+			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false); // 发送系统消息
 		} else if (3 == onlineProgress.intValue()) { // 获取审核进度是3则通过
