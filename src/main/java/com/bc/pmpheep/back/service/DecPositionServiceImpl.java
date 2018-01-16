@@ -5,6 +5,7 @@ package com.bc.pmpheep.back.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -456,18 +457,25 @@ public class DecPositionServiceImpl implements DecPositionService {
         DeclarationCountVO declarationCountVO = new DeclarationCountVO();
         Integer schoolDeclarationCount = decPositionDao.getSchoolDeclarationCount(materialId);
         Integer schoolDeclarationChosenCount = decPositionDao.getSchoolDeclarationChosenCount(materialId);
-        Integer schoolDeclarationAverage = 0;
-        Integer schoolDeclarationChosenAverage = 0;
+        String schoolDeclarationAverage = "0";
+        String schoolDeclarationChosenAverage = "0";
         if (decPositionDao.getSchoolCount(materialId) > 0) {
         	/*
-        	 * 若院校数量大于0，计算院校申报平均数以及当选平均数
+        	 * 若院校数量大于0，计算院校申报平均数
         	 */
-            schoolDeclarationAverage =
-            		(int) Math.round((double) schoolDeclarationCount
-                             / decPositionDao.getSchoolCount(materialId));
-            schoolDeclarationChosenAverage = 
-            		(int) Math.round((double)schoolDeclarationChosenCount
-            				/decPositionDao.getSchoolCount(materialId));
+        	Double presetAverage = (double)schoolDeclarationCount
+        			/decPositionDao.getSchoolCount(materialId);
+        	BigDecimal bigDecimalpreset = new BigDecimal(presetAverage);
+        	schoolDeclarationAverage = String.valueOf(bigDecimalpreset.setScale(2,
+        			BigDecimal.ROUND_HALF_UP).doubleValue());
+        	/*
+        	 * 计算当选数的平均数
+        	 */
+            Double chosenAverage = (double)schoolDeclarationChosenCount
+                    /decPositionDao.getSchoolCount(materialId);
+            BigDecimal bigDecimalchosen = new BigDecimal(chosenAverage);
+            schoolDeclarationChosenAverage = String.valueOf(bigDecimalchosen.setScale(2,
+            		BigDecimal.ROUND_HALF_UP).doubleValue());
         }
         Integer editorCount = decPositionDao.getEditorCount(materialId);
         Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);

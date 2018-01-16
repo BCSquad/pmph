@@ -91,6 +91,8 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 					false);
 			PmphGroupFile pmphGroupFile = new PmphGroupFile(id, pmphGroupMemberVO.getId(),
 					"0" + pmphGroupMemberVO.getId(), file.getOriginalFilename(), 0, null);
+			Long fileLenth = file.getSize();
+			pmphGroupFile.setFileSize(Double.valueOf(fileLenth / 1024));
 			pmphGroupFileDao.addPmphGroupFile(pmphGroupFile);
 			list.add(pmphGroupFile);
 
@@ -198,6 +200,22 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 		if (total > 0) {
 			List<PmphGroupFileVO> list = pmphGroupFileDao.listGroupFile(pageParameter);
 			for (PmphGroupFileVO pmphGroupFileVO : list) {
+				Double fileSize = pmphGroupFileVO.getFileSize();
+				if (ObjectUtil.notNull(fileSize)) {
+					if (fileSize > 0) {
+						pmphGroupFileVO.setFileLenth(String.format("%.2f", fileSize) + " kb");
+					} else {
+						pmphGroupFileVO.setFileLenth("0 kb");
+					}
+					if (fileSize > 1024) {
+						pmphGroupFileVO.setFileLenth(String.format("%.2f", fileSize / 1024) + " mb");
+					}
+					if (fileSize > 1024 * 1024) {
+						pmphGroupFileVO.setFileLenth(String.format("%.2f", fileSize / 1024 / 1024) + " gb");
+					}
+				} else {
+					pmphGroupFileVO.setFileLenth("大小不详");
+				}
 				pmphGroupFileVO.setFileId(RouteUtil.MONGODB_GROUP_FILE + pmphGroupFileVO.getFileId());
 			}
 			pageResult.setRows(list);

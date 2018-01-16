@@ -32,6 +32,7 @@ import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
 import com.bc.pmpheep.back.vo.PmphGroupMessageVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -135,11 +136,11 @@ public class GroupController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新建小组")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseBean add(String file, PmphGroup pmphGroup, HttpServletRequest request) {
+		String sessionId = CookiesUtil.getSessionId(request);
 		try {
-			String sessionId = CookiesUtil.getSessionId(request);
 			return new ResponseBean(pmphGroupService.addPmphGroupOnGroup(file, pmphGroup, sessionId));
 		} catch (IOException e) {
-			return new ResponseBean(e);
+			return new ResponseBean(e.getMessage());
 		}
 	}
 
@@ -155,7 +156,11 @@ public class GroupController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "上传头像")
 	@RequestMapping(value = "/files", method = RequestMethod.POST)
 	public ResponseBean files(@RequestParam("file") MultipartFile file) {
-		return new ResponseBean(pmphGroupService.msgUploadFiles(file));
+		try {
+			return new ResponseBean(pmphGroupService.msgUploadFiles(file));
+		} catch (Exception e) {
+			return new ResponseBean(e.getMessage());
+		}
 	}
 
 	/**
@@ -198,11 +203,11 @@ public class GroupController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改小组头像或小组名称")
 	@RequestMapping(value = "/update/pmphGroupDetail", method = RequestMethod.PUT)
 	public ResponseBean pmphGroupDetail(String file, PmphGroup pmphGroup, HttpServletRequest request) {
+		String sessionId = CookiesUtil.getSessionId(request);
 		try {
-			String sessionId = CookiesUtil.getSessionId(request);
 			return new ResponseBean(pmphGroupService.updatePmphGroupOnGroup(file, pmphGroup, sessionId));
 		} catch (IOException e) {
-			return new ResponseBean(e);
+			return new ResponseBean(e.getMessage());
 		}
 	}
 

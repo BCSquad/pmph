@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.DecClinicalRewardDao">
+
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id !=null">
+				id,
+			</if>
+			<if test="declarationId !=null">
+				declaration_id,
+			</if>
+			<if test="rewardName !=null and rewardName != ''">
+				reward_name,
+			</if>
+			<if test="awardUnit !=null">
+				award_unit,
+			</if>
+			<if test="rewardDate !=null and rewardDate != ''">
+				reward_date,
+			</if>
+			<if test="note !=null and note != ''">
+				note,
+			</if>
+			<if test="sort !=null">
+				sort,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<trim suffixOverrides=",">
+			<if test="id !=null">
+				#{id},
+			</if>
+			<if test="declarationId !=null">
+				#{declarationId},
+			</if>
+			<if test="rewardName !=null and rewardName != ''">
+				#{rewardName},
+			</if>
+			<if test="awardUnit !=null">
+				#{awardUnit},
+			</if>
+			<if test="rewardDate !=null and rewardDate != ''">
+				#{rewardDate},
+			</if>
+			<if test="note !=null and note != ''">
+				#{note},
+			</if>
+			<if test="sort !=null">
+				#{sort},
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="addDecClinicalReward" parameterType="DecClinicalReward">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dec_clinical_reward(
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+
+	<!-- 根据id删除 -->
+	<delete id="deleteDecClinicalReward" parameterType="java.lang.Long">
+		delete from
+		dec_clinical_reward where
+		id=#{id};
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateDecClinicalReward" parameterType="DecClinicalReward">
+		update dec_clinical_reward
+		<set>
+			<if test="declarationId !=null">
+				declaration_id = #{declarationId},
+			</if>
+			<if test="rewardName !=null and rewardName != ''">
+				reward_name = #{rewardName},
+			</if>
+			<if test="awardUnit !=null">
+				award_unit = #{awardUnit},
+			</if>
+			<if test="rewardDate !=null and rewardDate != ''">
+				reward_date = #{rewardDate},
+			</if>
+			<if test="note !=null and note != ''">
+				note = #{note},
+			</if>
+			<if test="sort !=null">
+				sort = #{sort},
+			</if>
+		</set>
+		where id=#{id} ;
+	</update>
+
+	<!-- 根据id查询 -->
+	<select id="getDecClinicalReward" parameterType="java.lang.Long"
+		resultType="DecClinicalReward">
+		select * from dec_clinical_reward where id=#{id};
+	</select>
+
+</mapper>

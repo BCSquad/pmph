@@ -15,12 +15,14 @@ import com.bc.pmpheep.back.dao.PmphGroupDao;
 import com.bc.pmpheep.back.dao.TextbookDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.MessageAttachment;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupFile;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.ArrayUtil;
+import com.bc.pmpheep.back.util.CastUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.FileUpload;
@@ -31,6 +33,7 @@ import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
+import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -202,12 +205,12 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		if (pmphUser.getIsAdmin()) {
 			list = pmphGroupDao.listPmphGroup(pmphGroup.getGroupName());
 			for (PmphGroupListVO pmphGroupListVO : list) {
-				pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
+				pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 			}
 		} else {
 			list = pmphGroupDao.getList(pmphGroup, pmphUser.getId());
 			for (PmphGroupListVO pmphGroupListVO : list) {
-				pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
+				pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 			}
 		}
 		return list;
@@ -349,7 +352,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		List<PmphGroupListVO> list = new ArrayList<>();
 		list = pmphGroupDao.getList(pmphGroup, pmphUser.getId());
 		for (PmphGroupListVO pmphGroupListVO : list) {
-			pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
+			pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 		}
 		return list;
 	}
@@ -370,25 +373,25 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		List<PmphGroupListVO> list = new ArrayList<>();
 		PageResult<PmphGroupListVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-		Integer total=0;
+		Integer total = 0;
 		if (pmphUser.getIsAdmin()) {
-			total=pmphGroupDao.getAdminCount();
+			total = pmphGroupDao.getAdminCount();
 			list = pmphGroupDao.getPmphGroupList(pageParameter);
 			for (PmphGroupListVO pmphGroupListVO : list) {
-				pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
+				pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 			}
 			pageResult.setRows(list);
 			pageResult.setTotal(total);
 
 		} else {
-			
-			PmphGroup pmphGroup=new PmphGroup();
+
+			PmphGroup pmphGroup = new PmphGroup();
 			pmphGroup.setGroupName(pageParameter.getParameter().getGroupName());
 			pmphGroup.setId(pmphUser.getId());
-			total=pmphGroupDao.getPmphGroupTotal(pageParameter);
+			total = pmphGroupDao.getPmphGroupTotal(pageParameter);
 			list = pmphGroupDao.getListPmphGroup(pageParameter);
 			for (PmphGroupListVO pmphGroupListVO : list) {
-				pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
+				pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 			}
 			pageResult.setRows(list);
 			pageResult.setTotal(total);
@@ -412,38 +415,41 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			}
 			String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));// 去掉后缀的文件名称
 			String beforeDate = DateUtil.date2Str(new Date(), "yyyyMMddHHmmss") + "/";// 获取当前时间拼接路径
-			FileUpload.fileUp(file, Const.MSG_FILE_PATH_FILE + beforeDate, fileName);// 上传文件
-			filePath = Const.MSG_FILE_PATH_FILE + beforeDate + fullFileName;
+			FileUpload.fileUp(file, this.getClass().getResource("/").getPath() + beforeDate, fileName);// 上传文件
+			filePath = this.getClass().getResource("/").getPath() + beforeDate + fullFileName;
 		}
 		return filePath;
 	}
 
 	/**
 	 * 
+	 * <pre>
 	 * 功能描述：保存文件到MongoDB
+	 * 使用示范：
 	 *
-	 * @param files
-	 *            临时文件路径
-	 * @param msgId
-	 *            messageId
-	 * @throws CheckedServiceException
+	 * &#64;param files 临时文件路径
+	 * &#64;param msgId messageId
+	 * &#64;throws CheckedServiceException
+	 * </pre>
 	 */
 	private String saveFileToMongoDB(String file) throws IOException {
-		String gridFSFileId = RouteUtil.DEFAULT_GROUP_IMAGE;
+		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;
 		// 添加附件到MongoDB表中
-		File f = FileUpload.getFileByFilePath(file);
-		if (f.isFile()) {
-			// 循环获取file数组中得文件
-			if (StringUtil.notEmpty(f.getName())) {
-				gridFSFileId = fileService.saveLocalFile(f, ImageType.GROUP_AVATAR, 0);// 上传文件到MongoDB
-				if (StringUtil.isEmpty(gridFSFileId)) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-							CheckedExceptionResult.FILE_UPLOAD_FAILED, "文件上传失败!");
-				}
-			}
-			FileUtil.delFile(file);// 删除本地临时文件
-		}
-		return gridFSFileId;
-	}
+		if (!StringUtil.isEmpty(file)) {
+			File f = FileUpload.getFileByFilePath(file);
+			if (f.isFile()) {
+				// 循环获取file数组中得文件
+				if (StringUtil.notEmpty(f.getName())) {
+					groupImage = fileService.saveLocalFile(f, FileType.GROUP_FILE, 0);// 上传文件到MongoDB
+					if (StringUtil.isEmpty(groupImage)) {
+						throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+								CheckedExceptionResult.FILE_UPLOAD_FAILED, "文件上传失败!");
+					}
 
+				}
+				FileUtil.delFile(file);// 删除本地临时文件
+			}
+		}
+		return groupImage;
+	}
 }

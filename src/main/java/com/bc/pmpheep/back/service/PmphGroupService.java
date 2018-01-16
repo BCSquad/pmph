@@ -108,13 +108,15 @@ public interface PmphGroupService {
 
 	/**
 	 * 
-	 * 功能描述：小组头像上传
+	 * 
+	 * 功能描述：小组上传头像
 	 *
-	 * @param request
-	 * @param files
+	 * @param file
 	 * @return
+	 * @throws CheckedServiceException
+	 *
 	 */
-	String msgUploadFiles(MultipartFile file) throws CheckedServiceException;
+	String msgUploadFiles(MultipartFile file) throws CheckedServiceException, IOException;
 
 	/**
 	 *

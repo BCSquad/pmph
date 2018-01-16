@@ -307,6 +307,7 @@
 			<artifactId>bcprov-jdk16</artifactId>
 			<version>${bcprov-jdk16.ver}</version>
 		</dependency>
+		
     </dependencies>
 
     <repositories>
@@ -331,6 +332,7 @@
                     <target>${maven-source.ver}</target>
                     <compilerArguments>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
+                        <extdirs>src\main\webapp\WEB-INF\lib</extdirs>
                     </compilerArguments>
                 </configuration>
             </plugin>
