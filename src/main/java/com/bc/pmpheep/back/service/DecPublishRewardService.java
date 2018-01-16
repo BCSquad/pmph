@@ -33,7 +33,7 @@ public interface DecPublishRewardService {
 	 * 更新
 	 * @author:tyc
      * @date:2018年1月16日上午10:11:47
-	 * @param decMonograph
+	 * @param decPublishReward
 	 * @return
 	 */
 	Integer updateDecPublishReward(DecPublishReward decPublishReward) throws CheckedServiceException;
