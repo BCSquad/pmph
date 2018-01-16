@@ -307,6 +307,7 @@
 			<artifactId>bcprov-jdk16</artifactId>
 			<version>${bcprov-jdk16.ver}</version>
 		</dependency>
+		
     </dependencies>
 
     <repositories>

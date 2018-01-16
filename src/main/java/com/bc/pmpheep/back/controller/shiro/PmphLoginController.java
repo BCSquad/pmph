@@ -144,10 +144,12 @@ public class PmphLoginController {
      * @return
      * </pre>
      */
+    // @ResponseBody
+    // @RequestMapping(value = "/sso", method = RequestMethod.GET)
     // public ResponseBean ssoLogin(HttpServletRequest request, HttpServletResponse response) {
     // String sessionId = CookiesUtil.getSessionId(request);
-    // PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-    // if (ObjectUtil.isNull(pmphUser)) {
+    // PmphUser pmUser = SessionUtil.getPmphUserBySessionId(sessionId);
+    // if (ObjectUtil.isNull(pmUser)) {
     // throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
     // CheckedExceptionResult.NULL_PARAM, "用户为空");
     // }
@@ -157,7 +159,12 @@ public class PmphLoginController {
     // try {
     // Principal principal = service.singleSignOn(request);
     // String userName = principal.getName();
-    // PmphUser pmUser = pmphUserService.login(userName, null);
+    // PmphUser pmphUser = pmphUserService.login(userName, null);
+    // if (ObjectUtil.isNull(pmphUser)) {// 为空就新建一个用户
+    // pmphUser =
+    // pmphUserService.add(new PmphUser(userName, "888888", userName, "DEFAULT"));
+    // pmphRoleService.addUserRole(pmphUser.getId(), 2L);// 添加默认权限
+    // }
     // pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
     // if (!RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUser.getAvatar())) {
     // pmphUser.setAvatar(RouteUtil.userAvatar(pmphUser.getAvatar()));
@@ -183,17 +190,15 @@ public class PmphLoginController {
     // // 根据用户Id查询对应权限Id
     // List<Long> pmphUserPermissionIds =
     // pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
-    // // String materialPermission =
-    // // pmphUserService.getMaterialPermissionByUserId(pmphUser.getId()); 根据用户返回书籍
     // // 验证成功在Session中保存用户信息
     // request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
     // // 验证成功在Session中保存用户Token信息
     // request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
-    // new DesRun("", userName).enpsw);
+    // new DesRun(userName, userName).enpsw);
     // // pmphUserSessionId
     // resultMap.put(Const.USER_SEESION_ID, request.getSession().getId());
     // resultMap.put(Const.SESSION_PMPH_USER, pmphUser);
-    // resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun("", userName).enpsw);
+    // resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun(userName, userName).enpsw);
     // resultMap.put("pmphUserPermissionIds", pmphUserPermissionIds);
     // return new ResponseBean(resultMap);
     // } catch (SingleSignOnException e) {
@@ -204,12 +209,12 @@ public class PmphLoginController {
     /**
      * 
      * <pre>
-	 * 功能描述：退出
-	 * 使用示范：
-	 *
-	 * &#64;param model
-	 * &#64;return
-	 * </pre>
+     * 功能描述：退出
+     * 使用示范：
+     *
+     * &#64;param model
+     * &#64;return
+     * </pre>
      * 
      */
     @ResponseBody
@@ -221,17 +226,15 @@ public class PmphLoginController {
         HttpSession session = SessionContext.getSession(sessionId);
         if (ObjectUtil.notNull(session)) {
             if (Const.LOGIN_TYPE_PMPH == loginType) {
-                // session.removeAttribute(Const.SESSION_PMPH_USER);// 清除User信息
-                // session.removeAttribute(Const.SEESION_PMPH_USER_TOKEN);// 清除token
                 session.invalidate();
             }
+            // try {
+            // response.sendRedirect(service.getSingleSignOutURL());
+            // } catch (IOException e) {
+            // return new ResponseBean(e);
+            // }
         }
         return new ResponseBean();
-        // try {
-        // response.sendRedirect(service.getSingleSignOnURL());
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // }
     }
 
     /**
