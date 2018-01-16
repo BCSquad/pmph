@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import small.danfer.sso.http.HttpSingleSignOnService;
-
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.CmsCategoryService;
@@ -223,7 +221,7 @@ public class PmphLoginController {
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public ResponseBean logout(HttpServletRequest request, HttpServletResponse response,
     @RequestParam("loginType") Short loginType) {
-        HttpSingleSignOnService service = new HttpSingleSignOnService();
+        // HttpSingleSignOnService service = new HttpSingleSignOnService();
         String sessionId = CookiesUtil.getSessionId(request);
         HttpSession session = SessionContext.getSession(sessionId);
         if (ObjectUtil.notNull(session)) {
