@@ -170,11 +170,24 @@
 		a.group_id = b.group_id
 		WHERE
 		b.group_id =
-		#{parameter.groupId} 
+		#{parameter.groupId}
 		<if test="parameter.fileName !=null and parameter.fileName !=''">
 			and a.file_name like concat('%',#{parameter.fileName},'%')
 		</if>
-		GROUP BY a.file_id DESC
+		GROUP BY a.file_id
+		ORDER BY
+		<if test="parameter.sortType != null and parameter.sortType != ''">
+			<if test="parameter.sortType == 'gmtCreate'">
+				a.gmt_create DESC ,
+			</if>
+			<if test="parameter.sortType == 'memberId'">
+				a.member_id DESC ,
+			</if>
+			<if test="parameter.sortType == 'download'">
+				a.download DESC ,
+			</if>
+		</if>
+		a.id
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>

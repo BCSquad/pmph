@@ -41,6 +41,8 @@ public class PmphGroupFileVO implements Serializable {
 	private Integer groupCount;
 	// 下载次数
 	private Integer download;
+	// 排序类别
+	private String sortType;
 
 	public PmphGroupFileVO() {
 		super();
@@ -132,6 +134,14 @@ public class PmphGroupFileVO implements Serializable {
 
 	public void setFileLenth(String fileLenth) {
 		this.fileLenth = fileLenth;
+	}
+
+	public String getSortType() {
+		return sortType;
+	}
+
+	public void setSortType(String sortType) {
+		this.sortType = sortType;
 	}
 
 	@Override
