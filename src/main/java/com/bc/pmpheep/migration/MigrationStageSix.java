@@ -274,6 +274,7 @@ public class MigrationStageSix {
                 declaration.setOfflineProgress(0);
             }
             declaration.setPaperDate((Timestamp) map.get("editauditdate")); // 纸质表收到时间
+            declaration.setReturnCause(null); // 退回原因
             if (ObjectUtil.isNull(isStagingJudge)) {
                 declaration.setIsStaging(0);
             } else {
