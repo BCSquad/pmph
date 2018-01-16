@@ -688,7 +688,6 @@ public class DeclarationServiceImpl implements DeclarationService {
 					(ArrayList<DecResearch>) decResearch, decAchievement);
 			declarationEtcBOs.add(declarationEtcBO);
 		}
-		long endTime = System.currentTimeMillis();
 		return declarationEtcBOs;
 	}
 

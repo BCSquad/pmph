@@ -139,9 +139,9 @@ public class MaterialController {
     @ResponseBody
     @LogDetail(businessType = Business_Type, logRemark = "查询教材公告列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ResponseBean list(HttpServletRequest request, Integer pageSize, Integer pageNumber,
+    public ResponseBean list(/*HttpServletRequest request,*/String sessionId, Integer pageSize, Integer pageNumber,
     Boolean isMy, String state, String materialName, String contactUserName) {
-        String sessionId = CookiesUtil.getSessionId(request);
+//        String sessionId = CookiesUtil.getSessionId(request);
         PageParameter<MaterialListVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
         MaterialListVO materialListVO = new MaterialListVO();
         materialListVO.setIsMy(isMy);
