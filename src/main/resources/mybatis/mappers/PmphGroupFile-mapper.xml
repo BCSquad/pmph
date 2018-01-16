@@ -141,6 +141,7 @@
 		a.file_name,
 		a.gmt_create,
 		a.member_id,
+		a.file_size,
 		b.display_name memberName,
 		(
 		SELECT
