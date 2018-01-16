@@ -307,6 +307,70 @@
 			<artifactId>bcprov-jdk16</artifactId>
 			<version>${bcprov-jdk16.ver}</version>
 		</dependency>
+		<!-- SSO-jar -->
+		<dependency>
+			<groupId>bcprov</groupId>
+			<artifactId>bcprov-jdk15</artifactId>
+			<version>1.46</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/bcprov-jdk15-1.46.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>commons</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/commons-logging-1.1.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>itrus</groupId>
+			<artifactId>itrus-json</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/itrus-json-1.0.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.12</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/log4j-1.2.12.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>opensaml</groupId>
+			<artifactId>opensaml</artifactId>
+			<version>1.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/opensaml-1.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>single-sign-on-core</groupId>
+			<artifactId>single-sign-on-core</artifactId>
+			<version>1.2</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/single-sign-on-core-1.2.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.2</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/slf4j-api-1.6.2.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>slf4j-log4j12</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.2</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/slf4j-log4j12-1.6.2.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>xmlsec</groupId>
+			<artifactId>xmlsec</artifactId>
+			<version>1.4.3</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/xmlsec-1.4.3.jar</systemPath>
+		</dependency>
     </dependencies>
 
     <repositories>
