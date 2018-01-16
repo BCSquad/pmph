@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.WriterUserTrendstDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="userId != null ">
+				user_id,
+			</if>
+			<if test="isPublic != null ">
+				is_public,
+			</if>
+			<if test=" type != null ">
+				type,
+			</if>
+			<if test="detail != null and detail !=''">
+				detail,
+			</if>
+			<if test="cmsContentId != null ">
+				cms_content_id,
+			</if>
+			<if test=" bookId != null ">
+				book_id,
+			</if>
+			<if test="bookCommentId != null">
+				book_comment_id,
+			</if>
+			<if test=" gmtCreate != null ">
+				gmt_create,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="userId != null ">
+				#{userId},
+			</if>
+			<if test="isPublic != null ">
+				#{isPublic},
+			</if>
+			<if test=" type != null ">
+				#{type},
+			</if>
+			<if test="detail != null and detail !=''">
+				#{detail},
+			</if>
+			<if test="cmsContentId != null ">
+				#{cmsContentId},
+			</if>
+			<if test=" bookId != null ">
+				#{bookId},
+			</if>
+			<if test="bookCommentId != null">
+				#{bookCommentId},
+			</if>
+			<if test=" gmtCreate != null ">
+				#{gmtCreate},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增WriterUserTrendst -->
+	<insert id="addWriterUserTrendst" parameterType="WriterUserTrendst">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into writer_user_trendst (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+
+	<!-- 根据id删除一个 -->
+	<delete id="deleteWriterUserTrendstById" parameterType="java.lang.Long">
+		delete
+		from writer_user_trendst where
+		id=#{id} ;
+	</delete>
+
+	<!-- 更新WriterUserTrendst -->
+	<update id="updateWriterUserTrendst" parameterType="WriterUserTrendst">
+		update writer_user_trendst
+		<set>
+			<if test="userId != null ">
+				user_id = #{userId},
+			</if>
+			<if test="isPublic != null ">
+				is_public = #{isPublic},
+			</if>
+			<if test=" type != null">
+				type = #{type},
+			</if>
+			<if test="detail != null and detail !=''">
+				detail = #{detail},
+			</if>
+			<if test="cmsContentId != null ">
+				cms_content_id = #{cmsContentId},
+			</if>
+			<if test=" bookId != null ">
+				book_id = #{bookId},
+			</if>
+			<if test="bookCommentId != null">
+				book_comment_id = #{bookCommentId},
+			</if>
+			<if test=" gmtCreate != null ">
+				gmt_create = #{gmtCreate},
+			</if>
+		</set>
+		where
+		id=#{id} ;
+	</update>
+
+	<!-- 根据id查询一个WriterUserTrendst -->
+	<select id="getWriterUserTrendstById" parameterType="java.lang.Long"
+		resultType="WriterUserTrendst">
+		select * from writer_user_trendst where id=#{id} ;
+	</select>
+
+	<!-- 查询表单的数据总数 -->
+	<select id="getWriterUserTrendstCount" resultType="Long">
+		select
+		count(*)
+		from
+		writer_user_trendst
+	</select>
+</mapper>
