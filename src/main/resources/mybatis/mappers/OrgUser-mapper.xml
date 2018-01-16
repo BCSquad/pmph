@@ -308,7 +308,7 @@
 			and o.org_name like concat('%',#{parameter.orgName},'%')
 		</if>
 		<if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
-			and ot.type_name like concat('%',#{parameter.orgTypeName},'%')
+			and ot.type_name=#{parameter.orgTypeName}
 		</if>
 		<if test="parameter.school !=null and parameter.school !='' ">
 			and ot.type_name!=#{parameter.school}
@@ -335,7 +335,7 @@
 			and o.org_name like concat('%',#{parameter.orgName},'%')
 		</if>
 		<if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
-			and ot.type_name like concat('%',#{parameter.orgTypeName},'%')
+			and ot.type_name=#{parameter.orgTypeName}
 		</if>
 		<if test="parameter.school !=null and parameter.school !='' ">
 			and ot.type_name!=#{parameter.school}
