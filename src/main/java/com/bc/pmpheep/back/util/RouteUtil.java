@@ -38,11 +38,14 @@ public class RouteUtil {
 	 * @return
 	 *
 	 */
-	public static String gruopImage(String gruopImage) {
-		if (!DEFAULT_GROUP_IMAGE.equals(gruopImage)) {
-			gruopImage = MONGODB_IMAGE + gruopImage;
+	public static String groupImage(String groupImage) {
+		if ("DEFAULT".equals(groupImage)) {
+			groupImage = DEFAULT_USER_AVATAR;
 		}
-		return gruopImage;
+		if (!DEFAULT_GROUP_IMAGE.equals(groupImage)) {
+			groupImage = MONGODB_IMAGE + groupImage;
+		}
+		return groupImage;
 	}
 
 	/**
@@ -55,6 +58,9 @@ public class RouteUtil {
 	 *
 	 */
 	public static String userAvatar(String avatar) {
+		if ("DEFAULT".equals(avatar)) {
+			avatar = DEFAULT_USER_AVATAR;
+		}
 		if (!DEFAULT_USER_AVATAR.equals(avatar)) {
 			avatar = MONGODB_IMAGE + avatar;
 		}
