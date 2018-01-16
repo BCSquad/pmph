@@ -137,7 +137,11 @@ public class GroupController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseBean add(String file, PmphGroup pmphGroup, HttpServletRequest request) {
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(pmphGroupService.addPmphGroupOnGroup(file, pmphGroup, sessionId));
+		try {
+			return new ResponseBean(pmphGroupService.addPmphGroupOnGroup(file, pmphGroup, sessionId));
+		} catch (IOException e) {
+			return new ResponseBean(e.getMessage());
+		}
 	}
 
 	/**
@@ -153,7 +157,7 @@ public class GroupController {
 	@RequestMapping(value = "/files", method = RequestMethod.POST)
 	public ResponseBean files(@RequestParam("file") MultipartFile file) {
 		try {
-			return new ResponseBean(pmphGroupService.addGroupImage(file));
+			return new ResponseBean(pmphGroupService.msgUploadFiles(file));
 		} catch (Exception e) {
 			return new ResponseBean(e.getMessage());
 		}
@@ -200,7 +204,11 @@ public class GroupController {
 	@RequestMapping(value = "/update/pmphGroupDetail", method = RequestMethod.PUT)
 	public ResponseBean pmphGroupDetail(String file, PmphGroup pmphGroup, HttpServletRequest request) {
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(pmphGroupService.updatePmphGroupOnGroup(file, pmphGroup, sessionId));
+		try {
+			return new ResponseBean(pmphGroupService.updatePmphGroupOnGroup(file, pmphGroup, sessionId));
+		} catch (IOException e) {
+			return new ResponseBean(e.getMessage());
+		}
 	}
 
 	/**
