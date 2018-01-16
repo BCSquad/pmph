@@ -17,10 +17,12 @@ public class DecMonograph implements Serializable {
     private Long id;
     // 申报表id
     private Long declarationId;
-    // 教材名称
+    // 专著名称
     private String monographName;
+    // 专著发表日期
+    private Date monographDate;
     // 是否自费（0=自费/1=公费）
-    private Integer isSelfPaid;
+    private boolean isSelfPaid;
     // 出版单位
     private String publisher;
     // 出版时间
@@ -30,60 +32,102 @@ public class DecMonograph implements Serializable {
     // 显示顺序
     private Integer sort;
     
+    public DecMonograph() {
+    	
+    }
+    
+    public DecMonograph(Long declarationId, String monographName, Date monographDate, 
+    		boolean isSelfPaid, String publisher, Date publishDate, String note, Integer sort) {
+    	super();
+    	this.declarationId = declarationId;
+    	this.monographName = monographName;
+    	this.monographDate = monographDate;
+    	this.isSelfPaid = isSelfPaid;
+    	this.publisher = publisher;
+    	this.publishDate = publishDate;
+    	this.note = note;
+    	this.sort = sort;
+    }
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public Long getDeclarationId() {
 		return declarationId;
 	}
+
 	public void setDeclarationId(Long declarationId) {
 		this.declarationId = declarationId;
 	}
+
 	public String getMonographName() {
 		return monographName;
 	}
+
 	public void setMonographName(String monographName) {
 		this.monographName = monographName;
 	}
-	public Integer getIsSelfPaid() {
+
+	public Date getMonographDate() {
+		return monographDate;
+	}
+
+	public void setMonographDate(Date monographDate) {
+		this.monographDate = monographDate;
+	}
+
+	public boolean isSelfPaid() {
 		return isSelfPaid;
 	}
-	public void setIsSelfPaid(Integer isSelfPaid) {
+
+	public void setSelfPaid(boolean isSelfPaid) {
 		this.isSelfPaid = isSelfPaid;
 	}
+
 	public String getPublisher() {
 		return publisher;
 	}
+
 	public void setPublisher(String publisher) {
 		this.publisher = publisher;
 	}
+
 	public Date getPublishDate() {
 		return publishDate;
 	}
+
 	public void setPublishDate(Date publishDate) {
 		this.publishDate = publishDate;
 	}
+
 	public String getNote() {
 		return note;
 	}
+
 	public void setNote(String note) {
 		this.note = note;
 	}
+
 	public Integer getSort() {
 		return sort;
 	}
+
 	public void setSort(Integer sort) {
 		this.sort = sort;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "DecMonograph [id=" + id + ", declarationId=" + declarationId
-				+ ", monographName=" + monographName + ", isSelfPaid="
-				+ isSelfPaid + ", publisher=" + publisher + ", publishDate="
-				+ publishDate + ", note=" + note + ", sort=" + sort + "]";
+				+ ", monographName=" + monographName + ", monographDate="
+				+ monographDate + ", isSelfPaid=" + isSelfPaid + ", publisher="
+				+ publisher + ", publishDate=" + publishDate + ", note=" + note
+				+ ", sort=" + sort + "]";
 	}
+    
 }
