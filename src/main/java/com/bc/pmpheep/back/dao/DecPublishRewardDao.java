@@ -15,7 +15,7 @@ public interface DecPublishRewardDao {
 	 * 新增
 	 * @author:tyc
      * @date:2018年1月16日上午10:05:12
-	 * @param decMonograph
+	 * @param decPublishReward
 	 * @return
 	 */
 	Integer addDecPublishReward(DecPublishReward decPublishReward);
@@ -33,7 +33,7 @@ public interface DecPublishRewardDao {
 	 * 更新
 	 * @author:tyc
      * @date:2018年1月16日上午10:06:57
-	 * @param decMonograph
+	 * @param decPublishReward
 	 * @return
 	 */
 	Integer updateDecPublishReward(DecPublishReward decPublishReward);

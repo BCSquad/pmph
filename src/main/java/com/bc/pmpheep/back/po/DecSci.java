@@ -6,24 +6,24 @@ import java.sql.Date;
 import org.apache.ibatis.type.Alias;
 
 /**
- * 主编学术专著情况表实体类
+ * SCI论文投稿及影响因子情况表实体类
  * @author tyc
- * 2018年1月16日09:15
+ * 2018年1月16日10:27
  */
 @SuppressWarnings("serial")
-@Alias("DecMonograph")
-public class DecMonograph implements Serializable {
+@Alias("DecSci")
+public class DecSci implements Serializable {
 	// 主键
     private Long id;
     // 申报表id
     private Long declarationId;
-    // 教材名称
-    private String monographName;
-    // 是否自费（0=自费/1=公费）
-    private Integer isSelfPaid;
-    // 出版单位
-    private String publisher;
-    // 出版时间
+    // 论文名称
+    private String paperName;
+    // 期刊名称
+    private String journalName;
+    // 期刊SCI影响因子
+    private String factor;
+    // 发表时间
     private Date publishDate;
     // 备注
     private String note;
@@ -42,23 +42,23 @@ public class DecMonograph implements Serializable {
 	public void setDeclarationId(Long declarationId) {
 		this.declarationId = declarationId;
 	}
-	public String getMonographName() {
-		return monographName;
+	public String getPaperName() {
+		return paperName;
 	}
-	public void setMonographName(String monographName) {
-		this.monographName = monographName;
+	public void setPaperName(String paperName) {
+		this.paperName = paperName;
 	}
-	public Integer getIsSelfPaid() {
-		return isSelfPaid;
+	public String getJournalName() {
+		return journalName;
 	}
-	public void setIsSelfPaid(Integer isSelfPaid) {
-		this.isSelfPaid = isSelfPaid;
+	public void setJournalName(String journalName) {
+		this.journalName = journalName;
 	}
-	public String getPublisher() {
-		return publisher;
+	public String getFactor() {
+		return factor;
 	}
-	public void setPublisher(String publisher) {
-		this.publisher = publisher;
+	public void setFactor(String factor) {
+		this.factor = factor;
 	}
 	public Date getPublishDate() {
 		return publishDate;
@@ -81,9 +81,9 @@ public class DecMonograph implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "DecMonograph [id=" + id + ", declarationId=" + declarationId
-				+ ", monographName=" + monographName + ", isSelfPaid="
-				+ isSelfPaid + ", publisher=" + publisher + ", publishDate="
-				+ publishDate + ", note=" + note + ", sort=" + sort + "]";
+		return "DecSci [id=" + id + ", declarationId=" + declarationId
+				+ ", paperName=" + paperName + ", journalName=" + journalName
+				+ ", factor=" + factor + ", publishDate=" + publishDate
+				+ ", note=" + note + ", sort=" + sort + "]";
 	}
 }

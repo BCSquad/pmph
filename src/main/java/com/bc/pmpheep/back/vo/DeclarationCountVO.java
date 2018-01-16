@@ -25,9 +25,9 @@ public class DeclarationCountVO implements Serializable{
 	//院校当选总数
 	private Integer schoolDeclarationChosenCount;
 	//院校申报平均数
-	private Integer schoolDeclarationAverage;
+	private String schoolDeclarationAverage;
 	//院校当选平均数
-	private Integer schoolDeclarationChosenAverage;
+	private String schoolDeclarationChosenAverage;
 	//主编申报总数
 	private Integer editorCount;
 	//副主编申报总数
@@ -73,20 +73,20 @@ public class DeclarationCountVO implements Serializable{
 		this.schoolDeclarationChosenCount = schoolDeclarationChosenCount;
 	}
 
-	public Integer getSchoolDeclarationAverage() {
+	public String getSchoolDeclarationAverage() {
 		return schoolDeclarationAverage;
 	}
-	
-	public void setSchoolDeclarationAverage(Integer schoolDeclarationAverage) {
+
+	public void setSchoolDeclarationAverage(String schoolDeclarationAverage) {
 		this.schoolDeclarationAverage = schoolDeclarationAverage;
 	}
-	
-	public Integer getSchoolDeclarationChosenAverage() {
+
+	public String getSchoolDeclarationChosenAverage() {
 		return schoolDeclarationChosenAverage;
 	}
 
 	public void setSchoolDeclarationChosenAverage(
-			Integer schoolDeclarationChosenAverage) {
+			String schoolDeclarationChosenAverage) {
 		this.schoolDeclarationChosenAverage = schoolDeclarationChosenAverage;
 	}
 
