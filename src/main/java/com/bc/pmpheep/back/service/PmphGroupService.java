@@ -103,7 +103,7 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PmphGroup addPmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId)
+	PmphGroup addPmphGroupOnGroup(String file, PmphGroup pmphGroup,HttpServletRequest request)
 			throws CheckedServiceException, IOException;
 
 	/**
@@ -131,7 +131,7 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PmphGroup updatePmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId)
+	PmphGroup updatePmphGroupOnGroup(String file, PmphGroup pmphGroup,HttpServletRequest request)
 			throws CheckedServiceException, IOException;
 
 	/**

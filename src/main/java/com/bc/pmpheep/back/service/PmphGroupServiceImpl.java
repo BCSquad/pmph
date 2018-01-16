@@ -26,6 +26,7 @@ import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CastUtil;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.FileUpload;
 import com.bc.pmpheep.back.util.FileUtil;
@@ -219,9 +220,9 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	}
 
 	@Override
-	public PmphGroup addPmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId)
+	public PmphGroup addPmphGroupOnGroup(String file, PmphGroup pmphGroup, HttpServletRequest request)
 			throws CheckedServiceException, IOException {
-
+		String sessionId = CookiesUtil.getSessionId(request);
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
@@ -233,7 +234,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		}
 		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		if (!StringUtil.isEmpty(file)) {
-			groupImage = saveFileToMongoDB(file);
+			groupImage = saveFileToMongoDB(file, request);
 		}
 		pmphGroup.setGroupImage(groupImage);
 		pmphGroup.setFounderId(pmphUser.getId());
@@ -253,8 +254,9 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	}
 
 	@Override
-	public PmphGroup updatePmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId)
+	public PmphGroup updatePmphGroupOnGroup(String file, PmphGroup pmphGroup, HttpServletRequest request)
 			throws CheckedServiceException, IOException {
+		String sessionId = CookiesUtil.getSessionId(request);
 		if (null == pmphGroup) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"参数对象不能为空");
@@ -284,7 +286,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 						&& !RouteUtil.DEFAULT_USER_AVATAR.equals(pmphGroupOld.getGroupImage())) {
 					fileService.remove(pmphGroupOld.getGroupImage());
 				}
-				String newGroupImage = saveFileToMongoDB(file);
+				String newGroupImage = saveFileToMongoDB(file, request);
 				pmphGroup.setGroupImage(newGroupImage);
 			}
 			pmphGroupDao.updatePmphGroup(pmphGroup);
@@ -418,7 +420,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));// 去掉后缀的文件名称
 			String beforeDate = DateUtil.date2Str(new Date(), "yyyyMMddHHmmss") + "/";// 获取当前时间拼接路径
 			FileUpload.fileUp(file, request.getSession().getServletContext().getRealPath("/") + beforeDate, fileName);// 上传文件
-			filePath = request.getSession().getServletContext().getRealPath("/") + beforeDate + fullFileName;
+			filePath = beforeDate + fullFileName;
 		}
 		return filePath;
 	}
@@ -434,11 +436,11 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	 * &#64;throws CheckedServiceException
 	 * </pre>
 	 */
-	private String saveFileToMongoDB(String file) throws IOException {
+	private String saveFileToMongoDB(String file, HttpServletRequest request) throws IOException {
 		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;
 		// 添加附件到MongoDB表中
 		if (!StringUtil.isEmpty(file)) {
-			File f = FileUpload.getFileByFilePath(file);
+			File f = FileUpload.getFileByFilePath(request.getSession().getServletContext().getRealPath("/") + file);
 			if (f.isFile()) {
 				// 循环获取file数组中得文件
 				if (StringUtil.notEmpty(f.getName())) {
