@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.DecSciDao">
+
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id !=null">
+				id,
+			</if>
+			<if test="declarationId !=null">
+				declaration_id,
+			</if>
+			<if test="paperName !=null and paperName != ''">
+				paper_name,
+			</if>
+			<if test="journalName !=null and journalName != ''">
+				journal_name,
+			</if>
+			<if test="factor !=null and factor != ''">
+				factor,
+			</if>
+			<if test="publishDate !=null and publishDate != ''">
+				publish_date,
+			</if>
+			<if test="note !=null and note != ''">
+				note,
+			</if>
+			<if test="sort !=null">
+				sort,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<trim suffixOverrides=",">
+			<if test="id !=null">
+				#{id},
+			</if>
+			<if test="declarationId !=null">
+				#{declarationId},
+			</if>
+			<if test="paperName !=null and paperName != ''">
+				#{paperName},
+			</if>
+			<if test="journalName !=null and journalName != ''">
+				#{journalName},
+			</if>
+			<if test="factor !=null and factor != ''">
+				#{factor},
+			</if>
+			<if test="publishDate !=null and publishDate != ''">
+				#{publishDate},
+			</if>
+			<if test="note !=null and note != ''">
+				#{note},
+			</if>
+			<if test="sort !=null">
+				#{sort},
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="addDecSci" parameterType="DecSci">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dec_sci(
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+
+	<!-- 根据id删除 -->
+	<delete id="deleteDecSci" parameterType="java.lang.Long">
+		delete from
+		dec_sci where
+		id=#{id};
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateDecSci" parameterType="DecSci">
+		update dec_sci
+		<set>
+			<if test="declarationId !=null">
+				declaration_id = #{declarationId},
+			</if>
+			<if test="paperName !=null and paperName != ''">
+				paper_name = #{paperName},
+			</if>
+			<if test="journalName !=null and journalName != ''">
+				journal_name = #{journalName},
+			</if>
+			<if test="factor !=null and factor != ''">
+				factor = #{factor},
+			</if>
+			<if test="publishDate !=null and publishDate != ''">
+				publish_date = #{publishDate},
+			</if>
+			<if test="note !=null and note != ''">
+				note = #{note},
+			</if>
+			<if test="sort !=null">
+				sort = #{sort},
+			</if>
+		</set>
+		where id=#{id} ;
+	</update>
+
+	<!-- 根据id查询 -->
+	<select id="getDecSci" parameterType="java.lang.Long"
+		resultType="DecSci">
+		select * from dec_sci where id=#{id};
+	</select>
+
+</mapper>
