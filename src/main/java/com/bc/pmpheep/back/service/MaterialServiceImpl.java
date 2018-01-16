@@ -794,6 +794,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					"用户为空");
 		}
 		for (MaterialListVO materialListVO : list) {
+			materialListVO.setFounderName(pmphUserService.get(materialListVO.getFounderId()).getRealname());
 			materialListVO.setIsMy(false);
 			if (!materialListVO.getIsPublished()) {
 				materialListVO

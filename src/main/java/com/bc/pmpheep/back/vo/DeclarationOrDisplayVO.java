@@ -69,6 +69,8 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 	private Integer offlineProgress;
 	// 纸质表收到时间
 	private Timestamp paperDate;
+	// 退回原因
+	private String returnCause;
 	// 是否暂存
 	private Integer isStaging;
 	// 是否逻辑删除
@@ -412,6 +414,14 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 		this.expertise = expertise;
 	}
 
+	public String getReturnCause() {
+		return returnCause;
+	}
+
+	public void setReturnCause(String returnCause) {
+		this.returnCause = returnCause;
+	}
+
 	@Override
 	public String toString() {
 		return "DeclarationOrDisplayVO [id=" + id + ", materialId="
@@ -427,10 +437,11 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 				+ ", orgId=" + orgId + ", orgNameOne=" + orgNameOne
 				+ ", onlineProgress=" + onlineProgress + ", authUserId="
 				+ authUserId + ", authDate=" + authDate + ", offlineProgress="
-				+ offlineProgress + ", paperDate=" + paperDate + ", isStaging="
-				+ isStaging + ", isDeleted=" + isDeleted + ", gmtCreate="
-				+ gmtCreate + ", gmtUpdate=" + gmtUpdate + ", isMultiBooks="
-				+ isMultiBooks + ", isMultiPosition=" + isMultiPosition
+				+ offlineProgress + ", paperDate=" + paperDate
+				+ ", returnCause=" + returnCause + ", isStaging=" + isStaging
+				+ ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
+				+ ", gmtUpdate=" + gmtUpdate + ", isMultiBooks=" + isMultiBooks
+				+ ", isMultiPosition=" + isMultiPosition
 				+ ", isDigitalEditorOptional=" + isDigitalEditorOptional
 				+ ", textbookName=" + textbookName + ", presetPosition="
 				+ presetPosition + "]";
