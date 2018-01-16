@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -400,7 +402,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	}
 
 	@Override
-	public String msgUploadFiles(MultipartFile file) throws CheckedServiceException {
+	public String msgUploadFiles(MultipartFile file, HttpServletRequest request) throws CheckedServiceException {
 		if (file.isEmpty()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
 					"附件为空！");
@@ -415,8 +417,8 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			}
 			String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));// 去掉后缀的文件名称
 			String beforeDate = DateUtil.date2Str(new Date(), "yyyyMMddHHmmss") + "/";// 获取当前时间拼接路径
-			FileUpload.fileUp(file, this.getClass().getResource("/").getPath() + beforeDate, fileName);// 上传文件
-			filePath = this.getClass().getResource("/").getPath() + beforeDate + fullFileName;
+			FileUpload.fileUp(file, request.getSession().getServletContext().getRealPath("/") + beforeDate, fileName);// 上传文件
+			filePath = request.getSession().getServletContext().getRealPath("/") + beforeDate + fullFileName;
 		}
 		return filePath;
 	}

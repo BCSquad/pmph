@@ -116,7 +116,7 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String msgUploadFiles(MultipartFile file) throws CheckedServiceException, IOException;
+	String msgUploadFiles(MultipartFile file,HttpServletRequest request) throws CheckedServiceException, IOException;
 
 	/**
 	 *

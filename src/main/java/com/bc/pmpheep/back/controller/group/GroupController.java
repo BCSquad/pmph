@@ -155,9 +155,9 @@ public class GroupController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "上传头像")
 	@RequestMapping(value = "/files", method = RequestMethod.POST)
-	public ResponseBean files(@RequestParam("file") MultipartFile file) {
+	public ResponseBean files(@RequestParam("file") MultipartFile file,HttpServletRequest request) {
 		try {
-			return new ResponseBean(pmphGroupService.msgUploadFiles(file));
+			return new ResponseBean(pmphGroupService.msgUploadFiles(file,request));
 		} catch (Exception e) {
 			return new ResponseBean(e.getMessage());
 		}
