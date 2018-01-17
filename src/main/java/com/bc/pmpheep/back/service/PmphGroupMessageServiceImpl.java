@@ -156,7 +156,7 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 			ids.add(tempId);
 		}
 		WebScocketMessage webScocketMessage = new WebScocketMessage(String.valueOf(pmphGroupMessage.getId()),
-				Const.MSG_TYPE_3, senderId, senderType == 0?"系统":pmphGroupMemberVO.getDisplayName(), senderType, Const.SEND_MSG_TYPE_0, null,
+				Const.MSG_TYPE_3, senderType == 0?0:senderId, senderType == 0?"系统":pmphGroupMemberVO.getDisplayName(), senderType, Const.SEND_MSG_TYPE_0, null,
 				null, msgConrent, pmphGroupMessage.getGmtCreate());
 		webScocketMessage.setGroupId(groupId);
 		webScocketMessage.setSenderIcon(senderType == 0 ?"":pmphGroupMemberVO.getAvatar());
