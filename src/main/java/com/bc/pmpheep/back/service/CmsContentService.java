@@ -126,11 +126,12 @@ public interface CmsContentService {
      *
      * @param id 主键ID
      * @param authStatus 审核状态
+     * @param categoryId 栏目类型
      * @return 影响行数
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer checkContentById(Long id, Short authStatus, String sessionId)
+    Integer checkContentById(Long id, Short authStatus, Long categoryId, String sessionId)
     throws CheckedServiceException;
 
     /**

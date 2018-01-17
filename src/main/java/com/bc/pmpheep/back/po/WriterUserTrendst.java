@@ -20,125 +20,135 @@ import org.apache.ibatis.type.Alias;
  * @modify (最后修改时间)
  * @修改人 ：曾庆峰
  * @审核人 ：
- *
+ * 
  */
 @SuppressWarnings("serial")
 @Alias("WriterUserTrendst")
 public class WriterUserTrendst implements Serializable {
-	/**
-	 * 主键
-	 */
-	private Long id;
-	/**
-	 * 用户id（writer_user）
-	 */
-	private Long userId;
-	/**
-	 * 是否所有人可见
-	 */
-	private Boolean isPublic;
-	/**
-	 * 动态类型
-	 */
-	private Integer type;
-	/**
-	 * 动态描述
-	 */
-	private String detail;
-	/**
-	 * 文章/评论主键
-	 */
-	private Long cmsContentId;
-	/**
-	 * 图书主键
-	 */
-	private Long bookId;
-	/**
-	 * 书评主键
-	 */
-	private Long bookCommentId;
-	/**
-	 * 发生时间
-	 */
-	private Timestamp gmtCreate;
+    /**
+     * 主键
+     */
+    private Long      id;
+    /**
+     * 用户id（writer_user）
+     */
+    private Long      userId;
+    /**
+     * 是否所有人可见
+     */
+    private Boolean   isPublic;
+    /**
+     * 动态类型
+     */
+    private Integer   type;
+    /**
+     * 动态描述
+     */
+    private String    detail;
+    /**
+     * 文章/评论主键
+     */
+    private Long      cmsContentId;
+    /**
+     * 图书主键
+     */
+    private Long      bookId;
+    /**
+     * 书评主键
+     */
+    private Long      bookCommentId;
+    /**
+     * 发生时间
+     */
+    private Timestamp gmtCreate;
 
-	public Long getId() {
-		return id;
-	}
+    public WriterUserTrendst() {
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public WriterUserTrendst(Long userId, Integer type, Long cmsContentId) {
+        this.userId = userId;
+        this.type = type;
+        this.cmsContentId = cmsContentId;
+    }
 
-	public Long getUserId() {
-		return userId;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Boolean getIsPublic() {
-		return isPublic;
-	}
+    public Long getUserId() {
+        return userId;
+    }
 
-	public void setIsPublic(Boolean isPublic) {
-		this.isPublic = isPublic;
-	}
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-	public Integer getType() {
-		return type;
-	}
+    public Boolean getIsPublic() {
+        return isPublic;
+    }
 
-	public void setType(Integer type) {
-		this.type = type;
-	}
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
+    }
 
-	public String getDetail() {
-		return detail;
-	}
+    public Integer getType() {
+        return type;
+    }
 
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
-	public Long getCmsContentId() {
-		return cmsContentId;
-	}
+    public String getDetail() {
+        return detail;
+    }
 
-	public void setCmsContentId(Long cmsContentId) {
-		this.cmsContentId = cmsContentId;
-	}
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
 
-	public Long getBookId() {
-		return bookId;
-	}
+    public Long getCmsContentId() {
+        return cmsContentId;
+    }
 
-	public void setBookId(Long bookId) {
-		this.bookId = bookId;
-	}
+    public void setCmsContentId(Long cmsContentId) {
+        this.cmsContentId = cmsContentId;
+    }
 
-	public Long getBookCommentId() {
-		return bookCommentId;
-	}
+    public Long getBookId() {
+        return bookId;
+    }
 
-	public void setBookCommentId(Long bookCommentId) {
-		this.bookCommentId = bookCommentId;
-	}
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
+    }
 
-	public Timestamp getGmtCreate() {
-		return gmtCreate;
-	}
+    public Long getBookCommentId() {
+        return bookCommentId;
+    }
 
-	public void setGmtCreate(Timestamp gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
+    public void setBookCommentId(Long bookCommentId) {
+        this.bookCommentId = bookCommentId;
+    }
 
-	@Override
-	public String toString() {
-		return "WriterUserTrendst [id=" + id + ", userId=" + userId + ", isPublic=" + isPublic + ", type=" + type
-				+ ", detail=" + detail + ", cmsContentId=" + cmsContentId + ", bookId=" + bookId + ", bookCommentId="
-				+ bookCommentId + ", gmtCreate=" + gmtCreate + "]";
-	}
+    public Timestamp getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    @Override
+    public String toString() {
+        return "WriterUserTrendst [id=" + id + ", userId=" + userId + ", isPublic=" + isPublic
+               + ", type=" + type + ", detail=" + detail + ", cmsContentId=" + cmsContentId
+               + ", bookId=" + bookId + ", bookCommentId=" + bookCommentId + ", gmtCreate="
+               + gmtCreate + "]";
+    }
 
 }

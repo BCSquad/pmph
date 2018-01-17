@@ -333,15 +333,13 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                   CheckedExceptionResult.NULL_PARAM, "书籍为空!");
             }
             String[] ids = StringUtil.str2StrArray(bookIds);
-            for (String id : ids) {
-                List<Long> userIdList = decPositionService.listDecPositionsByTextbookIds(ids);
-                for (Long userId : userIdList) {
-                    userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
-                                                        senderUserId, Const.SENDER_TYPE_1, userId,
-                                                        Const.RECEIVER_TYPE_2, 0L));
-                }
-                // 获取到书籍id然后根据书籍id在dec_position表中获取到申报表id根据申报表id在declaration表中获取作家id放入userMessage的接收人中
+            List<Long> userIdList = decPositionService.listDecPositionsByTextbookIds(ids);
+            for (Long userId : userIdList) {
+                userMessageList.add(new UserMessage(message.getId(), title, Const.MSG_TYPE_1,
+                                                    senderUserId, Const.SENDER_TYPE_1, userId,
+                                                    Const.RECEIVER_TYPE_2, 0L));
             }
+            // 获取到书籍id然后根据书籍id在dec_position表中获取到申报表id根据申报表id在declaration表中获取作家id放入userMessage的接收人中
         }
         // 如果是补发,进入下面操作 进行已发人员筛出
         if (!isSave) {
