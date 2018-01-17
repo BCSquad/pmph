@@ -279,7 +279,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-						CheckedExceptionResult.NULL_PARAM, "退回原因字符数不能超过规定!");
+						CheckedExceptionResult.NULL_PARAM, "退回意见超过100字符!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
