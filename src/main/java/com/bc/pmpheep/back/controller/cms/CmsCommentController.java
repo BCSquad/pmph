@@ -99,7 +99,10 @@ public class CmsCommentController {
     public ResponseBean check(@RequestParam("id") Long id,
     @RequestParam("authStatus") Short authStatus, HttpServletRequest request) {
         String sessionId = CookiesUtil.getSessionId(request);
-        return new ResponseBean(cmsContentService.checkContentById(id, authStatus, sessionId));
+        return new ResponseBean(cmsContentService.checkContentById(id,
+                                                                   authStatus,
+                                                                   Const.CMS_CATEGORY_ID_0,
+                                                                   sessionId));
     }
 
     /**

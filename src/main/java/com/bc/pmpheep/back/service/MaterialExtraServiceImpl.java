@@ -246,7 +246,8 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                                                            material.getFounderId(),
                                                            DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                     DateUtil.getCurrentTime()),
-                                                           materialId, Const.CMS_CATEGORY_ID_3));
+                                                           materialId, Const.CMS_CATEGORY_ID_3,
+                                                           Const.TRUE));
             if (ObjectUtil.isNull(cmsContentObj.getId())) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                                   CheckedExceptionResult.NULL_PARAM, "创建教材通知公告失败");

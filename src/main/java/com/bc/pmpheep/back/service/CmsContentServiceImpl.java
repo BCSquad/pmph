@@ -15,6 +15,7 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.CmsExtra;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
@@ -69,6 +70,8 @@ public class CmsContentServiceImpl implements CmsContentService {
     MaterialNoticeAttachmentService materialNoticeAttachmentService;
     @Autowired
     MaterialNoteAttachmentService   materialNoteAttachmentService;
+    @Autowired
+    WriterUserTrendstService        writerUserTrendstService;
 
     @Override
     public CmsContent addCmsContent(CmsContent cmsContent) throws CheckedServiceException {
@@ -294,7 +297,14 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        return cmsContentDao.publishCmsContentById(id);
+        Integer count = 0;
+        count = cmsContentDao.publishCmsContentById(id);
+        CmsContent cmsContent = this.getCmsContentById(id);
+        writerUserTrendstService.addWriterUserTrendst(new WriterUserTrendst(
+                                                                            cmsContent.getAuthorId(),
+                                                                            Const.WRITER_USER_TRENDST_TYPE_1,
+                                                                            id));
+        return count;
     }
 
     @Override
@@ -307,7 +317,7 @@ public class CmsContentServiceImpl implements CmsContentService {
     }
 
     @Override
-    public Integer checkContentById(Long id, Short authStatus, String sessionId)
+    public Integer checkContentById(Long id, Short authStatus, Long categoryId, String sessionId)
     throws CheckedServiceException {
         // 获取当前登陆用户
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -319,13 +329,26 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        return cmsContentDao.checkContentById(new CmsContent(
-                                                             id,
-                                                             authStatus,
-                                                             pmphUser.getId(),
-                                                             DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
-                                                                                      DateUtil.getCurrentTime()),
-                                                             Const.MATERIAL_TYPE_ID));
+        Integer count = 0;
+        count =
+        cmsContentDao.checkContentById(new CmsContent(
+                                                      id,
+                                                      authStatus,
+                                                      pmphUser.getId(),
+                                                      DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                                               DateUtil.getCurrentTime()),
+                                                      Const.MATERIAL_TYPE_ID));
+        CmsContent cmsContent = this.getCmsContentById(id);
+        Integer type = 0;
+        if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()) {
+            type = Const.WRITER_USER_TRENDST_TYPE_2;
+        } else {
+            type = Const.WRITER_USER_TRENDST_TYPE_1;
+        }
+        writerUserTrendstService.addWriterUserTrendst(new WriterUserTrendst(
+                                                                            cmsContent.getAuthorId(),
+                                                                            type, id));
+        return count;
     }
 
     @Override
