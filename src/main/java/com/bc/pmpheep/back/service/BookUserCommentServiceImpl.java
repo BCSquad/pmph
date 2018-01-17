@@ -12,6 +12,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.BookUserComment;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -44,6 +45,8 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 
 	@Autowired
 	BookUserCommentDao bookUserCommentDao;
+	@Autowired
+	WriterUserTrendstService writerUserTrendstService;
 
 	@Override
 	public PageResult<BookUserCommentVO> listBookUserComment(PageParameter<BookUserCommentVO> pageParameter)
@@ -81,6 +84,12 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			if (bookUserComment.getIsAuth() == 1) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.ILLEGAL_PARAM,
 						"有已经审核的评论了");
+			}
+			if (isAuth == 1) {
+				WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
+				writerUserTrendst.setUserId(bookUserComment.getWriterId());
+				writerUserTrendst.setType(5);
+				writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			}
 			bookUserComment.setId(id);
 			bookUserComment.setIsAuth(isAuth);

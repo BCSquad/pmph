@@ -14,6 +14,7 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Topic;
 import com.bc.pmpheep.back.po.TopicLog;
+import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -245,6 +246,10 @@ public class TopicServiceImpl implements TopicService {
 		}
 		if (ObjectUtil.notNull(topic.getAuthProgress())) {
 			if (3 == topic.getAuthProgress()) {
+				WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
+				writerUserTrendst.setUserId(topicDao.getTopicTextVO(topic.getId()).getUserId());
+				writerUserTrendst.setType(0);
+				writerUserTrendst.setDetail("");
 				// 创建本版号并将本版号放入数据中
 				String editionnum = "10" + new SimpleDateFormat("yyyy").format(new Date());
 				String vn = topicDao.getMaxTopicVn();
