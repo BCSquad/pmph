@@ -115,18 +115,22 @@ public class MyWebSocketHandler implements WebSocketHandler {
     // 接收到了前台新的信息
     @Override
     public void handleMessage(WebSocketSession webSocketSession,
-    WebSocketMessage<?> webSocketMessage) throws Exception {
-        // 信息内容String msgText=webSocketMessage.getPayload().toString();
-    	Gson gson = new Gson();
-    	WebScocketMessage webScocketMessage = gson.fromJson(webSocketMessage.getPayload().toString(), WebScocketMessage.class);
-    	if(!MyWebSocketHandler.isLogin(webScocketMessage.getSenderType() + "_" + webScocketMessage.getSenderType())){
-               	return ;
-        }
-    	pmphGroupMessageService.addGroupMessage(
-    			webScocketMessage.getContent(), 
-    			webScocketMessage.getGroupId(), 
-    			webScocketMessage.getSenderId(), 
-    			webScocketMessage.getSenderType()) ;
+    WebSocketMessage<?> webSocketMessage) {
+    	try {
+    		// 信息内容String msgText=webSocketMessage.getPayload().toString();
+        	Gson gson = new Gson();
+        	WebScocketMessage webScocketMessage = gson.fromJson(webSocketMessage.getPayload().toString(), WebScocketMessage.class);
+        	if(!MyWebSocketHandler.isLogin(webScocketMessage.getSenderType() + "_2" )){
+                   	return ;
+            }
+        	pmphGroupMessageService.addGroupMessage(
+        			webScocketMessage.getContent(), 
+        			webScocketMessage.getGroupId(), 
+        			webScocketMessage.getSenderId(), 
+        			webScocketMessage.getSenderType()) ;
+		} catch (Exception e) {
+			
+		}
     }
 
     @Override

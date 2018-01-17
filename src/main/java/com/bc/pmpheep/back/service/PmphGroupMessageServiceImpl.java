@@ -134,11 +134,12 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 		if (null == senderId ) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,"用户为空");
 		}
-		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(groupId, senderId,senderType.intValue() == 2);// 获取用户
+		PmphGroupMemberVO pmphGroupMemberVO = null;
 		PmphGroupMessage pmphGroupMessage;
 		if (senderType == 0) {
 			pmphGroupMessage = new PmphGroupMessage(groupId, 0L, msgConrent);
 		} else {
+			pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(groupId, senderId,senderType.intValue() == 2);// 获取用户
 			pmphGroupMessage = new PmphGroupMessage(groupId, pmphGroupMemberVO.getId(), msgConrent);
 		}
 		pmphGroupMessageDao.addPmphGroupMessage(pmphGroupMessage);
@@ -155,10 +156,10 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 			ids.add(tempId);
 		}
 		WebScocketMessage webScocketMessage = new WebScocketMessage(String.valueOf(pmphGroupMessage.getId()),
-				Const.MSG_TYPE_3, senderId, pmphGroupMemberVO.getDisplayName(), senderType, Const.SEND_MSG_TYPE_0, null,
+				Const.MSG_TYPE_3, senderId, senderType == 0?"系统":pmphGroupMemberVO.getDisplayName(), senderType, Const.SEND_MSG_TYPE_0, null,
 				null, msgConrent, pmphGroupMessage.getGmtCreate());
 		webScocketMessage.setGroupId(groupId);
-		webScocketMessage.setSenderIcon(pmphGroupMemberVO.getAvatar());
+		webScocketMessage.setSenderIcon(senderType == 0 ?"":pmphGroupMemberVO.getAvatar());
 		handler.sendWebSocketMessageToUser(ids, webScocketMessage);
 		return "SUCCESS";
 	}
