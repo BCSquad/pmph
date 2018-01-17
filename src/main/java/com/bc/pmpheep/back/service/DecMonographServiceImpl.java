@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.DecMonographDao;
 import com.bc.pmpheep.back.po.DecMonograph;
@@ -14,6 +15,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * @author tyc
  * 2018年1月16日 09:51
  */
+@Service
 public class DecMonographServiceImpl implements DecMonographService{
 
 	@Autowired
