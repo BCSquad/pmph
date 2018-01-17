@@ -30,6 +30,21 @@ public class DecSci implements Serializable {
     // 显示顺序
     private Integer sort;
     
+    public DecSci(){
+    	
+    }
+    
+	public DecSci(Long declarationId, String paperName, String journalName, String factor,
+			Date publishDate, String note, Integer sort) {
+		super();
+		this.declarationId = declarationId;
+		this.paperName = paperName;
+		this.journalName = journalName;
+		this.factor = factor;
+		this.publishDate = publishDate;
+		this.note = note;
+		this.sort = sort;
+	}
 	public Long getId() {
 		return id;
 	}
