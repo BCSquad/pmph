@@ -108,12 +108,20 @@
 		resultType="DecClinicalReward">
 		select * from dec_clinical_reward where id=#{id};
 	</select>
-	
+
 	<!-- 根据申报表id查询 -->
-	<select id="getListDecClinicalRewardByDeclarationId" parameterType="java.lang.Long"
-		resultType="DecClinicalReward">
-		select * from dec_clinical_reward where
+	<select id="getListDecClinicalRewardByDeclarationId"
+		parameterType="java.lang.Long" resultType="DecClinicalReward">
+		select * from
+		dec_clinical_reward where
 		declaration_id=#{declarationId};
 	</select>
-
+	<select id="getListDecClinicalRewardByDeclarationIds" resultType="DecClinicalReward">
+		select * from dec_clinical_reward where
+		declaration_id in
+		<foreach collection="list" item="declarationId" open="("
+			close=")" separator="," index="index">
+			#{declarationId}
+		</foreach>
+	</select>
 </mapper>

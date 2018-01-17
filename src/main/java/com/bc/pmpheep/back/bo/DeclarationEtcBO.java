@@ -20,6 +20,8 @@ import com.bc.pmpheep.back.po.DecSci;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
+import com.bc.pmpheep.back.vo.DecExtensionVO;
+
 import java.util.ArrayList;
 
 /**
@@ -129,6 +131,9 @@ public class DeclarationEtcBO {
 
 	@ExcelHeader(header = "学术荣誉授予情况")
 	private ArrayList<DecAcadeReward> decAcadeRewards;
+
+	@ExcelHeader(header = "作家扩展项")
+	private ArrayList<DecExtensionVO> decExtensionVOs;
 
 	public DeclarationEtcBO() {
 	}
@@ -645,6 +650,14 @@ public class DeclarationEtcBO {
 
 	public void setDecAcadeRewards(ArrayList<DecAcadeReward> decAcadeRewards) {
 		this.decAcadeRewards = decAcadeRewards;
+	}
+
+	public ArrayList<DecExtensionVO> getDecExtensionVOs() {
+		return decExtensionVOs;
+	}
+
+	public void setDecExtensionVOs(ArrayList<DecExtensionVO> decExtensionVOs) {
+		this.decExtensionVOs = decExtensionVOs;
 	}
 
 }

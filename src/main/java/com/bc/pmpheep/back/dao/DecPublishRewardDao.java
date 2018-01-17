@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.DecPublishReward;
+import com.bc.pmpheep.back.po.DecSci;
 
 /**
  * 出版行业获奖情况表数据访问层接口
@@ -57,4 +58,13 @@ public interface DecPublishRewardDao {
 	 * @return
 	 */
 	List<DecPublishReward> getListDecPublishRewardByDeclarationId(Long declarationId);
+	
+	/**
+	 * Description: 根据申报表id查询
+	 * 
+	 * @Param declarationId 申报表id
+	 * 
+	 * @Return 作家学习经历信息
+	 */
+	List<DecPublishReward> getListDecPublishRewardByDeclarationIds(List<Long> declarationId);
 }

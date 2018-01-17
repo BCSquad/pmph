@@ -109,8 +109,20 @@
 		resultType="DecExtensionVO">
 		select *,me.extension_name from dec_extension de
 		left join
-		(select * from material_extension) me on (me.id=de.extension_id)
+		material_extension me on me.id=de.extension_id
 		where
-		declaration_id=#{declarationId};
+		de.declaration_id=#{declarationId};
+	</select>
+
+	<select id="getListDecDecExtensionVOByDeclarationIds"
+		resultType="DecExtensionVO">
+		select * from dec_extension de left join
+		material_extension me on
+		me.id=de.extension_id where
+		de.declaration_id in
+		<foreach collection="list" item="declarationId" open="("
+			close=")" separator="," index="index">
+			#{declarationId}
+		</foreach>
 	</select>
 </mapper>

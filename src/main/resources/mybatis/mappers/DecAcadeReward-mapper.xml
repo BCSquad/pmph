@@ -108,12 +108,19 @@
 		resultType="DecAcadeReward">
 		select * from dec_acade_reward where id=#{id};
 	</select>
-	
+
 	<!-- 根据申报表id查询 -->
 	<select id="getListDecAcadeRewardByDeclarationId" parameterType="java.lang.Long"
 		resultType="DecAcadeReward">
 		select * from dec_acade_reward where
 		declaration_id=#{declarationId};
 	</select>
-
+	<select id="getListDecAcadeRewardByDeclarationIds" resultType="DecAcadeReward">
+		select * from dec_acade_reward where
+		declaration_id in
+		<foreach collection="list" item="declarationId" open="("
+			close=")" separator="," index="index">
+			#{declarationId}
+		</foreach>
+	</select>
 </mapper>
