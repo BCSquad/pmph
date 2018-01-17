@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.DecPublishRewardDao;
 import com.bc.pmpheep.back.po.DecPublishReward;
@@ -14,6 +15,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * @author tyc
  * 2018年1月16日10:15
  */
+@Service
 public class DecPublishRewardServiceImpl implements DecPublishRewardService{
 
 	@Autowired

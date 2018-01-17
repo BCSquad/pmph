@@ -8,11 +8,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtension;
@@ -23,6 +26,7 @@ import com.bc.pmpheep.back.po.MaterialOrg;
 import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.MaterialType;
 import com.bc.pmpheep.back.po.Org;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.MaterialContactService;
 import com.bc.pmpheep.back.service.MaterialExtensionService;
 import com.bc.pmpheep.back.service.MaterialExtraService;
@@ -33,6 +37,7 @@ import com.bc.pmpheep.back.service.MaterialProjectEditorService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.MaterialTypeService;
 import com.bc.pmpheep.back.service.OrgService;
+import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -41,6 +46,7 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -83,6 +89,8 @@ public class MigrationStageFour {
     private MaterialProjectEditorService materialProjectEditorService;
     @Autowired
     private OrgService orgService;
+    @Autowired
+    private PmphUserService pmphUserService;
     
     //用来装载向客户导出的信息
     private List<Object[]> excptionList = new ArrayList<Object[]>( );
@@ -280,12 +288,12 @@ public class MigrationStageFour {
                 excel.add(oldMaterial);
                 continue;
             }
-            Long DepartmentId = (Long) oldMaterial.get("DepartmentId");
-            if (ObjectUtil.isNull(DepartmentId)) {
+            Long departmentId = (Long) oldMaterial.get("DepartmentId");
+            if (ObjectUtil.isNull(departmentId)) {
 //                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建部门为空。"));
 //                excel.add(oldMaterial);
 //                continue;
-                DepartmentId = 0L;
+                departmentId = 0L;
             }
             Long director = (Long) oldMaterial.get("director");
             if (ObjectUtil.isNull(director)) {
@@ -299,7 +307,15 @@ public class MigrationStageFour {
 //                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建人为空。"));
 //                excel.add(oldMaterial);
 //                continue;
-                founder_id = 0L;
+            	founder_id = 0L;
+            	//设置成wuz
+            	PmphUser pmphUser = pmphUserService.getPmphUser("wuz");
+                if(null != pmphUser && null != pmphUser.getId()){
+                	founder_id =  pmphUser.getId();
+                }
+                if(null != pmphUser.getDepartmentId()){
+                	departmentId =  pmphUser.getDepartmentId();
+                }
             }
             Integer round = (Integer) oldMaterial.get("round");
             if (ObjectUtil.isNull(round)) {//没有轮次的设置默认值为0。
@@ -334,7 +350,7 @@ public class MigrationStageFour {
             material.setActualDeadline((Timestamp) oldMaterial.get("enddate"));
             material.setAgeDeadline((Timestamp) oldMaterial.get("agedeaddate"));
             material.setMailAddress(mailaddress);
-            material.setDepartmentId(DepartmentId);
+            material.setDepartmentId(departmentId);
             material.setDirector(director);//director,
             material.setIsMultiBooks("1".equals(String.valueOf(oldMaterial.get("isbookmulti")))); //is_multi_books,
             material.setIsMultiPosition("1".equals(String.valueOf(oldMaterial.get("ispositionmulti"))));//is_multi_position,
@@ -375,6 +391,27 @@ public class MigrationStageFour {
             material.setFounderId(founder_id);//founder_id,
             material.setGmtUpdate((Timestamp) oldMaterial.get("updatedate"));//gmt_update,			
             material.setMenderId((Long) oldMaterial.get("mender_id"));//mender_id
+            //主编学术专著情况
+            material.setIsMonographUsed(false);
+            //主编学术专著情况必填
+            material.setIsMonographRequired(false);
+            //出版行业获奖情况
+            material.setIsPublishRewardUsed(false);
+            //出版行业获奖情况必填
+            material.setIsPublishRewardRequired(false);
+            //SCI论文投稿及影响因子
+            material.setIsSciUsed(false);
+            //SCI论文投稿及影响因子必填
+            material.setIsSciRequired(false);
+            //临床医学获奖情况
+            material.setIsClinicalRewardUsed(false);
+            //临床医学获奖情况必填
+            material.setIsClinicalRewardRequired(false);
+            //学术荣誉授予情况
+            material.setIsAcadeRewardUsed(false);
+            //学术荣誉授予情况必填
+            material.setIsAcadeRewardRequired(false);  
+
             material = materialService.addMaterial(material);
             count++;
             long pk = material.getId();
