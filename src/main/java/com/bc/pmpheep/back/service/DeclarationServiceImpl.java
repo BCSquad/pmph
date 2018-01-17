@@ -277,6 +277,10 @@ public class DeclarationServiceImpl implements DeclarationService {
 				}
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
+			if (StringUtil.strLength(returnCause) > 100) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+						CheckedExceptionResult.NULL_PARAM, "退回意见超过100字符!");
+			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false); // 发送系统消息
