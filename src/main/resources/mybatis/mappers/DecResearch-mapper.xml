@@ -131,4 +131,13 @@
 		select count(*) from
 		dec_research
 	</select>
+	<!-- 根据declarationId查询 -->
+	<select id="getListDecSciExpByDeclarationIds" resultType="DecSci">
+		select * from dec_sci where
+		declaration_id in
+		<foreach collection="list" item="declarationId" open="("
+			close=")" separator="," index="index">
+			#{declarationId}
+		</foreach>
+	</select>
 </mapper>

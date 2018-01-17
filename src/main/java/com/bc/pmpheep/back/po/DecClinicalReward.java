@@ -28,6 +28,20 @@ public class DecClinicalReward implements Serializable {
     // 显示顺序
     private Integer sort;
     
+    public DecClinicalReward() {
+    	
+    }
+    
+	public DecClinicalReward(Long declarationId, String rewardName, Integer awardUnit,
+			Date rewardDate, String note, Integer sort) {
+		super();
+		this.declarationId = declarationId;
+		this.rewardName = rewardName;
+		this.awardUnit = awardUnit;
+		this.rewardDate = rewardDate;
+		this.note = note;
+		this.sort = sort;
+	}
 	public Long getId() {
 		return id;
 	}

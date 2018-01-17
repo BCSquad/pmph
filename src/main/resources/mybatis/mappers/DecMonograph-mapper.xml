@@ -124,5 +124,13 @@
 		select * from dec_monograph where
 		declaration_id=#{declarationId};
 	</select>
-
+	
+	<select id="getListDecMonographByDeclarationIds" 	resultType="DecMonograph">
+		select * from dec_monograph where
+		declaration_id in
+		<foreach collection="list" item="declarationId" open="("
+			close=")" separator="," index="index">
+			#{declarationId}
+		</foreach>
+	</select>
 </mapper>

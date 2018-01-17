@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecSci;
 
 /**
@@ -58,4 +59,14 @@ public interface DecSciDao {
 	 * @return
 	 */
 	List<DecSci> getListDecSciByDeclarationId(Long declarationId);
+	
+	
+	/**
+	 * Description: 根据申报表id查询
+	 * 
+	 * @Param declarationId 申报表id
+	 * 
+	 * @Return 作家学习经历信息
+	 */
+	List<DecSci> getListDecSciByDeclarationIds(List<Long> declarationId);
 }

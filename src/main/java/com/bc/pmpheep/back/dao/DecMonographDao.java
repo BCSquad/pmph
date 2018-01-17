@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.DecMonograph;
+import com.bc.pmpheep.back.po.DecSci;
 
 /**
  * 主编学术专著情况表数据访问层接口
@@ -58,4 +59,13 @@ public interface DecMonographDao {
 	 * @return
 	 */
 	List<DecMonograph> getListDecMonographByDeclarationId(Long declarationId);
+	
+	/**
+	 * Description: 根据申报表id查询
+	 * 
+	 * @Param declarationId 申报表id
+	 * 
+	 * @Return 作家学习经历信息
+	 */
+	List<DecMonograph> getListDecMonographByDeclarationIds(List<Long> declarationId);
 }

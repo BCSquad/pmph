@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.DecExtension;
+import com.bc.pmpheep.back.po.DecSci;
 import com.bc.pmpheep.back.vo.DecExtensionVO;
 
 /**
@@ -107,4 +108,13 @@ public interface DecExtensionDao {
    * @return DecExtension对象集合
    */
   List<DecExtensionVO> getListDecExtensionByDeclarationId(Long declarationId);
+  
+  /**
+	 * Description: 根据申报表id查询
+	 * 
+	 * @Param declarationId 申报表id
+	 * 
+	 * @Return 作家学习经历信息
+	 */
+	List<DecExtensionVO> getListDecExtensionVOByDeclarationIds(List<Long> declarationId);
 }

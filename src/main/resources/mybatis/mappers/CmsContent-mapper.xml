@@ -101,6 +101,9 @@
 			<if test="isStaging != null">
 				is_staging,
 			</if>
+			<if test="isMaterialEntry != null">
+				is_material_entry,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -202,6 +205,9 @@
 			</if>
 			<if test="isStaging != null">
 				#{isStaging},
+			</if>
+			<if test="isMaterialEntry != null">
+				#{isMaterialEntry},
 			</if>
 		</trim>
 	</sql>
@@ -315,6 +321,9 @@
 			</if>
 			<if test="materialId != null">
 				material_id=#{materialId},
+			</if>
+			<if test="isMaterialEntry != null">
+				is_material_entry=#{isMaterialEntry},
 			</if>
 		</set>
 		where 
@@ -455,7 +464,16 @@
 	
 	<!-- 根据materialId查询一个CmsContent -->
 	<select id="getCmsContentByMaterialId" parameterType="java.lang.Long" resultType="CmsContent">
-		SELECT * FROM cms_content t WHERE t.`category_id`=3 AND t.`material_id` =#{materialId};
+		SELECT 
+			* 
+		FROM 
+			cms_content t 
+		WHERE 
+			t.`category_id`=3 
+		AND 
+			t.`is_material_entry` = TRUE
+		AND 
+			t.`material_id` =#{materialId};
 	</select>
 	
 	<!-- 根据id查询一个CmsContent -->

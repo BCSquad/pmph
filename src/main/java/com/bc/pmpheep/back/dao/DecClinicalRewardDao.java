@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.DecClinicalReward;
+import com.bc.pmpheep.back.po.DecSci;
 
 /**
  * 临床医学获奖情况表数据访问层接口
@@ -58,4 +59,13 @@ public interface DecClinicalRewardDao {
 	 * @return
 	 */
 	List<DecClinicalReward> getListDecClinicalRewardByDeclarationId(Long declarationId);
+	
+	/**
+	 * Description: 根据申报表id查询
+	 * 
+	 * @Param declarationId 申报表id
+	 * 
+	 * @Return 作家学习经历信息
+	 */
+	List<DecClinicalReward> getListDecClinicalRewardByDeclarationIds(List<Long> declarationId);
 }

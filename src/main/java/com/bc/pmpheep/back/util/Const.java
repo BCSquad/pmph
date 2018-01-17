@@ -49,7 +49,7 @@ public class Const {
 
     public static final String             SESSION_ID                    = "sessionId";
 
-//    public static final String SESSION_ID = "JSESSIONID";
+    // public static final String SESSION_ID = "JSESSIONID";
 
     // PMPH_USER_TOKEN
     public static final String             SEESION_PMPH_USER_TOKEN       = "sessionPmphUserToken";
@@ -232,4 +232,17 @@ public class Const {
     public static final Short              SURVEY_QUESTION_TYPE_4        = 4;
     public static final Short              SURVEY_QUESTION_TYPE_5        = 5;
     public static final Short              SURVEY_QUESTION_TYPE_6        = 6;
+    /**
+     * 用户动态表
+     * 
+     * *注1：0=其他(教材申报、我要出书、图书纠错、问卷调查)/1=发表文章/2=文章评论/3=文章收藏/4=文章点赞/5=发表书评/6=图书收藏/7=图书点赞
+     */
+    public static final Integer            WRITER_USER_TRENDST_TYPE_0    = 0;
+    public static final Integer            WRITER_USER_TRENDST_TYPE_1    = 1;
+    public static final Integer            WRITER_USER_TRENDST_TYPE_2    = 2;
+    public static final Integer            WRITER_USER_TRENDST_TYPE_3    = 3;
+    public static final Integer            WRITER_USER_TRENDST_TYPE_4    = 4;
+    public static final Integer            WRITER_USER_TRENDST_TYPE_5    = 5;
+    public static final Integer            WRITER_USER_TRENDST_TYPE_6    = 6;
+    public static final Integer            WRITER_USER_TRENDST_TYPE_7    = 7;
 }

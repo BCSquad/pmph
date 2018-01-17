@@ -255,7 +255,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 	}
 
 	@Override
-	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause) 
+	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause)
 			throws CheckedServiceException, IOException {
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
@@ -425,19 +425,17 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 作家科研
 		List<DecResearch> decResearchList = decResearchDao.getListDecResearchByDeclarationId(declarationId);
 		// 主编学术专著情况
-		List<DecMonograph> decMonographList = 
-				decMonographDao.getListDecMonographByDeclarationId(declarationId);
+		List<DecMonograph> decMonographList = decMonographDao.getListDecMonographByDeclarationId(declarationId);
 		// 出版行业获奖情况
-		List<DecPublishReward> decPublishRewardList = 
-				decPublishRewardDao.getListDecPublishRewardByDeclarationId(declarationId);
+		List<DecPublishReward> decPublishRewardList = decPublishRewardDao
+				.getListDecPublishRewardByDeclarationId(declarationId);
 		// SCI论文投稿及影响因子情况
 		List<DecSci> decSciList = decSciDao.getListDecSciByDeclarationId(declarationId);
 		// 临床医学获奖情况
-		List<DecClinicalReward> decClinicalRewardList = 
-				decClinicalRewardDao.getListDecClinicalRewardByDeclarationId(declarationId);
+		List<DecClinicalReward> decClinicalRewardList = decClinicalRewardDao
+				.getListDecClinicalRewardByDeclarationId(declarationId);
 		// 学术荣誉授予情况
-		List<DecAcadeReward> decAcadeRewardList = 
-				decAcadeRewardDao.getListDecAcadeRewardByDeclarationId(declarationId);
+		List<DecAcadeReward> decAcadeRewardList = decAcadeRewardDao.getListDecAcadeRewardByDeclarationId(declarationId);
 		// 作家扩展项
 		List<DecExtensionVO> decExtensionList = decExtensionDao.getListDecExtensionByDeclarationId(declarationId);
 		// 把查询出来的信息添加进applicationVO
@@ -583,6 +581,23 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 作家科研
 		ArrayList<DecResearch> decResearchs = (ArrayList<DecResearch>) decResearchDao
 				.getListDecResearchByDeclarationIds(decIds);
+		// 主编学术专著情况
+		ArrayList<DecMonograph> decMonographList = (ArrayList<DecMonograph>) decMonographDao
+				.getListDecMonographByDeclarationIds(decIds);
+		// 出版行业获奖情况
+		ArrayList<DecPublishReward> decPublishRewardList = (ArrayList<DecPublishReward>) decPublishRewardDao
+				.getListDecPublishRewardByDeclarationIds(decIds);
+		// SCI论文投稿及影响因子情况
+		ArrayList<DecSci> decSciList = (ArrayList<DecSci>) decSciDao.getListDecSciByDeclarationIds(decIds);
+		// 临床医学获奖情况
+		ArrayList<DecClinicalReward> decClinicalRewardList = (ArrayList<DecClinicalReward>) decClinicalRewardDao
+				.getListDecClinicalRewardByDeclarationIds(decIds);
+		// 学术荣誉授予情况
+		ArrayList<DecAcadeReward> decAcadeRewardList = (ArrayList<DecAcadeReward>) decAcadeRewardDao
+				.getListDecAcadeRewardByDeclarationIds(decIds);
+		// 作家扩展项
+		ArrayList<DecExtensionVO> decExtensionList = (ArrayList<DecExtensionVO>) decExtensionDao
+				.getListDecExtensionVOByDeclarationIds(decIds);
 		for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
 			String strOnlineProgress = "";
 			String strOfflineProgress = "";

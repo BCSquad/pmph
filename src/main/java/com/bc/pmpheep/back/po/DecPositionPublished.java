@@ -37,6 +37,25 @@ public class DecPositionPublished implements Serializable {
     // 修改时间
     private Timestamp gmtUpdate;
     
+    public DecPositionPublished() {
+    	
+    }
+    
+    public DecPositionPublished(Long publisherId, Long declarationId, Long textbookId, 
+    		Integer presetPosition, Integer isOnList, Integer chosenPosition, 
+    		Integer rank, String syllabusId, String syllabusName) {
+    	super();
+    	this.publisherId = publisherId;
+    	this.declarationId = declarationId;
+    	this.textbookId = textbookId;
+    	this.presetPosition = presetPosition;
+    	this.isOnList = isOnList;
+    	this.chosenPosition = chosenPosition;
+    	this.rank = rank;
+    	this.syllabusId = syllabusId;
+    	this.syllabusName = syllabusName;
+    }
+    
 	public Long getId() {
 		return id;
 	}
