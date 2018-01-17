@@ -6,12 +6,17 @@ package com.bc.pmpheep.back.bo;
 
 import com.bc.pmpheep.annotation.ExcelHeader;
 import com.bc.pmpheep.back.po.DecAcade;
+import com.bc.pmpheep.back.po.DecAcadeReward;
 import com.bc.pmpheep.back.po.DecAchievement;
+import com.bc.pmpheep.back.po.DecClinicalReward;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecLastPosition;
+import com.bc.pmpheep.back.po.DecMonograph;
 import com.bc.pmpheep.back.po.DecNationalPlan;
+import com.bc.pmpheep.back.po.DecPublishReward;
 import com.bc.pmpheep.back.po.DecResearch;
+import com.bc.pmpheep.back.po.DecSci;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
@@ -109,6 +114,21 @@ public class DeclarationEtcBO {
 
 	@ExcelHeader(header = "科研情况")
 	private ArrayList<DecResearch> decResearchs;
+
+	@ExcelHeader(header = "学术专著")
+	private ArrayList<DecMonograph> decMonographs;
+
+	@ExcelHeader(header = "出版行业获奖情况")
+	private ArrayList<DecPublishReward> publishRewards;
+
+	@ExcelHeader(header = "SCI论文投稿及影响因子情况")
+	private ArrayList<DecSci> decScis;
+
+	@ExcelHeader(header = "临床医学获奖情况")
+	private ArrayList<DecClinicalReward> decClinicalRewards;
+
+	@ExcelHeader(header = "学术荣誉授予情况")
+	private ArrayList<DecAcadeReward> decAcadeRewards;
 
 	public DeclarationEtcBO() {
 	}
@@ -586,4 +606,45 @@ public class DeclarationEtcBO {
 	public void setDecResearchs(ArrayList<DecResearch> decResearchs) {
 		this.decResearchs = decResearchs;
 	}
+
+	public ArrayList<DecMonograph> getDecMonographs() {
+		return decMonographs;
+	}
+
+	public void setDecMonographs(ArrayList<DecMonograph> decMonographs) {
+		this.decMonographs = decMonographs;
+	}
+
+	public ArrayList<DecPublishReward> getPublishRewards() {
+		return publishRewards;
+	}
+
+	public void setPublishRewards(ArrayList<DecPublishReward> publishRewards) {
+		this.publishRewards = publishRewards;
+	}
+
+	public ArrayList<DecSci> getDecScis() {
+		return decScis;
+	}
+
+	public void setDecScis(ArrayList<DecSci> decScis) {
+		this.decScis = decScis;
+	}
+
+	public ArrayList<DecClinicalReward> getDecClinicalRewards() {
+		return decClinicalRewards;
+	}
+
+	public void setDecClinicalRewards(ArrayList<DecClinicalReward> decClinicalRewards) {
+		this.decClinicalRewards = decClinicalRewards;
+	}
+
+	public ArrayList<DecAcadeReward> getDecAcadeRewards() {
+		return decAcadeRewards;
+	}
+
+	public void setDecAcadeRewards(ArrayList<DecAcadeReward> decAcadeRewards) {
+		this.decAcadeRewards = decAcadeRewards;
+	}
+
 }

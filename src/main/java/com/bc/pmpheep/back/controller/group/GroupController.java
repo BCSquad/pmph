@@ -136,8 +136,12 @@ public class GroupController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新建小组")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseBean add(String file, PmphGroup pmphGroup, HttpServletRequest request) {
-		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(pmphGroupService.addPmphGroupOnGroup(file, pmphGroup, sessionId));
+		
+		try {
+			return new ResponseBean(pmphGroupService.addPmphGroupOnGroup(file, pmphGroup, request));
+		} catch (IOException e) {
+			return new ResponseBean(e.getMessage());
+		}
 	}
 
 	/**
@@ -151,9 +155,9 @@ public class GroupController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "上传头像")
 	@RequestMapping(value = "/files", method = RequestMethod.POST)
-	public ResponseBean files(@RequestParam("file") MultipartFile file) {
+	public ResponseBean files(@RequestParam("file") MultipartFile file,HttpServletRequest request) {
 		try {
-			return new ResponseBean(pmphGroupService.addGroupImage(file));
+			return new ResponseBean(pmphGroupService.msgUploadFiles(file,request));
 		} catch (Exception e) {
 			return new ResponseBean(e.getMessage());
 		}
@@ -200,7 +204,11 @@ public class GroupController {
 	@RequestMapping(value = "/update/pmphGroupDetail", method = RequestMethod.PUT)
 	public ResponseBean pmphGroupDetail(String file, PmphGroup pmphGroup, HttpServletRequest request) {
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(pmphGroupService.updatePmphGroupOnGroup(file, pmphGroup, sessionId));
+		try {
+			return new ResponseBean(pmphGroupService.updatePmphGroupOnGroup(file, pmphGroup, request));
+		} catch (IOException e) {
+			return new ResponseBean(e.getMessage());
+		}
 	}
 
 	/**

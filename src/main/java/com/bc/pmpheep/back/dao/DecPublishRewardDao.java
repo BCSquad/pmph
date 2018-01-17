@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.DecPublishReward;
@@ -46,4 +48,13 @@ public interface DecPublishRewardDao {
 	 * @return
 	 */
 	DecPublishReward getDecPublishReward(Long id);
+	
+	/**
+	 * 根据申报表id查询
+	 * @author:tyc
+     * @date:2018年1月16日下午16:46:23
+	 * @param declarationId
+	 * @return
+	 */
+	List<DecPublishReward> getListDecPublishRewardByDeclarationId(Long declarationId);
 }

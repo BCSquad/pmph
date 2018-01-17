@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bc.pmpheep.back.dao.DecMonographDao">
+<mapper namespace="com.bc.pmpheep.back.dao.DecAcadeRewardDao">
 
 	<sql id="key">
 		<!-- 去掉最后一个, -->
@@ -12,17 +12,14 @@
 			<if test="declarationId !=null">
 				declaration_id,
 			</if>
-			<if test="monographName !=null and monographName != ''">
-				monograph_name,
+			<if test="rewardName !=null and rewardName != ''">
+				reward_name,
 			</if>
-			<if test="isSelfPaid !=null ">
-				is_self_paid,
+			<if test="awardUnit !=null">
+				award_unit,
 			</if>
-			<if test="publisher !=null and publisher != ''">
-				publisher,
-			</if>
-			<if test="publishDate !=null and publishDate != ''">
-				publish_date,
+			<if test="rewardDate !=null and rewardDate != ''">
+				reward_date,
 			</if>
 			<if test="note !=null and note != ''">
 				note,
@@ -41,17 +38,14 @@
 			<if test="declarationId !=null">
 				#{declarationId},
 			</if>
-			<if test="monographName !=null and monographName != ''">
-				#{monographName},
+			<if test="rewardName !=null and rewardName != ''">
+				#{rewardName},
 			</if>
-			<if test="isSelfPaid !=null ">
-				#{isSelfPaid},
+			<if test="awardUnit !=null">
+				#{awardUnit},
 			</if>
-			<if test="publisher !=null and publisher != ''">
-				#{publisher},
-			</if>
-			<if test="publishDate !=null and publishDate != ''">
-				#{publishDate},
+			<if test="rewardDate !=null and rewardDate != ''">
+				#{rewardDate},
 			</if>
 			<if test="note !=null and note != ''">
 				#{note},
@@ -63,12 +57,12 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="addDecMonograph" parameterType="DecMonograph">
+	<insert id="addDecAcadeReward" parameterType="DecAcadeReward">
 		<selectKey resultType="java.lang.Long" order="AFTER"
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into dec_monograph(
+		insert into dec_acade_reward(
 		<include refid="key" />
 		)
 		values(
@@ -77,30 +71,27 @@
 	</insert>
 
 	<!-- 根据id删除 -->
-	<delete id="deleteDecMonograph" parameterType="java.lang.Long">
+	<delete id="deleteDecAcadeReward" parameterType="java.lang.Long">
 		delete from
-		dec_monograph where
+		dec_acade_reward where
 		id=#{id};
 	</delete>
 
 	<!-- 更新 -->
-	<update id="updateDecMonograph" parameterType="DecMonograph">
-		update dec_monograph
+	<update id="updateDecAcadeReward" parameterType="DecAcadeReward">
+		update dec_acade_reward
 		<set>
 			<if test="declarationId !=null">
 				declaration_id = #{declarationId},
 			</if>
-			<if test="monographName !=null and monographName != ''">
-				monograph_name = #{monographName},
+			<if test="rewardName !=null and rewardName != ''">
+				reward_name = #{rewardName},
 			</if>
-			<if test="isSelfPaid !=null ">
-				is_self_paid = #{isSelfPaid},
+			<if test="awardUnit !=null">
+				award_unit = #{awardUnit},
 			</if>
-			<if test="publisher !=null and publisher != ''">
-				publisher = #{publisher},
-			</if>
-			<if test="publishDate !=null and publishDate != ''">
-				publish_date = #{publishDate},
+			<if test="rewardDate !=null and rewardDate != ''">
+				reward_date = #{rewardDate},
 			</if>
 			<if test="note !=null and note != ''">
 				note = #{note},
@@ -113,15 +104,15 @@
 	</update>
 
 	<!-- 根据id查询 -->
-	<select id="getDecMonograph" parameterType="java.lang.Long"
-		resultType="DecMonograph">
-		select * from dec_monograph where id=#{id};
+	<select id="getDecAcadeReward" parameterType="java.lang.Long"
+		resultType="DecAcadeReward">
+		select * from dec_acade_reward where id=#{id};
 	</select>
 	
 	<!-- 根据申报表id查询 -->
-	<select id="getListDecMonographByDeclarationId" parameterType="java.lang.Long"
-		resultType="DecMonograph">
-		select * from dec_monograph where
+	<select id="getListDecAcadeRewardByDeclarationId" parameterType="java.lang.Long"
+		resultType="DecAcadeReward">
+		select * from dec_acade_reward where
 		declaration_id=#{declarationId};
 	</select>
 

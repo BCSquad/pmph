@@ -170,5 +170,6 @@ public interface DeclarationService {
 	 *            教材id
 	 * @return 符合查询条件的DeclarationEtcBO实例
 	 */
+        @Deprecated
 	List<DeclarationEtcBO> getDeclarationEtcBOs(Long materialId);
 }

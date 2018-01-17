@@ -103,7 +103,8 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PmphGroup addPmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId) throws CheckedServiceException;
+	PmphGroup addPmphGroupOnGroup(String file, PmphGroup pmphGroup,HttpServletRequest request)
+			throws CheckedServiceException, IOException;
 
 	/**
 	 * 
@@ -115,7 +116,7 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String addGroupImage(MultipartFile file) throws CheckedServiceException, IOException;
+	String msgUploadFiles(MultipartFile file,HttpServletRequest request) throws CheckedServiceException, IOException;
 
 	/**
 	 *
@@ -130,7 +131,8 @@ public interface PmphGroupService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PmphGroup updatePmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId) throws CheckedServiceException;
+	PmphGroup updatePmphGroupOnGroup(String file, PmphGroup pmphGroup,HttpServletRequest request)
+			throws CheckedServiceException, IOException;
 
 	/**
 	 * 
