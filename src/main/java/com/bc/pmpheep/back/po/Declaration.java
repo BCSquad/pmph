@@ -55,6 +55,12 @@ public class Declaration implements java.io.Serializable {
 	private String fax;
 	// 服从调剂
 	private Integer isDispensed;
+	// 参与本科教学评估认证
+	private Integer isUtec;
+	// 学历
+	private Integer degree;
+	// 专业特长
+	private String expertise;
 	//作家申报单位id
 	private Long orgId;
 	//审核进度
@@ -67,10 +73,12 @@ public class Declaration implements java.io.Serializable {
 	private Integer offlineProgress;
 	//纸质表收到时间
 	private Timestamp paperDate;
+	// 退回原因
+	private String returnCause;
 	//是否暂存
-	private Integer isStaging;
+	private Boolean isStaging;
 	//是否逻辑删除
-	private Integer isDeleted;
+	private Boolean isDeleted;
 	//创建时间
 	private Timestamp gmtCreate;
 	//修改时间
@@ -101,7 +109,7 @@ public class Declaration implements java.io.Serializable {
 			String handphone, String email, Short idtype, String idcard,
 			String telephone, String fax, Long orgId, Integer onlineProgress,
 			Long authUserId, Timestamp authDate, Integer offlineProgress,
-			Timestamp paperDate, Integer isStaging, Integer isDeleted) {
+			Timestamp paperDate, Boolean isStaging, Boolean isDeleted) {
 		super();
 		this.materialId = materialId;
 		this.userId = userId;
@@ -139,7 +147,7 @@ public class Declaration implements java.io.Serializable {
 			String handphone, String email, Short idtype, String idcard,
 			String telephone, String fax, Long orgId, Integer onlineProgress,
 			Long authUserId, Timestamp authDate, Integer offlineProgress,
-			Timestamp paperDate, Integer isStaging, Integer isDeleted,
+			Timestamp paperDate, Boolean isStaging, Boolean isDeleted,
 			Timestamp gmtCreate, Timestamp gmtUpdate) {
 		this.materialId = materialId;
 		this.userId = userId;
@@ -176,8 +184,8 @@ public class Declaration implements java.io.Serializable {
 			String handphone, String email, Short idtype, String idcard,
 			String telephone, String fax, Integer isDispensed, Long orgId, 
 			Integer onlineProgress, Long authUserId, Timestamp authDate, 
-			Integer offlineProgress, Timestamp paperDate, Integer isStaging, 
-			Integer isDeleted) {
+			Integer offlineProgress, Timestamp paperDate, Boolean isStaging, 
+			Boolean isDeleted) {
 		super();
 		this.materialId = materialId;
 		this.userId = userId;
@@ -399,19 +407,19 @@ public class Declaration implements java.io.Serializable {
 		this.paperDate = paperDate;
 	}
 
-	public Integer getIsStaging() {
+	public Boolean getIsStaging() {
 		return isStaging;
 	}
 
-	public void setIsStaging(Integer isStaging) {
+	public void setIsStaging(Boolean isStaging) {
 		this.isStaging = isStaging;
 	}
 
-	public Integer getIsDeleted() {
+	public Boolean getIsDeleted() {
 		return isDeleted;
 	}
 
-	public void setIsDeleted(Integer isDeleted) {
+	public void setIsDeleted(Boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
 
@@ -439,6 +447,38 @@ public class Declaration implements java.io.Serializable {
 		this.isDispensed = isDispensed;
 	}
 	
+	public Integer getIsUtec() {
+		return isUtec;
+	}
+	
+	public void setIsUtec(Integer isUtec) {
+		this.isUtec = isUtec;
+	}
+
+	public Integer getDegree() {
+		return degree;
+	}
+
+	public void setDegree(Integer degree) {
+		this.degree = degree;
+	}
+
+	public String getExpertise() {
+		return expertise;
+	}
+
+	public void setExpertise(String expertise) {
+		this.expertise = expertise;
+	}
+
+	public String getReturnCause() {
+		return returnCause;
+	}
+
+	public void setReturnCause(String returnCause) {
+		this.returnCause = returnCause;
+	}
+
 	@Override
 	public String toString() {
 		return "Declaration [id=" + id + ", materialId=" + materialId
@@ -449,12 +489,12 @@ public class Declaration implements java.io.Serializable {
 				+ postcode + ", handphone=" + handphone + ", email=" + email
 				+ ", idtype=" + idtype + ", idcard=" + idcard + ", telephone="
 				+ telephone + ", fax=" + fax + ", isDispensed=" + isDispensed
-				+ ", orgId=" + orgId + ", onlineProgress=" + onlineProgress
-				+ ", authUserId=" + authUserId + ", authDate=" + authDate
-				+ ", offlineProgress=" + offlineProgress + ", paperDate="
-				+ paperDate + ", isStaging=" + isStaging + ", isDeleted="
-				+ isDeleted + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
-				+ gmtUpdate + "]";
+				+ ", isUtec=" + isUtec + ", degree=" + degree + ", expertise="
+				+ expertise + ", orgId=" + orgId + ", onlineProgress="
+				+ onlineProgress + ", authUserId=" + authUserId + ", authDate="
+				+ authDate + ", offlineProgress=" + offlineProgress
+				+ ", paperDate=" + paperDate + ", returnCause=" + returnCause
+				+ ", isStaging=" + isStaging + ", isDeleted=" + isDeleted
+				+ ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
 	}
-
 }

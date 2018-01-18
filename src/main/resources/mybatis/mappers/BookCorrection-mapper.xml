@@ -282,6 +282,7 @@
 			e.dp_name ,
 			f.type_name ,
 			d.realname ,
+			g.realname dutyName,
 			a.result ,
 			a.page,
 			a.line,
@@ -300,6 +301,8 @@
 			pmph_department e on e.id = d.department_id
 		LEFT JOIN 
 			material_type   f  on f.id = b.type 
+		LEFT JOIN 
+			pmph_user       g  on g.id = b.editor_id
 		where 
 			!a.is_deleted and b.id is not null 
 		<if test="bookname != null and bookname != '' ">

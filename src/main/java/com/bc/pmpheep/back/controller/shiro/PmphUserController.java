@@ -316,9 +316,9 @@ public class PmphUserController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "个人中心首页")
 	@RequestMapping(value = "/personal/center", method = RequestMethod.GET)
-	public ResponseBean materiallist(HttpServletRequest request,String state,String materialName,
-			String groupName,String bookname,String name,String title) {
+	public ResponseBean center(HttpServletRequest request,String state,String materialName,
+			String groupName,String bookname,String name,String title,String authProgress,String topicBookname) {
 		return new ResponseBean(userService.getPersonalCenter(request,state,materialName,groupName,
-				title,bookname,name));
+				title,bookname,name,authProgress,topicBookname));
 	}
 }

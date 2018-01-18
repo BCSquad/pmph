@@ -139,7 +139,7 @@ public interface DeclarationService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	Declaration onlineProgress(Long id, Integer onlineProgress) 
+	Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause) 
 			throws CheckedServiceException, IOException;
 	
 	/**
@@ -170,5 +170,6 @@ public interface DeclarationService {
 	 *            教材id
 	 * @return 符合查询条件的DeclarationEtcBO实例
 	 */
+        @Deprecated
 	List<DeclarationEtcBO> getDeclarationEtcBOs(Long materialId);
 }

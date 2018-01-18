@@ -141,6 +141,36 @@
 			<if test="isDigitalEditorOptional != null">
 				is_digital_editor_optional,
 			</if>
+			<if test="isMonographUsed != null">
+				is_monograph_used,
+			</if>
+			<if test="isMonographRequired != null">
+				is_monograph_required,
+			</if>
+			<if test="isPublishRewardUsed != null">
+				is_publish_reward_used,
+			</if>
+			<if test="isPublishRewardRequired != null">
+				is_publish_reward_required,
+			</if>
+			<if test="isSciUsed != null">
+				is_sci_used,
+			</if>
+			<if test="isSciRequired != null">
+				is_sci_required,
+			</if>
+			<if test="isClinicalRewardUsed != null">
+				is_clinical_reward_used,
+			</if>
+			<if test="isClinicalRewardRequired != null">
+				is_clinical_reward_required,
+			</if>
+			<if test="isAcadeRewardUsed != null">
+				is_acade_reward_used,
+			</if>
+			<if test="isAcadeRewardRequired != null">
+				is_acade_reward_required,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -281,6 +311,36 @@
 			</if>
 			<if test="isDigitalEditorOptional != null">
 				#{isDigitalEditorOptional},
+			</if>
+			<if test="isMonographUsed != null">
+				#{isMonographUsed},
+			</if>
+			<if test="isMonographRequired != null">
+				#{isMonographRequired},
+			</if>
+			<if test="isPublishRewardUsed != null">
+				#{isPublishRewardUsed},
+			</if>
+			<if test="isPublishRewardRequired != null">
+				#{isPublishRewardRequired},
+			</if>
+			<if test="isSciUsed != null">
+				#{isSciUsed},
+			</if>
+			<if test="isSciRequired != null">
+				#{isSciRequired},
+			</if>
+			<if test="isClinicalRewardUsed != null">
+				#{isClinicalRewardUsed},
+			</if>
+			<if test="isClinicalRewardRequired != null">
+				#{isClinicalRewardRequired},
+			</if>
+			<if test="isAcadeRewardUsed != null">
+				#{isAcadeRewardUsed},
+			</if>
+			<if test="isAcadeRewardRequired != null">
+				#{isAcadeRewardRequired},
 			</if>
 		</trim>
 	</sql>
@@ -435,6 +495,36 @@
 			<if test="isDigitalEditorOptional != null">
 				is_digital_editor_optional = #{isDigitalEditorOptional},
 			</if>
+			<if test="isMonographUsed != null">
+				is_monograph_used = #{isMonographUsed},
+			</if>
+			<if test="isMonographRequired != null">
+				is_monograph_required = #{isMonographRequired},
+			</if>
+			<if test="isPublishRewardUsed != null">
+				is_publish_reward_used = #{isPublishRewardUsed},
+			</if>
+			<if test="isPublishRewardRequired != null">
+				is_publish_reward_required = #{isPublishRewardRequired},
+			</if>
+			<if test="isSciUsed != null">
+				is_sci_used = #{isSciUsed},
+			</if>
+			<if test="isSciRequired != null">
+				is_sci_required = #{isSciRequired},
+			</if>
+			<if test="isClinicalRewardUsed != null">
+				is_clinical_reward_used = #{isClinicalRewardUsed},
+			</if>
+			<if test="isClinicalRewardRequired != null">
+				is_clinical_reward_required = #{isClinicalRewardRequired},
+			</if>
+			<if test="isAcadeRewardUsed != null">
+				is_acade_reward_used = #{isAcadeRewardUsed},
+			</if>
+			<if test="isAcadeRewardRequired != null">
+				is_acade_reward_required = #{isAcadeRewardRequired},
+			</if>
 		</set>
 		where
 		id=#{id} ;
@@ -463,16 +553,17 @@
 	<!--获取教材集合 -->
 	<select id="getListMaterial" resultType="Material">
 		select
-		*
+			ma.*
 		from
-		material ma
-		where
-		1=1
-		<if test="materialName !=null and materialName !=''">
-			and material_name LIKE
-			CONCAT(CONCAT('%',#{materialName},'%'))
-		</if>
-		order by ma.id desc;
+			`material` ma
+		<where>
+			ma.`is_deleted` = FALSE
+			<if test="materialName !=null and materialName !=''">
+				AND
+					 ma.`material_name` LIKE CONCAT(CONCAT('%',#{materialName},'%'))
+			</if>
+		</where>
+		ORDER BY ma.`id` desc;
 	</select>
 
 
@@ -523,7 +614,8 @@
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
 			#{parameter.userId}
-			OR e.planning_editor = #{parameter.userId})
+			OR e.planning_editor = #{parameter.userId} OR
+			m.founder_id = #{parameter.userId})
 		</if>
 		<if test="parameter.materialName != null and parameter.materialName != ''">
 			AND m.material_name LIKE
@@ -572,7 +664,8 @@
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
 			#{parameter.userId}
-			OR e.planning_editor = #{parameter.userId})
+			OR e.planning_editor = #{parameter.userId} OR
+			m.founder_id = #{parameter.userId})
 		</if>
 		<if test="parameter.materialName != null and parameter.materialName != ''">
 			AND m.material_name LIKE
@@ -624,7 +717,8 @@
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
 			#{parameter.userId}
-			OR e.planning_editor = #{parameter.userId})
+			OR e.planning_editor = #{parameter.userId} OR
+			m.founder_id = #{parameter.userId})
 		</if>
 		<if test="parameter.materialName != null and parameter.materialName != ''">
 			AND m.material_name LIKE
@@ -673,7 +767,8 @@
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
 			#{parameter.userId}
-			OR e.planning_editor = #{parameter.userId})
+			OR e.planning_editor = #{parameter.userId} OR
+			m.founder_id = #{parameter.userId})
 		</if>
 		<if test="parameter.materialName != null and parameter.materialName != ''">
 			AND m.material_name LIKE

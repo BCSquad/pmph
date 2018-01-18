@@ -63,6 +63,15 @@
 			<if test="isDispensed !=null">
 				is_dispensed,
 			</if>
+			<if test="isUtec !=null">
+				is_utec,
+			</if>
+			<if test="degree !=null">
+				degree,
+			</if>
+			<if test="expertise !=null and expertise !=''">
+				expertise,
+			</if>
 			<if test="orgId != null">
 				org_id,
 			</if>
@@ -80,6 +89,9 @@
 			</if>
 			<if test="paperDate !=null ">
 				paper_date,
+			</if>
+			<if test="returnCause !=null and returnCause !=''">
+				return_cause,
 			</if>
 			<if test="isStaging !=null ">
 				is_staging,
@@ -149,6 +161,15 @@
 			<if test="isDispensed !=null">
 				#{isDispensed},
 			</if>
+			<if test="isUtec !=null">
+				#{isUtec},
+			</if>
+			<if test="degree !=null">
+				#{degree},
+			</if>
+			<if test="expertise !=null and expertise !=''">
+				#{expertise},
+			</if>
 			<if test="orgId != null">
 				#{orgId},
 			</if>
@@ -166,6 +187,9 @@
 			</if>
 			<if test="paperDate !=null">
 				#{paperDate},
+			</if>
+			<if test="returnCause !=null and returnCause !=''">
+				#{returnCause},
 			</if>
 			<if test="isStaging !=null">
 				#{isStaging},
@@ -255,6 +279,15 @@
 			<if test="isDispensed !=null">
 				is_dispensed = #{isDispensed},
 			</if>
+			<if test="isUtec !=null">
+				is_utec = #{isUtec},
+			</if>
+			<if test="degree !=null">
+				degree = #{degree},
+			</if>
+			<if test="expertise !=null and expertise !=''">
+				expertise = #{expertise},
+			</if>
 			<if test="orgId != null">
 				org_id = #{orgId},
 			</if>
@@ -272,6 +305,9 @@
 			</if>
 			<if test="paperDate !=null">
 				paper_date = #{paperDate},
+			</if>
+			<if test="returnCause !=null and returnCause !=''">
+				return_cause = #{returnCause},
 			</if>
 			<if test="isStaging !=null and isStaging !=''">
 				is_staging = #{isStaging},

@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.dao.MaterialExtraDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.CmsContent;
+import com.bc.pmpheep.back.po.CmsExtra;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtra;
@@ -73,6 +74,8 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
     private CmsContentService               cmsContentService;
     @Autowired
     private ContentService                  contentService;
+    @Autowired
+    private CmsExtraService                 cmsExtraService;
 
     private static final String             NOTICE = "notice";
     private static final String             NOTE   = "note";
@@ -210,8 +213,11 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.NULL_PARAM, "教材通知内容为空");
         }
+        // 内容ID
+        Long cmsContentId = null;
         CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
         if (ObjectUtil.notNull(cmsContent)) {
+            cmsContentId = cmsContent.getId();
             String mid = null;
             if (StringUtil.notEmpty(cmsContent.getMid())) {
                 mid = cmsContent.getMid();
@@ -228,6 +234,7 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             }
         } else {
             // 保存CMSContent内容
+            CmsContent cmsContentObj =
             cmsContentService.addCmsContent(new CmsContent(
                                                            0L,
                                                            "0",
@@ -239,8 +246,50 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                                                            material.getFounderId(),
                                                            DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                     DateUtil.getCurrentTime()),
-                                                           materialId, Const.CMS_CATEGORY_ID_3));
+                                                           materialId, Const.CMS_CATEGORY_ID_3,
+                                                           Const.TRUE));
+            if (ObjectUtil.isNull(cmsContentObj.getId())) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+                                                  CheckedExceptionResult.NULL_PARAM, "创建教材通知公告失败");
+            }
+            cmsContentId = cmsContentObj.getId();
         }
+        // 先删除教材通知附件
+        List<CmsExtra> cmsExtras = cmsExtraService.getCmsExtraByContentId(cmsContentId);
+        if (CollectionUtil.isNotEmpty(cmsExtras)) {
+            List<Long> cmsExtraIds = new ArrayList<Long>();
+            for (CmsExtra cmsExtra : cmsExtras) {
+                cmsExtraIds.add(cmsExtra.getId());
+            }
+            cmsExtraService.deleteCmsExtraByIds(cmsExtraIds);
+        }
+        // 教材通知附件
+        List<MaterialNoticeAttachment> materialNoticeAttachments = null;
+        // 教材备注附件
+        List<MaterialNoteAttachment> materialNoteAttachments = null;
+        // 教材通知备注
+        MaterialExtra materialExtra = this.getMaterialExtraByMaterialId(materialId);
+        if (ObjectUtil.notNull(materialExtra)) {
+            Long materialExtraId = materialExtra.getId();
+            if (ObjectUtil.notNull(materialExtraId)) {
+                // 教材通知附件
+                materialNoticeAttachments =
+                materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtraId);
+                // 教材备注附件
+                materialNoteAttachments =
+                materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtraId);
+                // 教材通知附件保存到CMS附件表中
+                for (MaterialNoticeAttachment mna : materialNoticeAttachments) {
+                    cmsExtraService.addCmsExtra(new CmsExtra(cmsContentId, mna.getAttachment(),
+                                                             mna.getAttachmentName(), 0L));
+                }
+                for (MaterialNoteAttachment ma : materialNoteAttachments) {
+                    cmsExtraService.addCmsExtra(new CmsExtra(cmsContentId, ma.getAttachment(),
+                                                             ma.getAttachmentName(), 0L));
+                }
+            }
+        }
+
         // 教材通知附件
         // String[] noticeFiles = materialExtraVO.getNoticeFiles();
         // if (ArrayUtil.isNotEmpty(noticeFiles)) {

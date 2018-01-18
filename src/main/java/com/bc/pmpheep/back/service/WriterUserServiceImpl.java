@@ -543,4 +543,9 @@ public class WriterUserServiceImpl implements WriterUserService {
 		return writerUserDao.updateWriterUserRank(writerUsers);
 	}
 
+	@Override
+	public Integer getCount() {
+		return writerUserDao.getCount();
+	}
+
 }

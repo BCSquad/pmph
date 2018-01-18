@@ -6,15 +6,21 @@ package com.bc.pmpheep.utils;
 
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.po.DecAcade;
+import com.bc.pmpheep.back.po.DecAcadeReward;
 import com.bc.pmpheep.back.po.DecAchievement;
+import com.bc.pmpheep.back.po.DecClinicalReward;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecLastPosition;
+import com.bc.pmpheep.back.po.DecMonograph;
 import com.bc.pmpheep.back.po.DecNationalPlan;
+import com.bc.pmpheep.back.po.DecPublishReward;
 import com.bc.pmpheep.back.po.DecResearch;
+import com.bc.pmpheep.back.po.DecSci;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
+import com.bc.pmpheep.back.util.BinaryUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -58,10 +64,12 @@ public class WordHelper {
      * @param materialName 教材名称
      * @param textbookPath 系统唯一临时文件目录/教材名/书序和书名的组合，例如"/home/temp35723882/五年九轮/1.心理学"
      * @param list DeclarationEtcBO对象集合
+     * @param filter 使用可填项的二进制选中
      * @throws CheckedServiceException 已检查的异常
      */
-    public void export(String materialName, String textbookPath, List<DeclarationEtcBO> list) throws CheckedServiceException {
-        HashMap<String, XWPFDocument> map = fromDeclarationEtcBOList(materialName, list);
+    public void export(String materialName, String textbookPath, List<DeclarationEtcBO> list,
+            Integer filter) throws CheckedServiceException {
+        HashMap<String, XWPFDocument> map = fromDeclarationEtcBOList(materialName, list, filter);
         if (createPath(textbookPath)) {
             if (!textbookPath.endsWith(File.separator)) {
                 textbookPath = textbookPath.concat(File.separator);
@@ -75,6 +83,7 @@ public class WordHelper {
                     out.flush();
                     out.close();
                 } catch (IOException ex) {
+                    logger.error("Word导出错误：{}", ex.getMessage());
                     throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                             CheckedExceptionResult.FILE_CREATION_FAILED, "未能创建Word文件");
                 }
@@ -90,11 +99,12 @@ public class WordHelper {
      *
      * @param materialName 教材名称
      * @param list DeclarationEtcBO实例集合
+     * @param filter 使用可填项的二进制选中
      * @return 包含文档名称和Word格式文档的键值对
      * @throws CheckedServiceException 已检查的异常
      */
-    public HashMap<String, XWPFDocument> fromDeclarationEtcBOList(String materialName, List<DeclarationEtcBO> list)
-            throws CheckedServiceException {
+    public HashMap<String, XWPFDocument> fromDeclarationEtcBOList(String materialName, List<DeclarationEtcBO> list,
+            Integer filter) throws CheckedServiceException {
         InputStream is;
         XWPFDocument document;
         String path = this.getClass().getClassLoader().getResource("ResumeTemplate.docx").getPath();
@@ -116,7 +126,7 @@ public class WordHelper {
             /* 申报单位 */
             String chosenOrgName = bo.getChosenOrgName();
             if (StringUtil.notEmpty(chosenOrgName)) {
-                document.getParagraphs().get(12).createRun().setText(chosenOrgName);
+                document.getParagraphs().get(17).createRun().setText(chosenOrgName);
             }
             List<XWPFTable> tables = document.getTables();
             String filename = generateFileName(bo);
@@ -131,7 +141,12 @@ public class WordHelper {
             fillDecNationalPlanData(tables.get(8), bo.getDecNationalPlans());
             fillDecTextbookData(tables.get(9), bo.getDecTextbooks());
             fillDecResearchData(tables.get(10), bo.getDecResearchs());
-            map.put(filename, document);
+            fillDecMonographData(tables.get(11), bo.getDecMonographs());
+            fillDecPublishRewardData(tables.get(12), bo.getPublishRewards());
+            fillDecSciData(tables.get(13), bo.getDecScis());
+            fillDecClinicalRewardData(tables.get(14), bo.getDecClinicalRewards());
+            fillDecAcadeRewardData(tables.get(15), bo.getDecAcadeRewards());
+            map.put(filename, removeEmptyTables(document, filter));
         }
         return map;
     }
@@ -158,6 +173,18 @@ public class WordHelper {
                     CheckedExceptionResult.NULL_PARAM, realname.concat("的申报图书或申报职位为空"));
         }
         return filename;
+    }
+
+    private XWPFDocument removeEmptyTables(XWPFDocument document, Integer filter) {
+        List<XWPFTable> tables = document.getTables();
+        for (int i = 15; i >= 1; i--) {
+            if (BinaryUtil.getBit(filter, i - 1) == false) {
+                int index = document.getPosOfTable(tables.get(i));
+                document.removeBodyElement(index);
+                document.removeBodyElement(index - 1);
+            }
+        }
+        return document;
     }
 
     private XWPFTable fillDeclarationData(XWPFTable table, DeclarationEtcBO bo) {
@@ -225,9 +252,39 @@ public class WordHelper {
         }
         /* 第六行 */
         cells = rows.get(5).getTableCells();
+        String degree = bo.getDegree();
+        if (StringUtil.notEmpty(degree)) {
+            cells.get(1).setText(degree);
+        }
         String email = bo.getEmail();
         if (StringUtil.notEmpty(email)) {
-            cells.get(1).setText(email);
+            cells.get(3).setText(email);
+        }
+        /* 第七行 */
+        cells = rows.get(6).getTableCells();
+        String idtype = bo.getIdtype();
+        if (StringUtil.notEmpty(idtype)) {
+            cells.get(1).setText(idtype);
+        }
+        String idcard = bo.getIdcard();
+        if (StringUtil.notEmpty(idcard)) {
+            cells.get(3).setText(idcard);
+        }
+        /* 第八行 */
+        cells = rows.get(7).getTableCells();
+        String expertise = bo.getExpertise();
+        if (StringUtil.notEmpty(expertise)) {
+            cells.get(1).setText(expertise);
+        }
+        /* 第九行 */
+        cells = rows.get(8).getTableCells();
+        Boolean isDispensed = bo.getIsDispensed();
+        if (ObjectUtil.notNull(isDispensed)) {
+            cells.get(1).setText(isDispensed ? "是" : "否");
+        }
+        Boolean isUtec = bo.getIsUtec();
+        if (ObjectUtil.notNull(isUtec)) {
+            cells.get(3).setText(isUtec ? "是" : "否");
         }
         return table;
     }
@@ -717,6 +774,259 @@ public class WordHelper {
                 cells.get(2).setText(value);
             }
             value = decResearch.getNote();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(3).setText(value);
+            }
+            for (XWPFTableCell cell : cells) {
+                cell.setVerticalAlignment(XWPFVertAlign.CENTER);
+            }
+            rowCount++;
+        }
+        return table;
+    }
+
+    private XWPFTable fillDecMonographData(XWPFTable table, List<DecMonograph> decMonographs) {
+        if (CollectionUtil.isEmpty(decMonographs)) {
+            return table;
+        }
+        if (decMonographs.size() > 1) {
+            int height = table.getRow(1).getHeight();
+            for (int i = 1; i < decMonographs.size(); i++) {
+                table.createRow().setHeight(height);
+            }
+        }
+        List<XWPFTableRow> rows = table.getRows();
+        List<XWPFTableCell> cells;
+        int rowCount = 1;
+        for (DecMonograph decMonograph : decMonographs) {
+            cells = rows.get(rowCount).getTableCells();
+            String value = decMonograph.getMonographName();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(0).setText(value);
+            }
+            Date monographDate = decMonograph.getMonographDate();
+            if (null != monographDate) {
+                value = sdf.format(monographDate);
+                cells.get(1).setText(value);
+            }
+            value = (decMonograph.isSelfPaid() ? "自费" : "公费");
+            if (StringUtil.notEmpty(value)) {
+                cells.get(2).setText(value);
+            }
+            value = decMonograph.getPublisher();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(3).setText(value);
+            }
+            Date publishDate = decMonograph.getPublishDate();
+            if (null != publishDate) {
+                value = sdf.format(publishDate);
+                cells.get(4).setText(value);
+            }
+            value = decMonograph.getNote();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(5).setText(value);
+            }
+            for (XWPFTableCell cell : cells) {
+                cell.setVerticalAlignment(XWPFVertAlign.CENTER);
+            }
+            rowCount++;
+        }
+        return table;
+    }
+
+    private XWPFTable fillDecPublishRewardData(XWPFTable table, List<DecPublishReward> decPublishRewards) {
+        if (CollectionUtil.isEmpty(decPublishRewards)) {
+            return table;
+        }
+        if (decPublishRewards.size() > 1) {
+            int height = table.getRow(1).getHeight();
+            for (int i = 1; i < decPublishRewards.size(); i++) {
+                table.createRow().setHeight(height);
+            }
+        }
+        List<XWPFTableRow> rows = table.getRows();
+        List<XWPFTableCell> cells;
+        int rowCount = 1;
+        for (DecPublishReward decPublishReward : decPublishRewards) {
+            cells = rows.get(rowCount).getTableCells();
+            String value = decPublishReward.getRewardName();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(0).setText(value);
+            }
+            Date rewardDate = decPublishReward.getRewardDate();
+            if (null != rewardDate) {
+                value = sdf.format(rewardDate);
+                cells.get(1).setText(value);
+            }
+            value = decPublishReward.getAwardUnit();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(2).setText(value);
+            }
+            value = decPublishReward.getNote();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(3).setText(value);
+            }
+            for (XWPFTableCell cell : cells) {
+                cell.setVerticalAlignment(XWPFVertAlign.CENTER);
+            }
+            rowCount++;
+        }
+        return table;
+    }
+
+    private XWPFTable fillDecSciData(XWPFTable table, List<DecSci> decScis) {
+        if (CollectionUtil.isEmpty(decScis)) {
+            return table;
+        }
+        if (decScis.size() > 1) {
+            int height = table.getRow(1).getHeight();
+            for (int i = 1; i < decScis.size(); i++) {
+                table.createRow().setHeight(height);
+            }
+        }
+        List<XWPFTableRow> rows = table.getRows();
+        List<XWPFTableCell> cells;
+        int rowCount = 1;
+        for (DecSci decSci : decScis) {
+            cells = rows.get(rowCount).getTableCells();
+            String value = decSci.getPaperName();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(0).setText(value);
+            }
+            value = decSci.getJournalName();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(1).setText(value);
+            }
+            value = decSci.getFactor();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(2).setText(value);
+            }
+            Date publishDate = decSci.getPublishDate();
+            if (null != publishDate) {
+                value = sdf.format(publishDate);
+                cells.get(3).setText(value);
+            }
+            value = decSci.getNote();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(4).setText(value);
+            }
+            for (XWPFTableCell cell : cells) {
+                cell.setVerticalAlignment(XWPFVertAlign.CENTER);
+            }
+            rowCount++;
+        }
+        return table;
+    }
+
+    private XWPFTable fillDecClinicalRewardData(XWPFTable table, List<DecClinicalReward> decClinicalRewards) {
+        if (CollectionUtil.isEmpty(decClinicalRewards)) {
+            return table;
+        }
+        if (decClinicalRewards.size() > 1) {
+            int height = table.getRow(1).getHeight();
+            for (int i = 1; i < decClinicalRewards.size(); i++) {
+                table.createRow().setHeight(height);
+            }
+        }
+        List<XWPFTableRow> rows = table.getRows();
+        List<XWPFTableCell> cells;
+        int rowCount = 1;
+        for (DecClinicalReward decClinicalReward : decClinicalRewards) {
+            cells = rows.get(rowCount).getTableCells();
+            String value = decClinicalReward.getRewardName();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(0).setText(value);
+            }
+            Date rewardDate = decClinicalReward.getRewardDate();
+            if (null != rewardDate) {
+                value = sdf.format(rewardDate);
+                cells.get(1).setText(value);
+            }
+            Integer type = decClinicalReward.getAwardUnit();
+            if (null != type) {
+                switch (type) {
+                    case 0:
+                        value = "无";
+                        break;
+                    case 1:
+                        value = "国际";
+                        break;
+                    case 2:
+                        value = "国家";
+                        break;
+                    case 3:
+                        value = "省部";
+                        break;
+                    case 4:
+                        value = "市";
+                        break;
+                    default:
+                        value = "其他";
+                        break;
+                }
+                cells.get(2).setText(value);
+            }
+            value = decClinicalReward.getNote();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(3).setText(value);
+            }
+            for (XWPFTableCell cell : cells) {
+                cell.setVerticalAlignment(XWPFVertAlign.CENTER);
+            }
+            rowCount++;
+        }
+        return table;
+    }
+
+    private XWPFTable fillDecAcadeRewardData(XWPFTable table, List<DecAcadeReward> decAcadeRewards) {
+        if (CollectionUtil.isEmpty(decAcadeRewards)) {
+            return table;
+        }
+        if (decAcadeRewards.size() > 1) {
+            int height = table.getRow(1).getHeight();
+            for (int i = 1; i < decAcadeRewards.size(); i++) {
+                table.createRow().setHeight(height);
+            }
+        }
+        List<XWPFTableRow> rows = table.getRows();
+        List<XWPFTableCell> cells;
+        int rowCount = 1;
+        for (DecAcadeReward decAcadeReward : decAcadeRewards) {
+            cells = rows.get(rowCount).getTableCells();
+            String value = decAcadeReward.getRewardName();
+            if (StringUtil.notEmpty(value)) {
+                cells.get(0).setText(value);
+            }
+            Date rewardDate = decAcadeReward.getRewardDate();
+            if (null != rewardDate) {
+                value = sdf.format(rewardDate);
+                cells.get(1).setText(value);
+            }
+            Integer type = decAcadeReward.getAwardUnit();
+            if (null != type) {
+                switch (type) {
+                    case 0:
+                        value = "无";
+                        break;
+                    case 1:
+                        value = "国际";
+                        break;
+                    case 2:
+                        value = "国家";
+                        break;
+                    case 3:
+                        value = "省部";
+                        break;
+                    case 4:
+                        value = "市";
+                        break;
+                    default:
+                        value = "其他";
+                        break;
+                }
+                cells.get(2).setText(value);
+            }
+            value = decAcadeReward.getNote();
             if (StringUtil.notEmpty(value)) {
                 cells.get(3).setText(value);
             }

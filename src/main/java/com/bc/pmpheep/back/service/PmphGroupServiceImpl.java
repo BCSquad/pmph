@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +26,7 @@ import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CastUtil;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.FileUpload;
 import com.bc.pmpheep.back.util.FileUtil;
@@ -32,7 +35,6 @@ import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.bean.ImageType;
@@ -50,8 +52,6 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Service
 public class PmphGroupServiceImpl extends BaseService implements PmphGroupService {
 
-	@Autowired
-	private TextbookDao textbookDao;
 	@Autowired
 	private PmphGroupDao pmphGroupDao;
 	@Autowired
@@ -208,21 +208,21 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		if (pmphUser.getIsAdmin()) {
 			list = pmphGroupDao.listPmphGroup(pmphGroup.getGroupName());
 			for (PmphGroupListVO pmphGroupListVO : list) {
-				pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
+				pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 			}
 		} else {
 			list = pmphGroupDao.getList(pmphGroup, pmphUser.getId());
 			for (PmphGroupListVO pmphGroupListVO : list) {
-				pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
+				pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 			}
 		}
 		return list;
 	}
 
 	@Override
-	public PmphGroup addPmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId)
+	public PmphGroup addPmphGroupOnGroup(String file, PmphGroup pmphGroup, HttpServletRequest request)
 			throws CheckedServiceException, IOException {
-
+		String sessionId = CookiesUtil.getSessionId(request);
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
@@ -234,7 +234,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		}
 		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		if (!StringUtil.isEmpty(file)) {
-			groupImage = saveFileToMongoDB(file);
+			groupImage = saveFileToMongoDB(file, request);
 		}
 		pmphGroup.setGroupImage(groupImage);
 		pmphGroup.setFounderId(pmphUser.getId());
@@ -254,8 +254,9 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 	}
 
 	@Override
-	public PmphGroup updatePmphGroupOnGroup(String file, PmphGroup pmphGroup, String sessionId)
+	public PmphGroup updatePmphGroupOnGroup(String file, PmphGroup pmphGroup, HttpServletRequest request)
 			throws CheckedServiceException, IOException {
+		String sessionId = CookiesUtil.getSessionId(request);
 		if (null == pmphGroup) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"参数对象不能为空");
@@ -285,7 +286,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 						&& !RouteUtil.DEFAULT_USER_AVATAR.equals(pmphGroupOld.getGroupImage())) {
 					fileService.remove(pmphGroupOld.getGroupImage());
 				}
-				String newGroupImage = saveFileToMongoDB(file);
+				String newGroupImage = saveFileToMongoDB(file, request);
 				pmphGroup.setGroupImage(newGroupImage);
 			}
 			pmphGroupDao.updatePmphGroup(pmphGroup);
@@ -355,7 +356,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		List<PmphGroupListVO> list = new ArrayList<>();
 		list = pmphGroupDao.getList(pmphGroup, pmphUser.getId());
 		for (PmphGroupListVO pmphGroupListVO : list) {
-			pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
+			pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 		}
 		return list;
 	}
@@ -376,31 +377,34 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		List<PmphGroupListVO> list = new ArrayList<>();
 		PageResult<PmphGroupListVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total = 0;
 		if (pmphUser.getIsAdmin()) {
+			total = pmphGroupDao.getAdminCount();
 			list = pmphGroupDao.getPmphGroupList(pageParameter);
-			// list =
-			// pmphGroupDao.listPmphGroup(pageParameter.getParameter().getGroupName());
 			for (PmphGroupListVO pmphGroupListVO : list) {
-				pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
+				pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 			}
 			pageResult.setRows(list);
+			pageResult.setTotal(total);
 
 		} else {
+
 			PmphGroup pmphGroup = new PmphGroup();
 			pmphGroup.setGroupName(pageParameter.getParameter().getGroupName());
 			pmphGroup.setId(pmphUser.getId());
+			total = pmphGroupDao.getPmphGroupTotal(pageParameter);
 			list = pmphGroupDao.getListPmphGroup(pageParameter);
-			// list = pmphGroupDao.getList(pmphGroup, pmphUser.getId());
 			for (PmphGroupListVO pmphGroupListVO : list) {
-				pmphGroupListVO.setGroupImage(RouteUtil.gruopImage(pmphGroupListVO.getGroupImage()));
+				pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 			}
 			pageResult.setRows(list);
+			pageResult.setTotal(total);
 		}
 		return pageResult;
 	}
 
 	@Override
-	public String msgUploadFiles(MultipartFile file) throws CheckedServiceException {
+	public String msgUploadFiles(MultipartFile file, HttpServletRequest request) throws CheckedServiceException {
 		if (file.isEmpty()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE, CheckedExceptionResult.NULL_PARAM,
 					"附件为空！");
@@ -415,38 +419,41 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			}
 			String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));// 去掉后缀的文件名称
 			String beforeDate = DateUtil.date2Str(new Date(), "yyyyMMddHHmmss") + "/";// 获取当前时间拼接路径
-			FileUpload.fileUp(file, Const.MSG_FILE_PATH_FILE + beforeDate, fileName);// 上传文件
-			filePath = Const.MSG_FILE_PATH_FILE + beforeDate + fullFileName;
+			FileUpload.fileUp(file, request.getSession().getServletContext().getRealPath("/") + beforeDate, fileName);// 上传文件
+			filePath = beforeDate + fullFileName;
 		}
 		return filePath;
 	}
 
 	/**
 	 * 
+	 * <pre>
 	 * 功能描述：保存文件到MongoDB
+	 * 使用示范：
 	 *
-	 * @param files
-	 *            临时文件路径
-	 * @param msgId
-	 *            messageId
-	 * @throws CheckedServiceException
+	 * &#64;param files 临时文件路径
+	 * &#64;param msgId messageId
+	 * &#64;throws CheckedServiceException
+	 * </pre>
 	 */
-	private String saveFileToMongoDB(String file) throws IOException {
-		String gridFSFileId = RouteUtil.DEFAULT_GROUP_IMAGE;
+	private String saveFileToMongoDB(String file, HttpServletRequest request) throws IOException {
+		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;
 		// 添加附件到MongoDB表中
-		File f = FileUpload.getFileByFilePath(file);
-		if (f.isFile()) {
-			// 循环获取file数组中得文件
-			if (StringUtil.notEmpty(f.getName())) {
-				gridFSFileId = fileService.saveLocalFile(f, ImageType.GROUP_AVATAR, 0);// 上传文件到MongoDB
-				if (StringUtil.isEmpty(gridFSFileId)) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-							CheckedExceptionResult.FILE_UPLOAD_FAILED, "文件上传失败!");
-				}
-			}
-			FileUtil.delFile(file);// 删除本地临时文件
-		}
-		return gridFSFileId;
-	}
+		if (!StringUtil.isEmpty(file)) {
+			File f = FileUpload.getFileByFilePath(request.getSession().getServletContext().getRealPath("/") + file);
+			if (f.isFile()) {
+				// 循环获取file数组中得文件
+				if (StringUtil.notEmpty(f.getName())) {
+					groupImage = fileService.saveLocalFile(f, FileType.GROUP_FILE, 0);// 上传文件到MongoDB
+					if (StringUtil.isEmpty(groupImage)) {
+						throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+								CheckedExceptionResult.FILE_UPLOAD_FAILED, "文件上传失败!");
+					}
 
+				}
+				FileUtil.delFile(file);// 删除本地临时文件
+			}
+		}
+		return groupImage;
+	}
 }

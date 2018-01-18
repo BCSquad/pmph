@@ -18,26 +18,32 @@ import org.apache.ibatis.type.Alias;
  */
 @SuppressWarnings("serial")
 @Alias("PmphGroupFileVO")
-public class PmphGroupFileVO implements Serializable{
+public class PmphGroupFileVO implements Serializable {
 	// 主键
 	private Long id;
-	//小组id
+	// 小组id
 	private Long groupId;
-	//文件id
+	// 文件id
 	private String fileId;
-	//文件名
+	// 文件名
 	private String fileName;
-	//上传时间
+	// 文件大小（PO）
+	private Double fileSize;
+	// 文件大小（前端展示）
+	private String fileLenth;
+	// 上传时间
 	private Timestamp gmtCreate;
-	//上传者id
+	// 上传者id
 	private Long memberId;
-	//上传者小组内名字
+	// 上传者小组内名字
 	private String memberName;
-	//上传小组数
+	// 上传小组数
 	private Integer groupCount;
-	//下载次数
+	// 下载次数
 	private Integer download;
-	
+	// 排序类别
+	private String sortType;
+
 	public PmphGroupFileVO() {
 		super();
 	}
@@ -114,12 +120,34 @@ public class PmphGroupFileVO implements Serializable{
 		this.download = download;
 	}
 
+	public Double getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(Double fileSize) {
+		this.fileSize = fileSize;
+	}
+
+	public String getFileLenth() {
+		return fileLenth;
+	}
+
+	public void setFileLenth(String fileLenth) {
+		this.fileLenth = fileLenth;
+	}
+
+	public String getSortType() {
+		return sortType;
+	}
+
+	public void setSortType(String sortType) {
+		this.sortType = sortType;
+	}
+
 	@Override
 	public String toString() {
-		return " {id:" + id + ", groupId:" + groupId + ", fileId:" + fileId
-				+ ", fileName:" + fileName + ", gmtCreate:" + gmtCreate
-				+ ", memberId:" + memberId + ", groupCount:" + groupCount
-				+ ", download:" + download + "}";
+		return " {id:" + id + ", groupId:" + groupId + ", fileId:" + fileId + ", fileName:" + fileName + ", gmtCreate:"
+				+ gmtCreate + ", memberId:" + memberId + ", groupCount:" + groupCount + ", download:" + download + "}";
 	}
-	
+
 }

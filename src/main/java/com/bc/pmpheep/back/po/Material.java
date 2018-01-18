@@ -104,13 +104,31 @@ public class Material implements java.io.Serializable {
     private Boolean isAchievementUsed    ;
     //个人成就可用
     private Boolean isAchievementRequired;
-    //
+    //是否可选数字编委
     private Boolean isDigitalEditorOptional ;
-    
+    //主编学术专著情况 
+    private Boolean isMonographUsed;
+    //主编学术专著情况必填
+    private Boolean isMonographRequired;
+    //出版行业获奖情况
+    private Boolean isPublishRewardUsed;
+    //出版行业获奖情况必填
+    private Boolean isPublishRewardRequired;
+    //SCI论文投稿及影响因子
+    private Boolean isSciUsed;
+    //SCI论文投稿及影响因子必填
+    private Boolean isSciRequired;
+    //临床医学获奖情况
+    private Boolean isClinicalRewardUsed;
+    //临床医学获奖情况必填
+    private Boolean isClinicalRewardRequired;
+    //学术荣誉授予情况
+    private Boolean isAcadeRewardUsed;
+    //学术荣誉授予情况必填
+    private Boolean isAcadeRewardRequired;  
 
     // Constructors
-
-    /** default constructor */
+	/** default constructor */
     public Material() {
     }
 
@@ -161,62 +179,6 @@ public class Material implements java.io.Serializable {
 		this.projectPermission = projectPermission;
 		this.planPermission = planPermission;
 	}
-
-	public Material(String materialName, Integer materialRound, Long materialType, Date deadline,
-    Date actualDeadline, Date ageDeadline, String mailAddress, Long departmentId, Long director,
-    Boolean isMultiBooks, Boolean isMultiPosition, Boolean isEduExpUsed, Boolean isEduExpRequired,
-    Boolean isWorkExpUsed, Boolean isWorkExpRequired, Boolean isTeachExpUsed,
-    Boolean isTeachExpRequired, Boolean isAcadeUsed, Boolean isAcadeRequired,
-    Boolean isLastPositionUsed, Boolean isLastPositionRequired,
-    Boolean isCourseUsed,Boolean isCourseRequired, 
-    Boolean isNationalPlanUsed, Boolean isNationalPlanRequired, Boolean isTextbookUsed,
-    Boolean isTextbookRequired, Boolean isOtherTextbookUsed, Boolean isOtherTextbookRequired,
-    Boolean isResearchUsed, Boolean isResearchRequired, Boolean isPublished, Boolean isPublic,
-    Boolean isAllTextbookPublished, Boolean isForceEnd, Boolean isDeleted, Timestamp gmtCreate,
-    Long founderId, Timestamp gmtUpdate, Long menderId) {
-        super();
-        this.materialName = materialName;
-        this.materialRound = materialRound;
-        this.materialType = materialType;
-        this.deadline = deadline;
-        this.actualDeadline = actualDeadline;
-        this.ageDeadline = ageDeadline;
-        this.mailAddress = mailAddress;
-        this.departmentId = departmentId;
-        this.director = director;
-        this.isMultiBooks = isMultiBooks;
-        this.isMultiPosition = isMultiPosition;
-        this.isEduExpUsed = isEduExpUsed;
-        this.isEduExpRequired = isEduExpRequired;
-        this.isWorkExpUsed = isWorkExpUsed;
-        this.isWorkExpRequired = isWorkExpRequired;
-        this.isTeachExpUsed = isTeachExpUsed;
-        this.isTeachExpRequired = isTeachExpRequired;
-        this.isAcadeUsed = isAcadeUsed;
-        this.isAcadeRequired = isAcadeRequired;
-        this.isLastPositionUsed = isLastPositionUsed;
-        this.isLastPositionRequired = isLastPositionRequired;
-        this.isCourseUsed = isCourseUsed;
-        this.isCourseRequired = isCourseRequired;
-        this.isNationalPlanUsed = isNationalPlanUsed;
-        this.isNationalPlanRequired = isNationalPlanRequired;
-        this.isTextbookUsed = isTextbookUsed;
-        this.isTextbookRequired = isTextbookRequired;
-        this.isOtherTextbookUsed = isOtherTextbookUsed;
-        this.isOtherTextbookRequired = isOtherTextbookRequired;
-        this.isResearchUsed = isResearchUsed;
-        this.isResearchRequired = isResearchRequired;
-        this.isPublished = isPublished;
-        this.isPublic = isPublic;
-        this.isAllTextbookPublished = isAllTextbookPublished;
-        this.isForceEnd = isForceEnd;
-        this.isDeleted = isDeleted;
-        this.gmtCreate = gmtCreate;
-        this.founderId = founderId;
-        this.gmtUpdate = gmtUpdate;
-        this.menderId = menderId;
-    }
-
     
     public Long getId() {
         return this.id;
@@ -589,88 +551,140 @@ public class Material implements java.io.Serializable {
 		this.isDigitalEditorOptional = isDigitalEditorOptional;
 	}
 
+	public Boolean getIsMonographUsed() {
+		return isMonographUsed;
+	}
+
+	public Material setIsMonographUsed(Boolean isMonographUsed) {
+		this.isMonographUsed = isMonographUsed;
+		return this;
+	}
+
+	public Boolean getIsMonographRequired() {
+		return isMonographRequired;
+	}
+
+	public Material setIsMonographRequired(Boolean isMonographRequired) {
+		this.isMonographRequired = isMonographRequired;
+		return this;
+	}
+
+	public Boolean getIsPublishRewardUsed() {
+		return isPublishRewardUsed;
+	}
+
+	public Material setIsPublishRewardUsed(Boolean isPublishRewardUsed) {
+		this.isPublishRewardUsed = isPublishRewardUsed;
+		return this;
+	}
+
+	public Boolean getIsPublishRewardRequired() {
+		return isPublishRewardRequired;
+	}
+
+	public Material setIsPublishRewardRequired(Boolean isPublishRewardRequired) {
+		this.isPublishRewardRequired = isPublishRewardRequired;
+		return this;
+	}
+
+	public Boolean getIsSciUsed() {
+		return isSciUsed;
+	}
+
+	public Material setIsSciUsed(Boolean isSciUsed) {
+		this.isSciUsed = isSciUsed;
+		return this;
+	}
+
+	public Boolean getIsSciRequired() {
+		return isSciRequired;
+	}
+
+	public Material setIsSciRequired(Boolean isSciRequired) {
+		this.isSciRequired = isSciRequired;
+		return this;
+	}
+
+	public Boolean getIsClinicalRewardUsed() {
+		return isClinicalRewardUsed;
+	}
+
+	public Material setIsClinicalRewardUsed(Boolean isClinicalRewardUsed) {
+		this.isClinicalRewardUsed = isClinicalRewardUsed;
+		return this;
+	}
+
+	public Boolean getIsClinicalRewardRequired() {
+		return isClinicalRewardRequired;
+	}
+
+	public Material setIsClinicalRewardRequired(Boolean isClinicalRewardRequired) {
+		this.isClinicalRewardRequired = isClinicalRewardRequired;
+		return this;
+	}
+
+	public Boolean getIsAcadeRewardUsed() {
+		return isAcadeRewardUsed;
+	}
+
+	public Material setIsAcadeRewardUsed(Boolean isAcadeRewardUsed) {
+		this.isAcadeRewardUsed = isAcadeRewardUsed;
+		return this;
+	}
+
+	public Boolean getIsAcadeRewardRequired() {
+		return isAcadeRewardRequired;
+	}
+
+	public Material setIsAcadeRewardRequired(Boolean isAcadeRewardRequired) {
+		this.isAcadeRewardRequired = isAcadeRewardRequired;
+		return this;
+	}
+
 	@Override
 	public String toString() {
-		return "{id:" + id + ", materialName:" + materialName
-				+ ", materialRound:" + materialRound + ", materialType:"
-				+ materialType + ", deadline:" + deadline + ", actualDeadline:"
-				+ actualDeadline + ", ageDeadline:" + ageDeadline
-				+ ", mailAddress:" + mailAddress + ", departmentId:"
-				+ departmentId + ", director:" + director + ", isMultiBooks:"
-				+ isMultiBooks + ", isMultiPosition:" + isMultiPosition
-				+ ", isEduExpUsed:" + isEduExpUsed + ", isEduExpRequired:"
-				+ isEduExpRequired + ", isWorkExpUsed:" + isWorkExpUsed
-				+ ", isWorkExpRequired:" + isWorkExpRequired
-				+ ", isTeachExpUsed:" + isTeachExpUsed
-				+ ", isTeachExpRequired:" + isTeachExpRequired
-				+ ", isAcadeUsed:" + isAcadeUsed + ", isAcadeRequired:"
-				+ isAcadeRequired + ", isLastPositionUsed:"
-				+ isLastPositionUsed + ", isLastPositionRequired:"
-				+ isLastPositionRequired + ", isCourseUsed:" + isCourseUsed
-				+ ", isCourseRequired:" + isCourseRequired
-				+ ", isNationalPlanUsed:" + isNationalPlanUsed
-				+ ", isNationalPlanRequired:" + isNationalPlanRequired
-				+ ", isTextbookUsed:" + isTextbookUsed
-				+ ", isTextbookRequired:" + isTextbookRequired
-				+ ", isOtherTextbookUsed:" + isOtherTextbookUsed
-				+ ", isOtherTextbookRequired:" + isOtherTextbookRequired
-				+ ", isResearchUsed:" + isResearchUsed
-				+ ", isResearchRequired:" + isResearchRequired
-				+ ", isPublished:" + isPublished + ", isPublic:" + isPublic
-				+ ", isAllTextbookPublished:" + isAllTextbookPublished
-				+ ", isForceEnd:" + isForceEnd + ", isDeleted:" + isDeleted
-				+ ", gmtCreate:" + gmtCreate + ", founderId:" + founderId
-				+ ", gmtUpdate:" + gmtUpdate + ", menderId:" + menderId
-				+ ", projectPermission:" + projectPermission
-				+ ", planPermission:" + planPermission + ", isAchievementUsed:"
-				+ isAchievementUsed + ", isAchievementRequired:"
-				+ isAchievementRequired + ", isDigitalEditorOptional:"
-				+ isDigitalEditorOptional + ", getId():" + getId()
-				+ ", getMaterialName():" + getMaterialName()
-				+ ", getMaterialRound():" + getMaterialRound()
-				+ ", getMaterialType():" + getMaterialType()
-				+ ", getDeadline():" + getDeadline() + ", getActualDeadline():"
-				+ getActualDeadline() + ", getAgeDeadline():"
-				+ getAgeDeadline() + ", getMailAddress():" + getMailAddress()
-				+ ", getDepartmentId():" + getDepartmentId()
-				+ ", getDirector():" + getDirector() + ", getIsMultiBooks():"
-				+ getIsMultiBooks() + ", getIsMultiPosition():"
-				+ getIsMultiPosition() + ", getIsEduExpUsed():"
-				+ getIsEduExpUsed() + ", getIsEduExpRequired():"
-				+ getIsEduExpRequired() + ", getIsWorkExpUsed():"
-				+ getIsWorkExpUsed() + ", getIsWorkExpRequired():"
-				+ getIsWorkExpRequired() + ", getIsTeachExpUsed():"
-				+ getIsTeachExpUsed() + ", getIsTeachExpRequired():"
-				+ getIsTeachExpRequired() + ", getIsAcadeUsed():"
-				+ getIsAcadeUsed() + ", getIsAcadeRequired():"
-				+ getIsAcadeRequired() + ", getIsLastPositionUsed():"
-				+ getIsLastPositionUsed() + ", getIsLastPositionRequired():"
-				+ getIsLastPositionRequired() + ", getIsCourseUsed():"
-				+ getIsCourseUsed() + ", getIsCourseRequired():"
-				+ getIsCourseRequired() + ", getIsNationalPlanUsed():"
-				+ getIsNationalPlanUsed() + ", getIsNationalPlanRequired():"
-				+ getIsNationalPlanRequired() + ", getIsTextbookUsed():"
-				+ getIsTextbookUsed() + ", getIsTextbookRequired():"
-				+ getIsTextbookRequired() + ", getIsOtherTextbookUsed():"
-				+ getIsOtherTextbookUsed() + ", getIsOtherTextbookRequired():"
-				+ getIsOtherTextbookRequired() + ", getIsResearchUsed():"
-				+ getIsResearchUsed() + ", getIsResearchRequired():"
-				+ getIsResearchRequired() + ", getIsPublished():"
-				+ getIsPublished() + ", getIsPublic():" + getIsPublic()
-				+ ", getIsAllTextbookPublished():"
-				+ getIsAllTextbookPublished() + ", getIsForceEnd():"
-				+ getIsForceEnd() + ", getIsDeleted():" + getIsDeleted()
-				+ ", getGmtCreate():" + getGmtCreate() + ", getFounderId():"
-				+ getFounderId() + ", getGmtUpdate():" + getGmtUpdate()
-				+ ", getMenderId():" + getMenderId()
-				+ ", getProjectPermission():" + getProjectPermission()
-				+ ", getPlanPermission():" + getPlanPermission()
-				+ ", getIsAchievementUsed():" + getIsAchievementUsed()
-				+ ", getIsAchievementRequired():" + getIsAchievementRequired()
-				+ ", getIsDigitalEditorOptional():"
-				+ getIsDigitalEditorOptional() + ", getClass():" + getClass()
-				+ ", hashCode():" + hashCode() + ", toString():"
-				+ super.toString() + "}";
+		return "{id:" + id + ",materialName:" + materialName
+				+ ",materialRound:" + materialRound + ",materialType:"
+				+ materialType + ",deadline:" + deadline + ",actualDeadline:"
+				+ actualDeadline + ",ageDeadline:" + ageDeadline
+				+ ",mailAddress:" + mailAddress + ",departmentId:"
+				+ departmentId + ",director:" + director + ",isMultiBooks:"
+				+ isMultiBooks + ",isMultiPosition:" + isMultiPosition
+				+ ",isEduExpUsed:" + isEduExpUsed + ",isEduExpRequired:"
+				+ isEduExpRequired + ",isWorkExpUsed:" + isWorkExpUsed
+				+ ",isWorkExpRequired:" + isWorkExpRequired
+				+ ",isTeachExpUsed:" + isTeachExpUsed + ",isTeachExpRequired:"
+				+ isTeachExpRequired + ",isAcadeUsed:" + isAcadeUsed
+				+ ",isAcadeRequired:" + isAcadeRequired
+				+ ",isLastPositionUsed:" + isLastPositionUsed
+				+ ",isLastPositionRequired:" + isLastPositionRequired
+				+ ",isCourseUsed:" + isCourseUsed + ",isCourseRequired:"
+				+ isCourseRequired + ",isNationalPlanUsed:"
+				+ isNationalPlanUsed + ",isNationalPlanRequired:"
+				+ isNationalPlanRequired + ",isTextbookUsed:" + isTextbookUsed
+				+ ",isTextbookRequired:" + isTextbookRequired
+				+ ",isOtherTextbookUsed:" + isOtherTextbookUsed
+				+ ",isOtherTextbookRequired:" + isOtherTextbookRequired
+				+ ",isResearchUsed:" + isResearchUsed + ",isResearchRequired:"
+				+ isResearchRequired + ",isPublished:" + isPublished
+				+ ",isPublic:" + isPublic + ",isAllTextbookPublished:"
+				+ isAllTextbookPublished + ",isForceEnd:" + isForceEnd
+				+ ",isDeleted:" + isDeleted + ",gmtCreate:" + gmtCreate
+				+ ",founderId:" + founderId + ",gmtUpdate:" + gmtUpdate
+				+ ",menderId:" + menderId + ",projectPermission:"
+				+ projectPermission + ",planPermission:" + planPermission
+				+ ",isAchievementUsed:" + isAchievementUsed
+				+ ",isAchievementRequired:" + isAchievementRequired
+				+ ",isDigitalEditorOptional:" + isDigitalEditorOptional
+				+ ",isMonographUsed:" + isMonographUsed
+				+ ",isMonographRequired:" + isMonographRequired
+				+ ",isPublishRewardUsed:" + isPublishRewardUsed
+				+ ",isPublishRewardRequired:" + isPublishRewardRequired
+				+ ",isSciUsed:" + isSciUsed + ",isSciRequired:" + isSciRequired
+				+ ",isClinicalRewardUsed:" + isClinicalRewardUsed
+				+ ",isClinicalRewardRequired:" + isClinicalRewardRequired
+				+ ",isAcadeRewardUsed:" + isAcadeRewardUsed
+				+ ",isAcadeRewardRequired:" + isAcadeRewardRequired + "}";
 	}
 
 	

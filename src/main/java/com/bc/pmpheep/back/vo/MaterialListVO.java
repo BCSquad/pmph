@@ -45,6 +45,8 @@ public class MaterialListVO implements Serializable {
 	private Boolean isFounder;
 	// 创建者id
 	private Long founderId;
+	// 创建者姓名
+	private String founderName;
 	// 消息id
 	private String msgId;
 	// 创建到 哪个步骤
@@ -178,6 +180,14 @@ public class MaterialListVO implements Serializable {
 
 	public void setFounderId(Long founderId) {
 		this.founderId = founderId;
+	}
+
+	public String getFounderName() {
+		return founderName;
+	}
+
+	public void setFounderName(String founderName) {
+		this.founderName = founderName;
 	}
 
 	public Long getUserId() {

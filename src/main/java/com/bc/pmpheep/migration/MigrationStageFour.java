@@ -1,6 +1,5 @@
 package com.bc.pmpheep.migration;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -27,6 +26,7 @@ import com.bc.pmpheep.back.po.MaterialOrg;
 import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.MaterialType;
 import com.bc.pmpheep.back.po.Org;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.MaterialContactService;
 import com.bc.pmpheep.back.service.MaterialExtensionService;
 import com.bc.pmpheep.back.service.MaterialExtraService;
@@ -37,6 +37,7 @@ import com.bc.pmpheep.back.service.MaterialProjectEditorService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.MaterialTypeService;
 import com.bc.pmpheep.back.service.OrgService;
+import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -88,6 +89,8 @@ public class MigrationStageFour {
     private MaterialProjectEditorService materialProjectEditorService;
     @Autowired
     private OrgService orgService;
+    @Autowired
+    private PmphUserService pmphUserService;
     
     //用来装载向客户导出的信息
     private List<Object[]> excptionList = new ArrayList<Object[]>( );
@@ -285,12 +288,12 @@ public class MigrationStageFour {
                 excel.add(oldMaterial);
                 continue;
             }
-            Long DepartmentId = (Long) oldMaterial.get("DepartmentId");
-            if (ObjectUtil.isNull(DepartmentId)) {
+            Long departmentId = (Long) oldMaterial.get("DepartmentId");
+            if (ObjectUtil.isNull(departmentId)) {
 //                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建部门为空。"));
 //                excel.add(oldMaterial);
 //                continue;
-                DepartmentId = 0L;
+                departmentId = 0L;
             }
             Long director = (Long) oldMaterial.get("director");
             if (ObjectUtil.isNull(director)) {
@@ -304,7 +307,15 @@ public class MigrationStageFour {
 //                oldMaterial.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建人为空。"));
 //                excel.add(oldMaterial);
 //                continue;
-                founder_id = 0L;
+            	founder_id = 0L;
+            	//设置成wuz
+            	PmphUser pmphUser = pmphUserService.getPmphUser("wuz");
+                if(null != pmphUser && null != pmphUser.getId()){
+                	founder_id =  pmphUser.getId();
+                }
+                if(null != pmphUser.getDepartmentId()){
+                	departmentId =  pmphUser.getDepartmentId();
+                }
             }
             Integer round = (Integer) oldMaterial.get("round");
             if (ObjectUtil.isNull(round)) {//没有轮次的设置默认值为0。
@@ -339,7 +350,7 @@ public class MigrationStageFour {
             material.setActualDeadline((Timestamp) oldMaterial.get("enddate"));
             material.setAgeDeadline((Timestamp) oldMaterial.get("agedeaddate"));
             material.setMailAddress(mailaddress);
-            material.setDepartmentId(DepartmentId);
+            material.setDepartmentId(departmentId);
             material.setDirector(director);//director,
             material.setIsMultiBooks("1".equals(String.valueOf(oldMaterial.get("isbookmulti")))); //is_multi_books,
             material.setIsMultiPosition("1".equals(String.valueOf(oldMaterial.get("ispositionmulti"))));//is_multi_position,
@@ -372,7 +383,7 @@ public class MigrationStageFour {
             material.setIsResearchUsed("1".equals(String.valueOf(oldMaterial.get("isusescientresearch"))));//is_research_used,
             material.setIsResearchRequired("1".equals(String.valueOf(oldMaterial.get("isfillscientresearch"))));//is_research_required,
             material.setIsPublished("1".equals(String.valueOf(oldMaterial.get("is_published"))));//is_published,
-            material.setIsPublic(false);//is_public
+            material.setIsPublic(true);//is_public
             material.setIsAllTextbookPublished("1".equals(String.valueOf(oldMaterial.get("is_all_textbook_published"))));//is_all_textbook_published
             material.setIsForceEnd(false);//is_force_end
             material.setIsDeleted("1".equals(String.valueOf(oldMaterial.get("isdelete"))));//is_deleted,
@@ -380,6 +391,27 @@ public class MigrationStageFour {
             material.setFounderId(founder_id);//founder_id,
             material.setGmtUpdate((Timestamp) oldMaterial.get("updatedate"));//gmt_update,			
             material.setMenderId((Long) oldMaterial.get("mender_id"));//mender_id
+            //主编学术专著情况
+            material.setIsMonographUsed(false);
+            //主编学术专著情况必填
+            material.setIsMonographRequired(false);
+            //出版行业获奖情况
+            material.setIsPublishRewardUsed(false);
+            //出版行业获奖情况必填
+            material.setIsPublishRewardRequired(false);
+            //SCI论文投稿及影响因子
+            material.setIsSciUsed(false);
+            //SCI论文投稿及影响因子必填
+            material.setIsSciRequired(false);
+            //临床医学获奖情况
+            material.setIsClinicalRewardUsed(false);
+            //临床医学获奖情况必填
+            material.setIsClinicalRewardRequired(false);
+            //学术荣誉授予情况
+            material.setIsAcadeRewardUsed(false);
+            //学术荣誉授予情况必填
+            material.setIsAcadeRewardRequired(false);  
+
             material = materialService.addMaterial(material);
             count++;
             long pk = material.getId();
@@ -848,7 +880,9 @@ public class MigrationStageFour {
     }
 
     protected void materialOrg() {
-        String sql = "select  "
+    	String sql = 
+    			 "select * from ( "
+                +"select   "
                 + "a.pushschoolid , "
                 + "b.new_pk materid, "
                 + "c.new_pk orgid, "
@@ -856,11 +890,14 @@ public class MigrationStageFour {
                 + "from teach_pushschool  a  "
                 + "LEFT JOIN teach_material  b on b.materid = a.materid "
                 + "LEFT JOIN ba_organize c on c.orgid = a.orgid "
-                + "where 1=1 ";
+                + "where 1=1 "
+    			+ ") temp  ";
         //获取到所有数据表
         String tableName = "teach_pushschool";
         JdbcHelper.addColumn(tableName); //增加new_pk字段
-        List<Map<String, Object>> pubList = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        List<Map<String, Object>> pubList = JdbcHelper.getJdbcTemplate().queryForList(
+        		sql+" where materid is not null  GROUP BY CONCAT(materid,'_',orgid) UNION  "+sql +" where materid is  null "
+        		);
         List<Map<String, Object>> excel = new LinkedList<>();
         int count = 0;
         //模块名称 

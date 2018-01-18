@@ -258,6 +258,7 @@ public class MaterialController {
 	 * @return
 	 */
 	@ResponseBody
+	@LogDetail(businessType = Business_Type, logRemark = "上传临时附件")
 	@RequestMapping(value = "/upTempFile", method = RequestMethod.POST)
 	public ResponseBean upTempFile(HttpServletRequest request, MultipartFile[] files) {
 		try {

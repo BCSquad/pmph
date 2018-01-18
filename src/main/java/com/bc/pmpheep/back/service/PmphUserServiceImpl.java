@@ -22,7 +22,6 @@ import com.bc.pmpheep.back.dao.PmphUserRoleDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphDepartment;
-import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
@@ -45,6 +44,7 @@ import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
+import com.bc.pmpheep.back.vo.TopicDeclarationVO;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -82,6 +82,13 @@ public class PmphUserServiceImpl implements PmphUserService {
 	BookCorrectionService bookCorrectionService;
 	@Autowired
 	BookUserCommentService bookUserCommentService;
+	@Autowired
+	WriterUserService writerUserService;
+	@Autowired
+	OrgUserService orgUserService;
+	@Autowired
+	TopicService topicService;
+
 	@Override
 	public boolean updatePersonalData(PmphUser pmphUser, MultipartFile file) throws IOException {
 		Long id = pmphUser.getId();
@@ -481,7 +488,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 		String path = pageParameter.getParameter().getPath();
 		Long departmentId = pageParameter.getParameter().getDepartmentId();
 		if (StringUtil.notEmpty(path) && ObjectUtil.notNull(departmentId)) {
-			pageParameter.getParameter().setPath(path + "-" +java.lang.String.valueOf(departmentId));
+			pageParameter.getParameter().setPath(path + "-" + java.lang.String.valueOf(departmentId) + '-');
 		}
 		PageResult<PmphUserManagerVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
@@ -615,6 +622,78 @@ public class PmphUserServiceImpl implements PmphUserService {
 	}
 
 	@Override
+	public Map<String, Object> getPersonalCenter(HttpServletRequest request, String state, String materialName,
+			String groupName, String title, String bookname, String name, String authProgress, String topicBookname) {
+		String sessionId = CookiesUtil.getSessionId(request);
+		// 用于装所有的数据map
+		Map<String, Object> map = new HashMap<>();
+		// 教师认证总数量
+		Integer writerUserCount = writerUserService.getCount();
+		// 机构认证数量orgList
+		Integer orgerCount = orgUserService.getCount();
+		// 小组
+		PmphGroupListVO pmphGroup = new PmphGroupListVO();
+		if (ObjectUtil.notNull(groupName)) {
+			pmphGroup.setGroupName(groupName.trim());
+		}
+		PageParameter<PmphGroupListVO> pageParameterPmphGroup = new PageParameter<>();
+		pageParameterPmphGroup.setParameter(pmphGroup);
+		// 小组结果
+		PageResult<PmphGroupListVO> pageResultPmphGroup = pmphGroupService.getlistPmphGroup(pageParameterPmphGroup,
+				sessionId);
+		// 教材申报
+		PageParameter<MaterialListVO> pageParameter2 = new PageParameter<>();
+		MaterialListVO materialListVO = new MaterialListVO();
+		materialListVO.setState(state);
+		materialListVO.setMaterialName(materialName);
+		pageParameter2.setParameter(materialListVO);
+		// 教材申报的结果
+		PageResult<MaterialListVO> pageResultMaterialListVO = materialService.listMaterials(pageParameter2, sessionId);
+		// 文章审核
+		PageParameter<CmsContentVO> pageParameter1 = new PageParameter<>();
+		CmsContentVO cmsContentVO = new CmsContentVO();
+		cmsContentVO.setTitle(title);
+		cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_1);
+		pageParameter1.setParameter(cmsContentVO);
+		// 文章审核的结果
+		PageResult<CmsContentVO> pageResultCmsContentVO = cmsContentService.listCmsContent(pageParameter1, sessionId);
+		// 图书纠错审核
+		PageResult<BookCorrectionAuditVO> pageResultBookCorrectionAuditVO = bookCorrectionService
+				.listBookCorrectionAudit(request, Const.PAGE_NUMBER, Const.PAGE_SIZE, bookname, null);
+		// 图书评论审核
+		PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
+		BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
+		bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
+		pageParameter.setParameter(bookUserCommentVO);
+		PageResult<BookUserCommentVO> pageResultBookUserCommentVO = bookUserCommentService
+				.listBookUserComment(pageParameter);
+		// 图书附件审核 暂时没有
+
+		// 选题申报
+		PageParameter<TopicDeclarationVO> pageParameter3 = new PageParameter<>();
+		TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
+		String[] strs = authProgress.split(",");
+		List<Long> progress = new ArrayList<>();
+		for (String str : strs) {
+			progress.add(Long.valueOf(str));
+		}
+		topicDeclarationVO.setBookname(topicBookname);
+		pageParameter3.setParameter(topicDeclarationVO);
+		PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO = topicService.listCheckTopic(progress,
+				pageParameter3);
+		// 把其他模块的数据都装入map中返回给前端
+		map.put("topicList", pageResultTopicDeclarationVO);
+		map.put("materialList", pageResultMaterialListVO);
+		map.put("cmsContent", pageResultCmsContentVO);
+		map.put("bookCorrectionAudit", pageResultBookCorrectionAuditVO);
+		map.put("bookUserComment", pageResultBookUserCommentVO);
+		map.put("pmphGroup", pageResultPmphGroup);
+		map.put("writerUserCount", writerUserCount);
+		map.put("orgUserCount", orgerCount);
+		return map;
+	}
+
+	@Override
 	public PmphUser getPmphUser(String username) {
 		if (StringUtil.isEmpty(username)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
@@ -625,52 +704,12 @@ public class PmphUserServiceImpl implements PmphUserService {
 	}
 
 	@Override
-	public Map<String,Object> getPersonalCenter(HttpServletRequest request, String state, String materialName,
-			String groupName, String title, String bookname, String name) {
-		String sessionId = CookiesUtil.getSessionId(request);
-		//用于装所有的数据map 
-		Map<String, Object> map=new HashMap<>();
-		//小组
-		PmphGroupListVO pmphGroup = new PmphGroupListVO();
-		if (ObjectUtil.notNull(groupName)) {
-			pmphGroup.setGroupName(groupName.trim());
+	public List<PmphUser> listPmphUserByDepartmentId(Long departmentId) throws CheckedServiceException {
+		if (ObjectUtil.isNull(departmentId)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"部门id为空");
 		}
-		PageParameter<PmphGroupListVO> pageParameterPmphGroup=new PageParameter<>();
-		pageParameterPmphGroup.setParameter(pmphGroup);
-		//小组结果
-		PageResult<PmphGroupListVO> pageResultPmphGroup=pmphGroupService.getlistPmphGroup(pageParameterPmphGroup, sessionId);
-		//教材申报
-		PageParameter<MaterialListVO> pageParameter2=new PageParameter<>();
-		MaterialListVO materialListVO=new MaterialListVO();
-		materialListVO.setState(state);
-		materialListVO.setMaterialName(materialName);
-		pageParameter2.setParameter(materialListVO);
-		//教材申报的结果
-		PageResult<MaterialListVO> pageResultMaterialListVO=materialService.listMaterials(pageParameter2, sessionId);
-		//文章审核
-		PageParameter<CmsContentVO> pageParameter1 =new PageParameter<>();
-		CmsContentVO cmsContentVO=new CmsContentVO();
-		cmsContentVO.setTitle(title);
-		cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_1);
-		pageParameter1.setParameter(cmsContentVO);
-		// 文章审核的结果
-		PageResult<CmsContentVO> pageResultCmsContentVO=cmsContentService.listCmsContent(pageParameter1, sessionId);
-		//图书纠错审核
-		PageResult<BookCorrectionAuditVO> pageResultBookCorrectionAuditVO=bookCorrectionService.listBookCorrectionAudit(
-				request,Const.PAGE_NUMBER,Const.PAGE_SIZE,bookname ,null);
-		//图书评论审核
-		PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
-		BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
-		bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
-		pageParameter.setParameter(bookUserCommentVO);
-		PageResult<BookUserCommentVO> pageResultBookUserCommentVO=bookUserCommentService.listBookUserComment(pageParameter);
-		//图书附件审核
-		map.put("materialList", pageResultMaterialListVO);
-		map.put("cmsContent", pageResultCmsContentVO);
-		map.put("bookCorrectionAudit", pageResultBookCorrectionAuditVO);
-		map.put("bookUserComment", pageResultBookUserCommentVO);
-		map.put("pmphGroup", pageResultPmphGroup);
-		return map;
+		return pmphUserDao.listPmphUserByDepartmentId(departmentId);
 	}
 
 }

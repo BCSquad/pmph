@@ -198,7 +198,7 @@ public class SpringThread implements Runnable {
 					sb.append(File.separator);
 					sb.append((i + 1) + "." + textbooks.get(i).getTextbookName());
 					sb.append(File.separator);
-					this.wordHelper.export(materialName, sb.toString(), list);
+					this.wordHelper.export(materialName, sb.toString(), list, 65535);
 					list.removeAll(list);
 				}
 			}

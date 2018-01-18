@@ -1,5 +1,6 @@
 package com.bc.pmpheep.migration;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,13 +16,16 @@ import com.bc.pmpheep.back.dao.CmsAdvertisementDao;
 import com.bc.pmpheep.back.dao.CmsAdvertisementImageDao;
 import com.bc.pmpheep.back.po.CmsAdvertisement;
 import com.bc.pmpheep.back.po.CmsAdvertisementImage;
-import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.po.SurveyQuestion;
 import com.bc.pmpheep.back.po.SurveyQuestionOption;
 import com.bc.pmpheep.back.po.SurveyTemplate;
 import com.bc.pmpheep.back.po.SurveyTemplateQuestion;
 import com.bc.pmpheep.back.po.SurveyType;
+import com.bc.pmpheep.back.po.Topic;
+import com.bc.pmpheep.back.po.TopicExtra;
+import com.bc.pmpheep.back.po.TopicWriter;
+import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.SurveyQuestionAnswerService;
 import com.bc.pmpheep.back.service.SurveyQuestionCategoryService;
@@ -32,6 +36,10 @@ import com.bc.pmpheep.back.service.SurveyTargetService;
 import com.bc.pmpheep.back.service.SurveyTemplateQuestionService;
 import com.bc.pmpheep.back.service.SurveyTemplateService;
 import com.bc.pmpheep.back.service.SurveyTypeService;
+import com.bc.pmpheep.back.service.TopicExtraService;
+import com.bc.pmpheep.back.service.TopicService;
+import com.bc.pmpheep.back.service.TopicWriertService;
+import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.vo.CmsAdvertisementOrImageVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
@@ -77,11 +85,20 @@ public class MigrationPlus {
 	 CmsAdvertisementImageDao cmsAdvertisementImageDao;
 	 @Resource
 	 FileService fileService;
+	 @Resource
+	 TopicService topicService;
+	 @Resource
+	 TopicExtraService topicExtraService;
+	 @Resource
+	 TopicWriertService topicWriertService;
+	 @Resource
+	 WriterUserService writerUserService;
 	 
 	 public void start() {
 		 Date begin = new Date();
-		 //initCmsAdvertisementData();
+		 initCmsAdvertisementData();
 		 survey();
+		 topic();
 		 logger.info("数据填充运行结束，用时：{}", JdbcHelper.getPastTime(begin));
 	 }
 	 
@@ -142,13 +159,10 @@ public class MigrationPlus {
 		 surveyTypeService.addSurveyType(surveyType2);
 		 SurveyType surveyType3 = new SurveyType("医生", 3);
 		 surveyTypeService.addSurveyType(surveyType3);
-		 String sql = "select * from sys_user where userid = '1496375695709123-789241'";
+		 String sql = "select * from sys_user where userid = '1496375695709123-789241'"; // 查询武震的new_pk
 		 List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
 		 Map<String, Object> map = maps.get(0);
 		 Long id = (Long) map.get("new_pk");
-		 /*PmphUser pmphUser = pmphUserService.getPmphUser("admin");
-		 SurveyTemplate surveyTemplate = new SurveyTemplate("人卫e教平台满意度问卷模板", 999, pmphUser.getId(), 
-				 "该问卷只针对教师", surveyType2.getId(), false);*/
 		 SurveyTemplate surveyTemplate = new SurveyTemplate("人卫e教平台满意度问卷模板", 999, id, 
 				 "该问卷只针对教师", surveyType2.getId(), false);
 		 surveyTemplateService.addSurveyTemplate(surveyTemplate);
@@ -311,4 +325,91 @@ public class MigrationPlus {
 				 surveyQuestion10.getId());
 		 surveyTemplateQuestionService.addSurveyTemplateQuestion(surveyTemplateQuestion10);
 	 }
+	 
+	 protected void topic() {
+		Topic topic = new Topic(4017L, "内科学", 1, new Timestamp(445555L), 2, 123, 210, 
+				"医学", 1, 1, 17L, 21, 2000, false, null, null, null, null, 3, "内容丰富",
+				new Timestamp(755564L), true, 15L, false, null, true, 35L, false, null, true,
+				423L, true, false, false, "基础覆盖面广", null, null, null, null, new Timestamp(446666L));
+		topic = topicService.add(topic);
+		TopicExtra topicExtra = new TopicExtra(topic.getId(), "丰富学生基础理论的辅导教材", 
+				"出版价值高", "内科学的基础理论");
+		topicExtraService.add(topicExtra);
+		WriterUser writerUser = writerUserService.get(topic.getUserId());
+		TopicWriter topicWriter = new TopicWriter(topic.getId(), writerUser.getRealname(),
+				writerUser.getSex(), 47, writerUser.getPosition(), writerUser.getWorkPlace());
+		topicWriertService.add(topicWriter);		
+		Topic topic1 = new Topic(4018L, "外科学", 1, new Timestamp(455985L), 2, 115, 200,
+				"医学", 1, 1, 18L, 18, 1200, false, null, null, null, null, 2, "重复",
+				new Timestamp(765464l), true, 15L, false, null, true, 35L, false, null, true, 
+				546L, true, false, false, "退回", null, null, null, null, new Timestamp(456000L));
+		topic1 = topicService.add(topic1);
+		TopicExtra topicExtra1 = new TopicExtra(topic1.getId(), "注重临床经验", "实用，工具书",
+				"临床技术");
+		topicExtraService.add(topicExtra1);
+		WriterUser writerUser1 = writerUserService.get(topic1.getUserId());
+		TopicWriter topicWriter1 = new TopicWriter(topic1.getId(), writerUser1.getRealname(),
+				writerUser1.getSex(), 45, writerUser1.getPosition(), writerUser1.getWorkPlace());
+		topicWriertService.add(topicWriter1);		
+		Topic topic2 = new Topic(4020L, "脑科学", 1, new Timestamp(435648L), 2, 95, 175,
+				"医学", 1, 4, 20L, 17, 2600, false, null, null, null, null, 1, null, 
+				null, true, 15L, false, null, null, 35L, false, null, false, null,
+				false, false, false, null, null, null, null, null, new Timestamp(445648L));
+		topic2 = topicService.add(topic2);
+		TopicExtra topicExtra2 = new TopicExtra(topic2.getId(), "前沿技术", "科普读物",
+				"介绍脑科学研究的发展");
+		topicExtraService.add(topicExtra2);
+		WriterUser writerUser2 = writerUserService.get(topic2.getUserId());
+		TopicWriter topicWriter2 = new TopicWriter(topic2.getId(), writerUser2.getRealname(),
+				writerUser2.getSex(), 51, writerUser2.getPosition(), writerUser2.getWorkPlace());
+		topicWriertService.add(topicWriter2);		
+		Topic topic3 = new Topic(4025L, "医学遗传学", 2, new Timestamp(452135L), 4, 135, 785,
+				"遗传学", 0, 3, 25L, 26, 2100, true, "Medical Genetics", "林恩·乔德", "美国",
+				"1", 1, null, null, true, 15L, false, null, true, 35L, true, "其他受理选题",
+				false, 419L, false, false, false, null, null, null, null, null, new Timestamp(453135L));
+		topic3 = topicService.add(topic3);
+		TopicExtra topicExtra3 = new TopicExtra(topic3.getId(), "国外经典教材", "工具书", 
+				"最新译本");
+		topicExtraService.add(topicExtra3);
+		WriterUser writerUser3 = writerUserService.get(topic3.getUserId());
+		TopicWriter topicWriter3 = new TopicWriter(topic3.getId(), writerUser3.getRealname(),
+				writerUser3.getSex(), 53, writerUser3.getPosition(), writerUser3.getWorkPlace());
+		topicWriertService.add(topicWriter3);		
+		Topic topic4 = new Topic(4030L, "社会心理学", 1, new Timestamp(475625L), 2, 1210, 179,
+				"心理学", 2, 5, 30L, 27, 3100, false, null, null, null, null, 1, null,
+				null, true, 15L, true, "不属于本部门领域", false, 35L, false, null, false, 
+				null, false, false, false, null, null, null, null, null, new Timestamp(476522L));
+		topic4 = topicService.add(topic4);
+		TopicExtra topicExtra4 = new TopicExtra(topic4.getId(), "心理学必修教材", "重要，必修课程",
+				"基础理论");
+		topicExtraService.add(topicExtra4);
+		WriterUser writerUser4 = writerUserService.get(topic4.getId());
+		TopicWriter topicWriter4 = new TopicWriter(topic4.getId(), writerUser4.getRealname(),
+				writerUser4.getSex(), 37, writerUser4.getPosition(), writerUser4.getWorkPlace());
+		topicWriertService.add(topicWriter4);				
+		Topic topic5 = new Topic(4035L, "人体解剖学", 0, new Timestamp(423654L), 1, 97, 1098,
+				"医学", 0, 3, 35L, 14, 3300, false, null, null, null, null, 1, null, null,
+				false, 15L, false, null, false, null, false, null, false, null, false, 
+				false, false, null, null, null, null, null, new Timestamp(433654L));
+		topic5 = topicService.add(topic5);
+		TopicExtra topicExtra5 = new TopicExtra(topic5.getId(), "医学院学生必读辅导书",
+				"重要", "人体图解");
+		topicExtraService.add(topicExtra5);
+		WriterUser writerUser5 = writerUserService.get(topic5.getUserId());
+		TopicWriter topicWriter5 = new TopicWriter(topic5.getId(), writerUser5.getRealname(), 
+				writerUser5.getSex(), 46, writerUser5.getPosition(), writerUser5.getWorkPlace());
+		topicWriertService.add(topicWriter5);		
+		Topic topic6 = new Topic(4050L, "医学统计学", 1, new Timestamp(413564L), 3, 1150, 108,
+				"医学", 1, 1, 50L, 18, 1100, false, null, null, null, null, 0, null, null,
+				null, null, null, null, null, null, null, null, null,null, null, true, 
+				null, null, null, null, null, null, null);
+		topic6 = topicService.add(topic6);
+		TopicExtra topicExtra6 = new TopicExtra(topic6.getId(), "辅助教材", "基础教材",
+				"统计学在医学上的应用");
+		topicExtraService.add(topicExtra6);
+		WriterUser writerUser6 = writerUserService.get(topic6.getUserId());
+		TopicWriter topicWriter6 = new TopicWriter(topic6.getId(), writerUser6.getRealname(),
+				writerUser6.getSex(), 52, writerUser6.getPosition(), writerUser6.getWorkPlace());
+		topicWriertService.add(topicWriter6);
+	}
 }

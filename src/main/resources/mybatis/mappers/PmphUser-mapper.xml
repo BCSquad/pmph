@@ -114,9 +114,9 @@
 	<update id="update" parameterType="PmphUser">
 		UPDATE pmph_user
 		<set>
-			<!-- 写这个的目的是保证一个 id不为空的空对象来不会报错  ：update pmph_user set id =1 where id =1 -->
+			<!-- 写这个的目的是保证一个 id不为空的空对象来不会报错 ：update pmph_user set id =1 where id =1 -->
 			<if test="id != null ">
-				id =  #{id},
+				id = #{id},
 			</if>
 			<if test="username != null and username!=''">
 				username = #{username},
@@ -179,25 +179,28 @@
 			#{id}
 		</foreach>
 	</delete>
-	
+
 	<!-- 根据主键 获取用户要更新的信息 -->
 	<select id="getInfo" parameterType="Long" resultType="PmphUser">
 		SELECT
-			id,
-			username,
-			realname,
-			handphone,
-			email,
-			avatar
+		id,
+		username,
+		realname,
+		handphone,
+		email,
+		avatar
 		FROM
-			pmph_user
+		pmph_user
 		WHERE
-			id = #{id} and is_deleted =0 and is_disabled = 0
+		id = #{id}
+		and is_deleted =0 and is_disabled = 0
 	</select>
-	
+
 	<!--根据id和原密码修改密码 -->
-	<update id="updatePassword" >
-		update pmph_user set password = #{newPassword} where id = #{id} and  password = #{oldPassword}
+	<update id="updatePassword">
+		update pmph_user set password =
+		#{newPassword} where
+		id = #{id} and password = #{oldPassword}
 	</update>
 
 	<select id="get" parameterType="Long" resultType="PmphUser">
@@ -387,7 +390,8 @@
 		<if
 			test="parameter.path !=null and parameter.path !='' and parameter.departmentId !=null">
 			and (d.path like concat(#{parameter.path},'%') or
-			d.id=#{parameter.departmentId})
+			d.id=#{parameter.departmentId} or d.parent_id
+			=#{parameter.departmentId} )
 		</if>
 		) t
 	</select>
@@ -412,9 +416,12 @@
 		<if
 			test="parameter.path !=null and parameter.path !='' and parameter.departmentId != null">
 			and (d.path like concat(#{parameter.path},'%') or
-			d.id=#{parameter.departmentId})
+			d.id=#{parameter.departmentId} or d.parent_id
+			=#{parameter.departmentId})
 		</if>
-		LIMIT #{start},#{pageSize}
+		<if test="start !=null and pageNumber != null">
+			LIMIT #{start},#{pageSize}
+		</if>
 	</select>
 	<!-- 根据用户id获取用户对应的权限 -->
 	<select id="getPmphUserPermissionByUserId" parameterType="Long"
@@ -431,7 +438,8 @@
 		`pmph_role_permission` prp
 		ON
 		pur.`role_id` = prp.`role_id`
-		LEFT JOIN `pmph_role` pr ON pur.`role_id`=pr.`id`
+		LEFT JOIN
+		`pmph_role` pr ON pur.`role_id`=pr.`id`
 		WHERE
 		pr.`is_disabled` = 0 AND
 		pu.`id`
@@ -475,6 +483,9 @@
 			<if test=" sort!= null and  sort!=''">
 				sort = #{sort},
 			</if>
+			<if test=" isDirector!= null ">
+				is_director= #{isDirector},
+			</if>
 		</set>
 		WHERE
 		id = #{id}
@@ -490,34 +501,45 @@
 		u.department_id =
 		#{departmentId}
 	</select>
-	
+
 	<!-- 统计部门下的编辑数量 -->
 	<select id="totalEditors" resultType="java.lang.Integer">
-	SELECT count(*) 
-	FROM pmph_user a 
-	LEFT JOIN pmph_department b ON a.department_id = b.id 
-	WHERE a.department_id = #{departmentId} 
-	<if test="realName !=null and realName !=''">
-		AND a.realname like concat('%',#{realName},'%') 
-	</if>
-	;
+		SELECT count(*)
+		FROM pmph_user a
+		LEFT JOIN pmph_department b ON
+		a.department_id = b.id
+		WHERE a.department_id = #{departmentId}
+		<if test="realName !=null and realName !=''">
+			AND a.realname like concat('%',#{realName},'%')
+		</if>
+		;
 	</select>
-	
+
 	<!-- 选题申报部门主任获取部门编辑列表 -->
 	<select id="listEditors" resultType="PmphEditorVO">
-	SELECT a.id,a.department_id,a.realname,a.handphone 
-	FROM pmph_user a 
-	LEFT JOIN pmph_department b ON a.department_id = b.id 
-	WHERE a.department_id = #{departmentId} 
-	<if test="realName !=null and realName !=''">
-		AND a.realname like concat('%',#{realName},'%') 
-	</if>
-	LIMIT 
-	#{start},#{pageSize};
+		SELECT a.id,a.department_id,a.realname,a.handphone
+		FROM pmph_user a
+		LEFT JOIN pmph_department b ON a.department_id = b.id
+		WHERE
+		a.department_id = #{departmentId}
+		<if test="realName !=null and realName !=''">
+			AND a.realname like concat('%',#{realName},'%')
+		</if>
+		LIMIT
+		#{start},#{pageSize};
 	</select>
-	
+
 	<!-- 根据用户名获取用户 -->
 	<select id="getPmphUser" resultType="PmphUser">
-		select * from pmph_user where username = #{username}
+		select * from pmph_user
+		where username = #{username}
 	</select>
+
+	<!-- 根据部门ID查询用户列表 -->
+	<select id="listPmphUserByDepartmentId" parameterType="java.lang.Long"
+		resultType="PmphUser">
+		select * from pmph_user where department_id =
+		#{departmentId}
+	</select>
+
 </mapper>

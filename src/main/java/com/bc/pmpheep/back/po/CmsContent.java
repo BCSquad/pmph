@@ -97,6 +97,8 @@ public class CmsContent implements java.io.Serializable {
     private Long      materialId;
     // 是否暂存
     private Boolean   isStaging;
+    // 是否教材报名入口
+    private Boolean   isMaterialEntry;
 
     // Constructors
 
@@ -143,8 +145,8 @@ public class CmsContent implements java.io.Serializable {
     }
 
     public CmsContent(Long parentId, String path, String mid, String title, Short authorType,
-    Boolean isPublished, Boolean isStaging, Long authUserId, String gmtReedit, Long materialId,
-    Long categoryId) {
+    Boolean isPublished, Boolean isStaging, Long authorId, String gmtReedit, Long materialId,
+    Long categoryId, Boolean isMaterialEntry) {
         this.parentId = parentId;
         this.path = path;
         this.mid = mid;
@@ -152,10 +154,11 @@ public class CmsContent implements java.io.Serializable {
         this.authorType = authorType;
         this.isPublished = isPublished;
         this.isStaging = isStaging;
-        this.authUserId = authUserId;
+        this.authorId = authorId;
         this.gmtReedit = gmtReedit;
         this.materialId = materialId;
         this.categoryId = categoryId;
+        this.isMaterialEntry = isMaterialEntry;
     }
 
     public CmsContent(Long parentId, String path, String mid, String title, String summary,
@@ -221,7 +224,7 @@ public class CmsContent implements java.io.Serializable {
     Boolean isHot, Integer sortHot, String deadlineHot, Boolean isPromote, Integer sortPromote,
     String deadlinePromote, Boolean isScheduled, Boolean isHide, Boolean isPublished,
     Boolean isAuth, Long authUserId, String authDate, Boolean isDeleted, Timestamp gmtCreate,
-    Timestamp gmtUpdate, String gmtReedit, Long materialId) {
+    Timestamp gmtUpdate, String gmtReedit, Long materialId, Boolean isMaterialEntry) {
         this.parentId = parentId;
         this.path = path;
         this.mid = mid;
@@ -566,6 +569,20 @@ public class CmsContent implements java.io.Serializable {
     }
 
     /**
+     * @return the isMaterialEntry
+     */
+    public Boolean getIsMaterialEntry() {
+        return isMaterialEntry;
+    }
+
+    /**
+     * @param isMaterialEntry the isMaterialEntry to set
+     */
+    public void setIsMaterialEntry(Boolean isMaterialEntry) {
+        this.isMaterialEntry = isMaterialEntry;
+    }
+
+    /**
      * <pre>
      * 功能描述：
      * 使用示范：
@@ -587,7 +604,8 @@ public class CmsContent implements java.io.Serializable {
                + ", isPublished:" + isPublished + ", isAuth:" + isAuth + ", authUserId:"
                + authUserId + ", authDate:" + authDate + ", isDeleted:" + isDeleted
                + ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate + ", gmtReedit:"
-               + gmtReedit + ", materialId:" + materialId + "}";
+               + gmtReedit + ", materialId:" + materialId + ", isMaterialEntry:" + isMaterialEntry
+               + "}";
     }
 
 }

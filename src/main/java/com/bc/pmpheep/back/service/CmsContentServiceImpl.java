@@ -15,6 +15,7 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.CmsExtra;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
@@ -54,15 +55,23 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Service
 public class CmsContentServiceImpl implements CmsContentService {
     @Autowired
-    CmsContentDao       cmsContentDao;
+    CmsContentDao                   cmsContentDao;
     @Autowired
-    ContentService      contentService;
+    ContentService                  contentService;
     @Autowired
-    CmsScheduleService  cmsScheduleService;
+    CmsScheduleService              cmsScheduleService;
     @Autowired
-    private FileService fileService;
+    private FileService             fileService;
     @Autowired
-    CmsExtraService     cmsExtraService;
+    CmsExtraService                 cmsExtraService;
+    @Autowired
+    MaterialExtraService            materialExtraService;
+    @Autowired
+    MaterialNoticeAttachmentService materialNoticeAttachmentService;
+    @Autowired
+    MaterialNoteAttachmentService   materialNoteAttachmentService;
+    @Autowired
+    WriterUserTrendstService        writerUserTrendstService;
 
     @Override
     public CmsContent addCmsContent(CmsContent cmsContent) throws CheckedServiceException {
@@ -120,6 +129,11 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               CheckedExceptionResult.NULL_PARAM, "所属栏目不能为空");
 
         }
+        if (ObjectUtil.isNull(cmsContent.getMaterialId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "教材ID不能为空");
+
+        }
         // MongoDB 内容插入
         Content contentObj = contentService.add(new Content(content));
         if (StringUtil.isEmpty(contentObj.getId())) {
@@ -129,10 +143,11 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         // 内容保存
         cmsContent.setParentId(cmsContent.getCategoryId());// 上级id
-        cmsContent.setPath(cmsContent.getPath());// 根节点路径
+        // cmsContent.setPath(cmsContent.getPath());// 根节点路径
         cmsContent.setMid(contentObj.getId());// 内容id
         cmsContent.setAuthorType(Const.CMS_AUTHOR_TYPE_1);// 作者类型
         cmsContent.setAuthorId(pmphUser.getId());// 作者id
+        // cmsContent.setMaterialId(cmsContent.getMaterialId());// 教材ID，为0表示未选择教材
         // 信息快报/公告管理(发布)，审核时间就为当前时间
         if (ObjectUtil.notNull(cmsContent.getIsPublished())) {
             if (Const.TRUE.booleanValue() == cmsContent.getIsPublished().booleanValue()) {
@@ -192,6 +207,10 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
 
+        }
+        if (ObjectUtil.isNull(cmsContent.getMaterialId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "教材ID为空");
         }
         // 信息快报/公告管理(发布)，审核时间就为当前时间
         if (Const.TRUE.booleanValue() == cmsContent.getIsPublished().booleanValue()) {
@@ -278,7 +297,14 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        return cmsContentDao.publishCmsContentById(id);
+        Integer count = 0;
+        count = cmsContentDao.publishCmsContentById(id);
+        CmsContent cmsContent = this.getCmsContentById(id);
+        writerUserTrendstService.addWriterUserTrendst(new WriterUserTrendst(
+                                                                            cmsContent.getAuthorId(),
+                                                                            Const.WRITER_USER_TRENDST_TYPE_1,
+                                                                            id));
+        return count;
     }
 
     @Override
@@ -291,7 +317,7 @@ public class CmsContentServiceImpl implements CmsContentService {
     }
 
     @Override
-    public Integer checkContentById(Long id, Short authStatus, String sessionId)
+    public Integer checkContentById(Long id, Short authStatus, Long categoryId, String sessionId)
     throws CheckedServiceException {
         // 获取当前登陆用户
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -303,13 +329,26 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        return cmsContentDao.checkContentById(new CmsContent(
-                                                             id,
-                                                             authStatus,
-                                                             pmphUser.getId(),
-                                                             DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
-                                                                                      DateUtil.getCurrentTime()),
-                                                             Const.MATERIAL_TYPE_ID));
+        Integer count = 0;
+        count =
+        cmsContentDao.checkContentById(new CmsContent(
+                                                      id,
+                                                      authStatus,
+                                                      pmphUser.getId(),
+                                                      DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                                               DateUtil.getCurrentTime()),
+                                                      Const.MATERIAL_TYPE_ID));
+        CmsContent cmsContent = this.getCmsContentById(id);
+        Integer type = 0;
+        if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()) {
+            type = Const.WRITER_USER_TRENDST_TYPE_2;
+        } else {
+            type = Const.WRITER_USER_TRENDST_TYPE_1;
+        }
+        writerUserTrendstService.addWriterUserTrendst(new WriterUserTrendst(
+                                                                            cmsContent.getAuthorId(),
+                                                                            type, id));
+        return count;
     }
 
     @Override

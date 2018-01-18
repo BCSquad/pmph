@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.DecPositionPublishedDao">
+
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id !=null">
+				id,
+			</if>
+			<if test="publisherId !=null">
+				publisher_id,
+			</if>
+			<if test="declarationId !=null">
+				declaration_id,
+			</if>
+			<if test="textbookId !=null">
+				textbook_id,
+			</if>
+			<if test="presetPosition !=null ">
+				preset_position,
+			</if>
+			<if test="isOnList !=null">
+				is_on_list,
+			</if>
+			<if test="chosenPosition !=null">
+				chosen_position,
+			</if>
+			<if test="rank !=null">
+				rank,
+			</if>
+			<if test="syllabusId !=null and syllabusId !=''">
+				syllabus_id,
+			</if>
+			<if test="syllabusName !=null and syllabusName !=''">
+				syllabus_name,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<trim suffixOverrides=",">
+			<if test="id !=null">
+				#{id},
+			</if>
+			<if test="publisherId !=null">
+				#{publisherId},
+			</if>
+			<if test="declarationId !=null">
+				#{declarationId},
+			</if>
+			<if test="textbookId !=null">
+				#{textbookId},
+			</if>
+			<if test="presetPosition !=null ">
+				#{presetPosition},
+			</if>
+			<if test="isOnList !=null">
+				#{isOnList},
+			</if>
+			<if test="chosenPosition !=null">
+				#{chosenPosition},
+			</if>
+			<if test="rank !=null">
+				#{rank},
+			</if>
+			<if test="syllabusId !=null and syllabusId !=''">
+				#{syllabusId},
+			</if>
+			<if test="syllabusName !=null and syllabusName !=''">
+				#{syllabusName},
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="addDecPositionPublished" parameterType="DecPositionPublished">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dec_position_published(
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+
+	<!-- 根据id删除 -->
+	<delete id="deleteDecPositionPublished" parameterType="java.lang.Long">
+		delete from
+		dec_position_published where
+		id=#{id};
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateDecPositionPublished" parameterType="DecPositionPublished">
+		update dec_position_published
+		<set>
+			<if test="publisherId !=null">
+				publisher_id = #{publisherId},
+			</if>
+			<if test="declarationId !=null">
+				declaration_id = #{declarationId},
+			</if>
+			<if test="textbookId !=null">
+				textbook_id = #{textbookId},
+			</if>
+			<if test="presetPosition !=null ">
+				preset_position = #{presetPosition},
+			</if>
+			<if test="isOnList !=null">
+				is_on_list = #{isOnList},
+			</if>
+			<if test="chosenPosition !=null">
+				chosen_position = #{chosenPosition},
+			</if>
+			<if test="rank !=null">
+				rank = #{rank},
+			</if>
+			<if test="syllabusId !=null and syllabusId !=''">
+				syllabus_id = #{syllabusId},
+			</if>
+			<if test="syllabusName !=null and syllabusName !=''">
+				syllabus_name = #{syllabusName},
+			</if>
+		</set>
+		where id=#{id} ;
+	</update>
+
+	<!-- 根据id查询 -->
+	<select id="getDecPositionPublishedById" parameterType="java.lang.Long"
+		resultType="DecPositionPublished">
+		select * from dec_position_published where id=#{id};
+	</select>
+
+</mapper>
