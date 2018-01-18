@@ -434,16 +434,17 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         resultMap.put("cmsExtras", cmsExtras);
         // 根据MaterialId 获取教材备注附件
+        List<MaterialNoteAttachment> materialNoteAttachments = null;
         if (Const.TRUE == cmsContent.getIsMaterialEntry()) {
             MaterialExtra materialExtra =
             materialExtraService.getMaterialExtraByMaterialId(cmsContent.getMaterialId());
             if (ObjectUtil.notNull(materialExtra)) {
                 // 教材备注附件
-                List<MaterialNoteAttachment> materialNoteAttachments =
+                materialNoteAttachments =
                 materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtra.getId());
-                resultMap.put("MaterialNoteAttachment", materialNoteAttachments);
             }
         }
+        resultMap.put("MaterialNoteAttachment", materialNoteAttachments);
         return resultMap;
     }
 
