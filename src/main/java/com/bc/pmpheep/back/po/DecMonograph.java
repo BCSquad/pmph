@@ -22,7 +22,7 @@ public class DecMonograph implements Serializable {
     // 专著发表日期
     private Date monographDate;
     // 是否自费（0=自费/1=公费）
-    private boolean isSelfPaid;
+    private Boolean isSelfPaid;
     // 出版单位
     private String publisher;
     // 出版时间
@@ -37,7 +37,7 @@ public class DecMonograph implements Serializable {
     }
     
     public DecMonograph(Long declarationId, String monographName, Date monographDate, 
-    		boolean isSelfPaid, String publisher, Date publishDate, String note, Integer sort) {
+    		Boolean isSelfPaid, String publisher, Date publishDate, String note, Integer sort) {
     	super();
     	this.declarationId = declarationId;
     	this.monographName = monographName;
@@ -81,11 +81,11 @@ public class DecMonograph implements Serializable {
 		this.monographDate = monographDate;
 	}
 
-	public boolean isSelfPaid() {
+	public Boolean isSelfPaid() {
 		return isSelfPaid;
 	}
 
-	public void setSelfPaid(boolean isSelfPaid) {
+	public void setSelfPaid(Boolean isSelfPaid) {
 		this.isSelfPaid = isSelfPaid;
 	}
 

@@ -114,8 +114,7 @@
 		de.declaration_id=#{declarationId};
 	</select>
 
-	<select id="getListDecDecExtensionVOByDeclarationIds"
-		resultType="DecExtensionVO">
+	<select id="getListDecExtensionVOByDeclarationIds" resultType="DecExtensionVO">
 		select * from dec_extension de left join
 		material_extension me on
 		me.id=de.extension_id where

@@ -361,14 +361,12 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             materialExtra = this.getMaterialExtraByMaterialId(materialId);
             if (ObjectUtil.notNull(materialExtra)) {
                 Long materialExtraId = materialExtra.getId();
-                if (ObjectUtil.notNull(materialExtraId)) {
-                    // 教材通知附件
-                    materialNoticeAttachments =
-                    materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtraId);
-                    // 教材备注附件
-                    materialNoteAttachments =
-                    materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtraId);
-                }
+                // 教材通知附件
+                materialNoticeAttachments =
+                materialNoticeAttachmentService.getMaterialNoticeAttachmentsByMaterialExtraId(materialExtraId);
+                // 教材备注附件
+                materialNoteAttachments =
+                materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtraId);
             }
             // 判断内容是否已经发布或审核通过
             String fileNoticeDownLoadType = null;
