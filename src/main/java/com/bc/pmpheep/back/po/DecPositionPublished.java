@@ -23,7 +23,7 @@ public class DecPositionPublished implements Serializable {
     // 申报职务
     private Integer presetPosition;
     // 是否进入预选名单
-    private Integer isOnList;
+    private boolean isOnList;
     // 遴选职务
     private Integer chosenPosition;
     // 排位
@@ -42,7 +42,7 @@ public class DecPositionPublished implements Serializable {
     }
     
     public DecPositionPublished(Long publisherId, Long declarationId, Long textbookId, 
-    		Integer presetPosition, Integer isOnList, Integer chosenPosition, 
+    		Integer presetPosition, boolean isOnList, Integer chosenPosition, 
     		Integer rank, String syllabusId, String syllabusName) {
     	super();
     	this.publisherId = publisherId;
@@ -86,10 +86,10 @@ public class DecPositionPublished implements Serializable {
 	public void setPresetPosition(Integer presetPosition) {
 		this.presetPosition = presetPosition;
 	}
-	public Integer getIsOnList() {
+	public boolean getIsOnList() {
 		return isOnList;
 	}
-	public void setIsOnList(Integer isOnList) {
+	public void setIsOnList(boolean isOnList) {
 		this.isOnList = isOnList;
 	}
 	public Integer getChosenPosition() {
