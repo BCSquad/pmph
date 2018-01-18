@@ -26,6 +26,7 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
+import java.io.File;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -309,6 +310,7 @@ public class MigrationStageEight {
             groupFile.setFileId("LOST");//file_id设为固定字符串，稍后更新
             groupFile.setMemberId(memberId);
             groupFile.setFileName(fileName);
+            groupFile.setFileSize(0D);
             groupFile.setDownload(donloadCount);
             /* 如果创建时间为空，则上传时间等于最后一次下载时间 */
             Timestamp gmtCreate;
@@ -340,6 +342,10 @@ public class MigrationStageEight {
                 continue;
             }
             groupFile.setFileId(mongoId);
+            String fullpath = SQLParameters.FILE_PATH + path;
+            File file = new File(fullpath);
+            double fileSize = file.length() / 1024;
+            groupFile.setFileSize(fileSize);
             groupFileService.updatePmphGroupFile(groupFile);
         }
         if (excel.size() > 0) {
