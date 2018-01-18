@@ -276,8 +276,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+						"最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
@@ -601,9 +601,45 @@ public class DeclarationServiceImpl implements DeclarationService {
 		ArrayList<DecExtensionVO> decExtensionList = (ArrayList<DecExtensionVO>) decExtensionDao
 				.getListDecExtensionVOByDeclarationIds(decIds);
 		for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
-			String strOnlineProgress = "";
-			String strOfflineProgress = "";
-			String sex = "";
+			String strOnlineProgress = "";// 审核进度
+			String strOfflineProgress = "";// 纸质表进度
+			String sex = "";// 性别
+			String idtype = "";// 证件类别
+			String degree = "";// 学历
+			switch (declarationOrDisplayVO.getIdtype()) {
+			case 0:
+				idtype = "身份证";
+				break;
+			case 1:
+				idtype = "护照";
+				break;
+			case 2:
+				idtype = "军官证";
+				break;
+			default:
+				idtype = "出现错误";
+				break;
+			}
+			switch (declarationOrDisplayVO.getDegree()) {
+			case 0:
+				degree = "无";
+				break;
+			case 1:
+				degree = "专科";
+				break;
+			case 2:
+				degree = "本科";
+				break;
+			case 3:
+				degree = "硕士";
+				break;
+			case 4:
+				degree = "博士";
+				break;
+			default:
+				degree = "出现错误";
+				break;
+			}
 			switch (declarationOrDisplayVO.getOnlineProgress()) {
 			case 0:
 				strOnlineProgress = "未提交";
@@ -618,6 +654,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 				strOnlineProgress = "已通过";
 				break;
 			default:
+				strOnlineProgress = "出现错误";
 				break;
 			}
 			switch (declarationOrDisplayVO.getSex()) {
@@ -631,6 +668,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 				sex = "女";
 				break;
 			default:
+				sex = "出现错误";
 				break;
 			}
 			switch (declarationOrDisplayVO.getOfflineProgress()) {
@@ -644,6 +682,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 				strOfflineProgress = "已收到";
 				break;
 			default:
+				strOfflineProgress = "出现错误";
 				break;
 			}
 			String birthday = "";
@@ -730,20 +769,67 @@ public class DeclarationServiceImpl implements DeclarationService {
 				}
 			}
 
+			// 主编学术专著情况
+			List<DecMonograph> monographs = new ArrayList<>();
+			for (DecMonograph monograph : decMonographList) {
+				if (monograph.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+					monographs.add(monograph);
+				}
+			}
+			// 出版行业获奖情况
+			List<DecPublishReward> publishRewards = new ArrayList<>();
+			for (DecPublishReward publishReward : decPublishRewardList) {
+				if (publishReward.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+					publishRewards.add(publishReward);
+				}
+			}
+			// SCI论文投稿及影响因子情况
+			List<DecSci> scis = new ArrayList<>();
+			for (DecSci sci : decSciList) {
+				if (sci.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+					scis.add(sci);
+				}
+			}
+			// 临床医学获奖情况
+			List<DecClinicalReward> clinicalRewards = new ArrayList<>();
+			for (DecClinicalReward clinicalReward : decClinicalRewardList) {
+				if (clinicalReward.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+					clinicalRewards.add(clinicalReward);
+				}
+			}
+			// 学术荣誉授予情况
+			List<DecAcadeReward> acadeRewards = new ArrayList<>();
+			for (DecAcadeReward acadeReward : decAcadeRewardList) {
+				if (acadeReward.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+					acadeRewards.add(acadeReward);
+				}
+			}
+			// 作家扩展项
+			List<DecExtensionVO> extensionVOs = new ArrayList<>();
+			for (DecExtensionVO extensionVO : decExtensionList) {
+				if (extensionVO.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+					extensionVOs.add(extensionVO);
+				}
+			}
 			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getTextbookName(),
 					declarationOrDisplayVO.getPresetPosition(), declarationOrDisplayVO.getRealname(),
 					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),
 					declarationOrDisplayVO.getOrgName(), declarationOrDisplayVO.getPosition(),
 					declarationOrDisplayVO.getTitle(), declarationOrDisplayVO.getAddress(),
 					declarationOrDisplayVO.getPostcode(), declarationOrDisplayVO.getTelephone(),
-					declarationOrDisplayVO.getFax(), declarationOrDisplayVO.getHandphone(),
-					declarationOrDisplayVO.getEmail(), strOnlineProgress, strOfflineProgress,
+					declarationOrDisplayVO.getFax(), declarationOrDisplayVO.getHandphone(), degree,
+					declarationOrDisplayVO.getEmail(), idtype, declarationOrDisplayVO.getIdcard(),
+					declarationOrDisplayVO.getExpertise(), declarationOrDisplayVO.getIsDispensed(),
+					declarationOrDisplayVO.getIsUtec(), strOnlineProgress, strOfflineProgress,
 					declarationOrDisplayVO.getOrgNameOne(), (ArrayList<DecEduExp>) decEduExp,
-					(ArrayList<DecWorkExp>) decWorkExp, (ArrayList<DecTeachExp>) decTeachExp,
+					(ArrayList<DecWorkExp>) decWorkExp, (ArrayList<DecTeachExp>) decTeachExp, decAchievement,
 					(ArrayList<DecAcade>) decAcade, (ArrayList<DecLastPosition>) decLastPosition,
 					(ArrayList<DecCourseConstruction>) decCourseConstruction,
 					(ArrayList<DecNationalPlan>) decNationalPlan, (ArrayList<DecTextbook>) decTextbook,
-					(ArrayList<DecResearch>) decResearch, decAchievement);
+					(ArrayList<DecResearch>) decResearch, (ArrayList<DecMonograph>) monographs,
+					(ArrayList<DecPublishReward>) publishRewards, (ArrayList<DecSci>) scis,
+					(ArrayList<DecClinicalReward>) clinicalRewards, (ArrayList<DecAcadeReward>) acadeRewards,
+					(ArrayList<DecExtensionVO>) extensionVOs);
 			declarationEtcBOs.add(declarationEtcBO);
 		}
 		return declarationEtcBOs;
