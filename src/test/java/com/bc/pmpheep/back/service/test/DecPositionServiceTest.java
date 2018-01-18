@@ -55,7 +55,7 @@ public class DecPositionServiceTest extends BaseTest{
      @Rollback(Const.ISROLLBACK)
      public void testUpdateDecPosition(){
     	 DecPosition decPosition = add();
-    	 decPosition.setIsOnList(1);
+    	 decPosition.setIsOnList(true);
     	 decPosition.setChosenPosition(1);
     	 Integer count = decPositionService.updateDecPosition(decPosition);
     	 Assert.assertTrue("更新数据失败", count > 0);
