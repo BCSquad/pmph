@@ -541,7 +541,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                 pmphDepartmentService.getPmphDepartmentById(pmphUser.getDepartmentId());
                 // 如果是父级部门主任，则可以查看子级部门下的所有用户发送的消息
                 if (parentId.longValue() == pmphDepartment.getParentId().longValue()) {
-                    PageParameter<PmphUserManagerVO> parameter = new PageParameter<>(null, null);
+                    PageParameter<PmphUserManagerVO> parameter = new PageParameter<>(1, 2000);
                     PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
                     pmphUserManagerVO.setPath(pmphDepartment.getPath());
                     pmphUserManagerVO.setDepartmentId(pmphDepartment.getId());
