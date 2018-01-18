@@ -124,6 +124,7 @@
 		  	org.`org_name` ,
 		  	sqa.`gmt_create`,
 		  	sqa.`survey_id`,
+		  	sqa.`user_id`,
 		  	t.`count`
 		FROM
   			`survey_question_answer` sqa 
@@ -184,22 +185,35 @@
 	</select>
 	
 	<!-- 问卷回收列表详情 -->
-	<select id="listSurveyQuestionAnswerBySurveyId" parameterType="java.lang.Long" resultType="SurveyQuestionAnswer">
+	<select id="listSurveyQuestionAnswerBySurveyId" parameterType="java.util.Map" resultType="SurveyQuestionAnswerListVO">
 		SELECT 
-		  	sq.`title`,
-		  	sqa.`option_id`,
-		  	sqa.`option_content` 
+			sq.`title`,
+		   	GROUP_CONCAT(sqa.`option_id`) option_id,
+		   	GROUP_CONCAT(sqo.`option_content`) oneOrManyOptionContent,
+		   	sqa.`option_content` noteOptionContent 
 		FROM
-  			`survey_question_answer` sqa 
-   		JOIN 
-   			`survey_question` sq 
-    	ON 
-    		sqa.`question_id` = sq.`id` 
-    	<where>
-    		sqa.`survey_id` = #{surveyId} 
-    	</where>
+		 	`survey_question_answer` sqa 
+		JOIN 
+			`survey_question` sq 
+		ON 
+			sqa.`question_id` = sq.`id` 
+		LEFT JOIN 
+			`survey_question_option` sqo
+		ON 
+			sqa.`option_id`= sqo.`id`
+		<where>
+			<if test="surveyId != null">
+				sqa.`survey_id` = #{surveyId}
+			</if>
+			<if test="userId != null">
+				AND
+					sqa.`user_id`= #{userId}
+			</if>
+		</where>
+		GROUP BY 
+			sq.`title`
 		ORDER BY 
-			sqa.`option_id` ASC
+			sqa.`option_id` ASC 
 	</select>
 	
 	<!-- 问卷结果统计列表 -->
@@ -308,7 +322,7 @@
 		    ORDER BY 
 		    	sq.id ASC
 		   ) a 
-    		 JOIN (
+    		LEFT JOIN (
     			SELECT 
 			        sqa.`question_id`,
 			        sqa.`option_id` optId,

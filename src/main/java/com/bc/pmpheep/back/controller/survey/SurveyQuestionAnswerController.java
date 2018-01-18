@@ -105,15 +105,18 @@ public class SurveyQuestionAnswerController {
      * 使用示范：
      *
      * @param surveyId 问卷ID
+     * @param userId 用户ID
      * @return  SurveyQuestionAnswer 对象集合
      * </pre>
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "问卷回收列表详情")
     @RequestMapping(value = "/recovery/detail", method = RequestMethod.GET)
-    public ResponseBean detail(@RequestParam("surveyId") Long surveyId) {
+    public ResponseBean detail(@RequestParam("surveyId") Long surveyId,
+    @RequestParam("userId") Long userId) {
         return new ResponseBean(
-                                surveyQuestionAnswerService.listSurveyQuestionAnswerBySurveyId(surveyId));
+                                surveyQuestionAnswerService.listSurveyQuestionAnswerBySurveyIdAndUserId(surveyId,
+                                                                                                        userId));
     }
 
     /**
