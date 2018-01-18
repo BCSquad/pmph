@@ -188,6 +188,8 @@
 	<select id="listSurveyQuestionAnswerBySurveyId" parameterType="java.util.Map" resultType="SurveyQuestionAnswerListVO">
 		SELECT 
 			sq.`title`,
+			sqa.`question_id`,
+  			sqa.`survey_id`,
 		   	GROUP_CONCAT(sqa.`option_id`) option_id,
 		   	GROUP_CONCAT(sqo.`option_content`) oneOrManyOptionContent,
 		   	sqa.`option_content` noteOptionContent 
@@ -213,7 +215,7 @@
 		GROUP BY 
 			sq.`title`
 		ORDER BY 
-			sqa.`option_id` ASC 
+			sq.`id` ASC 
 	</select>
 	
 	<!-- 问卷结果统计列表 -->
