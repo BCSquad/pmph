@@ -252,9 +252,39 @@ public class WordHelper {
         }
         /* 第六行 */
         cells = rows.get(5).getTableCells();
+        String degree = bo.getDegree();
+        if (StringUtil.notEmpty(degree)) {
+            cells.get(1).setText(degree);
+        }
         String email = bo.getEmail();
         if (StringUtil.notEmpty(email)) {
-            cells.get(1).setText(email);
+            cells.get(3).setText(email);
+        }
+        /* 第七行 */
+        cells = rows.get(6).getTableCells();
+        String idtype = bo.getIdtype();
+        if (StringUtil.notEmpty(idtype)) {
+            cells.get(1).setText(idtype);
+        }
+        String idcard = bo.getIdcard();
+        if (StringUtil.notEmpty(idcard)) {
+            cells.get(3).setText(idcard);
+        }
+        /* 第八行 */
+        cells = rows.get(7).getTableCells();
+        String expertise = bo.getExpertise();
+        if (StringUtil.notEmpty(expertise)) {
+            cells.get(1).setText(expertise);
+        }
+        /* 第九行 */
+        cells = rows.get(8).getTableCells();
+        Boolean isDispensed = bo.getIsDispensed();
+        if (ObjectUtil.notNull(isDispensed)) {
+            cells.get(1).setText(isDispensed ? "是" : "否");
+        }
+        Boolean isUtec = bo.getIsUtec();
+        if (ObjectUtil.notNull(isUtec)) {
+            cells.get(3).setText(isUtec ? "是" : "否");
         }
         return table;
     }
