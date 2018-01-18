@@ -655,7 +655,7 @@ public class MigrationStageSix {
             decLastPosition.setMaterialName(materialName);
             Integer position = positionJudge.intValue();
             decLastPosition.setPosition(position);
-            decLastPosition.setIsDigitalEditor(false); // 是否数字编委
+            //decLastPosition.setIsDigitalEditor(false); // 是否数字编委
             decLastPosition.setNote((String) map.get("remark")); // 备注
             decLastPosition.setSort(999); // 显示顺序
             decLastPosition = decLastPositionService.addDecLastPosition(decLastPosition);
@@ -846,7 +846,7 @@ public class MigrationStageSix {
             decTextbook.setRank(rank);
             Integer position = positionJudge.intValue();
             decTextbook.setPosition(position);
-            decTextbook.setIsDigitalEditor(false); // 是否数字编委
+            //decTextbook.setIsDigitalEditor(false); // 是否数字编委
             decTextbook.setPublisher(publisher);
             decTextbook.setPublishDate(publishDate);
             if (StringUtil.notEmpty(isbn)) {
