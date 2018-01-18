@@ -86,7 +86,7 @@ public interface TextbookService {
      * @param 
      * @return Integer
      */
-    List<Textbook> addOrUpdateTextBookList(BookListVO bookListVO, String sessionId)
+    BookListVO addOrUpdateTextBookList(BookListVO bookListVO, String sessionId)
     		throws CheckedServiceException;
     
     /**

@@ -373,20 +373,29 @@ public class TextbookServiceImpl implements TextbookService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Textbook> addOrUpdateTextBookList(BookListVO bookListVO, String sessionId)
+	public BookListVO addOrUpdateTextBookList(BookListVO bookListVO, String sessionId)
 			throws CheckedServiceException {
 		if (ObjectUtil.isNull(bookListVO)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 					"参数不能为空");
 		}
+		/*
+		 * 检测统一教材下书名和版次都相同的数据
+		 */
 		List<Map<String,Object>> list = new ArrayList<>();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		List<Textbook> bookList =gson.fromJson(bookListVO.getTextbooks(), 
 				new TypeToken<ArrayList<Textbook>>(){
 		}.getType()) ;
+		/*
+		 * 对数据进行排序
+		 */
 		ComparatorChain comparatorChain = new ComparatorChain();
 		comparatorChain.addComparator(new BeanComparator<Textbook>("sort"));
 		Collections.sort(bookList, comparatorChain);
+		/*
+		 * 查询此教材下现有的书籍
+		 */
 		List<Textbook> textbookList = textbookDao.getTextbookByMaterialId(bookListVO.getMaterialId());
 		List<Long> ids = new ArrayList<>();
 		for (Textbook textbook : textbookList){
@@ -450,7 +459,7 @@ public class TextbookServiceImpl implements TextbookService {
 		material.setId(bookListVO.getMaterialId());
 		material.setIsPublic(bookListVO.getIsPublic());
 		materialService.updateMaterial(material, sessionId);
-		return textbookDao.getTextbookByMaterialId(bookListVO.getMaterialId());
+		return getBookListVO(bookListVO.getMaterialId());
 	}
 	
 	@SuppressWarnings({ "resource"})

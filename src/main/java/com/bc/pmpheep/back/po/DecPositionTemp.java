@@ -51,11 +51,15 @@ public class DecPositionTemp implements Serializable {
 	private Timestamp gmtCreate;
 	// 修改时间
 	private Timestamp gmtUpdate;
+	
+	
+	public DecPositionTemp() {
+		super();
+	}
 
 	public DecPositionTemp(Long authorId, Boolean isBackground, Long declarationId, Long textbookId,
 			Integer presetPosition,  boolean isOnList, Integer chosenPosition, Integer rank,
 			String syllabusId, String syllabusName, Timestamp gmtCreate, Timestamp gmtUpdate) {
-		super();
 		this.authorId = authorId;
 		this.isBackground = isBackground;
 		this.declarationId = declarationId;
@@ -185,6 +189,14 @@ public class DecPositionTemp implements Serializable {
 				+ ", syllabusId:" + syllabusId + ", syllabusName:"
 				+ syllabusName + ", gmtCreate:" + gmtCreate + ", gmtUpdate:"
 				+ gmtUpdate + "}";
+	}
+
+	public DecPositionTemp(Long declarationId, Long textbookId, Integer presetPosition,Integer chosenPosition) {
+		this.declarationId = declarationId;
+		this.textbookId = textbookId;
+		this.presetPosition = presetPosition;
+		this.chosenPosition = chosenPosition;
+		
 	}
 
 }
