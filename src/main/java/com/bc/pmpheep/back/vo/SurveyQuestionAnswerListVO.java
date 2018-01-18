@@ -66,6 +66,10 @@ public class SurveyQuestionAnswerListVO implements java.io.Serializable {
      * 单选，多选内容
      */
     private String            oneOrManyOptionContent;
+    /**
+     * 问卷ID
+     */
+    private Long              surveyId;
 
     // Property accessors
     public Long getId() {
@@ -164,6 +168,20 @@ public class SurveyQuestionAnswerListVO implements java.io.Serializable {
      */
     public void setOneOrManyOptionContent(String oneOrManyOptionContent) {
         this.oneOrManyOptionContent = oneOrManyOptionContent;
+    }
+
+    /**
+     * @return the surveyId
+     */
+    public Long getSurveyId() {
+        return surveyId;
+    }
+
+    /**
+     * @param surveyId the surveyId to set
+     */
+    public void setSurveyId(Long surveyId) {
+        this.surveyId = surveyId;
     }
 
 }
