@@ -597,9 +597,6 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 学术荣誉授予情况
 		ArrayList<DecAcadeReward> decAcadeRewardList = (ArrayList<DecAcadeReward>) decAcadeRewardDao
 				.getListDecAcadeRewardByDeclarationIds(decIds);
-		// 作家扩展项
-		ArrayList<DecExtensionVO> decExtensionList = (ArrayList<DecExtensionVO>) decExtensionDao
-				.getListDecExtensionVOByDeclarationIds(decIds);
 		for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
 			String strOnlineProgress = "";// 审核进度
 			String strOfflineProgress = "";// 纸质表进度
@@ -804,13 +801,6 @@ public class DeclarationServiceImpl implements DeclarationService {
 					acadeRewards.add(acadeReward);
 				}
 			}
-			// 作家扩展项
-			List<DecExtensionVO> extensionVOs = new ArrayList<>();
-			for (DecExtensionVO extensionVO : decExtensionList) {
-				if (extensionVO.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-					extensionVOs.add(extensionVO);
-				}
-			}
 			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getTextbookName(),
 					declarationOrDisplayVO.getPresetPosition(), declarationOrDisplayVO.getRealname(),
 					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),
@@ -828,8 +818,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 					(ArrayList<DecNationalPlan>) decNationalPlan, (ArrayList<DecTextbook>) decTextbook,
 					(ArrayList<DecResearch>) decResearch, (ArrayList<DecMonograph>) monographs,
 					(ArrayList<DecPublishReward>) publishRewards, (ArrayList<DecSci>) scis,
-					(ArrayList<DecClinicalReward>) clinicalRewards, (ArrayList<DecAcadeReward>) acadeRewards,
-					(ArrayList<DecExtensionVO>) extensionVOs);
+					(ArrayList<DecClinicalReward>) clinicalRewards, (ArrayList<DecAcadeReward>) acadeRewards);
 			declarationEtcBOs.add(declarationEtcBO);
 		}
 		return declarationEtcBOs;
