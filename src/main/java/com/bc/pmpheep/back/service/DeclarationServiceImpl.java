@@ -277,7 +277,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-						CheckedExceptionResult.NULL_PARAM, "退回意见超过100字符!");
+						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
