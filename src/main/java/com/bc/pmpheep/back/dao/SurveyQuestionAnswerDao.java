@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.SurveyQuestionAnswer;
 import com.bc.pmpheep.back.vo.SurveyQuestionAnswerCountsVO;
+import com.bc.pmpheep.back.vo.SurveyQuestionAnswerListVO;
 import com.bc.pmpheep.back.vo.SurveyQuestionFillVO;
 import com.bc.pmpheep.back.vo.SurveyRecoveryVO;
 
@@ -24,7 +25,7 @@ public interface SurveyQuestionAnswerDao {
      * 
      * @author:tyc
      * @date:2017年12月20日下午16:40:37
-     * @param SurveyQuestionAnswer 实体对象
+     * @param SurveyQuestionAnswerListVO 实体对象
      * @return 影响行数
      */
     Integer addSurveyQuestionAnswer(SurveyQuestionAnswer surveyQuestionAnswer);
@@ -46,7 +47,7 @@ public interface SurveyQuestionAnswerDao {
      * 
      * @author:tyc
      * @date:2017年12月20日下午16:40:37
-     * @param SurveyQuestionAnswer
+     * @param SurveyQuestionAnswerListVO
      * @return 影响行数
      */
     Integer deleteSurveyQuestionAnswerById(Long id);
@@ -56,7 +57,7 @@ public interface SurveyQuestionAnswerDao {
      * 
      * @author:tyc
      * @date:2017年12月20日下午16:40:37
-     * @param SurveyQuestionAnswer
+     * @param SurveyQuestionAnswerListVO
      * @return 影响行数
      */
     Integer updateSurveyQuestionAnswer(SurveyQuestionAnswer surveyQuestionAnswer);
@@ -66,7 +67,7 @@ public interface SurveyQuestionAnswerDao {
      * 
      * @author:tyc
      * @date:2017年12月20日下午16:40:37
-     * @param SurveyQuestionAnswer
+     * @param SurveyQuestionAnswerListVO
      * @return 影响行数
      */
     SurveyQuestionAnswer getSurveyQuestionAnswerById(Long id);
@@ -140,8 +141,10 @@ public interface SurveyQuestionAnswerDao {
      * 使用示范：
      *
      * @param surveyId 问卷ID
-     * @return  SurveyQuestionAnswer 对象集合
+     * @param userId 用户ID
+     * @return  SurveyQuestionAnswerListVO 对象集合
      * </pre>
      */
-    List<SurveyQuestionAnswer> listSurveyQuestionAnswerBySurveyId(@Param("surveyId") Long surveyId);
+    List<SurveyQuestionAnswerListVO> listSurveyQuestionAnswerBySurveyId(
+    @Param("surveyId") Long surveyId, @Param("userId") Long userId);
 }

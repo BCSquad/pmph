@@ -175,22 +175,30 @@ public class SurveyQuestionAnswerServiceImpl implements SurveyQuestionAnswerServ
     }
 
     @Override
-    public Map<String, Object> listSurveyQuestionAnswerBySurveyId(Long surveyId)
-    throws CheckedServiceException {
+    public Map<String, Object> listSurveyQuestionAnswerBySurveyIdAndUserId(Long surveyId,
+    Long userId) throws CheckedServiceException {
         if (ObjectUtil.isNull(surveyId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问卷ID为空");
         }
+        if (ObjectUtil.isNull(userId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "用户ID为空");
+        }
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("Survey", surveyService.getSurveyAndSurveyTypeById(surveyId));
         resultMap.put("SurveyQuestionAnswer",
-                      surveyQuestionAnswerDao.listSurveyQuestionAnswerBySurveyId(surveyId));
+                      surveyQuestionAnswerDao.listSurveyQuestionAnswerBySurveyId(surveyId, userId));
         return resultMap;
     }
 
     @Override
     public PageResult<SurveyQuestionFillVO> listFillQuestion(
     PageParameter<SurveyQuestionFillVO> pageParameter) throws CheckedServiceException {
+        if (ObjectUtil.isNull(pageParameter.getParameter())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
         Long surveyId = pageParameter.getParameter().getSurveyId();
         Long questionId = pageParameter.getParameter().getQuestionId();
         if (ObjectUtil.isNull(surveyId) || ObjectUtil.isNull(questionId)) {

@@ -44,6 +44,10 @@ public class SurveyRecoveryVO implements Serializable {
 
     private String            realname;
     /**
+     * 用户Id
+     */
+    private Long              userId;
+    /**
      * 用户类别
      */
     private String            userType;
@@ -188,6 +192,20 @@ public class SurveyRecoveryVO implements Serializable {
      */
     public void setRealname(String realname) {
         this.realname = realname;
+    }
+
+    /**
+     * @return the userId
+     */
+    public Long getUserId() {
+        return userId;
+    }
+
+    /**
+     * @param userId the userId to set
+     */
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
 }

@@ -35,7 +35,7 @@ public interface SurveyQuestionAnswerService {
      * 
      * @author:tyc
      * @date:2017年12月22日下午16:11:24
-     * @param SurveyQuestionAnswer 实体对象
+     * @param SurveyQuestionAnswerListVO 实体对象
      * @return 影响行数
      */
     SurveyQuestionAnswer addSurveyQuestionAnswer(SurveyQuestionAnswer surveyQuestionAnswer)
@@ -58,7 +58,7 @@ public interface SurveyQuestionAnswerService {
      * 
      * @author:tyc
      * @date:2017年12月22日下午16:16:22
-     * @param SurveyQuestionAnswer
+     * @param SurveyQuestionAnswerListVO
      * @return 影响行数
      */
     Integer updateSurveyQuestionAnswer(SurveyQuestionAnswer surveyQuestionAnswer)
@@ -69,7 +69,7 @@ public interface SurveyQuestionAnswerService {
      * 
      * @author:tyc
      * @date:2017年12月22日下午16:25:17
-     * @param SurveyQuestionAnswer
+     * @param SurveyQuestionAnswerListVO
      * @return 影响行数
      */
     SurveyQuestionAnswer getSurveyQuestionAnswerById(Long id) throws CheckedServiceException;
@@ -138,11 +138,12 @@ public interface SurveyQuestionAnswerService {
      * 使用示范：
      *
      * @param surveyId 问卷ID
+     * @param userId 用户ID
      * @return  SurveyQuestionAnswer 对象集合
      * @throws CheckedServiceException
      * </pre>
      */
-    Map<String, Object> listSurveyQuestionAnswerBySurveyId(Long surveyId)
+    Map<String, Object> listSurveyQuestionAnswerBySurveyIdAndUserId(Long surveyId, Long userId)
     throws CheckedServiceException;
 
     /**

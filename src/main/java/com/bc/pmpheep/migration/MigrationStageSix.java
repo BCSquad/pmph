@@ -306,6 +306,7 @@ public class MigrationStageSix {
                 	declaration.setIsStaging(true);
 				}
             }
+            declaration.setIsDeleted(false); // 是否被逻辑删除
             Declaration dec = declarationService.getDeclarationByMaterialIdAndUserId(declaration.getMaterialId(),
                     declaration.getUserId());
             if (dec != null) {
@@ -654,6 +655,7 @@ public class MigrationStageSix {
             decLastPosition.setMaterialName(materialName);
             Integer position = positionJudge.intValue();
             decLastPosition.setPosition(position);
+            //decLastPosition.setIsDigitalEditor(false); // 是否数字编委
             decLastPosition.setNote((String) map.get("remark")); // 备注
             decLastPosition.setSort(999); // 显示顺序
             decLastPosition = decLastPositionService.addDecLastPosition(decLastPosition);
@@ -844,6 +846,7 @@ public class MigrationStageSix {
             decTextbook.setRank(rank);
             Integer position = positionJudge.intValue();
             decTextbook.setPosition(position);
+            //decTextbook.setIsDigitalEditor(false); // 是否数字编委
             decTextbook.setPublisher(publisher);
             decTextbook.setPublishDate(publishDate);
             if (StringUtil.notEmpty(isbn)) {
