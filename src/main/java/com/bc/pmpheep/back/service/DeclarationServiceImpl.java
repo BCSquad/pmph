@@ -118,8 +118,6 @@ public class DeclarationServiceImpl implements DeclarationService {
 	private DecClinicalRewardDao decClinicalRewardDao;
 	@Autowired
 	private DecAcadeRewardDao decAcadeRewardDao;
-	@Autowired
-	private FileService fileService;
 
 	@Override
 	public Declaration addDeclaration(Declaration declaration) throws CheckedServiceException {
