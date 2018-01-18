@@ -419,7 +419,9 @@
 			d.id=#{parameter.departmentId} or d.parent_id
 			=#{parameter.departmentId})
 		</if>
-		LIMIT #{start},#{pageSize}
+		<if test="start !=null and pageNumber != null">
+			LIMIT #{start},#{pageSize}
+		</if>
 	</select>
 	<!-- 根据用户id获取用户对应的权限 -->
 	<select id="getPmphUserPermissionByUserId" parameterType="Long"

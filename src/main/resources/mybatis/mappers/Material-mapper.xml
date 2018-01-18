@@ -553,16 +553,17 @@
 	<!--获取教材集合 -->
 	<select id="getListMaterial" resultType="Material">
 		select
-		*
+			ma.*
 		from
-		material ma
-		where
-		1=1
-		<if test="materialName !=null and materialName !=''">
-			and material_name LIKE
-			CONCAT(CONCAT('%',#{materialName},'%'))
-		</if>
-		order by ma.id desc;
+			`material` ma
+		<where>
+			ma.`is_deleted` = FALSE
+			<if test="materialName !=null and materialName !=''">
+				AND
+					 ma.`material_name` LIKE CONCAT(CONCAT('%',#{materialName},'%'))
+			</if>
+		</where>
+		ORDER BY ma.`id` desc;
 	</select>
 
 

@@ -18,6 +18,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.MessageAttachment;
 import com.bc.pmpheep.back.po.OrgUser;
+import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.po.WriterUser;
@@ -35,6 +36,7 @@ import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MessageStateVO;
 import com.bc.pmpheep.back.vo.MyMessageVO;
+import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.back.vo.UserMessageVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.po.Message;
@@ -87,6 +89,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 
     @Autowired
     private DecPositionService       decPositionService;
+
+    @Autowired
+    private PmphDepartmentService    pmphDepartmentService;
 
     @Override
     public UserMessage addUserMessage(UserMessage userMessage) throws CheckedServiceException {
@@ -530,18 +535,37 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             List<Long> ids = new ArrayList<Long>();
             // 如果是主任，获取主任所在部门下的所有用户
             if (Const.TRUE == pmphUser.getIsDirector()) {
-                List<PmphUser> pmphUsers =
-                pmphUserService.listPmphUserByDepartmentId(pmphUser.getDepartmentId());
-                if (CollectionUtil.isNotEmpty(pmphUsers)) {
-                    for (PmphUser user : pmphUsers) {
-                        ids.add(user.getId());
+                // 社内部门父级节点ID
+                Long parentId = 1L;
+                PmphDepartment pmphDepartment =
+                pmphDepartmentService.getPmphDepartmentById(pmphUser.getDepartmentId());
+                // 如果是父级部门主任，则可以查看子级部门下的所有用户发送的消息
+                if (parentId.longValue() == pmphDepartment.getParentId().longValue()) {
+                    PageParameter<PmphUserManagerVO> parameter = new PageParameter<>(null, null);
+                    PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
+                    pmphUserManagerVO.setPath(pmphDepartment.getPath());
+                    pmphUserManagerVO.setDepartmentId(pmphDepartment.getId());
+                    parameter.setParameter(pmphUserManagerVO);
+                    PageResult<PmphUserManagerVO> listPageResult =
+                    pmphUserService.getListPmphUser(parameter);
+                    List<PmphUserManagerVO> listPmphUserManagerVOs = listPageResult.getRows();
+                    for (PmphUserManagerVO pmManagerVO : listPmphUserManagerVOs) {
+                        ids.add(pmManagerVO.getId());
                     }
-                    pageParameter.getParameter().setSenderIds(ids);
+                } else {
+                    // 如果是子级部门主任，则只可以查看子级部门下的用户发送的消息
+                    List<PmphUser> pmphUsers =
+                    pmphUserService.listPmphUserByDepartmentId(pmphUser.getDepartmentId());
+                    if (CollectionUtil.isNotEmpty(pmphUsers)) {
+                        for (PmphUser user : pmphUsers) {
+                            ids.add(user.getId());
+                        }
+                    }
                 }
             } else {
                 ids.add(pmphUser.getId());
-                pageParameter.getParameter().setSenderIds(ids);
             }
+            pageParameter.getParameter().setSenderIds(ids);
         }
         PageResult<UserMessageVO> pageResult = new PageResult<>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);

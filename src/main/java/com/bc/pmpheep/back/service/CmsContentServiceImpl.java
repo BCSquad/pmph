@@ -14,6 +14,8 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.CmsExtra;
+import com.bc.pmpheep.back.po.MaterialExtra;
+import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.ArrayUtil;
@@ -431,6 +433,18 @@ public class CmsContentServiceImpl implements CmsContentService {
             cmsExtra.setAttachment(fileDownLoadType + attachment);// 拼接附件下载路径
         }
         resultMap.put("cmsExtras", cmsExtras);
+        // 根据MaterialId 获取教材备注附件
+        List<MaterialNoteAttachment> materialNoteAttachments = null;
+        if (Const.TRUE == cmsContent.getIsMaterialEntry()) {
+            MaterialExtra materialExtra =
+            materialExtraService.getMaterialExtraByMaterialId(cmsContent.getMaterialId());
+            if (ObjectUtil.notNull(materialExtra)) {
+                // 教材备注附件
+                materialNoteAttachments =
+                materialNoteAttachmentService.getMaterialNoteAttachmentByMaterialExtraId(materialExtra.getId());
+            }
+        }
+        resultMap.put("MaterialNoteAttachment", materialNoteAttachments);
         return resultMap;
     }
 
