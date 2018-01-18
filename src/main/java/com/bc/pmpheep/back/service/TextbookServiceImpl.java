@@ -373,7 +373,7 @@ public class TextbookServiceImpl implements TextbookService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public BookListVO addOrUpdateTextBookList(BookListVO bookListVO, String sessionId)
+	public List<Textbook> addOrUpdateTextBookList(BookListVO bookListVO, String sessionId)
 			throws CheckedServiceException {
 		if (ObjectUtil.isNull(bookListVO)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
@@ -459,7 +459,7 @@ public class TextbookServiceImpl implements TextbookService {
 		material.setId(bookListVO.getMaterialId());
 		material.setIsPublic(bookListVO.getIsPublic());
 		materialService.updateMaterial(material, sessionId);
-		return getBookListVO(bookListVO.getMaterialId());
+		return textbookDao.getTextbookByMaterialId(bookListVO.getMaterialId());
 	}
 	
 	@SuppressWarnings({ "resource"})
