@@ -76,9 +76,9 @@ public class Declaration implements java.io.Serializable {
 	// 退回原因
 	private String returnCause;
 	//是否暂存
-	private boolean isStaging;
+	private Boolean isStaging;
 	//是否逻辑删除
-	private boolean isDeleted;
+	private Boolean isDeleted;
 	//创建时间
 	private Timestamp gmtCreate;
 	//修改时间
@@ -109,7 +109,7 @@ public class Declaration implements java.io.Serializable {
 			String handphone, String email, Short idtype, String idcard,
 			String telephone, String fax, Long orgId, Integer onlineProgress,
 			Long authUserId, Timestamp authDate, Integer offlineProgress,
-			Timestamp paperDate, boolean isStaging, boolean isDeleted) {
+			Timestamp paperDate, Boolean isStaging, Boolean isDeleted) {
 		super();
 		this.materialId = materialId;
 		this.userId = userId;
@@ -147,7 +147,7 @@ public class Declaration implements java.io.Serializable {
 			String handphone, String email, Short idtype, String idcard,
 			String telephone, String fax, Long orgId, Integer onlineProgress,
 			Long authUserId, Timestamp authDate, Integer offlineProgress,
-			Timestamp paperDate, boolean isStaging, boolean isDeleted,
+			Timestamp paperDate, Boolean isStaging, Boolean isDeleted,
 			Timestamp gmtCreate, Timestamp gmtUpdate) {
 		this.materialId = materialId;
 		this.userId = userId;
@@ -184,8 +184,8 @@ public class Declaration implements java.io.Serializable {
 			String handphone, String email, Short idtype, String idcard,
 			String telephone, String fax, Integer isDispensed, Long orgId, 
 			Integer onlineProgress, Long authUserId, Timestamp authDate, 
-			Integer offlineProgress, Timestamp paperDate, boolean isStaging, 
-			boolean isDeleted) {
+			Integer offlineProgress, Timestamp paperDate, Boolean isStaging, 
+			Boolean isDeleted) {
 		super();
 		this.materialId = materialId;
 		this.userId = userId;
@@ -407,19 +407,19 @@ public class Declaration implements java.io.Serializable {
 		this.paperDate = paperDate;
 	}
 
-	public boolean getIsStaging() {
+	public Boolean getIsStaging() {
 		return isStaging;
 	}
 
-	public void setIsStaging(boolean isStaging) {
+	public void setIsStaging(Boolean isStaging) {
 		this.isStaging = isStaging;
 	}
 
-	public boolean getIsDeleted() {
+	public Boolean getIsDeleted() {
 		return isDeleted;
 	}
 
-	public void setIsDeleted(boolean isDeleted) {
+	public void setIsDeleted(Boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
 
