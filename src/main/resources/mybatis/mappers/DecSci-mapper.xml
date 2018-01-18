@@ -125,7 +125,7 @@
 		declaration_id=#{declarationId};
 	</select>
 	<!-- 根据declarationId查询 -->
-	<select id="getListDecSciExpByDeclarationIds" resultType="DecSci">
+	<select id="getListDecSciByDeclarationIds" resultType="DecSci">
 		select * from dec_sci where
 		declaration_id in
 		<foreach collection="list" item="declarationId" open="("
