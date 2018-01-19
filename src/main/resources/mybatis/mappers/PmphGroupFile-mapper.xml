@@ -183,9 +183,8 @@
 			<if test="parameter.sortType == 'download'">
 				a.download DESC,
 			</if>
-			a.gmt_create
 		</if>
-		a.id
+		a.gmt_create DESC
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
