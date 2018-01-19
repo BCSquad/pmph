@@ -195,14 +195,14 @@ public class MigrationStageSix {
             String unitid = (String) map.get("unitid"); // 旧表申报单位id
             Integer sysflag = (Integer) map.get("sysflag"); // 0为后台用户，1为前台用户
             Integer usertype = (Integer) map.get("usertype"); // 2为学校管理员
-            if (ObjectUtil.isNull(sysflag) || sysflag == 0) {
+            if (ObjectUtil.isNull(sysflag) || sysflag.equals(0)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为后台用户申报教材。"));
                 excel.add(map);
                 logger.debug("找到为后台用户申报教材，此结果将被记录在Excel中");
                 sysflagCount++;
                 continue;
             }
-            if (usertype == 2) {
+            if (usertype.equals(2)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为用户类型为学校管理员申报教材。"));
                 excel.add(map);
                 logger.debug("找到为用户类型为学校管理员申报教材，此结果将被记录在Excel中");
@@ -210,7 +210,7 @@ public class MigrationStageSix {
                 continue;
             }
             Declaration declaration = new Declaration();
-            if (ObjectUtil.isNull(materialid) || materialid == 0) {
+            if (ObjectUtil.isNull(materialid) || materialid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材对应的关联结果。"));
                 excel.add(map);
                 logger.debug("未找到教材对应的关联结果，此结果将被记录在Excel中");
@@ -218,7 +218,7 @@ public class MigrationStageSix {
                 continue;
             }
             declaration.setMaterialId(materialid);
-            if (ObjectUtil.isNull(userid) || userid == 0) {
+            if (ObjectUtil.isNull(userid) || userid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到作家对应的关联结果。"));
                 excel.add(map);
                 logger.debug("未找到作家对应的关联结果，此结果将被记录在Excel中");
