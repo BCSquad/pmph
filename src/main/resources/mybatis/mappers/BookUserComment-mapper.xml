@@ -195,6 +195,7 @@
 		<if test="parameter.isAuth != null">
 			and c.is_auth = #{parameter.isAuth}
 		</if>
+		ORDER BY c.gmt_create DESC
 		LIMIT #{start},#{pageSize}
 	</select>
 	<!-- 查询评论总数 -->
