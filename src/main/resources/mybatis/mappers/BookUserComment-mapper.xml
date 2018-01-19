@@ -136,7 +136,7 @@
 				sort_hot = #{sortHot},
 			</if>
 			<if test="isPromote != null">
-				is_peomote = #{isPromote},
+				is_promote = #{isPromote},
 			</if>
 			<if test="sortPromote != null">
 				sort_promote = #{sortPromote},
@@ -195,6 +195,7 @@
 		<if test="parameter.isAuth != null">
 			and c.is_auth = #{parameter.isAuth}
 		</if>
+		ORDER BY c.gmt_create DESC
 		LIMIT #{start},#{pageSize}
 	</select>
 	<!-- 查询评论总数 -->
