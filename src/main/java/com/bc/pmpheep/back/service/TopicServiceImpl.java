@@ -249,6 +249,7 @@ public class TopicServiceImpl implements TopicService {
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 		writerUserTrendst.setUserId(topicDao.getTopicTextVO(topic.getId()).getUserId());
 		writerUserTrendst.setType(0);
+		writerUserTrendst.setIsPublic(true);
 		if (ObjectUtil.notNull(topic.getAuthProgress())) {
 			if (3 == topic.getAuthProgress()) {
 				writerUserTrendst.setDetail(
