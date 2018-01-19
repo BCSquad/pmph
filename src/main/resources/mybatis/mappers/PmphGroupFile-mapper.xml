@@ -177,15 +177,13 @@
 		GROUP BY a.file_id
 		ORDER BY
 		<if test="parameter.sortType != null and parameter.sortType != ''">
-			<if test="parameter.sortType == 'gmtCreate'">
-				a.gmt_create DESC ,
-			</if>
 			<if test="parameter.sortType == 'memberId'">
 				a.member_id DESC ,
 			</if>
 			<if test="parameter.sortType == 'download'">
 				a.download DESC ,
 			</if>
+			a.gmt_create DESC
 		</if>
 		a.id
 		<if test="start !=null and pageNumber != null">
