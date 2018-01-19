@@ -404,25 +404,29 @@ public class TextbookServiceImpl implements TextbookService {
 		List<Long> delBook = new ArrayList<>();//装数据库中本来已经有的书籍id
 		int count = 1; //判断书序号的连续性计数器
 		for (Textbook textbook : bookList){
+		if (ObjectUtil.isNull(textbook.getId())){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.NULL_PARAM, "书籍id不能为为空");
+		}
 		if (ObjectUtil.isNull(textbook.getMaterialId())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-						CheckedExceptionResult.ILLEGAL_PARAM, "教材id不能为空");
+						CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
 		}
 		if (StringUtil.isEmpty(textbook.getTextbookName())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-					CheckedExceptionResult.ILLEGAL_PARAM, "书籍名称不能为空");
+					CheckedExceptionResult.NULL_PARAM, "书籍名称不能为空");
 		}
 		if (ObjectUtil.isNull(textbook.getTextbookRound())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-					CheckedExceptionResult.ILLEGAL_PARAM, "书籍轮次不能为空");
+					CheckedExceptionResult.NULL_PARAM, "书籍轮次不能为空");
 		}
 		if (ObjectUtil.isNull(textbook.getSort())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-					CheckedExceptionResult.ILLEGAL_PARAM, "图书序号不能为空");
+					CheckedExceptionResult.NULL_PARAM, "图书序号不能为空");
 		}
 		if (ObjectUtil.isNull(textbook.getFounderId())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-					CheckedExceptionResult.ILLEGAL_PARAM, "创建人id不能为空");
+					CheckedExceptionResult.NULL_PARAM, "创建人id不能为空");
 		}
 		if (count != textbook.getSort()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
