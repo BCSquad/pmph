@@ -19,6 +19,7 @@ import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtension;
@@ -102,9 +103,6 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
 	@Autowired
 	private MaterialTypeService materialTypeService;
-
-	@Autowired
-	private PmphRoleService pmphRoleService;
 
 	/**
 	 * 
@@ -883,6 +881,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			material.setId(id);
 			material.setIsDeleted(true);
 			materialDao.updateMaterial(material);
+			cmsContentService.updateCmsContentByMaterialId(id);
 		} else {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"您没有删除教材" + material.getMaterialName() + "的权限");

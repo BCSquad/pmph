@@ -224,6 +224,19 @@ public interface CmsContentService {
      * </pre>
      */
     Integer deleteCmsContentById(Long id) throws CheckedServiceException;
+    
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据教材id逻辑删除
+     * 使用示范：
+     *
+     * @param id 主键ID
+     * @return 影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer updateCmsContentByMaterialId(Long MaterialId) throws CheckedServiceException;
 
     /**
      * 
