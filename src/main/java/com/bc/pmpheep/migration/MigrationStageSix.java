@@ -164,7 +164,9 @@ public class MigrationStageSix {
                 + "left join ba_organize bo on bo.orgid=wd.unitid "
                 + "left join sys_user s on s.userid=wd.userid "
                 + "left join sys_userext su on su.userid=wd.userid "
-                + "left join (select * from teach_applyposition group by writerid) ta "
+                + "left join (select writerid,auditstate,auditid,editauditid,auditdate,"
+                + "isreceivedpaper,editauditstate,editauditdate "
+                + "from teach_applyposition group by writerid) ta "
                 + "on ta.writerid=wd.writerid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql); // 查询所有数据
         int count = 0; // 迁移成功的条目数
