@@ -136,7 +136,7 @@
 				sort_hot = #{sortHot},
 			</if>
 			<if test="isPromote != null">
-				is_peomote = #{isPromote},
+				is_promote = #{isPromote},
 			</if>
 			<if test="sortPromote != null">
 				sort_promote = #{sortPromote},
