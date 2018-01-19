@@ -150,8 +150,8 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			if (pmphGroupMembers.size() > 0) {
 				for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
 					PmphGroupMemberVO groupMember = pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId,
-							pmphGroupMember.getUserId(), pmphGroupMember.getIsWriter());
-					if (null == groupMember) {
+							pmphGroupMember.getUserId(), pmphGroupMember.getIsWriter());// 查看当前添加人员是否以前在小组中
+					if (ObjectUtil.isNull(groupMember)) {// 当前人员以前不在小组中
 						if (null == pmphGroupMember.getUserId()) {
 							throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 									CheckedExceptionResult.ILLEGAL_PARAM, "成员id为空");
