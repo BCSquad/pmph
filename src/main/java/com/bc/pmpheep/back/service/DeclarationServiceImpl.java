@@ -580,6 +580,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 教材编写
 		ArrayList<DecTextbook> decTextbooks = (ArrayList<DecTextbook>) decTextbookDao
 				.getListDecTextbookByDeclarationIds(decIds);
+		
+		
 		// 作家科研
 		ArrayList<DecResearch> decResearchs = (ArrayList<DecResearch>) decResearchDao
 				.getListDecResearchByDeclarationIds(decIds);
