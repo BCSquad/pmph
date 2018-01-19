@@ -2,6 +2,8 @@ package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
+
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -20,6 +22,18 @@ public class BookCorrectionAuditVO implements Serializable {
      * 图书名称
      */
     private String    bookname;
+    /**
+     * 图书图片
+     */
+    private String imageUrl;
+    /**
+     * 图书作者
+     */
+    private String author;
+    /**
+     * 图书出版时间
+     */
+    private Date publishDate;
     /**
      * 页码
      */
@@ -231,14 +245,48 @@ public class BookCorrectionAuditVO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "{id:" + id + ", bookname:" + bookname + ", page:" + page
-				+ ", line:" + line + ", content:" + content + ", attachment:"
-				+ attachment + ", attachmentName:" + attachmentName
-				+ ", realname:" + realname + ", gmtCreate:" + gmtCreate
-				+ ", authorReply:" + authorReply + ", isAuthorReplied:"
-				+ isAuthorReplied + ", isEditorHandling:" + isEditorHandling
-				+ ", isEditorReplied:" + isEditorReplied + ", editorReply:"
-				+ editorReply + ", result:" + result + "}";
+		return "{id:" + id + ",bookname:" + bookname + ",imageUrl:" + imageUrl
+				+ ",author:" + author + ",publishDate:" + publishDate
+				+ ",page:" + page + ",line:" + line + ",content:" + content
+				+ ",attachment:" + attachment + ",attachmentName:"
+				+ attachmentName + ",realname:" + realname + ",gmtCreate:"
+				+ gmtCreate + ",authorReply:" + authorReply
+				+ ",isAuthorReplied:" + isAuthorReplied + ",isEditorHandling:"
+				+ isEditorHandling + ",isEditorReplied:" + isEditorReplied
+				+ ",editorReply:" + editorReply + ",result:" + result + "}";
+	}
+
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+
+	public BookCorrectionAuditVO setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+		return this;
+	}
+
+
+	public String getAuthor() {
+		return author;
+	}
+
+
+	public BookCorrectionAuditVO setAuthor(String author) {
+		this.author = author;
+		return this;
+	}
+
+
+	public Date getPublishDate() {
+		return publishDate;
+	}
+
+
+	public BookCorrectionAuditVO setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
+		return this;
 	}
     
 	
