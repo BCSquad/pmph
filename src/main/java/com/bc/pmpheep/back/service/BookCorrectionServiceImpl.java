@@ -116,7 +116,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 	
 	@Override
 	public PageResult<BookCorrectionAuditVO> listBookCorrectionAudit(
-			HttpServletRequest request,Integer pageNumber,Integer pageSize,String bookname ,Boolean result) throws CheckedServiceException{
+			HttpServletRequest request,Integer pageNumber,Integer pageSize,String bookname ,Boolean isOver,Boolean result) throws CheckedServiceException{
 		if (null == request.getSession(false)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "会话过期");
 		}
@@ -147,6 +147,12 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		map.put("result", result);
 		map.put("bookname", StringUtil.toAllCheck(bookname));
 		map.put("editorId", editorId);
+		if(null != isOver && isOver){
+			map.put("isOver", 1); //APP的已完成
+			
+		}else{
+			map.put("isOver", 2);
+		}
 		// 返回实体
 		PageResult<BookCorrectionAuditVO> pageResult = new PageResult<BookCorrectionAuditVO>();
 		pageResult.setPageNumber(pageNumber);

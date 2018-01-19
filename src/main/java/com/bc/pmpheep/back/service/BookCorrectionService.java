@@ -67,7 +67,7 @@ public interface BookCorrectionService {
 	 * @throws CheckedServiceException
 	 */
 	PageResult<BookCorrectionAuditVO> listBookCorrectionAudit(HttpServletRequest request,
-			Integer pageNumber,Integer pageSize,String bookname ,Boolean result) throws CheckedServiceException;
+			Integer pageNumber,Integer pageSize,String bookname,Boolean isOver,Boolean result) throws CheckedServiceException;
 	
 	 /**
      * 新增一个    BookCorrection
