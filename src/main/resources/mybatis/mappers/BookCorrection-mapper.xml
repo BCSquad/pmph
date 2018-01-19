@@ -219,6 +219,9 @@
 		select 
 			a.id,
 			b.bookname,
+			b.author,
+			b.publish_date,
+			b.image_url ,
 			a.page,
 			a.line ,
 			a.content ,
