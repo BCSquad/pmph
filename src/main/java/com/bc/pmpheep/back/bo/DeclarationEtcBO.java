@@ -76,8 +76,26 @@ public class DeclarationEtcBO {
 	@ExcelHeader(header = "手机")
 	private String handphone;
 
+	@ExcelHeader(header = "学历")
+	private String degree;
+
 	@ExcelHeader(header = "邮箱")
 	private String email;
+
+	@ExcelHeader(header = "证件类型")
+	private String idtype;
+
+	@ExcelHeader(header = "证件号码")
+	private String idcard;
+
+	@ExcelHeader(header = "专业特长")
+	private String expertise;
+
+	@ExcelHeader(header = "是否服从调剂")
+	private Boolean isDispensed;
+
+	@ExcelHeader(header = "是否参与本科教学评估认证")
+	private Boolean isUtec;
 
 	@ExcelHeader(header = "学校审核")
 	private String onlineProgress;
@@ -132,20 +150,22 @@ public class DeclarationEtcBO {
 	@ExcelHeader(header = "学术荣誉授予情况")
 	private ArrayList<DecAcadeReward> decAcadeRewards;
 
-	@ExcelHeader(header = "作家扩展项")
-	private ArrayList<DecExtensionVO> decExtensionVOs;
-
 	public DeclarationEtcBO() {
 	}
 
 	public DeclarationEtcBO(String textbookName, String presetPosition, String realname, String username, String sex,
 			String birthday, Integer experience, String orgName, String position, String title, String address,
-			String postcode, String telephone, String fax, String handphone, String email, String onlineProgress,
+			String postcode, String telephone, String fax, String handphone, String degree, String email, String idtype,
+			String idcard, String expertise, Boolean isDispensed, Boolean isUtec, String onlineProgress,
 			String offlineProgress, String chosenOrgName, ArrayList<DecEduExp> decEduExps,
-			ArrayList<DecWorkExp> decWorkExps, ArrayList<DecTeachExp> decTeachExps, ArrayList<DecAcade> decAcades,
-			ArrayList<DecLastPosition> decLastPositions, ArrayList<DecCourseConstruction> decCourseConstructions,
-			ArrayList<DecNationalPlan> decNationalPlans, ArrayList<DecTextbook> decTextbooks,
-			ArrayList<DecResearch> decResearchs, DecAchievement decAchievement) {
+			ArrayList<DecWorkExp> decWorkExps, ArrayList<DecTeachExp> decTeachExps, DecAchievement decAchievement,
+			ArrayList<DecAcade> decAcades, ArrayList<DecLastPosition> decLastPositions,
+			ArrayList<DecCourseConstruction> decCourseConstructions, ArrayList<DecNationalPlan> decNationalPlans,
+			ArrayList<DecTextbook> decTextbooks, ArrayList<DecResearch> decResearchs,
+			ArrayList<DecMonograph> decMonographs, ArrayList<DecPublishReward> publishRewards,
+			ArrayList<DecSci> decScis, ArrayList<DecClinicalReward> decClinicalRewards,
+			ArrayList<DecAcadeReward> decAcadeRewards) {
+		super();
 		this.textbookName = textbookName;
 		this.presetPosition = presetPosition;
 		this.realname = realname;
@@ -161,20 +181,31 @@ public class DeclarationEtcBO {
 		this.telephone = telephone;
 		this.fax = fax;
 		this.handphone = handphone;
+		this.degree = degree;
 		this.email = email;
+		this.idtype = idtype;
+		this.idcard = idcard;
+		this.expertise = expertise;
+		this.isDispensed = isDispensed;
+		this.isUtec = isUtec;
 		this.onlineProgress = onlineProgress;
 		this.offlineProgress = offlineProgress;
 		this.chosenOrgName = chosenOrgName;
 		this.decEduExps = decEduExps;
 		this.decWorkExps = decWorkExps;
 		this.decTeachExps = decTeachExps;
+		this.decAchievement = decAchievement;
 		this.decAcades = decAcades;
 		this.decLastPositions = decLastPositions;
 		this.decCourseConstructions = decCourseConstructions;
 		this.decNationalPlans = decNationalPlans;
 		this.decTextbooks = decTextbooks;
 		this.decResearchs = decResearchs;
-		this.decAchievement = decAchievement;
+		this.decMonographs = decMonographs;
+		this.publishRewards = publishRewards;
+		this.decScis = decScis;
+		this.decClinicalRewards = decClinicalRewards;
+		this.decAcadeRewards = decAcadeRewards;
 	}
 
 	/**
@@ -403,6 +434,21 @@ public class DeclarationEtcBO {
 	}
 
 	/**
+	 * @return the degree
+	 */
+	public String getDegree() {
+		return degree;
+	}
+
+	/**
+	 * @param degree
+	 *            the degree to set
+	 */
+	public void setDegree(String degree) {
+		this.degree = degree;
+	}
+
+	/**
 	 * @return the email
 	 */
 	public String getEmail() {
@@ -415,6 +461,81 @@ public class DeclarationEtcBO {
 	 */
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	/**
+	 * @return the idtype
+	 */
+	public String getIdtype() {
+		return idtype;
+	}
+
+	/**
+	 * @param idtype
+	 *            the idtype to set
+	 */
+	public void setIdtype(String idtype) {
+		this.idtype = idtype;
+	}
+
+	/**
+	 * @return the idcard
+	 */
+	public String getIdcard() {
+		return idcard;
+	}
+
+	/**
+	 * @param idcard
+	 *            the idcard to set
+	 */
+	public void setIdcard(String idcard) {
+		this.idcard = idcard;
+	}
+
+	/**
+	 * @return the expertise
+	 */
+	public String getExpertise() {
+		return expertise;
+	}
+
+	/**
+	 * @param expertise
+	 *            the expertise to set
+	 */
+	public void setExpertise(String expertise) {
+		this.expertise = expertise;
+	}
+
+	/**
+	 * @return the isDispensed
+	 */
+	public Boolean getIsDispensed() {
+		return isDispensed;
+	}
+
+	/**
+	 * @param isDispensed
+	 *            the isDispensed to set
+	 */
+	public void setIsDispensed(Boolean isDispensed) {
+		this.isDispensed = isDispensed;
+	}
+
+	/**
+	 * @return the isUtec
+	 */
+	public Boolean getIsUtec() {
+		return isUtec;
+	}
+
+	/**
+	 * @param isUtec
+	 *            the isUtec to set
+	 */
+	public void setIsUtec(Boolean isUtec) {
+		this.isUtec = isUtec;
 	}
 
 	/**
@@ -612,52 +733,79 @@ public class DeclarationEtcBO {
 		this.decResearchs = decResearchs;
 	}
 
+	/**
+	 * @return the decMonographs
+	 */
 	public ArrayList<DecMonograph> getDecMonographs() {
 		return decMonographs;
 	}
 
+	/**
+	 * @param decMonographs
+	 *            the decMonographs to set
+	 */
 	public void setDecMonographs(ArrayList<DecMonograph> decMonographs) {
 		this.decMonographs = decMonographs;
 	}
 
+	/**
+	 * @return the publishRewards
+	 */
 	public ArrayList<DecPublishReward> getPublishRewards() {
 		return publishRewards;
 	}
 
+	/**
+	 * @param publishRewards
+	 *            the publishRewards to set
+	 */
 	public void setPublishRewards(ArrayList<DecPublishReward> publishRewards) {
 		this.publishRewards = publishRewards;
 	}
 
+	/**
+	 * @return the decScis
+	 */
 	public ArrayList<DecSci> getDecScis() {
 		return decScis;
 	}
 
+	/**
+	 * @param decScis
+	 *            the decScis to set
+	 */
 	public void setDecScis(ArrayList<DecSci> decScis) {
 		this.decScis = decScis;
 	}
 
+	/**
+	 * @return the decClinicalRewards
+	 */
 	public ArrayList<DecClinicalReward> getDecClinicalRewards() {
 		return decClinicalRewards;
 	}
 
+	/**
+	 * @param decClinicalRewards
+	 *            the decClinicalRewards to set
+	 */
 	public void setDecClinicalRewards(ArrayList<DecClinicalReward> decClinicalRewards) {
 		this.decClinicalRewards = decClinicalRewards;
 	}
 
+	/**
+	 * @return the decAcadeRewards
+	 */
 	public ArrayList<DecAcadeReward> getDecAcadeRewards() {
 		return decAcadeRewards;
 	}
 
+	/**
+	 * @param decAcadeRewards
+	 *            the decAcadeRewards to set
+	 */
 	public void setDecAcadeRewards(ArrayList<DecAcadeReward> decAcadeRewards) {
 		this.decAcadeRewards = decAcadeRewards;
-	}
-
-	public ArrayList<DecExtensionVO> getDecExtensionVOs() {
-		return decExtensionVOs;
-	}
-
-	public void setDecExtensionVOs(ArrayList<DecExtensionVO> decExtensionVOs) {
-		this.decExtensionVOs = decExtensionVOs;
 	}
 
 }

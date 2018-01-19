@@ -379,14 +379,23 @@ public class TextbookServiceImpl implements TextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 					"参数不能为空");
 		}
+		/*
+		 * 检测统一教材下书名和版次都相同的数据
+		 */
 		List<Map<String,Object>> list = new ArrayList<>();
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		List<Textbook> bookList =gson.fromJson(bookListVO.getTextbooks(), 
 				new TypeToken<ArrayList<Textbook>>(){
 		}.getType()) ;
+		/*
+		 * 对数据进行排序
+		 */
 		ComparatorChain comparatorChain = new ComparatorChain();
 		comparatorChain.addComparator(new BeanComparator<Textbook>("sort"));
 		Collections.sort(bookList, comparatorChain);
+		/*
+		 * 查询此教材下现有的书籍
+		 */
 		List<Textbook> textbookList = textbookDao.getTextbookByMaterialId(bookListVO.getMaterialId());
 		List<Long> ids = new ArrayList<>();
 		for (Textbook textbook : textbookList){
@@ -397,27 +406,39 @@ public class TextbookServiceImpl implements TextbookService {
 		for (Textbook textbook : bookList){
 		if (ObjectUtil.isNull(textbook.getMaterialId())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-						CheckedExceptionResult.ILLEGAL_PARAM, "教材id不能为空");
+						CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
 		}
 		if (StringUtil.isEmpty(textbook.getTextbookName())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-					CheckedExceptionResult.ILLEGAL_PARAM, "书籍名称不能为空");
+					CheckedExceptionResult.NULL_PARAM, "书籍名称不能为空");
+		}
+		if (StringUtil.strLength(textbook.getTextbookName()) > 25){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.ILLEGAL_PARAM, "书籍名称字数不能超过25个,请修改后再提交");
 		}
 		if (ObjectUtil.isNull(textbook.getTextbookRound())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-					CheckedExceptionResult.ILLEGAL_PARAM, "书籍轮次不能为空");
+					CheckedExceptionResult.NULL_PARAM, "书籍轮次不能为空");
+		}
+		if (textbook.getTextbookRound().intValue() > 2147483647){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.ILLEGAL_PARAM, "图书轮次过大，请修改后再提交");
 		}
 		if (ObjectUtil.isNull(textbook.getSort())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-					CheckedExceptionResult.ILLEGAL_PARAM, "图书序号不能为空");
+					CheckedExceptionResult.NULL_PARAM, "图书序号不能为空");
+		}
+		if (textbook.getSort().intValue() > 2147483647){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.ILLEGAL_PARAM, "图书序号过大，请修改后再提交");
 		}
 		if (ObjectUtil.isNull(textbook.getFounderId())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-					CheckedExceptionResult.ILLEGAL_PARAM, "创建人id不能为空");
+					CheckedExceptionResult.NULL_PARAM, "创建人id不能为空");
 		}
 		if (count != textbook.getSort()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-						CheckedExceptionResult.ILLEGAL_PARAM, "书籍序号必须连续");
+						CheckedExceptionResult.ILLEGAL_PARAM, "书籍序号必须从1开始且连续");
 		}
 			Map<String, Object> map = new HashMap<>();
 			map.put(textbook.getTextbookName(), textbook.getTextbookRound());

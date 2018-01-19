@@ -38,7 +38,7 @@ public class DecPositionTemp implements Serializable {
 	// 申报职务
 	private Integer presetPosition;
 	// 是否进入预选名单
-	private Integer isOnList;
+	private boolean isOnList;
 	// 遴选职务
 	private Integer chosenPosition;
 	// 排位
@@ -51,11 +51,15 @@ public class DecPositionTemp implements Serializable {
 	private Timestamp gmtCreate;
 	// 修改时间
 	private Timestamp gmtUpdate;
+	
+	
+	public DecPositionTemp() {
+		super();
+	}
 
 	public DecPositionTemp(Long authorId, Boolean isBackground, Long declarationId, Long textbookId,
-			Integer presetPosition,  Integer isOnList, Integer chosenPosition, Integer rank,
+			Integer presetPosition,  boolean isOnList, Integer chosenPosition, Integer rank,
 			String syllabusId, String syllabusName, Timestamp gmtCreate, Timestamp gmtUpdate) {
-		super();
 		this.authorId = authorId;
 		this.isBackground = isBackground;
 		this.declarationId = declarationId;
@@ -119,11 +123,11 @@ public class DecPositionTemp implements Serializable {
 	}
 
 	
-	public Integer getIsOnList() {
+	public boolean getIsOnList() {
 		return isOnList;
 	}
 
-	public void setIsOnList(Integer isOnList) {
+	public void setIsOnList(boolean isOnList) {
 		this.isOnList = isOnList;
 	}
 
@@ -185,6 +189,14 @@ public class DecPositionTemp implements Serializable {
 				+ ", syllabusId:" + syllabusId + ", syllabusName:"
 				+ syllabusName + ", gmtCreate:" + gmtCreate + ", gmtUpdate:"
 				+ gmtUpdate + "}";
+	}
+
+	public DecPositionTemp(Long declarationId, Long textbookId, Integer presetPosition,Integer chosenPosition) {
+		this.declarationId = declarationId;
+		this.textbookId = textbookId;
+		this.presetPosition = presetPosition;
+		this.chosenPosition = chosenPosition;
+		
 	}
 
 }

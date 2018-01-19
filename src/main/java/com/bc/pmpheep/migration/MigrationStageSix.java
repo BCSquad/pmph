@@ -133,11 +133,12 @@ public class MigrationStageSix {
     protected void declaration() {
         String tableName = "writer_declaration";// 要迁移的旧库表名
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
-        String sql = "select wd.writerid,wd.materid,wd.writername,wd.sex,wd.birthdate,wd.seniority,"
-                + "wd.duties,wd.positional,wd.address,wd.postcode,wd.handset,wd.email,wd.idcardtype,"
-                + "IFNULL(wd.idcardtype,0) idcardtype,"
-                + "wd.idcard,wd.linktel,wd.fax,tm.new_pk tm_materid,s.new_pk sys_userid,"
-                + "wd.unitid,bo.new_pk org_id,wd.workunit,"
+        String sql = "select wd.writerid,wd.materid,wd.writername,s.usercode,s.username,"
+        		+ "wd.sex,wd.birthdate,wd.seniority,wd.duties,wd.positional,wd.address,"
+        		+ "wd.postcode,wd.handset,wd.email,wd.idcardtype,"
+        		+ "IFNULL(wd.idcardtype,0) idcardtype,"
+                + "wd.idcard,wd.linktel,wd.fax,tm.new_pk tm_materid,"
+                + "s.new_pk sys_userid,wd.unitid,bo.new_pk org_id,wd.workunit,"
                 + "case when wd.submittype=10 then 0 "
                 + "when wd.submittype=11 and ta.auditstate=10 then 1 "
                 + "when ta.auditstate=12 and wd.submittype=11 then 2 "
@@ -172,6 +173,7 @@ public class MigrationStageSix {
         int usertypeCount = 0;
         int useridCount = 0;
         int decCount = 0;
+        int realNameCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -179,7 +181,9 @@ public class MigrationStageSix {
             String id = (String) map.get("writerid"); // 旧表主键值
             Long materialid = (Long) map.get("tm_materid"); // 教材id
             Long userid = (Long) map.get("sys_userid"); // 作家id
-            String realName = (String) map.get("writername"); // 作家姓名
+            String realName = (String) map.get("writername"); // 申报表作家姓名
+            /*String userCode = (String) map.get("usercode"); // 作家帐号
+            String userName = (String) map.get("username"); // 作家姓名*/
             String sexJudge = (String) map.get("sex"); // 性别
             String experienceNum = (String) map.get("seniority"); // 教龄
             String postCode = (String) map.get("postcode"); // 邮编
@@ -191,14 +195,14 @@ public class MigrationStageSix {
             String unitid = (String) map.get("unitid"); // 旧表申报单位id
             Integer sysflag = (Integer) map.get("sysflag"); // 0为后台用户，1为前台用户
             Integer usertype = (Integer) map.get("usertype"); // 2为学校管理员
-            if (ObjectUtil.isNull(sysflag) || sysflag == 0) {
+            if (ObjectUtil.isNull(sysflag) || sysflag.equals(0)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为后台用户申报教材。"));
                 excel.add(map);
                 logger.debug("找到为后台用户申报教材，此结果将被记录在Excel中");
                 sysflagCount++;
                 continue;
             }
-            if (usertype == 2) {
+            if (usertype.equals(2)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为用户类型为学校管理员申报教材。"));
                 excel.add(map);
                 logger.debug("找到为用户类型为学校管理员申报教材，此结果将被记录在Excel中");
@@ -206,7 +210,7 @@ public class MigrationStageSix {
                 continue;
             }
             Declaration declaration = new Declaration();
-            if (ObjectUtil.isNull(materialid) || materialid == 0) {
+            if (ObjectUtil.isNull(materialid) || materialid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材对应的关联结果。"));
                 excel.add(map);
                 logger.debug("未找到教材对应的关联结果，此结果将被记录在Excel中");
@@ -214,7 +218,7 @@ public class MigrationStageSix {
                 continue;
             }
             declaration.setMaterialId(materialid);
-            if (ObjectUtil.isNull(userid) || userid == 0) {
+            if (ObjectUtil.isNull(userid) || userid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到作家对应的关联结果。"));
                 excel.add(map);
                 logger.debug("未找到作家对应的关联结果，此结果将被记录在Excel中");
@@ -222,7 +226,24 @@ public class MigrationStageSix {
                 continue;
             }
             declaration.setUserId(userid);
-            declaration.setRealname(realName);
+            /*if (StringUtil.isEmpty(realName)) { // 如果申报表作家姓名为空，则设置为作家姓名
+            	if (StringUtil.isEmpty(userName)) { // 如果作家姓名为空，则设置为作家帐号
+            		declaration.setRealname(userCode);
+            	} else {
+            		declaration.setRealname(userName);
+				}
+            } else {
+            	declaration.setRealname(realName);
+            }*/
+            if (StringUtil.isEmpty(realName) && isStagingJudge.intValue() == 0) { // 申报表作家姓名为空并且不暂存
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空。"));
+                excel.add(map);
+                logger.debug("找到申报表作家姓名为空，此结果将被记录在Excel中");
+                realNameCount++;
+                continue;
+            } else {
+            	declaration.setRealname(realName);
+			}
             if (StringUtil.isEmpty(sexJudge)) {
                 declaration.setSex(1);
             } else {
@@ -276,11 +297,16 @@ public class MigrationStageSix {
             declaration.setPaperDate((Timestamp) map.get("editauditdate")); // 纸质表收到时间
             declaration.setReturnCause(null); // 退回原因
             if (ObjectUtil.isNull(isStagingJudge)) {
-                declaration.setIsStaging(0);
+                declaration.setIsStaging(false);
             } else {
                 Integer isStaging = isStagingJudge.intValue(); // 是否暂存
-                declaration.setIsStaging(isStaging);
+                if (isStaging.equals(0)) {
+                	declaration.setIsStaging(false);
+                } else {
+                	declaration.setIsStaging(true);
+				}
             }
+            declaration.setIsDeleted(false); // 是否被逻辑删除
             Declaration dec = declarationService.getDeclarationByMaterialIdAndUserId(declaration.getMaterialId(),
                     declaration.getUserId());
             if (dec != null) {
@@ -303,6 +329,7 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        logger.info("申报表作家姓名为空数量：{}", realNameCount);
         logger.info("后台用户申报教材数量：{}", sysflagCount);
         logger.info("用户类型为学校管理员申报教材数量：{}", usertypeCount);
         logger.info("未找到作家对应的关联结果数量：{}", useridCount);
@@ -628,6 +655,7 @@ public class MigrationStageSix {
             decLastPosition.setMaterialName(materialName);
             Integer position = positionJudge.intValue();
             decLastPosition.setPosition(position);
+            //decLastPosition.setIsDigitalEditor(false); // 是否数字编委
             decLastPosition.setNote((String) map.get("remark")); // 备注
             decLastPosition.setSort(999); // 显示顺序
             decLastPosition = decLastPositionService.addDecLastPosition(decLastPosition);
@@ -818,6 +846,7 @@ public class MigrationStageSix {
             decTextbook.setRank(rank);
             Integer position = positionJudge.intValue();
             decTextbook.setPosition(position);
+            //decTextbook.setIsDigitalEditor(false); // 是否数字编委
             decTextbook.setPublisher(publisher);
             decTextbook.setPublishDate(publishDate);
             if (StringUtil.notEmpty(isbn)) {
@@ -1122,10 +1151,15 @@ public class MigrationStageSix {
             }
             decPosition.setPresetPosition(Integer.valueOf(Positions, 2));//转成10进制
             if (ObjectUtil.isNull(isOnList)) {
-                decPosition.setIsOnList(1);
-            }
-            Integer isOn = isOnList.intValue();
-            decPosition.setIsOnList(isOn);
+                decPosition.setIsOnList(true);
+            } else {
+            	Integer isOn = isOnList.intValue();
+            	if (isOn.equals(1)) {
+            		decPosition.setIsOnList(true);
+            	} else {
+            		decPosition.setIsOnList(false);
+				}
+			}
             tempchosenPosition += "," + tempchosenPosition + ",";
             Integer chosen = 0;
             if (tempchosenPosition.contains(",a,")) {
@@ -1276,10 +1310,15 @@ public class MigrationStageSix {
             }
             decPositionPublished.setPresetPosition(Integer.valueOf(Positions, 2));//转成10进制
             if (ObjectUtil.isNull(isOnList)) {
-            	decPositionPublished.setIsOnList(1);
-            }
-            Integer isOn = isOnList.intValue();
-            decPositionPublished.setIsOnList(isOn);
+            	decPositionPublished.setIsOnList(true);
+            } else {
+            	Integer isOn = isOnList.intValue();
+            	if (isOn.equals(1)) {
+            		decPositionPublished.setIsOnList(true);
+            	} else {
+            		decPositionPublished.setIsOnList(false);
+				}
+			}
             tempchosenPosition += "," + tempchosenPosition + ",";
             Integer chosen = 0;
             if (tempchosenPosition.contains(",a,")) {

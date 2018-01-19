@@ -150,9 +150,9 @@ public class FileDownLoadController {
 	 * 功能描述：普通文件下载(更新下载数)
 	 * 使用示范：
 	 *
-	 * @param type 模块类型
-	 * @param id 文件在MongoDB中的id
-	 * @param response 服务响应
+	 * &#64;param type 模块类型
+	 * &#64;param id 文件在MongoDB中的id
+	 * &#64;param response 服务响应
 	 * </pre>
      * 
      * @throws UnsupportedEncodingException
@@ -235,9 +235,9 @@ public class FileDownLoadController {
 	 * 功能描述：处理不同浏览器下载文件乱码问题
 	 * 使用示范：
 	 *
-	 * @param request
-	 * @param fileName 文件名
-	 * @return 编码后的文件名
+	 * &#64;param request
+	 * &#64;param fileName 文件名
+	 * &#64;return 编码后的文件名
 	 * </pre>
      */
     private String returnFileName(HttpServletRequest request, String fileName) {
@@ -352,13 +352,11 @@ public class FileDownLoadController {
         String id =
         String.valueOf(System.currentTimeMillis())
               .concat(String.valueOf(RandomUtil.getRandomNum()));
-        logger.info("--------------{}-------", id);
         taskExecutor.execute(new SpringThread(zipHelper, wordHelper, materialService,
                                               textbookService, declarationService, materialId,
                                               textBookids, realname, position, title, orgName,
                                               unitName, positionType, onlineProgress,
                                               offlineProgress, id));
-        logger.info("--------------{}-------", id);
         return '"' + id + '"';
     }
 
@@ -442,9 +440,9 @@ public class FileDownLoadController {
 	 * 功能描述：导出已发布教材下的学校
 	 * 使用示范：
 	 *
-	 * @param materialId 教材ID
-	 * @param request
-	 * @param response
+	 * &#64;param materialId 教材ID
+	 * &#64;param request
+	 * &#64;param response
 	 * </pre>
      */
     @ResponseBody
@@ -631,12 +629,12 @@ public class FileDownLoadController {
     /**
      * 
      * <pre>
-	 * 功能描述：导出填空题调查结果Excel
-	 * 使用示范：
-	 * @user  tyc
+	 * 功能描述：导出填空题调查结果Excel 使用示范：
+	 * 
+	 * @user tyc
 	 * @param request
 	 * @param response
-	 * 2018.01.08 18:31
+	 *            2018.01.08 18:31
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出填空题调查结果")
@@ -645,7 +643,7 @@ public class FileDownLoadController {
         Workbook workbook = null;
         List<SurveyQuestionFillVO> surveyQuestionFillVO = null;
         try {
-            PageParameter<SurveyQuestionFillVO> pageParameter = new PageParameter<>(null, null);
+            PageParameter<SurveyQuestionFillVO> pageParameter = new PageParameter<>(1, 50000);
             surveyQuestionFillVO =
             (List<SurveyQuestionFillVO>) surveyQuestionAnswerService.listFillQuestion(pageParameter);
             workbook = excelHelper.fromBusinessObjectList(surveyQuestionFillVO, "填空题调查结果");

@@ -48,9 +48,9 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 	// 作家传真
 	private String fax;
 	// 服从调剂
-	private Integer isDispensed;
+	private Boolean isDispensed;
 	// 参与本科教学评估认证
-	private Integer isUtec;
+	private Boolean isUtec;
 	// 学历
 	private Integer degree;
 	// 专业特长
@@ -382,19 +382,19 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 		this.presetPosition = presetPosition;
 	}
 
-	public Integer getIsDispensed() {
+	public Boolean getIsDispensed() {
 		return isDispensed;
 	}
 
-	public void setIsDispensed(Integer isDispensed) {
+	public void setIsDispensed(Boolean isDispensed) {
 		this.isDispensed = isDispensed;
 	}
 
-	public Integer getIsUtec() {
+	public Boolean getIsUtec() {
 		return isUtec;
 	}
 
-	public void setIsUtec(Integer isUtec) {
+	public void setIsUtec(Boolean isUtec) {
 		this.isUtec = isUtec;
 	}
 
@@ -424,27 +424,18 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "DeclarationOrDisplayVO [id=" + id + ", materialId="
-				+ materialId + ", userId=" + userId + ", username=" + username
-				+ ", realname=" + realname + ", sex=" + sex + ", birthday="
-				+ birthday + ", experience=" + experience + ", orgName="
-				+ orgName + ", position=" + position + ", title=" + title
-				+ ", address=" + address + ", postcode=" + postcode
-				+ ", handphone=" + handphone + ", email=" + email + ", idtype="
-				+ idtype + ", idcard=" + idcard + ", telephone=" + telephone
-				+ ", fax=" + fax + ", isDispensed=" + isDispensed + ", isUtec="
-				+ isUtec + ", degree=" + degree + ", expertise=" + expertise
-				+ ", orgId=" + orgId + ", orgNameOne=" + orgNameOne
-				+ ", onlineProgress=" + onlineProgress + ", authUserId="
-				+ authUserId + ", authDate=" + authDate + ", offlineProgress="
-				+ offlineProgress + ", paperDate=" + paperDate
-				+ ", returnCause=" + returnCause + ", isStaging=" + isStaging
-				+ ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
-				+ ", gmtUpdate=" + gmtUpdate + ", isMultiBooks=" + isMultiBooks
-				+ ", isMultiPosition=" + isMultiPosition
-				+ ", isDigitalEditorOptional=" + isDigitalEditorOptional
-				+ ", textbookName=" + textbookName + ", presetPosition="
-				+ presetPosition + "]";
+		return "DeclarationOrDisplayVO [id=" + id + ", materialId=" + materialId + ", userId=" + userId + ", username="
+				+ username + ", realname=" + realname + ", sex=" + sex + ", birthday=" + birthday + ", experience="
+				+ experience + ", orgName=" + orgName + ", position=" + position + ", title=" + title + ", address="
+				+ address + ", postcode=" + postcode + ", handphone=" + handphone + ", email=" + email + ", idtype="
+				+ idtype + ", idcard=" + idcard + ", telephone=" + telephone + ", fax=" + fax + ", isDispensed="
+				+ isDispensed + ", isUtec=" + isUtec + ", degree=" + degree + ", expertise=" + expertise + ", orgId="
+				+ orgId + ", orgNameOne=" + orgNameOne + ", onlineProgress=" + onlineProgress + ", authUserId="
+				+ authUserId + ", authDate=" + authDate + ", offlineProgress=" + offlineProgress + ", paperDate="
+				+ paperDate + ", returnCause=" + returnCause + ", isStaging=" + isStaging + ", isDeleted=" + isDeleted
+				+ ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + ", isMultiBooks=" + isMultiBooks
+				+ ", isMultiPosition=" + isMultiPosition + ", isDigitalEditorOptional=" + isDigitalEditorOptional
+				+ ", textbookName=" + textbookName + ", presetPosition=" + presetPosition + "]";
 	}
 
 }
