@@ -517,12 +517,31 @@ public class TextbookServiceImpl implements TextbookService {
 				Cell first = row.getCell(0);
 				Cell second = row.getCell(1);
 				Cell third = row.getCell(2);
-				if (ObjectUtil.isNull(first) || ObjectUtil.isNull(second) || ObjectUtil.isNull(third)){
+				if (ObjectUtil.isNull(first) || ObjectUtil.isNull(second) || ObjectUtil.isNull(third)
+						|| "".equals(first.toString()) || "".equals(second.toString()) || "".equals(third.toString())){
 					break;
 				}
 				String bookName = StringUtil.getCellValue(second);
-				Integer sort = ObjectUtil.getCellValue(first);
-				Integer round = ObjectUtil.getCellValue(third);
+				if (StringUtil.strLength(bookName) > 25){
+					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+							CheckedExceptionResult.ILLEGAL_PARAM, "图书名称不能超过25个字数，请修改后再上传");
+				}
+				Integer sort = 0;
+				Integer round = 0;
+				try{
+					sort = ObjectUtil.getCellValue(first);
+				} catch(NumberFormatException e){
+					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+							CheckedExceptionResult.ILLEGAL_PARAM, "图书序号格式错误，请按照模板格式修改后"
+									+ "再上传");
+				}
+				try{
+					round = ObjectUtil.getCellValue(third);
+				} catch(NumberFormatException e){
+					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+							CheckedExceptionResult.ILLEGAL_PARAM, "书籍版次格式错误，请按照模板格式修改后"
+									+ "再上传");
+				}
 				textbook.setSort(sort);
 				textbook.setTextbookName(bookName);
 				textbook.setTextbookRound(round);
