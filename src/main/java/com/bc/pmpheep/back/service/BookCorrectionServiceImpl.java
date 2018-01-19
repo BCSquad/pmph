@@ -15,6 +15,7 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.BookCorrection;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -51,6 +52,9 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		return this.updateBookCorrection(bookCorrection);
 	}
 	
+	@Autowired
+	private WriterUserTrendstService writerUserTrendstService;
+	
 	@Override
 	public Integer replyWriter(Long id ,Boolean result , String editorReply)throws CheckedServiceException{
 		if (null == id ) {
@@ -80,7 +84,21 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		bookCorrection.setResult(result);
 		bookCorrection.setIsEditorReplied(true);
 		bookCorrection.setEditorReply(editorReply);
-		return this.updateBookCorrection(bookCorrection);
+		
+		WriterUserTrendst writerUserTrendst = new WriterUserTrendst(); 
+		writerUserTrendst.setUserId(bookCorrection.getUserId());
+		writerUserTrendst.setIsPublic(false);//自己可见
+		writerUserTrendst.setType(0);
+		String detail ="";
+		if(result){//有问题
+			detail ="{title:\"" + CheckedExceptionBusiness.BOOKCORRECTION + "\",content:\"您的图书纠错已核实。\",img:1}";
+		}else{
+			detail ="{title:\"" + CheckedExceptionBusiness.BOOKCORRECTION + "\",content:\"您的图书纠错未核实到该问题。\",img:2}";
+		}
+		writerUserTrendst.setDetail(detail);
+		Integer res = this.updateBookCorrection(bookCorrection);
+		writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
+		return res;
 	}
 	
 	@Override
@@ -116,7 +134,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 	
 	@Override
 	public PageResult<BookCorrectionAuditVO> listBookCorrectionAudit(
-			HttpServletRequest request,Integer pageNumber,Integer pageSize,String bookname ,Boolean result) throws CheckedServiceException{
+			HttpServletRequest request,Integer pageNumber,Integer pageSize,String bookname ,Boolean isOver,Boolean result) throws CheckedServiceException{
 		if (null == request.getSession(false)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "会话过期");
 		}
@@ -147,6 +165,12 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		map.put("result", result);
 		map.put("bookname", StringUtil.toAllCheck(bookname));
 		map.put("editorId", editorId);
+		if(null != isOver && isOver){
+			map.put("isOver", 1); //APP的已完成
+			
+		}else{
+			map.put("isOver", 2);
+		}
 		// 返回实体
 		PageResult<BookCorrectionAuditVO> pageResult = new PageResult<BookCorrectionAuditVO>();
 		pageResult.setPageNumber(pageNumber);

@@ -130,7 +130,7 @@
 		FROM
 		pmph_group_file a
 		LEFT JOIN
-		pmph_group_member b ON a.group_id = b.group_id
+		pmph_group_member b ON a.member_id = b.id
 		WHERE
 		b.group_id =
 		#{parameter.groupId}
@@ -167,7 +167,7 @@
 		pmph_group_file a
 		LEFT JOIN
 		pmph_group_member b ON
-		a.group_id = b.group_id
+		a.member_id = b.id
 		WHERE
 		b.group_id =
 		#{parameter.groupId}
@@ -177,15 +177,13 @@
 		GROUP BY a.file_id
 		ORDER BY
 		<if test="parameter.sortType != null and parameter.sortType != ''">
-			<if test="parameter.sortType == 'gmtCreate'">
-				a.gmt_create DESC ,
-			</if>
 			<if test="parameter.sortType == 'memberId'">
-				a.member_id DESC ,
+				a.member_id ,
 			</if>
 			<if test="parameter.sortType == 'download'">
-				a.download DESC ,
+				a.download DESC,
 			</if>
+			a.gmt_create
 		</if>
 		a.id
 		<if test="start !=null and pageNumber != null">

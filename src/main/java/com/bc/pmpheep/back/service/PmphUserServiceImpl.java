@@ -659,7 +659,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 		PageResult<CmsContentVO> pageResultCmsContentVO = cmsContentService.listCmsContent(pageParameter1, sessionId);
 		// 图书纠错审核
 		PageResult<BookCorrectionAuditVO> pageResultBookCorrectionAuditVO = bookCorrectionService
-				.listBookCorrectionAudit(request, Const.PAGE_NUMBER, Const.PAGE_SIZE, bookname, null);
+				.listBookCorrectionAudit(request, Const.PAGE_NUMBER, Const.PAGE_SIZE, bookname,null ,null);
 		// 图书评论审核
 		PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
 		BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();

@@ -249,9 +249,11 @@ public class TopicServiceImpl implements TopicService {
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 		writerUserTrendst.setUserId(topicDao.getTopicTextVO(topic.getId()).getUserId());
 		writerUserTrendst.setType(0);
+		writerUserTrendst.setIsPublic(true);
 		if (ObjectUtil.notNull(topic.getAuthProgress())) {
 			if (3 == topic.getAuthProgress()) {
-				writerUserTrendst.setDetail("{title:\"" + CheckedExceptionBusiness.TOPIC + "\",content:\"您的选题已经通过。\"}");
+				writerUserTrendst
+						.setDetail("{title:\"" + CheckedExceptionBusiness.TOPIC + "\",content:\"您的选题已经通过。\",img:1}");
 				// 创建本版号并将本版号放入数据中
 				String editionnum = "10" + new SimpleDateFormat("yyyy").format(new Date());
 				String vn = topicDao.getMaxTopicVn();
@@ -280,7 +282,8 @@ public class TopicServiceImpl implements TopicService {
 						+ topicTextVO.getEdition() + "','','11','" + remark + "',GETDATE(),1)";
 				SqlHelper.executeUpdate(sql, null);
 			} else {
-				writerUserTrendst.setDetail("{title:\"" + CheckedExceptionBusiness.TOPIC + "\",content:\"您的选题没有通过。\"}");
+				writerUserTrendst
+						.setDetail("{title:\"" + CheckedExceptionBusiness.TOPIC + "\",content:\"您的选题没有通过。\",img:2}");
 			}
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 		}

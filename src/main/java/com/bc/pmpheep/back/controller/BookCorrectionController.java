@@ -42,8 +42,9 @@ public class BookCorrectionController {
 			@RequestParam(value = "pageNumber", required = false)    Integer pageNumber,
 			@RequestParam(value = "pageSize",   required = false)	Integer pageSize,
 			@RequestParam(value = "bookname",   required = false)	String bookname ,
+			@RequestParam(value = "isOver",     required = false)	Boolean isOver,
 			@RequestParam(value = "result",     required = false)	Boolean result) {
-		return new ResponseBean(bookCorrectionService.listBookCorrectionAudit(request,pageNumber,pageSize,bookname ,result));
+		return new ResponseBean(bookCorrectionService.listBookCorrectionAudit(request,pageNumber,pageSize,bookname ,isOver,result));
 	}
 	
 	/**

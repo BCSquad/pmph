@@ -56,7 +56,7 @@ public class BookController {
 			Boolean isNew, Boolean isPromote, String path) {
 		PageParameter<BookVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		BookVO bookVO = new BookVO();
-		bookVO.setName(name.replaceAll(" ", ""));//去除空格
+		bookVO.setName(name);
 		bookVO.setIsNew(isNew);
 		bookVO.setPath(path);
 		bookVO.setType(type);
@@ -85,10 +85,11 @@ public class BookController {
 	 *
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "修改单个/多个书籍详情")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改单个/多个书籍详情")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	public ResponseBean update(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote,Long materialId) {
-		return new ResponseBean(bookService.updateBookById(ids, type, isOnSale, isNew, isPromote,materialId));
+	public ResponseBean update(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote,
+			Long materialId) {
+		return new ResponseBean(bookService.updateBookById(ids, type, isOnSale, isNew, isPromote, materialId));
 	}
 
 	/**
@@ -102,7 +103,7 @@ public class BookController {
 	 *
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "获取所有书籍类别")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取所有书籍类别")
 	@RequestMapping(value = "/list/materialType", method = RequestMethod.GET)
 	public ResponseBean materialType(Long parentId) {
 		return new ResponseBean(materialTypeService.listMaterialType(parentId));
@@ -119,7 +120,7 @@ public class BookController {
 	 *
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "删除书籍")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除书籍")
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public ResponseBean delete(Long id) {
 		return new ResponseBean(bookService.deleteBookById(id));
@@ -138,7 +139,7 @@ public class BookController {
 	 *
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "商城更新图书")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "商城更新图书")
 	@RequestMapping(value = "/abuttingjoint", method = RequestMethod.GET)
 	public ResponseBean abuttingjoint(Integer noteicetype, String[] key) {
 		return new ResponseBean(bookService.AbuttingJoint(key, noteicetype));
@@ -154,7 +155,7 @@ public class BookController {
 	 *
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "图书同步")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书同步")
 	@RequestMapping(value = "/allsynchronization", method = RequestMethod.GET)
 	public ResponseBean allsynchronization(Integer type) {
 		return new ResponseBean(bookService.AllSynchronization(type));
