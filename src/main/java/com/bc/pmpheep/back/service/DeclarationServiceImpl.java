@@ -253,19 +253,25 @@ public class DeclarationServiceImpl implements DeclarationService {
 	}
 
 	@Override
-	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause)
+	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause) 
 			throws CheckedServiceException, IOException {
 		if (ObjectUtil.isNull(id)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
-					"主键不能为空!");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+					CheckedExceptionResult.ILLEGAL_PARAM, "主键不能为空!");
 		}
 		if (ObjectUtil.isNull(onlineProgress)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
-					"审核进度不能为空!");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+					CheckedExceptionResult.ILLEGAL_PARAM, "审核进度不能为空!");
 		}
 		// 获取当前作家用户申报信息
 		Declaration declarationCon = declarationDao.getDeclarationById(id);
-		if (2 == onlineProgress.intValue()) { // 获取审核进度是2则被退回
+		// 获取审核进度是4并且已经通过审核单位并且不是提交到出版社0则被退回给申报单位
+		if (4 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress() && 
+				0 != declarationCon.getOrgId()) { 
+			
+		}
+		if (5 == onlineProgress.intValue() 
+				&& 0 == declarationCon.getOrgId()) { // 获取审核进度是5并且机构id为出版社0则被退回给个人
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
 				Integer chosenPosition = decPositions.getChosenPosition();
@@ -276,8 +282,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-						"最多只能输入100个字符，请重新输入!");
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
