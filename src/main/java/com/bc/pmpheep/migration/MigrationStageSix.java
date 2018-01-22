@@ -145,12 +145,13 @@ public class MigrationStageSix {
                 + "when ta.auditstate=11 and wd.submittype=11 then 3 "
                 + "when wd.submittype=11 then 1 "
                 + "when wd.submittype=12 then 2 "
-                + "end online_progress,wd.submittype,ta.auditstate,"
-                + "case when ta.auditid is null and ta.editauditid is null then null "
+                + "end online_progress,wd.submittype,ta.auditstate,ta.auditdate,"
+                /*+ "case when ta.auditid is null and ta.editauditid is null then null "
                 + "when ta.auditid is not null and ta.editauditid is not null then ta.auditid "
                 + "when ta.auditid is null and ta.editauditid is not null then ta.editauditid "
                 + "when ta.auditid is not null and ta.editauditid is null then ta.auditid "
-                + "end auth_user_id,ta.auditid,ta.editauditid,ta.auditdate,"
+                + "end auth_user_id,ta.auditid,ta.editauditid,"*/
+                + "case when eup.new_pk is not null then eup.new_pk else null end auth_user_id,"
                 + "case when ta.isreceivedpaper=0 or ta.editauditstate=10 then 0 "
                 + "when ta.editauditstate=12 then 1 "
                 + "when ta.isreceivedpaper=1 or ta.editauditstate=11 then 2 "
@@ -164,7 +165,10 @@ public class MigrationStageSix {
                 + "left join ba_organize bo on bo.orgid=wd.unitid "
                 + "left join sys_user s on s.userid=wd.userid "
                 + "left join sys_userext su on su.userid=wd.userid "
-                + "left join (select * from teach_applyposition group by writerid) ta "
+                + "left join (select writerid,auditstate,auditid,editauditid,auditdate,"
+                + "isreceivedpaper,editauditstate,editauditdate "
+                + "from teach_applyposition group by writerid) ta "
+                + "left join sys_user eup on eup.userid = ta.editauditid "
                 + "on ta.writerid=wd.writerid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql); // 查询所有数据
         int count = 0; // 迁移成功的条目数
@@ -189,7 +193,8 @@ public class MigrationStageSix {
             String postCode = (String) map.get("postcode"); // 邮编
             Long orgId = (Long) map.get("org_id"); // 申报单位id
             Long onlineProgressJudge = (Long) map.get("online_progress"); // 审核进度
-            String authUserid = (String) map.get("auth_user_id"); // 审核人id
+            //String authUserid = (String) map.get("auth_user_id"); // 审核人id
+            Long authUserid = (Long) map.get("auth_user_id"); // 审核人id
             Long offlineProgressJudge = (Long) map.get("offline_progress"); // 纸质表进度
             Long isStagingJudge = (Long) map.get("is_staging"); // 是否暂存
             String unitid = (String) map.get("unitid"); // 旧表申报单位id
@@ -285,8 +290,8 @@ public class MigrationStageSix {
             } else {
                 declaration.setOnlineProgress(0);
             }
-            Long authUserId = JdbcHelper.getPrimaryKey("sys_user", "userid", authUserid);
-            declaration.setAuthUserId(authUserId);
+            //Long authUserId = JdbcHelper.getPrimaryKey("sys_user", "userid", authUserid);
+            declaration.setAuthUserId(authUserid);
             declaration.setAuthDate((Timestamp) map.get("auditdate")); // 审核通过时间
             if (ObjectUtil.notNull(offlineProgressJudge)) {
                 Integer offlineProgress = offlineProgressJudge.intValue(); // 纸质表进度
