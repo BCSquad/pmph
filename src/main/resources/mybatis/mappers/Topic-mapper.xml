@@ -565,8 +565,8 @@
 		AND
 		a.is_editor_handling = FALSE
 		AND b.is_director = TRUE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
@@ -592,8 +592,8 @@
 		AND
 		a.is_editor_handling = FALSE
 		AND b.is_director = TRUE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
@@ -616,8 +616,8 @@
 		AND
 		a.is_rejected_by_editor =
 		FALSE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
@@ -642,8 +642,8 @@
 		AND
 		a.is_rejected_by_editor =
 		FALSE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
@@ -660,8 +660,8 @@
 		WHERE a.is_director_handling = TRUE
 		AND a.is_editor_handling =
 		FALSE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
@@ -678,8 +678,8 @@
 		LEFT JOIN writer_user b ON a.user_id = b.id
 		WHERE a.is_director_handling = TRUE
 		AND a.is_editor_handling = FALSE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
@@ -699,8 +699,8 @@
 		WHERE a.is_editor_handling = TRUE
 		AND a.is_rejected_by_editor =
 		FALSE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
@@ -717,8 +717,8 @@
 		LEFT JOIN writer_user b ON a.user_id = b.id
 		WHERE a.is_editor_handling = TRUE
 		AND a.is_rejected_by_editor = FALSE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
