@@ -367,6 +367,7 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 		Gson gson = new Gson();
 		bookListVO.setMaterialType(pathType);
+		bookListVO.setIsPublic(material.getIsPublic());
 		bookListVO.setTextbooks(gson.toJson(bookList));
 		return bookListVO;
 	}
