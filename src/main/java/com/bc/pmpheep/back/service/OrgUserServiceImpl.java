@@ -39,6 +39,8 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
     private OrgUserDao orgUserDao;
     @Autowired
     private OrgDao     orgDao;
+    @Autowired
+    private OrgService orgService;
 
     @Override
     public List<OrgUser> getOrgUserListByOrgIds(List<Long> orgIds) throws CheckedServiceException {
@@ -77,7 +79,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         	orgUser.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);
         }
         if (StringUtil.isEmpty(orgUser.getRealname())) {
-            orgUser.setRealname(orgUser.getUsername());
+            orgUser.setUsername(orgService.getOrgById(orgUser.getOrgId()).getOrgName());
         }
         orgUserDao.addOrgUser(orgUser);
         return orgUser;
