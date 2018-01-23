@@ -389,8 +389,11 @@ public class MigrationStageFour {
             material.setIsDeleted("1".equals(String.valueOf(oldMaterial.get("isdelete"))));//is_deleted,
             material.setGmtCreate((Timestamp) oldMaterial.get("createdate"));//gmt_create,			
             material.setFounderId(founder_id);//founder_id,
-            material.setGmtUpdate((Timestamp) oldMaterial.get("updatedate"));//gmt_update,			
-            material.setMenderId((Long) oldMaterial.get("mender_id"));//mender_id
+            material.setGmtUpdate((Timestamp) oldMaterial.get("updatedate"));//gmt_update,	
+            //修改者
+            Long mender_Id  =  (Long) oldMaterial.get("mender_id") ;
+            mender_Id = mender_Id == null ? material.getFounderId(): mender_Id ;
+            material.setMenderId(mender_Id);//mender_id
             //主编学术专著情况
             material.setIsMonographUsed(false);
             //主编学术专著情况必填
