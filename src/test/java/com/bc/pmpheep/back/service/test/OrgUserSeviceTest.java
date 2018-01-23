@@ -33,7 +33,7 @@ public class OrgUserSeviceTest extends BaseTest {
 	private OrgUserService orgUserService;
 	Random random = new Random();
 	OrgUser orgUser = new OrgUser("张珊" + random.nextInt(10000), "999", false, 5L, "李四", 1, "zhiwei", "职称", "cahunzehn",
-			"shou", "dianhia", "shenfenz", "email", "address", "String postcode", "String note", 2, false, null, null);
+			"shou", "dianhia", "shenfenz", "email", "address", "String postcode","DEFAULT","String note", 2, false, null, null);
 
 	@Test
 	@Rollback(Const.ISROLLBACK)
