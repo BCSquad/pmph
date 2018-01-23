@@ -68,13 +68,7 @@ public final class ObjectUtil {
 			value = Integer.valueOf(cellValue.intValue());
 			break;
 		case 1://字符串Cell.CELL_TYPE_STRING
-			try{
 			value = Integer.valueOf(cell.getStringCellValue().trim());
-			} catch(NumberFormatException e){
-				throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
-						CheckedExceptionResult.ILLEGAL_PARAM, cell.getStringCellValue().trim() 
-						+ ":单元格内容格式错误");
-			}
 			break;
 		case 3://空值 Cell.CELL_TYPE_BLANK
 			value = 0;

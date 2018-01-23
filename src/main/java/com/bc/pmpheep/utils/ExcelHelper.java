@@ -9,17 +9,24 @@ import com.bc.pmpheep.back.bo.DecPositionBO;
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.bo.WriterBO;
 import com.bc.pmpheep.back.po.DecAcade;
+import com.bc.pmpheep.back.po.DecAcadeReward;
+import com.bc.pmpheep.back.po.DecClinicalReward;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.DecLastPosition;
+import com.bc.pmpheep.back.po.DecMonograph;
 import com.bc.pmpheep.back.po.DecNationalPlan;
+import com.bc.pmpheep.back.po.DecPublishReward;
 import com.bc.pmpheep.back.po.DecResearch;
+import com.bc.pmpheep.back.po.DecSci;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.DecExtensionVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -28,6 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -471,6 +479,36 @@ public class ExcelHelper {
 							columnProperties = fillDecResearchData(list, row, columnProperties);
 							break;
 						}
+						case "学术专著": {
+							List<DecMonograph> list = (List<DecMonograph>) field.get(object);
+							columnProperties = fillDecMonographData(list, row, columnProperties);
+							break;
+						}
+						case "出版行业获奖情况": {
+							List<DecPublishReward> list = (List<DecPublishReward>) field.get(object);
+							columnProperties = fillDecPublishRewardData(list, row, columnProperties);
+							break;
+						}
+						case "SCI论文投稿及影响因子情况": {
+							List<DecSci> list = (List<DecSci>) field.get(object);
+							columnProperties = fillDecSciData(list, row, columnProperties);
+							break;
+						}
+						case "临床医学获奖情况": {
+							List<DecClinicalReward> list = (List<DecClinicalReward>) field.get(object);
+							columnProperties = fillDecClinicalRewardData(list, row, columnProperties);
+							break;
+						}
+						case "学术荣誉授予情况": {
+							List<DecAcadeReward> list = (List<DecAcadeReward>) field.get(object);
+							columnProperties = fillDecAcadeRewardData(list, row, columnProperties);
+							break;
+						}
+						case "作家扩展项": {
+							List<DecExtensionVO> list = (List<DecExtensionVO>) field.get(object);
+							columnProperties = fillDecExtensionVOData(list, row, columnProperties);
+							break;
+						}
 						default:
 							Object o = field.get(object);
 							Cell cell = row.createCell(columnProperties.getColCount());
@@ -729,6 +767,128 @@ public class ExcelHelper {
 						count++;
 						r2cell = r2.createCell(count);
 						r2cell.setCellValue("获奖情况");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						break;
+					}
+					case "学术专著": {
+						Cell r1cell = r1.createCell(count);
+						r1cell.setCellValue(headerName);
+						region = new CellRangeAddress(0, 0, count, count + 4);
+						sheet.addMergedRegion(region);
+						Cell r2cell = r2.createCell(count);
+						r2cell.setCellValue("专著名称");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("专著发表日期");
+						sheet.setColumnWidth(count, 7 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("发表情况");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("出版单位");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("出版时间");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						break;
+					}
+					case "出版行业获奖情况": {
+						Cell r1cell = r1.createCell(count);
+						r1cell.setCellValue(headerName);
+						region = new CellRangeAddress(0, 0, count, count + 2);
+						sheet.addMergedRegion(region);
+						Cell r2cell = r2.createCell(count);
+						r2cell.setCellValue("奖项名称");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("评奖单位");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("获奖时间");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						break;
+					}
+					case "SCI论文投稿及影响因子情况": {
+						Cell r1cell = r1.createCell(count);
+						r1cell.setCellValue(headerName);
+						region = new CellRangeAddress(0, 0, count, count + 3);
+						sheet.addMergedRegion(region);
+						Cell r2cell = r2.createCell(count);
+						r2cell.setCellValue("论文名称");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("期刊名称");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("期刊SCI影响因子");
+						sheet.setColumnWidth(count, 9 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("发表时间");
+						sheet.setColumnWidth(count, 3 * 512);
+						count++;
+						break;
+					}
+					case "临床医学获奖情况": {
+						Cell r1cell = r1.createCell(count);
+						r1cell.setCellValue(headerName);
+						region = new CellRangeAddress(0, 0, count, count + 2);
+						sheet.addMergedRegion(region);
+						Cell r2cell = r2.createCell(count);
+						r2cell.setCellValue("奖项名称");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("奖项级别");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("获奖时间");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						break;
+					}
+					case "学术荣誉授予情况": {
+						Cell r1cell = r1.createCell(count);
+						r1cell.setCellValue(headerName);
+						region = new CellRangeAddress(0, 0, count, count + 2);
+						sheet.addMergedRegion(region);
+						Cell r2cell = r2.createCell(count);
+						r2cell.setCellValue("荣誉名称");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("荣誉级别");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("授予时间");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						break;
+					}
+					case "作家扩展项": {
+						Cell r1cell = r1.createCell(count);
+						r1cell.setCellValue(headerName);
+						region = new CellRangeAddress(0, 0, count, count + 1);
+						sheet.addMergedRegion(region);
+						Cell r2cell = r2.createCell(count);
+						r2cell.setCellValue("扩展项名称");
+						sheet.setColumnWidth(count, 6 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("扩展项内容");
 						sheet.setColumnWidth(count, 5 * 512);
 						count++;
 						break;
@@ -1475,4 +1635,435 @@ public class ExcelHelper {
 		properties.setMaxLength(maxLength);
 		return properties;
 	}
+
+	private ColumnProperties fillDecMonographData(List<DecMonograph> decMonographs, Row row,
+			ColumnProperties properties) {
+		int colCount = properties.getColCount();
+		int[] maxLength = properties.getMaxLength();
+		if (CollectionUtil.isEmpty(decMonographs)) {
+			for (int i = 0; i < 5; i++) {
+				row.createCell(colCount++);
+			}
+		} else {
+			String value;
+			List<StringBuilder> builders = new ArrayList<>(5);
+			for (int i = 0; i < 5; i++) {
+				builders.add(new StringBuilder());
+			}
+			boolean isFirst = true;
+			for (DecMonograph decMonograph : decMonographs) {
+				if (isFirst == false) {
+					for (StringBuilder builder : builders) {
+						builder.append("\r\n");
+					}
+				} else {
+					isFirst = false;
+				}
+				int index = 0;
+				value = decMonograph.getMonographName();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				Date date = decMonograph.getMonographDate();
+				value = "";
+				if (!ObjectUtil.isNull(date)) {
+					value = DateUtil.date2Str(date);
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				value = "";
+				if (decMonograph.getIsSelfPaid()) {
+					value = "公费";
+				} else {
+					value = "自费";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				value = decMonograph.getPublisher();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				Date publish = decMonograph.getPublishDate();
+				value = "";
+				if (!ObjectUtil.isNull(publish)) {
+					value = DateUtil.date2Str(publish);
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount = properties.getColCount();// 列数复位
+			}
+			for (int i = 0; i < 3; i++) {
+				Cell cell = row.createCell(colCount++);
+				value = builders.get(i).toString();
+				cell.setCellValue(value);
+			}
+		}
+		properties.setColCount(colCount);
+		properties.setMaxLength(maxLength);
+		return properties;
+	}
+
+	private ColumnProperties fillDecPublishRewardData(List<DecPublishReward> decPublishRewards, Row row,
+			ColumnProperties properties) {
+		int colCount = properties.getColCount();
+		int[] maxLength = properties.getMaxLength();
+		if (CollectionUtil.isEmpty(decPublishRewards)) {
+			for (int i = 0; i < 3; i++) {
+				row.createCell(colCount++);
+			}
+		} else {
+			String value;
+			List<StringBuilder> builders = new ArrayList<>(3);
+			for (int i = 0; i < 3; i++) {
+				builders.add(new StringBuilder());
+			}
+			boolean isFirst = true;
+			for (DecPublishReward decPublishReward : decPublishRewards) {
+				if (isFirst == false) {
+					for (StringBuilder builder : builders) {
+						builder.append("\r\n");
+					}
+				} else {
+					isFirst = false;
+				}
+				int index = 0;
+				value = decPublishReward.getRewardName();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				value = decPublishReward.getAwardUnit();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				Date reward = decPublishReward.getRewardDate();
+				value = "";
+				if (!ObjectUtil.isNull(reward)) {
+					value = DateUtil.date2Str(reward);
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount = properties.getColCount();// 列数复位
+			}
+			for (int i = 0; i < 3; i++) {
+				Cell cell = row.createCell(colCount++);
+				value = builders.get(i).toString();
+				cell.setCellValue(value);
+			}
+		}
+		properties.setColCount(colCount);
+		properties.setMaxLength(maxLength);
+		return properties;
+	}
+
+	private ColumnProperties fillDecSciData(List<DecSci> decScis, Row row, ColumnProperties properties) {
+		int colCount = properties.getColCount();
+		int[] maxLength = properties.getMaxLength();
+		if (CollectionUtil.isEmpty(decScis)) {
+			for (int i = 0; i < 4; i++) {
+				row.createCell(colCount++);
+			}
+		} else {
+			String value;
+			List<StringBuilder> builders = new ArrayList<>(3);
+			for (int i = 0; i < 4; i++) {
+				builders.add(new StringBuilder());
+			}
+			boolean isFirst = true;
+			for (DecSci decSci : decScis) {
+				if (isFirst == false) {
+					for (StringBuilder builder : builders) {
+						builder.append("\r\n");
+					}
+				} else {
+					isFirst = false;
+				}
+				int index = 0;
+				value = decSci.getPaperName();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() / 2 + 1 > maxLength[colCount]) {
+					maxLength[colCount] = value.length() / 2 + 1;
+				}
+				colCount++;
+				value = decSci.getJournalName();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				value = decSci.getFactor();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				Date publishDate = decSci.getPublishDate();
+				value = "";
+				if (ObjectUtil.notNull(publishDate)) {
+					value = DateUtil.date2Str(publishDate);
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount = properties.getColCount();// 列数复位
+			}
+			for (int i = 0; i < 4; i++) {
+				Cell cell = row.createCell(colCount++);
+				value = builders.get(i).toString();
+				cell.setCellValue(value);
+			}
+		}
+		properties.setColCount(colCount);
+		properties.setMaxLength(maxLength);
+		return properties;
+	}
+
+	private ColumnProperties fillDecClinicalRewardData(List<DecClinicalReward> decClinicalRewards, Row row,
+			ColumnProperties properties) {
+		int colCount = properties.getColCount();
+		int[] maxLength = properties.getMaxLength();
+		if (CollectionUtil.isEmpty(decClinicalRewards)) {
+			for (int i = 0; i < 3; i++) {
+				row.createCell(colCount++);
+			}
+		} else {
+			String value;
+			List<StringBuilder> builders = new ArrayList<>(3);
+			for (int i = 0; i < 3; i++) {
+				builders.add(new StringBuilder());
+			}
+			boolean isFirst = true;
+			for (DecClinicalReward decClinicalReward : decClinicalRewards) {
+				if (isFirst == false) {
+					for (StringBuilder builder : builders) {
+						builder.append("\r\n");
+					}
+				} else {
+					isFirst = false;
+				}
+				int index = 0;
+				value = decClinicalReward.getRewardName();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				switch (decClinicalReward.getAwardUnit()) {
+				case 0:
+					value = "无";
+					break;
+				case 1:
+					value = "国际";
+					break;
+				case 2:
+					value = "国家";
+					break;
+
+				default:
+					value = "";
+					break;
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				Date reward = decClinicalReward.getRewardDate();
+				value = "";
+				if (!ObjectUtil.isNull(reward)) {
+					value = DateUtil.date2Str(reward);
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount = properties.getColCount();// 列数复位
+			}
+			for (int i = 0; i < 3; i++) {
+				Cell cell = row.createCell(colCount++);
+				value = builders.get(i).toString();
+				cell.setCellValue(value);
+			}
+		}
+		properties.setColCount(colCount);
+		properties.setMaxLength(maxLength);
+		return properties;
+	}
+
+	private ColumnProperties fillDecAcadeRewardData(List<DecAcadeReward> decAcadeRewards, Row row,
+			ColumnProperties properties) {
+		int colCount = properties.getColCount();
+		int[] maxLength = properties.getMaxLength();
+		if (CollectionUtil.isEmpty(decAcadeRewards)) {
+			for (int i = 0; i < 3; i++) {
+				row.createCell(colCount++);
+			}
+		} else {
+			String value;
+			List<StringBuilder> builders = new ArrayList<>(3);
+			for (int i = 0; i < 3; i++) {
+				builders.add(new StringBuilder());
+			}
+			boolean isFirst = true;
+			for (DecAcadeReward decAcadeReward : decAcadeRewards) {
+				if (isFirst == false) {
+					for (StringBuilder builder : builders) {
+						builder.append("\r\n");
+					}
+				} else {
+					isFirst = false;
+				}
+				int index = 0;
+				value = decAcadeReward.getRewardName();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				switch (decAcadeReward.getAwardUnit()) {
+				case 0:
+					value = "无";
+					break;
+				case 1:
+					value = "国际";
+					break;
+				case 2:
+					value = "国家";
+					break;
+				case 3:
+					value = "省部";
+					break;
+				case 4:
+					value = "市";
+					break;
+				default:
+					value = "";
+					break;
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				Date reward = decAcadeReward.getRewardDate();
+				value = "";
+				if (!ObjectUtil.isNull(reward)) {
+					value = DateUtil.date2Str(reward);
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount = properties.getColCount();// 列数复位
+			}
+			for (int i = 0; i < 3; i++) {
+				Cell cell = row.createCell(colCount++);
+				value = builders.get(i).toString();
+				cell.setCellValue(value);
+			}
+		}
+		properties.setColCount(colCount);
+		properties.setMaxLength(maxLength);
+		return properties;
+	}
+
+	private ColumnProperties fillDecExtensionVOData(List<DecExtensionVO> decExtensionVOs, Row row,
+			ColumnProperties properties) {
+		int colCount = properties.getColCount();
+		int[] maxLength = properties.getMaxLength();
+		if (CollectionUtil.isEmpty(decExtensionVOs)) {
+			for (int i = 0; i < 2; i++) {
+				row.createCell(colCount++);
+			}
+		} else {
+			String value;
+			List<StringBuilder> builders = new ArrayList<>(2);
+			for (int i = 0; i < 2; i++) {
+				builders.add(new StringBuilder());
+			}
+			boolean isFirst = true;
+			for (DecExtensionVO decExtensionVO : decExtensionVOs) {
+				if (isFirst == false) {
+					for (StringBuilder builder : builders) {
+						builder.append("\r\n");
+					}
+				} else {
+					isFirst = false;
+				}
+				int index = 0;
+				value = decExtensionVO.getExtensionName();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length() / 2 + 1;
+				}
+				colCount++;
+				value = decExtensionVO.getContent();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount = properties.getColCount();// 列数复位
+			}
+			for (int i = 0; i < 2; i++) {
+				Cell cell = row.createCell(colCount++);
+				value = builders.get(i).toString();
+				cell.setCellValue(value);
+			}
+		}
+		properties.setColCount(colCount);
+		properties.setMaxLength(maxLength);
+		return properties;
+	}
+
 }

@@ -203,7 +203,6 @@ public class GroupController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改小组头像或小组名称")
 	@RequestMapping(value = "/update/pmphGroupDetail", method = RequestMethod.PUT)
 	public ResponseBean pmphGroupDetail(String file, PmphGroup pmphGroup, HttpServletRequest request) {
-		String sessionId = CookiesUtil.getSessionId(request);
 		try {
 			return new ResponseBean(pmphGroupService.updatePmphGroupOnGroup(file, pmphGroup, request));
 		} catch (IOException e) {

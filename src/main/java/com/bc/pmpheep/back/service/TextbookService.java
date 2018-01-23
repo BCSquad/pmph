@@ -155,12 +155,22 @@ public interface TextbookService {
 	/**
 	 * 
 	 * Description:设置教材书籍选题号
-	 * @author:Administrator
+	 * @author:lyc
 	 * @date:2017年11月27日上午9:52:25
 	 * @param 
 	 * @return List<Textbook>
 	 */
 	List<Textbook> addTopicNumber(String topicTextbooks) throws CheckedServiceException;
+	
+	/**
+	 * 
+	 * Description:设置选题号页面导入Excel文件
+	 * @author:lyc
+	 * @date:2018年1月22日下午5:16:16
+	 * @param 
+	 * @return List<Textbook>
+	 */
+	List<Textbook> importTopicExcel(MultipartFile file) throws CheckedServiceException,IOException;
 	
 	/**
 	 *  通过书籍id查询对应已通过的主编和编委

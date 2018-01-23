@@ -31,7 +31,7 @@ public class TopicDirectorVO implements Serializable {
 	// 作家姓名
 	private String realName;
 	// 选题名称
-	private String bookName;
+	private String bookname;
 	// 预计交稿时间
 	private Timestamp deadline;
 	// 图书类别：0=专著，1=基础理论，2=论文集，3=科普，4=应用技术，5=工具书，6=其他
@@ -73,12 +73,12 @@ public class TopicDirectorVO implements Serializable {
 		this.realName = realName;
 	}
 
-	public String getBookName() {
-		return bookName;
+	public String getBookname() {
+		return bookname;
 	}
 
-	public void setBookName(String bookName) {
-		this.bookName = bookName;
+	public void setBookname(String bookname) {
+		this.bookname = bookname;
 	}
 
 	public Timestamp getDeadline() {

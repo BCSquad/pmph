@@ -192,17 +192,26 @@
 		LEFT JOIN 
 			writer_user d on d.id    = a.user_id
 		where 
-			b.id is not null and c.id is not null and !a.is_deleted 
+			b.id is not null and  !a.is_deleted 
 		<if test="editorId != null">
 			and c.editor_id  = #{editorId}
 		</if>
 		<if test="bookname != null and bookname != '' ">
 			and b.bookname like CONCAT('%',#{bookname},'%')
 		</if>
-		<if test="result   != null  ">
+		<if test="isOver == 1 "><!-- APP的已完成 -->
+		     and is_editor_replied
+			 <if test="result   != null  ">
+			   and a.result  = #{result} 
+			 </if>
+		</if>
+		<if test="isOver != 1 ">
+			<if test="result   != null  ">
 			<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来  -->
 			and ((is_editor_replied and a.result  = #{result} ) or (!is_editor_replied))  
+			</if>
 		</if>
+		
 	</select>
 	
 	<!-- 获取审核纠错页面的分页数据-->
@@ -210,6 +219,9 @@
 		select 
 			a.id,
 			b.bookname,
+			b.author,
+			b.publish_date,
+			b.image_url ,
 			a.page,
 			a.line ,
 			a.content ,
@@ -232,16 +244,24 @@
 		LEFT JOIN 
 			writer_user d on d.id    = a.user_id
 		where 
-			b.id is not null and c.id is not null and !a.is_deleted 
+			b.id is not null and  !a.is_deleted 
 		<if test="editorId != null">
 			and c.editor_id  = #{editorId}
 		</if>
 		<if test="bookname != null and bookname != '' ">
 			and b.bookname like CONCAT('%',#{bookname},'%')
 		</if>
-		<if test="result   != null  ">
+		<if test="isOver == 1 "><!-- APP的已完成 -->
+			 and is_editor_replied
+			 <if test="result   != null  ">
+			   and a.result  = #{result} 
+			 </if>
+		</if>
+		<if test="isOver != 1 ">
+			<if test="result   != null  ">
 			<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来  -->
 			and ((is_editor_replied and a.result  = #{result} ) or (!is_editor_replied))  
+			</if>
 		</if>
 		ORDER BY 
 			a.gmt_update desc 

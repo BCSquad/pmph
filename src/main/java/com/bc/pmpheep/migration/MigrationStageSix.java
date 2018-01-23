@@ -145,18 +145,12 @@ public class MigrationStageSix {
                 + "when ta.auditstate=11 and wd.submittype=11 then 3 "
                 + "when wd.submittype=11 then 1 "
                 + "when wd.submittype=12 then 2 "
-                + "end online_progress,wd.submittype,ta.auditstate,"
-                + "case when ta.auditid is null and ta.editauditid is null then null "
-                + "when ta.auditid is not null and ta.editauditid is not null then ta.auditid "
-                + "when ta.auditid is null and ta.editauditid is not null then ta.editauditid "
-                + "when ta.auditid is not null and ta.editauditid is null then ta.auditid "
-                + "end auth_user_id,ta.auditid,ta.editauditid,ta.auditdate,"
-                + "case when ta.isreceivedpaper=0 or ta.editauditstate=10 then 0 "
-                + "when ta.editauditstate=12 then 1 "
-                + "when ta.isreceivedpaper=1 or ta.editauditstate=11 then 2 "
-                + "when ta.isreceivedpaper is null or ta.editauditstate is null then 0 "
-                + "when ta.isreceivedpaper=0 or ta.editauditstate=10 then 0 "
-                + "end offline_progress,ta.isreceivedpaper,ta.editauditstate,"
+                + "end online_progress,wd.submittype,ta.auditstate,ta.auditdate,"
+                + "case when ta.isreceivedpaper=0 then 2 "
+                + "when ta.isreceivedpaper=1 then 0 "
+                + "when ta.isreceivedpaper is null then 0 "
+                + "end offline_progress,"
+                + "ta.isreceivedpaper,ta.editauditstate,"
                 + "case when wd.submittype=10 then 1 "
                 + "else 0 end is_staging,wd.submittype,ta.editauditdate,wd.userid,s.sysflag,su.usertype "
                 + "from writer_declaration wd "
@@ -164,7 +158,10 @@ public class MigrationStageSix {
                 + "left join ba_organize bo on bo.orgid=wd.unitid "
                 + "left join sys_user s on s.userid=wd.userid "
                 + "left join sys_userext su on su.userid=wd.userid "
-                + "left join (select * from teach_applyposition group by writerid) ta "
+                + "left join (select writerid,auditstate,auditid,editauditid,auditdate,"
+                + "isreceivedpaper,editauditstate,editauditdate "
+                + "from teach_applyposition group by writerid) ta "
+                + "left join sys_user eup on eup.userid = ta.editauditid "
                 + "on ta.writerid=wd.writerid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql); // 查询所有数据
         int count = 0; // 迁移成功的条目数
@@ -182,27 +179,25 @@ public class MigrationStageSix {
             Long materialid = (Long) map.get("tm_materid"); // 教材id
             Long userid = (Long) map.get("sys_userid"); // 作家id
             String realName = (String) map.get("writername"); // 申报表作家姓名
-            /*String userCode = (String) map.get("usercode"); // 作家帐号
-            String userName = (String) map.get("username"); // 作家姓名*/
             String sexJudge = (String) map.get("sex"); // 性别
             String experienceNum = (String) map.get("seniority"); // 教龄
             String postCode = (String) map.get("postcode"); // 邮编
             Long orgId = (Long) map.get("org_id"); // 申报单位id
             Long onlineProgressJudge = (Long) map.get("online_progress"); // 审核进度
-            String authUserid = (String) map.get("auth_user_id"); // 审核人id
+            Long authUserid = (Long) map.get("auth_user_id"); // 审核人id
             Long offlineProgressJudge = (Long) map.get("offline_progress"); // 纸质表进度
             Long isStagingJudge = (Long) map.get("is_staging"); // 是否暂存
             String unitid = (String) map.get("unitid"); // 旧表申报单位id
             Integer sysflag = (Integer) map.get("sysflag"); // 0为后台用户，1为前台用户
             Integer usertype = (Integer) map.get("usertype"); // 2为学校管理员
-            if (ObjectUtil.isNull(sysflag) || sysflag == 0) {
+            if (ObjectUtil.isNull(sysflag) || sysflag.equals(0)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为后台用户申报教材。"));
                 excel.add(map);
                 logger.debug("找到为后台用户申报教材，此结果将被记录在Excel中");
                 sysflagCount++;
                 continue;
             }
-            if (usertype == 2) {
+            if (usertype.equals(2)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为用户类型为学校管理员申报教材。"));
                 excel.add(map);
                 logger.debug("找到为用户类型为学校管理员申报教材，此结果将被记录在Excel中");
@@ -210,7 +205,7 @@ public class MigrationStageSix {
                 continue;
             }
             Declaration declaration = new Declaration();
-            if (ObjectUtil.isNull(materialid) || materialid == 0) {
+            if (ObjectUtil.isNull(materialid) || materialid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材对应的关联结果。"));
                 excel.add(map);
                 logger.debug("未找到教材对应的关联结果，此结果将被记录在Excel中");
@@ -218,7 +213,7 @@ public class MigrationStageSix {
                 continue;
             }
             declaration.setMaterialId(materialid);
-            if (ObjectUtil.isNull(userid) || userid == 0) {
+            if (ObjectUtil.isNull(userid) || userid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到作家对应的关联结果。"));
                 excel.add(map);
                 logger.debug("未找到作家对应的关联结果，此结果将被记录在Excel中");
@@ -226,16 +221,7 @@ public class MigrationStageSix {
                 continue;
             }
             declaration.setUserId(userid);
-            /*if (StringUtil.isEmpty(realName)) { // 如果申报表作家姓名为空，则设置为作家姓名
-            	if (StringUtil.isEmpty(userName)) { // 如果作家姓名为空，则设置为作家帐号
-            		declaration.setRealname(userCode);
-            	} else {
-            		declaration.setRealname(userName);
-				}
-            } else {
-            	declaration.setRealname(realName);
-            }*/
-            if (StringUtil.isEmpty(realName)) {
+            if (StringUtil.isEmpty(realName) && isStagingJudge.intValue() == 0) { // 申报表作家姓名为空并且不暂存
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空。"));
                 excel.add(map);
                 logger.debug("找到申报表作家姓名为空，此结果将被记录在Excel中");
@@ -285,8 +271,7 @@ public class MigrationStageSix {
             } else {
                 declaration.setOnlineProgress(0);
             }
-            Long authUserId = JdbcHelper.getPrimaryKey("sys_user", "userid", authUserid);
-            declaration.setAuthUserId(authUserId);
+            declaration.setAuthUserId(authUserid);
             declaration.setAuthDate((Timestamp) map.get("auditdate")); // 审核通过时间
             if (ObjectUtil.notNull(offlineProgressJudge)) {
                 Integer offlineProgress = offlineProgressJudge.intValue(); // 纸质表进度
@@ -310,10 +295,10 @@ public class MigrationStageSix {
             Declaration dec = declarationService.getDeclarationByMaterialIdAndUserId(declaration.getMaterialId(),
                     declaration.getUserId());
             if (dec != null) {
-                logger.warn("已存在教材id和作家id均相同的记录，本条数据放弃插入，material_id={}，user_id={}",
-                        declaration.getMaterialId(), declaration.getUserId());
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("已存在教材id和作家id均相同的记录。"));
                 excel.add(map);
+                logger.debug("已存在教材id和作家id均相同的记录，本条数据放弃插入，material_id={}，user_id={}",
+                        declaration.getMaterialId(), declaration.getUserId());
                 decCount++;
                 continue;
             }
@@ -655,7 +640,6 @@ public class MigrationStageSix {
             decLastPosition.setMaterialName(materialName);
             Integer position = positionJudge.intValue();
             decLastPosition.setPosition(position);
-            //decLastPosition.setIsDigitalEditor(false); // 是否数字编委
             decLastPosition.setNote((String) map.get("remark")); // 备注
             decLastPosition.setSort(999); // 显示顺序
             decLastPosition = decLastPositionService.addDecLastPosition(decLastPosition);
@@ -846,7 +830,6 @@ public class MigrationStageSix {
             decTextbook.setRank(rank);
             Integer position = positionJudge.intValue();
             decTextbook.setPosition(position);
-            //decTextbook.setIsDigitalEditor(false); // 是否数字编委
             decTextbook.setPublisher(publisher);
             decTextbook.setPublishDate(publishDate);
             if (StringUtil.notEmpty(isbn)) {

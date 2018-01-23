@@ -812,18 +812,4 @@ public class DeclarationEtcBO {
 		this.decAcadeRewards = decAcadeRewards;
 	}
 
-	/**
-	 * @return the decExtensionVOs
-	 */
-	public ArrayList<DecExtensionVO> getDecExtensionVOs() {
-		return decExtensionVOs;
-	}
-
-	/**
-	 * @param decExtensionVOs
-	 *            the decExtensionVOs to set
-	 */
-	public void setDecExtensionVOs(ArrayList<DecExtensionVO> decExtensionVOs) {
-		this.decExtensionVOs = decExtensionVOs;
-	}
 }

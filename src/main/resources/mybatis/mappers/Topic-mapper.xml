@@ -565,8 +565,8 @@
 		AND
 		a.is_editor_handling = FALSE
 		AND b.is_director = TRUE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
@@ -592,8 +592,8 @@
 		AND
 		a.is_editor_handling = FALSE
 		AND b.is_director = TRUE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
@@ -603,18 +603,21 @@
 
 	<!-- 获取编辑可以操作的申报选题 -->
 	<select id="listTopicEditorVOs" resultType="TopicEditorVO">
-		SELECT a.*,c.realname
+		SELECT a.*,c.realname,b.realname editorName
 		FROM topic a
-		LEFT JOIN pmph_user b ON a.editor_id
+		LEFT JOIN
+		pmph_user b ON a.editor_id
 		= b.id
-		LEFT JOIN writer_user c ON a.user_id = c.id
+		LEFT JOIN writer_user c ON a.user_id =
+		c.id
 		WHERE a.editor_id =
 		#{userId}
 		AND a.is_editor_handling = TRUE
-		AND a.is_rejected_by_editor =
+		AND
+		a.is_rejected_by_editor =
 		FALSE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
@@ -639,8 +642,8 @@
 		AND
 		a.is_rejected_by_editor =
 		FALSE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
@@ -657,8 +660,8 @@
 		WHERE a.is_director_handling = TRUE
 		AND a.is_editor_handling =
 		FALSE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
@@ -675,8 +678,8 @@
 		LEFT JOIN writer_user b ON a.user_id = b.id
 		WHERE a.is_director_handling = TRUE
 		AND a.is_editor_handling = FALSE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
@@ -686,15 +689,18 @@
 
 	<!-- 系统管理员查询选题申报（编辑界面） -->
 	<select id="listEditorView" resultType="TopicEditorVO">
-		SELECT a.*,b.realname
+		SELECT a.*,b.realname,c.realname editorName
 		FROM topic a
-		LEFT JOIN writer_user b ON a.user_id
+		LEFT JOIN
+		writer_user b ON a.user_id
 		= b.id
+		LEFT JOIN pmph_user c ON a.editor_id =
+		c.id
 		WHERE a.is_editor_handling = TRUE
 		AND a.is_rejected_by_editor =
 		FALSE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
@@ -711,8 +717,8 @@
 		LEFT JOIN writer_user b ON a.user_id = b.id
 		WHERE a.is_editor_handling = TRUE
 		AND a.is_rejected_by_editor = FALSE
-		<if test="bookName != null and bookName !=''">
-			AND a.bookname like concat('%',#{bookName},'%')
+		<if test="bookname != null and bookname !=''">
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time = #{submitTime}
