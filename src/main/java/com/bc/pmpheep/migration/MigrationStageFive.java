@@ -48,7 +48,7 @@ public class MigrationStageFive {
      * 教材书籍表
      */
     private void textbook() {
-        String sql = "select a.*,b.new_pk newmaterid,c.new_pk bookcreateuserid,b.createdate newcreatedate,"
+        String sql = "select DISTINCT a.*,b.new_pk newmaterid,c.new_pk bookcreateuserid,b.createdate newcreatedate,"
                 + " e.new_pk editroid,d.new_pk newcreateuserid,b.createuserid oldcreateuserid"
                 + " from teach_bookinfo a "
                 + " left join teach_material b on b.materid=a.materid "
