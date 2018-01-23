@@ -19,6 +19,7 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.ValidatUtil;
 import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
@@ -38,6 +39,8 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
     private OrgUserDao orgUserDao;
     @Autowired
     private OrgDao     orgDao;
+    @Autowired
+    private OrgService orgService;
 
     @Override
     public List<OrgUser> getOrgUserListByOrgIds(List<Long> orgIds) throws CheckedServiceException {
@@ -72,9 +75,11 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.ILLEGAL_PARAM, "用户名不能超过20个字符");
         }
-
+        if (StringUtil.isEmpty(orgUser.getAvatar())){
+        	orgUser.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);
+        }
         if (StringUtil.isEmpty(orgUser.getRealname())) {
-            orgUser.setRealname(orgUser.getUsername());
+            orgUser.setUsername(orgService.getOrgById(orgUser.getOrgId()).getOrgName());
         }
         orgUserDao.addOrgUser(orgUser);
         return orgUser;

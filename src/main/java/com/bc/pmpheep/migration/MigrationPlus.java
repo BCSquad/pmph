@@ -96,7 +96,7 @@ public class MigrationPlus {
 	 
 	 public void start() {
 		 Date begin = new Date();
-                 logger.info("初始化广告数据");
+		 logger.info("初始化广告数据");
 		 initCmsAdvertisementData();
                  logger.info("填充调查问卷测试数据");
 		 survey();

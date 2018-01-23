@@ -139,8 +139,8 @@ public interface DeclarationService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause) 
-			throws CheckedServiceException, IOException;
+	Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause, 
+			String sessionId) throws CheckedServiceException, IOException;
 	
 	/**
 	 * 显示专家信息

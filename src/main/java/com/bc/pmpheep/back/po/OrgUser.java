@@ -80,6 +80,10 @@ public class OrgUser implements Serializable {
      */
     private String    postcode;
     /**
+     * 头像
+     */
+    private String    avatar;
+    /**
      * 是否上传 委托书
      */
     private Boolean   isProxyUpload;
@@ -143,8 +147,8 @@ public class OrgUser implements Serializable {
 
     public OrgUser(String username, String password, Boolean isDisabled, Long orgId,
     String realname, Integer sex, String position, String title, String fax, String handphone,
-    String telephone, String idcard, String email, String address, String postcode, String note,
-    Integer sort, Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate) {
+    String telephone, String idcard, String email, String address, String postcode, String avatar,
+    String note, Integer sort, Boolean isDeleted, Timestamp gmtCreate, Timestamp gmtUpdate) {
         this.username = username;
         this.password = password;
         this.isDisabled = isDisabled;
@@ -160,6 +164,7 @@ public class OrgUser implements Serializable {
         this.email = email;
         this.address = address;
         this.postcode = postcode;
+        this.avatar = avatar;
         this.note = note;
         this.sort = sort;
         this.isDeleted = isDeleted;
@@ -335,7 +340,15 @@ public class OrgUser implements Serializable {
         this.postcode = postcode;
     }
 
-    public String getNote() {
+    public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public String getNote() {
         return note;
     }
 
@@ -387,7 +400,7 @@ public class OrgUser implements Serializable {
                + isDisabled + ", orgId:" + orgId + ", realname:" + realname + ", sex:" + sex
                + ", position:" + position + ", title:" + title + ", fax:" + fax + ", handphone:"
                + handphone + ", telephone:" + telephone + ", idcard:" + idcard + ", email:" + email
-               + ", address:" + address + ", postcode:" + postcode + ", note:" + note + ", sort:"
+               + ", address:" + address + ", postcode:" + postcode + ", avatar:" + avatar +", note:" + note + ", sort:"
                + sort + ", isDeleted:" + isDeleted + ", gmtCreate:" + gmtCreate + ", gmtUpdate:"
                + gmtUpdate + "}";
     }

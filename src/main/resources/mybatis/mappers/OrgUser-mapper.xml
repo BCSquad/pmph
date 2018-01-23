@@ -50,6 +50,9 @@
 			<if test="postcode != null and postcode !=''">
 				postcode,
 			</if>
+			<if test="avatar !=null and avatar !=''">
+			    avatar,
+			</if>
 			<if test="isProxyUpload != null and isProxyUpload !=''">
 				is_proxy_upload,
 			</if>
@@ -121,6 +124,9 @@
 			</if>
 			<if test="postcode != null and postcode !=''">
 				#{postcode},
+			</if>
+			<if test="avatar !=null and avatar !=''">
+			    #{avatar},
 			</if>
 			<if test="isProxyUpload != null and isProxyUpload !=''">
 				#{isProxyUpload},
@@ -215,6 +221,9 @@
 			</if>
 			<if test=" postcode != null and postcode !=''">
 				postcode= #{postcode},
+			</if>
+			<if test="avatar !=null and avatar !=''">
+			    avatar = #{avatar},
 			</if>
 			<if test=" isProxyUpload != null and isProxyUpload !=''">
 				is_proxy_upload = #{isProxyUpload},

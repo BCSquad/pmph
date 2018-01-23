@@ -274,12 +274,15 @@ public class MigrationStageOne {
                 + "b.duties,b.positional,b.fax,b.handset,b.phone,b.idcard,b.email,b.address,b.postcode,"
                 + "CASE WHEN e.fileid IS NOT NULL THEN 1 ELSE 0 END is_proxy_upload,e.filedir,"
                 + "CASE WHEN b.audittype=2 THEN 1 WHEN b.audittype=1 THEN 2 ELSE 0 END progress,"
-                + "b.auditdate,a.memo,a.sortno  "
+                + "b.auditdate,a.memo,a.sortno,f.filedir avatar "
                 + "FROM sys_user a "
                 + "LEFT JOIN sys_userext b ON a.userid = b.userid "
                 + "LEFT JOIN sys_userorganize c ON a.userid = c.userid "
                 + "LEFT JOIN ba_organize d ON c.orgid = d.orgid "
                 + "LEFT JOIN pub_addfileinfo e ON a.userid = e.operuserid "
+                + "LEFT JOIN (SELECT * FROM pub_addfileinfo x WHERE x.fileid IN (SELECT MAX(o.fileid) "
+				+ "FROM pub_addfileinfo o WHERE o.childsystemname='sys_userext_avatar' GROUP BY o.operuserid))f " 
+				+ "ON a.userid = f.operuserid "
                 + "WHERE a.sysflag=1 AND b.usertype=2 "
                 + "AND NOT EXISTS (SELECT * FROM pub_addfileinfo p WHERE e.operdate<p.operdate "
                 + "AND e.operuserid=p.operuserid) "
@@ -341,6 +344,7 @@ public class MigrationStageOne {
             String postcode = (String) map.get("postcode");
             Integer isProxyUpload = (Integer) map.get("is_proxy_upload");
             String proxy = (String) map.get("filedir");
+            String avatar = (String) map.get("avatar");
             Integer progress = (Integer) map.get("progress");
             Timestamp reviewDate = (Timestamp) map.get("auditdate");
             String note = (String) map.get("memo");
@@ -364,6 +368,7 @@ public class MigrationStageOne {
             orgUser.setEmail(email);
             orgUser.setAddress(address);
             orgUser.setPostcode(postcode);
+            orgUser.setAvatar("DEFAULT");
             orgUser.setIsProxyUpload(isProxyUpload == 1);
             orgUser.setProgress(progress);
             orgUser.setReviewDate(reviewDate);
@@ -393,8 +398,24 @@ public class MigrationStageOne {
                     excel.add(map);
                 }
                 orgUser.setProxy(mongoId);
-                orgUserService.updateOrgUser(orgUser);
             }
+                if (StringUtil.notEmpty(avatar)) {
+                    String avatarMongoId = "";
+                    try {
+                        avatarMongoId = fileService.migrateFile(avatar, ImageType.ORG_USER_AVATAR, pk);
+                    } catch (IOException ex) {
+                        avatarMongoId = "DEFAULT";
+                        logger.error("文件读取异常，路径<{}>,异常信息：{}", avatar, ex.getMessage());
+                        map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("作家用户头像文件读取异常。"));
+                        excel.add(map);
+                    } catch (Exception e) {
+                        avatarMongoId = "DEFAULT";
+                        map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常：" + e.getMessage() + "。"));
+                        excel.add(map);
+                    }
+                    orgUser.setAvatar(avatarMongoId);
+                }
+                orgUserService.updateOrgUser(orgUser);
         }
         if (excel.size() > 0) {
             try {

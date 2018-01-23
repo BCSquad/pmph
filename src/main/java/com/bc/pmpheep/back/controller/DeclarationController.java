@@ -119,9 +119,12 @@ public class DeclarationController {
     @RequestMapping(value = "/list/declaration/onlineProgress", method = RequestMethod.GET)
     public ResponseBean onlineProgress(@RequestParam("id") Long id,  
     		@RequestParam("onlineProgress") Integer onlineProgress, 
-    		@RequestParam("returnCause") String returnCause) 
+    		@RequestParam("returnCause") String returnCause, 
+    		 HttpServletRequest request) 
     		throws CheckedServiceException, IOException {
-        return new ResponseBean(declarationService.onlineProgress(id, onlineProgress, returnCause));
+    	String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(declarationService.onlineProgress(id, onlineProgress, returnCause, 
+        		sessionId));
     }
 
     /**
