@@ -96,8 +96,11 @@ public class MigrationPlus {
 	 
 	 public void start() {
 		 Date begin = new Date();
+		 logger.info("初始化广告数据");
 		 initCmsAdvertisementData();
+                 logger.info("填充调查问卷测试数据");
 		 survey();
+                 logger.info("填充选题申报测试数据");
 		 topic();
 		 logger.info("数据填充运行结束，用时：{}", JdbcHelper.getPastTime(begin));
 	 }
