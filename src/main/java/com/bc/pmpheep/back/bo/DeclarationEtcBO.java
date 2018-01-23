@@ -150,6 +150,9 @@ public class DeclarationEtcBO {
 	@ExcelHeader(header = "学术荣誉授予情况")
 	private ArrayList<DecAcadeReward> decAcadeRewards;
 
+	@ExcelHeader(header = "作家扩展项")
+	private ArrayList<DecExtensionVO> decExtensionVOs;
+
 	public DeclarationEtcBO() {
 	}
 
@@ -164,7 +167,7 @@ public class DeclarationEtcBO {
 			ArrayList<DecTextbook> decTextbooks, ArrayList<DecResearch> decResearchs,
 			ArrayList<DecMonograph> decMonographs, ArrayList<DecPublishReward> publishRewards,
 			ArrayList<DecSci> decScis, ArrayList<DecClinicalReward> decClinicalRewards,
-			ArrayList<DecAcadeReward> decAcadeRewards) {
+			ArrayList<DecAcadeReward> decAcadeRewards, ArrayList<DecExtensionVO> decExtensionVOs) {
 		super();
 		this.textbookName = textbookName;
 		this.presetPosition = presetPosition;
@@ -206,6 +209,7 @@ public class DeclarationEtcBO {
 		this.decScis = decScis;
 		this.decClinicalRewards = decClinicalRewards;
 		this.decAcadeRewards = decAcadeRewards;
+		this.decExtensionVOs = decExtensionVOs;
 	}
 
 	/**

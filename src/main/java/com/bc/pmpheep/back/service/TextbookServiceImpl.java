@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.bo.DecPositionBO;
-import com.bc.pmpheep.back.bo.WriterBO;
 import com.bc.pmpheep.back.dao.MaterialDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
 import com.bc.pmpheep.back.dao.PmphUserDao;
@@ -37,7 +36,6 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -367,6 +365,7 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 		Gson gson = new Gson();
 		bookListVO.setMaterialType(pathType);
+		bookListVO.setIsPublic(material.getIsPublic());
 		bookListVO.setTextbooks(gson.toJson(bookList));
 		return bookListVO;
 	}
@@ -625,6 +624,93 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 		return textbooks;
 	}
+	
+	@SuppressWarnings("resource")
+	@Override
+	public List<Textbook> importTopicExcel(MultipartFile file)
+			throws CheckedServiceException {
+		String fileType = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+		Workbook workbook = null;
+		InputStream in = null ;
+		try {
+			in = file.getInputStream();
+		} catch (FileNotFoundException e) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+					CheckedExceptionResult.NULL_PARAM, "未获取到文件");
+		} catch (IOException e){
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "读取文件失败");
+		}
+		try {
+			if ((".xls").equals(fileType)){
+				workbook = new HSSFWorkbook(in);
+			} else if ((".xlsx").equals(fileType)){
+				workbook = new XSSFWorkbook(in);
+			} else{
+				throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+						CheckedExceptionResult.ILLEGAL_PARAM, "读取的不是Excel文件");
+			}
+			} catch (IOException e) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+						CheckedExceptionResult.ILLEGAL_PARAM, "读取文件失败");
+			}
+		List<Textbook> textbookList = new ArrayList<>();
+		for (int numSheet = 0 ; numSheet < workbook.getNumberOfSheets();numSheet ++){
+			Sheet sheet = workbook.getSheetAt(numSheet);
+			if (null == sheet){
+				continue;
+			}
+			for (int rowNum = 1 ; rowNum <= sheet.getLastRowNum();rowNum ++){
+				Textbook textbook = new Textbook();
+				Row row = sheet.getRow(rowNum);
+				if (null == row){
+					break;
+				}
+				Cell first = row.getCell(0);
+				Cell second = row.getCell(1);
+				Cell third = row.getCell(2);
+				Cell fourth = row.getCell(3);
+				if (ObjectUtil.isNull(first) || ObjectUtil.isNull(second) || ObjectUtil.isNull(third)
+						|| ObjectUtil.isNull(fourth) || "".equals(first.toString()) 
+						|| "".equals(second.toString()) || "".equals(third.toString()) 
+						|| "".equals(fourth.toString())){
+					break;
+				}
+				String bookName = StringUtil.getCellValue(second);
+				if (StringUtil.strLength(bookName) > 25){
+					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+							CheckedExceptionResult.ILLEGAL_PARAM, "图书名称不能超过25个字数，请修改后再上传");
+				}
+				String topicNumber = StringUtil.getCellValue(fourth);
+				if (StringUtil.strLength(topicNumber) > 30){
+					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+							CheckedExceptionResult.ILLEGAL_PARAM, "选题号不能超过30个字数，请修改后再上传");
+				}
+				Integer sort = 0;
+				Integer round = 0;
+				try{
+					sort = ObjectUtil.getCellValue(first);
+				} catch(NumberFormatException e){
+					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+							CheckedExceptionResult.ILLEGAL_PARAM, "图书序号格式错误，请按照模板格式修改后"
+									+ "再上传");
+				}
+				try{
+					round = ObjectUtil.getCellValue(third);
+				} catch(NumberFormatException e){
+					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+							CheckedExceptionResult.ILLEGAL_PARAM, "书籍版次格式错误，请按照模板格式修改后"
+									+ "再上传");
+				}
+				textbook.setSort(sort);
+				textbook.setTextbookName(bookName);
+				textbook.setTextbookRound(round);
+				textbook.setTopicNumber(topicNumber);
+				textbookList.add(textbook);			
+			}
+		}
+		return textbookList;
+	}
 
 	@Override
 	public PageResult<TextbookDecVO> listEditorSelection(PageParameter<TextbookDecVO> pageParameter) {
@@ -759,5 +845,6 @@ public class TextbookServiceImpl implements TextbookService {
 		List<DecPositionBO> list=textbookDao.getExcelDecByMaterialId(textbookIds);
 		return list;
 	}
+	
 }
 

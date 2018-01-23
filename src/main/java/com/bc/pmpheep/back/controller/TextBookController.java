@@ -84,6 +84,14 @@ public class TextBookController {
     	return new ResponseBean(textbookService.getBookListVO(materialId));
     }
     
+    /**
+     * 
+     * Description:通过Excel文档批量导入教材书籍
+     * @author:lyc
+     * @date:2018年1月22日下午5:45:14
+     * @param 
+     * @return ResponseBean
+     */
     @ResponseBody
     @RequestMapping(value = "/import/excel", method = RequestMethod.POST)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "通过Excel文档批量导入教材书籍")
@@ -126,6 +134,28 @@ public class TextBookController {
     public ResponseBean topic(@RequestParam(name = "topicTextbooks") String topicTextbooks){
     	return new ResponseBean(textbookService.addTopicNumber(topicTextbooks));
     }
+    
+    /**
+     * 
+     * Description:设置选题号页面导入Excel文档
+     * @author:lyc
+     * @date:2018年1月22日下午5:47:04
+     * @param 
+     * @return ResponseBean
+     */
+    @ResponseBody
+    @RequestMapping(value = "/import/topicExcel", method = RequestMethod.POST)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "设置选题号页面导入Excel文档")
+    public ResponseBean topicExcel(@RequestParam(name = "file") MultipartFile file){
+    	try {
+			return new ResponseBean(textbookService.importTopicExcel(file));
+		} catch (CheckedServiceException e) {
+			return new ResponseBean(e);
+		} catch (IOException ex) {
+			return new ResponseBean(ex);
+		}
+    }
+    
     /**
      * 
      * 分配策划编辑

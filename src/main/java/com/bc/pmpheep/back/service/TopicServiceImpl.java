@@ -464,21 +464,21 @@ public class TopicServiceImpl implements TopicService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		Integer total = 0;
 		if (pmphUser.getIsAdmin()) {
-			total = topicDao.totalDirectorView(pageParameter.getParameter().getBookName(),
+			total = topicDao.totalDirectorView(pageParameter.getParameter().getBookname(),
 					pageParameter.getParameter().getSubmitTime());
 			if (total > 0) {
-				List<TopicDirectorVO> list = topicDao.listDirectorView(pageParameter.getParameter().getBookName(),
+				List<TopicDirectorVO> list = topicDao.listDirectorView(pageParameter.getParameter().getBookname(),
 						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(),
 						pageParameter.getPageSize());
 				list = addTypeNameDirector(list);
 				pageResult.setRows(list);
 			}
 		} else {
-			total = topicDao.totalTopicDirectorVOs(pmphUser.getId(), pageParameter.getParameter().getBookName(),
+			total = topicDao.totalTopicDirectorVOs(pmphUser.getId(), pageParameter.getParameter().getBookname(),
 					pageParameter.getParameter().getSubmitTime());
 			if (total > 0) {
 				List<TopicDirectorVO> list = topicDao.listTopicDirectorVOs(pmphUser.getId(),
-						pageParameter.getParameter().getBookName(), pageParameter.getParameter().getSubmitTime(),
+						pageParameter.getParameter().getBookname(), pageParameter.getParameter().getSubmitTime(),
 						pageParameter.getStart(), pageParameter.getPageSize());
 				list = addTypeNameDirector(list);
 				pageResult.setRows(list);
@@ -500,21 +500,21 @@ public class TopicServiceImpl implements TopicService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		Integer total = 0;
 		if (pmphUser.getIsAdmin()) {
-			total = topicDao.totalEditorView(pageParameter.getParameter().getBookName(),
+			total = topicDao.totalEditorView(pageParameter.getParameter().getBookname(),
 					pageParameter.getParameter().getSubmitTime());
 			if (total > 0) {
-				List<TopicEditorVO> list = topicDao.listEditorView(pageParameter.getParameter().getBookName(),
+				List<TopicEditorVO> list = topicDao.listEditorView(pageParameter.getParameter().getBookname(),
 						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(),
 						pageParameter.getPageSize());
 				list = addTypeNameEditor(list);
 				pageResult.setRows(list);
 			}
 		} else {
-			total = topicDao.totalTopicEditorVOs(pmphUser.getId(), pageParameter.getParameter().getBookName(),
+			total = topicDao.totalTopicEditorVOs(pmphUser.getId(), pageParameter.getParameter().getBookname(),
 					pageParameter.getParameter().getSubmitTime());
 			if (total > 0) {
 				List<TopicEditorVO> list = topicDao.listTopicEditorVOs(pmphUser.getId(),
-						pageParameter.getParameter().getBookName(), pageParameter.getParameter().getSubmitTime(),
+						pageParameter.getParameter().getBookname(), pageParameter.getParameter().getSubmitTime(),
 						pageParameter.getStart(), pageParameter.getPageSize());
 				list = addTypeNameEditor(list);
 				pageResult.setRows(list);

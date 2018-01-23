@@ -192,7 +192,7 @@
 		LEFT JOIN 
 			writer_user d on d.id    = a.user_id
 		where 
-			b.id is not null and c.id is not null and !a.is_deleted 
+			b.id is not null and  !a.is_deleted 
 		<if test="editorId != null">
 			and c.editor_id  = #{editorId}
 		</if>
@@ -244,7 +244,7 @@
 		LEFT JOIN 
 			writer_user d on d.id    = a.user_id
 		where 
-			b.id is not null and c.id is not null and !a.is_deleted 
+			b.id is not null and  !a.is_deleted 
 		<if test="editorId != null">
 			and c.editor_id  = #{editorId}
 		</if>

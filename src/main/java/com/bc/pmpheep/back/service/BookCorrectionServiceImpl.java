@@ -70,6 +70,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "回复内容超过最长限制500");
 		}
 		BookCorrection bookCorrection= this.getBookCorrectionById(id);
+		Long submitUserId = bookCorrection.getUserId();
 		if(!bookCorrection.getIsAuthorReplied() ){
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "请先主编审核");
 		}
@@ -86,7 +87,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		bookCorrection.setEditorReply(editorReply);
 		
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst(); 
-		writerUserTrendst.setUserId(bookCorrection.getUserId());
+		writerUserTrendst.setUserId(submitUserId);
 		writerUserTrendst.setIsPublic(false);//自己可见
 		writerUserTrendst.setType(0);
 		String detail ="";
