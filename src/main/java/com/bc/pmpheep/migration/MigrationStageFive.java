@@ -82,7 +82,7 @@ public class MigrationStageFive {
                 c=constant;
                 excel.add(map);
                 logger.error("该教材id为空，此结果将将被记录在Excel中");
-                //continue;
+                continue;
             }
             Long createuserid = (Long) map.get("bookcreateuserid");
             Long newcreateuseid = (Long) map.get("newcreateuserid");
