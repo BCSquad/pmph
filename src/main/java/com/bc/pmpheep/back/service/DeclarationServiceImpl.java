@@ -238,7 +238,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	}
 
 	@Override
-	public Declaration confirmPaperList(Long id, Integer offlineProgress) throws CheckedServiceException, IOException {
+	public Declaration confirmPaperList(Long id, Integer offlineProgress, String sessionId) 
+			throws CheckedServiceException, IOException {
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"主键不能为空!");
@@ -247,8 +248,22 @@ public class DeclarationServiceImpl implements DeclarationService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"确认收到纸质表不能为空!");
 		}
+		// 纸质表审核人id
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "审核人为空!");
+        }
+        Long authUserId = pmphUser.getId();// 纸质表审核人Id为登陆用户ID
 		// 获取当前作家用户申报信息
 		Declaration declarationCon = declarationDao.getDeclarationById(id);
+		if (ObjectUtil.isNull(declarationCon)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+					CheckedExceptionResult.OBJECT_NOT_FOUND, "查询结果为空!");
+		}
+		declarationCon.setAuthUserId(authUserId); // 纸质表审核人id
+		Date date = new Date();
+		declarationCon.setAuthDate(new Timestamp(date.getTime())); // 审核通过时间
 		declarationCon.setOfflineProgress(offlineProgress);
 		declarationDao.updateDeclaration(declarationCon);
 		systemMessageService.sendWhenReceiptAudit(declarationCon.getId(), true); // 发送系统消息
@@ -256,8 +271,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	}
 
 	@Override
-	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause, 
-			String sessionId) throws CheckedServiceException, IOException {
+	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause) 
+			throws CheckedServiceException, IOException {
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
 					CheckedExceptionResult.ILLEGAL_PARAM, "主键不能为空!");
@@ -266,13 +281,6 @@ public class DeclarationServiceImpl implements DeclarationService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
 					CheckedExceptionResult.ILLEGAL_PARAM, "审核进度不能为空!");
 		}
-		// 审核人id
-        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-        if (ObjectUtil.isNull(pmphUser)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "审核人为空!");
-        }
-        Long authUserId = pmphUser.getId();// 审核人Id为登陆用户ID
 		// 获取当前作家用户申报信息
 		Declaration declarationCon = declarationDao.getDeclarationById(id);
 		// 获取审核进度是4并且已经通过审核单位并且不是提交到出版社0则被退回给申报单位
@@ -336,24 +344,6 @@ public class DeclarationServiceImpl implements DeclarationService {
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false); // 发送系统消息
-		// 获取审核进度是6并且机构id为出版社0则出版社通过
-		// 提交出版社，出版社通过操作
-		} else if (6 == onlineProgress.intValue() && 0 == declarationCon.getOrgId()) { 
-			declarationCon.setOnlineProgress(onlineProgress);
-			declarationCon.setAuthUserId(authUserId); // 审核人id
-			declarationCon.setAuthDate((Timestamp) new Date()); // 审核通过时间
-			declarationDao.updateDeclaration(declarationCon);
-			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true); // 发送系统消息
-		// 获取审核进度是6并且已经通过审核单位并且不是提交到出版社0则出版社通过
-		// 提交到申报单位，申报单位已经通过审核，出版社通过操作
-		} else if (6 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress() && 
-				0 != declarationCon.getOrgId()) {
-			declarationCon.setOnlineProgress(onlineProgress);
-			declarationCon.setAuthUserId(authUserId); // 审核人id
-			declarationCon.setAuthDate((Timestamp) new Date()); // 审核通过时间
-			declarationDao.updateDeclaration(declarationCon);
-			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), true);
 		}
 		return declarationCon;
 	}
