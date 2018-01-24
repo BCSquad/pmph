@@ -263,7 +263,6 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		declarationCon.setAuthUserId(authUserId); // 纸质表审核人id
 		Date date = new Date();
-		declarationCon.setAuthDate(new Timestamp(date.getTime())); // 审核通过时间
 		declarationCon.setPaperDate(new Timestamp(date.getTime())); // 纸质表收到时间
 		declarationCon.setOfflineProgress(offlineProgress);
 		declarationDao.updateDeclaration(declarationCon);
