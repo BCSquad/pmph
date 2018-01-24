@@ -100,8 +100,10 @@ public class DeclarationController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "确认收到纸质表")
     @RequestMapping(value = "/list/declaration/confirmPaperList", method = RequestMethod.GET)
     public ResponseBean confirmPaperList(@RequestParam("id") Long id,
-    @RequestParam("offlineProgress") Integer offlineProgress) throws CheckedServiceException, IOException {
-        return new ResponseBean(declarationService.confirmPaperList(id, offlineProgress));
+    @RequestParam("offlineProgress") Integer offlineProgress, 
+    HttpServletRequest request) throws CheckedServiceException, IOException {
+    	String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(declarationService.confirmPaperList(id, offlineProgress, sessionId));
     }
 
     /**

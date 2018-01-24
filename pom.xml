@@ -84,6 +84,8 @@
         <httpcore.ver>4.4.1</httpcore.ver>
         <fastjson.ver>1.2.7</fastjson.ver>
         <bcprov-jdk16.ver>1.46</bcprov-jdk16.ver>
+        <!-- WebCollector爬虫 -->
+        <WebCollector.ver>2.52</WebCollector.ver>
     </properties>
 	
     <dependencies>
@@ -307,11 +309,13 @@
 			<artifactId>bcprov-jdk16</artifactId>
 			<version>${bcprov-jdk16.ver}</version>
 		</dependency>
+		<!-- WebCollector爬虫 -->
 		<dependency>
-    		<groupId>cn.edu.hfut.dmic.webcollector</groupId>
-    		<artifactId>WebCollector</artifactId>
-    		<version>2.52</version>
+		    <groupId>cn.edu.hfut.dmic.webcollector</groupId>
+		    <artifactId>WebCollector</artifactId>
+		    <version>${WebCollector.ver}</version>
 		</dependency>
+		
     </dependencies>
 
     <repositories>

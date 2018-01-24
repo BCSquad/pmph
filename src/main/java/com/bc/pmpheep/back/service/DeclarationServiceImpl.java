@@ -4,7 +4,9 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,12 +52,14 @@ import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Declaration;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.RouteUtil;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.ApplicationVO;
 import com.bc.pmpheep.back.vo.DecExtensionVO;
@@ -234,7 +238,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	}
 
 	@Override
-	public Declaration confirmPaperList(Long id, Integer offlineProgress) throws CheckedServiceException, IOException {
+	public Declaration confirmPaperList(Long id, Integer offlineProgress, String sessionId) 
+			throws CheckedServiceException, IOException {
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"主键不能为空!");
@@ -243,8 +248,22 @@ public class DeclarationServiceImpl implements DeclarationService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"确认收到纸质表不能为空!");
 		}
+		// 纸质表审核人id
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "审核人为空!");
+        }
+        Long authUserId = pmphUser.getId();// 纸质表审核人Id为登陆用户ID
 		// 获取当前作家用户申报信息
 		Declaration declarationCon = declarationDao.getDeclarationById(id);
+		if (ObjectUtil.isNull(declarationCon)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+					CheckedExceptionResult.OBJECT_NOT_FOUND, "查询结果为空!");
+		}
+		declarationCon.setAuthUserId(authUserId); // 纸质表审核人id
+		Date date = new Date();
+		declarationCon.setPaperDate(new Timestamp(date.getTime())); // 纸质表收到时间
 		declarationCon.setOfflineProgress(offlineProgress);
 		declarationDao.updateDeclaration(declarationCon);
 		systemMessageService.sendWhenReceiptAudit(declarationCon.getId(), true); // 发送系统消息
@@ -265,6 +284,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 获取当前作家用户申报信息
 		Declaration declarationCon = declarationDao.getDeclarationById(id);
 		// 获取审核进度是4并且已经通过审核单位并且不是提交到出版社0则被退回给申报单位
+		// 提交审核单位，审核单位通过，出版社退回申报单位操作
 		if (4 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress() && 
 				0 != declarationCon.getOrgId()) {
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
@@ -284,9 +304,10 @@ public class DeclarationServiceImpl implements DeclarationService {
 			declarationDao.updateDeclaration(declarationCon);
 			// 发送系统消息
 			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false); 
+		// 获取审核进度是5并且已经通过审核单位并且不是提交到出版社0则被退回给个人
+		// 提交审核单位，审核单位通过，出版社退回个人操作
 		} else if(5 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress() && 
 				0 != declarationCon.getOrgId()) { 
-			// 获取审核进度是5并且已经通过审核单位并且不是提交到出版社0则被退回给个人
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
 				Integer chosenPosition = decPositions.getChosenPosition();
@@ -304,8 +325,9 @@ public class DeclarationServiceImpl implements DeclarationService {
 			declarationDao.updateDeclaration(declarationCon);
 			// 发送系统消息
 			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false); 
+		// 获取审核进度是5并且机构id为出版社0则被退回给个人
+		// 提交到出版社，出版社退回个人操作
 		} else if (5 == onlineProgress.intValue() && 0 == declarationCon.getOrgId()) { 
-			// 获取审核进度是5并且机构id为出版社0则被退回给个人
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
 				Integer chosenPosition = decPositions.getChosenPosition();
@@ -322,18 +344,6 @@ public class DeclarationServiceImpl implements DeclarationService {
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false); // 发送系统消息
-		} else if (6 == onlineProgress.intValue() && 0 == declarationCon.getOrgId()) { 
-			// 获取审核进度是6并且机构id为出版社0则出版社通过
-			declarationCon.setOnlineProgress(onlineProgress);
-			declarationDao.updateDeclaration(declarationCon);
-			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true); // 发送系统消息
-		} else if (6 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress() && 
-				0 != declarationCon.getOrgId()) {
-			// 获取审核进度是6并且已经通过审核单位并且不是提交到出版社0则出版社通过
-			declarationCon.setOnlineProgress(onlineProgress);
-			declarationDao.updateDeclaration(declarationCon);
-			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), true);
 		}
 		return declarationCon;
 	}
