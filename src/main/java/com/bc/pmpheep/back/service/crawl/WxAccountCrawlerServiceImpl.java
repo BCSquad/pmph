@@ -24,14 +24,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.bc.pmpheep.back.controller.crawl.WxAccountCrawlerController;
+//import com.bc.pmpheep.back.controller.crawl.WxAccountCrawlerController;
 
 /**
  * 本教程为微信公众号文章抓取示例 示例中抓取的公众号标题（用于去重）存放于文件中，仅供参考 线上系统请老老实实用数据库
  *
  * @author hu
  */
-@Service
+/*@Service
 public class WxAccountCrawlerServiceImpl extends BreadthCrawler implements WxAccountCrawlerService{
 
     public static final Logger LOG = LoggerFactory.getLogger(WxAccountCrawlerServiceImpl.class);
@@ -159,4 +159,4 @@ public class WxAccountCrawlerServiceImpl extends BreadthCrawler implements WxAcc
         crawler.start(10);
     }
 
-}
+}*/
