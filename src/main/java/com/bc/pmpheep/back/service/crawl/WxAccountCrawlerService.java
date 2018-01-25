@@ -145,12 +145,4 @@ public class WxAccountCrawlerService extends BreadthCrawler {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        WxAccountCrawlerService crawler = new WxAccountCrawlerService("crawl_weixin", "wx_history.txt");
-        crawler.addAccount("机器之心");
-        crawler.addAccount("ZEALER订阅号");
-        crawler.setThreads(5);
-        crawler.start(10);
-    }
-
 }
