@@ -24,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.bc.pmpheep.back.controller.crawl.WxAccountCrawlerController;
+
 /**
  * 本教程为微信公众号文章抓取示例 示例中抓取的公众号标题（用于去重）存放于文件中，仅供参考 线上系统请老老实实用数据库
  *
@@ -147,6 +149,14 @@ public class WxAccountCrawlerServiceImpl extends BreadthCrawler implements WxAcc
                 reader.close();
             }
         }
+    }
+    
+    public static void main(String[] args) throws Exception {
+    	WxAccountCrawlerServiceImpl crawler = new WxAccountCrawlerServiceImpl("crawl_weixin", "wx_history.txt");
+        crawler.addAccount("机器之心");
+        crawler.addAccount("ZEALER订阅号");
+        crawler.setThreads(5);
+        crawler.start(10);
     }
 
 }
