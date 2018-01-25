@@ -80,4 +80,6 @@ public class CheckedExceptionBusiness {
 	public final static String QUESTIONNAIRE_SURVEY = "问卷调查";
 
 	public final static String WRITER_POINT_MANAGEMENT = "积分管理";
+
+	public final static String WECHAT_ARTICLE = "微信公众号文章同步";
 }

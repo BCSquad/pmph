@@ -1,4 +1,4 @@
-package com.bc.pmpheep.general.controller;
+package com.bc.pmpheep.general.runnable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -192,7 +192,7 @@ public class SpringThread implements Runnable {
 		zipDownload.setState(0);
 		zipDownload.setDetail("loading...");
 		zipDownload.setCreateTime(DateUtil.getCurrentTime());
-		Const.map.put(this.id, zipDownload);
+		Const.WORD_EXPORT_MAP.put(this.id, zipDownload);
 		try {
 			declarationEtcBOs = this.declarationService.declarationEtcBO(this.materialId, this.textBookids,
 					this.realname, this.position, this.title, this.orgName, this.unitName, this.positionType,
@@ -232,7 +232,7 @@ public class SpringThread implements Runnable {
 		}
 		zipDownload.setState(1);
 		zipDownload.setDetail("/zip/download?id=" + this.id);
-		Const.map.put(this.id, zipDownload);
+		Const.WORD_EXPORT_MAP.put(this.id, zipDownload);
 	}
 
 }

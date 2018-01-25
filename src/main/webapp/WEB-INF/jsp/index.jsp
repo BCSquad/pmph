@@ -25,6 +25,14 @@
             <img src="avatar/59cbd0da588e8a8aa8bb6925" />
             <img src="avatar/59cbd0da588e8a8aa8bb6925" />
             <img src="avatar/59cbd0da588e8a8aa8bb6924" />
+            <br>
+            <form class="form-inline" action="cms/wechat/article" method="post">
+                <div class="form-group">
+                    <label for="exampleInputName2">微信公众号文章地址</label>
+                    <input type="url" class="form-control" name="url" placeholder="请输入正确的网址">
+                </div>
+                <button type="submit" class="btn btn-default">获取id</button>
+            </form>
         </div>
         <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
         <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>

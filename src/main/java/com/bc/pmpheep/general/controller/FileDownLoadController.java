@@ -4,6 +4,7 @@
  */
 package com.bc.pmpheep.general.controller;
 
+import com.bc.pmpheep.general.runnable.SpringThread;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -375,9 +376,9 @@ public class FileDownLoadController {
     @RequestMapping(value = "/word/progress", method = RequestMethod.GET)
     public ZipDownload progress(String id) {
         ZipDownload zipDownload = new ZipDownload();
-        if (Const.map.containsKey(id)) {
-            zipDownload.setState(Const.map.get(id).getState());
-            zipDownload.setDetail(Const.map.get(id).getDetail());
+        if (Const.WORD_EXPORT_MAP.containsKey(id)) {
+            zipDownload.setState(Const.WORD_EXPORT_MAP.get(id).getState());
+            zipDownload.setDetail(Const.WORD_EXPORT_MAP.get(id).getDetail());
         }
         return zipDownload;
     }
@@ -398,7 +399,7 @@ public class FileDownLoadController {
         if (!src.endsWith(File.separator)) {
             src += File.separator;
         }
-        String materialName = Const.map.get(id).getMaterialName();
+        String materialName = Const.WORD_EXPORT_MAP.get(id).getMaterialName();
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/force-download");
         String filePath = src + id + File.separator + materialName + ".zip";
@@ -430,7 +431,7 @@ public class FileDownLoadController {
                                               CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
                                               "文件在传输时中断");
         } finally {
-            Const.map.remove(id);
+            Const.WORD_EXPORT_MAP.remove(id);
             ZipDownload.DeleteFolder(src + id);
         }
     }
