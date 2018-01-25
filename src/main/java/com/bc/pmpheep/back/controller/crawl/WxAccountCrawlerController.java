@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
-//import com.bc.pmpheep.back.service.crawl.WxAccountCrawlerService;
+import com.bc.pmpheep.back.service.crawl.WxAccountCrawlerService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -42,7 +42,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  *
  * @author tyc
  */
-/*@Controller
+@Controller
 @RequestMapping(value = "/accountCrawler")
 @SuppressWarnings("all")
 public class WxAccountCrawlerController {
@@ -52,20 +52,20 @@ public class WxAccountCrawlerController {
 	@Autowired
 	WxAccountCrawlerService wxAccountCrawlerService;
 	
-	*//**
+	/**
      * 文章抓取
      * 
      * @author tyc
      * @createDate 2018年1月25日 上午10:12:37
      * @param 
      * @throws IOException
-     *//*
+     */
     @ResponseBody
     @LogDetail(businessType = Crawler, logRemark = "文章抓取")
     @RequestMapping(value = "/Crawler", method = RequestMethod.GET)
-    public ResponseBean Crawler(@RequestParam("url") Long url) 
+    public ResponseBean Crawler(@RequestParam("url") String url) 
     		throws CheckedServiceException, IOException {
         return new ResponseBean();
     }
 
-}*/
+}
