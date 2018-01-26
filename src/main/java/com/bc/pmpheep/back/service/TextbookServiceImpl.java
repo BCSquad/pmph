@@ -516,8 +516,9 @@ public class TextbookServiceImpl implements TextbookService {
 				Cell first = row.getCell(0);
 				Cell second = row.getCell(1);
 				Cell third = row.getCell(2);
-				if (ObjectUtil.isNull(first) && ObjectUtil.isNull(second) && ObjectUtil.isNull(third)
-						&& "".equals(first.toString()) && "".equals(second.toString()) && "".equals(third.toString())){
+				if ((ObjectUtil.isNull(first) || "".equals(first.toString())) && ( ObjectUtil.isNull(second) 
+						|| "".equals(second.toString()))&& (ObjectUtil.isNull(third)
+						  || "".equals(third.toString()))){
 					break;
 				}
 				String bookName = StringUtil.getCellValue(second);
@@ -670,8 +671,9 @@ public class TextbookServiceImpl implements TextbookService {
 				Cell second = row.getCell(1);
 				Cell third = row.getCell(2);
 				Cell fourth = row.getCell(3);
-				if (ObjectUtil.isNull(first) && ObjectUtil.isNull(second) && ObjectUtil.isNull(third)
-						&& "".equals(first.toString()) && "".equals(second.toString()) && "".equals(third.toString())){
+				if ((ObjectUtil.isNull(first) || "".equals(first.toString())) && ( ObjectUtil.isNull(second) 
+						|| "".equals(second.toString()))&& (ObjectUtil.isNull(third)
+								  || "".equals(third.toString()))){
 					break;
 				}
 				String bookName = StringUtil.getCellValue(second);
