@@ -1,5 +1,11 @@
 package com.bc.pmpheep.back.controller.crawl;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.http.HttpException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,9 +78,18 @@ public class WeChatArticleController {
      * @return
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询人卫健康微信公众号文章")
-    @ResponseBody
     @RequestMapping(value = "/article/get", method = RequestMethod.GET)
-    public ResponseBean get(@RequestParam("guid")String guid){
-		return new ResponseBean(wechatArticleService.get(guid));
+    public void get(@RequestParam("guid")String guid,HttpServletResponse response){
+    	WechatArticle wechatArticle=wechatArticleService.get(guid);
+    	PrintWriter writer;
+		try {
+			writer = response.getWriter();
+			writer.write(wechatArticle.getResult());
+	    	writer.flush();
+	    	writer.close();
+		} catch (IOException e) {
+			new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
+	                CheckedExceptionResult.ILLEGAL_PARAM, "非法的请求参数");
+		}
     }
 }

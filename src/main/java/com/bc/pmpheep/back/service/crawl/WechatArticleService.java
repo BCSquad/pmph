@@ -45,8 +45,9 @@ public class WechatArticleService {
 		WechatArticle wechatArticle=Const.WACT_MAP.get(guid);
 		if(null==wechatArticle){
 			throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
-                    CheckedExceptionResult.NULL_PARAM, "请先进行文章搜索");
+                    CheckedExceptionResult.NULL_PARAM, "文章唯一标识不正确或未获取微信公众号文章");
 		}
+		
 		return wechatArticle;
 	}
 }
