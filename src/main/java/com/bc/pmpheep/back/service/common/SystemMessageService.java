@@ -3,9 +3,11 @@ package com.bc.pmpheep.back.service.common;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.Declaration;
@@ -28,6 +30,7 @@ import com.bc.pmpheep.back.service.PmphGroupService;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.service.UserMessageService;
 import com.bc.pmpheep.back.service.WriterUserService;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
@@ -656,6 +659,9 @@ public final class SystemMessageService {
         }
         //获取机构用户
         List<Long> orgIds = new ArrayList<Long>(1);
+        if (CollectionUtil.isEmpty(orgIds) || orgIds.size() == 0) {
+        	orgIds.add(declaration.getOrgId());
+        }
         List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(orgIds);
         // 存入消息主体
         Message message = new Message(msgContent);
