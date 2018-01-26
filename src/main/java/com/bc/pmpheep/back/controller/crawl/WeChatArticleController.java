@@ -43,7 +43,7 @@ public class WeChatArticleController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "启动人卫健康微信公众号文章同步")
-    @RequestMapping(value = "/article", method = RequestMethod.POST)
+    @RequestMapping(value = "/article/getArticle", method = RequestMethod.POST)
     public ResponseBean getArticle(@RequestParam("url") String url) {
         return new ResponseBean(wechatArticleService.runCrawler(url));
     }
@@ -65,5 +65,16 @@ public class WeChatArticleController {
         }
         return new ResponseBean(new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
                 CheckedExceptionResult.ILLEGAL_PARAM, "非法的请求参数"));
+    }
+    /**
+     * 查询人卫健康微信公众号文章
+     * @param guid
+     * @return
+     */
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询人卫健康微信公众号文章")
+    @ResponseBody
+    @RequestMapping(value = "/article/get", method = RequestMethod.GET)
+    public ResponseBean get(@RequestParam("guid")String guid){
+		return new ResponseBean(wechatArticleService.get(guid));
     }
 }
