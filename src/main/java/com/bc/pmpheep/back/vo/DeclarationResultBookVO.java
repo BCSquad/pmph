@@ -41,6 +41,8 @@ public class DeclarationResultBookVO implements Serializable{
 		//数字编委名单
 		@ExcelHeader(header = "数字编委名单")
 		private String isDigitalEditorList;
+		//是否展示
+		private Boolean isShow =false;
 		
 		public DeclarationResultBookVO() {
 			super();
@@ -108,6 +110,14 @@ public class DeclarationResultBookVO implements Serializable{
 		
 		public void setIsDigitalEditorList(String isDigitalEditorList) {
 			this.isDigitalEditorList = isDigitalEditorList;
+		}
+
+		public Boolean getIsShow() {
+			return isShow;
+		}
+
+		public void setIsShow(Boolean isShow) {
+			this.isShow = isShow;
 		}
 		
 }
