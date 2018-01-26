@@ -4,6 +4,7 @@
  */
 package com.bc.pmpheep.back.service.crawl;
 
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.RandomUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.runnable.WechatArticle;
@@ -35,4 +36,17 @@ public class WechatArticleService {
         taskExecutor.execute(new WechatArticleCrawlerTask(new WechatArticle(guid, url)));
         return guid;
     }
+
+	public WechatArticle get(String guid) throws CheckedServiceException{
+		if(StringUtil.isEmpty(guid)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
+                    CheckedExceptionResult.NULL_PARAM, "文章唯一标识不能为空");
+		}
+		WechatArticle wechatArticle=Const.WACT_MAP.get(guid);
+		if(null==wechatArticle){
+			throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
+                    CheckedExceptionResult.NULL_PARAM, "请先进行文章搜索");
+		}
+		return wechatArticle;
+	}
 }
