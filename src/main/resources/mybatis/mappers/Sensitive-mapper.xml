@@ -106,7 +106,7 @@
 		FROM
 		`sensitive` s
 		WHERE
-		1 = 1
+		s.is_deleted = FALSE
 		<if test="word != null and word != ''">
 			AND s.word LIKE CONCAT('%',#{word},'%')
 		</if>
@@ -118,7 +118,7 @@
 		FROM
 		`sensitive` s
 		WHERE
-		1 = 1
+		s.is_deleted = FALSE
 		<if test="word != null and word != ''">
 			AND s.word LIKE CONCAT('%',#{word},'%')
 		</if>
@@ -145,4 +145,12 @@
 		id =
 		#{id}
 	</delete>
+	<select id="getSensitiveId" parameterType="java.lang.String">
+		SELECT
+		s.id
+		FROM
+		`sensitive` s
+		WHERE
+		s.is_deleted = FALSE AND s.word = #{word}
+	</select>
 </mapper>
