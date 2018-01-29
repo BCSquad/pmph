@@ -161,7 +161,9 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
         for (Long orgId : listOrgId) {
             list.add(new SurveyTarget(userId, surveyTargetVO.getSurveyId(), orgId));
         }
-        count = surveyTargetDao.batchSaveSurveyTargetByList(list);// 保存发起问卷中间表
+        if (CollectionUtil.isNotEmpty(list)) {
+            count = surveyTargetDao.batchSaveSurveyTargetByList(list);// 保存发起问卷中间表
+        }
         if (count > 0) {
             // MongoDB 消息插入
             message = messageService.add(message);
