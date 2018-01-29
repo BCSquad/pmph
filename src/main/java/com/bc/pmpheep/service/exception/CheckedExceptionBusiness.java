@@ -34,7 +34,7 @@ public class CheckedExceptionBusiness {
 	public final static String TEXTBOOK_LOG = "书籍日志";
 
 	public final static String TOPIC = "教材申报";
-	
+
 	public final static String BOOKCORRECTION = "图书纠错";
 
 	public final static String MATERIAL = "教材申报";
@@ -54,6 +54,8 @@ public class CheckedExceptionBusiness {
 	public final static String GROUP = "小组";
 
 	public final static String AREA = "区域";
+
+	public final static String SENSITIVE = "敏感词";
 
 	public final static String BOOK = "图书";
 
