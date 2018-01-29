@@ -214,6 +214,39 @@
 		
 	</select>
 	
+	<!-- 根据id获取详情 -->
+	<select   id="getBookCorrectionAuditDetailById"  resultType="BookCorrectionAuditVO">
+		select 
+			a.id,
+			b.bookname,
+			b.author,
+			b.publish_date,
+			b.image_url ,
+			a.page,
+			a.line ,
+			a.content ,
+			a.attachment,
+			a.attachment_name,
+			d.realname,
+			a.gmt_create ,
+			a.is_author_replied,
+			a.author_reply ,
+			a.is_editor_handling ,
+			a.is_editor_replied ,
+			a.editor_reply,
+			a.result  
+		from 
+			book_correction a
+		LEFT JOIN 
+			book b on  b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = a.book_id
+		LEFT JOIN 
+			writer_user d on d.id    = a.user_id
+		where 
+			b.id is not null and  !a.is_deleted and a.id = #{id} 
+	</select>
+	
 	<!-- 获取审核纠错页面的分页数据-->
 	<select id="listBookCorrectionAudit"  resultType="BookCorrectionAuditVO">
 		select 

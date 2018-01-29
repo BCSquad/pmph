@@ -48,6 +48,21 @@ public class BookCorrectionController {
 	}
 	
 	/**
+	 * 根据id获取审核详情
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2018年1月29日 上午10:03:08
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取审核纠错详情")
+	@RequestMapping(value = "/detail", method = RequestMethod.GET)
+	public ResponseBean detail( @RequestParam(value = "id",  required = true)	Long id) {
+		return new ResponseBean(bookCorrectionService.getBookCorrectionAuditDetailById(id));
+	}
+	
+	/**
 	 * 获取审核纠错跟踪页面的分页数据
 	 * @introduction 
 	 * @author Mryang

@@ -187,6 +187,15 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 	}
 	
 	@Override
+	public BookCorrectionAuditVO getBookCorrectionAuditDetailById(Long id ) throws CheckedServiceException{
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "参数ID为空");
+		}
+		return bookCorrectionDao.getBookCorrectionAuditDetailById(id);
+	}
+	
+	
+	@Override
 	public BookCorrection addBookCorrection(BookCorrection bookCorrection) throws CheckedServiceException{
 		if (null == bookCorrection) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "参数为空");

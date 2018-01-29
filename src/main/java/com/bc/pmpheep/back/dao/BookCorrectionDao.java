@@ -5,6 +5,7 @@ package com.bc.pmpheep.back.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.BookCorrection;
@@ -63,6 +64,16 @@ public interface BookCorrectionDao {
 	 * @return
 	 */
 	List<BookCorrectionAuditVO> listBookCorrectionAudit (Map<String,Object> map);
+	
+	/**
+	 * 根据id获取审核详情
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2018年1月29日 上午9:58:50
+	 * @param id
+	 * @return
+	 */
+	BookCorrectionAuditVO getBookCorrectionAuditDetailById(@Param("id")Long id);
 	
 	/**
 	 * 获取审核纠错页面的数据总数
