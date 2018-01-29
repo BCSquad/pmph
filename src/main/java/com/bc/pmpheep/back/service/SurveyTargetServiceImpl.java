@@ -138,13 +138,27 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问卷结束时间为空");
         }
+        List<Long> orgIds = this.listOrgIdBySurveyId(surveyTargetVO.getSurveyId());
         Integer count = 0;
         Long userId = pmphUser.getId();// 当前用户
-        surveyService.updateSurvey(new Survey(surveyTargetVO.getSurveyId(), Const.SURVEY_STATUS_1,
-                                              DateUtil.str2Timestam(surveyTargetVO.getStartTime()),
-                                              DateUtil.str2Timestam(surveyTargetVO.getEndTime())));
-        List<SurveyTarget> list = new ArrayList<SurveyTarget>(surveyTargetVO.getOrgIds().size());
-        for (Long orgId : surveyTargetVO.getOrgIds()) {
+        List<Long> listOrgId = new ArrayList<Long>();
+        if (CollectionUtil.isEmpty(orgIds)) {// 第一次发布
+            listOrgId.addAll(surveyTargetVO.getOrgIds());
+            surveyService.updateSurvey(new Survey(
+                                                  surveyTargetVO.getSurveyId(),
+                                                  Const.SURVEY_STATUS_1,
+                                                  DateUtil.str2Timestam(surveyTargetVO.getStartTime()),
+                                                  DateUtil.str2Timestam(surveyTargetVO.getEndTime())));
+
+        } else {// 第二次发布
+            for (Long id : surveyTargetVO.getOrgIds()) {
+                if (!orgIds.contains(id)) {
+                    listOrgId.add(id);
+                }
+            }
+        }
+        List<SurveyTarget> list = new ArrayList<SurveyTarget>(listOrgId.size());
+        for (Long orgId : listOrgId) {
             list.add(new SurveyTarget(userId, surveyTargetVO.getSurveyId(), orgId));
         }
         count = surveyTargetDao.batchSaveSurveyTargetByList(list);// 保存发起问卷中间表
@@ -157,17 +171,19 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
             }
             // 发送消息
             List<WriterUser> writerUserList =
-            writerUserService.getWriterUserListByOrgIds(surveyTargetVO.getOrgIds());// 作家用户
+            writerUserService.getWriterUserListByOrgIds(listOrgId);// 作家用户
             List<UserMessage> userMessageList = new ArrayList<UserMessage>(writerUserList.size()); // 系统消息
             for (WriterUser writerUser : writerUserList) {
                 userMessageList.add(new UserMessage(message.getId(), surveyTargetVO.getTitle(),
                                                     Const.MSG_TYPE_1, userId, Const.SENDER_TYPE_1,
                                                     writerUser.getId(), Const.RECEIVER_TYPE_2, 0L));
             }
-            List<OrgUser> orgUserList =
-            orgUserService.getOrgUserListByOrgIds(surveyTargetVO.getOrgIds());// 获取学校管理员集合
+            List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(listOrgId);// 获取学校管理员集合
             List<String> orgUserEmail = new ArrayList<String>(orgUserList.size());// 收件人邮箱
             for (OrgUser orgUser : orgUserList) {
+                userMessageList.add(new UserMessage(message.getId(), surveyTargetVO.getTitle(),
+                                                    Const.MSG_TYPE_1, userId, Const.SENDER_TYPE_1,
+                                                    orgUser.getId(), Const.RECEIVER_TYPE_3, 0L));
                 orgUserEmail.add(orgUser.getEmail());// 获取学校管理员邮箱地址
             }
             Integer size = orgUserEmail.size();
@@ -208,5 +224,14 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
             }
         }
         return count;
+    }
+
+    @Override
+    public List<Long> listOrgIdBySurveyId(Long surveyId) throws CheckedServiceException {
+        if (ObjectUtil.isNull(surveyId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷ID为空");
+        }
+        return surveyTargetDao.listOrgIdBySurveyId(surveyId);
     }
 }

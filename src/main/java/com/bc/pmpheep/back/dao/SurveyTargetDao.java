@@ -66,22 +66,36 @@ public interface SurveyTargetDao {
      * </pre>
      */
     Integer batchSaveSurveyTargetByList(List<SurveyTarget> list);
-    
+
     /**
      * 根据发起人id查询问卷表
+     * 
      * @author:tyc
      * @date:2017年12月26日上午09:47:56
      * @param surveyTargetList
      * @return
      */
     List<Survey> getSurveyTargetByUserId(Long userId);
-    
+
     /**
      * 根据机构id查询问卷表
+     * 
      * @author:tyc
      * @date:2017年12月26日上午10:36:30
      * @param orgId
      * @return
      */
     List<Survey> getSurveyTargetByOrgId(Long orgId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按问卷ID查询，已经发布的学校
+     * 使用示范：
+     *
+     * @param surveyId 问卷ID
+     * @return orgid 集合
+     * </pre>
+     */
+    List<Long> listOrgIdBySurveyId(Long surveyId);
 }
