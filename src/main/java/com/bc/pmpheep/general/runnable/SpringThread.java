@@ -1,4 +1,4 @@
-package com.bc.pmpheep.general.controller;
+package com.bc.pmpheep.general.runnable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bc.pmpheep.back.bo.DeclarationEtcBO;
+import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.service.MaterialService;
@@ -164,16 +165,34 @@ public class SpringThread implements Runnable {
 			src += File.separator;
 		}
 		ZipDownload zipDownload = new ZipDownload();
-		String materialName = this.materialService.getMaterialNameById(this.materialId);
+		Material material = this.materialService.getMaterialById(this.materialId);
+		StringBuilder str = new StringBuilder("");
+		str.append(material.getIsEduExpRequired() ? "1" : "0");
+		str.append(material.getIsWorkExpRequired() ? "1" : "0");
+		str.append(material.getIsTeachExpRequired() ? "1" : "0");
+		str.append(material.getIsAcadeRequired() ? "1" : "0");
+		str.append(material.getIsLastPositionRequired() ? "1" : "0");
+		str.append(material.getIsCourseRequired() ? "1" : "0");
+		str.append(material.getIsNationalPlanRequired() ? "1" : "0");
+		str.append(material.getIsTextbookRequired() ? "1" : "0");
+		str.append(material.getIsOtherTextbookRequired() ? "0" : "0");
+		str.append(material.getIsResearchRequired() ? "1" : "0");
+		str.append(material.getIsAchievementRequired() ? "1" : "0");
+		str.append(material.getIsMonographRequired() ? "1" : "0");
+		str.append(material.getIsPublishRewardRequired() ? "1" : "0");
+		str.append(material.getIsSciRequired() ? "1" : "0");
+		str.append(material.getIsClinicalRewardRequired() ? "1" : "0");
+		str.append(material.getIsAcadeRewardRequired() ? "1" : "0");
+		Integer filter = Integer.parseInt(str.toString(), 2);
 		List<Textbook> textbooks = this.textbookService.getTextbookByMaterialId(this.materialId);
 		List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
 		String dest = src + this.id;
 		zipDownload.setId(this.id);
-		zipDownload.setMaterialName(materialName);
+		zipDownload.setMaterialName(material.getMaterialName());
 		zipDownload.setState(0);
 		zipDownload.setDetail("loading...");
 		zipDownload.setCreateTime(DateUtil.getCurrentTime());
-		Const.map.put(this.id, zipDownload);
+		Const.WORD_EXPORT_MAP.put(this.id, zipDownload);
 		try {
 			declarationEtcBOs = this.declarationService.declarationEtcBO(this.materialId, this.textBookids,
 					this.realname, this.position, this.title, this.orgName, this.unitName, this.positionType,
@@ -194,11 +213,11 @@ public class SpringThread implements Runnable {
 					sb.append(src);
 					sb.append(this.id);
 					sb.append(File.separator);
-					sb.append(materialName);
+					sb.append(material.getMaterialName());
 					sb.append(File.separator);
 					sb.append((i + 1) + "." + textbooks.get(i).getTextbookName());
 					sb.append(File.separator);
-					this.wordHelper.export(materialName, sb.toString(), list, 65535);
+					this.wordHelper.export(material.getMaterialName(), sb.toString(), list, filter);
 					list.removeAll(list);
 				}
 			}
@@ -207,13 +226,13 @@ public class SpringThread implements Runnable {
 		}
 		new Thread(zipDownload).start();
 		try {
-			this.zipHelper.zip(dest + File.separator + materialName, dest + File.separator, true, null);
+			this.zipHelper.zip(dest + File.separator + material.getMaterialName(), dest + File.separator, true, null);
 		} catch (Exception e) {
 			e.getMessage();
 		}
 		zipDownload.setState(1);
 		zipDownload.setDetail("/zip/download?id=" + this.id);
-		Const.map.put(this.id, zipDownload);
+		Const.WORD_EXPORT_MAP.put(this.id, zipDownload);
 	}
 
 }

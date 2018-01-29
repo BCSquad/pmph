@@ -165,13 +165,13 @@ public class ZipDownload implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		if (Const.map.containsKey(id)) {
+		if (Const.WORD_EXPORT_MAP.containsKey(id)) {
 			String src = this.getClass().getResource("/").getPath();
 			src = src.substring(1);
 			if (!src.endsWith(File.separator)) {
 				src += File.separator;
 			}
-			Const.map.remove(id);
+			Const.WORD_EXPORT_MAP.remove(id);
 			DeleteFolder(src + id);
 		}
 	}

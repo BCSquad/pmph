@@ -126,7 +126,7 @@ public interface DeclarationService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	Declaration confirmPaperList(Long id, Integer offlineProgress) 
+	Declaration confirmPaperList(Long id, Integer offlineProgress, String sessionId) 
 			throws CheckedServiceException, IOException;
 
 	/**

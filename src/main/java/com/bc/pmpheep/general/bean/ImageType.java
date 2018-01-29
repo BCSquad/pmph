@@ -20,6 +20,10 @@ public enum ImageType {
 	 */
 	WRITER_USER_AVATAR("作家用户头像"),
 	/**
+	 * 机构用户头像
+	 */
+	ORG_USER_AVATAR("机构用户头像"),
+	/**
 	 * 教师资格证
 	 */
 	WRITER_USER_CERT("教师资格证"),

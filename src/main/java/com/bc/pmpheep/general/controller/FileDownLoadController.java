@@ -4,6 +4,7 @@
  */
 package com.bc.pmpheep.general.controller;
 
+import com.bc.pmpheep.general.runnable.SpringThread;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -34,6 +35,7 @@ import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.bo.DecPositionBO;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Material;
+import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.BookCorrectionService;
 import com.bc.pmpheep.back.service.CmsExtraService;
 import com.bc.pmpheep.back.service.DecPositionService;
@@ -374,9 +376,9 @@ public class FileDownLoadController {
     @RequestMapping(value = "/word/progress", method = RequestMethod.GET)
     public ZipDownload progress(String id) {
         ZipDownload zipDownload = new ZipDownload();
-        if (Const.map.containsKey(id)) {
-            zipDownload.setState(Const.map.get(id).getState());
-            zipDownload.setDetail(Const.map.get(id).getDetail());
+        if (Const.WORD_EXPORT_MAP.containsKey(id)) {
+            zipDownload.setState(Const.WORD_EXPORT_MAP.get(id).getState());
+            zipDownload.setDetail(Const.WORD_EXPORT_MAP.get(id).getDetail());
         }
         return zipDownload;
     }
@@ -397,7 +399,7 @@ public class FileDownLoadController {
         if (!src.endsWith(File.separator)) {
             src += File.separator;
         }
-        String materialName = Const.map.get(id).getMaterialName();
+        String materialName = Const.WORD_EXPORT_MAP.get(id).getMaterialName();
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/force-download");
         String filePath = src + id + File.separator + materialName + ".zip";
@@ -429,7 +431,7 @@ public class FileDownLoadController {
                                               CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
                                               "文件在传输时中断");
         } finally {
-            Const.map.remove(id);
+            Const.WORD_EXPORT_MAP.remove(id);
             ZipDownload.DeleteFolder(src + id);
         }
     }
@@ -877,5 +879,43 @@ public class FileDownLoadController {
                                               CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
                                               "文件在传输时中断");
         }
+    }
+    
+    /**
+     * 
+     * Description:设置选题号页面导出选题号
+     * @author:lyc
+     * @date:2018年1月23日下午6:18:41
+     * @param 
+     * @return void
+     */
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "设置选题号页面导出选题号信息")
+    @RequestMapping(value = "/textbook/exportTopic" ,method = RequestMethod.GET)
+    public void exportTopic(Long materialId,HttpServletRequest request, HttpServletResponse response){
+    	List<Textbook> list = textbookService.listTopicNumber(materialId);
+    	Workbook workbook = null;
+    	if (list.size() == 0){
+    		list.add(new Textbook());
+    	}
+    	try{
+    		 workbook = excelHelper.fromTextbookTopic(list, "选题号导出");
+    	} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e){
+    		logger.warn("数据表格化的时候失败");
+    	}
+    	Material material = materialService.getMaterialById(materialId);
+    	String fileName = returnFileName(request, material.getMaterialName() + ".xls");
+    	response.setCharacterEncoding("utf-8");
+    	response.setContentType("application/force-download");
+    	response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+    	try (OutputStream out = response.getOutputStream()){
+    		workbook.write(out);
+    		out.flush();
+    		out.close();
+    	} catch (Exception e){
+    		logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+            throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
+    	}
     }
 }

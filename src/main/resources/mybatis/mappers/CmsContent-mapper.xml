@@ -8,7 +8,7 @@
 			<if test="parentId != null">
 				parent_id,
 			</if>
-			<if test="path != null and path !=''" >
+			<if test="path != null and path !=''">
 				path,
 			</if>
 			<if test="mid != null and mid !=''">
@@ -113,7 +113,7 @@
 			<if test="parentId != null">
 				#{parentId},
 			</if>
-			<if test="path != null and path !=''" >
+			<if test="path != null and path !=''">
 				#{path},
 			</if>
 			<if test="mid != null and mid !=''">
@@ -212,8 +212,8 @@
 		</trim>
 	</sql>
 	<!-- 新增CmsContent -->
-	<insert id="addCmsContent" parameterType="CmsContent" useGeneratedKeys="true"
-		keyProperty="id">
+	<insert id="addCmsContent" parameterType="CmsContent"
+		useGeneratedKeys="true" keyProperty="id">
 		insert into cms_content (
 		<include refid="key" />
 		)
@@ -229,7 +229,7 @@
 			<if test="parentId != null">
 				parent_id=#{parentId},
 			</if>
-			<if test="path != null and path !=''" >
+			<if test="path != null and path !=''">
 				path=#{path},
 			</if>
 			<if test="mid != null and mid !=''">
@@ -326,54 +326,58 @@
 				is_material_entry=#{isMaterialEntry},
 			</if>
 		</set>
-		where 
-			id=#{id};
+		where
+		id=#{id};
 	</update>
-	
+
 	<!-- CMS_content定时任务批量更新 -->
-	 <update id="updateCmsContentByIds" parameterType="java.util.List">
-	 	<foreach collection="list" item="item" index="index" open="" separator=";">
-	 		update 
-	 			cms_content 
-	 		<set>
-	 			is_published = #{isPublished},
-	 			gmt_update = #{gmtUpdate},
-	 		</set>
-	 		where
-	 			id=#{id};
-	 	</foreach>
-	 </update>
-	 
-	 <!-- 内容发布 -->
-	 <update id="publishCmsContentById" parameterType="java.lang.Long">
-	 		update cms_content set is_published = true  where id = #{id};
-	 </update>
-	 <!-- 内容隐藏 -->
-	 <update id="hideCmsContentById" parameterType="java.lang.Long">
-	 		update cms_content  set is_hide = true  where id = #{id};
-	 </update>
-	 <!-- 逻辑删除-->
-	<update id="deleteCmsContentById" parameterType="java.lang.Long">
-		update cms_content set is_deleted = true  where id = #{id};
-	</update>
-	
-	<update id="checkContentById" parameterType="CmsContent">
-		update cms_content 
+	<update id="updateCmsContentByIds" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open=""
+			separator=";">
+			update
+			cms_content
 			<set>
-				<if test="authStatus != null">
-					auth_status=#{authStatus},
-				</if>
-				<if test="authUserId != null">
-					auth_user_id=#{authUserId},
-				</if>
-				<if test="authDate != null">
-					auth_date=#{authDate},
-				</if>
+				is_published = #{isPublished},
+				gmt_update = #{gmtUpdate},
 			</set>
-			 where
-			 	 id = #{id};
+			where
+			id=#{id};
+		</foreach>
 	</update>
-	 
+
+	<!-- 内容发布 -->
+	<update id="publishCmsContentById" parameterType="java.lang.Long">
+		update
+		cms_content set is_published = true where id = #{id};
+	</update>
+	<!-- 内容隐藏 -->
+	<update id="hideCmsContentById" parameterType="java.lang.Long">
+		update cms_content
+		set is_hide = true where id = #{id};
+	</update>
+	<!-- 逻辑删除 -->
+	<update id="deleteCmsContentById" parameterType="java.lang.Long">
+		update
+		cms_content set is_deleted = true where id = #{id};
+	</update>
+
+	<update id="checkContentById" parameterType="CmsContent">
+		update cms_content
+		<set>
+			<if test="authStatus != null">
+				auth_status=#{authStatus},
+			</if>
+			<if test="authUserId != null">
+				auth_user_id=#{authUserId},
+			</if>
+			<if test="authDate != null">
+				auth_date=#{authDate},
+			</if>
+		</set>
+		where
+		id = #{id};
+	</update>
+
 	<!--CmsContentVO模糊查询获取列表 -->
 	<select id="listCmsContent" parameterType="PageParameter"
 		resultType="CmsContentVO">
@@ -384,128 +388,139 @@
 		FROM 
 			`cms_content`cc
 		LEFT JOIN
-			`pmph_user` pu 
+			`pmph_user` pu
 		ON
 			cc.author_id = pu.id
-		LEFT JOIN 
+		LEFT JOIN
 			`cms_category` ccg
-		ON 
+		ON
 			cc.`category_id` = ccg.`id`,
 			(
-				SELECT 
+				SELECT
 					count(*) count
-				FROM 
+				FROM
 					`cms_content`cc
 				LEFT JOIN
-					`pmph_user` pu 
+					`pmph_user` pu
 				ON
 					cc.author_id = pu.id
-				LEFT JOIN 
-					`cms_category` ccg 
-				ON 
+				LEFT JOIN
+					`cms_category` ccg
+				ON
 					cc.`category_id` = ccg.`id`
 				WHERE
-					cc.`is_deleted`= 0 
-				<if test="parameter !=null ">
-					<if test="parameter.categoryId != null">
-						AND cc.`category_id` = #{parameter.categoryId} 
-					</if>
-					<if test="parameter.isAdmin == false ">
-						AND cc.`author_id`=#{parameter.authorId} 
-					</if>
-					<if test="parameter.title != null and parameter.title != ''">
-						AND cc.`title` like concat('%',#{parameter.title},'%')
-					</if>
-					<if test="parameter.authStatus !=null ">
-						AND cc.`auth_status` = #{parameter.authStatus} 
-					</if>
-					<if test="parameter.isPublished !=null ">
-						AND cc.`is_published` = #{parameter.isPublished} 
-					</if>
-					<if test="parameter.username !=null and  parameter.username!='' ">
-						AND (
-							pu.`username` like concat('%',#{parameter.username},'%') 
-						OR
-							pu.`realname` like concat('%',#{parameter.username},'%') )
-					</if>
-				</if>
-			) t
-			WHERE
-				cc.`is_deleted`= 0 
-			<if test="parameter !=null ">
-				<if test="parameter.categoryId != null">
-					AND cc.`category_id` = #{parameter.categoryId} 
-				</if>
-				<if test="parameter.isAdmin == false ">
-					AND cc.`author_id`=#{parameter.authorId} 
-				</if>
-				<if test="parameter.title != null and parameter.title != ''">
-					AND cc.`title` like concat('%',#{parameter.title},'%')
-				</if>
-				<if test="parameter.authStatus !=null ">
-					AND cc.`auth_status` = #{parameter.authStatus} 
-				</if>
-				<if test="parameter.isPublished !=null ">
-					AND cc.`is_published` = #{parameter.isPublished} 
-				</if>
-				<if test="parameter.username !=null and  parameter.username!='' ">
-						AND (
-							pu.`username` like concat('%',#{parameter.username},'%')
-						OR
-							pu.`realname`like concat('%',#{parameter.username},'%') )
-				</if>
+					cc.`is_deleted`= 0
+		<if test="parameter !=null ">
+			<if test="parameter.categoryId != null">
+				AND cc.`category_id` = #{parameter.categoryId}
 			</if>
-		order by 
-   				  cc.`gmt_create` DESC 
+			<if test="parameter.isAdmin == false ">
+				AND cc.`author_id`=#{parameter.authorId}
+			</if>
+			<if test="parameter.title != null and parameter.title != ''">
+				AND cc.`title` like concat('%',#{parameter.title},'%')
+			</if>
+			<if test="parameter.authStatus !=null ">
+				AND cc.`auth_status` = #{parameter.authStatus}
+			</if>
+			<if test="parameter.isPublished !=null ">
+				AND cc.`is_published` = #{parameter.isPublished}
+			</if>
+			<if test="parameter.username !=null and  parameter.username!='' ">
+				AND (
+				pu.`username` like
+				concat('%',#{parameter.username},'%')
+				OR
+				pu.`realname` like
+				concat('%',#{parameter.username},'%') )
+			</if>
+		</if>
+		) t
+		WHERE
+		cc.`is_deleted`= 0
+		<if test="parameter !=null ">
+			<if test="parameter.categoryId != null">
+				AND cc.`category_id` = #{parameter.categoryId}
+			</if>
+			<if test="parameter.isAdmin == false ">
+				AND cc.`author_id`=#{parameter.authorId}
+			</if>
+			<if test="parameter.title != null and parameter.title != ''">
+				AND cc.`title` like concat('%',#{parameter.title},'%')
+			</if>
+			<if test="parameter.authStatus !=null ">
+				AND cc.`auth_status` = #{parameter.authStatus}
+			</if>
+			<if test="parameter.isPublished !=null ">
+				AND cc.`is_published` = #{parameter.isPublished}
+			</if>
+			<if test="parameter.username !=null and  parameter.username!='' ">
+				AND (
+				pu.`username` like
+				concat('%',#{parameter.username},'%')
+				OR
+				pu.`realname`like
+				concat('%',#{parameter.username},'%') )
+			</if>
+		</if>
+		order by
+		cc.`gmt_create` DESC
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
 	</select>
-	
+
 	<!-- 根据materialId查询一个CmsContent -->
-	<select id="getCmsContentByMaterialId" parameterType="java.lang.Long" resultType="CmsContent">
-		SELECT 
-			* 
-		FROM 
-			cms_content t 
-		WHERE 
-			t.`category_id`=3 
-		AND 
-			t.`is_material_entry` = TRUE
-		AND 
-			t.`material_id` =#{materialId};
+	<select id="getCmsContentByMaterialId" parameterType="java.lang.Long"
+		resultType="CmsContent">
+		SELECT
+		*
+		FROM
+		cms_content t
+		WHERE
+		t.`category_id`=3
+		AND
+		t.`is_material_entry` = TRUE
+		AND
+		t.`material_id` =#{materialId};
 	</select>
-	
+
 	<!-- 根据id查询一个CmsContent -->
-	<select id="getCmsContentById" parameterType="java.lang.Long" resultType="CmsContent">
+	<select id="getCmsContentById" parameterType="java.lang.Long"
+		resultType="CmsContent">
 		select * from cms_content where id=#{id};
 	</select>
-	
+
 	<!-- 查询表单的数据总数 -->
-	<select id="getCmsContentCount" parameterType="java.lang.Long"  resultType="java.lang.Integer">
+	<select id="getCmsContentCount" parameterType="java.lang.Long"
+		resultType="java.lang.Integer">
 		select
-			count(*)
+		count(*)
 		from
-			cms_content
+		cms_content
 		<if test="categoryId != null">
-			where  category_id = #{categoryId}
+			where category_id = #{categoryId}
 		</if>
 	</select>
-	
-	<!-- 批量删除-->
-    <delete id="deleteCmsContentByIds" >
-    	update 
-    		cms_content 
-    	set 
-    		is_deleted =true
-	 	where
-	 		id
+
+	<!-- 批量删除 -->
+	<delete id="deleteCmsContentByIds">
+		update
+		cms_content
+		set
+		is_deleted =true
+		where
+		id
 		in
-		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-                 #{item}
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
 		</foreach>
-    </delete>
-    
-    
-    
+	</delete>
+	<update id="updateCmsContentByMaterialId" parameterType="Long">
+		update
+		cms_content set is_deleted =true
+		where material_id = #{materialId};
+
+	</update>
 </mapper>

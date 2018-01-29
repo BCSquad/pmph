@@ -3,9 +3,11 @@ package com.bc.pmpheep.back.service.common;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.Declaration;
@@ -28,6 +30,7 @@ import com.bc.pmpheep.back.service.PmphGroupService;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.service.UserMessageService;
 import com.bc.pmpheep.back.service.WriterUserService;
+import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
@@ -162,7 +165,7 @@ public final class SystemMessageService {
                 userMessageService.addUserMessageBatch(userMessageList);
                 // websocket推送页面消息
                 WebScocketMessage webScocketMessage =
-                new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+                new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                                       Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
                                       messageTitle, tercherMsg, DateUtil.getCurrentTime());
                 myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
@@ -189,7 +192,7 @@ public final class SystemMessageService {
              userMessageService.addUserMessageBatch(userMessageList);
              // websocket推送页面消息
              WebScocketMessage webScocketMessage =
-             new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+             new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                                    Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
                                    managerMsg, DateUtil.getCurrentTime());
              myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
@@ -238,7 +241,7 @@ public final class SystemMessageService {
                 userMessageService.addUserMessage(userMessage);
                 // websocket推送页面消息
                 WebScocketMessage webScocketMessage =
-                new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+                new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                                       Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
                                       messageTitle, msgContent, DateUtil.getCurrentTime());
                 List<String> userIds = new ArrayList<String>(1);
@@ -298,7 +301,7 @@ public final class SystemMessageService {
         userMessageService.addUserMessageBatch(userMessageList);
         // websocket推送页面消息
         WebScocketMessage webScocketMessage =
-        new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+        new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                               Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
                               msgContent, DateUtil.getCurrentTime());
         myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
@@ -355,7 +358,7 @@ public final class SystemMessageService {
         userMessageService.addUserMessageBatch(userMessageList);
         // websocket推送页面消息
         WebScocketMessage webScocketMessage =
-        new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+        new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                               Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
                               msgContent, DateUtil.getCurrentTime());
         myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
@@ -408,7 +411,7 @@ public final class SystemMessageService {
         userMessageService.addUserMessageBatch(userMessageList);
         // websocket推送页面消息
         WebScocketMessage webScocketMessage =
-        new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+        new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                               Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
                               msgContent, DateUtil.getCurrentTime());
         myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
@@ -454,7 +457,7 @@ public final class SystemMessageService {
         userMessageService.addUserMessageBatch(userMessageList);
         // websocket推送页面消息
         WebScocketMessage webScocketMessage =
-        new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+        new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                               Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
                               msgContent, DateUtil.getCurrentTime());
         myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
@@ -526,7 +529,7 @@ public final class SystemMessageService {
             userMessageService.addUserMessageBatch(userMessageList);
             // websocket推送页面消息
             WebScocketMessage webScocketMessage =
-            new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+            new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                                   Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
                                   messageTitle, msgContent, DateUtil.getCurrentTime());
             myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
@@ -556,7 +559,7 @@ public final class SystemMessageService {
             userMessageService.addUserMessageBatch(userMessageList);
             // websocket推送页面消息
             WebScocketMessage webScocketMessage =
-            new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+            new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                                   Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
                                   messageTitle, msgContent, DateUtil.getCurrentTime());
             myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
@@ -617,13 +620,90 @@ public final class SystemMessageService {
                                                           new Short("2"),null));
         // websocket推送页面消息
         WebScocketMessage webScocketMessage =
-        new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+        new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                               Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
                               msgContent, DateUtil.getCurrentTime());
         List<String> userIds = new ArrayList<String>(1);
         userIds.add("2_" + declaration.getUserId());
         myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
     }
+    
+   /**
+    * 人卫社审核教材申报表  向机构用户发送信息
+    * @introduction 
+    * @author Mryang
+    * @createDate 2018年1月22日 上午10:12:34
+    * @param declarationId
+    * @param isPass
+    * @throws CheckedServiceException
+    * @throws IOException
+    */
+    public void sendWhenDeclarationFormAuditToOrgUser(Long declarationId, boolean isPass) throws CheckedServiceException, IOException {
+        // 获取申报表
+        Declaration declaration = declarationService.getDeclarationById(declarationId);
+        if (null == declaration) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "申报表不存在");
+        }
+        if (null == declaration.getOrgId()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "认证的管理员为空");
+        }
+        // 获取教材
+        Material material = materialService.getMaterialById(declaration.getMaterialId());
+        String msgContent = null;
+        if(isPass){ // 通过
+        	msgContent =  "恭喜！您校["+declaration.getRealname()+"]提交的《<font color='red'>" + material.getMaterialName()+ "</font>》申报表已通过[<font color='red'>出版社</font>]审核";
+        }else{     //退回 
+        	msgContent =  "抱歉！您校["+declaration.getRealname()+"]提交的《<font color='red'>" + material.getMaterialName()+ "</font>》申报表被[<font color='red'>出版社</font>]退回，请核对后重试";
+        }
+        //获取机构用户
+        List<Long> orgIds = new ArrayList<Long>(1);
+        if (CollectionUtil.isEmpty(orgIds) || orgIds.size() == 0) {
+        	orgIds.add(declaration.getOrgId());
+        }
+        List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(orgIds);
+        // 存入消息主体
+        Message message = new Message(msgContent);
+        message = messageService.add(message);
+        String msg_id = message.getId();
+        //消息集合
+        List<UserMessage> userMessageList = new ArrayList<UserMessage> ();
+        List<String> userIds = new ArrayList<String> ();
+        for(OrgUser orgUser :orgUserList){
+        	userMessageList.add(new UserMessage(
+            		msg_id,   //消息内容id
+            		messageTitle,//消息标题
+            		new Short("0"),//消息类型
+            		0L,            //发送者id   0- 系统
+            		new Short("0"), //发送者类型  0- 系统
+            		orgUser.getId(), //接收者id
+            		new Short("3"),         //接收者类型 （3- 机构用户 ）
+            		null                    //教材id 
+            		)
+            );
+        	userIds.add("3_"+orgUser.getId().toString());
+        }
+        
+        // 发送消息
+        // 批量插入消息
+        userMessageService.addUserMessageBatch(userMessageList);
+        // websocket推送页面消息
+        WebScocketMessage webScocketMessage = new WebScocketMessage(
+        		msg_id,   //消息id
+        		Const.MSG_TYPE_0,   // 消息类型 0=系统消息/1=站内群发/2=站内私信(作家和机构用户不能群发)/3 小组互动
+        		0L,      // 发送者id 0=系统/其他=用户id
+        		"系统",    // 发送者姓名
+        		Const.SENDER_TYPE_0,    // 发送者类型 0=系统/1=社内用户/2=作家用户/3=机构用户    
+        		Const.SEND_MSG_TYPE_0, // 发送类型 0 新增 1 撤回 2 删除
+        		"",   //头像 
+        		messageTitle,  //消息标题
+        		msgContent,  //消息内容
+        		DateUtil.getCurrentTime() //发送时间
+        );
+        myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
+    }
+    
 
     /**
      * 出版社收到纸质表 审核
@@ -680,7 +760,7 @@ public final class SystemMessageService {
         	userMessageService.addUserMessageBatch(userMessageList);
         	// websocket推送页面消息
             WebScocketMessage webScocketMessage =
-            new WebScocketMessage(orgMsg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+            new WebScocketMessage(orgMsg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                                   Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
                                   orgMsgContent, DateUtil.getCurrentTime());
             myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
@@ -696,7 +776,7 @@ public final class SystemMessageService {
                                                           declaration.getUserId(), new Short("2"),null));
         // websocket推送页面消息
         WebScocketMessage webScocketMessage =
-        new WebScocketMessage(writerMsg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+        new WebScocketMessage(writerMsg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                               Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
                               writerMsgContent, DateUtil.getCurrentTime());
         userIds = new ArrayList<String>(1);
@@ -737,7 +817,7 @@ public final class SystemMessageService {
                                                           new Short("2"),null));
         // websocket推送页面消息
         WebScocketMessage webScocketMessage =
-        new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+        new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                               Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
                               msgContent, DateUtil.getCurrentTime());
         List<String> userIds = new ArrayList<String>(1);
@@ -784,7 +864,7 @@ public final class SystemMessageService {
                                                                   new Short("2"),null));
                 // websocket推送页面消息
                 WebScocketMessage webScocketMessage =
-                new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+                new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                                       Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
                                       messageTitle, editorMsg, DateUtil.getCurrentTime());
                 List<String> userIds = new ArrayList<String>(1);
@@ -818,7 +898,7 @@ public final class SystemMessageService {
                                                                   new Short("2"),null));
                 // websocket推送页面消息
                 WebScocketMessage webScocketMessage =
-                new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+                new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                                       Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
                                       messageTitle, associateEditor, DateUtil.getCurrentTime());
                 List<String> userIds = new ArrayList<String>(1);
@@ -851,7 +931,7 @@ public final class SystemMessageService {
                                                                   new Short("2"),null));
                 // websocket推送页面消息
                 WebScocketMessage webScocketMessage =
-                new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+                new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                                       Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
                                       messageTitle, bianWei, DateUtil.getCurrentTime());
                 List<String> userIds = new ArrayList<String>(1);
@@ -917,7 +997,7 @@ public final class SystemMessageService {
                                                                       new Short("3"),null));
                     // websocket推送页面消息
                     WebScocketMessage webScocketMessage =
-                    new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+                    new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                                           Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
                                           messageTitle, msgContent, DateUtil.getCurrentTime());
                     List<String> userIds = new ArrayList<String>(1);
@@ -985,7 +1065,7 @@ public final class SystemMessageService {
                                                                       new Short("3"),null));
                     // websocket推送页面消息
                     WebScocketMessage webScocketMessage =
-                    new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_1,
+                    new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统", Const.SENDER_TYPE_0,
                                           Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
                                           messageTitle, msgContent, DateUtil.getCurrentTime());
                     List<String> userIds = new ArrayList<String>(1);

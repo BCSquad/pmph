@@ -22,6 +22,7 @@ import com.bc.pmpheep.back.po.DecSci;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
+import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -519,7 +520,7 @@ public class ExcelHelper {
 									columnProperties.setCurrentMaxElement(value.length());
 								}
 							}
-							columnProperties.setColCount(columnProperties.getColCount()+1);
+							columnProperties.setColCount(columnProperties.getColCount() + 1);
 							break;
 						}
 					}
@@ -881,14 +882,14 @@ public class ExcelHelper {
 					case "作家扩展项": {
 						Cell r1cell = r1.createCell(count);
 						r1cell.setCellValue(headerName);
-						region = new CellRangeAddress(0, 0, count, count + 2);
+						region = new CellRangeAddress(0, 0, count, count + 1);
 						sheet.addMergedRegion(region);
 						Cell r2cell = r2.createCell(count);
 						r2cell.setCellValue("扩展项名称");
 						sheet.setColumnWidth(count, 6 * 512);
 						count++;
 						r2cell = r2.createCell(count);
-						r2cell.setCellValue("扩展内容");
+						r2cell.setCellValue("扩展项内容");
 						sheet.setColumnWidth(count, 5 * 512);
 						count++;
 						break;
@@ -2017,13 +2018,13 @@ public class ExcelHelper {
 		int colCount = properties.getColCount();
 		int[] maxLength = properties.getMaxLength();
 		if (CollectionUtil.isEmpty(decExtensionVOs)) {
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 2; i++) {
 				row.createCell(colCount++);
 			}
 		} else {
 			String value;
-			List<StringBuilder> builders = new ArrayList<>(3);
-			for (int i = 0; i < 3; i++) {
+			List<StringBuilder> builders = new ArrayList<>(2);
+			for (int i = 0; i < 2; i++) {
 				builders.add(new StringBuilder());
 			}
 			boolean isFirst = true;
@@ -2042,7 +2043,7 @@ public class ExcelHelper {
 				}
 				builders.get(index++).append(value);
 				if (value.length() > maxLength[colCount]) {
-					maxLength[colCount] = value.length();
+					maxLength[colCount] = value.length() / 2 + 1;
 				}
 				colCount++;
 				value = decExtensionVO.getContent();
@@ -2055,7 +2056,7 @@ public class ExcelHelper {
 				}
 				colCount = properties.getColCount();// 列数复位
 			}
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 2; i++) {
 				Cell cell = row.createCell(colCount++);
 				value = builders.get(i).toString();
 				cell.setCellValue(value);
@@ -2064,5 +2065,40 @@ public class ExcelHelper {
 		properties.setColCount(colCount);
 		properties.setMaxLength(maxLength);
 		return properties;
+	}
+
+	/**
+	 * 
+	 * Description:用于设置选题号页面的导入功能
+	 * @author:lyc
+	 * @date:2018年1月23日下午6:03:03
+	 * @param 
+	 * @return Workbook
+	 */
+	public Workbook fromTextbookTopic (List<Textbook> dataSource, String sheetName)
+			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException{
+		if (ObjectUtil.isNull(dataSource) || dataSource.isEmpty()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+					CheckedExceptionResult.NULL_PARAM, "用于导出的数据源为空");
+		}
+		Workbook workbook = new HSSFWorkbook();
+		Sheet sheet = workbook.createSheet(sheetName);
+		Row header = sheet.createRow(0);
+		header.createCell(0).setCellValue("书序");
+		header.createCell(1).setCellValue("书籍名称");
+		header.createCell(2).setCellValue("版次");
+		header.createCell(3).setCellValue("选题号");
+		headerStyleSetup(workbook, 1);
+		int rowCount = 1;
+		for (Textbook textbook : dataSource){
+			Row row = sheet.createRow(rowCount);
+			row.createCell(0).setCellValue(textbook.getSort());
+			row.createCell(1).setCellValue(textbook.getTextbookName());
+			row.createCell(2).setCellValue(textbook.getTextbookRound());
+			row.createCell(3).setCellValue(textbook.getTopicNumber());
+			rowCount++;
+		}
+		int[] maxLength = {2,12,2,12};
+		return dataStyleSetup(workbook, 1, rowCount, new ColumnProperties(4, maxLength));
 	}
 }

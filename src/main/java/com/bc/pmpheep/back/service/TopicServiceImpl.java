@@ -249,9 +249,11 @@ public class TopicServiceImpl implements TopicService {
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 		writerUserTrendst.setUserId(topicDao.getTopicTextVO(topic.getId()).getUserId());
 		writerUserTrendst.setType(0);
+		writerUserTrendst.setIsPublic(true);
 		if (ObjectUtil.notNull(topic.getAuthProgress())) {
 			if (3 == topic.getAuthProgress()) {
-				writerUserTrendst.setDetail("{title:\"" + CheckedExceptionBusiness.TOPIC + "\",content:\"您的选题已经通过。\"}");
+				writerUserTrendst
+						.setDetail("{title:\"" + CheckedExceptionBusiness.TOPIC + "\",content:\"您的选题已经通过。\",img:1}");
 				// 创建本版号并将本版号放入数据中
 				String editionnum = "10" + new SimpleDateFormat("yyyy").format(new Date());
 				String vn = topicDao.getMaxTopicVn();
@@ -280,7 +282,8 @@ public class TopicServiceImpl implements TopicService {
 						+ topicTextVO.getEdition() + "','','11','" + remark + "',GETDATE(),1)";
 				SqlHelper.executeUpdate(sql, null);
 			} else {
-				writerUserTrendst.setDetail("{title:\"" + CheckedExceptionBusiness.TOPIC + "\",content:\"您的选题没有通过。\"}");
+				writerUserTrendst
+						.setDetail("{title:\"" + CheckedExceptionBusiness.TOPIC + "\",content:\"您的选题没有通过。\",img:2}");
 			}
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 		}
@@ -461,21 +464,21 @@ public class TopicServiceImpl implements TopicService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		Integer total = 0;
 		if (pmphUser.getIsAdmin()) {
-			total = topicDao.totalDirectorView(pageParameter.getParameter().getBookName(),
+			total = topicDao.totalDirectorView(pageParameter.getParameter().getBookname(),
 					pageParameter.getParameter().getSubmitTime());
 			if (total > 0) {
-				List<TopicDirectorVO> list = topicDao.listDirectorView(pageParameter.getParameter().getBookName(),
+				List<TopicDirectorVO> list = topicDao.listDirectorView(pageParameter.getParameter().getBookname(),
 						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(),
 						pageParameter.getPageSize());
 				list = addTypeNameDirector(list);
 				pageResult.setRows(list);
 			}
 		} else {
-			total = topicDao.totalTopicDirectorVOs(pmphUser.getId(), pageParameter.getParameter().getBookName(),
+			total = topicDao.totalTopicDirectorVOs(pmphUser.getId(), pageParameter.getParameter().getBookname(),
 					pageParameter.getParameter().getSubmitTime());
 			if (total > 0) {
 				List<TopicDirectorVO> list = topicDao.listTopicDirectorVOs(pmphUser.getId(),
-						pageParameter.getParameter().getBookName(), pageParameter.getParameter().getSubmitTime(),
+						pageParameter.getParameter().getBookname(), pageParameter.getParameter().getSubmitTime(),
 						pageParameter.getStart(), pageParameter.getPageSize());
 				list = addTypeNameDirector(list);
 				pageResult.setRows(list);
@@ -497,21 +500,21 @@ public class TopicServiceImpl implements TopicService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		Integer total = 0;
 		if (pmphUser.getIsAdmin()) {
-			total = topicDao.totalEditorView(pageParameter.getParameter().getBookName(),
+			total = topicDao.totalEditorView(pageParameter.getParameter().getBookname(),
 					pageParameter.getParameter().getSubmitTime());
 			if (total > 0) {
-				List<TopicEditorVO> list = topicDao.listEditorView(pageParameter.getParameter().getBookName(),
+				List<TopicEditorVO> list = topicDao.listEditorView(pageParameter.getParameter().getBookname(),
 						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(),
 						pageParameter.getPageSize());
 				list = addTypeNameEditor(list);
 				pageResult.setRows(list);
 			}
 		} else {
-			total = topicDao.totalTopicEditorVOs(pmphUser.getId(), pageParameter.getParameter().getBookName(),
+			total = topicDao.totalTopicEditorVOs(pmphUser.getId(), pageParameter.getParameter().getBookname(),
 					pageParameter.getParameter().getSubmitTime());
 			if (total > 0) {
 				List<TopicEditorVO> list = topicDao.listTopicEditorVOs(pmphUser.getId(),
-						pageParameter.getParameter().getBookName(), pageParameter.getParameter().getSubmitTime(),
+						pageParameter.getParameter().getBookname(), pageParameter.getParameter().getSubmitTime(),
 						pageParameter.getStart(), pageParameter.getPageSize());
 				list = addTypeNameEditor(list);
 				pageResult.setRows(list);

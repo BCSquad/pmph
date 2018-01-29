@@ -42,8 +42,24 @@ public class BookCorrectionController {
 			@RequestParam(value = "pageNumber", required = false)    Integer pageNumber,
 			@RequestParam(value = "pageSize",   required = false)	Integer pageSize,
 			@RequestParam(value = "bookname",   required = false)	String bookname ,
+			@RequestParam(value = "isOver",     required = false)	Boolean isOver,
 			@RequestParam(value = "result",     required = false)	Boolean result) {
-		return new ResponseBean(bookCorrectionService.listBookCorrectionAudit(request,pageNumber,pageSize,bookname ,result));
+		return new ResponseBean(bookCorrectionService.listBookCorrectionAudit(request,pageNumber,pageSize,bookname ,isOver,result));
+	}
+	
+	/**
+	 * 根据id获取审核详情
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2018年1月29日 上午10:03:08
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取审核纠错详情")
+	@RequestMapping(value = "/detail", method = RequestMethod.GET)
+	public ResponseBean detail( @RequestParam(value = "id",  required = true)	Long id) {
+		return new ResponseBean(bookCorrectionService.getBookCorrectionAuditDetailById(id));
 	}
 	
 	/**

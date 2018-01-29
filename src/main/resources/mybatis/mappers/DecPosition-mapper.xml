@@ -211,7 +211,7 @@
 		b.id is not null 
 		and (a.chosen_position in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)) 
 		and b.is_staging =false 
-		and b.online_progress != 2 
+		and b.online_progress > 0 
 		and c.id = #{textbookId}
 	</select>
 

@@ -124,7 +124,7 @@ public interface TopicDao {
 	 * @param
 	 * @return List<TopicDirectorVO>
 	 */
-	List<TopicDirectorVO> listTopicDirectorVOs(@Param("userId") Long userId, @Param("bookName") String bookName,
+	List<TopicDirectorVO> listTopicDirectorVOs(@Param("userId") Long userId, @Param("bookname") String bookname,
 			@Param("submitTime") Timestamp submitTime, @Param("start") Integer start,
 			@Param("pageSize") Integer pageSize);
 
@@ -137,7 +137,7 @@ public interface TopicDao {
 	 * @param
 	 * @return Integer
 	 */
-	Integer totalTopicDirectorVOs(@Param("userId") Long userId, @Param("bookName") String bookName,
+	Integer totalTopicDirectorVOs(@Param("userId") Long userId, @Param("bookname") String bookname,
 			@Param("submitTime") Timestamp submitTime);
 
 	/**
@@ -149,7 +149,7 @@ public interface TopicDao {
 	 * @param
 	 * @return List<TopicEditorVO>
 	 */
-	List<TopicEditorVO> listTopicEditorVOs(@Param("userId") Long userId, @Param("bookName") String bookName,
+	List<TopicEditorVO> listTopicEditorVOs(@Param("userId") Long userId, @Param("bookname") String bookname,
 			@Param("submitTime") Timestamp submitTime, @Param("start") Integer start,
 			@Param("pageSize") Integer pageSize);
 
@@ -212,7 +212,7 @@ public interface TopicDao {
 	 * @param
 	 * @return List<TopicDirectorVO>
 	 */
-	List<TopicDirectorVO> listDirectorView(@Param("bookName") String bookName,
+	List<TopicDirectorVO> listDirectorView(@Param("bookname") String bookname,
 			@Param("submitTime") Timestamp submitTime, @Param("start") Integer start,
 			@Param("pageSize") Integer pageSize);
 
@@ -225,7 +225,7 @@ public interface TopicDao {
 	 * @param
 	 * @return Integer
 	 */
-	Integer totalDirectorView(@Param("bookName") String bookName, @Param("submitTime") Timestamp submitTime);
+	Integer totalDirectorView(@Param("bookname") String bookname, @Param("submitTime") Timestamp submitTime);
 
 	/**
 	 * 
@@ -236,7 +236,7 @@ public interface TopicDao {
 	 * @param
 	 * @return List<TopicEditorVO>
 	 */
-	List<TopicEditorVO> listEditorView(@Param("bookName") String boonName, @Param("submitTime") Timestamp submitTime,
+	List<TopicEditorVO> listEditorView(@Param("bookname") String bookname, @Param("submitTime") Timestamp submitTime,
 			@Param("start") Integer start, @Param("pageSize") Integer pageSize);
 
 	/**
@@ -248,7 +248,7 @@ public interface TopicDao {
 	 * @param
 	 * @return Integer
 	 */
-	Integer totalEditorView(@Param("bookName") String bookName, @Param("submitTime") Timestamp submitTime);
+	Integer totalEditorView(@Param("bookname") String bookname, @Param("submitTime") Timestamp submitTime);
 
 	/**
 	 * 

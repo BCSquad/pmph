@@ -517,9 +517,11 @@
 
 	<!-- 选题申报部门主任获取部门编辑列表 -->
 	<select id="listEditors" resultType="PmphEditorVO">
-		SELECT a.id,a.department_id,a.realname,a.handphone
+		SELECT a.id,a.department_id,a.realname,a.handphone,b.dp_name
+		departmentName
 		FROM pmph_user a
-		LEFT JOIN pmph_department b ON a.department_id = b.id
+		LEFT JOIN pmph_department b ON
+		a.department_id = b.id
 		WHERE
 		a.department_id = #{departmentId}
 		<if test="realName !=null and realName !=''">

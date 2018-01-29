@@ -139,11 +139,11 @@ public class TopicController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "部门主任查看可操作的选题")
 	@RequestMapping(value = "/listDirector", method = RequestMethod.GET)
-	public ResponseBean listDirector(HttpServletRequest request, Integer pageSize, Integer pageNumber, String bookName,
+	public ResponseBean listDirector(HttpServletRequest request, Integer pageSize, Integer pageNumber, String bookname,
 			String submitTime) {
 		PageParameter<TopicDirectorVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		TopicDirectorVO topicDirectorVO = new TopicDirectorVO();
-		topicDirectorVO.setBookName(bookName);
+		topicDirectorVO.setBookname(bookname);
 		if (StringUtil.isEmpty(submitTime)) {
 			topicDirectorVO.setSubmitTime(null);
 		} else {
@@ -217,11 +217,11 @@ public class TopicController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "部门编辑查看可操作的申报选题")
 	@RequestMapping(value = "/listEditor", method = RequestMethod.GET)
-	public ResponseBean listEditor(HttpServletRequest request, Integer pageSize, Integer pageNumber, String bookName,
+	public ResponseBean listEditor(HttpServletRequest request, Integer pageSize, Integer pageNumber, String bookname,
 			String submitTime) {
 		PageParameter<TopicEditorVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		TopicEditorVO topicEditorVO = new TopicEditorVO();
-		topicEditorVO.setBookName(bookName);
+		topicEditorVO.setBookname(bookname);
 		if (StringUtil.isEmpty(submitTime)) {
 			topicEditorVO.setSubmitTime(null);
 		} else {
