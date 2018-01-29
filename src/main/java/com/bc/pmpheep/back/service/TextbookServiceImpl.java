@@ -457,14 +457,12 @@ public class TextbookServiceImpl implements TextbookService {
 			count++;
 		}
 		/* 设置书目录时若删除了部分书籍，找出这些书籍的id并将表中的相关数据删除掉 */
-		if (CollectionUtil.isNotEmpty(delBook)){
-			ids.removeAll(delBook);
+		ids.removeAll(delBook);
 			if (CollectionUtil.isNotEmpty(ids)){
 				for (Long id : ids){
 					textbookDao.deleteTextbookById(id);
 				}
 			}
-		}
 		/* 修改对应的教材的可见性区别 */
 		Material material = new Material();
 		material.setId(bookListVO.getMaterialId());
