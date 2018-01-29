@@ -223,7 +223,7 @@
 		SELECT 
 		    s.`id` surveyId,
 		    s.`title` surveyTitle,
-		    s.`begin_date`,
+		    s.`begin_date` startDate,
 		    s.`end_date`,
 		    st.`survey_name`,
 		    s.`intro`,
