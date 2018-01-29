@@ -61,15 +61,22 @@ public class WechatArticleService {
 	}
 
 	public CmsContent updateCmsContent(String guid) {
-		CmsContent cmsContent=new CmsContent();
+		CmsContent cmsContent = new CmsContent();
 		if(StringUtil.isEmpty(guid)){
 			throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
                     CheckedExceptionResult.NULL_PARAM, "文章唯一标识不能为空");
 		}
 		if (Const.WACT_MAP.containsKey(guid)) {
             WechatArticle wechatArticle = Const.WACT_MAP.get(guid);
-            String title=wechatArticle.getResult();
-            cmsContent.setTitle(title);
+            String html = wechatArticle.getResult();
+            String start = "<h2 class=\"rich_media_title\" id=\"activity-name\">";
+            String end = "</h2>";
+            int s = html.indexOf(start) + start.length();
+            int e = html.lastIndexOf(end);
+            String title = html.substring(s, e); // 获取标题
+            cmsContent.setCategoryId(1L); // 内容类型（1=随笔文章）
+            cmsContent.setParentId(0L); // 上级id（0为内容）
+            cmsContent.setTitle(title.trim());
             cmsContent.setCategoryId(Const.CMS_CATEGORY_ID_1);
         }
 		return cmsContentService.addCmsContent(cmsContent);

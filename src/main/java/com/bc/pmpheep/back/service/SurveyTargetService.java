@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.bc.pmpheep.back.po.SurveyTarget;
 import com.bc.pmpheep.back.vo.SurveyTargetVO;
@@ -86,4 +87,16 @@ public interface SurveyTargetService {
      * @return 影响行数
      */
     SurveyTarget getSurveyTargetById(Long id) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按问卷ID查询，已经发布的学校
+     * 使用示范：
+     *
+     * @param surveyId 问卷ID
+     * @return OrgId 集合
+     * </pre>
+     */
+    List<Long> listOrgIdBySurveyId(Long surveyId) throws CheckedServiceException;
 }
