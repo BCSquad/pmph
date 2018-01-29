@@ -77,6 +77,7 @@ public class WeChatArticleController {
      * @param guid
      * @return
      */
+    @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询人卫健康微信公众号文章")
     @RequestMapping(value = "/article/get", method = RequestMethod.GET)
     public void get(@RequestParam("guid")String guid,HttpServletResponse response){
@@ -91,5 +92,12 @@ public class WeChatArticleController {
 			new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
 	                CheckedExceptionResult.ILLEGAL_PARAM, "非法的请求参数");
 		}
+    }
+    
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "抓取文章同步到数据库")
+    @RequestMapping(value="/article/update",method= RequestMethod.GET)
+    public ResponseBean update(@RequestParam("guid")String guid){
+    	return new ResponseBean(wechatArticleService.updateCmsContent(guid));
     }
 }
