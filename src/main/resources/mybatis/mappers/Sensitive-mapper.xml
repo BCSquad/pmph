@@ -145,12 +145,14 @@
 		id =
 		#{id}
 	</delete>
-	<select id="getSensitiveId" parameterType="java.lang.String">
+	<select id="getSensitiveId" parameterType="java.lang.String"
+		resultType="java.lang.Long">
 		SELECT
 		s.id
 		FROM
 		`sensitive` s
 		WHERE
-		s.is_deleted = FALSE AND s.word = #{word}
+		s.is_deleted = FALSE AND
+		s.word = #{word}
 	</select>
 </mapper>
