@@ -147,7 +147,12 @@ WriterUserCertificationService {
         if (CollectionUtil.isNotEmpty(wUserCertifications)) {//教师审核通过的同时修改作家用户级别为教师
             count =
             writerUserCertificationDao.updateWriterUserCertificationProgressByUserId(wUserCertifications);
-            writerUserService.updateWriterUserRank(writerUsers);
+            List<WriterUser> list=writerUserService.getWriterUserRankList(writerUsers);
+            for (WriterUser writerUser : list) {
+				if(0==writerUser.getRank()){//当级别为0的时候修改
+					writerUserService.updateWriterUserRank(writerUsers);
+				}
+			}
         }
         return count;
     }

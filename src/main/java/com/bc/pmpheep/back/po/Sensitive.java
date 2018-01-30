@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
+
 /**
  * 
  * 
@@ -16,8 +17,8 @@ import org.apache.ibatis.type.Alias;
  * @since (该版本支持的JDK版本) ：JDK 1.6或以上
  * @version (版本) 1.0
  * @date (开发日期) 2018年1月29日
- * @modify (最后修改时间) 
- * @修改人 ：曾庆峰 
+ * @modify (最后修改时间)
+ * @修改人 ：曾庆峰
  * @审核人 ：
  *
  */
@@ -55,6 +56,22 @@ public class Sensitive implements Serializable {
 	 * 修改时间
 	 */
 	private Timestamp gmtUpdate;
+
+	public Sensitive() {
+		super();
+	}
+
+	public Sensitive(String word, Integer sort, String note, Boolean isDisabled, Boolean isDeleted, Timestamp gmtCreate,
+			Timestamp gmtUpdate) {
+		super();
+		this.word = word;
+		this.sort = sort;
+		this.note = note;
+		this.isDisabled = isDisabled;
+		this.isDeleted = isDeleted;
+		this.gmtCreate = gmtCreate;
+		this.gmtUpdate = gmtUpdate;
+	}
 
 	public Long getId() {
 		return id;

@@ -61,7 +61,7 @@
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into sensitive (
+		insert into `sensitive` (
 		<include refid="key" />
 		)
 		values(
@@ -71,7 +71,7 @@
 
 	<!-- 更新Sensitive -->
 	<update id="update" parameterType="Sensitive">
-		update sensitive
+		update `sensitive`
 		<set>
 			<if test="word != null and word !=''">
 				word=#{word},
