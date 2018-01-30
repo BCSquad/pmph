@@ -96,8 +96,7 @@ public class WechatArticleService {
             cmsContent.setParentId(0L); // 上级id（0为内容）
             cmsContent.setPath("0"); // 根节点路径
             cmsContent.setMid(contentObj.getId()); // 内容id
-            cmsContent.setCategoryId(1L); // 内容类型（1=随笔文章）
-            cmsContent.setCategoryId(Const.CMS_CATEGORY_ID_1);
+            cmsContent.setCategoryId(Const.CMS_CATEGORY_ID_1); // 内容类型（1=随笔文章）
             cmsContent.setTitle(title.trim());
             cmsContent.setAuthorType((short) 0); // 作者类型
         }
