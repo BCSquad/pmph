@@ -40,7 +40,7 @@ public class SensitiveServiceImpl extends BaseService implements SensitiveServic
 		String result = "FAIL";
 		if (!StringUtil.isEmpty(sensitive.getWord())) {
 			Long id = sensitiveDao.getSensitiveId(sensitive.getWord());
-			if (!sensitive.getId().equals(id)) {
+			if (null != id && !sensitive.getId().equals(id)) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE,
 						CheckedExceptionResult.ILLEGAL_PARAM, "修改的敏感词重复了");
 			}
