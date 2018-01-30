@@ -7,6 +7,8 @@ import java.io.Serializable;
 
 import org.apache.ibatis.type.Alias;
 
+import com.bc.pmpheep.back.po.Textbook;
+
 /**
  * <p>Title:书目录视图层<p>
  * <p>Description:设置书目录<p>
@@ -29,7 +31,11 @@ public class BookListVO implements Serializable{
 	//可见性区别
 	private Boolean isPublic;
     //教材书籍
-	private String textbooks;
+	private Textbook textbook;
+	//书籍序号
+	private Integer bookSort;
+	//是否允许被删除标识
+	private Boolean allowedDelete;
 	
 	public BookListVO() {
 		super();
@@ -75,13 +81,28 @@ public class BookListVO implements Serializable{
 		this.isPublic = isPublic;
 	}
 
-	public String getTextbooks() {
-		return textbooks;
+	public Textbook getTextbook() {
+		return textbook;
 	}
 
-	public void setTextbooks(String textbooks) {
-		this.textbooks = textbooks;
+	public void setTextbook(Textbook textbook) {
+		this.textbook = textbook;
 	}
 
-	
+	public Integer getBookSort() {
+		return bookSort;
+	}
+
+	public void setBookSort(Integer bookSort) {
+		this.bookSort = bookSort;
+	}
+
+	public Boolean getAllowedDelete() {
+		return allowedDelete;
+	}
+
+	public void setAllowedDelete(Boolean allowedDelete) {
+		this.allowedDelete = allowedDelete;
+	}
+
 }
