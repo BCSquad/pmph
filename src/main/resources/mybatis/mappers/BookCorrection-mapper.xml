@@ -299,7 +299,7 @@
 			</if>
 		</if>
 		ORDER BY 
-			a.gmt_update desc 
+			a.gmt_create desc 
 		limit #{start} ,#{pageSize}
 	</select>
 	
@@ -367,7 +367,7 @@
 			and a.is_editor_replied = #{isEditorReplied}
 		</if>
 		ORDER BY 
-			a.gmt_update desc 
+			a.gmt_create desc 
 		limit #{start} ,#{pageSize}
 	</select>
 	
