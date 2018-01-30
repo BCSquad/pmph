@@ -15,8 +15,10 @@ import com.bc.pmpheep.back.service.CmsContentService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.RandomUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.general.po.Content;
 import com.bc.pmpheep.general.runnable.WechatArticle;
 import com.bc.pmpheep.general.runnable.WechatArticleCrawlerTask;
+import com.bc.pmpheep.general.service.ContentService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -34,6 +36,8 @@ public class WechatArticleService {
     
     @Autowired
     CmsContentService cmsContentService;
+    @Autowired
+	ContentService contentService;
     
     public String runCrawler(String url) throws CheckedServiceException {
         if (StringUtil.isEmpty(url)) {
@@ -74,8 +78,25 @@ public class WechatArticleService {
             int titleS = html.indexOf(titleStart) + titleStart.length();
             int titleE = html.indexOf(titleEnd);
             String title = html.substring(titleS, titleE); // 获取标题
-            cmsContent.setCategoryId(1L); // 内容类型（1=随笔文章）
+            String contentStart = "<div class=\"rich_media_content \" id=\"js_content\">";
+            String contentEnd = "</div>";
+            int contentS = html.indexOf(contentStart) + contentStart.length();
+            int contentE = html.lastIndexOf(contentEnd);
+            String content = html.substring(contentS, contentE); // 获取内容
+            if (StringUtil.isEmpty(content)) {
+    			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, 
+    					CheckedExceptionResult.NULL_PARAM, "内容参数为空");
+    		}
+            // MongoDB内容插入
+    		Content contentObj = contentService.add(new Content(content));
+    		if (StringUtil.isEmpty(contentObj.getId())) {
+    			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, 
+    					CheckedExceptionResult.PO_ADD_FAILED, "Content对象内容保存失败");
+    		}
             cmsContent.setParentId(0L); // 上级id（0为内容）
+            // 根节点路径
+            cmsContent.setMid(contentObj.getId()); // 内容id
+            cmsContent.setCategoryId(1L); // 内容类型（1=随笔文章）
             cmsContent.setTitle(title.trim());
             cmsContent.setCategoryId(Const.CMS_CATEGORY_ID_1);
         }
