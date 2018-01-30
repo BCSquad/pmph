@@ -56,7 +56,7 @@ public class WechatArticleService {
                     CheckedExceptionResult.NULL_PARAM, "文章唯一标识不正确或未获取微信公众号文章");
 		}
 		//防止map内存溢出，操作过后就移除
-		Const.WACT_MAP.remove("guid");
+		//Const.WACT_MAP.remove("guid");
 		return wechatArticle;
 	}
 
