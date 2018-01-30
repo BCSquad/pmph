@@ -337,19 +337,20 @@ public class TextbookServiceImpl implements TextbookService {
 		return count;
 	}
 
-	public BookListVO getBookListVO(Long materialId) throws CheckedServiceException {
+	public List<BookListVO> getBookListVOs(Long materialId) throws CheckedServiceException {
 		if (ObjectUtil.isNull(materialId)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 					"教材id不能为空");
 		}
 		Material material = materialService.getMaterialById(materialId);
-		List<Textbook> bookList = textbookDao.getTextbookByMaterialId(materialId);
 		Long materialType = material.getMaterialType();
-		BookListVO bookListVO = new BookListVO();
-		bookListVO.setMaterialId(material.getId());
-		bookListVO.setMaterialName(material.getMaterialName());
-		bookListVO.setMaterialRound(material.getMaterialRound());
-		String path = materialTypeService.getMaterialTypeById(materialType).getPath();
+		String path;
+		try{
+			path = materialTypeService.getMaterialTypeById(materialType).getPath();
+		}catch (NullPointerException e){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "找不到此教材的分类");
+		}
 		if (StringUtil.isEmpty(path)){
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE,
 					CheckedExceptionResult.NULL_PARAM, "分类路径为空");
@@ -362,96 +363,110 @@ public class TextbookServiceImpl implements TextbookService {
 			String type = materialTypeService.getMaterialTypeById(Long.valueOf(pathType[i]))
 					.getTypeName();
 			pathType[i] = pathType[i].replace(pathType[i], type);
-		}
-		Gson gson = new Gson();
-		bookListVO.setMaterialType(pathType);
-		bookListVO.setIsPublic(material.getIsPublic());
-		bookListVO.setTextbooks(gson.toJson(bookList));
-		return bookListVO;
+		}	
+		List<Textbook> bookList = textbookDao.getTextbookByMaterialId(materialId);
+		List<BookListVO> books = new ArrayList<>();
+        for (Textbook textbook : bookList){
+        	BookListVO bookListVO = new BookListVO();
+    		bookListVO.setMaterialId(material.getId());
+    		bookListVO.setMaterialName(material.getMaterialName());
+    		bookListVO.setMaterialRound(material.getMaterialRound());
+    		bookListVO.setMaterialType(pathType);
+    		bookListVO.setIsPublic(material.getIsPublic());
+        	bookListVO.setTextbook(textbook);
+        	if (CollectionUtil.isNotEmpty(decPositionService.listDecPositionsByTextbookId(textbook.getId()))
+        			&& decPositionService.listDecPositionsByTextbookId(textbook.getId()).size() >0 ){
+        		bookListVO.setAllowedDelete(false);
+        	}else {
+        		bookListVO.setAllowedDelete(true);
+        	}
+        	books.add(bookListVO);
+        }
+		return books;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Textbook> addOrUpdateTextBookList(BookListVO bookListVO, String sessionId)
+	public List<Textbook> addOrUpdateTextBookList(String books, String sessionId)
 			throws CheckedServiceException {
-		if (ObjectUtil.isNull(bookListVO)) {
+		if (StringUtil.isEmpty(books)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 					"参数不能为空");
 		}
 		/*
-		 * 检测统一教材下书名和版次都相同的数据
+		 * 检测同一教材下书名和版次都相同的数据
 		 */
 		List<Map<String,Object>> list = new ArrayList<>();
 		Gson gson = new GsonBuilder().serializeNulls().create();
-		List<Textbook> bookList =gson.fromJson(bookListVO.getTextbooks(), 
-				new TypeToken<ArrayList<Textbook>>(){
+		List<BookListVO> bookList =gson.fromJson(books, 
+				new TypeToken<ArrayList<BookListVO>>(){
 		}.getType()) ;
 		/*
 		 * 对数据进行排序
 		 */
 		ComparatorChain comparatorChain = new ComparatorChain();
-		comparatorChain.addComparator(new BeanComparator<Textbook>("sort"));
+		comparatorChain.addComparator(new BeanComparator<Textbook>("bookSort"));
 		Collections.sort(bookList, comparatorChain);
 		/*
 		 * 查询此教材下现有的书籍
 		 */
-		List<Textbook> textbookList = textbookDao.getTextbookByMaterialId(bookListVO.getMaterialId());
+		List<Textbook> textbookList = textbookDao.getTextbookByMaterialId(bookList.get(0).getMaterialId());
 		List<Long> ids = new ArrayList<>();
 		for (Textbook textbook : textbookList){
 			ids.add(textbook.getId());
 		}
 		List<Long> delBook = new ArrayList<>();//装数据库中本来已经有的书籍id
 		int count = 1; //判断书序号的连续性计数器
-		for (Textbook textbook : bookList){
-		if (ObjectUtil.isNull(textbook.getMaterialId())){
+		for (BookListVO bookListVO : bookList){
+		if (ObjectUtil.isNull(bookListVO.getMaterialId())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 						CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
 		}
-		if (StringUtil.isEmpty(textbook.getTextbookName())){
+		if (StringUtil.isEmpty(bookListVO.getTextbook().getTextbookName())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 					CheckedExceptionResult.NULL_PARAM, "书籍名称不能为空");
 		}
-		if (StringUtil.strLength(textbook.getTextbookName()) > 25){
+		if (StringUtil.strLength(bookListVO.getTextbook().getTextbookName()) > 25){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 					CheckedExceptionResult.ILLEGAL_PARAM, "书籍名称字数不能超过25个,请修改后再提交");
 		}
-		if (ObjectUtil.isNull(textbook.getTextbookRound())){
+		if (ObjectUtil.isNull(bookListVO.getTextbook().getTextbookRound())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 					CheckedExceptionResult.NULL_PARAM, "书籍轮次不能为空");
 		}
-		if (textbook.getTextbookRound().intValue() > 2147483647){
+		if (bookListVO.getTextbook().getTextbookRound().intValue() > 2147483647){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 					CheckedExceptionResult.ILLEGAL_PARAM, "图书轮次过大，请修改后再提交");
 		}
-		if (ObjectUtil.isNull(textbook.getSort())){
+		if (ObjectUtil.isNull(bookListVO.getTextbook().getSort())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 					CheckedExceptionResult.NULL_PARAM, "图书序号不能为空");
 		}
-		if (textbook.getSort().intValue() > 2147483647){
+		if (bookListVO.getTextbook().getSort().intValue() > 2147483647){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 					CheckedExceptionResult.ILLEGAL_PARAM, "图书序号过大，请修改后再提交");
 		}
-		if (ObjectUtil.isNull(textbook.getFounderId())){
+		if (ObjectUtil.isNull(bookListVO.getTextbook().getFounderId())){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 					CheckedExceptionResult.NULL_PARAM, "创建人id不能为空");
 		}
-		if (count != textbook.getSort()){
+		if (count != bookListVO.getTextbook().getSort()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 						CheckedExceptionResult.ILLEGAL_PARAM, "书籍序号必须从1开始且连续");
 		}
 			Map<String, Object> map = new HashMap<>();
-			map.put(textbook.getTextbookName(), textbook.getTextbookRound());
+			map.put(bookListVO.getTextbook().getTextbookName(), bookListVO.getTextbook().getTextbookRound());
 			if (list.contains(map)) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 						CheckedExceptionResult.ILLEGAL_PARAM, "同一教材下书名和版次不能都相同");
 			}
 			/* 设置书目录时保存操作传回来的对象里可能有已经存在的书籍，已经存在的修改
 			 相关信息，没有的进行新增操作 */
-			if (ObjectUtil.notNull(textbookDao.getTextbookById(textbook.getId()))) {
-				textbookDao.updateTextbook(textbook);
-				delBook.add(textbook.getId());
+			if (ObjectUtil.notNull(textbookDao.getTextbookById(bookListVO.getTextbook().getId()))) {
+				textbookDao.updateTextbook(bookListVO.getTextbook());
+				delBook.add(bookListVO.getTextbook().getId());
 			} else {
-				textbookDao.addTextbook(textbook);
+				textbookDao.addTextbook(bookListVO.getTextbook());
 			}
 			list.add(map);
 			count++;
@@ -465,15 +480,15 @@ public class TextbookServiceImpl implements TextbookService {
 			}
 		/* 修改对应的教材的可见性区别 */
 		Material material = new Material();
-		material.setId(bookListVO.getMaterialId());
-		material.setIsPublic(bookListVO.getIsPublic());
+		material.setId(bookList.get(0).getMaterialId());
+		material.setIsPublic(bookList.get(0).getIsPublic());
 		materialService.updateMaterial(material, sessionId);
-		return textbookDao.getTextbookByMaterialId(bookListVO.getMaterialId());
+		return textbookDao.getTextbookByMaterialId(bookList.get(0).getMaterialId());
 	}
 	
 	@SuppressWarnings({ "resource"})
 	@Override
-	public List<Textbook> importExcel(MultipartFile file) throws CheckedServiceException {
+	public List<Textbook> importExcel(MultipartFile file, Long materialId) throws CheckedServiceException {
 		String fileType = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 		Workbook workbook = null;
 		InputStream in = null ;
@@ -500,6 +515,7 @@ public class TextbookServiceImpl implements TextbookService {
 						CheckedExceptionResult.ILLEGAL_PARAM, "读取文件失败");
 			}
 		List<Textbook> bookList = new ArrayList<>();
+		List<Textbook> books = textbookDao.getTextbookByMaterialId(materialId);
 		for (int numSheet = 0 ; numSheet < workbook.getNumberOfSheets();numSheet ++){
 			Sheet sheet = workbook.getSheetAt(numSheet);
 			if (null == sheet){
@@ -540,10 +556,18 @@ public class TextbookServiceImpl implements TextbookService {
 							CheckedExceptionResult.ILLEGAL_PARAM, "书籍版次格式错误，请按照模板格式修改后"
 									+ "再上传");
 				}
-				textbook.setSort(sort);
-				textbook.setTextbookName(bookName);
-				textbook.setTextbookRound(round);
-				bookList.add(textbook);			
+				for (Textbook book : books){
+					if (sort.intValue() == book.getSort() && round.intValue() == book.getTextbookRound()
+							&& bookName.equals(book.getTextbookName())){
+						bookList.add(book);
+					}else{
+						textbook.setSort(sort);
+						textbook.setTextbookName(bookName);
+						textbook.setTextbookRound(round);
+						bookList.add(textbook);			
+					}
+					break;
+				}
 			}
 		}
 		return bookList;

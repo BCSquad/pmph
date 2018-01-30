@@ -64,9 +64,9 @@ public class TextBookController {
     @ResponseBody
     @RequestMapping(value = "/add/textbook", method = RequestMethod.POST)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存或修改新增教材书籍")
-    public ResponseBean textbook( BookListVO bookListVO, HttpServletRequest request){
+    public ResponseBean textbook( String books, HttpServletRequest request){
     	String sessionId = CookiesUtil.getSessionId(request);
-    	return new ResponseBean(textbookService.addOrUpdateTextBookList(bookListVO, sessionId));
+    	return new ResponseBean(textbookService.addOrUpdateTextBookList(books, sessionId));
     }
     
     /**
@@ -81,7 +81,7 @@ public class TextBookController {
     @RequestMapping(value = "/list/textbooks", method = RequestMethod.GET)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "加载教材书籍列表")
     public ResponseBean textbooks(@RequestParam(name = "materialId") Long materialId){
-    	return new ResponseBean(textbookService.getBookListVO(materialId));
+    	return new ResponseBean(textbookService.getBookListVOs(materialId));
     }
     
     /**
@@ -95,9 +95,10 @@ public class TextBookController {
     @ResponseBody
     @RequestMapping(value = "/import/excel", method = RequestMethod.POST)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "通过Excel文档批量导入教材书籍")
-    public ResponseBean excel(@RequestParam(name = "file") MultipartFile file){
+    public ResponseBean excel(@RequestParam(name = "file") MultipartFile file, 
+    		@RequestParam(name = "materialId") Long materialId){
     	try {
-			return new ResponseBean(textbookService.importExcel(file));
+			return new ResponseBean(textbookService.importExcel(file,materialId));
 		} catch (CheckedServiceException e) {
 			return new ResponseBean(e);
 		} catch (IOException ex) {
