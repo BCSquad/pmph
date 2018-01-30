@@ -69,11 +69,11 @@ public class WechatArticleService {
 		if (Const.WACT_MAP.containsKey(guid)) {
             WechatArticle wechatArticle = Const.WACT_MAP.get(guid);
             String html = wechatArticle.getResult();
-            String start = "<h2 class=\"rich_media_title\" id=\"activity-name\">";
-            String end = "</h2>";
-            int s = html.indexOf(start) + start.length();
-            int e = html.lastIndexOf(end);
-            String title = html.substring(s, e); // 获取标题
+            String titleStart = "<h2 class=\"rich_media_title\" id=\"activity-name\">";
+            String titleEnd = "</h2>";
+            int titleS = html.indexOf(titleStart) + titleStart.length();
+            int titleE = html.indexOf(titleEnd);
+            String title = html.substring(titleS, titleE); // 获取标题
             cmsContent.setCategoryId(1L); // 内容类型（1=随笔文章）
             cmsContent.setParentId(0L); // 上级id（0为内容）
             cmsContent.setTitle(title.trim());
