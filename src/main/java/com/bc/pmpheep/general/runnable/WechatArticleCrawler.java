@@ -30,8 +30,10 @@ public class WechatArticleCrawler extends BreadthCrawler {
     @Override
     public void visit(Page page, CrawlDatums next) {
         Elements all = page.select("div[id=js_article]");
-        //Elements all = page.select("div[id=img-content]");
+        Elements img = page.select("div[id=img-content]");
         LOG.info(all.toString());
+        LOG.info(img.toString());
+        wechatArticle.setImg(img.toString());
         wechatArticle.setDone(true);
         wechatArticle.setResult(all.toString());
         Const.WACT_MAP.put(wechatArticle.getGuid(), wechatArticle);

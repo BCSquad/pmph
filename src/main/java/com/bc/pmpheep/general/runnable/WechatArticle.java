@@ -16,6 +16,7 @@ public class WechatArticle {
     private String url;
     private String result;
     private Boolean error = false;
+    private String img;
 
     public WechatArticle(String guid, String url) {
         this.guid = guid;
@@ -91,4 +92,13 @@ public class WechatArticle {
     public void setError(Boolean error) {
         this.error = error;
     }
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
+    
 }
