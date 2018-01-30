@@ -219,5 +219,12 @@ public interface WriterUserService {
 	 * @return
 	 */
 	Integer getCount();
+	
+	/**
+	 * 通过id查询用户级别
+	 * @param writerUsers
+	 * @return
+	 */
+	List<WriterUser> getWriterUserRankList(List<WriterUser> writerUsers);
 
 }
