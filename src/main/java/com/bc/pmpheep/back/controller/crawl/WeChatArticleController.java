@@ -73,6 +73,7 @@ public class WeChatArticleController {
                 CheckedExceptionResult.ILLEGAL_PARAM, "非法的请求参数"));
     }
     /**
+     * @author mr
      * 查询人卫健康微信公众号文章
      * @param guid
      * @return
@@ -94,6 +95,12 @@ public class WeChatArticleController {
 		}
     }
     
+    /**
+     * @author 
+     * 抓取文章同步到数据库
+     * @param guid
+     * @return
+     */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "抓取文章同步到数据库")
     @RequestMapping(value="/article/update",method= RequestMethod.GET)

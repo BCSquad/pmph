@@ -419,7 +419,7 @@
 	<select id="listTopicNumber" parameterType="java.lang.Long"
 	    resultType="Textbook">
 	   SELECT * FROM textbook t 
-	   WHERE t.material_id = #{materialId} ;
+	   WHERE t.material_id = #{materialId} ORDER BY t.sort;
 	</select>
 	<!-- 根据书籍id查询已通过的主编和编委数 -->
 	<select id="getTextbookDecTotal" parameterType="PageParameter" 

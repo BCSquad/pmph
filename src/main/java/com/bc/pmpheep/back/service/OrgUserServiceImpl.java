@@ -23,6 +23,7 @@ import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.ValidatUtil;
 import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
+import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -394,6 +395,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
         if (StringUtil.isEmpty(orgUser.getRealname())) {
             orgUser.setRealname(orgUser.getUsername());
         }
+        orgUser.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);//默认机构用户头像路径
         orgUser.setOrgId(orgDao.getOrgid(org.getOrgName()));
         orgUser.setPassword(new DesRun("", Const.DEFAULT_PASSWORD).enpsw);// 后台添加用户设置默认密码为123456
         int num = orgUserDao.addOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
