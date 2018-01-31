@@ -56,7 +56,7 @@ public class Declaration implements java.io.Serializable {
 	// 服从调剂
 	private Boolean isDispensed;
 	// 参与本科教学评估认证
-	private Integer isUtec;
+	private Boolean isUtec;
 	// 学历
 	private Integer degree;
 	// 专业特长
@@ -447,11 +447,11 @@ public class Declaration implements java.io.Serializable {
 		this.isDispensed = isDispensed;
 	}
 	
-	public Integer getIsUtec() {
+	public Boolean getIsUtec() {
 		return isUtec;
 	}
 	
-	public void setIsUtec(Integer isUtec) {
+	public void setIsUtec(Boolean isUtec) {
 		this.isUtec = isUtec;
 	}
 
