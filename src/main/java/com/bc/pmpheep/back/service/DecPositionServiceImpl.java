@@ -405,14 +405,14 @@ public class DecPositionServiceImpl implements DecPositionService {
         	for(int i=0 ;i<decPosition3.length;i++){
         		DecPosition                  item1 = decPosition3[i];
         		DecPosition                  item2 = decPositions3[i];
-        		if(item1.getId()   != item2.getId() ){
+        		if(item1.getId().intValue()   != item2.getId().intValue()  ){
         			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM, "还未确认主编/副主编,不能发布");
         		}
-        		if(item1.getRank() != item2.getRank() ){
+        		if(item1.getRank().intValue() != item2.getRank().intValue() ){
         			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM, "还未确认主编/副主编,不能发布");
         		}
-        		Integer chose1 = item1.getChosenPosition();
-        		Integer chose2 = item2.getChosenPosition();
+        		int chose1 = item1.getChosenPosition().intValue();
+        		int chose2 = item2.getChosenPosition().intValue();
         		chose1 = chose1 >8 ?chose1-8:chose1;
         		chose2 = chose2 >8 ?chose2-8:chose2;
         		if(chose1 != chose2 ){
