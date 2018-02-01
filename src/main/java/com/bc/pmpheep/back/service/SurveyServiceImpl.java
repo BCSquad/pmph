@@ -127,7 +127,7 @@ public class SurveyServiceImpl implements SurveyService {
         }
         String endDate = pageParameter.getParameter().getEndTime();
         if (StringUtil.notEmpty(endDate)) {
-            pageParameter.getParameter().setStartTime(endDate + " 23:59:59");
+            pageParameter.getParameter().setEndTime(endDate + " 23:59:59");
         }
         PageResult<SurveyVO> pageResult = new PageResult<SurveyVO>();
         // 将页面大小和页面页码拷贝
