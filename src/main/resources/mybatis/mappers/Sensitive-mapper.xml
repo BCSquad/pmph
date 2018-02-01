@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bc.pmpheep.back.dao.AreaDao">
+<mapper namespace="com.bc.pmpheep.back.dao.SensitiveDao">
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
@@ -61,7 +61,7 @@
 			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into sensitive (
+		insert into `sensitive` (
 		<include refid="key" />
 		)
 		values(
@@ -71,7 +71,7 @@
 
 	<!-- 更新Sensitive -->
 	<update id="update" parameterType="Sensitive">
-		update sensitive
+		update `sensitive`
 		<set>
 			<if test="word != null and word !=''">
 				word=#{word},
@@ -106,7 +106,7 @@
 		FROM
 		`sensitive` s
 		WHERE
-		1 = 1
+		s.is_deleted = FALSE
 		<if test="word != null and word != ''">
 			AND s.word LIKE CONCAT('%',#{word},'%')
 		</if>
@@ -118,7 +118,7 @@
 		FROM
 		`sensitive` s
 		WHERE
-		1 = 1
+		s.is_deleted = FALSE
 		<if test="word != null and word != ''">
 			AND s.word LIKE CONCAT('%',#{word},'%')
 		</if>
@@ -145,4 +145,14 @@
 		id =
 		#{id}
 	</delete>
+	<select id="getSensitiveId" parameterType="java.lang.String"
+		resultType="java.lang.Long">
+		SELECT
+		s.id
+		FROM
+		`sensitive` s
+		WHERE
+		s.is_deleted = FALSE AND
+		s.word = #{word}
+	</select>
 </mapper>

@@ -11,6 +11,7 @@ import com.bc.pmpheep.back.po.Sensitive;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -37,6 +38,13 @@ public class SensitiveServiceImpl extends BaseService implements SensitiveServic
 					"需要修改的敏感词id为空");
 		}
 		String result = "FAIL";
+		if (!StringUtil.isEmpty(sensitive.getWord())) {
+			Long id = sensitiveDao.getSensitiveId(sensitive.getWord());
+			if (null != id && !sensitive.getId().equals(id)) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE,
+						CheckedExceptionResult.ILLEGAL_PARAM, "修改的敏感词重复了");
+			}
+		}
 		Integer total = sensitiveDao.update(sensitive);
 		if (total > 0) {
 			result = "SUCCESS";

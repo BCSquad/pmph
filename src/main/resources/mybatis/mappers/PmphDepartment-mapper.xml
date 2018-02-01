@@ -149,20 +149,23 @@
 	<!-- 根据主键id查询 -->
 	<select id="listOpts" resultType="DepartmentOptsVO">
 		SELECT
-		d.id,
-		d.dp_name,
-		u.realname
+		a.id,
+		a.dp_name,
+		c.realname
 		FROM
 		pmph_department d
-		LEFT
-		JOIN pmph_user
-		u ON u.department_id = d.id
-		LEFT JOIN pmph_user_role p
-		ON p.user_id =
-		u.id
-		LEFT JOIN pmph_role r ON r.id = p.role_id
+		LEFT JOIN (
+		SELECT
+		u.department_id,
+		u.realname
+		FROM
+		pmph_user u
 		WHERE
-		r.role_name = '主任'
+		u.is_director
+		GROUP BY
+		u.department_id
+		) t ON t.department_id = d.id
+		WHERE 1=1
 		<if test="dpName != null and dpName !=''">
 			AND d.dp_name like concat('%',#{dpName},'%')
 		</if>
@@ -174,18 +177,23 @@
 	<!-- 根据主键id查询 -->
 	<select id="listOptsTotal" resultType="Integer">
 		SELECT count(*) FROM (SELECT
-		d.id,
-		d.dp_name,
-		u.realname
+		a.id,
+		a.dp_name,
+		c.realname
 		FROM
 		pmph_department d
-		LEFT JOIN pmph_user u ON
-		u.department_id = d.id
-		LEFT
-		JOIN pmph_user_role p ON p.user_id = u.id
-		LEFT JOIN pmph_role r ON r.id
-		= p.role_id
-		WHERE r.role_name = '主任'
+		LEFT JOIN (
+		SELECT
+		u.department_id,
+		u.realname
+		FROM
+		pmph_user u
+		WHERE
+		u.is_director
+		GROUP BY
+		u.department_id
+		) c ON c.department_id = d.id
+		WHERE 1=1
 		<if test="dpName != null and dpName !=''">
 			AND d.dp_name like concat('%',#{dpName},'%')
 		</if>

@@ -13,7 +13,7 @@ import com.bc.pmpheep.back.service.SensitiveService;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
 @Controller
-@RequestMapping(value = "/Sensitive")
+@RequestMapping(value = "/sensitive")
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class SensitiveController {
 	@Autowired

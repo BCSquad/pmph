@@ -548,4 +548,13 @@ public class WriterUserServiceImpl implements WriterUserService {
 		return writerUserDao.getCount();
 	}
 
+	@Override
+	public List<WriterUser> getWriterUserRankList(List<WriterUser> writerUsers) {
+		if(null==writerUsers){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return writerUserDao.getWriterUserRankList(writerUsers);
+	}
+
 }

@@ -217,6 +217,7 @@
 	<!-- 根据id获取详情 -->
 	<select   id="getBookCorrectionAuditDetailById"  resultType="BookCorrectionAuditVO">
 		select 
+		    DISTINCT
 			a.id,
 			b.bookname,
 			b.author,
@@ -250,6 +251,7 @@
 	<!-- 获取审核纠错页面的分页数据-->
 	<select id="listBookCorrectionAudit"  resultType="BookCorrectionAuditVO">
 		select 
+			DISTINCT
 			a.id,
 			b.bookname,
 			b.author,
@@ -297,14 +299,14 @@
 			</if>
 		</if>
 		ORDER BY 
-			a.gmt_update desc 
+			a.gmt_create desc 
 		limit #{start} ,#{pageSize}
 	</select>
 	
 	<!-- 获取审核纠错跟踪页面的数据总数  -->
 	<select id="listBookCorrectionTrackTotal"  resultType="java.lang.Integer">
 		SELECT 
-			count(a.id)
+			count(DISTINCT a.id)
 		FROM  
 			book_correction a
 		LEFT JOIN 
@@ -365,7 +367,7 @@
 			and a.is_editor_replied = #{isEditorReplied}
 		</if>
 		ORDER BY 
-			a.gmt_update desc 
+			a.gmt_create desc 
 		limit #{start} ,#{pageSize}
 	</select>
 	

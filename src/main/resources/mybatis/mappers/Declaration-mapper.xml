@@ -60,10 +60,10 @@
 			<if test="fax !=null and fax !=''">
 				fax,
 			</if>
-			<if test="isDispensed !=null">
+			<if test="isDispensed !=null and isDispensed !=''">
 				is_dispensed,
 			</if>
-			<if test="isUtec !=null">
+			<if test="isUtec !=null and isUtec !=''">
 				is_utec,
 			</if>
 			<if test="degree !=null">
@@ -158,10 +158,10 @@
 			<if test="fax !=null and fax !=''">
 				#{fax},
 			</if>
-			<if test="isDispensed !=null">
+			<if test="isDispensed !=null and isDispensed !=''">
 				#{isDispensed},
 			</if>
-			<if test="isUtec !=null">
+			<if test="isUtec !=null and isUtec !=''">
 				#{isUtec},
 			</if>
 			<if test="degree !=null">
@@ -276,10 +276,10 @@
 			<if test="fax !=null and fax !=''">
 				fax = #{fax},
 			</if>
-			<if test="isDispensed !=null">
+			<if test="isDispensed !=null and isDispensed !=''">
 				is_dispensed = #{isDispensed},
 			</if>
-			<if test="isUtec !=null">
+			<if test="isUtec !=null and isUtec !=''">
 				is_utec = #{isUtec},
 			</if>
 			<if test="degree !=null">

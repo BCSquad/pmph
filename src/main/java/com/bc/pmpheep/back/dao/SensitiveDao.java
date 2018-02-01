@@ -47,6 +47,16 @@ public interface SensitiveDao {
 	 *
 	 */
 	Integer update(Sensitive sensitive);
+	/**
+	 * 
+	 * 
+	 * 功能描述：通过敏感词查询id
+	 *
+	 * @param word
+	 * @return
+	 *
+	 */
+	Long getSensitiveId(String word);
 
 	/**
 	 * 
@@ -57,7 +67,7 @@ public interface SensitiveDao {
 	 * @return
 	 *
 	 */
-	Integer getTotal(String word);
+	Integer getTotal(@Param("word") String word);
 
 	/**
 	 * 

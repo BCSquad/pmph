@@ -263,8 +263,8 @@ public class MigrationStageSix {
             declaration.setIdcard((String) map.get("idcard")); // 证件号码
             declaration.setTelephone((String) map.get("linktel")); // 联系电话
             declaration.setFax((String) map.get("fax")); // 传真
-            declaration.setIsDispensed(0); // 服从调剂
-            declaration.setIsUtec(0); // 参与本科教学评估认证
+            declaration.setIsDispensed(false); // 服从调剂
+            declaration.setIsUtec(false); // 参与本科教学评估认证
             declaration.setDegree(0); // 学历
             declaration.setExpertise(null); // 专业特长
             if ("5".equals(unitid)) { // 旧表申报单位id为5的话orgid设置成0
