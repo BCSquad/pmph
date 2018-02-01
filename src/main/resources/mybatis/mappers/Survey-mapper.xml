@@ -190,12 +190,12 @@
 					<!-- 问卷创建日期 %H:%i:%s--> 
 					<if test="parameter.startTime !=null and parameter.startTime !='' ">
 						and 
-							s.`gmt_create` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d') 
+							s.`gmt_create` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
 							
 					</if>
 					<if test="parameter.endTime !=null and parameter.endTime !='' ">
 						and 
-							s.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d')
+							s.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
 					</if>
 				</if>
 				) t 
@@ -209,12 +209,12 @@
 			<!-- 问卷创建日期 %H:%i:%s--> 
 					<if test="parameter.startTime !=null and parameter.startTime !='' ">
 						and 
-							s.`gmt_create` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d') 
+							s.`gmt_create` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
 							
 					</if>
 					<if test="parameter.endTime !=null and parameter.endTime !='' ">
 						and 
-							s.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d')
+							s.`gmt_create` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
 					</if>
 		</if>
 		group by s.title desc 

@@ -324,8 +324,7 @@ public class DecPositionServiceImpl implements DecPositionService {
         // 获取书籍id
         Long textbookId = decPositions.get(0).getTextbookId();
         // 原来的历史遴选记录
-        List<DecPosition> oldlist =
-        decPositionService.listChosenDecPositionsByTextbookId(textbookId);
+        List<DecPosition> oldlist = decPositionService.listChosenDecPositionsByTextbookId(textbookId);
         // 1:确定
         if (selectionType_1.intValue() == selectionType.intValue()) {
             // 查询书籍下所有申报id
@@ -349,6 +348,78 @@ public class DecPositionServiceImpl implements DecPositionService {
         }
         // 2：发布
         if (selectionType_2.intValue() == selectionType.intValue()) {
+        	/***判断是否确认开始***/
+        	List<DecPosition> decPosition1 =  decPositionDao.listChosenDecPositionsByTextbookId(textbookId);
+        	//筛选出主编，副主编 
+        	List<DecPosition> decPosition2 = new ArrayList<DecPosition>();
+        	for(DecPosition item:decPosition1){
+        		if(null != item && null != item.getChosenPosition() &&
+        			(item.getChosenPosition() == 4 || item.getChosenPosition() == 12 || 
+        			 item.getChosenPosition() == 2 || item.getChosenPosition() == 10) ){
+        			decPosition2.add(item);
+        		}
+        	}
+        	List<DecPosition> decPositions2 = new ArrayList<DecPosition>();
+        	for(DecPosition decPosition:decPositions){
+        		if(null != decPosition && null != decPosition.getChosenPosition() &&
+            			(decPosition.getChosenPosition() == 4 || decPosition.getChosenPosition() == 12 || 
+            					decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10) ){
+        			decPositions2.add(decPosition);
+            	}
+        	}
+        	if(decPosition2.size() != decPositions2.size() ){ 
+        		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM, "还未确认主编/副主编,不能发布");
+        	}
+        	//排序 按照 id 升排列
+        	DecPosition []   decPosition3 = decPosition2.toArray(new DecPosition []{});
+        	for(int i=0 ;i<decPosition3.length-1;i++){
+        		for(int j=i+1 ;j<decPosition3.length;j++){
+        			//前面一个
+        			DecPosition item1= decPosition3[i];
+        			DecPosition item2= decPosition3[j];
+        			if(item2.getId() < item1.getId() ){
+        				//把小的先存起来
+        				DecPosition temp = decPosition3[j];
+        				//交换位置
+        				decPosition3[j]  = decPosition3[i];
+        				decPosition3[i]  = temp;
+        			}
+        		}
+        	}
+        	DecPosition[] decPositions3 = decPositions2.toArray(new DecPosition[]{});
+        	for(int i=0 ;i<decPositions3.length-1;i++){
+        		for(int j=i+1 ;j<decPositions3.length;j++){
+        			//前面一个
+        			DecPosition item1= decPositions3[i];
+        			DecPosition item2= decPositions3[j];
+        			if(item2.getId() < item1.getId() ){
+        				//把小的先存起来
+        				DecPosition temp = decPositions3[j];
+        				//交换位置
+        				decPositions3[j]        = decPositions3[i];
+        				decPositions3[i]        = temp;
+        			}
+        		}
+        	}
+        	//一一对比
+        	for(int i=0 ;i<decPosition3.length;i++){
+        		DecPosition                  item1 = decPosition3[i];
+        		DecPosition                  item2 = decPositions3[i];
+        		if(item1.getId().intValue()   != item2.getId().intValue()  ){
+        			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM, "还未确认主编/副主编,不能发布");
+        		}
+        		if(item1.getRank().intValue() != item2.getRank().intValue() ){
+        			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM, "还未确认主编/副主编,不能发布");
+        		}
+        		int chose1 = item1.getChosenPosition().intValue();
+        		int chose2 = item2.getChosenPosition().intValue();
+        		chose1 = chose1 >8 ?chose1-8:chose1;
+        		chose2 = chose2 >8 ?chose2-8:chose2;
+        		if(chose1 != chose2 ){
+        			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM, "还未确认主编/副主编,不能发布");
+        		}
+        	}
+        	/***判断是否确认结束***/
             if (ObjectUtil.isNull(textbookId)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                                   CheckedExceptionResult.NULL_PARAM, "书籍id为空");
