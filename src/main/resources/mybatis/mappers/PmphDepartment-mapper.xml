@@ -149,9 +149,9 @@
 	<!-- 根据主键id查询 -->
 	<select id="listOpts" resultType="DepartmentOptsVO">
 		SELECT
-		a.id,
-		a.dp_name,
-		c.realname
+		d.id,
+		d.dp_name,
+		t.realname
 		FROM
 		pmph_department d
 		LEFT JOIN (
@@ -177,8 +177,8 @@
 	<!-- 根据主键id查询 -->
 	<select id="listOptsTotal" resultType="Integer">
 		SELECT count(*) FROM (SELECT
-		a.id,
-		a.dp_name,
+		d.id,
+		d.dp_name,
 		c.realname
 		FROM
 		pmph_department d
