@@ -390,11 +390,7 @@
 				THEN	
 					pu.username
 				WHEN   
-					cc.`author_type` =1 
-				THEN   
-					wu.`username`
-				WHEN   
-					cc.`author_type` =2 
+					cc.`author_type` =1 || cc.`author_type` =2 
 				THEN   
 					wu.`username`
 			  END
@@ -408,6 +404,10 @@
 		ON
 			cc.author_id = pu.id
 		LEFT JOIN
+			`writer_user` wu
+		ON
+			cc.author_id = wu.id
+		LEFT JOIN
 			`cms_category` ccg
 		ON
 			cc.`category_id` = ccg.`id`,
@@ -420,6 +420,10 @@
 					`pmph_user` pu
 				ON
 					cc.author_id = pu.id
+				LEFT JOIN
+					`writer_user` wu
+				ON
+					cc.author_id = wu.id
 				LEFT JOIN
 					`cms_category` ccg
 				ON
