@@ -322,9 +322,9 @@ public class TextbookServiceImpl implements TextbookService {
 					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 							"还未发布主编/副主编，不能名单确认");
 				}
-				DecPosition decPosition=decPositionService.getDecPositionByTextbookId(textbook.getId());
+				List<DecPosition> decPosition=decPositionService.getDecPositionByTextbookId(textbook.getId());
 				// 是否确认编委
-				if(null==decPosition){
+				if(decPosition.size()==0){
 					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 							"还未确认编委，不能名单确认");
 				}
