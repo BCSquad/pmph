@@ -390,7 +390,7 @@
 				THEN	
 					pu.username
 				WHEN   
-					cc.`author_type` =1 || cc.`author_type` =2 
+					cc.`author_type` =1 OR cc.`author_type` =2 
 				THEN   
 					wu.`username`
 			  END
