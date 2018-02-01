@@ -121,6 +121,14 @@ public class SurveyServiceImpl implements SurveyService {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
+        String startDate = pageParameter.getParameter().getStartTime();
+        if (StringUtil.notEmpty(startDate)) {
+            pageParameter.getParameter().setStartTime(startDate + " 00:00:00");
+        }
+        String endDate = pageParameter.getParameter().getEndTime();
+        if (StringUtil.notEmpty(endDate)) {
+            pageParameter.getParameter().setStartTime(endDate + " 23:59:59");
+        }
         PageResult<SurveyVO> pageResult = new PageResult<SurveyVO>();
         // 将页面大小和页面页码拷贝
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
