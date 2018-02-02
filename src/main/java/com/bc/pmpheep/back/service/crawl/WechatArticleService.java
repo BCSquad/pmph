@@ -4,6 +4,18 @@
  */
 package com.bc.pmpheep.back.service.crawl;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +26,15 @@ import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.service.CmsContentService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.RandomUtil;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.po.Content;
+import com.bc.pmpheep.general.runnable.DisableSSLCertificateCheckUtil;
 import com.bc.pmpheep.general.runnable.WechatArticle;
 import com.bc.pmpheep.general.runnable.WechatArticleCrawlerTask;
 import com.bc.pmpheep.general.service.ContentService;
+import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -34,10 +50,15 @@ public class WechatArticleService {
     @Resource(name = "taskExecutor")
     ThreadPoolTaskExecutor taskExecutor;
     
+    // 获取img标签正则 
+    private static final String IMGURL_REG = "<img.*src=(.*?)[^>]*?>";
+    
     @Autowired
     CmsContentService cmsContentService;
     @Autowired
 	ContentService contentService;
+    @Autowired
+    private FileService fileService;
     
     public String runCrawler(String url) throws CheckedServiceException {
         if (StringUtil.isEmpty(url)) {
@@ -81,12 +102,30 @@ public class WechatArticleService {
             int contentS = html.indexOf(contentStart) + contentStart.length();
             int contentE = html.lastIndexOf(contentEnd);
             String content = html.substring(contentS, contentE); // 获取内容
-            if (StringUtil.isEmpty(content)) {
+            String contents = content.replaceAll("data-src", "src"); // 替换内容
+            //获取图片标签 
+            List<String> imgUrl = getImageUrl(contents); 
+            //获取图片src地址 
+            List<String> imgSrc = getImageSrc(imgUrl); 
+            //下载图片
+            List<String> htmlImgs = null;
+            try {
+            	htmlImgs = Download(imgSrc);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+            for (String imgs : htmlImgs) {
+            	String imgsId = RouteUtil.MONGODB_FILE + imgs; // 下载路径
+            	for (String imgSrcs : imgSrc) {
+                	contents.replaceAll(imgSrcs, imgsId);
+            	}
+            }
+            if (StringUtil.isEmpty(contents)) {
     			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, 
     					CheckedExceptionResult.NULL_PARAM, "内容参数为空");
     		}
             // MongoDB内容插入
-    		Content contentObj = contentService.add(new Content(content));
+    		Content contentObj = contentService.add(new Content(contents));
     		if (StringUtil.isEmpty(contentObj.getId())) {
     			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, 
     					CheckedExceptionResult.PO_ADD_FAILED, "Content对象内容保存失败");
@@ -102,4 +141,85 @@ public class WechatArticleService {
 		Const.WACT_MAP.remove("guid");
 		return cmsContentService.addCmsContent(cmsContent);
 	}
+	
+	  /*** 
+	   * 获取ImageUrl地址 
+	   * 
+	   * @param HTML 
+	   * @return 
+	   */
+	  private List<String> getImageUrl(String HTML) { 
+	    Matcher matcher = Pattern.compile(IMGURL_REG).matcher(HTML); 
+	    List<String> listImgUrl = new ArrayList<String>(); 
+	    while (matcher.find()) { 
+	      listImgUrl.add(matcher.group()); 
+	    } 
+	    return listImgUrl; 
+	  } 
+	  
+	  /*** 
+	   * 获取ImageSrc地址 
+	   * 
+	   * @param listImageUrl 
+	   * @return 
+	   */
+	  private List<String> getImageSrc(List<String> listImageUrl) { 
+	    List<String> listImgSrc = new ArrayList<String>(); 
+	    for (String image : listImageUrl) {
+            String srcStart = "src=\"";
+            String srcEnd = "?";
+            int srcS = image.indexOf(srcStart) + srcStart.length();
+            int srcE = image.indexOf(srcEnd);
+            if (srcE < srcS) {
+            	continue;
+            }
+            String content = image.substring(srcS, srcE);
+            listImgSrc.add(content);
+	    } 
+	    return listImgSrc; 
+	  }
+	  
+	  /*** 
+	   * 下载图片 
+	   * 
+	   * @param listImgSrc 
+	 * @throws IOException 
+	   */
+	  private List<String> Download(List<String> listImgSrc) throws IOException { 
+	    	List<String> listHtmlImgs = new ArrayList<String>();
+	      for (String url : listImgSrc) { 
+	        URL uri = new URL(url);
+	        DisableSSLCertificateCheckUtil.disableChecks();
+	        //打开链接  
+	        HttpURLConnection conn = (HttpURLConnection)uri.openConnection();  
+	        //设置请求方式为"GET"  
+	        conn.setRequestMethod("GET");  
+	        //超时响应时间为5秒  
+	        conn.setConnectTimeout(5 * 1000);  
+	        //通过输入流获取图片数据  
+	        InputStream in = conn.getInputStream();
+	        double randomNumber = Math.random()*100; // 随机数
+	        Random rand = new Random();
+			/*FileOutputStream fo = new FileOutputStream(new File("F:/java_html/eclipse/" 
+	        + (int) randomNumber + (int) randomNumber + (int) randomNumber + ".jpg"));*/
+			String mongoId = null;
+			if (in.available() != 0) {
+				mongoId = fileService.save(in, String.valueOf(randomNumber), FileType.CMS_IMG, 
+						(long) rand.nextInt(900)+ 100);
+			}
+			listHtmlImgs.add(mongoId);
+			in.close();
+	        /*byte[] buf = new byte[1024]; 
+	        int length = 0;
+	        System.out.println("开始下载:" + uri); 
+	        while ((length = in.read(buf, 0, buf.length)) != -1) { 
+	          fo.write(buf, 0, length); 
+	        }
+	        listHtmlImgs.add(fo.toString());
+	        in.close(); 
+	        fo.close();
+	        System.out.println(fo + "下载完成");*/ 
+	      }
+		return listHtmlImgs; 
+	  } 
 }
