@@ -233,8 +233,8 @@ public class TopicController {
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * 功能描述：编辑操作选题申报
 	 *
 	 * @param id
@@ -243,8 +243,8 @@ public class TopicController {
 	 *            审核进度
 	 * @param authFeedback
 	 *            审核意见
-	 * @param authDate
-	 *            审核时间
+	 * @param
+	 *
 	 * @param isAccepted
 	 *            编辑是否受理
 	 * @param isRejectedByEditor
@@ -273,6 +273,7 @@ public class TopicController {
 			topic.setIsRejectedByEditor(isRejectedByEditor);
 			if (isRejectedByEditor) {
 				topicLog.setTopicEvent("编辑退回选题给主任");
+				topic.setEditorId(0L);
 				topic.setIsEditorHandling(false);
 				topic.setReasonEditor(reasonEditor);
 			} else {
