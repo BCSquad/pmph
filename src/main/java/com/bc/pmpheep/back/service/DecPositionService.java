@@ -286,6 +286,6 @@ public interface DecPositionService {
      * @return
      * @throws CheckedServiceException
      */
-	DecPosition getDecPositionByTextbookId(Long textbookId)throws CheckedServiceException;;
+	List<DecPosition> getDecPositionByTextbookId(Long textbookId)throws CheckedServiceException;;
     
 }

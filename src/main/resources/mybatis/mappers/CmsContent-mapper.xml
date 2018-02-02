@@ -382,7 +382,19 @@
 	<select id="listCmsContent" parameterType="PageParameter"
 		resultType="CmsContentVO">
 		SELECT 
-			cc.`id`,cc.`title`,pu.username,cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,
+			cc.`id`,cc.`title`,
+			(
+			CASE
+				WHEN 
+					cc.`author_type` =0  
+				THEN	
+					pu.username
+				WHEN   
+					cc.`author_type` =1 || cc.`author_type` =2 
+				THEN   
+					wu.`username`
+			  END
+			 ) username,cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,
 			cc.`comments`,cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,
 			cc.`is_published`,cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry`,t.count
 		FROM 
@@ -391,6 +403,10 @@
 			`pmph_user` pu
 		ON
 			cc.author_id = pu.id
+		LEFT JOIN
+			`writer_user` wu
+		ON
+			cc.author_id = wu.id
 		LEFT JOIN
 			`cms_category` ccg
 		ON
@@ -404,6 +420,10 @@
 					`pmph_user` pu
 				ON
 					cc.author_id = pu.id
+				LEFT JOIN
+					`writer_user` wu
+				ON
+					cc.author_id = wu.id
 				LEFT JOIN
 					`cms_category` ccg
 				ON

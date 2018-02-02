@@ -443,5 +443,5 @@ public interface DecPositionDao {
      * @param textbookId
      * @return
      */
-	DecPosition getDecPositionByTextbookId(Long textbookId);
+	List<DecPosition> getDecPositionByTextbookId(Long textbookId);
 }
