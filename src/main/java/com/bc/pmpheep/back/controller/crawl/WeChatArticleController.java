@@ -100,11 +100,12 @@ public class WeChatArticleController {
      * 抓取文章同步到数据库
      * @param guid
      * @return
+     * @throws IOException 
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "抓取文章同步到数据库")
     @RequestMapping(value="/article/update",method= RequestMethod.GET)
-    public ResponseBean update(@RequestParam("guid")String guid){
+    public ResponseBean update(@RequestParam("guid")String guid) throws IOException{
     	return new ResponseBean(wechatArticleService.updateCmsContent(guid));
     }
 }

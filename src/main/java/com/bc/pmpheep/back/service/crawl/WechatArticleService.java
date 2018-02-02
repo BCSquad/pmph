@@ -4,8 +4,6 @@
  */
 package com.bc.pmpheep.back.service.crawl;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -83,7 +81,7 @@ public class WechatArticleService {
 		return wechatArticle;
 	}
 
-	public CmsContent updateCmsContent(String guid) {
+	public CmsContent updateCmsContent(String guid) throws IOException {
 		CmsContent cmsContent = new CmsContent();
 		if(StringUtil.isEmpty(guid)){
 			throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
@@ -108,16 +106,11 @@ public class WechatArticleService {
             //获取图片src地址 
             List<String> imgSrc = getImageSrc(imgUrl); 
             //下载图片
-            List<String> htmlImgs = null;
-            try {
-            	htmlImgs = Download(imgSrc);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            List<String> htmlImgs = Download(imgSrc);
             for (String imgs : htmlImgs) {
-            	String imgsId = RouteUtil.MONGODB_FILE + imgs; // 下载路径
             	for (String imgSrcs : imgSrc) {
-                	contents.replaceAll(imgSrcs, imgsId);
+                	String imgsId = RouteUtil.MONGODB_FILE + imgs; // 下载路径
+                	contents = contents.replace(imgSrcs, imgsId);
             	}
             }
             if (StringUtil.isEmpty(contents)) {
@@ -200,8 +193,6 @@ public class WechatArticleService {
 	        InputStream in = conn.getInputStream();
 	        double randomNumber = Math.random()*100; // 随机数
 	        Random rand = new Random();
-			/*FileOutputStream fo = new FileOutputStream(new File("F:/java_html/eclipse/" 
-	        + (int) randomNumber + (int) randomNumber + (int) randomNumber + ".jpg"));*/
 			String mongoId = null;
 			if (in.available() != 0) {
 				mongoId = fileService.save(in, String.valueOf(randomNumber), FileType.CMS_IMG, 
@@ -209,16 +200,6 @@ public class WechatArticleService {
 			}
 			listHtmlImgs.add(mongoId);
 			in.close();
-	        /*byte[] buf = new byte[1024]; 
-	        int length = 0;
-	        System.out.println("开始下载:" + uri); 
-	        while ((length = in.read(buf, 0, buf.length)) != -1) { 
-	          fo.write(buf, 0, length); 
-	        }
-	        listHtmlImgs.add(fo.toString());
-	        in.close(); 
-	        fo.close();
-	        System.out.println(fo + "下载完成");*/ 
 	      }
 		return listHtmlImgs; 
 	  } 
