@@ -162,7 +162,7 @@ public interface TopicDao {
 	 * @param
 	 * @return Integer
 	 */
-	Integer totalTopicEditorVOs(@Param("userId") Long userId, @Param("bookName") String bookName,
+	Integer totalTopicEditorVOs(@Param("userId") Long userId, @Param("bookname") String bookname,
 			@Param("submitTime") Timestamp submitTime);
 
 	/**
