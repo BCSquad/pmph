@@ -110,7 +110,7 @@ public class WechatArticleService {
             for (String imgs : htmlImgs) {
             	for (String imgSrcs : imgSrc) {
                 	String imgsId = RouteUtil.MONGODB_FILE + imgs; // 下载路径
-                	contents.replaceAll(imgSrcs, imgsId);
+                	contents = contents.replace(imgSrcs, imgsId);
             	}
             }
             if (StringUtil.isEmpty(contents)) {
