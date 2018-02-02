@@ -196,7 +196,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		// 教材类型验证
 		String materialType = materialVO.getMaterialType();
-		if (StringUtil.isEmpty(materialType) && !"[]".equals(materialType.replace(" ","")) && !"[NaN]".equals(materialType.replace(" ",""))) {
+		if (StringUtil.isEmpty(materialType) || "[]".equals(materialType.replace(" ","")) || "[NaN]".equals(materialType.replace(" ",""))) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"教材类型为空");
 		}
