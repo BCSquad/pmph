@@ -853,7 +853,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                             receiverId, Const.RECEIVER_TYPE_2);
         }
         // 插入消息发送对象数据
-        userMessageDao.addUserMessage(userMessage);
+        Integer res =  userMessageDao.addUserMessage(userMessage);
         // websocket发送的id
         List<String> websocketUserId = new ArrayList<String>();
         websocketUserId.add(userMessage.getReceiverType() + "_" + userMessage.getReceiverId());
@@ -866,6 +866,6 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                   message.getContent(), DateUtil.getCurrentTime());
             myWebSocketHandler.sendWebSocketMessageToUser(websocketUserId, webScocketMessage);
         }
-        return userMessageDao.addUserMessage(userMessage);
+        return res;
     }
 }
