@@ -100,17 +100,17 @@ public class WechatArticleService {
             int contentS = html.indexOf(contentStart) + contentStart.length();
             int contentE = html.lastIndexOf(contentEnd);
             String content = html.substring(contentS, contentE); // 获取内容
-            String contents = content.replaceAll("data-src", "src"); // 替换内容
+            String contents = content.replace("data-src", "src"); // 替换内容
             //获取图片标签 
             List<String> imgUrl = getImageUrl(contents); 
             //获取图片src地址 
             List<String> imgSrc = getImageSrc(imgUrl); 
             //下载图片
-            List<String> htmlImgs = Download(imgSrc);
-            for (String imgs : htmlImgs) {
-            	for (String imgSrcs : imgSrc) {
-                	String imgsId = RouteUtil.MONGODB_FILE + imgs; // 下载路径
-                	contents = contents.replace(imgSrcs, imgsId);
+            List<String> mongoImgs = Download(imgSrc);
+            for (int i = 0; i < imgSrc.size(); i++) {
+            	if (StringUtil.notEmpty(mongoImgs.get(i))) {
+            		String imgsId = RouteUtil.MONGODB_FILE + mongoImgs.get(i); // 下载路径
+            		contents = contents.replace(imgSrc.get(i), imgsId);	
             	}
             }
             if (StringUtil.isEmpty(contents)) {
