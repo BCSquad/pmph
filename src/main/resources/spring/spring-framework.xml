@@ -22,6 +22,7 @@
 	<!-- <context:component-scan base-package="com.bc.pmpheep.back.shiro.cache"/> -->
 	<context:component-scan base-package="com.bc.pmpheep.back.service" />
 	<context:component-scan base-package="com.bc.pmpheep.general.service" />
+	<context:component-scan base-package="com.bc.pmpheep.general.runnable" />
 	<context:component-scan base-package="com.bc.pmpheep.websocket" />
 	<context:component-scan base-package="com.bc.pmpheep.utils" />
 	<context:component-scan base-package="com.bc.pmpheep.migration" />

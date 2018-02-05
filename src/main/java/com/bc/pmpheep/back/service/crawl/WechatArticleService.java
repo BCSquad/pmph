@@ -4,18 +4,20 @@
  */
 package com.bc.pmpheep.back.service.crawl;
 
+import java.io.IOException;
+import java.util.List;
 import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
-
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.service.CmsContentService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.RandomUtil;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.po.Content;
+import com.bc.pmpheep.general.runnable.Download;
 import com.bc.pmpheep.general.runnable.WechatArticle;
 import com.bc.pmpheep.general.runnable.WechatArticleCrawlerTask;
 import com.bc.pmpheep.general.service.ContentService;
@@ -38,6 +40,8 @@ public class WechatArticleService {
     CmsContentService cmsContentService;
     @Autowired
 	ContentService contentService;
+    @Autowired
+    private Download download;
     
     public String runCrawler(String url) throws CheckedServiceException {
         if (StringUtil.isEmpty(url)) {
@@ -54,15 +58,15 @@ public class WechatArticleService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
                     CheckedExceptionResult.NULL_PARAM, "文章唯一标识不能为空");
 		}
-		WechatArticle wechatArticle=Const.WACT_MAP.get(guid);
-		if(null==wechatArticle){
+		WechatArticle wechatArticle = Const.WACT_MAP.get(guid);
+		if(null == wechatArticle){
 			throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
                     CheckedExceptionResult.NULL_PARAM, "文章唯一标识不正确或未获取微信公众号文章");
 		}
 		return wechatArticle;
 	}
 
-	public CmsContent updateCmsContent(String guid) {
+	public CmsContent synchroCmsContent(String guid) throws IOException {
 		CmsContent cmsContent = new CmsContent();
 		if(StringUtil.isEmpty(guid)){
 			throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
@@ -81,12 +85,25 @@ public class WechatArticleService {
             int contentS = html.indexOf(contentStart) + contentStart.length();
             int contentE = html.lastIndexOf(contentEnd);
             String content = html.substring(contentS, contentE); // 获取内容
-            if (StringUtil.isEmpty(content)) {
+            String contents = content.replace("data-src", "src"); // 替换内容
+            //获取图片标签 
+            List<String> imgUrl = download.getImageUrl(contents); 
+            //获取图片src地址 
+            List<String> imgSrc = download.getImageSrc(imgUrl);
+            //下载图片
+            List<String> mongoImgs = download.listDownload(imgSrc);
+            for (int i = 0; i < imgSrc.size(); i++) {
+            	if (StringUtil.notEmpty(mongoImgs.get(i))) {
+            		String imgsId = RouteUtil.MONGODB_FILE + mongoImgs.get(i); // 下载路径
+            		contents = contents.replace(imgSrc.get(i), imgsId);	
+            	}
+            }
+            if (StringUtil.isEmpty(contents)) {
     			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, 
     					CheckedExceptionResult.NULL_PARAM, "内容参数为空");
     		}
             // MongoDB内容插入
-    		Content contentObj = contentService.add(new Content(content));
+    		Content contentObj = contentService.add(new Content(contents));
     		if (StringUtil.isEmpty(contentObj.getId())) {
     			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, 
     					CheckedExceptionResult.PO_ADD_FAILED, "Content对象内容保存失败");
@@ -98,8 +115,10 @@ public class WechatArticleService {
             cmsContent.setTitle(title.trim());
             cmsContent.setAuthorType((short) 0); // 作者类型
         }
+		cmsContent = cmsContentService.addCmsContent(cmsContent);
 		//防止map内存溢出，操作过后就移除
 		Const.WACT_MAP.remove("guid");
-		return cmsContentService.addCmsContent(cmsContent);
+		return  cmsContent;
 	}
+	
 }

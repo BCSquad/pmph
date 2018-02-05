@@ -704,6 +704,7 @@ public class TextbookServiceImpl implements TextbookService {
 							CheckedExceptionResult.ILLEGAL_PARAM, "图书名称不能超过25个字数，请修改后再上传");
 				}
 				String topicNumber = StringUtil.getCellValue(fourth);
+				topicNumber = topicNumber.substring(0, topicNumber.indexOf(".0"));
 				if (StringUtil.strLength(topicNumber) > 30){
 					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
 							CheckedExceptionResult.ILLEGAL_PARAM, "选题号不能超过30个字数，请修改后再上传");

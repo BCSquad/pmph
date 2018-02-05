@@ -208,7 +208,7 @@
 		<if test="isOver != 1 ">
 			<if test="result   != null  ">
 			<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来  -->
-			and ((is_editor_replied and a.result  = #{result} ) or (!is_editor_replied))  
+			and (is_editor_replied and a.result  = #{result} )  
 			</if>
 		</if>
 		
@@ -295,7 +295,7 @@
 		<if test="isOver != 1 ">
 			<if test="result   != null  ">
 			<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来  -->
-			and ((is_editor_replied and a.result  = #{result} ) or (!is_editor_replied))  
+			and (is_editor_replied and a.result  = #{result} )  
 			</if>
 		</if>
 		ORDER BY 

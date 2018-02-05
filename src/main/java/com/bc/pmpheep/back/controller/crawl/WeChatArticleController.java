@@ -80,9 +80,9 @@ public class WeChatArticleController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询人卫健康微信公众号文章")
-    @RequestMapping(value = "/article/get", method = RequestMethod.GET)
-    public void get(@RequestParam("guid")String guid,HttpServletResponse response){
-    	WechatArticle wechatArticle=wechatArticleService.get(guid);
+    @RequestMapping(value = "/article/get", method = RequestMethod.POST)
+    public void get(@RequestParam("guid") String guid, HttpServletResponse response){
+    	WechatArticle wechatArticle = wechatArticleService.get(guid);
     	PrintWriter writer;
 		try {
 			writer = response.getWriter();
@@ -100,11 +100,12 @@ public class WeChatArticleController {
      * 抓取文章同步到数据库
      * @param guid
      * @return
+     * @throws IOException 
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "抓取文章同步到数据库")
-    @RequestMapping(value="/article/update",method= RequestMethod.GET)
-    public ResponseBean update(@RequestParam("guid")String guid){
-    	return new ResponseBean(wechatArticleService.updateCmsContent(guid));
+    @RequestMapping(value="/article/synchro",method = RequestMethod.POST)
+    public ResponseBean synchro(@RequestParam("guid") String guid) throws IOException {
+    	return new ResponseBean(wechatArticleService.synchroCmsContent(guid));
     }
 }
