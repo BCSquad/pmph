@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.po.CmsContent;
