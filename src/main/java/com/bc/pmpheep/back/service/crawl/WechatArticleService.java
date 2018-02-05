@@ -129,11 +129,10 @@ public class WechatArticleService {
             cmsContent.setCategoryId(Const.CMS_CATEGORY_ID_1); // 内容类型（1=随笔文章）
             cmsContent.setTitle(title.trim());
             cmsContent.setAuthorType((short) 0); // 作者类型
-            cmsContentService.addCmsContent(cmsContent);
         }
 		//防止map内存溢出，操作过后就移除
-		Const.WACT_MAP.remove("guid");
-		return cmsContent;
+		//Const.WACT_MAP.remove("guid");
+		return  cmsContentService.addCmsContent(cmsContent);
 	}
 	
 	  /*** 
