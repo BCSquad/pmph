@@ -475,7 +475,10 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                               "MessageAttachment对象保存失败!");
                         }
                     }
-                    FileUtil.delFile(files[i]);// 删除本地临时文件
+                    String localFile = files[i];
+                    String fileDirectory =
+                    localFile.substring(0, localFile.lastIndexOf(File.separatorChar));
+                    FileUtil.delete(fileDirectory);// 删除本地临时文件
                 }
             }
         }
@@ -601,7 +604,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                   "附件名称超出80个字符长度，请修改后上传！");
             }
             String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));// 去掉后缀的文件名称
-            String beforeDate = DateUtil.date2Str(new Date(), "yyyyMMddHHmmss") + "/";// 获取当前时间拼接路径
+            String beforeDate = DateUtil.date2Str(new Date(), "yyyyMMddHHmmss") + File.separator;// 获取当前时间拼接路径
             FileUpload.fileUp(file, Const.MSG_FILE_PATH_FILE + beforeDate, fileName);// 上传文件
             filePath = Const.MSG_FILE_PATH_FILE + beforeDate + fullFileName;
         }
