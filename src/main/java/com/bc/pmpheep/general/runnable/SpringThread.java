@@ -166,23 +166,23 @@ public class SpringThread implements Runnable {
 		}
 		ZipDownload zipDownload = new ZipDownload();
 		Material material = this.materialService.getMaterialById(this.materialId);
-		StringBuilder str = new StringBuilder("");
-		str.append(material.getIsEduExpRequired() ? "1" : "0");
-		str.append(material.getIsWorkExpRequired() ? "1" : "0");
-		str.append(material.getIsTeachExpRequired() ? "1" : "0");
-		str.append(material.getIsAcadeRequired() ? "1" : "0");
-		str.append(material.getIsLastPositionRequired() ? "1" : "0");
-		str.append(material.getIsCourseRequired() ? "1" : "0");
-		str.append(material.getIsNationalPlanRequired() ? "1" : "0");
-		str.append(material.getIsTextbookRequired() ? "1" : "0");
-		str.append(material.getIsOtherTextbookRequired() ? "0" : "0");
-		str.append(material.getIsResearchRequired() ? "1" : "0");
-		str.append(material.getIsAchievementRequired() ? "1" : "0");
-		str.append(material.getIsMonographRequired() ? "1" : "0");
-		str.append(material.getIsPublishRewardRequired() ? "1" : "0");
-		str.append(material.getIsSciRequired() ? "1" : "0");
-		str.append(material.getIsClinicalRewardRequired() ? "1" : "0");
-		str.append(material.getIsAcadeRewardRequired() ? "1" : "0");
+		StringBuilder str = new StringBuilder("111111111111111111");
+//		str.append(material.getIsEduExpRequired() ? "1" : "0");
+//		str.append(material.getIsWorkExpRequired() ? "1" : "0");
+//		str.append(material.getIsTeachExpRequired() ? "1" : "0");
+//		str.append(material.getIsAcadeRequired() ? "1" : "0");
+//		str.append(material.getIsLastPositionRequired() ? "1" : "0");
+//		str.append(material.getIsCourseRequired() ? "1" : "0");
+//		str.append(material.getIsNationalPlanRequired() ? "1" : "0");
+//		str.append(material.getIsTextbookRequired() ? "1" : "0");
+//		str.append(material.getIsOtherTextbookRequired() ? "0" : "0");
+//		str.append(material.getIsResearchRequired() ? "1" : "0");
+//		str.append(material.getIsAchievementRequired() ? "1" : "0");
+//		str.append(material.getIsMonographRequired() ? "1" : "0");
+//		str.append(material.getIsPublishRewardRequired() ? "1" : "0");
+//		str.append(material.getIsSciRequired() ? "1" : "0");
+//		str.append(material.getIsClinicalRewardRequired() ? "1" : "0");
+//		str.append(material.getIsAcadeRewardRequired() ? "1" : "0");
 		Integer filter = Integer.parseInt(str.toString(), 2);
 		List<Textbook> textbooks = this.textbookService.getTextbookByMaterialId(this.materialId);
 		List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
@@ -222,7 +222,7 @@ public class SpringThread implements Runnable {
 				}
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();
 		}
 		new Thread(zipDownload).start();
 		try {
