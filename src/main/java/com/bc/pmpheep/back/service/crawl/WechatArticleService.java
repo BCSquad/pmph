@@ -4,6 +4,7 @@
  */
 package com.bc.pmpheep.back.service.crawl;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -123,8 +124,7 @@ public class WechatArticleService {
 		//防止map内存溢出，操作过后就移除
 		Const.WACT_MAP.remove("guid");
 		//删除文件夹及以下文件
-		//String dir = "F:/java_html/eclipse/" + guid; // 本地
-		String dir = "D:/apache-tomcat-7.0.77/bin/" + guid; // 测试
+		String dir = new File("").getAbsolutePath() + "/" + guid; // 获取路径
 		FileUtil.deleteDirectory(dir);
 		return  cmsContent;
 	}
