@@ -138,23 +138,28 @@ public class WordHelper {
 			}
 			List<XWPFTable> tables = document.getTables();
 			String filename = generateFileName(bo);
-			fillDeclarationData(tables.get(0), bo);
-			fillDecEduExpData(tables.get(1), bo.getDecEduExps());
-			fillDecWorkExpData(tables.get(2), bo.getDecWorkExps());
-			fillDecTeachExpData(tables.get(3), bo.getDecTeachExps());
-			fillDecAchievementData(tables.get(4), bo.getDecAchievement());
-			fillDecAcadeData(tables.get(5), bo.getDecAcades());
-			fillDecLastPositionData(tables.get(6), bo.getDecLastPositions());
-			fillDecCourseConstructionData(tables.get(7), bo.getDecCourseConstructions());
-			fillDecNationalPlanData(tables.get(8), bo.getDecNationalPlans());
-			fillDecTextbookData(tables.get(9), bo.getDecTextbooks());
+			fillDeclarationPosition(tables.get(0), bo);
+			fillDeclarationData(tables.get(1), bo);
+			fillDecEduExpData(tables.get(2), bo.getDecEduExps());
+			fillDecWorkExpData(tables.get(3), bo.getDecWorkExps());
+			fillDecTeachExpData(tables.get(4), bo.getDecTeachExps());
+			fillDecAchievementData(tables.get(5), bo.getDecAchievement());
+			fillDecAcadeData(tables.get(6), bo.getDecAcades());
+			fillDecLastPositionData(tables.get(7), bo.getDecLastPositions());
+			fillDecCourseConstructionData(tables.get(8), bo.getDecCourseConstructions());
+			fillDecNationalPlanData(tables.get(9), bo.getDecNationalPlans());
 			fillDecResearchData(tables.get(10), bo.getDecResearchs());
 			fillDecMonographData(tables.get(11), bo.getDecMonographs());
-			fillDecPublishRewardData(tables.get(12), bo.getPublishRewards());
-			fillDecSciData(tables.get(13), bo.getDecScis());
-			fillDecClinicalRewardData(tables.get(14), bo.getDecClinicalRewards());
-			fillDecAcadeRewardData(tables.get(15), bo.getDecAcadeRewards());
-			map.put(filename, removeEmptyTables(document, filter));
+			fillDecTextbookData(tables.get(12), bo.getDecTextbooks());
+			//++++其他社教材编写情况++++
+			//++++参加人卫慕课、数字教材编写情况++++
+			fillDecPublishRewardData(tables.get(15), bo.getPublishRewards());
+			fillDecSciData(tables.get(16), bo.getDecScis());
+			fillDecClinicalRewardData(tables.get(17), bo.getDecClinicalRewards());
+			fillDecAcadeRewardData(tables.get(18), bo.getDecAcadeRewards());
+			//++++编写内容意向++++
+			// map.put(filename, removeEmptyTables(document, filter));
+			map.put(filename, document);
 		}
 		return map;
 	}
@@ -195,6 +200,17 @@ public class WordHelper {
 		return document;
 	}
 
+	private XWPFTable fillDeclarationPosition(XWPFTable table, DeclarationEtcBO bo) {
+		List<XWPFTableRow> rows = table.getRows();
+		List<XWPFTableCell> cells = rows.get(1).getTableCells();
+		/* 第一行 */
+		String textbookName = bo.getTextbookName();
+		String presetPosition = bo.getPresetPosition();
+		cells.get(0).setText("《".concat(textbookName).concat("》"));
+		cells.get(1).setText(presetPosition);
+		return table;
+	}
+
 	private XWPFTable fillDeclarationData(XWPFTable table, DeclarationEtcBO bo) {
 		List<XWPFTableRow> rows = table.getRows();
 		List<XWPFTableCell> cells = rows.get(0).getTableCells();
@@ -203,9 +219,6 @@ public class WordHelper {
 		if (StringUtil.notEmpty(realname)) {
 			cells.get(1).setText(realname);
 		}
-		String textbookName = bo.getTextbookName();
-		String presetPosition = bo.getPresetPosition();
-		cells.get(3).setText("《".concat(textbookName).concat("》").concat(presetPosition));
 		/* 第二行 */
 		cells = rows.get(1).getTableCells();
 		String sex = bo.getSex();
@@ -260,39 +273,32 @@ public class WordHelper {
 		}
 		/* 第六行 */
 		cells = rows.get(5).getTableCells();
-		String degree = bo.getDegree();
-		if (StringUtil.notEmpty(degree)) {
-			cells.get(1).setText(degree);
-		}
 		String email = bo.getEmail();
 		if (StringUtil.notEmpty(email)) {
-			cells.get(3).setText(email);
-		}
-		/* 第七行 */
-		cells = rows.get(6).getTableCells();
-		String idtype = bo.getIdtype();
-		if (StringUtil.notEmpty(idtype)) {
-			cells.get(1).setText(idtype);
+			cells.get(1).setText(email);
 		}
 		String idcard = bo.getIdcard();
 		if (StringUtil.notEmpty(idcard)) {
 			cells.get(3).setText(idcard);
 		}
-		/* 第八行 */
-		cells = rows.get(7).getTableCells();
-		String expertise = bo.getExpertise();
-		if (StringUtil.notEmpty(expertise)) {
-			cells.get(1).setText(expertise);
+		String degree = bo.getDegree();
+		if (StringUtil.notEmpty(degree)) {
+			cells.get(5).setText(degree);
 		}
-		/* 第九行 */
-		cells = rows.get(8).getTableCells();
+
+		/* 第七行 */
+		cells = rows.get(6).getTableCells();
 		Boolean isDispensed = bo.getIsDispensed();
 		if (ObjectUtil.notNull(isDispensed)) {
 			cells.get(1).setText(isDispensed ? "是" : "否");
 		}
+		String expertise = bo.getExpertise();
+		if (StringUtil.notEmpty(expertise)) {
+			cells.get(3).setText(expertise);
+		}
 		Boolean isUtec = bo.getIsUtec();
 		if (ObjectUtil.notNull(isUtec)) {
-			cells.get(3).setText(isUtec ? "是" : "否");
+			cells.get(5).setText(isUtec ? "是" : "否");
 		}
 		return table;
 	}
