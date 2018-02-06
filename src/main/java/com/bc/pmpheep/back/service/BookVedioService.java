@@ -22,7 +22,18 @@ public interface BookVedioService {
 	 * @return
 	 */
 	Integer addBookVedio(BookVedio bookVedio) throws CheckedServiceException;
-
+	/**
+	 * 动态更新
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2018年2月6日 下午5:10:58
+	 * @param bookVedio
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	Integer updateBookVedio(BookVedio bookVedio) throws CheckedServiceException;
+	
+	
 	/**
 	 * 根据文件上传路径模糊获取BookVedio
 	 * @introduction 
@@ -49,5 +60,7 @@ public interface BookVedioService {
 	 * @return
 	 */
 	PageResult<BookVedioVO>getList(Integer pageSize,Integer pageNumber,String bookName);
+	
+	
 
 }

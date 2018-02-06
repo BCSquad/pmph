@@ -1,8 +1,11 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
+
 import com.bc.pmpheep.back.po.BookVedio;
+ 
 
 
 @org.springframework.stereotype.Repository
@@ -46,5 +49,16 @@ public interface BookVedioDao {
 	 * @return
 	 */
 	List<BookVedio>  getBookVedioByBookIds  (@Param("bookIds")List<Long> bookIds);
+	
+	/**
+	 * 动态更新
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2018年2月6日 下午5:10:58
+	 * @param bookVedio
+	 * @return
+	 */
+	Integer updateBookVedio(BookVedio bookVedio)  ;
+	
 	
 }

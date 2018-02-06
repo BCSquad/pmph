@@ -28,6 +28,10 @@ public class BookVedioServiceImpl  implements BookVedioService {
 
 	@Autowired
 	private BookVedioDao bookVedioDao;
+	
+	@Autowired
+	private BookService bookService;
+	
 
 	@Override
 	public Integer addBookVedio(BookVedio bookVedio) throws CheckedServiceException {
@@ -54,8 +58,6 @@ public class BookVedioServiceImpl  implements BookVedioService {
 		return bookVedioDao.deleteBookVedioById(id);
 	}
 
-	@Autowired
-	private BookService bookService;
 	
 	@Override
 	public PageResult<BookVedioVO> getList(Integer pageSize, Integer pageNumber, String bookName) {
@@ -102,6 +104,17 @@ public class BookVedioServiceImpl  implements BookVedioService {
 		BookVedioVOlst.setRows(lst);
 		return BookVedioVOlst;
 	}
+
+	@Override
+	public Integer updateBookVedio(BookVedio bookVedio)
+			throws CheckedServiceException {
+		if(null == bookVedio || null == bookVedio.getId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return bookVedioDao.updateBookVedio(bookVedio);
+	}
+
+	
 	
 	
 	
