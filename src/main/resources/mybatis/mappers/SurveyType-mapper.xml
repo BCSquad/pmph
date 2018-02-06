@@ -80,4 +80,17 @@
 		ORDER BY 
 			sort ASC;
 	</select>
+	
+	<!-- 根据调查对象名称获取对象 -->
+	<select id="getSurveyTypeByName" parameterType="java.lang.String"  resultType="SurveyType">
+		SELECT 
+			st.*
+		FROM 
+			survey_type st
+		WHERE 
+			st.`survey_name`= #{surveyName}
+		ORDER BY 
+			sort ASC;
+	</select>
+	
 </mapper>

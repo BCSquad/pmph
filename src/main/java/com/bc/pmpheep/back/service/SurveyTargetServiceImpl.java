@@ -14,6 +14,7 @@ import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.po.SurveyTarget;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.po.WriterUser;
+import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
@@ -186,12 +187,18 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
                 userMessageList.add(new UserMessage(message.getId(), surveyTargetVO.getTitle(),
                                                     Const.MSG_TYPE_1, userId, Const.SENDER_TYPE_1,
                                                     orgUser.getId(), Const.RECEIVER_TYPE_3, 0L));
-                orgUserEmail.add(orgUser.getEmail());// 获取学校管理员邮箱地址
+                if (!"-".equals(orgUser.getEmail()) && !"null".equals(orgUser.getEmail())) {
+                    orgUserEmail.add(orgUser.getEmail());// 获取学校管理员邮箱地址
+                }
             }
             Integer size = orgUserEmail.size();
-            String[] emails =
-            new String[] { "515944204@qq.com", "869389545@qq.com", "nyz526@163.com" };
+            // String[] emails =
+            // new String[] { "515944204@qq.com", "869389545@qq.com", "nyz526@163.com" };
             String[] toEmail = (String[]) orgUserEmail.toArray(new String[size]);
+            if (ArrayUtil.isEmpty(toEmail)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                                  CheckedExceptionResult.NULL_PARAM, "收件人邮箱为空");
+            }
             // 发送邮件
             JavaMailSenderUtil javaMailSenderUtil = new JavaMailSenderUtil();
             try {
@@ -203,7 +210,7 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
                                             + "》需要您登陆下面地址，填写您宝贵意见。</span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>&nbsp;&nbsp;&nbsp;&nbsp;登陆地址：<a href='http://120.76.221.250/pmeph/survey/writeSurvey.action?surveyId="
                                             + surveyTargetVO.getSurveyId()
                                             + "'>人卫E教平台</a><br/></span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;'><br/></p>",
-                                            emails);
+                                            toEmail);
             } catch (Exception e) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                                   CheckedExceptionResult.OBJECT_NOT_FOUND, "邮件发送失败");

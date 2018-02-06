@@ -46,6 +46,11 @@ public class SurveyTypeServiceImpl implements SurveyTypeService {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问卷调查类型名称为空");
         }
+        SurveyType st = this.getSurveyTypeByName(surveyType.getSurveyName());
+        if (ObjectUtil.notNull(st)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "对象名称已存在");
+        }
         surveyTypeDao.addSurveyType(surveyType);
         return surveyType;
     }
@@ -82,4 +87,12 @@ public class SurveyTypeServiceImpl implements SurveyTypeService {
         return surveyTypeDao.listSurveyType();
     }
 
+    @Override
+    public SurveyType getSurveyTypeByName(String surveyName) throws CheckedServiceException {
+        if (StringUtil.isEmpty(surveyName)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return surveyTypeDao.getSurveyTypeByName(surveyName);
+    }
 }
