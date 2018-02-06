@@ -6,13 +6,17 @@ package com.bc.pmpheep.back.service.crawl;
 
 import java.io.IOException;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
+
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.service.CmsContentService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.FileUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -118,6 +122,10 @@ public class WechatArticleService {
 		cmsContent = cmsContentService.addCmsContent(cmsContent);
 		//防止map内存溢出，操作过后就移除
 		Const.WACT_MAP.remove("guid");
+		//删除文件夹及以下文件
+		//String dir = "F:/java_html/eclipse/" + guid; // 本地
+		String dir = "D:/apache-tomcat-7.0.77/bin/" + guid; // 测试
+		FileUtil.deleteDirectory(dir);
 		return  cmsContent;
 	}
 	
