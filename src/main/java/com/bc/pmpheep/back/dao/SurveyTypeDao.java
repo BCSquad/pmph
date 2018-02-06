@@ -64,4 +64,16 @@ public interface SurveyTypeDao {
      * </pre>
      */
     List<SurveyType> listSurveyType();
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按调查对象名称查询
+     * 使用示范：
+     *
+     * @param surveyName 调查对象名称
+     * @return SurveyType
+     * </pre>
+     */
+    SurveyType getSurveyTypeByName(String surveyName);
 }
