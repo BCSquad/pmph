@@ -6,9 +6,9 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="id !=null">
+			<!-- <if test="id !=null">
 				id,
-			</if>
+			</if> -->
 			<if test="publisherId !=null">
 				publisher_id,
 			</if>
@@ -41,9 +41,9 @@
 	<!-- sql片段对应?,id属性值任意 -->
 	<sql id="value">
 		<trim suffixOverrides=",">
-			<if test="id !=null">
+			<!-- <if test="id !=null">
 				#{id},
-			</if>
+			</if> -->
 			<if test="publisherId !=null">
 				#{publisherId},
 			</if>
@@ -87,7 +87,16 @@
 		<include refid="value" />
 		);
 	</insert>
-
+	
+	<!-- 批量插入DecPositionPublished -->
+	<insert id="batchInsertDecPositionPublished" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into dec_position_published (publisher_id,declaration_id,textbook_id,preset_position,chosen_position)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.publisherId},#{item.declarationId},#{item.textbookId},#{item.presetPosition},#{item.chosenPosition})
+        </foreach>
+    </insert>
+	
 	<!-- 根据id删除 -->
 	<delete id="deleteDecPositionPublished" parameterType="java.lang.Long">
 		delete from
@@ -129,7 +138,20 @@
 		</set>
 		where id=#{id} ;
 	</update>
-
+	
+	<!-- 按公布人id和申报表id删除 -->
+	<delete id="deleteDecPositionPublishedByPublisherIdAndDeclarationId" parameterType="java.util.Map" >
+		DELETE FROM 
+			`dec_position_published` 
+		WHERE 
+			publisher_id= #{publisherId}
+		AND 
+			declaration_id IN 
+			<foreach collection="decPositionPublisheds" item="item" open="(" close=")" separator=",">
+				#{item.declarationId}
+			</foreach>
+	</delete>
+	
 	<!-- 根据id查询 -->
 	<select id="getDecPositionPublishedById" parameterType="java.lang.Long"
 		resultType="DecPositionPublished">

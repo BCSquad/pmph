@@ -13,150 +13,166 @@ import org.apache.ibatis.type.Alias;
 @SuppressWarnings("serial")
 @Alias("DecPositionPublished")
 public class DecPositionPublished implements Serializable {
-	// 主键
-	private Long id;
-	// 公布人id
-	private Long publisherId;
-	// 申报表
-	private Long declarationId;
-	// 书籍id
-	private Long textbookId;
-	// 申报职务
-	private Integer presetPosition;
-	// 是否进入预选名单
-	private Boolean isOnList;
-	// 遴选职务
-	private Integer chosenPosition;
-	// 排位
-	private Integer rank;
-	// 教学大纲id
-	private String syllabusId;
-	// 教学大纲名称
-	private String syllabusName;
-	// 创建时间
-	private Timestamp gmtCreate;
-	// 修改时间
-	private Timestamp gmtUpdate;
+    // 主键
+    private Long      id;
+    // 公布人id
+    private Long      publisherId;
+    // 申报表
+    private Long      declarationId;
+    // 书籍id
+    private Long      textbookId;
+    // 申报职务
+    private Integer   presetPosition;
+    // 是否进入预选名单
+    private Boolean   isOnList;
+    // 遴选职务
+    private Integer   chosenPosition;
+    // 排位
+    private Integer   rank;
+    // 教学大纲id
+    private String    syllabusId;
+    // 教学大纲名称
+    private String    syllabusName;
+    // 创建时间
+    private Timestamp gmtCreate;
+    // 修改时间
+    private Timestamp gmtUpdate;
 
-	public DecPositionPublished() {
+    public DecPositionPublished() {
 
-	}
+    }
 
-	public DecPositionPublished(Long publisherId, Long declarationId, Long textbookId, Integer presetPosition,
-			Boolean isOnList, Integer chosenPosition, Integer rank, String syllabusId, String syllabusName) {
-		super();
-		this.publisherId = publisherId;
-		this.declarationId = declarationId;
-		this.textbookId = textbookId;
-		this.presetPosition = presetPosition;
-		this.isOnList = isOnList;
-		this.chosenPosition = chosenPosition;
-		this.rank = rank;
-		this.syllabusId = syllabusId;
-		this.syllabusName = syllabusName;
-	}
+    public DecPositionPublished(Long declarationId) {
+        this.declarationId = declarationId;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public DecPositionPublished(Long publisherId, Long declarationId, Long textbookId,
+    Integer presetPosition, Boolean isOnList, Integer chosenPosition, Integer rank,
+    String syllabusId, String syllabusName) {
+        super();
+        this.publisherId = publisherId;
+        this.declarationId = declarationId;
+        this.textbookId = textbookId;
+        this.presetPosition = presetPosition;
+        this.isOnList = isOnList;
+        this.chosenPosition = chosenPosition;
+        this.rank = rank;
+        this.syllabusId = syllabusId;
+        this.syllabusName = syllabusName;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public DecPositionPublished(Long publisherId, Long declarationId, Long textbookId,
+    Integer presetPosition, Integer chosenPosition) {
+        this.publisherId = publisherId;
+        this.declarationId = declarationId;
+        this.textbookId = textbookId;
+        this.presetPosition = presetPosition;
+        this.chosenPosition = chosenPosition;
+    }
 
-	public Long getPublisherId() {
-		return publisherId;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setPublisherId(Long publisherId) {
-		this.publisherId = publisherId;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Long getDeclarationId() {
-		return declarationId;
-	}
+    public Long getPublisherId() {
+        return publisherId;
+    }
 
-	public void setDeclarationId(Long declarationId) {
-		this.declarationId = declarationId;
-	}
+    public void setPublisherId(Long publisherId) {
+        this.publisherId = publisherId;
+    }
 
-	public Long getTextbookId() {
-		return textbookId;
-	}
+    public Long getDeclarationId() {
+        return declarationId;
+    }
 
-	public void setTextbookId(Long textbookId) {
-		this.textbookId = textbookId;
-	}
+    public void setDeclarationId(Long declarationId) {
+        this.declarationId = declarationId;
+    }
 
-	public Integer getPresetPosition() {
-		return presetPosition;
-	}
+    public Long getTextbookId() {
+        return textbookId;
+    }
 
-	public void setPresetPosition(Integer presetPosition) {
-		this.presetPosition = presetPosition;
-	}
+    public void setTextbookId(Long textbookId) {
+        this.textbookId = textbookId;
+    }
 
-	public Boolean getIsOnList() {
-		return isOnList;
-	}
+    public Integer getPresetPosition() {
+        return presetPosition;
+    }
 
-	public void setIsOnList(Boolean isOnList) {
-		this.isOnList = isOnList;
-	}
+    public void setPresetPosition(Integer presetPosition) {
+        this.presetPosition = presetPosition;
+    }
 
-	public Integer getChosenPosition() {
-		return chosenPosition;
-	}
+    public Boolean getIsOnList() {
+        return isOnList;
+    }
 
-	public void setChosenPosition(Integer chosenPosition) {
-		this.chosenPosition = chosenPosition;
-	}
+    public void setIsOnList(Boolean isOnList) {
+        this.isOnList = isOnList;
+    }
 
-	public Integer getRank() {
-		return rank;
-	}
+    public Integer getChosenPosition() {
+        return chosenPosition;
+    }
 
-	public void setRank(Integer rank) {
-		this.rank = rank;
-	}
+    public void setChosenPosition(Integer chosenPosition) {
+        this.chosenPosition = chosenPosition;
+    }
 
-	public String getSyllabusId() {
-		return syllabusId;
-	}
+    public Integer getRank() {
+        return rank;
+    }
 
-	public void setSyllabusId(String syllabusId) {
-		this.syllabusId = syllabusId;
-	}
+    public void setRank(Integer rank) {
+        this.rank = rank;
+    }
 
-	public String getSyllabusName() {
-		return syllabusName;
-	}
+    public String getSyllabusId() {
+        return syllabusId;
+    }
 
-	public void setSyllabusName(String syllabusName) {
-		this.syllabusName = syllabusName;
-	}
+    public void setSyllabusId(String syllabusId) {
+        this.syllabusId = syllabusId;
+    }
 
-	public Timestamp getGmtCreate() {
-		return gmtCreate;
-	}
+    public String getSyllabusName() {
+        return syllabusName;
+    }
 
-	public void setGmtCreate(Timestamp gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
+    public void setSyllabusName(String syllabusName) {
+        this.syllabusName = syllabusName;
+    }
 
-	public Timestamp getGmtUpdate() {
-		return gmtUpdate;
-	}
+    public Timestamp getGmtCreate() {
+        return gmtCreate;
+    }
 
-	public void setGmtUpdate(Timestamp gmtUpdate) {
-		this.gmtUpdate = gmtUpdate;
-	}
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
 
-	@Override
-	public String toString() {
-		return "DecPositionPublished [id=" + id + ", publisherId=" + publisherId + ", declarationId=" + declarationId
-				+ ", textbookId=" + textbookId + ", presetPosition=" + presetPosition + ", isOnList=" + isOnList
-				+ ", chosenPosition=" + chosenPosition + ", rank=" + rank + ", syllabusId=" + syllabusId
-				+ ", syllabusName=" + syllabusName + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
-	}
+    public Timestamp getGmtUpdate() {
+        return gmtUpdate;
+    }
+
+    public void setGmtUpdate(Timestamp gmtUpdate) {
+        this.gmtUpdate = gmtUpdate;
+    }
+
+    @Override
+    public String toString() {
+        return "DecPositionPublished [id=" + id + ", publisherId=" + publisherId
+               + ", declarationId=" + declarationId + ", textbookId=" + textbookId
+               + ", presetPosition=" + presetPosition + ", isOnList=" + isOnList
+               + ", chosenPosition=" + chosenPosition + ", rank=" + rank + ", syllabusId="
+               + syllabusId + ", syllabusName=" + syllabusName + ", gmtCreate=" + gmtCreate
+               + ", gmtUpdate=" + gmtUpdate + "]";
+    }
 }

@@ -244,6 +244,7 @@ public class CmsContentServiceImpl implements CmsContentService {
                 // 文章管理,通过
                 cmsContent.setAuthUserId(pmphUser.getId());
                 cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_2);
+                cmsContent.setIsStaging(Const.FALSE);
                 cmsContent.setAuthDate(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                 DateUtil.getCurrentTime()));
                 cmsContent.setIsPublished(true);
