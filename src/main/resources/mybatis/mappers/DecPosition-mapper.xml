@@ -176,8 +176,8 @@
 		select * from dec_position where
 		declaration_id=#{declarationId};
 	</select>
-
-	<!-- 根据书籍id查询申报职位列表 -->
+	
+	<!-- 根据书籍ids查询申报职位列表 -->
 	<select id="listDecPositionsByTextbookId" parameterType="java.lang.Long"
 		resultType="DecPosition">
 		select
@@ -198,6 +198,14 @@
 		and b.online_progress != 2
 		and
 		c.id = #{textbookId};
+	</select>
+	
+	<!-- 根据书籍id查询申报职位列表 -->
+	<select id="listDecPositionsByTextBookIds" resultType="DecPosition">
+		select * from dec_position where book_id in 
+		<foreach collection="textbookIds"  open="("  separator=","  close=")"  item="bookId"  index="index">
+			#{bookId}
+		</foreach>
 	</select>
 
 	<!-- 根据书籍id获取入选的职位职位(主编、副主编、编委、数字编辑) -->
