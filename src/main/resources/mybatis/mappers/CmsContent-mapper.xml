@@ -379,112 +379,178 @@
 	</update>
 
 	<!--CmsContentVO模糊查询获取列表 -->
-	<select id="listCmsContent" parameterType="PageParameter"
-		resultType="CmsContentVO">
-		SELECT 
-			cc.`id`,cc.`title`,
-			(
-			CASE
-				WHEN 
-					cc.`author_type` =0  
-				THEN	
-					pu.username
-				WHEN   
-					cc.`author_type` =1 || cc.`author_type` =2 
-				THEN   
-					wu.`username`
-			  END
-			 ) username,cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,
-			cc.`comments`,cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,
-			cc.`is_published`,cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry`,t.count
-		FROM 
-			`cms_content`cc
-		LEFT JOIN
-			`pmph_user` pu
-		ON
-			cc.author_id = pu.id
-		LEFT JOIN
-			`writer_user` wu
-		ON
-			cc.author_id = wu.id
-		LEFT JOIN
-			`cms_category` ccg
-		ON
-			cc.`category_id` = ccg.`id`,
-			(
-				SELECT
-					count(*) count
+	<select id="listCmsContent" parameterType="PageParameter" resultType="CmsContentVO">
+		SELECT * FROM (
+			(SELECT  cc.`id`, cc.`title`,
+  				(
+    				CASE
+				      WHEN cc.`author_type` = 0 
+				      THEN pu.username 
+				      WHEN cc.`author_type` = 1 || cc.`author_type` = 2 
+				      THEN wu.`username` 
+   					END
+  				) username,
+  				cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,cc.`comments`,cc.`likes`,
+  				cc.`bookmarks`,cc.category_id,ccg.`category_name`,cc.`is_published`,cc.`is_stick`,cc.`is_hot`,
+  				cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry` 
+			FROM
+			  `cms_content` cc 
+			  LEFT JOIN `pmph_user` pu 
+			    ON cc.author_id = pu.id 
+			  LEFT JOIN `writer_user` wu 
+			    ON cc.author_id = wu.id 
+			  LEFT JOIN `cms_category` ccg 
+			    ON cc.`category_id` = ccg.`id` 
+			WHERE cc.`is_deleted` = 0 
+			  AND cc.`author_type` = 0 
+			ORDER BY cc.`gmt_create` DESC) 
+		UNION
+			(SELECT  cc.`id`, cc.`title`,
+			  (
+			    CASE
+			      WHEN cc.`author_type` = 0 
+			      THEN pu.username 
+			      WHEN cc.`author_type` = 1 || cc.`author_type` = 2 
+			      THEN wu.`username` 
+			    END
+			  ) username,cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,cc.`comments`,
+			    cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,cc.`is_published`,cc.`is_stick`,
+			    cc.`is_hot`,cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry` 
+			FROM
+			  `cms_content` cc 
+			  LEFT JOIN `pmph_user` pu 
+			    ON cc.author_id = pu.id 
+			  LEFT JOIN `writer_user` wu 
+			    ON cc.author_id = wu.id 
+			  LEFT JOIN `cms_category` ccg 
+			    ON cc.`category_id` = ccg.`id` 
+			WHERE cc.`is_deleted` = 0 
+			  AND cc.`author_type` IN (1, 2) 
+			  AND cc.`is_staging` = FALSE))a,
+			  (SELECT SUM(`count`) `count` FROM
+			  	(SELECT  COUNT(*) `count`
+			     FROM
+			     	`cms_content` cc 
+			  	LEFT JOIN 
+			  		`pmph_user` pu 
+			    ON 
+			    	cc.author_id = pu.id 
+			  	LEFT JOIN 
+			  		`writer_user` wu 
+			    ON 
+			    	cc.author_id = wu.id 
+			  	LEFT JOIN 
+			  		`cms_category` ccg 
+			    ON 
+			    	cc.`category_id` = ccg.`id` 
+				WHERE 
+					cc.`is_deleted` = 0 
+				AND 
+					cc.`author_type` IN (1, 2) 
+				AND 
+				cc.`is_staging` = FALSE
+				 <if test="parameter !=null ">
+							<if test="parameter.categoryId != null">
+								AND cc.`category_id` = #{parameter.categoryId}
+							</if>
+							<if test="parameter.isAdmin == false ">
+								AND cc.`author_id`=#{parameter.authorId}
+							</if>
+							<if test="parameter.title != null and parameter.title != ''">
+								AND cc.`title` like concat('%',#{parameter.title},'%')
+							</if>
+							<if test="parameter.authStatus !=null ">
+								AND cc.`auth_status` = #{parameter.authStatus}
+							</if>
+							<if test="parameter.isPublished !=null ">
+								AND cc.`is_published` = #{parameter.isPublished}
+							</if>
+							<if test="parameter.username !=null and  parameter.username!='' ">
+								AND (
+								pu.`username` like
+								concat('%',#{parameter.username},'%')
+								OR
+								pu.`realname`like
+								concat('%',#{parameter.username},'%') )
+							</if>
+				</if>
+  				UNION
+				SELECT 
+					COUNT(*) `COUNT`
 				FROM
-					`cms_content`cc
-				LEFT JOIN
-					`pmph_user` pu
-				ON
-					cc.author_id = pu.id
-				LEFT JOIN
-					`writer_user` wu
-				ON
-					cc.author_id = wu.id
-				LEFT JOIN
-					`cms_category` ccg
-				ON
-					cc.`category_id` = ccg.`id`
-				WHERE
-					cc.`is_deleted`= 0
+				  `cms_content` cc 
+				LEFT JOIN 
+					`pmph_user` pu 
+				ON 
+					cc.author_id = pu.id 
+				LEFT JOIN 
+					`writer_user` wu 
+				ON 
+					cc.author_id = wu.id 
+				LEFT JOIN 
+					`cms_category` ccg 
+				ON 
+					cc.`category_id` = ccg.`id` 
+				WHERE 
+					cc.`is_deleted` = 0 
+				AND 
+					cc.`author_type` =0
+				<if test="parameter !=null ">
+							<if test="parameter.categoryId != null">
+								AND cc.`category_id` = #{parameter.categoryId}
+							</if>
+							<if test="parameter.isAdmin == false ">
+								AND cc.`author_id`=#{parameter.authorId}
+							</if>
+							<if test="parameter.title != null and parameter.title != ''">
+								AND cc.`title` like concat('%',#{parameter.title},'%')
+							</if>
+							<if test="parameter.authStatus !=null ">
+								AND cc.`auth_status` = #{parameter.authStatus}
+							</if>
+							<if test="parameter.isPublished !=null ">
+								AND cc.`is_published` = #{parameter.isPublished}
+							</if>
+							<if test="parameter.username !=null and  parameter.username!='' ">
+								AND (
+								pu.`username` like
+								concat('%',#{parameter.username},'%')
+								OR
+								pu.`realname`like
+								concat('%',#{parameter.username},'%') )
+							</if>
+				</if>
+				 )t
+			)b
+		<where>
 		<if test="parameter !=null ">
-			<if test="parameter.categoryId != null">
-				AND cc.`category_id` = #{parameter.categoryId}
-			</if>
-			<if test="parameter.isAdmin == false ">
-				AND cc.`author_id`=#{parameter.authorId}
-			</if>
-			<if test="parameter.title != null and parameter.title != ''">
-				AND cc.`title` like concat('%',#{parameter.title},'%')
-			</if>
-			<if test="parameter.authStatus !=null ">
-				AND cc.`auth_status` = #{parameter.authStatus}
-			</if>
-			<if test="parameter.isPublished !=null ">
-				AND cc.`is_published` = #{parameter.isPublished}
-			</if>
-			<if test="parameter.username !=null and  parameter.username!='' ">
-				AND (
-				pu.`username` like
-				concat('%',#{parameter.username},'%')
-				OR
-				pu.`realname` like
-				concat('%',#{parameter.username},'%') )
-			</if>
-		</if>
-		) t
-		WHERE
-		cc.`is_deleted`= 0
-		<if test="parameter !=null ">
-			<if test="parameter.categoryId != null">
-				AND cc.`category_id` = #{parameter.categoryId}
-			</if>
-			<if test="parameter.isAdmin == false ">
-				AND cc.`author_id`=#{parameter.authorId}
-			</if>
-			<if test="parameter.title != null and parameter.title != ''">
-				AND cc.`title` like concat('%',#{parameter.title},'%')
-			</if>
-			<if test="parameter.authStatus !=null ">
-				AND cc.`auth_status` = #{parameter.authStatus}
-			</if>
-			<if test="parameter.isPublished !=null ">
-				AND cc.`is_published` = #{parameter.isPublished}
-			</if>
-			<if test="parameter.username !=null and  parameter.username!='' ">
-				AND (
-				pu.`username` like
-				concat('%',#{parameter.username},'%')
-				OR
-				pu.`realname`like
-				concat('%',#{parameter.username},'%') )
-			</if>
-		</if>
+					<if test="parameter.categoryId != null">
+						 `category_id` = #{parameter.categoryId}
+					</if>
+					<if test="parameter.isAdmin == false ">
+						AND `author_id`=#{parameter.authorId}
+					</if>
+					<if test="parameter.title != null and parameter.title != ''">
+						AND `title` like concat('%',#{parameter.title},'%')
+					</if>
+					<if test="parameter.authStatus !=null ">
+						AND `auth_status` = #{parameter.authStatus}
+					</if>
+					<if test="parameter.isPublished !=null ">
+						AND `is_published` = #{parameter.isPublished}
+					</if>
+					<if test="parameter.username !=null and  parameter.username!='' ">
+						AND (
+						`username` like
+						concat('%',#{parameter.username},'%')
+						OR
+						`realname`like
+						concat('%',#{parameter.username},'%') )
+					</if>
+				</if>
+		</where>
 		order by
-		cc.`gmt_create` DESC
+			`gmt_create` DESC
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
