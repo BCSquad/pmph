@@ -105,6 +105,14 @@
 		dec_position_published where
 		id=#{id};
 	</delete>
+	
+	<!-- 根据bookIds删除 -->
+	<delete id="deleteDecPositionPublishedByBookIds" >
+		delete from dec_position_published where textbook_id in 
+		<foreach collection="bookIds" item="bookId" open="(" separator="," close=")" index="index"  >
+			#{bookId}
+		</foreach>
+	</delete>
 
 	<!-- 更新 -->
 	<update id="updateDecPositionPublished" parameterType="DecPositionPublished">
