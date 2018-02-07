@@ -90,10 +90,12 @@
 	
 	<!-- 批量插入DecPositionPublished -->
 	<insert id="batchInsertDecPositionPublished" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
-        insert into dec_position_published (publisher_id,declaration_id,textbook_id,preset_position,chosen_position)
+        insert into dec_position_published (publisher_id,declaration_id,textbook_id,preset_position,
+        									chosen_position,rank,syllabus_id,syllabus_name)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            ( #{item.publisherId},#{item.declarationId},#{item.textbookId},#{item.presetPosition},#{item.chosenPosition})
+            ( #{item.publisherId},#{item.declarationId},#{item.textbookId},
+              #{item.presetPosition},#{item.chosenPosition},#{item.rank},#{item.syllabusId},#{item.syllabusName})
         </foreach>
     </insert>
 	

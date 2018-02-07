@@ -62,12 +62,16 @@ public class DecPositionPublished implements Serializable {
     }
 
     public DecPositionPublished(Long publisherId, Long declarationId, Long textbookId,
-    Integer presetPosition, Integer chosenPosition) {
+    Integer presetPosition, Integer chosenPosition, Integer rank, String syllabusId,
+    String syllabusName) {
         this.publisherId = publisherId;
         this.declarationId = declarationId;
         this.textbookId = textbookId;
         this.presetPosition = presetPosition;
         this.chosenPosition = chosenPosition;
+        this.rank = rank;
+        this.syllabusId = syllabusId;
+        this.syllabusName = syllabusName;
     }
 
     public Long getId() {

@@ -449,7 +449,10 @@ public class DecPositionServiceImpl implements DecPositionService {
                                                                    decPosition.getDeclarationId(),
                                                                    textbookId,
                                                                    decPosition.getPresetPosition(),
-                                                                   decPosition.getChosenPosition()));
+                                                                   decPosition.getChosenPosition(),
+                                                                   decPosition.getRank(),
+                                                                   decPosition.getSyllabusId(),
+                                                                   decPosition.getSyllabusName()));
             }
             map.put("decPositionPublisheds", decPositionPublisheds);
             decPositionPublishedService.deleteDecPositionPublishedByPublisherIdAndDeclarationId(map);// 先删除当前发布人已发布的

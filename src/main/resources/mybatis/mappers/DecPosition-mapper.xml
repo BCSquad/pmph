@@ -335,7 +335,8 @@
 		    END) strPresetPosition,
 			dc.`online_progress`,
 			dc.`id` declarationId, dc.`offline_progress`,
-			dp.`chosen_position`, dp.`rank`
+			dp.`chosen_position`, dp.`rank`,
+			dp.`syllabus_id`,dp.`syllabus_name`
 		FROM
 			`dec_position` dp
 		LEFT JOIN

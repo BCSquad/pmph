@@ -43,6 +43,10 @@ public class DecPositionEditorSelectionVO implements Serializable {
     private Boolean   isDigitalEditor;
     // 是否可选数字编委
     private Boolean   isDigitalEditorOptional;
+    // 教学大纲id
+    private String    syllabusId;
+    // 教学大纲名称
+    private String    syllabusName;
 
     // 作家id
     private Long      userId;
@@ -313,6 +317,34 @@ public class DecPositionEditorSelectionVO implements Serializable {
      */
     public void setStrPresetPosition(String strPresetPosition) {
         this.strPresetPosition = strPresetPosition;
+    }
+
+    /**
+     * @return the syllabusId
+     */
+    public String getSyllabusId() {
+        return syllabusId;
+    }
+
+    /**
+     * @param syllabusId the syllabusId to set
+     */
+    public void setSyllabusId(String syllabusId) {
+        this.syllabusId = syllabusId;
+    }
+
+    /**
+     * @return the syllabusName
+     */
+    public String getSyllabusName() {
+        return syllabusName;
+    }
+
+    /**
+     * @param syllabusName the syllabusName to set
+     */
+    public void setSyllabusName(String syllabusName) {
+        this.syllabusName = syllabusName;
     }
 
 }
