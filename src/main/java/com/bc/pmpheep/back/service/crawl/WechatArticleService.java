@@ -127,8 +127,8 @@ public class WechatArticleService {
 		//防止map内存溢出，操作过后就移除
 		Const.WACT_MAP.remove("guid");
 		//删除文件夹及以下文件
-		String dir = new File("").getAbsolutePath() + "/" + guid; // 获取路径
-		FileUtil.deleteDirectory(dir);
+		String dirs = new File("").getAbsolutePath() + "/" + guid; // 获取路径
+		FileUtil.deleteDirectory(dirs);
 		return  cmsContent;
 	}
 	
