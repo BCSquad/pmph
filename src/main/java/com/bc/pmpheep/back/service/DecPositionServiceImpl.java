@@ -161,6 +161,19 @@ public class DecPositionServiceImpl implements DecPositionService {
         }
         return decPositionDao.listDecPositionsByTextbookId(textbookId);
     }
+    
+    @Override
+    public List<DecPosition> listDecPositionsByTextBookIds(List<Long> textbookIds)  throws CheckedServiceException {
+        if (null == textbookIds || textbookIds.size() == 0) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,  CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        for(Long bookId:textbookIds){
+        	if(null == bookId){
+        		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,  CheckedExceptionResult.NULL_PARAM, "有书籍id为空");
+        	}
+        }
+        return decPositionDao.listDecPositionsByTextBookIds(textbookIds);
+    }
 
     @Override
     public List<DecPosition> listChosenDecPositionsByTextbookId(Long textbookId)
