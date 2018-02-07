@@ -100,7 +100,7 @@ public interface DecPositionService {
      * @return
      * @throws CheckedServiceException
      */
-    List<DecPosition> listDecPositionsByTextBookIds(List<Long> textbookIds) throws CheckedServiceException;
+    List<DecPosition> listDecPositionsByTextBookIds(List<Long> textBookIds) throws CheckedServiceException;
 
     /**
      * 根据书籍id获取入选的职位职位(主编、副主编、编委、数字编辑)

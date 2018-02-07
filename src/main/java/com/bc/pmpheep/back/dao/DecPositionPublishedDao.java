@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.DecPositionPublished;
@@ -66,6 +67,16 @@ public interface DecPositionPublishedDao {
      * </pre>
      */
     Integer batchInsertDecPositionPublished(List<DecPositionPublished> decPositionPublisheds);
+    
+    /**
+     * 根据书籍ids删除
+     * @introduction 
+     * @author Mryang
+     * @createDate 2018年2月7日 下午2:48:08
+     * @param bookIds
+     * @return
+     */
+    Integer deleteDecPositionPublishedByBookIds(@Param("bookIds")List<Long> bookIds);
 
     /**
      * 
