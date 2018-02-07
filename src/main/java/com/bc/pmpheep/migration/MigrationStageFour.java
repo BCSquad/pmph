@@ -554,8 +554,8 @@ public class MigrationStageFour {
             if (StringUtil.isEmpty(note)) {
                 object.put(SQLParameters.EXCEL_EX_HEADER, exception.append("备注。"));
                 excel.add(object);
-                note="-";
-                excptionList.add(new Object[]{matername,"教材备注内容为空","原专家平台或者在运平台没有填写通知备注","设置为'-'导入新库表"});
+                //note="-";
+                //excptionList.add(new Object[]{matername,"教材备注内容为空","原专家平台或者在运平台没有填写通知备注","设置为'-'导入新库表"});
             }
             MaterialExtra materialExtra = new MaterialExtra();
             materialExtra.setMaterialId(materid);
