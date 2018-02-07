@@ -10,34 +10,14 @@ import com.bc.pmpheep.back.po.BookVedio;
 
 @org.springframework.stereotype.Repository
 public interface BookVedioDao {
-
-	/**
-	 * 新增 vedio
-	 * @introduction 
-	 * @author Mryang
-	 * @createDate 2018年1月31日  9:24:01
-	 * @param bookVedio
-	 * @return
-	 */
-	Integer addBookVedio(BookVedio bookVedio);
-
-	/**
-	 * 根据文件上传路径模糊获取BookVedio
-	 * @introduction 
-	 * @author Mryang
-	 * @createDate 2018年1月31日  9:24:01
-	 * @param bookVedio
-	 * @return
-	 */
-	BookVedio  getBookVedioByOldPath(@Param("oldPath")String oldPath);
 	
 	/**
-	 * 根据文件id删除BookVedio
+	 * 根据文件ids删除BookVedio
 	 * 2018年2月6日 上午11:11:36 
-	 * @param id
+	 * @param ids
 	 * @return
 	 */
-	Integer deleteBookVedioById(@Param("id")Long id);
+	Integer deleteBookVedioByIds(@Param("ids")List<Long> ids);
 	
 	
 	/**
