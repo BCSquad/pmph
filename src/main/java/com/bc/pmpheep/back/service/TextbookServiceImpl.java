@@ -371,6 +371,16 @@ public class TextbookServiceImpl implements TextbookService {
 		}	
 		List<Textbook> bookList = textbookDao.getTextbookByMaterialId(materialId);
 		List<BookListVO> books = new ArrayList<>();
+		if (null == bookList || bookList.isEmpty()){
+			BookListVO bookListVO = new BookListVO();
+			bookListVO.setMaterialId(material.getId());
+			bookListVO.setMaterialName(material.getMaterialName());
+			bookListVO.setMaterialRound(material.getMaterialRound());
+			bookListVO.setMaterialType(pathType);
+			bookListVO.setIsPublic(material.getIsPublic());
+			books.add(bookListVO);
+			return books;
+		}
         for (Textbook textbook : bookList){
         	BookListVO bookListVO = new BookListVO();
     		bookListVO.setMaterialId(material.getId());
