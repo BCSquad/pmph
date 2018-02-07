@@ -202,7 +202,7 @@
 	
 	<!-- 根据书籍id查询申报职位列表 -->
 	<select id="listDecPositionsByTextBookIds" resultType="DecPosition">
-		select * from dec_position where book_id in 
+		select * from dec_position where textbook_id in 
 		<foreach collection="textbookIds"  open="("  separator=","  close=")"  item="bookId"  index="index">
 			#{bookId}
 		</foreach>
