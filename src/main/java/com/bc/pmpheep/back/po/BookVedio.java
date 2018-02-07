@@ -46,8 +46,6 @@ public class BookVedio implements Serializable{
 	private java.sql.Timestamp gmtCreate;
 	//修改时间
 	private java.sql.Timestamp gmtUpdate;
-	//资源分类
-	private Long resourceType ;
 	//封面图片id
 	private String  cover; 
 	
@@ -64,17 +62,6 @@ public class BookVedio implements Serializable{
 		this.origFileName = origFileName;
 		this.origFileSize = origFileSize;
 		this.userId = userId;
-	}
-
-	
-
-	public Long getResourceType() {
-		return resourceType;
-	}
-
-	public BookVedio setResourceType(Long resourceType) {
-		this.resourceType = resourceType;
-		return this;
 	}
 
 	public String getCover() {
@@ -255,9 +242,10 @@ public class BookVedio implements Serializable{
 				+ ",origFileSize:" + origFileSize + ",path:" + path
 				+ ",fileName:" + fileName + ",fileSize:" + fileSize + ",sort:"
 				+ sort + ",clicks:" + clicks + ",userId:" + userId + ",isAuth:"
-				+ isAuth + ",authUserId:" + authUserId + ",auth:" + authDate
-				+ ",isDeleted:" + isDeleted + ",gmtCreate:" + gmtCreate
-				+ ",gmtUpdate:" + gmtUpdate + "}";
+				+ isAuth + ",authUserId:" + authUserId + ",authDate:"
+				+ authDate + ",isDeleted:" + isDeleted + ",gmtCreate:"
+				+ gmtCreate + ",gmtUpdate:" + gmtUpdate + ",cover:" + cover
+				+ "}";
 	}
 	
 	

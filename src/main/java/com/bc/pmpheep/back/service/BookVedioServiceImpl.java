@@ -34,28 +34,16 @@ public class BookVedioServiceImpl  implements BookVedioService {
 	
 
 	@Override
-	public Integer addBookVedio(BookVedio bookVedio) throws CheckedServiceException {
-		return bookVedioDao.addBookVedio(bookVedio);
-	}
-
-	@Override
-	public BookVedio getBookVedioByOldPath(String oldPath) throws CheckedServiceException {
-		if(StringUtil.isEmpty(oldPath)){
+	public Integer deleteBookVedioByIds(List<Long> ids) throws CheckedServiceException {
+		if(null == ids || ids.size() == 0 ){
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		String UUID = oldPath.substring(oldPath.lastIndexOf(System.getProperty("file.separator"))+1,oldPath.lastIndexOf("."));
-		if(StringUtil.isEmpty(UUID)){
-			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		for(Long id :ids){
+			if(null == id ){
+				throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO, CheckedExceptionResult.NULL_PARAM, "有参数为空");
+			}
 		}
-		return bookVedioDao.getBookVedioByOldPath(UUID);
-	}
-
-	@Override
-	public Integer deleteBookVedioById(Long id) throws CheckedServiceException {
-		if(null == id){
-			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO, CheckedExceptionResult.NULL_PARAM, "参数为空");
-		}
-		return bookVedioDao.deleteBookVedioById(id);
+		return bookVedioDao.deleteBookVedioByIds(ids);
 	}
 
 	
@@ -100,7 +88,7 @@ public class BookVedioServiceImpl  implements BookVedioService {
 		PageResult<BookVedioVO> BookVedioVOlst= new  PageResult<BookVedioVO>();
 		BookVedioVOlst.setPageNumber(pageNumber);
 		BookVedioVOlst.setPageSize(pageSize);
-		BookVedioVOlst.setPageTotal(total);
+		BookVedioVOlst.setTotal(total);
 		BookVedioVOlst.setRows(lst);
 		return BookVedioVOlst;
 	}

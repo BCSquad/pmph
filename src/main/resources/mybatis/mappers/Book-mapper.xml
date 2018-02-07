@@ -516,7 +516,7 @@
 	</select>
 	
 	<!-- 获取书籍总数 -->
-	<select id="getListToatl" >
+	<select id="getListToatl" resultType="java.lang.Integer">
 		select COUNT(id)  from book where 1=1 
 		<if test="bookName != null ">
 			and  bookname like CONCAT('%',#{bookName},'%') 
