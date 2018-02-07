@@ -77,7 +77,7 @@ public class WechatArticleService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
                     CheckedExceptionResult.NULL_PARAM, "文章唯一标识不能为空");
 		}
-		//删除文件夹及以下文件
+		// 删除文件夹及以下文件
 		String dir = new File("").getAbsolutePath() + "/" + guid; // 获取路径
 		FileUtil.deleteDirectory(dir);
 		if (Const.WACT_MAP.containsKey(guid)) {
@@ -124,9 +124,9 @@ public class WechatArticleService {
             cmsContent.setAuthorType((short) 0); // 作者类型
     		cmsContent = cmsContentService.addCmsContent(cmsContent);
         }
-		//防止map内存溢出，操作过后就移除
+		// 防止map内存溢出，操作过后就移除
 		Const.WACT_MAP.remove("guid");
-		//删除文件夹及以下文件
+		// 删除文件夹及以下文件
 		String dirs = new File("").getAbsolutePath() + "/" + guid; // 获取路径
 		FileUtil.deleteDirectory(dirs);
 		return  cmsContent;
