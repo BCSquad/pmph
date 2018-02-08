@@ -150,16 +150,16 @@
 	</update>
 	
 	<!-- 按公布人id和申报表id删除 -->
-	<delete id="deleteDecPositionPublishedByPublisherIdAndDeclarationId" parameterType="java.util.Map" >
+	<delete id="deleteDecPositionPublishedByTextBookId" parameterType="java.lang.Long" >
 		DELETE FROM 
 			`dec_position_published` 
 		WHERE 
-			publisher_id= #{publisherId}
-		AND 
-			declaration_id IN 
+			 textbook_id= #{textbookId}
+		<!--AND  
+			 declaration_id IN 
 			<foreach collection="decPositionPublisheds" item="item" open="(" close=")" separator=",">
 				#{item.declarationId}
-			</foreach>
+			</foreach> -->
 	</delete>
 	
 	<!-- 根据id查询 -->

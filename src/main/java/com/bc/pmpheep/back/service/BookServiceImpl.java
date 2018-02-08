@@ -419,4 +419,12 @@ public class BookServiceImpl extends BaseService implements BookService {
         pageResult.setRows(rows);
 		return pageResult;
 	}
+
+	@Override
+	public Integer updateBookCore(Long id) throws CheckedServiceException {
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return bookDao.updateBookCore(id);
+	}
 }

@@ -1,7 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
-import java.util.Map;
+
 import com.bc.pmpheep.back.po.DecPositionPublished;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -66,11 +66,11 @@ public interface DecPositionPublishedService {
      */
     Integer batchInsertDecPositionPublished(List<DecPositionPublished> decPositionPublisheds)
     throws CheckedServiceException;
-    
-    
+
     /**
      * 根据书籍ids删除
-     * @introduction 
+     * 
+     * @introduction
      * @author Mryang
      * @createDate 2018年2月7日 下午2:48:08
      * @param bookIds
@@ -88,6 +88,5 @@ public interface DecPositionPublishedService {
      * @return
      * </pre>
      */
-    Integer deleteDecPositionPublishedByPublisherIdAndDeclarationId(Map<String, Object> map)
-    throws CheckedServiceException;
+    Integer deleteDecPositionPublishedByTextBookId(Long textbookId) throws CheckedServiceException;
 }
