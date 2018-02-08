@@ -46,6 +46,8 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 	@Autowired
 	BookUserCommentDao bookUserCommentDao;
 	@Autowired
+	private BookService bookService;
+	@Autowired
 	WriterUserTrendstService writerUserTrendstService;
 
 	@Override
@@ -97,6 +99,10 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			bookUserComment.setAuthUserId(pmphUser.getId());
 			bookUserComment.setAuthDate(DateUtil.getCurrentTime());
 			num += bookUserCommentDao.updateBookUserComment(bookUserComment);
+			if (isAuth == 1){
+				//更新评分
+				bookService.updateBookCore(id);
+			}
 		}
 		if (num > 0) {
 			result = "SUCCESS";

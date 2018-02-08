@@ -61,6 +61,14 @@ public interface BookService {
 	 * @return 包含主键的插入对象
 	 */
 	BookUserMark add(BookUserMark mark) throws CheckedServiceException;
+	
+	/**
+	 * 更新书的评分
+	 * 
+	 * @param bookId
+	 * @return 影响行数
+	 */
+	Integer updateBookCore(Long id) throws CheckedServiceException;
 
 	/**
 	 *
