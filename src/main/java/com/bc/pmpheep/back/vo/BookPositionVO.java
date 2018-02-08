@@ -68,6 +68,8 @@ public class BookPositionVO implements Serializable{
 		private Integer revisionTimes;
 		//公布后再次公布次数
 		private Integer republishTimes;
+		//最终结果公布后是否可以再公布 （结果修改了就可以再次公布）
+		private Boolean repub; 
 		
 		public BookPositionVO() {
 			super();
@@ -263,6 +265,14 @@ public class BookPositionVO implements Serializable{
 		public void setIsForceEnd(Boolean isForceEnd) {
 			this.isForceEnd = isForceEnd;
 		}
+		
+		public Boolean getRepub() {
+			return repub;
+		}
+
+		public void setRepub(Boolean repub) {
+			this.repub = repub;
+		}
 
 		@Override
 		public String toString() {
@@ -281,7 +291,8 @@ public class BookPositionVO implements Serializable{
 					+ ",bianWeisNum:" + bianWeisNum + ",groupId:" + groupId
 					+ ",myPower:" + myPower + ",isPublished:" + isPublished
 					+ ",isLocked:" + isLocked + ",revisionTimes:"
-					+ revisionTimes + ",republishTimes:" + republishTimes + "}";
+					+ revisionTimes + ",republishTimes:" + republishTimes
+					+ ",repub:" + repub + "}";
 		}
 		
 		
