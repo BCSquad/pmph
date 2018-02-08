@@ -606,7 +606,10 @@ public class TextbookServiceImpl implements TextbookService {
 								&& bookName.equals(book.getTextbookName())){
 							bookList.add(book);
 						}else{
-							bookList.add(book);
+							textbook.setSort(sort);
+							textbook.setTextbookName(bookName);
+							textbook.setTextbookRound(round);
+							bookList.add(textbook);
 						}
 					}
 				}
