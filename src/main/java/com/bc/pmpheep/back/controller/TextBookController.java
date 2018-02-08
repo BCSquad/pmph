@@ -64,9 +64,11 @@ public class TextBookController {
     @ResponseBody
     @RequestMapping(value = "/add/textbook", method = RequestMethod.POST)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存或修改新增教材书籍")
-    public ResponseBean textbook( String books, HttpServletRequest request){
+    public ResponseBean textbook( Long materialId, Boolean isPublic,String textbooks,
+    		HttpServletRequest request){
     	String sessionId = CookiesUtil.getSessionId(request);
-    	return new ResponseBean(textbookService.addOrUpdateTextBookList(books, sessionId));
+    	return new ResponseBean(textbookService.addOrUpdateTextBookList(materialId,
+    			isPublic, textbooks, sessionId));
     }
     
     /**
