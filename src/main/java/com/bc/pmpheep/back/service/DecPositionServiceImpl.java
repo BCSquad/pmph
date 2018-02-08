@@ -457,18 +457,18 @@ public class DecPositionServiceImpl implements DecPositionService {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                                   CheckedExceptionResult.NULL_PARAM, "书籍id为空");
             }
-            // 获取当前书籍书申报信息
-            List<DecPosition> decPositionsList =
-            decPositionService.listDecPositionsByTextBookIds(new ArrayList<Long>(
-                                                                                 Arrays.asList(textbookId)));
+            // 获取当前书籍书申报信息(包含没有被遴选上的)
+            List<DecPosition> decPositionsList = decPositionService.listDecPositionsByTextBookIds(new ArrayList<Long>( Arrays.asList(textbookId)));
             if (CollectionUtil.isEmpty(decPositionsList)) {
-                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                                  CheckedExceptionResult.NULL_PARAM,
-                                                  "当前书籍还未遴选主编，副主编");
+                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,  CheckedExceptionResult.NULL_PARAM, "当前书籍还未遴选主编，副主编");
             }
-            List<DecPositionPublished> decPositionPublisheds =
-            new ArrayList<DecPositionPublished>(decPositionsList.size());// DecPositionPublished对象集合
+            // DecPositionPublished对象集合
+            List<DecPositionPublished> decPositionPublisheds = new ArrayList<DecPositionPublished>(decPositionsList.size());
             for (DecPosition decPosition : decPositionsList) {
+            	if(null == decPosition || null == decPosition.getChosenPosition() || decPosition.getChosenPosition().intValue() <=0 ){
+            		continue;
+            	}
+            	//筛选出遴选上的人员
                 decPositionPublisheds.add(new DecPositionPublished(pmphUser.getId(),
                                                                    decPosition.getDeclarationId(),
                                                                    textbookId,
