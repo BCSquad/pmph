@@ -224,8 +224,9 @@ public class MigrationStageOne {
                 excel.add(map);
                 continue;
             }
+            //找不到所属区域根据客户要求删除不导入
             if (ObjectUtil.isNull(areaId)){
-            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到机构所属区域。"));
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("已删除。"));
                 excel.add(map);
                 continue;
             }
@@ -533,6 +534,12 @@ public class MigrationStageOne {
             String signature = (String) map.get("usersign");
             String note = (String) map.get("memo");
             Integer sort = (Integer) map.get("sortno");
+            //此重复用户只能通过个人信息多少判断保留，保留个人信息较全的一条，另一条删除
+            if (("王训".equals(realName) || "赵舒武".equals(realName)) && ObjectUtil.isNull(sort)){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("已删除"));
+            	excel.add(map);
+            	continue;
+            }
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
             }
