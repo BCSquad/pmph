@@ -86,8 +86,8 @@ public interface TextbookService {
      * @param 
      * @return List<Textbook>
      */
-    List<Textbook> addOrUpdateTextBookList(String books, String sessionId)
-    		throws CheckedServiceException;
+    List<Textbook> addOrUpdateTextBookList(Long materialId, Boolean isPublic,String textbooks,
+    		String sessionId) throws CheckedServiceException;
     
     /**
      * 
