@@ -594,6 +594,13 @@ public class TextbookServiceImpl implements TextbookService {
 							CheckedExceptionResult.ILLEGAL_PARAM, "书籍版次格式错误，请按照模板格式修改后"
 									+ "再上传");
 				}
+				if (null == books || books.isEmpty()){
+					textbook.setSort(sort);
+					textbook.setTextbookName(bookName);
+					textbook.setTextbookRound(round);
+					bookList.add(textbook);
+					return bookList;
+				}
 				/* 无人申报的教材，如果与Excel文档相同的书籍，保留数据库里的数据，否则保存Excel文档里的书籍 */
 				if (null == noPeople || noPeople.isEmpty()){
 					textbook.setSort(sort);
