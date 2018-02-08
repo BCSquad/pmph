@@ -154,8 +154,8 @@
 		DELETE FROM 
 			`dec_position_published` 
 		WHERE 
-			publisher_id= #{publisherId}
-		AND 
+			<!-- publisher_id= #{publisherId}
+		AND  -->
 			declaration_id IN 
 			<foreach collection="decPositionPublisheds" item="item" open="(" close=")" separator=",">
 				#{item.declarationId}
