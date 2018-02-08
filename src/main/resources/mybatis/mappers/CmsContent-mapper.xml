@@ -402,7 +402,7 @@
 			  LEFT JOIN `cms_category` ccg 
 			    ON cc.`category_id` = ccg.`id` 
 			WHERE cc.`is_deleted` = 0 
-			  AND cc.`author_type` = 0 
+			  AND cc.`author_type` IN (0,1) 
 			ORDER BY cc.`gmt_create` DESC) 
 		UNION
 			(SELECT  cc.`id`, cc.`title`,
@@ -425,7 +425,7 @@
 			  LEFT JOIN `cms_category` ccg 
 			    ON cc.`category_id` = ccg.`id` 
 			WHERE cc.`is_deleted` = 0 
-			  AND cc.`author_type` IN (1, 2) 
+			  AND cc.`author_type`=2
 			  AND cc.`is_staging` = FALSE))a,
 			  (SELECT SUM(`count`) `count` FROM
 			  	(SELECT  COUNT(*) `count`
@@ -446,7 +446,7 @@
 				WHERE 
 					cc.`is_deleted` = 0 
 				AND 
-					cc.`author_type` IN (1, 2) 
+					cc.`author_type` =2 
 				AND 
 				cc.`is_staging` = FALSE
 				 <if test="parameter !=null ">
@@ -494,7 +494,7 @@
 				WHERE 
 					cc.`is_deleted` = 0 
 				AND 
-					cc.`author_type` =0
+					cc.`author_type` IN(0,1)
 				<if test="parameter !=null ">
 							<if test="parameter.categoryId != null">
 								AND cc.`category_id` = #{parameter.categoryId}
