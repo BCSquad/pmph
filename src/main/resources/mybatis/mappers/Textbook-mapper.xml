@@ -264,7 +264,7 @@
 			b.textbook_id=a.id
 			LEFT JOIN (select * from declaration where
 			is_deleted = 0 and is_staging =
-			0 and online_progress !=2) c on c.id =
+			0 and online_progress !=0 ) c on c.id =
 			b.declaration_id
 			LEFT JOIN material d on d.id = a.material_id
 			LEFT JOIN
@@ -344,7 +344,7 @@
 		LEFT JOIN (select * from
 		declaration where is_deleted = 0 and is_staging =
 		0 and online_progress
-		!=2) c on c.id = b.declaration_id
+		!=0) c on c.id = b.declaration_id
 		LEFT JOIN material d on d.id =
 		a.material_id
 		LEFT JOIN (select * from pmph_user where is_deleted =0

@@ -356,7 +356,7 @@
 		ON
 			dc.`org_id`= org.`id`
 		WHERE 
-			dc.`online_progress` in (1,3) 
+			dc.`online_progress` != 0 
 		AND
 			dc.`is_staging`= FALSE
 		AND
