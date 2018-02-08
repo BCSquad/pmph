@@ -1,7 +1,6 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,25 +77,28 @@ public class DecPositionPublishedServiceImpl implements DecPositionPublishedServ
     @Override
     public DecPositionPublished getDecPositionPublishedById(Long id) throws CheckedServiceException {
         if (ObjectUtil.isNull(id)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "参数不能为空");
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "参数不能为空");
         }
         return decPositionPublishedDao.getDecPositionPublishedById(id);
     }
 
     @Override
-    public Integer deleteDecPositionPublishedByBookIds(List<Long> bookIds) throws CheckedServiceException{
-    	if (null ==  bookIds || bookIds.size() == 0) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "参数不能为空");
+    public Integer deleteDecPositionPublishedByBookIds(List<Long> bookIds)
+    throws CheckedServiceException {
+        if (null == bookIds || bookIds.size() == 0) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "参数不能为空");
         }
-    	for(Long bookId :bookIds){
-    		if(null == bookId){
-    			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "有参数为空");
-    		}
-    	}
-    	return decPositionPublishedDao.deleteDecPositionPublishedByBookIds(bookIds);
+        for (Long bookId : bookIds) {
+            if (null == bookId) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                                  CheckedExceptionResult.NULL_PARAM, "有参数为空");
+            }
+        }
+        return decPositionPublishedDao.deleteDecPositionPublishedByBookIds(bookIds);
     }
-    
-    
+
     @Override
     public Integer batchInsertDecPositionPublished(List<DecPositionPublished> decPositionPublisheds)
     throws CheckedServiceException {
@@ -108,13 +110,13 @@ public class DecPositionPublishedServiceImpl implements DecPositionPublishedServ
     }
 
     @Override
-    public Integer deleteDecPositionPublishedByPublisherIdAndDeclarationId(Map<String, Object> map)
+    public Integer deleteDecPositionPublishedByTextBookId(Long textbookId)
     throws CheckedServiceException {
-        if (CollectionUtil.isEmpty(map)) {
+        if (ObjectUtil.isNull(textbookId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "参数不能为空");
         }
-        return decPositionPublishedDao.deleteDecPositionPublishedByPublisherIdAndDeclarationId(map);
+        return decPositionPublishedDao.deleteDecPositionPublishedByTextBookId(textbookId);
     }
 
 }

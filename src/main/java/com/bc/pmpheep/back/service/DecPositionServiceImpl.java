@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -161,16 +162,19 @@ public class DecPositionServiceImpl implements DecPositionService {
         }
         return decPositionDao.listDecPositionsByTextbookId(textbookId);
     }
-    
+
     @Override
-    public List<DecPosition> listDecPositionsByTextBookIds(List<Long> textbookIds)  throws CheckedServiceException {
+    public List<DecPosition> listDecPositionsByTextBookIds(List<Long> textbookIds)
+    throws CheckedServiceException {
         if (null == textbookIds || textbookIds.size() == 0) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,  CheckedExceptionResult.NULL_PARAM, "参数为空");
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        for(Long bookId:textbookIds){
-        	if(null == bookId){
-        		throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,  CheckedExceptionResult.NULL_PARAM, "有书籍id为空");
-        	}
+        for (Long bookId : textbookIds) {
+            if (null == bookId) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                                  CheckedExceptionResult.NULL_PARAM, "有书籍id为空");
+            }
         }
         return decPositionDao.listDecPositionsByTextBookIds(textbookIds);
     }
@@ -453,11 +457,18 @@ public class DecPositionServiceImpl implements DecPositionService {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                                   CheckedExceptionResult.NULL_PARAM, "书籍id为空");
             }
-            Map<String, Object> map = new HashMap<String, Object>(2);
-            map.put("publisherId", pmphUser.getId());
+            // 获取当前书籍书申报信息
+            List<DecPosition> decPositionsList =
+            decPositionService.listDecPositionsByTextBookIds(new ArrayList<Long>(
+                                                                                 Arrays.asList(textbookId)));
+            if (CollectionUtil.isEmpty(decPositionsList)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                                  CheckedExceptionResult.NULL_PARAM,
+                                                  "当前书籍还未遴选主编，副主编");
+            }
             List<DecPositionPublished> decPositionPublisheds =
-            new ArrayList<DecPositionPublished>(decPositions.size());// DecPositionPublished对象集合
-            for (DecPosition decPosition : decPositions) {
+            new ArrayList<DecPositionPublished>(decPositionsList.size());// DecPositionPublished对象集合
+            for (DecPosition decPosition : decPositionsList) {
                 decPositionPublisheds.add(new DecPositionPublished(pmphUser.getId(),
                                                                    decPosition.getDeclarationId(),
                                                                    textbookId,
@@ -467,8 +478,7 @@ public class DecPositionServiceImpl implements DecPositionService {
                                                                    decPosition.getSyllabusId(),
                                                                    decPosition.getSyllabusName()));
             }
-            map.put("decPositionPublisheds", decPositionPublisheds);
-            decPositionPublishedService.deleteDecPositionPublishedByPublisherIdAndDeclarationId(map);// 先删除当前发布人已发布的
+            decPositionPublishedService.deleteDecPositionPublishedByTextBookId(textbookId);// 先删除当前发布人已发布的
             decPositionPublishedService.batchInsertDecPositionPublished(decPositionPublisheds);// 再添加
             // 发布时更新textbook表中is_chief_published（是否已公布主编/副主编）字段
             count = textbookService.updateTextbook(new Textbook(textbookId, true));
