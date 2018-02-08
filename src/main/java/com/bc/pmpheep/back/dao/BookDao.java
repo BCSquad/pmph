@@ -128,4 +128,12 @@ public interface BookDao {
 	 * @return
 	 */
 	List<Book> geList(java.util.Map<String,Object> map);
+	
+	/**
+	 * 更新书的评分
+	 * 
+	 * @param bookId
+	 * @return 影响行数
+	 */
+	Integer updateBookCore(@Param("id")Long id);
 }
