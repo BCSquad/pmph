@@ -554,6 +554,12 @@ public class TextbookServiceImpl implements TextbookService {
 				noPeople.add(book);
 			}
 		}
+		/* 有人申报的教材，以数据库里查询出来的数据为准 */
+		if (null != havePeople || !havePeople.isEmpty()){
+			for (Textbook book : havePeople){
+				bookList.add(book);
+			}
+		}
 		for (int numSheet = 0 ; numSheet < workbook.getNumberOfSheets();numSheet ++){
 			Sheet sheet = workbook.getSheetAt(numSheet);
 			if (null == sheet){
@@ -601,29 +607,17 @@ public class TextbookServiceImpl implements TextbookService {
 					textbook.setTextbookRound(round);
 					bookList.add(textbook);								
 				}else{
-					for (Textbook book : noPeople){
-						if (sort.intValue() == book.getSort() && round.intValue() == book.getTextbookRound()
-								&& bookName.equals(book.getTextbookName())){
-							bookList.add(book);
-						}else{
-							textbook.setSort(sort);
-							textbook.setTextbookName(bookName);
-							textbook.setTextbookRound(round);
-							bookList.add(textbook);
-						}
-					}
-				}
-				/* 有人申报的教材，以数据库里查询出来的数据为准 */
-				if (null == havePeople || havePeople.isEmpty()){
 					textbook.setSort(sort);
 					textbook.setTextbookName(bookName);
 					textbook.setTextbookRound(round);
-					bookList.add(textbook);	
-				}else{
-					for (Textbook book : havePeople){
-						bookList.add(book);
+					for (Textbook book : noPeople){
+						if (sort.intValue() == book.getSort() && round.intValue() == book.getTextbookRound()
+								&& bookName.equals(book.getTextbookName())){
+							textbook = book;
+						}
 					}
-				}
+					bookList.add(textbook);
+				}				
 			}
 		}
 		return bookList;
