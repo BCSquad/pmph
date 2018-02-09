@@ -24,6 +24,7 @@ import com.bc.pmpheep.back.vo.BookCorrectionTrackVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.google.gson.Gson;
 
 /**
  * BookCorrectionService 实现
@@ -92,9 +93,18 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		writerUserTrendst.setType(0);
 		String detail ="";
 		if(result){//有问题
-			detail ="{title:\"" + CheckedExceptionBusiness.BOOKCORRECTION + "\",content:\"您的图书纠错已核实。\",img:1}";
+			Map<String,Object> map =  new HashMap<String,Object>();
+			map.put("title", CheckedExceptionBusiness.BOOKCORRECTION);
+			map.put("content", "您的图书纠错已核实。");
+			map.put("img", 1);
+			detail = new Gson().toJson(map) ;
 		}else{
-			detail ="{title:\"" + CheckedExceptionBusiness.BOOKCORRECTION + "\",content:\"您的图书纠错未核实到该问题。\",img:2}";
+			Map<String,Object> map =  new HashMap<String,Object>();
+			map.put("title", CheckedExceptionBusiness.BOOKCORRECTION);
+			map.put("content", "您的图书纠错未核实到该问题。");
+			map.put("img", 2);
+			//detail ="{title:\"" + CheckedExceptionBusiness.BOOKCORRECTION + "\",content:\"您的图书纠错未核实到该问题。\",img:2}";
+			detail = new Gson().toJson(map) ;
 		}
 		writerUserTrendst.setDetail(detail);
 		Integer res = this.updateBookCorrection(bookCorrection);

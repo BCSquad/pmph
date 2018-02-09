@@ -1,13 +1,12 @@
 package com.bc.pmpheep.back.service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bc.pmpheep.back.dao.TopicDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -31,7 +30,7 @@ import com.bc.pmpheep.erp.service.InfoWorking;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
-
+import com.google.gson.Gson;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -214,6 +213,7 @@ public class TopicServiceImpl implements TopicService {
 		return list;
 	}
 
+
 	@Override
 	public String update(TopicLog topicLog, String sessionId, Topic topic) throws CheckedServiceException {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -255,8 +255,11 @@ public class TopicServiceImpl implements TopicService {
 		writerUserTrendst.setIsPublic(true);
 		if (ObjectUtil.notNull(topic.getAuthProgress())) {
 			if (3 == topic.getAuthProgress()) {
-				writerUserTrendst
-						.setDetail("{title:\"" + CheckedExceptionBusiness.TOPIC + "\",content:\"您的选题已经通过。\",img:1}");
+				Map<String,Object> detail =  new HashMap<String,Object>();
+            	detail.put("title", CheckedExceptionBusiness.TOPIC);
+            	detail.put("content", "您的选题已经通过。");
+            	detail.put("img", 1);
+                writerUserTrendst.setDetail(new Gson().toJson(detail));
 				// 创建本版号并将本版号放入数据中
 				String editionnum = "10" + new SimpleDateFormat("yyyy").format(new Date());
 				String vn = topicDao.get(topic.getId()).getVn();
@@ -287,13 +290,17 @@ public class TopicServiceImpl implements TopicService {
 						+ topicTextVO.getEdition() + "','','11','" + remark + "',GETDATE(),1)";
 				SqlHelper.executeUpdate(sql, null);
 			} else {
-				writerUserTrendst
-						.setDetail("{title:\"" + CheckedExceptionBusiness.TOPIC + "\",content:\"您的选题没有通过。\",img:2}");
+				Map<String,Object> detail =  new HashMap<String,Object>();
+            	detail.put("title", CheckedExceptionBusiness.TOPIC);
+            	detail.put("content", "您的选题未通过。");
+            	detail.put("img", 2);
+                writerUserTrendst.setDetail(new Gson().toJson(detail));
 			}
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 		}
 		return result;
 	}
+
 
 	@Override
 	public TopicTextVO topicTextVO(TopicLog topicLog, String sessionId, Long id) throws CheckedServiceException {
