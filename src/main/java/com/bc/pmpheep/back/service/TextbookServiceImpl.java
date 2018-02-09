@@ -612,7 +612,7 @@ public class TextbookServiceImpl implements TextbookService {
 					textbook.setTextbookRound(round);
 					for (Textbook book : noPeople){
 						if (sort.intValue() == book.getSort() && round.intValue() == book.getTextbookRound()
-								&& bookName.equals(book.getTextbookName())){
+								&& bookName.trim().equals(book.getTextbookName().trim())){
 							textbook = book;
 						}
 					}
