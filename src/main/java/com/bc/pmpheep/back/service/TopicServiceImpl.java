@@ -213,7 +213,6 @@ public class TopicServiceImpl implements TopicService {
 		return list;
 	}
 
-
 	@Override
 	public String update(TopicLog topicLog, String sessionId, Topic topic) throws CheckedServiceException {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -225,12 +224,6 @@ public class TopicServiceImpl implements TopicService {
 		if (ObjectUtil.isNull(topic) || ObjectUtil.isNull(topic.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
 					"该选题不存在");
-		}
-		if (!StringUtil.isEmpty(topic.getAuthFeedback())) {
-			if (topic.getAuthFeedback().length() > 200) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
-						"审核意见过长，请不要超过200个字符");
-			}
 		}
 		if (!StringUtil.isEmpty(topic.getReasonDirector())) {
 			if (topic.getReasonDirector().length() > 200) {
@@ -254,53 +247,70 @@ public class TopicServiceImpl implements TopicService {
 		writerUserTrendst.setType(0);
 		writerUserTrendst.setIsPublic(true);
 		if (ObjectUtil.notNull(topic.getAuthProgress())) {
+			if (topic.getAuthFeedback().length() > 200) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
+						"审核意见过长，请不要超过200个字符");
+			}
+			if (StringUtil.isEmpty(topic.getAuthFeedback())) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+						"审核不能为空");
+			}
 			if (3 == topic.getAuthProgress()) {
-				Map<String,Object> detail =  new HashMap<String,Object>();
-            	detail.put("title", CheckedExceptionBusiness.TOPIC);
-            	detail.put("content", "您的选题已经通过。");
-            	detail.put("img", 1);
-                writerUserTrendst.setDetail(new Gson().toJson(detail));
+				Map<String, Object> detail = new HashMap<String, Object>();
+				detail.put("title", CheckedExceptionBusiness.TOPIC);
+				detail.put("content", "您的选题已经通过。");
+				detail.put("img", 1);
+				writerUserTrendst.setDetail(new Gson().toJson(detail));
 				// 创建本版号并将本版号放入数据中
-				String editionnum = "10" + new SimpleDateFormat("yyyy").format(new Date());
-				String vn = topicDao.get(topic.getId()).getVn();
-				if (StringUtil.isEmpty(vn)) {
-					vn = topicDao.getMaxTopicVn();
-					if (StringUtil.isEmpty(vn)) {
-						vn = editionnum + "000001";
-					} else {
-						vn = editionnum + Integer.parseInt(vn.substring(7)) + 1000000 + 1 + "";
-					}
-				}
-				topic.setNote("选题通过");
-				topic.setVn(vn);
-				topicDao.update(topic);
-				String remark = topic.getAuthFeedback();
-				TopicTextVO topicTextVO = topicTextVO(topicLog, sessionId, topic.getId());
-				String sql = "insert into i_declarestates (editionnum,rwusercode,rwusername,topicname,readerpeople,sources,fontcount,piccount,timetohand,subject,booktype,levels,depositbank,bankaccount,selectreason,publishingvalue,content,authorbuybooks,authorsponsor,originalname,originalauthor,originalnationality,originalpress,publishagerevision,topicnumber,auditstates,remark,creattime,states)";
-				sql += "values('" + vn + "','" + topicTextVO.getUsername() + "','" + topicTextVO.getRealname()
-						+ "','','" + topicTextVO.getReadType() + "','" + topicTextVO.getSourceType() + "','"
-						+ topicTextVO.getWordNumber() + "','" + topicTextVO.getPictureNumber() + "','"
-						+ DateUtil.formatTimeStamp("yyyy-MM-dd", topicTextVO.getDeadline()) + "','"
-						+ topicTextVO.getSubject() + "','" + topicTextVO.getTypeName() + "','" + topicTextVO.getRank()
-						+ "','" + topicTextVO.getBank() + "','" + topicTextVO.getAccountNumber() + "','"
-						+ topicTextVO.getTopicExtra().getReason() + "','" + topicTextVO.getTopicExtra().getPrice()
-						+ "','" + topicTextVO.getTopicExtra().getScore() + "','" + topicTextVO.getPurchase() + "','"
-						+ topicTextVO.getSponsorship() + "','" + topicTextVO.getOriginalBookname() + "','"
-						+ topicTextVO.getOriginalAuthor() + "','" + topicTextVO.getNation() + "','','"
-						+ topicTextVO.getEdition() + "','','11','" + remark + "',GETDATE(),1)";
-				SqlHelper.executeUpdate(sql, null);
+				// String editionnum = "10" + new SimpleDateFormat("yyyy").format(new Date());
+				// String vn = topicDao.get(topic.getId()).getVn();
+				// if (StringUtil.isEmpty(vn)) {
+				// vn = topicDao.getMaxTopicVn();
+				// if (StringUtil.isEmpty(vn)) {
+				// vn = editionnum + "000001";
+				// } else {
+				// vn = editionnum + Integer.parseInt(vn.substring(7)) + 1000000 + 1 + "";
+				// }
+				// }
+				// topic.setNote("选题通过");
+				// topic.setVn(vn);
+				// topicDao.update(topic);
+				// String remark = topic.getAuthFeedback();
+				// TopicTextVO topicTextVO = topicTextVO(topicLog, sessionId, topic.getId());
+				// String sql = "insert into i_declarestates
+				// (editionnum,rwusercode,rwusername,topicname,readerpeople,sources,fontcount,piccount,timetohand,subject,booktype,levels,depositbank,bankaccount,selectreason,publishingvalue,content,authorbuybooks,authorsponsor,originalname,originalauthor,originalnationality,originalpress,publishagerevision,topicnumber,auditstates,remark,creattime,states)";
+				// sql += "values('" + vn + "','" + topicTextVO.getUsername() + "','" +
+				// topicTextVO.getRealname()
+				// + "','','" + topicTextVO.getReadType() + "','" + topicTextVO.getSourceType()
+				// + "','"
+				// + topicTextVO.getWordNumber() + "','" + topicTextVO.getPictureNumber() +
+				// "','"
+				// + DateUtil.formatTimeStamp("yyyy-MM-dd", topicTextVO.getDeadline()) + "','"
+				// + topicTextVO.getSubject() + "','" + topicTextVO.getTypeName() + "','" +
+				// topicTextVO.getRank()
+				// + "','" + topicTextVO.getBank() + "','" + topicTextVO.getAccountNumber() +
+				// "','"
+				// + topicTextVO.getTopicExtra().getReason() + "','" +
+				// topicTextVO.getTopicExtra().getPrice()
+				// + "','" + topicTextVO.getTopicExtra().getScore() + "','" +
+				// topicTextVO.getPurchase() + "','"
+				// + topicTextVO.getSponsorship() + "','" + topicTextVO.getOriginalBookname() +
+				// "','"
+				// + topicTextVO.getOriginalAuthor() + "','" + topicTextVO.getNation() +
+				// "','','"
+				// + topicTextVO.getEdition() + "','','11','" + remark + "',GETDATE(),1)";
+				// SqlHelper.executeUpdate(sql, null);
 			} else {
-				Map<String,Object> detail =  new HashMap<String,Object>();
-            	detail.put("title", CheckedExceptionBusiness.TOPIC);
-            	detail.put("content", "您的选题未通过。");
-            	detail.put("img", 2);
-                writerUserTrendst.setDetail(new Gson().toJson(detail));
+				Map<String, Object> detail = new HashMap<String, Object>();
+				detail.put("title", CheckedExceptionBusiness.TOPIC);
+				detail.put("content", "您的选题未通过。");
+				detail.put("img", 2);
+				writerUserTrendst.setDetail(new Gson().toJson(detail));
 			}
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 		}
 		return result;
 	}
-
 
 	@Override
 	public TopicTextVO topicTextVO(TopicLog topicLog, String sessionId, Long id) throws CheckedServiceException {
