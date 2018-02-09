@@ -37,8 +37,8 @@ public class CORSFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         LOG.info("This is CORSFilter, url :{}", req.getRequestURI());
         HttpServletResponse resp = (HttpServletResponse) response;
-        resp.setHeader("Access-Control-Allow-Origin", "*");
-//        resp.setHeader("Access-Control-Allow-Credentials", "true");
+        resp.setHeader("Access-Control-Allow-Origin", "http://120.76.221.250:20802");
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
         resp.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         resp.setHeader("Access-Control-Max-Age", "3600");
 //        resp.setHeader("Access-Control-Allow-Headers", "x-requested-with");
