@@ -497,7 +497,13 @@ public class TextbookServiceImpl implements TextbookService {
 		ids.removeAll(delBook);
 			if (CollectionUtil.isNotEmpty(ids)){
 				for (Long id : ids){
-					textbookDao.deleteTextbookById(id);
+					if (CollectionUtil.isNotEmpty(decPositionService.listDecPositionsByTextbookId(id))
+		        			&& decPositionService.listDecPositionsByTextbookId(id).size() >0 ){
+						throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+								CheckedExceptionResult.NULL_PARAM, "被申报的书籍不允许被删除");
+					}else{
+						textbookDao.deleteTextbookById(id);
+					}
 				}
 			}
 		/* 修改对应的教材的可见性区别 */
