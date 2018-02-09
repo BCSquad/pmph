@@ -382,6 +382,7 @@
 	<select id="listCmsContent" parameterType="PageParameter" resultType="CmsContentVO">
 		SELECT * FROM (
 			(SELECT  cc.`id`, cc.`title`, pu.`username` username,
+			
   				<!-- (
     				CASE
 				      WHEN cc.`author_type` = 0 
