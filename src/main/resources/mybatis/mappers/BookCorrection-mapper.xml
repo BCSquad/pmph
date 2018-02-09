@@ -260,7 +260,7 @@
 			a.page,
 			a.line ,
 			a.content ,
-			a.attachment,
+			concat('/file/download/',a.attachment) attachment,
 			a.attachment_name,
 			d.realname,
 			a.gmt_create ,
