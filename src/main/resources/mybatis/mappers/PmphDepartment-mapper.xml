@@ -122,9 +122,10 @@
 		) isLeaf
 		FROM
 		pmph_department p
-		LEFT JOIN pmph_department d ON d.parent_id = p.id
+		LEFT JOIN pmph_department d ON
+		d.parent_id = p.id
 		WHERE
-		p.parent_id = 1
+		p.parent_id = #{parentId}
 		GROUP BY
 		p.id
 		ORDER BY
