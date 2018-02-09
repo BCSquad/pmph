@@ -354,10 +354,10 @@
 		LEFT JOIN
 			`org` org
 		ON
-			dc.`org_id`= org.`id`
+			dc.`org_id`= org.`id` and dc.`online_progress` > 0 
 		WHERE 
-			dc.`online_progress` != 0 
-		AND
+			<!-- dc.`online_progress` != 0 
+		AND -->
 			dc.`is_staging`= FALSE
 		AND
 			dp.`textbook_id` = #{textbookId}
@@ -366,7 +366,7 @@
 				dc.`realname` like concat('%',#{realName},'%')
 		</if>
 		ORDER BY
-			dp.`gmt_create` DESC
+			dp.`rank`=1 DESC,dp.`chosen_position` =1 DESC,dp.`gmt_create` DESC
 	</select>
 
 	<!-- 教材申报-遴选主编/遴选编委(更新) -->
