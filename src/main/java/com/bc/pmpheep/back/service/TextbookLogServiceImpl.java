@@ -417,37 +417,39 @@ public class TextbookLogServiceImpl implements TextbookLogService {
             StringBuilder detail = new StringBuilder("");
             if (redSumZhuBian > 0) {
                 detail.append("移除了" + redSumZhuBian + "位主编:[" + redZhuBian.toString().substring(1)
-                              + "]");
+                              + "];");
             }
             if (redSumFuZhuBian > 0) {
                 detail.append("移除了" + redSumFuZhuBian + "位副主编:["
-                              + redFuZhuBian.toString().substring(1) + "]");
+                              + redFuZhuBian.toString().substring(1) + "];");
             }
             if (redSumBianWei > 0) {
                 detail.append("移除了" + redSumBianWei + "位编委:[" + redBianWei.toString().substring(1)
-                              + "]");
+                              + "];");
             }
             if (redSumShuZiBianWei > 0) {
                 detail.append("移除了" + redSumShuZiBianWei + "位数字编辑:["
-                              + redShuZiBianWei.toString().substring(1) + "]");
+                              + redShuZiBianWei.toString().substring(1) + "];");
             }
             if (addSumZhuBian > 0) {
                 detail.append("增加了" + addSumZhuBian + "位主编:[" + addZhuBian.toString().substring(1)
-                              + "]");
+                              + "];");
             }
             if (addSumFuZhuBian > 0) {
                 detail.append("增加了" + addSumFuZhuBian + "位副主编:["
-                              + addFuZhuBian.toString().substring(1) + "]");
+                              + addFuZhuBian.toString().substring(1) + "];");
             }
             if (addSumBianWei > 0) {
                 detail.append("增加了" + addSumBianWei + "位编委:[" + addBianWei.toString().substring(1)
-                              + "]");
+                              + "];");
             }
             if (addSumShuZiBianWei > 0) {
                 detail.append("增加了" + addSumShuZiBianWei + "位数字编辑:["
-                              + addShuZiBianWei.toString().substring(1) + "]");
+                              + addShuZiBianWei.toString().substring(1) + "];");
             }
             String detail2 = detail.toString();
+            //去掉最后一个;
+            detail2 = detail2.substring(0, detail2.length()-1);
             TextbookLog textbookLog = new TextbookLog();
             textbookLog.setDetail(detail2.length() >= 100 ? detail2.substring(0, 95) + "..." : detail2);
             textbookLog.setIsPmphUpdater(userType == 1);
