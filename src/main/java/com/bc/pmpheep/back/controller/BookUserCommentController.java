@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.BookUserComment;
 import com.bc.pmpheep.back.service.BookUserCommentService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.vo.BookUserCommentVO;
@@ -91,5 +92,13 @@ public class BookUserCommentController {
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public ResponseBean delete(Long[] ids) {
 		return new ResponseBean(bookUserCommentService.deleteBookUserCommentById(ids));
+	}
+
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "置顶、热门、精品推荐书评")
+	@RequestMapping(value = "/bookUserComment", method = RequestMethod.PUT)
+	public ResponseBean bookUserComment(BookUserComment bookUserComment) {
+		return new ResponseBean();
+
 	}
 }

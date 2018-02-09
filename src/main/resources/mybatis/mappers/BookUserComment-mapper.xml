@@ -120,7 +120,7 @@
 			<if test=" writerId != null and writerId !=''">
 				writer_id =#{writerId} ,
 			</if>
-			<if test="score != null and score !=''">
+			<if test="score != null">
 				score = #{score} ,
 			</if>
 			<if test="title != null and title != ''">
@@ -187,7 +187,8 @@
 		writer_user u ON u.id =
 		c.writer_id
 		WHERE
-		c.is_deleted = FALSE AND c.is_long = #{parameter.isLong}
+		c.is_deleted = FALSE AND
+		c.is_long = #{parameter.isLong}
 		<if test="parameter.name != null and parameter.name != ''">
 			and (b.bookname like concat("%",#{parameter.name},"%") or
 			b.isbn like concat("%",#{parameter.name},"%"))
