@@ -50,7 +50,6 @@ public class WechatArticleService {
 	ContentService contentService;
     @Autowired
     private Download download;
-    Logger logger = LoggerFactory.getLogger(WechatArticleService.class);
     public String runCrawler(String url) throws CheckedServiceException {
         if (StringUtil.isEmpty(url)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
@@ -58,7 +57,6 @@ public class WechatArticleService {
         }
         String guid = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
         taskExecutor.execute(new WechatArticleCrawlerTask(new WechatArticle(guid, url)));
-        logger.info("guid", guid);
         return guid;
     }
 
