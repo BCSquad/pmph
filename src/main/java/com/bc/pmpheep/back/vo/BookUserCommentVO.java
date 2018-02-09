@@ -72,6 +72,11 @@ public class BookUserCommentVO implements Serializable {
 	 * 是否热门
 	 */
 	private Boolean isHot;
+
+	/**
+	 * 是否置顶
+	 */
+	private Boolean isStick;
 	/**
 	 * 热门显示顺序
 	 */
@@ -227,6 +232,14 @@ public class BookUserCommentVO implements Serializable {
 
 	public Boolean getIsHot() {
 		return isHot;
+	}
+
+	public Boolean getIsStick() {
+		return isStick;
+	}
+
+	public void setIsStick(Boolean isStick) {
+		this.isStick = isStick;
 	}
 
 	public void setIsHot(Boolean isHot) {

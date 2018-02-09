@@ -4,15 +4,17 @@
  */
 package com.bc.pmpheep.general.runnable;
 
+import org.jsoup.select.Elements;
+
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
+
 import com.bc.pmpheep.back.util.Const;
-import org.jsoup.select.Elements;
 
 /**
  * 微信公众号文章爬虫
- *
+ * 
  * @author L.X <gugia@qq.com>
  */
 public class WechatArticleCrawler extends BreadthCrawler {

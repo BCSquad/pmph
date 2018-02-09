@@ -535,7 +535,7 @@
 	<!-- 更新评分 -->
 	<update id="updateBookCore" >
 		update book set score = (
-			select avg(score) from book_user_comment where is_auth and !is_deleted and book_id = #{id}  GROUP BY book_id
+			select avg(score) from book_user_comment where is_auth = 1 and !is_deleted and book_id = #{id}  GROUP BY book_id
 		)
 		where  id = #{id}
 	</update>
