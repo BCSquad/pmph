@@ -9,8 +9,9 @@ import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-public class DisableSSLCertificateCheckUtil {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DisableSSLCertificateCheckUtil.class);
+public final class DisableSSLCertificateCheckUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DisableSSLCertificateCheckUtil.class);
 
     /**
      * Prevent instantiation of utility class.
