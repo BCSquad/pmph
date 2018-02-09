@@ -225,6 +225,13 @@ public class TopicServiceImpl implements TopicService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
 					"该选题不存在");
 		}
+		if (!StringUtil.isEmpty(topic.getAuthFeedback())) {
+			if (topic.getAuthFeedback().length() > 200) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
+						"审核意见过长，请不要超过200个字符");
+			}
+		}
+
 		if (!StringUtil.isEmpty(topic.getReasonDirector())) {
 			if (topic.getReasonDirector().length() > 200) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
@@ -247,10 +254,6 @@ public class TopicServiceImpl implements TopicService {
 		writerUserTrendst.setType(0);
 		writerUserTrendst.setIsPublic(true);
 		if (ObjectUtil.notNull(topic.getAuthProgress())) {
-			if (topic.getAuthFeedback().length() > 200) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
-						"审核意见过长，请不要超过200个字符");
-			}
 			if (StringUtil.isEmpty(topic.getAuthFeedback())) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
 						"审核不能为空");
