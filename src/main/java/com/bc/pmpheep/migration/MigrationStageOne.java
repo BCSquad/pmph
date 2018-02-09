@@ -338,17 +338,32 @@ public class MigrationStageOne {
             String title = (String) map.get("positional");
             String fax = (String) map.get("fax");
             String handphone = (String) map.get("handset");
+            if (StringUtil.notEmpty(handphone) && "null".equals(handphone)){
+            	handphone = "-";
+            }
             String telephone = (String) map.get("phone");
             String idcard = (String) map.get("idcard");
             String email = (String) map.get("email");
+            if (StringUtil.notEmpty(email) && "null".equals(email)){
+            	email = "-";
+            }
             String address = (String) map.get("address");
+            if (StringUtil.notEmpty(address) && "null".equals(address)){
+            	address = "-";
+            }
             String postcode = (String) map.get("postcode");
+            if (StringUtil.notEmpty(postcode) && "null".equals(postcode)){
+            	postcode = "-";
+            }
             Integer isProxyUpload = (Integer) map.get("is_proxy_upload");
             String proxy = (String) map.get("filedir");
             String avatar = (String) map.get("avatar");
             Integer progress = (Integer) map.get("progress");
             Timestamp reviewDate = (Timestamp) map.get("auditdate");
             String note = (String) map.get("memo");
+            if (StringUtil.notEmpty(note) && "null".equals(note)){
+            	note = "-";
+            }
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
