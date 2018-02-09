@@ -28,8 +28,8 @@ public class ProcessInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest,
     HttpServletResponse httpServletResponse, Object o) throws Exception {
 
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
         httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
+        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
         //
         // httpServletResponse.setHeader("Access-Control-Allow-Headers",
         // "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
