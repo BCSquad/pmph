@@ -79,5 +79,6 @@ public interface BookUserCommentService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String updateBookUserComment(BookUserComment bookUserComment) throws CheckedServiceException;
+	String updateBookUserComment(Long[] ids, Boolean isStick, Boolean isPromote, Boolean isHot, Integer sort,
+			Integer sortPromote, Integer sortHot) throws CheckedServiceException;
 }

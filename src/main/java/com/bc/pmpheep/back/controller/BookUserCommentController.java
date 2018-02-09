@@ -106,8 +106,10 @@ public class BookUserCommentController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "置顶、热门、精品推荐书评")
 	@RequestMapping(value = "/comment", method = RequestMethod.PUT)
-	public ResponseBean comment(BookUserComment bookUserComment) {
-		return new ResponseBean(bookUserCommentService.updateBookUserComment(bookUserComment));
+	public ResponseBean comment(Long[] ids, Boolean isStick, Boolean isPromote, Boolean isHot, Integer sort,
+			Integer sortPromote, Integer sortHot) {
+		return new ResponseBean(bookUserCommentService.updateBookUserComment(ids, isStick, isPromote, isHot, sort,
+				sortPromote, sortHot));
 
 	}
 }
