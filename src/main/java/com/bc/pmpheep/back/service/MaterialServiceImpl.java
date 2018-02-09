@@ -214,11 +214,11 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材通知内容过长");
 		}
-		if (StringUtil.isEmpty(materialExtra.getNote())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"教材备注内容为空");
-		}
-		if (materialExtra.getNote().length() > 2000) {
+//		if (StringUtil.isEmpty(materialExtra.getNote())) {
+//			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+//					"教材备注内容为空");
+//		}
+		if (null != materialExtra.getNote() && materialExtra.getNote().length() > 2000) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材备注内容过长");
 		}

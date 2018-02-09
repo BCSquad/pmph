@@ -124,14 +124,25 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 	}
 
 	@Override
-	public String updateBookUserComment(BookUserComment bookUserComment)
-			throws CheckedServiceException {
-		if (ObjectUtil.isNull(bookUserComment.getId())) {
+	public String updateBookUserComment(Long[] ids, Boolean isStick, Boolean isPromote, Boolean isHot, Integer sort,
+			Integer sortPromote, Integer sortHot) throws CheckedServiceException {
+		if (ArrayUtil.isEmpty(ids)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
 					"评论id为空");
 		}
 		String result = "FAIL";
-		int num = bookUserCommentDao.updateBookUserComment(bookUserComment);
+		int num = 0;
+		for (Long id : ids) {
+			BookUserComment bookUserComment = new BookUserComment();
+			bookUserComment.setId(id);
+			bookUserComment.setIsHot(isHot);
+			bookUserComment.setIsPromote(isPromote);
+			bookUserComment.setIsStick(isStick);
+			bookUserComment.setSort(sort);
+			bookUserComment.setSortHot(sortHot);
+			bookUserComment.setSortPromote(sortPromote);
+			num += bookUserCommentDao.updateBookUserComment(bookUserComment);
+		}
 		if (num > 0) {
 			result = "SUCCESS";
 		}
