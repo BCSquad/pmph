@@ -20,6 +20,9 @@
 			<if test="content != null and content !=''">
 				content,
 			</if>
+			<if test="isStick != null">
+				is_stick,
+			</if>
 			<if test=" isHide != null ">
 				is_hide,
 			</if>
@@ -61,6 +64,9 @@
 			</if>
 			<if test="content != null and content !=''">
 				#{content} ,
+			</if>
+			<if test=" isStick != null">
+				#{isStick} ,
 			</if>
 			<if test=" isHide != null">
 				#{isHide} ,
@@ -128,6 +134,12 @@
 			</if>
 			<if test="content != null and content !=''">
 				content= #{content} ,
+			</if>
+			<if test="isStick != null">
+				is_stick = #{isStick},
+			</if>
+			<if test="sort != null">
+				sort = #{sort},
 			</if>
 			<if test="isHot != null">
 				is_hot = #{isHot},
