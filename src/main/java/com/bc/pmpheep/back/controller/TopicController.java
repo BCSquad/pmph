@@ -392,8 +392,8 @@ public class TopicController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "判断当前用户的身份")
 	@RequestMapping(value = "/identity", method = RequestMethod.GET)
-	public ResponseBean identity(/* HttpServletRequest request */String sessionId) {
-		// String sessionId = CookiesUtil.getSessionId(request);
+	public ResponseBean identity(HttpServletRequest request) {
+		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(pmphUserService.identity(sessionId));
 	}
 }
