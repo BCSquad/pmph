@@ -282,4 +282,6 @@ public interface TopicDao {
 	 *
 	 */
 	Integer updateByVn(Topic topic);
+
+	Topic get(Long id);
 }

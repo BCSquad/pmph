@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ import com.bc.pmpheep.general.runnable.Download;
 import com.bc.pmpheep.general.runnable.WechatArticle;
 import com.bc.pmpheep.general.runnable.WechatArticleCrawlerTask;
 import com.bc.pmpheep.general.service.ContentService;
+import com.bc.pmpheep.migration.test.MigrationTest;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -47,7 +50,6 @@ public class WechatArticleService {
 	ContentService contentService;
     @Autowired
     private Download download;
-    
     public String runCrawler(String url) throws CheckedServiceException {
         if (StringUtil.isEmpty(url)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,

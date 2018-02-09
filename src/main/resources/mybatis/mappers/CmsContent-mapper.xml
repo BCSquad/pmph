@@ -381,15 +381,16 @@
 	<!--CmsContentVO模糊查询获取列表 -->
 	<select id="listCmsContent" parameterType="PageParameter" resultType="CmsContentVO">
 		SELECT * FROM (
-			(SELECT  cc.`id`, cc.`title`,
-  				(
+			(SELECT  cc.`id`, cc.`title`, pu.`username` username,
+			
+  				<!-- (
     				CASE
 				      WHEN cc.`author_type` = 0 
 				      THEN pu.username 
 				      WHEN cc.`author_type` = 1 || cc.`author_type` = 2 
 				      THEN wu.`username` 
    					END
-  				) username,
+  				) username, -->
   				cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,cc.`comments`,cc.`likes`,
   				cc.`bookmarks`,cc.category_id,ccg.`category_name`,cc.`is_published`,cc.`is_stick`,cc.`is_hot`,
   				cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry`,pu.`realname` 
@@ -405,15 +406,16 @@
 			  AND cc.`author_type` IN (0,1) 
 			ORDER BY cc.`gmt_create` DESC) 
 		UNION
-			(SELECT  cc.`id`, cc.`title`,
-			  (
+			(SELECT  cc.`id`, cc.`title`,wu.`username` username,
+			 <!--  (
 			    CASE
 			      WHEN cc.`author_type` = 0 
 			      THEN pu.username 
 			      WHEN cc.`author_type` = 1 || cc.`author_type` = 2 
 			      THEN wu.`username` 
 			    END
-			  ) username,cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,cc.`comments`,
+			  ) username, -->
+			    cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,cc.`comments`,
 			    cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,cc.`is_published`,cc.`is_stick`,
 			    cc.`is_hot`,cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry`,pu.`realname` 
 			FROM
@@ -426,7 +428,8 @@
 			    ON cc.`category_id` = ccg.`id` 
 			WHERE cc.`is_deleted` = 0 
 			  AND cc.`author_type`=2
-			  AND cc.`is_staging` = FALSE))a,
+			  AND cc.`is_staging` = FALSE
+			  ORDER BY cc.`gmt_create` DESC ))a,
 			  (SELECT SUM(`count`) `count` FROM
 			  	(SELECT  COUNT(*) `count`
 			     FROM
