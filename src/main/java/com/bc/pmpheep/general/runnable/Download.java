@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;    
+import org.apache.http.conn.ssl.SSLSocketFactory;  
 
 @Service
 public class Download {
@@ -73,6 +75,7 @@ public class Download {
 		for (String url : listImgSrc) { 
 			URL uri = new URL(url);
 	        DisableSSLCertificateCheckUtil.disableChecks();
+	        SSLSocketFactory.getSocketFactory().setHostnameVerifier(new AllowAllHostnameVerifier());   
 	        //打开链接  
 	        HttpURLConnection conn = (HttpURLConnection)uri.openConnection();  
 	        //设置请求方式为"GET"  
