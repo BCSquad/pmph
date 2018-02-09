@@ -544,4 +544,29 @@
 		#{departmentId}
 	</select>
 
+	<select id="isOpts" parameterType="java.lang.Long" resultType="PmphUser">
+		SELECT
+		u.*
+		FROM
+		pmph_user u
+		LEFT JOIN pmph_user_role p ON p.user_id = u.id
+		LEFT JOIN pmph_role r ON p.role_id = r.id,
+		topic t
+		WHERE
+		r.id =
+		t.opts_role_id
+		AND u.id = #{id}
+	</select>
+
+	<select id="isEditor" parameterType="java.lang.Long" resultType="PmphUser">
+		SELECT
+		u.*
+		FROM
+		pmph_user u,
+		topic t
+		WHERE
+		t.editor_id = u.id
+		AND u.id = #{id}
+	</select>
+
 </mapper>
