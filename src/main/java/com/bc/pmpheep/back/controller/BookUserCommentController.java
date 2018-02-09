@@ -94,11 +94,20 @@ public class BookUserCommentController {
 		return new ResponseBean(bookUserCommentService.deleteBookUserCommentById(ids));
 	}
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：置顶、热门、精品推荐书评
+	 *
+	 * @param bookUserComment
+	 * @return
+	 *
+	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "置顶、热门、精品推荐书评")
-	@RequestMapping(value = "/bookUserComment", method = RequestMethod.PUT)
-	public ResponseBean bookUserComment(BookUserComment bookUserComment) {
-		return new ResponseBean();
+	@RequestMapping(value = "/comment", method = RequestMethod.PUT)
+	public ResponseBean comment(BookUserComment bookUserComment) {
+		return new ResponseBean(bookUserCommentService.updateBookUserComment(bookUserComment));
 
 	}
 }

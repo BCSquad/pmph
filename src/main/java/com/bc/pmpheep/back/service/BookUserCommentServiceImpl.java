@@ -124,7 +124,8 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 	}
 
 	@Override
-	public String updateBookUserComment(BookUserComment bookUserComment) throws CheckedServiceException {
+	public String updateBookUserComment(BookUserComment bookUserComment)
+			throws CheckedServiceException {
 		if (ObjectUtil.isNull(bookUserComment.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
 					"评论id为空");
