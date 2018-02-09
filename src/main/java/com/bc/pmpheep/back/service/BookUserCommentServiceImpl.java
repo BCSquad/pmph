@@ -98,8 +98,8 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			bookUserComment.setAuthUserId(pmphUser.getId());
 			bookUserComment.setAuthDate(DateUtil.getCurrentTime());
 			num += bookUserCommentDao.updateBookUserComment(bookUserComment);
-			if (isAuth == 1){
-				//更新评分
+			if (isAuth == 1) {
+				// 更新评分
 				bookService.updateBookCore(id);
 			}
 		}
@@ -117,6 +117,21 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 		}
 		String result = "FAIL";
 		int num = bookUserCommentDao.deleteBookUserCommentById(ids);
+		if (num > 0) {
+			result = "SUCCESS";
+		}
+		return result;
+	}
+
+	@Override
+	public String updateBookUserComment(BookUserComment bookUserComment)
+			throws CheckedServiceException {
+		if (ObjectUtil.isNull(bookUserComment.getId())) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"评论id为空");
+		}
+		String result = "FAIL";
+		int num = bookUserCommentDao.updateBookUserComment(bookUserComment);
 		if (num > 0) {
 			result = "SUCCESS";
 		}
