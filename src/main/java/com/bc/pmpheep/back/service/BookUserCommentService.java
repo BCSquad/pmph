@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.BookUserComment;
 import com.bc.pmpheep.back.vo.BookUserCommentVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -53,8 +54,7 @@ public interface BookUserCommentService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String updateBookUserCommentByAuth(Long[] ids, Integer isAuth, String sessionId)
-			throws CheckedServiceException;
+	String updateBookUserCommentByAuth(Long[] ids, Integer isAuth, String sessionId) throws CheckedServiceException;
 
 	/**
 	 * 
@@ -68,4 +68,17 @@ public interface BookUserCommentService {
 	 *
 	 */
 	String deleteBookUserCommentById(Long[] ids) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：置顶、热门、精品推荐书评
+	 *
+	 * @param bookUserComment
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	String updateBookUserComment(Long[] ids, Boolean isStick, Boolean isPromote, Boolean isHot, Integer sort,
+			Integer sortPromote, Integer sortHot) throws CheckedServiceException;
 }

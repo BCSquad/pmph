@@ -98,8 +98,8 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			bookUserComment.setAuthUserId(pmphUser.getId());
 			bookUserComment.setAuthDate(DateUtil.getCurrentTime());
 			num += bookUserCommentDao.updateBookUserComment(bookUserComment);
-			if (isAuth == 1){
-				//更新评分
+			if (isAuth == 1) {
+				// 更新评分
 				bookService.updateBookCore(id);
 			}
 		}
@@ -117,6 +117,32 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 		}
 		String result = "FAIL";
 		int num = bookUserCommentDao.deleteBookUserCommentById(ids);
+		if (num > 0) {
+			result = "SUCCESS";
+		}
+		return result;
+	}
+
+	@Override
+	public String updateBookUserComment(Long[] ids, Boolean isStick, Boolean isPromote, Boolean isHot, Integer sort,
+			Integer sortPromote, Integer sortHot) throws CheckedServiceException {
+		if (ArrayUtil.isEmpty(ids)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"评论id为空");
+		}
+		String result = "FAIL";
+		int num = 0;
+		for (Long id : ids) {
+			BookUserComment bookUserComment = new BookUserComment();
+			bookUserComment.setId(id);
+			bookUserComment.setIsHot(isHot);
+			bookUserComment.setIsPromote(isPromote);
+			bookUserComment.setIsStick(isStick);
+			bookUserComment.setSort(sort);
+			bookUserComment.setSortHot(sortHot);
+			bookUserComment.setSortPromote(sortPromote);
+			num += bookUserCommentDao.updateBookUserComment(bookUserComment);
+		}
 		if (num > 0) {
 			result = "SUCCESS";
 		}
