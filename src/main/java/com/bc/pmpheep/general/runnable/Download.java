@@ -73,11 +73,13 @@ public class Download {
 	public List<String> listDownload(List<String> listImgSrc) throws IOException { 
 		List<String> listHtmlImgs = new ArrayList<String>();
 		for (String url : listImgSrc) { 
-			URL uri = new URL(url);
+			URL uri = new URL(null,url,new sun.net.www.protocol.https.Handler());
+			//URL uri = new URL(url);
+			//SSLSocketFactory.getSocketFactory().setHostnameVerifier(new AllowAllHostnameVerifier()); 
 	        DisableSSLCertificateCheckUtil.disableChecks();
-	        SSLSocketFactory.getSocketFactory().setHostnameVerifier(new AllowAllHostnameVerifier());   
 	        //打开链接  
-	        HttpURLConnection conn = (HttpURLConnection)uri.openConnection();  
+	        javax.net.ssl.HttpsURLConnection conn = (javax.net.ssl.HttpsURLConnection) uri.openConnection();
+	        //HttpURLConnection conn = (HttpURLConnection)uri.openConnection();  
 	        //设置请求方式为"GET"  
 	        conn.setRequestMethod("GET");  
 	        //超时响应时间为5秒  
