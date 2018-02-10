@@ -81,8 +81,8 @@ public class WechatArticleService {
                                               CheckedExceptionResult.NULL_PARAM, "文章唯一标识不能为空");
         }
         // 删除文件夹及以下文件
-        String dir = new File("").getAbsolutePath() + "/" + guid; // 获取路径
-        FileUtil.deleteDirectory(dir);
+        //String dir = new File("").getAbsolutePath() + "/" + guid; // 获取路径
+        //FileUtil.deleteDirectory(dir);
         if (Const.WACT_MAP.containsKey(guid)) {
             WechatArticle wechatArticle = Const.WACT_MAP.get(guid);
             String html = wechatArticle.getResult();
