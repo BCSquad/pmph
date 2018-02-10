@@ -102,7 +102,6 @@ public class WechatArticleService {
             List<String> imgUrl = download.getImageUrl(contents);
             // 获取图片src地址
             List<String> imgSrc = download.getImageSrc(imgUrl);
-            DisableSSLCertificateCheckUtil.disableChecks();
             // 下载图片
             List<String> mongoImgs = download.listDownload(imgSrc);
             for (int i = 0; i < imgSrc.size(); i++) {
