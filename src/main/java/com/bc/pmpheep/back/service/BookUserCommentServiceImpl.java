@@ -100,7 +100,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			num += bookUserCommentDao.updateBookUserComment(bookUserComment);
 			if (isAuth == 1) {
 				// 更新评分
-				bookService.updateBookCore(id);
+				bookService.updateBookCore(bookUserComment.getBookId());
 			}
 		}
 		if (num > 0) {
