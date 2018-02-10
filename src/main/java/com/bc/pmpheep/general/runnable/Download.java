@@ -10,11 +10,6 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,25 +68,15 @@ public class Download {
 	 * @param listImgSrc 
 	 * @throws IOException 
 	 */
-	public List<String> listDownload(List<String> listImgSrc) throws Exception { 
+	public List<String> listDownload(List<String> listImgSrc) throws IOException { 
 		List<String> listHtmlImgs = new ArrayList<String>();
 		for (String url : listImgSrc) { 
 			//URL uri = new URL(null,url,new sun.net.www.protocol.https.Handler());
-			// 创建SSLContext对象，并使用我们指定的信任管理器初始化
-			TrustManager[] tm = { new MyX509TrustManager() };
-			SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
-			sslContext.init(null, tm, new java.security.SecureRandom());
-			// 从上述SSLContext对象中得到SSLSocketFactory对象
-			SSLSocketFactory ssf = sslContext.getSocketFactory();
 			URL uri = new URL(url);
 	        DisableSSLCertificateCheckUtil.disableChecks();
 	        //打开链接  
 	        //javax.net.ssl.HttpsURLConnection conn = (javax.net.ssl.HttpsURLConnection) uri.openConnection();
-	        HttpsURLConnection conn = (HttpsURLConnection)uri.openConnection();
-	        conn.setSSLSocketFactory(ssf);
-	        conn.setDoOutput(true);
-	        conn.setDoInput(true);
-	        conn.setUseCaches(false);
+	        HttpURLConnection conn = (HttpURLConnection)uri.openConnection();
 	        conn.setRequestProperty("Referer", "http://mp.weixin.qq.com"); // 这是破解防盗链添加的参数
 	        //设置请求方式为"GET"  
 	        conn.setRequestMethod("GET");  
