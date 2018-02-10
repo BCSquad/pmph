@@ -226,5 +226,11 @@ public interface WriterUserService {
 	 * @return
 	 */
 	List<WriterUser> getWriterUserRankList(List<WriterUser> writerUsers);
+	/**
+	 * 通过作家用户id修改  为教师
+	 * @param writerUsers
+	 * @return
+	 */
+	Integer updateWriterUser(List<WriterUser> writerUsers);
 
 }

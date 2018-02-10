@@ -173,6 +173,12 @@ public interface WriterUserDao {
 	 * @return
 	 */
 	List<WriterUserManagerVO> getLsitisTeacher(PageParameter<WriterUserManagerVO> pageParameter);
+	/**
+	 * 通过id修改为教师
+	 * @param writerUsers
+	 * @return
+	 */
+	Integer updateWriterUser(List<WriterUser> writerUsers);
 
     // /**
     // *
