@@ -12,6 +12,16 @@ import com.bc.pmpheep.back.po.BookVedio;
 public interface BookVedioDao {
 	
 	/**
+	 * 新增 vedio
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2018年1月31日  9:24:01
+	 * @param bookVedio
+	 * @return
+	 */
+	Integer addBookVedio(BookVedio bookVedio);
+	
+	/**
 	 * 根据文件ids删除BookVedio
 	 * 2018年2月6日 上午11:11:36 
 	 * @param ids
@@ -39,6 +49,16 @@ public interface BookVedioDao {
 	 * @return
 	 */
 	Integer updateBookVedio(BookVedio bookVedio)  ;
+	
+	/**
+	 * 根据文件上传路径获取BookVedio
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2018年1月31日  9:24:01
+	 * @param bookVedio
+	 * @return
+	 */
+	BookVedio  getBookVedioByOldPath(@Param("oldPath")String oldPath);
 	
 	
 }

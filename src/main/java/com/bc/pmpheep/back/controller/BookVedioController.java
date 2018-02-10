@@ -92,4 +92,19 @@ public class BookVedioController {
 		return new ResponseBean<Integer>(bookVedioService.deleteBookVedioByIds(Arrays.asList(new Long[]{id})));
 	}
 	
+	/**
+	 * 保存籍视频信息
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2018年2月10日 下午5:34:12
+	 * @param bookVedio
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/addBookVedio", method = RequestMethod.POST)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存籍视频信息")
+	public ResponseBean<Integer> addBookVedio(BookVedio bookVedio){
+		return new ResponseBean<Integer>(bookVedioService.addBookVedio(bookVedio));
+	}
+	
 }
