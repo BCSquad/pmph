@@ -22,6 +22,7 @@ import com.bc.pmpheep.back.util.RandomUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.po.Content;
+import com.bc.pmpheep.general.runnable.DisableSSLCertificateCheckUtil;
 import com.bc.pmpheep.general.runnable.Download;
 import com.bc.pmpheep.general.runnable.WechatArticle;
 import com.bc.pmpheep.general.runnable.WechatArticleCrawlerTask;
@@ -101,6 +102,7 @@ public class WechatArticleService {
             List<String> imgUrl = download.getImageUrl(contents);
             // 获取图片src地址
             List<String> imgSrc = download.getImageSrc(imgUrl);
+            DisableSSLCertificateCheckUtil.disableChecks();
             // 下载图片
             List<String> mongoImgs = download.listDownload(imgSrc);
             for (int i = 0; i < imgSrc.size(); i++) {

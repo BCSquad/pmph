@@ -27,7 +27,7 @@ public final class DisableSSLCertificateCheckUtil {
 
     public static void disableChecks() {
         try {
-            new URL("https://0.0.0.0/").getContent();
+            new URL("https://120.76.221.250/").getContent();
         } catch (IOException e) {
             // This invocation will always fail, but it will register the
             // default SSL provider to the URL class.
