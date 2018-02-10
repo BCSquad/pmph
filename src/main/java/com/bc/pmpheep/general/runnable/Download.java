@@ -1,9 +1,12 @@
 package com.bc.pmpheep.general.runnable;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -73,13 +76,12 @@ public class Download {
 	public List<String> listDownload(List<String> listImgSrc) throws IOException { 
 		List<String> listHtmlImgs = new ArrayList<String>();
 		for (String url : listImgSrc) { 
-			URL uri = new URL(null,url,new sun.net.www.protocol.https.Handler());
-			//URL uri = new URL(url);
-			//SSLSocketFactory.getSocketFactory().setHostnameVerifier(new AllowAllHostnameVerifier()); 
+//			URL uri = new URL(null,url,new sun.net.www.protocol.https.Handler());
+			URL uri = new URL(url);
 	        DisableSSLCertificateCheckUtil.disableChecks();
 	        //打开链接  
-	        javax.net.ssl.HttpsURLConnection conn = (javax.net.ssl.HttpsURLConnection) uri.openConnection();
-	        //HttpURLConnection conn = (HttpURLConnection)uri.openConnection();  
+//	        javax.net.ssl.HttpsURLConnection conn = (javax.net.ssl.HttpsURLConnection) uri.openConnection();
+	        HttpURLConnection conn = (HttpURLConnection)uri.openConnection();  
 	        //设置请求方式为"GET"  
 	        conn.setRequestMethod("GET");  
 	        //超时响应时间为5秒  
@@ -97,5 +99,6 @@ public class Download {
 			in.close();
 		}
 		return listHtmlImgs; 
-	} 
+	}
+
 }
