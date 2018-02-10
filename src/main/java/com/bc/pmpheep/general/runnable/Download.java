@@ -10,10 +10,6 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -80,14 +76,12 @@ public class Download {
 	        DisableSSLCertificateCheckUtil.disableChecks();
 	        //打开链接  
 	        //javax.net.ssl.HttpsURLConnection conn = (javax.net.ssl.HttpsURLConnection) uri.openConnection();
-	        HttpsURLConnection conn = (HttpsURLConnection)uri.openConnection();
+	        HttpURLConnection conn = (HttpURLConnection)uri.openConnection();
 	        conn.setRequestProperty("Referer", "http://mp.weixin.qq.com"); // 这是破解防盗链添加的参数
 	        //设置请求方式为"GET"  
 	        conn.setRequestMethod("GET");  
 	        //超时响应时间为5秒  
 	        conn.setConnectTimeout(5 * 1000);
-	        conn.setHostnameVerifier(new Download().new TrustAnyHostnameVerifier());
-	        conn.connect();
 	        //通过输入流获取图片数据  
 	        InputStream in = conn.getInputStream();
 	        double randomNumber = Math.random()*100; // 随机数
@@ -102,11 +96,4 @@ public class Download {
 		}
 		return listHtmlImgs; 
 	}
-	
-	public class TrustAnyHostnameVerifier implements HostnameVerifier {
-        public boolean verify(String hostname, SSLSession session) {
-            // 直接返回true
-            return true;
-        }
-    }
 }
