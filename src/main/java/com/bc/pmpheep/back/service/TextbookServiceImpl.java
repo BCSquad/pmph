@@ -274,8 +274,9 @@ public class TextbookServiceImpl implements TextbookService {
 			List<BookPositionVO> rows = textbookDao.listBookPosition(pageParameter);
 			//下面进行授权
 			for(BookPositionVO row:rows){
+				String rowpower = "000000";
 				if(power == 1 || power ==2 ){ //管理员或者主任
-					row.setMyPower("11111111");
+					rowpower = "11111111" ; 
 				}else if (power == 3){        //教材项目编辑
 					//因为项目编辑的权限不是全部  ，因此要检查我是不是这本书的策划编辑，如果是  ，这本书我的权利就是项目编辑+策划编辑的权利
 					Integer tempProjectPermission =  material.getProjectPermission() ;
@@ -284,10 +285,35 @@ public class TextbookServiceImpl implements TextbookService {
 							   row.getPlanningEditor().intValue() == pmphUser.getId().intValue() ){ //我又是策划编辑 
 						tempProjectPermission = (tempProjectPermission | material.getPlanPermission() );
 					}
-					row.setMyPower(StringUtil.tentToBinary(tempProjectPermission)) ;
+					rowpower = StringUtil.tentToBinary(tempProjectPermission) ; 
 				}else if (power == 4){ //教材策划编辑
-					row.setMyPower(StringUtil.tentToBinary(material.getPlanPermission()));
+					rowpower = StringUtil.tentToBinary(material.getPlanPermission());
 				}
+				//把权限拿出来一个个判断
+				//分配策划编辑的权限
+				String s1 = rowpower.substring(0, 1);
+				String s2 = rowpower.substring(1, 2);
+				String s3 = rowpower.substring(2, 3);
+				String s4 = rowpower.substring(3, 4);
+				String s5 = rowpower.substring(4, 5);
+				String s6 = rowpower.substring(5, 6);
+				String s7 = rowpower.substring(6, 7);
+				String s8 = rowpower.substring(7, 8);
+				if(material.getIsForceEnd() || material.getIsAllTextbookPublished() ){//教材结束或者强制结束
+					s2 = "0";
+					s3 = "0";
+					s4 = "0";
+					s5 = "0";
+					s6 = "0";
+					s8 = "0";
+				}else if ( row.getIsLocked() || row.getIsPublished() ){ //书籍已经发布了或者确认了名单
+					s2 =(power == 1 || power ==2) ? s2 : "0";
+					s3 =(power == 1 || power ==2) ? s3 : "0";
+					s4 =(power == 1 || power ==2) ? s4 : "0";
+					s5 = "0";
+				}
+				rowpower = s1+s2+s3+s4+s5+s6+s7+s8;
+				row.setMyPower(rowpower);
 			}
 			pageResult.setRows(rows);
 		}

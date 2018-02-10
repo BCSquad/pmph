@@ -144,13 +144,16 @@ WriterUserCertificationService {
                                                                 progress));
             writerUsers.add(new WriterUser(writerUserCertification.getUserId()));
         }
-        if (CollectionUtil.isNotEmpty(wUserCertifications)) {//教师审核通过的同时修改作家用户级别为教师
+        if (CollectionUtil.isNotEmpty(wUserCertifications)) {//教师审核通过的同时修改普通用户级别为教师
             count =
             writerUserCertificationDao.updateWriterUserCertificationProgressByUserId(wUserCertifications);
             List<WriterUser> list=writerUserService.getWriterUserRankList(writerUsers);
             for (WriterUser writerUser : list) {
+            	writerUser.setIsTeacher(true);
 				if(0==writerUser.getRank()){//当级别为0的时候修改
 					writerUserService.updateWriterUserRank(writerUsers);
+				}else{
+					writerUserService.updateWriterUser(writerUsers);
 				}
 			}
         }
