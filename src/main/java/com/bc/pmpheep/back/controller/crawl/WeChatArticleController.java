@@ -104,7 +104,7 @@ public class WeChatArticleController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "抓取文章同步到数据库")
-    @RequestMapping(value = "/article/synchro", method = RequestMethod.GET)
+    @RequestMapping(value = "/article/synchro", method = RequestMethod.POST)
     public ResponseBean synchro(@RequestParam("guid") String guid) throws IOException {
         return new ResponseBean(wechatArticleService.synchroCmsContent(guid));
     }
