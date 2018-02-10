@@ -159,6 +159,20 @@ public interface WriterUserDao {
 	 * @return
 	 */
 	List<WriterUser> getWriterUserRankList(List<WriterUser> writerUsers);
+	
+	/**
+	 * 查询教师用户数量
+	 * @param pageParameter
+	 * @return
+	 */
+	Integer getLsitisTeacherTotal(PageParameter<WriterUserManagerVO> pageParameter);
+	
+	/**
+	 * 查询教师用户
+	 * @param pageParameter
+	 * @return
+	 */
+	List<WriterUserManagerVO> getLsitisTeacher(PageParameter<WriterUserManagerVO> pageParameter);
 
     // /**
     // *

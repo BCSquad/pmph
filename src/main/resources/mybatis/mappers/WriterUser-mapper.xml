@@ -800,4 +800,43 @@
 				#{item.id}
 		    </foreach>
 	</select>
+	
+	<!-- getLsitisTeacherTotal查询教师用户数量 -->
+	<select id="getLsitisTeacherTotal" parameterType="PageParameter"
+		resultType="java.lang.Integer">
+		select count(*) from writer_user w 
+		left join org o on o.id = w.org_id
+		left join Writer_User_Certification wuc on wuc.user_id=w.id
+		where 1=1	and is_teacher=1
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (w.username like concat('%',#{parameter.name},'%' ) or
+			w.realname like
+			concat('%',#{parameter.name},'%' ) )
+		</if>
+		<if test="parameter.orgName !=null and parameter.orgName !=''">
+			and o.org_name like concat('%', #{parameter.orgName},'%')
+		</if>
+	</select>
+	
+	<!-- getLsitisTeacher查询教师用户 -->
+	<select id="getLsitisTeacher" parameterType="PageParameter"
+		resultType="WriterUserManagerVO">
+		select
+		*
+		from writer_user w left join org o on o.id = w.org_id 
+		left join Writer_User_Certification wuc on wuc.user_id=w.id
+		where	1=1	and is_teacher=1
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (w.username like concat('%',#{parameter.name},'%' ) or
+			w.realname like
+			concat('%',#{parameter.name},'%' ) )
+		</if>
+		<if test="parameter.orgName !=null and parameter.orgName !=''">
+			and o.org_name like concat('%', #{parameter.orgName},'%')
+		</if>
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
 </mapper>

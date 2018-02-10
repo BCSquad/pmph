@@ -324,33 +324,64 @@ public class WriterUserServiceImpl implements WriterUserService {
 		}
 		PageResult<WriterUserManagerVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-		int total = writerUserDao.getListWriterUserTotal(pageParameter);
-		if (total > 0) {
-			List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(pageParameter);
-			for (WriterUserManagerVO vo : list) {
-				switch (vo.getRank()) {
-				case 0:
-					vo.setRankName("普通用户");
-					break;
-				case 1:
-					vo.setRankName("教师用户");
-					break;
-				case 2:
-					vo.setRankName("作家用户");
-					break;
-				case 3:
-					vo.setRankName("专家用户");
-					break;
+		// 当rank为1的时候  查询教师用户
+		int total=0;
+		if(pageParameter.getParameter().getRank() == null || pageParameter.getParameter().getRank() != 1){
+			//当rank不为1的时候
+			 total= writerUserDao.getListWriterUserTotal(pageParameter);
+			if (total > 0) {
+				List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(pageParameter);
+				for (WriterUserManagerVO vo : list) {
+					switch (vo.getRank()) {
+					case 0:
+						vo.setRankName("普通用户");
+						break;
+					case 1:
+						vo.setRankName("教师用户");
+						break;
+					case 2:
+						vo.setRankName("作家用户");
+						break;
+					case 3:
+						vo.setRankName("专家用户");
+						break;
 
-				default:
-					throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
-							CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
+					default:
+						throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
+								CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
+					}
 				}
+				pageResult.setRows(list);
 			}
-			pageResult.setRows(list);
-		}
-		pageResult.setTotal(total);
+			pageResult.setTotal(total);
+		}else{
+			total=writerUserDao.getLsitisTeacherTotal(pageParameter);
+			if(total>0){
+				List<WriterUserManagerVO> list = writerUserDao.getLsitisTeacher(pageParameter);
+				for (WriterUserManagerVO vo : list) {
+					switch (vo.getRank()) {
+					case 0:
+						vo.setRankName("普通用户");
+						break;
+					case 1:
+						vo.setRankName("教师用户");
+						break;
+					case 2:
+						vo.setRankName("作家用户");
+						break;
+					case 3:
+						vo.setRankName("专家用户");
+						break;
 
+					default:
+						throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
+								CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
+					}
+				}
+				pageResult.setRows(list);
+			}
+			pageResult.setTotal(total);
+		}
 		return pageResult;
 	}
 
