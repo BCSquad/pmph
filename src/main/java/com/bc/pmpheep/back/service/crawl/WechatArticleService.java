@@ -75,7 +75,7 @@ public class WechatArticleService {
         return wechatArticle;
     }
 
-    public CmsContent synchroCmsContent(String guid) throws IOException {
+    public CmsContent synchroCmsContent(String guid) throws Exception {
         CmsContent cmsContent = new CmsContent();
         if (StringUtil.isEmpty(guid)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
