@@ -1,12 +1,9 @@
 package com.bc.pmpheep.general.runnable;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -18,15 +15,13 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;    
-import org.apache.http.conn.ssl.SSLSocketFactory;  
 
 @Service
 public class Download {
-    
-    // 获取img标签正则 
+
+    // 获取img标签正则
     private static final String IMGURL_REG = "<img.*src=(.*?)[^>]*?>";
-    
+
     @Autowired
     private FileService fileService;
     
@@ -100,5 +95,4 @@ public class Download {
 		}
 		return listHtmlImgs; 
 	}
-
 }
