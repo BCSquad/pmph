@@ -28,23 +28,24 @@ public class ProcessInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest,
     HttpServletResponse httpServletResponse, Object o) throws Exception {
 
-        httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-        //
+        // httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+        // httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
+        // //
+        // // httpServletResponse.setHeader("Access-Control-Allow-Headers",
+        // // "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
         // httpServletResponse.setHeader("Access-Control-Allow-Headers",
-        // "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
-        httpServletResponse.setHeader("Access-Control-Allow-Headers",
-                                      "Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
-        httpServletResponse.setHeader("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-
-        httpServletResponse.setHeader("X-Powered-By", "Jetty");
-
-        String method = httpServletRequest.getMethod();
-
-        if (method.equals("OPTIONS")) {
-            httpServletResponse.setStatus(200);
-            return false;
-        }
+        // "Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
+        // httpServletResponse.setHeader("Access-Control-Allow-Methods",
+        // "PUT,POST,GET,DELETE,OPTIONS");
+        //
+        // httpServletResponse.setHeader("X-Powered-By", "Jetty");
+        //
+        // String method = httpServletRequest.getMethod();
+        //
+        // if (method.equals("OPTIONS")) {
+        // httpServletResponse.setStatus(200);
+        // return false;
+        // }
         // System.out.println(method);
         return true;
     }
