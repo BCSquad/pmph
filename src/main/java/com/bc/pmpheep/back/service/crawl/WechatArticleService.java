@@ -22,6 +22,7 @@ import com.bc.pmpheep.back.util.RandomUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.po.Content;
+import com.bc.pmpheep.general.runnable.DisableSSLCertificateCheckUtil;
 import com.bc.pmpheep.general.runnable.Download;
 import com.bc.pmpheep.general.runnable.WechatArticle;
 import com.bc.pmpheep.general.runnable.WechatArticleCrawlerTask;
@@ -74,7 +75,7 @@ public class WechatArticleService {
         return wechatArticle;
     }
 
-    public CmsContent synchroCmsContent(String guid) throws IOException {
+    public CmsContent synchroCmsContent(String guid) throws Exception {
         CmsContent cmsContent = new CmsContent();
         if (StringUtil.isEmpty(guid)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
