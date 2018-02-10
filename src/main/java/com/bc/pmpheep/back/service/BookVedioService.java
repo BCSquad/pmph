@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.util.List;
+
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.BookVedio;
 import com.bc.pmpheep.back.vo.BookVedioVO;
@@ -11,6 +12,8 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 
 public interface BookVedioService {
+	
+	Integer addBookVedio(BookVedio bookVedio) throws CheckedServiceException;
 
 	/**
 	 * 动态更新

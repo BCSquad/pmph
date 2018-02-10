@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bc.pmpheep.back.dao.BookVedioDao;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Book;
@@ -100,6 +98,26 @@ public class BookVedioServiceImpl  implements BookVedioService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		return bookVedioDao.updateBookVedio(bookVedio);
+	}
+
+
+	@Override
+	public Integer addBookVedio(BookVedio bookVedio)  throws CheckedServiceException {
+		// 验证 、、。。。。。内部产生数据不需验证。。。。。。。。
+		String oldPath = bookVedio.getOrigPath() ;
+		String oldUUid = oldPath.substring(oldPath.lastIndexOf(System.getProperty("file.separator"))+1,oldPath.lastIndexOf("."));
+		BookVedio bookVedio2 =  bookVedioDao.getBookVedioByOldPath(oldUUid);
+		//如果前台已经存入了，那么这里需要更新 
+		if(null != bookVedio2){
+			bookVedio
+				.setOrigFileName(bookVedio2.getOrigFileName())
+				.setOrigFileSize(bookVedio2.getOrigFileSize())
+				.setOrigPath(bookVedio2.getOrigPath())
+				.setId(bookVedio2.getId())
+				.setUserId(0L);
+			return bookVedioDao.updateBookVedio(bookVedio);
+		}
+		return bookVedioDao.addBookVedio(bookVedio);
 	}
 
 	
