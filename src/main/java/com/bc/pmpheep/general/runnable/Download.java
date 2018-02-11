@@ -1,5 +1,6 @@
 package com.bc.pmpheep.general.runnable;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,6 +15,13 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.imageio.stream.FileImageOutputStream;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -105,6 +113,72 @@ public class Download {
 //			listHtmlImgs.add(mongoId);
 //			in.close();
 //		}
+		
+		HttpClient client = HttpClients.createDefault();  
+        HttpGet get = new HttpGet(listImgSrc.get(0));  
+        FileImageOutputStream fios=null;  
+        InputStream in=null;  
+        ByteArrayOutputStream baos =null;  
+        try {  
+            //baos= new ByteArrayOutputStream();  
+            HttpResponse hr = client.execute(get);  
+            HttpEntity entity = hr.getEntity();  
+            in= entity.getContent();  
+            byte[] buffer = new byte[1024];  
+            int len = -1;  
+            while ((len = in.read(buffer))>0) {  
+                //baos.write(buffer,0,len);  
+            }  
+            //byte[] b = baos.toByteArray();
+            Random rand = new Random();
+			String   mongoId = fileService.save(in, "----", FileType.CMS_IMG, 
+			(long) rand.nextInt(900)+ 100);
+            //创建目录  
+//            File dir = new File(directory);  
+//            if(!dir.exists()){  
+//                dir.mkdirs();  
+//                File file=new File(dir,fileName);  
+//                if(!file.exists()){  
+//                    file.createNewFile();  
+//                     fios = new FileImageOutputStream(file);  
+//                    fios.write(b);  
+//                }  
+//            }else{  
+//                File file=new File(dir,fileName);  
+//                file.createNewFile();  
+//                fios = new FileImageOutputStream(file);  
+//                fios.write(b);  
+//            }  
+//            return dir+"/"+fileName;  
+        } catch (IOException e) {  
+            //异常处理  
+            if(null!=fios){  
+                try {  
+                    fios.close();  
+                } catch (IOException e1) {  
+                       
+                }  
+            }  
+              
+        }   
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		return listImgSrc; 
 	}
 	
@@ -160,6 +234,7 @@ public class Download {
                  System.out.println(mongoId);
              } catch (Exception e) {
              	e.printStackTrace();
+             	throw new IllegalArgumentException("证书校验异常2222222222222222！");
              } finally {
                  // 完毕，关闭所有链接
                  os.close();
