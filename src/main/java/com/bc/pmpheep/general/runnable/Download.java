@@ -62,8 +62,7 @@ public class Download {
 				continue;
 			}
 		String content = image.substring(srcS, srcE);
-		String contents = content.replace("https", "http"); // 替换内容
-		listImgSrc.add(contents);
+		listImgSrc.add(content);
 		} 
 		return listImgSrc; 
 	}
@@ -83,7 +82,7 @@ public class Download {
 	        // 打开链接  
 	        //javax.net.ssl.HttpsURLConnection conn = (javax.net.ssl.HttpsURLConnection) uri.openConnection();
 	        HttpURLConnection conn = (HttpURLConnection)uri.openConnection();
-	        conn.setRequestProperty("Referer", "http://mmbiz.qpic.cn/"); // 这是破解防盗链添加的参数
+	        conn.setRequestProperty("Referer", url); // 这是破解防盗链添加的参数
 	        conn.setDoInput(true); // 是否打开输入流true|false
 	        conn.setRequestMethod("GET"); // 设置请求方式为"GET"
 	        conn.setConnectTimeout(5 * 1000); // 超时响应时间为5秒 
