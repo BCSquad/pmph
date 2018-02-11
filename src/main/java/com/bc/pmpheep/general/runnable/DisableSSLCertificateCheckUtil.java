@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
+
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -27,7 +29,8 @@ public final class DisableSSLCertificateCheckUtil {
 
     public static void disableChecks() {
         try {
-            new URL("http://120.76.221.250/").getContent();
+        	InetAddress ia = InetAddress.getLocalHost();
+            new URL("http://" + ia.getHostAddress() + "/").getContent();
         } catch (IOException e) {
             // This invocation will always fail, but it will register the
             // default SSL provider to the URL class.

@@ -427,7 +427,11 @@
 				dc.`realname` like concat('%',#{realName},'%')
 		</if>
 		ORDER BY
-			dp.`rank`=1 DESC,dp.`chosen_position` =1 DESC,dp.`gmt_create` DESC
+		 dp.`rank` &lt; 1 DESC,
+		 dp.`preset_position`=1 ASC,
+		  dp.`chosen_position` =1 DESC,
+		  dp.`gmt_create` DESC 
+			<!-- dp.`preset_position` DESC,dp.`rank`=1 DESC,dp.`chosen_position` =1 DESC,dp.`gmt_create` DESC -->
 	</select>
 
 	<!-- 教材申报-遴选主编/遴选编委(更新) -->

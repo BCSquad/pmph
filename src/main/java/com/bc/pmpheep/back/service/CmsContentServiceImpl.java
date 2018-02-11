@@ -250,6 +250,12 @@ public class CmsContentServiceImpl implements CmsContentService {
                 cmsContent.setIsPublished(true);
             }
         }
+        if (cmsContent.getCategoryId() == Const.CMS_CATEGORY_ID_1
+            && cmsContent.getAuthorType() == Const.CMS_AUTHOR_TYPE_2
+            && cmsContent.getAuthStatus() == Const.CMS_AUTHOR_STATUS_0
+            && Const.TRUE == cmsContent.getIsStaging()) {
+            cmsContent.setIsStaging(false);
+        }
         // 再次编辑时间
         cmsContent.setGmtReedit(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                          DateUtil.getCurrentTime()));
