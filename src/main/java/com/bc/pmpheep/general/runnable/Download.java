@@ -79,15 +79,15 @@ public class Download {
 			//URL uri = new URL(null,url,new sun.net.www.protocol.https.Handler());
 			URL uri = new URL(url);
 	        DisableSSLCertificateCheckUtil.disableChecks();
-	        //打开链接  
+	        // 打开链接  
 	        //javax.net.ssl.HttpsURLConnection conn = (javax.net.ssl.HttpsURLConnection) uri.openConnection();
 	        HttpURLConnection conn = (HttpURLConnection)uri.openConnection();
 	        conn.setRequestProperty("Referer", "http://mp.weixin.qq.com"); // 这是破解防盗链添加的参数
-	        //设置请求方式为"GET"  
-	        conn.setRequestMethod("GET");  
-	        //超时响应时间为5秒  
-	        conn.setConnectTimeout(5 * 1000);
-	        //通过输入流获取图片数据  
+	        conn.setDoInput(true); // 是否打开输入流true|false
+	        conn.setRequestMethod("GET"); // 设置请求方式为"GET"
+	        conn.setConnectTimeout(5 * 1000); // 超时响应时间为5秒 
+	        conn.connect(); // 打开连接端口
+	        // 通过输入流获取图片数据  
 	        InputStream in = conn.getInputStream();
 	        double randomNumber = Math.random()*100; // 随机数
 	        Random rand = new Random();

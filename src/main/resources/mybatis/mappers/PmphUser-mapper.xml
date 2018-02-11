@@ -508,7 +508,11 @@
 		FROM pmph_user a
 		LEFT JOIN pmph_department b ON
 		a.department_id = b.id
-		WHERE a.department_id = #{departmentId}
+		WHERE
+		(b.path LIKE concat(#{path},'%')
+		OR b.id
+		=#{departmentId}
+		OR b.parent_id =#{departmentId})
 		<if test="realName !=null and realName !=''">
 			AND a.realname like concat('%',#{realName},'%')
 		</if>
@@ -523,7 +527,10 @@
 		LEFT JOIN pmph_department b ON
 		a.department_id = b.id
 		WHERE
-		a.department_id = #{departmentId}
+		(b.path LIKE concat(#{path},'%')
+		OR b.id
+		=#{departmentId}
+		OR b.parent_id =#{departmentId})
 		<if test="realName !=null and realName !=''">
 			AND a.realname like concat('%',#{realName},'%')
 		</if>
@@ -566,7 +573,8 @@
 		topic t
 		WHERE
 		t.editor_id = u.id
-		AND u.id = #{id}
+		AND u.id =
+		#{id}
 	</select>
 
 </mapper>
