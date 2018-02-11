@@ -81,7 +81,7 @@
 	</delete>
 
 	<!-- 修改 -->
-	<update id="updateWriterPointRule" parameterType="WriterPointRule">
+	<update id="updateWriterPointRule" parameterType="WriterPointRuleVO">
 		update writer_point_rule
 		<set>
 			<if test="ruleName != null and ruleName != ''">

@@ -40,7 +40,7 @@ public interface WriterPointRuleDao {
 	 * @param writerPointRule
 	 * @return
 	 */
-	Integer updateWriterPointRule(WriterPointRule writerPointRule);
+	Integer updateWriterPointRule(WriterPointRuleVO writerPointRule);
 	
 	/**
 	 * 查询

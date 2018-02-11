@@ -98,7 +98,7 @@ public class WriterPointRuleController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "修改积分或兑换规则")
 	@RequestMapping(value = "/pointrule/update", method = RequestMethod.PUT)
-	public ResponseBean update(WriterPointRule writerPointRule){
+	public ResponseBean update(WriterPointRuleVO writerPointRule){
 		return new ResponseBean(writerPointRuleService.updateWriterPointRule(writerPointRule));
 	}
 	

@@ -106,7 +106,8 @@ public class Download {
 	 * 下载图片
 	 * @param listImgSrc
 	 * 			图片url集合
-	 * @return	返回芒果id集合
+	 * @return	
+	 * 			返回芒果id集合
 	 * @throws Exception
 	 */
 	public List<String> download(List<String> listImgSrc) throws Exception {
