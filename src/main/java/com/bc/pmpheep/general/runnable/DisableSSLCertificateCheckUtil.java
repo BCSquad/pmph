@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import javax.net.ssl.*;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -36,7 +35,8 @@ public final class DisableSSLCertificateCheckUtil {
         	LOGGER.error("错误信息：", e);
         }
         try {
-            SSLContext sslc = SSLContext.getInstance("TLS");
+            SSLContext sslc = SSLContext.getInstance("SSL");
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
             TrustManager[] trustManagerArray = {new X509TrustManager() {
                 @Override
                 public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
@@ -53,7 +53,7 @@ public final class DisableSSLCertificateCheckUtil {
                     return new X509Certificate[0];
                 }
             }};
-            sslc.init(null, trustManagerArray, null);
+            sslc.init(kmf.getKeyManagers(), trustManagerArray, null);
             HttpsURLConnection.setDefaultSSLSocketFactory(sslc.getSocketFactory());
             HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
                 @Override
