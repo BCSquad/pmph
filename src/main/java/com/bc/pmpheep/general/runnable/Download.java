@@ -128,11 +128,11 @@ public class Download {
 		            HttpResponse hr = client.execute(get);  
 		            HttpEntity entity = hr.getEntity();  
 		            in= entity.getContent();  
-		            byte[] buffer = new byte[1024];  
-		            int len = -1;  
-		            while ((len = in.read(buffer))>0) {  
-		                //baos.write(buffer,0,len);  
-		            }  
+//		            byte[] buffer = new byte[1024];  
+//		            int len = -1;  
+//		            while ((len = in.read(buffer))>0) {  
+//		                //baos.write(buffer,0,len);  
+//		            }  
 		            //byte[] b = baos.toByteArray();
 		            Random rand = new Random();
 					String   mongoId = fileService.save(in, "----", FileType.CMS_IMG,  (long) rand.nextInt(900)+ 100);
