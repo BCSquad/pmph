@@ -81,6 +81,7 @@ public class Download {
 	 * @param listImgSrc 
 	 * @throws IOException 
 	 */
+	@SuppressWarnings("unused")
 	public List<String> listDownload(List<String> listImgSrc) throws IOException { 
 //		List<String> listHtmlImgs = new ArrayList<String>();
 //		for (String url : listImgSrc) { 
@@ -113,63 +114,61 @@ public class Download {
 //			listHtmlImgs.add(mongoId);
 //			in.close();
 //		}
-		
-		HttpClient client = HttpClients.createDefault();  
-        HttpGet get = new HttpGet(listImgSrc.get(0));  
-        FileImageOutputStream fios=null;  
-        InputStream in=null;  
-        ByteArrayOutputStream baos =null;  
-        try {  
-            //baos= new ByteArrayOutputStream();  
-            HttpResponse hr = client.execute(get);  
-            HttpEntity entity = hr.getEntity();  
-            in= entity.getContent();  
-            byte[] buffer = new byte[1024];  
-            int len = -1;  
-            while ((len = in.read(buffer))>0) {  
-                //baos.write(buffer,0,len);  
-            }  
-            //byte[] b = baos.toByteArray();
-            Random rand = new Random();
-			String   mongoId = fileService.save(in, "----", FileType.CMS_IMG, 
-			(long) rand.nextInt(900)+ 100);
-            //创建目录  
-//            File dir = new File(directory);  
-//            if(!dir.exists()){  
-//                dir.mkdirs();  
-//                File file=new File(dir,fileName);  
-//                if(!file.exists()){  
-//                    file.createNewFile();  
-//                     fios = new FileImageOutputStream(file);  
-//                    fios.write(b);  
-//                }  
-//            }else{  
-//                File file=new File(dir,fileName);  
-//                file.createNewFile();  
-//                fios = new FileImageOutputStream(file);  
-//                fios.write(b);  
-//            }  
-//            return dir+"/"+fileName;  
-        } catch (IOException e) {  
-            //异常处理  
-            if(null!=fios){  
-                try {  
-                    fios.close();  
-                } catch (IOException e1) {  
-                       
-                }  
-            }  
-              
-        }   
-		
-		
-		
-		
-		
+		List<String> res = new ArrayList<String>(listImgSrc.size());
+		for(String item:listImgSrc){
+			
+				
+				HttpClient client = HttpClients.createDefault();  
+		        HttpGet get = new HttpGet(item);  
+		        FileImageOutputStream fios=null;  
+		        InputStream in=null;  
+		        ByteArrayOutputStream baos =null;  
+		        try {  
+		            //baos= new ByteArrayOutputStream();  
+		            HttpResponse hr = client.execute(get);  
+		            HttpEntity entity = hr.getEntity();  
+		            in= entity.getContent();  
+		            byte[] buffer = new byte[1024];  
+		            int len = -1;  
+		            while ((len = in.read(buffer))>0) {  
+		                //baos.write(buffer,0,len);  
+		            }  
+		            //byte[] b = baos.toByteArray();
+		            Random rand = new Random();
+					String   mongoId = fileService.save(in, "----", FileType.CMS_IMG,  (long) rand.nextInt(900)+ 100);
+					res.add(mongoId);
+		            //创建目录  
+		//            File dir = new File(directory);  
+		//            if(!dir.exists()){  
+		//                dir.mkdirs();  
+		//                File file=new File(dir,fileName);  
+		//                if(!file.exists()){  
+		//                    file.createNewFile();  
+		//                     fios = new FileImageOutputStream(file);  
+		//                    fios.write(b);  
+		//                }  
+		//            }else{  
+		//                File file=new File(dir,fileName);  
+		//                file.createNewFile();  
+		//                fios = new FileImageOutputStream(file);  
+		//                fios.write(b);  
+		//            }  
+		//            return dir+"/"+fileName;  
+		        } catch (Exception e) {  
+		            //异常处理  
+		            if(null!=fios){  
+		                try {  
+		                    fios.close();  
+		                } catch (IOException e1) {  
+		                       
+		                }  
+		            }  
+		              
+		        }   
 		
 		
 		
-		
+		}	
 		
 		
 		
@@ -179,7 +178,12 @@ public class Download {
 		
 		
 		
-		return listImgSrc; 
+		
+		
+		
+		
+		
+		return res ; 
 	}
 	
 	/**
