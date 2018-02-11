@@ -101,6 +101,8 @@ public class Download {
 		}
 		return listHtmlImgs; 
 	}
+	
+	
 	public void download(String urlString, String filename, String savePath) throws Exception {
         InputStream is = null;
         OutputStream os = null;
