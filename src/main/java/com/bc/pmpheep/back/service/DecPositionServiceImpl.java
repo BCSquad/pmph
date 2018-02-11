@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -310,7 +312,41 @@ public class DecPositionServiceImpl implements DecPositionService {
         decPositionDao.listEditorSelection(textbookId,
                                            StringUtil.toAllCheck(realName),
                                            presetPosition);
-        resultMap.put("DecPositionEditorSelectionVO", listEditorSelectionVOs);
+        // 排序
+        List<DecPositionEditorSelectionVO> selectedDecPositionEditorSelectionVOs =
+        new ArrayList<DecPositionEditorSelectionVO>();// 已遴选集合
+        List<DecPositionEditorSelectionVO> unselectedDecPositionEditorSelectionVOs =
+        new ArrayList<DecPositionEditorSelectionVO>();// 未遴选集合
+        for (DecPositionEditorSelectionVO de : listEditorSelectionVOs) {
+            if (ObjectUtil.notNull(de.getRank())) {
+                selectedDecPositionEditorSelectionVOs.add(de);
+            } else if (de.getChosenPosition() > 0) {
+                selectedDecPositionEditorSelectionVOs.add(de);
+            } else {
+                unselectedDecPositionEditorSelectionVOs.add(de);
+            }
+        }
+        Collections.sort(selectedDecPositionEditorSelectionVOs,
+                         new Comparator<DecPositionEditorSelectionVO>() {
+                             public int compare(DecPositionEditorSelectionVO arg0,
+                             DecPositionEditorSelectionVO arg1) {
+                                 return arg1.getPresetPosition()
+                                            .compareTo(arg0.getPresetPosition());
+                             }
+                         });
+        Collections.sort(unselectedDecPositionEditorSelectionVOs,
+                         new Comparator<DecPositionEditorSelectionVO>() {
+                             public int compare(DecPositionEditorSelectionVO arg0,
+                             DecPositionEditorSelectionVO arg1) {
+                                 return arg1.getPresetPosition()
+                                            .compareTo(arg0.getPresetPosition());
+                             }
+                         });
+        List<DecPositionEditorSelectionVO> newDecPositionEditorSelectionVOs =
+        new ArrayList<DecPositionEditorSelectionVO>(listEditorSelectionVOs.size());// 重新排序后的集合
+        newDecPositionEditorSelectionVOs.addAll(selectedDecPositionEditorSelectionVOs);
+        newDecPositionEditorSelectionVOs.addAll(unselectedDecPositionEditorSelectionVOs);
+        resultMap.put("DecPositionEditorSelectionVO", newDecPositionEditorSelectionVOs);
         Material material = materialService.getMaterialById(materialId);
         resultMap.put("IsDigitalEditorOptional", material.getIsDigitalEditorOptional());
         return resultMap;

@@ -150,6 +150,9 @@ public class CmsContentServiceImpl implements CmsContentService {
         cmsContent.setAuthorType(Const.CMS_AUTHOR_TYPE_1);// 作者类型
         cmsContent.setAuthorId(pmphUser.getId());// 作者id
         // cmsContent.setMaterialId(cmsContent.getMaterialId());// 教材ID，为0表示未选择教材
+        if (Const.TRUE == cmsContent.getIsPublished()) {
+            cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_2);
+        }
         // 信息快报/公告管理(发布)，审核时间就为当前时间
         if (ObjectUtil.notNull(cmsContent.getAuthStatus())) {
             if (Const.CMS_AUTHOR_STATUS_2.shortValue() == cmsContent.getAuthStatus()) {
@@ -214,10 +217,14 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "教材ID为空");
         }
+        if (Const.TRUE == cmsContent.getIsPublished()) {
+            cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_2);
+        }
         // 信息快报/公告管理(发布)，审核时间就为当前时间
         if (Const.CMS_AUTHOR_STATUS_2 == cmsContent.getAuthStatus().shortValue()) {
             cmsContent.setAuthUserId(pmphUser.getId());
             cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_2);
+            cmsContent.setIsStaging(Const.FALSE);
             cmsContent.setAuthDate(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                             DateUtil.getCurrentTime()));
             cmsContent.setIsPublished(true);

@@ -347,4 +347,25 @@ public class DecPositionEditorSelectionVO implements Serializable {
         this.syllabusName = syllabusName;
     }
 
+    /**
+     * <pre>
+     * 功能描述：
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
+    @Override
+    public String toString() {
+        return "DecPositionEditorSelectionVO [id=" + id + ", declarationId=" + declarationId
+               + ", textbookId=" + textbookId + ", presetPosition=" + presetPosition
+               + ", strPresetPosition=" + strPresetPosition + ", chosenPosition=" + chosenPosition
+               + ", rank=" + rank + ", isDigitalEditor=" + isDigitalEditor
+               + ", isDigitalEditorOptional=" + isDigitalEditorOptional + ", syllabusId="
+               + syllabusId + ", syllabusName=" + syllabusName + ", userId=" + userId
+               + ", realname=" + realname + ", sex=" + sex + ", orgName=" + orgName + ", orgId="
+               + orgId + ", reportName=" + reportName + ", onlineProgress=" + onlineProgress
+               + ", offlineProgress=" + offlineProgress + ", gmtCreate=" + gmtCreate + "]";
+    }
+
 }
