@@ -112,7 +112,9 @@ public class Download {
 	public List<String> download(List<String> listImgSrc) throws Exception {
         InputStream is = null;
         OutputStream os = null;
+        //存放路径
         String savePath = null;
+        //文件名称
         String filename = null;
         List<String> listHtmlImgs = new ArrayList<String>();
         for (String urlString : listImgSrc) {
@@ -139,10 +141,14 @@ public class Download {
                  while ((len = is.read(bs)) != -1) {
                      os.write(bs, 0, len);
                  }
+                 // 新建文件用于存放图片
                  File file = new File("D://2.png");
                  Random rand = new Random();
+                 // 上传到芒果 返回芒果id 
                  String mongoId =fileService.saveLocalFile(file, FileType.CMS_IMG, (long) rand.nextInt(900) + 100);
+                 //把芒果id加到list集合中
                  listHtmlImgs.add(mongoId);
+                 // 删除文件夹以及图片
                  FileUtil.deleteDirectory("D:\\\\");
                  System.out.println(mongoId);
              } catch (Exception e) {
