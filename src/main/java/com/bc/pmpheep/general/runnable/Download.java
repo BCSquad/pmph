@@ -185,7 +185,7 @@ public class Download {
 		
 		
 		
-		
+		System.out.println("__________________________________"+res.toString());
 		
 		return res ; 
 	}
