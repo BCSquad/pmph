@@ -154,15 +154,19 @@ public class Download {
 		//                fios.write(b);  
 		//            }  
 		//            return dir+"/"+fileName;  
-		        } catch (Exception e) {  
-		            //异常处理  
-		            if(null!=fios){  
-		                try {  
-		                    fios.close();  
-		                } catch (IOException e1) {  
-		                       
-		                }  
-		            }  
+		        } catch (Exception e) { 
+		        	e.printStackTrace();
+		        	throw new IllegalArgumentException(e.getMessage());   
+                	
+//		            //异常处理  
+//		            if(null!=fios){  
+//		                try {  
+//		                    fios.close();  
+//		                } catch (Exception e1) {  
+//		                	throw new IllegalArgumentException(e1.getMessage());   
+//		                	e1.printStackTrace();
+//		                }  
+//		            }  
 		              
 		        }   
 		
