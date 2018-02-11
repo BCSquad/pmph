@@ -82,7 +82,13 @@ public class Download {
 	        // 打开链接  
 	        //javax.net.ssl.HttpsURLConnection conn = (javax.net.ssl.HttpsURLConnection) uri.openConnection();
 	        HttpURLConnection conn = (HttpURLConnection)uri.openConnection();
-	        conn.setRequestProperty("Referer", url); // 这是破解防盗链添加的参数
+	        conn.setRequestProperty("Referer", ""); // 这是破解防盗链添加的参数
+	        conn.setRequestProperty("accept", "*/*");
+	        conn.setRequestProperty("connection", "Keep-Alive");
+	        conn.setRequestProperty("user-agent", 
+	        		"Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) "
+	        		+ "Chrome/53.0.2785.116 Safari/537.36");
+	        conn.setDoOutput(true);
 	        conn.setDoInput(true); // 是否打开输入流true|false
 	        conn.setRequestMethod("GET"); // 设置请求方式为"GET"
 	        conn.setConnectTimeout(5 * 1000); // 超时响应时间为5秒 
