@@ -857,12 +857,4 @@
 			id=#{item.id}
 		</foreach>
 	</update>
-	
-	<!-- 根据用户名、昵称和真实姓名查询id -->
-	<select id="getId" parameterType="String" resultType="WriterUser">
-		select * from writer_user
-		where 
-		username = #{username} 
-		and realname = #{realname}
-	</select>
 </mapper>

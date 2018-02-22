@@ -596,17 +596,4 @@ public class WriterUserServiceImpl implements WriterUserService {
 		return writerUserDao.updateWriterUser(writerUsers);
 	}
 
-	@Override
-	public WriterUser getId(String username, String realname) {
-		if (StringUtil.isEmpty(username)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "参数为空");
-		}
-		if (StringUtil.isEmpty(realname)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "参数为空");
-		}
-		return writerUserDao.getId(username, realname);
-	}
-
 }
