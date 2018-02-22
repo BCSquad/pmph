@@ -29,6 +29,7 @@ import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Declaration;
+import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.DecAcadeService;
 import com.bc.pmpheep.back.service.DecCourseConstructionService;
 import com.bc.pmpheep.back.service.DecEduExpService;
@@ -43,6 +44,7 @@ import com.bc.pmpheep.back.service.DecTextbookService;
 import com.bc.pmpheep.back.service.DecWorkExpService;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.service.MaterialService;
+import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
@@ -98,6 +100,9 @@ public class MigrationStageSix {
     FileService fileService;
     @Resource
     ExcelHelper excelHelper;
+    @Resource
+    WriterUserService writerUserService;
+    
     @Autowired
     private MaterialService materialService;
 
@@ -223,7 +228,12 @@ public class MigrationStageSix {
                 useridCount++;
                 continue;
             }
-            declaration.setUserId(userid);
+            if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id) && "李勇".equals(realName)) {
+            	WriterUser writerUser = writerUserService.getId("18045661072", "18045661072", realName);
+            	declaration.setUserId(writerUser.getId());
+            } else {
+                declaration.setUserId(userid);
+			}
             if (StringUtil.isEmpty(realName) && isStagingJudge.intValue() == 0) { // 申报表作家姓名为空并且不暂存
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空。"));
                 excel.add(map);

@@ -232,5 +232,15 @@ public interface WriterUserService {
 	 * @return
 	 */
 	Integer updateWriterUser(List<WriterUser> writerUsers);
+	
+	/**
+	 * 功能描述：根据用户名、昵称和真实姓名查询id
+	 * @author tyc
+	 * @param username
+	 * @param nickname
+	 * @param realname
+	 * @return
+	 */
+	WriterUser getId(String username, String nickname, String realname);
 
 }
