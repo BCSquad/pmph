@@ -14,7 +14,6 @@ import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterProfile;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
-import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DesRun;
@@ -598,12 +597,8 @@ public class WriterUserServiceImpl implements WriterUserService {
 	}
 
 	@Override
-	public WriterUser getId(String username, String nickname, String realname) {
+	public WriterUser getId(String username, String realname) {
 		if (StringUtil.isEmpty(username)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-					CheckedExceptionResult.NULL_PARAM, "参数为空");
-		}
-		if (StringUtil.isEmpty(nickname)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
@@ -611,7 +606,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		return writerUserDao.getId(username, nickname, realname);
+		return writerUserDao.getId(username, realname);
 	}
 
 }

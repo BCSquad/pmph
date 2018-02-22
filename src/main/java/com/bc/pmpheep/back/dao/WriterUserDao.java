@@ -204,13 +204,12 @@ public interface WriterUserDao {
     // List<WriterUser> getList(Page<WriterUser,Map<String, String>> page);
 	
 	/**
-	 * 功能描述：根据用户名、昵称和真实姓名查询id
+	 * 功能描述：根据用户名和真实姓名查询id
 	 * @author tyc
 	 * @param username
-	 * @param nickname
 	 * @param realname
 	 * @return
 	 */
-	WriterUser getId(String username, String nickname, String realname);
+	WriterUser getId(String username, String realname);
 
 }

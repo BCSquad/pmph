@@ -862,7 +862,7 @@
 	<select id="getId" parameterType="String" resultType="WriterUser">
 		select * from writer_user
 		where 
-		username = #{username} and  nickname = #{nickname} 
+		username = #{username} 
 		and realname = #{realname}
 	</select>
 </mapper>
