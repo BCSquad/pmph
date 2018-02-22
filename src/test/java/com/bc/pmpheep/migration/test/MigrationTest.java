@@ -59,65 +59,65 @@ public class MigrationTest extends BaseTest {
     @Resource
     MigrationPlus migrationPlus;
 
-//    @Test
-//    @Rollback(false)
-//    public void testMigrationStageOne() {
-//        migrationStageOne.start();
-//    }
-//
-//    @Test
-//    @Rollback(false)
-//    public void testMigrationStageTwo() {
-//        migrationStageTwo.start();
-//    }
-//
-//    @Test
-//    @Rollback(false)
-//    public void testMigrationStageThree() {
-//        migrationStageThree.start();
-//    }
-//
-//    @Test
-//    @Rollback(false)
-//    public void testMigrationStageFour() {
-//        migrationStageFour.start();
-//    }
-//
-//    @Test
-//    @Rollback(false)
-//    public void testMigrationStageFive() {
-//        migrationStageFive.start();
-//    }
-//
-//    @Test
-//    @Rollback(false)
-//    public void testMigrationStageSix() {
-//        migrationStageSix.start();
-//    }
-//
-//    @Test
-//    @Rollback(false)
-//    public void testMigrationStageSeven() {
-//        migrationStageSeven.start();
-//    }
-//
-//    @Test
-//    @Rollback(false)
-//    public void testMigrationStageEight() {
-//        migrationStageEight.start();
-//    }
-//
-//    @Test
-//    @Rollback(false)
-//    public void testMigrationStageNine() {
-//        migrationStageNine.start();
-//    }
-//
-//    @Test
-//    @Rollback(false)
-//    public void testMigrationStageTen() {
-//        migrationStageTen.start();
-//    }
+    @Test
+    @Rollback(false)
+    public void testMigrationStageOne() {
+        migrationStageOne.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageTwo() {
+        migrationStageTwo.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageThree() {
+        migrationStageThree.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageFour() {
+        migrationStageFour.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageFive() {
+        migrationStageFive.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageSix() {
+        migrationStageSix.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageSeven() {
+        migrationStageSeven.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageEight() {
+        migrationStageEight.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageNine() {
+        migrationStageNine.start();
+    }
+
+    @Test
+    @Rollback(false)
+    public void testMigrationStageTen() {
+        migrationStageTen.start();
+    }
     
     @Test
     @Rollback(false)

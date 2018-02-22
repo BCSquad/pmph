@@ -29,7 +29,6 @@ import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Declaration;
-import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.DecAcadeService;
 import com.bc.pmpheep.back.service.DecCourseConstructionService;
 import com.bc.pmpheep.back.service.DecEduExpService;
@@ -44,7 +43,6 @@ import com.bc.pmpheep.back.service.DecTextbookService;
 import com.bc.pmpheep.back.service.DecWorkExpService;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.service.MaterialService;
-import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
@@ -100,8 +98,6 @@ public class MigrationStageSix {
     FileService fileService;
     @Resource
     ExcelHelper excelHelper;
-    @Resource
-    WriterUserService writerUserService;
     
     @Autowired
     private MaterialService materialService;
@@ -116,7 +112,7 @@ public class MigrationStageSix {
         }
         Date begin = new Date();
         declaration();
-        decEduExp();
+        /*decEduExp();
         decWorkExp();
         decTeachExp();
         decAcade();
@@ -128,7 +124,7 @@ public class MigrationStageSix {
         decResearch();
         decExtension();
         decPosition();
-        decPositionPublished();
+        decPositionPublished();*/
         logger.info("迁移第六步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
 
@@ -228,9 +224,20 @@ public class MigrationStageSix {
                 useridCount++;
                 continue;
             }
-            if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id) && "李勇".equals(realName)) {
-            	WriterUser writerUser = writerUserService.getId("18045661072", "18045661072", realName);
-            	declaration.setUserId(writerUser.getId());
+            if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id) 
+            		|| "e56504a4-8b26-4b55-89c9-571fc94675d9".equals(id)) {
+            	String sqlId = "SELECT *,new_pk userId FROM sys_user ";
+            	List<Map<String, Object>> mapIds = JdbcHelper.getJdbcTemplate().queryForList(sqlId);
+            	for (Map<String, Object> mapId : mapIds) {
+                	Long userId = (Long) mapId.get("userId");
+                	String usercode = (String) mapId.get("usercode");
+                	String username = (String) mapId.get("username");
+                	if ("18045661072".equals(usercode) && "李勇".equals(username)) {
+                		declaration.setUserId(userId);
+                	} else if ("watergo1".equals(usercode) && "李清照2".equals(username)) {
+                		declaration.setUserId(userId);
+                	}
+            	}
             } else {
                 declaration.setUserId(userid);
 			}
