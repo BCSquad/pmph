@@ -315,7 +315,11 @@
             <artifactId>WebCollector</artifactId>
             <version>${WebCollector.ver}</version>
         </dependency>
-		
+        <dependency>
+            <groupId>com.rws.3rd</groupId>
+            <artifactId>sso</artifactId>
+            <version>1.2</version>
+        </dependency>
     </dependencies>
 
     <repositories>
@@ -325,6 +329,16 @@
             <url>https://repo.spring.io/libs-release</url>
             <snapshots>
                 <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>3rd</id>
+            <url>http://211.149.209.221:8081/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
     </repositories>
