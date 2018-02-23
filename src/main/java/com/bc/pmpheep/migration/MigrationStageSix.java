@@ -243,10 +243,7 @@ public class MigrationStageSix {
 			}
             if (StringUtil.isEmpty(realName) && isStagingJudge.intValue() == 0) { // 申报表作家姓名为空并且不暂存
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空。"));
-                excel.add(map);
-                logger.debug("找到申报表作家姓名为空，此结果将被记录在Excel中");
                 realNameCount++;
-                continue;
             } else {
             	declaration.setRealname(realName);
 			}
