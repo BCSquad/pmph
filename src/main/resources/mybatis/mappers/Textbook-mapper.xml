@@ -310,6 +310,7 @@
 	<select id="listBookPosition" parameterType="PageParameter"
 		resultType="BookPositionVO">
 		select
+		e.book_id bookId,
 		a.revision_times,
 		a.republish_times,
 		a.is_locked,
