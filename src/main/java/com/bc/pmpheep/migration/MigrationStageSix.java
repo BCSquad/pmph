@@ -98,6 +98,7 @@ public class MigrationStageSix {
     FileService fileService;
     @Resource
     ExcelHelper excelHelper;
+    
     @Autowired
     private MaterialService materialService;
 
@@ -223,7 +224,23 @@ public class MigrationStageSix {
                 useridCount++;
                 continue;
             }
-            declaration.setUserId(userid);
+            if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id) 
+            		|| "e56504a4-8b26-4b55-89c9-571fc94675d9".equals(id)) {
+            	String sqlId = "SELECT *,new_pk userId FROM sys_user ";
+            	List<Map<String, Object>> mapIds = JdbcHelper.getJdbcTemplate().queryForList(sqlId);
+            	for (Map<String, Object> mapId : mapIds) {
+                	Long userId = (Long) mapId.get("userId");
+                	String usercode = (String) mapId.get("usercode");
+                	String username = (String) mapId.get("username");
+                	if ("18045661072".equals(usercode) && "李勇".equals(username)) {
+                		declaration.setUserId(userId);
+                	} else if ("watergo1".equals(usercode) && "李清照2".equals(username)) {
+                		declaration.setUserId(userId);
+                	}
+            	}
+            } else {
+                declaration.setUserId(userid);
+			}
             if (StringUtil.isEmpty(realName) && isStagingJudge.intValue() == 0) { // 申报表作家姓名为空并且不暂存
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空。"));
                 excel.add(map);
