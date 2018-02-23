@@ -61,6 +61,14 @@ public interface BookService {
 	 * @return 包含主键的插入对象
 	 */
 	BookUserMark add(BookUserMark mark) throws CheckedServiceException;
+	
+	/**
+	 * 更新书的评分
+	 * 
+	 * @param bookId
+	 * @return 影响行数
+	 */
+	Integer updateBookCore(Long id) throws CheckedServiceException;
 
 	/**
 	 *
@@ -74,6 +82,17 @@ public interface BookService {
 	 *
 	 */
 	PageResult<BookVO> listBookVO(PageParameter<BookVO> pageParameter) throws CheckedServiceException;
+	
+	/**
+	 * 书的分页数据
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2018年2月6日 下午4:19:33
+	 * @param pageParameter
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	PageResult<Book>   listBook(Integer pageSize, Integer pageNumber, String bookName) throws CheckedServiceException;
 
 	/**
 	 *

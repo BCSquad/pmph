@@ -14,6 +14,7 @@ import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.po.SurveyTarget;
 import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.po.WriterUser;
+import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
@@ -138,16 +139,32 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问卷结束时间为空");
         }
+        List<Long> orgIds = this.listOrgIdBySurveyId(surveyTargetVO.getSurveyId());
         Integer count = 0;
         Long userId = pmphUser.getId();// 当前用户
-        surveyService.updateSurvey(new Survey(surveyTargetVO.getSurveyId(), Const.SURVEY_STATUS_1,
-                                              DateUtil.str2Timestam(surveyTargetVO.getStartTime()),
-                                              DateUtil.str2Timestam(surveyTargetVO.getEndTime())));
-        List<SurveyTarget> list = new ArrayList<SurveyTarget>(surveyTargetVO.getOrgIds().size());
-        for (Long orgId : surveyTargetVO.getOrgIds()) {
+        List<Long> listOrgId = new ArrayList<Long>();
+        if (CollectionUtil.isEmpty(orgIds)) {// 第一次发布
+            listOrgId.addAll(surveyTargetVO.getOrgIds());
+            surveyService.updateSurvey(new Survey(
+                                                  surveyTargetVO.getSurveyId(),
+                                                  Const.SURVEY_STATUS_1,
+                                                  DateUtil.str2Timestam(surveyTargetVO.getStartTime()),
+                                                  DateUtil.str2Timestam(surveyTargetVO.getEndTime())));
+
+        } else {// 第二次发布
+            for (Long id : surveyTargetVO.getOrgIds()) {
+                if (!orgIds.contains(id)) {
+                    listOrgId.add(id);
+                }
+            }
+        }
+        List<SurveyTarget> list = new ArrayList<SurveyTarget>(listOrgId.size());
+        for (Long orgId : listOrgId) {
             list.add(new SurveyTarget(userId, surveyTargetVO.getSurveyId(), orgId));
         }
-        count = surveyTargetDao.batchSaveSurveyTargetByList(list);// 保存发起问卷中间表
+        if (CollectionUtil.isNotEmpty(list)) {
+            count = surveyTargetDao.batchSaveSurveyTargetByList(list);// 保存发起问卷中间表
+        }
         if (count > 0) {
             // MongoDB 消息插入
             message = messageService.add(message);
@@ -157,30 +174,43 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
             }
             // 发送消息
             List<WriterUser> writerUserList =
-            writerUserService.getWriterUserListByOrgIds(surveyTargetVO.getOrgIds());// 作家用户
+            writerUserService.getWriterUserListByOrgIds(listOrgId);// 作家用户
             List<UserMessage> userMessageList = new ArrayList<UserMessage>(writerUserList.size()); // 系统消息
             for (WriterUser writerUser : writerUserList) {
                 userMessageList.add(new UserMessage(message.getId(), surveyTargetVO.getTitle(),
                                                     Const.MSG_TYPE_1, userId, Const.SENDER_TYPE_1,
                                                     writerUser.getId(), Const.RECEIVER_TYPE_2, 0L));
             }
-            List<OrgUser> orgUserList =
-            orgUserService.getOrgUserListByOrgIds(surveyTargetVO.getOrgIds());// 获取学校管理员集合
+            List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(listOrgId);// 获取学校管理员集合
             List<String> orgUserEmail = new ArrayList<String>(orgUserList.size());// 收件人邮箱
             for (OrgUser orgUser : orgUserList) {
-                orgUserEmail.add(orgUser.getEmail());// 获取学校管理员邮箱地址
+                userMessageList.add(new UserMessage(message.getId(), surveyTargetVO.getTitle(),
+                                                    Const.MSG_TYPE_1, userId, Const.SENDER_TYPE_1,
+                                                    orgUser.getId(), Const.RECEIVER_TYPE_3, 0L));
+                if (!"-".equals(orgUser.getEmail()) && !"null".equals(orgUser.getEmail())) {
+                    orgUserEmail.add(orgUser.getEmail());// 获取学校管理员邮箱地址
+                }
             }
             Integer size = orgUserEmail.size();
-            String[] emails =
-            new String[] { "515944204@qq.com", "869389545@qq.com", "nyz526@163.com" };
+            // String[] emails =
+            // new String[] { "515944204@qq.com", "869389545@qq.com", "nyz526@163.com" };
             String[] toEmail = (String[]) orgUserEmail.toArray(new String[size]);
+            if (ArrayUtil.isEmpty(toEmail)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                                  CheckedExceptionResult.NULL_PARAM, "收件人邮箱为空");
+            }
             // 发送邮件
             JavaMailSenderUtil javaMailSenderUtil = new JavaMailSenderUtil();
             try {
                 // 给学校管理员发送邮件
-                javaMailSenderUtil.sendMail(surveyTargetVO.getTitle(), message.getContent(),
-                // "<p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>您好：</span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>&nbsp; &nbsp; 现有一份《XXXX问卷调查》需要您登陆下面地址，填写您宝贵意见。</span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>&nbsp;&nbsp;&nbsp;&nbsp;登陆地址：<a href='http://www.baidu.com'>人卫E教平台</a><br/></span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;'><br/></p>",
-                                            emails);
+                javaMailSenderUtil.sendMail(surveyTargetVO.getTitle(),
+                // message.getContent(),
+                                            "<p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>您好：</span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>&nbsp; &nbsp; 现有一份《"
+                                            + surveyTargetVO.getTitle()
+                                            + "》需要您登陆下面地址，填写您宝贵意见。</span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>&nbsp;&nbsp;&nbsp;&nbsp;登陆地址：<a href='http://120.76.221.250/pmeph/survey/writeSurvey.action?surveyId="
+                                            + surveyTargetVO.getSurveyId()
+                                            + "'>人卫E教平台</a><br/></span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;'><br/></p>",
+                                            toEmail);
             } catch (Exception e) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                                   CheckedExceptionResult.OBJECT_NOT_FOUND, "邮件发送失败");
@@ -208,5 +238,14 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
             }
         }
         return count;
+    }
+
+    @Override
+    public List<Long> listOrgIdBySurveyId(Long surveyId) throws CheckedServiceException {
+        if (ObjectUtil.isNull(surveyId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷ID为空");
+        }
+        return surveyTargetDao.listOrgIdBySurveyId(surveyId);
     }
 }

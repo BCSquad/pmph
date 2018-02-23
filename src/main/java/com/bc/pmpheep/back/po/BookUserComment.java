@@ -61,6 +61,14 @@ public class BookUserComment implements Serializable {
 	 */
 	private Boolean isPromote;
 	/**
+	 * 是否置顶
+	 */
+	private Boolean isStick;
+	/**
+	 * 置顶顺序
+	 */
+	private Integer sort;
+	/**
 	 * 推荐显示顺序
 	 */
 	private Integer sortPromote;
@@ -255,6 +263,22 @@ public class BookUserComment implements Serializable {
 
 	public void setGmtUpdate(Timestamp gmtUpdate) {
 		this.gmtUpdate = gmtUpdate;
+	}
+
+	public Boolean getIsStick() {
+		return isStick;
+	}
+
+	public void setIsStick(Boolean isStick) {
+		this.isStick = isStick;
+	}
+
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
 	}
 
 	@Override

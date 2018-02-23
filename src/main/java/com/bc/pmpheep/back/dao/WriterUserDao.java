@@ -152,6 +152,33 @@ public interface WriterUserDao {
 	 * @return
 	 */
 	Integer getCount();
+	
+	/**
+	 * 通过id查询用户级别
+	 * @param writerUsers
+	 * @return
+	 */
+	List<WriterUser> getWriterUserRankList(List<WriterUser> writerUsers);
+	
+	/**
+	 * 查询教师用户数量
+	 * @param pageParameter
+	 * @return
+	 */
+	Integer getLsitisTeacherTotal(PageParameter<WriterUserManagerVO> pageParameter);
+	
+	/**
+	 * 查询教师用户
+	 * @param pageParameter
+	 * @return
+	 */
+	List<WriterUserManagerVO> getLsitisTeacher(PageParameter<WriterUserManagerVO> pageParameter);
+	/**
+	 * 通过id修改为教师
+	 * @param writerUsers
+	 * @return
+	 */
+	Integer updateWriterUser(List<WriterUser> writerUsers);
 
     // /**
     // *

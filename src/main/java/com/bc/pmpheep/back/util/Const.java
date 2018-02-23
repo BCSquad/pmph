@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.context.ApplicationContext;
 
 import com.bc.pmpheep.general.bean.ZipDownload;
+import com.bc.pmpheep.general.runnable.WechatArticle;
 
 /**
  * 
@@ -26,7 +27,9 @@ import com.bc.pmpheep.general.bean.ZipDownload;
  */
 public class Const {
     // word导出内存
-    public static Map<String, ZipDownload> map                           = new HashMap<>();
+    public static Map<String, ZipDownload> WORD_EXPORT_MAP               = new HashMap<>(16);
+    // 微信公众号爬虫任务内存
+    public static Map<String, WechatArticle>WACT_MAP                     = new HashMap<>(16);
     // 临时文件上传的目录
     public static final String             FILE_TEMP_PATH                = "/upload/temp";
 
@@ -49,7 +52,7 @@ public class Const {
 
     public static final String             SESSION_ID                    = "sessionId";
 
-    // public static final String SESSION_ID = "JSESSIONID";
+//     public static final String SESSION_ID = "JSESSIONID";
 
     // PMPH_USER_TOKEN
     public static final String             SEESION_PMPH_USER_TOKEN       = "sessionPmphUserToken";

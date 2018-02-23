@@ -84,6 +84,8 @@
         <httpcore.ver>4.4.1</httpcore.ver>
         <fastjson.ver>1.2.7</fastjson.ver>
         <bcprov-jdk16.ver>1.46</bcprov-jdk16.ver>
+        <!-- WebCollector爬虫 -->
+        <WebCollector.ver>2.71</WebCollector.ver>
     </properties>
 	
     <dependencies>
@@ -272,41 +274,47 @@
         </dependency>
         <!-- java-mail -->
         <dependency>
-	        <groupId>javax.mail</groupId>
-	        <artifactId>javax.mail-api</artifactId>
-	        <version>${java-mail.ver}</version>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.apache.commons</groupId>
-	        <artifactId>commons-email</artifactId>
-	        <version>${commons-email.ver}</version>
-	    </dependency>
-	    <!-- 百度统计 -->
-	    <dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>${httpclient.ver}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpmime</artifactId>
-			<version>${httpmime.ver}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
-			<version>${httpcore.ver}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>${fastjson.ver}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk16</artifactId>
-			<version>${bcprov-jdk16.ver}</version>
-		</dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+            <version>${java-mail.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+            <version>${commons-email.ver}</version>
+        </dependency>
+        <!-- 百度统计 -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>${httpmime.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>${httpcore.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.ver}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk16</artifactId>
+            <version>${bcprov-jdk16.ver}</version>
+        </dependency>
+        <!-- WebCollector爬虫 -->
+        <dependency>
+            <groupId>cn.edu.hfut.dmic.webcollector</groupId>
+            <artifactId>WebCollector</artifactId>
+            <version>${WebCollector.ver}</version>
+        </dependency>
 		
     </dependencies>
 

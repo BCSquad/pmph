@@ -777,7 +777,10 @@
 			update
 			writer_user
 			<set>
-				rank=1
+				<if test="isTeacher!=null">
+					is_teacher = #{isTeacher},
+				</if>
+					rank=1,
 			</set>
 			where
 			id=#{item.id}
@@ -791,4 +794,67 @@
 		LEFT JOIN `org` o ON wuc.`org_id` = o.`id`
 		where wu.`is_deleted`=0 and wuc.`progress` !=0
 	</select>
+	<!-- 通过id查询用户级别 -->
+	<select id="getWriterUserRankList" parameterType="java.util.List" resultType="WriterUser">
+		select rank from
+			writer_user
+			where id in
+			<foreach item="item" collection="list" index="index" open="(" separator=","  close=")">
+				#{item.id}
+		    </foreach>
+	</select>
+	
+	<!-- getLsitisTeacherTotal查询教师用户数量 -->
+	<select id="getLsitisTeacherTotal" parameterType="PageParameter"
+		resultType="java.lang.Integer">
+		select count(*) from writer_user w 
+		left join org o on o.id = w.org_id
+		left join Writer_User_Certification wuc on wuc.user_id=w.id
+		where 1=1	and is_teacher=1
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (w.username like concat('%',#{parameter.name},'%' ) or
+			w.realname like
+			concat('%',#{parameter.name},'%' ) )
+		</if>
+		<if test="parameter.orgName !=null and parameter.orgName !=''">
+			and o.org_name like concat('%', #{parameter.orgName},'%')
+		</if>
+	</select>
+	
+	<!-- getLsitisTeacher查询教师用户 -->
+	<select id="getLsitisTeacher" parameterType="PageParameter"
+		resultType="WriterUserManagerVO">
+		select
+		*
+		from writer_user w left join org o on o.id = w.org_id 
+		left join Writer_User_Certification wuc on wuc.user_id=w.id
+		where	1=1	and is_teacher=1
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (w.username like concat('%',#{parameter.name},'%' ) or
+			w.realname like
+			concat('%',#{parameter.name},'%' ) )
+		</if>
+		<if test="parameter.orgName !=null and parameter.orgName !=''">
+			and o.org_name like concat('%', #{parameter.orgName},'%')
+		</if>
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
+	
+	<!-- 教师审核后WriterUser中is_teacher段 -->
+	<update id="updateWriterUser"
+		parameterType="java.util.List">
+		<foreach item="item" collection="list" index="index" open=""
+			separator=";">
+			update
+			writer_user
+			<set>
+				is_teacher =1
+			</set>
+			where
+			id=#{item.id}
+		</foreach>
+	</update>
 </mapper>

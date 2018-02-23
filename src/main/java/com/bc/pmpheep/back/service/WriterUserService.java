@@ -219,5 +219,18 @@ public interface WriterUserService {
 	 * @return
 	 */
 	Integer getCount();
+	
+	/**
+	 * 通过id查询用户级别
+	 * @param writerUsers
+	 * @return
+	 */
+	List<WriterUser> getWriterUserRankList(List<WriterUser> writerUsers);
+	/**
+	 * 通过作家用户id修改  为教师
+	 * @param writerUsers
+	 * @return
+	 */
+	Integer updateWriterUser(List<WriterUser> writerUsers);
 
 }

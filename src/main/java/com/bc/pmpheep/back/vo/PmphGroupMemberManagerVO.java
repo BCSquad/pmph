@@ -48,9 +48,29 @@ public class PmphGroupMemberManagerVO implements Serializable {
 	private String handphone;
 	// 邮箱
 	private String email;
+	//头像
+	private String avatar;
+	//地址
+	private  String address;
 
 	public PmphGroupMemberManagerVO() {
 		super();
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public Long getId() {

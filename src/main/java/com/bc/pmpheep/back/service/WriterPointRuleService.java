@@ -38,7 +38,7 @@ public interface WriterPointRuleService {
      * @return
      * @throws CheckedServiceException
      */
-    Integer updateWriterPointRule(WriterPointRule writerPointRule) throws CheckedServiceException;
+    Integer updateWriterPointRule(WriterPointRuleVO writerPointRule) throws CheckedServiceException;
     
     /**
      * 添加积分规则

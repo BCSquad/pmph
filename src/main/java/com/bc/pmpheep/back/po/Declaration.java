@@ -54,9 +54,9 @@ public class Declaration implements java.io.Serializable {
 	//作家传真
 	private String fax;
 	// 服从调剂
-	private Integer isDispensed;
+	private Boolean isDispensed;
 	// 参与本科教学评估认证
-	private Integer isUtec;
+	private Boolean isUtec;
 	// 学历
 	private Integer degree;
 	// 专业特长
@@ -182,7 +182,7 @@ public class Declaration implements java.io.Serializable {
 			Integer sex, Date birthday, Integer experience, String orgName,
 			String position, String title, String address, String postcode,
 			String handphone, String email, Short idtype, String idcard,
-			String telephone, String fax, Integer isDispensed, Long orgId, 
+			String telephone, String fax, Boolean isDispensed, Long orgId, 
 			Integer onlineProgress, Long authUserId, Timestamp authDate, 
 			Integer offlineProgress, Timestamp paperDate, Boolean isStaging, 
 			Boolean isDeleted) {
@@ -439,19 +439,19 @@ public class Declaration implements java.io.Serializable {
 		this.gmtUpdate = gmtUpdate;
 	}
 
-	public Integer getIsDispensed() {
+	public Boolean getIsDispensed() {
 		return isDispensed;
 	}
 
-	public void setIsDispensed(Integer isDispensed) {
+	public void setIsDispensed(Boolean isDispensed) {
 		this.isDispensed = isDispensed;
 	}
 	
-	public Integer getIsUtec() {
+	public Boolean getIsUtec() {
 		return isUtec;
 	}
 	
-	public void setIsUtec(Integer isUtec) {
+	public void setIsUtec(Boolean isUtec) {
 		this.isUtec = isUtec;
 	}
 

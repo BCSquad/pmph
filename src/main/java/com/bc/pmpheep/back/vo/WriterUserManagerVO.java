@@ -92,8 +92,18 @@ public class WriterUserManagerVO implements Serializable {
     private String  note;
     // 条件分页总条数
     private Integer count;
+    // 是否教师
+    private Boolean isTeacher;
+    
+    public Boolean getIsTeacher() {
+		return isTeacher;
+	}
 
-    public Long getId() {
+	public void setIsTeacher(Boolean isTeacher) {
+		this.isTeacher = isTeacher;
+	}
+
+	public Long getId() {
         return id;
     }
 
@@ -284,7 +294,6 @@ public class WriterUserManagerVO implements Serializable {
     public void setCount(Integer count) {
         this.count = count;
     }
-
     /**
      * <pre>
      * 功能描述：
@@ -293,15 +302,17 @@ public class WriterUserManagerVO implements Serializable {
      * @return
      * </pre>
      */
-    @Override
-    public String toString() {
-        return "WriterUserManagerVO [id=" + id + ", username=" + username + ", name=" + name
-               + ", isDisabled=" + isDisabled + ", orgId=" + orgId + ", orgName=" + orgName
-               + ", nickname=" + nickname + ", realname=" + realname + ", position=" + position
-               + ", title=" + title + ", idcard=" + idcard + ", handphone=" + handphone
-               + ", email=" + email + ", address=" + address + ", rank=" + rank + ", progress="
-               + progress + ", cert=" + cert + ", rankName=" + rankName + ", sort=" + sort
-               + ", note=" + note + ", count=" + count + "]";
-    }
+	@Override
+	public String toString() {
+		return "WriterUserManagerVO [id=" + id + ", username=" + username + ", name=" + name + ", isDisabled="
+				+ isDisabled + ", orgId=" + orgId + ", orgName=" + orgName + ", nickname=" + nickname + ", realname="
+				+ realname + ", position=" + position + ", title=" + title + ", idcard=" + idcard + ", handphone="
+				+ handphone + ", email=" + email + ", address=" + address + ", rank=" + rank + ", progress=" + progress
+				+ ", cert=" + cert + ", rankName=" + rankName + ", sort=" + sort + ", note=" + note + ", count=" + count
+				+ ", isTeacher=" + isTeacher + "]";
+	}
+
+   
+  
 
 }

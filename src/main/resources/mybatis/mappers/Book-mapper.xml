@@ -514,4 +514,29 @@
 		b.bookmarks DESC
 		limit #{start},#{pageSize}
 	</select>
+	
+	<!-- 获取书籍总数 -->
+	<select id="getListToatl" resultType="java.lang.Integer">
+		select COUNT(id)  from book where 1=1 
+		<if test="bookName != null ">
+			and  bookname like CONCAT('%',#{bookName},'%') 
+		</if>
+	</select>
+	
+	<!-- 获取数据分页数据 -->
+	<select id="geList" resultType="Book">
+		select * from book where 1=1 
+		<if test="bookName != null ">
+			and  bookname like CONCAT('%',#{bookName},'%') 
+		</if>
+		limit #{start},#{pageSize} 
+	</select>
+	
+	<!-- 更新评分 -->
+	<update id="updateBookCore" >
+		update book set score = (
+			select avg(score) from book_user_comment where is_auth = 1 and !is_deleted and book_id = #{id}  GROUP BY book_id
+		)
+		where  id = #{id}
+	</update>
 </mapper>

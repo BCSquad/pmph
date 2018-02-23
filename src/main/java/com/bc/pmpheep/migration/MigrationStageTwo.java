@@ -129,8 +129,9 @@ public class MigrationStageTwo {
                 excel.add(map);
                 continue;
             }
+            //按客户要求删除该数据
             if (ObjectUtil.isNull(roleId)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "用户所属角色被删除。");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "已删除。");
                 excel.add(map);
                 continue;
             }
@@ -174,8 +175,9 @@ public class MigrationStageTwo {
             	continue;
             }
             Integer usertype = (Integer) map.get("usertype");
+            //按客户反馈直接删除该数据
             if (ObjectUtil.notNull(usertype) && 2 == usertype.intValue()) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "此用户为机构用户。");
+                map.put(SQLParameters.EXCEL_EX_HEADER, "已删除。");
                 excel.add(map);
                 continue;
             }

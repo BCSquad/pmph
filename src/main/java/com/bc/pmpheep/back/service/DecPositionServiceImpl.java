@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +21,12 @@ import com.bc.pmpheep.back.dao.DecPositionDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecPosition;
+import com.bc.pmpheep.back.po.DecPositionPublished;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
+import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.JsonUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -36,6 +41,7 @@ import com.bc.pmpheep.back.vo.DeclarationResultSchoolVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.back.vo.NewDecPosition;
+import com.bc.pmpheep.back.vo.TextBookDecPositionVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
@@ -58,19 +64,21 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 public class DecPositionServiceImpl implements DecPositionService {
 
     @Autowired
-    private DecPositionDao       decPositionDao;
+    private DecPositionDao              decPositionDao;
     @Autowired
-    private FileService          fileService;
+    private FileService                 fileService;
     @Autowired
-    private DecPositionService   decPositionService;
+    private DecPositionService          decPositionService;
     @Autowired
-    private TextbookLogService   textbookLogService;
+    private TextbookLogService          textbookLogService;
     @Autowired
-    private TextbookService      textbookService;
+    private TextbookService             textbookService;
     @Autowired
-    private MaterialService      materialService;
+    private MaterialService             materialService;
     @Autowired
-    private SystemMessageService systemMessageService;
+    private SystemMessageService        systemMessageService;
+    @Autowired
+    private DecPositionPublishedService decPositionPublishedService;
 
     @Override
     public DecPosition addDecPosition(DecPosition decPosition) throws CheckedServiceException {
@@ -160,6 +168,22 @@ public class DecPositionServiceImpl implements DecPositionService {
     }
 
     @Override
+    public List<DecPosition> listDecPositionsByTextBookIds(List<Long> textbookIds)
+    throws CheckedServiceException {
+        if (null == textbookIds || textbookIds.size() == 0) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        for (Long bookId : textbookIds) {
+            if (null == bookId) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                                  CheckedExceptionResult.NULL_PARAM, "有书籍id为空");
+            }
+        }
+        return decPositionDao.listDecPositionsByTextBookIds(textbookIds);
+    }
+
+    @Override
     public List<DecPosition> listChosenDecPositionsByTextbookId(Long textbookId)
     throws CheckedServiceException {
         if (null == textbookId) {
@@ -190,14 +214,14 @@ public class DecPositionServiceImpl implements DecPositionService {
         decPositionDao.listDecPositions(list.get(0).getDeclarationId());
         String newId = ",";
         for (NewDecPosition newDecPosition : list) { // 遍历所有的id
-        	newId += newDecPosition.getId() + ",";
+            newId += newDecPosition.getId() + ",";
         }
         for (DecPosition DecPosition : istDecPositions) { // 遍历原数据
-	    	if (!newId.contains("," + DecPosition.getId() + ",")) {
-	    		if (ObjectUtil.notNull(DecPosition.getId())) {
-	    			decPositionDao.deleteDecPosition(DecPosition.getId());
-	    		}
-	        }
+            if (!newId.contains("," + DecPosition.getId() + ",")) {
+                if (ObjectUtil.notNull(DecPosition.getId())) {
+                    decPositionDao.deleteDecPosition(DecPosition.getId());
+                }
+            }
         }
         for (NewDecPosition newDecPosition : list) {
             Long id = newDecPosition.getId();
@@ -288,7 +312,41 @@ public class DecPositionServiceImpl implements DecPositionService {
         decPositionDao.listEditorSelection(textbookId,
                                            StringUtil.toAllCheck(realName),
                                            presetPosition);
-        resultMap.put("DecPositionEditorSelectionVO", listEditorSelectionVOs);
+        // 排序
+        List<DecPositionEditorSelectionVO> selectedDecPositionEditorSelectionVOs =
+        new ArrayList<DecPositionEditorSelectionVO>();// 已遴选集合
+        List<DecPositionEditorSelectionVO> unselectedDecPositionEditorSelectionVOs =
+        new ArrayList<DecPositionEditorSelectionVO>();// 未遴选集合
+        for (DecPositionEditorSelectionVO de : listEditorSelectionVOs) {
+            if (ObjectUtil.notNull(de.getRank())) {
+                selectedDecPositionEditorSelectionVOs.add(de);
+            } else if (de.getChosenPosition() > 0) {
+                selectedDecPositionEditorSelectionVOs.add(de);
+            } else {
+                unselectedDecPositionEditorSelectionVOs.add(de);
+            }
+        }
+        Collections.sort(selectedDecPositionEditorSelectionVOs,
+                         new Comparator<DecPositionEditorSelectionVO>() {
+                             public int compare(DecPositionEditorSelectionVO arg0,
+                             DecPositionEditorSelectionVO arg1) {
+                                 return arg1.getPresetPosition()
+                                            .compareTo(arg0.getPresetPosition());
+                             }
+                         });
+        Collections.sort(unselectedDecPositionEditorSelectionVOs,
+                         new Comparator<DecPositionEditorSelectionVO>() {
+                             public int compare(DecPositionEditorSelectionVO arg0,
+                             DecPositionEditorSelectionVO arg1) {
+                                 return arg1.getPresetPosition()
+                                            .compareTo(arg0.getPresetPosition());
+                             }
+                         });
+        List<DecPositionEditorSelectionVO> newDecPositionEditorSelectionVOs =
+        new ArrayList<DecPositionEditorSelectionVO>(listEditorSelectionVOs.size());// 重新排序后的集合
+        newDecPositionEditorSelectionVOs.addAll(selectedDecPositionEditorSelectionVOs);
+        newDecPositionEditorSelectionVOs.addAll(unselectedDecPositionEditorSelectionVOs);
+        resultMap.put("DecPositionEditorSelectionVO", newDecPositionEditorSelectionVOs);
         Material material = materialService.getMaterialById(materialId);
         resultMap.put("IsDigitalEditorOptional", material.getIsDigitalEditorOptional());
         return resultMap;
@@ -349,10 +407,123 @@ public class DecPositionServiceImpl implements DecPositionService {
         }
         // 2：发布
         if (selectionType_2.intValue() == selectionType.intValue()) {
+            /*** 判断是否确认开始 ***/
+            List<DecPosition> decPosition1 =
+            decPositionDao.listChosenDecPositionsByTextbookId(textbookId);
+            // 筛选出主编，副主编
+            List<DecPosition> decPosition2 = new ArrayList<DecPosition>();
+            for (DecPosition item : decPosition1) {
+                if (null != item
+                    && null != item.getChosenPosition()
+                    && (item.getChosenPosition() == 4 || item.getChosenPosition() == 12
+                        || item.getChosenPosition() == 2 || item.getChosenPosition() == 10)) {
+                    decPosition2.add(item);
+                }
+            }
+            List<DecPosition> decPositions2 = new ArrayList<DecPosition>();
+            for (DecPosition decPosition : decPositions) {
+                if (null != decPosition
+                    && null != decPosition.getChosenPosition()
+                    && (decPosition.getChosenPosition() == 4
+                        || decPosition.getChosenPosition() == 12
+                        || decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10)) {
+                    decPositions2.add(decPosition);
+                }
+            }
+            if (decPosition2.size() != decPositions2.size()) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                                  CheckedExceptionResult.ILLEGAL_PARAM,
+                                                  "还未确认主编/副主编,不能发布");
+            }
+            // 排序 按照 id 升排列
+            DecPosition[] decPosition3 = decPosition2.toArray(new DecPosition[] {});
+            for (int i = 0; i < decPosition3.length - 1; i++) {
+                for (int j = i + 1; j < decPosition3.length; j++) {
+                    // 前面一个
+                    DecPosition item1 = decPosition3[i];
+                    DecPosition item2 = decPosition3[j];
+                    if (item2.getId() < item1.getId()) {
+                        // 把小的先存起来
+                        DecPosition temp = decPosition3[j];
+                        // 交换位置
+                        decPosition3[j] = decPosition3[i];
+                        decPosition3[i] = temp;
+                    }
+                }
+            }
+            DecPosition[] decPositions3 = decPositions2.toArray(new DecPosition[] {});
+            for (int i = 0; i < decPositions3.length - 1; i++) {
+                for (int j = i + 1; j < decPositions3.length; j++) {
+                    // 前面一个
+                    DecPosition item1 = decPositions3[i];
+                    DecPosition item2 = decPositions3[j];
+                    if (item2.getId() < item1.getId()) {
+                        // 把小的先存起来
+                        DecPosition temp = decPositions3[j];
+                        // 交换位置
+                        decPositions3[j] = decPositions3[i];
+                        decPositions3[i] = temp;
+                    }
+                }
+            }
+            // 一一对比
+            for (int i = 0; i < decPosition3.length; i++) {
+                DecPosition item1 = decPosition3[i];
+                DecPosition item2 = decPositions3[i];
+                if (item1.getId().intValue() != item2.getId().intValue()) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                                      CheckedExceptionResult.ILLEGAL_PARAM,
+                                                      "还未确认主编/副主编,不能发布");
+                }
+                if (item1.getRank().intValue() != item2.getRank().intValue()) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                                      CheckedExceptionResult.ILLEGAL_PARAM,
+                                                      "还未确认主编/副主编,不能发布");
+                }
+                int chose1 = item1.getChosenPosition().intValue();
+                int chose2 = item2.getChosenPosition().intValue();
+                chose1 = chose1 > 8 ? chose1 - 8 : chose1;
+                chose2 = chose2 > 8 ? chose2 - 8 : chose2;
+                if (chose1 != chose2) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                                      CheckedExceptionResult.ILLEGAL_PARAM,
+                                                      "还未确认主编/副主编,不能发布");
+                }
+            }
+            /*** 判断是否确认结束 ***/
             if (ObjectUtil.isNull(textbookId)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                                   CheckedExceptionResult.NULL_PARAM, "书籍id为空");
             }
+            // 获取当前书籍书申报信息(包含没有被遴选上的)
+            List<DecPosition> decPositionsList =
+            decPositionService.listDecPositionsByTextBookIds(new ArrayList<Long>(
+                                                                                 Arrays.asList(textbookId)));
+            if (CollectionUtil.isEmpty(decPositionsList)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                                  CheckedExceptionResult.NULL_PARAM,
+                                                  "当前书籍还未遴选主编，副主编");
+            }
+            // DecPositionPublished对象集合
+            List<DecPositionPublished> decPositionPublisheds =
+            new ArrayList<DecPositionPublished>(decPositionsList.size());
+            for (DecPosition decPosition : decPositionsList) {
+                if (null == decPosition || null == decPosition.getChosenPosition()
+                    || decPosition.getChosenPosition().intValue() <= 0) {
+                    continue;
+                }
+                // 筛选出遴选上的人员
+                decPositionPublisheds.add(new DecPositionPublished(pmphUser.getId(),
+                                                                   decPosition.getDeclarationId(),
+                                                                   textbookId,
+                                                                   decPosition.getPresetPosition(),
+                                                                   decPosition.getChosenPosition(),
+                                                                   decPosition.getRank(),
+                                                                   decPosition.getSyllabusId(),
+                                                                   decPosition.getSyllabusName()));
+            }
+            decPositionPublishedService.deleteDecPositionPublishedByTextBookId(textbookId);// 先删除当前发布人已发布的
+            decPositionPublishedService.batchInsertDecPositionPublished(decPositionPublisheds);// 再添加
             // 发布时更新textbook表中is_chief_published（是否已公布主编/副主编）字段
             count = textbookService.updateTextbook(new Textbook(textbookId, true));
             if (count > 0) {
@@ -456,26 +627,27 @@ public class DecPositionServiceImpl implements DecPositionService {
     public DeclarationCountVO getDeclarationCountVO(Long materialId) throws CheckedServiceException {
         DeclarationCountVO declarationCountVO = new DeclarationCountVO();
         Integer schoolDeclarationCount = decPositionDao.getSchoolDeclarationCount(materialId);
-        Integer schoolDeclarationChosenCount = decPositionDao.getSchoolDeclarationChosenCount(materialId);
+        Integer schoolDeclarationChosenCount =
+        decPositionDao.getSchoolDeclarationChosenCount(materialId);
         String schoolDeclarationAverage = "0";
         String schoolDeclarationChosenAverage = "0";
         if (decPositionDao.getSchoolCount(materialId) > 0) {
-        	/*
-        	 * 若院校数量大于0，计算院校申报平均数
-        	 */
-        	Double presetAverage = (double)schoolDeclarationCount
-        			/decPositionDao.getSchoolCount(materialId);
-        	BigDecimal bigDecimalpreset = new BigDecimal(presetAverage);
-        	schoolDeclarationAverage = String.valueOf(bigDecimalpreset.setScale(2,
-        			BigDecimal.ROUND_HALF_UP).doubleValue());
-        	/*
-        	 * 计算当选数的平均数
-        	 */
-            Double chosenAverage = (double)schoolDeclarationChosenCount
-                    /decPositionDao.getSchoolCount(materialId);
+            /*
+             * 若院校数量大于0，计算院校申报平均数
+             */
+            Double presetAverage =
+            (double) schoolDeclarationCount / decPositionDao.getSchoolCount(materialId);
+            BigDecimal bigDecimalpreset = new BigDecimal(presetAverage);
+            schoolDeclarationAverage =
+            String.valueOf(bigDecimalpreset.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+            /*
+             * 计算当选数的平均数
+             */
+            Double chosenAverage =
+            (double) schoolDeclarationChosenCount / decPositionDao.getSchoolCount(materialId);
             BigDecimal bigDecimalchosen = new BigDecimal(chosenAverage);
-            schoolDeclarationChosenAverage = String.valueOf(bigDecimalchosen.setScale(2,
-            		BigDecimal.ROUND_HALF_UP).doubleValue());
+            schoolDeclarationChosenAverage =
+            String.valueOf(bigDecimalchosen.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
         }
         Integer editorCount = decPositionDao.getEditorCount(materialId);
         Integer subEditorCount = decPositionDao.getSubEditorCount(materialId);
@@ -558,12 +730,11 @@ public class DecPositionServiceImpl implements DecPositionService {
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
         if (total > 0) {
-            List<DeclarationResultSchoolVO> VOs =
-            decPositionDao.getSchoolListChosen(pageParameter);
+            List<DeclarationResultSchoolVO> VOs = decPositionDao.getSchoolListChosen(pageParameter);
             List<DeclarationResultSchoolVO> list = new ArrayList<>();
-            for (DeclarationResultSchoolVO declarationResultSchoolVO : VOs){
-            	declarationResultSchoolVO.setState(1);
-            	list.add(declarationResultSchoolVO);
+            for (DeclarationResultSchoolVO declarationResultSchoolVO : VOs) {
+                declarationResultSchoolVO.setState(1);
+                list.add(declarationResultSchoolVO);
             }
             pageResult.setRows(list);
             pageResult.setTotal(total);
@@ -587,12 +758,11 @@ public class DecPositionServiceImpl implements DecPositionService {
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
         if (total > 0) {
-            List<DeclarationResultSchoolVO> VOs =
-            decPositionDao.getSchoolListPreset(pageParameter);
+            List<DeclarationResultSchoolVO> VOs = decPositionDao.getSchoolListPreset(pageParameter);
             List<DeclarationResultSchoolVO> list = new ArrayList<>();
-            for (DeclarationResultSchoolVO declarationResultSchoolVO : VOs){
-            	declarationResultSchoolVO.setState(2);
-            	list.add(declarationResultSchoolVO);
+            for (DeclarationResultSchoolVO declarationResultSchoolVO : VOs) {
+                declarationResultSchoolVO.setState(2);
+                list.add(declarationResultSchoolVO);
             }
             pageResult.setRows(list);
             pageResult.setTotal(total);
@@ -652,13 +822,35 @@ public class DecPositionServiceImpl implements DecPositionService {
         return decPositionDao.updateDecPositionSetDefault(ids, editorOrSubeditorType);
     }
 
-	@Override
-	public DecPosition getDecPositionByTextbookId(Long textbookId) throws CheckedServiceException {
-		if(null == textbookId){
-			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-                    CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
-		}
-		return decPositionDao.getDecPositionByTextbookId(textbookId);
-	}
+    @Override
+    public List<DecPosition> getDecPositionByTextbookId(Long textbookId)
+    throws CheckedServiceException {
+        if (null == textbookId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+                                              CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
+        }
+        return decPositionDao.getDecPositionByTextbookId(textbookId);
+    }
+
+    @Override
+    public PageResult<TextBookDecPositionVO> listDeclarationByTextbookIds(
+    PageParameter<TextBookDecPositionVO> pageParameter) throws CheckedServiceException {
+        if (ArrayUtil.isEmpty(pageParameter.getParameter().getTextBookIds())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+                                              CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
+        }
+        PageResult<TextBookDecPositionVO> pageResult = new PageResult<TextBookDecPositionVO>();
+        // 将页面大小和页面页码拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 包含数据总条数的数据集
+        List<TextBookDecPositionVO> textBookList =
+        decPositionDao.listDeclarationByTextbookIds(pageParameter);
+        if (!textBookList.isEmpty()) {
+            Integer count = textBookList.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(textBookList);
+        }
+        return pageResult;
+    }
 
 }

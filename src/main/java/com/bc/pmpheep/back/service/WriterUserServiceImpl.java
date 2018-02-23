@@ -14,7 +14,6 @@ import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterProfile;
 import com.bc.pmpheep.back.po.WriterRole;
 import com.bc.pmpheep.back.po.WriterUser;
-import com.bc.pmpheep.back.shiro.kit.ShiroKit;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DesRun;
@@ -324,33 +323,64 @@ public class WriterUserServiceImpl implements WriterUserService {
 		}
 		PageResult<WriterUserManagerVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-		int total = writerUserDao.getListWriterUserTotal(pageParameter);
-		if (total > 0) {
-			List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(pageParameter);
-			for (WriterUserManagerVO vo : list) {
-				switch (vo.getRank()) {
-				case 0:
-					vo.setRankName("普通用户");
-					break;
-				case 1:
-					vo.setRankName("教师用户");
-					break;
-				case 2:
-					vo.setRankName("作家用户");
-					break;
-				case 3:
-					vo.setRankName("专家用户");
-					break;
+		// 当rank为1的时候  查询教师用户
+		int total=0;
+		if(pageParameter.getParameter().getRank() == null || pageParameter.getParameter().getRank() != 1){
+			//当rank不为1的时候
+			 total= writerUserDao.getListWriterUserTotal(pageParameter);
+			if (total > 0) {
+				List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(pageParameter);
+				for (WriterUserManagerVO vo : list) {
+					switch (vo.getRank()) {
+					case 0:
+						vo.setRankName("普通用户");
+						break;
+					case 1:
+						vo.setRankName("教师用户");
+						break;
+					case 2:
+						vo.setRankName("作家用户");
+						break;
+					case 3:
+						vo.setRankName("专家用户");
+						break;
 
-				default:
-					throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
-							CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
+					default:
+						throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
+								CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
+					}
 				}
+				pageResult.setRows(list);
 			}
-			pageResult.setRows(list);
-		}
-		pageResult.setTotal(total);
+			pageResult.setTotal(total);
+		}else{
+			total=writerUserDao.getLsitisTeacherTotal(pageParameter);
+			if(total>0){
+				List<WriterUserManagerVO> list = writerUserDao.getLsitisTeacher(pageParameter);
+				for (WriterUserManagerVO vo : list) {
+					switch (vo.getRank()) {
+					case 0:
+						vo.setRankName("普通用户");
+						break;
+					case 1:
+						vo.setRankName("教师用户");
+						break;
+					case 2:
+						vo.setRankName("作家用户");
+						break;
+					case 3:
+						vo.setRankName("专家用户");
+						break;
 
+					default:
+						throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_USER_MANAGEMENT,
+								CheckedExceptionResult.NULL_PARAM, "该用户没有身份");
+					}
+				}
+				pageResult.setRows(list);
+			}
+			pageResult.setTotal(total);
+		}
 		return pageResult;
 	}
 
@@ -546,6 +576,24 @@ public class WriterUserServiceImpl implements WriterUserService {
 	@Override
 	public Integer getCount() {
 		return writerUserDao.getCount();
+	}
+
+	@Override
+	public List<WriterUser> getWriterUserRankList(List<WriterUser> writerUsers) {
+		if(null==writerUsers){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return writerUserDao.getWriterUserRankList(writerUsers);
+	}
+
+	@Override
+	public Integer updateWriterUser(List<WriterUser> writerUsers) {
+		if(null==writerUsers){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return writerUserDao.updateWriterUser(writerUsers);
 	}
 
 }

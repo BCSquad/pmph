@@ -208,15 +208,16 @@
 		<if test="isOver != 1 ">
 			<if test="result   != null  ">
 			<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来  -->
-			and ((is_editor_replied and a.result  = #{result} ) or (!is_editor_replied))  
+			and (is_editor_replied and a.result  = #{result} )  
 			</if>
 		</if>
 		
 	</select>
 	
-	<!-- 获取审核纠错页面的分页数据-->
-	<select id="listBookCorrectionAudit"  resultType="BookCorrectionAuditVO">
+	<!-- 根据id获取详情 -->
+	<select   id="getBookCorrectionAuditDetailById"  resultType="BookCorrectionAuditVO">
 		select 
+		    DISTINCT
 			a.id,
 			b.bookname,
 			b.author,
@@ -226,6 +227,40 @@
 			a.line ,
 			a.content ,
 			a.attachment,
+			a.attachment_name,
+			d.realname,
+			a.gmt_create ,
+			a.is_author_replied,
+			a.author_reply ,
+			a.is_editor_handling ,
+			a.is_editor_replied ,
+			a.editor_reply,
+			a.result  
+		from 
+			book_correction a
+		LEFT JOIN 
+			book b on  b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = a.book_id
+		LEFT JOIN 
+			writer_user d on d.id    = a.user_id
+		where 
+			b.id is not null and  !a.is_deleted and a.id = #{id} 
+	</select>
+	
+	<!-- 获取审核纠错页面的分页数据-->
+	<select id="listBookCorrectionAudit"  resultType="BookCorrectionAuditVO">
+		select 
+			DISTINCT
+			a.id,
+			b.bookname,
+			b.author,
+			b.publish_date,
+			b.image_url ,
+			a.page,
+			a.line ,
+			a.content ,
+			concat('/file/download/',a.attachment) attachment,
 			a.attachment_name,
 			d.realname,
 			a.gmt_create ,
@@ -260,18 +295,18 @@
 		<if test="isOver != 1 ">
 			<if test="result   != null  ">
 			<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来  -->
-			and ((is_editor_replied and a.result  = #{result} ) or (!is_editor_replied))  
+			and (is_editor_replied and a.result  = #{result} )  
 			</if>
 		</if>
 		ORDER BY 
-			a.gmt_update desc 
+			a.gmt_create desc 
 		limit #{start} ,#{pageSize}
 	</select>
 	
 	<!-- 获取审核纠错跟踪页面的数据总数  -->
 	<select id="listBookCorrectionTrackTotal"  resultType="java.lang.Integer">
 		SELECT 
-			count(a.id)
+			count(DISTINCT a.id)
 		FROM  
 			book_correction a
 		LEFT JOIN 
@@ -332,7 +367,7 @@
 			and a.is_editor_replied = #{isEditorReplied}
 		</if>
 		ORDER BY 
-			a.gmt_update desc 
+			a.gmt_create desc 
 		limit #{start} ,#{pageSize}
 	</select>
 	

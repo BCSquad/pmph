@@ -43,6 +43,8 @@ public class DeclarationResultSchoolVO implements Serializable{
 	private String isDigitalEditorList;
 	//当前页面排序方式  1 按当选数/2 按申报数
 	private Integer state;
+	//是否展示
+	private Boolean isShow = false;
 	public DeclarationResultSchoolVO() {
 		super();
 	}
@@ -117,6 +119,14 @@ public class DeclarationResultSchoolVO implements Serializable{
 
 	public void setState(Integer state) {
 		this.state = state;
+	}
+
+	public Boolean getIsShow() {
+		return isShow;
+	}
+
+	public void setIsShow(Boolean isShow) {
+		this.isShow = isShow;
 	}
 	
 }

@@ -17,6 +17,7 @@ import com.bc.pmpheep.back.vo.DeclarationResultBookVO;
 import com.bc.pmpheep.back.vo.DeclarationResultSchoolVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
+import com.bc.pmpheep.back.vo.TextBookDecPositionVO;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -150,6 +151,17 @@ public interface DecPositionDao {
     List<DecPosition> listDecPositionsByTextbookId(Long textbookId);
 
     /**
+     * 根据书籍ids获取申报职位
+     * 
+     * @author Mryang
+     * @createDate 2017年11月16日 下午2:37:19
+     * @param textbookId
+     * @return
+     * @throws CheckedServiceException
+     */
+    List<DecPosition> listDecPositionsByTextBookIds(@Param("textbookIds") List<Long> textbookIds);
+
+    /**
      * 根据书籍id获取入选的职位职位(主编、副主编、编委、数字编辑)
      * 
      * @author Mryang
@@ -247,13 +259,14 @@ public interface DecPositionDao {
     /**
      * 
      * Description:根据教材id获取院校当选总数
+     * 
      * @author:lyc
      * @date:2018年1月2日下午4:12:15
-     * @param 
+     * @param
      * @return Integer
      */
     Integer getSchoolDeclarationChosenCount(Long materialId);
-    
+
     /**
      * 
      * Description:根据教材id获取院校总数
@@ -301,53 +314,58 @@ public interface DecPositionDao {
     /**
      * 
      * Description:根据教材id获取数字编委申报总数
+     * 
      * @author:lyc
      * @date:2017年12月18日下午3:13:09
-     * @param 
+     * @param
      * @return Integer
      */
     Integer getDigitalCount(Long materialId);
-    
+
     /**
      * 
      * Description:根据教材id获取主编当选总数
+     * 
      * @author:lyc
      * @date:2018年1月2日下午3:38:02
-     * @param 
+     * @param
      * @return Integer
      */
     Integer getChosenEditorCount(Long materialId);
-    
+
     /**
      * 
      * Description:根据教材id获取副主编当选总数
+     * 
      * @author:lyc
      * @date:2018年1月2日下午3:38:44
-     * @param 
+     * @param
      * @return Integer
      */
     Integer getChosenSubeditorCount(Long materialId);
-    
+
     /**
      * 
      * Description:根据教材id获取编委当选总数
+     * 
      * @author:lyc
      * @date:2018年1月2日下午3:39:09
-     * @param 
+     * @param
      * @return Integer
      */
     Integer getChosenEditorialCount(Long materialId);
-    
+
     /**
      * 
      * Description:根据教材id获取数字编委当选总数
+     * 
      * @author:lyc
      * @date:2018年1月2日下午3:39:36
-     * @param 
+     * @param
      * @return Integer
      */
     Integer getChosenDigitalCount(Long materialId);
-    
+
     /**
      * 
      * Description:根据教材id（和学校名称）查询学校申报情况（按当选结果排序）
@@ -437,11 +455,26 @@ public interface DecPositionDao {
      * @return
      */
     List<TextbookDecVO> getTextbookEditorList(Long textbookId);
-    
+
     /**
      * 根据书籍id查询编委
+     * 
      * @param textbookId
      * @return
      */
-	DecPosition getDecPositionByTextbookId(Long textbookId);
+    List<DecPosition> getDecPositionByTextbookId(Long textbookId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据书籍ID查询对应书籍申报人员信息
+     * 使用示范：
+     *
+     * @param pageParameter 
+     * @return List<TextBookDecPositionVO> 集合
+     * </pre>
+     */
+    List<TextBookDecPositionVO> listDeclarationByTextbookIds(
+    PageParameter<TextBookDecPositionVO> pageParameter);
+
 }

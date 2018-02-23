@@ -46,6 +46,8 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 	@Autowired
 	BookUserCommentDao bookUserCommentDao;
 	@Autowired
+	private BookService bookService;
+	@Autowired
 	WriterUserTrendstService writerUserTrendstService;
 
 	@Override
@@ -63,7 +65,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 	}
 
 	@Override
-	public String updateBookUserCommentByAuth(Long[] ids, Integer isAuth, Boolean isHot, String sessionId)
+	public String updateBookUserCommentByAuth(Long[] ids, Integer isAuth, String sessionId)
 			throws CheckedServiceException {
 		String result = "FAIL";
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -93,10 +95,13 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			}
 			bookUserComment.setId(id);
 			bookUserComment.setIsAuth(isAuth);
-			bookUserComment.setIsHot(isHot);
 			bookUserComment.setAuthUserId(pmphUser.getId());
 			bookUserComment.setAuthDate(DateUtil.getCurrentTime());
 			num += bookUserCommentDao.updateBookUserComment(bookUserComment);
+			if (isAuth == 1) {
+				// 更新评分
+				bookService.updateBookCore(bookUserComment.getBookId());
+			}
 		}
 		if (num > 0) {
 			result = "SUCCESS";
@@ -112,6 +117,32 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 		}
 		String result = "FAIL";
 		int num = bookUserCommentDao.deleteBookUserCommentById(ids);
+		if (num > 0) {
+			result = "SUCCESS";
+		}
+		return result;
+	}
+
+	@Override
+	public String updateBookUserComment(Long[] ids, Boolean isStick, Boolean isPromote, Boolean isHot, Integer sort,
+			Integer sortPromote, Integer sortHot) throws CheckedServiceException {
+		if (ArrayUtil.isEmpty(ids)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"评论id为空");
+		}
+		String result = "FAIL";
+		int num = 0;
+		for (Long id : ids) {
+			BookUserComment bookUserComment = new BookUserComment();
+			bookUserComment.setId(id);
+			bookUserComment.setIsHot(isHot);
+			bookUserComment.setIsPromote(isPromote);
+			bookUserComment.setIsStick(isStick);
+			bookUserComment.setSort(sort);
+			bookUserComment.setSortHot(sortHot);
+			bookUserComment.setSortPromote(sortPromote);
+			num += bookUserCommentDao.updateBookUserComment(bookUserComment);
+		}
 		if (num > 0) {
 			result = "SUCCESS";
 		}

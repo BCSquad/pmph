@@ -68,7 +68,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 
 	/**
 	 * 
-	 * @param 主键id
+	 * @param
 	 * @return PmphGroupMember
 	 * @throws CheckedServiceException
 	 */
@@ -84,7 +84,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 
 	/**
 	 * 
-	 * @param 主键id
+	 * @param
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */
@@ -251,6 +251,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		if (total > 0) {
 			List<PmphGroupMemberManagerVO> list = pmphGroupMemberDao.listGroupMemberManagerVOs(pageParameter);
 			for (PmphGroupMemberManagerVO pmphGroupMemberManagerVO : list) {
+				pmphGroupMemberManagerVO.setAvatar(RouteUtil.userAvatar(pmphGroupMemberManagerVO.getAvatar()));
 				if (pmphGroupMemberManagerVO.getIsWriter()) {
 					pmphGroupMemberManagerVO.setUserType(Const.SENDER_TYPE_2);
 				} else {

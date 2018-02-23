@@ -107,4 +107,9 @@
 		left join org o on o.id=stg.org_id  
 		where org_id=#{orgId};
 	</select>
+	
+	<!-- 按问卷ID查询，已经发布的学校 -->
+	<select id="listOrgIdBySurveyId" parameterType="java.lang.Long" resultType="java.lang.Long">
+		SELECT stg.`org_id` FROM survey_target stg  WHERE stg.`survey_id`=#{surveyId};
+	</select>
 </mapper>

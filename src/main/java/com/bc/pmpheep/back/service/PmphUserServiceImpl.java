@@ -26,6 +26,7 @@ import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.PmphUserRole;
+import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.CookiesUtil;
@@ -42,6 +43,7 @@ import com.bc.pmpheep.back.vo.CmsContentVO;
 import com.bc.pmpheep.back.vo.MaterialListVO;
 import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
+import com.bc.pmpheep.back.vo.PmphIdentity;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
@@ -609,11 +611,13 @@ public class PmphUserServiceImpl implements PmphUserService {
 					"部门id为空");
 		}
 		PageResult<PmphEditorVO> pageResult = new PageResult<>();
+		Long departmentId = pageParameter.getParameter().getDepartmentId();
+		String path = pmphDepartmentDao.getPmphDepartmentById(departmentId).getPath();
+		path = path + "-" + departmentId + "-";
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-		Integer total = pmphUserDao.totalEditors(pageParameter.getParameter().getDepartmentId(),
-				pageParameter.getParameter().getRealName());
+		Integer total = pmphUserDao.totalEditors(path, departmentId, pageParameter.getParameter().getRealName());
 		if (total > 0) {
-			List<PmphEditorVO> list = pmphUserDao.listEditors(pageParameter.getParameter().getDepartmentId(),
+			List<PmphEditorVO> list = pmphUserDao.listEditors(path, departmentId,
 					pageParameter.getParameter().getRealName(), pageParameter.getPageSize(), pageParameter.getStart());
 			pageResult.setRows(list);
 		}
@@ -659,7 +663,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 		PageResult<CmsContentVO> pageResultCmsContentVO = cmsContentService.listCmsContent(pageParameter1, sessionId);
 		// 图书纠错审核
 		PageResult<BookCorrectionAuditVO> pageResultBookCorrectionAuditVO = bookCorrectionService
-				.listBookCorrectionAudit(request, Const.PAGE_NUMBER, Const.PAGE_SIZE, bookname,null ,null);
+				.listBookCorrectionAudit(request, Const.PAGE_NUMBER, Const.PAGE_SIZE, bookname, null, null);
 		// 图书评论审核
 		PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
 		BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
@@ -710,6 +714,29 @@ public class PmphUserServiceImpl implements PmphUserService {
 					"部门id为空");
 		}
 		return pmphUserDao.listPmphUserByDepartmentId(departmentId);
+	}
+
+	@Override
+	public PmphIdentity identity(String sessionId) throws CheckedServiceException {
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (ObjectUtil.isNull(pmphUser)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+					"用户为空！");
+		}
+		Long id = pmphUser.getId();
+		PmphIdentity identity = new PmphIdentity(pmphUser.getId(), pmphUser.getUsername(), pmphUser.getRealname());
+		identity.setIsAdmin(pmphUser.getIsAdmin());
+		identity.setIsDirector(pmphUser.getIsDirector());
+		List<PmphUser> list = new ArrayList<>();
+		list = pmphUserDao.isEditor(id);
+		if (!list.isEmpty()) {
+			identity.setIsEditor(true);
+		}
+		list = pmphUserDao.isOpts(id);
+		if (!list.isEmpty()) {
+			identity.setIsOpts(true);
+		}
+		return identity;
 	}
 
 }

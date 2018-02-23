@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.po.BookUserComment;
 import com.bc.pmpheep.back.service.BookUserCommentService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.vo.BookUserCommentVO;
@@ -44,11 +45,12 @@ public class BookUserCommentController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页初始化/模糊查询图书评论")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ResponseBean list(Integer pageSize, Integer pageNumber, String name, Integer isAuth) {
+	public ResponseBean list(Integer pageSize, Integer pageNumber, String name, Integer isAuth, Boolean isLong) {
 		PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
 		bookUserCommentVO.setIsAuth(isAuth);
 		bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
+		bookUserCommentVO.setIsLong(isLong);
 		pageParameter.setParameter(bookUserCommentVO);
 		return new ResponseBean(bookUserCommentService.listBookUserComment(pageParameter));
 	}
@@ -70,9 +72,9 @@ public class BookUserCommentController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量审核图书评论")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	public ResponseBean update(Long[] ids, Integer isAuth, Boolean isHot,HttpServletRequest request) {
+	public ResponseBean update(Long[] ids, Integer isAuth, HttpServletRequest request) {
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(bookUserCommentService.updateBookUserCommentByAuth(ids, isAuth,isHot, sessionId));
+		return new ResponseBean(bookUserCommentService.updateBookUserCommentByAuth(ids, isAuth, sessionId));
 	}
 
 	/**
@@ -90,5 +92,24 @@ public class BookUserCommentController {
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public ResponseBean delete(Long[] ids) {
 		return new ResponseBean(bookUserCommentService.deleteBookUserCommentById(ids));
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：置顶、热门、精品推荐书评
+	 *
+	 * @param bookUserComment
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "置顶、热门、精品推荐书评")
+	@RequestMapping(value = "/comment", method = RequestMethod.PUT)
+	public ResponseBean comment(Long[] ids, Boolean isStick, Boolean isPromote, Boolean isHot, Integer sort,
+			Integer sortPromote, Integer sortHot) {
+		return new ResponseBean(bookUserCommentService.updateBookUserComment(ids, isStick, isPromote, isHot, sort,
+				sortPromote, sortHot));
+
 	}
 }

@@ -176,8 +176,8 @@
 		select * from dec_position where
 		declaration_id=#{declarationId};
 	</select>
-
-	<!-- 根据书籍id查询申报职位列表 -->
+	
+	<!-- 根据书籍ids查询申报职位列表 -->
 	<select id="listDecPositionsByTextbookId" parameterType="java.lang.Long"
 		resultType="DecPosition">
 		select
@@ -199,6 +199,14 @@
 		and
 		c.id = #{textbookId};
 	</select>
+	
+	<!-- 根据书籍id查询申报职位列表 -->
+	<select id="listDecPositionsByTextBookIds" resultType="DecPosition">
+		select * from dec_position where textbook_id in 
+		<foreach collection="textbookIds"  open="("  separator=","  close=")"  item="bookId"  index="index">
+			#{bookId}
+		</foreach>
+	</select>
 
 	<!-- 根据书籍id获取入选的职位职位(主编、副主编、编委、数字编辑) -->
 	<select id="listChosenDecPositionsByTextbookId" parameterType="java.lang.Long"
@@ -211,28 +219,89 @@
 		b.id is not null 
 		and (a.chosen_position in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)) 
 		and b.is_staging =false 
-		and b.online_progress != 2 
+		and b.online_progress > 0 
 		and c.id = #{textbookId}
 	</select>
 
 	<!-- 根据书籍id查询申报id -->
 	<select id="listDecPositionsByTextbookIds" resultType="java.lang.Long">
 		SELECT
-		d.user_id
+			d.`user_id`
 		FROM
-		declaration d
+			declaration d
 		LEFT JOIN
-		dec_position p
+			dec_position p
 		ON
-		d.id =
-		p.declaration_id
+			d.id = p.declaration_id
 		WHERE
-		p.textbook_id
+			p.textbook_id
 		in
 		<foreach collection="array" item="item" index="index" open="("
 			close=")" separator=",">
 			#{item}
 		</foreach>
+	</select>
+	
+	<!-- 根据书籍ID查询对应书籍申报人员信息 -->
+	<select id="listDeclarationByTextbookIds" parameterType="PageParameter" resultType="TextBookDecPositionVO">
+		SELECT
+			d.`user_id`,
+			d.`realname`,
+  			o.`org_name`,
+  			t.`count`
+		FROM
+			declaration d
+		LEFT JOIN
+			dec_position p
+		ON
+			d.id = p.declaration_id
+		JOIN 
+			`org` o
+  		ON 
+  			o.`id`=d.`org_id`,
+  			(
+  				SELECT 
+  					COUNT(*) `count`
+  				FROM
+					declaration d
+				LEFT JOIN
+					dec_position p
+				ON
+					d.id = p.declaration_id
+				JOIN 
+					`org` o
+		  		ON 
+		  			o.`id`=d.`org_id`
+		  		<where>
+			  		<!-- 下面是动态条件 -->
+					<if test="parameter !=null ">
+						<!-- 问卷标题 -->
+						<if test="parameter.textBookIds != null ">
+							p.textbook_id in
+							<foreach collection="parameter.textBookIds" item="item" index="index" open="(" close=")" separator=",">
+								#{item}
+							</foreach>
+						</if>
+					</if>
+		  		</where>
+		  			
+  			)t
+		<where>
+			<!-- 下面是动态条件 -->
+			<if test="parameter !=null ">
+			<!-- 问卷标题 -->
+				<if test="parameter.textBookIds != null ">
+					p.textbook_id in
+					<foreach collection="parameter.textBookIds" item="item" index="index" open="(" close=")" separator=",">
+						#{item}
+					</foreach>
+				</if>
+			</if>
+		</where>
+		ORDER BY o.`id` 
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
 	</select>
 
 	<!-- 查询作家申报职位表的总记录数 -->
@@ -335,7 +404,8 @@
 		    END) strPresetPosition,
 			dc.`online_progress`,
 			dc.`id` declarationId, dc.`offline_progress`,
-			dp.`chosen_position`, dp.`rank`
+			dp.`chosen_position`, dp.`rank`,
+			dp.`syllabus_id`,dp.`syllabus_name`
 		FROM
 			`dec_position` dp
 		LEFT JOIN
@@ -345,10 +415,10 @@
 		LEFT JOIN
 			`org` org
 		ON
-			dc.`org_id`= org.`id`
+			dc.`org_id`= org.`id` and dc.`online_progress` > 0 
 		WHERE 
-			dc.`online_progress` in (1,3) 
-		AND
+			<!-- dc.`online_progress` != 0 
+		AND -->
 			dc.`is_staging`= FALSE
 		AND
 			dp.`textbook_id` = #{textbookId}
@@ -357,7 +427,11 @@
 				dc.`realname` like concat('%',#{realName},'%')
 		</if>
 		ORDER BY
-			dp.`gmt_create` DESC
+		 dp.`rank` &lt; 1 DESC,
+		 dp.`preset_position`=1 ASC,
+		  dp.`chosen_position` =1 DESC,
+		  dp.`gmt_create` DESC 
+			<!-- dp.`preset_position` DESC,dp.`rank`=1 DESC,dp.`chosen_position` =1 DESC,dp.`gmt_create` DESC -->
 	</select>
 
 	<!-- 教材申报-遴选主编/遴选编委(更新) -->

@@ -98,6 +98,7 @@ public class MigrationStageSix {
     FileService fileService;
     @Resource
     ExcelHelper excelHelper;
+    
     @Autowired
     private MaterialService materialService;
 
@@ -223,7 +224,23 @@ public class MigrationStageSix {
                 useridCount++;
                 continue;
             }
-            declaration.setUserId(userid);
+            if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id) 
+            		|| "e56504a4-8b26-4b55-89c9-571fc94675d9".equals(id)) {
+            	String sqlId = "SELECT *,new_pk userId FROM sys_user ";
+            	List<Map<String, Object>> mapIds = JdbcHelper.getJdbcTemplate().queryForList(sqlId);
+            	for (Map<String, Object> mapId : mapIds) {
+                	Long userId = (Long) mapId.get("userId");
+                	String usercode = (String) mapId.get("usercode");
+                	String username = (String) mapId.get("username");
+                	if ("18045661072".equals(usercode) && "李勇".equals(username)) {
+                		declaration.setUserId(userId);
+                	} else if ("watergo1".equals(usercode) && "李清照2".equals(username)) {
+                		declaration.setUserId(userId);
+                	}
+            	}
+            } else {
+                declaration.setUserId(userid);
+			}
             if (StringUtil.isEmpty(realName) && isStagingJudge.intValue() == 0) { // 申报表作家姓名为空并且不暂存
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空。"));
                 excel.add(map);
@@ -243,13 +260,17 @@ public class MigrationStageSix {
             if (JdbcHelper.judgeExperience(experienceNum)) {
                 experienceNum = JdbcHelper.correctExperience(experienceNum);
             }
-            declaration.setExperience(Integer.parseInt(experienceNum));
+            declaration.setExperience(Integer.parseInt(experienceNum)); // 教龄
             declaration.setOrgName((String) map.get("workunit")); // 工作单位
             declaration.setPosition((String) map.get("duties")); // 职务
             declaration.setTitle((String) map.get("positional")); // 职称
             declaration.setAddress((String) map.get("address")); // 联系地址
             if (StringUtil.strLength(postCode) > 20 && "55894b98-6b15-4210-9460-11bdf6e8e89c".equals(id)) {
                 declaration.setPostcode("100000");
+            } else if("097674e55b094bb58e99c09f12b4e124".equals(id)) {
+            	declaration.setPostcode("434020");
+            } else if("245328b530b04523ab26e6b70d7764d8".equals(id)) {
+            	declaration.setPostcode("211199");
             } else {
                 declaration.setPostcode(postCode); // 邮编
             }
@@ -259,8 +280,8 @@ public class MigrationStageSix {
             declaration.setIdcard((String) map.get("idcard")); // 证件号码
             declaration.setTelephone((String) map.get("linktel")); // 联系电话
             declaration.setFax((String) map.get("fax")); // 传真
-            declaration.setIsDispensed(0); // 服从调剂
-            declaration.setIsUtec(0); // 参与本科教学评估认证
+            declaration.setIsDispensed(false); // 服从调剂
+            declaration.setIsUtec(false); // 参与本科教学评估认证
             declaration.setDegree(0); // 学历
             declaration.setExpertise(null); // 专业特长
             if ("5".equals(unitid)) { // 旧表申报单位id为5的话orgid设置成0
@@ -1018,7 +1039,7 @@ public class MigrationStageSix {
             Long extensionid = (Long) map.get("tmeid"); // 教材扩展项id
             Long declarationid = (Long) map.get("wdid"); // 申报表id
             String content = (String) map.get("content"); // 扩展项内容
-            String contents = content.trim();
+            String contents = content.trim(); // 扩展项内容去除空格
             DecExtension decExtension = new DecExtension();
             if (ObjectUtil.isNull(extensionid) || extensionid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到教材扩展项对应的关联结果。"));
@@ -1095,13 +1116,13 @@ public class MigrationStageSix {
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
             String id = (String) map.get("materid"); // 旧表主键值
-            DecPosition decPosition = new DecPosition();
             Long declarationid = (Long) map.get("wdid"); // 申报表id
             Long textbookid = (Long) map.get("tbid"); // 书籍id
             String temppresetPosition = (String) map.get("preset_position"); // 申报职务
             Long isOnList = (Long) map.get("is_on_list"); // 是否进入预选名单
             String tempchosenPosition = (String) map.get("chosen_position"); // 遴选职务
             Integer mastersort = (Integer) map.get("mastersort"); // 排位
+            DecPosition decPosition = new DecPosition();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
@@ -1247,20 +1268,20 @@ public class MigrationStageSix {
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
             String id = (String) map.get("positionid"); // 旧表主键值
-            DecPositionPublished decPositionPublished = new DecPositionPublished();
             Long materid = (Long) map.get("newmaterid"); // 教材id
-            Long publisherId = publisherIdMap.get(materid); 
+            Long publisherId = publisherIdMap.get(materid); // 公布人id
             if(ObjectUtil.isNull(publisherId)){
             	publisherId = materialService.getMaterialById(materid).getDirector() ;
             	publisherIdMap.put(materid, publisherId);
             }
-            decPositionPublished.setPublisherId(publisherId); // 公布人id
             Long declarationid = (Long) map.get("wdid"); // 申报表id
             Long textbookid = (Long) map.get("tbid"); // 书籍id
             String temppresetPosition = (String) map.get("preset_position"); // 申报职务
             Long isOnList = (Long) map.get("is_on_list"); // 是否进入预选名单
             String tempchosenPosition = (String) map.get("chosen_position"); // 遴选职务
             Integer mastersort = (Integer) map.get("mastersort"); // 排位
+            DecPositionPublished decPositionPublished = new DecPositionPublished();
+            decPositionPublished.setPublisherId(publisherId); // 公布人id
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);

@@ -224,8 +224,9 @@ public class MigrationStageOne {
                 excel.add(map);
                 continue;
             }
+            //找不到所属区域根据客户要求删除不导入
             if (ObjectUtil.isNull(areaId)){
-            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到机构所属区域。"));
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("已删除。"));
                 excel.add(map);
                 continue;
             }
@@ -335,19 +336,58 @@ public class MigrationStageOne {
             }
             String position = (String) map.get("duties");
             String title = (String) map.get("positional");
+            if (StringUtil.isEmpty(title)){
+            	title = "-";
+            }
+            if (!"-".equals(title)){
+	            switch (title) {
+				case "1097":
+					title = "教授";
+					break;
+				case "1098":
+					title = "副教授";
+	                break;
+				case "1099":
+					title = "讲师";
+					break;
+				case "1100":
+					title = "正高";
+					break;
+				case "1101":
+					title = "副高";
+					break;
+				default:
+					title = "其他";
+				}
+            }
             String fax = (String) map.get("fax");
             String handphone = (String) map.get("handset");
+            if (StringUtil.notEmpty(handphone) && "null".equals(handphone)){
+            	handphone = "-";
+            }
             String telephone = (String) map.get("phone");
             String idcard = (String) map.get("idcard");
             String email = (String) map.get("email");
+            if (StringUtil.notEmpty(email) && "null".equals(email)){
+            	email = "-";
+            }
             String address = (String) map.get("address");
+            if (StringUtil.notEmpty(address) && "null".equals(address)){
+            	address = "-";
+            }
             String postcode = (String) map.get("postcode");
+            if (StringUtil.notEmpty(postcode) && "null".equals(postcode)){
+            	postcode = "-";
+            }
             Integer isProxyUpload = (Integer) map.get("is_proxy_upload");
             String proxy = (String) map.get("filedir");
             String avatar = (String) map.get("avatar");
             Integer progress = (Integer) map.get("progress");
             Timestamp reviewDate = (Timestamp) map.get("auditdate");
             String note = (String) map.get("memo");
+            if (StringUtil.notEmpty(note) && "null".equals(note)){
+            	note = "-";
+            }
             Integer sort = (Integer) map.get("sortno");
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
@@ -533,6 +573,12 @@ public class MigrationStageOne {
             String signature = (String) map.get("usersign");
             String note = (String) map.get("memo");
             Integer sort = (Integer) map.get("sortno");
+            //此重复用户只能通过个人信息多少判断保留，保留个人信息较全的一条，另一条删除
+            if (("王训".equals(realName) || "赵舒武".equals(realName)) && ObjectUtil.isNull(sort)){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("已删除"));
+            	excel.add(map);
+            	continue;
+            }
             if (ObjectUtil.notNull(sort) && sort < 0) {
                 sort = 999;
             }

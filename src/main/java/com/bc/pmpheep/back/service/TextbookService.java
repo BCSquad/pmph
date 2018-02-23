@@ -74,9 +74,9 @@ public interface TextbookService {
      * @author:lyc
      * @date:2017年11月23日上午9:56:09
      * @param 
-     * @return BookListVO
+     * @return List<BookListVO>
      */
-    BookListVO getBookListVO(Long materialId) throws CheckedServiceException;
+    List<BookListVO> getBookListVOs(Long materialId) throws CheckedServiceException;
     
     /**
      * 
@@ -84,10 +84,10 @@ public interface TextbookService {
      * @author:lyc
      * @date:2017年11月23日下午1:56:50
      * @param 
-     * @return Integer
+     * @return List<Textbook>
      */
-    List<Textbook> addOrUpdateTextBookList(BookListVO bookListVO, String sessionId)
-    		throws CheckedServiceException;
+    List<Textbook> addOrUpdateTextBookList(Long materialId, Boolean isPublic,String textbooks,
+    		String sessionId) throws CheckedServiceException;
     
     /**
      * 
@@ -97,7 +97,7 @@ public interface TextbookService {
      * @param 
      * @return List<Textbook>
      */
-    List<Textbook> importExcel(MultipartFile file) throws CheckedServiceException,IOException;
+    List<Textbook> importExcel(MultipartFile file, Long materialId) throws CheckedServiceException,IOException;
     /**
      * 功能描述：批量结果公布（最终结果公布）
      * @param ids

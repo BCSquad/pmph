@@ -38,7 +38,7 @@ public class DecPositionTemp implements Serializable {
 	// 申报职务
 	private Integer presetPosition;
 	// 是否进入预选名单
-	private boolean isOnList;
+	private Boolean isOnList;
 	// 遴选职务
 	private Integer chosenPosition;
 	// 排位
@@ -58,7 +58,7 @@ public class DecPositionTemp implements Serializable {
 	}
 
 	public DecPositionTemp(Long authorId, Boolean isBackground, Long declarationId, Long textbookId,
-			Integer presetPosition,  boolean isOnList, Integer chosenPosition, Integer rank,
+			Integer presetPosition,  Boolean isOnList, Integer chosenPosition, Integer rank,
 			String syllabusId, String syllabusName, Timestamp gmtCreate, Timestamp gmtUpdate) {
 		this.authorId = authorId;
 		this.isBackground = isBackground;
@@ -123,11 +123,11 @@ public class DecPositionTemp implements Serializable {
 	}
 
 	
-	public boolean getIsOnList() {
+	public Boolean getIsOnList() {
 		return isOnList;
 	}
 
-	public void setIsOnList(boolean isOnList) {
+	public void setIsOnList(Boolean isOnList) {
 		this.isOnList = isOnList;
 	}
 

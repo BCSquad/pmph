@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.dao.CmsAdvertisementDao;
 import com.bc.pmpheep.back.dao.CmsAdvertisementImageDao;
 import com.bc.pmpheep.back.po.CmsAdvertisement;
 import com.bc.pmpheep.back.po.CmsAdvertisementImage;
+import com.bc.pmpheep.back.po.Sensitive;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.po.SurveyQuestion;
 import com.bc.pmpheep.back.po.SurveyQuestionOption;
@@ -27,6 +28,7 @@ import com.bc.pmpheep.back.po.TopicExtra;
 import com.bc.pmpheep.back.po.TopicWriter;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.PmphUserService;
+import com.bc.pmpheep.back.service.SensitiveService;
 import com.bc.pmpheep.back.service.SurveyQuestionAnswerService;
 import com.bc.pmpheep.back.service.SurveyQuestionCategoryService;
 import com.bc.pmpheep.back.service.SurveyQuestionOptionService;
@@ -93,15 +95,17 @@ public class MigrationPlus {
 	 TopicWriertService topicWriertService;
 	 @Resource
 	 WriterUserService writerUserService;
+	 @Resource
+	 SensitiveService sensitiveService;
 	 
 	 public void start() {
 		 Date begin = new Date();
+         logger.info("填充调查问卷测试数据");
+		 survey();
+         logger.info("填充选题申报测试数据");
+		 topic();
 		 logger.info("初始化广告数据");
 		 initCmsAdvertisementData();
-                 logger.info("填充调查问卷测试数据");
-		 survey();
-                 logger.info("填充选题申报测试数据");
-		 topic();
 		 logger.info("数据填充运行结束，用时：{}", JdbcHelper.getPastTime(begin));
 	 }
 	 
@@ -114,7 +118,7 @@ public class MigrationPlus {
 	                + "{adname:'首页轮播',         type:1,autoPlay:true, animationInterval:3000,image:[{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'},{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'},{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'}]} ,"
 	                + "{adname:'首页中部',         type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/2670f031-35da-4dd6-b079-8f295c51a339.png'},{image:'/upload/site/af598f9e-ae9e-48a0-a3e4-17acc363051a.png'},{image:'/upload/site/a4160c1e-8beb-4530-9f2b-df022a6f751d.png'},{image:'/upload/site/a69b782d-f1ad-42e6-a91a-08432963b54a.png'}]} ,"
 	                + "{adname:'信息快报和遴选公告列表',type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/article/20170328/wenzhang10.jpg'}]} ,"
-	                + "{adname:'读书首页轮播 ',      type:1,autoPlay:true ,animationInterval:3000,image:[{image:'/upload/article/20170328/xiaoxi1.jpg'},{image:'/upload/article/20170328/xiaoxi2.jpg'},{image:'/upload/article/20170328/xiaoxi3.jpg'}]} ,"
+	                + "{adname:'读书首页轮播 ',      type:1,autoPlay:true ,animationInterval:3000,image:[{image:'/upload/article/20170328/xiaoxi1.jpg'},{image:'/upload/article/20170328/xiaoxi2.jpg'},{image:'/upload/article/20170328/xiaoxi3.jpg'}]} "
 	                + "]";
 	        Gson gson = new Gson();
 	        List<CmsAdvertisementOrImageVO> lst = gson.fromJson(dataJson, new TypeToken<ArrayList<CmsAdvertisementOrImageVO>>() {
@@ -414,5 +418,26 @@ public class MigrationPlus {
 		TopicWriter topicWriter6 = new TopicWriter(topic6.getId(), writerUser6.getRealname(),
 				writerUser6.getSex(), 52, writerUser6.getPosition(), writerUser6.getWorkPlace());
 		topicWriertService.add(topicWriter6);
+	}
+	 
+	 protected void sensitive() {
+		Sensitive sensitive = new Sensitive("妈的", 1, "不文明用语", false, false, null, null);
+		sensitiveService.add(sensitive);
+		Sensitive sensitive1 = new Sensitive("闭嘴", 2, "不礼貌", false, false, null, null);
+		sensitiveService.add(sensitive1);
+		Sensitive sensitive2 = new Sensitive("死人", 3, null, false, false, null, null);
+		sensitiveService.add(sensitive2);
+		Sensitive sensitive3 = new Sensitive("王八蛋", 4, "不文明用语", false, false, null, null);
+		sensitiveService.add(sensitive3);
+		Sensitive sensitive4 = new Sensitive("傻逼", 5, null, false, false, null, null);
+		sensitiveService.add(sensitive4);
+		Sensitive sensitive5 = new Sensitive("垃圾", 6, "不合适用语", false, false, null, null);
+		sensitiveService.add(sensitive5);
+		Sensitive sensitive6 = new Sensitive("渣渣", 7, "网络用语", false, true, null, null);
+		sensitiveService.add(sensitive6);
+		Sensitive sensitive7 = new Sensitive("二", 8, "网络用语", true, false, null, null);
+		sensitiveService.add(sensitive7);
+		Sensitive sensitive8 = new Sensitive("放屁", 9, "口头用语", true, true, null, null);
+		sensitiveService.add(sensitive8);
 	}
 }

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.BookVedioDao">
+
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null ">
+				#{id},
+			</if>
+			<if test="bookId != null ">
+				#{bookId},
+			</if>
+			<if test="title != null and title != ''  ">
+				#{title},
+			</if>
+			<if test="origPath != null and origPath !='' ">
+				#{origPath},
+			</if>
+			<if test="origFileName != null and origFileName !=''">
+				#{origFileName},
+			</if>
+			<if test="origFileSize != null ">
+				#{origFileSize},
+			</if>
+			<if test=" path != null and path !=''">
+				#{path},
+			</if>
+			<if test=" fileName != null and fileName !=''">
+				#{fileName},
+			</if>
+			<if test=" fileSize != null ">
+				#{fileSize},
+			</if>
+			<if test=" sort != null ">
+				#{sort},
+			</if>
+			<if test=" clicks != null ">
+				#{clicks},
+			</if>
+			<if test=" userId != null ">
+				#{userId},
+			</if>
+			<if test=" isAuth != null ">
+				#{isAuth},
+			</if>
+			<if test=" authUserId != null ">
+				#{authUserId},
+			</if>
+			<if test=" authDate != null ">
+				#{authDate},
+			</if>
+			<if test=" cover != null and cover != '' ">
+				#{cover},
+			</if>
+		</trim>
+	</sql>
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id != null ">
+				id,
+			</if>
+			<if test="bookId != null ">
+				book_id,
+			</if>
+			<if test="title != null and title != ''  ">
+				title,
+			</if>
+			<if test="origPath != null and origPath !='' ">
+				orig_path,
+			</if>
+			<if test="origFileName != null and origFileName !=''">
+				orig_file_name,
+			</if>
+			<if test="origFileSize != null ">
+				orig_file_size,
+			</if>
+			<if test=" path != null and path !=''">
+				path,
+			</if>
+			<if test=" fileName != null and fileName !=''">
+				file_name,
+			</if>
+			<if test=" fileSize != null ">
+				file_size,
+			</if>
+			<if test=" sort != null ">
+				sort,
+			</if>
+			<if test=" clicks != null ">
+				clicks,
+			</if>
+			<if test=" userId != null ">
+				user_id,
+			</if>
+			<if test=" isAuth != null ">
+				is_auth,
+			</if>
+			<if test=" authUserId != null ">
+				auth_user_id,
+			</if>
+			<if test=" authDate != null ">
+				auth_date,
+			</if>
+			<if test=" cover != null and cover != '' ">
+				cover,
+			</if>
+		</trim>
+	</sql>
+	
+	<!-- 新增BookVedio -->
+	<insert id="addBookVedio"        parameterType="BookVedio">
+		<selectKey resultType="java.lang.Long" order="AFTER"  keyProperty="id">
+			 <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into book_vedio ( <include refid="key" /> )  values( <include refid="value" /> ) ;
+	</insert>
+	
+	<!--根据文件id删除BookVedio -->
+	<delete id="deleteBookVedioByIds"   >
+		delete  from  book_vedio where id in
+		<foreach collection="ids" item="id" open="("  separator=","  close=")" index="index">
+			#{id} 
+		</foreach>
+	</delete>
+	
+	<!-- 获取vedio根据书籍id -->
+	<select id="getBookVedioByBookIds" resultType="BookVedio">
+		select * from  book_vedio where book_id in 
+		<foreach collection="bookIds" item="bookId" open="("  separator=","  close=")" index="index">
+			#{bookId}
+		</foreach>
+	</select>
+	
+	<!-- 动态更新 -->
+	<update id="updateBookVedio">
+		update book_vedio set
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="bookId != null ">
+				book_id =#{bookId},
+			</if>
+			<if test="title != null and title != ''  ">
+				title =#{title},
+			</if>
+			<if test="origPath != null and origPath !='' ">
+				orig_path =#{origPath},
+			</if>
+			<if test="origFileName != null and origFileName !=''">
+				orig_file_name =#{origFileName},
+			</if>
+			<if test="origFileSize != null ">
+				orig_file_size =#{origFileSize},
+			</if>
+			<if test=" path != null and path !=''">
+				path =#{path},
+			</if>
+			<if test=" fileName != null and fileName !=''">
+				file_name =#{fileName},
+			</if>
+			<if test=" fileSize != null ">
+				file_size =#{fileSize},
+			</if>
+			<if test=" sort != null ">
+				sort =#{sort},
+			</if>
+			<if test=" clicks != null ">
+				clicks =#{clicks},
+			</if>
+			<if test=" userId != null ">
+				user_id =#{userId},
+			</if>
+			<if test=" isAuth != null ">
+				is_auth =#{isAuth},
+			</if>
+			<if test=" authUserId != null ">
+				auth_user_id =#{authUserId},
+			</if>
+			<if test=" authDate != null ">
+				auth_date =#{authDate},
+			</if>
+			<if test=" cover != null and cover != '' ">
+				cover =#{cover},
+			</if>
+		</trim>
+		where id = #{id} 
+	</update>
+	
+	<!--根据文件上传路径获取BookVedio -->
+	<select id="getBookVedioByOldPath"  resultType="BookVedio" >
+		select * from  book_vedio where orig_path like  concat('%',#{oldPath},'.%');
+	</select>
+	
+	
+	
+	
+</mapper>

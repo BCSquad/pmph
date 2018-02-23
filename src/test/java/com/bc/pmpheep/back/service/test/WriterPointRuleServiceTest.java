@@ -53,8 +53,10 @@ public class WriterPointRuleServiceTest extends BaseTest {
 	public void updateWriterPointRule(){
 		writerPointRuleService.addWriterPointRule(writerPointRule);
 		writerPointRule.setPoint(2);
+		WriterPointRuleVO writerPointRule1 = new WriterPointRuleVO(writerPointRule.getId(), "登录规则", "login", 1,
+				false, null, 0, null, false);
 		Assert.assertTrue("更新失败", 
-				writerPointRuleService.updateWriterPointRule(writerPointRule) > 0);
+				writerPointRuleService.updateWriterPointRule(writerPointRule1) > 0);
 	}
 	
 	@Test

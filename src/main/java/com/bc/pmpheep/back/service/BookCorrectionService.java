@@ -69,6 +69,17 @@ public interface BookCorrectionService {
 	PageResult<BookCorrectionAuditVO> listBookCorrectionAudit(HttpServletRequest request,
 			Integer pageNumber,Integer pageSize,String bookname,Boolean isOver,Boolean result) throws CheckedServiceException;
 	
+	/**
+	 * 根据id获取审核详情
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2018年1月29日 上午10:01:50
+	 * @param id
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	BookCorrectionAuditVO getBookCorrectionAuditDetailById(Long id ) throws CheckedServiceException;
+	
 	 /**
      * 新增一个    BookCorrection
      * @param bookCorrection 实体对象

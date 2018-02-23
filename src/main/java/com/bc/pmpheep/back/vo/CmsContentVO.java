@@ -54,6 +54,8 @@ public class CmsContentVO implements Serializable {
     private Boolean   isAdmin;
     // 是否已发布
     private Boolean   isPublished;
+    // 是否教材报名入口
+    private Boolean   isMaterialEntry;
     // 创建时间
     private Timestamp gmtCreate;
 
@@ -391,6 +393,20 @@ public class CmsContentVO implements Serializable {
      */
     public void setAuthStatus(Short authStatus) {
         this.authStatus = authStatus;
+    }
+
+    /**
+     * @return the isMaterialEntry
+     */
+    public Boolean getIsMaterialEntry() {
+        return isMaterialEntry;
+    }
+
+    /**
+     * @param isMaterialEntry the isMaterialEntry to set
+     */
+    public void setIsMaterialEntry(Boolean isMaterialEntry) {
+        this.isMaterialEntry = isMaterialEntry;
     }
 
 }
