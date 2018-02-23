@@ -326,14 +326,36 @@ public class DecPositionServiceImpl implements DecPositionService {
                 unselectedDecPositionEditorSelectionVOs.add(de);
             }
         }
-        Collections.sort(selectedDecPositionEditorSelectionVOs,
-                         new Comparator<DecPositionEditorSelectionVO>() {
-                             public int compare(DecPositionEditorSelectionVO arg0,
-                             DecPositionEditorSelectionVO arg1) {
-                                 return arg1.getPresetPosition()
-                                            .compareTo(arg0.getPresetPosition());
-                             }
-                         });
+        List<DecPositionEditorSelectionVO> editorList =
+        new ArrayList<DecPositionEditorSelectionVO>();// 已遴选主编集合
+        List<DecPositionEditorSelectionVO> subeditorList =
+        new ArrayList<DecPositionEditorSelectionVO>();// 已遴选副主编集合
+        List<DecPositionEditorSelectionVO> editorialMemberList =
+        new ArrayList<DecPositionEditorSelectionVO>();// 已遴选编委集合
+        List<DecPositionEditorSelectionVO> digitalrList =
+        new ArrayList<DecPositionEditorSelectionVO>();// 已遴选数字编委集合
+        for (DecPositionEditorSelectionVO decVo : selectedDecPositionEditorSelectionVOs) {
+            if (4 == decVo.getChosenPosition()) {// 主编
+                editorList.add(decVo);
+            } else if (2 == decVo.getChosenPosition()) {// 副主编
+                subeditorList.add(decVo);
+            } else if (1 == decVo.getChosenPosition()) {// 编委
+                editorialMemberList.add(decVo);
+            } else if (8 == decVo.getChosenPosition()) {// 数字编委
+                digitalrList.add(decVo);
+            }
+        }
+        Collections.sort(editorList, new Comparator<DecPositionEditorSelectionVO>() {
+            public int compare(DecPositionEditorSelectionVO arg0, DecPositionEditorSelectionVO arg1) {
+                return arg0.getRank().compareTo(arg1.getRank());
+            }
+        });
+
+        Collections.sort(subeditorList, new Comparator<DecPositionEditorSelectionVO>() {
+            public int compare(DecPositionEditorSelectionVO arg0, DecPositionEditorSelectionVO arg1) {
+                return arg0.getRank().compareTo(arg1.getRank());
+            }
+        });
         Collections.sort(unselectedDecPositionEditorSelectionVOs,
                          new Comparator<DecPositionEditorSelectionVO>() {
                              public int compare(DecPositionEditorSelectionVO arg0,
@@ -344,7 +366,10 @@ public class DecPositionServiceImpl implements DecPositionService {
                          });
         List<DecPositionEditorSelectionVO> newDecPositionEditorSelectionVOs =
         new ArrayList<DecPositionEditorSelectionVO>(listEditorSelectionVOs.size());// 重新排序后的集合
-        newDecPositionEditorSelectionVOs.addAll(selectedDecPositionEditorSelectionVOs);
+        newDecPositionEditorSelectionVOs.addAll(editorList);
+        newDecPositionEditorSelectionVOs.addAll(subeditorList);
+        newDecPositionEditorSelectionVOs.addAll(editorialMemberList);
+        newDecPositionEditorSelectionVOs.addAll(digitalrList);
         newDecPositionEditorSelectionVOs.addAll(unselectedDecPositionEditorSelectionVOs);
         resultMap.put("DecPositionEditorSelectionVO", newDecPositionEditorSelectionVOs);
         Material material = materialService.getMaterialById(materialId);

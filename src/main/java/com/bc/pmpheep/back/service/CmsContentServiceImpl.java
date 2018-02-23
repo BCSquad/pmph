@@ -347,6 +347,10 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
+        Boolean isPublished = false;
+        if (Const.CMS_AUTHOR_STATUS_2 == authStatus) {
+            isPublished = true;
+        }
         Integer count = 0;
         count =
         cmsContentDao.checkContentById(new CmsContent(
@@ -355,7 +359,7 @@ public class CmsContentServiceImpl implements CmsContentService {
                                                       pmphUser.getId(),
                                                       DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                DateUtil.getCurrentTime()),
-                                                      Const.MATERIAL_TYPE_ID));
+                                                      isPublished, Const.MATERIAL_TYPE_ID));
         CmsContent cmsContent = this.getCmsContentById(id);
         Integer type = 0;
         if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()) {
