@@ -414,6 +414,27 @@ public class DecPositionServiceImpl implements DecPositionService {
             // 查询书籍下所有申报id
             List<Long> ids =
             decPositionService.getDecPositionIdByBookId(textbookId, editorOrSubeditorType);
+            if (2 == editorOrSubeditorType) {
+                List<Long> newEditorialMemberIds = new ArrayList<Long>();// 遴选的编委ID
+                for (DecPosition decPosition : decPositions) {
+                    if (1 == decPosition.getChosenPosition()
+                        || 8 == decPosition.getChosenPosition()) {
+                        if (!ids.contains(decPosition.getId())) {
+                            newEditorialMemberIds.add(decPosition.getId());
+                        }
+                    }
+                }
+                if (newEditorialMemberIds.isEmpty()) {
+                    Textbook textbook = textbookService.getTextbookById(textbookId);
+                    if (0 != textbook.getRevisionTimes()) {
+                        textbookService.updatRevisionTimesByTextBookId(-1, textbookId);
+                    }
+                } else {
+                    textbookService.updatRevisionTimesByTextBookId(1, textbookId);
+                }
+
+            }
+
             // 初始化作家职位申报表
             if (CollectionUtil.isNotEmpty(ids)) {
                 decPositionService.updateDecPositionSetDefault(ids, editorOrSubeditorType);
