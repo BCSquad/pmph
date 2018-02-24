@@ -70,7 +70,17 @@ public class BookPositionVO implements Serializable{
 		private Integer republishTimes;
 		//最终结果公布后是否可以再公布 （结果修改了就可以再次公布）
 		private Boolean repub; 
+		//书籍id
+		private Long bookId;
 		
+		public Long getBookId() {
+			return bookId;
+		}
+
+		public void setBookId(Long bookId) {
+			this.bookId = bookId;
+		}
+
 		public BookPositionVO() {
 			super();
 		}
@@ -276,25 +286,17 @@ public class BookPositionVO implements Serializable{
 
 		@Override
 		public String toString() {
-			return "{materialId:" + materialId + ",isAllTextbookPublished:"
-					+ isAllTextbookPublished + ",isForceEnd:" + isForceEnd
-					+ ",textBookId:" + textBookId + ",sort:" + sort
-					+ ",textbookName:" + textbookName + ",textbookRound:"
-					+ textbookRound + ",applyNum:" + applyNum
-					+ ",planningEditor:" + planningEditor
-					+ ",planningEditorName:" + planningEditorName
-					+ ",editorsAndAssociateEditors:"
-					+ editorsAndAssociateEditors
-					+ ",editorsAndAssociateEditorsNum:"
-					+ editorsAndAssociateEditorsNum + ",isChiefPublished:"
-					+ isChiefPublished + ",bianWeis:" + bianWeis
-					+ ",bianWeisNum:" + bianWeisNum + ",groupId:" + groupId
-					+ ",myPower:" + myPower + ",isPublished:" + isPublished
-					+ ",isLocked:" + isLocked + ",revisionTimes:"
-					+ revisionTimes + ",republishTimes:" + republishTimes
-					+ ",repub:" + repub + "}";
+			return "BookPositionVO [materialId=" + materialId + ", isAllTextbookPublished=" + isAllTextbookPublished
+					+ ", isForceEnd=" + isForceEnd + ", textBookId=" + textBookId + ", sort=" + sort + ", textbookName="
+					+ textbookName + ", textbookRound=" + textbookRound + ", applyNum=" + applyNum + ", planningEditor="
+					+ planningEditor + ", planningEditorName=" + planningEditorName + ", editorsAndAssociateEditors="
+					+ editorsAndAssociateEditors + ", editorsAndAssociateEditorsNum=" + editorsAndAssociateEditorsNum
+					+ ", isChiefPublished=" + isChiefPublished + ", bianWeis=" + bianWeis + ", bianWeisNum="
+					+ bianWeisNum + ", groupId=" + groupId + ", myPower=" + myPower + ", isPublished=" + isPublished
+					+ ", isLocked=" + isLocked + ", revisionTimes=" + revisionTimes + ", republishTimes="
+					+ republishTimes + ", repub=" + repub + ", bookId=" + bookId + "]";
 		}
-		
+
 		
 }
 

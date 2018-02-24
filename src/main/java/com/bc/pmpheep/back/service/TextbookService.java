@@ -110,11 +110,10 @@ public interface TextbookService {
      * @return
      * @throws CheckedServiceException
      */
-    Integer updateTextbookAndMaterial(Long[] ids, String sessionId) throws CheckedServiceException;
-
-    /**
-     * 
-     * <pre>
+	Integer updateTextbookAndMaterial(Long[] ids,String sessionId,Long materialId) throws CheckedServiceException;
+	/**
+	 * 
+	 * <pre>
 	 * 功能描述：根据教材Id查询对应的书籍集合
 	 * 使用示范：
 	 *
