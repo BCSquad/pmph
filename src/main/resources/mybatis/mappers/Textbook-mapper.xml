@@ -540,4 +540,9 @@
 			GROUP BY dp.`textbook_id`
 	</select>
 	
+	<!-- 遴选编委后修改 再次修改次数-->
+	<update id="updatRevisionTimesByTextBookId" parameterType="java.util.Map">
+		UPDATE textbook SET revision_times=revision_times+(#{number}) WHERE id = #{textBookId};
+	</update>
+	
 </mapper>
