@@ -104,7 +104,7 @@ public interface TextbookService {
      * @return
      * @throws CheckedServiceException
      */
-	Integer updateTextbookAndMaterial(Long[] ids,String sessionId) throws CheckedServiceException;
+	Integer updateTextbookAndMaterial(Long[] ids,String sessionId,Long materialId) throws CheckedServiceException;
 	/**
 	 * 
 	 * <pre>

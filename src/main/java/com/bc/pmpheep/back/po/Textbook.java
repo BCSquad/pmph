@@ -69,7 +69,11 @@ public class Textbook implements java.io.Serializable {
     public Textbook(Long id) {
         this.id = id;
     }
-
+    
+    public Textbook(Long id,Integer republishTimes) {
+        this.id = id;
+        this.republishTimes = republishTimes;
+    }
     public Textbook(Long id, Boolean isChiefPublished) {
         this.id = id;
         this.isChiefPublished = isChiefPublished;

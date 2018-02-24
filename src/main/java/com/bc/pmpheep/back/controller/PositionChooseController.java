@@ -109,9 +109,10 @@ public class PositionChooseController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量结果公布（最终结果公布）")
 	@RequestMapping(value = "/updateResult", method = RequestMethod.PUT)
-	public ResponseBean updateResult(@RequestParam("ids") Long[] ids, HttpServletRequest request) {
+	public ResponseBean updateResult(@RequestParam("ids") Long[] ids,@RequestParam("materialId") Long materialId,
+			HttpServletRequest request) {
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(textbookService.updateTextbookAndMaterial(ids, sessionId));
+		return new ResponseBean(textbookService.updateTextbookAndMaterial(ids, sessionId,materialId));
 	}
 
 	/**

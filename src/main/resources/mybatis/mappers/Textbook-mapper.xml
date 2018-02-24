@@ -439,8 +439,15 @@
 	</update>
 	<!-- 根据id进行结果公布 -->
 	<update id="updateBookPublished" parameterType="list">
-		update textbook  
-			set is_published= true
+		update textbook
+		<set>
+			<if test="isPublished !=null">
+				is_published=#{isPublished},
+			</if>
+			<if test="republishTimes != null ">
+				republish_times=#{republishTimes},
+			</if>
+		</set>
 			where id in
 		<foreach item="item" collection="list" open="(" separator="," close=")">
 			#{item.id}
