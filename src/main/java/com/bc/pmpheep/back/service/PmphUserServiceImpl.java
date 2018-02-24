@@ -611,11 +611,13 @@ public class PmphUserServiceImpl implements PmphUserService {
 					"部门id为空");
 		}
 		PageResult<PmphEditorVO> pageResult = new PageResult<>();
+		Long departmentId = pageParameter.getParameter().getDepartmentId();
+		String path = pmphDepartmentDao.getPmphDepartmentById(departmentId).getPath();
+		path = path + "-" + departmentId + "-";
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-		Integer total = pmphUserDao.totalEditors(pageParameter.getParameter().getDepartmentId(),
-				pageParameter.getParameter().getRealName());
+		Integer total = pmphUserDao.totalEditors(path, departmentId, pageParameter.getParameter().getRealName());
 		if (total > 0) {
-			List<PmphEditorVO> list = pmphUserDao.listEditors(pageParameter.getParameter().getDepartmentId(),
+			List<PmphEditorVO> list = pmphUserDao.listEditors(path, departmentId,
 					pageParameter.getParameter().getRealName(), pageParameter.getPageSize(), pageParameter.getStart());
 			pageResult.setRows(list);
 		}

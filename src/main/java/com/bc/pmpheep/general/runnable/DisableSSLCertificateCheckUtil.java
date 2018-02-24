@@ -20,7 +20,7 @@ public final class DisableSSLCertificateCheckUtil {
      */
 
     private DisableSSLCertificateCheckUtil() {
-
+    	super();
     }
 
     /**
@@ -29,15 +29,14 @@ public final class DisableSSLCertificateCheckUtil {
 
     public static void disableChecks() {
         try {
-        	InetAddress ia = InetAddress.getLocalHost();
-            new URL("http://" + ia.getHostAddress() + "/").getContent();
+        	//String ip = InetAddress.getByName("http://120.76.221.250/").getHostAddress();
+        	//InetAddress.getLocalHost().getHostAddress()
+            new URL("http://120.76.221.250/").getContent();
         } catch (IOException e) {
-            // This invocation will always fail, but it will register the
-            // default SSL provider to the URL class.
+        	LOGGER.error("错误信息：", e);
         }
         try {
-            SSLContext sslc;
-            sslc = SSLContext.getInstance("TLS");
+            SSLContext sslc = SSLContext.getInstance("TLS");
             TrustManager[] trustManagerArray = {new X509TrustManager() {
                 @Override
                 public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {

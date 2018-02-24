@@ -168,7 +168,8 @@ public interface PmphUserDao {
 	 * @param
 	 * @return Integer
 	 */
-	Integer totalEditors(@Param("departmentId") Long departmentId, @Param("realName") String realName);
+	Integer totalEditors(@Param("path") String path, @Param("departmentId") Long departmentId,
+			@Param("realName") String realName);
 
 	/**
 	 * 
@@ -179,8 +180,8 @@ public interface PmphUserDao {
 	 * @param
 	 * @return List<PmphEditorVO>
 	 */
-	List<PmphEditorVO> listEditors(@Param("departmentId") Long departmentId, @Param("realName") String realName,
-			@Param("pageSize") Integer pageSize, @Param("start") Integer start);
+	List<PmphEditorVO> listEditors(@Param("path") String path, @Param("departmentId") Long departmentId,
+			@Param("realName") String realName, @Param("pageSize") Integer pageSize, @Param("start") Integer start);
 
 	/**
 	 * 根据用户名获取用户 tyc
