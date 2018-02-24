@@ -161,10 +161,10 @@ public class TextbookServiceImpl implements TextbookService {
 		Material materials=new Material();
 		List <Long> textBookIds =  new ArrayList<>(textbooks.size());
 		for (Textbook textbook : textbooks) {
-			if(Const.TRUE==textbook.getIsPublished()){
-				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, 
-						CheckedExceptionResult.ILLEGAL_PARAM,"名单已确认");
-			}
+//			if(Const.TRUE==textbook.getIsPublished()){
+//				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, 
+//						CheckedExceptionResult.ILLEGAL_PARAM,"名单已确认");
+//			}
 			//判断公布修改次数
 			if(0!=textbook.getRevisionTimes()){
 				textBooks.add(new Textbook(textbook.getId(), textbook.getRevisionTimes()));
