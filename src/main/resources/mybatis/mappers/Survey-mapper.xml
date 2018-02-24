@@ -218,6 +218,7 @@
 					</if>
 		</if>
 		group by s.title desc 
+		ORDER BY s.`gmt_create` DESC 
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>

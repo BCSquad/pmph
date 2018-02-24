@@ -128,11 +128,14 @@ public class CmsContent implements java.io.Serializable {
         this.authDate = authDate;
     }
 
-    public CmsContent(Long id, Short authStatus, Long authUserId, String authDate, Long materialId) {
+    public CmsContent(Long id, Short authStatus, Long authUserId, String authDate,
+    Boolean isPublished, Boolean isStaging, Long materialId) {
         this.id = id;
         this.authStatus = authStatus;
         this.authUserId = authUserId;
         this.authDate = authDate;
+        this.isPublished = isPublished;
+        this.isStaging = isStaging;
         this.materialId = materialId;
     }
 

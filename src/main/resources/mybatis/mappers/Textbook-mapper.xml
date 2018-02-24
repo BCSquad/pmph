@@ -310,6 +310,7 @@
 	<select id="listBookPosition" parameterType="PageParameter"
 		resultType="BookPositionVO">
 		select
+		e.book_id bookId,
 		a.revision_times,
 		a.republish_times,
 		a.is_locked,
@@ -438,8 +439,15 @@
 	</update>
 	<!-- 根据id进行结果公布 -->
 	<update id="updateBookPublished" parameterType="list">
-		update textbook  
-			set is_published= true
+		update textbook
+		<set>
+			<if test="isPublished !=null">
+				is_published=#{isPublished},
+			</if>
+			<if test="republishTimes != null ">
+				republish_times=#{republishTimes},
+			</if>
+		</set>
 			where id in
 		<foreach item="item" collection="list" open="(" separator="," close=")">
 			#{item.id}
@@ -531,5 +539,10 @@
 		</foreach>
 			GROUP BY dp.`textbook_id`
 	</select>
+	
+	<!-- 遴选编委后修改 再次修改次数-->
+	<update id="updatRevisionTimesByTextBookId" parameterType="java.util.Map">
+		UPDATE textbook SET revision_times=revision_times+(#{number}) WHERE id = #{textBookId};
+	</update>
 	
 </mapper>

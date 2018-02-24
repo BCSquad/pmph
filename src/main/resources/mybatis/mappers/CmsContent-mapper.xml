@@ -373,6 +373,12 @@
 			<if test="authDate != null">
 				auth_date=#{authDate},
 			</if>
+			<if test="isPublished != null">
+				is_published=#{isPublished},
+			</if>
+			<if test="materialId != null">
+				material_id=#{materialId},
+			</if>
 		</set>
 		where
 		id = #{id};
