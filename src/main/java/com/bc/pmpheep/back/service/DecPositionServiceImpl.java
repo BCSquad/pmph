@@ -327,13 +327,13 @@ public class DecPositionServiceImpl implements DecPositionService {
             }
         }
         List<DecPositionEditorSelectionVO> editorList =
-        new ArrayList<DecPositionEditorSelectionVO>();// 已遴选主编集合
+        new ArrayList<DecPositionEditorSelectionVO>(selectedDecPositionEditorSelectionVOs.size());// 已遴选主编集合
         List<DecPositionEditorSelectionVO> subeditorList =
-        new ArrayList<DecPositionEditorSelectionVO>();// 已遴选副主编集合
+        new ArrayList<DecPositionEditorSelectionVO>(selectedDecPositionEditorSelectionVOs.size());// 已遴选副主编集合
         List<DecPositionEditorSelectionVO> editorialMemberList =
-        new ArrayList<DecPositionEditorSelectionVO>();// 已遴选编委集合
+        new ArrayList<DecPositionEditorSelectionVO>(selectedDecPositionEditorSelectionVOs.size());// 已遴选编委集合
         List<DecPositionEditorSelectionVO> digitalrList =
-        new ArrayList<DecPositionEditorSelectionVO>();// 已遴选数字编委集合
+        new ArrayList<DecPositionEditorSelectionVO>(selectedDecPositionEditorSelectionVOs.size());// 已遴选数字编委集合
         for (DecPositionEditorSelectionVO decVo : selectedDecPositionEditorSelectionVOs) {
             if (4 == decVo.getChosenPosition()) {// 主编
                 editorList.add(decVo);
