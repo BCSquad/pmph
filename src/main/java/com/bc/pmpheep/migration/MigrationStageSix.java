@@ -243,10 +243,7 @@ public class MigrationStageSix {
 			}
             if (StringUtil.isEmpty(realName) && isStagingJudge.intValue() == 0) { // 申报表作家姓名为空并且不暂存
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空。"));
-                excel.add(map);
-                logger.debug("找到申报表作家姓名为空，此结果将被记录在Excel中");
                 realNameCount++;
-                continue;
             } else {
             	declaration.setRealname(realName);
 			}
@@ -1263,7 +1260,6 @@ public class MigrationStageSix {
         int textbookidCount = 0;
         int outListUrlCount = 0;
         int outListCount = 0;
-        int error = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -1344,10 +1340,6 @@ public class MigrationStageSix {
             decPositionPublished.setGmtCreate((Timestamp) map.get("gmt_create")); // 创建时间
             String outLineUrl = (String) map.get("outlineurl"); // 教学大纲id
             decPositionPublished = decPositionPublishedService.addDecPositionPublished(decPositionPublished);
-            if (ObjectUtil.isNull(declarationid)) {
-            	error++;
-            	continue;
-            }
             long pk = decPositionPublished.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "positionid", id);
             count++;
@@ -1383,7 +1375,6 @@ public class MigrationStageSix {
         logger.info("未找到教材扩展项对应的关联结果数量：{}", extensionidCount);
         logger.info("未找到书籍对应的关联结果数量：{}", textbookidCount);
         logger.info("teach_positionset表迁移完成，异常条目数量：{}", excel.size());
-        logger.info("错误数量：{}", error);
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
         //记录信息
         Map<String, Object> msg = new HashMap<String, Object>();
