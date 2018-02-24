@@ -225,7 +225,8 @@ public class MigrationStageSix {
                 continue;
             }
             if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id) 
-            		|| "e56504a4-8b26-4b55-89c9-571fc94675d9".equals(id)) {
+            		|| "e56504a4-8b26-4b55-89c9-571fc94675d9".equals(id) || 
+            		"a37913ba4eee41ca9ab88f8086b578e5".equals(id)) {
             	String sqlId = "SELECT *,new_pk userId FROM sys_user ";
             	List<Map<String, Object>> mapIds = JdbcHelper.getJdbcTemplate().queryForList(sqlId);
             	for (Map<String, Object> mapId : mapIds) {
@@ -235,6 +236,8 @@ public class MigrationStageSix {
                 	if ("18045661072".equals(usercode) && "李勇".equals(username)) {
                 		declaration.setUserId(userId);
                 	} else if ("watergo1".equals(usercode) && "李清照2".equals(username)) {
+                		declaration.setUserId(userId);
+                	} else if ("qingna0522".equals(usercode) && "吕庆娜".equals(username)) {
                 		declaration.setUserId(userId);
                 	}
             	}
