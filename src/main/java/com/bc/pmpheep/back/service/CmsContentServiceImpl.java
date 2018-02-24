@@ -359,7 +359,7 @@ public class CmsContentServiceImpl implements CmsContentService {
                                                       pmphUser.getId(),
                                                       DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                DateUtil.getCurrentTime()),
-                                                      isPublished, Const.MATERIAL_TYPE_ID));
+                                                      isPublished, false, Const.MATERIAL_TYPE_ID));
         CmsContent cmsContent = this.getCmsContentById(id);
         Integer type = 0;
         if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()) {
