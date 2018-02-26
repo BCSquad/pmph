@@ -52,6 +52,7 @@ import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Declaration;
+import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -121,6 +122,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	private DecClinicalRewardDao decClinicalRewardDao;
 	@Autowired
 	private DecAcadeRewardDao decAcadeRewardDao;
+	@Autowired
+	private MaterialService materialService;
 
 	@Override
 	public Declaration addDeclaration(Declaration declaration) throws CheckedServiceException {
@@ -498,6 +501,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 		List<DecAcadeReward> decAcadeRewardList = decAcadeRewardDao.getListDecAcadeRewardByDeclarationId(declarationId);
 		// 作家扩展项
 		List<DecExtensionVO> decExtensionList = decExtensionDao.getListDecExtensionByDeclarationId(declarationId);
+		// 是否选择必填
+		Material material = materialService.getMaterialById(declaration.getMaterialId());
 		// 把查询出来的信息添加进applicationVO
 		applicationVO.setDecPositionList(decPositionList);
 		applicationVO.setDeclaration(declaration);
@@ -517,6 +522,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		applicationVO.setDecClinicalRewardList(decClinicalRewardList);
 		applicationVO.setDecAcadeRewardList(decAcadeRewardList);
 		applicationVO.setDecExtensionList(decExtensionList);
+		applicationVO.setMaterial(material);
 		return applicationVO;
 	}
 
