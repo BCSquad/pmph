@@ -29,81 +29,81 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  */
 @Repository
 public interface CmsContentDao {
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
 	 * 功能描述：新增
 	 * 使用示范：
 	 *
 	 * @param cmsContent  CmsContent对象
 	 * @return 影响行数
 	 * </pre>
-	 */
-	Integer addCmsContent(CmsContent cmsContent);
+     */
+    Integer addCmsContent(CmsContent cmsContent);
 
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
 	 * 功能描述：修改CmsContent
 	 * 使用示范：
 	 *
 	 * @param cmsContent 
 	 * @return 影响行数
 	 * </pre>
-	 */
-	Integer updateCmsContent(CmsContent cmsContent);
+     */
+    Integer updateCmsContent(CmsContent cmsContent);
 
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
 	 * 功能描述：定时任务批量更新
 	 * 使用示范：
 	 *
 	 * @param csmContents CmsContent对象集合
 	 * @return
 	 * </pre>
-	 */
-	Integer updateCmsContentByIds(List<CmsContent> csmContents);
+     */
+    Integer updateCmsContentByIds(List<CmsContent> csmContents);
 
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
 	 * 功能描述： 内容发布
 	 * 使用示范：
 	 * 
 	 * @param id 主键ID
 	 * @return 影响行数
 	 * </pre>
-	 */
-	Integer publishCmsContentById(Long id);
+     */
+    Integer publishCmsContentById(Long id);
 
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
 	 * 功能描述：内容修改 按ID
 	 * 使用示范：
 	 *
 	 * @param id 主键ID
 	 * @return 影响行数
 	 * </pre>
-	 */
-	Integer updateCmsContentById(Long id);
+     */
+    Integer updateCmsContentById(Long id);
 
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
 	 * 功能描述： 内容隐藏
 	 * 使用示范：
 	 *
 	 * @param id 主键ID
 	 * @return 影响行数
 	 * </pre>
-	 */
-	Integer hideCmsContentById(Long id);
+     */
+    Integer hideCmsContentById(Long id);
 
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
 	 * 功能描述： 社外内容审核操作(通过/拒绝)
 	 * 使用示范：
 	 *
@@ -111,95 +111,107 @@ public interface CmsContentDao {
 	 * @param authStatus 审核状态
 	 * @return 影响行数
 	 * </pre>
-	 */
-	Integer checkContentById(CmsContent cmsContent);
+     */
+    Integer checkContentById(CmsContent cmsContent);
 
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
 	 * 功能描述：获取CmsContent列表（同时查询分页数据和总条数）
 	 * 使用示范：
 	 *
 	 * @param pageParameter
 	 * @return List<CmsContentVO>
 	 * </pre>
-	 */
-	List<CmsContentVO> listCmsContent(PageParameter<CmsContentVO> pageParameter);
+     */
+    List<CmsContentVO> listCmsContent(PageParameter<CmsContentVO> pageParameter);
 
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取评论列表（同时查询分页数据和总条数）
+     * 使用示范：
+     *
+     * @param pageParameter
+     * @return List<CmsContentVO>
+     * </pre>
+     */
+    List<CmsContentVO> listCmsComment(PageParameter<CmsContentVO> pageParameter);
+
+    /**
+     * 
+     * <pre>
 	 * 功能描述：查询CmsContent列表(全部)
 	 * 使用示范：
 	 *
 	 * @param cmsContent 
 	 * @return CmsContent集合对象
 	 * </pre>
-	 */
-	List<CmsContent> getCmsContentList(CmsContent cmsContent);
+     */
+    List<CmsContent> getCmsContentList(CmsContent cmsContent);
 
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
 	 * 功能描述：通过id获取CmsContent对象
 	 * 使用示范：
 	 *
 	 * @param id 主键ID
 	 * @return CmsContent 对象
 	 * </pre>
-	 */
-	CmsContent getCmsContentById(Long id);
+     */
+    CmsContent getCmsContentById(Long id);
 
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
 	 * 功能描述：通过materialId获取CmsContent对象
 	 * 使用示范：
 	 *
 	 * @param materialId 教材ID
 	 * @return CmsContent对象
 	 * </pre>
-	 */
-	CmsContent getCmsContentByMaterialId(Long materialId);
+     */
+    CmsContent getCmsContentByMaterialId(Long materialId);
 
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
 	 * 功能描述：获取总条数
 	 * 使用示范：
 	  *@param categoryId CmsCategory 主键ID
 	 * @return 总条数
 	 * </pre>
-	 */
-	Integer getCmsContentCount(@Param("categoryId") Long categoryId);
+     */
+    Integer getCmsContentCount(@Param("categoryId") Long categoryId);
 
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
 	 * 功能描述：按主键Id删除(逻辑删除)
 	 * 使用示范：
 	 *
 	 * @param id 主键ID
 	 * @return 影响行数
 	 * </pre>
-	 */
-	Integer deleteCmsContentById(Long id);
+     */
+    Integer deleteCmsContentById(Long id);
 
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
 	 * 功能描述：批量删除
 	 * 使用示范：
 	 *
 	 * @param ids 主键id 集合
 	 * @return 影响行数
 	 * </pre>
-	 */
-	Integer deleteCmsContentByIds(List<Long> ids);
+     */
+    Integer deleteCmsContentByIds(List<Long> ids);
 
-	/**
-	 * 
-	 * <pre>
+    /**
+     * 
+     * <pre>
 	 * 功能描述：根据教材id逻辑删除
 	 * 使用示范：
 	 *
@@ -207,6 +219,6 @@ public interface CmsContentDao {
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 * </pre>
-	 */
-	Integer updateCmsContentByMaterialId(Long MaterialId);
+     */
+    Integer updateCmsContentByMaterialId(Long MaterialId);
 }

@@ -79,7 +79,7 @@ public class CmsCommentController {
         PageParameter<CmsContentVO> pageParameter =
         new PageParameter<CmsContentVO>(pageNumber, pageSize, cmsContentVO);
         String sessionId = CookiesUtil.getSessionId(request);
-        return new ResponseBean(cmsContentService.listCmsContent(pageParameter, sessionId));
+        return new ResponseBean(cmsContentService.listCmsComment(pageParameter, sessionId));
     }
 
     /**

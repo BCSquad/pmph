@@ -199,7 +199,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		// 教材类型验证
 		String materialType = materialVO.getMaterialType();
-		if (StringUtil.isEmpty(materialType) || "[]".equals(materialType.replace(" ","")) || "[NaN]".equals(materialType.replace(" ",""))) {
+		if (StringUtil.isEmpty(materialType) || "[]".equals(materialType.replace(" ", ""))
+				|| "[NaN]".equals(materialType.replace(" ", ""))) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"教材类型为空");
 		}
@@ -217,10 +218,14 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材通知内容过长");
 		}
-//		if (StringUtil.isEmpty(materialExtra.getNote())) {
-//			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-//					"教材备注内容为空");
-//		}
+		// if (StringUtil.isEmpty(materialExtra.getNote())) {
+		// throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+		// CheckedExceptionResult.NULL_PARAM,
+		// "教材备注内容为空");
+		// }
+		if ("null".equals(materialExtra.getNote()) || "[]".equals(materialExtra.getNote())) {
+			materialExtra.setNote(null);
+		}
 		if (null != materialExtra.getNote() && materialExtra.getNote().length() > 2000) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材备注内容过长");
