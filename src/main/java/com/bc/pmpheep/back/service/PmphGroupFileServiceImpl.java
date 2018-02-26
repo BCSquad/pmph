@@ -203,15 +203,15 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 				Double fileSize = pmphGroupFileVO.getFileSize();
 				if (ObjectUtil.notNull(fileSize)) {
 					if (fileSize > 0) {
-						pmphGroupFileVO.setFileLenth(String.format("%.2f", fileSize) + " kb");
+						pmphGroupFileVO.setFileLenth(String.format("%.2f", fileSize) + " KB");
 					} else {
-						pmphGroupFileVO.setFileLenth("0 kb");
+						pmphGroupFileVO.setFileLenth("0 KB");
 					}
 					if (fileSize > 1024) {
-						pmphGroupFileVO.setFileLenth(String.format("%.2f", fileSize / 1024) + " mb");
+						pmphGroupFileVO.setFileLenth(String.format("%.2f", fileSize / 1024) + " M");
 					}
 					if (fileSize > 1024 * 1024) {
-						pmphGroupFileVO.setFileLenth(String.format("%.2f", fileSize / 1024 / 1024) + " gb");
+						pmphGroupFileVO.setFileLenth(String.format("%.2f", fileSize / 1024 / 1024) + " G");
 					}
 				} else {
 					pmphGroupFileVO.setFileLenth("大小不详");

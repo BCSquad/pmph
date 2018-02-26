@@ -21,6 +21,7 @@ import com.bc.pmpheep.back.po.DecSci;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecWorkExp;
+import com.bc.pmpheep.back.po.Material;
 
 /**
  * @author MrYang
@@ -66,6 +67,8 @@ public class ApplicationVO implements Serializable {
 	private List<DecAcadeReward> decAcadeRewardList = new ArrayList<DecAcadeReward>(5);
 	// 作家扩展项
 	private List<DecExtensionVO> decExtensionList = new ArrayList<DecExtensionVO>(5);
+	// 是否选择必填
+	private Material material = new Material();
 
 	public ApplicationVO() {
 		super();
@@ -214,6 +217,14 @@ public class ApplicationVO implements Serializable {
 
 	public void setDecAcadeRewardList(List<DecAcadeReward> decAcadeRewardList) {
 		this.decAcadeRewardList = decAcadeRewardList;
+	}
+	
+	public Material getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(Material material) {
+		this.material = material;
 	}
 
 }
