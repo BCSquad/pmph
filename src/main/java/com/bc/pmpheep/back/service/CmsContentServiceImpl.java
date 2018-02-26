@@ -586,4 +586,28 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         return cmsContentDao.updateCmsContentByMaterialId(MaterialId);
     }
+
+    @Override
+    public PageResult<CmsContentVO> listCmsComment(PageParameter<CmsContentVO> pageParameter,
+    String sessionId) throws CheckedServiceException {
+        // 获取当前登陆用户
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
+        pageParameter.getParameter().setIsAdmin(pmphUser.getIsAdmin());
+        pageParameter.getParameter().setAuthorId(pmphUser.getId());
+        PageResult<CmsContentVO> pageResult = new PageResult<CmsContentVO>();
+        // 将页面大小和页面页码拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 包含数据总条数的数据集
+        List<CmsContentVO> cmsContentList = cmsContentDao.listCmsComment(pageParameter);
+        if (CollectionUtil.isNotEmpty(cmsContentList)) {
+            Integer count = cmsContentList.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(cmsContentList);
+        }
+        return pageResult;
+    }
 }
