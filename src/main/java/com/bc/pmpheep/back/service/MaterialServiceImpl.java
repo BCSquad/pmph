@@ -76,7 +76,10 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
 	@Autowired
 	private MaterialExtraService materialExtraService;
-
+	
+	@Autowired
+	private MaterialService              materialService;
+	
 	@Autowired
 	private MaterialNoticeAttachmentService materialNoticeAttachmentService;
 
@@ -712,6 +715,22 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		if (!pmphUser.getIsAdmin()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
 					"该用户没有操作权限");
+		}
+		// 教材权限的检查
+		List<PmphRole> pmphRoles = pmphUserService.getListUserRole(pmphUser.getId());
+		Integer power = null;
+		// 系统管理员权限检查
+		for (PmphRole pmphRole : pmphRoles) {
+			if (null != pmphRole && null != pmphRole.getRoleName() && "系统管理员".equals(pmphRole.getRoleName())) {
+				power = 1; // 我是系统管理原
+			}
+		}
+		// 教材主任检查
+		Material materialDirector = materialService.getMaterialById(material.getId());
+		if (null == power) {
+			if (null != materialDirector && null != materialDirector.getDirector() && pmphUser.getId().equals(materialDirector.getDirector())) {
+				power = 2; // 我是教材的主任
+			}
 		}
 		return materialDao.updateMaterial(material);
 	}

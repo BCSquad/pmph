@@ -245,8 +245,11 @@ public class MigrationStageSix {
                 declaration.setUserId(userid);
 			}
             if (StringUtil.isEmpty(realName) && isStagingJudge.intValue() == 0) { // 申报表作家姓名为空并且不暂存
-            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空。"));
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空并且不是暂存表。"));
+                excel.add(map);
+                logger.debug("找到申报表作家姓名为空并且不是暂存表，此结果将被记录在Excel中");
                 realNameCount++;
+                continue;
             } else {
             	declaration.setRealname(realName);
 			}
@@ -338,7 +341,7 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
-        logger.info("申报表作家姓名为空数量：{}", realNameCount);
+        logger.info("申报表作家姓名为空并且不是暂存表数量：{}", realNameCount);
         logger.info("后台用户申报教材数量：{}", sysflagCount);
         logger.info("用户类型为学校管理员申报教材数量：{}", usertypeCount);
         logger.info("未找到作家对应的关联结果数量：{}", useridCount);
