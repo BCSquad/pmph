@@ -221,7 +221,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		// "教材备注内容为空");
 		// }
 		if ("null".equals(materialExtra.getNote()) || "[]".equals(materialExtra.getNote())) {
-			materialExtra.setNote(null);
+			materialExtra.setNote("");
 		}
 		if (null != materialExtra.getNote() && materialExtra.getNote().length() > 2000) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
