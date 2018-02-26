@@ -166,13 +166,16 @@ public class TextbookServiceImpl implements TextbookService {
 //						CheckedExceptionResult.ILLEGAL_PARAM,"名单已确认");
 //			}
 			//判断公布修改次数
-			if(0!=textbook.getRevisionTimes()){
-				textBooks.add(new Textbook(textbook.getId(), textbook.getRevisionTimes()));
+			if(null == textbook.getRevisionTimes() || textbook.getRevisionTimes().intValue() <= 0){
+				textbookDao.updateTextbook(new Textbook(textbook.getId(), 0).setIsPublished(true));
+			}else {
+				textbookDao.updateTextbook(new Textbook(textbook.getId(), textbook.getRevisionTimes().intValue()+1).setIsPublished(true));
 			}
 			materials.setId(textbook.getMaterialId());
 			textBookIds.add(textbook.getId());
+			
 		}
-		textbookDao.updateBookPublished(textBooks);
+		//textbookDao.updateBookPublished(textBooks);
 		List<Textbook> books=materialDao.getMaterialAndTextbook(materials);
 		Integer count = 0;
 		/*通过遍历查看教材下面所有书籍是否公布，当数据全部公布则该教材改为最终公布*/

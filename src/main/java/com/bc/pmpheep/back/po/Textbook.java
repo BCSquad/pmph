@@ -176,8 +176,9 @@ public class Textbook implements java.io.Serializable {
         return this.isPublished;
     }
 
-    public void setIsPublished(Boolean isPublished) {
+    public Textbook setIsPublished(Boolean isPublished) {
         this.isPublished = isPublished;
+        return this;
     }
 
     public Timestamp getGmtPublished() {
