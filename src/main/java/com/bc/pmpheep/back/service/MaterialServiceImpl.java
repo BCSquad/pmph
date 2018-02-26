@@ -76,10 +76,10 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
 	@Autowired
 	private MaterialExtraService materialExtraService;
-	
+
 	@Autowired
-	private MaterialService              materialService;
-	
+	private MaterialService materialService;
+
 	@Autowired
 	private MaterialNoticeAttachmentService materialNoticeAttachmentService;
 
@@ -503,6 +503,12 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialNoteAttachmentService.deleteMaterialNoteAttachmentById(materialNoteAttachment.getId());
 			}
 		}
+		CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
+		String title = material.getMaterialName();
+		if (!title.equals(cmsContent.getTitle())) {
+			cmsContent.setTitle(title);
+			cmsContentService.updateCmsContent(cmsContent);
+		}
 
 		/**
 		 * // 判断教材备注附件和教材通知附件 List<MaterialNoticeAttachment>
@@ -728,7 +734,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		// 教材主任检查
 		Material materialDirector = materialService.getMaterialById(material.getId());
 		if (null == power) {
-			if (null != materialDirector && null != materialDirector.getDirector() && pmphUser.getId().equals(materialDirector.getDirector())) {
+			if (null != materialDirector && null != materialDirector.getDirector()
+					&& pmphUser.getId().equals(materialDirector.getDirector())) {
 				power = 2; // 我是教材的主任
 			}
 		}
