@@ -1,10 +1,13 @@
 package com.bc.pmpheep.back.service;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.dao.BookVedioDao;
@@ -13,6 +16,8 @@ import com.bc.pmpheep.back.po.Book;
 import com.bc.pmpheep.back.po.BookVedio;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookVedioVO;
+import com.bc.pmpheep.general.bean.FileType;
+import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -29,6 +34,9 @@ public class BookVedioServiceImpl  implements BookVedioService {
 	
 	@Autowired
 	private BookService bookService;
+	
+	@Autowired
+	private FileService fileService;
 	
 
 	@Override
@@ -100,14 +108,17 @@ public class BookVedioServiceImpl  implements BookVedioService {
 		return bookVedioDao.updateBookVedio(bookVedio);
 	}
 
-
+	
+	
 	@Override
-	public Integer addBookVedio(BookVedio bookVedio)  throws CheckedServiceException {
+	public Integer addBookVedio(HttpServletRequest request,  BookVedio bookVedio)  throws CheckedServiceException, Exception{
+		String tempFileId = bookVedio.getCover();
+		bookVedio.setCover("---");
 		// 验证 、、。。。。。内部产生数据不需验证。。。。。。。。
 		String oldPath = bookVedio.getOrigPath() ;
 		String oldUUid = oldPath.substring(oldPath.lastIndexOf(System.getProperty("file.separator"))+1,oldPath.lastIndexOf("."));
 		BookVedio bookVedio2 =  bookVedioDao.getBookVedioByOldPath(oldUUid);
-		//如果前台已经存入了，那么这里需要更新 
+		//如果前台已经存入了，那么这里需要更新
 		if(null != bookVedio2){
 			bookVedio
 				.setOrigFileName(bookVedio2.getOrigFileName())
@@ -115,9 +126,18 @@ public class BookVedioServiceImpl  implements BookVedioService {
 				.setOrigPath(bookVedio2.getOrigPath())
 				.setId(bookVedio2.getId())
 				.setUserId(0L);
-			return bookVedioDao.updateBookVedio(bookVedio);
+			bookVedioDao.updateBookVedio(bookVedio);
 		}
-		return bookVedioDao.addBookVedio(bookVedio);
+		bookVedioDao.addBookVedio(bookVedio);
+		//保存fengmian文件
+		byte[] fileByte = (byte[]) request.getSession(false).getAttribute(tempFileId);
+		String fileName = (String) request.getSession(false).getAttribute("fileName_" + tempFileId);
+		InputStream sbs = new ByteArrayInputStream(fileByte);
+		String coverId = fileService.save(sbs, fileName, FileType.BOOKVEDIO_CONER,bookVedio.getId());
+		request.getSession(false).removeAttribute(tempFileId);
+		request.getSession(false).removeAttribute("fileName_" + tempFileId);
+		bookVedio.setCover(coverId);
+		return bookVedioDao.updateBookVedio(bookVedio);
 	}
 
 	
