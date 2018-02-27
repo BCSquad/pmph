@@ -193,9 +193,9 @@
 		LEFT JOIN textbook t ON g.book_id = t.id
 		where g.id in (
 			select DISTINCT
-				group_id from pmph_group_member where 
+				group_id from pmph_group_member where 1=1
 				<if test="parameter.id != null">
-				user_id = #{parameter.id}
+				and user_id = #{parameter.id}
 				</if>
 				and is_writer =false AND is_deleted = FALSE)
 		<if test="parameter.groupName != null and parameter.groupName !=''">
@@ -238,9 +238,9 @@
 		from pmph_group g
 		LEFT JOIN textbook t ON g.book_id = t.id
 		where g.id in (select DISTINCT
-				group_id from pmph_group_member where 
+				group_id from pmph_group_member where 1=1
 				<if test="parameter.id != null">
-				user_id = #{parameter.id}
+				and user_id = #{parameter.id}
 				</if>
 				and is_writer =false AND is_deleted = FALSE)
 	</select>

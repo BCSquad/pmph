@@ -401,14 +401,13 @@ public class TextbookServiceImpl implements TextbookService {
                 String s5 = rowpower.substring(4, 5);
                 String s6 = rowpower.substring(5, 6);
                 String s7 = rowpower.substring(6, 7);
-                String s8 = rowpower.substring(7, 8);
-                if (material.getIsForceEnd() || material.getIsAllTextbookPublished()) {// 教材结束或者强制结束
+                String s8 = rowpower.substring(7, 8);//qiangzhijiesu
+                if (material.getIsForceEnd() || material.getIsAllTextbookPublished()) { // 教材结束或者强制结束
                     s2 = "0";
                     s3 = "0";
                     s4 = "0";
                     s5 = "0";
                     s6 = "0";
-                    s8 = "0";
                 } else if (row.getIsLocked() || row.getIsPublished()) { // 书籍已经发布了或者确认了名单
                     s2 = (power == 1 || power == 2) ? s2 : "0";
                     s3 = (power == 1 || power == 2) ? s3 : "0";

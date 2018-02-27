@@ -34,7 +34,7 @@ import com.google.gson.Gson;
  *
  */
 @Service
-public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
+public class CmsAdvertisementServiceImpl implements CmsAdvertisementService {
 
 	@Autowired
 	CmsAdvertisementDao cmsAdvertisementDao;
@@ -44,17 +44,18 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 	FileService fileService;
 
 	@Override
-	public List<CmsAdvertisementOrImageVO> getAdvertisementList(String sessionId) throws CheckedServiceException{
+	public List<CmsAdvertisementOrImageVO> getAdvertisementList(String sessionId) throws CheckedServiceException {
 		// 获取当前登陆用户
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "用户为空");
 		}
-		if (!pmphUser.getIsAdmin()) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM,
-						"该用户没有操作权限");
+		List<CmsAdvertisementOrImageVO> cmsAdvertisementOrImageVOs = cmsAdvertisementDao.getAdvertisementList();
+		if (pmphUser.getIsAdmin()) {
+			for (CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO : cmsAdvertisementOrImageVOs) {
+				cmsAdvertisementOrImageVO.setIsPlay(true);
+			}
 		}
-		List<CmsAdvertisementOrImageVO> cmsAdvertisementOrImageVOs=cmsAdvertisementDao.getAdvertisementList();
 		return cmsAdvertisementOrImageVOs;
 	}
 
@@ -78,13 +79,13 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		if (null == cmsAdvertisement.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "广告id");
 		}
-		count=cmsAdvertisementDao.updateCmsAdvertisement(cmsAdvertisement);
+		count = cmsAdvertisementDao.updateCmsAdvertisement(cmsAdvertisement);
 		return count;
 	}
 
 	@Override
-	public Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, String sessionId,Long[] imageId,Long[] disable)
-			throws CheckedServiceException {
+	public Integer updateCmsAdvertisement(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, String sessionId,
+			Long[] imageId, Long[] disable) throws CheckedServiceException {
 		// session PmphUser用户验证
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
@@ -98,49 +99,56 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		if (ObjectUtil.isNull(cmsAdvertisementOrImageVO)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		if(null != cmsAdvertisementOrImageVO.getAdname()){
-			if(StringUtil.strLength(cmsAdvertisementOrImageVO.getAdname()) > 25){
-				throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM, "最多只能输入25个字符");
+		if (null != cmsAdvertisementOrImageVO.getAdname()) {
+			if (StringUtil.strLength(cmsAdvertisementOrImageVO.getAdname()) > 25) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM,
+						"最多只能输入25个字符");
 			}
-			CmsAdvertisement cmsAdvertisement=cmsAdvertisementDao.getCmsAdvertisementById(cmsAdvertisementOrImageVO.getId());
-			if(!cmsAdvertisementOrImageVO.getAdname().equals(cmsAdvertisement.getAdname())){
-				if(cmsAdvertisementDao.getCmsAdvertisementByName(cmsAdvertisementOrImageVO.getAdname()).size() > 0){
-					throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM, "广告位置名称已存在，请重新输入");
+			CmsAdvertisement cmsAdvertisement = cmsAdvertisementDao
+					.getCmsAdvertisementById(cmsAdvertisementOrImageVO.getId());
+			if (!cmsAdvertisementOrImageVO.getAdname().equals(cmsAdvertisement.getAdname())) {
+				if (cmsAdvertisementDao.getCmsAdvertisementByName(cmsAdvertisementOrImageVO.getAdname()).size() > 0) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+							CheckedExceptionResult.ILLEGAL_PARAM, "广告位置名称已存在，请重新输入");
 				}
 			}
 		}
 		if (null == cmsAdvertisementOrImageVO.getId()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "广告id为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM,
+					"广告id为空");
 		}
 		if (null == cmsAdvertisementOrImageVO.getAdname()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "广告名称为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM,
+					"广告名称为空");
 		}
 		if (null == imageId) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		if (null != cmsAdvertisementOrImageVO.getUrl()) {
-			if(StringUtil.strLength(cmsAdvertisementOrImageVO.getUrl()) > 150){
-				throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM, "最多只能输入150个字符");
+			if (StringUtil.strLength(cmsAdvertisementOrImageVO.getUrl()) > 150) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM,
+						"最多只能输入150个字符");
 			}
 		}
-		if(null!=cmsAdvertisementOrImageVO.getNote()){
-			if(StringUtil.strLength(cmsAdvertisementOrImageVO.getNote()) > 20){
-				throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM, "备注最多只能输入20个字符");
+		if (null != cmsAdvertisementOrImageVO.getNote()) {
+			if (StringUtil.strLength(cmsAdvertisementOrImageVO.getNote()) > 20) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM,
+						"备注最多只能输入20个字符");
 			}
 		}
 		Integer count = 0;
-		CmsAdvertisementImage cmsAdvertisementImage=new CmsAdvertisementImage();
-		if( 0 != imageId.length){
+		CmsAdvertisementImage cmsAdvertisementImage = new CmsAdvertisementImage();
+		if (0 != imageId.length) {
 			for (int i = 0; i < imageId.length; i++) {
 				cmsAdvertisementImage.setId(imageId[i]);
 				cmsAdvertisementImage.setIsDisabled((Boolean) cmsAdvertisementOrImageVO.getIsDisplay());
-				//修改图片为显示
+				// 修改图片为显示
 				cmsAdvertisementImageDao.updateCmsAdvertisementImage(cmsAdvertisementImage);
 			}
 		}
-		if( 0 !=disable.length  ){
+		if (0 != disable.length) {
 			for (int i = 0; i < disable.length; i++) {
-				//把不启用的图片更改禁用
+				// 把不启用的图片更改禁用
 				cmsAdvertisementImage.setId(disable[i]);
 				cmsAdvertisementImageDao.updateImageIsDisabled(cmsAdvertisementImage);
 			}
@@ -150,7 +158,8 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 	}
 
 	@Override
-	public CmsAdvertisement addCmsAdvertisement(CmsAdvertisement cmsAdvertisement,CmsAdvertisementImage cmsAdvertisementImage, MultipartFile file, String sessionId)
+	public CmsAdvertisement addCmsAdvertisement(CmsAdvertisement cmsAdvertisement,
+			CmsAdvertisementImage cmsAdvertisementImage, MultipartFile file, String sessionId)
 			throws CheckedServiceException, IOException {
 		// session PmphUser用户验证
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -173,11 +182,11 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		}
 		// 先保存上传的广告图片返回MongoDBid
 		String newImage = fileService.save(file, ImageType.CMS_ADVERTISEMENT_IMAGE, cmsAdvertisementImage.getId());
-		// 保存图片id和关联广告id 
+		// 保存图片id和关联广告id
 		cmsAdvertisementImage.setAdvertId(cmsAdvertisement.getId());
 		cmsAdvertisementImage.setImage(newImage);
 		cmsAdvertisementImageDao.addCmsAdvertisementImage(cmsAdvertisementImage);
-		//保存广告管理设置
+		// 保存广告管理设置
 		cmsAdvertisementDao.addCmsAdvertisement(cmsAdvertisement);
 		return cmsAdvertisement;
 	}
@@ -192,8 +201,8 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 	}
 
 	@Override
-	public CmsAdvertisementImage addCmsAdevertisementImage(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO, MultipartFile file,
-			String sessionId) throws CheckedServiceException,IOException {
+	public CmsAdvertisementImage addCmsAdevertisementImage(CmsAdvertisementOrImageVO cmsAdvertisementOrImageVO,
+			MultipartFile file, String sessionId) throws CheckedServiceException, IOException {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
@@ -206,10 +215,10 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		if (ObjectUtil.isNull(cmsAdvertisementOrImageVO)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		if(null==file){
+		if (null == file) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "图片为空");
 		}
-		CmsAdvertisementImage cmsAdvertisementImage=new CmsAdvertisementImage();
+		CmsAdvertisementImage cmsAdvertisementImage = new CmsAdvertisementImage();
 		cmsAdvertisementImage.setAdvertId(cmsAdvertisementOrImageVO.getAdvertId());
 		// 新增图片默认不启用
 		cmsAdvertisementImage.setIsDisabled(Const.TRUE);
@@ -217,11 +226,11 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 		cmsAdvertisementImage.setImage(RouteUtil.MONGODB_IMAGE);
 		cmsAdvertisementImageDao.addCmsAdvertisementImage(cmsAdvertisementImage);
 		// 保存图片到 MongoDB 返回id存入图片id
-		String newImage=fileService.save(file, ImageType.CMS_ADVERTISEMENT_IMAGE,cmsAdvertisementImage.getId());
+		String newImage = fileService.save(file, ImageType.CMS_ADVERTISEMENT_IMAGE, cmsAdvertisementImage.getId());
 		// 替换之前图片id的临时值
 		cmsAdvertisementImage.setImage(newImage);
 		cmsAdvertisementImageDao.updateCmsAdvertisementImage(cmsAdvertisementImage);
-		//拼接芒果DB图片路径
+		// 拼接芒果DB图片路径
 		cmsAdvertisementImage.setImage(RouteUtil.MONGODB_IMAGE.concat(newImage));
 		return cmsAdvertisementImage;
 	}
@@ -230,25 +239,26 @@ public class CmsAdvertisementServiceImpl  implements CmsAdvertisementService {
 	public Integer deleteCmsAdvertisementImageById(Long id, String[] image, String sessionId) {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,"用户为空");
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
 		}
 		if (!pmphUser.getIsAdmin()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.ILLEGAL_PARAM,
 					"该用户没有操作权限");
 		}
-		if(null==id){
+		if (null == id) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		if(null==image){
+		if (null == image) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.CMS, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		Integer count=0;
-		//遍历数组 进行删除MongoDB的图
+		Integer count = 0;
+		// 遍历数组 进行删除MongoDB的图
 		for (int i = 0; i < image.length; i++) {
 			fileService.remove(image[i]);
 		}
 		// 删除本地相对应的图片信息
-		count=cmsAdvertisementImageDao.deleteCmsAdvertisementByImages(id);
+		count = cmsAdvertisementImageDao.deleteCmsAdvertisementByImages(id);
 		return count;
 	}
 

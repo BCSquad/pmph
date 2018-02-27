@@ -12,7 +12,6 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-
 /**
  * @author mr
  * @CreateDate 2017年12月22日 下午10:10:46
@@ -88,7 +87,7 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 	/**
 	 * 图片表id
 	 */
-//	private Long imageId;
+	// private Long imageId;
 	/**
 	 * 广告管理id
 	 */
@@ -101,15 +100,18 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 	 * 图片是否启用
 	 */
 	private Boolean isDisplay;
-	
-	
-//	public Long getImageId() {
-//		return imageId;
-//	}
-//
-//	public void setImageId(Long imageId) {
-//		this.imageId = imageId;
-//	}
+	/**
+	 * 能否操作
+	 */
+	private Boolean isPlay;
+
+	// public Long getImageId() {
+	// return imageId;
+	// }
+	//
+	// public void setImageId(Long imageId) {
+	// this.imageId = imageId;
+	// }
 
 	public Boolean getIsDisplay() {
 		return isDisplay;
@@ -128,12 +130,13 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 	}
 
 	public void setImage(String image) {
-		if(StringUtil.isEmpty(image)){
-			this.image = new ArrayList<>() ;
-			return ;
+		if (StringUtil.isEmpty(image)) {
+			this.image = new ArrayList<>();
+			return;
 		}
 		Gson gson = new Gson();
-		this.image = gson.fromJson(image,new TypeToken<ArrayList<CmsAdvertisementImage>>() {}.getType() );
+		this.image = gson.fromJson(image, new TypeToken<ArrayList<CmsAdvertisementImage>>() {
+		}.getType());
 
 	}
 
@@ -268,7 +271,15 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 	public void setIsShowHeading(Boolean isShowHeading) {
 		this.isShowHeading = isShowHeading;
 	}
-	
+
+	public Boolean getIsPlay() {
+		return isPlay;
+	}
+
+	public void setIsPlay(Boolean isPlay) {
+		this.isPlay = isPlay;
+	}
+
 	public CmsAdvertisementOrImageVO() {
 		super();
 	}
