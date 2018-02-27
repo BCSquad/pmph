@@ -312,7 +312,7 @@
 			</if>
 		</where>
 		GROUP BY d.`user_id`
-		ORDER BY o.`id` 
+		ORDER BY d.`user_id`
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
