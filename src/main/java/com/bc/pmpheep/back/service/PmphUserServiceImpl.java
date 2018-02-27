@@ -629,7 +629,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 
 	@Override
 	public Map<String, Object> getPersonalCenter(HttpServletRequest request, String state, String materialName,
-			String groupName, String title, String bookname, String name, String authProgress, String topicBookname) {
+			String groupName, String title, String bookname, String name, String authProgress, String topicBookname,Boolean booleans) {
 		String sessionId = CookiesUtil.getSessionId(request);
 		PmphUser sessionPmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == sessionPmphUser) {
@@ -660,14 +660,17 @@ public class PmphUserServiceImpl implements PmphUserService {
 		pageParameter2.setParameter(materialListVO);
 		// 教材申报的结果
 		PageResult<MaterialListVO> pageResultMaterialListVO = materialService.listMaterials(pageParameter2, sessionId);
-		// 文章审核
-		PageParameter<CmsContentVO> pageParameter1 = new PageParameter<>();
-		CmsContentVO cmsContentVO = new CmsContentVO();
-		cmsContentVO.setTitle(title);
-		cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_1);
-		pageParameter1.setParameter(cmsContentVO);
-		// 文章审核的结果
-		PageResult<CmsContentVO> pageResultCmsContentVO = cmsContentService.listCmsContent(pageParameter1, sessionId);
+		if(booleans){
+			// 文章审核
+			PageParameter<CmsContentVO> pageParameter1 = new PageParameter<>();
+			CmsContentVO cmsContentVO = new CmsContentVO();
+			cmsContentVO.setTitle(title);
+			cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_1);
+			pageParameter1.setParameter(cmsContentVO);
+			//文章审核的结果
+			PageResult<CmsContentVO> pageResultCmsContentVO = cmsContentService.listCmsContent(pageParameter1, sessionId);
+			map.put("cmsContent", pageResultCmsContentVO);
+		}
 		// 图书纠错审核
 		PageResult<BookCorrectionAuditVO> pageResultBookCorrectionAuditVO = bookCorrectionService
 				.listBookCorrectionAudit(request, Const.PAGE_NUMBER, Const.PAGE_SIZE, bookname, null, null);
@@ -697,7 +700,6 @@ public class PmphUserServiceImpl implements PmphUserService {
 		// 把其他模块的数据都装入map中返回给前端
 		map.put("topicList", pageResultTopicDeclarationVO);
 		map.put("materialList", pageResultMaterialListVO);
-		map.put("cmsContent", pageResultCmsContentVO);
 		map.put("bookCorrectionAudit", pageResultBookCorrectionAuditVO);
 		map.put("bookUserComment", pageResultBookUserCommentVO);
 		map.put("pmphGroup", pageResultPmphGroup);
@@ -706,7 +708,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 		//把用户信息存入map
 		map.put("pmphUser", sessionPmphUser);
 		//把用户角色存入map
-		map.put("PmphRole", rolelist);
+		map.put("pmphRole", rolelist);
 		return map;
 	}
 
