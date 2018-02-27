@@ -125,6 +125,7 @@ public class BookVedioServiceImpl  implements BookVedioService {
 			bookVedio2.setUserId(0L);
 			bookVedio2.setCover(bookVedio.getCover());
 			bookVedioDao.updateBookVedio(bookVedio2);
+			bookVedio.setId(bookVedio2.getId());
 		}else {
 			bookVedio.setPath("-");
 			bookVedio.setFileName("-");
