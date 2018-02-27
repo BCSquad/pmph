@@ -708,4 +708,9 @@
 		where material_id = #{materialId};
 
 	</update>
+	
+	<!-- 评论审核通过后，评论数加1-->
+	<update id="updatCmsContentCommentsById" parameterType="java.lang.Long">
+		UPDATE `cms_content` SET comments=comments+1 WHERE id = #{id};
+	</update>
 </mapper>

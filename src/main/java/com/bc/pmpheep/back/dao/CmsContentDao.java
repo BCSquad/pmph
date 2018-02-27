@@ -221,4 +221,16 @@ public interface CmsContentDao {
 	 * </pre>
      */
     Integer updateCmsContentByMaterialId(Long MaterialId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：评论审核通过后，评论数加1
+     * 使用示范：
+     *
+     * @param id CmsContent主键
+     * @return 影响行数
+     * </pre>
+     */
+    Integer updatCmsContentCommentsById(Long id);
 }
