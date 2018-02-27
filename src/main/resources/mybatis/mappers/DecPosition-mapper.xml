@@ -247,14 +247,19 @@
 		SELECT
 			d.`user_id`,
 			d.`realname`,
-  			o.`org_name`,
+  			<!-- o.`org_name`, -->
+  			d.`org_name`,
   			t.`count`
 		FROM
 			declaration d
-		LEFT JOIN
+		LEFT JOIN 
+			`textbook` tb
+  		ON 
+  			d.`material_id`= tb.`material_id`
+		<!-- LEFT JOIN
 			dec_position p
 		ON
-			d.id = p.declaration_id
+			d.id = p.declaration_id -->
 		JOIN 
 			`org` o
   		ON 
@@ -264,20 +269,26 @@
   					COUNT(*) `count`
   				FROM
 					declaration d
-				LEFT JOIN
+				LEFT JOIN 
+					`textbook` tb
+  				ON 
+  					d.`material_id`= tb.`material_id`
+				<!-- LEFT JOIN
 					dec_position p
 				ON
-					d.id = p.declaration_id
+					d.id = p.declaration_id -->
 				JOIN 
 					`org` o
 		  		ON 
 		  			o.`id`=d.`org_id`
 		  		<where>
+		  			d.`is_staging`=FALSE
 			  		<!-- 下面是动态条件 -->
 					<if test="parameter !=null ">
 						<!-- 问卷标题 -->
 						<if test="parameter.textBookIds != null ">
-							p.textbook_id in
+							<!-- p.textbook_id in -->
+							AND tb.`id` IN 
 							<foreach collection="parameter.textBookIds" item="item" index="index" open="(" close=")" separator=",">
 								#{item}
 							</foreach>
@@ -287,11 +298,13 @@
 		  			
   			)t
 		<where>
+			d.`is_staging`=FALSE
 			<!-- 下面是动态条件 -->
 			<if test="parameter !=null ">
 			<!-- 问卷标题 -->
 				<if test="parameter.textBookIds != null ">
-					p.textbook_id in
+					<!-- p.textbook_id in -->
+					AND tb.`id` IN 
 					<foreach collection="parameter.textBookIds" item="item" index="index" open="(" close=")" separator=",">
 						#{item}
 					</foreach>
@@ -299,7 +312,7 @@
 			</if>
 		</where>
 		GROUP BY d.`user_id`
-		ORDER BY o.`id` 
+		ORDER BY d.`user_id`
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>

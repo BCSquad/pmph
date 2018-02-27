@@ -95,8 +95,8 @@ public class PositionChooseController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量通过（名单确认）")
 	@RequestMapping(value = "/updateTextbook", method = RequestMethod.PUT)
-	public ResponseBean updateTextbook(@RequestParam("ids") Long[] ids, HttpServletRequest request) {
-		String sessionId = CookiesUtil.getSessionId(request);
+	public ResponseBean updateTextbook(@RequestParam("ids") Long[] ids, /*HttpServletRequest request*/String sessionId) {
+//		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(textbookService.updateTextbooks(ids, sessionId));
 	}
 

@@ -97,10 +97,11 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.NULL_PARAM, "通知内容为空");
         }
-        /*if (StringUtil.isEmpty(materialExtra.getNote())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
-                                              CheckedExceptionResult.NULL_PARAM, "备注内容为空");
-        }*/
+        /*
+         * if (StringUtil.isEmpty(materialExtra.getNote())) { throw new
+         * CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+         * CheckedExceptionResult.NULL_PARAM, "备注内容为空"); }
+         */
         materialExtraDao.addMaterialExtra(materialExtra);
         return materialExtra;
     }
@@ -467,18 +468,18 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             }
         }
         CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
-        if (ObjectUtil.isNull(cmsContent)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
-                                              CheckedExceptionResult.NULL_PARAM, "没有找到对应的教材通知信息");
+        if (ObjectUtil.notNull(cmsContent)) {
+            // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
+            // CheckedExceptionResult.NULL_PARAM, "没有找到对应的教材通知信息");
+            cmsContentService.updateCmsContent(new CmsContent(cmsContent.getId(),
+                                                              true,
+                                                              false,
+                                                              Const.CMS_AUTHOR_STATUS_2,
+                                                              0L, // authUserId
+                                                                  // 为0代表系统审核
+                                                              DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                                                       DateUtil.getCurrentTime())));
         }
-        cmsContentService.updateCmsContent(new CmsContent(cmsContent.getId(),
-                                                          true,
-                                                          false,
-                                                          Const.CMS_AUTHOR_STATUS_2,
-                                                          0L, // authUserId
-                                                              // 为0代表系统审核
-                                                          DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
-                                                                                   DateUtil.getCurrentTime())));
         count = materialService.updateMaterial(new Material(materialId, true), sessionId);
         return count;
     }
