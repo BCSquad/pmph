@@ -430,7 +430,6 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				String tempFileId = materialNoticeAttachment.getAttachment();
 				byte[] fileByte = (byte[]) request.getSession(false).getAttribute(tempFileId);
 				String fileName = (String) request.getSession(false).getAttribute("fileName_" + tempFileId);
-				;
 				materialNoticeAttachment.setAttachment(String.valueOf(new Date().getTime()));
 				materialNoticeAttachment.setAttachmentName(fileName);
 				materialNoticeAttachment.setDownload(0L);
@@ -445,9 +444,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialNoticeAttachment.setAttachment(noticeId);
 				// 更新通知
 				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
-				// 移除session的文件
-				request.getSession(false).removeAttribute(tempFileId);
-				request.getSession(false).removeAttribute("fileName_" + tempFileId);
+				// 移除session的文件 
+				// request.getSession(false).removeAttribute(tempFileId);
+				// request.getSession(false).removeAttribute("fileName_" + tempFileId);
 			} else {
 				newTempNoticeFileIds += materialNoticeAttachment.getId() + ",";
 			}
@@ -491,8 +490,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				// 更新备注
 				materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
 				// 移除session的文件
-				request.getSession().removeAttribute(tempFileId);
-				request.getSession().removeAttribute("fileName_" + tempFileId);
+				// request.getSession().removeAttribute(tempFileId);
+				// request.getSession().removeAttribute("fileName_" + tempFileId);
 			} else {
 				newTempNoteFileIds += materialNoteAttachment.getId() + ",";
 			}
@@ -505,7 +504,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
 		String title = material.getMaterialName();
-		if (!title.equals(cmsContent.getTitle())) {
+		if (null != cmsContent && null != cmsContent.getTitle() && !title.equals(cmsContent.getTitle())) {
 			cmsContent.setTitle(title);
 			cmsContentService.updateCmsContent(cmsContent);
 		}

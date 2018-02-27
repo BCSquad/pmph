@@ -90,7 +90,9 @@ public class PmphUserServiceImpl implements PmphUserService {
 	OrgUserService orgUserService;
 	@Autowired
 	TopicService topicService;
-
+	@Autowired
+    PmphRoleService roleService;
+	
 	@Override
 	public boolean updatePersonalData(PmphUser pmphUser, MultipartFile file) throws IOException {
 		Long id = pmphUser.getId();
@@ -629,6 +631,11 @@ public class PmphUserServiceImpl implements PmphUserService {
 	public Map<String, Object> getPersonalCenter(HttpServletRequest request, String state, String materialName,
 			String groupName, String title, String bookname, String name, String authProgress, String topicBookname) {
 		String sessionId = CookiesUtil.getSessionId(request);
+		PmphUser sessionPmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == sessionPmphUser) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"请求用户不存在");
+		}
 		// 用于装所有的数据map
 		Map<String, Object> map = new HashMap<>();
 		// 教师认证总数量
@@ -685,6 +692,8 @@ public class PmphUserServiceImpl implements PmphUserService {
 		pageParameter3.setParameter(topicDeclarationVO);
 		PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO = topicService.listCheckTopic(progress,
 				pageParameter3);
+		//获取用户角色
+		List<PmphRole> rolelist=roleService.getPmphRoleByUserId(sessionPmphUser.getId());
 		// 把其他模块的数据都装入map中返回给前端
 		map.put("topicList", pageResultTopicDeclarationVO);
 		map.put("materialList", pageResultMaterialListVO);
@@ -694,6 +703,10 @@ public class PmphUserServiceImpl implements PmphUserService {
 		map.put("pmphGroup", pageResultPmphGroup);
 		map.put("writerUserCount", writerUserCount);
 		map.put("orgUserCount", orgerCount);
+		//把用户信息存入map
+		map.put("pmphUser", sessionPmphUser);
+		//把用户角色存入map
+		map.put("PmphRole", rolelist);
 		return map;
 	}
 
