@@ -167,9 +167,13 @@ public class TextbookServiceImpl implements TextbookService {
 			// CheckedExceptionResult.ILLEGAL_PARAM,"名单已确认");
 			// }
 			if(textbook.getIsPublished()) {
-				textbookDao.updateTextbook(new Textbook(textbook.getId(), textbook.getRevisionTimes().intValue()+1).setIsPublished(true));
+				Textbook textbook2 = new Textbook(textbook.getId(), textbook.getRevisionTimes().intValue()+1).setIsPublished(true);
+						 textbook2.setRevisionTimes(textbook.getRevisionTimes().intValue()+1) ;
+				textbookDao.updateTextbook(textbook2);
 			}else {
-				textbookDao.updateTextbook(new Textbook(textbook.getId(), 0).setIsPublished(true));
+				Textbook textbook2 = new Textbook(textbook.getId(), 0).setIsPublished(true);
+				         textbook2.setRevisionTimes(0) ;
+				textbookDao.updateTextbook(textbook2);
 			}
 			materials.setId(textbook.getMaterialId());
 			textBookIds.add(textbook.getId());
