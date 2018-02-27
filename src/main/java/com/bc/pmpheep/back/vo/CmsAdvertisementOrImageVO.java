@@ -103,7 +103,7 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 	/**
 	 * 能否操作
 	 */
-	private Boolean isPlay;
+	private Boolean isPlay = false;
 
 	// public Long getImageId() {
 	// return imageId;
