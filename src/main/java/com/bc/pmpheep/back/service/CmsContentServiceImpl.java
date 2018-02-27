@@ -391,13 +391,15 @@ public class CmsContentServiceImpl implements CmsContentService {
         PageResult<CmsContentVO> pageResult = new PageResult<CmsContentVO>();
         // 将页面大小和页面页码拷贝
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-        // 包含数据总条数的数据集
-        List<CmsContentVO> cmsContentList = cmsContentDao.listCmsContent(pageParameter);
-        if (CollectionUtil.isNotEmpty(cmsContentList)) {
-            Integer count = cmsContentList.get(0).getCount();
-            pageResult.setTotal(count);
-            pageResult.setRows(cmsContentList);
-        }
+//        if(cmsContentDao.getCmsContentByAuthorId(pageParameter.getParameter().getAuthorId()).size()>0){
+        	 // 包含数据总条数的数据集
+            List<CmsContentVO> cmsContentList = cmsContentDao.listCmsContent(pageParameter);
+            if (CollectionUtil.isNotEmpty(cmsContentList)) {
+                Integer count = cmsContentList.get(0).getCount();
+                pageResult.setTotal(count);
+                pageResult.setRows(cmsContentList);
+            }
+//        }
         return pageResult;
     }
 

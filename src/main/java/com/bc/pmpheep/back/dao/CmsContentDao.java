@@ -209,18 +209,13 @@ public interface CmsContentDao {
      */
     Integer deleteCmsContentByIds(List<Long> ids);
 
-    /**
-     * 
-     * <pre>
-	 * 功能描述：根据教材id逻辑删除
-	 * 使用示范：
-	 *
-	 * @param id 主键ID
-	 * @return 影响行数
-	 * @throws CheckedServiceException
-	 * </pre>
-     */
-    Integer updateCmsContentByMaterialId(Long MaterialId);
+
+//    /**
+//     * 通过作者id查询cmsContent
+//     * @param authorId
+//     * @return
+//     */
+//    List<CmsContent> getCmsContentByAuthorId(Long AuthorId);
 
     /**
      * 
@@ -233,4 +228,17 @@ public interface CmsContentDao {
      * </pre>
      */
     Integer updatCmsContentCommentsById(Long id);
+    
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据教材materialId逻辑删除
+     * 使用示范：
+     *
+     * @param materialId 主键ID
+     * @return 影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+	Integer updateCmsContentByMaterialId(Long materialId);
 }
