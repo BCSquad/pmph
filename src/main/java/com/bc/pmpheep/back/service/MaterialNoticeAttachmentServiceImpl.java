@@ -41,7 +41,7 @@ MaterialNoticeAttachmentService {
         }
         if (StringUtil.isEmpty(materialNoticeAttachment.getAttachmentName())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_NOTICE_ATTACHMENT,
-                                              CheckedExceptionResult.NULL_PARAM, "附件名称");
+                                              CheckedExceptionResult.NULL_PARAM, "附件名称为空");
         }
         materialNoticeAttachmentDao.addMaterialNoticeAttachment(materialNoticeAttachment);
         return materialNoticeAttachment;
