@@ -23,10 +23,10 @@
     </servlet-mapping>
 
     <!--允许跨域-->
-    <filter-mapping>
+<!--    <filter-mapping>
         <filter-name>CorsFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    </filter-mapping>-->
 
     <!-- 使用配置文件修改来实现Put和Delete请求的参数传递 这种方式是在有时候，Ajax使用PUT/DELTET调用时，参数获取不到的情况下使用 
     名称必须和springMvc配置的servlet名称对应 -->
