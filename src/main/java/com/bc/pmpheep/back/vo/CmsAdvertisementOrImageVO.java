@@ -280,10 +280,6 @@ public class CmsAdvertisementOrImageVO implements Serializable {
 		this.isPlay = isPlay;
 	}
 
-	public void setImage(List<CmsAdvertisementImage> image) {
-		this.image = image;
-	}
-
 	public CmsAdvertisementOrImageVO() {
 		super();
 	}
