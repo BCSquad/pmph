@@ -17,6 +17,7 @@ import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.BookVedioVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  *@author MrYang 
@@ -99,12 +100,14 @@ public class BookVedioController {
 	 * @createDate 2018年2月10日 下午5:34:12
 	 * @param bookVedio
 	 * @return
+	 * @throws Exception 
+	 * @throws CheckedServiceException 
 	 */
 	@ResponseBody
 	@RequestMapping(value="/addBookVedio", method = RequestMethod.POST)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存籍视频信息")
-	public ResponseBean<Integer> addBookVedio(BookVedio bookVedio){
-		return new ResponseBean<Integer>(bookVedioService.addBookVedio(bookVedio));
+	public ResponseBean<Integer> addBookVedio(HttpServletRequest request,BookVedio bookVedio) throws Exception{
+		return new ResponseBean<Integer>(bookVedioService.addBookVedio(request,bookVedio));
 	}
 	
 }

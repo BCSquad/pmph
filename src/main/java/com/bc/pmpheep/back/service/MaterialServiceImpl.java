@@ -76,10 +76,10 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
 	@Autowired
 	private MaterialExtraService materialExtraService;
-	
+
 	@Autowired
-	private MaterialService              materialService;
-	
+	private MaterialService materialService;
+
 	@Autowired
 	private MaterialNoticeAttachmentService materialNoticeAttachmentService;
 
@@ -224,7 +224,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		// "教材备注内容为空");
 		// }
 		if ("null".equals(materialExtra.getNote()) || "[]".equals(materialExtra.getNote())) {
-			materialExtra.setNote(null);
+			materialExtra.setNote("");
 		}
 		if (null != materialExtra.getNote() && materialExtra.getNote().length() > 2000) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
@@ -430,7 +430,6 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				String tempFileId = materialNoticeAttachment.getAttachment();
 				byte[] fileByte = (byte[]) request.getSession(false).getAttribute(tempFileId);
 				String fileName = (String) request.getSession(false).getAttribute("fileName_" + tempFileId);
-				;
 				materialNoticeAttachment.setAttachment(String.valueOf(new Date().getTime()));
 				materialNoticeAttachment.setAttachmentName(fileName);
 				materialNoticeAttachment.setDownload(0L);
@@ -445,9 +444,9 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialNoticeAttachment.setAttachment(noticeId);
 				// 更新通知
 				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
-				// 移除session的文件
-				request.getSession(false).removeAttribute(tempFileId);
-				request.getSession(false).removeAttribute("fileName_" + tempFileId);
+				// 移除session的文件 
+				// request.getSession(false).removeAttribute(tempFileId);
+				// request.getSession(false).removeAttribute("fileName_" + tempFileId);
 			} else {
 				newTempNoticeFileIds += materialNoticeAttachment.getId() + ",";
 			}
@@ -491,8 +490,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				// 更新备注
 				materialNoteAttachmentService.updateMaterialNoteAttachment(materialNoteAttachment);
 				// 移除session的文件
-				request.getSession().removeAttribute(tempFileId);
-				request.getSession().removeAttribute("fileName_" + tempFileId);
+				// request.getSession().removeAttribute(tempFileId);
+				// request.getSession().removeAttribute("fileName_" + tempFileId);
 			} else {
 				newTempNoteFileIds += materialNoteAttachment.getId() + ",";
 			}
@@ -502,6 +501,12 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				fileService.remove(materialNoteAttachment.getAttachment()); // 删除文件
 				materialNoteAttachmentService.deleteMaterialNoteAttachmentById(materialNoteAttachment.getId());
 			}
+		}
+		CmsContent cmsContent = cmsContentService.getCmsContentByMaterialId(materialId);
+		String title = material.getMaterialName();
+		if (null != cmsContent && null != cmsContent.getTitle() && !title.equals(cmsContent.getTitle())) {
+			cmsContent.setTitle(title);
+			cmsContentService.updateCmsContent(cmsContent);
 		}
 
 		/**
@@ -728,7 +733,8 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		// 教材主任检查
 		Material materialDirector = materialService.getMaterialById(material.getId());
 		if (null == power) {
-			if (null != materialDirector && null != materialDirector.getDirector() && pmphUser.getId().equals(materialDirector.getDirector())) {
+			if (null != materialDirector && null != materialDirector.getDirector()
+					&& pmphUser.getId().equals(materialDirector.getDirector())) {
 				power = 2; // 我是教材的主任
 			}
 		}

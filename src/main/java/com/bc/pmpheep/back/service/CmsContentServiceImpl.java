@@ -360,6 +360,10 @@ public class CmsContentServiceImpl implements CmsContentService {
                                                       DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                DateUtil.getCurrentTime()),
                                                       isPublished, false, Const.MATERIAL_TYPE_ID));
+        // 评论审核通过，评论数加1
+        if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()) {
+            this.updatCmsContentCommentsById(id);
+        }
         CmsContent cmsContent = this.getCmsContentById(id);
         Integer type = 0;
         if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()) {
@@ -611,5 +615,14 @@ public class CmsContentServiceImpl implements CmsContentService {
             pageResult.setRows(cmsContentList);
         }
         return pageResult;
+    }
+
+    @Override
+    public Integer updatCmsContentCommentsById(Long id) throws CheckedServiceException {
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "主键为空");
+        }
+        return cmsContentDao.updatCmsContentCommentsById(id);
     }
 }

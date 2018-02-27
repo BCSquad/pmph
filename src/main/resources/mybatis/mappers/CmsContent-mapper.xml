@@ -399,7 +399,7 @@
   				) username, -->
   				cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,cc.`comments`,cc.`likes`,
   				cc.`bookmarks`,cc.category_id,ccg.`category_name`,cc.`is_published`,cc.`is_stick`,cc.`is_hot`,
-  				cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry`,pu.`realname` 
+  				cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry`,cc.`author_id`,pu.`realname` 
 			FROM
 			  `cms_content` cc 
 			  LEFT JOIN `pmph_user` pu 
@@ -423,7 +423,7 @@
 			  ) username, -->
 			    cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,cc.`comments`,
 			    cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,cc.`is_published`,cc.`is_stick`,
-			    cc.`is_hot`,cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry`,pu.`realname` 
+			    cc.`is_hot`,cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry`,cc.`author_id`,pu.`realname` 
 			FROM
 			  `cms_content` cc 
 			  LEFT JOIN `pmph_user` pu 
@@ -713,4 +713,9 @@
 		resultType="CmsContent">
 		select * from cms_content where author_id=#{AuthorId}
 	</select>
+	
+	<!-- 评论审核通过后，评论数加1-->
+	<update id="updatCmsContentCommentsById" parameterType="java.lang.Long">
+		UPDATE `cms_content` SET comments=comments+1 WHERE id = #{id};
+	</update>
 </mapper>
