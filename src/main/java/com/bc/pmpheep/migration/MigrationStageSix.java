@@ -224,9 +224,11 @@ public class MigrationStageSix {
                 useridCount++;
                 continue;
             }
-            if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id) 
-            		|| "e56504a4-8b26-4b55-89c9-571fc94675d9".equals(id) || 
-            		"a37913ba4eee41ca9ab88f8086b578e5".equals(id)) {
+            if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id) || 
+            		"e56504a4-8b26-4b55-89c9-571fc94675d9".equals(id) || 
+            		"a37913ba4eee41ca9ab88f8086b578e5".equals(id) || 
+            		"6777c8f6-4493-4e62-b2af-4d5501937ac0".equals(id) || 
+            		"d4eb6718-b0d0-4bde-99e9-8a4b7534c143".equals(id)) {
             	String sqlId = "SELECT *,new_pk userId FROM sys_user ";
             	List<Map<String, Object>> mapIds = JdbcHelper.getJdbcTemplate().queryForList(sqlId);
             	for (Map<String, Object> mapId : mapIds) {
@@ -245,8 +247,11 @@ public class MigrationStageSix {
                 declaration.setUserId(userid);
 			}
             if (StringUtil.isEmpty(realName) && isStagingJudge.intValue() == 0) { // 申报表作家姓名为空并且不暂存
-            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空。"));
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空并且不是暂存表。"));
+                excel.add(map);
+                logger.debug("找到申报表作家姓名为空并且不是暂存表，此结果将被记录在Excel中");
                 realNameCount++;
+                continue;
             } else {
             	declaration.setRealname(realName);
 			}
@@ -338,7 +343,7 @@ public class MigrationStageSix {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
-        logger.info("申报表作家姓名为空数量：{}", realNameCount);
+        logger.info("申报表作家姓名为空并且不是暂存表数量：{}", realNameCount);
         logger.info("后台用户申报教材数量：{}", sysflagCount);
         logger.info("用户类型为学校管理员申报教材数量：{}", usertypeCount);
         logger.info("未找到作家对应的关联结果数量：{}", useridCount);

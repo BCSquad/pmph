@@ -146,6 +146,14 @@ public class Book implements Serializable {
 	 */
 	private Timestamp deadlinePromote;
 	/**
+	 * 是否重点学科
+	 */
+	private Boolean isKey;
+	/**
+	 * 重点学科显示顺序
+	 */
+	private Integer sortKey;
+	/**
 	 * 销量
 	 */
 	private Long sales;
@@ -180,8 +188,8 @@ public class Book implements Serializable {
 			Long type, Date publishDate, String reader, Double price, Double score, String buyUrl, String imageUrl,
 			String pdfUrl, Long clicks, Long comments, Long likes, Long bookmarks, Boolean isStick, Integer sort,
 			Timestamp deadlineStick, Boolean isNew, Integer sortNew, Timestamp deadlineNew, Boolean isPromote,
-			Integer sortPromote, Timestamp deadlinePromote, Long sales, Boolean isOnSale, Timestamp gmtCreate,
-			Timestamp gmtUpdate) {
+			Integer sortPromote, Timestamp deadlinePromote, Boolean isKey, Integer sortKey, Long sales, Boolean isOnSale,
+			Timestamp gmtCreate, Timestamp gmtUpdate) {
 		super();
 		this.bookname = bookname;
 		this.isbn = isbn;
@@ -211,6 +219,8 @@ public class Book implements Serializable {
 		this.isPromote = isPromote;
 		this.sortPromote = sortPromote;
 		this.deadlinePromote = deadlinePromote;
+		this.isKey = isKey;
+		this.sortKey = sortKey;
 		this.sales = sales;
 		this.isOnSale = isOnSale;
 		this.gmtCreate = gmtCreate;
@@ -449,6 +459,22 @@ public class Book implements Serializable {
 		this.deadlinePromote = deadlinePromote;
 	}
 
+	public Boolean getIsKey() {
+		return isKey;
+	}
+
+	public void setIsKey(Boolean isKey) {
+		this.isKey = isKey;
+	}
+
+	public Integer getSortKey() {
+		return sortKey;
+	}
+
+	public void setSortKey(Integer sortKey) {
+		this.sortKey = sortKey;
+	}
+
 	public Long getSales() {
 		return sales;
 	}
@@ -514,8 +540,8 @@ public class Book implements Serializable {
 				+ ", comments=" + comments + ", likes=" + likes + ", bookmarks=" + bookmarks + ", isStick=" + isStick
 				+ ", sort=" + sort + ", deadlineStick=" + deadlineStick + ", isNew=" + isNew + ", sortNew=" + sortNew
 				+ ", deadlineNew=" + deadlineNew + ", isPromote=" + isPromote + ", sortPromote=" + sortPromote
-				+ ", deadlinePromote=" + deadlinePromote + ", sales=" + sales + ", isOnSale=" + isOnSale
-				+ ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
+				+ ", deadlinePromote=" + deadlinePromote + ", isKey = " + isKey + ", sortKey = " + sortKey 
+				+ ", sales=" + sales + ", isOnSale=" + isOnSale + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
 	}
 
 }

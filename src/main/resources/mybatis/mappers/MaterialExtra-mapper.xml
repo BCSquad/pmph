@@ -68,7 +68,7 @@
 			<if test="notice != null and notice !='' ">
 				notice = #{notice},
 			</if>
-			<if test=" note != null and note !=''">
+			<if test=" note != null ">
 				note= #{note},
 			</if>
 		</set>

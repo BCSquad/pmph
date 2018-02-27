@@ -192,10 +192,10 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
                 }
             }
             Integer size = orgUserEmail.size();
-            // String[] emails =
-            // new String[] { "515944204@qq.com", "869389545@qq.com", "nyz526@163.com" };
+            String[] emails =
+            new String[] { "515944204@qq.com", "869389545@qq.com", "nyz526@163.com" };
             String[] toEmail = (String[]) orgUserEmail.toArray(new String[size]);
-            if (ArrayUtil.isEmpty(toEmail)) {
+            if (ArrayUtil.isEmpty(emails)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                                   CheckedExceptionResult.NULL_PARAM, "收件人邮箱为空");
             }

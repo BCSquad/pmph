@@ -150,6 +150,21 @@ public interface CmsContentService {
     String sessionId) throws CheckedServiceException;
 
     /**
+     * 
+     * <pre>
+     * 功能描述：评论审核列表
+     * 使用示范：
+     *
+     * @param pageParameter 带有分页参数和查询条件参数
+     * @param sessionId 
+     * @return 分页结果集
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    PageResult<CmsContentVO> listCmsComment(PageParameter<CmsContentVO> pageParameter,
+    String sessionId) throws CheckedServiceException;
+
+    /**
      * 通过id获取 CmsContent
      * 
      * @author Mryang
@@ -224,7 +239,7 @@ public interface CmsContentService {
      * </pre>
      */
     Integer deleteCmsContentById(Long id) throws CheckedServiceException;
-    
+
     /**
      * 
      * <pre>
@@ -250,4 +265,18 @@ public interface CmsContentService {
      * </pre>
      */
     Integer deleteCmsContentByIds(List<Long> ids) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：评论审核通过后，评论数加1
+     * 使用示范：
+     *
+     * @param id CmsContent主键
+     * @return 影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer updatCmsContentCommentsById(Long id) throws CheckedServiceException;
+
 }

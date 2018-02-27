@@ -46,7 +46,11 @@ public enum FileType {
     /**
      * CMS附件
      */
-    CMS_ADVERTISEMENT("CMS广告图片");
+    CMS_ADVERTISEMENT("CMS广告图片"),
+    /**
+     * shipinfengmian
+     */
+    BOOKVEDIO_CONER("CMS广告图片");
     
     private final String type;
 

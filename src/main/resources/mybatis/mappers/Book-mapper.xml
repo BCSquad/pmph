@@ -95,6 +95,12 @@
 			<if test="deadlinePromote != null">
 				deadline_promote,
 			</if>
+			<if test="isKey !=null">
+			    is_key,
+			</if>
+			<if test="sortKey !=null">
+			    sort_key,
+			</if>
 			<if test="sales != null">
 				sales,
 			</if>
@@ -202,6 +208,12 @@
 			</if>
 			<if test="deadlinePromote != null">
 				#{deadlinePromote},
+			</if>
+			<if test="isKey !=null">
+			    #{isKey},
+			</if>
+			<if test="sortKey !=null">
+			    #{sortKey},
 			</if>
 			<if test="sales != null">
 				#{sales},
@@ -327,6 +339,12 @@
 			</if>
 			<if test="deadlinePromote != null ">
 				deadline_promote=#{deadlinePromote},
+			</if>
+			<if test="isKey !=null">
+			    is_key = #{isKey},
+			</if>
+			<if test="sortKey !=null">
+			    sort_key = #{sortKey},
 			</if>
 			<if test=" sales != null and sales !=''">
 				sales=#{sales},

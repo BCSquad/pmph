@@ -399,7 +399,7 @@
   				) username, -->
   				cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,cc.`comments`,cc.`likes`,
   				cc.`bookmarks`,cc.category_id,ccg.`category_name`,cc.`is_published`,cc.`is_stick`,cc.`is_hot`,
-  				cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry`,pu.`realname` 
+  				cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry`,cc.`author_id`,pu.`realname` 
 			FROM
 			  `cms_content` cc 
 			  LEFT JOIN `pmph_user` pu 
@@ -423,7 +423,7 @@
 			  ) username, -->
 			    cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,cc.`comments`,
 			    cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,cc.`is_published`,cc.`is_stick`,
-			    cc.`is_hot`,cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry`,pu.`realname` 
+			    cc.`is_hot`,cc.`is_promote`,cc.`is_staging`,cc.`is_material_entry`,cc.`author_id`,pu.`realname` 
 			FROM
 			  `cms_content` cc 
 			  LEFT JOIN `pmph_user` pu 
@@ -564,6 +564,96 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
+	
+	<!--CmsContentVO模糊查询获取评论列表 -->
+	<select id="listCmsComment" parameterType="PageParameter" resultType="CmsContentVO">
+		SELECT 
+			cc.`id`,cc.`title`,wu.username,cc.`auth_status`,cc.`auth_date`,cc.`gmt_create`,cc.`clicks`,
+			cc.`comments`,cc.`likes`,cc.`bookmarks`,cc.category_id,ccg.`category_name`,
+			cc.`is_published`,cc.`is_stick`,cc.`is_hot`,cc.`is_promote`,cc.`is_staging`,t.count
+		FROM 
+			`cms_content`cc
+		LEFT JOIN
+			`writer_user` wu 
+		ON
+			cc.author_id = wu.id
+		LEFT JOIN 
+			`cms_category` ccg
+		ON 
+			cc.`category_id` = ccg.`id`,
+			(
+				SELECT 
+					count(*) count
+				FROM 
+					`cms_content`cc
+				LEFT JOIN
+					`writer_user` wu 
+				ON
+					cc.author_id = wu.id
+				LEFT JOIN 
+					`cms_category` ccg 
+				ON 
+					cc.`category_id` = ccg.`id`
+				WHERE
+					cc.`is_deleted`= 0 
+				AND cc.`is_staging` = FALSE 
+				<if test="parameter !=null ">
+					<if test="parameter.categoryId != null">
+						AND cc.`category_id` = #{parameter.categoryId} 
+					</if>
+					<if test="parameter.isAdmin == false ">
+						AND cc.`author_id`=#{parameter.authorId} 
+					</if>
+					<if test="parameter.title != null and parameter.title != ''">
+						AND cc.`title` like concat('%',#{parameter.title},'%')
+					</if>
+					<if test="parameter.authStatus !=null ">
+						AND cc.`auth_status` = #{parameter.authStatus} 
+					</if>
+					<if test="parameter.isPublished !=null ">
+						AND cc.`is_published` = #{parameter.isPublished} 
+					</if>
+					<if test="parameter.username !=null and  parameter.username!='' ">
+						AND (
+							wu.`username` like concat('%',#{parameter.username},'%') 
+						OR
+							wu.`realname` like concat('%',#{parameter.username},'%') )
+					</if>
+				</if>
+			) t
+			WHERE
+				cc.`is_deleted`= 0 
+			AND 
+			 	cc.`is_staging` = FALSE 
+			<if test="parameter !=null ">
+				<if test="parameter.categoryId != null">
+					AND cc.`category_id` = #{parameter.categoryId} 
+				</if>
+				<if test="parameter.isAdmin == false ">
+					AND cc.`author_id`=#{parameter.authorId} 
+				</if>
+				<if test="parameter.title != null and parameter.title != ''">
+					AND cc.`title` like concat('%',#{parameter.title},'%')
+				</if>
+				<if test="parameter.authStatus !=null ">
+					AND cc.`auth_status` = #{parameter.authStatus} 
+				</if>
+				<if test="parameter.isPublished !=null ">
+					AND cc.`is_published` = #{parameter.isPublished} 
+				</if>
+				<if test="parameter.username !=null and  parameter.username!='' ">
+						AND (
+							wu.`username` like concat('%',#{parameter.username},'%')
+						OR
+							wu.`realname`like concat('%',#{parameter.username},'%') )
+				</if>
+			</if>
+		order by 
+   				  cc.`gmt_create` DESC 
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
 
 	<!-- 根据materialId查询一个CmsContent -->
 	<select id="getCmsContentByMaterialId" parameterType="java.lang.Long"
@@ -617,5 +707,15 @@
 		cms_content set is_deleted =true
 		where material_id = #{materialId};
 
+	</update>
+	<!-- 通过作者id查询cmsContent -->
+	<select id="getCmsContentByAuthorId" parameterType="java.lang.Long"
+		resultType="CmsContent">
+		select * from cms_content where author_id=#{AuthorId}
+	</select>
+	
+	<!-- 评论审核通过后，评论数加1-->
+	<update id="updatCmsContentCommentsById" parameterType="java.lang.Long">
+		UPDATE `cms_content` SET comments=comments+1 WHERE id = #{id};
 	</update>
 </mapper>
