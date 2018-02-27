@@ -221,4 +221,11 @@ public interface CmsContentDao {
 	 * </pre>
      */
     Integer updateCmsContentByMaterialId(Long MaterialId);
+    
+//    /**
+//     * 通过作者id查询cmsContent
+//     * @param authorId
+//     * @return
+//     */
+//    List<CmsContent> getCmsContentByAuthorId(Long AuthorId);
 }

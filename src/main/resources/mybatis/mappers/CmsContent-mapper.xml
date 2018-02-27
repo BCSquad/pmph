@@ -708,4 +708,9 @@
 		where material_id = #{materialId};
 
 	</update>
+	<!-- 通过作者id查询cmsContent -->
+	<select id="getCmsContentByAuthorId" parameterType="java.lang.Long"
+		resultType="CmsContent">
+		select * from cms_content where author_id=#{AuthorId}
+	</select>
 </mapper>
