@@ -159,7 +159,6 @@ public class TextbookServiceImpl implements TextbookService {
 			}
 		}
 		List<Textbook> textbooks = textbookDao.getTextbooks(ids);
-		List<Textbook> textBooks = new ArrayList<Textbook>(textbooks.size());
 		Material materials = new Material();
 		List<Long> textBookIds = new ArrayList<>(textbooks.size());
 		for (Textbook textbook : textbooks) {
@@ -167,12 +166,10 @@ public class TextbookServiceImpl implements TextbookService {
 			// throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 			// CheckedExceptionResult.ILLEGAL_PARAM,"名单已确认");
 			// }
-			// 判断公布修改次数
-			if (null == textbook.getRevisionTimes() || textbook.getRevisionTimes().intValue() <= 0) {
+			if(textbook.getIsPublished()) {
+				textbookDao.updateTextbook(new Textbook(textbook.getId(), textbook.getRevisionTimes().intValue()+1).setIsPublished(true));
+			}else {
 				textbookDao.updateTextbook(new Textbook(textbook.getId(), 0).setIsPublished(true));
-			} else {
-				textbookDao.updateTextbook(new Textbook(textbook.getId(), textbook.getRevisionTimes().intValue() + 1)
-						.setIsPublished(true));
 			}
 			materials.setId(textbook.getMaterialId());
 			textBookIds.add(textbook.getId());
