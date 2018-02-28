@@ -339,12 +339,12 @@
 		editorsAndAssociateEditorsNum,
 		GROUP_CONCAT(
 			IF(
-			b.chosen_position in (1,3,5,7,8,9,10,11,12,13,14,15),
+			b.chosen_position in (1,3,5,7),<!-- baohanshuzibainwei  1,3,5,7,8,9,10,11,12,13,14,15 -->
 			IF(g.allres like CONCAT('%,',b.textbook_id,'_',b.declaration_id,'_',b.preset_position,'_',b.chosen_position,'_',IFNULL(b.rank,0),',%')
-			 	,CONCAT('&lt;font color="red"&gt;',c.realname,'&lt;/font&gt;'),CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;')),
+			 	,CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;'),CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;')),
 			null
 			) ORDER BY b.chosen_position desc,b.rank asc) bianWeis,
-		sum(IF(b.chosen_position in (1,3,5,7,8,9,10,11,12,13,14,15) ,1,0)) bianWeisNum ,
+		sum(IF(b.chosen_position in (1,3,5,7) ,1,0)) bianWeisNum ,
 		e.id groupId,
 		IF(!a.is_published,null,f.repub) repub 
 		from textbook a
