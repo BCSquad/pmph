@@ -33,7 +33,7 @@ public class CheckedExceptionBusiness {
 
 	public final static String TEXTBOOK_LOG = "书籍日志";
 
-	public final static String TOPIC = "教材申报";
+	public final static String TOPIC = "选题申报";
 
 	public final static String BOOKCORRECTION = "图书纠错";
 	

@@ -113,6 +113,12 @@
 			<if test="gmtUpdate != null ">
 				gmt_update,
 			</if>
+			<if test="isKey != null">
+				is_key,
+			</if>
+			<if test="sortKey != null">
+				sort_key,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -226,6 +232,12 @@
 			</if>
 			<if test="gmtUpdate != null">
 				#{gmtUpdate},
+			</if>
+			<if test="isKey != null">
+				#{isKey},
+			</if>
+			<if test="sortKey != null">
+				#{sortKey},
 			</if>
 		</trim>
 	</sql>

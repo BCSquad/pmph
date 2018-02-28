@@ -207,4 +207,11 @@ public interface MaterialService {
      * </pre>
      */
     List<Material> listPublishedMaterial() throws CheckedServiceException;
+    
+//    /**
+//     * 教材申报的数量
+//     * @param id
+//     * @return
+//     */
+//	Integer getCount(Long id);
 }

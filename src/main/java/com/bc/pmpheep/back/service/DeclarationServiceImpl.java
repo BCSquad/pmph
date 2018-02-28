@@ -182,7 +182,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 	@Override
 	public PageResult<DeclarationListVO> pageDeclaration(Integer pageNumber, Integer pageSize, Long materialId,
 			String textBookids, String realname, String position, String title, String orgName, Long orgId,
-			String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress)
+			String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,Boolean haveFile)
 			throws CheckedServiceException {
 		if (null == materialId) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -223,6 +223,9 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		if (null != offlineProgress && offlineProgress != 0) {
 			map.put("offlineProgress", offlineProgress); // 纸质表进度
+		}
+		if(null != haveFile) {
+			map.put("haveFile", haveFile); // 有无教材大纲 
 		}
 		// 包装参数实体
 		PageParameter<Map<String, Object>> pageParameter = new PageParameter<Map<String, Object>>(pageNumber, pageSize,

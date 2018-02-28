@@ -251,8 +251,8 @@ public class TopicServiceImpl implements TopicService {
 		}
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 		writerUserTrendst.setUserId(topicDao.getTopicTextVO(topic.getId()).getUserId());
-		writerUserTrendst.setType(0);
-		writerUserTrendst.setIsPublic(true);
+		writerUserTrendst.setType(9);
+		writerUserTrendst.setIsPublic(false);
 		if (ObjectUtil.notNull(topic.getAuthProgress())) {
 			if (StringUtil.isEmpty(topic.getAuthFeedback())) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
