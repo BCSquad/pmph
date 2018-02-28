@@ -40,6 +40,9 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 	@Autowired
 	private PmphUserService pmphUserService;
 	
+	@Autowired
+	private BookService bookService;
+	
 	@Override
 	public Integer updateToAcceptancing(Long id )throws CheckedServiceException{
 		if (null == id ) {
@@ -71,6 +74,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "回复内容超过最长限制500");
 		}
 		BookCorrection bookCorrection= this.getBookCorrectionById(id);
+		Long bookId = bookCorrection.getBookId();
 		Long submitUserId = bookCorrection.getUserId();
 		if(!bookCorrection.getIsAuthorReplied() ){
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "请先主编审核");
@@ -90,7 +94,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst(); 
 		writerUserTrendst.setUserId(submitUserId);
 		writerUserTrendst.setIsPublic(false);//自己可见
-		writerUserTrendst.setType(0);
+		writerUserTrendst.setType(10);
 		String detail ="";
 		if(result){//有问题
 			Map<String,Object> map =  new HashMap<String,Object>();
@@ -98,12 +102,13 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 			map.put("content", "您的图书纠错已核实。");
 			map.put("img", 1);
 			detail = new Gson().toJson(map) ;
+			//更新评论数
+			bookService.updateComments(bookId);
 		}else{
 			Map<String,Object> map =  new HashMap<String,Object>();
 			map.put("title", CheckedExceptionBusiness.BOOKCORRECTION);
 			map.put("content", "您的图书纠错未核实到该问题。");
 			map.put("img", 2);
-			//detail ="{title:\"" + CheckedExceptionBusiness.BOOKCORRECTION + "\",content:\"您的图书纠错未核实到该问题。\",img:2}";
 			detail = new Gson().toJson(map) ;
 		}
 		writerUserTrendst.setDetail(detail);
