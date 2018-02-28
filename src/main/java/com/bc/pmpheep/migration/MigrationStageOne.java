@@ -432,11 +432,7 @@ public class MigrationStageOne {
                     logger.error("文件读取异常，路径<{}>,异常信息：{}", proxy, ex.getMessage());
                     map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("文件读取异常。"));
                     excel.add(map);
-                } catch (Exception e) {
-                    mongoId = "DEFAULT";
-                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常：" + e.getMessage() + "。"));
-                    excel.add(map);
-                }
+                } 
                 orgUser.setProxy(mongoId);
             }
                 if (StringUtil.notEmpty(avatar)) {
@@ -448,11 +444,7 @@ public class MigrationStageOne {
                         logger.error("文件读取异常，路径<{}>,异常信息：{}", avatar, ex.getMessage());
                         map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("作家用户头像文件读取异常。"));
                         excel.add(map);
-                    } catch (Exception e) {
-                        avatarMongoId = "DEFAULT";
-                        map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常：" + e.getMessage() + "。"));
-                        excel.add(map);
-                    }
+                    } 
                     orgUser.setAvatar(avatarMongoId);
                 }
                 orgUserService.updateOrgUser(orgUser);
@@ -655,11 +647,7 @@ public class MigrationStageOne {
                     logger.error("文件读取异常，路径<{}>,异常信息：{}", cert, ex.getMessage());
                     map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("教师资格证文件读取异常。"));
                     excel.add(map);
-                } catch (Exception e) {
-                    certMongoId = "DEFAULT";
-                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常：" + e.getMessage() + "。"));
-                    excel.add(map);
-                }
+                } 
                 writerUser.setCert(certMongoId);
             }
             if (StringUtil.notEmpty(avatar)) {

@@ -281,11 +281,7 @@ public class MigrationStageTwo {
                     map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常。");
                     excel.add(map);
                     logger.error("文件读取异常，路径<{}>,异常信息：{}", cert, ex.getMessage());
-                } catch (Exception e) {
-                    mongoId = "DEFAULT";
-                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常：" + e.getMessage() + "。"));
-                    excel.add(map);
-                }
+                } 
                 writerUserCertification.setCert(mongoId);
                 writerCertificationService.updateWriterUserCertification(writerUserCertification);
             }
