@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.SysOperation;
@@ -46,5 +48,12 @@ public interface SysOperationService {
      */
     PageResult<SysOperation> getListSysOperation(PageParameter<SysOperation> pageParameter)
     throws CheckedServiceException;
+    
+    /**
+     * 通过userId
+     * @param id
+     * @return
+     */
+	List<SysOperation> getSysOperation(Long userId);
 
 }
