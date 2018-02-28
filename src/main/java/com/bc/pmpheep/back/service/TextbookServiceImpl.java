@@ -91,6 +91,9 @@ public class TextbookServiceImpl implements TextbookService {
 
 	@Autowired
 	private DecPositionPublishedService decPositionPublishedService;
+	
+    @Autowired
+    private SystemMessageService systemMessageService;
 
 	/**
 	 * 
@@ -222,8 +225,7 @@ public class TextbookServiceImpl implements TextbookService {
 		}
 		return count;
 	}
-    @Autowired
-    private SystemMessageService systemMessageService;
+
     
 	@Override
 	public List<Textbook> getTextbookByMaterialIdAndUserId(Long materialId, Long userId)
