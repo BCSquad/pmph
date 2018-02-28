@@ -251,8 +251,8 @@ public class TopicServiceImpl implements TopicService {
 		}
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 		writerUserTrendst.setUserId(topicDao.getTopicTextVO(topic.getId()).getUserId());
-		writerUserTrendst.setType(0);
-		writerUserTrendst.setIsPublic(true);
+		writerUserTrendst.setType(9);
+		writerUserTrendst.setIsPublic(false);
 		if (ObjectUtil.notNull(topic.getAuthProgress())) {
 			if (StringUtil.isEmpty(topic.getAuthFeedback())) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
@@ -260,9 +260,9 @@ public class TopicServiceImpl implements TopicService {
 			}
 			if (3 == topic.getAuthProgress()) {
 				Map<String, Object> detail = new HashMap<String, Object>();
-				detail.put("title", CheckedExceptionBusiness.TOPIC);
-				detail.put("content", "您的选题已经通过。");
-				detail.put("img", 1);
+				detail.put("\"title\"", CheckedExceptionBusiness.TOPIC);
+				detail.put("\"content\"", "您的选题已经通过。");
+				detail.put("\"img\"", 1);
 				writerUserTrendst.setDetail(new Gson().toJson(detail));
 				// 创建本版号并将本版号放入数据中
 				// String editionnum = "10" + new SimpleDateFormat("yyyy").format(new Date());
@@ -305,9 +305,9 @@ public class TopicServiceImpl implements TopicService {
 				// SqlHelper.executeUpdate(sql, null);
 			} else {
 				Map<String, Object> detail = new HashMap<String, Object>();
-				detail.put("title", CheckedExceptionBusiness.TOPIC);
-				detail.put("content", "您的选题未通过。");
-				detail.put("img", 2);
+				detail.put("\"title\"", CheckedExceptionBusiness.TOPIC);
+				detail.put("\"content\"", "您的选题未通过。");
+				detail.put("\"img\"", 2);
 				writerUserTrendst.setDetail(new Gson().toJson(detail));
 			}
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
