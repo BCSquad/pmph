@@ -124,4 +124,8 @@
 			LIMIT
 			#{start},#{pageSize}
 	</select>
+	<!-- 通过用户id查询日志 -->
+	<select id="getSysOperation" resultType="SysOperation" parameterType="java.lang.Long" >
+		select * from sys_operation where user_id=#{userId}
+	</select>
 </mapper>

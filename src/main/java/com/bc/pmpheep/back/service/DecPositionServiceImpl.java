@@ -335,13 +335,13 @@ public class DecPositionServiceImpl implements DecPositionService {
         List<DecPositionEditorSelectionVO> digitalrList =
         new ArrayList<DecPositionEditorSelectionVO>(selectedDecPositionEditorSelectionVOs.size());// 已遴选数字编委集合
         for (DecPositionEditorSelectionVO decVo : selectedDecPositionEditorSelectionVOs) {
-            if (4 == decVo.getChosenPosition()) {// 主编
+            if (4 == decVo.getChosenPosition() || 12 == decVo.getChosenPosition() ) {// 主编          1100 0100
                 editorList.add(decVo);
-            } else if (2 == decVo.getChosenPosition()) {// 副主编
+            } else if (2 == decVo.getChosenPosition() || 10 == decVo.getChosenPosition() ) {// 副主编  1010 0010
                 subeditorList.add(decVo);
-            } else if (1 == decVo.getChosenPosition()) {// 编委
+            } else if (1 == decVo.getChosenPosition() || 9  == decVo.getChosenPosition() ) {// 编委    1001 0001 
                 editorialMemberList.add(decVo);
-            } else if (8 == decVo.getChosenPosition()) {// 数字编委
+            } else if (8 == decVo.getChosenPosition()) {// 数字编委  1000
                 digitalrList.add(decVo);
             }
         }

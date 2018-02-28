@@ -399,24 +399,25 @@ public class BookServiceImpl extends BaseService implements BookService {
 	}
 
 	@Override
-	public PageResult<Book> listBook(Integer pageSize, Integer pageNumber, String bookName) throws CheckedServiceException {
+	public PageResult<Book> listBook(Integer pageSize, Integer pageNumber, String bookName)
+			throws CheckedServiceException {
 		Map<String, Object> map = new HashMap<String, Object>(3);
-		if(!StringUtil.isEmpty(bookName)){
+		if (!StringUtil.isEmpty(bookName)) {
 			bookName = StringUtil.toAllCheck(bookName.trim());
 			map.put("bookName", bookName);
 		}
-		map.put("start",    ((pageNumber-1)*pageSize) );
+		map.put("start", ((pageNumber - 1) * pageSize));
 		map.put("pageSize", pageSize);
 		PageResult<Book> pageResult = new PageResult<Book>();
 		pageResult.setPageNumber(pageNumber);
-        pageResult.setPageSize  (pageSize);
-        List<Book> rows = new ArrayList<Book>(1);
-        Integer total = bookDao.getListToatl(map);
-        if(null != total && total.intValue() > 0 ){
-        	rows = bookDao.geList(map);
-        }
-        pageResult.setTotal(total);
-        pageResult.setRows(rows);
+		pageResult.setPageSize(pageSize);
+		List<Book> rows = new ArrayList<Book>(1);
+		Integer total = bookDao.getListToatl(map);
+		if (null != total && total.intValue() > 0) {
+			rows = bookDao.geList(map);
+		}
+		pageResult.setTotal(total);
+		pageResult.setRows(rows);
 		return pageResult;
 	}
 
@@ -426,5 +427,13 @@ public class BookServiceImpl extends BaseService implements BookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		return bookDao.updateBookCore(id);
+	}
+
+	@Override
+	public void updateComments(Long id) throws CheckedServiceException {
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		bookDao.updateComments(id);
 	}
 }

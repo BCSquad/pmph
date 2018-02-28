@@ -1,10 +1,12 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
 import com.bc.pmpheep.back.po.BookVedio;
+import com.bc.pmpheep.back.vo.BookVedioVO2;
  
 
 
@@ -28,6 +30,17 @@ public interface BookVedioDao {
 	 * @return
 	 */
 	Integer deleteBookVedioByIds(@Param("ids")List<Long> ids);
+	
+	/**
+	 * 获取微视频列表总数
+	 * @return
+	 */
+	Integer           getVedioListTotal(Map<String, Object> map);
+	/**
+	 * 获取微视频列表
+	 * @return
+	 */
+	List<BookVedioVO2> getVedioList(Map<String, Object> map);
 	
 	
 	/**

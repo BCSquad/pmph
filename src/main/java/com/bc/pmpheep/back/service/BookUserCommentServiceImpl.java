@@ -101,6 +101,8 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			if (isAuth == 1) {
 				// 更新评分
 				bookService.updateBookCore(bookUserComment.getBookId());
+				// 更新书的评论数
+				bookService.updateComments(bookUserComment.getBookId());
 			}
 		}
 		if (num > 0) {

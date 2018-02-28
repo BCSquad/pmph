@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.PmphUserRole;
+import com.bc.pmpheep.back.po.SysOperation;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
@@ -94,6 +96,8 @@ public class PmphUserServiceImpl implements PmphUserService {
     PmphRoleService roleService;
 	@Autowired
 	PmphUserService pmphUserService;
+	@Autowired
+	SysOperationService sysOperationService;
 	
 	@Override
 	public boolean updatePersonalData(PmphUser pmphUser, MultipartFile file) throws IOException {
@@ -705,6 +709,15 @@ public class PmphUserServiceImpl implements PmphUserService {
 		PmphIdentity pmphIdentity=pmphUserService.identity(sessionId);
 		//获取用户角色
 		List<PmphRole> rolelist=roleService.getPmphRoleByUserId(sessionPmphUser.getId());
+		//获取用户上次登录时间
+		List<SysOperation> listSysOperation=sysOperationService.getSysOperation(sessionPmphUser.getId());
+		Timestamp loginTime=null;
+		//获取最后一次登录时间
+		if(listSysOperation != null && listSysOperation.size() >= 2){
+			loginTime=listSysOperation.get(listSysOperation.size()-1).getOperateDate();
+		}else {
+			loginTime=listSysOperation.get(0).getOperateDate();
+		}
 		// 把其他模块的数据都装入map中返回给前端
 		map.put("topicList", pageResultTopicDeclarationVO);
 		map.put("materialList", pageResultMaterialListVO);
@@ -719,6 +732,8 @@ public class PmphUserServiceImpl implements PmphUserService {
 		map.put("pmphRole", rolelist);
 		//把选题申报的当前身份存入map
 		map.put("pmphIdentity", pmphIdentity);
+		//存入用户上次操作时间
+		map.put("loginTime", loginTime);
 		return map;
 	}
 
