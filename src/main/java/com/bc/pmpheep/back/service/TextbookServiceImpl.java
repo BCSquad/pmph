@@ -35,8 +35,8 @@ import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -87,9 +87,6 @@ public class TextbookServiceImpl implements TextbookService {
 	private MaterialProjectEditorService materialProjectEditorService;
 
 	@Autowired
-	private PmphRoleService pmphRoleService;
-
-	@Autowired
 	private DecPositionService decPositionService;
 
 	@Autowired
@@ -130,7 +127,7 @@ public class TextbookServiceImpl implements TextbookService {
 
 	@Override
 	public Integer updateTextbookAndMaterial(Long[] ids, String sessionId, Long materialId)
-			throws CheckedServiceException {
+			throws CheckedServiceException, Exception {
 		// 获取当前用户
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
@@ -177,7 +174,6 @@ public class TextbookServiceImpl implements TextbookService {
 			}
 			materials.setId(textbook.getMaterialId());
 			textBookIds.add(textbook.getId());
-
 		}
 		// textbookDao.updateBookPublished(textBooks);
 		List<Textbook> books = materialDao.getMaterialAndTextbook(materials);
@@ -219,10 +215,16 @@ public class TextbookServiceImpl implements TextbookService {
 		decPositionPublishedService.deleteDecPositionPublishedByBookIds(textBookIds);
 		// 向dec_position_published插入新数据
 		decPositionPublishedService.batchInsertDecPositionPublished(decPositionPublishedLst);
-		/** 下面是发布更新最终结果表的数据 ---end --- */
+		/** 发布更新最终结果表的数据 ---end --- */
+		//发送消息
+		for (Textbook textbook : textbooks) {
+			systemMessageService.sendWhenPubfinalResult(textbook.getId()) ;
+		}
 		return count;
 	}
-
+    @Autowired
+    private SystemMessageService systemMessageService;
+    
 	@Override
 	public List<Textbook> getTextbookByMaterialIdAndUserId(Long materialId, Long userId)
 			throws CheckedServiceException {
