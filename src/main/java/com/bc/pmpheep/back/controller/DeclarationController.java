@@ -53,6 +53,7 @@ public class DeclarationController {
      * @param positionType 条件查询 申报职位 ;null全部 1主编 2副主编 3编委
      * @param onlineProgress 1待审核 3已经审核
      * @param offlineProgress 0 未 2 收到
+     * @param haveFile  有无教材大纲 null  true  false 
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "加载申报列表")
@@ -70,7 +71,8 @@ public class DeclarationController {
     @RequestParam(value = "unitName", required = false) String unitName,
     @RequestParam(value = "positionType", required = false) Integer positionType,
     @RequestParam(value = "onlineProgress", required = false) Integer onlineProgress,
-    @RequestParam(value = "offlineProgress", required = false) Integer offlineProgress) {
+    @RequestParam(value = "offlineProgress", required = false) Integer offlineProgress,
+    @RequestParam(value = "haveFile",        required = false) Boolean haveFile) {
         return new ResponseBean(declarationService.pageDeclaration(pageNumber,
                                                                    pageSize,
                                                                    materialId,
@@ -83,7 +85,8 @@ public class DeclarationController {
                                                                    unitName,
                                                                    positionType,
                                                                    onlineProgress,
-                                                                   offlineProgress));
+                                                                   offlineProgress,
+                                                                   haveFile));
     }
 
     /**

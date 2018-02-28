@@ -529,6 +529,14 @@
 			and a.offline_progress = #{parameter.offlineProgress}
 		</if>
 		GROUP BY a.id
+		<if test="parameter.onlineProgress != haveFile ">
+			<if test="haveFile ">  <!-- haveFile -->
+				HAVING  GROUP_CONCAT(c.syllabus_id) is not null 
+			</if>
+			<if test="!haveFile "> <!-- noFile -->
+				HAVING  GROUP_CONCAT(c.syllabus_id) is      null 
+			</if>
+		</if>
 		) temp
 	</select>
 
@@ -634,6 +642,14 @@
 			and a.offline_progress = #{parameter.offlineProgress}
 		</if>
 		GROUP BY a.id
+		<if test="parameter.onlineProgress != haveFile ">
+			<if test="haveFile ">  <!-- haveFile -->
+				HAVING  GROUP_CONCAT(c.syllabus_id) is not null 
+			</if>
+			<if test="!haveFile "> <!-- noFile -->
+				HAVING  GROUP_CONCAT(c.syllabus_id) is      null 
+			</if>
+		</if>
 		<!-- 排序和分页条件 -->
 		order by a.realname
 		limit #{start},#{pageSize}
