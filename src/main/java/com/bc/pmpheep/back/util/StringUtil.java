@@ -50,12 +50,12 @@ public final class StringUtil {
         }
         str = str.replace(" ", "");
         if (str.length() == 1) {
-            return str;
+            return "%"+str+"%";
         }
-        StringBuilder strTemp = new StringBuilder();
+        StringBuilder strTemp = new StringBuilder("%");
         for (int i = 0; i < str.length(); i++) {
             String temp = str.substring(i, i + 1);
-            strTemp.append(i == 0 ? temp : "%" + temp);
+            strTemp.append(temp+"%");
         }
         return strTemp.toString();
     }
