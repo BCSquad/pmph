@@ -112,6 +112,7 @@ public interface OrgUserService {
     
     /**
      * 机构认证总数量
+     * @param orgId 
      * @return
      */
 	Integer getCount();

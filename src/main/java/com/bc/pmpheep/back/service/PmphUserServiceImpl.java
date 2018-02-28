@@ -92,6 +92,8 @@ public class PmphUserServiceImpl implements PmphUserService {
 	TopicService topicService;
 	@Autowired
     PmphRoleService roleService;
+	@Autowired
+	PmphUserService pmphUserService;
 	
 	@Override
 	public boolean updatePersonalData(PmphUser pmphUser, MultipartFile file) throws IOException {
@@ -642,6 +644,10 @@ public class PmphUserServiceImpl implements PmphUserService {
 		Integer writerUserCount = writerUserService.getCount();
 		// 机构认证数量orgList
 		Integer orgerCount = orgUserService.getCount();
+		// 教材申报数量
+//		Integer materialCount = materialService.getCount(sessionPmphUser.getId());
+		// 选题申报数量
+//		Integer topicCount = topicService.getCount(sessionPmphUser.getId());
 		// 小组
 		PmphGroupListVO pmphGroup = new PmphGroupListVO();
 		if (ObjectUtil.notNull(groupName)) {
@@ -682,7 +688,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 		PageResult<BookUserCommentVO> pageResultBookUserCommentVO = bookUserCommentService
 				.listBookUserComment(pageParameter);
 		// 图书附件审核 暂时没有
-
+		
 		// 选题申报
 		PageParameter<TopicDeclarationVO> pageParameter3 = new PageParameter<>();
 		TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
@@ -695,6 +701,8 @@ public class PmphUserServiceImpl implements PmphUserService {
 		pageParameter3.setParameter(topicDeclarationVO);
 		PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO = topicService.listCheckTopic(progress,
 				pageParameter3);
+		//选题申报当前用户角色
+		PmphIdentity pmphIdentity=pmphUserService.identity(sessionId);
 		//获取用户角色
 		List<PmphRole> rolelist=roleService.getPmphRoleByUserId(sessionPmphUser.getId());
 		// 把其他模块的数据都装入map中返回给前端
@@ -709,6 +717,8 @@ public class PmphUserServiceImpl implements PmphUserService {
 		map.put("pmphUser", sessionPmphUser);
 		//把用户角色存入map
 		map.put("pmphRole", rolelist);
+		//把选题申报的当前身份存入map
+		map.put("pmphIdentity", pmphIdentity);
 		return map;
 	}
 
