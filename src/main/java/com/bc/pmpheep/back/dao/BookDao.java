@@ -112,28 +112,43 @@ public interface BookDao {
 	 */
 	Integer getBookPreferenceAnalysisTotal(@Param("bookname") String bookname, @Param("type") Long type,
 			@Param("path") String path);
+
 	/**
 	 * 获取书籍总数
-	 * @introduction 
+	 * 
+	 * @introduction
 	 * @author Mryang
 	 * @createDate 2018年2月6日 下午4:23:12
 	 * @return
 	 */
-	Integer getListToatl(java.util.Map<String,Object> map);
+	Integer getListToatl(java.util.Map<String, Object> map);
+
 	/**
 	 * 获取数据分页数据
-	 * @introduction 
+	 * 
+	 * @introduction
 	 * @author Mryang
 	 * @createDate 2018年2月6日 下午4:23:21
 	 * @return
 	 */
-	List<Book> geList(java.util.Map<String,Object> map);
-	
+	List<Book> geList(java.util.Map<String, Object> map);
+
 	/**
 	 * 更新书的评分
 	 * 
 	 * @param bookId
 	 * @return 影响行数
 	 */
-	Integer updateBookCore(@Param("id")Long id);
+	Integer updateBookCore(@Param("id") Long id);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：更新评论数
+	 *
+	 * @param id
+	 * @throws CheckedServiceException
+	 *
+	 */
+	void updateComments(@Param("id") Long id);
 }

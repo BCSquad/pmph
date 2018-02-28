@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.service.BookVedioService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.vo.BookVedioVO;
+import com.bc.pmpheep.back.vo.BookVedioVO2;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -33,6 +34,32 @@ public class BookVedioController {
 		
 	@Autowired
 	private BookVedioService bookVedioService;
+	/**
+	 * 查询书籍视频
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2018年2月6日 下午5:34:12
+	 * @param pageSize
+	 * @param pageNumber
+	 * @param bookName
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/getVedioList", method = RequestMethod.GET)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询书籍视频列表")
+	public ResponseBean<PageResult<BookVedioVO2>> getVedioList(
+			Integer pageSize, 
+			Integer pageNumber, 
+			String bookName,
+			Boolean isAuth,
+			String  upLoadTimeStart,
+			String  upLoadTimeEnd){
+		pageSize   = (pageSize   == null || pageSize   <= 0 )? 5:pageSize;
+		pageNumber = (pageNumber == null || pageNumber <= 0 )? 1:pageNumber;
+		return new ResponseBean<PageResult<BookVedioVO2>>(
+				bookVedioService.getVedioList(pageSize,pageNumber,bookName,isAuth,upLoadTimeStart,upLoadTimeEnd));
+	}
+	
 	
 	/**
 	 * 查询书籍视频

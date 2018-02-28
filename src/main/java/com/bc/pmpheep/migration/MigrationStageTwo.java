@@ -273,19 +273,15 @@ public class MigrationStageTwo {
             count++;
             Long pk = writerUserCertification.getId();
             if (StringUtil.notEmpty(cert)) {
-                String mongoId = "";
+                String mongoId;
                 try {
-                    fileService.migrateFile(cert, ImageType.WRITER_USER_CERT, pk);
+                    mongoId = fileService.migrateFile(cert, ImageType.WRITER_USER_CERT, pk);
                 } catch (IOException ex) {
                     mongoId = "DEFAULT";
                     map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常。");
                     excel.add(map);
                     logger.error("文件读取异常，路径<{}>,异常信息：{}", cert, ex.getMessage());
-                } catch (Exception e) {
-                    mongoId = "DEFAULT";
-                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常：" + e.getMessage() + "。"));
-                    excel.add(map);
-                }
+                } 
                 writerUserCertification.setCert(mongoId);
                 writerCertificationService.updateWriterUserCertification(writerUserCertification);
             }

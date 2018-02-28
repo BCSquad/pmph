@@ -104,6 +104,9 @@
 			<if test="isMaterialEntry != null">
 				is_material_entry,
 			</if>
+			<if test="cover != null and cover != ''">
+				cover,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -208,6 +211,9 @@
 			</if>
 			<if test="isMaterialEntry != null">
 				#{isMaterialEntry},
+			</if>
+			<if test="cover != null and cover != ''">
+				#{cover},
 			</if>
 		</trim>
 	</sql>
@@ -324,6 +330,9 @@
 			</if>
 			<if test="isMaterialEntry != null">
 				is_material_entry=#{isMaterialEntry},
+			</if>
+			<if test="cover != null and cover != ''">
+				cover=#{cover},
 			</if>
 		</set>
 		where

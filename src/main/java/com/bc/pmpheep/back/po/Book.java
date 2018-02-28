@@ -146,14 +146,6 @@ public class Book implements Serializable {
 	 */
 	private Timestamp deadlinePromote;
 	/**
-	 * 是否重点学科
-	 */
-	private Boolean isKey;
-	/**
-	 * 重点学科显示顺序
-	 */
-	private Integer sortKey;
-	/**
 	 * 销量
 	 */
 	private Long sales;
@@ -173,7 +165,15 @@ public class Book implements Serializable {
 	 * 修改时间
 	 */
 	private Timestamp gmtUpdate;
-
+	/**
+	 * 是否重点学科
+	 */
+	private Boolean isKey;
+	/**
+	 * 重点学科显示顺序
+	 */
+	private Integer sortKey;
+	
 	public Book() {
 		super();
 	}
@@ -459,22 +459,6 @@ public class Book implements Serializable {
 		this.deadlinePromote = deadlinePromote;
 	}
 
-	public Boolean getIsKey() {
-		return isKey;
-	}
-
-	public void setIsKey(Boolean isKey) {
-		this.isKey = isKey;
-	}
-
-	public Integer getSortKey() {
-		return sortKey;
-	}
-
-	public void setSortKey(Integer sortKey) {
-		this.sortKey = sortKey;
-	}
-
 	public Long getSales() {
 		return sales;
 	}
@@ -531,17 +515,83 @@ public class Book implements Serializable {
 		this.materialId = materialId;
 	}
 
-	@Override
-	public String toString() {
-		return "book [id=" + id + ", bookname=" + bookname + ", isbn=" + isbn + ", sn=" + sn + ", author=" + author
-				+ ", publisher=" + publisher + ", lang=" + lang + ", revision=" + revision + ", type=" + type
-				+ ", publishDate=" + publishDate + ", reader=" + reader + ", price=" + price + ", score=" + score
-				+ ", buyUrl=" + buyUrl + ", imageUrl=" + imageUrl + ", pdfUrl=" + pdfUrl + ", clicks=" + clicks
-				+ ", comments=" + comments + ", likes=" + likes + ", bookmarks=" + bookmarks + ", isStick=" + isStick
-				+ ", sort=" + sort + ", deadlineStick=" + deadlineStick + ", isNew=" + isNew + ", sortNew=" + sortNew
-				+ ", deadlineNew=" + deadlineNew + ", isPromote=" + isPromote + ", sortPromote=" + sortPromote
-				+ ", deadlinePromote=" + deadlinePromote + ", isKey = " + isKey + ", sortKey = " + sortKey 
-				+ ", sales=" + sales + ", isOnSale=" + isOnSale + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
+	public Boolean getIsKey() {
+		return isKey;
 	}
 
+	public void setIsKey(Boolean isKey) {
+		this.isKey = isKey;
+	}
+
+	public Integer getSortKey() {
+		return sortKey;
+	}
+
+	public void setSortKey(Integer sortKey) {
+		this.sortKey = sortKey;
+	}
+	
+	
+	public Book(Long id, String vn, String bookname, String isbn, String sn, String author, String publisher,
+			String lang, Integer revision, Long type, Date publishDate, String reader, Double price, Double score,
+			String buyUrl, Long materialId, String imageUrl, String pdfUrl, Long clicks, Long comments, Long likes,
+			Long bookmarks, Boolean isStick, Integer sort, Timestamp deadlineStick, Boolean isNew, Integer sortNew,
+			Timestamp deadlineNew, Boolean isPromote, Integer sortPromote, Timestamp deadlinePromote, Long sales,
+			Boolean isOnSale, String content, Timestamp gmtCreate, Timestamp gmtUpdate, Boolean isKey,
+			Integer sortKey) {
+		this.id = id;
+		this.vn = vn;
+		this.bookname = bookname;
+		this.isbn = isbn;
+		this.sn = sn;
+		this.author = author;
+		this.publisher = publisher;
+		this.lang = lang;
+		this.revision = revision;
+		this.type = type;
+		this.publishDate = publishDate;
+		this.reader = reader;
+		this.price = price;
+		this.score = score;
+		this.buyUrl = buyUrl;
+		this.materialId = materialId;
+		this.imageUrl = imageUrl;
+		this.pdfUrl = pdfUrl;
+		this.clicks = clicks;
+		this.comments = comments;
+		this.likes = likes;
+		this.bookmarks = bookmarks;
+		this.isStick = isStick;
+		this.sort = sort;
+		this.deadlineStick = deadlineStick;
+		this.isNew = isNew;
+		this.sortNew = sortNew;
+		this.deadlineNew = deadlineNew;
+		this.isPromote = isPromote;
+		this.sortPromote = sortPromote;
+		this.deadlinePromote = deadlinePromote;
+		this.sales = sales;
+		this.isOnSale = isOnSale;
+		this.content = content;
+		this.gmtCreate = gmtCreate;
+		this.gmtUpdate = gmtUpdate;
+		this.isKey = isKey;
+		this.sortKey = sortKey;
+	}
+
+	@Override
+	public String toString() {
+		return "Book [id=" + id + ", vn=" + vn + ", bookname=" + bookname + ", isbn=" + isbn + ", sn=" + sn
+				+ ", author=" + author + ", publisher=" + publisher + ", lang=" + lang + ", revision=" + revision
+				+ ", type=" + type + ", publishDate=" + publishDate + ", reader=" + reader + ", price=" + price
+				+ ", score=" + score + ", buyUrl=" + buyUrl + ", materialId=" + materialId + ", imageUrl=" + imageUrl
+				+ ", pdfUrl=" + pdfUrl + ", clicks=" + clicks + ", comments=" + comments + ", likes=" + likes
+				+ ", bookmarks=" + bookmarks + ", isStick=" + isStick + ", sort=" + sort + ", deadlineStick="
+				+ deadlineStick + ", isNew=" + isNew + ", sortNew=" + sortNew + ", deadlineNew=" + deadlineNew
+				+ ", isPromote=" + isPromote + ", sortPromote=" + sortPromote + ", deadlinePromote=" + deadlinePromote
+				+ ", sales=" + sales + ", isOnSale=" + isOnSale + ", content=" + content + ", gmtCreate=" + gmtCreate
+				+ ", gmtUpdate=" + gmtUpdate + ", isKey=" + isKey + ", sortKey=" + sortKey + "]";
+	}
+
+	
 }

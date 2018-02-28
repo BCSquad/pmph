@@ -93,7 +93,7 @@
 			<if test=" point != null">
 				point=#{point},
 			</if>
-			<if test=" isExchange != null and isExchange != ''">
+			<if test=" isExchange != null">
 				is_exchange=#{isExchange},
 			</if>
 			<if test=" thirdName != null and thirdName != ''">
@@ -105,7 +105,7 @@
 			<if test=" description != null and description != ''">
 				description=#{description},
 			</if>
-			<if test=" isDisabled != null and isDisabled != ''">
+			<if test=" isDisabled != null">
 				is_disabled=#{isDisabled},
 			</if>
 		</set>

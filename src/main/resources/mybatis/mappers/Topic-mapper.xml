@@ -290,7 +290,7 @@
 			AND t.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND t.submit_time = #{submitTime}
+			AND t.submit_time like concat('%',#{submitTime},'%')
 		</if>
 		ORDER BY t.submit_time
 		LIMIT
@@ -320,7 +320,7 @@
 			AND t.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND t.submit_time = #{submitTime}
+			AND t.submit_time like concat('%',#{submitTime},'%')
 		</if>
 		ORDER BY t.submit_time
 	</select>
@@ -342,7 +342,7 @@
 			AND t.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND t.submit_time = #{submitTime}
+			AND t.submit_time like concat('%',#{submitTime},'%')
 		</if>
 		ORDER BY t.submit_time
 		LIMIT
@@ -366,7 +366,7 @@
 			AND t.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND t.submit_time = #{submitTime}
+			AND t.submit_time like concat('%',#{submitTime},'%')
 		</if>
 		ORDER BY t.submit_time
 	</select>
@@ -530,7 +530,7 @@
 			AND t.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND t.submit_time = #{submitTime}
+			AND t.submit_time like concat('%',#{submitTime},'%')
 		</if>
 		ORDER BY t.submit_time
 		limit
@@ -550,7 +550,7 @@
 			AND t.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND t.submit_time = #{submitTime}
+			AND t.submit_time like concat('%',#{submitTime},'%')
 		</if>
 		ORDER BY t.submit_time
 	</select>
@@ -571,7 +571,7 @@
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND a.submit_time = #{submitTime}
+			AND a.submit_time like concat('%',#{submitTime},'%')
 		</if>
 		ORDER BY a.submit_time
 		LIMIT
@@ -598,7 +598,7 @@
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND a.submit_time = #{submitTime}
+			AND a.submit_time like concat('%',#{submitTime},'%')
 		</if>
 		ORDER BY a.submit_time) t
 	</select>
@@ -622,7 +622,7 @@
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND a.submit_time = #{submitTime}
+			AND a.submit_time like concat('%',#{submitTime},'%')
 		</if>
 		ORDER BY a.submit_time
 		LIMIT
@@ -648,7 +648,7 @@
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND a.submit_time = #{submitTime}
+			AND a.submit_time like concat('%',#{submitTime},'%')
 		</if>
 		ORDER BY a.submit_time) t
 	</select>
@@ -666,7 +666,7 @@
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND a.submit_time = #{submitTime}
+			AND a.submit_time like concat('%',#{submitTime},'%')
 		</if>
 		ORDER BY a.submit_time
 		LIMIT
@@ -684,7 +684,7 @@
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND a.submit_time = #{submitTime}
+			AND a.submit_time like concat('%',#{submitTime},'%')
 		</if>
 		ORDER BY a.submit_time
 	</select>
@@ -706,7 +706,7 @@
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND a.submit_time = #{submitTime}
+			AND a.submit_time like concat('%',#{submitTime},'%')
 		</if>
 		ORDER BY a.submit_time
 		LIMIT
@@ -725,7 +725,7 @@
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND a.submit_time = #{submitTime}
+			AND a.submit_time like concat('%',#{submitTime},'%')
 		</if>
 		ORDER BY a.submit_time
 	</select>

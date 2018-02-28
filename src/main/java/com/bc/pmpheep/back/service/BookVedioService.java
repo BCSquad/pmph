@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.BookVedio;
 import com.bc.pmpheep.back.vo.BookVedioVO;
+import com.bc.pmpheep.back.vo.BookVedioVO2;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 
@@ -45,6 +46,14 @@ public interface BookVedioService {
 	 */
 	PageResult<BookVedioVO>getList(Integer pageSize,Integer pageNumber,String bookName);
 	
+	/**
+	 * 获取书籍视频列表2
+	 * @introduction 
+	 * @author Mryang
+	 * @createDate 2018年2月6日 下午3:29:39
+	 * @return
+	 */
+	PageResult<BookVedioVO2>getVedioList(Integer pageSize,Integer pageNumber,String bookName,Boolean isAuth,String upLoadTimeStart,String  upLoadTimeEnd);
 	
 
 }

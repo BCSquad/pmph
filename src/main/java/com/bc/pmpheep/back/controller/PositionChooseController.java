@@ -20,6 +20,7 @@ import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.vo.TextbookDecVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.utils.ExcelHelper;
 
 /**
@@ -105,12 +106,14 @@ public class PositionChooseController {
 	 * 
 	 * @param ids
 	 * @return
+	 * @throws Exception 
+	 * @throws CheckedServiceException 
 	 */
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量结果公布（最终结果公布）")
 	@RequestMapping(value = "/updateResult", method = RequestMethod.PUT)
 	public ResponseBean updateResult(@RequestParam("ids") Long[] ids,@RequestParam("materialId") Long materialId,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws  Exception {
 		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(textbookService.updateTextbookAndMaterial(ids, sessionId,materialId));
 	}

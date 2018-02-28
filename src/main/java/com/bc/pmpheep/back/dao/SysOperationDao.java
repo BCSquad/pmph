@@ -48,4 +48,11 @@ public interface SysOperationDao {
      * </pre>
      */
     List<SysOperation> getListSysOperation(PageParameter<SysOperation> pageParameter);
+    
+    /**
+     * 通过用户id 查询
+     * @param userId
+     * @return
+     */
+	List<SysOperation> getSysOperation(Long userId);
 }

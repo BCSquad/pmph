@@ -61,7 +61,7 @@ public interface BookService {
 	 * @return 包含主键的插入对象
 	 */
 	BookUserMark add(BookUserMark mark) throws CheckedServiceException;
-	
+
 	/**
 	 * 更新书的评分
 	 * 
@@ -82,17 +82,18 @@ public interface BookService {
 	 *
 	 */
 	PageResult<BookVO> listBookVO(PageParameter<BookVO> pageParameter) throws CheckedServiceException;
-	
+
 	/**
 	 * 书的分页数据
-	 * @introduction 
+	 * 
+	 * @introduction
 	 * @author Mryang
 	 * @createDate 2018年2月6日 下午4:19:33
 	 * @param pageParameter
 	 * @return
 	 * @throws CheckedServiceException
 	 */
-	PageResult<Book>   listBook(Integer pageSize, Integer pageNumber, String bookName) throws CheckedServiceException;
+	PageResult<Book> listBook(Integer pageSize, Integer pageNumber, String bookName) throws CheckedServiceException;
 
 	/**
 	 *
@@ -112,7 +113,7 @@ public interface BookService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	String updateBookById(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote,Long materialId)
+	String updateBookById(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote, Long materialId)
 			throws CheckedServiceException;
 
 	/**
@@ -151,5 +152,17 @@ public interface BookService {
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PageResult<BookPreferenceAnalysisVO> getBookPreferenceAnalysis(PageParameter<BookPreferenceAnalysisVO> pageParameter) throws CheckedServiceException;
+	PageResult<BookPreferenceAnalysisVO> getBookPreferenceAnalysis(
+			PageParameter<BookPreferenceAnalysisVO> pageParameter) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：更新评论数
+	 *
+	 * @param id
+	 * @throws CheckedServiceException
+	 *
+	 */
+	void updateComments(Long id) throws CheckedServiceException;
 }

@@ -126,4 +126,11 @@ public interface TopicService {
 	 *
 	 */
 	void updateByErp() throws CheckedServiceException;
+	
+//	/**
+//	 * 选题申报的数量
+//	 * @param id
+//	 * @return
+//	 */
+//	Integer getCount(Long id);
 }

@@ -70,23 +70,21 @@ public class TopicServiceImpl implements TopicService {
 		PageResult<TopicOPtsManagerVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		Integer total = 0;
+		String submitTime = DateUtil.date2Str(pageParameter.getParameter().getSubmitTime(), "yyyy-MM-dd");
 		if (pmphUser.getIsAdmin()) {
-			total = topicDao.listTotal(pageParameter.getParameter().getBookname(),
-					pageParameter.getParameter().getSubmitTime());
+			total = topicDao.listTotal(pageParameter.getParameter().getBookname(), submitTime);
 			if (total > 0) {
-				List<TopicOPtsManagerVO> list = topicDao.list(pageParameter.getParameter().getBookname(),
-						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(),
-						pageParameter.getPageSize());
+				List<TopicOPtsManagerVO> list = topicDao.list(pageParameter.getParameter().getBookname(), submitTime,
+						pageParameter.getStart(), pageParameter.getPageSize());
 				list = addTypeName(list);
 				pageResult.setRows(list);
 			}
 		} else {
-			total = topicDao.listOptsTotal(pmphUser.getId(), pageParameter.getParameter().getBookname(),
-					pageParameter.getParameter().getSubmitTime());
+			total = topicDao.listOptsTotal(pmphUser.getId(), pageParameter.getParameter().getBookname(), submitTime);
 			if (total > 0) {
 				List<TopicOPtsManagerVO> list = topicDao.listOpts(pmphUser.getId(),
-						pageParameter.getParameter().getBookname(), pageParameter.getParameter().getSubmitTime(),
-						pageParameter.getStart(), pageParameter.getPageSize());
+						pageParameter.getParameter().getBookname(), submitTime, pageParameter.getStart(),
+						pageParameter.getPageSize());
 				list = addTypeName(list);
 				pageResult.setRows(list);
 			}
@@ -251,8 +249,8 @@ public class TopicServiceImpl implements TopicService {
 		}
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 		writerUserTrendst.setUserId(topicDao.getTopicTextVO(topic.getId()).getUserId());
-		writerUserTrendst.setType(0);
-		writerUserTrendst.setIsPublic(true);
+		writerUserTrendst.setType(9);
+		writerUserTrendst.setIsPublic(false);
 		if (ObjectUtil.notNull(topic.getAuthProgress())) {
 			if (StringUtil.isEmpty(topic.getAuthFeedback())) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
@@ -425,12 +423,12 @@ public class TopicServiceImpl implements TopicService {
 		}
 		PageResult<TopicDeclarationVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		String submitTime = DateUtil.date2Str(pageParameter.getParameter().getSubmitTime(), "yyyy-MM-dd");
 		Integer total = topicDao.listCheckTopicTotal(authProgress, pageParameter.getParameter().getBookname(),
-				pageParameter.getParameter().getSubmitTime());
+				submitTime);
 		if (total > 0) {
 			List<TopicDeclarationVO> list = topicDao.listCheckTopic(authProgress, pageParameter.getPageSize(),
-					pageParameter.getStart(), pageParameter.getParameter().getBookname(),
-					pageParameter.getParameter().getSubmitTime());
+					pageParameter.getStart(), pageParameter.getParameter().getBookname(), submitTime);
 			list = addState(list);
 			pageResult.setRows(list);
 		}
@@ -485,23 +483,22 @@ public class TopicServiceImpl implements TopicService {
 		PageResult<TopicDirectorVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		Integer total = 0;
+		String submitTime = DateUtil.date2Str(pageParameter.getParameter().getSubmitTime(), "yyyy-MM-dd");
 		if (pmphUser.getIsAdmin()) {
-			total = topicDao.totalDirectorView(pageParameter.getParameter().getBookname(),
-					pageParameter.getParameter().getSubmitTime());
+			total = topicDao.totalDirectorView(pageParameter.getParameter().getBookname(), submitTime);
 			if (total > 0) {
 				List<TopicDirectorVO> list = topicDao.listDirectorView(pageParameter.getParameter().getBookname(),
-						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(),
-						pageParameter.getPageSize());
+						submitTime, pageParameter.getStart(), pageParameter.getPageSize());
 				list = addTypeNameDirector(list);
 				pageResult.setRows(list);
 			}
 		} else {
 			total = topicDao.totalTopicDirectorVOs(pmphUser.getId(), pageParameter.getParameter().getBookname(),
-					pageParameter.getParameter().getSubmitTime());
+					submitTime);
 			if (total > 0) {
 				List<TopicDirectorVO> list = topicDao.listTopicDirectorVOs(pmphUser.getId(),
-						pageParameter.getParameter().getBookname(), pageParameter.getParameter().getSubmitTime(),
-						pageParameter.getStart(), pageParameter.getPageSize());
+						pageParameter.getParameter().getBookname(), submitTime, pageParameter.getStart(),
+						pageParameter.getPageSize());
 				list = addTypeNameDirector(list);
 				pageResult.setRows(list);
 			}
@@ -521,23 +518,22 @@ public class TopicServiceImpl implements TopicService {
 		PageResult<TopicEditorVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		Integer total = 0;
+		String submitTime = DateUtil.date2Str(pageParameter.getParameter().getSubmitTime(), "yyyy-MM-dd");
 		if (pmphUser.getIsAdmin()) {
-			total = topicDao.totalEditorView(pageParameter.getParameter().getBookname(),
-					pageParameter.getParameter().getSubmitTime());
+			total = topicDao.totalEditorView(pageParameter.getParameter().getBookname(), submitTime);
 			if (total > 0) {
 				List<TopicEditorVO> list = topicDao.listEditorView(pageParameter.getParameter().getBookname(),
-						pageParameter.getParameter().getSubmitTime(), pageParameter.getStart(),
-						pageParameter.getPageSize());
+						submitTime, pageParameter.getStart(), pageParameter.getPageSize());
 				list = addTypeNameEditor(list);
 				pageResult.setRows(list);
 			}
 		} else {
 			total = topicDao.totalTopicEditorVOs(pmphUser.getId(), pageParameter.getParameter().getBookname(),
-					pageParameter.getParameter().getSubmitTime());
+					submitTime);
 			if (total > 0) {
 				List<TopicEditorVO> list = topicDao.listTopicEditorVOs(pmphUser.getId(),
-						pageParameter.getParameter().getBookname(), pageParameter.getParameter().getSubmitTime(),
-						pageParameter.getStart(), pageParameter.getPageSize());
+						pageParameter.getParameter().getBookname(), submitTime, pageParameter.getStart(),
+						pageParameter.getPageSize());
 				list = addTypeNameEditor(list);
 				pageResult.setRows(list);
 			}

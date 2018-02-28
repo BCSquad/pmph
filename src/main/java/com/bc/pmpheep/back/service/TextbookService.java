@@ -110,7 +110,7 @@ public interface TextbookService {
      * @return
      * @throws CheckedServiceException
      */
-	Integer updateTextbookAndMaterial(Long[] ids,String sessionId,Long materialId) throws CheckedServiceException;
+	Integer updateTextbookAndMaterial(Long[] ids,String sessionId,Long materialId) throws CheckedServiceException ,Exception;
 	/**
 	 * 
 	 * <pre>
