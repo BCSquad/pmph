@@ -170,6 +170,8 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 				editorId = null; // 我是系统管理原
 			}
 		}
+		//权限由菜单控制
+		editorId = null;
 		Map<String,Object> map = new HashMap<String,Object> (4);
 		map.put("start", (pageNumber-1)*pageSize);
 		map.put("pageSize", pageSize);
