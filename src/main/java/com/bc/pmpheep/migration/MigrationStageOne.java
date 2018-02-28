@@ -639,7 +639,7 @@ public class MigrationStageOne {
             JdbcHelper.updateNewPrimaryKey("sys_userext", pk, "userid", userId);
             count++;
             if (StringUtil.notEmpty(cert)) {
-                String certMongoId = "";
+                String certMongoId;
                 try {
                     certMongoId = fileService.migrateFile(cert, ImageType.WRITER_USER_CERT, pk);
                 } catch (IOException ex) {
