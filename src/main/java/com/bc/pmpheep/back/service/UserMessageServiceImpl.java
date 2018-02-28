@@ -626,23 +626,26 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         PmphUser pmphUser = pmphUserService.get(userMessage.getSenderId());
         resultMap.put("msgId", userMessage.getId());// 主键ID
         resultMap.put("title", userMessage.getTitle());// 标题
-        resultMap.put("senderName", pmphUser.getRealname());// 发送者
+        if (ObjectUtil.notNull(pmphUser)) {
+            resultMap.put("senderName", pmphUser.getRealname());// 发送者
+        }
         resultMap.put("senderDate", userMessage.getGmtCreate());// 发送时间
         Message message = messageService.get(userMessage.getMsgId());// 获取消息内容
-        if (ObjectUtil.isNull(message)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                              CheckedExceptionResult.NULL_PARAM, "消息对象为空！");
-        }
-        resultMap.put("content", message.getContent());// 内容
-        List<MessageAttachment> messageAttachments =
-        messageAttachmentService.getMessageAttachmentByMsgId(message.getId());
-        if (CollectionUtil.isNotEmpty(messageAttachments)) {
-            for (MessageAttachment mAttachment : messageAttachments) {
-                String attachmentId = mAttachment.getAttachment();
-                mAttachment.setAttachment(Const.FILE_DOWNLOAD + attachmentId);
+        if (ObjectUtil.notNull(message)) {
+            // throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+            // CheckedExceptionResult.NULL_PARAM, "消息对象为空！");
+            resultMap.put("content", message.getContent());// 内容
+            List<MessageAttachment> messageAttachments =
+            messageAttachmentService.getMessageAttachmentByMsgId(message.getId());
+            if (CollectionUtil.isNotEmpty(messageAttachments)) {
+                for (MessageAttachment mAttachment : messageAttachments) {
+                    String attachmentId = mAttachment.getAttachment();
+                    mAttachment.setAttachment(Const.FILE_DOWNLOAD + attachmentId);
+                }
             }
+            resultMap.put("MessageAttachment", messageAttachments);// 内容附件
         }
-        resultMap.put("MessageAttachment", messageAttachments);// 内容附件
+
         return resultMap;
     }
 
@@ -856,7 +859,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                             receiverId, Const.RECEIVER_TYPE_2);
         }
         // 插入消息发送对象数据
-        Integer res =  userMessageDao.addUserMessage(userMessage);
+        Integer res = userMessageDao.addUserMessage(userMessage);
         // websocket发送的id
         List<String> websocketUserId = new ArrayList<String>();
         websocketUserId.add(userMessage.getReceiverType() + "_" + userMessage.getReceiverId());
