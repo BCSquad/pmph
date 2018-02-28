@@ -213,11 +213,7 @@ public class MigrationStageThree {
                     logger.error("文件读取异常，路径<{}>,异常信息：{}", avatar, ex.getMessage());
                     map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("文件读取异常。"));
                     excel.add(map);
-                } catch (Exception e) {
-                    mongoId = "DEFAULT";
-                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常：" + e.getMessage() + "。"));
-                    excel.add(map);
-                }
+                } 
                 pmphUser.setAvatar(mongoId);
                 pmphUser.setPassword(null);
                 pmphUserService.update(pmphUser);
