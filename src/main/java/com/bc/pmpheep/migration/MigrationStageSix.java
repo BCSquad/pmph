@@ -232,7 +232,7 @@ public class MigrationStageSix {
             	String sqlId = "SELECT *,new_pk userIds FROM sys_user ";
             	List<Map<String, Object>> mapIds = JdbcHelper.getJdbcTemplate().queryForList(sqlId);
             	for (Map<String, Object> mapId : mapIds) {
-                	Long userId = (Long) mapId.get("userId");
+                	Long userId = (Long) mapId.get("userIds");
                 	String usercode = (String) mapId.get("usercode");
                 	String username = (String) mapId.get("username");
                 	if ("18045661072".equals(usercode) && "李勇".equals(username)) {
