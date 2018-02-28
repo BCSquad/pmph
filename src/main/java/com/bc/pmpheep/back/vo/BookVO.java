@@ -55,6 +55,14 @@ public class BookVO implements Serializable {
 	 * 教材id
 	 */
 	private Long materialId;
+	/**
+	 * 是否重点学科
+	 */
+	private Boolean isKey;
+	/**
+	 * 重点学科显示顺序
+	 */
+	private Integer sortKey;
 
 	public Long getId() {
 		return id;
@@ -152,4 +160,20 @@ public class BookVO implements Serializable {
 		this.materialId = materialId;
 	}
 
+	public Boolean getIsKey() {
+		return isKey;
+	}
+
+	public void setIsKey(Boolean isKey) {
+		this.isKey = isKey;
+	}
+
+	public Integer getSortKey() {
+		return sortKey;
+	}
+
+	public void setSortKey(Integer sortKey) {
+		this.sortKey = sortKey;
+	}
+	
 }
