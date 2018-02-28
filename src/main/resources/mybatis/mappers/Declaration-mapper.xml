@@ -529,11 +529,11 @@
 			and a.offline_progress = #{parameter.offlineProgress}
 		</if>
 		GROUP BY a.id
-		<if test="parameter.onlineProgress != haveFile ">
-			<if test="haveFile ">  <!-- haveFile -->
+		<if test="parameter.haveFile !=  null ">
+			<if test="parameter.haveFile">  <!-- haveFile -->
 				HAVING  GROUP_CONCAT(c.syllabus_id) is not null 
 			</if>
-			<if test="!haveFile "> <!-- noFile -->
+			<if test="!parameter.haveFile"> <!-- noFile -->
 				HAVING  GROUP_CONCAT(c.syllabus_id) is      null 
 			</if>
 		</if>
@@ -642,11 +642,11 @@
 			and a.offline_progress = #{parameter.offlineProgress}
 		</if>
 		GROUP BY a.id
-		<if test="parameter.onlineProgress != haveFile ">
-			<if test="haveFile ">  <!-- haveFile -->
+		<if test="parameter.haveFile !=  null ">
+			<if test="parameter.haveFile">  <!-- haveFile -->
 				HAVING  GROUP_CONCAT(c.syllabus_id) is not null 
 			</if>
-			<if test="!haveFile "> <!-- noFile -->
+			<if test="!parameter.haveFile"> <!-- noFile -->
 				HAVING  GROUP_CONCAT(c.syllabus_id) is      null 
 			</if>
 		</if>
