@@ -663,17 +663,13 @@ public class MigrationStageOne {
                 writerUser.setCert(certMongoId);
             }
             if (StringUtil.notEmpty(avatar)) {
-                String avatarMongoId = "";
+                String avatarMongoId;
                 try {
                     avatarMongoId = fileService.migrateFile(avatar, ImageType.WRITER_USER_AVATAR, pk);
                 } catch (IOException ex) {
                     avatarMongoId = "DEFAULT";
                     logger.error("文件读取异常，路径<{}>,异常信息：{}", avatar, ex.getMessage());
                     map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("作家用户头像文件读取异常。"));
-                    excel.add(map);
-                } catch (Exception e) {
-                    avatarMongoId = "DEFAULT";
-                    map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未知异常：" + e.getMessage() + "。"));
                     excel.add(map);
                 }
                 writerUser.setAvatar(avatarMongoId);

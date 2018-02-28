@@ -253,7 +253,7 @@
 		FROM
 			declaration d
 		LEFT JOIN 
-			`textbook` tb
+			(SELECT * FROM `textbook` GROUP BY `textbook_name`)tb
   		ON 
   			d.`material_id`= tb.`material_id`
 		<!-- LEFT JOIN
@@ -270,7 +270,7 @@
   				FROM
 					declaration d
 				LEFT JOIN 
-					`textbook` tb
+					(SELECT * FROM `textbook` GROUP BY `textbook_name`)tb
   				ON 
   					d.`material_id`= tb.`material_id`
 				<!-- LEFT JOIN
@@ -312,7 +312,7 @@
 			</if>
 		</where>
 		GROUP BY d.`user_id`
-		ORDER BY d.`user_id`
+		ORDER BY d.`realname`
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>

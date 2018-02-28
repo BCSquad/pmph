@@ -184,6 +184,49 @@ public class Book implements Serializable {
 		this.isbn = isbn;
 	}
 
+	public Book(String bookname, String isbn, String sn, String author, String publisher, String lang, Integer revision,
+			Long type, Date publishDate, String reader, Double price, Double score, String buyUrl, String imageUrl,
+			String pdfUrl, Long clicks, Long comments, Long likes, Long bookmarks, Boolean isStick, Integer sort,
+			Timestamp deadlineStick, Boolean isNew, Integer sortNew, Timestamp deadlineNew, Boolean isPromote,
+			Integer sortPromote, Timestamp deadlinePromote, Boolean isKey, Integer sortKey, Long sales, Boolean isOnSale,
+			Timestamp gmtCreate, Timestamp gmtUpdate) {
+		super();
+		this.bookname = bookname;
+		this.isbn = isbn;
+		this.sn = sn;
+		this.author = author;
+		this.publisher = publisher;
+		this.lang = lang;
+		this.revision = revision;
+		this.type = type;
+		this.publishDate = publishDate;
+		this.reader = reader;
+		this.price = price;
+		this.score = score;
+		this.buyUrl = buyUrl;
+		this.imageUrl = imageUrl;
+		this.pdfUrl = pdfUrl;
+		this.clicks = clicks;
+		this.comments = comments;
+		this.likes = likes;
+		this.bookmarks = bookmarks;
+		this.isStick = isStick;
+		this.sort = sort;
+		this.deadlineStick = deadlineStick;
+		this.isNew = isNew;
+		this.sortNew = sortNew;
+		this.deadlineNew = deadlineNew;
+		this.isPromote = isPromote;
+		this.sortPromote = sortPromote;
+		this.deadlinePromote = deadlinePromote;
+		this.isKey = isKey;
+		this.sortKey = sortKey;
+		this.sales = sales;
+		this.isOnSale = isOnSale;
+		this.gmtCreate = gmtCreate;
+		this.gmtUpdate = gmtUpdate;
+	}
+
 	public Long getId() {
 		return id;
 	}

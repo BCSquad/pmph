@@ -53,7 +53,7 @@ public class DeclarationServiceTest extends BaseTest {
 		Integer onlineProgress=null;
 		Integer offlineProgress=null;
 		PageResult<DeclarationListVO> page=declarationService.pageDeclaration(
-					pageNumber, pageSize, materialId, textBookids, realname, position, title, orgName, orgId,unitName, positionType, onlineProgress, offlineProgress
+					pageNumber, pageSize, materialId, textBookids, realname, position, title, orgName, orgId,unitName, positionType, onlineProgress, offlineProgress, null
 				);
 		
 	}

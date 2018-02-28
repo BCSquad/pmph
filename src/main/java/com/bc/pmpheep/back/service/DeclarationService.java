@@ -109,12 +109,13 @@ public interface DeclarationService {
 	 *            1待审核 3已经审核
 	 * @param offlineProgress
 	 *            0 未 2 收到
+	 * @param haveFile  有无教材大纲 null  true  false 
 	 * @return PageResult<DeclarationListVO>
 	 * @Throws CheckedServiceException
 	 */
 	public PageResult<DeclarationListVO> pageDeclaration(Integer pageNumber, Integer pageSize, Long materialId,
 			String textBookids, String realname, String position, String title, String orgName,Long orgId, String unitName,
-			Integer positionType, Integer onlineProgress, Integer offlineProgress) throws CheckedServiceException;
+			Integer positionType, Integer onlineProgress, Integer offlineProgress,Boolean haveFile) throws CheckedServiceException;
 
 	/**
 	 * 确认收到纸质表

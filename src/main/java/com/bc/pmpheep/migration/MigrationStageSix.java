@@ -229,10 +229,10 @@ public class MigrationStageSix {
             		"a37913ba4eee41ca9ab88f8086b578e5".equals(id) || 
             		"6777c8f6-4493-4e62-b2af-4d5501937ac0".equals(id) || 
             		"d4eb6718-b0d0-4bde-99e9-8a4b7534c143".equals(id)) {
-            	String sqlId = "SELECT *,new_pk userId FROM sys_user ";
+            	String sqlId = "SELECT *,new_pk userIds FROM sys_user ";
             	List<Map<String, Object>> mapIds = JdbcHelper.getJdbcTemplate().queryForList(sqlId);
             	for (Map<String, Object> mapId : mapIds) {
-                	Long userId = (Long) mapId.get("userId");
+                	Long userId = (Long) mapId.get("userIds");
                 	String usercode = (String) mapId.get("usercode");
                 	String username = (String) mapId.get("username");
                 	if ("18045661072".equals(usercode) && "李勇".equals(username)) {

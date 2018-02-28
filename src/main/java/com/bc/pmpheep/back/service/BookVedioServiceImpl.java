@@ -120,22 +120,23 @@ public class BookVedioServiceImpl  implements BookVedioService {
 		BookVedio bookVedio2 =  bookVedioDao.getBookVedioByOldPath(oldUUid);
 		//如果前台已经存入了，那么这里需要更新
 		if(null != bookVedio2){
-			bookVedio
-				.setOrigFileName(bookVedio2.getOrigFileName())
-				.setOrigFileSize(bookVedio2.getOrigFileSize())
-				.setOrigPath(bookVedio2.getOrigPath())
-				.setId(bookVedio2.getId())
-				.setUserId(0L);
-			bookVedioDao.updateBookVedio(bookVedio);
+			bookVedio2.setBookId(bookVedio.getBookId());
+			bookVedio2.setTitle(bookVedio.getTitle());
+			bookVedio2.setUserId(0L);
+			bookVedio2.setCover(bookVedio.getCover());
+			bookVedioDao.updateBookVedio(bookVedio2);
+			bookVedio.setId(bookVedio2.getId());
+		}else {
+			bookVedio.setPath("-");
+			bookVedio.setFileName("-");
+			bookVedio.setFileSize(0L);
+			bookVedioDao.addBookVedio(bookVedio);
 		}
-		bookVedioDao.addBookVedio(bookVedio);
 		//保存fengmian文件
 		byte[] fileByte = (byte[]) request.getSession(false).getAttribute(tempFileId);
 		String fileName = (String) request.getSession(false).getAttribute("fileName_" + tempFileId);
 		InputStream sbs = new ByteArrayInputStream(fileByte);
 		String coverId = fileService.save(sbs, fileName, FileType.BOOKVEDIO_CONER,bookVedio.getId());
-		request.getSession(false).removeAttribute(tempFileId);
-		request.getSession(false).removeAttribute("fileName_" + tempFileId);
 		bookVedio.setCover(coverId);
 		return bookVedioDao.updateBookVedio(bookVedio);
 	}
