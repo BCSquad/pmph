@@ -96,10 +96,10 @@
 				deadline_promote,
 			</if>
 			<if test="isKey !=null">
-			    is_key,
+				is_key,
 			</if>
 			<if test="sortKey !=null">
-			    sort_key,
+				sort_key,
 			</if>
 			<if test="sales != null">
 				sales,
@@ -216,10 +216,10 @@
 				#{deadlinePromote},
 			</if>
 			<if test="isKey !=null">
-			    #{isKey},
+				#{isKey},
 			</if>
 			<if test="sortKey !=null">
-			    #{sortKey},
+				#{sortKey},
 			</if>
 			<if test="sales != null">
 				#{sales},
@@ -353,10 +353,10 @@
 				deadline_promote=#{deadlinePromote},
 			</if>
 			<if test="isKey !=null">
-			    is_key = #{isKey},
+				is_key = #{isKey},
 			</if>
 			<if test="sortKey !=null">
-			    sort_key = #{sortKey},
+				sort_key = #{sortKey},
 			</if>
 			<if test=" sales != null and sales !=''">
 				sales=#{sales},
@@ -544,29 +544,37 @@
 		b.bookmarks DESC
 		limit #{start},#{pageSize}
 	</select>
-	
+
 	<!-- 获取书籍总数 -->
 	<select id="getListToatl" resultType="java.lang.Integer">
-		select COUNT(id)  from book where 1=1 
+		select COUNT(id) from book where 1=1
 		<if test="bookName != null ">
-			and  bookname like CONCAT('%',#{bookName},'%') 
+			and bookname like CONCAT('%',#{bookName},'%')
 		</if>
 	</select>
-	
+
 	<!-- 获取数据分页数据 -->
 	<select id="geList" resultType="Book">
-		select * from book where 1=1 
+		select * from book where 1=1
 		<if test="bookName != null ">
-			and  bookname like CONCAT('%',#{bookName},'%') 
+			and bookname like CONCAT('%',#{bookName},'%')
 		</if>
-		limit #{start},#{pageSize} 
+		limit #{start},#{pageSize}
 	</select>
-	
+
 	<!-- 更新评分 -->
-	<update id="updateBookCore" >
+	<update id="updateBookCore">
 		update book set score = (
-			select avg(score) from book_user_comment where is_auth = 1 and !is_deleted and book_id = #{id}  GROUP BY book_id
+		select avg(score) from
+		book_user_comment where is_auth = 1 and !is_deleted
+		and book_id = #{id}
+		GROUP BY book_id
 		)
-		where  id = #{id}
+		where id = #{id}
+	</update>
+	<!-- 更新评分 -->
+	<update id="updateComments">
+		update book set comments = comments+1 where id =
+		#{id}
 	</update>
 </mapper>
