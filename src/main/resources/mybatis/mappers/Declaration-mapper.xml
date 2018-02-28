@@ -469,8 +469,7 @@
 		LEFT JOIN textbook d on d.id = c.textbook_id
 		LEFT JOIN writer_user e on e.id=a.user_id
 		LEFT JOIN (SELECT id,org_name from org UNION  SELECT 0,'人民卫生出版社' from org ) f on f.id=a.org_id
-		where
-			a.online_progress > 0 and a.is_deleted = 0 and  !is_staging
+		where a.online_progress > 0 and a.is_deleted = 0 and  !is_staging and c.id is not null 
 		<!--  and b.is_deleted =0 -->
 		and a.material_id = #{parameter.materialId}
 		<!-- 下面是动态条件 -->
@@ -582,8 +581,7 @@
 		LEFT JOIN textbook     d on d.id = c.textbook_id
 		LEFT JOIN writer_user  e on e.id=a.user_id
 		LEFT JOIN (SELECT id,org_name from org UNION  SELECT 0,'人民卫生出版社' from org ) f on f.id=a.org_id
-		where 
-			a.online_progress > 0 and a.is_deleted = 0 and  !is_staging
+		where a.online_progress > 0 and a.is_deleted = 0 and  !is_staging and c.id is not null 
 		<!-- and b.is_deleted =0 and b.id = #{parameter.materialId} -->
 		and a.material_id = #{parameter.materialId}
 		<!-- 下面是动态条件 -->
