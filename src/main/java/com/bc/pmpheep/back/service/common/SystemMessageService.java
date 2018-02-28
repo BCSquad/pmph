@@ -843,7 +843,7 @@ public final class SystemMessageService {
         // 给主编发送
         for (DecPosition decPosition : decPositionList) {
             if (null != decPosition.getChosenPosition() && null != decPosition.getRank()
-                && decPosition.getChosenPosition() == 1) {
+                && (decPosition.getChosenPosition() == 4 || decPosition.getChosenPosition() == 12)) {
                 String editorMsg =
                 "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
                 + textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
@@ -880,7 +880,7 @@ public final class SystemMessageService {
         Message message = new Message(associateEditor);
         for (DecPosition decPosition : decPositionList) {
             if (null != decPosition.getChosenPosition() && null != decPosition.getRank()
-                && decPosition.getChosenPosition() == 2) {
+                && (decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10)) {
                 // 获取申报表
                 Declaration declaration =
                 declarationService.getDeclarationById(decPosition.getDeclarationId());
@@ -913,7 +913,8 @@ public final class SystemMessageService {
         + textbook.getTextbookName() + "</font>]的编委";
         message = new Message(bianWei);
         for (DecPosition decPosition : decPositionList) {
-            if (null != decPosition.getChosenPosition() && decPosition.getChosenPosition() == 3) {
+            if (null != decPosition.getChosenPosition() 
+            		&&  (decPosition.getChosenPosition() == 1 || 9 == decPosition.getChosenPosition())) {
                 // 获取申报表
                 Declaration declaration =
                 declarationService.getDeclarationById(decPosition.getDeclarationId());
@@ -1041,14 +1042,14 @@ public final class SystemMessageService {
                         "[<font color='red'>" + declaration.getRealname() + "</font>]当选";
                         if (null != decPosition.getChosenPosition()
                             && null != decPosition.getRank()
-                            && decPosition.getChosenPosition() == 1) {
+                            && (decPosition.getChosenPosition() == 4 || decPosition.getChosenPosition() == 12)) {
                             msgContent += "第" + rank(decPosition.getRank()) + "主编";
                         } else if (null != decPosition.getChosenPosition()
                                    && null != decPosition.getRank()
-                                   && decPosition.getChosenPosition() == 2) {
+                                   && (decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10 ) ) {
                             msgContent += "副主编";
                         } else if (null != decPosition.getChosenPosition()
-                                   && decPosition.getChosenPosition() == 3) {
+                                   && (decPosition.getChosenPosition() == 1 || decPosition.getChosenPosition() == 9 )) {
                             msgContent += "编委";
                         } else {
                             continue;
