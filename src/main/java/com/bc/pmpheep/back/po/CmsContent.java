@@ -99,6 +99,8 @@ public class CmsContent implements java.io.Serializable {
     private Boolean   isStaging;
     // 是否教材报名入口
     private Boolean   isMaterialEntry;
+    // 封面id
+    private String    cover;
 
     // Constructors
 
@@ -149,7 +151,7 @@ public class CmsContent implements java.io.Serializable {
 
     public CmsContent(Long parentId, String path, String mid, String title, Short authorType,
     Boolean isPublished, Boolean isStaging, Long authorId, String gmtReedit, Long materialId,
-    Long categoryId, Boolean isMaterialEntry) {
+    Long categoryId, Boolean isMaterialEntry, String cover) {
         this.parentId = parentId;
         this.path = path;
         this.mid = mid;
@@ -162,6 +164,7 @@ public class CmsContent implements java.io.Serializable {
         this.materialId = materialId;
         this.categoryId = categoryId;
         this.isMaterialEntry = isMaterialEntry;
+        this.cover = cover;
     }
 
     public CmsContent(Long parentId, String path, String mid, String title, String summary,
@@ -227,7 +230,7 @@ public class CmsContent implements java.io.Serializable {
     Boolean isHot, Integer sortHot, String deadlineHot, Boolean isPromote, Integer sortPromote,
     String deadlinePromote, Boolean isScheduled, Boolean isHide, Boolean isPublished,
     Boolean isAuth, Long authUserId, String authDate, Boolean isDeleted, Timestamp gmtCreate,
-    Timestamp gmtUpdate, String gmtReedit, Long materialId, Boolean isMaterialEntry) {
+    Timestamp gmtUpdate, String gmtReedit, Long materialId, Boolean isMaterialEntry, String cover) {
         this.parentId = parentId;
         this.path = path;
         this.mid = mid;
@@ -262,6 +265,7 @@ public class CmsContent implements java.io.Serializable {
         this.gmtUpdate = gmtUpdate;
         this.gmtReedit = gmtReedit;
         this.materialId = materialId;
+        this.cover = cover;
     }
 
     // Property accessors
@@ -586,6 +590,20 @@ public class CmsContent implements java.io.Serializable {
     }
 
     /**
+     * @return the cover
+     */
+    public String getCover() {
+        return cover;
+    }
+
+    /**
+     * @param cover the cover to set
+     */
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    /**
      * <pre>
      * 功能描述：
      * 使用示范：
@@ -608,7 +626,6 @@ public class CmsContent implements java.io.Serializable {
                + authUserId + ", authDate:" + authDate + ", isDeleted:" + isDeleted
                + ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate + ", gmtReedit:"
                + gmtReedit + ", materialId:" + materialId + ", isMaterialEntry:" + isMaterialEntry
-               + "}";
+               + ", cover:" + cover + "}";
     }
-
 }
