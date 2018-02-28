@@ -273,9 +273,9 @@ public class MigrationStageTwo {
             count++;
             Long pk = writerUserCertification.getId();
             if (StringUtil.notEmpty(cert)) {
-                String mongoId = "";
+                String mongoId;
                 try {
-                    fileService.migrateFile(cert, ImageType.WRITER_USER_CERT, pk);
+                    mongoId = fileService.migrateFile(cert, ImageType.WRITER_USER_CERT, pk);
                 } catch (IOException ex) {
                     mongoId = "DEFAULT";
                     map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常。");
