@@ -137,7 +137,7 @@ public class MigrationPlus {
 	            cmsAdvertisement.setAutoPlay(cmsAdvertisementAndImages.getAutoPlay());
 	            //循环间隔时间
 	            cmsAdvertisement.setAnimationInterval(cmsAdvertisementAndImages.getAnimationInterval());
-	            //类型    0 普通  1 轮播
+	            //类型    0 普通  1 轮播  2两张
 	            cmsAdvertisement.setType(cmsAdvertisementAndImages.getType());
 	            //保存广告
 	            cmsAdvertisementDao.addCmsAdvertisement(cmsAdvertisement);
