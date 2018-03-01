@@ -354,16 +354,16 @@ public final class DateUtil {
         }
 
         if (timeStamp.getTime() >= todayStartMillis) {
-            return "今天"+time.substring(11, 16);
+            return "今天 "+time.substring(11, 16);
         }
 
         long yesterdayStartMilis = todayStartMillis - oneDayMillis; // 昨天
         if (timeStamp.getTime() >= yesterdayStartMilis) {
-            return "昨天"+time.substring(11, 16);
+            return "昨天 "+time.substring(11, 16);
         }
         long yesterdayBeforeStartMilis = yesterdayStartMilis - oneDayMillis;
         if (timeStamp.getTime() >= yesterdayBeforeStartMilis) {
-            return "前天"+time.substring(11, 16);
+            return "前天 "+time.substring(11, 16);
         }
         return time;
     }
