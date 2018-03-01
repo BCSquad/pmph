@@ -92,4 +92,18 @@ public interface BookUserCommentDao {
 	 *
 	 */
 	Integer deleteBookUserCommentByBookId(Long bookId);
+	
+	/**
+	 * admin查询图书评论数量
+	 * @param pageParameter
+	 * @return
+	 */
+	Integer getBookUserCommentAdminTotal(PageParameter<BookUserCommentVO> pageParameter);
+	
+	/**
+	 *  admin查询图书评论
+	 * @param pageParameter
+	 * @return
+	 */
+	List<BookUserCommentVO> listBookUserCommentAdmin(PageParameter<BookUserCommentVO> pageParameter);
 }

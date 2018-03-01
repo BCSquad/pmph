@@ -679,12 +679,15 @@ public class PmphUserServiceImpl implements PmphUserService {
 			}
 		}
 		// 图书评论审核
-		PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
-		BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
-		bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
-		pageParameter.setParameter(bookUserCommentVO);
-		PageResult<BookUserCommentVO> pageResultBookUserCommentVO = bookUserCommentService
-				.listBookUserComment(pageParameter);
+		if(sessionPmphUser.getIsAdmin()){
+			PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
+			BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
+			bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
+			pageParameter.setParameter(bookUserCommentVO);
+			PageResult<BookUserCommentVO> pageResultBookUserCommentVO = bookUserCommentService
+					.listBookUserCommentAdmin(pageParameter);
+			map.put("bookUserComment", pageResultBookUserCommentVO);
+		}
 		// 选题申报
 		PageParameter<TopicDeclarationVO> pageParameter3 = new PageParameter<>();
 		//选题申报当前用户角色
@@ -726,7 +729,6 @@ public class PmphUserServiceImpl implements PmphUserService {
 		}
 		// 把其他模块的数据都装入map中返回给前端
 		map.put("materialList", pageResultMaterialListVO);
-		map.put("bookUserComment", pageResultBookUserCommentVO);
 		map.put("pmphGroup", pageResultPmphGroup);
 		map.put("writerUserCount", writerUserCount);
 		map.put("orgUserCount", orgerCount);
