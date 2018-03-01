@@ -51,13 +51,13 @@ public class BookVedioController {
 			Integer pageSize, 
 			Integer pageNumber, 
 			String bookName,
-			Boolean isAuth,
+			Integer state,
 			String  upLoadTimeStart,
 			String  upLoadTimeEnd){
 		pageSize   = (pageSize   == null || pageSize   <= 0 )? 5:pageSize;
 		pageNumber = (pageNumber == null || pageNumber <= 0 )? 1:pageNumber;
 		return new ResponseBean<PageResult<BookVedioVO2>>(
-				bookVedioService.getVedioList(pageSize,pageNumber,bookName,isAuth,upLoadTimeStart,upLoadTimeEnd));
+				bookVedioService.getVedioList(pageSize,pageNumber,bookName,state,upLoadTimeStart,upLoadTimeEnd));
 	}
 	
 	

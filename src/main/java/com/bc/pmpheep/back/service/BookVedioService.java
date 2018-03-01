@@ -53,7 +53,7 @@ public interface BookVedioService {
 	 * @createDate 2018年2月6日 下午3:29:39
 	 * @return
 	 */
-	PageResult<BookVedioVO2>getVedioList(Integer pageSize,Integer pageNumber,String bookName,Boolean isAuth,String upLoadTimeStart,String  upLoadTimeEnd);
+	PageResult<BookVedioVO2>getVedioList(Integer pageSize,Integer pageNumber,String bookName,Integer state,String upLoadTimeStart,String  upLoadTimeEnd);
 	
 
 }
