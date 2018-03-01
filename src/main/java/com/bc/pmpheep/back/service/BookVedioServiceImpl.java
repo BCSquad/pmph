@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,8 +15,10 @@ import com.bc.pmpheep.back.dao.BookVedioDao;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Book;
 import com.bc.pmpheep.back.po.BookVedio;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookVedioVO;
+import com.bc.pmpheep.back.vo.BookVedioVO2;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -37,6 +40,39 @@ public class BookVedioServiceImpl  implements BookVedioService {
 	
 	@Autowired
 	private FileService fileService;
+	
+	@Override
+	public PageResult<BookVedioVO2> getVedioList(Integer pageSize, Integer pageNumber, String bookName, Integer state,
+			String upLoadTimeStart, String upLoadTimeEnd) {
+		Map<String, Object> map = new HashMap<String, Object>(3);
+		map.put("start",    ((pageNumber-1)*pageSize) );
+		map.put("pageSize", pageSize);
+		bookName = StringUtil.toAllCheck(bookName);
+		if(null != bookName){
+			map.put("bookName", bookName);
+		}
+		if(null != state && 0 == state.intValue() ) {//all
+			map.put("state", state);
+		}
+		//yyyy-MM-dd
+		if(StringUtil.notEmpty(upLoadTimeStart)) {
+			Timestamp startTime = DateUtil.str2Timestam(upLoadTimeStart);
+			map.put("startTime", startTime);
+		}
+		if(StringUtil.notEmpty(upLoadTimeEnd)) {
+			Timestamp endTime = DateUtil.str2Timestam(upLoadTimeEnd);
+			map.put("endTime", endTime);
+		}
+		PageResult<BookVedioVO2> BookVedioVO2lst= new  PageResult<BookVedioVO2>();
+		BookVedioVO2lst.setPageNumber(pageNumber);
+		BookVedioVO2lst.setPageSize(pageSize);
+		Integer  total = bookVedioDao.getVedioListTotal(map);
+		if(null != total && total > 0 ) {
+			BookVedioVO2lst.setRows(bookVedioDao.getVedioList(map));
+		}
+		BookVedioVO2lst.setTotal(total);
+		return BookVedioVO2lst;
+	}
 	
 
 	@Override
@@ -140,6 +176,9 @@ public class BookVedioServiceImpl  implements BookVedioService {
 		bookVedio.setCover(coverId);
 		return bookVedioDao.updateBookVedio(bookVedio);
 	}
+
+
+	
 
 	
 	

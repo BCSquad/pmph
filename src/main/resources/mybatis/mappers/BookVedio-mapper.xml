@@ -195,7 +195,68 @@
 		select * from  book_vedio where orig_path like  concat('%',#{oldPath},'.%');
 	</select>
 	
+	<!-- 获取微视频列表总数 -->
+	<select id="getVedioListTotal"  resultType="java.lang.Integer" >
+	    select 
+	        COUNT(a.id)
+			from book_vedio a LEFT JOIN  book b on b.id = a.book_id LEFT JOIN writer_user c on c.id= a.user_id
+		where  a.is_deleted = false and b.id is not null and c.id is not null 
+		<if test="bookName != null"> 
+			and b.bookname like #{bookName}
+		</if>
+		<if test="state != null"> 
+			<if test="state == 1"> 
+				and a.auth_user_id is null
+		    </if>
+			<if test="state == 2"> 
+				and a.auth_user_id is not null and a.is_auth = false
+			</if>
+			<if test="state == 3"> 
+				and a.auth_user_id is not null and a.is_auth = true
+			</if>
+		</if>
+		<if test="startTime != null"> 
+			and a.gmt_create  <![CDATA[ >= ]]> #{startTime}
+		</if>
+		<if test="endTime != null"> 
+			and a.gmt_create  <![CDATA[ <= ]]>  #{endTime}
+		</if>
+	</select>
 	
-	
+	<!-- 获取微视频列表 -->
+	<select id="getVedioList"  resultType="BookVedioVO2" >
+	    select a.id id,
+			a.book_id bookId,
+			b.bookname bookName,
+			a.orig_file_name origFileName,
+			a.path path,
+			if(c.id = 0,'管理员',c.realname) userName,
+			a.gmt_create gmtCreate,
+			a.file_size fileSize,
+			if(a.auth_user_id is null,null,a.is_auth) isAuth
+			from book_vedio a LEFT JOIN  book b on b.id = a.book_id LEFT JOIN writer_user c on c.id= a.user_id
+		where  a.is_deleted = false and b.id is not null and c.id is not null 
+		<if test="bookName != null"> 
+			and b.bookname like #{bookName}
+		</if>
+		<if test="state != null"> 
+			<if test="state == 1"> 
+				and a.auth_user_id is null
+		    </if>
+			<if test="state == 2"> 
+				and a.auth_user_id is not null and a.is_auth = false
+			</if>
+			<if test="state == 3"> 
+				and a.auth_user_id is not null and a.is_auth = true
+			</if>
+		</if>
+		<if test="startTime != null"> 
+			and a.gmt_create  <![CDATA[ >= ]]> #{startTime}
+		</if>
+		<if test="endTime != null"> 
+			and a.gmt_create  <![CDATA[ <= ]]>  #{endTime}
+		</if>
+		ORDER BY a.gmt_create desc limit #{start} ,#{pageSize}
+	</select>
 	
 </mapper>
