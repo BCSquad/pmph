@@ -8,8 +8,10 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.bc.pmpheep.back.dao.CmsAdvertisementDao;
@@ -26,6 +28,7 @@ import com.bc.pmpheep.back.po.SurveyType;
 import com.bc.pmpheep.back.po.Topic;
 import com.bc.pmpheep.back.po.TopicExtra;
 import com.bc.pmpheep.back.po.TopicWriter;
+import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.SensitiveService;
@@ -41,6 +44,7 @@ import com.bc.pmpheep.back.service.SurveyTypeService;
 import com.bc.pmpheep.back.service.TopicExtraService;
 import com.bc.pmpheep.back.service.TopicService;
 import com.bc.pmpheep.back.service.TopicWriertService;
+import com.bc.pmpheep.back.service.WriterPointRuleService;
 import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.vo.CmsAdvertisementOrImageVO;
 import com.bc.pmpheep.general.bean.FileType;
@@ -97,6 +101,8 @@ public class MigrationPlus {
 	 WriterUserService writerUserService;
 	 @Resource
 	 SensitiveService sensitiveService;
+	 @Resource
+	 WriterPointRuleService writerPointRuleService;
 	 
 	 public void start() {
 		 Date begin = new Date();
@@ -104,6 +110,8 @@ public class MigrationPlus {
 		 survey();
          logger.info("填充选题申报测试数据");
 		 topic();
+		 logger.info("填充积分规则数据");
+		 point();
 		 logger.info("初始化广告数据");
 		 initCmsAdvertisementData();
 		 logger.info("数据填充运行结束，用时：{}", JdbcHelper.getPastTime(begin));
@@ -440,4 +448,23 @@ public class MigrationPlus {
 		Sensitive sensitive8 = new Sensitive("放屁", 9, "口头用语", true, true, null, null);
 		sensitiveService.add(sensitive8);
 	}
+	 //积分规则迁移
+	 protected  void point(){
+		 WriterPointRule writerPointRule1=new WriterPointRule("连续登录", "logins", 1, false, null, null, "连续登录每天增加1分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule1);
+		 WriterPointRule writerPointRule2=new WriterPointRule("连续最大积分", "max_login_integral", 5, false, null, null, "到第5天增加5分后，每天给5分，中间有一天不来，重新开始积分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule2);
+		 WriterPointRule writerPointRule3=new WriterPointRule("登录", "login", 1, false, null, null, "每天登录一次给1分，一天仅一次", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule3);
+		 WriterPointRule writerPointRule4=new WriterPointRule("回复话题", "reply_topic", 1, false, null, null, "回复话题给1分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule4);
+		 WriterPointRule writerPointRule5=new WriterPointRule("创建话题", "create_topic", 2, false, null, null, "创建话题给1分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule5);
+		 WriterPointRule writerPointRule6=new WriterPointRule("平台a", "sys_a", 50, true, "2", 2, "本平台50积分=商城2积分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule6);
+		 WriterPointRule writerPointRule7=new WriterPointRule("平台b", "sys_b", 200, true, "0", 10, "本平台200积分=平台b10积分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule7);
+		 WriterPointRule writerPointRule8=new WriterPointRule("智慧商城", "buss", 100, true, "1", 1, "本平台100积分=智慧商城1积分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule8);
+	 }
 }
