@@ -50,7 +50,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		}
 		BookCorrection bookCorrection= this.getBookCorrectionById(id);
 		if(!bookCorrection.getIsAuthorReplied() ){
-			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "请先主编审核");
+			//throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "请先主编审核");
 		}
 		bookCorrection.setIsEditorHandling(true);
 		return this.updateBookCorrection(bookCorrection);
@@ -77,10 +77,10 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		Long bookId = bookCorrection.getBookId();
 		Long submitUserId = bookCorrection.getUserId();
 		if(!bookCorrection.getIsAuthorReplied() ){
-			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "请先主编审核");
+			//throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "请先主编审核");
 		}
 		if(!bookCorrection.getIsEditorHandling() ){
-			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "策划编辑未受理");
+			//throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "策划编辑未受理");
 		}
 		if(bookCorrection.getIsEditorReplied()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION, CheckedExceptionResult.NULL_PARAM, "策划编辑不能再次回复");
@@ -90,6 +90,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		bookCorrection.setResult(result);
 		bookCorrection.setIsEditorReplied(true);
 		bookCorrection.setEditorReply(editorReply);
+		bookCorrection.setIsEditorHandling(true);
 		
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst(); 
 		writerUserTrendst.setUserId(submitUserId);

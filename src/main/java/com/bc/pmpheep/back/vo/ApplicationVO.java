@@ -12,21 +12,25 @@ import com.bc.pmpheep.back.po.DecAchievement;
 import com.bc.pmpheep.back.po.DecClinicalReward;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
+import com.bc.pmpheep.back.po.DecIntention;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecMonograph;
+import com.bc.pmpheep.back.po.DecMoocDigital;
 import com.bc.pmpheep.back.po.DecNationalPlan;
 import com.bc.pmpheep.back.po.DecPublishReward;
 import com.bc.pmpheep.back.po.DecResearch;
 import com.bc.pmpheep.back.po.DecSci;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
+import com.bc.pmpheep.back.po.DecTextbookPmph;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Material;
 
 /**
  * @author MrYang
  * @CreateDate 2017年9月30日 下午4:34:28
- *
+ * 修改：tyc
+ * @Date 20180301
  **/
 @SuppressWarnings("serial")
 @Alias("ApplicationVO")
@@ -45,13 +49,13 @@ public class ApplicationVO implements Serializable {
 	private DecAchievement decAchievement = new DecAchievement();
 	// 主要学术兼职
 	private List<DecAcade> decAcadeList = new ArrayList<DecAcade>(5);
-	// 上版教材参编情况
+	// 作家本套上版教材参编情况表
 	private List<DecLastPosition> decLastPositionList = new ArrayList<DecLastPosition>(5);
-	// 精品课程建设情况
-	private List<DecCourseConstruction> decCourseConstruction = new ArrayList<DecCourseConstruction>(5);
 	// 主编国家规划教材情况
 	private List<DecNationalPlan> decNationalPlanList = new ArrayList<DecNationalPlan>(5);
-	// 教材编写情况
+	// 精品课程建设情况
+	private List<DecCourseConstruction> decCourseConstruction = new ArrayList<DecCourseConstruction>(5);
+	// 其他社教材编写情况表
 	private List<DecTextbook> decTextbookList = new ArrayList<DecTextbook>(5);
 	// 科研情况
 	private List<DecResearch> decResearchList = new ArrayList<DecResearch>(5);
@@ -67,6 +71,12 @@ public class ApplicationVO implements Serializable {
 	private List<DecAcadeReward> decAcadeRewardList = new ArrayList<DecAcadeReward>(5);
 	// 作家扩展项
 	private List<DecExtensionVO> decExtensionList = new ArrayList<DecExtensionVO>(5);
+	// 人卫社教材编写情况表
+	private List<DecTextbookPmph> decTextbookPmphList = new ArrayList<DecTextbookPmph>(5);
+	// 参加人卫慕课、数字教材编写情况
+	private DecMoocDigital decMoocDigital = new DecMoocDigital();
+	// 编写内容意向表
+	private DecIntention decIntention = new DecIntention();
 	// 是否选择必填
 	private Material material = new Material();
 
@@ -225,6 +235,30 @@ public class ApplicationVO implements Serializable {
 
 	public void setMaterial(Material material) {
 		this.material = material;
+	}
+
+	public List<DecTextbookPmph> getDecTextbookPmphList() {
+		return decTextbookPmphList;
+	}
+
+	public void setDecTextbookPmphList(List<DecTextbookPmph> decTextbookPmphList) {
+		this.decTextbookPmphList = decTextbookPmphList;
+	}
+
+	public DecMoocDigital getDecMoocDigital() {
+		return decMoocDigital;
+	}
+
+	public void setDecMoocDigital(DecMoocDigital decMoocDigital) {
+		this.decMoocDigital = decMoocDigital;
+	}
+
+	public DecIntention getDecIntention() {
+		return decIntention;
+	}
+
+	public void setDecIntention(DecIntention decIntention) {
+		this.decIntention = decIntention;
 	}
 
 }

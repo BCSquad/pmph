@@ -77,7 +77,7 @@
 	<select id="listTextbookLogByTextBookId" parameterType="PageParameter" resultType="TextbookLog">
 		SELECT 
 			a.id,a.textbook_id,a.updater_id,a.is_pmph_updater,
-			CONCAT('[',IF(a.is_pmph_updater,b.realname,c.realname),']','于[{gmt_create}]',a.detail) detail,
+			CONCAT('[',IF(a.is_pmph_updater,b.realname,c.realname),']',' 于 [{gmt_create}];',a.detail) detail,
 			a.gmt_create
 		FROM
 			textbook_log  a

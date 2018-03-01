@@ -204,8 +204,16 @@
 		<if test="bookName != null"> 
 			and b.bookname like #{bookName}
 		</if>
-		<if test="isAuth != null"> 
-			and a.is_auth =  #{isAuth}
+		<if test="state != null"> 
+			<if test="state == 1"> 
+				and a.auth_user_id is null
+		    </if>
+			<if test="state == 2"> 
+				and a.auth_user_id is not null and a.is_auth = false
+			</if>
+			<if test="state == 3"> 
+				and a.auth_user_id is not null and a.is_auth = true
+			</if>
 		</if>
 		<if test="startTime != null"> 
 			and a.gmt_create  <![CDATA[ >= ]]> #{startTime}
@@ -231,8 +239,16 @@
 		<if test="bookName != null"> 
 			and b.bookname like #{bookName}
 		</if>
-		<if test="isAuth != null"> 
-			and a.is_auth =  #{isAuth}
+		<if test="state != null"> 
+			<if test="state == 1"> 
+				and a.auth_user_id is null
+		    </if>
+			<if test="state == 2"> 
+				and a.auth_user_id is not null and a.is_auth = false
+			</if>
+			<if test="state == 3"> 
+				and a.auth_user_id is not null and a.is_auth = true
+			</if>
 		</if>
 		<if test="startTime != null"> 
 			and a.gmt_create  <![CDATA[ >= ]]> #{startTime}

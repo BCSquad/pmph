@@ -42,7 +42,7 @@ public class BookVedioServiceImpl  implements BookVedioService {
 	private FileService fileService;
 	
 	@Override
-	public PageResult<BookVedioVO2> getVedioList(Integer pageSize, Integer pageNumber, String bookName, Boolean isAuth,
+	public PageResult<BookVedioVO2> getVedioList(Integer pageSize, Integer pageNumber, String bookName, Integer state,
 			String upLoadTimeStart, String upLoadTimeEnd) {
 		Map<String, Object> map = new HashMap<String, Object>(3);
 		map.put("start",    ((pageNumber-1)*pageSize) );
@@ -51,8 +51,8 @@ public class BookVedioServiceImpl  implements BookVedioService {
 		if(null != bookName){
 			map.put("bookName", bookName);
 		}
-		if(null != isAuth) {
-			map.put("isAuth", isAuth);
+		if(null != state && 0 == state.intValue() ) {//all
+			map.put("state", state);
 		}
 		//yyyy-MM-dd
 		if(StringUtil.notEmpty(upLoadTimeStart)) {

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.DecMoocDigitalDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="declarationId != null">
+				declaration_id,
+			</if>
+			<if test=" content != null and content !=''">
+				content,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="declarationId != null">
+				#{declarationId},
+			</if>
+			<if test=" content != null and content !=''">
+				#{content},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增 -->
+	<insert id="addDecMoocDigital" parameterType="DecMoocDigital">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dec_mooc_digital (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 根据declarationId查询 -->
+	<select id="getDecMoocDigitalByDeclarationId" parameterType="java.lang.Long"
+		resultType="DecMoocDigital">
+		SELECT * from dec_mooc_digital where declaration_id = #{declarationId}
+	</select>
+
+
+	<!-- 根据declarationId查询 -->
+	<select id="getDecMoocDigitalByDeclarationIds" resultType="DecMoocDigital">
+		SELECT * from dec_mooc_digital where declaration_id in
+		<foreach collection="list" item="declarationId" open="("
+			close=")" separator="," index="index">
+			#{declarationId}
+		</foreach>
+	</select>
+
+</mapper>
