@@ -284,4 +284,28 @@ public interface TopicDao {
 	Integer updateByVn(Topic topic);
 
 	Topic get(Long id);
+	
+	/**
+	 * 查询选题申报的数量
+	 * @param authProgress
+	 * @param bookname
+	 * @param submitTime
+	 * @return
+	 */
+	Integer listMyTopicTotal(@Param("authProgress") List<Long> authProgress, @Param("bookname") String bookname,
+			@Param("submitTime") Timestamp submitTime,@Param("isDirectorHandling") Boolean isDirectorHandling,
+			@Param("isEditorHandling") Boolean isEditorHandling, @Param("isOptsHandling") Boolean isOptsHandling);
+	/**
+	 * 	查询当前用户相关的选题申报
+	 * @param authProgress
+	 * @param pageSize
+	 * @param start
+	 * @param bookname
+	 * @param submitTime
+	 * @return
+	 */
+	List<TopicDeclarationVO> listMyTopic(@Param("authProgress") List<Long> authProgress, @Param("pageSize") Integer pageSize,
+			@Param("start")  Integer start,@Param("bookname") String bookname,
+			@Param("submitTime") Timestamp submitTime,@Param("isDirectorHandling")  Boolean isDirectorHandling,
+			@Param("isEditorHandling")Boolean isEditorHandling,@Param("isOptsHandling") Boolean isOptsHandling);
 }

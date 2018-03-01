@@ -14,6 +14,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.tags.EscapeBodyTag;
 
 import com.bc.pmpheep.back.dao.PmphDepartmentDao;
 import com.bc.pmpheep.back.dao.PmphPermissionDao;
@@ -695,7 +696,37 @@ public class PmphUserServiceImpl implements PmphUserService {
 		
 		// 选题申报
 		PageParameter<TopicDeclarationVO> pageParameter3 = new PageParameter<>();
+		//选题申报当前用户角色
+		PmphIdentity pmphIdentity=pmphUserService.identity(sessionId);
 		TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
+		//当用户时admin查询所有
+		if(pmphIdentity.getIsAdmin()){
+			topicDeclarationVO.setIsDirectorHandling(true);
+			topicDeclarationVO.setIsOptsHandling(true);
+			topicDeclarationVO.setIsEditorHandling(true);
+		}else {
+			topicDeclarationVO.setIsDirectorHandling(false);
+			topicDeclarationVO.setIsOptsHandling(false);
+			topicDeclarationVO.setIsEditorHandling(false);
+		}
+		//是否由主任受理
+		if(pmphIdentity.getIsDirector()){
+			topicDeclarationVO.setIsDirectorHandling(true);
+		}else{
+			topicDeclarationVO.setIsDirectorHandling(false);
+		}
+		//是否由运维人员受理
+		if(pmphIdentity.getIsOpts()){
+			topicDeclarationVO.setIsOptsHandling(true);
+		}else{
+			topicDeclarationVO.setIsOptsHandling(false);
+		}
+		//是否由编辑受理
+		if(pmphIdentity.getIsEditor()){
+			topicDeclarationVO.setIsEditorHandling(true);
+		}else {
+			topicDeclarationVO.setIsEditorHandling(false);
+		}
 		String[] strs = authProgress.split(",");
 		List<Long> progress = new ArrayList<>();
 		for (String str : strs) {
@@ -703,10 +734,8 @@ public class PmphUserServiceImpl implements PmphUserService {
 		}
 		topicDeclarationVO.setBookname(topicBookname);
 		pageParameter3.setParameter(topicDeclarationVO);
-		PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO = topicService.listCheckTopic(progress,
+		PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO = topicService.listMyTopic(progress,
 				pageParameter3);
-		//选题申报当前用户角色
-		PmphIdentity pmphIdentity=pmphUserService.identity(sessionId);
 		//获取用户角色
 		List<PmphRole> rolelist=roleService.getPmphRoleByUserId(sessionPmphUser.getId());
 		//获取用户上次登录时间
