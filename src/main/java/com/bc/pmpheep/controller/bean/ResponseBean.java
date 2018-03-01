@@ -56,6 +56,11 @@ public class ResponseBean<T> implements Serializable {
      */
     public static final int NO_PERMISSION       = 100;
 
+    /**
+     * 重新登陆
+     */
+    public static final int LOGIN_AGAIN         = 110;
+
     private int             code                = SUCCESS;
     private String          msg                 = "success";
     private T               data;

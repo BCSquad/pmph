@@ -24,10 +24,12 @@ import small.danfer.sso.http.HttpSingleSignOnService;
 
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.PmphUserWechat;
 import com.bc.pmpheep.back.service.CmsCategoryService;
 import com.bc.pmpheep.back.service.PmphPermissionService;
 import com.bc.pmpheep.back.service.PmphRoleService;
 import com.bc.pmpheep.back.service.PmphUserService;
+import com.bc.pmpheep.back.service.PmphUserWechatService;
 import com.bc.pmpheep.back.sessioncontext.SessionContext;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.CookiesUtil;
@@ -35,10 +37,12 @@ import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.bc.pmpheep.wechat.interceptor.OAuthRequired;
 
 /**
  * 
@@ -70,6 +74,8 @@ public class PmphLoginController {
     PmphRoleService       pmphRoleService;
     @Autowired
     CmsCategoryService    cmsCategoryService;
+    @Autowired
+    PmphUserWechatService pmphUserWechatService;
 
     /**
      * 
@@ -86,15 +92,54 @@ public class PmphLoginController {
      * 
      */
     @ResponseBody
+    @OAuthRequired
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ResponseBean login(@RequestParam("username") String username,
-    @RequestParam("password") String password, HttpServletRequest request) {
+    public ResponseBean login(@RequestParam(value = "username", required = false) String username,
+    @RequestParam(value = "password", required = false) String password, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         logger.info("username => " + username);
         logger.info("password => " + password);
         // HttpSingleSignOnService service = new HttpSingleSignOnService();
         // String url = service.getSingleSignOnURL();
         try {
+            // 判断是否从企业微信App登陆
+            String userAgent = request.getHeader("user-agent").toLowerCase();
+            Boolean isTrue =
+            userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
+            if (isTrue) {
+                HttpSession session = request.getSession();
+                String wechatUserId = (String) session.getAttribute("UserId");
+                if (StringUtil.isEmpty(wechatUserId)) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                                      CheckedExceptionResult.NULL_PARAM,
+                                                      "网络异常，请重新再试!");
+                }
+                PmphUserWechat pmphUserWechat =
+                pmphUserWechatService.getPmphUserWechatByWechatId(wechatUserId);
+                if (StringUtil.notEmpty(username)) {
+                    if (ObjectUtil.isNull(pmphUserWechat)) {
+                        pmphUserWechatService.add(new PmphUserWechat(username, wechatUserId));
+                    }
+                } else if (StringUtil.isEmpty(username)) {
+                    if (ObjectUtil.notNull(pmphUserWechat)) {
+                        PmphUser pmphUser =
+                        pmphUserService.getByUsernameAndPassword(pmphUserWechat.getUsername(), null);
+                        if (ObjectUtil.notNull(pmphUser)) {
+                            username = pmphUserWechat.getUsername();
+                            password = pmphUser.getPassword();
+                        }
+                    } else {
+                        ResponseBean responseBean = new ResponseBean();
+                        responseBean.setCode(ResponseBean.LOGIN_AGAIN);
+                        responseBean.setData("请重新登陆！");
+                        return responseBean;
+                    }
+                }
+            }
+            if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                                  CheckedExceptionResult.NULL_PARAM, "请输入用户名和密码!");
+            }
             PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
             // PmphUser pmphUser = pmphUserService.login(userName, null);
             pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
