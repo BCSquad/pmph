@@ -22,8 +22,10 @@ import com.bc.pmpheep.back.dao.DecClinicalRewardDao;
 import com.bc.pmpheep.back.dao.DecCourseConstructionDao;
 import com.bc.pmpheep.back.dao.DecEduExpDao;
 import com.bc.pmpheep.back.dao.DecExtensionDao;
+import com.bc.pmpheep.back.dao.DecIntentionDao;
 import com.bc.pmpheep.back.dao.DecLastPositionDao;
 import com.bc.pmpheep.back.dao.DecMonographDao;
+import com.bc.pmpheep.back.dao.DecMoocDigitalDao;
 import com.bc.pmpheep.back.dao.DecNationalPlanDao;
 import com.bc.pmpheep.back.dao.DecPositionDao;
 import com.bc.pmpheep.back.dao.DecPublishRewardDao;
@@ -31,6 +33,7 @@ import com.bc.pmpheep.back.dao.DecResearchDao;
 import com.bc.pmpheep.back.dao.DecSciDao;
 import com.bc.pmpheep.back.dao.DecTeachExpDao;
 import com.bc.pmpheep.back.dao.DecTextbookDao;
+import com.bc.pmpheep.back.dao.DecTextbookPmphDao;
 import com.bc.pmpheep.back.dao.DecWorkExpDao;
 import com.bc.pmpheep.back.dao.DeclarationDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -41,8 +44,10 @@ import com.bc.pmpheep.back.po.DecAchievement;
 import com.bc.pmpheep.back.po.DecClinicalReward;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
+import com.bc.pmpheep.back.po.DecIntention;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecMonograph;
+import com.bc.pmpheep.back.po.DecMoocDigital;
 import com.bc.pmpheep.back.po.DecNationalPlan;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.DecPublishReward;
@@ -50,6 +55,7 @@ import com.bc.pmpheep.back.po.DecResearch;
 import com.bc.pmpheep.back.po.DecSci;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
+import com.bc.pmpheep.back.po.DecTextbookPmph;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.po.Material;
@@ -122,6 +128,12 @@ public class DeclarationServiceImpl implements DeclarationService {
 	private DecClinicalRewardDao decClinicalRewardDao;
 	@Autowired
 	private DecAcadeRewardDao decAcadeRewardDao;
+	@Autowired
+	private DecTextbookPmphDao decTextbookPmphDao;
+	@Autowired
+	private DecMoocDigitalDao decMoocDigitalDao;
+	@Autowired
+	private DecIntentionDao decIntentionDao;
 	@Autowired
 	private MaterialService materialService;
 
@@ -480,14 +492,19 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 上套教材
 		List<DecLastPosition> decLastPositionList = decLastPositionDao
 				.getListDecLastPositionByDeclarationId(declarationId);
-		// 精品课程建设情况
-		List<DecCourseConstruction> decCourseConstruction = decCourseConstructionDao
-				.getDecCourseConstructionByDeclarationId(declarationId);
 		// 主编国家级规划
 		List<DecNationalPlan> decNationalPlanList = decNationalPlanDao
 				.getListDecNationalPlanByDeclarationId(declarationId);
+		// 人卫社教材编写情况表
+		List<DecTextbookPmph> decTextbookPmphList = 
+				decTextbookPmphDao.getListDecTextbookPmphByDeclarationId(declarationId);
 		// 教材编写
 		List<DecTextbook> decTextbookList = decTextbookDao.getListDecTextbookByDeclarationId(declarationId);
+		// 参加人卫慕课、数字教材编写情况表
+		DecMoocDigital decMoocDigital = decMoocDigitalDao.getDecMoocDigitalByDeclarationId(declarationId);
+		// 精品课程建设情况
+		List<DecCourseConstruction> decCourseConstruction = decCourseConstructionDao
+				.getDecCourseConstructionByDeclarationId(declarationId);
 		// 作家科研
 		List<DecResearch> decResearchList = decResearchDao.getListDecResearchByDeclarationId(declarationId);
 		// 主编学术专著情况
@@ -504,6 +521,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 		List<DecAcadeReward> decAcadeRewardList = decAcadeRewardDao.getListDecAcadeRewardByDeclarationId(declarationId);
 		// 作家扩展项
 		List<DecExtensionVO> decExtensionList = decExtensionDao.getListDecExtensionByDeclarationId(declarationId);
+		// 编写内容意向表
+		DecIntention decIntention = decIntentionDao.getDecIntentionByDeclarationId(declarationId);
 		// 是否选择必填
 		Material material = materialService.getMaterialById(declaration.getMaterialId());
 		// 把查询出来的信息添加进applicationVO
@@ -515,9 +534,11 @@ public class DeclarationServiceImpl implements DeclarationService {
 		applicationVO.setDecAchievement(decAchievement);
 		applicationVO.setDecAcadeList(decAcadeList);
 		applicationVO.setDecLastPositionList(decLastPositionList);
-		applicationVO.setDecCourseConstruction(decCourseConstruction);
 		applicationVO.setDecNationalPlanList(decNationalPlanList);
+		applicationVO.setDecTextbookPmphList(decTextbookPmphList);
 		applicationVO.setDecTextbookList(decTextbookList);
+		applicationVO.setDecMoocDigital(decMoocDigital);
+		applicationVO.setDecCourseConstruction(decCourseConstruction);
 		applicationVO.setDecResearchList(decResearchList);
 		applicationVO.setDecMonographList(decMonographList);
 		applicationVO.setDecPublishRewardList(decPublishRewardList);
@@ -525,6 +546,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		applicationVO.setDecClinicalRewardList(decClinicalRewardList);
 		applicationVO.setDecAcadeRewardList(decAcadeRewardList);
 		applicationVO.setDecExtensionList(decExtensionList);
+		applicationVO.setDecIntention(decIntention);
 		applicationVO.setMaterial(material);
 		return applicationVO;
 	}
