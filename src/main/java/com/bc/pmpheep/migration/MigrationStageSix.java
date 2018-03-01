@@ -27,6 +27,7 @@ import com.bc.pmpheep.back.po.DecPositionPublished;
 import com.bc.pmpheep.back.po.DecResearch;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
+import com.bc.pmpheep.back.po.DecTextbookPmph;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.service.DecAcadeService;
@@ -39,6 +40,7 @@ import com.bc.pmpheep.back.service.DecPositionPublishedService;
 import com.bc.pmpheep.back.service.DecPositionService;
 import com.bc.pmpheep.back.service.DecResearchService;
 import com.bc.pmpheep.back.service.DecTeachExpService;
+import com.bc.pmpheep.back.service.DecTextbookPmphService;
 import com.bc.pmpheep.back.service.DecTextbookService;
 import com.bc.pmpheep.back.service.DecWorkExpService;
 import com.bc.pmpheep.back.service.DeclarationService;
@@ -94,6 +96,8 @@ public class MigrationStageSix {
     DecExtensionService decExtensionService;
     @Resource
     DecPositionPublishedService decPositionPublishedService;
+    @Resource
+    DecTextbookPmphService decTextbookPmphService;
     @Resource
     FileService fileService;
     @Resource
@@ -846,31 +850,48 @@ public class MigrationStageSix {
             Date publishDate = (Date) map.get("publisdate"); // 出版时间
             String isbn = (String) map.get("booknumber"); // 标准书号
             DecTextbook decTextbook = new DecTextbook();
-            if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
+            DecTextbookPmph decTextbookPmph = new DecTextbookPmph();
+        	if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 declarationidCount++;
                 continue;
             }
-            decTextbook.setDeclarationId(declarationid);
-            decTextbook.setMaterialName(materialName);
-            Integer rank = rankJudge.intValue();
-            decTextbook.setRank(rank);
-            Integer position = positionJudge.intValue();
-            decTextbook.setPosition(position);
-            decTextbook.setPublisher(publisher);
-            decTextbook.setPublishDate(publishDate);
             if (StringUtil.notEmpty(isbn)) {
                 isbn = isbn.trim();
                 isbn = isbn.replace("ISBN", "ISBN ").replace("isbn", "ISBN ").replace(":", "")
                 		.replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
                 		.replace("•", "·");
             }
-            decTextbook.setIsbn(isbn);
-            decTextbook.setNote((String) map.get("remark")); // 备注
-            decTextbook.setSort(999); // 显示顺序
-            decTextbook = decTextbookService.addDecTextbook(decTextbook);
+            Integer rank = rankJudge.intValue();
+            if (ObjectUtil.isNull(rank)) {
+            	rank = 0;
+            }
+            if (!"人民卫生出版社".equals(publisher)) {
+	            decTextbook.setDeclarationId(declarationid);
+	            decTextbook.setMaterialName(materialName);
+	            decTextbook.setRank(rank);
+	            Integer position = positionJudge.intValue();
+	            decTextbook.setPosition(position);
+	        	decTextbook.setPublisher(publisher);
+	            decTextbook.setPublishDate(publishDate);
+	            decTextbook.setIsbn(isbn);
+	            decTextbook.setNote((String) map.get("remark")); // 备注
+	            decTextbook.setSort(999); // 显示顺序
+	            decTextbook = decTextbookService.addDecTextbook(decTextbook);
+            } else {
+	            decTextbookPmph.setDeclarationId(declarationid);
+	            decTextbookPmph.setMaterialName(materialName);
+	            decTextbookPmph.setRank(rank);
+	            Integer position = positionJudge.intValue();
+	            decTextbookPmph.setPosition(position);
+	            decTextbookPmph.setPublishDate(publishDate);
+	            decTextbookPmph.setIsbn(isbn);
+	            decTextbookPmph.setNote((String) map.get("remark")); // 备注
+	            decTextbookPmph.setSort(999); // 显示顺序
+	            decTextbookPmph = decTextbookPmphService.addDecTextbookPmph(decTextbookPmph);
+			}
             long pk = decTextbook.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "materwriteid", id);
             count++;
@@ -918,6 +939,7 @@ public class MigrationStageSix {
             Date publishDate = (Date) map.get("publisdates"); // 出版时间
             String isbn = (String) map.get("booknumber"); // 标准书号
             DecTextbook decTextbook = new DecTextbook();
+            DecTextbookPmph decTextbookPmph = new DecTextbookPmph();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
@@ -925,28 +947,41 @@ public class MigrationStageSix {
                 declarationidCount++;
                 continue;
             }
-            decTextbook.setDeclarationId(declarationid);
-            decTextbook.setMaterialName(materialName);
-            decTextbook.setRank(5); // 教材级别
-            Integer position = positionJudge.intValue();
-            decTextbook.setPosition(position);
-            String publishers = publisher.trim();
-            if (publishers.length() > 50 || "-1819".equals(id)) {
-            	decTextbook.setPublisher("中国铁道出版社北京（2007）");
-            } else {
-            	decTextbook.setPublisher(publishers);
-			}
-            decTextbook.setPublishDate(publishDate);
             if (StringUtil.notEmpty(isbn)) {
                 isbn = isbn.trim();
                 isbn = isbn.replace("ISBN", "ISBN ").replace("isbn", "ISBN ").replace(":", "")
                 		.replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
                 		.replace("•", "·");
             }
-            decTextbook.setIsbn(isbn);
-            decTextbook.setNote((String) map.get("remark")); // 备注
-            decTextbook.setSort(999); // 显示顺序
-            decTextbook = decTextbookService.addDecTextbook(decTextbook);
+            if (!"人民卫生出版社".equals(publisher)) {
+            	decTextbook.setDeclarationId(declarationid);
+                decTextbook.setMaterialName(materialName);
+                decTextbook.setRank(0); // 教材级别
+                Integer position = positionJudge.intValue();
+                decTextbook.setPosition(position);
+                String publishers = publisher.trim();
+                if (publishers.length() > 50 || "-1819".equals(id)) {
+                	decTextbook.setPublisher("中国铁道出版社北京（2007）");
+                } else {
+                	decTextbook.setPublisher(publishers);
+    			}
+                decTextbook.setPublishDate(publishDate);
+                decTextbook.setIsbn(isbn);
+                decTextbook.setNote((String) map.get("remark")); // 备注
+                decTextbook.setSort(999); // 显示顺序
+                decTextbook = decTextbookService.addDecTextbook(decTextbook);
+            } else {
+            	decTextbookPmph.setDeclarationId(declarationid);
+	            decTextbookPmph.setMaterialName(materialName);
+	            decTextbookPmph.setRank(0); // 教材级别
+	            Integer position = positionJudge.intValue();
+	            decTextbookPmph.setPosition(position);
+	            decTextbookPmph.setPublishDate(publishDate);
+	            decTextbookPmph.setIsbn(isbn);
+	            decTextbookPmph.setNote((String) map.get("remark")); // 备注
+	            decTextbookPmph.setSort(999); // 显示顺序
+	            decTextbookPmph = decTextbookPmphService.addDecTextbookPmph(decTextbookPmph);
+			}
             long pk = decTextbook.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "othermaterwriteid", id);
             count++;
