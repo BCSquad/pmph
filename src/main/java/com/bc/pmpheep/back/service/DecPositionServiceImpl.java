@@ -554,25 +554,51 @@ public class DecPositionServiceImpl implements DecPositionService {
                                                   "当前书籍还未遴选主编，副主编");
             }
             // DecPositionPublished对象集合
-            List<DecPositionPublished> decPositionPublisheds =
-            new ArrayList<DecPositionPublished>(decPositionsList.size());
+            List<DecPositionPublished> decPositionPublisheds = new ArrayList<DecPositionPublished>(decPositionsList.size());
             for (DecPosition decPosition : decPositionsList) {
-                if (null == decPosition || null == decPosition.getChosenPosition()
-                    || decPosition.getChosenPosition().intValue() <= 0) {
-                    continue;
+            	// 筛选出遴选上的主编副主编人员 
+            	Integer chosenPosition = decPosition.getChosenPosition();
+                if (null != chosenPosition && (chosenPosition == 4 || chosenPosition == 2 || chosenPosition == 12 || chosenPosition == 10 )) {
+                	chosenPosition = chosenPosition > 8 ?chosenPosition-8:chosenPosition;
+                	decPositionPublisheds.add(new DecPositionPublished(pmphUser.getId(),
+                            decPosition.getDeclarationId(),
+                            textbookId,
+                            decPosition.getPresetPosition(),
+                            chosenPosition,
+                            decPosition.getRank(),
+                            decPosition.getSyllabusId(),
+                            decPosition.getSyllabusName()));
                 }
-                // 筛选出遴选上的人员
-                decPositionPublisheds.add(new DecPositionPublished(pmphUser.getId(),
-                                                                   decPosition.getDeclarationId(),
-                                                                   textbookId,
-                                                                   decPosition.getPresetPosition(),
-                                                                   decPosition.getChosenPosition(),
-                                                                   decPosition.getRank(),
-                                                                   decPosition.getSyllabusId(),
-                                                                   decPosition.getSyllabusName()));
+            }
+            //已经公布的列表
+            List<DecPositionPublished> lst = decPositionPublishedService.getDecPositionPublishedListByBookId(textbookId);
+            List<DecPositionPublished> addNew = new ArrayList<DecPositionPublished>(16);
+            for(DecPositionPublished item :lst) {
+            	//编委 | 数字编委
+            	if(item.getChosenPosition() == 1 || item.getChosenPosition() >= 8) {
+            		//item.setChosenPosition(item.getChosenPosition() > 8 ?(item.getChosenPosition()-8):item.getChosenPosition() );
+            		addNew.add(item);
+            	}
+            }
+            //加入主编副主编
+            for(DecPositionPublished item :decPositionPublisheds) {
+            	boolean no = true;
+            	for(DecPositionPublished itemadd :addNew) {
+            		if( itemadd.getDeclarationId().intValue() ==  item.getDeclarationId().intValue() ) {
+            			no = false;
+            			itemadd.setChosenPosition(item.getChosenPosition()+8);
+            		}
+            	}
+            	if(no) {
+            		addNew.add(item);
+            	}
+            }
+            //clear Id
+            for(DecPositionPublished item :addNew) {
+            	item.setId(null);
             }
             decPositionPublishedService.deleteDecPositionPublishedByTextBookId(textbookId);// 先删除当前发布人已发布的
-            decPositionPublishedService.batchInsertDecPositionPublished(decPositionPublisheds);// 再添加
+            decPositionPublishedService.batchInsertDecPositionPublished(addNew);// 再添加
             // 发布时更新textbook表中is_chief_published（是否已公布主编/副主编）字段
             count = textbookService.updateTextbook(new Textbook(textbookId, true));
             if (count > 0) {
