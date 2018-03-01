@@ -11,14 +11,17 @@ import com.bc.pmpheep.back.po.DecAchievement;
 import com.bc.pmpheep.back.po.DecClinicalReward;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
+import com.bc.pmpheep.back.po.DecIntention;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecMonograph;
+import com.bc.pmpheep.back.po.DecMoocDigital;
 import com.bc.pmpheep.back.po.DecNationalPlan;
 import com.bc.pmpheep.back.po.DecPublishReward;
 import com.bc.pmpheep.back.po.DecResearch;
 import com.bc.pmpheep.back.po.DecSci;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
+import com.bc.pmpheep.back.po.DecTextbookPmph;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.vo.DecExtensionVO;
 
@@ -120,7 +123,7 @@ public class DeclarationEtcBO {
 	@ExcelHeader(header = "学术兼职")
 	private ArrayList<DecAcade> decAcades;
 
-	@ExcelHeader(header = "上版教材参编情况")
+	@ExcelHeader(header = "本套上版教材参编情况")
 	private ArrayList<DecLastPosition> decLastPositions;
 
 	@ExcelHeader(header = "精品课程建设情况")
@@ -129,7 +132,12 @@ public class DeclarationEtcBO {
 	@ExcelHeader(header = "主编国家级规划教材情况")
 	private ArrayList<DecNationalPlan> decNationalPlans;
 
-	@ExcelHeader(header = "教材编写情况")
+	@ExcelHeader(header = "人卫社教材编写情况")
+	private ArrayList<DecTextbookPmph> decTextbookPmphs;
+
+	private DecMoocDigital decMoocDigital;
+
+	@ExcelHeader(header = "其他社教材编写情况")
 	private ArrayList<DecTextbook> decTextbooks;
 
 	@ExcelHeader(header = "科研情况")
@@ -153,6 +161,8 @@ public class DeclarationEtcBO {
 	@ExcelHeader(header = "作家扩展项")
 	private ArrayList<DecExtensionVO> decExtensionVOs;
 
+	private DecIntention decIntention;
+
 	public DeclarationEtcBO() {
 	}
 
@@ -164,10 +174,12 @@ public class DeclarationEtcBO {
 			ArrayList<DecWorkExp> decWorkExps, ArrayList<DecTeachExp> decTeachExps, DecAchievement decAchievement,
 			ArrayList<DecAcade> decAcades, ArrayList<DecLastPosition> decLastPositions,
 			ArrayList<DecCourseConstruction> decCourseConstructions, ArrayList<DecNationalPlan> decNationalPlans,
+			ArrayList<DecTextbookPmph> decTextbookPmphs, DecMoocDigital decMoocDigital,
 			ArrayList<DecTextbook> decTextbooks, ArrayList<DecResearch> decResearchs,
 			ArrayList<DecMonograph> decMonographs, ArrayList<DecPublishReward> publishRewards,
 			ArrayList<DecSci> decScis, ArrayList<DecClinicalReward> decClinicalRewards,
-			ArrayList<DecAcadeReward> decAcadeRewards, ArrayList<DecExtensionVO> decExtensionVOs) {
+			ArrayList<DecAcadeReward> decAcadeRewards, ArrayList<DecExtensionVO> decExtensionVOs,
+			DecIntention decIntention) {
 		super();
 		this.textbookName = textbookName;
 		this.presetPosition = presetPosition;
@@ -202,6 +214,8 @@ public class DeclarationEtcBO {
 		this.decLastPositions = decLastPositions;
 		this.decCourseConstructions = decCourseConstructions;
 		this.decNationalPlans = decNationalPlans;
+		this.decTextbookPmphs = decTextbookPmphs;
+		this.decMoocDigital = decMoocDigital;
 		this.decTextbooks = decTextbooks;
 		this.decResearchs = decResearchs;
 		this.decMonographs = decMonographs;
@@ -210,6 +224,7 @@ public class DeclarationEtcBO {
 		this.decClinicalRewards = decClinicalRewards;
 		this.decAcadeRewards = decAcadeRewards;
 		this.decExtensionVOs = decExtensionVOs;
+		this.decIntention = decIntention;
 	}
 
 	/**
@@ -810,6 +825,38 @@ public class DeclarationEtcBO {
 	 */
 	public void setDecAcadeRewards(ArrayList<DecAcadeReward> decAcadeRewards) {
 		this.decAcadeRewards = decAcadeRewards;
+	}
+
+	public ArrayList<DecTextbookPmph> getDecTextbookPmphs() {
+		return decTextbookPmphs;
+	}
+
+	public void setDecTextbookPmphs(ArrayList<DecTextbookPmph> decTextbookPmphs) {
+		this.decTextbookPmphs = decTextbookPmphs;
+	}
+
+	public DecMoocDigital getDecMoocDigital() {
+		return decMoocDigital;
+	}
+
+	public void setDecMoocDigital(DecMoocDigital decMoocDigital) {
+		this.decMoocDigital = decMoocDigital;
+	}
+
+	public ArrayList<DecExtensionVO> getDecExtensionVOs() {
+		return decExtensionVOs;
+	}
+
+	public void setDecExtensionVOs(ArrayList<DecExtensionVO> decExtensionVOs) {
+		this.decExtensionVOs = decExtensionVOs;
+	}
+
+	public DecIntention getDecIntention() {
+		return decIntention;
+	}
+
+	public void setDecIntention(DecIntention decIntention) {
+		this.decIntention = decIntention;
 	}
 
 }
