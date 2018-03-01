@@ -704,28 +704,19 @@ public class PmphUserServiceImpl implements PmphUserService {
 			topicDeclarationVO.setIsDirectorHandling(true);
 			topicDeclarationVO.setIsOptsHandling(true);
 			topicDeclarationVO.setIsEditorHandling(true);
-		}else {
-			topicDeclarationVO.setIsDirectorHandling(false);
-			topicDeclarationVO.setIsOptsHandling(false);
-			topicDeclarationVO.setIsEditorHandling(false);
-		}
-		//是否由主任受理
-		if(pmphIdentity.getIsDirector()){
-			topicDeclarationVO.setIsDirectorHandling(true);
 		}else{
-			topicDeclarationVO.setIsDirectorHandling(false);
-		}
-		//是否由运维人员受理
-		if(pmphIdentity.getIsOpts()){
-			topicDeclarationVO.setIsOptsHandling(true);
-		}else{
-			topicDeclarationVO.setIsOptsHandling(false);
-		}
-		//是否由编辑受理
-		if(pmphIdentity.getIsEditor()){
-			topicDeclarationVO.setIsEditorHandling(true);
-		}else {
-			topicDeclarationVO.setIsEditorHandling(false);
+			//是否由主任受理
+			if(pmphIdentity.getIsDirector()){
+				topicDeclarationVO.setIsDirectorHandling(true);
+			}
+			//是否由运维人员受理
+			if(pmphIdentity.getIsOpts()){
+				topicDeclarationVO.setIsOptsHandling(true);
+			}
+			//是否由编辑受理
+			if(pmphIdentity.getIsEditor()){
+				topicDeclarationVO.setIsEditorHandling(true);
+			}
 		}
 		String[] strs = authProgress.split(",");
 		List<Long> progress = new ArrayList<>();
