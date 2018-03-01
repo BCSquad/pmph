@@ -872,10 +872,10 @@
 			and	t.is_director_handling =#{isDirectorHandling}
 		</if>
 		<if test="isOptsHandling != null">
-			and	is_opts_handling = #{isOptsHandling}
+			and	t.is_opts_handling = #{isOptsHandling}
 		</if>
 		<if test="isEditorHandling != null">
-			and	is_editor_handling = #{isEditorHandling}
+			and	t.is_editor_handling = #{isEditorHandling}
 		</if>
 		<if test="bookname != null and bookname !=''">
 			AND t.bookname like concat('%',#{bookname},'%')
@@ -905,10 +905,10 @@
 			and	t.is_director_handling =#{isDirectorHandling}
 		</if>
 		<if test="isOptsHandling != null">
-			and	is_opts_handling = #{isOptsHandling}
+			and	t.is_opts_handling = #{isOptsHandling}
 		</if>
 		<if test="isEditorHandling != null">
-			and	is_editor_handling = #{isEditorHandling}
+			and	t.is_editor_handling = #{isEditorHandling}
 		</if>
 		<if test="bookname != null and bookname !=''">
 			AND t.bookname like concat('%',#{bookname},'%')
