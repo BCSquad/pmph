@@ -573,8 +573,13 @@
 		where id = #{id}
 	</update>
 	<!-- 更新评分 -->
-	<update id="updateComments">
+	<update id="updateUpComments">
 		update book set comments = comments+1 where id =
+		#{id}
+	</update>
+		<!-- 更新评分 -->
+	<update id="updateDownComments">
+		update book set comments = comments-1 where id =
 		#{id}
 	</update>
 </mapper>
