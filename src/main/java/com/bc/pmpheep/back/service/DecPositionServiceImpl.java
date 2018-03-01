@@ -587,6 +587,7 @@ public class DecPositionServiceImpl implements DecPositionService {
             		if( itemadd.getDeclarationId().intValue() ==  item.getDeclarationId().intValue() ) {
             			no = false;
             			itemadd.setChosenPosition(item.getChosenPosition()+8);
+            			break;
             		}
             	}
             	if(no) {
