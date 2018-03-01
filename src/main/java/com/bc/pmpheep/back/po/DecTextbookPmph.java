@@ -1,7 +1,7 @@
 package com.bc.pmpheep.back.po;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
 
