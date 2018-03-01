@@ -1,7 +1,6 @@
-﻿package com.bc.pmpheep.wechat.aes;
+package com.bc.pmpheep.wechat.aes;
 
 public class AesException extends Exception {
-
     //
     private static final long serialVersionUID       = 1L;
     public final static int   OK                     = 0;
@@ -55,9 +54,8 @@ public class AesException extends Exception {
     public AesException() {
     }
 
-    public AesException(int code) {
+    AesException(int code) {
         super(getMessage(code));
         this.code = code;
     }
-
 }
