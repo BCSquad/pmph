@@ -75,7 +75,7 @@ public class TextbookLogServiceImpl implements TextbookLogService {
                 Long id = textbookLog.getId();
                 String detail = textbookLog.getDetail();
                 Timestamp gmtCreate = textbookLog.getGmtCreate();
-                detail = detail.replace("{gmt_create}", DateUtil.format(gmtCreate));
+                detail = detail.replace("{gmt_create}", DateUtil.format(gmtCreate))+";";
                 newRows.add(new TextbookLogVO(id, detail));
             }
             pageResult.setRows(newRows);
