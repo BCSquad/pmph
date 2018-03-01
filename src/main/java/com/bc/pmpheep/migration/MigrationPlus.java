@@ -402,7 +402,7 @@ public class MigrationPlus {
 		topicWriertService.add(topicWriter4);				
 		Topic topic5 = new Topic(4035L, "人体解剖学", 0, new Timestamp(423654L), 1, 97, 1098,
 				"医学", 0, 3, 35L, 14, 3300, false, null, null, null, null, 1, null, null,
-				false, 15L, false, null, false, null, false, null, false, null, false, 
+				true, 15L, false, null, false, null, false, null, false, null, false, 
 				false, false, null, null, null, null, null, new Timestamp(433654L));
 		topic5 = topicService.add(topic5);
 		TopicExtra topicExtra5 = new TopicExtra(topic5.getId(), "医学院学生必读辅导书",
