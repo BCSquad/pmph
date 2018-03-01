@@ -255,4 +255,49 @@
 			#{id}
 		</foreach>
 	</delete>
+	<!-- admin查询图书评论数量 -->
+	<select id="getBookUserCommentAdminTotal" parameterType="PageParameter"
+		resultType="java.lang.Integer">
+		SELECT
+		count(*)
+		FROM
+		book_user_comment c
+		LEFT
+		JOIN book b ON b.id =
+		c.book_id
+		LEFT JOIN
+		writer_user u ON u.id =
+		c.writer_id
+		WHERE
+		c.is_deleted
+		=
+		FALSE 
+		<if test="parameter.name != null and parameter.name != ''">
+			and (b.bookname like concat("%",#{parameter.name},"%") or
+			b.isbn like concat("%",#{parameter.name},"%"))
+		</if>
+	</select>
+	<!-- 分页查询admin图书评论 -->
+	<select id="listBookUserCommentAdmin" parameterType="PageParameter"
+		resultType="BookUserCommentVO">
+		SELECT
+		c.*, b.bookname,
+		b.isbn,
+		u.realname writerName
+		FROM
+		book_user_comment c
+		LEFT
+		JOIN book b ON b.id = c.book_id
+		LEFT JOIN
+		writer_user u ON u.id =
+		c.writer_id
+		WHERE
+		c.is_deleted = FALSE
+		<if test="parameter.name != null and parameter.name != ''">
+			and (b.bookname like concat("%",#{parameter.name},"%") or
+			b.isbn like concat("%",#{parameter.name},"%"))
+		</if>
+		ORDER BY c.gmt_create DESC
+		LIMIT #{start},#{pageSize}
+	</select>
 </mapper>

@@ -159,4 +159,17 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 		return result;
 	}
 
+	@Override
+	public PageResult<BookUserCommentVO> listBookUserCommentAdmin(PageParameter<BookUserCommentVO> pageParameter) {
+		PageResult<BookUserCommentVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total = bookUserCommentDao.getBookUserCommentAdminTotal(pageParameter);
+		if (total > 0) {
+			List<BookUserCommentVO> list = bookUserCommentDao.listBookUserCommentAdmin(pageParameter);
+			pageResult.setRows(list);
+		}
+		pageResult.setTotal(total);
+		return pageResult;
+	}
+
 }
