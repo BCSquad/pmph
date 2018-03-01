@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.PmphUserWechatDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="username!=null and username !=''">
+				username,
+			</if>
+			<if test="wechatId !=null and wechatId !=''">
+				wechat_id,
+			</if>
+		</trim>
+	</sql>
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="username!=null and username !=''">
+				#{username},
+			</if>
+			<if test="wechatId !=null and wechatId !=''">
+				#{wechatId},
+			</if>
+		</trim>
+	</sql>
+	<insert id="add" parameterType="PmphUserWechat" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO pmph_user_wechat
+		(
+		<include refid="key" />
+		)
+		VALUES
+		(
+		<include refid="value" />
+		);
+	</insert>
+	
+
+	<!-- 动态更新对象的写法 -->
+	<update id="update" parameterType="PmphUserWechat">
+		UPDATE pmph_user_wechat
+		<set>
+			<if test="username != null and username!=''">
+				username = #{username},
+			</if>
+			<if test="wechatId !=null and wechatId !=''">
+				wechat_id=#{wechatId},
+			</if>
+		</set>
+		WHERE
+		id = #{id}
+	</update>
+	
+	<!-- 根据ID删除PmphUserWechat对象 -->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from  pmph_user_wechat where id=#{id};
+	</delete>
+	
+	<!-- 根据微信企业号用户ID删除PmphUserWechat对象 -->
+	<delete id="deleteByWechatId" parameterType="java.lang.String">
+		delete from  pmph_user_wechat where wechat_id=#{wechatId};
+	</delete>
+	
+	<!-- 根据微信企业号用户ID查询PmphUserWechat对象 -->
+	<select id="getPmphUserWechatByWechatId" parameterType="java.lang.String" resultType="PmphUserWechat">
+		SELECT
+			*
+		FROM
+			pmph_user_wechat
+		WHERE
+			wechat_id = #{wechatId};
+	</select>
+
+</mapper>
