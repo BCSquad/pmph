@@ -868,7 +868,8 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(rank)) {
             	rank = 0;
             }
-            if (!"人民卫生出版社".equals(publisher)) {
+            publisher = publisher == null ? null : publisher;
+            if (!"人民卫生出版社".equals(publisher.trim())) {
 	            decTextbook.setDeclarationId(declarationid);
 	            decTextbook.setMaterialName(materialName);
 	            decTextbook.setRank(rank);
@@ -956,7 +957,7 @@ public class MigrationStageSix {
             if (!"人民卫生出版社".equals(publisher)) {
             	decTextbook.setDeclarationId(declarationid);
                 decTextbook.setMaterialName(materialName);
-                decTextbook.setRank(0); // 教材级别
+                decTextbook.setRank(0); // 教材级别（设置成无）
                 Integer position = positionJudge.intValue();
                 decTextbook.setPosition(position);
                 String publishers = publisher.trim();
@@ -973,7 +974,7 @@ public class MigrationStageSix {
             } else {
             	decTextbookPmph.setDeclarationId(declarationid);
 	            decTextbookPmph.setMaterialName(materialName);
-	            decTextbookPmph.setRank(0); // 教材级别
+	            decTextbookPmph.setRank(0); // 教材级别（设置成无）
 	            Integer position = positionJudge.intValue();
 	            decTextbookPmph.setPosition(position);
 	            decTextbookPmph.setPublishDate(publishDate);
