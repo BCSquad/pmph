@@ -634,6 +634,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 		return pageResult;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public Map<String, Object> getPersonalCenter(HttpServletRequest request, String state, String materialName,
 			String groupName, String title, String bookname, String name, String authProgress, String topicBookname,Boolean booleans) {
@@ -643,6 +644,8 @@ public class PmphUserServiceImpl implements PmphUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"请求用户不存在");
 		}
+		//获取用户角色
+		List<PmphRole> rolelist=roleService.getPmphRoleByUserId(sessionPmphUser.getId());
 		// 用于装所有的数据map
 		Map<String, Object> map = new HashMap<>();
 		// 教师认证总数量
@@ -682,9 +685,14 @@ public class PmphUserServiceImpl implements PmphUserService {
 			PageResult<CmsContentVO> pageResultCmsContentVO = cmsContentService.listCmsContent(pageParameter1, sessionId);
 			map.put("cmsContent", pageResultCmsContentVO);
 		}
-		// 图书纠错审核
-		PageResult<BookCorrectionAuditVO> pageResultBookCorrectionAuditVO = bookCorrectionService
-				.listBookCorrectionAudit(request, Const.PAGE_NUMBER, Const.PAGE_SIZE, bookname, null, null);
+		for (PmphRole pmphRole : rolelist) {
+			if("策划编辑".equals(pmphRole.getRoleName())||"系统管理员".equals(pmphRole.getRoleName())){
+				// 图书纠错审核
+				PageResult<BookCorrectionAuditVO> pageResultBookCorrectionAuditVO = bookCorrectionService
+						.listBookCorrectionAudit(request, Const.PAGE_NUMBER, Const.PAGE_SIZE, bookname, null, null);
+				map.put("bookCorrectionAudit", pageResultBookCorrectionAuditVO);
+			}
+		}
 		// 图书评论审核
 		PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
 		BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
@@ -692,8 +700,6 @@ public class PmphUserServiceImpl implements PmphUserService {
 		pageParameter.setParameter(bookUserCommentVO);
 		PageResult<BookUserCommentVO> pageResultBookUserCommentVO = bookUserCommentService
 				.listBookUserComment(pageParameter);
-		// 图书附件审核 暂时没有
-		
 		// 选题申报
 		PageParameter<TopicDeclarationVO> pageParameter3 = new PageParameter<>();
 		//选题申报当前用户角色
@@ -704,7 +710,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 			topicDeclarationVO.setIsDirectorHandling(true);
 			topicDeclarationVO.setIsOptsHandling(true);
 			topicDeclarationVO.setIsEditorHandling(true);
-		}else{
+		}else if(null!=pmphIdentity){
 			//是否由主任受理
 			if(pmphIdentity.getIsDirector()){
 				topicDeclarationVO.setIsDirectorHandling(true);
@@ -717,6 +723,10 @@ public class PmphUserServiceImpl implements PmphUserService {
 			if(pmphIdentity.getIsEditor()){
 				topicDeclarationVO.setIsEditorHandling(true);
 			}
+		}else{
+			topicDeclarationVO.setIsDirectorHandling(false);
+			topicDeclarationVO.setIsOptsHandling(false);
+			topicDeclarationVO.setIsEditorHandling(false);
 		}
 		String[] strs = authProgress.split(",");
 		List<Long> progress = new ArrayList<>();
@@ -727,8 +737,6 @@ public class PmphUserServiceImpl implements PmphUserService {
 		pageParameter3.setParameter(topicDeclarationVO);
 		PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO = topicService.listMyTopic(progress,
 				pageParameter3);
-		//获取用户角色
-		List<PmphRole> rolelist=roleService.getPmphRoleByUserId(sessionPmphUser.getId());
 		//获取用户上次登录时间
 		List<SysOperation> listSysOperation=sysOperationService.getSysOperation(sessionPmphUser.getId());
 		Timestamp loginTime=null;
@@ -741,7 +749,6 @@ public class PmphUserServiceImpl implements PmphUserService {
 		// 把其他模块的数据都装入map中返回给前端
 		map.put("topicList", pageResultTopicDeclarationVO);
 		map.put("materialList", pageResultMaterialListVO);
-		map.put("bookCorrectionAudit", pageResultBookCorrectionAuditVO);
 		map.put("bookUserComment", pageResultBookUserCommentVO);
 		map.put("pmphGroup", pageResultPmphGroup);
 		map.put("writerUserCount", writerUserCount);
