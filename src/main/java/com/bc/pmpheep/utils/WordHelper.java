@@ -137,7 +137,7 @@ public class WordHelper {
 			/* 申报单位 */
 			String chosenOrgName = bo.getChosenOrgName();
 			if (StringUtil.notEmpty(chosenOrgName)) {
-				document.getParagraphs().get(17).createRun().setText(chosenOrgName);
+				document.getParagraphs().get(21).createRun().setText(chosenOrgName);
 			}
 			List<XWPFTable> tables = document.getTables();
 			String filename = generateFileName(bo);
@@ -149,13 +149,13 @@ public class WordHelper {
 			fillDecAchievementData(tables.get(5), bo.getDecAchievement());
 			fillDecAcadeData(tables.get(6), bo.getDecAcades());
 			fillDecLastPositionData(tables.get(7), bo.getDecLastPositions());
-			fillDecMonographData(tables.get(8), bo.getDecMonographs());
+			fillDecNationalPlanData(tables.get(8), bo.getDecNationalPlans());
 			fillDecTextbookPmphData(tables.get(9), bo.getDecTextbookPmphs());
 			fillDecTextbookData(tables.get(10), bo.getDecTextbooks());
 			fillDecMoocDigitalData(tables.get(11), bo.getDecMoocDigital());
 			fillDecCourseConstructionData(tables.get(12), bo.getDecCourseConstructions());
-			fillDecNationalPlanData(tables.get(13), bo.getDecNationalPlans());
-			fillDecResearchData(tables.get(14), bo.getDecResearchs());
+			fillDecResearchData(tables.get(13), bo.getDecResearchs());
+			fillDecMonographData(tables.get(14), bo.getDecMonographs());
 			fillDecPublishRewardData(tables.get(15), bo.getPublishRewards());
 			fillDecSciData(tables.get(16), bo.getDecScis());
 			fillDecClinicalRewardData(tables.get(17), bo.getDecClinicalRewards());

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
+import com.bc.pmpheep.back.dao.BookDao;
 import com.bc.pmpheep.back.dao.BookUserCommentDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -102,7 +103,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 				// 更新评分
 				bookService.updateBookCore(bookUserComment.getBookId());
 				// 更新书的评论数
-				bookService.updateComments(bookUserComment.getBookId());
+				bookService.updateUpComments(bookUserComment.getBookId());
 			}
 		}
 		if (num > 0) {
@@ -120,6 +121,13 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 		String result = "FAIL";
 		int num = bookUserCommentDao.deleteBookUserCommentById(ids);
 		if (num > 0) {
+			for (Long id : ids) {
+				BookUserComment bookUserComment = bookUserCommentDao.getBookUserCommentById(id);
+				Long bookId = bookUserComment.getBookId();
+				if (bookUserComment.getIsAuth() == 1) {
+					bookService.updateDownComments(bookId);
+				}
+			}
 			result = "SUCCESS";
 		}
 		return result;
