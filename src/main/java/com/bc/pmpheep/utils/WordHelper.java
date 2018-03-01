@@ -205,7 +205,7 @@ public class WordHelper {
 
 	private XWPFTable fillDeclarationPosition(XWPFTable table, DeclarationEtcBO bo) {
 		List<XWPFTableRow> rows = table.getRows();
-		List<XWPFTableCell> cells = rows.get(1).getTableCells();
+		List<XWPFTableCell> cells = rows.get(0).getTableCells();
 		/* 第一行 */
 		String textbookName = bo.getTextbookName();
 		String presetPosition = bo.getPresetPosition();
