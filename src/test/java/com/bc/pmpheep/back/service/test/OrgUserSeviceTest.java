@@ -69,7 +69,6 @@ public class OrgUserSeviceTest extends BaseTest {
         Assert.assertNotNull("获取数据失败", orgUserService.getOrgUserById(orgUser.getId()));
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test
     public void testGetListOrgUserVO() {
         PageParameter pageParameter = new PageParameter<>();
@@ -125,19 +124,11 @@ public class OrgUserSeviceTest extends BaseTest {
     }
 
     @Test
-    public void testUpdateOrgUserProgressById() {
+    public void testUpdateOrgUserProgressById() throws CheckedServiceException, IOException {
         orgUserService.addOrgUser(orgUser);
         List<Long> list = new ArrayList<Long>();
         list.add(orgUser.getId());
-        try {
-            Integer count = orgUserService.updateOrgUserProgressById(1, list);
-            Assert.assertTrue("更新审核状态失败", count > 0);
-        } catch (CheckedServiceException e) {
-            logger.error(e.getMessage());
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-        Assert.fail();
+        Assert.assertTrue("更新审核状态失败", orgUserService.updateOrgUserProgressById(1, list) > 0);
     }
 
     @Test
