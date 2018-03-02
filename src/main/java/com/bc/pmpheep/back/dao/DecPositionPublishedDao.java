@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.DecPositionPublished;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * 已公布作家申报职位表数据访问层接口
@@ -89,5 +90,13 @@ public interface DecPositionPublishedDao {
      * </pre>
      */
     Integer deleteDecPositionPublishedByTextBookId(Long textbookId);
+    
+    /**
+     * 按照书籍查询
+     * @param textbookId
+     * @return
+     * @throws CheckedServiceException
+     */
+    List<DecPositionPublished> getDecPositionPublishedListByBookId(Long textbookId) ;
 
 }
