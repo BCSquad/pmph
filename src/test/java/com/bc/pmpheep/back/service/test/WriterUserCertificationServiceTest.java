@@ -1,7 +1,5 @@
 package com.bc.pmpheep.back.service.test;
 
-import java.util.Random;
-
 import javax.annotation.Resource;
 
 import org.junit.Assert;
@@ -37,7 +35,7 @@ public class WriterUserCertificationServiceTest extends BaseTest {
         Long[] idsLongs = { 1L, 2L };
         Assert.assertTrue("修改失败",
                           writerUserCertificationService.updateWriterUserCertificationProgressByUserId(progress,
-                                                                                                       idsLongs) >= 0);
+                                                                                                       idsLongs, null) >= 0);
     }
 
     @Test

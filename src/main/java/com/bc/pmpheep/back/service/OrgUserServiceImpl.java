@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,7 +134,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	}
 
 	@Override
-	public Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds) throws CheckedServiceException {
+	public Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds) throws CheckedServiceException, IOException {
 		if (CollectionUtil.isEmpty(orgUserIds) || ObjectUtil.isNull(progress)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SCHOOL_ADMIN_CHECK,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
@@ -153,6 +154,16 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 			if (CollectionUtil.isNotEmpty(orgUsers)) {
 				count = orgUserDao.updateOrgUserProgressById(orgUsers);
 			}
+		}
+		Boolean isPass=null;
+		if(1==progress){
+			isPass=true;
+		}
+		if(2==progress){
+			isPass=false;
+		}
+		if(null!=isPass){//推送机构认证审核信息
+			systemMessageService.sendWhenManagerCertificationAudit(orgUserIds, isPass);
 		}
 		return count;
 	}

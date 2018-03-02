@@ -213,7 +213,7 @@ public interface WriterUserService {
 	 * @param writerUsers
 	 * @return
 	 */
-	Integer updateWriterUserRank(List<WriterUser> writerUsers)throws CheckedServiceException;
+	Integer updateWriterUserRank(WriterUser writerUsers)throws CheckedServiceException;
 	/**
 	 * 查询教师认证数量
 	 * @param userid 
@@ -232,7 +232,7 @@ public interface WriterUserService {
 	 * @param writerUsers
 	 * @return
 	 */
-	Integer updateWriterUser(List<WriterUser> writerUsers) throws CheckedServiceException;
+	Integer updateWriterUser(WriterUser writerUsers) throws CheckedServiceException;
 	
 	/**
 	 * 通过用户id查询用户信息

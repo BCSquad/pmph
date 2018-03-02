@@ -203,7 +203,7 @@ public final class SystemMessageService {
 	}
 
 	/**
-	 * 遴选主编副主编时点击确认按钮之后向第一主编发送消息
+	 * 遴选主编副主编时点击发布按钮之后向主编、副主编发送消息
 	 * 
 	 * @author Mryang
 	 * @createDate 2017年11月17日 下午1:57:04
@@ -224,12 +224,25 @@ public final class SystemMessageService {
 		// 获取这本书的申报遴选列表
 		List<DecPosition> decPositionLst = decPositionService.listDecPositionsByTextbookId(bookId);
 		for (DecPosition decPosition : decPositionLst) {
-			if (null != decPosition && null != decPosition.getChosenPosition() && null != decPosition.getRank()
-					&& decPosition.getChosenPosition() == 1 && decPosition.getRank() == 1) {// 筛选出主编
+			if (null != decPosition && null != decPosition.getChosenPosition() && null != decPosition.getRank()) {// 筛选出主编、副主编
 				Declaration declaration = declarationService.getDeclarationById(decPosition.getDeclarationId());
 				// 消息内容
-				String msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
-						+ "</font>》<font color='red'>[" + textbook.getTextbookName() + "</font>]的第一主编，您现在可以开始遴选编委了";
+				String msgContent = "";
+				if (decPosition.getChosenPosition() == 4) {
+					if (decPosition.getRank() == 1) {
+						msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
+								+ "</font>》<font color='red'>[" + textbook.getTextbookName()
+								+ "</font>]的第一主编，您现在可以开始遴选编委了，最终结果以遴选结果公告为准";
+					} else {
+						msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
+								+ "</font>》<font color='red'>[" + textbook.getTextbookName()
+								+ "</font>]的主编，最终结果以遴选结果公告为准";
+					}
+				}
+				if (decPosition.getChosenPosition() == 2) {
+					msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
+							+ "</font>》<font color='red'>[" + textbook.getTextbookName() + "</font>]的副主编，最终结果以遴选结果公告为准";
+				}
 				Message message = new Message(msgContent);
 				message = messageService.add(message);
 				String msg_id = message.getId();
@@ -440,7 +453,7 @@ public final class SystemMessageService {
 		// 存入消息主体
 		String msgContent = "抱歉，您提交的教师认证资料已被[<font color='red'>" + auditorOrgName + "</font>]管理员退回，请您核对后重试";// 退回
 		if (isPass) {// 通过
-			msgContent = "恭喜！您提交的教师认证资料已通过[color='red'>" + auditorOrgName + "</font>]管理员审核";
+			msgContent = "恭喜！您提交的教师认证资料已通过[<font color='red'>" + auditorOrgName + "</font>]管理员审核";
 		}
 		// 存入消息主体
 		Message message = new Message(msgContent);

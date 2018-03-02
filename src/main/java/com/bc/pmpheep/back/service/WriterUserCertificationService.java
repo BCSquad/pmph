@@ -2,6 +2,8 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.bc.pmpheep.back.po.WriterUserCertification;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -74,7 +76,7 @@ public interface WriterUserCertificationService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer updateWriterUserCertificationProgressByUserId(Short progress, Long[] userIds)
+    Integer updateWriterUserCertificationProgressByUserId(Short progress, Long[] userIds,HttpServletRequest request)
     throws CheckedServiceException,Exception;
 
     /**

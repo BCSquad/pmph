@@ -565,7 +565,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 	}
 
 	@Override
-	public Integer updateWriterUserRank(List<WriterUser> writerUsers) {
+	public Integer updateWriterUserRank(WriterUser writerUsers) {
 		if(null==writerUsers){
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
@@ -588,7 +588,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 	}
 
 	@Override
-	public Integer updateWriterUser(List<WriterUser> writerUsers) {
+	public Integer updateWriterUser(WriterUser writerUsers) {
 		if(null==writerUsers){
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");

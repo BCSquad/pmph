@@ -9,6 +9,7 @@ import org.apache.ibatis.type.Alias;
  * Material 教材信息表 实体类
  * 
  * @author mryang
+ * 修改：tyc
  * 
  */
 @SuppressWarnings("serial")
@@ -66,14 +67,14 @@ public class Material implements java.io.Serializable {
     private Boolean   isNationalPlanUsed;
     // 主编国家规划教材情况必填
     private Boolean   isNationalPlanRequired;
-    // 教材编写情况
+    // 其他社教材编写情况
     private Boolean   isTextbookUsed;
-    // 教材编写情况必填
+    // 其他社教材编写情况必填
     private Boolean   isTextbookRequired;
-    // 其他教材编写情况
-    private Boolean   isOtherTextbookUsed;
-    // 其他教材编写情况必填
-    private Boolean   isOtherTextbookRequired;
+    // 人卫社教材编写情况
+    private Boolean   isPmphTextbookUsed;
+    // 人卫社教材编写情况必填
+    private Boolean   isPmphTextbookRequired;
     // 科研情况
     private Boolean   isResearchUsed;
     // 科研情况必填
@@ -125,7 +126,15 @@ public class Material implements java.io.Serializable {
     //学术荣誉授予情况
     private Boolean isAcadeRewardUsed;
     //学术荣誉授予情况必填
-    private Boolean isAcadeRewardRequired;  
+    private Boolean isAcadeRewardRequired;
+    // 人卫慕课、数字教材编写情况
+    private Boolean isMoocDigitalUsed;
+    // 人卫慕课、数字教材编写情况必填
+    private Boolean isMoocDigitalRequired;
+    // 编写内容意向
+    private Boolean isIntentionUsed;
+    // 编写内容意向必填
+    private Boolean isIntentionRequired;
 
     // Constructors
 	/** default constructor */
@@ -404,20 +413,20 @@ public class Material implements java.io.Serializable {
         this.isTextbookRequired = isTextbookRequired;
     }
 
-    public Boolean getIsOtherTextbookUsed() {
-        return this.isOtherTextbookUsed;
+    public Boolean getIsPmphTextbookUsed() {
+        return this.isPmphTextbookUsed;
     }
 
-    public void setIsOtherTextbookUsed(Boolean isOtherTextbookUsed) {
-        this.isOtherTextbookUsed = isOtherTextbookUsed;
+    public void setIsPmphTextbookUsed(Boolean isPmphTextbookUsed) {
+        this.isPmphTextbookUsed = isPmphTextbookUsed;
     }
 
-    public Boolean getIsOtherTextbookRequired() {
-        return this.isOtherTextbookRequired;
+    public Boolean getIsPmphTextbookRequired() {
+        return this.isPmphTextbookRequired;
     }
 
-    public void setIsOtherTextbookRequired(Boolean isOtherTextbookRequired) {
-        this.isOtherTextbookRequired = isOtherTextbookRequired;
+    public void setIsPmphTextbookRequired(Boolean isPmphTextbookRequired) {
+        this.isPmphTextbookRequired = isPmphTextbookRequired;
     }
 
     public Boolean getIsResearchUsed() {
@@ -641,56 +650,88 @@ public class Material implements java.io.Serializable {
 		return this;
 	}
 
-	@Override
-	public String toString() {
-		return "{id:" + id + ",materialName:" + materialName
-				+ ",materialRound:" + materialRound + ",materialType:"
-				+ materialType + ",deadline:" + deadline + ",actualDeadline:"
-				+ actualDeadline + ",ageDeadline:" + ageDeadline
-				+ ",mailAddress:" + mailAddress + ",departmentId:"
-				+ departmentId + ",director:" + director + ",isMultiBooks:"
-				+ isMultiBooks + ",isMultiPosition:" + isMultiPosition
-				+ ",isEduExpUsed:" + isEduExpUsed + ",isEduExpRequired:"
-				+ isEduExpRequired + ",isWorkExpUsed:" + isWorkExpUsed
-				+ ",isWorkExpRequired:" + isWorkExpRequired
-				+ ",isTeachExpUsed:" + isTeachExpUsed + ",isTeachExpRequired:"
-				+ isTeachExpRequired + ",isAcadeUsed:" + isAcadeUsed
-				+ ",isAcadeRequired:" + isAcadeRequired
-				+ ",isLastPositionUsed:" + isLastPositionUsed
-				+ ",isLastPositionRequired:" + isLastPositionRequired
-				+ ",isCourseUsed:" + isCourseUsed + ",isCourseRequired:"
-				+ isCourseRequired + ",isNationalPlanUsed:"
-				+ isNationalPlanUsed + ",isNationalPlanRequired:"
-				+ isNationalPlanRequired + ",isTextbookUsed:" + isTextbookUsed
-				+ ",isTextbookRequired:" + isTextbookRequired
-				+ ",isOtherTextbookUsed:" + isOtherTextbookUsed
-				+ ",isOtherTextbookRequired:" + isOtherTextbookRequired
-				+ ",isResearchUsed:" + isResearchUsed + ",isResearchRequired:"
-				+ isResearchRequired + ",isPublished:" + isPublished
-				+ ",isPublic:" + isPublic + ",isAllTextbookPublished:"
-				+ isAllTextbookPublished + ",isForceEnd:" + isForceEnd
-				+ ",isDeleted:" + isDeleted + ",gmtCreate:" + gmtCreate
-				+ ",founderId:" + founderId + ",gmtUpdate:" + gmtUpdate
-				+ ",menderId:" + menderId + ",projectPermission:"
-				+ projectPermission + ",planPermission:" + planPermission
-				+ ",isAchievementUsed:" + isAchievementUsed
-				+ ",isAchievementRequired:" + isAchievementRequired
-				+ ",isDigitalEditorOptional:" + isDigitalEditorOptional
-				+ ",isMonographUsed:" + isMonographUsed
-				+ ",isMonographRequired:" + isMonographRequired
-				+ ",isPublishRewardUsed:" + isPublishRewardUsed
-				+ ",isPublishRewardRequired:" + isPublishRewardRequired
-				+ ",isSciUsed:" + isSciUsed + ",isSciRequired:" + isSciRequired
-				+ ",isClinicalRewardUsed:" + isClinicalRewardUsed
-				+ ",isClinicalRewardRequired:" + isClinicalRewardRequired
-				+ ",isAcadeRewardUsed:" + isAcadeRewardUsed
-				+ ",isAcadeRewardRequired:" + isAcadeRewardRequired + "}";
+	public Boolean getIsMoocDigitalUsed() {
+		return isMoocDigitalUsed;
 	}
 
+	public void setIsMoocDigitalUsed(Boolean isMoocDigitalUsed) {
+		this.isMoocDigitalUsed = isMoocDigitalUsed;
+	}
+
+	public Boolean getIsMoocDigitalRequired() {
+		return isMoocDigitalRequired;
+	}
+
+	public void setIsMoocDigitalRequired(Boolean isMoocDigitalRequired) {
+		this.isMoocDigitalRequired = isMoocDigitalRequired;
+	}
+
+	public Boolean getIsIntentionUsed() {
+		return isIntentionUsed;
+	}
+
+	public void setIsIntentionUsed(Boolean isIntentionUsed) {
+		this.isIntentionUsed = isIntentionUsed;
+	}
+
+	public Boolean getIsIntentionRequired() {
+		return isIntentionRequired;
+	}
+
+	public void setIsIntentionRequired(Boolean isIntentionRequired) {
+		this.isIntentionRequired = isIntentionRequired;
+	}
+
+	@Override
+	public String toString() {
+		return "Material [id=" + id + ", materialName=" + materialName
+				+ ", materialRound=" + materialRound + ", materialType="
+				+ materialType + ", deadline=" + deadline + ", actualDeadline="
+				+ actualDeadline + ", ageDeadline=" + ageDeadline
+				+ ", mailAddress=" + mailAddress + ", departmentId="
+				+ departmentId + ", director=" + director + ", isMultiBooks="
+				+ isMultiBooks + ", isMultiPosition=" + isMultiPosition
+				+ ", isEduExpUsed=" + isEduExpUsed + ", isEduExpRequired="
+				+ isEduExpRequired + ", isWorkExpUsed=" + isWorkExpUsed
+				+ ", isWorkExpRequired=" + isWorkExpRequired
+				+ ", isTeachExpUsed=" + isTeachExpUsed
+				+ ", isTeachExpRequired=" + isTeachExpRequired
+				+ ", isAcadeUsed=" + isAcadeUsed + ", isAcadeRequired="
+				+ isAcadeRequired + ", isLastPositionUsed="
+				+ isLastPositionUsed + ", isLastPositionRequired="
+				+ isLastPositionRequired + ", isCourseUsed=" + isCourseUsed
+				+ ", isCourseRequired=" + isCourseRequired
+				+ ", isNationalPlanUsed=" + isNationalPlanUsed
+				+ ", isNationalPlanRequired=" + isNationalPlanRequired
+				+ ", isTextbookUsed=" + isTextbookUsed
+				+ ", isTextbookRequired=" + isTextbookRequired
+				+ ", isPmphTextbookUsed=" + isPmphTextbookUsed
+				+ ", isPmphTextbookRequired=" + isPmphTextbookRequired
+				+ ", isResearchUsed=" + isResearchUsed
+				+ ", isResearchRequired=" + isResearchRequired
+				+ ", isPublished=" + isPublished + ", isPublic=" + isPublic
+				+ ", isAllTextbookPublished=" + isAllTextbookPublished
+				+ ", isForceEnd=" + isForceEnd + ", isDeleted=" + isDeleted
+				+ ", gmtCreate=" + gmtCreate + ", founderId=" + founderId
+				+ ", gmtUpdate=" + gmtUpdate + ", menderId=" + menderId
+				+ ", projectPermission=" + projectPermission
+				+ ", planPermission=" + planPermission + ", isAchievementUsed="
+				+ isAchievementUsed + ", isAchievementRequired="
+				+ isAchievementRequired + ", isDigitalEditorOptional="
+				+ isDigitalEditorOptional + ", isMonographUsed="
+				+ isMonographUsed + ", isMonographRequired="
+				+ isMonographRequired + ", isPublishRewardUsed="
+				+ isPublishRewardUsed + ", isPublishRewardRequired="
+				+ isPublishRewardRequired + ", isSciUsed=" + isSciUsed
+				+ ", isSciRequired=" + isSciRequired
+				+ ", isClinicalRewardUsed=" + isClinicalRewardUsed
+				+ ", isClinicalRewardRequired=" + isClinicalRewardRequired
+				+ ", isAcadeRewardUsed=" + isAcadeRewardUsed
+				+ ", isAcadeRewardRequired=" + isAcadeRewardRequired
+				+ ", isMoocDigitalUsed=" + isMoocDigitalUsed
+				+ ", isMoocDigitalRequired=" + isMoocDigitalRequired
+				+ ", isIntentionUsed=" + isIntentionUsed
+				+ ", isIntentionRequired=" + isIntentionRequired + "]";
+	}
 	
-
-    
-
-    
-
 }
