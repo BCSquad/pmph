@@ -147,4 +147,5 @@ public class OrgUserSeviceTest extends BaseTest {
         orgUser.setHandphone(null);
         Assert.assertNotNull("添加失败", orgUserService.addOrgUserAndOrgOfBack(orgUser, org));
     }
+
 }
