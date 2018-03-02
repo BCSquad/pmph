@@ -12,9 +12,9 @@
         <title>PMPH E-education Platform</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript">
-        	alert('${UserId}');
+        	//alert('${UserId}');
         	if(0 == '${isLogin}'){
-        		alert(1);
+        		//alert(1);
         		window.location.href='http://192.168.100.109:8089/#/login?wechatUserId='+'${UserId}';
         		//window.location.href='http://120.76.221.250/#/login';
         	}else{
