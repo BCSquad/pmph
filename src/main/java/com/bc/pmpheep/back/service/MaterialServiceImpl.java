@@ -444,7 +444,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				materialNoticeAttachment.setAttachment(noticeId);
 				// 更新通知
 				materialNoticeAttachmentService.updateMaterialNoticeAttachment(materialNoticeAttachment);
-				// 移除session的文件 
+				// 移除session的文件
 				// request.getSession(false).removeAttribute(tempFileId);
 				// request.getSession(false).removeAttribute("fileName_" + tempFileId);
 			} else {
@@ -717,10 +717,11 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		if (!pmphUser.getIsAdmin()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
-					"该用户没有操作权限");
-		}
+		// if (!pmphUser.getIsAdmin()) {
+		// throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+		// CheckedExceptionResult.ILLEGAL_PARAM,
+		// "该用户没有操作权限");
+		// }
 		// 教材权限的检查
 		List<PmphRole> pmphRoles = pmphUserService.getListUserRole(pmphUser.getId());
 		Integer power = null;
