@@ -35,7 +35,7 @@ public class CORSFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
-        LOG.info("This is CORSFilter, url :{}", req.getRequestURI());
+        LOG.debug("This is CORSFilter, url :{}", req.getRequestURI());
         HttpServletResponse resp = (HttpServletResponse) response;
 //        resp.setHeader("Access-Control-Allow-Origin", "http://120.76.221.250:20802");
 //        resp.setHeader("Access-Control-Allow-Credentials", "true");
