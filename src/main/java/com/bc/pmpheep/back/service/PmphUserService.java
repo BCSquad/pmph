@@ -272,7 +272,7 @@ public interface PmphUserService {
      */
     Map<String, Object> getPersonalCenter(HttpServletRequest request, String state,
     String materialName, String groupName, String title, String bookname, String name,
-    String authProgress, String topicBookname, Boolean booleans);
+    String authProgress, String topicBookname);
 
     /**
      * 

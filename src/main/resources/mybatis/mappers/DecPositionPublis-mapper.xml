@@ -167,5 +167,10 @@
 		resultType="DecPositionPublished">
 		select * from dec_position_published where id=#{id};
 	</select>
+	
+	<!-- 按照书籍查询 -->
+	<select id="getDecPositionPublishedListByBookId"   resultType="DecPositionPublished">
+		select * from dec_position_published where textbook_id= #{textbookId} ;
+	</select>
 
 </mapper>

@@ -430,10 +430,19 @@ public class BookServiceImpl extends BaseService implements BookService {
 	}
 
 	@Override
-	public void updateComments(Long id) throws CheckedServiceException {
+	public void updateUpComments(Long id) throws CheckedServiceException {
 		if (null == id) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		bookDao.updateComments(id);
+		bookDao.updateUpComments(id);
 	}
+
+	@Override
+	public void updateDownComments(Long id) throws CheckedServiceException {
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		bookDao.updateDownComments(id);
+	}
+
 }

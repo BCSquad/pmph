@@ -11,14 +11,17 @@ import com.bc.pmpheep.back.po.DecAchievement;
 import com.bc.pmpheep.back.po.DecClinicalReward;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
+import com.bc.pmpheep.back.po.DecIntention;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecMonograph;
+import com.bc.pmpheep.back.po.DecMoocDigital;
 import com.bc.pmpheep.back.po.DecNationalPlan;
 import com.bc.pmpheep.back.po.DecPublishReward;
 import com.bc.pmpheep.back.po.DecResearch;
 import com.bc.pmpheep.back.po.DecSci;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
+import com.bc.pmpheep.back.po.DecTextbookPmph;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.util.BinaryUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -134,7 +137,7 @@ public class WordHelper {
 			/* 申报单位 */
 			String chosenOrgName = bo.getChosenOrgName();
 			if (StringUtil.notEmpty(chosenOrgName)) {
-				document.getParagraphs().get(17).createRun().setText(chosenOrgName);
+				document.getParagraphs().get(21).createRun().setText(chosenOrgName);
 			}
 			List<XWPFTable> tables = document.getTables();
 			String filename = generateFileName(bo);
@@ -146,18 +149,18 @@ public class WordHelper {
 			fillDecAchievementData(tables.get(5), bo.getDecAchievement());
 			fillDecAcadeData(tables.get(6), bo.getDecAcades());
 			fillDecLastPositionData(tables.get(7), bo.getDecLastPositions());
-			fillDecCourseConstructionData(tables.get(8), bo.getDecCourseConstructions());
-			fillDecNationalPlanData(tables.get(9), bo.getDecNationalPlans());
-			fillDecResearchData(tables.get(10), bo.getDecResearchs());
-			fillDecMonographData(tables.get(11), bo.getDecMonographs());
-			fillDecTextbookData(tables.get(12), bo.getDecTextbooks());
-			//++++其他社教材编写情况++++
-			//++++参加人卫慕课、数字教材编写情况++++
+			fillDecNationalPlanData(tables.get(8), bo.getDecNationalPlans());
+			fillDecTextbookPmphData(tables.get(9), bo.getDecTextbookPmphs());
+			fillDecTextbookData(tables.get(10), bo.getDecTextbooks());
+			fillDecMoocDigitalData(tables.get(11), bo.getDecMoocDigital());
+			fillDecCourseConstructionData(tables.get(12), bo.getDecCourseConstructions());
+			fillDecResearchData(tables.get(13), bo.getDecResearchs());
+			fillDecMonographData(tables.get(14), bo.getDecMonographs());
 			fillDecPublishRewardData(tables.get(15), bo.getPublishRewards());
 			fillDecSciData(tables.get(16), bo.getDecScis());
 			fillDecClinicalRewardData(tables.get(17), bo.getDecClinicalRewards());
 			fillDecAcadeRewardData(tables.get(18), bo.getDecAcadeRewards());
-			//++++编写内容意向++++
+			fillDecIntentionData(tables.get(19), bo.getDecIntention());
 			// map.put(filename, removeEmptyTables(document, filter));
 			map.put(filename, document);
 		}
@@ -190,7 +193,7 @@ public class WordHelper {
 
 	private XWPFDocument removeEmptyTables(XWPFDocument document, Integer filter) {
 		List<XWPFTable> tables = document.getTables();
-		for (int i = 15; i >= 1; i--) {
+		for (int i = 18; i >= 1; i--) {
 			if (BinaryUtil.getBit(filter, i - 1) == false) {
 				int index = document.getPosOfTable(tables.get(i));
 				document.removeBodyElement(index);
@@ -202,7 +205,7 @@ public class WordHelper {
 
 	private XWPFTable fillDeclarationPosition(XWPFTable table, DeclarationEtcBO bo) {
 		List<XWPFTableRow> rows = table.getRows();
-		List<XWPFTableCell> cells = rows.get(1).getTableCells();
+		List<XWPFTableCell> cells = rows.get(0).getTableCells();
 		/* 第一行 */
 		String textbookName = bo.getTextbookName();
 		String presetPosition = bo.getPresetPosition();
@@ -454,6 +457,30 @@ public class WordHelper {
 		return table;
 	}
 
+	private XWPFTable fillDecMoocDigitalData(XWPFTable table, DecMoocDigital decMoocDigital) {
+		if (null == decMoocDigital) {
+			return table;
+		}
+		List<XWPFTableRow> rows = table.getRows();
+		String value = decMoocDigital.getContent();
+		if (StringUtil.notEmpty(value)) {
+			rows.get(0).getCell(0).setText(value);
+		}
+		return table;
+	}
+
+	private XWPFTable fillDecIntentionData(XWPFTable table, DecIntention decIntention) {
+		if (null == decIntention) {
+			return table;
+		}
+		List<XWPFTableRow> rows = table.getRows();
+		String value = decIntention.getContent();
+		if (StringUtil.notEmpty(value)) {
+			rows.get(0).getCell(0).setText(value);
+		}
+		return table;
+	}
+
 	private XWPFTable fillDecAcadeData(XWPFTable table, List<DecAcade> decAcades) {
 		if (CollectionUtil.isEmpty(decAcades)) {
 			return table;
@@ -540,6 +567,9 @@ public class WordHelper {
 					break;
 				case 3:
 					value = "编委";
+					break;
+				case 4:
+					value = "数字编委";
 					break;
 				default:
 					value = "无";
@@ -666,6 +696,94 @@ public class WordHelper {
 		return table;
 	}
 
+	private XWPFTable fillDecTextbookPmphData(XWPFTable table, List<DecTextbookPmph> decTextbookPmphs) {
+		if (CollectionUtil.isEmpty(decTextbookPmphs)) {
+			return table;
+		}
+		if (decTextbookPmphs.size() > 1) {
+			int height = table.getRow(1).getHeight();
+			for (int i = 1; i < decTextbookPmphs.size(); i++) {
+				table.createRow().setHeight(height);
+			}
+		}
+		List<XWPFTableRow> rows = table.getRows();
+		List<XWPFTableCell> cells;
+		int rowCount = 1;
+		for (DecTextbookPmph decTextbookPmph : decTextbookPmphs) {
+			cells = rows.get(rowCount).getTableCells();
+			String value = decTextbookPmph.getMaterialName();
+			if (StringUtil.notEmpty(value)) {
+				cells.get(0).setText(value);
+			}
+			/* 0=无/1=国家/2=省部/3=协编/4=校本/5=其他教材 */
+			Integer rank = decTextbookPmph.getRank();
+			if (null != rank) {
+				switch (rank) {
+				case 0:
+					value = "无";
+				case 1:
+					value = "国家";
+					break;
+				case 2:
+					value = "省部";
+					break;
+				case 3:
+					value = "协编";
+					break;
+				case 4:
+					value = "校本";
+					break;
+				case 5:
+					value = "其他教材";
+					break;
+				default:
+					value = "其他";
+					break;
+				}
+				cells.get(1).setText(value);
+			}
+			Integer position = decTextbookPmph.getPosition();// 0=无/1=主编/2=副主编/3=编委
+			if (null != position) {
+				switch (position) {
+				case 1:
+					value = "主编";
+					break;
+				case 2:
+					value = "副主编";
+					break;
+				case 3:
+					value = "编委";
+					break;
+				case 4:
+					value = "数字编委";
+					break;
+				default:
+					value = "无";
+					break;
+				}
+				cells.get(2).setText(value);
+			}
+			Date publishDate = decTextbookPmph.getPublishDate();
+			if (null != publishDate) {
+				value = sdf.format(publishDate);
+				cells.get(3).setText(value);
+			}
+			value = decTextbookPmph.getIsbn();
+			if (StringUtil.notEmpty(value)) {
+				cells.get(4).setText(value);
+			}
+			value = decTextbookPmph.getNote();
+			if (StringUtil.notEmpty(value)) {
+				cells.get(5).setText(value);
+			}
+			for (XWPFTableCell cell : cells) {
+				cell.setVerticalAlignment(XWPFVertAlign.CENTER);
+			}
+			rowCount++;
+		}
+		return table;
+	}
+
 	private XWPFTable fillDecTextbookData(XWPFTable table, List<DecTextbook> decTextbooks) {
 		if (CollectionUtil.isEmpty(decTextbooks)) {
 			return table;
@@ -685,10 +803,12 @@ public class WordHelper {
 			if (StringUtil.notEmpty(value)) {
 				cells.get(0).setText(value);
 			}
-			/* 1=国家/2=省部/3=协编/4=/5=其他教材/6=教育部规划/7=卫计委规划/8=区域规划/9=创新教材 */
+			/* 0=无/1=国家/2=省部/3=协编/4=校本/5=其他教材 */
 			Integer rank = decTextbook.getRank();
 			if (null != rank) {
 				switch (rank) {
+				case 0:
+					value = "无";
 				case 1:
 					value = "国家";
 					break;
@@ -703,18 +823,6 @@ public class WordHelper {
 					break;
 				case 5:
 					value = "其他教材";
-					break;
-				case 6:
-					value = "教育部规划";
-					break;
-				case 7:
-					value = "卫计委规划";
-					break;
-				case 8:
-					value = "区域规划";
-					break;
-				case 9:
-					value = "创新教材";
 					break;
 				default:
 					value = "其他";
@@ -734,6 +842,9 @@ public class WordHelper {
 				case 3:
 					value = "编委";
 					break;
+				case 4:
+					value = "数字编委";
+					break;
 				default:
 					value = "无";
 					break;
@@ -745,13 +856,17 @@ public class WordHelper {
 				value = sdf.format(publishDate);
 				cells.get(3).setText(value);
 			}
-			value = decTextbook.getIsbn();
+			value = decTextbook.getPublisher();
 			if (StringUtil.notEmpty(value)) {
 				cells.get(4).setText(value);
 			}
-			value = decTextbook.getNote();
+			value = decTextbook.getIsbn();
 			if (StringUtil.notEmpty(value)) {
 				cells.get(5).setText(value);
+			}
+			value = decTextbook.getNote();
+			if (StringUtil.notEmpty(value)) {
+				cells.get(6).setText(value);
 			}
 			for (XWPFTableCell cell : cells) {
 				cell.setVerticalAlignment(XWPFVertAlign.CENTER);

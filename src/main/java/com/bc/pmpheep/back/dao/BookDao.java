@@ -144,11 +144,22 @@ public interface BookDao {
 	/**
 	 * 
 	 * 
-	 * 功能描述：更新评论数
+	 * 功能描述：更新评论数+1
 	 *
 	 * @param id
 	 * @throws CheckedServiceException
 	 *
 	 */
-	void updateComments(@Param("id") Long id);
+	void updateUpComments(@Param("id") Long id);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：更新评论数-1
+	 *
+	 * @param id
+	 * @throws CheckedServiceException
+	 *
+	 */
+	void updateDownComments(@Param("id") Long id);
 }

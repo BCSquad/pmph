@@ -109,7 +109,7 @@ public class Download {
 							+ "Chrome/53.0.2785.116 Safari/537.36");
 			conn.setDoOutput(true);
 			conn.setDoInput(true); // 是否打开输入流true|false
-			conn.setRequestMethod("GET"); // 设置请求方式为"GET"
+			conn.setRequestMethod("POST"); // 设置请求方式为"GET"
 			conn.setConnectTimeout(5 * 1000); // 超时响应时间为5秒
 			conn.connect(); // 打开连接端口
 			// 通过输入流获取图片数据

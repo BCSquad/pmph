@@ -194,7 +194,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 	@Override
 	public PageResult<DeclarationListVO> pageDeclaration(Integer pageNumber, Integer pageSize, Long materialId,
 			String textBookids, String realname, String position, String title, String orgName, Long orgId,
-			String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,Boolean haveFile)
+			String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile)
 			throws CheckedServiceException {
 		if (null == materialId) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -236,8 +236,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 		if (null != offlineProgress && offlineProgress != 0) {
 			map.put("offlineProgress", offlineProgress); // 纸质表进度
 		}
-		if(null != haveFile) {
-			map.put("haveFile", haveFile); // 有无教材大纲 
+		if (null != haveFile) {
+			map.put("haveFile", haveFile); // 有无教材大纲
 		}
 		// 包装参数实体
 		PageParameter<Map<String, Object>> pageParameter = new PageParameter<Map<String, Object>>(pageNumber, pageSize,
@@ -256,7 +256,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 	}
 
 	@Override
-	public Declaration confirmPaperList(Long id, Integer offlineProgress, String sessionId) 
+	public Declaration confirmPaperList(Long id, Integer offlineProgress, String sessionId)
 			throws CheckedServiceException, IOException {
 		if (ObjectUtil.isNull(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
@@ -267,16 +267,16 @@ public class DeclarationServiceImpl implements DeclarationService {
 					"确认收到纸质表不能为空!");
 		}
 		// 纸质表审核人id
-        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-        if (ObjectUtil.isNull(pmphUser)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "审核人为空!");
-        }
-        Long authUserId = pmphUser.getId();// 纸质表审核人Id为登陆用户ID
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (ObjectUtil.isNull(pmphUser)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.OBJECT_NOT_FOUND, "审核人为空!");
+		}
+		Long authUserId = pmphUser.getId();// 纸质表审核人Id为登陆用户ID
 		// 获取当前作家用户申报信息
 		Declaration declarationCon = declarationDao.getDeclarationById(id);
 		if (ObjectUtil.isNull(declarationCon)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.OBJECT_NOT_FOUND, "查询结果为空!");
 		}
 		declarationCon.setAuthUserId(authUserId); // 纸质表审核人id
@@ -289,22 +289,22 @@ public class DeclarationServiceImpl implements DeclarationService {
 	}
 
 	@Override
-	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause) 
+	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause)
 			throws CheckedServiceException, IOException {
 		if (ObjectUtil.isNull(id)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
-					CheckedExceptionResult.ILLEGAL_PARAM, "主键不能为空!");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+					"主键不能为空!");
 		}
 		if (ObjectUtil.isNull(onlineProgress)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
-					CheckedExceptionResult.ILLEGAL_PARAM, "审核进度不能为空!");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+					"审核进度不能为空!");
 		}
 		// 获取当前作家用户申报信息
 		Declaration declarationCon = declarationDao.getDeclarationById(id);
 		// 获取审核进度是4并且已经通过审核单位并且不是提交到出版社0则被退回给申报单位
 		// 提交审核单位，审核单位通过，出版社退回申报单位操作
-		if (4 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress() && 
-				0 != declarationCon.getOrgId()) {
+		if (4 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress()
+				&& 0 != declarationCon.getOrgId()) {
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
 				Integer chosenPosition = decPositions.getChosenPosition();
@@ -315,17 +315,17 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
-						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+						"最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
 			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false); 
-		// 获取审核进度是5并且已经通过审核单位并且不是提交到出版社0则被退回给个人
-		// 提交审核单位，审核单位通过，出版社退回个人操作
-		} else if(5 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress() && 
-				0 != declarationCon.getOrgId()) { 
+			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false);
+			// 获取审核进度是5并且已经通过审核单位并且不是提交到出版社0则被退回给个人
+			// 提交审核单位，审核单位通过，出版社退回个人操作
+		} else if (5 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress()
+				&& 0 != declarationCon.getOrgId()) {
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
 				Integer chosenPosition = decPositions.getChosenPosition();
@@ -336,16 +336,16 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
-						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+						"最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
 			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false); 
-		// 获取审核进度是5并且机构id为出版社0则被退回给个人
-		// 提交到出版社，出版社退回个人操作
-		} else if (5 == onlineProgress.intValue() && 0 == declarationCon.getOrgId()) { 
+			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false);
+			// 获取审核进度是5并且机构id为出版社0则被退回给个人
+			// 提交到出版社，出版社退回个人操作
+		} else if (5 == onlineProgress.intValue() && 0 == declarationCon.getOrgId()) {
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
 				Integer chosenPosition = decPositions.getChosenPosition();
@@ -356,8 +356,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
-						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+						"最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
@@ -496,8 +496,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 		List<DecNationalPlan> decNationalPlanList = decNationalPlanDao
 				.getListDecNationalPlanByDeclarationId(declarationId);
 		// 人卫社教材编写情况表
-		List<DecTextbookPmph> decTextbookPmphList = 
-				decTextbookPmphDao.getListDecTextbookPmphByDeclarationId(declarationId);
+		List<DecTextbookPmph> decTextbookPmphList = decTextbookPmphDao
+				.getListDecTextbookPmphByDeclarationId(declarationId);
 		// 教材编写
 		List<DecTextbook> decTextbookList = decTextbookDao.getListDecTextbookByDeclarationId(declarationId);
 		// 参加人卫慕课、数字教材编写情况表
@@ -657,7 +657,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 个人成就
 		ArrayList<DecAchievement> decAchievements = (ArrayList<DecAchievement>) decAchievementDao
 				.getDecAchievementByDeclarationIds(decIds);
-		// 上套教材
+		// 本套上版教材参编情况
 		ArrayList<DecLastPosition> decLastPositions = (ArrayList<DecLastPosition>) decLastPositionDao
 				.getListDecLastPositionByDeclarationIds(decIds);
 		// 精品课程建设情况
@@ -666,10 +666,15 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 主编国家级规划
 		ArrayList<DecNationalPlan> decNationalPlans = (ArrayList<DecNationalPlan>) decNationalPlanDao
 				.getListDecNationalPlanByDeclarationIds(decIds);
-		// 教材编写
+		// 人卫社教材编写情况表
+		ArrayList<DecTextbookPmph> decTextbookPmphs = (ArrayList<DecTextbookPmph>) decTextbookPmphDao
+				.getListDecTextbookPmphByDeclarationIds(decIds);
+		// 其他社教材编写情况
 		ArrayList<DecTextbook> decTextbooks = (ArrayList<DecTextbook>) decTextbookDao
 				.getListDecTextbookByDeclarationIds(decIds);
-
+		// 参加人卫慕课、数字教材编写情况表
+		ArrayList<DecMoocDigital> decMoocDigitals = (ArrayList<DecMoocDigital>) decMoocDigitalDao
+				.getDecMoocDigitalByDeclarationIds(decIds);
 		// 作家科研
 		ArrayList<DecResearch> decResearchs = (ArrayList<DecResearch>) decResearchDao
 				.getListDecResearchByDeclarationIds(decIds);
@@ -690,6 +695,9 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 作家扩展项
 		ArrayList<DecExtensionVO> decExtensionVOs = (ArrayList<DecExtensionVO>) decExtensionDao
 				.getListDecExtensionVOByDeclarationIds(decIds);
+		// 编写内容意向表
+		ArrayList<DecIntention> decIntentions = (ArrayList<DecIntention>) decIntentionDao
+				.getDecIntentionByDeclarationIds(decIds);
 		for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
 			String strOnlineProgress = "";// 审核进度
 			String strOfflineProgress = "";// 纸质表进度
@@ -844,11 +852,25 @@ public class DeclarationServiceImpl implements DeclarationService {
 					decNationalPlan.add(plan);
 				}
 			}
-			// 教材编写
+			// 人卫社教材编写
+			List<DecTextbookPmph> decTextbookPmph = new ArrayList<>();
+			for (DecTextbookPmph textbookPmph : decTextbookPmph) {
+				if (textbookPmph.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+					decTextbookPmph.add(textbookPmph);
+				}
+			}
+			// 其他社教材编写
 			List<DecTextbook> decTextbook = new ArrayList<>();
 			for (DecTextbook textbook : decTextbooks) {
 				if (textbook.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
 					decTextbook.add(textbook);
+				}
+			}
+			// 参加人卫慕课、数字教材编写情况表
+			DecMoocDigital decMoocDigital = new DecMoocDigital();
+			for (DecMoocDigital moocDigital : decMoocDigitals) {
+				if (moocDigital.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+					decMoocDigital = moocDigital;
 				}
 			}
 			// 作家科研
@@ -901,6 +923,14 @@ public class DeclarationServiceImpl implements DeclarationService {
 					extensionVOs.add(extensionVO);
 				}
 			}
+			// 编写内容意向表
+			DecIntention decIntention = new DecIntention();
+			for (DecIntention intention : decIntentions) {
+				if (intention.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+					decIntention = intention;
+				}
+			}
+
 			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getTextbookName(),
 					declarationOrDisplayVO.getPresetPosition(), declarationOrDisplayVO.getRealname(),
 					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),
@@ -915,11 +945,11 @@ public class DeclarationServiceImpl implements DeclarationService {
 					(ArrayList<DecWorkExp>) decWorkExp, (ArrayList<DecTeachExp>) decTeachExp, decAchievement,
 					(ArrayList<DecAcade>) decAcade, (ArrayList<DecLastPosition>) decLastPosition,
 					(ArrayList<DecCourseConstruction>) decCourseConstruction,
-					(ArrayList<DecNationalPlan>) decNationalPlan, (ArrayList<DecTextbook>) decTextbook,
-					(ArrayList<DecResearch>) decResearch, (ArrayList<DecMonograph>) monographs,
-					(ArrayList<DecPublishReward>) publishRewards, (ArrayList<DecSci>) scis,
-					(ArrayList<DecClinicalReward>) clinicalRewards, (ArrayList<DecAcadeReward>) acadeRewards,
-					(ArrayList<DecExtensionVO>) extensionVOs);
+					(ArrayList<DecNationalPlan>) decNationalPlan, (ArrayList<DecTextbookPmph>) decTextbookPmph,
+					decMoocDigital, (ArrayList<DecTextbook>) decTextbook, (ArrayList<DecResearch>) decResearch,
+					(ArrayList<DecMonograph>) monographs, (ArrayList<DecPublishReward>) publishRewards,
+					(ArrayList<DecSci>) scis, (ArrayList<DecClinicalReward>) clinicalRewards,
+					(ArrayList<DecAcadeReward>) acadeRewards, (ArrayList<DecExtensionVO>) extensionVOs, decIntention);
 			declarationEtcBOs.add(declarationEtcBO);
 		}
 		return declarationEtcBOs;

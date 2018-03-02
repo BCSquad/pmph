@@ -158,11 +158,22 @@ public interface BookService {
 	/**
 	 * 
 	 * 
-	 * 功能描述：更新评论数
+	 * 功能描述：更新评论数+1
 	 *
 	 * @param id
 	 * @throws CheckedServiceException
 	 *
 	 */
-	void updateComments(Long id) throws CheckedServiceException;
+	void updateUpComments(Long id) throws CheckedServiceException;
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：更新评论数-1
+	 *
+	 * @param id
+	 * @throws CheckedServiceException
+	 *
+	 */
+	void updateDownComments(Long id) throws CheckedServiceException;
 }
