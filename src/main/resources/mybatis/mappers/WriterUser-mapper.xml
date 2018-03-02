@@ -857,4 +857,13 @@
 			id=#{item.id}
 		</foreach>
 	</update>
+	<!-- 通过查询用户id查询用户信息 -->
+	<select id="getWriterUserList" resultType="WriterUser">
+		select * from writer_user
+		where id in
+		<foreach collection="array" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

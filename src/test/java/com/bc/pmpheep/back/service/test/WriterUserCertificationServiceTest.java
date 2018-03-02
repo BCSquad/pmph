@@ -13,6 +13,7 @@ import org.springframework.test.annotation.Rollback;
 import com.bc.pmpheep.back.po.WriterUserCertification;
 import com.bc.pmpheep.back.service.WriterUserCertificationService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -29,7 +30,7 @@ public class WriterUserCertificationServiceTest extends BaseTest {
 
     @Test
     @Rollback(Const.ISROLLBACK)
-    public void testUpdateWriterUserCertificationProgressByUserId() {
+    public void testUpdateWriterUserCertificationProgressByUserId() throws CheckedServiceException, Exception {
     	WriterUserCertification writerUserCertification=this.addWriterUserCertification();
         // 教师审核按userId更新WriterUserCertification中Progress状态字段
         Short progress = 2;
