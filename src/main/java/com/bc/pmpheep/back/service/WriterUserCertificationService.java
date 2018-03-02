@@ -75,7 +75,7 @@ public interface WriterUserCertificationService {
      * </pre>
      */
     Integer updateWriterUserCertificationProgressByUserId(Short progress, Long[] userIds)
-    throws CheckedServiceException;
+    throws CheckedServiceException,Exception;
 
     /**
      * 

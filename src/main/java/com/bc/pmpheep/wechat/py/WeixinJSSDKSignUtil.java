@@ -47,7 +47,7 @@ public class WeixinJSSDKSignUtil {
             crypt.reset();
             crypt.update(string1.getBytes("UTF-8"));
             signature = byteToHex(crypt.digest());
-            // System.out.println("Sign signature:" + signature);
+            System.out.println("Sign signature:" + signature);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {

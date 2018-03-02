@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.WriterUserCertificationDao;
+import com.bc.pmpheep.back.po.Org;
+import com.bc.pmpheep.back.po.OrgUser;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.po.WriterUserCertification;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
@@ -35,7 +40,14 @@ WriterUserCertificationService {
     private WriterUserCertificationDao writerUserCertificationDao;
     @Autowired
     WriterUserService writerUserService;
-
+    @Autowired
+    SystemMessageService systemMessageService;
+    @Autowired
+    OrgUserService orgUserService;
+    @Autowired
+    PmphUserService pmphUserService;
+    @Autowired
+    OrgService orgService;
     /**
      * 
      * @introduction 新增一个WriterUserCertification
@@ -118,7 +130,7 @@ WriterUserCertificationService {
 
     @Override
     public Integer updateWriterUserCertificationProgressByUserId(Short progress, Long[] userIds)
-    throws CheckedServiceException {
+    throws CheckedServiceException, Exception {
         List<WriterUserCertification> writerUserCertifications =
         this.getWriterUserCertificationByUserIds(userIds);
         if (ObjectUtil.isNull(progress)) {
@@ -155,6 +167,33 @@ WriterUserCertificationService {
 				}else{
 					writerUserService.updateWriterUser(writerUsers);
 				}
+			}
+        }
+        //认证通过或退回的推送消息
+        Boolean isPass = null;
+        if(2==progress){
+        	isPass=false;
+        }
+        if(3==progress){
+        	isPass=true;
+        }
+        if(null!=isPass){
+        	List<Long> teacherIds=new ArrayList<>();
+            for (int i = 0; i < userIds.length; i++) {
+              	teacherIds.add(userIds[0]);
+      		}
+        	//获取用户认证类型和认证人
+        	List<WriterUser> users=writerUserService.getWriterUserList(userIds);
+        	for (WriterUser writerUser : users) {
+        		if(1==writerUser.getAuthUserType()){//社内用户
+        			PmphUser pmphUser=pmphUserService.get(writerUser.getAuthUserId());
+        			systemMessageService.sendWhenTeacherCertificationAudit(pmphUser.getRealname(), teacherIds, isPass);
+        		}
+        		if(2==writerUser.getAuthUserType()){//学校机构用户
+        			OrgUser orgUsers=orgUserService.getOrgUserById(writerUser.getAuthUserId());
+        			Org org=orgService.getOrgById(orgUsers.getOrgId());
+        			systemMessageService.sendWhenTeacherCertificationAudit(org.getOrgName(), teacherIds, isPass);
+        		}
 			}
         }
         return count;

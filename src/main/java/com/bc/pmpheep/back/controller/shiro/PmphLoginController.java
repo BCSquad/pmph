@@ -95,95 +95,85 @@ public class PmphLoginController {
     @OAuthRequired
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ResponseBean login(@RequestParam(value = "username", required = false) String username,
-    @RequestParam(value = "password", required = false) String password, HttpServletRequest request) {
+    @RequestParam(value = "password", required = false) String password,
+    @RequestParam(value = "wechatUserId", required = false) String wechatUserId,
+    @RequestParam(value = "token", required = false) String token, HttpServletRequest request)
+    throws CheckedServiceException {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         logger.info("username => " + username);
         logger.info("password => " + password);
         // HttpSingleSignOnService service = new HttpSingleSignOnService();
         // String url = service.getSingleSignOnURL();
-        try {
-            // 判断是否从企业微信App登陆
-            String userAgent = request.getHeader("user-agent").toLowerCase();
-            Boolean isTrue =
-            userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
-            if (isTrue) {
-                HttpSession session = request.getSession();
-                String wechatUserId = (String) session.getAttribute("UserId");
-                if (StringUtil.isEmpty(wechatUserId)) {
+        // try {
+        // 判断是否从企业微信App登陆
+        String userAgent = request.getHeader("user-agent").toLowerCase();
+        Boolean isTrue =
+        userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
+        if (isTrue) {
+            if (StringUtil.notEmpty(token)) {
+                String newToken = username + password + wechatUserId + "pmph";
+                if (!newToken.equals(new DesRun(token).depsw)) {
                     throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                                      CheckedExceptionResult.NULL_PARAM,
-                                                      "网络异常，请重新再试!");
-                }
-                PmphUserWechat pmphUserWechat =
-                pmphUserWechatService.getPmphUserWechatByWechatId(wechatUserId);
-                if (StringUtil.notEmpty(username)) {
-                    if (ObjectUtil.isNull(pmphUserWechat)) {
-                        pmphUserWechatService.add(new PmphUserWechat(username, wechatUserId));
-                    }
-                } else if (StringUtil.isEmpty(username)) {
-                    if (ObjectUtil.notNull(pmphUserWechat)) {
-                        PmphUser pmphUser =
-                        pmphUserService.getByUsernameAndPassword(pmphUserWechat.getUsername(), null);
-                        if (ObjectUtil.notNull(pmphUser)) {
-                            username = pmphUserWechat.getUsername();
-                            password = pmphUser.getPassword();
-                        }
-                    } else {
-                        ResponseBean responseBean = new ResponseBean();
-                        responseBean.setCode(ResponseBean.LOGIN_AGAIN);
-                        responseBean.setData("请重新登陆！");
-                        return responseBean;
-                    }
+                                                      CheckedExceptionResult.NULL_PARAM, "用户名密码错误!");
                 }
             }
-            if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
-                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-                                                  CheckedExceptionResult.NULL_PARAM, "请输入用户名和密码!");
-            }
-            PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
-            // PmphUser pmphUser = pmphUserService.login(userName, null);
-            pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
-            if (!RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUser.getAvatar())) {
-                pmphUser.setAvatar(RouteUtil.userAvatar(pmphUser.getAvatar()));
-            }
-            // 根据用户Id查询对应角色(是否为管理员)
-            List<PmphRole> pmphRoles = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
-            List<Long> roleIds = new ArrayList<Long>(pmphRoles.size());
-            for (PmphRole pmphRole : pmphRoles) {
-                roleIds.add(pmphRole.getId());
-                if (ObjectUtil.notNull(pmphRole)) {
-                    if (Const.LOGIN_USER_IS_ADMIN.equals(pmphRole.getRoleName())
-                        || Const.LOGIN_USER_IS_ADMINS.equals(pmphRole.getRoleName())
-                        || Const.LOGIN_SYS_USER_IS_ADMIN.equals(pmphRole.getRoleName())) {
-                        pmphUser.setIsAdmin(true);
-                    } else {
-                        pmphUser.setIsAdmin(false);
-                    }
-                }
-                if (Const.TRUE == pmphUser.getIsAdmin()) {
-                    break;
-                }
-            }
-            // 根据用户Id查询对应权限Id
-            List<Long> pmphUserPermissionIds =
-            pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
-            // String materialPermission =
-            // pmphUserService.getMaterialPermissionByUserId(pmphUser.getId()); 根据用户返回书籍
-            // 验证成功在Session中保存用户信息
-            request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
-            // 验证成功在Session中保存用户Token信息
-            request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
-                                              new DesRun(password, username).enpsw);
-            // pmphUserSessionId
-            resultMap.put(Const.USER_SEESION_ID, request.getSession().getId());
-            resultMap.put(Const.SESSION_PMPH_USER, pmphUser);
-            resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun(password, username).enpsw);
-            resultMap.put("pmphUserPermissionIds", pmphUserPermissionIds);
-            // resultMap.put("materialPermission", materialPermission);
-            return new ResponseBean(resultMap);
-        } catch (CheckedServiceException cException) {
-            return new ResponseBean(cException);
         }
+        if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "请输入用户名和密码!");
+        }
+        PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
+        // PmphUser pmphUser = pmphUserService.login(userName, null);
+        pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
+        if (!RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUser.getAvatar())) {
+            pmphUser.setAvatar(RouteUtil.userAvatar(pmphUser.getAvatar()));
+        }
+        // 根据用户Id查询对应角色(是否为管理员)
+        List<PmphRole> pmphRoles = pmphRoleService.getPmphRoleByUserId(pmphUser.getId());
+        List<Long> roleIds = new ArrayList<Long>(pmphRoles.size());
+        for (PmphRole pmphRole : pmphRoles) {
+            roleIds.add(pmphRole.getId());
+            if (ObjectUtil.notNull(pmphRole)) {
+                if (Const.LOGIN_USER_IS_ADMIN.equals(pmphRole.getRoleName())
+                    || Const.LOGIN_USER_IS_ADMINS.equals(pmphRole.getRoleName())
+                    || Const.LOGIN_SYS_USER_IS_ADMIN.equals(pmphRole.getRoleName())) {
+                    pmphUser.setIsAdmin(true);
+                } else {
+                    pmphUser.setIsAdmin(false);
+                }
+            }
+            if (Const.TRUE == pmphUser.getIsAdmin()) {
+                break;
+            }
+        }
+        // 根据用户Id查询对应权限Id
+        List<Long> pmphUserPermissionIds =
+        pmphUserService.getPmphUserPermissionByUserId(pmphUser.getId());
+        // 判断是否从企业微信App登陆
+        if (isTrue) {
+            PmphUserWechat pmphUserWechat =
+            pmphUserWechatService.getPmphUserWechatByWechatId(wechatUserId);
+            if (ObjectUtil.isNull(pmphUserWechat)) {
+                pmphUserWechatService.add(new PmphUserWechat(username, wechatUserId));
+            }
+        }
+        // String materialPermission =
+        // pmphUserService.getMaterialPermissionByUserId(pmphUser.getId()); 根据用户返回书籍
+        // 验证成功在Session中保存用户信息
+        request.getSession().setAttribute(Const.SESSION_PMPH_USER, pmphUser);
+        // 验证成功在Session中保存用户Token信息
+        request.getSession().setAttribute(Const.SEESION_PMPH_USER_TOKEN,
+                                          new DesRun(password, username).enpsw);
+        // pmphUserSessionId
+        resultMap.put(Const.USER_SEESION_ID, request.getSession().getId());
+        resultMap.put(Const.SESSION_PMPH_USER, pmphUser);
+        resultMap.put(Const.SEESION_PMPH_USER_TOKEN, new DesRun(password, username).enpsw);
+        resultMap.put("pmphUserPermissionIds", pmphUserPermissionIds);
+        // resultMap.put("materialPermission", materialPermission);
+        return new ResponseBean(resultMap);
+        // } catch (CheckedServiceException cException) {
+        // return new ResponseBean(cException);
+        // }
     }
 
     /**

@@ -32,6 +32,7 @@ public class OAuth2Controller {
     public String Oauth2API(HttpServletRequest request, @RequestParam String resultUrl) {
         // 此处可以添加获取持久化的数据，如企业号id等相关信息
         String CropId = Constants.CORPID;
+        // resultUrl = resultUrl.replaceAll("192.168.100.109:8080", "192.168.100.109:8089");
         String redirectUrl = "";
         if (resultUrl != null) {
             // String reqUrl = request.getLocalAddr();
@@ -104,9 +105,9 @@ public class OAuth2Controller {
      * @throws RemoteException
      */
     public String getMemberGuidByCode(String token, String code, int agentId) {
-        System.out.println("code==" + code + "\ntoken=" + token + "\nagentid=" + agentId);
+        // System.out.println("code==" + code + "\ntoken=" + token + "\nagentid=" + agentId);
         Result<String> result = QiYeUtil.oAuth2GetUserByCode(token, code, agentId);
-        System.out.println("result=" + result);
+        // System.out.println("result=" + result);
         if (result.getErrcode() == "0") {
             if (result.getObj() != null) {
                 // 此处可以通过微信授权用code还钱的Userid查询自己本地服务器中的数据
