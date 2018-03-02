@@ -153,8 +153,10 @@ public class CmsInfoLettersManagementController {
             String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(cmsContentService.updateCmsContent(cmsContent,
                                                                        files,
+                                                                       null,
                                                                        content,
                                                                        attachment,
+                                                                       null,
                                                                        scheduledTime,
                                                                        sessionId));
         } catch (IOException e) {

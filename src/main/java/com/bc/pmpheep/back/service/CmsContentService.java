@@ -66,9 +66,9 @@ public interface CmsContentService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer updateCmsContent(CmsContent cmsContent, String[] files, String content,
-    String[] attachment, String scheduledTime, String sessionId) throws CheckedServiceException,
-    IOException;
+    Integer updateCmsContent(CmsContent cmsContent, String[] files, String[] imgFile,
+    String content, String[] attachment, String[] imgAttachment, String scheduledTime,
+    String sessionId) throws CheckedServiceException, IOException;
 
     /**
      * 更新CmsContent对象
