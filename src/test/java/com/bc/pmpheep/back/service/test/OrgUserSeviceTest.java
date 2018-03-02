@@ -130,7 +130,9 @@ public class OrgUserSeviceTest extends BaseTest {
         list.add(orgUser.getId());
         try {
             Assert.assertTrue("更新审核状态失败", orgUserService.updateOrgUserProgressById(1, list) > 0);
-        } catch (CheckedServiceException | IOException e) {
+        } catch (CheckedServiceException e) {
+            logger.error(e.getMessage());
+        } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
