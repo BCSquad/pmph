@@ -379,6 +379,8 @@ public class CmsContentServiceImpl implements CmsContentService {
         if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()
             && Boolean.TRUE == isPublished) {
             this.updatCmsContentCommentsById(id, 1);
+            CmsContent cmsContent = this.getCmsContentById(id);
+            this.updateCmsContentByParentId(cmsContent.getParentId(), 1);
         }
         CmsContent cmsContent = this.getCmsContentById(id);
         Integer type = 0;
@@ -551,6 +553,7 @@ public class CmsContentServiceImpl implements CmsContentService {
             CmsContent cmsContent = this.getCmsContentById(id);
             if (Boolean.TRUE == cmsContent.getIsPublished()) {
                 this.updatCmsContentCommentsById(id, -1);
+                this.updateCmsContentByParentId(cmsContent.getParentId(), -1);
             }
         }
         return cmsContentDao.deleteCmsContentByIds(ids);
@@ -700,5 +703,15 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
         return cmsContentDao.updatCmsContentCommentsById(id, comments);
+    }
+
+    @Override
+    public Integer updateCmsContentByParentId(Long id, Integer comments)
+    throws CheckedServiceException {
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "主键为空");
+        }
+        return cmsContentDao.updateCmsContentByParentId(id, comments);
     }
 }

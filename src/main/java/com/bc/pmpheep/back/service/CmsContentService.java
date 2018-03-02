@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.CmsContent;
@@ -279,4 +281,18 @@ public interface CmsContentService {
      */
     Integer updatCmsContentCommentsById(Long id, Integer comments) throws CheckedServiceException;
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据parent_id更新文章评论数
+     * 使用示范：
+     *
+     * @param id CmsContent主键
+     * @param comments 1/-1
+     * @return  影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer updateCmsContentByParentId(@Param("id") Long id, @Param("comments") Integer comments)
+    throws CheckedServiceException;
 }
