@@ -26,6 +26,7 @@ import com.bc.pmpheep.back.util.FileUpload;
 import com.bc.pmpheep.back.util.FileUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.SummaryUtil;
@@ -383,12 +384,14 @@ public class CmsContentServiceImpl implements CmsContentService {
         Integer type = 0;
         if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()) {
             type = Const.WRITER_USER_TRENDST_TYPE_2;
-        } else {
+        } else if (Const.CMS_CATEGORY_ID_1.longValue() == categoryId.longValue()) {
             type = Const.WRITER_USER_TRENDST_TYPE_1;
         }
-        writerUserTrendstService.addWriterUserTrendst(new WriterUserTrendst(
-                                                                            cmsContent.getAuthorId(),
-                                                                            type, id));
+        if (Boolean.TRUE == isPublished) {
+            writerUserTrendstService.addWriterUserTrendst(new WriterUserTrendst(
+                                                                                cmsContent.getAuthorId(),
+                                                                                type, id));
+        }
         return count;
     }
 
@@ -492,8 +495,16 @@ public class CmsContentServiceImpl implements CmsContentService {
         resultMap.put("MaterialNoteAttachment", materialNoteAttachments);
         // 文章封面图片
         CmsExtra cmsExtra = cmsExtraService.getCmsExtraByAttachment(cmsContent.getCover());
-        resultMap.put("imgFileName", cmsExtra.getAttachmentName());
-        resultMap.put("imgFilePath", "/img/" + cmsContent.getCover());
+        String imgFileName = null;
+        String imgFilePath = RouteUtil.DEFAULT_USER_AVATAR;
+        if (ObjectUtil.notNull(cmsExtra)) {
+            imgFileName = cmsExtra.getAttachmentName();
+        }
+        resultMap.put("imgFileName", imgFileName);
+        if (!"DEFAULT".equals(cmsContent.getCover())) {
+            imgFilePath = "/img/" + cmsContent.getCover();
+        }
+        resultMap.put("imgFilePath", imgFilePath);
         return resultMap;
     }
 

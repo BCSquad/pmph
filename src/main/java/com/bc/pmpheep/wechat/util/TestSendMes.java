@@ -14,7 +14,7 @@ public class TestSendMes {
     public static void main(String[] args) {
         // 应用ID，账号，部门为""，标签为""，消息类型，内容
         // 部门不为""，标签不为""，将会给该部门的每个成员发送消息
-        Send_msg("nyz526",
+        Send_msg("@all",
                  "200",
                  "",
                  "text",
