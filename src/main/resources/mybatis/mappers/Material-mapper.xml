@@ -87,11 +87,11 @@
 			<if test="isTextbookRequired!=null">
 				is_textbook_required,
 			</if>
-			<if test="isOtherTextbookUsed!=null">
-				is_other_textbook_used,
+			<if test="isPmphTextbookUsed!=null">
+				is_pmph_textbook_used,
 			</if>
-			<if test="isOtherTextbookRequired!=null">
-				is_other_textbook_required,
+			<if test="isPmphTextbookRequired!=null">
+				is_pmph_textbook_required,
 			</if>
 			<if test="isResearchUsed!=null">
 				is_research_used,
@@ -170,6 +170,18 @@
 			</if>
 			<if test="isAcadeRewardRequired != null">
 				is_acade_reward_required,
+			</if>
+			<if test="isMoocDigitalUsed != null">
+				is_mooc_digital_used,
+			</if>
+			<if test="isMoocDigitalRequired != null">
+				is_mooc_digital_required,
+			</if>
+			<if test="isIntentionUsed != null">
+				is_intention_used,
+			</if>
+			<if test="isIntentionRequired != null">
+				is_intention_required,
 			</if>
 		</trim>
 	</sql>
@@ -258,11 +270,11 @@
 			<if test="isTextbookRequired!=null">
 				#{isTextbookRequired},
 			</if>
-			<if test="isOtherTextbookUsed!=null">
-				#{isOtherTextbookUsed},
+			<if test="isPmphTextbookUsed!=null">
+				#{isPmphTextbookUsed},
 			</if>
-			<if test="isOtherTextbookRequired!=null">
-				#{isOtherTextbookRequired},
+			<if test="isPmphTextbookRequired!=null">
+				#{isPmphTextbookRequired},
 			</if>
 			<if test="isResearchUsed!=null">
 				#{isResearchUsed},
@@ -341,6 +353,18 @@
 			</if>
 			<if test="isAcadeRewardRequired != null">
 				#{isAcadeRewardRequired},
+			</if>
+			<if test="isMoocDigitalUsed != null">
+				#{isMoocDigitalUsed},
+			</if>
+			<if test="isMoocDigitalRequired != null">
+				#{isMoocDigitalRequired},
+			</if>
+			<if test="isIntentionUsed != null">
+				#{isIntentionUsed},
+			</if>
+			<if test="isIntentionRequired != null">
+				#{isIntentionRequired},
 			</if>
 		</trim>
 	</sql>
@@ -447,11 +471,11 @@
 			<if test="isTextbookRequired !=null  ">
 				is_Textbook_Required=#{isTextbookRequired},
 			</if>
-			<if test="isOtherTextbookUsed !=null  ">
-				is_other_textbook_used=#{isOtherTextbookUsed},
+			<if test="isPmphTextbookUsed !=null  ">
+				is_pmph_textbook_used=#{isPmphTextbookUsed},
 			</if>
-			<if test="isOtherTextbookRequired !=null  ">
-				is_other_textbook_required=#{isOtherTextbookRequired},
+			<if test="isPmphTextbookRequired !=null  ">
+				is_pmph_textbook_required=#{isPmphTextbookRequired},
 			</if>
 			<if test="isResearchUsed !=null ">
 				is_research_used=#{isResearchUsed},
@@ -524,6 +548,18 @@
 			</if>
 			<if test="isAcadeRewardRequired != null">
 				is_acade_reward_required = #{isAcadeRewardRequired},
+			</if>
+			<if test="isMoocDigitalUsed != null">
+				is_mooc_digital_used = #{isMoocDigitalUsed},
+			</if>
+			<if test="isMoocDigitalRequired != null">
+				is_mooc_digital_required = #{isMoocDigitalRequired},
+			</if>
+			<if test="isIntentionUsed != null">
+				is_intention_used = #{isIntentionUsed},
+			</if>
+			<if test="isIntentionRequired != null">
+				is_intention_required = #{isIntentionRequired},
 			</if>
 		</set>
 		where
