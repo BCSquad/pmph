@@ -179,6 +179,12 @@ public interface WriterUserDao {
 	 * @return
 	 */
 	Integer updateWriterUser(List<WriterUser> writerUsers);
+	/**
+	 * 通过用户id查询用户信息
+	 * @param userIds
+	 * @return
+	 */
+	List<WriterUser> getWriterUserList(Long[] userIds);
 
     // /**
     // *

@@ -13,7 +13,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.OrgUser;
-import com.bc.pmpheep.back.shiro.kit.ShiroKit;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DesRun;
@@ -23,7 +23,6 @@ import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.ValidatUtil;
 import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
-import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -42,6 +41,8 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
     private OrgDao     orgDao;
     @Autowired
     private OrgService orgService;
+    @Autowired
+    SystemMessageService systemMessageService;
 
     @Override
     public List<OrgUser> getOrgUserListByOrgIds(List<Long> orgIds) throws CheckedServiceException {

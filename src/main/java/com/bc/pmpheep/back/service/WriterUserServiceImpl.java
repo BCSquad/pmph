@@ -596,4 +596,13 @@ public class WriterUserServiceImpl implements WriterUserService {
 		return writerUserDao.updateWriterUser(writerUsers);
 	}
 
+	@Override
+	public List<WriterUser> getWriterUserList(Long[] userIds) {
+		if(null==userIds){
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return writerUserDao.getWriterUserList(userIds);
+	}
+
 }
