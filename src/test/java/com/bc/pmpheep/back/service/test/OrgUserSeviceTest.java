@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service.test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -19,6 +20,7 @@ import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -119,7 +121,7 @@ public class OrgUserSeviceTest extends BaseTest {
 	}
 
 	@Test
-	public void testUpdateOrgUserProgressById() {
+	public void testUpdateOrgUserProgressById() throws CheckedServiceException, IOException {
 		orgUserService.addOrgUser(orgUser);
 		List<Long> list = new ArrayList<Long>();
 		list.add(orgUser.getId());
