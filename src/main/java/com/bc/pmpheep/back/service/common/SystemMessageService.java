@@ -991,15 +991,17 @@ public final class SystemMessageService {
 					Message msg = new Message(msgContent);
 					msg = messageService.add(msg);
 					String msg_id = msg.getId();
+					// 获取机构管理员
+					OrgUser orgUser = orgUserService.getOrgUserByOrgId(org.getId());
 					// 发送消息给申报者
 					userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L,
-							new Short("0"), org.getId(), new Short("3"), null));
+							new Short("0"), orgUser.getId(), new Short("3"), null));
 					// websocket推送页面消息
 					WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
 							Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
 							msgContent, DateUtil.getCurrentTime());
 					List<String> userIds = new ArrayList<String>(1);
-					userIds.add("3_" + org.getId());
+					userIds.add("3_" + orgUser.getId());
 					myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
 
 				}
@@ -1051,15 +1053,17 @@ public final class SystemMessageService {
 					Message msg = new Message(msgContent);
 					msg = messageService.add(msg);
 					String msg_id = msg.getId();
+					// 获取机构管理员
+					OrgUser orgUser = orgUserService.getOrgUserByOrgId(org.getId());
 					// 发送消息给申报者
 					userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L,
-							new Short("0"), org.getId(), new Short("3"), null));
+							new Short("0"), orgUser.getId(), new Short("3"), null));
 					// websocket推送页面消息
 					WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
 							Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
 							msgContent, DateUtil.getCurrentTime());
 					List<String> userIds = new ArrayList<String>(1);
-					userIds.add("3_" + org.getId());
+					userIds.add("3_" + orgUser.getId());
 					myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
 				}
 			}
