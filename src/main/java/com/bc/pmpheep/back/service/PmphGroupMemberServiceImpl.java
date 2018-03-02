@@ -165,11 +165,11 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 						if (pmphGroupMember.getIsWriter()) {
 							WriterUser writerUser = writerUserService.get(pmphGroupMember.getUserId());
 							pmphGroupMember.setDisplayName(writerUser.getRealname());
-							writers.add(writerUser.getId());
+							writers.add(pmphGroupMember.getUserId());
 						} else {
 							PmphUser user = pmphUserService.get(pmphGroupMember.getUserId());
 							pmphGroupMember.setDisplayName(user.getRealname());
-							pmphs.add(user.getId());
+							pmphs.add(pmphGroupMember.getUserId());
 						}
 						pmphGroupMember.setGroupId(groupId);
 						pmphGroupMemberDao.addPmphGroupMember(pmphGroupMember);
@@ -179,15 +179,24 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 							pmphGroupMember.setGroupId(groupId);
 							pmphGroupMember.setIsDeleted(false);
 							pmphGroupMemberDao.update(pmphGroupMember);
+							if (groupMember.getIsWriter()) {
+								writers.add(pmphGroupMember.getUserId());
+							} else {
+								pmphs.add(pmphGroupMember.getUserId());
+							}
 						}
 					}
 				}
 				// 向添加的小组成员发送消息
 				try {
-					// 向作家用户发送消息
-					systemMessageService.sendWhenInviteJoinGroup(pmphUser.getRealname(), groupId, writers, (short) 2);
-					// 向社内用户发送消息
-					systemMessageService.sendWhenInviteJoinGroup(pmphUser.getRealname(), groupId, pmphs, (short) 1);
+					if (!writers.isEmpty()) {
+						// 向作家用户发送消息
+						systemMessageService.sendWhenInviteJoinGroup(pmphUser.getRealname(), groupId, writers,
+								(short) 2);
+					}
+					if (!pmphs.isEmpty()) {// 向社内用户发送消息
+						systemMessageService.sendWhenInviteJoinGroup(pmphUser.getRealname(), groupId, pmphs, (short) 1);
+					}
 				} catch (IOException e) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 							CheckedExceptionResult.ILLEGAL_PARAM, "发送消息失败" + e.getMessage());
