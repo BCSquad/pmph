@@ -391,7 +391,11 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        pageParameter.getParameter().setIsAdmin(pmphUser.getIsAdmin());
+        if (Const.CMS_CATEGORY_ID_1.longValue() == pageParameter.getParameter().getCategoryId()) {
+            pageParameter.getParameter().setIsAdmin(true);
+        } else {
+            pageParameter.getParameter().setIsAdmin(pmphUser.getIsAdmin());
+        }
         pageParameter.getParameter().setAuthorId(pmphUser.getId());
         PageResult<CmsContentVO> pageResult = new PageResult<CmsContentVO>();
         // 将页面大小和页面页码拷贝
