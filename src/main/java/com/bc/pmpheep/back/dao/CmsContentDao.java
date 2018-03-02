@@ -209,13 +209,12 @@ public interface CmsContentDao {
      */
     Integer deleteCmsContentByIds(List<Long> ids);
 
-
-//    /**
-//     * 通过作者id查询cmsContent
-//     * @param authorId
-//     * @return
-//     */
-//    List<CmsContent> getCmsContentByAuthorId(Long AuthorId);
+    // /**
+    // * 通过作者id查询cmsContent
+    // * @param authorId
+    // * @return
+    // */
+    // List<CmsContent> getCmsContentByAuthorId(Long AuthorId);
 
     /**
      * 
@@ -227,8 +226,8 @@ public interface CmsContentDao {
      * @return 影响行数
      * </pre>
      */
-    Integer updatCmsContentCommentsById(Long id);
-    
+    Integer updatCmsContentCommentsById(@Param("id") Long id, @Param("comments") Integer comments);
+
     /**
      * 
      * <pre>
@@ -240,5 +239,5 @@ public interface CmsContentDao {
      * @throws CheckedServiceException
      * </pre>
      */
-	Integer updateCmsContentByMaterialId(Long materialId);
+    Integer updateCmsContentByMaterialId(Long materialId);
 }

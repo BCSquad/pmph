@@ -277,6 +277,6 @@ public interface CmsContentService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer updatCmsContentCommentsById(Long id) throws CheckedServiceException;
+    Integer updatCmsContentCommentsById(Long id, Integer comments) throws CheckedServiceException;
 
 }

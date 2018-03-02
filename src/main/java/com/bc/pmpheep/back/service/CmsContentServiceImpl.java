@@ -378,7 +378,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         // 评论审核通过，评论数加1
         if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()
             && Boolean.TRUE == isPublished) {
-            this.updatCmsContentCommentsById(id);
+            this.updatCmsContentCommentsById(id, 1);
         }
         CmsContent cmsContent = this.getCmsContentById(id);
         Integer type = 0;
@@ -547,6 +547,12 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
 
         }
+        for (Long id : ids) {
+            CmsContent cmsContent = this.getCmsContentById(id);
+            if (Boolean.TRUE == cmsContent.getIsPublished()) {
+                this.updatCmsContentCommentsById(id, -1);
+            }
+        }
         return cmsContentDao.deleteCmsContentByIds(ids);
     }
 
@@ -556,6 +562,7 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
+
         return cmsContentDao.updateCmsContent(cmsContent);
     }
 
@@ -686,11 +693,12 @@ public class CmsContentServiceImpl implements CmsContentService {
     }
 
     @Override
-    public Integer updatCmsContentCommentsById(Long id) throws CheckedServiceException {
+    public Integer updatCmsContentCommentsById(Long id, Integer comments)
+    throws CheckedServiceException {
         if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
-        return cmsContentDao.updatCmsContentCommentsById(id);
+        return cmsContentDao.updatCmsContentCommentsById(id, comments);
     }
 }
