@@ -130,4 +130,14 @@ public class CmsExtraServiceImpl implements CmsExtraService {
         return cmsExtraDao.deleteCmsExtraByAttachment(attachment);
     }
 
+    @Override
+    public CmsExtra getCmsExtraByAttachment(String attachment) throws CheckedServiceException {
+        if (StringUtil.isEmpty(attachment)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "参数attachment为空");
+
+        }
+        return cmsExtraDao.getCmsExtraByAttachment(attachment);
+    }
+
 }
