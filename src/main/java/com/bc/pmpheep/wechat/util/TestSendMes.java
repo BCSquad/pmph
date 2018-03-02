@@ -15,11 +15,12 @@ public class TestSendMes {
         // 应用ID，账号，部门为""，标签为""，消息类型，内容
         // 部门不为""，标签不为""，将会给该部门的每个成员发送消息
         Send_msg("nyz526",
-                 "198",
+                 "200",
                  "",
                  "text",
                  1000002,
-                 "企业微信发送消息测试.\n登陆<a href='http://20097r18u8.iask.in/pmpheep/pmph/login'>人卫出版社</a>");
+                 "企业微信发送消息测试.\n登陆<a href='http://20097r18u8.iask.in/pmpheep/wechatUserInfo'>人卫出版社</a>");
+        // "企业微信发送消息测试.\n登陆<a href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx72eaeae98b5382c9&redirect_uri=http%3A%2F%2F20097r18u8.iask.in%2Fpmpheep%2Foauth2url%3Foauth2url%3Dhttp%3A%2F%2F192.168.100.109%3A8089%2Fpmpheep%2Fpmph%2Flogin%3Fusername%3Dadmin%26password%3D123%26_timer%3D1519954483077&response_type=code&scope=snsapi_base&state=sunlight&connect_redirect=1#wechat_redirect'>人卫出版社</a>");
 
     }
 
