@@ -74,7 +74,7 @@ public class OAuth2Interceptor implements HandlerInterceptor {
                     }
                     // 请求的路径
                     String contextPath = request.getContextPath();
-                    response.sendRedirect(contextPath + "/oauth2.do?resultUrl=" + resultUrl);
+                    response.sendRedirect(contextPath + "/oauth2?resultUrl=" + resultUrl);
                     return false;
                 }
             }

@@ -45,6 +45,11 @@
                         <value>/sys/operation/operations</value><!-- 操作日志 -->
                         <value>/file/**</value><!-- 文件下载 -->
                         <value>/image/**</value><!-- 图片加载 -->
+                        <value>/coreJoin/**</value>
+                        <value>/oauth2/**</value>
+                        <value>/oauth2url/**</value>
+                        <value>/oauth2wx/**</value>
+                        <value>/oauth2me/**</value>
                     </list>
                 </property>
             </bean>	
@@ -54,6 +59,8 @@
         <mvc:interceptor>
 			<!-- 对所有的请求拦截使用/** ,对某个模块下的请求拦截使用：/pmph/* -->
 			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/pmph/login" />
+			<mvc:exclude-mapping path="/pmph/logout" />
 			<bean id="oauth2Interceptor" class="com.bc.pmpheep.wechat.interceptor.OAuth2Interceptor"></bean>
 		</mvc:interceptor>
 		
