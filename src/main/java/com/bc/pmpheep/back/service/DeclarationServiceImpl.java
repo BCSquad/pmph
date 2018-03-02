@@ -292,15 +292,23 @@ public class DeclarationServiceImpl implements DeclarationService {
 	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause)
 			throws CheckedServiceException, IOException {
 		if (ObjectUtil.isNull(id)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
-					"主键不能为空!");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+					CheckedExceptionResult.ILLEGAL_PARAM, "主键不能为空!");
 		}
 		if (ObjectUtil.isNull(onlineProgress)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
-					"审核进度不能为空!");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+					CheckedExceptionResult.ILLEGAL_PARAM, "审核进度不能为空!");
 		}
 		// 获取当前作家用户申报信息
 		Declaration declarationCon = declarationDao.getDeclarationById(id);
+		// 获取审核进度是3并且已提交但是待审核并且是提交到出版社0
+		// 提交出版社，出版社通过
+		if (3 == onlineProgress.intValue() && 1 == declarationCon.getOnlineProgress() 
+				&& 0 == declarationCon.getOrgId()) {
+			declarationCon.setOnlineProgress(onlineProgress);
+			declarationDao.updateDeclaration(declarationCon);
+			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true); // 发送系统消息
+		}
 		// 获取审核进度是4并且已经通过审核单位并且不是提交到出版社0则被退回给申报单位
 		// 提交审核单位，审核单位通过，出版社退回申报单位操作
 		if (4 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress()
