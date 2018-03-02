@@ -216,6 +216,12 @@ public class MigrationStageOne {
                 excel.add(map);
                 continue;
             }
+            //依据客户反馈不迁移的机构
+            if ("江苏建康职业学院".equals(orgName) || "北京大学".equals(orgName) || "民办山东万杰医学高等专科学校".equals(orgName)
+            		|| "天津大学".equals(orgName) || "协和医院".equals(orgName) || "华西医院".equals(orgName)
+            		|| "技术学校".equals(orgName) || "qthzyxy".equals(orgName)){
+            	continue;
+            }
             list.add(orgName);
             Integer orgType = (Integer) map.get("orgtype");
             Long areaId = (Long) map.get("new_pk");

@@ -119,16 +119,18 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 					"评论id为空");
 		}
 		String result = "FAIL";
+		for (Long id : ids) {
+			BookUserComment bookUserComment = bookUserCommentDao.getBookUserCommentById(id);
+			Long bookId = bookUserComment.getBookId();
+			if (bookUserComment.getIsAuth() == 1) {
+				bookService.updateDownComments(bookId);
+			}
+		}
 		int num = bookUserCommentDao.deleteBookUserCommentById(ids);
 		if (num > 0) {
-			for (Long id : ids) {
-				BookUserComment bookUserComment = bookUserCommentDao.getBookUserCommentById(id);
-				Long bookId = bookUserComment.getBookId();
-				if (bookUserComment.getIsAuth() == 1) {
-					bookService.updateDownComments(bookId);
-				}
-			}
 			result = "SUCCESS";
+		} else {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "删除失败");
 		}
 		return result;
 	}

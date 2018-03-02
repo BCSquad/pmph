@@ -228,12 +228,9 @@ public class MigrationStageSix {
                 useridCount++;
                 continue;
             }
-            if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id) || 
-            		"e56504a4-8b26-4b55-89c9-571fc94675d9".equals(id) || 
-            		"a37913ba4eee41ca9ab88f8086b578e5".equals(id) || 
-            		"6777c8f6-4493-4e62-b2af-4d5501937ac0".equals(id) || 
-            		"d4eb6718-b0d0-4bde-99e9-8a4b7534c143".equals(id)) {
-            	String sqlId = "SELECT *,new_pk userIds FROM sys_user ";
+            if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id)) {
+            	String sqlId = "SELECT *,new_pk userIds FROM sys_user "
+            			+ "where usercode = '18045661072' and username = '李勇'";
             	List<Map<String, Object>> mapIds = JdbcHelper.getJdbcTemplate().queryForList(sqlId);
             	for (Map<String, Object> mapId : mapIds) {
                 	Long userId = (Long) mapId.get("userIds");
@@ -241,21 +238,17 @@ public class MigrationStageSix {
                 	String username = (String) mapId.get("username");
                 	if ("18045661072".equals(usercode) && "李勇".equals(username)) {
                 		declaration.setUserId(userId);
-                	} else if ("watergo1".equals(usercode) && "李清照2".equals(username)) {
-                		declaration.setUserId(userId);
-                	} else if ("qingna0522".equals(usercode) && "吕庆娜".equals(username)) {
-                		declaration.setUserId(userId);
                 	}
             	}
             } else {
                 declaration.setUserId(userid);
 			}
-            if (StringUtil.isEmpty(realName) && isStagingJudge.intValue() == 0) { // 申报表作家姓名为空并且不暂存
-            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空并且不是暂存表。"));
+            if (StringUtil.isEmpty(realName) && isStagingJudge.intValue() == 0) { // 申报表作家姓名为空并且没有暂存
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空并且没有暂存。"));
                 realNameCount++;
-                excel.add(map);
-                logger.debug("找到申报表作家姓名为空并且不是暂存表，此结果将被记录在Excel中");
-                continue;
+                /*excel.add(map);
+                logger.debug("找到申报表作家姓名为空并且没有暂存，此结果将被记录在Excel中");
+                continue;*/
             } else {
             	declaration.setRealname(realName);
 			}
@@ -330,7 +323,7 @@ public class MigrationStageSix {
             if (dec != null) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("已存在教材id和作家id均相同的记录。"));
                 excel.add(map);
-                logger.debug("已存在教材id和作家id均相同的记录，本条数据放弃插入，material_id={}，user_id={}",
+                logger.error("已存在教材id和作家id均相同的记录，本条数据放弃插入，material_id={}，user_id={}",
                         declaration.getMaterialId(), declaration.getUserId());
                 decCount++;
                 continue;
@@ -868,7 +861,7 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(rank)) {
             	rank = 0;
             }
-            publisher = publisher == null ? null : publisher;
+            publisher = publisher == null ? "" : publisher;
             if (!"人民卫生出版社".equals(publisher.trim())) {
 	            decTextbook.setDeclarationId(declarationid);
 	            decTextbook.setMaterialName(materialName);
@@ -954,15 +947,17 @@ public class MigrationStageSix {
                 		.replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
                 		.replace("•", "·");
             }
-            if (!"人民卫生出版社".equals(publisher)) {
+            publisher = publisher == null ? "" : publisher;
+            if (!"人民卫生出版社".equals(publisher.trim())) {
             	decTextbook.setDeclarationId(declarationid);
                 decTextbook.setMaterialName(materialName);
                 decTextbook.setRank(0); // 教材级别（设置成无）
                 Integer position = positionJudge.intValue();
                 decTextbook.setPosition(position);
                 String publishers = publisher.trim();
-                if (publishers.length() > 50 || "-1819".equals(id)) {
-                	decTextbook.setPublisher("中国铁道出版社北京（2007）");
+                if (StringUtil.length(publishers) > 50 || "-1819".equals(id)) {
+                	publishers.substring(0, 7);
+            		decTextbook.setPublisher(publishers);
                 } else {
                 	decTextbook.setPublisher(publishers);
     			}

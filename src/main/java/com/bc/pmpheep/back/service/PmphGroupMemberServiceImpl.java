@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.WriterUser;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
@@ -48,6 +50,8 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	private DecPositionService decPositionService;
 	@Autowired
 	private PmphGroupMemberService pmphGroupMemberService;
+	@Autowired
+	SystemMessageService systemMessageService;
 
 	/**
 	 * 
@@ -148,6 +152,8 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		}
 		if (pmphUser.getIsAdmin() || isFounderOrisAdmin(groupId, sessionId)) {// 是超级管理员或者该小组的创建人和管理员才可以添加成员
 			if (pmphGroupMembers.size() > 0) {
+				List<Long> writers = new ArrayList<>();
+				List<Long> pmphs = new ArrayList<>();
 				for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
 					PmphGroupMemberVO groupMember = pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId,
 							pmphGroupMember.getUserId(), pmphGroupMember.getIsWriter());// 查看当前添加人员是否以前在小组中
@@ -159,9 +165,11 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 						if (pmphGroupMember.getIsWriter()) {
 							WriterUser writerUser = writerUserService.get(pmphGroupMember.getUserId());
 							pmphGroupMember.setDisplayName(writerUser.getRealname());
+							writers.add(pmphGroupMember.getUserId());
 						} else {
 							PmphUser user = pmphUserService.get(pmphGroupMember.getUserId());
 							pmphGroupMember.setDisplayName(user.getRealname());
+							pmphs.add(pmphGroupMember.getUserId());
 						}
 						pmphGroupMember.setGroupId(groupId);
 						pmphGroupMemberDao.addPmphGroupMember(pmphGroupMember);
@@ -171,9 +179,27 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 							pmphGroupMember.setGroupId(groupId);
 							pmphGroupMember.setIsDeleted(false);
 							pmphGroupMemberDao.update(pmphGroupMember);
+							if (groupMember.getIsWriter()) {
+								writers.add(pmphGroupMember.getUserId());
+							} else {
+								pmphs.add(pmphGroupMember.getUserId());
+							}
 						}
 					}
-
+				}
+				// 向添加的小组成员发送消息
+				try {
+					if (!writers.isEmpty()) {
+						// 向作家用户发送消息
+						systemMessageService.sendWhenInviteJoinGroup(pmphUser.getRealname(), groupId, writers,
+								(short) 2);
+					}
+					if (!pmphs.isEmpty()) {// 向社内用户发送消息
+						systemMessageService.sendWhenInviteJoinGroup(pmphUser.getRealname(), groupId, pmphs, (short) 1);
+					}
+				} catch (IOException e) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+							CheckedExceptionResult.ILLEGAL_PARAM, "发送消息失败" + e.getMessage());
 				}
 				result = "SUCCESS";
 			} else {
