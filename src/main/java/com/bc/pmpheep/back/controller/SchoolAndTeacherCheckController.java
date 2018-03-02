@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -99,12 +100,14 @@ public class SchoolAndTeacherCheckController {
      * @param orgUserIds 用户IDs
      * @return
      * </pre>
+     * @throws IOException 
+     * @throws CheckedServiceException 
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
     @RequestMapping(value = "/orgCheck", method = RequestMethod.PUT)
     public ResponseBean orgCheck(@RequestParam(name = "progress") Integer progress,
-    @RequestParam(name = "orgUserIds") List<Long> orgUserIds) {
+    @RequestParam(name = "orgUserIds") List<Long> orgUserIds) throws CheckedServiceException, IOException {
         return new ResponseBean(orgUserService.updateOrgUserProgressById(progress, orgUserIds));
     }
 

@@ -670,16 +670,16 @@ public class PmphUserServiceImpl implements PmphUserService {
 			PageResult<CmsContentVO> pageResultCmsContentVO = cmsContentService.listCmsContent(pageParameter1, sessionId);
 			map.put("cmsContent", pageResultCmsContentVO);
 //		}
-		for (PmphRole pmphRole : rolelist) {
-			if("策划编辑".equals(pmphRole.getRoleName())||"系统管理员".equals(pmphRole.getRoleName())){
+//		for (PmphRole pmphRole : rolelist) {
+//			if("策划编辑".equals(pmphRole.getRoleName())||"系统管理员".equals(pmphRole.getRoleName())){
 				// 图书纠错审核
 				PageResult<BookCorrectionAuditVO> pageResultBookCorrectionAuditVO = bookCorrectionService
 						.listBookCorrectionAudit(request, Const.PAGE_NUMBER, Const.PAGE_SIZE, bookname, null, null);
 				map.put("bookCorrectionAudit", pageResultBookCorrectionAuditVO);
-			}
-		}
+//			}
+//		}
 		// 图书评论审核
-		if(sessionPmphUser.getIsAdmin()){
+//		if(sessionPmphUser.getIsAdmin()){
 			PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
 			BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
 			bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
@@ -687,7 +687,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 			PageResult<BookUserCommentVO> pageResultBookUserCommentVO = bookUserCommentService
 					.listBookUserCommentAdmin(pageParameter);
 			map.put("bookUserComment", pageResultBookUserCommentVO);
-		}
+//		}
 		// 选题申报
 		PageParameter<TopicDeclarationVO> pageParameter3 = new PageParameter<>();
 		//选题申报当前用户角色
