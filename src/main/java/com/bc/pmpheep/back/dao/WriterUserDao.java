@@ -145,7 +145,7 @@ public interface WriterUserDao {
 	 * @param writerUsers
 	 * @return
 	 */
-	Integer updateWriterUserRank(List<WriterUser> writerUsers);
+	Integer updateWriterUserRank(WriterUser writerUsers);
 	
 	/**
 	 * 查询教师认证总数量
@@ -178,7 +178,7 @@ public interface WriterUserDao {
 	 * @param writerUsers
 	 * @return
 	 */
-	Integer updateWriterUser(List<WriterUser> writerUsers);
+	Integer updateWriterUser(WriterUser writerUsers);
 	/**
 	 * 通过用户id查询用户信息
 	 * @param userIds

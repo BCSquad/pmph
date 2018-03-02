@@ -440,7 +440,7 @@ public final class SystemMessageService {
 		// 存入消息主体
 		String msgContent = "抱歉，您提交的教师认证资料已被[<font color='red'>" + auditorOrgName + "</font>]管理员退回，请您核对后重试";// 退回
 		if (isPass) {// 通过
-			msgContent = "恭喜！您提交的教师认证资料已通过[color='red'>" + auditorOrgName + "</font>]管理员审核";
+			msgContent = "恭喜！您提交的教师认证资料已通过[<font color='red'>" + auditorOrgName + "</font>]管理员审核";
 		}
 		// 存入消息主体
 		Message message = new Message(msgContent);

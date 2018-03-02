@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,9 @@ import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -129,8 +133,10 @@ WriterUserCertificationService {
     }
 
     @Override
-    public Integer updateWriterUserCertificationProgressByUserId(Short progress, Long[] userIds)
+    public Integer updateWriterUserCertificationProgressByUserId(Short progress, Long[] userIds,HttpServletRequest request)
     throws CheckedServiceException, Exception {
+    	String sessionId = CookiesUtil.getSessionId(request);
+    	PmphUser pmphuser = SessionUtil.getPmphUserBySessionId(sessionId);
         List<WriterUserCertification> writerUserCertifications =
         this.getWriterUserCertificationByUserIds(userIds);
         if (ObjectUtil.isNull(progress)) {
@@ -161,11 +167,20 @@ WriterUserCertificationService {
             writerUserCertificationDao.updateWriterUserCertificationProgressByUserId(wUserCertifications);
             List<WriterUser> list=writerUserService.getWriterUserRankList(writerUsers);
             for (WriterUser writerUser : list) {
-            	writerUser.setIsTeacher(true);
 				if(0==writerUser.getRank()){//当级别为0的时候修改
-					writerUserService.updateWriterUserRank(writerUsers);
+					for (WriterUser wrs : writerUsers) {
+						wrs.setAuthUserType(1);
+						wrs.setAuthUserId(pmphuser.getId());
+						writerUser.setIsTeacher(true);
+						writerUserService.updateWriterUserRank(wrs);
+					}
 				}else{
-					writerUserService.updateWriterUser(writerUsers);
+					for (WriterUser wrs : writerUsers) {
+						wrs.setAuthUserType(1);
+						wrs.setAuthUserId(pmphuser.getId());
+						writerUser.setIsTeacher(true);
+						writerUserService.updateWriterUser(wrs);
+					}
 				}
 			}
         }

@@ -2,6 +2,8 @@ package com.bc.pmpheep.back.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -157,9 +159,9 @@ public class SchoolAndTeacherCheckController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
     @RequestMapping(value = "/writerCheck", method = RequestMethod.PUT)
     public ResponseBean writerCheck(@RequestParam("progress") Short progress,
-    @RequestParam("userIds") Long[] userIds) throws CheckedServiceException, Exception {
+    @RequestParam("userIds") Long[] userIds,HttpServletRequest request) throws CheckedServiceException, Exception {
         return new ResponseBean(
                                 writerUserCertificationService.updateWriterUserCertificationProgressByUserId(progress,
-                                                                                                             userIds));
+                                                                                                             userIds,request));
     }
 }
