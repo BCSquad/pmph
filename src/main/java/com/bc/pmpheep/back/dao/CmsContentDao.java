@@ -209,13 +209,12 @@ public interface CmsContentDao {
      */
     Integer deleteCmsContentByIds(List<Long> ids);
 
-
-//    /**
-//     * 通过作者id查询cmsContent
-//     * @param authorId
-//     * @return
-//     */
-//    List<CmsContent> getCmsContentByAuthorId(Long AuthorId);
+    // /**
+    // * 通过作者id查询cmsContent
+    // * @param authorId
+    // * @return
+    // */
+    // List<CmsContent> getCmsContentByAuthorId(Long AuthorId);
 
     /**
      * 
@@ -227,8 +226,8 @@ public interface CmsContentDao {
      * @return 影响行数
      * </pre>
      */
-    Integer updatCmsContentCommentsById(Long id);
-    
+    Integer updatCmsContentCommentsById(@Param("id") Long id, @Param("comments") Integer comments);
+
     /**
      * 
      * <pre>
@@ -240,5 +239,18 @@ public interface CmsContentDao {
      * @throws CheckedServiceException
      * </pre>
      */
-	Integer updateCmsContentByMaterialId(Long materialId);
+    Integer updateCmsContentByMaterialId(Long materialId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据parent_id更新文章评论数
+     * 使用示范：
+     *
+     * @param id CmsContent主键
+     * @param comments 1/-1
+     * @return  影响行数
+     * </pre>
+     */
+    Integer updateCmsContentByParentId(@Param("id") Long id, @Param("comments") Integer comments);
 }

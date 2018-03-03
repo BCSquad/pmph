@@ -110,7 +110,8 @@ public class CmsContentController {
                                                                     files,
                                                                     content,
                                                                     scheduledTime,
-                                                                    sessionId));
+                                                                    sessionId,
+                                                                    request));
         } catch (IOException e) {
             return new ResponseBean(e);
         }
@@ -217,7 +218,8 @@ public class CmsContentController {
                                                                        attachment,
                                                                        imgAttachment,
                                                                        scheduledTime,
-                                                                       sessionId));
+                                                                       sessionId,
+                                                                       request));
         } catch (IOException e) {
             return new ResponseBean(e);
         }

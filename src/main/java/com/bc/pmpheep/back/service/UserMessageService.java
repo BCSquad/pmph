@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -99,9 +101,9 @@ public interface UserMessageService {
      * @param isSave true新增，false补发
      * @return
      */
-    Integer addOrUpdateUserMessage(Message message, String title, Integer sendType, String orgIds,
-    Long senderId, String userIds, String bookIds, boolean isSave, String[] files, String sessionId)
-    throws CheckedServiceException, IOException;
+    Integer addOrUpdateUserMessage(HttpServletRequest request, Message message, String title,
+    Integer sendType, String orgIds, Long senderId, String userIds, String bookIds, boolean isSave,
+    String[] files, String sessionId) throws CheckedServiceException, IOException;
 
     /**
      * 
@@ -116,8 +118,9 @@ public interface UserMessageService {
 	 * @throws CheckedServiceException IOException
 	 * </pre>
      */
-    Integer updateUserMessage(Message message, String msgId, String msgTitle, String[] files,
-    String[] attachment) throws CheckedServiceException, IOException;
+    Integer updateUserMessage(HttpServletRequest request, Message message, String msgId,
+    String msgTitle, String[] files, String[] attachment) throws CheckedServiceException,
+    IOException;
 
     /**
      * 
@@ -191,7 +194,8 @@ public interface UserMessageService {
 	 * @throws CheckedServiceException
 	 * </pre>
      */
-    String msgUploadFiles(MultipartFile file) throws CheckedServiceException;
+    Map<String, Object> msgUploadFiles(HttpServletRequest request, MultipartFile file)
+    throws CheckedServiceException, IOException;
 
     /**
      * 
@@ -254,12 +258,12 @@ public interface UserMessageService {
      * @author tyc
      * @createDate 2017年11月22日 下午5:04:00
      * @param message
-     * @param receiverId	接收者id
+     * @param receiverId 接收者id
      * @param sessionId
      * @return
      * @throws CheckedServiceException
      * @throws IOException
      */
-    Integer addOneUserMessage(Message message, Long receiverId, String sessionId) 
-    		throws CheckedServiceException, IOException;
+    Integer addOneUserMessage(Message message, Long receiverId, String sessionId)
+    throws CheckedServiceException, IOException;
 }

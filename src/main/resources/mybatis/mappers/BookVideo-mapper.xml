@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bc.pmpheep.back.dao.BookVedioDao">
+<mapper namespace="com.bc.pmpheep.back.dao.BookVideoDao">
 
 	<!-- sql片段对应?,id属性值任意 -->
 	<sql id="value">
@@ -111,34 +111,34 @@
 		</trim>
 	</sql>
 	
-	<!-- 新增BookVedio -->
-	<insert id="addBookVedio"        parameterType="BookVedio">
+	<!-- 新增BookVideo -->
+	<insert id="addBookVideo"        parameterType="BookVideo">
 		<selectKey resultType="java.lang.Long" order="AFTER"  keyProperty="id">
 			 <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into book_vedio ( <include refid="key" /> )  values( <include refid="value" /> ) ;
+		insert into book_video ( <include refid="key" /> )  values( <include refid="value" /> ) ;
 	</insert>
 	
-	<!--根据文件id删除BookVedio -->
-	<delete id="deleteBookVedioByIds"   >
-		delete  from  book_vedio where id in
+	<!--根据文件id删除BookVideo -->
+	<delete id="deleteBookVideoByIds"   >
+		delete  from  book_video where id in
 		<foreach collection="ids" item="id" open="("  separator=","  close=")" index="index">
 			#{id} 
 		</foreach>
 	</delete>
 	
 	<!-- 获取vedio根据书籍id -->
-	<select id="getBookVedioByBookIds" resultType="BookVedio">
-		select * from  book_vedio where book_id in 
+	<select id="getBookVideoByBookIds" resultType="BookVideo">
+		select * from  book_video where book_id in 
 		<foreach collection="bookIds" item="bookId" open="("  separator=","  close=")" index="index">
 			#{bookId}
 		</foreach>
 	</select>
 	
 	<!-- 动态更新 -->
-	<update id="updateBookVedio">
-		update book_vedio set
+	<update id="updateBookVideo">
+		update book_video set
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
 			<if test="bookId != null ">
@@ -190,16 +190,16 @@
 		where id = #{id} 
 	</update>
 	
-	<!--根据文件上传路径获取BookVedio -->
-	<select id="getBookVedioByOldPath"  resultType="BookVedio" >
-		select * from  book_vedio where orig_path like  concat('%',#{oldPath},'.%');
+	<!--根据文件上传路径获取BookVideo -->
+	<select id="getBookVideoByOldPath"  resultType="BookVideo" >
+		select * from  book_video where orig_path like  concat('%',#{oldPath},'.%');
 	</select>
 	
 	<!-- 获取微视频列表总数 -->
-	<select id="getVedioListTotal"  resultType="java.lang.Integer" >
+	<select id="getVideoListTotal"  resultType="java.lang.Integer" >
 	    select 
 	        COUNT(a.id)
-			from book_vedio a LEFT JOIN  book b on b.id = a.book_id LEFT JOIN writer_user c on c.id= a.user_id
+			from book_video a LEFT JOIN  book b on b.id = a.book_id LEFT JOIN writer_user c on c.id= a.user_id
 		where  a.is_deleted = false and b.id is not null and c.id is not null 
 		<if test="bookName != null"> 
 			and b.bookname like #{bookName}
@@ -224,7 +224,7 @@
 	</select>
 	
 	<!-- 获取微视频列表 -->
-	<select id="getVedioList"  resultType="BookVedioVO2" >
+	<select id="getVideoList"  resultType="BookVideoVO" >
 	    select a.id id,
 			a.book_id bookId,
 			b.bookname bookName,
@@ -234,7 +234,7 @@
 			a.gmt_create gmtCreate,
 			a.file_size fileSize,
 			if(a.auth_user_id is null,null,a.is_auth) isAuth
-			from book_vedio a LEFT JOIN  book b on b.id = a.book_id LEFT JOIN writer_user c on c.id= a.user_id
+			from book_video a LEFT JOIN  book b on b.id = a.book_id LEFT JOIN writer_user c on c.id= a.user_id
 		where  a.is_deleted = false and b.id is not null and c.id is not null 
 		<if test="bookName != null"> 
 			and b.bookname like #{bookName}

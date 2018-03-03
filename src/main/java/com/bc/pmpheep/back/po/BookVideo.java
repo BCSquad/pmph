@@ -3,13 +3,13 @@ package com.bc.pmpheep.back.po;
 import java.io.Serializable;
 
 /**
- * BookVedio 实体 
+ * BookVideo 实体 
  * @author MrYang
  * 2018年1月31日  上午8:53:35
  */
 @SuppressWarnings("serial")
-@org.apache.ibatis.type.Alias("BookVedio")
-public class BookVedio implements Serializable{
+@org.apache.ibatis.type.Alias("BookVideo")
+public class BookVideo implements Serializable{
 	//主键
 	private Long id;
 	//图书id
@@ -49,11 +49,11 @@ public class BookVedio implements Serializable{
 	//封面图片id
 	private String  cover; 
 	
-	public BookVedio() {
+	public BookVideo() {
 		super();
 	}
 	
-	public BookVedio(Long bookId, String title, String origPath,
+	public BookVideo(Long bookId, String title, String origPath,
 			String origFileName, Long origFileSize, Long userId) {
 		super();
 		this.bookId = bookId;
@@ -68,7 +68,7 @@ public class BookVedio implements Serializable{
 		return cover;
 	}
 
-	public BookVedio setCover(String cover) {
+	public BookVideo setCover(String cover) {
 		this.cover = cover;
 		return this;
 	}
@@ -77,7 +77,7 @@ public class BookVedio implements Serializable{
 		return id;
 	}
 
-	public BookVedio setId(Long id) {
+	public BookVideo setId(Long id) {
 		this.id = id;
 		return this;
 	}
@@ -86,7 +86,7 @@ public class BookVedio implements Serializable{
 		return bookId;
 	}
 
-	public BookVedio setBookId(Long bookId) {
+	public BookVideo setBookId(Long bookId) {
 		this.bookId = bookId;
 		return this;
 	}
@@ -95,7 +95,7 @@ public class BookVedio implements Serializable{
 		return title;
 	}
 
-	public BookVedio setTitle(String title) {
+	public BookVideo setTitle(String title) {
 		this.title = title;
 		return this;
 	}
@@ -104,7 +104,7 @@ public class BookVedio implements Serializable{
 		return origPath;
 	}
 
-	public BookVedio setOrigPath(String origPath) {
+	public BookVideo setOrigPath(String origPath) {
 		this.origPath = origPath;
 		return this;
 	}
@@ -113,7 +113,7 @@ public class BookVedio implements Serializable{
 		return origFileName;
 	}
 
-	public BookVedio setOrigFileName(String origFileName) {
+	public BookVideo setOrigFileName(String origFileName) {
 		this.origFileName = origFileName;
 		return this;
 	}
@@ -122,7 +122,7 @@ public class BookVedio implements Serializable{
 		return origFileSize;
 	}
 
-	public BookVedio setOrigFileSize(Long origFileSize) {
+	public BookVideo setOrigFileSize(Long origFileSize) {
 		this.origFileSize = origFileSize;
 		return this;
 	}
@@ -131,7 +131,7 @@ public class BookVedio implements Serializable{
 		return path;
 	}
 
-	public BookVedio setPath(String path) {
+	public BookVideo setPath(String path) {
 		this.path = path;
 		return this;
 	}
@@ -140,7 +140,7 @@ public class BookVedio implements Serializable{
 		return fileName;
 	}
 
-	public BookVedio setFileName(String fileName) {
+	public BookVideo setFileName(String fileName) {
 		this.fileName = fileName;
 		return this;
 	}
@@ -149,7 +149,7 @@ public class BookVedio implements Serializable{
 		return fileSize;
 	}
 
-	public BookVedio setFileSize(Long fileSize) {
+	public BookVideo setFileSize(Long fileSize) {
 		this.fileSize = fileSize;
 		return this;
 	}
@@ -158,7 +158,7 @@ public class BookVedio implements Serializable{
 		return sort;
 	}
 
-	public BookVedio setSort(Integer sort) {
+	public BookVideo setSort(Integer sort) {
 		this.sort = sort;
 		return this;
 	}
@@ -167,7 +167,7 @@ public class BookVedio implements Serializable{
 		return clicks;
 	}
 
-	public BookVedio setClicks(Long clicks) {
+	public BookVideo setClicks(Long clicks) {
 		this.clicks = clicks;
 		return this;
 	}
@@ -176,7 +176,7 @@ public class BookVedio implements Serializable{
 		return userId;
 	}
 
-	public BookVedio setUserId(Long userId) {
+	public BookVideo setUserId(Long userId) {
 		this.userId = userId;
 		return this;
 	}
@@ -185,7 +185,7 @@ public class BookVedio implements Serializable{
 		return isAuth;
 	}
 
-	public BookVedio setIsAuth(Boolean isAuth) {
+	public BookVideo setIsAuth(Boolean isAuth) {
 		this.isAuth = isAuth;
 		return this;
 	}
@@ -194,7 +194,7 @@ public class BookVedio implements Serializable{
 		return authUserId;
 	}
 
-	public BookVedio setAuthUserId(Long authUserId) {
+	public BookVideo setAuthUserId(Long authUserId) {
 		this.authUserId = authUserId;
 		return this;
 	}
@@ -203,7 +203,7 @@ public class BookVedio implements Serializable{
 		return authDate;
 	}
 
-	public BookVedio setAuthDate(java.util.Date authDate) {
+	public BookVideo setAuthDate(java.util.Date authDate) {
 		this.authDate = authDate;
 		return this;
 	}
@@ -212,7 +212,7 @@ public class BookVedio implements Serializable{
 		return isDeleted;
 	}
 
-	public BookVedio setIsDeleted(Boolean isDeleted) {
+	public BookVideo setIsDeleted(Boolean isDeleted) {
 		this.isDeleted = isDeleted;
 		return this;
 	}
@@ -221,7 +221,7 @@ public class BookVedio implements Serializable{
 		return gmtCreate;
 	}
 
-	public BookVedio setGmtCreate(java.sql.Timestamp gmtCreate) {
+	public BookVideo setGmtCreate(java.sql.Timestamp gmtCreate) {
 		this.gmtCreate = gmtCreate;
 		return this;
 	}
@@ -230,7 +230,7 @@ public class BookVedio implements Serializable{
 		return gmtUpdate;
 	}
 
-	public BookVedio setGmtUpdate(java.sql.Timestamp gmtUpdate) {
+	public BookVideo setGmtUpdate(java.sql.Timestamp gmtUpdate) {
 		this.gmtUpdate = gmtUpdate;
 		return this;
 	}

@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.CmsContent;
@@ -53,7 +57,8 @@ public interface CmsContentService {
      * </pre>
      */
     CmsContent addCmsContent(CmsContent cmsContent, String[] files, String content,
-    String scheduledTime, String sessionId) throws CheckedServiceException, IOException;
+    String scheduledTime, String sessionId, HttpServletRequest request)
+    throws CheckedServiceException, IOException;
 
     /**
      * 
@@ -68,7 +73,7 @@ public interface CmsContentService {
      */
     Integer updateCmsContent(CmsContent cmsContent, String[] files, String[] imgFile,
     String content, String[] attachment, String[] imgAttachment, String scheduledTime,
-    String sessionId) throws CheckedServiceException, IOException;
+    String sessionId, HttpServletRequest request) throws CheckedServiceException, IOException;
 
     /**
      * 更新CmsContent对象
@@ -277,6 +282,20 @@ public interface CmsContentService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer updatCmsContentCommentsById(Long id) throws CheckedServiceException;
+    Integer updatCmsContentCommentsById(Long id, Integer comments) throws CheckedServiceException;
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据parent_id更新文章评论数
+     * 使用示范：
+     *
+     * @param id CmsContent主键
+     * @param comments 1/-1
+     * @return  影响行数
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer updateCmsContentByParentId(@Param("id") Long id, @Param("comments") Integer comments)
+    throws CheckedServiceException;
 }
