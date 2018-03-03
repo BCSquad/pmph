@@ -159,6 +159,26 @@ public class TextbookServiceImpl implements TextbookService {
 			}
 		}
 		List<Textbook> textbooks = textbookDao.getTextbooks(ids);
+		if (textbooks.size() > 0) {
+			for (Textbook textbook : textbooks) {
+				// 是否存在策划编辑
+				if (ObjectUtil.isNull(textbook.getPlanningEditor())) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+							CheckedExceptionResult.NULL_PARAM, "还未选择策划编辑，不能进行公布");
+				}
+				// 是否发布主编
+				if (!textbook.getIsChiefPublished()) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+							CheckedExceptionResult.NULL_PARAM, "还未发布主编/副主编，不能进行公布");
+				}
+				List<DecPosition> decPosition = decPositionService.getDecPositionByTextbookId(textbook.getId());
+				// 是否确认编委
+				if (decPosition.size() == 0) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+							CheckedExceptionResult.NULL_PARAM, "还未确认编委，不能进行公布");
+				}
+			}
+		}
 		Material materials = new Material();
 		List<Long> textBookIds = new ArrayList<>(textbooks.size());
 		for (Textbook textbook : textbooks) {
