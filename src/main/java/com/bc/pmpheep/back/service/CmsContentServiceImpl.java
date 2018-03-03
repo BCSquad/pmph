@@ -504,7 +504,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         resultMap.put("MaterialNoteAttachment", materialNoteAttachments);
         // 文章封面图片
         CmsExtra cmsExtra = cmsExtraService.getCmsExtraByAttachment(cmsContent.getCover());
-        String imgFileName = null;
+        String imgFileName = "默认封面.png";
         String imgFilePath = RouteUtil.DEFAULT_USER_AVATAR;
         if (ObjectUtil.notNull(cmsExtra)) {
             imgFileName = cmsExtra.getAttachmentName();
