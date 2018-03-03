@@ -81,4 +81,13 @@ public interface BookUserCommentService {
 	 */
 	String updateBookUserComment(Long[] ids, Boolean isStick, Boolean isPromote, Boolean isHot, Integer sort,
 			Integer sortPromote, Integer sortHot) throws CheckedServiceException;
+	
+	/**
+	 * admin 查询图书评论
+	 * @param pageParameter
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	PageResult<BookUserCommentVO> listBookUserCommentAdmin(PageParameter<BookUserCommentVO> pageParameter) 
+			throws CheckedServiceException;
 }

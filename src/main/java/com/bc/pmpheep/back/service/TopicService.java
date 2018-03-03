@@ -127,10 +127,14 @@ public interface TopicService {
 	 */
 	void updateByErp() throws CheckedServiceException;
 	
-//	/**
-//	 * 选题申报的数量
-//	 * @param id
-//	 * @return
-//	 */
-//	Integer getCount(Long id);
+	/**
+	 * 查询当前用户相关的选题申报
+	 * @param progress
+	 * @param pageParameter3
+	 * @return
+	 */
+	PageResult<TopicDeclarationVO> listMyTopic(List<Long> authProgress, PageParameter<TopicDeclarationVO> pageParameter3)
+			throws CheckedServiceException;
+	
+	
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
+import com.bc.pmpheep.back.dao.BookDao;
 import com.bc.pmpheep.back.dao.BookUserCommentDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
@@ -102,7 +103,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 				// 更新评分
 				bookService.updateBookCore(bookUserComment.getBookId());
 				// 更新书的评论数
-				bookService.updateComments(bookUserComment.getBookId());
+				bookService.updateUpComments(bookUserComment.getBookId());
 			}
 		}
 		if (num > 0) {
@@ -118,9 +119,18 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 					"评论id为空");
 		}
 		String result = "FAIL";
+		for (Long id : ids) {
+			BookUserComment bookUserComment = bookUserCommentDao.getBookUserCommentById(id);
+			Long bookId = bookUserComment.getBookId();
+			if (bookUserComment.getIsAuth() == 1) {
+				bookService.updateDownComments(bookId);
+			}
+		}
 		int num = bookUserCommentDao.deleteBookUserCommentById(ids);
 		if (num > 0) {
 			result = "SUCCESS";
+		} else {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "删除失败");
 		}
 		return result;
 	}
@@ -149,6 +159,19 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			result = "SUCCESS";
 		}
 		return result;
+	}
+
+	@Override
+	public PageResult<BookUserCommentVO> listBookUserCommentAdmin(PageParameter<BookUserCommentVO> pageParameter) {
+		PageResult<BookUserCommentVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total = bookUserCommentDao.getBookUserCommentAdminTotal(pageParameter);
+		if (total > 0) {
+			List<BookUserCommentVO> list = bookUserCommentDao.listBookUserCommentAdmin(pageParameter);
+			pageResult.setRows(list);
+		}
+		pageResult.setTotal(total);
+		return pageResult;
 	}
 
 }

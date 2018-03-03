@@ -53,6 +53,11 @@ public class WechatArticleService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
 					CheckedExceptionResult.NULL_PARAM, "给定链接不能为空");
 		}
+		String str=url.substring(0, 24);
+		if(!"https://mp.weixin.qq.com".equals(str)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
+					CheckedExceptionResult.ILLEGAL_PARAM, "同步失败，请检查链接地址是否正确，或者其他原因");
+		}
 		String guid = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
 		taskExecutor.execute(new WechatArticleCrawlerTask(new WechatArticle(guid, url)));
 		return guid;
@@ -92,7 +97,7 @@ public class WechatArticleService {
 				title = html.substring(titleS, titleE); // 获取标题
 			} catch (Exception e) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
-						CheckedExceptionResult.ILLEGAL_PARAM, "给定链接为搜狗微信搜索里面的微信文章地址");
+						CheckedExceptionResult.ILLEGAL_PARAM, "同步失败，请检查链接地址是否正确，或者其他原因");
 			}
 			String contentStart = "<div class=\"rich_media_content \" id=\"js_content\">";
 			String contentEnd = "</div>";

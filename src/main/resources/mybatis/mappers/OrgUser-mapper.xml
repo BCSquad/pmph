@@ -51,7 +51,7 @@
 				postcode,
 			</if>
 			<if test="avatar !=null and avatar !=''">
-			    avatar,
+				avatar,
 			</if>
 			<if test="isProxyUpload != null and isProxyUpload !=''">
 				is_proxy_upload,
@@ -126,7 +126,7 @@
 				#{postcode},
 			</if>
 			<if test="avatar !=null and avatar !=''">
-			    #{avatar},
+				#{avatar},
 			</if>
 			<if test="isProxyUpload != null and isProxyUpload !=''">
 				#{isProxyUpload},
@@ -223,7 +223,7 @@
 				postcode= #{postcode},
 			</if>
 			<if test="avatar !=null and avatar !=''">
-			    avatar = #{avatar},
+				avatar = #{avatar},
 			</if>
 			<if test=" isProxyUpload != null and isProxyUpload !=''">
 				is_proxy_upload = #{isProxyUpload},
@@ -255,48 +255,51 @@
 		<foreach item="item" collection="list" index="index" open=""
 			separator=";">
 			update
-				org_user
+			org_user
 			<set>
 				progress = #{item.progress}
 			</set>
 			where
-				id=#{item.id}
+			id=#{item.id}
 		</foreach>
 	</update>
 
 	<!-- 根据id集合查询一个OrgUser -->
 	<select id="getOrgUserByIds" parameterType="list" resultType="OrgUser">
-		select 
-			* 
-		from 
-			org_user 
-		where 
-			id
+		select
+		*
+		from
+		org_user
+		where
+		id
 		in
-		<foreach item="item" collection="list" separator="," open="(" close=")" index="">
+		<foreach item="item" collection="list" separator="," open="("
+			close=")" index="">
 			#{item}
 		</foreach>
 	</select>
-	
+
 	<!-- 根据id查询一个OrgUser -->
-	<select id="getOrgUserById" parameterType="java.lang.Long" resultType="OrgUser">
+	<select id="getOrgUserById" parameterType="java.lang.Long"
+		resultType="OrgUser">
 		select * from org_user where id=#{id} ;
 	</select>
 
 	<!-- 根据机构id集查询用户 -->
-	<select id="getOrgUserListByOrgIds" resultType="OrgUser" parameterType="list">
+	<select id="getOrgUserListByOrgIds" resultType="OrgUser"
+		parameterType="list">
 		select
-			*
+		*
 		from
-			org_user
+		org_user
 		where
-			<!-- is_disabled =0
-		and -->
-			is_deleted =0
+		<!-- is_disabled =0 and -->
+		is_deleted =0
 		and
-			org_id
+		org_id
 		in
-		<foreach item="item" collection="list" separator="," open="(" close=")" index="">
+		<foreach item="item" collection="list" separator="," open="("
+			close=")" index="">
 			#{item}
 		</foreach>
 	</select>
@@ -328,15 +331,19 @@
 	</select>
 	<select id="getListOrgUser" parameterType="PageParameter"
 		resultType="OrgAndOrgUserVO">
-		select 	ou.id,o.org_name,ou.username,ou.realname,ou.handphone,ou.email,ou.address,o.area_id,
-				ou.is_disabled isDisabled,ot.type_name orgTypeName,ou.position,ou.title,ou.note,
-				ou.org_id,ot.id orgTypeId
-			from org o
-			left join org_user ou on ou.org_id=o.id
-			left join org_type ot on ot.id=o.org_type_id
+		select
+		ou.id,o.org_name,ou.username,ou.realname,ou.handphone,ou.email,ou.address,o.area_id,
+		ou.is_disabled isDisabled,ot.type_name
+		orgTypeName,ou.position,ou.title,ou.note,
+		ou.org_id,ot.id orgTypeId
+		from org o
+		left join org_user ou on ou.org_id=o.id
+		left join org_type ot
+		on ot.id=o.org_type_id
 		where 1=1
 		<if test="parameter.name !=null and parameter.name !='' ">
-			and (ou.username like concat('%',#{parameter.name},'%' ) or
+			and (ou.username like concat('%',#{parameter.name},'%' )
+			or
 			ou.realname like
 			concat('%',#{parameter.name},'%' ) )
 		</if>
@@ -370,7 +377,7 @@
 		resultType="OrgUser">
 		select * from org_user where org_id=#{orgId} ;
 	</select>
-	
+
 	<!-- 根据机构username查询OrgUser -->
 	<select id="getOrgUsername" parameterType="java.lang.String"
 		resultType="OrgUser">
@@ -388,6 +395,19 @@
 		ON
 		o.`id`=ou.`org_id`
 		where
-		ou.is_deleted = 0 and ou.is_proxy_upload=1
+		ou.is_deleted = 0 and
+		ou.is_proxy_upload=1
+	</select>
+
+	<!-- 根据机构id查询机构管理员 -->
+	<select id="getOrgUserByOrgId" resultType="OrgUser"
+		parameterType="java.lang.Long">
+		select
+		*
+		from
+		org_user
+		where
+		org_id =
+		#{orgId}
 	</select>
 </mapper>

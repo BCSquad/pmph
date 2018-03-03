@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.DecTextbookPmphDao">
+
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="id !=null">
+				id,
+			</if>
+			<if test="declarationId !=null">
+				declaration_id,
+			</if>
+			<if test="materialName !=null and materialName !=''">
+				material_name,
+			</if>
+			<if test="rank !=null">
+				rank,
+			</if>
+			<if test="position !=null">
+				position,
+			</if>
+			<if test="isDigitalEditor !=null ">
+ 				is_digital_editor,
+ 			</if>
+			<if test="publishDate !=null ">
+				publish_date,
+			</if>
+			<if test="isbn !=null and isbn !=''">
+				isbn,
+			</if>
+			<if test="note !=null and note !=''">
+				note,
+			</if>
+			<if test="sort !=null">
+				sort,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<trim suffixOverrides=",">
+			<if test="id !=null">
+				#{id},
+			</if>
+			<if test="declarationId !=null">
+				#{declarationId},
+			</if>
+			<if test="materialName !=null and materialName !=''">
+				#{materialName},
+			</if>
+			<if test="rank !=null">
+				#{rank},
+			</if>
+			<if test="isDigitalEditor !=null ">
+				#{isDigitalEditor},
+			</if>
+			<if test="position !=null">
+				#{position},
+			</if>
+			<if test="isDigitalEditor !=null ">
+ 				#{isDigitalEditor},
+ 			</if>
+			<if test="publishDate !=null">
+				#{publishDate},
+			</if>
+			<if test="isbn !=null and isbn !=''">
+				#{isbn},
+			</if>
+			<if test="note !=null and note !=''">
+				#{note},
+			</if>
+			<if test="sort !=null">
+				#{sort},
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="addDecTextbookPmph" parameterType="DecTextbookPmph">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或AFTER -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into dec_textbook_pmph(
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		);
+	</insert>
+
+	<!-- 根据id删除 -->
+	<delete id="deleteDecTextbookPmphById" parameterType="java.lang.Long">
+		delete from
+		dec_textbook_pmph where
+		id=#{id};
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateDecTextbookPmph" parameterType="DecTextbookPmph">
+		update dec_textbook_pmph
+		<set>
+			<if test="declarationId !=null">
+				declaration_id = #{declarationId},
+			</if>
+			<if test="materialName !=null and materialName !=''">
+				material_name = #{materialName},
+			</if>
+			<if test="rank !=null">
+				rank = #{rank},
+			</if>
+			<if test="position !=null">
+				position = #{position},
+			</if>
+			<if test="publishDate !=null ">
+				publish_date = #{publishDate},
+			</if>
+			<if test="isbn !=null and isbn !=''">
+				isbn = #{isbn},
+			</if>
+			<if test="note !=null and note !=''">
+				note = #{note},
+			</if>
+			<if test="sort !=null">
+				sort = #{sort},
+			</if>
+			<if test="isDigitalEditor !=null ">
+ 				is_digital_editor = #{isDigitalEditor},
+ 			</if>
+		</set>
+		where id=#{id} ;
+	</update>
+
+	<!-- 根据id查询 -->
+	<select id="getDecTextbookPmphById" parameterType="java.lang.Long"
+		resultType="DecTextbook">
+		select * from dec_textbook_pmph where id=#{id};
+	</select>
+
+	<!-- 根据declarationId查询 -->
+	<select id="getListDecTextbookPmphByDeclarationId" parameterType="java.lang.Long"
+		resultType="DecTextbook">
+		select * from dec_textbook_pmph where
+		declaration_id=#{declarationId};
+	</select>
+
+	<!-- 根据declarationId查询 -->
+	<select id="getListDecTextbookPmphByDeclarationIds" resultType="DecTextbook">
+		select * from dec_textbook_pmph where
+		declaration_id in
+		<foreach collection="list" item="declarationId" open="("
+			close=")" separator="," index="index">
+			#{declarationId}
+		</foreach>
+	</select>
+</mapper>

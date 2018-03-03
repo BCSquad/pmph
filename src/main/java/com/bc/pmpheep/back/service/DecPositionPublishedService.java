@@ -89,4 +89,12 @@ public interface DecPositionPublishedService {
      * </pre>
      */
     Integer deleteDecPositionPublishedByTextBookId(Long textbookId) throws CheckedServiceException;
+    
+    /**
+     * 按照书籍查询
+     * @param textbookId
+     * @return
+     * @throws CheckedServiceException
+     */
+    List<DecPositionPublished> getDecPositionPublishedListByBookId(Long textbookId) throws CheckedServiceException;
 }

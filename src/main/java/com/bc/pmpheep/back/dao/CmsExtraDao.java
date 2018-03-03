@@ -143,4 +143,16 @@ public interface CmsExtraDao {
      * </pre>
      */
     Integer deleteCmsExtraByIds(List<Long> ids);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据attachment查询一个CmsExtra
+     * 使用示范：
+     *
+     * @param attachment MongoDBId
+     * @return CmsExtra对象
+     * </pre>
+     */
+    CmsExtra getCmsExtraByAttachment(String attachment);
 }

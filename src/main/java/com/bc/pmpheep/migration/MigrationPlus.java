@@ -26,6 +26,7 @@ import com.bc.pmpheep.back.po.SurveyType;
 import com.bc.pmpheep.back.po.Topic;
 import com.bc.pmpheep.back.po.TopicExtra;
 import com.bc.pmpheep.back.po.TopicWriter;
+import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.SensitiveService;
@@ -41,6 +42,7 @@ import com.bc.pmpheep.back.service.SurveyTypeService;
 import com.bc.pmpheep.back.service.TopicExtraService;
 import com.bc.pmpheep.back.service.TopicService;
 import com.bc.pmpheep.back.service.TopicWriertService;
+import com.bc.pmpheep.back.service.WriterPointRuleService;
 import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.vo.CmsAdvertisementOrImageVO;
 import com.bc.pmpheep.general.bean.FileType;
@@ -97,6 +99,8 @@ public class MigrationPlus {
 	 WriterUserService writerUserService;
 	 @Resource
 	 SensitiveService sensitiveService;
+	 @Resource
+	 WriterPointRuleService writerPointRuleService;
 	 
 	 public void start() {
 		 Date begin = new Date();
@@ -104,6 +108,8 @@ public class MigrationPlus {
 		 survey();
          logger.info("填充选题申报测试数据");
 		 topic();
+		 logger.info("填充积分规则数据");
+		 point();
 		 logger.info("初始化广告数据");
 		 initCmsAdvertisementData();
 		 logger.info("数据填充运行结束，用时：{}", JdbcHelper.getPastTime(begin));
@@ -116,7 +122,7 @@ public class MigrationPlus {
 	        String dataJson
 	                = "["
 	                + "{adname:'首页轮播',         type:1,autoPlay:true, animationInterval:3000,image:[{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'},{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'},{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'}]} ,"
-	                + "{adname:'首页中部',         type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/2670f031-35da-4dd6-b079-8f295c51a339.png'},{image:'/upload/site/af598f9e-ae9e-48a0-a3e4-17acc363051a.png'},{image:'/upload/site/a4160c1e-8beb-4530-9f2b-df022a6f751d.png'},{image:'/upload/site/a69b782d-f1ad-42e6-a91a-08432963b54a.png'}]} ,"
+	                + "{adname:'首页中部',         type:2,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/2670f031-35da-4dd6-b079-8f295c51a339.png'},{image:'/upload/site/af598f9e-ae9e-48a0-a3e4-17acc363051a.png'},{image:'/upload/site/a4160c1e-8beb-4530-9f2b-df022a6f751d.png'},{image:'/upload/site/a69b782d-f1ad-42e6-a91a-08432963b54a.png'}]} ,"
 	                + "{adname:'信息快报和遴选公告列表',type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/article/20170328/wenzhang10.jpg'}]} ,"
 	                + "{adname:'读书首页轮播 ',      type:1,autoPlay:true ,animationInterval:3000,image:[{image:'/upload/article/20170328/xiaoxi1.jpg'},{image:'/upload/article/20170328/xiaoxi2.jpg'},{image:'/upload/article/20170328/xiaoxi3.jpg'}]} "
 	                + "]";
@@ -131,7 +137,7 @@ public class MigrationPlus {
 	            cmsAdvertisement.setAutoPlay(cmsAdvertisementAndImages.getAutoPlay());
 	            //循环间隔时间
 	            cmsAdvertisement.setAnimationInterval(cmsAdvertisementAndImages.getAnimationInterval());
-	            //类型    0 普通  1 轮播
+	            //类型    0 普通  1 轮播  2两张
 	            cmsAdvertisement.setType(cmsAdvertisementAndImages.getType());
 	            //保存广告
 	            cmsAdvertisementDao.addCmsAdvertisement(cmsAdvertisement);
@@ -396,7 +402,7 @@ public class MigrationPlus {
 		topicWriertService.add(topicWriter4);				
 		Topic topic5 = new Topic(4035L, "人体解剖学", 0, new Timestamp(423654L), 1, 97, 1098,
 				"医学", 0, 3, 35L, 14, 3300, false, null, null, null, null, 1, null, null,
-				false, 15L, false, null, false, null, false, null, false, null, false, 
+				true, 15L, false, null, false, null, false, null, false, null, false, 
 				false, false, null, null, null, null, null, new Timestamp(433654L));
 		topic5 = topicService.add(topic5);
 		TopicExtra topicExtra5 = new TopicExtra(topic5.getId(), "医学院学生必读辅导书",
@@ -440,4 +446,23 @@ public class MigrationPlus {
 		Sensitive sensitive8 = new Sensitive("放屁", 9, "口头用语", true, true, null, null);
 		sensitiveService.add(sensitive8);
 	}
+	 //积分规则迁移
+	 protected  void point(){
+		 WriterPointRule writerPointRule1=new WriterPointRule("连续登录", "logins", 1, false, null, null, "连续登录每天增加1分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule1);
+		 WriterPointRule writerPointRule2=new WriterPointRule("连续最大积分", "max_login_integral", 5, false, null, null, "到第5天增加5分后，每天给5分，中间有一天不来，重新开始积分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule2);
+		 WriterPointRule writerPointRule3=new WriterPointRule("登录", "login", 1, false, null, null, "每天登录一次给1分，一天仅一次", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule3);
+		 WriterPointRule writerPointRule4=new WriterPointRule("回复话题", "reply_topic", 1, false, null, null, "回复话题给1分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule4);
+		 WriterPointRule writerPointRule5=new WriterPointRule("创建话题", "create_topic", 2, false, null, null, "创建话题给1分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule5);
+		 WriterPointRule writerPointRule6=new WriterPointRule("平台a", "sys_a", 50, true, "2", 2, "本平台50积分=商城2积分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule6);
+		 WriterPointRule writerPointRule7=new WriterPointRule("平台b", "sys_b", 200, true, "0", 10, "本平台200积分=平台b10积分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule7);
+		 WriterPointRule writerPointRule8=new WriterPointRule("智慧商城", "buss", 100, true, "1", 1, "本平台100积分=智慧商城1积分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule8);
+	 }
 }

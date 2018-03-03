@@ -1,19 +1,28 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.WriterUserCertificationDao;
+import com.bc.pmpheep.back.po.Org;
+import com.bc.pmpheep.back.po.OrgUser;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.po.WriterUserCertification;
+import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -35,7 +44,14 @@ WriterUserCertificationService {
     private WriterUserCertificationDao writerUserCertificationDao;
     @Autowired
     WriterUserService writerUserService;
-
+    @Autowired
+    SystemMessageService systemMessageService;
+    @Autowired
+    OrgUserService orgUserService;
+    @Autowired
+    PmphUserService pmphUserService;
+    @Autowired
+    OrgService orgService;
     /**
      * 
      * @introduction 新增一个WriterUserCertification
@@ -117,8 +133,10 @@ WriterUserCertificationService {
     }
 
     @Override
-    public Integer updateWriterUserCertificationProgressByUserId(Short progress, Long[] userIds)
-    throws CheckedServiceException {
+    public Integer updateWriterUserCertificationProgressByUserId(Short progress, Long[] userIds,HttpServletRequest request)
+    throws CheckedServiceException, Exception {
+    	String sessionId = CookiesUtil.getSessionId(request);
+    	PmphUser pmphuser = SessionUtil.getPmphUserBySessionId(sessionId);
         List<WriterUserCertification> writerUserCertifications =
         this.getWriterUserCertificationByUserIds(userIds);
         if (ObjectUtil.isNull(progress)) {
@@ -149,12 +167,48 @@ WriterUserCertificationService {
             writerUserCertificationDao.updateWriterUserCertificationProgressByUserId(wUserCertifications);
             List<WriterUser> list=writerUserService.getWriterUserRankList(writerUsers);
             for (WriterUser writerUser : list) {
-            	writerUser.setIsTeacher(true);
 				if(0==writerUser.getRank()){//当级别为0的时候修改
-					writerUserService.updateWriterUserRank(writerUsers);
+					for (WriterUser wrs : writerUsers) {
+						wrs.setAuthUserType(1);
+						wrs.setAuthUserId(pmphuser.getId());
+						writerUser.setIsTeacher(true);
+						writerUserService.updateWriterUserRank(wrs);
+					}
 				}else{
-					writerUserService.updateWriterUser(writerUsers);
+					for (WriterUser wrs : writerUsers) {
+						wrs.setAuthUserType(1);
+						wrs.setAuthUserId(pmphuser.getId());
+						writerUser.setIsTeacher(true);
+						writerUserService.updateWriterUser(wrs);
+					}
 				}
+			}
+        }
+        //认证通过或退回的推送消息
+        Boolean isPass = null;
+        if(2==progress){
+        	isPass=false;
+        }
+        if(3==progress){
+        	isPass=true;
+        }
+        if(null!=isPass){
+        	List<Long> teacherIds=new ArrayList<>();
+            for (int i = 0; i < userIds.length; i++) {
+              	teacherIds.add(userIds[0]);
+      		}
+        	//获取用户认证类型和认证人
+        	List<WriterUser> users=writerUserService.getWriterUserList(userIds);
+        	for (WriterUser writerUser : users) {
+        		if(1==writerUser.getAuthUserType()){//社内用户
+        			PmphUser pmphUser=pmphUserService.get(writerUser.getAuthUserId());
+        			systemMessageService.sendWhenTeacherCertificationAudit(pmphUser.getRealname(), teacherIds, isPass);
+        		}
+        		if(2==writerUser.getAuthUserType()){//学校机构用户
+        			OrgUser orgUsers=orgUserService.getOrgUserById(writerUser.getAuthUserId());
+        			Org org=orgService.getOrgById(orgUsers.getOrgId());
+        			systemMessageService.sendWhenTeacherCertificationAudit(org.getOrgName(), teacherIds, isPass);
+        		}
 			}
         }
         return count;

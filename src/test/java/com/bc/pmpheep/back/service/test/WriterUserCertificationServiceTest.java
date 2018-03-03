@@ -1,7 +1,5 @@
 package com.bc.pmpheep.back.service.test;
 
-import java.util.Random;
-
 import javax.annotation.Resource;
 
 import org.junit.Assert;
@@ -13,6 +11,7 @@ import org.springframework.test.annotation.Rollback;
 import com.bc.pmpheep.back.po.WriterUserCertification;
 import com.bc.pmpheep.back.service.WriterUserCertificationService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 
 /**
@@ -29,14 +28,14 @@ public class WriterUserCertificationServiceTest extends BaseTest {
 
     @Test
     @Rollback(Const.ISROLLBACK)
-    public void testUpdateWriterUserCertificationProgressByUserId() {
+    public void testUpdateWriterUserCertificationProgressByUserId() throws CheckedServiceException, Exception {
     	WriterUserCertification writerUserCertification=this.addWriterUserCertification();
         // 教师审核按userId更新WriterUserCertification中Progress状态字段
         Short progress = 2;
         Long[] idsLongs = { 1L, 2L };
         Assert.assertTrue("修改失败",
                           writerUserCertificationService.updateWriterUserCertificationProgressByUserId(progress,
-                                                                                                       idsLongs) >= 0);
+                                                                                                       idsLongs, null) >= 0);
     }
 
     @Test

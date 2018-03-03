@@ -1,6 +1,5 @@
 package com.bc.pmpheep.back.service;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.Timestamp;
@@ -11,29 +10,26 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.bc.pmpheep.back.dao.BookVedioDao;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Book;
-import com.bc.pmpheep.back.po.BookVedio;
+import com.bc.pmpheep.back.po.BookVideo;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.vo.BookVedioVO;
-import com.bc.pmpheep.back.vo.BookVedioVO2;
+import com.bc.pmpheep.back.vo.PastBookVideoVO;
+import com.bc.pmpheep.back.vo.BookVideoVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.bc.pmpheep.back.dao.BookVideoDao;
 
-
-
-
-@Service("bookVedioService")
-public class BookVedioServiceImpl  implements BookVedioService {
+@Service("bookVideoService")
+public class BookVideoServiceImpl  implements BookVideoService {
 	
 
 	@Autowired
-	private BookVedioDao bookVedioDao;
+	private BookVideoDao bookVideoDao;
 	
 	@Autowired
 	private BookService bookService;
@@ -42,7 +38,7 @@ public class BookVedioServiceImpl  implements BookVedioService {
 	private FileService fileService;
 	
 	@Override
-	public PageResult<BookVedioVO2> getVedioList(Integer pageSize, Integer pageNumber, String bookName, Boolean isAuth,
+	public PageResult<BookVideoVO> getVideoList(Integer pageSize, Integer pageNumber, String bookName, Integer state,
 			String upLoadTimeStart, String upLoadTimeEnd) {
 		Map<String, Object> map = new HashMap<String, Object>(3);
 		map.put("start",    ((pageNumber-1)*pageSize) );
@@ -51,8 +47,8 @@ public class BookVedioServiceImpl  implements BookVedioService {
 		if(null != bookName){
 			map.put("bookName", bookName);
 		}
-		if(null != isAuth) {
-			map.put("isAuth", isAuth);
+		if(null != state && 0 == state.intValue() ) {//all
+			map.put("state", state);
 		}
 		//yyyy-MM-dd
 		if(StringUtil.notEmpty(upLoadTimeStart)) {
@@ -63,20 +59,20 @@ public class BookVedioServiceImpl  implements BookVedioService {
 			Timestamp endTime = DateUtil.str2Timestam(upLoadTimeEnd);
 			map.put("endTime", endTime);
 		}
-		PageResult<BookVedioVO2> BookVedioVO2lst= new  PageResult<BookVedioVO2>();
-		BookVedioVO2lst.setPageNumber(pageNumber);
-		BookVedioVO2lst.setPageSize(pageSize);
-		Integer  total = bookVedioDao.getVedioListTotal(map);
+		PageResult<BookVideoVO> BookVideoVO2lst= new  PageResult<BookVideoVO>();
+		BookVideoVO2lst.setPageNumber(pageNumber);
+		BookVideoVO2lst.setPageSize(pageSize);
+		Integer  total = bookVideoDao.getVideoListTotal(map);
 		if(null != total && total > 0 ) {
-			BookVedioVO2lst.setRows(bookVedioDao.getVedioList(map));
+			BookVideoVO2lst.setRows(bookVideoDao.getVideoList(map));
 		}
-		BookVedioVO2lst.setTotal(total);
-		return BookVedioVO2lst;
+		BookVideoVO2lst.setTotal(total);
+		return BookVideoVO2lst;
 	}
 	
 
 	@Override
-	public Integer deleteBookVedioByIds(List<Long> ids) throws CheckedServiceException {
+	public Integer deleteBookVideoByIds(List<Long> ids) throws CheckedServiceException {
 		if(null == ids || ids.size() == 0 ){
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
@@ -85,12 +81,12 @@ public class BookVedioServiceImpl  implements BookVedioService {
 				throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO, CheckedExceptionResult.NULL_PARAM, "有参数为空");
 			}
 		}
-		return bookVedioDao.deleteBookVedioByIds(ids);
+		return bookVideoDao.deleteBookVideoByIds(ids);
 	}
 
 	
 	@Override
-	public PageResult<BookVedioVO> getList(Integer pageSize, Integer pageNumber, String bookName) {
+	public PageResult<PastBookVideoVO> getList(Integer pageSize, Integer pageNumber, String bookName) {
 		Map<String, Object> map = new HashMap<String, Object>(3);
 		if(!StringUtil.isEmpty(bookName)){
 			bookName = StringUtil.toAllCheck(bookName.trim());
@@ -100,81 +96,81 @@ public class BookVedioServiceImpl  implements BookVedioService {
 		map.put("pageSize", pageSize);
 		//获取书籍的分页
 		PageResult<Book> listBooks =   bookService.listBook(pageSize,pageNumber, bookName);
-		List<BookVedioVO> lst = new ArrayList<BookVedioVO> ();
+		List<PastBookVideoVO> lst = new ArrayList<PastBookVideoVO> ();
 		Integer total = 0;
 		if(null != listBooks && null != listBooks.getTotal() && listBooks.getTotal().intValue() > 0 ){
 			total = listBooks.getTotal();
 			List<Long> bookIds = new ArrayList<Long> (listBooks.getRows().size());
 			for(Book book: listBooks.getRows()){
 				bookIds.add(book.getId());
-				BookVedioVO bookVedioVO = new BookVedioVO();
-				bookVedioVO.setAuthor(book.getAuthor())
+				PastBookVideoVO pastBookVideoVO = new PastBookVideoVO();
+				pastBookVideoVO.setAuthor(book.getAuthor())
 						   .setBookId(book.getId())
 						   .setBookname(book.getBookname())
 						   .setImageUrl(book.getImageUrl())
 						   .setRevision(book.getRevision())
 						   .setSn(book.getSn());
-				lst.add(bookVedioVO);
+				lst.add(pastBookVideoVO);
 			}
-			List<BookVedio> BookVedios= bookVedioDao.getBookVedioByBookIds(bookIds);
-			for(BookVedioVO bookVedioVO: lst){
-				List<BookVedio> bookVedios = new ArrayList<BookVedio>();
-				for(BookVedio BookVedio: BookVedios){
-					if(bookVedioVO.getBookId().equals(BookVedio.getBookId())){
-						bookVedios.add(BookVedio);
+			List<BookVideo> BookVideos= bookVideoDao.getBookVideoByBookIds(bookIds);
+			for(PastBookVideoVO pastBookVideoVO: lst){
+				List<BookVideo> bookVideos = new ArrayList<BookVideo>();
+				for(BookVideo BookVideo: BookVideos){
+					if(pastBookVideoVO.getBookId().equals(BookVideo.getBookId())){
+						bookVideos.add(BookVideo);
 					}
 				}
-				bookVedioVO.setBookVedios(bookVedios);
+				pastBookVideoVO.setBookVideos(bookVideos);
 			}
 		}
-		PageResult<BookVedioVO> BookVedioVOlst= new  PageResult<BookVedioVO>();
-		BookVedioVOlst.setPageNumber(pageNumber);
-		BookVedioVOlst.setPageSize(pageSize);
-		BookVedioVOlst.setTotal(total);
-		BookVedioVOlst.setRows(lst);
-		return BookVedioVOlst;
+		PageResult<PastBookVideoVO> BookVideoVOlst= new  PageResult<PastBookVideoVO>();
+		BookVideoVOlst.setPageNumber(pageNumber);
+		BookVideoVOlst.setPageSize(pageSize);
+		BookVideoVOlst.setTotal(total);
+		BookVideoVOlst.setRows(lst);
+		return BookVideoVOlst;
 	}
 
 	@Override
-	public Integer updateBookVedio(BookVedio bookVedio)
+	public Integer updateBookVideo(BookVideo bookVideo)
 			throws CheckedServiceException {
-		if(null == bookVedio || null == bookVedio.getId()){
+		if(null == bookVideo || null == bookVideo.getId()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		return bookVedioDao.updateBookVedio(bookVedio);
+		return bookVideoDao.updateBookVideo(bookVideo);
 	}
 
 	
 	
 	@Override
-	public Integer addBookVedio(HttpServletRequest request,  BookVedio bookVedio)  throws CheckedServiceException, Exception{
-		String tempFileId = bookVedio.getCover();
-		bookVedio.setCover("---");
+	public Integer addBookVideo(HttpServletRequest request,  BookVideo bookVideo)  throws CheckedServiceException, Exception{
+		String tempFileId = bookVideo.getCover();
+		bookVideo.setCover("---");
 		// 验证 、、。。。。。内部产生数据不需验证。。。。。。。。
-		String oldPath = bookVedio.getOrigPath() ;
+		String oldPath = bookVideo.getOrigPath() ;
 		String oldUUid = oldPath.substring(oldPath.lastIndexOf(System.getProperty("file.separator"))+1,oldPath.lastIndexOf("."));
-		BookVedio bookVedio2 =  bookVedioDao.getBookVedioByOldPath(oldUUid);
+		BookVideo bookVideo2 =  bookVideoDao.getBookVideoByOldPath(oldUUid);
 		//如果前台已经存入了，那么这里需要更新
-		if(null != bookVedio2){
-			bookVedio2.setBookId(bookVedio.getBookId());
-			bookVedio2.setTitle(bookVedio.getTitle());
-			bookVedio2.setUserId(0L);
-			bookVedio2.setCover(bookVedio.getCover());
-			bookVedioDao.updateBookVedio(bookVedio2);
-			bookVedio.setId(bookVedio2.getId());
+		if(null != bookVideo2){
+			bookVideo2.setBookId(bookVideo.getBookId());
+			bookVideo2.setTitle(bookVideo.getTitle());
+			bookVideo2.setUserId(0L);
+			bookVideo2.setCover(bookVideo.getCover());
+			bookVideoDao.updateBookVideo(bookVideo2);
+			bookVideo.setId(bookVideo2.getId());
 		}else {
-			bookVedio.setPath("-");
-			bookVedio.setFileName("-");
-			bookVedio.setFileSize(0L);
-			bookVedioDao.addBookVedio(bookVedio);
+			bookVideo.setPath("-");
+			bookVideo.setFileName("-");
+			bookVideo.setFileSize(0L);
+			bookVideoDao.addBookVideo(bookVideo);
 		}
 		//保存fengmian文件
 		byte[] fileByte = (byte[]) request.getSession(false).getAttribute(tempFileId);
 		String fileName = (String) request.getSession(false).getAttribute("fileName_" + tempFileId);
 		InputStream sbs = new ByteArrayInputStream(fileByte);
-		String coverId = fileService.save(sbs, fileName, FileType.BOOKVEDIO_CONER,bookVedio.getId());
-		bookVedio.setCover(coverId);
-		return bookVedioDao.updateBookVedio(bookVedio);
+		String coverId = fileService.save(sbs, fileName, FileType.BOOKVEDIO_CONER,bookVideo.getId());
+		bookVideo.setCover(coverId);
+		return bookVideoDao.updateBookVideo(bookVideo);
 	}
 
 

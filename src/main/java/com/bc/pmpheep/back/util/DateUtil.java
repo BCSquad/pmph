@@ -343,6 +343,7 @@ public final class DateUtil {
         int oneDayMillis = 24 * 60 * 60 * 1000;
         // 今天0点的时间错
         long todayStartMillis = 0L;
+        String time = formatTimeStamp("yyyy-MM-dd HH:mm:ss", timeStamp);
         try {
             DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String tsStr = sdf.format(new Date());
@@ -353,18 +354,18 @@ public final class DateUtil {
         }
 
         if (timeStamp.getTime() >= todayStartMillis) {
-            return "今天";
+            return "今天 "+time.substring(11, 16);
         }
 
         long yesterdayStartMilis = todayStartMillis - oneDayMillis; // 昨天
         if (timeStamp.getTime() >= yesterdayStartMilis) {
-            return "昨天";
+            return "昨天 "+time.substring(11, 16);
         }
         long yesterdayBeforeStartMilis = yesterdayStartMilis - oneDayMillis;
         if (timeStamp.getTime() >= yesterdayBeforeStartMilis) {
-            return "前天";
+            return "前天 "+time.substring(11, 16);
         }
-        return formatTimeStamp("yyyy-MM-dd HH:mm:ss", timeStamp);
+        return time;
     }
 
     public static void main(String[] args) throws ParseException {

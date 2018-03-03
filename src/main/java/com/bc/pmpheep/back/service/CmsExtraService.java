@@ -152,4 +152,16 @@ public interface CmsExtraService {
      * </pre>
      */
     Integer deleteCmsExtraByIds(List<Long> ids) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据attachment查询一个CmsExtra
+     * 使用示范：
+     *
+     * @param attachment MongoDBId
+     * @return CmsExtra对象
+     * </pre>
+     */
+    CmsExtra getCmsExtraByAttachment(String attachment) throws CheckedServiceException;
 }

@@ -1,6 +1,9 @@
 package com.bc.pmpheep.back.controller;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,7 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * 
@@ -96,12 +100,14 @@ public class SchoolAndTeacherCheckController {
      * @param orgUserIds 用户IDs
      * @return
      * </pre>
+     * @throws IOException 
+     * @throws CheckedServiceException 
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
     @RequestMapping(value = "/orgCheck", method = RequestMethod.PUT)
     public ResponseBean orgCheck(@RequestParam(name = "progress") Integer progress,
-    @RequestParam(name = "orgUserIds") List<Long> orgUserIds) {
+    @RequestParam(name = "orgUserIds") List<Long> orgUserIds) throws CheckedServiceException, IOException {
         return new ResponseBean(orgUserService.updateOrgUserProgressById(progress, orgUserIds));
     }
 
@@ -149,14 +155,16 @@ public class SchoolAndTeacherCheckController {
      * @param userIds 作家用户Ids
      * @return
      * </pre>
+     * @throws Exception 
+     * @throws CheckedServiceException 
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
     @RequestMapping(value = "/writerCheck", method = RequestMethod.PUT)
     public ResponseBean writerCheck(@RequestParam("progress") Short progress,
-    @RequestParam("userIds") Long[] userIds) {
+    @RequestParam("userIds") Long[] userIds,HttpServletRequest request) throws CheckedServiceException, Exception {
         return new ResponseBean(
                                 writerUserCertificationService.updateWriterUserCertificationProgressByUserId(progress,
-                                                                                                             userIds));
+                                                                                                             userIds,request));
     }
 }

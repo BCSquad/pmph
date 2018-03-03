@@ -204,14 +204,18 @@ public class CmsContentController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "文章修改")
     @RequestMapping(value = "/content/update", method = RequestMethod.PUT)
     public ResponseBean update(CmsContent cmsContent, @RequestParam("file") String[] files,
-    @RequestParam("content") String content, @RequestParam("attachment") String[] attachment,
+    @RequestParam("imgFile") String[] imgFile, @RequestParam("content") String content,
+    @RequestParam("attachment") String[] attachment,
+    @RequestParam("imgAttachment") String[] imgAttachment,
     @RequestParam("scheduledTime") String scheduledTime, HttpServletRequest request) {
         try {
             String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(cmsContentService.updateCmsContent(cmsContent,
                                                                        files,
+                                                                       imgFile,
                                                                        content,
                                                                        attachment,
+                                                                       imgAttachment,
                                                                        scheduledTime,
                                                                        sessionId));
         } catch (IOException e) {

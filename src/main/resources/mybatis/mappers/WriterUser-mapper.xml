@@ -771,20 +771,23 @@
 	</delete>
 	<!-- 教师审核后WriterUser中Rank字段 -->
 	<update id="updateWriterUserRank"
-		parameterType="java.util.List">
-		<foreach item="item" collection="list" index="index" open=""
-			separator=";">
+		parameterType="WriterUser">
 			update
 			writer_user
 			<set>
-				<if test="isTeacher!=null">
-					is_teacher = #{isTeacher},
+				<if test="authUserType!=null ">
+					auth_user_type=#{authUserType},
+				</if>
+				<if test="authUserId!=null">
+					auth_user_id=#{authUserId},
+				</if>
+				<if test=" isTeacher!= null ">
+					is_teacher= #{isTeacher},
 				</if>
 					rank=1,
 			</set>
 			where
-			id=#{item.id}
-		</foreach>
+			id=#{id}
 	</update>
 	<!-- 查询教师认证总数量 -->
 	<select id="getCount" resultType="java.lang.Integer">
@@ -844,17 +847,30 @@
 	
 	
 	<!-- 教师审核后WriterUser中is_teacher段 -->
-	<update id="updateWriterUser"
-		parameterType="java.util.List">
-		<foreach item="item" collection="list" index="index" open=""
-			separator=";">
+	<update id="updateWriterUser"	parameterType="WriterUser">
 			update
 			writer_user
 			<set>
-				is_teacher =1
+				<if test=" authUserType!= null and  authUserType!=''">
+					 auth_user_type =#{authUserType},
+				</if>
+				<if test=" authUserId!= null and  authUserId!=''">
+					 auth_user_id=#{authUserId},
+				</if>
+				<if test=" isTeacher!= null ">
+					is_teacher= #{isTeacher},
+				</if>
 			</set>
 			where
-			id=#{item.id}
-		</foreach>
+			id=#{id}
 	</update>
+	<!-- 通过查询用户id查询用户信息 -->
+	<select id="getWriterUserList" resultType="WriterUser">
+		select * from writer_user
+		where id in
+		<foreach collection="array" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

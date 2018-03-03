@@ -216,6 +216,12 @@ public class MigrationStageOne {
                 excel.add(map);
                 continue;
             }
+            //依据客户反馈不迁移的机构
+            if ("江苏建康职业学院".equals(orgName) || "北京大学".equals(orgName) || "民办山东万杰医学高等专科学校".equals(orgName)
+            		|| "天津大学".equals(orgName) || "协和医院".equals(orgName) || "华西医院".equals(orgName)
+            		|| "技术学校".equals(orgName) || "qthzyxy".equals(orgName)){
+            	continue;
+            }
             list.add(orgName);
             Integer orgType = (Integer) map.get("orgtype");
             Long areaId = (Long) map.get("new_pk");
@@ -335,6 +341,9 @@ public class MigrationStageOne {
                 sex = Integer.parseInt(sexNum);
             }
             String position = (String) map.get("duties");
+            if (StringUtil.notEmpty(position) && ("null".equals(position) || "nu".equals(position))){
+            	position = "-";
+            }
             String title = (String) map.get("positional");
             if (StringUtil.isEmpty(title)){
             	title = "-";
@@ -361,22 +370,31 @@ public class MigrationStageOne {
 				}
             }
             String fax = (String) map.get("fax");
+            if (StringUtil.notEmpty(fax) && ("null".equals(fax) || "nu".equals(fax))){
+            	fax = "-";
+            }
             String handphone = (String) map.get("handset");
-            if (StringUtil.notEmpty(handphone) && "null".equals(handphone)){
+            if (StringUtil.notEmpty(handphone) && ("null".equals(handphone) || "nu".equals(handphone))){
             	handphone = "-";
             }
             String telephone = (String) map.get("phone");
+            if (StringUtil.notEmpty(telephone) && ("null".equals(telephone) || "nu".equals(telephone))){
+            	telephone = "-";
+            }
             String idcard = (String) map.get("idcard");
+            if (StringUtil.notEmpty(idcard) && ("null".equals(idcard) || "nu".equals(idcard))){
+            	idcard = "-";
+            }
             String email = (String) map.get("email");
-            if (StringUtil.notEmpty(email) && "null".equals(email)){
+            if (StringUtil.notEmpty(email) && ("null".equals(email) || "nu".equals(email))){
             	email = "-";
             }
             String address = (String) map.get("address");
-            if (StringUtil.notEmpty(address) && "null".equals(address)){
+            if (StringUtil.notEmpty(address) && ("null".equals(address) || "nu".equals(address))){
             	address = "-";
             }
             String postcode = (String) map.get("postcode");
-            if (StringUtil.notEmpty(postcode) && "null".equals(postcode)){
+            if (StringUtil.notEmpty(postcode) && ("null".equals(postcode) || "nu".equals(postcode))){
             	postcode = "-";
             }
             Integer isProxyUpload = (Integer) map.get("is_proxy_upload");
@@ -385,7 +403,7 @@ public class MigrationStageOne {
             Integer progress = (Integer) map.get("progress");
             Timestamp reviewDate = (Timestamp) map.get("auditdate");
             String note = (String) map.get("memo");
-            if (StringUtil.notEmpty(note) && "null".equals(note)){
+            if (StringUtil.notEmpty(note) && ("null".equals(note) || "nu".equals(note))){
             	note = "-";
             }
             Integer sort = (Integer) map.get("sortno");
@@ -536,7 +554,13 @@ public class MigrationStageOne {
             }
             Integer experience = Integer.parseInt(experienceNum);
             String workPlace = (String) map.get("unitid");
+            if (StringUtil.notEmpty(workPlace) && ("null".equals(workPlace) || "nu".equals(workPlace))){
+            	workPlace = "-";
+            }
             String position = (String) map.get("duties");
+            if (StringUtil.notEmpty(position) && ("null".equals(position) || "nu".equals(position))){
+            	position = "-";
+            }
             String title = (String) map.get("positional");
             if (StringUtil.isEmpty(title)){
             	title = "-";
@@ -563,12 +587,33 @@ public class MigrationStageOne {
 				}
             }
             String fax = (String) map.get("fax");
+            if (StringUtil.notEmpty(fax) && ("null".equals(fax) || "nu".equals(fax))){
+            	fax = "-";
+            }
             String handphone = (String) map.get("handset");
+            if (StringUtil.notEmpty(handphone) && ("null".equals(handphone) || "nu".equals(handphone))){
+            	handphone = "-";
+            }
             String telephone = (String) map.get("phone");
+            if (StringUtil.notEmpty(telephone) && ("null".equals(telephone) || "nu".equals(telephone))){
+            	telephone = "-";
+            }
             String idcard = (String) map.get("idcard");
+            if (StringUtil.notEmpty(idcard) && ("null".equals(idcard) || "nu".equals(idcard))){
+            	idcard = "-";
+            }
             String email = (String) map.get("email");
+            if (StringUtil.notEmpty(email) && ("null".equals(email) || "nu".equals(email))){
+            	email = "-";
+            }
             String address = (String) map.get("address");
+            if (StringUtil.notEmpty(address) && ("null".equals(address) || "nu".equals(address))){
+            	address = "-";
+            }
             String postcode = (String) map.get("postcode");
+            if (StringUtil.notEmpty(postcode) && ("null".equals(postcode) || "nu".equals(postcode))){
+            	postcode = "-";
+            }
             Long rankNum = (Long) map.get("rank");
             Integer rank = 0;
             if (ObjectUtil.notNull(rankNum)) {
@@ -588,6 +633,9 @@ public class MigrationStageOne {
             String avatar = (String) map.get("avatar");
             String signature = (String) map.get("usersign");
             String note = (String) map.get("memo");
+            if (StringUtil.notEmpty(note) && ("null".equals(note) || "nu".equals(note))){
+            	note = "-";
+            }
             Integer sort = (Integer) map.get("sortno");
             //此重复用户只能通过个人信息多少判断保留，保留个人信息较全的一条，另一条删除
             if (("王训".equals(realName) || "赵舒武".equals(realName)) && ObjectUtil.isNull(sort)){

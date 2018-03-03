@@ -213,25 +213,33 @@ public interface WriterUserService {
 	 * @param writerUsers
 	 * @return
 	 */
-	Integer updateWriterUserRank(List<WriterUser> writerUsers);
+	Integer updateWriterUserRank(WriterUser writerUsers)throws CheckedServiceException;
 	/**
 	 * 查询教师认证数量
 	 * @param userid 
 	 * @return
 	 */
-	Integer getCount();
+	Integer getCount()throws CheckedServiceException;
 	
 	/**
 	 * 通过id查询用户级别
 	 * @param writerUsers
 	 * @return
 	 */
-	List<WriterUser> getWriterUserRankList(List<WriterUser> writerUsers);
+	List<WriterUser> getWriterUserRankList(List<WriterUser> writerUsers)throws CheckedServiceException;
 	/**
 	 * 通过作家用户id修改  为教师
 	 * @param writerUsers
 	 * @return
 	 */
-	Integer updateWriterUser(List<WriterUser> writerUsers);
+	Integer updateWriterUser(WriterUser writerUsers) throws CheckedServiceException;
+	
+	/**
+	 * 通过用户id查询用户信息
+	 * @param userIds
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	List<WriterUser> getWriterUserList(Long[] userIds) throws CheckedServiceException;
 
 }

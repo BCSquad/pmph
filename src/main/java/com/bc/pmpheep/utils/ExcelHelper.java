@@ -21,6 +21,7 @@ import com.bc.pmpheep.back.po.DecResearch;
 import com.bc.pmpheep.back.po.DecSci;
 import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
+import com.bc.pmpheep.back.po.DecTextbookPmph;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -455,7 +456,7 @@ public class ExcelHelper {
 							columnProperties = fillDecAcadeData(list, row, columnProperties);
 							break;
 						}
-						case "上版教材参编情况": {
+						case "本套上版教材参编情况": {
 							List<DecLastPosition> list = (List<DecLastPosition>) field.get(object);
 							columnProperties = fillDecLastPositionData(list, row, columnProperties);
 							break;
@@ -470,7 +471,12 @@ public class ExcelHelper {
 							columnProperties = fillDecNationalPlanData(list, row, columnProperties);
 							break;
 						}
-						case "教材编写情况": {
+						case "人卫社教材编写情况": {
+							List<DecTextbookPmph> list = (List<DecTextbookPmph>) field.get(object);
+							columnProperties = fillDecTextbookPmphData(list, row, columnProperties);
+							break;
+						}
+						case "其他社教材编写情况": {
 							List<DecTextbook> list = (List<DecTextbook>) field.get(object);
 							columnProperties = fillDecTextbookData(list, row, columnProperties);
 							break;
@@ -673,7 +679,7 @@ public class ExcelHelper {
 						count++;
 						break;
 					}
-					case "上版教材参编情况": {
+					case "本套上版教材参编情况": {
 						Cell r1cell = r1.createCell(count);
 						r1cell.setCellValue(headerName);
 						region = new CellRangeAddress(0, 0, count, count + 1);
@@ -726,7 +732,7 @@ public class ExcelHelper {
 						count++;
 						break;
 					}
-					case "教材编写情况": {
+					case "人卫社教材编写情况": {
 						Cell r1cell = r1.createCell(count);
 						r1cell.setCellValue(headerName);
 						region = new CellRangeAddress(0, 0, count, count + 4);
@@ -742,6 +748,37 @@ public class ExcelHelper {
 						r2cell = r2.createCell(count);
 						r2cell.setCellValue("编写职务");
 						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("出版时间");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("标准书号");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						break;
+					}
+					case "其他社教材编写情况": {
+						Cell r1cell = r1.createCell(count);
+						r1cell.setCellValue(headerName);
+						region = new CellRangeAddress(0, 0, count, count + 5);
+						sheet.addMergedRegion(region);
+						Cell r2cell = r2.createCell(count);
+						r2cell.setCellValue("教材名称");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("级别");
+						sheet.setColumnWidth(count, 3 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("编写职务");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("出版社");
+						sheet.setColumnWidth(count, 4 * 512);
 						count++;
 						r2cell = r2.createCell(count);
 						r2cell.setCellValue("出版时间");
@@ -1455,10 +1492,11 @@ public class ExcelHelper {
 		return properties;
 	}
 
-	private ColumnProperties fillDecTextbookData(List<DecTextbook> decTextbooks, Row row, ColumnProperties properties) {
+	private ColumnProperties fillDecTextbookPmphData(List<DecTextbookPmph> decTextbookPmphs, Row row,
+			ColumnProperties properties) {
 		int colCount = properties.getColCount();
 		int[] maxLength = properties.getMaxLength();
-		if (CollectionUtil.isEmpty(decTextbooks)) {
+		if (CollectionUtil.isEmpty(decTextbookPmphs)) {
 			for (int i = 0; i < 5; i++) {
 				row.createCell(colCount++);
 			}
@@ -1466,6 +1504,117 @@ public class ExcelHelper {
 			String value;
 			List<StringBuilder> builders = new ArrayList<>(5);
 			for (int i = 0; i < 5; i++) {
+				builders.add(new StringBuilder());
+			}
+			boolean isFirst = true;
+			for (DecTextbookPmph decTextbookPmph : decTextbookPmphs) {
+				if (isFirst == false) {
+					for (StringBuilder builder : builders) {
+						builder.append("\r\n");
+					}
+				} else {
+					isFirst = false;
+				}
+				int index = 0;
+				value = decTextbookPmph.getMaterialName();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				value = "其他";
+				switch (decTextbookPmph.getRank()) {
+				case 0:
+					value = "无";
+					break;
+				case 1:
+					value = "国家";
+					break;
+				case 2:
+					value = "省部";
+					break;
+				case 3:
+					value = "协编";
+					break;
+				case 4:
+					value = "校本";
+					break;
+				case 5:
+					value = "其他";
+					break;
+				default:
+					break;
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				value = "无";
+				switch (decTextbookPmph.getPosition()) {
+				case 1:
+					value = "主编";
+					break;
+				case 2:
+					value = "副主编";
+					break;
+				case 3:
+					value = "编委";
+					break;
+				default:
+					break;
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				if (ObjectUtil.isNull(decTextbookPmph.getPublishDate())) {
+					value = "";
+				} else {
+					value = sdf.format(decTextbookPmph.getPublishDate());
+				}
+
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				value = decTextbookPmph.getIsbn();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount = properties.getColCount();// 列数复位
+			}
+			for (int i = 0; i < 5; i++) {
+				Cell cell = row.createCell(colCount++);
+				value = builders.get(i).toString();
+				cell.setCellValue(value);
+			}
+		}
+		properties.setColCount(colCount);
+		properties.setMaxLength(maxLength);
+		return properties;
+	}
+
+	private ColumnProperties fillDecTextbookData(List<DecTextbook> decTextbooks, Row row, ColumnProperties properties) {
+		int colCount = properties.getColCount();
+		int[] maxLength = properties.getMaxLength();
+		if (CollectionUtil.isEmpty(decTextbooks)) {
+			for (int i = 0; i < 6; i++) {
+				row.createCell(colCount++);
+			}
+		} else {
+			String value;
+			List<StringBuilder> builders = new ArrayList<>(6);
+			for (int i = 0; i < 6; i++) {
 				builders.add(new StringBuilder());
 			}
 			boolean isFirst = true;
@@ -1489,6 +1638,9 @@ public class ExcelHelper {
 				colCount++;
 				value = "其他";
 				switch (decTextbook.getRank()) {
+				case 0:
+					value = "无";
+					break;
 				case 1:
 					value = "国家";
 					break;
@@ -1503,18 +1655,6 @@ public class ExcelHelper {
 					break;
 				case 5:
 					value = "其他";
-					break;
-				case 6:
-					value = "教育部规划";
-					break;
-				case 7:
-					value = "卫计委规划";
-					break;
-				case 8:
-					value = "区域规划";
-					break;
-				case 9:
-					value = "创新教材";
 					break;
 				default:
 					break;
@@ -1543,6 +1683,15 @@ public class ExcelHelper {
 					maxLength[colCount] = value.length();
 				}
 				colCount++;
+				value = decTextbook.getPublisher();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
 				if (ObjectUtil.isNull(decTextbook.getPublishDate())) {
 					value = "";
 				} else {
@@ -1564,7 +1713,7 @@ public class ExcelHelper {
 				}
 				colCount = properties.getColCount();// 列数复位
 			}
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 6; i++) {
 				Cell cell = row.createCell(colCount++);
 				value = builders.get(i).toString();
 				cell.setCellValue(value);
@@ -2070,16 +2219,17 @@ public class ExcelHelper {
 	/**
 	 * 
 	 * Description:用于设置选题号页面的导入功能
+	 * 
 	 * @author:lyc
 	 * @date:2018年1月23日下午6:03:03
-	 * @param 
+	 * @param
 	 * @return Workbook
 	 */
-	public Workbook fromTextbookTopic (List<Textbook> dataSource, String sheetName)
-			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException{
-		if (ObjectUtil.isNull(dataSource) || dataSource.isEmpty()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-					CheckedExceptionResult.NULL_PARAM, "用于导出的数据源为空");
+	public Workbook fromTextbookTopic(List<Textbook> dataSource, String sheetName)
+			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
+		if (ObjectUtil.isNull(dataSource) || dataSource.isEmpty()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
+					"用于导出的数据源为空");
 		}
 		Workbook workbook = new HSSFWorkbook();
 		Sheet sheet = workbook.createSheet(sheetName);
@@ -2090,7 +2240,7 @@ public class ExcelHelper {
 		header.createCell(3).setCellValue("选题号");
 		headerStyleSetup(workbook, 1);
 		int rowCount = 1;
-		for (Textbook textbook : dataSource){
+		for (Textbook textbook : dataSource) {
 			Row row = sheet.createRow(rowCount);
 			row.createCell(0).setCellValue(textbook.getSort());
 			row.createCell(1).setCellValue(textbook.getTextbookName());
@@ -2098,7 +2248,7 @@ public class ExcelHelper {
 			row.createCell(3).setCellValue(textbook.getTopicNumber());
 			rowCount++;
 		}
-		int[] maxLength = {2,12,2,12};
+		int[] maxLength = { 2, 12, 2, 12 };
 		return dataStyleSetup(workbook, 1, rowCount, new ColumnProperties(4, maxLength));
 	}
 }

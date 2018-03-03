@@ -5,42 +5,42 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.bc.pmpheep.back.po.BookVedio;
-import com.bc.pmpheep.back.vo.BookVedioVO2;
+import com.bc.pmpheep.back.po.BookVideo;
+import com.bc.pmpheep.back.vo.BookVideoVO;
  
 
 
 @org.springframework.stereotype.Repository
-public interface BookVedioDao {
+public interface BookVideoDao {
 	
 	/**
 	 * 新增 vedio
 	 * @introduction 
 	 * @author Mryang
 	 * @createDate 2018年1月31日  9:24:01
-	 * @param bookVedio
+	 * @param bookVideo
 	 * @return
 	 */
-	Integer addBookVedio(BookVedio bookVedio);
+	Integer addBookVideo(BookVideo bookVideo);
 	
 	/**
-	 * 根据文件ids删除BookVedio
+	 * 根据文件ids删除BookVideo
 	 * 2018年2月6日 上午11:11:36 
 	 * @param ids
 	 * @return
 	 */
-	Integer deleteBookVedioByIds(@Param("ids")List<Long> ids);
+	Integer deleteBookVideoByIds(@Param("ids")List<Long> ids);
 	
 	/**
 	 * 获取微视频列表总数
 	 * @return
 	 */
-	Integer           getVedioListTotal(Map<String, Object> map);
+	Integer           getVideoListTotal(Map<String, Object> map);
 	/**
 	 * 获取微视频列表
 	 * @return
 	 */
-	List<BookVedioVO2> getVedioList(Map<String, Object> map);
+	List<BookVideoVO> getVideoList(Map<String, Object> map);
 	
 	
 	/**
@@ -51,27 +51,27 @@ public interface BookVedioDao {
 	 * @param bookIds
 	 * @return
 	 */
-	List<BookVedio>  getBookVedioByBookIds  (@Param("bookIds")List<Long> bookIds);
+	List<BookVideo>  getBookVideoByBookIds  (@Param("bookIds")List<Long> bookIds);
 	
 	/**
 	 * 动态更新
 	 * @introduction 
 	 * @author Mryang
 	 * @createDate 2018年2月6日 下午5:10:58
-	 * @param bookVedio
+	 * @param bookVideo
 	 * @return
 	 */
-	Integer updateBookVedio(BookVedio bookVedio)  ;
+	Integer updateBookVideo(BookVideo bookVideo);
 	
 	/**
-	 * 根据文件上传路径获取BookVedio
+	 * 根据文件上传路径获取BookVideo
 	 * @introduction 
 	 * @author Mryang
 	 * @createDate 2018年1月31日  9:24:01
-	 * @param bookVedio
+	 * @param bookVideo
 	 * @return
 	 */
-	BookVedio  getBookVedioByOldPath(@Param("oldPath")String oldPath);
+	BookVideo  getBookVideoByOldPath(@Param("oldPath")String oldPath);
 	
 	
 }
