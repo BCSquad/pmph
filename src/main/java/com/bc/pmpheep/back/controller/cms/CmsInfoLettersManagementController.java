@@ -110,7 +110,8 @@ public class CmsInfoLettersManagementController {
                                                                     files,
                                                                     content,
                                                                     scheduledTime,
-                                                                    sessionId));
+                                                                    sessionId,
+                                                                    request));
         } catch (IOException e) {
             return new ResponseBean(e);
         }
@@ -158,7 +159,8 @@ public class CmsInfoLettersManagementController {
                                                                        attachment,
                                                                        null,
                                                                        scheduledTime,
-                                                                       sessionId));
+                                                                       sessionId,
+                                                                       request));
         } catch (IOException e) {
             return new ResponseBean(e);
         }

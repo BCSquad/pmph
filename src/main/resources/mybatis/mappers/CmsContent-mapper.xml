@@ -723,13 +723,19 @@
 		select * from cms_content where author_id=#{AuthorId}
 	</select>
 	
+	<!-- 通过作者id查询cmsContent -->
+	<select id="getCmsContentByParentId" parameterType="java.lang.Long"
+		resultType="CmsContent">
+		select * from cms_content where parent_id=#{parentId}
+	</select>
+	
 	<!-- 评论审核通过后，评论数加1/-1 -->
 	<update id="updatCmsContentCommentsById" parameterType="java.util.Map">
-		UPDATE `cms_content` SET comments=comments + #{comments} WHERE id = #{id};
+		UPDATE `cms_content` SET comments=comments + (#{comments}) WHERE id = #{id};
 	</update>
 	
 	<!-- 评论审核通过后，文章评论数加1/-1 -->
 	<update id="updateCmsContentByParentId" parameterType="java.util.Map">
-		UPDATE `cms_content` SET comments=comments + #{comments} WHERE category_id=1  AND id = #{id};
+		UPDATE `cms_content` SET comments=comments +(#{comments}) WHERE category_id=1  AND id = #{id};
 	</update>
 </mapper>

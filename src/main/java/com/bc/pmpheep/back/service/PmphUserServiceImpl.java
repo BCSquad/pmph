@@ -619,129 +619,148 @@ public class PmphUserServiceImpl implements PmphUserService {
         return materialPermission;
     }
 
-	@SuppressWarnings("unused")
-	@Override
-	public Map<String, Object> getPersonalCenter(HttpServletRequest request, String state, String materialName,
-			String groupName, String title, String bookname, String name, String authProgress, String topicBookname) {
-		String sessionId = CookiesUtil.getSessionId(request);
-		PmphUser sessionPmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-		if (null == sessionPmphUser) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"请求用户不存在");
-		}
-		//获取用户角色
-		List<PmphRole> rolelist=roleService.getPmphRoleByUserId(sessionPmphUser.getId());
-		// 用于装所有的数据map
-		Map<String, Object> map = new HashMap<>();
-		// 教师认证总数量
-		Integer writerUserCount = writerUserService.getCount();
-		// 机构认证数量orgList
-		Integer orgerCount = orgUserService.getCount();
-		// 教材申报数量
-//		Integer materialCount = materialService.getCount(sessionPmphUser.getId());
-		// 选题申报数量
-//		Integer topicCount = topicService.getCount(sessionPmphUser.getId());
-		// 小组
-		PmphGroupListVO pmphGroup = new PmphGroupListVO();
-		if (ObjectUtil.notNull(groupName)) {
-			pmphGroup.setGroupName(groupName.trim());
-		}
-		PageParameter<PmphGroupListVO> pageParameterPmphGroup = new PageParameter<>();
-		pageParameterPmphGroup.setParameter(pmphGroup);
-		// 小组结果
-		PageResult<PmphGroupListVO> pageResultPmphGroup = pmphGroupService.getlistPmphGroup(pageParameterPmphGroup,
-				sessionId);
-		// 教材申报
-		PageParameter<MaterialListVO> pageParameter2 = new PageParameter<>();
-		MaterialListVO materialListVO = new MaterialListVO();
-		materialListVO.setState(state);
-		materialListVO.setMaterialName(materialName);
-		pageParameter2.setParameter(materialListVO);
-		// 教材申报的结果
-		PageResult<MaterialListVO> pageResultMaterialListVO = materialService.listMaterials(pageParameter2, sessionId);
-//		if(booleans){
-			// 文章审核
-			PageParameter<CmsContentVO> pageParameter1 = new PageParameter<>();
-			CmsContentVO cmsContentVO = new CmsContentVO();
-			cmsContentVO.setTitle(title);
-			cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_1);
-			pageParameter1.setParameter(cmsContentVO);
-			//文章审核的结果
-			PageResult<CmsContentVO> pageResultCmsContentVO = cmsContentService.listCmsContent(pageParameter1, sessionId);
-			map.put("cmsContent", pageResultCmsContentVO);
-//		}
-//		for (PmphRole pmphRole : rolelist) {
-//			if("策划编辑".equals(pmphRole.getRoleName())||"系统管理员".equals(pmphRole.getRoleName())){
-				// 图书纠错审核
-				PageResult<BookCorrectionAuditVO> pageResultBookCorrectionAuditVO = bookCorrectionService
-						.listBookCorrectionAudit(request, Const.PAGE_NUMBER, Const.PAGE_SIZE, bookname, null, null);
-				map.put("bookCorrectionAudit", pageResultBookCorrectionAuditVO);
-//			}
-//		}
-		// 图书评论审核
-//		if(sessionPmphUser.getIsAdmin()){
-			PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
-			BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
-			bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
-			pageParameter.setParameter(bookUserCommentVO);
-			PageResult<BookUserCommentVO> pageResultBookUserCommentVO = bookUserCommentService
-					.listBookUserCommentAdmin(pageParameter);
-			map.put("bookUserComment", pageResultBookUserCommentVO);
-//		}
-		// 选题申报
-		PageParameter<TopicDeclarationVO> pageParameter3 = new PageParameter<>();
-		//选题申报当前用户角色
-		PmphIdentity pmphIdentity=pmphUserService.identity(sessionId);
-		TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
-		//当用户时admin查询所有
-		//是否由主任受理
-		if(pmphIdentity.getIsDirector()){
-			topicDeclarationVO.setIsDirectorHandling(true);
-		}
-		//是否由运维人员受理
-		if(pmphIdentity.getIsOpts()){
-			topicDeclarationVO.setIsOptsHandling(true);
-		}
-		//是否由编辑受理
-		if(pmphIdentity.getIsEditor()){
-			topicDeclarationVO.setIsEditorHandling(true);
-		}
-		String[] strs = authProgress.split(",");
-		List<Long> progress = new ArrayList<>();
-		for (String str : strs) {
-			progress.add(Long.valueOf(str));
-		}
-		topicDeclarationVO.setBookname(topicBookname);
-		pageParameter3.setParameter(topicDeclarationVO);
-		if(pmphIdentity.getIsAdmin()||pmphIdentity.getIsDirector()||pmphIdentity.getIsOpts()){
-			PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO = topicService.listMyTopic(progress,
-					pageParameter3);
-			map.put("topicList", pageResultTopicDeclarationVO);
-		}
-		//获取用户上次登录时间
-		List<SysOperation> listSysOperation=sysOperationService.getSysOperation(sessionPmphUser.getId());
-		Timestamp loginTime=null;
-		//获取最后一次登录时间
-		if(listSysOperation != null && listSysOperation.size() >= 2){
-			loginTime=listSysOperation.get(listSysOperation.size()-1).getOperateDate();
-		}else {
-			loginTime=listSysOperation.get(0).getOperateDate();
-		}
-		// 把其他模块的数据都装入map中返回给前端
-		map.put("materialList", pageResultMaterialListVO);
-		map.put("pmphGroup", pageResultPmphGroup);
-		map.put("writerUserCount", writerUserCount);
-		map.put("orgUserCount", orgerCount);
-		//把用户信息存入map
-		map.put("pmphUser", sessionPmphUser);
-		//把用户角色存入map
-		map.put("pmphRole", rolelist);
-		//把选题申报的当前身份存入map
-		map.put("pmphIdentity", pmphIdentity);
-		//存入用户上次操作时间
-		map.put("loginTime", loginTime);
-		return map;
-	}
+    @SuppressWarnings("unused")
+    @Override
+    public Map<String, Object> getPersonalCenter(HttpServletRequest request, String state,
+    String materialName, String groupName, String title, String bookname, String name,
+    String authProgress, String topicBookname) {
+        String sessionId = CookiesUtil.getSessionId(request);
+        PmphUser sessionPmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (null == sessionPmphUser) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "请求用户不存在");
+        }
+        // 获取用户角色
+        List<PmphRole> rolelist = roleService.getPmphRoleByUserId(sessionPmphUser.getId());
+        // 用于装所有的数据map
+        Map<String, Object> map = new HashMap<>();
+        // 教师认证总数量
+        Integer writerUserCount = writerUserService.getCount();
+        // 机构认证数量orgList
+        Integer orgerCount = orgUserService.getCount();
+        // 教材申报数量
+        // Integer materialCount = materialService.getCount(sessionPmphUser.getId());
+        // 选题申报数量
+        // Integer topicCount = topicService.getCount(sessionPmphUser.getId());
+        // 小组
+        PmphGroupListVO pmphGroup = new PmphGroupListVO();
+        if (ObjectUtil.notNull(groupName)) {
+            pmphGroup.setGroupName(groupName.trim());
+        }
+        PageParameter<PmphGroupListVO> pageParameterPmphGroup = new PageParameter<>();
+        pageParameterPmphGroup.setParameter(pmphGroup);
+        // 小组结果
+        PageResult<PmphGroupListVO> pageResultPmphGroup =
+        pmphGroupService.getlistPmphGroup(pageParameterPmphGroup, sessionId);
+        // 教材申报
+        PageParameter<MaterialListVO> pageParameter2 = new PageParameter<>();
+        MaterialListVO materialListVO = new MaterialListVO();
+        materialListVO.setState(state);
+        materialListVO.setMaterialName(materialName);
+        pageParameter2.setParameter(materialListVO);
+        // 教材申报的结果
+        PageResult<MaterialListVO> pageResultMaterialListVO =
+        materialService.listMaterials(pageParameter2, sessionId);
+        // if(booleans){
+        // 文章审核
+        PageParameter<CmsContentVO> pageParameter1 = new PageParameter<>();
+        CmsContentVO cmsContentVO = new CmsContentVO();
+        cmsContentVO.setTitle(title);
+        cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_1);
+        pageParameter1.setParameter(cmsContentVO);
+        // 文章审核的结果
+        PageResult<CmsContentVO> pageResultCmsContentVO =
+        cmsContentService.listCmsContent(pageParameter1, sessionId);
+        map.put("cmsContent", pageResultCmsContentVO);
+        // }
+        // for (PmphRole pmphRole : rolelist) {
+        // if("策划编辑".equals(pmphRole.getRoleName())||"系统管理员".equals(pmphRole.getRoleName())){
+        // 图书纠错审核
+        PageResult<BookCorrectionAuditVO> pageResultBookCorrectionAuditVO =
+        bookCorrectionService.listBookCorrectionAudit(request,
+                                                      Const.PAGE_NUMBER,
+                                                      Const.PAGE_SIZE,
+                                                      bookname,
+                                                      null,
+                                                      null);
+        map.put("bookCorrectionAudit", pageResultBookCorrectionAuditVO);
+        // }
+        // }
+        // 图书评论审核
+        // if(sessionPmphUser.getIsAdmin()){
+        PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
+        BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
+        bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
+        pageParameter.setParameter(bookUserCommentVO);
+        PageResult<BookUserCommentVO> pageResultBookUserCommentVO =
+        bookUserCommentService.listBookUserCommentAdmin(pageParameter);
+        map.put("bookUserComment", pageResultBookUserCommentVO);
+        // }
+        // 选题申报
+        PageParameter<TopicDeclarationVO> pageParameter3 = new PageParameter<>();
+        // 选题申报当前用户角色
+        PmphIdentity pmphIdentity = pmphUserService.identity(sessionId);
+        TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
+        // 当用户时admin查询所有
+        // 是否由主任受理
+        if (pmphIdentity.getIsDirector()) {
+            topicDeclarationVO.setIsDirectorHandling(true);
+        }
+        // 是否由运维人员受理
+        if (pmphIdentity.getIsOpts()) {
+            topicDeclarationVO.setIsOptsHandling(true);
+        }
+        // 是否由编辑受理
+        if (pmphIdentity.getIsEditor()) {
+            topicDeclarationVO.setIsEditorHandling(true);
+        }
+        String[] strs = authProgress.split(",");
+        List<Long> progress = new ArrayList<>();
+        for (String str : strs) {
+            progress.add(Long.valueOf(str));
+        }
+        topicDeclarationVO.setBookname(topicBookname);
+        pageParameter3.setParameter(topicDeclarationVO);
+        if (pmphIdentity.getIsAdmin() || pmphIdentity.getIsDirector() || pmphIdentity.getIsOpts()) {
+            PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
+            topicService.listMyTopic(progress, pageParameter3);
+            map.put("topicList", pageResultTopicDeclarationVO);
+        }else{
+        	PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =new PageResult<>();
+	    	List<TopicDeclarationVO> list = new ArrayList<>();
+	    	pageResultTopicDeclarationVO.setPageNumber(0);
+	    	pageResultTopicDeclarationVO.setRows(list);
+	    	pageResultTopicDeclarationVO.setPageTotal(0);
+	    	pageResultTopicDeclarationVO.setStart(0);
+	    	pageResultTopicDeclarationVO.setTotal(0);;
+        	map.put("topicList", pageResultTopicDeclarationVO);
+        }
+        // 获取用户上次登录时间
+        List<SysOperation> listSysOperation =
+        sysOperationService.getSysOperation(sessionPmphUser.getId());
+        Timestamp loginTime = listSysOperation.get(0).getOperateDate();
+        // 获取最后一次登录时间
+        // if(listSysOperation != null && listSysOperation.size() >= 2){
+        // loginTime=listSysOperation.get(listSysOperation.size()-1).getOperateDate();
+        // }else {
+        // loginTime=listSysOperation.get(0).getOperateDate();
+        // }
+        // 把其他模块的数据都装入map中返回给前端
+        map.put("materialList", pageResultMaterialListVO);
+        map.put("pmphGroup", pageResultPmphGroup);
+        map.put("writerUserCount", writerUserCount);
+        map.put("orgUserCount", orgerCount);
+        // 把用户信息存入map
+        map.put("pmphUser", sessionPmphUser);
+        // 把用户角色存入map
+        map.put("pmphRole", rolelist);
+        // 把选题申报的当前身份存入map
+        map.put("pmphIdentity", pmphIdentity);
+        // 存入用户上次操作时间
+        map.put("loginTime", loginTime);
+        return map;
+    }
+
     @Override
     public PageResult<PmphEditorVO> listEditors(PageParameter<PmphEditorVO> pageParameter)
     throws CheckedServiceException {

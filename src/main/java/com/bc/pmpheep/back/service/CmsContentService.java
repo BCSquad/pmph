@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -55,7 +57,8 @@ public interface CmsContentService {
      * </pre>
      */
     CmsContent addCmsContent(CmsContent cmsContent, String[] files, String content,
-    String scheduledTime, String sessionId) throws CheckedServiceException, IOException;
+    String scheduledTime, String sessionId, HttpServletRequest request)
+    throws CheckedServiceException, IOException;
 
     /**
      * 
@@ -70,7 +73,7 @@ public interface CmsContentService {
      */
     Integer updateCmsContent(CmsContent cmsContent, String[] files, String[] imgFile,
     String content, String[] attachment, String[] imgAttachment, String scheduledTime,
-    String sessionId) throws CheckedServiceException, IOException;
+    String sessionId, HttpServletRequest request) throws CheckedServiceException, IOException;
 
     /**
      * 更新CmsContent对象
@@ -295,4 +298,16 @@ public interface CmsContentService {
      */
     Integer updateCmsContentByParentId(@Param("id") Long id, @Param("comments") Integer comments)
     throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据ParentId查询CMSContent集合
+     * 使用示范：
+     *
+     * @param parentId 
+     * @return CmsContent对象集合
+     * </pre>
+     */
+    List<CmsContent> getCmsContentByParentId(Long parentId) throws CheckedServiceException;
 }
