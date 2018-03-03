@@ -727,4 +727,9 @@
 	<update id="updatCmsContentCommentsById" parameterType="java.util.Map">
 		UPDATE `cms_content` SET comments=comments + #{comments} WHERE id = #{id};
 	</update>
+	
+	<!-- 评论审核通过后，文章评论数加1/-1 -->
+	<update id="updateCmsContentByParentId" parameterType="java.util.Map">
+		UPDATE `cms_content` SET comments=comments + #{comments} WHERE category_id=1  AND id = #{id};
+	</update>
 </mapper>

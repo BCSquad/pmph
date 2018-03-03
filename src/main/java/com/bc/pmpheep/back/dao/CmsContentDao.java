@@ -240,4 +240,17 @@ public interface CmsContentDao {
      * </pre>
      */
     Integer updateCmsContentByMaterialId(Long materialId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据parent_id更新文章评论数
+     * 使用示范：
+     *
+     * @param id CmsContent主键
+     * @param comments 1/-1
+     * @return  影响行数
+     * </pre>
+     */
+    Integer updateCmsContentByParentId(@Param("id") Long id, @Param("comments") Integer comments);
 }
