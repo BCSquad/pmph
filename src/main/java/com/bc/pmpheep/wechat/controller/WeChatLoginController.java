@@ -63,12 +63,11 @@ public class WeChatLoginController {
             } else {
                 PmphUser pu = pmphUserService.getPmphUserByUsername(pmphUserWechat.getUsername());
                 if (ObjectUtil.notNull(pu)) {
-                    String username = pmphUserWechat.getUsername();
-                    String password = new DesRun(pu.getPassword()).depsw;
-                    model.addAttribute(Const.PMPH_WECHAT_USER_TOKEN, new DesRun(password,
-                                                                                username + password
-                                                                                + wechatUserId
-                                                                                + "pmph").enpsw);
+                    String username = new DesRun(null, pmphUserWechat.getUsername()).enpsw;
+                    String password = pu.getPassword();
+                    model.addAttribute(Const.PMPH_WECHAT_USER_TOKEN,
+                                       new DesRun(password, username + password + wechatUserId
+                                                            + "<pmpheep>").enpsw);
                     model.addAttribute("username", username);
                     model.addAttribute("password", password);
                     model.addAttribute("isLogin", "1");
