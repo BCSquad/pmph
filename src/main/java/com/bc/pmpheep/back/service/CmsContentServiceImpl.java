@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -478,11 +479,15 @@ public class CmsContentServiceImpl implements CmsContentService {
         resultMap.put("content", content);
         // 按contentId 获取CMS内容附件
         List<CmsExtra> cmsExtras = cmsExtraService.getCmsExtraByContentId(id);
+        List<CmsExtra> cmsList = new ArrayList<CmsExtra>(cmsExtras.size());
         for (CmsExtra cmsExtra : cmsExtras) {
             String attachment = cmsExtra.getAttachment();
-            cmsExtra.setAttachment(fileDownLoadType + attachment);// 拼接附件下载路径
+            if (!attachment.equals(cmsContent.getCover())) {
+                cmsExtra.setAttachment(fileDownLoadType + attachment);// 拼接附件下载路径
+                cmsList.add(cmsExtra);
+            }
         }
-        resultMap.put("cmsExtras", cmsExtras);
+        resultMap.put("cmsExtras", cmsList);
         // 根据MaterialId 获取教材备注附件
         List<MaterialNoteAttachment> materialNoteAttachments = null;
         if (Const.TRUE == cmsContent.getIsMaterialEntry()) {
@@ -504,7 +509,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         resultMap.put("imgFileName", imgFileName);
         if (!"DEFAULT".equals(cmsContent.getCover())) {
-            imgFilePath = "/img/" + cmsContent.getCover();
+            imgFilePath = RouteUtil.MONGODB_IMAGE + cmsContent.getCover();
         }
         resultMap.put("imgFilePath", imgFilePath);
         return resultMap;
