@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageResult;
-import com.bc.pmpheep.back.po.BookVedio;
-import com.bc.pmpheep.back.service.BookVedioService;
+import com.bc.pmpheep.back.po.BookVideo;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.vo.BookVedioVO;
-import com.bc.pmpheep.back.vo.BookVedioVO2;
+import com.bc.pmpheep.back.vo.PastBookVideoVO;
+import com.bc.pmpheep.back.vo.BookVideoVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.bc.pmpheep.back.service.BookVideoService;
 
 /**
  *@author MrYang 
@@ -26,14 +26,14 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  *
  **/
 @Controller
-@RequestMapping("/bookVedio")
-public class BookVedioController {
+@RequestMapping("/bookVideo")
+public class BookVideoController {
 	
 	// 当前业务类型
 	private static final String BUSSINESS_TYPE = "微视频";
 		
 	@Autowired
-	private BookVedioService bookVedioService;
+	private BookVideoService bookVideoService;
 	/**
 	 * 查询书籍视频
 	 * @introduction 
@@ -45,9 +45,9 @@ public class BookVedioController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="/getVedioList", method = RequestMethod.GET)
+	@RequestMapping(value="/getVideoList", method = RequestMethod.GET)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询书籍视频列表")
-	public ResponseBean<PageResult<BookVedioVO2>> getVedioList(
+	public ResponseBean<PageResult<BookVideoVO>> getVideoList(
 			Integer pageSize, 
 			Integer pageNumber, 
 			String bookName,
@@ -56,8 +56,8 @@ public class BookVedioController {
 			String  upLoadTimeEnd){
 		pageSize   = (pageSize   == null || pageSize   <= 0 )? 5:pageSize;
 		pageNumber = (pageNumber == null || pageNumber <= 0 )? 1:pageNumber;
-		return new ResponseBean<PageResult<BookVedioVO2>>(
-				bookVedioService.getVedioList(pageSize,pageNumber,bookName,state,upLoadTimeStart,upLoadTimeEnd));
+		return new ResponseBean<PageResult<BookVideoVO>>(
+				bookVideoService.getVideoList(pageSize,pageNumber,bookName,state,upLoadTimeStart,upLoadTimeEnd));
 	}
 	
 	
@@ -74,10 +74,10 @@ public class BookVedioController {
 	@ResponseBody
 	@RequestMapping(value="/getList", method = RequestMethod.GET)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询书籍视频列表")
-	public ResponseBean<PageResult<BookVedioVO>> getList(Integer pageSize, Integer pageNumber, String bookName){
+	public ResponseBean<PageResult<PastBookVideoVO>> getList(Integer pageSize, Integer pageNumber, String bookName){
 		pageSize   = (pageSize   == null || pageSize   <= 0 )? 5:pageSize;
 		pageNumber = (pageNumber == null || pageNumber <= 0 )? 1:pageNumber;
-		return new ResponseBean<PageResult<BookVedioVO>>(bookVedioService.getList(pageSize, pageNumber, bookName));
+		return new ResponseBean<PageResult<PastBookVideoVO>>(bookVideoService.getList(pageSize, pageNumber, bookName));
 	}
 	
 	/**
@@ -94,13 +94,13 @@ public class BookVedioController {
 	@RequestMapping(value="/audit", method = RequestMethod.PUT)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "审核视频")
 	public ResponseBean<Integer> audit(HttpServletRequest request,Long id,Boolean isAuth){
-		BookVedio bookVedio = new BookVedio();
-		bookVedio
+		BookVideo bookVideo = new BookVideo();
+		bookVideo
 			.setId(id)
 			.setAuthDate(new Date())
 			.setAuthUserId(SessionUtil.getPmphUserBySessionId(CookiesUtil.getSessionId(request)).getId())
 			.setIsAuth(isAuth==null ? false:isAuth); 
-		return new ResponseBean<Integer>(bookVedioService.updateBookVedio(bookVedio));
+		return new ResponseBean<Integer>(bookVideoService.updateBookVideo(bookVideo));
 	}
 	
 	/**
@@ -114,10 +114,10 @@ public class BookVedioController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="/deleteBookVedio", method = RequestMethod.PUT)
+	@RequestMapping(value="/deleteBookVideo", method = RequestMethod.PUT)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除视频")
-	public ResponseBean<Integer> deleteBookVedio(Long id){
-		return new ResponseBean<Integer>(bookVedioService.deleteBookVedioByIds(Arrays.asList(new Long[]{id})));
+	public ResponseBean<Integer> deleteBookVideo(Long id){
+		return new ResponseBean<Integer>(bookVideoService.deleteBookVideoByIds(Arrays.asList(new Long[]{id})));
 	}
 	
 	/**
@@ -125,16 +125,16 @@ public class BookVedioController {
 	 * @introduction 
 	 * @author Mryang
 	 * @createDate 2018年2月10日 下午5:34:12
-	 * @param bookVedio
+	 * @param bookVideo
 	 * @return
 	 * @throws Exception 
 	 * @throws CheckedServiceException 
 	 */
 	@ResponseBody
-	@RequestMapping(value="/addBookVedio", method = RequestMethod.POST)
+	@RequestMapping(value="/addBookVideo", method = RequestMethod.POST)
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存籍视频信息")
-	public ResponseBean<Integer> addBookVedio(HttpServletRequest request,BookVedio bookVedio) throws Exception{
-		return new ResponseBean<Integer>(bookVedioService.addBookVedio(request,bookVedio));
+	public ResponseBean<Integer> addBookVideo(HttpServletRequest request,BookVideo bookVideo) throws Exception{
+		return new ResponseBean<Integer>(bookVideoService.addBookVideo(request,bookVideo));
 	}
 	
 }

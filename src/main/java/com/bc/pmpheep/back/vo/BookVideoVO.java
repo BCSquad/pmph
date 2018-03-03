@@ -8,8 +8,8 @@ import java.io.Serializable;
  * 2018年1月31日  上午8:53:35
  */
 @SuppressWarnings("serial")
-@org.apache.ibatis.type.Alias("BookVedioVO2")
-public class BookVedioVO2 implements Serializable{
+@org.apache.ibatis.type.Alias("BookVideoVO")
+public class BookVideoVO implements Serializable{
 	
 	//主键
 	private Long id;
@@ -31,7 +31,7 @@ public class BookVedioVO2 implements Serializable{
 	private Boolean isAuth;
 	
 	
-	public BookVedioVO2() {
+	public BookVideoVO() {
 		super();
 	}
 
