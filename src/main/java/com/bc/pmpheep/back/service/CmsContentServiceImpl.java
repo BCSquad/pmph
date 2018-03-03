@@ -321,6 +321,9 @@ public class CmsContentServiceImpl implements CmsContentService {
             for (int i = 0; i < imgAttachment.length; i++) {
                 fileService.remove(imgAttachment[i]);
             }
+            if (ArrayUtil.isEmpty(imgFile)) {// 如果删除了封面没上传，就使用默认封面
+                this.updateCmsContent(new CmsContent(cmsContent.getId(), "DEFAULT"));
+            }
         }
         // 保存附件到MongoDB
         this.saveFileToMongoDB(request, files, imgFile, cmsContent.getId());
