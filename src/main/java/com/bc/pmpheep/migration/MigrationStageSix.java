@@ -102,7 +102,7 @@ public class MigrationStageSix {
     FileService fileService;
     @Resource
     ExcelHelper excelHelper;
-    
+
     @Autowired
     private MaterialService materialService;
 
@@ -139,38 +139,38 @@ public class MigrationStageSix {
         String tableName = "writer_declaration";// 要迁移的旧库表名
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
         String sql = "select wd.writerid,wd.materid,wd.writername,s.usercode,s.username,"
-        		+ "wd.sex,wd.birthdate,wd.seniority,wd.duties,wd.positional,wd.address,"
-        		+ "wd.postcode,wd.handset,wd.email,wd.idcardtype,"
-        		+ "IFNULL(wd.idcardtype,0) idcardtype,"
-        		+ "wd.idcard,wd.linktel,wd.fax,tm.new_pk tm_materid,"
-        		+ "s.new_pk sys_userid,wd.unitid,bo.new_pk org_id,wd.workunit,"
-        		+ "case when wd.submittype=10 then 0 "
-        		+ "when wd.submittype=11 and ta.auditstate=10 then 1 "
-        		+ "when ta.auditstate=12 and wd.submittype=11 then 2 "
-        		+ "when ta.auditstate=11 and wd.submittype=11 then 3 "
-        		+ "when wd.submittype=11 then 1 "
-        		+ "when wd.submittype=12 then 2 "
-        		+ "end online_progress,wd.submittype,ta.auditstate,ta.auditdate,"
-        		+ "case when eup.new_pk is not null then eup.new_pk else null "
-        		+ "end auth_user_id,"
-        		+ "case when ta.isreceivedpaper=0 then 2 "
-        		+ "when ta.isreceivedpaper=1 then 0 "
-        		+ "when ta.isreceivedpaper is null then 0 "
-        		+ "end offline_progress,"
-        		+ "ta.isreceivedpaper,ta.editauditstate,"
-        		+ "case when wd.submittype=10 then 1 "
-        		+ "else 0 end is_staging,wd.submittype,ta.editauditdate,"
-        		+ "wd.userid,s.sysflag,su.usertype "
-        		+ "from writer_declaration wd "
-        		+ "left join teach_material tm on tm.materid=wd.materid "
-        		+ "left join ba_organize bo on bo.orgid=wd.unitid "
-        		+ "left join sys_user s on s.userid=wd.userid "
-        		+ "left join sys_userext su on su.userid=wd.userid "
-        		+ "left join (select writerid,auditstate,auditid,editauditid,auditdate,"
-        		+ "isreceivedpaper,editauditstate,editauditdate "
-        		+ "from teach_applyposition group by writerid) ta "
-        		+ "left join sys_user eup on eup.userid = ta.editauditid "
-        		+ "on ta.writerid=wd.writerid ";
+                + "wd.sex,wd.birthdate,wd.seniority,wd.duties,wd.positional,wd.address,"
+                + "wd.postcode,wd.handset,wd.email,wd.idcardtype,"
+                + "IFNULL(wd.idcardtype,0) idcardtype,"
+                + "wd.idcard,wd.linktel,wd.fax,tm.new_pk tm_materid,"
+                + "s.new_pk sys_userid,wd.unitid,bo.new_pk org_id,wd.workunit,"
+                + "case when wd.submittype=10 then 0 "
+                + "when wd.submittype=11 and ta.auditstate=10 then 1 "
+                + "when ta.auditstate=12 and wd.submittype=11 then 2 "
+                + "when ta.auditstate=11 and wd.submittype=11 then 3 "
+                + "when wd.submittype=11 then 1 "
+                + "when wd.submittype=12 then 2 "
+                + "end online_progress,wd.submittype,ta.auditstate,ta.auditdate,"
+                + "case when eup.new_pk is not null then eup.new_pk else null "
+                + "end auth_user_id,"
+                + "case when ta.isreceivedpaper=0 then 2 "
+                + "when ta.isreceivedpaper=1 then 0 "
+                + "when ta.isreceivedpaper is null then 0 "
+                + "end offline_progress,"
+                + "ta.isreceivedpaper,ta.editauditstate,"
+                + "case when wd.submittype=10 then 1 "
+                + "else 0 end is_staging,wd.submittype,ta.editauditdate,"
+                + "wd.userid,s.sysflag,su.usertype "
+                + "from writer_declaration wd "
+                + "left join teach_material tm on tm.materid=wd.materid "
+                + "left join ba_organize bo on bo.orgid=wd.unitid "
+                + "left join sys_user s on s.userid=wd.userid "
+                + "left join sys_userext su on su.userid=wd.userid "
+                + "left join (select writerid,auditstate,auditid,editauditid,auditdate,"
+                + "isreceivedpaper,editauditstate,editauditdate "
+                + "from teach_applyposition group by writerid) ta "
+                + "left join sys_user eup on eup.userid = ta.editauditid "
+                + "on ta.writerid=wd.writerid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql); // 查询所有数据
         int count = 0; // 迁移成功的条目数
         int materialidCount = 0;
@@ -229,29 +229,29 @@ public class MigrationStageSix {
                 continue;
             }
             if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id)) {
-            	String sqlId = "SELECT *,new_pk userIds FROM sys_user "
-            			+ "where usercode = '18045661072' and username = '李勇'";
-            	List<Map<String, Object>> mapIds = JdbcHelper.getJdbcTemplate().queryForList(sqlId);
-            	for (Map<String, Object> mapId : mapIds) {
-                	Long userId = (Long) mapId.get("userIds");
-                	String usercode = (String) mapId.get("usercode");
-                	String username = (String) mapId.get("username");
-                	if ("18045661072".equals(usercode) && "李勇".equals(username)) {
-                		declaration.setUserId(userId);
-                	}
-            	}
+                String sqlId = "SELECT *,new_pk userIds FROM sys_user "
+                        + "where usercode = '18045661072' and username = '李勇'";
+                List<Map<String, Object>> mapIds = JdbcHelper.getJdbcTemplate().queryForList(sqlId);
+                for (Map<String, Object> mapId : mapIds) {
+                    Long userId = (Long) mapId.get("userIds");
+                    String usercode = (String) mapId.get("usercode");
+                    String username = (String) mapId.get("username");
+                    if ("18045661072".equals(usercode) && "李勇".equals(username)) {
+                        declaration.setUserId(userId);
+                    }
+                }
             } else {
                 declaration.setUserId(userid);
-			}
+            }
             if (StringUtil.isEmpty(realName) && isStagingJudge.intValue() == 0) { // 申报表作家姓名为空并且没有暂存
-            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空并且没有暂存。"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空并且没有暂存。"));
                 realNameCount++;
                 /*excel.add(map);
                 logger.debug("找到申报表作家姓名为空并且没有暂存，此结果将被记录在Excel中");
                 continue;*/
             } else {
-            	declaration.setRealname(realName);
-			}
+                declaration.setRealname(realName);
+            }
             if (StringUtil.isEmpty(sexJudge)) {
                 declaration.setSex(1);
             } else {
@@ -269,10 +269,10 @@ public class MigrationStageSix {
             declaration.setAddress((String) map.get("address")); // 联系地址
             if (StringUtil.strLength(postCode) > 20 && "55894b98-6b15-4210-9460-11bdf6e8e89c".equals(id)) {
                 declaration.setPostcode("100000");
-            } else if("097674e55b094bb58e99c09f12b4e124".equals(id)) {
-            	declaration.setPostcode("434020");
-            } else if("245328b530b04523ab26e6b70d7764d8".equals(id)) {
-            	declaration.setPostcode("211199");
+            } else if ("097674e55b094bb58e99c09f12b4e124".equals(id)) {
+                declaration.setPostcode("434020");
+            } else if ("245328b530b04523ab26e6b70d7764d8".equals(id)) {
+                declaration.setPostcode("211199");
             } else {
                 declaration.setPostcode(postCode); // 邮编
             }
@@ -287,10 +287,10 @@ public class MigrationStageSix {
             declaration.setDegree(0); // 学历
             declaration.setExpertise(null); // 专业特长
             if ("5".equals(unitid)) { // 旧表申报单位id为5的话orgid设置成0
-            	declaration.setOrgId(0L); // 0为人民卫生出版社
+                declaration.setOrgId(0L); // 0为人民卫生出版社
             } else {
-            	declaration.setOrgId(orgId); // 申报单位id
-			}
+                declaration.setOrgId(orgId); // 申报单位id
+            }
             if (ObjectUtil.notNull(onlineProgressJudge)) {
                 Integer onlineProgress = onlineProgressJudge.intValue(); // 审核进度
                 declaration.setOnlineProgress(onlineProgress);
@@ -312,10 +312,10 @@ public class MigrationStageSix {
             } else {
                 Integer isStaging = isStagingJudge.intValue(); // 是否暂存
                 if (isStaging.equals(0)) {
-                	declaration.setIsStaging(false);
+                    declaration.setIsStaging(false);
                 } else {
-                	declaration.setIsStaging(true);
-				}
+                    declaration.setIsStaging(true);
+                }
             }
             declaration.setIsDeleted(false); // 是否被逻辑删除
             Declaration dec = declarationService.getDeclarationByMaterialIdAndUserId(declaration.getMaterialId(),
@@ -783,8 +783,8 @@ public class MigrationStageSix {
             if (StringUtil.notEmpty(isbn)) {
                 isbn = isbn.trim();
                 isbn = isbn.replace("ISBN", "ISBN ").replace("isbn", "ISBN ").replace(":", "")
-                		.replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
-                		.replace("•", "·");
+                        .replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
+                        .replace("•", "·");
             }
             decNationalPlan.setIsbn(isbn);
             Integer rank = rankJudge.intValue();
@@ -844,7 +844,7 @@ public class MigrationStageSix {
             String isbn = (String) map.get("booknumber"); // 标准书号
             DecTextbook decTextbook = new DecTextbook();
             DecTextbookPmph decTextbookPmph = new DecTextbookPmph();
-        	if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
+            if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
@@ -854,38 +854,38 @@ public class MigrationStageSix {
             if (StringUtil.notEmpty(isbn)) {
                 isbn = isbn.trim();
                 isbn = isbn.replace("ISBN", "ISBN ").replace("isbn", "ISBN ").replace(":", "")
-                		.replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
-                		.replace("•", "·");
+                        .replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
+                        .replace("•", "·");
             }
             Integer rank = rankJudge.intValue();
             if (ObjectUtil.isNull(rank)) {
-            	rank = 0;
+                rank = 0;
             }
             publisher = publisher == null ? "" : publisher;
             if (!"人民卫生出版社".equals(publisher.trim())) {
-	            decTextbook.setDeclarationId(declarationid);
-	            decTextbook.setMaterialName(materialName);
-	            decTextbook.setRank(rank);
-	            Integer position = positionJudge.intValue();
-	            decTextbook.setPosition(position);
-	        	decTextbook.setPublisher(publisher);
-	            decTextbook.setPublishDate(publishDate);
-	            decTextbook.setIsbn(isbn);
-	            decTextbook.setNote((String) map.get("remark")); // 备注
-	            decTextbook.setSort(999); // 显示顺序
-	            decTextbook = decTextbookService.addDecTextbook(decTextbook);
+                decTextbook.setDeclarationId(declarationid);
+                decTextbook.setMaterialName(materialName);
+                decTextbook.setRank(rank);
+                Integer position = positionJudge.intValue();
+                decTextbook.setPosition(position);
+                decTextbook.setPublisher(publisher);
+                decTextbook.setPublishDate(publishDate);
+                decTextbook.setIsbn(isbn);
+                decTextbook.setNote((String) map.get("remark")); // 备注
+                decTextbook.setSort(999); // 显示顺序
+                decTextbook = decTextbookService.addDecTextbook(decTextbook);
             } else {
-	            decTextbookPmph.setDeclarationId(declarationid);
-	            decTextbookPmph.setMaterialName(materialName);
-	            decTextbookPmph.setRank(rank);
-	            Integer position = positionJudge.intValue();
-	            decTextbookPmph.setPosition(position);
-	            decTextbookPmph.setPublishDate(publishDate);
-	            decTextbookPmph.setIsbn(isbn);
-	            decTextbookPmph.setNote((String) map.get("remark")); // 备注
-	            decTextbookPmph.setSort(999); // 显示顺序
-	            decTextbookPmph = decTextbookPmphService.addDecTextbookPmph(decTextbookPmph);
-			}
+                decTextbookPmph.setDeclarationId(declarationid);
+                decTextbookPmph.setMaterialName(materialName);
+                decTextbookPmph.setRank(rank);
+                Integer position = positionJudge.intValue();
+                decTextbookPmph.setPosition(position);
+                decTextbookPmph.setPublishDate(publishDate);
+                decTextbookPmph.setIsbn(isbn);
+                decTextbookPmph.setNote((String) map.get("remark")); // 备注
+                decTextbookPmph.setSort(999); // 显示顺序
+                decTextbookPmph = decTextbookPmphService.addDecTextbookPmph(decTextbookPmph);
+            }
             long pk = decTextbook.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "materwriteid", id);
             count++;
@@ -905,19 +905,19 @@ public class MigrationStageSix {
         msg.put("result", "" + tableName + "  表迁移完成" + count + "/" + maps.size());
         SQLParameters.STATISTICS.add(msg);
     }
-    
+
     protected void decTextbookOther() {
         String tableName = "writer_othermaterwrite "; //要迁移的旧库表名
         JdbcHelper.addColumn(tableName); //增加new_pk字段
         String sql = "select wo.othermaterwriteid,wo.writerid,wo.matername,"
-        		+ "case when wo.duty like '%1%' then 1 when wo.duty like '%2%' then 2 "
-        		+ "else 3 end position,"
-        		+ "wo.publishing,"
-        		+ "if(wo.publisdate='0000-00-00 00:00:00',"
-        		+ "STR_TO_DATE('2017-01-01 14:17:17','%Y-%c-%d %H:%i:%s'),wo.publisdate)publisdates,"
-        		+ "wo.booknumber,wo.remark,wd.new_pk id "
-        		+ "from writer_othermaterwrite wo "
-        		+ "left join writer_declaration wd on wd.writerid=wo.writerid ";
+                + "case when wo.duty like '%1%' then 1 when wo.duty like '%2%' then 2 "
+                + "else 3 end position,"
+                + "wo.publishing,"
+                + "if(wo.publisdate='0000-00-00 00:00:00',"
+                + "STR_TO_DATE('2017-01-01 14:17:17','%Y-%c-%d %H:%i:%s'),wo.publisdate)publisdates,"
+                + "wo.booknumber,wo.remark,wd.new_pk id "
+                + "from writer_othermaterwrite wo "
+                + "left join writer_declaration wd on wd.writerid=wo.writerid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0;//迁移成功的条目数
         int declarationidCount = 0;
@@ -944,40 +944,40 @@ public class MigrationStageSix {
             if (StringUtil.notEmpty(isbn)) {
                 isbn = isbn.trim();
                 isbn = isbn.replace("ISBN", "ISBN ").replace("isbn", "ISBN ").replace(":", "")
-                		.replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
-                		.replace("•", "·");
+                        .replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
+                        .replace("•", "·");
             }
             publisher = publisher == null ? "" : publisher;
             if (!"人民卫生出版社".equals(publisher.trim())) {
-            	decTextbook.setDeclarationId(declarationid);
+                decTextbook.setDeclarationId(declarationid);
                 decTextbook.setMaterialName(materialName);
                 decTextbook.setRank(0); // 教材级别（设置成无）
                 Integer position = positionJudge.intValue();
                 decTextbook.setPosition(position);
                 String publishers = publisher.trim();
                 if (StringUtil.length(publishers) > 50 || "-1819".equals(id)) {
-                	publishers.substring(0, 7);
-            		decTextbook.setPublisher(publishers);
+                    publishers.substring(0, 7);
+                    decTextbook.setPublisher(publishers);
                 } else {
-                	decTextbook.setPublisher(publishers);
-    			}
+                    decTextbook.setPublisher(publishers);
+                }
                 decTextbook.setPublishDate(publishDate);
                 decTextbook.setIsbn(isbn);
                 decTextbook.setNote((String) map.get("remark")); // 备注
                 decTextbook.setSort(999); // 显示顺序
                 decTextbook = decTextbookService.addDecTextbook(decTextbook);
             } else {
-            	decTextbookPmph.setDeclarationId(declarationid);
-	            decTextbookPmph.setMaterialName(materialName);
-	            decTextbookPmph.setRank(0); // 教材级别（设置成无）
-	            Integer position = positionJudge.intValue();
-	            decTextbookPmph.setPosition(position);
-	            decTextbookPmph.setPublishDate(publishDate);
-	            decTextbookPmph.setIsbn(isbn);
-	            decTextbookPmph.setNote((String) map.get("remark")); // 备注
-	            decTextbookPmph.setSort(999); // 显示顺序
-	            decTextbookPmph = decTextbookPmphService.addDecTextbookPmph(decTextbookPmph);
-			}
+                decTextbookPmph.setDeclarationId(declarationid);
+                decTextbookPmph.setMaterialName(materialName);
+                decTextbookPmph.setRank(0); // 教材级别（设置成无）
+                Integer position = positionJudge.intValue();
+                decTextbookPmph.setPosition(position);
+                decTextbookPmph.setPublishDate(publishDate);
+                decTextbookPmph.setIsbn(isbn);
+                decTextbookPmph.setNote((String) map.get("remark")); // 备注
+                decTextbookPmph.setSort(999); // 显示顺序
+                decTextbookPmph = decTextbookPmphService.addDecTextbookPmph(decTextbookPmph);
+            }
             long pk = decTextbook.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "othermaterwriteid", id);
             count++;
@@ -1123,24 +1123,24 @@ public class MigrationStageSix {
         String tableName = "teach_applyposition"; // 要迁移的旧库表名
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
         String sql = "select ta.materid,ta.writerid,ta.bookid,"
-        		+ "GROUP_CONCAT(case when ta.positiontype=1 then 'a' when ta.positiontype=2 "
-        		+ "then 'b' when ta.positiontype=3 then 'c' else 'c' "
-        		+ "end ORDER BY ta.positiontype) preset_position,"
-        		+ "if(sum(if(tp.positiontype in (1,2,3),1,0))>0,true,false) is_on_list,"
-        		+ "GROUP_CONCAT(case when tp.positiontype=1 and tp.directoraudit>=11 then 'a' "
-        		+ "when tp.positiontype=2 and tp.directoraudit>=11 then 'b' "
-        		+ "when tp.positiontype=3 and tp.directoraudit>=41 then 'c' else 'd' "
-        		+ "end ORDER BY tp.positiontype) chosen_position,"
-        		+ "min(tp.mastersort) mastersort,ta.outlineurl,ta.outlinename,"
-        		+ "ifnull(wd.updatedate,wd.createdate) gmt_create,"
-        		+ "wd.new_pk wdid,tb.new_pk tbid "
-        		+ "from teach_applyposition ta "
-        		+ "left join teach_positionset tp on tp.appposiid=ta.appposiid "
-        		+ "left join writer_declaration wd on wd.writerid=ta.writerid "
-        		+ "left join teach_bookinfo tb on tb.bookid=ta.bookid "
-        		+ "WHERE ta.positiontype in (1,2,3) and wd.writerid is not null "
-        		+ "and tb.bookid is not null "
-        		+ "GROUP BY wd.writerid,tb.bookid ";
+                + "GROUP_CONCAT(case when ta.positiontype=1 then 'a' when ta.positiontype=2 "
+                + "then 'b' when ta.positiontype=3 then 'c' else 'c' "
+                + "end ORDER BY ta.positiontype) preset_position,"
+                + "if(sum(if(tp.positiontype in (1,2,3),1,0))>0,true,false) is_on_list,"
+                + "GROUP_CONCAT(case when tp.positiontype=1 and tp.directoraudit>=11 then 'a' "
+                + "when tp.positiontype=2 and tp.directoraudit>=11 then 'b' "
+                + "when tp.positiontype=3 and tp.directoraudit>=41 then 'c' else 'd' "
+                + "end ORDER BY tp.positiontype) chosen_position,"
+                + "min(tp.mastersort) mastersort,ta.outlineurl,ta.outlinename,"
+                + "ifnull(wd.updatedate,wd.createdate) gmt_create,"
+                + "wd.new_pk wdid,tb.new_pk tbid "
+                + "from teach_applyposition ta "
+                + "left join teach_positionset tp on tp.appposiid=ta.appposiid "
+                + "left join writer_declaration wd on wd.writerid=ta.writerid "
+                + "left join teach_bookinfo tb on tb.bookid=ta.bookid "
+                + "WHERE ta.positiontype in (1,2,3) and wd.writerid is not null "
+                + "and tb.bookid is not null "
+                + "GROUP BY wd.writerid,tb.bookid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0; // 迁移成功的条目数
         int extensionidCount = 0;
@@ -1196,13 +1196,13 @@ public class MigrationStageSix {
             if (ObjectUtil.isNull(isOnList)) {
                 decPosition.setIsOnList(true);
             } else {
-            	Integer isOn = isOnList.intValue();
-            	if (isOn.equals(1)) {
-            		decPosition.setIsOnList(true);
-            	} else {
-            		decPosition.setIsOnList(false);
-				}
-			}
+                Integer isOn = isOnList.intValue();
+                if (isOn.equals(1)) {
+                    decPosition.setIsOnList(true);
+                } else {
+                    decPosition.setIsOnList(false);
+                }
+            }
             tempchosenPosition += "," + tempchosenPosition + ",";
             Integer chosen = 0;
             if (tempchosenPosition.contains(",a,")) {
@@ -1212,7 +1212,7 @@ public class MigrationStageSix {
             } else if (tempchosenPosition.contains(",c,")) {
                 chosen = 1;
             } else if (tempchosenPosition.contains(",d,")) {
-            	chosen = 0;
+                chosen = 0;
             }
             decPosition.setChosenPosition(chosen);
             decPosition.setRank(mastersort);
@@ -1263,6 +1263,7 @@ public class MigrationStageSix {
     }
 
     private Map<Long, Long> publisherIdMap = new HashMap<Long, Long>(); // 教材id和主任id
+
     /**
      * 已公布作家申报职位表
      */
@@ -1270,29 +1271,29 @@ public class MigrationStageSix {
         String tableName = "teach_positionset"; // 要迁移的旧库表名
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
         String sql = "select tp.positionid,tp.materid,tp.writerid,tp.bookid,"
-        		+ "GROUP_CONCAT(case when tp.applypositiontype=1 then 'a' when tp.applypositiontype=2 "
-        		+ "then 'b' when tp.applypositiontype=3 then 'c' else 'c' "
-        		+ "end ORDER BY tp.applypositiontype) preset_position,"
-        		+ "if(sum(if(tp.positiontype in (1,2,3),1,0))>0,true,false) is_on_list,"
-        		+ "GROUP_CONCAT(case when tp.positiontype=1 and tp.directoraudit>=11 then 'a' "
-        		+ "when tp.positiontype=2 and tp.directoraudit>=11 then 'b' "
-        		+ "when tp.positiontype=3 and tp.directoraudit>=41 then 'c' else 'd' "
-        		+ "end ORDER BY tp.positiontype) chosen_position,"
-        		+ "min(tp.mastersort) mastersort,ta.outlineurl,ta.outlinename,"
-        		+ "ifnull(wd.updatedate,wd.createdate) gmt_create,"
-        		+ "wd.new_pk wdid,tb.new_pk tbid,tm.new_pk newmaterid "
-        		+ "from teach_positionset tp "
-        		+ "left join teach_applyposition ta on ta.appposiid=tp.appposiid "
-        		+ "left join writer_declaration wd on wd.writerid=ta.writerid "
-        		+ "left join teach_bookinfo tb on tb.bookid=ta.bookid "
-        		+ "left join teach_material tm on tm.materid=ta.materid "
-        		+ "WHERE ta.positiontype in (1,2,3) and wd.writerid is not null "
-        		+ "and tb.bookid is not null "
-        		+ "and tb.dealtype >= 70 "
-        		+ "and ((tp.positiontype =1 and tp.directoraudit >=11) "
-        		+ "or (tp.positiontype =2 and tp.directoraudit >=11) "
-        		+ "or (tp.positiontype =3 and tp.directoraudit >=41)) "
-        		+ "GROUP BY wd.writerid,tb.bookid ";
+                + "GROUP_CONCAT(case when tp.applypositiontype=1 then 'a' when tp.applypositiontype=2 "
+                + "then 'b' when tp.applypositiontype=3 then 'c' else 'c' "
+                + "end ORDER BY tp.applypositiontype) preset_position,"
+                + "if(sum(if(tp.positiontype in (1,2,3),1,0))>0,true,false) is_on_list,"
+                + "GROUP_CONCAT(case when tp.positiontype=1 and tp.directoraudit>=11 then 'a' "
+                + "when tp.positiontype=2 and tp.directoraudit>=11 then 'b' "
+                + "when tp.positiontype=3 and tp.directoraudit>=41 then 'c' else 'd' "
+                + "end ORDER BY tp.positiontype) chosen_position,"
+                + "min(tp.mastersort) mastersort,ta.outlineurl,ta.outlinename,"
+                + "ifnull(wd.updatedate,wd.createdate) gmt_create,"
+                + "wd.new_pk wdid,tb.new_pk tbid,tm.new_pk newmaterid "
+                + "from teach_positionset tp "
+                + "left join teach_applyposition ta on ta.appposiid=tp.appposiid "
+                + "left join writer_declaration wd on wd.writerid=ta.writerid "
+                + "left join teach_bookinfo tb on tb.bookid=ta.bookid "
+                + "left join teach_material tm on tm.materid=ta.materid "
+                + "WHERE ta.positiontype in (1,2,3) and wd.writerid is not null "
+                + "and tb.bookid is not null "
+                + "and tb.dealtype >= 70 "
+                + "and ((tp.positiontype =1 and tp.directoraudit >=11) "
+                + "or (tp.positiontype =2 and tp.directoraudit >=11) "
+                + "or (tp.positiontype =3 and tp.directoraudit >=41)) "
+                + "GROUP BY wd.writerid,tb.bookid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0; // 迁移成功的条目数
         int extensionidCount = 0;
@@ -1306,9 +1307,9 @@ public class MigrationStageSix {
             String id = (String) map.get("positionid"); // 旧表主键值
             Long materid = (Long) map.get("newmaterid"); // 教材id
             Long publisherId = publisherIdMap.get(materid); // 公布人id
-            if(ObjectUtil.isNull(publisherId)){
-            	publisherId = materialService.getMaterialById(materid).getDirector() ;
-            	publisherIdMap.put(materid, publisherId);
+            if (ObjectUtil.isNull(publisherId)) {
+                publisherId = materialService.getMaterialById(materid).getDirector();
+                publisherIdMap.put(materid, publisherId);
             }
             Long declarationid = (Long) map.get("wdid"); // 申报表id
             Long textbookid = (Long) map.get("tbid"); // 书籍id
@@ -1353,15 +1354,15 @@ public class MigrationStageSix {
             }
             decPositionPublished.setPresetPosition(Integer.valueOf(Positions, 2));//转成10进制
             if (ObjectUtil.isNull(isOnList)) {
-            	decPositionPublished.setIsOnList(true);
+                decPositionPublished.setIsOnList(true);
             } else {
-            	Integer isOn = isOnList.intValue();
-            	if (isOn.equals(1)) {
-            		decPositionPublished.setIsOnList(true);
-            	} else {
-            		decPositionPublished.setIsOnList(false);
-				}
-			}
+                Integer isOn = isOnList.intValue();
+                if (isOn.equals(1)) {
+                    decPositionPublished.setIsOnList(true);
+                } else {
+                    decPositionPublished.setIsOnList(false);
+                }
+            }
             tempchosenPosition += "," + tempchosenPosition + ",";
             Integer chosen = 0;
             if (tempchosenPosition.contains(",a,")) {
@@ -1371,7 +1372,7 @@ public class MigrationStageSix {
             } else if (tempchosenPosition.contains(",c,")) {
                 chosen = 1;
             } else if (tempchosenPosition.contains(",d,")) {
-            	chosen = 0;
+                chosen = 0;
             }
             decPositionPublished.setChosenPosition(chosen);
             decPositionPublished.setRank(mastersort);
