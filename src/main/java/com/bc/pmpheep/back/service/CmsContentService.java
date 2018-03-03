@@ -298,4 +298,16 @@ public interface CmsContentService {
      */
     Integer updateCmsContentByParentId(@Param("id") Long id, @Param("comments") Integer comments)
     throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据ParentId查询CMSContent集合
+     * 使用示范：
+     *
+     * @param parentId 
+     * @return CmsContent对象集合
+     * </pre>
+     */
+    List<CmsContent> getCmsContentByParentId(Long parentId) throws CheckedServiceException;
 }

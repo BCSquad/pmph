@@ -194,7 +194,7 @@ public interface UserMessageService {
 	 * @throws CheckedServiceException
 	 * </pre>
      */
-    Map<String, Object> msgUploadFiles(HttpServletRequest request, MultipartFile file)
+    String msgUploadFiles(HttpServletRequest request, MultipartFile file)
     throws CheckedServiceException, IOException;
 
     /**

@@ -588,14 +588,13 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     }
 
     @Override
-    public Map<String, Object> msgUploadFiles(HttpServletRequest request, MultipartFile file)
+    public String msgUploadFiles(HttpServletRequest request, MultipartFile file)
     throws CheckedServiceException, IOException {
         if (file.isEmpty()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "附件为空！");
         }
-        String filePath = "";
-        Map<String, Object> resultMap = new HashMap<>(2);
+        String tempFileId = "";
         // 循环获取file数组中得文件
         if (StringUtil.notEmpty(file.getOriginalFilename())) {
             String fullFileName = file.getOriginalFilename();// 完整文件名
@@ -612,15 +611,13 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             // filePath = Const.MSG_FILE_PATH_FILE + beforeDate + fullFileName;
 
             UUID uuid = UUID.randomUUID();
-            String tempFileId = uuid.toString();
+            tempFileId = uuid.toString();
             request.getSession(false).setAttribute("fileName_" + tempFileId,
                                                    file.getOriginalFilename());
             byte[] fileByte = file.getBytes();
             request.getSession(false).setAttribute(tempFileId, fileByte);
-            resultMap.put("filePath", tempFileId);
-            resultMap.put("file", fileByte);
         }
-        return resultMap;
+        return tempFileId;
     }
 
     @Override

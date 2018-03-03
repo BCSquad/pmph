@@ -546,7 +546,13 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        return cmsContentDao.deleteCmsContentById(id);
+        List<CmsContent> list = this.getCmsContentByParentId(id);
+        List<Long> ids = new ArrayList<Long>(list.size());
+        for (CmsContent cmsContent : list) {
+            ids.add(cmsContent.getId());
+        }
+        cmsContentDao.deleteCmsContentById(id);
+        return this.deleteCmsContentByIds(ids);
     }
 
     @Override
@@ -556,11 +562,17 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
 
         }
+        Long comments = 0L;
         for (Long id : ids) {
             CmsContent cmsContent = this.getCmsContentById(id);
             if (Boolean.TRUE == cmsContent.getIsPublished()) {
-                this.updatCmsContentCommentsById(id, -1);
-                this.updateCmsContentByParentId(cmsContent.getParentId(), -1);
+                if (cmsContent.getComments() > comments.longValue()) {
+                    this.updatCmsContentCommentsById(id, -1);
+                }
+                CmsContent cmContent = this.getCmsContentById(cmsContent.getParentId());
+                if (cmContent.getComments().longValue() > comments.longValue()) {
+                    this.updateCmsContentByParentId(cmsContent.getParentId(), -1);
+                }
             }
         }
         return cmsContentDao.deleteCmsContentByIds(ids);
@@ -700,5 +712,14 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               CheckedExceptionResult.NULL_PARAM, "主键为空");
         }
         return cmsContentDao.updateCmsContentByParentId(id, comments);
+    }
+
+    @Override
+    public List<CmsContent> getCmsContentByParentId(Long parentId) throws CheckedServiceException {
+        if (ObjectUtil.isNull(parentId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "上级id为空");
+        }
+        return cmsContentDao.getCmsContentByParentId(parentId);
     }
 }
