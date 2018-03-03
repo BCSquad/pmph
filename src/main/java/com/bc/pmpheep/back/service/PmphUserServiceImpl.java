@@ -725,6 +725,8 @@ public class PmphUserServiceImpl implements PmphUserService {
             PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
             topicService.listMyTopic(progress, pageParameter3);
             map.put("topicList", pageResultTopicDeclarationVO);
+        }else{
+        	map.put("topicList", null);
         }
         // 获取用户上次登录时间
         List<SysOperation> listSysOperation =
