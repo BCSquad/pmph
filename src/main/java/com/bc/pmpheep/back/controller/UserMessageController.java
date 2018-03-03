@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.UserMessage;
+import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.service.UserMessageService;
 import com.bc.pmpheep.back.util.CookiesUtil;
@@ -26,6 +27,7 @@ import com.bc.pmpheep.back.vo.MyMessageVO;
 import com.bc.pmpheep.back.vo.UserMessageVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.po.Message;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * @author MrYang
@@ -41,6 +43,8 @@ public class UserMessageController {
     private UserMessageService  userMessageService;
     @Autowired
     private TextbookService     textbookService;
+    @Autowired
+    private MaterialService     materialService;
     // 当前业务类型
     private static final String BUSSINESS_TYPE = "系统消息";
 
@@ -164,7 +168,8 @@ public class UserMessageController {
     HttpServletRequest request) {
         try {
             String sessionId = CookiesUtil.getSessionId(request);
-            return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,
+            return new ResponseBean(userMessageService.addOrUpdateUserMessage(request,
+                                                                              message,
                                                                               title,
                                                                               sendType,
                                                                               orgIds,
@@ -201,7 +206,8 @@ public class UserMessageController {
     HttpServletRequest request) {
         try {
             String sessionId = CookiesUtil.getSessionId(request);
-            return new ResponseBean(userMessageService.addOrUpdateUserMessage(message,
+            return new ResponseBean(userMessageService.addOrUpdateUserMessage(request,
+                                                                              message,
                                                                               title,
                                                                               sendType,
                                                                               orgIds,
@@ -250,9 +256,10 @@ public class UserMessageController {
     @RequestMapping(value = "/updateMessage", method = RequestMethod.PUT)
     public ResponseBean updateMessage(Message message, @RequestParam("msgId") String msgId,
     @RequestParam("msgTitle") String msgTitle, @RequestParam("file") String[] files,
-    @RequestParam("attachment") String[] attachment) {
+    @RequestParam("attachment") String[] attachment, HttpServletRequest request) {
         try {
-            return new ResponseBean(userMessageService.updateUserMessage(message,
+            return new ResponseBean(userMessageService.updateUserMessage(request,
+                                                                         message,
                                                                          msgId,
                                                                          msgTitle,
                                                                          files,
@@ -294,8 +301,17 @@ public class UserMessageController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "上传附件")
     @RequestMapping(value = "/message/file", method = RequestMethod.POST)
-    public ResponseBean file(@RequestParam("file") MultipartFile file) {
-        return new ResponseBean(userMessageService.msgUploadFiles(file));
+    public ResponseBean file(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+        try {
+            // MultipartFile[] files = new MultipartFile[] { file };
+            // return new ResponseBean(materialService.upTempFile(request, files));
+            return new ResponseBean(userMessageService.msgUploadFiles(request, file));
+        } catch (CheckedServiceException e) {
+            return new ResponseBean(e);
+        } catch (Exception e) {
+            return new ResponseBean(e);
+        }
+
     }
 
     /**

@@ -1,12 +1,15 @@
 package com.bc.pmpheep.back.service;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +30,6 @@ import com.bc.pmpheep.back.util.CastUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
-import com.bc.pmpheep.back.util.FileUpload;
-import com.bc.pmpheep.back.util.FileUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.RouteUtil;
@@ -242,9 +243,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     }
 
     @Override
-    public Integer addOrUpdateUserMessage(Message message, String title, Integer sendType,
-    String orgIds, Long senderId, String userIds, String bookIds, boolean isSave, String[] files,
-    String sessionId) throws CheckedServiceException, IOException {
+    public Integer addOrUpdateUserMessage(HttpServletRequest request, Message message,
+    String title, Integer sendType, String orgIds, Long senderId, String userIds, String bookIds,
+    boolean isSave, String[] files, String sessionId) throws CheckedServiceException, IOException {
         if (ObjectUtil.isNull(sendType)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "发送对象未选择，请选择!");
@@ -402,14 +403,15 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                   message.getContent(), DateUtil.getCurrentTime());
             myWebSocketHandler.sendWebSocketMessageToUser(websocketUserIds, webScocketMessage);
             // 添加附件到MongoDB表中
-            saveFileToMongoDB(files, message.getId());
+            saveFileToMongoDB(request, files, message.getId());
         }
         return userMessageList.size();
     }
 
     @Override
-    public Integer updateUserMessage(Message message, String msgId, String msgTitle,
-    String[] files, String[] attachment) throws CheckedServiceException, IOException {
+    public Integer updateUserMessage(HttpServletRequest request, Message message, String msgId,
+    String msgTitle, String[] files, String[] attachment) throws CheckedServiceException,
+    IOException {
         Integer count = 0;
         // 更新消息内容Message
         if (StringUtil.notEmpty(msgId) && ObjectUtil.notNull(message.getContent())) {
@@ -423,7 +425,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         }
         // 添加附件到MongoDB表中
         if (StringUtil.notEmpty(msgId)) {
-            saveFileToMongoDB(files, msgId);
+            saveFileToMongoDB(request, files, msgId);
         }
         // 是否有消息附件删除
         if (ArrayUtil.isNotEmpty(attachment)) {
@@ -447,39 +449,36 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
 	 * @throws CheckedServiceException
 	 * </pre>
      */
-    private void saveFileToMongoDB(String[] files, String msgId) throws IOException {
+    private void saveFileToMongoDB(HttpServletRequest request, String[] files, String msgId)
+    throws IOException {
         // 添加附件到MongoDB表中
         if (ArrayUtil.isNotEmpty(files)) {
             for (int i = 0; i < files.length; i++) {
-                File file = FileUpload.getFileByFilePath(files[i]);
-                if (file.isFile()) {
-                    // 循环获取file数组中得文件
-                    if (StringUtil.notEmpty(file.getName())) {
-                        String gridFSFileId =
-                        fileService.saveLocalFile(file, FileType.MSG_FILE, CastUtil.castLong(msgId));// 上传文件到MongoDB
-                        if (StringUtil.isEmpty(gridFSFileId)) {
-                            throw new CheckedServiceException(
-                                                              CheckedExceptionBusiness.MESSAGE,
-                                                              CheckedExceptionResult.FILE_UPLOAD_FAILED,
-                                                              "文件上传失败!");
-                        }
-                        // 保存对应数据
-                        MessageAttachment mAttachment =
-                        messageAttachmentService.addMessageAttachment(new MessageAttachment(
-                                                                                            msgId,
-                                                                                            gridFSFileId,
-                                                                                            file.getName()));
-                        if (ObjectUtil.isNull(mAttachment.getId())) {
-                            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                                              CheckedExceptionResult.NULL_PARAM,
-                                                              "MessageAttachment对象保存失败!");
-                        }
-                    }
-                    String localFile = files[i];
-                    String fileDirectory =
-                    localFile.substring(0, localFile.lastIndexOf(File.separatorChar));
-                    FileUtil.delete(fileDirectory);// 删除本地临时文件
+                byte[] fileByte = (byte[]) request.getSession(false).getAttribute(files[i]);
+                String fileName =
+                (String) request.getSession(false).getAttribute("fileName_" + files[i]);
+                InputStream sbs = new ByteArrayInputStream(fileByte);
+                String gridFSFileId =
+                fileService.save(sbs, fileName, FileType.MSG_FILE, CastUtil.castLong(msgId));
+                if (StringUtil.isEmpty(gridFSFileId)) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                      CheckedExceptionResult.FILE_UPLOAD_FAILED,
+                                                      "文件上传失败!");
                 }
+                // 保存对应数据
+                MessageAttachment mAttachment =
+                messageAttachmentService.addMessageAttachment(new MessageAttachment(msgId,
+                                                                                    gridFSFileId,
+                                                                                    fileName));
+                if (ObjectUtil.isNull(mAttachment.getId())) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                      CheckedExceptionResult.NULL_PARAM,
+                                                      "MessageAttachment对象保存失败!");
+                }
+                // String localFile = files[i];
+                // String fileDirectory =
+                // localFile.substring(0, localFile.lastIndexOf(File.separatorChar));
+                // FileUtil.delete(fileDirectory);// 删除本地临时文件
             }
         }
     }
@@ -589,12 +588,14 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
     }
 
     @Override
-    public String msgUploadFiles(MultipartFile file) throws CheckedServiceException {
+    public Map<String, Object> msgUploadFiles(HttpServletRequest request, MultipartFile file)
+    throws CheckedServiceException, IOException {
         if (file.isEmpty()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "附件为空！");
         }
         String filePath = "";
+        Map<String, Object> resultMap = new HashMap<>(2);
         // 循环获取file数组中得文件
         if (StringUtil.notEmpty(file.getOriginalFilename())) {
             String fullFileName = file.getOriginalFilename();// 完整文件名
@@ -603,12 +604,23 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                                   CheckedExceptionResult.NULL_PARAM,
                                                   "附件名称超出80个字符长度，请修改后上传！");
             }
-            String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));// 去掉后缀的文件名称
-            String beforeDate = DateUtil.date2Str(new Date(), "yyyyMMddHHmmss") + File.separator;// 获取当前时间拼接路径
-            FileUpload.fileUp(file, Const.MSG_FILE_PATH_FILE + beforeDate, fileName);// 上传文件
-            filePath = Const.MSG_FILE_PATH_FILE + beforeDate + fullFileName;
+            // String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));//
+            // 去掉后缀的文件名称
+            // String beforeDate = DateUtil.date2Str(new Date(), "yyyyMMddHHmmss") +
+            // File.separator;// 获取当前时间拼接路径
+            // FileUpload.fileUp(file, Const.MSG_FILE_PATH_FILE + beforeDate, fileName);// 上传文件
+            // filePath = Const.MSG_FILE_PATH_FILE + beforeDate + fullFileName;
+
+            UUID uuid = UUID.randomUUID();
+            String tempFileId = uuid.toString();
+            request.getSession(false).setAttribute("fileName_" + tempFileId,
+                                                   file.getOriginalFilename());
+            byte[] fileByte = file.getBytes();
+            request.getSession(false).setAttribute(tempFileId, fileByte);
+            resultMap.put("filePath", tempFileId);
+            resultMap.put("file", fileByte);
         }
-        return filePath;
+        return resultMap;
     }
 
     @Override

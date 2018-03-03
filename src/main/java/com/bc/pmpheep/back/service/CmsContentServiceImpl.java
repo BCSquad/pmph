@@ -1,11 +1,14 @@
 package com.bc.pmpheep.back.service;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +26,6 @@ import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
-import com.bc.pmpheep.back.util.FileUpload;
-import com.bc.pmpheep.back.util.FileUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.RouteUtil;
@@ -119,7 +120,8 @@ public class CmsContentServiceImpl implements CmsContentService {
 
     @Override
     public CmsContent addCmsContent(CmsContent cmsContent, String[] files, String content,
-    String scheduledTime, String sessionId) throws CheckedServiceException, IOException {
+    String scheduledTime, String sessionId, HttpServletRequest request)
+    throws CheckedServiceException, IOException {
         // 获取当前登陆用户
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
@@ -196,14 +198,14 @@ public class CmsContentServiceImpl implements CmsContentService {
         // DateUtil.str2Timestam(scheduledTime)));
         // }
         // 保存附件到MongoDB
-        this.saveFileToMongoDB(files, null, contentId);
+        this.saveFileToMongoDB(request, files, null, contentId);
         return cmsContent;
     }
 
     @Override
     public Integer updateCmsContent(CmsContent cmsContent, String[] files, String[] imgFile,
     String content, String[] attachment, String[] imgAttachment, String scheduledTime,
-    String sessionId) throws CheckedServiceException, IOException {
+    String sessionId, HttpServletRequest request) throws CheckedServiceException, IOException {
         Integer count = 0;
         // 获取当前登陆用户
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -321,7 +323,7 @@ public class CmsContentServiceImpl implements CmsContentService {
             }
         }
         // 保存附件到MongoDB
-        this.saveFileToMongoDB(files, imgFile, cmsContent.getId());
+        this.saveFileToMongoDB(request, files, imgFile, cmsContent.getId());
         return count;
     }
 
@@ -595,73 +597,53 @@ public class CmsContentServiceImpl implements CmsContentService {
 	 * &#64;throws CheckedServiceException
 	 * </pre>
      */
-    private void saveFileToMongoDB(String[] files, String[] imgFile, Long contentId)
-    throws CheckedServiceException, IOException {
+    private void saveFileToMongoDB(HttpServletRequest request, String[] files, String[] imgFile,
+    Long contentId) throws CheckedServiceException, IOException {
         // 保存附件到MongoDB
         if (ArrayUtil.isNotEmpty(files)) {
             for (int i = 0; i < files.length; i++) {
-                File file = FileUpload.getFileByFilePath(files[i]);
-                if (file.isFile()) {
-                    // 循环获取file数组中得文件
-                    if (StringUtil.notEmpty(file.getName())) {
-                        System.out.println(file.getName());
-                        String gridFSFileId =
-                        fileService.saveLocalFile(file, FileType.CMS_ATTACHMENT, contentId);
-                        if (StringUtil.isEmpty(gridFSFileId)) {
-                            throw new CheckedServiceException(
-                                                              CheckedExceptionBusiness.CMS,
-                                                              CheckedExceptionResult.FILE_UPLOAD_FAILED,
-                                                              "文件上传失败!");
-                        }
-                        // 保存对应数据
-                        CmsExtra cmsExtra =
-                        cmsExtraService.addCmsExtra(new CmsExtra(contentId, gridFSFileId,
-                                                                 file.getName(), null));
-                        if (ObjectUtil.isNull(cmsExtra.getId())) {
-                            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                                              CheckedExceptionResult.PO_ADD_FAILED,
-                                                              "CmsExtra对象新增失败");
-                        }
-                    }
-                    // FileUtil.delFile(files[i]);// 删除本地临时文件
-                    String localFile = files[i];
-                    String fileDirectory =
-                    localFile.substring(0, localFile.lastIndexOf(File.separatorChar));
-                    FileUtil.delete(fileDirectory);// 删除本地临时文件
+                byte[] fileByte = (byte[]) request.getSession(false).getAttribute(imgFile[i]);
+                String fileName =
+                (String) request.getSession(false).getAttribute("fileName_" + imgFile[i]);
+                InputStream sbs = new ByteArrayInputStream(fileByte);
+                String gridFSFileId =
+                fileService.save(sbs, fileName, FileType.CMS_ATTACHMENT, contentId);
+                if (StringUtil.isEmpty(gridFSFileId)) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                                      CheckedExceptionResult.FILE_UPLOAD_FAILED,
+                                                      "文件上传失败!");
+                }
+                // 保存对应数据
+                CmsExtra cmsExtra =
+                cmsExtraService.addCmsExtra(new CmsExtra(contentId, gridFSFileId, fileName, null));
+                if (ObjectUtil.isNull(cmsExtra.getId())) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                                      CheckedExceptionResult.PO_ADD_FAILED,
+                                                      "CmsExtra对象新增失败");
                 }
             }
         }
         if (ArrayUtil.isNotEmpty(imgFile)) {
             for (int i = 0; i < imgFile.length; i++) {
-                File file = FileUpload.getFileByFilePath(imgFile[i]);
-                if (file.isFile()) {
-                    // 循环获取file数组中得文件
-                    if (StringUtil.notEmpty(file.getName())) {
-                        System.out.println(file.getName());
-                        String gridFSFileId =
-                        fileService.saveLocalFile(file, ImageType.CMS_CONTENT_COVER_IMG, contentId);
-                        if (StringUtil.isEmpty(gridFSFileId)) {
-                            throw new CheckedServiceException(
-                                                              CheckedExceptionBusiness.CMS,
-                                                              CheckedExceptionResult.FILE_UPLOAD_FAILED,
-                                                              "文件上传失败!");
-                        }
-                        // 保存对应数据
-                        CmsExtra cmsExtra =
-                        cmsExtraService.addCmsExtra(new CmsExtra(contentId, gridFSFileId,
-                                                                 file.getName(), null));
-                        this.updateCmsContent(new CmsContent(contentId, gridFSFileId));// 更新封面ID
-                        if (ObjectUtil.isNull(cmsExtra.getId())) {
-                            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                                              CheckedExceptionResult.PO_ADD_FAILED,
-                                                              "上传封面失败");
-                        }
-                    }
-                    // FileUtil.delFile(files[i]);// 删除本地临时文件
-                    String localFile = imgFile[i];
-                    String fileDirectory =
-                    localFile.substring(0, localFile.lastIndexOf(File.separatorChar));
-                    FileUtil.delete(fileDirectory);// 删除本地临时文件
+                byte[] fileByte = (byte[]) request.getSession(false).getAttribute(imgFile[i]);
+                String fileName =
+                (String) request.getSession(false).getAttribute("fileName_" + imgFile[i]);
+                InputStream sbs = new ByteArrayInputStream(fileByte);
+                String gridFSFileId =
+                fileService.save(sbs, fileName, ImageType.CMS_CONTENT_COVER_IMG, contentId);
+                if (StringUtil.isEmpty(gridFSFileId)) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                                      CheckedExceptionResult.FILE_UPLOAD_FAILED,
+                                                      "文件上传失败!");
+                }
+                // 保存对应数据
+                CmsExtra cmsExtra =
+                cmsExtraService.addCmsExtra(new CmsExtra(contentId, gridFSFileId, fileName, null));
+                this.updateCmsContent(new CmsContent(contentId, gridFSFileId));// 更新封面ID
+                if (ObjectUtil.isNull(cmsExtra.getId())) {
+                    throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                                      CheckedExceptionResult.PO_ADD_FAILED,
+                                                      "上传封面失败");
                 }
             }
         }
