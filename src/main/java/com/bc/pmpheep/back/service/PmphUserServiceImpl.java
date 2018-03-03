@@ -726,7 +726,14 @@ public class PmphUserServiceImpl implements PmphUserService {
             topicService.listMyTopic(progress, pageParameter3);
             map.put("topicList", pageResultTopicDeclarationVO);
         }else{
-        	map.put("topicList", null);
+        	PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =new PageResult<>();
+	    	List<TopicDeclarationVO> list = new ArrayList<>();
+	    	pageResultTopicDeclarationVO.setPageNumber(0);
+	    	pageResultTopicDeclarationVO.setRows(list);
+	    	pageResultTopicDeclarationVO.setPageTotal(0);
+	    	pageResultTopicDeclarationVO.setStart(0);
+	    	pageResultTopicDeclarationVO.setTotal(0);;
+        	map.put("topicList", pageResultTopicDeclarationVO);
         }
         // 获取用户上次登录时间
         List<SysOperation> listSysOperation =
