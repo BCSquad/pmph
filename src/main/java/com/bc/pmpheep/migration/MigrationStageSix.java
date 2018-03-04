@@ -329,7 +329,7 @@ public class MigrationStageSix {
             if (declaration.getUserId() == null) {
                 logger.info("userId为空的作家名称为：{}", declaration.getRealname());
             } else {
-                logger.info("当前执行的作家id：{}", declaration.getUserId().toString());
+                //logger.info("当前执行的作家id：{}", declaration.getUserId().toString());
             }
             Declaration dec = declarationService.getDeclarationByMaterialIdAndUserId(declaration.getMaterialId(),
                     declaration.getUserId());
