@@ -63,4 +63,54 @@ public class SQLParameters {
      * 储存错误信息，方便测序完成一次打印或者导出完毕信息
      */
     public static List<Map<String, Object>> STATISTICS = new ArrayList<>(16);
+    
+    /**
+     * 用于数据迁移后导出总体统计结果
+     */
+    public static List<Map<String, Object>> STATISTICS_RESULT = new ArrayList<>(16);
+    
+    /**
+     * 总体统计结果表名列的表头
+     */
+    public static final String EXCEL_HEADER_TABLENAME = "表名";
+    
+    /**
+     * 总体统计结果描述列的表头
+     */
+    public static final String EXCEL_HEADER_DESCRIPTION = "描述";
+    
+    /**
+     * 总体统计结果数据总数目列的表头
+     */
+    public static final String EXCEL_HEADER_SUM_DATA = "总数据";
+    
+    /**
+     * 总体统计结果已迁移数据数目列的表头
+     */
+    public static final String EXCEL_HEADER_MIGRATED_DATA = "已迁移数据";
+    
+    /**
+     * 总体统计结果正常数据数目列的表头
+     */
+    public static final String EXCEL_HEADER_CORECT_DATA = "正常数据";
+    
+    /**
+     * 总体统计结果异常经转换迁移数据数目列的表头
+     */
+    public static final String EXCEL_HEADER_TRANSFERED_DATA = "异常经转换迁移数据";
+    
+    /**
+     * 总体统计结果未迁移数据数目列的表头
+     */
+    public static final String EXCEL_HEADER_NO_MIGRATED_DATA = "未迁移数据";
+    
+    /**
+     * 总体统计结果异常原因的表头
+     */
+    public static final String EXCEL_HEADER_EXCEPTION_REASON = "异常原因";
+    
+    /**
+     * 总体统计结果处理方式的表头
+     */
+    public static final String EXCEL_HEADER_DEAL_WITH = "处理方式";
 }
