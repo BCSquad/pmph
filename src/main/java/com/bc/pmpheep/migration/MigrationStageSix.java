@@ -970,12 +970,20 @@ public class MigrationStageSix {
                         .replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
                         .replace("•", "·");
             }
-            publisher = publisher == null ? "" : publisher;
+            if (ObjectUtil.isNull(publisher)) {
+                publisher = "未填写";
+            }
+            int position;
+            if (ObjectUtil.isNull(positionJudge)){
+                position = 5;
+            }else{
+                position = positionJudge.intValue();
+            }
+            long pk;
             if (!"人民卫生出版社".equals(publisher.trim())) {
                 decTextbook.setDeclarationId(declarationid);
                 decTextbook.setMaterialName(materialName);
                 decTextbook.setRank(0); // 教材级别（设置成无）
-                Integer position = positionJudge.intValue();
                 decTextbook.setPosition(position);
                 String publishers = publisher.trim();
                 if (StringUtil.length(publishers) > 50 || "-1819".equals(id)) {
@@ -989,19 +997,19 @@ public class MigrationStageSix {
                 decTextbook.setNote((String) map.get("remark")); // 备注
                 decTextbook.setSort(999); // 显示顺序
                 decTextbook = decTextbookService.addDecTextbook(decTextbook);
+                pk = decTextbook.getId();
             } else {
                 decTextbookPmph.setDeclarationId(declarationid);
                 decTextbookPmph.setMaterialName(materialName);
                 decTextbookPmph.setRank(0); // 教材级别（设置成无）
-                Integer position = positionJudge.intValue();
                 decTextbookPmph.setPosition(position);
                 decTextbookPmph.setPublishDate(publishDate);
                 decTextbookPmph.setIsbn(isbn);
                 decTextbookPmph.setNote((String) map.get("remark")); // 备注
                 decTextbookPmph.setSort(999); // 显示顺序
                 decTextbookPmph = decTextbookPmphService.addDecTextbookPmph(decTextbookPmph);
+                pk = decTextbookPmph.getId();
             }
-            long pk = decTextbook.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "othermaterwriteid", id);
             count++;
         }
