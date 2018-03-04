@@ -877,13 +877,19 @@ public class MigrationStageSix {
                 rank = rankJudge.intValue();
             }
             if (ObjectUtil.isNull(publisher)) {
-                publisher = "";
+                publisher = "未填写";
             }
+            int position;
+            if (ObjectUtil.isNull(positionJudge)){
+                position = 5;
+            }else{
+                position = positionJudge.intValue();
+            }
+            long pk;
             if (!"人民卫生出版社".equals(publisher.trim())) {
                 decTextbook.setDeclarationId(declarationid);
                 decTextbook.setMaterialName(materialName);
                 decTextbook.setRank(rank);
-                Integer position = positionJudge.intValue();
                 decTextbook.setPosition(position);
                 decTextbook.setPublisher(publisher);
                 decTextbook.setPublishDate(publishDate);
@@ -891,19 +897,19 @@ public class MigrationStageSix {
                 decTextbook.setNote((String) map.get("remark")); // 备注
                 decTextbook.setSort(999); // 显示顺序
                 decTextbook = decTextbookService.addDecTextbook(decTextbook);
+                pk = decTextbook.getId();
             } else {
                 decTextbookPmph.setDeclarationId(declarationid);
                 decTextbookPmph.setMaterialName(materialName);
                 decTextbookPmph.setRank(rank);
-                Integer position = positionJudge.intValue();
                 decTextbookPmph.setPosition(position);
                 decTextbookPmph.setPublishDate(publishDate);
                 decTextbookPmph.setIsbn(isbn);
                 decTextbookPmph.setNote((String) map.get("remark")); // 备注
                 decTextbookPmph.setSort(999); // 显示顺序
                 decTextbookPmph = decTextbookPmphService.addDecTextbookPmph(decTextbookPmph);
+                pk = decTextbookPmph.getId();
             }
-            long pk = decTextbook.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "materwriteid", id);
             count++;
         }
