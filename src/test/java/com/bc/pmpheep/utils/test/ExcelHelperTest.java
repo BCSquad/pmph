@@ -115,7 +115,7 @@ public class ExcelHelperTest extends BaseTest {
         declarationEtcBO = new DeclarationEtcBO();
         declarationEtcBO.setPresetPosition("副主编");
         list.add(declarationEtcBO);
-        Workbook workbook = excelHelper.fromDeclarationEtcBOList(list, "专家信息表");
+        Workbook workbook = excelHelper.fromDeclarationEtcBOList(null, list, "专家信息表");
         String path = this.getClass().getResource("/").getPath().concat("DeclarationEtcBOList.xls");
         FileOutputStream out = new FileOutputStream(path);
         workbook.write(out);

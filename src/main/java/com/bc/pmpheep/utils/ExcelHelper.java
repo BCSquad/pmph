@@ -23,6 +23,7 @@ import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecTextbookPmph;
 import com.bc.pmpheep.back.po.DecWorkExp;
+import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.DateUtil;
@@ -177,147 +178,146 @@ public class ExcelHelper {
         }
     }
 
-	/**
-	 * 根据Map集合创建工作簿
-	 *
-	 * @param maps
-	 *            工作簿的数据源
-	 * @param sheetname
-	 *            表名
-	 * @return 根据Map集合创建的工作簿
-	 */
-	public Workbook fromMaps(List<Map<String, Object>> maps, String sheetname) {
-		if (null == maps || maps.isEmpty()) {
-			throw new IllegalArgumentException("生成Excel时数据源对象为空");
-		}
-		/* 创建工作簿 */
-		Workbook workbook = new HSSFWorkbook();
-		/* 创建工作表 */
-		Sheet sheet = workbook.createSheet(sheetname);
-		int rowCount = 0; // 行计数
-		int columnCount = 0; // 列计数
-		for (Map<String, Object> map : maps) {
-			/* 先设置表头，表头等于Map键名 */
-			if (rowCount == 0) {
-				Row header = sheet.createRow(0);
-				for (String key : map.keySet()) {
-					Cell cell = header.createCell(columnCount);
-					cell.setCellValue(key);
-					columnCount++;
-				}
-				rowCount++;
-			}
-			columnCount = 0;// 列计数归零
-			Row row = sheet.createRow(rowCount);
-			/* 开始以键值填充单元格 */
-			for (Map.Entry<String, Object> entry : map.entrySet()) {
-				if (null != entry.getValue()) {
-					Cell cell = row.createCell(columnCount);
-					cell.setCellValue(entry.getValue().toString());
-				}
-				columnCount++;
-			}
-			rowCount++;
-		}
-		return workbook;
-	}
-	
-	/**
-	 * 根据Map集合创建工作簿
-	 * @param maps 数据源
-	 * @param sheetname 表名
-	 * @return 根据Map集合创建的工作簿
-	 */
-	public Workbook fromResultMaps(List<Map<String, Object>> maps, String sheetname){
-		if (null == maps || maps.isEmpty()){
-			throw new IllegalArgumentException("生成Excel时数据源对象为空");
-		}
-		Workbook workbook = new HSSFWorkbook();
-		Sheet sheet = workbook.createSheet(sheetname);
-		int rowCount = 0;
-		int columnCount = 0;
-		for (Map<String, Object> map : maps){
-			if (rowCount == 0){
-				Row header = sheet.createRow(rowCount);
-				for (String key : map.keySet()){
-					Cell cell = header.createCell(columnCount);
-					cell.setCellValue(key);
-					columnCount++;
-				}
-				rowCount++;
-			}
-			columnCount=0;
-			Row row = sheet.createRow(rowCount);
-			String[] reason = map.get("异常原因").toString().split("。");
-			Integer number = reason.length;
-			String[] dealWith = map.get("处理方式").toString().split("。");
-			if (number > 1){
-				sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+number-1, 0, 0));
-				sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+number-1, 1, 1));
-				sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+number-1, 2, 2));
-				sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+number-1, 3, 3));
-				sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+number-1, 4, 4));
-				sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+number-1, 5, 5));
-				sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+number-1, 6, 6));				
-			}
-			for (Map.Entry<String, Object> entry : map.entrySet()){
-				if ("异常原因".equals(entry.getKey()) || "处理方式".equals(entry.getKey())){
-					for (int i = 0;i<reason.length;i++){
-						if (i>0){
-							Row rows = sheet.createRow(rowCount+i);
-							Cell cell = rows.createCell(columnCount);
-							cell.setCellValue(reason[i]);
-							Cell otherCell = rows.createCell(columnCount+1);
-							otherCell.setCellValue(dealWith[i]);
-						}else{
-							Cell cell = row.createCell(columnCount);
-							cell.setCellValue(reason[i]);
-							Cell otherCell = row.createCell(columnCount+1);
-							otherCell.setCellValue(dealWith[i]);
-						}
-					}
-				} else{
-					Cell cell = row.createCell(columnCount);
-					cell.setCellValue(entry.getValue().toString());
-					columnCount++;
-				}
-			}
-			rowCount = rowCount + reason.length;
-		}
-		int[] maxLength = {5,10,5,5,5,5,5,20,20};
-		return dataStyleSetup(workbook, 0, rowCount, new ColumnProperties(9, maxLength));
-	}
-	
-	/**
-	 * 导出总体统计结果Excel文档
-	 * @param maps 导出数据源
-	 * @param sheetname 表名
-	 * @param path
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	public void exportFromResultMaps(List<Map<String, Object>> maps, String sheetname, String path)
-			throws FileNotFoundException, IOException {
-		if (maps.size() < 1) {
-			return;
-		}
-		LinkedHashSet<Map<String, Object>> set = new LinkedHashSet<>();
-		set.addAll(maps);
-		maps.clear();
-		maps.addAll(set);
-		Workbook workbook = fromResultMaps(maps, sheetname);
-		if (StringUtil.isEmpty(path)) {
-			path = "";
-		}
-		StringBuilder sb = new StringBuilder(path);
-		sb.append(sheetname);
-		sb.append(".xls");
-		try (FileOutputStream out = new FileOutputStream(sb.toString())) {
-			workbook.write(out);
-			out.flush();
-		}
-	}
-	
+    /**
+     * 根据Map集合创建工作簿
+     *
+     * @param maps 工作簿的数据源
+     * @param sheetname 表名
+     * @return 根据Map集合创建的工作簿
+     */
+    public Workbook fromMaps(List<Map<String, Object>> maps, String sheetname) {
+        if (null == maps || maps.isEmpty()) {
+            throw new IllegalArgumentException("生成Excel时数据源对象为空");
+        }
+        /* 创建工作簿 */
+        Workbook workbook = new HSSFWorkbook();
+        /* 创建工作表 */
+        Sheet sheet = workbook.createSheet(sheetname);
+        int rowCount = 0; // 行计数
+        int columnCount = 0; // 列计数
+        for (Map<String, Object> map : maps) {
+            /* 先设置表头，表头等于Map键名 */
+            if (rowCount == 0) {
+                Row header = sheet.createRow(0);
+                for (String key : map.keySet()) {
+                    Cell cell = header.createCell(columnCount);
+                    cell.setCellValue(key);
+                    columnCount++;
+                }
+                rowCount++;
+            }
+            columnCount = 0;// 列计数归零
+            Row row = sheet.createRow(rowCount);
+            /* 开始以键值填充单元格 */
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                if (null != entry.getValue()) {
+                    Cell cell = row.createCell(columnCount);
+                    cell.setCellValue(entry.getValue().toString());
+                }
+                columnCount++;
+            }
+            rowCount++;
+        }
+        return workbook;
+    }
+
+    /**
+     * 根据Map集合创建工作簿
+     *
+     * @param maps 数据源
+     * @param sheetname 表名
+     * @return 根据Map集合创建的工作簿
+     */
+    public Workbook fromResultMaps(List<Map<String, Object>> maps, String sheetname) {
+        if (null == maps || maps.isEmpty()) {
+            throw new IllegalArgumentException("生成Excel时数据源对象为空");
+        }
+        Workbook workbook = new HSSFWorkbook();
+        Sheet sheet = workbook.createSheet(sheetname);
+        int rowCount = 0;
+        int columnCount = 0;
+        for (Map<String, Object> map : maps) {
+            if (rowCount == 0) {
+                Row header = sheet.createRow(rowCount);
+                for (String key : map.keySet()) {
+                    Cell cell = header.createCell(columnCount);
+                    cell.setCellValue(key);
+                    columnCount++;
+                }
+                rowCount++;
+            }
+            columnCount = 0;
+            Row row = sheet.createRow(rowCount);
+            String[] reason = map.get("异常原因").toString().split("。");
+            Integer number = reason.length;
+            String[] dealWith = map.get("处理方式").toString().split("。");
+            if (number > 1) {
+                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 0, 0));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 1, 1));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 2, 2));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 3, 3));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 4, 4));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 5, 5));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 6, 6));
+            }
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                if ("异常原因".equals(entry.getKey()) || "处理方式".equals(entry.getKey())) {
+                    for (int i = 0; i < reason.length; i++) {
+                        if (i > 0) {
+                            Row rows = sheet.createRow(rowCount + i);
+                            Cell cell = rows.createCell(columnCount);
+                            cell.setCellValue(reason[i]);
+                            Cell otherCell = rows.createCell(columnCount + 1);
+                            otherCell.setCellValue(dealWith[i]);
+                        } else {
+                            Cell cell = row.createCell(columnCount);
+                            cell.setCellValue(reason[i]);
+                            Cell otherCell = row.createCell(columnCount + 1);
+                            otherCell.setCellValue(dealWith[i]);
+                        }
+                    }
+                } else {
+                    Cell cell = row.createCell(columnCount);
+                    cell.setCellValue(entry.getValue().toString());
+                    columnCount++;
+                }
+            }
+            rowCount = rowCount + reason.length;
+        }
+        int[] maxLength = {5, 10, 5, 5, 5, 5, 5, 20, 20};
+        return dataStyleSetup(workbook, 0, rowCount, new ColumnProperties(9, maxLength));
+    }
+
+    /**
+     * 导出总体统计结果Excel文档
+     *
+     * @param maps 导出数据源
+     * @param sheetname 表名
+     * @param path
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public void exportFromResultMaps(List<Map<String, Object>> maps, String sheetname, String path)
+            throws FileNotFoundException, IOException {
+        if (maps.size() < 1) {
+            return;
+        }
+        LinkedHashSet<Map<String, Object>> set = new LinkedHashSet<>();
+        set.addAll(maps);
+        maps.clear();
+        maps.addAll(set);
+        Workbook workbook = fromResultMaps(maps, sheetname);
+        if (StringUtil.isEmpty(path)) {
+            path = "";
+        }
+        StringBuilder sb = new StringBuilder(path);
+        sb.append(sheetname);
+        sb.append(".xls");
+        try (FileOutputStream out = new FileOutputStream(sb.toString())) {
+            workbook.write(out);
+            out.flush();
+        }
+    }
 
     /**
      * 根据教材遴选表业务对象（DecPositionBO）集合创建工作簿，适用于主编/副主编导出
@@ -488,11 +488,12 @@ public class ExcelHelper {
     /**
      * 根据业务对象（包含子集合的BO）集合创建工作簿
      *
+     * @param materialId 申报表所属教材ID
      * @param dataSource 业务对象（BO）集合
      * @param sheetName 要生成的Excel表名（非文件名）
      * @return Excel工作簿
      */
-    public Workbook fromDeclarationEtcBOList(List<DeclarationEtcBO> dataSource, String sheetName)
+    public Workbook fromDeclarationEtcBOList(Material material, List<DeclarationEtcBO> dataSource, String sheetName)
             throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
         if (null == dataSource || dataSource.isEmpty()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -623,7 +624,9 @@ public class ExcelHelper {
             rowCount++;
         }
         /* 样式调整 */
-        return dataStyleSetup(workbook, 2, rowCount, columnProperties);
+        workbook = dataStyleSetup(workbook, 2, rowCount, columnProperties);
+        /* 以下隐藏多余的列 */
+        return clearColumns(workbook, material);
     }
 
     private CellStyle generateStyle(Workbook workbook, boolean hasBorder, boolean centerAlign,
@@ -1076,6 +1079,116 @@ public class ExcelHelper {
                     sheet.setColumnWidth(j, (maxLength[j] + 1) * 512);// 设置列宽度
                 }
             }
+        }
+        return workbook;
+    }
+
+    private Workbook clearColumns(Workbook workbook, Material material) {
+        int startColumn = 26;
+        if (!material.getIsEduExpUsed()) {
+            for (int i = 0; i < 4; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 4;
+        }
+        if (!material.getIsWorkExpUsed()) {
+            for (int i = 0; i < 3; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 3;
+        }
+        if (!material.getIsTeachExpUsed()) {
+            for (int i = 0; i < 3; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 3;
+        }
+        if (!material.getIsAcadeUsed()) {
+            for (int i = 0; i < 3; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 3;
+        }
+        if (!material.getIsLastPositionUsed()) {
+            for (int i = 0; i < 2; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 2;
+        }
+        if (!material.getIsCourseUsed()) {
+            for (int i = 0; i < 3; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 3;
+        }
+        if (!material.getIsNationalPlanUsed()) {
+            for (int i = 0; i < 3; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 3;
+        }
+        if (!material.getIsPmphTextbookUsed()) {
+            for (int i = 0; i < 5; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 5;
+        }
+        if (!material.getIsTextbookUsed()) {
+            for (int i = 0; i < 6; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 6;
+        }
+        if (!material.getIsResearchUsed()) {
+            for (int i = 0; i < 3; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 3;
+        }
+        if (!material.getIsMonographUsed()) {
+            for (int i = 0; i < 5; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 5;
+        }
+        if (!material.getIsPublishRewardUsed()) {
+            for (int i = 0; i < 3; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 3;
+        }
+        if (!material.getIsSciUsed()) {
+            for (int i = 0; i < 4; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 4;
+        }
+        if (!material.getIsClinicalRewardUsed()) {
+            for (int i = 0; i < 3; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 3;
+        }
+        if (!material.getIsAcadeRewardUsed()) {
+            for (int i = 0; i < 3; i++) {
+                workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+            }
+        } else {
+            startColumn += 3;
         }
         return workbook;
     }

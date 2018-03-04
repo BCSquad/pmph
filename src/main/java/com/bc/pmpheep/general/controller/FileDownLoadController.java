@@ -293,7 +293,7 @@ public class FileDownLoadController {
         Workbook workbook = null;
         try {
             workbook =
-            excelHelper.fromDeclarationEtcBOList(declarationService.declarationEtcBO(materialId,
+            excelHelper.fromDeclarationEtcBOList(materialService.getMaterialById(materialId), declarationService.declarationEtcBO(materialId,
                                                                                      textBookids,
                                                                                      realname,
                                                                                      position,
@@ -311,7 +311,7 @@ public class FileDownLoadController {
         response.setContentType("application/force-download");
         try {
             StringBuilder sb = new StringBuilder("attachment;fileName=");
-            String materialName = new String(materialService.getMaterialNameById(materialId).getBytes(""),"ISO8859-1");
+            String materialName = new String(materialService.getMaterialNameById(materialId).getBytes("utf-8"),"ISO8859-1");
             sb.append(materialName);
             sb.append(".");
             SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd.HHmm");

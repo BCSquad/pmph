@@ -862,7 +862,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			// 人卫社教材编写
 			List<DecTextbookPmph> decTextbookPmph = new ArrayList<>();
-			for (DecTextbookPmph textbookPmph : decTextbookPmph) {
+			for (DecTextbookPmph textbookPmph : decTextbookPmphs) {
 				if (textbookPmph.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
 					decTextbookPmph.add(textbookPmph);
 				}
