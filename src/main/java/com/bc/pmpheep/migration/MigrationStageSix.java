@@ -870,11 +870,15 @@ public class MigrationStageSix {
                         .replace("：", "").replace("、", "/").replace(".", "·").replace("*", "·")
                         .replace("•", "·");
             }
-            Integer rank = rankJudge.intValue();
-            if (ObjectUtil.isNull(rank)) {
+            Integer rank;
+            if (ObjectUtil.isNull(rankJudge)) {
                 rank = 0;
+            } else {
+                rank = rankJudge.intValue();
             }
-            publisher = publisher == null ? "" : publisher;
+            if (ObjectUtil.isNull(publisher)) {
+                publisher = "";
+            }
             if (!"人民卫生出版社".equals(publisher.trim())) {
                 decTextbook.setDeclarationId(declarationid);
                 decTextbook.setMaterialName(materialName);
