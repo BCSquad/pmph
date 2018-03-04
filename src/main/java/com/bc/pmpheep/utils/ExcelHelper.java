@@ -221,6 +221,103 @@ public class ExcelHelper {
 		}
 		return workbook;
 	}
+	
+	/**
+	 * 根据Map集合创建工作簿
+	 * @param maps 数据源
+	 * @param sheetname 表名
+	 * @return 根据Map集合创建的工作簿
+	 */
+	public Workbook fromResultMaps(List<Map<String, Object>> maps, String sheetname){
+		if (null == maps || maps.isEmpty()){
+			throw new IllegalArgumentException("生成Excel时数据源对象为空");
+		}
+		Workbook workbook = new HSSFWorkbook();
+		Sheet sheet = workbook.createSheet(sheetname);
+		int rowCount = 0;
+		int columnCount = 0;
+		for (Map<String, Object> map : maps){
+			if (rowCount == 0){
+				Row header = sheet.createRow(rowCount);
+				for (String key : map.keySet()){
+					Cell cell = header.createCell(columnCount);
+					cell.setCellValue(key);
+					columnCount++;
+				}
+				rowCount++;
+			}
+			columnCount=0;
+			Row row = sheet.createRow(rowCount);
+			String[] reason = map.get("异常原因").toString().split("。");
+			Integer number = reason.length;
+			String[] dealWith = map.get("处理方式").toString().split("。");
+			if (number > 1){
+				sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+number-1, 0, 0));
+				sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+number-1, 1, 1));
+				sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+number-1, 2, 2));
+				sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+number-1, 3, 3));
+				sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+number-1, 4, 4));
+				sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+number-1, 5, 5));
+				sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount+number-1, 6, 6));				
+			}
+			for (Map.Entry<String, Object> entry : map.entrySet()){
+				if ("异常原因".equals(entry.getKey()) || "处理方式".equals(entry.getKey())){
+					for (int i = 0;i<reason.length;i++){
+						if (i>0){
+							Row rows = sheet.createRow(rowCount+i);
+							Cell cell = rows.createCell(columnCount);
+							cell.setCellValue(reason[i]);
+							Cell otherCell = rows.createCell(columnCount+1);
+							otherCell.setCellValue(dealWith[i]);
+						}else{
+							Cell cell = row.createCell(columnCount);
+							cell.setCellValue(reason[i]);
+							Cell otherCell = row.createCell(columnCount+1);
+							otherCell.setCellValue(dealWith[i]);
+						}
+					}
+				} else{
+					Cell cell = row.createCell(columnCount);
+					cell.setCellValue(entry.getValue().toString());
+					columnCount++;
+				}
+			}
+			rowCount = rowCount + reason.length;
+		}
+		int[] maxLength = {5,10,5,5,5,5,5,20,20};
+		return dataStyleSetup(workbook, 0, rowCount, new ColumnProperties(9, maxLength));
+	}
+	
+	/**
+	 * 导出总体统计结果Excel文档
+	 * @param maps 导出数据源
+	 * @param sheetname 表名
+	 * @param path
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void exportFromResultMaps(List<Map<String, Object>> maps, String sheetname, String path)
+			throws FileNotFoundException, IOException {
+		if (maps.size() < 1) {
+			return;
+		}
+		LinkedHashSet<Map<String, Object>> set = new LinkedHashSet<>();
+		set.addAll(maps);
+		maps.clear();
+		maps.addAll(set);
+		Workbook workbook = fromResultMaps(maps, sheetname);
+		if (StringUtil.isEmpty(path)) {
+			path = "";
+		}
+		StringBuilder sb = new StringBuilder(path);
+		sb.append(sheetname);
+		sb.append(".xls");
+		try (FileOutputStream out = new FileOutputStream(sb.toString())) {
+			workbook.write(out);
+			out.flush();
+		}
+	}
+	
 
 	/**
 	 * 根据教材遴选表业务对象（DecPositionBO）集合创建工作簿，适用于主编/副主编导出
