@@ -2,12 +2,10 @@ package com.bc.pmpheep.utils.test;
 
 import com.bc.pmpheep.back.bo.DecPositionBO;
 import com.bc.pmpheep.back.bo.DeclarationBO;
-import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.bo.WriterBO;
-import com.bc.pmpheep.back.po.Area;
-import com.bc.pmpheep.back.po.DecEduExp;
-import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.service.DecTeachExpService;
+import com.bc.pmpheep.back.service.DeclarationService;
+import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
@@ -37,9 +35,14 @@ public class ExcelHelperTest extends BaseTest {
     @Resource
     ExcelHelper excelHelper;
     @Resource
+    MaterialService materialService;
+    @Resource
+    DeclarationService declarationService;
+    @Resource
     DecTeachExpService decTeachExpService;
 
     @Test
+    @Ignore
     public void fromDecPositionBOList() throws IOException, SecurityException, IllegalArgumentException, IllegalAccessException {
         List<DecPositionBO> list = makeDecPositionBOList();
         Workbook workbook = excelHelper.fromDecPositionBOList(list, "遴选表");
@@ -51,6 +54,7 @@ public class ExcelHelperTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void fromBusinessObjectList() throws IOException, SecurityException, IllegalArgumentException, IllegalAccessException {
         List<DeclarationBO> list = new ArrayList();
         DeclarationBO declarationBO = new DeclarationBO();
@@ -77,45 +81,18 @@ public class ExcelHelperTest extends BaseTest {
     @Ignore
     public void fromDeclarationEtcBOList() throws CheckedServiceException, FileNotFoundException, IOException,
             IllegalArgumentException, IllegalAccessException {
-        List<DeclarationEtcBO> list = new ArrayList();
-        DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO();
-        declarationEtcBO.setRealname("John");
-        list.add(declarationEtcBO);
-        declarationEtcBO = new DeclarationEtcBO();
-        declarationEtcBO.setUsername("Smith");
-        ArrayList<DecEduExp> exps = new ArrayList<>(3);
-        DecEduExp exp = new DecEduExp();
-        exp.setDateBegin("1998-07-01");
-        exp.setDateEnd("2003-12-01");
-        exp.setDegree("本科");
-        exp.setMajor("临床医学");
-        exp.setSchoolName("首都医科大学");
-        exps.add(exp);
-        exp = new DecEduExp();
-        exp.setDateBegin("2004-07-01");
-        exp.setDateEnd("2007-12-01");
-        exp.setDegree("硕士");
-        exp.setMajor("临床医学");
-        exp.setSchoolName("首都医科大学");
-        exps.add(exp);
-        exp = new DecEduExp();
-        exp.setDateBegin("2008-07-01");
-        exp.setDateEnd("2012-12-01");
-        exp.setDegree("博士");
-        exp.setMajor("临床医学");
-        exp.setSchoolName("首都医科大学");
-        exps.add(exp);
-        declarationEtcBO.setDecEduExps(exps);
-        list.add(declarationEtcBO);
-        declarationEtcBO = new DeclarationEtcBO();
-        declarationEtcBO.setTextbookName("人体解剖学与组织胚胎学");
-        ArrayList<DecTeachExp> decTeachExps = (ArrayList<DecTeachExp>) decTeachExpService.getListDecTeachExpByDeclarationId(7747L);
-        declarationEtcBO.setDecTeachExps(decTeachExps);
-        list.add(declarationEtcBO);
-        declarationEtcBO = new DeclarationEtcBO();
-        declarationEtcBO.setPresetPosition("副主编");
-        list.add(declarationEtcBO);
-        Workbook workbook = excelHelper.fromDeclarationEtcBOList(null, list, "专家信息表");
+        Workbook workbook = excelHelper.fromDeclarationEtcBOList(materialService.getMaterialById(2L),
+                declarationService.declarationEtcBO(2L,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null),
+                "专家信息表");
         String path = this.getClass().getResource("/").getPath().concat("DeclarationEtcBOList.xls");
         FileOutputStream out = new FileOutputStream(path);
         workbook.write(out);
@@ -124,6 +101,7 @@ public class ExcelHelperTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void fromMaps() throws FileNotFoundException, IOException {
         String sql = "SELECT * FROM bbs_groupusers";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
@@ -139,6 +117,7 @@ public class ExcelHelperTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void exportFromMaps() throws IOException {
         String sql = "SELECT * FROM bbs_group";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
