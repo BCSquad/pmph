@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -148,7 +149,12 @@ public class MigrationStageThree {
                 + "WHERE a.sysflag = 0 OR a.usercode = 'admin';";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
         int count = 0;
+        int correctCount = 0;
+        int[] state = {0,0,0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
             String userId = (String) map.get("userid");
@@ -156,6 +162,11 @@ public class MigrationStageThree {
             if (StringUtil.isEmpty(userName)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到用户的登陆账号。"));
                 excel.add(map);
+                if (state[0] == 0){
+                	reason.append("找不到用户的登陆账号。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             String password = "888888";
@@ -172,11 +183,21 @@ public class MigrationStageThree {
                 departmentId = 0L;
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("此用户没有所属的社内部门。"));
                 excel.add(map);
+                if (state[1] == 0){
+                	reason.append("此用户没有所属的社内部门。");
+                	dealWith.append("设为人民卫生出版社迁入数据库。");
+                	state[1] = 1;
+                }
             }
             if (departmentId > number){
             	departmentId = 0L;
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("此用户所属部门为学校机构。"));
                 excel.add(map);
+                if (state[2] == 0){
+                	reason.append("此用户所属部门为学校机构。");
+                	dealWith.append("设为人民卫生出版社迁入数据库。");
+                	state[2] = 1;
+                }
             }
             String handphone = (String) map.get("handset");
             String email = (String) map.get("email");
@@ -213,10 +234,18 @@ public class MigrationStageThree {
                     logger.error("文件读取异常，路径<{}>,异常信息：{}", avatar, ex.getMessage());
                     map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("文件读取异常。"));
                     excel.add(map);
+                    if (state[3] == 0){
+                    	reason.append("社内用户头像文件丢失。");
+                    	dealWith.append("设为默认头像迁入数据库。");
+                    	state[3] = 1;
+                    }
                 } 
                 pmphUser.setAvatar(mongoId);
                 pmphUser.setPassword(null);
                 pmphUserService.update(pmphUser);
+            }
+            if (null == map.get("exception")){
+            	correctCount++;
             }
         }
         if (excel.size() > 0) {
@@ -225,6 +254,18 @@ public class MigrationStageThree {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "pmph_user");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "社内用户表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("pmph_user表迁移完成");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据", maps.size(), count);
@@ -282,7 +323,12 @@ public class MigrationStageThree {
                 + "WHERE b.sysflag = 0 OR b.usercode = 'admin';";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
         int count = 0;
+        int correctCount = 0;//统计正常数据的数量
+        int[] state = {0};//识别当前数据异常是否存在的标识
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         for (Map<String, Object> map : maps) {
             Double userroleId = (Double) map.get("userroleid");
             Long userId = (Long) map.get("user_new_pk");
@@ -290,6 +336,11 @@ public class MigrationStageThree {
             if (ObjectUtil.isNull(roleId)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "用户所属角色被删除。");
                 excel.add(map);
+                if (state[0] == 0){
+                	reason.append("用户所属角色被删除。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             PmphUserRole pmphUserRole = new PmphUserRole();
@@ -299,6 +350,9 @@ public class MigrationStageThree {
             count++;
             Long pk = pmphUserRole.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "userroleid", userroleId);
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -306,6 +360,18 @@ public class MigrationStageThree {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "pmph_user_role");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "社内用户-角色关联表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("pmph_user_role表迁移完成");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据", maps.size(), count);
@@ -327,11 +393,22 @@ public class MigrationStageThree {
     	String tableName = "sys_role";
 		List<Map<String,Object>> maps = JdbcHelper.queryForList(tableName);
 		List<Map<String,Object>> excel = new LinkedList<>();
+		Map<String, Object> result = new LinkedHashMap<>();
+		int count = 0;
+		int correctCount = 0;
+		int[] state = {0};
+		StringBuilder reason = new StringBuilder();
+		StringBuilder dealWith = new StringBuilder();
 		for (Map<String,Object> map : maps){
 			Long newpk = (Long) map.get("new_pk");
 			if (newpk == 0){
 				map.put(SQLParameters.EXCEL_EX_HEADER, "此角色未迁移成功。");
 				excel.add(map);
+				if (state[0] == 0){
+					reason.append("角色不存在。");
+					dealWith.append("放弃迁移。");
+					state[0] = 1;
+				}
 				continue;
 			}
 			PmphRolePermission pmphRolePermission = new PmphRolePermission();
@@ -339,6 +416,10 @@ public class MigrationStageThree {
 				pmphRolePermission.setRoleId(newpk);
 				pmphRolePermission.setPermissionId(Long.parseLong(String.valueOf(i)));
 				pmphRolePermissionService.addPmphRolePermission(pmphRolePermission);
+			}
+			count++;
+			if (null == map.get("exception")){
+				correctCount++;
 			}
 		}
 		if (excel.size() > 0){
@@ -348,6 +429,18 @@ public class MigrationStageThree {
                 logger.error("异常数据导出到Excel失败", ex);
             }
 		}
+		if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "pmph_role_permission");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "社内用户-权限关联表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
+        }
 	}
     
     /**
