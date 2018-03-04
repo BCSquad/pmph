@@ -228,22 +228,27 @@ public class MigrationStageSix {
                 useridCount++;
                 continue;
             } else {
-            	if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id)) {
+                if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id)) {
                     String sqlId = "SELECT *,new_pk userIds FROM sys_user "
                             + "where usercode = '18045661072' and username = '李勇'";
                     List<Map<String, Object>> mapIds = JdbcHelper.getJdbcTemplate().queryForList(sqlId);
                     for (Map<String, Object> mapId : mapIds) {
                         Long userId = (Long) mapId.get("userIds");
+                        if (ObjectUtil.isNull(userId)) {
+                            map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("李勇的userId为空"));
+                            excel.add(map);
+                            logger.debug("作家李勇的userId为空，此结果将被记录在Excel中");
+                            useridCount++;
+                            continue;
+                        }
                         String usercode = (String) mapId.get("usercode");
                         String username = (String) mapId.get("username");
-                        if ("18045661072".equals(usercode) && "李勇".equals(username)) {
-                            declaration.setUserId(userId);
-                        }
+                        declaration.setUserId(userId);
                     }
                 } else {
                     declaration.setUserId(userid);
                 }
-			}
+            }
             if (StringUtil.isEmpty(realName) && isStagingJudge.intValue() == 0) { // 申报表作家姓名为空并且没有暂存
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空并且没有暂存。"));
                 realNameCount++;
