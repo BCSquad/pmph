@@ -926,7 +926,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			// 作家扩展项
 			List<DecExtensionVO> extensionVOs = new ArrayList<>();
-			for (DecExtensionVO extensionVO : extensionVOs) {
+			for (DecExtensionVO extensionVO : decExtensionVOs) {
 				if (extensionVO.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
 					extensionVOs.add(extensionVO);
 				}
