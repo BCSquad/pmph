@@ -1,5 +1,7 @@
 package com.bc.pmpheep.migration;
 
+import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -45,8 +47,10 @@ import com.bc.pmpheep.back.service.DecTextbookService;
 import com.bc.pmpheep.back.service.DecWorkExpService;
 import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.service.MaterialService;
+import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
@@ -70,6 +74,8 @@ public class MigrationStageSix {
     Date split;
     Date blank;
 
+    @Resource
+    WriterUserService writerUserService;
     @Resource
     DeclarationService declarationService;
     @Resource
@@ -229,22 +235,18 @@ public class MigrationStageSix {
                 continue;
             } else {
                 if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id)) {
-                    String sqlId = "SELECT *,new_pk userIds FROM sys_user "
-                            + "where usercode = '18045661072' and username = '李勇'";
-                    List<Map<String, Object>> mapIds = JdbcHelper.getJdbcTemplate().queryForList(sqlId);
-                    for (Map<String, Object> mapId : mapIds) {
-                        Long userId = (Long) mapId.get("userIds");
-                        if (ObjectUtil.isNull(userId)) {
-                            map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("李勇的userId为空"));
-                            excel.add(map);
-                            logger.debug("作家李勇的userId为空，此结果将被记录在Excel中");
-                            useridCount++;
-                            continue;
-                        }
-                        String usercode = (String) mapId.get("usercode");
-                        String username = (String) mapId.get("username");
-                        declaration.setUserId(userId);
+                    WriterUserManagerVO vo = new WriterUserManagerVO();
+                    vo.setUsername("18045661072");
+                    PageParameter<WriterUserManagerVO> param = new PageParameter<>(1, 1, vo);
+                    PageResult<WriterUserManagerVO> list = writerUserService.getListWriterUser(param);
+                    if (list.getRows().isEmpty()) {
+                        map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到'18045661072-李勇'对应的关联结果。"));
+                        excel.add(map);
+                        logger.debug("未找到'18045661072-李勇'对应的关联结果，此结果将被记录在Excel中");
+                        useridCount++;
+                        continue;
                     }
+                    declaration.setUserId(list.getRows().get(0).getId());
                 } else {
                     declaration.setUserId(userid);
                 }
