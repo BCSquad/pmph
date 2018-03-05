@@ -50,4 +50,12 @@ public interface WriterPointLogService {
 	 * @return
 	 */
 	PageResult<WriterPointLogVO> getListWriterPointLog (PageParameter<WriterPointLogVO> pageParameter);
+	
+	/**
+	 *  通过用户id查询积分记录
+	 * @param writerId
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	WriterPointLog getWriterPointLogByUserId(Long userId) throws CheckedServiceException;
 }

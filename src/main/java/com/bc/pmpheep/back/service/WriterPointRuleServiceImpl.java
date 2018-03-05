@@ -8,13 +8,11 @@ import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.dao.WriterPointRuleDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
-import com.bc.pmpheep.back.po.WriterPoint;
 import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
-import com.bc.pmpheep.back.vo.WriterPointLogVO;
 import com.bc.pmpheep.back.vo.WriterPointRuleVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -144,6 +142,24 @@ public class WriterPointRuleServiceImpl implements WriterPointRuleService{
             pageResult.setRows(writerPointRuleVOs);
         }
         return pageResult;
+	}
+
+	@Override
+	public List<WriterPointRuleVO> getWriterPointRule(String ruleName) throws CheckedServiceException {
+		if(ObjectUtil.isNull(ruleName)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return writerPointRuleDao.getWriterPointRuleByName(ruleName);
+	}
+
+	@Override
+	public WriterPointRule getWriterPointRuleByName(String ruleName) throws CheckedServiceException {
+		if(ObjectUtil.isNull(ruleName)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return writerPointRuleDao.getWriterPointRuleByRuleName(ruleName);
 	}
 
 }

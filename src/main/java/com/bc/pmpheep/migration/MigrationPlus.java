@@ -457,8 +457,16 @@ public class MigrationPlus {
 		 writerPointRuleService.addWriterPointRule(writerPointRule3);
 		 WriterPointRule writerPointRule4=new WriterPointRule("回复话题", "reply_topic", 1, false, null, null, "回复话题给1分", true);
 		 writerPointRuleService.addWriterPointRule(writerPointRule4);
-		 WriterPointRule writerPointRule5=new WriterPointRule("创建话题", "create_topic", 2, false, null, null, "创建话题给1分", true);
+		 WriterPointRule writerPointRule5=new WriterPointRule("创建话题", "create_topic", 1, false, null, null, "创建话题给1分", true);
 		 writerPointRuleService.addWriterPointRule(writerPointRule5);
+		 WriterPointRule writerPointRule9=new WriterPointRule("图书评论", "book_comment", 1, false, null, null, "图书评论给1分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule9);
+		 WriterPointRule writerPointRule10=new WriterPointRule("图书纠错", "book_correction", 1, false, null, null, "图书纠错给1分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule10);
+		 WriterPointRule writerPointRule11=new WriterPointRule("发表文章", "cms_content", 1, false, null, null, "发表文章给1分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule11);
+		 WriterPointRule writerPointRule12=new WriterPointRule("问卷调查", "survey", 1, false, null, null, "问卷调查给1分", true);
+		 writerPointRuleService.addWriterPointRule(writerPointRule12);
 		 WriterPointRule writerPointRule6=new WriterPointRule("平台a", "sys_a", 50, true, "2", 2, "本平台50积分=商城2积分", true);
 		 writerPointRuleService.addWriterPointRule(writerPointRule6);
 		 WriterPointRule writerPointRule7=new WriterPointRule("平台b", "sys_b", 200, true, "0", 10, "本平台200积分=平台b10积分", true);

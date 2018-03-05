@@ -1,18 +1,19 @@
 package com.bc.pmpheep.back.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.common.service.BaseService;
-import com.bc.pmpheep.back.dao.BookDao;
 import com.bc.pmpheep.back.dao.BookUserCommentDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.BookUserComment;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.WriterPoint;
+import com.bc.pmpheep.back.po.WriterPointLog;
+import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.DateUtil;
@@ -50,7 +51,13 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 	private BookService bookService;
 	@Autowired
 	WriterUserTrendstService writerUserTrendstService;
-
+	@Autowired
+	WriterPointRuleService writerPointRuleService;
+	@Autowired
+	WriterPointLogService writerPointLogService;
+	@Autowired
+	WriterPointService writerPointService;
+	
 	@Override
 	public PageResult<BookUserCommentVO> listBookUserComment(PageParameter<BookUserCommentVO> pageParameter)
 			throws CheckedServiceException {
@@ -70,9 +77,6 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			throws CheckedServiceException {
 		String result = "FAIL";
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-		if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "用户为空");
-		}
 		if (ArrayUtil.isEmpty(ids)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
 					"评论id为空");
@@ -104,6 +108,40 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 				bookService.updateBookCore(bookUserComment.getBookId());
 				// 更新书的评论数
 				bookService.updateUpComments(bookUserComment.getBookId());
+			}
+			// 当用户评论过后 增加相应积分
+			if(isAuth == 1){
+				String ruleName="图书评论";
+				//获取积分规则
+				WriterPointRule writerPointRuleVOs=writerPointRuleService.getWriterPointRuleByName(ruleName);
+				if(null!=writerPointRuleVOs){
+					//查询用户评论之前的积分值
+					WriterPointLog writerPointLog2=writerPointLogService.getWriterPointLogByUserId(bookUserComment.getWriterId());
+					WriterPointLog writerPointLog=new WriterPointLog();
+					//现在的规则的积分值+以前的积分
+					Integer temp=0;
+					if(null!=writerPointLog2){
+						temp=writerPointRuleVOs.getPoint()+writerPointLog2.getPoint();
+						writerPointLog.setPoint(temp);
+					}else{
+						temp=writerPointRuleVOs.getPoint();
+						writerPointLog.setPoint(temp);
+					}
+					//积分规则id
+					writerPointLog.setRuleId(writerPointRuleVOs.getId());
+					writerPointLog.setUserId(bookUserComment.getWriterId());
+					//增加积分记录
+					writerPointLogService.add(writerPointLog);
+					WriterPoint point=writerPointService.getWriterPointByUserId(bookUserComment.getWriterId());
+					WriterPoint writerPoint=new WriterPoint();
+					//当前获取的总积分=评论积分+以前的积分
+					writerPoint.setGain(writerPointLog.getPoint());
+					writerPoint.setUserId(bookUserComment.getWriterId());
+					writerPoint.setTotal(writerPoint.getGain()+point.getLoss());
+					writerPoint.setLoss(point.getLoss());
+					writerPoint.setId(point.getId());
+					writerPointService.updateWriterPoint(writerPoint);
+				}
 			}
 		}
 		if (num > 0) {

@@ -58,4 +58,11 @@ public interface WriterPointLogDao {
 	 * @return
 	 */
 	List<WriterPointLogVO> listWriterPointLogVO(PageParameter<WriterPointLogVO> pageParameter);
+	
+	/**
+	 * 通过用户id查询积分记录
+	 * @param writerId
+	 * @return
+	 */
+	WriterPointLog getWriterPointLogByUserId(Long userId);
 }
