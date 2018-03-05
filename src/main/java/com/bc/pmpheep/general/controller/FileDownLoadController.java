@@ -303,19 +303,19 @@ public class FileDownLoadController {
         response.setContentType("application/force-download");
         try {
             StringBuilder sb = new StringBuilder("attachment;fileName=");
-            String materialName = new String(materialService.getMaterialNameById(materialId).getBytes("utf-8"),
-                    "ISO8859-1");
+            String materialName;
+            String userAgent = request.getHeader("User-Agent");
+            if (userAgent.toLowerCase().contains("mozilla")) {
+                materialName = URLEncoder.encode(materialService.getMaterialNameById(materialId), "UTF-8");
+            } else {
+                materialName = new String(materialService.getMaterialNameById(materialId).getBytes("utf-8"), "ISO8859-1");
+            }
             sb.append(materialName);
             sb.append(".");
             SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd.HHmm");
             sb.append(sdf.format(new Date()));
             sb.append(".xls");
-            String userAgent = request.getHeader("User-Agent");
-            if (userAgent.toLowerCase().contains("mozilla")) {
-                response.setHeader("Content-Disposition", URLDecoder.decode(sb.toString(), "utf-8"));
-            } else {
-                response.setHeader("Content-Disposition", sb.toString().replace("+", "%20"));
-            }
+            response.setHeader("Content-Disposition", sb.toString().replace("+", "%20"));
         } catch (UnsupportedEncodingException e) {
             logger.warn("修改编码格式的时候失败");
         }
