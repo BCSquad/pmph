@@ -92,6 +92,8 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 				WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 				writerUserTrendst.setUserId(bookUserComment.getWriterId());
 				writerUserTrendst.setType(5);
+				writerUserTrendst.setBookId(bookUserComment.getBookId());
+				writerUserTrendst.setBookCommentId(id);
 				writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			}
 			bookUserComment.setId(id);
