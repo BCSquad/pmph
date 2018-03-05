@@ -351,9 +351,7 @@
 			and o.org_name like concat('%',#{parameter.orgName},'%')
 		</if>
 		<if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
-			<if test="parameter.orgTypeName != all">
-				and ot.type_name=#{parameter.orgTypeName}
-			</if>
+			and ot.type_name=#{parameter.orgTypeName}
 		</if>
 		<if test="parameter.school !=null and parameter.school !='' ">
 			and ot.type_name!=#{parameter.school}
@@ -411,5 +409,53 @@
 		where
 		org_id =
 		#{orgId}
+	</select>
+	
+	<select id="getListAllOrgUser" parameterType="PageParameter"
+		resultType="OrgAndOrgUserVO">
+		select
+		ou.id,o.org_name,ou.username,ou.realname,ou.handphone,ou.email,ou.address,o.area_id,
+		ou.is_disabled isDisabled,ot.type_name
+		orgTypeName,ou.position,ou.title,ou.note,
+		ou.org_id,ot.id orgTypeId,t.count
+		from org o
+		left join org_user ou on ou.org_id=o.id
+		left join org_type ot
+		on ot.id=o.org_type_id,(
+			select 
+				count(*) `count` 
+			from 
+				org o
+			left join 
+				org_user ou on ou.org_id=o.id
+			left join 
+				org_type ot
+			on 
+				ot.id=o.org_type_id
+			where 1=1
+			<if test="parameter.name !=null and parameter.name !='' ">
+				and (
+						u.username like concat('%',#{parameter.name},'%') 
+					or 
+						u.realname like concat('%',#{parameter.name},'%')
+				)
+			</if>
+			<if test="parameter.orgName !=null and parameter.orgName !=''">
+				and o.org_name like concat('%',#{parameter.orgName},'%')
+			</if>
+		)t
+		where 1=1
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (ou.username like concat('%',#{parameter.name},'%' )
+			or
+			ou.realname like
+			concat('%',#{parameter.name},'%' ) )
+		</if>
+		<if test="parameter.orgName !=null and parameter.orgName !=''">
+			and o.org_name like concat('%',#{parameter.orgName},'%')
+		</if>
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
 	</select>
 </mapper>
