@@ -139,19 +139,29 @@ public class BookVideoController {
      * @introduction
      * @author Mryang
      * @createDate 2018年2月10日 下午5:34:12
-     * @param bookVideo
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/addBookVideo", method = RequestMethod.POST)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存微视频信息")
-    public ResponseBean<Integer> addBookVideo(HttpServletRequest request, BookVideo bookVideo,
+    public ResponseBean<Integer> addBookVideo(HttpServletRequest request, Long bookId,
+            String title, String origPath, String origFileName, Long origFileSize,
+            String path, String fileName, Long fileSize,
             @RequestParam("cover") MultipartFile cover) throws IOException {
         String sessionId = CookiesUtil.getSessionId(request);
         if (StringUtil.isEmpty(sessionId)) {
             return new ResponseBean(new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO,
                     CheckedExceptionResult.USER_SESSION, "尚未登录或session已过期"));
         }
+        BookVideo bookVideo = new BookVideo();
+        bookVideo.setBookId(bookId);
+        bookVideo.setTitle(title);
+        bookVideo.setOrigPath(origPath);
+        bookVideo.setOrigFileName(origFileName);
+        bookVideo.setOrigFileSize(origFileSize);
+        bookVideo.setPath(path);
+        bookVideo.setFileName(fileName);
+        bookVideo.setFileSize(fileSize);
         return new ResponseBean(bookVideoService.addBookVideo(sessionId, bookVideo, cover));
     }
 

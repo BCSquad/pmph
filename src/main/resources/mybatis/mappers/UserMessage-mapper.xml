@@ -445,7 +445,8 @@
 		<if test="parameter.senderIds != null">
 			AND
 			m.sender_id in
-			<foreach collection="parameter.senderIds" item="userId" index="index" open="(" close=")" separator=",">
+			<foreach collection="parameter.senderIds" item="userId"
+				index="index" open="(" close=")" separator=",">
 				#{userId}
 			</foreach>
 		</if>
@@ -482,7 +483,8 @@
 		<if test="parameter.senderIds != null">
 			AND
 			m.sender_id in
-			<foreach collection="parameter.senderIds" item="userId" index="index" open="(" close=")" separator=",">
+			<foreach collection="parameter.senderIds" item="userId"
+				index="index" open="(" close=")" separator=",">
 				#{userId}
 			</foreach>
 		</if>
@@ -543,6 +545,8 @@
 		#{parameter.userType}
 		AND
 		m.is_deleted = false
+		AND
+		m.is_withdraw = false
 		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
 		</if>
