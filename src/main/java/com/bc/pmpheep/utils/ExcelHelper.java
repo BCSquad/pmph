@@ -247,44 +247,44 @@ public class ExcelHelper {
                 rowCount++;
             }
             columnCount = 0;
-            Row row = sheet.createRow(rowCount);
             String[] reason = map.get("异常原因").toString().split("。");
             Integer number = reason.length;
             String[] dealWith = map.get("处理方式").toString().split("。");
             if (number > 1) {
-                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 0, 0));
-                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 1, 1));
-                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 2, 2));
-                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 3, 3));
-                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 4, 4));
-                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 5, 5));
-                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 6, 6));
+            	sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 0, 0));
+            	sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 1, 1));
+            	sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 2, 2));
+            	sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 3, 3));
+            	sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 4, 4));
+            	sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 5, 5));
+            	sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 6, 6));
             }
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                if ("异常原因".equals(entry.getKey()) || "处理方式".equals(entry.getKey())) {
-                    for (int i = 0; i < reason.length; i++) {
-                        if (i > 0) {
-                            Row rows = sheet.createRow(rowCount + i);
-                            Cell cell = rows.createCell(columnCount);
-                            cell.setCellValue(reason[i]);
-                            Cell otherCell = rows.createCell(columnCount + 1);
-                            otherCell.setCellValue(dealWith[i]);
-                        } else {
-                            Cell cell = row.createCell(columnCount);
-                            cell.setCellValue(reason[i]);
-                            Cell otherCell = row.createCell(columnCount + 1);
-                            otherCell.setCellValue(dealWith[i]);
-                        }
-                    }
-                } else {
-                    Cell cell = row.createCell(columnCount);
-                    cell.setCellValue(entry.getValue().toString());
-                    columnCount++;
-                }
+            for (int i = 0; i <reason.length ; i ++){
+            	Row row = sheet.createRow(rowCount + i);
+            	columnCount = 0;
+	            for (Map.Entry<String, Object> entry : map.entrySet()) {
+	            		Cell cell = row.createCell(columnCount);
+	            		if (i == 0){
+	            			if ("异常原因".equals(entry.getKey())){
+	            				cell.setCellValue(reason[i]);
+	            			} else if ("处理方式".equals(entry.getKey())){
+	            				cell.setCellValue(dealWith[i]);
+	            			} else {
+	            				cell.setCellValue(entry.getValue().toString());
+	            			}
+	            		} else {
+	            			if ("异常原因".equals(entry.getKey())){
+	            				cell.setCellValue(reason[i]);
+	            			} else if ("处理方式".equals(entry.getKey())){
+	            				cell.setCellValue(dealWith[i]);
+	            			}	            			
+	            		}
+	            	columnCount++;	
+            	}
             }
             rowCount = rowCount + reason.length;
         }
-        int[] maxLength = {5, 10, 5, 5, 5, 5, 5, 20, 20};
+        int[] maxLength = {5, 10, 5, 5, 5, 5, 5, 30, 30};
         return dataStyleSetup(workbook, 0, rowCount, new ColumnProperties(9, maxLength));
     }
 
