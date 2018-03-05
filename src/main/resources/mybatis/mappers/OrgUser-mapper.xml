@@ -351,7 +351,7 @@
 			and o.org_name like concat('%',#{parameter.orgName},'%')
 		</if>
 		<if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
-			<if test="parameter.orgTypeName !='all'">
+			<if test="parameter.orgTypeName != all">
 				and ot.type_name=#{parameter.orgTypeName}
 			</if>
 		</if>
