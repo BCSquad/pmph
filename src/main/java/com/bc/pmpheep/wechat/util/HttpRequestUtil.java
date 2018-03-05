@@ -23,6 +23,23 @@ import org.slf4j.LoggerFactory;
 
 import com.bc.pmpheep.wechat.enums.EnumMethod;
 
+/**
+ * 
+ * <pre>
+ * 功能描述：HttpRequestUtil 工具类
+ * 使用示范：
+ * 
+ * 
+ * @author (作者) nyz
+ * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2018-2-27
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
+ * </pre>
+ */
 public class HttpRequestUtil {
     private static Logger logger = LoggerFactory.getLogger(HttpRequestUtil.class);
 

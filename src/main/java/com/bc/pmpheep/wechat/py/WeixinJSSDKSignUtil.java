@@ -11,9 +11,24 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * 微信jssdk签名工具类
+ * 
+ * <pre>
+ * 功能描述：微信jssdk签名工具类
+ * 使用示范：
+ * 
+ * 
+ * @author (作者) nyz
+ * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2018-2-27
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
+ * </pre>
  */
 public class WeixinJSSDKSignUtil {
+    @SuppressWarnings("rawtypes")
     public static void main(String[] args) {
         String jsapi_ticket = "jsapi_ticket";
         // 注意 URL 一定要动态获取，不能 hardcode
