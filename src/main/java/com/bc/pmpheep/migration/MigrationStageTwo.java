@@ -380,6 +380,7 @@ public class MigrationStageTwo {
                     if (state[4] == 0){
                     	reason.append("教师资格证文件丢失。");
                     	dealWith.append("设为默认文件迁入数据库。");
+                    	state[4] = 1;
                     }
                 } 
                 writerUserCertification.setCert(mongoId);
