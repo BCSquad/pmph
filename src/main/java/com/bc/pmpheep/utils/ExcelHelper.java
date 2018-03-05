@@ -488,7 +488,7 @@ public class ExcelHelper {
     /**
      * 根据业务对象（包含子集合的BO）集合创建工作簿
      *
-     * @param materialId 申报表所属教材ID
+     * @param material 申报表所属教材对象
      * @param dataSource 业务对象（BO）集合
      * @param sheetName 要生成的Excel表名（非文件名）
      * @return Excel工作簿
@@ -1008,6 +1008,7 @@ public class ExcelHelper {
                             break;
                         }
                         case "作家扩展项": {
+                            //List<DecExtensionVO> list = (List<DecExtensionVO>) field.get(object);
                             Cell r1cell = r1.createCell(count);
                             r1cell.setCellValue(headerName);
                             region = new CellRangeAddress(0, 0, count, count + 1);
