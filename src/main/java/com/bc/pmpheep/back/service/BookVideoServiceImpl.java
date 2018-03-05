@@ -154,8 +154,7 @@ public class BookVideoServiceImpl implements BookVideoService {
         if (ObjectUtil.isNull(bookVideo.getBookId()) || StringUtil.isEmpty(bookVideo.getTitle())
                 || StringUtil.isEmpty(bookVideo.getFileName()) || StringUtil.isEmpty(bookVideo.getPath())
                 || StringUtil.isEmpty(bookVideo.getOrigFileName()) || StringUtil.isEmpty(bookVideo.getOrigPath())
-                || StringUtil.isEmpty(bookVideo.getCover()) || ObjectUtil.isNull(bookVideo.getFileSize())
-                || ObjectUtil.isNull(bookVideo.getOrigFileSize())) {
+                || ObjectUtil.isNull(bookVideo.getFileSize()) || ObjectUtil.isNull(bookVideo.getOrigFileSize())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO, CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         bookVideo.setUserId(0L);

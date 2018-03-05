@@ -92,4 +92,13 @@ public class WriterPointServiceImpl implements WriterPointService{
 		return writerPointDao.getWriterPoint(id);
 	}
 
+	@Override
+	public WriterPoint getWriterPointByUserId(Long userId) throws CheckedServiceException {
+		if(ObjectUtil.isNull(userId)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return writerPointDao.getWriterPointByUserId(userId);
+	}
+
 }

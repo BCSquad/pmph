@@ -196,7 +196,11 @@
 		</if>
 	</select>
 	<!--  -->
-	<select id="getWriterPointRuleByName" parameterType="java.lang.String" resultType="WriterPointRule">
+	<select id="getWriterPointRuleByName" parameterType="java.lang.String" resultType="WriterPointRuleVO">
+		select * from writer_point_rule where rule_name=#{ruleName};
+	</select>
+	
+	<select id="getWriterPointRuleByRuleName" parameterType="java.lang.String" resultType="WriterPointRule">
 		select * from writer_point_rule where rule_name=#{ruleName};
 	</select>
 </mapper>

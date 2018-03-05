@@ -126,5 +126,9 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
-	
+	<!-- 通过用户id查询积分 -->
+	<select id="getWriterPointByUserId" parameterType="java.lang.Long"
+		resultType="WriterPoint">
+		select * from writer_point where user_id=#{userId};
+	</select>
 </mapper>

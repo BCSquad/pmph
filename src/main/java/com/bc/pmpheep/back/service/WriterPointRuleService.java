@@ -5,7 +5,6 @@ import java.util.List;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.WriterPointRule;
-import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.WriterPointRuleVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -54,5 +53,19 @@ public interface WriterPointRuleService {
      * @return
      * @throws CheckedServiceException
      */
-    Integer deleteWriterPointRule(Long id) throws CheckedServiceException;;
+    Integer deleteWriterPointRule(Long id) throws CheckedServiceException;
+    
+    /**
+     * 通过积分规则名称查询积分规则
+     * @param ruleName
+     * @return
+     */
+    List<WriterPointRuleVO> getWriterPointRule(String ruleName) throws CheckedServiceException;
+    
+    /**
+     * 通过积分名称查询积分规则
+     * @param ruleName
+     * @return
+     */
+	WriterPointRule getWriterPointRuleByName(String ruleName)throws CheckedServiceException;
 }

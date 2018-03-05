@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.controller.crawl;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +106,7 @@ public class WeChatArticleController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "抓取文章同步到数据库")
     @RequestMapping(value = "/article/synchro", method = RequestMethod.GET)
-    public ResponseBean synchro(@RequestParam("guid") String guid) throws IOException {
-        return new ResponseBean(wechatArticleService.synchroCmsContent(guid));
+    public ResponseBean synchro(@RequestParam("guid") String guid,HttpServletRequest request) throws IOException {
+        return new ResponseBean(wechatArticleService.synchroCmsContent(guid,request));
     }
 }
