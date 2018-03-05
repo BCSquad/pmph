@@ -617,9 +617,9 @@ public class CmsContentServiceImpl implements CmsContentService {
         // 保存附件到MongoDB
         if (ArrayUtil.isNotEmpty(files)) {
             for (int i = 0; i < files.length; i++) {
-                byte[] fileByte = (byte[]) request.getSession(false).getAttribute(imgFile[i]);
+                byte[] fileByte = (byte[]) request.getSession(false).getAttribute(files[i]);
                 String fileName =
-                (String) request.getSession(false).getAttribute("fileName_" + imgFile[i]);
+                (String) request.getSession(false).getAttribute("fileName_" + files[i]);
                 InputStream sbs = new ByteArrayInputStream(fileByte);
                 String gridFSFileId =
                 fileService.save(sbs, fileName, FileType.CMS_ATTACHMENT, contentId);
