@@ -237,7 +237,7 @@
 			if(a.auth_user_id is null,null,a.is_auth) isAuth
 			from book_video a LEFT JOIN  book b on b.id = a.book_id
                         LEFT JOIN writer_user c on c.id= a.user_id LEFT JOIN pmph_user d on d.id= a.auth_user_id 
-		where  a.is_deleted = false and b.id is not null and c.id is not null 
+		where  a.is_deleted = false and b.id is not null 
 		<if test="bookName != null"> 
 			and b.bookname like #{bookName}
 		</if>
