@@ -161,7 +161,7 @@ public class WordHelper {
 			fillDecClinicalRewardData(tables.get(17), bo.getDecClinicalRewards());
 			fillDecAcadeRewardData(tables.get(18), bo.getDecAcadeRewards());
 			fillDecIntentionData(tables.get(19), bo.getDecIntention());
-			// map.put(filename, removeEmptyTables(document, filter));
+			map.put(filename, removeEmptyTables(document, filter));
 			map.put(filename, document);
 		}
 		return map;
@@ -193,7 +193,7 @@ public class WordHelper {
 
 	private XWPFDocument removeEmptyTables(XWPFDocument document, Integer filter) {
 		List<XWPFTable> tables = document.getTables();
-		for (int i = 18; i >= 1; i--) {
+		for (int i = 20; i >= 1; i--) {
 			if (BinaryUtil.getBit(filter, i - 1) == false) {
 				int index = document.getPosOfTable(tables.get(i));
 				document.removeBodyElement(index);
