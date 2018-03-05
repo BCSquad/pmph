@@ -23,8 +23,21 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.wechat.interceptor.OAuthRequired;
 
 /**
- * 需要验证OAuth2控制器
  * 
+ * <pre>
+ * 功能描述：需要验证OAuth2控制器
+ * 使用示范：
+ * 
+ * 
+ * @author (作者) nyz
+ * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2018-2-27
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
+ * </pre>
  */
 @Controller
 public class WeChatLoginController {
@@ -36,10 +49,15 @@ public class WeChatLoginController {
     PmphRoleService       pmphRoleService;
 
     /**
-     * 加载个人信息，此处添加了@OAuthRequired注解
      * 
+     * <pre>
+     * 功能描述：加载个人信息，此处添加了@OAuthRequired注解
+     * 使用示范：
+     *
+     * @param request
      * @param model
      * @return
+     * </pre>
      */
     @RequestMapping(value = { "/wechatUserInfo" })
     @OAuthRequired

@@ -11,8 +11,21 @@ import com.bc.pmpheep.wechat.po.AccessToken;
 import com.bc.pmpheep.wechat.po.WXjsTicket;
 
 /**
- * 公众平台通用接口工具类
  * 
+ * <pre>
+ * 功能描述：公众平台通用接口工具类
+ * 使用示范：
+ * 
+ * 
+ * @author (作者) nyz
+ * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2018-2-27
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
+ * </pre>
  */
 public class WechatAccessToken {
     // 获取微信公众号：access_token的接口地址（GET） 限2000（次/天）
@@ -25,11 +38,16 @@ public class WechatAccessToken {
     // https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ID&corpsecret=SECRECT
 
     /**
-     * 获取access_token
      * 
+     * <pre>
+     * 功能描述：获取access_token
+     * 使用示范：
+     *
      * @param appid 凭证
      * @param appsecret 密钥
+     * @param type
      * @return
+     * </pre>
      */
     public static AccessToken getAccessToken(String appid, String appsecret, int type) {
         AccessToken accessToken = null;
@@ -61,6 +79,16 @@ public class WechatAccessToken {
 
     private static Logger log = LoggerFactory.getLogger(WechatAccessToken.class);
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：获取wx_js_ticket
+     * 使用示范：
+     *
+     * @param accessToken access_token
+     * @return
+     * </pre>
+     */
     public static WXjsTicket getWXjsTicket(String accessToken) {
         WXjsTicket wXjsTicket = null;
         String requestUrl = WXURLUtil.JSAPIURL.replace("ACCESS_TOKEN", accessToken);
