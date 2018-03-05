@@ -4,7 +4,6 @@
  */
 package com.bc.pmpheep.general.controller;
 
-import com.bc.pmpheep.general.runnable.SpringThread;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -13,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -62,6 +63,7 @@ import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.back.vo.SurveyQuestionFillVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.bean.ZipDownload;
+import com.bc.pmpheep.general.runnable.SpringThread;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -70,8 +72,6 @@ import com.bc.pmpheep.utils.ExcelHelper;
 import com.bc.pmpheep.utils.WordHelper;
 import com.bc.pmpheep.utils.ZipHelper;
 import com.mongodb.gridfs.GridFSDBFile;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * 文件下载控制器
@@ -293,7 +293,8 @@ public class FileDownLoadController {
         Workbook workbook = null;
         try {
             workbook =
-            excelHelper.fromDeclarationEtcBOList(materialService.getMaterialById(materialId), declarationService.declarationEtcBO(materialId,
+            excelHelper.fromDeclarationEtcBOList(materialService.getMaterialById(materialId),
+                                                 declarationService.declarationEtcBO(materialId,
                                                                                      textBookids,
                                                                                      realname,
                                                                                      position,
@@ -311,7 +312,9 @@ public class FileDownLoadController {
         response.setContentType("application/force-download");
         try {
             StringBuilder sb = new StringBuilder("attachment;fileName=");
-            String materialName = new String(materialService.getMaterialNameById(materialId).getBytes("utf-8"),"ISO8859-1");
+            String materialName =
+            new String(materialService.getMaterialNameById(materialId).getBytes("utf-8"),
+                       "ISO8859-1");
             sb.append(materialName);
             sb.append(".");
             SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd.HHmm");
@@ -886,42 +889,44 @@ public class FileDownLoadController {
                                               "文件在传输时中断");
         }
     }
-    
+
     /**
      * 
      * Description:设置选题号页面导出选题号
+     * 
      * @author:lyc
      * @date:2018年1月23日下午6:18:41
-     * @param 
+     * @param
      * @return void
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "设置选题号页面导出选题号信息")
-    @RequestMapping(value = "/textbook/exportTopic" ,method = RequestMethod.GET)
-    public void exportTopic(Long materialId,HttpServletRequest request, HttpServletResponse response){
-    	List<Textbook> list = textbookService.listTopicNumber(materialId);
-    	Workbook workbook = null;
-    	if (list.size() == 0){
-    		list.add(new Textbook());
-    	}
-    	try{
-    		 workbook = excelHelper.fromTextbookTopic(list, "选题号导出");
-    	} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e){
-    		logger.warn("数据表格化的时候失败");
-    	}
-    	Material material = materialService.getMaterialById(materialId);
-    	String fileName = returnFileName(request, material.getMaterialName() + ".xls");
-    	response.setCharacterEncoding("utf-8");
-    	response.setContentType("application/force-download");
-    	response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
-    	try (OutputStream out = response.getOutputStream()){
-    		workbook.write(out);
-    		out.flush();
-    		out.close();
-    	} catch (Exception e){
-    		logger.warn("文件下载时出现IO异常： {}", e.getMessage());
+    @RequestMapping(value = "/textbook/exportTopic", method = RequestMethod.GET)
+    public void exportTopic(Long materialId, HttpServletRequest request,
+    HttpServletResponse response) {
+        List<Textbook> list = textbookService.listTopicNumber(materialId);
+        Workbook workbook = null;
+        if (list.size() == 0) {
+            list.add(new Textbook());
+        }
+        try {
+            workbook = excelHelper.fromTextbookTopic(list, "选题号导出");
+        } catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+            logger.warn("数据表格化的时候失败");
+        }
+        Material material = materialService.getMaterialById(materialId);
+        String fileName = returnFileName(request, material.getMaterialName() + ".xls");
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/force-download");
+        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        try (OutputStream out = response.getOutputStream()) {
+            workbook.write(out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            logger.warn("文件下载时出现IO异常： {}", e.getMessage());
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
                                               CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
                                               "文件在传输时中断");
-    	}
+        }
     }
 }

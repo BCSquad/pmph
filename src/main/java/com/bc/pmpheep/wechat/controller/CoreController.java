@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,15 +20,40 @@ import com.bc.pmpheep.wechat.service.CoreService;
 import com.bc.pmpheep.wechat.util.Constants;
 
 /**
- * 注解方式打开链接
  * 
+ * <pre>
+ * 功能描述：注解方式打开链接
+ * 使用示范：
+ * 
+ * 
+ * @author (作者) nyz
+ * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2018-2-27
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
+ * </pre>
  */
 @Controller
 public class CoreController {
-    private String token          = Constants.TOKEN;
-    private String encodingAESKey = Constants.encodingAESKey;
-    private String corpId         = Constants.CORPID;
+    private static Logger logger         = LoggerFactory.getLogger(CoreController.class);
+    private String        token          = Constants.TOKEN;
+    private String        encodingAESKey = Constants.encodingAESKey;
+    private String        corpId         = Constants.CORPID;
 
+    /**
+     * 
+     * <pre>
+     * 功能描述： 企业微信服务发送消息绑定API
+     * 使用示范：
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @throws IOException
+     * </pre>
+     */
     @RequestMapping(value = { "/coreJoin" }, method = RequestMethod.GET)
     public void coreJoinGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException {
@@ -46,7 +73,7 @@ public class CoreController {
             WXBizMsgCrypt wxcpt = new WXBizMsgCrypt(token, encodingAESKey, corpId);
             result = wxcpt.VerifyURL(msg_signature, timestamp, nonce, echostr);
         } catch (AesException e) {
-            e.printStackTrace();
+            logger.error("AES解密出现异常：{}", e.getMessage());
         }
         if (result == null) {
             result = token;
@@ -56,6 +83,17 @@ public class CoreController {
         out = null;
     }
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：企业微信服务响应消息
+     * 使用示范：
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @throws IOException
+     * </pre>
+     */
     @RequestMapping(value = { "/coreJoin" }, method = RequestMethod.POST)
     public void coreJoinPost(HttpServletRequest request, HttpServletResponse response)
     throws IOException {
@@ -79,7 +117,7 @@ public class CoreController {
             // 解密消息
             msg = wxcpt.DecryptMsg(msg_signature, timestamp, nonce, postData);
         } catch (AesException e) {
-            e.printStackTrace();
+            logger.error("Aes解密出现异常：{}", e.getMessage());
         }
         // System.out.println("msg=" + msg);
         // 调用核心业务类接收消息、处理消息
@@ -90,12 +128,11 @@ public class CoreController {
             // 加密回复消息
             encryptMsg = wxcpt.EncryptMsg(respMessage, timestamp, nonce);
         } catch (AesException e) {
-            e.printStackTrace();
+            logger.error("Aes加密出现异常：{}", e.getMessage());
         }
         // 响应消息
         PrintWriter out = response.getWriter();
         out.print(encryptMsg);
         out.close();
     }
-
 }

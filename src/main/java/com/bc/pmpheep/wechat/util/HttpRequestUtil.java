@@ -18,9 +18,13 @@ import javax.net.ssl.TrustManager;
 
 import net.sf.json.JSONObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.bc.pmpheep.wechat.enums.EnumMethod;
 
 public class HttpRequestUtil {
+    private static Logger logger = LoggerFactory.getLogger(HttpRequestUtil.class);
 
     /**
      * 发起https请求并获取结果
@@ -83,14 +87,12 @@ public class HttpRequestUtil {
             jsonObject = JSONObject.fromObject(buffer.toString());
             // System.out.println("jsonObject="+jsonObject);
         } catch (ConnectException ce) {
-            ce.printStackTrace();
-            System.out.println("网络链接失败！");
+            logger.error("网络链接:{}", ce.getMessage());
         } catch (UnknownHostException uhe) {
-            uhe.printStackTrace();
-            System.out.println("微信API无法访问....！");
+            logger.error("微信API访问异常:{}", uhe.getMessage());
             // httpRequest(requestUrl, requestMethod, outputStr);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("出现异常：{}", e.getMessage());
         }
         return jsonObject;
     }
@@ -156,7 +158,9 @@ public class HttpRequestUtil {
             inputStream = null;
             httpUrlConn.disconnect();
         } catch (ConnectException ce) {
+            logger.error("网络链接:{}", ce.getMessage());
         } catch (Exception e) {
+            logger.error("出现异常：{}", e.getMessage());
         }
         return out.toByteArray();
     }

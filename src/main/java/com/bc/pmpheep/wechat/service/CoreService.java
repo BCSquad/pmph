@@ -3,16 +3,42 @@ package com.bc.pmpheep.wechat.service;
 import java.util.Date;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.bc.pmpheep.wechat.po.resp.TextMessage;
 import com.bc.pmpheep.wechat.util.MessageUtil;
 
 /**
  * 
- * 处理微信发来的信息
+ * <pre>
+ * 功能描述：处理微信发来的信息
+ * 使用示范：
  * 
+ * 
+ * @author (作者) nyz
+ * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2018-2-27
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
+ * </pre>
  */
 public class CoreService {
+    private static Logger logger = LoggerFactory.getLogger(CoreService.class);
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：解析消息
+     * 使用示范：
+     *
+     * @param msg 消息串
+     * @return
+     * </pre>
+     */
     public static String processRequest(String msg) {
         String respMessage = null;
         try {
@@ -72,9 +98,9 @@ public class CoreService {
             textMessage.setContent(respContent);
             respMessage = MessageUtil.textMessageToXml(textMessage);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("处理消息出异常：{}", e.getMessage());
             // System.out.println(e);
-            respMessage = "有异常了。。。";
+            respMessage = "处理消息出异常。。。";
         }
         return respMessage;
     }
