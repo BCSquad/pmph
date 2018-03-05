@@ -21,6 +21,9 @@ import com.bc.pmpheep.back.po.CmsExtra;
 import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.WriterPoint;
+import com.bc.pmpheep.back.po.WriterPointLog;
+import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -79,7 +82,13 @@ public class CmsContentServiceImpl implements CmsContentService {
     MaterialNoteAttachmentService   materialNoteAttachmentService;
     @Autowired
     WriterUserTrendstService        writerUserTrendstService;
-
+	@Autowired
+	WriterPointRuleService writerPointRuleService;
+	@Autowired
+	WriterPointLogService writerPointLogService;
+	@Autowired
+	WriterPointService writerPointService;
+    
     @Override
     public CmsContent addCmsContent(CmsContent cmsContent) throws CheckedServiceException {
         if (ObjectUtil.isNull(cmsContent)) {
@@ -399,6 +408,40 @@ public class CmsContentServiceImpl implements CmsContentService {
             writerUserTrendstService.addWriterUserTrendst(new WriterUserTrendst(
                                                                                 cmsContent.getAuthorId(),
                                                                                 type, id));
+        }
+        //当文章通过的时候 给用户增加积分
+        if(2==authStatus){
+        	String ruleName="发表文章";
+			//获取积分规则
+			WriterPointRule writerPointRuleVOs=writerPointRuleService.getWriterPointRuleByName(ruleName);
+			if(null!=writerPointRuleVOs){
+				//查询用户评论之前的积分值
+				WriterPointLog writerPointLog2=writerPointLogService.getWriterPointLogByUserId(cmsContent.getAuthorId());
+				WriterPointLog writerPointLog=new WriterPointLog();
+				//现在的规则的积分值+以前的积分
+				Integer temp=0;
+				if(null!=writerPointLog2){
+					temp=writerPointRuleVOs.getPoint()+writerPointLog2.getPoint();
+					writerPointLog.setPoint(temp);
+				}else{
+					temp=writerPointRuleVOs.getPoint();
+					writerPointLog.setPoint(temp);
+				}
+				//积分规则id
+				writerPointLog.setRuleId(writerPointRuleVOs.getId());
+				writerPointLog.setUserId(cmsContent.getAuthorId());
+				//增加积分记录
+				writerPointLogService.add(writerPointLog);
+				WriterPoint point=writerPointService.getWriterPointByUserId(cmsContent.getAuthorId());
+				WriterPoint writerPoint=new WriterPoint();
+				//当前获取的总积分=评论积分+以前的积分
+				writerPoint.setGain(writerPointLog.getPoint());
+				writerPoint.setUserId(cmsContent.getAuthorId());
+				writerPoint.setTotal(writerPoint.getGain()+point.getLoss());
+				writerPoint.setLoss(point.getLoss());
+				writerPoint.setId(point.getId());
+				writerPointService.updateWriterPoint(writerPoint);
+			}
         }
         return count;
     }

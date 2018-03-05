@@ -2,11 +2,13 @@ package com.bc.pmpheep.migration;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -186,6 +188,11 @@ public class MigrationStageSix {
         int decCount = 0;
         int realNameCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;//统计正常数据的数量
+        int[] state = {0,0,0,0,0,0,0};//判断该数据是否有相应异常情况的标识
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -209,6 +216,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("找到为后台用户申报教材，此结果将被记录在Excel中");
                 sysflagCount++;
+                if (state[0] == 0){
+                	reason.append("申报教材的对应人员为社内用户。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             if (usertype.equals(2)) {
@@ -216,6 +228,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("找到为用户类型为学校管理员申报教材，此结果将被记录在Excel中");
                 usertypeCount++;
+                if (state[1] == 0){
+                	reason.append("申报教材的对应人员为机构管理员用户。");
+                	dealWith.append("放弃迁移。");
+                	state[1] = 1;
+                }
                 continue;
             }
             Declaration declaration = new Declaration();
@@ -224,6 +241,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到教材对应的关联结果，此结果将被记录在Excel中");
                 materialidCount++;
+                if (state[2] == 0){
+                	reason.append("找不到用户申报的教材。");
+                	dealWith.append("放弃迁移。");
+                	state[2] = 1;
+                }
                 continue;
             }
             declaration.setMaterialId(materialid);
@@ -232,6 +254,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到作家对应的关联结果，此结果将被记录在Excel中");
                 useridCount++;
+                if (state[3] == 0){
+                	reason.append("找不到申报人员是哪一位用户。");
+                	dealWith.append("放弃迁移。");
+                	state[3] = 1;
+                }
                 continue;
             } else {
                 if ("7d4856e6-99ca-48fb-9205-3704c01a109e".equals(id)) {
@@ -244,6 +271,11 @@ public class MigrationStageSix {
                         excel.add(map);
                         logger.debug("未找到'18045661072-李勇'对应的关联结果，此结果将被记录在Excel中");
                         useridCount++;
+                        if (state[4] == 0){
+                        	reason.append("未找到申报人员李勇所对应的系统用户。");
+                        	dealWith.append("放弃迁移。");
+                        	state[4] = 1;
+                        }
                         continue;
                     }
                     declaration.setUserId(list.getRows().get(0).getId());
@@ -254,6 +286,11 @@ public class MigrationStageSix {
             if (StringUtil.isEmpty(realName) && isStagingJudge.intValue() == 0) { // 申报表作家姓名为空并且没有暂存
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到申报表作家姓名为空并且没有暂存。"));
                 realNameCount++;
+                if (state[5] == 0){
+                	reason.append("已提交申报表的作家找不到真实姓名。");
+                	dealWith.append("照常迁入。");
+                	state[5] = 1;
+                }
                 /*excel.add(map);
                 logger.debug("找到申报表作家姓名为空并且没有暂存，此结果将被记录在Excel中");
                 continue;*/
@@ -339,12 +376,20 @@ public class MigrationStageSix {
                 logger.error("已存在教材id和作家id均相同的记录，本条数据放弃插入，material_id={}，user_id={}",
                         declaration.getMaterialId(), declaration.getUserId());
                 decCount++;
+                if (state[6] == 0){
+                	reason.append("同一用户申报同一教材的记录多于1条。");
+                	dealWith.append("放弃迁移。");
+                	state[6] = 1;
+                }
                 continue;
             }
             declaration = declarationService.addDeclaration(declaration);
             long pk = declaration.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "writerid", id); // 更新旧表中new_pk字段
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -352,6 +397,18 @@ public class MigrationStageSix {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "declaration");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家申报表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("申报表作家姓名为空并且不是暂存表数量：{}", realNameCount);
         logger.info("后台用户申报教材数量：{}", sysflagCount);
@@ -382,6 +439,11 @@ public class MigrationStageSix {
         int count = 0;//迁移成功的条目数
         int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -396,6 +458,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 declarationidCount++;
+                if (state[0] == 0){
+                	reason.append("找不到对应的申报作家。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             decEduExp.setDeclarationId(declarationid);
@@ -424,6 +491,9 @@ public class MigrationStageSix {
             long pk = decEduExp.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "leamid", id);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -431,6 +501,18 @@ public class MigrationStageSix {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "dec_edu_exp");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家学习经历表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
         logger.info("writer_learn表迁移完成，异常条目数量：{}", excel.size());
@@ -453,6 +535,11 @@ public class MigrationStageSix {
         int count = 0;//迁移成功的条目数
         int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state= {0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -466,6 +553,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 declarationidCount++;
+                if (state[0] == 0){
+                	reason.append("找不到对应的申报作家。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             decWorkExp.setDeclarationId(declarationid);
@@ -493,6 +585,9 @@ public class MigrationStageSix {
             long pk = decWorkExp.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "workid", id);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -500,6 +595,18 @@ public class MigrationStageSix {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "dec_work_exp");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家工作经历表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
         logger.info("writer_work表迁移完成，异常条目数量：{}", excel.size());
@@ -522,6 +629,11 @@ public class MigrationStageSix {
         int count = 0;//迁移成功的条目数
         int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -535,6 +647,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 declarationidCount++;
+                if (state[0] == 0){
+                	reason.append("找不到对应的申报作家。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             decTeachExp.setDeclarationId(declarationid);
@@ -562,6 +679,9 @@ public class MigrationStageSix {
             long pk = decTeachExp.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "teachid", id);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -569,6 +689,18 @@ public class MigrationStageSix {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "dec_teach_exp");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家教学经历表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
         logger.info("writer_teach表迁移完成，异常条目数量：{}", excel.size());
@@ -591,6 +723,11 @@ public class MigrationStageSix {
         int count = 0;//迁移成功的条目数
         int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -605,6 +742,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 declarationidCount++;
+                if (state[0] == 0){
+                	reason.append("找不到对应的申报作家。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             decAcade.setDeclarationId(declarationid);
@@ -626,6 +768,9 @@ public class MigrationStageSix {
             long pk = decAcade.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "acadeid", id);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -633,6 +778,18 @@ public class MigrationStageSix {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "dec_acade");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家兼职学术表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
         logger.info("writer_acade表迁移完成，异常条目数量：{}", excel.size());
@@ -660,6 +817,11 @@ public class MigrationStageSix {
         int count = 0;//迁移成功的条目数
         int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -673,6 +835,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 declarationidCount++;
+                if (state[0] == 0){
+                	reason.append("找不到对应的申报作家。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             decLastPosition.setDeclarationId(declarationid);
@@ -685,6 +852,9 @@ public class MigrationStageSix {
             long pk = decLastPosition.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "materpatid", id);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -692,6 +862,18 @@ public class MigrationStageSix {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "dec_last_position");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家上套教材参编情况表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
         logger.info("writer_materpat表迁移完成，异常条目数量：{}", excel.size());
@@ -714,6 +896,11 @@ public class MigrationStageSix {
         int count = 0;//迁移成功的条目数
         int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -728,6 +915,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 declarationidCount++;
+                if (state[0] == 0){
+                	reason.append("找不到对应的申报作家。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             decCourseConstruction.setDeclarationId(declarationid);
@@ -741,6 +933,9 @@ public class MigrationStageSix {
             long pk = decCourseConstruction.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "constructionid", id);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -748,6 +943,18 @@ public class MigrationStageSix {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "dec_course_construction");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家精品课程建设情况表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
         logger.info("writer_construction表迁移完成，异常条目数量：{}", excel.size());
@@ -775,6 +982,11 @@ public class MigrationStageSix {
         int count = 0;//迁移成功的条目数
         int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -789,6 +1001,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 declarationidCount++;
+                if (state[0] == 0){
+                	reason.append("找不到对应的申报作家。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             decNationalPlan.setDeclarationId(declarationid);
@@ -808,6 +1025,9 @@ public class MigrationStageSix {
             long pk = decNationalPlan.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "editorbookid", id);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -815,6 +1035,18 @@ public class MigrationStageSix {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "dec_national_plan");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家主编国家级规划教材情况表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
         logger.info("writer_editorbook表迁移完成，异常条目数量：{}", excel.size());
@@ -844,6 +1076,11 @@ public class MigrationStageSix {
         int count = 0;//迁移成功的条目数
         int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -862,6 +1099,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 declarationidCount++;
+                if (state[0] == 0){
+                	reason.append("找不到对应的申报作家。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             if (StringUtil.notEmpty(isbn)) {
@@ -912,6 +1154,9 @@ public class MigrationStageSix {
             }
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "materwriteid", id);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -919,6 +1164,18 @@ public class MigrationStageSix {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "dec_textbook");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家教材编写情况表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
         logger.info("writer_materwrite表迁移完成，异常条目数量：{}", excel.size());
@@ -945,6 +1202,11 @@ public class MigrationStageSix {
         int count = 0;//迁移成功的条目数
         int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -962,6 +1224,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 declarationidCount++;
+                if (state[0] == 0){
+                	reason.append("找不到对应的申报作家。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             if (StringUtil.notEmpty(isbn)) {
@@ -1012,6 +1279,9 @@ public class MigrationStageSix {
             }
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "othermaterwriteid", id);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -1019,6 +1289,18 @@ public class MigrationStageSix {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "dec_textbookOther");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家其他教材编写情况表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
         logger.info("writer_othermaterwrite表迁移完成，异常条目数量：{}", excel.size());
@@ -1041,6 +1323,11 @@ public class MigrationStageSix {
         int count = 0;//迁移成功的条目数
         int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -1055,6 +1342,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 declarationidCount++;
+                if (state[0] == 0){
+                	reason.append("找不到对应的申报作家。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             decResearch.setDeclarationId(declarationid);
@@ -1067,6 +1359,9 @@ public class MigrationStageSix {
             long pk = decResearch.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "scientresearchid", id);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -1074,6 +1369,18 @@ public class MigrationStageSix {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "dec_research");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家科研情况表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
         logger.info("writer_scientresearch表迁移完成，异常条目数量：{}", excel.size());
@@ -1099,6 +1406,11 @@ public class MigrationStageSix {
         int extensionidCount = 0;
         int declarationidCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -1113,6 +1425,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到教材扩展项对应的关联结果，此结果将被记录在Excel中");
                 extensionidCount++;
+                if (state[0] == 0){
+                	reason.append("未找到教材对应的扩展项。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             decExtension.setExtensionId(extensionid);
@@ -1121,6 +1438,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 declarationidCount++;
+                if (state[1] == 0){
+                	reason.append("没有找对对应的申报作家。");
+                	dealWith.append("放弃迁移。");
+                	state[1] = 1;
+                }
                 continue;
             }
             decExtension.setDeclarationId(declarationid);
@@ -1129,6 +1451,9 @@ public class MigrationStageSix {
             long pk = decExtension.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "extvalueid", id);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -1136,6 +1461,18 @@ public class MigrationStageSix {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "dec_extension");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家扩展项填报表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("未找到教材扩展项对应的关联结果数量：{}", extensionidCount);
         logger.info("未找到申报表对应的关联结果数量：{}", declarationidCount);
@@ -1179,6 +1516,11 @@ public class MigrationStageSix {
         int outListUrlCount = 0;
         int outListCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0,0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -1195,6 +1537,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 extensionidCount++;
+                if (state[0] == 0){
+                	reason.append("找不带对应的申报作家。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             decPosition.setDeclarationId(declarationid);
@@ -1203,6 +1550,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到书籍对应的关联结果，此结果将被记录在Excel中");
                 textbookidCount++;
+                if (state[1] == 0){
+                	reason.append("找不到申报的书籍。");
+                	dealWith.append("放弃迁移。");
+                	state[1] = 1;
+                }
                 continue;
             }
             decPosition.setTextbookId(textbookid);
@@ -1264,14 +1616,17 @@ public class MigrationStageSix {
                     excel.add(map);
                     logger.debug("文件读取异常，路径<{}>，异常信息：{}", outLineUrl, ex.getMessage());
                     outListUrlCount++;
-                } catch (Exception e) {
-                    map.put(SQLParameters.EXCEL_EX_HEADER, "存文件未知异常：" + e.getMessage() + "。");
-                    excel.add(map);
-                    logger.debug("更新mongoDB的id错误，此结果将被记录在Excel中");
-                    outListCount++;
+                    if (state[2] == 0){
+                    	reason.append("教学大纲文件丢失。");
+                    	dealWith.append("教学大纲可以没有，照常迁入数据库。");
+                    	state[2] = 1;
+                    }
                 }
                 decPosition.setSyllabusId(mongoId);
                 decPositionService.updateDecPosition(decPosition);
+            }
+            if (null == map.get("exception")){
+            	correctCount++;
             }
         }
         if (excel.size() > 0) {
@@ -1280,6 +1635,18 @@ public class MigrationStageSix {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "dec_position");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家申报职位表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("文件读取异常数量：{}", outListUrlCount);
         logger.info("更新mongoDB的id错误数量：{}", outListCount);
@@ -1332,6 +1699,11 @@ public class MigrationStageSix {
         int outListUrlCount = 0;
         int outListCount = 0;
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0,0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
@@ -1355,6 +1727,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到申报表对应的关联结果，此结果将被记录在Excel中");
                 extensionidCount++;
+                if (state[0] == 0){
+                	reason.append("找不到对应的申报作家。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             decPositionPublished.setDeclarationId(declarationid);
@@ -1363,6 +1740,11 @@ public class MigrationStageSix {
                 excel.add(map);
                 logger.debug("未找到书籍对应的关联结果，此结果将被记录在Excel中");
                 textbookidCount++;
+                if (state[1] == 0){
+                	reason.append("找不到申报的书籍。");
+                	dealWith.append("放弃迁移。");
+                	state[1] = 1;
+                }
                 continue;
             }
             decPositionPublished.setTextbookId(textbookid);
@@ -1424,14 +1806,17 @@ public class MigrationStageSix {
                     excel.add(map);
                     logger.debug("文件读取异常，路径<{}>，异常信息：{}", outLineUrl, ex.getMessage());
                     outListUrlCount++;
-                } catch (Exception e) {
-                    map.put(SQLParameters.EXCEL_EX_HEADER, "存文件未知异常：" + e.getMessage() + "。");
-                    excel.add(map);
-                    logger.debug("更新mongoDB的id错误，此结果将被记录在Excel中");
-                    outListCount++;
+                    if (state[2] == 0){
+                    	reason.append("教学大纲文件丢失。");
+                    	dealWith.append("教学大纲可以没有，照常迁入数据库。");
+                    	state[2] = 1;
+                    }
                 }
                 decPositionPublished.setSyllabusId(mongoId);
                 decPositionPublishedService.updateDecPositionPublished(decPositionPublished);
+            }
+            if (null == map.get("exception")){
+            	correctCount++;
             }
         }
         if (excel.size() > 0) {
@@ -1440,6 +1825,18 @@ public class MigrationStageSix {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "dec_position_published");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "已公布作家申报职位表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("文件读取异常数量：{}", outListUrlCount);
         logger.info("更新mongoDB的id错误数量：{}", outListCount);

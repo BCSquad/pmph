@@ -563,14 +563,14 @@
     <select id="getSchoolDeclarationChosenCount" parameterType="java.lang.Long"
         resultType="java.lang.Integer">
         SELECT count(a.chosen_position) count 
-		FROM dec_position a 
+		FROM dec_position_published a 
 		LEFT JOIN declaration b ON a.declaration_id = b.id 
 		LEFT JOIN textbook c ON a.textbook_id = c.id 
 		LEFT JOIN material d ON b.material_id = d.id 
 		LEFT JOIN org e ON b.org_id = e.id 
 		WHERE a.chosen_position IS NOT NULL AND a.chosen_position !=0 
 		AND c.is_published IS TRUE AND d.id = #{materialId} 
-		AND b.is_staging = 0 AND b.online_progress = 3 ;
+		AND b.is_staging = 0 ;
     </select>
     
     <!-- 根据materialId查询学校总数 -->
@@ -714,11 +714,11 @@
 	<select id="getChosenEditorCount" parameterType="java.lang.Long" 
 	    resultType="java.lang.Integer">
 	    select sum(if((dp.chosen_position = 4) AND n.is_published IS TRUE,1,0)) count 
-	    from dec_position dp 
+	    from dec_position_published dp 
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
 		LEFT JOIN (SELECT id,is_published FROM textbook) n ON (n.id = dp.textbook_id)
-		where d.is_staging = 0 AND d.online_progress = 3 
+		where d.is_staging = 0 
 		and m.id= #{materialId};
 	</select>
 	
@@ -726,11 +726,11 @@
 	<select id="getChosenSubeditorCount" parameterType="java.lang.Long" 
 	    resultType="java.lang.Integer">
 	    select sum(if((dp.chosen_position = 2) AND n.is_published IS TRUE,1,0)) count 
-	    from dec_position dp 
+	    from dec_position_published dp 
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
 		LEFT JOIN (SELECT id,is_published FROM textbook) n ON (n.id = dp.textbook_id)
-		where d.is_staging = 0 AND d.online_progress = 3 
+		where d.is_staging = 0 
 		and m.id= #{materialId};
 	</select>
 	
@@ -738,11 +738,11 @@
 	<select id="getChosenEditorialCount" parameterType="java.lang.Long" 
 	    resultType="java.lang.Integer">
 	    select sum(if((dp.chosen_position = 1) AND n.is_published IS TRUE,1,0)) count 
-	    from dec_position dp 
+	    from dec_position_published dp 
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
 		LEFT JOIN (SELECT id,is_published FROM textbook) n ON (n.id = dp.textbook_id)
-		where d.is_staging = 0 AND d.online_progress = 3 
+		where d.is_staging = 0 
 		and m.id= #{materialId};
 	</select>
 	
@@ -750,11 +750,11 @@
 	<select id="getChosenDigitalCount" parameterType="java.lang.Long" 
 	    resultType="java.lang.Integer">
 	    select sum(if((dp.chosen_position in (8,9,10,11,12,13,14,15) AND n.is_published IS TRUE),1,0)) count 
-	    from dec_position dp 
+	    from dec_position_published dp 
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
 		LEFT JOIN (SELECT id,is_published FROM textbook) n ON (n.id = dp.textbook_id)
-		where d.is_staging = 0 AND d.online_progress = 3 
+		where d.is_staging = 0 
 		and m.id= #{materialId};
 	</select>
 	
