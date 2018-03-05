@@ -158,6 +158,7 @@ public class BookVideoServiceImpl implements BookVideoService {
             throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO, CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         bookVideo.setUserId(0L);
+        bookVideo.setIsAuth(true);
         bookVideo.setAuthUserId(pmphUser.getId());
         bookVideo.setAuthDate(new Date());
         bookVideo.setCover("DEFAULT");//暂设为默认值

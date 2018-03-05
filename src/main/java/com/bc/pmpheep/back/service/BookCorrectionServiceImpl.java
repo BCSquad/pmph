@@ -15,6 +15,9 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.BookCorrection;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.WriterPoint;
+import com.bc.pmpheep.back.po.WriterPointLog;
+import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -40,9 +43,14 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 	private BookCorrectionDao bookCorrectionDao;
 	@Autowired
 	private PmphUserService pmphUserService;
-
 	@Autowired
 	private BookService bookService;
+	@Autowired
+	WriterPointRuleService writerPointRuleService;
+	@Autowired
+	WriterPointLogService writerPointLogService;
+	@Autowired
+	WriterPointService writerPointService;
 
 	@Override
 	public Integer updateToAcceptancing(Long id) throws CheckedServiceException {
@@ -115,12 +123,47 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 			detail = new Gson().toJson(map);
 			// 更新评论数
 			// bookService.updateComments(bookId);
+			
 		} else {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.BOOKCORRECTION);
 			map.put("content", "您的图书纠错未核实到该问题。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
+		}
+		//当审核有问题的时候则给用户增加积分
+		if(result){
+			String ruleName="图书纠错";
+			//获取积分规则
+			WriterPointRule writerPointRuleVOs=writerPointRuleService.getWriterPointRuleByName(ruleName);
+			if(null!=writerPointRuleVOs){
+				//查询用户纠错之前的积分值
+				WriterPointLog writerPointLog2=writerPointLogService.getWriterPointLogByUserId(submitUserId);
+				WriterPointLog writerPointLog=new WriterPointLog();
+				//现在的规则的积分值+以前的积分
+				Integer temp=0;
+				if(null!=writerPointLog2){
+					temp=writerPointRuleVOs.getPoint()+writerPointLog2.getPoint();
+					writerPointLog.setPoint(temp);
+				}else{
+					temp=writerPointRuleVOs.getPoint();
+					writerPointLog.setPoint(temp);
+				}
+				//积分规则id
+				writerPointLog.setRuleId(writerPointRuleVOs.getId());
+				writerPointLog.setUserId(submitUserId);
+				//增加积分记录
+				writerPointLogService.add(writerPointLog);
+				WriterPoint point=writerPointService.getWriterPointByUserId(submitUserId);
+				WriterPoint writerPoint=new WriterPoint();
+				//当前获取的总积分=评论积分+以前的积分
+				writerPoint.setGain(writerPointLog.getPoint());
+				writerPoint.setUserId(submitUserId);
+				writerPoint.setTotal(writerPoint.getGain()+point.getLoss());
+				writerPoint.setLoss(point.getLoss());
+				writerPoint.setId(point.getId());
+				writerPointService.updateWriterPoint(writerPoint);
+			}
 		}
 		writerUserTrendst.setDetail(detail);
 		Integer res = this.updateBookCorrection(bookCorrection);
