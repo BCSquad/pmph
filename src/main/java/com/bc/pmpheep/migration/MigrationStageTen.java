@@ -30,6 +30,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -119,6 +120,11 @@ public class MigrationStageTen {
         JdbcHelper.addColumn(tableName); //增加new_pk字段
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);//取得该表中所有数据
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0,0,0,0,0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         String sql = "SELECT sysflag FROM sys_user WHERE userid = ?";
         int count = 0;//迁移成功的条目数
         for (Map<String, Object> map : maps) {
@@ -130,6 +136,11 @@ public class MigrationStageTen {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "内容标题为空");
                 excel.add(map);
                 logger.error("内容标题为空，本条数据无效，将记录在Excel中");
+                if (state[0] == 0){
+                	reason.append("找不到内容标题。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             cmsContent.setTitle(title);
@@ -138,6 +149,11 @@ public class MigrationStageTen {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "文章内容为空");
                 excel.add(map);
                 logger.error("文章内容为空，本条数据无效，将记录在Excel中");
+                if (state[1] == 0){
+                	reason.append("找不到文章的内容。");
+                	dealWith.append("放弃迁移。");
+                	state[1] = 1;
+                }
                 continue;
             }
             BigDecimal colid = (BigDecimal) map.get("colid");
@@ -146,6 +162,11 @@ public class MigrationStageTen {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "获取site_column表new_pk字段失败，colid=" + colid);
                 excel.add(map);
                 logger.error("获取site_column表new_pk字段失败，此结果将被记录在Excel中");
+                if (state[2] == 0){
+                	reason.append("找不到对应的分类栏目。");
+                	dealWith.append("放弃迁移。");
+                	state[2] = 1;
+                }
                 continue;
             }
             cmsContent.setCategoryId(pk);
@@ -160,6 +181,11 @@ public class MigrationStageTen {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "未找到成员在sys_user表中的对应主键");
                 excel.add(map);
                 logger.error("未找到成员在sys_user表中的对应主键，此结果将被记录在Excel中");
+                if (state[3] == 0){
+                	reason.append("找不到对应的作者信息。");
+                	dealWith.append("放弃迁移。");
+                	state[3] = 1;
+                }
                 continue;
             } else {
                 cmsContent.setAuthorId(userId);
@@ -175,6 +201,11 @@ public class MigrationStageTen {
                         map.put(SQLParameters.EXCEL_EX_HEADER, "小组成员对应的sysflag无法识别");
                         excel.add(map);
                         logger.error("小组成员对应的sysflag无法识别，此结果将被记录在Excel中");
+                        if (state[4] == 0){
+                        	reason.append("找不到作者对应的人员类型。");
+                        	dealWith.append("放弃迁移。");
+                        	state[4] = 1;
+                        }
                         continue;
                 }
             }
@@ -196,6 +227,11 @@ public class MigrationStageTen {
                     map.put(SQLParameters.EXCEL_EX_HEADER, "未找到成员在sys_user表中的对应主键");
                     excel.add(map);
                     logger.error("未找到成员在sys_user表中的对应主键，此结果将被记录在Excel中");
+                    if (state[5] == 0){
+                    	reason.append("找不到对应的审核者的信息。");
+                    	dealWith.append("放弃迁移。");
+                    	state[5] = 1;
+                    }
                     continue;
                 } else {
                     cmsContent.setAuthUserId(authUserId);
@@ -230,6 +266,9 @@ public class MigrationStageTen {
             Double artid = (Double) map.get("artid");
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "artid", artid);//更新旧表中new_pk字段
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -238,8 +277,27 @@ public class MigrationStageTen {
                 logger.error("异常数据导出到Excel失败", ex);
             }
         }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "cms_content");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "CMS内容表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
+        }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
+        if (SQLParameters.STATISTICS_RESULT.size() > 0){
+        	try{
+        		excelHelper.exportFromResultMaps(SQLParameters.STATISTICS_RESULT, "总体统计结果", null);
+        	} catch(IOException ex){
+        		logger.error("异常数据导出到Excel失败", ex);
+        	}
+        }
     }
 
     public void materialNotice() {

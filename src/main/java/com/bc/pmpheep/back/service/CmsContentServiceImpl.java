@@ -321,6 +321,9 @@ public class CmsContentServiceImpl implements CmsContentService {
             for (int i = 0; i < imgAttachment.length; i++) {
                 fileService.remove(imgAttachment[i]);
             }
+            if (ArrayUtil.isEmpty(imgFile)) {// 如果删除了封面没上传，就使用默认封面
+                this.updateCmsContent(new CmsContent(cmsContent.getId(), "DEFAULT"));
+            }
         }
         // 保存附件到MongoDB
         this.saveFileToMongoDB(request, files, imgFile, cmsContent.getId());
@@ -504,7 +507,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         resultMap.put("MaterialNoteAttachment", materialNoteAttachments);
         // 文章封面图片
         CmsExtra cmsExtra = cmsExtraService.getCmsExtraByAttachment(cmsContent.getCover());
-        String imgFileName = null;
+        String imgFileName = "默认封面.png";
         String imgFilePath = RouteUtil.DEFAULT_USER_AVATAR;
         if (ObjectUtil.notNull(cmsExtra)) {
             imgFileName = cmsExtra.getAttachmentName();
@@ -614,9 +617,9 @@ public class CmsContentServiceImpl implements CmsContentService {
         // 保存附件到MongoDB
         if (ArrayUtil.isNotEmpty(files)) {
             for (int i = 0; i < files.length; i++) {
-                byte[] fileByte = (byte[]) request.getSession(false).getAttribute(imgFile[i]);
+                byte[] fileByte = (byte[]) request.getSession(false).getAttribute(files[i]);
                 String fileName =
-                (String) request.getSession(false).getAttribute("fileName_" + imgFile[i]);
+                (String) request.getSession(false).getAttribute("fileName_" + files[i]);
                 InputStream sbs = new ByteArrayInputStream(fileByte);
                 String gridFSFileId =
                 fileService.save(sbs, fileName, FileType.CMS_ATTACHMENT, contentId);

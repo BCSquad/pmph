@@ -135,19 +135,19 @@
 
 	<!-- 根据id查询 -->
 	<select id="getDecTextbookPmphById" parameterType="java.lang.Long"
-		resultType="DecTextbook">
+		resultType="DecTextbookPmph">
 		select * from dec_textbook_pmph where id=#{id};
 	</select>
 
 	<!-- 根据declarationId查询 -->
 	<select id="getListDecTextbookPmphByDeclarationId" parameterType="java.lang.Long"
-		resultType="DecTextbook">
+		resultType="DecTextbookPmph">
 		select * from dec_textbook_pmph where
 		declaration_id=#{declarationId};
 	</select>
 
 	<!-- 根据declarationId查询 -->
-	<select id="getListDecTextbookPmphByDeclarationIds" resultType="DecTextbook">
+	<select id="getListDecTextbookPmphByDeclarationIds" resultType="DecTextbookPmph">
 		select * from dec_textbook_pmph where
 		declaration_id in
 		<foreach collection="list" item="declarationId" open="("

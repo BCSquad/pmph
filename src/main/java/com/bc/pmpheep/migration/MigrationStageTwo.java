@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +120,12 @@ public class MigrationStageTwo {
                 + "WHERE b.sysflag = 1 AND d.usertype != 2 ;";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
         int count = 0;
+        int correctCount = 0;//统计正确数据数量
+        int[] state = {0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         for (Map<String, Object> map : maps) {
             Double userroleId = (Double) map.get("userroleid");
             Long userId = (Long) map.get("user_new_pk");
@@ -127,12 +133,22 @@ public class MigrationStageTwo {
             if (ObjectUtil.isNull(userId)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, "此用户不存在。");
                 excel.add(map);
+                if (state[0] == 0){
+                	reason.append("此用户不存在。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             //按客户要求删除该数据
             if (ObjectUtil.isNull(roleId)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "已删除。");
                 excel.add(map);
+                if (state[1] == 0){
+                	reason.append("没有此角色。");
+                	dealWith.append("根据客户反馈放弃迁移。");
+                	state[1] = 1;
+                }
                 continue;
             }
             WriterUserRole writerUserRole = new WriterUserRole();
@@ -142,6 +158,9 @@ public class MigrationStageTwo {
             count++;
             Long pk = writerUserRole.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "userroleid", userroleId);
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -149,6 +168,18 @@ public class MigrationStageTwo {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "writer_user_role");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家-角色关联表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("writer_user_role迁移完成");
         logger.info("原数据库表共{}条数据，迁移了{}条数据", maps.size(), count);
@@ -166,12 +197,22 @@ public class MigrationStageTwo {
                 + "LEFT JOIN book_tag d ON a.tagid = d.tagid GROUP BY a.userid ;";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
         int count = 0;
+        int correctCount = 0;//统计正确数据数量
+        int[] state = {0,0,0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         for (Map<String, Object> map : maps) {
             Long userId = (Long) map.get("new_pk");
             if (ObjectUtil.isNull(userId)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, "此用户不存在");
             	excel.add(map);
+            	if (state[0] == 0){
+            		reason.append("用户不存在。");
+            		dealWith.append("放弃迁移。");
+            		state[0] = 1;
+            	}
             	continue;
             }
             Integer usertype = (Integer) map.get("usertype");
@@ -179,11 +220,21 @@ public class MigrationStageTwo {
             if (ObjectUtil.notNull(usertype) && 2 == usertype.intValue()) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "已删除。");
                 excel.add(map);
+                if (state[1] == 0){
+                	reason.append("用户为机构管理员。");
+                	dealWith.append("根据客户反馈，放弃迁移。");
+                	state[1] = 1;
+                }
                 continue;
             }
             if (userId == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "此用户为社内用户。");
                 excel.add(map);
+                if (state[2] == 0){
+                	reason.append("用户为社内用户。");
+                	dealWith.append("放弃迁移。");
+                	state[2] = 1;
+                }
                 continue;
             }
             String profile = (String) map.get("introduce");
@@ -191,6 +242,11 @@ public class MigrationStageTwo {
             if (StringUtil.isEmpty(tagName)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, "此标签不存在");
             	excel.add(map);
+            	if (state[3] == 0){
+            		reason.append("标签不存在。");
+            		dealWith.append("标签可以为空，照常迁入数据库。");
+            		state[3] = 1;
+            	}
             }
             WriterProfile writerProfile = new WriterProfile();
             writerProfile.setUserId(userId);
@@ -199,6 +255,9 @@ public class MigrationStageTwo {
             writerProfile = writerProfileService.addWriterProfile(writerProfile);
             count++;
             //此表原系统数据不存在，所以无需反向更新
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -206,6 +265,18 @@ public class MigrationStageTwo {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "writer_profile");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "用户标签表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("writer_profile表迁移完成");
         logger.info("原数据库表共{}条数据，迁移了{}条数据", maps.size(), count);
@@ -228,31 +299,56 @@ public class MigrationStageTwo {
                 + "WHERE a.sysflag=1 AND b.usertype !=2 AND e.filedir IS NOT NULL ;";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
         int count = 0;
+        int correctCount = 0;//统计正常数据的数量
+        int[] state = {0,0,0,0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
             Long userId = (Long) map.get("user_new_pk");
             if (ObjectUtil.isNull(userId)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("此用户不存在。"));
                 excel.add(map);
+                if (state[0] == 0){
+                	reason.append("用户不存在。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             if (userId == 0){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户为社内用户。"));
                 excel.add(map);
+                if (state[1] == 0){
+                	reason.append("用户为社内用户。");
+                	dealWith.append("放弃迁移。");
+                	state[1] = 1;
+                }
                 continue;
             }
             Long orgId = (Long) map.get("org_new_pk");
             if (ObjectUtil.isNull(orgId) || orgId == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户没有教师认证单位，可以"
-                		+ "通过申报表和专家平台再次确定"));
+                		+ "通过申报表和专家平台再次确定。"));
                 excel.add(map);
+                if (state[2] == 0){
+                	reason.append("用户没有教师认证单位。");
+                	dealWith.append("放弃迁移。");
+                	state[2] = 1;
+                }
                 continue;
             }
             if (orgId == 0){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户认证单位为社内部门"
-            			+ "或认证单位在表里存在重复情况，可以通过申报表及专家平台再次确定"));
+            			+ "或认证单位在表里存在重复情况，可以通过申报表及专家平台再次确定。"));
                 excel.add(map);
+                if (state[3] == 0){
+                	reason.append("用户认证单位为社内部门。");
+                	dealWith.append("放弃迁移。");
+                	state[3] = 1;
+                }
                 continue;
             }
             String handphone = (String) map.get("handset");
@@ -281,9 +377,17 @@ public class MigrationStageTwo {
                     map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常。");
                     excel.add(map);
                     logger.error("文件读取异常，路径<{}>,异常信息：{}", cert, ex.getMessage());
+                    if (state[4] == 0){
+                    	reason.append("教师资格证文件丢失。");
+                    	dealWith.append("设为默认文件迁入数据库。");
+                    	state[4] = 1;
+                    }
                 } 
                 writerUserCertification.setCert(mongoId);
                 writerCertificationService.updateWriterUserCertification(writerUserCertification);
+            }
+            if (null == map.get("exception")){
+            	correctCount++;
             }
         }
         if (excel.size() > 0) {
@@ -292,6 +396,18 @@ public class MigrationStageTwo {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "writer_user_certification");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "教师资格认证表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("writer_user_certification");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据", maps.size(), count);

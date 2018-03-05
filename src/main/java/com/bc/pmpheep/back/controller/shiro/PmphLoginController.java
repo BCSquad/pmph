@@ -111,12 +111,14 @@ public class PmphLoginController {
         userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
         if (isTrue) {
             if (StringUtil.notEmpty(token)) {
-                String newToken = username + password + wechatUserId + "pmph";
+                String newToken = username + password + wechatUserId + "<pmpheep>";
                 if (!newToken.equals(new DesRun(token).depsw)) {
                     throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                                       CheckedExceptionResult.NULL_PARAM, "用户名密码错误!");
                 }
             }
+            username = new DesRun(username).depsw;
+            password = new DesRun(password).depsw;
         }
         if (StringUtil.isEmpty(username) || StringUtil.isEmpty(password)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,

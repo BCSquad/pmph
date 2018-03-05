@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,11 @@ public class MigrationStageNine {
         /* booktypesid这张表重复的bookid非常多，因此用group来返回唯一结果 */
         String sql = "SELECT booktypesid FROM book_goodstype WHERE bookid = ? GROUP BY bookid";
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0,0,0,0,0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             /* Get book_goodsinfo properties */
@@ -102,6 +108,11 @@ public class MigrationStageNine {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "购买链接为空");
                 excel.add(map);
                 logger.error("购买链接(buyurl)为空，本条数据无效，将记录在Excel中");
+                if (state[0] == 0){
+                	reason.append("找不到购买链接。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             book.setBuyUrl(buyurl);
@@ -138,6 +149,11 @@ public class MigrationStageNine {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "旧数据库中出版日期为空，已设为当前日期");
                 excel.add(map);
                 logger.warn("旧数据库中出版日期为空，已设为当前日期，此结果将被记录在Excel中");
+                if (state[1] == 0){
+                	reason.append("找不到书籍出版日期。");
+                	dealWith.append("设为当前日期迁入数据库。");
+                	state[1] = 1;
+                }
             } else {
                 try {
                     String publicationdate = map.get("publicationdate").toString();
@@ -147,6 +163,11 @@ public class MigrationStageNine {
                     map.put(SQLParameters.EXCEL_EX_HEADER, "出版日期转换失败，已设为当前日期");
                     excel.add(map);
                     logger.warn("出版日期转换失败，此结果将被记录在Excel中，错误信息：{}", ex.getMessage());
+                    if (state[2] == 0){
+                    	reason.append("出版日期转换失败。");
+                    	dealWith.append("设为当前日期迁入数据库。");
+                    	state[2] = 1;
+                    }
                 }
             }
             if (StringUtil.notEmpty(press)) {
@@ -156,6 +177,11 @@ public class MigrationStageNine {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "出版图书没有出版社，已设为'暂缺'");
                 excel.add(map);
                 logger.warn("出版图书的出版社字段为空，此结果将被记录在Excel中");
+                if(state[3] == 0){
+                	reason.append("找不到书籍的出版社。");
+                	dealWith.append("设为暂缺迁入数据库。");
+                	state[3] = 1;
+                }
             }
             if (StringUtil.notEmpty(reader)) {
                 book.setReader(reader);
@@ -171,6 +197,11 @@ public class MigrationStageNine {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "查询booktypesid时未返回唯一结果");
                 excel.add(map);
                 logger.error("查询booktypesid时未返回唯一结果，错误信息{}", ex.getMessage());
+                if (state[4] == 0){
+                	reason.append("书籍具有多个类型，非唯一分类。");
+                	dealWith.append("放弃迁移。");
+                	state[4] = 1;
+                }
                 continue;
             }
             Long pk = JdbcHelper.getPrimaryKey("sys_booktypes", "BookTypesID", booktypesid);
@@ -178,6 +209,11 @@ public class MigrationStageNine {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "获取sys_booktypes表new_pk字段失败，BookTypesID=" + booktypesid);
                 excel.add(map);
                 logger.error("获取sys_booktypes表new_pk字段失败，此结果将被记录在Excel中");
+                if (state[5] == 0){
+                	reason.append("找不到书籍对应的分类信息。");
+                	dealWith.append("放弃迁移。");
+                	state[5] = 1;
+                }
                 continue;
             }
             book.setType(pk);
@@ -193,6 +229,9 @@ public class MigrationStageNine {
             }
             bookService.add(detail);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -200,6 +239,18 @@ public class MigrationStageNine {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "book");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "出版图书表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);

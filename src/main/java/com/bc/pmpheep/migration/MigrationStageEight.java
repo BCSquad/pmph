@@ -26,13 +26,14 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
 import com.bc.pmpheep.utils.ExcelHelper;
-import java.io.File;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -134,6 +135,11 @@ public class MigrationStageEight {
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);//取得该表中所有数据
         int count = 0;//迁移成功的条目数
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0,0,0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         String sql = "SELECT sysflag FROM sys_user WHERE userid = ?";
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -144,6 +150,11 @@ public class MigrationStageEight {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "未找到成员所属小组");
                 excel.add(map);
                 logger.error("未找到成员所属小组，此结果将被记录在Excel中");
+                if (state[0] == 0){
+                	reason.append("未找到成员所属小组。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             String userID = (String) map.get("userID");
@@ -152,6 +163,11 @@ public class MigrationStageEight {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "未找到成员在sys_user表中的对应主键");
                 excel.add(map);
                 logger.error("未找到成员在sys_user表中的对应主键，此结果将被记录在Excel中");
+                if (state[1] == 0){
+                	reason.append("没有查找到组员对应的用户。");
+                	dealWith.append("放弃迁移。");
+                	state[1] = 1;
+                }
                 continue;
             } else {
                 member.setUserId(userId);
@@ -167,6 +183,11 @@ public class MigrationStageEight {
                         map.put(SQLParameters.EXCEL_EX_HEADER, "小组成员对应的sysflag无法识别");
                         excel.add(map);
                         logger.error("小组成员对应的sysflag无法识别，此结果将被记录在Excel中");
+                        if (state[2] == 0){
+                        	reason.append("无法判断小组成员的用户类型。");
+                        	dealWith.append("放弃迁移。");
+                        	state[2] = 1;
+                        }
                         continue;
                 }
             }
@@ -199,10 +220,18 @@ public class MigrationStageEight {
                 if (null == pmphGroup) {
                     map.put(SQLParameters.EXCEL_EX_HEADER, "小组id为：" + groupId + " 的小组没有找到");
                     excel.add(map);
+                    if (state[3] == 0){
+                    	reason.append("没有找到对应的小组。");
+                    	dealWith.append("放弃迁移。");
+                    	state[3] = 1;
+                    }
                     continue;
                 }
                 pmphGroup.setFounderId(userId);
                 groupService.updatePmphGroup(pmphGroup);
+            }
+            if (null == map.get("exception")){
+            	correctCount++;
             }
         }
         if (excel.size() > 0) {
@@ -211,6 +240,18 @@ public class MigrationStageEight {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "pmph_group_member");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "后台小组成员表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
@@ -227,6 +268,11 @@ public class MigrationStageEight {
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);//取得该表中所有数据
         int count = 0;//迁移成功的条目数
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         String sql = "SELECT new_pk FROM bbs_groupusers WHERE groupID = ? AND userID = ?";
         /* 以下开始遍历旧表数据，根据相应规则进行数据转换 */
         for (Map<String, Object> map : maps) {
@@ -238,6 +284,11 @@ public class MigrationStageEight {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "未找到消息对应小组");
                 excel.add(map);
                 logger.error("未找到消息对应小组，此结果将被记录在Excel中");
+                if (state[0] == 0){
+                	reason.append("没有找到消息所对应的小组。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             groupMessage.setGroupId(groupId);
@@ -248,6 +299,11 @@ public class MigrationStageEight {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "未找到消息对应成员");
                 excel.add(map);
                 logger.error("未找到消息对应成员，此结果将被记录在Excel中");
+                if (state[1] == 0){
+                	reason.append("没有找到消息所对应的小组成员。");
+                	dealWith.append("放弃迁移。");
+                	state[1] = 1;
+                }
                 continue;
             }
             groupMessage.setMemberId(memberId);
@@ -260,6 +316,9 @@ public class MigrationStageEight {
             long pk = groupMessage.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "ID", id);//更新旧表中new_pk字段
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -267,6 +326,18 @@ public class MigrationStageEight {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "pmph_group_message");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "后台小组消息表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
@@ -282,6 +353,11 @@ public class MigrationStageEight {
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);//取得该表中所有数据
         int count = 0;//迁移成功的条目数
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
+        int correctCount = 0;
+        int[] state = {0,0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         String sql = "SELECT new_pk FROM bbs_groupusers WHERE groupID = ? AND userID = ?";
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
@@ -297,6 +373,11 @@ public class MigrationStageEight {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "未找到文件对应小组");
                 excel.add(map);
                 logger.error("未找到文件对应小组，此结果将被记录在Excel中");
+                if (state[0] == 0){
+                	reason.append("没有找到文件所对应的小组。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             groupFile.setGroupId(groupId);
@@ -305,6 +386,11 @@ public class MigrationStageEight {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "未找到文件对应上传者");
                 excel.add(map);
                 logger.error("未找到文件对应上传者，此结果将被记录在Excel中");
+                if (state[1] == 0){
+                	reason.append("没有找到文件所对应的上传者。");
+                	dealWith.append("放弃迁移。");
+                	state[1] = 1;
+                }
                 continue;
             }
             groupFile.setFileId("LOST");//file_id设为固定字符串，稍后更新
@@ -335,18 +421,22 @@ public class MigrationStageEight {
                 logger.error("文件读取异常，路径<{}>，异常信息：{}", path, ex.getMessage());
                 map.put(SQLParameters.EXCEL_EX_HEADER, "文件读取异常");
                 excel.add(map);
+                if (state[2] == 0){
+                	reason.append("小组文件丢失。");
+                	dealWith.append("放弃迁移。");
+                	state[2] = 1;
+                }
                 continue;
-            } catch (Exception ex) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, "位置错误信息：" + ex.getMessage());
-                excel.add(map);
-                continue;
-            }
+            } 
             groupFile.setFileId(mongoId);
             String fullpath = SQLParameters.FILE_PATH + path;
             File file = new File(fullpath);
             double fileSize = file.length() / 1024;
             groupFile.setFileSize(fileSize);
             groupFileService.updatePmphGroupFile(groupFile);
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -354,6 +444,18 @@ public class MigrationStageEight {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "pmph_group_file");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "后台小组文件表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
