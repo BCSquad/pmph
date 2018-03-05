@@ -41,6 +41,7 @@ import com.bc.pmpheep.back.service.BookCorrectionService;
 import com.bc.pmpheep.back.service.CmsExtraService;
 import com.bc.pmpheep.back.service.DecPositionService;
 import com.bc.pmpheep.back.service.DeclarationService;
+import com.bc.pmpheep.back.service.MaterialExtensionService;
 import com.bc.pmpheep.back.service.MaterialNoteAttachmentService;
 import com.bc.pmpheep.back.service.MaterialNoticeAttachmentService;
 import com.bc.pmpheep.back.service.MaterialOrgService;
@@ -104,6 +105,8 @@ public class FileDownLoadController {
     WordHelper wordHelper;
     @Resource
     MaterialService materialService;
+    @Resource
+    MaterialExtensionService materialExtensionService;
     @Resource
     TextbookService textbookService;
     @Resource
@@ -293,6 +296,7 @@ public class FileDownLoadController {
         Workbook workbook = null;
         try {
             workbook = excelHelper.fromDeclarationEtcBOList(materialService.getMaterialById(materialId),
+                    materialExtensionService.getMaterialExtensionByMaterialId(materialId),
                     declarationService.declarationEtcBO(materialId, textBookids, realname, position, title, orgName,
                             unitName, positionType, onlineProgress, offlineProgress),
                     "专家信息表");

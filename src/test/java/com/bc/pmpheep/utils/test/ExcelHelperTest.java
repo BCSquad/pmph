@@ -5,6 +5,7 @@ import com.bc.pmpheep.back.bo.DeclarationBO;
 import com.bc.pmpheep.back.bo.WriterBO;
 import com.bc.pmpheep.back.service.DecTeachExpService;
 import com.bc.pmpheep.back.service.DeclarationService;
+import com.bc.pmpheep.back.service.MaterialExtensionService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -36,6 +37,8 @@ public class ExcelHelperTest extends BaseTest {
     ExcelHelper excelHelper;
     @Resource
     MaterialService materialService;
+    @Resource
+    MaterialExtensionService materialExtensionService;
     @Resource
     DeclarationService declarationService;
     @Resource
@@ -78,10 +81,11 @@ public class ExcelHelperTest extends BaseTest {
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void fromDeclarationEtcBOList() throws CheckedServiceException, FileNotFoundException, IOException,
             IllegalArgumentException, IllegalAccessException {
         Workbook workbook = excelHelper.fromDeclarationEtcBOList(materialService.getMaterialById(2L),
+                materialExtensionService.getMaterialExtensionByMaterialId(2L),
                 declarationService.declarationEtcBO(2L,
                         null,
                         null,
