@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,12 @@ public class MigrationStageFive {
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
         int count = 0;//迁移成功的条目数
+        int correctCount = 0;
+        int[] state = {0,0,0,0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         //默认值
         Long constant=0L;
         /* 开始遍历查询结果 */
@@ -82,6 +88,11 @@ public class MigrationStageFive {
                 c=constant;
                 excel.add(map);
                 logger.error("该教材id为空，此结果将将被记录在Excel中");
+                if (state[0] == 0){
+                	reason.append("找不到教材的唯一标识。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             Long createuserid = (Long) map.get("bookcreateuserid");
@@ -92,6 +103,11 @@ public class MigrationStageFive {
                 newcreateuseid=constant;
                 excel.add(map);
                 logger.error("该教材的创建者id为空，此结果将将被记录在Excel中");
+                if (state[1] == 0){
+                	reason.append("找不到教材的创建者。");
+                	dealWith.append("设为默认值迁入数据库。");
+                	state[1] = 1;
+                }
                 //continue;
             }
             String bookname = (String) map.get("bookname");
@@ -99,6 +115,11 @@ public class MigrationStageFive {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("该书籍名称为空。"));
                 excel.add(map);
                 logger.error("该书籍名称为空，此结果将将被记录在Excel中");
+                if (state[2] == 0){
+                	reason.append("找不到书籍的名称。");
+                	dealWith.append("放弃迁移。");
+                	state[2] = 1;
+                }
                 continue;
             }
             java.util.Date ceDate = (java.util.Date) map.get("createdate");
@@ -108,6 +129,11 @@ public class MigrationStageFive {
                 map.put(SQLParameters.EXCEL_EX_HEADER, exception.append("创建时间为空。"));
                 excel.add(map);
                 logger.error("创建时间为空，因新库不能插入null，去教材表找对应创建时间，此结果将将被记录在Excel中");
+                if (state[3] ==0){
+                	reason.append("找不到书籍的创建时间。");
+                	dealWith.append("放弃迁移。");
+                	state[3] = 1;
+                }
                 continue;
             }
             Integer xnumber = (Integer) map.get("xnumber");
@@ -116,6 +142,11 @@ public class MigrationStageFive {
                 xnumber=(int) constant.longValue();
                 excel.add(map);
                 logger.error("图书序号为空，此结果将将被记录在Excel中");
+                if (state[4] == 0){
+                	reason.append("找不到书籍的序号。");
+                	dealWith.append("设为默认值迁入数据库。");
+                	state[4] = 1;
+                }
                 //continue;
             }
             Textbook textbook = new Textbook();
@@ -168,6 +199,9 @@ public class MigrationStageFive {
             long pk = textbook.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "bookid", id); // 更新旧表中new_pk字段
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -175,6 +209,18 @@ public class MigrationStageFive {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "textbook");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "教材书籍表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("'{}'表迁移完成，异常条目数量：{}", tableName, excel.size());
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);

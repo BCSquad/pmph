@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -75,13 +76,18 @@ public class MigrationStageOne {
         writerPoint();
         logger.info("迁移第一步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
     }
-
+    
     protected void area() {
         String tableName = "ba_areacode"; //要迁移的旧库表名
         JdbcHelper.addColumn(tableName); //增加new_pk字段
         List<Map<String, Object>> maps = JdbcHelper.queryForList(tableName);//取得该表中所有数据
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
         int count = 0;//迁移成功的条目数
+        int correctCount = 0;//没有问题的数据
+        int[] state = {0,0};//用户判断此表是否用异常数据的标识
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         /* 开始遍历查询结果 */
         for (Map<String, Object> map : maps) {
             /* 根据MySQL字段类型进行类型转换 */
@@ -92,12 +98,22 @@ public class MigrationStageOne {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "找不到区域名称。");
                 excel.add(map);
                 logger.error("区域名称为空，此结果将被记录在Excel中");
+                if (state[0] == 0){
+                	reason.append("找不到区域名称。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             if (ObjectUtil.isNull(parentCode)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "找不到区域省-市-县路径。");
                 excel.add(map);
                 logger.error("父区域编码为空，此结果将被记录在Excel中");
+                if (state[1] == 0){
+                	reason.append("找不到区域省-市-县路径。");
+                	dealWith.append("设为默认值0迁入数据库。");
+                	state[1] = 1;
+                }
             }
             /* 开始新增新表对象，并设置属性值 */
             Area area = new Area();
@@ -114,6 +130,9 @@ public class MigrationStageOne {
             long pk = area.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "AreaID", areaId);//更新旧表中new_pk字段
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -121,6 +140,18 @@ public class MigrationStageOne {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "area");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "区域表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("area表迁移完成");
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
@@ -137,7 +168,12 @@ public class MigrationStageOne {
                 + "AND parentid=0 ;";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
         int count = 0;
+        int correctCount = 0;//统计正常数据的数量
+        int[] state = {0};//用户统计该表是否有相对应的异常数据情况的标识
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         for (Map<String, Object> map : maps) {
             String orgTypeId = (String) map.get("orgid");
             String orgName = (String) map.get("orgname");
@@ -145,6 +181,11 @@ public class MigrationStageOne {
                 map.put(SQLParameters.EXCEL_EX_HEADER, "找不到机构类型名称。");
                 excel.add(map);
                 logger.error("机构类型名称为空，此结果将被记录在Excel中");
+                if (state[0] == 0){
+                	reason.append("找不到机构类型名称。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             Integer sort = (Integer) map.get("sortno");
@@ -158,6 +199,9 @@ public class MigrationStageOne {
             Long pk = orgType.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "orgid", orgTypeId);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -165,6 +209,18 @@ public class MigrationStageOne {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "org_type");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "机构类型表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("org_type表迁移完成");
         logger.info("原数据库表中共有{}条数据，迁移了{}条数据", maps.size(), count);
@@ -183,7 +239,12 @@ public class MigrationStageOne {
         List<Map<String, Object>> excel = new LinkedList<>();
         /*除主键外有其他列有唯一值约束，用此集合放此列已经插入新表的值作为判断重复的条件*/
         List<String> list = new ArrayList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
         int count = 0;
+        int correctCount = 0;
+        int[] state = {0,0,0,0,0,0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         for (Map<String, Object> map : maps) {
             /*因此表有主要级字段和次要级字段，次要级字段插入新表同时也需导出Excel，因此异常信息不止一条，
 			 * 用StringBulider进行拼接成最终的异常信息
@@ -192,11 +253,15 @@ public class MigrationStageOne {
             Integer isDeleted = (Integer) map.get("isdelete");
             if (ObjectUtil.isNull(isDeleted)) {
             	isDeleted = 0;
-            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("是否逻辑删除数据为空。"));
-            	excel.add(map);
             }
             /* 此数据为被逻辑删除的数据，待客户反馈再决定是否迁移，现阶段暂时不迁移 */
             if (isDeleted.intValue() == 1){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("被逻辑删除的数据。"));
+            	if (state[0] == 0){
+            		reason.append("被逻辑删除的数据。");
+            		dealWith.append("放弃迁移。");
+            		state[0] = 1;
+            	}
             	continue;
             }
             String orgId = (String) map.get("orgid");
@@ -204,36 +269,67 @@ public class MigrationStageOne {
             if (StringUtil.isEmpty(orgName)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到机构名称。"));
                 excel.add(map);
+                if (state[1] == 0){
+                	reason.append("找不到机构名称。");
+                	dealWith.append("放弃迁移。");
+                	state[1] = 1;
+                }
                 continue;
             }
             if (JdbcHelper.nameDuplicate(list, orgName)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构名称重复。"));
                 excel.add(map);
+                if (state[2] == 0){
+                	reason.append("机构名称重复。");
+                	dealWith.append("放弃迁移。");
+                	state[2] = 1;
+                }
                 continue;
             }
             if (StringUtil.strLength(orgName) > 20){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构名称过长。"));
                 excel.add(map);
+                if (state[3] == 0){
+                	reason.append("机构名称过长。");
+                	dealWith.append("放弃迁移。");
+                	state[3] = 1;
+                }
                 continue;
             }
             //依据客户反馈不迁移的机构
             if ("江苏建康职业学院".equals(orgName) || "北京大学".equals(orgName) || "民办山东万杰医学高等专科学校".equals(orgName)
             		|| "天津大学".equals(orgName) || "协和医院".equals(orgName) || "华西医院".equals(orgName)
             		|| "技术学校".equals(orgName) || "qthzyxy".equals(orgName)){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("缺少管理员账号。"));
+            	if (state[4] == 0){
+            		reason.append("缺少管理员账号。");
+            		dealWith.append("依据客户反馈，放弃迁移。");
+            		state[4] = 1;
+            	}
             	continue;
             }
             list.add(orgName);
             Integer orgType = (Integer) map.get("orgtype");
             Long areaId = (Long) map.get("new_pk");
-            if (ObjectUtil.isNull(orgType) || ObjectUtil.isNull(areaId)) {
+            if (ObjectUtil.isNull(orgType)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到机构所属类型。"));
                 excel.add(map);
+                if (state[5] ==0){
+                	reason.append("找不到机构所属类型。");
+                	dealWith.append("放弃迁移。");
+                	state[5] = 1;
+                }
                 continue;
             }
             //找不到所属区域根据客户要求删除不导入
             if (ObjectUtil.isNull(areaId)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("已删除。"));
                 excel.add(map);
+                if (state[6] ==0){
+                	reason.append("找不到所属区域。");
+                	dealWith.append("依据客户反馈，放弃迁移。");
+                	state[6] = 1;
+                }
                 continue;
             }
             Long orgTypeId = JdbcHelper.getPrimaryKey(tableName, "orgid", String.valueOf(orgType));
@@ -257,6 +353,9 @@ public class MigrationStageOne {
             Long pk = org.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "orgid", orgId);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -264,6 +363,18 @@ public class MigrationStageOne {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "org");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "机构表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("org表迁移完成");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据", maps.size(), count);
@@ -297,7 +408,12 @@ public class MigrationStageOne {
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         List<String> list = new ArrayList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
         int count = 0;
+        int correctCount = 0;//统计正常数据数量
+        int[] state = {0,0,0,0,0,0,0,0};//识别该表是否有相应异常数据的标识
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
             String userId = map.get("userid").toString();
@@ -305,16 +421,31 @@ public class MigrationStageOne {
             if (StringUtil.isEmpty(username)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到机构代码。"));
                 excel.add(map);
+                if (state[0] == 0){
+                	reason.append("找不到机构管理员账号。");
+                	dealWith.append("放弃迁移。");
+                	state[0] = 1;
+                }
                 continue;
             }
             if (JdbcHelper.nameDuplicate(list, username)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构代码重复。"));
                 excel.add(map);
+                if (state[1] == 0){
+                	reason.append("机构管路员账号重复。");
+                	dealWith.append("放弃迁移。");
+                	state[1] = 1;
+                }
                 continue;
             }
             if (StringUtil.strLength(username) > 20){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构代码过长。"));
                 excel.add(map);
+                if (state[2] == 0){
+                	reason.append("机构管理员账号过长。");
+                	dealWith.append("放弃迁移。");
+                	state[2] = 1;
+                }
                 continue;
             }
             list.add(username);
@@ -322,6 +453,11 @@ public class MigrationStageOne {
             if (ObjectUtil.isNull(orgId)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到对应的学校。"));
                 excel.add(map);
+                if (state[3] == 0){
+                	reason.append("找不到对应的机构。");
+                	dealWith.append("放弃迁移。");
+                	state[3] = 1;
+                }
                 continue;
             }
             String password = (String) map.get("password");
@@ -329,6 +465,11 @@ public class MigrationStageOne {
                 password = "888888";
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构用户登陆密码为空。"));
                 excel.add(map);
+                if (state[4] == 0){
+                	reason.append("机构用户登陆密码为空。");
+                	dealWith.append("设为默认密码迁入数据库。");
+                	state[4] = 1;
+                }
             }
             String realName = (String) map.get("username");
             String orgName = (String) map.get("orgname");
@@ -435,6 +576,11 @@ public class MigrationStageOne {
             if (orgUser.getProgress() == 1 && ObjectUtil.isNull(orgUser.getReviewDate())) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("审核通过，但审核时间为空。"));
                 excel.add(map);
+                if (state[5] == 0){
+                	reason.append("审核通过但社和时间为空。");
+                	dealWith.append("依据客户反馈照常迁入数据库。");
+                	state[5] = 1;
+                }
             }
             orgUser = orgUserService.addOrgUser(orgUser);
             Long pk = orgUser.getId();
@@ -450,6 +596,11 @@ public class MigrationStageOne {
                     logger.error("文件读取异常，路径<{}>,异常信息：{}", proxy, ex.getMessage());
                     map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("文件读取异常。"));
                     excel.add(map);
+                    if (state[6] == 0){
+                    	reason.append("机构委托书丢失。");
+                    	dealWith.append("设为默认图片迁入数据库。");
+                    	state[6] = 1;
+                    }
                 } 
                 orgUser.setProxy(mongoId);
             }
@@ -460,12 +611,20 @@ public class MigrationStageOne {
                     } catch (IOException ex) {
                         avatarMongoId = "DEFAULT";
                         logger.error("文件读取异常，路径<{}>,异常信息：{}", avatar, ex.getMessage());
-                        map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("作家用户头像文件读取异常。"));
+                        map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构用户头像文件读取异常。"));
                         excel.add(map);
+                        if (state[7] == 0){
+                        	reason.append("机构用户头像文件丢失。");
+                        	dealWith.append("设为默认头像迁入数据库。");
+                        	state[7] = 1;
+                        }
                     } 
                     orgUser.setAvatar(avatarMongoId);
                 }
                 orgUserService.updateOrgUser(orgUser);
+                if (null == map.get("exception")){
+                	correctCount++;
+                }
         }
         if (excel.size() > 0) {
             try {
@@ -473,6 +632,18 @@ public class MigrationStageOne {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "org_user");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "机构用户表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("org_user表迁移完成");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据", maps.size(), count);
@@ -510,22 +681,43 @@ public class MigrationStageOne {
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         List<String> list = new ArrayList<>();
+        Map<String, Object> result = new LinkedHashMap<>();
         int count = 0;
+        int correctCount = 0;//统计正常数据的数量
+        int[] state = {0,0,0,0,0,0,0,0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         for (Map<String, Object> map : maps) {
             StringBuilder sb = new StringBuilder();
             String userId = (String) map.get("userid");
             String username = (String) map.get("usercode");
             if ("admin".equals(username)){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, "系统管理员账号。");
+            	if (state[0] == 0){
+            		reason.append("此账号为系统管理员账号。");
+            		dealWith.append("放弃迁入作家用户表，迁入社内用户表。");
+            		state[0] = 1;
+            	}
             	continue;
             }
             if (StringUtil.isEmpty(username)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到用户的登陆名"));
+                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到用户的登陆名。"));
                 excel.add(map);
+                if (state[1] == 0){
+                	reason.append("未找到用户的登陆账号。");
+                	dealWith.append("放弃迁入。");
+                	state[1] = 1;
+                }
                 continue;
             }
             if (JdbcHelper.nameDuplicate(list, username)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户的登陆名重复。"));
                 excel.add(map);
+                if (state[2] == 0){
+                	reason.append("用户的登录名重复。");
+                	dealWith.append("放弃迁入。");
+                	state[2] = 1;
+                }
                 continue;
             }
             list.add(username);
@@ -550,6 +742,11 @@ public class MigrationStageOne {
                 	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("此教龄数据没有值，为“无”，“、”，"
                 			+ "“其他”或数字远远超出人的寿命，无法通过合适方法修改插入新数据库，"));
                 	excel.add(map);
+                	if (state[3] == 0){
+                		reason.append("教龄数据不合规范。");
+                		dealWith.append("经过合理规则转换迁入数据库。");
+                		state[3] = 1;
+                	}
                 } 
             }
             Integer experience = Integer.parseInt(experienceNum);
@@ -641,6 +838,11 @@ public class MigrationStageOne {
             if (("王训".equals(realName) || "赵舒武".equals(realName)) && ObjectUtil.isNull(sort)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("已删除"));
             	excel.add(map);
+            	if (state[4] == 0){
+            		reason.append("用户重复。");
+            		dealWith.append("放弃迁入。");
+            		state[4] = 1;
+            	}
             	continue;
             }
             if (ObjectUtil.notNull(sort) && sort < 0) {
@@ -680,6 +882,11 @@ public class MigrationStageOne {
             if (writerUser.getIsTeacher() && ObjectUtil.isNull(writerUser.getAuthTime())) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("认证通过但认证时间为空。"));
                 excel.add(map);
+                if (state[5] == 0){
+                	reason.append("认证通过但认证时间为空。");
+                	dealWith.append("依据客户要求照常迁入数据库。");
+                	state[5] = 1;
+                }
             }
             writerUser = writerUserService.add(writerUser);
             Long pk = writerUser.getId();
@@ -695,6 +902,11 @@ public class MigrationStageOne {
                     logger.error("文件读取异常，路径<{}>,异常信息：{}", cert, ex.getMessage());
                     map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("教师资格证文件读取异常。"));
                     excel.add(map);
+                    if (state[6] == 0){
+                    	reason.append("教师资格证文件丢失。");
+                    	dealWith.append("设为默认图片迁入数据库。");
+                    	state[6] = 1;
+                    }
                 } 
                 writerUser.setCert(certMongoId);
             }
@@ -707,11 +919,19 @@ public class MigrationStageOne {
                     logger.error("文件读取异常，路径<{}>,异常信息：{}", avatar, ex.getMessage());
                     map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("作家用户头像文件读取异常。"));
                     excel.add(map);
+                    if (state[7] == 0){
+                    	reason.append("作家用户头像丢失。");
+                    	dealWith.append("设为默认头像迁入数据库。");
+                    	state[7] = 1;
+                    }
                 }
                 writerUser.setAvatar(avatarMongoId);
             }
             writerUser.setPassword(null);
             writerUserService.update(writerUser);
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -719,6 +939,18 @@ public class MigrationStageOne {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "writer_user");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "作家用户表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("writer_user表迁移完成");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据", maps.size(), count);
@@ -734,7 +966,12 @@ public class MigrationStageOne {
         		+ "left join sys_userext sysue ON sysu.userid = sysue.userid "
         		+ "where sysu.sysflag=1 and sysue.usertype !=2";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
+        Map<String, Object> result = new LinkedHashMap<>();
         int count = 0;//迁移成功的条目数
+        int correctCount = 0;//统计正常数据的数量
+        int[] state = {0};
+        StringBuilder reason = new StringBuilder();
+        StringBuilder dealWith = new StringBuilder();
         List<Map<String, Object>> excel = new LinkedList<>();
         for (Map<String, Object> map : maps) {
         	StringBuilder sb = new StringBuilder();
@@ -745,6 +982,11 @@ public class MigrationStageOne {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到用户id对应的关联结果。"));
                 excel.add(map);
                 logger.debug("未找到用户id对应的关联结果，此结果将被记录在Excel中");
+                if (state[0] == 0){
+                	reason.append("未找到用户的积分。");
+                	dealWith.append("放弃迁入。");
+                	state[0] = 1;
+                }
                 continue;
             }
             writerPoint.setUserId(userId);
@@ -755,6 +997,9 @@ public class MigrationStageOne {
             long pk = writerPoint.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "userid", id);
             count++;
+            if (null == map.get("exception")){
+            	correctCount++;
+            }
         }
         if (excel.size() > 0) {
             try {
@@ -762,6 +1007,18 @@ public class MigrationStageOne {
             } catch (IOException ex) {
                 logger.error("异常数据导出到Excel失败", ex);
             }
+        }
+        if (correctCount != maps.size()){
+        	result.put(SQLParameters.EXCEL_HEADER_TABLENAME, "writer_point");
+        	result.put(SQLParameters.EXCEL_HEADER_DESCRIPTION, "用户积分表");
+        	result.put(SQLParameters.EXCEL_HEADER_SUM_DATA, maps.size());
+        	result.put(SQLParameters.EXCEL_HEADER_MIGRATED_DATA, count);
+        	result.put(SQLParameters.EXCEL_HEADER_CORECT_DATA, correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_TRANSFERED_DATA, count - correctCount);
+        	result.put(SQLParameters.EXCEL_HEADER_NO_MIGRATED_DATA, maps.size() - count);
+        	result.put(SQLParameters.EXCEL_HEADER_EXCEPTION_REASON, reason.toString());
+        	result.put(SQLParameters.EXCEL_HEADER_DEAL_WITH, dealWith.toString());
+        	SQLParameters.STATISTICS_RESULT.add(result);
         }
         logger.info("writer_point表迁移完成");
         logger.info("原数据库表共有{}条数据，迁移了{}条数据", maps.size(), count);

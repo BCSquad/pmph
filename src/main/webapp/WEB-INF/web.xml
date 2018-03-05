@@ -21,7 +21,7 @@
         <servlet-name>springMvc</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-    
+
     <!--允许跨域-->
     <filter>  
         <filter-name>corsFilter</filter-name>  

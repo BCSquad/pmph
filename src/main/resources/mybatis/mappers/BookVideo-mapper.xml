@@ -227,6 +227,7 @@
 	<select id="getVideoList"  resultType="BookVideoVO" >
 	    select a.id id,
 			a.book_id bookId,
+                        a.title title,
 			b.bookname bookName,
 			a.orig_file_name origFileName,
 			a.path path,

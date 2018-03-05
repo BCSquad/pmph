@@ -70,6 +70,8 @@ import com.bc.pmpheep.utils.ExcelHelper;
 import com.bc.pmpheep.utils.WordHelper;
 import com.bc.pmpheep.utils.ZipHelper;
 import com.mongodb.gridfs.GridFSDBFile;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 文件下载控制器
@@ -291,7 +293,7 @@ public class FileDownLoadController {
         Workbook workbook = null;
         try {
             workbook =
-            excelHelper.fromDeclarationEtcBOList(declarationService.declarationEtcBO(materialId,
+            excelHelper.fromDeclarationEtcBOList(materialService.getMaterialById(materialId), declarationService.declarationEtcBO(materialId,
                                                                                      textBookids,
                                                                                      realname,
                                                                                      position,
@@ -308,10 +310,14 @@ public class FileDownLoadController {
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/force-download");
         try {
-            response.setHeader("Content-Disposition",
-                               "attachment;fileName="
-                               + new String("DeclarationEtcBOList.xls".getBytes("utf-8"),
-                                            "ISO8859-1"));
+            StringBuilder sb = new StringBuilder("attachment;fileName=");
+            String materialName = new String(materialService.getMaterialNameById(materialId).getBytes("utf-8"),"ISO8859-1");
+            sb.append(materialName);
+            sb.append(".");
+            SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd.HHmm");
+            sb.append(sdf.format(new Date()));
+            sb.append(".xls");
+            response.setHeader("Content-Disposition", sb.toString());
         } catch (UnsupportedEncodingException e) {
             logger.warn("修改编码格式的时候失败");
         }
