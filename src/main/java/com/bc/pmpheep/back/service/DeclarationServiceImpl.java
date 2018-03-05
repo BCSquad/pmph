@@ -59,6 +59,7 @@ import com.bc.pmpheep.back.po.DecTextbookPmph;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.po.Material;
+import com.bc.pmpheep.back.po.MaterialExtension;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -136,6 +137,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	private DecIntentionDao decIntentionDao;
 	@Autowired
 	private MaterialService materialService;
+	@Autowired
+	private MaterialExtensionService materialExtensionService;
 
 	@Override
 	public Declaration addDeclaration(Declaration declaration) throws CheckedServiceException {
@@ -706,6 +709,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 编写内容意向表
 		ArrayList<DecIntention> decIntentions = (ArrayList<DecIntention>) decIntentionDao
 				.getDecIntentionByDeclarationIds(decIds);
+                // 教材扩展项
+                //List<MaterialExtension> extensions = materialExtensionService.getMaterialExtensionByMaterialId(materialId);
 		for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
 			String strOnlineProgress = "";// 审核进度
 			String strOfflineProgress = "";// 纸质表进度

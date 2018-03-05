@@ -105,4 +105,8 @@
 		</if>
 	</select>
 	
+	<select id="getWriterPointLogByUserId" parameterType="java.lang.Long"
+		resultType="WriterPointLog">
+		select * from writer_point_log where user_id=#{user_id};
+	</select>
 </mapper>

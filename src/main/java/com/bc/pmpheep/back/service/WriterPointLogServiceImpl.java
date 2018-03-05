@@ -8,11 +8,9 @@ import com.bc.pmpheep.back.dao.WriterPointLogDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.WriterPointLog;
-import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
-import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.WriterPointLogVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -78,6 +76,15 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
         }
         return pageResult;
 	    
+	}
+
+	@Override
+	public WriterPointLog getWriterPointLogByUserId(Long userId) throws CheckedServiceException {
+		if(null==userId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		return writerPointLogDao.getWriterPointLogByUserId(userId);
 	}
 
 }

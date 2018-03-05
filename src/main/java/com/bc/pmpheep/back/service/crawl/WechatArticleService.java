@@ -9,17 +9,21 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.po.CmsContent;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.service.CmsContentService;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.FileUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.po.Content;
 import com.bc.pmpheep.general.runnable.Download;
@@ -76,7 +80,13 @@ public class WechatArticleService {
 		return wechatArticle;
 	}
 
-	public CmsContent synchroCmsContent(String guid) throws IOException {
+	public CmsContent synchroCmsContent(String guid,HttpServletRequest request) throws IOException {
+		String sessionId = CookiesUtil.getSessionId(request);
+	    PmphUser sessionPmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+	    if (null == sessionPmphUser) {
+	    	 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+	                                              CheckedExceptionResult.NULL_PARAM, "请求用户不存在");
+	    }
 		CmsContent cmsContent = new CmsContent();
 		if (StringUtil.isEmpty(guid)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.WECHAT_ARTICLE,
@@ -133,6 +143,7 @@ public class WechatArticleService {
 			cmsContent.setCategoryId(Const.CMS_CATEGORY_ID_1); // 内容类型（1=随笔文章）
 			cmsContent.setTitle(title.trim());
 			cmsContent.setAuthorType((short) 0); // 作者类型
+//			cmsContent.setAuthorId(sessionPmphUser.getId());//作者id
 			cmsContent = cmsContentService.addCmsContent(cmsContent);
 		}
 		// 防止map内存溢出，操作过后就移除
