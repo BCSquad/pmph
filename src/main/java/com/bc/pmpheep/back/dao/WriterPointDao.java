@@ -59,4 +59,11 @@ public interface WriterPointDao {
 	 */
 	List<WriterPointVO> listWriterPointVO(PageParameter<WriterPointVO> pageParameter);
 	
+	/**
+	 * 通过用户id查询积分
+	 * @param userId
+	 * @return
+	 */
+	WriterPoint getWriterPointByUserId(Long userId);
+	
 }

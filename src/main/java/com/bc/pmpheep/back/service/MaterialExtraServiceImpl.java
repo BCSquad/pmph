@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -431,6 +433,10 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_EXTRA,
                                               CheckedExceptionResult.NULL_PARAM, "机构为空");
         }
+        Set<Long> newOrgIdSet = new HashSet<>();// 防止网络延迟重复提交
+        newOrgIdSet.addAll(orgIds);
+        List<Long> listOrgIds = new ArrayList<Long>(newOrgIdSet.size());
+        listOrgIds.addAll(newOrgIdSet);
         // 获取当前用户
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
@@ -438,20 +444,20 @@ public class MaterialExtraServiceImpl extends BaseService implements MaterialExt
                                               CheckedExceptionResult.NULL_PARAM, "请求用户不存在");
         }
         Integer count = 0;
-        List<MaterialOrg> materialOrgList = new ArrayList<MaterialOrg>(orgIds.size());
+        List<MaterialOrg> materialOrgList = new ArrayList<MaterialOrg>(listOrgIds.size());
         // 根据教材ID查询教材-机构关联表
         List<Long> OrgIds = materialOrgService.getListMaterialOrgByMaterialId(materialId);
         if (CollectionUtil.isEmpty(OrgIds)) {// 为空，初次发布
-            for (Long orgId : orgIds) {
+            for (Long orgId : listOrgIds) {
                 materialOrgList.add(new MaterialOrg(materialId, orgId));
             }
             count = materialOrgService.addMaterialOrgs(materialOrgList);
             if (count > 0) {
-                systemMessageService.materialSend(materialId, orgIds);
+                systemMessageService.materialSend(materialId, listOrgIds);
             }
         } else {// 不为空
             List<Long> newOrgIds = new ArrayList<Long>();// 新选中的机构
-            for (Long orgId : orgIds) {
+            for (Long orgId : listOrgIds) {
                 if (!OrgIds.contains(orgId)) {
                     newOrgIds.add(orgId);
                     materialOrgList.add(new MaterialOrg(materialId, orgId));

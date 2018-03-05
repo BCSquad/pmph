@@ -1,12 +1,12 @@
 package com.bc.pmpheep.wechat.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.rmi.RemoteException;
-import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,16 +17,36 @@ import com.bc.pmpheep.wechat.util.QiYeUtil;
 import com.bc.pmpheep.wechat.util.Result;
 
 /**
- * OAuth2 处理控制器
  * 
+ * <pre>
+ * 功能描述： OAuth2 处理控制器
+ * 使用示范：
+ * 
+ * 
+ * @author (作者) nyz
+ * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2018-2-27
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
+ * </pre>
  */
 @Controller
 public class OAuth2Controller {
+    private static Logger logger = LoggerFactory.getLogger(OAuth2Controller.class);
+
     /**
-     * 构造参数并将请求重定向到微信API获取登录信息
      * 
-     * @param index
+     * <pre>
+     * 功能描述：构造参数并将请求重定向到微信API获取登录信息
+     * 使用示范：
+     *
+     * @param request HttpServletRequest
+     * @param resultUrl 跳转页面地址
      * @return
+     * </pre>
      */
     @RequestMapping(value = { "/oauth2" })
     public String Oauth2API(HttpServletRequest request, @RequestParam String resultUrl) {
@@ -51,12 +71,16 @@ public class OAuth2Controller {
     }
 
     /**
-     * 根据code获取Userid后跳转到需要带用户信息的最终页面
      * 
-     * @param request
+     * <pre>
+     * 功能描述：根据code获取Userid后跳转到需要带用户信息的最终页面
+     * 使用示范：
+     *
+     * @param request HttpServletRequest
      * @param code 获取微信重定向到自己设置的URL中code参数
      * @param oauth2url 跳转到最终页面的地址
      * @return
+     * </pre>
      */
     @RequestMapping(value = { "/oauth2url" })
     public String Oauth2MeUrl(HttpServletRequest request, @RequestParam String code,
@@ -74,18 +98,21 @@ public class OAuth2Controller {
     }
 
     /**
-     * 构造带员工身份信息的URL
      * 
+     * <pre>
+     * 功能描述：构造带员工身份信息的URL
+     * 使用示范：
+     *
      * @param corpid 企业id
      * @param redirect_uri 授权后重定向的回调链接地址，请使用urlencode对链接进行处理
-     * @param state 重定向后会带上state参数，企业可以填写a-zA-Z0-9的参数值
      * @return
+     * </pre>
      */
     private String oAuth2Url(String corpid, String redirect_uri) {
         try {
             redirect_uri = java.net.URLEncoder.encode(redirect_uri, "utf-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error("URL转码出现异常：{}", e.getMessage());
         }
         String oauth2Url =
         "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + corpid + "&redirect_uri="
@@ -95,14 +122,16 @@ public class OAuth2Controller {
     }
 
     /**
-     * 调用接口获取用户信息
      * 
-     * @param token
-     * @param code
-     * @param agentId
+     * <pre>
+     * 功能描述：调用接口获取用户信息
+     * 使用示范：
+     *
+     * @param token 企业任意填写，用于生成签名。
+     * @param code 获取微信重定向到自己设置的URL中code参数
+     * @param agentId 接收的应用id
      * @return
-     * @throws SQLException
-     * @throws RemoteException
+     * </pre>
      */
     public String getMemberGuidByCode(String token, String code, int agentId) {
         // System.out.println("code==" + code + "\ntoken=" + token + "\nagentid=" + agentId);

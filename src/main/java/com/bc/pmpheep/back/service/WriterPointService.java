@@ -52,4 +52,12 @@ public interface WriterPointService {
      * @throws CheckedServiceException
      */
     WriterPoint getWriterPoint(Long id)throws CheckedServiceException;
+    
+    /**
+     * 通过用户id查询积分
+     * @param userId
+     * @return
+     * @throws CheckedServiceException
+     */
+	WriterPoint getWriterPointByUserId(Long userId)throws CheckedServiceException;
 }

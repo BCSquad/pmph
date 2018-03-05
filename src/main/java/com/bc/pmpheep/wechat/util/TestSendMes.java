@@ -3,8 +3,21 @@ package com.bc.pmpheep.wechat.util;
 import net.sf.json.JSONObject;
 
 /**
- * 消息发送
  * 
+ * <pre>
+ * 功能描述：消息发送
+ * 使用示范：
+ * 
+ * 
+ * @author (作者) nyz
+ * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2018-2-27
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
+ * </pre>
  */
 public class TestSendMes {
     // 发送消息
@@ -25,7 +38,11 @@ public class TestSendMes {
     }
 
     /**
-     * @date 2016年12月31日上午10:05:07
+     * 
+     * <pre>
+     * 功能描述：主动发送文字给企业用户
+     * 使用示范：
+     *
      * @param touser 成员ID列表
      * @param toparty 部门ID列表
      * @param totag 标签ID列表
@@ -33,7 +50,7 @@ public class TestSendMes {
      * @param agentid 企业应用的id，整型。可在应用的设置页面查看
      * @param content 消息内容，最长不超过2048个字节，注意：主页型应用推送的文本消息在微信端最多只显示20个字（包含中英文）
      * @return int 表示是否是保密消息，0表示否，1表示是，默认0
-     * @Des: 主动发送文字给企业用户
+     * </pre>
      */
     public static int Send_msg(String touser, String toparty, String totag, String msgtype,
     int agentid, String content) {
