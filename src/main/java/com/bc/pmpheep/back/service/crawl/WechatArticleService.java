@@ -134,7 +134,6 @@ public class WechatArticleService {
             // 获取图片src地址
             List<String> imgSrc = download.getImageSrc(imgUrl);
             // 下载图片
-            // List<String> mongoImgs = download.listDownload(imgSrc);
             List<String> mongoImgs = download.download(imgSrc);
             for (int i = 0; i < imgSrc.size(); i++) {
                 if (StringUtil.notEmpty(mongoImgs.get(i))) {
