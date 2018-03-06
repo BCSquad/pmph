@@ -55,28 +55,25 @@ public interface DecPositionPublishedService {
     DecPositionPublished getDecPositionPublishedById(Long id) throws CheckedServiceException;
 
     /**
-     * 
-     * <pre>
-     * 功能描述：批量新增
-     * 使用示范：
-     *
-     * @param decPositionPublisheds
-     * @return 影响行数
-     * </pre>
+     * @Param id
+     * @Return DecPosition 实体对象
+     * @throws CheckedServiceException
      */
-    Integer batchInsertDecPositionPublished(List<DecPositionPublished> decPositionPublisheds)
+    DecPositionPublished getDecPositionByDeclarationId(Long declarationId)
     throws CheckedServiceException;
 
     /**
-     * 根据书籍ids删除
      * 
-     * @introduction
-     * @author Mryang
-     * @createDate 2018年2月7日 下午2:48:08
-     * @param bookIds
-     * @return
+     * <pre>
+	 * 功能描述：批量新增
+	 * 使用示范：
+	 *
+	 * &#64;param decPositionPublisheds
+	 * &#64;return 影响行数
+	 * </pre>
      */
-    Integer deleteDecPositionPublishedByBookIds(List<Long> bookIds) throws CheckedServiceException;
+    Integer batchInsertDecPositionPublished(List<DecPositionPublished> decPositionPublisheds)
+    throws CheckedServiceException;
 
     /**
      * 
@@ -111,4 +108,16 @@ public interface DecPositionPublishedService {
      * </pre>
      */
     Integer deletePublishedEditorByTextbookId(Long textbookId) throws CheckedServiceException;
+
+    /**
+     * 根据书籍ids删除
+     * 
+     * @introduction
+     * @author Mryang
+     * @createDate 2018年2月7日 下午2:48:08
+     * @param bookIds
+     * @return
+     */
+    Integer deleteDecPositionPublishedByBookIds(List<Long> bookIds) throws CheckedServiceException;
+
 }

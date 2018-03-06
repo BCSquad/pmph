@@ -61,6 +61,7 @@ import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialExtension;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.DateUtil;
@@ -139,6 +140,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	private MaterialService materialService;
 	@Autowired
 	private MaterialExtensionService materialExtensionService;
+	@Autowired
+	private WriterUserTrendstService writerUserTrendstService;
 
 	@Override
 	public Declaration addDeclaration(Declaration declaration) throws CheckedServiceException {
@@ -304,12 +307,30 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		// 获取当前作家用户申报信息
 		Declaration declarationCon = declarationDao.getDeclarationById(id);
+		// 获取教材
+		Material material = materialService.getMaterialById(declarationCon.getMaterialId());
 		// 获取审核进度是3并且已提交但是待审核并且是提交到出版社0
 		// 提交出版社，出版社通过
 		if (3 == onlineProgress.intValue() && 1 == declarationCon.getOnlineProgress() 
 				&& 0 == declarationCon.getOrgId()) {
 			declarationCon.setOnlineProgress(onlineProgress);
 			declarationDao.updateDeclaration(declarationCon);
+			WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
+			writerUserTrendst.setUserId(declarationCon.getUserId());
+			writerUserTrendst.setIsPublic(false);// 自己可见
+			writerUserTrendst.setType(8);
+			String detail = "";
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("title", CheckedExceptionBusiness.MATERIAL);
+			map.put("content", "恭喜！您提交的《" + material.getMaterialName() 
+					+ "》申报表已通过出版社审核");
+			map.put("img", 1);
+			detail = new Gson().toJson(map);
+			writerUserTrendst.setDetail(detail);
+			writerUserTrendst.setCmsContentId(null);
+			writerUserTrendst.setBookId(declarationCon.getMaterialId());
+			writerUserTrendst.setBookCommentId(null);
+			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true); // 发送系统消息
 		}
 		// 获取审核进度是4并且已经通过审核单位并且不是提交到出版社0则被退回给申报单位
@@ -372,6 +393,22 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
+			WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
+			writerUserTrendst.setUserId(declarationCon.getUserId());
+			writerUserTrendst.setIsPublic(false);// 自己可见
+			writerUserTrendst.setType(8);
+			String detail = "";
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("title", CheckedExceptionBusiness.MATERIAL);
+			map.put("content", "抱歉，您提交的《" + material.getMaterialName() 
+					+ "》申报表被出版社退回，请您核对后重试");
+			map.put("img", 2);
+			detail = new Gson().toJson(map);
+			writerUserTrendst.setDetail(detail);
+			writerUserTrendst.setCmsContentId(null);
+			writerUserTrendst.setBookId(declarationCon.getMaterialId());
+			writerUserTrendst.setBookCommentId(null);
+			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), false); // 发送系统消息
 		}
 		return declarationCon;
@@ -845,6 +882,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			for (DecAchievement achievement : decAchievements) {
 				if (achievement.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
 					decAchievement = achievement;
+                                        break;
 				}
 			}
 			// 上套教材
@@ -887,6 +925,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			for (DecMoocDigital moocDigital : decMoocDigitals) {
 				if (moocDigital.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
 					decMoocDigital = moocDigital;
+                                        break;
 				}
 			}
 			// 作家科研
@@ -932,18 +971,19 @@ public class DeclarationServiceImpl implements DeclarationService {
 					acadeRewards.add(acadeReward);
 				}
 			}
-			// 作家扩展项
-			List<DecExtensionVO> extensionVOs = new ArrayList<>();
-			for (DecExtensionVO extensionVO : decExtensionVOs) {
-				if (extensionVO.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-					extensionVOs.add(extensionVO);
-				}
-			}
 			// 编写内容意向表
 			DecIntention decIntention = new DecIntention();
 			for (DecIntention intention : decIntentions) {
 				if (intention.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
 					decIntention = intention;
+                                        break;
+				}
+			}
+			// 作家扩展项
+			List<DecExtensionVO> extensionVOs = new ArrayList<>();
+			for (DecExtensionVO extensionVO : decExtensionVOs) {
+				if (extensionVO.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+					extensionVOs.add(extensionVO);
 				}
 			}
 

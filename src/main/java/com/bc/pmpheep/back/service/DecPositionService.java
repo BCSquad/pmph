@@ -59,6 +59,7 @@ public interface DecPositionService {
      * @throws CheckedServiceException
      */
     DecPosition getDecPositionById(Long id) throws CheckedServiceException;
+    
 
     /**
      * @Param declarationId

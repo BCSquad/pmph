@@ -208,7 +208,18 @@ public class TextbookServiceImpl implements TextbookService {
 			}
 		}
 		if (count == books.size()) {
-			count = materialDao.updateMaterialPublished(materials);
+		    // 检查有没有再次公布 
+			PageResult<BookPositionVO> listBookPosition = this.listBookPosition(1,9999999, null,null, null, materials.getId(),sessionId);
+			boolean haveNo = true;
+			for(BookPositionVO bookPositionVO:listBookPosition.getRows()) {
+				if(bookPositionVO.getIsPublished() && bookPositionVO.getRepub()) {
+					haveNo = false;
+					break;
+				}
+			}
+			if(haveNo) {
+				count = materialDao.updateMaterialPublished(materials);
+			}
 		}
 
 		// textbookDao.updateTextbook(textbook);
@@ -241,7 +252,7 @@ public class TextbookServiceImpl implements TextbookService {
 		/** 发布更新最终结果表的数据 ---end --- */
 		//发送消息
 		for (Textbook textbook : textbooks) {
-			systemMessageService.sendWhenPubfinalResult(textbook.getId()) ;
+			systemMessageService.sendWhenPubfinalResult(textbook.getId(),decPositionPublishedLst) ;
 		}
 		return count;
 	}

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.DecPosition;
+import com.bc.pmpheep.back.po.DecPositionPublished;
 import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.Org;
@@ -212,7 +213,8 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenConfirmFirstEditor(Long bookId) throws CheckedServiceException, IOException {
+	public void sendWhenConfirmFirstEditor(Long bookId, List<DecPositionPublished> newMessage)
+			throws CheckedServiceException, IOException {
 		// 获取教材书籍
 		Textbook textbook = textbookService.getTextbookById(bookId);
 		// 获取教材
@@ -222,26 +224,46 @@ public final class SystemMessageService {
 					"该书籍没有找到对应的教材");
 		}
 		// 获取这本书的申报遴选列表
-		List<DecPosition> decPositionLst = decPositionService.listDecPositionsByTextbookId(bookId);
-		for (DecPosition decPosition : decPositionLst) {
+		for (DecPositionPublished decPosition : newMessage) {
 			if (null != decPosition && null != decPosition.getChosenPosition() && null != decPosition.getRank()) {// 筛选出主编、副主编
 				Declaration declaration = declarationService.getDeclarationById(decPosition.getDeclarationId());
 				// 消息内容
 				String msgContent = "";
-				if (decPosition.getChosenPosition() == 4) {
+				if (decPosition.getChosenPosition() == 4 || decPosition.getChosenPosition() == 12) {
 					if (decPosition.getRank() == 1) {
+						if (decPosition.getChosenPosition() == 12) {
+							msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
+									+ "</font>》<font color='red'>[" + textbook.getTextbookName()
+									+ "</font>]的第一主编和数字编委，您现在可以开始遴选编委了，最终结果以遴选结果公告为准";
+						} else {
+							msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
+									+ "</font>》<font color='red'>[" + textbook.getTextbookName()
+									+ "</font>]的第一主编，您现在可以开始遴选编委了，最终结果以遴选结果公告为准";
+						}
+
+					} else {
+						if (decPosition.getChosenPosition() == 12) {
+							msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
+									+ "</font>》<font color='red'>[" + textbook.getTextbookName()
+									+ "</font>]的主编与数字编委，最终结果以遴选结果公告为准";
+						} else {
+							msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
+									+ "</font>》<font color='red'>[" + textbook.getTextbookName()
+									+ "</font>]的主编，最终结果以遴选结果公告为准";
+						}
+					}
+				}
+				if (decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10) {
+					if (decPosition.getChosenPosition() == 10) {
 						msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
 								+ "</font>》<font color='red'>[" + textbook.getTextbookName()
-								+ "</font>]的第一主编，您现在可以开始遴选编委了，最终结果以遴选结果公告为准";
+								+ "</font>]的副主编和数字编委，最终结果以遴选结果公告为准";
 					} else {
 						msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
 								+ "</font>》<font color='red'>[" + textbook.getTextbookName()
-								+ "</font>]的主编，最终结果以遴选结果公告为准";
+								+ "</font>]的副主编，最终结果以遴选结果公告为准";
 					}
-				}
-				if (decPosition.getChosenPosition() == 2) {
-					msgContent = "恭喜您被选为《<font color='red'>" + material.getMaterialName()
-							+ "</font>》<font color='red'>[" + textbook.getTextbookName() + "</font>]的副主编，最终结果以遴选结果公告为准";
+
 				}
 				Message message = new Message(msgContent);
 				message = messageService.add(message);
@@ -873,13 +895,12 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenPubfinalResult(Long textBookId) throws CheckedServiceException, IOException {
-		// 获取这书根据书籍id获取申报职位
-		List<DecPosition> decPositionList = decPositionService.listDecPositionsByTextbookId(textBookId);
+	public void sendWhenPubfinalResult(Long textBookId, List<DecPositionPublished> decPositionPublishedLst)
+			throws CheckedServiceException, IOException {
 		Textbook textbook = textbookService.getTextbookById(textBookId);
 		Material material = materialService.getMaterialById(textbook.getMaterialId());
 		// 给主编发送
-		for (DecPosition decPosition : decPositionList) {
+		for (DecPositionPublished decPosition : decPositionPublishedLst) {
 			if (null != decPosition.getChosenPosition() && null != decPosition.getRank()
 					&& (decPosition.getChosenPosition() == 4 || decPosition.getChosenPosition() == 12)) {
 				String editorMsg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
@@ -909,7 +930,7 @@ public final class SystemMessageService {
 				+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>" + textbook.getTextbookName()
 				+ "</font>]的副主编";
 		Message message = new Message(associateEditor);
-		for (DecPosition decPosition : decPositionList) {
+		for (DecPositionPublished decPosition : decPositionPublishedLst) {
 			if (null != decPosition.getChosenPosition() && null != decPosition.getRank()
 					&& (decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10)) {
 				// 获取申报表
@@ -937,7 +958,7 @@ public final class SystemMessageService {
 				+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>" + textbook.getTextbookName()
 				+ "</font>]的编委";
 		message = new Message(bianWei);
-		for (DecPosition decPosition : decPositionList) {
+		for (DecPositionPublished decPosition : decPositionPublishedLst) {
 			if (null != decPosition.getChosenPosition()
 					&& (decPosition.getChosenPosition() == 1 || 9 == decPosition.getChosenPosition())) {
 				// 获取申报表

@@ -55,6 +55,16 @@ public interface DecPositionPublishedDao {
      * @return
      */
     DecPositionPublished getDecPositionPublishedById(Long id);
+    
+    /**
+     * 查询
+     * 
+     * @author:tyc
+     * @date:2018年1月15日下午16:18:57
+     * @param id
+     * @return
+     */
+    DecPositionPublished getDecPositionByDeclarationId(Long declarationId);
 
     /**
      * 
