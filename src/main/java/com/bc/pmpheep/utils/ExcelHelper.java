@@ -286,7 +286,7 @@ public class ExcelHelper {
             }
             rowCount = rowCount + reason.length;
         }
-        int[] maxLength = {5, 10, 5, 5, 5, 5, 5, 30, 30};
+        int[] maxLength = {5, 10, 5, 5, 5, 5, 5, 30, 45};
         return dataStyleSetup(workbook, 0, rowCount, new ColumnProperties(9, maxLength));
     }
 
