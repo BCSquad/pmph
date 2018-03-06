@@ -322,7 +322,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String detail = "";
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
-			map.put("content", "您申报《" + material.getMaterialName() + "》教材的申报表已通过。");
+			map.put("content", "恭喜！您提交的《" + material.getMaterialName() 
+					+ "》申报表已通过出版社审核");
 			map.put("img", 1);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
@@ -399,7 +400,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String detail = "";
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
-			map.put("content", "您申报《" + material.getMaterialName() + "》教材的申报表被退回。");
+			map.put("content", "抱歉，您提交的《" + material.getMaterialName() 
+					+ "》申报表被出版社退回，请您核对后重试");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
