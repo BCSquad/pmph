@@ -64,5 +64,5 @@ public interface WriterPointLogDao {
 	 * @param writerId
 	 * @return
 	 */
-	WriterPointLog getWriterPointLogByUserId(Long userId);
+	List<WriterPointLog> getWriterPointLogByUserId(Long userId);
 }

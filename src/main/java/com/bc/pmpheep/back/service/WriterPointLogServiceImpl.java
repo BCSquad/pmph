@@ -79,7 +79,7 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
 	}
 
 	@Override
-	public WriterPointLog getWriterPointLogByUserId(Long userId) throws CheckedServiceException {
+	public List<WriterPointLog> getWriterPointLogByUserId(Long userId) throws CheckedServiceException {
 		if(null==userId){
 			throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");

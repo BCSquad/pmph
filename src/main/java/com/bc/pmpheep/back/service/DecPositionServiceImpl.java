@@ -312,6 +312,12 @@ public class DecPositionServiceImpl implements DecPositionService {
         decPositionDao.listEditorSelection(textbookId,
                                            StringUtil.toAllCheck(realName),
                                            presetPosition);
+        // 因为作家申报机构为0时 为人卫社 但机构中又不存在0机构 在此遍历作家申报的机构，如果为null这里设置为人卫社  
+        for (DecPositionEditorSelectionVO decPositionEditorSelectionVO : listEditorSelectionVOs) {
+        	if(null==decPositionEditorSelectionVO.getReportName()){
+        		decPositionEditorSelectionVO.setReportName("人民卫生出版社");
+        	}
+		}
         // 排序
         List<DecPositionEditorSelectionVO> selectedDecPositionEditorSelectionVOs =
         new ArrayList<DecPositionEditorSelectionVO>();// 已遴选集合
