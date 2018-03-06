@@ -1020,8 +1020,10 @@ public class ExcelHelper {
                             }
                             Cell r1cell = r1.createCell(count);
                             r1cell.setCellValue(headerName);
-                            region = new CellRangeAddress(0, 0, count, count + extensions.size());
-                            sheet.addMergedRegion(region);
+                            if (extensions.size() > 1) {
+                                region = new CellRangeAddress(0, 0, count, count + extensions.size() - 1);
+                                sheet.addMergedRegion(region);
+                            }
                             for (MaterialExtension extension : extensions) {
                                 Cell cell = r2.createCell(count);
                                 String extensionName = extension.getExtensionName() == null ? "" : extension.getExtensionName();
