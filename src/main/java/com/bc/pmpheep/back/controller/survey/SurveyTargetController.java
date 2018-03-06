@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.annotation.LogDetail;
@@ -72,4 +73,34 @@ public class SurveyTargetController {
             return new ResponseBean(e);
         }
     }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：问卷调查补发消息
+     * 使用示范：
+     *
+     * @param message 消息对象
+     * @param title 问卷调查名称
+     * @param surveyId 问卷ID
+     * @param request
+     * @return
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "问卷调查补发消息")
+    @RequestMapping(value = "/send/message", method = RequestMethod.POST)
+    public ResponseBean message(Message message, @RequestParam("title") String title,
+    @RequestParam("surveyId") Long surveyId, HttpServletRequest request) {
+        try {
+            String sessionId = CookiesUtil.getSessionId(request);
+            return new ResponseBean(surveyTargetService.reissueSurveyMessage(message,
+                                                                             title,
+                                                                             surveyId,
+                                                                             sessionId));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
+    }
+
 }

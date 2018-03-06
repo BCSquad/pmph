@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +47,7 @@ import com.bc.pmpheep.back.service.MaterialNoteAttachmentService;
 import com.bc.pmpheep.back.service.MaterialNoticeAttachmentService;
 import com.bc.pmpheep.back.service.MaterialOrgService;
 import com.bc.pmpheep.back.service.MaterialService;
+import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.SurveyQuestionAnswerService;
 import com.bc.pmpheep.back.service.TextbookService;
@@ -73,68 +75,69 @@ import com.bc.pmpheep.utils.ExcelHelper;
 import com.bc.pmpheep.utils.WordHelper;
 import com.bc.pmpheep.utils.ZipHelper;
 import com.mongodb.gridfs.GridFSDBFile;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 /**
  * 文件下载控制器
- *
+ * 
  * @author L.X <gugia@qq.com>
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @Controller
 public class FileDownLoadController {
 
-    Logger logger = LoggerFactory.getLogger(FileDownLoadController.class);
+    Logger                          logger         =
+                                                   LoggerFactory.getLogger(FileDownLoadController.class);
 
     @Resource
-    FileService fileService;
+    FileService                     fileService;
     @Resource
-    PmphGroupFileService groupFileService;
+    PmphGroupFileService            groupFileService;
     @Resource
-    CmsExtraService cmsExtraService;
+    CmsExtraService                 cmsExtraService;
     @Resource
     MaterialNoticeAttachmentService materialNoticeAttachmentService;
     @Resource
-    MaterialNoteAttachmentService materialNoteAttachmentService;
+    MaterialNoteAttachmentService   materialNoteAttachmentService;
     @Resource
-    DeclarationService declarationService;
+    DeclarationService              declarationService;
     @Resource
-    ExcelHelper excelHelper;
+    ExcelHelper                     excelHelper;
     @Resource
-    WordHelper wordHelper;
+    WordHelper                      wordHelper;
     @Resource
-    MaterialService materialService;
+    MaterialService                 materialService;
     @Resource
-    MaterialExtensionService materialExtensionService;
+    MaterialExtensionService        materialExtensionService;
     @Resource
-    TextbookService textbookService;
+    TextbookService                 textbookService;
     @Resource
-    ZipHelper zipHelper;
+    ZipHelper                       zipHelper;
     @Resource
-    MaterialOrgService materialOrgService;
+    MaterialOrgService              materialOrgService;
     @Autowired
-    BookCorrectionService bookCorrectionService;
+    BookCorrectionService           bookCorrectionService;
     @Autowired
-    SurveyQuestionAnswerService surveyQuestionAnswerService;
+    SurveyQuestionAnswerService     surveyQuestionAnswerService;
     @Autowired
-    DecPositionService decPositionService;
+    DecPositionService              decPositionService;
     @Resource(name = "taskExecutor")
-    private ThreadPoolTaskExecutor taskExecutor;
+    private ThreadPoolTaskExecutor  taskExecutor;
+    @Autowired
+    OrgService                      orgService;
     // 当前业务类型
-    private static final String BUSSINESS_TYPE = "文件下载";
+    private static final String     BUSSINESS_TYPE = "文件下载";
 
     /**
      * 普通文件下载
-     *
+     * 
      * @param id 文件在MongoDB中的id
      * @param response 服务响应
      * @throws UnsupportedEncodingException
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "普通文件下载")
     @RequestMapping(value = "/file/download/{id}", method = RequestMethod.GET)
-    public void download(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response)
-            throws UnsupportedEncodingException {
+    public void download(@PathVariable("id") String id, HttpServletRequest request,
+    HttpServletResponse response) throws UnsupportedEncodingException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/force-download");
         GridFSDBFile file = fileService.get(id);
@@ -155,7 +158,7 @@ public class FileDownLoadController {
     }
 
     /**
-     *
+     * 
      * <pre>
      * 功能描述：普通文件下载(更新下载数)
      * 使用示范：
@@ -164,13 +167,13 @@ public class FileDownLoadController {
      * &#64;param id 文件在MongoDB中的id
      * &#64;param response 服务响应
      * </pre>
-     *
+     * 
      * @throws UnsupportedEncodingException
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "普通文件下载(更新下载数)")
     @RequestMapping(value = "/file/{type}/download/{id}", method = RequestMethod.GET)
-    public void download(@PathVariable("type") String type, @PathVariable("id") String id, HttpServletRequest request,
-            HttpServletResponse response) throws UnsupportedEncodingException {
+    public void download(@PathVariable("type") String type, @PathVariable("id") String id,
+    HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/force-download");
         GridFSDBFile file = fileService.get(id);
@@ -200,7 +203,7 @@ public class FileDownLoadController {
 
     /**
      * 小组文件下载
-     *
+     * 
      * @param id 图片在MongoDB中的id
      * @param groupId 小组id
      * @param response 服务响应
@@ -208,11 +211,12 @@ public class FileDownLoadController {
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "小组文件下载")
     @RequestMapping(value = "/groupfile/download/{id}", method = RequestMethod.GET)
-    public ResponseBean download(@PathVariable("id") String id, @RequestParam("groupId") long groupId,
-            HttpServletRequest request, HttpServletResponse response) {
+    public ResponseBean download(@PathVariable("id") String id,
+    @RequestParam("groupId") long groupId, HttpServletRequest request, HttpServletResponse response) {
         if (groupId < 1) {
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "小组id错误（负数或零）");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "小组id错误（负数或零）");
         }
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/force-download");
@@ -220,7 +224,8 @@ public class FileDownLoadController {
         if (null == file) {
             logger.warn("未找到id为'{}'的文件", id);
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "未找到对应文件");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "未找到对应文件");
         }
         String fileName = returnFileName(request, file.getFilename());
         response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
@@ -232,12 +237,13 @@ public class FileDownLoadController {
         } catch (IOException ex) {
             logger.warn("文件下载时出现IO异常：{}", ex.getMessage());
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
         }
     }
 
     /**
-     *
+     * 
      * <pre>
      * 功能描述：处理不同浏览器下载文件乱码问题
      * 使用示范：
@@ -252,7 +258,8 @@ public class FileDownLoadController {
         String reFileName = "";
         if (StringUtil.isEmpty(fileName)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "未找到对应文件");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "未找到对应文件");
         }
         try {
             // 针对IE或者以IE为内核的浏览器：
@@ -269,10 +276,10 @@ public class FileDownLoadController {
     }
 
     /**
-     *
-     *
+     * 
+     * 
      * 功能描述：申报表批量导出excel
-     *
+     * 
      * @param materialId 教材id
      * @param textBookids 书籍id集合
      * @param realname 条件查询的账号或者姓名
@@ -285,21 +292,31 @@ public class FileDownLoadController {
      * @param offlineProgress 0 未 2 收到
      * @param request
      * @param response
-     *
+     * 
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报表批量导出excel")
     @RequestMapping(value = "/excel/declaration", method = RequestMethod.GET)
-    public void declarationExcel(Long materialId, String textBookids, String realname, String position, String title,
-            String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress,
-            HttpServletRequest request, HttpServletResponse response) {
+    public void declarationExcel(Long materialId, String textBookids, String realname,
+    String position, String title, String orgName, String unitName, Integer positionType,
+    Integer onlineProgress, Integer offlineProgress, HttpServletRequest request,
+    HttpServletResponse response) {
         Workbook workbook = null;
         try {
-            workbook = excelHelper.fromDeclarationEtcBOList(materialService.getMaterialById(materialId),
-                    materialExtensionService.getMaterialExtensionByMaterialId(materialId),
-                    declarationService.declarationEtcBO(materialId, textBookids, realname, position, title, orgName,
-                            unitName, positionType, onlineProgress, offlineProgress),
-                    "专家信息表");
+            workbook =
+            excelHelper.fromDeclarationEtcBOList(materialService.getMaterialById(materialId),
+                                                 materialExtensionService.getMaterialExtensionByMaterialId(materialId),
+                                                 declarationService.declarationEtcBO(materialId,
+                                                                                     textBookids,
+                                                                                     realname,
+                                                                                     position,
+                                                                                     title,
+                                                                                     orgName,
+                                                                                     unitName,
+                                                                                     positionType,
+                                                                                     onlineProgress,
+                                                                                     offlineProgress),
+                                                 "专家信息表");
         } catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
             logger.warn("数据表格化的时候失败");
         }
@@ -310,9 +327,12 @@ public class FileDownLoadController {
             String materialName;
             String userAgent = request.getHeader("User-Agent");
             if (userAgent.toLowerCase().contains("mozilla")) {
-                materialName = URLEncoder.encode(materialService.getMaterialNameById(materialId), "UTF-8");
+                materialName =
+                URLEncoder.encode(materialService.getMaterialNameById(materialId), "UTF-8");
             } else {
-                materialName = new String(materialService.getMaterialNameById(materialId).getBytes("utf-8"), "ISO8859-1");
+                materialName =
+                new String(materialService.getMaterialNameById(materialId).getBytes("utf-8"),
+                           "ISO8859-1");
             }
             sb.append(materialName);
             sb.append(".");
@@ -330,15 +350,16 @@ public class FileDownLoadController {
         } catch (Exception e) {
             logger.warn("文件下载时出现IO异常：{}", e.getMessage());
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
         }
     }
 
     /**
-     *
-     *
+     * 
+     * 
      * 功能描述：申报表批量导出word
-     *
+     * 
      * @param materialId 教材id
      * @param textBookids 书籍id集合
      * @param realname 条件查询的账号或者姓名
@@ -350,28 +371,33 @@ public class FileDownLoadController {
      * @param onlineProgress 1待审核 3已经审核
      * @param offlineProgress 0 未 2 收到
      * @param response
-     *
+     * 
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报表批量导出word")
     @RequestMapping(value = "/word/declaration", method = RequestMethod.GET)
-    public String declarationWord(Long materialId, String textBookids, String realname, String position, String title,
-            String orgName, String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress) {
-        String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
-        taskExecutor.execute(new SpringThread(zipHelper, wordHelper, materialService, textbookService,
-                declarationService, materialId, textBookids, realname, position, title, orgName, unitName, positionType,
-                onlineProgress, offlineProgress, id));
+    public String declarationWord(Long materialId, String textBookids, String realname,
+    String position, String title, String orgName, String unitName, Integer positionType,
+    Integer onlineProgress, Integer offlineProgress) {
+        String id =
+        String.valueOf(System.currentTimeMillis())
+              .concat(String.valueOf(RandomUtil.getRandomNum()));
+        taskExecutor.execute(new SpringThread(zipHelper, wordHelper, materialService,
+                                              textbookService, declarationService, materialId,
+                                              textBookids, realname, position, title, orgName,
+                                              unitName, positionType, onlineProgress,
+                                              offlineProgress, id));
         return '"' + id + '"';
     }
 
     /**
-     *
-     *
+     * 
+     * 
      * 功能描述：查询进度
-     *
+     * 
      * @param id
      * @return
-     *
+     * 
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询word打包进度")
@@ -387,14 +413,15 @@ public class FileDownLoadController {
 
     /**
      * word打包文件
-     *
+     * 
      * @param id 生成的唯一标识符
      * @param response 服务响应
      * @throws UnsupportedEncodingException
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "word打包文件")
     @RequestMapping(value = "/zip/download", method = RequestMethod.GET)
-    public void downloadZip(@RequestParam("id") String id, HttpServletRequest request, HttpServletResponse response) {
+    public void downloadZip(@RequestParam("id") String id, HttpServletRequest request,
+    HttpServletResponse response) {
         String src = this.getClass().getResource("/").getPath();
         src = src.substring(1);
         if (!src.endsWith(File.separator)) {
@@ -429,7 +456,8 @@ public class FileDownLoadController {
             e.printStackTrace();
             logger.warn("文件下载时出现IO异常：{}", e.getMessage());
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
         } finally {
             Const.WORD_EXPORT_MAP.remove(id);
             ZipDownload.DeleteFolder(src + id);
@@ -437,7 +465,7 @@ public class FileDownLoadController {
     }
 
     /**
-     *
+     * 
      * <pre>
      * 功能描述：导出已发布教材下的学校
      * 使用示范：
@@ -451,7 +479,7 @@ public class FileDownLoadController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出已发布教材下的学校")
     @RequestMapping(value = "/excel/published/org", method = RequestMethod.GET)
     public void org(@RequestParam("materialId") Long materialId, HttpServletRequest request,
-            HttpServletResponse response) {
+    HttpServletResponse response) {
         Workbook workbook = null;
         List<OrgExclVO> orgList = null;
         try {
@@ -477,13 +505,14 @@ public class FileDownLoadController {
         } catch (Exception e) {
             logger.warn("文件下载时出现IO异常：{}", e.getMessage());
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
         }
     }
 
     /**
      * 导出书籍遴选名单/批量导出
-     *
+     * 
      * @param request
      * @param response
      * @param textbookIds
@@ -493,7 +522,7 @@ public class FileDownLoadController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出书籍遴选名单/批量导出")
     @RequestMapping(value = "/chosenPosition/exportExcel", method = RequestMethod.GET)
     public void exportExcel(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam("textbookIds") Long[] textbookIds) throws CheckedServiceException, Exception {
+    @RequestParam("textbookIds") Long[] textbookIds) throws CheckedServiceException, Exception {
         Workbook workbook = null;
         List<ExcelDecAndTextbookVO> list = null;
         try {
@@ -530,13 +559,14 @@ public class FileDownLoadController {
         } catch (Exception e) {
             logger.warn("文件下载时出现IO异常：{}", e.getMessage());
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
         }
     }
 
     /**
      * 导出纠错信息
-     *
+     * 
      * @introduction
      * @author Mryang
      * @createDate 2017年12月20日 下午5:01:53
@@ -550,14 +580,18 @@ public class FileDownLoadController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出纠错信息")
     @RequestMapping(value = "/bookCorrectionTrack/exportExcel", method = RequestMethod.GET)
     public void exportExcel(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam(value = "bookname", required = false) String bookname,
-            @RequestParam(value = "isEditorReplied", required = false) Boolean isEditorReplied)
-            throws CheckedServiceException, Exception {
+    @RequestParam(value = "bookname", required = false) String bookname,
+    @RequestParam(value = "isEditorReplied", required = false) Boolean isEditorReplied)
+    throws CheckedServiceException, Exception {
         Workbook workbook = null;
         List<BookCorrectionTrackVO> list = null;
         try {
-            list = bookCorrectionService.listBookCorrectionTrack(request, null, null, bookname, isEditorReplied)
-                    .getRows();
+            list =
+            bookCorrectionService.listBookCorrectionTrack(request,
+                                                          null,
+                                                          null,
+                                                          bookname,
+                                                          isEditorReplied).getRows();
             if (list.size() == 0) {
                 // 设置表头 ，放置初始化表出错
                 list.add(new BookCorrectionTrackVO());
@@ -577,13 +611,14 @@ public class FileDownLoadController {
         } catch (Exception e) {
             logger.warn("文件下载时出现IO异常：{}", e.getMessage());
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
         }
     }
 
     /**
      * 角色遴选 批量导出主编、副主编
-     *
+     * 
      * @param textbookIds
      * @param request
      * @param response
@@ -591,8 +626,8 @@ public class FileDownLoadController {
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "角色遴选 批量导出主编、副主编")
     @RequestMapping(value = "/position/exportEditors", method = RequestMethod.GET)
-    public void exportEditors(Long[] textbookIds, HttpServletRequest request, HttpServletResponse response)
-            throws IllegalAccessException, Exception {
+    public void exportEditors(Long[] textbookIds, HttpServletRequest request,
+    HttpServletResponse response) throws IllegalAccessException, Exception {
         List<DecPositionBO> list;
         Workbook workbook = null;
         try {
@@ -600,7 +635,8 @@ public class FileDownLoadController {
             workbook = excelHelper.fromDecPositionBOList(list, "主编-副主编");
         } catch (CheckedServiceException | IllegalArgumentException e) {
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_CREATION_FAILED, "数据表格化的时候失败");
+                                              CheckedExceptionResult.FILE_CREATION_FAILED,
+                                              "数据表格化的时候失败");
         }
         // 通过书籍id获取教材信息
         Material material = materialService.getMaterialByName(textbookIds);
@@ -615,12 +651,13 @@ public class FileDownLoadController {
         } catch (Exception e) {
             logger.warn("文件下载时出现IO异常：{}", e.getMessage());
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
         }
     }
 
     /**
-     *
+     * 
      * <pre>
      * 功能描述：导出填空题调查结果Excel 使用示范：
      *
@@ -636,8 +673,8 @@ public class FileDownLoadController {
         List<SurveyQuestionFillVO> surveyQuestionFillVO = null;
         try {
             PageParameter<SurveyQuestionFillVO> pageParameter = new PageParameter<>(1, 50000);
-            surveyQuestionFillVO = (List<SurveyQuestionFillVO>) surveyQuestionAnswerService
-                    .listFillQuestion(pageParameter);
+            surveyQuestionFillVO =
+            (List<SurveyQuestionFillVO>) surveyQuestionAnswerService.listFillQuestion(pageParameter);
             workbook = excelHelper.fromBusinessObjectList(surveyQuestionFillVO, "填空题调查结果");
         } catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
             logger.warn("数据表格化的时候失败");
@@ -654,14 +691,15 @@ public class FileDownLoadController {
         } catch (Exception e) {
             logger.warn("文件下载时出现IO异常：{}", e.getMessage());
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
         }
     }
 
     /**
-     *
+     * 
      * Description:申报情况统计页面按申报单位统计导出统计结果
-     *
+     * 
      * @author:lyc
      * @date:2018年1月9日上午10:29:21
      * @param
@@ -669,10 +707,12 @@ public class FileDownLoadController {
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报情况统计页面按申报单位统计导出统计结果")
     @RequestMapping(value = "/result/exportSituationSchool", method = RequestMethod.GET)
-    public void exportSituationSchool(Long materialId, String schoolName, Integer state, HttpServletRequest request,
-            HttpServletResponse response) {
-        PageParameter<DeclarationSituationSchoolResultVO> pageParameter = new PageParameter<>(1, 50000);
-        DeclarationSituationSchoolResultVO declarationSituationSchoolResultVO = new DeclarationSituationSchoolResultVO();
+    public void exportSituationSchool(Long materialId, String schoolName, Integer state,
+    HttpServletRequest request, HttpServletResponse response) {
+        PageParameter<DeclarationSituationSchoolResultVO> pageParameter =
+        new PageParameter<>(1, 50000);
+        DeclarationSituationSchoolResultVO declarationSituationSchoolResultVO =
+        new DeclarationSituationSchoolResultVO();
         declarationSituationSchoolResultVO.setMaterialId(materialId);
         declarationSituationSchoolResultVO.setSchoolName(schoolName);
         pageParameter.setParameter(declarationSituationSchoolResultVO);
@@ -680,14 +720,18 @@ public class FileDownLoadController {
         List<DeclarationSituationSchoolResultVO> list = null;
         String sheetName = "";
         if (state.intValue() == 1) {
-            list = decPositionService.listChosenDeclarationSituationSchoolResultVOs(pageParameter).getRows();
+            list =
+            decPositionService.listChosenDeclarationSituationSchoolResultVOs(pageParameter)
+                              .getRows();
             sheetName = "申报情况按单位统计（按当选数排序）";
         } else if (state.intValue() == 2) {
-            list = decPositionService.listPresetDeclarationSituationSchoolResultVOs(pageParameter).getRows();
+            list =
+            decPositionService.listPresetDeclarationSituationSchoolResultVOs(pageParameter)
+                              .getRows();
             sheetName = "申报情况按单位统计（按申报数排序）";
         } else {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
-                    "未知的排序方式");
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "未知的排序方式");
         }
         if (list.size() == 0) {
             list.add(new DeclarationSituationSchoolResultVO());
@@ -709,14 +753,15 @@ public class FileDownLoadController {
         } catch (Exception e) {
             logger.warn("文件下载时出现IO异常： {}", e.getMessage());
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
         }
     }
 
     /**
-     *
+     * 
      * Description:申报结果统计页面按申报单位统计导出统计结果
-     *
+     * 
      * @author:lyc
      * @date:2018年1月9日上午11:16:01
      * @param
@@ -724,8 +769,8 @@ public class FileDownLoadController {
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报结果统计页面按申报单位统计导出统计结果")
     @RequestMapping(value = "/result/exportResultSchool", method = RequestMethod.GET)
-    public void exportResultSchool(Long materialId, String schoolName, Integer state, HttpServletRequest request,
-            HttpServletResponse response) {
+    public void exportResultSchool(Long materialId, String schoolName, Integer state,
+    HttpServletRequest request, HttpServletResponse response) {
         PageParameter<DeclarationResultSchoolVO> pageParameter = new PageParameter<>(1, 50000);
         DeclarationResultSchoolVO declarationResultSchoolVO = new DeclarationResultSchoolVO();
         declarationResultSchoolVO.setMaterialId(materialId);
@@ -741,8 +786,8 @@ public class FileDownLoadController {
             list = decPositionService.listPresetDeclarationResultSchoolVOs(pageParameter).getRows();
             sheetName = "申报结果按单位统计（按申报数排序）";
         } else {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
-                    "未知的排序方式");
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "未知的排序方式");
         }
         if (list.size() == 0) {
             list.add(new DeclarationResultSchoolVO());
@@ -764,14 +809,15 @@ public class FileDownLoadController {
         } catch (Exception e) {
             logger.warn("文件下载时出现IO异常： {}", e.getMessage());
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
         }
     }
 
     /**
-     *
+     * 
      * Description:申报情况统计页面按书名统计导出统计结果
-     *
+     * 
      * @author:lyc
      * @date:2018年1月9日上午11:41:10
      * @param
@@ -780,9 +826,11 @@ public class FileDownLoadController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报情况统计页面按书名统计导出统计结果")
     @RequestMapping(value = "/result/exportSituationBook", method = RequestMethod.GET)
     public void exportSituationBook(Long materialId, String bookName, HttpServletRequest request,
-            HttpServletResponse response) {
-        PageParameter<DeclarationSituationBookResultVO> pageParameter = new PageParameter<>(1, 50000);
-        DeclarationSituationBookResultVO declarationSituationBookResultVO = new DeclarationSituationBookResultVO();
+    HttpServletResponse response) {
+        PageParameter<DeclarationSituationBookResultVO> pageParameter =
+        new PageParameter<>(1, 50000);
+        DeclarationSituationBookResultVO declarationSituationBookResultVO =
+        new DeclarationSituationBookResultVO();
         declarationSituationBookResultVO.setMaterialId(materialId);
         declarationSituationBookResultVO.setBookName(bookName);
         pageParameter.setParameter(declarationSituationBookResultVO);
@@ -809,14 +857,15 @@ public class FileDownLoadController {
         } catch (Exception e) {
             logger.warn("文件下载时出现IO异常： {}", e.getMessage());
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
         }
     }
 
     /**
-     *
+     * 
      * Description:申报结果统计页面按书名统计导出统计结果
-     *
+     * 
      * @author:lyc
      * @date:2018年1月9日下午2:42:26
      * @param
@@ -825,7 +874,7 @@ public class FileDownLoadController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报结果统计页面按书名统计导出统计结果")
     @RequestMapping(value = "/result/exportResultBook", method = RequestMethod.GET)
     public void exportResultBook(Long materialId, String bookName, HttpServletRequest request,
-            HttpServletResponse response) {
+    HttpServletResponse response) {
         PageParameter<DeclarationResultBookVO> pageParameter = new PageParameter<>(1, 50000);
         DeclarationResultBookVO declarationResultBookVO = new DeclarationResultBookVO();
         declarationResultBookVO.setMaterialId(materialId);
@@ -854,14 +903,15 @@ public class FileDownLoadController {
         } catch (Exception e) {
             logger.warn("文件下载时出现IO异常： {}", e.getMessage());
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
         }
     }
 
     /**
-     *
+     * 
      * Description:设置选题号页面导出选题号
-     *
+     * 
      * @author:lyc
      * @date:2018年1月23日下午6:18:41
      * @param
@@ -869,7 +919,8 @@ public class FileDownLoadController {
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "设置选题号页面导出选题号信息")
     @RequestMapping(value = "/textbook/exportTopic", method = RequestMethod.GET)
-    public void exportTopic(Long materialId, HttpServletRequest request, HttpServletResponse response) {
+    public void exportTopic(Long materialId, HttpServletRequest request,
+    HttpServletResponse response) {
         List<Textbook> list = textbookService.listTopicNumber(materialId);
         Workbook workbook = null;
         if (list.size() == 0) {
@@ -892,7 +943,46 @@ public class FileDownLoadController {
         } catch (Exception e) {
             logger.warn("文件下载时出现IO异常： {}", e.getMessage());
             throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-                    CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
+        }
+    }
+
+    /**
+     * 
+     * <pre>
+    * 功能描述：导出所有学校
+    * 使用示范：
+    *
+    * @param request
+    * @param response
+    * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出所有学校")
+    @RequestMapping(value = "/excel/allOrg", method = RequestMethod.GET)
+    public void allOrg(HttpServletRequest request, HttpServletResponse response) {
+        Workbook workbook = null;
+        List<OrgExclVO> orgList = null;
+        try {
+            orgList = orgService.listAllOrgToExcel();
+            workbook = excelHelper.fromBusinessObjectList(orgList, "所有学校信息");
+        } catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+            logger.warn("数据表格化的时候失败");
+        }
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/force-download");
+        String fileName = returnFileName(request, "所有学校" + ".xls");
+        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        try (OutputStream out = response.getOutputStream()) {
+            workbook.write(out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+            throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+                                              CheckedExceptionResult.FILE_DOWNLOAD_FAILED,
+                                              "文件在传输时中断");
         }
     }
 }

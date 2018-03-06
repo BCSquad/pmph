@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Org;
+import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -41,16 +42,17 @@ public interface OrgDao {
      * @throws CheckedServiceException
      */
     Org getOrgById(Long id);
-    
+
     /**
      * 根据学校名称和学校机构代码获取机构
-     * @param name  学校名称
+     * 
+     * @param name 学校名称
      * @param username 机构代码
      * @return Org
      * @throws CheckedServiceException
      */
-    Org getOrgByNameAndUserName(@Param("name")String name,@Param("username")String username);
-    
+    Org getOrgByNameAndUserName(@Param("name") String name, @Param("username") String username);
+
     /**
      * 
      * @param id
@@ -151,5 +153,16 @@ public interface OrgDao {
      * @return id
      */
     Long getOrgid(String orgName);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：所有学校导出
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
+    List<OrgExclVO> listAllOrgToExcel();
 
 }

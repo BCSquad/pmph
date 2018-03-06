@@ -248,4 +248,71 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
         }
         return surveyTargetDao.listOrgIdBySurveyId(surveyId);
     }
+
+    @Override
+    public Integer reissueSurveyMessage(Message message, String title, Long surveyId,
+    String sessionId) throws CheckedServiceException, IOException {
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
+        if (ObjectUtil.isNull(surveyId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷表Id为空");
+        }
+        if (StringUtil.isEmpty(title)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷名称为空");
+        }
+        // MongoDB 消息插入
+        message = messageService.add(message);
+        if (StringUtil.isEmpty(message.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
+        }
+        Integer count = 0;
+        List<Long> orgIds = this.listOrgIdBySurveyId(surveyId);
+        if (CollectionUtil.isNotEmpty(orgIds)) {
+            count = orgIds.size();
+            Long userId = pmphUser.getId();
+            String surveyTitle = title + "-(问卷催办)";
+            // 发送消息
+            List<WriterUser> writerUserList = writerUserService.getWriterUserListByOrgIds(orgIds);// 作家用户
+            List<UserMessage> userMessageList = new ArrayList<UserMessage>(writerUserList.size()); // 系统消息
+            for (WriterUser writerUser : writerUserList) {
+                userMessageList.add(new UserMessage(message.getId(), surveyTitle, Const.MSG_TYPE_1,
+                                                    userId, Const.SENDER_TYPE_1,
+                                                    writerUser.getId(), Const.RECEIVER_TYPE_2, 0L));
+            }
+            List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(orgIds);// 获取学校管理员集合
+            for (OrgUser orgUser : orgUserList) {
+                userMessageList.add(new UserMessage(message.getId(), surveyTitle, Const.MSG_TYPE_1,
+                                                    userId, Const.SENDER_TYPE_1, orgUser.getId(),
+                                                    Const.RECEIVER_TYPE_3, 0L));
+            }
+            // 发送消息
+            if (CollectionUtil.isNotEmpty(userMessageList)) {
+                userMessageService.addUserMessageBatch(userMessageList); // 插入消息发送对象数据
+                // websocket发送的id集合
+                List<String> websocketUserIds = new ArrayList<String>();
+                for (UserMessage userMessage : userMessageList) {
+                    websocketUserIds.add(userMessage.getReceiverType() + "_"
+                                         + userMessage.getReceiverId());
+                }
+                // webscokt发送消息
+                if (CollectionUtil.isNotEmpty(websocketUserIds)) {
+                    WebScocketMessage webScocketMessage =
+                    new WebScocketMessage(message.getId(), Const.MSG_TYPE_1, userId,
+                                          pmphUser.getRealname(), Const.SENDER_TYPE_1,
+                                          Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
+                                          surveyTitle, message.getContent(),
+                                          DateUtil.getCurrentTime());
+                    myWebSocketHandler.sendWebSocketMessageToUser(websocketUserIds,
+                                                                  webScocketMessage);
+                }
+            }
+        }
+        return count;
+    }
 }

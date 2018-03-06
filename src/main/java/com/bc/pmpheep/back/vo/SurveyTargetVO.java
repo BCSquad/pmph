@@ -47,6 +47,10 @@ public class SurveyTargetVO implements Serializable {
      * 问卷结束时间
      */
     private String            endTime;
+    /**
+     * 发送类型 (1:发起问卷，2：补发消息)
+     */
+    private Integer           sendType;
 
     /**
      * @return the title
@@ -116,6 +120,20 @@ public class SurveyTargetVO implements Serializable {
      */
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    /**
+     * @return the sendType
+     */
+    public Integer getSendType() {
+        return sendType;
+    }
+
+    /**
+     * @param sendType the sendType to set
+     */
+    public void setSendType(Integer sendType) {
+        this.sendType = sendType;
     }
 
 }

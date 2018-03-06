@@ -364,4 +364,24 @@
         	</foreach>
 	</select>
 	
+	<!-- 所有学校导出 -->
+	<select id="listAllOrgToExcel" resultType="OrgExclVO">
+		SELECT 
+		  	o.`org_name`,
+		  	ou.`username`,
+		  	ar.`area_name`
+		FROM
+		  	`org` o 
+		LEFT JOIN 
+			`org_user` ou
+		ON 
+			o.`id` = ou.`org_id`
+		JOIN 
+			`area` ar 
+		ON 
+			o.`area_id` = ar.`id` 
+		ORDER BY 
+			o.`area_id`,o.`id` ASC ;
+	</select>
+	
 </mapper>

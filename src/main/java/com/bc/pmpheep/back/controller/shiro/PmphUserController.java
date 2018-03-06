@@ -312,22 +312,6 @@ public class PmphUserController {
 	@RequestMapping(value = "/personal/center", method = RequestMethod.GET)
 	public ResponseBean center(HttpServletRequest request,String state,String materialName,
 			String groupName,String bookname,String name,String title,String authProgress,String topicBookname) {
-//		Boolean booleans=true;
-//		try {
-//			String sessionId = CookiesUtil.getSessionId(request);
-//			PmphUser sessionPmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
-//			PageParameter<MaterialListVO> pageParameter2 = new PageParameter<>();
-//			MaterialListVO materialListVO = new MaterialListVO();
-//			materialListVO.setState(state);
-//			materialListVO.setMaterialName(materialName);
-//			pageParameter2.setParameter(materialListVO);
-//			// 教材申报的结果
-//			PageResult<MaterialListVO> pageResultMaterialListVO = materialService.listMaterials(pageParameter2, sessionId);
-//		} catch (Exception e) {
-//			booleans=false;
-//			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-//	                CheckedExceptionResult.NULL_PARAM,"教材申报未找到对应作者");
-//		}
 		return new ResponseBean(userService.getPersonalCenter(request,state,materialName,groupName,
 				title,bookname,name,authProgress,topicBookname));
 	}
