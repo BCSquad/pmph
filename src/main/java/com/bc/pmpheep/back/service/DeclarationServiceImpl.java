@@ -236,7 +236,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		if (null != onlineProgress && onlineProgress != 0) {
 			map.put("onlineProgress", onlineProgress); // 学校审核进度
 		}
-		if (null != offlineProgress && offlineProgress != 0) {
+		if (null != offlineProgress ) {                 //0 未收到 // 2 已收到
 			map.put("offlineProgress", offlineProgress); // 纸质表进度
 		}
 		if (null != haveFile) {
