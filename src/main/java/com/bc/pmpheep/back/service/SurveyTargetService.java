@@ -99,4 +99,21 @@ public interface SurveyTargetService {
      * </pre>
      */
     List<Long> listOrgIdBySurveyId(Long surveyId) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：问卷调查补发消息
+     * 使用示范：
+     *
+    * @param message 消息对象
+     * @param title 问卷调查名称
+     * @param surveyId 问卷ID
+     * @param sessionId
+     * @return
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer reissueSurveyMessage(Message message, String title, Long surveyId, String sessionId)
+    throws CheckedServiceException, IOException;
 }

@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Org;
+import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -44,18 +45,19 @@ public interface OrgService {
      * @throws CheckedServiceException
      */
     Org getOrgById(Long id) throws CheckedServiceException;
-    
+
     /**
      * 根据学校名称和学校机构代码获取机构
-     * @introduction 
+     * 
+     * @introduction
      * @author Mryang
      * @createDate 2018年1月2日 下午2:33:48
-     * @param name   学校名称
+     * @param name 学校名称
      * @param username 机构代码
      * @return
      * @throws CheckedServiceException
      */
-    Org getOrgByNameAndUserName(String name,String username) throws CheckedServiceException;
+    Org getOrgByNameAndUserName(String name, String username) throws CheckedServiceException;
 
     /**
      * 
@@ -118,4 +120,15 @@ public interface OrgService {
      */
     List<OrgVO> listSendToSchoolAdminOrAllUser(@Param("orgName") String orgName,
     @Param("materialId") Long materialId) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：所有学校导出
+     * 使用示范：
+     *
+     * @return
+     * </pre>
+     */
+    List<OrgExclVO> listAllOrgToExcel() throws CheckedServiceException;
 }
