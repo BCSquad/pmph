@@ -252,7 +252,7 @@ public class TextbookServiceImpl implements TextbookService {
 		/** 发布更新最终结果表的数据 ---end --- */
 		//发送消息
 		for (Textbook textbook : textbooks) {
-			systemMessageService.sendWhenPubfinalResult(textbook.getId()) ;
+			systemMessageService.sendWhenPubfinalResult(textbook.getId(),decPositionPublishedLst) ;
 		}
 		return count;
 	}

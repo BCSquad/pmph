@@ -895,13 +895,12 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenPubfinalResult(Long textBookId) throws CheckedServiceException, IOException {
-		// 获取这书根据书籍id获取申报职位
-		List<DecPosition> decPositionList = decPositionService.listDecPositionsByTextbookId(textBookId);
+	public void sendWhenPubfinalResult(Long textBookId, List<DecPositionPublished> decPositionPublishedLst)
+			throws CheckedServiceException, IOException {
 		Textbook textbook = textbookService.getTextbookById(textBookId);
 		Material material = materialService.getMaterialById(textbook.getMaterialId());
 		// 给主编发送
-		for (DecPosition decPosition : decPositionList) {
+		for (DecPositionPublished decPosition : decPositionPublishedLst) {
 			if (null != decPosition.getChosenPosition() && null != decPosition.getRank()
 					&& (decPosition.getChosenPosition() == 4 || decPosition.getChosenPosition() == 12)) {
 				String editorMsg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
@@ -931,7 +930,7 @@ public final class SystemMessageService {
 				+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>" + textbook.getTextbookName()
 				+ "</font>]的副主编";
 		Message message = new Message(associateEditor);
-		for (DecPosition decPosition : decPositionList) {
+		for (DecPositionPublished decPosition : decPositionPublishedLst) {
 			if (null != decPosition.getChosenPosition() && null != decPosition.getRank()
 					&& (decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10)) {
 				// 获取申报表
@@ -959,7 +958,7 @@ public final class SystemMessageService {
 				+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>" + textbook.getTextbookName()
 				+ "</font>]的编委";
 		message = new Message(bianWei);
-		for (DecPosition decPosition : decPositionList) {
+		for (DecPositionPublished decPosition : decPositionPublishedLst) {
 			if (null != decPosition.getChosenPosition()
 					&& (decPosition.getChosenPosition() == 1 || 9 == decPosition.getChosenPosition())) {
 				// 获取申报表

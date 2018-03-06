@@ -336,7 +336,7 @@
 		IS NOT NULL and c.id is not null
 		AND b.is_staging =false and
 		b.online_progress != 2
-		AND A.chosen_position IN (1,2,3) AND
+		AND A.chosen_position IN (1,2,3,4) AND
 		C.is_published = true
 		AND B.org_id = #{orgId}
 		AND C.ID IN
