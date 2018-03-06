@@ -138,12 +138,12 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 			WriterPointRule writerPointRuleVOs=writerPointRuleService.getWriterPointRuleByName(ruleName);
 			if(null!=writerPointRuleVOs){
 				//查询用户纠错之前的积分值
-				WriterPointLog writerPointLog2=writerPointLogService.getWriterPointLogByUserId(submitUserId);
+				List<WriterPointLog> writerPointLog2=writerPointLogService.getWriterPointLogByUserId(submitUserId);
 				WriterPointLog writerPointLog=new WriterPointLog();
 				//现在的规则的积分值+以前的积分
 				Integer temp=0;
-				if(null!=writerPointLog2){
-					temp=writerPointRuleVOs.getPoint()+writerPointLog2.getPoint();
+				if(writerPointLog2.size()>0){
+					temp=writerPointRuleVOs.getPoint()+writerPointLog2.get(0).getPoint();
 					writerPointLog.setPoint(temp);
 				}else{
 					temp=writerPointRuleVOs.getPoint();

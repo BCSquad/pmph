@@ -1,4 +1,6 @@
 package com.bc.pmpheep.back.service;
+import java.util.List;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.WriterPointLog;
@@ -57,5 +59,5 @@ public interface WriterPointLogService {
 	 * @return
 	 * @throws CheckedServiceException
 	 */
-	WriterPointLog getWriterPointLogByUserId(Long userId) throws CheckedServiceException;
+	List<WriterPointLog> getWriterPointLogByUserId(Long userId) throws CheckedServiceException;
 }

@@ -290,56 +290,66 @@ public class DecPositionServiceImpl implements DecPositionService {
 		return list.size();
 	}
 
-	@Override
-	public Map<String, Object> listEditorSelection(Long textbookId, Long materialId, String realName,
-			Integer presetPosition) throws CheckedServiceException {
-		if (ObjectUtil.isNull(textbookId)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"书籍id不能为空");
+    @Override
+    public Map<String, Object> listEditorSelection(Long textbookId, Long materialId,
+    String realName, Integer presetPosition) throws CheckedServiceException {
+        if (ObjectUtil.isNull(textbookId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "书籍id不能为空");
+        }
+        if (ObjectUtil.isNull(materialId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "教材id不能为空");
+        }
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        List<DecPositionEditorSelectionVO> listEditorSelectionVOs =
+        decPositionDao.listEditorSelection(textbookId,
+                                           StringUtil.toAllCheck(realName),
+                                           presetPosition);
+        // 因为作家申报机构为0时 为人卫社 但机构中又不存在0机构 在此遍历作家申报的机构，如果为null这里设置为人卫社  
+        for (DecPositionEditorSelectionVO decPositionEditorSelectionVO : listEditorSelectionVOs) {
+        	if(null==decPositionEditorSelectionVO.getReportName()){
+        		decPositionEditorSelectionVO.setReportName("人民卫生出版社");
+        	}
 		}
-		if (ObjectUtil.isNull(materialId)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-					"教材id不能为空");
-		}
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		List<DecPositionEditorSelectionVO> listEditorSelectionVOs = decPositionDao.listEditorSelection(textbookId,
-				StringUtil.toAllCheck(realName), presetPosition);
-		// 排序
-		List<DecPositionEditorSelectionVO> selectedDecPositionEditorSelectionVOs = new ArrayList<DecPositionEditorSelectionVO>();// 已遴选集合
-		List<DecPositionEditorSelectionVO> unselectedDecPositionEditorSelectionVOs = new ArrayList<DecPositionEditorSelectionVO>();// 未遴选集合
-		for (DecPositionEditorSelectionVO de : listEditorSelectionVOs) {
-			if (ObjectUtil.notNull(de.getRank())) {
-				selectedDecPositionEditorSelectionVOs.add(de);
-			} else if (de.getChosenPosition() > 0) {
-				selectedDecPositionEditorSelectionVOs.add(de);
-			} else {
-				unselectedDecPositionEditorSelectionVOs.add(de);
-			}
-		}
-		List<DecPositionEditorSelectionVO> editorList = new ArrayList<DecPositionEditorSelectionVO>(
-				selectedDecPositionEditorSelectionVOs.size());// 已遴选主编集合
-		List<DecPositionEditorSelectionVO> subeditorList = new ArrayList<DecPositionEditorSelectionVO>(
-				selectedDecPositionEditorSelectionVOs.size());// 已遴选副主编集合
-		List<DecPositionEditorSelectionVO> editorialMemberList = new ArrayList<DecPositionEditorSelectionVO>(
-				selectedDecPositionEditorSelectionVOs.size());// 已遴选编委集合
-		List<DecPositionEditorSelectionVO> digitalrList = new ArrayList<DecPositionEditorSelectionVO>(
-				selectedDecPositionEditorSelectionVOs.size());// 已遴选数字编委集合
-		for (DecPositionEditorSelectionVO decVo : selectedDecPositionEditorSelectionVOs) {
-			if (4 == decVo.getChosenPosition() || 12 == decVo.getChosenPosition()) {// 主编 1100 0100
-				editorList.add(decVo);
-			} else if (2 == decVo.getChosenPosition() || 10 == decVo.getChosenPosition()) {// 副主编 1010 0010
-				subeditorList.add(decVo);
-			} else if (1 == decVo.getChosenPosition() || 9 == decVo.getChosenPosition()) {// 编委 1001 0001
-				editorialMemberList.add(decVo);
-			} else if (8 == decVo.getChosenPosition()) {// 数字编委 1000
-				digitalrList.add(decVo);
-			}
-		}
-		Collections.sort(editorList, new Comparator<DecPositionEditorSelectionVO>() {
-			public int compare(DecPositionEditorSelectionVO arg0, DecPositionEditorSelectionVO arg1) {
-				return arg0.getRank().compareTo(arg1.getRank());
-			}
-		});
+        // 排序
+        List<DecPositionEditorSelectionVO> selectedDecPositionEditorSelectionVOs =
+        new ArrayList<DecPositionEditorSelectionVO>();// 已遴选集合
+        List<DecPositionEditorSelectionVO> unselectedDecPositionEditorSelectionVOs =
+        new ArrayList<DecPositionEditorSelectionVO>();// 未遴选集合
+        for (DecPositionEditorSelectionVO de : listEditorSelectionVOs) {
+            if (ObjectUtil.notNull(de.getRank())) {
+                selectedDecPositionEditorSelectionVOs.add(de);
+            } else if (de.getChosenPosition() > 0) {
+                selectedDecPositionEditorSelectionVOs.add(de);
+            } else {
+                unselectedDecPositionEditorSelectionVOs.add(de);
+            }
+        }
+        List<DecPositionEditorSelectionVO> editorList =
+        new ArrayList<DecPositionEditorSelectionVO>(selectedDecPositionEditorSelectionVOs.size());// 已遴选主编集合
+        List<DecPositionEditorSelectionVO> subeditorList =
+        new ArrayList<DecPositionEditorSelectionVO>(selectedDecPositionEditorSelectionVOs.size());// 已遴选副主编集合
+        List<DecPositionEditorSelectionVO> editorialMemberList =
+        new ArrayList<DecPositionEditorSelectionVO>(selectedDecPositionEditorSelectionVOs.size());// 已遴选编委集合
+        List<DecPositionEditorSelectionVO> digitalrList =
+        new ArrayList<DecPositionEditorSelectionVO>(selectedDecPositionEditorSelectionVOs.size());// 已遴选数字编委集合
+        for (DecPositionEditorSelectionVO decVo : selectedDecPositionEditorSelectionVOs) {
+            if (4 == decVo.getChosenPosition() || 12 == decVo.getChosenPosition() ) {// 主编          1100 0100
+                editorList.add(decVo);
+            } else if (2 == decVo.getChosenPosition() || 10 == decVo.getChosenPosition() ) {// 副主编  1010 0010
+                subeditorList.add(decVo);
+            } else if (1 == decVo.getChosenPosition() || 9  == decVo.getChosenPosition() ) {// 编委    1001 0001 
+                editorialMemberList.add(decVo);
+            } else if (8 == decVo.getChosenPosition()) {// 数字编委  1000
+                digitalrList.add(decVo);
+            }
+        }
+        Collections.sort(editorList, new Comparator<DecPositionEditorSelectionVO>() {
+            public int compare(DecPositionEditorSelectionVO arg0, DecPositionEditorSelectionVO arg1) {
+                return arg0.getRank().compareTo(arg1.getRank());
+            }
+        });
 
 		Collections.sort(subeditorList, new Comparator<DecPositionEditorSelectionVO>() {
 			public int compare(DecPositionEditorSelectionVO arg0, DecPositionEditorSelectionVO arg1) {
