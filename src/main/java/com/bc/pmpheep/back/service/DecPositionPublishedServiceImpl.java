@@ -128,14 +128,23 @@ public class DecPositionPublishedServiceImpl implements DecPositionPublishedServ
         return decPositionPublishedDao.deleteDecPositionPublishedByTextBookId(textbookId);
     }
 
-	@Override
-	public List<DecPositionPublished> getDecPositionPublishedListByBookId(Long textbookId)
-			throws CheckedServiceException {
-		if (ObjectUtil.isNull(textbookId)) {
+    @Override
+    public List<DecPositionPublished> getDecPositionPublishedListByBookId(Long textbookId)
+    throws CheckedServiceException {
+        if (ObjectUtil.isNull(textbookId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "参数不能为空");
         }
-		return decPositionPublishedDao.getDecPositionPublishedListByBookId(textbookId);
-	}
+        return decPositionPublishedDao.getDecPositionPublishedListByBookId(textbookId);
+    }
 
+    @Override
+    public Integer deletePublishedEditorByTextbookId(Long textbookId)
+    throws CheckedServiceException {
+        if (ObjectUtil.isNull(textbookId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "书籍id为空");
+        }
+        return decPositionPublishedDao.deletePublishedEditorByTextbookId(textbookId);
+    }
 }
