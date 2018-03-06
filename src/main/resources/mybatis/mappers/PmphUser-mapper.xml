@@ -252,12 +252,13 @@
 		</if>
 		LIMIT #{start},#{size}
 	</select>
-	
+
 	<!-- 根据username查询PmphUser对象 -->
-	<select id="getPmphUserByUsername" resultType="PmphUser" parameterType="java.lang.String">
+	<select id="getPmphUserByUsername" resultType="PmphUser"
+		parameterType="java.lang.String">
 		SELECT * FROM pmph_user WHERE username = #{username}
 	</select>
-	
+
 	<select id="getByUsernameAndPassword" resultType="PmphUser"
 		parameterType="map">
 		SELECT
@@ -567,7 +568,7 @@
 		WHERE
 		r.id =
 		t.opts_role_id
-		AND u.id = #{id}
+		AND u.id = #{id} AND t.auth_progress = 0
 	</select>
 
 	<select id="isEditor" parameterType="java.lang.Long" resultType="PmphUser">
@@ -579,7 +580,7 @@
 		WHERE
 		t.editor_id = u.id
 		AND u.id =
-		#{id}
+		#{id} AND t.auth_progress = 0
 	</select>
 
 </mapper>

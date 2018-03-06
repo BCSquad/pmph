@@ -72,10 +72,9 @@ public class Download {
             try {
                 String imageName = url.substring(url.lastIndexOf("/") + 1, url.length());
                 Integer wenhaoInteger = imageName.indexOf("?");
-                if (wenhaoInteger > 0) {
+                if (wenhaoInteger >= 0) {
                     imageName = imageName.substring(0, wenhaoInteger);
                 }
-
                 URL uri = new URL(url);
                 InputStream in = uri.openStream();
                 ByteArrayOutputStream outStream = new ByteArrayOutputStream();
