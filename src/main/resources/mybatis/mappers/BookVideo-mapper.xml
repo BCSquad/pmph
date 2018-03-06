@@ -199,8 +199,8 @@
 	<select id="getVideoListTotal"  resultType="java.lang.Integer" >
 	    select 
 	        COUNT(a.id)
-			from book_video a LEFT JOIN  book b on b.id = a.book_id LEFT JOIN writer_user c on c.id= a.user_id
-		where  a.is_deleted = false and b.id is not null and c.id is not null 
+			from book_video a LEFT JOIN  book b on b.id = a.book_id 
+		where  a.is_deleted = false and b.id is not null
 		<if test="bookName != null"> 
 			and b.bookname like #{bookName}
 		</if>
@@ -234,7 +234,12 @@
 			if(a.user_id=0,d.realname,c.realname) userName,
 			a.gmt_create gmtCreate,
 			a.file_size fileSize,
-			if(a.auth_user_id is null,null,a.is_auth) isAuth
+			if(a.auth_user_id is null,null,a.is_auth) isAuth,
+                        (case 
+                        when a.auth_user_id is null then 1
+                        when a.auth_user_id is not null and a.is_auth = false then 2
+                        when a.auth_user_id is not null and a.is_auth = true then 3
+                        else 1 end) as state
 			from book_video a LEFT JOIN  book b on b.id = a.book_id
                         LEFT JOIN writer_user c on c.id= a.user_id LEFT JOIN pmph_user d on d.id= a.auth_user_id 
 		where  a.is_deleted = false and b.id is not null 

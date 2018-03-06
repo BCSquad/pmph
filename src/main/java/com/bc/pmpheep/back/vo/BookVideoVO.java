@@ -31,6 +31,8 @@ public class BookVideoVO implements Serializable {
     private Long fileSize;
     //是否通过审核
     private Boolean isAuth;
+    //1=待审核,2=未通过,3=已通过
+    private Integer state;
 
     public BookVideoVO() {
         super();
@@ -120,6 +122,20 @@ public class BookVideoVO implements Serializable {
 
     public void setIsAuth(Boolean isAuth) {
         this.isAuth = isAuth;
+    }
+
+    /**
+     * @return the state
+     */
+    public Integer getState() {
+        return state;
+    }
+
+    /**
+     * @param state the state to set
+     */
+    public void setState(Integer state) {
+        this.state = state;
     }
 
     @Override

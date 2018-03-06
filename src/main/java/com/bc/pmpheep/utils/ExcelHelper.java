@@ -24,6 +24,7 @@ import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecTextbookPmph;
 import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.Material;
+import com.bc.pmpheep.back.po.MaterialExtension;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.DateUtil;
@@ -46,6 +47,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
@@ -251,36 +253,36 @@ public class ExcelHelper {
             Integer number = reason.length;
             String[] dealWith = map.get("处理方式").toString().split("。");
             if (number > 1) {
-            	sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 0, 0));
-            	sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 1, 1));
-            	sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 2, 2));
-            	sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 3, 3));
-            	sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 4, 4));
-            	sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 5, 5));
-            	sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 6, 6));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 0, 0));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 1, 1));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 2, 2));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 3, 3));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 4, 4));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 5, 5));
+                sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount + number - 1, 6, 6));
             }
-            for (int i = 0; i <reason.length ; i ++){
-            	Row row = sheet.createRow(rowCount + i);
-            	columnCount = 0;
-	            for (Map.Entry<String, Object> entry : map.entrySet()) {
-	            		Cell cell = row.createCell(columnCount);
-	            		if (i == 0){
-	            			if ("异常原因".equals(entry.getKey())){
-	            				cell.setCellValue(reason[i]);
-	            			} else if ("处理方式".equals(entry.getKey())){
-	            				cell.setCellValue(dealWith[i]);
-	            			} else {
-	            				cell.setCellValue(entry.getValue().toString());
-	            			}
-	            		} else {
-	            			if ("异常原因".equals(entry.getKey())){
-	            				cell.setCellValue(reason[i]);
-	            			} else if ("处理方式".equals(entry.getKey())){
-	            				cell.setCellValue(dealWith[i]);
-	            			}	            			
-	            		}
-	            	columnCount++;	
-            	}
+            for (int i = 0; i < reason.length; i++) {
+                Row row = sheet.createRow(rowCount + i);
+                columnCount = 0;
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    Cell cell = row.createCell(columnCount);
+                    if (i == 0) {
+                        if ("异常原因".equals(entry.getKey())) {
+                            cell.setCellValue(reason[i]);
+                        } else if ("处理方式".equals(entry.getKey())) {
+                            cell.setCellValue(dealWith[i]);
+                        } else {
+                            cell.setCellValue(entry.getValue().toString());
+                        }
+                    } else {
+                        if ("异常原因".equals(entry.getKey())) {
+                            cell.setCellValue(reason[i]);
+                        } else if ("处理方式".equals(entry.getKey())) {
+                            cell.setCellValue(dealWith[i]);
+                        }
+                    }
+                    columnCount++;
+                }
             }
             rowCount = rowCount + reason.length;
         }
@@ -489,11 +491,13 @@ public class ExcelHelper {
      * 根据业务对象（包含子集合的BO）集合创建工作簿
      *
      * @param material 申报表所属教材对象
+     * @param extensions 教材扩展项集合
      * @param dataSource 业务对象（BO）集合
      * @param sheetName 要生成的Excel表名（非文件名）
      * @return Excel工作簿
      */
-    public Workbook fromDeclarationEtcBOList(Material material, List<DeclarationEtcBO> dataSource, String sheetName)
+    public Workbook fromDeclarationEtcBOList(Material material, List<MaterialExtension> extensions,
+            List<DeclarationEtcBO> dataSource, String sheetName)
             throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
         if (null == dataSource || dataSource.isEmpty()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -501,7 +505,7 @@ public class ExcelHelper {
         }
         Workbook workbook = new HSSFWorkbook();
         Sheet sheet = workbook.createSheet(sheetName);
-        sheet = generateDeclarationEtcBOHeader(sheet); // 生成表头
+        sheet = generateDeclarationEtcBOHeader(extensions, sheet); // 生成表头
         headerStyleSetup(workbook, 2); // 设置表头样式
         Field[] fields = dataSource.get(0).getClass().getDeclaredFields();
         /* 设置行计数器 */
@@ -601,8 +605,11 @@ public class ExcelHelper {
                                 break;
                             }
                             case "作家扩展项": {
+                                if (extensions == null || extensions.isEmpty()) {
+                                    break;
+                                }
                                 List<DecExtensionVO> list = (List<DecExtensionVO>) field.get(object);
-                                columnProperties = fillDecExtensionVOData(list, row, columnProperties);
+                                columnProperties = fillDecExtensionVODataPlus(extensions, list, row, columnProperties);
                                 break;
                             }
                             default:
@@ -673,7 +680,7 @@ public class ExcelHelper {
         return sheet;
     }
 
-    private Sheet generateDeclarationEtcBOHeader(Sheet sheet) {
+    private Sheet generateDeclarationEtcBOHeader(List<MaterialExtension> extensions, Sheet sheet) {
         Field[] fields = DeclarationEtcBO.class.getDeclaredFields();
         Row r1 = sheet.createRow(0);
         Row r2 = sheet.createRow(1);
@@ -1008,19 +1015,29 @@ public class ExcelHelper {
                             break;
                         }
                         case "作家扩展项": {
-                            //List<DecExtensionVO> list = (List<DecExtensionVO>) field.get(object);
+                            if (extensions == null || extensions.isEmpty()) {
+                                break;
+                            }
                             Cell r1cell = r1.createCell(count);
                             r1cell.setCellValue(headerName);
-                            region = new CellRangeAddress(0, 0, count, count + 1);
+                            region = new CellRangeAddress(0, 0, count, count + extensions.size());
                             sheet.addMergedRegion(region);
-                            Cell r2cell = r2.createCell(count);
-                            r2cell.setCellValue("扩展项名称");
-                            sheet.setColumnWidth(count, 6 * 512);
-                            count++;
-                            r2cell = r2.createCell(count);
-                            r2cell.setCellValue("扩展项内容");
-                            sheet.setColumnWidth(count, 5 * 512);
-                            count++;
+                            for (MaterialExtension extension : extensions) {
+                                Cell cell = r2.createCell(count);
+                                String extensionName = extension.getExtensionName() == null ? "" : extension.getExtensionName();
+                                cell.setCellValue(extensionName);
+                                int length = extension.getExtensionName().length() > 10 ? 10 : extension.getExtensionName().length();
+                                sheet.setColumnWidth(count, length * 512);
+                                count++;
+                            }
+//                            Cell r2cell = r2.createCell(count);
+//                            r2cell.setCellValue("扩展项名称");
+//                            sheet.setColumnWidth(count, 6 * 512);
+//                            count++;
+//                            r2cell = r2.createCell(count);
+//                            r2cell.setCellValue("扩展项内容");
+//                            sheet.setColumnWidth(count, 5 * 512);
+//                            count++;
                             break;
                         }
                         default:
@@ -2411,6 +2428,36 @@ public class ExcelHelper {
                 Cell cell = row.createCell(colCount++);
                 value = builders.get(i).toString();
                 cell.setCellValue(value);
+            }
+        }
+        properties.setColCount(colCount);
+        properties.setMaxLength(maxLength);
+        return properties;
+    }
+
+    private ColumnProperties fillDecExtensionVODataPlus(List<MaterialExtension> extensions,
+            List<DecExtensionVO> decExtensionVOs, Row row, ColumnProperties properties) {
+        int colCount = properties.getColCount();
+        int[] maxLength = properties.getMaxLength();
+        if (CollectionUtil.isEmpty(decExtensionVOs)) {
+            for (MaterialExtension extension : extensions) {
+                row.createCell(colCount++);
+            }
+        } else {
+            for (MaterialExtension extension : extensions) {
+                for (DecExtensionVO vo : decExtensionVOs) {
+                    if (vo.getExtensionId().equals(extension.getId())) {
+                        Cell cell = row.createCell(colCount++);
+                        String content = vo.getContent();
+                        if (StringUtil.notEmpty(content)) {
+                            cell.setCellValue(content);
+                            maxLength[colCount - 1] = content.length();
+                        } else {
+                            maxLength[colCount - 1] = 2;
+                        }
+                        break;
+                    }
+                }
             }
         }
         properties.setColCount(colCount);

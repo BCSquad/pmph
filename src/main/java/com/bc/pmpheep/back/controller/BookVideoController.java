@@ -17,6 +17,7 @@ import com.bc.pmpheep.back.vo.PastBookVideoVO;
 import com.bc.pmpheep.back.vo.BookVideoVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.back.service.BookVideoService;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -94,21 +95,31 @@ public class BookVideoController {
      * @introduction
      * @author Mryang
      * @createDate 2018年2月6日 下午5:34:12
-     * @param pageSize
-     * @param pageNumber
-     * @param bookName
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/audit", method = RequestMethod.PUT)
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "微视频审核")
     public ResponseBean<Integer> audit(HttpServletRequest request, Long id, Boolean isAuth) {
+        if (ObjectUtil.isNull(id)) {
+            return new ResponseBean(new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO,
+                    CheckedExceptionResult.NULL_PARAM, "微视频id不能为空"));
+        }
+        if (ObjectUtil.isNull(isAuth)) {
+            return new ResponseBean(new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO,
+                    CheckedExceptionResult.NULL_PARAM, "审核参数不能为空"));
+        }
+        String sessionId = CookiesUtil.getSessionId(request);
+        if (StringUtil.isEmpty(sessionId)) {
+            return new ResponseBean(new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO,
+                    CheckedExceptionResult.USER_SESSION, "尚未登录或session已过期"));
+        }
         BookVideo bookVideo = new BookVideo();
         bookVideo
                 .setId(id)
                 .setAuthDate(new Date())
-                .setAuthUserId(SessionUtil.getPmphUserBySessionId(CookiesUtil.getSessionId(request)).getId())
-                .setIsAuth(isAuth == null ? false : isAuth);
+                .setAuthUserId(SessionUtil.getPmphUserBySessionId(sessionId).getId())
+                .setIsAuth(isAuth);
         return new ResponseBean(bookVideoService.updateBookVideo(bookVideo));
     }
 
