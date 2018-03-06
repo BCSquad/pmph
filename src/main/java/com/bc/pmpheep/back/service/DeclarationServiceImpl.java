@@ -307,6 +307,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		// 获取当前作家用户申报信息
 		Declaration declarationCon = declarationDao.getDeclarationById(id);
+		// 获取教材
+		Material material = materialService.getMaterialById(declarationCon.getMaterialId());
 		// 获取审核进度是3并且已提交但是待审核并且是提交到出版社0
 		// 提交出版社，出版社通过
 		if (3 == onlineProgress.intValue() && 1 == declarationCon.getOnlineProgress() 
@@ -320,7 +322,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String detail = "";
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
-			map.put("content", "您申报教材的申报表已通过。");
+			map.put("content", "您申报《" + material.getMaterialName() + "》教材的申报表已通过。");
 			map.put("img", 1);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
@@ -397,7 +399,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String detail = "";
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
-			map.put("content", "您申报教材的申报表被退回。");
+			map.put("content", "您申报《" + material.getMaterialName() + "》教材的申报表被退回。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
