@@ -602,8 +602,12 @@ public class CmsContentServiceImpl implements CmsContentService {
         for (CmsContent cmsContent : list) {
             ids.add(cmsContent.getId());
         }
-        cmsContentDao.deleteCmsContentById(id);
-        return this.deleteCmsContentByIds(ids);
+        Integer count = 0;
+        count = cmsContentDao.deleteCmsContentById(id);
+        if (CollectionUtil.isNotEmpty(ids)) {
+            count = this.deleteCmsContentByIds(ids);
+        }
+        return count;
     }
 
     @Override
