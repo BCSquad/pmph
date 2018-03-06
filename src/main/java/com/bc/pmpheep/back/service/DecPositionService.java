@@ -316,4 +316,30 @@ public interface DecPositionService {
     PageResult<TextBookDecPositionVO> listDeclarationByTextbookIds(
     PageParameter<TextBookDecPositionVO> pageParameter) throws CheckedServiceException;
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：批量发布主编、副主编
+     * 使用示范：
+     *
+     * @param textbookId 书籍主键ID集合
+     * @param sessionId
+     * @return
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer batchPublishEditor(List<Long> textbookIds, String sessionId)
+    throws CheckedServiceException, IOException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据书籍ID查询书籍选中的主编，副主编
+     * 使用示范：
+     *
+     * @param textbookId 书籍ID
+     * @return DecPosition集合
+     * </pre>
+     */
+    List<DecPosition> getEditorByTextbookId(Long textbookId) throws CheckedServiceException;
 }

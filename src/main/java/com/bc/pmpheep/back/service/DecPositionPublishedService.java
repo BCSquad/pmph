@@ -89,12 +89,26 @@ public interface DecPositionPublishedService {
      * </pre>
      */
     Integer deleteDecPositionPublishedByTextBookId(Long textbookId) throws CheckedServiceException;
-    
+
     /**
      * 按照书籍查询
+     * 
      * @param textbookId
      * @return
      * @throws CheckedServiceException
      */
-    List<DecPositionPublished> getDecPositionPublishedListByBookId(Long textbookId) throws CheckedServiceException;
+    List<DecPositionPublished> getDecPositionPublishedListByBookId(Long textbookId)
+    throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按书籍ID删除DecPositionPublished
+     * 使用示范：
+     *
+     * @param textbookId 书籍ID
+     * @return 影响行数
+     * </pre>
+     */
+    Integer deletePublishedEditorByTextbookId(Long textbookId) throws CheckedServiceException;
 }

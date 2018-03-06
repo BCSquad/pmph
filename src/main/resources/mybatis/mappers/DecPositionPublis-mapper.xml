@@ -172,5 +172,23 @@
 	<select id="getDecPositionPublishedListByBookId"   resultType="DecPositionPublished">
 		select * from dec_position_published where textbook_id= #{textbookId} ;
 	</select>
-
+	
+	<!-- 按申报表id删除 -->
+	<delete id="deletePublishedEditorByTextbookId" parameterType="java.lang.Long">
+       DELETE 
+       		a.* 
+       FROM
+  			`dec_position_published`  a
+  	   JOIN 
+    		(SELECT 
+      			t.`id` 
+    		FROM
+      			`dec_position_published` t 
+   			WHERE 
+   				t.`chosen_position` IN (2, 4) 
+      		AND 
+      			t.`textbook_id` = #{textbookId}) tmp 
+    	ON a.id = tmp.id 
+    </delete>
+	
 </mapper>

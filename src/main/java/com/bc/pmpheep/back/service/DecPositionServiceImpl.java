@@ -335,13 +335,16 @@ public class DecPositionServiceImpl implements DecPositionService {
         List<DecPositionEditorSelectionVO> digitalrList =
         new ArrayList<DecPositionEditorSelectionVO>(selectedDecPositionEditorSelectionVOs.size());// 已遴选数字编委集合
         for (DecPositionEditorSelectionVO decVo : selectedDecPositionEditorSelectionVOs) {
-            if (4 == decVo.getChosenPosition() || 12 == decVo.getChosenPosition() ) {// 主编          1100 0100
+            if (4 == decVo.getChosenPosition() || 12 == decVo.getChosenPosition()) {// 主编 1100 0100
                 editorList.add(decVo);
-            } else if (2 == decVo.getChosenPosition() || 10 == decVo.getChosenPosition() ) {// 副主编  1010 0010
+            } else if (2 == decVo.getChosenPosition() || 10 == decVo.getChosenPosition()) {// 副主编
+                                                                                           // 1010
+                                                                                           // 0010
                 subeditorList.add(decVo);
-            } else if (1 == decVo.getChosenPosition() || 9  == decVo.getChosenPosition() ) {// 编委    1001 0001 
+            } else if (1 == decVo.getChosenPosition() || 9 == decVo.getChosenPosition()) {// 编委 1001
+                                                                                          // 0001
                 editorialMemberList.add(decVo);
-            } else if (8 == decVo.getChosenPosition()) {// 数字编委  1000
+            } else if (8 == decVo.getChosenPosition()) {// 数字编委 1000
                 digitalrList.add(decVo);
             }
         }
@@ -453,93 +456,96 @@ public class DecPositionServiceImpl implements DecPositionService {
         }
         // 2：发布
         if (selectionType_2.intValue() == selectionType.intValue()) {
-//            /*** 判断是否确认开始 ***/
-//            List<DecPosition> decPosition1 =
-//            decPositionDao.listChosenDecPositionsByTextbookId(textbookId);
-//            // 筛选出主编，副主编
-//            List<DecPosition> decPosition2 = new ArrayList<DecPosition>();
-//            for (DecPosition item : decPosition1) {
-//                if (null != item
-//                    && null != item.getChosenPosition()
-//                    && (item.getChosenPosition() == 4 || item.getChosenPosition() == 12
-//                        || item.getChosenPosition() == 2 || item.getChosenPosition() == 10)) {
-//                    decPosition2.add(item);
-//                }
-//            }
-//            List<DecPosition> decPositions2 = new ArrayList<DecPosition>();
-//            for (DecPosition decPosition : decPositions) {
-//                if (null != decPosition
-//                    && null != decPosition.getChosenPosition()
-//                    && (decPosition.getChosenPosition() == 4
-//                        || decPosition.getChosenPosition() == 12
-//                        || decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10)) {
-//                    decPositions2.add(decPosition);
-//                }
-//            }
-//            if (decPosition2.size() != decPositions2.size()) {
-//                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-//                                                  CheckedExceptionResult.ILLEGAL_PARAM,
-//                                                  "还未确认主编/副主编,不能发布");
-//            }
-//            // 排序 按照 id 升排列
-//            DecPosition[] decPosition3 = decPosition2.toArray(new DecPosition[] {});
-//            for (int i = 0; i < decPosition3.length - 1; i++) {
-//                for (int j = i + 1; j < decPosition3.length; j++) {
-//                    // 前面一个
-//                    DecPosition item1 = decPosition3[i];
-//                    DecPosition item2 = decPosition3[j];
-//                    if (item2.getId() < item1.getId()) {
-//                        // 把小的先存起来
-//                        DecPosition temp = decPosition3[j];
-//                        // 交换位置
-//                        decPosition3[j] = decPosition3[i];
-//                        decPosition3[i] = temp;
-//                    }
-//                }
-//            }
-//            DecPosition[] decPositions3 = decPositions2.toArray(new DecPosition[] {});
-//            for (int i = 0; i < decPositions3.length - 1; i++) {
-//                for (int j = i + 1; j < decPositions3.length; j++) {
-//                    // 前面一个
-//                    DecPosition item1 = decPositions3[i];
-//                    DecPosition item2 = decPositions3[j];
-//                    if (item2.getId() < item1.getId()) {
-//                        // 把小的先存起来
-//                        DecPosition temp = decPositions3[j];
-//                        // 交换位置
-//                        decPositions3[j] = decPositions3[i];
-//                        decPositions3[i] = temp;
-//                    }
-//                }
-//            }
-//            // 一一对比
-//            for (int i = 0; i < decPosition3.length; i++) {
-//                DecPosition item1 = decPosition3[i];
-//                DecPosition item2 = decPositions3[i];
-//                if (item1.getId().intValue() != item2.getId().intValue()) {
-//                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-//                                                      CheckedExceptionResult.ILLEGAL_PARAM,
-//                                                      "还未确认主编/副主编,不能发布");
-//                }
-//                if (item1.getRank().intValue() != item2.getRank().intValue()) {
-//                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-//                                                      CheckedExceptionResult.ILLEGAL_PARAM,
-//                                                      "还未确认主编/副主编,不能发布");
-//                }
-//                int chose1 = item1.getChosenPosition().intValue();
-//                int chose2 = item2.getChosenPosition().intValue();
-//                chose1 = chose1 > 8 ? chose1 - 8 : chose1;
-//                chose2 = chose2 > 8 ? chose2 - 8 : chose2;
-//                if (chose1 != chose2) {
-//                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-//                                                      CheckedExceptionResult.ILLEGAL_PARAM,
-//                                                      "还未确认主编/副主编,不能发布");
-//                }
-//            }
-//            /*** 判断是否确认结束 ***/
-        	//发布的时候 先确认
-        	this.updateDecPositionEditorSelection(jsonDecPosition, 1 , editorOrSubeditorType, sessionId);
-        	
+            // /*** 判断是否确认开始 ***/
+            // List<DecPosition> decPosition1 =
+            // decPositionDao.listChosenDecPositionsByTextbookId(textbookId);
+            // // 筛选出主编，副主编
+            // List<DecPosition> decPosition2 = new ArrayList<DecPosition>();
+            // for (DecPosition item : decPosition1) {
+            // if (null != item
+            // && null != item.getChosenPosition()
+            // && (item.getChosenPosition() == 4 || item.getChosenPosition() == 12
+            // || item.getChosenPosition() == 2 || item.getChosenPosition() == 10)) {
+            // decPosition2.add(item);
+            // }
+            // }
+            // List<DecPosition> decPositions2 = new ArrayList<DecPosition>();
+            // for (DecPosition decPosition : decPositions) {
+            // if (null != decPosition
+            // && null != decPosition.getChosenPosition()
+            // && (decPosition.getChosenPosition() == 4
+            // || decPosition.getChosenPosition() == 12
+            // || decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10)) {
+            // decPositions2.add(decPosition);
+            // }
+            // }
+            // if (decPosition2.size() != decPositions2.size()) {
+            // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+            // CheckedExceptionResult.ILLEGAL_PARAM,
+            // "还未确认主编/副主编,不能发布");
+            // }
+            // // 排序 按照 id 升排列
+            // DecPosition[] decPosition3 = decPosition2.toArray(new DecPosition[] {});
+            // for (int i = 0; i < decPosition3.length - 1; i++) {
+            // for (int j = i + 1; j < decPosition3.length; j++) {
+            // // 前面一个
+            // DecPosition item1 = decPosition3[i];
+            // DecPosition item2 = decPosition3[j];
+            // if (item2.getId() < item1.getId()) {
+            // // 把小的先存起来
+            // DecPosition temp = decPosition3[j];
+            // // 交换位置
+            // decPosition3[j] = decPosition3[i];
+            // decPosition3[i] = temp;
+            // }
+            // }
+            // }
+            // DecPosition[] decPositions3 = decPositions2.toArray(new DecPosition[] {});
+            // for (int i = 0; i < decPositions3.length - 1; i++) {
+            // for (int j = i + 1; j < decPositions3.length; j++) {
+            // // 前面一个
+            // DecPosition item1 = decPositions3[i];
+            // DecPosition item2 = decPositions3[j];
+            // if (item2.getId() < item1.getId()) {
+            // // 把小的先存起来
+            // DecPosition temp = decPositions3[j];
+            // // 交换位置
+            // decPositions3[j] = decPositions3[i];
+            // decPositions3[i] = temp;
+            // }
+            // }
+            // }
+            // // 一一对比
+            // for (int i = 0; i < decPosition3.length; i++) {
+            // DecPosition item1 = decPosition3[i];
+            // DecPosition item2 = decPositions3[i];
+            // if (item1.getId().intValue() != item2.getId().intValue()) {
+            // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+            // CheckedExceptionResult.ILLEGAL_PARAM,
+            // "还未确认主编/副主编,不能发布");
+            // }
+            // if (item1.getRank().intValue() != item2.getRank().intValue()) {
+            // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+            // CheckedExceptionResult.ILLEGAL_PARAM,
+            // "还未确认主编/副主编,不能发布");
+            // }
+            // int chose1 = item1.getChosenPosition().intValue();
+            // int chose2 = item2.getChosenPosition().intValue();
+            // chose1 = chose1 > 8 ? chose1 - 8 : chose1;
+            // chose2 = chose2 > 8 ? chose2 - 8 : chose2;
+            // if (chose1 != chose2) {
+            // throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+            // CheckedExceptionResult.ILLEGAL_PARAM,
+            // "还未确认主编/副主编,不能发布");
+            // }
+            // }
+            // /*** 判断是否确认结束 ***/
+            // 发布的时候 先确认
+            this.updateDecPositionEditorSelection(jsonDecPosition,
+                                                  1,
+                                                  editorOrSubeditorType,
+                                                  sessionId);
+
             if (ObjectUtil.isNull(textbookId)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                                   CheckedExceptionResult.NULL_PARAM, "书籍id为空");
@@ -554,49 +560,54 @@ public class DecPositionServiceImpl implements DecPositionService {
                                                   "当前书籍还未遴选主编，副主编");
             }
             // DecPositionPublished对象集合
-            List<DecPositionPublished> decPositionPublisheds = new ArrayList<DecPositionPublished>(decPositionsList.size());
+            List<DecPositionPublished> decPositionPublisheds =
+            new ArrayList<DecPositionPublished>(decPositionsList.size());
             for (DecPosition decPosition : decPositionsList) {
-            	// 筛选出遴选上的主编副主编人员 
-            	Integer chosenPosition = decPosition.getChosenPosition();
-                if (null != chosenPosition && (chosenPosition == 4 || chosenPosition == 2 || chosenPosition == 12 || chosenPosition == 10 )) {
-                	chosenPosition = chosenPosition > 8 ?chosenPosition-8:chosenPosition;
-                	decPositionPublisheds.add(new DecPositionPublished(pmphUser.getId(),
-                            decPosition.getDeclarationId(),
-                            textbookId,
-                            decPosition.getPresetPosition(),
-                            chosenPosition,
-                            decPosition.getRank(),
-                            decPosition.getSyllabusId(),
-                            decPosition.getSyllabusName()));
+                // 筛选出遴选上的主编副主编人员
+                Integer chosenPosition = decPosition.getChosenPosition();
+                if (null != chosenPosition
+                    && (chosenPosition == 4 || chosenPosition == 2 || chosenPosition == 12 || chosenPosition == 10)) {
+                    chosenPosition = chosenPosition > 8 ? chosenPosition - 8 : chosenPosition;
+                    decPositionPublisheds.add(new DecPositionPublished(
+                                                                       pmphUser.getId(),
+                                                                       decPosition.getDeclarationId(),
+                                                                       textbookId,
+                                                                       decPosition.getPresetPosition(),
+                                                                       chosenPosition,
+                                                                       decPosition.getRank(),
+                                                                       decPosition.getSyllabusId(),
+                                                                       decPosition.getSyllabusName()));
                 }
             }
-            //已经公布的列表
-            List<DecPositionPublished> lst = decPositionPublishedService.getDecPositionPublishedListByBookId(textbookId);
+            // 已经公布的列表
+            List<DecPositionPublished> lst =
+            decPositionPublishedService.getDecPositionPublishedListByBookId(textbookId);
             List<DecPositionPublished> addNew = new ArrayList<DecPositionPublished>(16);
-            for(DecPositionPublished item :lst) {
-            	//编委 | 数字编委
-            	if(item.getChosenPosition() == 1 || item.getChosenPosition() >= 8) {
-            		//item.setChosenPosition(item.getChosenPosition() > 8 ?(item.getChosenPosition()-8):item.getChosenPosition() );
-            		addNew.add(item);
-            	}
+            for (DecPositionPublished item : lst) {
+                // 编委 | 数字编委
+                if (item.getChosenPosition() == 1 || item.getChosenPosition() >= 8) {
+                    // item.setChosenPosition(item.getChosenPosition() > 8
+                    // ?(item.getChosenPosition()-8):item.getChosenPosition() );
+                    addNew.add(item);
+                }
             }
-            //加入主编副主编
-            for(DecPositionPublished item :decPositionPublisheds) {
-            	boolean no = true;
-            	for(DecPositionPublished itemadd :addNew) {
-            		if( itemadd.getDeclarationId().intValue() ==  item.getDeclarationId().intValue() ) {
-            			no = false;
-            			itemadd.setChosenPosition(item.getChosenPosition()+8);
-            			break;
-            		}
-            	}
-            	if(no) {
-            		addNew.add(item);
-            	}
+            // 加入主编副主编
+            for (DecPositionPublished item : decPositionPublisheds) {
+                boolean no = true;
+                for (DecPositionPublished itemadd : addNew) {
+                    if (itemadd.getDeclarationId().intValue() == item.getDeclarationId().intValue()) {
+                        no = false;
+                        itemadd.setChosenPosition(item.getChosenPosition() + 8);
+                        break;
+                    }
+                }
+                if (no) {
+                    addNew.add(item);
+                }
             }
-            //clear Id
-            for(DecPositionPublished item :addNew) {
-            	item.setId(null);
+            // clear Id
+            for (DecPositionPublished item : addNew) {
+                item.setId(null);
             }
             decPositionPublishedService.deleteDecPositionPublishedByTextBookId(textbookId);// 先删除当前发布人已发布的
             decPositionPublishedService.batchInsertDecPositionPublished(addNew);// 再添加
@@ -927,6 +938,66 @@ public class DecPositionServiceImpl implements DecPositionService {
             pageResult.setRows(textBookList);
         }
         return pageResult;
+    }
+
+    @Override
+    public Integer batchPublishEditor(List<Long> textbookIds, String sessionId)
+    throws CheckedServiceException, IOException {
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId("61D6033C97738F55273FE01C78F73041");
+        if (ObjectUtil.isNull(pmphUser)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
+        if (ObjectUtil.isNull(pmphUser.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
+        if (ObjectUtil.isNull(textbookIds)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "未选中书籍");
+        }
+        Integer count = 0;
+        for (Long textbookId : textbookIds) {
+            List<DecPosition> listDecPositions = this.getEditorByTextbookId(textbookId);// 查询当前书籍已遴选的主编，副主编
+            if (CollectionUtil.isEmpty(listDecPositions)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                                  CheckedExceptionResult.NULL_PARAM,
+                                                  "当前选中书籍还未遴选主编，副主编");
+            }
+            // DecPositionPublished对象集合
+            List<DecPositionPublished> decPositionPublisheds =
+            new ArrayList<DecPositionPublished>(listDecPositions.size());
+            for (DecPosition decPosition : listDecPositions) {
+                decPositionPublisheds.add(new DecPositionPublished(pmphUser.getId(),
+                                                                   decPosition.getDeclarationId(),
+                                                                   textbookId,
+                                                                   decPosition.getPresetPosition(),
+                                                                   decPosition.getChosenPosition(),
+                                                                   decPosition.getRank(),
+                                                                   decPosition.getSyllabusId(),
+                                                                   decPosition.getSyllabusName()));
+            }
+            // 删除已发布的主编，副主编
+            decPositionPublishedService.deletePublishedEditorByTextbookId(textbookId);
+            // 重新发布
+            decPositionPublishedService.batchInsertDecPositionPublished(decPositionPublisheds);// 再添加
+            // 发布时更新textbook表中is_chief_published（是否已公布主编/副主编）字段
+            count = textbookService.updateTextbook(new Textbook(textbookId, true));
+            if (count > 0) {
+                // 发送消息
+                systemMessageService.sendWhenConfirmFirstEditor(textbookId);
+            }
+        }
+        return count;
+    }
+
+    @Override
+    public List<DecPosition> getEditorByTextbookId(Long textbookId) throws CheckedServiceException {
+        if (ObjectUtil.isNull(textbookId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "书籍ID为空");
+        }
+        return decPositionDao.getEditorByTextbookId(textbookId);
     }
 
 }
