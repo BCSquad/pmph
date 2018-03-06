@@ -638,10 +638,6 @@ public class PmphUserServiceImpl implements PmphUserService {
         Integer writerUserCount = writerUserService.getCount();
         // 机构认证数量orgList
         Integer orgerCount = orgUserService.getCount();
-        // 教材申报数量
-        // Integer materialCount = materialService.getCount(sessionPmphUser.getId());
-        // 选题申报数量
-        // Integer topicCount = topicService.getCount(sessionPmphUser.getId());
         // 小组
         PmphGroupListVO pmphGroup = new PmphGroupListVO();
         if (ObjectUtil.notNull(groupName)) {
