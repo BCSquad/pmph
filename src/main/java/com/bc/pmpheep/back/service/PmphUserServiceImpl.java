@@ -710,6 +710,16 @@ public class PmphUserServiceImpl implements PmphUserService {
         if (pmphIdentity.getIsEditor()) {
             topicDeclarationVO.setIsEditorHandling(true);
         }
+        for (PmphRole pmphRole : rolelist) {
+        	//编辑
+        	if(2==pmphRole.getId()){
+        		topicDeclarationVO.setIsEditorHandling(true);
+        	}
+        	//主任
+        	if(9==pmphRole.getId()){
+        		topicDeclarationVO.setIsDirectorHandling(true);
+        	}
+		}
         String[] strs = authProgress.split(",");
         List<Long> progress = new ArrayList<>();
         for (String str : strs) {
@@ -717,9 +727,10 @@ public class PmphUserServiceImpl implements PmphUserService {
         }
         topicDeclarationVO.setBookname(topicBookname);
         pageParameter3.setParameter(topicDeclarationVO);
-        if (pmphIdentity.getIsAdmin() || pmphIdentity.getIsDirector() || pmphIdentity.getIsOpts()) {
+        if (2==rolelist.get(0).getId()||9==rolelist.get(0).getId()||1==rolelist.get(0).getId()) {
             PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
             topicService.listMyTopic(progress, pageParameter3);
+//            		topicService.listCheckTopic(progress, pageParameter3);		
             map.put("topicList", pageResultTopicDeclarationVO);
         }else{
         	PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =new PageResult<>();
