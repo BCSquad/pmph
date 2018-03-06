@@ -10,11 +10,14 @@ import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.bo.WriterBO;
 import com.bc.pmpheep.back.po.DecAcade;
 import com.bc.pmpheep.back.po.DecAcadeReward;
+import com.bc.pmpheep.back.po.DecAchievement;
 import com.bc.pmpheep.back.po.DecClinicalReward;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
+import com.bc.pmpheep.back.po.DecIntention;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecMonograph;
+import com.bc.pmpheep.back.po.DecMoocDigital;
 import com.bc.pmpheep.back.po.DecNationalPlan;
 import com.bc.pmpheep.back.po.DecPublishReward;
 import com.bc.pmpheep.back.po.DecResearch;
@@ -544,6 +547,11 @@ public class ExcelHelper {
                                 columnProperties = fillDecTeachExpData(list, row, columnProperties);
                                 break;
                             }
+                            case "个人成就": {
+                                DecAchievement decAchievement = (DecAchievement) field.get(object);
+                                columnProperties = fillDecAchievementData(decAchievement, row, columnProperties);
+                                break;
+                            }
                             case "学术兼职": {
                                 List<DecAcade> list = (List<DecAcade>) field.get(object);
                                 columnProperties = fillDecAcadeData(list, row, columnProperties);
@@ -574,6 +582,11 @@ public class ExcelHelper {
                                 columnProperties = fillDecTextbookData(list, row, columnProperties);
                                 break;
                             }
+                            case "参加人卫慕课、数字教材编写情况": {
+                                DecMoocDigital decMoocDigital = (DecMoocDigital) field.get(object);
+                                columnProperties = fillDecMoocDigitalData(decMoocDigital, row, columnProperties);
+                                break;
+                            }
                             case "科研情况": {
                                 List<DecResearch> list = (List<DecResearch>) field.get(object);
                                 columnProperties = fillDecResearchData(list, row, columnProperties);
@@ -602,6 +615,11 @@ public class ExcelHelper {
                             case "学术荣誉授予情况": {
                                 List<DecAcadeReward> list = (List<DecAcadeReward>) field.get(object);
                                 columnProperties = fillDecAcadeRewardData(list, row, columnProperties);
+                                break;
+                            }
+                            case "编写内容意向": {
+                                DecIntention decIntention = (DecIntention) field.get(object);
+                                columnProperties = fillDecIntentionData(decIntention, row, columnProperties);
                                 break;
                             }
                             case "作家扩展项": {
@@ -758,6 +776,16 @@ public class ExcelHelper {
                             count++;
                             break;
                         }
+                        case "个人成就": {
+                            Cell r1cell = r1.createCell(count);
+                            r2.createCell(count);
+                            r1cell.setCellValue(headerName);
+                            region = new CellRangeAddress(0, 1, count, count);
+                            sheet.setColumnWidth(count, 15 * 512);
+                            sheet.addMergedRegion(region);
+                            count++;
+                            break;
+                        }
                         case "学术兼职": {
                             Cell r1cell = r1.createCell(count);
                             r1cell.setCellValue(headerName);
@@ -888,6 +916,16 @@ public class ExcelHelper {
                             count++;
                             break;
                         }
+                        case "参加人卫慕课、数字教材编写情况": {
+                            Cell r1cell = r1.createCell(count);
+                            r2.createCell(count);
+                            r1cell.setCellValue(headerName);
+                            region = new CellRangeAddress(0, 1, count, count);
+                            sheet.setColumnWidth(count, 15 * 512);
+                            sheet.addMergedRegion(region);
+                            count++;
+                            break;
+                        }
                         case "科研情况": {
                             Cell r1cell = r1.createCell(count);
                             r1cell.setCellValue(headerName);
@@ -1014,6 +1052,16 @@ public class ExcelHelper {
                             count++;
                             break;
                         }
+                        case "编写内容意向": {
+                            Cell r1cell = r1.createCell(count);
+                            r2.createCell(count);
+                            r1cell.setCellValue(headerName);
+                            region = new CellRangeAddress(0, 1, count, count);
+                            sheet.setColumnWidth(count, 15 * 512);
+                            sheet.addMergedRegion(region);
+                            count++;
+                            break;
+                        }
                         case "作家扩展项": {
                             if (extensions == null || extensions.isEmpty()) {
                                 break;
@@ -1044,6 +1092,7 @@ public class ExcelHelper {
                         }
                         default:
                             Cell cell = r1.createCell(count);
+                            r2.createCell(count);
                             sheet.setColumnWidth(count, (headerName.length() + 1) * 512);// 设置基本列宽度
                             cell.setCellValue(headerName);
                             region = new CellRangeAddress(0, 1, count, count);
@@ -1126,6 +1175,11 @@ public class ExcelHelper {
         } else {
             startColumn += 3;
         }
+        if(!material.getIsAchievementUsed()) {
+            workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+        }else{
+            startColumn++;
+        }
         if (!material.getIsAcadeUsed()) {
             for (int i = 0; i < 3; i++) {
                 workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
@@ -1168,6 +1222,11 @@ public class ExcelHelper {
         } else {
             startColumn += 6;
         }
+        if(!material.getIsMoocDigitalUsed()) {
+            workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+        }else{
+            startColumn++;
+        }
         if (!material.getIsResearchUsed()) {
             for (int i = 0; i < 3; i++) {
                 workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
@@ -1209,6 +1268,11 @@ public class ExcelHelper {
             }
         } else {
             startColumn += 3;
+        }
+        if(!material.getIsIntentionUsed()) {
+            workbook.getSheetAt(0).setColumnHidden(startColumn++, true);
+        }else{
+            startColumn++;
         }
         return workbook;
     }
@@ -2376,6 +2440,69 @@ public class ExcelHelper {
                 Cell cell = row.createCell(colCount++);
                 value = builders.get(i).toString();
                 cell.setCellValue(value);
+            }
+        }
+        properties.setColCount(colCount);
+        properties.setMaxLength(maxLength);
+        return properties;
+    }
+    
+    private ColumnProperties fillDecAchievementData(DecAchievement decAchievement, Row row,
+            ColumnProperties properties) {
+        int colCount = properties.getColCount();
+        int[] maxLength = properties.getMaxLength();
+        if (ObjectUtil.isNull(decAchievement)) {
+            row.createCell(colCount++);
+        } else {
+            Cell cell = row.createCell(colCount++);
+            String content = decAchievement.getContent();
+            if (StringUtil.notEmpty(content)) {
+                cell.setCellValue(content);
+                maxLength[colCount - 1] = content.length();
+            } else {
+                maxLength[colCount - 1] = 2;
+            }
+        }
+        properties.setColCount(colCount);
+        properties.setMaxLength(maxLength);
+        return properties;
+    }
+    
+    private ColumnProperties fillDecMoocDigitalData(DecMoocDigital decMoocDigital, Row row,
+            ColumnProperties properties) {
+        int colCount = properties.getColCount();
+        int[] maxLength = properties.getMaxLength();
+        if (ObjectUtil.isNull(decMoocDigital)) {
+            row.createCell(colCount++);
+        } else {
+            Cell cell = row.createCell(colCount++);
+            String content = decMoocDigital.getContent();
+            if (StringUtil.notEmpty(content)) {
+                cell.setCellValue(content);
+                maxLength[colCount - 1] = content.length();
+            } else {
+                maxLength[colCount - 1] = 2;
+            }
+        }
+        properties.setColCount(colCount);
+        properties.setMaxLength(maxLength);
+        return properties;
+    }
+
+    private ColumnProperties fillDecIntentionData(DecIntention decIntention, Row row,
+            ColumnProperties properties) {
+        int colCount = properties.getColCount();
+        int[] maxLength = properties.getMaxLength();
+        if (ObjectUtil.isNull(decIntention)) {
+            row.createCell(colCount++);
+        } else {
+            Cell cell = row.createCell(colCount++);
+            String content = decIntention.getContent();
+            if (StringUtil.notEmpty(content)) {
+                cell.setCellValue(content);
+                maxLength[colCount - 1] = content.length();
+            } else {
+                maxLength[colCount - 1] = 2;
             }
         }
         properties.setColCount(colCount);

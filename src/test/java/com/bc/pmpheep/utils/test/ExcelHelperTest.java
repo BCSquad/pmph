@@ -81,7 +81,7 @@ public class ExcelHelperTest extends BaseTest {
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void fromDeclarationEtcBOList() throws CheckedServiceException, FileNotFoundException, IOException,
             IllegalArgumentException, IllegalAccessException {
         Workbook workbook = excelHelper.fromDeclarationEtcBOList(materialService.getMaterialById(2L),
