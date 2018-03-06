@@ -168,6 +168,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 				}
 			}
 			try {
+				// System.out.println(vns[i] + " " + "第" + i + "号本版号");
 				ot = PostBusyAPI(vns[i]);
 				if ("1".equals(ot.getJSONObject("RESP").getString("CODE"))) {
 					// 请求成功并正常返回
@@ -243,14 +244,14 @@ public class BookServiceImpl extends BaseService implements BookService {
 		String strSign = MD5.md5(sbSgin.toString()).toLowerCase();
 
 		StringBuffer sbPar = new StringBuffer();
-		sbPar.append("method=com.ai.ecp.pmph.gdsdetail.services&");
+		sbPar.append("sign=" + strSign + "&");
 		sbPar.append("timestamp=" + URLEncoder.encode(sendTime, "UTF-8") + "&");
+		sbPar.append("sign_method=md5&");
+		sbPar.append("session=" + session_key + "&");
+		sbPar.append("method=com.ai.ecp.pmph.gdsdetail.services&");
 		sbPar.append("format=json&");
 		sbPar.append("app_key=" + app_key + "&");
 		sbPar.append("v=1.0&");
-		sbPar.append("sign=" + strSign + "&");
-		sbPar.append("sign_method=md5&");
-		sbPar.append("session=" + session_key + "&");
 		sbPar.append("versionNumber=" + URLEncoder.encode(vn, "UTF-8"));
 		String strRes = ContactMallUtil.getInfomation(uri, sbPar.toString());
 		return JSONObject.fromObject(strRes);
@@ -353,6 +354,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 					"同步中产生了错误，请重新同步");
 		}
 		String[] vns = new InfoWorking().listBookInfo();
+		vns = ArrayUtil.array_unique(vns);
 		if (1 == type) {
 			AbuttingJoint(vns, type);
 		} else {

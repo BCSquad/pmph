@@ -118,6 +118,7 @@ public class DeclarationEtcBO {
 	@ExcelHeader(header = "教学经历")
 	private ArrayList<DecTeachExp> decTeachExps;
 
+	@ExcelHeader(header = "个人成就")
 	private DecAchievement decAchievement;
 
 	@ExcelHeader(header = "学术兼职")
@@ -135,10 +136,11 @@ public class DeclarationEtcBO {
 	@ExcelHeader(header = "人卫社教材编写情况")
 	private ArrayList<DecTextbookPmph> decTextbookPmphs;
 
-	private DecMoocDigital decMoocDigital;
-
 	@ExcelHeader(header = "其他社教材编写情况")
 	private ArrayList<DecTextbook> decTextbooks;
+
+        @ExcelHeader(header = "参加人卫慕课、数字教材编写情况")
+	private DecMoocDigital decMoocDigital;
 
 	@ExcelHeader(header = "科研情况")
 	private ArrayList<DecResearch> decResearchs;
@@ -157,11 +159,12 @@ public class DeclarationEtcBO {
 
 	@ExcelHeader(header = "学术荣誉授予情况")
 	private ArrayList<DecAcadeReward> decAcadeRewards;
+        
+	@ExcelHeader(header = "编写内容意向")
+	private DecIntention decIntention;
 
 	@ExcelHeader(header = "作家扩展项")
 	private ArrayList<DecExtensionVO> decExtensionVOs;
-
-	private DecIntention decIntention;
 
 	public DeclarationEtcBO() {
 	}

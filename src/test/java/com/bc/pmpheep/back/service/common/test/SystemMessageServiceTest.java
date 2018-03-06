@@ -34,11 +34,11 @@ public class SystemMessageServiceTest extends BaseTest {
     	systemMessageService.materialSend(materialId,Arrays.asList(orgIds));
     }
 
-    @Test
-    @Rollback(Const.ISROLLBACK)
-    public void testSendWhenConfirmFirstEditor() throws CheckedServiceException, IOException {
-    	systemMessageService.sendWhenConfirmFirstEditor(bookId) ;
-  	}
+//    @Test
+//    @Rollback(Const.ISROLLBACK)
+//    public void testSendWhenConfirmFirstEditor() throws CheckedServiceException, IOException {
+//    	systemMessageService.sendWhenConfirmFirstEditor(bookId) ;
+//  	}
 
     @Test
     @Rollback(Const.ISROLLBACK)

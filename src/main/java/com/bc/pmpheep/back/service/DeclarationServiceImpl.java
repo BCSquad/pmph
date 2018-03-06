@@ -845,6 +845,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			for (DecAchievement achievement : decAchievements) {
 				if (achievement.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
 					decAchievement = achievement;
+                                        break;
 				}
 			}
 			// 上套教材
@@ -887,6 +888,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			for (DecMoocDigital moocDigital : decMoocDigitals) {
 				if (moocDigital.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
 					decMoocDigital = moocDigital;
+                                        break;
 				}
 			}
 			// 作家科研
@@ -932,18 +934,19 @@ public class DeclarationServiceImpl implements DeclarationService {
 					acadeRewards.add(acadeReward);
 				}
 			}
-			// 作家扩展项
-			List<DecExtensionVO> extensionVOs = new ArrayList<>();
-			for (DecExtensionVO extensionVO : decExtensionVOs) {
-				if (extensionVO.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
-					extensionVOs.add(extensionVO);
-				}
-			}
 			// 编写内容意向表
 			DecIntention decIntention = new DecIntention();
 			for (DecIntention intention : decIntentions) {
 				if (intention.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
 					decIntention = intention;
+                                        break;
+				}
+			}
+			// 作家扩展项
+			List<DecExtensionVO> extensionVOs = new ArrayList<>();
+			for (DecExtensionVO extensionVO : decExtensionVOs) {
+				if (extensionVO.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
+					extensionVOs.add(extensionVO);
 				}
 			}
 

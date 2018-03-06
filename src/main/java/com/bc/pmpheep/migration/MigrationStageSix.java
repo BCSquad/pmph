@@ -213,8 +213,10 @@ public class MigrationStageSix {
             Integer usertype = (Integer) map.get("usertype"); // 2为学校管理员
             // 机构代码去除空格截取
             String orgcode = (String) map.get("orgcode"); // 机构代码
-            String orgCode = orgcode.trim(); // 去除空格
-            String orgCodes = orgCode.substring(0, 3); // 截取
+            String orgCodes = null;
+            if (orgcode != null && !orgcode.equals("") && orgcode.length() > 3) {
+            	orgCodes = orgcode.trim().substring(0, 3); // 去除空格截取
+            }
             if (ObjectUtil.isNull(sysflag) || sysflag.equals(0)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为后台用户申报教材。"));
                 excel.add(map);

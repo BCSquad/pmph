@@ -65,7 +65,7 @@ public class BookServiceTest extends BaseTest {
 		Book book = this.addBook();
 		Assert.assertNotNull("插入内容后返回的Book不应为空", book.getId());
 		Long[] ids = { book.getId() };
-		returnSring = bookService.updateBookById(ids, 1L, true, true, false,null);
+		returnSring = bookService.updateBookById(ids, 1L, true, true, false, null);
 		Assert.assertEquals("是否更新成功", "SUCCESS", returnSring);
 
 	}
@@ -103,6 +103,14 @@ public class BookServiceTest extends BaseTest {
 	}
 
 	@Test
+	public void testAbuttingJoint() {
+		String returnSring = "ERROR";
+		String[] vns = { "2013005332","2016001491","2013002293" };
+		returnSring = bookService.AbuttingJoint(vns, 1);
+		Assert.assertEquals("书籍同步成功", "SUCCESS", returnSring);
+	}
+
+	@Test
 	public void testGetBookPreferenceAnalysis() {
 		PageParameter<BookPreferenceAnalysisVO> pageParameter = new PageParameter<>(1, 10);
 		BookPreferenceAnalysisVO bookPreferenceAnalysisVO = new BookPreferenceAnalysisVO();
@@ -114,9 +122,9 @@ public class BookServiceTest extends BaseTest {
 
 	private Book addBook() {
 		// add 图书添加
-		Book book = bookService.add(new Book(null, "生理学", "1234", "1", "作者", "出版社", null, null, 1, 1L, null, null, 99D, 9D,
-				"http:www.baidu.com", null, "d://ee", "d://aa", 0L, 0L, 0L, 0L, true, 999, null, true, 999, null, true, 999,
-				null, 0L, true, null, null, null, null, null));
+		Book book = bookService.add(new Book(null, "生理学", "1234", "1", "作者", "出版社", null, null, 1, 1L, null, null, 99D,
+				9D, "http:www.baidu.com", null, "d://ee", "d://aa", 0L, 0L, 0L, 0L, true, 999, null, true, 999, null,
+				true, 999, null, 0L, true, null, null, null, null, null));
 		return book;
 	}
 
