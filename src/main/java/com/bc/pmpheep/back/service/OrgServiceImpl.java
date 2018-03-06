@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -128,18 +129,20 @@ public class OrgServiceImpl extends BaseService implements OrgService {
         }
         return orgDao.getOrgById(id);
     }
-    
+
     @Override
-    public Org getOrgByNameAndUserName(String name,String username) throws CheckedServiceException{
-    	if(StringUtil.isEmpty(name)){
-    		throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构名称为空");
-    	}
-    	if(StringUtil.isEmpty(username)){
-    		throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM, "机构代码为空");
-    	}
-    	return orgDao.getOrgByNameAndUserName( name.trim(), username.trim());
+    public Org getOrgByNameAndUserName(String name, String username) throws CheckedServiceException {
+        if (StringUtil.isEmpty(name)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "机构名称为空");
+        }
+        if (StringUtil.isEmpty(username)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+                                              CheckedExceptionResult.NULL_PARAM, "机构代码为空");
+        }
+        return orgDao.getOrgByNameAndUserName(name.trim(), username.trim());
     }
-    
+
     /**
      * 
      * @param id
@@ -256,6 +259,11 @@ public class OrgServiceImpl extends BaseService implements OrgService {
     public List<OrgVO> listSendToSchoolAdminOrAllUser(String orgName, Long materialId)
     throws CheckedServiceException {
         return orgDao.listSendToSchoolAdminOrAllUser(orgName, materialId);
+    }
+
+    @Override
+    public List<OrgExclVO> listAllOrgToExcel() throws CheckedServiceException {
+        return orgDao.listAllOrgToExcel();
     }
 
 }
