@@ -151,7 +151,8 @@ public class MigrationStageSix {
                 + "wd.postcode,wd.handset,wd.email,wd.idcardtype,"
                 + "IFNULL(wd.idcardtype,0) idcardtype,"
                 + "wd.idcard,wd.linktel,wd.fax,tm.new_pk tm_materid,"
-                + "s.new_pk sys_userid,wd.unitid,bo.new_pk org_id,wd.workunit,bo.orgcode,"
+                + "s.new_pk sys_userid,wd.unitid,bo.new_pk org_id,wd.workunit,"
+                + "case when bo.orgcode like '%15-%' then 0 end orgcode,bo.orgcode,"
                 + "case when wd.submittype=10 then 0 "
                 + "when wd.submittype=11 and ta.auditstate=10 then 1 "
                 + "when ta.auditstate=12 and wd.submittype=11 then 2 "
@@ -211,10 +212,7 @@ public class MigrationStageSix {
             String unitid = (String) map.get("unitid"); // 旧表申报单位id
             Integer sysflag = (Integer) map.get("sysflag"); // 0为后台用户，1为前台用户
             Integer usertype = (Integer) map.get("usertype"); // 2为学校管理员
-            // 机构代码去除空格截取
             String orgcode = (String) map.get("orgcode"); // 机构代码
-            String orgCode = orgcode.trim(); // 去除空格
-            String orgCodes = orgCode.substring(0, 3); // 截取
             if (ObjectUtil.isNull(sysflag) || sysflag.equals(0)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找到为后台用户申报教材。"));
                 excel.add(map);
@@ -335,8 +333,8 @@ public class MigrationStageSix {
             declaration.setIsUtec(false); // 参与本科教学评估认证
             declaration.setDegree(0); // 学历
             declaration.setExpertise(null); // 专业特长
-            // 旧表申报单位id为5的或者机构代码截取为15-的把orgid设置成0
-            if ("5".equals(unitid) || "15-".equals(orgCodes)) { 
+            // 旧表申报单位id为5的或者机构代0的把orgid设置成0
+            if ("5".equals(unitid) || "0".equals(orgcode)) { 
                 declaration.setOrgId(0L); // 0为人民卫生出版社
             } else {
                 declaration.setOrgId(orgId); // 申报单位id
