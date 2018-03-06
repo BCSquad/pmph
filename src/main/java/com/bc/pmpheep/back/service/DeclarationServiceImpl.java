@@ -379,7 +379,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 
 	@Override
 	public ApplicationVO exportExcel(Long declarationId) {
-		ApplicationVO applicationVO = new ApplicationVO();
+		ApplicationVO applicationVO = new ApplicationVO(); // 专家信息显示实体
+		// 作家申报
 		List<DecPositionDisplayVO> decPositionList = decPositionDao.listDecPositionsOrBook(declarationId);
 		for (DecPositionDisplayVO decPositions : decPositionList) {
 			String syllabusId = decPositions.getSyllabusId();
@@ -488,50 +489,52 @@ public class DeclarationServiceImpl implements DeclarationService {
 				}
 			}
 		}
-		// 专家信息
+		// 作家申报表
 		DeclarationOrDisplayVO declaration = declarationDao.getDeclarationByIdOrOrgName(declarationId);
-		// 学习经历
+		// 作家学习经历
 		List<DecEduExp> decEduExpList = decEduExpDao.getListDecEduExpByDeclarationId(declarationId);
-		// 工作经历
+		// 作家工作经历
 		List<DecWorkExp> decWorkExpList = decWorkExpDao.getListDecWorkExpByDeclarationId(declarationId);
-		// 教学经历
+		// 作家教学经历
 		List<DecTeachExp> decTeachExpList = decTeachExpDao.getListDecTeachExpByDeclarationId(declarationId);
-		// 个人成就
+		// 作家个人成就
 		DecAchievement decAchievement = decAchievementDao.getDecAchievementByDeclarationId(declarationId);
-		// 兼职学术
+		// 作家兼职学术
 		List<DecAcade> decAcadeList = decAcadeDao.getListDecAcadeByDeclarationId(declarationId);
-		// 上套教材
-		List<DecLastPosition> decLastPositionList = decLastPositionDao
-				.getListDecLastPositionByDeclarationId(declarationId);
-		// 主编国家级规划
-		List<DecNationalPlan> decNationalPlanList = decNationalPlanDao
-				.getListDecNationalPlanByDeclarationId(declarationId);
+		// 作家本套上版教材参编情况
+		List<DecLastPosition> decLastPositionList = 
+				decLastPositionDao.getListDecLastPositionByDeclarationId(declarationId);
+		// 作家主编国家级规划教材情况
+		List<DecNationalPlan> decNationalPlanList = 
+				decNationalPlanDao.getListDecNationalPlanByDeclarationId(declarationId);
 		// 人卫社教材编写情况表
-		List<DecTextbookPmph> decTextbookPmphList = decTextbookPmphDao
-				.getListDecTextbookPmphByDeclarationId(declarationId);
-		// 教材编写
+		List<DecTextbookPmph> decTextbookPmphList = 
+				decTextbookPmphDao.getListDecTextbookPmphByDeclarationId(declarationId);
+		// 其他社教材编写情况
 		List<DecTextbook> decTextbookList = decTextbookDao.getListDecTextbookByDeclarationId(declarationId);
 		// 参加人卫慕课、数字教材编写情况表
 		DecMoocDigital decMoocDigital = decMoocDigitalDao.getDecMoocDigitalByDeclarationId(declarationId);
-		// 精品课程建设情况
-		List<DecCourseConstruction> decCourseConstruction = decCourseConstructionDao
-				.getDecCourseConstructionByDeclarationId(declarationId);
-		// 作家科研
+		// 作家精品课程建设情况
+		List<DecCourseConstruction> decCourseConstruction = 
+				decCourseConstructionDao.getDecCourseConstructionByDeclarationId(declarationId);
+		// 作家科研情况
 		List<DecResearch> decResearchList = decResearchDao.getListDecResearchByDeclarationId(declarationId);
 		// 主编学术专著情况
 		List<DecMonograph> decMonographList = decMonographDao.getListDecMonographByDeclarationId(declarationId);
 		// 出版行业获奖情况
-		List<DecPublishReward> decPublishRewardList = decPublishRewardDao
-				.getListDecPublishRewardByDeclarationId(declarationId);
+		List<DecPublishReward> decPublishRewardList = 
+				decPublishRewardDao.getListDecPublishRewardByDeclarationId(declarationId);
 		// SCI论文投稿及影响因子情况
 		List<DecSci> decSciList = decSciDao.getListDecSciByDeclarationId(declarationId);
 		// 临床医学获奖情况
-		List<DecClinicalReward> decClinicalRewardList = decClinicalRewardDao
-				.getListDecClinicalRewardByDeclarationId(declarationId);
+		List<DecClinicalReward> decClinicalRewardList = 
+				decClinicalRewardDao.getListDecClinicalRewardByDeclarationId(declarationId);
 		// 学术荣誉授予情况
-		List<DecAcadeReward> decAcadeRewardList = decAcadeRewardDao.getListDecAcadeRewardByDeclarationId(declarationId);
+		List<DecAcadeReward> decAcadeRewardList = 
+				decAcadeRewardDao.getListDecAcadeRewardByDeclarationId(declarationId);
 		// 作家扩展项
-		List<DecExtensionVO> decExtensionList = decExtensionDao.getListDecExtensionByDeclarationId(declarationId);
+		List<DecExtensionVO> decExtensionList = 
+				decExtensionDao.getListDecExtensionByDeclarationId(declarationId);
 		// 编写内容意向表
 		DecIntention decIntention = decIntentionDao.getDecIntentionByDeclarationId(declarationId);
 		// 是否选择必填
