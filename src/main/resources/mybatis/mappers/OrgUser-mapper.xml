@@ -307,7 +307,7 @@
 	<!-- 分页查询 -->
 	<select id="getListOrgUserTotal" parameterType="PageParameter"
 		resultType="java.lang.Integer">
-		select count(*) from org_user u left join org o on o.id = u.org_id
+		select count(*) from org o left join org_user u on o.id = u.org_id
 		left join org_type ot on ot.id=o.org_type_id
 		where 1=1
 		<if test="parameter.username !=null and parameter.username !='' ">
