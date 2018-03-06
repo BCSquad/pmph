@@ -569,8 +569,7 @@
 		LEFT JOIN material d ON b.material_id = d.id 
 		LEFT JOIN org e ON b.org_id = e.id 
 		WHERE a.chosen_position IS NOT NULL AND a.chosen_position !=0 
-		AND c.is_published IS TRUE AND d.id = #{materialId} 
-		AND b.is_staging = 0 ;
+		AND d.id = #{materialId} AND b.is_staging = 0 ;
     </select>
     
     <!-- 根据materialId查询学校总数 -->
@@ -713,7 +712,7 @@
 	<!-- 根据materialId查询主编当选数 -->
 	<select id="getChosenEditorCount" parameterType="java.lang.Long" 
 	    resultType="java.lang.Integer">
-	    select sum(if((dp.chosen_position = 4) AND n.is_published IS TRUE,1,0)) count 
+	    select IFNULL(sum(if((dp.chosen_position = 4),1,0)),0) count 
 	    from dec_position_published dp 
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
@@ -725,7 +724,7 @@
 	<!-- 根据materialId查询副主编当选数 -->
 	<select id="getChosenSubeditorCount" parameterType="java.lang.Long" 
 	    resultType="java.lang.Integer">
-	    select sum(if((dp.chosen_position = 2) AND n.is_published IS TRUE,1,0)) count 
+	    select IFNULL(sum(if((dp.chosen_position = 2),1,0)),0) count 
 	    from dec_position_published dp 
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
@@ -737,7 +736,7 @@
 	<!-- 根据materialId查询编委当选数 -->
 	<select id="getChosenEditorialCount" parameterType="java.lang.Long" 
 	    resultType="java.lang.Integer">
-	    select sum(if((dp.chosen_position = 1) AND n.is_published IS TRUE,1,0)) count 
+	    select IFNULL(sum(if((dp.chosen_position = 1),1,0)),0) count 
 	    from dec_position_published dp 
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
@@ -749,7 +748,7 @@
 	<!-- 根据materialId查询数字编委当选数 -->
 	<select id="getChosenDigitalCount" parameterType="java.lang.Long" 
 	    resultType="java.lang.Integer">
-	    select sum(if((dp.chosen_position in (8,9,10,11,12,13,14,15) AND n.is_published IS TRUE),1,0)) count 
+	    select IFNULL(sum(if((dp.chosen_position in (8,9,10,11,12,13,14,15)),1,0)),0) count 
 	    from dec_position_published dp 
 		left join (select * from declaration) d on (d.id=dp.declaration_id) 
 		left join (select id from material) m on (m.id=d.material_id) 
