@@ -6,9 +6,7 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<!-- <if test="id !=null">
-				id,
-			</if> -->
+			<!-- <if test="id !=null"> id, </if> -->
 			<if test="publisherId !=null">
 				publisher_id,
 			</if>
@@ -41,9 +39,7 @@
 	<!-- sql片段对应?,id属性值任意 -->
 	<sql id="value">
 		<trim suffixOverrides=",">
-			<!-- <if test="id !=null">
-				#{id},
-			</if> -->
+			<!-- <if test="id !=null"> #{id}, </if> -->
 			<if test="publisherId !=null">
 				#{publisherId},
 			</if>
@@ -87,29 +83,35 @@
 		<include refid="value" />
 		);
 	</insert>
-	
+
 	<!-- 批量插入DecPositionPublished -->
-	<insert id="batchInsertDecPositionPublished" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
-        insert into dec_position_published (publisher_id,declaration_id,textbook_id,preset_position,
-        									chosen_position,rank,syllabus_id,syllabus_name)
-        values
-        <foreach collection="list" item="item" index="index" separator=",">
-            ( #{item.publisherId},#{item.declarationId},#{item.textbookId},
-              #{item.presetPosition},#{item.chosenPosition},#{item.rank},#{item.syllabusId},#{item.syllabusName})
-        </foreach>
-    </insert>
-	
+	<insert id="batchInsertDecPositionPublished" useGeneratedKeys="true"
+		keyProperty="id" parameterType="java.util.List">
+		insert into dec_position_published
+		(publisher_id,declaration_id,textbook_id,preset_position,
+		chosen_position,rank,syllabus_id,syllabus_name)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+			#{item.publisherId},#{item.declarationId},#{item.textbookId},
+			#{item.presetPosition},#{item.chosenPosition},#{item.rank},#{item.syllabusId},#{item.syllabusName})
+		</foreach>
+	</insert>
+
 	<!-- 根据id删除 -->
 	<delete id="deleteDecPositionPublished" parameterType="java.lang.Long">
-		delete from
+		delete
+		from
 		dec_position_published where
 		id=#{id};
 	</delete>
-	
+
 	<!-- 根据bookIds删除 -->
-	<delete id="deleteDecPositionPublishedByBookIds" >
-		delete from dec_position_published where textbook_id in 
-		<foreach collection="bookIds" item="bookId" open="(" separator="," close=")" index="index"  >
+	<delete id="deleteDecPositionPublishedByBookIds">
+		delete from dec_position_published where textbook_id in
+		<foreach collection="bookIds" item="bookId" open="("
+			separator="," close=")" index="index">
 			#{bookId}
 		</foreach>
 	</delete>
@@ -148,29 +150,35 @@
 		</set>
 		where id=#{id} ;
 	</update>
-	
+
 	<!-- 按公布人id和申报表id删除 -->
-	<delete id="deleteDecPositionPublishedByTextBookId" parameterType="java.lang.Long" >
-		DELETE FROM 
-			`dec_position_published` 
-		WHERE 
-			 textbook_id= #{textbookId}
-		<!--AND  
-			 declaration_id IN 
-			<foreach collection="decPositionPublisheds" item="item" open="(" close=")" separator=",">
-				#{item.declarationId}
-			</foreach> -->
+	<delete id="deleteDecPositionPublishedByTextBookId"
+		parameterType="java.lang.Long">
+		DELETE FROM
+		`dec_position_published`
+		WHERE
+		textbook_id= #{textbookId}
+		<!--AND declaration_id IN <foreach collection="decPositionPublisheds" item="item" 
+			open="(" close=")" separator=","> #{item.declarationId} </foreach> -->
 	</delete>
-	
+
 	<!-- 根据id查询 -->
 	<select id="getDecPositionPublishedById" parameterType="java.lang.Long"
 		resultType="DecPositionPublished">
 		select * from dec_position_published where id=#{id};
 	</select>
-	
+
+	<!-- 根据declarationId查询 -->
+	<select id="getDecPositionByDeclarationId" parameterType="java.lang.Long"
+		resultType="DecPositionPublished">
+		select * from dec_position_published where
+		declaration_id=#{declarationId};
+	</select>
+
 	<!-- 按照书籍查询 -->
-	<select id="getDecPositionPublishedListByBookId"   resultType="DecPositionPublished">
-		select * from dec_position_published where textbook_id= #{textbookId} ;
+	<select id="getDecPositionPublishedListByBookId" resultType="DecPositionPublished">
+		select * from dec_position_published where textbook_id= #{textbookId}
+		;
 	</select>
 
 </mapper>
