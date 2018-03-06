@@ -435,9 +435,9 @@
 			where 1=1
 			<if test="parameter.name !=null and parameter.name !='' ">
 				and (
-						u.username like concat('%',#{parameter.name},'%') 
+						ou.username like concat('%',#{parameter.name},'%') 
 					or 
-						u.realname like concat('%',#{parameter.name},'%')
+						ou.realname like concat('%',#{parameter.name},'%')
 				)
 			</if>
 			<if test="parameter.orgName !=null and parameter.orgName !=''">
