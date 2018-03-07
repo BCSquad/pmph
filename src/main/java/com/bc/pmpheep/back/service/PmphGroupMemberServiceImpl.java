@@ -485,18 +485,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		// 通过书籍id查询小组
 		PmphGroup pmphGroup = pmphGroupService.getPmphGroupByTextbookId(textbookId);
 		//判断当前用户是否是管理员 是否是创建小组的用户
-		if(pmphUser.getId()==pmphGroup.getFounderId()||pmphUser.getIsAdmin()){
+		if(pmphUser.getId()!=pmphGroup.getFounderId()||!pmphUser.getIsAdmin()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
 					"该用户没有更新成员权限 ");
-		}
-		if(null==pmphGroup){
-			for (TextbookDecVO te : textbookDecVOs) {
-				list.add(new PmphGroupMember(te.getUserId(), Const.TRUE));
-			}
-			//重新创建小组
-			PmphGroup group = pmphGroupService.addEditorSelcetionGroup(sessionId, list, textbookId);
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-					"小组已被删除，现在重新创建小组");
 		}
 		// 通过小组id查询小组现有成员
 		List<PmphGroupMember> pmphGroupMembers = pmphGroupMemberDao.listPmphGroupMembers(pmphGroup.getId());
