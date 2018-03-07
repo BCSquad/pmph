@@ -195,8 +195,8 @@ public class WordHelper {
 	private XWPFDocument removeEmptyTables(XWPFDocument document, String filter) {
 		List<XWPFTable> tables = document.getTables();
 		for (int i = 18; i >= 1; i--) {
-			String a = String.valueOf(filter.charAt(i - 1));
-			if (a.equals("0")) {
+			String str = String.valueOf(filter.charAt(i - 1));
+			if (str.equals("0")) {
 				int index = document.getPosOfTable(tables.get(i + 1));
 				document.removeBodyElement(index);
 				document.removeBodyElement(index - 1);
