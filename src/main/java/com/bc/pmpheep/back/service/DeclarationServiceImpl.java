@@ -310,7 +310,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 获取教材
 		Material material = materialService.getMaterialById(declarationCon.getMaterialId());
 		// 获取审核进度是3并且已提交但是待审核并且是提交到出版社0
-		// 提交出版社，出版社通过
+		// 提交出版社，出版社点击通过
 		if (3 == onlineProgress.intValue() && 1 == declarationCon.getOnlineProgress() 
 				&& 0 == declarationCon.getOrgId()) {
 			declarationCon.setOnlineProgress(onlineProgress);
@@ -323,7 +323,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
 			map.put("content", "恭喜！您提交的《" + material.getMaterialName() 
-					+ "》申报表已通过出版社审核");
+					+ "》申报表已通过出版社审核。");
 			map.put("img", 1);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
@@ -332,10 +332,9 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendst.setBookCommentId(null);
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true); // 发送系统消息
-		}
 		// 获取审核进度是4并且已经通过审核单位并且不是提交到出版社0则被退回给申报单位
-		// 提交审核单位，审核单位通过，出版社退回申报单位操作
-		if (4 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress()
+		// 提交审核单位，审核单位已经通过，出版社退回给申报单位操作
+		} else if (4 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress()
 				&& 0 != declarationCon.getOrgId()) {
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
@@ -354,8 +353,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			declarationDao.updateDeclaration(declarationCon);
 			// 发送系统消息
 			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false);
-			// 获取审核进度是5并且已经通过审核单位并且不是提交到出版社0则被退回给个人
-			// 提交审核单位，审核单位通过，出版社退回个人操作
+		// 获取审核进度是5并且已经通过审核单位并且不是提交到出版社0则被退回给个人
+		// 提交审核单位，审核单位已经通过，出版社退回给个人操作
 		} else if (5 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress()
 				&& 0 != declarationCon.getOrgId()) {
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
@@ -375,8 +374,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			declarationDao.updateDeclaration(declarationCon);
 			// 发送系统消息
 			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false);
-			// 获取审核进度是5并且机构id为出版社0则被退回给个人
-			// 提交到出版社，出版社退回个人操作
+		// 获取审核进度是5并且机构id为出版社0则被退回给个人
+		// 提交到出版社，出版社退回给个人操作
 		} else if (5 == onlineProgress.intValue() && 0 == declarationCon.getOrgId()) {
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
@@ -401,7 +400,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
 			map.put("content", "抱歉，您提交的《" + material.getMaterialName() 
-					+ "》申报表被出版社退回，请您核对后重试");
+					+ "》申报表被出版社退回，请您核对后重试。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
