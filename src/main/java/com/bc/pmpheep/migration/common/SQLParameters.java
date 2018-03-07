@@ -102,7 +102,7 @@ public class SQLParameters {
     /**
      * 总体统计结果未迁移数据数目列的表头
      */
-    public static final String EXCEL_HEADER_NO_MIGRATED_DATA = "未迁移数据";
+    public static final String EXCEL_HEADER_NO_MIGRATED_DATA = "异常未迁移数据";
     
     /**
      * 总体统计结果异常原因的表头

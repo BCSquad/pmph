@@ -380,7 +380,7 @@
 		ORDER BY
 		t.textbook_name
 		) presetPosition,
-		o.org_name orgNameOne
+		if(d.org_id=0,'人民卫生出版社',o.org_name) orgNameOne
 		FROM
 		declaration d
 		LEFT JOIN writer_user w ON w.id =
@@ -391,8 +391,7 @@
 		LEFT JOIN org o ON o.id = d.org_id
 		LEFT JOIN material m ON m.id = d.material_id
 		WHERE
-		d.online_progress IN
-		(1, 3)
+		d.online_progress > 0
 		AND d.is_deleted = 0
 		AND m.is_deleted = 0
 		AND d.material_id =

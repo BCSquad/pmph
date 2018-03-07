@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -53,7 +54,7 @@ public class DeclarationController {
      * @param positionType 条件查询 申报职位 ;null全部 1主编 2副主编 3编委
      * @param onlineProgress 1待审核 3已经审核
      * @param offlineProgress 0 未 2 收到
-     * @param haveFile  有无教材大纲 null  true  false 
+     * @param haveFile 有无教材大纲 null true false
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "加载申报列表")
@@ -67,12 +68,12 @@ public class DeclarationController {
     @RequestParam(value = "position", required = false) String position,
     @RequestParam(value = "title", required = false) String title,
     @RequestParam(value = "orgName", required = false) String orgName,
-    @RequestParam(value = "orgId", required = false)   Long orgId,
+    @RequestParam(value = "orgId", required = false) Long orgId,
     @RequestParam(value = "unitName", required = false) String unitName,
     @RequestParam(value = "positionType", required = false) Integer positionType,
     @RequestParam(value = "onlineProgress", required = false) Integer onlineProgress,
     @RequestParam(value = "offlineProgress", required = false) Integer offlineProgress,
-    @RequestParam(value = "haveFile",        required = false) Boolean haveFile) {
+    @RequestParam(value = "haveFile", required = false) Boolean haveFile) {
         return new ResponseBean(declarationService.pageDeclaration(pageNumber,
                                                                    pageSize,
                                                                    materialId,
@@ -103,9 +104,9 @@ public class DeclarationController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "确认收到纸质表")
     @RequestMapping(value = "/list/declaration/confirmPaperList", method = RequestMethod.GET)
     public ResponseBean confirmPaperList(@RequestParam("id") Long id,
-    @RequestParam("offlineProgress") Integer offlineProgress, 
-    HttpServletRequest request) throws CheckedServiceException, IOException {
-    	String sessionId = CookiesUtil.getSessionId(request);
+    @RequestParam("offlineProgress") Integer offlineProgress, HttpServletRequest request)
+    throws CheckedServiceException, IOException {
+        String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(declarationService.confirmPaperList(id, offlineProgress, sessionId));
     }
 
@@ -122,10 +123,9 @@ public class DeclarationController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "审核进度")
     @RequestMapping(value = "/list/declaration/onlineProgress", method = RequestMethod.GET)
-    public ResponseBean onlineProgress(@RequestParam("id") Long id,  
-    		@RequestParam("onlineProgress") Integer onlineProgress, 
-    		@RequestParam("returnCause") String returnCause) 
-    		throws CheckedServiceException, IOException {
+    public ResponseBean onlineProgress(@RequestParam("id") Long id,
+    @RequestParam("onlineProgress") Integer onlineProgress,
+    @RequestParam("returnCause") String returnCause) throws CheckedServiceException, IOException {
         return new ResponseBean(declarationService.onlineProgress(id, onlineProgress, returnCause));
     }
 
@@ -219,4 +219,27 @@ public class DeclarationController {
         }
     }
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：批量发布主编、副主编
+     * 使用示范：
+     *
+     * @param textbookId 书籍主键ID集合
+     * @param request
+     * @return
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量发布主编、副主编")
+    @RequestMapping(value = "/batchPublishEditor", method = RequestMethod.PUT)
+    public ResponseBean batchPublishEditor(@RequestParam("textbookIds") List<Long> textbookIds,
+    HttpServletRequest request) {
+        String sessionId = CookiesUtil.getSessionId(request);
+        try {
+            return new ResponseBean(decPositionService.batchPublishEditor(textbookIds, sessionId));
+        } catch (IOException e) {
+            return new ResponseBean(e);
+        }
+    }
 }

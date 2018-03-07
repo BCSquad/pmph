@@ -356,7 +356,7 @@
 			LEFT JOIN textbook     d  on d.id = c.textbook_id
 			where 
 			b.is_staging =false and b.online_progress != 2
-			and c.chosen_position in (1,2,3) and d.is_published = true 
+			and c.chosen_position in (1, 2, 3, 4) and d.is_published = true 
 			and b.id is not null and c.id is not null and d.id is not null 
 			and d.id in 
 			<foreach item="bookId" collection="list" open="(" separator="," close=")">

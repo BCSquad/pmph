@@ -199,7 +199,7 @@ public class OrgUserController {
             orgAndOrgUserVO.setOrgName(StringUtil.toAllCheck(orgName));
         }
         if (StringUtil.notEmpty(name)) {
-            orgAndOrgUserVO.setName(StringUtil.toAllCheck(orgName));// 去除空格
+            orgAndOrgUserVO.setName(StringUtil.toAllCheck(name));// 去除空格
         }
         pageParameter.setPageNumber(pageNumber);
         pageParameter.setPageSize(pageSize);

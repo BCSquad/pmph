@@ -477,4 +477,15 @@ public interface DecPositionDao {
     List<TextBookDecPositionVO> listDeclarationByTextbookIds(
     PageParameter<TextBookDecPositionVO> pageParameter);
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据书籍ID查询书籍选中的主编，副主编
+     * 使用示范：
+     *
+     * @param textbookId 书籍ID
+     * @return DecPosition集合
+     * </pre>
+     */
+    List<DecPosition> getEditorByTextbookId(Long textbookId);
 }
