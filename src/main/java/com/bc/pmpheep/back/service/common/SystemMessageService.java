@@ -899,18 +899,66 @@ public final class SystemMessageService {
 			throws CheckedServiceException, IOException {
 		Textbook textbook = textbookService.getTextbookById(textBookId);
 		Material material = materialService.getMaterialById(textbook.getMaterialId());
-		// 给主编发送
+		// 给主编、副主编、编委、数字编委发送
+		String msg = "";
 		for (DecPositionPublished decPosition : decPositionPublishedLst) {
-			if (null != decPosition.getChosenPosition() && null != decPosition.getRank()
-					&& (decPosition.getChosenPosition() == 4 || decPosition.getChosenPosition() == 12)) {
-				String editorMsg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
-						+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
-						+ textbook.getTextbookName() + "</font>]的";
-				editorMsg += "的第" + rank(decPosition.getRank()) + "主编";
+			if (null != decPosition.getChosenPosition() && null != decPosition.getRank()) {
+				if (decPosition.getChosenPosition() == 8) {
+					msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+							+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+							+ textbook.getTextbookName() + "</font>]的数字编委";
+				}
+				if (decPosition.getChosenPosition() == 4 || decPosition.getChosenPosition() == 12) {
+					if (decPosition.getRank() == 1) {
+						if (decPosition.getChosenPosition() == 4) {
+							msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的第一主编";
+						} else {
+							msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的第一主编、数字编委";
+						}
+					} else {
+						if (decPosition.getChosenPosition() == 4) {
+							msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的主编";
+						} else {
+							msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+									+ textbook.getTextbookName() + "</font>]的主编、数字编委";
+						}
+					}
+				}
+
+				if (decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10) {
+					if (decPosition.getChosenPosition() == 2) {
+						msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+								+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+								+ textbook.getTextbookName() + "</font>]的副主编";
+					} else {
+						msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+								+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+								+ textbook.getTextbookName() + "</font>]的副主编、数字编委";
+					}
+				}
+
+				if (decPosition.getChosenPosition() == 1 || 9 == decPosition.getChosenPosition()) {
+					if (decPosition.getChosenPosition() == 1) {
+						msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+								+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+								+ textbook.getTextbookName() + "</font>]的编委";
+					} else {
+						msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
+								+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
+								+ textbook.getTextbookName() + "</font>]的编委、数字编委";
+					}
+				}
 				// 获取申报表
 				Declaration declaration = declarationService.getDeclarationById(decPosition.getDeclarationId());
 				// 存入消息主体
-				Message message = new Message(editorMsg);
+				Message message = new Message(msg);
 				message = messageService.add(message);
 				String msg_id = message.getId();
 				// 发送消息给申报者
@@ -918,64 +966,8 @@ public final class SystemMessageService {
 						new Short("0"), declaration.getUserId(), new Short("2"), null));
 				// websocket推送页面消息
 				WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-						Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
-						editorMsg, DateUtil.getCurrentTime());
-				List<String> userIds = new ArrayList<String>(1);
-				userIds.add("2_" + declaration.getUserId());
-				myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
-			}
-		}
-		// 给副主编发送
-		String associateEditor = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
-				+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>" + textbook.getTextbookName()
-				+ "</font>]的副主编";
-		Message message = new Message(associateEditor);
-		for (DecPositionPublished decPosition : decPositionPublishedLst) {
-			if (null != decPosition.getChosenPosition() && null != decPosition.getRank()
-					&& (decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10)) {
-				// 获取申报表
-				Declaration declaration = declarationService.getDeclarationById(decPosition.getDeclarationId());
-				// 存入消息主体
-				String msg_id = message.getId();
-				if (null == msg_id) {
-					message = messageService.add(message);
-				}
-				msg_id = message.getId();
-				// 发送消息给申报者
-				userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L,
-						new Short("0"), declaration.getUserId(), new Short("2"), null));
-				// websocket推送页面消息
-				WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-						Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
-						associateEditor, DateUtil.getCurrentTime());
-				List<String> userIds = new ArrayList<String>(1);
-				userIds.add("2_" + declaration.getUserId());
-				myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
-			}
-		}
-		// 给编委发送
-		String bianWei = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
-				+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>" + textbook.getTextbookName()
-				+ "</font>]的编委";
-		message = new Message(bianWei);
-		for (DecPositionPublished decPosition : decPositionPublishedLst) {
-			if (null != decPosition.getChosenPosition()
-					&& (decPosition.getChosenPosition() == 1 || 9 == decPosition.getChosenPosition())) {
-				// 获取申报表
-				Declaration declaration = declarationService.getDeclarationById(decPosition.getDeclarationId());
-				// 存入消息主体
-				String msg_id = message.getId();
-				if (null == msg_id) {
-					message = messageService.add(message);
-				}
-				msg_id = message.getId();
-				// 发送消息给申报者
-				userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L,
-						new Short("0"), declaration.getUserId(), new Short("2"), null));
-				// websocket推送页面消息
-				WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-						Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle,
-						bianWei, DateUtil.getCurrentTime());
+						Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msg,
+						DateUtil.getCurrentTime());
 				List<String> userIds = new ArrayList<String>(1);
 				userIds.add("2_" + declaration.getUserId());
 				myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
@@ -1007,24 +999,49 @@ public final class SystemMessageService {
 						msgContent += " - "
 								+ textbookService.getTextbookById(decPosition.getTextbookId()).getTextbookName()
 								+ " - ";
-						if (null != decPosition.getChosenPosition() && null != decPosition.getRank()
-								&& decPosition.getChosenPosition() == 1) {
-							msgContent += "第" + rank(decPosition.getRank()) + "主编";
-						} else if (null != decPosition.getChosenPosition() && null != decPosition.getRank()
-								&& decPosition.getChosenPosition() == 2) {
-							msgContent += "副主编";
-						} else if (null != decPosition.getChosenPosition() && decPosition.getChosenPosition() == 3) {
-							msgContent += "编委";
-						} else {
-							continue;
+						if (null != decPosition.getChosenPosition() && null != decPosition.getRank()) {
+							if (decPosition.getChosenPosition() == 8) {
+								msgContent += "数字编委";
+							}
+							if (decPosition.getChosenPosition() == 4 || decPosition.getChosenPosition() == 12) {
+								if (decPosition.getRank() == 1) {
+									if (decPosition.getChosenPosition() == 4) {
+										msgContent += "第一主编";
+									} else {
+										msgContent += "第一主编、数字编委";
+									}
+								} else {
+									if (decPosition.getChosenPosition() == 4) {
+										msgContent += "主编";
+									} else {
+										msgContent += "主编、数字编委";
+									}
+								}
+
+							}
+							if (decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10) {
+								if (decPosition.getChosenPosition() == 2) {
+									msgContent += "副主编";
+								} else {
+									msgContent += "副主编、数字编委";
+								}
+							}
+							if (decPosition.getChosenPosition() == 1 || decPosition.getChosenPosition() == 9) {
+
+								if (decPosition.getChosenPosition() == 1) {
+									msgContent += "编委";
+								} else {
+									msgContent += "编委、数字编委";
+								}
+							}
 						}
 						sum++;
 					}
 					msgContent.replace("{sum}", String.valueOf(sum));
 					// 存入消息主体
-					Message msg = new Message(msgContent);
-					msg = messageService.add(msg);
-					String msg_id = msg.getId();
+					Message message = new Message(msgContent);
+					message = messageService.add(message);
+					String msg_id = message.getId();
 					// 获取机构管理员
 					OrgUser orgUser = orgUserService.getOrgUserByOrgId(org.getId());
 					// 发送消息给申报者
@@ -1070,23 +1087,47 @@ public final class SystemMessageService {
 							msgContent += ",";
 						}
 						msgContent += "[<font color='red'>" + declaration.getRealname() + "</font>]当选";
-						if (null != decPosition.getChosenPosition() && null != decPosition.getRank()
-								&& (decPosition.getChosenPosition() == 4 || decPosition.getChosenPosition() == 12)) {
-							msgContent += "第" + rank(decPosition.getRank()) + "主编";
-						} else if (null != decPosition.getChosenPosition() && null != decPosition.getRank()
-								&& (decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10)) {
-							msgContent += "副主编";
-						} else if (null != decPosition.getChosenPosition()
-								&& (decPosition.getChosenPosition() == 1 || decPosition.getChosenPosition() == 9)) {
-							msgContent += "编委";
-						} else {
-							continue;
+						if (null != decPosition.getChosenPosition() && null != decPosition.getRank()) {
+							if (decPosition.getChosenPosition() == 8) {
+								msgContent += "数字编委";
+							}
+							if (decPosition.getChosenPosition() == 4 || decPosition.getChosenPosition() == 12) {
+								if (decPosition.getRank() == 1) {
+									if (decPosition.getChosenPosition() == 4) {
+										msgContent += "第一主编";
+									} else {
+										msgContent += "第一主编、数字编委";
+									}
+								} else {
+									if (decPosition.getChosenPosition() == 4) {
+										msgContent += "主编";
+									} else {
+										msgContent += "主编、数字编委";
+									}
+								}
+
+							}
+							if (decPosition.getChosenPosition() == 2 || decPosition.getChosenPosition() == 10) {
+								if (decPosition.getChosenPosition() == 2) {
+									msgContent += "副主编";
+								} else {
+									msgContent += "副主编、数字编委";
+								}
+							}
+							if (decPosition.getChosenPosition() == 1 || decPosition.getChosenPosition() == 9) {
+
+								if (decPosition.getChosenPosition() == 1) {
+									msgContent += "编委";
+								} else {
+									msgContent += "编委、数字编委";
+								}
+							}
 						}
 					}
 					// 存入消息主体
-					Message msg = new Message(msgContent);
-					msg = messageService.add(msg);
-					String msg_id = msg.getId();
+					Message message = new Message(msgContent);
+					message = messageService.add(message);
+					String msg_id = message.getId();
 					// 获取机构管理员
 					OrgUser orgUser = orgUserService.getOrgUserByOrgId(org.getId());
 					// 发送消息给申报者
