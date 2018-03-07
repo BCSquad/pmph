@@ -884,7 +884,7 @@ public class DecPositionServiceImpl implements DecPositionService {
     @Override
     public Integer batchPublishEditor(List<Long> textbookIds, String sessionId)
     throws CheckedServiceException, IOException {
-        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId("7C74A9F0C6497BB37B1FB8B0ECC63A8E");
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
