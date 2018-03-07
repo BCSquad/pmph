@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.bean.FileType;
+import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 
 /**
@@ -48,6 +49,22 @@ public class FileUploadController {
     public ResponseBean upload(Model model, @RequestParam("file") MultipartFile file) {
         try {
             return new ResponseBean(fileService.save(file, FileType.GROUP_FILE, 0));
+        } catch (IOException ex) {
+            return new ResponseBean(ex);
+        }
+    }
+
+    /**
+     * 上传文件并保存在Mongodb中
+     * 
+     * @param file 文件
+     * @return 返回上传结果
+     */
+    @ResponseBody
+    @RequestMapping(value = "/file/image/upload", method = RequestMethod.POST)
+    public ResponseBean imageUpload(@RequestParam("file") MultipartFile file) {
+        try {
+            return new ResponseBean(fileService.save(file, ImageType.CMS_CONTENT_COVER_IMG, 0));
         } catch (IOException ex) {
             return new ResponseBean(ex);
         }
