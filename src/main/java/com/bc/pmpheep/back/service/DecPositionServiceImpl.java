@@ -573,7 +573,7 @@ public class DecPositionServiceImpl implements DecPositionService {
 						chosen.setPresetPositionEditor(preset.getPresetPositionEditor());
 						chosen.setPresetPositionSubeditor(preset.getPresetPositionSubeditor());
 						chosen.setPresetPositionEditorial(preset.getPresetPositionEditorial());
-						chosen.setIsDigitalEditor(preset.getIsDigitalEditor());
+						chosen.setIsDigitalEditor(preset.getPresetDigitalEditor());
 						// 计算申报人数
 						Integer presetPersons = chosen.getPresetPositionEditor()
 								+ chosen.getPresetPositionSubeditor()
