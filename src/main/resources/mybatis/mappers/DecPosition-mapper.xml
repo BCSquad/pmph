@@ -598,7 +598,7 @@
     <select id="getSchoolListPreset" parameterType="pageParameter" 
         resultType="DeclarationResultSchoolVO">
         SELECT * FROM (
-		SELECT @rowno:=@rowno+1 AS ROW,t1.materialid,t1.orgid,t1.schoolname,t1.editorlist,
+		SELECT @rowno:=@rowno+1 AS row,t1.materialid,t1.orgid,t1.schoolname,t1.editorlist,
 		t1.subeditorlist,t1.editoriallist,t1.isdigitaleditorlist 
 		FROM (
 		SELECT GROUP_CONCAT(if((c.chosen_position IN (4,12)),a.realname,null)) editorlist,
@@ -759,15 +759,15 @@
 	<select id="getSchoolResultChosen" parameterType="pageParameter"
 		resultType="DeclarationSituationSchoolResultVO">
 		SELECT * FROM (
-		SELECT @rowno:=@rowno+1 AS ROW,t1.materialid,t1.orgid,t1.schoolname,t1.presetpositioneditor,
-		t1.presetpositionsubeditor,t1.presetpositioneditorial,t1.presetpositiondigitaleditor,
+		SELECT @rowno:=@rowno+1 AS row,t1.materialid,t1.orgid,t1.schoolname,t1.presetpositioneditor,
+		t1.presetpositionsubeditor,t1.presetpositioneditorial,t1.presetdigitaleditor,
 		t1.chosenpositioneditor,t1.chosenpositionsubeditor,t1.chosenpositioneditorial,
 		t1.isdigitaleditor 
 		FROM (
 		SELECT SUM(if((b.preset_position IN (4,5,6,7,12,13,14,15)),1,0)) presetpositioneditor,
 		SUM(if((b.preset_position IN (2,3,6,7,10,11,14,15)),1,0)) presetpositionsubeditor,
 		SUM(if((b.preset_position IN (1,3,5,7,9,11,13,15)),1,0)) presetpositioneditorial,
-		SUM(if((b.preset_position IN (8,9,10,11,12,13,14,15)),1,0)) presetpositiondigitaleditor,
+		SUM(if((b.preset_position IN (8,9,10,11,12,13,14,15)),1,0)) presetdigitaleditor,
 		SUM(if((c.chosen_position IN (4,12)),1,0)) chosenpositioneditor,
 		SUM(if((c.chosen_position IN (2,10)),1,0)) chosenpositionsubeditor,
 		SUM(if((c.chosen_position IN (1,9)),1,0)) chosenpositioneditorial,
@@ -800,14 +800,14 @@
 		resultType="DeclarationSituationSchoolResultVO">
 		SELECT * FROM (
 		SELECT @rowno:=@rowno+1 AS row,t1.materialid,t1.orgid,t1.schoolname,t1.presetpositioneditor,
-		t1.presetpositionsubeditor,t1.presetpositioneditorial,t1.presetpositiondigitaleditor,
+		t1.presetpositionsubeditor,t1.presetpositioneditorial,t1.presetdigitaleditor,
 		t1.chosenpositioneditor,t1.chosenpositionsubeditor,t1.chosenpositioneditorial,
 		t1.isdigitaleditor 
 		FROM (
 		SELECT SUM(if((b.preset_position IN (4,5,6,7,12,13,14,15)),1,0)) presetpositioneditor,
 		SUM(if((b.preset_position IN (2,3,6,7,10,11,14,15)),1,0)) presetpositionsubeditor,
 		SUM(if((b.preset_position IN (1,3,5,7,9,11,13,15)),1,0)) presetpositioneditorial,
-		SUM(if((b.preset_position IN (8,9,10,11,12,13,14,15)),1,0)) presetpositiondigitaleditor,
+		SUM(if((b.preset_position IN (8,9,10,11,12,13,14,15)),1,0)) presetdigitaleditor,
 		SUM(if((c.chosen_position IN (4,12)),1,0)) chosenpositioneditor,
 		SUM(if((c.chosen_position IN (2,10)),1,0)) chosenpositionsubeditor,
 		SUM(if((c.chosen_position IN (1,9)),1,0)) chosenpositioneditorial,
@@ -844,14 +844,14 @@
 		resultType="DeclarationSituationBookResultVO">
 		SELECT * FROM (
 		SELECT @rowno:=@rowno+1 AS row,t1.materialid,t1.id,t1.bookname,t1.presetpositioneditor,
-		t1.presetpositionsubeditor,t1.presetpositioneditorial,t1.presetpositiondigitaleditor,
+		t1.presetpositionsubeditor,t1.presetpositioneditorial,t1.presetdigitaleditor,
 		t1.chosenpositioneditor,t1.chosenpositionsubeditor,t1.chosenpositioneditorial,
 		t1.isdigitaleditor 
 		FROM (
 		SELECT SUM(if((b.preset_position IN (4,5,6,7,12,13,14,15)),1,0)) presetpositioneditor,
 		SUM(if((b.preset_position IN (2,3,6,7,10,11,14,15)),1,0)) presetpositionsubeditor,
 		SUM(if((b.preset_position IN (1,3,5,7,9,11,13,15)),1,0)) presetpositioneditorial,
-		SUM(if((b.preset_position IN (8,9,10,11,12,13,14,15)),1,0)) presetpositiondigitaleditor,
+		SUM(if((b.preset_position IN (8,9,10,11,12,13,14,15)),1,0)) presetdigitaleditor,
 		SUM(if((c.chosen_position IN (4,12)),1,0)) chosenpositioneditor,
 		SUM(if((c.chosen_position IN (2,10)),1,0)) chosenpositionsubeditor,
 		SUM(if((c.chosen_position IN (1,9)),1,0)) chosenpositioneditorial,
