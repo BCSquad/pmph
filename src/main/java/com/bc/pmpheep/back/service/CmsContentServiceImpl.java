@@ -44,6 +44,7 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.mongodb.gridfs.GridFSDBFile;
 
 /**
  * 
@@ -559,6 +560,11 @@ public class CmsContentServiceImpl implements CmsContentService {
         String imgFilePath = RouteUtil.DEFAULT_USER_AVATAR;
         if (ObjectUtil.notNull(cmsExtra)) {
             imgFileName = cmsExtra.getAttachmentName();
+        } else {
+            GridFSDBFile file = fileService.get(cmsContent.getCover());
+            if (ObjectUtil.notNull(file)) {
+                imgFileName = file.getFilename();
+            }
         }
         resultMap.put("imgFileName", imgFileName);
         if (!"DEFAULT".equals(cmsContent.getCover())) {
