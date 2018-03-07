@@ -304,7 +304,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 
 	@Override
 	public PmphGroup addEditorSelcetionGroup(String sessionId, List<PmphGroupMember> list, Long textbookId)
-			throws CheckedServiceException, IOException {
+			throws CheckedServiceException {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
