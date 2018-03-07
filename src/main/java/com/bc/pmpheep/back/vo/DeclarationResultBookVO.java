@@ -31,16 +31,16 @@ public class DeclarationResultBookVO implements Serializable{
 		private String bookName;
 		//主编名单
 		@ExcelHeader(header = "主编名单")
-		private String editorList;
+		private String editorList = "-";
 		//副主编名单
 		@ExcelHeader(header = "副主编名单")
-		private String subEditorList;
+		private String subEditorList = "-";
 		//编委名单
 		@ExcelHeader(header = "编委名单")
-		private String editorialList;
+		private String editorialList = "-";
 		//数字编委名单
 		@ExcelHeader(header = "数字编委名单")
-		private String isDigitalEditorList;
+		private String isDigitalEditorList = "-";
 		//是否展示
 		private Boolean isShow =false;
 		

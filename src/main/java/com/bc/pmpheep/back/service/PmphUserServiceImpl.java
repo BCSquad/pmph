@@ -619,7 +619,6 @@ public class PmphUserServiceImpl implements PmphUserService {
         return materialPermission;
     }
 
-    @SuppressWarnings("unused")
     @Override
     public Map<String, Object> getPersonalCenter(HttpServletRequest request, String state,
     String materialName, String groupName, String title, String bookname, String name,

@@ -31,32 +31,32 @@ public class DeclarationSituationBookResultVO implements Serializable{
 		private String bookName;
 		//主编申报数
 		@ExcelHeader(header = "主编申报数")
-		private Integer presetPositionEditor;
+		private Integer presetPositionEditor = 0;
 		//副主编申报数
 		@ExcelHeader(header = "副主编申报数")
-		private Integer presetPositionSubeditor;
+		private Integer presetPositionSubeditor = 0;
 		//编委申报数
 		@ExcelHeader(header = "编委申报数")
-		private Integer presetPositionEditorial;
+		private Integer presetPositionEditorial = 0;
 		//数字编委申报数
 		@ExcelHeader(header = "数字编委申报数")
-		private Integer presetDigitalEditor;
+		private Integer presetDigitalEditor = 0;
 		//主编当选数
 		@ExcelHeader(header = "主编当选数")
-		private Integer chosenPositionEditor;
+		private Integer chosenPositionEditor = 0;
 		//副主编当选数
 		@ExcelHeader(header = "副主编当选数")
-		private Integer chosenPositionSubeditor;
+		private Integer chosenPositionSubeditor = 0;
 		//编委当选数
 		@ExcelHeader(header = "编委当选数")
-		private Integer chosenPositionEditorial;
+		private Integer chosenPositionEditorial = 0;
 		//数字编委当选数
 		@ExcelHeader(header = "数字编委当选数")
-		private Integer isDigitalEditor;
+		private Integer isDigitalEditor = 0;
 		//申报人数
-		private Integer presetPersons;
+		private Integer presetPersons = 0;
 		//当选人数
-		private Integer chosenPersons;
+		private Integer chosenPersons = 0;
 		
 		public DeclarationSituationBookResultVO() {
 			super();

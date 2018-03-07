@@ -902,14 +902,14 @@ public final class SystemMessageService {
 		// 给主编、副主编、编委、数字编委发送
 		String msg = "";
 		for (DecPositionPublished decPosition : decPositionPublishedLst) {
-			if (null != decPosition.getChosenPosition() && null != decPosition.getRank()) {
+			if (null != decPosition.getChosenPosition()) {
 				if (decPosition.getChosenPosition() == 8) {
 					msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
 							+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
 							+ textbook.getTextbookName() + "</font>]的数字编委";
 				}
 				if (decPosition.getChosenPosition() == 4 || decPosition.getChosenPosition() == 12) {
-					if (decPosition.getRank() == 1) {
+					if (null != decPosition.getRank() && decPosition.getRank() == 1) {
 						if (decPosition.getChosenPosition() == 4) {
 							msg = "《<font color='red'>" + material.getMaterialName() + "</font>》[<font color='red'>"
 									+ textbook.getTextbookName() + "</font>]的最终结果已公布，恭喜您当选[<font color='red'>"
@@ -999,7 +999,7 @@ public final class SystemMessageService {
 						msgContent += " - "
 								+ textbookService.getTextbookById(decPosition.getTextbookId()).getTextbookName()
 								+ " - ";
-						if (null != decPosition.getChosenPosition() && null != decPosition.getRank()) {
+						if (null != decPosition.getChosenPosition()) {
 							if (decPosition.getChosenPosition() == 8) {
 								msgContent += "数字编委";
 							}
@@ -1087,7 +1087,7 @@ public final class SystemMessageService {
 							msgContent += ",";
 						}
 						msgContent += "[<font color='red'>" + declaration.getRealname() + "</font>]当选";
-						if (null != decPosition.getChosenPosition() && null != decPosition.getRank()) {
+						if (null != decPosition.getChosenPosition()) {
 							if (decPosition.getChosenPosition() == 8) {
 								msgContent += "数字编委";
 							}

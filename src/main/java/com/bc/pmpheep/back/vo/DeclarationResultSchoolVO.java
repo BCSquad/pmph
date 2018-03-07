@@ -31,16 +31,16 @@ public class DeclarationResultSchoolVO implements Serializable{
 	private String schoolName;
 	//主编名单
 	@ExcelHeader(header = "主编名单")
-	private String editorList;
+	private String editorList = "-";
 	//副主编名单
 	@ExcelHeader(header = "副主编名单")
-	private String subEditorList;
+	private String subEditorList = "-";
 	//编委名单
 	@ExcelHeader(header = "编委名单")
-	private String editorialList;
+	private String editorialList = "-";
 	//数字编委名单
 	@ExcelHeader(header = "数字编委名单")
-	private String isDigitalEditorList;
+	private String isDigitalEditorList = "-";
 	//当前页面排序方式  1 按当选数/2 按申报数
 	private Integer state;
 	//是否展示
