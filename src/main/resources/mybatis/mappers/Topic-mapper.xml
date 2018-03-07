@@ -617,7 +617,7 @@
 		AND a.is_editor_handling = TRUE
 		AND
 		a.is_rejected_by_editor =
-		FALSE AND a.auth_progress = 1
+		FALSE AND a.auth_progress in (1,2)
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
@@ -643,7 +643,7 @@
 		AND a.is_editor_handling = TRUE
 		AND
 		a.is_rejected_by_editor =
-		FALSE AND a.auth_progress = 1
+		FALSE AND a.auth_progress in (1,2)
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
@@ -701,7 +701,7 @@
 		WHERE a.is_editor_handling = TRUE
 		AND a.is_rejected_by_editor =
 		FALSE
-		AND a.auth_progress = 1
+		AND a.auth_progress in (1,2)
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
@@ -720,7 +720,7 @@
 		LEFT JOIN writer_user b ON a.user_id = b.id
 		WHERE a.is_editor_handling = TRUE
 		AND a.is_rejected_by_editor = FALSE
-		AND a.auth_progress = 1
+		AND a.auth_progress in (1,2)
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
