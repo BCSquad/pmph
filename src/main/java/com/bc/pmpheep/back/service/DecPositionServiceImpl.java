@@ -721,6 +721,18 @@ public class DecPositionServiceImpl implements DecPositionService {
 			List<DeclarationResultSchoolVO> list = new ArrayList<>();
 			for (DeclarationResultSchoolVO declarationResultSchoolVO : VOs) {
 				declarationResultSchoolVO.setState(1);
+				if (declarationResultSchoolVO.getEditorList().isEmpty()){
+					declarationResultSchoolVO.setEditorList("-");
+				}
+				if (declarationResultSchoolVO.getSubEditorList().isEmpty()){
+					declarationResultSchoolVO.setSubEditorList("-");
+				}
+				if (declarationResultSchoolVO.getEditorialList().isEmpty()){
+					declarationResultSchoolVO.setEditorialList("-");
+				}
+				if (declarationResultSchoolVO.getIsDigitalEditorList().isEmpty()){
+					declarationResultSchoolVO.setIsDigitalEditorList("-");
+				}
 				list.add(declarationResultSchoolVO);
 			}
 			pageResult.setRows(list);
@@ -748,6 +760,18 @@ public class DecPositionServiceImpl implements DecPositionService {
 			List<DeclarationResultSchoolVO> list = new ArrayList<>();
 			for (DeclarationResultSchoolVO declarationResultSchoolVO : VOs) {
 				declarationResultSchoolVO.setState(2);
+				if (declarationResultSchoolVO.getEditorList().isEmpty()){
+					declarationResultSchoolVO.setEditorList("-");
+				}
+				if (declarationResultSchoolVO.getSubEditorList().isEmpty()){
+					declarationResultSchoolVO.setSubEditorList("-");
+				}
+				if (declarationResultSchoolVO.getEditorialList().isEmpty()){
+					declarationResultSchoolVO.setEditorialList("-");
+				}
+				if (declarationResultSchoolVO.getIsDigitalEditorList().isEmpty()){
+					declarationResultSchoolVO.setIsDigitalEditorList("-");
+				}
 				list.add(declarationResultSchoolVO);
 			}
 			pageResult.setRows(list);
@@ -771,7 +795,23 @@ public class DecPositionServiceImpl implements DecPositionService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
 		if (total > 0) {
-			List<DeclarationResultBookVO> list = decPositionDao.getBookList(pageParameter);
+			List<DeclarationResultBookVO> VOs = decPositionDao.getBookList(pageParameter);
+			List<DeclarationResultBookVO> list = new ArrayList<>();
+			for (DeclarationResultBookVO declarationResultBookVO : VOs){
+				if (declarationResultBookVO.getEditorList().isEmpty()){
+					declarationResultBookVO.setEditorList("-");
+				}
+				if (declarationResultBookVO.getSubEditorList().isEmpty()){
+					declarationResultBookVO.setSubEditorList("-");
+				}
+				if (declarationResultBookVO.getEditorialList().isEmpty()){
+					declarationResultBookVO.setEditorialList("-");
+				}
+				if (declarationResultBookVO.getIsDigitalEditorList().isEmpty()){
+					declarationResultBookVO.setIsDigitalEditorList("-");
+				}
+				list.add(declarationResultBookVO);
+			}
 			pageResult.setRows(list);
 			pageResult.setTotal(total);
 		}
