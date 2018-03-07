@@ -388,17 +388,15 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			pageResult.setTotal(total);
 
 		} else {
-
 			PmphGroup pmphGroup = new PmphGroup();
-			pmphGroup.setGroupName(pageParameter.getParameter().getGroupName());
-			pmphGroup.setId(pmphUser.getId());
-			total = pmphGroupDao.getPmphGroupTotal(pageParameter);
-			list = pmphGroupDao.getListPmphGroup(pageParameter);
+			List<PmphGroupListVO> groupListVOs=pmphGroupDao.getList(pmphGroup, pmphUser.getId());
 			for (PmphGroupListVO pmphGroupListVO : list) {
 				pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 			}
-			pageResult.setRows(list);
-			pageResult.setTotal(total);
+			if(groupListVOs.size()>0){
+				pageResult.setRows(groupListVOs);
+				pageResult.setTotal(groupListVOs.size());
+			}
 		}
 		return pageResult;
 	}
