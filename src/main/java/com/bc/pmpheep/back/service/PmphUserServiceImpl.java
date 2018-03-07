@@ -639,9 +639,6 @@ public class PmphUserServiceImpl implements PmphUserService {
         Integer orgerCount = orgUserService.getCount();
         // 小组
         PmphGroupListVO pmphGroup = new PmphGroupListVO();
-        if (ObjectUtil.notNull(groupName)) {
-            pmphGroup.setGroupName(groupName.trim());
-        }
         PageParameter<PmphGroupListVO> pageParameterPmphGroup = new PageParameter<>();
         pageParameterPmphGroup.setParameter(pmphGroup);
         // 小组结果

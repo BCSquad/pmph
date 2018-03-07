@@ -73,7 +73,7 @@ public class WordHelperTest extends BaseTest {
         declarationEtcBO.setChosenOrgName("首都医科大学");
         list.add(declarationEtcBO);
         String textbook = "全国高等学校健康服务与管理专业第一轮规划教材";
-        HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(textbook, list, 65535);
+        HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(textbook, list, "111111111111111111");
         for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
             FileOutputStream out = new FileOutputStream(entry.getKey());
             entry.getValue().write(out);
@@ -90,7 +90,7 @@ public class WordHelperTest extends BaseTest {
             return;
         }
         String textbook = "全国高等学校健康服务与管理专业第一轮规划教材";
-        HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(textbook, declarationEtcBOs, 65535);
+        HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(textbook, declarationEtcBOs, "111111111111111111");
         for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
             FileOutputStream out = new FileOutputStream(entry.getKey());
             entry.getValue().write(out);
@@ -123,7 +123,7 @@ public class WordHelperTest extends BaseTest {
         sb.append("1.人体解剖学与组织胚胎学");
         sb.append(File.separator);
         logger.info("获取到的路径地址是 {}", sb.toString());
-        wordHelper.export("四川重庆中等卫生职业教育规划教材（护理、助产专业） 第二轮修订", sb.toString(), declarationEtcBOs, 21983);
+        wordHelper.export("四川重庆中等卫生职业教育规划教材（护理、助产专业） 第二轮修订", sb.toString(), declarationEtcBOs, "111111111111111111");
     }
 
     private ArrayList<DecEduExp> makeFakeDecEduExpList() {

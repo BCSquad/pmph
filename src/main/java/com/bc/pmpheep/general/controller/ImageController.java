@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.service.FileService;
@@ -71,5 +72,26 @@ public class ImageController {
             // return responseBean;
         }
         return new ResponseBean();
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据ID查询图片名称
+     * 使用示范：
+     *
+     * @param id id 图片在MongoDB中的id
+     * @return 图片名称
+     * </pre>
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @RequestMapping(value = "/image/{id}/name", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseBean getFileName(@PathVariable("id") String id) {
+        GridFSDBFile file = fileService.get(id);
+        if (null == file) {
+            logger.warn("未找到id为'{}'的文件", id);
+        }
+        return new ResponseBean(file.getFilename());
     }
 }
