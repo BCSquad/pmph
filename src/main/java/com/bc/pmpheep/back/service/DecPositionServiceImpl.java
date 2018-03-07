@@ -721,16 +721,16 @@ public class DecPositionServiceImpl implements DecPositionService {
 			List<DeclarationResultSchoolVO> list = new ArrayList<>();
 			for (DeclarationResultSchoolVO declarationResultSchoolVO : VOs) {
 				declarationResultSchoolVO.setState(1);
-				if (declarationResultSchoolVO.getEditorList().isEmpty()){
+				if (StringUtil.isEmpty(declarationResultSchoolVO.getEditorList())){
 					declarationResultSchoolVO.setEditorList("-");
 				}
-				if (declarationResultSchoolVO.getSubEditorList().isEmpty()){
+				if (StringUtil.isEmpty(declarationResultSchoolVO.getSubEditorList())){
 					declarationResultSchoolVO.setSubEditorList("-");
 				}
-				if (declarationResultSchoolVO.getEditorialList().isEmpty()){
+				if (StringUtil.isEmpty(declarationResultSchoolVO.getEditorialList())){
 					declarationResultSchoolVO.setEditorialList("-");
 				}
-				if (declarationResultSchoolVO.getIsDigitalEditorList().isEmpty()){
+				if (StringUtil.isEmpty(declarationResultSchoolVO.getIsDigitalEditorList())){
 					declarationResultSchoolVO.setIsDigitalEditorList("-");
 				}
 				list.add(declarationResultSchoolVO);
@@ -760,16 +760,16 @@ public class DecPositionServiceImpl implements DecPositionService {
 			List<DeclarationResultSchoolVO> list = new ArrayList<>();
 			for (DeclarationResultSchoolVO declarationResultSchoolVO : VOs) {
 				declarationResultSchoolVO.setState(2);
-				if (declarationResultSchoolVO.getEditorList().isEmpty()){
+				if (StringUtil.isEmpty(declarationResultSchoolVO.getEditorList())){
 					declarationResultSchoolVO.setEditorList("-");
 				}
-				if (declarationResultSchoolVO.getSubEditorList().isEmpty()){
+				if (StringUtil.isEmpty(declarationResultSchoolVO.getSubEditorList())){
 					declarationResultSchoolVO.setSubEditorList("-");
 				}
-				if (declarationResultSchoolVO.getEditorialList().isEmpty()){
+				if (StringUtil.isEmpty(declarationResultSchoolVO.getEditorialList())){
 					declarationResultSchoolVO.setEditorialList("-");
 				}
-				if (declarationResultSchoolVO.getIsDigitalEditorList().isEmpty()){
+				if (StringUtil.isEmpty(declarationResultSchoolVO.getIsDigitalEditorList())){
 					declarationResultSchoolVO.setIsDigitalEditorList("-");
 				}
 				list.add(declarationResultSchoolVO);
@@ -798,16 +798,16 @@ public class DecPositionServiceImpl implements DecPositionService {
 			List<DeclarationResultBookVO> VOs = decPositionDao.getBookList(pageParameter);
 			List<DeclarationResultBookVO> list = new ArrayList<>();
 			for (DeclarationResultBookVO declarationResultBookVO : VOs){
-				if (declarationResultBookVO.getEditorList().isEmpty()){
+				if (StringUtil.isEmpty(declarationResultBookVO.getEditorList())){
 					declarationResultBookVO.setEditorList("-");
 				}
-				if (declarationResultBookVO.getSubEditorList().isEmpty()){
+				if (StringUtil.isEmpty(declarationResultBookVO.getSubEditorList())){
 					declarationResultBookVO.setSubEditorList("-");
 				}
-				if (declarationResultBookVO.getEditorialList().isEmpty()){
+				if (StringUtil.isEmpty(declarationResultBookVO.getEditorialList())){
 					declarationResultBookVO.setEditorialList("-");
 				}
-				if (declarationResultBookVO.getIsDigitalEditorList().isEmpty()){
+				if (StringUtil.isEmpty(declarationResultBookVO.getIsDigitalEditorList())){
 					declarationResultBookVO.setIsDigitalEditorList("-");
 				}
 				list.add(declarationResultBookVO);
