@@ -68,14 +68,13 @@ public class Download {
         List<String> listHtmlImgs = new ArrayList<String>();
         for (String url : listImgSrc) {
             try {
-                String imageName = url.substring(url.lastIndexOf("/") + 1, url.length());
-                Integer wenhaoInteger = imageName.indexOf("?");
-                if (wenhaoInteger >= 0) {
-                    imageName = imageName.substring(0, wenhaoInteger);
-                }
+                // String imageName = url.substring(url.lastIndexOf("/") + 1, url.length());
+                // Integer wenhaoInteger = imageName.indexOf("?");
+                // if (wenhaoInteger >= 0) {
+                // imageName = imageName.substring(0, wenhaoInteger);
+                // }
                 URL uri = new URL(url);
                 InputStream in = uri.openStream();
-
                 double randomNumber = Math.random() * 100; // 随机数
                 Random rand = new Random();
                 String mongoId = null;
