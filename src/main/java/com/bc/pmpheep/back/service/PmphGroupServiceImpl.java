@@ -393,8 +393,10 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			for (PmphGroupListVO pmphGroupListVO : list) {
 				pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 			}
-			pageResult.setRows(groupListVOs);
-			pageResult.setTotal(groupListVOs.size());
+			if(groupListVOs.size()>0){
+				pageResult.setRows(groupListVOs);
+				pageResult.setTotal(groupListVOs.size());
+			}
 		}
 		return pageResult;
 	}
