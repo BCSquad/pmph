@@ -147,7 +147,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"教材名称为空");
 		}
-		if (material.getMaterialName().length() > 40) {
+		if (material.getMaterialName().length() > 50) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材名称过长");
 		}
