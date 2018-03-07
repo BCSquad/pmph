@@ -756,16 +756,19 @@
     <select id="getBookListOne" parameterType="pageParameter" 
         resultType="DeclarationSituationBookResultVO">
 	    SELECT * FROM (
-		SELECT @rowno:=@rowno+1 AS row,t1.materialid,t1.id,t1.bookname,t1.editorlist,
-		t1.subeditorlist,t1.editoriallist,t1.isdigitaleditorlist  
+		SELECT @rowno:=@rowno+1 AS row,t1.materialid,t1.id,t1.bookname,t1.presetpositioneditor,
+		t1.presetpositionsubeditor,t1.presetpositioneditorial,t1.presetdigitaleditor,
+		t1.chosenpositioneditor,t1.chosenpositionsubeditor,t1.chosenpositioneditorial,
+		t1.isdigitaleditor  
 		FROM (
 		SELECT 0 presetpositioneditor,0 presetpositionsubeditor,0 presetpositioneditorial,
-		0 presetdigitaleditor,
+		0 presetdigitaleditor,0 chosenpositioneditor,0 chosenpositionsubeditor,
+		0 chosenpositioneditorial,0 isdigitaleditor,
 		b.id materialid,a.id id,a.textbook_name bookname 
 		FROM textbook a 
 		LEFT JOIN material b ON a.material_id = b.id 
 		WHERE b.id = #{parameter.materialId} 
-		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
+		<if test="parameter.bookName !=null and parameter.bookName !=''">
 			and a.textbook_name like concat ('%',#{parameter.bookName},'%') 
 		</if>
 		GROUP BY a.id ORDER BY a.sort ASC)t1,
@@ -837,10 +840,11 @@
 	 <!-- 申报结果按学校统计（按申报数排序） -->
     <select id="getSchoolListPreset" parameterType="pageParameter" 
         resultType="DeclarationResultSchoolVO">
+        SELECT * FROM (
         SELECT @rowno:=@rowno+1 AS row,t1.materialid,t1.orgid,t1.schoolname,t1.editorlist,
 		t1.subeditorlist,t1.editoriallist,t1.isdigitaleditorlist 
 		FROM (
-		SELECT 0 editorlist,0 subeditorlist,0 editoriallist,0 isdigitaleditorlist,
+		SELECT '-' editorlist,'-' subeditorlist,'-' editoriallist,'-' isdigitaleditorlist,
 		d.id materialid,e.id orgid,e.org_name schoolname 
 		FROM declaration a 
 		LEFT JOIN dec_position b ON a.id = b.declaration_id 
@@ -910,7 +914,7 @@
 		FROM textbook a 
 		LEFT JOIN material b ON a.material_id = b.id 
 		WHERE b.id = #{parameter.materialId} 
-		<if test="parameter.schoolName !=null and parameter.schoolName !=''">
+		<if test="parameter.bookName !=null and parameter.bookName !=''">
 			and a.textbook_name like concat ('%',#{parameter.bookName},'%') 
 		</if>
 		GROUP BY a.id ORDER BY a.sort ASC)t1,
@@ -933,7 +937,7 @@
 		GROUP_CONCAT(if((b.chosen_position IN (1,9)),a.realname,null)) editoriallist,
 		GROUP_CONCAT(IF((b.chosen_position IN (8,9,10,12)),a.realname,null)) isdigitaleditorlist,
 		d.id materialid,c.id id,c.textbook_name bookname 
-		FROM declaration a z
+		FROM declaration a 
 		LEFT JOIN dec_position_published b ON a.id = b.declaration_id 
 		LEFT JOIN textbook c ON b.textbook_id = c.id 
 		LEFT JOIN material d ON c.material_id = d.id 
