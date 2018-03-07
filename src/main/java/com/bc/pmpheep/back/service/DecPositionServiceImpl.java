@@ -536,7 +536,8 @@ public class DecPositionServiceImpl implements DecPositionService {
             for (DecPositionPublished old : lst) {
                 for (DecPositionPublished now : decPositionPublisheds) {
                     DecPositionPublished published =
-                    decPositionPublishedService.getDecPositionByDeclarationId(now.getDeclarationId());
+                    decPositionPublishedService.getDecPositionByDeclarationId(now.getDeclarationId(),
+                                                                              now.getTextbookId());
                     if (ObjectUtil.isNull(published)) {
                         newMessage.add(now);
                     }
