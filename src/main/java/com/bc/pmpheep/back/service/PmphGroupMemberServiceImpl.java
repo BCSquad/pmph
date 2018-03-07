@@ -287,6 +287,20 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 				} else {
 					pmphGroupMemberManagerVO.setUserType(Const.SENDER_TYPE_1);
 				}
+				//处理position 
+				String position = pmphGroupMemberManagerVO.getPosition();
+				if(null != position && position.contains(",")) {
+					position = position.replace("无,", "").replace(",无", "");
+					String  [] positions = position.split(",");
+					String tempPosition = positions[0];
+					for(int i = 1 ; i<positions.length ; i++) {
+						if(!(","+tempPosition+",").contains(","+positions[i]+",")) {
+							tempPosition += ","+positions[i];
+						}
+					}
+					pmphGroupMemberManagerVO.setPosition(tempPosition);
+				}
+				//处理position  end
 			}
 			pageResult.setRows(list);
 		}

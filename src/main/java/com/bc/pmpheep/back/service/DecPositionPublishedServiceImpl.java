@@ -82,14 +82,19 @@ public class DecPositionPublishedServiceImpl implements DecPositionPublishedServ
         }
         return decPositionPublishedDao.getDecPositionPublishedById(id);
     }
-    
+
     @Override
-    public DecPositionPublished getDecPositionByDeclarationId(Long declarationId) throws CheckedServiceException {
+    public DecPositionPublished getDecPositionByDeclarationId(Long declarationId, Long textbookId)
+    throws CheckedServiceException {
         if (ObjectUtil.isNull(declarationId)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
                                               CheckedExceptionResult.NULL_PARAM, "参数不能为空");
         }
-        return decPositionPublishedDao.getDecPositionByDeclarationId(declarationId);
+        if (ObjectUtil.isNull(textbookId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                                              CheckedExceptionResult.NULL_PARAM, "书籍ID参数不能为空");
+        }
+        return decPositionPublishedDao.getDecPositionByDeclarationId(declarationId, textbookId);
     }
 
     @Override

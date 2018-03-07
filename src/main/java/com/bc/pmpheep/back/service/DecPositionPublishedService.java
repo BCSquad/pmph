@@ -59,7 +59,7 @@ public interface DecPositionPublishedService {
      * @Return DecPosition 实体对象
      * @throws CheckedServiceException
      */
-    DecPositionPublished getDecPositionByDeclarationId(Long declarationId)
+    DecPositionPublished getDecPositionByDeclarationId(Long declarationId, Long textbookId)
     throws CheckedServiceException;
 
     /**
