@@ -75,7 +75,7 @@ public class WordHelper {
 	 * @throws CheckedServiceException
 	 *             已检查的异常
 	 */
-	public void export(String materialName, String textbookPath, List<DeclarationEtcBO> list, Integer filter)
+	public void export(String materialName, String textbookPath, List<DeclarationEtcBO> list, String filter)
 			throws CheckedServiceException {
 		HashMap<String, XWPFDocument> map = fromDeclarationEtcBOList(materialName, list, filter);
 		if (createPath(textbookPath)) {
@@ -116,7 +116,7 @@ public class WordHelper {
 	 *             已检查的异常
 	 */
 	public HashMap<String, XWPFDocument> fromDeclarationEtcBOList(String materialName, List<DeclarationEtcBO> list,
-			Integer filter) throws CheckedServiceException {
+			String filter) throws CheckedServiceException {
 		InputStream is;
 		XWPFDocument document;
 		String path = this.getClass().getClassLoader().getResource("ResumeTemplate.docx").getPath();
@@ -191,9 +191,24 @@ public class WordHelper {
 		return filename;
 	}
 
+	// 直接使用字符串判断
+	private XWPFDocument removeEmptyTables(XWPFDocument document, String filter) {
+		List<XWPFTable> tables = document.getTables();
+		for (int i = 18; i >= 1; i--) {
+			String a = String.valueOf(filter.charAt(i - 1));
+			if (a.equals("0")) {
+				int index = document.getPosOfTable(tables.get(i + 1));
+				document.removeBodyElement(index);
+				document.removeBodyElement(index - 1);
+			}
+		}
+		return document;
+	}
+
+	// 使用位运算判断（产生了问题）
 	private XWPFDocument removeEmptyTables(XWPFDocument document, Integer filter) {
 		List<XWPFTable> tables = document.getTables();
-		for (int i = 20; i >= 1; i--) {
+		for (int i = 18; i >= 1; i--) {
 			if (BinaryUtil.getBit(filter, i - 1) == false) {
 				int index = document.getPosOfTable(tables.get(i));
 				document.removeBodyElement(index);
