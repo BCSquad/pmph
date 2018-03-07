@@ -290,7 +290,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 					String tempPosition = positions[0];
 					for(int i = 1 ; i<positions.length ; i++) {
 						if(!(","+tempPosition+",").contains(","+positions[i]+",")) {
-							tempPosition = ","+positions[i];
+							tempPosition += ","+positions[i];
 						}
 					}
 					pmphGroupMemberManagerVO.setPosition(tempPosition);
