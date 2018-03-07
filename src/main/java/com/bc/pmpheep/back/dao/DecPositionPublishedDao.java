@@ -55,7 +55,7 @@ public interface DecPositionPublishedDao {
      * @return
      */
     DecPositionPublished getDecPositionPublishedById(Long id);
-    
+
     /**
      * 查询
      * 
@@ -64,7 +64,8 @@ public interface DecPositionPublishedDao {
      * @param id
      * @return
      */
-    DecPositionPublished getDecPositionByDeclarationId(Long declarationId);
+    DecPositionPublished getDecPositionByDeclarationId(@Param("declarationId") Long declarationId,
+    @Param("textbookId") Long textbookId);
 
     /**
      * 

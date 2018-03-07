@@ -430,27 +430,28 @@
 		</if>
 	</select>
 	<!-- 根据用户id获取用户对应的权限 -->
-	<select id="getPmphUserPermissionByUserId" parameterType="Long" resultType="Long">
+	<select id="getPmphUserPermissionByUserId" parameterType="Long"
+		resultType="Long">
 		SELECT
-			prp.`permission_id`
+		prp.`permission_id`
 		FROM
-			`pmph_user` pu
+		`pmph_user` pu
 		LEFT JOIN
-			`pmph_user_role` pur
+		`pmph_user_role` pur
 		ON
-			pu.`id` = pur.`user_id`
+		pu.`id` = pur.`user_id`
 		LEFT JOIN
-			`pmph_role_permission` prp
+		`pmph_role_permission` prp
 		ON
-			pur.`role_id` = prp.`role_id`
+		pur.`role_id` = prp.`role_id`
 		LEFT JOIN
-			`pmph_role` pr ON pur.`role_id`=pr.`id`
+		`pmph_role` pr ON pur.`role_id`=pr.`id`
 		WHERE
-			pr.`is_disabled` = 0 
+		pr.`is_disabled` = 0
 		AND
-			pu.`id` = #{userId}
-		GROUP BY 
-			prp.`permission_id` 
+		pu.`id` = #{userId}
+		GROUP BY
+		prp.`permission_id`
 	</select>
 
 	<select id="getMaterialPermissionByUserId" parameterType="Long"
@@ -581,7 +582,7 @@
 		WHERE
 		t.editor_id = u.id
 		AND u.id =
-		#{id} AND t.auth_progress = 0
+		#{id} AND t.auth_progress in (1,2) AND t.is_editor_handling = 1
 	</select>
 
 </mapper>

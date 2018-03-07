@@ -169,10 +169,10 @@
 	</select>
 
 	<!-- 根据declarationId查询 -->
-	<select id="getDecPositionByDeclarationId" parameterType="java.lang.Long"
+	<select id="getDecPositionByDeclarationId" parameterType="java.util.Map"
 		resultType="DecPositionPublished">
 		select * from dec_position_published where
-		declaration_id=#{declarationId};
+		declaration_id=#{declarationId} and textbook_id= #{textbookId};
 	</select>
 
 	<!-- 按照书籍查询 -->

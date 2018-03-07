@@ -617,7 +617,7 @@
 		AND a.is_editor_handling = TRUE
 		AND
 		a.is_rejected_by_editor =
-		FALSE AND a.auth_progress = 1
+		FALSE AND a.auth_progress =1
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
@@ -643,7 +643,7 @@
 		AND a.is_editor_handling = TRUE
 		AND
 		a.is_rejected_by_editor =
-		FALSE AND a.auth_progress = 1
+		FALSE AND a.auth_progress =1
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
@@ -701,7 +701,7 @@
 		WHERE a.is_editor_handling = TRUE
 		AND a.is_rejected_by_editor =
 		FALSE
-		AND a.auth_progress = 1
+		AND a.auth_progress =1
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
@@ -720,13 +720,13 @@
 		LEFT JOIN writer_user b ON a.user_id = b.id
 		WHERE a.is_editor_handling = TRUE
 		AND a.is_rejected_by_editor = FALSE
-		AND a.auth_progress = 1
+		AND a.auth_progress =1
 		<if test="bookname != null and bookname !=''">
 			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
 			AND a.submit_time like concat('%',#{submitTime},'%')
-		</if> 
+		</if>
 		ORDER BY a.submit_time DESC
 	</select>
 
@@ -869,13 +869,13 @@
 			#{authProgress}
 		</foreach>
 		<if test="isDirectorHandling != null">
-			and	t.is_director_handling =#{isDirectorHandling}
+			and t.is_director_handling =#{isDirectorHandling}
 		</if>
 		<if test="isOptsHandling != null">
-			and	t.is_opts_handling = #{isOptsHandling}
+			and t.is_opts_handling = #{isOptsHandling}
 		</if>
 		<if test="isEditorHandling != null">
-			and	t.is_editor_handling = #{isEditorHandling}
+			and t.is_editor_handling = #{isEditorHandling}
 		</if>
 		<if test="bookname != null and bookname !=''">
 			AND t.bookname like concat('%',#{bookname},'%')
@@ -885,7 +885,7 @@
 		</if>
 		ORDER BY t.submit_time
 	</select>
-	<!--  查询当前用户相关的选题申报 -->
+	<!-- 查询当前用户相关的选题申报 -->
 	<select id="listMyTopic" resultType="TopicDeclarationVO">
 		SELECT
 		t.*, w.realname,p.realname editorName
@@ -902,13 +902,13 @@
 			#{authProgress}
 		</foreach>
 		<if test="isDirectorHandling != null">
-			and	t.is_director_handling =#{isDirectorHandling}
+			and t.is_director_handling =#{isDirectorHandling}
 		</if>
 		<if test="isOptsHandling != null">
-			and	t.is_opts_handling = #{isOptsHandling}
+			and t.is_opts_handling = #{isOptsHandling}
 		</if>
 		<if test="isEditorHandling != null">
-			and	t.is_editor_handling = #{isEditorHandling}
+			and t.is_editor_handling = #{isEditorHandling}
 		</if>
 		<if test="bookname != null and bookname !=''">
 			AND t.bookname like concat('%',#{bookname},'%')

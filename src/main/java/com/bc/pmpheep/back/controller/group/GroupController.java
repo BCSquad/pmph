@@ -454,7 +454,7 @@ public class GroupController {
 			}.getType();
 			List<PmphGroupMember> list = gson.fromJson(pmphGroupMembers, type);
 			return new ResponseBean(pmphGroupService.addEditorSelcetionGroup(sessionId, list, textbookId));
-		} catch (IOException e) {
+		} catch (Exception e) {
 			return new ResponseBean(e);
 		}
 	}

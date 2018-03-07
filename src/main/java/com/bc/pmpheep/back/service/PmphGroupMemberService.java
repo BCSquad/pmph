@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -177,6 +178,7 @@ public interface PmphGroupMemberService {
 	 * @param sessionId
 	 * @return
 	 * @throws CheckedServiceException
+	 * @throws Exception 
 	 */
 	String addEditorBookGroup(Long textbookId, String sessionId) throws CheckedServiceException;
 

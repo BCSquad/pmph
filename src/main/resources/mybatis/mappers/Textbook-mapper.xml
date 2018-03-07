@@ -332,10 +332,11 @@
 		GROUP_CONCAT(
 			IF(
 			b.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),
-			IF(g.allres like CONCAT('%,',b.textbook_id,'_',b.declaration_id,'_',b.preset_position,'_',b.chosen_position,'_',IFNULL(b.rank,0),',%'), 
+			IF(g.allres like CONCAT('%,',b.textbook_id,'_',b.declaration_id,'_',b.preset_position,'_',b.chosen_position,'_',IFNULL(b.rank,0),',%') 
+			    or a.is_published or a.is_chief_published, 
 				CONCAT('&lt;font color="red"&gt;',c.realname,'&lt;/font&gt;'), CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;')),
 			null
-			) ORDER BY b.chosen_position desc,b.rank asc) editorsAndAssociateEditors,
+			) ORDER BY if(b.chosen_position>8,b.chosen_position-8,b.chosen_position) desc,b.rank asc) editorsAndAssociateEditors,
 		sum(IF(b.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),1,0))
 		editorsAndAssociateEditorsNum,
 		GROUP_CONCAT(

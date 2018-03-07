@@ -150,6 +150,10 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
+		if(!pmphUser.getIsAdmin()||!isFounderOrisAdmin(groupId, sessionId)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"该用户没有此操作权限");
+		}
 		if (pmphUser.getIsAdmin() || isFounderOrisAdmin(groupId, sessionId)) {// 是超级管理员或者该小组的创建人和管理员才可以添加成员
 			if (pmphGroupMembers.size() > 0) {
 				List<Long> writers = new ArrayList<>();
@@ -283,6 +287,20 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 				} else {
 					pmphGroupMemberManagerVO.setUserType(Const.SENDER_TYPE_1);
 				}
+				//处理position 
+				String position = pmphGroupMemberManagerVO.getPosition();
+				if(null != position && position.contains(",")) {
+					position = position.replace("无,", "").replace(",无", "");
+					String  [] positions = position.split(",");
+					String tempPosition = positions[0];
+					for(int i = 1 ; i<positions.length ; i++) {
+						if(!(","+tempPosition+",").contains(","+positions[i]+",")) {
+							tempPosition += ","+positions[i];
+						}
+					}
+					pmphGroupMemberManagerVO.setPosition(tempPosition);
+				}
+				//处理position  end
 			}
 			pageResult.setRows(list);
 		}
@@ -451,33 +469,47 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 
 	}
 
+	@SuppressWarnings("unused")
 	@Override
-	public String addEditorBookGroup(Long textbookId, String sessionId) throws CheckedServiceException {
+	public String addEditorBookGroup(Long textbookId, String sessionId) throws CheckedServiceException{
 		String result = "FAIL";
-		// 通过书籍id查询小组
-		PmphGroup pmphGroup = pmphGroupService.getPmphGroupByTextbookId(textbookId);
 		// 获取用户信息 进行判断用户是否有权限操作
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"该用户为空");
 		}
-		if (!pmphUser.getIsAdmin()) {
-			if (!isFounderOrisAdmin(pmphGroup.getId(), sessionId)) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
-						"该用户没有操作权限");
-			}
-		}
 		// 通过书籍id查询所有主编、副主编、编委
 		List<TextbookDecVO> textbookDecVOs = decPositionService.getTextbookEditorList(textbookId);
+		List<PmphGroupMember> list = new ArrayList<PmphGroupMember>(textbookDecVOs.size());
+		// 通过书籍id查询小组
+		PmphGroup pmphGroup = pmphGroupService.getPmphGroupByTextbookId(textbookId);
+		//判断当前用户是否是管理员 是否是创建小组的用户
+		if(pmphUser.getId()==pmphGroup.getFounderId()||pmphUser.getIsAdmin()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+					"该用户没有更新成员权限 ");
+		}
+		if(null==pmphGroup){
+			for (TextbookDecVO te : textbookDecVOs) {
+				list.add(new PmphGroupMember(te.getUserId(), Const.TRUE));
+			}
+			//重新创建小组
+			PmphGroup group = pmphGroupService.addEditorSelcetionGroup(sessionId, list, textbookId);
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"小组已被删除，现在重新创建小组");
+		}
 		// 通过小组id查询小组现有成员
 		List<PmphGroupMember> pmphGroupMembers = pmphGroupMemberDao.listPmphGroupMembers(pmphGroup.getId());
+		// 先判断小组现有成员与现在书籍id成员是否相同
+		if(textbookDecVOs.size()==(pmphGroupMembers.size()-1)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.SUCCESS,
+					"小组成员已是最新");
+		}
 		// 用于装已存在小组内的userid
 		String s = ",";
 		for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
 			s += pmphGroupMember.getUserId() + ",";
 		}
-		List<PmphGroupMember> list = new ArrayList<PmphGroupMember>(textbookDecVOs.size());
 		// 通过遍历把不存在的成员添加到list中
 		for (TextbookDecVO textbookDecVO : textbookDecVOs) {
 			String str = textbookDecVO.getUserId().toString();

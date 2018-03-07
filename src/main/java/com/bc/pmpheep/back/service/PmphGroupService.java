@@ -158,7 +158,7 @@ public interface PmphGroupService {
 	 * @throws IOException
 	 */
 	PmphGroup addEditorSelcetionGroup(String sessionId, List<PmphGroupMember> list, Long textbookId)
-			throws CheckedServiceException, IOException;
+			throws CheckedServiceException;
 
 	/**
 	 * 分页查询小组
