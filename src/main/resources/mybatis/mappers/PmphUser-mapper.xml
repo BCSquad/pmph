@@ -582,7 +582,7 @@
 		WHERE
 		t.editor_id = u.id
 		AND u.id =
-		#{id} AND t.auth_progress in (1,2) AND t.is_editor_handling = 1
+		#{id} AND t.auth_progress = 1 AND t.is_editor_handling = 1
 	</select>
 
 </mapper>

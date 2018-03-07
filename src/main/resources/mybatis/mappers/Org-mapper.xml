@@ -91,14 +91,17 @@
 		resultType="Org">
 		select * from org where id=#{id} ;
 	</select>
-	
+
 	<!-- 根据机构名称机构代码查询一个Org -->
-	<select id="getOrgByNameAndUserName"  resultType="Org">
-		select DISTINCT a.* 
-		from org a 
-		LEFT JOIN org_user b on b.org_id = a.id 
-		where  !a.is_deleted and !b.is_deleted and !b.is_disabled  
-		and  a.org_name = #{name} and b.username = #{username}  ;
+	<select id="getOrgByNameAndUserName" resultType="Org">
+		select DISTINCT
+		a.*
+		from org a
+		LEFT JOIN org_user b on b.org_id = a.id
+		where
+		!a.is_deleted and !b.is_deleted and !b.is_disabled
+		and a.org_name =
+		#{name} and b.username = #{username} ;
 	</select>
 
 	<!--获取学校管理员审核列表 -->
@@ -125,7 +128,8 @@
 		ON
 		o.`id`=ou.`org_id`
 		where
-		ou.is_deleted = 0 and ou.is_proxy_upload=1
+		ou.is_deleted = 0 and
+		ou.is_proxy_upload=1
 		<if test="parameter !=null ">
 			<!-- 学校名称 -->
 			<if test="parameter.orgName !=null and  parameter.orgName != '' ">
@@ -140,9 +144,11 @@
 			<!-- 管理员姓名 -->
 			<if test="parameter.realname != null and parameter.realname !='' ">
 				and (
-						ou.`realname` like concat(concat('%',#{parameter.realname}),'%')
-					OR  
-						ou.username LIKE CONCAT(CONCAT('%',#{parameter.realname}),'%')
+				ou.`realname` like
+				concat(concat('%',#{parameter.realname}),'%')
+				OR
+				ou.username LIKE
+				CONCAT(CONCAT('%',#{parameter.realname}),'%')
 				)
 			</if>
 			<!-- 审核状态 -->
@@ -167,9 +173,11 @@
 			<!-- 管理员姓名 -->
 			<if test="parameter.realname != null and parameter.realname !='' ">
 				and (
-						ou.`realname` like concat(concat('%',#{parameter.realname}),'%')
-					OR  
-						ou.username LIKE CONCAT(CONCAT('%',#{parameter.realname}),'%')
+				ou.`realname` like
+				concat(concat('%',#{parameter.realname}),'%')
+				OR
+				ou.username LIKE
+				CONCAT(CONCAT('%',#{parameter.realname}),'%')
 				)
 			</if>
 			<!-- 审核状态 -->
@@ -237,42 +245,43 @@
 	<select id="listSendToSchoolAdminOrAllUser" parameterType="map"
 		resultType="OrgVO">
 		SELECT
-			GROUP_CONCAT(o.`id`) id,
-			GROUP_CONCAT(o.`org_name`)org_name,
-			o.`area_id`,
-			o.`parent_id`,
-			GROUP_CONCAT(o.`org_type_id`)org_type_id,
-			ar.`area_name`
+		GROUP_CONCAT(o.`id`) id,
+		GROUP_CONCAT(o.`org_name`)org_name,
+		o.`area_id`,
+		o.`parent_id`,
+		GROUP_CONCAT(o.`org_type_id`)org_type_id,
+		ar.`area_name`
 		FROM
-			<if test="materialId !=null ">
-				`material_org` mo 
-			LEFT JOIN  
-				`org` o 
-			ON 
-				mo.`org_id` = o.`id`
-			</if>
-			<if test="materialId ==null ">
-				`org` o
-			</if>
+		<if test="materialId !=null ">
+			`material_org` mo
+			LEFT JOIN
+			`org` o
+			ON
+			mo.`org_id` = o.`id`
+		</if>
+		<if test="materialId ==null ">
+			`org` o
+		</if>
 		LEFT JOIN
-			`org_type` ot
+		`org_type` ot
 		ON
-			o.`org_type_id` =
-			ot.`id`
+		o.`org_type_id` =
+		ot.`id`
 		LEFT JOIN
-			`area` ar ON o.`area_id` = ar.`id`
+		`area` ar ON
+		o.`area_id` = ar.`id`
 		WHERE
-			1=1
-			<if test="orgName !=null and orgName != '' ">
-				and o.`org_name` LIKE CONCAT(CONCAT('%',#{orgName},'%'))
-			</if>
-			<if test="materialId !=null ">
-				AND mo.`material_id`= #{materialId}
-			</if>
+		1=1
+		<if test="orgName !=null and orgName != '' ">
+			and o.`org_name` LIKE CONCAT(CONCAT('%',#{orgName},'%'))
+		</if>
+		<if test="materialId !=null ">
+			AND mo.`material_id`= #{materialId}
+		</if>
 		GROUP BY
-			o.`area_id`
-			ORDER BY
-			o.`area_id`,o.`id` ASC;
+		o.`area_id`
+		ORDER BY
+		o.`area_id`,o.`id` ASC;
 	</select>
 
 	<!-- 新增用户或者修改用户是加载的机构 -->
@@ -341,47 +350,55 @@
 		resultType="Org">
 		select * from org where org_type_id=#{typeId} ;
 	</select>
-	<!-- 根据orgName查询id-->
-	<select id="getOrgid" parameterType="String"
-		resultType="Long">
-		select id from org where org_name=#{orgName} ;
+	<!-- 根据orgName查询id -->
+	<select id="getOrgid" parameterType="String" resultType="Long">
+		select
+		id from org where org_name=#{orgName} ;
 	</select>
-	
-	<!-- 根据书籍获取当选了该书籍的人员所属机构-->
-	<select id="listBeElectedOrgByBookIds" parameterType="list" resultType="Org">
-		select DISTINCT DISTINCT a.* 
-			from org a 
-			LEFT JOIN declaration b on b.org_id = a.id 
-			LEFT JOIN dec_position c on c.declaration_id=b.id
-			LEFT JOIN textbook     d  on d.id = c.textbook_id
-			where 
-			b.is_staging =false and b.online_progress != 2
-			and c.chosen_position in (1, 2, 3, 4) and d.is_published = true 
-			and b.id is not null and c.id is not null and d.id is not null 
-			and d.id in 
-			<foreach item="bookId" collection="list" open="(" separator="," close=")">
-            	#{bookId}
-        	</foreach>
+
+	<!-- 根据书籍获取当选了该书籍的人员所属机构 -->
+	<select id="listBeElectedOrgByBookIds" parameterType="list"
+		resultType="Org">
+		select DISTINCT DISTINCT a.*
+		from org a
+		LEFT JOIN declaration b on
+		b.org_id = a.id
+		LEFT JOIN dec_position c on c.declaration_id=b.id
+		LEFT
+		JOIN textbook d on d.id = c.textbook_id
+		where
+		b.is_staging =false and
+		b.online_progress != 2
+		and c.chosen_position in (1, 2,4,8,9,10,12) and
+		d.is_published = true
+		and b.id is not null and c.id is not null and
+		d.id is not null
+		and d.id in
+		<foreach item="bookId" collection="list" open="(" separator=","
+			close=")">
+			#{bookId}
+		</foreach>
 	</select>
-	
+
 	<!-- 所有学校导出 -->
 	<select id="listAllOrgToExcel" resultType="OrgExclVO">
-		SELECT 
-		  	o.`org_name`,
-		  	ou.`username`,
-		  	ar.`area_name`
+		SELECT
+		o.`org_name`,
+		ou.`username`,
+		ar.`area_name`
 		FROM
-		  	`org` o 
-		LEFT JOIN 
-			`org_user` ou
-		ON 
-			o.`id` = ou.`org_id`
-		JOIN 
-			`area` ar 
-		ON 
-			o.`area_id` = ar.`id` 
-		ORDER BY 
-			o.`area_id`,o.`id` ASC ;
+		`org` o
+		LEFT JOIN
+		`org_user` ou
+		ON
+		o.`id`
+		= ou.`org_id`
+		JOIN
+		`area` ar
+		ON
+		o.`area_id` = ar.`id`
+		ORDER BY
+		o.`area_id`,o.`id` ASC ;
 	</select>
-	
+
 </mapper>
