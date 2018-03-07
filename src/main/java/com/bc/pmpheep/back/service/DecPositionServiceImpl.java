@@ -680,7 +680,7 @@ public class DecPositionServiceImpl implements DecPositionService {
 		int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
 		if (total > 0) {
 			List<DeclarationSituationBookResultVO> declarationSituationBookResultVOs = decPositionDao
-					.getBookResult(pageParameter);
+					.getBookResultPreset(pageParameter);
 			List<DeclarationSituationBookResultVO> list = new ArrayList<>();
 			for (DeclarationSituationBookResultVO declarationSituationBookResultVO : declarationSituationBookResultVOs) {
 				// 计算申报人数和当选人数
