@@ -400,6 +400,18 @@ public interface DecPositionDao {
      * @return Integer
      */
     Integer getBooks(Long materialId);
+    
+    /**
+     * 
+     * Description:获取书本列表
+     * 
+     * @author:lyc
+     * @date:2017年12月1日下午5:22:39
+     * @param
+     * @return List<DeclarationSituationBookResultVO>
+     */
+    List<DeclarationSituationBookResultVO> getBookListOne(
+    		PageParameter<DeclarationSituationBookResultVO> pageParameter);
 
     /**
      * 
@@ -451,6 +463,17 @@ public interface DecPositionDao {
 
     /**
      * 
+     * Description:获取书本列表
+     * 
+     * @author:lyc
+     * @date:2017年12月1日下午5:22:39
+     * @param
+     * @return List<DeclarationSituationBookResultVO>
+     */
+    List<DeclarationResultBookVO> getBookListTwo(PageParameter<DeclarationResultBookVO> pageParameter);
+    
+    /**
+     * 
      * Description:根据教材id（和书名）查询统计结果
      * 
      * @author:lyc
@@ -458,7 +481,7 @@ public interface DecPositionDao {
      * @param
      * @return List<DeclarationResultBookVO>
      */
-    List<DeclarationResultBookVO> getBookList(PageParameter<DeclarationResultBookVO> pageParameter);
+    List<DeclarationResultBookVO> getBookChosenList(PageParameter<DeclarationResultBookVO> pageParameter);
 
     /**
      * 根据书籍id查询该书的主编、副编委、编委

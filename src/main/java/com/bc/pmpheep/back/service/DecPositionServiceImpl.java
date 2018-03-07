@@ -795,7 +795,7 @@ public class DecPositionServiceImpl implements DecPositionService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
 		if (total > 0) {
-			List<DeclarationResultBookVO> VOs = decPositionDao.getBookList(pageParameter);
+			List<DeclarationResultBookVO> VOs = decPositionDao.getBookChosenList(pageParameter);
 			List<DeclarationResultBookVO> list = new ArrayList<>();
 			for (DeclarationResultBookVO declarationResultBookVO : VOs){
 				if (StringUtil.isEmpty(declarationResultBookVO.getEditorList())){
