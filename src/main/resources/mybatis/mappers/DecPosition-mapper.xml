@@ -550,19 +550,20 @@
 	<!-- 根据materialId查询学校申报总数 -->
     <select id="getSchoolDeclarationCount" parameterType="java.lang.Long" 
         resultType="java.lang.Integer">
-        SELECT count(a.preset_position) count 
+        SELECT COUNT(*) FROM (
+        SELECT count(a.declaration_id) count 
 		FROM dec_position a 
 		LEFT JOIN declaration b ON a.declaration_id = b.id 
 		LEFT JOIN material c ON b.material_id = c.id 
 		LEFT JOIN org d ON b.org_id = d.id 
 		WHERE a.preset_position IS NOT NULL AND c.id = #{materialId} 
-		AND b.is_staging = 0 AND b.online_progress > 0 ;
+		AND b.is_staging = 0 AND b.online_progress > 0 GROUP BY a.declaration_id)a;
     </select>
     
     <!-- 根据materialId查询学校当选总数 -->
     <select id="getSchoolDeclarationChosenCount" parameterType="java.lang.Long"
         resultType="java.lang.Integer">
-        SELECT count(a.chosen_position) count 
+        SELECT IFNULL(SUM(if((a.chosen_position IN (1,2,4,8,9,10,12)),1,0)),0) count 
 		FROM dec_position_published a 
 		LEFT JOIN declaration b ON a.declaration_id = b.id 
 		LEFT JOIN textbook c ON a.textbook_id = c.id 
