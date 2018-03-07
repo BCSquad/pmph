@@ -286,6 +286,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 				//处理position 
 				String position = pmphGroupMemberManagerVO.getPosition();
 				if(null != position && position.contains(",")) {
+					position = position.replace("无,", "").replace(",无", "");
 					String  [] positions = position.split(",");
 					String tempPosition = positions[0];
 					for(int i = 1 ; i<positions.length ; i++) {
