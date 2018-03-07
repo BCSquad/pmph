@@ -216,24 +216,31 @@
 		'成员'
 		END identity,
 		GROUP_CONCAT(
-		CASE
-		WHEN a.is_writer = 1 THEN
-		(
-		CASE
-		WHEN h.chosen_position = 1 THEN
-		'主编'
-		WHEN h.chosen_position = 2 THEN
-		'副主编'
-		WHEN h.chosen_position = 3 THEN
-		'编委'
-		WHEN h.chosen_position = 0 THEN
-		'无'
-		END
-		)
-		WHEN a.is_writer = 0 THEN
-		'项目策划编辑'
-		END
-		) position,
+			CASE WHEN a.is_writer = 0 THEN
+			(
+				CASE
+					WHEN a.user_id = k.director then '主任'
+          WHEN a.user_id = l.editor_id   then '项目编辑'
+          WHEN a.user_id = i.planning_editor  then '策划编辑'
+					else '无'
+				END
+			)
+			WHEN a.is_writer = 1 THEN 
+			(
+				CASE
+					WHEN j.chosen_position = 12 and j.rank =1  THEN '主编（第一主编）,数字编委'
+          WHEN j.chosen_position = 4  and j.rank =1  THEN '主编（第一主编）'
+          WHEN j.chosen_position = 12                THEN '主编,数字编委'
+          WHEN j.chosen_position = 4                 THEN '主编'
+          WHEN j.chosen_position = 10                THEN '副主编,数字编委'
+          WHEN j.chosen_position = 2                 THEN '副主编'
+					WHEN j.chosen_position = 9                 THEN '编委,数字编委'
+          WHEN j.chosen_position = 1                 THEN '编委'
+					else '无'
+				END
+			)
+			END
+		)  position,
 		CASE
 		WHEN a.is_writer = 1 THEN
 		e.org_id
@@ -272,7 +279,12 @@
 		LEFT JOIN (SELECT a.* FROM writer_user a) e ON a.user_id = e.id
 		LEFT JOIN org f ON f.id = e.org_id
 		LEFT JOIN declaration g ON g.user_id = e.id
-		LEFT JOIN dec_position h ON g.id = h.declaration_id
+		
+		LEFT JOIN textbook i on i.id = b.book_id
+		LEFT JOIN dec_position_published j on j.textbook_id = i.id and g.id = j.declaration_id
+        LEFT JOIN material k on k.id = i.material_id
+        LEFT JOIN material_project_editor	l on l.material_id = k.id
+		
 		WHERE a.group_id =
 		#{parameter.groupId} and
 		a.is_deleted = false
