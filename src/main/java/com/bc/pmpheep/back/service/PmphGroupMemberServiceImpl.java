@@ -283,6 +283,19 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 				} else {
 					pmphGroupMemberManagerVO.setUserType(Const.SENDER_TYPE_1);
 				}
+				//处理position 
+				String position = pmphGroupMemberManagerVO.getPosition();
+				if(null != position && position.contains(",")) {
+					String  [] positions = position.split(",");
+					String tempPosition = positions[0];
+					for(int i = 1 ; i<positions.length ; i++) {
+						if(!(","+tempPosition+",").contains(","+positions[i]+",")) {
+							tempPosition = ","+positions[i];
+						}
+					}
+					pmphGroupMemberManagerVO.setPosition(tempPosition);
+				}
+				//处理position  end
 			}
 			pageResult.setRows(list);
 		}
@@ -462,16 +475,21 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"该用户为空");
 		}
-		if (!pmphUser.getIsAdmin()) {
-			if (!isFounderOrisAdmin(pmphGroup.getId(), sessionId)) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
-						"该用户没有操作权限");
-			}
-		}
+//		if (!pmphUser.getIsAdmin()) {
+//			if (!isFounderOrisAdmin(pmphGroup.getId(), sessionId)) {
+//				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.ILLEGAL_PARAM,
+//						"该用户没有操作权限");
+//			}
+//		}
 		// 通过书籍id查询所有主编、副主编、编委
 		List<TextbookDecVO> textbookDecVOs = decPositionService.getTextbookEditorList(textbookId);
 		// 通过小组id查询小组现有成员
 		List<PmphGroupMember> pmphGroupMembers = pmphGroupMemberDao.listPmphGroupMembers(pmphGroup.getId());
+		// 先判断小组现有成员与现在书籍id成员是否相同
+		if(textbookDecVOs.size()==(pmphGroupMembers.size()-1)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.SUCCESS,
+					"小组成员已是最新");
+		}
 		// 用于装已存在小组内的userid
 		String s = ",";
 		for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {

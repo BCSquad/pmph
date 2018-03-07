@@ -1,7 +1,5 @@
 package com.bc.pmpheep.general.runnable;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -70,32 +68,23 @@ public class Download {
         List<String> listHtmlImgs = new ArrayList<String>();
         for (String url : listImgSrc) {
             try {
-                String imageName = url.substring(url.lastIndexOf("/") + 1, url.length());
-                Integer wenhaoInteger = imageName.indexOf("?");
-                if (wenhaoInteger >= 0) {
-                    imageName = imageName.substring(0, wenhaoInteger);
-                }
+                // String imageName = url.substring(url.lastIndexOf("/") + 1, url.length());
+                // Integer wenhaoInteger = imageName.indexOf("?");
+                // if (wenhaoInteger >= 0) {
+                // imageName = imageName.substring(0, wenhaoInteger);
+                // }
                 URL uri = new URL(url);
                 InputStream in = uri.openStream();
-                ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-                byte[] buf = new byte[1024];
-                int length = 0;
-                while ((length = in.read(buf, 0, buf.length)) != -1) {
-                    outStream.write(buf, 0, length);
-                }
-                byte[] data = outStream.toByteArray(); // 取内存中保存的数据
-                InputStream inputStream = new ByteArrayInputStream(data);
                 double randomNumber = Math.random() * 100; // 随机数
                 Random rand = new Random();
                 String mongoId = null;
                 mongoId =
-                fileService.save(inputStream,
+                fileService.save(in,
                                  String.valueOf(randomNumber),
                                  FileType.CMS_IMG,
                                  (long) rand.nextInt(900) + 100);
                 listHtmlImgs.add(mongoId);
                 in.close();
-                outStream.close();
             } catch (Exception e) {
                 logger.error("输入或输出异常:{}", e.getMessage());
             }
