@@ -412,7 +412,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
 
         // 当文章通过的时候 给用户增加积分
-        if (2 == authStatus) {
+        if (Const.CMS_AUTHOR_STATUS_2 == authStatus) {
             String ruleName = "发表文章";
             // 获取积分规则
             WriterPointRule writerPointRuleVOs =
