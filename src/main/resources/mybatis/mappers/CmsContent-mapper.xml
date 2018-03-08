@@ -738,4 +738,66 @@
 	<update id="updateCmsContentByParentId" parameterType="java.util.Map">
 		UPDATE `cms_content` SET comments=comments +(#{comments}) WHERE category_id=1  AND id = #{id};
 	</update>
+	
+	<!--CmsContentVO模糊查询获取帮助列表 -->
+	<select id="listHelp" parameterType="PageParameter" resultType="CmsContentVO">
+		SELECT 
+			cc.`id`,cc.`title`,pu.`username`,cc.`gmt_create`,t.count
+		FROM 
+			`cms_content`cc
+		LEFT JOIN
+			`pmph_user` pu 
+		ON
+			cc.author_id = pu.id,
+			(
+				SELECT 
+					count(*) count
+				FROM 
+					`cms_content`cc
+				LEFT JOIN
+					`pmph_user` pu 
+				ON
+					cc.author_id =  pu .id
+				WHERE
+					cc.`is_deleted`= 0 
+				AND cc.`is_staging` = FALSE 
+				<if test="parameter !=null ">
+					<if test="parameter.categoryId != null">
+						AND cc.`category_id` = #{parameter.categoryId} 
+					</if>
+					<if test="parameter.title != null and parameter.title != ''">
+						AND cc.`title` like concat('%',#{parameter.title},'%')
+					</if>
+					<if test="parameter.username !=null and  parameter.username!='' ">
+						AND (
+							pu.`username` like concat('%',#{parameter.username},'%') 
+						OR
+							pu.`realname` like concat('%',#{parameter.username},'%') )
+					</if>
+				</if>
+			) t
+			WHERE
+				cc.`is_deleted`= 0 
+			AND 
+			 	cc.`is_staging` = FALSE 
+			<if test="parameter !=null ">
+					<if test="parameter.categoryId != null">
+						AND cc.`category_id` = #{parameter.categoryId} 
+					</if>
+					<if test="parameter.title != null and parameter.title != ''">
+						AND cc.`title` like concat('%',#{parameter.title},'%')
+					</if>
+					<if test="parameter.username !=null and  parameter.username!='' ">
+						AND (
+							pu.`username` like concat('%',#{parameter.username},'%') 
+						OR
+							pu.`realname` like concat('%',#{parameter.username},'%') )
+					</if>
+			</if>
+		order by 
+   				  cc.`gmt_create` DESC 
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
 </mapper>

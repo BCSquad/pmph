@@ -49,10 +49,10 @@ public class Const {
     public static final boolean              ISROLLBACK                    = true;
     // 用户SessionId
     public static final String               USER_SEESION_ID               = "userSessionId";
-    //服务器上
-    public static final String SESSION_ID = "sessionId";
+    // 服务器上
+    public static final String               SESSION_ID                    = "sessionId";
 
-//    public static final String               SESSION_ID                    = "JSESSIONID";
+    // public static final String SESSION_ID = "JSESSIONID";
     // PMPH_WECHAT_USER_TOKEN
     public static final String               PMPH_WECHAT_USER_TOKEN        = "token";
     // PMPH_USER_TOKEN
@@ -215,12 +215,13 @@ public class Const {
     public static final Short                CMS_CATEGORY_PERMISSSION_2    = 2;
     public static final Long                 CMS_MATERIAL_ID               = 0L;
     /**
-     * CMS栏目类型（0：评论，1：内容管理，2：信息快报管理，3：公告管理）
+     * CMS栏目类型（0：评论，1：内容管理，2：信息快报管理，3：公告管理，4：帮助管理）
      */
     public static final Long                 CMS_CATEGORY_ID_0             = 0L;
     public static final Long                 CMS_CATEGORY_ID_1             = 1L;
     public static final Long                 CMS_CATEGORY_ID_2             = 2L;
     public static final Long                 CMS_CATEGORY_ID_3             = 3L;
+    public static final Long                 CMS_CATEGORY_ID_4             = 4L;
 
     /**
      * 问卷状态(0=未发送/1=发送/2=回收)
