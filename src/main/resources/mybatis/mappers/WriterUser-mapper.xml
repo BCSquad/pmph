@@ -858,7 +858,7 @@
 					 auth_user_id=#{authUserId},
 				</if>
 				<if test=" isTeacher!= null ">
-					is_teacher= #{isTeacher},
+					is_teacher=#{isTeacher},
 				</if>
 			</set>
 			where
