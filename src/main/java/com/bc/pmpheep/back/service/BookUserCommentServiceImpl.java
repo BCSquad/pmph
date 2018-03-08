@@ -124,11 +124,15 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 					// 现在的规则的积分值+以前的积分
 					Integer temp = 0;
 					if (writerPointLog2.size() > 0) {
-						temp = writerPointRuleVOs.getPoint() + writerPointLog2.get(0).getPoint();
-						writerPointLog.setPoint(temp);
+						Integer newTemp = 0;
+	                	for (WriterPointLog writerPointLogNew : writerPointLog2) {
+	                		newTemp += writerPointLogNew.getPoint();
+	                	}
+	                    temp = writerPointRuleVOs.getPoint() + newTemp;
+						writerPointLog.setPoint(writerPointRuleVOs.getPoint());
 					} else {
 						temp = writerPointRuleVOs.getPoint();
-						writerPointLog.setPoint(temp);
+						writerPointLog.setPoint(writerPointRuleVOs.getPoint());
 					}
 					// 积分规则id
 					writerPointLog.setRuleId(writerPointRuleVOs.getId());
@@ -138,7 +142,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 					WriterPoint point = writerPointService.getWriterPointByUserId(bookUserComment.getWriterId());
 					WriterPoint writerPoint = new WriterPoint();
 					// 当前获取的总积分=评论积分+以前的积分
-					writerPoint.setGain(writerPointLog.getPoint());
+					writerPoint.setGain(temp);
 					writerPoint.setUserId(bookUserComment.getWriterId());
 					writerPoint.setTotal(writerPoint.getGain() + point.getLoss());
 					writerPoint.setLoss(point.getLoss());
