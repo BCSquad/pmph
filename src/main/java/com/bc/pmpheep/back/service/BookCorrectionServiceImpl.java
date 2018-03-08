@@ -112,6 +112,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 		writerUserTrendst.setUserId(submitUserId);
+		writerUserTrendst.setBookId(bookId);
 		writerUserTrendst.setIsPublic(false);// 自己可见
 		writerUserTrendst.setType(10);
 		String detail = "";
