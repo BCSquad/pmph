@@ -425,7 +425,11 @@ public class CmsContentServiceImpl implements CmsContentService {
                 // 现在的规则的积分值+以前的积分
                 Integer temp = 0;
                 if (writerPointLog2.size() > 0) {
-                    temp = writerPointRuleVOs.getPoint() + writerPointLog2.get(0).getPoint();
+                	Integer newTemp = 0;
+                	for (WriterPointLog writerPointLogNew : writerPointLog2) {
+                		newTemp += writerPointLogNew.getPoint();
+                	}
+                    temp = writerPointRuleVOs.getPoint() + newTemp;
                     writerPointLog.setPoint(temp);
                 } else {
                     temp = writerPointRuleVOs.getPoint();
