@@ -139,7 +139,7 @@ public class DeclarationEtcBO {
 	@ExcelHeader(header = "其他社教材编写情况")
 	private ArrayList<DecTextbook> decTextbooks;
 
-        @ExcelHeader(header = "参加人卫慕课、数字教材编写情况")
+    @ExcelHeader(header = "参加人卫慕课、数字教材编写情况")
 	private DecMoocDigital decMoocDigital;
 
 	@ExcelHeader(header = "科研情况")
