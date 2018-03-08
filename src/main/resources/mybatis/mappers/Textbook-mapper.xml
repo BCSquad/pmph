@@ -471,7 +471,7 @@
 			LEFT JOIN `org` org ON dc.`org_id`= org.`id`
 			LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
 			WHERE
-				dc.is_staging=false and dc.online_progress!=2
+				dc.is_staging=false 
 				and dp.chosen_position!=0
 		<if test="parameter.textBookId !=null  ">
 			and dp.`textbook_id` =#{parameter.textBookId}
@@ -489,7 +489,7 @@
 		LEFT JOIN `org` org ON dc.`org_id`= org.`id`
 		LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
 		WHERE
-			dc.is_staging=false and dc.online_progress!=2
+			dc.is_staging=false 
 			and dp.chosen_position!=0
 		<if test="parameter.textBookId !=null  ">
 			and dp.`textbook_id` =#{parameter.textBookId}
