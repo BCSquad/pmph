@@ -17,6 +17,8 @@ public class WriterPointLogVO implements java.io.Serializable{
 	private Long userId;
 	//规则id
 	private Long ruleId;
+	//规则名称
+	private String ruleName;
 	//积分变化(可为负数)
 	private Integer point;
 	//条件分页总条数分页查询
@@ -87,6 +89,14 @@ public class WriterPointLogVO implements java.io.Serializable{
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public String getRuleName() {
+		return ruleName;
+	}
+
+	public void setRuleName(String ruleName) {
+		this.ruleName = ruleName;
 	}
 
 	@Override
