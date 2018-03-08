@@ -834,7 +834,7 @@
 		update
 		material
 		set is_all_textbook_published= true
-		where id =  #{material.id}
+		where id = #{id}
 	</update>
 	<!-- 通过教材id查询该教材全部书籍 -->
 	<select id="getMaterialAndTextbook" resultType="Textbook">
