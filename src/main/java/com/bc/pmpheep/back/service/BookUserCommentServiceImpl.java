@@ -114,41 +114,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			// 当用户评论过后 增加相应积分
 			if (isAuth == 1) {
 				String ruleName = "图书评论";
-				// 获取积分规则
-				WriterPointRule writerPointRuleVOs = writerPointRuleService.getWriterPointRuleByName(ruleName);
-				if (null != writerPointRuleVOs) {
-					// 查询用户评论之前的积分值
-					List<WriterPointLog> writerPointLog2 = writerPointLogService
-							.getWriterPointLogByUserId(bookUserComment.getWriterId());
-					WriterPointLog writerPointLog = new WriterPointLog();
-					// 现在的规则的积分值+以前的积分
-					Integer temp = 0;
-					if (writerPointLog2.size() > 0) {
-						Integer newTemp = 0;
-	                	for (WriterPointLog writerPointLogNew : writerPointLog2) {
-	                		newTemp += writerPointLogNew.getPoint();
-	                	}
-	                    temp = writerPointRuleVOs.getPoint() + newTemp;
-						writerPointLog.setPoint(writerPointRuleVOs.getPoint());
-					} else {
-						temp = writerPointRuleVOs.getPoint();
-						writerPointLog.setPoint(writerPointRuleVOs.getPoint());
-					}
-					// 积分规则id
-					writerPointLog.setRuleId(writerPointRuleVOs.getId());
-					writerPointLog.setUserId(bookUserComment.getWriterId());
-					// 增加积分记录
-					writerPointLogService.add(writerPointLog);
-					WriterPoint point = writerPointService.getWriterPointByUserId(bookUserComment.getWriterId());
-					WriterPoint writerPoint = new WriterPoint();
-					// 当前获取的总积分=评论积分+以前的积分
-					writerPoint.setGain(temp);
-					writerPoint.setUserId(bookUserComment.getWriterId());
-					writerPoint.setTotal(writerPoint.getGain() + point.getLoss());
-					writerPoint.setLoss(point.getLoss());
-					writerPoint.setId(point.getId());
-					writerPointService.updateWriterPoint(writerPoint);
-				}
+				writerPointLogService.addWriterPointLogByRuleName(ruleName, bookUserComment.getWriterId());
 			}
 		}
 		if (num > 0) {
