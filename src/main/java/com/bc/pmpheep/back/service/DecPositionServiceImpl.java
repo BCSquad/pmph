@@ -959,6 +959,9 @@ public class DecPositionServiceImpl implements DecPositionService {
 				pageResult.setTotal(total);
 				return pageResult;
 			}
+			if (VOs.size() < books.size()){
+				flag = true;
+			}
 			for (DeclarationResultBookVO book : books){
 				for (DeclarationResultBookVO vo : VOs){
 					if (vo.getId().equals(book.getId())){
