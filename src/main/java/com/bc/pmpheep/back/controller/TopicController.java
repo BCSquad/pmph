@@ -186,6 +186,8 @@ public class TopicController {
 		topic.setIsRejectedByDirector(isRejectedByDirector);
 		if (isRejectedByDirector) {
 			topicLog.setTopicEvent("主任退回选题给运维人员");
+			topic.setIsRejectedByEditor(false);
+			topic.setReasonEditor("-");
 			topic.setIsDirectorHandling(false);
 			topic.setReasonDirector(reasonDirector);
 		} else {

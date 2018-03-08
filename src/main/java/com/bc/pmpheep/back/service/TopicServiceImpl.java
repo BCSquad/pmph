@@ -249,6 +249,7 @@ public class TopicServiceImpl implements TopicService {
 		}
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 		writerUserTrendst.setUserId(topicDao.getTopicTextVO(topic.getId()).getUserId());
+		writerUserTrendst.setBookId(topic.getId());
 		writerUserTrendst.setType(9);
 		writerUserTrendst.setIsPublic(false);
 		if (ObjectUtil.notNull(topic.getAuthProgress())) {
@@ -259,7 +260,7 @@ public class TopicServiceImpl implements TopicService {
 			if (3 == topic.getAuthProgress()) {
 				Map<String, Object> detail = new HashMap<String, Object>();
 				detail.put("title", CheckedExceptionBusiness.TOPIC);
-				detail.put("content", "您的选题已经通过。");
+				detail.put("content", "您的选题《"+topic.getBookname()+"》已经通过。");
 				detail.put("img", 1);
 				writerUserTrendst.setDetail(new Gson().toJson(detail));
 				// 创建本版号并将本版号放入数据中
@@ -304,7 +305,7 @@ public class TopicServiceImpl implements TopicService {
 			} else {
 				Map<String, Object> detail = new HashMap<String, Object>();
 				detail.put("title", CheckedExceptionBusiness.TOPIC);
-				detail.put("content", "您的选题未通过。");
+				detail.put("content", "您的选题《"+topic.getBookname()+"》未通过。");
 				detail.put("img", 2);
 				writerUserTrendst.setDetail(new Gson().toJson(detail));
 			}

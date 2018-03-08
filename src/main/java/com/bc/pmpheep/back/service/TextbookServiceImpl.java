@@ -94,7 +94,9 @@ public class TextbookServiceImpl implements TextbookService {
 	
     @Autowired
     private SystemMessageService systemMessageService;
-
+    
+    @Autowired
+    private  TextbookService textbookService;
 	/**
 	 * 
 	 * @param Textbook
@@ -199,29 +201,6 @@ public class TextbookServiceImpl implements TextbookService {
 			textBookIds.add(textbook.getId());
 		}
 		// textbookDao.updateBookPublished(textBooks);
-		List<Textbook> books = materialDao.getMaterialAndTextbook(materials);
-		Integer count = 0;
-		/* 通过遍历查看教材下面所有书籍是否公布，当数据全部公布则该教材改为最终公布 */
-		for (Textbook book : books) {
-			if (book.getIsPublished()) {
-				count++;
-			}
-		}
-		if (count == books.size()) {
-		    // 检查有没有再次公布 
-			PageResult<BookPositionVO> listBookPosition = this.listBookPosition(1,9999999, null,null, null, materials.getId(),sessionId);
-			boolean haveNo = true;
-			for(BookPositionVO bookPositionVO:listBookPosition.getRows()) {
-				if(bookPositionVO.getIsPublished() && bookPositionVO.getRepub()) {
-					haveNo = false;
-					break;
-				}
-			}
-			if(haveNo) {
-				count = materialDao.updateMaterialPublished(materials);
-			}
-		}
-
 		// textbookDao.updateTextbook(textbook);
 		/** 下面是发布更新最终结果表的数据 */
 		// 获取这些书的申报者
@@ -250,6 +229,29 @@ public class TextbookServiceImpl implements TextbookService {
 		// 向dec_position_published插入新数据
 		decPositionPublishedService.batchInsertDecPositionPublished(decPositionPublishedLst);
 		/** 发布更新最终结果表的数据 ---end --- */
+		//List<Textbook> books = materialDao.getMaterialAndTextbook(materials);
+		List<Textbook> books = textbookService. getTextbookByMaterialId(materials.getId());
+		Integer count = 0;
+		/* 通过遍历查看教材下面所有书籍是否公布，当数据全部公布则该教材改为最终公布 */
+		for (Textbook book : books) {
+			if (book.getIsPublished()) {
+				count++;
+			}
+		}
+		if (count == books.size()) {
+		    // 检查有没有再次公布 
+			PageResult<BookPositionVO> listBookPosition = this.listBookPosition(1,9999999, null,null, null, materials.getId(),sessionId);
+			boolean haveNo = true;
+			for(BookPositionVO bookPositionVO:listBookPosition.getRows()) {
+				if(bookPositionVO.getIsPublished() && bookPositionVO.getRepub()) {
+					haveNo = false;
+					break;
+				}
+			}
+			if(haveNo) {
+				count = materialDao.updateMaterialPublished(materials);
+			}
+		}
 		//发送消息
 		for (Textbook textbook : textbooks) {
 			systemMessageService.sendWhenPubfinalResult(textbook.getId(),decPositionPublishedLst) ;

@@ -201,8 +201,10 @@ public class SpringThread implements Runnable {
 		try {
 			List<DeclarationEtcBO> list = new ArrayList<>();
 			for (int i = 0; i < textbooks.size(); i++) {
+				String textbookName = textbooks.get(i).getTextbookName() + "第" + textbooks.get(i).getTextbookRound()
+						+ "版";
 				for (DeclarationEtcBO declarationEtcBO : declarationEtcBOs) {
-					if (textbooks.get(i).getTextbookName().equals(declarationEtcBO.getTextbookName())) {
+					if (textbookName.equals(declarationEtcBO.getTextbookName())) {
 						list.add(declarationEtcBO);
 					}
 				}
@@ -213,7 +215,7 @@ public class SpringThread implements Runnable {
 					sb.append(File.separator);
 					sb.append(material.getMaterialName());
 					sb.append(File.separator);
-					sb.append((i + 1) + "." + textbooks.get(i).getTextbookName());
+					sb.append((i + 1) + "." + textbookName);
 					sb.append(File.separator);
 					this.wordHelper.export(material.getMaterialName(), sb.toString(), list, str.toString());
 					list.removeAll(list);
