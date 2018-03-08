@@ -94,7 +94,9 @@ public class TextbookServiceImpl implements TextbookService {
 	
     @Autowired
     private SystemMessageService systemMessageService;
-
+    
+    @Autowired
+    private  TextbookService textbookService;
 	/**
 	 * 
 	 * @param Textbook
@@ -199,7 +201,8 @@ public class TextbookServiceImpl implements TextbookService {
 			textBookIds.add(textbook.getId());
 		}
 		// textbookDao.updateBookPublished(textBooks);
-		List<Textbook> books = materialDao.getMaterialAndTextbook(materials);
+		//List<Textbook> books = materialDao.getMaterialAndTextbook(materials);
+		List<Textbook> books = textbookService. getTextbookByMaterialId(materials.getId());
 		Integer count = 0;
 		/* 通过遍历查看教材下面所有书籍是否公布，当数据全部公布则该教材改为最终公布 */
 		for (Textbook book : books) {
