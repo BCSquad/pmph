@@ -587,10 +587,10 @@ public class DecPositionServiceImpl implements DecPositionService {
 						chosen.setPresetPersons(presetPersons);
 						chosen.setChosenPersons(chosenPersons);
 						chosen.setState(1);
-						list.add(chosen);
 						break;
 					}
 				}
+				list.add(chosen);
 			}
 			presets.removeAll(delList);
 			if (flag){
@@ -618,25 +618,19 @@ public class DecPositionServiceImpl implements DecPositionService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
 		if (total > 0) {
-			boolean flag = false;
 			List<DeclarationSituationSchoolResultVO> presets = decPositionDao
 					.getSchoolResultPreset(pageParameter);
 			List<DeclarationSituationSchoolResultVO> chosens = decPositionDao
 					.getSchoolResultChosen(pageParameter);
-			List<DeclarationSituationSchoolResultVO> delList = new ArrayList<>();
 			List<DeclarationSituationSchoolResultVO> list = new ArrayList<>();
 			if (null == chosens || chosens.isEmpty()){
 				pageResult.setRows(presets);
 				pageResult.setTotal(total);
 				return pageResult;
 			}
-			if (chosens.size() < presets.size()){
-				flag = true;
-			}
 			for (DeclarationSituationSchoolResultVO preset : presets) {
 				for(DeclarationSituationSchoolResultVO chosen : chosens){
 					if (chosen.getOrgId().equals(preset.getOrgId())){
-						delList.add(preset);
 						preset.setChosenPositionEditor(chosen.getChosenPositionEditor());
 						preset.setChosenPositionSubeditor(chosen.getChosenPositionSubeditor());
 						preset.setChosenPositionEditorial(chosen.getChosenPositionEditorial());
@@ -654,14 +648,10 @@ public class DecPositionServiceImpl implements DecPositionService {
 						preset.setPresetPersons(presetPersons);
 						preset.setChosenPersons(chosenPersons);
 						preset.setState(2);
-						list.add(preset);
 						break;
 					}
 				}
-			}
-			presets.removeAll(delList);
-			if (flag){
-				list.addAll(presets);
+				list.add(preset);
 			}
 			pageResult.setRows(list);
 			pageResult.setTotal(total);
@@ -731,14 +721,11 @@ public class DecPositionServiceImpl implements DecPositionService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
 		if (total > 0) {
-			boolean flagOne = false;
-			boolean flagTwo = false;
 			List<DeclarationSituationBookResultVO> books = decPositionDao.getBookListOne(pageParameter);
 			List<DeclarationSituationBookResultVO> presets = decPositionDao
 					.getBookResultPreset(pageParameter);
 			List<DeclarationSituationBookResultVO> chosens = decPositionDao
 					.getBookResultChosen(pageParameter);
-			List<DeclarationSituationBookResultVO> delList = new ArrayList<>();
 			List<DeclarationSituationBookResultVO> middle = new ArrayList<>();
 			List<DeclarationSituationBookResultVO> list = new ArrayList<>();
 			if (null == presets || presets.isEmpty()){
@@ -746,13 +733,9 @@ public class DecPositionServiceImpl implements DecPositionService {
 				pageResult.setTotal(total);
 				return pageResult;
 			}
-			if (presets.size() < books.size()){
-				flagOne = true;
-			}
 			for (DeclarationSituationBookResultVO book : books) {
 				for (DeclarationSituationBookResultVO preset : presets){
 					if (preset.getId().equals(book.getId())){
-						delList.add(book);
 						book.setPresetPositionEditor(preset.getPresetPositionEditor());
 						book.setPresetPositionSubeditor(preset.getPresetPositionSubeditor());
 						book.setPresetPositionEditorial(preset.getPresetPositionEditorial());
@@ -763,28 +746,19 @@ public class DecPositionServiceImpl implements DecPositionService {
 								+ book.getPresetPositionEditorial()
 								+ book.getPresetDigitalEditor();
 						book.setPresetPersons(presetPersons);
-						middle.add(book);
 					    break;
 					}					
 				}
+				middle.add(book);
 			}
-			books.removeAll(delList);
-			if (flagOne){
-				middle.addAll(books);
-			}
-			delList.clear();
 			if (null == chosens || chosens.isEmpty()){
 				pageResult.setRows(middle);
 				pageResult.setTotal(total);
 				return pageResult;
 			}
-			if (chosens.size() < middle.size()){
-				flagTwo = true;
-			}
 			for (DeclarationSituationBookResultVO book : middle){
 				for (DeclarationSituationBookResultVO chosen : chosens){
 					if (chosen.getId().equals(book.getId())){
-						delList.add(book);
 						book.setChosenPositionEditor(chosen.getChosenPositionEditor());
 						book.setChosenPositionSubeditor(chosen.getChosenPositionSubeditor());
 						book.setChosenPositionEditorial(chosen.getChosenPositionEditorial());
@@ -795,14 +769,10 @@ public class DecPositionServiceImpl implements DecPositionService {
 								+ book.getChosenPositionEditorial()
 								+ book.getIsDigitalEditor();
 						book.setChosenPersons(chosenPersons);
-						list.add(book);
 						break;
 					}
 				}
-			}
-			middle.removeAll(delList);
-			if (flagTwo){
-				list.addAll(middle);
+				list.add(book);
 			}
 			pageResult.setRows(list);
 			pageResult.setTotal(total);
@@ -855,10 +825,10 @@ public class DecPositionServiceImpl implements DecPositionService {
 							chosen.setIsDigitalEditorList("-");
 						}
 						chosen.setState(1);
-						list.add(chosen);
 						break;
 					}
 				}
+				list.add(chosen);
 			}
 			presets.removeAll(delList);
 			if (flag){
@@ -885,23 +855,17 @@ public class DecPositionServiceImpl implements DecPositionService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
 		if (total > 0) {
-			boolean flag = false;
 			List<DeclarationResultSchoolVO> presets = decPositionDao.getSchoolListPreset(pageParameter);
 			List<DeclarationResultSchoolVO> chosens = decPositionDao.getSchoolListChosen(pageParameter);
 			List<DeclarationResultSchoolVO> list = new ArrayList<>();
-			List<DeclarationResultSchoolVO> delList = new ArrayList<>();
 			if (null == chosens || chosens.isEmpty()){
 				pageResult.setRows(presets);
 				pageResult.setTotal(total);
 				return pageResult;
 			}
-			if (chosens.size() < presets.size()){
-				flag = true;
-			}
 			for (DeclarationResultSchoolVO preset : presets) {
 				for (DeclarationResultSchoolVO chosen : chosens){
 					if (chosen.getOrgId().equals(preset.getOrgId())){
-						delList.add(preset);
 						preset.setEditorList(chosen.getEditorList());
 						preset.setSubEditorList(chosen.getSubEditorList());
 						preset.setEditorialList(chosen.getEditorialList());
@@ -919,14 +883,10 @@ public class DecPositionServiceImpl implements DecPositionService {
 							preset.setIsDigitalEditorList("-");
 						}
 						preset.setState(2);
-						list.add(preset);
 						break;						
 					}
 				}
-			}
-			presets.removeAll(delList);
-			if (flag){
-				list.addAll(presets);
+				list.add(preset);
 			}
 			pageResult.setRows(list);
 			pageResult.setTotal(total);
@@ -949,18 +909,13 @@ public class DecPositionServiceImpl implements DecPositionService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
 		if (total > 0) {
-			boolean flag = false;
 			List<DeclarationResultBookVO> books = decPositionDao.getBookListTwo(pageParameter);
 			List<DeclarationResultBookVO> VOs = decPositionDao.getBookChosenList(pageParameter);
-			List<DeclarationResultBookVO> delList = new ArrayList<>();
 			List<DeclarationResultBookVO> list = new ArrayList<>();
 			if (null == VOs || VOs.isEmpty()){
 				pageResult.setRows(books);
 				pageResult.setTotal(total);
 				return pageResult;
-			}
-			if (VOs.size() < books.size()){
-				flag = true;
 			}
 			for (DeclarationResultBookVO book : books){
 				for (DeclarationResultBookVO vo : VOs){
@@ -981,14 +936,10 @@ public class DecPositionServiceImpl implements DecPositionService {
 						if (StringUtil.isEmpty(book.getIsDigitalEditorList())){
 							book.setIsDigitalEditorList("-");
 						}
-						list.add(book);
 						break;
 					}
 				}
-			}
-			books.removeAll(delList);
-			if (flag){
-				list.addAll(books);
+				list.add(book);
 			}
 			pageResult.setRows(list);
 			pageResult.setTotal(total);
