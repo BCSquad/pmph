@@ -294,7 +294,8 @@ public interface TopicDao {
 	 */
 	Integer listMyTopicTotal(@Param("authProgress") List<Long> authProgress, @Param("bookname") String bookname,
 			@Param("submitTime") Timestamp submitTime,@Param("isDirectorHandling") Boolean isDirectorHandling,
-			@Param("isEditorHandling") Boolean isEditorHandling, @Param("isOptsHandling") Boolean isOptsHandling);
+			@Param("isEditorHandling") Boolean isEditorHandling, @Param("isOptsHandling") Boolean isOptsHandling,
+			@Param("editorId") Long editorId);
 	/**
 	 * 	查询当前用户相关的选题申报
 	 * @param authProgress
@@ -307,5 +308,6 @@ public interface TopicDao {
 	List<TopicDeclarationVO> listMyTopic(@Param("authProgress") List<Long> authProgress, @Param("pageSize") Integer pageSize,
 			@Param("start")  Integer start,@Param("bookname") String bookname,
 			@Param("submitTime") Timestamp submitTime,@Param("isDirectorHandling")  Boolean isDirectorHandling,
-			@Param("isEditorHandling")Boolean isEditorHandling,@Param("isOptsHandling") Boolean isOptsHandling);
+			@Param("isEditorHandling")Boolean isEditorHandling,@Param("isOptsHandling") Boolean isOptsHandling,
+			@Param("editorId") Long editorId);
 }

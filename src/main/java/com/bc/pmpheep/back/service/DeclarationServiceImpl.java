@@ -239,7 +239,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		if (null != onlineProgress && onlineProgress != 0) {
 			map.put("onlineProgress", onlineProgress); // 学校审核进度
 		}
-		if (null != offlineProgress ) {                 //0 未收到 // 2 已收到
+		if (null != offlineProgress) { // 0 未收到 // 2 已收到
 			map.put("offlineProgress", offlineProgress); // 纸质表进度
 		}
 		if (null != haveFile) {
@@ -298,12 +298,12 @@ public class DeclarationServiceImpl implements DeclarationService {
 	public Declaration onlineProgress(Long id, Integer onlineProgress, String returnCause)
 			throws CheckedServiceException, IOException {
 		if (ObjectUtil.isNull(id)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
-					CheckedExceptionResult.ILLEGAL_PARAM, "主键不能为空!");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+					"主键不能为空!");
 		}
 		if (ObjectUtil.isNull(onlineProgress)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
-					CheckedExceptionResult.ILLEGAL_PARAM, "审核进度不能为空!");
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+					"审核进度不能为空!");
 		}
 		// 获取当前作家用户申报信息
 		Declaration declarationCon = declarationDao.getDeclarationById(id);
@@ -311,7 +311,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		Material material = materialService.getMaterialById(declarationCon.getMaterialId());
 		// 获取审核进度是3并且已提交但是待审核并且是提交到出版社0
 		// 提交出版社，出版社点击通过
-		if (3 == onlineProgress.intValue() && 1 == declarationCon.getOnlineProgress() 
+		if (3 == onlineProgress.intValue() && 1 == declarationCon.getOnlineProgress()
 				&& 0 == declarationCon.getOrgId()) {
 			declarationCon.setOnlineProgress(onlineProgress);
 			declarationDao.updateDeclaration(declarationCon);
@@ -322,8 +322,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String detail = "";
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
-			map.put("content", "恭喜！您提交的《" + material.getMaterialName() 
-					+ "》申报表已通过出版社审核。");
+			map.put("content", "恭喜！您提交的《" + material.getMaterialName() + "》申报表已通过出版社审核。");
 			map.put("img", 1);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
@@ -332,8 +331,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendst.setBookCommentId(null);
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true); // 发送系统消息
-		// 获取审核进度是4并且已经通过审核单位并且不是提交到出版社0则被退回给申报单位
-		// 提交审核单位，审核单位已经通过，出版社退回给申报单位操作
+			// 获取审核进度是4并且已经通过审核单位并且不是提交到出版社0则被退回给申报单位
+			// 提交审核单位，审核单位已经通过，出版社退回给申报单位操作
 		} else if (4 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress()
 				&& 0 != declarationCon.getOrgId()) {
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
@@ -353,8 +352,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			declarationDao.updateDeclaration(declarationCon);
 			// 发送系统消息
 			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false);
-		// 获取审核进度是5并且已经通过审核单位并且不是提交到出版社0则被退回给个人
-		// 提交审核单位，审核单位已经通过，出版社退回给个人操作
+			// 获取审核进度是5并且已经通过审核单位并且不是提交到出版社0则被退回给个人
+			// 提交审核单位，审核单位已经通过，出版社退回给个人操作
 		} else if (5 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress()
 				&& 0 != declarationCon.getOrgId()) {
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
@@ -374,8 +373,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			declarationDao.updateDeclaration(declarationCon);
 			// 发送系统消息
 			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false);
-		// 获取审核进度是5并且机构id为出版社0则被退回给个人
-		// 提交到出版社，出版社退回给个人操作
+			// 获取审核进度是5并且机构id为出版社0则被退回给个人
+			// 提交到出版社，出版社退回给个人操作
 		} else if (5 == onlineProgress.intValue() && 0 == declarationCon.getOrgId()) {
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
@@ -399,8 +398,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String detail = "";
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
-			map.put("content", "抱歉，您提交的《" + material.getMaterialName() 
-					+ "》申报表被出版社退回，请您核对后重试。");
+			map.put("content", "抱歉，您提交的《" + material.getMaterialName() + "》申报表被出版社退回，请您核对后重试。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
@@ -538,39 +536,37 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 作家兼职学术
 		List<DecAcade> decAcadeList = decAcadeDao.getListDecAcadeByDeclarationId(declarationId);
 		// 作家本套上版教材参编情况
-		List<DecLastPosition> decLastPositionList = 
-				decLastPositionDao.getListDecLastPositionByDeclarationId(declarationId);
+		List<DecLastPosition> decLastPositionList = decLastPositionDao
+				.getListDecLastPositionByDeclarationId(declarationId);
 		// 作家主编国家级规划教材情况
-		List<DecNationalPlan> decNationalPlanList = 
-				decNationalPlanDao.getListDecNationalPlanByDeclarationId(declarationId);
+		List<DecNationalPlan> decNationalPlanList = decNationalPlanDao
+				.getListDecNationalPlanByDeclarationId(declarationId);
 		// 人卫社教材编写情况表
-		List<DecTextbookPmph> decTextbookPmphList = 
-				decTextbookPmphDao.getListDecTextbookPmphByDeclarationId(declarationId);
+		List<DecTextbookPmph> decTextbookPmphList = decTextbookPmphDao
+				.getListDecTextbookPmphByDeclarationId(declarationId);
 		// 其他社教材编写情况
 		List<DecTextbook> decTextbookList = decTextbookDao.getListDecTextbookByDeclarationId(declarationId);
 		// 参加人卫慕课、数字教材编写情况表
 		DecMoocDigital decMoocDigital = decMoocDigitalDao.getDecMoocDigitalByDeclarationId(declarationId);
 		// 作家精品课程建设情况
-		List<DecCourseConstruction> decCourseConstruction = 
-				decCourseConstructionDao.getDecCourseConstructionByDeclarationId(declarationId);
+		List<DecCourseConstruction> decCourseConstruction = decCourseConstructionDao
+				.getDecCourseConstructionByDeclarationId(declarationId);
 		// 作家科研情况
 		List<DecResearch> decResearchList = decResearchDao.getListDecResearchByDeclarationId(declarationId);
 		// 主编学术专著情况
 		List<DecMonograph> decMonographList = decMonographDao.getListDecMonographByDeclarationId(declarationId);
 		// 出版行业获奖情况
-		List<DecPublishReward> decPublishRewardList = 
-				decPublishRewardDao.getListDecPublishRewardByDeclarationId(declarationId);
+		List<DecPublishReward> decPublishRewardList = decPublishRewardDao
+				.getListDecPublishRewardByDeclarationId(declarationId);
 		// SCI论文投稿及影响因子情况
 		List<DecSci> decSciList = decSciDao.getListDecSciByDeclarationId(declarationId);
 		// 临床医学获奖情况
-		List<DecClinicalReward> decClinicalRewardList = 
-				decClinicalRewardDao.getListDecClinicalRewardByDeclarationId(declarationId);
+		List<DecClinicalReward> decClinicalRewardList = decClinicalRewardDao
+				.getListDecClinicalRewardByDeclarationId(declarationId);
 		// 学术荣誉授予情况
-		List<DecAcadeReward> decAcadeRewardList = 
-				decAcadeRewardDao.getListDecAcadeRewardByDeclarationId(declarationId);
+		List<DecAcadeReward> decAcadeRewardList = decAcadeRewardDao.getListDecAcadeRewardByDeclarationId(declarationId);
 		// 作家扩展项
-		List<DecExtensionVO> decExtensionList = 
-				decExtensionDao.getListDecExtensionByDeclarationId(declarationId);
+		List<DecExtensionVO> decExtensionList = decExtensionDao.getListDecExtensionByDeclarationId(declarationId);
 		// 编写内容意向表
 		DecIntention decIntention = decIntentionDao.getDecIntentionByDeclarationId(declarationId);
 		// 是否选择必填
@@ -748,8 +744,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 编写内容意向表
 		ArrayList<DecIntention> decIntentions = (ArrayList<DecIntention>) decIntentionDao
 				.getDecIntentionByDeclarationIds(decIds);
-                // 教材扩展项
-                //List<MaterialExtension> extensions = materialExtensionService.getMaterialExtensionByMaterialId(materialId);
+		// 教材扩展项
+		List<MaterialExtension> extensions = materialExtensionService.getMaterialExtensionByMaterialId(materialId);
 		for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
 			String strOnlineProgress = "";// 审核进度
 			String strOfflineProgress = "";// 纸质表进度
@@ -881,7 +877,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			for (DecAchievement achievement : decAchievements) {
 				if (achievement.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
 					decAchievement = achievement;
-                                        break;
+					break;
 				}
 			}
 			// 上套教材
@@ -924,7 +920,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			for (DecMoocDigital moocDigital : decMoocDigitals) {
 				if (moocDigital.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
 					decMoocDigital = moocDigital;
-                                        break;
+					break;
 				}
 			}
 			// 作家科研
@@ -975,7 +971,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			for (DecIntention intention : decIntentions) {
 				if (intention.getDeclarationId().equals(declarationOrDisplayVO.getId())) {
 					decIntention = intention;
-                                        break;
+					break;
 				}
 			}
 			// 作家扩展项
@@ -985,8 +981,9 @@ public class DeclarationServiceImpl implements DeclarationService {
 					extensionVOs.add(extensionVO);
 				}
 			}
-
-			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getTextbookName(),
+			String textbookName = declarationOrDisplayVO.getTextbookName() + "第"
+					+ declarationOrDisplayVO.getTextbookRound() + "版";
+			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(textbookName,
 					declarationOrDisplayVO.getPresetPosition(), declarationOrDisplayVO.getRealname(),
 					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),
 					declarationOrDisplayVO.getOrgName(), declarationOrDisplayVO.getPosition(),

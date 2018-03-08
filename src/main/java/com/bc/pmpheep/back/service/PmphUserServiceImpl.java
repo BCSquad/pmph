@@ -714,21 +714,30 @@ public class PmphUserServiceImpl implements PmphUserService {
         }
         topicDeclarationVO.setBookname(topicBookname);
         pageParameter3.setParameter(topicDeclarationVO);
-        if (2==rolelist.get(0).getId()||9==rolelist.get(0).getId()||1==rolelist.get(0).getId()) {
-            PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
-            topicService.listMyTopic(progress, pageParameter3);
-//            		topicService.listCheckTopic(progress, pageParameter3);		
-            map.put("topicList", pageResultTopicDeclarationVO);
+        //
+        if(sessionPmphUser.getIsAdmin()){
+        	PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
+                    topicService.listMyTopic(progress, pageParameter3,null);
+//                    		topicService.listCheckTopic(progress, pageParameter3);		
+                    map.put("topicList", pageResultTopicDeclarationVO);
         }else{
-        	PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =new PageResult<>();
-	    	List<TopicDeclarationVO> list = new ArrayList<>();
-	    	pageResultTopicDeclarationVO.setPageNumber(0);
-	    	pageResultTopicDeclarationVO.setRows(list);
-	    	pageResultTopicDeclarationVO.setPageTotal(0);
-	    	pageResultTopicDeclarationVO.setStart(0);
-	    	pageResultTopicDeclarationVO.setTotal(0);;
-        	map.put("topicList", pageResultTopicDeclarationVO);
+        	if (2==rolelist.get(0).getId()||9==rolelist.get(0).getId()||1==rolelist.get(0).getId()) {
+                PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
+                topicService.listMyTopic(progress, pageParameter3,sessionPmphUser.getId());
+//                 		topicService.listCheckTopic(progress, pageParameter3);		
+                map.put("topicList", pageResultTopicDeclarationVO);
+            }else{
+            	PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =new PageResult<>();
+     	    	List<TopicDeclarationVO> list = new ArrayList<>();
+     	    	pageResultTopicDeclarationVO.setPageNumber(0);
+     	    	pageResultTopicDeclarationVO.setRows(list);
+     	    	pageResultTopicDeclarationVO.setPageTotal(0);
+     	    	pageResultTopicDeclarationVO.setStart(0);
+     	    	pageResultTopicDeclarationVO.setTotal(0);;
+             	map.put("topicList", pageResultTopicDeclarationVO);
+             }
         }
+       
         // 获取用户上次登录时间
         List<SysOperation> listSysOperation =
         sysOperationService.getSysOperation(sessionPmphUser.getId());

@@ -90,9 +90,21 @@ public class DeclarationOrDisplayVO implements java.io.Serializable {
 	 */
 	private String textbookName;
 	/**
+	 * 书籍版次
+	 */
+	private Integer textbookRound;
+	/**
 	 * 申报职位
 	 */
 	private String presetPosition;
+
+	public Integer getTextbookRound() {
+		return textbookRound;
+	}
+
+	public void setTextbookRound(Integer textbookRound) {
+		this.textbookRound = textbookRound;
+	}
 
 	public Boolean getIsDigitalEditorOptional() {
 		return isDigitalEditorOptional;

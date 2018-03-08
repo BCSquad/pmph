@@ -861,62 +861,68 @@
 	<!-- 查询当前用户相关的选题申报数量 -->
 	<select id="listMyTopicTotal" resultType="java.lang.Integer">
 		SELECT count(*)
-		FROM topic t LEFT JOIN writer_user w ON w.id =
-		t.user_id LEFT JOIN pmph_user p ON p.id = t.editor_id WHERE
-		t.auth_progress IN
+		FROM topic a
+		LEFT JOIN
+		writer_user b ON a.user_id= b.id
+		LEFT JOIN pmph_user c ON a.editor_id =c.id
+		WHERE	
+			a.auth_progress in
 		<foreach collection="authProgress" index="index" close=")"
 			open="(" separator="," item="authProgress">
 			#{authProgress}
 		</foreach>
 		<if test="isDirectorHandling != null">
-			and t.is_director_handling =#{isDirectorHandling}
+			and a.is_director_handling =#{isDirectorHandling}
 		</if>
 		<if test="isOptsHandling != null">
-			and t.is_opts_handling = #{isOptsHandling}
+			and a.is_opts_handling = #{isOptsHandling}
 		</if>
 		<if test="isEditorHandling != null">
-			and t.is_editor_handling = #{isEditorHandling}
+			and a.is_editor_handling = #{isEditorHandling}
 		</if>
 		<if test="bookname != null and bookname !=''">
-			AND t.bookname like concat('%',#{bookname},'%')
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND t.submit_time like concat('%',#{submitTime},'%')
+			AND a.submit_time like concat('%',#{submitTime},'%')
 		</if>
-		ORDER BY t.submit_time
+		<if test="editorId != null">
+			and	a.editor_id=#{editorId}
+		</if>
+		ORDER BY a.submit_time
 	</select>
 	<!-- 查询当前用户相关的选题申报 -->
 	<select id="listMyTopic" resultType="TopicDeclarationVO">
-		SELECT
-		t.*, w.realname,p.realname editorName
-		FROM
-		topic t
+	SELECT a.*,b.realname,c.realname editorName
+		FROM topic a
 		LEFT JOIN
-		writer_user w ON w.id = t.user_id
-		LEFT JOIN pmph_user p ON p.id =
-		t.editor_id
-		WHERE
-		t.auth_progress IN
+		writer_user b ON a.user_id= b.id
+		LEFT JOIN pmph_user c ON a.editor_id =c.id
+		WHERE 
+			 a.auth_progress in
 		<foreach collection="authProgress" index="index" close=")"
 			open="(" separator="," item="authProgress">
 			#{authProgress}
 		</foreach>
 		<if test="isDirectorHandling != null">
-			and t.is_director_handling =#{isDirectorHandling}
+			and a.is_director_handling =#{isDirectorHandling}
 		</if>
 		<if test="isOptsHandling != null">
-			and t.is_opts_handling = #{isOptsHandling}
+			and a.is_opts_handling = #{isOptsHandling}
 		</if>
 		<if test="isEditorHandling != null">
-			and t.is_editor_handling = #{isEditorHandling}
+			and a.is_editor_handling = #{isEditorHandling}
 		</if>
 		<if test="bookname != null and bookname !=''">
-			AND t.bookname like concat('%',#{bookname},'%')
+			AND a.bookname like concat('%',#{bookname},'%')
 		</if>
 		<if test="submitTime != null">
-			AND t.submit_time like concat('%',#{submitTime},'%')
+			AND a.submit_time like concat('%',#{submitTime},'%')
 		</if>
-		ORDER BY t.submit_time
+		<if test="editorId != null">
+			and	a.editor_id=#{editorId}
+		</if>
+		ORDER BY a.submit_time
 		limit
 		#{start},#{pageSize}
 	</select>

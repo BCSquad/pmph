@@ -451,7 +451,7 @@ public class CmsContentServiceImpl implements CmsContentService {
                 writerPoint.setId(point.getId());
                 writerPointService.updateWriterPoint(writerPoint);
             }
-
+            writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
         }
         return count;
     }
