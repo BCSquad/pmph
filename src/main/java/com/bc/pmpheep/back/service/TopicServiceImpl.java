@@ -601,7 +601,7 @@ public class TopicServiceImpl implements TopicService {
 
 	@Override
 	public PageResult<TopicDeclarationVO> listMyTopic(List<Long> authProgress,
-			PageParameter<TopicDeclarationVO> pageParameter) {
+			PageParameter<TopicDeclarationVO> pageParameter,Long editorId) {
 		if (CollectionUtil.isEmpty(authProgress)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
 					"选题申报状态不对");
@@ -610,12 +610,14 @@ public class TopicServiceImpl implements TopicService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		Integer total = topicDao.listMyTopicTotal(authProgress, pageParameter.getParameter().getBookname(),
 				pageParameter.getParameter().getSubmitTime(),pageParameter.getParameter().getIsDirectorHandling(),
-				pageParameter.getParameter().getIsEditorHandling(),pageParameter.getParameter().getIsOptsHandling());
+				pageParameter.getParameter().getIsEditorHandling(),pageParameter.getParameter().getIsOptsHandling()
+				,editorId);
 		if (total > 0) {
 			List<TopicDeclarationVO> list = topicDao.listMyTopic(authProgress, pageParameter.getPageSize(),
 					pageParameter.getStart(), pageParameter.getParameter().getBookname(),
 					pageParameter.getParameter().getSubmitTime(),pageParameter.getParameter().getIsDirectorHandling(),
-					pageParameter.getParameter().getIsEditorHandling(),pageParameter.getParameter().getIsOptsHandling());
+					pageParameter.getParameter().getIsEditorHandling(),pageParameter.getParameter().getIsOptsHandling()
+					,editorId);
 			list = addState(list);
 			pageResult.setRows(list);
 		}
