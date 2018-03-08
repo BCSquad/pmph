@@ -430,10 +430,10 @@ public class CmsContentServiceImpl implements CmsContentService {
                 		newTemp += writerPointLogNew.getPoint();
                 	}
                     temp = writerPointRuleVOs.getPoint() + newTemp;
-                    writerPointLog.setPoint(temp);
+                    writerPointLog.setPoint(writerPointRuleVOs.getPoint());
                 } else {
                     temp = writerPointRuleVOs.getPoint();
-                    writerPointLog.setPoint(temp);
+                    writerPointLog.setPoint(writerPointRuleVOs.getPoint());
                 }
                 // 积分规则id
                 writerPointLog.setRuleId(writerPointRuleVOs.getId());
@@ -444,7 +444,7 @@ public class CmsContentServiceImpl implements CmsContentService {
                 writerPointService.getWriterPointByUserId(cmsContent.getAuthorId());
                 WriterPoint writerPoint = new WriterPoint();
                 // 当前获取的总积分=评论积分+以前的积分
-                writerPoint.setGain(writerPointLog.getPoint());
+                writerPoint.setGain(temp);
                 writerPoint.setUserId(cmsContent.getAuthorId());
                 writerPoint.setTotal(writerPoint.getGain() + point.getLoss());
                 writerPoint.setLoss(point.getLoss());
