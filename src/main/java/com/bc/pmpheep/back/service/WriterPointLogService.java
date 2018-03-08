@@ -60,4 +60,12 @@ public interface WriterPointLogService {
 	 * @throws CheckedServiceException
 	 */
 	List<WriterPointLog> getWriterPointLogByUserId(Long userId) throws CheckedServiceException;
+	
+	/**
+	 * 添加积分积累
+	 * @param ruleName
+	 * @param userId
+	 * @throws CheckedServiceException
+	 */
+	void addWriterPointLogByRuleName(String ruleName, Long userId) throws CheckedServiceException;
 }
