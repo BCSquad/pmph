@@ -33,7 +33,9 @@ import com.bc.pmpheep.back.service.PmphUserWechatService;
 import com.bc.pmpheep.back.sessioncontext.SessionContext;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.DesRun;
+import com.bc.pmpheep.back.util.MD5;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
@@ -297,5 +299,37 @@ public class PmphLoginController {
         responseBean.setCode(ResponseBean.NO_PERMISSION);
         responseBean.setMsg("没有权限！");
         return responseBean;
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：后台一键登陆到前台
+     * 使用示范：
+     *
+     * @param userName 用户名
+     * @param userType 用户类型
+     * @return MD5加密字符串
+     * </pre>
+     */
+    @ResponseBody
+    @RequestMapping(value = "/keyToLand", method = RequestMethod.GET)
+    public ResponseBean keyToLand(@RequestParam("userName") String userName,
+    @RequestParam("userType") Integer userType) {
+        if (StringUtil.isEmpty(userName)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户名为空");
+        }
+        if (ObjectUtil.isNull(userType)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户类型为空");
+        }
+        String key = "1005387596c57c2278f4f61058c78d1b";
+        String today = DateUtil.getDays();
+        String md5 = MD5.md5(userName + key + today);
+        String url =
+        "http://120.76.221.250/pmeph/innerlogin.action?username=" + userName + "&md5=" + md5
+        + "&usertype=" + userType;
+        return new ResponseBean(url);
     }
 }
