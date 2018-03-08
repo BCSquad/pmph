@@ -368,7 +368,7 @@ public interface DecPositionDao {
 
     /**
      * 
-     * Description:根据教材id（和学校名称）查询学校申报职务情况（按当选结果排序）
+     * Description:根据教材id（和学校名称）查询学校当选职务情况（按当选结果排序）
      * 
      * @author:lyc
      * @date:2017年12月1日下午2:30:41
@@ -380,7 +380,7 @@ public interface DecPositionDao {
 
     /**
      * 
-     * Description:根据教材id（和学校名称）查询学校当选职务情况（按申报结果排序）
+     * Description:根据教材id（和学校名称）查询学校申报职务情况（按申报结果排序）
      * 
      * @author:lyc
      * @date:2017年12月5日上午10:15:13
