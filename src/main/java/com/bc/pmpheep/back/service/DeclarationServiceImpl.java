@@ -745,7 +745,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 		ArrayList<DecIntention> decIntentions = (ArrayList<DecIntention>) decIntentionDao
 				.getDecIntentionByDeclarationIds(decIds);
 		// 教材扩展项
-		List<MaterialExtension> extensions = materialExtensionService.getMaterialExtensionByMaterialId(materialId);
+		// List<MaterialExtension> extensions =
+		// materialExtensionService.getMaterialExtensionByMaterialId(materialId);
 		for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
 			String strOnlineProgress = "";// 审核进度
 			String strOfflineProgress = "";// 纸质表进度

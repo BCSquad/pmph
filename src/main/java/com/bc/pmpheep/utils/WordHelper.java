@@ -11,6 +11,7 @@ import com.bc.pmpheep.back.po.DecAchievement;
 import com.bc.pmpheep.back.po.DecClinicalReward;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
+import com.bc.pmpheep.back.po.DecExtension;
 import com.bc.pmpheep.back.po.DecIntention;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecMonograph;
@@ -23,10 +24,12 @@ import com.bc.pmpheep.back.po.DecTeachExp;
 import com.bc.pmpheep.back.po.DecTextbook;
 import com.bc.pmpheep.back.po.DecTextbookPmph;
 import com.bc.pmpheep.back.po.DecWorkExp;
+import com.bc.pmpheep.back.po.MaterialExtension;
 import com.bc.pmpheep.back.util.BinaryUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.DecExtensionVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -75,9 +78,9 @@ public class WordHelper {
 	 * @throws CheckedServiceException
 	 *             已检查的异常
 	 */
-	public void export(String materialName, String textbookPath, List<DeclarationEtcBO> list, String filter)
-			throws CheckedServiceException {
-		HashMap<String, XWPFDocument> map = fromDeclarationEtcBOList(materialName, list, filter);
+	public void export(String materialName, String textbookPath, List<DeclarationEtcBO> list, String filter,
+			List<MaterialExtension> extensions) throws CheckedServiceException {
+		HashMap<String, XWPFDocument> map = fromDeclarationEtcBOList(materialName, list, filter, extensions);
 		if (createPath(textbookPath)) {
 			if (!textbookPath.endsWith(File.separator)) {
 				textbookPath = textbookPath.concat(File.separator);
@@ -116,7 +119,7 @@ public class WordHelper {
 	 *             已检查的异常
 	 */
 	public HashMap<String, XWPFDocument> fromDeclarationEtcBOList(String materialName, List<DeclarationEtcBO> list,
-			String filter) throws CheckedServiceException {
+			String filter, List<MaterialExtension> extensions) throws CheckedServiceException {
 		InputStream is;
 		XWPFDocument document;
 		String path = this.getClass().getClassLoader().getResource("ResumeTemplate.docx").getPath();
@@ -134,12 +137,32 @@ public class WordHelper {
 				List<XWPFRun> runs = document.getParagraphs().get(0).getRuns();
 				runs.get(0).setText(materialName.concat("专家申报表"), 0);
 			}
+			List<XWPFTable> tables = document.getTables();
+			int i = 21;
+			List<DecExtensionVO> decExtensionVOs = bo.getDecExtensionVOs();
+			if (!extensions.isEmpty()) {
+				for (MaterialExtension materialExtension : extensions) {
+					String extensionName = materialExtension.getExtensionName();
+					document.getParagraphs().get(i - 1).createRun().setText(extensionName);
+					i++;
+				}
+			}
+			i = 21;
+			if (!decExtensionVOs.isEmpty()) {
+				for (DecExtensionVO decExtensionVO : decExtensionVOs) {
+					List<XWPFTableRow> rows = tables.get(i).getRows();
+					String value = decExtensionVO.getContent();
+					if (StringUtil.notEmpty(value)) {
+						rows.get(0).getCell(0).setText(value);
+					}
+					i += 2;
+				}
+			}
 			/* 申报单位 */
 			String chosenOrgName = bo.getChosenOrgName();
 			if (StringUtil.notEmpty(chosenOrgName)) {
-				document.getParagraphs().get(21).createRun().setText(chosenOrgName);
+				document.getParagraphs().get(i).createRun().setText(chosenOrgName);
 			}
-			List<XWPFTable> tables = document.getTables();
 			String filename = generateFileName(bo);
 			fillDeclarationPosition(tables.get(0), bo);
 			fillDeclarationData(tables.get(1), bo);
