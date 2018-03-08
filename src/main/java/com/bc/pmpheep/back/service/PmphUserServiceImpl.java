@@ -653,7 +653,6 @@ public class PmphUserServiceImpl implements PmphUserService {
         // 教材申报的结果
         PageResult<MaterialListVO> pageResultMaterialListVO =
         materialService.listMaterials(pageParameter2, sessionId);
-        // if(booleans){
         // 文章审核
         PageParameter<CmsContentVO> pageParameter1 = new PageParameter<>();
         CmsContentVO cmsContentVO = new CmsContentVO();
@@ -664,9 +663,6 @@ public class PmphUserServiceImpl implements PmphUserService {
         PageResult<CmsContentVO> pageResultCmsContentVO =
         cmsContentService.listCmsContent(pageParameter1, sessionId);
         map.put("cmsContent", pageResultCmsContentVO);
-        // }
-        // for (PmphRole pmphRole : rolelist) {
-        // if("策划编辑".equals(pmphRole.getRoleName())||"系统管理员".equals(pmphRole.getRoleName())){
         // 图书纠错审核
         PageResult<BookCorrectionAuditVO> pageResultBookCorrectionAuditVO =
         bookCorrectionService.listBookCorrectionAudit(request,
@@ -676,10 +672,7 @@ public class PmphUserServiceImpl implements PmphUserService {
                                                       null,
                                                       null);
         map.put("bookCorrectionAudit", pageResultBookCorrectionAuditVO);
-        // }
-        // }
         // 图书评论审核
-        // if(sessionPmphUser.getIsAdmin()){
         PageParameter<BookUserCommentVO> pageParameter = new PageParameter<>();
         BookUserCommentVO bookUserCommentVO = new BookUserCommentVO();
         bookUserCommentVO.setName(name.replaceAll(" ", ""));// 去除空格
@@ -687,13 +680,11 @@ public class PmphUserServiceImpl implements PmphUserService {
         PageResult<BookUserCommentVO> pageResultBookUserCommentVO =
         bookUserCommentService.listBookUserCommentAdmin(pageParameter);
         map.put("bookUserComment", pageResultBookUserCommentVO);
-        // }
         // 选题申报
         PageParameter<TopicDeclarationVO> pageParameter3 = new PageParameter<>();
         // 选题申报当前用户角色
         PmphIdentity pmphIdentity = pmphUserService.identity(sessionId);
         TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
-        // 当用户时admin查询所有
         // 是否由主任受理
         if (pmphIdentity.getIsDirector()) {
             topicDeclarationVO.setIsDirectorHandling(true);
@@ -742,12 +733,6 @@ public class PmphUserServiceImpl implements PmphUserService {
         List<SysOperation> listSysOperation =
         sysOperationService.getSysOperation(sessionPmphUser.getId());
         Timestamp loginTime = listSysOperation.get(0).getOperateDate();
-        // 获取最后一次登录时间
-        // if(listSysOperation != null && listSysOperation.size() >= 2){
-        // loginTime=listSysOperation.get(listSysOperation.size()-1).getOperateDate();
-        // }else {
-        // loginTime=listSysOperation.get(0).getOperateDate();
-        // }
         // 把其他模块的数据都装入map中返回给前端
         map.put("materialList", pageResultMaterialListVO);
         map.put("pmphGroup", pageResultPmphGroup);

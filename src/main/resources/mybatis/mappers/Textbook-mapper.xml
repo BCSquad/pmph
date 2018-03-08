@@ -471,7 +471,7 @@
 			LEFT JOIN `org` org ON dc.`org_id`= org.`id`
 			LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
 			WHERE
-				dc.is_staging=false and dc.online_progress!=2
+				dc.is_staging=false 
 				and dp.chosen_position!=0
 		<if test="parameter.textBookId !=null  ">
 			and dp.`textbook_id` =#{parameter.textBookId}
@@ -489,7 +489,7 @@
 		LEFT JOIN `org` org ON dc.`org_id`= org.`id`
 		LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
 		WHERE
-			dc.is_staging=false and dc.online_progress!=2
+			dc.is_staging=false 
 			and dp.chosen_position!=0
 		<if test="parameter.textBookId !=null  ">
 			and dp.`textbook_id` =#{parameter.textBookId}
@@ -512,7 +512,7 @@
 		LEFT JOIN `textbook` t ON t.`id`= dp.`textbook_id`
 		LEFT JOIN `material` m ON m.`id`= t.`material_id`
 		WHERE
-			dc.is_staging=false and dc.online_progress!=2 and dp.chosen_position !=0
+			dc.is_staging=false and dc.online_progress!=0 and dp.chosen_position !=0
 			and dp.`textbook_id` in
 		<foreach collection="array" item="item" index="index" open="("
 			separator="," close=")">
@@ -532,7 +532,7 @@
 					left join writer_user wu on wu.id =dc.user_id 
 					left join textbook tk on tk.id =dp.textbook_id
 					left join material m on m.id=tk.material_id
-					WHERE dc.is_staging=false and dc.online_progress!=2
+					WHERE dc.is_staging=false and dc.online_progress!=0
 				and dp.chosen_position in(2,3,4,5,6,10,11,12,13,14,15,16,17)
 				and dp.`textbook_id` in
 		<foreach collection="array" item="item" index="index" open="("

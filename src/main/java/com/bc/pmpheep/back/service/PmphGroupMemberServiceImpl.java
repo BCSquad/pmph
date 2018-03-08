@@ -540,34 +540,8 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
             throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
                                               CheckedExceptionResult.SUCCESS, "小组成员已是最新");
         }
-        // 先判断小组现有成员与现在书籍id成员是否相同
-        // if (textbookDecVOs.size() == (pmphGroupMembers.size() - 1)) {
-        // throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-        // CheckedExceptionResult.SUCCESS, "小组成员已是最新");
-        // }
         pmphGroupMemberService.addPmphGroupMemberOnGroup(pmphGroup.getId(), list, sessionId);
         result = "SUCCESS";
-
-        // 用于装已存在小组内的userid
-        // String s = ",";
-        // for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
-        // s += pmphGroupMember.getUserId() + ",";
-        // }
-        // // 通过遍历把不存在的成员添加到list中
-        // for (TextbookDecVO textbookDecVO : textbookDecVOs) {
-        // String str = textbookDecVO.getUserId().toString();
-        // if (!s.contains(textbookDecVO.getUserId().toString())) {
-        // list.add(new PmphGroupMember(textbookDecVO.getUserId(), Const.TRUE));
-        // }
-        // }
-        // // 批量把没有加入的小组的传入作家用户添加到该小组
-        // if (list.size() == 0 || list == null) {
-        // throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-        // CheckedExceptionResult.NULL_PARAM, "添加成员失败 ");
-        // } else {
-        // pmphGroupMemberService.addPmphGroupMemberOnGroup(pmphGroup.getId(), list, sessionId);
-        // result = "SUCCESS";
-        // }
         return result;
     }
 }

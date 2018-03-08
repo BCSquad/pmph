@@ -967,7 +967,7 @@
  		LEFT JOIN `writer_user` wu ON wu.`id`= dc.`user_id`
  		WHERE
  			dc.is_staging=false 
- 			and dc.online_progress!=2
+ 			and dp.chosen_position!=0
  			and dp.`textbook_id` =#{textBookId}
      </select>
 	
