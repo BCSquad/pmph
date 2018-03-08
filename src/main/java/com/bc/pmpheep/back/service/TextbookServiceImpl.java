@@ -612,7 +612,7 @@ public class TextbookServiceImpl implements TextbookService {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK, CheckedExceptionResult.NULL_PARAM,
 						"书籍名称不能为空");
 			}
-			if (StringUtil.strLength(book.getTextbookName()) > 25) {
+			if (StringUtil.strLength(book.getTextbookName()) > 50) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 						CheckedExceptionResult.ILLEGAL_PARAM, "书籍名称字数不能超过25个,请修改后再提交");
 			}
@@ -751,7 +751,7 @@ public class TextbookServiceImpl implements TextbookService {
 					break;
 				}
 				String bookName = StringUtil.getCellValue(second);
-				if (StringUtil.strLength(bookName) > 25) {
+				if (StringUtil.strLength(bookName) > 50) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
 							CheckedExceptionResult.ILLEGAL_PARAM, "图书名称不能超过25个字数，请修改后再上传");
 				}

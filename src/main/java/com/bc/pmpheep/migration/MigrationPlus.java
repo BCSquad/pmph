@@ -459,10 +459,10 @@ public class MigrationPlus {
 		 writerPointRuleService.addWriterPointRule(writerPointRule2);
 		 WriterPointRule writerPointRule3=new WriterPointRule("登录", "login", 1, false, null, null, "每天登录一次给1分，一天仅一次", true);
 		 writerPointRuleService.addWriterPointRule(writerPointRule3);
-		 WriterPointRule writerPointRule4=new WriterPointRule("回复话题", "reply_topic", 1, false, null, null, "回复话题给1分", true);
+		 /*WriterPointRule writerPointRule4=new WriterPointRule("回复话题", "reply_topic", 1, false, null, null, "回复话题给1分", true);
 		 writerPointRuleService.addWriterPointRule(writerPointRule4);
 		 WriterPointRule writerPointRule5=new WriterPointRule("创建话题", "create_topic", 1, false, null, null, "创建话题给1分", true);
-		 writerPointRuleService.addWriterPointRule(writerPointRule5);
+		 writerPointRuleService.addWriterPointRule(writerPointRule5);*/
 		 WriterPointRule writerPointRule9=new WriterPointRule("图书评论", "book_comment", 1, false, null, null, "图书评论给1分", true);
 		 writerPointRuleService.addWriterPointRule(writerPointRule9);
 		 WriterPointRule writerPointRule10=new WriterPointRule("图书纠错", "book_correction", 1, false, null, null, "图书纠错给1分", true);
