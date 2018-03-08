@@ -98,37 +98,39 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
 			throws CheckedServiceException {
 		//获取积分规则
 		WriterPointRule writerPointRuleVOs = writerPointRuleService.getWriterPointRuleByName(ruleName);
-		if(null!=writerPointRuleVOs){
-			//查询用户纠错之前的积分值
-			List<WriterPointLog> writerPointLog2= this.getWriterPointLogByUserId(userId);
-			WriterPointLog writerPointLog=new WriterPointLog();
-			//现在的规则的积分值+以前的积分
-			Integer temp=0;
-			if(writerPointLog2.size()>0){
-				Integer newTemp = 0;
-            	for (WriterPointLog writerPointLogNew : writerPointLog2) {
-            		newTemp += writerPointLogNew.getPoint();
-            	}
-                temp = writerPointRuleVOs.getPoint() + newTemp;
-				writerPointLog.setPoint(writerPointRuleVOs.getPoint());
-			}else{
-				temp=writerPointRuleVOs.getPoint();
-				writerPointLog.setPoint(writerPointRuleVOs.getPoint());
+		if (writerPointRuleVOs.getIsDisabled() == true) {
+			if (null != writerPointRuleVOs){
+				//查询用户纠错之前的积分值
+				List<WriterPointLog> writerPointLog2 = this.getWriterPointLogByUserId(userId);
+				WriterPointLog writerPointLog = new WriterPointLog();
+				//现在的规则的积分值+以前的积分
+				Integer temp = 0;
+				if (writerPointLog2.size() > 0){
+					Integer newTemp = 0;
+	            	for (WriterPointLog writerPointLogNew : writerPointLog2) {
+	            		newTemp += writerPointLogNew.getPoint();
+	            	}
+	                temp = writerPointRuleVOs.getPoint() + newTemp;
+					writerPointLog.setPoint(writerPointRuleVOs.getPoint());
+				}else{
+					temp = writerPointRuleVOs.getPoint();
+					writerPointLog.setPoint(writerPointRuleVOs.getPoint());
+				}
+				//积分规则id
+				writerPointLog.setRuleId(writerPointRuleVOs.getId());
+				writerPointLog.setUserId(userId);
+				//增加积分记录
+				this.add(writerPointLog);
+				WriterPoint point = writerPointService.getWriterPointByUserId(userId);
+				WriterPoint writerPoint = new WriterPoint();
+				//当前获取的总积分=评论积分+以前的积分
+				writerPoint.setGain(temp);
+				writerPoint.setUserId(userId);
+				writerPoint.setTotal(writerPoint.getGain() + point.getLoss());
+				writerPoint.setLoss(point.getLoss());
+				writerPoint.setId(point.getId());
+				writerPointService.updateWriterPoint(writerPoint);
 			}
-			//积分规则id
-			writerPointLog.setRuleId(writerPointRuleVOs.getId());
-			writerPointLog.setUserId(userId);
-			//增加积分记录
-			this.add(writerPointLog);
-			WriterPoint point=writerPointService.getWriterPointByUserId(userId);
-			WriterPoint writerPoint=new WriterPoint();
-			//当前获取的总积分=评论积分+以前的积分
-			writerPoint.setGain(temp);
-			writerPoint.setUserId(userId);
-			writerPoint.setTotal(writerPoint.getGain()+point.getLoss());
-			writerPoint.setLoss(point.getLoss());
-			writerPoint.setId(point.getId());
-			writerPointService.updateWriterPoint(writerPoint);
 		}
 	}
 
