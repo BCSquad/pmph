@@ -171,14 +171,14 @@ WriterUserCertificationService {
 					for (WriterUser wrs : writerUsers) {
 						wrs.setAuthUserType(1);
 						wrs.setAuthUserId(pmphuser.getId());
-						writerUser.setIsTeacher(true);
+						wrs.setIsTeacher(true);
 						writerUserService.updateWriterUserRank(wrs);
 					}
 				}else{
 					for (WriterUser wrs : writerUsers) {
 						wrs.setAuthUserType(1);
 						wrs.setAuthUserId(pmphuser.getId());
-						writerUser.setIsTeacher(true);
+						wrs.setIsTeacher(true);
 						writerUserService.updateWriterUser(wrs);
 					}
 				}
