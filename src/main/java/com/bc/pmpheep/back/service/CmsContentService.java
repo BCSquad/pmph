@@ -63,6 +63,20 @@ public interface CmsContentService {
     /**
      * 
      * <pre>
+     * 功能描述：新增帮助
+     * 使用示范：
+     *
+     * @param cmsContent  CmsContent对象
+     * @return CmsContent对象
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    CmsContent addHelp(CmsContent cmsContent, String content, String sessionId,
+    HttpServletRequest request) throws CheckedServiceException, IOException;
+
+    /**
+     * 
+     * <pre>
      * 功能描述：修改CmsContent
      * 使用示范：
      *
@@ -74,6 +88,20 @@ public interface CmsContentService {
     Integer updateCmsContent(CmsContent cmsContent, String[] files, String[] imgFile,
     String content, String[] attachment, String[] imgAttachment, String scheduledTime,
     String sessionId, HttpServletRequest request) throws CheckedServiceException, IOException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：修改CmsContent
+     * 使用示范：
+     *
+     * @param cmsContent 
+     * @return  cmsContent CmsContent对象
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Integer updateHelp(CmsContent cmsContent, String content, String sessionId,
+    HttpServletRequest request) throws CheckedServiceException, IOException;
 
     /**
      * 更新CmsContent对象
@@ -223,6 +251,19 @@ public interface CmsContentService {
     /**
      * 
      * <pre>
+     * 功能描述：通过id获取CmsContent,Contemt,对象
+     * 使用示范：
+     *
+     * @param id 主键ID
+     * @return CmsContent 对象
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    Map<String, Object> getHelpDetail(Long id) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
      * 功能描述：获取总条数
      * 使用示范：
      *@param categoryId CmsCategory 主键ID
@@ -310,4 +351,19 @@ public interface CmsContentService {
      * </pre>
      */
     List<CmsContent> getCmsContentByParentId(Long parentId) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：帮助管理列表
+     * 使用示范：
+     *
+     * @param pageParameter 带有分页参数和查询条件参数
+     * @param sessionId 
+     * @return 分页结果集
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    PageResult<CmsContentVO> listHelp(PageParameter<CmsContentVO> pageParameter, String sessionId)
+    throws CheckedServiceException;
 }

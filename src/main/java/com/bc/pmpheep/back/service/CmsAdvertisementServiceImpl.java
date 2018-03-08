@@ -136,6 +136,9 @@ public class CmsAdvertisementServiceImpl implements CmsAdvertisementService {
 						"备注最多只能输入20个字符");
 			}
 		}
+		if(cmsAdvertisementOrImageVO.getNote()==null){
+			cmsAdvertisementOrImageVO.setNote("");
+		}
 		Integer count = 0;
 		CmsAdvertisementImage cmsAdvertisementImage = new CmsAdvertisementImage();
 		if (0 != imageId.length) {

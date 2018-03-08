@@ -153,7 +153,7 @@
 				<if test="isDisabled != null">
 					is_disabled=#{isDisabled},
 				</if>
-				<if test="note != null and note != ''">
+				<if test="note != null">
 					note=#{note},
 				</if>
 				<if test="style != null and style != ''">
