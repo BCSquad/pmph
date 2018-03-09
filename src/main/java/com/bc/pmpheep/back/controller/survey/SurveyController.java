@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -137,8 +138,8 @@ public class SurveyController {
      * </pre>
      */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "按主键ID删除问卷信息")
-    @RequestMapping(value = "/send/org", method = RequestMethod.GET)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询问卷已发送对象")
+    @GetMapping(value = "/send/org")
     public ResponseBean org(@RequestParam("surveyId") Long surveyId) {
         return new ResponseBean(surveyService.listSendOrgBySurveyId(surveyId));
     }
