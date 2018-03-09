@@ -249,7 +249,7 @@
 	</select>
 	
 	<!-- 根据问卷ID查询问卷已发送对象 -->
-	<select id="listSendOrgBySurveyId" parameterType="java.lang.Long" resultType="OrgVO">
+	<select id="listSendOrgBySurveyId" parameterType="PageParameter" resultType="OrgVO">
 		SELECT 
 			o.`id`,o.`org_name`, ou.`username`, ou.`handphone` ,t.`count`
 		FROM 
