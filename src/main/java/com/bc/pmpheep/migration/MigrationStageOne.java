@@ -457,6 +457,7 @@ public class MigrationStageOne {
             		dealWith.append("依据客户反馈，放弃迁移。");
             		state[3] = 1;
             	}
+            	continue;
             }
             list.add(username);
             Long orgId = (Long) map.get("new_pk");
