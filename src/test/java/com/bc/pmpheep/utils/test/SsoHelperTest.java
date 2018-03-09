@@ -26,10 +26,15 @@ public class SsoHelperTest extends BaseTest {
     SsoHelper ssoHelper;
 
     @Test
-    public void createSSOAccount() throws InterruptedException {
+    public void createSSOAccount() {
         OrgUser orgUser = new OrgUser("gugia", "123");//SSO已存在该账号，理应报错
         String msg = ssoHelper.createSSOAccount(orgUser);
         logger.info(msg);
         Assert.assertFalse(msg.equals("success"));
+    }
+
+    @Test
+    public void resetPassword() {
+        Assert.assertTrue("修改SSO用户密码失败", ssoHelper.resetPassword("gugia", "123123"));
     }
 }
