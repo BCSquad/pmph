@@ -826,11 +826,6 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "内容参数为空");
         }
-        if (ObjectUtil.isNull(cmsContent.getCategoryId())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                              CheckedExceptionResult.NULL_PARAM, "所属栏目不能为空");
-
-        }
         // MongoDB 内容插入
         Content contentObj = contentService.add(new Content(content));
         if (StringUtil.isEmpty(contentObj.getId())) {
