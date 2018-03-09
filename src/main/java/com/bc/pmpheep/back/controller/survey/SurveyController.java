@@ -125,4 +125,22 @@ public class SurveyController {
     public ResponseBean remove(@PathVariable("id") Long id) {
         return new ResponseBean(surveyService.deleteSurveyById(id));
     }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据问卷ID查询问卷已发送对象
+     * 使用示范：
+     *
+     * @param surveyId 问卷ID
+     * @return 已发送对象(学校)集合
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "按主键ID删除问卷信息")
+    @RequestMapping(value = "/send/org", method = RequestMethod.GET)
+    public ResponseBean org(@RequestParam("surveyId") Long surveyId) {
+        return new ResponseBean(surveyService.listSendOrgBySurveyId(surveyId));
+    }
+
 }

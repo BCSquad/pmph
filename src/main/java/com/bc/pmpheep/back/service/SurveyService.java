@@ -1,8 +1,11 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Survey;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -119,4 +122,16 @@ public interface SurveyService {
      */
     SurveyVO getSurveyAndSurveyTypeById(Long id) throws CheckedServiceException;
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据问卷ID查询问卷已发送对象
+     * 使用示范：
+     *
+     * @param surveyId 问卷id
+     * @return
+     * @throws CheckedServiceException
+     * </pre>
+     */
+    List<OrgVO> listSendOrgBySurveyId(Long surveyId) throws CheckedServiceException;
 }

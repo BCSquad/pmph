@@ -248,4 +248,24 @@
 		</where>
 	</select>
 	
+	<!-- 根据问卷ID查询问卷已发送对象 -->
+	<select id="listSendOrgBySurveyId" parameterType="java.lang.Long" resultType="OrgVO">
+		SELECT 
+			o.`id`,o.`org_name`, ou.`username`, ou.`handphone` 
+		FROM 
+			`survey_target` st 
+		JOIN 
+			`org` o 
+		ON 
+			st.`org_id` = o.`id` 
+		JOIN 
+			`org_user` ou 
+		ON 
+			o.`id`= ou.`org_id`
+		WHERE 
+			st.`survey_id`=#{surveyId}
+		ORDER BY
+			 o.`id`
+	</select>
+	
 </mapper>
