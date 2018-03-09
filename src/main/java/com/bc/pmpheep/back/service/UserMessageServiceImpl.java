@@ -875,7 +875,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         // webscokt发送消息
         if (CollectionUtil.isNotEmpty(websocketUserId)) {
             WebScocketMessage webScocketMessage =
-            new WebScocketMessage(message.getId(), Const.MSG_TYPE_2, senderUserId,
+            new WebScocketMessage(message.getId(), Const.MSG_TYPE_0, senderUserId,
                                   pmphUser.getRealname(), Const.SENDER_TYPE_1,
                                   Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
                                   message.getContent(), DateUtil.getCurrentTime());
