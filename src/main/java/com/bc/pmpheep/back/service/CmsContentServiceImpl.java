@@ -572,7 +572,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         resultMap.put("imgFileName", imgFileName);
         if (!"DEFAULT".equals(cmsContent.getCover())) {
-            imgFilePath = RouteUtil.MONGODB_IMAGE + cmsContent.getCover();
+            imgFilePath = cmsContent.getCover();
         }
         resultMap.put("imgFilePath", imgFilePath);
         return resultMap;

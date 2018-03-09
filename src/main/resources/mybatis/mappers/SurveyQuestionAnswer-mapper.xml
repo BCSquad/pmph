@@ -431,5 +431,9 @@
 		</if>
 	</select>
 	
+	<!-- 根据问题ID查询问卷已回答人 -->
+	<select id="getUserIdBySurveyId" parameterType="java.lang.Long" resultType="java.lang.Long">
+		select t.`user_id` from `survey_question_answer` t where t.`survey_id`=#{surveyId} GROUP BY t.`user_id`;
+	</select>
 	
 </mapper>

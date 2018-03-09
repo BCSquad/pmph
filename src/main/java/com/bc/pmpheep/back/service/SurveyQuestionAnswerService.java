@@ -172,4 +172,16 @@ public interface SurveyQuestionAnswerService {
      * </pre>
      */
     List<SurveyQuestionFillVO> listFillQuestionCounts(Long surveyId) throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据问卷ID查询已回答问卷的用户ID
+     * 使用示范：
+     *
+     * @param surveyId 问卷Id
+     * @return 已回答问卷的用户ID集合
+     * </pre>
+     */
+    List<Long> getUserIdBySurveyId(Long surveyId) throws CheckedServiceException;
 }
