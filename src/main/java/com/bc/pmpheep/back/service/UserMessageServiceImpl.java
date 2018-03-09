@@ -864,7 +864,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                               CheckedExceptionResult.NULL_PARAM, "接收人为空!");
         } else {
             userMessage =
-            new UserMessage(message.getId(), "私信", Const.MSG_TYPE_0, senderUserId, Const.SENDER_TYPE_1,
+            new UserMessage(message.getId(), "系统消息", Const.MSG_TYPE_0, senderUserId, Const.SENDER_TYPE_1,
                             receiverId, Const.RECEIVER_TYPE_2);
         }
         // 插入消息发送对象数据
