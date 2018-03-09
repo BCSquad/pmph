@@ -27,6 +27,7 @@ import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.bc.pmpheep.utils.SsoHelper;
 
 /**
  * OrgUserServiceImpl 接口实现
@@ -44,6 +45,8 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	private OrgService orgService;
 	@Autowired
 	SystemMessageService systemMessageService;
+        @Autowired
+        SsoHelper ssoHelper;
 
 	@Override
 	public List<OrgUser> getOrgUserListByOrgIds(List<Long> orgIds) throws CheckedServiceException {
@@ -250,8 +253,8 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 		if (StringUtil.isEmpty(orgUser.getRealname())) {
 			orgUser.setRealname(orgUser.getUsername());
 		}
-		orgUser.setPassword(new DesRun(Const.DEFAULT_PASSWORD, "").enpsw);// 后台添加用户设置默认密码为123456
-		int num = orgUserDao.addOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
+                orgUser.setPassword(new DesRun(Const.DEFAULT_PASSWORD, "").enpsw);// 后台添加用户设置默认密码为123456
+                int num = orgUserDao.addOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
 		String result = "FAIL";
 		if (num > 0) {
 			result = "SUCCESS";
@@ -333,7 +336,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 		orgUser.setHandphone(orgAndOrgUserVO.getHandphone());
 		orgUser.setEmail(orgAndOrgUserVO.getEmail());
 		orgUser.setAddress(orgAndOrgUserVO.getNote());
-		String result = "FAIL";
+                String result = "FAIL";
 		if (ObjectUtil.notNull(orgUser)) {
 			int count = orgUserDao.updateOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
 			if (count > 0) {
@@ -407,8 +410,13 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 		orgUser.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);// 默认机构用户头像路径
 		orgUser.setOrgId(orgDao.getOrgid(org.getOrgName()));
 		orgUser.setPassword(new DesRun("", Const.DEFAULT_PASSWORD).enpsw);// 后台添加用户设置默认密码为123456
+                String result = ssoHelper.createSSOAccount(orgUser);
+                if(!result.equals("success")){
+                    throw new CheckedServiceException(CheckedExceptionBusiness.ORG,
+					CheckedExceptionResult.FAILURE_SSO_CALLBACK, result);
+                }
 		int num = orgUserDao.addOrgUser(orgUser);// 返回的影响行数，如果不是影响0行就是添加成功
-		String result = "FAIL";
+		result = "FAIL";
 		if (num > 0) {
 			result = "SUCCESS";
 		}

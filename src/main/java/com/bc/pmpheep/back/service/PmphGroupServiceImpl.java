@@ -311,6 +311,8 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 					"用户为空");
 		}
 		Textbook textbook = textbookService.getTextbookById(textbookId);
+		list.get(0).setTextbookId(textbookId);
+		list.get(0).setMaterialId(textbook.getMaterialId());
 		String groupImage = RouteUtil.DEFAULT_GROUP_IMAGE;// 未上传小组头像时，获取默认小组头像路径
 		PmphGroup pmphGroup = new PmphGroup();
 		// 查询小组名称是否已存在 不存在直接用书名
@@ -390,7 +392,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		} else {
 			PmphGroup pmphGroup = new PmphGroup();
 			List<PmphGroupListVO> groupListVOs=pmphGroupDao.getList(pmphGroup, pmphUser.getId());
-			for (PmphGroupListVO pmphGroupListVO : list) {
+			for (PmphGroupListVO pmphGroupListVO : groupListVOs) {
 				pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 			}
 			if(groupListVOs.size()>0){

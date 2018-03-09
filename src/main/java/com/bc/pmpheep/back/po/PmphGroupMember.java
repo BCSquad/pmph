@@ -54,6 +54,27 @@ public class PmphGroupMember implements Serializable {
 	 * 修改时间
 	 */
 	private Timestamp gmtUpdate;
+	// 教材id
+    private Long	materialId;
+    
+	// 书籍id
+    private Long	textbookId;
+    
+	public Long getTextbookId() {
+		return textbookId;
+	}
+
+	public void setTextbookId(Long textbookId) {
+		this.textbookId = textbookId;
+	}
+
+	public Long getMaterialId() {
+		return materialId;
+	}
+
+	public void setMaterialId(Long materialId) {
+		this.materialId = materialId;
+	}
 
 	public PmphGroupMember() {
 		super();
@@ -165,10 +186,12 @@ public class PmphGroupMember implements Serializable {
 				+ ", gmtUpdate:" + gmtUpdate + "}";
 	}
 
-	public PmphGroupMember(Long userId, Boolean isWriter) {
+	public PmphGroupMember(Long userId, Boolean isWriter,Long materialId,Long textbookId) {
 		super();
 		this.userId = userId;
 		this.isWriter = isWriter;
+		this.materialId=materialId;
+		this.textbookId=textbookId;
 	}
 
 }
