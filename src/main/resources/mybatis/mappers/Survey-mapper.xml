@@ -251,7 +251,7 @@
 	<!-- 根据问卷ID查询问卷已发送对象 -->
 	<select id="listSendOrgBySurveyId" parameterType="java.lang.Long" resultType="OrgVO">
 		SELECT 
-			o.`id`,o.`org_name`, ou.`username`, ou.`handphone` 
+			o.`id`,o.`org_name`, ou.`username`, ou.`handphone` ,t.`count`
 		FROM 
 			`survey_target` st 
 		JOIN 
@@ -261,11 +261,42 @@
 		JOIN 
 			`org_user` ou 
 		ON 
-			o.`id`= ou.`org_id`
-		WHERE 
-			st.`survey_id`=#{surveyId}
+			o.`id`= ou.`org_id`,
+		(
+			SELECT 
+				count(*) `count`
+			FROM 
+				`survey_target` st 
+			JOIN 
+				`org` o 
+			ON 
+				st.`org_id` = o.`id` 
+			JOIN 
+				`org_user` ou 
+			ON 
+				o.`id`= ou.`org_id
+			<where>
+				<if test="parameter !=null ">
+					<!-- 问卷ID -->
+					<if test="parameter.surveyId != null and parameter.surveyId != ''">
+						st.`survey_id`=#{surveyId}
+					</if>
+				</if>
+			</where>
+		)t 
+		<where>
+				<if test="parameter !=null ">
+					<!-- 问卷ID  -->
+					<if test="parameter.surveyId != null and parameter.surveyId != ''">
+						st.`survey_id`=#{surveyId}
+					</if>
+				</if>
+			</where>
 		ORDER BY
 			 o.`id`
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
 	</select>
 	
 </mapper>

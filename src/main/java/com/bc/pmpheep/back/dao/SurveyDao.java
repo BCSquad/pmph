@@ -90,5 +90,5 @@ public interface SurveyDao {
      * @return
      * </pre>
      */
-    List<OrgVO> listSendOrgBySurveyId(Long surveyId);
+    List<OrgVO> listSendOrgBySurveyId(PageParameter<OrgVO> pageParameter);
 }

@@ -267,11 +267,22 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    public List<OrgVO> listSendOrgBySurveyId(Long surveyId) throws CheckedServiceException {
-        if (ObjectUtil.isNull(surveyId)) {
+    public PageResult<OrgVO> listSendOrgBySurveyId(PageParameter<OrgVO> pageParameter)
+    throws CheckedServiceException {
+        if (ObjectUtil.isNull(pageParameter)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
-                                              CheckedExceptionResult.NULL_PARAM, "问卷ID为空");
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        return surveyDao.listSendOrgBySurveyId(surveyId);
+        PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
+        // 将页面大小和页面页码拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 包含数据总条数的数据集
+        List<OrgVO> orgList = surveyDao.listSendOrgBySurveyId(pageParameter);
+        if (CollectionUtil.isNotEmpty(orgList)) {
+            Integer count = orgList.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(orgList);
+        }
+        return pageResult;
     }
 }

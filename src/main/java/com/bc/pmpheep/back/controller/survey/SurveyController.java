@@ -17,6 +17,7 @@ import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.service.SurveyService;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -140,8 +141,11 @@ public class SurveyController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询问卷已发送对象")
     @GetMapping(value = "/send/org")
-    public ResponseBean org(@RequestParam("surveyId") Long surveyId) {
-        return new ResponseBean(surveyService.listSendOrgBySurveyId(surveyId));
+    public ResponseBean org(OrgVO orgVO, @RequestParam("pageNumber") Integer pageNumber,
+    @RequestParam("pageSize") Integer pageSize) {
+        PageParameter<OrgVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+        pageParameter.setParameter(orgVO);
+        return new ResponseBean(surveyService.listSendOrgBySurveyId(pageParameter));
     }
 
 }

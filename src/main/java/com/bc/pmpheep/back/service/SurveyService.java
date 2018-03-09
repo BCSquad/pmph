@@ -1,7 +1,5 @@
 package com.bc.pmpheep.back.service;
 
-import java.util.List;
-
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Survey;
@@ -133,5 +131,6 @@ public interface SurveyService {
      * @throws CheckedServiceException
      * </pre>
      */
-    List<OrgVO> listSendOrgBySurveyId(Long surveyId) throws CheckedServiceException;
+    PageResult<OrgVO> listSendOrgBySurveyId(PageParameter<OrgVO> pageParameter)
+    throws CheckedServiceException;
 }
