@@ -408,9 +408,9 @@ public class FileDownLoadController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报表批量导出word")
 	@RequestMapping(value = "/front/word/declaration", method = RequestMethod.GET)
-	public String declarationWord(String ids) {
+	public String declarationWord(String selectedIds) {
 		List<Long> decIds = new ArrayList<>();
-		String[] decId = ids.split(",");
+		String[] decId = selectedIds.split(",");
 		for (int i = 0; i < decId.length; i++) {
 			decIds.add(Long.valueOf(decId[i]));
 		}
