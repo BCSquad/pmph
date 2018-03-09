@@ -61,7 +61,7 @@ public class CheckedExceptionBusiness {
 
 	public final static String BOOK = "图书";
 
-	public final static String ORG = "机构";
+	public final static String ORG = "机构/机构用户";
 
 	public final static String PMPH_DEPARTMENT = "社内部门";
 
