@@ -745,11 +745,7 @@
 		SUM(if((b.chosen_position IN (2,10)),1,0)) DESC,
 		SUM(if((b.chosen_position IN (1,9)),1,0)) DESC,
 		SUM(if((b.chosen_position IN (8,9,10,12)),1,0)) DESC)t1,
-		(SELECT @rowno:=0)t2)t3 
-		<if test="start !=null and pageNumber != null">
-			limit #{start},#{pageSize} 
-		</if>
-		;
+		(SELECT @rowno:=0)t2)t3 ;
 	</select>
 	
 	<!-- 书籍列表 -->
@@ -801,11 +797,7 @@
 		<if test="parameter.bookName !=null and parameter.bookName !=''">
 			and c.textbook_name like concat ('%',#{parameter.bookName},'%') 
 		</if>
-		GROUP BY c.id ORDER BY c.sort ASC)t1,(SELECT @rowno:=0)t2 )t3 
-		<if test="start !=null and pageNumber != null">
-			limit #{start},#{pageSize} 
-		</if>
-		;
+		GROUP BY c.id ORDER BY c.sort ASC)t1,(SELECT @rowno:=0)t2 )t3 ;
 	</select>
 	
 	<!-- 申报情况按书籍统计（当选职务） -->
@@ -830,11 +822,7 @@
 		<if test="parameter.bookName !=null and parameter.bookName !=''">
 			and c.textbook_name like concat ('%',#{parameter.bookName},'%') 
 		</if>
-		GROUP BY c.id ORDER BY c.sort ASC)t1,(SELECT @rowno:=0)t2 )t3 
-		<if test="start !=null and pageNumber != null">
-			limit #{start},#{pageSize} 
-		</if>
-		;
+		GROUP BY c.id ORDER BY c.sort ASC)t1,(SELECT @rowno:=0)t2 )t3 ;
 	</select>
 	
 	 <!-- 申报结果按学校统计（按申报数排序） -->
@@ -895,11 +883,7 @@
 		SUM(if((b.chosen_position in (2,10)),1,0)) DESC,
 		SUM(if((b.chosen_position in (1,9)),1,0)) DESC,
 		SUM(if((b.chosen_position in (8,9,10,12)),1,0)) DESC)t1,
-		(SELECT @rowno:=0)t2 )t3 
-		<if test="start !=null and pageNumber != null">
-			limit #{start},#{pageSize} 
-		</if>
-		;
+		(SELECT @rowno:=0)t2 )t3 ;
 	</select>
     
     <!-- 书籍列表 -->
@@ -947,11 +931,7 @@
 		    and c.textbook_name like concat ('%',#{parameter.bookName},'%') 
 		</if>
         GROUP BY c.id ORDER BY c.sort ASC)t1,
- 		(SELECT @rowno:=0)t2 )t3 
-	    <if test="start !=null and pageNumber != null">
-			limit #{start},#{pageSize}
-		</if>
-		;
+ 		(SELECT @rowno:=0)t2 )t3 ;
     </select>
     
     <!-- 根据书籍id查询主编和副主编、编委-->

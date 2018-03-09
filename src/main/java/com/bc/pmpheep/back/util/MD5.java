@@ -32,7 +32,10 @@ public class MD5 {
     }
 
     public static void main(String[] args) {
-        System.out.println(md5("31119@qq.com" + "123456"));
-        System.out.println(md5("mj1"));
+        // System.out.println(md5("31119@qq.com" + "123456"));
+        System.out.println(DateUtil.getDays());
+        System.out.println(md5("13791853320" + "1005387596c57c2278f4f61058c78d1b"
+                               + DateUtil.getDays()));
+
     }
 }

@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -68,5 +69,22 @@ public class FileUploadController {
         } catch (IOException ex) {
             return new ResponseBean(ex);
         }
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按ID删除MongoDB文件
+     * 使用示范：
+     *
+     * @param id MongoDB对应ID
+     * @return
+     * </pre>
+     */
+    @ResponseBody
+    @RequestMapping(value = "/file/{id}/delete", method = RequestMethod.DELETE)
+    public ResponseBean fileDelete(@PathVariable("id") String id) {
+        fileService.remove(id);
+        return new ResponseBean();
     }
 }
