@@ -274,12 +274,12 @@
 			JOIN 
 				`org_user` ou 
 			ON 
-				o.`id`= ou.`org_id
+				o.`id`= ou.`org_id`
 			<where>
 				<if test="parameter !=null ">
 					<!-- 问卷ID -->
 					<if test="parameter.surveyId != null">
-						st.`survey_id`=#{surveyId}
+						st.`survey_id`= #{parameter.surveyId}
 					</if>
 				</if>
 			</where>
@@ -288,7 +288,7 @@
 				<if test="parameter !=null ">
 					<!-- 问卷ID  -->
 					<if test="parameter.surveyId != null">
-						st.`survey_id`=#{surveyId}
+						st.`survey_id`= #{parameter.surveyId}
 					</if>
 				</if>
 			</where>
