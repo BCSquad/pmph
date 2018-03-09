@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -209,7 +208,14 @@ public class SpringThread implements Runnable {
 				String textbookName = textbooks.get(i).getTextbookName() + "第" + textbooks.get(i).getTextbookRound()
 						+ "版";
 				for (DeclarationEtcBO declarationEtcBO : declarationEtcBOs) {
-					if (textbookName.equals(declarationEtcBO.getTextbookName())) {
+					for (DeclarationEtcBO etcBO : declarationEtcBOs) {
+						if (declarationEtcBO.getRealname().equals(etcBO.getRealname())
+								&& !declarationEtcBO.getTextbookName().contains(etcBO.getTextbookName().get(0))) {
+							declarationEtcBO.getTextbookName().add(etcBO.getTextbookName().get(0));
+							declarationEtcBO.getPresetPosition().add(etcBO.getPresetPosition().get(0));
+						}
+					}
+					if (textbookName.equals(declarationEtcBO.getTextbookName().get(0))) {
 						list.add(declarationEtcBO);
 					}
 				}

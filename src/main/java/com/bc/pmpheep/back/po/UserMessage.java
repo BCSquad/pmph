@@ -134,10 +134,11 @@ public class UserMessage implements java.io.Serializable {
         this.materialId = materialId == null ? 0L : materialId ;
     }
     
-    public UserMessage(String msgId, Short msgType, Long senderId, Short senderType,
+    public UserMessage(String msgId, String title, Short msgType, Long senderId, Short senderType,
     	    Long receiverId, Short receiverType) {
     	        super();
     	        this.msgId = msgId;
+    	        this.title = title;
     	        this.msgType = msgType;
     	        this.senderId = senderId;
     	        this.senderType = senderType;

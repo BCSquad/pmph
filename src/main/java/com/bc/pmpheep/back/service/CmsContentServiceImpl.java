@@ -572,7 +572,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         resultMap.put("imgFileName", imgFileName);
         if (!"DEFAULT".equals(cmsContent.getCover())) {
-            imgFilePath = RouteUtil.MONGODB_IMAGE + cmsContent.getCover();
+            imgFilePath = cmsContent.getCover();
         }
         resultMap.put("imgFilePath", imgFilePath);
         return resultMap;
@@ -825,11 +825,6 @@ public class CmsContentServiceImpl implements CmsContentService {
         if (StringUtil.isEmpty(content)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "内容参数为空");
-        }
-        if (ObjectUtil.isNull(cmsContent.getCategoryId())) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                              CheckedExceptionResult.NULL_PARAM, "所属栏目不能为空");
-
         }
         // MongoDB 内容插入
         Content contentObj = contentService.add(new Content(content));

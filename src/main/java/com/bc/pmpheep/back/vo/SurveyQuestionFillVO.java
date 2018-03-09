@@ -1,7 +1,6 @@
 package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
@@ -71,7 +70,7 @@ public class SurveyQuestionFillVO implements Serializable {
      * 创建时间
      */
     @ExcelHeader(header = "时间")
-    private Timestamp         gmtCreate;
+    private String            gmtCreate;
 
     /**
      * @return the userId
@@ -160,14 +159,14 @@ public class SurveyQuestionFillVO implements Serializable {
     /**
      * @return the gmtCreate
      */
-    public Timestamp getGmtCreate() {
+    public String getGmtCreate() {
         return gmtCreate;
     }
 
     /**
      * @param gmtCreate the gmtCreate to set
      */
-    public void setGmtCreate(Timestamp gmtCreate) {
+    public void setGmtCreate(String gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
 

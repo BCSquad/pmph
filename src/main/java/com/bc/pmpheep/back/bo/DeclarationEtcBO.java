@@ -26,6 +26,7 @@ import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.vo.DecExtensionVO;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 教材申报表业务对象，用于Excel/Word(批量)导出
@@ -35,10 +36,10 @@ import java.util.ArrayList;
 public class DeclarationEtcBO {
 
 	@ExcelHeader(header = "申报图书")
-	private String textbookName;
+	private List<String> textbookName;
 
 	@ExcelHeader(header = "申报职位")
-	private String presetPosition;
+	private List<String> presetPosition;
 
 	@ExcelHeader(header = "姓名")
 	private String realname;
@@ -171,13 +172,12 @@ public class DeclarationEtcBO {
 	public DeclarationEtcBO() {
 	}
 
-	public DeclarationEtcBO(String textbookName, String presetPosition, String realname, String username, String sex,
-			String birthday, Integer experience, String orgName, String position, String title, String address,
-			String postcode, String telephone, String fax, String handphone, String degree, String email, String idtype,
-			String idcard, String expertise, Boolean isDispensed, Boolean isUtec, String onlineProgress,
-			String offlineProgress, String chosenOrgName, ArrayList<DecEduExp> decEduExps,
-			ArrayList<DecWorkExp> decWorkExps, ArrayList<DecTeachExp> decTeachExps, DecAchievement decAchievement,
-			ArrayList<DecAcade> decAcades, ArrayList<DecLastPosition> decLastPositions,
+	public DeclarationEtcBO(String realname, String username, String sex, String birthday, Integer experience,
+			String orgName, String position, String title, String address, String postcode, String telephone,
+			String fax, String handphone, String degree, String email, String idtype, String idcard, String expertise,
+			Boolean isDispensed, Boolean isUtec, String onlineProgress, String offlineProgress, String chosenOrgName,
+			ArrayList<DecEduExp> decEduExps, ArrayList<DecWorkExp> decWorkExps, ArrayList<DecTeachExp> decTeachExps,
+			DecAchievement decAchievement, ArrayList<DecAcade> decAcades, ArrayList<DecLastPosition> decLastPositions,
 			ArrayList<DecCourseConstruction> decCourseConstructions, ArrayList<DecNationalPlan> decNationalPlans,
 			ArrayList<DecTextbookPmph> decTextbookPmphs, DecMoocDigital decMoocDigital,
 			ArrayList<DecTextbook> decTextbooks, ArrayList<DecResearch> decResearchs,
@@ -186,8 +186,6 @@ public class DeclarationEtcBO {
 			ArrayList<DecAcadeReward> decAcadeRewards, ArrayList<DecExtensionVO> decExtensionVOs,
 			DecIntention decIntention) {
 		super();
-		this.textbookName = textbookName;
-		this.presetPosition = presetPosition;
 		this.realname = realname;
 		this.username = username;
 		this.sex = sex;
@@ -240,33 +238,19 @@ public class DeclarationEtcBO {
 		this.materialId = materialId;
 	}
 
-	/**
-	 * @return the textbookName
-	 */
-	public String getTextbookName() {
+	public List<String> getTextbookName() {
 		return textbookName;
 	}
 
-	/**
-	 * @param textbookName
-	 *            the textbookName to set
-	 */
-	public void setTextbookName(String textbookName) {
+	public void setTextbookName(List<String> textbookName) {
 		this.textbookName = textbookName;
 	}
 
-	/**
-	 * @return the presetPosition
-	 */
-	public String getPresetPosition() {
+	public List<String> getPresetPosition() {
 		return presetPosition;
 	}
 
-	/**
-	 * @param presetPosition
-	 *            the presetPosition to set
-	 */
-	public void setPresetPosition(String presetPosition) {
+	public void setPresetPosition(List<String> presetPosition) {
 		this.presetPosition = presetPosition;
 	}
 

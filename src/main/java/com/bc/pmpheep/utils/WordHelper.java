@@ -38,17 +38,25 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.xmlbeans.XmlCursor;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -138,7 +146,6 @@ public class WordHelper {
 				runs.get(0).setText(materialName.concat("专家申报表"), 0);
 			}
 			List<XWPFTable> tables = document.getTables();
-	
 			/* 申报单位 */
 			String chosenOrgName = bo.getChosenOrgName();
 			if (StringUtil.notEmpty(chosenOrgName)) {
@@ -165,6 +172,8 @@ public class WordHelper {
 			fillDecClinicalRewardData(tables.get(17), bo.getDecClinicalRewards());
 			fillDecAcadeRewardData(tables.get(18), bo.getDecAcadeRewards());
 			fillDecIntentionData(tables.get(19), bo.getDecIntention());
+			// fillDecExtensionVOData(tables.get(20), bo.getDecExtensionVOs(),
+			// extensions);//扩展项
 			map.put(filename, removeEmptyTables(document, filter));
 			map.put(filename, document);
 		}
@@ -173,8 +182,8 @@ public class WordHelper {
 
 	private String generateFileName(DeclarationEtcBO bo) throws CheckedServiceException {
 		String realname = bo.getRealname();
-		String textbookName = bo.getTextbookName();
-		String presetPosition = bo.getPresetPosition();
+		String textbookName = bo.getTextbookName().get(0);
+		String presetPosition = bo.getPresetPosition().get(0);
 		String filename;
 		if (StringUtil.notEmpty(textbookName) && StringUtil.notEmpty(presetPosition)) {
 			if (StringUtil.isEmpty(realname)) {
@@ -224,12 +233,20 @@ public class WordHelper {
 
 	private XWPFTable fillDeclarationPosition(XWPFTable table, DeclarationEtcBO bo) {
 		List<XWPFTableRow> rows = table.getRows();
-		List<XWPFTableCell> cells = rows.get(0).getTableCells();
-		/* 第一行 */
-		String textbookName = bo.getTextbookName();
-		String presetPosition = bo.getPresetPosition();
-		cells.get(0).setText("《".concat(textbookName).concat("》"));
-		cells.get(1).setText(presetPosition);
+		List<String> textbookName = bo.getTextbookName();
+		List<String> presetPosition = bo.getPresetPosition();
+		if (textbookName.size() > 0) {
+			for (int i = 0; i < textbookName.size(); i++) {
+				int height = table.getRow(i).getHeight();
+				List<XWPFTableCell> cells = rows.get(i).getTableCells();
+				cells.get(0).setText("《".concat(textbookName.get(i)).concat("》"));
+				cells.get(1).setText(presetPosition.get(i));
+				if (i + 1 < textbookName.size()) {
+					table.createRow().setHeight(height);
+				}
+
+			}
+		}
 		return table;
 	}
 
@@ -496,6 +513,35 @@ public class WordHelper {
 		String value = decIntention.getContent();
 		if (StringUtil.notEmpty(value)) {
 			rows.get(0).getCell(0).setText(value);
+		}
+		return table;
+	}
+
+	private XWPFTable fillDecExtensionVOData(XWPFTable table, List<DecExtensionVO> decExtensionVOs,
+			List<MaterialExtension> extensions) {
+		if (CollectionUtil.isEmpty(extensions)) {
+			return table;
+		}
+
+		if (extensions.size() > 1) {
+			int height = table.getRow(0).getHeight();
+			for (int i = 1; i < extensions.size(); i++) {
+				table.createRow().setHeight(height);
+			}
+		}
+
+		List<XWPFTableRow> rows = table.getRows();
+		int rowCount = 0;
+		for (MaterialExtension materialExtension : extensions) {
+			String name = materialExtension.getExtensionName();
+			rows.get(rowCount).getCell(0).setText(name);
+			for (DecExtensionVO decExtensionVO : decExtensionVOs) {
+				if (decExtensionVO.getExtensionId().equals(materialExtension.getId())) {
+					String value = decExtensionVO.getContent();
+					rows.get(rowCount + 1).getCell(0).setText(value);
+				}
+			}
+			rowCount++;
 		}
 		return table;
 	}

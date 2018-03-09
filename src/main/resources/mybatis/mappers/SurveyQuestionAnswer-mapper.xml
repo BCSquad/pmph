@@ -349,6 +349,8 @@
 	<!-- 填空题统计 -->
 	<select id="listFillQuestionCounts" parameterType="java.lang.Long" resultType="SurveyQuestionFillVO">
 		SELECT 
+		  sq.`id` questionId,
+		  sqa.`survey_id`,
 		  sq.`title` questionName,
 		  sq.`type`questionType,
 		  COUNT(sqa.`user_id`) count
@@ -376,7 +378,7 @@
 		SELECT 
 		  	sq.`title` questionName,
 		  	sqa.`option_content`,
-		  	sqa.`gmt_create`,
+		  	DATE_FORMAT(sqa.`gmt_create`, '%Y-%c-%d %h:%i:%s') gmt_create,
 		  	wu.`realname`,
 		  	t.count
 		FROM
@@ -431,5 +433,9 @@
 		</if>
 	</select>
 	
+	<!-- 根据问题ID查询问卷已回答人 -->
+	<select id="getUserIdBySurveyId" parameterType="java.lang.Long" resultType="java.lang.Long">
+		select t.`user_id` from `survey_question_answer` t where t.`survey_id`=#{surveyId} GROUP BY t.`user_id`;
+	</select>
 	
 </mapper>

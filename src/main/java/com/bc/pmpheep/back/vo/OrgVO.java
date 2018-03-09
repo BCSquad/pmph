@@ -31,7 +31,7 @@ public class OrgVO implements Serializable {
     private String    areaId;
     // 所属区域名称
     private String    areaName;
-    // 联系人 
+    // 联系人
     private String    contactPerson;
     // 联系电话
     private String    contactPhone;
@@ -73,6 +73,10 @@ public class OrgVO implements Serializable {
     private Integer   count;
     // 创建时间
     private Timestamp gmtCreate;
+    /**
+     * 问卷ID
+     */
+    private Long      surveyId;
 
     public OrgVO() {
         super();
@@ -341,6 +345,20 @@ public class OrgVO implements Serializable {
     }
 
     /**
+     * @return the surveyId
+     */
+    public Long getSurveyId() {
+        return surveyId;
+    }
+
+    /**
+     * @param surveyId the surveyId to set
+     */
+    public void setSurveyId(Long surveyId) {
+        this.surveyId = surveyId;
+    }
+
+    /**
      * <pre>
      * 功能描述：
      * 使用示范：
@@ -353,9 +371,9 @@ public class OrgVO implements Serializable {
         return "OrgVO {id=" + id + ", orgName=" + orgName + ", username=" + username
                + ", realname=" + realname + ", orgTypeId=" + orgTypeId + ", orgTypeName="
                + orgTypeName + ", parentId=" + parentId + ", areaId=" + areaId + ", areaName="
-               + areaName + ", contactPerson=" + contactPerson + ", contactPhone="
-               + contactPhone + ", progress=" + progress + ", handphone=" + handphone + ", email="
-               + email + ", position=" + position + ", title=" + title + ", address=" + address
+               + areaName + ", contactPerson=" + contactPerson + ", contactPhone=" + contactPhone
+               + ", progress=" + progress + ", handphone=" + handphone + ", email=" + email
+               + ", position=" + position + ", title=" + title + ", address=" + address
                + ", postcode=" + postcode + ", note=" + note + ", sort=" + sort + ", count="
                + count + ", gmtCreate=" + gmtCreate + "}";
     }

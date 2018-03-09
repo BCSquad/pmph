@@ -229,4 +229,13 @@ public class SurveyQuestionAnswerServiceImpl implements SurveyQuestionAnswerServ
         return surveyQuestionAnswerDao.listFillQuestionCounts(surveyId);
     }
 
+    @Override
+    public List<Long> getUserIdBySurveyId(Long surveyId) throws CheckedServiceException {
+        if (ObjectUtil.isNull(surveyId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷ID为空");
+        }
+        return surveyQuestionAnswerDao.getUserIdBySurveyId(surveyId);
+    }
+
 }
