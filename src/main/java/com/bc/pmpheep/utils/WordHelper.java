@@ -138,30 +138,11 @@ public class WordHelper {
 				runs.get(0).setText(materialName.concat("专家申报表"), 0);
 			}
 			List<XWPFTable> tables = document.getTables();
-			int i = 21;
-			List<DecExtensionVO> decExtensionVOs = bo.getDecExtensionVOs();
-			if (!extensions.isEmpty()) {
-				for (MaterialExtension materialExtension : extensions) {
-					String extensionName = materialExtension.getExtensionName();
-					document.getParagraphs().get(i - 1).createRun().setText(extensionName);
-					i++;
-				}
-			}
-			i = 21;
-			if (!decExtensionVOs.isEmpty()) {
-				for (DecExtensionVO decExtensionVO : decExtensionVOs) {
-					List<XWPFTableRow> rows = tables.get(i).getRows();
-					String value = decExtensionVO.getContent();
-					if (StringUtil.notEmpty(value)) {
-						rows.get(0).getCell(0).setText(value);
-					}
-					i += 2;
-				}
-			}
+	
 			/* 申报单位 */
 			String chosenOrgName = bo.getChosenOrgName();
 			if (StringUtil.notEmpty(chosenOrgName)) {
-				document.getParagraphs().get(i).createRun().setText(chosenOrgName);
+				document.getParagraphs().get(21).createRun().setText(chosenOrgName);
 			}
 			String filename = generateFileName(bo);
 			fillDeclarationPosition(tables.get(0), bo);

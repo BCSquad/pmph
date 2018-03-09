@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -66,6 +67,7 @@ import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.back.vo.SurveyQuestionFillVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.bean.ZipDownload;
+import com.bc.pmpheep.general.runnable.Front;
 import com.bc.pmpheep.general.runnable.SpringThread;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -389,6 +391,32 @@ public class FileDownLoadController {
 		taskExecutor.execute(new SpringThread(zipHelper, wordHelper, materialService, textbookService,
 				declarationService, materialId, textBookids, realname, position, title, orgName, unitName, positionType,
 				onlineProgress, offlineProgress, id, materialExtensionService));
+		return '"' + id + '"';
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：申报表批量导出word
+	 * 
+	 * 
+	 * @param ids
+	 *            申报表ids
+	 * @param response
+	 * 
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "申报表批量导出word")
+	@RequestMapping(value = "/front/word/declaration", method = RequestMethod.GET)
+	public String declarationWord(String selectedIds) {
+		List<Long> decIds = new ArrayList<>();
+		String[] decId = selectedIds.split(",");
+		for (int i = 0; i < decId.length; i++) {
+			decIds.add(Long.valueOf(decId[i]));
+		}
+		String id = String.valueOf(System.currentTimeMillis()).concat(String.valueOf(RandomUtil.getRandomNum()));
+		taskExecutor.execute(new Front(logger, zipHelper, wordHelper, materialService, textbookService,
+				declarationService, materialExtensionService, decIds, id));
 		return '"' + id + '"';
 	}
 
