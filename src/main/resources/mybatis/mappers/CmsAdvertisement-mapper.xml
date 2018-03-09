@@ -144,7 +144,7 @@
 	<update id="updateCmsAdvertisement" parameterType="CmsAdvertisementOrImageVO">
 		update cms_advertisement 
 			<set>
-				<if test="url != null and url !=''">
+				<if test="url != null ">
 					url=#{url},
 				</if>
 				<if test="sort != null">
