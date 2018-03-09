@@ -196,6 +196,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
                             } else {
                                 pmphs.add(pmphGroupMember.getUserId());
                             }
+                        } else {
+                        	throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+                        			CheckedExceptionResult.ILLEGAL_PARAM, "该用户已在小组中，请勿重复添加");
                         }
                     }
                 }
