@@ -3,9 +3,11 @@ package com.bc.pmpheep.back.controller.cms;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,7 +60,7 @@ public class CmsManualController {
      * </pre>
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询操作手册列表")
-    @RequestMapping(value = "/manual/list", method = RequestMethod.GET)
+    @GetMapping(value = "/manual/list")
     public ResponseBean list(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, CmsManualVO cmsManualVO,
@@ -89,7 +91,7 @@ public class CmsManualController {
      * </pre>
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增操作手册")
-    @RequestMapping(value = "/new/manual", method = RequestMethod.POST)
+    @PostMapping(value = "/new/manual")
     public ResponseBean manual(CmsManual cmsManual, HttpServletRequest request) {
         String sessionId = CookiesUtil.getSessionId(request);
         return new ResponseBean(cmsManualService.addCmsManual(cmsManual, sessionId));
@@ -106,7 +108,7 @@ public class CmsManualController {
      * </pre>
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除操作手册")
-    @RequestMapping(value = "/manual/{id}/delete", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/manual/{id}/delete")
     public ResponseBean delCmsManual(@PathVariable("id") Long id) {
         return new ResponseBean(cmsManualService.deleteCmsManualById(id));
     }

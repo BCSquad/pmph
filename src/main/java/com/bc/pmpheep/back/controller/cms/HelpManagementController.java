@@ -5,9 +5,11 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,7 +63,7 @@ public class HelpManagementController {
      * </pre>
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询文章管理列表")
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
     public ResponseBean list(
     @RequestParam(name = "pageNumber", defaultValue = "1") Integer pageNumber,
     @RequestParam(name = "pageSize") Integer pageSize, CmsContentVO cmsContentVO,
@@ -97,7 +99,7 @@ public class HelpManagementController {
      * </pre>
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "新增帮助")
-    @RequestMapping(value = "/newHelp", method = RequestMethod.POST)
+    @PostMapping(value = "/newHelp")
     public ResponseBean newHelp(CmsContent cmsContent, @RequestParam("content") String content,
     HttpServletRequest request) {
         try {
@@ -121,8 +123,8 @@ public class HelpManagementController {
      * @return Map<String,Object>
      * </pre>
      */
+    @GetMapping(value = "/{id}/detail")
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查看帮助内容详情")
-    @RequestMapping(value = "/{id}/detail", method = RequestMethod.GET)
     public ResponseBean detail(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.getHelpDetail(id));
     }
@@ -138,7 +140,7 @@ public class HelpManagementController {
      * </pre>
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "帮助修改")
-    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @PutMapping(value = "/update")
     public ResponseBean update(CmsContent cmsContent, @RequestParam("content") String content,
     HttpServletRequest request) {
         try {
