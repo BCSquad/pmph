@@ -57,7 +57,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 	WriterPointLogService writerPointLogService;
 	@Autowired
 	WriterPointService writerPointService;
-	
+
 	@Override
 	public PageResult<BookUserCommentVO> listBookUserComment(PageParameter<BookUserCommentVO> pageParameter)
 			throws CheckedServiceException {
@@ -88,7 +88,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 		int num = 0;
 		for (Long id : ids) {
 			BookUserComment bookUserComment = bookUserCommentDao.getBookUserCommentById(id);
-			if (bookUserComment.getIsAuth() == 1) {
+			if (bookUserComment.getIsAuth() != 0) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.ILLEGAL_PARAM,
 						"有已经审核的评论了");
 			}
@@ -112,38 +112,9 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 				bookService.updateUpComments(bookUserComment.getBookId());
 			}
 			// 当用户评论过后 增加相应积分
-			if(isAuth == 1){
-				String ruleName="图书评论";
-				//获取积分规则
-				WriterPointRule writerPointRuleVOs=writerPointRuleService.getWriterPointRuleByName(ruleName);
-				if(null!=writerPointRuleVOs){
-					//查询用户评论之前的积分值
-					List<WriterPointLog> writerPointLog2=writerPointLogService.getWriterPointLogByUserId(bookUserComment.getWriterId());
-					WriterPointLog writerPointLog=new WriterPointLog();
-					//现在的规则的积分值+以前的积分
-					Integer temp=0;
-					if(writerPointLog2.size()>0){
-						temp=writerPointRuleVOs.getPoint()+writerPointLog2.get(0).getPoint();
-						writerPointLog.setPoint(temp);
-					}else{
-						temp=writerPointRuleVOs.getPoint();
-						writerPointLog.setPoint(temp);
-					}
-					//积分规则id
-					writerPointLog.setRuleId(writerPointRuleVOs.getId());
-					writerPointLog.setUserId(bookUserComment.getWriterId());
-					//增加积分记录
-					writerPointLogService.add(writerPointLog);
-					WriterPoint point=writerPointService.getWriterPointByUserId(bookUserComment.getWriterId());
-					WriterPoint writerPoint=new WriterPoint();
-					//当前获取的总积分=评论积分+以前的积分
-					writerPoint.setGain(writerPointLog.getPoint());
-					writerPoint.setUserId(bookUserComment.getWriterId());
-					writerPoint.setTotal(writerPoint.getGain()+point.getLoss());
-					writerPoint.setLoss(point.getLoss());
-					writerPoint.setId(point.getId());
-					writerPointService.updateWriterPoint(writerPoint);
-				}
+			if (isAuth == 1) {
+				String ruleName = "图书评论";
+				writerPointLogService.addWriterPointLogByRuleName(ruleName, bookUserComment.getWriterId());
 			}
 		}
 		if (num > 0) {

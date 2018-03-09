@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.bean.FileType;
+import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 
 /**
@@ -51,5 +53,38 @@ public class FileUploadController {
         } catch (IOException ex) {
             return new ResponseBean(ex);
         }
+    }
+
+    /**
+     * 上传文件并保存在Mongodb中
+     * 
+     * @param file 文件
+     * @return 返回上传结果
+     */
+    @ResponseBody
+    @RequestMapping(value = "/file/image/upload", method = RequestMethod.POST)
+    public ResponseBean imageUpload(@RequestParam("file") MultipartFile file) {
+        try {
+            return new ResponseBean(fileService.save(file, ImageType.CMS_CONTENT_COVER_IMG, 0));
+        } catch (IOException ex) {
+            return new ResponseBean(ex);
+        }
+    }
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：按ID删除MongoDB文件
+     * 使用示范：
+     *
+     * @param id MongoDB对应ID
+     * @return
+     * </pre>
+     */
+    @ResponseBody
+    @RequestMapping(value = "/file/{id}/delete", method = RequestMethod.DELETE)
+    public ResponseBean fileDelete(@PathVariable("id") String id) {
+        fileService.remove(id);
+        return new ResponseBean();
     }
 }

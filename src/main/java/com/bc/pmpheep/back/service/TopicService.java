@@ -133,7 +133,7 @@ public interface TopicService {
 	 * @param pageParameter3
 	 * @return
 	 */
-	PageResult<TopicDeclarationVO> listMyTopic(List<Long> authProgress, PageParameter<TopicDeclarationVO> pageParameter3)
+	PageResult<TopicDeclarationVO> listMyTopic(List<Long> authProgress, PageParameter<TopicDeclarationVO> pageParameter3,Long editorId)
 			throws CheckedServiceException;
 	
 	

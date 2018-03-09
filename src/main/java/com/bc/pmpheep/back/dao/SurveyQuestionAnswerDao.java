@@ -147,4 +147,16 @@ public interface SurveyQuestionAnswerDao {
      */
     List<SurveyQuestionAnswerListVO> listSurveyQuestionAnswerBySurveyId(
     @Param("surveyId") Long surveyId, @Param("userId") Long userId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据问卷ID查询已回答问卷的用户ID
+     * 使用示范：
+     *
+     * @param surveyId 问卷Id
+     * @return 已回答问卷的用户ID集合
+     * </pre>
+     */
+    List<Long> getUserIdBySurveyId(Long surveyId);
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +12,7 @@ import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.DeclarationService;
+import com.bc.pmpheep.back.service.MaterialExtensionService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.TextbookService;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -29,6 +31,7 @@ public class SpringThread implements Runnable {
 	MaterialService materialService;
 	TextbookService textbookService;
 	DeclarationService declarationService;
+	MaterialExtensionService materialExtensionService;
 	private Long materialId;
 	private String textBookids;
 	private String realname;
@@ -132,7 +135,8 @@ public class SpringThread implements Runnable {
 	public SpringThread(ZipHelper zipHelper, WordHelper wordHelper, MaterialService materialService,
 			TextbookService textbookService, DeclarationService declarationService, Long materialId, String textBookids,
 			String realname, String position, String title, String orgName, String unitName, Integer positionType,
-			Integer onlineProgress, Integer offlineProgress, String id) {
+			Integer onlineProgress, Integer offlineProgress, String id,
+			MaterialExtensionService materialExtensionService) {
 		super();
 		this.zipHelper = zipHelper;
 		this.wordHelper = wordHelper;
@@ -150,6 +154,7 @@ public class SpringThread implements Runnable {
 		this.onlineProgress = onlineProgress;
 		this.offlineProgress = offlineProgress;
 		this.id = id;
+		this.materialExtensionService = materialExtensionService;
 	}
 
 	@Override
@@ -201,8 +206,10 @@ public class SpringThread implements Runnable {
 		try {
 			List<DeclarationEtcBO> list = new ArrayList<>();
 			for (int i = 0; i < textbooks.size(); i++) {
+				String textbookName = textbooks.get(i).getTextbookName() + "第" + textbooks.get(i).getTextbookRound()
+						+ "版";
 				for (DeclarationEtcBO declarationEtcBO : declarationEtcBOs) {
-					if (textbooks.get(i).getTextbookName().equals(declarationEtcBO.getTextbookName())) {
+					if (textbookName.equals(declarationEtcBO.getTextbookName())) {
 						list.add(declarationEtcBO);
 					}
 				}
@@ -213,9 +220,10 @@ public class SpringThread implements Runnable {
 					sb.append(File.separator);
 					sb.append(material.getMaterialName());
 					sb.append(File.separator);
-					sb.append((i + 1) + "." + textbooks.get(i).getTextbookName());
+					sb.append((i + 1) + "." + textbookName);
 					sb.append(File.separator);
-					this.wordHelper.export(material.getMaterialName(), sb.toString(), list, str.toString());
+					this.wordHelper.export(material.getMaterialName(), sb.toString(), list, str.toString(),
+							this.materialExtensionService.getMaterialExtensionByMaterialId(this.materialId));
 					list.removeAll(list);
 				}
 			}

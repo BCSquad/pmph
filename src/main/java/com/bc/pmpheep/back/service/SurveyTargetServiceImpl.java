@@ -52,19 +52,21 @@ import com.bc.pmpheep.websocket.WebScocketMessage;
 @Service
 public class SurveyTargetServiceImpl implements SurveyTargetService {
     @Autowired
-    SurveyTargetDao    surveyTargetDao;
+    SurveyTargetDao             surveyTargetDao;
     @Autowired
-    OrgUserService     orgUserService;
+    OrgUserService              orgUserService;
     @Autowired
-    WriterUserService  writerUserService;
+    WriterUserService           writerUserService;
     @Autowired
-    MessageService     messageService;
+    MessageService              messageService;
     @Autowired
-    SurveyService      surveyService;
+    SurveyService               surveyService;
     @Autowired
-    MyWebSocketHandler myWebSocketHandler;
+    MyWebSocketHandler          myWebSocketHandler;
     @Autowired
-    UserMessageService userMessageService;
+    UserMessageService          userMessageService;
+    @Autowired
+    SurveyQuestionAnswerService surveyQuestionAnswerService;
 
     @Override
     public SurveyTarget addSurveyTarget(SurveyTarget surveyTarget) throws CheckedServiceException {
@@ -252,7 +254,7 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
     @Override
     public Integer reissueSurveyMessage(Message message, String title, Long surveyId,
     String sessionId) throws CheckedServiceException, IOException {
-        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId("602CFFA01B7E389E8D1AF1434244BF23");
         if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
@@ -271,6 +273,7 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
         }
+        List<Long> listUserId = surveyQuestionAnswerService.getUserIdBySurveyId(surveyId);
         Integer count = 0;
         List<Long> orgIds = this.listOrgIdBySurveyId(surveyId);
         if (CollectionUtil.isNotEmpty(orgIds)) {
@@ -281,15 +284,21 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
             List<WriterUser> writerUserList = writerUserService.getWriterUserListByOrgIds(orgIds);// 作家用户
             List<UserMessage> userMessageList = new ArrayList<UserMessage>(writerUserList.size()); // 系统消息
             for (WriterUser writerUser : writerUserList) {
-                userMessageList.add(new UserMessage(message.getId(), surveyTitle, Const.MSG_TYPE_1,
-                                                    userId, Const.SENDER_TYPE_1,
-                                                    writerUser.getId(), Const.RECEIVER_TYPE_2, 0L));
+                if (!listUserId.contains(writerUser.getId())) {
+                    userMessageList.add(new UserMessage(message.getId(), surveyTitle,
+                                                        Const.MSG_TYPE_1, userId,
+                                                        Const.SENDER_TYPE_1, writerUser.getId(),
+                                                        Const.RECEIVER_TYPE_2, 0L));
+                }
             }
             List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(orgIds);// 获取学校管理员集合
             for (OrgUser orgUser : orgUserList) {
-                userMessageList.add(new UserMessage(message.getId(), surveyTitle, Const.MSG_TYPE_1,
-                                                    userId, Const.SENDER_TYPE_1, orgUser.getId(),
-                                                    Const.RECEIVER_TYPE_3, 0L));
+                if (!listUserId.contains(orgUser.getId())) {
+                    userMessageList.add(new UserMessage(message.getId(), surveyTitle,
+                                                        Const.MSG_TYPE_1, userId,
+                                                        Const.SENDER_TYPE_1, orgUser.getId(),
+                                                        Const.RECEIVER_TYPE_3, 0L));
+                }
             }
             // 发送消息
             if (CollectionUtil.isNotEmpty(userMessageList)) {

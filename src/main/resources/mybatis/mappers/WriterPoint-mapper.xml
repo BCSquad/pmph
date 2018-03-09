@@ -98,11 +98,12 @@
 						and wu.user_id = #{parameter.userId}
 					</if>
 					<!-- 用户名称 -->
+					<if test="parameter.realname !=null and parameter.realname!=''">
+						and 
+							wu.realname like concat('%',#{parameter.realname},'%')
+					</if>
 					<if test="parameter.username !=null and parameter.username!=''">
-						and (
-							wu.username like concat('%',#{parameter.username},'%')
-						or
-							wu.realname like concat('%',#{parameter.username},'%') )
+						and wu.username like concat('%',#{parameter.username},'%')
 					</if>
 				</if>
 				) t 
@@ -114,11 +115,12 @@
 				and wu.user_id = #{parameter.userId}
 			</if>
 			<!-- 用户名称 -->
+			<if test="parameter.realname !=null and parameter.realname!=''">
+						and 
+							wu.realname like concat('%',#{parameter.realname},'%')
+			</if>
 			<if test="parameter.username !=null and parameter.username!=''">
-				and (
-					wu.username like concat('%',#{parameter.username},'%')
-				or
-					wu.realname like concat('%',#{parameter.username},'%') )
+				and wu.username like concat('%',#{parameter.username},'%')
 			</if>
 		</if>
 		group by wu.username desc 

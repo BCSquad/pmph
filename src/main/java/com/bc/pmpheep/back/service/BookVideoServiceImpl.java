@@ -53,7 +53,7 @@ public class BookVideoServiceImpl implements BookVideoService {
         if (null != bookName) {
             map.put("bookName", bookName);
         }
-        if (null != state && 0 == state.intValue()) {//all
+        if (null != state && 0 != state.intValue()) {//all
             map.put("state", state);
         }
         //yyyy-MM-dd

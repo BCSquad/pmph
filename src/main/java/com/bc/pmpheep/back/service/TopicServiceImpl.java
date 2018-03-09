@@ -249,6 +249,7 @@ public class TopicServiceImpl implements TopicService {
 		}
 		WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 		writerUserTrendst.setUserId(topicDao.getTopicTextVO(topic.getId()).getUserId());
+		writerUserTrendst.setBookId(topic.getId());
 		writerUserTrendst.setType(9);
 		writerUserTrendst.setIsPublic(false);
 		if (ObjectUtil.notNull(topic.getAuthProgress())) {
@@ -259,7 +260,7 @@ public class TopicServiceImpl implements TopicService {
 			if (3 == topic.getAuthProgress()) {
 				Map<String, Object> detail = new HashMap<String, Object>();
 				detail.put("title", CheckedExceptionBusiness.TOPIC);
-				detail.put("content", "您的选题已经通过。");
+				detail.put("content", "您的选题《"+topic.getBookname()+"》已经通过。");
 				detail.put("img", 1);
 				writerUserTrendst.setDetail(new Gson().toJson(detail));
 				// 创建本版号并将本版号放入数据中
@@ -304,7 +305,7 @@ public class TopicServiceImpl implements TopicService {
 			} else {
 				Map<String, Object> detail = new HashMap<String, Object>();
 				detail.put("title", CheckedExceptionBusiness.TOPIC);
-				detail.put("content", "您的选题未通过。");
+				detail.put("content", "您的选题《"+topic.getBookname()+"》未通过。");
 				detail.put("img", 2);
 				writerUserTrendst.setDetail(new Gson().toJson(detail));
 			}
@@ -601,7 +602,7 @@ public class TopicServiceImpl implements TopicService {
 
 	@Override
 	public PageResult<TopicDeclarationVO> listMyTopic(List<Long> authProgress,
-			PageParameter<TopicDeclarationVO> pageParameter) {
+			PageParameter<TopicDeclarationVO> pageParameter,Long editorId) {
 		if (CollectionUtil.isEmpty(authProgress)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
 					"选题申报状态不对");
@@ -610,12 +611,14 @@ public class TopicServiceImpl implements TopicService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		Integer total = topicDao.listMyTopicTotal(authProgress, pageParameter.getParameter().getBookname(),
 				pageParameter.getParameter().getSubmitTime(),pageParameter.getParameter().getIsDirectorHandling(),
-				pageParameter.getParameter().getIsEditorHandling(),pageParameter.getParameter().getIsOptsHandling());
+				pageParameter.getParameter().getIsEditorHandling(),pageParameter.getParameter().getIsOptsHandling()
+				,editorId);
 		if (total > 0) {
 			List<TopicDeclarationVO> list = topicDao.listMyTopic(authProgress, pageParameter.getPageSize(),
 					pageParameter.getStart(), pageParameter.getParameter().getBookname(),
 					pageParameter.getParameter().getSubmitTime(),pageParameter.getParameter().getIsDirectorHandling(),
-					pageParameter.getParameter().getIsEditorHandling(),pageParameter.getParameter().getIsOptsHandling());
+					pageParameter.getParameter().getIsEditorHandling(),pageParameter.getParameter().getIsOptsHandling()
+					,editorId);
 			list = addState(list);
 			pageResult.setRows(list);
 		}

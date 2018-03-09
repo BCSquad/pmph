@@ -44,6 +44,7 @@ import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.mongodb.gridfs.GridFSDBFile;
 
 /**
  * 
@@ -411,7 +412,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
 
         // 当文章通过的时候 给用户增加积分
-        if (2 == authStatus) {
+        if (Const.CMS_AUTHOR_STATUS_2 == authStatus) {
             String ruleName = "发表文章";
             // 获取积分规则
             WriterPointRule writerPointRuleVOs =
@@ -424,11 +425,15 @@ public class CmsContentServiceImpl implements CmsContentService {
                 // 现在的规则的积分值+以前的积分
                 Integer temp = 0;
                 if (writerPointLog2.size() > 0) {
-                    temp = writerPointRuleVOs.getPoint() + writerPointLog2.get(0).getPoint();
-                    writerPointLog.setPoint(temp);
+                    Integer newTemp = 0;
+                    for (WriterPointLog writerPointLogNew : writerPointLog2) {
+                        newTemp += writerPointLogNew.getPoint();
+                    }
+                    temp = writerPointRuleVOs.getPoint() + newTemp;
+                    writerPointLog.setPoint(writerPointRuleVOs.getPoint());
                 } else {
                     temp = writerPointRuleVOs.getPoint();
-                    writerPointLog.setPoint(temp);
+                    writerPointLog.setPoint(writerPointRuleVOs.getPoint());
                 }
                 // 积分规则id
                 writerPointLog.setRuleId(writerPointRuleVOs.getId());
@@ -439,14 +444,14 @@ public class CmsContentServiceImpl implements CmsContentService {
                 writerPointService.getWriterPointByUserId(cmsContent.getAuthorId());
                 WriterPoint writerPoint = new WriterPoint();
                 // 当前获取的总积分=评论积分+以前的积分
-                writerPoint.setGain(writerPointLog.getPoint());
+                writerPoint.setGain(temp);
                 writerPoint.setUserId(cmsContent.getAuthorId());
                 writerPoint.setTotal(writerPoint.getGain() + point.getLoss());
                 writerPoint.setLoss(point.getLoss());
                 writerPoint.setId(point.getId());
                 writerPointService.updateWriterPoint(writerPoint);
             }
-
+            writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
         }
         return count;
     }
@@ -559,10 +564,15 @@ public class CmsContentServiceImpl implements CmsContentService {
         String imgFilePath = RouteUtil.DEFAULT_USER_AVATAR;
         if (ObjectUtil.notNull(cmsExtra)) {
             imgFileName = cmsExtra.getAttachmentName();
+        } else {
+            GridFSDBFile file = fileService.get(cmsContent.getCover());
+            if (ObjectUtil.notNull(file)) {
+                imgFileName = file.getFilename();
+            }
         }
         resultMap.put("imgFileName", imgFileName);
         if (!"DEFAULT".equals(cmsContent.getCover())) {
-            imgFilePath = RouteUtil.MONGODB_IMAGE + cmsContent.getCover();
+            imgFilePath = cmsContent.getCover();
         }
         resultMap.put("imgFilePath", imgFilePath);
         return resultMap;
@@ -779,5 +789,101 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               CheckedExceptionResult.NULL_PARAM, "上级id为空");
         }
         return cmsContentDao.getCmsContentByParentId(parentId);
+    }
+
+    @Override
+    public PageResult<CmsContentVO> listHelp(PageParameter<CmsContentVO> pageParameter,
+    String sessionId) throws CheckedServiceException {
+        // 获取当前登陆用户
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
+        PageResult<CmsContentVO> pageResult = new PageResult<CmsContentVO>();
+        // 将页面大小和页面页码拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 包含数据总条数的数据集
+        List<CmsContentVO> cmsContentList = cmsContentDao.listHelp(pageParameter);
+        if (CollectionUtil.isNotEmpty(cmsContentList)) {
+            Integer count = cmsContentList.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(cmsContentList);
+        }
+        return pageResult;
+    }
+
+    @Override
+    public CmsContent addHelp(CmsContent cmsContent, String content, String sessionId,
+    HttpServletRequest request) throws CheckedServiceException, IOException {
+        // 获取当前登陆用户
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
+        if (StringUtil.isEmpty(content)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "内容参数为空");
+        }
+        // MongoDB 内容插入
+        Content contentObj = contentService.add(new Content(content));
+        if (StringUtil.isEmpty(contentObj.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.PO_ADD_FAILED,
+                                              "Content对象内容保存失败");
+        }
+        // 内容保存
+        cmsContent.setCategoryId(Const.CMS_CATEGORY_ID_4);
+        cmsContent.setParentId(Const.CMS_CATEGORY_ID_4);// 上级id
+        cmsContent.setPath("0");
+        cmsContent.setMid(contentObj.getId());// 内容id
+        cmsContent.setAuthorType(Const.CMS_AUTHOR_TYPE_1);// 作者类型
+        cmsContent.setAuthorId(pmphUser.getId());// 作者id
+        Long contentId = this.addCmsContent(cmsContent).getId();// 获取新增后的主键ID
+        if (ObjectUtil.isNull(contentId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.PO_ADD_FAILED,
+                                              "CmsContent添加内容失败");
+        }
+        return cmsContent;
+    }
+
+    @Override
+    public Map<String, Object> getHelpDetail(Long id) throws CheckedServiceException {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        if (ObjectUtil.isNull(id)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+
+        }
+        // 按id 获取CmsContent对象
+        CmsContent cmsContent = cmsContentDao.getCmsContentById(id);
+        resultMap.put("cmsContent", cmsContent);
+        // 按mid 获取Content对象
+        Content content = contentService.get(cmsContent.getMid());
+        resultMap.put("content", content);
+        return resultMap;
+    }
+
+    @Override
+    public Integer updateHelp(CmsContent cmsContent, String content, String sessionId,
+    HttpServletRequest request) throws CheckedServiceException, IOException {
+        // 获取当前登陆用户
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
+        if (StringUtil.notEmpty(content)) {
+            // 更新MongoDB 内容
+            contentService.update(new Content(cmsContent.getMid(), content));
+        }
+        if (ObjectUtil.isNull(cmsContent)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+
+        }
+        return cmsContentDao.updateCmsContent(cmsContent);
     }
 }

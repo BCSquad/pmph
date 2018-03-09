@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bc.pmpheep.back.dao.CmsManualDao">
+	<sql id="key">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="manualName != null and manualName !=''">
+				manual_name,
+			</if>
+			<if test="attachment != null and attachment !='' " >
+				attachment,
+			</if>
+			<if test="note != null and note !='' " >
+				note,
+			</if>
+			<if test="download != null " >
+				download,
+			</if>
+			<if test="userId != null " >
+				user_id,
+			</if>
+		</trim>
+	</sql>
+	<!-- sql片段对应?,id属性值任意 -->
+	<sql id="value">
+		<!-- 去掉最后一个, -->
+		<trim suffixOverrides=",">
+			<if test="manualName != null and manualName !=''">
+				#{manualName},
+			</if>
+			<if test="attachment != null and attachment !='' " >
+				#{attachment},
+			</if>
+			<if test="note != null and note !='' " >
+				#{note},
+			</if>
+			<if test="download != null " >
+				#{download},
+			</if>
+			<if test="userId != null " >
+				#{userId},
+			</if>
+		</trim>
+	</sql>
+	<!-- 新增CmsExtra -->
+	<insert id="addCmsManual" parameterType="CmsManual" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into cms_manual (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
+	</insert>
+
+	<!-- 根据id删除一个 CmsExtra-->
+	<delete id="deleteCmsManualById" parameterType="java.lang.Long">
+		delete from cms_manual where id=#{id};
+	</delete>
+	
+	<!--CmsManualVO模糊查询获取帮助列表 -->
+	<select id="listCmsManual" parameterType="PageParameter" resultType="CmsManualVO">
+		SELECT 
+			cm.`id`,cm.`manual_name`,cm.`attachment`,cm.`note`,cm.`user_id`,cm.`gmt_create`,pu.`realname` username,t.count
+		FROM 
+			`cms_manual`cm
+		LEFT JOIN
+			`pmph_user` pu 
+		ON
+			cm.`user_id` = pu.`id`,
+			(
+				SELECT 
+					count(*) `count`
+				FROM 
+					`cms_manual`cm
+				LEFT JOIN
+					`pmph_user` pu 
+				ON
+					cm.`user_id` = pu.`id`
+				<where>
+					<if test="parameter !=null ">
+						<if test="parameter.manualName != null and parameter.manualName != ''">
+							 cm.`manual_name` like concat('%',#{parameter.manualName},'%')
+						</if>
+						<if test="parameter.userName !=null and  parameter.userName!='' ">
+							AND (
+								pu.`username` like concat('%',#{parameter.userName},'%') 
+							OR
+								pu.`realname` like concat('%',#{parameter.userName},'%') )
+						</if>
+					</if>
+				</where>
+			) t
+			<where>
+				<if test="parameter !=null">
+						<if test="parameter.manualName != null and parameter.manualName != ''">
+							 cm.`manual_name` like concat('%',#{parameter.manualName},'%')
+						</if>
+						<if test="parameter.userName !=null and  parameter.userName!='' ">
+							AND (
+								pu.`username` like concat('%',#{parameter.userName},'%') 
+							OR
+								pu.`realname` like concat('%',#{parameter.userName},'%') )
+						</if>
+				</if>
+			</where>
+		order by 
+   				  cm.`gmt_create` DESC 
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+</mapper>

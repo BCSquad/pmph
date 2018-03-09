@@ -12,7 +12,7 @@
           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd
           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 ">
-   <!-- 	 <mvc:annotation-driven/> -->
+   	 <mvc:annotation-driven/>
    	 <mvc:default-servlet-handler/>
    	
     <!-- 使用cglib进行动态代理 -->
@@ -63,7 +63,7 @@
 			<mvc:exclude-mapping path="/pmph/logout" />
 			<mvc:exclude-mapping path="/sys/operation/new" />
 			<mvc:exclude-mapping path="/sys/operation/operations" />
-			<mvc:exclude-mapping path="/image/**" />
+			<mvc:exclude-mapping path="/image/*" />
 			<bean id="oauth2Interceptor" class="com.bc.pmpheep.wechat.interceptor.OAuth2Interceptor"></bean>
 		</mvc:interceptor>
 		

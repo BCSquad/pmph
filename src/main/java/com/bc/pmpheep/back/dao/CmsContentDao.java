@@ -129,6 +129,18 @@ public interface CmsContentDao {
     /**
      * 
      * <pre>
+     * 功能描述：获取CmsContent列表（同时查询分页数据和总条数）
+     * 使用示范：
+     *
+     * @param pageParameter
+     * @return List<CmsContentVO>
+     * </pre>
+     */
+    List<CmsContentVO> listHelp(PageParameter<CmsContentVO> pageParameter);
+
+    /**
+     * 
+     * <pre>
      * 功能描述：获取评论列表（同时查询分页数据和总条数）
      * 使用示范：
      *

@@ -139,7 +139,7 @@ public class DeclarationEtcBO {
 	@ExcelHeader(header = "其他社教材编写情况")
 	private ArrayList<DecTextbook> decTextbooks;
 
-        @ExcelHeader(header = "参加人卫慕课、数字教材编写情况")
+	@ExcelHeader(header = "参加人卫慕课、数字教材编写情况")
 	private DecMoocDigital decMoocDigital;
 
 	@ExcelHeader(header = "科研情况")
@@ -159,12 +159,14 @@ public class DeclarationEtcBO {
 
 	@ExcelHeader(header = "学术荣誉授予情况")
 	private ArrayList<DecAcadeReward> decAcadeRewards;
-        
+
 	@ExcelHeader(header = "编写内容意向")
 	private DecIntention decIntention;
 
 	@ExcelHeader(header = "作家扩展项")
 	private ArrayList<DecExtensionVO> decExtensionVOs;
+
+	private Long materialId;
 
 	public DeclarationEtcBO() {
 	}
@@ -228,6 +230,14 @@ public class DeclarationEtcBO {
 		this.decAcadeRewards = decAcadeRewards;
 		this.decExtensionVOs = decExtensionVOs;
 		this.decIntention = decIntention;
+	}
+
+	public Long getMaterialId() {
+		return materialId;
+	}
+
+	public void setMaterialId(Long materialId) {
+		this.materialId = materialId;
 	}
 
 	/**

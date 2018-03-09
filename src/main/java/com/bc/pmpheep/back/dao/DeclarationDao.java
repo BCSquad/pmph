@@ -60,16 +60,17 @@ public interface DeclarationDao {
 	 * @Return Declaration
 	 */
 	Declaration getDeclarationById(Long id);
-	
+
 	/**
 	 * 查询多个申报
-	 * @introduction 
+	 * 
+	 * @introduction
 	 * @author Mryang
 	 * @createDate 2017年12月14日 下午4:41:09
 	 * @param ids
 	 * @return
 	 */
-	List<Declaration>  getDeclarationByIds(@Param("ids")List<Long> ids);
+	List<Declaration> getDeclarationByIds(@Param("ids") List<Long> ids);
 
 	/**
 	 * Description: 根据教材id查询作家申报信息
@@ -79,18 +80,17 @@ public interface DeclarationDao {
 	 * @Return 作家申报信息
 	 */
 	List<Declaration> getDeclarationByMaterialId(Long materialId);
-        
-        /**
+
+	/**
 	 * Description: 根据教材id和作家id查询作家申报信息
 	 * 
 	 * @Param materialId 教材id
-         * 
-         * @Param userId 作家id
+	 * 
+	 * @Param userId 作家id
 	 * 
 	 * @Return 作家申报信息
 	 */
-	Declaration getDeclarationByMaterialIdAndUserId(@Param("materialId")Long materialId, 
-                @Param("userId")Long userId);
+	Declaration getDeclarationByMaterialIdAndUserId(@Param("materialId") Long materialId, @Param("userId") Long userId);
 
 	/**
 	 * Description: 根据教材id查询作家申报信息
@@ -104,6 +104,14 @@ public interface DeclarationDao {
 			@Param("position") String position, @Param("title") String title, @Param("orgName") String orgName,
 			@Param("unitName") String unitName, @Param("positionType") Integer positionType,
 			@Param("onlineProgress") Integer onlineProgress, @Param("offlineProgress") Integer offlineProgress);
+
+	/**
+	 * 根据教材申报id与姓名查询作家申报信息
+	 * 
+	 * @param id
+	 * @return
+	 */
+	List<DeclarationOrDisplayVO> getDeclarationOrDisplayVOByIdOrRealname(@Param("id") List<Long> id);
 
 	/**
 	 * Description:查询表的数据总记录数
