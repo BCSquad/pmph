@@ -168,14 +168,14 @@ WriterUserCertificationService {
             List<WriterUser> list = writerUserService.getWriterUserRankList(writerUsers);
             for (WriterUser writerUser : list) {
 				if (0 == writerUser.getRank()) {//当级别为0的时候修改
-					for (WriterUser wrs : writerUsers) {
+					for (WriterUser wrs : list) {
 						wrs.setAuthUserType(1);
 						wrs.setAuthUserId(pmphuser.getId());
 						wrs.setIsTeacher(true);
 						writerUserService.updateWriterUserRank(wrs);
 					}
 				} else {
-					for (WriterUser wrs : writerUsers) {
+					for (WriterUser wrs : list) {
 						wrs.setAuthUserType(1);
 						wrs.setAuthUserId(pmphuser.getId());
 						wrs.setIsTeacher(false);
