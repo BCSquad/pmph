@@ -249,7 +249,7 @@
 	</select>
 	
 	<!-- 根据问卷ID查询问卷已发送对象 -->
-	<select id="listSendOrgBySurveyId" parameterType="java.lang.Long" resultType="OrgVO">
+	<select id="listSendOrgBySurveyId" parameterType="PageParameter" resultType="OrgVO">
 		SELECT 
 			o.`id`,o.`org_name`, ou.`username`, ou.`handphone` ,t.`count`
 		FROM 
@@ -278,7 +278,7 @@
 			<where>
 				<if test="parameter !=null ">
 					<!-- 问卷ID -->
-					<if test="parameter.surveyId != null and parameter.surveyId != ''">
+					<if test="parameter.surveyId != null">
 						st.`survey_id`=#{surveyId}
 					</if>
 				</if>
@@ -287,7 +287,7 @@
 		<where>
 				<if test="parameter !=null ">
 					<!-- 问卷ID  -->
-					<if test="parameter.surveyId != null and parameter.surveyId != ''">
+					<if test="parameter.surveyId != null">
 						st.`survey_id`=#{surveyId}
 					</if>
 				</if>
