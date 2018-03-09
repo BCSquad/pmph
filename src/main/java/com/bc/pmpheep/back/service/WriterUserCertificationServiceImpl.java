@@ -168,15 +168,19 @@ WriterUserCertificationService {
             List<WriterUser> list = writerUserService.getWriterUserRankList(writerUsers);
             for (WriterUser writerUser : list) {
 				if (0 == writerUser.getRank()) {//当级别为0的时候修改
-					writerUser.setAuthUserType(1);
-					writerUser.setAuthUserId(pmphuser.getId());
-					writerUser.setIsTeacher(true);
-					writerUserService.updateWriterUserRank(writerUser);
+					for (WriterUser wrs : list) {
+						wrs.setAuthUserType(1);
+						wrs.setAuthUserId(pmphuser.getId());
+						wrs.setIsTeacher(true);
+						writerUserService.updateWriterUserRank(wrs);
+					}
 				} else {
-					writerUser.setAuthUserType(1);
-					writerUser.setAuthUserId(pmphuser.getId());
-					writerUser.setIsTeacher(false);
-					writerUserService.updateWriterUser(writerUser);
+					for (WriterUser wrs : list) {
+						wrs.setAuthUserType(1);
+						wrs.setAuthUserId(pmphuser.getId());
+						wrs.setIsTeacher(false);
+						writerUserService.updateWriterUser(wrs);
+					}
 				}
 			}
         }
