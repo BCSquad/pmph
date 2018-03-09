@@ -146,7 +146,7 @@ WriterUserCertificationService {
         Integer count = 0;
         List<WriterUserCertification> wUserCertifications =
         new ArrayList<WriterUserCertification>(writerUserCertifications.size());
-        List<WriterUser> writerUsers=new ArrayList<>();
+        List<WriterUser> writerUsers = new ArrayList<>();
         for (WriterUserCertification writerUserCertification : writerUserCertifications) {
             if (Const.WRITER_PROGRESS_0 == writerUserCertification.getProgress()) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
@@ -165,20 +165,20 @@ WriterUserCertificationService {
         if (CollectionUtil.isNotEmpty(wUserCertifications)) {//教师审核通过的同时修改普通用户级别为教师
             count =
             writerUserCertificationDao.updateWriterUserCertificationProgressByUserId(wUserCertifications);
-            List<WriterUser> list=writerUserService.getWriterUserRankList(writerUsers);
+            List<WriterUser> list = writerUserService.getWriterUserRankList(writerUsers);
             for (WriterUser writerUser : list) {
-				if(0==writerUser.getRank()){//当级别为0的时候修改
-					for (WriterUser wrs : writerUsers) {
+				if (0 == writerUser.getRank()) {//当级别为0的时候修改
+					for (WriterUser wrs : list) {
 						wrs.setAuthUserType(1);
 						wrs.setAuthUserId(pmphuser.getId());
 						wrs.setIsTeacher(true);
 						writerUserService.updateWriterUserRank(wrs);
 					}
-				}else{
-					for (WriterUser wrs : writerUsers) {
+				} else {
+					for (WriterUser wrs : list) {
 						wrs.setAuthUserType(1);
 						wrs.setAuthUserId(pmphuser.getId());
-						wrs.setIsTeacher(true);
+						wrs.setIsTeacher(false);
 						writerUserService.updateWriterUser(wrs);
 					}
 				}
@@ -186,27 +186,27 @@ WriterUserCertificationService {
         }
         //认证通过或退回的推送消息
         Boolean isPass = null;
-        if(2==progress){
+        if (2 == progress) {
         	isPass=false;
         }
-        if(3==progress){
+        if (3 == progress) {
         	isPass=true;
         }
-        if(null!=isPass){
-        	List<Long> teacherIds=new ArrayList<>();
+        if (null != isPass) {
+        	List<Long> teacherIds = new ArrayList<>();
             for (int i = 0; i < userIds.length; i++) {
               	teacherIds.add(userIds[0]);
       		}
         	//获取用户认证类型和认证人
-        	List<WriterUser> users=writerUserService.getWriterUserList(userIds);
+        	List<WriterUser> users = writerUserService.getWriterUserList(userIds);
         	for (WriterUser writerUser : users) {
-        		if(1==writerUser.getAuthUserType()){//社内用户
-        			PmphUser pmphUser=pmphUserService.get(writerUser.getAuthUserId());
+        		if (1 == writerUser.getAuthUserType()) {//社内用户
+        			PmphUser pmphUser = pmphUserService.get(writerUser.getAuthUserId());
         			systemMessageService.sendWhenTeacherCertificationAudit(pmphUser.getRealname(), teacherIds, isPass);
         		}
-        		if(2==writerUser.getAuthUserType()){//学校机构用户
-        			OrgUser orgUsers=orgUserService.getOrgUserById(writerUser.getAuthUserId());
-        			Org org=orgService.getOrgById(orgUsers.getOrgId());
+        		if (2 == writerUser.getAuthUserType()) {//学校机构用户
+        			OrgUser orgUsers = orgUserService.getOrgUserById(writerUser.getAuthUserId());
+        			Org org = orgService.getOrgById(orgUsers.getOrgId());
         			systemMessageService.sendWhenTeacherCertificationAudit(org.getOrgName(), teacherIds, isPass);
         		}
 			}
