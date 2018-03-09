@@ -254,7 +254,7 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
     @Override
     public Integer reissueSurveyMessage(Message message, String title, Long surveyId,
     String sessionId) throws CheckedServiceException, IOException {
-        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId("602CFFA01B7E389E8D1AF1434244BF23");
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");

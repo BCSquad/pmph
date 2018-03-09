@@ -26,7 +26,7 @@
 			<if test=" description != null and description != ''">
 				description,
 			</if>
-			<if test=" isDisabled != null and isDisabled != ''">
+			<if test=" isDisabled != null">
 				is_disabled,
 			</if>
 		</trim>
@@ -56,7 +56,7 @@
 			<if test=" description != null and description != ''">
 				#{description},
 			</if>
-			<if test=" isDisabled != null and isDisabled != ''">
+			<if test=" isDisabled != null">
 				#{isDisabled},
 			</if>
 		</trim>

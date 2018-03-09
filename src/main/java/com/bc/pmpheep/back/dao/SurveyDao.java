@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Survey;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 
 /**
@@ -78,4 +79,16 @@ public interface SurveyDao {
      * </pre>
      */
     SurveyVO getSurveyAndSurveyTypeById(@Param("id") Long id);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：根据问卷ID查询问卷已发送对象
+     * 使用示范：
+     *
+     * @param surveyId 问卷id
+     * @return
+     * </pre>
+     */
+    List<OrgVO> listSendOrgBySurveyId(PageParameter<OrgVO> pageParameter);
 }

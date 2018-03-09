@@ -22,6 +22,7 @@ import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -263,5 +264,25 @@ public class SurveyServiceImpl implements SurveyService {
             }
         }
         return questionIds;
+    }
+
+    @Override
+    public PageResult<OrgVO> listSendOrgBySurveyId(PageParameter<OrgVO> pageParameter)
+    throws CheckedServiceException {
+        if (ObjectUtil.isNull(pageParameter)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        PageResult<OrgVO> pageResult = new PageResult<OrgVO>();
+        // 将页面大小和页面页码拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 包含数据总条数的数据集
+        List<OrgVO> orgList = surveyDao.listSendOrgBySurveyId(pageParameter);
+        if (CollectionUtil.isNotEmpty(orgList)) {
+            Integer count = orgList.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(orgList);
+        }
+        return pageResult;
     }
 }
