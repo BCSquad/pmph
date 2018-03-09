@@ -22,6 +22,7 @@ import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.SurveyQuestionListVO;
 import com.bc.pmpheep.back.vo.SurveyVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -263,5 +264,14 @@ public class SurveyServiceImpl implements SurveyService {
             }
         }
         return questionIds;
+    }
+
+    @Override
+    public List<OrgVO> listSendOrgBySurveyId(Long surveyId) throws CheckedServiceException {
+        if (ObjectUtil.isNull(surveyId)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷ID为空");
+        }
+        return surveyDao.listSendOrgBySurveyId(surveyId);
     }
 }
