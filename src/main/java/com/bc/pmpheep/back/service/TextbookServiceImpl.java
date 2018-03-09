@@ -91,12 +91,13 @@ public class TextbookServiceImpl implements TextbookService {
 
 	@Autowired
 	private DecPositionPublishedService decPositionPublishedService;
-	
-    @Autowired
-    private SystemMessageService systemMessageService;
-    
-    @Autowired
-    private  TextbookService textbookService;
+
+	@Autowired
+	private SystemMessageService systemMessageService;
+
+	@Autowired
+	private TextbookService textbookService;
+
 	/**
 	 * 
 	 * @param Textbook
@@ -188,15 +189,16 @@ public class TextbookServiceImpl implements TextbookService {
 			// throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
 			// CheckedExceptionResult.ILLEGAL_PARAM,"名单已确认");
 			// }
-//if(textbook.getIsPublished()) {
-				Textbook textbook2 = new Textbook(textbook.getId(), textbook.getRevisionTimes().intValue()+1).setIsPublished(true);
-						 textbook2.setRevisionTimes(textbook.getRevisionTimes().intValue()+1) ;
-				textbookDao.updateTextbook(textbook2);
-//			}else {
-//				Textbook textbook2 = new Textbook(textbook.getId(), 0).setIsPublished(true);
-//				         textbook2.setRevisionTimes(0) ;
-//				textbookDao.updateTextbook(textbook2);
-//			}
+			// if(textbook.getIsPublished()) {
+			Textbook textbook2 = new Textbook(textbook.getId(), textbook.getRevisionTimes().intValue() + 1)
+					.setIsPublished(true);
+			textbook2.setRevisionTimes(textbook.getRevisionTimes().intValue() + 1);
+			textbookDao.updateTextbook(textbook2);
+			// }else {
+			// Textbook textbook2 = new Textbook(textbook.getId(), 0).setIsPublished(true);
+			// textbook2.setRevisionTimes(0) ;
+			// textbookDao.updateTextbook(textbook2);
+			// }
 			materials.setId(textbook.getMaterialId());
 			textBookIds.add(textbook.getId());
 		}
@@ -224,13 +226,31 @@ public class TextbookServiceImpl implements TextbookService {
 			decPositionPublished.setSyllabusName(decPosition.getSyllabusName());
 			decPositionPublishedLst.add(decPositionPublished);
 		}
+		List<DecPositionPublished> olds = decPositionPublishedService.getDecPositionPublishedListByBookIds(textBookIds);
+		List<DecPositionPublished> sends = new ArrayList<>();
+		for (DecPositionPublished now : decPositionPublishedLst) {
+			DecPositionPublished published = decPositionPublishedService
+					.getDecPositionByDeclarationId(now.getDeclarationId(), now.getTextbookId());
+			if (ObjectUtil.isNull(published)) {
+				sends.add(now);
+			}
+			for (DecPositionPublished old : olds) {
+				if (old.getDeclarationId().equals(now.getDeclarationId())
+						&& old.getTextbookId().equals(now.getTextbookId())) {
+					if (!old.getChosenPosition().equals(now.getChosenPosition())
+							|| !old.getRank().equals(now.getRank())) {
+						sends.add(now);
+					}
+				}
+			}
+		}
 		// 先删除dec_position_published表中的所有数据
 		decPositionPublishedService.deleteDecPositionPublishedByBookIds(textBookIds);
 		// 向dec_position_published插入新数据
 		decPositionPublishedService.batchInsertDecPositionPublished(decPositionPublishedLst);
 		/** 发布更新最终结果表的数据 ---end --- */
-		//List<Textbook> books = materialDao.getMaterialAndTextbook(materials);
-		List<Textbook> books = textbookService. getTextbookByMaterialId(materials.getId());
+		// List<Textbook> books = materialDao.getMaterialAndTextbook(materials);
+		List<Textbook> books = textbookService.getTextbookByMaterialId(materials.getId());
 		Integer count = 0;
 		/* 通过遍历查看教材下面所有书籍是否公布，当数据全部公布则该教材改为最终公布 */
 		for (Textbook book : books) {
@@ -239,27 +259,27 @@ public class TextbookServiceImpl implements TextbookService {
 			}
 		}
 		if (count == books.size()) {
-		    // 检查有没有再次公布 
-			PageResult<BookPositionVO> listBookPosition = this.listBookPosition(1,9999999, null,null, null, materials.getId(),sessionId);
+			// 检查有没有再次公布
+			PageResult<BookPositionVO> listBookPosition = this.listBookPosition(1, 9999999, null, null, null,
+					materials.getId(), sessionId);
 			boolean haveNo = true;
-			for(BookPositionVO bookPositionVO:listBookPosition.getRows()) {
-				if(bookPositionVO.getIsPublished() && bookPositionVO.getRepub()) {
+			for (BookPositionVO bookPositionVO : listBookPosition.getRows()) {
+				if (bookPositionVO.getIsPublished() && bookPositionVO.getRepub()) {
 					haveNo = false;
 					break;
 				}
 			}
-			if(haveNo) {
+			if (haveNo) {
 				count = materialDao.updateMaterialPublished(materials);
 			}
 		}
-		//发送消息
+		// 发送消息
 		for (Textbook textbook : textbooks) {
-			systemMessageService.sendWhenPubfinalResult(textbook.getId(),decPositionPublishedLst) ;
+			systemMessageService.sendWhenPubfinalResult(textbook.getId(), sends);
 		}
 		return count;
 	}
 
-    
 	@Override
 	public List<Textbook> getTextbookByMaterialIdAndUserId(Long materialId, Long userId)
 			throws CheckedServiceException {
