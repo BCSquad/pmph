@@ -839,7 +839,8 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               "Content对象内容保存失败");
         }
         // 内容保存
-        cmsContent.setParentId(cmsContent.getCategoryId());// 上级id
+        cmsContent.setCategoryId(Const.CMS_CATEGORY_ID_4);
+        cmsContent.setParentId(Const.CMS_CATEGORY_ID_4);// 上级id
         cmsContent.setPath("0");
         cmsContent.setMid(contentObj.getId());// 内容id
         cmsContent.setAuthorType(Const.CMS_AUTHOR_TYPE_1);// 作者类型

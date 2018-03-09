@@ -299,7 +299,8 @@ public class MigrationStageOne {
             //依据客户反馈不迁移的机构
             if ("江苏建康职业学院".equals(orgName) || "北京大学".equals(orgName) || "民办山东万杰医学高等专科学校".equals(orgName)
             		|| "天津大学".equals(orgName) || "协和医院".equals(orgName) || "华西医院".equals(orgName)
-            		|| "技术学校".equals(orgName) || "qthzyxy".equals(orgName)){
+            		|| "技术学校".equals(orgName) || "qthzyxy".equals(orgName) || "河南中医学院".equals(orgName)
+            		|| "陕西中医学院".equals(orgName)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("缺少管理员账号。"));
             	if (state[4] == 0){
             		reason.append("缺少管理员账号。");
@@ -411,7 +412,7 @@ public class MigrationStageOne {
         Map<String, Object> result = new LinkedHashMap<>();
         int count = 0;
         int correctCount = 0;//统计正常数据数量
-        int[] state = {0,0,0,0,0,0,0,0};//识别该表是否有相应异常数据的标识
+        int[] state = {0,0,0,0,0,0,0,0,0};//识别该表是否有相应异常数据的标识
         StringBuilder reason = new StringBuilder();
         StringBuilder dealWith = new StringBuilder();
         for (Map<String, Object> map : maps) {
@@ -448,15 +449,24 @@ public class MigrationStageOne {
                 }
                 continue;
             }
+            if ("jxyxgdxx".equals(username) || "zyyyzkxy".equals(username) || "qlyyxy".equals(username)){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("依据客户反馈不迁移"));
+            	excel.add(map);
+            	if (state[3] == 0){
+            		reason.append("多余管理员账号。");
+            		dealWith.append("依据客户反馈，放弃迁移。");
+            		state[3] = 1;
+            	}
+            }
             list.add(username);
             Long orgId = (Long) map.get("new_pk");
             if (ObjectUtil.isNull(orgId)) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("找不到对应的学校。"));
                 excel.add(map);
-                if (state[3] == 0){
+                if (state[4] == 0){
                 	reason.append("找不到对应的机构。");
                 	dealWith.append("放弃迁移。");
-                	state[3] = 1;
+                	state[4] = 1;
                 }
                 continue;
             }
@@ -465,10 +475,10 @@ public class MigrationStageOne {
                 password = "888888";
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构用户登陆密码为空。"));
                 excel.add(map);
-                if (state[4] == 0){
+                if (state[5] == 0){
                 	reason.append("机构用户登陆密码为空。");
                 	dealWith.append("设为默认密码迁入数据库。");
-                	state[4] = 1;
+                	state[5] = 1;
                 }
             }
             String realName = (String) map.get("username");
@@ -576,10 +586,10 @@ public class MigrationStageOne {
             if (orgUser.getProgress() == 1 && ObjectUtil.isNull(orgUser.getReviewDate())) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("审核通过，但审核时间为空。"));
                 excel.add(map);
-                if (state[5] == 0){
+                if (state[6] == 0){
                 	reason.append("审核通过但社和时间为空。");
                 	dealWith.append("依据客户反馈照常迁入数据库。");
-                	state[5] = 1;
+                	state[6] = 1;
                 }
             }
             orgUser = orgUserService.addOrgUser(orgUser);
@@ -596,10 +606,10 @@ public class MigrationStageOne {
                     logger.error("文件读取异常，路径<{}>,异常信息：{}", proxy, ex.getMessage());
                     map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("文件读取异常。"));
                     excel.add(map);
-                    if (state[6] == 0){
+                    if (state[7] == 0){
                     	reason.append("机构委托书丢失。");
                     	dealWith.append("设为默认图片迁入数据库。");
-                    	state[6] = 1;
+                    	state[7] = 1;
                     }
                 } 
                 orgUser.setProxy(mongoId);
@@ -613,10 +623,10 @@ public class MigrationStageOne {
                         logger.error("文件读取异常，路径<{}>,异常信息：{}", avatar, ex.getMessage());
                         map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构用户头像文件读取异常。"));
                         excel.add(map);
-                        if (state[7] == 0){
+                        if (state[8] == 0){
                         	reason.append("机构用户头像文件丢失。");
                         	dealWith.append("设为默认头像迁入数据库。");
-                        	state[7] = 1;
+                        	state[8] = 1;
                         }
                     } 
                     orgUser.setAvatar(avatarMongoId);
