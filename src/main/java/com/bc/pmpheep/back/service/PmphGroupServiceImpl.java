@@ -390,7 +390,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 		} else {
 			PmphGroup pmphGroup = new PmphGroup();
 			List<PmphGroupListVO> groupListVOs=pmphGroupDao.getList(pmphGroup, pmphUser.getId());
-			for (PmphGroupListVO pmphGroupListVO : list) {
+			for (PmphGroupListVO pmphGroupListVO : groupListVOs) {
 				pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 			}
 			if(groupListVOs.size()>0){
