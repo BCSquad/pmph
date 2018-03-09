@@ -52,7 +52,7 @@ public class Const {
     // 服务器上
     public static final String               SESSION_ID                    = "sessionId";
 
-    // public static final String SESSION_ID = "JSESSIONID";
+	//     public static final String SESSION_ID = "JSESSIONID";
     // PMPH_WECHAT_USER_TOKEN
     public static final String               PMPH_WECHAT_USER_TOKEN        = "token";
     // PMPH_USER_TOKEN

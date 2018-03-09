@@ -417,27 +417,36 @@
 		GROUP_CONCAT(
 		CASE
 		when p.preset_position =15 then
-		'主编,副主编,编委,数字编委'       <!-- 1111 -->
-		when p.preset_position =14 then '主编,副主编,数字编委'          <!-- 1110 -->
-		when p.preset_position =13 then '主编,编委,数字编委'            <!-- 1101 -->
-		when p.preset_position =12 then '主编,数字编委'               <!-- 1100 -->
-		when p.preset_position =11 then '副主编,编委,数字编委'          <!-- 1011 -->
-		when p.preset_position =10 then '副主编,数字编委'              <!-- 1010 -->
-		when p.preset_position =9 then '编委,数字编委'               <!-- 1001 -->
-		when p.preset_position =8 then '数字编委'                   <!-- 1000 -->
-		when p.preset_position =7 then '主编,副主编,编委'             <!-- 0111 -->
-		when p.preset_position =6 then '主编,副主编'                 <!-- 0110 -->
-		when p.preset_position =5 then '主编,编委'                  <!-- 0101 -->
-		when p.preset_position =4 then '主编'                      <!-- 0100 -->
-		when p.preset_position =3 then '副主编,编委'                 <!-- 0011 -->
-		when p.preset_position =2 then '副主编'                     <!-- 0010 -->
-		when p.preset_position =1 then '编委'                      <!-- 0001 -->
+		'主编,副主编,编委,数字编委'
+		when
+		p.preset_position =14 then '主编,副主编,数字编委'
+		when p.preset_position =13
+		then '主编,编委,数字编委'
+		when p.preset_position =12 then '主编,数字编委'
+		when
+		p.preset_position =11 then '副主编,编委,数字编委'
+		when p.preset_position =10
+		then '副主编,数字编委'
+		when p.preset_position =9 then '编委,数字编委'
+		when
+		p.preset_position =8 then '数字编委'
+		when p.preset_position =7 then
+		'主编,副主编,编委'
+		when p.preset_position =6 then '主编,副主编'
+		when
+		p.preset_position =5 then '主编,编委'
+		when p.preset_position =4 then '主编'
+		when p.preset_position =3 then '副主编,编委'
+		when p.preset_position =2 then
+		'副主编'
+		when p.preset_position =1 then '编委'
 		else null
 		END
 		ORDER BY
 		t.textbook_name
 		) presetPosition,
-		if(d.org_id=0,'人民卫生出版社',o.org_name) orgNameOne
+		if(d.org_id=0,'人民卫生出版社',o.org_name)
+		orgNameOne
 		FROM
 		declaration d
 		LEFT
@@ -446,13 +455,16 @@
 		LEFT JOIN dec_position p ON
 		p.declaration_id = d.id
 		LEFT JOIN
-		textbook t ON t.id = p.textbook_id
+		textbook t
+		ON t.id = p.textbook_id
 		LEFT JOIN org o ON o.id = d.org_id
-		LEFT JOIN material m ON m.id =
+		LEFT JOIN
+		material m ON m.id =
 		d.material_id
 		WHERE
 		d.online_progress > 0
-		AND d.is_deleted = 0
+		AND
+		d.is_deleted = 0
 		AND
 		m.is_deleted = 0
 		AND d.material_id =
@@ -593,10 +605,10 @@
 		GROUP BY a.id
 		<if test="parameter.haveFile !=  null ">
 			<if test="parameter.haveFile">  <!-- haveFile -->
-				HAVING GROUP_CONCAT(c.syllabus_id) is not null
+				HAVING GROUP_CONCAT(c.syllabus_id SEPARATOR "") != ""
 			</if>
 			<if test="!parameter.haveFile"> <!-- noFile -->
-				HAVING GROUP_CONCAT(c.syllabus_id) is null
+				HAVING GROUP_CONCAT(c.syllabus_id SEPARATOR "") = ""
 			</if>
 		</if>
 		) temp
@@ -710,10 +722,10 @@
 		GROUP BY a.id
 		<if test="parameter.haveFile !=  null ">
 			<if test="parameter.haveFile">  <!-- haveFile -->
-				HAVING GROUP_CONCAT(c.syllabus_id) is not null
+				HAVING GROUP_CONCAT(c.syllabus_id SEPARATOR "") != ""
 			</if>
 			<if test="!parameter.haveFile"> <!-- noFile -->
-				HAVING GROUP_CONCAT(c.syllabus_id) is null
+				HAVING GROUP_CONCAT(c.syllabus_id SEPARATOR "") = ""
 			</if>
 		</if>
 		<!-- 排序和分页条件 -->

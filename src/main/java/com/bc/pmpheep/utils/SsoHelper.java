@@ -16,8 +16,11 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,44 +36,67 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Service
 public class SsoHelper {
 
+    @Value("#{spring['sso.url']}")
+    private String url;
+
+    /**
+     * @return the url
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * @param url the url to set
+     */
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     static Logger logger = LoggerFactory.getLogger(SsoHelper.class);
     static Gson gson = new Gson();
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://sso.ipmph.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
+    Retrofit retrofit;
     volatile Boolean result;
     volatile String message = "";
+    volatile SsoUser ssoUser;
+
+    @PostConstruct
+    public void postConstruct() {
+        retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+    }
 
     public String createSSOAccount(OrgUser orgUser) throws CheckedServiceException {
         if (StringUtil.isEmpty(orgUser.getUsername())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                     CheckedExceptionResult.NULL_PARAM, "新建SSO用户时用户名不能为空");
         }
-        SsoUser ssoUser = new SsoUser();
-        ssoUser.setUserName(orgUser.getUsername());
+        SsoUser user = new SsoUser();
+        user.setUserName(orgUser.getUsername());
         String address = orgUser.getAddress();
         String email = orgUser.getEmail();
         String handphone = orgUser.getHandphone();
         String realname = orgUser.getRealname();
         if (StringUtil.notEmpty(address)) {
-            ssoUser.setAddress(address);
+            user.setAddress(address);
         }
         if (StringUtil.notEmpty(email)) {
-            ssoUser.setEmail(email);
+            user.setEmail(email);
         }
         if (StringUtil.notEmpty(handphone)) {
-            ssoUser.setMobile(handphone);
+            user.setMobile(handphone);
         }
         if (StringUtil.notEmpty(realname)) {
-            ssoUser.setRealName(realname);
+            user.setRealName(realname);
         }
-        ssoUser.setPassword("123456");
+        user.setPassword("123456");
         SsoService ssoService = retrofit.create(SsoService.class);
         SsoRequest<SsoUser> request = new SsoRequest<>();
         request.setMethod("ZAS.AddUser");
-        request.setParams(ssoUser);
-        logger.info("request={}", gson.toJson(request));
+        request.setParams(user);
+//        logger.info("request={}", gson.toJson(request));
         result = null;
         Call<SsoResponse> call = ssoService.addUser(request);
         call.enqueue(new Callback<SsoResponse>() {
@@ -114,37 +140,102 @@ public class SsoHelper {
         }
     }
 
-    private void test() {
+    public boolean resetPassword(String loginID, String newPassword) {
+        if (StringUtil.isEmpty(loginID) || StringUtil.isEmpty(newPassword)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                    CheckedExceptionResult.NULL_PARAM, "重置SSO用户密码时用户名和新的密码均不能为空");
+        }
         SsoService ssoService = retrofit.create(SsoService.class);
         SsoRequest<Map<String, String>> request = new SsoRequest<>();
-        request.setMethod("ZAS.UserInfo");
+        request.setMethod("ZAS.ModifyUser");
         Map<String, String> map = new HashMap<>(2);
-        map.put("LoginID", "gugia");
-        map.put("Password", "123456");
+        map.put("LoginID", loginID);
+        map.put("Password", newPassword);
         request.setParams(map);
-        logger.info("request={}", gson.toJson(request));
-        Call<Map> call = ssoService.getUserInfo2(request);
-        call.enqueue(new Callback<Map>() {
+        result = null;
+        Call<SsoResponse> call = ssoService.modifyUser(request);
+        call.enqueue(new Callback<SsoResponse>() {
             @Override
-            public void onResponse(Call<Map> call, Response<Map> response) {
-                logger.info("isSuccessful={}", response.isSuccessful());
+            public void onResponse(Call<SsoResponse> call, Response<SsoResponse> response) {
+                boolean httpSuccess = response.isSuccessful();
+                logger.info("isSuccessful={}", httpSuccess);
                 logger.info("code={}", response.code());
-                logger.info("headers={}", response.headers());
-                logger.info("message={}", response.message());
-                logger.info("errorBody={}", response.errorBody());
-                logger.info("raw={}", response.raw());
+                if (!httpSuccess) {
+                    result = false;
+                    return;
+                }
                 if (null != response.body()) {
-                    Map<String, ?> map = response.body();
-                    logger.info("body={}", gson.toJson(map));
+                    SsoResponse<SsoUser> ssoResponse = response.body();
+                    result = ssoResponse.getSuccess();
+                    logger.info("sso.success={}", result);
+                    logger.info("sso.message={}", message);
+                    logger.info("sso.userdata={}", gson.toJson(ssoResponse.getUserData()));
                 } else {
-                    logger.warn("请求失败");
+                    result = false;
+                    message = "已向SSO成功发送请求，但没有数据返回";
+                    logger.warn(message);
                 }
             }
 
             @Override
-            public void onFailure(Call<Map> call, Throwable t) {
+            public void onFailure(Call<SsoResponse> call, Throwable t) {
+                logger.error("请求出错", t);
+                result = false;
+            }
+        });
+        while (null == result) {
+        }
+        return result;
+    }
+
+    public SsoUser getUserInfo(String loginID, String password) {
+        if (StringUtil.isEmpty(loginID) || StringUtil.isEmpty(password)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                    CheckedExceptionResult.NULL_PARAM, "查询SSO用户时用户名和密码均不能为空");
+        }
+        SsoService ssoService = retrofit.create(SsoService.class);
+        SsoRequest<Map<String, String>> request = new SsoRequest<>();
+        request.setMethod("ZAS.UserInfo");
+        Map<String, String> map = new HashMap<>(2);
+        map.put("LoginID", loginID);
+        map.put("Password", password);
+        request.setParams(map);
+        result = null;
+        ssoUser = null;
+        Call<SsoResponse> call = ssoService.getUserInfo(request);
+        call.enqueue(new Callback<SsoResponse>() {
+            @Override
+            public void onResponse(Call<SsoResponse> call, Response<SsoResponse> response) {
+                boolean httpSuccess = response.isSuccessful();
+                logger.info("isSuccessful={}", httpSuccess);
+                logger.info("code={}", response.code());
+                if (!httpSuccess) {
+                    result = false;
+                    message = "向SSO发送请求失败，错误代码".concat(String.valueOf(response.code()));
+                    return;
+                }
+                if (null != response.body()) {
+                    SsoResponse<SsoUser> ssoResponse = response.body();
+                    result = ssoResponse.getSuccess();
+                    message = ssoResponse.getMessage();
+                    ssoUser = ssoResponse.getUserData();
+                    logger.info("sso.success={}", result);
+                    logger.info("sso.message={}", message);
+                    logger.info("sso.userdata={}", gson.toJson(ssoResponse.getUserData()));
+                } else {
+                    result = false;
+                    message = "已向SSO成功发送请求，但没有数据返回";
+                    logger.warn(message);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SsoResponse> call, Throwable t) {
                 logger.error("请求出错", t);
             }
         });
+        while (null == result) {
+        }
+        return ssoUser;
     }
 }

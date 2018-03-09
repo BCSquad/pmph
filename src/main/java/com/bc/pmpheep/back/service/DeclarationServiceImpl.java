@@ -345,11 +345,28 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-						"最多只能输入100个字符，请重新输入!");
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
+			WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
+			writerUserTrendst.setUserId(declarationCon.getUserId());
+			writerUserTrendst.setIsPublic(false);// 自己可见
+			writerUserTrendst.setType(8);
+			String detail = "";
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("title", CheckedExceptionBusiness.MATERIAL);
+			map.put("content", "抱歉，贵校老师" + declarationCon.getRealname() + 
+					"提交的《" + material.getMaterialName() 
+					+ "》申报表被出版社退回，请贵校核对后重试。");
+			map.put("img", 2);
+			detail = new Gson().toJson(map);
+			writerUserTrendst.setDetail(detail);
+			writerUserTrendst.setCmsContentId(null);
+			writerUserTrendst.setBookId(declarationCon.getMaterialId());
+			writerUserTrendst.setBookCommentId(null);
+			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			// 发送系统消息
 			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false);
 			// 获取审核进度是5并且已经通过审核单位并且不是提交到出版社0则被退回给个人
@@ -366,8 +383,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-						"最多只能输入100个字符，请重新输入!");
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
@@ -386,8 +403,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-						"最多只能输入100个字符，请重新输入!");
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
@@ -398,7 +415,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String detail = "";
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
-			map.put("content", "抱歉，您提交的《" + material.getMaterialName() + "》申报表被出版社退回，请您核对后重试。");
+			map.put("content", "抱歉，您提交的《" + material.getMaterialName() 
+					+ "》申报表被出版社退回，请您核对后重试。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
@@ -640,8 +658,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO();
 			declarationEtcBO.setRealname("欧阳望月".concat(String.valueOf(count)));
 			declarationEtcBO.setUsername("Smith");
-			declarationEtcBO.setTextbookName("人体解剖学与组织胚胎学");
-			declarationEtcBO.setPresetPosition("副主编");
+			// declarationEtcBO.setTextbookName("人体解剖学与组织胚胎学");
+			// declarationEtcBO.setPresetPosition("副主编");
 			declarationEtcBO.setChosenOrgName("人民卫生出版社");
 			declarationEtcBO.setSex("女");
 			declarationEtcBO.setBirthday("1975年11月22日");
@@ -744,9 +762,6 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 编写内容意向表
 		ArrayList<DecIntention> decIntentions = (ArrayList<DecIntention>) decIntentionDao
 				.getDecIntentionByDeclarationIds(decIds);
-		// 教材扩展项
-		// List<MaterialExtension> extensions =
-		// materialExtensionService.getMaterialExtensionByMaterialId(materialId);
 		for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
 			String strOnlineProgress = "";// 审核进度
 			String strOfflineProgress = "";// 纸质表进度
@@ -984,8 +999,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			String textbookName = declarationOrDisplayVO.getTextbookName() + "第"
 					+ declarationOrDisplayVO.getTextbookRound() + "版";
-			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(textbookName,
-					declarationOrDisplayVO.getPresetPosition(), declarationOrDisplayVO.getRealname(),
+			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getRealname(),
 					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),
 					declarationOrDisplayVO.getOrgName(), declarationOrDisplayVO.getPosition(),
 					declarationOrDisplayVO.getTitle(), declarationOrDisplayVO.getAddress(),
@@ -1003,6 +1017,12 @@ public class DeclarationServiceImpl implements DeclarationService {
 					(ArrayList<DecMonograph>) monographs, (ArrayList<DecPublishReward>) publishRewards,
 					(ArrayList<DecSci>) scis, (ArrayList<DecClinicalReward>) clinicalRewards,
 					(ArrayList<DecAcadeReward>) acadeRewards, (ArrayList<DecExtensionVO>) extensionVOs, decIntention);
+			List<String> list = new ArrayList<>();
+			list.add(textbookName);
+			declarationEtcBO.setTextbookName(list);
+			List<String> presetPosition = new ArrayList<>();
+			presetPosition.add(declarationOrDisplayVO.getPresetPosition());
+			declarationEtcBO.setPresetPosition(presetPosition);
 			declarationEtcBOs.add(declarationEtcBO);
 		}
 		return declarationEtcBOs;
@@ -1033,7 +1053,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	}
 
 	@Override
-	public List<DeclarationOrDisplayVO> getDeclarationOrDisplayVOByRealname(List<Long> id) throws CheckedServiceException {
+	public List<DeclarationOrDisplayVO> getDeclarationOrDisplayVOByRealname(List<Long> id)
+			throws CheckedServiceException {
 		List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao
 				.getDeclarationOrDisplayVOByIdOrRealname(id);
 		return declarationOrDisplayVOs;
@@ -1341,8 +1362,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			String textbookName = declarationOrDisplayVO.getTextbookName() + "第"
 					+ declarationOrDisplayVO.getTextbookRound() + "版";
-			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(textbookName,
-					declarationOrDisplayVO.getPresetPosition(), declarationOrDisplayVO.getRealname(),
+			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getRealname(),
 					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),
 					declarationOrDisplayVO.getOrgName(), declarationOrDisplayVO.getPosition(),
 					declarationOrDisplayVO.getTitle(), declarationOrDisplayVO.getAddress(),
@@ -1360,6 +1380,12 @@ public class DeclarationServiceImpl implements DeclarationService {
 					(ArrayList<DecMonograph>) monographs, (ArrayList<DecPublishReward>) publishRewards,
 					(ArrayList<DecSci>) scis, (ArrayList<DecClinicalReward>) clinicalRewards,
 					(ArrayList<DecAcadeReward>) acadeRewards, (ArrayList<DecExtensionVO>) extensionVOs, decIntention);
+			List<String> list = new ArrayList<>();
+			list.add(textbookName);
+			declarationEtcBO.setTextbookName(list);
+			List<String> presetPosition = new ArrayList<>();
+			presetPosition.add(declarationOrDisplayVO.getPresetPosition());
+			declarationEtcBO.setPresetPosition(presetPosition);
 			declarationEtcBO.setMaterialId(declarationOrDisplayVO.getMaterialId());
 			declarationEtcBOs.add(declarationEtcBO);
 		}

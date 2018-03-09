@@ -110,17 +110,26 @@ public interface DecPositionPublishedDao {
      * @throws CheckedServiceException
      */
     List<DecPositionPublished> getDecPositionPublishedListByBookId(Long textbookId);
+    
+    /**
+     * 按照书籍查询
+     * 
+     * @param textbookId
+     * @return
+     * @throws CheckedServiceException
+     */
+    List<DecPositionPublished> getDecPositionPublishedListByBookIds(List<Long> textbookIds);
 
     /**
-     * 
-     * <pre>
-     * 功能描述：按书籍id删除DecPositionPublished
-     * 使用示范：
-     *
-     * @param textbookId 书籍ID
-     * @return 影响行数
-     * </pre>
-     */
-    Integer deletePublishedEditorByTextbookId(Long textbookId);
+	 * 
+	 * <pre>
+	 * 功能描述：按书籍id删除DecPositionPublished
+	 * 使用示范：
+	 *
+	 * &#64;param textbookId 书籍ID
+	 * &#64;return 影响行数
+	 * </pre>
+	 */
+	Integer deletePublishedEditorByTextbookId(Long textbookId);
 
 }

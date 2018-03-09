@@ -254,7 +254,7 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
     @Override
     public Integer reissueSurveyMessage(Message message, String title, Long surveyId,
     String sessionId) throws CheckedServiceException, IOException {
-        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId("602CFFA01B7E389E8D1AF1434244BF23");
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
@@ -291,15 +291,16 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
                                                         Const.RECEIVER_TYPE_2, 0L));
                 }
             }
-            List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(orgIds);// 获取学校管理员集合
-            for (OrgUser orgUser : orgUserList) {
-                if (!listUserId.contains(orgUser.getId())) {
-                    userMessageList.add(new UserMessage(message.getId(), surveyTitle,
-                                                        Const.MSG_TYPE_1, userId,
-                                                        Const.SENDER_TYPE_1, orgUser.getId(),
-                                                        Const.RECEIVER_TYPE_3, 0L));
-                }
-            }
+            // List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(orgIds);//
+            // 获取学校管理员集合
+            // for (OrgUser orgUser : orgUserList) {
+            // if (!listUserId.contains(orgUser.getId())) {
+            // userMessageList.add(new UserMessage(message.getId(), surveyTitle,
+            // Const.MSG_TYPE_1, userId,
+            // Const.SENDER_TYPE_1, orgUser.getId(),
+            // Const.RECEIVER_TYPE_3, 0L));
+            // }
+            // }
             // 发送消息
             if (CollectionUtil.isNotEmpty(userMessageList)) {
                 userMessageService.addUserMessageBatch(userMessageList); // 插入消息发送对象数据

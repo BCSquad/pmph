@@ -171,8 +171,15 @@ public class Front implements Runnable {
 				str.append(material.getIsIntentionUsed() ? "1" : "0");
 				Integer filter = Integer.parseInt(str.toString(), 2);
 				List<Textbook> textbooks = this.textbookService.getTextbookByMaterialId(material.getId());
-				String name = declarationOrDisplayVOs.get(i).getRealname() + "-" +material.getMaterialName() ;
+				String name = declarationOrDisplayVOs.get(i).getRealname() + "-" + material.getMaterialName();
 				for (DeclarationEtcBO declarationEtcBO : declarationEtcBOs) {
+					for (DeclarationEtcBO etcBO : declarationEtcBOs) {
+						if (declarationEtcBO.getRealname().equals(etcBO.getRealname())
+								&& !declarationEtcBO.getTextbookName().contains(etcBO.getTextbookName().get(0))) {
+							declarationEtcBO.getTextbookName().add(etcBO.getTextbookName().get(0));
+							declarationEtcBO.getPresetPosition().add(etcBO.getPresetPosition().get(0));
+						}
+					}
 					if (declarationOrDisplayVOs.get(i).getRealname().equals(declarationEtcBO.getRealname())) {
 						list.add(declarationEtcBO);
 					}
@@ -184,7 +191,7 @@ public class Front implements Runnable {
 					sb.append(File.separator);
 					sb.append(declarationOrDisplayVOs.get(i).getOrgNameOne());
 					sb.append(File.separator);
-					sb.append((i + 1) + "." + name);
+					sb.append(name);
 					sb.append(File.separator);
 					this.wordHelper.export(material.getMaterialName(), sb.toString(), list, str.toString(),
 							this.materialExtensionService.getMaterialExtensionByMaterialId(material.getId()));

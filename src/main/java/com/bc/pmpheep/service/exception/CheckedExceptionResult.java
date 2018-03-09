@@ -48,9 +48,13 @@ public enum CheckedExceptionResult {
      */
     FILE_DOWNLOAD_FAILED(9, "文件下载失败"),
     /**
-     * 文件下载失败
+     * 持久化对象保存失败
      */
     PO_ADD_FAILED(10, "持久化对象保存失败"),
+    /**
+     * 调用SSO-API方法不成功
+     */
+    FAILURE_SSO_CALLBACK(11, "调用SSO-API方法失败"),
     /**
      * 用户SESSION为空
      */

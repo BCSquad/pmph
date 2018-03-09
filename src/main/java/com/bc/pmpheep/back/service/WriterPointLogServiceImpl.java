@@ -98,21 +98,21 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
 			throws CheckedServiceException {
 		//获取积分规则
 		WriterPointRule writerPointRuleVOs = writerPointRuleService.getWriterPointRuleByName(ruleName);
-		if (writerPointRuleVOs.getIsDisabled() == true) {
-			if (null != writerPointRuleVOs){
+		if (writerPointRuleVOs.getIsDisabled() == false) {
+			if (null != writerPointRuleVOs) {
 				//查询用户纠错之前的积分值
 				List<WriterPointLog> writerPointLog2 = this.getWriterPointLogByUserId(userId);
 				WriterPointLog writerPointLog = new WriterPointLog();
 				//现在的规则的积分值+以前的积分
 				Integer temp = 0;
-				if (writerPointLog2.size() > 0){
+				if (writerPointLog2.size() > 0) {
 					Integer newTemp = 0;
 	            	for (WriterPointLog writerPointLogNew : writerPointLog2) {
 	            		newTemp += writerPointLogNew.getPoint();
 	            	}
 	                temp = writerPointRuleVOs.getPoint() + newTemp;
 					writerPointLog.setPoint(writerPointRuleVOs.getPoint());
-				}else{
+				} else {
 					temp = writerPointRuleVOs.getPoint();
 					writerPointLog.setPoint(writerPointRuleVOs.getPoint());
 				}
