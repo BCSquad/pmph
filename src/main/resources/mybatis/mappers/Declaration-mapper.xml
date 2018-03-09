@@ -605,10 +605,10 @@
 		GROUP BY a.id
 		<if test="parameter.haveFile !=  null ">
 			<if test="parameter.haveFile">  <!-- haveFile -->
-				HAVING GROUP_CONCAT(c.syllabus_id SEPARATOR "") != null
+				HAVING GROUP_CONCAT(c.syllabus_id SEPARATOR "") != ""
 			</if>
 			<if test="!parameter.haveFile"> <!-- noFile -->
-				HAVING GROUP_CONCAT(c.syllabus_id SEPARATOR "") = null
+				HAVING GROUP_CONCAT(c.syllabus_id SEPARATOR "") = ""
 			</if>
 		</if>
 		) temp
@@ -722,10 +722,10 @@
 		GROUP BY a.id
 		<if test="parameter.haveFile !=  null ">
 			<if test="parameter.haveFile">  <!-- haveFile -->
-				HAVING GROUP_CONCAT(c.syllabus_id) is not null
+				HAVING GROUP_CONCAT(c.syllabus_id SEPARATOR "") != ""
 			</if>
 			<if test="!parameter.haveFile"> <!-- noFile -->
-				HAVING GROUP_CONCAT(c.syllabus_id) is null
+				HAVING GROUP_CONCAT(c.syllabus_id SEPARATOR "") = ""
 			</if>
 		</if>
 		<!-- 排序和分页条件 -->
