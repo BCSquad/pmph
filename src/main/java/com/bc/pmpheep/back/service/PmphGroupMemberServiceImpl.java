@@ -11,11 +11,15 @@ import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphGroupMemberDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.Material;
+import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphGroupMember;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
+import com.bc.pmpheep.back.util.BinaryUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -53,6 +57,13 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
     private PmphGroupMemberService pmphGroupMemberService;
     @Autowired
     SystemMessageService           systemMessageService;
+	@Autowired
+	private MaterialService 	   materialService;
+	@Autowired
+	private TextbookService 	   textbookService;
+	@Autowired
+	private MaterialProjectEditorService materialProjectEditorService;
+
 
     /**
      * 
@@ -154,11 +165,23 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
             throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        if (!pmphUser.getIsAdmin() || !isFounderOrisAdmin(groupId, sessionId)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
+        //查询教材信息
+        Material material=materialService.getMaterialById(pmphGroupMembers.get(0).getMaterialId());
+        //查询书籍信息
+        Textbook textbook=textbookService.getTextbookById(pmphGroupMembers.get(0).getTextbookId());
+        //查询该教材是否存在项目编辑
+        MaterialProjectEditor materialProjectEditor=materialProjectEditorService.getMaterialProjectEditorByMaterialIdAndUserId(material.getId(), pmphUser.getId());
+        ////判断当前教材是否有创建小组的权限
+        if(material.getDirector()!=pmphUser.getId()||textbook.getPlanningEditor()!=pmphUser.getId()
+        		||null==materialProjectEditor||!pmphUser.getIsAdmin()){
+        	if(!BinaryUtil.getBit(material.getPlanPermission(), 7)||!BinaryUtil.getBit(material.getProjectPermission(), 7)){
+        		throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+                        CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
+        	}
         }
-        if (pmphUser.getIsAdmin() || isFounderOrisAdmin(groupId, sessionId)) {// 是超级管理员或者该小组的创建人和管理员才可以添加成员
+        if (pmphUser.getIsAdmin() || isFounderOrisAdmin(groupId, sessionId)
+        		||material.getDirector()==pmphUser.getId()||textbook.getPlanningEditor()==pmphUser.getId()
+        		||pmphUser.getId()==materialProjectEditor.getEditorId()) {// 是超级管理员或者该小组的创建人和管理员才可以添加成员
             if (pmphGroupMembers.size() > 0) {
                 List<Long> writers = new ArrayList<>();
                 List<Long> pmphs = new ArrayList<>();
@@ -258,8 +281,10 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
         Long memberId = pmphUser.getId();
         PmphGroupMemberVO currentUser =
         pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId, memberId, false);
-        if (currentUser.getIsFounder() || currentUser.getIsAdmin()) {
-            flag = true;
+        if(null!=currentUser){
+        	 if (currentUser.getIsFounder() || currentUser.getIsAdmin()) {
+                 flag = true;
+             }
         }
         return flag;
     }
@@ -511,37 +536,49 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
             throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
                                               CheckedExceptionResult.NULL_PARAM, "该用户为空");
         }
+        //查询书籍信息
+        Textbook textbook=textbookService.getTextbookById(textbookId);
+        //查询教材信息
+        Material material=materialService.getMaterialById(textbook.getMaterialId());
+        //查询该教材是否存在项目编辑
+        MaterialProjectEditor materialProjectEditor=materialProjectEditorService.getMaterialProjectEditorByMaterialIdAndUserId(material.getId(), pmphUser.getId());
         // 通过书籍id查询所有主编、副主编、编委
         List<TextbookDecVO> textbookDecVOs = decPositionService.getTextbookEditorList(textbookId);
         List<PmphGroupMember> list = new ArrayList<PmphGroupMember>(textbookDecVOs.size());
         // 通过书籍id查询小组
         PmphGroup pmphGroup = pmphGroupService.getPmphGroupByTextbookId(textbookId);
-        // 判断当前用户是否是管理员 是否是创建小组的用户
-        if (pmphUser.getId().longValue() != pmphGroup.getFounderId().longValue()
-            || Boolean.FALSE == pmphUser.getIsAdmin()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有更新成员权限 ");
+        //判断当前教材是否有更新小组的权限
+        if(material.getDirector()==pmphUser.getId()||textbook.getPlanningEditor()==pmphUser.getId()
+        		||pmphUser.getId()==materialProjectEditor.getEditorId()||pmphUser.getIsAdmin()
+        		||pmphUser.getId().longValue() == pmphGroup.getFounderId().longValue()){
+        	if(!BinaryUtil.getBit(material.getPlanPermission(), 7)||!BinaryUtil.getBit(material.getProjectPermission(), 7)){
+        		throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+        				CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有更新成员权限 ");
+        	}
+		    // 通过小组id查询小组现有成员
+		    List<PmphGroupMember> pmphGroupMembers =
+		    pmphGroupMemberDao.listPmphGroupMembers(pmphGroup.getId());
+		    List<Long> groupUserIdList = new ArrayList<Long>(pmphGroupMembers.size());
+		    for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
+		        groupUserIdList.add(pmphGroupMember.getUserId());
+		    }
+		    // 通过遍历把不存在的成员添加到list中
+		    for (TextbookDecVO textbookDecVO : textbookDecVOs) {
+		        Long userId = textbookDecVO.getUserId();
+		        if (!groupUserIdList.contains(userId)) {
+		            list.add(new PmphGroupMember(userId, Const.TRUE,textbook.getMaterialId(),textbookId));
+		        }
+		    }
+		    if (CollectionUtil.isEmpty(list)) {
+		        throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+		                                          CheckedExceptionResult.SUCCESS, "小组成员已是最新");
+		    }
+		    pmphGroupMemberService.addPmphGroupMemberOnGroup(pmphGroup.getId(), list, sessionId);
+		    result = "SUCCESS";
+        }else{
+        	throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+    				CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有更新成员权限 ");
         }
-        // 通过小组id查询小组现有成员
-        List<PmphGroupMember> pmphGroupMembers =
-        pmphGroupMemberDao.listPmphGroupMembers(pmphGroup.getId());
-        List<Long> groupUserIdList = new ArrayList<Long>(pmphGroupMembers.size());
-        for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
-            groupUserIdList.add(pmphGroupMember.getUserId());
-        }
-        // 通过遍历把不存在的成员添加到list中
-        for (TextbookDecVO textbookDecVO : textbookDecVOs) {
-            Long userId = textbookDecVO.getUserId();
-            if (!groupUserIdList.contains(userId)) {
-                list.add(new PmphGroupMember(userId, Const.TRUE));
-            }
-        }
-        if (CollectionUtil.isEmpty(list)) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-                                              CheckedExceptionResult.SUCCESS, "小组成员已是最新");
-        }
-        pmphGroupMemberService.addPmphGroupMemberOnGroup(pmphGroup.getId(), list, sessionId);
-        result = "SUCCESS";
         return result;
     }
 }
