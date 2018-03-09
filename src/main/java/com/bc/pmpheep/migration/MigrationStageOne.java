@@ -433,7 +433,7 @@ public class MigrationStageOne {
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("机构代码重复。"));
                 excel.add(map);
                 if (state[1] == 0){
-                	reason.append("机构管路员账号重复。");
+                	reason.append("机构管理员账号重复。");
                 	dealWith.append("放弃迁移。");
                 	state[1] = 1;
                 }
@@ -470,6 +470,11 @@ public class MigrationStageOne {
                 	state[4] = 1;
                 }
                 continue;
+            }else{
+                if (null != orgUserService.getOrgUserByOrgId(orgId)) {
+                    logger.error("迁移org_user时，机构ID(org_id={})出现了重复，机构用户名:{}", orgId, username);
+                    continue;
+                }
             }
             String password = (String) map.get("password");
             if (StringUtil.isEmpty(password)) {
