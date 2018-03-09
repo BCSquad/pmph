@@ -640,8 +640,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO();
 			declarationEtcBO.setRealname("欧阳望月".concat(String.valueOf(count)));
 			declarationEtcBO.setUsername("Smith");
-			declarationEtcBO.setTextbookName("人体解剖学与组织胚胎学");
-			declarationEtcBO.setPresetPosition("副主编");
+			// declarationEtcBO.setTextbookName("人体解剖学与组织胚胎学");
+			// declarationEtcBO.setPresetPosition("副主编");
 			declarationEtcBO.setChosenOrgName("人民卫生出版社");
 			declarationEtcBO.setSex("女");
 			declarationEtcBO.setBirthday("1975年11月22日");
@@ -744,9 +744,6 @@ public class DeclarationServiceImpl implements DeclarationService {
 		// 编写内容意向表
 		ArrayList<DecIntention> decIntentions = (ArrayList<DecIntention>) decIntentionDao
 				.getDecIntentionByDeclarationIds(decIds);
-		// 教材扩展项
-		// List<MaterialExtension> extensions =
-		// materialExtensionService.getMaterialExtensionByMaterialId(materialId);
 		for (DeclarationOrDisplayVO declarationOrDisplayVO : declarationOrDisplayVOs) {
 			String strOnlineProgress = "";// 审核进度
 			String strOfflineProgress = "";// 纸质表进度
@@ -984,8 +981,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			String textbookName = declarationOrDisplayVO.getTextbookName() + "第"
 					+ declarationOrDisplayVO.getTextbookRound() + "版";
-			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(textbookName,
-					declarationOrDisplayVO.getPresetPosition(), declarationOrDisplayVO.getRealname(),
+			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getRealname(),
 					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),
 					declarationOrDisplayVO.getOrgName(), declarationOrDisplayVO.getPosition(),
 					declarationOrDisplayVO.getTitle(), declarationOrDisplayVO.getAddress(),
@@ -1003,6 +999,12 @@ public class DeclarationServiceImpl implements DeclarationService {
 					(ArrayList<DecMonograph>) monographs, (ArrayList<DecPublishReward>) publishRewards,
 					(ArrayList<DecSci>) scis, (ArrayList<DecClinicalReward>) clinicalRewards,
 					(ArrayList<DecAcadeReward>) acadeRewards, (ArrayList<DecExtensionVO>) extensionVOs, decIntention);
+			List<String> list = new ArrayList<>();
+			list.add(textbookName);
+			declarationEtcBO.setTextbookName(list);
+			List<String> presetPosition = new ArrayList<>();
+			presetPosition.add(declarationOrDisplayVO.getPresetPosition());
+			declarationEtcBO.setPresetPosition(presetPosition);
 			declarationEtcBOs.add(declarationEtcBO);
 		}
 		return declarationEtcBOs;
@@ -1033,7 +1035,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	}
 
 	@Override
-	public List<DeclarationOrDisplayVO> getDeclarationOrDisplayVOByRealname(List<Long> id) throws CheckedServiceException {
+	public List<DeclarationOrDisplayVO> getDeclarationOrDisplayVOByRealname(List<Long> id)
+			throws CheckedServiceException {
 		List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao
 				.getDeclarationOrDisplayVOByIdOrRealname(id);
 		return declarationOrDisplayVOs;
@@ -1341,8 +1344,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			String textbookName = declarationOrDisplayVO.getTextbookName() + "第"
 					+ declarationOrDisplayVO.getTextbookRound() + "版";
-			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(textbookName,
-					declarationOrDisplayVO.getPresetPosition(), declarationOrDisplayVO.getRealname(),
+			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getRealname(),
 					declarationOrDisplayVO.getUsername(), sex, birthday, declarationOrDisplayVO.getExperience(),
 					declarationOrDisplayVO.getOrgName(), declarationOrDisplayVO.getPosition(),
 					declarationOrDisplayVO.getTitle(), declarationOrDisplayVO.getAddress(),
@@ -1360,6 +1362,12 @@ public class DeclarationServiceImpl implements DeclarationService {
 					(ArrayList<DecMonograph>) monographs, (ArrayList<DecPublishReward>) publishRewards,
 					(ArrayList<DecSci>) scis, (ArrayList<DecClinicalReward>) clinicalRewards,
 					(ArrayList<DecAcadeReward>) acadeRewards, (ArrayList<DecExtensionVO>) extensionVOs, decIntention);
+			List<String> list = new ArrayList<>();
+			list.add(textbookName);
+			declarationEtcBO.setTextbookName(list);
+			List<String> presetPosition = new ArrayList<>();
+			presetPosition.add(declarationOrDisplayVO.getPresetPosition());
+			declarationEtcBO.setPresetPosition(presetPosition);
 			declarationEtcBO.setMaterialId(declarationOrDisplayVO.getMaterialId());
 			declarationEtcBOs.add(declarationEtcBO);
 		}
