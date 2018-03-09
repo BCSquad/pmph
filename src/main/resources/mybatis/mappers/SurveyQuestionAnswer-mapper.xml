@@ -349,6 +349,8 @@
 	<!-- 填空题统计 -->
 	<select id="listFillQuestionCounts" parameterType="java.lang.Long" resultType="SurveyQuestionFillVO">
 		SELECT 
+		  sq.`id` questionId,
+		  sqa.`survey_id`,
 		  sq.`title` questionName,
 		  sq.`type`questionType,
 		  COUNT(sqa.`user_id`) count
@@ -376,7 +378,7 @@
 		SELECT 
 		  	sq.`title` questionName,
 		  	sqa.`option_content`,
-		  	sqa.`gmt_create`,
+		  	DATE_FORMAT(sqa.`gmt_create`, '%Y-%c-%d %h:%i:%s') gmt_create,
 		  	wu.`realname`,
 		  	t.count
 		FROM
