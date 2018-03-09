@@ -864,7 +864,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                               CheckedExceptionResult.NULL_PARAM, "接收人为空!");
         } else {
             userMessage =
-            new UserMessage(message.getId(), Const.MSG_TYPE_2, senderUserId, Const.SENDER_TYPE_1,
+            new UserMessage(message.getId(), "私信", Const.MSG_TYPE_0, senderUserId, Const.SENDER_TYPE_1,
                             receiverId, Const.RECEIVER_TYPE_2);
         }
         // 插入消息发送对象数据
@@ -875,7 +875,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         // webscokt发送消息
         if (CollectionUtil.isNotEmpty(websocketUserId)) {
             WebScocketMessage webScocketMessage =
-            new WebScocketMessage(message.getId(), Const.MSG_TYPE_2, senderUserId,
+            new WebScocketMessage(message.getId(), Const.MSG_TYPE_0, senderUserId,
                                   pmphUser.getRealname(), Const.SENDER_TYPE_1,
                                   Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
                                   message.getContent(), DateUtil.getCurrentTime());
