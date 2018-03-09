@@ -22,7 +22,7 @@ public interface SsoService {
     Call<SsoResponse> getUserInfo(@Body SsoRequest<Map<String, String>> request);
 
     @POST("api/json")
-    Call<Map> getUserInfo2(@Body SsoRequest<Map<String, String>> request);
+    Call<SsoResponse> modifyUser(@Body SsoRequest<Map<String, String>> request);
 
     @POST("api/json")
     Call<SsoResponse> addUser(@Body SsoRequest<SsoUser> request);
