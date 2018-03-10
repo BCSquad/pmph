@@ -174,14 +174,23 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
         //查询该教材是否存在项目编辑
         MaterialProjectEditor materialProjectEditor=materialProjectEditorService.getMaterialProjectEditorByMaterialIdAndUserId(material.getId(), pmphUser.getId());
         ////判断当前教材是否有创建小组的权限
-        if(material.getDirector()!=pmphUser.getId()||textbook.getPlanningEditor()!=pmphUser.getId()
-        		||null==materialProjectEditor||!pmphUser.getIsAdmin()){
-        	if(null!=material.getPlanPermission()||null!=material.getProjectPermission()){
-        		if(!BinaryUtil.getBit(material.getPlanPermission(), 7)||!BinaryUtil.getBit(material.getProjectPermission(), 7)){
-            		throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-                            CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
-            	}
-        	}
+        if (!material.getDirector().equals(pmphUser.getId()) && !textbook.getPlanningEditor().equals(pmphUser.getId())
+                && null == materialProjectEditor && !pmphUser.getIsAdmin()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+                    CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
+
+        }
+        if (null != material.getPlanPermission()) {
+            if (!BinaryUtil.getBit(material.getPlanPermission(), 7)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+                        CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
+            }
+        }
+        if (null != material.getProjectPermission()) {
+            if (!BinaryUtil.getBit(material.getProjectPermission(), 7)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+                        CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
+            }
         }
         if (pmphUser.getIsAdmin() || isFounderOrisAdmin(groupId, sessionId)
         		||material.getDirector()==pmphUser.getId()||textbook.getPlanningEditor()==pmphUser.getId()
