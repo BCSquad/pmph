@@ -61,6 +61,7 @@ import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialExtension;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -142,6 +143,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	private MaterialExtensionService materialExtensionService;
 	@Autowired
 	private WriterUserTrendstService writerUserTrendstService;
+        @Autowired
+        private WriterUserService writerUserService;
 
 	@Override
 	public Declaration addDeclaration(Declaration declaration) throws CheckedServiceException {
@@ -543,6 +546,10 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		// 作家申报表
 		DeclarationOrDisplayVO declaration = declarationDao.getDeclarationByIdOrOrgName(declarationId);
+                WriterUser user = writerUserService.get(declaration.getUserId());
+                if (user != null) {
+                    declaration.setUsername(user.getUsername());
+                }
 		// 作家学习经历
 		List<DecEduExp> decEduExpList = decEduExpDao.getListDecEduExpByDeclarationId(declarationId);
 		// 作家工作经历
