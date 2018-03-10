@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Book;
@@ -176,4 +178,12 @@ public interface BookService {
 	 *
 	 */
 	void updateDownComments(Long id) throws CheckedServiceException;
+
+	/**
+	 * 图书配套导入
+	 * @param file 上传的图书配套Excel
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	String bookExcel(MultipartFile file) throws CheckedServiceException;
 }
