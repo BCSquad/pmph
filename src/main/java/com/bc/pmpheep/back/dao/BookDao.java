@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.po.Book;
+import com.bc.pmpheep.back.po.BookSupport;
 import com.bc.pmpheep.back.vo.BookPreferenceAnalysisVO;
 import com.bc.pmpheep.back.vo.BookVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -47,6 +48,42 @@ public interface BookDao {
 	 * @return Book
 	 */
 	Book getBookById(Long id);
+
+	/**
+	 * 查询一个 Book 通过书籍名称
+	 * 
+	 * @param Book
+	 *            必须包含主键ID
+	 * @return Book
+	 */
+	Book getBookByBookname(String bookname);
+
+	/**
+	 * 查询一个 Book 通过书籍名称
+	 * 
+	 * @param Book
+	 *            必须包含主键ID
+	 * @return Book
+	 */
+	BookSupport getBookSupport(@Param("bookId") Long bookId, @Param("supportId") Long supportId);
+
+	/**
+	 * 新增一个Book
+	 * 
+	 * @param Book
+	 *            实体对象
+	 * @return 影响行数
+	 */
+	Integer addBookSupport(@Param("id") Long id, @Param("bookId") Long bookId);
+
+	/**
+	 * 查询一个 Book 通过isbn
+	 * 
+	 * @param Book
+	 *            必须包含主键ID
+	 * @return Book
+	 */
+	Book getBookByIsbn(String isbn);
 
 	/**
 	 * 

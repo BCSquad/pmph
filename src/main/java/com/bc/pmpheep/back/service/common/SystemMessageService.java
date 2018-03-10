@@ -217,6 +217,10 @@ public final class SystemMessageService {
 			throws CheckedServiceException, IOException {
 		// 获取教材书籍
 		Textbook textbook = textbookService.getTextbookById(bookId);
+		if (textbook.getIsPublished()) {
+			sendWhenPubfinalResult(bookId, newMessage);
+			return;
+		}
 		// 获取教材
 		Material material = materialService.getMaterialById(textbook.getMaterialId());
 		if (null == material) {
