@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -143,6 +145,13 @@ public class BookController {
 	@RequestMapping(value = "/abuttingjoint", method = RequestMethod.GET)
 	public ResponseBean abuttingjoint(Integer noteicetype, String[] key) {
 		return new ResponseBean(bookService.AbuttingJoint(key, noteicetype));
+	}
+
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书配套导入")
+	@RequestMapping(value = "/bookExcel", method = RequestMethod.POST)
+	public ResponseBean bookExcel(@RequestParam("file") MultipartFile file) {
+		return new ResponseBean<>(bookService.bookExcel(file));
 	}
 
 	/**

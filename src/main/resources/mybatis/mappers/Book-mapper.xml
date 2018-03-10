@@ -383,6 +383,26 @@
 		resultType="Book">
 		select * from book where id=#{id} ;
 	</select>
+	<!-- 根据id查询一个Book -->
+	<select id="getBookSupport" parameterType="java.lang.Long"
+		resultType="BookSupport">
+		select * from book_support where book_id=#{bookId} AND
+		support_id = #{supportId} ;
+	</select>
+	<!-- 根据bookname查询一个Book -->
+	<select id="getBookByBookname" parameterType="java.lang.String"
+		resultType="Book">
+		select * from book where bookname=#{bookname} ;
+	</select>
+	<!-- 根据isbn查询一个Book -->
+	<select id="getBookByIsbn" parameterType="java.lang.String"
+		resultType="Book">
+		select * from book where isbn=#{isbn} ;
+	</select>
+	<insert id="addBookSupport">
+		insert into book_support (book_id,support_id) VALUES
+		(#{id},#{bookId})
+	</insert>
 
 	<!-- 根据vn查询一个Book -->
 	<select id="getBookByVn" parameterType="java.lang.String"
@@ -577,7 +597,7 @@
 		update book set comments = comments+1 where id =
 		#{id}
 	</update>
-		<!-- 更新评分 -->
+	<!-- 更新评分 -->
 	<update id="updateDownComments">
 		update book set comments = comments-1 where id =
 		#{id}
