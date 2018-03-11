@@ -242,7 +242,7 @@ public class CmsAdvertisementServiceImpl implements CmsAdvertisementService {
 	}
 
 	@Override
-	public Integer deleteCmsAdvertisementImageById(Long id, String[] image, String sessionId) {
+	public Integer deleteCmsAdvertisementImageById(Long[] id, String[] image, String sessionId) {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
@@ -264,7 +264,9 @@ public class CmsAdvertisementServiceImpl implements CmsAdvertisementService {
 			fileService.remove(image[i]);
 		}
 		// 删除本地相对应的图片信息
-		count = cmsAdvertisementImageDao.deleteCmsAdvertisementByImages(id);
+		for (int i = 0; i < id.length; i++) {
+			count = cmsAdvertisementImageDao.deleteCmsAdvertisementByImages(id[0]);
+		}
 		return count;
 	}
 
