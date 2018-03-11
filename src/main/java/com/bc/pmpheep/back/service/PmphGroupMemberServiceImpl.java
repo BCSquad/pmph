@@ -605,15 +605,20 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
     				CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
 		}
 		for(PmphGroupMember pmphGroupMember: pmphGroupMembers) {
-			if(StringUtil.isEmpty(pmphGroupMember.getDisplayName())) {
-				if(null != pmphGroupMember.getIsWriter() && pmphGroupMember.getIsWriter() ) {
-					pmphGroupMember.setDisplayName(writerUserService.get(pmphGroupMember.getUserId()).getRealname());
-				}else {
-					pmphGroupMember.setDisplayName(pmphUserService.get(pmphGroupMember.getUserId()).getRealname());
+			Boolean isWriter = pmphGroupMember.getIsWriter();
+			isWriter = (isWriter == null || !isWriter) ? false:true;
+			PmphGroupMemberVO member = getPmphGroupMemberByMemberId(groupId,pmphGroupMember.getUserId(),isWriter);
+			if(null== member || member.getId() == null ) {
+				if(StringUtil.isEmpty(pmphGroupMember.getDisplayName())) {
+					if(isWriter) {
+						pmphGroupMember.setDisplayName(writerUserService.get(pmphGroupMember.getUserId()).getRealname());
+					}else {
+						pmphGroupMember.setDisplayName(pmphUserService.get(pmphGroupMember.getUserId()).getRealname());
+					}
 				}
+				pmphGroupMember.setGroupId(groupId);
+				this.addPmphGroupMember(pmphGroupMember);
 			}
-			pmphGroupMember.setGroupId(groupId);
-			this.addPmphGroupMember(pmphGroupMember);
 		}
 		return pmphGroupMembers.size();
 	}
