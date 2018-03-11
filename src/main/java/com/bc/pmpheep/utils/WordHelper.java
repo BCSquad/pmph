@@ -11,7 +11,6 @@ import com.bc.pmpheep.back.po.DecAchievement;
 import com.bc.pmpheep.back.po.DecClinicalReward;
 import com.bc.pmpheep.back.po.DecCourseConstruction;
 import com.bc.pmpheep.back.po.DecEduExp;
-import com.bc.pmpheep.back.po.DecExtension;
 import com.bc.pmpheep.back.po.DecIntention;
 import com.bc.pmpheep.back.po.DecLastPosition;
 import com.bc.pmpheep.back.po.DecMonograph;
@@ -33,6 +32,9 @@ import com.bc.pmpheep.back.vo.DecExtensionVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+
+import sun.tools.jconsole.inspector.XTable;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -47,16 +49,23 @@ import java.util.Map;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFSDTCell;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTJc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -145,11 +154,41 @@ public class WordHelper {
 				List<XWPFRun> runs = document.getParagraphs().get(0).getRuns();
 				runs.get(0).setText(materialName.concat("专家申报表"), 0);
 			}
+			List<XWPFParagraph> xwpfParagraphs = document.getParagraphs();
 			List<XWPFTable> tables = document.getTables();
+			int i = 21;
+			for (MaterialExtension extension : extensions) {
+				XmlCursor cursor = xwpfParagraphs.get(i).getCTP().newCursor();
+				XWPFParagraph xwpfParagraph = document.insertNewParagraph(cursor);// ---这个是关键
+				CTPPr pPPr = xwpfParagraph.getCTP().getPPr() != null ? xwpfParagraph.getCTP().getPPr()
+						: xwpfParagraph.getCTP().addNewPPr();
+				CTSpacing pSpacing = pPPr.getSpacing() != null ? pPPr.getSpacing() : pPPr.addNewSpacing();
+				pSpacing.setLine(BigInteger.valueOf(100L));
+				XWPFRun xwpfRun = xwpfParagraph.createRun();
+				xwpfRun.setText(extension.getExtensionName());
+				xwpfRun.setFontSize(12);
+				xwpfRun.setFontFamily("宋体");
+				xwpfRun.setBold(true);
+				insertXWPFParagraph(extension.getExtensionName(), document);
+				i++;
+			}
 			/* 申报单位 */
 			String chosenOrgName = bo.getChosenOrgName();
 			if (StringUtil.notEmpty(chosenOrgName)) {
-				document.getParagraphs().get(21).createRun().setText(chosenOrgName);
+				xwpfParagraphs.get(i).createRun().setText(chosenOrgName);
+			}
+			i = 21;
+			if (!bo.getDecExtensionVOs().isEmpty()) {
+				for (DecExtensionVO decExtensionVO : bo.getDecExtensionVOs()) {
+					if (ObjectUtil.notNull(decExtensionVO)) {
+						List<XWPFTableRow> rows = tables.get(i).getRows();
+						String value = decExtensionVO.getContent();
+						if (StringUtil.notEmpty(value)) {
+							rows.get(0).getCell(0).setText(value);
+						}
+					}
+					i++;
+				}
 			}
 			String filename = generateFileName(bo);
 			fillDeclarationPosition(tables.get(0), bo);
@@ -172,8 +211,6 @@ public class WordHelper {
 			fillDecClinicalRewardData(tables.get(17), bo.getDecClinicalRewards());
 			fillDecAcadeRewardData(tables.get(18), bo.getDecAcadeRewards());
 			fillDecIntentionData(tables.get(19), bo.getDecIntention());
-			// fillDecExtensionVOData(tables.get(20), bo.getDecExtensionVOs(),
-			// extensions);//扩展项
 			map.put(filename, removeEmptyTables(document, filter));
 			map.put(filename, document);
 		}
@@ -513,35 +550,6 @@ public class WordHelper {
 		String value = decIntention.getContent();
 		if (StringUtil.notEmpty(value)) {
 			rows.get(0).getCell(0).setText(value);
-		}
-		return table;
-	}
-
-	private XWPFTable fillDecExtensionVOData(XWPFTable table, List<DecExtensionVO> decExtensionVOs,
-			List<MaterialExtension> extensions) {
-		if (CollectionUtil.isEmpty(extensions)) {
-			return table;
-		}
-
-		if (extensions.size() > 1) {
-			int height = table.getRow(0).getHeight();
-			for (int i = 1; i < extensions.size(); i++) {
-				table.createRow().setHeight(height);
-			}
-		}
-
-		List<XWPFTableRow> rows = table.getRows();
-		int rowCount = 0;
-		for (MaterialExtension materialExtension : extensions) {
-			String name = materialExtension.getExtensionName();
-			rows.get(rowCount).getCell(0).setText(name);
-			for (DecExtensionVO decExtensionVO : decExtensionVOs) {
-				if (decExtensionVO.getExtensionId().equals(materialExtension.getId())) {
-					String value = decExtensionVO.getContent();
-					rows.get(rowCount + 1).getCell(0).setText(value);
-				}
-			}
-			rowCount++;
 		}
 		return table;
 	}
@@ -1250,5 +1258,23 @@ public class WordHelper {
 			return destDir.mkdirs();
 		}
 		return true;
+	}
+
+	public static void insertXWPFParagraph(String key, XWPFDocument doc2) {
+		List<XWPFParagraph> paragraphList = doc2.getParagraphs();
+		if (paragraphList != null && paragraphList.size() > 0) {
+			for (int i = 0; i < paragraphList.size(); i++) {
+				List<XWPFRun> runs = paragraphList.get(i).getRuns();
+				for (XWPFRun run : runs) {
+					String text = run.getText(0);
+					if (text != null) {
+						if (text.equals(key)) {
+							XmlCursor cursor = paragraphList.get(i + 1).getCTP().newCursor();
+							XWPFTable xwpfTable = doc2.insertNewTbl(cursor);// ---这个是关键
+						}
+					}
+				}
+			}
+		}
 	}
 }
