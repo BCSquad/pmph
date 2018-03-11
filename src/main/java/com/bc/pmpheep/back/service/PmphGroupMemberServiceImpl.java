@@ -27,6 +27,7 @@ import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
@@ -161,6 +162,8 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
             throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
+        /**
+        *
         Textbook textbook=new Textbook();
         if(null!=pmphGroupMembers.get(0).getTextbookId()){
         	//查询书籍信息
@@ -192,10 +195,24 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
                         CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
             }
         }
+        */
+        //jianchaquanxian 
+        Long materialId = pmphGroupMembers.get(0).getMaterialId() ;
+        Long textBookId = pmphGroupMembers.get(0).getTextbookId();
+        String myPower  = textbookService.listBookPosition(1,9999,null,"["+textBookId+"]",null,materialId,sessionId)
+        								  .getRows()
+        								  .get(0)
+        								  .getMyPower();
+        String groupPower = myPower.substring(6,7);
+        //
+        /**
+         * 
         if (pmphUser.getIsAdmin() || isFounderOrisAdmin(groupId, sessionId)
         		||material.getDirector()==pmphUser.getId()||textbook.getPlanningEditor()==pmphUser.getId()
         		||pmphUser.getId()==materialProjectEditor.getEditorId()) {// 是超级管理员或者该小组的创建人和管理员才可以添加成员
-            if (pmphGroupMembers.size() > 0) {
+        */
+        if("1".equals(groupPower)) {
+        	if (pmphGroupMembers.size() > 0) {
                 List<Long> writers = new ArrayList<>();
                 List<Long> pmphs = new ArrayList<>();
                 for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
