@@ -196,7 +196,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
             }
         }
         */
-        //jianchaquanxian 
+        //小组权限的判断 
         Long materialId = pmphGroupMembers.get(0).getMaterialId() ;
         Long textBookId = pmphGroupMembers.get(0).getTextbookId();
         String myPower  = textbookService.listBookPosition(1,9999,null,"["+textBookId+"]",null,materialId,sessionId)
@@ -204,14 +204,14 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
         								  .get(0)
         								  .getMyPower();
         String groupPower = myPower.substring(6,7);
-        //
+        
         /**
          * 
         if (pmphUser.getIsAdmin() || isFounderOrisAdmin(groupId, sessionId)
         		||material.getDirector()==pmphUser.getId()||textbook.getPlanningEditor()==pmphUser.getId()
         		||pmphUser.getId()==materialProjectEditor.getEditorId()) {// 是超级管理员或者该小组的创建人和管理员才可以添加成员
         */
-        if("1".equals(groupPower)) {
+        if("1".equals(groupPower)) { //小组权限的判断  end
         	if (pmphGroupMembers.size() > 0) {
                 List<Long> writers = new ArrayList<>();
                 List<Long> pmphs = new ArrayList<>();
@@ -557,15 +557,20 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
         // 通过书籍id查询小组
         PmphGroup pmphGroup = pmphGroupService.getPmphGroupByTextbookId(textbookId);
         //判断当前教材是否有更新小组的权限
-        if(material.getDirector()==pmphUser.getId()||textbook.getPlanningEditor()==pmphUser.getId()
-        		||null!=materialProjectEditor||pmphUser.getIsAdmin()
-        		||pmphUser.getId().longValue() == pmphGroup.getFounderId().longValue()){
-        	if(null!=material.getPlanPermission()||null!=material.getProjectPermission()){
-        		if(!BinaryUtil.getBit(material.getPlanPermission(), 7)||!BinaryUtil.getBit(material.getProjectPermission(), 7)){
-            		throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-            				CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有更新成员权限 ");
-            	}
-        	}
+        //小组权限的判断 
+        Long materialId = textbook.getMaterialId() ;
+        String myPower  = textbookService.listBookPosition(1,9999,null,"["+textbookId+"]",null,materialId,sessionId)
+        								  .getRows()
+        								  .get(0)
+        								  .getMyPower();
+        String groupPower = myPower.substring(6,7);
+        if("1".equals(groupPower)){
+//        	if(null!=material.getPlanPermission()||null!=material.getProjectPermission()){
+//        		if(!BinaryUtil.getBit(material.getPlanPermission(), 7)||!BinaryUtil.getBit(material.getProjectPermission(), 7)){
+//            		throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+//            				CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有更新成员权限 ");
+//            	}
+//        	}
 		    // 通过小组id查询小组现有成员
 		    List<PmphGroupMember> pmphGroupMembers =
 		    pmphGroupMemberDao.listPmphGroupMembers(pmphGroup.getId());
