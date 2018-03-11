@@ -613,7 +613,6 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 				}
 			}
 			pmphGroupMember.setGroupId(groupId);
-			pmphGroupMember.setDisplayName(null);
 			this.addPmphGroupMember(pmphGroupMember);
 		}
 		return pmphGroupMembers.size();
