@@ -599,12 +599,21 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
     }
 
 	@Override
-	public Integer addPmphGroupMembers(List<PmphGroupMember> pmphGroupMembers) throws CheckedServiceException {
+	public Integer addPmphGroupMembers(Long groupId,List<PmphGroupMember> pmphGroupMembers) throws CheckedServiceException {
 		if(null == pmphGroupMembers || pmphGroupMembers.size() == 0 ) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
     				CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
 		}
 		for(PmphGroupMember pmphGroupMember: pmphGroupMembers) {
+			if(StringUtil.isEmpty(pmphGroupMember.getDisplayName())) {
+				if(null != pmphGroupMember.getIsWriter() && pmphGroupMember.getIsWriter() ) {
+					pmphGroupMember.setDisplayName(writerUserService.get(pmphGroupMember.getUserId()).getRealname());
+				}else {
+					pmphGroupMember.setDisplayName(pmphUserService.get(pmphGroupMember.getUserId()).getRealname());
+				}
+			}
+			pmphGroupMember.setGroupId(groupId);
+			pmphGroupMember.setDisplayName(null);
 			this.addPmphGroupMember(pmphGroupMember);
 		}
 		return pmphGroupMembers.size();

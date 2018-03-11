@@ -181,11 +181,8 @@ public class GroupController {
 		Type type = new TypeToken<ArrayList<PmphGroupMember>>() {
 		}.getType();
 		List<PmphGroupMember> list = gson.fromJson(pmphGroupMembers, type);
-		for(PmphGroupMember item: list) {
-			item.setGroupId(groupId);
-		}
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(pmphGroupMemberService.addPmphGroupMembers(list));
+		return new ResponseBean(pmphGroupMemberService.addPmphGroupMembers(groupId,list));
 
 	}
 
