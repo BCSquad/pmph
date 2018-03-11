@@ -74,10 +74,10 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	 */
 	@Override
 	public PmphGroupMember addPmphGroupMember(PmphGroupMember pmphGroupMember) throws CheckedServiceException {
-		if (null == pmphGroupMember.getDisplayName()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-					"小组内显示名称为空");
-		}
+//		if (null == pmphGroupMember.getDisplayName()) {
+//			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+//					"小组内显示名称为空");
+//		}
 		pmphGroupMemberDao.addPmphGroupMember(pmphGroupMember);
 		return pmphGroupMember;
 	}
@@ -592,5 +592,17 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
         }
         return result;
     }
+
+	@Override
+	public Integer addPmphGroupMembers(List<PmphGroupMember> pmphGroupMembers) throws CheckedServiceException {
+		if(null == pmphGroupMembers || pmphGroupMembers.size() == 0 ) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+    				CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
+		}
+		for(PmphGroupMember pmphGroupMember: pmphGroupMembers) {
+			this.addPmphGroupMember(pmphGroupMember);
+		}
+		return pmphGroupMembers.size();
+	}
 
 }
