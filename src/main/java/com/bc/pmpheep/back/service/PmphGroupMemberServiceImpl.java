@@ -478,8 +478,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId, userId,
 				isWriter);
 		if (ObjectUtil.isNull(pmphGroupMemberVO)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-					"你不是该小组的组员");
+			return null;
+//			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+//					"你不是该小组的组员");
 		}
 		pmphGroupMemberVO.setAvatar(
 				isWriter ? writerUserService.get(userId).getAvatar() : pmphUserService.get(userId).getAvatar());
