@@ -33,8 +33,6 @@ import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
-import sun.tools.jconsole.inspector.XTable;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -46,26 +44,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFSDTCell;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTJc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -169,7 +161,7 @@ public class WordHelper {
 				xwpfRun.setFontSize(12);
 				xwpfRun.setFontFamily("宋体");
 				xwpfRun.setBold(true);
-				insertXWPFParagraph(extension.getExtensionName(), document);
+				insertXWPFParagraph(extension.getExtensionName(), document, tables.get(19));
 				i++;
 			}
 			/* 申报单位 */
@@ -1260,7 +1252,7 @@ public class WordHelper {
 		return true;
 	}
 
-	public static void insertXWPFParagraph(String key, XWPFDocument doc2) {
+	public static void insertXWPFParagraph(String key, XWPFDocument doc2, XWPFTable xwpfTable) {
 		List<XWPFParagraph> paragraphList = doc2.getParagraphs();
 		if (paragraphList != null && paragraphList.size() > 0) {
 			for (int i = 0; i < paragraphList.size(); i++) {
@@ -1270,7 +1262,51 @@ public class WordHelper {
 					if (text != null) {
 						if (text.equals(key)) {
 							XmlCursor cursor = paragraphList.get(i + 1).getCTP().newCursor();
-							XWPFTable xwpfTable = doc2.insertNewTbl(cursor);// ---这个是关键
+							XWPFTable table = doc2.insertNewTbl(cursor);
+							XWPFTableRow tableRow = table.getRow(0);
+							for (int cellNum = 0; cellNum < 27; cellNum++) {
+								tableRow.addNewTableCell();
+							}
+							for (int rowNum = 0; rowNum < 3; rowNum++) {
+								table.createRow();
+							}
+							//合并列（没有作用）
+							for (int rowNum = 0; rowNum < table.getRows().size(); rowNum++) {
+								for (int cellIndex = 0; cellIndex < tableRow.getTableCells().size(); cellIndex++) {
+									CTHMerge hmerge = CTHMerge.Factory.newInstance();
+									if (cellIndex == 0) {
+										// The first merged cell is set with RESTART merge value
+										hmerge.setVal(STMerge.RESTART);
+									} else {
+										// Cells which join (merge) the first one, are set with CONTINUE
+										hmerge.setVal(STMerge.CONTINUE);
+									}
+									XWPFTableCell cell = table.getRow(rowNum).getCell(cellIndex);
+									// Try getting the TcPr. Not simply setting an new one every time.
+									CTTcPr tcPr = cell.getCTTc().getTcPr();
+									if (tcPr != null) {
+										tcPr.setHMerge(hmerge);
+									} else {
+										// only set an new TcPr if there is not one already
+										tcPr = CTTcPr.Factory.newInstance();
+										tcPr.setHMerge(hmerge);
+										cell.getCTTc().setTcPr(tcPr);
+									}
+								}
+							}
+							//合并行
+							for (int col = 0; col < tableRow.getTableCells().size(); col++) {
+								for (int rowIndex = 0; rowIndex < table.getRows().size(); rowIndex++) {
+									XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
+									if (rowIndex == 0) {
+										// The first merged cell is set with RESTART merge value
+										cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.RESTART);
+									} else {
+										// Cells which join (merge) the first one, are set with CONTINUE
+										cell.getCTTc().addNewTcPr().addNewVMerge().setVal(STMerge.CONTINUE);
+									}
+								}
+							}
 						}
 					}
 				}
