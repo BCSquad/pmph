@@ -217,11 +217,12 @@ public interface PmphUserService {
      * 功能描述：分页查询社内用户
      * 
      * @param page 传入的查询条件与分页条件
+     * @param groupId  不为空时表示在需要关联小组的遴选职位
      * @return 返回已经分好页的结果集
      * @throws CheckedServiceException
      * 
      */
-    PageResult<PmphUserManagerVO> getListPmphUser(PageParameter<PmphUserManagerVO> page)
+    PageResult<PmphUserManagerVO> getListPmphUser(PageParameter<PmphUserManagerVO> page,Long groupId)
     throws CheckedServiceException;
 
     /**

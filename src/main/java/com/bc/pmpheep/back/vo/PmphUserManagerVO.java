@@ -77,6 +77,10 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	 * 是否为部门主任
 	 */
 	private Boolean isDirector = false;
+	/**
+	 * 遴选职位
+	 */
+	private String position;
 
 	/**
 	 * @return the id
@@ -256,10 +260,19 @@ public class PmphUserManagerVO implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "PmphUserManagerVO [id=" + id + ", name=" + name + ", username=" + username + ", isDisabled="
-				+ isDisabled + ", realname=" + realname + ", path=" + path + ", departmentName=" + departmentName
-				+ ", pmphRoles=" + pmphRoles + ", handphone=" + handphone + ", email=" + email + ", note=" + note
-				+ ", sort=" + sort + "]";
+		return "PmphUserManagerVO [id=" + id + ", name=" + name + ", username=" + username + ", departmentId="
+				+ departmentId + ", isDisabled=" + isDisabled + ", realname=" + realname + ", path=" + path
+				+ ", departmentName=" + departmentName + ", pmphRoles=" + pmphRoles + ", roleIds=" + roleIds
+				+ ", handphone=" + handphone + ", email=" + email + ", note=" + note + ", sort=" + sort
+				+ ", isDirector=" + isDirector + ", position=" + position + "]";
 	}
 
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+	
 }
