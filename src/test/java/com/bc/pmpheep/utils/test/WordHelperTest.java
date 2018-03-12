@@ -7,13 +7,17 @@ import com.bc.pmpheep.back.service.DeclarationService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.test.BaseTest;
 import com.bc.pmpheep.utils.WordHelper;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,22 +86,27 @@ public class WordHelperTest extends BaseTest {
 //        }
 //    }
 //
-//    @Test
-//    @Ignore
-//    public void fromDeclarationEtcBOListAlpha() throws FileNotFoundException, IOException {
-//        List<DeclarationEtcBO> declarationEtcBOs = declarationService.getDeclarationEtcBOs(125L);
-//        if (CollectionUtil.isEmpty(declarationEtcBOs)) {
-//            return;
-//        }
-//        String textbook = "全国高等学校健康服务与管理专业第一轮规划教材";
-//        HashMap<String, XWPFDocument> map = wordHelper.fromDeclarationEtcBOList(textbook, declarationEtcBOs, "111111111111111111");
-//        for (Map.Entry<String, XWPFDocument> entry : map.entrySet()) {
-//            FileOutputStream out = new FileOutputStream(entry.getKey());
-//            entry.getValue().write(out);
-//            out.flush();
-//            out.close();
-//        }
-//    }
+    @Test
+    @Ignore
+    public void fromDeclarationEtcBOListAlpha() throws FileNotFoundException, IOException {
+        InputStream is;
+        XWPFDocument document;
+        String path = this.getClass().getClassLoader().getResource("ResumeTemplate.docx").getPath();
+        try {
+            is = new FileInputStream(path);
+            document = new XWPFDocument(is);
+            document = wordHelper.addTable(document);
+        } catch (IOException ex) {
+            logger.error("读取Word模板文件'ResumeTemplate.docx'时出现错误：{}", ex.getMessage());
+            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+                    CheckedExceptionResult.FILE_CREATION_FAILED, "未找到模板文件");
+        }
+        FileOutputStream out = new FileOutputStream("test.docx");
+        document.write(out);
+        out.flush();
+        out.close();
+
+    }
 //
 //    @Test
 //    public void export() throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
