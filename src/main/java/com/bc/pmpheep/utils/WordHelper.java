@@ -150,14 +150,15 @@ public class WordHelper {
                 CTPPr pPPr = xwpfParagraph.getCTP().getPPr() != null ? xwpfParagraph.getCTP().getPPr()
                         : xwpfParagraph.getCTP().addNewPPr();
                 CTSpacing pSpacing = pPPr.getSpacing() != null ? pPPr.getSpacing() : pPPr.addNewSpacing();
-                pSpacing.setLine(BigInteger.valueOf(100L));
+                pSpacing.setLine(BigInteger.valueOf(360L));
+                pSpacing.setBeforeLines(BigInteger.valueOf(100L));
                 XWPFRun xwpfRun = xwpfParagraph.createRun();
                 xwpfRun.setText(extension.getExtensionName());
                 xwpfRun.setFontSize(12);
                 xwpfRun.setFontFamily("宋体");
                 xwpfRun.setBold(true);
-                //i++;
-                //cursor = xwpfParagraphs.get(i + 1).getCTP().newCursor();
+                /* 以下填充扩展项内容 */
+                cursor = xwpfParagraphs.get(i + 1).getCTP().newCursor();
                 XWPFTable t = document.insertNewTbl(cursor);
                 XWPFTableRow row = t.getRow(0);
                 XWPFTableCell cell = row.getCell(0);

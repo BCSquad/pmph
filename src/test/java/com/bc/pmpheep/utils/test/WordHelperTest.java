@@ -4,6 +4,7 @@ import com.bc.pmpheep.back.bo.DeclarationEtcBO;
 import com.bc.pmpheep.back.po.DecEduExp;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.service.DeclarationService;
+import com.bc.pmpheep.back.service.MaterialExtensionService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
@@ -44,6 +45,8 @@ public class WordHelperTest extends BaseTest {
     MaterialService materialService;
     @Resource
     DeclarationService declarationService;
+    @Resource
+    MaterialExtensionService materialExtensionService;
 
 //    @Test
 //    @Ignore
@@ -105,7 +108,38 @@ public class WordHelperTest extends BaseTest {
         document.write(out);
         out.flush();
         out.close();
+    }
 
+    @Test
+    @Ignore
+    public void test() throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
+        List<DeclarationEtcBO> list = declarationService.declarationEtcBO(2L, null, null, null, null, null, null, null, null, null);
+        Material material = materialService.getMaterialById(2L);
+        StringBuilder str = new StringBuilder();
+        str.append(material.getIsEduExpUsed() ? "1" : "0");
+        str.append(material.getIsWorkExpUsed() ? "1" : "0");
+        str.append(material.getIsTeachExpUsed() ? "1" : "0");
+        str.append(material.getIsAchievementUsed() ? "1" : "0");
+        str.append(material.getIsAcadeUsed() ? "1" : "0");
+        str.append(material.getIsLastPositionUsed() ? "1" : "0");
+        str.append(material.getIsNationalPlanUsed() ? "1" : "0");
+        str.append(material.getIsPmphTextbookUsed() ? "1" : "0");
+        str.append(material.getIsTextbookUsed() ? "1" : "0");
+        str.append(material.getIsMoocDigitalUsed() ? "1" : "0");
+        str.append(material.getIsCourseUsed() ? "1" : "0");
+        str.append(material.getIsResearchUsed() ? "1" : "0");
+        str.append(material.getIsMonographUsed() ? "1" : "0");
+        str.append(material.getIsPublishRewardUsed() ? "1" : "0");
+        str.append(material.getIsSciUsed() ? "1" : "0");
+        str.append(material.getIsClinicalRewardUsed() ? "1" : "0");
+        str.append(material.getIsAcadeRewardUsed() ? "1" : "0");
+        str.append(material.getIsIntentionUsed() ? "1" : "0");
+        String src = this.getClass().getResource("/").getPath();
+        src = src.substring(1);
+        if (!src.endsWith(File.separator)) {
+            src += File.separator;
+        }
+        wordHelper.export("测试", src, list, str.toString(), materialExtensionService.getMaterialExtensionByMaterialId(2L));
     }
 //
 //    @Test
