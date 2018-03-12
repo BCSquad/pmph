@@ -167,7 +167,7 @@ WriterUserCertificationService {
             writerUserCertificationDao.updateWriterUserCertificationProgressByUserId(wUserCertifications);
             List<WriterUser> list = writerUserService.getWriterUserRankList(writerUsers);
             for (WriterUser writerUser : list) {
-				if (0 == writerUser.getRank() || 3 == progress) { // 当级别为0或者通过的时候修改
+				if (0 == writerUser.getRank() || 3 == progress.intValue()) { // 当级别为0或者通过的时候修改
 					for (WriterUser wrs : writerUsers) {
 						wrs.setAuthUserType(1);
 						wrs.setAuthUserId(pmphuser.getId());
