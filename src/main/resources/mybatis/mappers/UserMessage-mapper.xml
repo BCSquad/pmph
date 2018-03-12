@@ -442,16 +442,15 @@
 		m.is_deleted = 0
 		AND
 		m.msg_type = 1
-		<if test="parameter != null and parameter.receiverIds != null">
+		<if test="parameter.senderIds != null">
 			AND
-			m.receiver_id in
-			<foreach collection="parameter.receiverIds" item="userId"
+			m.sender_id in
+			<foreach collection="parameter.senderIds" item="userId"
 				index="index" open="(" close=")" separator=",">
 				#{userId}
 			</foreach>
-			and m.receiver_type = 1 
 		</if>
-		<if test="parameter != null and parameter.title != null and parameter.title != ''">
+		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
 		</if>
 		GROUP BY
@@ -481,16 +480,15 @@
 		m.is_deleted = 0
 		AND
 		m.msg_type = 1
-		<if test="parameter != null and parameter.receiverIds != null">
+		<if test="parameter.senderIds != null">
 			AND
-			m.receiver_id in
-			<foreach collection="parameter.receiverIds" item="userId"
+			m.sender_id in
+			<foreach collection="parameter.senderIds" item="userId"
 				index="index" open="(" close=")" separator=",">
 				#{userId}
 			</foreach>
-			and m.receiver_type = 1 
 		</if>
-		<if test="parameter != null and parameter.title != null and parameter.title != ''">
+		<if test="parameter.title != null and parameter.title != ''">
 			and m.title like concat('%',#{parameter.title},'%')
 		</if>
 		GROUP BY
