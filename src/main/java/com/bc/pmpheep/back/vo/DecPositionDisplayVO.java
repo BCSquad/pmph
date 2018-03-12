@@ -36,6 +36,8 @@ public class DecPositionDisplayVO implements Serializable {
     private String showPosition;
     // 显示遴选职务
     private String showChosenPosition;
+    // 发布遴选职务
+    private Integer chosen;
 
     public String getShowChosenPosition() {
 		return showChosenPosition;
@@ -153,6 +155,14 @@ public class DecPositionDisplayVO implements Serializable {
 		this.gmtUpdate = gmtUpdate;
 	}
 
+	public Integer getChosen() {
+		return chosen;
+	}
+
+	public void setChosen(Integer chosen) {
+		this.chosen = chosen;
+	}
+
 	@Override
 	public String toString() {
 		return "DecPositionDisplayVO [id=" + id + ", declarationId="
@@ -163,7 +173,8 @@ public class DecPositionDisplayVO implements Serializable {
 				+ ", syllabusId=" + syllabusId + ", syllabusName="
 				+ syllabusName + ", gmtCreate=" + gmtCreate + ", gmtUpdate="
 				+ gmtUpdate + ", showPosition=" + showPosition
-				+ ", showChosenPosition=" + showChosenPosition + "]";
+				+ ", showChosenPosition=" + showChosenPosition + ", chosen="
+				+ chosen + "]";
 	}
     
 }
