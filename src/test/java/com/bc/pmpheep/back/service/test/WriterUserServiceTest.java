@@ -90,7 +90,7 @@ public class WriterUserServiceTest extends BaseTest {
         WriterUserManagerVO managerVO = new WriterUserManagerVO();
         pageParameter.setParameter(managerVO);
         pageParameter.setPageSize(15);
-        pageResult = writerUserService.getListWriterUser(pageParameter);
+        pageResult = writerUserService.getListWriterUser(pageParameter,null);
         Assert.assertNotNull("是否查询成功", pageResult);
         // logger.info("查找成功{}", pageResult);
     }

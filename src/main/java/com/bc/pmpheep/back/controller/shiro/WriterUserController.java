@@ -191,7 +191,9 @@ public class WriterUserController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "分页查询作家用户")
 	@RequestMapping(value = "/list/writerUser", method = RequestMethod.GET)
-	public ResponseBean writerUser(@RequestParam("pageSize") Integer pageSize,
+	public ResponseBean writerUser(
+			@RequestParam("groupId")  Long groupId ,
+			@RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
 			@RequestParam("rank") Integer rank, @RequestParam("orgName") String orgName) {
 		PageParameter pageParameter = new PageParameter<>();
@@ -206,7 +208,7 @@ public class WriterUserController {
 		pageParameter.setPageNumber(pageNumber);
 		pageParameter.setPageSize(pageSize);
 		pageParameter.setParameter(writerUserManagerVO);
-		return new ResponseBean(writerUserService.getListWriterUser(pageParameter));
+		return new ResponseBean(writerUserService.getListWriterUser(pageParameter,groupId));
 	}
 
 	/**

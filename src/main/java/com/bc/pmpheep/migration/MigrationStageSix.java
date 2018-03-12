@@ -271,7 +271,7 @@ public class MigrationStageSix {
                     WriterUserManagerVO vo = new WriterUserManagerVO();
                     vo.setUsername("18045661072");
                     PageParameter<WriterUserManagerVO> param = new PageParameter<>(1, 1, vo);
-                    PageResult<WriterUserManagerVO> list = writerUserService.getListWriterUser(param);
+                    PageResult<WriterUserManagerVO> list = writerUserService.getListWriterUser(param,null);
                     if (list.getRows().isEmpty()) {
                         map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到'18045661072-李勇'对应的关联结果。"));
                         excel.add(map);

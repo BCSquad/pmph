@@ -1,6 +1,8 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,9 @@ import com.bc.pmpheep.back.dao.WriterRoleDao;
 import com.bc.pmpheep.back.dao.WriterUserDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.DecPositionPublished;
+import com.bc.pmpheep.back.po.Declaration;
+import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.WriterPermission;
 import com.bc.pmpheep.back.po.WriterProfile;
 import com.bc.pmpheep.back.po.WriterRole;
@@ -41,8 +46,15 @@ public class WriterUserServiceImpl implements WriterUserService {
 	WriterUserDao writerUserDao;
 	@Autowired
 	WriterRoleDao writerRoleDao;
+	
 	@Autowired
 	WriterProfileDao writerProfileDao;
+	
+	@Autowired  
+	private  DecPositionPublishedService decPositionPublishedService;
+	
+	@Autowired
+	private PmphGroupService pmphGroupService;
 
 	@Override
 	public List<WriterUser> getWriterUserListByOrgIds(List<Long> orgIds) throws CheckedServiceException {
@@ -311,7 +323,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 	 * @return 需要的Page对象
 	 */
 	@Override
-	public PageResult<WriterUserManagerVO> getListWriterUser(PageParameter<WriterUserManagerVO> pageParameter)
+	public PageResult<WriterUserManagerVO> getListWriterUser(PageParameter<WriterUserManagerVO> pageParameter,Long groupId)
 			throws CheckedServiceException {
 		String name = pageParameter.getParameter().getName();
 		if (StringUtil.notEmpty(name)) {
@@ -381,8 +393,53 @@ public class WriterUserServiceImpl implements WriterUserService {
 			}
 			pageResult.setTotal(total);
 		}
+		// 设置职位
+		if( null != pageResult.getRows() && pageResult.getRows().size() >0 && null != groupId) {
+			//清空职位
+			for(WriterUserManagerVO writerUserManagerVO: pageResult.getRows()) {
+				writerUserManagerVO.setPosition("无"); 
+			}
+			// 设置职位
+			PmphGroup pmphGroup = pmphGroupService.getPmphGroupById(groupId) ;
+			Long bookId = pmphGroup.getBookId();
+			if(null != bookId ) {
+				//查询这本书的发布职位 
+				List<DecPositionPublished> publisheds = decPositionPublishedService.getDecPositionPublishedListByBookId(bookId);
+				if(null != publisheds && publisheds.size() > 0 ) {
+					Map<Long,String> userIdsAndPostions = new HashMap<Long,String>();
+					for(DecPositionPublished published: publisheds) {
+						Declaration declaration = declarationService.getDeclarationById(published.getDeclarationId()) ;
+						String postiton = "无";
+						if(published.getChosenPosition().intValue() == 4 ) {
+							postiton = "主编  主编，数字编委 副主编";
+						}else if(published.getChosenPosition().intValue() == 12) {
+							postiton = "主编，数字编委";
+						}else if(published.getChosenPosition().intValue() == 2) {
+							postiton = "副主编";
+						}else if(published.getChosenPosition().intValue() == 10) {
+							postiton = "副主编，数字编委";
+						}else if(published.getChosenPosition().intValue() == 1 ) {
+							postiton = "编委";
+						}else if(published.getChosenPosition().intValue() == 9 ) {
+							postiton = "编委，数字编委";
+						}
+						userIdsAndPostions.put(declaration.getUserId(), postiton);
+					}
+					for(WriterUserManagerVO writerUserManagerVO: pageResult.getRows()) {
+						String postion = userIdsAndPostions.get(writerUserManagerVO.getId());
+						if(null != postion) {
+							writerUserManagerVO.setPosition(postion); 
+						}
+					}
+				}
+			}
+		}
+		// 设置职位 end 
 		return pageResult;
 	}
+	
+	@Autowired
+	private DeclarationService declarationService;
 
 	@Override
 	public PageResult<WriterUserManagerVO> getTeacherCheckList(PageParameter<WriterUserManagerVO> pageParameter)
