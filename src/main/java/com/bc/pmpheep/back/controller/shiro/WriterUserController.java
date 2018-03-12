@@ -192,7 +192,7 @@ public class WriterUserController {
 	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "分页查询作家用户")
 	@RequestMapping(value = "/list/writerUser", method = RequestMethod.GET)
 	public ResponseBean writerUser(
-			@RequestParam("groupId")  Long groupId ,
+			Long groupId ,
 			@RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
 			@RequestParam("rank") Integer rank, @RequestParam("orgName") String orgName) {
