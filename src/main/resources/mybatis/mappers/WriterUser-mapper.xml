@@ -784,7 +784,9 @@
 				<if test=" isTeacher!= null ">
 					is_teacher= #{isTeacher},
 				</if>
-					rank=1,
+				<if test="rank != null">
+					rank = #{rank},
+				</if>
 			</set>
 			where
 			id=#{id}
