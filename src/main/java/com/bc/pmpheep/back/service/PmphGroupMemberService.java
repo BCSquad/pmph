@@ -27,6 +27,15 @@ public interface PmphGroupMemberService {
 	 * @throws CheckedServiceException
 	 */
 	PmphGroupMember addPmphGroupMember(PmphGroupMember pmphGroupMember) throws CheckedServiceException;
+	
+	/**
+	 * 
+	 * @param pmphGroupMember
+	 *            实体对象
+	 * @return 带主键的 PmphGroupMember
+	 * @throws CheckedServiceException
+	 */
+	Integer addPmphGroupMembers(Long groupId,List<PmphGroupMember> pmphGroupMembers) throws CheckedServiceException;
 
 	/**
 	 * 
