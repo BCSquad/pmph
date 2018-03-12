@@ -86,6 +86,6 @@ public interface CmsAdvertisementService {
 	 * @param sessionId
 	 * @return
 	 */
-	Integer deleteCmsAdvertisementImageById(Long[] id, String[] image, String sessionId);
+	Integer deleteCmsAdvertisementImageById( String[] image,Long[] id, String sessionId);
 
 }
