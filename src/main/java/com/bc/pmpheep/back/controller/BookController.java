@@ -12,6 +12,7 @@ import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.BookService;
 import com.bc.pmpheep.back.service.MaterialTypeService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.BookVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -168,5 +169,21 @@ public class BookController {
 	@RequestMapping(value = "/allsynchronization", method = RequestMethod.GET)
 	public ResponseBean allsynchronization(Integer type) {
 		return new ResponseBean(bookService.AllSynchronization(type));
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取图书是否同步完成
+	 *
+	 * @param type
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取图书是否同步完成")
+	@RequestMapping(value = "/isEnd", method = RequestMethod.GET)
+	public ResponseBean isEnd() {
+		return new ResponseBean(Const.AllSYNCHRONIZATION);
 	}
 }

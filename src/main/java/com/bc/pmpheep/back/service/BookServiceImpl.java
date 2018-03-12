@@ -42,6 +42,7 @@ import com.bc.pmpheep.back.po.BookUserMark;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ContactMallUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.MD5;
@@ -171,6 +172,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 	@Override
 	public String AbuttingJoint(String[] vns, Integer type) throws CheckedServiceException {
 		String result = "SUCCESS";
+		int num = vns.length / 100;
 		for (int i = 0; i < vns.length; i++) {
 			JSONObject ot = new JSONObject();
 			if (type == 0) {// 商城发送修改的请求
@@ -179,7 +181,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 				}
 			}
 			try {
-				// System.out.println(vns[i] + " " + "第" + i + "号本版号");
+				System.out.println(vns[i] + " " + "第" + (i + 1) + "号本版号");
 				ot = PostBusyAPI(vns[i]);
 				if ("1".equals(ot.getJSONObject("RESP").getString("CODE"))) {
 					// 请求成功并正常返回
@@ -200,6 +202,9 @@ public class BookServiceImpl extends BaseService implements BookService {
 							BookDetail bookDetail = new BookDetail(book.getId(), content);
 							bookDetailDao.updateBookDetailByBookId(bookDetail);
 						}
+					}
+					if ((i + 1) >= num * (Const.AllSYNCHRONIZATION + 1)) {
+						Const.AllSYNCHRONIZATION++;
 					}
 				}
 			} catch (Exception e) {
@@ -382,7 +387,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 			}
 			AbuttingJoint(editionnums, type);
 		}
-
+		Const.AllSYNCHRONIZATION = 0;
 		return "SUCCESS";
 	}
 
