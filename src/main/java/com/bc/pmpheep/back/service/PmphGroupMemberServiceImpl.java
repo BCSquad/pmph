@@ -27,6 +27,7 @@ import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.BookPositionVO;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
@@ -73,10 +74,10 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	 */
 	@Override
 	public PmphGroupMember addPmphGroupMember(PmphGroupMember pmphGroupMember) throws CheckedServiceException {
-		if (null == pmphGroupMember.getDisplayName()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-					"小组内显示名称为空");
-		}
+//		if (null == pmphGroupMember.getDisplayName()) {
+//			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+//					"小组内显示名称为空");
+//		}
 		pmphGroupMemberDao.addPmphGroupMember(pmphGroupMember);
 		return pmphGroupMember;
 	}
@@ -161,24 +162,57 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
             throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
                                               CheckedExceptionResult.NULL_PARAM, "用户为空");
         }
-        //查询教材信息
-        Material material=materialService.getMaterialById(pmphGroupMembers.get(0).getMaterialId());
-        //查询书籍信息
-        Textbook textbook=textbookService.getTextbookById(pmphGroupMembers.get(0).getTextbookId());
+        /**
+        *
+        Textbook textbook=new Textbook();
+        if(null!=pmphGroupMembers.get(0).getTextbookId()){
+        	//查询书籍信息
+        	textbook=textbookService.getTextbookById(pmphGroupMembers.get(0).getTextbookId());
+        }
+        Material material=new Material();
+        if(null!=pmphGroupMembers.get(0).getMaterialId()){
+        	 //查询教材信息
+            material=materialService.getMaterialById(pmphGroupMembers.get(0).getMaterialId());
+        }
         //查询该教材是否存在项目编辑
         MaterialProjectEditor materialProjectEditor=materialProjectEditorService.getMaterialProjectEditorByMaterialIdAndUserId(material.getId(), pmphUser.getId());
         ////判断当前教材是否有创建小组的权限
-        if(material.getDirector()!=pmphUser.getId()||textbook.getPlanningEditor()!=pmphUser.getId()
-        		||null==materialProjectEditor||!pmphUser.getIsAdmin()){
-        	if(!BinaryUtil.getBit(material.getPlanPermission(), 7)||!BinaryUtil.getBit(material.getProjectPermission(), 7)){
-        		throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-                        CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
-        	}
+        if (!material.getDirector().equals(pmphUser.getId()) && !textbook.getPlanningEditor().equals(pmphUser.getId())
+                && null == materialProjectEditor && !pmphUser.getIsAdmin()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+                    CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
+
         }
+        if (null != material.getPlanPermission()) {
+            if (!BinaryUtil.getBit(material.getPlanPermission(), 7)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+                        CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
+            }
+        }
+        if (null != material.getProjectPermission()) {
+            if (!BinaryUtil.getBit(material.getProjectPermission(), 7)) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+                        CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有此操作权限");
+            }
+        }
+        */
+        //小组权限的判断 
+        Long materialId = pmphGroupMembers.get(0).getMaterialId() ;
+        Long textBookId = pmphGroupMembers.get(0).getTextbookId();
+        String myPower  = textbookService.listBookPosition(1,9999,null,"["+textBookId+"]",null,materialId,sessionId)
+        								  .getRows()
+        								  .get(0)
+        								  .getMyPower();
+        String groupPower = myPower.substring(6,7);
+        
+        /**
+         * 
         if (pmphUser.getIsAdmin() || isFounderOrisAdmin(groupId, sessionId)
         		||material.getDirector()==pmphUser.getId()||textbook.getPlanningEditor()==pmphUser.getId()
         		||pmphUser.getId()==materialProjectEditor.getEditorId()) {// 是超级管理员或者该小组的创建人和管理员才可以添加成员
-            if (pmphGroupMembers.size() > 0) {
+        */
+        if("1".equals(groupPower)) { //小组权限的判断  end
+        	if (pmphGroupMembers.size() > 0) {
                 List<Long> writers = new ArrayList<>();
                 List<Long> pmphs = new ArrayList<>();
                 for (PmphGroupMember pmphGroupMember : pmphGroupMembers) {
@@ -444,8 +478,9 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberDao.getPmphGroupMemberByMemberId(groupId, userId,
 				isWriter);
 		if (ObjectUtil.isNull(pmphGroupMemberVO)) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-					"你不是该小组的组员");
+			return null;
+//			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+//					"你不是该小组的组员");
 		}
 		pmphGroupMemberVO.setAvatar(
 				isWriter ? writerUserService.get(userId).getAvatar() : pmphUserService.get(userId).getAvatar());
@@ -523,13 +558,20 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
         // 通过书籍id查询小组
         PmphGroup pmphGroup = pmphGroupService.getPmphGroupByTextbookId(textbookId);
         //判断当前教材是否有更新小组的权限
-        if(material.getDirector()==pmphUser.getId()||textbook.getPlanningEditor()==pmphUser.getId()
-        		||pmphUser.getId()==materialProjectEditor.getEditorId()||pmphUser.getIsAdmin()
-        		||pmphUser.getId().longValue() == pmphGroup.getFounderId().longValue()){
-        	if(!BinaryUtil.getBit(material.getPlanPermission(), 7)||!BinaryUtil.getBit(material.getProjectPermission(), 7)){
-        		throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
-        				CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有更新成员权限 ");
-        	}
+        //小组权限的判断 
+        Long materialId = textbook.getMaterialId() ;
+        String myPower  = textbookService.listBookPosition(1,9999,null,"["+textbookId+"]",null,materialId,sessionId)
+        								  .getRows()
+        								  .get(0)
+        								  .getMyPower();
+        String groupPower = myPower.substring(6,7);
+        if("1".equals(groupPower)){
+//        	if(null!=material.getPlanPermission()||null!=material.getProjectPermission()){
+//        		if(!BinaryUtil.getBit(material.getPlanPermission(), 7)||!BinaryUtil.getBit(material.getProjectPermission(), 7)){
+//            		throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+//            				CheckedExceptionResult.ILLEGAL_PARAM, "该用户没有更新成员权限 ");
+//            	}
+//        	}
 		    // 通过小组id查询小组现有成员
 		    List<PmphGroupMember> pmphGroupMembers =
 		    pmphGroupMemberDao.listPmphGroupMembers(pmphGroup.getId());
@@ -556,5 +598,30 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
         }
         return result;
     }
+
+	@Override
+	public Integer addPmphGroupMembers(Long groupId,List<PmphGroupMember> pmphGroupMembers) throws CheckedServiceException {
+		if(null == pmphGroupMembers || pmphGroupMembers.size() == 0 ) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+    				CheckedExceptionResult.ILLEGAL_PARAM, "参数为空");
+		}
+		for(PmphGroupMember pmphGroupMember: pmphGroupMembers) {
+			Boolean isWriter = pmphGroupMember.getIsWriter();
+			isWriter = (isWriter == null || !isWriter) ? false:true;
+			PmphGroupMemberVO member = getPmphGroupMemberByMemberId(groupId,pmphGroupMember.getUserId(),isWriter);
+			if(null== member || member.getId() == null ) {
+				if(StringUtil.isEmpty(pmphGroupMember.getDisplayName())) {
+					if(isWriter) {
+						pmphGroupMember.setDisplayName(writerUserService.get(pmphGroupMember.getUserId()).getRealname());
+					}else {
+						pmphGroupMember.setDisplayName(pmphUserService.get(pmphGroupMember.getUserId()).getRealname());
+					}
+				}
+				pmphGroupMember.setGroupId(groupId);
+				this.addPmphGroupMember(pmphGroupMember);
+			}
+		}
+		return pmphGroupMembers.size();
+	}
 
 }

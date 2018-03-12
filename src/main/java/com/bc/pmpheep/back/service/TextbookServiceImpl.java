@@ -237,9 +237,17 @@ public class TextbookServiceImpl implements TextbookService {
 			for (DecPositionPublished old : olds) {
 				if (old.getDeclarationId().equals(now.getDeclarationId())
 						&& old.getTextbookId().equals(now.getTextbookId())) {
-					if (!old.getChosenPosition().equals(now.getChosenPosition())
-							|| !old.getRank().equals(now.getRank())) {
+					if (!old.getChosenPosition().equals(now.getChosenPosition())) {
 						sends.add(now);
+					} else {
+						if (null == now.getRank() && null == now.getRank()) {
+						} else if (null != now.getRank() && null != now.getRank()) {
+							if (!now.getRank().equals(now.getRank())) {
+								sends.add(now);
+							}
+						} else {
+							sends.add(now);
+						}
 					}
 				}
 			}

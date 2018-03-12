@@ -152,9 +152,10 @@ public interface WriterUserService {
 	 * 
 	 * @param page
 	 *            传入的查询条件
+	 * @param groupId  不为空时表示在需要关联小组的遴选职位
 	 * @return
 	 */
-	PageResult<WriterUserManagerVO> getListWriterUser(PageParameter<WriterUserManagerVO> pageParameter)
+	PageResult<WriterUserManagerVO> getListWriterUser(PageParameter<WriterUserManagerVO> pageParameter,Long groupId )
 			throws CheckedServiceException;
 
 	/**

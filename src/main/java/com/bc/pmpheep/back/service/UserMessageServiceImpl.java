@@ -549,7 +549,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                     pmphUserManagerVO.setDepartmentId(pmphDepartment.getId());
                     parameter.setParameter(pmphUserManagerVO);
                     PageResult<PmphUserManagerVO> listPageResult =
-                    pmphUserService.getListPmphUser(parameter);
+                    pmphUserService.getListPmphUser(parameter,null);
                     List<PmphUserManagerVO> listPmphUserManagerVOs = listPageResult.getRows();
                     for (PmphUserManagerVO pmManagerVO : listPmphUserManagerVOs) {
                         ids.add(pmManagerVO.getId());

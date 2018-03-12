@@ -1,5 +1,6 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -14,8 +15,16 @@ import java.util.Properties;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.ibatis.exceptions.TooManyResultsException;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.BookDao;
@@ -27,10 +36,13 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Book;
 import com.bc.pmpheep.back.po.BookDetail;
+import com.bc.pmpheep.back.po.BookSupport;
 import com.bc.pmpheep.back.po.BookUserLike;
 import com.bc.pmpheep.back.po.BookUserMark;
+import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ContactMallUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.MD5;
@@ -160,6 +172,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 	@Override
 	public String AbuttingJoint(String[] vns, Integer type) throws CheckedServiceException {
 		String result = "SUCCESS";
+		int num = vns.length / 100;
 		for (int i = 0; i < vns.length; i++) {
 			JSONObject ot = new JSONObject();
 			if (type == 0) {// 商城发送修改的请求
@@ -168,7 +181,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 				}
 			}
 			try {
-//				System.out.println(vns[i] + " " + "第" + i + "号本版号");
+				System.out.println(vns[i] + " " + "第" + (i + 1) + "号本版号");
 				ot = PostBusyAPI(vns[i]);
 				if ("1".equals(ot.getJSONObject("RESP").getString("CODE"))) {
 					// 请求成功并正常返回
@@ -189,6 +202,9 @@ public class BookServiceImpl extends BaseService implements BookService {
 							BookDetail bookDetail = new BookDetail(book.getId(), content);
 							bookDetailDao.updateBookDetailByBookId(bookDetail);
 						}
+					}
+					if ((i + 1) >= num * (Const.AllSYNCHRONIZATION + 1)) {
+						Const.AllSYNCHRONIZATION++;
 					}
 				}
 			} catch (Exception e) {
@@ -371,7 +387,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 			}
 			AbuttingJoint(editionnums, type);
 		}
-
+		Const.AllSYNCHRONIZATION = 0;
 		return "SUCCESS";
 	}
 
@@ -445,6 +461,108 @@ public class BookServiceImpl extends BaseService implements BookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		bookDao.updateDownComments(id);
+	}
+
+	@Override
+	public String bookExcel(MultipartFile file) throws CheckedServiceException {
+		String fileType = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+		Workbook workbook = null;
+		InputStream in = null;
+		try {
+			in = file.getInputStream();
+		} catch (FileNotFoundException e) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, CheckedExceptionResult.NULL_PARAM,
+					"未获取到文件");
+		} catch (IOException e) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, CheckedExceptionResult.ILLEGAL_PARAM,
+					"读取文件失败");
+		}
+		try {
+			if ((".xls").equals(fileType)) {
+				workbook = new HSSFWorkbook(in);
+			} else if ((".xlsx").equals(fileType)) {
+				workbook = new XSSFWorkbook(in);
+			} else {
+				throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, CheckedExceptionResult.ILLEGAL_PARAM,
+						"读取的不是Excel文件");
+			}
+		} catch (IOException e) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, CheckedExceptionResult.ILLEGAL_PARAM,
+					"读取文件失败");
+		}
+		for (int numSheet = 0; numSheet < workbook.getNumberOfSheets(); numSheet++) {
+			Sheet sheet = workbook.getSheetAt(numSheet);
+			if (ObjectUtil.isNull(sheet)) {
+				continue;
+			}
+			for (int rowNum = 1; rowNum <= sheet.getLastRowNum(); rowNum++) {
+				Row row = sheet.getRow(rowNum);
+				Long id = 0L;
+				List<Long> bookIds = new ArrayList<>();
+				if (null == row) {
+					break;
+				}
+				for (int i = 0; i < 7; i += 2) {
+					Cell name = row.getCell(i);
+					Cell isbn = row.getCell(i + 1);
+					Book book = new Book();
+					if (!ObjectUtil.isNull(isbn) && !"".equals(isbn.toString())) {
+						String ISBN = isbn.toString();
+						if (!ISBN.contains("ISBN")) {
+							ISBN = "ISBN " + ISBN;
+						}
+						try {
+							book = bookDao.getBookByIsbn(ISBN);
+						} catch (Exception e) {
+							throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+									CheckedExceptionResult.ILLEGAL_PARAM,
+									"Excel中第" + rowNum + "行第" + (i + 1) + "列isbn填写错误请确认后重试。");
+						}
+						if (0 == i) {
+							id = book.getId();
+						} else {
+							bookIds.add(book.getId());
+						}
+					} else if (!ObjectUtil.isNull(name) && !"".equals(name.toString())) {
+						try {
+							book = bookDao.getBookByBookname(name.toString());
+						} catch (TooManyResultsException e) {
+							throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+									CheckedExceptionResult.ILLEGAL_PARAM, "Excel中第" + rowNum + "行第" + (i + 1) + "列"
+											+ name.toString() + "书籍存在多本同名书籍，填写isbn后重试。");
+						} catch (Exception e) {
+							throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+									CheckedExceptionResult.ILLEGAL_PARAM, "Excel中第" + rowNum + "行第" + (i + 1) + "列"
+											+ name.toString() + "书籍填写错误，请确认后或者填写isbn后重试。");
+						}
+						if (0 == i) {
+							id = book.getId();
+						} else {
+							bookIds.add(book.getId());
+						}
+					}
+				}
+				addBookExcel(id, bookIds, rowNum);
+			}
+		}
+		return "SECCESS";
+	}
+
+	public void addBookExcel(Long id, List<Long> bookIds, int rowNum) {
+		if (ObjectUtil.isNull(id)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, CheckedExceptionResult.NULL_PARAM,
+					"参数为空");
+		}
+		if (bookIds.isEmpty()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, CheckedExceptionResult.NULL_PARAM,
+					"Excel中第" + rowNum + "行没有填写配套图书，请确认后重试。");
+		}
+		for (Long bookId : bookIds) {
+			BookSupport bookSupport = bookDao.getBookSupport(id, bookId);
+			if (ObjectUtil.isNull(bookSupport)) {
+				bookDao.addBookSupport(id, bookId);
+			}
+		}
 	}
 
 }

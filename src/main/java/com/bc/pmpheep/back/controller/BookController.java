@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.BookService;
 import com.bc.pmpheep.back.service.MaterialTypeService;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.vo.BookVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 
@@ -145,6 +148,13 @@ public class BookController {
 		return new ResponseBean(bookService.AbuttingJoint(key, noteicetype));
 	}
 
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书配套导入")
+	@RequestMapping(value = "/bookExcel", method = RequestMethod.POST)
+	public ResponseBean bookExcel(@RequestParam("file") MultipartFile file) {
+		return new ResponseBean<>(bookService.bookExcel(file));
+	}
+
 	/**
 	 * 
 	 * 
@@ -159,5 +169,21 @@ public class BookController {
 	@RequestMapping(value = "/allsynchronization", method = RequestMethod.GET)
 	public ResponseBean allsynchronization(Integer type) {
 		return new ResponseBean(bookService.AllSynchronization(type));
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取图书是否同步完成
+	 *
+	 * @param type
+	 * @return
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取图书是否同步完成")
+	@RequestMapping(value = "/isEnd", method = RequestMethod.GET)
+	public ResponseBean isEnd() {
+		return new ResponseBean(Const.AllSYNCHRONIZATION);
 	}
 }

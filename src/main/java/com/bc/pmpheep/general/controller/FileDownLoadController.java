@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.bo.DecPositionBO;
 import com.bc.pmpheep.back.plugin.PageParameter;
+import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.service.BookCorrectionService;
@@ -49,6 +50,7 @@ import com.bc.pmpheep.back.service.MaterialNoticeAttachmentService;
 import com.bc.pmpheep.back.service.MaterialOrgService;
 import com.bc.pmpheep.back.service.MaterialService;
 import com.bc.pmpheep.back.service.OrgService;
+import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.SurveyQuestionAnswerService;
 import com.bc.pmpheep.back.service.TextbookService;
@@ -63,6 +65,7 @@ import com.bc.pmpheep.back.vo.DeclarationResultSchoolVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationBookResultVO;
 import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
+import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
 import com.bc.pmpheep.back.vo.OrgExclVO;
 import com.bc.pmpheep.back.vo.SurveyQuestionFillVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
@@ -128,6 +131,9 @@ public class FileDownLoadController {
     OrgService                      orgService;
     // 当前业务类型
     private static final String     BUSSINESS_TYPE = "文件下载";
+    
+    @Autowired
+    private OrgUserService      orgUserService;
 
     /**
      * 普通文件下载
@@ -539,6 +545,56 @@ public class FileDownLoadController {
                                               "文件在传输时中断");
         }
     }
+    
+    /**
+     * 机构用户export
+     */
+    @RequestMapping(value = "/orgUserExportEcel", method = RequestMethod.GET)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出excel")
+    @ResponseBody
+    public void orgUserExportEcel(
+    		 HttpServletRequest request, HttpServletResponse response,
+		     String name,
+		     String orgName, String orgTypeName,
+		     Boolean isHospital) {
+        PageParameter pageParameter = new PageParameter<>();
+        OrgAndOrgUserVO orgAndOrgUserVO = new OrgAndOrgUserVO();
+        if (StringUtil.notEmpty(orgName)) {
+            orgAndOrgUserVO.setOrgName(orgName.replaceAll(" ", ""));
+        }
+        if (StringUtil.notEmpty(name)) {
+            orgAndOrgUserVO.setName(name.replaceAll(" ", ""));// 去除空格
+        }
+        if (StringUtil.notEmpty(orgTypeName)) {
+            orgAndOrgUserVO.setOrgTypeName(orgTypeName.replaceAll(" ", ""));// 去除空格
+        }
+        orgAndOrgUserVO.setIsHospital(isHospital);
+        pageParameter.setPageNumber(1);
+        pageParameter.setPageSize(9999999);
+        pageParameter.setParameter(orgAndOrgUserVO);
+        //export 
+        Workbook workbook = null;
+        List<OrgAndOrgUserVO> orgList = null;
+        try {
+            orgList = orgUserService.getListOrgUser(pageParameter).getRows();
+            workbook = excelHelper.fromBusinessObjectList(orgList, "机构账户信息");
+        } catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
+            logger.warn("数据表格化的时候失败");
+        }
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/force-download");
+        String fileName = returnFileName(request,  "机构账户信息.xls");
+        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        try (OutputStream out = response.getOutputStream()) {
+            workbook.write(out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+            throw new CheckedServiceException(CheckedExceptionBusiness.FILE, CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+        }
+        
+    }        
 
     /**
      * 导出书籍遴选名单/批量导出

@@ -242,7 +242,7 @@ public class CmsAdvertisementServiceImpl implements CmsAdvertisementService {
 	}
 
 	@Override
-	public Integer deleteCmsAdvertisementImageById(Long id, String[] image, String sessionId) {
+	public Integer deleteCmsAdvertisementImageById( String[] image,Long[] id, String sessionId) {
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
 		if (null == pmphUser || null == pmphUser.getId()) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
@@ -261,10 +261,18 @@ public class CmsAdvertisementServiceImpl implements CmsAdvertisementService {
 		Integer count = 0;
 		// 遍历数组 进行删除MongoDB的图
 		for (int i = 0; i < image.length; i++) {
-			fileService.remove(image[i]);
+			if(null!=id[i]){
+				//取芒果图片上保存的id
+				String ids=image[i].substring(15);
+				fileService.remove(ids);
+			}
 		}
 		// 删除本地相对应的图片信息
-		count = cmsAdvertisementImageDao.deleteCmsAdvertisementByImages(id);
+		for (int i = 0; i < id.length; i++) {
+			if(null!=id[i]){
+				count = cmsAdvertisementImageDao.deleteCmsAdvertisementByImages(id[i]);
+			}
+		}
 		return count;
 	}
 

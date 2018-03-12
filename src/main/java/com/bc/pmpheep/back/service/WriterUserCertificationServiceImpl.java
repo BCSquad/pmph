@@ -167,14 +167,65 @@ WriterUserCertificationService {
             writerUserCertificationDao.updateWriterUserCertificationProgressByUserId(wUserCertifications);
             List<WriterUser> list = writerUserService.getWriterUserRankList(writerUsers);
             for (WriterUser writerUser : list) {
-				if (0 == writerUser.getRank()) {//当级别为0的时候修改
+            	// 当级别为0并且是通过的时候修改
+				if (0 == writerUser.getRank() && 3 == progress.intValue()) {
+					for (WriterUser wrs : writerUsers) {
+						wrs.setRank(1);
+						wrs.setAuthUserType(1);
+						wrs.setAuthUserId(pmphuser.getId());
+						wrs.setIsTeacher(true);
+						writerUserService.updateWriterUserRank(wrs);
+					}
+				// 当级别为0并且是退回的时候修改
+				} else if (0 == writerUser.getRank() && 2 == progress.intValue()) {
+					for (WriterUser wrs : writerUsers) {
+						wrs.setAuthUserType(1);
+						wrs.setAuthUserId(pmphuser.getId());
+						wrs.setIsTeacher(false);
+						writerUserService.updateWriterUser(wrs);
+					}
+				// 当级别为1并且是通过的时候修改
+				} else if (1 == writerUser.getRank() && 3 == progress.intValue()) {
 					for (WriterUser wrs : writerUsers) {
 						wrs.setAuthUserType(1);
 						wrs.setAuthUserId(pmphuser.getId());
 						wrs.setIsTeacher(true);
 						writerUserService.updateWriterUserRank(wrs);
 					}
-				} else {
+				// 当级别为1并且是退回的时候修改
+				} else if (1 == writerUser.getRank() && 2 == progress.intValue()) {
+					for (WriterUser wrs : writerUsers) {
+						wrs.setAuthUserType(1);
+						wrs.setAuthUserId(pmphuser.getId());
+						wrs.setIsTeacher(false);
+						writerUserService.updateWriterUser(wrs);
+					}
+				// 当级别为2并且是通过的时候修改
+				} else if (2 == writerUser.getRank() && 3 == progress.intValue()) {
+					for (WriterUser wrs : writerUsers) {
+						wrs.setAuthUserType(1);
+						wrs.setAuthUserId(pmphuser.getId());
+						wrs.setIsTeacher(true);
+						writerUserService.updateWriterUserRank(wrs);
+					}
+				// 当级别为2并且是退回的时候修改
+				} else if (2 == writerUser.getRank() && 2 == progress.intValue()) {
+					for (WriterUser wrs : writerUsers) {
+						wrs.setAuthUserType(1);
+						wrs.setAuthUserId(pmphuser.getId());
+						wrs.setIsTeacher(false);
+						writerUserService.updateWriterUser(wrs);
+					}
+				// 当级别为3并且是通过的时候修改
+				} else if (3 == writerUser.getRank() && 3 == progress.intValue()) {
+					for (WriterUser wrs : writerUsers) {
+						wrs.setAuthUserType(1);
+						wrs.setAuthUserId(pmphuser.getId());
+						wrs.setIsTeacher(true);
+						writerUserService.updateWriterUserRank(wrs);
+					}
+				// 当级别为2并且是退回的时候修改
+				} else if (3 == writerUser.getRank() && 2 == progress.intValue()) {
 					for (WriterUser wrs : writerUsers) {
 						wrs.setAuthUserType(1);
 						wrs.setAuthUserId(pmphuser.getId());

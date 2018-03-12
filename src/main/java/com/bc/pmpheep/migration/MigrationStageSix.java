@@ -271,7 +271,7 @@ public class MigrationStageSix {
                     WriterUserManagerVO vo = new WriterUserManagerVO();
                     vo.setUsername("18045661072");
                     PageParameter<WriterUserManagerVO> param = new PageParameter<>(1, 1, vo);
-                    PageResult<WriterUserManagerVO> list = writerUserService.getListWriterUser(param);
+                    PageResult<WriterUserManagerVO> list = writerUserService.getListWriterUser(param,null);
                     if (list.getRows().isEmpty()) {
                         map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到'18045661072-李勇'对应的关联结果。"));
                         excel.add(map);
@@ -318,7 +318,7 @@ public class MigrationStageSix {
             declaration.setPosition((String) map.get("duties")); // 职务
             declaration.setTitle((String) map.get("positional")); // 职称
             declaration.setAddress((String) map.get("address")); // 联系地址
-            if (StringUtil.strLength(postCode) > 20 && "55894b98-6b15-4210-9460-11bdf6e8e89c".equals(id)) {
+            if (StringUtil.strLength(postCode) > 20 || "55894b98-6b15-4210-9460-11bdf6e8e89c".equals(id)) {
                 declaration.setPostcode("100000");
             } else if ("097674e55b094bb58e99c09f12b4e124".equals(id)) {
                 declaration.setPostcode("434020");
@@ -330,13 +330,28 @@ public class MigrationStageSix {
             declaration.setHandphone((String) map.get("handset")); // 手机
             declaration.setEmail((String) map.get("email")); // 邮箱
             declaration.setIdtype((Short) map.get("idcardtype1")); // 证件类型
-            declaration.setIdcard((String) map.get("idcard")); // 证件号码
+            declaration.setHandphone((String) map.get("handset")); // 手机
+            String idcard = (String) map.get("idcard");
+            if (StringUtil.notEmpty(idcard)) {
+                if (idcard.length() > 20) {
+                    idcard = idcard.substring(0, 19);
+                }
+            }
+            declaration.setIdcard(idcard); // 证件号码
+            declaration.setIdtype((Short) map.get("idcardtype1")); // 证件类型
             declaration.setTelephone((String) map.get("linktel")); // 联系电话
             declaration.setFax((String) map.get("fax")); // 传真
             declaration.setIsDispensed(false); // 服从调剂
             declaration.setIsUtec(false); // 参与本科教学评估认证
             declaration.setDegree(0); // 学历
             declaration.setExpertise(null); // 专业特长
+            /* 修改一个特殊情况 */
+            if ("a4大小、128g铜板、彩印、正反面、2000册，印刷费1600元".equals(declaration.getHandphone())) {
+                declaration.setHandphone(null);
+                declaration.setIdcard(null); // 证件号码
+                declaration.setTelephone(null); // 联系电话
+                declaration.setFax(null); // 传真
+            }
             // 旧表申报单位id为5的或者机构代码截取为15-的把orgid设置成0
             if ("5".equals(unitid) || "15-".equals(orgCodes)) { 
                 declaration.setOrgId(0L); // 0为人民卫生出版社

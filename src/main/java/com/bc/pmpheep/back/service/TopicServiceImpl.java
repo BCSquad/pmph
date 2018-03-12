@@ -260,7 +260,7 @@ public class TopicServiceImpl implements TopicService {
 			if (3 == topic.getAuthProgress()) {
 				Map<String, Object> detail = new HashMap<String, Object>();
 				detail.put("title", CheckedExceptionBusiness.TOPIC);
-				detail.put("content", "您的选题《"+topic.getBookname()+"》已经通过。");
+				detail.put("content", "您的选题《"+topicDao.get(topic.getId()).getBookname()+"》已经通过。");
 				detail.put("img", 1);
 				writerUserTrendst.setDetail(new Gson().toJson(detail));
 				// 创建本版号并将本版号放入数据中
@@ -305,7 +305,7 @@ public class TopicServiceImpl implements TopicService {
 			} else {
 				Map<String, Object> detail = new HashMap<String, Object>();
 				detail.put("title", CheckedExceptionBusiness.TOPIC);
-				detail.put("content", "您的选题《"+topic.getBookname()+"》未通过。");
+				detail.put("content", "您的选题《"+topicDao.get(topic.getId()).getBookname()+"》未通过。");
 				detail.put("img", 2);
 				writerUserTrendst.setDetail(new Gson().toJson(detail));
 			}

@@ -61,6 +61,7 @@ import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialExtension;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -142,6 +143,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	private MaterialExtensionService materialExtensionService;
 	@Autowired
 	private WriterUserTrendstService writerUserTrendstService;
+        @Autowired
+        private WriterUserService writerUserService;
 
 	@Override
 	public Declaration addDeclaration(Declaration declaration) throws CheckedServiceException {
@@ -345,11 +348,28 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-						"最多只能输入100个字符，请重新输入!");
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
+			WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
+			writerUserTrendst.setUserId(declarationCon.getUserId());
+			writerUserTrendst.setIsPublic(false);// 自己可见
+			writerUserTrendst.setType(8);
+			String detail = "";
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("title", CheckedExceptionBusiness.MATERIAL);
+			map.put("content", "抱歉，贵校老师" + declarationCon.getRealname() + 
+					"提交的《" + material.getMaterialName() 
+					+ "》申报表被出版社退回，请贵校核对后重试。");
+			map.put("img", 2);
+			detail = new Gson().toJson(map);
+			writerUserTrendst.setDetail(detail);
+			writerUserTrendst.setCmsContentId(null);
+			writerUserTrendst.setBookId(declarationCon.getMaterialId());
+			writerUserTrendst.setBookCommentId(null);
+			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			// 发送系统消息
 			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false);
 			// 获取审核进度是5并且已经通过审核单位并且不是提交到出版社0则被退回给个人
@@ -366,8 +386,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-						"最多只能输入100个字符，请重新输入!");
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
@@ -386,8 +406,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-						"最多只能输入100个字符，请重新输入!");
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
+						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
@@ -398,7 +418,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String detail = "";
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
-			map.put("content", "抱歉，您提交的《" + material.getMaterialName() + "》申报表被出版社退回，请您核对后重试。");
+			map.put("content", "抱歉，您提交的《" + material.getMaterialName() 
+					+ "》申报表被出版社退回，请您核对后重试。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
@@ -525,6 +546,10 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		// 作家申报表
 		DeclarationOrDisplayVO declaration = declarationDao.getDeclarationByIdOrOrgName(declarationId);
+                WriterUser user = writerUserService.get(declaration.getUserId());
+                if (user != null) {
+                    declaration.setUsername(user.getUsername());
+                }
 		// 作家学习经历
 		List<DecEduExp> decEduExpList = decEduExpDao.getListDecEduExpByDeclarationId(declarationId);
 		// 作家工作经历
