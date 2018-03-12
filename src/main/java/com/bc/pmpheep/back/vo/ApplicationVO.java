@@ -37,6 +37,8 @@ import com.bc.pmpheep.back.po.Material;
 public class ApplicationVO implements Serializable {
 	// 申报职位
 	private List<DecPositionDisplayVO> decPositionList = new ArrayList<DecPositionDisplayVO>(5);
+	// 遴选职位
+	private List<DecPositionPublishedVO> decPositionPublishedVOs = new ArrayList<DecPositionPublishedVO>(5);
 	// 作家申报表
 	private DeclarationOrDisplayVO declaration = new DeclarationOrDisplayVO();
 	// 主要学习经历
@@ -259,6 +261,15 @@ public class ApplicationVO implements Serializable {
 
 	public void setDecIntention(DecIntention decIntention) {
 		this.decIntention = decIntention;
+	}
+
+	public List<DecPositionPublishedVO> getDecPositionPublishedVOs() {
+		return decPositionPublishedVOs;
+	}
+
+	public void setDecPositionPublishedVOs(
+			List<DecPositionPublishedVO> decPositionPublishedVOs) {
+		this.decPositionPublishedVOs = decPositionPublishedVOs;
 	}
 
 }
