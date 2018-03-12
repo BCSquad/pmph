@@ -143,6 +143,7 @@ public class WordHelper {
             List<XWPFParagraph> xwpfParagraphs = document.getParagraphs();
             List<XWPFTable> tables = document.getTables();
             int i = 21;
+            XWPFTable old = tables.get(19);
             for (MaterialExtension extension : extensions) {
                 XmlCursor cursor = xwpfParagraphs.get(i).getCTP().newCursor();
                 XWPFParagraph xwpfParagraph = document.insertNewParagraph(cursor);// ---这个是关键
@@ -156,9 +157,8 @@ public class WordHelper {
                 xwpfRun.setFontFamily("宋体");
                 xwpfRun.setBold(true);
                 //i++;
-                cursor = xwpfParagraphs.get(i + 1).getCTP().newCursor();
+                //cursor = xwpfParagraphs.get(i + 1).getCTP().newCursor();
                 XWPFTable t = document.insertNewTbl(cursor);
-                XWPFTable old = tables.get(19);
                 XWPFTableRow row = t.getRow(0);
                 XWPFTableCell cell = row.getCell(0);
                 CTTc cttc = cell.getCTTc();
@@ -171,7 +171,7 @@ public class WordHelper {
                 }
                 if (!bo.getDecExtensionVOs().isEmpty()) {
                     for (DecExtensionVO decExtensionVO : bo.getDecExtensionVOs()) {
-                        if (decExtensionVO.getExtensionId().equals(extension.getId())) {
+                        if (extension.getId().equals(decExtensionVO.getExtensionId())) {
                             String content = decExtensionVO.getContent();
                             if (StringUtil.notEmpty(content)) {
                                 XWPFRun run = cell.getParagraphs().get(0).createRun();
