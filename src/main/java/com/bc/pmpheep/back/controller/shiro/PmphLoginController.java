@@ -328,7 +328,7 @@ public class PmphLoginController {
         String today = DateUtil.getDays();
         String md5 = MD5.md5(userName + key + today);
         String url =
-        "http://120.76.221.250/pmeph/innerlogin.action?username=" + userName + "&md5=" + md5
+        "http://119.254.226.115/pmeph/innerlogin.action?username=" + userName + "&md5=" + md5
         + "&usertype=" + userType;
         return new ResponseBean(url);
     }
