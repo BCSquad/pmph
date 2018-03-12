@@ -551,7 +551,9 @@ public class MigrationStageSix {
     protected void decWorkExp() {
         String tableName = "writer_work"; //要迁移的旧库表名
         JdbcHelper.addColumn(tableName); //增加new_pk字段
-        String sql = "select *,wd.new_pk id from writer_work w "
+        String sql = "select w.workid,w.workunitname,w.position,w.remark,w.startstopdate,w.enddate,"
+        		+ "wd.new_pk id "
+        		+ "from writer_work w "
                 + "left join writer_declaration wd on wd.writerid=w.writerid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0;//迁移成功的条目数
@@ -645,7 +647,9 @@ public class MigrationStageSix {
     protected void decTeachExp() {
         String tableName = "writer_teach"; //要迁移的旧库表名
         JdbcHelper.addColumn(tableName); //增加new_pk字段
-        String sql = "select *,wd.new_pk id from writer_teach w "
+        String sql = "select w.teachid,w.schoolname,w.subjects,w.remark,w.startstopdate,w.enddate,"
+        		+ "wd.new_pk id "
+        		+ "from writer_teach w "
                 + "left join writer_declaration wd on wd.writerid=w.writerid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         int count = 0;//迁移成功的条目数
@@ -739,7 +743,9 @@ public class MigrationStageSix {
     protected void decAcade() {
         String tableName = "writer_acade"; //要迁移的旧库表名
         JdbcHelper.addColumn(tableName); //增加new_pk字段
-        String sql = "select *,wd.new_pk id from writer_acade wa "
+        String sql = "select wa.acadeid,wa.level,wa.duties,wa.organization,wa.remark,"
+        		+ "wd.new_pk id "
+        		+ "from writer_acade wa "
                 + "left join writer_declaration wd on wd.writerid=wa.writerid";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);//取得该表中所有数据
         int count = 0;//迁移成功的条目数
@@ -912,7 +918,9 @@ public class MigrationStageSix {
     protected void decCourseConstruction() {
         String tableName = "writer_construction "; //要迁移的旧库表名
         JdbcHelper.addColumn(tableName); //增加new_pk字段
-        String sql = "select *,wd.new_pk id from writer_construction wc "
+        String sql = "select wc.constructionid,wc.curriculumname,wc.classhour,wc.type,wc.remark,"
+        		+ "wd.new_pk id "
+        		+ "from writer_construction wc "
                 + "left join writer_declaration wd on wd.writerid=wc.writerid";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);//取得该表中所有数据
         int count = 0;//迁移成功的条目数
@@ -1339,7 +1347,9 @@ public class MigrationStageSix {
     protected void decResearch() {
         String tableName = "writer_scientresearch "; //要迁移的旧库表名
         JdbcHelper.addColumn(tableName); //增加new_pk字段
-        String sql = "select *,wd.new_pk id from writer_scientresearch ws "
+        String sql = "select ws.scientresearchid,ws.topicname,ws.approvaluntiname,ws.award,ws.remark,"
+        		+ "wd.new_pk id "
+        		+ "from writer_scientresearch ws "
                 + "left join writer_declaration wd on wd.writerid=ws.writerid";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);//取得该表中所有数据
         int count = 0;//迁移成功的条目数
@@ -1419,7 +1429,8 @@ public class MigrationStageSix {
     protected void decExtension() {
         String tableName = "teach_material_extvalue"; // 要迁移的旧库表名
         JdbcHelper.addColumn(tableName); // 增加new_pk字段
-        String sql = "select *,tme.expendname,wd.new_pk wdid,tme.new_pk tmeid "
+        String sql = "select wme.extvalueid,wme.content,"
+        		+ "tme.expendname,wd.new_pk wdid,tme.new_pk tmeid "
                 + "from teach_material_extvalue wme "
                 + "left join writer_declaration wd on wd.writerid=wme.writerid "
                 + "left join teach_material_extend tme on tme.expendid=wme.expendid ";
