@@ -496,8 +496,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			default:
 				break;
 			}
-			if (decPositions.getChosen() != 0) {
-				switch (decPositions.getChosen()) {
+			if (decPositions.getChosenPosition() != 0) {
+				switch (decPositions.getChosenPosition()) {
 				case 1:
 					decPositions.setShowChosenPosition("编委");
 					break;
