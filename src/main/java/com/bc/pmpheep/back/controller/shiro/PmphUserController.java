@@ -257,7 +257,7 @@ public class PmphUserController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页查询社内用户")
 	@RequestMapping(value = "/list/pmphUser", method = RequestMethod.GET)
 	public ResponseBean pmphUser(Integer pageSize, Integer pageNumber, String name, @RequestParam("path") String path,
-			Long departmentId) {
+			Long departmentId,Long groupId) {
 		PageParameter pageParameter = new PageParameter<>();
 		PmphUserManagerVO pmphUserManagerVO = new PmphUserManagerVO();
 		if (StringUtil.notEmpty(name)) {
@@ -268,7 +268,7 @@ public class PmphUserController {
 		pageParameter.setPageNumber(pageNumber);
 		pageParameter.setPageSize(pageSize);
 		pageParameter.setParameter(pmphUserManagerVO);
-		return new ResponseBean(userService.getListPmphUser(pageParameter));
+		return new ResponseBean(userService.getListPmphUser(pageParameter,groupId));
 	}
 
 	/**

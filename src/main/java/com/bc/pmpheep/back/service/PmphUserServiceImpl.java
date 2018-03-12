@@ -22,12 +22,15 @@ import com.bc.pmpheep.back.dao.PmphUserDao;
 import com.bc.pmpheep.back.dao.PmphUserRoleDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.PmphDepartment;
+import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphPermission;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.PmphUserRole;
 import com.bc.pmpheep.back.po.SysOperation;
+import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.CookiesUtil;
@@ -42,6 +45,7 @@ import com.bc.pmpheep.back.vo.BookCorrectionAuditVO;
 import com.bc.pmpheep.back.vo.BookUserCommentVO;
 import com.bc.pmpheep.back.vo.CmsContentVO;
 import com.bc.pmpheep.back.vo.MaterialListVO;
+import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.PmphEditorVO;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
 import com.bc.pmpheep.back.vo.PmphIdentity;
@@ -62,6 +66,11 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  */
 @Service
 public class PmphUserServiceImpl implements PmphUserService {
+	
+	@Autowired
+    private TextbookService textbookService;
+    @Autowired
+    private MaterialProjectEditorService materialProjectEditorService;
 
     @Autowired
     PmphUserDao              pmphUserDao;
@@ -494,7 +503,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     @Override
     public PageResult<PmphUserManagerVO> getListPmphUser(
-    PageParameter<PmphUserManagerVO> pageParameter) throws CheckedServiceException {
+    PageParameter<PmphUserManagerVO> pageParameter,Long groupId) throws CheckedServiceException {
         String name = pageParameter.getParameter().getName();
         if (StringUtil.notEmpty(name)) {
             pageParameter.getParameter().setName(name);
@@ -519,9 +528,45 @@ public class PmphUserServiceImpl implements PmphUserService {
         }
 
         pageResult.setTotal(total);
-
+        // 设置职位
+        if( null != pageResult.getRows() && pageResult.getRows().size() >0 && null != groupId) {
+        	//清空职位
+			for(PmphUserManagerVO pmphUserManagerVO: pageResult.getRows()) {
+				pmphUserManagerVO.setPosition("无");
+			}
+	     	PmphGroup pmphGroup = pmphGroupService.getPmphGroupById(groupId) ;
+	     	Long bookId = pmphGroup.getBookId();
+	     	if(null != bookId ) {
+		     	Textbook textbook = textbookService.getTextbookById(bookId);
+		     	Material material= materialService.getMaterialById(textbook.getMaterialId());
+		     	List<MaterialProjectEditorVO> projects = materialProjectEditorService.listMaterialProjectEditors(textbook.getMaterialId());
+		     	for(PmphUserManagerVO pmphUserManagerVO: pageResult.getRows()) {
+					Long pmphUserId = pmphUserManagerVO.getId();
+					String posotion = null ;
+					if(material.getDirector().intValue() == pmphUserId.intValue() ) {
+						posotion = "主任";
+					}
+					if(null != projects && projects.size() > 0) {
+						for(MaterialProjectEditorVO  item: projects) {
+							if(item.getEditorId().intValue() == pmphUserId.intValue() ) {
+								posotion += (posotion == null)?"项目编辑":",项目编辑";
+								break;
+							}
+						}
+					}
+					if(textbook.getPlanningEditor().intValue() == pmphUserId.intValue() ) {
+						posotion += (posotion == null)?"策划编辑":",策划编辑";
+					}
+					pmphUserManagerVO.setPosition(posotion == null ? "无" : posotion);
+				}
+        	}
+        }
+        // 设置职位 end 
         return pageResult;
     }
+    
+    
+    
 
     @Override
     public String updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO)

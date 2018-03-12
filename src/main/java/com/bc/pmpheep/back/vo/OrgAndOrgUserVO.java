@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
+import com.bc.pmpheep.annotation.ExcelHeader;
+
 /**
  * 
  * @author M
@@ -16,14 +18,18 @@ public class OrgAndOrgUserVO implements Serializable{
 	 // 主键
     private Long    id;
     // 机构名称
+    @ExcelHeader(header = "机构名称")
     private String    orgName;
     // 机构代码
+    @ExcelHeader(header = "机构账号")
     private String    username;
     // 管理员姓名
+    @ExcelHeader(header = "管理员姓名")
     private String    realname;
     // 机构类型id
     private Long      orgTypeId;
     // 机构类型名称
+    @ExcelHeader(header = "机构类型")
     private String    orgTypeName;
     // 上级机构id
     private String    parentId;
@@ -38,16 +44,22 @@ public class OrgAndOrgUserVO implements Serializable{
     // 审核进度
     private Integer   progress;
     //手机
+    @ExcelHeader(header = "手机")
     private String    handphone;
     //邮箱
+    @ExcelHeader(header = "邮箱")
     private String    email;
     //职务
+    @ExcelHeader(header = "职务")
     private String    position;
     //职称
+    @ExcelHeader(header = "职称")
     private String    title;
      //地址
+    @ExcelHeader(header = "地址")
     private String    address;
      // 邮编
+    @ExcelHeader(header = "邮编")
     private String    postcode;
     //委托书
     private String    proxy;

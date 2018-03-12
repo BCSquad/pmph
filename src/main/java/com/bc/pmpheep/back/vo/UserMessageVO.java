@@ -63,8 +63,9 @@ public class UserMessageVO implements Serializable {
     private Boolean    isWithdraw;
     // 是否被逻辑删除 只有接收者可以删除
     private Boolean    isDeleted;
-    private List<Long> senderIds;
-
+   private List<Long> senderIds;
+    
+    
     public Long getId() {
         return id;
     }
@@ -177,4 +178,14 @@ public class UserMessageVO implements Serializable {
         this.senderIds = senderIds;
     }
 
+	
+	@Override
+	public String toString() {
+		return "UserMessageVO [id=" + id + ", title=" + title + ", content=" + content + ", senderId=" + senderId
+				+ ", sendName=" + sendName + ", sendTime=" + sendTime + ", msgId=" + msgId + ", isRead=" + isRead
+				+ ", isWithdraw=" + isWithdraw + ", isDeleted=" + isDeleted + ", senderIds=" + senderIds
+				+ "]";
+	}
+
+    
 }

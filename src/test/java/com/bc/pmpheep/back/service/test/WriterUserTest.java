@@ -143,7 +143,7 @@ public class WriterUserTest extends BaseTest {
         pageParameter2.setPageNumber(1);
         pageParameter2.setPageSize(20);
         pageParameter2.setParameter(writerUserManagerVO);
-        PageResult<WriterUserManagerVO> pageResult2 = userService.getListWriterUser(pageParameter2);
+        PageResult<WriterUserManagerVO> pageResult2 = userService.getListWriterUser(pageParameter2,null);
         Assert.assertNotNull(pageResult2);
     }
 
