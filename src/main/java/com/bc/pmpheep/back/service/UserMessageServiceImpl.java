@@ -535,12 +535,12 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         // 如果是系统管理员，则查询所有，否则查询对应的消息
         if (Const.FALSE == pmphUser.getIsAdmin()) {
             List<Long> ids = new ArrayList<Long>();
+            ids.add(pmphUser.getId());
             // 如果是主任，获取主任所在部门下的所有用户
             if (Const.TRUE == pmphUser.getIsDirector()) {
                 // 社内部门父级节点ID
                 Long parentId = 1L;
-                PmphDepartment pmphDepartment =
-                pmphDepartmentService.getPmphDepartmentById(pmphUser.getDepartmentId());
+                PmphDepartment pmphDepartment = pmphDepartmentService.getPmphDepartmentById(pmphUser.getDepartmentId());
                 // 如果是父级部门主任，则可以查看子级部门下的所有用户发送的消息
                 if (parentId.longValue() == pmphDepartment.getParentId().longValue()) {
                     PageParameter<PmphUserManagerVO> parameter = new PageParameter<>(1, 2000);
@@ -564,10 +564,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                         }
                     }
                 }
-            } else {
-                ids.add(pmphUser.getId());
             }
-            pageParameter.getParameter().setSenderIds(ids);
+            //pageParameter.getParameter().setSenderIds(ids);
+            pageParameter.getParameter().setReceiverIds(ids);
         }
         PageResult<UserMessageVO> pageResult = new PageResult<>();
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
