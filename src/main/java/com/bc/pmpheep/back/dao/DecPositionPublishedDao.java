@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.DecPositionPublished;
+import com.bc.pmpheep.back.vo.DecPositionPublishedVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -131,5 +132,16 @@ public interface DecPositionPublishedDao {
 	 * </pre>
 	 */
 	Integer deletePublishedEditorByTextbookId(Long textbookId);
+	
+	/**
+     * 
+     * Description:根据申报表id查询申报职位信息
+     * 
+     * @author:tyc
+     * @date:2018年3月12日下午17:05:21
+     * @Param:
+     * @Return:List<DecPositionPublishedVO>
+     */
+    List<DecPositionPublishedVO> listDecPositionDisplayOrPosition(Long declarationId);
 
 }
