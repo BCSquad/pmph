@@ -191,7 +191,7 @@ public class PmphUserServiceTest extends BaseTest {
 		pageParameter.setParameter(managerVO);
 		pageParameter.setPageNumber(1);
 		pageParameter.setPageSize(30);
-		pageResult = userService.getListPmphUser(pageParameter);
+		pageResult = userService.getListPmphUser(pageParameter,null);
 		Assert.assertNotNull("查找失败", pageResult);
 	}
 
