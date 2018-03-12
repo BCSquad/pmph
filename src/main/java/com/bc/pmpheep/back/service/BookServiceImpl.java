@@ -172,6 +172,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 	@Override
 	public String AbuttingJoint(String[] vns, Integer type) throws CheckedServiceException {
 		String result = "SUCCESS";
+		Const.AllSYNCHRONIZATION = 0;
 		int num = vns.length / 100;
 		for (int i = 0; i < vns.length; i++) {
 			JSONObject ot = new JSONObject();
@@ -369,6 +370,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
 					"同步中产生了错误，请重新同步");
 		}
+		Const.AllSYNCHRONIZATION = 100;
 		String[] vns = new InfoWorking().listBookInfo();
 		vns = ArrayUtil.array_unique(vns);
 		if (1 == type) {
