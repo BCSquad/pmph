@@ -62,7 +62,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -156,8 +155,8 @@ public class WordHelper {
                 xwpfRun.setFontSize(12);
                 xwpfRun.setFontFamily("宋体");
                 xwpfRun.setBold(true);
-                i++;
-                cursor = xwpfParagraphs.get(i).getCTP().newCursor();
+                //i++;
+                cursor = xwpfParagraphs.get(i + 1).getCTP().newCursor();
                 XWPFTable t = document.insertNewTbl(cursor);
                 XWPFTable old = tables.get(19);
                 XWPFTableRow row = t.getRow(0);
