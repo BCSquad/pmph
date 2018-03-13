@@ -415,11 +415,11 @@ public class CmsContentServiceImpl implements CmsContentService {
         if (Const.CMS_CATEGORY_ID_1.longValue() == categoryId.longValue() && 
         		Boolean.TRUE == isPublished) {
             String ruleName = "发表文章";
-            writerPointLogService.addWriterPointLogByRuleName(ruleName, pmphUser.getId());
+            writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
         } else if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue() && 
         		Boolean.TRUE == isPublished) {
         	String ruleName = "评论审核";
-            writerPointLogService.addWriterPointLogByRuleName(ruleName, pmphUser.getId());
+            writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
         }
         return count;
     }
@@ -526,23 +526,25 @@ public class CmsContentServiceImpl implements CmsContentService {
             }
         }
         resultMap.put("MaterialNoteAttachment", materialNoteAttachments);
-        // 文章封面图片
-        CmsExtra cmsExtra = cmsExtraService.getCmsExtraByAttachment(cmsContent.getCover());
-        String imgFileName = "默认封面.png";
-        String imgFilePath = RouteUtil.DEFAULT_USER_AVATAR;
-        if (ObjectUtil.notNull(cmsExtra)) {
-            imgFileName = cmsExtra.getAttachmentName();
-        } else {
-            GridFSDBFile file = fileService.get(cmsContent.getCover());
-            if (ObjectUtil.notNull(file)) {
-                imgFileName = file.getFilename();
+        if (Const.CMS_CATEGORY_ID_1.longValue() == cmsContent.getCategoryId().longValue()) {
+            // 文章封面图片
+            CmsExtra cmsExtra = cmsExtraService.getCmsExtraByAttachment(cmsContent.getCover());
+            String imgFileName = "默认封面.png";
+            String imgFilePath = RouteUtil.DEFAULT_USER_AVATAR;
+            if (ObjectUtil.notNull(cmsExtra)) {
+                imgFileName = cmsExtra.getAttachmentName();
+            } else {
+                GridFSDBFile file = fileService.get(cmsContent.getCover());
+                if (ObjectUtil.notNull(file)) {
+                    imgFileName = file.getFilename();
+                }
             }
+            resultMap.put("imgFileName", imgFileName);
+            if (!"DEFAULT".equals(cmsContent.getCover())) {
+                imgFilePath = cmsContent.getCover();
+            }
+            resultMap.put("imgFilePath", imgFilePath);
         }
-        resultMap.put("imgFileName", imgFileName);
-        if (!"DEFAULT".equals(cmsContent.getCover())) {
-            imgFilePath = cmsContent.getCover();
-        }
-        resultMap.put("imgFilePath", imgFilePath);
         return resultMap;
     }
 
