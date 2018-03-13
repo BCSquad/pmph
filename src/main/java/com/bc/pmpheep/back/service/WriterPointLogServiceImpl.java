@@ -137,8 +137,8 @@ public class WriterPointLogServiceImpl implements WriterPointLogService {
                 this.add(writerPointLog);
                 WriterPoint point = writerPointService.getWriterPointByUserId(userId);
                 if (ObjectUtil.notNull(point)) {
-                    writerPointService.updateWriterPoint(new WriterPoint(userId, temp
-                                                                                 + point.getLoss(),
+                    writerPointService.updateWriterPoint(new WriterPoint(point.getId(), userId,
+                                                                         temp + point.getLoss(),
                                                                          point.getGain(),
                                                                          point.getLoss()));
                 } else {
@@ -148,5 +148,4 @@ public class WriterPointLogServiceImpl implements WriterPointLogService {
             }
         }
     }
-
 }
