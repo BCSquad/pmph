@@ -95,8 +95,7 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
 	}
 
 	@Override
-	public void addWriterPointLogByRuleName(String ruleName, Long userId)
-			throws CheckedServiceException {
+	public void addWriterPointLogByRuleName(String ruleName, Long userId) throws CheckedServiceException {
 		if(StringUtil.isEmpty(ruleName)){
 			 throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                      CheckedExceptionResult.NULL_PARAM, "参数为空1");
@@ -106,10 +105,10 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
                     CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		//获取积分规则
-		WriterPointRule writerPointRuleVOs = writerPointRuleService.getWriterPointRuleByName(ruleName);
-		if (null != writerPointRuleVOs && null != writerPointRuleVOs.getIsDisabled() && writerPointRuleVOs.getIsDisabled() == false) {
+		WriterPointRule writerPointRuleVOs =  writerPointRuleService.getWriterPointRuleByName(ruleName);
+		if (null != writerPointRuleVOs && null != writerPointRuleVOs.getIsDisabled() &&  writerPointRuleVOs.getIsDisabled() == false) {
 			//查询用户之前的积分值
-			List<WriterPointLog> writerPointLog2 = this.getWriterPointLogByUserId(userId);
+			List<WriterPointLog> writerPointLog2 = this.getWriterPointLogByUserId (userId);
 			WriterPointLog writerPointLog = new WriterPointLog();
 			//现在的规则的积分值+以前的积分
 			Integer temp   = writerPointRuleVOs.getPoint();
@@ -125,15 +124,35 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
 			//增加积分记录
 			this.add(writerPointLog);
 			WriterPoint point = writerPointService.getWriterPointByUserId(userId);
-			WriterPoint writerPoint = new WriterPoint();
-			//当前获取的总积分=评论积分+以前的积分
-			writerPoint.setGain(temp);
-			writerPoint.setUserId(userId);
-			writerPoint.setTotal(writerPoint.getGain() + point.getLoss());
-			writerPoint.setLoss(point.getLoss());
-			writerPoint.setId(point.getId());
-			writerPointService.updateWriterPoint(writerPoint);
+			if(null != point) {
+				WriterPoint writerPoint = new WriterPoint();
+				//当前获取的总积分=评论积分+以前的积分
+				writerPoint.setGain(temp);
+				writerPoint.setUserId(userId);
+				writerPoint.setTotal(writerPoint.getGain() + point.getLoss());
+				writerPoint.setLoss(point.getLoss());
+				writerPoint.setId(point.getId());
+				writerPointService.updateWriterPoint(writerPoint);
+			}else {
+				WriterPoint writerPoint = new WriterPoint();
+				//当前获取的总积分=评论积分+以前的积分
+				writerPoint.setGain(temp);
+				writerPoint.setUserId(userId);
+				writerPoint.setTotal(writerPoint.getGain());
+				writerPoint.setLoss(0);
+				writerPointService.addWriterPoint(writerPoint);
+			}
 		}
 	}
-
 }
+
+
+
+
+
+
+
+
+
+
+
