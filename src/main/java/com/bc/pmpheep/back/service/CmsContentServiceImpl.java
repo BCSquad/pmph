@@ -412,46 +412,14 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
 
         // 当文章通过的时候 给用户增加积分
-        if (Const.CMS_AUTHOR_STATUS_2 == authStatus) {
+        if (Const.CMS_CATEGORY_ID_1.longValue() == categoryId.longValue() && 
+        		Boolean.TRUE == isPublished) {
             String ruleName = "发表文章";
-            // 获取积分规则
-            WriterPointRule writerPointRuleVOs =
-            writerPointRuleService.getWriterPointRuleByName(ruleName);
-            if (null != writerPointRuleVOs) {
-                // 查询用户评论之前的积分记录
-                List<WriterPointLog> writerPointLog2 =
-                writerPointLogService.getWriterPointLogByUserId(cmsContent.getAuthorId());
-                WriterPointLog writerPointLog = new WriterPointLog();
-                // 现在的规则的积分值+以前的积分
-                Integer temp = 0;
-                if (writerPointLog2.size() > 0) {
-                    Integer newTemp = 0;
-                    for (WriterPointLog writerPointLogNew : writerPointLog2) {
-                        newTemp += writerPointLogNew.getPoint();
-                    }
-                    temp = writerPointRuleVOs.getPoint() + newTemp;
-                    writerPointLog.setPoint(writerPointRuleVOs.getPoint());
-                } else {
-                    temp = writerPointRuleVOs.getPoint();
-                    writerPointLog.setPoint(writerPointRuleVOs.getPoint());
-                }
-                // 积分规则id
-                writerPointLog.setRuleId(writerPointRuleVOs.getId());
-                writerPointLog.setUserId(cmsContent.getAuthorId());
-                // 增加积分记录
-                writerPointLogService.add(writerPointLog);
-                WriterPoint point =
-                writerPointService.getWriterPointByUserId(cmsContent.getAuthorId());
-                WriterPoint writerPoint = new WriterPoint();
-                // 当前获取的总积分=评论积分+以前的积分
-                writerPoint.setGain(temp);
-                writerPoint.setUserId(cmsContent.getAuthorId());
-                writerPoint.setTotal(writerPoint.getGain() + point.getLoss());
-                writerPoint.setLoss(point.getLoss());
-                writerPoint.setId(point.getId());
-                writerPointService.updateWriterPoint(writerPoint);
-            }
-            writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
+            writerPointLogService.addWriterPointLogByRuleName(ruleName, pmphUser.getId());
+        } else if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue() && 
+        		Boolean.TRUE == isPublished) {
+        	String ruleName = "评论审核";
+            writerPointLogService.addWriterPointLogByRuleName(ruleName, pmphUser.getId());
         }
         return count;
     }
