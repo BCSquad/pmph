@@ -3,8 +3,10 @@
  */
 package com.bc.pmpheep.back.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +15,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -200,7 +204,7 @@ public class DecPositionServiceImpl implements DecPositionService {
 	}
 
 	@Override
-	public long saveBooks(DecPositionVO decPositionVO) throws IOException {
+	public long saveBooks(DecPositionVO decPositionVO, HttpServletRequest request) throws IOException {
 		List<NewDecPosition> list = decPositionVO.getList();
 		if (CollectionUtil.isEmpty(list)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -277,7 +281,18 @@ public class DecPositionServiceImpl implements DecPositionService {
 				decPositionDao.addDecPosition(decPosition);
 				String mongoId = null;
 				if (ObjectUtil.notNull(decPosition.getId()) && StringUtil.notEmpty(file)) {
-					mongoId = fileService.saveLocalFile(files, FileType.SYLLABUS, decPosition.getId());
+					// mongoId = fileService.saveLocalFile(files, FileType.SYLLABUS, decPosition.getId());
+					byte[] fileByte = (byte[]) 
+							request.getSession(false).getAttribute(newDecPosition.getFile());
+					String fileNames =
+			                (String) request.getSession(false).getAttribute("fileName_" + newDecPosition.getFile());
+					InputStream sbs = new ByteArrayInputStream(fileByte);
+					mongoId = fileService.save(sbs, fileNames, FileType.SYLLABUS, decPosition.getId());
+	                if (StringUtil.isEmpty(mongoId)) {
+	                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+	                                                      CheckedExceptionResult.FILE_UPLOAD_FAILED,
+	                                                      "文件上传失败!");
+	                }
 				}
 				if (StringUtil.notEmpty(mongoId)) {
 					decPosition.setSyllabusId(mongoId);
