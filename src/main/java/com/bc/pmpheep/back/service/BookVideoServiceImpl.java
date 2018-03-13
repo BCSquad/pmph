@@ -57,13 +57,20 @@ public class BookVideoServiceImpl implements BookVideoService {
             map.put("state", state);
         }
         //yyyy-MM-dd
+        Timestamp startTime = null;
         if (StringUtil.notEmpty(upLoadTimeStart)) {
-            Timestamp startTime = DateUtil.str2Timestam(upLoadTimeStart);
+            startTime = DateUtil.str2Timestam(upLoadTimeStart);
             map.put("startTime", startTime);
         }
         if (StringUtil.notEmpty(upLoadTimeEnd)) {
             Timestamp endTime = DateUtil.str2Timestam(upLoadTimeEnd);
-            map.put("endTime", endTime);
+            if (ObjectUtil.notNull(startTime)) {
+                if (startTime.compareTo(endTime) == 0) {
+                    endTime.setTime(startTime.getTime() + 24 * 60 * 60 * 1000);
+                }
+                endTime.setTime(0);
+                map.put("endTime", endTime);
+            }
         }
         PageResult<BookVideoVO> BookVideoVO2lst = new PageResult<BookVideoVO>();
         BookVideoVO2lst.setPageNumber(pageNumber);
