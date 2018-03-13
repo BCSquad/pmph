@@ -288,6 +288,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 		Long authUserId = pmphUser.getId();// 纸质表审核人Id为登陆用户ID
 		// 获取当前作家用户申报信息
 		Declaration declarationCon = declarationDao.getDeclarationById(id);
+		// 获取教材
+		Material material = materialService.getMaterialById(declarationCon.getMaterialId());
 		if (ObjectUtil.isNull(declarationCon)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 					CheckedExceptionResult.OBJECT_NOT_FOUND, "查询结果为空!");
@@ -297,6 +299,22 @@ public class DeclarationServiceImpl implements DeclarationService {
 		declarationCon.setPaperDate(new Timestamp(date.getTime())); // 纸质表收到时间
 		declarationCon.setOfflineProgress(offlineProgress);
 		declarationDao.updateDeclaration(declarationCon);
+		WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
+		writerUserTrendst.setUserId(declarationCon.getUserId());
+		writerUserTrendst.setIsPublic(false);// 自己可见
+		writerUserTrendst.setType(8);
+		String detail = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", CheckedExceptionBusiness.MATERIAL);
+		map.put("content", "您好，人民卫生出版社已收到您在《" + material.getMaterialName() 
+				+ "》提交的申报纸质表，感谢您的参与，请耐心等待遴选结果。");
+		map.put("img", 1);
+		detail = new Gson().toJson(map);
+		writerUserTrendst.setDetail(detail);
+		writerUserTrendst.setCmsContentId(null);
+		writerUserTrendst.setBookId(declarationCon.getMaterialId());
+		writerUserTrendst.setBookCommentId(null);
+		writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 		systemMessageService.sendWhenReceiptAudit(declarationCon.getId(), true); // 发送系统消息
 		return declarationCon;
 	}
