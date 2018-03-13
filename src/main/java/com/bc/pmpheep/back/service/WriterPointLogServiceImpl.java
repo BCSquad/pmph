@@ -100,7 +100,7 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
 		WriterPointRule writerPointRuleVOs = writerPointRuleService.getWriterPointRuleByName(ruleName);
 		if (writerPointRuleVOs.getIsDisabled() == false) {
 			if (null != writerPointRuleVOs) {
-				//查询用户纠错之前的积分值
+				//查询用户之前的积分值
 				List<WriterPointLog> writerPointLog2 = this.getWriterPointLogByUserId(userId);
 				WriterPointLog writerPointLog = new WriterPointLog();
 				//现在的规则的积分值+以前的积分
@@ -111,11 +111,10 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
 	            		newTemp += writerPointLogNew.getPoint();
 	            	}
 	                temp = writerPointRuleVOs.getPoint() + newTemp;
-					writerPointLog.setPoint(writerPointRuleVOs.getPoint());
 				} else {
 					temp = writerPointRuleVOs.getPoint();
-					writerPointLog.setPoint(writerPointRuleVOs.getPoint());
 				}
+				writerPointLog.setPoint(writerPointRuleVOs.getPoint());
 				//积分规则id
 				writerPointLog.setRuleId(writerPointRuleVOs.getId());
 				writerPointLog.setUserId(userId);

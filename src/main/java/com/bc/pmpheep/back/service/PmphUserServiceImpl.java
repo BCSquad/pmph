@@ -117,10 +117,29 @@ public class PmphUserServiceImpl implements PmphUserService {
         // 头像文件不为空
         if (null != file) {
             if (StringUtil.notEmpty(pmphUser.getAvatar())) {
-                fileService.remove(pmphUser.getAvatar());
+            	if(pmphUser.getAvatar().contains("/")) {
+                	String avatar = pmphUser.getAvatar()  ;
+                	avatar = avatar.substring(avatar.lastIndexOf("/")+1, avatar.length());
+                	fileService.remove(avatar);
+                }
+                if(pmphUser.getAvatar().contains("\\")) {
+                	String avatar = pmphUser.getAvatar()  ;
+                	avatar = avatar.substring(avatar.lastIndexOf("\\")+1, avatar.length());
+                	fileService.remove(avatar);
+                }
             }
             String newAvatar = fileService.save(file, ImageType.PMPH_USER_AVATAR, id);
             pmphUser.setAvatar(newAvatar);
+        }
+        if(null != pmphUser.getAvatar() && pmphUser.getAvatar().contains("/")) {
+        	String avatar = pmphUser.getAvatar()  ;
+        	avatar = avatar.substring(avatar.lastIndexOf("/")+1, avatar.length());
+        	pmphUser.setAvatar(avatar);
+        }
+        if(null != pmphUser.getAvatar() && pmphUser.getAvatar().contains("\\")) {
+        	String avatar = pmphUser.getAvatar()  ;
+        	avatar = avatar.substring(avatar.lastIndexOf("\\")+1, avatar.length());
+        	pmphUser.setAvatar(avatar);
         }
         pmphUserDao.update(pmphUser);
         return true;

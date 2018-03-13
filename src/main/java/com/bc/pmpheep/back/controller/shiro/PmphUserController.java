@@ -113,7 +113,7 @@ public class PmphUserController {
 		} catch (IOException e) {
 			return new ResponseBean("文件上传失败");
 		} catch (Exception e) {
-			return new ResponseBean("未知错误");
+			return new ResponseBean(e.getMessage());
 		}
 	}
 
