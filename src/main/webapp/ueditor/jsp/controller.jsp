@@ -1,3 +1,4 @@
+<%@page import="java.io.File"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	import="com.bc.pmpheep.ueditor.ActionEnter"
     pageEncoding="UTF-8"%>
@@ -16,7 +17,7 @@
 	
 	String rootPath = application.getRealPath( "/" );
 	
-	out.write( new ActionEnter( request, rootPath,rootPath+"\\ueditor\\jsp\\config.json" ).exec() );
+	out.write( new ActionEnter( request, rootPath,rootPath + File.separator+"ueditor"+File.separator+"jsp"+File.separator+"config.json" ).exec() );
 	
 	
 %>
