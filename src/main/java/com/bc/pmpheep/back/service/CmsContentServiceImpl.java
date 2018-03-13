@@ -21,9 +21,6 @@ import com.bc.pmpheep.back.po.CmsExtra;
 import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.PmphUser;
-import com.bc.pmpheep.back.po.WriterPoint;
-import com.bc.pmpheep.back.po.WriterPointLog;
-import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -391,14 +388,17 @@ public class CmsContentServiceImpl implements CmsContentService {
                                                       DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                DateUtil.getCurrentTime()),
                                                       isPublished, false, Const.MATERIAL_TYPE_ID));
+        CmsContent cmsContent = this.getCmsContentById(id);
+        if (ObjectUtil.isNull(cmsContent)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "获取对象为空");
+        }
         // 评论审核通过，评论数加1
         if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()
             && Boolean.TRUE == isPublished) {
             this.updatCmsContentCommentsById(id, 1);
-            CmsContent cmsContent = this.getCmsContentById(id);
             this.updateCmsContentByParentId(cmsContent.getParentId(), 1);
         }
-        CmsContent cmsContent = this.getCmsContentById(id);
         Integer type = 0;
         if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()) {
             type = Const.WRITER_USER_TRENDST_TYPE_2;
@@ -412,13 +412,13 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
 
         // 当文章通过的时候 给用户增加积分
-        if (Const.CMS_CATEGORY_ID_1.longValue() == categoryId.longValue() && 
-        		Boolean.TRUE == isPublished) {
+        if (Const.CMS_CATEGORY_ID_1.longValue() == categoryId.longValue()
+            && Boolean.TRUE == isPublished) {
             String ruleName = "发表文章";
             writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
-        } else if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue() && 
-        		Boolean.TRUE == isPublished) {
-        	String ruleName = "评论审核";
+        } else if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()
+                   && Boolean.TRUE == isPublished) {
+            String ruleName = "评论审核";
             writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
         }
         return count;
