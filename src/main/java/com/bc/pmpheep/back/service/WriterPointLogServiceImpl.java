@@ -13,6 +13,7 @@ import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.WriterPointLogVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -96,6 +97,14 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
 	@Override
 	public void addWriterPointLogByRuleName(String ruleName, Long userId)
 			throws CheckedServiceException {
+		if(StringUtil.isEmpty(ruleName)){
+			 throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                     CheckedExceptionResult.NULL_PARAM, "参数为空1");
+		}
+		if(ObjectUtil.isNull(userId)){
+			 throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
 		//获取积分规则
 		WriterPointRule writerPointRuleVOs = writerPointRuleService.getWriterPointRuleByName(ruleName);
 		if (writerPointRuleVOs.getIsDisabled() == false) {
@@ -105,7 +114,7 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
 				WriterPointLog writerPointLog = new WriterPointLog();
 				//现在的规则的积分值+以前的积分
 				Integer temp = 0;
-				if (writerPointLog2.size() > 0) {
+				if (!writerPointLog2.isEmpty()) {
 					Integer newTemp = 0;
 	            	for (WriterPointLog writerPointLogNew : writerPointLog2) {
 	            		newTemp += writerPointLogNew.getPoint();
@@ -122,12 +131,14 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
 				this.add(writerPointLog);
 				WriterPoint point = writerPointService.getWriterPointByUserId(userId);
 				WriterPoint writerPoint = new WriterPoint();
+				if(null!=point){
+					writerPoint.setTotal(temp+point.getLoss());
+					writerPoint.setLoss(point.getLoss());
+					writerPoint.setId(point.getId());
+				}
 				//当前获取的总积分=评论积分+以前的积分
 				writerPoint.setGain(temp);
 				writerPoint.setUserId(userId);
-				writerPoint.setTotal(writerPoint.getGain() + point.getLoss());
-				writerPoint.setLoss(point.getLoss());
-				writerPoint.setId(point.getId());
 				writerPointService.updateWriterPoint(writerPoint);
 			}
 		}

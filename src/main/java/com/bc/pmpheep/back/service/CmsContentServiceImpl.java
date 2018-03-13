@@ -413,14 +413,10 @@ public class CmsContentServiceImpl implements CmsContentService {
 
         // 当文章通过的时候 给用户增加积分
         if (Const.CMS_CATEGORY_ID_1.longValue() == categoryId.longValue()
-            && Boolean.TRUE == isPublished) {
+            && Boolean.TRUE == isPublished && Const.CMS_AUTHOR_TYPE_2 == cmsContent.getAuthorType()) {
             String ruleName = "发表文章";
             writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
-        } else if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()
-                   && Boolean.TRUE == isPublished) {
-            String ruleName = "评论审核";
-            writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
-        }
+        } 
         return count;
     }
 

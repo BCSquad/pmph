@@ -28,6 +28,7 @@ import com.bc.pmpheep.back.service.PmphGroupService;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphGroupFileVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberManagerVO;
 import com.bc.pmpheep.back.vo.PmphGroupMessageVO;
@@ -78,7 +79,7 @@ public class GroupController {
 		 * 因此返回时<务必>要使用ResponseBean的构造函数即 new ResponseBean(anything)
 		 */
 		PmphGroup pmphGroup = new PmphGroup();
-		if (ObjectUtil.notNull(groupName)) {
+		if (StringUtil.isEmpty(groupName)) {
 			pmphGroup.setGroupName(groupName.trim());
 		}
 		String sessionId = CookiesUtil.getSessionId(request);
