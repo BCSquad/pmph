@@ -90,7 +90,7 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			BookUserComment bookUserComment = bookUserCommentDao.getBookUserCommentById(id);
 			if (bookUserComment.getIsAuth() != 0) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.ILLEGAL_PARAM,
-						"有已经审核的评论了");
+						"您选中的评论中有已经审核完成的评论，请确认后再次提交");
 			}
 			if (isAuth == 1) {
 				WriterUserTrendst writerUserTrendst = new WriterUserTrendst();

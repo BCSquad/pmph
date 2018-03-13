@@ -28,6 +28,7 @@ import com.bc.pmpheep.back.dao.DecMonographDao;
 import com.bc.pmpheep.back.dao.DecMoocDigitalDao;
 import com.bc.pmpheep.back.dao.DecNationalPlanDao;
 import com.bc.pmpheep.back.dao.DecPositionDao;
+import com.bc.pmpheep.back.dao.DecPositionPublishedDao;
 import com.bc.pmpheep.back.dao.DecPublishRewardDao;
 import com.bc.pmpheep.back.dao.DecResearchDao;
 import com.bc.pmpheep.back.dao.DecSciDao;
@@ -74,6 +75,7 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.ApplicationVO;
 import com.bc.pmpheep.back.vo.DecExtensionVO;
 import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
+import com.bc.pmpheep.back.vo.DecPositionPublishedVO;
 import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.back.vo.DeclarationOrDisplayVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -99,6 +101,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	private SystemMessageService systemMessageService;
 	@Autowired
 	private DecPositionDao decPositionDao;
+	@Autowired
+	private DecPositionPublishedDao decPositionPublishedDao;
 	@Autowired
 	private DecEduExpDao decEduExpDao;
 	@Autowired
@@ -143,8 +147,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	private MaterialExtensionService materialExtensionService;
 	@Autowired
 	private WriterUserTrendstService writerUserTrendstService;
-        @Autowired
-        private WriterUserService writerUserService;
+    @Autowired
+    private WriterUserService writerUserService;
 
 	@Override
 	public Declaration addDeclaration(Declaration declaration) throws CheckedServiceException {
@@ -544,6 +548,62 @@ public class DeclarationServiceImpl implements DeclarationService {
 				}
 			}
 		}
+		// 作家遴选
+		List<DecPositionPublishedVO> decPositionPublishedVOs = 
+				decPositionPublishedDao.listDecPositionDisplayOrPosition(declarationId);
+		for (DecPositionPublishedVO decPositionPublished : decPositionPublishedVOs) {
+			if (decPositionPublished.getChosenPosition() != 0) {
+				switch (decPositionPublished.getChosenPosition()) {
+				case 1:
+					decPositionPublished.setShowChosenPosition("编委");
+					break;
+				case 2:
+					decPositionPublished.setShowChosenPosition("副主编");
+					break;
+				case 3:
+					decPositionPublished.setShowChosenPosition("副主编,编委");
+					break;
+				case 4:
+					decPositionPublished.setShowChosenPosition("主编");
+					break;
+				case 5:
+					decPositionPublished.setShowChosenPosition("主编,编委");
+					break;
+				case 6:
+					decPositionPublished.setShowChosenPosition("主编,副主编");
+					break;
+				case 7:
+					decPositionPublished.setShowChosenPosition("主编,副主编,编委");
+					break;
+				case 8:
+					decPositionPublished.setShowChosenPosition("数字编委");
+					break;
+				case 9:
+					decPositionPublished.setShowChosenPosition("编委,数字编委");
+					break;
+				case 10:
+					decPositionPublished.setShowChosenPosition("副主编,数字编委");
+					break;
+				case 11:
+					decPositionPublished.setShowChosenPosition("副主编,编委,数字编委");
+					break;
+				case 12:
+					decPositionPublished.setShowChosenPosition("主编,数字编委");
+					break;
+				case 13:
+					decPositionPublished.setShowChosenPosition("主编,编委,数字编委");
+					break;
+				case 14:
+					decPositionPublished.setShowChosenPosition("主编,副主编,数字编委");
+					break;
+				case 15:
+					decPositionPublished.setShowChosenPosition("主编,副主编,编委,数字编委");
+					break;
+				default:
+					break;
+				}
+			}
+		}
 		// 作家申报表
 		DeclarationOrDisplayVO declaration = declarationDao.getDeclarationByIdOrOrgName(declarationId);
                 WriterUser user = writerUserService.get(declaration.getUserId());
@@ -598,6 +658,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		Material material = materialService.getMaterialById(declaration.getMaterialId());
 		// 把查询出来的信息添加进applicationVO
 		applicationVO.setDecPositionList(decPositionList);
+		applicationVO.setDecPositionPublishedVOs(decPositionPublishedVOs);
 		applicationVO.setDeclaration(declaration);
 		applicationVO.setDecEduExpList(decEduExpList);
 		applicationVO.setDecWorkExpList(decWorkExpList);

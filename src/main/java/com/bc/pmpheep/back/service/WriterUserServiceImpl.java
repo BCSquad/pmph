@@ -410,9 +410,13 @@ public class WriterUserServiceImpl implements WriterUserService {
 					for(DecPositionPublished published: publisheds) {
 						Declaration declaration = declarationService.getDeclarationById(published.getDeclarationId()) ;
 						String postiton = "无";
-						if(published.getChosenPosition().intValue() == 4 ) {
-							postiton = "主编  主编，数字编委 副主编";
-						}else if(published.getChosenPosition().intValue() == 12) {
+						if(published.getChosenPosition().intValue() == 4 && null != published.getRank() && published.getRank() == 1) {
+							postiton = "主编(第一主编)";
+						}else if(published.getChosenPosition().intValue() == 4 ) {
+							postiton = "主编";
+						}else if(published.getChosenPosition().intValue() == 12 && null != published.getRank() && published.getRank() == 1) {
+							postiton = "主编(第一主编)，数字编委";
+						}else if(published.getChosenPosition().intValue() == 12 ) {
 							postiton = "主编，数字编委";
 						}else if(published.getChosenPosition().intValue() == 2) {
 							postiton = "副主编";
