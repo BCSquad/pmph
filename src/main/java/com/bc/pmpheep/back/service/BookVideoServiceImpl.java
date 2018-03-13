@@ -68,7 +68,6 @@ public class BookVideoServiceImpl implements BookVideoService {
                 if (startTime.compareTo(endTime) == 0) {
                     endTime.setTime(startTime.getTime() + 24 * 60 * 60 * 1000);
                 }
-                endTime.setTime(0);
                 map.put("endTime", endTime);
             }
         }
