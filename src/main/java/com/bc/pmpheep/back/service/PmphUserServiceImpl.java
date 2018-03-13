@@ -6,15 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.back.dao.PmphDepartmentDao;
 import com.bc.pmpheep.back.dao.PmphPermissionDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
@@ -52,7 +48,6 @@ import com.bc.pmpheep.back.vo.PmphIdentity;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
-import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -108,14 +103,14 @@ public class PmphUserServiceImpl implements PmphUserService {
     SysOperationService      sysOperationService;
 
     @Override
-    public boolean updatePersonalData(PmphUser pmphUser, MultipartFile file) throws IOException {
+    public boolean updatePersonalData(PmphUser pmphUser, String newAvatar) throws IOException {
         Long id = pmphUser.getId();
         if (null == id) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
         }
         // 头像文件不为空
-        if (null != file) {
+        if (null != newAvatar) {
             if (StringUtil.notEmpty(pmphUser.getAvatar())) {
             	if(pmphUser.getAvatar().contains("/")) {
                 	String avatar = pmphUser.getAvatar()  ;
@@ -128,7 +123,6 @@ public class PmphUserServiceImpl implements PmphUserService {
                 	fileService.remove(avatar);
                 }
             }
-            String newAvatar = fileService.save(file, ImageType.PMPH_USER_AVATAR, id);
             pmphUser.setAvatar(newAvatar);
         }
         if(null != pmphUser.getAvatar() && pmphUser.getAvatar().contains("/")) {
