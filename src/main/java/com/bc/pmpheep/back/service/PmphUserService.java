@@ -32,7 +32,7 @@ public interface PmphUserService {
      * @return
      * @throws IOException
      */
-    boolean updatePersonalData(PmphUser pmphUser,  String newAvatar) throws IOException;
+    boolean updatePersonalData(HttpServletRequest request,PmphUser pmphUser,  String newAvatar) throws IOException;
 
     /**
      * 添加单个用户

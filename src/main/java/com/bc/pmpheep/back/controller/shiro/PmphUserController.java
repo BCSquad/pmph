@@ -108,10 +108,11 @@ public class PmphUserController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改个人信息")
 	@RequestMapping(value = "/updatePersonalData", method = RequestMethod.PUT)
 	public ResponseBean updatePersonalData(
+			HttpServletRequest request, 
 			PmphUser pmphUser,
 			@RequestParam(value="file", required = false) String newAvatar) {
 		try {
-			return new ResponseBean(userService.updatePersonalData(pmphUser, newAvatar));
+			return new ResponseBean(userService.updatePersonalData(request,pmphUser, newAvatar));
 		} catch (IOException e) {
 			return new ResponseBean("文件上传失败");
 		} catch (Exception e) {

@@ -1,8 +1,11 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +51,8 @@ import com.bc.pmpheep.back.vo.PmphIdentity;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
+import com.bc.pmpheep.general.bean.FileType;
+import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -103,7 +108,7 @@ public class PmphUserServiceImpl implements PmphUserService {
     SysOperationService      sysOperationService;
 
     @Override
-    public boolean updatePersonalData(PmphUser pmphUser, String newAvatar) throws IOException {
+    public boolean updatePersonalData(HttpServletRequest request,PmphUser pmphUser, String newAvatar) throws IOException {
         Long id = pmphUser.getId();
         if (null == id) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
@@ -125,15 +130,21 @@ public class PmphUserServiceImpl implements PmphUserService {
             }
             pmphUser.setAvatar(newAvatar);
         }
-        if(null != pmphUser.getAvatar() && pmphUser.getAvatar().contains("/")) {
-        	String avatar = pmphUser.getAvatar()  ;
+        String avatar = pmphUser.getAvatar()  ;
+        if(null != avatar && avatar.contains("/")) {
         	avatar = avatar.substring(avatar.lastIndexOf("/")+1, avatar.length());
-        	pmphUser.setAvatar(avatar);
         }
-        if(null != pmphUser.getAvatar() && pmphUser.getAvatar().contains("\\")) {
-        	String avatar = pmphUser.getAvatar()  ;
+        if(null != avatar && avatar.contains("\\")) {
         	avatar = avatar.substring(avatar.lastIndexOf("\\")+1, avatar.length());
-        	pmphUser.setAvatar(avatar);
+        }
+        if(null != avatar) {
+        	byte[] fileByte = (byte[]) request.getSession(false).getAttribute(avatar);
+    		String fileName = (String) request.getSession(false).getAttribute("fileName_" + avatar);
+    		String noticeId;
+    		// 保存通知文件
+    		InputStream sbs = new ByteArrayInputStream(fileByte);
+    		noticeId = fileService.save(sbs, fileName, ImageType.PMPH_USER_AVATAR,id);
+    		pmphUser.setAvatar(noticeId);
         }
         pmphUserDao.update(pmphUser);
         return true;
