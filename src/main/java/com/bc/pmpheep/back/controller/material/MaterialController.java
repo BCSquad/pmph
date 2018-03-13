@@ -1,9 +1,12 @@
 package com.bc.pmpheep.back.controller.material;
 
+
 import java.io.IOException;
-
+import java.io.OutputStream;
 import javax.servlet.http.HttpServletRequest;
-
+import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.service.MaterialService;
@@ -20,7 +22,9 @@ import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.vo.MaterialListVO;
 import com.bc.pmpheep.back.vo.MaterialVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.general.controller.ImageController;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+
 
 /**
  * @author MrYang
@@ -31,6 +35,8 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 @Controller
 @RequestMapping(value = "/material")
 public class MaterialController {
+	
+	Logger      logger = LoggerFactory.getLogger(ImageController.class);
 
 	@Autowired
 	private MaterialService materialService;
@@ -271,6 +277,29 @@ public class MaterialController {
 			return new ResponseBean(e);
 		}
 	}
+	
+	
+	/**
+     * 获取临时文件
+     * 
+     * @param tempId  
+     * @param response 服务响应
+     */
+	@LogDetail(businessType = Business_Type, logRemark = "获取临时文件")
+    @RequestMapping(value = "getTempFile", method = RequestMethod.GET)
+    public void getTempFile(String tempFileId, HttpServletRequest request,HttpServletResponse response) {
+    	byte[] fileByte = (byte[]) request.getSession(false).getAttribute(tempFileId);
+		response.setContentType("image/png");
+        try (OutputStream out = response.getOutputStream()) {
+            out.write(fileByte, 0, fileByte.length);
+            out.flush();
+            out.close();
+        } catch (IOException ex) {
+            logger.error("文件下载时出现IO异常：{}", ex.getMessage());
+        } catch (Exception ex) {
+            logger.warn("图片查看时出现异常：{}", ex.getMessage());
+        }
+    }
 
 	/**
 	 * 
