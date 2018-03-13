@@ -689,7 +689,7 @@ public class FileDownLoadController {
         String fileName = returnFileName(request, "纠错跟踪" + DateUtil.getTime() + ".xls");
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/force-download");
-        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        response.setHeader("Content-disposition", String.format("attachment; filename=\"%s\"", fileName));
         try (OutputStream out = response.getOutputStream()) {
             workbook.write(out);
             out.flush();
