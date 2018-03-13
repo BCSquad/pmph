@@ -13,6 +13,7 @@ import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.WriterPointLogVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -96,6 +97,14 @@ public class WriterPointLogServiceImpl implements WriterPointLogService{
 	@Override
 	public void addWriterPointLogByRuleName(String ruleName, Long userId)
 			throws CheckedServiceException {
+		if(StringUtil.isEmpty(ruleName)){
+			 throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                     CheckedExceptionResult.NULL_PARAM, "参数为空1");
+		}
+		if(ObjectUtil.isNull(userId)){
+			 throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
 		//获取积分规则
 		WriterPointRule writerPointRuleVOs = writerPointRuleService.getWriterPointRuleByName(ruleName);
 		if (null != writerPointRuleVOs && null != writerPointRuleVOs.getIsDisabled() && writerPointRuleVOs.getIsDisabled() == false) {
