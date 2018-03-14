@@ -27,6 +27,10 @@ public class SensitiveServiceImpl extends BaseService implements SensitiveServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE, CheckedExceptionResult.NULL_PARAM,
 					"参数为空");
 		}
+		if (sensitive.getWord().length() > 10) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE, CheckedExceptionResult.ILLEGAL_PARAM,
+					"敏感词太长了，请控制在10个字以内");
+		}
 		sensitiveDao.add(sensitive);
 		return sensitive;
 	}
@@ -39,6 +43,10 @@ public class SensitiveServiceImpl extends BaseService implements SensitiveServic
 		}
 		String result = "FAIL";
 		if (!StringUtil.isEmpty(sensitive.getWord())) {
+			if (sensitive.getWord().length() > 10) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE,
+						CheckedExceptionResult.ILLEGAL_PARAM, "敏感词太长了，请控制在10个字以内");
+			}
 			Long id = sensitiveDao.getSensitiveId(sensitive.getWord());
 			if (null != id && !sensitive.getId().equals(id)) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE,
