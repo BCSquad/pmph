@@ -6,106 +6,114 @@ import org.apache.ibatis.type.Alias;
 
 /**
  * 用户积分表实体类
+ * 
  * @author tyc
  * @date 2017年12月28日 上午08:44:17
  */
 @SuppressWarnings("serial")
 @Alias("WriterPoint")
-public class WriterPoint implements java.io.Serializable{
+public class WriterPoint implements java.io.Serializable {
 
-	//主键
-	private Long id;
-	//用户id
-	private Long userId;
-	//当前总积分
-	private Integer total;
-	//获取积分合计
-	private Integer gain;
-	//消费积分合计
-	private Integer loss;
-	//创建时间
-	private Date gmtCreate;
-	//修改时间
-	private Date gmtUpdate;
-	
-	//构造器
-	public WriterPoint(){
-	}
-	
-	public WriterPoint(Long id){
-		super();
-		this.id = id;
-	}
-	
-	public WriterPoint(Long userId, Integer total, Integer gain, 
-			Integer loss){
-		super();
-		this.userId = userId;
-		this.total = total;
-		this.gain = gain;
-		this.loss = loss;
-	}
+    // 主键
+    private Long    id;
+    // 用户id
+    private Long    userId;
+    // 当前总积分
+    private Integer total;
+    // 获取积分合计
+    private Integer gain;
+    // 消费积分合计
+    private Integer loss;
+    // 创建时间
+    private Date    gmtCreate;
+    // 修改时间
+    private Date    gmtUpdate;
 
-	public Long getId() {
-		return id;
-	}
+    // 构造器
+    public WriterPoint() {
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public WriterPoint(Long id) {
+        super();
+        this.id = id;
+    }
 
-	public Long getUserId() {
-		return userId;
-	}
+    public WriterPoint(Long id, Long userId, Integer total, Integer gain, Integer loss) {
+        this.id = id;
+        this.userId = userId;
+        this.total = total;
+        this.gain = gain;
+        this.loss = loss;
+    }
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    public WriterPoint(Long userId, Integer total, Integer gain, Integer loss) {
+        super();
+        this.userId = userId;
+        this.total = total;
+        this.gain = gain;
+        this.loss = loss;
+    }
 
-	public Integer getTotal() {
-		return total;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setTotal(Integer total) {
-		this.total = total;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Integer getGain() {
-		return gain;
-	}
+    public Long getUserId() {
+        return userId;
+    }
 
-	public void setGain(Integer gain) {
-		this.gain = gain;
-	}
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-	public Integer getLoss() {
-		return loss;
-	}
+    public Integer getTotal() {
+        return total;
+    }
 
-	public void setLoss(Integer loss) {
-		this.loss = loss;
-	}
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
 
-	public Date getGmtCreate() {
-		return gmtCreate;
-	}
+    public Integer getGain() {
+        return gain;
+    }
 
-	public void setGmtCreate(Date gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
+    public void setGain(Integer gain) {
+        this.gain = gain;
+    }
 
-	public Date getGmtUpdate() {
-		return gmtUpdate;
-	}
+    public Integer getLoss() {
+        return loss;
+    }
 
-	public void setGmtUpdate(Date gmtUpdate) {
-		this.gmtUpdate = gmtUpdate;
-	}
+    public void setLoss(Integer loss) {
+        this.loss = loss;
+    }
 
-	@Override
-	public String toString() {
-		return "WriterPoint [id=" + id + ", userId=" + userId + ", total="
-				+ total + ", gain=" + gain + ", loss=" + loss + ", gmtCreate="
-				+ gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
-	}
+    public Date getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Date gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Date getGmtUpdate() {
+        return gmtUpdate;
+    }
+
+    public void setGmtUpdate(Date gmtUpdate) {
+        this.gmtUpdate = gmtUpdate;
+    }
+
+    @Override
+    public String toString() {
+        return "WriterPoint [id=" + id + ", userId=" + userId + ", total=" + total + ", gain="
+               + gain + ", loss=" + loss + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate
+               + "]";
+    }
 }

@@ -1,6 +1,8 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +15,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.dao.PmphDepartmentDao;
 import com.bc.pmpheep.back.dao.PmphPermissionDao;
@@ -34,6 +35,7 @@ import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.CookiesUtil;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
@@ -66,61 +68,86 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  */
 @Service
 public class PmphUserServiceImpl implements PmphUserService {
-	
-	@Autowired
-    private TextbookService textbookService;
+
+    @Autowired
+    private TextbookService              textbookService;
     @Autowired
     private MaterialProjectEditorService materialProjectEditorService;
 
     @Autowired
-    PmphUserDao              pmphUserDao;
+    PmphUserDao                          pmphUserDao;
     @Autowired
-    PmphRoleDao              pmphRoleDao;
+    PmphRoleDao                          pmphRoleDao;
     @Autowired
-    PmphDepartmentDao        pmphDepartmentDao;
+    PmphDepartmentDao                    pmphDepartmentDao;
     @Autowired
-    PmphPermissionDao        permissionDao;
+    PmphPermissionDao                    permissionDao;
     @Autowired
-    PmphUserRoleDao          pmphUserRoleDao;
+    PmphUserRoleDao                      pmphUserRoleDao;
     @Autowired
-    private FileService      fileService;
+    private FileService                  fileService;
     @Autowired
-    MaterialService          materialService;
+    MaterialService                      materialService;
     @Autowired
-    private PmphGroupService pmphGroupService;
+    private PmphGroupService             pmphGroupService;
     @Autowired
-    CmsContentService        cmsContentService;
+    CmsContentService                    cmsContentService;
     @Autowired
-    BookCorrectionService    bookCorrectionService;
+    BookCorrectionService                bookCorrectionService;
     @Autowired
-    BookUserCommentService   bookUserCommentService;
+    BookUserCommentService               bookUserCommentService;
     @Autowired
-    WriterUserService        writerUserService;
+    WriterUserService                    writerUserService;
     @Autowired
-    OrgUserService           orgUserService;
+    OrgUserService                       orgUserService;
     @Autowired
-    TopicService             topicService;
+    TopicService                         topicService;
     @Autowired
-    PmphRoleService          roleService;
+    PmphRoleService                      roleService;
     @Autowired
-    PmphUserService          pmphUserService;
+    PmphUserService                      pmphUserService;
     @Autowired
-    SysOperationService      sysOperationService;
+    SysOperationService                  sysOperationService;
 
     @Override
-    public boolean updatePersonalData(PmphUser pmphUser, MultipartFile file) throws IOException {
+    public boolean updatePersonalData(HttpServletRequest request, PmphUser pmphUser,
+    String newAvatar) throws IOException {
         Long id = pmphUser.getId();
         if (null == id) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
         }
         // 头像文件不为空
-        if (null != file) {
+        if (null != newAvatar) {
             if (StringUtil.notEmpty(pmphUser.getAvatar())) {
-                fileService.remove(pmphUser.getAvatar());
+                if (pmphUser.getAvatar().contains("/")) {
+                    String avatar = pmphUser.getAvatar();
+                    avatar = avatar.substring(avatar.lastIndexOf("/") + 1, avatar.length());
+                    fileService.remove(avatar);
+                }
+                if (pmphUser.getAvatar().contains("\\")) {
+                    String avatar = pmphUser.getAvatar();
+                    avatar = avatar.substring(avatar.lastIndexOf("\\") + 1, avatar.length());
+                    fileService.remove(avatar);
+                }
             }
-            String newAvatar = fileService.save(file, ImageType.PMPH_USER_AVATAR, id);
             pmphUser.setAvatar(newAvatar);
+        }
+        String avatar = pmphUser.getAvatar();
+        if (null != avatar && avatar.contains("/")) {
+            avatar = avatar.substring(avatar.lastIndexOf("/") + 1, avatar.length());
+        }
+        if (null != avatar && avatar.contains("\\")) {
+            avatar = avatar.substring(avatar.lastIndexOf("\\") + 1, avatar.length());
+        }
+        if (null != avatar) {
+            byte[] fileByte = (byte[]) request.getSession(false).getAttribute(avatar);
+            String fileName = (String) request.getSession(false).getAttribute("fileName_" + avatar);
+            String noticeId;
+            // 保存通知文件
+            InputStream sbs = new ByteArrayInputStream(fileByte);
+            noticeId = fileService.save(sbs, fileName, ImageType.PMPH_USER_AVATAR, id);
+            pmphUser.setAvatar(noticeId);
         }
         pmphUserDao.update(pmphUser);
         return true;
@@ -503,7 +530,7 @@ public class PmphUserServiceImpl implements PmphUserService {
 
     @Override
     public PageResult<PmphUserManagerVO> getListPmphUser(
-    PageParameter<PmphUserManagerVO> pageParameter,Long groupId) throws CheckedServiceException {
+    PageParameter<PmphUserManagerVO> pageParameter, Long groupId) throws CheckedServiceException {
         String name = pageParameter.getParameter().getName();
         if (StringUtil.notEmpty(name)) {
             pageParameter.getParameter().setName(name);
@@ -529,44 +556,42 @@ public class PmphUserServiceImpl implements PmphUserService {
 
         pageResult.setTotal(total);
         // 设置职位
-        if( null != pageResult.getRows() && pageResult.getRows().size() >0 && null != groupId) {
-        	//清空职位
-			for(PmphUserManagerVO pmphUserManagerVO: pageResult.getRows()) {
-				pmphUserManagerVO.setPosition("无");
-			}
-	     	PmphGroup pmphGroup = pmphGroupService.getPmphGroupById(groupId) ;
-	     	Long bookId = pmphGroup.getBookId();
-	     	if(null != bookId ) {
-		     	Textbook textbook = textbookService.getTextbookById(bookId);
-		     	Material material= materialService.getMaterialById(textbook.getMaterialId());
-		     	List<MaterialProjectEditorVO> projects = materialProjectEditorService.listMaterialProjectEditors(textbook.getMaterialId());
-		     	for(PmphUserManagerVO pmphUserManagerVO: pageResult.getRows()) {
-					Long pmphUserId = pmphUserManagerVO.getId();
-					String posotion = null ;
-					if(material.getDirector().intValue() == pmphUserId.intValue() ) {
-						posotion = "主任";
-					}
-					if(null != projects && projects.size() > 0) {
-						for(MaterialProjectEditorVO  item: projects) {
-							if(item.getEditorId().intValue() == pmphUserId.intValue() ) {
-								posotion += (posotion == null)?"项目编辑":",项目编辑";
-								break;
-							}
-						}
-					}
-					if(textbook.getPlanningEditor().intValue() == pmphUserId.intValue() ) {
-						posotion += (posotion == null)?"策划编辑":",策划编辑";
-					}
-					pmphUserManagerVO.setPosition(posotion == null ? "无" : posotion);
-				}
-        	}
+        if (null != pageResult.getRows() && pageResult.getRows().size() > 0 && null != groupId) {
+            // 清空职位
+            for (PmphUserManagerVO pmphUserManagerVO : pageResult.getRows()) {
+                pmphUserManagerVO.setPosition("无");
+            }
+            PmphGroup pmphGroup = pmphGroupService.getPmphGroupById(groupId);
+            Long bookId = pmphGroup.getBookId();
+            if (null != bookId) {
+                Textbook textbook = textbookService.getTextbookById(bookId);
+                Material material = materialService.getMaterialById(textbook.getMaterialId());
+                List<MaterialProjectEditorVO> projects =
+                materialProjectEditorService.listMaterialProjectEditors(textbook.getMaterialId());
+                for (PmphUserManagerVO pmphUserManagerVO : pageResult.getRows()) {
+                    Long pmphUserId = pmphUserManagerVO.getId();
+                    String posotion = null;
+                    if (material.getDirector().intValue() == pmphUserId.intValue()) {
+                        posotion = "主任";
+                    }
+                    if (null != projects && projects.size() > 0) {
+                        for (MaterialProjectEditorVO item : projects) {
+                            if (item.getEditorId().intValue() == pmphUserId.intValue()) {
+                                posotion += (posotion == null) ? "项目编辑" : ",项目编辑";
+                                break;
+                            }
+                        }
+                    }
+                    if (textbook.getPlanningEditor().intValue() == pmphUserId.intValue()) {
+                        posotion += (posotion == null) ? "策划编辑" : ",策划编辑";
+                    }
+                    pmphUserManagerVO.setPosition(posotion == null ? "无" : posotion);
+                }
+            }
         }
-        // 设置职位 end 
+        // 设置职位 end
         return pageResult;
     }
-    
-    
-    
 
     @Override
     public String updatePmphUserOfBack(PmphUserManagerVO pmphUserManagerVO)
@@ -743,15 +768,15 @@ public class PmphUserServiceImpl implements PmphUserService {
             topicDeclarationVO.setIsEditorHandling(true);
         }
         for (PmphRole pmphRole : rolelist) {
-        	//编辑
-        	if(2==pmphRole.getId()){
-        		topicDeclarationVO.setIsEditorHandling(true);
-        	}
-        	//主任
-        	if(9==pmphRole.getId()){
-        		topicDeclarationVO.setIsDirectorHandling(true);
-        	}
-		}
+            // 编辑
+            if (2 == pmphRole.getId()) {
+                topicDeclarationVO.setIsEditorHandling(true);
+            }
+            // 主任
+            if (9 == pmphRole.getId()) {
+                topicDeclarationVO.setIsDirectorHandling(true);
+            }
+        }
         String[] strs = authProgress.split(",");
         List<Long> progress = new ArrayList<>();
         for (String str : strs) {
@@ -760,33 +785,38 @@ public class PmphUserServiceImpl implements PmphUserService {
         topicDeclarationVO.setBookname(topicBookname);
         pageParameter3.setParameter(topicDeclarationVO);
         //
-        if(sessionPmphUser.getIsAdmin()){
-        	PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
-                    topicService.listMyTopic(progress, pageParameter3,null);
-//                    		topicService.listCheckTopic(progress, pageParameter3);		
-                    map.put("topicList", pageResultTopicDeclarationVO);
-        }else{
-        	if (2==rolelist.get(0).getId()||9==rolelist.get(0).getId()||1==rolelist.get(0).getId()) {
+        if (sessionPmphUser.getIsAdmin()) {
+            PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
+            topicService.listMyTopic(progress, pageParameter3, null);
+            // topicService.listCheckTopic(progress, pageParameter3);
+            map.put("topicList", pageResultTopicDeclarationVO);
+        } else {
+            if (2 == rolelist.get(0).getId() || 9 == rolelist.get(0).getId()
+                || 1 == rolelist.get(0).getId()) {
                 PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
-                topicService.listMyTopic(progress, pageParameter3,sessionPmphUser.getId());
-//                 		topicService.listCheckTopic(progress, pageParameter3);		
+                topicService.listMyTopic(progress, pageParameter3, sessionPmphUser.getId());
+                // topicService.listCheckTopic(progress, pageParameter3);
                 map.put("topicList", pageResultTopicDeclarationVO);
-            }else{
-            	PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =new PageResult<>();
-     	    	List<TopicDeclarationVO> list = new ArrayList<>();
-     	    	pageResultTopicDeclarationVO.setPageNumber(0);
-     	    	pageResultTopicDeclarationVO.setRows(list);
-     	    	pageResultTopicDeclarationVO.setPageTotal(0);
-     	    	pageResultTopicDeclarationVO.setStart(0);
-     	    	pageResultTopicDeclarationVO.setTotal(0);;
-             	map.put("topicList", pageResultTopicDeclarationVO);
-             }
+            } else {
+                PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO = new PageResult<>();
+                List<TopicDeclarationVO> list = new ArrayList<>();
+                pageResultTopicDeclarationVO.setPageNumber(0);
+                pageResultTopicDeclarationVO.setRows(list);
+                pageResultTopicDeclarationVO.setPageTotal(0);
+                pageResultTopicDeclarationVO.setStart(0);
+                pageResultTopicDeclarationVO.setTotal(0);
+                ;
+                map.put("topicList", pageResultTopicDeclarationVO);
+            }
         }
-       
+
         // 获取用户上次登录时间
         List<SysOperation> listSysOperation =
         sysOperationService.getSysOperation(sessionPmphUser.getId());
-        Timestamp loginTime = listSysOperation.get(0).getOperateDate();
+        Timestamp loginTime = DateUtil.getCurrentTime();
+        if (!listSysOperation.isEmpty()) {
+            loginTime = listSysOperation.get(0).getOperateDate();
+        }
         // 把其他模块的数据都装入map中返回给前端
         map.put("materialList", pageResultMaterialListVO);
         map.put("pmphGroup", pageResultPmphGroup);

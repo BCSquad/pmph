@@ -2,8 +2,6 @@ package com.bc.pmpheep.back.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphDepartment;
@@ -43,6 +41,14 @@ public interface PmphDepartmentService {
 	 * @throws CheckedServiceException
 	 */
 	PmphDepartment getPmphDepartmentById(Long id) throws CheckedServiceException;
+	
+	/**
+	 * 
+	 * @param name
+	 * @return PmphDepartment
+	 * @throws CheckedServiceException
+	 */
+	PmphDepartment getPmphDepartmentByName(String name) throws CheckedServiceException;
 
 	/**
 	 * 

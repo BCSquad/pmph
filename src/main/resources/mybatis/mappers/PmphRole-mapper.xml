@@ -118,6 +118,10 @@
 		id = #{id}
 	</select>
 	
+	<select id="getByName" parameterType="java.util.Map" resultType="PmphRole">
+		SELECT  * FROM pmph_role WHERE role_name = #{roleName}
+	</select>
+	
 	<select id="getPmphRoleByUserId" parameterType="java.lang.Long" resultType="PmphRole">
 		SELECT 
 			* 

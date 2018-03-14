@@ -45,6 +45,20 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 		}
 		return roleDao.get(id);
 	}
+	
+	  /**
+     * 根据 roleName加载角色对象
+     * 
+     * @param id 角色ID
+     * @return
+     */
+	@Override
+	public  PmphRole getByName(String roleName) throws CheckedServiceException{
+		if (StringUtil.isEmpty(roleName)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ROLE_MANAGEMENT,CheckedExceptionResult.NULL_PARAM, "角色名称为空时禁止查询");
+		}
+		return roleDao.getByName(roleName);
+	}
 
 	@Override
 	public List<PmphRole> getPmphRoleByUserId(Long userId) throws CheckedServiceException {

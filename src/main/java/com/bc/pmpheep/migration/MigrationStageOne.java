@@ -707,6 +707,17 @@ public class MigrationStageOne {
             StringBuilder sb = new StringBuilder();
             String userId = (String) map.get("userid");
             String username = (String) map.get("usercode");
+            if (StringUtil.isEmpty(username)) {
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到用户的登陆名。"));
+            	excel.add(map);
+            	if (state[1] == 0){
+            		reason.append("未找到用户的登陆账号。");
+            		dealWith.append("放弃迁入。");
+            		state[1] = 1;
+            	}
+            	continue;
+            }
+            username = username.replace("&middot;", "·");
             if ("admin".equals(username)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, "系统管理员账号。");
             	if (state[0] == 0){
@@ -715,16 +726,6 @@ public class MigrationStageOne {
             		state[0] = 1;
             	}
             	continue;
-            }
-            if (StringUtil.isEmpty(username)) {
-                map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到用户的登陆名。"));
-                excel.add(map);
-                if (state[1] == 0){
-                	reason.append("未找到用户的登陆账号。");
-                	dealWith.append("放弃迁入。");
-                	state[1] = 1;
-                }
-                continue;
             }
             if (JdbcHelper.nameDuplicate(list, username)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户的登陆名重复。"));
