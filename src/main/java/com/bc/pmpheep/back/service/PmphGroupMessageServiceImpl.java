@@ -127,19 +127,21 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 		}
 		return pmphGroupMessageDao.updatePmphGroupMessage(pmphGroupMessage);
 	}
-	
+
 	@Override
 	public String addGroupMessage(String msgConrent, Long groupId, Long senderId, Short senderType)
 			throws CheckedServiceException, IOException {
-		if (null == senderId ) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,"用户为空");
+		if (null == senderId) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"用户为空");
 		}
 		PmphGroupMemberVO pmphGroupMemberVO = null;
 		PmphGroupMessage pmphGroupMessage;
 		if (senderType == 0) {
 			pmphGroupMessage = new PmphGroupMessage(groupId, 0L, msgConrent);
 		} else {
-			pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(groupId, senderId,senderType.intValue() == 2);// 获取用户
+			pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(groupId, senderId,
+					senderType.intValue() == 2);// 获取用户
 			pmphGroupMessage = new PmphGroupMessage(groupId, pmphGroupMemberVO.getId(), msgConrent);
 		}
 		pmphGroupMessageDao.addPmphGroupMessage(pmphGroupMessage);
@@ -156,14 +158,15 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 			ids.add(tempId);
 		}
 		WebScocketMessage webScocketMessage = new WebScocketMessage(String.valueOf(pmphGroupMessage.getId()),
-				Const.MSG_TYPE_3, senderType == 0?0:senderId, senderType == 0?"系统":pmphGroupMemberVO.getDisplayName(), senderType, Const.SEND_MSG_TYPE_0, null,
+				Const.MSG_TYPE_3, senderType == 0 ? 0 : senderId,
+				senderType == 0 ? "系统" : pmphGroupMemberVO.getDisplayName(), senderType, Const.SEND_MSG_TYPE_0, null,
 				null, msgConrent, pmphGroupMessage.getGmtCreate());
 		webScocketMessage.setGroupId(groupId);
-		webScocketMessage.setSenderIcon(senderType == 0 ?"":pmphGroupMemberVO.getAvatar());
+		webScocketMessage.setSenderIcon(senderType == 0 ? "" : pmphGroupMemberVO.getAvatar());
 		handler.sendWebSocketMessageToUser(ids, webScocketMessage);
 		return "SUCCESS";
 	}
-	
+
 	@Override
 	public String addGroupMessage(String msgConrent, Long groupId, String sessionId, Short senderType)
 			throws CheckedServiceException, IOException {
@@ -175,6 +178,10 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 		Long userId = pmphUser.getId();
 		PmphGroupMemberVO pmphGroupMemberVO = pmphGroupMemberService.getPmphGroupMemberByMemberId(groupId, userId,
 				false);// 获取后台用户
+		if (ObjectUtil.isNull(pmphGroupMemberVO)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
+					"您不是该小组成员");
+		}
 		PmphGroupMessage pmphGroupMessage;
 		if (senderType == 0) {
 			pmphGroupMessage = new PmphGroupMessage(groupId, 0L, msgConrent);
