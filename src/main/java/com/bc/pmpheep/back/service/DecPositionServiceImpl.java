@@ -261,13 +261,14 @@ public class DecPositionServiceImpl implements DecPositionService {
 				decPosition.setPresetPosition(15);
 			}
 			File files = null;
+			String fileName = null;
 			if (StringUtil.isEmpty(file)) {
 				decPosition.setSyllabusId(null);
 				decPosition.setSyllabusName(null);
 			} else {
 				files = new File(file);
 				if (files.exists()) {
-					String fileName = files.getName(); // 获取原文件名字
+					fileName = files.getName(); // 获取原文件名字
 					decPosition.setSyllabusName(fileName);
 				} else {
 					decPosition.setSyllabusId(null);
@@ -284,10 +285,10 @@ public class DecPositionServiceImpl implements DecPositionService {
 					// mongoId = fileService.saveLocalFile(files, FileType.SYLLABUS, decPosition.getId());
 					byte[] fileByte = (byte[]) 
 							request.getSession(false).getAttribute(newDecPosition.getFile());
-					String fileNames =
-			                (String) request.getSession(false).getAttribute("fileName_" + newDecPosition.getFile());
+					/*String fileNames =
+			                (String) request.getSession(false).getAttribute("fileName_" + newDecPosition.getFile());*/
 					InputStream sbs = new ByteArrayInputStream(fileByte);
-					mongoId = fileService.save(sbs, fileNames, FileType.SYLLABUS, decPosition.getId());
+					mongoId = fileService.save(sbs, fileName, FileType.SYLLABUS, decPosition.getId());
 	                if (StringUtil.isEmpty(mongoId)) {
 	                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 	                                                      CheckedExceptionResult.FILE_UPLOAD_FAILED,
@@ -296,6 +297,7 @@ public class DecPositionServiceImpl implements DecPositionService {
 				}
 				if (StringUtil.notEmpty(mongoId)) {
 					decPosition.setSyllabusId(mongoId);
+					decPosition.setSyllabusName(fileName);
 					decPositionDao.updateDecPosition(decPosition);
 				}
 			} else {
