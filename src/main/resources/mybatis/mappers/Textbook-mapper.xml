@@ -524,7 +524,7 @@
 	<select id="getExcelDecByMaterialId" resultType="com.bc.pmpheep.back.bo.DecPositionBO">
 		select 	tk.textbook_name,tk.textbook_round,tk.sort, 
           			CONCAT('[',GROUP_CONCAT(CONCAT('{realname:"',dc.realname,'",',
-					'chosenOrgName:"',,if(dc.org_id >0,org.org_name,'人民卫生出版社'),'",','chosenPosition:',dp.chosen_position,',',
+					'chosenOrgName:"',if(dc.org_id >0,org.org_name,'人民卫生出版社'),'",','chosenPosition:',dp.chosen_position,',',
 					'rank:',if(dp.rank is not null,dp.rank,0),'}') ORDER BY if(dp.chosen_position>8,dp.chosen_position-8,dp.chosen_position) desc ,dp.rank asc),']') writers 
 					from dec_position dp
 					left join declaration dc on dp.declaration_id=dc.id 
