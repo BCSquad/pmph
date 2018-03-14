@@ -143,8 +143,9 @@ public class DeclarationController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存图书")
     @RequestMapping(value = "/list/declaration/saveBooks", method = RequestMethod.POST)
-    public ResponseBean saveBooks(DecPositionVO decPositionVO) throws IOException {
-        return new ResponseBean(decPositionService.saveBooks(decPositionVO));
+    public ResponseBean saveBooks(DecPositionVO decPositionVO, HttpServletRequest request) 
+    		throws IOException {
+        return new ResponseBean(decPositionService.saveBooks(decPositionVO, request));
     }
 
     /**
