@@ -15,9 +15,9 @@
 	response.setHeader("Content-Type" , "text/html");
 	
 	
-	String rootPath = application.getRealPath( "/" );
+	String rootPath = application.getRealPath( "/" ).replaceAll("\\\\", "/");
 	
-	out.write( new ActionEnter( request, rootPath,rootPath + File.separator+"ueditor"+File.separator+"jsp"+File.separator+"config.json" ).exec() );
+	out.write( new ActionEnter( request, rootPath,rootPath + "ueditor"+File.separator+"jsp"+File.separator+"config.json" ).exec() );
 	
 	
 %>
