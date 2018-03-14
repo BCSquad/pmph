@@ -53,6 +53,10 @@ public class MaterialListVO implements Serializable {
 	private String materialStep;
 	// 我对这本教材的权限 (八位数二进制)
 	private String myPower;
+	// 项目编辑权限
+	private Integer projectPermission;
+	// 策划编辑权限
+	private Integer planPermission;
 
 	public Long getId() {
 		return id;
@@ -220,6 +224,22 @@ public class MaterialListVO implements Serializable {
 
 	public void setMyPower(String myPower) {
 		this.myPower = myPower;
+	}
+
+	public Integer getProjectPermission() {
+		return projectPermission;
+	}
+
+	public void setProjectPermission(Integer projectPermission) {
+		this.projectPermission = projectPermission;
+	}
+
+	public Integer getPlanPermission() {
+		return planPermission;
+	}
+
+	public void setPlanPermission(Integer planPermission) {
+		this.planPermission = planPermission;
 	}
 
 }

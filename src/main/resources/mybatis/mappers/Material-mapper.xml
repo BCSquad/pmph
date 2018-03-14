@@ -541,7 +541,8 @@
 				is_clinical_reward_used = #{isClinicalRewardUsed},
 			</if>
 			<if test="isClinicalRewardRequired != null">
-				is_clinical_reward_required = #{isClinicalRewardRequired},
+				is_clinical_reward_required =
+				#{isClinicalRewardRequired},
 			</if>
 			<if test="isAcadeRewardUsed != null">
 				is_acade_reward_used = #{isAcadeRewardUsed},
@@ -589,14 +590,15 @@
 	<!--获取教材集合 -->
 	<select id="getListMaterial" resultType="Material">
 		select
-			ma.*
+		ma.*
 		from
-			`material` ma
+		`material` ma
 		<where>
 			ma.`is_deleted` = FALSE
 			<if test="materialName !=null and materialName !=''">
 				AND
-					 ma.`material_name` LIKE CONCAT(CONCAT('%',#{materialName},'%'))
+				ma.`material_name` LIKE
+				CONCAT(CONCAT('%',#{materialName},'%'))
 			</if>
 		</where>
 		ORDER BY ma.`id` desc;
@@ -637,16 +639,22 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id
+		m.founder_id,
+		m.project_permission,
+		m.plan_permission
 		FROM
 		material m
-		LEFT JOIN material_contact c ON m.id = c.material_id
-		LEFT JOIN material_project_editor p ON p.material_id = m.id
 		LEFT JOIN
-		textbook e ON e.material_id = m.id
+		material_contact c ON m.id = c.material_id
+		LEFT JOIN
+		material_project_editor p ON p.material_id = m.id
+		LEFT JOIN
+		textbook e
+		ON e.material_id = m.id
 		LEFT JOIN pmph_user u ON m.director
 		= u.id
-		WHERE m.is_deleted = FALSE
+		WHERE
+		m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
 			#{parameter.userId}
@@ -686,16 +694,21 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id
+		m.founder_id,
+		m.project_permission,
+		m.plan_permission
 		FROM
 		material m
 		LEFT JOIN material_contact c
 		ON m.id = c.material_id
-		LEFT JOIN material_project_editor p ON
-		p.material_id = m.id
-		LEFT JOIN textbook e ON e.material_id = m.id
 		LEFT
-		JOIN pmph_user u ON m.director = u.id
+		JOIN material_project_editor p ON
+		p.material_id = m.id
+		LEFT JOIN
+		textbook e ON e.material_id = m.id
+		LEFT
+		JOIN pmph_user u ON m.director =
+		u.id
 		WHERE m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
@@ -740,16 +753,22 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id
+		m.founder_id,
+		m.project_permission,
+		m.plan_permission
 		FROM
 		material m
-		LEFT JOIN material_contact c ON m.id = c.material_id
-		LEFT JOIN material_project_editor p ON p.material_id = m.id
 		LEFT JOIN
-		textbook e ON e.material_id = m.id
+		material_contact c ON m.id = c.material_id
+		LEFT JOIN
+		material_project_editor p ON p.material_id = m.id
+		LEFT JOIN
+		textbook e
+		ON e.material_id = m.id
 		LEFT JOIN pmph_user u ON m.director
 		= u.id
-		WHERE m.is_deleted = FALSE
+		WHERE
+		m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
 			#{parameter.userId}
@@ -789,16 +808,21 @@
 		m.is_all_textbook_published,
 		m.is_deleted,
 		m.is_published,
-		m.founder_id
+		m.founder_id,
+		m.project_permission,
+		m.plan_permission
 		FROM
 		material m
 		LEFT JOIN material_contact c
 		ON m.id = c.material_id
-		LEFT JOIN material_project_editor p ON
-		p.material_id = m.id
-		LEFT JOIN textbook e ON e.material_id = m.id
 		LEFT
-		JOIN pmph_user u ON m.director = u.id
+		JOIN material_project_editor p ON
+		p.material_id = m.id
+		LEFT JOIN
+		textbook e ON e.material_id = m.id
+		LEFT
+		JOIN pmph_user u ON m.director =
+		u.id
 		WHERE m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
