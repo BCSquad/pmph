@@ -525,7 +525,7 @@
 		select 	tk.textbook_name,tk.textbook_round,tk.sort, 
           			CONCAT('[',GROUP_CONCAT(CONCAT('{realname:"',dc.realname,'",',
 					'chosenOrgName:"',org.org_name,'",','chosenPosition:',dp.chosen_position,',',
-					'rank:',dp.rank,'}') ORDER BY dp.chosen_position asc,dp.rank asc),']') writers 
+					'rank:',dp.rank,'}') ORDER BY if(dp.chosen_position>8,dp.chosen_position-8,dp.chosen_position) desc ,dp.rank asc),']') writers 
 					from dec_position dp
 					left join declaration dc on dp.declaration_id=dc.id 
 					left join org org on dc.org_id=org.id 
