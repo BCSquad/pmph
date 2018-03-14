@@ -52,6 +52,12 @@ public interface PmphRoleService {
      * @return
      */
     PmphRole get(Long id) throws CheckedServiceException;
+    
+    /**
+     * 根据 roleName加载角色对象
+     * @return
+     */
+    PmphRole getByName(String roleName) throws CheckedServiceException;
 
     /**
      * 
