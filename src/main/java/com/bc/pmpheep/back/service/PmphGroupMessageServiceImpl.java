@@ -180,7 +180,7 @@ public class PmphGroupMessageServiceImpl extends BaseService implements PmphGrou
 				false);// 获取后台用户
 		if (ObjectUtil.isNull(pmphGroupMemberVO)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
-					"您不是该小组成员");
+					"您不是该小组成员，无法与其他成员对话或上传小组文件。");
 		}
 		PmphGroupMessage pmphGroupMessage;
 		if (senderType == 0) {
