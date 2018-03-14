@@ -53,6 +53,12 @@ public interface PmphRoleDao {
      * </pre>
      */
     List<PmphRole> getPmphRoleByUserId(Long userId);
+    
+    /**
+     * 根据 roleName加载角色对象
+     * @return
+     */
+    PmphRole getByName(@Param("roleName") String roleName);
 
     /**
      * 
