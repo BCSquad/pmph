@@ -347,7 +347,7 @@ public class ExcelHelper {
         header.createCell(6).setCellValue("编写职位");
         headerStyleSetup(workbook, 1); // 设置表头样式
         /*** 重新设置头背景颜色end ***/
-        for(int i=0 ; i< 7 ;i++) {
+        for(int i=0 ; i< 7 ; i++) {
         	Cell cell = workbook.getSheet(sheetName).getRow(0).getCell(i); 
         	CellStyle style = cell.getCellStyle();
             style.setFillBackgroundColor(HSSFColorPredefined.GREY_50_PERCENT.getIndex());
