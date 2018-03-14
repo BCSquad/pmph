@@ -365,10 +365,10 @@ public class ExcelHelper {
             Integer zhuBianTotalNum = 0 ;
             Integer fuZhuBianTotalNum = 0 ;
             for (WriterBO writer : writers) {
-            	Integer chosenPosition = writer.getChosenPosition();
-            	if((chosenPosition & 0b100) > 0 || (chosenPosition & 0b1100) > 0) {
+            	 Integer chosenPosition = writer.getChosenPosition();
+            	if(null != chosenPosition && (chosenPosition == 12 || chosenPosition == 4)) {
             		zhuBianTotalNum ++ ;
-            	}else if((chosenPosition & 0b10) > 0 || (chosenPosition & 0b1010) > 0) {
+            	}else if(null != chosenPosition && (chosenPosition == 10 || chosenPosition == 2)) {
             		fuZhuBianTotalNum++;
             	}
             }
@@ -396,17 +396,17 @@ public class ExcelHelper {
                 if (null != writer.getRank()) {
                     rank = String.valueOf(writer.getRank());
                 }
-                if((chosenPosition & 0b1100) > 0) {
+                if(null != chosenPosition && chosenPosition == 12 ) {
                 	position = "主编 "+zhuBianTotalNum+"-"+rank+"，数字编委";
-                }else if((chosenPosition & 0b100) > 0) {
+                }else if(null != chosenPosition && chosenPosition == 4 ) {
                 	position = "主编 "+zhuBianTotalNum+"-"+rank;
-                }else if((chosenPosition & 0b1010) > 0) {
+                }else if(null != chosenPosition && chosenPosition == 10 ) {
                 	position = "副主编 "+fuZhuBianTotalNum+"-"+rank+"，数字编委";
-                }else if((chosenPosition & 0b10) > 0) {
+                }else if(null != chosenPosition && chosenPosition == 2 ) {
                 	position = "副主编 "+fuZhuBianTotalNum+"-"+rank;
-                }else if((chosenPosition & 0b1001) > 0) {
+                }else if(null != chosenPosition && chosenPosition == 9 ) {
                 	position = "编委，数字编委";
-                }else if((chosenPosition & 0b1) > 0) {
+                }else if(null != chosenPosition && chosenPosition == 1 ) {
                 	position = "编委";
                 }
                 row.createCell(6).setCellValue(position);

@@ -533,7 +533,7 @@
 					left join textbook tk on tk.id =dp.textbook_id
 					left join material m on m.id=tk.material_id
 					WHERE dc.is_staging=false and dc.online_progress!=0
-				and dp.chosen_position in(2,3,4,5,6,10,11,12,13,14,15,16,17)
+				and dp.chosen_position in(12,4,10,2,9,1)
 				and dp.`textbook_id` in
 		<foreach collection="array" item="item" index="index" open="("
 			separator="," close=")">
