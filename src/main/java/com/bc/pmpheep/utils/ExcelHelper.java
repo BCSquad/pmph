@@ -343,9 +343,17 @@ public class ExcelHelper {
         header.createCell(2).setCellValue("版次");
         header.createCell(3).setCellValue("序号");
         header.createCell(4).setCellValue("姓名");
-        header.createCell(5).setCellValue("申报单位");
+        header.createCell(5).setCellValue("内封单位");
         header.createCell(6).setCellValue("编写职位");
         headerStyleSetup(workbook, 1); // 设置表头样式
+        /*** 重新设置头背景颜色end ***/
+        for(int i=0 ; i< 7 ; i++) {
+        	Cell cell = workbook.getSheet(sheetName).getRow(0).getCell(i); 
+        	CellStyle style = cell.getCellStyle();
+            style.setFillBackgroundColor(HSSFColorPredefined.GREY_50_PERCENT.getIndex());
+            cell.setCellStyle(style);
+        }
+        /*** 重新设置头背景颜色end ***/
         /* 设置行计数器 */
         int rowCount = 1;
         /* 遍历list中的对象 */
@@ -353,6 +361,16 @@ public class ExcelHelper {
             List<WriterBO> writers = bo.getWriters();
             if (CollectionUtil.isEmpty(writers)) {
                 continue;
+            }
+            Integer zhuBianTotalNum = 0 ;
+            Integer fuZhuBianTotalNum = 0 ;
+            for (WriterBO writer : writers) {
+            	 Integer chosenPosition = writer.getChosenPosition();
+            	if(null != chosenPosition && (chosenPosition == 12 || chosenPosition == 4)) {
+            		zhuBianTotalNum ++ ;
+            	}else if(null != chosenPosition && (chosenPosition == 10 || chosenPosition == 2)) {
+            		fuZhuBianTotalNum++;
+            	}
             }
             Row row = sheet.createRow(rowCount);
             row.createCell(0).setCellValue(bo.getSort());
@@ -378,19 +396,18 @@ public class ExcelHelper {
                 if (null != writer.getRank()) {
                     rank = String.valueOf(writer.getRank());
                 }
-                if ((chosenPosition & 0b1) > 0) {
-                    position = "编委";
-                } else if ((chosenPosition & 0b10) > 0) {
-                    position = "副主编".concat(rank);
-                } else if ((chosenPosition & 0b100) > 0) {
-                    position = "主编".concat(rank);
-                }
-                if ((chosenPosition & 0b1000) > 0) {
-                    if (StringUtil.isEmpty(position)) {
-                        position = "数字编委";
-                    } else {
-                        position = position.concat("，数字编委");
-                    }
+                if(null != chosenPosition && chosenPosition == 12 ) {
+                	position = "主编 "+zhuBianTotalNum+"-"+rank+"，数字编委";
+                }else if(null != chosenPosition && chosenPosition == 4 ) {
+                	position = "主编 "+zhuBianTotalNum+"-"+rank;
+                }else if(null != chosenPosition && chosenPosition == 10 ) {
+                	position = "副主编 "+fuZhuBianTotalNum+"-"+rank+"，数字编委";
+                }else if(null != chosenPosition && chosenPosition == 2 ) {
+                	position = "副主编 "+fuZhuBianTotalNum+"-"+rank;
+                }else if(null != chosenPosition && chosenPosition == 9 ) {
+                	position = "编委，数字编委";
+                }else if(null != chosenPosition && chosenPosition == 1 ) {
+                	position = "编委";
                 }
                 row.createCell(6).setCellValue(position);
                 writerNum++;
