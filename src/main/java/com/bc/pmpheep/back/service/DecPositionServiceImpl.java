@@ -286,10 +286,10 @@ public class DecPositionServiceImpl implements DecPositionService {
 				decPositionDao.addDecPosition(decPosition);
 				String mongoId = null;
 				if (ObjectUtil.notNull(decPosition.getId()) && StringUtil.notEmpty(file)) {
-					mongoId = fileService.saveLocalFile(files, FileType.SYLLABUS, decPosition.getId());
-					/*byte[] fileByte = (byte[]) request.getAttribute(file);
-					InputStream input = new ByteArrayInputStream(fileByte);
-					mongoId = fileService.save(input, fileName, FileType.SYLLABUS, decPosition.getId());*/
+					// mongoId = fileService.saveLocalFile(files, FileType.SYLLABUS, decPosition.getId());
+					byte[] fileByte = (byte[]) request.getSession(false).getAttribute(file);
+	                InputStream input = new ByteArrayInputStream(fileByte);
+					mongoId = fileService.save(input, fileName, FileType.SYLLABUS, decPosition.getId());
 	                if (StringUtil.isEmpty(mongoId)) {
 	                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 	                                                      CheckedExceptionResult.FILE_UPLOAD_FAILED,
