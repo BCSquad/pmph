@@ -1,20 +1,19 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.bc.pmpheep.back.dao.PmphDepartmentDao;
 import com.bc.pmpheep.back.dao.PmphPermissionDao;
 import com.bc.pmpheep.back.dao.PmphRoleDao;
@@ -52,6 +51,7 @@ import com.bc.pmpheep.back.vo.PmphIdentity;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
+import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -108,19 +108,43 @@ public class PmphUserServiceImpl implements PmphUserService {
     SysOperationService      sysOperationService;
 
     @Override
-    public boolean updatePersonalData(PmphUser pmphUser, MultipartFile file) throws IOException {
+    public boolean updatePersonalData(HttpServletRequest request,PmphUser pmphUser, String newAvatar) throws IOException {
         Long id = pmphUser.getId();
         if (null == id) {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
         }
         // 头像文件不为空
-        if (null != file) {
+        if (null != newAvatar) {
             if (StringUtil.notEmpty(pmphUser.getAvatar())) {
-                fileService.remove(pmphUser.getAvatar());
+            	if(pmphUser.getAvatar().contains("/")) {
+                	String avatar = pmphUser.getAvatar()  ;
+                	avatar = avatar.substring(avatar.lastIndexOf("/")+1, avatar.length());
+                	fileService.remove(avatar);
+                }
+                if(pmphUser.getAvatar().contains("\\")) {
+                	String avatar = pmphUser.getAvatar()  ;
+                	avatar = avatar.substring(avatar.lastIndexOf("\\")+1, avatar.length());
+                	fileService.remove(avatar);
+                }
             }
-            String newAvatar = fileService.save(file, ImageType.PMPH_USER_AVATAR, id);
             pmphUser.setAvatar(newAvatar);
+        }
+        String avatar = pmphUser.getAvatar()  ;
+        if(null != avatar && avatar.contains("/")) {
+        	avatar = avatar.substring(avatar.lastIndexOf("/")+1, avatar.length());
+        }
+        if(null != avatar && avatar.contains("\\")) {
+        	avatar = avatar.substring(avatar.lastIndexOf("\\")+1, avatar.length());
+        }
+        if(null != avatar) {
+        	byte[] fileByte = (byte[]) request.getSession(false).getAttribute(avatar);
+    		String fileName = (String) request.getSession(false).getAttribute("fileName_" + avatar);
+    		String noticeId;
+    		// 保存通知文件
+    		InputStream sbs = new ByteArrayInputStream(fileByte);
+    		noticeId = fileService.save(sbs, fileName, ImageType.PMPH_USER_AVATAR,id);
+    		pmphUser.setAvatar(noticeId);
         }
         pmphUserDao.update(pmphUser);
         return true;

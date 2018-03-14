@@ -21,9 +21,6 @@ import com.bc.pmpheep.back.po.CmsExtra;
 import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.PmphUser;
-import com.bc.pmpheep.back.po.WriterPoint;
-import com.bc.pmpheep.back.po.WriterPointLog;
-import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -391,14 +388,17 @@ public class CmsContentServiceImpl implements CmsContentService {
                                                       DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                DateUtil.getCurrentTime()),
                                                       isPublished, false, Const.MATERIAL_TYPE_ID));
+        CmsContent cmsContent = this.getCmsContentById(id);
+        if (ObjectUtil.isNull(cmsContent)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.OBJECT_NOT_FOUND, "获取对象为空");
+        }
         // 评论审核通过，评论数加1
         if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()
             && Boolean.TRUE == isPublished) {
             this.updatCmsContentCommentsById(id, 1);
-            CmsContent cmsContent = this.getCmsContentById(id);
             this.updateCmsContentByParentId(cmsContent.getParentId(), 1);
         }
-        CmsContent cmsContent = this.getCmsContentById(id);
         Integer type = 0;
         if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()) {
             type = Const.WRITER_USER_TRENDST_TYPE_2;
@@ -412,47 +412,11 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
 
         // 当文章通过的时候 给用户增加积分
-        if (Const.CMS_AUTHOR_STATUS_2 == authStatus) {
+        if (Const.CMS_CATEGORY_ID_1.longValue() == categoryId.longValue()
+            && Boolean.TRUE == isPublished && Const.CMS_AUTHOR_TYPE_2 == cmsContent.getAuthorType()) {
             String ruleName = "发表文章";
-            // 获取积分规则
-            WriterPointRule writerPointRuleVOs =
-            writerPointRuleService.getWriterPointRuleByName(ruleName);
-            if (null != writerPointRuleVOs) {
-                // 查询用户评论之前的积分记录
-                List<WriterPointLog> writerPointLog2 =
-                writerPointLogService.getWriterPointLogByUserId(cmsContent.getAuthorId());
-                WriterPointLog writerPointLog = new WriterPointLog();
-                // 现在的规则的积分值+以前的积分
-                Integer temp = 0;
-                if (writerPointLog2.size() > 0) {
-                    Integer newTemp = 0;
-                    for (WriterPointLog writerPointLogNew : writerPointLog2) {
-                        newTemp += writerPointLogNew.getPoint();
-                    }
-                    temp = writerPointRuleVOs.getPoint() + newTemp;
-                    writerPointLog.setPoint(writerPointRuleVOs.getPoint());
-                } else {
-                    temp = writerPointRuleVOs.getPoint();
-                    writerPointLog.setPoint(writerPointRuleVOs.getPoint());
-                }
-                // 积分规则id
-                writerPointLog.setRuleId(writerPointRuleVOs.getId());
-                writerPointLog.setUserId(cmsContent.getAuthorId());
-                // 增加积分记录
-                writerPointLogService.add(writerPointLog);
-                WriterPoint point =
-                writerPointService.getWriterPointByUserId(cmsContent.getAuthorId());
-                WriterPoint writerPoint = new WriterPoint();
-                // 当前获取的总积分=评论积分+以前的积分
-                writerPoint.setGain(temp);
-                writerPoint.setUserId(cmsContent.getAuthorId());
-                writerPoint.setTotal(writerPoint.getGain() + point.getLoss());
-                writerPoint.setLoss(point.getLoss());
-                writerPoint.setId(point.getId());
-                writerPointService.updateWriterPoint(writerPoint);
-            }
             writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
-        }
+        } 
         return count;
     }
 
@@ -558,23 +522,25 @@ public class CmsContentServiceImpl implements CmsContentService {
             }
         }
         resultMap.put("MaterialNoteAttachment", materialNoteAttachments);
-        // 文章封面图片
-        CmsExtra cmsExtra = cmsExtraService.getCmsExtraByAttachment(cmsContent.getCover());
-        String imgFileName = "默认封面.png";
-        String imgFilePath = RouteUtil.DEFAULT_USER_AVATAR;
-        if (ObjectUtil.notNull(cmsExtra)) {
-            imgFileName = cmsExtra.getAttachmentName();
-        } else {
-            GridFSDBFile file = fileService.get(cmsContent.getCover());
-            if (ObjectUtil.notNull(file)) {
-                imgFileName = file.getFilename();
+        if (Const.CMS_CATEGORY_ID_1.longValue() == cmsContent.getCategoryId().longValue()) {
+            // 文章封面图片
+            CmsExtra cmsExtra = cmsExtraService.getCmsExtraByAttachment(cmsContent.getCover());
+            String imgFileName = "默认封面.png";
+            String imgFilePath = RouteUtil.DEFAULT_USER_AVATAR;
+            if (ObjectUtil.notNull(cmsExtra)) {
+                imgFileName = cmsExtra.getAttachmentName();
+            } else {
+                GridFSDBFile file = fileService.get(cmsContent.getCover());
+                if (ObjectUtil.notNull(file)) {
+                    imgFileName = file.getFilename();
+                }
             }
+            resultMap.put("imgFileName", imgFileName);
+            if (!"DEFAULT".equals(cmsContent.getCover())) {
+                imgFilePath = cmsContent.getCover();
+            }
+            resultMap.put("imgFilePath", imgFilePath);
         }
-        resultMap.put("imgFileName", imgFileName);
-        if (!"DEFAULT".equals(cmsContent.getCover())) {
-            imgFilePath = cmsContent.getCover();
-        }
-        resultMap.put("imgFilePath", imgFilePath);
         return resultMap;
     }
 

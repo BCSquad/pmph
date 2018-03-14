@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecPosition;
@@ -138,7 +140,7 @@ public interface DecPositionService {
      * @return
      * @throws IOException
      */
-    long saveBooks(DecPositionVO decPositionVO) throws IOException;
+    long saveBooks(DecPositionVO decPositionVO, HttpServletRequest request) throws IOException;
 
     /**
      * 

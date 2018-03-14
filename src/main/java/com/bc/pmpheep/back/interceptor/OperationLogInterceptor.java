@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -40,6 +42,7 @@ import com.bc.pmpheep.back.util.StringUtil;
  * </pre>
  */
 public class OperationLogInterceptor extends HandlerInterceptorAdapter {
+    Logger               logger = LoggerFactory.getLogger(OperationLogInterceptor.class);
 
     @Autowired
     SysOperationService  sysOperationService;
@@ -118,7 +121,12 @@ public class OperationLogInterceptor extends HandlerInterceptorAdapter {
                 Method[] methods = cls.getMethods();// 类中的所有方法
                 String logRemark = "";// 方法用途
                 String businessType = "";// 业务类型
-                HttpSession session = request.getSession();
+                HttpSession session = null;
+                try {
+                    session = request.getSession();
+                } catch (Exception e) {
+                    logger.warn("session为空时出现异常：{}", e.getMessage());
+                }
                 if (ObjectUtil.notNull(session)) {
                     PmphUser pmphUser = (PmphUser) session.getAttribute(Const.SESSION_PMPH_USER);
                     if (ObjectUtil.notNull(pmphUser)) {

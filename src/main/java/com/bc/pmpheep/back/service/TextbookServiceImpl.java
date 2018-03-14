@@ -13,6 +13,7 @@ import java.util.Map;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -740,6 +741,9 @@ public class TextbookServiceImpl implements TextbookService {
 		} catch (IOException e) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"读取文件失败");
+		} catch (OfficeXmlFileException e){
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "此文档不是对应的.xls或.xlsx的Excel文档，请修改为正确的后缀名再进行上传");
 		}
 		List<Textbook> bookList = new ArrayList<>();
 		List<Textbook> books = textbookDao.getTextbookByMaterialId(materialId);
