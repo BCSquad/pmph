@@ -498,6 +498,17 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         // 按mid 获取Content对象
         Content content = contentService.get(cmsContent.getMid());
+        if(content == null ) {
+        	content = new Content();
+        	content.setId(cmsContent.getMid());
+        	content.setContent("");
+        }
+        if(null == content.getId() ) {
+        	content.setId(cmsContent.getMid());
+        }
+        if(null == content.getContent()) {
+        	content.setContent("");
+        }
         resultMap.put("content", content);
         // 按contentId 获取CMS内容附件
         List<CmsExtra> cmsExtras = cmsExtraService.getCmsExtraByContentId(id);
