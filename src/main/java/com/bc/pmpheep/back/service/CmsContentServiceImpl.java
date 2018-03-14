@@ -416,7 +416,7 @@ public class CmsContentServiceImpl implements CmsContentService {
             && Boolean.TRUE == isPublished && Const.CMS_AUTHOR_TYPE_2 == cmsContent.getAuthorType()) {
             String ruleName = "发表文章";
             writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
-        } 
+        }
         return count;
     }
 
@@ -669,25 +669,32 @@ public class CmsContentServiceImpl implements CmsContentService {
         if (ArrayUtil.isNotEmpty(imgFile)) {
             for (int i = 0; i < imgFile.length; i++) {
                 byte[] fileByte = (byte[]) request.getSession(false).getAttribute(imgFile[i]);
-                String fileName =
-                (String) request.getSession(false).getAttribute("fileName_" + imgFile[i]);
-                InputStream sbs = new ByteArrayInputStream(fileByte);
-                String gridFSFileId =
-                fileService.save(sbs, fileName, ImageType.CMS_CONTENT_COVER_IMG, contentId);
-                if (StringUtil.isEmpty(gridFSFileId)) {
-                    throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                                      CheckedExceptionResult.FILE_UPLOAD_FAILED,
-                                                      "文件上传失败!");
+                String gridFSFileId = imgFile[i];
+                if (ObjectUtil.notNull(fileByte)) {
+                    String fileName =
+                    (String) request.getSession(false).getAttribute("fileName_" + imgFile[i]);
+                    InputStream sbs = new ByteArrayInputStream(fileByte);
+                    gridFSFileId =
+                    fileService.save(sbs, fileName, ImageType.CMS_CONTENT_COVER_IMG, contentId);
+                    if (StringUtil.isEmpty(gridFSFileId)) {
+                        throw new CheckedServiceException(
+                                                          CheckedExceptionBusiness.CMS,
+                                                          CheckedExceptionResult.FILE_UPLOAD_FAILED,
+                                                          "文件上传失败!");
+                    }
+                    // 保存对应数据
+                    CmsExtra cmsExtra =
+                    cmsExtraService.addCmsExtra(new CmsExtra(contentId, gridFSFileId, fileName,
+                                                             null));
+                    if (ObjectUtil.isNull(cmsExtra.getId())) {
+                        throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                                          CheckedExceptionResult.PO_ADD_FAILED,
+                                                          "上传封面失败");
+                    }
                 }
-                // 保存对应数据
-                CmsExtra cmsExtra =
-                cmsExtraService.addCmsExtra(new CmsExtra(contentId, gridFSFileId, fileName, null));
+
                 this.updateCmsContent(new CmsContent(contentId, gridFSFileId));// 更新封面ID
-                if (ObjectUtil.isNull(cmsExtra.getId())) {
-                    throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                                      CheckedExceptionResult.PO_ADD_FAILED,
-                                                      "上传封面失败");
-                }
+
             }
         }
     }
