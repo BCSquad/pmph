@@ -162,7 +162,7 @@
 	</select>
 	
 	<!-- 根据主键id查询 -->
-	<select id="getDepartmentId"  resultType="getPmphDepartmentByName">
+	<select id="getPmphDepartmentByName"  resultType="PmphDepartment">
 		select * from pmph_department where dp_name = #{name}
 	</select>
 
