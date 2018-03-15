@@ -566,6 +566,14 @@ public class WriterUserServiceImpl implements WriterUserService {
 						CheckedExceptionResult.NULL_PARAM, "备注需要小于100字符");
 			}
 		}
+        if(StringUtil.strLength(writerUser.getPosition())>36){
+        	throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                    CheckedExceptionResult.ILLEGAL_PARAM, "职务需要小于36字符");
+        }
+        if(StringUtil.strLength(writerUser.getTitle())>30){
+        	throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                    CheckedExceptionResult.ILLEGAL_PARAM, "职称需要小于30字符");
+        }
 		int num = writerUserDao.update(writerUser);
 		String result = "FAIL";
 		if (num > 0) {
