@@ -18,7 +18,7 @@
 			<if test="dpName != null and dpName !=''">
 				dp_name,
 			</if>
-			<if test="sort != null and sort !=''">
+			<if test="sort != null">
 				sort,
 			</if>
 			<if test="note != null and note !=''">
@@ -42,7 +42,7 @@
 			<if test="dpName !=null and dpName !=''">
 				#{dpName},
 			</if>
-			<if test="sort !=null and sort !=''">
+			<if test="sort !=null">
 				#{sort},
 			</if>
 			<if test="note !=null and note !=''">
@@ -85,7 +85,7 @@
 			<if test=" dpName != null and dpName !=''">
 				dp_name= #{dpName},
 			</if>
-			<if test=" sort != null and sort !=''">
+			<if test=" sort != null">
 				sort= #{sort},
 			</if>
 			<if test=" note != null and note !=''">
