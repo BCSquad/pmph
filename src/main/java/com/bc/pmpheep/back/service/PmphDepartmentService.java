@@ -116,6 +116,6 @@ public interface PmphDepartmentService {
 	 * 
 	 * @return
 	 */
-	List<PmphDepartment> getPmphDepartmentList();
+	List<PmphDepartment> getPmphDepartmentList()throws CheckedServiceException;;
 
 }
