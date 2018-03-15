@@ -340,6 +340,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 				&& 0 == declarationCon.getOrgId()) {
 			declarationCon.setOnlineProgress(onlineProgress);
 			declarationDao.updateDeclaration(declarationCon);
+			// 添加动态信息
 			WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 			writerUserTrendst.setUserId(declarationCon.getUserId());
 			writerUserTrendst.setIsPublic(false);// 自己可见
@@ -375,6 +376,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
+			// 添加动态信息
 			WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 			writerUserTrendst.setUserId(declarationCon.getUserId());
 			writerUserTrendst.setIsPublic(false);// 自己可见
@@ -413,6 +415,23 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
+			// 添加动态信息
+			WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
+			writerUserTrendst.setUserId(declarationCon.getUserId());
+			writerUserTrendst.setIsPublic(false);// 自己可见
+			writerUserTrendst.setType(8);
+			String detail = "";
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("title", CheckedExceptionBusiness.MATERIAL);
+			map.put("content", "抱歉，您提交的《" + material.getMaterialName() 
+					+ "》申报表被出版社退回，请您核对后重试。");
+			map.put("img", 2);
+			detail = new Gson().toJson(map);
+			writerUserTrendst.setDetail(detail);
+			writerUserTrendst.setCmsContentId(null);
+			writerUserTrendst.setBookId(declarationCon.getMaterialId());
+			writerUserTrendst.setBookCommentId(null);
+			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			// 发送系统消息
 			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false);
 			// 获取审核进度是5并且机构id为出版社0则被退回给个人
@@ -433,6 +452,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
+			// 添加动态信息
 			WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 			writerUserTrendst.setUserId(declarationCon.getUserId());
 			writerUserTrendst.setIsPublic(false);// 自己可见
