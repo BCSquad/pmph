@@ -37,7 +37,15 @@ public class SensitiveServiceImpl extends BaseService implements SensitiveServic
 						CheckedExceptionResult.ILLEGAL_PARAM, "备注太长了，请控制在100个字以内");
 			}
 		}
-		sensitiveDao.add(sensitive);
+		Sensitive sen = sensitiveDao.getSensitiveId(sensitive.getWord());
+		if (ObjectUtil.notNull(sen)) {
+			sen.setIsDeleted(false);
+			sen.setNote(sensitive.getNote());
+			sen.setSort(sensitive.getSort());
+			sensitiveDao.update(sen);
+		} else {
+			sensitiveDao.add(sensitive);
+		}
 		return sensitive;
 	}
 
@@ -59,7 +67,7 @@ public class SensitiveServiceImpl extends BaseService implements SensitiveServic
 				throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE,
 						CheckedExceptionResult.ILLEGAL_PARAM, "敏感词太长了，请控制在10个字以内");
 			}
-			Long id = sensitiveDao.getSensitiveId(sensitive.getWord());
+			Long id = sensitiveDao.getSensitiveId(sensitive.getWord()).getId();
 			if (null != id && !sensitive.getId().equals(id)) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE,
 						CheckedExceptionResult.ILLEGAL_PARAM, "修改的敏感词重复了");

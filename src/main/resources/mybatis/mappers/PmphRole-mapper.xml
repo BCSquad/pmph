@@ -237,7 +237,7 @@
 			<!-- <if test="note != null and note!=''">
 				note = #{note},
 			</if> -->
-			<if test="sort != null and sort!=''">
+			<if test="sort != null">
 				sort = #{sort},
 			</if>
 			note = #{note}
