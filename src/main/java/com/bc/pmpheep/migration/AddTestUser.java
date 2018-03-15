@@ -137,19 +137,24 @@ public class AddTestUser {
          }
 	}
 	class TestOrgBo{
+		//机构名称
 		private String orgName ;
+		//机构类型名称
 		private String orgType ;
+		//区域名称
 		private String areaName;
 		//用户名
 		private String username;
 		//密码
 		private String password;
-		//真实姓名
+		//管理员姓名
 		private String realname;
-		//
+		//头像
 		private String avatar;
-		//
+		//作家用户集
 		List<WriterUser>  writerUsers ;
+		
+		
 		public String getOrgName() {
 			return this.orgName  ;
 		}
@@ -199,7 +204,13 @@ public class AddTestUser {
 		public void setWriterUsers(List<WriterUser>  writerUsers) {
 			this.writerUsers =writerUsers;
 		}
-		
+		@Override
+		public String toString() {
+			return "{orgName:" + orgName + ",orgType:" + orgType + ",areaName:"
+					+ areaName + ",username:" + username + ",password:"
+					+ password + ",realname:" + realname + ",avatar:" + avatar
+					+ ",writerUsers:" + writerUsers + "}";
+		}
 	}
 	
 	class TestPmphUserBo{
@@ -211,10 +222,11 @@ public class AddTestUser {
 		private String password;
 		//部门名称
 		private String department;
-		//
+		//头像
 		private String avatar;
 		//角色名称
 		List<PmphRole> roles;
+		
 		public String getUsername() {
 			return username;
 		}
