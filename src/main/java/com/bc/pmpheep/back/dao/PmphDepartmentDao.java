@@ -122,4 +122,10 @@ public interface PmphDepartmentDao {
 	 *
 	 */
 	Integer listOptsTotal(@Param("dpName") String dpName);
+	
+	/**功能描述： 查询部门
+	 * 
+	 * @return
+	 */
+	List<PmphDepartment> getDepartmentIdList();
 }

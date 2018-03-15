@@ -215,4 +215,8 @@
 		</if>
 		GROUP BY d.id) t
 	</select>
+	<!-- 查询所有部门 -->
+	<select id="getDepartmentIdList"	resultType="PmphDepartment">
+		select * from  pmph_department
+	</select>
 </mapper>

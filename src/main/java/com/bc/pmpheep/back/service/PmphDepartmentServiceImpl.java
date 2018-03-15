@@ -248,4 +248,9 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 		return pageResult;
 	}
 
+	@Override
+	public List<PmphDepartment> getPmphDepartmentList() {
+		return pmphDepartmentDao.getDepartmentIdList();
+	}
+
 }

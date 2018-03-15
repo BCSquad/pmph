@@ -105,5 +105,11 @@ public interface PmphDepartmentService {
 	 *
 	 */
 	PageResult<DepartmentOptsVO> listOpts(PageParameter<DepartmentOptsVO> pageParameter) throws CheckedServiceException;
+	
+	/**功能描述： 获取所有部门
+	 * 
+	 * @return
+	 */
+	List<PmphDepartment> getPmphDepartmentList();
 
 }

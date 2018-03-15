@@ -16,6 +16,7 @@ import com.bc.pmpheep.back.dao.CmsAdvertisementDao;
 import com.bc.pmpheep.back.dao.CmsAdvertisementImageDao;
 import com.bc.pmpheep.back.po.CmsAdvertisement;
 import com.bc.pmpheep.back.po.CmsAdvertisementImage;
+import com.bc.pmpheep.back.po.PmphDepartment;
 import com.bc.pmpheep.back.po.Sensitive;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.po.SurveyQuestion;
@@ -28,6 +29,7 @@ import com.bc.pmpheep.back.po.TopicExtra;
 import com.bc.pmpheep.back.po.TopicWriter;
 import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.po.WriterUser;
+import com.bc.pmpheep.back.service.PmphDepartmentService;
 import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.SensitiveService;
 import com.bc.pmpheep.back.service.SurveyQuestionAnswerService;
@@ -62,7 +64,6 @@ import com.google.gson.reflect.TypeToken;
 public class MigrationPlus {
 	
 	 private final Logger logger = LoggerFactory.getLogger(MigrationPlus.class);
-	 
 	 @Resource
 	 SurveyQuestionAnswerService surveyQuestionAnswerService;
 	 @Resource
@@ -101,6 +102,8 @@ public class MigrationPlus {
 	 SensitiveService sensitiveService;
 	 @Resource
 	 WriterPointRuleService writerPointRuleService;
+	 @Resource
+	 PmphDepartmentService pmphDepartmentService;
 	 
 	 public void start() {
 		 Date begin = new Date();
@@ -478,4 +481,11 @@ public class MigrationPlus {
 		 WriterPointRule writerPointRule8=new WriterPointRule("智慧商城", "buss", 100, true, "1", 1, "本平台100积分=智慧商城1积分", true);
 		 writerPointRuleService.addWriterPointRule(writerPointRule8);
 	 }
+	 
+	 //	部门对比
+//	protected void department(){
+//		List<PmphDepartment> list=pmphDepartmentService.getPmphDepartmentList();
+//		for (PmphDepartment pmphDepartment : list) {
+//		}
+//	 }
 }
