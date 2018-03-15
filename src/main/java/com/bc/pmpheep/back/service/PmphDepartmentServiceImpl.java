@@ -2,17 +2,14 @@ package com.bc.pmpheep.back.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.PmphDepartmentDao;
 import com.bc.pmpheep.back.dao.PmphUserDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.PmphDepartment;
-import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -249,8 +246,15 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 	}
 
 	@Override
-	public List<PmphDepartment> getPmphDepartmentList() {
+	public List<PmphDepartment> getPmphDepartmentList() throws CheckedServiceException{
 		return pmphDepartmentDao.getDepartmentIdList();
+	}
+	public PmphDepartment getPmphDepartmentByName(String name) throws CheckedServiceException {
+		if (StringUtil.isEmpty(name)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,
+					CheckedExceptionResult.NULL_PARAM, "部门名称为空");
+		}
+		return pmphDepartmentDao.getPmphDepartmentByName(name);
 	}
 
 }

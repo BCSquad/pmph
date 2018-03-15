@@ -111,6 +111,10 @@ public class MigrationStageTen {
         category1 = cmsCategoryService.addCmsCategory(category1);
         pk = category1.getId();
         JdbcHelper.updateNewPrimaryKey(tableName, pk, "colid", "1003");//更新旧表中new_pk字段
+        /* 新增帮助管理栏目 */
+        CmsCategory category4 = new CmsCategory(0L, "0", "帮助管理", true);
+        category4.setId(4L);
+        cmsCategoryService.addCmsCategory(category4);
         logger.info("'{}'表迁移完成", tableName);
         logger.info("原数据库中共有{}条数据，迁移了{}条数据", maps.size(), count);
     }

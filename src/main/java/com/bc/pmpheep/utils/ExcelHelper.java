@@ -975,7 +975,7 @@ public class ExcelHelper {
                             sheet.setColumnWidth(count, 7 * 512);
                             count++;
                             r2cell = r2.createCell(count);
-                            r2cell.setCellValue("发表情况");
+                            r2cell.setCellValue("出版方式");
                             sheet.setColumnWidth(count, 5 * 512);
                             count++;
                             r2cell = r2.createCell(count);
@@ -2161,7 +2161,7 @@ public class ExcelHelper {
                 }
                 colCount = properties.getColCount();// 列数复位
             }
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 5; i++) {
                 Cell cell = row.createCell(colCount++);
                 value = builders.get(i).toString();
                 cell.setCellValue(value);

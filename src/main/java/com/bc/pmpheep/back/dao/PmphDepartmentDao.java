@@ -30,6 +30,13 @@ public interface PmphDepartmentDao {
 	 * @return PmphDepartment
 	 */
 	PmphDepartment getPmphDepartmentById(Long id);
+	
+	/**
+	 * 根据名称查询
+	 * @param name
+	 * @return
+	 */
+	PmphDepartment getPmphDepartmentByName(@Param("name") String name);
 
 	/**
 	 * 

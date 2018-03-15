@@ -10,6 +10,7 @@ import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.AreaDao;
 import com.bc.pmpheep.back.po.Area;
 import com.bc.pmpheep.back.util.ObjectUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.AreaTreeVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
@@ -198,6 +199,15 @@ public class AreaServiceImpl extends BaseService implements AreaService {
 	@Override
 	public void deleteAllArea() throws CheckedServiceException {
 		areaDao.deleteAllArea();
+	}
+
+	@Override
+	public Long getAreaIdByName(String areaName) throws CheckedServiceException {
+		if (StringUtil.isEmpty(areaName)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.AREA, CheckedExceptionResult.NULL_PARAM,
+					"区域名称为空");
+		}
+		return areaDao.getAreaId(areaName);
 	}
 
 }

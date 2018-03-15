@@ -404,7 +404,7 @@
 			index="index" item="id">
 			#{id}
 		</foreach>
-		GROUP BY t.textbook_round , w.username
+		GROUP BY t.textbook_round  ,t.textbook_name, w.username
 		ORDER BY
 		t.textbook_name DESC
 	</select>
@@ -518,7 +518,7 @@
 		<if test="offlineProgress != null ">
 			and d.offline_progress = #{offlineProgress}
 		</if>
-		GROUP BY t.textbook_round , w.username
+		GROUP BY t.textbook_round ,t.textbook_name, w.username
 		ORDER BY
 		t.textbook_name DESC
 	</select>

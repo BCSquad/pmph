@@ -37,6 +37,13 @@ public interface AreaService {
      * @throws CheckedServiceException
      */
     Area getAreaById(Long id) throws CheckedServiceException;
+    
+    /**
+     * 根据名称获取区域Id
+     * @param areaName
+     * @return
+     */
+    Long getAreaIdByName(String areaName)throws CheckedServiceException;
 
     /**
      * 删除Area 通过主键id
