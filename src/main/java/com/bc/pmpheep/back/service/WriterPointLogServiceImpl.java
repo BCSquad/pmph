@@ -119,9 +119,10 @@ public class WriterPointLogServiceImpl implements WriterPointLogService {
                 List<WriterPointLog> writerPointLog2 = this.getWriterPointLogByUserId(userId);
                 WriterPointLog writerPointLog = new WriterPointLog();
                 // 现在的规则的积分值+以前的积分
-                Integer temp = 0;
+                Integer temp = 0; // 获取的总积分
                 if (!writerPointLog2.isEmpty()) {
-                    Integer newTemp = 0;
+                    Integer newTemp = 0; // 以前的总积分
+                    // 遍历以前获取的积分
                     for (WriterPointLog writerPointLogNew : writerPointLog2) {
                         newTemp += writerPointLogNew.getPoint();
                     }
@@ -135,6 +136,7 @@ public class WriterPointLogServiceImpl implements WriterPointLogService {
                 writerPointLog.setUserId(userId);
                 // 增加积分记录
                 this.add(writerPointLog);
+                // 查询用户积分
                 WriterPoint point = writerPointService.getWriterPointByUserId(userId);
                 if (ObjectUtil.notNull(point)) {
                     writerPointService.updateWriterPoint(new WriterPoint(point.getId(), userId,

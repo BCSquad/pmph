@@ -23,6 +23,8 @@ public class DecNationalPlan implements java.io.Serializable {
 	private String isbn;
 	//教材级别
 	private Integer rank;
+	// 教材级别(文字输入)
+	private String rankText;
 	//备注
 	private String note;
 	//显示顺序
@@ -41,11 +43,12 @@ public class DecNationalPlan implements java.io.Serializable {
 
 	/** full constructor */
 	public DecNationalPlan(Long declarationId, String materialName,
-			String isbn, Integer rank, String note, Integer sort) {
+			String isbn, Integer rank, String rankText, String note, Integer sort) {
 		this.declarationId = declarationId;
 		this.materialName = materialName;
 		this.isbn = isbn;
 		this.rank = rank;
+		this.rankText = rankText;
 		this.note = note;
 		this.sort = sort;
 	}
@@ -106,10 +109,19 @@ public class DecNationalPlan implements java.io.Serializable {
 		this.sort = sort;
 	}
 
+	public String getRankText() {
+		return rankText;
+	}
+
+	public void setRankText(String rankText) {
+		this.rankText = rankText;
+	}
+
 	@Override
 	public String toString() {
-		return " {id:" + id + ", declarationId:" + declarationId
-				+ ", materialName:" + materialName + ", isbn:" + isbn
-				+ ", rank:" + rank + ", note:" + note + ", sort:" + sort + "}";
+		return "DecNationalPlan [id=" + id + ", declarationId=" + declarationId
+				+ ", materialName=" + materialName + ", isbn=" + isbn
+				+ ", rank=" + rank + ", rankText=" + rankText + ", note="
+				+ note + ", sort=" + sort + "]";
 	}
 }

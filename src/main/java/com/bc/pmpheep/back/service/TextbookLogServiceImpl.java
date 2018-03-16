@@ -149,7 +149,7 @@ public class TextbookLogServiceImpl implements TextbookLogService {
         textbookLogDao.addTextbookLog(textbookLog);
         return textbookLog;
     }
-
+    
     @Override
     public void addTextbookLog(List<DecPosition> oldlist, Long textbookId, Long updaterId,
     int userType) throws CheckedServiceException {
@@ -201,100 +201,34 @@ public class TextbookLogServiceImpl implements TextbookLogService {
             }
             // 新选的职位
             Integer newChosenPosition = newDecPosition.getChosenPosition();
-            // 如果现在是主编
-            if (null != newChosenPosition && (
-            		newChosenPosition == 4  || 
-            		newChosenPosition == 5  || 
-            		newChosenPosition == 6  || 
-            		newChosenPosition == 7  ||
-            		newChosenPosition == 12 ||
-            		newChosenPosition == 13 ||
-            		newChosenPosition == 14 ||
-            		newChosenPosition == 15 
-            		)) {
-                StringBuilder temp = new StringBuilder(",");
-                // 遍历出所有的主编信息
-                for (DecPosition oldDecPosition : oldlist) {
-                    temp.append(oldDecPosition.getDeclarationId() + "_"
-                                + oldDecPosition.getChosenPosition() + ",");
-                }
-                if (!temp.toString().contains("," + newDecPosition.getDeclarationId() + "_1" + ",")) {
-                    addSumZhuBian++;
+            //是否是新增
+            boolean isAdd = true;
+          	// 遍历出所有的旧的信息
+            for (DecPosition oldDecPosition : oldlist) {
+          	  if(oldDecPosition.getDeclarationId().intValue() == newDecPosition.getDeclarationId() .intValue()){
+              		isAdd = false;
+              		break;
+              	}
+            }
+            if(isAdd){
+            	//新增的主编
+                if (null != newChosenPosition && (newChosenPosition == 4 || newChosenPosition == 12 ) ) {
+                	addSumZhuBian++;
                     addZhuBian.append("," + declaration.getRealname());
                 }
-            }
-            // 副主编
-            if (null != newChosenPosition && (
-            		newChosenPosition == 2  || 
-            		newChosenPosition == 3  || 
-            		newChosenPosition == 6  || 
-            		newChosenPosition == 7  || 
-            		newChosenPosition == 10 || 
-            		newChosenPosition == 11 || 
-            		newChosenPosition == 14 || 
-            		newChosenPosition == 15 
-            		)) {
-                StringBuilder temp = new StringBuilder(",");
-                for (DecPosition oldDecPosition : oldlist) {
-                    temp.append(oldDecPosition.getDeclarationId() + "_"
-                                + oldDecPosition.getChosenPosition() + ",");
-                }
-                if (!temp.toString().contains("," + newDecPosition.getDeclarationId() + "_2" + ",")) {
-                    addSumFuZhuBian++;
+            	//新增的副主编
+                if (null != newChosenPosition && (newChosenPosition == 2 || newChosenPosition == 10 ) ) {
+                	addSumFuZhuBian++;
                     addFuZhuBian.append("," + declaration.getRealname());
                 }
-           }
-           // 编委
-           if (null != newChosenPosition && (
-        		   newChosenPosition == 1  ||
-        		   newChosenPosition == 3  ||
-        		   newChosenPosition == 5  ||
-        		   newChosenPosition == 7  ||
-        		   newChosenPosition == 9  ||
-        		   newChosenPosition == 11  ||
-        		   newChosenPosition == 13  ||
-        		   newChosenPosition == 15  
-        		   )) {
-                StringBuilder temp = new StringBuilder(",");
-                for (DecPosition oldDecPosition : oldlist) {
-                    temp.append(oldDecPosition.getDeclarationId() + "_"
-                                + oldDecPosition.getChosenPosition() + ",");
-                }
-                if (!temp.toString().contains("," + newDecPosition.getDeclarationId() + "_3" + ",")) {
-                    addSumBianWei++;
+                //新增的编委
+                if (null != newChosenPosition && (newChosenPosition == 1 || newChosenPosition == 9  ) ) {
+                	addSumBianWei++;
                     addBianWei.append("," + declaration.getRealname());
                 }
-            }
-            // 数字编辑
-            if (null != newChosenPosition && (
-            		newChosenPosition == 8   || 
-            		newChosenPosition == 9   || 
-            		newChosenPosition == 10  || 
-            		newChosenPosition == 11  ||
-            		newChosenPosition == 12  ||
-            		newChosenPosition == 13  ||
-            		newChosenPosition == 14  ||
-            		newChosenPosition == 15 
-            		)) {
-                StringBuilder temp = new StringBuilder(",");
-                for (DecPosition oldDecPosition : oldlist) {
-                	Integer oldChosenPosition =  oldDecPosition.getChosenPosition() ;
-                	if (null != oldChosenPosition && (
-                			oldChosenPosition == 8   || 
-        					oldChosenPosition == 9   || 
-							oldChosenPosition == 10  || 
-							oldChosenPosition == 11  ||
-							oldChosenPosition == 12  ||
-							oldChosenPosition == 13  ||
-							oldChosenPosition == 14  ||
-							oldChosenPosition == 15 
-                    		)) { 
-                        temp.append(oldDecPosition.getDeclarationId() + ",");
-                    }
-
-                }
-                if (!temp.toString().contains("," + newDecPosition.getDeclarationId() + ",")) {
-                    addSumShuZiBianWei++;
+                //新增的数字编委
+                if (null != newChosenPosition && (newChosenPosition == 8 || newChosenPosition == 12 || newChosenPosition == 10 || newChosenPosition == 9 ) ){
+                	addSumShuZiBianWei++;
                     addShuZiBianWei.append("," + declaration.getRealname());
                 }
             }
@@ -313,107 +247,80 @@ public class TextbookLogServiceImpl implements TextbookLogService {
             }
             // 老的的职位
             Integer oldChosenPosition = oldDecPosition.getChosenPosition();
-            // 如果以前是主编
-            if (null != oldChosenPosition && (
-            		oldChosenPosition == 4  || 
-    				oldChosenPosition == 5  || 
-					oldChosenPosition == 6  || 
-					oldChosenPosition == 7  ||
-					oldChosenPosition == 12 ||
-					oldChosenPosition == 13 ||
-					oldChosenPosition == 14 ||
-					oldChosenPosition == 15 
-            		)) {
-                StringBuilder temp = new StringBuilder(",");
-                for (DecPosition newDecPosition : newlist) {
-                    temp.append(newDecPosition.getDeclarationId() + "_"
-                                + newDecPosition.getChosenPosition() + ",");
-                }
-                if (!temp.toString().contains("," + oldDecPosition.getDeclarationId() + "_1" + ",")) {
-                    redSumZhuBian++;
-                    redZhuBian.append("," + declaration.getRealname());
-                }
-               
+            //是否删除
+            boolean isDel = true;
+            // 遍历出所有新的信息
+            for (DecPosition newDecPosition : newlist) {
+          	  if( oldDecPosition.getDeclarationId().intValue() == newDecPosition.getDeclarationId().intValue() ){
+          		    isDel = false;
+              		break;
+              	}
             }
-            // 副主编
-            if (null != oldChosenPosition && (
-            		oldChosenPosition == 2  || 
-            		oldChosenPosition == 3  || 
-            		oldChosenPosition == 6  || 
-            		oldChosenPosition == 7  || 
-            		oldChosenPosition == 10 || 
-            		oldChosenPosition == 11 || 
-            		oldChosenPosition == 14 || 
-            		oldChosenPosition == 15 
-            		)) {
-                StringBuilder temp = new StringBuilder(",");
-                for (DecPosition newDecPosition : newlist) {
-                    temp.append(newDecPosition.getDeclarationId() + "_"
-                                + newDecPosition.getChosenPosition() + ",");
+            if(isDel){
+            	//移除了主编
+            	if (null != oldChosenPosition && ( oldChosenPosition == 4 || oldChosenPosition == 12 ) ) {
+            		redSumZhuBian++;
+                    redZhuBian.append("," + declaration.getRealname());
+                   
                 }
-                if (!temp.toString().contains("," + oldDecPosition.getDeclarationId() + "_2" + ",")) {
-                    redSumFuZhuBian++;
+            	//移除了副主编
+            	if (null != oldChosenPosition && ( oldChosenPosition == 2 || oldChosenPosition == 10 ) ) {
+            		redSumFuZhuBian++;
                     redFuZhuBian.append("," + declaration.getRealname());
                 }
-                
-            }
-           // 编委
-            if (null != oldChosenPosition && (
-            		oldChosenPosition == 1  ||
-            		oldChosenPosition == 3  ||
-            		oldChosenPosition == 5  ||
-            		oldChosenPosition == 7  ||
-            		oldChosenPosition == 9  ||
-            		oldChosenPosition == 11  ||
-            		oldChosenPosition == 13  ||
-            		oldChosenPosition == 15  
-         		   )) {
-                StringBuilder temp = new StringBuilder(",");
-                for (DecPosition newDecPosition : newlist) {
-                    temp.append(newDecPosition.getDeclarationId() + "_"
-                                + newDecPosition.getChosenPosition() + ",");
-                }
-                if (!temp.toString().contains("," + oldDecPosition.getDeclarationId() + "_3" + ",")) {
-                    redSumBianWei++;
+            	//移除了编委
+            	if (null != oldChosenPosition && ( oldChosenPosition == 1 || oldChosenPosition == 9 ) ) {
+            		redSumBianWei++;
                     redBianWei.append("," + declaration.getRealname());
                 }
-            }
-            // 数字编辑
-            if (null != oldChosenPosition && (
-            		oldChosenPosition == 8   || 
-            		oldChosenPosition == 9   || 
-            		oldChosenPosition == 10  || 
-            		oldChosenPosition == 11  ||
-            		oldChosenPosition == 12  ||
-            		oldChosenPosition == 13  ||
-            		oldChosenPosition == 14  ||
-            		oldChosenPosition == 15 
-            		)) {
-                StringBuilder temp = new StringBuilder(",");
-                for (DecPosition newDecPosition : newlist) {
-                	Integer newChosenPosition =  newDecPosition.getChosenPosition() ;
-                    if (null != newChosenPosition && (
-                    		newChosenPosition == 8   || 
-                    		newChosenPosition == 9   || 
-                    		newChosenPosition == 10  || 
-                    		newChosenPosition == 11  ||
-                    		newChosenPosition == 12  ||
-                    		newChosenPosition == 13  ||
-                    		newChosenPosition == 14  ||
-                    		newChosenPosition == 15 
-                    		)) {
-                        temp.append(newDecPosition.getDeclarationId() + ",");
-                    }
-                }
-                if (!temp.toString().contains("," + oldDecPosition.getDeclarationId() + ",")) {
-                    redSumShuZiBianWei++;
+            	//移除了编委
+            	if (null != oldChosenPosition && ( oldChosenPosition == 8 || oldChosenPosition == 12 || oldChosenPosition == 10 || oldChosenPosition == 9) ) {
+            		redSumShuZiBianWei++;
                     redShuZiBianWei.append("," + declaration.getRealname());
                 }
             }
         }
+        //职位被修改的
+        StringBuilder updateString = new StringBuilder("");
+        boolean allUpdate = false;
+        for (DecPosition newDecPosition : newlist) {
+            // 申报者
+            Long declarationId = newDecPosition.getDeclarationId();
+            // 新的申报表
+            Declaration declaration = new Declaration();
+            for(Declaration tempDeclaration: declarations){
+            	if(tempDeclaration.getId().intValue() == declarationId.intValue()){
+            		declaration = tempDeclaration;
+            		break ;
+            	}
+            }
+            // 新选的职位
+            Integer newChosenPosition = newDecPosition.getChosenPosition();
+            Integer newRank  = newDecPosition.getRank();
+            newRank = newRank == null? 0 :newRank;
+            //是否是新增
+            boolean isUpdate = false;
+          	// 遍历出所有的旧的信息
+            for (DecPosition oldDecPosition : oldlist) {
+              Integer oldChosenPosition = oldDecPosition.getChosenPosition();
+              Integer oldRank  = oldDecPosition.getRank();
+              oldRank = oldRank ==  null ? 0 : oldRank;
+              //修改的是职位或者排序 都算
+          	  if(oldDecPosition.getDeclarationId().intValue() == newDecPosition.getDeclarationId() .intValue() 
+          			  && !(newChosenPosition.intValue() ==  oldChosenPosition.intValue() && newRank.intValue() == oldRank.intValue())){
+          		    isUpdate = true;
+              		break;
+              	}
+            }
+            if(isUpdate){
+            	allUpdate = true;
+            	updateString.append(","+ declaration.getRealname());
+            }
+        } 
+        //遍历错误信息
         if (addSumZhuBian > 0 || redSumZhuBian > 0 || addSumFuZhuBian > 0 || redSumFuZhuBian > 0
             || addSumBianWei > 0 || redSumBianWei > 0 || addSumShuZiBianWei > 0
-            || redSumShuZiBianWei > 0) {
+            || redSumShuZiBianWei > 0 || allUpdate) {
             StringBuilder detail = new StringBuilder("");
             if (redSumZhuBian > 0) {
                 detail.append("移除了" + redSumZhuBian + "位主编:[" + redZhuBian.toString().substring(1)
@@ -446,6 +353,9 @@ public class TextbookLogServiceImpl implements TextbookLogService {
             if (addSumShuZiBianWei > 0) {
                 detail.append("增加了" + addSumShuZiBianWei + "位数字编辑:["
                               + addShuZiBianWei.toString().substring(1) + "];");
+            }
+            if(allUpdate){
+            	detail.append("修改了:["+ updateString.toString().substring(1) + "]的职位信息;");
             }
             String detail2 = detail.toString();
             //去掉最后一个;

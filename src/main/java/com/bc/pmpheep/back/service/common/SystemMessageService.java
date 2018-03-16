@@ -810,6 +810,11 @@ public final class SystemMessageService {
 					+ "</font>]在《<font color='red'>" + material.getMaterialName() + "</font>》提交的申报纸质表";
 			writerMsgContent = "您好，人民卫生出版社已收到您在《<font color='red'>" + material.getMaterialName()
 					+ "</font>》提交的申报纸质表，感谢您的参与，请耐心等待遴选结果";
+		}else{//取消收到
+			orgMsgContent = "您好，人民卫生出版社取消收到贵校老师[<font color='red'>" + declaration.getRealname()
+			+ "</font>]在《<font color='red'>" + material.getMaterialName() + "</font>》提交的申报纸质表";
+			writerMsgContent = "您好，人民卫生出版社取消收到您在《<font color='red'>" + material.getMaterialName()
+			+ "</font>》提交的申报纸质表，请您核对后重试";
 		}
 		// 存入消息主体
 		Message orgUserMessage = new Message(orgMsgContent);

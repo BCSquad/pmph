@@ -118,6 +118,8 @@ public class MigrationPlus {
 		 logger.info("初始化广告数据");
 		 initCmsAdvertisementData();
 		 logger.info("数据填充运行结束，用时：{}", JdbcHelper.getPastTime(begin));
+		 department();
+		 logger.info("更新人卫社组织结构，清除冗余部门");
 	 }
 	 
 	 //初始化广告数据
@@ -484,7 +486,7 @@ public class MigrationPlus {
 		 writerPointRuleService.addWriterPointRule(writerPointRule8);
 	 }
 	 
-	 //	部门对比
+	 //	清除冗余部门
 	protected void department(){
 		//查询现在所有部门，
 		PmphUserDepartmentVO departmentVO = pmphDepartmentService.listPmphDepartment(null);
