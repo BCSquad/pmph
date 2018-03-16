@@ -5,9 +5,6 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="id != null">
-				id,
-			</if>
 			<if test="categoryName != null and categoryName !=''">
 				category_name,
 			</if>
@@ -20,9 +17,6 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="id != null">
-				#{id},
-			</if>
 			<if test="categoryName != null and categoryName !=''">
 				#{categoryName},
 			</if>
@@ -52,9 +46,6 @@
 	<update id="updateSurveyQuestionCategory" parameterType="SurveyQuestionCategory">
 		update survey_question_category
 		<set>
-			<if test="id != null">
-				id=#{id},
-			</if>
 			<if test="categoryName != null and categoryName !=''">
 				category_name=#{categoryName},
 			</if>

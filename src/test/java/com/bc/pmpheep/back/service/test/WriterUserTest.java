@@ -204,4 +204,10 @@ public class WriterUserTest extends BaseTest {
                                        null, null, null, false, null, null));
         return writerUser;
     }
+    
+	@Test
+	public void resetPasswordTest() {
+		String password = userService.resetPassword(1L);
+		Assert.assertNotNull("修改失败", password);
+	}
 }

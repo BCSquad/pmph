@@ -136,7 +136,7 @@ public interface CmsContentService {
      * @throws CheckedServiceException
      * </pre>
      */
-    Integer publishCmsContentById(Long id) throws CheckedServiceException;
+    Integer publishCmsContentById(Long id, String sessionId) throws CheckedServiceException;
 
     /**
      * 
@@ -366,4 +366,16 @@ public interface CmsContentService {
      */
     PageResult<CmsContentVO> listHelp(PageParameter<CmsContentVO> pageParameter, String sessionId)
     throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：帮助管理-常见问题按标题查询
+     * 使用示范：
+     *
+     * @param title 问题名称
+     * @return
+     * </pre>
+     */
+    List<CmsContent> listCmsContentByTitle(String title) throws CheckedServiceException;
 }

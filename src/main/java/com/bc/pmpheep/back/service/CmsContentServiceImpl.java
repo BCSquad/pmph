@@ -233,9 +233,9 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "教材ID为空");
         }
-        if (Const.TRUE == cmsContent.getIsPublished()) {
-            cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_2);
-        }
+        // if (Const.TRUE == cmsContent.getIsPublished()) {
+        // cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_2);
+        // }
         // 信息快报/公告管理(发布)，审核时间就为当前时间
         if (Const.CMS_AUTHOR_STATUS_2 == cmsContent.getAuthStatus().shortValue()) {
             cmsContent.setAuthUserId(pmphUser.getId());
@@ -244,8 +244,7 @@ public class CmsContentServiceImpl implements CmsContentService {
             cmsContent.setAuthDate(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                             DateUtil.getCurrentTime()));
             cmsContent.setIsPublished(true);
-        } else if (cmsContent.getCategoryId() == Const.CMS_CATEGORY_ID_2
-                   || cmsContent.getCategoryId() == Const.CMS_CATEGORY_ID_3) {
+        } else if (Const.CMS_AUTHOR_STATUS_0 == cmsContent.getAuthStatus().shortValue()) {
             if (Const.TRUE == cmsContent.getIsStaging()) {
                 // 信息快报/公告管理(暂存)
                 cmsContent.setAuthUserId(pmphUser.getId());
@@ -338,13 +337,27 @@ public class CmsContentServiceImpl implements CmsContentService {
     }
 
     @Override
-    public Integer publishCmsContentById(Long id) throws CheckedServiceException {
+    public Integer publishCmsContentById(Long id, String sessionId) throws CheckedServiceException {
+        // 获取当前登陆用户
+        PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+        if (ObjectUtil.isNull(pmphUser) || ObjectUtil.isNull(pmphUser.getId())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
         if (ObjectUtil.isNull(id)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
-        Integer count = 0;
-        count = cmsContentDao.publishCmsContentById(id);
+        // count = cmsContentDao.publishCmsContentById(id);
+        Integer count =
+        cmsContentDao.updateCmsContent(new CmsContent(
+                                                      id,
+                                                      Boolean.TRUE,
+                                                      Boolean.FALSE,
+                                                      Const.CMS_AUTHOR_STATUS_2,
+                                                      pmphUser.getId(),
+                                                      DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                                               DateUtil.getCurrentTime())));
         CmsContent cmsContent = this.getCmsContentById(id);
         writerUserTrendstService.addWriterUserTrendst(new WriterUserTrendst(
                                                                             cmsContent.getAuthorId(),
@@ -394,8 +407,7 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               CheckedExceptionResult.OBJECT_NOT_FOUND, "获取对象为空");
         }
         // 评论审核通过，评论数加1
-        if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue()
-            && Boolean.TRUE == isPublished) {
+        if (Const.CMS_CATEGORY_ID_0.longValue() == categoryId.longValue() && isPublished) {
             this.updatCmsContentCommentsById(id, 1);
             this.updateCmsContentByParentId(cmsContent.getParentId(), 1);
         }
@@ -405,15 +417,15 @@ public class CmsContentServiceImpl implements CmsContentService {
         } else if (Const.CMS_CATEGORY_ID_1.longValue() == categoryId.longValue()) {
             type = Const.WRITER_USER_TRENDST_TYPE_1;
         }
-        if (Boolean.TRUE == isPublished) {
+        if (isPublished) {
             writerUserTrendstService.addWriterUserTrendst(new WriterUserTrendst(
                                                                                 cmsContent.getAuthorId(),
                                                                                 type, id));
         }
 
         // 当文章通过的时候 给用户增加积分
-        if (Const.CMS_CATEGORY_ID_1.longValue() == categoryId.longValue()
-            && Boolean.TRUE == isPublished && Const.CMS_AUTHOR_TYPE_2 == cmsContent.getAuthorType()) {
+        if (Const.CMS_CATEGORY_ID_1.longValue() == categoryId.longValue() && isPublished
+            && Const.CMS_AUTHOR_TYPE_2 == cmsContent.getAuthorType()) {
             String ruleName = "发表文章";
             writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
         }
@@ -490,7 +502,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         resultMap.put("cmsContent", cmsContent);
         // 判断内容是否已经发布或审核通过
         String fileDownLoadType = null;
-        if (Const.TRUE.booleanValue() == cmsContent.getIsPublished().booleanValue()
+        if (cmsContent.getIsPublished()
             || Const.CMS_AUTHOR_STATUS_2.shortValue() == cmsContent.getAuthStatus().shortValue()) {
             fileDownLoadType = Const.CMS_FILE_DOWNLOAD;
         } else {
@@ -498,16 +510,10 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         // 按mid 获取Content对象
         Content content = contentService.get(cmsContent.getMid());
-        if(content == null ) {
-        	content = new Content();
-        	content.setId(cmsContent.getMid());
-        	content.setContent("");
-        }
-        if(null == content.getId() ) {
-        	content.setId(cmsContent.getMid());
-        }
-        if(null == content.getContent()) {
-        	content.setContent("");
+        if (ObjectUtil.isNull(content)) {
+            content = new Content();
+            content.setId(cmsContent.getMid());
+            content.setContent("");
         }
         resultMap.put("content", content);
         // 按contentId 获取CMS内容附件
@@ -523,7 +529,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         resultMap.put("cmsExtras", cmsList);
         // 根据MaterialId 获取教材备注附件
         List<MaterialNoteAttachment> materialNoteAttachments = null;
-        if (Const.TRUE == cmsContent.getIsMaterialEntry()) {
+        if (cmsContent.getIsMaterialEntry()) {
             MaterialExtra materialExtra =
             materialExtraService.getMaterialExtraByMaterialId(cmsContent.getMaterialId());
             if (ObjectUtil.notNull(materialExtra)) {
@@ -607,7 +613,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         Long comments = 0L;
         for (Long id : ids) {
             CmsContent cmsContent = this.getCmsContentById(id);
-            if (Boolean.TRUE == cmsContent.getIsPublished()) {
+            if (cmsContent.getIsPublished()) {
                 if (cmsContent.getComments() > comments.longValue()) {
                     this.updatCmsContentCommentsById(id, -1);
                 }
@@ -810,6 +816,12 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "内容参数为空");
         }
+        List<CmsContent> listContents = this.listCmsContentByTitle(cmsContent.getTitle());
+        if (CollectionUtil.isNotEmpty(listContents)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.ILLEGAL_PARAM,
+                                              "添加的常见问题已存在，请确认后再添加");
+        }
         // MongoDB 内容插入
         Content contentObj = contentService.add(new Content(content));
         if (StringUtil.isEmpty(contentObj.getId())) {
@@ -869,5 +881,14 @@ public class CmsContentServiceImpl implements CmsContentService {
 
         }
         return cmsContentDao.updateCmsContent(cmsContent);
+    }
+
+    @Override
+    public List<CmsContent> listCmsContentByTitle(String title) throws CheckedServiceException {
+        if (StringUtil.isEmpty(title)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return cmsContentDao.listCmsContentByTitle(title);
     }
 }

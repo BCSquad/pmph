@@ -847,10 +847,6 @@ public class TextbookServiceImpl implements TextbookService {
 					"参数不能为空");
 		}
 		for (Textbook textbook : textbooks) {
-			if (!textbook.getIsPublished()) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-						CheckedExceptionResult.ILLEGAL_PARAM, "未公布教材书籍不能设置选题号");
-			}
 			textbookDao.updateTextbook(textbook);
 		}
 		return textbooks;
@@ -910,8 +906,10 @@ public class TextbookServiceImpl implements TextbookService {
 					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
 							CheckedExceptionResult.ILLEGAL_PARAM, "图书名称不能超过25个字数，请修改后再上传");
 				}
-				String topicNumber = StringUtil.getCellValue(fourth);
-				topicNumber = topicNumber.substring(0, topicNumber.indexOf(".0"));
+				String topicNumber = StringUtil.getCellValue(fourth);					
+				if (StringUtil.notEmpty(topicNumber)){
+					topicNumber = topicNumber.substring(0, topicNumber.indexOf(".0"));
+				}
 				if (StringUtil.strLength(topicNumber) > 30) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
 							CheckedExceptionResult.ILLEGAL_PARAM, "选题号不能超过30个字数，请修改后再上传");

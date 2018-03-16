@@ -130,8 +130,9 @@ public class CmsContentController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "文章发布")
     @RequestMapping(value = "/content/{id}/publish", method = RequestMethod.PUT)
-    public ResponseBean publish(@PathVariable("id") Long id) {
-        return new ResponseBean(cmsContentService.publishCmsContentById(id));
+    public ResponseBean publish(@PathVariable("id") Long id, HttpServletRequest request) {
+        String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(cmsContentService.publishCmsContentById(id, sessionId));
     }
 
     /**

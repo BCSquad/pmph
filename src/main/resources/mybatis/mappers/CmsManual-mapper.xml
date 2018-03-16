@@ -111,4 +111,8 @@
 			limit #{start},#{pageSize}
 		</if>
 	</select>
+	<!-- 帮助管理-操作手册按标题查询 -->
+	<select id="listCmsManualByManualName" parameterType="java.lang.String" resultType="CmsManual">
+		SELECT * FROM  `cms_manual` t WHERE  t.`manual_name`=#{manualName}
+	</select>
 </mapper>

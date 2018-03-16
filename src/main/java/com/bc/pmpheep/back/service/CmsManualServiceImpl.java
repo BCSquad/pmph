@@ -107,4 +107,14 @@ public class CmsManualServiceImpl implements CmsManualService {
         return pageResult;
     }
 
+    @Override
+    public List<CmsManual> listCmsManualByManualName(String manualName)
+    throws CheckedServiceException {
+        if (StringUtil.isEmpty(manualName)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                                              CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        return cmsManualDao.listCmsManualByManualName(manualName);
+    }
+
 }
