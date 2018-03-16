@@ -4,6 +4,7 @@
  */
 package com.bc.pmpheep.migration.test;
 
+import com.bc.pmpheep.migration.AddTestUser;
 import com.bc.pmpheep.migration.MigrationPlus;
 import com.bc.pmpheep.migration.MigrationStageEight;
 import com.bc.pmpheep.migration.MigrationStageFive;
@@ -123,5 +124,14 @@ public class MigrationTest extends BaseTest {
     @Rollback(false)
     public void testMigrationPlus() {
     	migrationPlus.start();
+    }
+    
+    @Resource
+    AddTestUser addTestUser;
+    
+    @Test
+    @Rollback(false)
+    public void testAddTestUser() {
+    	addTestUser.addTestUser();
     }
 }

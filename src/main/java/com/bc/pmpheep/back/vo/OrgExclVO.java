@@ -93,4 +93,7 @@ public class OrgExclVO {
         this.materialName = materialName;
     }
 
+    public OrgExclVO() {
+    }
+
 }

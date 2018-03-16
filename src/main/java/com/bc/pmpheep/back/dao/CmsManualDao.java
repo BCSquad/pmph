@@ -35,4 +35,16 @@ public interface CmsManualDao {
      */
     List<CmsManualVO> listCmsManual(PageParameter<CmsManualVO> pageParameter);
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：帮助管理-操作手册按标题查询
+     * 使用示范：
+     *
+     * @param manualName  操作手册标题
+     * @return
+     * </pre>
+     */
+    List<CmsManual> listCmsManualByManualName(String manualName);
+
 }

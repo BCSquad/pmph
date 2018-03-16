@@ -46,13 +46,13 @@ public class WriterUserServiceImpl implements WriterUserService {
 	WriterUserDao writerUserDao;
 	@Autowired
 	WriterRoleDao writerRoleDao;
-	
+
 	@Autowired
 	WriterProfileDao writerProfileDao;
-	
-	@Autowired  
-	private  DecPositionPublishedService decPositionPublishedService;
-	
+
+	@Autowired
+	private DecPositionPublishedService decPositionPublishedService;
+
 	@Autowired
 	private PmphGroupService pmphGroupService;
 
@@ -87,7 +87,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 		if (StringUtil.isEmpty(user.getAvatar())) {
 			user.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);
 		}
-		if(StringUtil.isEmpty(user.getNickname())){
+		if (StringUtil.isEmpty(user.getNickname())) {
 			user.setNickname(user.getUsername());
 		}
 		// 使用用户名作为盐值，MD5 算法加密
@@ -323,8 +323,8 @@ public class WriterUserServiceImpl implements WriterUserService {
 	 * @return 需要的Page对象
 	 */
 	@Override
-	public PageResult<WriterUserManagerVO> getListWriterUser(PageParameter<WriterUserManagerVO> pageParameter,Long groupId)
-			throws CheckedServiceException {
+	public PageResult<WriterUserManagerVO> getListWriterUser(PageParameter<WriterUserManagerVO> pageParameter,
+			Long groupId) throws CheckedServiceException {
 		String name = pageParameter.getParameter().getName();
 		if (StringUtil.notEmpty(name)) {
 			pageParameter.getParameter().setName(name);
@@ -335,11 +335,11 @@ public class WriterUserServiceImpl implements WriterUserService {
 		}
 		PageResult<WriterUserManagerVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
-		// 当rank为1的时候  查询教师用户
-		int total=0;
-		if(pageParameter.getParameter().getRank() == null || pageParameter.getParameter().getRank() != 1){
-			//当rank不为1的时候
-			 total= writerUserDao.getListWriterUserTotal(pageParameter);
+		// 当rank为1的时候 查询教师用户
+		int total = 0;
+		if (pageParameter.getParameter().getRank() == null || pageParameter.getParameter().getRank() != 1) {
+			// 当rank不为1的时候
+			total = writerUserDao.getListWriterUserTotal(pageParameter);
 			if (total > 0) {
 				List<WriterUserManagerVO> list = writerUserDao.getListWriterUser(pageParameter);
 				for (WriterUserManagerVO vo : list) {
@@ -365,9 +365,9 @@ public class WriterUserServiceImpl implements WriterUserService {
 				pageResult.setRows(list);
 			}
 			pageResult.setTotal(total);
-		}else{
-			total=writerUserDao.getLsitisTeacherTotal(pageParameter);
-			if(total>0){
+		} else {
+			total = writerUserDao.getLsitisTeacherTotal(pageParameter);
+			if (total > 0) {
 				List<WriterUserManagerVO> list = writerUserDao.getLsitisTeacher(pageParameter);
 				for (WriterUserManagerVO vo : list) {
 					switch (vo.getRank()) {
@@ -394,54 +394,57 @@ public class WriterUserServiceImpl implements WriterUserService {
 			pageResult.setTotal(total);
 		}
 		// 设置职位
-		if( null != pageResult.getRows() && pageResult.getRows().size() >0 && null != groupId) {
-			//清空职位
-			for(WriterUserManagerVO writerUserManagerVO: pageResult.getRows()) {
-				writerUserManagerVO.setPosition("无"); 
+		if (null != pageResult.getRows() && pageResult.getRows().size() > 0 && null != groupId) {
+			// 清空职位
+			for (WriterUserManagerVO writerUserManagerVO : pageResult.getRows()) {
+				writerUserManagerVO.setPosition("无");
 			}
 			// 设置职位
-			PmphGroup pmphGroup = pmphGroupService.getPmphGroupById(groupId) ;
+			PmphGroup pmphGroup = pmphGroupService.getPmphGroupById(groupId);
 			Long bookId = pmphGroup.getBookId();
-			if(null != bookId ) {
-				//查询这本书的发布职位 
-				List<DecPositionPublished> publisheds = decPositionPublishedService.getDecPositionPublishedListByBookId(bookId);
-				if(null != publisheds && publisheds.size() > 0 ) {
-					Map<Long,String> userIdsAndPostions = new HashMap<Long,String>();
-					for(DecPositionPublished published: publisheds) {
-						Declaration declaration = declarationService.getDeclarationById(published.getDeclarationId()) ;
+			if (null != bookId && bookId.intValue() > 0) {
+				// 查询这本书的发布职位
+				List<DecPositionPublished> publisheds = decPositionPublishedService
+						.getDecPositionPublishedListByBookId(bookId);
+				if (null != publisheds && publisheds.size() > 0) {
+					Map<Long, String> userIdsAndPostions = new HashMap<Long, String>();
+					for (DecPositionPublished published : publisheds) {
+						Declaration declaration = declarationService.getDeclarationById(published.getDeclarationId());
 						String postiton = "无";
-						if(published.getChosenPosition().intValue() == 4 && null != published.getRank() && published.getRank() == 1) {
+						if (published.getChosenPosition().intValue() == 4 && null != published.getRank()
+								&& published.getRank() == 1) {
 							postiton = "主编(第一主编)";
-						}else if(published.getChosenPosition().intValue() == 4 ) {
+						} else if (published.getChosenPosition().intValue() == 4) {
 							postiton = "主编";
-						}else if(published.getChosenPosition().intValue() == 12 && null != published.getRank() && published.getRank() == 1) {
+						} else if (published.getChosenPosition().intValue() == 12 && null != published.getRank()
+								&& published.getRank() == 1) {
 							postiton = "主编(第一主编)，数字编委";
-						}else if(published.getChosenPosition().intValue() == 12 ) {
+						} else if (published.getChosenPosition().intValue() == 12) {
 							postiton = "主编，数字编委";
-						}else if(published.getChosenPosition().intValue() == 2) {
+						} else if (published.getChosenPosition().intValue() == 2) {
 							postiton = "副主编";
-						}else if(published.getChosenPosition().intValue() == 10) {
+						} else if (published.getChosenPosition().intValue() == 10) {
 							postiton = "副主编，数字编委";
-						}else if(published.getChosenPosition().intValue() == 1 ) {
+						} else if (published.getChosenPosition().intValue() == 1) {
 							postiton = "编委";
-						}else if(published.getChosenPosition().intValue() == 9 ) {
+						} else if (published.getChosenPosition().intValue() == 9) {
 							postiton = "编委，数字编委";
 						}
 						userIdsAndPostions.put(declaration.getUserId(), postiton);
 					}
-					for(WriterUserManagerVO writerUserManagerVO: pageResult.getRows()) {
+					for (WriterUserManagerVO writerUserManagerVO : pageResult.getRows()) {
 						String postion = userIdsAndPostions.get(writerUserManagerVO.getId());
-						if(null != postion) {
-							writerUserManagerVO.setPosition(postion); 
+						if (null != postion) {
+							writerUserManagerVO.setPosition(postion);
 						}
 					}
 				}
 			}
 		}
-		// 设置职位 end 
+		// 设置职位 end
 		return pageResult;
 	}
-	
+
 	@Autowired
 	private DeclarationService declarationService;
 
@@ -566,6 +569,14 @@ public class WriterUserServiceImpl implements WriterUserService {
 						CheckedExceptionResult.NULL_PARAM, "备注需要小于100字符");
 			}
 		}
+		if (StringUtil.strLength(writerUser.getPosition()) > 36) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "职务需要小于36字符");
+		}
+		if (StringUtil.strLength(writerUser.getTitle()) > 30) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.ILLEGAL_PARAM, "职称需要小于30字符");
+		}
 		int num = writerUserDao.update(writerUser);
 		String result = "FAIL";
 		if (num > 0) {
@@ -627,7 +638,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 
 	@Override
 	public Integer updateWriterUserRank(WriterUser writerUsers) {
-		if(null==writerUsers){
+		if (null == writerUsers) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
@@ -641,7 +652,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 
 	@Override
 	public List<WriterUser> getWriterUserRankList(List<WriterUser> writerUsers) {
-		if(null==writerUsers){
+		if (null == writerUsers) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
@@ -650,7 +661,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 
 	@Override
 	public Integer updateWriterUser(WriterUser writerUsers) {
-		if(null==writerUsers){
+		if (null == writerUsers) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
@@ -659,11 +670,25 @@ public class WriterUserServiceImpl implements WriterUserService {
 
 	@Override
 	public List<WriterUser> getWriterUserList(Long[] userIds) {
-		if(null==userIds){
+		if (null == userIds) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
 		return writerUserDao.getWriterUserList(userIds);
+	}
+
+	@Override
+	public String resetPassword(Long id) throws CheckedServiceException {
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+					CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+		String password = "888888";
+		WriterUser user = writerUserDao.get(id);
+		DesRun desRun = new DesRun(user.getUsername(), password);
+		user.setPassword(desRun.enpsw);
+		writerUserDao.update(user);
+		return password;
 	}
 
 }

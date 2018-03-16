@@ -56,7 +56,7 @@ public interface SensitiveDao {
 	 * @return
 	 *
 	 */
-	Long getSensitiveId(String word);
+	Sensitive getSensitiveId(String word);
 
 	/**
 	 * 

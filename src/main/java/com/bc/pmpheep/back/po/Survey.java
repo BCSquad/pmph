@@ -115,6 +115,7 @@ public class Survey implements java.io.Serializable {
         this.id = id;
         this.title = title;
         this.typeId = typeId;
+        this.intro = intro;
     }
 
     public Survey(Long id, Short status, Timestamp beginDate, Timestamp endDate) {
@@ -142,9 +143,9 @@ public class Survey implements java.io.Serializable {
         this.gmtCreate = gmtCreate;
         this.gmtUpdate = gmtUpdate;
     }
-    
+
     public Survey(String title, String subhead, String intro, Long templateId, Long typeId,
-    	    Long userId, Timestamp beginDate, Timestamp endDate, Integer sort, Short status) {
+    Long userId, Timestamp beginDate, Timestamp endDate, Integer sort, Short status) {
         this.title = title;
         this.subhead = subhead;
         this.intro = intro;
@@ -354,14 +355,13 @@ public class Survey implements java.io.Serializable {
         this.gmtUpdate = gmtUpdate;
     }
 
-	@Override
-	public String toString() {
-		return "Survey [id=" + id + ", title=" + title + ", subhead=" + subhead
-				+ ", intro=" + intro + ", templateId=" + templateId
-				+ ", typeId=" + typeId + ", userId=" + userId + ", beginDate="
-				+ beginDate + ", endDate=" + endDate + ", sort=" + sort
-				+ ", status=" + status + ", isDeleted=" + isDeleted
-				+ ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
-	}
+    @Override
+    public String toString() {
+        return "Survey [id=" + id + ", title=" + title + ", subhead=" + subhead + ", intro="
+               + intro + ", templateId=" + templateId + ", typeId=" + typeId + ", userId=" + userId
+               + ", beginDate=" + beginDate + ", endDate=" + endDate + ", sort=" + sort
+               + ", status=" + status + ", isDeleted=" + isDeleted + ", gmtCreate=" + gmtCreate
+               + ", gmtUpdate=" + gmtUpdate + "]";
+    }
 
 }

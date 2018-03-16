@@ -176,4 +176,22 @@ public class BookVideoController {
         return new ResponseBean(bookVideoService.addBookVideo(sessionId, bookVideo, cover));
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/addVideo", method = RequestMethod.POST)
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存微视频信息")
+    public ResponseBean<Integer> addVideo(Long userId, Long bookId,
+            String title, String origPath, String origFileName, Long origFileSize,
+            String path, String fileName, Long fileSize,
+            @RequestParam("cover") MultipartFile cover) throws IOException {
+        BookVideo bookVideo = new BookVideo();
+        bookVideo.setBookId(bookId);
+        bookVideo.setTitle(title);
+        bookVideo.setOrigPath(origPath);
+        bookVideo.setOrigFileName(origFileName);
+        bookVideo.setOrigFileSize(origFileSize);
+        bookVideo.setPath(path);
+        bookVideo.setFileName(fileName);
+        bookVideo.setFileSize(fileSize);
+        return new ResponseBean(bookVideoService.addBookVideoFront(userId, bookVideo, cover));
+    }
 }

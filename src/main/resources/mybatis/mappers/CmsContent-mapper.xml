@@ -316,7 +316,10 @@
 			<if test="authUserId != null">
 				auth_user_id=#{authUserId},
 			</if>
-			<if test="authDate != null and authDate!='' ">
+			<if test="authDate == null ">
+				auth_date=#{authDate},
+			</if>
+			<if test="authDate != null ">
 				auth_date=#{authDate},
 			</if>
 			<if test="isDeleted != null">
@@ -799,5 +802,10 @@
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
+	</select>
+	
+	<!-- 帮助管理-常见问题按标题查询 -->
+	<select id="listCmsContentByTitle" parameterType="java.lang.String" resultType="CmsContent">
+		SELECT * FROM  `cms_content` t WHERE t.`category_id`=4 AND t.`title`=#{title}
 	</select>
 </mapper>

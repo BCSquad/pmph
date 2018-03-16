@@ -35,14 +35,14 @@ import com.bc.pmpheep.controller.bean.ResponseBean;
  * 使用示范：
  * 
  * 
- * @author (作者) nyz
+ * &#64;author (作者) nyz
  * 
- * @since (该版本支持的JDK版本) ：JDK 1.6或以上
- * @version (版本) 1.0
- * @date (开发日期) 2017-9-20
- * @modify (最后修改时间) 
- * @修改人 ：nyz 
- * @审核人 ：
+ * &#64;since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * &#64;version (版本) 1.0
+ * &#64;date (开发日期) 2017-9-20
+ * &#64;modify (最后修改时间) 
+ * &#64;修改人 ：nyz 
+ * &#64;审核人 ：
  * </pre>
  */
 @SuppressWarnings("all")
@@ -69,13 +69,13 @@ public class WriterUserController {
 	 * 功能描述：添加用户保存的方法
 	 * 使用示范：
 	 *
-	 * @param user
-	 * @param request
-	 * @return
+	 * &#64;param user
+	 * &#64;param request
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "添加用户")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "添加用户")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public ResponseBean add(WriterUser user, @FormParam("roleIds") String roleIds) {
 		logger.debug("添加用户 post 方法");
@@ -95,12 +95,12 @@ public class WriterUserController {
 	 * 功能描述：
 	 * 使用示范：
 	 *
-	 * @param user
-	 * @return
+	 * &#64;param user
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "更新用户")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新用户")
 	@RequestMapping(value = "/updateStatus", method = RequestMethod.PUT)
 	public ResponseBean updateStatus(WriterUser user) {
 		WriterUser writerUser = writerUserService.update(user);
@@ -113,13 +113,13 @@ public class WriterUserController {
 	 * 功能描述：更新用户的信息（包括更新用户绑定的角色）
 	 * 使用示范：
 	 *
-	 * @param user
-	 * @param request
-	 * @return
+	 * &#64;param user
+	 * &#64;param request
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "更新用户的信息和用户绑定的角色")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "更新用户的信息和用户绑定的角色")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	public ResponseBean update(WriterUser user, @FormParam("roleIds") String roleIds) {
 		logger.debug("user => " + user.toString());
@@ -137,13 +137,13 @@ public class WriterUserController {
 	 * 功能描述：根据用户 id 跳转到用户权限的列表页面
 	 * 使用示范：
 	 *
-	 * @param userId
-	 * @param model
-	 * @return
+	 * &#64;param userId
+	 * &#64;param model
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "跳转到用户权限的列表页面")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "跳转到用户权限的列表页面")
 	@RequestMapping(value = "/resources/{id}", method = RequestMethod.GET)
 	public ResponseBean resources(@PathVariable("id") Long userId) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -160,12 +160,12 @@ public class WriterUserController {
 	 * 功能描述：批量删除用户 1、删除用户数据 2、删除用户绑定的角色数据
 	 * 使用示范：
 	 *
-	 * @param userIds
-	 * @return
+	 * &#64;param userIds
+	 * &#64;return
 	 * </pre>
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "批量删除用户及其角色")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量删除用户及其角色")
 	@RequestMapping(value = "/delete/{userIds}", method = RequestMethod.DELETE)
 	public ResponseBean delete(@PathVariable("userIds") String userIds) {
 		String[] ids = userIds.split(",");
@@ -189,26 +189,24 @@ public class WriterUserController {
 	 * 
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "分页查询作家用户")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "分页查询作家用户")
 	@RequestMapping(value = "/list/writerUser", method = RequestMethod.GET)
-	public ResponseBean writerUser(
-			Long groupId ,
-			@RequestParam("pageSize") Integer pageSize,
+	public ResponseBean writerUser(Long groupId, @RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
 			@RequestParam("rank") Integer rank, @RequestParam("orgName") String orgName) {
 		PageParameter pageParameter = new PageParameter<>();
 		WriterUserManagerVO writerUserManagerVO = new WriterUserManagerVO();
-		if(StringUtil.notEmpty(name)){
-			writerUserManagerVO.setName(name.replaceAll(" ", ""));//去除空格
+		if (StringUtil.notEmpty(name)) {
+			writerUserManagerVO.setName(name.replaceAll(" ", ""));// 去除空格
 		}
-		if(StringUtil.notEmpty(orgName)){
+		if (StringUtil.notEmpty(orgName)) {
 			writerUserManagerVO.setOrgName(orgName.replaceAll(" ", ""));
 		}
 		writerUserManagerVO.setRank(rank);
 		pageParameter.setPageNumber(pageNumber);
 		pageParameter.setPageSize(pageSize);
 		pageParameter.setParameter(writerUserManagerVO);
-		return new ResponseBean(writerUserService.getListWriterUser(pageParameter,groupId));
+		return new ResponseBean(writerUserService.getListWriterUser(pageParameter, groupId));
 	}
 
 	/**
@@ -222,7 +220,7 @@ public class WriterUserController {
 	 * 
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "添加用户")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "添加用户")
 	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
 	public ResponseBean addUser(WriterUser writerUser) {
 		return new ResponseBean(writerUserService.addWriterUserOfBack(writerUser));
@@ -239,7 +237,7 @@ public class WriterUserController {
 	 * 
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "修改作家用户")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "修改作家用户")
 	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
 	public ResponseBean updateUser(WriterUser writerUser) {
 		return new ResponseBean(writerUserService.updateWriterUserOfBack(writerUser));
@@ -260,10 +258,10 @@ public class WriterUserController {
 	 *
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = " 分页查询小组成员添加界面作家用户信息")
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = " 分页查询小组成员添加界面作家用户信息")
 	@RequestMapping(value = "/list/groupMember", method = RequestMethod.GET)
-	public ResponseBean groupMember(Integer pageSize, Integer pageNumber, String bookname,
-			Integer chosenPosition, String name) {
+	public ResponseBean groupMember(Integer pageSize, Integer pageNumber, String bookname, Integer chosenPosition,
+			String name) {
 		PageParameter<GroupMemberWriterUserVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		GroupMemberWriterUserVO groupMemberWriterUserVO = new GroupMemberWriterUserVO();
 		groupMemberWriterUserVO.setBookname(bookname);
@@ -271,5 +269,12 @@ public class WriterUserController {
 		groupMemberWriterUserVO.setName(name);
 		pageParameter.setParameter(groupMemberWriterUserVO);
 		return new ResponseBean(writerUserService.listGroupMemberWriterUsers(pageParameter));
+	}
+
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "个人用户重置密码")
+	@RequestMapping(value = "/resetPassword", method = RequestMethod.PUT)
+	public ResponseBean resetPassword(Long id) {
+		return new ResponseBean<>(writerUserService.resetPassword(id));
 	}
 }

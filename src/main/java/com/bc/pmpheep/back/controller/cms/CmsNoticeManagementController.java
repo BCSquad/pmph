@@ -179,8 +179,8 @@ public class CmsNoticeManagementController {
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除一条公告管理数据")
-    @RequestMapping(value = "/notice/{id}/update", method = RequestMethod.DELETE)
-    public ResponseBean update(@PathVariable("id") Long id) {
+    @RequestMapping(value = "/notice/{id}/remove", method = RequestMethod.DELETE)
+    public ResponseBean remove(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.deleteCmsContentById(id));
     }
 

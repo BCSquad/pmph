@@ -563,7 +563,7 @@ public class PmphUserServiceImpl implements PmphUserService {
             }
             PmphGroup pmphGroup = pmphGroupService.getPmphGroupById(groupId);
             Long bookId = pmphGroup.getBookId();
-            if (null != bookId) {
+            if (null != bookId && bookId.intValue() > 0 ) {
                 Textbook textbook = textbookService.getTextbookById(bookId);
                 Material material = materialService.getMaterialById(textbook.getMaterialId());
                 List<MaterialProjectEditorVO> projects =
@@ -913,4 +913,13 @@ public class PmphUserServiceImpl implements PmphUserService {
         return pmphUserDao.getPmphUserByUsername(username);
     }
 
+	@Override
+	public PmphUser updateUser(PmphUser pmphUser) {
+		if (ObjectUtil.isNull(pmphUser)) {
+	           throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+	                                              CheckedExceptionResult.NULL_PARAM, "用户属性为空时禁止更新用户");
+	    }
+        pmphUserDao.update(pmphUser);
+        return pmphUser;
+	}
 }

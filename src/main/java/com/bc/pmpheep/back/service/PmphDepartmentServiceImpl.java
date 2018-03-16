@@ -246,6 +246,9 @@ public class PmphDepartmentServiceImpl extends BaseService implements PmphDepart
 	}
 
 	@Override
+	public List<PmphDepartment> getPmphDepartmentList() throws CheckedServiceException{
+		return pmphDepartmentDao.getDepartmentIdList();
+	}
 	public PmphDepartment getPmphDepartmentByName(String name) throws CheckedServiceException {
 		if (StringUtil.isEmpty(name)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.PMPH_DEPARTMENT,

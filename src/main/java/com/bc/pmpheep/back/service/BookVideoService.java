@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface BookVideoService {
 
+    Integer addBookVideoFront(Long userId, BookVideo bookVideo, MultipartFile cover) throws CheckedServiceException, IOException;
+    
     Integer addBookVideo(String sessionId, BookVideo bookVideo, MultipartFile cover) throws CheckedServiceException, IOException;
 
     /**

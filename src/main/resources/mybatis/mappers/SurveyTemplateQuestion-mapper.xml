@@ -5,9 +5,6 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="id != null">
-				id,
-			</if>
 			<if test="templateId != null">
 				template_id,
 			</if>
@@ -20,9 +17,6 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="id != null">
-				#{id},
-			</if>
 			<if test="templateId != null">
 				#{templateId},
 			</if>
@@ -63,9 +57,6 @@
 	<update id="updateSurveyTemplateQuestion" parameterType="SurveyTemplateQuestion">
 		update survey_template_question
 		<set>
-			<if test="id != null">
-				id=#{id},
-			</if>
 			<if test="templateId != null">
 				template_id=#{templateId},
 			</if>

@@ -331,10 +331,6 @@ public class ExcelHelper {
      * @return 根据Map集合创建的工作簿
      */
     public Workbook fromDecPositionBOList(List<DecPositionBO> dataSource, String sheetName) {
-        if (null == dataSource || dataSource.isEmpty()) {
-            throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
-                    "用于导出Excel的数据源为空");
-        }
         Workbook workbook = new HSSFWorkbook();
         Sheet sheet = workbook.createSheet(sheetName);
         Row header = sheet.createRow(0);
@@ -356,63 +352,65 @@ public class ExcelHelper {
         /*** 重新设置头背景颜色end ***/
         /* 设置行计数器 */
         int rowCount = 1;
-        /* 遍历list中的对象 */
-        for (DecPositionBO bo : dataSource) {
-            List<WriterBO> writers = bo.getWriters();
-            if (CollectionUtil.isEmpty(writers)) {
-                continue;
-            }
-            Integer zhuBianTotalNum = 0 ;
-            Integer fuZhuBianTotalNum = 0 ;
-            for (WriterBO writer : writers) {
-            	 Integer chosenPosition = writer.getChosenPosition();
-            	if(null != chosenPosition && (chosenPosition == 12 || chosenPosition == 4)) {
-            		zhuBianTotalNum ++ ;
-            	}else if(null != chosenPosition && (chosenPosition == 10 || chosenPosition == 2)) {
-            		fuZhuBianTotalNum++;
-            	}
-            }
-            Row row = sheet.createRow(rowCount);
-            row.createCell(0).setCellValue(bo.getSort());
-            row.createCell(1).setCellValue(bo.getTextbookName());
-            row.createCell(2).setCellValue(bo.getTextbookRound());
-            int writerNum = 1;
-            for (WriterBO writer : writers) {
-                if (writerNum > 1) {
-                    row = sheet.createRow(rowCount);
-                    row.createCell(0);
-                    row.createCell(1);
-                    row.createCell(2);
-                }
-                row.createCell(3).setCellValue(String.valueOf(writerNum));
-                row.createCell(4).setCellValue(writer.getRealname());
-                row.createCell(5).setCellValue(writer.getChosenOrgName());
-                Integer chosenPosition = writer.getChosenPosition();
-                if (null == chosenPosition) {
-                    continue;
-                }
-                String position = "";
-                String rank = "";
-                if (null != writer.getRank()) {
-                    rank = String.valueOf(writer.getRank());
-                }
-                if(null != chosenPosition && chosenPosition == 12 ) {
-                	position = "主编 "+zhuBianTotalNum+"-"+rank+"，数字编委";
-                }else if(null != chosenPosition && chosenPosition == 4 ) {
-                	position = "主编 "+zhuBianTotalNum+"-"+rank;
-                }else if(null != chosenPosition && chosenPosition == 10 ) {
-                	position = "副主编 "+fuZhuBianTotalNum+"-"+rank+"，数字编委";
-                }else if(null != chosenPosition && chosenPosition == 2 ) {
-                	position = "副主编 "+fuZhuBianTotalNum+"-"+rank;
-                }else if(null != chosenPosition && chosenPosition == 9 ) {
-                	position = "编委，数字编委";
-                }else if(null != chosenPosition && chosenPosition == 1 ) {
-                	position = "编委";
-                }
-                row.createCell(6).setCellValue(position);
-                writerNum++;
-                rowCount++;
-            }
+        if (null != dataSource && !dataSource.isEmpty()) {
+	        /* 遍历list中的对象 */
+	        for (DecPositionBO bo : dataSource) {
+	            List<WriterBO> writers = bo.getWriters();
+	            if (CollectionUtil.isEmpty(writers)) {
+	                continue;
+	            }
+	            Integer zhuBianTotalNum = 0 ;
+	            Integer fuZhuBianTotalNum = 0 ;
+	            for (WriterBO writer : writers) {
+	            	 Integer chosenPosition = writer.getChosenPosition();
+	            	if(null != chosenPosition && (chosenPosition == 12 || chosenPosition == 4)) {
+	            		zhuBianTotalNum ++ ;
+	            	}else if(null != chosenPosition && (chosenPosition == 10 || chosenPosition == 2)) {
+	            		fuZhuBianTotalNum++;
+	            	}
+	            }
+	            Row row = sheet.createRow(rowCount);
+	            row.createCell(0).setCellValue(bo.getSort());
+	            row.createCell(1).setCellValue(bo.getTextbookName());
+	            row.createCell(2).setCellValue(bo.getTextbookRound());
+	            int writerNum = 1;
+	            for (WriterBO writer : writers) {
+	                if (writerNum > 1) {
+	                    row = sheet.createRow(rowCount);
+	                    row.createCell(0);
+	                    row.createCell(1);
+	                    row.createCell(2);
+	                }
+	                row.createCell(3).setCellValue(String.valueOf(writerNum));
+	                row.createCell(4).setCellValue(writer.getRealname());
+	                row.createCell(5).setCellValue(writer.getChosenOrgName());
+	                Integer chosenPosition = writer.getChosenPosition();
+	                if (null == chosenPosition) {
+	                    continue;
+	                }
+	                String position = "";
+	                String rank = "";
+	                if (null != writer.getRank()) {
+	                    rank = String.valueOf(writer.getRank());
+	                }
+	                if(null != chosenPosition && chosenPosition == 12 ) {
+	                	position = "主编 "+zhuBianTotalNum+"-"+rank+"，数字编委";
+	                }else if(null != chosenPosition && chosenPosition == 4 ) {
+	                	position = "主编 "+zhuBianTotalNum+"-"+rank;
+	                }else if(null != chosenPosition && chosenPosition == 10 ) {
+	                	position = "副主编 "+fuZhuBianTotalNum+"-"+rank+"，数字编委";
+	                }else if(null != chosenPosition && chosenPosition == 2 ) {
+	                	position = "副主编 "+fuZhuBianTotalNum+"-"+rank;
+	                }else if(null != chosenPosition && chosenPosition == 9 ) {
+	                	position = "编委，数字编委";
+	                }else if(null != chosenPosition && chosenPosition == 1 ) {
+	                	position = "编委";
+	                }
+	                row.createCell(6).setCellValue(position);
+	                writerNum++;
+	                rowCount++;
+	            }
+	        }
         }
         int[] maxLength = {2, 12, 2, 2, 5, 15, 9};
         return dataStyleSetup(workbook, 1, rowCount, new ColumnProperties(7, maxLength));
@@ -975,7 +973,7 @@ public class ExcelHelper {
                             sheet.setColumnWidth(count, 7 * 512);
                             count++;
                             r2cell = r2.createCell(count);
-                            r2cell.setCellValue("发表情况");
+                            r2cell.setCellValue("出版方式");
                             sheet.setColumnWidth(count, 5 * 512);
                             count++;
                             r2cell = r2.createCell(count);
@@ -2161,7 +2159,7 @@ public class ExcelHelper {
                 }
                 colCount = properties.getColCount();// 列数复位
             }
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 5; i++) {
                 Cell cell = row.createCell(colCount++);
                 value = builders.get(i).toString();
                 cell.setCellValue(value);

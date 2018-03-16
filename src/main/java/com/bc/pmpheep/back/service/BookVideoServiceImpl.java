@@ -21,6 +21,7 @@ import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.back.dao.BookVideoDao;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import java.io.IOException;
@@ -42,6 +43,9 @@ public class BookVideoServiceImpl implements BookVideoService {
 
     @Autowired
     private FileService fileService;
+    
+    @Autowired
+    private WriterUserService writerUserService;
 
     @Override
     public PageResult<BookVideoVO> getVideoList(Integer pageSize, Integer pageNumber, String bookName, Integer state,
@@ -175,4 +179,26 @@ public class BookVideoServiceImpl implements BookVideoService {
         return bookVideoDao.updateBookVideo(bookVideo);
     }
 
+    @Override
+    public Integer addBookVideoFront(Long userId, BookVideo bookVideo, MultipartFile cover)
+            throws CheckedServiceException, IOException {
+        WriterUser user = writerUserService.get(userId);
+        if (ObjectUtil.isNull(user)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO, CheckedExceptionResult.NULL_PARAM, "用户为空");
+        }
+        if (ObjectUtil.isNull(bookVideo.getBookId()) || StringUtil.isEmpty(bookVideo.getTitle())
+                || StringUtil.isEmpty(bookVideo.getFileName()) || StringUtil.isEmpty(bookVideo.getPath())
+                || StringUtil.isEmpty(bookVideo.getOrigFileName()) || StringUtil.isEmpty(bookVideo.getOrigPath())
+                || ObjectUtil.isNull(bookVideo.getFileSize()) || ObjectUtil.isNull(bookVideo.getOrigFileSize())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_VEDIO, CheckedExceptionResult.NULL_PARAM, "参数为空");
+        }
+        bookVideo.setUserId(userId);
+        bookVideo.setIsAuth(false);
+        bookVideo.setCover("DEFAULT");//暂设为默认值
+        bookVideoDao.addBookVideo(bookVideo);
+        /* 保存封面 */
+        String coverId = fileService.save(cover, FileType.BOOKVEDIO_CONER, bookVideo.getId());
+        bookVideo.setCover(coverId);
+        return bookVideoDao.updateBookVideo(bookVideo);
+    }
 }

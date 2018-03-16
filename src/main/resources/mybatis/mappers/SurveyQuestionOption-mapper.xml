@@ -5,9 +5,6 @@
 	<sql id="key">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="id != null">
-				id,
-			</if>
 			<if test="questionId != null">
 				question_id,
 			</if>
@@ -26,9 +23,6 @@
 	<sql id="value">
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
-			<if test="id != null">
-				#{id},
-			</if>
 			<if test="questionId != null">
 				#{questionId},
 			</if>
@@ -76,9 +70,6 @@
 	<update id="updateSurveyQuestionOption" parameterType="SurveyQuestionOption">
 		update survey_question_option
 		<set>
-			<if test="id != null">
-				id=#{id},
-			</if>
 			<if test="questionId != null">
 				question_id=#{questionId},
 			</if>

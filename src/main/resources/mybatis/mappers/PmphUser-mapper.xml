@@ -149,10 +149,10 @@
 				sort = #{sort},
 			</if>
 			<if test=" isDeleted!= null ">
-				is_deleted= #{isDeleted}
+				is_deleted= #{isDeleted},
 			</if>
 			<if test="isDirector!=null">
-				is_director = #{isDirector}
+				is_director = #{isDirector},
 			</if>
 		</set>
 		WHERE

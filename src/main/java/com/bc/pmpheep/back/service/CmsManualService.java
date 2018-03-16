@@ -1,8 +1,9 @@
 package com.bc.pmpheep.back.service;
 
+import java.util.List;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
-import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.CmsManual;
 import com.bc.pmpheep.back.vo.CmsManualVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -40,4 +41,16 @@ public interface CmsManualService {
      */
     PageResult<CmsManualVO> listCmsManual(PageParameter<CmsManualVO> pageParameter, String sessionId)
     throws CheckedServiceException;
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：帮助管理-操作手册按标题查询
+     * 使用示范：
+     *
+     * @param manualName  操作手册标题
+     * @return
+     * </pre>
+     */
+    List<CmsManual> listCmsManualByManualName(String manualName) throws CheckedServiceException;
 }
