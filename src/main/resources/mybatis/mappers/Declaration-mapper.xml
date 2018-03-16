@@ -404,7 +404,7 @@
 			index="index" item="id">
 			#{id}
 		</foreach>
-		GROUP BY t.textbook_round  ,t.textbook_name, w.username
+		GROUP BY t.textbook_round ,t.textbook_name, w.username
 		ORDER BY
 		t.textbook_name DESC
 	</select>
@@ -496,7 +496,12 @@
 		</if>
 		<!-- 申报单位 -->
 		<if test="unitName != null and unitName != ''">
-			and o.org_name like concat('%',#{unitName},'%')
+			<if test="unitName == '人民卫生出版社'">
+				and d.org_id = 0
+			</if>
+			<if test="unitName != '人民卫生出版社'">
+				and o.org_name like concat('%',#{unitName},'%')
+			</if>
 		</if>
 		<!-- 申报职位 -->
 		<if test="positionType != null ">
