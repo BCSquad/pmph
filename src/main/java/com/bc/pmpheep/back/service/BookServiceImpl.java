@@ -95,7 +95,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 
 	@Override
 	public String updateBookById(Long[] ids, Long type, Boolean isOnSale, Boolean isNew, Boolean isPromote,
-			Long materialId) throws CheckedServiceException {
+			Long materialId, Boolean isKey) throws CheckedServiceException {
 		if (ArrayUtil.isEmpty(ids)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM, "id为空");
 		}
@@ -115,12 +115,17 @@ public class BookServiceImpl extends BaseService implements BookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
 					"是否推荐为空");
 		}
+		if (ObjectUtil.isNull(isKey)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK, CheckedExceptionResult.NULL_PARAM,
+					"是否重点学科为空");
+		}
 		String result = "FAIL";
 		for (Long id : ids) {
 			Book book = new Book();
 			book.setId(id);
 			book.setType(type);
 			book.setIsNew(isNew);
+			book.setIsKey(isKey);
 			book.setIsOnSale(isOnSale);
 			book.setIsPromote(isPromote);
 			book.setMaterialId(materialId);
