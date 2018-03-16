@@ -847,10 +847,6 @@ public class TextbookServiceImpl implements TextbookService {
 					"参数不能为空");
 		}
 		for (Textbook textbook : textbooks) {
-			if (!textbook.getIsPublished()) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
-						CheckedExceptionResult.ILLEGAL_PARAM, "未公布教材书籍不能设置选题号");
-			}
 			textbookDao.updateTextbook(textbook);
 		}
 		return textbooks;
