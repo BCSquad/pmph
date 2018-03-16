@@ -402,7 +402,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 			// 设置职位
 			PmphGroup pmphGroup = pmphGroupService.getPmphGroupById(groupId) ;
 			Long bookId = pmphGroup.getBookId();
-			if(null != bookId ) {
+			if(null != bookId && bookId.intValue() > 0 ) {
 				//查询这本书的发布职位 
 				List<DecPositionPublished> publisheds = decPositionPublishedService.getDecPositionPublishedListByBookId(bookId);
 				if(null != publisheds && publisheds.size() > 0 ) {

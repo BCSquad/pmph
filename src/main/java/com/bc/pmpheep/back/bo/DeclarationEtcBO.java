@@ -96,10 +96,10 @@ public class DeclarationEtcBO {
 	private String expertise;
 
 	@ExcelHeader(header = "是否服从调剂")
-	private Boolean isDispensed;
+	private String isDispensed;
 
 	@ExcelHeader(header = "是否参与本科教学评估认证")
-	private Boolean isUtec;
+	private String isUtec;
 
 	@ExcelHeader(header = "学校审核")
 	private String onlineProgress;
@@ -175,7 +175,7 @@ public class DeclarationEtcBO {
 	public DeclarationEtcBO(String realname, String username, String sex, String birthday, Integer experience,
 			String orgName, String position, String title, String address, String postcode, String telephone,
 			String fax, String handphone, String degree, String email, String idtype, String idcard, String expertise,
-			Boolean isDispensed, Boolean isUtec, String onlineProgress, String offlineProgress, String chosenOrgName,
+			String isDispensed, String isUtec, String onlineProgress, String offlineProgress, String chosenOrgName,
 			ArrayList<DecEduExp> decEduExps, ArrayList<DecWorkExp> decWorkExps, ArrayList<DecTeachExp> decTeachExps,
 			DecAchievement decAchievement, ArrayList<DecAcade> decAcades, ArrayList<DecLastPosition> decLastPositions,
 			ArrayList<DecCourseConstruction> decCourseConstructions, ArrayList<DecNationalPlan> decNationalPlans,
@@ -524,33 +524,19 @@ public class DeclarationEtcBO {
 		this.expertise = expertise;
 	}
 
-	/**
-	 * @return the isDispensed
-	 */
-	public Boolean getIsDispensed() {
+	public String getIsDispensed() {
 		return isDispensed;
 	}
 
-	/**
-	 * @param isDispensed
-	 *            the isDispensed to set
-	 */
-	public void setIsDispensed(Boolean isDispensed) {
+	public void setIsDispensed(String isDispensed) {
 		this.isDispensed = isDispensed;
 	}
 
-	/**
-	 * @return the isUtec
-	 */
-	public Boolean getIsUtec() {
+	public String getIsUtec() {
 		return isUtec;
 	}
 
-	/**
-	 * @param isUtec
-	 *            the isUtec to set
-	 */
-	public void setIsUtec(Boolean isUtec) {
+	public void setIsUtec(String isUtec) {
 		this.isUtec = isUtec;
 	}
 

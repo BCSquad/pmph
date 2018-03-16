@@ -563,7 +563,7 @@ public class PmphUserServiceImpl implements PmphUserService {
             }
             PmphGroup pmphGroup = pmphGroupService.getPmphGroupById(groupId);
             Long bookId = pmphGroup.getBookId();
-            if (null != bookId) {
+            if (null != bookId && bookId.intValue() > 0 ) {
                 Textbook textbook = textbookService.getTextbookById(bookId);
                 Material material = materialService.getMaterialById(textbook.getMaterialId());
                 List<MaterialProjectEditorVO> projects =
