@@ -16,7 +16,7 @@ import com.bc.pmpheep.back.dao.CmsAdvertisementDao;
 import com.bc.pmpheep.back.dao.CmsAdvertisementImageDao;
 import com.bc.pmpheep.back.po.CmsAdvertisement;
 import com.bc.pmpheep.back.po.CmsAdvertisementImage;
-import com.bc.pmpheep.back.po.PmphDepartment;
+import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Sensitive;
 import com.bc.pmpheep.back.po.Survey;
 import com.bc.pmpheep.back.po.SurveyQuestion;
@@ -46,7 +46,9 @@ import com.bc.pmpheep.back.service.TopicService;
 import com.bc.pmpheep.back.service.TopicWriertService;
 import com.bc.pmpheep.back.service.WriterPointRuleService;
 import com.bc.pmpheep.back.service.WriterUserService;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.vo.CmsAdvertisementOrImageVO;
+import com.bc.pmpheep.back.vo.PmphUserDepartmentVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
@@ -483,9 +485,62 @@ public class MigrationPlus {
 	 }
 	 
 	 //	部门对比
-//	protected void department(){
-//		List<PmphDepartment> list=pmphDepartmentService.getPmphDepartmentList();
-//		for (PmphDepartment pmphDepartment : list) {
-//		}
-//	 }
+	protected void department(){
+		//查询现在所有部门，
+		PmphUserDepartmentVO departmentVO = pmphDepartmentService.listPmphDepartment(null);
+		//部门总数为28，超过则是多余部门
+		if(ObjectUtil.notNull(departmentVO)&&departmentVO.getSonDepartment().size()>28){
+			for (PmphUserDepartmentVO pmphDepartment : departmentVO.getSonDepartment()) {
+				//查询该部门下的所有成员
+				List<PmphUser> pmphUsers=pmphUserService.listPmphUserByDepartmentId(pmphDepartment.getId());
+				switch (pmphDepartment.getDpName()) {
+				case "出版社科室1":
+					if(ObjectUtil.notNull(pmphUsers)){
+						for (PmphUser pmphUser : pmphUsers) {//把该部门人员移到人民卫生出版社部门下
+							pmphUser.setDepartmentId(0L);
+							pmphUserService.updateUser(pmphUser);
+						}
+					}
+					//删除多余的部门
+					pmphDepartmentService.deletePmphDepartmentBatch(pmphDepartment.getId());
+					break;
+				case "公司领导":
+					//查询该部门下的所有成员
+					if(ObjectUtil.notNull(pmphUsers)){
+						for (PmphUser pmphUser : pmphUsers) {//把该部门人员移到人民卫生出版社部门下
+							pmphUser.setDepartmentId(0L);
+							pmphUserService.updateUser(pmphUser);
+						}
+					}
+					//删除多余的部门
+					pmphDepartmentService.deletePmphDepartmentBatch(pmphDepartment.getId());
+					break;
+				case "其他":
+					//查询该部门下的所有成员
+					if(ObjectUtil.notNull(pmphUsers)){
+						for (PmphUser pmphUser : pmphUsers) {//把该部门人员移到人民卫生出版社部门下
+							pmphUser.setDepartmentId(0L);
+							pmphUserService.updateUser(pmphUser);
+						}
+					}
+					//删除多余的部门
+					pmphDepartmentService.deletePmphDepartmentBatch(pmphDepartment.getId());
+					break;
+				case "农协":
+					//查询该部门下的所有成员
+					if(ObjectUtil.notNull(pmphUsers)){
+						for (PmphUser pmphUser : pmphUsers) {//把该部门人员移到人民卫生出版社部门下
+							pmphUser.setDepartmentId(0L);
+							pmphUserService.updateUser(pmphUser);
+						}
+					}
+					//删除多余的部门
+					pmphDepartmentService.deletePmphDepartmentBatch(pmphDepartment.getId());
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	 }
 }

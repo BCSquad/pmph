@@ -913,4 +913,13 @@ public class PmphUserServiceImpl implements PmphUserService {
         return pmphUserDao.getPmphUserByUsername(username);
     }
 
+	@Override
+	public PmphUser updateUser(PmphUser pmphUser) {
+		if (ObjectUtil.isNull(pmphUser)) {
+	           throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+	                                              CheckedExceptionResult.NULL_PARAM, "用户属性为空时禁止更新用户");
+	    }
+        pmphUserDao.update(pmphUser);
+        return pmphUser;
+	}
 }

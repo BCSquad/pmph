@@ -306,5 +306,12 @@ public interface PmphUserService {
      * </pre>
      */
     PmphUser getPmphUserByUsername(String username) throws CheckedServiceException;
+    
+    /**
+     * 更新部门 
+     * @param pmphUser
+     * @return
+     */
+	PmphUser updateUser(PmphUser pmphUser);
 
 }
