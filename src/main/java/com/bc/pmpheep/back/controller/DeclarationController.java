@@ -91,7 +91,7 @@ public class DeclarationController {
     }
 
     /**
-     * 确认收到纸质表
+     * 确认/取消收到纸质表
      * 
      * @author tyc
      * @createDate 2017年11月24日 下午15:27:36
@@ -101,7 +101,7 @@ public class DeclarationController {
      * @throws IOException
      */
     @ResponseBody
-    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "确认收到纸质表")
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "确认/取消收到纸质表")
     @RequestMapping(value = "/list/declaration/confirmPaperList", method = RequestMethod.GET)
     public ResponseBean confirmPaperList(@RequestParam("id") Long id,
     @RequestParam("offlineProgress") Integer offlineProgress, HttpServletRequest request)
