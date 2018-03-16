@@ -277,4 +277,16 @@ public interface CmsContentDao {
      * </pre>
      */
     List<CmsContent> getCmsContentByParentId(Long parentId);
+
+    /**
+     * 
+     * <pre>
+     * 功能描述：帮助管理-常见问题按标题查询
+     * 使用示范：
+     *
+     * @param title 问题名称
+     * @return
+     * </pre>
+     */
+    List<CmsContent> listCmsContentByTitle(String title);
 }
