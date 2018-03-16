@@ -109,7 +109,7 @@ public class CmsManualController {
      */
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除操作手册")
     @DeleteMapping(value = "/manual/{id}/delete")
-    public ResponseBean delCmsManual(@PathVariable("id") Long id) {
+    public ResponseBean delete(@PathVariable("id") Long id) {
         return new ResponseBean(cmsManualService.deleteCmsManualById(id));
     }
 }
