@@ -908,7 +908,9 @@ public class TextbookServiceImpl implements TextbookService {
 				}
 				String topicNumber = StringUtil.getCellValue(fourth);					
 				if (StringUtil.notEmpty(topicNumber)){
-					topicNumber = topicNumber.substring(0, topicNumber.indexOf(".0"));
+					if (topicNumber.indexOf(".0") > -1){
+						topicNumber = topicNumber.substring(0, topicNumber.indexOf(".0"));
+					}
 				}
 				if (StringUtil.strLength(topicNumber) > 30) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
