@@ -147,8 +147,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 	private MaterialExtensionService materialExtensionService;
 	@Autowired
 	private WriterUserTrendstService writerUserTrendstService;
-    @Autowired
-    private WriterUserService writerUserService;
+	@Autowired
+	private WriterUserService writerUserService;
 
 	@Override
 	public Declaration addDeclaration(Declaration declaration) throws CheckedServiceException {
@@ -306,8 +306,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 		String detail = "";
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title", CheckedExceptionBusiness.MATERIAL);
-		map.put("content", "您好，人民卫生出版社已收到您在《" + material.getMaterialName() 
-				+ "》提交的申报纸质表，感谢您的参与，请耐心等待遴选结果。");
+		map.put("content", "您好，人民卫生出版社已收到您在《" + material.getMaterialName() + "》提交的申报纸质表，感谢您的参与，请耐心等待遴选结果。");
 		map.put("img", 1);
 		detail = new Gson().toJson(map);
 		writerUserTrendst.setDetail(detail);
@@ -371,8 +370,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
-						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+						"最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
@@ -384,8 +383,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String detail = "";
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
-			map.put("content", "抱歉，贵校老师" + declarationCon.getRealname() + 
-					"提交的《" + material.getMaterialName() 
+			map.put("content", "抱歉，贵校老师" + declarationCon.getRealname() + "提交的《" + material.getMaterialName()
 					+ "》申报表被出版社退回，请贵校核对后重试。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
@@ -410,8 +408,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
-						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+						"最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
@@ -423,8 +421,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String detail = "";
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
-			map.put("content", "抱歉，您提交的《" + material.getMaterialName() 
-					+ "》申报表被出版社退回，请您核对后重试。");
+			map.put("content", "抱歉，您提交的《" + material.getMaterialName() + "》申报表被出版社退回，请您核对后重试。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
@@ -447,8 +444,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, 
-						CheckedExceptionResult.NULL_PARAM, "最多只能输入100个字符，请重新输入!");
+				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+						"最多只能输入100个字符，请重新输入!");
 			}
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
@@ -460,8 +457,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			String detail = "";
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("title", CheckedExceptionBusiness.MATERIAL);
-			map.put("content", "抱歉，您提交的《" + material.getMaterialName() 
-					+ "》申报表被出版社退回，请您核对后重试。");
+			map.put("content", "抱歉，您提交的《" + material.getMaterialName() + "》申报表被出版社退回，请您核对后重试。");
 			map.put("img", 2);
 			detail = new Gson().toJson(map);
 			writerUserTrendst.setDetail(detail);
@@ -587,8 +583,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			}
 		}
 		// 作家遴选
-		List<DecPositionPublishedVO> decPositionPublishedVOs = 
-				decPositionPublishedDao.listDecPositionDisplayOrPosition(declarationId);
+		List<DecPositionPublishedVO> decPositionPublishedVOs = decPositionPublishedDao
+				.listDecPositionDisplayOrPosition(declarationId);
 		for (DecPositionPublishedVO decPositionPublished : decPositionPublishedVOs) {
 			if (decPositionPublished.getChosenPosition() != 0) {
 				switch (decPositionPublished.getChosenPosition()) {
@@ -644,10 +640,10 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}
 		// 作家申报表
 		DeclarationOrDisplayVO declaration = declarationDao.getDeclarationByIdOrOrgName(declarationId);
-                WriterUser user = writerUserService.get(declaration.getUserId());
-                if (user != null) {
-                    declaration.setUsername(user.getUsername());
-                }
+		WriterUser user = writerUserService.get(declaration.getUserId());
+		if (user != null) {
+			declaration.setUsername(user.getUsername());
+		}
 		// 作家学习经历
 		List<DecEduExp> decEduExpList = decEduExpDao.getListDecEduExpByDeclarationId(declarationId);
 		// 作家工作经历
@@ -1103,6 +1099,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 					extensionVOs.add(extensionVO);
 				}
 			}
+			String isDispensed = declarationOrDisplayVO.getIsDispensed() ? "是" : "否";
+			String isUtec = declarationOrDisplayVO.getIsUtec() ? "是" : "否";
 			String textbookName = declarationOrDisplayVO.getTextbookName() + "第"
 					+ declarationOrDisplayVO.getTextbookRound() + "版";
 			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getRealname(),
@@ -1112,8 +1110,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 					declarationOrDisplayVO.getPostcode(), declarationOrDisplayVO.getTelephone(),
 					declarationOrDisplayVO.getFax(), declarationOrDisplayVO.getHandphone(), degree,
 					declarationOrDisplayVO.getEmail(), idtype, declarationOrDisplayVO.getIdcard(),
-					declarationOrDisplayVO.getExpertise(), declarationOrDisplayVO.getIsDispensed(),
-					declarationOrDisplayVO.getIsUtec(), strOnlineProgress, strOfflineProgress,
+					declarationOrDisplayVO.getExpertise(), isDispensed, isUtec, strOnlineProgress, strOfflineProgress,
 					declarationOrDisplayVO.getOrgNameOne(), (ArrayList<DecEduExp>) decEduExp,
 					(ArrayList<DecWorkExp>) decWorkExp, (ArrayList<DecTeachExp>) decTeachExp, decAchievement,
 					(ArrayList<DecAcade>) decAcade, (ArrayList<DecLastPosition>) decLastPosition,
@@ -1466,6 +1463,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 					extensionVOs.add(extensionVO);
 				}
 			}
+			String isDispensed = declarationOrDisplayVO.getIsDispensed() ? "是" : "否";
+			String isUtec = declarationOrDisplayVO.getIsUtec() ? "是" : "否";
 			String textbookName = declarationOrDisplayVO.getTextbookName() + "第"
 					+ declarationOrDisplayVO.getTextbookRound() + "版";
 			DeclarationEtcBO declarationEtcBO = new DeclarationEtcBO(declarationOrDisplayVO.getRealname(),
@@ -1475,8 +1474,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 					declarationOrDisplayVO.getPostcode(), declarationOrDisplayVO.getTelephone(),
 					declarationOrDisplayVO.getFax(), declarationOrDisplayVO.getHandphone(), degree,
 					declarationOrDisplayVO.getEmail(), idtype, declarationOrDisplayVO.getIdcard(),
-					declarationOrDisplayVO.getExpertise(), declarationOrDisplayVO.getIsDispensed(),
-					declarationOrDisplayVO.getIsUtec(), strOnlineProgress, strOfflineProgress,
+					declarationOrDisplayVO.getExpertise(), isDispensed, isUtec, strOnlineProgress, strOfflineProgress,
 					declarationOrDisplayVO.getOrgNameOne(), (ArrayList<DecEduExp>) decEduExp,
 					(ArrayList<DecWorkExp>) decWorkExp, (ArrayList<DecTeachExp>) decTeachExp, decAchievement,
 					(ArrayList<DecAcade>) decAcade, (ArrayList<DecLastPosition>) decLastPosition,
