@@ -21,6 +21,9 @@
 			<if test="rank !=null and rank !=''">
 				rank,
 			</if>
+			<if test="rankText !=null and rankText != ''">
+				rank_text,
+			</if>
 			<if test="note !=null and note !=''">
 				note,
 			</if>
@@ -46,6 +49,9 @@
 			</if>
 			<if test="rank !=null and rank !=''">
 				#{rank},
+			</if>
+			<if test="rankText !=null and rankText != ''">
+				#{rankText},
 			</if>
 			<if test="note !=null and note !=''">
 				#{note},
@@ -92,6 +98,9 @@
 			</if>
 			<if test="rank !=null and rank !=''">
 				rank = #{rank},
+			</if>
+			<if test="rankText !=null and rankText != ''">
+				rank_text = #{rankText},
 			</if>
 			<if test="note !=null and note !=''">
 				note = #{note},
