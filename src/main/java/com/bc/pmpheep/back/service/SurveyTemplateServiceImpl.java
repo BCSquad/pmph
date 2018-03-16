@@ -147,7 +147,19 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         String templateName = surveyTemplateVO.getTemplateName();// 问卷名称
+        if (templateName.length() > 50) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷标题不能超过50个字符");
+        }
         String intro = surveyTemplateVO.getIntro();// 问卷概述
+        if (templateName.length() > 200) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷概述不能超过200个字符");
+        }
+        if (templateName.length() > 200) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷概述不能超过200个字符");
+        }
         Long typeId = surveyTemplateVO.getTypeId();// 问卷调查类型
         Long userId = pmphUser.getId();// 问卷创建人
         SurveyTemplate surveyTemplate =
