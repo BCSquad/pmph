@@ -152,10 +152,11 @@ public interface WriterUserService {
 	 * 
 	 * @param page
 	 *            传入的查询条件
-	 * @param groupId  不为空时表示在需要关联小组的遴选职位
+	 * @param groupId
+	 *            不为空时表示在需要关联小组的遴选职位
 	 * @return
 	 */
-	PageResult<WriterUserManagerVO> getListWriterUser(PageParameter<WriterUserManagerVO> pageParameter,Long groupId )
+	PageResult<WriterUserManagerVO> getListWriterUser(PageParameter<WriterUserManagerVO> pageParameter, Long groupId)
 			throws CheckedServiceException;
 
 	/**
@@ -208,39 +209,58 @@ public interface WriterUserService {
 	 * 
 	 */
 	String updateWriterUserOfBack(WriterUser WriterUser) throws CheckedServiceException;
-	
+
 	/**
 	 * 通过作家用户id修改 级别为教师
+	 * 
 	 * @param writerUsers
 	 * @return
 	 */
-	Integer updateWriterUserRank(WriterUser writerUsers)throws CheckedServiceException;
+	Integer updateWriterUserRank(WriterUser writerUsers) throws CheckedServiceException;
+
 	/**
 	 * 查询教师认证数量
-	 * @param userid 
+	 * 
+	 * @param userid
 	 * @return
 	 */
-	Integer getCount()throws CheckedServiceException;
-	
+	Integer getCount() throws CheckedServiceException;
+
 	/**
 	 * 通过id查询用户级别
+	 * 
 	 * @param writerUsers
 	 * @return
 	 */
-	List<WriterUser> getWriterUserRankList(List<WriterUser> writerUsers)throws CheckedServiceException;
+	List<WriterUser> getWriterUserRankList(List<WriterUser> writerUsers) throws CheckedServiceException;
+
 	/**
-	 * 通过作家用户id修改  为教师
+	 * 通过作家用户id修改 为教师
+	 * 
 	 * @param writerUsers
 	 * @return
 	 */
 	Integer updateWriterUser(WriterUser writerUsers) throws CheckedServiceException;
-	
+
 	/**
 	 * 通过用户id查询用户信息
+	 * 
 	 * @param userIds
 	 * @return
 	 * @throws CheckedServiceException
 	 */
 	List<WriterUser> getWriterUserList(Long[] userIds) throws CheckedServiceException;
 
+	/**
+	 * 
+	 * 
+	 * 功能描述：重置密码
+	 *
+	 * @param id
+	 *            需要重置密码的用户id
+	 * @return
+	 * @throws CheckedServiceException
+	 *
+	 */
+	String resetPassword(Long id) throws CheckedServiceException;
 }
