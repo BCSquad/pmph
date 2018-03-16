@@ -124,15 +124,15 @@ public class MigrationPlus {
 	        //初始化的数据
 	        String dataJson
 	                = "["
-	                + "{adname:'首页轮播',         type:1,autoPlay:true, animationInterval:3000,image:[{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'},{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'},{image:'/upload/site/24e8c65f-f513-4bee-9e20-bdcc9f97e3a1.jpg'}]} ,"
+	                + "{adname:'首页轮播',          type:1,autoPlay:true, animationInterval:3000, image:[{image:'/web/img/banner4.png'},{image:'/web/img/banner4.png'},{image:'/web/img/banner4.png'}]} ,"
 	                + "{adname:'首页中部1',         type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/2670f031-35da-4dd6-b079-8f295c51a339.png'}]} ,"
 	                + "{adname:'首页中部2',         type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/af598f9e-ae9e-48a0-a3e4-17acc363051a.png'}]} ,"
 	                + "{adname:'首页中部3',         type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/a4160c1e-8beb-4530-9f2b-df022a6f751d.png'}]} ,"
 	                + "{adname:'首页中部4',         type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/a69b782d-f1ad-42e6-a91a-08432963b54a.png'}]} ,"
-	                + "{adname:'信息快报和遴选公告列表',type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/article/20170328/wenzhang10.jpg'}]} ,"
-	                + "{adname:'首页原重点推荐1',	    type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/article/20170328/zhongdiantuijian1.png'}]} ,"
-	                + "{adname:'首页原重点推荐2',	    type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/article/20170328/zhongdiantuijian2.png'}]} ,"
-	                + "{adname:'读书首页轮播 ',      type:1,autoPlay:true ,animationInterval:3000,image:[{image:'/upload/article/20170328/xiaoxi1.jpg'},{image:'/upload/article/20170328/xiaoxi2.jpg'},{image:'/upload/article/20170328/xiaoxi3.jpg'}]} "
+	                + "{adname:'信息快报和遴选公告列表', type:0,autoPlay:false,animationInterval:0,   image:[{image:'/web/img/caode.png'}]} ,"
+	                + "{adname:'首页原重点推荐1',	    type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/a2067cf8-d076-4ba5-90b8-f63dd4d3a172.png'}]} ,"
+	                + "{adname:'首页原重点推荐2',	    type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/aafeba35-79e8-49f6-931c-45678ef58d86.png'}]} ,"
+	                + "{adname:'读书首页轮播 ',      type:1,autoPlay:true ,animationInterval:3000,image:[{image:'/web/img/bannerd.png'},{image:'/web/img/banner2d.png'}]} "
 	                + "]";
 	        Gson gson = new Gson();
 	        List<CmsAdvertisementOrImageVO> lst = gson.fromJson(dataJson, new TypeToken<ArrayList<CmsAdvertisementOrImageVO>>() {
