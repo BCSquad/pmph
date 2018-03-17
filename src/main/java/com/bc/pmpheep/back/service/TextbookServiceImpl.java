@@ -847,6 +847,10 @@ public class TextbookServiceImpl implements TextbookService {
 					"参数不能为空");
 		}
 		for (Textbook textbook : textbooks) {
+			if (StringUtil.notEmpty(textbook.getTopicNumber()) && StringUtil.strLength(textbook.getTopicNumber()) > 30){
+				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+						CheckedExceptionResult.ILLEGAL_PARAM, "选题号不能超过30个字符");
+			}
 			textbookDao.updateTextbook(textbook);
 		}
 		return textbooks;
@@ -908,7 +912,9 @@ public class TextbookServiceImpl implements TextbookService {
 				}
 				String topicNumber = StringUtil.getCellValue(fourth);					
 				if (StringUtil.notEmpty(topicNumber)){
-					topicNumber = topicNumber.substring(0, topicNumber.indexOf(".0"));
+					if (topicNumber.indexOf(".0") > -1){
+						topicNumber = topicNumber.substring(0, topicNumber.indexOf(".0"));
+					}
 				}
 				if (StringUtil.strLength(topicNumber) > 30) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,

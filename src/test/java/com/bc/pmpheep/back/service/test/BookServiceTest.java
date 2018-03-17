@@ -65,7 +65,7 @@ public class BookServiceTest extends BaseTest {
 		Book book = this.addBook();
 		Assert.assertNotNull("插入内容后返回的Book不应为空", book.getId());
 		Long[] ids = { book.getId() };
-		returnSring = bookService.updateBookById(ids, 1L, true, true, false, null);
+		returnSring = bookService.updateBookById(ids, 1L, true, true, false, null, false);
 		Assert.assertEquals("是否更新成功", "SUCCESS", returnSring);
 
 	}

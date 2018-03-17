@@ -54,6 +54,6 @@ public interface SensitiveService {
 	 * @return
 	 *
 	 */
-	String updateIsDeleted(Long[] id) throws CheckedServiceException;
+	String deletedIsDeleted(Long[] id) throws CheckedServiceException;
 
 }

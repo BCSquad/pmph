@@ -92,7 +92,7 @@ public interface SensitiveDao {
 	 * @return
 	 *
 	 */
-	Integer updateIsDeleted(Long[] id);
+	Integer deletedIsDeleted(Long[] id);
 
 	/**
 	 * 

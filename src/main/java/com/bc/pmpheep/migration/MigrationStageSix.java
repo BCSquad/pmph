@@ -161,8 +161,8 @@ public class MigrationStageSix {
                 + "end online_progress,wd.submittype,ta.auditstate,ta.auditdate,"
                 + "case when eup.new_pk is not null then eup.new_pk else null "
                 + "end auth_user_id,"
-                + "case when ta.isreceivedpaper=0 then 2 "
-                + "when ta.isreceivedpaper=1 then 0 "
+                + "case when ta.isreceivedpaper=1 then 2 "
+                + "when ta.isreceivedpaper=0 then 0 "
                 + "when ta.isreceivedpaper is null then 0 "
                 + "end offline_progress,"
                 + "ta.isreceivedpaper,ta.editauditstate,"
@@ -1005,7 +1005,7 @@ public class MigrationStageSix {
                 + "case when materlevel like '%1%,%2%' then 3 "
                 + "when materlevel like '%1%' then 1 "
                 + "when materlevel like '%2%' then 2 "
-                + "else 2 end rank,wa.remark,wd.new_pk id "
+                + "else 0 end rank,wa.remark,wd.new_pk id "
                 + "from writer_editorbook wa "
                 + "left join writer_declaration wd on wd.writerid=wa.writerid ";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
@@ -1049,6 +1049,16 @@ public class MigrationStageSix {
             decNationalPlan.setIsbn(isbn);
             Integer rank = rankJudge.intValue();
             decNationalPlan.setRank(rank);
+            // 教材级别(文字输入)0=无/1=教育部十二五/2=国家卫计委十二五/3=both
+            if (0 == rank) {
+            	decNationalPlan.setRankText("无");
+            } else if (1 == rank) {
+            	decNationalPlan.setRankText("教育部十二五");
+            } else if (2 == rank) {
+            	decNationalPlan.setRankText("国家卫计委十二五");
+            } else if (3 == rank) {
+            	decNationalPlan.setRankText("both");
+            }
             decNationalPlan.setNote((String) map.get("remark")); // 备注
             decNationalPlan.setSort(999); // 显示顺序
             decNationalPlan = decNationalPlanService.addDecNationalPlan(decNationalPlan);

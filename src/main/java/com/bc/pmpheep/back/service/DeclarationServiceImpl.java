@@ -66,6 +66,7 @@ import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
@@ -314,7 +315,11 @@ public class DeclarationServiceImpl implements DeclarationService {
 		writerUserTrendst.setBookId(declarationCon.getMaterialId());
 		writerUserTrendst.setBookCommentId(null);
 		writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
-		systemMessageService.sendWhenReceiptAudit(declarationCon.getId(), true); // 发送系统消息
+		Boolean isPass=true;
+		if(0==offlineProgress){
+			isPass=false;
+		}
+		systemMessageService.sendWhenReceiptAudit(declarationCon.getId(), isPass); // 发送系统消息
 		return declarationCon;
 	}
 

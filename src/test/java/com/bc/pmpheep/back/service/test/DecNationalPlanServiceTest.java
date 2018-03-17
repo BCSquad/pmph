@@ -40,6 +40,7 @@ public class DecNationalPlanServiceTest extends BaseTest {
 		decNationalPlan.setMaterialName("人体解剖学");
 		decNationalPlan.setIsbn("666");
 		decNationalPlan.setRank(1);
+		decNationalPlan.setRankText("教育部十二五");
 		decNationalPlan.setNote("重点建设学科");
 		decNationalPlan.setSort(1);
 		decNationalPlan = decNationalPlanService.addDecNationalPlan(decNationalPlan);
@@ -78,19 +79,20 @@ public class DecNationalPlanServiceTest extends BaseTest {
 		list = decNationalPlanService.getListDecNationalPlanByDeclarationId(1L);
 		Assert.assertTrue("获取主编国家级规划教材情况集合信息失败", list.size() > 1);
 	}
-	
+
 	private DecNationalPlan add(){
 		DecNationalPlan decNationalPlan = new DecNationalPlan();
 		decNationalPlan.setDeclarationId(1L);
 		decNationalPlan.setMaterialName("普通心理学");
 		decNationalPlan.setIsbn("123456");
 		decNationalPlan.setRank(2);
+		decNationalPlan.setRankText("国家卫计委十二五");
 		decNationalPlan.setSort(13);
 		decNationalPlanService.addDecNationalPlan(decNationalPlan);
 		DecNationalPlan decNationalPlan2 = new DecNationalPlan(1L, "社会心理学", "654321",
-				1, "专业主修教材", null);
+				1, "教育部十二五", "专业主修教材", null);
 		decNationalPlanService.addDecNationalPlan(decNationalPlan2);
-		DecNationalPlan decNationalPlan3 = new DecNationalPlan(2L, "变态心理学", "111", 3, null, null);
+		DecNationalPlan decNationalPlan3 = new DecNationalPlan(2L, "变态心理学", "111", 3, "both", null, null);
 		decNationalPlanService.addDecNationalPlan(decNationalPlan3);
 		return decNationalPlan3;
 	}
