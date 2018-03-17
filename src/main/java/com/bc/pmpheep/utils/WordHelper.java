@@ -148,7 +148,7 @@ public class WordHelper {
 			}
 			if (StringUtil.notEmpty(materialName)) {
 				List<XWPFRun> runs = document.getParagraphs().get(0).getRuns();
-				runs.get(0).setText(materialName.concat("专家申报表"), 0);
+				runs.get(0).setText(materialName.concat("主编、副主编、编委申请表"), 0);
 			}
 			List<XWPFParagraph> xwpfParagraphs = document.getParagraphs();
 			List<XWPFTable> tables = document.getTables();
@@ -283,8 +283,8 @@ public class WordHelper {
 		List<String> presetPosition = bo.getPresetPosition();
 		if (textbookName.size() > 0) {
 			for (int i = 0; i < textbookName.size(); i++) {
-				int height = table.getRow(i).getHeight();
-				List<XWPFTableCell> cells = rows.get(i).getTableCells();
+				int height = table.getRow(i+1).getHeight();
+				List<XWPFTableCell> cells = rows.get(i+1).getTableCells();
 				cells.get(0).setText("《".concat(textbookName.get(i)).concat("》"));
 				cells.get(1).setText(presetPosition.get(i));
 				if (i + 1 < textbookName.size()) {

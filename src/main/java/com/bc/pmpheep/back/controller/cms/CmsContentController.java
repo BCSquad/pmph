@@ -256,7 +256,7 @@ public class CmsContentController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "文章删除")
     @RequestMapping(value = "/content/{id}/delete", method = RequestMethod.DELETE)
-    public ResponseBean delCmsContent(@PathVariable("id") Long id) {
+    public ResponseBean delete(@PathVariable("id") Long id) {
         return new ResponseBean(cmsContentService.deleteCmsContentById(id));
     }
 }
