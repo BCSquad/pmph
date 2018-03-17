@@ -57,7 +57,7 @@ public class SensitiveController {
 	/**
 	 * 
 	 * 
-	 * 功能描述：逻辑删除敏感词
+	 * 功能描述：删除敏感词
 	 *
 	 * @param ids
 	 * @return
