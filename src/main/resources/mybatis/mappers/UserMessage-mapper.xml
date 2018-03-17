@@ -215,7 +215,7 @@
 	<!-- 根据消息id 获取 UserMessage集 -->
 	<select id="getMessageByMsgId" parameterType="java.lang.String"
 		resultType="UserMessage">
-		select * from user_message where msg_id = #{msgId};
+		select * from `user_message` t where t.`msg_id` = #{msgId} AND t.`is_read`=1;
 	</select>
 
 	<!-- 批量插入 UserMessage -->

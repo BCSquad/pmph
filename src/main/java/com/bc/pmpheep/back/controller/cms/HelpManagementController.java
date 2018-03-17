@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bc.pmpheep.annotation.LogDetail;
@@ -154,4 +156,20 @@ public class HelpManagementController {
         }
     }
 
+    /**
+     * 
+     * <pre>
+     * 功能描述：帮助管理删除
+     * 使用示范：
+     *
+     * @param id 主键ID
+     * @return 影响行数
+     * </pre>
+     */
+    @ResponseBody
+    @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "帮助管理删除")
+    @RequestMapping(value = "/{id}/delete", method = RequestMethod.DELETE)
+    public ResponseBean delete(@PathVariable("id") Long id) {
+        return new ResponseBean(cmsContentService.deleteCmsContentById(id));
+    }
 }

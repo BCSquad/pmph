@@ -7,22 +7,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 表示对标记有xxx注解的类,做代理 注解@Retention可以用来修饰注解，是注解的注解，称为元注解。
- * Retention注解有一个属性value，是RetentionPolicy类型的，Enum RetentionPolicy是一个枚举类型，
- * 这个枚举决定了Retention注解应该如何去保持，也可理解为Rentention 搭配 RententionPolicy使用。RetentionPolicy有3个值：CLASS RUNTIME
- * SOURCE 用@Retention(RetentionPolicy .CLASS)修饰的注解，表示注解的信息被保留在class文件(字节码文件)中当程序编译时，但不会被虚拟机读取在运行的时候；
- * 用@Retention(RetentionPolicy.SOURCE )修饰的注解,表示注解的信息会被编译器抛弃，不会留在class文件中，注解的信息只会留在源文件中；
- * 用@Retention(RetentionPolicy.RUNTIME )修饰的注解，表示注解的信息被保留在class文件(字节码文件)中当程序编译时，会被虚拟机保留在运行时，
- * 所以他们可以用反射的方式读取。RetentionPolicy.RUNTIME 可以让你从JVM中读取Annotation注解的信息，以便在分析程序的时候使用.
  * 
- * 类和方法的annotation缺省情况下是不出现在javadoc中的，为了加入这个性质我们用@Documented java用 @interface Annotation{ } 定义一个注解
+ * <pre>
+ * 功能描述：操作日志注解
+ * 使用示范：
  * 
- * @Annotation，一个注解是一个类。
  * 
- * @interface是一个关键字，在设计annotations的时候必须把一个类型定义为@interface，而不能用class或interface关键字
+ * @author (作者) nyz
  * 
- * @author nyz
- * 
+ * @since (该版本支持的JDK版本) ：JDK 1.6或以上
+ * @version (版本) 1.0
+ * @date (开发日期) 2018-3-17
+ * @modify (最后修改时间) 
+ * @修改人 ：nyz 
+ * @审核人 ：
+ * </pre>
  */
 
 @Target({ ElementType.METHOD, ElementType.TYPE })
