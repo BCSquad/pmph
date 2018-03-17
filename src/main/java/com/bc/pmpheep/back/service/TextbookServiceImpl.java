@@ -230,24 +230,28 @@ public class TextbookServiceImpl implements TextbookService {
 		List<DecPositionPublished> olds = decPositionPublishedService.getDecPositionPublishedListByBookIds(textBookIds);
 		List<DecPositionPublished> sends = new ArrayList<>();
 		for (DecPositionPublished now : decPositionPublishedLst) {
-			DecPositionPublished published = decPositionPublishedService
-					.getDecPositionByDeclarationId(now.getDeclarationId(), now.getTextbookId());
-			if (ObjectUtil.isNull(published)) {
+			if (ObjectUtil.notNull(now.getRank())) {
 				sends.add(now);
-			}
-			for (DecPositionPublished old : olds) {
-				if (old.getDeclarationId().equals(now.getDeclarationId())
-						&& old.getTextbookId().equals(now.getTextbookId())) {
-					if (!old.getChosenPosition().equals(now.getChosenPosition())) {
-						sends.add(now);
-					} else {
-						if (null == now.getRank() && null == now.getRank()) {
-						} else if (null != now.getRank() && null != now.getRank()) {
-							if (!now.getRank().equals(now.getRank())) {
+			} else {
+				DecPositionPublished published = decPositionPublishedService
+						.getDecPositionByDeclarationId(now.getDeclarationId(), now.getTextbookId());
+				if (ObjectUtil.isNull(published)) {
+					sends.add(now);
+				}
+				for (DecPositionPublished old : olds) {
+					if (old.getDeclarationId().equals(now.getDeclarationId())
+							&& old.getTextbookId().equals(now.getTextbookId())) {
+						if (!old.getChosenPosition().equals(now.getChosenPosition())) {
+							sends.add(now);
+						} else {
+							if (null == now.getRank() && null == now.getRank()) {
+							} else if (null != now.getRank() && null != now.getRank()) {
+								if (!now.getRank().equals(now.getRank())) {
+									sends.add(now);
+								}
+							} else {
 								sends.add(now);
 							}
-						} else {
-							sends.add(now);
 						}
 					}
 				}
@@ -741,9 +745,9 @@ public class TextbookServiceImpl implements TextbookService {
 		} catch (IOException e) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"读取文件失败");
-		} catch (OfficeXmlFileException e){
-			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
-					CheckedExceptionResult.ILLEGAL_PARAM, "此文档不是对应的.xls或.xlsx的Excel文档，请修改为正确的后缀名再进行上传");
+		} catch (OfficeXmlFileException e) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, CheckedExceptionResult.ILLEGAL_PARAM,
+					"此文档不是对应的.xls或.xlsx的Excel文档，请修改为正确的后缀名再进行上传");
 		}
 		List<Textbook> bookList = new ArrayList<>();
 		List<Textbook> books = textbookDao.getTextbookByMaterialId(materialId);
@@ -847,6 +851,10 @@ public class TextbookServiceImpl implements TextbookService {
 					"参数不能为空");
 		}
 		for (Textbook textbook : textbooks) {
+			if (StringUtil.notEmpty(textbook.getTopicNumber()) && StringUtil.strLength(textbook.getTopicNumber()) > 30){
+				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+						CheckedExceptionResult.ILLEGAL_PARAM, "选题号不能超过30个字符");
+			}
 			textbookDao.updateTextbook(textbook);
 		}
 		return textbooks;
@@ -906,9 +914,9 @@ public class TextbookServiceImpl implements TextbookService {
 					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
 							CheckedExceptionResult.ILLEGAL_PARAM, "图书名称不能超过25个字数，请修改后再上传");
 				}
-				String topicNumber = StringUtil.getCellValue(fourth);					
-				if (StringUtil.notEmpty(topicNumber)){
-					if (topicNumber.indexOf(".0") > -1){
+				String topicNumber = StringUtil.getCellValue(fourth);
+				if (StringUtil.notEmpty(topicNumber)) {
+					if (topicNumber.indexOf(".0") > -1) {
 						topicNumber = topicNumber.substring(0, topicNumber.indexOf(".0"));
 					}
 				}

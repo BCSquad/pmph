@@ -36,6 +36,8 @@ public class SensitiveServiceImpl extends BaseService implements SensitiveServic
 				throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE,
 						CheckedExceptionResult.ILLEGAL_PARAM, "备注太长了，请控制在100个字以内");
 			}
+		} else {
+			sensitive.setNote("-");
 		}
 		Sensitive sen = sensitiveDao.getSensitiveId(sensitive.getWord());
 		if (ObjectUtil.notNull(sen)) {
@@ -58,6 +60,8 @@ public class SensitiveServiceImpl extends BaseService implements SensitiveServic
 				throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE,
 						CheckedExceptionResult.ILLEGAL_PARAM, "备注太长了，请控制在100个字以内");
 			}
+		} else {
+			sensitive.setNote("-");
 		}
 		String result = "FAIL";
 		if (StringUtil.notEmpty(sensitive.getWord())) {
