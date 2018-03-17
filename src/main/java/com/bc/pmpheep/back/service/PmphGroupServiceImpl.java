@@ -36,6 +36,7 @@ import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.PmphGroupListVO;
+import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
@@ -216,6 +217,15 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 				pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 			}
 		}
+		for (PmphGroupListVO pmphGroupListVO : list) {
+			PmphGroupMemberVO user = pmphGroupMemberService.getPmphGroupMemberByMemberId(pmphGroupListVO.getId(),
+					pmphUser.getId(), false);
+			if (ObjectUtil.isNull(user)) {
+				pmphGroupListVO.setIsMember(false);
+			} else {
+				pmphGroupListVO.setIsMember(true);
+			}
+		}
 		return list;
 	}
 
@@ -310,7 +320,7 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"用户为空");
 		}
-		if(list.size()==0){
+		if (list.size() == 0) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP, CheckedExceptionResult.NULL_PARAM,
 					"成员名单为空，更新失败");
 		}
@@ -395,11 +405,11 @@ public class PmphGroupServiceImpl extends BaseService implements PmphGroupServic
 
 		} else {
 			PmphGroup pmphGroup = new PmphGroup();
-			List<PmphGroupListVO> groupListVOs=pmphGroupDao.getList(pmphGroup, pmphUser.getId());
+			List<PmphGroupListVO> groupListVOs = pmphGroupDao.getList(pmphGroup, pmphUser.getId());
 			for (PmphGroupListVO pmphGroupListVO : groupListVOs) {
 				pmphGroupListVO.setGroupImage(RouteUtil.groupImage(pmphGroupListVO.getGroupImage()));
 			}
-			if(groupListVOs.size()>0){
+			if (groupListVOs.size() > 0) {
 				pageResult.setRows(groupListVOs);
 				pageResult.setTotal(groupListVOs.size());
 			}

@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.util;
 
+import java.text.DecimalFormat;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -266,11 +268,12 @@ public final class StringUtil {
         if (null == cell) {
             return "";
         }
+        DecimalFormat df = new DecimalFormat("0");
         int type = cell.getCellType();
         String value = "";
         switch (type) {
         case 0:// 数字 Cell.CELL_TYPE_NUMERIC
-            value = String.valueOf(cell.getNumericCellValue()).trim();
+            value = String.valueOf(df.format(cell.getNumericCellValue())).trim();
             break;
         case 1:// 字符串Cell.CELL_TYPE_STRING
             value = cell.getStringCellValue().trim();
