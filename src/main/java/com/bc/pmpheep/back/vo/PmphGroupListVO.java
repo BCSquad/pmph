@@ -30,6 +30,8 @@ public class PmphGroupListVO implements Serializable {
 	 * 该小组的文件数量
 	 */
 	private Integer files;
+	// 判断当前用户是否为该小组成员
+	private Boolean isMember;
 
 	public PmphGroupListVO() {
 		super();
@@ -89,6 +91,14 @@ public class PmphGroupListVO implements Serializable {
 
 	public void setFiles(Integer files) {
 		this.files = files;
+	}
+
+	public Boolean getIsMember() {
+		return isMember;
+	}
+
+	public void setIsMember(Boolean isMember) {
+		this.isMember = isMember;
 	}
 
 }
