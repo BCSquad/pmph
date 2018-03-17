@@ -39,10 +39,8 @@ public class SensitiveServiceImpl extends BaseService implements SensitiveServic
 		}
 		Sensitive sen = sensitiveDao.getSensitiveId(sensitive.getWord());
 		if (ObjectUtil.notNull(sen)) {
-			sen.setIsDeleted(false);
-			sen.setNote(sensitive.getNote());
-			sen.setSort(sensitive.getSort());
-			sensitiveDao.update(sen);
+			throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE, CheckedExceptionResult.ILLEGAL_PARAM,
+					"已经有该敏感词了。");
 		} else {
 			sensitiveDao.add(sensitive);
 		}
@@ -55,22 +53,25 @@ public class SensitiveServiceImpl extends BaseService implements SensitiveServic
 			throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE, CheckedExceptionResult.NULL_PARAM,
 					"需要修改的敏感词id为空");
 		}
-		if (!StringUtil.isEmpty(sensitive.getNote())) {
+		if (StringUtil.notEmpty(sensitive.getNote())) {
 			if (sensitive.getNote().length() > 100) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE,
 						CheckedExceptionResult.ILLEGAL_PARAM, "备注太长了，请控制在100个字以内");
 			}
 		}
 		String result = "FAIL";
-		if (!StringUtil.isEmpty(sensitive.getWord())) {
+		if (StringUtil.notEmpty(sensitive.getWord())) {
 			if (sensitive.getWord().length() > 10) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE,
 						CheckedExceptionResult.ILLEGAL_PARAM, "敏感词太长了，请控制在10个字以内");
 			}
-			Long id = sensitiveDao.getSensitiveId(sensitive.getWord()).getId();
-			if (null != id && !sensitive.getId().equals(id)) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE,
-						CheckedExceptionResult.ILLEGAL_PARAM, "修改的敏感词重复了");
+			Sensitive sen = sensitiveDao.getSensitiveId(sensitive.getWord());
+			if (ObjectUtil.notNull(sen)) {
+				Long id = sen.getId();
+				if (null != id && !sensitive.getId().equals(id)) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE,
+							CheckedExceptionResult.ILLEGAL_PARAM, "修改的敏感词重复了");
+				}
 			}
 		}
 		Integer total = sensitiveDao.update(sensitive);
@@ -94,13 +95,13 @@ public class SensitiveServiceImpl extends BaseService implements SensitiveServic
 	}
 
 	@Override
-	public String updateIsDeleted(Long[] id) throws CheckedServiceException {
+	public String deletedIsDeleted(Long[] id) throws CheckedServiceException {
 		if (ArrayUtil.isEmpty(id)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SENSITIVE, CheckedExceptionResult.NULL_PARAM,
 					"没有找到需要删除的敏感词");
 		}
 		String result = "FAIL";
-		Integer total = sensitiveDao.updateIsDeleted(id);
+		Integer total = sensitiveDao.deletedIsDeleted(id);
 		if (total > 0) {
 			result = "SUCCESS";
 		}

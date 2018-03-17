@@ -64,12 +64,13 @@ public class SensitiveController {
 	 *
 	 */
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "逻辑删除敏感词")
-	@RequestMapping(value = "/isDeleted", method = RequestMethod.PUT)
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "删除敏感词")
+	@RequestMapping(value = "/isDeleted", method = RequestMethod.DELETE)
 	public ResponseBean isDeleted(Long[] ids) {
-		return new ResponseBean(sensitiveService.updateIsDeleted(ids));
+		return new ResponseBean(sensitiveService.deletedIsDeleted(ids));
 	}
-
+	
+	
 	/**
 	 * 
 	 * 

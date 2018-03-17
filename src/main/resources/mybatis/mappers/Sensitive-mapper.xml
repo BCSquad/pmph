@@ -126,16 +126,17 @@
 		LIMIT #{start},#{pageSize}
 	</select>
 
-	<update id="updateIsDeleted">
-		UPDATE `sensitive` s
-		SET s.is_deleted = TRUE
+	<delete id="deletedIsDeleted">
+		DELETE
+		FROM
+		`sensitive`
 		WHERE
 		id IN
 		<foreach collection="array" open="(" separator="," close=")"
 			index="index" item="id">
 			#{id}
 		</foreach>
-	</update>
+	</delete>
 
 	<delete id="delete" parameterType="java.lang.Long">
 		DELETE
