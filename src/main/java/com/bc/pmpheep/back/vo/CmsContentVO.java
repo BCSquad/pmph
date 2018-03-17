@@ -58,6 +58,8 @@ public class CmsContentVO implements Serializable {
     private Boolean   isMaterialEntry;
     // 创建时间
     private Timestamp gmtCreate;
+    // 真实姓名
+    private String    realname;
 
     /**
      * @return the id
@@ -407,6 +409,20 @@ public class CmsContentVO implements Serializable {
      */
     public void setIsMaterialEntry(Boolean isMaterialEntry) {
         this.isMaterialEntry = isMaterialEntry;
+    }
+
+    /**
+     * @return the realname
+     */
+    public String getRealname() {
+        return realname;
+    }
+
+    /**
+     * @param realname the realname to set
+     */
+    public void setRealname(String realname) {
+        this.realname = realname;
     }
 
 }

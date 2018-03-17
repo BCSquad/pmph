@@ -38,7 +38,7 @@ public class SensitiveServiceTest extends BaseTest {
 	public void updateIsDeletedTest() {
 		Sensitive sen = sensitiveService.add(sensitive);
 		Long[] id = { sen.getId() };
-		String result = sensitiveService.updateIsDeleted(id);
+		String result = sensitiveService.deletedIsDeleted(id);
 		Assert.assertTrue("删除失败", result.equals("SUCCESS"));
 	}
 

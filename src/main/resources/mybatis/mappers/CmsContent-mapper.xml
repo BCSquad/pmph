@@ -745,7 +745,7 @@
 	<!--CmsContentVO模糊查询获取帮助列表 -->
 	<select id="listHelp" parameterType="PageParameter" resultType="CmsContentVO">
 		SELECT 
-			cc.`id`,cc.`title`,pu.`username`,cc.`gmt_create`,t.count
+			cc.`id`,cc.`title`,pu.`username`,pu.`realname`,cc.`gmt_create`,t.count
 		FROM 
 			`cms_content`cc
 		LEFT JOIN
