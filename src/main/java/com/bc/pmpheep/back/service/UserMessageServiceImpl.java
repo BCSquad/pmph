@@ -491,12 +491,13 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         }
         // 已经发送的人员列表
         List<UserMessage> sendedList = userMessageDao.getMessageByMsgId(userMessage.getMsgId());
-        for (UserMessage userMessage2 : sendedList) {
-            if (ObjectUtil.notNull(userMessage2.getIsRead()) && userMessage2.getIsRead()) {
-                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
-                                                  CheckedExceptionResult.NULL_PARAM,
-                                                  "消息已有人读取，无法撤销！");
-            }
+        // for (UserMessage userMessage2 : sendedList) {
+        if (CollectionUtil.isNotEmpty(sendedList)) {
+            // if (ObjectUtil.notNull(userMessage2.getIsRead()) && userMessage2.getIsRead()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                              CheckedExceptionResult.NULL_PARAM, "消息已有人读取，无法撤销！");
+            // }
+            // }
         }
         return userMessageDao.updateUserMessageWithdrawByMsgId(userMessage.getMsgId());
     }
@@ -549,7 +550,7 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                     pmphUserManagerVO.setDepartmentId(pmphDepartment.getId());
                     parameter.setParameter(pmphUserManagerVO);
                     PageResult<PmphUserManagerVO> listPageResult =
-                    pmphUserService.getListPmphUser(parameter,null);
+                    pmphUserService.getListPmphUser(parameter, null);
                     List<PmphUserManagerVO> listPmphUserManagerVOs = listPageResult.getRows();
                     for (PmphUserManagerVO pmManagerVO : listPmphUserManagerVOs) {
                         ids.add(pmManagerVO.getId());
@@ -864,8 +865,8 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
                                               CheckedExceptionResult.NULL_PARAM, "接收人为空!");
         } else {
             userMessage =
-            new UserMessage(message.getId(), "系统消息", Const.MSG_TYPE_0, senderUserId, Const.SENDER_TYPE_1,
-                            receiverId, Const.RECEIVER_TYPE_2);
+            new UserMessage(message.getId(), "系统消息", Const.MSG_TYPE_0, senderUserId,
+                            Const.SENDER_TYPE_1, receiverId, Const.RECEIVER_TYPE_2);
         }
         // 插入消息发送对象数据
         Integer res = userMessageDao.addUserMessage(userMessage);
