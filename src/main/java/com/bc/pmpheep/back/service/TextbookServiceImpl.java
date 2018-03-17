@@ -851,6 +851,10 @@ public class TextbookServiceImpl implements TextbookService {
 					"参数不能为空");
 		}
 		for (Textbook textbook : textbooks) {
+			if (StringUtil.notEmpty(textbook.getTopicNumber()) && StringUtil.strLength(textbook.getTopicNumber()) > 30){
+				throw new CheckedServiceException(CheckedExceptionBusiness.TEXTBOOK,
+						CheckedExceptionResult.ILLEGAL_PARAM, "选题号不能超过30个字符");
+			}
 			textbookDao.updateTextbook(textbook);
 		}
 		return textbooks;
