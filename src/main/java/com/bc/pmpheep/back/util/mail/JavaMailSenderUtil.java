@@ -76,8 +76,9 @@ public class JavaMailSenderUtil {
         // 创建邮件发送类
         JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
         // 设置邮件
-        MimeMessage mailMessage = JavaMailSenderConfig(senderImpl);
+        MimeMessage mailMessage = null;
         try {
+            mailMessage = JavaMailSenderConfig(senderImpl);
             // 设置邮件
             MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage, true, "UTF-8");
             // 收件人
@@ -93,16 +94,14 @@ public class JavaMailSenderUtil {
             isOk = true;
             logger.info("邮件发送成功...");
         } catch (Exception e) {
-            logger.error("邮件发送时发生异常");
-            logger.error(e.getMessage());
+            logger.error("邮件发送时发生异常:{}", e.getMessage());
             logger.info("邮件进行重发");
             try {
                 Thread.sleep(2000);
                 senderImpl.send(mailMessage);
                 isOk = true;
             } catch (InterruptedException ie) {
-                logger.error("重发邮件时发生异常");
-                logger.error(ie.getMessage());
+                logger.error("重发邮件时发生异常:{}", ie.getMessage());
             }
         }
         return isOk;
