@@ -506,6 +506,11 @@ public class BookServiceImpl extends BaseService implements BookService {
 			if (ObjectUtil.isNull(sheet)) {
 				continue;
 			}
+			Row en = sheet.getRow(0);
+			int count = 0;
+			while (ObjectUtil.notNull(en.getCell(count))) {
+				count++;
+			}
 			for (int rowNum = 1; rowNum <= sheet.getLastRowNum(); rowNum++) {
 				Row row = sheet.getRow(rowNum);
 				Long id = 0L;
@@ -513,7 +518,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 				if (null == row) {
 					break;
 				}
-				for (int i = 0; i < 7; i += 2) {
+				for (int i = 0; i < count - 1; i += 2) {
 					Cell name = row.getCell(i);
 					Cell isbn = row.getCell(i + 1);
 					Book book = new Book();

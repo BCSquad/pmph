@@ -74,29 +74,92 @@
 		select * from writer_point_log where id=#{id};
 	</select>
 	
-	<!-- 用户积分记录分页列表（同时查询分页数据和总条数） -->
+	<!-- 用户积分获取记录分页列表（同时查询分页数据和总条数） -->
 	<select id="listWriterPointLogVO" parameterType="PageParameter" resultType="WriterPointLogVO">
-		select wpl.*,wpr.rule_name,wu.username,wu.realname,t.count 
+		select wpl.*,wpr.rule_name,wu.username,wu.realname,wpr.is_exchange,
+		wp.total,wp.loss,t.count 
 		from writer_point_log wpl 
-		left join writer_user wu on wu.id=wpl.user_id
+		left join writer_user wu on wu.id=wpl.user_id 
+		left join writer_point wp on wp.user_id=wpl.user_id 
 		left join writer_point_rule wpr on wpr.id=wpl.rule_id,
 		(select count(*) count from writer_point_log wpl 
 			left join writer_user wu on wu.id=wpl.user_id 
 			left join writer_point_rule wpr on wpr.id=wpl.rule_id 
-			where 1 = 1 
+			where 1 = 1 and wpr.is_exchange = 0 
 			<!-- 下面是动态条件 -->
 				<if test="parameter !=null ">
 					<!-- 用户id -->
 					<if test="parameter.userId != null">
 						and wu.id = #{parameter.userId}
 					</if>
+					<!-- 时间 -->
+					<if test="parameter.startTime !=null and parameter.startTime !='' ">
+						and wpl.gmt_create &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+					</if>
+					<if test="parameter.endTime !=null and parameter.endTime !='' ">
+						and wpl.gmt_create &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s') 
+					</if>
 				</if>) t 
-		where 1 = 1 
+		where 1 = 1 and wpr.is_exchange = 0 
 		<!-- 下面是动态条件 -->
 		<if test="parameter !=null ">
 			<!-- 用户id -->
 			<if test="parameter.userId != null">
 				and wu.id = #{parameter.userId}
+			</if>
+			<!-- 时间 -->
+			<if test="parameter.startTime !=null and parameter.startTime !='' ">
+				and wpl.gmt_create &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+			</if>
+			<if test="parameter.endTime !=null and parameter.endTime !='' ">
+				and wpl.gmt_create &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s') 
+			</if>
+		</if>
+		group by wpl.id desc 
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+	
+	<!-- 用户积分兑换记录分页列表（同时查询分页数据和总条数） -->
+	<select id="listWriterPointLogVOExchange" parameterType="PageParameter" resultType="WriterPointLogVO">
+		select wpl.*,wpr.rule_name,wu.username,wu.realname,wpr.exchange_point,wpr.is_exchange,
+		wp.total,wp.loss,t.count 
+		from writer_point_log wpl 
+		left join writer_user wu on wu.id=wpl.user_id 
+		left join writer_point wp on wp.user_id=wpl.user_id 
+		left join writer_point_rule wpr on wpr.id=wpl.rule_id,
+		(select count(*) count from writer_point_log wpl 
+			left join writer_user wu on wu.id=wpl.user_id 
+			left join writer_point_rule wpr on wpr.id=wpl.rule_id 
+			where 1 = 1 and wpr.is_exchange = 1 
+			<!-- 下面是动态条件 -->
+				<if test="parameter !=null ">
+					<!-- 用户id -->
+					<if test="parameter.userId != null">
+						and wu.id = #{parameter.userId}
+					</if>
+					<!-- 时间 -->
+					<if test="parameter.startTime !=null and parameter.startTime !='' ">
+						and wpl.gmt_create &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+					</if>
+					<if test="parameter.endTime !=null and parameter.endTime !='' ">
+						and wpl.gmt_create &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s') 
+					</if>
+				</if>) t 
+		where 1 = 1 and wpr.is_exchange = 1 
+		<!-- 下面是动态条件 -->
+		<if test="parameter !=null ">
+			<!-- 用户id -->
+			<if test="parameter.userId != null">
+				and wu.id = #{parameter.userId}
+			</if>
+			<!-- 时间 -->
+			<if test="parameter.startTime !=null and parameter.startTime !='' ">
+				and wpl.gmt_create &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+			</if>
+			<if test="parameter.endTime !=null and parameter.endTime !='' ">
+				and wpl.gmt_create &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s') 
 			</if>
 		</if>
 		group by wpl.id desc 

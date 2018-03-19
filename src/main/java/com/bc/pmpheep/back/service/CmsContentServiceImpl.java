@@ -117,9 +117,9 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "作者类型参数为空");
         }
-        if (cmsContent.getTitle().length() > 50) {
+        if (cmsContent.getTitle().length() > 100) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "消息标题不能超过50个字！");
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "消息标题不能超过100个字！");
         }
         cmsContentDao.addCmsContent(cmsContent);
         return cmsContent;

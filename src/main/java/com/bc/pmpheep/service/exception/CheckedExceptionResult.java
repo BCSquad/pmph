@@ -56,6 +56,10 @@ public enum CheckedExceptionResult {
      */
     FAILURE_SSO_CALLBACK(11, "调用SSO-API方法失败"),
     /**
+     * 调用SSO-API方法不成功
+     */
+    FAILURE_EMAIL_ERROR(25, "邮件发送失败"),
+    /**
      * 用户SESSION为空
      */
     USER_SESSION(30, "用户SESSION为空");

@@ -319,7 +319,13 @@
 		<if test="parameter.orgName !=null and parameter.orgName !=''">
 			and o.org_name like concat('%',#{parameter.orgName},'%')
 		</if>
-		<if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
+		<if test="parameter.isHospital == 1">
+			and ot.type_name="医院"
+		</if>
+		<if test="parameter.isHospital == 2">
+		and ot.type_name!="医院"
+		</if>
+		<!-- <if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
 			and ot.type_name=#{parameter.orgTypeName}
 		</if>
 		<if test="parameter.school !=null and parameter.school !='' ">
@@ -327,7 +333,7 @@
 		</if>
 		<if test="parameter.hospital !=null and parameter.hospital !='' ">
 			and ot.type_name =#{parameter.hospital}
-		</if>
+		</if> -->
 	</select>
 	<select id="getListOrgUser" parameterType="PageParameter"
 		resultType="OrgAndOrgUserVO">
@@ -350,7 +356,13 @@
 		<if test="parameter.orgName !=null and parameter.orgName !=''">
 			and o.org_name like concat('%',#{parameter.orgName},'%')
 		</if>
-		<if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
+		<if test="parameter.isHospital == 1">
+			and ot.type_name="医院"
+		</if>
+		<if test="parameter.isHospital == 2">
+		and ot.type_name!="医院"
+		</if>
+		<!-- <if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
 			and ot.type_name=#{parameter.orgTypeName}
 		</if>
 		<if test="parameter.school !=null and parameter.school !='' ">
@@ -358,7 +370,7 @@
 		</if>
 		<if test="parameter.hospital !=null and parameter.hospital !='' ">
 			and ot.type_name =#{parameter.hospital}
-		</if>
+		</if> -->
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
@@ -397,6 +409,7 @@
 		where
 		ou.is_deleted = 0 and
 		ou.is_proxy_upload=1
+		and ou.progress =0
 	</select>
 
 	<!-- 根据机构id查询机构管理员 -->

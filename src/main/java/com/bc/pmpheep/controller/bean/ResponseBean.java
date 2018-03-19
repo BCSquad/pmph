@@ -30,6 +30,10 @@ public class ResponseBean<T> implements Serializable {
      */
     public static final int UNCHECKED_ERROR     = 21;
     /**
+     * 邮件发送异常
+     */
+    public static final int MAIL_EXCEPTION      = 25;
+    /**
      * 下标越界异常 IndexOutOfBoundsException
      */
     public static final int INDEX_OUT_OF_BOUNDS = 30;

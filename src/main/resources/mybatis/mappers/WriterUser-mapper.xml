@@ -797,7 +797,7 @@
 		FROM `writer_user` wu
 		LEFT JOIN `writer_user_certification` wuc ON wu.`id`= wuc.`user_id`
 		LEFT JOIN `org` o ON wuc.`org_id` = o.`id`
-		where wu.`is_deleted`=0 and wuc.`progress` !=0
+		where wu.`is_deleted`=0 and wuc.`progress` =1
 	</select>
 	<!-- 通过id查询用户级别 -->
 	<select id="getWriterUserRankList" parameterType="java.util.List" resultType="WriterUser">

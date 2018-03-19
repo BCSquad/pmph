@@ -560,7 +560,7 @@ public class FileDownLoadController {
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出excel")
 	@ResponseBody
 	public void orgUserExportEcel(HttpServletRequest request, HttpServletResponse response, String name, String orgName,
-			String orgTypeName, Boolean isHospital) {
+			String orgTypeName, Integer isHospital) {
 		PageParameter pageParameter = new PageParameter<>();
 		OrgAndOrgUserVO orgAndOrgUserVO = new OrgAndOrgUserVO();
 		if (StringUtil.notEmpty(orgName)) {
