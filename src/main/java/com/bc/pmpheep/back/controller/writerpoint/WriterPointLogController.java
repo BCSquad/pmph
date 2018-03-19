@@ -29,7 +29,7 @@ public class WriterPointLogController {
 	private static final String BUSSINESS_TYPE = "积分管理";
 	
 	@ResponseBody
-	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "分页查询用户积分记录列表")
+	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "分页查询用户积分获取记录列表")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ResponseBean list(@RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber,
@@ -40,4 +40,19 @@ public class WriterPointLogController {
 		pageParameter.setParameter(writerPointLogVO);
 		return new ResponseBean(writerPointLogService.getListWriterPointLog(pageParameter));
 	}
+	
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE,logRemark = "分页查询用户积分兑换记录列表")
+	@RequestMapping(value = "/listExchange", method = RequestMethod.GET)
+	public ResponseBean listExchange(@RequestParam("pageSize") Integer pageSize,
+			@RequestParam("pageNumber") Integer pageNumber,
+			@RequestParam("userId") Long userId){
+		PageParameter<WriterPointLogVO> pageParameter=new PageParameter<>(pageNumber, pageSize);
+		WriterPointLogVO writerPointLogVO=new WriterPointLogVO();
+		writerPointLogVO.setUserId(userId);
+		pageParameter.setParameter(writerPointLogVO);
+		return new ResponseBean(writerPointLogService.getListWriterPointLogExchange(pageParameter));
+	}
+	
+	
 }
