@@ -409,6 +409,7 @@
 		where
 		ou.is_deleted = 0 and
 		ou.is_proxy_upload=1
+		and ou.progress =0
 	</select>
 
 	<!-- 根据机构id查询机构管理员 -->
