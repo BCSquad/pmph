@@ -158,7 +158,7 @@ public class SpringThread implements Runnable {
 
 	@Override
 	public void run() {
-		System.out.println("线程开始");
+//		System.out.println("线程开始");
 		String src = this.getClass().getResource("/").getPath();
 		src = src.substring(1);
 		if (!src.endsWith(File.separator)) {
