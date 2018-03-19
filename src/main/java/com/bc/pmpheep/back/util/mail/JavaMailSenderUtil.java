@@ -27,7 +27,19 @@ import org.springframework.mail.javamail.MimeMessageHelper;
  * </pre>
  */
 public class JavaMailSenderUtil {
-    Logger logger = LoggerFactory.getLogger(JavaMailSenderUtil.class);
+    Logger                       logger    = LoggerFactory.getLogger(JavaMailSenderUtil.class);
+    // 发送邮件服务器
+    private static final String  HOST      = "smtp.sina.com";
+    // 端口号
+    private static final Integer PROT      = 25;
+    // 用户名
+    private static final String  USER_NAME = "sccdbc@sina.com";
+    // 密码
+    private static final String  PASS_WORD = "sccdbc";
+    // 是否需要验证密码
+    private static final String  AUTH      = "true";
+    // 超时时间
+    private static final String  TIME_OUT  = "2000";
 
     /**
      * 
@@ -40,17 +52,17 @@ public class JavaMailSenderUtil {
      */
     private MimeMessage JavaMailSenderConfig(JavaMailSenderImpl senderImpl) {
         // senderImpl.setHost("smtp.qq.com");// 发送邮件服务器
-        senderImpl.setHost("smtp.sina.com");// 发送邮件服务器
+        senderImpl.setHost(HOST);// 发送邮件服务器
         // 端口号，腾讯邮箱使用SSL协议端口号：465/587，腾讯邮箱使用非SSL协议,163邮箱,新浪邮箱端口号都是：25
-        senderImpl.setPort(25);
-        senderImpl.setUsername("sccdbc@sina.com"); // 用户名
-        senderImpl.setPassword("sccdbc"); // 密码
+        senderImpl.setPort(PROT);
+        senderImpl.setUsername(USER_NAME); // 用户名
+        senderImpl.setPassword(PASS_WORD); // 密码
 
         Properties prop = new Properties();// 参数配置
         // prop.put("mail.smtp.ssl.enable", "true");// 使用SSL协议
         // prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        prop.put("mail.smtp.auth", "true"); // 是否需要验证密码
-        prop.put("mail.smtp.timeout", "20000");// 超时时间
+        prop.put("mail.smtp.auth", AUTH); // 是否需要验证密码
+        prop.put("mail.smtp.timeout", TIME_OUT);// 超时时间
         senderImpl.setJavaMailProperties(prop);
 
         // 创建一个邮件消息

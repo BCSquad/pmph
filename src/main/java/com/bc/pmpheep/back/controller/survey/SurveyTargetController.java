@@ -69,8 +69,8 @@ public class SurveyTargetController {
             return new ResponseBean(surveyTargetService.batchSaveSurveyTargetByList(message,
                                                                                     surveyTargetVO,
                                                                                     sessionId));
-        } catch (IOException e) {
-            return new ResponseBean(e);
+        } catch (Exception e) {
+            return new ResponseBean(e.getMessage());
         }
     }
 
