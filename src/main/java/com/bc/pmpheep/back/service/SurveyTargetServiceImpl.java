@@ -119,7 +119,7 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
 
     @Override
     public Integer batchSaveSurveyTargetByList(Message message, SurveyTargetVO surveyTargetVO,
-    String sessionId) throws Exception {
+    String sessionId) throws CheckedServiceException, IOException {
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,

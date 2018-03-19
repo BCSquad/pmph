@@ -8,7 +8,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.mail.MailSendException;
 
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.mongodb.MongoException;
@@ -61,6 +61,10 @@ public class ResponseBeanAop {
         } else if (ex instanceof MongoException) {
             responseBean.setMsg("图片或文件不存在");
             responseBean.setCode(ResponseBean.MONGO_EXCEPTION);
+            logger.error(sb.toString(), ex.toString());
+        } else if (ex instanceof MailSendException) {
+            responseBean.setMsg("邮件发送失败");
+            responseBean.setCode(ResponseBean.MAIL_EXCEPTION);
             logger.error(sb.toString(), ex.toString());
         } else {
             responseBean.setMsg(ex.toString());
