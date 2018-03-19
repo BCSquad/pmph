@@ -5,7 +5,7 @@
 *.properties
 
 #忽略.classpath
-*.classpath
+#*.classpath
 
 #忽略.project 
 *.project

@@ -122,4 +122,9 @@ public final class PropsUtil {
         }
         return value;
     }
+
+    public static void main(String[] args) {
+        String aString = getString(loadProps("mail.properties"), "mail.smtp.host");
+        System.out.println(aString);
+    }
 }
