@@ -148,7 +148,7 @@ public class WordHelper {
 			}
 			if (StringUtil.notEmpty(materialName)) {
 				List<XWPFRun> runs = document.getParagraphs().get(0).getRuns();
-				runs.get(0).setText(materialName.concat("主编、副主编、编委申请表"), 0);
+				runs.get(0).setText(materialName.concat("申报表"), 0);
 			}
 			List<XWPFParagraph> xwpfParagraphs = document.getParagraphs();
 			List<XWPFTable> tables = document.getTables();

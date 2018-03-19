@@ -257,6 +257,7 @@ public class MigrationStageOne {
             /* 此数据为被逻辑删除的数据，待客户反馈再决定是否迁移，现阶段暂时不迁移 */
             if (isDeleted.intValue() == 1){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("被逻辑删除的数据。"));
+            	excel.add(map);
             	if (state[0] == 0){
             		reason.append("被逻辑删除的数据。");
             		dealWith.append("放弃迁移。");
@@ -302,6 +303,7 @@ public class MigrationStageOne {
             		|| "技术学校".equals(orgName) || "qthzyxy".equals(orgName) || "河南中医学院".equals(orgName)
             		|| "陕西中医学院".equals(orgName)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("缺少管理员账号。"));
+            	excel.add(map);
             	if (state[4] == 0){
             		reason.append("缺少管理员账号。");
             		dealWith.append("依据客户反馈，放弃迁移。");
