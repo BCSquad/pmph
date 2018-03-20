@@ -63,15 +63,11 @@ public class SurveyTargetController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "发起问卷")
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     public ResponseBean send(Message message, SurveyTargetVO surveyTargetVO,
-    HttpServletRequest request) {
-        try {
-            String sessionId = CookiesUtil.getSessionId(request);
-            return new ResponseBean(surveyTargetService.batchSaveSurveyTargetByList(message,
-                                                                                    surveyTargetVO,
-                                                                                    sessionId));
-        } catch (IOException e) {
-            return new ResponseBean(e);
-        }
+    HttpServletRequest request) throws Exception {
+        String sessionId = CookiesUtil.getSessionId(request);
+        return new ResponseBean(surveyTargetService.batchSaveSurveyTargetByList(message,
+                                                                                surveyTargetVO,
+                                                                                sessionId));
     }
 
     /**

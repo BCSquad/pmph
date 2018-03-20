@@ -51,13 +51,22 @@ public interface WriterPointLogDao {
 	WriterPointLog getWriterPointLog(Long id);
 	
 	/**
-     * 用户积分记录分页列表（同时查询分页数据和总条数）
+     * 用户积分获取记录分页列表（同时查询分页数据和总条数）
      * @author:tyc
      * @date:2017年12月28日下午15:22:32
 	 * @param pageParameter
 	 * @return
 	 */
 	List<WriterPointLogVO> listWriterPointLogVO(PageParameter<WriterPointLogVO> pageParameter);
+	
+	/**
+     * 用户积分兑换记录分页列表（同时查询分页数据和总条数）
+     * @author:tyc
+     * @date:2018年3月17日上午11:01:55
+	 * @param pageParameter
+	 * @return
+	 */
+	List<WriterPointLogVO> listWriterPointLogVOExchange(PageParameter<WriterPointLogVO> pageParameter);
 	
 	/**
 	 * 通过用户id查询积分记录

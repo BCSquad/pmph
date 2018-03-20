@@ -51,7 +51,7 @@ public class OrgUserController {
 	public ResponseBean orgUser(@RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber, @RequestParam("name") String name,
 			@RequestParam("orgName") String orgName, @RequestParam("orgTypeName") String orgTypeName,
-			@RequestParam("isHospital") Boolean isHospital) {
+			@RequestParam("isHospital") Integer isHospital) {
 		PageParameter pageParameter = new PageParameter<>();
 		OrgAndOrgUserVO orgAndOrgUserVO = new OrgAndOrgUserVO();
 		if (StringUtil.notEmpty(orgName)) {
