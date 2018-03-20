@@ -11,7 +11,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 import com.bc.pmpheep.back.util.PropsUtil;
-import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * 
@@ -77,8 +76,7 @@ public class JavaMailSenderUtil {
      * @throws Exception
      * </pre>
      */
-    public boolean sendMail(String title, String content, String[] toMail)
-    throws CheckedServiceException {
+    public boolean sendMail(String title, String content, String[] toMail) throws Exception {
         Boolean isOk = false;
         // 创建邮件发送类
         JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();

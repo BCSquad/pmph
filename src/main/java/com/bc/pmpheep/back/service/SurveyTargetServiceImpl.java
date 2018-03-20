@@ -119,7 +119,7 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
 
     @Override
     public Integer batchSaveSurveyTargetByList(Message message, SurveyTargetVO surveyTargetVO,
-    String sessionId) throws CheckedServiceException, IOException {
+    String sessionId) throws Exception {
         PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
         if (ObjectUtil.isNull(pmphUser)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
@@ -201,6 +201,7 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
                 throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                                   CheckedExceptionResult.NULL_PARAM, "收件人邮箱为空");
             }
+
             // 发送邮件
             JavaMailSenderUtil javaMailSenderUtil = new JavaMailSenderUtil();
             // 给学校管理员发送邮件

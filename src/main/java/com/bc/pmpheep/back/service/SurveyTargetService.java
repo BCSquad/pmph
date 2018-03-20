@@ -53,7 +53,7 @@ public interface SurveyTargetService {
      * </pre>
      */
     Integer batchSaveSurveyTargetByList(Message message, SurveyTargetVO surveyTargetVO,
-    String sessionId) throws CheckedServiceException, IOException;
+    String sessionId) throws Exception;
 
     /**
      * 删除SurveyTarget通过主键id
