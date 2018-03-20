@@ -28,6 +28,9 @@ import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.utils.SsoHelper;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * OrgUserServiceImpl 接口实现
@@ -36,7 +39,7 @@ import com.bc.pmpheep.utils.SsoHelper;
  * 
  */
 @Service
-public class OrgUserServiceImpl extends BaseService implements OrgUserService {
+public class OrgUserServiceImpl extends BaseService implements OrgUserService, ApplicationContextAware {
 	@Autowired
 	private OrgUserDao orgUserDao;
 	@Autowired
@@ -45,6 +48,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 	private OrgService orgService;
 	@Autowired
 	SystemMessageService systemMessageService;
+        ApplicationContext context;
 
 	@Override
 	public List<OrgUser> getOrgUserListByOrgIds(List<Long> orgIds) throws CheckedServiceException {
@@ -415,7 +419,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 		orgUser.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);// 默认机构用户头像路径
 		orgUser.setOrgId(orgDao.getOrgid(org.getOrgName()));
 		orgUser.setPassword(new DesRun("", Const.DEFAULT_PASSWORD).enpsw);// 后台添加用户设置默认密码为123456
-                SsoHelper ssoHelper = new SsoHelper();
+                SsoHelper ssoHelper = context.getBean(SsoHelper.class);
 		String result = ssoHelper.createSSOAccount(orgUser);
 		if (!result.equals("success")) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.FAILURE_SSO_CALLBACK,
@@ -477,4 +481,9 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 		orgUserDao.updateOrgUser(orgUser);
 		return password;
 	}
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.context = applicationContext;
+    }
 }
