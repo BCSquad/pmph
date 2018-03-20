@@ -112,6 +112,13 @@
 		dec_position_temp where
 		id=#{id};
 	</delete>
+	
+	<!-- 根据id删除一个作家申报暂存职位信息 -->
+	<delete id="deleteDecPositionTempByTextbookId" parameterType="java.lang.Long">
+		delete from
+		dec_position_temp where
+		textbook_id = #{textbookId};
+	</delete>
 
 	<!-- 更新作家申报职位信息 -->
 	<update id="updateDecPositionTemp" parameterType="DecPositionTemp">

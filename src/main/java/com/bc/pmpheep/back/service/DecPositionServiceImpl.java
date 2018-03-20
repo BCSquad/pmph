@@ -83,6 +83,8 @@ public class DecPositionServiceImpl implements DecPositionService {
 	private SystemMessageService systemMessageService;
 	@Autowired
 	private DecPositionPublishedService decPositionPublishedService;
+	@Autowired
+	private DecPositionTempService decPositionTempService;
 
 	@Override
 	public DecPosition addDecPosition(DecPosition decPosition) throws CheckedServiceException {
@@ -445,7 +447,8 @@ public class DecPositionServiceImpl implements DecPositionService {
 				} else {
 					textbookService.updatRevisionTimesByTextBookId(1, textbookId);
 				}
-
+				//清楚dec_position_temp表
+				decPositionTempService.deleteDecPositionTempByTextbookId(textbookId);
 			}
 
 			// 初始化作家职位申报表
