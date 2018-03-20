@@ -199,4 +199,14 @@ public interface BookDao {
 	 *
 	 */
 	void updateDownComments(@Param("id") Long id);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取所有书籍
+	 *
+	 * @return
+	 *
+	 */
+	List<Book> listBook();
 }
