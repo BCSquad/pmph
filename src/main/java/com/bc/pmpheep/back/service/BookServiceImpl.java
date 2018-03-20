@@ -19,6 +19,7 @@ import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -179,6 +180,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 	public String AbuttingJoint(String[] vns, Integer type) throws CheckedServiceException {
 		String result = "SUCCESS";
 		Const.AllSYNCHRONIZATION = 0;
+
 		int num = vns.length / 100;
 		for (int i = 0; i < vns.length; i++) {
 			JSONObject ot = new JSONObject();
@@ -193,7 +195,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 				if ("1".equals(ot.getJSONObject("RESP").getString("CODE"))) {
 					// 请求成功并正常返回
 					if (type == 1) {
-						emptyBooks(vns[i]);// 如果请求成功有返回值时，清除所有数据
+						// emptyBooks(vns[i]);// 如果请求成功有返回值时，清除所有数据
 					}
 					JSONArray array = ot.getJSONObject("RESP").getJSONObject("responseData").getJSONArray("results");
 					if (array.size() > 0) {
@@ -343,16 +345,26 @@ public class BookServiceImpl extends BaseService implements BookService {
 	 * @return
 	 *
 	 */
-	private void emptyBooks(String vn) {
-		// 1.根据本版号搜索出书籍id 2.根据书籍id删除关联表的所有数据
-		Book book = bookDao.getBookByVn(vn);
-		if (!ObjectUtil.isNull(book)) {
-			Long id = book.getId();
-			bookDao.deleteBookById(id);
-			bookDetailDao.deleteBookDetailByBookId(id);
-			bookUserCommentDao.deleteBookUserCommentByBookId(id);
-			bookUserLikeDao.deleteBookUserLikeByBookId(id);
-			bookUserMarkDao.deleteBookUserMarkByBookId(id);
+	private void emptyBooks() {
+		List<Book> books = bookDao.listBook();
+		if (!books.isEmpty()) {
+			for (Book book : books) {
+				Long id = book.getId();
+				// 书籍
+				// 详情
+				// 配套
+				// 评论
+				// 点赞
+				// 收藏
+				// 对应
+				// 纠错
+				// 微视频
+				bookDao.deleteBookById(id);
+				bookDetailDao.deleteBookDetailByBookId(id);
+				bookUserCommentDao.deleteBookUserCommentByBookId(id);
+				bookUserLikeDao.deleteBookUserLikeByBookId(id);
+				bookUserMarkDao.deleteBookUserMarkByBookId(id);
+			}
 		}
 	}
 
@@ -506,19 +518,19 @@ public class BookServiceImpl extends BaseService implements BookService {
 			if (ObjectUtil.isNull(sheet)) {
 				continue;
 			}
-			Row en = sheet.getRow(0);
-			int count = 0;
-			while (ObjectUtil.notNull(en.getCell(count))) {
-				count++;
-			}
 			for (int rowNum = 1; rowNum <= sheet.getLastRowNum(); rowNum++) {
 				Row row = sheet.getRow(rowNum);
 				Long id = 0L;
 				List<Long> bookIds = new ArrayList<>();
 				if (null == row) {
-					break;
+					continue;
 				}
-				for (int i = 0; i < count - 1; i += 2) {
+				Cell cell = row.getCell(8);
+				if (row.getLastCellNum() > 9 || (ObjectUtil.notNull(cell) && !"".equals(cell.toString()))) {
+					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+							CheckedExceptionResult.ILLEGAL_PARAM, "提交的Excel格式不正确，请按照模版修改后重试");
+				}
+				for (int i = 0; i < 7; i += 2) {
 					Cell name = row.getCell(i);
 					Cell isbn = row.getCell(i + 1);
 					Book book = new Book();

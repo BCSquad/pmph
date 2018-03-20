@@ -26,6 +26,7 @@ import com.bc.pmpheep.back.po.DecWorkExp;
 import com.bc.pmpheep.back.po.MaterialExtension;
 import com.bc.pmpheep.back.util.BinaryUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.DecExtensionVO;
@@ -283,8 +284,8 @@ public class WordHelper {
 		List<String> presetPosition = bo.getPresetPosition();
 		if (textbookName.size() > 0) {
 			for (int i = 0; i < textbookName.size(); i++) {
-				int height = table.getRow(i+1).getHeight();
-				List<XWPFTableCell> cells = rows.get(i+1).getTableCells();
+				int height = table.getRow(i + 1).getHeight();
+				List<XWPFTableCell> cells = rows.get(i + 1).getTableCells();
 				cells.get(0).setText("《".concat(textbookName.get(i)).concat("》"));
 				cells.get(1).setText(presetPosition.get(i));
 				if (i + 1 < textbookName.size()) {
@@ -659,9 +660,14 @@ public class WordHelper {
 				}
 				cells.get(1).setText(value);
 			}
-			value = decLastPosition.getNote();
+			value = decLastPosition.getPublisher();
 			if (StringUtil.notEmpty(value)) {
 				cells.get(2).setText(value);
+			}
+			Date publishDate = decLastPosition.getPublishDate();
+			if (null != publishDate) {
+				value = sdf.format(publishDate);
+				cells.get(3).setText(value);
 			}
 			for (XWPFTableCell cell : cells) {
 				cell.setVerticalAlignment(XWPFVertAlign.CENTER);
@@ -748,22 +754,8 @@ public class WordHelper {
 			if (StringUtil.notEmpty(value)) {
 				cells.get(1).setText(value);
 			}
-			Integer rank = decNationalPlan.getRank();// 1=教育部十二五/2=国家卫计委十二五/3=both
-			if (null != rank) {
-				switch (rank) {
-				case 1:
-					value = "教育部十二五";
-					break;
-				case 2:
-					value = "国家卫计委十二五";
-					break;
-				case 3:
-					value = "教育部和国家卫计委十二五";
-					break;
-				default:
-					value = "其他";
-					break;
-				}
+			value = decNationalPlan.getRankText();
+			if (StringUtil.notEmpty(value)) {
 				cells.get(2).setText(value);
 			}
 			value = decNationalPlan.getNote();

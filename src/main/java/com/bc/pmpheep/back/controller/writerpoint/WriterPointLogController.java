@@ -33,10 +33,14 @@ public class WriterPointLogController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ResponseBean list(@RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber,
-			@RequestParam("userId") Long userId){
+			@RequestParam("userId") Long userId, 
+			@RequestParam("startTime") String startTime, 
+			@RequestParam("endTime") String endTime){
 		PageParameter<WriterPointLogVO> pageParameter=new PageParameter<>(pageNumber, pageSize);
 		WriterPointLogVO writerPointLogVO=new WriterPointLogVO();
 		writerPointLogVO.setUserId(userId);
+		writerPointLogVO.setStartTime(startTime);
+		writerPointLogVO.setEndTime(endTime);
 		pageParameter.setParameter(writerPointLogVO);
 		return new ResponseBean(writerPointLogService.getListWriterPointLog(pageParameter));
 	}
@@ -46,10 +50,14 @@ public class WriterPointLogController {
 	@RequestMapping(value = "/listExchange", method = RequestMethod.GET)
 	public ResponseBean listExchange(@RequestParam("pageSize") Integer pageSize,
 			@RequestParam("pageNumber") Integer pageNumber,
-			@RequestParam("userId") Long userId){
-		PageParameter<WriterPointLogVO> pageParameter=new PageParameter<>(pageNumber, pageSize);
-		WriterPointLogVO writerPointLogVO=new WriterPointLogVO();
+			@RequestParam("userId") Long userId, 
+			@RequestParam("startTime") String startTime, 
+			@RequestParam("endTime") String endTime){
+		PageParameter<WriterPointLogVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
+		WriterPointLogVO writerPointLogVO = new WriterPointLogVO();
 		writerPointLogVO.setUserId(userId);
+		writerPointLogVO.setStartTime(startTime);
+		writerPointLogVO.setEndTime(endTime);
 		pageParameter.setParameter(writerPointLogVO);
 		return new ResponseBean(writerPointLogService.getListWriterPointLogExchange(pageParameter));
 	}
