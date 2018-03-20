@@ -92,16 +92,30 @@ public interface BookUserCommentDao {
 	 *
 	 */
 	Integer deleteBookUserCommentByBookId(Long bookId);
-	
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：删除图书评论
+	 *
+	 * @param ids
+	 *            需要删除的评论id数组
+	 * @return 影响行数
+	 *
+	 */
+	Integer deleteBookUserCommentBookIds(List<Long> ids);
+
 	/**
 	 * admin查询图书评论数量
+	 * 
 	 * @param pageParameter
 	 * @return
 	 */
 	Integer getBookUserCommentAdminTotal(PageParameter<BookUserCommentVO> pageParameter);
-	
+
 	/**
-	 *  admin查询图书评论
+	 * admin查询图书评论
+	 * 
 	 * @param pageParameter
 	 * @return
 	 */

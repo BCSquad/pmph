@@ -24,26 +24,32 @@
 				#{bookId},
 			</if>
 			<if test="authorId != null ">
-				 #{authorId},
+				#{authorId},
 			</if>
 			<if test="editorId != null ">
 				#{editorId},
 			</if>
 		</trim>
 	</sql>
-	<!--新增一个    BookEditor -->
+	<!--新增一个 BookEditor -->
 	<insert id="addBookEditor" parameterType="BookEditor">
-		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into book_editor ( <include refid="key" /> )
-			              values( <include refid="value" /> ) ;
+		insert into book_editor (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
 	</insert>
 
 
 	<!-- 根据主键删除BookEditor -->
 	<delete id="deleteBookEditorById" parameterType="java.lang.Long">
-		delete from book_editor where id=#{id} ;
+		delete from
+		book_editor where id=#{id} ;
 	</delete>
 
 	<!-- 更新一个BookEditor -->
@@ -67,8 +73,17 @@
 	</update>
 
 	<!-- 根据主键获取BookEditor -->
-	<select id="getBookEditorById" parameterType="java.lang.Long" resultType="BookEditor">
+	<select id="getBookEditorById" parameterType="java.lang.Long"
+		resultType="BookEditor">
 		select * from book_editor where id=#{id} ;
 	</select>
-	
+	<delete id="deleteBookEditorByBookIds">
+		delete from
+		book_editor where book_id in
+		<foreach collection="list" close=")" index="index" item="id"
+			open="(" separator=",">
+			#{id}
+		</foreach>
+		;
+	</delete>
 </mapper>

@@ -59,7 +59,17 @@
 		book_detail where
 		book_id=#{bookId} ;
 	</delete>
-
+	<!-- 根据书籍id批量删除 -->
+	<delete id="deleteBookDetailByBookIds">
+		delete from
+		book_detail
+		where
+		book_id in
+		<foreach collection="list" close=")" index="index" item="id"
+			open="(" separator=",">
+			#{id}
+		</foreach>
+	</delete>
 	<!-- 更新BookDetail -->
 	<update id="updateBookDetail" parameterType="BookDetail">
 		update book_detail

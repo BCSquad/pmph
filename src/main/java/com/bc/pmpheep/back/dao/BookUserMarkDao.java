@@ -1,6 +1,9 @@
 package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.po.BookUserMark;
+
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -51,4 +54,16 @@ public interface BookUserMarkDao {
 	 *
 	 */
 	Integer deleteBookUserMarkByBookId(Long bookId);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据书籍id删除书籍收藏
+	 *
+	 * @param bookId
+	 *            书籍id
+	 * @return
+	 *
+	 */
+	void deleteBookUserMarkByBookIds(List<Long> id);
 }

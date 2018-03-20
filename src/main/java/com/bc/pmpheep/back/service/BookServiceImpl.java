@@ -19,7 +19,6 @@ import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -29,11 +28,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.common.service.BaseService;
+import com.bc.pmpheep.back.dao.BookCorrectionDao;
 import com.bc.pmpheep.back.dao.BookDao;
 import com.bc.pmpheep.back.dao.BookDetailDao;
+import com.bc.pmpheep.back.dao.BookEditorDao;
 import com.bc.pmpheep.back.dao.BookUserCommentDao;
 import com.bc.pmpheep.back.dao.BookUserLikeDao;
 import com.bc.pmpheep.back.dao.BookUserMarkDao;
+import com.bc.pmpheep.back.dao.BookVideoDao;
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Book;
@@ -41,7 +43,6 @@ import com.bc.pmpheep.back.po.BookDetail;
 import com.bc.pmpheep.back.po.BookSupport;
 import com.bc.pmpheep.back.po.BookUserLike;
 import com.bc.pmpheep.back.po.BookUserMark;
-import com.bc.pmpheep.back.po.Textbook;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
@@ -73,6 +74,12 @@ public class BookServiceImpl extends BaseService implements BookService {
 	BookUserMarkDao bookUserMarkDao;
 	@Autowired
 	BookUserLikeDao bookUserLikeDao;
+	@Autowired
+	BookVideoDao bookVideoDao;
+	@Autowired
+	BookCorrectionDao bookCorrectionDao;
+	@Autowired
+	BookEditorDao bookEditorDao;
 
 	@Override
 	public PageResult<BookVO> listBookVO(PageParameter<BookVO> pageParameter) throws CheckedServiceException {
@@ -180,35 +187,41 @@ public class BookServiceImpl extends BaseService implements BookService {
 	public String AbuttingJoint(String[] vns, Integer type) throws CheckedServiceException {
 		String result = "SUCCESS";
 		Const.AllSYNCHRONIZATION = 0;
-
 		int num = vns.length / 100;
 		for (int i = 0; i < vns.length; i++) {
+			Book oldBook = bookDao.getBookByBookVn(vns[i]);
 			JSONObject ot = new JSONObject();
 			if (type == 0) {// 商城发送修改的请求
-				if (ObjectUtil.isNull(bookDao.getBookByVn(vns[i]))) {
+				if (ObjectUtil.isNull(oldBook)) {
 					continue;
 				}
 			}
 			try {
-				System.out.println(vns[i] + " " + "第" + (i + 1) + "号本版号");
+				System.out.println("第" + (i + 1) + "号,共" + vns.length + "号");
 				ot = PostBusyAPI(vns[i]);
 				if ("1".equals(ot.getJSONObject("RESP").getString("CODE"))) {
-					// 请求成功并正常返回
-					if (type == 1) {
-						// emptyBooks(vns[i]);// 如果请求成功有返回值时，清除所有数据
-					}
 					JSONArray array = ot.getJSONObject("RESP").getJSONObject("responseData").getJSONArray("results");
 					if (array.size() > 0) {
 						Book book = BusyResJSONToModel(array.getJSONObject(0), null);
 						String content = book.getContent();// 获取到图书详情将其存入到图书详情表中
-						if (ObjectUtil.isNull(book.getId())) {
+						if (ObjectUtil.isNull(oldBook)) {
 							book.setScore(9.0);
-							bookDao.addBook(book);
-							BookDetail bookDetail = new BookDetail(book.getId(), content);
+							Long id = bookDao.addBook(book);
+							BookDetail bookDetail = new BookDetail(id, content);
 							bookDetailDao.addBookDetail(bookDetail);
 						} else {
-							bookDao.updateBook(book);
-							BookDetail bookDetail = new BookDetail(book.getId(), content);
+							Book newBook = new Book(book.getBookname(), book.getIsbn(), book.getSn(), book.getAuthor(),
+									book.getPublisher(), book.getLang(), book.getRevision(), book.getType(),
+									book.getPublishDate(), book.getReader(), book.getPrice(), book.getScore(),
+									book.getBuyUrl(), book.getImageUrl(), book.getPdfUrl(), book.getClicks(),
+									book.getComments(), book.getLikes(), book.getBookmarks(), book.getIsStick(),
+									book.getSort(), book.getDeadlineStick(), book.getIsNew(), book.getSortNew(),
+									book.getDeadlineNew(), book.getIsPromote(), book.getSortPromote(),
+									book.getDeadlinePromote(), book.getIsKey(), book.getSortKey(), book.getSales(),
+									book.getIsOnSale(), book.getGmtCreate(), book.getGmtUpdate());
+							newBook.setId(oldBook.getId());
+							bookDao.updateBook(newBook);
+							BookDetail bookDetail = new BookDetail(oldBook.getId(), content);
 							bookDetailDao.updateBookDetailByBookId(bookDetail);
 						}
 					}
@@ -221,6 +234,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 				result = "FAIL";
 			}
 		}
+
 		return result;
 	}
 
@@ -292,14 +306,15 @@ public class BookServiceImpl extends BaseService implements BookService {
 	 * @return
 	 *
 	 */
-	private Book BusyResJSONToModel(JSONObject item, Book model) {
+	public Book BusyResJSONToModel(JSONObject item, Book model) {
 		if (model == null) {
-			model = bookDao.getBookByVn(item.getString("versionNumber"));
+			model = bookDao.getBookByBookVn(item.getString("versionNumber"));
 			if (model == null) {
 				model = new Book();
 				model.setIsPromote(true);
 				model.setIsOnSale(true);
 				model.setIsNew(true);
+				model.setIsKey(false);
 				model.setSales(0L);
 				model.setGmtCreate(DateUtil.getCurrentTime());
 			}
@@ -335,39 +350,6 @@ public class BookServiceImpl extends BaseService implements BookService {
 		return model;
 	}
 
-	/**
-	 * 
-	 * 
-	 * 功能描述：清除书籍与其相关的所有的数据
-	 *
-	 * @param vn
-	 *            书籍本版号
-	 * @return
-	 *
-	 */
-	private void emptyBooks() {
-		List<Book> books = bookDao.listBook();
-		if (!books.isEmpty()) {
-			for (Book book : books) {
-				Long id = book.getId();
-				// 书籍
-				// 详情
-				// 配套
-				// 评论
-				// 点赞
-				// 收藏
-				// 对应
-				// 纠错
-				// 微视频
-				bookDao.deleteBookById(id);
-				bookDetailDao.deleteBookDetailByBookId(id);
-				bookUserCommentDao.deleteBookUserCommentByBookId(id);
-				bookUserLikeDao.deleteBookUserLikeByBookId(id);
-				bookUserMarkDao.deleteBookUserMarkByBookId(id);
-			}
-		}
-	}
-
 	@Override
 	public String deleteBookById(Long id) throws CheckedServiceException {
 		if (ObjectUtil.isNull(id)) {
@@ -394,18 +376,14 @@ public class BookServiceImpl extends BaseService implements BookService {
 		if (1 == type) {
 			AbuttingJoint(vns, type);
 		} else {
-			List<String> list = new ArrayList<>();
-			for (String vn : vns) {
-				Book book = bookDao.getBookByVn(vn);
-				if (ObjectUtil.isNull(book)) {
-					list.add(vn);
-				}
+			List<String> vn = ArrayUtil.toList(vns);
+			List<String> bookVns = bookDao.getBookByVn();
+			vn.remove(bookVns);
+			String[] newBookVn = new String[vn.size()];
+			for (int i = 0; i < vn.size(); i++) {
+				newBookVn[i] = vn.get(i);
 			}
-			String editionnums[] = new String[list.size()];
-			for (int i = 0, j = list.size(); i < j; i++) {
-				editionnums[i] = list.get(i);
-			}
-			AbuttingJoint(editionnums, type);
+			AbuttingJoint(newBookVn, type);
 		}
 		Const.AllSYNCHRONIZATION = 0;
 		return "SUCCESS";

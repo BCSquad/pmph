@@ -1,6 +1,9 @@
 package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.po.BookDetail;
+
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -61,4 +64,16 @@ public interface BookDetailDao {
 	 *
 	 */
 	Integer deleteBookDetailByBookId(Long bookId);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据书籍id删除书籍详情
+	 *
+	 * @param bookId
+	 *            书籍id
+	 * @return
+	 *
+	 */
+	void deleteBookDetailByBookIds(List<Long> id);
 }
