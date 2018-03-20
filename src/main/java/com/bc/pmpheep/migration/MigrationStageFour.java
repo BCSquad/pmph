@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.bc.pmpheep.back.po.CmsContent;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.MaterialContact;
 import com.bc.pmpheep.back.po.MaterialExtension;
@@ -28,6 +29,7 @@ import com.bc.pmpheep.back.po.MaterialProjectEditor;
 import com.bc.pmpheep.back.po.MaterialType;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.service.CmsContentService;
 import com.bc.pmpheep.back.service.MaterialContactService;
 import com.bc.pmpheep.back.service.MaterialExtensionService;
 import com.bc.pmpheep.back.service.MaterialExtraService;
@@ -43,6 +45,8 @@ import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
+import com.bc.pmpheep.general.po.Content;
+import com.bc.pmpheep.general.service.ContentService;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.migration.common.JdbcHelper;
 import com.bc.pmpheep.migration.common.SQLParameters;
@@ -92,6 +96,10 @@ public class MigrationStageFour {
 	private OrgService orgService;
 	@Autowired
 	private PmphUserService pmphUserService;
+	@Autowired
+	private CmsContentService cmsContentService;
+	@Autowired
+	private ContentService contentService;
 
 	// 用来装载向客户导出的信息
 	private List<Object[]> excptionList = new ArrayList<Object[]>();
@@ -441,6 +449,15 @@ public class MigrationStageFour {
 			if (null == oldMaterial.get("exception")){
 				correctCount++;
 			}
+			//保存教材社区相关的信息
+			String s = "<p>简介:驱蚊器</p><p><br/></p><p>邮寄地址：驱蚊器翁</p><p><br/></p><p>联&nbsp;系&nbsp;人：陈慧 (电话：18610032992，Emali：147258369@qq.com)</p><p><br/></p><p>";
+			Content content  = new Content( s);
+			content  = contentService.add(content);
+			
+			CmsContent cmsContent  = new CmsContent();
+			cmsContentService.addCmsContent(cmsContent);
+			
+			
 		}
 		// 没有错误数据
 		if (excptionList.size() == excptionListOldSize) {

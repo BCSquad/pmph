@@ -17,6 +17,14 @@ public interface DecPositionTempService {
 	 * @throws CheckedServiceException
 	 */
 	Integer deleteDecPositionTemp(Long id) throws CheckedServiceException;
+	
+
+	/**
+	 * @Param textbookId
+	 * @Return 影响行数
+	 * @throws CheckedServiceException
+	 */
+	Integer deleteDecPositionTempByTextbookId(Long textbookId) throws CheckedServiceException;
 
 	/**
 	 * @Param DecPosition 实体对象
