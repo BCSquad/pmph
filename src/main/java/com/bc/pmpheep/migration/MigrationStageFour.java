@@ -42,6 +42,7 @@ import com.bc.pmpheep.back.service.MaterialTypeService;
 import com.bc.pmpheep.back.service.OrgService;
 import com.bc.pmpheep.back.service.PmphUserService;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
+import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.general.bean.FileType;
@@ -103,6 +104,8 @@ public class MigrationStageFour {
 
 	// 用来装载向客户导出的信息
 	private List<Object[]> excptionList = new ArrayList<Object[]>();
+	// 用来装所有的教材
+	private List<Material>  materials    = new ArrayList<Material>();
 
 	public void start() {
 		Date begin = new Date();
@@ -115,6 +118,8 @@ public class MigrationStageFour {
 		transferMaterialContact();
 		materialOrg();
 		materialPprojectEeditor();
+		//新增教材社区数据
+		addMaterialCommunity();
 		try {
 			excelHelper.exportFromList(excptionList, "教材块问题数据导出", "For客户");
 		} catch (IOException e) {
@@ -124,6 +129,8 @@ public class MigrationStageFour {
 		}
 		logger.info("迁移第四步运行结束，用时：{}", JdbcHelper.getPastTime(begin));
 	}
+	
+	
 
 	protected void materialType() {
 		String tableName = "sys_booktypes";
@@ -449,15 +456,8 @@ public class MigrationStageFour {
 			if (null == oldMaterial.get("exception")){
 				correctCount++;
 			}
-			//保存教材社区相关的信息
-			String s = "<p>简介:驱蚊器</p><p><br/></p><p>邮寄地址：驱蚊器翁</p><p><br/></p><p>联&nbsp;系&nbsp;人：陈慧 (电话：18610032992，Emali：147258369@qq.com)</p><p><br/></p><p>";
-			Content content  = new Content( s);
-			content  = contentService.add(content);
-			
-			CmsContent cmsContent  = new CmsContent();
-			cmsContentService.addCmsContent(cmsContent);
-			
-			
+			//保存教材，为下面保存教材社区做准备
+			materials.add(material);
 		}
 		// 没有错误数据
 		if (excptionList.size() == excptionListOldSize) {
@@ -1291,6 +1291,49 @@ public class MigrationStageFour {
 		Map<String, Object> msg = new HashMap<String, Object>();
 		msg.put("result", "MaterialProjectEditor  表迁移完成" + count + "/" + materialProjectEditorList.size());
 		SQLParameters.STATISTICS.add(msg);
+	}
+	
+	protected  void  addMaterialCommunity (){
+		//保存教材社区相关的信息
+		for(Material  material:  materials){
+			MaterialExtra materialExtra=  materialExtraService.getMaterialExtraByMaterialId(material.getId());
+			if(null == materialExtra){
+				materialExtra = new MaterialExtra();
+			}
+			String detail = "<p>简介:驱蚊器</p>"
+					      + "<p><br/></p>"
+					      + "<p>邮寄地址：驱蚊器翁</p>"
+					      + "<p><br/></p>"
+					      + "<p>联&nbsp;系&nbsp;人：陈慧 (电话：18610032992，Emali：147258369@qq.com)</p>"
+					      + "<p><br/>/p>";
+			detail = detail+"<p>简介:"+null == materialExtra.getNotice()?"":materialExtra.getNotice()+"</p>";
+			detail = detail+"<p><br/></p><p>邮寄地址:"+material.getMailAddress()+"</p>";
+			List<MaterialContact> materialContacts =materialContactService.listMaterialContactByMaterialId(material.getId()) ;
+			for(MaterialContact materialContact : materialContacts){
+				detail = detail+"<p><br/></p><p>联&nbsp;系&nbsp;人："+materialContact.getContactUserName()+" (电话："+materialContact.getContactPhone()+"，Emali："+materialContact.getContactEmail()+")</p>";
+			}
+			Content content  = new Content( detail);
+			content  = contentService.add(content);
+			CmsContent cmsContent  = new CmsContent();
+			cmsContent.setParentId(0L);
+			cmsContent.setPath("0");
+			cmsContent.setMid(content.getId());
+			cmsContent.setCategoryId(3L);
+			cmsContent.setTitle(material.getMaterialName());
+			cmsContent.setAuthorType(new Short("0"));
+			cmsContent.setAuthorId(material.getFounderId());
+			cmsContent.setIsPublished(material.getIsPublished());
+			cmsContent.setAuthStatus(material.getIsPublished()?new Short("2"):new Short("0"));
+			cmsContent.setAuthDate(DateUtil.date2Str(material.getGmtUpdate() == null ? material.getGmtCreate():material.getGmtUpdate()));
+			cmsContent.setAuthUserId(material.getFounderId());
+			cmsContent.setGmtCreate(material.getGmtCreate()  );
+			cmsContent.setGmtUpdate(material.getGmtUpdate() == null ? material.getGmtCreate():material.getGmtUpdate());
+			cmsContent.setIsMaterialEntry(true);
+			cmsContent.setMaterialId(material.getId());
+			cmsContentService.addCmsContent(cmsContent);
+		}
+		
+		
 	}
 
 	/***********************************
