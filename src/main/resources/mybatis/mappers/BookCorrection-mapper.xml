@@ -57,10 +57,10 @@
 		<!-- 去掉最后一个, -->
 		<trim suffixOverrides=",">
 			<if test="bookId != null ">
-				 #{bookId},
+				#{bookId},
 			</if>
 			<if test="userId != null ">
-				 #{userId},
+				#{userId},
 			</if>
 			<if test="page != null ">
 				#{page},
@@ -72,7 +72,7 @@
 				#{content},
 			</if>
 			<if test="attachment != null and attachment != '' ">
-				 #{attachment},
+				#{attachment},
 			</if>
 			<if test="attachmentName != null and attachmentName != '' ">
 				#{attachmentName},
@@ -81,41 +81,47 @@
 				#{isEditorHandling},
 			</if>
 			<if test="isAuthorReplied != null ">
-				 #{isAuthorReplied},
+				#{isAuthorReplied},
 			</if>
 			<if test="authorReply != null and authorReply != '' ">
 				#{authorReply},
 			</if>
 			<if test="isEditorReplied != null ">
-				 #{isEditorReplied},
+				#{isEditorReplied},
 			</if>
 			<if test="editorReply != null and editorReply != '' ">
 				#{editorReply},
 			</if>
 			<if test="result != null ">
-				 #{result},
+				#{result},
 			</if>
 			<if test="replyDate != null ">
-				 #{replyDate},
+				#{replyDate},
 			</if>
 			<if test="isDeleted != null ">
-				 #{isDeleted},
+				#{isDeleted},
 			</if>
 		</trim>
 	</sql>
-	<!--新增一个    BookCorrection -->
+	<!--新增一个 BookCorrection -->
 	<insert id="addBookCorrection" parameterType="BookCorrection">
-		<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id"> <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into book_correction ( <include refid="key" /> )
-			values( <include refid="value" /> ) ;
+		insert into book_correction (
+		<include refid="key" />
+		)
+		values(
+		<include refid="value" />
+		) ;
 	</insert>
 
 
 	<!-- 根据主键删除BookCorrection -->
 	<delete id="deleteBookCorrectionById" parameterType="java.lang.Long">
-		delete from book_correction where id=#{id} ;
+		delete from
+		book_correction where id=#{id} ;
 	</delete>
 
 	<!-- 更新一个BookCorrection -->
@@ -175,152 +181,162 @@
 	</update>
 
 	<!-- 根据主键获取BookCorrection -->
-	<select id="getBookCorrectionById" parameterType="java.lang.Long" resultType="BookCorrection">
+	<select id="getBookCorrectionById" parameterType="java.lang.Long"
+		resultType="BookCorrection">
 		select * from book_correction where id=#{id} ;
 	</select>
-	
+
 	<!-- 获取审核纠错页面的数据总数 -->
-	<select id="listBookCorrectionAuditTotal"  resultType="java.lang.Integer">
-		select 
-			count(a.id) 
-		from 
-			book_correction a
-		LEFT JOIN 
-			book b on  b.id = a.book_id
-		LEFT JOIN 
-			book_editor c on c.book_id = a.book_id
-		LEFT JOIN 
-			writer_user d on d.id    = a.user_id
-		where 
-			b.id is not null and  !a.is_deleted 
+	<select id="listBookCorrectionAuditTotal" resultType="java.lang.Integer">
+		select
+		count(a.id)
+		from
+		book_correction a
+		LEFT JOIN
+		book b on b.id =
+		a.book_id
+		LEFT JOIN
+		book_editor c on c.book_id = a.book_id
+		LEFT JOIN
+		writer_user d on d.id = a.user_id
+		where
+		b.id is not null and
+		!a.is_deleted
 		<if test="editorId != null">
-			and c.editor_id  = #{editorId}
+			and c.editor_id = #{editorId}
 		</if>
 		<if test="bookname != null and bookname != '' ">
 			and b.bookname like CONCAT('%',#{bookname},'%')
 		</if>
 		<if test="isOver == 1 "><!-- APP的已完成 -->
-		     and is_editor_replied
-			 <if test="result   != null  ">
-			   and a.result  = #{result} 
-			 </if>
+			and is_editor_replied
+			<if test="result   != null  ">
+				and a.result = #{result}
+			</if>
 		</if>
 		<if test="isOver != 1 ">
 			<if test="result   != null  ">
-			<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来  -->
-			and (is_editor_replied and a.result  = #{result} )  
+				<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来 -->
+				and (is_editor_replied and a.result = #{result} )
 			</if>
 		</if>
-		
+
 	</select>
-	
+
 	<!-- 根据id获取详情 -->
-	<select   id="getBookCorrectionAuditDetailById"  resultType="BookCorrectionAuditVO">
-		select 
-		    DISTINCT
-			a.id,
-			b.bookname,
-			b.author,
-			b.publish_date,
-			b.image_url ,
-			a.page,
-			a.line ,
-			a.content ,
-			a.attachment,
-			a.attachment_name,
-			d.realname,
-			a.gmt_create ,
-			a.is_author_replied,
-			a.author_reply ,
-			a.is_editor_handling ,
-			a.is_editor_replied ,
-			a.editor_reply,
-			a.result  
-		from 
-			book_correction a
-		LEFT JOIN 
-			book b on  b.id = a.book_id
-		LEFT JOIN 
-			book_editor c on c.book_id = a.book_id
-		LEFT JOIN 
-			writer_user d on d.id    = a.user_id
-		where 
-			b.id is not null and  !a.is_deleted and a.id = #{id} 
+	<select id="getBookCorrectionAuditDetailById" resultType="BookCorrectionAuditVO">
+		select
+		DISTINCT
+		a.id,
+		b.bookname,
+		b.author,
+		b.publish_date,
+		b.image_url ,
+		a.page,
+		a.line ,
+		a.content ,
+		a.attachment,
+		a.attachment_name,
+		d.realname,
+		a.gmt_create ,
+		a.is_author_replied,
+		a.author_reply ,
+		a.is_editor_handling ,
+		a.is_editor_replied ,
+		a.editor_reply,
+		a.result
+		from
+		book_correction a
+		LEFT JOIN
+		book b on b.id = a.book_id
+		LEFT JOIN
+		book_editor c on c.book_id = a.book_id
+		LEFT JOIN
+		writer_user d on d.id =
+		a.user_id
+		where
+		b.id is not null and !a.is_deleted and a.id = #{id}
 	</select>
-	
-	<!-- 获取审核纠错页面的分页数据-->
-	<select id="listBookCorrectionAudit"  resultType="BookCorrectionAuditVO">
-		select 
-			DISTINCT
-			a.id,
-			b.bookname,
-			b.author,
-			b.publish_date,
-			b.image_url ,
-			a.page,
-			a.line ,
-			a.content ,
-			concat('/file/download/',a.attachment) attachment,
-			a.attachment_name,
-			d.realname,
-			a.gmt_create ,
-			a.is_author_replied,
-			a.author_reply ,
-			a.is_editor_handling ,
-			a.is_editor_replied ,
-			a.editor_reply,
-			a.result  
-		from 
-			book_correction a
-		LEFT JOIN 
-			book b on  b.id = a.book_id
-		LEFT JOIN 
-			book_editor c on c.book_id = a.book_id
-		LEFT JOIN 
-			writer_user d on d.id    = a.user_id
-		where 
-			b.id is not null and  !a.is_deleted 
+
+	<!-- 获取审核纠错页面的分页数据 -->
+	<select id="listBookCorrectionAudit" resultType="BookCorrectionAuditVO">
+		select
+		DISTINCT
+		a.id,
+		b.bookname,
+		b.author,
+		b.publish_date,
+		b.image_url ,
+		a.page,
+		a.line ,
+		a.content ,
+		concat('/file/download/',a.attachment)
+		attachment,
+		a.attachment_name,
+		d.realname,
+		a.gmt_create ,
+		a.is_author_replied,
+		a.author_reply ,
+		a.is_editor_handling ,
+		a.is_editor_replied ,
+		a.editor_reply,
+		a.result
+		from
+		book_correction a
+		LEFT
+		JOIN
+		book b on b.id = a.book_id
+		LEFT JOIN
+		book_editor c on c.book_id =
+		a.book_id
+		LEFT JOIN
+		writer_user d on d.id = a.user_id
+		where
+		b.id is not
+		null and !a.is_deleted
 		<if test="editorId != null">
-			and c.editor_id  = #{editorId}
+			and c.editor_id = #{editorId}
 		</if>
 		<if test="bookname != null and bookname != '' ">
 			and b.bookname like CONCAT('%',#{bookname},'%')
 		</if>
 		<if test="isOver == 1 "><!-- APP的已完成 -->
-			 and is_editor_replied
-			 <if test="result   != null  ">
-			   and a.result  = #{result} 
-			 </if>
+			and is_editor_replied
+			<if test="result   != null  ">
+				and a.result = #{result}
+			</if>
 		</if>
 		<if test="isOver != 1 ">
 			<if test="result   != null  ">
-			<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来  -->
-			and (is_editor_replied and a.result  = #{result} )  
+				<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来 -->
+				and (is_editor_replied and a.result = #{result} )
 			</if>
 		</if>
-		ORDER BY 
-			a.gmt_create desc 
+		ORDER BY
+		a.gmt_create desc
 		limit #{start} ,#{pageSize}
 	</select>
-	
-	<!-- 获取审核纠错跟踪页面的数据总数  -->
-	<select id="listBookCorrectionTrackTotal"  resultType="java.lang.Integer">
-		SELECT 
-			count(DISTINCT a.id)
-		FROM  
-			book_correction a
-		LEFT JOIN 
-			book b on b.id = a.book_id
-		LEFT JOIN 
-			book_editor c on c.book_id = b.id
-		LEFT JOIN 
-			pmph_user d on d.id = c.editor_id
-		LEFT JOIN 
-			pmph_department e on e.id = d.department_id
-		LEFT JOIN 
-			material_type   f  on f.id = b.type 
-		where 
-			!a.is_deleted and b.id is not null 
+
+	<!-- 获取审核纠错跟踪页面的数据总数 -->
+	<select id="listBookCorrectionTrackTotal" resultType="java.lang.Integer">
+		SELECT
+		count(DISTINCT a.id)
+		FROM
+		book_correction a
+		LEFT JOIN
+		book b on b.id
+		= a.book_id
+		LEFT JOIN
+		book_editor c on c.book_id = b.id
+		LEFT JOIN
+		pmph_user d on d.id = c.editor_id
+		LEFT JOIN
+		pmph_department e on e.id =
+		d.department_id
+		LEFT JOIN
+		material_type f on f.id = b.type
+		where
+		!a.is_deleted and b.id is not null
 		<if test="bookname != null and bookname != '' ">
 			and b.bookname like CONCAT('%',#{bookname},'%')
 		</if>
@@ -328,47 +344,58 @@
 			and a.is_editor_replied = #{isEditorReplied}
 		</if>
 	</select>
-	
+
 	<!-- 获取审核纠错跟踪页面的分页数据 -->
-	<select id="listBookCorrectionTrack"       resultType="BookCorrectionTrackVO">
-		SELECT 
-			a.id ,
-			b.bookname,
-			e.dp_name ,
-			f.type_name ,
-			d.realname ,
-			g.realname dutyName,
-			a.result ,
-			a.page,
-			a.line,
-			a.content,
-			a.author_reply,
-			a.is_editor_replied 
-		FROM  
-			book_correction a
-		LEFT JOIN 
-			book b on b.id = a.book_id
-		LEFT JOIN 
-			book_editor c on c.book_id = b.id
-		LEFT JOIN 
-			pmph_user d on d.id = c.editor_id
-		LEFT JOIN 
-			pmph_department e on e.id = d.department_id
-		LEFT JOIN 
-			material_type   f  on f.id = b.type 
-		LEFT JOIN 
-			pmph_user       g  on g.id = b.editor_id
-		where 
-			!a.is_deleted and b.id is not null 
+	<select id="listBookCorrectionTrack" resultType="BookCorrectionTrackVO">
+		SELECT
+		a.id ,
+		b.bookname,
+		e.dp_name ,
+		f.type_name ,
+		d.realname ,
+		g.realname
+		dutyName,
+		a.result ,
+		a.page,
+		a.line,
+		a.content,
+		a.author_reply,
+		a.is_editor_replied
+		FROM
+		book_correction a
+		LEFT JOIN
+		book b on b.id =
+		a.book_id
+		LEFT JOIN
+		book_editor c on c.book_id = b.id
+		LEFT JOIN
+		pmph_user
+		d on d.id = c.editor_id
+		LEFT JOIN
+		pmph_department e on e.id =
+		d.department_id
+		LEFT JOIN
+		material_type f on f.id = b.type
+		LEFT JOIN
+		pmph_user g on g.id = b.editor_id
+		where
+		!a.is_deleted and b.id is not
+		null
 		<if test="bookname != null and bookname != '' ">
 			and b.bookname like CONCAT('%',#{bookname},'%')
 		</if>
 		<if test="isEditorReplied != null ">
 			and a.is_editor_replied = #{isEditorReplied}
 		</if>
-		ORDER BY 
-			a.gmt_create desc 
+		ORDER BY
+		a.gmt_create desc
 		limit #{start} ,#{pageSize}
 	</select>
-	
+	<delete id="deleteBookCoorrectionTrackByBookIds">
+		delete from book_correction where book_id in
+		<foreach collection="list" close=")" index="index" item="id"
+			open="(" separator=",">
+			#{id}
+		</foreach>
+	</delete>
 </mapper>

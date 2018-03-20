@@ -17,11 +17,11 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,8 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  *
  * @author L.X <gugia@qq.com>
  */
-@Scope("prototype")
-@Service
+@Component("prototype")
 public class SsoHelper {
 
     @Value("#{spring['sso.url']}")

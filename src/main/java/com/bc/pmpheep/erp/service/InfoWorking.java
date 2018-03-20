@@ -1,11 +1,9 @@
 package com.bc.pmpheep.erp.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
-
-import com.bc.pmpheep.back.po.Topic;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -46,7 +44,17 @@ public class InfoWorking extends BaseWorking implements ErpWorking {
 	 *
 	 */
 	public String[] listBookInfo() {
-		JSONArray bookInfo = listBook("i_bookinfo");
+		JSONArray bookInfo = listBookVn("i_bookinfo");
+		String[] vns = new String[bookInfo.size()];
+		for (int i = 0; i < bookInfo.size(); i++) {
+			JSONObject job = bookInfo.getJSONObject(i);
+			vns[i] = job.getString("editionnum");
+		}
+		return vns;
+	}
+
+	public String[] listBook(String bookNum) {
+		JSONArray bookInfo = listBook("i_bookinfo", bookNum);
 		String[] vns = new String[bookInfo.size()];
 		for (int i = 0; i < bookInfo.size(); i++) {
 			JSONObject job = bookInfo.getJSONObject(i);
