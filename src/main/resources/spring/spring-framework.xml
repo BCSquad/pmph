@@ -14,7 +14,9 @@
 
     <!-- 使用cglib进行动态代理 -->
     <aop:aspectj-autoproxy proxy-target-class="true" />
-
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
     <!-- 启动组件扫描，排除@Controller组件，该组件由SpringMVC配置文件扫描 -->
     <!-- <context:component-scan base-package="com.bc.pmpheep.**"> <context:exclude-filter 
     type="annotation" expression="org.springframework.stereotype.Controller" 
@@ -59,7 +61,7 @@
     </bean>
 
     <bean id="taskExecutor" name="taskExecutor"
-              class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
         <!-- 核心线程数 线程池维护线程的最少数量 -->
         <property name="corePoolSize" value="1" />
         <!-- 线程池维护线程所允许的空闲时间 -->
@@ -82,7 +84,7 @@
         <property name="mapperLocations" value="classpath:mybatis/mappers/*.xml" />
         <!-- 扫描 entity 包，这样在 mapper 中就可以使用简单类名，多个用 ; 隔开 -->
         <property name="typeAliasesPackage"
-                          value="com.bc.pmpheep.back.po;com.bc.pmpheep.back.plugin;com.bc.pmpheep.back.vo" />
+                  value="com.bc.pmpheep.back.po;com.bc.pmpheep.back.plugin;com.bc.pmpheep.back.vo" />
         <!-- 配置 MyBatis 全局配置文件 -->
         <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
     </bean>
@@ -97,10 +99,10 @@
 
     <!-- 支持注解方式声明式事务 -->
     <tx:annotation-driven transaction-manager="transactionManager"
-                              proxy-target-class="true" />
+                          proxy-target-class="true" />
     <!-- 事务管理器 -->
     <bean id="transactionManager"
-              class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource" />
     </bean>
     <!-- 事务 -->
@@ -114,15 +116,15 @@
             <tx:method name="select*" read-only="true" />
             <!-- 对insert,update,delete,add 开头的方法进行事务管理,只要有异常就回滚 -->
             <tx:method name="batch*" read-only="false" rollback-for="java.lang.Exception"
-                                   propagation="REQUIRED" />
+                       propagation="REQUIRED" />
             <tx:method name="delete*" read-only="false" rollback-for="java.lang.Exception"
-                                   propagation="REQUIRED" />
+                       propagation="REQUIRED" />
             <tx:method name="update*" read-only="false" rollback-for="java.lang.Exception"
-                                   propagation="REQUIRED" />
+                       propagation="REQUIRED" />
             <tx:method name="add*" read-only="false" rollback-for="java.lang.Exception"
-                                   propagation="REQUIRED" />
+                       propagation="REQUIRED" />
             <tx:method name="insert*" read-only="false" rollback-for="java.lang.Exception"
-                                   propagation="REQUIRED" />
+                       propagation="REQUIRED" />
         </tx:attributes>
     </tx:advice>
 
@@ -131,35 +133,35 @@
     <!-- 事务入口 -->
     <aop:config>
         <aop:pointcut id="allServiceMethod"
-                              expression="execution(* com.bc.pmpheep.back.service.*.*(..))" />
+                      expression="execution(* com.bc.pmpheep.back.service.*.*(..))" />
         <aop:advisor pointcut-ref="allServiceMethod" advice-ref="txAdvice" />
 
         <!-- controller responseBean封装拦截 -->
         <aop:aspect ref="responseBeanAop" order="2">
             <aop:around method="controllerMethodHandler"
-                                    pointcut="execution(* com.bc.pmpheep.back.controller..*(..))" />
+                        pointcut="execution(* com.bc.pmpheep.back.controller..*(..))" />
         </aop:aspect>
     </aop:config>
 
     <!--MongoDB -->
     <mongo:mongo replica-set="${mongo.replicaSet}">
         <mongo:options connections-per-host="${mongo.connectionsPerHost}"
-                               threads-allowed-to-block-for-connection-multiplier="${mongo.threadsAllowedToBlockForConnectionMultiplier}"
-                               connect-timeout="${mongo.connectTimeout}" max-wait-time="${mongo.maxWaitTime}"
-                               auto-connect-retry="${mongo.autoConnectRetry}" socket-keep-alive="${mongo.socketKeepAlive}"
-                               socket-timeout="${mongo.socketTimeout}" slave-ok="${mongo.slaveOk}"
-                               write-number="${mongo.writeNumber}" write-timeout="${mongo.writeTimeout}"
-                               write-fsync="${mongo.writeFsync}" />
+                       threads-allowed-to-block-for-connection-multiplier="${mongo.threadsAllowedToBlockForConnectionMultiplier}"
+                       connect-timeout="${mongo.connectTimeout}" max-wait-time="${mongo.maxWaitTime}"
+                       auto-connect-retry="${mongo.autoConnectRetry}" socket-keep-alive="${mongo.socketKeepAlive}"
+                       socket-timeout="${mongo.socketTimeout}" slave-ok="${mongo.slaveOk}"
+                       write-number="${mongo.writeNumber}" write-timeout="${mongo.writeTimeout}"
+                       write-fsync="${mongo.writeFsync}" />
     </mongo:mongo>
     <mongo:db-factory id="mongoDbFactory" dbname="${mongo.dbName}"
-                          mongo-ref="mongo" authentication-dbname="${mongo.authenticationDbname}"
-                          username="${mongo.username}" password="${mongo.password}" />
+                      mongo-ref="mongo" authentication-dbname="${mongo.authenticationDbname}"
+                      username="${mongo.username}" password="${mongo.password}" />
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
     </bean>
     <mongo:repositories base-package="com.bc.pmpheep.general.dao" />
     <mongo:mapping-converter id="mappingConverter"
-                                 db-factory-ref="mongoDbFactory" disable-validation="true" />
+                             db-factory-ref="mongoDbFactory" disable-validation="true" />
     <bean id="anotherMongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
     </bean>

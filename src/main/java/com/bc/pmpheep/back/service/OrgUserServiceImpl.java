@@ -417,6 +417,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService {
 		orgUser.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);// 默认机构用户头像路径
 		orgUser.setOrgId(orgDao.getOrgid(org.getOrgName()));
 		orgUser.setPassword(new DesRun("", Const.DEFAULT_PASSWORD).enpsw);// 后台添加用户设置默认密码为123456
+//                SsoHelper ssoHelper = new SsoHelper();
 		String result = ssoHelper.createSSOAccount(orgUser);
 		if (!result.equals("success")) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.FAILURE_SSO_CALLBACK,
