@@ -34,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  *
  * @author L.X <gugia@qq.com>
  */
-@Component
+@Component("prototype")
 public class SsoHelper {
 
     @Value("#{spring['sso.url']}")
