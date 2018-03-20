@@ -37,6 +37,13 @@ public class DecPositionTempServiceTest extends BaseTest{
     
     @Test
     @Rollback(Const.ISROLLBACK)
+	public void testDeleteDecPositionTempByTextbookId(){
+		DecPositionTemp decPositionTemp=this.add();
+		Assert.assertNotNull("删除失败", decPositionTempService.deleteDecPositionTempByTextbookId(decPositionTemp.getTextbookId()));
+	}
+    
+    @Test
+    @Rollback(Const.ISROLLBACK)
     public void testUpdateDecPositionTemp(){
     	DecPositionTemp decPositionTemp=this.add();
     	decPositionTemp.setAuthorId(2L);

@@ -34,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  *
  * @author L.X <gugia@qq.com>
  */
-@Scope("prototype")
+@Scope("request")
 @Service
 public class SsoHelper {
 

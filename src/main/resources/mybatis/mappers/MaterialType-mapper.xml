@@ -114,4 +114,5 @@
 		select * from material_type where parent_id = #{parentId}
 		order by sort;
 	</select>
+	
 </mapper>

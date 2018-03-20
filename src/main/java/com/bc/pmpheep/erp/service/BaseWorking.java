@@ -108,8 +108,23 @@ public class BaseWorking extends BaseService {
 	 * @return
 	 *
 	 */
-	protected JSONArray listBook(String tabName) {
+	protected JSONArray listBookVn(String tabName) {
 		return SqlHelper.executeQuery("select editionnum from " + tabName, null);
+	}
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取所有的数据
+	 * 
+	 * @param tabName
+	 *            表名
+	 * @return
+	 *
+	 */
+	protected JSONArray listBook(String tabName, String bookNum) {
+		return SqlHelper.executeQuery("select booknumber,editionnum from " + tabName + " where booknumber in (" + bookNum + ") group by booknumber,editionnum",
+				null);
 	}
 
 	/**

@@ -95,12 +95,6 @@
 			<if test="deadlinePromote != null">
 				deadline_promote,
 			</if>
-			<if test="isKey !=null">
-				is_key,
-			</if>
-			<if test="sortKey !=null">
-				sort_key,
-			</if>
 			<if test="sales != null">
 				sales,
 			</if>
@@ -214,12 +208,6 @@
 			</if>
 			<if test="deadlinePromote != null">
 				#{deadlinePromote},
-			</if>
-			<if test="isKey !=null">
-				#{isKey},
-			</if>
-			<if test="sortKey !=null">
-				#{sortKey},
 			</if>
 			<if test="sales != null">
 				#{sales},
@@ -405,12 +393,21 @@
 	</insert>
 
 	<!-- 根据vn查询一个Book -->
-	<select id="getBookByVn" parameterType="java.lang.String"
-		resultType="Book">
-		select b.*,d.detail content from book b left join
-		book_detail d on d.book_id = b.id where b.vn=#{vn} ;
+	<select id="getBookByVn" resultType="String">
+		select b.vn from
+		book b left
+		join
+		book_detail d on d.book_id = b.id;
 	</select>
-
+	<!-- 根据vn查询一个Book -->
+	<select id="getBookByBookVn" resultType="Book">
+		select b.*,d.detail
+		content from
+		book b left
+		join
+		book_detail d on d.book_id = b.id where
+		b.vn=#{vn};
+	</select>
 	<!-- 分页查询 -->
 	<select id="listBookVO" parameterType="PageParameter"
 		resultType="BookVO">
@@ -602,7 +599,26 @@
 		update book set comments = comments-1 where id =
 		#{id}
 	</update>
-	<select id="listBook" resultType="Book">
-	select * from book;
+	<!-- 获取所有书籍的id -->
+	<select id="listBookId" resultType="Long">
+		select id from book;
+	</select>
+	<!-- 批量删除书籍 -->
+	<select id="deleted">
+		delete from book where
+		id in
+		<foreach collection="list" close=")" index="index" item="id"
+			open="(" separator=",">
+			#{id}
+		</foreach>
+	</select>
+	<!-- 批量删除配套图书 -->
+	<select id="deletedBookSupport">
+		delete from book_support where
+		book_id in
+		<foreach collection="list" close=")" index="index" item="id"
+			open="(" separator=",">
+			#{id}
+		</foreach>
 	</select>
 </mapper>

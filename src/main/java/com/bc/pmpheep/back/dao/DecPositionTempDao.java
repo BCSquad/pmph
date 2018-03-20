@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.dao;
 import org.springframework.stereotype.Repository;
 
 import com.bc.pmpheep.back.po.DecPositionTemp;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 @Repository
 public interface DecPositionTempDao {
@@ -27,6 +28,13 @@ public interface DecPositionTempDao {
 	 * @Return:Integer
 	 */
 	Integer deleteDecPositionTemp(Long id);
+	
+	/**
+	 * @Param textbookId
+	 * @Return 影响行数
+	 * @throws CheckedServiceException
+	 */
+	Integer deleteDecPositionTempByTextbookId(Long textbookId) ;
 
 	/**
 	 * 
