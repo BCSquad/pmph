@@ -27,6 +27,12 @@
 			<if test="isDigitalEditor !=null ">
  				is_digital_editor,
  			</if>
+ 			<if test="publisher !=null and publisher !=''">
+				publisher,
+			</if>
+ 			<if test="publishDate !=null and publishDate !=''">
+				publish_date,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -56,6 +62,12 @@
 			<if test="isDigitalEditor !=null ">
  				#{isDigitalEditor},
  			</if>
+ 			<if test="publisher !=null and publisher !=''">
+				#{publisher},
+			</if>
+ 			<if test="publishDate !=null and publishDate !=''">
+				#{publishDate},
+			</if>
 		</trim>
 	</sql>
 
@@ -102,6 +114,12 @@
 			<if test="isDigitalEditor !=null ">
  				is_digital_editor = #{isDigitalEditor},
  			</if>
+ 			<if test="publisher !=null and publisher !=''">
+				publisher = #{publisher},
+			</if>
+ 			<if test="publishDate !=null and publishDate !=''">
+				publish_date = #{publishDate},
+			</if>
 		</set>
 		where id=#{id} ;
 	</update>

@@ -8,7 +8,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.dao.QueryTimeoutException;
+import org.springframework.mail.MailSendException;
 
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.mongodb.MongoException;
@@ -54,13 +55,18 @@ public class ResponseBeanAop {
             responseBean.setMsg("类型转换异常");
             responseBean.setCode(ResponseBean.CLASS_CAST);
             logger.error(sb.toString(), ex.toString());
-        } else if (ex instanceof DataAccessResourceFailureException) {
+        } else if (ex instanceof DataAccessResourceFailureException
+                   || ex instanceof QueryTimeoutException) {
             responseBean.setMsg("数据库连接超时");
             responseBean.setCode(ResponseBean.DATABASE_TIME_OUT);
             logger.error(sb.toString(), ex.toString());
         } else if (ex instanceof MongoException) {
             responseBean.setMsg("图片或文件不存在");
             responseBean.setCode(ResponseBean.MONGO_EXCEPTION);
+            logger.error(sb.toString(), ex.toString());
+        } else if (ex instanceof MailSendException) {
+            responseBean.setMsg("邮件发送失败");
+            responseBean.setCode(ResponseBean.MAIL_EXCEPTION);
             logger.error(sb.toString(), ex.toString());
         } else {
             responseBean.setMsg(ex.toString());

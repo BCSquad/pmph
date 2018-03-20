@@ -47,11 +47,20 @@ public interface WriterPointLogService {
 	Integer delete(Long id)throws CheckedServiceException;
 	
 	/**
-	 * 分页查询积分记录
+	 * 分页查询用户积分获取记录
 	 * @param pageParameter
 	 * @return
 	 */
-	PageResult<WriterPointLogVO> getListWriterPointLog (PageParameter<WriterPointLogVO> pageParameter);
+	PageResult<WriterPointLogVO> getListWriterPointLog(PageParameter<WriterPointLogVO> pageParameter) 
+			throws CheckedServiceException;
+	
+	/**
+	 * 分页查询用户积分兑换记录
+	 * @param pageParameter
+	 * @return
+	 */
+	PageResult<WriterPointLogVO> getListWriterPointLogExchange(PageParameter<WriterPointLogVO> pageParameter) 
+			throws CheckedServiceException;
 	
 	/**
 	 *  通过用户id查询积分记录

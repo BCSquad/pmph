@@ -1,5 +1,7 @@
 package com.bc.pmpheep.back.po;
 
+import java.util.Date;
+
 import org.apache.ibatis.type.Alias;
 
 /**
@@ -28,6 +30,10 @@ public class DecLastPosition implements java.io.Serializable {
 	private Integer position;
 	// 是否数字编辑
 	private Boolean isDigitalEditor;
+	// 出版社
+	private String publisher;
+	// 出版时间
+	private Date publishDate;
 	// 备注
 	private String note;
 	// 显示顺序
@@ -121,10 +127,28 @@ public class DecLastPosition implements java.io.Serializable {
 		this.sort = sort;
 	}
 
+	public String getPublisher() {
+		return publisher;
+	}
+
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
+	}
+
+	public Date getPublishDate() {
+		return publishDate;
+	}
+
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
+	}
+
 	@Override
 	public String toString() {
-		return "DecLastPosition [id=" + id + ", declarationId=" + declarationId + ", materialName=" + materialName
-				+ ", position=" + position + ", isDigitalEditor=" + isDigitalEditor + ", note=" + note + ", sort="
-				+ sort + "]";
+		return "DecLastPosition [id=" + id + ", declarationId=" + declarationId
+				+ ", materialName=" + materialName + ", position=" + position
+				+ ", isDigitalEditor=" + isDigitalEditor + ", publisher="
+				+ publisher + ", publishDate=" + publishDate + ", note=" + note
+				+ ", sort=" + sort + "]";
 	}
 }

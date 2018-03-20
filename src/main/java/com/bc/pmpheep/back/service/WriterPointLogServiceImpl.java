@@ -75,11 +75,81 @@ public class WriterPointLogServiceImpl implements WriterPointLogService {
 
     @Override
     public PageResult<WriterPointLogVO> getListWriterPointLog(
-    PageParameter<WriterPointLogVO> pageParameter) {
+    PageParameter<WriterPointLogVO> pageParameter) throws CheckedServiceException{
         PageResult<WriterPointLogVO> pageResult = new PageResult<WriterPointLogVO>();
+        String startTime = pageParameter.getParameter().getStartTime(); // 开始时间
+        String endTime = pageParameter.getParameter().getEndTime(); // 结束时间
+        Long userId = pageParameter.getParameter().getUserId();
+        WriterPointLogVO writerPointLogVO = new WriterPointLogVO();
+        if (StringUtil.isEmpty(startTime) && StringUtil.isEmpty(endTime)) {
+        	writerPointLogVO.setStartTime(null);
+        	writerPointLogVO.setEndTime(null);
+        } else {
+        	writerPointLogVO.setStartTime(startTime + " 00:00:00");
+        	writerPointLogVO.setEndTime(endTime + " 23:59:59");
+        }
+        if (StringUtil.isEmpty(startTime) && StringUtil.notEmpty(endTime)) {
+        	writerPointLogVO.setStartTime(endTime + " 00:00:00");
+        	writerPointLogVO.setEndTime(endTime + " 23:59:59");
+        } else if (StringUtil.isEmpty(endTime) && StringUtil.notEmpty(startTime)) {
+        	writerPointLogVO.setStartTime(startTime + " 00:00:00");
+        	writerPointLogVO.setEndTime(startTime + " 23:59:59");
+        }
+        if (ObjectUtil.notNull(userId)) {
+        	writerPointLogVO.setUserId(userId);
+        } else {
+        	throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+        pageParameter.setParameter(writerPointLogVO);
+        // 将页面大小和页面页码拷贝
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 包含数据总条数的数据集
         List<WriterPointLogVO> writerPointLogVOs =
         writerPointLogDao.listWriterPointLogVO(pageParameter);
+        if (CollectionUtil.isNotEmpty(writerPointLogVOs)) {
+            Integer count = writerPointLogVOs.get(0).getCount();
+            pageResult.setTotal(count);
+            pageResult.setRows(writerPointLogVOs);
+        }
+        return pageResult;
+
+    }
+    
+    @Override
+    public PageResult<WriterPointLogVO> getListWriterPointLogExchange(
+    PageParameter<WriterPointLogVO> pageParameter) throws CheckedServiceException{
+        PageResult<WriterPointLogVO> pageResult = new PageResult<WriterPointLogVO>();
+        String startTime = pageParameter.getParameter().getStartTime(); // 开始时间
+        String endTime = pageParameter.getParameter().getEndTime(); // 结束时间
+        Long userId = pageParameter.getParameter().getUserId();
+        WriterPointLogVO writerPointLogVO = new WriterPointLogVO();
+        if (StringUtil.isEmpty(startTime) && StringUtil.isEmpty(endTime)) {
+        	writerPointLogVO.setStartTime(null);
+        	writerPointLogVO.setEndTime(null);
+        } else {
+        	writerPointLogVO.setStartTime(startTime + " 00:00:00");
+        	writerPointLogVO.setEndTime(endTime + " 23:59:59");
+        }
+        if (StringUtil.isEmpty(startTime) && StringUtil.notEmpty(endTime)) {
+        	writerPointLogVO.setStartTime(endTime + " 00:00:00");
+        	writerPointLogVO.setEndTime(endTime + " 23:59:59");
+        } else if (StringUtil.isEmpty(endTime) && StringUtil.notEmpty(startTime)) {
+        	writerPointLogVO.setStartTime(startTime + " 00:00:00");
+        	writerPointLogVO.setEndTime(startTime + " 23:59:59");
+        }
+        if (ObjectUtil.notNull(userId)) {
+        	writerPointLogVO.setUserId(userId);
+        } else {
+        	throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+        pageParameter.setParameter(writerPointLogVO);
+        // 将页面大小和页面页码拷贝
+        PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+        // 包含数据总条数的数据集
+        List<WriterPointLogVO> writerPointLogVOs =
+        writerPointLogDao.listWriterPointLogVOExchange(pageParameter);
         if (CollectionUtil.isNotEmpty(writerPointLogVOs)) {
             Integer count = writerPointLogVOs.get(0).getCount();
             pageResult.setTotal(count);

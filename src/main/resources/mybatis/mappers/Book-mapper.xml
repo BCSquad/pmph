@@ -602,4 +602,7 @@
 		update book set comments = comments-1 where id =
 		#{id}
 	</update>
+	<select id="listBook" resultType="Book">
+	select * from book;
+	</select>
 </mapper>
