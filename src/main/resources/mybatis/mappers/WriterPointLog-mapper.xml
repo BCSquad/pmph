@@ -84,6 +84,7 @@
 		left join writer_point_rule wpr on wpr.id=wpl.rule_id,
 		(select count(*) count from writer_point_log wpl 
 			left join writer_user wu on wu.id=wpl.user_id 
+			left join writer_point wp on wp.user_id=wpl.user_id 
 			left join writer_point_rule wpr on wpr.id=wpl.rule_id 
 			where 1 = 1 and wpr.is_exchange = 0 
 			<!-- 下面是动态条件 -->
@@ -94,10 +95,13 @@
 					</if>
 					<!-- 时间 -->
 					<if test="parameter.startTime !=null and parameter.startTime !='' ">
-						and wpl.gmt_create &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+						and (UNIX_TIMESTAMP(wpl.gmt_create) &gt;= 
+						UNIX_TIMESTAMP(date_format(#{parameter.startTime},'%Y-%m-%d %H:%i:%s')) 
 					</if>
 					<if test="parameter.endTime !=null and parameter.endTime !='' ">
-						and wpl.gmt_create &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s') 
+						and UNIX_TIMESTAMP(wpl.gmt_create) &lt;= 
+						UNIX_TIMESTAMP(date_format(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')) 
+						) 
 					</if>
 				</if>) t 
 		where 1 = 1 and wpr.is_exchange = 0 
@@ -109,10 +113,13 @@
 			</if>
 			<!-- 时间 -->
 			<if test="parameter.startTime !=null and parameter.startTime !='' ">
-				and wpl.gmt_create &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+				and (UNIX_TIMESTAMP(wpl.gmt_create) &gt;= 
+				UNIX_TIMESTAMP(date_format(#{parameter.startTime},'%Y-%m-%d %H:%i:%s')) 
 			</if>
 			<if test="parameter.endTime !=null and parameter.endTime !='' ">
-				and wpl.gmt_create &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s') 
+				and UNIX_TIMESTAMP(wpl.gmt_create) &lt;= 
+				UNIX_TIMESTAMP(date_format(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')) 
+				) 
 			</if>
 		</if>
 		group by wpl.id desc 
@@ -131,6 +138,7 @@
 		left join writer_point_rule wpr on wpr.id=wpl.rule_id,
 		(select count(*) count from writer_point_log wpl 
 			left join writer_user wu on wu.id=wpl.user_id 
+			left join writer_point wp on wp.user_id=wpl.user_id 
 			left join writer_point_rule wpr on wpr.id=wpl.rule_id 
 			where 1 = 1 and wpr.is_exchange = 1 
 			<!-- 下面是动态条件 -->
@@ -141,10 +149,13 @@
 					</if>
 					<!-- 时间 -->
 					<if test="parameter.startTime !=null and parameter.startTime !='' ">
-						and wpl.gmt_create &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+						and (UNIX_TIMESTAMP(wpl.gmt_create) &gt;= 
+						UNIX_TIMESTAMP(date_format(#{parameter.startTime},'%Y-%m-%d %H:%i:%s')) 
 					</if>
 					<if test="parameter.endTime !=null and parameter.endTime !='' ">
-						and wpl.gmt_create &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s') 
+						and UNIX_TIMESTAMP(wpl.gmt_create) &lt;= 
+						UNIX_TIMESTAMP(date_format(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')) 
+						) 
 					</if>
 				</if>) t 
 		where 1 = 1 and wpr.is_exchange = 1 
@@ -156,10 +167,13 @@
 			</if>
 			<!-- 时间 -->
 			<if test="parameter.startTime !=null and parameter.startTime !='' ">
-				and wpl.gmt_create &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+				and (UNIX_TIMESTAMP(wpl.gmt_create) &gt;= 
+				UNIX_TIMESTAMP(date_format(#{parameter.startTime},'%Y-%m-%d %H:%i:%s')) 
 			</if>
 			<if test="parameter.endTime !=null and parameter.endTime !='' ">
-				and wpl.gmt_create &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s') 
+				and UNIX_TIMESTAMP(wpl.gmt_create) &lt;= 
+				UNIX_TIMESTAMP(date_format(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')) 
+				) 
 			</if>
 		</if>
 		group by wpl.id desc 
