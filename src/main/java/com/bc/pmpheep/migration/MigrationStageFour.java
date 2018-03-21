@@ -449,8 +449,8 @@ public class MigrationStageFour {
 			// 学术荣誉授予情况必填
 			material.setIsAcadeRewardRequired(false);
 			// 设置权限
-			material.setProjectPermission(Integer.valueOf("11111111", 2));
-			material.setPlanPermission(Integer.valueOf("00010000", 2));
+			material.setProjectPermission(Integer.valueOf("11110011", 2));
+			material.setPlanPermission(   Integer.valueOf("00010000", 2));
 			
 			material = materialService.addMaterial(material);
 			count++;
