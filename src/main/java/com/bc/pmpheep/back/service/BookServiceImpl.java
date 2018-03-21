@@ -186,7 +186,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 	@Override
 	public String AbuttingJoint(String[] vns, Integer type) throws CheckedServiceException {
 		String result = "SUCCESS";
-		Const.AllSYNCHRONIZATION = 0;
+		Const.AllSYNCHRONIZATION = 1;
 		int num = vns.length / 100;
 		for (int i = 0; i < vns.length; i++) {
 			Book oldBook = bookDao.getBookByBookVn(vns[i]);
