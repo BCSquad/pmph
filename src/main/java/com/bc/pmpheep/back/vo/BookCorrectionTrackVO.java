@@ -83,7 +83,7 @@ public class BookCorrectionTrackVO implements Serializable {
     @ExcelHeader(header = "是否回复")
     private String   isEditorRepliedString ;
     
-    public BookCorrectionTrackVO() {
+	public BookCorrectionTrackVO() {
 		super();
 	}
 

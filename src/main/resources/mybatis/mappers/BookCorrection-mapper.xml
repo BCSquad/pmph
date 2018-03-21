@@ -191,6 +191,8 @@
 			book_editor c on c.book_id = a.book_id
 		LEFT JOIN 
 			writer_user d on d.id    = a.user_id
+		LEFT JOIN 
+			pmph_user p on p.id=c.editor_id	
 		where 
 			b.id is not null and  !a.is_deleted 
 		<if test="editorId != null">
@@ -235,7 +237,7 @@
 			a.is_editor_handling ,
 			a.is_editor_replied ,
 			a.editor_reply,
-			a.result  
+			a.result
 		from 
 			book_correction a
 		LEFT JOIN 
@@ -269,7 +271,8 @@
 			a.is_editor_handling ,
 			a.is_editor_replied ,
 			a.editor_reply,
-			a.result  
+			a.result,
+			p.realname editorName
 		from 
 			book_correction a
 		LEFT JOIN 
@@ -278,8 +281,11 @@
 			book_editor c on c.book_id = a.book_id
 		LEFT JOIN 
 			writer_user d on d.id    = a.user_id
+		LEFT JOIN 
+			pmph_user p on p.id=c.editor_id
 		where 
 			b.id is not null and  !a.is_deleted 
+		
 		<if test="editorId != null">
 			and c.editor_id  = #{editorId}
 		</if>
