@@ -197,7 +197,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 				}
 			}
 			try {
-				System.out.println("第" + (i + 1) + "号,共" + vns.length + "号");
+//				System.out.println("第" + (i + 1) + "号,共" + vns.length + "号");
 				ot = PostBusyAPI(vns[i]);
 				if ("1".equals(ot.getJSONObject("RESP").getString("CODE"))) {
 					JSONArray array = ot.getJSONObject("RESP").getJSONObject("responseData").getJSONArray("results");
