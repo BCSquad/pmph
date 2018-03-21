@@ -363,7 +363,10 @@
 			a.author_reply,
 			a.is_editor_replied,
 			b.author,
-			wu.realname correctionName
+			wu.realname correctionName,
+			b.image_url,
+			a.gmt_create,
+			b.publish_date
 			FROM
 			book_correction a
 			LEFT JOIN

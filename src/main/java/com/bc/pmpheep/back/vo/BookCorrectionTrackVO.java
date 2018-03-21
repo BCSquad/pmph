@@ -1,6 +1,8 @@
 package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
 
@@ -90,7 +92,56 @@ public class BookCorrectionTrackVO implements Serializable {
      * 提交者姓名
      */
     private String correctionName;
+    /**
+     * 创建时间
+     */
+    private Timestamp gmtCreate;
+    /**
+     * 图书出版时间
+     */
+    private Date publishDate;
+    /**
+     * 图书图片
+     */
+    private String imageUrl;
     
+    
+	public Timestamp getGmtCreate() {
+		return gmtCreate;
+	}
+
+
+
+	public void setGmtCreate(Timestamp gmtCreate) {
+		this.gmtCreate = gmtCreate;
+	}
+
+
+
+	public Date getPublishDate() {
+		return publishDate;
+	}
+
+
+
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
+	}
+
+
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+
+
 	public String getAuthor() {
 		return author;
 	}
