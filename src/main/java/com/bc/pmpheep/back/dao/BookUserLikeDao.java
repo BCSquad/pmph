@@ -65,5 +65,5 @@ public interface BookUserLikeDao {
 	 * @return
 	 *
 	 */
-	Integer deleteBookUserLikeByBookIds(List<Long> id);
+	Integer deleteBookUserLikeByBookIds();
 }

@@ -75,5 +75,5 @@ public interface BookDetailDao {
 	 * @return
 	 *
 	 */
-	void deleteBookDetailByBookIds(List<Long> id);
+	void deleteBookDetailByBookIds();
 }

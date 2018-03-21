@@ -79,11 +79,6 @@
 	</select>
 	<delete id="deleteBookEditorByBookIds">
 		delete from
-		book_editor where book_id in
-		<foreach collection="list" close=")" index="index" item="id"
-			open="(" separator=",">
-			#{id}
-		</foreach>
-		;
+		book_editor 
 	</delete>
 </mapper>

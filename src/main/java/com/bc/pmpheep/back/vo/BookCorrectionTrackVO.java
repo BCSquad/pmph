@@ -1,6 +1,8 @@
 package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
 
@@ -82,8 +84,89 @@ public class BookCorrectionTrackVO implements Serializable {
      */
     @ExcelHeader(header = "是否回复")
     private String   isEditorRepliedString ;
+    /**
+     * 图书作者
+     */
+    private String author;
+    /**
+     * 提交者姓名
+     */
+    private String correctionName;
+    /**
+     * 创建时间
+     */
+    private Timestamp gmtCreate;
+    /**
+     * 图书出版时间
+     */
+    private Date publishDate;
+    /**
+     * 图书图片
+     */
+    private String imageUrl;
     
-    public BookCorrectionTrackVO() {
+    
+	public Timestamp getGmtCreate() {
+		return gmtCreate;
+	}
+
+
+
+	public void setGmtCreate(Timestamp gmtCreate) {
+		this.gmtCreate = gmtCreate;
+	}
+
+
+
+	public Date getPublishDate() {
+		return publishDate;
+	}
+
+
+
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
+	}
+
+
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+
+
+	public String getAuthor() {
+		return author;
+	}
+
+
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+
+
+	public String getCorrectionName() {
+		return correctionName;
+	}
+
+
+
+	public void setCorrectionName(String correctionName) {
+		this.correctionName = correctionName;
+	}
+
+
+
+	public BookCorrectionTrackVO() {
 		super();
 	}
 
@@ -269,19 +352,17 @@ public class BookCorrectionTrackVO implements Serializable {
 		this.dutyName = dutyName;
 	}
 
+
+
 	@Override
 	public String toString() {
-		return "{id:" + id + ",bookname:" + bookname + ",dpName:" + dpName
-				+ ",typeName:" + typeName + ",realname:" + realname
-				+ ",dutyName:" + dutyName + ",result:" + result
-				+ ",resultString:" + resultString + ",page:" + page + ",line:"
-				+ line + ",content:" + content + ",authorReply:" + authorReply
-				+ ",isEditorReplied:" + isEditorReplied
-				+ ",isEditorRepliedString:" + isEditorRepliedString + "}";
+		return "BookCorrectionTrackVO [id=" + id + ", bookname=" + bookname + ", dpName=" + dpName + ", typeName="
+				+ typeName + ", realname=" + realname + ", dutyName=" + dutyName + ", result=" + result
+				+ ", resultString=" + resultString + ", page=" + page + ", line=" + line + ", content=" + content
+				+ ", authorReply=" + authorReply + ", isEditorReplied=" + isEditorReplied + ", isEditorRepliedString="
+				+ isEditorRepliedString + ", author=" + author + ", correctionName=" + correctionName + "]";
 	}
-    
 	
-   
     
 
 }

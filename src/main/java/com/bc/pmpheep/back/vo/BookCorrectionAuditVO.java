@@ -86,8 +86,23 @@ public class BookCorrectionAuditVO implements Serializable {
      *检查结果
      */
     private Boolean result ;
+    /**
+     * 策划编辑姓名
+     */
+    private String editorName;
     
     
+	public String getEditorName() {
+		return editorName;
+	}
+
+
+	public BookCorrectionAuditVO setEditorName(String editorName) {
+		this.editorName = editorName;
+		return this;
+	}
+
+
 	public BookCorrectionAuditVO() {
 		super();
 	}
@@ -243,17 +258,15 @@ public class BookCorrectionAuditVO implements Serializable {
 	}
 
 
+
 	@Override
 	public String toString() {
-		return "{id:" + id + ",bookname:" + bookname + ",imageUrl:" + imageUrl
-				+ ",author:" + author + ",publishDate:" + publishDate
-				+ ",page:" + page + ",line:" + line + ",content:" + content
-				+ ",attachment:" + attachment + ",attachmentName:"
-				+ attachmentName + ",realname:" + realname + ",gmtCreate:"
-				+ gmtCreate + ",authorReply:" + authorReply
-				+ ",isAuthorReplied:" + isAuthorReplied + ",isEditorHandling:"
-				+ isEditorHandling + ",isEditorReplied:" + isEditorReplied
-				+ ",editorReply:" + editorReply + ",result:" + result + "}";
+		return "BookCorrectionAuditVO [id=" + id + ", bookname=" + bookname + ", imageUrl=" + imageUrl + ", author="
+				+ author + ", publishDate=" + publishDate + ", page=" + page + ", line=" + line + ", content=" + content
+				+ ", attachment=" + attachment + ", attachmentName=" + attachmentName + ", realname=" + realname
+				+ ", gmtCreate=" + gmtCreate + ", authorReply=" + authorReply + ", isAuthorReplied=" + isAuthorReplied
+				+ ", isEditorHandling=" + isEditorHandling + ", isEditorReplied=" + isEditorReplied + ", editorReply="
+				+ editorReply + ", result=" + result + ", editorName=" + editorName + "]";
 	}
 
 

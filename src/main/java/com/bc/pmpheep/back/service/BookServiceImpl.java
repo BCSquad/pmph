@@ -186,7 +186,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 	@Override
 	public String AbuttingJoint(String[] vns, Integer type) throws CheckedServiceException {
 		String result = "SUCCESS";
-		Const.AllSYNCHRONIZATION = 0;
+		Const.AllSYNCHRONIZATION = 1;
 		int num = vns.length / 100;
 		for (int i = 0; i < vns.length; i++) {
 			Book oldBook = bookDao.getBookByBookVn(vns[i]);
@@ -206,8 +206,8 @@ public class BookServiceImpl extends BaseService implements BookService {
 						String content = book.getContent();// 获取到图书详情将其存入到图书详情表中
 						if (ObjectUtil.isNull(oldBook)) {
 							book.setScore(9.0);
-							Long id = bookDao.addBook(book);
-							BookDetail bookDetail = new BookDetail(id, content);
+							bookDao.addBook(book);
+							BookDetail bookDetail = new BookDetail(book.getId(), content);
 							bookDetailDao.addBookDetail(bookDetail);
 						} else {
 							Book newBook = new Book(book.getBookname(), book.getIsbn(), book.getSn(), book.getAuthor(),

@@ -65,5 +65,5 @@ public interface BookUserMarkDao {
 	 * @return
 	 *
 	 */
-	void deleteBookUserMarkByBookIds(List<Long> id);
+	void deleteBookUserMarkByBookIds();
 }

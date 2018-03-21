@@ -61,5 +61,5 @@ public interface BookEditorDao {
 	 * @param id
 	 *
 	 */
-	void deleteBookEditorByBookIds(List<Long> id);
+	void deleteBookEditorByBookIds();
 }
