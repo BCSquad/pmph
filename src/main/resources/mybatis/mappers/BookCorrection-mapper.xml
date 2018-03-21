@@ -187,21 +187,21 @@
 	</select>
 
 	<!-- 获取审核纠错页面的数据总数 -->
-	<select id="listBookCorrectionAuditTotal" resultType="java.lang.Integer">
-		select
-		count(a.id)
-		from
-		book_correction a
-		LEFT JOIN
-		book b on b.id =
-		a.book_id
-		LEFT JOIN
-		book_editor c on c.book_id = a.book_id
-		LEFT JOIN
-		writer_user d on d.id = a.user_id
-		where
-		b.id is not null and
-		!a.is_deleted
+	<select id="listBookCorrectionAuditTotal"  resultType="java.lang.Integer">
+		select 
+			count(a.id) 
+		from 
+			book_correction a
+		LEFT JOIN 
+			book b on  b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = a.book_id
+		LEFT JOIN 
+			writer_user d on d.id    = a.user_id
+		LEFT JOIN 
+			pmph_user p on p.id=c.editor_id	
+		where 
+			b.id is not null and  !a.is_deleted 
 		<if test="editorId != null">
 			and c.editor_id = #{editorId}
 		</if>
@@ -224,76 +224,73 @@
 	</select>
 
 	<!-- 根据id获取详情 -->
-	<select id="getBookCorrectionAuditDetailById" resultType="BookCorrectionAuditVO">
-		select
-		DISTINCT
-		a.id,
-		b.bookname,
-		b.author,
-		b.publish_date,
-		b.image_url ,
-		a.page,
-		a.line ,
-		a.content ,
-		a.attachment,
-		a.attachment_name,
-		d.realname,
-		a.gmt_create ,
-		a.is_author_replied,
-		a.author_reply ,
-		a.is_editor_handling ,
-		a.is_editor_replied ,
-		a.editor_reply,
-		a.result
-		from
-		book_correction a
-		LEFT JOIN
-		book b on b.id = a.book_id
-		LEFT JOIN
-		book_editor c on c.book_id = a.book_id
-		LEFT JOIN
-		writer_user d on d.id =
-		a.user_id
-		where
-		b.id is not null and !a.is_deleted and a.id = #{id}
+	<select   id="getBookCorrectionAuditDetailById"  resultType="BookCorrectionAuditVO">
+		select 
+		    DISTINCT
+			a.id,
+			b.bookname,
+			b.author,
+			b.publish_date,
+			b.image_url ,
+			a.page,
+			a.line ,
+			a.content ,
+			a.attachment,
+			a.attachment_name,
+			d.realname,
+			a.gmt_create ,
+			a.is_author_replied,
+			a.author_reply ,
+			a.is_editor_handling ,
+			a.is_editor_replied ,
+			a.editor_reply,
+			a.result
+		from 
+			book_correction a
+		LEFT JOIN 
+			book b on  b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = a.book_id
+		LEFT JOIN 
+			writer_user d on d.id    = a.user_id
+		where 
+			b.id is not null and  !a.is_deleted and a.id = #{id} 
 	</select>
-
 	<!-- 获取审核纠错页面的分页数据 -->
 	<select id="listBookCorrectionAudit" resultType="BookCorrectionAuditVO">
-		select
-		DISTINCT
-		a.id,
-		b.bookname,
-		b.author,
-		b.publish_date,
-		b.image_url ,
-		a.page,
-		a.line ,
-		a.content ,
-		concat('/file/download/',a.attachment)
-		attachment,
-		a.attachment_name,
-		d.realname,
-		a.gmt_create ,
-		a.is_author_replied,
-		a.author_reply ,
-		a.is_editor_handling ,
-		a.is_editor_replied ,
-		a.editor_reply,
-		a.result
-		from
-		book_correction a
-		LEFT
-		JOIN
-		book b on b.id = a.book_id
-		LEFT JOIN
-		book_editor c on c.book_id =
-		a.book_id
-		LEFT JOIN
-		writer_user d on d.id = a.user_id
-		where
-		b.id is not
-		null and !a.is_deleted
+			select 
+			DISTINCT
+			a.id,
+			b.bookname,
+			b.author,
+			b.publish_date,
+			b.image_url ,
+			a.page,
+			a.line ,
+			a.content ,
+			concat('/file/download/',a.attachment) attachment,
+			a.attachment_name,
+			d.realname,
+			a.gmt_create ,
+			a.is_author_replied,
+			a.author_reply ,
+			a.is_editor_handling ,
+			a.is_editor_replied ,
+			a.editor_reply,
+			a.result,
+			p.realname editorName
+		from 
+			book_correction a
+		LEFT JOIN 
+			book b on  b.id = a.book_id
+		LEFT JOIN 
+			book_editor c on c.book_id = a.book_id
+		LEFT JOIN 
+			writer_user d on d.id    = a.user_id
+		LEFT JOIN 
+			pmph_user p on p.id=c.editor_id
+		where 
+			b.id is not null and  !a.is_deleted
 		<if test="editorId != null">
 			and c.editor_id = #{editorId}
 		</if>
