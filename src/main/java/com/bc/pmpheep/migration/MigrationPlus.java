@@ -128,7 +128,7 @@ public class MigrationPlus {
 	        //初始化的数据
 	        String dataJson
 	                = "["
-	                + "{adname:'首页轮播',          type:1,autoPlay:true, animationInterval:3000, image:[{image:'/web/img/banner4.png'},{image:'/web/img/banner4.png'},{image:'/web/img/banner4.png'}]} ,"
+	                + "{adname:'首页轮播',          type:1,autoPlay:true, animationInterval:3000, image:[{image:'/web/img/banner4.png'},{image:'/web/img/banner3.png'},{image:'/web/img/banner2.png'}]} ,"
 	                + "{adname:'首页中部1',         type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/2670f031-35da-4dd6-b079-8f295c51a339.png'}]} ,"
 	                + "{adname:'首页中部2',         type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/af598f9e-ae9e-48a0-a3e4-17acc363051a.png'}]} ,"
 	                + "{adname:'首页中部3',         type:0,autoPlay:false,animationInterval:0,   image:[{image:'/upload/site/a4160c1e-8beb-4530-9f2b-df022a6f751d.png'}]} ,"
