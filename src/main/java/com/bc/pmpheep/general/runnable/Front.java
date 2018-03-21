@@ -123,7 +123,7 @@ public class Front implements Runnable {
 	}
 
 	@Override
-	public void run() {
+	public synchronized void run() {
 		System.out.println("线程开始");
 		String src = this.getClass().getResource("/").getPath();
 		src = src.substring(1);
