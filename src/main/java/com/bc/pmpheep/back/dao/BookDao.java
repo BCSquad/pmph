@@ -83,7 +83,7 @@ public interface BookDao {
 	 *            实体对象
 	 * @return 影响行数
 	 */
-	void deletedBookSupport(List<Long> bookId);
+	void deletedBookSupport();
 
 	/**
 	 * 查询一个 Book 通过isbn
@@ -229,5 +229,5 @@ public interface BookDao {
 	 * @param id
 	 *
 	 */
-	void deleted(List<Long> id);
+	void deleted();
 }

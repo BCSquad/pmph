@@ -51,7 +51,7 @@ public interface BookCorrectionService {
 	 * @throws CheckedServiceException
 	 */
 	PageResult<BookCorrectionTrackVO> listBookCorrectionTrack(HttpServletRequest request,
-			Integer pageNumber,Integer pageSize,String bookname ,Boolean isEditorReplied) throws CheckedServiceException;
+			Integer pageNumber,Integer pageSize,String bookname ,Boolean isEditorReplied,Boolean result) throws CheckedServiceException;
 
 	
 	/**

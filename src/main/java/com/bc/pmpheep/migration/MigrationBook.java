@@ -14,6 +14,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.bc.pmpheep.back.dao.BookCorrectionDao;
+import com.bc.pmpheep.back.dao.BookDao;
+import com.bc.pmpheep.back.dao.BookDetailDao;
+import com.bc.pmpheep.back.dao.BookEditorDao;
+import com.bc.pmpheep.back.dao.BookUserCommentDao;
+import com.bc.pmpheep.back.dao.BookUserLikeDao;
+import com.bc.pmpheep.back.dao.BookUserMarkDao;
+import com.bc.pmpheep.back.dao.BookVideoDao;
 import com.bc.pmpheep.back.dao.MaterialTypeDao;
 import com.bc.pmpheep.back.po.Book;
 import com.bc.pmpheep.back.service.BookService;
@@ -30,6 +38,22 @@ public class MigrationBook {
 	BookService bookService;
 	@Autowired
 	MaterialTypeDao materialTypeDao;
+	@Autowired
+	BookDetailDao bookDetailDao;
+	@Autowired
+	BookUserCommentDao bookUserCommentDao;
+	@Autowired
+	BookUserMarkDao bookUserMarkDao;
+	@Autowired
+	BookUserLikeDao bookUserLikeDao;
+	@Autowired
+	BookVideoDao bookVideoDao;
+	@Autowired
+	BookCorrectionDao bookCorrectionDao;
+	@Autowired
+	BookEditorDao bookEditorDao;
+	@Autowired
+	BookDao bookDao;
 
 	public void start() {
 		clearBook();
@@ -67,6 +91,15 @@ public class MigrationBook {
 		}
 		String sn = sns.toString().substring(1);
 		String[] vns = new InfoWorking().listBook(sn);
+		bookDao.deleted();
+		bookDetailDao.deleteBookDetailByBookIds();
+		bookDao.deletedBookSupport();
+		bookCorrectionDao.deleteBookCoorrectionTrackByBookIds();
+		bookEditorDao.deleteBookEditorByBookIds();
+		bookUserCommentDao.deleteBookUserCommentBookIds();
+		bookUserLikeDao.deleteBookUserLikeByBookIds();
+		bookUserMarkDao.deleteBookUserMarkByBookIds();
+		bookVideoDao.deleteBookVideoByBookIds();
 		bookService.AbuttingJoint(vns, 1);
 	}
 

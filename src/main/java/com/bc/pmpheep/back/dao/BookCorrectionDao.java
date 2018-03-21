@@ -121,5 +121,5 @@ public interface BookCorrectionDao {
 	 * @param id
 	 *
 	 */
-	void deleteBookCoorrectionTrackByBookIds(List<Long> id);
+	void deleteBookCoorrectionTrackByBookIds();
 }
