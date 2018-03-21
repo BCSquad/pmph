@@ -1,6 +1,9 @@
 package com.bc.pmpheep.back.dao;
 
 import com.bc.pmpheep.back.po.BookUserLike;
+
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -51,4 +54,16 @@ public interface BookUserLikeDao {
 	 *
 	 */
 	Integer deleteBookUserLikeByBookId(Long bookId);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：根据书籍id批量删除书籍点赞
+	 *
+	 * @param bookId
+	 *            书籍id
+	 * @return
+	 *
+	 */
+	Integer deleteBookUserLikeByBookIds(List<Long> id);
 }

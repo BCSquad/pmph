@@ -49,6 +49,14 @@ public class DecPositionTempServiceImpl implements DecPositionTempService {
 		}
 		return decPositionTempDao.deleteDecPositionTemp(id);
 	}
+	
+	@Override
+	public Integer deleteDecPositionTempByTextbookId(Long textbookId) throws CheckedServiceException {
+		if (null == textbookId) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM, "id不能为空");
+		}
+		return decPositionTempDao.deleteDecPositionTempByTextbookId(textbookId);
+	}
 
 	@Override
 	public Integer updateDecPositionTemp(DecPositionTemp decPositionTemp) throws CheckedServiceException {
@@ -67,5 +75,7 @@ public class DecPositionTempServiceImpl implements DecPositionTempService {
 		}
 		return decPositionTempDao.getDecPositionTempById(id);
 	}
+
+	
 
 }

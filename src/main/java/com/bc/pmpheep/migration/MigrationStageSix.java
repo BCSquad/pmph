@@ -876,6 +876,8 @@ public class MigrationStageSix {
             decLastPosition.setPosition(position);
             decLastPosition.setNote((String) map.get("remark")); // 备注
             decLastPosition.setSort(999); // 显示顺序
+            decLastPosition.setPublisher("人民卫生出版社"); // 出版社
+            decLastPosition.setPublishDate(null); // 出版时间
             decLastPosition = decLastPositionService.addDecLastPosition(decLastPosition);
             long pk = decLastPosition.getId();
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "materpatid", id);

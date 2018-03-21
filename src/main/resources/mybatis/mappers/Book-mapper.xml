@@ -95,12 +95,6 @@
 			<if test="deadlinePromote != null">
 				deadline_promote,
 			</if>
-			<if test="isKey !=null">
-				is_key,
-			</if>
-			<if test="sortKey !=null">
-				sort_key,
-			</if>
 			<if test="sales != null">
 				sales,
 			</if>
@@ -214,12 +208,6 @@
 			</if>
 			<if test="deadlinePromote != null">
 				#{deadlinePromote},
-			</if>
-			<if test="isKey !=null">
-				#{isKey},
-			</if>
-			<if test="sortKey !=null">
-				#{sortKey},
 			</if>
 			<if test="sales != null">
 				#{sales},
@@ -405,12 +393,21 @@
 	</insert>
 
 	<!-- 根据vn查询一个Book -->
-	<select id="getBookByVn" parameterType="java.lang.String"
-		resultType="Book">
-		select b.*,d.detail content from book b left join
-		book_detail d on d.book_id = b.id where b.vn=#{vn} ;
+	<select id="getBookByVn" resultType="String">
+		select b.vn from
+		book b left
+		join
+		book_detail d on d.book_id = b.id;
 	</select>
-
+	<!-- 根据vn查询一个Book -->
+	<select id="getBookByBookVn" resultType="Book">
+		select b.*,d.detail
+		content from
+		book b left
+		join
+		book_detail d on d.book_id = b.id where
+		b.vn=#{vn};
+	</select>
 	<!-- 分页查询 -->
 	<select id="listBookVO" parameterType="PageParameter"
 		resultType="BookVO">
@@ -478,7 +475,7 @@
 		resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM
 		(SELECT
-		b.*, (
+		b.id,b.bookname,(
 		CASE
 		WHEN t.count != '' THEN
 		t.count
@@ -489,23 +486,15 @@
 		m.type_name
 		FROM
 		book b
-		LEFT JOIN (
-		SELECT
-		b.id,
-		count(*)
-		count
-		FROM
-		book_user_comment c
-		LEFT JOIN book b ON c.book_id = b.id
-		WHERE
-		c.is_auth = TRUE
-		AND c.is_deleted = FALSE
+		LEFT JOIN
+		(SELECT b.id,COUNT(c.score) count FROM book b LEFT JOIN book_user_comment c
+		ON b.id = c.book_id
+		WHERE c.is_auth =TRUE
+		AND c.is_deleted =FALSE
 		AND c.is_hide = FALSE
-		AND
-		c.score > 3
-		) t ON t.id = b.id
-		LEFT JOIN material_type m ON m.id =
-		b.type
+		AND c.score >=6
+		GROUP BY b.id) t ON t.id = b.id
+		LEFT JOIN material_type m ON m.id = b.type
 		WHERE
 		1 = 1
 		<if test="bookname != null and bookname != ''">
@@ -523,33 +512,31 @@
 	<!-- 查询总数 -->
 	<select id="getBookPreferenceAnalysis" resultType="BookPreferenceAnalysisVO">
 		SELECT
-		b.*, (
+		b.id,b.bookname,(
 		CASE
 		WHEN t.count != '' THEN
 		t.count
 		ELSE
 		0
 		END
-		) count,
+		)
+		count,
 		m.type_name
 		FROM
 		book b
-		LEFT JOIN (
-		SELECT
-		b.id,
-		count(*) count
-		FROM
-		book_user_comment c
-		LEFT JOIN book b ON c.book_id = b.id
+		LEFT JOIN
+		(SELECT b.id,COUNT(c.score) count
+		FROM book b LEFT JOIN book_user_comment c
+		ON b.id = c.book_id
 		WHERE
-		c.is_auth
-		= TRUE
-		AND c.is_deleted = FALSE
+		c.is_auth =TRUE
+		AND c.is_deleted =FALSE
 		AND c.is_hide = FALSE
-		AND c.score > 3
-		) t
-		ON t.id = b.id
-		LEFT JOIN material_type m ON m.id = b.type
+		AND c.score
+		>=6
+		GROUP BY b.id) t ON t.id = b.id
+		LEFT JOIN material_type m ON m.id =
+		b.type
 		WHERE
 		1 = 1
 		<if test="bookname != null and bookname != ''">
@@ -602,4 +589,26 @@
 		update book set comments = comments-1 where id =
 		#{id}
 	</update>
+	<!-- 获取所有书籍的id -->
+	<select id="listBookId" resultType="Long">
+		select id from book;
+	</select>
+	<!-- 批量删除书籍 -->
+	<select id="deleted">
+		delete from book where
+		id in
+		<foreach collection="list" close=")" index="index" item="id"
+			open="(" separator=",">
+			#{id}
+		</foreach>
+	</select>
+	<!-- 批量删除配套图书 -->
+	<select id="deletedBookSupport">
+		delete from book_support where
+		book_id in
+		<foreach collection="list" close=")" index="index" item="id"
+			open="(" separator=",">
+			#{id}
+		</foreach>
+	</select>
 </mapper>

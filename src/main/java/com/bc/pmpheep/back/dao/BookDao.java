@@ -22,7 +22,7 @@ public interface BookDao {
 	 *            实体对象
 	 * @return 影响行数
 	 */
-	Integer addBook(Book book);
+	Long addBook(Book book);
 
 	/**
 	 * 删除Book 通过主键id
@@ -59,7 +59,7 @@ public interface BookDao {
 	Book getBookByBookname(String bookname);
 
 	/**
-	 * 查询一个 Book 通过书籍名称
+	 * 查询一个 BookSupport 通过书籍名称
 	 * 
 	 * @param Book
 	 *            必须包含主键ID
@@ -68,13 +68,22 @@ public interface BookDao {
 	BookSupport getBookSupport(@Param("bookId") Long bookId, @Param("supportId") Long supportId);
 
 	/**
-	 * 新增一个Book
+	 * 新增一个BookSupport
 	 * 
 	 * @param Book
 	 *            实体对象
 	 * @return 影响行数
 	 */
 	Integer addBookSupport(@Param("id") Long id, @Param("bookId") Long bookId);
+
+	/**
+	 * 删除BookSupport
+	 * 
+	 * @param Book
+	 *            实体对象
+	 * @return 影响行数
+	 */
+	void deletedBookSupport(List<Long> bookId);
 
 	/**
 	 * 查询一个 Book 通过isbn
@@ -116,14 +125,16 @@ public interface BookDao {
 	/**
 	 * 
 	 * 
-	 * 功能描述：根据本版号获取书籍信息
+	 * 功能描述：获取所有书籍的本版号
 	 *
 	 * @param vn
 	 *            本版号
 	 * @return
 	 *
 	 */
-	Book getBookByVn(String vn);
+	List<String> getBookByVn();
+
+	Book getBookByBookVn(String vn);
 
 	/**
 	 * 
@@ -199,4 +210,24 @@ public interface BookDao {
 	 *
 	 */
 	void updateDownComments(@Param("id") Long id);
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取所有书籍
+	 *
+	 * @return
+	 *
+	 */
+	List<Long> listBookId();
+
+	/**
+	 * 
+	 * 
+	 * 功能描述：批量删除book
+	 *
+	 * @param id
+	 *
+	 */
+	void deleted(List<Long> id);
 }

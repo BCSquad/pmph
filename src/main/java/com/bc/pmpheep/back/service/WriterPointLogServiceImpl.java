@@ -1,6 +1,5 @@
 package com.bc.pmpheep.back.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import com.bc.pmpheep.back.po.WriterPoint;
 import com.bc.pmpheep.back.po.WriterPointLog;
 import com.bc.pmpheep.back.po.WriterPointRule;
 import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.PageParameterUitl;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -81,46 +79,29 @@ public class WriterPointLogServiceImpl implements WriterPointLogService {
         PageResult<WriterPointLogVO> pageResult = new PageResult<WriterPointLogVO>();
         String startTime = pageParameter.getParameter().getStartTime(); // 开始时间
         String endTime = pageParameter.getParameter().getEndTime(); // 结束时间
-        // 查询近一周
-        String startDates = DateUtil.date2Str(new Date());
-        String endDates = DateUtil.getAfterDayDate("-7");
+        Long userId = pageParameter.getParameter().getUserId();
+        WriterPointLogVO writerPointLogVO = new WriterPointLogVO();
         if (StringUtil.isEmpty(startTime) && StringUtil.isEmpty(endTime)) {
-            pageParameter.getParameter().setStartTime(endDates);
-            pageParameter.getParameter().setEndTime(startDates);
+        	writerPointLogVO.setStartTime(null);
+        	writerPointLogVO.setEndTime(null);
         } else {
-            if (StringUtil.isEmpty(startTime)) {
-                pageParameter.getParameter()
-                             .setStartTime(DateUtil.date2Str(DateUtil.getDateBefore(DateUtil.str2Date(endTime),
-                                                                                    7)));
-                pageParameter.getParameter().setEndTime(endTime);
-            }
-            if (StringUtil.isEmpty(endTime)) {
-                pageParameter.getParameter().setStartTime(startTime);
-                pageParameter.getParameter()
-                             .setEndTime(DateUtil.date2Str(DateUtil.getDateBefore(DateUtil.str2Date(startTime),
-                                                                                  -7)));
-            }
+        	writerPointLogVO.setStartTime(startTime + " 00:00:00");
+        	writerPointLogVO.setEndTime(endTime + " 23:59:59");
         }
-        // 查询近一个月
-        String startDate = DateUtil.date2Str(new Date());
-        String endDate = DateUtil.getAfterDayDate("-30");
-        if (StringUtil.isEmpty(startTime) && StringUtil.isEmpty(endTime)) {
-            pageParameter.getParameter().setStartTime(endDate);
-            pageParameter.getParameter().setEndTime(startDate);
+        if (StringUtil.isEmpty(startTime) && StringUtil.notEmpty(endTime)) {
+        	writerPointLogVO.setStartTime(endTime + " 00:00:00");
+        	writerPointLogVO.setEndTime(endTime + " 23:59:59");
+        } else if (StringUtil.isEmpty(endTime) && StringUtil.notEmpty(startTime)) {
+        	writerPointLogVO.setStartTime(startTime + " 00:00:00");
+        	writerPointLogVO.setEndTime(startTime + " 23:59:59");
+        }
+        if (ObjectUtil.notNull(userId)) {
+        	writerPointLogVO.setUserId(userId);
         } else {
-            if (StringUtil.isEmpty(startTime)) {
-                pageParameter.getParameter()
-                             .setStartTime(DateUtil.date2Str(DateUtil.getDateBefore(DateUtil.str2Date(endTime),
-                                                                                    30)));
-                pageParameter.getParameter().setEndTime(endTime);
-            }
-            if (StringUtil.isEmpty(endTime)) {
-                pageParameter.getParameter().setStartTime(startTime);
-                pageParameter.getParameter()
-                             .setEndTime(DateUtil.date2Str(DateUtil.getDateBefore(DateUtil.str2Date(startTime),
-                                                                                  -30)));
-            }
-        }
+        	throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+        pageParameter.setParameter(writerPointLogVO);
         // 将页面大小和页面页码拷贝
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         // 包含数据总条数的数据集
@@ -141,46 +122,29 @@ public class WriterPointLogServiceImpl implements WriterPointLogService {
         PageResult<WriterPointLogVO> pageResult = new PageResult<WriterPointLogVO>();
         String startTime = pageParameter.getParameter().getStartTime(); // 开始时间
         String endTime = pageParameter.getParameter().getEndTime(); // 结束时间
-        // 查询近一周
-        String startDates = DateUtil.date2Str(new Date());
-        String endDates = DateUtil.getAfterDayDate("-7");
+        Long userId = pageParameter.getParameter().getUserId();
+        WriterPointLogVO writerPointLogVO = new WriterPointLogVO();
         if (StringUtil.isEmpty(startTime) && StringUtil.isEmpty(endTime)) {
-            pageParameter.getParameter().setStartTime(endDates);
-            pageParameter.getParameter().setEndTime(startDates);
+        	writerPointLogVO.setStartTime(null);
+        	writerPointLogVO.setEndTime(null);
         } else {
-            if (StringUtil.isEmpty(startTime)) {
-                pageParameter.getParameter()
-                             .setStartTime(DateUtil.date2Str(DateUtil.getDateBefore(DateUtil.str2Date(endTime),
-                                                                                    7)));
-                pageParameter.getParameter().setEndTime(endTime);
-            }
-            if (StringUtil.isEmpty(endTime)) {
-                pageParameter.getParameter().setStartTime(startTime);
-                pageParameter.getParameter()
-                             .setEndTime(DateUtil.date2Str(DateUtil.getDateBefore(DateUtil.str2Date(startTime),
-                                                                                  -7)));
-            }
+        	writerPointLogVO.setStartTime(startTime + " 00:00:00");
+        	writerPointLogVO.setEndTime(endTime + " 23:59:59");
         }
-        // 查询近一个月
-        String startDate = DateUtil.date2Str(new Date());
-        String endDate = DateUtil.getAfterDayDate("-30");
-        if (StringUtil.isEmpty(startTime) && StringUtil.isEmpty(endTime)) {
-            pageParameter.getParameter().setStartTime(endDate);
-            pageParameter.getParameter().setEndTime(startDate);
+        if (StringUtil.isEmpty(startTime) && StringUtil.notEmpty(endTime)) {
+        	writerPointLogVO.setStartTime(endTime + " 00:00:00");
+        	writerPointLogVO.setEndTime(endTime + " 23:59:59");
+        } else if (StringUtil.isEmpty(endTime) && StringUtil.notEmpty(startTime)) {
+        	writerPointLogVO.setStartTime(startTime + " 00:00:00");
+        	writerPointLogVO.setEndTime(startTime + " 23:59:59");
+        }
+        if (ObjectUtil.notNull(userId)) {
+        	writerPointLogVO.setUserId(userId);
         } else {
-            if (StringUtil.isEmpty(startTime)) {
-                pageParameter.getParameter()
-                             .setStartTime(DateUtil.date2Str(DateUtil.getDateBefore(DateUtil.str2Date(endTime),
-                                                                                    30)));
-                pageParameter.getParameter().setEndTime(endTime);
-            }
-            if (StringUtil.isEmpty(endTime)) {
-                pageParameter.getParameter().setStartTime(startTime);
-                pageParameter.getParameter()
-                             .setEndTime(DateUtil.date2Str(DateUtil.getDateBefore(DateUtil.str2Date(startTime),
-                                                                                  -30)));
-            }
-        }
+        	throw new CheckedServiceException(CheckedExceptionBusiness.WRITER_POINT_MANAGEMENT,
+                    CheckedExceptionResult.NULL_PARAM, "参数为空");
+		}
+        pageParameter.setParameter(writerPointLogVO);
         // 将页面大小和页面页码拷贝
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
         // 包含数据总条数的数据集

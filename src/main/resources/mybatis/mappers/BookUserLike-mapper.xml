@@ -61,11 +61,23 @@
 
 	<!-- 根据书籍id删除 -->
 	<delete id="deleteBookUserLikeByBookId" parameterType="java.lang.Long">
-		delete from
+		delete
+		from
 		book_user_like where
 		book_id=#{bookId} ;
 	</delete>
-	
+
+	<!-- 根据书籍id批量删除 -->
+	<delete id="deleteBookUserLikeByBookIds">
+		delete from
+		book_user_like where
+		book_id in
+		<foreach collection="list" close=")" index="index" item="id"
+			open="(" separator=",">
+			#{id}
+		</foreach>
+	</delete>
+
 	<!-- 更新BookUserLike -->
 	<update id="updateBookUserLike" parameterType="BookUserLike">
 		update book_user_like

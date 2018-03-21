@@ -310,12 +310,14 @@
 		select count(*) from org o left join org_user u on o.id = u.org_id
 		left join org_type ot on ot.id=o.org_type_id
 		where 1=1
-		<if test="parameter.username !=null and parameter.username !='' ">
-			and u.username like concat('%',#{parameter.username},'%')
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (u.username like concat('%',#{parameter.name},'%' )
+			or
+			u.realname
+			like
+			concat('%',#{parameter.name},'%' ) )
 		</if>
-		<if test="parameter.realname !=null and parameter.realname !=''">
-			and u.realname like concat('%',#{parameter.realname},'%')
-		</if>
+
 		<if test="parameter.orgName !=null and parameter.orgName !=''">
 			and o.org_name like concat('%',#{parameter.orgName},'%')
 		</if>
@@ -323,17 +325,13 @@
 			and ot.type_name="医院"
 		</if>
 		<if test="parameter.isHospital == 2">
-		and ot.type_name!="医院"
+			and ot.type_name!="医院"
 		</if>
-		<!-- <if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
+		<if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
 			and ot.type_name=#{parameter.orgTypeName}
-		</if>
-		<if test="parameter.school !=null and parameter.school !='' ">
-			and ot.type_name!=#{parameter.school}
-		</if>
-		<if test="parameter.hospital !=null and parameter.hospital !='' ">
-			and ot.type_name =#{parameter.hospital}
-		</if> -->
+		</if> <!-- <if test="parameter.school !=null and parameter.school !='' "> and ot.type_name!=#{parameter.school} 
+			</if> <if test="parameter.hospital !=null and parameter.hospital !='' "> 
+			and ot.type_name =#{parameter.hospital} </if> -->
 	</select>
 	<select id="getListOrgUser" parameterType="PageParameter"
 		resultType="OrgAndOrgUserVO">
@@ -360,17 +358,14 @@
 			and ot.type_name="医院"
 		</if>
 		<if test="parameter.isHospital == 2">
-		and ot.type_name!="医院"
+			and ot.type_name!="医院"
 		</if>
-		<!-- <if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
+		<if test="parameter.orgTypeName !=null and parameter.orgTypeName !=''">
 			and ot.type_name=#{parameter.orgTypeName}
-		</if>
-		<if test="parameter.school !=null and parameter.school !='' ">
-			and ot.type_name!=#{parameter.school}
-		</if>
-		<if test="parameter.hospital !=null and parameter.hospital !='' ">
-			and ot.type_name =#{parameter.hospital}
-		</if> -->
+		</if><!-- <if test="parameter.school !=null and parameter.school !='' "> 
+			and ot.type_name!=#{parameter.school} </if> <if test="parameter.hospital 
+			!=null and parameter.hospital !='' "> and ot.type_name =#{parameter.hospital} 
+			</if> -->
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
@@ -423,39 +418,40 @@
 		org_id =
 		#{orgId}
 	</select>
-	
+
 	<select id="getListAllOrgUser" parameterType="PageParameter"
 		resultType="OrgAndOrgUserVO">
 		select
 		ou.id,o.org_name,ou.username,ou.realname,ou.handphone,ou.email,ou.address,o.area_id,
 		ou.is_disabled isDisabled,ot.type_name
 		orgTypeName,ou.position,ou.title,ou.note,
-		ou.org_id,ot.id orgTypeId,t.count
+		ou.org_id,ot.id
+		orgTypeId,t.count
 		from org o
 		left join org_user ou on ou.org_id=o.id
 		left join org_type ot
 		on ot.id=o.org_type_id,(
-			select 
-				count(*) `count` 
-			from 
-				org o
-			left join 
-				org_user ou on ou.org_id=o.id
-			left join 
-				org_type ot
-			on 
-				ot.id=o.org_type_id
-			where 1=1
-			<if test="parameter.name !=null and parameter.name !='' ">
-				and (
-						ou.username like concat('%',#{parameter.name},'%') 
-					or 
-						ou.realname like concat('%',#{parameter.name},'%')
-				)
-			</if>
-			<if test="parameter.orgName !=null and parameter.orgName !=''">
-				and o.org_name like concat('%',#{parameter.orgName},'%')
-			</if>
+		select
+		count(*) `count`
+		from
+		org o
+		left join
+		org_user ou on ou.org_id=o.id
+		left join
+		org_type ot
+		on
+		ot.id=o.org_type_id
+		where 1=1
+		<if test="parameter.name !=null and parameter.name !='' ">
+			and (
+			ou.username like concat('%',#{parameter.name},'%')
+			or
+			ou.realname like concat('%',#{parameter.name},'%')
+			)
+		</if>
+		<if test="parameter.orgName !=null and parameter.orgName !=''">
+			and o.org_name like concat('%',#{parameter.orgName},'%')
+		</if>
 		)t
 		where 1=1
 		<if test="parameter.name !=null and parameter.name !='' ">

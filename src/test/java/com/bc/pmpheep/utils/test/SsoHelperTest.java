@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 public class SsoHelperTest extends BaseTest {
 
     Logger logger = LoggerFactory.getLogger(SsoHelperTest.class);
-
+    
     @Resource
     SsoHelper ssoHelper;
 

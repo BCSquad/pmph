@@ -110,32 +110,39 @@
 			</if>
 		</trim>
 	</sql>
-	
+
 	<!-- 新增BookVideo -->
-	<insert id="addBookVideo"        parameterType="BookVideo">
-		<selectKey resultType="java.lang.Long" order="AFTER"  keyProperty="id">
-			 <!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
+	<insert id="addBookVideo" parameterType="BookVideo">
+		<selectKey resultType="java.lang.Long" order="AFTER"
+			keyProperty="id">
+			<!-- order="AFTER"表示先执行插入语句，之后再执行查询语句 BEFORE 或 AFTER -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-		insert into book_video ( <include refid="key" /> )  values( <include refid="value" /> ) ;
+		insert into book_video (
+		<include refid="key" />
+		) values(
+		<include refid="value" />
+		) ;
 	</insert>
-	
+
 	<!--根据文件id删除BookVideo -->
-	<delete id="deleteBookVideoByIds"   >
-		delete  from  book_video where id in
-		<foreach collection="ids" item="id" open="("  separator=","  close=")" index="index">
-			#{id} 
+	<delete id="deleteBookVideoByIds">
+		delete from book_video where id in
+		<foreach collection="ids" item="id" open="(" separator=","
+			close=")" index="index">
+			#{id}
 		</foreach>
 	</delete>
-	
+
 	<!-- 获取vedio根据书籍id -->
 	<select id="getBookVideoByBookIds" resultType="BookVideo">
-		select * from  book_video where book_id in 
-		<foreach collection="bookIds" item="bookId" open="("  separator=","  close=")" index="index">
+		select * from book_video where book_id in
+		<foreach collection="bookIds" item="bookId" open="("
+			separator="," close=")" index="index">
 			#{bookId}
 		</foreach>
 	</select>
-	
+
 	<!-- 动态更新 -->
 	<update id="updateBookVideo">
 		update book_video set
@@ -187,83 +194,103 @@
 				cover =#{cover},
 			</if>
 		</trim>
-		where id = #{id} 
+		where id = #{id}
 	</update>
-	
+
 	<!--根据文件上传路径获取BookVideo -->
-	<select id="getBookVideoByOldPath"  resultType="BookVideo" >
-		select * from  book_video where orig_path like  concat('%',#{oldPath},'.%');
+	<select id="getBookVideoByOldPath" resultType="BookVideo">
+		select * from
+		book_video where orig_path like
+		concat('%',#{oldPath},'.%');
 	</select>
-	
+
 	<!-- 获取微视频列表总数 -->
-	<select id="getVideoListTotal"  resultType="java.lang.Integer" >
-	    select 
-	        COUNT(a.id)
-			from book_video a LEFT JOIN  book b on b.id = a.book_id 
-		where  a.is_deleted = false and b.id is not null
-		<if test="bookName != null"> 
+	<select id="getVideoListTotal" resultType="java.lang.Integer">
+		select
+		COUNT(a.id)
+		from book_video a LEFT JOIN book b on b.id =
+		a.book_id
+		where a.is_deleted = false and b.id is not null
+		<if test="bookName != null">
 			and b.bookname like #{bookName}
 		</if>
-		<if test="state != null"> 
-			<if test="state == 1"> 
+		<if test="state != null">
+			<if test="state == 1">
 				and a.auth_user_id is null
-		    </if>
-			<if test="state == 2"> 
+			</if>
+			<if test="state == 2">
 				and a.auth_user_id is not null and a.is_auth = false
 			</if>
-			<if test="state == 3"> 
+			<if test="state == 3">
 				and a.auth_user_id is not null and a.is_auth = true
 			</if>
 		</if>
-		<if test="startTime != null"> 
-			and a.gmt_create  <![CDATA[ >= ]]> #{startTime}
+		<if test="startTime != null">
+			and a.gmt_create  <![CDATA[ >= ]]>
+			#{startTime}
 		</if>
-		<if test="endTime != null"> 
-			and a.gmt_create  <![CDATA[ <= ]]>  #{endTime}
+		<if test="endTime != null">
+			and a.gmt_create  <![CDATA[ <= ]]>
+			#{endTime}
 		</if>
 	</select>
-	
+
 	<!-- 获取微视频列表 -->
-	<select id="getVideoList"  resultType="BookVideoVO" >
-	    select a.id id,
-			a.book_id bookId,
-                        a.title title,
-			b.bookname bookName,
-			a.orig_file_name origFileName,
-			a.path path,
-			if(a.user_id=0,d.realname,c.realname) userName,
-			a.gmt_create gmtCreate,
-			a.file_size fileSize,
-			if(a.auth_user_id is null,null,a.is_auth) isAuth,
-                        (case 
-                        when a.auth_user_id is null then 1
-                        when a.auth_user_id is not null and a.is_auth = false then 2
-                        when a.auth_user_id is not null and a.is_auth = true then 3
-                        else 1 end) as state
-			from book_video a LEFT JOIN  book b on b.id = a.book_id
-                        LEFT JOIN writer_user c on c.id= a.user_id LEFT JOIN pmph_user d on d.id= a.auth_user_id 
-		where  a.is_deleted = false and b.id is not null 
-		<if test="bookName != null"> 
+	<select id="getVideoList" resultType="BookVideoVO">
+		select a.id id,
+		a.book_id bookId,
+		a.title title,
+		b.bookname bookName,
+		a.orig_file_name origFileName,
+		a.path path,
+		if(a.user_id=0,d.realname,c.realname) userName,
+		a.gmt_create gmtCreate,
+		a.file_size fileSize,
+		if(a.auth_user_id is null,null,a.is_auth) isAuth,
+		(case
+		when a.auth_user_id is null then 1
+		when a.auth_user_id is not null
+		and a.is_auth = false then 2
+		when a.auth_user_id is not null and
+		a.is_auth = true then 3
+		else 1 end) as state
+		from book_video a LEFT JOIN
+		book b on b.id = a.book_id
+		LEFT JOIN writer_user c on c.id= a.user_id
+		LEFT JOIN pmph_user d on d.id=
+		a.auth_user_id
+		where a.is_deleted = false
+		and b.id is not null
+		<if test="bookName != null">
 			and b.bookname like #{bookName}
 		</if>
-		<if test="state != null"> 
-			<if test="state == 1"> 
+		<if test="state != null">
+			<if test="state == 1">
 				and a.auth_user_id is null
-		    </if>
-			<if test="state == 2"> 
+			</if>
+			<if test="state == 2">
 				and a.auth_user_id is not null and a.is_auth = false
 			</if>
-			<if test="state == 3"> 
+			<if test="state == 3">
 				and a.auth_user_id is not null and a.is_auth = true
 			</if>
 		</if>
-		<if test="startTime != null"> 
-			and a.gmt_create  <![CDATA[ >= ]]> #{startTime}
+		<if test="startTime != null">
+			and a.gmt_create  <![CDATA[ >= ]]>
+			#{startTime}
 		</if>
-		<if test="endTime != null"> 
-			and a.gmt_create  <![CDATA[ <= ]]>  #{endTime}
+		<if test="endTime != null">
+			and a.gmt_create  <![CDATA[ <= ]]>
+			#{endTime}
 		</if>
 		ORDER BY a.gmt_create desc limit #{start} ,#{pageSize}
 	</select>
-	
+	<!--根据书籍id删除BookVideo -->
+	<delete id="deleteBookVideoByBookIds">
+		delete from book_video where book_id in
+		<foreach collection="list" item="id" open="(" separator=","
+			close=")" index="index">
+			#{id}
+		</foreach>
+	</delete>
 </mapper>

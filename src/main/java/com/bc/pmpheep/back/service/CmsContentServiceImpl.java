@@ -119,7 +119,8 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         if (cmsContent.getTitle().length() > 100) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-                                              CheckedExceptionResult.ILLEGAL_PARAM, "消息标题不能超过100个字！");
+                                              CheckedExceptionResult.ILLEGAL_PARAM,
+                                              "消息标题不能超过100个字！");
         }
         cmsContentDao.addCmsContent(cmsContent);
         return cmsContent;
@@ -227,15 +228,11 @@ public class CmsContentServiceImpl implements CmsContentService {
         if (ObjectUtil.isNull(cmsContent)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
-
         }
         if (ObjectUtil.isNull(cmsContent.getMaterialId())) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "教材ID为空");
         }
-        // if (Const.TRUE == cmsContent.getIsPublished()) {
-        // cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_2);
-        // }
         // 信息快报/公告管理(发布)，审核时间就为当前时间
         if (Const.CMS_AUTHOR_STATUS_2 == cmsContent.getAuthStatus().shortValue()) {
             cmsContent.setAuthUserId(pmphUser.getId());
@@ -245,32 +242,22 @@ public class CmsContentServiceImpl implements CmsContentService {
                                                             DateUtil.getCurrentTime()));
             cmsContent.setIsPublished(true);
         } else if (Const.CMS_AUTHOR_STATUS_0 == cmsContent.getAuthStatus().shortValue()) {
-            if (Const.TRUE == cmsContent.getIsStaging()) {
+            if (cmsContent.getIsStaging()) {
                 // 信息快报/公告管理(暂存)
                 cmsContent.setAuthUserId(pmphUser.getId());
                 cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_0);
                 cmsContent.setAuthDate(null);
                 cmsContent.setIsPublished(false);
             }
-        } else {
+        } else if (Const.CMS_AUTHOR_STATUS_1.shortValue() == cmsContent.getAuthStatus()
+                                                                       .shortValue()) {
             // 文章管理,退回
-            if (Const.CMS_AUTHOR_STATUS_1.shortValue() == cmsContent.getAuthStatus().shortValue()) {
-                cmsContent.setAuthUserId(pmphUser.getId());
-                cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_1);
-                cmsContent.setAuthDate(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
-                                                                DateUtil.getCurrentTime()));
-                cmsContent.setIsDeleted(false);
-                cmsContent.setIsPublished(false);
-            } else if (Const.CMS_AUTHOR_STATUS_2.shortValue() == cmsContent.getAuthStatus()
-                                                                           .shortValue()) {
-                // 文章管理,通过
-                cmsContent.setAuthUserId(pmphUser.getId());
-                cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_2);
-                cmsContent.setIsStaging(Const.FALSE);
-                cmsContent.setAuthDate(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
-                                                                DateUtil.getCurrentTime()));
-                cmsContent.setIsPublished(true);
-            }
+            cmsContent.setAuthUserId(pmphUser.getId());
+            cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_1);
+            cmsContent.setAuthDate(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
+                                                            DateUtil.getCurrentTime()));
+            cmsContent.setIsDeleted(false);
+            cmsContent.setIsPublished(false);
         }
         if (cmsContent.getCategoryId() == Const.CMS_CATEGORY_ID_1
             && cmsContent.getAuthorType() == Const.CMS_AUTHOR_TYPE_2
@@ -283,9 +270,9 @@ public class CmsContentServiceImpl implements CmsContentService {
                                                          DateUtil.getCurrentTime()));
         count = cmsContentDao.updateCmsContent(cmsContent);
         // 当文章通过的时候给用户增加积分
-        if (Const.CMS_CATEGORY_ID_1.longValue() == cmsContent.getCategoryId().longValue() 
-        		&& Const.CMS_AUTHOR_STATUS_2.shortValue() == cmsContent.getAuthStatus().shortValue() 
-        		&& Const.CMS_AUTHOR_TYPE_2 == cmsContent.getAuthorType()) {
+        if (Const.CMS_CATEGORY_ID_1.longValue() == cmsContent.getCategoryId().longValue()
+            && Const.CMS_AUTHOR_STATUS_2.shortValue() == cmsContent.getAuthStatus().shortValue()
+            && Const.CMS_AUTHOR_TYPE_2 == cmsContent.getAuthorType()) {
             String ruleName = "发表文章";
             writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
         }
