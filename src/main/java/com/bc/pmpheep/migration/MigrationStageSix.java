@@ -941,7 +941,7 @@ public class MigrationStageSix {
             Long declarationid = (Long) map.get("id"); // 申报表id
             String courseName = (String) map.get("curriculumname"); // 课程名称
             String classHour = (String) map.get("classhour"); // 课程全年课时数
-            String typeJudge = (String) map.get("type"); // 职务
+            String typeJudge = (String) map.get("type"); // 课程级别
             DecCourseConstruction decCourseConstruction = new DecCourseConstruction();
             if (ObjectUtil.isNull(declarationid) || declarationid.intValue() == 0) {
                 map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到申报表对应的关联结果。"));
@@ -959,7 +959,15 @@ public class MigrationStageSix {
             decCourseConstruction.setCourseName(courseName);
             decCourseConstruction.setClassHour(classHour);
             Integer type = Integer.parseInt(typeJudge);
-            decCourseConstruction.setType(type);
+            if (type.intValue() == 1) {
+            	decCourseConstruction.setType(2);
+            } else if (type.intValue() == 2) {
+            	decCourseConstruction.setType(3);
+            } else if (type.intValue() == 3) {
+            	decCourseConstruction.setType(0);
+            } else {
+            	decCourseConstruction.setType(0);
+            }
             decCourseConstruction.setNote((String) map.get("remark")); // 备注
             decCourseConstruction.setSort(999); // 显示顺序
             decCourseConstruction = decCourseConstructionService.addDecCourseConstruction(decCourseConstruction);

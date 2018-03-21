@@ -91,16 +91,15 @@ public class MigrationBook {
 		}
 		String sn = sns.toString().substring(1);
 		String[] vns = new InfoWorking().listBook(sn);
-		List<Long> ids = bookDao.listBookId();
-		bookDao.deleted(ids);
-		bookDetailDao.deleteBookDetailByBookIds(ids);
-		bookDao.deletedBookSupport(ids);
-		bookCorrectionDao.deleteBookCoorrectionTrackByBookIds(ids);
-		bookEditorDao.deleteBookEditorByBookIds(ids);
-		bookUserCommentDao.deleteBookUserCommentBookIds(ids);
-		bookUserLikeDao.deleteBookUserLikeByBookIds(ids);
-		bookUserMarkDao.deleteBookUserMarkByBookIds(ids);
-		bookVideoDao.deleteBookVideoByBookIds(ids);
+		bookDao.deleted();
+		bookDetailDao.deleteBookDetailByBookIds();
+		bookDao.deletedBookSupport();
+		bookCorrectionDao.deleteBookCoorrectionTrackByBookIds();
+		bookEditorDao.deleteBookEditorByBookIds();
+		bookUserCommentDao.deleteBookUserCommentBookIds();
+		bookUserLikeDao.deleteBookUserLikeByBookIds();
+		bookUserMarkDao.deleteBookUserMarkByBookIds();
+		bookVideoDao.deleteBookVideoByBookIds();
 		bookService.AbuttingJoint(vns, 1);
 	}
 

@@ -628,7 +628,16 @@ public class DecPositionServiceImpl implements DecPositionService {
 			}
 			if (flag){
 				presets.removeAll(delList);
-				list.addAll(presets);
+				for (DeclarationSituationSchoolResultVO preset : presets){
+					// 计算申报人数
+					Integer presetPersons = preset.getPresetPositionEditor()
+							+ preset.getPresetPositionSubeditor()
+							+ preset.getPresetPositionEditorial()
+							+ preset.getPresetDigitalEditor();
+					preset.setPresetPersons(presetPersons);
+					preset.setState(1);
+					list.add(preset);
+				}
 			}
 			pageResult.setRows(list);
 			pageResult.setTotal(total);
@@ -688,7 +697,7 @@ public class DecPositionServiceImpl implements DecPositionService {
 						+ preset.getPresetPositionEditorial()
 						+ preset.getPresetDigitalEditor();
 				// 计算当选人数
-				Integer chosenPersons = preset.getPresetPositionEditor()
+				Integer chosenPersons = preset.getChosenPositionEditor()
 						+ preset.getChosenPositionSubeditor()
 						+ preset.getChosenPositionEditorial()
 						+ preset.getIsDigitalEditor();

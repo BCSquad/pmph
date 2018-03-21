@@ -295,7 +295,7 @@
 			LIKE
 			concat('%',#{parameter.name},'%'))
 		</if>
-		GROUP BY a.user_id
+		GROUP BY a.user_id,a.is_writer
 		order by a.is_founder DESC , a.is_admin DESC
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
