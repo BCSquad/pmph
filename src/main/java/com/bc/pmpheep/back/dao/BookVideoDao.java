@@ -84,6 +84,6 @@ public interface BookVideoDao {
 	 * @param id
 	 *
 	 */
-	void deleteBookVideoByBookIds(List<Long> id);
+	void deleteBookVideoByBookIds();
 
 }

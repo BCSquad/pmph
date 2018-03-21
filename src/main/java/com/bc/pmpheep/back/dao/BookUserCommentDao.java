@@ -103,7 +103,7 @@ public interface BookUserCommentDao {
 	 * @return 影响行数
 	 *
 	 */
-	Integer deleteBookUserCommentBookIds(List<Long> ids);
+	Integer deleteBookUserCommentBookIds();
 
 	/**
 	 * admin查询图书评论数量

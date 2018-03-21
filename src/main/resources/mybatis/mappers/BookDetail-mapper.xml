@@ -63,12 +63,6 @@
 	<delete id="deleteBookDetailByBookIds">
 		delete from
 		book_detail
-		where
-		book_id in
-		<foreach collection="list" close=")" index="index" item="id"
-			open="(" separator=",">
-			#{id}
-		</foreach>
 	</delete>
 	<!-- 更新BookDetail -->
 	<update id="updateBookDetail" parameterType="BookDetail">

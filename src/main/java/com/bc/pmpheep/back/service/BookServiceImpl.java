@@ -206,8 +206,8 @@ public class BookServiceImpl extends BaseService implements BookService {
 						String content = book.getContent();// 获取到图书详情将其存入到图书详情表中
 						if (ObjectUtil.isNull(oldBook)) {
 							book.setScore(9.0);
-							Long id = bookDao.addBook(book);
-							BookDetail bookDetail = new BookDetail(id, content);
+							bookDao.addBook(book);
+							BookDetail bookDetail = new BookDetail(book.getId(), content);
 							bookDetailDao.addBookDetail(bookDetail);
 						} else {
 							Book newBook = new Book(book.getBookname(), book.getIsbn(), book.getSn(), book.getAuthor(),

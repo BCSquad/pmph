@@ -287,10 +287,6 @@
 	</select>
 	<!--根据书籍id删除BookVideo -->
 	<delete id="deleteBookVideoByBookIds">
-		delete from book_video where book_id in
-		<foreach collection="list" item="id" open="(" separator=","
-			close=")" index="index">
-			#{id}
-		</foreach>
+		delete from book_video
 	</delete>
 </mapper>

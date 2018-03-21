@@ -311,9 +311,9 @@
 		left join org_type ot on ot.id=o.org_type_id
 		where 1=1
 		<if test="parameter.name !=null and parameter.name !='' ">
-			and (ou.username like concat('%',#{parameter.name},'%' )
+			and (u.username like concat('%',#{parameter.name},'%' )
 			or
-			ou.realname
+			u.realname
 			like
 			concat('%',#{parameter.name},'%' ) )
 		</if>

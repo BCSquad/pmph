@@ -82,8 +82,40 @@ public class BookCorrectionTrackVO implements Serializable {
      */
     @ExcelHeader(header = "是否回复")
     private String   isEditorRepliedString ;
+    /**
+     * 图书作者
+     */
+    private String author;
+    /**
+     * 提交者姓名
+     */
+    private String correctionName;
     
-    public BookCorrectionTrackVO() {
+	public String getAuthor() {
+		return author;
+	}
+
+
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+
+
+	public String getCorrectionName() {
+		return correctionName;
+	}
+
+
+
+	public void setCorrectionName(String correctionName) {
+		this.correctionName = correctionName;
+	}
+
+
+
+	public BookCorrectionTrackVO() {
 		super();
 	}
 
@@ -269,19 +301,17 @@ public class BookCorrectionTrackVO implements Serializable {
 		this.dutyName = dutyName;
 	}
 
+
+
 	@Override
 	public String toString() {
-		return "{id:" + id + ",bookname:" + bookname + ",dpName:" + dpName
-				+ ",typeName:" + typeName + ",realname:" + realname
-				+ ",dutyName:" + dutyName + ",result:" + result
-				+ ",resultString:" + resultString + ",page:" + page + ",line:"
-				+ line + ",content:" + content + ",authorReply:" + authorReply
-				+ ",isEditorReplied:" + isEditorReplied
-				+ ",isEditorRepliedString:" + isEditorRepliedString + "}";
+		return "BookCorrectionTrackVO [id=" + id + ", bookname=" + bookname + ", dpName=" + dpName + ", typeName="
+				+ typeName + ", realname=" + realname + ", dutyName=" + dutyName + ", result=" + result
+				+ ", resultString=" + resultString + ", page=" + page + ", line=" + line + ", content=" + content
+				+ ", authorReply=" + authorReply + ", isEditorReplied=" + isEditorReplied + ", isEditorRepliedString="
+				+ isEditorRepliedString + ", author=" + author + ", correctionName=" + correctionName + "]";
 	}
-    
 	
-   
     
 
 }

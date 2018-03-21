@@ -145,7 +145,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 
 	@Override
 	public PageResult<BookCorrectionTrackVO> listBookCorrectionTrack(HttpServletRequest request, Integer pageNumber,
-			Integer pageSize, String bookname, Boolean isEditorReplied) throws CheckedServiceException {
+			Integer pageSize, String bookname, Boolean isEditorReplied,Boolean result) throws CheckedServiceException {
 		if (null == request.getSession(false)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"会话过期");
@@ -161,6 +161,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		map.put("pageSize", pageSize);
 		map.put("isEditorReplied", isEditorReplied);
 		map.put("bookname", StringUtil.toAllCheck(bookname));
+		map.put("result", result);
 		// 返回实体
 		PageResult<BookCorrectionTrackVO> pageResult = new PageResult<BookCorrectionTrackVO>();
 		pageResult.setPageNumber(pageNumber);

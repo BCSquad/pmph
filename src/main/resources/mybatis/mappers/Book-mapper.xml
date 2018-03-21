@@ -595,20 +595,10 @@
 	</select>
 	<!-- 批量删除书籍 -->
 	<select id="deleted">
-		delete from book where
-		id in
-		<foreach collection="list" close=")" index="index" item="id"
-			open="(" separator=",">
-			#{id}
-		</foreach>
+		delete from book 
 	</select>
 	<!-- 批量删除配套图书 -->
 	<select id="deletedBookSupport">
-		delete from book_support where
-		book_id in
-		<foreach collection="list" close=")" index="index" item="id"
-			open="(" separator=",">
-			#{id}
-		</foreach>
+		delete from book_support
 	</select>
 </mapper>
