@@ -111,7 +111,17 @@ public class AddTestUser {
 		      		  "},"+
 	        		  "{'orgName':'天津测试学校','orgType':'本科','areaName':'天津市','username':'tjcsxxtest','password':'123456','realname':'天津学校管理员','avatar':'DEFAULT',"+
 		      		  		"writerUsers:["+
-		      		  			"{'username':'tjzuojia01','password':'888888','nickname':'天津作家01','realname':'天津作家01'}"+
+		      		  			"{'username':'tjzuojia01','password':'888888','nickname':'天津作家01','realname':'天津作家01'},"+
+		      		  			"{'username':'tjzuojia02','password':'888888','nickname':'天津作家02','realname':'天津作家02'},"+
+		      		  			"{'username':'tjzuojia03','password':'888888','nickname':'天津作家03','realname':'天津作家03'},"+
+		      		  			"{'username':'tjzuojia04','password':'888888','nickname':'天津作家04','realname':'天津作家04'},"+
+		      		  			"{'username':'tjzuojia05','password':'888888','nickname':'天津作家05','realname':'天津作家05'},"+
+		      		  			"{'username':'tjzuojia06','password':'888888','nickname':'天津作家06','realname':'天津作家06'},"+
+		      		  			"{'username':'tjzuojia07','password':'888888','nickname':'天津作家07','realname':'天津作家07'},"+
+		      		  			"{'username':'tjzuojia08','password':'888888','nickname':'天津作家08','realname':'天津作家08'},"+
+		      		  			"{'username':'tjzuojia09','password':'888888','nickname':'天津作家09','realname':'天津作家09'},"+
+		      		  			"{'username':'tjzuojia10','password':'888888','nickname':'天津作家10','realname':'天津作家10'},"+
+		      		  			"{'username':'tjzuojia11','password':'888888','nickname':'天津作家11','realname':'天津作家11'}"+
 		      		  		"]"+
 		      		  "}"+
 				  "]" ;
