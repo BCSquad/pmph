@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
+import com.bc.pmpheep.back.util.DesRun;
 import com.bc.pmpheep.back.util.PropsUtil;
 
 /**
@@ -49,11 +50,11 @@ public class JavaMailSenderUtil {
         // 端口号，腾讯邮箱使用SSL协议端口号：465/587，腾讯邮箱使用非SSL协议,163邮箱,新浪邮箱端口号都是：25
         senderImpl.setPort(PropsUtil.getInt(properties, "mail.smtp.port"));
         senderImpl.setUsername(PropsUtil.getString(properties, "mail.smtp.username")); // 用户名
-        senderImpl.setPassword(PropsUtil.getString(properties, "mail.smtp.password")); // 密码
+        senderImpl.setPassword(new DesRun(PropsUtil.getString(properties, "mail.smtp.password")).depsw); // 密码
 
         Properties prop = new Properties();// 参数配置
-        // prop.put("mail.smtp.ssl.enable", "true");// 使用SSL协议
-        // prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        prop.put("mail.smtp.ssl.enable", "true");// 使用SSL协议
+        prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         prop.put("mail.smtp.auth", PropsUtil.getString(properties, "mail.smtp.auth")); // 是否需要验证密码
         prop.put("mail.smtp.timeout", PropsUtil.getString(properties, "mail.smtp.timeout"));// 超时时间
         senderImpl.setJavaMailProperties(prop);
