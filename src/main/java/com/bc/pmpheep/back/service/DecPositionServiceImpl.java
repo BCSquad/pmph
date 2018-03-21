@@ -628,7 +628,16 @@ public class DecPositionServiceImpl implements DecPositionService {
 			}
 			if (flag){
 				presets.removeAll(delList);
-				list.addAll(presets);
+				for (DeclarationSituationSchoolResultVO preset : presets){
+					// 计算申报人数
+					Integer presetPersons = preset.getPresetPositionEditor()
+							+ preset.getPresetPositionSubeditor()
+							+ preset.getPresetPositionEditorial()
+							+ preset.getPresetDigitalEditor();
+					preset.setPresetPersons(presetPersons);
+					preset.setState(1);
+					list.add(preset);
+				}
 			}
 			pageResult.setRows(list);
 			pageResult.setTotal(total);
