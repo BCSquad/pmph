@@ -353,7 +353,8 @@ public class MigrationStageSix {
                 declaration.setFax(null); // 传真
             }
             // 旧表申报单位id为5的或者机构代码截取为15-的把orgid设置成0
-            if ("5".equals(unitid) || "15-".equals(orgCodes)) { 
+            if ("5".equals(unitid) || "15-".equals(orgCodes) 
+            		|| (ObjectUtil.isNull(orgId) && isStagingJudge.intValue() == 0)) { 
                 declaration.setOrgId(0L); // 0为人民卫生出版社
             } else {
                 declaration.setOrgId(orgId); // 申报单位id
