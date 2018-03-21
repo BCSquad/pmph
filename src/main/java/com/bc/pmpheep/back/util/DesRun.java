@@ -141,11 +141,12 @@ public class DesRun {
     }
 
     public static void main(String[] args) {
-        DesRun desRun = new DesRun("B1:40:2F:CF:BD:1D:92:05");
+        DesRun desRun1 = new DesRun("39:19:61:7A:CE:8C:2F:A4:FA:82:6B:6D:CE:34:8D:2C");
         // String a = new DesRun("15fdsafdsa", "admin" + "123" + "nyz526").enpsw;
         // System.out.println(a);
         // DesRun desRun = new DesRun(a);
-        // DesRun desRun = new DesRun("", "123");
-        System.out.println(desRun.depsw);
+        DesRun desRun = new DesRun("", "scbcxxkrewj123");
+        System.out.println(desRun.enpsw);
+        System.out.println(desRun1.depsw);
     }
 }
