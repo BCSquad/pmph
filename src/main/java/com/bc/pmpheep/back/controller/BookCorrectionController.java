@@ -81,8 +81,9 @@ public class BookCorrectionController {
 			@RequestParam(value = "pageNumber", 		 required = false)  Integer pageNumber,
 			@RequestParam(value = "pageSize",            required = false)	Integer pageSize,
 			@RequestParam(value = "bookname",            required = false)	String  bookname ,
-			@RequestParam(value = "isEditorReplied",     required = false)	Boolean isEditorReplied) {
-		return new ResponseBean(bookCorrectionService.listBookCorrectionTrack(request,pageNumber,pageSize,bookname ,isEditorReplied));
+			@RequestParam(value = "isEditorReplied",     required = false)	Boolean isEditorReplied,
+			@RequestParam(value = "result",     required = false)	Boolean result) {
+		return new ResponseBean(bookCorrectionService.listBookCorrectionTrack(request,pageNumber,pageSize,bookname ,isEditorReplied,result));
 	}
 	
 	/**
