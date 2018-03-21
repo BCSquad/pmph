@@ -676,7 +676,7 @@ public class FileDownLoadController {
 		Workbook workbook = null;
 		List<BookCorrectionTrackVO> list = null;
 		try {
-			list = bookCorrectionService.listBookCorrectionTrack(request, null, null, bookname, isEditorReplied)
+			list = bookCorrectionService.listBookCorrectionTrack(request, null, null, bookname, isEditorReplied,null)
 					.getRows();
 			if (list.size() == 0) {
 				// 设置表头 ，放置初始化表出错
