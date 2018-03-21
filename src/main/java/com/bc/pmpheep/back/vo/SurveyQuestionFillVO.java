@@ -72,6 +72,14 @@ public class SurveyQuestionFillVO implements Serializable {
     @ExcelHeader(header = "时间")
     private String            gmtCreate;
 
+    public SurveyQuestionFillVO() {
+    }
+
+    public SurveyQuestionFillVO(Long surveyId, Long questionId) {
+        this.surveyId = surveyId;
+        this.questionId = questionId;
+    }
+
     /**
      * @return the userId
      */
