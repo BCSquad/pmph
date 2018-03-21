@@ -392,10 +392,6 @@
 		limit #{start} ,#{pageSize}
 	</select>
 	<delete id="deleteBookCoorrectionTrackByBookIds">
-		delete from book_correction where book_id in
-		<foreach collection="list" close=")" index="index" item="id"
-			open="(" separator=",">
-			#{id}
-		</foreach>
+		delete from book_correction 
 	</delete>
 </mapper>
