@@ -443,10 +443,10 @@
 			AND org.`org_name` like concat('%',#{orgName},'%')
 		</if>
 		ORDER BY
-		dc.`realname` ASC,
 		dp.`rank` &lt; 1 DESC,
 		dp.`preset_position`=1 ASC,
 		dp.`chosen_position` =1 DESC,
+		dc.`realname` ASC,
 		dp.`gmt_create` DESC
 		<!-- dp.`preset_position` DESC,dp.`rank`=1 DESC,dp.`chosen_position` =1 
 			DESC,dp.`gmt_create` DESC -->
@@ -488,7 +488,7 @@
 		</if>
 		<if test="editorOrSubeditorType ==2">
 			AND
-			dp.`chosen_position`IN (1,8)
+			dp.`chosen_position`IN (1,8,9)
 		</if>
 		AND
 		dp.`textbook_id` = #{textbookId};
