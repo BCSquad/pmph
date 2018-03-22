@@ -347,7 +347,7 @@ public class ExcelHelper {
 		header.createCell(2).setCellValue("版次");
 		header.createCell(3).setCellValue("序号");
 		header.createCell(4).setCellValue("姓名");
-		header.createCell(5).setCellValue("内封单位");
+		header.createCell(5).setCellValue("申报单位");
 		header.createCell(6).setCellValue("编写职位");
 		headerStyleSetup(workbook, 1); // 设置表头样式
 		/*** 重新设置头背景颜色end ***/
