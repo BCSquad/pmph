@@ -34,6 +34,7 @@ import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
@@ -894,7 +895,7 @@ public final class SystemMessageService {
 		userIds.add("2_" + cmsContent.getAuthorId());
 		myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
 	}
-
+	
 	/**
 	 * 某一本书的最终结果公布 或者 整套教材全部公布时 向当选者和学校管理员发送消息
 	 * 
@@ -1153,7 +1154,7 @@ public final class SystemMessageService {
 			}
 		}
 	}
-
+	
 	/**
 	 * 
 	 * 主编排位数字转成中文
@@ -1251,5 +1252,44 @@ public final class SystemMessageService {
 			break;
 		}
 		return res;
+	}
+	
+	/**
+	 * 给教材已结束并且未遴选上的作家推送消息
+	 * 
+	 * @param materialId
+	 * @param declaration
+	 * @throws CheckedServiceException
+	 * @throws IOException
+	 */
+	public void sendWhenPositionChooserLoss(Long materialId,List<Declaration> declarations) 
+			throws CheckedServiceException, IOException{
+		Material material = materialService.getMaterialById(materialId);
+		if(ObjectUtil.isNull(material)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+					"教材为空");
+		}
+		String msg="";
+		if(material.getIsAllTextbookPublished()&&declarations.size()>0){
+			msg="《<font color='red'>" + material.getMaterialName()
+			+ "</font>》教材遴选已结束，未选中，感谢您的支持与参与。";
+		}
+		// 存入消息主体
+		Message message = new Message(msg);
+		message = messageService.add(message);
+		String msg_id = message.getId();
+		for (Declaration declaration : declarations) {
+			// 发送消息给申报者
+			userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+					declaration.getUserId(), new Short("2"), null));
+			// websocket推送页面消息
+			WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
+					Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msg,
+					DateUtil.getCurrentTime());
+			List<String> userIds = new ArrayList<String>(1);
+			userIds.add("2_" + declaration.getUserId());
+			myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
+		}
+		
 	}
 }

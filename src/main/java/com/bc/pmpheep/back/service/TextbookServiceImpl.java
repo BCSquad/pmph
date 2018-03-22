@@ -32,6 +32,7 @@ import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.DecPosition;
 import com.bc.pmpheep.back.po.DecPositionPublished;
+import com.bc.pmpheep.back.po.Declaration;
 import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
@@ -98,7 +99,10 @@ public class TextbookServiceImpl implements TextbookService {
 
 	@Autowired
 	private TextbookService textbookService;
-
+	
+	@Autowired
+	private DeclarationService declarationService;
+	
 	/**
 	 * 
 	 * @param Textbook
@@ -290,8 +294,17 @@ public class TextbookServiceImpl implements TextbookService {
 		for (Textbook textbook : textbooks) {
 			systemMessageService.sendWhenPubfinalResult(textbook.getId(), sends);
 		}
+		//当教材遴选结束时给为遴选上的用户推送消息
+		Material material2=materialService.getMaterialById(materialId);
+		if(ObjectUtil.notNull(material2)){
+			if(material2.getIsAllTextbookPublished()){
+				List<Declaration> declaration=declarationService.getPositionChooseLossByMaterialId(materialId);
+				systemMessageService.sendWhenPositionChooserLoss(materialId, declaration);
+			}
+		}
 		return count;
 	}
+
 
 	@Override
 	public List<Textbook> getTextbookByMaterialIdAndUserId(Long materialId, Long userId)

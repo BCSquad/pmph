@@ -149,4 +149,11 @@ public interface DeclarationDao {
 	 * @Return Declaration
 	 */
 	DeclarationOrDisplayVO getDeclarationByIdOrOrgName(Long id);
+	
+	/**
+	 * 通过教材id查询教材结束并且未遴选上的作家
+	 * @param materialId
+	 * @return
+	 */
+	List<Declaration> getPositionChooseLossByMaterialId(Long materialId);
 }

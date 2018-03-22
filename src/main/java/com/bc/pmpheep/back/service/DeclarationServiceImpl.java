@@ -1507,4 +1507,13 @@ public class DeclarationServiceImpl implements DeclarationService {
 		return declarationEtcBOs;
 	}
 
+	@Override
+	public List<Declaration> getPositionChooseLossByMaterialId(Long materialId) throws CheckedServiceException {
+		if(null==materialId){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+					"教材id为空");
+		}
+		return declarationDao.getPositionChooseLossByMaterialId(materialId);
+	}
+
 }
