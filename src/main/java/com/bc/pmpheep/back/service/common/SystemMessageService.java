@@ -674,7 +674,7 @@ public final class SystemMessageService {
 		if (declaration.getOrgId() == 0) {// 提交的人卫社
 			msgContent = "抱歉，您提交的《<font color='red'>" + material.getMaterialName()
 					+ "</font>》申报表被[<font color='red'>出版社</font>]退回，退回原因：" + returnCause 
-					+ "请您核对后重试";
+					+ "，请您核对后重试";
 			if (isPass) {// 通过
 				msgContent = "恭喜！您提交的《<font color='red'>" + material.getMaterialName()
 						+ "</font>》申报表已通过[<font color='red'>出版社</font>]审核";
@@ -682,7 +682,7 @@ public final class SystemMessageService {
 		} else {// 提交的机构
 			msgContent = "抱歉，您提交的《<font color='red'>" + material.getMaterialName()
 					+ "</font>》申报表被[<font color='red'>学校管理员</font>]退回，退回原因：" + returnCause 
-					+ "请您核对后重试";
+					+ "，请您核对后重试";
 			if (isPass) {// 通过
 				msgContent = "恭喜！您提交的《<font color='red'>" + material.getMaterialName()
 						+ "</font>》申报表已通过[<font color='red'>学校管理员</font>]审核";
@@ -736,7 +736,7 @@ public final class SystemMessageService {
 		} else { // 退回
 			msgContent = "抱歉！您校[" + declaration.getRealname() + "]提交的《<font color='red'>" + material.getMaterialName()
 					+ "</font>》申报表被[<font color='red'>出版社</font>]退回，退回原因：" + returnCause 
-					+ "请核对后重试";
+					+ "，请核对后重试";
 		}
 		// 获取机构用户
 		List<Long> orgIds = new ArrayList<Long>(1);
