@@ -289,17 +289,16 @@ public class DecPositionServiceImpl implements DecPositionService {
 				String fileNames = null;
 				String mongoId = null;
 				if (ObjectUtil.notNull(decPosition.getId()) && StringUtil.notEmpty(file)) {
-					// mongoId = fileService.saveLocalFile(files, FileType.SYLLABUS, decPosition.getId());
+					// mongoId = fileService.saveLocalFile(files, FileType.SYLLABUS,
+					// decPosition.getId());
 					byte[] fileByte = (byte[]) request.getSession(false).getAttribute(file);
-	                fileNames =
-	                (String) request.getSession(false).getAttribute("fileName_" + file);
-	                InputStream input = new ByteArrayInputStream(fileByte);
+					fileNames = (String) request.getSession(false).getAttribute("fileName_" + file);
+					InputStream input = new ByteArrayInputStream(fileByte);
 					mongoId = fileService.save(input, fileNames, FileType.SYLLABUS, decPosition.getId());
-	                if (StringUtil.isEmpty(mongoId)) {
-	                    throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
-	                                                      CheckedExceptionResult.FILE_UPLOAD_FAILED,
-	                                                      "文件上传失败!");
-	                }
+					if (StringUtil.isEmpty(mongoId)) {
+						throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+								CheckedExceptionResult.FILE_UPLOAD_FAILED, "文件上传失败!");
+					}
 				}
 				if (StringUtil.notEmpty(mongoId)) {
 					decPosition.setSyllabusId(mongoId);
@@ -314,8 +313,8 @@ public class DecPositionServiceImpl implements DecPositionService {
 	}
 
 	@Override
-	public Map<String, Object> listEditorSelection(Long textbookId, Long materialId, String realName,
-			Integer presetPosition) throws CheckedServiceException {
+	public Map<String, Object> listEditorSelection(Long textbookId, Long materialId, String realName, String orgName
+			) throws CheckedServiceException {
 		if (ObjectUtil.isNull(textbookId)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"书籍id不能为空");
@@ -326,7 +325,7 @@ public class DecPositionServiceImpl implements DecPositionService {
 		}
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		List<DecPositionEditorSelectionVO> listEditorSelectionVOs = decPositionDao.listEditorSelection(textbookId,
-				StringUtil.toAllCheck(realName), presetPosition);
+				StringUtil.toAllCheck(realName), StringUtil.toAllCheck(orgName));
 		// 因为作家申报机构为0时 为人卫社 但机构中又不存在0机构 在此遍历作家申报的机构，如果为null这里设置为人卫社
 		for (DecPositionEditorSelectionVO decPositionEditorSelectionVO : listEditorSelectionVOs) {
 			if (null == decPositionEditorSelectionVO.getReportName()) {
@@ -447,7 +446,7 @@ public class DecPositionServiceImpl implements DecPositionService {
 				} else {
 					textbookService.updatRevisionTimesByTextBookId(1, textbookId);
 				}
-				//清楚dec_position_temp表
+				// 清楚dec_position_temp表
 				decPositionTempService.deleteDecPositionTempByTextbookId(textbookId);
 			}
 
@@ -576,19 +575,16 @@ public class DecPositionServiceImpl implements DecPositionService {
 		int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
 		if (total > 0) {
 			boolean flag = false;
-			List<DeclarationSituationSchoolResultVO> chosens = decPositionDao
-					.getSchoolResultChosenPage(pageParameter);
+			List<DeclarationSituationSchoolResultVO> chosens = decPositionDao.getSchoolResultChosenPage(pageParameter);
 			List<DeclarationSituationSchoolResultVO> presets = decPositionDao
 					.getSchoolResultPresetChosen(pageParameter);
 			List<DeclarationSituationSchoolResultVO> delList = new ArrayList<>();
 			List<DeclarationSituationSchoolResultVO> list = new ArrayList<>();
-			if (null == chosens || chosens.isEmpty()){
-				for (DeclarationSituationSchoolResultVO preset : presets){
+			if (null == chosens || chosens.isEmpty()) {
+				for (DeclarationSituationSchoolResultVO preset : presets) {
 					// 计算申报人数
-					Integer presetPersons = preset.getPresetPositionEditor()
-							+ preset.getPresetPositionSubeditor()
-							+ preset.getPresetPositionEditorial()
-							+ preset.getPresetDigitalEditor();
+					Integer presetPersons = preset.getPresetPositionEditor() + preset.getPresetPositionSubeditor()
+							+ preset.getPresetPositionEditorial() + preset.getPresetDigitalEditor();
 					preset.setPresetPersons(presetPersons);
 					preset.setState(1);
 					list.add(preset);
@@ -597,43 +593,37 @@ public class DecPositionServiceImpl implements DecPositionService {
 				pageResult.setTotal(total);
 				return pageResult;
 			}
-			if (chosens.size() < presets.size()){
+			if (chosens.size() < presets.size()) {
 				flag = true;
 			}
 			for (DeclarationSituationSchoolResultVO chosen : chosens) {
-				for (DeclarationSituationSchoolResultVO preset : presets){
-					if (preset.getOrgId().equals(chosen.getOrgId())){
+				for (DeclarationSituationSchoolResultVO preset : presets) {
+					if (preset.getOrgId().equals(chosen.getOrgId())) {
 						delList.add(preset);
 						chosen.setPresetPositionEditor(preset.getPresetPositionEditor());
 						chosen.setPresetPositionSubeditor(preset.getPresetPositionSubeditor());
 						chosen.setPresetPositionEditorial(preset.getPresetPositionEditorial());
-						chosen.setPresetDigitalEditor(preset.getPresetDigitalEditor());						
+						chosen.setPresetDigitalEditor(preset.getPresetDigitalEditor());
 						break;
 					}
 				}
 				// 计算申报人数
-				Integer presetPersons = chosen.getPresetPositionEditor()
-						+ chosen.getPresetPositionSubeditor()
-						+ chosen.getPresetPositionEditorial()
-						+ chosen.getPresetDigitalEditor();
+				Integer presetPersons = chosen.getPresetPositionEditor() + chosen.getPresetPositionSubeditor()
+						+ chosen.getPresetPositionEditorial() + chosen.getPresetDigitalEditor();
 				// 计算当选人数
-				Integer chosenPersons = chosen.getChosenPositionEditor()
-						+ chosen.getChosenPositionSubeditor()
-						+ chosen.getChosenPositionEditorial()
-						+ chosen.getIsDigitalEditor();
+				Integer chosenPersons = chosen.getChosenPositionEditor() + chosen.getChosenPositionSubeditor()
+						+ chosen.getChosenPositionEditorial() + chosen.getIsDigitalEditor();
 				chosen.setPresetPersons(presetPersons);
 				chosen.setChosenPersons(chosenPersons);
 				chosen.setState(1);
 				list.add(chosen);
 			}
-			if (flag){
+			if (flag) {
 				presets.removeAll(delList);
-				for (DeclarationSituationSchoolResultVO preset : presets){
+				for (DeclarationSituationSchoolResultVO preset : presets) {
 					// 计算申报人数
-					Integer presetPersons = preset.getPresetPositionEditor()
-							+ preset.getPresetPositionSubeditor()
-							+ preset.getPresetPositionEditorial()
-							+ preset.getPresetDigitalEditor();
+					Integer presetPersons = preset.getPresetPositionEditor() + preset.getPresetPositionSubeditor()
+							+ preset.getPresetPositionEditorial() + preset.getPresetDigitalEditor();
 					preset.setPresetPersons(presetPersons);
 					preset.setState(1);
 					list.add(preset);
@@ -661,18 +651,14 @@ public class DecPositionServiceImpl implements DecPositionService {
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		int total = decPositionDao.getSchoolCount(pageParameter.getParameter().getMaterialId());
 		if (total > 0) {
-			List<DeclarationSituationSchoolResultVO> presets = decPositionDao
-					.getSchoolResultPreset(pageParameter);
-			List<DeclarationSituationSchoolResultVO> chosens = decPositionDao
-					.getSchoolResultChosen(pageParameter);
+			List<DeclarationSituationSchoolResultVO> presets = decPositionDao.getSchoolResultPreset(pageParameter);
+			List<DeclarationSituationSchoolResultVO> chosens = decPositionDao.getSchoolResultChosen(pageParameter);
 			List<DeclarationSituationSchoolResultVO> list = new ArrayList<>();
-			if (null == chosens || chosens.isEmpty()){
-				for (DeclarationSituationSchoolResultVO preset : presets){
+			if (null == chosens || chosens.isEmpty()) {
+				for (DeclarationSituationSchoolResultVO preset : presets) {
 					// 计算申报人数
-					Integer presetPersons = preset.getPresetPositionEditor()
-							+ preset.getPresetPositionSubeditor()
-							+ preset.getPresetPositionEditorial()
-							+ preset.getPresetDigitalEditor();
+					Integer presetPersons = preset.getPresetPositionEditor() + preset.getPresetPositionSubeditor()
+							+ preset.getPresetPositionEditorial() + preset.getPresetDigitalEditor();
 					preset.setPresetPersons(presetPersons);
 					preset.setState(2);
 					list.add(preset);
@@ -682,25 +668,21 @@ public class DecPositionServiceImpl implements DecPositionService {
 				return pageResult;
 			}
 			for (DeclarationSituationSchoolResultVO preset : presets) {
-				for(DeclarationSituationSchoolResultVO chosen : chosens){
-					if (chosen.getOrgId().equals(preset.getOrgId())){
+				for (DeclarationSituationSchoolResultVO chosen : chosens) {
+					if (chosen.getOrgId().equals(preset.getOrgId())) {
 						preset.setChosenPositionEditor(chosen.getChosenPositionEditor());
 						preset.setChosenPositionSubeditor(chosen.getChosenPositionSubeditor());
 						preset.setChosenPositionEditorial(chosen.getChosenPositionEditorial());
-						preset.setIsDigitalEditor(chosen.getIsDigitalEditor());						
+						preset.setIsDigitalEditor(chosen.getIsDigitalEditor());
 						break;
 					}
 				}
 				// 计算申报人数
-				Integer presetPersons = preset.getPresetPositionEditor()
-						+ preset.getPresetPositionSubeditor()
-						+ preset.getPresetPositionEditorial()
-						+ preset.getPresetDigitalEditor();
+				Integer presetPersons = preset.getPresetPositionEditor() + preset.getPresetPositionSubeditor()
+						+ preset.getPresetPositionEditorial() + preset.getPresetDigitalEditor();
 				// 计算当选人数
-				Integer chosenPersons = preset.getChosenPositionEditor()
-						+ preset.getChosenPositionSubeditor()
-						+ preset.getChosenPositionEditorial()
-						+ preset.getIsDigitalEditor();
+				Integer chosenPersons = preset.getChosenPositionEditor() + preset.getChosenPositionSubeditor()
+						+ preset.getChosenPositionEditorial() + preset.getIsDigitalEditor();
 				preset.setPresetPersons(presetPersons);
 				preset.setChosenPersons(chosenPersons);
 				preset.setState(2);
@@ -775,19 +757,15 @@ public class DecPositionServiceImpl implements DecPositionService {
 		int total = decPositionDao.getBooks(pageParameter.getParameter().getMaterialId());
 		if (total > 0) {
 			List<DeclarationSituationBookResultVO> books = decPositionDao.getBookListOne(pageParameter);
-			List<DeclarationSituationBookResultVO> presets = decPositionDao
-					.getBookResultPreset(pageParameter);
-			List<DeclarationSituationBookResultVO> chosens = decPositionDao
-					.getBookResultChosen(pageParameter);
+			List<DeclarationSituationBookResultVO> presets = decPositionDao.getBookResultPreset(pageParameter);
+			List<DeclarationSituationBookResultVO> chosens = decPositionDao.getBookResultChosen(pageParameter);
 			List<DeclarationSituationBookResultVO> middle = new ArrayList<>();
 			List<DeclarationSituationBookResultVO> list = new ArrayList<>();
-			if (null == presets || presets.isEmpty()){
-				for (DeclarationSituationBookResultVO book : books){
+			if (null == presets || presets.isEmpty()) {
+				for (DeclarationSituationBookResultVO book : books) {
 					// 计算申报人数
-					Integer presetPersons = book.getPresetPositionEditor()
-							+ book.getPresetPositionSubeditor()
-							+ book.getPresetPositionEditorial()
-							+ book.getPresetDigitalEditor();
+					Integer presetPersons = book.getPresetPositionEditor() + book.getPresetPositionSubeditor()
+							+ book.getPresetPositionEditorial() + book.getPresetDigitalEditor();
 					book.setPresetPersons(presetPersons);
 					list.add(book);
 				}
@@ -796,31 +774,29 @@ public class DecPositionServiceImpl implements DecPositionService {
 				return pageResult;
 			}
 			for (DeclarationSituationBookResultVO book : books) {
-				for (DeclarationSituationBookResultVO preset : presets){
-					if (preset.getId().equals(book.getId())){
+				for (DeclarationSituationBookResultVO preset : presets) {
+					if (preset.getId().equals(book.getId())) {
 						book.setPresetPositionEditor(preset.getPresetPositionEditor());
 						book.setPresetPositionSubeditor(preset.getPresetPositionSubeditor());
 						book.setPresetPositionEditorial(preset.getPresetPositionEditorial());
 						book.setPresetDigitalEditor(preset.getPresetDigitalEditor());
-					    break;
-					}					
+						break;
+					}
 				}
 				// 计算申报人数
-				Integer presetPersons = book.getPresetPositionEditor()
-						+ book.getPresetPositionSubeditor()
-						+ book.getPresetPositionEditorial()
-						+ book.getPresetDigitalEditor();
+				Integer presetPersons = book.getPresetPositionEditor() + book.getPresetPositionSubeditor()
+						+ book.getPresetPositionEditorial() + book.getPresetDigitalEditor();
 				book.setPresetPersons(presetPersons);
 				middle.add(book);
 			}
-			if (null == chosens || chosens.isEmpty()){
+			if (null == chosens || chosens.isEmpty()) {
 				pageResult.setRows(middle);
 				pageResult.setTotal(total);
 				return pageResult;
 			}
-			for (DeclarationSituationBookResultVO book : middle){
-				for (DeclarationSituationBookResultVO chosen : chosens){
-					if (chosen.getId().equals(book.getId())){
+			for (DeclarationSituationBookResultVO book : middle) {
+				for (DeclarationSituationBookResultVO chosen : chosens) {
+					if (chosen.getId().equals(book.getId())) {
 						book.setChosenPositionEditor(chosen.getChosenPositionEditor());
 						book.setChosenPositionSubeditor(chosen.getChosenPositionSubeditor());
 						book.setChosenPositionEditorial(chosen.getChosenPositionEditorial());
@@ -828,11 +804,9 @@ public class DecPositionServiceImpl implements DecPositionService {
 						break;
 					}
 				}
-				//计算当选人数
-				Integer chosenPersons = book.getChosenPositionEditor()
-						+ book.getChosenPositionSubeditor()
-						+ book.getChosenPositionEditorial()
-						+ book.getIsDigitalEditor();
+				// 计算当选人数
+				Integer chosenPersons = book.getChosenPositionEditor() + book.getChosenPositionSubeditor()
+						+ book.getChosenPositionEditorial() + book.getIsDigitalEditor();
 				book.setChosenPersons(chosenPersons);
 				list.add(book);
 			}
@@ -862,8 +836,8 @@ public class DecPositionServiceImpl implements DecPositionService {
 			List<DeclarationResultSchoolVO> presets = decPositionDao.getSchoolListPresetChosen(pageParameter);
 			List<DeclarationResultSchoolVO> delList = new ArrayList<>();
 			List<DeclarationResultSchoolVO> list = new ArrayList<>();
-			if (null == chosens || chosens.isEmpty()){
-				for (DeclarationResultSchoolVO preset : presets){
+			if (null == chosens || chosens.isEmpty()) {
+				for (DeclarationResultSchoolVO preset : presets) {
 					preset.setState(1);
 					list.add(preset);
 				}
@@ -871,23 +845,23 @@ public class DecPositionServiceImpl implements DecPositionService {
 				pageResult.setTotal(total);
 				return pageResult;
 			}
-			if (chosens.size() < presets.size()){
+			if (chosens.size() < presets.size()) {
 				flag = true;
 			}
 			for (DeclarationResultSchoolVO chosen : chosens) {
-				for (DeclarationResultSchoolVO preset : presets){
-					if (preset.getOrgId().equals(chosen.getOrgId())){
+				for (DeclarationResultSchoolVO preset : presets) {
+					if (preset.getOrgId().equals(chosen.getOrgId())) {
 						delList.add(preset);
-						if (StringUtil.isEmpty(chosen.getEditorList())){
+						if (StringUtil.isEmpty(chosen.getEditorList())) {
 							chosen.setEditorList("-");
 						}
-						if (StringUtil.isEmpty(chosen.getSubEditorList())){
+						if (StringUtil.isEmpty(chosen.getSubEditorList())) {
 							chosen.setSubEditorList("-");
 						}
-						if (StringUtil.isEmpty(chosen.getEditorialList())){
+						if (StringUtil.isEmpty(chosen.getEditorialList())) {
 							chosen.setEditorialList("-");
 						}
-						if (StringUtil.isEmpty(chosen.getIsDigitalEditorList())){
+						if (StringUtil.isEmpty(chosen.getIsDigitalEditorList())) {
 							chosen.setIsDigitalEditorList("-");
 						}
 						break;
@@ -896,7 +870,7 @@ public class DecPositionServiceImpl implements DecPositionService {
 				chosen.setState(1);
 				list.add(chosen);
 			}
-			if (flag){
+			if (flag) {
 				presets.removeAll(delList);
 				list.addAll(presets);
 			}
@@ -924,8 +898,8 @@ public class DecPositionServiceImpl implements DecPositionService {
 			List<DeclarationResultSchoolVO> presets = decPositionDao.getSchoolListPreset(pageParameter);
 			List<DeclarationResultSchoolVO> chosens = decPositionDao.getSchoolListChosen(pageParameter);
 			List<DeclarationResultSchoolVO> list = new ArrayList<>();
-			if (null == chosens || chosens.isEmpty()){
-				for (DeclarationResultSchoolVO preset : presets){
+			if (null == chosens || chosens.isEmpty()) {
+				for (DeclarationResultSchoolVO preset : presets) {
 					preset.setState(2);
 					list.add(preset);
 				}
@@ -934,25 +908,25 @@ public class DecPositionServiceImpl implements DecPositionService {
 				return pageResult;
 			}
 			for (DeclarationResultSchoolVO preset : presets) {
-				for (DeclarationResultSchoolVO chosen : chosens){
-					if (chosen.getOrgId().equals(preset.getOrgId())){
+				for (DeclarationResultSchoolVO chosen : chosens) {
+					if (chosen.getOrgId().equals(preset.getOrgId())) {
 						preset.setEditorList(chosen.getEditorList());
 						preset.setSubEditorList(chosen.getSubEditorList());
 						preset.setEditorialList(chosen.getEditorialList());
 						preset.setIsDigitalEditorList(chosen.getIsDigitalEditorList());
-						if (StringUtil.isEmpty(preset.getEditorList())){
+						if (StringUtil.isEmpty(preset.getEditorList())) {
 							preset.setEditorList("-");
 						}
-						if (StringUtil.isEmpty(preset.getSubEditorList())){
+						if (StringUtil.isEmpty(preset.getSubEditorList())) {
 							preset.setSubEditorList("-");
 						}
-						if (StringUtil.isEmpty(preset.getEditorialList())){
+						if (StringUtil.isEmpty(preset.getEditorialList())) {
 							preset.setEditorialList("-");
 						}
-						if (StringUtil.isEmpty(preset.getIsDigitalEditorList())){
+						if (StringUtil.isEmpty(preset.getIsDigitalEditorList())) {
 							preset.setIsDigitalEditorList("-");
 						}
-						break;						
+						break;
 					}
 				}
 				preset.setState(2);
@@ -982,28 +956,28 @@ public class DecPositionServiceImpl implements DecPositionService {
 			List<DeclarationResultBookVO> books = decPositionDao.getBookListTwo(pageParameter);
 			List<DeclarationResultBookVO> VOs = decPositionDao.getBookChosenList(pageParameter);
 			List<DeclarationResultBookVO> list = new ArrayList<>();
-			if (null == VOs || VOs.isEmpty()){
+			if (null == VOs || VOs.isEmpty()) {
 				pageResult.setRows(books);
 				pageResult.setTotal(total);
 				return pageResult;
 			}
-			for (DeclarationResultBookVO book : books){
-				for (DeclarationResultBookVO vo : VOs){
-					if (vo.getId().equals(book.getId())){
+			for (DeclarationResultBookVO book : books) {
+				for (DeclarationResultBookVO vo : VOs) {
+					if (vo.getId().equals(book.getId())) {
 						book.setEditorList(vo.getEditorList());
 						book.setSubEditorList(vo.getSubEditorList());
 						book.setEditorialList(vo.getEditorialList());
 						book.setIsDigitalEditorList(vo.getIsDigitalEditorList());
-						if (StringUtil.isEmpty(book.getEditorList())){
+						if (StringUtil.isEmpty(book.getEditorList())) {
 							book.setEditorList("-");
 						}
-						if (StringUtil.isEmpty(book.getSubEditorList())){
+						if (StringUtil.isEmpty(book.getSubEditorList())) {
 							book.setSubEditorList("-");
 						}
-						if (StringUtil.isEmpty(book.getEditorialList())){
+						if (StringUtil.isEmpty(book.getEditorialList())) {
 							book.setEditorialList("-");
 						}
-						if (StringUtil.isEmpty(book.getIsDigitalEditorList())){
+						if (StringUtil.isEmpty(book.getIsDigitalEditorList())) {
 							book.setIsDigitalEditorList("-");
 						}
 						break;
