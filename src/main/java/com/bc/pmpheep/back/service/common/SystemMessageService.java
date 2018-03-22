@@ -34,6 +34,7 @@ import com.bc.pmpheep.back.service.WriterUserService;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
@@ -656,7 +657,7 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenDeclarationFormAudit(Long declarationId, boolean isPass)
+	public void sendWhenDeclarationFormAudit(Long declarationId, boolean isPass, String returnCause)
 			throws CheckedServiceException, IOException {
 		// 获取申报表
 		Declaration declaration = declarationService.getDeclarationById(declarationId);
@@ -673,14 +674,16 @@ public final class SystemMessageService {
 		String msgContent = "";
 		if (declaration.getOrgId() == 0) {// 提交的人卫社
 			msgContent = "抱歉，您提交的《<font color='red'>" + material.getMaterialName()
-					+ "</font>》申报表被[<font color='red'>出版社</font>]退回，请您核对后重试";
+					+ "</font>》申报表被[<font color='red'>出版社</font>]退回，退回原因：" + returnCause 
+					+ "，请您核对后重试";
 			if (isPass) {// 通过
 				msgContent = "恭喜！您提交的《<font color='red'>" + material.getMaterialName()
 						+ "</font>》申报表已通过[<font color='red'>出版社</font>]审核";
 			}
 		} else {// 提交的机构
 			msgContent = "抱歉，您提交的《<font color='red'>" + material.getMaterialName()
-					+ "</font>》申报表被[<font color='red'>学校管理员</font>]退回，请您核对后重试";
+					+ "</font>》申报表被[<font color='red'>学校管理员</font>]退回，退回原因：" + returnCause 
+					+ "，请您核对后重试";
 			if (isPass) {// 通过
 				msgContent = "恭喜！您提交的《<font color='red'>" + material.getMaterialName()
 						+ "</font>》申报表已通过[<font color='red'>学校管理员</font>]审核";
@@ -713,7 +716,7 @@ public final class SystemMessageService {
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenDeclarationFormAuditToOrgUser(Long declarationId, boolean isPass)
+	public void sendWhenDeclarationFormAuditToOrgUser(Long declarationId, boolean isPass, String returnCause)
 			throws CheckedServiceException, IOException {
 		// 获取申报表
 		Declaration declaration = declarationService.getDeclarationById(declarationId);
@@ -733,7 +736,8 @@ public final class SystemMessageService {
 					+ "</font>》申报表已通过[<font color='red'>出版社</font>]审核";
 		} else { // 退回
 			msgContent = "抱歉！您校[" + declaration.getRealname() + "]提交的《<font color='red'>" + material.getMaterialName()
-					+ "</font>》申报表被[<font color='red'>出版社</font>]退回，请核对后重试";
+					+ "</font>》申报表被[<font color='red'>出版社</font>]退回，退回原因：" + returnCause 
+					+ "，请核对后重试";
 		}
 		// 获取机构用户
 		List<Long> orgIds = new ArrayList<Long>(1);
@@ -894,7 +898,7 @@ public final class SystemMessageService {
 		userIds.add("2_" + cmsContent.getAuthorId());
 		myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
 	}
-
+	
 	/**
 	 * 某一本书的最终结果公布 或者 整套教材全部公布时 向当选者和学校管理员发送消息
 	 * 
@@ -1153,7 +1157,7 @@ public final class SystemMessageService {
 			}
 		}
 	}
-
+	
 	/**
 	 * 
 	 * 主编排位数字转成中文
@@ -1251,5 +1255,44 @@ public final class SystemMessageService {
 			break;
 		}
 		return res;
+	}
+	
+	/**
+	 * 给教材已结束并且未遴选上的作家推送消息
+	 * 
+	 * @param materialId
+	 * @param declaration
+	 * @throws CheckedServiceException
+	 * @throws IOException
+	 */
+	public void sendWhenPositionChooserLoss(Long materialId,List<Declaration> declarations) 
+			throws CheckedServiceException, IOException{
+		Material material = materialService.getMaterialById(materialId);
+		if(ObjectUtil.isNull(material)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
+					"教材为空");
+		}
+		String msg="";
+		if(material.getIsAllTextbookPublished()&&declarations.size()>0){
+			msg="《<font color='red'>" + material.getMaterialName()
+			+ "</font>》教材遴选已结束，未选中，感谢您的支持与参与。";
+		}
+		// 存入消息主体
+		Message message = new Message(msg);
+		message = messageService.add(message);
+		String msg_id = message.getId();
+		for (Declaration declaration : declarations) {
+			// 发送消息给申报者
+			userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+					declaration.getUserId(), new Short("2"), null));
+			// websocket推送页面消息
+			WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
+					Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msg,
+					DateUtil.getCurrentTime());
+			List<String> userIds = new ArrayList<String>(1);
+			userIds.add("2_" + declaration.getUserId());
+			myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
+		}
+		
 	}
 }
