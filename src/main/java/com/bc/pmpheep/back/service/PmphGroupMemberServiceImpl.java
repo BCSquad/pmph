@@ -619,6 +619,11 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 				}
 				pmphGroupMember.setGroupId(groupId);
 				this.addPmphGroupMember(pmphGroupMember);
+			}else{
+				PmphGroupMember reUseMember = new PmphGroupMember ();
+				reUseMember.setId(member.getId());
+				reUseMember.setIsDeleted(false);
+				pmphGroupMemberDao.updatePmphGroupMember(reUseMember);
 			}
 		}
 		return pmphGroupMembers.size();

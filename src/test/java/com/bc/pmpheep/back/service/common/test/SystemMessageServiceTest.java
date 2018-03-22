@@ -86,7 +86,7 @@ public class SystemMessageServiceTest extends BaseTest {
 	@Test
 	@Rollback(Const.ISROLLBACK)
 	public void testSendWhenDeclarationFormAudit() throws CheckedServiceException, IOException {
-		systemMessageService.sendWhenDeclarationFormAudit(5L, true);
+		systemMessageService.sendWhenDeclarationFormAudit(5L, true, "");
 
 	}
 
