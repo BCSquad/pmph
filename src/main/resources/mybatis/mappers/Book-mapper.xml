@@ -475,7 +475,7 @@
 		resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM
 		(SELECT
-		b.*,b.bookname,(
+		b.*,(
 		CASE
 		WHEN t.count != '' THEN
 		t.count
@@ -512,7 +512,7 @@
 	<!-- 查询总数 -->
 	<select id="getBookPreferenceAnalysis" resultType="BookPreferenceAnalysisVO">
 		SELECT
-		b.*,b.bookname,(
+		b.*,(
 		CASE
 		WHEN t.count != '' THEN
 		t.count
