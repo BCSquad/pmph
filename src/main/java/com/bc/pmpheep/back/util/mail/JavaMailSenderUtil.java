@@ -47,14 +47,16 @@ public class JavaMailSenderUtil {
         properties = PropsUtil.loadProps("mail.properties");
         // senderImpl.setHost("smtp.qq.com");// 发送邮件服务器
         senderImpl.setHost(PropsUtil.getString(properties, "mail.smtp.host"));// 发送邮件服务器
-        // 端口号，腾讯邮箱使用SSL协议端口号：465/587，腾讯邮箱使用非SSL协议,163邮箱,新浪邮箱端口号都是：25
+        // 端口号，腾讯邮箱使用SSL协议端口号：465/587，163邮箱使用SSL协议端口号:465/994
+        // 腾讯邮箱使用非SSL协议,163邮箱,新浪邮箱端口号都是：25
         senderImpl.setPort(PropsUtil.getInt(properties, "mail.smtp.port"));
         senderImpl.setUsername(PropsUtil.getString(properties, "mail.smtp.username")); // 用户名
         senderImpl.setPassword(new DesRun(PropsUtil.getString(properties, "mail.smtp.password")).depsw); // 密码
 
         Properties prop = new Properties();// 参数配置
-        prop.put("mail.smtp.ssl.enable", "true");// 使用SSL协议
-        prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        prop.put("mail.smtp.ssl.enable", PropsUtil.getString(properties, "mail.smtp.ssl.enable"));// 使用SSL协议
+        prop.put("mail.smtp.socketFactory.class",
+                 PropsUtil.getString(properties, "mail.smtp.socketFactory.class"));
         prop.put("mail.smtp.auth", PropsUtil.getString(properties, "mail.smtp.auth")); // 是否需要验证密码
         prop.put("mail.smtp.timeout", PropsUtil.getString(properties, "mail.smtp.timeout"));// 超时时间
         senderImpl.setJavaMailProperties(prop);
