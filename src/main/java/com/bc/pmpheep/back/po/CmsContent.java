@@ -101,6 +101,8 @@ public class CmsContent implements java.io.Serializable {
     private Boolean   isMaterialEntry;
     // 封面id
     private String    cover;
+    // 退回理由
+    private String    returnReason;
 
     // Constructors
 
@@ -606,6 +608,20 @@ public class CmsContent implements java.io.Serializable {
      */
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    /**
+     * @return the returnReason
+     */
+    public String getReturnReason() {
+        return returnReason;
+    }
+
+    /**
+     * @param returnReason the returnReason to set
+     */
+    public void setReturnReason(String returnReason) {
+        this.returnReason = returnReason;
     }
 
     /**

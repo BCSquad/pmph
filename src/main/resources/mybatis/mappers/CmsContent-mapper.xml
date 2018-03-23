@@ -471,21 +471,26 @@
 				AND 
 				cc.`is_staging` = FALSE
 				 <if test="parameter !=null ">
+				 			<!-- 栏目类型 -->
 							<if test="parameter.categoryId != null">
 								AND cc.`category_id` = #{parameter.categoryId}
 							</if>
+							<!-- 作者 -->
 							<if test="parameter.isAdmin == false ">
 								AND cc.`author_id`=#{parameter.authorId}
 							</if>
+							<!-- 文章标题 -->
 							<if test="parameter.title != null and parameter.title != ''">
 								AND cc.`title` like concat('%',#{parameter.title},'%')
 							</if>
+							<!-- 状态（已发布，未发布，已退回） -->
 							<if test="parameter.authStatus !=null ">
 								AND cc.`auth_status` = #{parameter.authStatus}
 							</if>
 							<if test="parameter.isPublished !=null ">
 								AND cc.`is_published` = #{parameter.isPublished}
 							</if>
+							<!-- 作者 -->
 							<if test="parameter.username !=null and  parameter.username!='' ">
 								AND (
 								pu.`username` like
@@ -494,6 +499,25 @@
 								pu.`realname`like
 								concat('%',#{parameter.username},'%') )
 							</if>
+							<!-- 所属教材 -->
+							<if test="parameter.materialId !=null ">
+								AND cc.`material_id` = #{parameter.materialId}
+							</if>
+							<!-- 创建时间 -->
+							<if test="parameter.startGmtCreate !=null">
+								AND cc.`gmt_create` &gt;= #{parameter.startGmtCreate}
+							</if>
+							<if test="parameter.endGmtCreate !=null">
+								AND cc.`gmt_create`  &lt;=  #{parameter.endGmtCreate}
+							</if>
+							<!-- 发布时间 -->
+							<if test="parameter.startAuthDate !=null">
+								AND cc.`auth_date` &gt;= #{parameter.startAuthDate}
+							</if>
+							<if test="parameter.endAuthDate !=null">
+								AND cc.`auth_date`  &lt;=  #{parameter.endAuthDate}
+							</if>
+							<!-- 平台类型 -->
 				</if>
   				UNION
 				SELECT 
@@ -540,6 +564,25 @@
 								pu.`realname`like
 								concat('%',#{parameter.username},'%') )
 							</if>
+							<!-- 所属教材 -->
+							<if test="parameter.materialId !=null ">
+								AND cc.`material_id` = #{parameter.materialId}
+							</if>
+							<!-- 创建时间 -->
+							<if test="parameter.startGmtCreate !=null">
+								AND cc.`gmt_create` &gt;= #{parameter.startGmtCreate}
+							</if>
+							<if test="parameter.endGmtCreate !=null">
+								AND cc.`gmt_create`  &lt;=  #{parameter.endGmtCreate}
+							</if>
+							<!-- 发布时间 -->
+							<if test="parameter.startAuthDate !=null">
+								AND cc.`auth_date` &gt;= #{parameter.startAuthDate}
+							</if>
+							<if test="parameter.endAuthDate !=null">
+								AND cc.`auth_date`  &lt;=  #{parameter.endAuthDate}
+							</if>
+							<!-- 平台类型 -->
 				</if>
 				 )t
 			)b
@@ -568,6 +611,25 @@
 						`realname`like
 						concat('%',#{parameter.username},'%') )
 					</if>
+					<!-- 所属教材 -->
+					<if test="parameter.materialId !=null ">
+						AND cc.`material_id` = #{parameter.materialId}
+					</if>
+					<!-- 创建时间 -->
+					<if test="parameter.startGmtCreate !=null">
+						AND cc.`gmt_create` &gt;= #{parameter.startGmtCreate}
+					</if>
+					<if test="parameter.endGmtCreate !=null">
+						AND cc.`gmt_create`  &lt;=  #{parameter.endGmtCreate}
+					</if>
+					<!-- 发布时间 -->
+					<if test="parameter.startAuthDate !=null">
+						AND cc.`auth_date` &gt;= #{parameter.startAuthDate}
+					</if>
+					<if test="parameter.endAuthDate !=null">
+						AND cc.`auth_date`  &lt;=  #{parameter.endAuthDate}
+					</if>
+					<!-- 平台类型 -->
 				</if>
 		</where>
 		order by
