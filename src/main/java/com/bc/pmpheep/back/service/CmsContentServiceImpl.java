@@ -504,26 +504,6 @@ public class CmsContentServiceImpl implements CmsContentService {
         } else {
             pageParameter.getParameter().setIsAdmin(pmphUser.getIsAdmin());
         }
-        // 创建开始时间
-        String startCreateDate = pageParameter.getParameter().getStartCreateDate();
-        if (StringUtil.notEmpty(startCreateDate)) {
-            pageParameter.getParameter().setStartGmtCreate(DateUtil.str2Timestam(startCreateDate));
-        }
-        // 创建结束时间
-        String endCreateDate = pageParameter.getParameter().getEndCreateDate();
-        if (StringUtil.notEmpty(endCreateDate)) {
-            pageParameter.getParameter().setEndGmtCreate(DateUtil.str2Timestam(endCreateDate));
-        }
-        // 发布开始时间
-        String startAuDate = pageParameter.getParameter().getStartAuDate();
-        if (StringUtil.notEmpty(startAuDate)) {
-            pageParameter.getParameter().setStartAuthDate(DateUtil.str2Timestam(startAuDate));
-        }
-        // 发布结束时间
-        String endAuDate = pageParameter.getParameter().getEndAuDate();
-        if (StringUtil.notEmpty(endAuDate)) {
-            pageParameter.getParameter().setEndAuthDate(DateUtil.str2Timestam(endAuDate));
-        }
         pageParameter.getParameter().setAuthorId(pmphUser.getId());
         PageResult<CmsContentVO> pageResult = new PageResult<CmsContentVO>();
         // 将页面大小和页面页码拷贝
