@@ -190,5 +190,25 @@ public interface PmphGroupMemberService {
 	 * @throws Exception 
 	 */
 	String addEditorBookGroup(Long textbookId, String sessionId) throws CheckedServiceException;
+	
+	/**
+	 * 
+	 * <p>Description:修改小组成员的小组内昵称</p>
+	 *
+	 * @param groupId 小组主键
+	 * @param id 小组成员主键
+	 * @param displayName 小组成员昵称
+	 * @param sessionId
+	 * @throws CheckedServiceException
+	 *
+	 * @return String
+	 *
+	 * @author lyc
+	 *
+	 * @date 2018年3月22日 下午3:10:28
+	 *
+	 */
+	String updatePmphGroupMemberDisplayName(Long groupId, Long id , String displayName, String sessionId) 
+			throws CheckedServiceException;
 
 }

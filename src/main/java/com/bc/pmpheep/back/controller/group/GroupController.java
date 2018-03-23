@@ -474,4 +474,27 @@ public class GroupController {
 		String sessionId = CookiesUtil.getSessionId(request);
 		return new ResponseBean(pmphGroupMemberService.addEditorBookGroup(textbookId, sessionId));
 	}
+	
+	/**
+	 * 
+	 * <p>Description:修改小组成员昵称</p>
+	 *
+	 * @param groupId
+	 * @param id
+	 * @param displayName
+	 * @param request
+	 * @return ResponseBean
+	 *
+	 * @author lyc
+	 *
+	 * @date 2018年3月22日 下午4:54:20
+	 *
+	 */
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "后台小组成员管理修改小组成员昵称")
+	@RequestMapping(value = "/update/displayName", method = RequestMethod.POST)
+	public ResponseBean displayName(Long groupId, Long id, String displayName,HttpServletRequest request){
+		String sessionId = CookiesUtil.getSessionId(request);
+		return new ResponseBean(pmphGroupMemberService.updatePmphGroupMemberDisplayName(groupId, id, displayName, sessionId));
+	}
 }

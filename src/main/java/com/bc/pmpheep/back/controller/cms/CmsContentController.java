@@ -71,10 +71,10 @@ public class CmsContentController {
         cmsContentVO.setCategoryId(Const.CMS_CATEGORY_ID_1);
         String title = cmsContentVO.getTitle();
         String userName = cmsContentVO.getUsername();
-        if (StringUtil.notEmpty(title)) {
+        if (StringUtil.notEmpty(title)) {// 文章标题
             cmsContentVO.setTitle(StringUtil.toAllCheck(title));
         }
-        if (StringUtil.notEmpty(userName)) {
+        if (StringUtil.notEmpty(userName)) {// 作者，状态
             cmsContentVO.setUsername(StringUtil.toAllCheck(userName));
         }
         PageParameter<CmsContentVO> pageParameter =

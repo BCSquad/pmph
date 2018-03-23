@@ -197,7 +197,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 				}
 			}
 			try {
-				System.out.println("第" + (i + 1) + "号,共" + vns.length + "号");
+				// System.out.println("第" + (i + 1) + "号,共" + vns.length + "号");
 				ot = PostBusyAPI(vns[i]);
 				if ("1".equals(ot.getJSONObject("RESP").getString("CODE"))) {
 					JSONArray array = ot.getJSONObject("RESP").getJSONObject("responseData").getJSONArray("results");
@@ -206,6 +206,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 						String content = book.getContent();// 获取到图书详情将其存入到图书详情表中
 						if (ObjectUtil.isNull(oldBook)) {
 							book.setScore(9.0);
+							book.setType(1L);
 							bookDao.addBook(book);
 							BookDetail bookDetail = new BookDetail(book.getId(), content);
 							bookDetailDao.addBookDetail(bookDetail);

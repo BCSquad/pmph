@@ -42,6 +42,10 @@ public class CmsContentVO implements Serializable {
     private Long      authUserId;
     // 审核通过时间
     private Timestamp authDate;
+    // 发布开始时间
+    private Timestamp startAuthDate;
+    // 发布结束时间
+    private Timestamp endAuthDate;
     // 审核状态
     private Short     authStatus;
     // 条件分页总条数分页查询
@@ -58,8 +62,16 @@ public class CmsContentVO implements Serializable {
     private Boolean   isMaterialEntry;
     // 创建时间
     private Timestamp gmtCreate;
+    // 创建开始时间
+    private Timestamp startGmtCreate;
+    // 创建结束时间
+    private Timestamp endGmtCreate;
     // 真实姓名
     private String    realname;
+    // 教材id
+    private Long      materialId;
+    // 平台类型
+    private Integer   platform;
 
     /**
      * @return the id
@@ -425,4 +437,87 @@ public class CmsContentVO implements Serializable {
         this.realname = realname;
     }
 
+    /**
+     * @return the materialId
+     */
+    public Long getMaterialId() {
+        return materialId;
+    }
+
+    /**
+     * @param materialId the materialId to set
+     */
+    public void setMaterialId(Long materialId) {
+        this.materialId = materialId;
+    }
+
+    /**
+     * @return the startAuthDate
+     */
+    public Timestamp getStartAuthDate() {
+        return startAuthDate;
+    }
+
+    /**
+     * @param startAuthDate the startAuthDate to set
+     */
+    public void setStartAuthDate(Timestamp startAuthDate) {
+        this.startAuthDate = startAuthDate;
+    }
+
+    /**
+     * @return the endAuthDate
+     */
+    public Timestamp getEndAuthDate() {
+        return endAuthDate;
+    }
+
+    /**
+     * @param endAuthDate the endAuthDate to set
+     */
+    public void setEndAuthDate(Timestamp endAuthDate) {
+        this.endAuthDate = endAuthDate;
+    }
+
+    /**
+     * @return the startGmtCreate
+     */
+    public Timestamp getStartGmtCreate() {
+        return startGmtCreate;
+    }
+
+    /**
+     * @param startGmtCreate the startGmtCreate to set
+     */
+    public void setStartGmtCreate(Timestamp startGmtCreate) {
+        this.startGmtCreate = startGmtCreate;
+    }
+
+    /**
+     * @return the endGmtCreate
+     */
+    public Timestamp getEndGmtCreate() {
+        return endGmtCreate;
+    }
+
+    /**
+     * @param endGmtCreate the endGmtCreate to set
+     */
+    public void setEndGmtCreate(Timestamp endGmtCreate) {
+        this.endGmtCreate = endGmtCreate;
+    }
+
+    /**
+     * @return the platform
+     */
+    public Integer getPlatform() {
+        return platform;
+    }
+
+    /**
+     * @param platform the platform to set
+     */
+    public void setPlatform(Integer platform) {
+        this.platform = platform;
+    }
 }

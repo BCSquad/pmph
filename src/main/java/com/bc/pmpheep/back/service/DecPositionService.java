@@ -61,7 +61,6 @@ public interface DecPositionService {
      * @throws CheckedServiceException
      */
     DecPosition getDecPositionById(Long id) throws CheckedServiceException;
-    
 
     /**
      * @Param declarationId
@@ -121,13 +120,13 @@ public interface DecPositionService {
     /**
      * 
      * <pre>
-     * 功能描述：根据书籍id获取申报表id
-     * 使用示范：
-     *
-     * @param textbookIds textbookId 书籍id数组
-     * @return 申报表id结果集
-     * @throws CheckedServiceException
-     * </pre>
+	 * 功能描述：根据书籍id获取申报表id
+	 * 使用示范：
+	 *
+	 * &#64;param textbookIds textbookId 书籍id数组
+	 * &#64;return 申报表id结果集
+	 * &#64;throws CheckedServiceException
+	 * </pre>
      */
     List<Long> listDecPositionsByTextbookIds(String[] textbookIds) throws CheckedServiceException;
 
@@ -145,46 +144,48 @@ public interface DecPositionService {
     /**
      * 
      * <pre>
-     * 功能描述：教材申报-遴选主编/遴选编委(列表)
-     * 使用示范：
-     *
-     * @param textbookId 书籍ID
-     * @param realName 申报人姓名
-     * @param presetPosition 申报职位
-     * @return
-     * @throws CheckedServiceException
-     * </pre>
+	 * 功能描述：教材申报-遴选主编/遴选编委(列表)
+	 * 使用示范：
+	 *
+	 * &#64;param textbookId 书籍ID
+	 * &#64;param realName 申报人姓名
+	 * &#64;param presetPosition 申报职位
+	 * &#64;return
+	 * &#64;throws CheckedServiceException
+	 * </pre>
      */
     Map<String, Object> listEditorSelection(Long textbookId, Long materialId, String realName,
-    Integer presetPosition) throws CheckedServiceException;
+    String orgName) throws CheckedServiceException;
 
     /**
      * 
      * <pre>
-     * 功能描述：教材申报-遴选主编/遴选编委(更新)
-     * 使用示范：
-     *
-     * @param decPositions DecPosition对象集合
-     * @param selectionType (1:确定，2：发布)
-     * @param editorOrSubeditorType 主编，副主编/编委(1:主编，副主编，2：编委)
-     * @return 影响行数
-     * @throws CheckedServiceException
-     * </pre>
+	 * 功能描述：教材申报-遴选主编/遴选编委(更新)
+	 * 使用示范：
+	 *
+	 * @param decPositions DecPosition对象集合
+	 * @param selectionType (1:确定，2：发布)
+	 * @param editorOrSubeditorType 主编，副主编/编委(1:主编，副主编，2：编委)
+	 * @param unselectedHold (编委遴选界面，没有人员被选中也可以进行暂存,0:未选中，1：选中)
+	 * @return 影响行数
+	 * @throws CheckedServiceException
+	 * </pre>
      */
     Integer updateDecPositionEditorSelection(String jsonDecPosition, Integer selectionType,
-    Integer editorOrSubeditorType, String sessionId) throws CheckedServiceException, IOException;
+    Integer editorOrSubeditorType, Integer unselectedHold, Long textbookId, String sessionId)
+    throws CheckedServiceException, IOException;
 
     /**
      * 
      * <pre>
-     * 功能描述：教材申报-遴选主编/遴选编委 (根据书籍Id查询所有申报id)
-     * 使用示范：
-     *
-     * @param textbookId  书籍Id
-     * @return 所有申报id
-     * @param editorOrSubeditorType 主编，副主编/编委(1:主编，副主编，2：编委)
-     * @throws CheckedServiceException
-     * </pre>
+	 * 功能描述：教材申报-遴选主编/遴选编委 (根据书籍Id查询所有申报id)
+	 * 使用示范：
+	 *
+	 * &#64;param textbookId  书籍Id
+	 * &#64;return 所有申报id
+	 * &#64;param editorOrSubeditorType 主编，副主编/编委(1:主编，副主编，2：编委)
+	 * &#64;throws CheckedServiceException
+	 * </pre>
      */
     List<Long> getDecPositionIdByBookId(Long textbookId, Integer editorOrSubeditorType)
     throws CheckedServiceException;
@@ -192,14 +193,14 @@ public interface DecPositionService {
     /**
      * 
      * <pre>
-     * 功能描述：教材申报-遴选主编/遴选编委 (更新前先初始化)
-     * 使用示范：
-     *
-     * @param ids 主键ID集合
-     * @param editorOrSubeditorType 主编，副主编/编委(1:主编，副主编，2：编委)
-     * @return 影响行数 
-     * @throws CheckedServiceException
-     * </pre>
+	 * 功能描述：教材申报-遴选主编/遴选编委 (更新前先初始化)
+	 * 使用示范：
+	 *
+	 * &#64;param ids 主键ID集合
+	 * &#64;param editorOrSubeditorType 主编，副主编/编委(1:主编，副主编，2：编委)
+	 * &#64;return 影响行数 
+	 * &#64;throws CheckedServiceException
+	 * </pre>
      */
     Integer updateDecPositionSetDefault(List<Long> ids, Integer editorOrSubeditorType)
     throws CheckedServiceException;
@@ -308,13 +309,13 @@ public interface DecPositionService {
     /**
      * 
      * <pre>
-     * 功能描述：根据书籍ID查询对应书籍申报人员信息
-     * 使用示范：
-     *
-     * @param textbookIds 书籍ID
-     * @return TextBookDecPositionVO 集合
-     * @throws CheckedServiceException
-     * </pre>
+	 * 功能描述：根据书籍ID查询对应书籍申报人员信息
+	 * 使用示范：
+	 *
+	 * &#64;param textbookIds 书籍ID
+	 * &#64;return TextBookDecPositionVO 集合
+	 * &#64;throws CheckedServiceException
+	 * </pre>
      */
     PageResult<TextBookDecPositionVO> listDeclarationByTextbookIds(
     PageParameter<TextBookDecPositionVO> pageParameter) throws CheckedServiceException;
@@ -322,14 +323,14 @@ public interface DecPositionService {
     /**
      * 
      * <pre>
-     * 功能描述：批量发布主编、副主编
-     * 使用示范：
-     *
-     * @param textbookId 书籍主键ID集合
-     * @param sessionId
-     * @return
-     * @throws CheckedServiceException
-     * </pre>
+	 * 功能描述：批量发布主编、副主编
+	 * 使用示范：
+	 *
+	 * &#64;param textbookId 书籍主键ID集合
+	 * &#64;param sessionId
+	 * &#64;return
+	 * &#64;throws CheckedServiceException
+	 * </pre>
      */
     Integer batchPublishEditor(List<Long> textbookIds, String sessionId)
     throws CheckedServiceException, IOException;
@@ -337,12 +338,12 @@ public interface DecPositionService {
     /**
      * 
      * <pre>
-     * 功能描述：根据书籍ID查询书籍选中的主编，副主编
-     * 使用示范：
-     *
-     * @param textbookId 书籍ID
-     * @return DecPosition集合
-     * </pre>
+	 * 功能描述：根据书籍ID查询书籍选中的主编，副主编
+	 * 使用示范：
+	 *
+	 * &#64;param textbookId 书籍ID
+	 * &#64;return DecPosition集合
+	 * </pre>
      */
     List<DecPosition> getEditorByTextbookId(Long textbookId) throws CheckedServiceException;
 }

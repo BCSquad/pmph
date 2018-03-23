@@ -143,8 +143,8 @@ public class DeclarationController {
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "保存图书")
     @RequestMapping(value = "/list/declaration/saveBooks", method = RequestMethod.POST)
-    public ResponseBean saveBooks(DecPositionVO decPositionVO, HttpServletRequest request) 
-    		throws IOException {
+    public ResponseBean saveBooks(DecPositionVO decPositionVO, HttpServletRequest request)
+    throws IOException {
         return new ResponseBean(decPositionService.saveBooks(decPositionVO, request));
     }
 
@@ -171,10 +171,11 @@ public class DeclarationController {
 	* 功能描述：教材申报-遴选主编/遴选编委
 	* 使用示范：
 	* 
-	* @param textbookId 书籍ID
-	* @param realName 申报人姓名
-	* @param presetPosition 申报职位
-	* @return
+	* &#64;param textbookId 书籍ID
+	* &#64;param realName 申报人姓名
+	* &#64;param presetPosition 申报职位
+	* 			sort 排序（1=职位，2=姓名）
+	* &#64;return
 	 * </pre>
      */
     @ResponseBody
@@ -182,11 +183,11 @@ public class DeclarationController {
     @RequestMapping(value = "/list/editor/selection", method = RequestMethod.GET)
     public ResponseBean selection(@RequestParam("textbookId") Long textbookId,
     @RequestParam("materialId") Long materialId, @RequestParam("realName") String realName,
-    @RequestParam("presetPosition") Integer presetPosition) {
+    @RequestParam("orgName") String orgName) {
         return new ResponseBean(decPositionService.listEditorSelection(textbookId,
                                                                        materialId,
                                                                        realName,
-                                                                       presetPosition));
+                                                                       orgName));
     }
 
     /**
@@ -198,7 +199,8 @@ public class DeclarationController {
 	 * @param decPositions DecPosition对象集合
 	 * @param selectionType (1:确定，2：发布)
 	 * @param editorOrSubeditorType 主编，副主编/编委(1:主编，副主编，2：编委)
-	 * @return
+	 * @param unselectedHold (编委遴选界面，没有人员被选中也可以进行暂存,0:未选中，1：选中)
+	 * @return 
 	 * </pre>
      */
     @ResponseBody
@@ -207,13 +209,16 @@ public class DeclarationController {
     public ResponseBean update(@RequestParam("jsonDecPosition") String jsonDecPosition,
     @RequestParam("selectionType") Integer selectionType,
     @RequestParam("editorOrEditorialPanel") Integer editorOrSubeditorType,
-    HttpServletRequest request) {
+    @RequestParam("unselectedHold") Integer unselectedHold,
+    @RequestParam("textbookId") Long textbookId, HttpServletRequest request) {
         String sessionId = CookiesUtil.getSessionId(request);
         try {
             return new ResponseBean(
                                     decPositionService.updateDecPositionEditorSelection(jsonDecPosition,
                                                                                         selectionType,
                                                                                         editorOrSubeditorType,
+                                                                                        unselectedHold,
+                                                                                        textbookId,
                                                                                         sessionId));
         } catch (IOException e) {
             return new ResponseBean(e);
@@ -223,13 +228,13 @@ public class DeclarationController {
     /**
      * 
      * <pre>
-     * 功能描述：批量发布主编、副主编
-     * 使用示范：
-     *
-     * @param textbookId 书籍主键ID集合
-     * @param request
-     * @return
-     * </pre>
+	 * 功能描述：批量发布主编、副主编
+	 * 使用示范：
+	 *
+	 * &#64;param textbookId 书籍主键ID集合
+	 * &#64;param request
+	 * &#64;return
+	 * </pre>
      */
     @ResponseBody
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "批量发布主编、副主编")
