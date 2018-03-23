@@ -43,10 +43,8 @@ public class CmsContentVO implements Serializable {
     // 审核通过时间
     private Timestamp authDate;
     // 发布开始时间
-    private Timestamp startAuthDate;
-    // 发布结束时间
-    private Timestamp endAuthDate;
     private String    startAuDate;
+    // 发布结束时间
     private String    endAuDate;
     // 审核状态
     private Short     authStatus;
@@ -65,10 +63,8 @@ public class CmsContentVO implements Serializable {
     // 创建时间
     private Timestamp gmtCreate;
     // 创建开始时间
-    private Timestamp startGmtCreate;
-    // 创建结束时间
-    private Timestamp endGmtCreate;
     private String    startCreateDate;
+    // 创建结束时间
     private String    endCreateDate;
     // 真实姓名
     private String    realname;
@@ -453,62 +449,6 @@ public class CmsContentVO implements Serializable {
      */
     public void setMaterialId(Long materialId) {
         this.materialId = materialId;
-    }
-
-    /**
-     * @return the startAuthDate
-     */
-    public Timestamp getStartAuthDate() {
-        return startAuthDate;
-    }
-
-    /**
-     * @param startAuthDate the startAuthDate to set
-     */
-    public void setStartAuthDate(Timestamp startAuthDate) {
-        this.startAuthDate = startAuthDate;
-    }
-
-    /**
-     * @return the endAuthDate
-     */
-    public Timestamp getEndAuthDate() {
-        return endAuthDate;
-    }
-
-    /**
-     * @param endAuthDate the endAuthDate to set
-     */
-    public void setEndAuthDate(Timestamp endAuthDate) {
-        this.endAuthDate = endAuthDate;
-    }
-
-    /**
-     * @return the startGmtCreate
-     */
-    public Timestamp getStartGmtCreate() {
-        return startGmtCreate;
-    }
-
-    /**
-     * @param startGmtCreate the startGmtCreate to set
-     */
-    public void setStartGmtCreate(Timestamp startGmtCreate) {
-        this.startGmtCreate = startGmtCreate;
-    }
-
-    /**
-     * @return the endGmtCreate
-     */
-    public Timestamp getEndGmtCreate() {
-        return endGmtCreate;
-    }
-
-    /**
-     * @param endGmtCreate the endGmtCreate to set
-     */
-    public void setEndGmtCreate(Timestamp endGmtCreate) {
-        this.endGmtCreate = endGmtCreate;
     }
 
     /**

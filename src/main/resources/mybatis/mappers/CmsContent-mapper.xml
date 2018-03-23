@@ -504,20 +504,19 @@
 								AND cc.`material_id` = #{parameter.materialId}
 							</if>
 							<!-- 创建时间 -->
-							<if test="parameter.startGmtCreate !=null">
-								AND cc.`gmt_create` &gt;= #{parameter.startGmtCreate}
+							<if test="parameter.startCreateDate !=null and parameter.startCreateDate !=''">
+								AND cc.`gmt_create` &gt;= str_to_date(#{parameter.startCreateDate},'%Y-%m-%d %H:%i:%s')
 							</if>
-							<if test="parameter.endGmtCreate !=null">
-								AND cc.`gmt_create`  &lt;=  #{parameter.endGmtCreate}
+							<if test="parameter.endCreateDate !=null and parameter.endCreateDate !='' ">
+								AND cc.`gmt_create`  &lt;=  str_to_date(#{parameter.endCreateDate},'%Y-%m-%d %H:%i:%s')
 							</if>
 							<!-- 发布时间 -->
-							<if test="parameter.startAuthDate !=null">
-								AND cc.`auth_date` &gt;= #{parameter.startAuthDate}
+							<if test="parameter.startAuDate !=null and parameter.startAuDate !='' ">
+								AND cc.`auth_date` &gt;= str_to_date(#{parameter.startAuDate},'%Y-%m-%d %H:%i:%s')
 							</if>
-							<if test="parameter.endAuthDate !=null">
-								AND cc.`auth_date`  &lt;=  #{parameter.endAuthDate}
+							<if test="parameter.endAuDate !=null and parameter.endAuDate !='' ">
+								AND cc.`auth_date`  &lt;= str_to_date(#{parameter.endAuDate},'%Y-%m-%d %H:%i:%s')
 							</if>
-							<!-- 平台类型 -->
 				</if>
   				UNION
 				SELECT 
@@ -568,21 +567,20 @@
 							<if test="parameter.materialId !=null ">
 								AND cc.`material_id` = #{parameter.materialId}
 							</if>
-							<!-- 创建时间 -->
-							<if test="parameter.startGmtCreate !=null">
-								AND cc.`gmt_create` &gt;= #{parameter.startGmtCreate}
+								<!-- 创建时间 -->
+							<if test="parameter.startCreateDate !=null and parameter.startCreateDate !=''">
+								AND cc.`gmt_create` &gt;= str_to_date(#{parameter.startCreateDate},'%Y-%m-%d %H:%i:%s')
 							</if>
-							<if test="parameter.endGmtCreate !=null">
-								AND cc.`gmt_create`  &lt;=  #{parameter.endGmtCreate}
+							<if test="parameter.endCreateDate !=null and parameter.endCreateDate !='' ">
+								AND cc.`gmt_create`  &lt;=  str_to_date(#{parameter.endCreateDate},'%Y-%m-%d %H:%i:%s')
 							</if>
 							<!-- 发布时间 -->
-							<if test="parameter.startAuthDate !=null">
-								AND cc.`auth_date` &gt;= #{parameter.startAuthDate}
+							<if test="parameter.startAuDate !=null and parameter.startAuDate !='' ">
+								AND cc.`auth_date` &gt;= str_to_date(#{parameter.startAuDate},'%Y-%m-%d %H:%i:%s')
 							</if>
-							<if test="parameter.endAuthDate !=null">
-								AND cc.`auth_date`  &lt;=  #{parameter.endAuthDate}
+							<if test="parameter.endAuDate !=null and parameter.endAuDate !='' ">
+								AND cc.`auth_date`  &lt;= str_to_date(#{parameter.endAuDate},'%Y-%m-%d %H:%i:%s')
 							</if>
-							<!-- 平台类型 -->
 				</if>
 				 )t
 			)b
@@ -613,23 +611,22 @@
 					</if>
 					<!-- 所属教材 -->
 					<if test="parameter.materialId !=null ">
-						AND cc.`material_id` = #{parameter.materialId}
+						AND `material_id` = #{parameter.materialId}
 					</if>
-					<!-- 创建时间 -->
-					<if test="parameter.startGmtCreate !=null">
-						AND cc.`gmt_create` &gt;= #{parameter.startGmtCreate}
-					</if>
-					<if test="parameter.endGmtCreate !=null">
-						AND cc.`gmt_create`  &lt;=  #{parameter.endGmtCreate}
-					</if>
-					<!-- 发布时间 -->
-					<if test="parameter.startAuthDate !=null">
-						AND cc.`auth_date` &gt;= #{parameter.startAuthDate}
-					</if>
-					<if test="parameter.endAuthDate !=null">
-						AND cc.`auth_date`  &lt;=  #{parameter.endAuthDate}
-					</if>
-					<!-- 平台类型 -->
+						<!-- 创建时间 -->
+							<if test="parameter.startCreateDate !=null and parameter.startCreateDate !=''">
+								AND `gmt_create` &gt;= str_to_date(#{parameter.startCreateDate},'%Y-%m-%d %H:%i:%s')
+							</if>
+							<if test="parameter.endCreateDate !=null and parameter.endCreateDate !='' ">
+								AND `gmt_create`  &lt;=  str_to_date(#{parameter.endCreateDate},'%Y-%m-%d %H:%i:%s')
+							</if>
+							<!-- 发布时间 -->
+							<if test="parameter.startAuDate !=null and parameter.startAuDate !='' ">
+								AND `auth_date` &gt;= str_to_date(#{parameter.startAuDate},'%Y-%m-%d %H:%i:%s')
+							</if>
+							<if test="parameter.endAuDate !=null and parameter.endAuDate !='' ">
+								AND `auth_date`  &lt;= str_to_date(#{parameter.endAuDate},'%Y-%m-%d %H:%i:%s')
+							</if>
 				</if>
 		</where>
 		order by
