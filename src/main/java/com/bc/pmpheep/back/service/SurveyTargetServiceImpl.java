@@ -141,6 +141,11 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问卷结束时间为空");
         }
+        if (DateUtil.str2Timestam(surveyTargetVO.getStartTime()).getTime() > DateUtil.str2Timestam(surveyTargetVO.getEndTime())
+                                                                                     .getTime()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "开始日期不能大于结束日期");
+        }
         List<Long> orgIds = this.listOrgIdBySurveyId(surveyTargetVO.getSurveyId());
         Integer count = 0;
         Long userId = pmphUser.getId();// 当前用户
