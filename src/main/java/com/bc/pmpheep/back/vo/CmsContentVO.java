@@ -46,6 +46,8 @@ public class CmsContentVO implements Serializable {
     private Timestamp startAuthDate;
     // 发布结束时间
     private Timestamp endAuthDate;
+    private String    startAuDate;
+    private String    endAuDate;
     // 审核状态
     private Short     authStatus;
     // 条件分页总条数分页查询
@@ -66,6 +68,8 @@ public class CmsContentVO implements Serializable {
     private Timestamp startGmtCreate;
     // 创建结束时间
     private Timestamp endGmtCreate;
+    private String    startCreateDate;
+    private String    endCreateDate;
     // 真实姓名
     private String    realname;
     // 教材id
@@ -520,4 +524,61 @@ public class CmsContentVO implements Serializable {
     public void setPlatform(Integer platform) {
         this.platform = platform;
     }
+
+    /**
+     * @return the startAuDate
+     */
+    public String getStartAuDate() {
+        return startAuDate;
+    }
+
+    /**
+     * @param startAuDate the startAuDate to set
+     */
+    public void setStartAuDate(String startAuDate) {
+        this.startAuDate = startAuDate;
+    }
+
+    /**
+     * @return the endAuDate
+     */
+    public String getEndAuDate() {
+        return endAuDate;
+    }
+
+    /**
+     * @param endAuDate the endAuDate to set
+     */
+    public void setEndAuDate(String endAuDate) {
+        this.endAuDate = endAuDate;
+    }
+
+    /**
+     * @return the startCreateDate
+     */
+    public String getStartCreateDate() {
+        return startCreateDate;
+    }
+
+    /**
+     * @param startCreateDate the startCreateDate to set
+     */
+    public void setStartCreateDate(String startCreateDate) {
+        this.startCreateDate = startCreateDate;
+    }
+
+    /**
+     * @return the endCreateDate
+     */
+    public String getEndCreateDate() {
+        return endCreateDate;
+    }
+
+    /**
+     * @param endCreateDate the endCreateDate to set
+     */
+    public void setEndCreateDate(String endCreateDate) {
+        this.endCreateDate = endCreateDate;
+    }
+
 }
