@@ -196,7 +196,7 @@ public interface DecPositionDao {
 	 * </pre>
      */
     List<DecPositionEditorSelectionVO> listEditorSelection(@Param("textbookId") Long textbookId,
-    @Param("realName") String realName, @Param("presetPosition") Integer presetPosition);
+    @Param("realName") String realName, @Param("orgName") String orgName);
 
     /**
      * 

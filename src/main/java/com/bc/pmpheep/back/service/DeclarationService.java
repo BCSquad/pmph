@@ -197,4 +197,11 @@ public interface DeclarationService {
 	 */
 	@Deprecated
 	List<DeclarationEtcBO> getDeclarationEtcBOs(Long materialId);
+	
+	/**
+	 * 通过教材id 查询教材已结束并且未遴选上的作家
+	 * @param materialId
+	 * @return
+	 */
+	List<Declaration> getPositionChooseLossByMaterialId(Long materialId)throws CheckedServiceException;
 }

@@ -619,9 +619,59 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 				}
 				pmphGroupMember.setGroupId(groupId);
 				this.addPmphGroupMember(pmphGroupMember);
+			}else{
+				PmphGroupMember reUseMember = new PmphGroupMember ();
+				reUseMember.setId(member.getId());
+				reUseMember.setIsDeleted(false);
+				pmphGroupMemberDao.updatePmphGroupMember(reUseMember);
 			}
 		}
 		return pmphGroupMembers.size();
+	}
+
+	@Override
+	public String updatePmphGroupMemberDisplayName(Long groupId, Long id, String displayName,
+			String sessionId) throws CheckedServiceException {
+		String result = "FAIL";
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "该用户为空");
+		}
+		if (ObjectUtil.isNull(id)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "未选择小组成员");
+		}
+		if (StringUtil.isEmpty(displayName)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+					CheckedExceptionResult.NULL_PARAM, "成员昵称不能为空");
+		}
+		PmphGroupMember member = new PmphGroupMember();
+		member.setId(id);
+		member.setDisplayName(displayName);
+		if (pmphUser.getIsAdmin() || isFounder(groupId, sessionId)){
+			pmphGroupMemberDao.update(member);
+			result = "SUCCESS";
+		} else if (isFounderOrisAdmin(groupId, sessionId)){
+			PmphGroupMember pmphGroupMember = pmphGroupMemberDao.getPmphGroupMemberById(id);
+			if (pmphGroupMember.getIsFounder() || pmphGroupMember.getIsAdmin()){
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+						CheckedExceptionResult.ILLEGAL_PARAM, "管理员只能修改自己或普通成员的小组内昵称");
+			}else{
+				pmphGroupMemberDao.update(member);
+				result = "SUCCESS";
+			}
+		}else {
+			PmphGroupMember pmphGroupMember = pmphGroupMemberDao.getPmphGroupMemberById(id);
+			if (pmphUser.getId().equals(pmphGroupMember.getUserId()) && !pmphGroupMember.getIsWriter()){
+				pmphGroupMemberDao.update(member);
+				result = "SUCCESS";
+			} else {
+				throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
+						CheckedExceptionResult.ILLEGAL_PARAM, "普通成员只能修改自己的昵称");
+			}
+		}
+		return result;
 	}
 
 }
