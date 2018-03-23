@@ -789,6 +789,11 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					pageParameter.getParameter().setIsForceEnd(false);
 					pageParameter.getParameter().setIsPublished(true);
 					break;
+				case "未结束":
+					pageParameter.getParameter().setIsAllTextbookPublished(false);
+					pageParameter.getParameter().setIsForceEnd(false);
+					pageParameter.getParameter().setIsPublished(null);
+					break;
 
 				default:
 					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
