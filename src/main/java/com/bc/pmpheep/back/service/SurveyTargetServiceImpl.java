@@ -218,8 +218,7 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
             }
             // Integer size = orgUserEmail.size();
             String[] emails =
-            // new String[] { "515944204@qq.com", "2310870657@qq.com", "501331000@qq.com" };
-            new String[] { "nyz526@163.com" };
+            new String[] { "515944204@qq.com", "2310870657@qq.com", "501331000@qq.com" };
             // String[] toEmail = (String[]) orgUserEmail.toArray(new String[size]);
             if (ArrayUtil.isEmpty(emails)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
