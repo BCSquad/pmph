@@ -65,6 +65,7 @@ import com.bc.pmpheep.back.vo.DeclarationSituationSchoolResultVO;
 import com.bc.pmpheep.back.vo.ExcelDecAndTextbookVO;
 import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
 import com.bc.pmpheep.back.vo.OrgExclVO;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.back.vo.SurveyQuestionFillVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.general.bean.ZipDownload;
@@ -77,6 +78,9 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.utils.ExcelHelper;
 import com.bc.pmpheep.utils.WordHelper;
 import com.bc.pmpheep.utils.ZipHelper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.mongodb.gridfs.GridFSDBFile;
 
 /**
@@ -990,6 +994,7 @@ public class FileDownLoadController {
 	 * @param
 	 * @return void
 	 */
+	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "设置选题号页面导出选题号信息")
 	@RequestMapping(value = "/textbook/exportTopic", method = RequestMethod.GET)
 	public void exportTopic(Long materialId, HttpServletRequest request, HttpServletResponse response) {
@@ -1051,6 +1056,38 @@ public class FileDownLoadController {
 			out.close();
 		} catch (Exception e) {
 			logger.warn("文件下载时出现IO异常：{}", e.getMessage());
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
+		}
+	}
+	
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出机构用户对比后的信息")
+	@RequestMapping(value = "/org/exportOrgInfo", method = RequestMethod.GET)
+	public void exportOrgInfo(HttpServletRequest request, HttpServletResponse response, String orgVOs){
+		if (StringUtil.isEmpty(orgVOs)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, 
+					CheckedExceptionResult.NULL_PARAM, "导出的机构信息不能为空");
+		}
+		Gson gson = new GsonBuilder().create();
+		List<OrgVO> list = gson.fromJson(orgVOs, new TypeToken<ArrayList<OrgVO>>() {
+		}.getType());
+		Workbook workbook = null;
+		try {
+			workbook = excelHelper.fromOrgVO(list, "机构用户信息");
+		} catch (CheckedServiceException | IllegalAccessException | IllegalArgumentException e) {
+			logger.warn("数据表格化的时候失败");
+		} 
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/force-download");
+		String fileName = returnFileName(request, "机构用户信息" + ".xls");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+		try (OutputStream out = response.getOutputStream()){
+			workbook.write(out);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			logger.warn("文件下载时出现IO异常： {}", e.getMessage());
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
