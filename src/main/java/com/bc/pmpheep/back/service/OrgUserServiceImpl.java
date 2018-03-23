@@ -1,11 +1,21 @@
 package com.bc.pmpheep.back.service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.back.common.service.BaseService;
 import com.bc.pmpheep.back.dao.OrgDao;
@@ -24,10 +34,12 @@ import com.bc.pmpheep.back.util.RouteUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.util.ValidatUtil;
 import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.utils.SsoHelper;
+
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -486,4 +498,77 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.context = applicationContext;
     }
+
+	@SuppressWarnings("resource")
+	@Override
+	public List<OrgVO> importExcel(MultipartFile file)
+			throws CheckedServiceException {
+		String fileType = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+		Workbook workbook = null;
+		InputStream in = null;
+		try {
+			in = file.getInputStream();
+		} catch (FileNotFoundException e) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+					CheckedExceptionResult.NULL_PARAM, "获取上传的文件失败");
+		} catch (IOException e){
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "读取文件失败");
+		}
+		try {
+			if (".xls".equals(fileType)){
+				workbook = new HSSFWorkbook(in);
+			} else if (".xlsx".equals(fileType)){
+				workbook = new XSSFWorkbook(in);
+			} else {
+				throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+						CheckedExceptionResult.ILLEGAL_PARAM, "读取的不是Excel文件");
+			}
+		} catch (IOException e){
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "文件读取失败");
+		} catch (OfficeXmlFileException e){
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+					CheckedExceptionResult.ILLEGAL_PARAM, "此文档不是对应的.xls或.xlsx的Excel文档，请修改为正确的后缀名再进行上传");
+		}
+		PageParameter<OrgAndOrgUserVO> pageParameter = new PageParameter<>();
+		pageParameter.setParameter(new OrgAndOrgUserVO());
+		pageParameter.setStart(null);
+		List<OrgAndOrgUserVO> orgUsers = orgUserDao.getListAllOrgUser(pageParameter);
+		List<OrgVO> list = new ArrayList<>();
+		for (int numSheet =0 ; numSheet < workbook.getNumberOfSheets(); numSheet++ ){
+			Sheet sheet = workbook.getSheetAt(numSheet);
+			if (null == sheet){
+				continue;
+			}
+			for (int rowNum = 1; rowNum <= sheet.getLastRowNum(); rowNum++){
+				OrgVO orgVO = new OrgVO();
+				Row row = sheet.getRow(rowNum);
+				if (null == row){
+					break;
+				}
+				Cell second = row.getCell(1);
+				String orgName = StringUtil.getCellValue(second);
+				if (StringUtil.isEmpty(orgName)){
+					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+							CheckedExceptionResult.NULL_PARAM, "Excel文件里序号为" + rowNum + "的机构名称为空");
+				}
+				orgVO.setOrgName(orgName);
+				if (null == orgUsers || orgUsers.isEmpty()){
+					list.add(orgVO);
+					continue;
+				}
+				for (OrgAndOrgUserVO orgAndOrgUserVO : orgUsers){
+					if (orgName.equals(orgAndOrgUserVO.getOrgName())){
+						orgVO.setUsername(orgAndOrgUserVO.getUsername());
+						orgVO.setOrgTypeName(orgAndOrgUserVO.getOrgTypeName());
+						orgVO.setRealname(orgAndOrgUserVO.getRealname());
+						break;
+					}
+				}
+				list.add(orgVO);
+			}
+		}
+		return list;
+	}
 }

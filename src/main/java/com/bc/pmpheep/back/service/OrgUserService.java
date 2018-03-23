@@ -3,11 +3,14 @@ package com.bc.pmpheep.back.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.bc.pmpheep.back.plugin.PageParameter;
 import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.Org;
 import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -158,4 +161,20 @@ public interface OrgUserService {
 	 *
 	 */
 	String resetPassword(Long id) throws CheckedServiceException;
+	
+	/**
+	 * 
+	 * <p>Description:机构用户管理界面导入Excel文件</p>
+	 *
+	 * @param file
+	 * @throws CheckedServiceException
+	 *
+	 * @return List<OrgVO>
+	 *
+	 * @author lyc
+	 *
+	 * @date 2018年3月23日 上午10:15:07
+	 *
+	 */
+	List<OrgVO> importExcel(MultipartFile file) throws CheckedServiceException,IOException;
 }
