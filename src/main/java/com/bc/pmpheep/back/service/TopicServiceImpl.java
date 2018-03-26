@@ -255,7 +255,7 @@ public class TopicServiceImpl implements TopicService {
 		if (ObjectUtil.notNull(topic.getAuthProgress())) {
 			if (StringUtil.isEmpty(topic.getAuthFeedback())) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
-						"审核不能为空");
+						"审核意见不能为空");
 			}
 			if (3 == topic.getAuthProgress()) {
 				Map<String, Object> detail = new HashMap<String, Object>();

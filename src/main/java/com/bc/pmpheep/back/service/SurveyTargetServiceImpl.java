@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.bc.pmpheep.back.dao.SurveyTargetDao;
@@ -67,6 +68,23 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
     UserMessageService          userMessageService;
     @Autowired
     SurveyQuestionAnswerService surveyQuestionAnswerService;
+
+    @Value("#{spring['login2front.url']}")
+    private String              login2frontUrl;
+
+    /**
+     * @return the login2frontUrl
+     */
+    public String getLogin2frontUrl() {
+        return login2frontUrl;
+    }
+
+    /**
+     * @param login2frontUrl the login2frontUrl to set
+     */
+    public void setLogin2frontUrl(String login2frontUrl) {
+        this.login2frontUrl = login2frontUrl;
+    }
 
     @Override
     public SurveyTarget addSurveyTarget(SurveyTarget surveyTarget) throws CheckedServiceException {
@@ -141,6 +159,11 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问卷结束时间为空");
         }
+        if (DateUtil.str2Timestam(surveyTargetVO.getStartTime()).getTime() > DateUtil.str2Timestam(surveyTargetVO.getEndTime())
+                                                                                     .getTime()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.ILLEGAL_PARAM, "开始日期不能大于结束日期");
+        }
         List<Long> orgIds = this.listOrgIdBySurveyId(surveyTargetVO.getSurveyId());
         Integer count = 0;
         Long userId = pmphUser.getId();// 当前用户
@@ -204,12 +227,16 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
 
             // 发送邮件
             JavaMailSenderUtil javaMailSenderUtil = new JavaMailSenderUtil();
+            String serverUrl =
+            getLogin2frontUrl().substring(0, getLogin2frontUrl().lastIndexOf("/"));
             // 给学校管理员发送邮件
             javaMailSenderUtil.sendMail(surveyTargetVO.getTitle(),
             // message.getContent(),
                                         "<p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>您好：</span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>&nbsp; &nbsp; 现有一份《"
                                         + surveyTargetVO.getTitle()
-                                        + "》需要您登陆下面地址，填写您宝贵意见。</span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>&nbsp;&nbsp;&nbsp;&nbsp;登陆地址：<a href='http://120.76.221.250/pmeph/survey/writeSurvey.action?surveyId="
+                                        + "》需要您登陆下面地址，填写您宝贵意见。</span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-align: left;'><span style='font-family: 黑体, SimHei;'>&nbsp;&nbsp;&nbsp;&nbsp;登陆地址：<a href='"
+                                        + serverUrl
+                                        + "/survey/writeSurvey.action?surveyId="
                                         + surveyTargetVO.getSurveyId()
                                         + "'>人卫E教平台</a><br/></span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;'><br/></p>",
                                         emails);

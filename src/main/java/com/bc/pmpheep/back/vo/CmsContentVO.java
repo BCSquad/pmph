@@ -42,6 +42,10 @@ public class CmsContentVO implements Serializable {
     private Long      authUserId;
     // 审核通过时间
     private Timestamp authDate;
+    // 发布开始时间
+    private String    startAuDate;
+    // 发布结束时间
+    private String    endAuDate;
     // 审核状态
     private Short     authStatus;
     // 条件分页总条数分页查询
@@ -58,8 +62,16 @@ public class CmsContentVO implements Serializable {
     private Boolean   isMaterialEntry;
     // 创建时间
     private Timestamp gmtCreate;
+    // 创建开始时间
+    private String    startCreateDate;
+    // 创建结束时间
+    private String    endCreateDate;
     // 真实姓名
     private String    realname;
+    // 教材id
+    private Long      materialId;
+    // 平台类型
+    private Integer   platform;
 
     /**
      * @return the id
@@ -423,6 +435,90 @@ public class CmsContentVO implements Serializable {
      */
     public void setRealname(String realname) {
         this.realname = realname;
+    }
+
+    /**
+     * @return the materialId
+     */
+    public Long getMaterialId() {
+        return materialId;
+    }
+
+    /**
+     * @param materialId the materialId to set
+     */
+    public void setMaterialId(Long materialId) {
+        this.materialId = materialId;
+    }
+
+    /**
+     * @return the platform
+     */
+    public Integer getPlatform() {
+        return platform;
+    }
+
+    /**
+     * @param platform the platform to set
+     */
+    public void setPlatform(Integer platform) {
+        this.platform = platform;
+    }
+
+    /**
+     * @return the startAuDate
+     */
+    public String getStartAuDate() {
+        return startAuDate;
+    }
+
+    /**
+     * @param startAuDate the startAuDate to set
+     */
+    public void setStartAuDate(String startAuDate) {
+        this.startAuDate = startAuDate;
+    }
+
+    /**
+     * @return the endAuDate
+     */
+    public String getEndAuDate() {
+        return endAuDate;
+    }
+
+    /**
+     * @param endAuDate the endAuDate to set
+     */
+    public void setEndAuDate(String endAuDate) {
+        this.endAuDate = endAuDate;
+    }
+
+    /**
+     * @return the startCreateDate
+     */
+    public String getStartCreateDate() {
+        return startCreateDate;
+    }
+
+    /**
+     * @param startCreateDate the startCreateDate to set
+     */
+    public void setStartCreateDate(String startCreateDate) {
+        this.startCreateDate = startCreateDate;
+    }
+
+    /**
+     * @return the endCreateDate
+     */
+    public String getEndCreateDate() {
+        return endCreateDate;
+    }
+
+    /**
+     * @param endCreateDate the endCreateDate to set
+     */
+    public void setEndCreateDate(String endCreateDate) {
+        this.endCreateDate = endCreateDate;
     }
 
 }

@@ -106,12 +106,12 @@ public class SysOperationServiceImpl implements SysOperationService {
         return pageResult;
     }
 
-	@Override
-	public List<SysOperation> getSysOperation(Long userId) {
-		if(null== userId){
-			 throw new CheckedServiceException(CheckedExceptionBusiness.OPERATION,
-                     CheckedExceptionResult.NULL_PARAM, "用户id为空");
-		}
-		return sysOperationDao.getSysOperation(userId);
-	}
+    @Override
+    public List<SysOperation> getSysOperation(Long userId) {
+        if (null == userId) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.OPERATION,
+                                              CheckedExceptionResult.NULL_PARAM, "用户id为空");
+        }
+        return sysOperationDao.getSysOperation(userId);
+    }
 }

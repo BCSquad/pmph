@@ -701,13 +701,13 @@ public class WordHelper {
 			if (null != type) {
 				switch (type) {
 				case 1:
-					value = "国家";
+					value = "国际";
 					break;
 				case 2:
-					value = "省部";
+					value = "国家";
 					break;
 				case 3:
-					value = "学校";
+					value = "省部";
 					break;
 				default:
 					value = "其他";

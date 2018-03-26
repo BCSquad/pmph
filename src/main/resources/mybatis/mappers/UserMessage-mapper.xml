@@ -467,8 +467,16 @@
 		m.title,
 		m.sender_id,
 		m.is_withdraw,
-		u.realname
-		sendName,
+		 (
+			    CASE
+			      WHEN m.`sender_type` = 0 ||m.`sender_type` = 1
+			      THEN u.realname 
+			      WHEN m.`sender_type` = 2 
+			      THEN wu.`realname` 
+			      WHEN m.`sender_type` = 3 
+			      THEN ou.`realname` 
+			    END
+			  ) sendName,
 		m.gmt_create sendTime
 		FROM
 		user_message m
@@ -476,6 +484,12 @@
 		pmph_user u
 		ON
 		u.id = m.sender_id
+		left join writer_user wu
+		ON
+		wu.id = m.sender_id
+		left join org_user ou
+		ON
+		ou.id = m.sender_id
 		WHERE
 		m.is_deleted = 0
 		AND

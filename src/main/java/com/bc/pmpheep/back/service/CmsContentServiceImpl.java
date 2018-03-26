@@ -21,6 +21,7 @@ import com.bc.pmpheep.back.po.CmsExtra;
 import com.bc.pmpheep.back.po.MaterialExtra;
 import com.bc.pmpheep.back.po.MaterialNoteAttachment;
 import com.bc.pmpheep.back.po.PmphUser;
+import com.bc.pmpheep.back.po.UserMessage;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.util.ArrayUtil;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -36,11 +37,15 @@ import com.bc.pmpheep.back.vo.CmsContentVO;
 import com.bc.pmpheep.general.bean.FileType;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.po.Content;
+import com.bc.pmpheep.general.po.Message;
 import com.bc.pmpheep.general.service.ContentService;
 import com.bc.pmpheep.general.service.FileService;
+import com.bc.pmpheep.general.service.MessageService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.bc.pmpheep.websocket.MyWebSocketHandler;
+import com.bc.pmpheep.websocket.WebScocketMessage;
 import com.mongodb.gridfs.GridFSDBFile;
 
 /**
@@ -86,6 +91,12 @@ public class CmsContentServiceImpl implements CmsContentService {
     WriterPointLogService           writerPointLogService;
     @Autowired
     WriterPointService              writerPointService;
+    @Autowired
+    MyWebSocketHandler              myWebSocketHandler;
+    @Autowired
+    UserMessageService              userMessageService;
+    @Autowired
+    MessageService                  messageService;
 
     @Override
     public CmsContent addCmsContent(CmsContent cmsContent) throws CheckedServiceException {
@@ -269,6 +280,59 @@ public class CmsContentServiceImpl implements CmsContentService {
         cmsContent.setGmtReedit(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                          DateUtil.getCurrentTime()));
         count = cmsContentDao.updateCmsContent(cmsContent);
+        if (count > 0// 内容管理，退回发送消息
+            && Const.CMS_AUTHOR_STATUS_1.shortValue() == cmsContent.getAuthStatus().shortValue()) {
+            // MongoDB 消息插入
+            String categoryName = "文章管理";
+            if (Const.CMS_CATEGORY_ID_2.longValue() == cmsContent.getCategoryId().longValue()) {
+                categoryName = "信息快报管理";
+            } else if (Const.CMS_CATEGORY_ID_3.longValue() == cmsContent.getCategoryId()
+                                                                        .longValue()) {
+                categoryName = "公告管理";
+            }
+            // 退回时发送消息内容
+            StringBuilder sb = new StringBuilder();
+            sb.append(categoryName);
+            sb.append("中您添加的《 ");
+            sb.append(cmsContent.getTitle());
+            sb.append(" 》已被退回 ！");
+            if (StringUtil.notEmpty(cmsContent.getReturnReason())) {
+                sb.append("<br/><br/>退回理由为：");
+                sb.append(cmsContent.getReturnReason());
+            }
+            Message message = messageService.add(new Message(sb.toString()));
+            if (StringUtil.isEmpty(message.getId())) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
+                                                  CheckedExceptionResult.OBJECT_NOT_FOUND, "储存失败!");
+            }
+            String returnContentTitle = "内容管理审核退回";
+            List<UserMessage> userMessageList = new ArrayList<UserMessage>(4); // 系统消息
+            userMessageList.add(new UserMessage(message.getId(), returnContentTitle,
+                                                Const.MSG_TYPE_1, pmphUser.getId(),
+                                                Const.SENDER_TYPE_1, cmsContent.getAuthorId(),
+                                                cmsContent.getAuthorType(), 0L));
+            // 发送消息
+            if (CollectionUtil.isNotEmpty(userMessageList)) {
+                userMessageService.addUserMessageBatch(userMessageList); // 插入消息发送对象数据
+                // websocket发送的id集合
+                List<String> websocketUserIds = new ArrayList<String>();
+                for (UserMessage userMessage : userMessageList) {
+                    websocketUserIds.add(userMessage.getReceiverType() + "_"
+                                         + userMessage.getReceiverId());
+                }
+                // webscokt发送消息
+                if (CollectionUtil.isNotEmpty(websocketUserIds)) {
+                    WebScocketMessage webScocketMessage =
+                    new WebScocketMessage(message.getId(), Const.MSG_TYPE_1, pmphUser.getId(),
+                                          pmphUser.getRealname(), Const.SENDER_TYPE_1,
+                                          Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR,
+                                          returnContentTitle, message.getContent(),
+                                          DateUtil.getCurrentTime());
+                    myWebSocketHandler.sendWebSocketMessageToUser(websocketUserIds,
+                                                                  webScocketMessage);
+                }
+            }
+        }
         // 当文章通过的时候给用户增加积分
         if (Const.CMS_CATEGORY_ID_1.longValue() == cmsContent.getCategoryId().longValue()
             && Const.CMS_AUTHOR_STATUS_2.shortValue() == cmsContent.getAuthStatus().shortValue()
