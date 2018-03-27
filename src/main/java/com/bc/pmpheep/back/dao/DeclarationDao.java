@@ -151,7 +151,7 @@ public interface DeclarationDao {
 	DeclarationOrDisplayVO getDeclarationByIdOrOrgName(Long id);
 	
 	/**
-	 * 通过教材id查询教材结束并且未遴选上的作家
+	 * 通过教材id查询教材申报所有人
 	 * @param materialId
 	 * @return
 	 */
