@@ -36,6 +36,7 @@ import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.RouteUtil;
+import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
 import com.bc.pmpheep.back.vo.PmphGroupMemberVO;
 import com.bc.pmpheep.general.po.Message;
@@ -1272,27 +1273,29 @@ public final class SystemMessageService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"教材为空");
 		}
-		String msg="";
+		String msg=null;
 		if(material.getIsAllTextbookPublished()&&declarations.size()>0){
 			msg="《<font color='red'>" + material.getMaterialName()
 			+ "</font>》教材遴选已结束，未选中，感谢您的支持与参与。";
 		}
-		// 存入消息主体
-		Message message = new Message(msg);
-		message = messageService.add(message);
-		String msg_id = message.getId();
-		for (Declaration declaration : declarations) {
-			// 发送消息给申报者
-			userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
-					declaration.getUserId(), new Short("2"), null));
-			// websocket推送页面消息
-			WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
-					Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msg,
-					DateUtil.getCurrentTime());
-			List<String> userIds = new ArrayList<String>(1);
-			userIds.add("2_" + declaration.getUserId());
-			myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
+		//当消息不为空时才进行下面操作
+		if(StringUtil.notEmpty(msg)){
+			// 存入消息主体
+			Message message = new Message(msg);
+			message = messageService.add(message);
+			String msg_id = message.getId();
+			for (Declaration declaration : declarations) {
+				// 发送消息给申报者
+				userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+						declaration.getUserId(), new Short("2"), null));
+				// websocket推送页面消息
+				WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
+						Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msg,
+						DateUtil.getCurrentTime());
+				List<String> userIds = new ArrayList<String>(1);
+				userIds.add("2_" + declaration.getUserId());
+				myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
+			}
 		}
-		
 	}
 }
