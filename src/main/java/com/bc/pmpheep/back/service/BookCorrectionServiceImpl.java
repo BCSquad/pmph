@@ -100,8 +100,8 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 			// CheckedExceptionResult.NULL_PARAM, "策划编辑未受理");
 		}
 		if (bookCorrection.getIsEditorReplied()) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
-					CheckedExceptionResult.NULL_PARAM, "策划编辑不能再次回复");
+			/*throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
+					CheckedExceptionResult.NULL_PARAM, "策划编辑不能再次回复");*/
 		}
 		bookCorrection = new BookCorrection();
 		bookCorrection.setId(id);

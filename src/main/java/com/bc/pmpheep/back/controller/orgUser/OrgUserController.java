@@ -3,12 +3,15 @@
  */
 package com.bc.pmpheep.back.controller.orgUser;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bc.pmpheep.annotation.LogDetail;
 import com.bc.pmpheep.back.plugin.PageParameter;
@@ -18,6 +21,7 @@ import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
  * <p>
@@ -215,5 +219,18 @@ public class OrgUserController {
 	@RequestMapping(value = "/resetPassword", method = RequestMethod.PUT)
 	public ResponseBean resetPassword(Long id) {
 		return new ResponseBean<>(orgUserService.resetPassword(id));
+	}
+	
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "机构用户管理界面导入Excel文件")
+	@RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+	public ResponseBean importExcel(@RequestParam(name = "file")MultipartFile file){
+		try {
+			return new ResponseBean(orgUserService.importExcel(file));
+		} catch (CheckedServiceException e) {
+            return new ResponseBean(e);
+		} catch (IOException e) {
+			return new ResponseBean(e);
+		}
 	}
 }

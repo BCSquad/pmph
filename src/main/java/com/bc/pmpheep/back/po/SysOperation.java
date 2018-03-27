@@ -47,7 +47,6 @@ public class SysOperation implements java.io.Serializable {
     private String    startTime;
     // 结束时间
     private String    endTime;
-
     private Integer   count;
 
     // Constructors

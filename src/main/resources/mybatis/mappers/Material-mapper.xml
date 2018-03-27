@@ -675,7 +675,7 @@
 			#{parameter.isAllTextbookPublished}
 			AND m.is_force_end =
 			#{parameter.isForceEnd}
-			AND m.is_published = #{parameter.isPublished}
+			<if test="parameter.isPublished != null"> AND m.is_published = #{parameter.isPublished}</if>
 		</if>
 		ORDER BY
 		m.actual_deadline DESC,
@@ -730,7 +730,8 @@
 			#{parameter.isAllTextbookPublished}
 			AND m.is_force_end =
 			#{parameter.isForceEnd}
-			AND m.is_published = #{parameter.isPublished}
+			<if test="parameter.isPublished != null"> AND m.is_published = #{parameter.isPublished}</if>
+
 		</if>
 		ORDER BY
 		m.gmt_create DESC,

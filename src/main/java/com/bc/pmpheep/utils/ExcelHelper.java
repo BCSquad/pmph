@@ -34,6 +34,7 @@ import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.DecExtensionVO;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
@@ -2650,5 +2651,34 @@ public class ExcelHelper {
 		}
 		int[] maxLength = { 2, 12, 2, 12 };
 		return dataStyleSetup(workbook, 1, rowCount, new ColumnProperties(4, maxLength));
+	}
+	
+	public Workbook fromOrgVO(List<OrgVO> dataSource, String sheetName) 
+			throws CheckedServiceException,IllegalAccessException, IllegalArgumentException{
+		if (null == dataSource || dataSource.isEmpty()){
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, 
+					CheckedExceptionResult.NULL_PARAM, "用于导出的数据源为空");
+		}
+		Workbook workbook = new HSSFWorkbook();
+		Sheet sheet = workbook.createSheet(sheetName);
+		Row header = sheet.createRow(0);
+		header.createCell(0).setCellValue("序号");
+		header.createCell(1).setCellValue("机构名称");
+		header.createCell(2).setCellValue("机构账号");
+		header.createCell(3).setCellValue("机构类型");
+		header.createCell(4).setCellValue("管理员名称");
+		headerStyleSetup(workbook, 1);
+		int rowCount = 1;
+		for (OrgVO orgVO : dataSource){
+			Row row = sheet.createRow(rowCount);
+			row.createCell(0).setCellValue(rowCount);
+			row.createCell(1).setCellValue(orgVO.getOrgName());
+			row.createCell(2).setCellValue(orgVO.getUsername());
+			row.createCell(3).setCellValue(orgVO.getOrgTypeName());
+			row.createCell(4).setCellValue(orgVO.getRealname());
+			rowCount++;
+		}
+		int[] maxLength = {2,15,15,10,15};
+		return dataStyleSetup(workbook, 1, rowCount, new ColumnProperties(5, maxLength));
 	}
 }
