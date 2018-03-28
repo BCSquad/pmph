@@ -106,7 +106,6 @@ public class MigrationPlus {
 	 WriterPointRuleService writerPointRuleService;
 	 @Resource
 	 PmphDepartmentService pmphDepartmentService;
-	 
 	 public void start() {
 		 Date begin = new Date();
          logger.info("填充调查问卷测试数据");
