@@ -1701,13 +1701,13 @@ public class ExcelHelper {
 				value = "其他";
 				switch (decCourseConstruction.getType()) {
 				case 1:
-					value = "国家";
+					value = "国际";
 					break;
 				case 2:
-					value = "省部";
+					value = "国家";
 					break;
 				case 3:
-					value = "学校";
+					value = "省部";
 					break;
 				default:
 					break;
@@ -2131,7 +2131,7 @@ public class ExcelHelper {
 				Date date = decMonograph.getMonographDate();
 				value = "";
 				if (!ObjectUtil.isNull(date)) {
-					value = DateUtil.date2Str(date);
+					value = sdf.format(date);
 				}
 				builders.get(index++).append(value);
 				if (value.length() > maxLength[colCount]) {
@@ -2161,7 +2161,7 @@ public class ExcelHelper {
 				Date publish = decMonograph.getPublishDate();
 				value = "";
 				if (!ObjectUtil.isNull(publish)) {
-					value = DateUtil.date2Str(publish);
+					value = sdf.format(publish);
 				}
 				builders.get(index++).append(value);
 				if (value.length() > maxLength[colCount]) {
@@ -2225,7 +2225,7 @@ public class ExcelHelper {
 				Date reward = decPublishReward.getRewardDate();
 				value = "";
 				if (!ObjectUtil.isNull(reward)) {
-					value = DateUtil.date2Str(reward);
+					value = sdf.format(reward);
 				}
 				builders.get(index++).append(value);
 				if (value.length() > maxLength[colCount]) {
@@ -2297,7 +2297,7 @@ public class ExcelHelper {
 				Date publishDate = decSci.getPublishDate();
 				value = "";
 				if (ObjectUtil.notNull(publishDate)) {
-					value = DateUtil.date2Str(publishDate);
+					value = sdf.format(publishDate);
 				}
 				builders.get(index++).append(value);
 				if (value.length() > maxLength[colCount]) {
@@ -2372,7 +2372,7 @@ public class ExcelHelper {
 				Date reward = decClinicalReward.getRewardDate();
 				value = "";
 				if (!ObjectUtil.isNull(reward)) {
-					value = DateUtil.date2Str(reward);
+					value = sdf.format(reward);
 				}
 				builders.get(index++).append(value);
 				if (value.length() > maxLength[colCount]) {
@@ -2452,7 +2452,7 @@ public class ExcelHelper {
 				Date reward = decAcadeReward.getRewardDate();
 				value = "";
 				if (!ObjectUtil.isNull(reward)) {
-					value = DateUtil.date2Str(reward);
+					value = sdf.format(reward);
 				}
 				builders.get(index++).append(value);
 				if (value.length() > maxLength[colCount]) {
