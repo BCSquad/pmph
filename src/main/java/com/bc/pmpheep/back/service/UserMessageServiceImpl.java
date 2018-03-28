@@ -633,12 +633,24 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
             throw new CheckedServiceException(CheckedExceptionBusiness.MESSAGE,
                                               CheckedExceptionResult.NULL_PARAM, "用户消息对象为空！");
         }
-        PmphUser pmphUser = pmphUserService.get(userMessage.getSenderId());
+        String realName = null;
+        if (Const.SENDER_TYPE_0 == userMessage.getSenderType()
+            || Const.SENDER_TYPE_1 == userMessage.getSenderType()) {
+            PmphUser pmphUser = pmphUserService.get(userMessage.getSenderId());
+            realName = pmphUser.getRealname();
+        }
+        if (Const.SENDER_TYPE_2 == userMessage.getSenderType()) {
+            WriterUser writerUser = writerUserService.get(userMessage.getSenderId());
+            realName = writerUser.getRealname();
+        }
+        if (Const.SENDER_TYPE_3 == userMessage.getSenderType()) {
+            OrgUser orgUser = orgUserService.getOrgUserById(userMessage.getSenderId());
+            realName = orgUser.getRealname();
+        }
+
         resultMap.put("msgId", userMessage.getId());// 主键ID
         resultMap.put("title", userMessage.getTitle());// 标题
-        if (ObjectUtil.notNull(pmphUser)) {
-            resultMap.put("senderName", pmphUser.getRealname());// 发送者
-        }
+        resultMap.put("senderName", realName);// 发送者
         resultMap.put("senderDate", userMessage.getGmtCreate());// 发送时间
         Message message = messageService.get(userMessage.getMsgId());// 获取消息内容
         if (ObjectUtil.notNull(message)) {
