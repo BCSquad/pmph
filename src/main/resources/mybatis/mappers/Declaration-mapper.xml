@@ -755,12 +755,20 @@
 	<!-- 根据教材id 查询已结束教材并且未遴选上的作家 -->
 	<select id="getPositionChooseLossByMaterialId" parameterType="java.lang.Long"
 		resultType="Declaration">
-		select d.user_id from declaration d
-			left join material m on m.id=d.material_id
-			left join dec_position dp on dp.declaration_id=d.id
-			where dp.chosen_position=0
-			and m.is_all_textbook_published=true
-			and m.id=#{materialId}	
+		select distinct d.user_id from dec_position dp
+			left join declaration d on d.id=dp.declaration_id 
+			left join material	m on m.id=d.material_id
+			left join textbook	t on t.material_id=m.id
+		where	 m.is_all_textbook_published=true 
+			and m.id=#{materialId} and d.user_id not in 
+			(
+			select distinct d.user_id from dec_position dp
+				left join declaration d on d.id=dp.declaration_id 
+				left join material	m on m.id=d.material_id
+				left join textbook	t on t.material_id=m.id
+			where	 dp.chosen_position > 0
+				and m.is_all_textbook_published=true 
+				and m.id=#{materialId})
 	</select>
 		
 </mapper>
