@@ -37,6 +37,7 @@ import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
@@ -102,6 +103,9 @@ public class TextbookServiceImpl implements TextbookService {
 	
 	@Autowired
 	private DeclarationService declarationService;
+	
+	@Autowired
+	private WriterUserTrendstService writerUserTrendstService;
 	
 	/**
 	 * 
@@ -301,6 +305,88 @@ public class TextbookServiceImpl implements TextbookService {
 				List<Declaration> declaration=declarationService.getPositionChooseLossByMaterialId(materialId);
 				systemMessageService.sendWhenPositionChooserLoss(materialId, declaration);
 			}
+		}
+		// 遍历被遴选人发送动态
+		for (DecPositionPublished decPositionPublished : decPositionPublishedLst) {
+			if (null == decPositionPublished || null == decPositionPublished.getChosenPosition()
+					|| decPositionPublished.getChosenPosition() <= 0) {
+				continue;
+			}
+			// 获取申报表
+			Declaration declarationById = 
+					declarationService.getDeclarationById(decPositionPublished.getDeclarationId());
+			// 获取书籍
+			Textbook textbook = textbookService.getTextbookById(decPositionPublished.getTextbookId());
+			// 作家遴选
+			String showChosenPosition = "";
+			if (decPositionPublished.getChosenPosition() != 0) {
+				switch (decPositionPublished.getChosenPosition()) {
+				case 1:
+					showChosenPosition = "编委";
+					break;
+				case 2:
+					showChosenPosition = "副主编";
+					break;
+				case 3:
+					showChosenPosition = "副主编,编委";
+					break;
+				case 4:
+					showChosenPosition = "主编";
+					break;
+				case 5:
+					showChosenPosition = "主编,编委";
+					break;
+				case 6:
+					showChosenPosition = "主编,副主编";
+					break;
+				case 7:
+					showChosenPosition = "主编,副主编,编委";
+					break;
+				case 8:
+					showChosenPosition = "数字编委";
+					break;
+				case 9:
+					showChosenPosition = "编委,数字编委";
+					break;
+				case 10:
+					showChosenPosition = "副主编,数字编委";
+					break;
+				case 11:
+					showChosenPosition = "副主编,编委,数字编委";
+					break;
+				case 12:
+					showChosenPosition = "主编,数字编委";
+					break;
+				case 13:
+					showChosenPosition = "主编,编委,数字编委";
+					break;
+				case 14:
+					showChosenPosition = "主编,副主编,数字编委";
+					break;
+				case 15:
+					showChosenPosition = "主编,副主编,编委,数字编委";
+					break;
+				default:
+					break;
+				}
+			}
+			// 添加动态信息
+			WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
+			writerUserTrendst.setUserId(declarationById.getUserId());
+			writerUserTrendst.setIsPublic(false);// 自己可见
+			writerUserTrendst.setType(8);
+			String detail = "";
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("title", CheckedExceptionBusiness.MATERIAL);
+			map.put("content", "您已被遴选为《" + textbook.getTextbookName() + "》的" 
+			+ showChosenPosition  + "。");
+			map.put("img", 1);
+			detail = new Gson().toJson(map);
+			writerUserTrendst.setDetail(detail);
+			writerUserTrendst.setCmsContentId(null);
+			writerUserTrendst.setBookId(declarationById.getMaterialId());
+			writerUserTrendst.setBookCommentId(null);
+			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 		}
 		return count;
 	}

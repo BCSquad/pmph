@@ -714,10 +714,12 @@ public final class SystemMessageService {
 	 * @createDate 2018年1月22日 上午10:12:34
 	 * @param declarationId
 	 * @param isPass
+	 * @param returnCause 退回原因
+	 * @param onlineProgress 4 == 退回给学校，5 == 退回给个人
 	 * @throws CheckedServiceException
 	 * @throws IOException
 	 */
-	public void sendWhenDeclarationFormAuditToOrgUser(Long declarationId, boolean isPass, String returnCause)
+	public void sendWhenDeclarationFormAuditToOrgUser(Long declarationId, boolean isPass, String returnCause, Integer onlineProgress)
 			throws CheckedServiceException, IOException {
 		// 获取申报表
 		Declaration declaration = declarationService.getDeclarationById(declarationId);
@@ -736,51 +738,76 @@ public final class SystemMessageService {
 			msgContent = "恭喜！您校[" + declaration.getRealname() + "]提交的《<font color='red'>" + material.getMaterialName()
 					+ "</font>》申报表已通过[<font color='red'>出版社</font>]审核";
 		} else { // 退回
-			msgContent = "抱歉！您校[" + declaration.getRealname() + "]提交的《<font color='red'>" + material.getMaterialName()
-					+ "</font>》申报表被[<font color='red'>出版社</font>]退回，退回原因：" + returnCause 
-					+ "，请核对后重试";
+			// 出版社退回给学校==4
+			if (4 == onlineProgress.intValue()) {
+				msgContent = "抱歉！您校[" + declaration.getRealname() + "]提交的《<font color='red'>" + material.getMaterialName()
+						+ "</font>》申报表被[<font color='red'>出版社</font>]退回，退回原因：" + returnCause 
+						+ "，请核对后重试";
+			} else if (5 == onlineProgress.intValue()) { // 出版社退回给个人==5
+				msgContent = "抱歉！您提交的《<font color='red'>" + material.getMaterialName()
+						+ "</font>》申报表被[<font color='red'>出版社</font>]退回，退回原因：" + returnCause 
+						+ "，请您核对后重试";
+			}
 		}
-		// 获取机构用户
-		List<Long> orgIds = new ArrayList<Long>(1);
-		if (CollectionUtil.isEmpty(orgIds) || orgIds.size() == 0) {
-			orgIds.add(declaration.getOrgId());
-		}
-		List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(orgIds);
-		// 存入消息主体
-		Message message = new Message(msgContent);
-		message = messageService.add(message);
-		String msg_id = message.getId();
-		// 消息集合
-		List<UserMessage> userMessageList = new ArrayList<UserMessage>();
-		List<String> userIds = new ArrayList<String>();
-		for (OrgUser orgUser : orgUserList) {
-			userMessageList.add(new UserMessage(msg_id, // 消息内容id
+		WebScocketMessage webScocketMessage = null;
+		List<String> userIds = null;
+		if (4 == onlineProgress.intValue()) {
+			// 获取机构用户
+			List<Long> orgIds = new ArrayList<Long>(1);
+			if (CollectionUtil.isEmpty(orgIds) || orgIds.size() == 0) {
+				orgIds.add(declaration.getOrgId());
+			}
+			List<OrgUser> orgUserList = orgUserService.getOrgUserListByOrgIds(orgIds);
+			// 存入消息主体
+			Message message = new Message(msgContent);
+			message = messageService.add(message);
+			String msg_id = message.getId();
+			// 消息集合
+			List<UserMessage> userMessageList = new ArrayList<UserMessage>();
+			userIds = new ArrayList<String>();
+			for (OrgUser orgUser : orgUserList) {
+				userMessageList.add(new UserMessage(msg_id, // 消息内容id
+						messageTitle, // 消息标题
+						new Short("0"), // 消息类型
+						0L, // 发送者id 0- 系统
+						new Short("0"), // 发送者类型 0- 系统
+						orgUser.getId(), // 接收者id
+						new Short("3"), // 接收者类型 （3- 机构用户 ）
+						null // 教材id
+				));
+				userIds.add("3_" + orgUser.getId().toString());
+			}
+	
+			// 发送消息
+			// 批量插入消息
+			userMessageService.addUserMessageBatch(userMessageList);
+			// websocket推送页面消息
+			webScocketMessage = new WebScocketMessage(msg_id, // 消息id
+					Const.MSG_TYPE_0, // 消息类型 0=系统消息/1=站内群发/2=站内私信(作家和机构用户不能群发)/3 小组互动
+					0L, // 发送者id 0=系统/其他=用户id
+					"系统", // 发送者姓名
+					Const.SENDER_TYPE_0, // 发送者类型 0=系统/1=社内用户/2=作家用户/3=机构用户
+					Const.SEND_MSG_TYPE_0, // 发送类型 0 新增 1 撤回 2 删除
+					"", // 头像
 					messageTitle, // 消息标题
-					new Short("0"), // 消息类型
-					0L, // 发送者id 0- 系统
-					new Short("0"), // 发送者类型 0- 系统
-					orgUser.getId(), // 接收者id
-					new Short("3"), // 接收者类型 （3- 机构用户 ）
-					null // 教材id
-			));
-			userIds.add("3_" + orgUser.getId().toString());
+					msgContent, // 消息内容
+					DateUtil.getCurrentTime() // 发送时间
+			);
+		} else if (5 == onlineProgress.intValue()) {
+			// 存入消息主体
+			Message message = new Message(msgContent);
+			message = messageService.add(message);
+			String msg_id = message.getId();
+			// 发送消息
+			userMessageService.addUserMessage(new UserMessage(msg_id, messageTitle, new Short("0"), 0L, new Short("0"),
+					declaration.getUserId(), new Short("2"), null));
+			// websocket推送页面消息
+			webScocketMessage = new WebScocketMessage(msg_id, Const.MSG_TYPE_0, 0L, "系统",
+					Const.SENDER_TYPE_0, Const.SEND_MSG_TYPE_0, RouteUtil.DEFAULT_USER_AVATAR, messageTitle, msgContent,
+					DateUtil.getCurrentTime());
+			userIds = new ArrayList<String>(1);
+			userIds.add("2_" + declaration.getUserId());
 		}
-
-		// 发送消息
-		// 批量插入消息
-		userMessageService.addUserMessageBatch(userMessageList);
-		// websocket推送页面消息
-		WebScocketMessage webScocketMessage = new WebScocketMessage(msg_id, // 消息id
-				Const.MSG_TYPE_0, // 消息类型 0=系统消息/1=站内群发/2=站内私信(作家和机构用户不能群发)/3 小组互动
-				0L, // 发送者id 0=系统/其他=用户id
-				"系统", // 发送者姓名
-				Const.SENDER_TYPE_0, // 发送者类型 0=系统/1=社内用户/2=作家用户/3=机构用户
-				Const.SEND_MSG_TYPE_0, // 发送类型 0 新增 1 撤回 2 删除
-				"", // 头像
-				messageTitle, // 消息标题
-				msgContent, // 消息内容
-				DateUtil.getCurrentTime() // 发送时间
-		);
 		myWebSocketHandler.sendWebSocketMessageToUser(userIds, webScocketMessage);
 	}
 

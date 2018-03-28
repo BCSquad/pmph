@@ -167,7 +167,7 @@ public class BookController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "图书同步")
 	@RequestMapping(value = "/allsynchronization", method = RequestMethod.GET)
-	public ResponseBean allsynchronization(Integer type) {
+	public synchronized ResponseBean allsynchronization(Integer type) {
 		return new ResponseBean(bookService.AllSynchronization(type));
 	}
 
