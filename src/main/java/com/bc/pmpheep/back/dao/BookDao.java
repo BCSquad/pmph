@@ -101,7 +101,7 @@ public interface BookDao {
 	 *            必须包含主键ID
 	 * @return Book
 	 */
-	Book getBookByVn(String vn);
+	Book getBookByVn2(String vn);
 
 	/**
 	 * 
