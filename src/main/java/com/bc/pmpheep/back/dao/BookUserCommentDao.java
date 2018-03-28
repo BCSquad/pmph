@@ -120,4 +120,14 @@ public interface BookUserCommentDao {
 	 * @return
 	 */
 	List<BookUserCommentVO> listBookUserCommentAdmin(PageParameter<BookUserCommentVO> pageParameter);
+	/**
+	 * 
+	 * 
+	 * 功能描述：获取最小推荐排序
+	 *
+	 * @param bookId
+	 * @return
+	 *
+	 */
+	Integer getMinSort(Long bookId);
 }

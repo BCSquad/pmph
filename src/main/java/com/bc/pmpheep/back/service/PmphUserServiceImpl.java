@@ -117,6 +117,18 @@ public class PmphUserServiceImpl implements PmphUserService {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
         }
+        if (!StringUtil.isEmpty(pmphUser.getEmail())) {
+			if (!ValidatUtil.checkEmail(pmphUser.getEmail())) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+						CheckedExceptionResult.ILLEGAL_PARAM, "邮箱不符合规范");
+			}
+		}
+		if (!StringUtil.isEmpty(pmphUser.getHandphone())) {
+			if (!ValidatUtil.checkMobileNumber(pmphUser.getHandphone())) {
+				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+						CheckedExceptionResult.ILLEGAL_PARAM, "手机号码不符合规范");
+			}
+		}
         // 头像文件不为空
         if (null != newAvatar) {
             if (StringUtil.notEmpty(pmphUser.getAvatar())) {

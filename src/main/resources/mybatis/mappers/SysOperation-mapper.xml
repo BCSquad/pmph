@@ -94,7 +94,7 @@
 								 )
 						</if>
 						<if test="parameter.startTime !=null and parameter.startTime !='' ">
-							and so.`operate_date` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+							and so.`operate_date` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s')
 							
 						</if>
 						<if test="parameter.endTime !=null and parameter.endTime !='' ">
@@ -113,7 +113,7 @@
 						)
 				</if>
 				<if test="parameter.startTime !=null and parameter.startTime !='' ">
-					and so.`operate_date` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s') 
+					and so.`operate_date` &gt;= str_to_date(#{parameter.startTime},'%Y-%m-%d %H:%i:%s')
 				</if>
 				<if test="parameter.endTime !=null and parameter.endTime !='' ">
 					and so.`operate_date` &lt;= str_to_date(#{parameter.endTime},'%Y-%m-%d %H:%i:%s')
