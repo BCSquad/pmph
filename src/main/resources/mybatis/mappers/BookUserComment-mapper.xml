@@ -307,7 +307,7 @@
 		ORDER BY c.gmt_create DESC
 		LIMIT #{start},#{pageSize}
 	</select>
-	<select id="getMinSort">
+	<select id="getMinSort" resultType="java.lang.Integer">
 		SELECT MIN(c.sort) FROM book_user_comment c WHERE
 		c.book_id=#{bookId}
 	</select>
