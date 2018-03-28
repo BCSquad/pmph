@@ -53,14 +53,14 @@ public class InfoWorking extends BaseWorking implements ErpWorking {
 		return vns;
 	}
 
-	public String[] listBook(String bookNum) {
-		JSONArray bookInfo = listBook("i_bookinfo", bookNum);
-		String[] vns = new String[bookInfo.size()];
-		for (int i = 0; i < bookInfo.size(); i++) {
-			JSONObject job = bookInfo.getJSONObject(i);
-			vns[i] = job.getString("editionnum");
-		}
-		return vns;
+	public JSONArray listBook(String bookNum) {
+		return  listBook("i_bookinfo", bookNum);
+//		String[] vns = new String[bookInfo.size()];
+//		for (int i = 0; i < bookInfo.size(); i++) {
+//			JSONObject job = bookInfo.getJSONObject(i);
+//			vns[i] = job.getString("editionnum");
+//		}
+//		return vns;
 	}
 
 	/**
