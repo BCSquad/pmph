@@ -158,7 +158,7 @@ public class MigrationBook {
 				materNamesAndIds.put(materName, materId);
 			}
 			//更新书籍
-			Book book = bookDao.getBookByBookVn(bookVn);
+			Book book = bookDao.getBookByVn2(bookVn);
 			if(null != book ){
 				book.setMaterialId(materId);
 				book.setSn(bookSn);

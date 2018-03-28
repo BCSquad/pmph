@@ -389,7 +389,7 @@
 	</select>
 	
 	<!-- 根据vn查询一个Book -->
-	<select id="getBookByVn" parameterType="java.lang.String" resultType="Book">
+	<select id="getBookByVn2" parameterType="java.lang.String" resultType="Book">
 		select * from book where vn = #{vn} ;
 	</select>
 	
