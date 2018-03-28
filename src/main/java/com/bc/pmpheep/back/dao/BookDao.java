@@ -93,6 +93,15 @@ public interface BookDao {
 	 * @return Book
 	 */
 	Book getBookByIsbn(String isbn);
+	
+	/**
+	 * 查询一个 Book 通过vn
+	 * 
+	 * @param Book
+	 *            必须包含主键ID
+	 * @return Book
+	 */
+	Book getBookByVn(String vn);
 
 	/**
 	 * 

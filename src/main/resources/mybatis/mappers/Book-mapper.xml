@@ -387,6 +387,12 @@
 		resultType="Book">
 		select * from book where isbn=#{isbn} ;
 	</select>
+	
+	<!-- 根据vn查询一个Book -->
+	<select id="getBookByVn" parameterType="java.lang.String" resultType="Book">
+		select * from book where vn = #{vn} ;
+	</select>
+	
 	<insert id="addBookSupport">
 		insert into book_support (book_id,support_id) VALUES
 		(#{id},#{bookId})
