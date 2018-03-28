@@ -386,7 +386,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			declarationCon.setReturnCause(returnCause);
 			declarationDao.updateDeclaration(declarationCon);
 			// 添加动态信息
-			WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
+			/*WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
 			writerUserTrendst.setUserId(declarationCon.getUserId());
 			writerUserTrendst.setIsPublic(false);// 自己可见
 			writerUserTrendst.setType(8);
@@ -401,9 +401,9 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendst.setCmsContentId(null);
 			writerUserTrendst.setBookId(declarationCon.getMaterialId());
 			writerUserTrendst.setBookCommentId(null);
-			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
+			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);*/
 			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false, returnCause);
+			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false, returnCause, onlineProgress);
 			// 获取审核进度是5并且已经通过审核单位并且不是提交到出版社0则被退回给个人
 			// 提交审核单位，审核单位已经通过，出版社退回给个人操作
 		} else if (5 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress()
@@ -441,7 +441,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendst.setBookCommentId(null);
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			// 发送系统消息
-			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false, returnCause);
+			systemMessageService.sendWhenDeclarationFormAuditToOrgUser(declarationCon.getId(), false, returnCause, onlineProgress);
 			// 获取审核进度是5并且机构id为出版社0则被退回给个人
 			// 提交到出版社，出版社退回给个人操作
 		} else if (5 == onlineProgress.intValue() && 0 == declarationCon.getOrgId()) {

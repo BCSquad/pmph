@@ -295,7 +295,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 							CheckedExceptionResult.NULL_PARAM, "扩展项名称为空");
 				}
-				if (materialExtension.getExtensionName().length() > 20) {
+				if (materialExtension.getExtensionName().length() > 100) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 							CheckedExceptionResult.NULL_PARAM, "扩展项名称太长");
 				}
@@ -788,6 +788,11 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					pageParameter.getParameter().setIsAllTextbookPublished(false);
 					pageParameter.getParameter().setIsForceEnd(false);
 					pageParameter.getParameter().setIsPublished(true);
+					break;
+				case "未结束":
+					pageParameter.getParameter().setIsAllTextbookPublished(false);
+					pageParameter.getParameter().setIsForceEnd(false);
+					pageParameter.getParameter().setIsPublished(null);
 					break;
 
 				default:

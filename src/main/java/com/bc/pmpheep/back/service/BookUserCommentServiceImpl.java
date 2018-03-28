@@ -161,10 +161,15 @@ public class BookUserCommentServiceImpl extends BaseService implements BookUserC
 			bookUserComment.setIsHot(isHot);
 			bookUserComment.setIsPromote(isPromote);
 			bookUserComment.setIsStick(isStick);
+			if (null != isStick && isStick) {
+				Long bookId = bookUserCommentDao.getBookUserCommentById(id).getBookId();
+				sort = bookUserCommentDao.getMinSort(bookId) - 1;
+			}
 			bookUserComment.setSort(sort);
 			bookUserComment.setSortHot(sortHot);
 			bookUserComment.setSortPromote(sortPromote);
 			num += bookUserCommentDao.updateBookUserComment(bookUserComment);
+
 		}
 		if (num > 0) {
 			result = "SUCCESS";

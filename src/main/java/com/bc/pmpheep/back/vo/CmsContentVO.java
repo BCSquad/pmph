@@ -43,9 +43,9 @@ public class CmsContentVO implements Serializable {
     // 审核通过时间
     private Timestamp authDate;
     // 发布开始时间
-    private Timestamp startAuthDate;
+    private String    startAuDate;
     // 发布结束时间
-    private Timestamp endAuthDate;
+    private String    endAuDate;
     // 审核状态
     private Short     authStatus;
     // 条件分页总条数分页查询
@@ -63,9 +63,9 @@ public class CmsContentVO implements Serializable {
     // 创建时间
     private Timestamp gmtCreate;
     // 创建开始时间
-    private Timestamp startGmtCreate;
+    private String    startCreateDate;
     // 创建结束时间
-    private Timestamp endGmtCreate;
+    private String    endCreateDate;
     // 真实姓名
     private String    realname;
     // 教材id
@@ -452,62 +452,6 @@ public class CmsContentVO implements Serializable {
     }
 
     /**
-     * @return the startAuthDate
-     */
-    public Timestamp getStartAuthDate() {
-        return startAuthDate;
-    }
-
-    /**
-     * @param startAuthDate the startAuthDate to set
-     */
-    public void setStartAuthDate(Timestamp startAuthDate) {
-        this.startAuthDate = startAuthDate;
-    }
-
-    /**
-     * @return the endAuthDate
-     */
-    public Timestamp getEndAuthDate() {
-        return endAuthDate;
-    }
-
-    /**
-     * @param endAuthDate the endAuthDate to set
-     */
-    public void setEndAuthDate(Timestamp endAuthDate) {
-        this.endAuthDate = endAuthDate;
-    }
-
-    /**
-     * @return the startGmtCreate
-     */
-    public Timestamp getStartGmtCreate() {
-        return startGmtCreate;
-    }
-
-    /**
-     * @param startGmtCreate the startGmtCreate to set
-     */
-    public void setStartGmtCreate(Timestamp startGmtCreate) {
-        this.startGmtCreate = startGmtCreate;
-    }
-
-    /**
-     * @return the endGmtCreate
-     */
-    public Timestamp getEndGmtCreate() {
-        return endGmtCreate;
-    }
-
-    /**
-     * @param endGmtCreate the endGmtCreate to set
-     */
-    public void setEndGmtCreate(Timestamp endGmtCreate) {
-        this.endGmtCreate = endGmtCreate;
-    }
-
-    /**
      * @return the platform
      */
     public Integer getPlatform() {
@@ -520,4 +464,61 @@ public class CmsContentVO implements Serializable {
     public void setPlatform(Integer platform) {
         this.platform = platform;
     }
+
+    /**
+     * @return the startAuDate
+     */
+    public String getStartAuDate() {
+        return startAuDate;
+    }
+
+    /**
+     * @param startAuDate the startAuDate to set
+     */
+    public void setStartAuDate(String startAuDate) {
+        this.startAuDate = startAuDate;
+    }
+
+    /**
+     * @return the endAuDate
+     */
+    public String getEndAuDate() {
+        return endAuDate;
+    }
+
+    /**
+     * @param endAuDate the endAuDate to set
+     */
+    public void setEndAuDate(String endAuDate) {
+        this.endAuDate = endAuDate;
+    }
+
+    /**
+     * @return the startCreateDate
+     */
+    public String getStartCreateDate() {
+        return startCreateDate;
+    }
+
+    /**
+     * @param startCreateDate the startCreateDate to set
+     */
+    public void setStartCreateDate(String startCreateDate) {
+        this.startCreateDate = startCreateDate;
+    }
+
+    /**
+     * @return the endCreateDate
+     */
+    public String getEndCreateDate() {
+        return endCreateDate;
+    }
+
+    /**
+     * @param endCreateDate the endCreateDate to set
+     */
+    public void setEndCreateDate(String endCreateDate) {
+        this.endCreateDate = endCreateDate;
+    }
+
 }
