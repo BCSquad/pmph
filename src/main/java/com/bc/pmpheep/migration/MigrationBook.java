@@ -73,7 +73,6 @@ public class MigrationBook {
 	public void start() {
 		clearBook();
 	}
-
 	protected void clearBook() {
 		StringBuilder sns = new StringBuilder();
 		InputStream is;
