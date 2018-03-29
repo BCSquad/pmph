@@ -501,7 +501,7 @@
 	<select id="getTopicTextVO" parameterType="java.lang.Long"
 		resultType="TopicTextVO">
 		SELECT
-		t.*, u.realname,u.username,a.bank,a.account_number
+		t.*, u.realname editorName,u.username,a.bank,a.account_number
 		FROM
 		topic t
 		LEFT JOIN pmph_user u ON u.id = t.editor_id

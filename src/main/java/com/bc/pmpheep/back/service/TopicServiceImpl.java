@@ -58,6 +58,8 @@ public class TopicServiceImpl implements TopicService {
 	TopicWriertService topicWriertService;
 	@Autowired
 	WriterUserTrendstService writerUserTrendstService;
+	@Autowired
+	TopicSimilarBookService topicSimilarBookService;
 
 	@Override
 	public PageResult<TopicOPtsManagerVO> listOpts(String sessionId, PageParameter<TopicOPtsManagerVO> pageParameter)
@@ -260,7 +262,7 @@ public class TopicServiceImpl implements TopicService {
 			if (3 == topic.getAuthProgress()) {
 				Map<String, Object> detail = new HashMap<String, Object>();
 				detail.put("title", CheckedExceptionBusiness.TOPIC);
-				detail.put("content", "您的选题《"+topicDao.get(topic.getId()).getBookname()+"》已经通过。");
+				detail.put("content", "您的选题《" + topicDao.get(topic.getId()).getBookname() + "》已经通过。");
 				detail.put("img", 1);
 				writerUserTrendst.setDetail(new Gson().toJson(detail));
 				// 创建本版号并将本版号放入数据中
@@ -305,7 +307,7 @@ public class TopicServiceImpl implements TopicService {
 			} else {
 				Map<String, Object> detail = new HashMap<String, Object>();
 				detail.put("title", CheckedExceptionBusiness.TOPIC);
-				detail.put("content", "您的选题《"+topicDao.get(topic.getId()).getBookname()+"》未通过。");
+				detail.put("content", "您的选题《" + topicDao.get(topic.getId()).getBookname() + "》未通过。");
 				detail.put("img", 2);
 				writerUserTrendst.setDetail(new Gson().toJson(detail));
 			}
@@ -330,6 +332,61 @@ public class TopicServiceImpl implements TopicService {
 		TopicTextVO topicTextVO = topicDao.getTopicTextVO(id);
 		topicTextVO.setTopicExtra(topicExtraService.getTopicExtraByTopicId(id));
 		topicTextVO.setTopicWriters(topicWriertService.listTopicWriterByTopicId(id));
+		topicTextVO.setTopicSimilarBooks(topicSimilarBookService.listTopicSimilarBookByTopicId(id));
+		Integer pp = topicTextVO.getPositionProfession();
+		Integer degree = topicTextVO.getDegree();
+		if (ObjectUtil.notNull(degree)) {
+			switch (degree) {
+			case 0:
+				topicTextVO.setDegreeName("博士");
+				break;
+			case 1:
+				topicTextVO.setDegreeName("硕士");
+				break;
+			case 2:
+				topicTextVO.setDegreeName("学士");
+				break;
+			case 3:
+				topicTextVO.setDegreeName("其他");
+				break;
+
+			default:
+				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+						"没有这个文凭");
+			}
+		}
+		if (ObjectUtil.notNull(pp)) {
+			switch (pp) {
+			case 0:
+				topicTextVO.setPositionProfessionName("中科院院士");
+				break;
+			case 1:
+				topicTextVO.setPositionProfessionName("工程院院士");
+				break;
+			case 2:
+				topicTextVO.setPositionProfessionName("博导");
+				break;
+			case 3:
+				topicTextVO.setPositionProfessionName("硕导");
+				break;
+			case 4:
+				topicTextVO.setPositionProfessionName("正高");
+				break;
+			case 5:
+				topicTextVO.setPositionProfessionName("副高");
+				break;
+			case 6:
+				topicTextVO.setPositionProfessionName("中级");
+				break;
+			case 7:
+				topicTextVO.setPositionProfessionName("其他");
+				break;
+
+			default:
+				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+						"没有这个职务");
+			}
+		}
 		switch (topicTextVO.getRank()) {
 		case 0:
 			topicTextVO.setRankType("低");
@@ -352,17 +409,19 @@ public class TopicServiceImpl implements TopicService {
 		case 1:
 			topicTextVO.setSourceType("编辑策划");
 			break;
-
 		case 2:
+			topicTextVO.setSourceType("修订");
+			break;
+		case 4:
 			topicTextVO.setSourceType("专家策划");
 			break;
 		case 3:
 			topicTextVO.setSourceType("离退休编审策划");
 			break;
-		case 4:
+		case 5:
 			topicTextVO.setSourceType("上级交办");
 			break;
-		case 5:
+		case 6:
 			topicTextVO.setSourceType("作者投稿");
 			break;
 
@@ -392,19 +451,28 @@ public class TopicServiceImpl implements TopicService {
 		case 1:
 			topicTextVO.setTypeName("基础理论");
 			break;
-		case 2:
+		case 3:
 			topicTextVO.setTypeName("论文集");
 			break;
-		case 3:
-			topicTextVO.setTypeName("科普");
+		case 2:
+			topicTextVO.setTypeName("教材");
 			break;
 		case 4:
-			topicTextVO.setTypeName("应用技术");
+			topicTextVO.setTypeName("图谱");
 			break;
 		case 5:
-			topicTextVO.setTypeName("工具书");
+			topicTextVO.setTypeName("科普");
+			break;
+		case 7:
+			topicTextVO.setTypeName("教辅");
 			break;
 		case 6:
+			topicTextVO.setTypeName("应用技术");
+			break;
+		case 8:
+			topicTextVO.setTypeName("工具书");
+			break;
+		case 9:
 			topicTextVO.setTypeName("其他");
 			break;
 
@@ -602,7 +670,7 @@ public class TopicServiceImpl implements TopicService {
 
 	@Override
 	public PageResult<TopicDeclarationVO> listMyTopic(List<Long> authProgress,
-			PageParameter<TopicDeclarationVO> pageParameter,Long editorId) {
+			PageParameter<TopicDeclarationVO> pageParameter, Long editorId) {
 		if (CollectionUtil.isEmpty(authProgress)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
 					"选题申报状态不对");
@@ -610,15 +678,15 @@ public class TopicServiceImpl implements TopicService {
 		PageResult<TopicDeclarationVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		Integer total = topicDao.listMyTopicTotal(authProgress, pageParameter.getParameter().getBookname(),
-				pageParameter.getParameter().getSubmitTime(),pageParameter.getParameter().getIsDirectorHandling(),
-				pageParameter.getParameter().getIsEditorHandling(),pageParameter.getParameter().getIsOptsHandling()
-				,editorId);
+				pageParameter.getParameter().getSubmitTime(), pageParameter.getParameter().getIsDirectorHandling(),
+				pageParameter.getParameter().getIsEditorHandling(), pageParameter.getParameter().getIsOptsHandling(),
+				editorId);
 		if (total > 0) {
 			List<TopicDeclarationVO> list = topicDao.listMyTopic(authProgress, pageParameter.getPageSize(),
 					pageParameter.getStart(), pageParameter.getParameter().getBookname(),
-					pageParameter.getParameter().getSubmitTime(),pageParameter.getParameter().getIsDirectorHandling(),
-					pageParameter.getParameter().getIsEditorHandling(),pageParameter.getParameter().getIsOptsHandling()
-					,editorId);
+					pageParameter.getParameter().getSubmitTime(), pageParameter.getParameter().getIsDirectorHandling(),
+					pageParameter.getParameter().getIsEditorHandling(),
+					pageParameter.getParameter().getIsOptsHandling(), editorId);
 			list = addState(list);
 			pageResult.setRows(list);
 		}
