@@ -355,12 +355,6 @@
 			<if test="materialId != null">
 				material_id=#{materialId}
 			</if>
-			<if test="gmtCreate != null ">
-				gmt_create=#{gmtCreate},
-			</if>
-			<if test=" gmtUpdate != null ">
-				gmt_update=#{gmtUpdate},
-			</if>
 		</set>
 		where
 		id=#{id} ;

@@ -199,7 +199,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 			try {
 //				System.out.println("第"+(i+1)+"条数据，本版号为"+vns[i]+"  共"+vns.length+"条");
 				ot = PostBusyAPI(vns[i]);
-				if ("1".equals(ot.getJSONObject("RESP").getString("CODE"))) {
+				if (null != ot && "1".equals(ot.getJSONObject("RESP").getString("CODE"))) {
 					JSONArray array = ot.getJSONObject("RESP").getJSONObject("responseData").getJSONArray("results");
 					if (array.size() > 0) {
 						Book book = BusyResJSONToModel(array.getJSONObject(0), null);
