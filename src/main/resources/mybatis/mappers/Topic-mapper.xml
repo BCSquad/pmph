@@ -1000,7 +1000,7 @@
 		LEFT JOIN writer_user c ON a.user_id =c.id
 		WHERE a.editor_id =#{userId}
 		AND a.is_editor_handling = TRUE
-		ANDa.is_rejected_by_editor =FALSE 
+		AND	a.is_rejected_by_editor =FALSE 
 		AND a.auth_progress in(1,2,3)
 		ORDER BY a.submit_time DESC) t
 	</select>
