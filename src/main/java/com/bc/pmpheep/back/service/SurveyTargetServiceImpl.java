@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.service;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,8 +160,17 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问卷结束时间为空");
         }
-        if (DateUtil.str2Timestam(surveyTargetVO.getStartTime()).getTime() > DateUtil.str2Timestam(surveyTargetVO.getEndTime())
-                                                                                     .getTime()) {
+        Timestamp statTime = DateUtil.str2Timestam(surveyTargetVO.getStartTime());
+        Timestamp endTime = DateUtil.str2Timestam(surveyTargetVO.getEndTime());
+        if (statTime.getTime() > DateUtil.getCurrentTime().getTime()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷开始时间不能大于今天");
+        }
+        if (endTime.getTime() < DateUtil.getCurrentTime().getTime()) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
+                                              CheckedExceptionResult.NULL_PARAM, "问卷结束时间不能小于今天");
+        }
+        if (statTime.getTime() > endTime.getTime()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.ILLEGAL_PARAM, "开始日期不能大于结束日期");
         }
