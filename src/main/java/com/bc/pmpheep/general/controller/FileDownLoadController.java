@@ -18,12 +18,12 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.shiro.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +54,13 @@ import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.SurveyQuestionAnswerService;
 import com.bc.pmpheep.back.service.TextbookService;
+import com.bc.pmpheep.back.sessioncontext.SessionContext;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookCorrectionTrackVO;
 import com.bc.pmpheep.back.vo.DeclarationResultBookVO;
@@ -1072,7 +1075,8 @@ public class FileDownLoadController {
 			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, 
 					CheckedExceptionResult.NULL_PARAM, "参数不能为空");
 		}
-		HttpSession session = request.getSession();
+		String sessionId = CookiesUtil.getSessionId(request);
+		HttpSession session = SessionContext.getSession(sessionId);
 		List<OrgVO> list = (List<OrgVO>) session.getAttribute(uuid);
 		if (null == list || list.isEmpty()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, 
