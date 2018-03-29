@@ -4,7 +4,14 @@
 package com.bc.pmpheep.back.controller.orgUser;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +27,7 @@ import com.bc.pmpheep.back.po.OrgUser;
 import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
+import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
@@ -224,13 +232,20 @@ public class OrgUserController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "机构用户管理界面导入Excel文件")
 	@RequestMapping(value = "/importExcel", method = RequestMethod.POST)
-	public ResponseBean importExcel(@RequestParam(name = "file")MultipartFile file){
+	public ResponseBean importExcel(@RequestParam(name = "file")MultipartFile file, HttpServletRequest request){
+		Map<String, Object> map = new HashedMap();
+		HttpSession session = request.getSession();
+        String uuid = UUID.randomUUID().toString().replace("-", "").toLowerCase();
 		try {
-			return new ResponseBean(orgUserService.importExcel(file));
+		List<OrgVO> list = orgUserService.importExcel(file);
+		map.put("uuid", uuid);
+		map.put("list", list);
+		session.setAttribute(uuid, list);
 		} catch (CheckedServiceException e) {
-            return new ResponseBean(e);
+			return new ResponseBean(e);
 		} catch (IOException e) {
 			return new ResponseBean(e);
 		}
+		return new ResponseBean(map);
 	}
 }

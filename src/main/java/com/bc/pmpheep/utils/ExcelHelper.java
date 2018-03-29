@@ -840,7 +840,7 @@ public class ExcelHelper {
 					case "本套上版教材参编情况": {
 						Cell r1cell = r1.createCell(count);
 						r1cell.setCellValue(headerName);
-						region = new CellRangeAddress(0, 0, count, count + 1);
+						region = new CellRangeAddress(0, 0, count, count + 4);
 						sheet.addMergedRegion(region);
 						Cell r2cell = r2.createCell(count);
 						r2cell.setCellValue("教材名称");
@@ -848,6 +848,18 @@ public class ExcelHelper {
 						count++;
 						r2cell = r2.createCell(count);
 						r2cell.setCellValue("编写职务");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("是否数字编辑");
+						sheet.setColumnWidth(count, 7 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("出版单位");
+						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("出版时间");
 						sheet.setColumnWidth(count, 5 * 512);
 						count++;
 						break;
@@ -893,7 +905,7 @@ public class ExcelHelper {
 					case "人卫社教材编写情况": {
 						Cell r1cell = r1.createCell(count);
 						r1cell.setCellValue(headerName);
-						region = new CellRangeAddress(0, 0, count, count + 4);
+						region = new CellRangeAddress(0, 0, count, count + 5);
 						sheet.addMergedRegion(region);
 						Cell r2cell = r2.createCell(count);
 						r2cell.setCellValue("教材名称");
@@ -906,6 +918,10 @@ public class ExcelHelper {
 						r2cell = r2.createCell(count);
 						r2cell.setCellValue("编写职务");
 						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("是否数字编辑");
+						sheet.setColumnWidth(count, 7 * 512);
 						count++;
 						r2cell = r2.createCell(count);
 						r2cell.setCellValue("出版时间");
@@ -920,7 +936,7 @@ public class ExcelHelper {
 					case "其他社教材编写情况": {
 						Cell r1cell = r1.createCell(count);
 						r1cell.setCellValue(headerName);
-						region = new CellRangeAddress(0, 0, count, count + 5);
+						region = new CellRangeAddress(0, 0, count, count + 6);
 						sheet.addMergedRegion(region);
 						Cell r2cell = r2.createCell(count);
 						r2cell.setCellValue("教材名称");
@@ -933,6 +949,10 @@ public class ExcelHelper {
 						r2cell = r2.createCell(count);
 						r2cell.setCellValue("编写职务");
 						sheet.setColumnWidth(count, 5 * 512);
+						count++;
+						r2cell = r2.createCell(count);
+						r2cell.setCellValue("是否数字编辑");
+						sheet.setColumnWidth(count, 7 * 512);
 						count++;
 						r2cell = r2.createCell(count);
 						r2cell.setCellValue("出版社");
@@ -1553,7 +1573,7 @@ public class ExcelHelper {
 					maxLength[colCount] = value.length();
 				}
 				colCount++;
-				value = "其他";
+				value = "无";
 				Integer rank = decAcade.getRank();
 				if (ObjectUtil.isNull(rank)) {
 					rank = 0;
@@ -1567,6 +1587,9 @@ public class ExcelHelper {
 					break;
 				case 3:
 					value = "省部";
+					break;
+				case 4:
+					value = "市级";
 					break;
 				default:
 					break;
@@ -1602,13 +1625,13 @@ public class ExcelHelper {
 		int colCount = properties.getColCount();
 		int[] maxLength = properties.getMaxLength();
 		if (CollectionUtil.isEmpty(decLastPositions)) {
-			for (int i = 0; i < 2; i++) {
+			for (int i = 0; i < 5; i++) {
 				row.createCell(colCount++);
 			}
 		} else {
 			String value;
-			List<StringBuilder> builders = new ArrayList<>(3);
-			for (int i = 0; i < 2; i++) {
+			List<StringBuilder> builders = new ArrayList<>(6);
+			for (int i = 0; i < 5; i++) {
 				builders.add(new StringBuilder());
 			}
 			boolean isFirst = true;
@@ -1652,9 +1675,33 @@ public class ExcelHelper {
 				if (value.length() > maxLength[colCount]) {
 					maxLength[colCount] = value.length();
 				}
+				colCount++;
+				value = decLastPosition.getIsDigitalEditor() ? "是" : "否";
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				value = decLastPosition.getPublisher();
+				if (StringUtil.isEmpty(value)) {
+					value = "";
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
+				value = "";
+				if (ObjectUtil.notNull(decLastPosition.getPublishDate())) {
+					value = DateUtil.date2Str(decLastPosition.getPublishDate());
+				}
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
 				colCount = properties.getColCount();// 列数复位
 			}
-			for (int i = 0; i < 2; i++) {
+			for (int i = 0; i < 5; i++) {
 				Cell cell = row.createCell(colCount++);
 				value = builders.get(i).toString();
 				cell.setCellValue(value);
@@ -1698,7 +1745,7 @@ public class ExcelHelper {
 					maxLength[colCount] = value.length();
 				}
 				colCount++;
-				value = "其他";
+				value = "无";
 				switch (decCourseConstruction.getType()) {
 				case 1:
 					value = "国际";
@@ -1806,13 +1853,13 @@ public class ExcelHelper {
 		int colCount = properties.getColCount();
 		int[] maxLength = properties.getMaxLength();
 		if (CollectionUtil.isEmpty(decTextbookPmphs)) {
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 6; i++) {
 				row.createCell(colCount++);
 			}
 		} else {
 			String value;
-			List<StringBuilder> builders = new ArrayList<>(5);
-			for (int i = 0; i < 5; i++) {
+			List<StringBuilder> builders = new ArrayList<>(6);
+			for (int i = 0; i < 6; i++) {
 				builders.add(new StringBuilder());
 			}
 			boolean isFirst = true;
@@ -1881,6 +1928,12 @@ public class ExcelHelper {
 					maxLength[colCount] = value.length();
 				}
 				colCount++;
+				value = decTextbookPmph.getIsDigitalEditor() ? "是" : "否";
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
 				if (ObjectUtil.isNull(decTextbookPmph.getPublishDate())) {
 					value = "";
 				} else {
@@ -1902,7 +1955,7 @@ public class ExcelHelper {
 				}
 				colCount = properties.getColCount();// 列数复位
 			}
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 6; i++) {
 				Cell cell = row.createCell(colCount++);
 				value = builders.get(i).toString();
 				cell.setCellValue(value);
@@ -1917,13 +1970,13 @@ public class ExcelHelper {
 		int colCount = properties.getColCount();
 		int[] maxLength = properties.getMaxLength();
 		if (CollectionUtil.isEmpty(decTextbooks)) {
-			for (int i = 0; i < 6; i++) {
+			for (int i = 0; i < 7; i++) {
 				row.createCell(colCount++);
 			}
 		} else {
 			String value;
-			List<StringBuilder> builders = new ArrayList<>(6);
-			for (int i = 0; i < 6; i++) {
+			List<StringBuilder> builders = new ArrayList<>(7);
+			for (int i = 0; i < 7; i++) {
 				builders.add(new StringBuilder());
 			}
 			boolean isFirst = true;
@@ -1992,6 +2045,12 @@ public class ExcelHelper {
 					maxLength[colCount] = value.length();
 				}
 				colCount++;
+				value = decTextbook.getIsDigitalEditor() ? "是" : "否";
+				builders.get(index++).append(value);
+				if (value.length() > maxLength[colCount]) {
+					maxLength[colCount] = value.length();
+				}
+				colCount++;
 				value = decTextbook.getPublisher();
 				if (StringUtil.isEmpty(value)) {
 					value = "";
@@ -2022,7 +2081,7 @@ public class ExcelHelper {
 				}
 				colCount = properties.getColCount();// 列数复位
 			}
-			for (int i = 0; i < 6; i++) {
+			for (int i = 0; i < 7; i++) {
 				Cell cell = row.createCell(colCount++);
 				value = builders.get(i).toString();
 				cell.setCellValue(value);
@@ -2140,9 +2199,9 @@ public class ExcelHelper {
 				colCount++;
 				value = "";
 				if (decMonograph.getIsSelfPaid()) {
-					value = "公费";
-				} else {
 					value = "自费";
+				} else {
+					value = "公费";
 				}
 				builders.get(index++).append(value);
 				if (value.length() > maxLength[colCount]) {
@@ -2652,12 +2711,12 @@ public class ExcelHelper {
 		int[] maxLength = { 2, 12, 2, 12 };
 		return dataStyleSetup(workbook, 1, rowCount, new ColumnProperties(4, maxLength));
 	}
-	
-	public Workbook fromOrgVO(List<OrgVO> dataSource, String sheetName) 
-			throws CheckedServiceException,IllegalAccessException, IllegalArgumentException{
-		if (null == dataSource || dataSource.isEmpty()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, 
-					CheckedExceptionResult.NULL_PARAM, "用于导出的数据源为空");
+
+	public Workbook fromOrgVO(List<OrgVO> dataSource, String sheetName)
+			throws CheckedServiceException, IllegalAccessException, IllegalArgumentException {
+		if (null == dataSource || dataSource.isEmpty()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, CheckedExceptionResult.NULL_PARAM,
+					"用于导出的数据源为空");
 		}
 		Workbook workbook = new HSSFWorkbook();
 		Sheet sheet = workbook.createSheet(sheetName);
@@ -2669,7 +2728,7 @@ public class ExcelHelper {
 		header.createCell(4).setCellValue("管理员名称");
 		headerStyleSetup(workbook, 1);
 		int rowCount = 1;
-		for (OrgVO orgVO : dataSource){
+		for (OrgVO orgVO : dataSource) {
 			Row row = sheet.createRow(rowCount);
 			row.createCell(0).setCellValue(rowCount);
 			row.createCell(1).setCellValue(orgVO.getOrgName());
@@ -2678,7 +2737,7 @@ public class ExcelHelper {
 			row.createCell(4).setCellValue(orgVO.getRealname());
 			rowCount++;
 		}
-		int[] maxLength = {2,15,15,10,15};
+		int[] maxLength = { 2, 15, 15, 10, 15 };
 		return dataStyleSetup(workbook, 1, rowCount, new ColumnProperties(5, maxLength));
 	}
 }
