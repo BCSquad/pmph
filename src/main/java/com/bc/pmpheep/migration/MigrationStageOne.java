@@ -393,9 +393,7 @@ public class MigrationStageOne {
         JdbcHelper.addColumn("sys_userext");//因为是用户相关，所以用户拓展表也要添加new_pk字段
         String sql = "SELECT a.userid,a.usercode,a.`password`,a.isvalid,d.new_pk,a.username,d.orgname,b.sex,"
                 + "b.duties,b.positional,b.fax,b.handset,b.phone,b.idcard,b.email,b.address,b.postcode,"
-                // + "CASE WHEN e.fileid IS NOT NULL THEN 1 ELSE 0 END is_proxy_upload,"
-                + "CASE WHEN a.sysflag=1 and b.usertype=2 and b.audittype IS NOT NULL THEN 1 "
-                + "ELSE 0 END is_proxy_upload,"
+                 + "CASE WHEN b.audittype IS NOT NULL THEN 1 ELSE 0 END is_proxy_upload,"
                 + "e.filedir,"
                 + "CASE WHEN b.audittype=2 THEN 1 WHEN b.audittype=1 THEN 2 ELSE 0 END progress,"
                 + "b.auditdate,a.memo,a.sortno,f.filedir avatar "
@@ -608,6 +606,10 @@ public class MigrationStageOne {
             JdbcHelper.updateNewPrimaryKey(tableName, pk, "userid", userId);
             JdbcHelper.updateNewPrimaryKey("sys_userext", pk, "userid", userId);//用户拓展表也要更新new_pk
             count++;
+            if (StringUtil.isEmpty(proxy) && isProxyUpload == 1){
+            	proxy = "DEFAULT";
+            	orgUser.setProxy(proxy);
+            }
             if (StringUtil.notEmpty(proxy)) {
                 String mongoId = "";
                 try {

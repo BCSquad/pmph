@@ -20,8 +20,10 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.shiro.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,10 +54,13 @@ import com.bc.pmpheep.back.service.OrgUserService;
 import com.bc.pmpheep.back.service.PmphGroupFileService;
 import com.bc.pmpheep.back.service.SurveyQuestionAnswerService;
 import com.bc.pmpheep.back.service.TextbookService;
+import com.bc.pmpheep.back.sessioncontext.SessionContext;
 import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
+import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
+import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.BookCorrectionTrackVO;
 import com.bc.pmpheep.back.vo.DeclarationResultBookVO;
@@ -78,6 +83,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.bc.pmpheep.utils.ExcelHelper;
 import com.bc.pmpheep.utils.WordHelper;
 import com.bc.pmpheep.utils.ZipHelper;
+import com.fasterxml.jackson.databind.annotation.JsonAppend.Prop;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -1064,14 +1070,18 @@ public class FileDownLoadController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出机构用户对比后的信息")
 	@RequestMapping(value = "/org/exportOrgInfo", method = RequestMethod.GET)
-	public void exportOrgInfo(HttpServletRequest request, HttpServletResponse response, String orgVOs){
-		if (StringUtil.isEmpty(orgVOs)){
+	public void exportOrgInfo(HttpServletRequest request, HttpServletResponse response, String uuid){
+		if (StringUtil.isEmpty(uuid)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, 
+					CheckedExceptionResult.NULL_PARAM, "参数不能为空");
+		}
+		String sessionId = CookiesUtil.getSessionId(request);
+		HttpSession session = SessionContext.getSession(sessionId);
+		List<OrgVO> list = (List<OrgVO>) session.getAttribute(uuid);
+		if (null == list || list.isEmpty()){
 			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, 
 					CheckedExceptionResult.NULL_PARAM, "导出的机构信息不能为空");
 		}
-		Gson gson = new GsonBuilder().create();
-		List<OrgVO> list = gson.fromJson(orgVOs, new TypeToken<ArrayList<OrgVO>>() {
-		}.getType());
 		Workbook workbook = null;
 		try {
 			workbook = excelHelper.fromOrgVO(list, "机构用户信息");

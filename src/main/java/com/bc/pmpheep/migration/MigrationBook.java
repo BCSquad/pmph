@@ -101,7 +101,7 @@ public class MigrationBook {
 				Cell sn = row.getCell(1);
 				if (ObjectUtil.notNull(sn) && !"".equals(sn.toString())) {
 					sns.append(",'" + sn.toString().replace(".0", "") + "'");
-					snsAndMaterNames.put(sn.toString().replace(".0", ""),  String.valueOf(row.getCell(7)));
+					snsAndMaterNames.put(sn.toString().replace(".0", ""),  String.valueOf(row.getCell(8)));
 				}
 			}
 		}
