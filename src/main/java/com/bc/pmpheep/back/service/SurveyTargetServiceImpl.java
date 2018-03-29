@@ -162,11 +162,11 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
         }
         Timestamp statTime = DateUtil.str2Timestam(surveyTargetVO.getStartTime());
         Timestamp endTime = DateUtil.str2Timestam(surveyTargetVO.getEndTime());
-        if (statTime.getTime() > DateUtil.getCurrentTime().getTime()) {
+        if (statTime.getTime() > DateUtil.getCurrentTimeByYMD().getTime()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问卷开始时间不能大于今天");
         }
-        if (endTime.getTime() < DateUtil.getCurrentTime().getTime()) {
+        if (endTime.getTime() < DateUtil.getCurrentTimeByYMD().getTime()) {
             throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                               CheckedExceptionResult.NULL_PARAM, "问卷结束时间不能小于今天");
         }
