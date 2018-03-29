@@ -257,7 +257,7 @@ public class MigrationStageTen {
                 for (String src : srcs) {
                     try {
                         String mongoId = fileService.migrateFile(src.replace("/pmph_imesp", ""), FileType.CMS_IMG, pk);
-                        ct = ct.replace(src, "/image/" + mongoId);
+                        ct = ct.replace(src, "/pmpheep/image/" + mongoId);
                     } catch (IOException ex) {
                         logger.warn("无法根据文章内容中的图片路径找到指定文件{}", ex.getMessage());
                     }

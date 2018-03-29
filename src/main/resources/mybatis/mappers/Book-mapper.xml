@@ -355,12 +355,6 @@
 			<if test="materialId != null">
 				material_id=#{materialId}
 			</if>
-			<if test="gmtCreate != null ">
-				gmt_create=#{gmtCreate},
-			</if>
-			<if test=" gmtUpdate != null ">
-				gmt_update=#{gmtUpdate},
-			</if>
 		</set>
 		where
 		id=#{id} ;
@@ -387,6 +381,12 @@
 		resultType="Book">
 		select * from book where isbn=#{isbn} ;
 	</select>
+	
+	<!-- 根据vn查询一个Book -->
+	<select id="getBookByVn2" parameterType="java.lang.String" resultType="Book">
+		select * from book where vn = #{vn} ;
+	</select>
+	
 	<insert id="addBookSupport">
 		insert into book_support (book_id,support_id) VALUES
 		(#{id},#{bookId})

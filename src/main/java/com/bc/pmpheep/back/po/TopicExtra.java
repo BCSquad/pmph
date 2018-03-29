@@ -43,17 +43,43 @@ public class TopicExtra implements Serializable {
 	 * 主要内容
 	 */
 	private String score;
+	/**
+	 * 作者主要专业成就及学术地位
+	 */
+	private String achievement;
+	/**
+	 * 写作及外语水平
+	 */
+	private String ability;
 
 	public TopicExtra() {
 		super();
 	}
 
-	public TopicExtra(Long topicId, String reason, String price, String score) {
+	public TopicExtra(Long topicId, String reason, String price, String score, String achievement, String ability) {
 		super();
 		this.topicId = topicId;
 		this.reason = reason;
 		this.price = price;
 		this.score = score;
+		this.achievement = achievement;
+		this.ability = ability;
+	}
+
+	public String getAchievement() {
+		return achievement;
+	}
+
+	public void setAchievement(String achievement) {
+		this.achievement = achievement;
+	}
+
+	public String getAbility() {
+		return ability;
+	}
+
+	public void setAbility(String ability) {
+		this.ability = ability;
 	}
 
 	public Long getId() {
