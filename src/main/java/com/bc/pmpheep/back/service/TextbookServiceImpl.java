@@ -37,6 +37,7 @@ import com.bc.pmpheep.back.po.Material;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
+import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
 import com.bc.pmpheep.back.util.CollectionUtil;
@@ -79,6 +80,9 @@ public class TextbookServiceImpl implements TextbookService {
 
 	@Autowired
 	private PmphUserService pmphUserService;
+	
+	@Autowired
+	private WriterUserService writerUserService;
 
 	@Autowired
 	private MaterialService materialService;
@@ -306,15 +310,20 @@ public class TextbookServiceImpl implements TextbookService {
 				systemMessageService.sendWhenPositionChooserLoss(materialId, declaration);
 			}
 		}
-		// 遍历被遴选人发送动态
+		// 遍历被遴选人发送动态 和被修改成专家
 		for (DecPositionPublished decPositionPublished : decPositionPublishedLst) {
 			if (null == decPositionPublished || null == decPositionPublished.getChosenPosition()
 					|| decPositionPublished.getChosenPosition() <= 0) {
 				continue;
 			}
 			// 获取申报表
-			Declaration declarationById = 
-					declarationService.getDeclarationById(decPositionPublished.getDeclarationId());
+			Declaration declarationById =  declarationService.getDeclarationById(decPositionPublished.getDeclarationId());
+			//修改成专家
+			WriterUser  writerUser   =   new WriterUser();
+			writerUser.setId(declarationById.getUserId());
+			writerUser.setIsExpert(true);
+			writerUser.setRank(3);
+			writerUserService.update(writerUser);
 			// 获取书籍
 			Textbook textbook = textbookService.getTextbookById(decPositionPublished.getTextbookId());
 			// 作家遴选

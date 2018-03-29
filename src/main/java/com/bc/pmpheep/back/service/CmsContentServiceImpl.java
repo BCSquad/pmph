@@ -278,7 +278,13 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         // 再次编辑时间
         cmsContent.setGmtReedit(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
-                                                         DateUtil.getCurrentTime()));
+                                                      DateUtil.getCurrentTime()));
+        //撤销
+        if(null !=  cmsContent.getIsPublished()){
+        	cmsContent.setIsStaging(cmsContent.getIsPublished());
+        }else{
+        	cmsContent.setIsStaging(false);
+        }
         count = cmsContentDao.updateCmsContent(cmsContent);
         if (count > 0// 内容管理，退回发送消息
             && Const.CMS_AUTHOR_STATUS_1.shortValue() == cmsContent.getAuthStatus().shortValue()) {
@@ -447,8 +453,10 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         Boolean isPublished = false;
-        if (Const.CMS_AUTHOR_STATUS_2 == authStatus) {
-            isPublished = true;
+        Boolean isStaging   = false;
+        if ( Const.CMS_AUTHOR_STATUS_2 == authStatus){  // 发布
+        	isPublished = true;
+            isStaging   = true;
         }
         Integer count = 0;
         count =
@@ -458,7 +466,7 @@ public class CmsContentServiceImpl implements CmsContentService {
                                                       pmphUser.getId(),
                                                       DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                DateUtil.getCurrentTime()),
-                                                      isPublished, false, Const.MATERIAL_TYPE_ID));
+                                                      isPublished, isStaging, Const.MATERIAL_TYPE_ID));
         CmsContent cmsContent = this.getCmsContentById(id);
         if (ObjectUtil.isNull(cmsContent)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
