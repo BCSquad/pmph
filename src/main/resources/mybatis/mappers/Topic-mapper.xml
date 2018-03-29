@@ -926,4 +926,83 @@
 		limit
 		#{start},#{pageSize}
 	</select>
+	
+	<!-- 主任受理 总数-->
+	<select id="listIsDirectorTopicTotal" resultType="Integer">
+		SELECT count(*) FROM (SELECT a.*,c.realname
+		FROM topic a LEFT JOIN
+		pmph_user b ON a.department_id= b.department_id
+		LEFT JOIN writer_user c
+		ON a.user_id = c.id
+		WHERE b.id = #{userId}
+		AND a.is_director_handling =TRUE
+		AND a.is_editor_handling = FALSE
+		AND b.is_director = TRUE
+		ORDER BY a.submit_time DESC) t
+	</select>
+	<!-- 主任受理 -->
+	<select id="listIsDirectorTopic" resultType="TopicDirectorVO">
+		SELECT a.*,c.realname
+		FROM topic a LEFT JOIN pmph_user b ON	a.department_id = b.department_id
+		LEFT JOIN writer_user c ON a.user_id= c.id
+		WHERE b.id = #{userId}
+		AND	a.is_director_handling = TRUE
+		AND	a.is_editor_handling = FALSE
+		AND b.is_director = TRUE
+		ORDER BY a.submit_time DESC
+		LIMIT
+		#{start},#{pageSize}
+	</select>
+	<!--运维受理 -->
+	<select id="listIsOptsTopic" resultType="TopicOPtsManagerVO">
+		SELECT  t.*,w.realname
+		FROM topic t
+		LEFT JOIN pmph_user_role r ON r.role_id =t.opts_role_id
+		LEFT JOIN pmph_user u ON u.id = r.user_id
+		LEFT JOIN writer_user w ON t.user_id = w.id
+		WHERE u.id =#{userId}
+		AND t.is_opts_handling = TRUE
+		AND t.is_director_handling =FALSE
+		ORDER BY t.submit_time desc
+		LIMIT
+		#{start},#{pageSize}
+	</select>
+	<!-- 运维受理 总数 -->
+	<select id="listIsOptsTopicTotal" resultType="Integer">
+		SELECT
+		count(*) FROM topic t
+		LEFT JOIN pmph_user_role r ON r.role_id =t.opts_role_id
+		LEFT JOIN pmph_user u ON u.id = r.user_id
+		LEFT JOIN writer_user w ON t.user_id = w.id
+		WHERE u.id =#{userId}
+		AND t.is_opts_handling = TRUE
+		AND t.is_director_handling =FALSE
+		ORDER BY t.submit_time DESC
+	</select>
+	<!-- 编辑受理 -->
+	<select id="listIsEditor" resultType="TopicEditorVO">
+		SELECT a.*,c.realname,b.realname editorName
+		FROM topic a
+		LEFT JOIN
+		pmph_user b ON a.editor_id= b.id
+		LEFT JOIN writer_user c ON a.user_id =c.id
+		WHERE a.editor_id =#{userId}
+		AND a.is_editor_handling = TRUE
+		AND a.is_rejected_by_editor =FALSE 
+		AND a.auth_progress in(1,2,3)
+		ORDER BY a.submit_time DESC
+		LIMIT
+		#{start},#{pageSize}
+	</select>
+	<select id="listIsEditorTotal" resultType="Integer">
+		SELECT count(*) FROM (SELECT a.*,b.realname FROM topic a
+		LEFT JOIN pmph_user b ON a.editor_id =b.id
+		LEFT JOIN writer_user c ON a.user_id =c.id
+		WHERE a.editor_id =#{userId}
+		AND a.is_editor_handling = TRUE
+		ANDa.is_rejected_by_editor =FALSE 
+		AND a.auth_progress in(1,2,3)
+		ORDER BY a.submit_time DESC) t
+	</select>
+	
 </mapper>

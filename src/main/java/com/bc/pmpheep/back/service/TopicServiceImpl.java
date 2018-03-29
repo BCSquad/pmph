@@ -625,4 +625,49 @@ public class TopicServiceImpl implements TopicService {
 		pageResult.setTotal(total);
 		return pageResult;
 	}
+
+	@Override
+	public PageResult<TopicDirectorVO> listIsDirectorTopic(Long userId,PageParameter<TopicDirectorVO> pageParameter) throws CheckedServiceException {
+		PageResult<TopicDirectorVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total = topicDao.listIsDirectorTopicTotal(userId);
+		if(total>0){
+			List<TopicDirectorVO> list=topicDao.listIsDirectorTopic(userId, pageParameter.getPageSize(),
+					pageParameter.getStart());
+			list = addTypeNameDirector(list);
+			pageResult.setRows(list);
+		}
+		pageResult.setTotal(total);
+		return pageResult;
+	}
+
+	@Override
+	public PageResult<TopicOPtsManagerVO> listIsOptsTopic(Long userId,PageParameter<TopicOPtsManagerVO> pageParameter) throws CheckedServiceException {
+		PageResult<TopicOPtsManagerVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total = topicDao.listIsOptsTopicTotal(userId);
+		if(total>0){
+			List<TopicOPtsManagerVO> list=topicDao.listIsOptsTopic(userId, pageParameter.getPageSize(),
+					pageParameter.getStart());
+			list = addTypeName(list);
+			pageResult.setRows(list);
+		}
+		pageResult.setTotal(total);
+		return pageResult;
+	}
+
+	@Override
+	public PageResult<TopicEditorVO> listIsEditor(Long userId,PageParameter<TopicEditorVO> pageParameter) throws CheckedServiceException {
+		PageResult<TopicEditorVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total = topicDao.listIsEditorTotal(userId);
+		if(total>0){
+			List<TopicEditorVO> list=topicDao.listIsEditor(userId,pageParameter.getPageSize(),
+					pageParameter.getStart());
+			list = addTypeNameEditor(list);
+			pageResult.setRows(list);
+		}
+		pageResult.setTotal(total);
+		return pageResult;
+	}
 }
