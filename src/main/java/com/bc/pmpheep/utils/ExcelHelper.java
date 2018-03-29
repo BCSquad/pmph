@@ -2724,8 +2724,8 @@ public class ExcelHelper {
 		header.createCell(0).setCellValue("序号");
 		header.createCell(1).setCellValue("机构名称");
 		header.createCell(2).setCellValue("机构账号");
-		header.createCell(3).setCellValue("机构类型");
-		header.createCell(4).setCellValue("管理员名称");
+		header.createCell(3).setCellValue("管理员名称");
+		header.createCell(4).setCellValue("机构类型");
 		headerStyleSetup(workbook, 1);
 		int rowCount = 1;
 		for (OrgVO orgVO : dataSource) {
@@ -2733,8 +2733,8 @@ public class ExcelHelper {
 			row.createCell(0).setCellValue(rowCount);
 			row.createCell(1).setCellValue(orgVO.getOrgName());
 			row.createCell(2).setCellValue(orgVO.getUsername());
-			row.createCell(3).setCellValue(orgVO.getOrgTypeName());
-			row.createCell(4).setCellValue(orgVO.getRealname());
+			row.createCell(3).setCellValue(orgVO.getRealname());
+			row.createCell(4).setCellValue(orgVO.getOrgTypeName());
 			rowCount++;
 		}
 		int[] maxLength = { 2, 15, 15, 10, 15 };
