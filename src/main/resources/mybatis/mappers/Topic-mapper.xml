@@ -650,7 +650,7 @@
 			<if test="realname !=null and realname !=''">
 			    realname = #{realname},
 			</if>
-			<if test="sex !=nul">
+			<if test="sex !=null">
 			    sex = #{sex},
 			</if>
 			<if test="price !=null">
