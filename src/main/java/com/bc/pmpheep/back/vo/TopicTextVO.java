@@ -99,6 +99,7 @@ public class TopicTextVO implements Serializable {
 	private String address;
 	private String postcode;
 	private String email;
+	private Boolean isTranslation;
 	/**
 	 * 学科及专业
 	 */
@@ -326,6 +327,14 @@ public class TopicTextVO implements Serializable {
 
 	public Integer getRevisionStock() {
 		return revisionStock;
+	}
+
+	public Boolean getIsTranslation() {
+		return isTranslation;
+	}
+
+	public void setIsTranslation(Boolean isTranslation) {
+		this.isTranslation = isTranslation;
 	}
 
 	public void setRevisionStock(Integer revisionStock) {
