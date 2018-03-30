@@ -99,6 +99,8 @@ public class TopicTextVO implements Serializable {
 	private String address;
 	private String postcode;
 	private String email;
+	private Boolean isTranslation;
+	private String originalPublisher;
 	/**
 	 * 学科及专业
 	 */
@@ -328,6 +330,14 @@ public class TopicTextVO implements Serializable {
 		return revisionStock;
 	}
 
+	public Boolean getIsTranslation() {
+		return isTranslation;
+	}
+
+	public void setIsTranslation(Boolean isTranslation) {
+		this.isTranslation = isTranslation;
+	}
+
 	public void setRevisionStock(Integer revisionStock) {
 		this.revisionStock = revisionStock;
 	}
@@ -362,6 +372,14 @@ public class TopicTextVO implements Serializable {
 
 	public void setPositionProfession(Integer positionProfession) {
 		this.positionProfession = positionProfession;
+	}
+
+	public String getOriginalPublisher() {
+		return originalPublisher;
+	}
+
+	public void setOriginalPublisher(String originalPublisher) {
+		this.originalPublisher = originalPublisher;
 	}
 
 	public String getPositionProfessionName() {

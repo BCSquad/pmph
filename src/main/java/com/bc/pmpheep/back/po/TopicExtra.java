@@ -36,10 +36,6 @@ public class TopicExtra implements Serializable {
 	 */
 	private String reason;
 	/**
-	 * 出版价值
-	 */
-	private String price;
-	/**
 	 * 主要内容
 	 */
 	private String score;
@@ -56,11 +52,10 @@ public class TopicExtra implements Serializable {
 		super();
 	}
 
-	public TopicExtra(Long topicId, String reason, String price, String score, String achievement, String ability) {
+	public TopicExtra(Long topicId, String reason, String score, String achievement, String ability) {
 		super();
 		this.topicId = topicId;
 		this.reason = reason;
-		this.price = price;
 		this.score = score;
 		this.achievement = achievement;
 		this.ability = ability;
@@ -104,14 +99,6 @@ public class TopicExtra implements Serializable {
 
 	public void setReason(String reason) {
 		this.reason = reason;
-	}
-
-	public String getPrice() {
-		return price;
-	}
-
-	public void setPrice(String price) {
-		this.price = price;
 	}
 
 	public String getScore() {
