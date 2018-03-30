@@ -190,7 +190,7 @@ public class Front implements Runnable {
 					sb.append(src);
 					sb.append(this.id);
 					sb.append(File.separator);
-					sb.append(declarationOrDisplayVOs.get(i).getOrgNameOne());
+					sb.append(material.getMaterialName());
 					sb.append(File.separator);
 					sb.append(name);
 					sb.append(File.separator);
@@ -204,7 +204,7 @@ public class Front implements Runnable {
 		}
 		new Thread(zipDownload).start();
 		try {
-			this.zipHelper.zip(dest + File.separator + declarationOrDisplayVOs.get(0).getOrgNameOne(),
+			this.zipHelper.zip(dest + File.separator + material.getMaterialName(),
 					dest + File.separator, true, null);
 		} catch (Exception e) {
 			e.getMessage();
