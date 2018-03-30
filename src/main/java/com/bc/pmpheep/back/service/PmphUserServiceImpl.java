@@ -132,37 +132,17 @@ public class PmphUserServiceImpl implements PmphUserService {
                                                   CheckedExceptionResult.ILLEGAL_PARAM, "手机号码不符合规范");
             }
         }
-        // 头像文件不为空
+        // 头像文件不为空更新头像
         if (StringUtil.notEmpty(newAvatar)) {
-            if (StringUtil.notEmpty(pmphUser.getAvatar())) {
-                if (pmphUser.getAvatar().contains("/")) {
-                    String avatar = pmphUser.getAvatar();
-                    avatar = avatar.substring(avatar.lastIndexOf("/") + 1, avatar.length());
-                    fileService.remove(avatar);
-                }
-                if (pmphUser.getAvatar().contains("\\")) {
-                    String avatar = pmphUser.getAvatar();
-                    avatar = avatar.substring(avatar.lastIndexOf("\\") + 1, avatar.length());
-                    fileService.remove(avatar);
-                }
-            }
-            pmphUser.setAvatar(newAvatar);
-        }
-        String avatar = pmphUser.getAvatar();
-        if (StringUtil.notEmpty(avatar) && avatar.contains("/")) {
-            avatar = avatar.substring(avatar.lastIndexOf("/") + 1, avatar.length());
-        }
-        if (StringUtil.notEmpty(avatar) && avatar.contains("\\")) {
-            avatar = avatar.substring(avatar.lastIndexOf("\\") + 1, avatar.length());
-        }
-        if (StringUtil.notEmpty(avatar)) {
-            byte[] fileByte = (byte[]) request.getSession(false).getAttribute(avatar);
-            String fileName = (String) request.getSession(false).getAttribute("fileName_" + avatar);
+            byte[] fileByte = (byte[]) request.getSession(false).getAttribute(newAvatar);
+            String fileName = (String) request.getSession(false).getAttribute("fileName_" + newAvatar);
             String noticeId;
             // 保存通知文件
             InputStream sbs = new ByteArrayInputStream(fileByte);
             noticeId = fileService.save(sbs, fileName, ImageType.PMPH_USER_AVATAR, id);
             pmphUser.setAvatar(noticeId);
+        }else{
+        	 pmphUser.setAvatar(null);
         }
         pmphUserDao.update(pmphUser);
         return true;
