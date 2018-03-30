@@ -231,4 +231,31 @@ public class TopicDeclarationVO implements Serializable {
 		this.authFeedback = authFeedback;
 	}
 
+	public TopicDeclarationVO(Long id, String realname, String bookname, Timestamp deadline, Integer type,
+			String typeName, Timestamp submitTime, String editorName, Timestamp authDate, Integer authProgress,
+			String authFeedback, Boolean isOptsHandling, Boolean isDirectorHandling, Boolean isEditorHandling,
+			Boolean isAccepted, String state, String stateDeail) {
+		this.id = id;
+		this.realname = realname;
+		this.bookname = bookname;
+		this.deadline = deadline;
+		this.type = type;
+		this.typeName = typeName;
+		this.submitTime = submitTime;
+		this.editorName = editorName;
+		this.authDate = authDate;
+		this.authProgress = authProgress;
+		this.authFeedback = authFeedback;
+		this.isOptsHandling = isOptsHandling;
+		this.isDirectorHandling = isDirectorHandling;
+		this.isEditorHandling = isEditorHandling;
+		this.isAccepted = isAccepted;
+		this.state = state;
+		this.stateDeail = stateDeail;
+	}
+
+	public TopicDeclarationVO() {
+		super();
+	}
+	
 }

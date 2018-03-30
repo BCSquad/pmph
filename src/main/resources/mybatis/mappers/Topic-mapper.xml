@@ -938,6 +938,7 @@
 		AND a.is_director_handling =TRUE
 		AND a.is_editor_handling = FALSE
 		AND b.is_director = TRUE
+		AND a.auth_progress in(1,2,3)
 		ORDER BY a.submit_time DESC) t
 	</select>
 	<!-- 主任受理 -->
@@ -949,6 +950,7 @@
 		AND	a.is_director_handling = TRUE
 		AND	a.is_editor_handling = FALSE
 		AND b.is_director = TRUE
+		AND a.auth_progress in(1,2,3)
 		ORDER BY a.submit_time DESC
 		LIMIT
 		#{start},#{pageSize}
@@ -963,6 +965,7 @@
 		WHERE u.id =#{userId}
 		AND t.is_opts_handling = TRUE
 		AND t.is_director_handling =FALSE
+		AND t.auth_progress in(1,2,3)
 		ORDER BY t.submit_time desc
 		LIMIT
 		#{start},#{pageSize}
@@ -977,6 +980,7 @@
 		WHERE u.id =#{userId}
 		AND t.is_opts_handling = TRUE
 		AND t.is_director_handling =FALSE
+		AND t.auth_progress in(1,2,3)
 		ORDER BY t.submit_time DESC
 	</select>
 	<!-- 编辑受理 -->
@@ -995,7 +999,7 @@
 		#{start},#{pageSize}
 	</select>
 	<select id="listIsEditorTotal" resultType="Integer">
-		SELECT count(*) FROM (SELECT a.*,b.realname FROM topic a
+		SELECT count(*) FROM (SELECT a.* FROM topic a
 		LEFT JOIN pmph_user b ON a.editor_id =b.id
 		LEFT JOIN writer_user c ON a.user_id =c.id
 		WHERE a.editor_id =#{userId}

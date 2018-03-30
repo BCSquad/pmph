@@ -42,6 +42,103 @@ public class TopicDirectorVO implements Serializable {
 	// 提交时间
 	private Timestamp submitTime;
 	/**
+	 * 选题申报状态
+	 */
+	private String state;
+	/**
+	 * 详细状态
+	 */
+	private String stateDeail;
+	/**
+	 * 审核进度
+	 */
+	private Integer authProgress;
+	/**
+	 * 退回原因/审核意见
+	 */
+	private String authFeedback;
+	/**
+	 * 是否有运维人员受理
+	 */
+	private Boolean isOptsHandling;
+	/**
+	 * 是否由主任受理
+	 */
+	private Boolean isDirectorHandling;
+	/**
+	 * 是否由编辑受理
+	 */
+	private Boolean isEditorHandling;
+	/**
+	 * 编辑是否接受办理
+	 */
+	private Boolean isAccepted;
+	
+	public Boolean getIsAccepted() {
+		return isAccepted;
+	}
+
+	public void setIsAccepted(Boolean isAccepted) {
+		this.isAccepted = isAccepted;
+	}
+
+	public Integer getAuthProgress() {
+		return authProgress;
+	}
+
+	public void setAuthProgress(Integer authProgress) {
+		this.authProgress = authProgress;
+	}
+
+	public String getAuthFeedback() {
+		return authFeedback;
+	}
+
+	public void setAuthFeedback(String authFeedback) {
+		this.authFeedback = authFeedback;
+	}
+
+	public Boolean getIsOptsHandling() {
+		return isOptsHandling;
+	}
+
+	public void setIsOptsHandling(Boolean isOptsHandling) {
+		this.isOptsHandling = isOptsHandling;
+	}
+
+	public Boolean getIsDirectorHandling() {
+		return isDirectorHandling;
+	}
+
+	public void setIsDirectorHandling(Boolean isDirectorHandling) {
+		this.isDirectorHandling = isDirectorHandling;
+	}
+
+	public Boolean getIsEditorHandling() {
+		return isEditorHandling;
+	}
+
+	public void setIsEditorHandling(Boolean isEditorHandling) {
+		this.isEditorHandling = isEditorHandling;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getStateDeail() {
+		return stateDeail;
+	}
+
+	public void setStateDeail(String stateDeail) {
+		this.stateDeail = stateDeail;
+	}
+
+	/**
 	 * 是否被编辑退回
 	 */
 	private Boolean isRejectedByEditor;
