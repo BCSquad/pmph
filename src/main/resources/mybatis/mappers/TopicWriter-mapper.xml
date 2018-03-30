@@ -23,6 +23,12 @@
 			<if test=" workplace != null and workplace !=''">
 				workplace,
 			</if>
+			<if test="phone !=null and phone !=''">
+			    phone,
+			</if>
+			<if test="degree !=null">
+			    degree,
+			</if>
 		</trim>
 	</sql>
 	<!-- sql片段对应?,id属性值任意 -->
@@ -46,6 +52,12 @@
 			</if>
 			<if test="workplace != null and workplace !=''">
 				#{workplace},
+			</if>
+			<if test="phone !=null and phone !=''">
+			    #{phone},
+			</if>
+			<if test="degree !=null">
+			    #{degree},
 			</if>
 		</trim>
 	</sql>
