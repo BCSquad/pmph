@@ -2,11 +2,13 @@ package com.bc.pmpheep.back.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.type.Alias;
 
 import com.bc.pmpheep.back.po.TopicExtra;
+import com.bc.pmpheep.back.po.TopicSimilarBook;
 import com.bc.pmpheep.back.po.TopicWriter;
 
 /**
@@ -47,19 +49,19 @@ public class TopicTextVO implements Serializable {
 	/**
 	 * 读者对象
 	 */
-	private String readType;
+	private String[] readType;
 	/**
 	 * 预计交稿时间
 	 */
 	private Timestamp deadline;
 	/**
-	 * 选题来源 0=社策划/1=编辑策划/2=专家策划/3=离退休编审策划/4=上级交办/5=作者投稿
+	 * 选题来源 0=社策划/1=编辑策划/2=修订/3=离退休编审策划/4=专家推荐/5=上级交办/6=作者投稿
 	 */
 	private Integer source;
 	/**
 	 * 选题来源
 	 */
-	private String sourceType;
+	private String[] sourceType;
 	/**
 	 * 估计字数（千字）
 	 */
@@ -68,6 +70,37 @@ public class TopicTextVO implements Serializable {
 	 * 预估图数
 	 */
 	private Integer pictureNumber;
+	private String readerQuantity;
+	private String campaign;
+	private String salesChannel;
+	private String lifecycle;
+	private String printAdvise;
+	private String priceAdvise;
+	private String printNumber;
+	private String cost;
+	private String minPrintNumber;
+	private String benefit;
+	private Boolean isRevision;
+	private String revisionBookname;
+	private String revisionAuthor;
+	private Date revisionPublishDate;
+	private Integer revisionPrint;
+	private Integer revisionStock;
+	private String realname;
+	private String position;
+	private Integer sex;
+	private Integer price;
+	private Integer positionProfession;
+	private String[] positionProfessionName;
+	private Integer degree;
+	private String[] degreeName;
+	private String workplace;
+	private String phone;
+	private String address;
+	private String postcode;
+	private String email;
+	private Boolean isTranslation;
+	private String originalPublisher;
 	/**
 	 * 学科及专业
 	 */
@@ -79,15 +112,15 @@ public class TopicTextVO implements Serializable {
 	/**
 	 * 级别
 	 */
-	private String rankType;
+	private String[] rankType;
 	/**
-	 * 图书类别 0=专著/1=基础理论/2=论文集/3=科普/4=应用技术/5=工具书/6=其他
+	 * 图书类别 0=专著/1=基础理论/2=教材/3=论文集/4=图谱/5=科普/6=应用技术/7=教辅/8=工具书/9=其他
 	 */
 	private Integer type;
 	/**
 	 * 图书类别
 	 */
-	private String typeName;
+	private String typeName[];
 	/**
 	 * 银行账户id
 	 */
@@ -133,13 +166,17 @@ public class TopicTextVO implements Serializable {
 	 */
 	private List<TopicWriter> topicWriters;
 	/**
+	 * 社外同类书情况表
+	 */
+	private List<TopicSimilarBook> topicSimilarBooks;
+	/**
 	 * 编辑id
 	 */
 	private Long editorId;
 	/**
 	 * 编辑真实姓名
 	 */
-	private String realname;
+	private String editorName;
 	/**
 	 * 编辑用户名
 	 */
@@ -160,6 +197,262 @@ public class TopicTextVO implements Serializable {
 	 * 审核意见
 	 */
 	private String authFeedback;
+
+	public List<TopicSimilarBook> getTopicSimilarBooks() {
+		return topicSimilarBooks;
+	}
+
+	public void setTopicSimilarBooks(List<TopicSimilarBook> topicSimilarBooks) {
+		this.topicSimilarBooks = topicSimilarBooks;
+	}
+
+	public String getReaderQuantity() {
+		return readerQuantity;
+	}
+
+	public void setReaderQuantity(String readerQuantity) {
+		this.readerQuantity = readerQuantity;
+	}
+
+	public String getCampaign() {
+		return campaign;
+	}
+
+	public void setCampaign(String campaign) {
+		this.campaign = campaign;
+	}
+
+	public String getSalesChannel() {
+		return salesChannel;
+	}
+
+	public void setSalesChannel(String salesChannel) {
+		this.salesChannel = salesChannel;
+	}
+
+	public String getLifecycle() {
+		return lifecycle;
+	}
+
+	public void setLifecycle(String lifecycle) {
+		this.lifecycle = lifecycle;
+	}
+
+	public String getPrintAdvise() {
+		return printAdvise;
+	}
+
+	public void setPrintAdvise(String printAdvise) {
+		this.printAdvise = printAdvise;
+	}
+
+	public String getPriceAdvise() {
+		return priceAdvise;
+	}
+
+	public void setPriceAdvise(String priceAdvise) {
+		this.priceAdvise = priceAdvise;
+	}
+
+	public String getPrintNumber() {
+		return printNumber;
+	}
+
+	public void setPrintNumber(String printNumber) {
+		this.printNumber = printNumber;
+	}
+
+	public String getCost() {
+		return cost;
+	}
+
+	public void setCost(String cost) {
+		this.cost = cost;
+	}
+
+	public String getMinPrintNumber() {
+		return minPrintNumber;
+	}
+
+	public void setMinPrintNumber(String minPrintNumber) {
+		this.minPrintNumber = minPrintNumber;
+	}
+
+	public String getBenefit() {
+		return benefit;
+	}
+
+	public void setBenefit(String benefit) {
+		this.benefit = benefit;
+	}
+
+	public Boolean getIsRevision() {
+		return isRevision;
+	}
+
+	public void setIsRevision(Boolean isRevision) {
+		this.isRevision = isRevision;
+	}
+
+	public String getRevisionBookname() {
+		return revisionBookname;
+	}
+
+	public void setRevisionBookname(String revisionBookname) {
+		this.revisionBookname = revisionBookname;
+	}
+
+	public String getRevisionAuthor() {
+		return revisionAuthor;
+	}
+
+	public void setRevisionAuthor(String revisionAuthor) {
+		this.revisionAuthor = revisionAuthor;
+	}
+
+	public Date getRevisionPublishDate() {
+		return revisionPublishDate;
+	}
+
+	public void setRevisionPublishDate(Date revisionPublishDate) {
+		this.revisionPublishDate = revisionPublishDate;
+	}
+
+	public Integer getRevisionPrint() {
+		return revisionPrint;
+	}
+
+	public void setRevisionPrint(Integer revisionPrint) {
+		this.revisionPrint = revisionPrint;
+	}
+
+	public Integer getRevisionStock() {
+		return revisionStock;
+	}
+
+	public Boolean getIsTranslation() {
+		return isTranslation;
+	}
+
+	public void setIsTranslation(Boolean isTranslation) {
+		this.isTranslation = isTranslation;
+	}
+
+	public void setRevisionStock(Integer revisionStock) {
+		this.revisionStock = revisionStock;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+	public Integer getSex() {
+		return sex;
+	}
+
+	public void setSex(Integer sex) {
+		this.sex = sex;
+	}
+
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
+
+	public Integer getPositionProfession() {
+		return positionProfession;
+	}
+
+	public void setPositionProfession(Integer positionProfession) {
+		this.positionProfession = positionProfession;
+	}
+
+	public String getOriginalPublisher() {
+		return originalPublisher;
+	}
+
+	public void setOriginalPublisher(String originalPublisher) {
+		this.originalPublisher = originalPublisher;
+	}
+
+	public String[] getPositionProfessionName() {
+		return positionProfessionName;
+	}
+
+	public void setPositionProfessionName(String[] positionProfessionName) {
+		this.positionProfessionName = positionProfessionName;
+	}
+
+	public Integer getDegree() {
+		return degree;
+	}
+
+	public void setDegree(Integer degree) {
+		this.degree = degree;
+	}
+
+	public String[] getDegreeName() {
+		return degreeName;
+	}
+
+	public void setDegreeName(String[] degreeName) {
+		this.degreeName = degreeName;
+	}
+
+	public String getWorkplace() {
+		return workplace;
+	}
+
+	public void setWorkplace(String workplace) {
+		this.workplace = workplace;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPostcode() {
+		return postcode;
+	}
+
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getEditorName() {
+		return editorName;
+	}
+
+	public void setEditorName(String editorName) {
+		this.editorName = editorName;
+	}
 
 	public Long getId() {
 		return id;
@@ -337,27 +630,27 @@ public class TopicTextVO implements Serializable {
 		this.topicWriters = topicWriters;
 	}
 
-	public String getReadType() {
+	public String[] getReadType() {
 		return readType;
 	}
 
-	public void setReadType(String readType) {
+	public void setReadType(String[] readType) {
 		this.readType = readType;
 	}
 
-	public String getSourceType() {
+	public String[] getSourceType() {
 		return sourceType;
 	}
 
-	public void setSourceType(String sourceType) {
+	public void setSourceType(String[] sourceType) {
 		this.sourceType = sourceType;
 	}
 
-	public String getTypeName() {
+	public String[] getTypeName() {
 		return typeName;
 	}
 
-	public void setTypeName(String typeName) {
+	public void setTypeName(String[] typeName) {
 		this.typeName = typeName;
 	}
 
@@ -409,11 +702,11 @@ public class TopicTextVO implements Serializable {
 		this.username = username;
 	}
 
-	public String getRankType() {
+	public String[] getRankType() {
 		return rankType;
 	}
 
-	public void setRankType(String rankType) {
+	public void setRankType(String[] rankType) {
 		this.rankType = rankType;
 	}
 

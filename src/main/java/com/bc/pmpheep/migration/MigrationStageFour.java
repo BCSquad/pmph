@@ -451,7 +451,10 @@ public class MigrationStageFour {
 			// 设置权限
 			material.setProjectPermission(Integer.valueOf("11110011", 2));
 			material.setPlanPermission(   Integer.valueOf("00010000", 2));
-			
+			/***
+			 * 把教材放在教材分类下面
+			 */
+			material.setMaterialType(1L);
 			material = materialService.addMaterial(material);
 			count++;
 			long pk = material.getId();

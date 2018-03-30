@@ -59,11 +59,11 @@ public class SurveyQuestionAnswerListVO implements java.io.Serializable {
 
     private String            title;
     /**
-     * 文本内容
+     * 用户选择（单选，多选选项）内容
      */
     private String            noteOptionContent;
     /**
-     * 单选，多选内容
+     * 单选，多选选项内容
      */
     private String            oneOrManyOptionContent;
     /**

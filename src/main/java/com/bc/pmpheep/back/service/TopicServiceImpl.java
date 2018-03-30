@@ -1,10 +1,13 @@
 package com.bc.pmpheep.back.service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.dao.TopicDao;
@@ -58,6 +61,8 @@ public class TopicServiceImpl implements TopicService {
 	TopicWriertService topicWriertService;
 	@Autowired
 	WriterUserTrendstService writerUserTrendstService;
+	@Autowired
+	TopicSimilarBookService topicSimilarBookService;
 
 	@Override
 	public PageResult<TopicOPtsManagerVO> listOpts(String sessionId, PageParameter<TopicOPtsManagerVO> pageParameter)
@@ -260,7 +265,7 @@ public class TopicServiceImpl implements TopicService {
 			if (3 == topic.getAuthProgress()) {
 				Map<String, Object> detail = new HashMap<String, Object>();
 				detail.put("title", CheckedExceptionBusiness.TOPIC);
-				detail.put("content", "您的选题《"+topicDao.get(topic.getId()).getBookname()+"》已经通过。");
+				detail.put("content", "您的选题《" + topicDao.get(topic.getId()).getBookname() + "》已经通过。");
 				detail.put("img", 1);
 				writerUserTrendst.setDetail(new Gson().toJson(detail));
 				// 创建本版号并将本版号放入数据中
@@ -305,7 +310,7 @@ public class TopicServiceImpl implements TopicService {
 			} else {
 				Map<String, Object> detail = new HashMap<String, Object>();
 				detail.put("title", CheckedExceptionBusiness.TOPIC);
-				detail.put("content", "您的选题《"+topicDao.get(topic.getId()).getBookname()+"》未通过。");
+				detail.put("content", "您的选题《" + topicDao.get(topic.getId()).getBookname() + "》未通过。");
 				detail.put("img", 2);
 				writerUserTrendst.setDetail(new Gson().toJson(detail));
 			}
@@ -330,15 +335,70 @@ public class TopicServiceImpl implements TopicService {
 		TopicTextVO topicTextVO = topicDao.getTopicTextVO(id);
 		topicTextVO.setTopicExtra(topicExtraService.getTopicExtraByTopicId(id));
 		topicTextVO.setTopicWriters(topicWriertService.listTopicWriterByTopicId(id));
+		topicTextVO.setTopicSimilarBooks(topicSimilarBookService.listTopicSimilarBookByTopicId(id));
+		Integer pp = topicTextVO.getPositionProfession();
+		Integer degree = topicTextVO.getDegree();
+		if (ObjectUtil.notNull(degree)) {
+			switch (degree) {
+			case 0:
+				topicTextVO.setDegreeName(new String[]{"博士"});
+				break;
+			case 1:
+				topicTextVO.setDegreeName(new String[]{"硕士"});
+				break;
+			case 2:
+				topicTextVO.setDegreeName(new String[]{"学士"});
+				break;
+			case 3:
+				topicTextVO.setDegreeName(new String[]{"其他"});
+				break;
+
+			default:
+				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+						"没有这个文凭");
+			}
+		}
+		if (ObjectUtil.notNull(pp)) {
+			switch (pp) {
+			case 0:
+				topicTextVO.setPositionProfessionName(new String[]{"中科院院士"});
+				break;
+			case 1:
+				topicTextVO.setPositionProfessionName(new String[]{"工程院院士"});
+				break;
+			case 2:
+				topicTextVO.setPositionProfessionName(new String[]{"博导"});
+				break;
+			case 3:
+				topicTextVO.setPositionProfessionName(new String[]{"硕导"});
+				break;
+			case 4:
+				topicTextVO.setPositionProfessionName(new String[]{"正高"});
+				break;
+			case 5:
+				topicTextVO.setPositionProfessionName(new String[]{"副高"});
+				break;
+			case 6:
+				topicTextVO.setPositionProfessionName(new String[]{"中级"});
+				break;
+			case 7:
+				topicTextVO.setPositionProfessionName(new String[]{"其他"});
+				break;
+
+			default:
+				throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+						"没有这个职务");
+			}
+		}
 		switch (topicTextVO.getRank()) {
 		case 0:
-			topicTextVO.setRankType("低");
+			topicTextVO.setRankType(new String[]{"低"});
 			break;
 		case 1:
-			topicTextVO.setRankType("中");
+			topicTextVO.setRankType(new String[]{"中"});
 			break;
 		case 2:
-			topicTextVO.setRankType("高");
+			topicTextVO.setRankType(new String[]{"高"});
 			break;
 
 		default:
@@ -347,23 +407,25 @@ public class TopicServiceImpl implements TopicService {
 		}
 		switch (topicTextVO.getSource()) {
 		case 0:
-			topicTextVO.setSourceType("社策划");
+			topicTextVO.setSourceType(new String[]{"社策划"});
 			break;
 		case 1:
-			topicTextVO.setSourceType("编辑策划");
+			topicTextVO.setSourceType(new String[]{"编辑策划"});
 			break;
-
 		case 2:
-			topicTextVO.setSourceType("专家策划");
-			break;
-		case 3:
-			topicTextVO.setSourceType("离退休编审策划");
+			topicTextVO.setSourceType(new String[]{"修订"});
 			break;
 		case 4:
-			topicTextVO.setSourceType("上级交办");
+			topicTextVO.setSourceType(new String[]{"专家策划"});
+			break;
+		case 3:
+			topicTextVO.setSourceType(new String[]{"离退休编审策划"});
 			break;
 		case 5:
-			topicTextVO.setSourceType("作者投稿");
+			topicTextVO.setSourceType(new String[]{"上级交办"});
+			break;
+		case 6:
+			topicTextVO.setSourceType(new String[]{"作者投稿"});
 			break;
 
 		default:
@@ -372,13 +434,13 @@ public class TopicServiceImpl implements TopicService {
 		}
 		switch (topicTextVO.getReader()) {
 		case 0:
-			topicTextVO.setReadType("医务工作者");
+			topicTextVO.setReadType(new String[]{"医务工作者"});
 			break;
 		case 1:
-			topicTextVO.setReadType("医学院校师生");
+			topicTextVO.setReadType(new String[]{"医学院校师生"});
 			break;
 		case 2:
-			topicTextVO.setReadType("大众");
+			topicTextVO.setReadType(new String[]{"大众"});
 			break;
 
 		default:
@@ -387,25 +449,34 @@ public class TopicServiceImpl implements TopicService {
 		}
 		switch (topicTextVO.getType()) {
 		case 0:
-			topicTextVO.setTypeName("专著");
+			topicTextVO.setTypeName(new String[]{"专著"});
 			break;
 		case 1:
-			topicTextVO.setTypeName("基础理论");
-			break;
-		case 2:
-			topicTextVO.setTypeName("论文集");
+			topicTextVO.setTypeName(new String[]{"基础理论"});
 			break;
 		case 3:
-			topicTextVO.setTypeName("科普");
+			topicTextVO.setTypeName(new String[]{"论文集"});
+			break;
+		case 2:
+			topicTextVO.setTypeName(new String[]{"教材"});
 			break;
 		case 4:
-			topicTextVO.setTypeName("应用技术");
+			topicTextVO.setTypeName(new String[]{"图谱"});
 			break;
 		case 5:
-			topicTextVO.setTypeName("工具书");
+			topicTextVO.setTypeName(new String[]{"科普"});
+			break;
+		case 7:
+			topicTextVO.setTypeName(new String[]{"教辅"});
 			break;
 		case 6:
-			topicTextVO.setTypeName("其他");
+			topicTextVO.setTypeName(new String[]{"应用技术"});
+			break;
+		case 8:
+			topicTextVO.setTypeName(new String[]{"工具书"});
+			break;
+		case 9:
+			topicTextVO.setTypeName(new String[]{"其他"});
 			break;
 
 		default:
@@ -602,7 +673,7 @@ public class TopicServiceImpl implements TopicService {
 
 	@Override
 	public PageResult<TopicDeclarationVO> listMyTopic(List<Long> authProgress,
-			PageParameter<TopicDeclarationVO> pageParameter,Long editorId) {
+			PageParameter<TopicDeclarationVO> pageParameter, Long editorId) {
 		if (CollectionUtil.isEmpty(authProgress)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.ILLEGAL_PARAM,
 					"选题申报状态不对");
@@ -610,19 +681,159 @@ public class TopicServiceImpl implements TopicService {
 		PageResult<TopicDeclarationVO> pageResult = new PageResult<>();
 		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
 		Integer total = topicDao.listMyTopicTotal(authProgress, pageParameter.getParameter().getBookname(),
-				pageParameter.getParameter().getSubmitTime(),pageParameter.getParameter().getIsDirectorHandling(),
-				pageParameter.getParameter().getIsEditorHandling(),pageParameter.getParameter().getIsOptsHandling()
-				,editorId);
+				pageParameter.getParameter().getSubmitTime(), pageParameter.getParameter().getIsDirectorHandling(),
+				pageParameter.getParameter().getIsEditorHandling(), pageParameter.getParameter().getIsOptsHandling(),
+				editorId);
 		if (total > 0) {
 			List<TopicDeclarationVO> list = topicDao.listMyTopic(authProgress, pageParameter.getPageSize(),
 					pageParameter.getStart(), pageParameter.getParameter().getBookname(),
-					pageParameter.getParameter().getSubmitTime(),pageParameter.getParameter().getIsDirectorHandling(),
-					pageParameter.getParameter().getIsEditorHandling(),pageParameter.getParameter().getIsOptsHandling()
-					,editorId);
+					pageParameter.getParameter().getSubmitTime(), pageParameter.getParameter().getIsDirectorHandling(),
+					pageParameter.getParameter().getIsEditorHandling(),
+					pageParameter.getParameter().getIsOptsHandling(), editorId);
 			list = addState(list);
 			pageResult.setRows(list);
 		}
 		pageResult.setTotal(total);
 		return pageResult;
+	}
+
+	@Override
+	public PageResult<TopicDirectorVO> listIsDirectorTopic(Long userId,PageParameter<TopicDirectorVO> pageParameter) throws CheckedServiceException {
+		PageResult<TopicDirectorVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total = topicDao.listIsDirectorTopicTotal(userId);
+		if(total>0){
+			List<TopicDirectorVO> list=topicDao.listIsDirectorTopic(userId, pageParameter.getPageSize(),
+					pageParameter.getStart());
+			list = addTypeNameDirector(list);
+			list = addStateTopicDirectorVO(list);
+			pageResult.setRows(list);
+		}
+		pageResult.setTotal(total);
+		return pageResult;
+	}
+	public List<TopicDirectorVO> addStateTopicDirectorVO(List<TopicDirectorVO> list) {
+		for (TopicDirectorVO vo : list) {
+			if (1 == vo.getAuthProgress()) {
+				if (vo.getIsOptsHandling()) {
+					vo.setState("作者已提交");
+					vo.setStateDeail("待管理员分配");
+					if (vo.getIsDirectorHandling()) {
+						vo.setState("主任已受理");
+						vo.setStateDeail("待主任分配");
+						if (vo.getIsEditorHandling()) {
+							vo.setState("主任已分配");
+							vo.setStateDeail("待编辑受理");
+							if (vo.getIsAccepted()) {
+								vo.setState("编辑已受理");
+								vo.setStateDeail("待编辑处理");
+							}
+						}
+					}
+				}
+			} else {
+				if (2 == vo.getAuthProgress()) {
+					vo.setState("不通过");
+				}
+				if (3 == vo.getAuthProgress()) {
+					vo.setState("通过");
+				}
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public PageResult<TopicOPtsManagerVO> listIsOptsTopic(Long userId,PageParameter<TopicOPtsManagerVO> pageParameter) throws CheckedServiceException {
+		PageResult<TopicOPtsManagerVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total = topicDao.listIsOptsTopicTotal(userId);
+		if(total>0){
+			List<TopicOPtsManagerVO> list=topicDao.listIsOptsTopic(userId, pageParameter.getPageSize(),
+					pageParameter.getStart());
+			list = addTypeName(list);
+			list = addStateTopicOPtsManagerVO(list);
+			pageResult.setRows(list);
+		}
+		pageResult.setTotal(total);
+		return pageResult;
+	}
+
+	public List<TopicOPtsManagerVO> addStateTopicOPtsManagerVO(List<TopicOPtsManagerVO> list) {
+		for (TopicOPtsManagerVO vo : list) {
+			if (1 == vo.getAuthProgress()) {
+				if (vo.getIsOptsHandling()) {
+					vo.setState("作者已提交");
+					vo.setStateDeail("待管理员分配");
+					if (vo.getIsDirectorHandling()) {
+						vo.setState("主任已受理");
+						vo.setStateDeail("待主任分配");
+						if (vo.getIsEditorHandling()) {
+							vo.setState("主任已分配");
+							vo.setStateDeail("待编辑受理");
+							if (vo.getIsAccepted()) {
+								vo.setState("编辑已受理");
+								vo.setStateDeail("待编辑处理");
+							}
+						}
+					}
+				}
+			} else {
+				if (2 == vo.getAuthProgress()) {
+					vo.setState("不通过");
+				}
+				if (3 == vo.getAuthProgress()) {
+					vo.setState("通过");
+				}
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public PageResult<TopicEditorVO> listIsEditor(Long userId,PageParameter<TopicEditorVO> pageParameter) throws CheckedServiceException {
+		PageResult<TopicEditorVO> pageResult = new PageResult<>();
+		PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
+		Integer total = topicDao.listIsEditorTotal(userId);
+		if(total>0){
+			List<TopicEditorVO> list=topicDao.listIsEditor(userId,pageParameter.getPageSize(),
+					pageParameter.getStart());
+			list = addTypeNameEditor(list);
+			list = addStateTopicEditorVOO(list);
+			pageResult.setRows(list);
+		}
+		pageResult.setTotal(total);
+		return pageResult;
+	}
+
+	public List<TopicEditorVO> addStateTopicEditorVOO(List<TopicEditorVO> list) {
+		for (TopicEditorVO vo : list) {
+			if (1 == vo.getAuthProgress()) {
+				if (vo.getIsOptsHandling()) {
+					vo.setState("作者已提交");
+					vo.setStateDeail("待管理员分配");
+					if (vo.getIsDirectorHandling()) {
+						vo.setState("主任已受理");
+						vo.setStateDeail("待主任分配");
+						if (vo.getIsEditorHandling()) {
+							vo.setState("主任已分配");
+							vo.setStateDeail("待编辑受理");
+							if (vo.getIsAccepted()) {
+								vo.setState("编辑已受理");
+								vo.setStateDeail("待编辑处理");
+							}
+						}
+					}
+				}
+			} else {
+				if (2 == vo.getAuthProgress()) {
+					vo.setState("不通过");
+				}
+				if (3 == vo.getAuthProgress()) {
+					vo.setState("通过");
+				}
+			}
+		}
+		return list;
 	}
 }

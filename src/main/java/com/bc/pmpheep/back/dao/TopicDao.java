@@ -310,4 +310,45 @@ public interface TopicDao {
 			@Param("submitTime") Timestamp submitTime,@Param("isDirectorHandling")  Boolean isDirectorHandling,
 			@Param("isEditorHandling")Boolean isEditorHandling,@Param("isOptsHandling") Boolean isOptsHandling,
 			@Param("editorId") Long editorId);
+	/**
+	 * 运维受理总数
+	 * @param userId
+	 * @return
+	 */
+	Integer listIsOptsTopicTotal(@Param("userId") Long userId);
+	/**
+	 *  运维受理
+	 * @param userId
+	 * @return
+	 */
+	List<TopicOPtsManagerVO> listIsOptsTopic(@Param("userId")Long userId,@Param("pageSize") Integer pageSize,
+			@Param("start")  Integer start);
+	
+	/**
+	 * 主任受理
+	 * @param userId
+	 * @return
+	 */
+	List<TopicDirectorVO> listIsDirectorTopic(@Param("userId") Long userId,@Param("pageSize") Integer pageSize,
+			@Param("start")  Integer start);
+	/**
+	 * 主任受理总数
+	 * @param userId
+	 * @return
+	 */
+	Integer listIsDirectorTopicTotal(@Param("userId") Long userId);
+	
+	/**
+	 * 编辑受理总数
+	 * @param userId
+	 * @return
+	 */
+	Integer listIsEditorTotal(@Param("userId") Long userId);
+	/**
+	 * 编辑受理
+	 * @param userId
+	 * @return
+	 */
+	List<TopicEditorVO> listIsEditor(@Param("userId") Long userId,@Param("pageSize") Integer pageSize,
+			@Param("start")  Integer start);
 }

@@ -62,6 +62,90 @@ public class TopicOPtsManagerVO implements Serializable {
 	 * 退回原因
 	 */
 	private String reasonDirector;
+	/**
+	 * 选题申报状态
+	 */
+	private String state;
+	/**
+	 * 详细状态
+	 */
+	private String stateDeail;
+	/**
+	 * 审核进度
+	 */
+	private Integer authProgress;
+	/**
+	 * 是否有运维人员受理
+	 */
+	private Boolean isOptsHandling;
+	/**
+	 * 是否由主任受理
+	 */
+	private Boolean isDirectorHandling;
+	/**
+	 * 是否由编辑受理
+	 */
+	private Boolean isEditorHandling;
+	/**
+	 * 编辑是否接受办理
+	 */
+	private Boolean isAccepted;
+
+	public Integer getAuthProgress() {
+		return authProgress;
+	}
+
+	public void setAuthProgress(Integer authProgress) {
+		this.authProgress = authProgress;
+	}
+
+	public Boolean getIsOptsHandling() {
+		return isOptsHandling;
+	}
+
+	public void setIsOptsHandling(Boolean isOptsHandling) {
+		this.isOptsHandling = isOptsHandling;
+	}
+
+	public Boolean getIsEditorHandling() {
+		return isEditorHandling;
+	}
+
+	public void setIsEditorHandling(Boolean isEditorHandling) {
+		this.isEditorHandling = isEditorHandling;
+	}
+
+	public Boolean getIsDirectorHandling() {
+		return isDirectorHandling;
+	}
+
+	public void setIsDirectorHandling(Boolean isDirectorHandling) {
+		this.isDirectorHandling = isDirectorHandling;
+	}
+
+	public Boolean getIsAccepted() {
+		return isAccepted;
+	}
+
+	public void setIsAccepted(Boolean isAccepted) {
+		this.isAccepted = isAccepted;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getStateDeail() {
+		return stateDeail;
+	}
+
+	public void setStateDeail(String stateDeail) {
+		this.stateDeail = stateDeail;
+	}
 
 	public Long getId() {
 		return id;
