@@ -1,10 +1,13 @@
 package com.bc.pmpheep.back.service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bc.pmpheep.back.dao.TopicDao;
@@ -703,10 +706,41 @@ public class TopicServiceImpl implements TopicService {
 			List<TopicDirectorVO> list=topicDao.listIsDirectorTopic(userId, pageParameter.getPageSize(),
 					pageParameter.getStart());
 			list = addTypeNameDirector(list);
+			list = addStateTopicDirectorVO(list);
 			pageResult.setRows(list);
 		}
 		pageResult.setTotal(total);
 		return pageResult;
+	}
+	public List<TopicDirectorVO> addStateTopicDirectorVO(List<TopicDirectorVO> list) {
+		for (TopicDirectorVO vo : list) {
+			if (1 == vo.getAuthProgress()) {
+				if (vo.getIsOptsHandling()) {
+					vo.setState("作者已提交");
+					vo.setStateDeail("待管理员分配");
+					if (vo.getIsDirectorHandling()) {
+						vo.setState("主任已受理");
+						vo.setStateDeail("待主任分配");
+						if (vo.getIsEditorHandling()) {
+							vo.setState("主任已分配");
+							vo.setStateDeail("待编辑受理");
+							if (vo.getIsAccepted()) {
+								vo.setState("编辑已受理");
+								vo.setStateDeail("待编辑处理");
+							}
+						}
+					}
+				}
+			} else {
+				if (2 == vo.getAuthProgress()) {
+					vo.setState("不通过");
+				}
+				if (3 == vo.getAuthProgress()) {
+					vo.setState("通过");
+				}
+			}
+		}
+		return list;
 	}
 
 	@Override
@@ -718,10 +752,42 @@ public class TopicServiceImpl implements TopicService {
 			List<TopicOPtsManagerVO> list=topicDao.listIsOptsTopic(userId, pageParameter.getPageSize(),
 					pageParameter.getStart());
 			list = addTypeName(list);
+			list = addStateTopicOPtsManagerVO(list);
 			pageResult.setRows(list);
 		}
 		pageResult.setTotal(total);
 		return pageResult;
+	}
+
+	public List<TopicOPtsManagerVO> addStateTopicOPtsManagerVO(List<TopicOPtsManagerVO> list) {
+		for (TopicOPtsManagerVO vo : list) {
+			if (1 == vo.getAuthProgress()) {
+				if (vo.getIsOptsHandling()) {
+					vo.setState("作者已提交");
+					vo.setStateDeail("待管理员分配");
+					if (vo.getIsDirectorHandling()) {
+						vo.setState("主任已受理");
+						vo.setStateDeail("待主任分配");
+						if (vo.getIsEditorHandling()) {
+							vo.setState("主任已分配");
+							vo.setStateDeail("待编辑受理");
+							if (vo.getIsAccepted()) {
+								vo.setState("编辑已受理");
+								vo.setStateDeail("待编辑处理");
+							}
+						}
+					}
+				}
+			} else {
+				if (2 == vo.getAuthProgress()) {
+					vo.setState("不通过");
+				}
+				if (3 == vo.getAuthProgress()) {
+					vo.setState("通过");
+				}
+			}
+		}
+		return list;
 	}
 
 	@Override
@@ -733,9 +799,41 @@ public class TopicServiceImpl implements TopicService {
 			List<TopicEditorVO> list=topicDao.listIsEditor(userId,pageParameter.getPageSize(),
 					pageParameter.getStart());
 			list = addTypeNameEditor(list);
+			list = addStateTopicEditorVOO(list);
 			pageResult.setRows(list);
 		}
 		pageResult.setTotal(total);
 		return pageResult;
+	}
+
+	public List<TopicEditorVO> addStateTopicEditorVOO(List<TopicEditorVO> list) {
+		for (TopicEditorVO vo : list) {
+			if (1 == vo.getAuthProgress()) {
+				if (vo.getIsOptsHandling()) {
+					vo.setState("作者已提交");
+					vo.setStateDeail("待管理员分配");
+					if (vo.getIsDirectorHandling()) {
+						vo.setState("主任已受理");
+						vo.setStateDeail("待主任分配");
+						if (vo.getIsEditorHandling()) {
+							vo.setState("主任已分配");
+							vo.setStateDeail("待编辑受理");
+							if (vo.getIsAccepted()) {
+								vo.setState("编辑已受理");
+								vo.setStateDeail("待编辑处理");
+							}
+						}
+					}
+				}
+			} else {
+				if (2 == vo.getAuthProgress()) {
+					vo.setState("不通过");
+				}
+				if (3 == vo.getAuthProgress()) {
+					vo.setState("通过");
+				}
+			}
+		}
+		return list;
 	}
 }
