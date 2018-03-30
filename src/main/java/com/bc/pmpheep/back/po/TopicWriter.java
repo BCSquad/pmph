@@ -51,6 +51,12 @@ public class TopicWriter implements Serializable {
 	 * 工作单位
 	 */
 	private String workplace;
+	
+	private String phone;
+	
+	private Integer degree;
+	
+	private String degreeName;
 
 	public TopicWriter() {
 		super();
@@ -120,6 +126,30 @@ public class TopicWriter implements Serializable {
 
 	public void setWorkplace(String workplace) {
 		this.workplace = workplace;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public Integer getDegree() {
+		return degree;
+	}
+
+	public void setDegree(Integer degree) {
+		this.degree = degree;
+	}
+
+	public String getDegreeName() {
+		return degreeName;
+	}
+
+	public void setDegreeName(String degreeName) {
+		this.degreeName = degreeName;
 	}
 
 }
