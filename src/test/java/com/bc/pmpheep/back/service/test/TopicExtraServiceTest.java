@@ -30,7 +30,7 @@ import com.bc.pmpheep.test.BaseTest;
  */
 public class TopicExtraServiceTest extends BaseTest {
 	Logger logger = LoggerFactory.getLogger(TopicExtraServiceTest.class);
-	TopicExtra topicExtra = new TopicExtra(1L, null, null, null);
+	TopicExtra topicExtra = new TopicExtra(1L, null, null, null,null);
 
 	@Resource
 	TopicExtraService topicExtraService;

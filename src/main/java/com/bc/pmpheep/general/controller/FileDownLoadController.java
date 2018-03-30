@@ -59,6 +59,7 @@ import com.bc.pmpheep.back.util.CollectionUtil;
 import com.bc.pmpheep.back.util.Const;
 import com.bc.pmpheep.back.util.CookiesUtil;
 import com.bc.pmpheep.back.util.DateUtil;
+import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.RandomUtil;
 import com.bc.pmpheep.back.util.SessionUtil;
 import com.bc.pmpheep.back.util.StringUtil;
@@ -476,6 +477,10 @@ public class FileDownLoadController {
 		src = src.substring(1);
 		if (!src.endsWith(File.separator)) {
 			src += File.separator;
+		}
+		if (ObjectUtil.isNull(Const.WORD_EXPORT_MAP.get(id))) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
+					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "已经超过下载时长了，请重新导出下载");
 		}
 		String materialName = Const.WORD_EXPORT_MAP.get(id).getMaterialName();
 		response.setCharacterEncoding("utf-8");
@@ -1066,33 +1071,33 @@ public class FileDownLoadController {
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "文件在传输时中断");
 		}
 	}
-	
+
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "导出机构用户对比后的信息")
 	@RequestMapping(value = "/org/exportOrgInfo", method = RequestMethod.GET)
-	public void exportOrgInfo(HttpServletRequest request, HttpServletResponse response, String uuid){
-		if (StringUtil.isEmpty(uuid)){
-			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, 
-					CheckedExceptionResult.NULL_PARAM, "参数不能为空");
+	public void exportOrgInfo(HttpServletRequest request, HttpServletResponse response, String uuid) {
+		if (StringUtil.isEmpty(uuid)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, CheckedExceptionResult.NULL_PARAM,
+					"参数不能为空");
 		}
 		String sessionId = CookiesUtil.getSessionId(request);
 		HttpSession session = SessionContext.getSession(sessionId);
 		List<OrgVO> list = (List<OrgVO>) session.getAttribute(uuid);
-		if (null == list || list.isEmpty()){
-			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, 
-					CheckedExceptionResult.NULL_PARAM, "导出的机构信息不能为空");
+		if (null == list || list.isEmpty()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.ORG, CheckedExceptionResult.NULL_PARAM,
+					"导出的机构信息不能为空");
 		}
 		Workbook workbook = null;
 		try {
 			workbook = excelHelper.fromOrgVO(list, "机构用户信息");
 		} catch (CheckedServiceException | IllegalAccessException | IllegalArgumentException e) {
 			logger.warn("数据表格化的时候失败");
-		} 
+		}
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		String fileName = returnFileName(request, "机构用户信息" + ".xls");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
-		try (OutputStream out = response.getOutputStream()){
+		try (OutputStream out = response.getOutputStream()) {
 			workbook.write(out);
 			out.flush();
 			out.close();

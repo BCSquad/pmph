@@ -106,7 +106,6 @@ public class MigrationPlus {
 	 WriterPointRuleService writerPointRuleService;
 	 @Resource
 	 PmphDepartmentService pmphDepartmentService;
-	 
 	 public void start() {
 		 Date begin = new Date();
          logger.info("填充调查问卷测试数据");
@@ -358,7 +357,7 @@ public class MigrationPlus {
 				423L, true, false, false, "基础覆盖面广", null, null, null, null, new Timestamp(446666L));
 		topic = topicService.add(topic);
 		TopicExtra topicExtra = new TopicExtra(topic.getId(), "丰富学生基础理论的辅导教材", 
-				"出版价值高", "内科学的基础理论");
+				"出版价值高", "内科学的基础理论",null);
 		topicExtraService.add(topicExtra);
 		WriterUser writerUser = writerUserService.get(topic.getUserId());
 		TopicWriter topicWriter = new TopicWriter(topic.getId(), writerUser.getRealname(),
@@ -370,7 +369,7 @@ public class MigrationPlus {
 				546L, true, false, false, "退回", null, null, null, null, new Timestamp(456000L));
 		topic1 = topicService.add(topic1);
 		TopicExtra topicExtra1 = new TopicExtra(topic1.getId(), "注重临床经验", "实用，工具书",
-				"临床技术");
+				"临床技术",null);
 		topicExtraService.add(topicExtra1);
 		WriterUser writerUser1 = writerUserService.get(topic1.getUserId());
 		TopicWriter topicWriter1 = new TopicWriter(topic1.getId(), writerUser1.getRealname(),
@@ -382,7 +381,7 @@ public class MigrationPlus {
 				false, false, false, null, null, null, null, null, new Timestamp(445648L));
 		topic2 = topicService.add(topic2);
 		TopicExtra topicExtra2 = new TopicExtra(topic2.getId(), "前沿技术", "科普读物",
-				"介绍脑科学研究的发展");
+				"介绍脑科学研究的发展",null);
 		topicExtraService.add(topicExtra2);
 		WriterUser writerUser2 = writerUserService.get(topic2.getUserId());
 		TopicWriter topicWriter2 = new TopicWriter(topic2.getId(), writerUser2.getRealname(),
@@ -394,7 +393,7 @@ public class MigrationPlus {
 				false, 419L, false, false, false, null, null, null, null, null, new Timestamp(453135L));
 		topic3 = topicService.add(topic3);
 		TopicExtra topicExtra3 = new TopicExtra(topic3.getId(), "国外经典教材", "工具书", 
-				"最新译本");
+				"最新译本",null);
 		topicExtraService.add(topicExtra3);
 		WriterUser writerUser3 = writerUserService.get(topic3.getUserId());
 		TopicWriter topicWriter3 = new TopicWriter(topic3.getId(), writerUser3.getRealname(),
@@ -406,7 +405,7 @@ public class MigrationPlus {
 				null, false, false, false, null, null, null, null, null, new Timestamp(476522L));
 		topic4 = topicService.add(topic4);
 		TopicExtra topicExtra4 = new TopicExtra(topic4.getId(), "心理学必修教材", "重要，必修课程",
-				"基础理论");
+				"基础理论",null);
 		topicExtraService.add(topicExtra4);
 		WriterUser writerUser4 = writerUserService.get(topic4.getId());
 		TopicWriter topicWriter4 = new TopicWriter(topic4.getId(), writerUser4.getRealname(),
@@ -418,7 +417,7 @@ public class MigrationPlus {
 				false, false, null, null, null, null, null, new Timestamp(433654L));
 		topic5 = topicService.add(topic5);
 		TopicExtra topicExtra5 = new TopicExtra(topic5.getId(), "医学院学生必读辅导书",
-				"重要", "人体图解");
+				"重要", "人体图解",null);
 		topicExtraService.add(topicExtra5);
 		WriterUser writerUser5 = writerUserService.get(topic5.getUserId());
 		TopicWriter topicWriter5 = new TopicWriter(topic5.getId(), writerUser5.getRealname(), 
@@ -430,7 +429,7 @@ public class MigrationPlus {
 				null, null, null, null, null, null, null);
 		topic6 = topicService.add(topic6);
 		TopicExtra topicExtra6 = new TopicExtra(topic6.getId(), "辅助教材", "基础教材",
-				"统计学在医学上的应用");
+				"统计学在医学上的应用",null);
 		topicExtraService.add(topicExtra6);
 		WriterUser writerUser6 = writerUserService.get(topic6.getUserId());
 		TopicWriter topicWriter6 = new TopicWriter(topic6.getId(), writerUser6.getRealname(),

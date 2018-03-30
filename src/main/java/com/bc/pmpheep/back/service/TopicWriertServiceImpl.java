@@ -40,7 +40,31 @@ public class TopicWriertServiceImpl implements TopicWriertService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
 					"选题申报id为空！");
 		}
-		return topicWriterDao.listTopicWriterByTopicId(topicId);
+		List<TopicWriter> list = topicWriterDao.listTopicWriterByTopicId(topicId);
+		for (TopicWriter topicWriter : list) {
+			Integer degree = topicWriter.getDegree();
+			if (ObjectUtil.notNull(degree)) {
+				switch (degree) {
+				case 0:
+					topicWriter.setDegreeName("博士");
+					break;
+				case 1:
+					topicWriter.setDegreeName("硕士");
+					break;
+				case 2:
+					topicWriter.setDegreeName("学士");
+					break;
+				case 3:
+					topicWriter.setDegreeName("其他");
+					break;
+
+				default:
+					throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC, CheckedExceptionResult.NULL_PARAM,
+							"没有这个文凭");
+				}
+			}
+		}
+		return list;
 	}
 
 	@Override

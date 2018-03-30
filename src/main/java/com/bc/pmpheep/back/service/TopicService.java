@@ -135,6 +135,31 @@ public interface TopicService {
 	 */
 	PageResult<TopicDeclarationVO> listMyTopic(List<Long> authProgress, PageParameter<TopicDeclarationVO> pageParameter3,Long editorId)
 			throws CheckedServiceException;
+
+	/**
+	 *  由主任受理
+	 * @param userId
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	PageResult<TopicDirectorVO> listIsDirectorTopic(Long userId,PageParameter<TopicDirectorVO> pageParameter)throws CheckedServiceException;
+
+	/**由运维人员受理
+	 *
+	 * @param userId
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	PageResult<TopicOPtsManagerVO> listIsOptsTopic(Long userId,PageParameter<TopicOPtsManagerVO> pageParameter)throws CheckedServiceException;
+	
+	/**由编辑受理
+	 * 
+	 * @param userId
+	 * @return
+	 * @throws CheckedServiceException
+	 */
+	PageResult<TopicEditorVO> listIsEditor(Long userId,PageParameter<TopicEditorVO> pageParameter)throws CheckedServiceException;
+
 	
 	
 }

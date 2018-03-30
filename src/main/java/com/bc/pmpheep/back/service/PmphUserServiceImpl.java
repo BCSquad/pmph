@@ -54,6 +54,9 @@ import com.bc.pmpheep.back.vo.PmphIdentity;
 import com.bc.pmpheep.back.vo.PmphRoleVO;
 import com.bc.pmpheep.back.vo.PmphUserManagerVO;
 import com.bc.pmpheep.back.vo.TopicDeclarationVO;
+import com.bc.pmpheep.back.vo.TopicDirectorVO;
+import com.bc.pmpheep.back.vo.TopicEditorVO;
+import com.bc.pmpheep.back.vo.TopicOPtsManagerVO;
 import com.bc.pmpheep.general.bean.ImageType;
 import com.bc.pmpheep.general.service.FileService;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
@@ -767,28 +770,6 @@ public class PmphUserServiceImpl implements PmphUserService {
         // 选题申报当前用户角色
         PmphIdentity pmphIdentity = pmphUserService.identity(sessionId);
         TopicDeclarationVO topicDeclarationVO = new TopicDeclarationVO();
-        // 是否由主任受理
-        if (pmphIdentity.getIsDirector()) {
-            topicDeclarationVO.setIsDirectorHandling(true);
-        }
-        // 是否由运维人员受理
-        if (pmphIdentity.getIsOpts()) {
-            topicDeclarationVO.setIsOptsHandling(true);
-        }
-        // 是否由编辑受理
-        if (pmphIdentity.getIsEditor()) {
-            topicDeclarationVO.setIsEditorHandling(true);
-        }
-        for (PmphRole pmphRole : rolelist) {
-            // 编辑
-            if (2 == pmphRole.getId()) {
-                topicDeclarationVO.setIsEditorHandling(true);
-            }
-            // 主任
-            if (9 == pmphRole.getId()) {
-                topicDeclarationVO.setIsDirectorHandling(true);
-            }
-        }
         String[] strs = authProgress.split(",");
         List<Long> progress = new ArrayList<>();
         for (String str : strs) {
@@ -796,32 +777,42 @@ public class PmphUserServiceImpl implements PmphUserService {
         }
         topicDeclarationVO.setBookname(topicBookname);
         pageParameter3.setParameter(topicDeclarationVO);
-        //
-        if (sessionPmphUser.getIsAdmin()) {
-            PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
-            topicService.listMyTopic(progress, pageParameter3, null);
-            // topicService.listCheckTopic(progress, pageParameter3);
-            map.put("topicList", pageResultTopicDeclarationVO);
-        } else {
-            if (2 == rolelist.get(0).getId() || 9 == rolelist.get(0).getId()
-                || 1 == rolelist.get(0).getId()) {
-                PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
-                topicService.listMyTopic(progress, pageParameter3, sessionPmphUser.getId());
-                // topicService.listCheckTopic(progress, pageParameter3);
-                map.put("topicList", pageResultTopicDeclarationVO);
-            } else {
-                PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO = new PageResult<>();
-                List<TopicDeclarationVO> list = new ArrayList<>();
-                pageResultTopicDeclarationVO.setPageNumber(0);
-                pageResultTopicDeclarationVO.setRows(list);
-                pageResultTopicDeclarationVO.setPageTotal(0);
-                pageResultTopicDeclarationVO.setStart(0);
-                pageResultTopicDeclarationVO.setTotal(0);
-                ;
-                map.put("topicList", pageResultTopicDeclarationVO);
-            }
+        // 由主任受理
+        if (pmphIdentity.getIsDirector()) {
+        	PageParameter<TopicDirectorVO> pageParameterTopicDirectorVO = new PageParameter<>();
+        	PageResult<TopicDirectorVO> PageResultTopicDirectorVO=topicService.listIsDirectorTopic(sessionPmphUser.getId(),pageParameterTopicDirectorVO);
+        	map.put("topicList", PageResultTopicDirectorVO);
         }
-
+        // 由运维人员受理
+        if (pmphIdentity.getIsOpts()) {
+        	PageParameter<TopicOPtsManagerVO> pageParameterTopicOPtsManagerVO = new PageParameter<>();
+        	PageResult<TopicOPtsManagerVO> PageResultTopicOPtsManagerVO=topicService.listIsOptsTopic(sessionPmphUser.getId(),pageParameterTopicOPtsManagerVO);
+        	map.put("topicList", PageResultTopicOPtsManagerVO);
+        	
+        }
+        // 由编辑受理
+        if (pmphIdentity.getIsEditor()) {
+        	PageParameter<TopicEditorVO> pageParameterTopicEditorVO = new PageParameter<>();
+        	 PageResult<TopicEditorVO> PageResultTopicEditorVO=topicService.listIsEditor(sessionPmphUser.getId(),pageParameterTopicEditorVO);
+        	 map.put("topicList", PageResultTopicEditorVO);
+        }
+        //是否是系统管理员
+        if(pmphIdentity.getIsAdmin()){
+       	 	PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
+       	            topicService.listMyTopic(progress, pageParameter3, null);
+       	            map.put("topicList", pageResultTopicDeclarationVO);
+        }
+        // 因前端需要判断，当没有选题申报给空数据
+        if(ObjectUtil.isNull(map.get("topicList"))){
+        	PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =new PageResult<>();
+ 	    	List<TopicDeclarationVO> list = new ArrayList<>();
+ 	    	pageResultTopicDeclarationVO.setPageNumber(0);
+ 	    	pageResultTopicDeclarationVO.setRows(list);
+ 	    	pageResultTopicDeclarationVO.setPageTotal(0);
+ 	    	pageResultTopicDeclarationVO.setStart(0);
+ 	    	pageResultTopicDeclarationVO.setTotal(0);;
+         	map.put("topicList", pageResultTopicDeclarationVO);
+        }
         // 获取用户上次登录时间
         List<SysOperation> listSysOperation =
         sysOperationService.getSysOperation(sessionPmphUser.getId());
