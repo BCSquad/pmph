@@ -802,6 +802,17 @@ public class PmphUserServiceImpl implements PmphUserService {
        	            topicService.listMyTopic(progress, pageParameter3, null);
        	            map.put("topicList", pageResultTopicDeclarationVO);
         }
+        // 因前端需要判断，当没有选题申报给空数据
+        if(ObjectUtil.isNull(map.get("topicList"))){
+        	PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =new PageResult<>();
+ 	    	List<TopicDeclarationVO> list = new ArrayList<>();
+ 	    	pageResultTopicDeclarationVO.setPageNumber(0);
+ 	    	pageResultTopicDeclarationVO.setRows(list);
+ 	    	pageResultTopicDeclarationVO.setPageTotal(0);
+ 	    	pageResultTopicDeclarationVO.setStart(0);
+ 	    	pageResultTopicDeclarationVO.setTotal(0);;
+         	map.put("topicList", pageResultTopicDeclarationVO);
+        }
         // 获取用户上次登录时间
         List<SysOperation> listSysOperation =
         sysOperationService.getSysOperation(sessionPmphUser.getId());
