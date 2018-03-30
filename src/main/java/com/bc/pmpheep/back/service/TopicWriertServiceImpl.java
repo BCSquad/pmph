@@ -43,6 +43,20 @@ public class TopicWriertServiceImpl implements TopicWriertService {
 		List<TopicWriter> list = topicWriterDao.listTopicWriterByTopicId(topicId);
 		for (TopicWriter topicWriter : list) {
 			Integer degree = topicWriter.getDegree();
+			Integer sex = topicWriter.getSex();
+			if (ObjectUtil.notNull(sex)){
+				switch (sex) {
+				case 0:
+					topicWriter.setSexName(new String[]{"男"});
+					break;
+				case 1:
+					topicWriter.setSexName(new String[]{"女"});
+					break;
+				default:
+					throw new CheckedServiceException(CheckedExceptionBusiness.TOPIC,
+							CheckedExceptionResult.ILLEGAL_PARAM, "性别信息有错误");
+				}
+			}
 			if (ObjectUtil.notNull(degree)) {
 				switch (degree) {
 				case 0:

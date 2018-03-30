@@ -31,11 +31,14 @@ import com.bc.pmpheep.back.dao.BookVideoDao;
 import com.bc.pmpheep.back.dao.MaterialTypeDao;
 import com.bc.pmpheep.back.po.Book;
 import com.bc.pmpheep.back.po.CmsContent;
+import com.bc.pmpheep.back.po.MaterialType;
 import com.bc.pmpheep.back.service.BookService;
 import com.bc.pmpheep.back.service.CmsContentService;
+import com.bc.pmpheep.back.service.MaterialTypeService;
 import com.bc.pmpheep.back.util.DateUtil;
 import com.bc.pmpheep.back.util.ObjectUtil;
 import com.bc.pmpheep.back.util.StringUtil;
+import com.bc.pmpheep.back.vo.MaterialTypeVO;
 import com.bc.pmpheep.erp.service.InfoWorking;
 import com.bc.pmpheep.general.po.Content;
 import com.bc.pmpheep.general.service.ContentService;
@@ -73,6 +76,7 @@ public class MigrationBook {
 	public void start() {
 		clearBook();
 	}
+
 	protected void clearBook() {
 		StringBuilder sns = new StringBuilder();
 		InputStream is;
@@ -90,7 +94,7 @@ public class MigrationBook {
 			throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL, CheckedExceptionResult.ILLEGAL_PARAM,
 					"读取文件失败");
 		}
-		Map<String,String> snsAndMaterNames =  new HashMap<String,String>(16);
+		Map<String, MaterialType> snsAndMaterNames = new HashMap<String, MaterialType>(16);
 		for (int numSheet = 0; numSheet < workbook.getNumberOfSheets(); numSheet++) {
 			Sheet sheet = workbook.getSheetAt(numSheet);
 			if (ObjectUtil.isNull(sheet)) {
@@ -100,66 +104,72 @@ public class MigrationBook {
 				Row row = sheet.getRow(rowNum);
 				Cell sn = row.getCell(1);
 				if (ObjectUtil.notNull(sn) && !"".equals(sn.toString())) {
+					MaterialType materialType = new MaterialType();
 					sns.append(",'" + sn.toString().replace(".0", "") + "'");
-					snsAndMaterNames.put(sn.toString().replace(".0", ""),  String.valueOf(row.getCell(8)));
+					materialType.setTypeName(String.valueOf(row.getCell(2)));
+					materialType.setId(Long.valueOf(row.getCell(3).toString().replace(".0", "")));
+					snsAndMaterNames.put(sn.toString().replace(".0", ""), materialType);
 				}
 			}
 		}
-		bookDao.deleted();
-		bookDetailDao.deleteBookDetailByBookIds();
-		bookDao.deletedBookSupport();
-		bookCorrectionDao.deleteBookCoorrectionTrackByBookIds();
-		bookEditorDao.deleteBookEditorByBookIds();
-		bookUserCommentDao.deleteBookUserCommentBookIds();
-		bookUserLikeDao.deleteBookUserLikeByBookIds();
-		bookUserMarkDao.deleteBookUserMarkByBookIds();
-		bookVideoDao.deleteBookVideoByBookIds();
-		//同步更新或者插入书籍
+		 bookDao.deleted();
+		 bookDetailDao.deleteBookDetailByBookIds();
+		 bookDao.deletedBookSupport();
+		 bookCorrectionDao.deleteBookCoorrectionTrackByBookIds();
+		 bookEditorDao.deleteBookEditorByBookIds();
+		 bookUserCommentDao.deleteBookUserCommentBookIds();
+		 bookUserLikeDao.deleteBookUserLikeByBookIds();
+		 bookUserMarkDao.deleteBookUserMarkByBookIds();
+		 bookVideoDao.deleteBookVideoByBookIds();
+		// 同步更新或者插入书籍
 		String sn = sns.toString().substring(1);
 		JSONArray bookInfo = new InfoWorking().listBook(sn);
-		String[] vns = new String[bookInfo.size()];//版本号
+		String[] vns = new String[bookInfo.size()];// 版本号
 		for (int i = 0; i < bookInfo.size(); i++) {
 			JSONObject job = bookInfo.getJSONObject(i);
 			vns[i] = job.getString("editionnum");
 		}
-		bookService.AbuttingJoint(vns, 1);
-		//初始化教材社区数据
-		Map<String,Long> materNamesAndIds =  new HashMap<String,Long>(16);
+		 bookService.AbuttingJoint(vns, 1);
+		// 初始化教材社区数据
+		Map<String, Long> materNamesAndIds = new HashMap<String, Long>(16);
 		for (int i = 0; i < bookInfo.size(); i++) {
 			JSONObject job = bookInfo.getJSONObject(i);
-			String bookVn   = job.getString("editionnum");  //本版号
-			String bookSn   = job.getString("booknumber");  //书号
-			String materName = snsAndMaterNames.get(bookSn);
-			if(null == materName || "".equals(materName.trim())){
+			String bookVn = job.getString("editionnum"); // 本版号
+			String bookSn = job.getString("booknumber"); // 书号
+			String materName = snsAndMaterNames.get(bookSn).getTypeName();
+			Long type = snsAndMaterNames.get(bookSn).getId();
+			if (null == materName || "".equals(materName.trim())) {
 				continue;
 			}
-			Long materId = materNamesAndIds .get(materName); 
-			if(null ==  materId){
-				materId  = Long.MAX_VALUE - i ;
-				Content content  = new Content( materName);
-				content  = contentService.add(content);
-				CmsContent cmsContent  = new CmsContent();
-				cmsContent.setParentId(0L);
-				cmsContent.setPath("0");
-				cmsContent.setMid(content.getId());
-				cmsContent.setCategoryId(3L);
-				cmsContent.setTitle(materName);
-				cmsContent.setAuthorType(new Short("0"));
-				cmsContent.setAuthorId(342L);
-				cmsContent.setIsPublished(true);
-				cmsContent.setAuthStatus(new Short("2"));
-				cmsContent.setAuthDate(DateUtil.date2Str(new Date()));
-				cmsContent.setAuthUserId(342L);
-				cmsContent.setGmtCreate(DateUtil.getCurrentTime() );
-				cmsContent.setGmtUpdate(DateUtil.getCurrentTime() );
-				cmsContent.setIsMaterialEntry(true);
-				cmsContent.setMaterialId(materId);
-				cmsContentService.addCmsContent(cmsContent);
-				materNamesAndIds.put(materName, materId);
-			}
-			//更新书籍
+			Long materId = materNamesAndIds.get(materName);
+			 if (null == materId) {
+			 materId = Long.MAX_VALUE - i;
+			 Content content = new Content(materName);
+			 content = contentService.add(content);
+			 CmsContent cmsContent = new CmsContent();
+			 cmsContent.setParentId(0L);
+			 cmsContent.setPath("0");
+			 cmsContent.setMid(content.getId());
+			 cmsContent.setCategoryId(3L);
+			 cmsContent.setTitle(materName);
+			 cmsContent.setAuthorType(new Short("0"));
+			 cmsContent.setAuthorId(342L);
+			 cmsContent.setIsPublished(true);
+			 cmsContent.setAuthStatus(new Short("2"));
+			 cmsContent.setAuthDate(DateUtil.date2Str(new Date()));
+			 cmsContent.setAuthUserId(342L);
+			 cmsContent.setGmtCreate(DateUtil.getCurrentTime());
+			 cmsContent.setGmtUpdate(DateUtil.getCurrentTime());
+			 cmsContent.setIsMaterialEntry(true);
+			 cmsContent.setMaterialId(materId);
+			 cmsContentService.addCmsContent(cmsContent);
+			 materNamesAndIds.put(materName, materId);
+			 }
+
+			// 更新书籍
 			Book book = bookDao.getBookByVn2(bookVn);
-			if(null != book ){
+			if (null != book) {
+				book.setType(type);
 				book.setMaterialId(materId);
 				book.setSn(bookSn);
 				bookDao.updateBook(book);

@@ -73,13 +73,77 @@ public class Topic implements Serializable {
 	 */
 	private Long bankAccountId;
 	/**
+	 * 预计读者数及购买力
+	 */
+	private String readerQuantity;
+	/**
 	 * 作者购书
 	 */
 	private Integer purchase;
 	/**
+	 * 可能的宣传方式
+	 */
+	private String campaign;
+	/**
+	 * 可能的销售渠道
+	 */
+	private String salesChannel;
+	/**
+	 * 图书生命周期
+	 */
+	private String lifecycle;
+	/**
 	 * 作者赞助
 	 */
 	private Integer sponsorship;
+	/**
+	 * 印刷、用纸建议
+	 */
+	private String printAdvise;
+	/**
+	 * 定价建议
+	 */
+	private String priceAdvise;
+	/**
+	 * 预计印数
+	 */
+	private String printNumber;
+	/**
+	 * 成本估算
+	 */
+	private String cost;
+	/**
+	 * 保底印数
+	 */
+	private String minPrintNumber;
+	/**
+	 * 效益估算
+	 */
+	private String benefit;
+	/**
+	 * 是否修订书稿
+	 */
+	private Boolean isRevision;
+	/**
+	 * 修订原书名
+	 */
+	private String revisionBookname;
+	/**
+	 * 原编著者
+	 */
+	private String revisionAuthor;
+	/**
+	 * 上版出版时间
+	 */
+	private Timestamp revisionPublishDate;
+	/**
+	 * 累计印数
+	 */
+	private Integer revisionPrint;
+	/**
+	 * 库存数
+	 */
+	private Integer revisionStock;
 	/**
 	 * 是否为翻译书稿
 	 */
@@ -93,6 +157,10 @@ public class Topic implements Serializable {
 	 */
 	private String originalAuthor;
 	/**
+	 * 原出版者
+	 */
+	private String originalPublisher;
+	/**
 	 * 国籍
 	 */
 	private String nation;
@@ -100,6 +168,50 @@ public class Topic implements Serializable {
 	 * 出版年代及版次
 	 */
 	private String edition;
+	/**
+	 * 主编姓名
+	 */
+	private String realname;
+	/**
+	 * 性别
+	 */
+	private Integer sex;
+	/**
+	 * 年龄
+	 */
+	private Integer price;
+	/**
+	 * 行政职务
+	 */
+	private String position;
+	/**
+	 * 专业职务
+	 */
+	private Integer positionProfession;
+	/**
+	 * 学历
+	 */
+	private Integer degree;
+	/**
+	 * 工作单位
+	 */
+	private String workplace;
+	/**
+	 * 电话
+	 */
+	private String phone;
+	/**
+	 * 通讯地址
+	 */
+	private String address;
+	/**
+	 * 邮编
+	 */
+	private String postcode;
+	/**
+	 * 电子邮箱
+	 */
+	private String email;
 	/**
 	 * 审核进度
 	 */
@@ -193,14 +305,30 @@ public class Topic implements Serializable {
 		super();
 	}
 
-	public Topic(Long userId, String bookname, Integer reader, Timestamp deadline, Integer source, Integer wordNumber,
-			Integer pictureNumber, String subject, Integer rank, Integer type, Long bankAccountId, Integer purchase,
-			Integer sponsorship, Boolean isTranslation, String originalBookname, String originalAuthor, String nation,
-			String edition, Integer authProgress, String authFeedback, Timestamp authDate, Boolean isOptsHandling,
-			Long optsRoleId, Boolean isRejectedByDirector, String reasonDirector, Boolean isDirectorHandling,
-			Long departmentId, Boolean isRejectedByEditor, String reasonEditor, Boolean isEditorHandling, Long editorId,
-			Boolean isAccepted, Boolean isStaging, Boolean isDeleted, String note, Timestamp gmtCreate,
-			Timestamp gmtUpdate, String tn, String vn, Timestamp submitTime) {
+	public Topic(Long userId, String bookname, Integer reader,
+			Timestamp deadline, Integer source, Integer wordNumber,
+			Integer pictureNumber, String subject, Integer rank, Integer type,
+			Long bankAccountId, String readerQuantity, Integer purchase,
+			String campaign, String salesChannel, String lifecycle,
+			Integer sponsorship, String printAdvise, String priceAdvise,
+			String printNumber, String cost, String minPrintNumber,
+			String benefit, Boolean isRevision, String revisionBookname,
+			String revisionAuthor, Timestamp revisionPublishDate,
+			Integer revisionPrint, Integer revisionStock,
+			Boolean isTranslation, String originalBookname,
+			String originalAuthor, String originalPublisher, String nation,
+			String edition, String realname, Integer sex, Integer price,
+			String position, Integer positionProfession, Integer degree,
+			String workplace, String phone, String address, String postcode,
+			String email, Integer authProgress, String authFeedback,
+			Timestamp authDate, Boolean isOptsHandling, Long optsRoleId,
+			Boolean isRejectedByDirector, String reasonDirector,
+			Boolean isDirectorHandling, Long departmentId,
+			Boolean isRejectedByEditor, String reasonEditor,
+			Boolean isEditorHandling, Long editorId, Boolean isAccepted,
+			Boolean isStaging, Boolean isDeleted, String note,
+			Timestamp gmtCreate, Timestamp gmtUpdate, String tn, String vn,
+			Timestamp submitTime) {
 		super();
 		this.userId = userId;
 		this.bookname = bookname;
@@ -213,13 +341,41 @@ public class Topic implements Serializable {
 		this.rank = rank;
 		this.type = type;
 		this.bankAccountId = bankAccountId;
+		this.readerQuantity = readerQuantity;
 		this.purchase = purchase;
+		this.campaign = campaign;
+		this.salesChannel = salesChannel;
+		this.lifecycle = lifecycle;
 		this.sponsorship = sponsorship;
+		this.printAdvise = printAdvise;
+		this.priceAdvise = priceAdvise;
+		this.printNumber = printNumber;
+		this.cost = cost;
+		this.minPrintNumber = minPrintNumber;
+		this.benefit = benefit;
+		this.isRevision = isRevision;
+		this.revisionBookname = revisionBookname;
+		this.revisionAuthor = revisionAuthor;
+		this.revisionPublishDate = revisionPublishDate;
+		this.revisionPrint = revisionPrint;
+		this.revisionStock = revisionStock;
 		this.isTranslation = isTranslation;
 		this.originalBookname = originalBookname;
 		this.originalAuthor = originalAuthor;
+		this.originalPublisher = originalPublisher;
 		this.nation = nation;
 		this.edition = edition;
+		this.realname = realname;
+		this.sex = sex;
+		this.price = price;
+		this.position = position;
+		this.positionProfession = positionProfession;
+		this.degree = degree;
+		this.workplace = workplace;
+		this.phone = phone;
+		this.address = address;
+		this.postcode = postcode;
+		this.email = email;
 		this.authProgress = authProgress;
 		this.authFeedback = authFeedback;
 		this.authDate = authDate;
@@ -243,6 +399,8 @@ public class Topic implements Serializable {
 		this.vn = vn;
 		this.submitTime = submitTime;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -348,6 +506,14 @@ public class Topic implements Serializable {
 		this.bankAccountId = bankAccountId;
 	}
 
+	public String getReaderQuantity() {
+		return readerQuantity;
+	}
+
+	public void setReaderQuantity(String readerQuantity) {
+		this.readerQuantity = readerQuantity;
+	}
+
 	public Integer getPurchase() {
 		return purchase;
 	}
@@ -356,12 +522,132 @@ public class Topic implements Serializable {
 		this.purchase = purchase;
 	}
 
+	public String getCampaign() {
+		return campaign;
+	}
+
+	public void setCampaign(String campaign) {
+		this.campaign = campaign;
+	}
+
+	public String getSalesChannel() {
+		return salesChannel;
+	}
+
+	public void setSalesChannel(String salesChannel) {
+		this.salesChannel = salesChannel;
+	}
+
+	public String getLifecycle() {
+		return lifecycle;
+	}
+
+	public void setLifecycle(String lifecycle) {
+		this.lifecycle = lifecycle;
+	}
+
 	public Integer getSponsorship() {
 		return sponsorship;
 	}
 
 	public void setSponsorship(Integer sponsorship) {
 		this.sponsorship = sponsorship;
+	}
+
+	public String getPrintAdvise() {
+		return printAdvise;
+	}
+
+	public void setPrintAdvise(String printAdvise) {
+		this.printAdvise = printAdvise;
+	}
+
+	public String getPriceAdvise() {
+		return priceAdvise;
+	}
+
+	public void setPriceAdvise(String priceAdvise) {
+		this.priceAdvise = priceAdvise;
+	}
+
+	public String getPrintNumber() {
+		return printNumber;
+	}
+
+	public void setPrintNumber(String printNumber) {
+		this.printNumber = printNumber;
+	}
+
+	public String getCost() {
+		return cost;
+	}
+
+	public void setCost(String cost) {
+		this.cost = cost;
+	}
+
+	public String getMinPrintNumber() {
+		return minPrintNumber;
+	}
+
+	public void setMinPrintNumber(String minPrintNumber) {
+		this.minPrintNumber = minPrintNumber;
+	}
+
+	public String getBenefit() {
+		return benefit;
+	}
+
+	public void setBenefit(String benefit) {
+		this.benefit = benefit;
+	}
+
+	public Boolean getIsRevision() {
+		return isRevision;
+	}
+
+	public void setIsRevision(Boolean isRevision) {
+		this.isRevision = isRevision;
+	}
+
+	public String getRevisionBookname() {
+		return revisionBookname;
+	}
+
+	public void setRevisionBookname(String revisionBookname) {
+		this.revisionBookname = revisionBookname;
+	}
+
+	public String getRevisionAuthor() {
+		return revisionAuthor;
+	}
+
+	public void setRevisionAuthor(String revisionAuthor) {
+		this.revisionAuthor = revisionAuthor;
+	}
+
+	public Timestamp getRevisionPublishDate() {
+		return revisionPublishDate;
+	}
+
+	public void setRevisionPublishDate(Timestamp revisionPublishDate) {
+		this.revisionPublishDate = revisionPublishDate;
+	}
+
+	public Integer getRevisionPrint() {
+		return revisionPrint;
+	}
+
+	public void setRevisionPrint(Integer revisionPrint) {
+		this.revisionPrint = revisionPrint;
+	}
+
+	public Integer getRevisionStock() {
+		return revisionStock;
+	}
+
+	public void setRevisionStock(Integer revisionStock) {
+		this.revisionStock = revisionStock;
 	}
 
 	public Boolean getIsTranslation() {
@@ -388,6 +674,14 @@ public class Topic implements Serializable {
 		this.originalAuthor = originalAuthor;
 	}
 
+	public String getOriginalPublisher() {
+		return originalPublisher;
+	}
+
+	public void setOriginalPublisher(String originalPublisher) {
+		this.originalPublisher = originalPublisher;
+	}
+
 	public String getNation() {
 		return nation;
 	}
@@ -402,6 +696,94 @@ public class Topic implements Serializable {
 
 	public void setEdition(String edition) {
 		this.edition = edition;
+	}
+
+	public String getRealname() {
+		return realname;
+	}
+
+	public void setRealname(String realname) {
+		this.realname = realname;
+	}
+
+	public Integer getSex() {
+		return sex;
+	}
+
+	public void setSex(Integer sex) {
+		this.sex = sex;
+	}
+
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+	public Integer getPositionProfession() {
+		return positionProfession;
+	}
+
+	public void setPositionProfession(Integer positionProfession) {
+		this.positionProfession = positionProfession;
+	}
+
+	public Integer getDegree() {
+		return degree;
+	}
+
+	public void setDegree(Integer degree) {
+		this.degree = degree;
+	}
+
+	public String getWorkplace() {
+		return workplace;
+	}
+
+	public void setWorkplace(String workplace) {
+		this.workplace = workplace;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPostcode() {
+		return postcode;
+	}
+
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Integer getAuthProgress() {
@@ -570,6 +952,49 @@ public class Topic implements Serializable {
 
 	public void setSubmitTime(Timestamp submitTime) {
 		this.submitTime = submitTime;
+	}
+
+	@Override
+	public String toString() {
+		return "Topic [id=" + id + ", userId=" + userId + ", bookname="
+				+ bookname + ", reader=" + reader + ", deadline=" + deadline
+				+ ", source=" + source + ", wordNumber=" + wordNumber
+				+ ", pictureNumber=" + pictureNumber + ", subject=" + subject
+				+ ", rank=" + rank + ", type=" + type + ", bankAccountId="
+				+ bankAccountId + ", readerQuantity=" + readerQuantity
+				+ ", purchase=" + purchase + ", campaign=" + campaign
+				+ ", salesChannel=" + salesChannel + ", lifecycle=" + lifecycle
+				+ ", sponsorship=" + sponsorship + ", printAdvise="
+				+ printAdvise + ", priceAdvise=" + priceAdvise
+				+ ", printNumber=" + printNumber + ", cost=" + cost
+				+ ", minPrintNumber=" + minPrintNumber + ", benefit=" + benefit
+				+ ", isRevision=" + isRevision + ", revisionBookname="
+				+ revisionBookname + ", revisionAuthor=" + revisionAuthor
+				+ ", revisionPublishDate=" + revisionPublishDate
+				+ ", revisionPrint=" + revisionPrint + ", revisionStock="
+				+ revisionStock + ", isTranslation=" + isTranslation
+				+ ", originalBookname=" + originalBookname
+				+ ", originalAuthor=" + originalAuthor + ", originalPublisher="
+				+ originalPublisher + ", nation=" + nation + ", edition="
+				+ edition + ", realname=" + realname + ", sex=" + sex
+				+ ", price=" + price + ", position=" + position
+				+ ", positionProfession=" + positionProfession + ", degree="
+				+ degree + ", workplace=" + workplace + ", phone=" + phone
+				+ ", address=" + address + ", postcode=" + postcode
+				+ ", email=" + email + ", authProgress=" + authProgress
+				+ ", authFeedback=" + authFeedback + ", authDate=" + authDate
+				+ ", isOptsHandling=" + isOptsHandling + ", optsRoleId="
+				+ optsRoleId + ", isRejectedByDirector=" + isRejectedByDirector
+				+ ", reasonDirector=" + reasonDirector
+				+ ", isDirectorHandling=" + isDirectorHandling
+				+ ", departmentId=" + departmentId + ", isRejectedByEditor="
+				+ isRejectedByEditor + ", reasonEditor=" + reasonEditor
+				+ ", isEditorHandling=" + isEditorHandling + ", editorId="
+				+ editorId + ", isAccepted=" + isAccepted + ", isStaging="
+				+ isStaging + ", isDeleted=" + isDeleted + ", note=" + note
+				+ ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate
+				+ ", tn=" + tn + ", vn=" + vn + ", submitTime=" + submitTime
+				+ "]";
 	}
 
 }

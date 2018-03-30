@@ -49,7 +49,7 @@ public class TopicTextVO implements Serializable {
 	/**
 	 * 读者对象
 	 */
-	private String readType;
+	private String[] readType;
 	/**
 	 * 预计交稿时间
 	 */
@@ -61,7 +61,7 @@ public class TopicTextVO implements Serializable {
 	/**
 	 * 选题来源
 	 */
-	private String sourceType;
+	private String[] sourceType;
 	/**
 	 * 估计字数（千字）
 	 */
@@ -91,9 +91,9 @@ public class TopicTextVO implements Serializable {
 	private Integer sex;
 	private Integer price;
 	private Integer positionProfession;
-	private String positionProfessionName;
+	private String[] positionProfessionName;
 	private Integer degree;
-	private String degreeName;
+	private String[] degreeName;
 	private String workplace;
 	private String phone;
 	private String address;
@@ -112,7 +112,7 @@ public class TopicTextVO implements Serializable {
 	/**
 	 * 级别
 	 */
-	private String rankType;
+	private String[] rankType;
 	/**
 	 * 图书类别 0=专著/1=基础理论/2=教材/3=论文集/4=图谱/5=科普/6=应用技术/7=教辅/8=工具书/9=其他
 	 */
@@ -120,7 +120,7 @@ public class TopicTextVO implements Serializable {
 	/**
 	 * 图书类别
 	 */
-	private String typeName;
+	private String typeName[];
 	/**
 	 * 银行账户id
 	 */
@@ -382,11 +382,11 @@ public class TopicTextVO implements Serializable {
 		this.originalPublisher = originalPublisher;
 	}
 
-	public String getPositionProfessionName() {
+	public String[] getPositionProfessionName() {
 		return positionProfessionName;
 	}
 
-	public void setPositionProfessionName(String positionProfessionName) {
+	public void setPositionProfessionName(String[] positionProfessionName) {
 		this.positionProfessionName = positionProfessionName;
 	}
 
@@ -398,11 +398,11 @@ public class TopicTextVO implements Serializable {
 		this.degree = degree;
 	}
 
-	public String getDegreeName() {
+	public String[] getDegreeName() {
 		return degreeName;
 	}
 
-	public void setDegreeName(String degreeName) {
+	public void setDegreeName(String[] degreeName) {
 		this.degreeName = degreeName;
 	}
 
@@ -630,27 +630,27 @@ public class TopicTextVO implements Serializable {
 		this.topicWriters = topicWriters;
 	}
 
-	public String getReadType() {
+	public String[] getReadType() {
 		return readType;
 	}
 
-	public void setReadType(String readType) {
+	public void setReadType(String[] readType) {
 		this.readType = readType;
 	}
 
-	public String getSourceType() {
+	public String[] getSourceType() {
 		return sourceType;
 	}
 
-	public void setSourceType(String sourceType) {
+	public void setSourceType(String[] sourceType) {
 		this.sourceType = sourceType;
 	}
 
-	public String getTypeName() {
+	public String[] getTypeName() {
 		return typeName;
 	}
 
-	public void setTypeName(String typeName) {
+	public void setTypeName(String[] typeName) {
 		this.typeName = typeName;
 	}
 
@@ -702,11 +702,11 @@ public class TopicTextVO implements Serializable {
 		this.username = username;
 	}
 
-	public String getRankType() {
+	public String[] getRankType() {
 		return rankType;
 	}
 
-	public void setRankType(String rankType) {
+	public void setRankType(String[] rankType) {
 		this.rankType = rankType;
 	}
 

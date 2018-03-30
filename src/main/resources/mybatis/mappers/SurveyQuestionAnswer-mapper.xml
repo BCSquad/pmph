@@ -135,8 +135,9 @@
     	ON 
     		wu.`org_id` = org.`id`,
     		(
+    		SELECT count(a.`count`) `count` from(
     		 SELECT 
-				count(*) count
+				count(*) `count`
 			 FROM
 	  			`survey_question_answer` sqa 
 	  		 JOIN 
@@ -160,8 +161,8 @@
 							wu.`realname` like concat('%',#{parameter.userName},'%') )
 					</if>
 	    		</where>
-	    		GROUP BY s.`title`  
-    		)t
+	    		GROUP BY s.`title`,wu.`realname`
+    		)a)t
   		<where>
 	    	<if test="parameter.title != null and parameter.title != ''">
 				s.`title` like concat('%',#{parameter.title},'%')
@@ -172,7 +173,7 @@
 			</if>
 	    </where>
 		GROUP BY 
-			s.`title`
+			s.`title`,wu.`realname`
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
 		</if>
