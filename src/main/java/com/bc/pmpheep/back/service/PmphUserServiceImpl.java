@@ -121,19 +121,19 @@ public class PmphUserServiceImpl implements PmphUserService {
                                               CheckedExceptionResult.NULL_PARAM, "用户ID为空时禁止更新用户");
         }
         if (!StringUtil.isEmpty(pmphUser.getEmail())) {
-			if (!ValidatUtil.checkEmail(pmphUser.getEmail())) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-						CheckedExceptionResult.ILLEGAL_PARAM, "邮箱不符合规范");
-			}
-		}
-		if (!StringUtil.isEmpty(pmphUser.getHandphone())) {
-			if (!ValidatUtil.checkMobileNumber(pmphUser.getHandphone())) {
-				throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-						CheckedExceptionResult.ILLEGAL_PARAM, "手机号码不符合规范");
-			}
-		}
+            if (!ValidatUtil.checkEmail(pmphUser.getEmail())) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                                  CheckedExceptionResult.ILLEGAL_PARAM, "邮箱不符合规范");
+            }
+        }
+        if (!StringUtil.isEmpty(pmphUser.getHandphone())) {
+            if (!ValidatUtil.checkMobileNumber(pmphUser.getHandphone())) {
+                throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                                  CheckedExceptionResult.ILLEGAL_PARAM, "手机号码不符合规范");
+            }
+        }
         // 头像文件不为空
-        if (null != newAvatar) {
+        if (StringUtil.notEmpty(newAvatar)) {
             if (StringUtil.notEmpty(pmphUser.getAvatar())) {
                 if (pmphUser.getAvatar().contains("/")) {
                     String avatar = pmphUser.getAvatar();
@@ -149,13 +149,13 @@ public class PmphUserServiceImpl implements PmphUserService {
             pmphUser.setAvatar(newAvatar);
         }
         String avatar = pmphUser.getAvatar();
-        if (null != avatar && avatar.contains("/")) {
+        if (StringUtil.notEmpty(avatar) && avatar.contains("/")) {
             avatar = avatar.substring(avatar.lastIndexOf("/") + 1, avatar.length());
         }
-        if (null != avatar && avatar.contains("\\")) {
+        if (StringUtil.notEmpty(avatar) && avatar.contains("\\")) {
             avatar = avatar.substring(avatar.lastIndexOf("\\") + 1, avatar.length());
         }
-        if (null != avatar) {
+        if (StringUtil.notEmpty(avatar)) {
             byte[] fileByte = (byte[]) request.getSession(false).getAttribute(avatar);
             String fileName = (String) request.getSession(false).getAttribute("fileName_" + avatar);
             String noticeId;
@@ -578,7 +578,7 @@ public class PmphUserServiceImpl implements PmphUserService {
             }
             PmphGroup pmphGroup = pmphGroupService.getPmphGroupById(groupId);
             Long bookId = pmphGroup.getBookId();
-            if (null != bookId && bookId.intValue() > 0 ) {
+            if (null != bookId && bookId.intValue() > 0) {
                 Textbook textbook = textbookService.getTextbookById(bookId);
                 Material material = materialService.getMaterialById(textbook.getMaterialId());
                 List<MaterialProjectEditorVO> projects =
@@ -779,39 +779,44 @@ public class PmphUserServiceImpl implements PmphUserService {
         pageParameter3.setParameter(topicDeclarationVO);
         // 由主任受理
         if (pmphIdentity.getIsDirector()) {
-        	PageParameter<TopicDirectorVO> pageParameterTopicDirectorVO = new PageParameter<>();
-        	PageResult<TopicDirectorVO> PageResultTopicDirectorVO=topicService.listIsDirectorTopic(sessionPmphUser.getId(),pageParameterTopicDirectorVO);
-        	map.put("topicList", PageResultTopicDirectorVO);
+            PageParameter<TopicDirectorVO> pageParameterTopicDirectorVO = new PageParameter<>();
+            PageResult<TopicDirectorVO> PageResultTopicDirectorVO =
+            topicService.listIsDirectorTopic(sessionPmphUser.getId(), pageParameterTopicDirectorVO);
+            map.put("topicList", PageResultTopicDirectorVO);
         }
         // 由运维人员受理
         if (pmphIdentity.getIsOpts()) {
-        	PageParameter<TopicOPtsManagerVO> pageParameterTopicOPtsManagerVO = new PageParameter<>();
-        	PageResult<TopicOPtsManagerVO> PageResultTopicOPtsManagerVO=topicService.listIsOptsTopic(sessionPmphUser.getId(),pageParameterTopicOPtsManagerVO);
-        	map.put("topicList", PageResultTopicOPtsManagerVO);
-        	
+            PageParameter<TopicOPtsManagerVO> pageParameterTopicOPtsManagerVO =
+            new PageParameter<>();
+            PageResult<TopicOPtsManagerVO> PageResultTopicOPtsManagerVO =
+            topicService.listIsOptsTopic(sessionPmphUser.getId(), pageParameterTopicOPtsManagerVO);
+            map.put("topicList", PageResultTopicOPtsManagerVO);
+
         }
         // 由编辑受理
         if (pmphIdentity.getIsEditor()) {
-        	PageParameter<TopicEditorVO> pageParameterTopicEditorVO = new PageParameter<>();
-        	 PageResult<TopicEditorVO> PageResultTopicEditorVO=topicService.listIsEditor(sessionPmphUser.getId(),pageParameterTopicEditorVO);
-        	 map.put("topicList", PageResultTopicEditorVO);
+            PageParameter<TopicEditorVO> pageParameterTopicEditorVO = new PageParameter<>();
+            PageResult<TopicEditorVO> PageResultTopicEditorVO =
+            topicService.listIsEditor(sessionPmphUser.getId(), pageParameterTopicEditorVO);
+            map.put("topicList", PageResultTopicEditorVO);
         }
-        //是否是系统管理员
-        if(pmphIdentity.getIsAdmin()){
-       	 	PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
-       	            topicService.listMyTopic(progress, pageParameter3, null);
-       	            map.put("topicList", pageResultTopicDeclarationVO);
+        // 是否是系统管理员
+        if (pmphIdentity.getIsAdmin()) {
+            PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
+            topicService.listMyTopic(progress, pageParameter3, null);
+            map.put("topicList", pageResultTopicDeclarationVO);
         }
         // 因前端需要判断，当没有选题申报给空数据
-        if(ObjectUtil.isNull(map.get("topicList"))){
-        	PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =new PageResult<>();
- 	    	List<TopicDeclarationVO> list = new ArrayList<>();
- 	    	pageResultTopicDeclarationVO.setPageNumber(0);
- 	    	pageResultTopicDeclarationVO.setRows(list);
- 	    	pageResultTopicDeclarationVO.setPageTotal(0);
- 	    	pageResultTopicDeclarationVO.setStart(0);
- 	    	pageResultTopicDeclarationVO.setTotal(0);;
-         	map.put("topicList", pageResultTopicDeclarationVO);
+        if (ObjectUtil.isNull(map.get("topicList"))) {
+            PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO = new PageResult<>();
+            List<TopicDeclarationVO> list = new ArrayList<>();
+            pageResultTopicDeclarationVO.setPageNumber(0);
+            pageResultTopicDeclarationVO.setRows(list);
+            pageResultTopicDeclarationVO.setPageTotal(0);
+            pageResultTopicDeclarationVO.setStart(0);
+            pageResultTopicDeclarationVO.setTotal(0);
+            ;
+            map.put("topicList", pageResultTopicDeclarationVO);
         }
         // 获取用户上次登录时间
         List<SysOperation> listSysOperation =
@@ -916,13 +921,13 @@ public class PmphUserServiceImpl implements PmphUserService {
         return pmphUserDao.getPmphUserByUsername(username);
     }
 
-	@Override
-	public PmphUser updateUser(PmphUser pmphUser) {
-		if (ObjectUtil.isNull(pmphUser)) {
-	           throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
-	                                              CheckedExceptionResult.NULL_PARAM, "用户属性为空时禁止更新用户");
-	    }
+    @Override
+    public PmphUser updateUser(PmphUser pmphUser) {
+        if (ObjectUtil.isNull(pmphUser)) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
+                                              CheckedExceptionResult.NULL_PARAM, "用户属性为空时禁止更新用户");
+        }
         pmphUserDao.update(pmphUser);
         return pmphUser;
-	}
+    }
 }
