@@ -609,8 +609,7 @@ public class MigrationStageOne {
             if (StringUtil.isEmpty(proxy) && isProxyUpload == 1){
             	proxy = "DEFAULT";
             	orgUser.setProxy(proxy);
-            }
-            if (StringUtil.notEmpty(proxy)) {
+            } else if (StringUtil.notEmpty(proxy)) {
                 String mongoId = "";
                 try {
                     mongoId = fileService.migrateFile(proxy, ImageType.ORG_USER_PROXY, pk);

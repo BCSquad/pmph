@@ -39,9 +39,11 @@ import com.bc.pmpheep.test.BaseTest;
  */
 public class TopicServiceTest extends BaseTest {
 	Logger logger = LoggerFactory.getLogger(TopicServiceTest.class);
-	Topic topic = new Topic(9L, "abc", 2, DateUtil.getCurrentTime(), 0, 100, 100, "pps", 0, 0, 1L, null, null, false,
-			null, null, null, null, 1, null, null, true, 1L, false, null, false, null, false, null, false, null, false,
-			false, false, null, null, null, null, null, DateUtil.getCurrentTime());
+	Topic topic = new Topic(9L, "abc", 2, DateUtil.getCurrentTime(), 0, 100, 100, "pps", 0, 0, 1L, "20", null, null, 
+			null, null, null, null, null, null, null, null, null, false, null, null, null, null, null, false, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, null,
+			true, 1L, false, null, false, null, false, null, false, null, false, false, false, null, null, null, null,
+			null, DateUtil.getCurrentTime());
 
 	@Resource
 	TopicService topicService;

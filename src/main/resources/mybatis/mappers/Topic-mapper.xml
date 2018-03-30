@@ -39,11 +39,59 @@
 			<if test="bankAccountId != null">
 				bank_account_id,
 			</if>
+			<if test="readerQuantity != null and readerQuantity !=''">
+			    reader_quantity,
+			</if>
 			<if test="purchase != null">
 				purchase,
 			</if>
+			<if test="campaign !=null and campaign !=''">
+			    campaign,
+			</if>
+			<if test="salesChannel !=null and salesChannel !=''">
+			    sales_channel,
+			</if>
+			<if test="lifecycle !=null and lifecycle !=''">
+			    lifecycle,
+			</if>
 			<if test="sponsorship != null">
 				sponsorship,
+			</if>
+			<if test="printAdvise != null and printAdvise !=''">
+			    print_advise,
+			</if>
+			<if test="priceAdvise !=null and priceAdvise !=''">
+			    price_advise,
+			</if>
+			<if test="printNumber !=null and printNumber !=''">
+			    print_number,
+			</if>
+			<if test="cost !=null and cost !=''">
+			    cost,
+			</if>
+			<if test="minPrintNumber !=null and minPrintNumber !=''">
+			    min_print_number,
+			</if>
+			<if test="benefit != null and benefit !=''">
+			    benefit,
+			</if>
+			<if test="isRevision !=null">
+			    is_revision,
+			</if>
+			<if test="revisionBookname != null and revisionBookname !=''">
+			    revision_bookname,
+			</if>
+			<if test="revisionAuthor !=null and revisionAuthor !=''">
+			    revision_author,
+			</if>
+			<if test="revisionPublishDate !=null">
+			    revision_publish_date,
+			</if>
+			<if test="revisionPrint !=null">
+			    revision_print,
+			</if>
+			<if test="revisionStock !=null">
+			    revision_stock,
 			</if>
 			<if test="isTranslation != null">
 				is_translation,
@@ -54,11 +102,47 @@
 			<if test="originalAuthor != null and originalAuthor !='' ">
 				original_author,
 			</if>
+			<if test="originalPublisher !=null and originalPublisher !=''">
+			    original_publisher,
+			</if>
 			<if test="nation != null and nation !='' ">
 				nation,
 			</if>
 			<if test="edition != null and edition !='' ">
 				edition,
+			</if>
+			<if test="realname != null and realname !=''">
+			    realname,
+			</if>
+			<if test="sex !=null">
+			    sex,
+			</if>
+			<if test="price !=null">
+			    price,
+			</if>
+			<if test="position !=null and position !=''">
+			    position,
+			</if>
+			<if test="positionProfession !=null">
+			    position_profession,
+			</if>
+			<if test="degree !=null">
+			    degree,
+			</if>
+			<if test="workplace !=null and workplace !=''">
+			    workplace,
+			</if>
+			<if test="phone !=null and phone !=''">
+			    phone,
+			</if>
+			<if test="address !=null and address !=''">
+			    address,
+			</if>
+			<if test="postcode !=null and postcode !=''">
+			    postcode,
+			</if>
+			<if test="email !=null and email !=''">
+			    email,
 			</if>
 			<if test="authProgress != null">
 				auth_progress,
@@ -164,11 +248,59 @@
 			<if test="bankAccountId != null">
 				#{bankAccountId},
 			</if>
+			<if test="readerQuantity !=null and readerQuantity !=''">
+			    #{readerQuantity},
+			</if>
 			<if test="purchase != null">
 				#{purchase},
 			</if>
+			<if test="campaign !=null and campaign !=''">
+			    #{campaign},
+			</if>
+			<if test="salesChannel !=null and salesChannel !=''">
+			    #{salesChannel},
+			</if>
+			<if test="lifecycle !=null and lifecycle !=''">
+			    #{lifecycle},
+			</if>
 			<if test="sponsorship != null">
 				#{sponsorship},
+			</if>
+			<if test="printAdvise !=null and printAdvise !=''">
+			    #{printAdvise},
+			</if>
+			<if test="priceAdvise !=null and priceAdvise !=''">
+			    #{priceAdvise},
+			</if>
+			<if test="printNumber !=null and printNumber !=''">
+			    #{printNumber},
+			</if>
+			<if test="cost != null and cost !=''">
+			    #{cost},
+			</if>
+			<if test="minPrintNumber !=null and minPrintNumber !=''">
+			    #{minPrintNumber},
+			</if>
+			<if test="benefit !=null and benefit !=''">
+			    #{benefit},
+			</if>
+			<if test="isRevision !=null">
+			    #{isRevision},
+			</if>
+			<if test="revisionBookname !=null and revisionBookname !=''">
+			    #{revisionBookname},
+			</if>
+			<if test="revisionAuthor !=null and revisionAuthor !=''">
+			    #{revisionAuthor},
+			</if>
+			<if test="revisionPublishDate !=null">
+			    #{revisionPublishDate},
+			</if>
+			<if test="revisionPrint !=null">
+			    #{revisionPrint},
+			</if>
+			<if test="revisionStock !=null">
+			    #{revisionStock},
 			</if>
 			<if test="isTranslation != null">
 				#{isTranslation},
@@ -179,11 +311,47 @@
 			<if test="originalAuthor != null and originalAuthor !='' ">
 				#{originalAuthor},
 			</if>
+			<if test="originalPublisher !=null and originalPublisher !=''">
+			    #{originalPublisher},
+			</if>
 			<if test="nation != null and nation !='' ">
 				#{nation},
 			</if>
 			<if test="edition != null and edition !='' ">
 				#{edition},
+			</if>
+			<if test="realname !=null and realname !=''">
+			    #{realname},
+			</if>
+			<if test="sex !=null">
+			    #{sex},
+			</if>
+			<if test="price !=null">
+			    #{price},
+			</if>
+			<if test="position !=null and position !=''">
+			    #{position},
+			</if>
+			<if test="positionProfession !=null">
+			    #{positionProfession},
+			</if>
+			<if test="degree !=null">
+			    #{degree},
+			</if>
+			<if test="workplace !=null and workplace !=''">
+			    #{workplace},
+			</if>
+			<if test="phone !=null and phone !=''">
+			    #{phone},
+			</if>
+			<if test="address !=null and address !=''">
+			    #{address},
+			</if>
+			<if test="postcode !=null and postcode !=''">
+			    #{postcode},
+			</if>
+			<if test="email !=null and email !=''">
+			    #{email},
 			</if>
 			<if test="authProgress != null">
 				#{authProgress},
@@ -271,7 +439,7 @@
 	<!-- 运维人员获取可以操作的选题 -->
 	<select id="listOpts" resultType="TopicOPtsManagerVO">
 		SELECT
-		t.*
+		t.*,w.realname
 		FROM
 		topic t
 		LEFT JOIN pmph_user_role r ON r.role_id
@@ -328,7 +496,7 @@
 	<!-- 系统管理员获取可以操作的选题 -->
 	<select id="list" resultType="TopicOPtsManagerVO">
 		SELECT
-		t.*
+		t.*,w.realname
 		FROM
 		topic t
 		LEFT JOIN
@@ -407,11 +575,59 @@
 			<if test="bankAccountId != null">
 				bank_account_id = #{bankAccountId},
 			</if>
+			<if test="readerQuantity !=null and readerQuantity !=''">
+			    reader_quantity = #{readerQuantity},
+			</if>
 			<if test="purchase != null">
 				purchase = #{purchase},
 			</if>
+			<if test="campaign !=null and campaign !=''">
+			    campaign = #{campaign},
+			</if>
+			<if test="salesChannel !=null and salesChannel !=''">
+			    sales_channel = #{salesChannel},
+			</if>
+			<if test="lifecycle !=null and lifecycle !=''">
+			    lifecycle = #{lifecycle},
+			</if>
 			<if test="sponsorship != null">
 				sponsorship = #{sponsorship},
+			</if>
+			<if test="printAdvise !=null and printAdvise !=''">
+			    print_advise = #{printAdvise},
+			</if>
+			<if test="priceAdvise !=null and priceAdvise !=''">
+			    price_advise = #{priceAdvise},
+			</if>
+			<if test="printNumber !=null and printNumber !=''">
+			    print_number = #{printNumber},
+			</if>
+			<if test="cost !=null and cost !=''">
+			    cost = #{cost},
+			</if>
+			<if test="minPrintNumber !=null and minPrintNumber !=''">
+			    min_print_number = #{minPrintNumber},
+			</if>
+			<if test="benefit !=null and benefit !=''">
+			    benefit = #{benefit},
+			</if>
+			<if test="isRevision !=null">
+			    is_revision = #{isRevision},
+			</if>
+			<if test="revisionBookname !=null and revisionBookname !=''">
+			    revision_bookname = #{revisionBookname},
+			</if>
+			<if test="revisionAuthor !=null and revisionAuthor !=''">
+			    revision_author = #{revisionAuthor},
+			</if>
+			<if test="revisionPublishDate !=null">
+			    revision_publish_date = #{revisionPublishDate},
+			</if>
+			<if test="revisionPrint !=null">
+			    revision_print = #{revisionPrint},
+			</if>
+			<if test="revisionStock !=null">
+			    revision_stock = #{revisionStock},
 			</if>
 			<if test="isTranslation != null">
 				is_translation = #{isTranslation},
@@ -422,11 +638,47 @@
 			<if test="originalAuthor != null and originalAuthor !='' ">
 				original_author = #{originalAuthor},
 			</if>
+			<if test="originalPublisher !=null and originalPublisher !=''">
+			    original_publisher = #{originalPublisher},
+			</if>
 			<if test="nation != null and nation !='' ">
 				nation = #{nation},
 			</if>
 			<if test="edition != null and edition !='' ">
 				edition = #{edition},
+			</if>
+			<if test="realname !=null and realname !=''">
+			    realname = #{realname},
+			</if>
+			<if test="sex !=nul">
+			    sex = #{sex},
+			</if>
+			<if test="price !=null">
+			    price = #{price},
+			</if>
+			<if test="position !=null and position !=''">
+			    position = #{position},
+			</if>
+			<if test="positionProfession !=null">
+			    position_profession = #{positionProfession},
+			</if>
+			<if test="degree !=null">
+			    degree = #{degree},
+			</if>
+			<if test="workplace !=null and workplace != ''">
+			    workplace = #{workplace},
+			</if>
+			<if test="phone !=null and phone !=''">
+			    phone = #{phone},
+			</if>
+			<if test="address !=null and address !=''">
+			    address = #{address},
+			</if>
+			<if test="postcode !=null and postcode !=''">
+			    postcode = #{postcode},
+			</if>
+			<if test="email !=null and email !=''">
+			    email = #{email},
 			</if>
 			<if test="authProgress != null">
 				auth_progress = #{authProgress},
@@ -513,7 +765,7 @@
 
 	<select id="listCheckTopic" resultType="TopicDeclarationVO">
 		SELECT
-		t.*,p.realname editorName
+		t.*, w.realname,p.realname editorName
 		FROM
 		topic t
 		LEFT JOIN
@@ -556,7 +808,7 @@
 	</select>
 	<!-- 获取主任可以操作的选题 -->
 	<select id="listTopicDirectorVOs" resultType="TopicDirectorVO">
-		SELECT a.*
+		SELECT a.*,c.realname
 		FROM topic a LEFT JOIN pmph_user b ON
 		a.department_id = b.department_id
 		LEFT JOIN writer_user c ON a.user_id
@@ -580,7 +832,7 @@
 
 	<!-- 计算主任可以操作的选题数 -->
 	<select id="totalTopicDirectorVOs" resultType="Integer">
-		SELECT count(*) FROM (SELECT a.*
+		SELECT count(*) FROM (SELECT a.*,c.realname
 		FROM topic a LEFT JOIN
 		pmph_user b ON a.department_id
 		= b.department_id
@@ -605,7 +857,7 @@
 
 	<!-- 获取编辑可以操作的申报选题 -->
 	<select id="listTopicEditorVOs" resultType="TopicEditorVO">
-		SELECT a.*,b.realname editorName
+		SELECT a.*,c.realname,b.realname editorName
 		FROM topic a
 		LEFT JOIN
 		pmph_user b ON a.editor_id
@@ -631,7 +883,7 @@
 
 	<!-- 计算编辑可以操作的选题数 -->
 	<select id="totalTopicEditorVOs" resultType="Integer">
-		SELECT count(*) FROM (SELECT a.*
+		SELECT count(*) FROM (SELECT a.*,b.realname
 		FROM topic a
 		LEFT JOIN
 		pmph_user b ON a.editor_id =
@@ -655,7 +907,7 @@
 
 	<!-- 系统管理员查询选题申报（主任界面） -->
 	<select id="listDirectorView" resultType="TopicDirectorVO">
-		SELECT a.*
+		SELECT a.*,b.realname
 		FROM topic a
 		LEFT JOIN writer_user b ON a.user_id
 		= b.id
@@ -691,7 +943,7 @@
 
 	<!-- 系统管理员查询选题申报（编辑界面） -->
 	<select id="listEditorView" resultType="TopicEditorVO">
-		SELECT a.*,c.realname editorName
+		SELECT a.*,b.realname,c.realname editorName
 		FROM topic a
 		LEFT JOIN
 		writer_user b ON a.user_id
@@ -893,7 +1145,7 @@
 	</select>
 	<!-- 查询当前用户相关的选题申报 -->
 	<select id="listMyTopic" resultType="TopicDeclarationVO">
-	SELECT a.*,c.realname editorName
+	SELECT a.*,b.realname,c.realname editorName
 		FROM topic a
 		LEFT JOIN
 		writer_user b ON a.user_id= b.id
@@ -938,24 +1190,27 @@
 		AND a.is_director_handling =TRUE
 		AND a.is_editor_handling = FALSE
 		AND b.is_director = TRUE
+		AND a.auth_progress in(1,2,3)
 		ORDER BY a.submit_time DESC) t
 	</select>
 	<!-- 主任受理 -->
 	<select id="listIsDirectorTopic" resultType="TopicDirectorVO">
-		SELECT a.*
-		FROM topic a LEFT JOIN pmph_user b ON	a.department_id = b.department_id
+		SELECT a.*,c.realname
+		FROM topic a 
+		LEFT JOIN pmph_user b ON	a.department_id = b.department_id
 		LEFT JOIN writer_user c ON a.user_id= c.id
 		WHERE b.id = #{userId}
 		AND	a.is_director_handling = TRUE
 		AND	a.is_editor_handling = FALSE
 		AND b.is_director = TRUE
+		AND a.auth_progress in(1,2,3)
 		ORDER BY a.submit_time DESC
 		LIMIT
 		#{start},#{pageSize}
 	</select>
 	<!--运维受理 -->
 	<select id="listIsOptsTopic" resultType="TopicOPtsManagerVO">
-		SELECT  t.*
+		SELECT  t.*,w.realname
 		FROM topic t
 		LEFT JOIN pmph_user_role r ON r.role_id =t.opts_role_id
 		LEFT JOIN pmph_user u ON u.id = r.user_id
@@ -963,6 +1218,7 @@
 		WHERE u.id =#{userId}
 		AND t.is_opts_handling = TRUE
 		AND t.is_director_handling =FALSE
+		AND t.auth_progress in(1,2,3)
 		ORDER BY t.submit_time desc
 		LIMIT
 		#{start},#{pageSize}
@@ -977,11 +1233,12 @@
 		WHERE u.id =#{userId}
 		AND t.is_opts_handling = TRUE
 		AND t.is_director_handling =FALSE
+		AND t.auth_progress in(1,2,3)
 		ORDER BY t.submit_time DESC
 	</select>
 	<!-- 编辑受理 -->
 	<select id="listIsEditor" resultType="TopicEditorVO">
-		SELECT a.*,b.realname editorName
+		SELECT a.*,c.realname,b.realname editorName
 		FROM topic a
 		LEFT JOIN
 		pmph_user b ON a.editor_id= b.id
@@ -995,7 +1252,7 @@
 		#{start},#{pageSize}
 	</select>
 	<select id="listIsEditorTotal" resultType="Integer">
-		SELECT count(*) FROM (SELECT a.*,b.realname FROM topic a
+		SELECT count(*) FROM (SELECT a.* FROM topic a
 		LEFT JOIN pmph_user b ON a.editor_id =b.id
 		LEFT JOIN writer_user c ON a.user_id =c.id
 		WHERE a.editor_id =#{userId}

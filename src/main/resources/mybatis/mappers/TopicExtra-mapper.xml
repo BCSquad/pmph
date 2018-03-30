@@ -11,11 +11,14 @@
 			<if test="reason != null and reason !=''">
 				reason,
 			</if>
-			<if test=" price != null and price !=''">
-				price,
-			</if>
 			<if test=" score != null and score !=''">
 				score,
+			</if>
+			<if test="achievement !=null and achievement !=''">
+			    achievement,
+			</if>
+			<if test="ability  !=null and ability !=''">
+			    ability,
 			</if>
 		</trim>
 	</sql>
@@ -29,11 +32,14 @@
 			<if test="reason != null and reason !=''">
 				#{reason},
 			</if>
-			<if test=" price != null and price !=''">
-				#{price},
-			</if>
 			<if test=" score != null and score !=''">
 				#{score},
+			</if>
+			<if test="achievement !=null and achievement !=''">
+			    #{achievement},
+			</if>
+			<if test="ability !=null and ability !=''">
+			    #{ability},
 			</if>
 		</trim>
 	</sql>
