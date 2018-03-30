@@ -271,7 +271,7 @@
 	<!-- 运维人员获取可以操作的选题 -->
 	<select id="listOpts" resultType="TopicOPtsManagerVO">
 		SELECT
-		t.*,w.realname
+		t.*
 		FROM
 		topic t
 		LEFT JOIN pmph_user_role r ON r.role_id
@@ -328,7 +328,7 @@
 	<!-- 系统管理员获取可以操作的选题 -->
 	<select id="list" resultType="TopicOPtsManagerVO">
 		SELECT
-		t.*,w.realname
+		t.*
 		FROM
 		topic t
 		LEFT JOIN
@@ -513,7 +513,7 @@
 
 	<select id="listCheckTopic" resultType="TopicDeclarationVO">
 		SELECT
-		t.*, w.realname,p.realname editorName
+		t.*,p.realname editorName
 		FROM
 		topic t
 		LEFT JOIN
@@ -556,7 +556,7 @@
 	</select>
 	<!-- 获取主任可以操作的选题 -->
 	<select id="listTopicDirectorVOs" resultType="TopicDirectorVO">
-		SELECT a.*,c.realname
+		SELECT a.*
 		FROM topic a LEFT JOIN pmph_user b ON
 		a.department_id = b.department_id
 		LEFT JOIN writer_user c ON a.user_id
@@ -580,7 +580,7 @@
 
 	<!-- 计算主任可以操作的选题数 -->
 	<select id="totalTopicDirectorVOs" resultType="Integer">
-		SELECT count(*) FROM (SELECT a.*,c.realname
+		SELECT count(*) FROM (SELECT a.*
 		FROM topic a LEFT JOIN
 		pmph_user b ON a.department_id
 		= b.department_id
@@ -605,7 +605,7 @@
 
 	<!-- 获取编辑可以操作的申报选题 -->
 	<select id="listTopicEditorVOs" resultType="TopicEditorVO">
-		SELECT a.*,c.realname,b.realname editorName
+		SELECT a.*,b.realname editorName
 		FROM topic a
 		LEFT JOIN
 		pmph_user b ON a.editor_id
@@ -631,7 +631,7 @@
 
 	<!-- 计算编辑可以操作的选题数 -->
 	<select id="totalTopicEditorVOs" resultType="Integer">
-		SELECT count(*) FROM (SELECT a.*,b.realname
+		SELECT count(*) FROM (SELECT a.*
 		FROM topic a
 		LEFT JOIN
 		pmph_user b ON a.editor_id =
@@ -655,7 +655,7 @@
 
 	<!-- 系统管理员查询选题申报（主任界面） -->
 	<select id="listDirectorView" resultType="TopicDirectorVO">
-		SELECT a.*,b.realname
+		SELECT a.*
 		FROM topic a
 		LEFT JOIN writer_user b ON a.user_id
 		= b.id
@@ -691,7 +691,7 @@
 
 	<!-- 系统管理员查询选题申报（编辑界面） -->
 	<select id="listEditorView" resultType="TopicEditorVO">
-		SELECT a.*,b.realname,c.realname editorName
+		SELECT a.*,c.realname editorName
 		FROM topic a
 		LEFT JOIN
 		writer_user b ON a.user_id
@@ -893,7 +893,7 @@
 	</select>
 	<!-- 查询当前用户相关的选题申报 -->
 	<select id="listMyTopic" resultType="TopicDeclarationVO">
-	SELECT a.*,b.realname,c.realname editorName
+	SELECT a.*,c.realname editorName
 		FROM topic a
 		LEFT JOIN
 		writer_user b ON a.user_id= b.id
@@ -929,7 +929,7 @@
 	
 	<!-- 主任受理 总数-->
 	<select id="listIsDirectorTopicTotal" resultType="Integer">
-		SELECT count(*) FROM (SELECT a.*,c.realname
+		SELECT count(*) FROM (SELECT a.*
 		FROM topic a LEFT JOIN
 		pmph_user b ON a.department_id= b.department_id
 		LEFT JOIN writer_user c
@@ -942,7 +942,7 @@
 	</select>
 	<!-- 主任受理 -->
 	<select id="listIsDirectorTopic" resultType="TopicDirectorVO">
-		SELECT a.*,c.realname
+		SELECT a.*
 		FROM topic a LEFT JOIN pmph_user b ON	a.department_id = b.department_id
 		LEFT JOIN writer_user c ON a.user_id= c.id
 		WHERE b.id = #{userId}
@@ -955,7 +955,7 @@
 	</select>
 	<!--运维受理 -->
 	<select id="listIsOptsTopic" resultType="TopicOPtsManagerVO">
-		SELECT  t.*,w.realname
+		SELECT  t.*
 		FROM topic t
 		LEFT JOIN pmph_user_role r ON r.role_id =t.opts_role_id
 		LEFT JOIN pmph_user u ON u.id = r.user_id
@@ -981,7 +981,7 @@
 	</select>
 	<!-- 编辑受理 -->
 	<select id="listIsEditor" resultType="TopicEditorVO">
-		SELECT a.*,c.realname,b.realname editorName
+		SELECT a.*,b.realname editorName
 		FROM topic a
 		LEFT JOIN
 		pmph_user b ON a.editor_id= b.id
