@@ -5,6 +5,7 @@
 package com.bc.pmpheep.migration.test;
 
 import com.bc.pmpheep.migration.AddTestUser;
+import com.bc.pmpheep.migration.MigrationBook;
 import com.bc.pmpheep.migration.MigrationPlus;
 import com.bc.pmpheep.migration.MigrationStageEight;
 import com.bc.pmpheep.migration.MigrationStageFive;
@@ -21,6 +22,7 @@ import com.bc.pmpheep.test.BaseTest;
 import javax.annotation.Resource;
 
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
@@ -59,6 +61,10 @@ public class MigrationTest extends BaseTest {
     MigrationStageTen migrationStageTen;
     @Resource
     MigrationPlus migrationPlus;
+    @Resource
+    MigrationBook migrationBook;
+    @Resource
+    AddTestUser addTestUser;
 
     @Test
     @Rollback(false)
@@ -119,19 +125,23 @@ public class MigrationTest extends BaseTest {
     public void testMigrationStageTen() {
         migrationStageTen.start();
     }
-    
+
     @Test
     @Rollback(false)
     public void testMigrationPlus() {
-    	migrationPlus.start();
+        migrationPlus.start();
     }
-    
-    @Resource
-    AddTestUser addTestUser;
-    
+
+    @Ignore
     @Test
     @Rollback(false)
     public void testAddTestUser() {
-    	addTestUser.addTestUser();
+        addTestUser.addTestUser();
+    }
+
+    @Test
+    @Rollback(false)
+    public void addBook() {
+        migrationBook.start();
     }
 }
