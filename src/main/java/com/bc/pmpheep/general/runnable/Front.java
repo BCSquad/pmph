@@ -137,7 +137,6 @@ public class Front implements Runnable {
 		String dest = src + this.id;
 		zipDownload.setId(this.id);
 		zipDownload.setState(0);
-		zipDownload.setMaterialName(declarationOrDisplayVOs.get(0).getOrgNameOne());
 		zipDownload.setDetail("loading...");
 		zipDownload.setCreateTime(DateUtil.getCurrentTime());
 		Const.WORD_EXPORT_MAP.put(this.id, zipDownload);
@@ -185,12 +184,13 @@ public class Front implements Runnable {
 						list.add(declarationEtcBO);
 					}
 				}
+				zipDownload.setMaterialName(material.getMaterialName());
 				if (!CollectionUtil.isEmpty(list)) {
 					StringBuilder sb = new StringBuilder();
 					sb.append(src);
 					sb.append(this.id);
 					sb.append(File.separator);
-					sb.append(declarationOrDisplayVOs.get(i).getOrgNameOne());
+					sb.append(material.getMaterialName());
 					sb.append(File.separator);
 					sb.append(name);
 					sb.append(File.separator);
