@@ -39,6 +39,7 @@ public class TopicWriter implements Serializable {
 	 * 性别 0=男/1=女
 	 */
 	private Integer sex;
+	private String[] sexName;
 	/**
 	 * 年龄
 	 */
@@ -102,6 +103,14 @@ public class TopicWriter implements Serializable {
 
 	public void setSex(Integer sex) {
 		this.sex = sex;
+	}
+
+	public String[] getSexName() {
+		return sexName;
+	}
+
+	public void setSexName(String[] sexName) {
+		this.sexName = sexName;
 	}
 
 	public Integer getPrice() {
