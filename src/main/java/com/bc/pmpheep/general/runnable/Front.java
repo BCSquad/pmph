@@ -134,9 +134,32 @@ public class Front implements Runnable {
 		List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
 		List<DeclarationOrDisplayVO> declarationOrDisplayVOs = this.declarationService
 				.getDeclarationOrDisplayVOByRealname(this.decIds);
+		Material material = this.materialService
+				.getMaterialById(declarationOrDisplayVOs.get(0).getMaterialId());
+		StringBuilder str = new StringBuilder();
+		str.append(material.getIsEduExpUsed() ? "1" : "0");
+		str.append(material.getIsWorkExpUsed() ? "1" : "0");
+		str.append(material.getIsTeachExpUsed() ? "1" : "0");
+		str.append(material.getIsAchievementUsed() ? "1" : "0");
+		str.append(material.getIsAcadeUsed() ? "1" : "0");
+		str.append(material.getIsLastPositionUsed() ? "1" : "0");
+		str.append(material.getIsNationalPlanUsed() ? "1" : "0");
+		str.append(material.getIsPmphTextbookUsed() ? "1" : "0");
+		str.append(material.getIsTextbookUsed() ? "1" : "0");
+		str.append(material.getIsMoocDigitalUsed() ? "1" : "0");
+		str.append(material.getIsCourseUsed() ? "1" : "0");
+		str.append(material.getIsResearchUsed() ? "1" : "0");
+		str.append(material.getIsMonographUsed() ? "1" : "0");
+		str.append(material.getIsPublishRewardUsed() ? "1" : "0");
+		str.append(material.getIsSciUsed() ? "1" : "0");
+		str.append(material.getIsClinicalRewardUsed() ? "1" : "0");
+		str.append(material.getIsAcadeRewardUsed() ? "1" : "0");
+		str.append(material.getIsIntentionUsed() ? "1" : "0");
+		Integer filter = Integer.parseInt(str.toString(), 2);
 		String dest = src + this.id;
 		zipDownload.setId(this.id);
 		zipDownload.setState(0);
+		zipDownload.setMaterialName(material.getMaterialName());
 		zipDownload.setDetail("loading...");
 		zipDownload.setCreateTime(DateUtil.getCurrentTime());
 		Const.WORD_EXPORT_MAP.put(this.id, zipDownload);
@@ -148,28 +171,6 @@ public class Front implements Runnable {
 		try {
 			List<DeclarationEtcBO> list = new ArrayList<>();
 			for (int i = 0; i < declarationOrDisplayVOs.size(); i++) {
-				Material material = this.materialService
-						.getMaterialById(declarationOrDisplayVOs.get(i).getMaterialId());
-				StringBuilder str = new StringBuilder();
-				str.append(material.getIsEduExpUsed() ? "1" : "0");
-				str.append(material.getIsWorkExpUsed() ? "1" : "0");
-				str.append(material.getIsTeachExpUsed() ? "1" : "0");
-				str.append(material.getIsAchievementUsed() ? "1" : "0");
-				str.append(material.getIsAcadeUsed() ? "1" : "0");
-				str.append(material.getIsLastPositionUsed() ? "1" : "0");
-				str.append(material.getIsNationalPlanUsed() ? "1" : "0");
-				str.append(material.getIsPmphTextbookUsed() ? "1" : "0");
-				str.append(material.getIsTextbookUsed() ? "1" : "0");
-				str.append(material.getIsMoocDigitalUsed() ? "1" : "0");
-				str.append(material.getIsCourseUsed() ? "1" : "0");
-				str.append(material.getIsResearchUsed() ? "1" : "0");
-				str.append(material.getIsMonographUsed() ? "1" : "0");
-				str.append(material.getIsPublishRewardUsed() ? "1" : "0");
-				str.append(material.getIsSciUsed() ? "1" : "0");
-				str.append(material.getIsClinicalRewardUsed() ? "1" : "0");
-				str.append(material.getIsAcadeRewardUsed() ? "1" : "0");
-				str.append(material.getIsIntentionUsed() ? "1" : "0");
-				Integer filter = Integer.parseInt(str.toString(), 2);
 				List<Textbook> textbooks = this.textbookService.getTextbookByMaterialId(material.getId());
 				String name = declarationOrDisplayVOs.get(i).getRealname() + "-" + material.getMaterialName();
 				for (DeclarationEtcBO declarationEtcBO : declarationEtcBOs) {
@@ -184,13 +185,12 @@ public class Front implements Runnable {
 						list.add(declarationEtcBO);
 					}
 				}
-				zipDownload.setMaterialName(material.getMaterialName());
 				if (!CollectionUtil.isEmpty(list)) {
 					StringBuilder sb = new StringBuilder();
 					sb.append(src);
 					sb.append(this.id);
 					sb.append(File.separator);
-					sb.append(material.getMaterialName());
+					sb.append(declarationOrDisplayVOs.get(i).getOrgNameOne());
 					sb.append(File.separator);
 					sb.append(name);
 					sb.append(File.separator);
