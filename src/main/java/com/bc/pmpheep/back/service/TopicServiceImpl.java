@@ -434,13 +434,13 @@ public class TopicServiceImpl implements TopicService {
 		}
 		switch (topicTextVO.getReader()) {
 		case 0:
-			topicTextVO.setReadType(new String[]{"医务工作者"});
+			topicTextVO.setReadType("医务工作者");
 			break;
 		case 1:
-			topicTextVO.setReadType(new String[]{"医学院校师生"});
+			topicTextVO.setReadType("医学院校师生");
 			break;
 		case 2:
-			topicTextVO.setReadType(new String[]{"大众"});
+			topicTextVO.setReadType("大众");
 			break;
 
 		default:
