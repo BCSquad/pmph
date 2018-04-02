@@ -596,7 +596,7 @@ public class WordHelper {
 					value = "省部";
 					break;
 				case 4:
-					value = "其他";
+					value = "市级";
 					break;
 				default:
 					value = "无";
