@@ -253,13 +253,14 @@ public class CmsContentServiceImpl implements CmsContentService {
                                                             DateUtil.getCurrentTime()));
             cmsContent.setIsPublished(true);
         } else if (Const.CMS_AUTHOR_STATUS_0 == cmsContent.getAuthStatus().shortValue()) {
-            if (cmsContent.getIsStaging()) {
-                // 信息快报/公告管理(暂存)
-                cmsContent.setAuthUserId(pmphUser.getId());
-                cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_0);
-                cmsContent.setAuthDate(null);
-                cmsContent.setIsPublished(false);
-            }
+            // if (cmsContent.getIsStaging()) {
+            // 信息快报/公告管理(暂存)
+            cmsContent.setAuthUserId(pmphUser.getId());
+            cmsContent.setAuthStatus(Const.CMS_AUTHOR_STATUS_0);
+            cmsContent.setAuthDate(null);
+            cmsContent.setIsPublished(false);
+            cmsContent.setIsStaging(true);
+            // }
         } else if (Const.CMS_AUTHOR_STATUS_1.shortValue() == cmsContent.getAuthStatus()
                                                                        .shortValue()) {
             // 文章管理,退回
@@ -278,12 +279,12 @@ public class CmsContentServiceImpl implements CmsContentService {
         }
         // 再次编辑时间
         cmsContent.setGmtReedit(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
-                                                      DateUtil.getCurrentTime()));
-        //撤销
-        if(null !=  cmsContent.getIsPublished()){
-        	cmsContent.setIsStaging(cmsContent.getIsPublished());
-        }else{
-        	cmsContent.setIsStaging(false);
+                                                         DateUtil.getCurrentTime()));
+        // 撤销
+        if (null != cmsContent.getIsPublished()) {
+            cmsContent.setIsStaging(cmsContent.getIsPublished());
+        } else {
+            cmsContent.setIsStaging(false);
         }
         count = cmsContentDao.updateCmsContent(cmsContent);
         if (count > 0// 内容管理，退回发送消息
@@ -346,34 +347,6 @@ public class CmsContentServiceImpl implements CmsContentService {
             String ruleName = "发表文章";
             writerPointLogService.addWriterPointLogByRuleName(ruleName, cmsContent.getAuthorId());
         }
-        // 是否定时发布
-        // CmsSchedule csmSchedule =
-        // cmsScheduleService.getCmsScheduleByContentId(cmsContent.getId());
-        // 1.修改时如果不选择定时发布，则查询该数据之前是否有选择定时发布，如果有则删除
-        // if (Const.FALSE.booleanValue() == cmsContent.getIsScheduled().booleanValue())
-        // {
-        // if (ObjectUtil.notNull(csmSchedule)) {
-        // cmsScheduleService.deleteCmsScheduleByContentId(cmsContent.getId());
-        // }
-        // }
-        // 2.修改时如果选择定时发布，则查询该数据之前是否有选择定时发布，如果有则更新，没有则新增
-        // if (Const.TRUE.booleanValue() == cmsContent.getIsScheduled().booleanValue())
-        // {
-        // if (StringUtil.isEmpty(scheduledTime)) {
-        // throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
-        // CheckedExceptionResult.NULL_PARAM, "定时发布时间参数为空");
-        // }
-        // if (ObjectUtil.notNull(csmSchedule)) {
-        // cmsScheduleService.updateCmsSchedule(new CmsSchedule(
-        // csmSchedule.getId(),
-        // cmsContent.getId(),
-        // DateUtil.str2Timestam(scheduledTime)));
-        // } else {
-        // cmsScheduleService.addCmsSchedule(new CmsSchedule(
-        // cmsContent.getId(),
-        // DateUtil.str2Timestam(scheduledTime)));
-        // }
-        // }
         // 删除附件
         if (ArrayUtil.isNotEmpty(attachment)) {
             // 删除CmsExtra 表
@@ -453,10 +426,10 @@ public class CmsContentServiceImpl implements CmsContentService {
                                               CheckedExceptionResult.NULL_PARAM, "参数为空");
         }
         Boolean isPublished = false;
-        Boolean isStaging   = false;
-        if ( Const.CMS_AUTHOR_STATUS_2 == authStatus){  // 发布
-        	isPublished = true;
-            isStaging   = true;
+        Boolean isStaging = false;
+        if (Const.CMS_AUTHOR_STATUS_2 == authStatus) { // 发布
+            isPublished = true;
+            isStaging = true;
         }
         Integer count = 0;
         count =
@@ -466,7 +439,8 @@ public class CmsContentServiceImpl implements CmsContentService {
                                                       pmphUser.getId(),
                                                       DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                                                DateUtil.getCurrentTime()),
-                                                      isPublished, isStaging, Const.MATERIAL_TYPE_ID));
+                                                      isPublished, isStaging,
+                                                      Const.MATERIAL_TYPE_ID));
         CmsContent cmsContent = this.getCmsContentById(id);
         if (ObjectUtil.isNull(cmsContent)) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,

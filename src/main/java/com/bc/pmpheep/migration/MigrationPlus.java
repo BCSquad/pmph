@@ -466,29 +466,29 @@ public class MigrationPlus {
 	}
 	 //积分规则迁移
 	 protected  void point(){
-		 WriterPointRule writerPointRule1=new WriterPointRule("连续登录", "logins", 1, false, null, null, "连续登录每天增加1分", true);
+		 WriterPointRule writerPointRule1=new WriterPointRule("连续登录", "logins", 1, false, null, null, "连续登录每天增加1分", false);
 		 writerPointRuleService.addWriterPointRule(writerPointRule1);
-		 WriterPointRule writerPointRule2=new WriterPointRule("连续最大积分", "max_login_integral", 5, false, null, null, "到第5天增加5分后，每天给5分，中间有一天不来，重新开始积分", true);
+		 WriterPointRule writerPointRule2=new WriterPointRule("连续最大积分", "max_login_integral", 5, false, null, null, "到第5天增加5分后，每天给5分，中间有一天不来，重新开始积分", false);
 		 writerPointRuleService.addWriterPointRule(writerPointRule2);
-		 WriterPointRule writerPointRule3=new WriterPointRule("登录", "login", 1, false, null, null, "每天登录一次给1分，一天仅一次", true);
+		 WriterPointRule writerPointRule3=new WriterPointRule("登录", "login", 1, false, null, null, "每天登录一次给1分，一天仅一次", false);
 		 writerPointRuleService.addWriterPointRule(writerPointRule3);
-		 /*WriterPointRule writerPointRule4=new WriterPointRule("回复话题", "reply_topic", 1, false, null, null, "回复话题给1分", true);
+		 /*WriterPointRule writerPointRule4=new WriterPointRule("回复话题", "reply_topic", 1, false, null, null, "回复话题给1分", false);
 		 writerPointRuleService.addWriterPointRule(writerPointRule4);
-		 WriterPointRule writerPointRule5=new WriterPointRule("创建话题", "create_topic", 1, false, null, null, "创建话题给1分", true);
+		 WriterPointRule writerPointRule5=new WriterPointRule("创建话题", "create_topic", 1, false, null, null, "创建话题给1分", false);
 		 writerPointRuleService.addWriterPointRule(writerPointRule5);*/
-		 WriterPointRule writerPointRule9=new WriterPointRule("图书评论", "book_comment", 1, false, null, null, "图书评论给1分", true);
+		 WriterPointRule writerPointRule9=new WriterPointRule("图书评论", "book_comment", 1, false, null, null, "图书评论给1分", false);
 		 writerPointRuleService.addWriterPointRule(writerPointRule9);
-		 WriterPointRule writerPointRule10=new WriterPointRule("图书纠错", "book_correction", 1, false, null, null, "图书纠错给1分", true);
+		 WriterPointRule writerPointRule10=new WriterPointRule("图书纠错", "book_correction", 1, false, null, null, "图书纠错给1分", false);
 		 writerPointRuleService.addWriterPointRule(writerPointRule10);
-		 WriterPointRule writerPointRule11=new WriterPointRule("发表文章", "cms_content", 1, false, null, null, "发表文章给1分", true);
+		 WriterPointRule writerPointRule11=new WriterPointRule("发表文章", "cms_content", 1, false, null, null, "发表文章给1分", false);
 		 writerPointRuleService.addWriterPointRule(writerPointRule11);
-		 WriterPointRule writerPointRule12=new WriterPointRule("问卷调查", "survey", 1, false, null, null, "问卷调查给1分", true);
+		 WriterPointRule writerPointRule12=new WriterPointRule("问卷调查", "survey", 1, false, null, null, "问卷调查给1分", false);
 		 writerPointRuleService.addWriterPointRule(writerPointRule12);
-		 WriterPointRule writerPointRule6=new WriterPointRule("平台a", "sys_a", 50, true, "2", 2, "本平台50积分=商城2积分", true);
+		 WriterPointRule writerPointRule6=new WriterPointRule("平台a", "sys_a", 50, true, "2", 2, "本平台50积分=商城2积分", false);
 		 writerPointRuleService.addWriterPointRule(writerPointRule6);
-		 WriterPointRule writerPointRule7=new WriterPointRule("平台b", "sys_b", 200, true, "0", 10, "本平台200积分=平台b10积分", true);
+		 WriterPointRule writerPointRule7=new WriterPointRule("平台b", "sys_b", 200, true, "0", 10, "本平台200积分=平台b10积分", false);
 		 writerPointRuleService.addWriterPointRule(writerPointRule7);
-		 WriterPointRule writerPointRule8=new WriterPointRule("智慧商城", "buss", 100, true, "1", 1, "本平台100积分=智慧商城1积分", true);
+		 WriterPointRule writerPointRule8=new WriterPointRule("智慧商城", "buss", 100, true, "1", 1, "本平台100积分=智慧商城1积分", false);
 		 writerPointRuleService.addWriterPointRule(writerPointRule8);
 	 }
 	 

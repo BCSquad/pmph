@@ -301,7 +301,12 @@ public class MigrationStageSix {
                 logger.debug("找到申报表作家姓名为空并且没有暂存，此结果将被记录在Excel中");
                 continue;*/
             } else {
-                declaration.setRealname(realName);
+            	/*if ("0579c3b70c3e4adcbd008b6065e83c7f".equals(id)) {
+            		declaration.setRealname("魏敏杰");
+            	} else {
+            		
+				}*/
+            	declaration.setRealname(realName);
             }
             if (StringUtil.isEmpty(sexJudge)) {
                 declaration.setSex(1);
@@ -786,7 +791,11 @@ public class MigrationStageSix {
                     decAcade.setRank(null);
                 } else {
                     Integer rank = Integer.parseInt(rankJudge);
-                    decAcade.setRank(rank);
+                    if (4 == rank) {
+                    	decAcade.setRank(5);
+                    } else {
+                    	decAcade.setRank(rank);
+                    }
                 }
             }
             decAcade.setOrgName(orgName);
