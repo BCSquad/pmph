@@ -851,8 +851,8 @@ public class ExcelHelper {
 						sheet.setColumnWidth(count, 5 * 512);
 						count++;
 						r2cell = r2.createCell(count);
-						r2cell.setCellValue("是否数字编辑");
-						sheet.setColumnWidth(count, 7 * 512);
+						r2cell.setCellValue("数字编辑");
+						sheet.setColumnWidth(count, 5 * 512);
 						count++;
 						r2cell = r2.createCell(count);
 						r2cell.setCellValue("出版单位");
@@ -920,8 +920,8 @@ public class ExcelHelper {
 						sheet.setColumnWidth(count, 5 * 512);
 						count++;
 						r2cell = r2.createCell(count);
-						r2cell.setCellValue("是否数字编辑");
-						sheet.setColumnWidth(count, 7 * 512);
+						r2cell.setCellValue("数字编辑");
+						sheet.setColumnWidth(count, 5 * 512);
 						count++;
 						r2cell = r2.createCell(count);
 						r2cell.setCellValue("出版时间");
@@ -951,8 +951,8 @@ public class ExcelHelper {
 						sheet.setColumnWidth(count, 5 * 512);
 						count++;
 						r2cell = r2.createCell(count);
-						r2cell.setCellValue("是否数字编辑");
-						sheet.setColumnWidth(count, 7 * 512);
+						r2cell.setCellValue("数字编辑");
+						sheet.setColumnWidth(count, 5 * 512);
 						count++;
 						r2cell = r2.createCell(count);
 						r2cell.setCellValue("出版社");
