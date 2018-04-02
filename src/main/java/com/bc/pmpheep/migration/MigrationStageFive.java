@@ -193,6 +193,7 @@ public class MigrationStageFive {
             }
             if (dealtype >= 80) {
                 textbook.setIsPublished(true);// 是否已公布
+                textbook.setIsLocked(true);//当公布后为锁定
             }
             /* 开始新增新表对象，并设置属性值 */
             textbook = textbookService.addTextbook(textbook);

@@ -197,7 +197,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 				}
 			}
 			try {
-//				System.out.println("第"+(i+1)+"条数据，本版号为"+vns[i]+"  共"+vns.length+"条");
+				// System.out.println("第"+(i+1)+"条数据，本版号为"+vns[i]+" 共"+vns.length+"条");
 				ot = PostBusyAPI(vns[i]);
 				if (null != ot && "1".equals(ot.getJSONObject("RESP").getString("CODE"))) {
 					JSONArray array = ot.getJSONObject("RESP").getJSONObject("responseData").getJSONArray("results");
@@ -497,6 +497,7 @@ public class BookServiceImpl extends BaseService implements BookService {
 			if (ObjectUtil.isNull(sheet)) {
 				continue;
 			}
+
 			for (int rowNum = 1; rowNum <= sheet.getLastRowNum(); rowNum++) {
 				Row row = sheet.getRow(rowNum);
 				Long id = 0L;
@@ -504,11 +505,15 @@ public class BookServiceImpl extends BaseService implements BookService {
 				if (null == row) {
 					continue;
 				}
-				Cell cell = row.getCell(8);
-				if (row.getLastCellNum() > 9 || (ObjectUtil.notNull(cell) && !"".equals(cell.toString()))) {
-					throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
-							CheckedExceptionResult.ILLEGAL_PARAM, "提交的Excel格式不正确，请按照模版修改后重试");
+				int lastCell = row.getLastCellNum();
+				for (int cellNum = 8; cellNum <= lastCell; cellNum++) {
+					Cell cell = row.getCell(cellNum);
+					if (ObjectUtil.notNull(cell) && !"".equals(cell.toString())) {
+						throw new CheckedServiceException(CheckedExceptionBusiness.EXCEL,
+								CheckedExceptionResult.ILLEGAL_PARAM, "提交的Excel格式不正确，请按照模版修改后重试");
+					}
 				}
+
 				for (int i = 0; i < 7; i += 2) {
 					Cell name = row.getCell(i);
 					Cell isbn = row.getCell(i + 1);

@@ -657,6 +657,10 @@ public class TextbookServiceImpl implements TextbookService {
 					"教材id不能为空");
 		}
 		Material material = materialService.getMaterialById(materialId);
+		if (null == material){
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
+					CheckedExceptionResult.NULL_PARAM, "该教材不存在，请保存教材后再进行相关操作");
+		}
 		Long materialType = material.getMaterialType();
 		String path;
 		try {
