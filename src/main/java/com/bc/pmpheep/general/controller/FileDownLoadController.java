@@ -1077,6 +1077,10 @@ public class FileDownLoadController {
 					"参数不能为空");
 		}
 		String sessionId = CookiesUtil.getSessionId(request);
+		if (StringUtil.isEmpty(sessionId)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.SESSION, 
+					CheckedExceptionResult.NULL_PARAM, "用户登陆超时，请重新登陆再试");
+		}
 		HttpSession session = SessionContext.getSession(sessionId);
 		List<OrgVO> list = (List<OrgVO>) session.getAttribute(uuid);
 		if (null == list || list.isEmpty()) {
