@@ -700,6 +700,9 @@ public class WordHelper {
 			Integer type = decCourseConstruction.getType();// 1=国家/2=省部/3=学校
 			if (null != type) {
 				switch (type) {
+				case 0:
+					value = "无";
+					break;
 				case 1:
 					value = "国际";
 					break;
@@ -710,7 +713,7 @@ public class WordHelper {
 					value = "省部";
 					break;
 				default:
-					value = "其他";
+					value = "";
 					break;
 				}
 				cells.get(1).setText(value);
@@ -795,6 +798,7 @@ public class WordHelper {
 				switch (rank) {
 				case 0:
 					value = "无";
+					break;
 				case 1:
 					value = "国家";
 					break;
@@ -808,10 +812,10 @@ public class WordHelper {
 					value = "校本";
 					break;
 				case 5:
-					value = "其他教材";
+					value = "其他";
 					break;
 				default:
-					value = "其他";
+					value = "";
 					break;
 				}
 				cells.get(1).setText(value);
@@ -883,6 +887,7 @@ public class WordHelper {
 				switch (rank) {
 				case 0:
 					value = "无";
+					break;
 				case 1:
 					value = "国家";
 					break;
@@ -896,10 +901,10 @@ public class WordHelper {
 					value = "校本";
 					break;
 				case 5:
-					value = "其他教材";
+					value = "其他";
 					break;
 				default:
-					value = "其他";
+					value = "";
 					break;
 				}
 				cells.get(1).setText(value);
