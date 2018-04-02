@@ -651,23 +651,26 @@ public class WordHelper {
 				case 3:
 					value = "编委";
 					break;
-				case 4:
-					value = "数字编委";
-					break;
 				default:
-					value = "无";
+					value = "";
 					break;
 				}
 				cells.get(1).setText(value);
 			}
+			value = decLastPosition.getIsDigitalEditor() ? "是" : "否";
+			cells.get(2).setText(value);
 			value = decLastPosition.getPublisher();
 			if (StringUtil.notEmpty(value)) {
-				cells.get(2).setText(value);
+				cells.get(3).setText(value);
 			}
 			Date publishDate = decLastPosition.getPublishDate();
 			if (null != publishDate) {
 				value = sdf.format(publishDate);
-				cells.get(3).setText(value);
+				cells.get(4).setText(value);
+			}
+			value = decLastPosition.getNote();
+			if (!StringUtil.isEmpty(value)) {
+				cells.get(5).setText(value);
 			}
 			for (XWPFTableCell cell : cells) {
 				cell.setVerticalAlignment(XWPFVertAlign.CENTER);
@@ -832,27 +835,26 @@ public class WordHelper {
 				case 3:
 					value = "编委";
 					break;
-				case 4:
-					value = "数字编委";
-					break;
 				default:
-					value = "无";
+					value = "";
 					break;
 				}
 				cells.get(2).setText(value);
 			}
+			value = decTextbookPmph.getIsDigitalEditor() ? "是" : "否";
+			cells.get(3).setText(value);
 			Date publishDate = decTextbookPmph.getPublishDate();
 			if (null != publishDate) {
 				value = sdf.format(publishDate);
-				cells.get(3).setText(value);
+				cells.get(4).setText(value);
 			}
 			value = decTextbookPmph.getIsbn();
 			if (StringUtil.notEmpty(value)) {
-				cells.get(4).setText(value);
+				cells.get(5).setText(value);
 			}
 			value = decTextbookPmph.getNote();
 			if (StringUtil.notEmpty(value)) {
-				cells.get(5).setText(value);
+				cells.get(6).setText(value);
 			}
 			for (XWPFTableCell cell : cells) {
 				cell.setVerticalAlignment(XWPFVertAlign.CENTER);
@@ -921,31 +923,30 @@ public class WordHelper {
 				case 3:
 					value = "编委";
 					break;
-				case 4:
-					value = "数字编委";
-					break;
 				default:
-					value = "无";
+					value = "";
 					break;
 				}
 				cells.get(2).setText(value);
 			}
+			value = decTextbook.getIsDigitalEditor() ? "是" : "否";
+			cells.get(3).setText(value);
 			Date publishDate = decTextbook.getPublishDate();
 			if (null != publishDate) {
 				value = sdf.format(publishDate);
-				cells.get(3).setText(value);
+				cells.get(4).setText(value);
 			}
 			value = decTextbook.getPublisher();
 			if (StringUtil.notEmpty(value)) {
-				cells.get(4).setText(value);
+				cells.get(5).setText(value);
 			}
 			value = decTextbook.getIsbn();
 			if (StringUtil.notEmpty(value)) {
-				cells.get(5).setText(value);
+				cells.get(6).setText(value);
 			}
 			value = decTextbook.getNote();
 			if (StringUtil.notEmpty(value)) {
-				cells.get(6).setText(value);
+				cells.get(7).setText(value);
 			}
 			for (XWPFTableCell cell : cells) {
 				cell.setVerticalAlignment(XWPFVertAlign.CENTER);
@@ -1230,7 +1231,7 @@ public class WordHelper {
 					value = "市";
 					break;
 				default:
-					value = "其他";
+					value = "";
 					break;
 				}
 				cells.get(2).setText(value);
