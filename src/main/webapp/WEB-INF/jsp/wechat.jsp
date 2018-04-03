@@ -20,7 +20,7 @@
         	}else if(1=='${isLogin}'){
         		window.location.href='http://192.168.100.109:8089/#/login?username='+'${username}'+'&password='+'${password}'+'&wechatUserId='+'${UserId}'+'&token='+'${token}';
         	}else if(2=='${isLogin}'){
-        		window.location.href='http://192.168.100.135?username='+'${username}'+'&password='+'${password}'+'&token='+'${token}'+'&wechatUserId='+'${UserId}';
+        		window.location.href='http://192.168.100.135/#/login?username='+'${username}'+'&password='+'${password}'+'&token='+'${token}'+'&wechatUserId='+'${UserId}';
         	}
 		</script>
     </head>

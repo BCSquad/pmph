@@ -28,8 +28,14 @@ public class TopicEditorVO implements Serializable {
 	private Long id;
 	// 编辑Id
 	private Long userId;
-	// 作家姓名
+	/**
+	 * 主编姓名
+	 */
 	private String realName;
+	/**
+	 * 提交者姓名
+	 */
+	private String submitName;
 	// 审核人姓名
 	private String editorName;
 	// 选题名称
@@ -68,7 +74,7 @@ public class TopicEditorVO implements Serializable {
 	 * 是否由编辑受理
 	 */
 	private Boolean isEditorHandling;
-	
+
 	public Integer getAuthProgress() {
 		return authProgress;
 	}
@@ -195,6 +201,14 @@ public class TopicEditorVO implements Serializable {
 
 	public void setIsAccepted(Boolean isAccepted) {
 		this.isAccepted = isAccepted;
+	}
+
+	public String getSubmitName() {
+		return submitName;
+	}
+
+	public void setSubmitName(String submitName) {
+		this.submitName = submitName;
 	}
 
 }
