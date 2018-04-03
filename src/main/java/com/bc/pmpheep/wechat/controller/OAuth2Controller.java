@@ -52,11 +52,10 @@ public class OAuth2Controller {
     public String Oauth2API(HttpServletRequest request, @RequestParam String resultUrl) {
         // 此处可以添加获取持久化的数据，如企业号id等相关信息
         String CropId = Constants.CORPID;
-        // resultUrl = resultUrl.replaceAll("192.168.100.109:8080", "192.168.100.109:8089");
         String redirectUrl = "";
         if (resultUrl != null) {
             // String reqUrl = request.getLocalAddr();
-            String reqUrl = "20097r18u8.iask.in";
+            String reqUrl = "20097r18u8.iask.in";// 备案域名
             // System.out.println("request.getServletPath()=" + request.getServletPath());
             // System.out.println("request.getRequestURL()=" + request.getRequestURL());
             // System.out.println("request.getLocalAddr()=" + request.getLocalAddr());
