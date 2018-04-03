@@ -478,10 +478,6 @@ public class FileDownLoadController {
 		if (!src.endsWith(File.separator)) {
 			src += File.separator;
 		}
-		if (ObjectUtil.isNull(Const.WORD_EXPORT_MAP.get(id))) {
-			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
-					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "已经超过下载时长了，请重新导出下载");
-		}
 		String materialName = Const.WORD_EXPORT_MAP.get(id).getMaterialName();
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
@@ -1081,6 +1077,10 @@ public class FileDownLoadController {
 					"参数不能为空");
 		}
 		String sessionId = CookiesUtil.getSessionId(request);
+		if (StringUtil.isEmpty(sessionId)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.SESSION, 
+					CheckedExceptionResult.NULL_PARAM, "用户登陆超时，请重新登陆再试");
+		}
 		HttpSession session = SessionContext.getSession(sessionId);
 		List<OrgVO> list = (List<OrgVO>) session.getAttribute(uuid);
 		if (null == list || list.isEmpty()) {

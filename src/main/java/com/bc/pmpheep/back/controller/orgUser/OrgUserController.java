@@ -33,6 +33,8 @@ import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.OrgAndOrgUserVO;
 import com.bc.pmpheep.back.vo.OrgVO;
 import com.bc.pmpheep.controller.bean.ResponseBean;
+import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
+import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -239,6 +241,10 @@ public class OrgUserController {
 	public ResponseBean importExcel(@RequestParam(name = "file")MultipartFile file, HttpServletRequest request){
 		Map<String, Object> map = new HashedMap();
 		String sessionId = CookiesUtil.getSessionId(request);
+		if (StringUtil.isEmpty(sessionId)){
+			throw new CheckedServiceException(CheckedExceptionBusiness.SESSION, 
+					CheckedExceptionResult.NULL_PARAM, "用户登陆超时，请重新登陆再试");
+		}
 		HttpSession session = SessionContext.getSession(sessionId);
         String uuid = UUID.randomUUID().toString().replace("-", "").toLowerCase();
 		try {

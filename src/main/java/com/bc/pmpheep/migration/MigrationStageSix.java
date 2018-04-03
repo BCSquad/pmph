@@ -791,7 +791,11 @@ public class MigrationStageSix {
                     decAcade.setRank(null);
                 } else {
                     Integer rank = Integer.parseInt(rankJudge);
-                    decAcade.setRank(rank);
+                    if (4 == rank) {
+                    	decAcade.setRank(5);
+                    } else {
+                    	decAcade.setRank(rank);
+                    }
                 }
             }
             decAcade.setOrgName(orgName);
