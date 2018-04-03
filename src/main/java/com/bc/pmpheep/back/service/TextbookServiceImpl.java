@@ -693,6 +693,7 @@ public class TextbookServiceImpl implements TextbookService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL_TYPE, CheckedExceptionResult.NULL_PARAM,
 					"分类路径为空");
 		}
+		path = path + "-" + String.valueOf(materialType);
 		if (path.indexOf("0-") != -1) {
 			path = path.replaceFirst("0-", "");
 		}
