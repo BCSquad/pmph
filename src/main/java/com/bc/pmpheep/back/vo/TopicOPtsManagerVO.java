@@ -35,6 +35,10 @@ public class TopicOPtsManagerVO implements Serializable {
 	 */
 	private String submitName;
 	/**
+	 * 主编姓名
+	 */
+	private String realname;
+	/**
 	 * 书名
 	 */
 	private String bookname;
@@ -217,6 +221,14 @@ public class TopicOPtsManagerVO implements Serializable {
 
 	public void setReasonDirector(String reasonDirector) {
 		this.reasonDirector = reasonDirector;
+	}
+
+	public String getRealname() {
+		return realname;
+	}
+
+	public void setRealname(String realname) {
+		this.realname = realname;
 	}
 
 }

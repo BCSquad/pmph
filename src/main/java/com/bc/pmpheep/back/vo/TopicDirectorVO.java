@@ -33,6 +33,10 @@ public class TopicDirectorVO implements Serializable {
 	 * 提交选题申报用户姓名
 	 */
 	private String submitName;
+	/**
+	 * 主编姓名
+	 */
+	private String realname;
 	// 选题名称
 	private String bookname;
 	// 预计交稿时间
@@ -227,6 +231,14 @@ public class TopicDirectorVO implements Serializable {
 
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
+	}
+
+	public String getRealname() {
+		return realname;
+	}
+
+	public void setRealname(String realname) {
+		this.realname = realname;
 	}
 
 }
