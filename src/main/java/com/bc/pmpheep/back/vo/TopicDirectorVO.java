@@ -29,8 +29,14 @@ public class TopicDirectorVO implements Serializable {
 	private Long id;
 	// 部门id
 	private Long departmentId;
-	// 作家姓名
-	private String realName;
+	/**
+	 * 提交选题申报用户姓名
+	 */
+	private String submitName;
+	/**
+	 * 主编姓名
+	 */
+	private String realname;
 	// 选题名称
 	private String bookname;
 	// 预计交稿时间
@@ -73,7 +79,7 @@ public class TopicDirectorVO implements Serializable {
 	 * 编辑是否接受办理
 	 */
 	private Boolean isAccepted;
-	
+
 	public Boolean getIsAccepted() {
 		return isAccepted;
 	}
@@ -163,12 +169,12 @@ public class TopicDirectorVO implements Serializable {
 		this.departmentId = departmentId;
 	}
 
-	public String getRealName() {
-		return realName;
+	public String getSubmitName() {
+		return submitName;
 	}
 
-	public void setRealName(String realName) {
-		this.realName = realName;
+	public void setSubmitName(String submitName) {
+		this.submitName = submitName;
 	}
 
 	public String getBookname() {
@@ -225,6 +231,14 @@ public class TopicDirectorVO implements Serializable {
 
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
+	}
+
+	public String getRealname() {
+		return realname;
+	}
+
+	public void setRealname(String realname) {
+		this.realname = realname;
 	}
 
 }
