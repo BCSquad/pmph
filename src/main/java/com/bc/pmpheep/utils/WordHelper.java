@@ -652,7 +652,7 @@ public class WordHelper {
 					value = "编委";
 					break;
 				default:
-					value = "";
+					value = "无";
 					break;
 				}
 				cells.get(1).setText(value);
@@ -716,7 +716,7 @@ public class WordHelper {
 					value = "省部";
 					break;
 				default:
-					value = "";
+					value = "无";
 					break;
 				}
 				cells.get(1).setText(value);
@@ -818,7 +818,7 @@ public class WordHelper {
 					value = "其他";
 					break;
 				default:
-					value = "";
+					value = "无";
 					break;
 				}
 				cells.get(1).setText(value);
@@ -836,7 +836,7 @@ public class WordHelper {
 					value = "编委";
 					break;
 				default:
-					value = "";
+					value = "无";
 					break;
 				}
 				cells.get(2).setText(value);
@@ -906,7 +906,7 @@ public class WordHelper {
 					value = "其他";
 					break;
 				default:
-					value = "";
+					value = "无";
 					break;
 				}
 				cells.get(1).setText(value);
@@ -924,7 +924,7 @@ public class WordHelper {
 					value = "编委";
 					break;
 				default:
-					value = "";
+					value = "无";
 					break;
 				}
 				cells.get(2).setText(value);
@@ -1231,7 +1231,7 @@ public class WordHelper {
 					value = "市";
 					break;
 				default:
-					value = "";
+					value = "无";
 					break;
 				}
 				cells.get(2).setText(value);
