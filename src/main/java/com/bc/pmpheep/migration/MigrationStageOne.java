@@ -452,7 +452,8 @@ public class MigrationStageOne {
                 }
                 continue;
             }
-            if ("jxyxgdxx".equals(username) || "zyyyzkxy".equals(username) || "qlyyxy".equals(username)){
+            if ("jxyxgdxx".equals(username) || "zyyyzkxy".equals(username) || "qlyyxy".equals(username)
+            		|| "shcjzyxy".equals(username)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("依据客户反馈不迁移"));
             	excel.add(map);
             	if (state[3] == 0){
@@ -699,7 +700,7 @@ public class MigrationStageOne {
                 + "FROM pub_addfileinfo p WHERE p.childsystemname='sys_userext_teacher' GROUP BY p.operuserid))f "
                 + "ON a.userid = f.operuserid "
                 + "LEFT JOIN sys_user g ON b.teacheraudituser = g.userid "
-                + "WHERE a.sysflag=1 AND b.usertype !=2 ;";
+                + "WHERE a.sysflag=1 AND b.usertype !=2 AND a.isvalid =1;";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         List<String> list = new ArrayList<>();
@@ -716,30 +717,49 @@ public class MigrationStageOne {
             if (StringUtil.isEmpty(username)) {
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("未找到用户的登陆名。"));
             	excel.add(map);
-            	if (state[1] == 0){
+            	if (state[0] == 0){
             		reason.append("未找到用户的登陆账号。");
             		dealWith.append("放弃迁入。");
-            		state[1] = 1;
+            		state[0] = 1;
             	}
             	continue;
             }
             username = username.replace("&middot;", "·");
             if ("admin".equals(username)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, "系统管理员账号。");
-            	if (state[0] == 0){
+            	if (state[1] == 0){
             		reason.append("此账号为系统管理员账号。");
             		dealWith.append("放弃迁入作家用户表，迁入社内用户表。");
-            		state[0] = 1;
+            		state[1] = 1;
+            	}
+            	continue;
+            }
+            String realName = (String) map.get("username");
+            if (StringUtil.isEmpty(realName)) {
+            	realName = username;
+            }
+            Integer sort = (Integer) map.get("sortno");
+            if (ObjectUtil.notNull(sort) && sort < 0) {
+            	sort = 999;
+            }
+            //此重复用户只能通过个人信息多少判断保留，保留个人信息较全的一条，另一条删除
+            if (("王训".equals(realName) || "赵舒武".equals(realName)) && ObjectUtil.isNull(sort)){
+            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("已删除"));
+            	excel.add(map);
+            	if (state[2] == 0){
+            		reason.append("用户名重复。");
+            		dealWith.append("放弃迁入。");
+            		state[2] = 1;
             	}
             	continue;
             }
             if (JdbcHelper.nameDuplicate(list, username)){
             	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("用户的登陆名重复。"));
                 excel.add(map);
-                if (state[2] == 0){
+                if (state[3] == 0){
                 	reason.append("用户的登录名重复。");
                 	dealWith.append("放弃迁入。");
-                	state[2] = 1;
+                	state[3] = 1;
                 }
                 continue;
             }
@@ -747,10 +767,6 @@ public class MigrationStageOne {
             String password = "888888";
             Integer isDisabled = (Integer) map.get("isvalid");
             Long orgid = (Long) map.get("org_new_pk");
-            String realName = (String) map.get("username");
-            if (StringUtil.isEmpty(realName)) {
-                realName = username;
-            }
             String sexNum = (String) map.get("sex");
             Integer sex = 0;
             if (StringUtil.notEmpty(sexNum)) {
@@ -765,10 +781,10 @@ public class MigrationStageOne {
                 	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("此教龄数据没有值，为“无”，“、”，"
                 			+ "“其他”或数字远远超出人的寿命，无法通过合适方法修改插入新数据库，"));
                 	excel.add(map);
-                	if (state[3] == 0){
+                	if (state[4] == 0){
                 		reason.append("教龄数据不合规范。");
                 		dealWith.append("经过合理规则转换迁入数据库。");
-                		state[3] = 1;
+                		state[4] = 1;
                 	}
                 } 
             }
@@ -855,21 +871,6 @@ public class MigrationStageOne {
             String note = (String) map.get("memo");
             if (StringUtil.notEmpty(note) && ("null".equals(note) || "nu".equals(note))){
             	note = "-";
-            }
-            Integer sort = (Integer) map.get("sortno");
-            //此重复用户只能通过个人信息多少判断保留，保留个人信息较全的一条，另一条删除
-            if (("王训".equals(realName) || "赵舒武".equals(realName)) && ObjectUtil.isNull(sort)){
-            	map.put(SQLParameters.EXCEL_EX_HEADER, sb.append("已删除"));
-            	excel.add(map);
-            	if (state[4] == 0){
-            		reason.append("用户重复。");
-            		dealWith.append("放弃迁入。");
-            		state[4] = 1;
-            	}
-            	continue;
-            }
-            if (ObjectUtil.notNull(sort) && sort < 0) {
-                sort = 999;
             }
             WriterUser writerUser = new WriterUser();
             writerUser.setUsername(username);
