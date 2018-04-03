@@ -49,7 +49,7 @@ public class TopicTextVO implements Serializable {
 	/**
 	 * 读者对象
 	 */
-	private String[] readType;
+	private String readType;
 	/**
 	 * 预计交稿时间
 	 */
@@ -630,11 +630,11 @@ public class TopicTextVO implements Serializable {
 		this.topicWriters = topicWriters;
 	}
 
-	public String[] getReadType() {
+	public String getReadType() {
 		return readType;
 	}
 
-	public void setReadType(String[] readType) {
+	public void setReadType(String readType) {
 		this.readType = readType;
 	}
 
