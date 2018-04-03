@@ -439,7 +439,7 @@
 	<!-- 运维人员获取可以操作的选题 -->
 	<select id="listOpts" resultType="TopicOPtsManagerVO">
 		SELECT
-		t.*,w.realname
+		t.*,w.realname submitName
 		FROM
 		topic t
 		LEFT JOIN pmph_user_role r ON r.role_id
@@ -496,7 +496,7 @@
 	<!-- 系统管理员获取可以操作的选题 -->
 	<select id="list" resultType="TopicOPtsManagerVO">
 		SELECT
-		t.*,w.realname
+		t.*,w.realname submitName
 		FROM
 		topic t
 		LEFT JOIN
@@ -808,7 +808,7 @@
 	</select>
 	<!-- 获取主任可以操作的选题 -->
 	<select id="listTopicDirectorVOs" resultType="TopicDirectorVO">
-		SELECT a.*,c.realname
+		SELECT a.*,c.realname submitName
 		FROM topic a LEFT JOIN pmph_user b ON
 		a.department_id = b.department_id
 		LEFT JOIN writer_user c ON a.user_id
@@ -832,7 +832,7 @@
 
 	<!-- 计算主任可以操作的选题数 -->
 	<select id="totalTopicDirectorVOs" resultType="Integer">
-		SELECT count(*) FROM (SELECT a.*,c.realname
+		SELECT count(*) FROM (SELECT a.*,c.realname submitName
 		FROM topic a LEFT JOIN
 		pmph_user b ON a.department_id
 		= b.department_id

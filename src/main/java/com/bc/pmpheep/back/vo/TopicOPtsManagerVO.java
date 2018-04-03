@@ -31,9 +31,9 @@ public class TopicOPtsManagerVO implements Serializable {
 	 */
 	private Long id;
 	/**
-	 * 作家姓名
+	 * 提交选题申报用户姓名
 	 */
-	private String realname;
+	private String submitName;
 	/**
 	 * 书名
 	 */
@@ -155,12 +155,12 @@ public class TopicOPtsManagerVO implements Serializable {
 		this.id = id;
 	}
 
-	public String getRealname() {
-		return realname;
+	public String getSubmitName() {
+		return submitName;
 	}
 
-	public void setRealname(String realname) {
-		this.realname = realname;
+	public void setSubmitName(String submitName) {
+		this.submitName = submitName;
 	}
 
 	public String getBookname() {
