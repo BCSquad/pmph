@@ -2,7 +2,8 @@
 *.class
 
 #忽略.properties
-*.properties
+spring.properties
+log4j.properties
 
 #忽略.classpath
 *.classpath
