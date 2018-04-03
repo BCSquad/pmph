@@ -108,10 +108,11 @@ public class WeChatLoginController {
                 PmphUser pmphUser = pmphUserService.login(userName, null);
                 if (ObjectUtil.isNull(pmphUser)) {// 为空就新建一个用户
                     pmphUser =
-                    pmphUserService.add(new PmphUser(userName, "888888", userName, "DEFAULT"));
+                    pmphUserService.add(new PmphUser(userName, new DesRun(null, "888888").enpsw,
+                                                     userName, "DEFAULT"));
                     pmphRoleService.addUserRole(pmphUser.getId(), 2L);// 添加默认权限
                 }
-                String username = pmphUser.getUsername();
+                String username = new DesRun(null, pmphUser.getUsername()).enpsw;
                 String password = pmphUser.getPassword();
                 String wechatUserId = "sso";
                 model.addAttribute("username", username);

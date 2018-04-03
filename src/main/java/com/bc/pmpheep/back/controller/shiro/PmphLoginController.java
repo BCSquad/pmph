@@ -146,6 +146,9 @@ public class PmphLoginController {
                                               CheckedExceptionResult.NULL_PARAM, "请输入用户名和密码!");
         }
         PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
+        if (ObjectUtil.isNull(pmphUser)) {
+            pmphUser = pmphUserService.login(new DesRun(username).depsw, password);
+        }
         // PmphUser pmphUser = pmphUserService.login(userName, null);
         pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
         if (!RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUser.getAvatar())) {
