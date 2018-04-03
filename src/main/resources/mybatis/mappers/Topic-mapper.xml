@@ -857,7 +857,7 @@
 
 	<!-- 获取编辑可以操作的申报选题 -->
 	<select id="listTopicEditorVOs" resultType="TopicEditorVO">
-		SELECT a.*,c.realname,b.realname editorName
+		SELECT a.*,c.realname submitName,b.realname editorName
 		FROM topic a
 		LEFT JOIN
 		pmph_user b ON a.editor_id
@@ -883,7 +883,7 @@
 
 	<!-- 计算编辑可以操作的选题数 -->
 	<select id="totalTopicEditorVOs" resultType="Integer">
-		SELECT count(*) FROM (SELECT a.*,b.realname
+		SELECT count(*) FROM (SELECT a.*,b.realname submitName
 		FROM topic a
 		LEFT JOIN
 		pmph_user b ON a.editor_id =
@@ -907,7 +907,7 @@
 
 	<!-- 系统管理员查询选题申报（主任界面） -->
 	<select id="listDirectorView" resultType="TopicDirectorVO">
-		SELECT a.*,b.realname
+		SELECT a.*,b.realname submitName
 		FROM topic a
 		LEFT JOIN writer_user b ON a.user_id
 		= b.id
@@ -943,7 +943,7 @@
 
 	<!-- 系统管理员查询选题申报（编辑界面） -->
 	<select id="listEditorView" resultType="TopicEditorVO">
-		SELECT a.*,b.realname,c.realname editorName
+		SELECT a.*,b.realname submitName,c.realname editorName
 		FROM topic a
 		LEFT JOIN
 		writer_user b ON a.user_id
@@ -1145,7 +1145,7 @@
 	</select>
 	<!-- 查询当前用户相关的选题申报 -->
 	<select id="listMyTopic" resultType="TopicDeclarationVO">
-	SELECT a.*,b.realname,c.realname editorName
+	SELECT a.*,b.realname submitName,c.realname editorName
 		FROM topic a
 		LEFT JOIN
 		writer_user b ON a.user_id= b.id
@@ -1195,7 +1195,7 @@
 	</select>
 	<!-- 主任受理 -->
 	<select id="listIsDirectorTopic" resultType="TopicDirectorVO">
-		SELECT a.*,c.realname
+		SELECT a.*,c.realname submitName
 		FROM topic a 
 		LEFT JOIN pmph_user b ON	a.department_id = b.department_id
 		LEFT JOIN writer_user c ON a.user_id= c.id
@@ -1210,7 +1210,7 @@
 	</select>
 	<!--运维受理 -->
 	<select id="listIsOptsTopic" resultType="TopicOPtsManagerVO">
-		SELECT  t.*,w.realname
+		SELECT  t.*,w.realname submitName
 		FROM topic t
 		LEFT JOIN pmph_user_role r ON r.role_id =t.opts_role_id
 		LEFT JOIN pmph_user u ON u.id = r.user_id
@@ -1238,7 +1238,7 @@
 	</select>
 	<!-- 编辑受理 -->
 	<select id="listIsEditor" resultType="TopicEditorVO">
-		SELECT a.*,c.realname,b.realname editorName
+		SELECT a.*,c.realname submitName,b.realname editorName
 		FROM topic a
 		LEFT JOIN
 		pmph_user b ON a.editor_id= b.id
