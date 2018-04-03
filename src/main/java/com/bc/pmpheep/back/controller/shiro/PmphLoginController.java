@@ -145,10 +145,13 @@ public class PmphLoginController {
             throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                               CheckedExceptionResult.NULL_PARAM, "请输入用户名和密码!");
         }
-        PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
-        if (ObjectUtil.isNull(pmphUser)) {
-            pmphUser = pmphUserService.login(new DesRun(username).depsw, password);
+        if (StringUtil.notEmpty(wechatUserId)) {
+            if ("sso".equals(wechatUserId)) {
+                username = new DesRun(username).depsw;
+                password = new DesRun(password).depsw;
+            }
         }
+        PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
         // PmphUser pmphUser = pmphUserService.login(userName, null);
         pmphUser.setLoginType(Const.LOGIN_TYPE_PMPH);
         if (!RouteUtil.DEFAULT_USER_AVATAR.equals(pmphUser.getAvatar())) {
