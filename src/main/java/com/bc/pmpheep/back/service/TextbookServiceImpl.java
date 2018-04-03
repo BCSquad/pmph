@@ -308,6 +308,26 @@ public class TextbookServiceImpl implements TextbookService {
 			if(material2.getIsAllTextbookPublished()){
 				List<Declaration> declaration=declarationService.getPositionChooseLossByMaterialId(materialId);
 				systemMessageService.sendWhenPositionChooserLoss(materialId, declaration);
+				if(null != declaration && declaration.size() > 0 ){
+					for(Declaration d: declaration){
+						// 添加动态信息
+						WriterUserTrendst writerUserTrendst = new WriterUserTrendst();
+						writerUserTrendst.setUserId(d.getUserId());
+						writerUserTrendst.setIsPublic(false);// 自己可见
+						writerUserTrendst.setType(8);
+						String detail = "";
+						Map<String, Object> map = new HashMap<String, Object>();
+						map.put("title", CheckedExceptionBusiness.MATERIAL);
+						map.put("content", "教材已遴选结束,很遗憾,您未入选");
+						map.put("img", 2);
+						detail = new Gson().toJson(map);
+						writerUserTrendst.setDetail(detail);
+						writerUserTrendst.setCmsContentId(null);
+						writerUserTrendst.setBookId(d.getMaterialId());
+						writerUserTrendst.setBookCommentId(null);
+						writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
+					}
+				}
 			}
 		}
 		// 遍历被遴选人发送动态 和被修改成专家
