@@ -366,10 +366,9 @@ public class DeclarationServiceImpl implements DeclarationService {
 			writerUserTrendstService.addWriterUserTrendst(writerUserTrendst);
 			// 发送系统消息
 			systemMessageService.sendWhenDeclarationFormAudit(declarationCon.getId(), true, returnCause); 
-			// 获取审核进度是4并且已经通过审核单位并且不是提交到出版社0则被退回给申报单位
-			// 提交审核单位，审核单位已经通过，出版社退回给申报单位操作
-		} else if (4 == onlineProgress.intValue() && 3 == declarationCon.getOnlineProgress()
-				&& 0 != declarationCon.getOrgId()) {
+			// 获取审核进度是4并且通过或者不通过审核单位并且不是提交到出版社0则被退回给申报单位
+			// 提交审核单位，审核单位通过或者不通过，出版社都退回给申报单位操作
+		} else if (4 == onlineProgress.intValue() && 0 != declarationCon.getOrgId()) {
 			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
 				Integer chosenPosition = decPositions.getChosenPosition();
