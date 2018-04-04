@@ -369,14 +369,14 @@ public class DeclarationServiceImpl implements DeclarationService {
 			// 获取审核进度是4并且通过或者不通过审核单位并且不是提交到出版社0则被退回给申报单位
 			// 提交审核单位，审核单位通过或者不通过，出版社都退回给申报单位操作
 		} else if (4 == onlineProgress.intValue() && 0 != declarationCon.getOrgId()) {
-			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
+			/*List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
 				Integer chosenPosition = decPositions.getChosenPosition();
 				if (null != chosenPosition && chosenPosition.intValue() > 0) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 							CheckedExceptionResult.NULL_PARAM, "已遴选职务，不可退回给申报单位!");
 				}
-			}
+			}*/
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -406,14 +406,14 @@ public class DeclarationServiceImpl implements DeclarationService {
 			// 获取审核进度是5并且通过或者不通过审核单位并且不是提交到出版社0则被退回给个人
 			// 提交审核单位，审核单位通过或者不通过，出版社都可以退回给个人操作
 		} else if (5 == onlineProgress.intValue() && 0 != declarationCon.getOrgId()) {
-			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
+			/*List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
 				Integer chosenPosition = decPositions.getChosenPosition();
 				if (null != chosenPosition && chosenPosition.intValue() > 0) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 							CheckedExceptionResult.NULL_PARAM, "已遴选职务，不可退回给个人!");
 				}
-			}
+			}*/
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
@@ -443,14 +443,14 @@ public class DeclarationServiceImpl implements DeclarationService {
 			// 获取审核进度是5并且机构id为出版社0则被退回给个人
 			// 提交到出版社，出版社退回给个人操作
 		} else if (5 == onlineProgress.intValue() && 0 == declarationCon.getOrgId()) {
-			List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
+			/*List<DecPosition> decPosition = decPositionDao.listDecPositions(id);
 			for (DecPosition decPositions : decPosition) {
 				Integer chosenPosition = decPositions.getChosenPosition();
 				if (null != chosenPosition && chosenPosition.intValue() > 0) {
 					throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL,
 							CheckedExceptionResult.NULL_PARAM, "已遴选职务，不可退回给个人!");
 				}
-			}
+			}*/
 			declarationCon.setOnlineProgress(onlineProgress);
 			if (StringUtil.strLength(returnCause) > 100) {
 				throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
