@@ -1,12 +1,18 @@
 package com.bc.pmpheep.wechat.controller;
 
+import java.security.Principal;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import small.danfer.sso.http.HttpSingleSignOnService;
 
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.PmphUserWechat;
@@ -39,8 +45,10 @@ import com.bc.pmpheep.wechat.interceptor.OAuthRequired;
  * @审核人 ：
  * </pre>
  */
+@RequestMapping(value = "/sso")
 @Controller
 public class WeChatLoginController {
+    Logger                logger = LoggerFactory.getLogger(WeChatLoginController.class);
     @Autowired
     PmphUserService       pmphUserService;
     @Autowired
@@ -59,21 +67,20 @@ public class WeChatLoginController {
      * @return
      * </pre>
      */
-    @RequestMapping(value = { "/wechatUserInfo" })
+    @RequestMapping(value = { "/login" })
     @OAuthRequired
     public Object load(HttpServletRequest request, Model model) {
-        // System.out.println("Load a User!");
-        HttpSession session = request.getSession();
-        model.addAttribute("Userid", session.getAttribute("UserId"));// 判断是否从企业微信App登陆
-        String userAgent = request.getHeader("user-agent").toLowerCase();
+        String userAgent = request.getHeader("user-agent").toLowerCase();// 判断是否从企业微信App登陆
         Boolean isTrue =
         userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
         if (isTrue) {
-            String wechatUserId = (String) session.getAttribute("UserId");
+            HttpSession session = request.getSession();
+            String wechatUserId = (String) session.getAttribute("UserId");// 企业微信账号
             if (StringUtil.isEmpty(wechatUserId)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
                                                   CheckedExceptionResult.NULL_PARAM, "网络异常，请重新再试!");
             }
+            model.addAttribute("Userid", wechatUserId);
             PmphUserWechat pmphUserWechat =
             pmphUserWechatService.getPmphUserWechatByWechatId(wechatUserId);
             if (ObjectUtil.isNull(pmphUserWechat)) {
@@ -90,6 +97,33 @@ public class WeChatLoginController {
                     model.addAttribute("password", password);
                     model.addAttribute("isLogin", "1");
                 }
+            }
+        } else {// SSO 登陆
+            model.addAttribute("isLogin", "2");
+            HttpSingleSignOnService service = new HttpSingleSignOnService();
+            try {
+                Principal principal = service.singleSignOn(request);
+                String userName = principal.getName();
+                assert userName != null;
+                PmphUser pmphUser = pmphUserService.getPmphUserByUsername(userName);
+                if (ObjectUtil.isNull(pmphUser)) {// 为空就新建一个用户
+                    pmphUser =
+                    pmphUserService.add(new PmphUser(userName, new DesRun(null, "888888").enpsw,
+                                                     userName, "DEFAULT"));
+                    pmphRoleService.addUserRole(pmphUser.getId(), 2L);// 添加默认权限
+                }
+                String username = new DesRun(null, pmphUser.getUsername()).enpsw;
+                String password = pmphUser.getPassword();
+                String wechatUserId = "sso";
+                model.addAttribute("username", username);
+                model.addAttribute("password", password);
+                model.addAttribute("UserId", wechatUserId);
+                model.addAttribute(Const.PMPH_WECHAT_USER_TOKEN, new DesRun(password,
+                                                                            username + password
+                                                                            + wechatUserId
+                                                                            + "<pmpheep>").enpsw);
+            } catch (Exception e) {
+                logger.error("SSO登陆失败，异常信息'{}'", e.getMessage());
             }
         }
         return "wechat";

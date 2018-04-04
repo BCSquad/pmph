@@ -296,7 +296,7 @@ public class MigrationStageTwo {
                 + "LEFT JOIN (SELECT * FROM pub_addfileinfo y WHERE y.fileid IN (SELECT MAX(p.fileid) "
                 + "FROM pub_addfileinfo p WHERE p.childsystemname='sys_userext_teacher' GROUP BY p.operuserid))e "
                 + "ON a.userid = e.operuserid "
-                + "WHERE a.sysflag=1 AND b.usertype !=2 AND e.filedir IS NOT NULL ;";
+                + "WHERE a.sysflag=1 AND b.usertype !=2 AND b.isteacher IS NOT NULL ;";
         List<Map<String, Object>> maps = JdbcHelper.getJdbcTemplate().queryForList(sql);
         List<Map<String, Object>> excel = new LinkedList<>();
         Map<String, Object> result = new LinkedHashMap<>();
