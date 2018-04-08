@@ -523,7 +523,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 		}
 		writerUser.setPassword(new DesRun("", Const.DEFAULT_PASSWORD).enpsw);// 后台添加用户设置默认密码为123456
 		writerUser.setNickname(writerUser.getUsername());
-		writerUser.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);// 后台添加新用户时，设置为默认头像
+		writerUser.setAvatar("DEFAULT");// 后台添加新用户时，设置为默认头像
 		writerUserDao.add(writerUser);
 		Long num = writerUser.getId();
 		String result = "FAIL";

@@ -223,14 +223,14 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
                                                     Const.MSG_TYPE_1, userId, Const.SENDER_TYPE_1,
                                                     orgUser.getId(), Const.RECEIVER_TYPE_3, 0L));
                 if (!"-".equals(orgUser.getEmail()) && !"null".equals(orgUser.getEmail())) {
-                    // orgUserEmail.add(orgUser.getEmail());// 获取学校管理员邮箱地址
+                    orgUserEmail.add(orgUser.getEmail());// 获取学校管理员邮箱地址
                 }
             }
-            // Integer size = orgUserEmail.size();
-            String[] emails =
-            new String[] { "515944204@qq.com", "2310870657@qq.com", "501331000@qq.com" };
-            // String[] toEmail = (String[]) orgUserEmail.toArray(new String[size]);
-            if (ArrayUtil.isEmpty(emails)) {
+            Integer size = orgUserEmail.size();
+            // String[] emails =
+            // new String[] { "515944204@qq.com", "2310870657@qq.com", "501331000@qq.com" };
+            String[] toEmail = (String[]) orgUserEmail.toArray(new String[size]);
+            if (ArrayUtil.isEmpty(toEmail)) {
                 throw new CheckedServiceException(CheckedExceptionBusiness.QUESTIONNAIRE_SURVEY,
                                                   CheckedExceptionResult.NULL_PARAM, "收件人邮箱为空");
             }
@@ -249,7 +249,7 @@ public class SurveyTargetServiceImpl implements SurveyTargetService {
                                         + "/survey/writeSurvey.action?surveyId="
                                         + surveyTargetVO.getSurveyId()
                                         + "'>人卫E教平台</a><br/></span></p><p style='margin: 5px 0px; color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px;'><br/></p>",
-                                        emails);
+                                        toEmail);
             // 发送消息
             if (CollectionUtil.isNotEmpty(userMessageList)) {
                 userMessageService.addUserMessageBatch(userMessageList); // 插入消息发送对象数据
