@@ -32,6 +32,10 @@ import com.bc.pmpheep.back.vo.WriterUserManagerVO;
 import com.bc.pmpheep.service.exception.CheckedExceptionBusiness;
 import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
+import com.bc.pmpheep.utils.SsoHelper;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * WriterUserService 实现
@@ -40,7 +44,7 @@ import com.bc.pmpheep.service.exception.CheckedServiceException;
  * 
  */
 @Service
-public class WriterUserServiceImpl implements WriterUserService {
+public class WriterUserServiceImpl implements WriterUserService, ApplicationContextAware {
 
 	@Autowired
 	WriterUserDao writerUserDao;
@@ -55,6 +59,8 @@ public class WriterUserServiceImpl implements WriterUserService {
 
 	@Autowired
 	private PmphGroupService pmphGroupService;
+        
+        ApplicationContext context;
 
 	@Override
 	public List<WriterUser> getWriterUserListByOrgIds(List<Long> orgIds) throws CheckedServiceException {
@@ -523,7 +529,7 @@ public class WriterUserServiceImpl implements WriterUserService {
 		}
 		writerUser.setPassword(new DesRun("", Const.DEFAULT_PASSWORD).enpsw);// 后台添加用户设置默认密码为123456
 		writerUser.setNickname(writerUser.getUsername());
-		writerUser.setAvatar(RouteUtil.DEFAULT_USER_AVATAR);// 后台添加新用户时，设置为默认头像
+		writerUser.setAvatar("DEFAULT");// 后台添加新用户时，设置为默认头像
 		writerUserDao.add(writerUser);
 		Long num = writerUser.getId();
 		String result = "FAIL";
@@ -683,12 +689,21 @@ public class WriterUserServiceImpl implements WriterUserService {
 			throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 					CheckedExceptionResult.NULL_PARAM, "参数为空");
 		}
-		String password = "888888";
+		String password = "123456";
 		WriterUser user = writerUserDao.get(id);
+                SsoHelper ssoHelper = context.getBean(SsoHelper.class);
+                if(!ssoHelper.resetPassword(user.getUsername(), password)){
+                    throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT, 
+                            CheckedExceptionResult.FAILURE_SSO_CALLBACK, "访问单点登录系统失败");
+                }
 		DesRun desRun = new DesRun(user.getUsername(), password);
 		user.setPassword(desRun.enpsw);
 		writerUserDao.update(user);
 		return password;
 	}
-
+        
+        @Override
+        public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+            this.context = applicationContext;
+        }
 }

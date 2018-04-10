@@ -101,7 +101,7 @@ public class TopicServiceImpl implements TopicService {
 
 	/**
 	 * 功能描述：向VO中添加图书类别名称
-	 *
+	 *0=专著/1=基础理论/2=教材/3=论文集/4=图谱/5=科普/6=应用技术/7=教辅/8=工具书/9=其他
 	 * @param list
 	 * @return
 	 */
@@ -115,18 +115,27 @@ public class TopicServiceImpl implements TopicService {
 				vo.setTypeName("基础理论");
 				break;
 			case 2:
-				vo.setTypeName("论文集");
+				vo.setTypeName("教材");
 				break;
 			case 3:
-				vo.setTypeName("科普");
+				vo.setTypeName("论文集");
 				break;
 			case 4:
-				vo.setTypeName("应用技术");
+				vo.setTypeName("图谱");
 				break;
 			case 5:
-				vo.setTypeName("工具书");
+				vo.setTypeName("科普");
 				break;
 			case 6:
+				vo.setTypeName("应用技术");
+				break;
+			case 7:
+				vo.setTypeName("教辅");
+				break;
+			case 8:
+				vo.setTypeName("工具书");
+				break;
+			case 9:
 				vo.setTypeName("其他");
 				break;
 
@@ -154,18 +163,27 @@ public class TopicServiceImpl implements TopicService {
 				vo.setTypeName("基础理论");
 				break;
 			case 2:
-				vo.setTypeName("论文集");
+				vo.setTypeName("教材");
 				break;
 			case 3:
-				vo.setTypeName("科普");
+				vo.setTypeName("论文集");
 				break;
 			case 4:
-				vo.setTypeName("应用技术");
+				vo.setTypeName("图谱");
 				break;
 			case 5:
-				vo.setTypeName("工具书");
+				vo.setTypeName("科普");
 				break;
 			case 6:
+				vo.setTypeName("应用技术");
+				break;
+			case 7:
+				vo.setTypeName("教辅");
+				break;
+			case 8:
+				vo.setTypeName("工具书");
+				break;
+			case 9:
 				vo.setTypeName("其他");
 				break;
 
@@ -193,18 +211,27 @@ public class TopicServiceImpl implements TopicService {
 				vo.setTypeName("基础理论");
 				break;
 			case 2:
-				vo.setTypeName("论文集");
+				vo.setTypeName("教材");
 				break;
 			case 3:
-				vo.setTypeName("科普");
+				vo.setTypeName("论文集");
 				break;
 			case 4:
-				vo.setTypeName("应用技术");
+				vo.setTypeName("图谱");
 				break;
 			case 5:
-				vo.setTypeName("工具书");
+				vo.setTypeName("科普");
 				break;
 			case 6:
+				vo.setTypeName("应用技术");
+				break;
+			case 7:
+				vo.setTypeName("教辅");
+				break;
+			case 8:
+				vo.setTypeName("工具书");
+				break;
+			case 9:
 				vo.setTypeName("其他");
 				break;
 
