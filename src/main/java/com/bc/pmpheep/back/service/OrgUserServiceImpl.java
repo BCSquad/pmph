@@ -52,6 +52,7 @@ import org.springframework.context.ApplicationContextAware;
  */
 @Service
 public class OrgUserServiceImpl extends BaseService implements OrgUserService, ApplicationContextAware {
+
 	@Autowired
 	private OrgUserDao orgUserDao;
 	@Autowired
@@ -488,6 +489,11 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 		}
 		String password = "123456";
 		OrgUser orgUser = orgUserDao.getOrgUserById(id);
+                SsoHelper ssoHelper = context.getBean(SsoHelper.class);
+                if(!ssoHelper.resetPassword(orgUser.getUsername(), password)){
+                    throw new CheckedServiceException(CheckedExceptionBusiness.ORG, 
+                            CheckedExceptionResult.FAILURE_SSO_CALLBACK, "访问单点登录系统失败");
+                }
 		DesRun desRun = new DesRun(orgUser.getUsername(), password);
 		orgUser.setPassword(desRun.enpsw);
 		orgUserDao.updateOrgUser(orgUser);
