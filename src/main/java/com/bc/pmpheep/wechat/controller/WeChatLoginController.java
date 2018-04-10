@@ -105,7 +105,7 @@ public class WeChatLoginController {
                 Principal principal = service.singleSignOn(request);
                 String userName = principal.getName();
                 assert userName != null;
-                PmphUser pmphUser = pmphUserService.login(userName, null);
+                PmphUser pmphUser = pmphUserService.getPmphUserByUsername(userName);
                 if (ObjectUtil.isNull(pmphUser)) {// 为空就新建一个用户
                     pmphUser =
                     pmphUserService.add(new PmphUser(userName, new DesRun(null, "888888").enpsw,
