@@ -696,7 +696,8 @@
 		m.is_published,
 		m.founder_id,
 		m.project_permission,
-		m.plan_permission
+		m.plan_permission,
+		m.gmt_create
 		FROM
 		material m
 		LEFT JOIN material_contact c
