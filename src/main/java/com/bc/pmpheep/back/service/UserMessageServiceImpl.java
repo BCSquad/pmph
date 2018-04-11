@@ -201,9 +201,9 @@ public class UserMessageServiceImpl extends BaseService implements UserMessageSe
         } else {
             pageParameter.getParameter().setName(orgNameOrReceiver.replaceAll(" ", ""));
         }
-        if (Const.FALSE.booleanValue() == pmphUser.getIsAdmin().booleanValue()) {
-            pageParameter.getParameter().setSenderId(pmphUser.getId());
-        }
+        // if (Const.FALSE.booleanValue() == pmphUser.getIsAdmin().booleanValue()) {
+        // pageParameter.getParameter().setSenderId(pmphUser.getId());
+        // }
         PageResult<MessageStateVO> pageResult = new PageResult<MessageStateVO>();
         // 将页面大小和页面页码拷贝
         PageParameterUitl.CopyPageParameter(pageParameter, pageResult);
