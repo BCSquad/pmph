@@ -653,6 +653,7 @@
 		ON e.material_id = m.id
 		LEFT JOIN pmph_user u ON m.director
 		= u.id
+		left join pmph_department pdu on pdu.id = u.department_id
 		WHERE
 		m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
@@ -697,7 +698,8 @@
 		m.founder_id,
 		m.project_permission,
 		m.plan_permission,
-		m.gmt_create
+		m.gmt_create,
+		pdu.dp_name
 		FROM
 		material m
 		LEFT JOIN material_contact c
@@ -710,6 +712,7 @@
 		LEFT
 		JOIN pmph_user u ON m.director =
 		u.id
+		left join pmph_department pdu on pdu.id = u.department_id
 		WHERE m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
@@ -769,6 +772,7 @@
 		ON e.material_id = m.id
 		LEFT JOIN pmph_user u ON m.director
 		= u.id
+		left join pmph_department pdu on pdu.id = u.department_id
 		WHERE
 		m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
@@ -812,7 +816,9 @@
 		m.is_published,
 		m.founder_id,
 		m.project_permission,
-		m.plan_permission
+		m.plan_permission,
+		m.gmt_create,
+		pdu.dp_name
 		FROM
 		material m
 		LEFT JOIN material_contact c
@@ -825,6 +831,7 @@
 		LEFT
 		JOIN pmph_user u ON m.director =
 		u.id
+		left join pmph_department pdu on pdu.id = u.department_id
 		WHERE m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =

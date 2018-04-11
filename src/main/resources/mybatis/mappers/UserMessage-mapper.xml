@@ -612,4 +612,8 @@
 			#{msgId}
 		</foreach>
 	</delete>
+
+	<select id="getSenderDepartmentId" parameterType="long" resultType="long">
+		select department_id from pmph_user  where id = #{senderId}
+	</select>
 </mapper>
