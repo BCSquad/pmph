@@ -204,4 +204,10 @@ public interface UserMessageDao {
      */
     Integer deleteMessageByMsgId(List<String> msgIds);
 
+    /**
+     * 获取当前发送者id的部门id
+     * @param senderId
+     * @return
+     */
+    Long getSenderDepartmentId(Long senderId);
 }
