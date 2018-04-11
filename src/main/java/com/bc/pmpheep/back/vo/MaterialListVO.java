@@ -59,6 +59,8 @@ public class MaterialListVO implements Serializable {
 	private Integer projectPermission;
 	// 策划编辑权限
 	private Integer planPermission;
+	//部门名称
+	private String dpName;
 
 	public Long getId() {
 		return id;
@@ -251,5 +253,13 @@ public class MaterialListVO implements Serializable {
 
 	public void setGmtCreate(Date gmtCreate) {
 		this.gmtCreate = gmtCreate;
+	}
+
+	public String getDpName() {
+		return dpName;
+	}
+
+	public void setDpName(String dpName) {
+		this.dpName = dpName;
 	}
 }
