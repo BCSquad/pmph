@@ -159,6 +159,7 @@ public class FileDownLoadController {
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
 		GridFSDBFile file = fileService.get(id);
+
 		if (null == file) {
 			logger.warn("未找到id为'{}'的文件", id);
 			return;
@@ -246,7 +247,8 @@ public class FileDownLoadController {
 			throw new CheckedServiceException(CheckedExceptionBusiness.FILE,
 					CheckedExceptionResult.FILE_DOWNLOAD_FAILED, "未找到对应文件");
 		}
-		String fileName = returnFileName(request, file.getFilename());
+		String fileName = groupFileService.getFileName(id);
+				fileName =	returnFileName(request, fileName);
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			file.writeTo(out);

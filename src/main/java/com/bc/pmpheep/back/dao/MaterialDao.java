@@ -184,4 +184,18 @@ public interface MaterialDao {
      * </pre>
      */
     List<Material> listPublishedMaterial();
+
+    /**
+     * 报名已结束 实际报名截止时间 且遴选为结束
+     * @param pageParameter
+     * @return
+     */
+    Integer listMaterialSignUpEndTotal(PageParameter<MaterialListVO> pageParameter);
+
+    /**
+     * 报名已结束 实际报名截止时间 且遴选为结束
+     * @param pageParameter
+     * @return
+     */
+    List<MaterialListVO> listMaterialSignUpEnd(PageParameter<MaterialListVO> pageParameter);
 }
