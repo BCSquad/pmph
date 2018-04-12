@@ -105,4 +105,10 @@ public interface PmphGroupFileService {
 	 */
 	Integer updatePmphGroupFileOfDown(Long groupId, String fileId) throws CheckedServiceException;
 
+	/**
+	 * 获取文件名
+	 * @param id
+	 * @return
+	 */
+    String getFileName(String id);
 }

@@ -676,7 +676,9 @@
 			#{parameter.isAllTextbookPublished}
 			AND m.is_force_end =
 			#{parameter.isForceEnd}
-			<if test="parameter.isPublished != null"> AND m.is_published = #{parameter.isPublished}</if>
+			<if test="parameter.isPublished != null"> AND m.is_published = #{parameter.isPublished}
+				<if test="parameter.isPublished">And m.actual_deadline &gt; curdate() </if>
+			</if>
 		</if>
 		ORDER BY
 		m.actual_deadline DESC,
@@ -734,7 +736,10 @@
 			#{parameter.isAllTextbookPublished}
 			AND m.is_force_end =
 			#{parameter.isForceEnd}
-			<if test="parameter.isPublished != null"> AND m.is_published = #{parameter.isPublished}</if>
+			<if test="parameter.isPublished != null">
+				AND m.is_published = #{parameter.isPublished}
+				<if test="parameter.isPublished">And m.actual_deadline &gt; curdate() </if>
+			</if>
 
 		</if>
 		ORDER BY
@@ -801,6 +806,7 @@
 		m.actual_deadline DESC,
 		m.gmt_create DESC) t
 	</select>
+
 
 	<select id="listMaterialEnd" parameterType="PageParameter"
 		resultType="MaterialListVO">
@@ -877,6 +883,121 @@
 		where m.id=#{id}
 	</select>
 
+	<select id="listMaterialSignUpEndTotal" parameterType="PageParameter"
+			resultType="java.lang.Integer">
+		SELECT count(*) FROM
+		(SELECT DISTINCT
+		m.id,
+		m.material_name,
+		m.deadline,
+		m.actual_deadline,
+		m.director,
+		m.is_force_end,
+		m.is_all_textbook_published,
+		m.is_deleted,
+		m.is_published,
+		m.founder_id,
+		m.project_permission,
+		m.plan_permission,
+		m.gmt_create,
+		pdu.dp_name
+		FROM
+		material m
+		LEFT JOIN
+		material_contact c ON m.id = c.material_id
+		LEFT JOIN
+		material_project_editor p ON p.material_id = m.id
+		LEFT JOIN
+		textbook e
+		ON e.material_id = m.id
+		LEFT JOIN pmph_user u ON m.director
+		= u.id
+		left join pmph_department pdu on pdu.id = u.department_id
+		WHERE
+		m.is_deleted = FALSE
+		<if test="parameter.isMy != null">
+			AND (m.director = #{parameter.userId} OR p.editor_id =
+			#{parameter.userId}
+			OR e.planning_editor = #{parameter.userId} OR
+			m.founder_id = #{parameter.userId})
+		</if>
+		<if test="parameter.materialName != null and parameter.materialName != ''">
+			AND m.material_name LIKE
+			concat('%',#{parameter.materialName},'%')
+		</if>
+		<if
+				test="parameter.contactUserName != null and parameter.contactUserName !=''">
+			AND c.contact_user_name LIKE
+			concat('%',#{parameter.contactUserName},'%')
+		</if>
+		<if test="parameter.state != null and parameter.state != ''">
+			AND (m.is_all_textbook_published =
+			#{parameter.isAllTextbookPublished}
+			and m.is_force_end =
+			#{parameter.isForceEnd})
+			And m.actual_deadline &lt; curdate()
+		</if>
+		ORDER BY
+		m.actual_deadline DESC,
+		m.gmt_create DESC) t
+	</select>
+	<select id="listMaterialSignUpEnd" parameterType="PageParameter"
+			resultType="MaterialListVO">
+		SELECT DISTINCT m.id,
+		m.material_name,
+		m.deadline,
+		m.actual_deadline,
+		m.director,
+		m.is_force_end,
+		m.is_all_textbook_published,
+		m.is_deleted,
+		m.is_published,
+		m.founder_id,
+		m.project_permission,
+		m.plan_permission,
+		m.gmt_create,
+		pdu.dp_name
+		FROM
+		material m
+		LEFT JOIN
+		material_contact c ON m.id = c.material_id
+		LEFT JOIN
+		material_project_editor p ON p.material_id = m.id
+		LEFT JOIN
+		textbook e
+		ON e.material_id = m.id
+		LEFT JOIN pmph_user u ON m.director
+		= u.id
+		left join pmph_department pdu on pdu.id = u.department_id
+		WHERE
+		m.is_deleted = FALSE
+		<if test="parameter.isMy != null">
+			AND (m.director = #{parameter.userId} OR p.editor_id =
+			#{parameter.userId}
+			OR e.planning_editor = #{parameter.userId} OR
+			m.founder_id = #{parameter.userId})
+		</if>
+		<if test="parameter.materialName != null and parameter.materialName != ''">
+			AND m.material_name LIKE
+			concat('%',#{parameter.materialName},'%')
+		</if>
+		<if
+				test="parameter.contactUserName != null and parameter.contactUserName !=''">
+			AND c.contact_user_name LIKE
+			concat('%',#{parameter.contactUserName},'%')
+		</if>
+		<if test="parameter.state != null and parameter.state != ''">
+			AND (m.is_all_textbook_published =
+			#{parameter.isAllTextbookPublished}
+			and m.is_force_end =
+			#{parameter.isForceEnd})
+			And m.actual_deadline &lt; curdate()
+
+		</if>
+		ORDER BY
+		m.actual_deadline DESC,
+		m.gmt_create DESC
+	</select>
 	<!-- 通过书籍id获取教材信息 -->
 	<select id="getMaterialByName" resultType="Material">
 		select * from material m
