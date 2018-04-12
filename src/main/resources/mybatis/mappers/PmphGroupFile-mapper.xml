@@ -221,4 +221,9 @@
 		file_id = #{fileId}
 	</update>
 
+	<!--获取文件名-->
+	<select id="getFileName" resultType="java.lang.String">
+		select file_name  from pmph_group_file where file_id = #{id} limit 0,1
+	</select>
+
 </mapper>

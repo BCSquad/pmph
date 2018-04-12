@@ -246,4 +246,9 @@ public class PmphGroupFileServiceImpl extends BaseService implements PmphGroupFi
 		return pmphGroupFileDao.updatePmphGroupFileOfDownload(groupId, fileId);
 	}
 
+	@Override
+	public String getFileName(String id) {
+		return pmphGroupFileDao.getFileName(id);
+	}
+
 }

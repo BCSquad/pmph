@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.service;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bc.pmpheep.back.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,12 +34,6 @@ import com.bc.pmpheep.back.po.PmphGroup;
 import com.bc.pmpheep.back.po.PmphRole;
 import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.Textbook;
-import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.CookiesUtil;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.PageParameterUitl;
-import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.MaterialListVO;
 import com.bc.pmpheep.back.vo.MaterialMainInfoVO;
 import com.bc.pmpheep.back.vo.MaterialProjectEditorVO;
@@ -768,7 +764,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		Integer total = 0;
 		String state = pageParameter.getParameter().getState();
-		if ("已结束".equals(state)) {
+		if ("遴选已结束".equals(state)) {
 			pageParameter.getParameter().setIsAllTextbookPublished(true);
 			pageParameter.getParameter().setIsForceEnd(true);
 			pageParameter.getParameter().setIsPublished(true);
@@ -776,7 +772,14 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			if (total > 0) {
 				list = materialDao.listMaterialEnd(pageParameter);
 			}
-		} else {
+		} else if ("报名已结束".equals(state)) {
+			pageParameter.getParameter().setIsAllTextbookPublished(false);
+			pageParameter.getParameter().setIsForceEnd(false);
+			total = materialDao.listMaterialSignUpEndTotal(pageParameter);
+			if (total > 0) {
+				list = materialDao.listMaterialSignUpEnd(pageParameter);
+			}
+		}else {
 			if (!StringUtil.isEmpty(state)) {
 				switch (state) {
 				case "未发布":
@@ -862,13 +865,18 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					textbookService.getTextbookByMaterialIdAndUserId(materialListVO.getId(), pmphUser.getId()))) {// 判断是否为策划编辑
 				materialListVO.setIsMy(true);
 			}
+			SimpleDateFormat sdfDay  = new SimpleDateFormat("yyyy-MM-dd");
+			Long time1 = DateUtil.fomatDate(DateUtil.getDay()).getTime();
+			Long time2 = DateUtil.fomatDate(sdfDay.format( materialListVO.getActualDeadline())).getTime();
 			if (materialListVO.getIsPublished()) {
 				if (materialListVO.getIsForceEnd() || materialListVO.getIsAllTextbookPublished()) {
-					materialListVO.setState("已结束");
-				} else {
+					materialListVO.setState("遴选已结束");
+				} else if( time1> time2){
+					materialListVO.setState("报名已结束");
+				}else{
 					materialListVO.setState("已发布");
 				}
-			} else {
+			} else{
 				materialListVO.setState("未发布");
 			}
 			String myPower = getMaterialMainInfoById(materialListVO.getId(), sessionId).getMyPower();
