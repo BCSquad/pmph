@@ -636,6 +636,7 @@ public class FileDownLoadController {
 			workbook = excelHelper.fromBusinessObjectList(list, "遴选名单");
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
+			e.printStackTrace();
 		}
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
