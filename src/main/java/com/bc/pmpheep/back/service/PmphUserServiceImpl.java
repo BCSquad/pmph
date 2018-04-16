@@ -767,15 +767,15 @@ public class PmphUserServiceImpl implements PmphUserService {
         pageParameter3.setParameter(topicDeclarationVO);
         // 由主任受理
         if (pmphIdentity.getIsDirector()) {
-            PageParameter<TopicDirectorVO> pageParameterTopicDirectorVO = new PageParameter<>();
+            PageParameter<TopicDirectorVO> pageParameterTopicDirectorVO = new PageParameter<>(1,100);
             PageResult<TopicDirectorVO> PageResultTopicDirectorVO =
-            topicService.listIsDirectorTopic(sessionPmphUser.getId(), pageParameterTopicDirectorVO);
+                    topicService.listIsDirectorTopic(sessionPmphUser.getId(), pageParameterTopicDirectorVO);
             map.put("topicList", PageResultTopicDirectorVO);
         }
         // 由运维人员受理
         if (pmphIdentity.getIsOpts()) {
             PageParameter<TopicOPtsManagerVO> pageParameterTopicOPtsManagerVO =
-            new PageParameter<>();
+            new PageParameter<>(1,100);
             PageResult<TopicOPtsManagerVO> PageResultTopicOPtsManagerVO =
             topicService.listIsOptsTopic(sessionPmphUser.getId(), pageParameterTopicOPtsManagerVO);
             map.put("topicList", PageResultTopicOPtsManagerVO);
@@ -783,17 +783,19 @@ public class PmphUserServiceImpl implements PmphUserService {
         }
         // 由编辑受理
         if (pmphIdentity.getIsEditor()) {
-            PageParameter<TopicEditorVO> pageParameterTopicEditorVO = new PageParameter<>();
+            PageParameter<TopicEditorVO> pageParameterTopicEditorVO = new PageParameter<>(1,100);
             PageResult<TopicEditorVO> PageResultTopicEditorVO =
             topicService.listIsEditor(sessionPmphUser.getId(), pageParameterTopicEditorVO);
             map.put("topicList", PageResultTopicEditorVO);
         }
         // 是否是系统管理员
         if (pmphIdentity.getIsAdmin()) {
+            pageParameter3.setPageSize(100);
             PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO =
             topicService.listMyTopic(progress, pageParameter3, null);
             map.put("topicList", pageResultTopicDeclarationVO);
         }
+
         // 因前端需要判断，当没有选题申报给空数据
         if (ObjectUtil.isNull(map.get("topicList"))) {
             PageResult<TopicDeclarationVO> pageResultTopicDeclarationVO = new PageResult<>();
