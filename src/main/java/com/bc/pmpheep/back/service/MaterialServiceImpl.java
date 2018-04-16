@@ -872,7 +872,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 				if (materialListVO.getIsForceEnd() || materialListVO.getIsAllTextbookPublished()) {
 					materialListVO.setState("遴选结束");
 				} else if( time1> time2){
-					materialListVO.setState("报名已结束");
+					materialListVO.setState("报名结束");
 				}else{
 					materialListVO.setState("已发布");
 				}

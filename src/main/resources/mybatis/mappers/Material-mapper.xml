@@ -654,7 +654,9 @@
 		LEFT JOIN pmph_user u ON m.director
 		= u.id
 		left join pmph_department pdu on pdu.id = u.department_id
-		left join cms_content t1 on t1.material_id = m.id and t1.category_id = 3
+		left join (select t1.* from (select t1.gmt_create,t1.material_id from cms_content t1
+		where t1.category_id = 3
+		group by t1.material_id) t1 GROUP BY t1.material_id) t1 on t1.material_id = m.id
 		WHERE
 		m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
@@ -716,7 +718,9 @@
 		JOIN pmph_user u ON m.director =
 		u.id
 		left join pmph_department pdu on pdu.id = u.department_id
-		left join cms_content t1 on t1.material_id = m.id and t1.category_id = 3
+		left join (select t1.* from (select t1.gmt_create,t1.material_id from cms_content t1
+		where t1.category_id = 3
+		group by t1.material_id) t1 GROUP BY t1.material_id) t1 on t1.material_id = m.id
 		WHERE m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
@@ -745,7 +749,7 @@
 
 		</if>
 		ORDER BY
-		m.gmt_create DESC,
+		t1.gmt_create DESC,
 		m.actual_deadline DESC
 		<if test="pageSize != null">
 			LIMIT #{start} , #{pageSize}
@@ -780,7 +784,9 @@
 		LEFT JOIN pmph_user u ON m.director
 		= u.id
 		left join pmph_department pdu on pdu.id = u.department_id
-		left join cms_content t1 on t1.material_id = m.id and t1.category_id = 3
+		left join (select t1.* from (select t1.gmt_create,t1.material_id from cms_content t1
+		where t1.category_id = 3
+		group by t1.material_id) t1 GROUP BY t1.material_id) t1 on t1.material_id = m.id
 		WHERE
 		m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
@@ -841,7 +847,9 @@
 		JOIN pmph_user u ON m.director =
 		u.id
 		left join pmph_department pdu on pdu.id = u.department_id
-		left join cms_content t1 on t1.material_id = m.id and t1.category_id = 3
+		left join (select t1.* from (select t1.gmt_create,t1.material_id from cms_content t1
+		where t1.category_id = 3
+		group by t1.material_id) t1 GROUP BY t1.material_id) t1 on t1.material_id = m.id
 		WHERE m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
@@ -866,7 +874,7 @@
 			AND m.is_published = #{parameter.isPublished}
 		</if>
 		ORDER BY
-		m.gmt_create DESC,
+		t1.gmt_create DESC,
 		m.actual_deadline DESC
 		<if test="pageSize != null">
 			LIMIT #{start} , #{pageSize}
@@ -917,7 +925,9 @@
 		LEFT JOIN pmph_user u ON m.director
 		= u.id
 		left join pmph_department pdu on pdu.id = u.department_id
-		left join cms_content t1 on t1.material_id = m.id and t1.category_id = 3
+		left join (select t1.* from (select t1.gmt_create,t1.material_id from cms_content t1
+		where t1.category_id = 3
+		group by t1.material_id) t1 GROUP BY t1.material_id) t1 on t1.material_id = m.id
 		WHERE
 		m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
@@ -974,7 +984,9 @@
 		LEFT JOIN pmph_user u ON m.director
 		= u.id
 		left join pmph_department pdu on pdu.id = u.department_id
-		left join cms_content t1 on t1.material_id = m.id and t1.category_id = 3
+		left join (select t1.* from (select t1.gmt_create,t1.material_id from cms_content t1
+		where t1.category_id = 3
+		group by t1.material_id) t1 GROUP BY t1.material_id) t1 on t1.material_id = m.id
 		WHERE
 		m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
@@ -1001,7 +1013,7 @@
 
 		</if>
 		ORDER BY
-		m.actual_deadline DESC,
+		t1.gmt_create DESC,
 		m.gmt_create DESC
 	</select>
 	<!-- 通过书籍id获取教材信息 -->
