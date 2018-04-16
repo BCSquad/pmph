@@ -764,7 +764,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		}
 		Integer total = 0;
 		String state = pageParameter.getParameter().getState();
-		if ("遴选已结束".equals(state)) {
+		if ("遴选结束".equals(state)) {
 			pageParameter.getParameter().setIsAllTextbookPublished(true);
 			pageParameter.getParameter().setIsForceEnd(true);
 			pageParameter.getParameter().setIsPublished(true);
@@ -772,7 +772,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			if (total > 0) {
 				list = materialDao.listMaterialEnd(pageParameter);
 			}
-		} else if ("报名已结束".equals(state)) {
+		} else if ("报名结束".equals(state)) {
 			pageParameter.getParameter().setIsAllTextbookPublished(false);
 			pageParameter.getParameter().setIsForceEnd(false);
 			total = materialDao.listMaterialSignUpEndTotal(pageParameter);
@@ -870,7 +870,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 			Long time2 = DateUtil.fomatDate(sdfDay.format( materialListVO.getActualDeadline())).getTime();
 			if (materialListVO.getIsPublished()) {
 				if (materialListVO.getIsForceEnd() || materialListVO.getIsAllTextbookPublished()) {
-					materialListVO.setState("遴选已结束");
+					materialListVO.setState("遴选结束");
 				} else if( time1> time2){
 					materialListVO.setState("报名已结束");
 				}else{

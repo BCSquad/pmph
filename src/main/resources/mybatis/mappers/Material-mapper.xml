@@ -654,6 +654,7 @@
 		LEFT JOIN pmph_user u ON m.director
 		= u.id
 		left join pmph_department pdu on pdu.id = u.department_id
+		left join cms_content t1 on t1.material_id = m.id and t1.category_id = 3
 		WHERE
 		m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
@@ -700,7 +701,7 @@
 		m.founder_id,
 		m.project_permission,
 		m.plan_permission,
-		m.gmt_create,
+		t1.gmt_create,
 		pdu.dp_name
 		FROM
 		material m
@@ -715,6 +716,7 @@
 		JOIN pmph_user u ON m.director =
 		u.id
 		left join pmph_department pdu on pdu.id = u.department_id
+		left join cms_content t1 on t1.material_id = m.id and t1.category_id = 3
 		WHERE m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
@@ -778,6 +780,7 @@
 		LEFT JOIN pmph_user u ON m.director
 		= u.id
 		left join pmph_department pdu on pdu.id = u.department_id
+		left join cms_content t1 on t1.material_id = m.id and t1.category_id = 3
 		WHERE
 		m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
@@ -823,7 +826,7 @@
 		m.founder_id,
 		m.project_permission,
 		m.plan_permission,
-		m.gmt_create,
+		t1.gmt_create,
 		pdu.dp_name
 		FROM
 		material m
@@ -838,6 +841,7 @@
 		JOIN pmph_user u ON m.director =
 		u.id
 		left join pmph_department pdu on pdu.id = u.department_id
+		left join cms_content t1 on t1.material_id = m.id and t1.category_id = 3
 		WHERE m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
 			AND (m.director = #{parameter.userId} OR p.editor_id =
@@ -913,6 +917,7 @@
 		LEFT JOIN pmph_user u ON m.director
 		= u.id
 		left join pmph_department pdu on pdu.id = u.department_id
+		left join cms_content t1 on t1.material_id = m.id and t1.category_id = 3
 		WHERE
 		m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
@@ -955,7 +960,7 @@
 		m.founder_id,
 		m.project_permission,
 		m.plan_permission,
-		m.gmt_create,
+		t1.gmt_create,
 		pdu.dp_name
 		FROM
 		material m
@@ -969,6 +974,7 @@
 		LEFT JOIN pmph_user u ON m.director
 		= u.id
 		left join pmph_department pdu on pdu.id = u.department_id
+		left join cms_content t1 on t1.material_id = m.id and t1.category_id = 3
 		WHERE
 		m.is_deleted = FALSE
 		<if test="parameter.isMy != null">
