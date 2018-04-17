@@ -150,6 +150,9 @@ public class PmphLoginController {
                 username = new DesRun(username).depsw;
                 password = new DesRun(password).depsw;
             }
+            if("pmphuserlogin".equals(wechatUserId)){
+                password = new DesRun(password).depsw;
+            }
         }
         PmphUser pmphUser = pmphUserService.login(username, new DesRun("", password).enpsw);
         // PmphUser pmphUser = pmphUserService.login(userName, null);
