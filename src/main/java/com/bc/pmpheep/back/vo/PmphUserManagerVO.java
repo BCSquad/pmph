@@ -30,6 +30,10 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	 */
 	private String username;
 	/**
+	 *
+	 */
+	private String password;
+	/**
 	 * 部门id
 	 */
 	private Long departmentId;
@@ -274,5 +278,12 @@ public class PmphUserManagerVO implements java.io.Serializable {
 	public void setPosition(String position) {
 		this.position = position;
 	}
-	
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 }
