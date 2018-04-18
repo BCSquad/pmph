@@ -103,7 +103,7 @@ public class CmsContentController {
     @RequestMapping(value = "/newContent", method = RequestMethod.POST)
     public ResponseBean newContent(CmsContent cmsContent, @RequestParam("file") String[] files,
     @RequestParam("content") String content, @RequestParam("scheduledTime") String scheduledTime,
-    HttpServletRequest request) {
+                                   @RequestParam("authorname") String authorname, HttpServletRequest request) {
         try {
             String sessionId = CookiesUtil.getSessionId(request);
             return new ResponseBean(cmsContentService.addCmsContent(cmsContent,

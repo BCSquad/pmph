@@ -103,6 +103,8 @@ public class CmsContent implements java.io.Serializable {
     private String    cover;
     // 退回理由
     private String    returnReason;
+    //作家姓名
+    private String authorname;
 
     // Constructors
 
@@ -648,5 +650,13 @@ public class CmsContent implements java.io.Serializable {
                + ", gmtCreate:" + gmtCreate + ", gmtUpdate:" + gmtUpdate + ", gmtReedit:"
                + gmtReedit + ", materialId:" + materialId + ", isMaterialEntry:" + isMaterialEntry
                + ", cover:" + cover + "}";
+    }
+
+    public String getAuthorname() {
+        return authorname;
+    }
+
+    public void setAuthorname(String authorname) {
+        this.authorname = authorname;
     }
 }
