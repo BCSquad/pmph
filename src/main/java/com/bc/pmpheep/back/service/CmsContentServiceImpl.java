@@ -128,6 +128,7 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "作者类型参数为空");
         }
+
         if (cmsContent.getTitle().length() > 100) {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.ILLEGAL_PARAM,
@@ -160,6 +161,10 @@ public class CmsContentServiceImpl implements CmsContentService {
             throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
                                               CheckedExceptionResult.NULL_PARAM, "教材ID不能为空");
 
+        }
+        if (ObjectUtil.isNull(cmsContent.getAuthorname())) {
+            throw new CheckedServiceException(CheckedExceptionBusiness.CMS,
+                    CheckedExceptionResult.NULL_PARAM, "作者姓名参数为空");
         }
         // MongoDB 内容插入
         Content contentObj = contentService.add(new Content(content));
