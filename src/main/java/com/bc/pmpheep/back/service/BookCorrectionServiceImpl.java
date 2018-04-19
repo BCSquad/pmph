@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bc.pmpheep.back.vo.BookFeedBack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -234,12 +235,96 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 	}
 
 	@Override
+	public PageResult<BookFeedBack> bookFeedBaskList(HttpServletRequest request, Integer pageNumber, Integer pageSize, Boolean result) {
+		if (null == request.getSession(false)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"会话过期");
+		}
+		// 获取当前用户
+		String sessionId = CookiesUtil.getSessionId(request);
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser || null == pmphUser.getId()) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"请求用户不存在");
+		}
+		if (null == pageNumber || pageNumber < 1) {
+			pageNumber = 1;
+		}
+		if (null == pageSize || pageSize < 1) {
+			pageSize = Integer.MAX_VALUE;
+		}
+//		Long editorId = pmphUser.getId();
+//		// 权限的检查
+//		List<PmphRole> pmphRoles = pmphUserService.getListUserRole(pmphUser.getId());
+//		for (PmphRole pmphRole : pmphRoles) {
+//			if (null != pmphRole && null != pmphRole.getRoleName() && "系统管理员".equals(pmphRole.getRoleName().trim())) {
+//				editorId = null; // 我是系统管理原
+//			}
+//		}
+//		// 权限由菜单控制
+//		editorId = null;
+		Map<String, Object> map = new HashMap<String, Object>(4);
+		map.put("start", (pageNumber - 1) * pageSize);
+		map.put("pageSize", pageSize);
+		map.put("result", result);
+		//map.put("editorId", editorId);
+		// 返回实体
+		PageResult<BookFeedBack> pageResult = new PageResult<BookFeedBack>();
+		pageResult.setPageNumber(pageNumber);
+		pageResult.setPageSize(pageSize);
+		// 获取总数
+		Integer total = bookCorrectionDao.bookFeedBackListTotal(map);
+		if (null != total && total > 0) {
+			List<BookFeedBack> rows = bookCorrectionDao.bookFeedBackList(map);
+			pageResult.setRows(rows);
+		}
+		pageResult.setTotal(total);
+		return pageResult;
+	}
+
+	@Override
 	public BookCorrectionAuditVO getBookCorrectionAuditDetailById(Long id) throws CheckedServiceException {
 		if (null == id) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
 					CheckedExceptionResult.NULL_PARAM, "参数ID为空");
 		}
+
 		return bookCorrectionDao.getBookCorrectionAuditDetailById(id);
+	}
+
+	@Override
+	public BookFeedBack getBookFeedBackDetailById(Long id) throws CheckedServiceException {
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
+					CheckedExceptionResult.NULL_PARAM, "参数ID为空");
+		}
+		BookFeedBack BookFeedBackList = bookCorrectionDao.getBookFeedBackDetailById(id);
+		return BookFeedBackList;
+	}
+
+	@Override
+	public Integer replyBookFeedBackWriter(Long id, String authorReply,HttpServletRequest request) {
+		if (null == id) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
+					CheckedExceptionResult.NULL_PARAM, "主键为空");
+		}
+		if (StringUtil.isEmpty(authorReply)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
+					CheckedExceptionResult.NULL_PARAM, "回复内容为空");
+		}
+		if (authorReply.length() > 500) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.BOOK_CORRECTION,
+					CheckedExceptionResult.NULL_PARAM, "回复内容超过最长限制500");
+		}
+		if (null == request.getSession(false)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"会话过期");
+		}
+		// 获取当前用户
+		String sessionId = CookiesUtil.getSessionId(request);
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		Long authorId = pmphUser.getId();
+		return bookCorrectionDao.replyBookFeedBackWriter(id,authorReply,authorId);
 	}
 
 	@Override
@@ -300,5 +385,7 @@ public class BookCorrectionServiceImpl extends BaseService implements BookCorrec
 		}
 		return bookCorrectionDao.getBookCorrectionById(id);
 	}
+
+
 
 }

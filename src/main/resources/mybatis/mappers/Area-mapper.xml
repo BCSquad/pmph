@@ -86,7 +86,7 @@
 	
 	<!-- 获取area集通过parentId -->
 	<select id="getAreaByParentId" parameterType="java.lang.Long" resultType="AreaTreeVO" >  
-	    select * from area where parent_id = #{parentId} order by  sort ;
+	    select * from area where parent_id = #{parentId} order by  CONVERT(area_name USING gbk) ,sort;
 	</select> 
 	
 	<!-- 批量删除-->
