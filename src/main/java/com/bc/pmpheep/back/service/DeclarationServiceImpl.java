@@ -812,7 +812,8 @@ public class DeclarationServiceImpl implements DeclarationService {
 			throws CheckedServiceException, IllegalArgumentException, IllegalAccessException {
 		List<DeclarationEtcBO> declarationEtcBOs = new ArrayList<>();
 		Gson gson = new Gson();
-		List<Long> bookIds = gson.fromJson(textBookids, new TypeToken<ArrayList<Long>>() {
+
+ 		List<Long> bookIds = gson.fromJson("["+textBookids+"]", new TypeToken<ArrayList<Long>>() {
 		}.getType());
 		List<DeclarationOrDisplayVO> declarationOrDisplayVOs = declarationDao.getDeclarationOrDisplayVOByMaterialId(
 				materialId, bookIds, realname, position, title, orgName, unitName, positionType, onlineProgress,
