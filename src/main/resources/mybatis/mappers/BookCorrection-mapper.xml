@@ -190,9 +190,11 @@
 				author_id = #{authorId},
 			</if>
 			auth_date = now(),
+			is_auth = 1,
 			<if test="authorReply != null and authorReply != '' ">
 				author_reply = #{authorReply},
 			</if>
+
 		</set>
 		where id=#{id} ;
 	</update>
