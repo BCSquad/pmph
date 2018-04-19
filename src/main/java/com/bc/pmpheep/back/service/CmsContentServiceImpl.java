@@ -286,7 +286,7 @@ public class CmsContentServiceImpl implements CmsContentService {
         cmsContent.setGmtReedit(DateUtil.formatTimeStamp("yyyy-MM-dd HH:mm:ss",
                                                          DateUtil.getCurrentTime()));
         // 撤销
-        if (null != cmsContent.getIsPublished()) {
+        if (null != cmsContent.getIsPublished()&& 2 != cmsContent.getAuthStatus()) {
             cmsContent.setIsStaging(cmsContent.getIsPublished());
         } else {
             cmsContent.setIsStaging(false);
