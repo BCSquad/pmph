@@ -3,6 +3,8 @@ package com.bc.pmpheep.back.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.back.plugin.PageResult;
+import com.bc.pmpheep.back.vo.BookFeedBack;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -122,4 +124,33 @@ public interface BookCorrectionDao {
 	 *
 	 */
 	void deleteBookCoorrectionTrackByBookIds();
+
+	/**
+	 * 读者反馈数据总数
+	 * @param map
+	 * @return
+	 */
+    Integer bookFeedBackListTotal(Map<String, Object> map);
+
+	/**
+	 * 读者反馈数据
+	 * @param map
+	 * @return
+	 */
+	List<BookFeedBack> bookFeedBackList(Map<String, Object> map);
+
+	/**
+	 * 获取某个具体读书反馈详情
+	 * @param id
+	 * @return
+	 */
+    BookFeedBack getBookFeedBackDetailById(@Param("id") Long id);
+
+	/**
+	 * 回复 读者反馈
+	 * @param id
+	 * @param authorReply
+	 * @return
+	 */
+	Integer replyBookFeedBackWriter(@Param("id") Long id, @Param("authorReply") String authorReply,@Param("authorId") Long authorId);
 }

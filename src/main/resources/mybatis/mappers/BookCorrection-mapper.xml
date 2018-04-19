@@ -179,6 +179,23 @@
 		</set>
 		where id=#{id} ;
 	</update>
+	
+	<update id="replyBookFeedBackWriter">
+		UPDATE book_user_feedback
+		<set>
+			<if test="id != null "> <!-- set id=#{id} 为了保证不出现语法错误 -->
+				id = #{id},
+			</if>
+			<if test="authorId != null "> <!-- set id=#{id} 为了保证不出现语法错误 -->
+				author_id = #{authorId},
+			</if>
+			auth_date = now(),
+			<if test="authorReply != null and authorReply != '' ">
+				author_reply = #{authorReply},
+			</if>
+		</set>
+		where id=#{id} ;
+	</update>
 
 	<!-- 根据主键获取BookCorrection -->
 	<select id="getBookCorrectionById" parameterType="java.lang.Long"
@@ -222,7 +239,72 @@
 		</if>
 
 	</select>
+	<select id="bookFeedBackList" parameterType="map" resultType="BookFeedBack">
+		SELECT
+		b.bookname,
+		wu.realname as feedBackName,
+		bc.id,
+		bc.book_id,
+		bc.content,
+		bc.is_auth as result,
+		pu.realname as authorname,
+		bc.author_reply,
+		bc.auth_date,
+		DATE_FORMAT(bc.gmt_create,'%Y-%m-%d %H:%i:%S') as gmt_create
+		FROM
+		book AS b
+		Inner Join book_user_feedback AS bc ON
+		b.id = bc.book_id
+		left join writer_user wu on bc.user_id = wu.id
+		left join pmph_user pu on bc.author_id = pu.id
+		WHERE
+		bc.is_deleted = '0'
+		<if test="result != null and result != '' ">
+			AND bc.is_auth = #{result}
+		</if>
+		order by bc.gmt_create desc
+		limit ${start},${pageSize}
+	</select>
 
+	<select id="bookFeedBackListTotal" parameterType="map" resultType="int">
+		SELECT
+		count(*)
+		FROM
+		book AS b
+		Inner Join book_user_feedback AS bc ON
+		b.id = bc.book_id
+		left join writer_user wu on bc.user_id = wu.id
+		left join pmph_user pu on bc.author_id = pu.id
+		WHERE
+		bc.is_deleted = '0'
+		<if test="result != null and result != '' ">
+			AND bc.is_auth = #{result}
+		</if>
+		order BY  bc.gmt_create desc
+	</select>
+
+	<select id="getBookFeedBackDetailById" resultType="BookFeedBack">
+		SELECT
+		b.bookname,
+		wu.realname as feedBackName,
+		bc.id,
+		bc.book_id,
+		bc.content,
+		bc.is_auth as result,
+		pu.realname as authorname,
+		bc.author_reply,
+		bc.auth_date,
+		DATE_FORMAT(bc.gmt_create,'%Y-%m-%d %H:%I:%S') as gmt_create
+		FROM
+		book AS b
+		Inner Join book_user_feedback AS bc ON
+		b.id = bc.book_id
+		left join writer_user wu on bc.user_id = wu.id
+		left join pmph_user pu on bc.author_id = pu.id
+		WHERE
+		bc.is_deleted = '0'
+		and bc.id = #{id}
+	</select>
 	<!-- 根据id获取详情 -->
 	<select   id="getBookCorrectionAuditDetailById"  resultType="BookCorrectionAuditVO">
 		select 

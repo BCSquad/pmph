@@ -6,6 +6,7 @@ import com.bc.pmpheep.back.plugin.PageResult;
 import com.bc.pmpheep.back.po.BookCorrection;
 import com.bc.pmpheep.back.vo.BookCorrectionAuditVO;
 import com.bc.pmpheep.back.vo.BookCorrectionTrackVO;
+import com.bc.pmpheep.back.vo.BookFeedBack;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
 /**
@@ -115,6 +116,30 @@ public interface BookCorrectionService {
 	 * @throws CheckedServiceException
 	 */
 	BookCorrection   getBookCorrectionById (Long id) throws CheckedServiceException;
-	
-	
+
+
+	/**
+	 * 获取读书反馈列表
+	 * @param request
+	 * @param pageNumber
+	 * @param pageSize
+	 * @param result
+	 * @return
+	 */
+	PageResult<BookFeedBack>  bookFeedBaskList(HttpServletRequest request, Integer pageNumber, Integer pageSize, Boolean result);
+
+	/**
+	 * 获取某个具体的读书反馈详情
+	 * @param id
+	 * @return
+	 */
+	BookFeedBack getBookFeedBackDetailById(Long id);
+
+	/**
+	 * 反馈内容 回复
+	 * @param id
+	 * @param authorReply
+	 * @return
+	 */
+	Integer replyBookFeedBackWriter(Long id, String authorReply,HttpServletRequest request);
 }

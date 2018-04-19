@@ -145,7 +145,7 @@ public class DesRun {
         // String a = new DesRun("15fdsafdsa", "admin" + "123" + "nyz526").enpsw;
         // System.out.println(a);
         // DesRun desRun = new DesRun(a);
-        DesRun desRun = new DesRun("", "scbcxxkrewj123");
+        DesRun desRun = new DesRun("", "888888");
         System.out.println(desRun.enpsw);
         System.out.println(desRun1.depsw);
     }
