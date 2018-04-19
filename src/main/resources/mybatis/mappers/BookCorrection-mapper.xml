@@ -261,7 +261,7 @@
 		left join pmph_user pu on bc.author_id = pu.id
 		WHERE
 		bc.is_deleted = '0'
-		<if test="result != null and result != '' ">
+		<if test="result != null ">
 			AND bc.is_auth = #{result}
 		</if>
 		order by bc.gmt_create desc
@@ -279,7 +279,7 @@
 		left join pmph_user pu on bc.author_id = pu.id
 		WHERE
 		bc.is_deleted = '0'
-		<if test="result != null and result != '' ">
+		<if test="result != null  ">
 			AND bc.is_auth = #{result}
 		</if>
 		order BY  bc.gmt_create desc
