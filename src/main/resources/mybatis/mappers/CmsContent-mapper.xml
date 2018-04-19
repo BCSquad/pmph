@@ -413,7 +413,8 @@
 		SELECT
 		cc.`id`,
 		cc.`title`,
-		cc.author_name username,
+		cc.author_name authorname,
+		pu.`username` username,
 		cc.`auth_status`,
 		cc.`auth_date`,
 		cc.`gmt_create`,
@@ -430,7 +431,12 @@
 		cc.`is_staging`,
 		cc.`is_material_entry`,
 		cc.`author_id`,
-		pu.`realname`,
+        CASE
+        WHEN pu.`realname` IS NULL THEN
+        wu.realname
+        ELSE
+        pu.`realname`
+        END realname,
 		cc.`material_id`
 			FROM
 			  `cms_content` cc 
@@ -493,7 +499,12 @@
 								AND cc.`is_published` = #{parameter.isPublished}
 							</if>
 							<if test="parameter.username !=null and  parameter.username!='' ">
-								AND cc.`author_name` like concat('%',#{parameter.username},'%')
+								AND (
+								pu.`username` like
+								concat('%',#{parameter.username},'%')
+								OR
+								pu.`realname`like
+								concat('%',#{parameter.username},'%') )
 							</if>
 							<!-- 所属教材 -->
 							<if test="parameter.materialId !=null ">
@@ -534,7 +545,12 @@
 						AND `is_published` = #{parameter.isPublished}
 					</if>
 					<if test="parameter.username !=null and  parameter.username!='' ">
-						AND `username` like concat('%',#{parameter.username},'%')
+						AND (
+						`username` like
+						concat('%',#{parameter.username},'%')
+						OR
+						`realname`like
+						concat('%',#{parameter.username},'%') )
 					</if>
 					<!-- 所属教材 -->
 					<if test="parameter.materialId !=null ">

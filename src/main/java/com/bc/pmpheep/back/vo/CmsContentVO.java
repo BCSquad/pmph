@@ -72,6 +72,8 @@ public class CmsContentVO implements Serializable {
     private Long      materialId;
     // 平台类型
     private Integer   platform;
+    // 原作家姓名
+    private String authorname;
 
     /**
      * @return the id
@@ -521,4 +523,11 @@ public class CmsContentVO implements Serializable {
         this.endCreateDate = endCreateDate;
     }
 
+    public String getAuthorname() {
+        return authorname;
+    }
+
+    public void setAuthorname(String authorname) {
+        this.authorname = authorname;
+    }
 }
