@@ -2,6 +2,7 @@ package com.bc.pmpheep.back.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -318,6 +319,12 @@ public class PmphRoleServiceImpl implements PmphRoleService {
 					CheckedExceptionResult.NULL_PARAM, "角色ID或用户ID为空时禁止查询");
 		}
 		return roleDao.getUserRoleList(userId, roleId);
+	}
+
+
+	@Override
+	public List<Map<String, Object>> userPermission(Long id) {
+		return roleDao.userPermission(id);
 	}
 
 }
