@@ -1,6 +1,7 @@
 package com.bc.pmpheep.back.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -151,4 +152,11 @@ public interface PmphRoleDao {
      * @return
      */
 	List<PmphUserRole> getUserRoleList(@Param("userId") Long userId, @Param("roleId") Long roleId);
+
+    /**
+     * 获取首页的权限
+     * @param id
+     * @return
+     */
+    List<Map<String,Object>> userPermission(@Param("id") Long id);
 }

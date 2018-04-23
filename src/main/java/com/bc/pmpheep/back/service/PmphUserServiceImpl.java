@@ -704,6 +704,8 @@ public class PmphUserServiceImpl implements PmphUserService {
         }
         // 获取用户角色
         List<PmphRole> rolelist = roleService.getPmphRoleByUserId(sessionPmphUser.getId());
+        //获取当前用户的首页的 权限
+        List<Map<String,Object>> userPermissionList = roleService.userPermission(sessionPmphUser.getId());
         // 用于装所有的数据map
         Map<String, Object> map = new HashMap<>();
         // 教师认证总数量
@@ -824,6 +826,7 @@ public class PmphUserServiceImpl implements PmphUserService {
         map.put("pmphUser", sessionPmphUser);
         // 把用户角色存入map
         map.put("pmphRole", rolelist);
+        map.put("userPermission",userPermissionList);
         // 把选题申报的当前身份存入map
         map.put("pmphIdentity", pmphIdentity);
         // 存入用户上次操作时间
