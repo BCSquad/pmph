@@ -208,7 +208,7 @@ public interface PmphGroupMemberService {
 	 * @date 2018年3月22日 下午3:10:28
 	 *
 	 */
-	String updatePmphGroupMemberDisplayName(Long groupId, Long id , String displayName, String sessionId) 
+	String updatePmphGroupMemberDisplayName(Long groupId,Long userId, Long id , String displayName, String sessionId)
 			throws CheckedServiceException;
 
 }

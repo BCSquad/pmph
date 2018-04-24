@@ -357,6 +357,9 @@ public class GroupController {
 		return new ResponseBean(pmphGroupMemberService.listGroupMemberManagerVOs(pageParameter));
 	}
 
+
+
+
 	/**
 	 * 
 	 * 
@@ -460,6 +463,8 @@ public class GroupController {
 		}
 	}
 
+
+
 	/**
 	 * 职位遴选页面更新小组成员
 	 * 
@@ -493,8 +498,8 @@ public class GroupController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "后台小组成员管理修改小组成员昵称")
 	@RequestMapping(value = "/update/displayName", method = RequestMethod.POST)
-	public ResponseBean displayName(Long groupId, Long id, String displayName,HttpServletRequest request){
+	public ResponseBean displayName(Long groupId,Long userId, Long id, String displayName,HttpServletRequest request){
 		String sessionId = CookiesUtil.getSessionId(request);
-		return new ResponseBean(pmphGroupMemberService.updatePmphGroupMemberDisplayName(groupId, id, displayName, sessionId));
+		return new ResponseBean(pmphGroupMemberService.updatePmphGroupMemberDisplayName(groupId,userId, id, displayName, sessionId));
 	}
 }
