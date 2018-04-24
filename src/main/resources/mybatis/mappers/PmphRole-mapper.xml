@@ -340,4 +340,29 @@
 		WHERE
 		user_id = #{userId} AND role_id = #{roleId}
 	</select>
+
+	<select id="userPermission" resultType="map">
+		SELECT
+	sum(t.materialAuthor) materialAuthor,t.permission_id
+FROM
+	(
+		SELECT
+			count(*) AS materialAuthor,prp.permission_id
+		FROM
+			pmph_user_role p
+		LEFT JOIN pmph_role r ON p.role_id = r.id
+		LEFT JOIN pmph_role_permission prp ON prp.role_id = p.role_id
+		WHERE
+
+			p.user_id = #{id}
+		AND r.is_disabled IS FALSE
+		AND prp.permission_id in(2,3,7,15,20,23)
+		GROUP BY
+			r.role_name,
+			prp.permission_id
+		ORDER BY
+			role_name,
+			permission_id
+	) t group by t.permission_id
+	</select>
 </mapper>

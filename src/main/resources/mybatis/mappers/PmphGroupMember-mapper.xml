@@ -106,9 +106,18 @@
 	<update id="update" parameterType="PmphGroupMember">
 		update
 		pmph_group_member set
-		is_deleted = false
-		where user_id =#{userId} and group_id =#{groupId}
-		and is_writer = #{isWriter} ;
+		is_deleted = false , display_name = #{displayName}
+		where
+		1=1
+		<if test="userId != null and userId !='' ">
+			and user_id = #{userId}
+		</if>
+		<if test="groupId != null and groupId !=''">
+			and group_id =#{groupId}
+		</if>
+		<if test=" isWriter != null">
+			and is_writer = #{isWriter}
+		</if>
 	</update>
 
 	<!-- 根据id查询一个 PmphGroupMember -->

@@ -630,7 +630,7 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 	}
 
 	@Override
-	public String updatePmphGroupMemberDisplayName(Long groupId, Long id, String displayName,
+	public String updatePmphGroupMemberDisplayName(Long groupId,Long userId, Long id, String displayName,
 			String sessionId) throws CheckedServiceException {
 		String result = "FAIL";
 		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
@@ -646,9 +646,11 @@ public class PmphGroupMemberServiceImpl extends BaseService implements PmphGroup
 			throw new CheckedServiceException(CheckedExceptionBusiness.GROUP,
 					CheckedExceptionResult.NULL_PARAM, "成员昵称不能为空");
 		}
-		PmphGroupMember member = new PmphGroupMember();
-		member.setId(id);
-		member.setDisplayName(displayName);
+			PmphGroupMember member = new PmphGroupMember();
+			member.setId(id);
+			member.setDisplayName(displayName);
+			member.setUserId(userId);
+			member.setGroupId(groupId);
 		if (pmphUser.getIsAdmin() || isFounder(groupId, sessionId)){
 			pmphGroupMemberDao.update(member);
 			result = "SUCCESS";
