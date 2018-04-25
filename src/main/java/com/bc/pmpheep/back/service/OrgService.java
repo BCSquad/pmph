@@ -130,5 +130,5 @@ public interface OrgService {
      * @return
      * </pre>
      */
-    List<OrgExclVO> listAllOrgToExcel() throws CheckedServiceException;
+    List<OrgExclVO> listAllOrgToExcel(String chooseOrg) throws CheckedServiceException;
 }

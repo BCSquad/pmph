@@ -158,6 +158,11 @@ public class WriterUser implements Serializable {
     private Short   loginType;
 
     /**
+     * 退回原因
+     */
+    private String    backReason;
+
+    /**
      * @return the id
      */
     public Long getId() {
@@ -690,4 +695,11 @@ public class WriterUser implements Serializable {
                + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
     }
 
+    public String getBackReason() {
+        return backReason;
+    }
+
+    public void setBackReason(String backReason) {
+        this.backReason = backReason;
+    }
 }

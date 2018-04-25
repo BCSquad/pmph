@@ -122,6 +122,11 @@ public class OrgUser implements Serializable {
 
     private String    loginType;
 
+    /**
+     * 退回原因
+     */
+    private String    backReason;
+
     public OrgUser() {
 
     }
@@ -405,4 +410,11 @@ public class OrgUser implements Serializable {
                + gmtUpdate + "}";
     }
 
+    public String getBackReason() {
+        return backReason;
+    }
+
+    public void setBackReason(String backReason) {
+        this.backReason = backReason;
+    }
 }
