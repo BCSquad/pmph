@@ -397,6 +397,15 @@
 		`area` ar
 		ON
 		o.`area_id` = ar.`id`
+		<where>
+
+			<if test="chooseOrg != null">
+				o.id in
+				<foreach collection="chooseOrg " item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+			</if>
+		</where>
 		ORDER BY
 		o.`area_id`,o.`id` ASC ;
 	</select>

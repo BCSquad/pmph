@@ -262,8 +262,8 @@ public class OrgServiceImpl extends BaseService implements OrgService {
     }
 
     @Override
-    public List<OrgExclVO> listAllOrgToExcel() throws CheckedServiceException {
-        return orgDao.listAllOrgToExcel();
+    public List<OrgExclVO> listAllOrgToExcel(String listAllOrgToExcel) throws CheckedServiceException {
+        return orgDao.listAllOrgToExcel(listAllOrgToExcel.split(","));
     }
 
 }

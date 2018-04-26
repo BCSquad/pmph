@@ -152,7 +152,7 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 	}
 
 	@Override
-	public Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds)
+	public Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds,String backReason)
 			throws CheckedServiceException, IOException {
 		if (CollectionUtil.isEmpty(orgUserIds) || ObjectUtil.isNull(progress)) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.SCHOOL_ADMIN_CHECK,
@@ -168,7 +168,9 @@ public class OrgUserServiceImpl extends BaseService implements OrgUserService, A
 					throw new CheckedServiceException(CheckedExceptionBusiness.USER_MANAGEMENT,
 							CheckedExceptionResult.NULL_PARAM, "已审核的用户不能再次审核");
 				}
-				orgUsers.add(new OrgUser(orgUser.getId(), progress));
+				OrgUser ou = new OrgUser(orgUser.getId(), progress);
+				ou.setBackReason(backReason);
+				orgUsers.add(ou);
 			}
 			if (CollectionUtil.isNotEmpty(orgUsers)) {
 				count = orgUserDao.updateOrgUserProgressById(orgUsers);
