@@ -258,6 +258,9 @@
 			org_user
 			<set>
 				progress = #{item.progress}
+				<if test="item.backReason !=null and item.backReason != '' ">
+					,backReason =   #{item.backReason}
+				</if>
 			</set>
 			where
 			id=#{item.id}

@@ -163,6 +163,6 @@ public interface OrgDao {
      * @return
      * </pre>
      */
-    List<OrgExclVO> listAllOrgToExcel();
+    List<OrgExclVO> listAllOrgToExcel(@Param("chooseOrg") String[] chooseOrg);
 
 }

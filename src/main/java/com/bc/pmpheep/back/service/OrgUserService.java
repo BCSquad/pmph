@@ -80,7 +80,7 @@ public interface OrgUserService {
 	 * &#64;throws CheckedServiceException
 	 * </pre>
 	 */
-	Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds)
+	Integer updateOrgUserProgressById(Integer progress, List<Long> orgUserIds,String backReason)
 			throws CheckedServiceException, IOException;
 
 	/**
