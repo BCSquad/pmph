@@ -362,7 +362,7 @@
 			a.is_editor_replied ,
 			a.editor_reply,
 			a.result,
-			p.realname editorName,
+			p.realname editorName
 		from 
 			book_correction a
 		LEFT JOIN 
