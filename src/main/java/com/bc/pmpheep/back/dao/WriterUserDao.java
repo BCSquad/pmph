@@ -186,6 +186,14 @@ public interface WriterUserDao {
 	 */
 	List<WriterUser> getWriterUserList(Long[] userIds);
 
+	/**
+	 * 是否置顶
+	 * @param id
+	 * @param isTop
+	 * @return
+	 */
+    Integer isTop(@Param("id") Long id, @Param("isTop") Boolean isTop);
+
     // /**
     // *
     // * <pre>

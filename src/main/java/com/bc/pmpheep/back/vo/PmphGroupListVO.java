@@ -32,11 +32,19 @@ public class PmphGroupListVO implements Serializable {
 	private Integer files;
 	// 判断当前用户是否为该小组成员
 	private Boolean isMember;
+	//小组信息
+	private String msgContent;
 
 	public PmphGroupListVO() {
 		super();
 	}
+	public String getMsgContent() {
+		return msgContent;
+	}
 
+	public void setMsgContent(String msgContent) {
+		this.msgContent = msgContent;
+	}
 	public Long getId() {
 		return id;
 	}
