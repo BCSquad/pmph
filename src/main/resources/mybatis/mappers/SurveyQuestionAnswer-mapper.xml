@@ -112,53 +112,38 @@
 	
 	<!-- 问卷回收列表 -->
 	<select id="listSurveyRecovery" parameterType="PageParameter" resultType="SurveyRecoveryVO">
-		SELECT 
-			s.`title`,
-		  	wu.`realname`,
-		  	org.`org_name` ,
-		  	sqa.`gmt_create`,
-		  	sqa.`survey_id`,
-		  	sqa.`user_id`,
-		  	t.`count`
+		SELECT
+		s.`title`,
+		wu.`realname`,
+		org.`org_name`,
+		sqa.`gmt_create`,
+		sqa.`survey_id`,
+		sqa.`user_id`,
+		t.`count`
 		FROM
-  			`survey_question_answer` sqa 
-  		JOIN 
-  			`survey` s 
-    	ON 
-    		sqa.`survey_id` = s.`id` 
-  		JOIN 
-  			`writer_user` wu 
-    	ON 
-    		sqa.`user_id` = wu.`id` 
-  		JOIN 
-  			`org` org 
-    	ON 
-    		wu.`org_id` = org.`id`,
-    		(
-    		SELECT count(a.`count`) `count` from(
-    		 SELECT 
-				count(*) `count`
-			 FROM
-	  			`survey_question_answer` sqa 
-	  		 JOIN 
-	  			`survey` s 
-	    	 ON 
-	    		sqa.`survey_id` = s.`id` 
-	  		 JOIN 
-	  			`writer_user` wu 
-	    	 ON 
-	    	 	sqa.`user_id` = wu.`id` 
-	  		 JOIN 
-	  			`org` org 
-	    	 ON 
-	    		wu.`org_id` = org.`id`
+		`survey_question_answer` sqa
+		JOIN `survey` s ON sqa.`survey_id` = s.`id`
+		JOIN `writer_user` wu ON sqa.`user_id` = wu.`id`
+		JOIN `org` org ON wu.`org_id` = org.`id`,
+		(
+		SELECT
+		count(a.`count`) `count`
+		FROM
+		(
+		SELECT
+		count(*) `count`
+		FROM
+		`survey_question_answer` sqa
+		JOIN `survey` s ON sqa.`survey_id` = s.`id`
+		JOIN `writer_user` wu ON sqa.`user_id` = wu.`id`
+		JOIN `org` org ON wu.`org_id` = org.`id`
 	    		<where>
 	    			<if test="parameter.title != null and parameter.title != ''">
 							s.`title` like concat('%',#{parameter.title},'%')
 					</if>
 					<if test="parameter.userName !=null and parameter.userName!=''">
 						and 
-							wu.`realname` like concat('%',#{parameter.userName},'%') )
+							wu.`realname` like concat('%',#{parameter.userName},'%')
 					</if>
 	    		</where>
 	    		GROUP BY s.`title`,wu.`realname`
@@ -169,7 +154,7 @@
 			</if>
 			<if test="parameter.userName !=null and parameter.userName!=''">
 				and 
-					wu.`realname` like concat('%',#{parameter.userName},'%') )
+					wu.`realname` like concat('%',#{parameter.userName},'%')
 			</if>
 	    </where>
 		GROUP BY 

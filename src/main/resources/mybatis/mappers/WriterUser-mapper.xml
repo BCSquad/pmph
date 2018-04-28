@@ -866,6 +866,7 @@
 			where
 			id=#{id}
 	</update>
+
 	<!-- 通过查询用户id查询用户信息 -->
 	<select id="getWriterUserList" resultType="WriterUser">
 		select * from writer_user
@@ -875,4 +876,9 @@
 			#{item}
 		</foreach>
 	</select>
+
+	<!--修改是否置顶-->
+	<update id="isTop" >
+		update writer_user set is_top = !#{isTop} where id = #{id}
+	</update>
 </mapper>

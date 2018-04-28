@@ -94,7 +94,7 @@ public class WriterUserManagerVO implements Serializable {
     private Integer count;
     // 是否教师
     private Boolean isTeacher;
-    
+
     public Boolean getIsTeacher() {
 		return isTeacher;
 	}
@@ -312,7 +312,8 @@ public class WriterUserManagerVO implements Serializable {
 				+ ", isTeacher=" + isTeacher + "]";
 	}
 
-   
-  
+
+
+
 
 }
