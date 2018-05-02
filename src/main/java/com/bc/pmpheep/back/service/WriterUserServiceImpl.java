@@ -701,9 +701,17 @@ public class WriterUserServiceImpl implements WriterUserService, ApplicationCont
 		writerUserDao.update(user);
 		return password;
 	}
-        
-        @Override
-        public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-            this.context = applicationContext;
-        }
+
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.context = applicationContext;
+    }
+
+	@Override
+	public Integer isTop(Long id, Boolean isTop) {
+		return writerUserDao.isTop(id,isTop);
+	}
+
+
 }

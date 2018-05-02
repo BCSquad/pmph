@@ -388,9 +388,10 @@
 			</if>
 		</if>
 		<if test="isOver != 1 ">
+			and is_editor_replied=0
 			<if test="result   != null  ">
-				<!-- 策划编辑回复了的根据状态查询 ，没有回复的 均可以查出来 -->
-				and (is_editor_replied and a.result = #{result} )
+				<!-- 策划编辑回复了的根据状态查询 -->
+				and a.result = #{result}
 			</if>
 		</if>
 		ORDER BY

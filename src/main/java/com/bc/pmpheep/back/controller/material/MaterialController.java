@@ -3,6 +3,7 @@ package com.bc.pmpheep.back.controller.material;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -46,24 +47,24 @@ public class MaterialController {
 	/**
 	 * 新建遴选公告
 	 * 
-	 * @param sessionId
-	 * @param material
+	 * @param //sessionId
+	 * @param //material
 	 *            教材对象
-	 * @param materialContacts
+	 * @param //materialContacts
 	 *            多个教材联系人
-	 * @param materialExtensions
+	 * @param //materialExtensions
 	 *            多个教材扩展项
-	 * @param MaterialProjectEditors
+	 * @param //MaterialProjectEditors
 	 *            多个教材扩项目编辑
-	 * @param materialExtra
+	 * @param //materialExtra
 	 *            教材通知备
-	 * @param materialNoticeAttachments
+	 * @param //materialNoticeAttachments
 	 *            多个教材通知
-	 * @param noticeFiles
+	 * @param //noticeFiles
 	 *            通知文件
-	 * @param materialNoteAttachments
+	 * @param //materialNoteAttachments
 	 *            多个教材备注
-	 * @param noteFiles
+	 * @param //noteFiles
 	 *            备注文件
 	 * @return
 	 */
@@ -97,24 +98,24 @@ public class MaterialController {
 	/**
 	 * 更新遴选公告
 	 * 
-	 * @param sessionId
-	 * @param material
+	 * @param   //sessionId
+	 * @param    //material
 	 *            教材对象
-	 * @param materialContacts
+	 * @param   //materialContacts
 	 *            多个教材联系人
-	 * @param materialExtensions
+	 * @param  //materialExtensions
 	 *            多个教材扩展项
-	 * @param MaterialProjectEditors
+	 * @param //MaterialProjectEditors
 	 *            多个教材扩项目编辑
-	 * @param materialExtra
+	 * @param //materialExtra
 	 *            教材通知备
-	 * @param materialNoticeAttachments
+	 * @param //materialNoticeAttachments
 	 *            多个教材通知
-	 * @param noticeFiles
+	 * @param //noticeFiles
 	 *            通知文件
-	 * @param materialNoteAttachments
+	 * @param //materialNoteAttachments
 	 *            多个教材备注
-	 * @param noteFiles
+	 * @param //noteFiles
 	 *            备注文件
 	 * @return
 	 */
@@ -157,7 +158,7 @@ public class MaterialController {
 	 *            当前页数
 	 * @param isMy
 	 *            是否我的
-	 * @param state
+	 *  @param //state
 	 *            当前状态
 	 * @param materialName
 	 *            教材名称
@@ -170,7 +171,11 @@ public class MaterialController {
 	@LogDetail(businessType = Business_Type, logRemark = "查询教材公告列表")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ResponseBean list(HttpServletRequest request, Integer pageSize, Integer pageNumber, Boolean isMy,
-			String state, String materialName, String contactUserName) {
+			String state,String materialName, String contactUserName) throws UnsupportedEncodingException {
+		//state 中文乱码
+//		String str=request.getParameter("state");
+		//byte[] bytes=str.getBytes("ISO-8859-1");
+		//String state=new String(bytes,"utf-8");
 		String sessionId = CookiesUtil.getSessionId(request);
 		PageParameter<MaterialListVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		MaterialListVO materialListVO = new MaterialListVO();
@@ -204,7 +209,7 @@ public class MaterialController {
 	 * @introduction
 	 * @author Mryang
 	 * @createDate 2017年12月14日 上午9:52:42
-	 * @param materialId
+	 * @param //materialId
 	 * @param request
 	 * @return
 	 */
@@ -282,7 +287,7 @@ public class MaterialController {
 	/**
      * 获取临时文件
      * 
-     * @param tempId  
+     * @param //tempId
      * @param response 服务响应
      */
 	@LogDetail(businessType = Business_Type, logRemark = "获取临时文件")

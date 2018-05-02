@@ -79,7 +79,7 @@ public class GroupController {
 		 * 因此返回时<务必>要使用ResponseBean的构造函数即 new ResponseBean(anything)
 		 */
 		PmphGroup pmphGroup = new PmphGroup();
-		if (StringUtil.isEmpty(groupName)) {
+		if (!StringUtil.isEmpty(groupName)) {
 			pmphGroup.setGroupName(groupName.trim());
 		}
 		String sessionId = CookiesUtil.getSessionId(request);
