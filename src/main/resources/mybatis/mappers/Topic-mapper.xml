@@ -765,7 +765,7 @@
 
 	<select id="listCheckTopic" resultType="TopicDeclarationVO">
 		SELECT
-		t.*, w.realname,p.realname editorName
+		w.realname,p.realname editorName,t.*
 		FROM
 		topic t
 		LEFT JOIN
