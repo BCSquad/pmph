@@ -540,7 +540,7 @@ public interface DecPositionDao {
      * @param textbookId
      * @return
      */
-    List<DecPosition> getDecPositionByTextbookId(Long textbookId);
+    List<DecPosition> getDecPositionByTextbookId( Long textbookId);
 
     /**
      * 
@@ -566,4 +566,9 @@ public interface DecPositionDao {
      * </pre>
      */
     List<DecPosition> getEditorByTextbookId(Long textbookId);
+
+    /*
+    获取当前教材下的主编
+     */
+    List<Map<String,Object>> getIsZhuBian(@Param("materialId") Long materialId);
 }

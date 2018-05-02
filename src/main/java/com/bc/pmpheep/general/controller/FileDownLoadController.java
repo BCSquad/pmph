@@ -1050,15 +1050,18 @@ public class FileDownLoadController {
 	public void allOrg(HttpServletRequest request, HttpServletResponse response) {
 		Workbook workbook = null;
 		List<OrgExclVO> orgList = null;
+		String chooseOrg = request.getParameter("chooseOrg");
 		try {
-			orgList = orgService.listAllOrgToExcel();
+
+
+			orgList = orgService.listAllOrgToExcel(StringUtil.isEmpty(chooseOrg)?"":chooseOrg);
 			workbook = excelHelper.fromBusinessObjectList(orgList, "所有学校信息");
 		} catch (CheckedServiceException | IllegalArgumentException | IllegalAccessException e) {
 			logger.warn("数据表格化的时候失败");
 		}
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/force-download");
-		String fileName = returnFileName(request, "所有学校" + ".xls");
+		String fileName = returnFileName(request, StringUtil.isEmpty(chooseOrg)?"所有学校":"学校名单" + ".xls");
 		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 		try (OutputStream out = response.getOutputStream()) {
 			workbook.write(out);

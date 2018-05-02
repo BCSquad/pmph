@@ -408,6 +408,8 @@ public class DecPositionServiceImpl implements DecPositionService {
         resultMap.put("DecPositionEditorSelectionVO", newDecPositionEditorSelectionVOs);
         Material material = materialService.getMaterialById(materialId);
         resultMap.put("IsDigitalEditorOptional", material.getIsDigitalEditorOptional());
+        List<Map<String,Object>> isZhuBian = decPositionDao.getIsZhuBian( materialId);
+        resultMap.put("isZhuBian",isZhuBian);
         return resultMap;
     }
 

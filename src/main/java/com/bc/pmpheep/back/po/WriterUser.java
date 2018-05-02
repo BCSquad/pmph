@@ -157,6 +157,13 @@ public class WriterUser implements Serializable {
 
     private Short   loginType;
 
+    private Boolean isTop;
+
+    private Date topSort;
+
+
+
+
     /**
      * @return the id
      */
@@ -690,4 +697,20 @@ public class WriterUser implements Serializable {
                + ", gmtCreate=" + gmtCreate + ", gmtUpdate=" + gmtUpdate + "]";
     }
 
+
+    public Boolean getIsTop() {
+        return isTop;
+    }
+
+    public void setIsTop(Boolean isTop) {
+        this.isTop = isTop;
+    }
+
+    public Date getTopSort() {
+        return topSort;
+    }
+
+    public void setTopSort(Date topSort) {
+        this.topSort = topSort;
+    }
 }
