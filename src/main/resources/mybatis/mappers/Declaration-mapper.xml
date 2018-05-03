@@ -537,7 +537,9 @@
 	<!-- 申报表审核列表总数 -->
 	<select id="listDeclarationTotal" parameterType="PageParameter"
 		resultType="java.lang.Integer">
-		select count(*) from (
+		select sum(temp1.coun) from (
+
+		select count(*) as coun from (
 		select
 		a.id
 		from declaration a
@@ -549,15 +551,15 @@
 		LEFT JOIN (SELECT id,org_name from org UNION SELECT 0,'人民卫生出版社' from
 		org ) f on f.id=a.org_id
 		where a.online_progress > 0 and a.is_deleted =
-		0   and c.id is not null
+		0 and c.id is not null
 		<!-- and b.is_deleted =0 -->
-		and a.material_id = #{parameter.materialId}
+		and a.material_id in ${parameter.materialId}
 		<!-- 下面是动态条件 -->
 		<!-- 书籍 -->
 		<if test="parameter.bookIds != null ">
 			and d.id in
 			<foreach collection="parameter.bookIds" item="item" index="index"
-				open="(" close=")" separator=",">
+					 open="(" close=")" separator=",">
 				#{item}
 			</foreach>
 		</if>
@@ -617,6 +619,7 @@
 			</if>
 		</if>
 		) temp
+		) temp1
 	</select>
 
 	<!-- 申报表审核分页列表 -->
@@ -668,7 +671,7 @@
 		where a.online_progress > 0 and a.is_deleted =
 		0   and c.id is not null
 		<!-- and b.is_deleted =0 and b.id = #{parameter.materialId} -->
-		and a.material_id = #{parameter.materialId}
+		and a.material_id in ${parameter.materialId}
 		<!-- 下面是动态条件 -->
 		<!-- 书籍 -->
 		<if test="parameter.bookIds != null ">
@@ -770,5 +773,22 @@
 				and m.is_all_textbook_published=true 
 				and m.id=#{materialId})
 	</select>
-		
+	<!-- wx获取用户的教材申报-->
+	<select id="getMaterialForResolve" resultType="map" parameterType="map">
+    SELECT
+     concat('(',GROUP_CONCAT(DISTINCT m.id separator ','),')') as mymaterials
+		FROM
+		material m
+		LEFT JOIN material_contact c ON m.id = c.material_id
+		LEFT JOIN material_project_editor p ON p.material_id = m.id
+		LEFT JOIN textbook e ON e.material_id = m.id
+     WHERE m.is_deleted = FALSE
+
+			AND (m.director = 4 OR p.editor_id =4
+			OR e.planning_editor = 4 OR
+			m.founder_id = 4)
+			AND m.is_all_textbook_published =0
+			AND m.is_force_end =0
+	</select>
+
 </mapper>

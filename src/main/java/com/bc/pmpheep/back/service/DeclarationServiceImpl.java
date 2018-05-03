@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bc.pmpheep.back.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,14 +66,6 @@ import com.bc.pmpheep.back.po.PmphUser;
 import com.bc.pmpheep.back.po.WriterUser;
 import com.bc.pmpheep.back.po.WriterUserTrendst;
 import com.bc.pmpheep.back.service.common.SystemMessageService;
-import com.bc.pmpheep.back.util.CollectionUtil;
-import com.bc.pmpheep.back.util.Const;
-import com.bc.pmpheep.back.util.DateUtil;
-import com.bc.pmpheep.back.util.ObjectUtil;
-import com.bc.pmpheep.back.util.PageParameterUitl;
-import com.bc.pmpheep.back.util.RouteUtil;
-import com.bc.pmpheep.back.util.SessionUtil;
-import com.bc.pmpheep.back.util.StringUtil;
 import com.bc.pmpheep.back.vo.ApplicationVO;
 import com.bc.pmpheep.back.vo.DecExtensionVO;
 import com.bc.pmpheep.back.vo.DecPositionDisplayVO;
@@ -84,6 +77,8 @@ import com.bc.pmpheep.service.exception.CheckedExceptionResult;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -207,10 +202,24 @@ public class DeclarationServiceImpl implements DeclarationService {
 
 	@Override
 	public PageResult<DeclarationListVO> pageDeclaration(Integer pageNumber, Integer pageSize, Long materialId,
-			String textBookids, String realname, String position, String title, String orgName, Long orgId,
-			String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile)
+														 String textBookids, String realname, String position, String title, String orgName, Long orgId,
+														 String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile, String tag,
+														 HttpServletRequest request)
 			throws CheckedServiceException {
-		if (null == materialId) {
+		if (null == request.getSession(false)) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"会话过期");
+		}
+		// 获取当前用户
+		String sessionId = CookiesUtil.getSessionId(request);
+		PmphUser pmphUser = SessionUtil.getPmphUserBySessionId(sessionId);
+		if (null == pmphUser) {
+			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
+					"请求用户不存在");
+		}
+
+
+		if (null == materialId && tag==null) {
 			throw new CheckedServiceException(CheckedExceptionBusiness.MATERIAL, CheckedExceptionResult.NULL_PARAM,
 					"教材为空");
 		}
@@ -219,7 +228,13 @@ public class DeclarationServiceImpl implements DeclarationService {
 		}.getType());
 		// 拼装复合参数
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("materialId", materialId);
+		if(tag!=null&& tag.equals("WX")){
+			map.put("userId",pmphUser.getId());
+			Map<String,Object> ma=declarationDao.getMaterialForResolve(map);
+			map.put("materialId", ma.get("mymaterials"));
+		}else{
+			map.put("materialId", "("+materialId+")");
+		}
 		if (null != bookIds && bookIds.size() > 0) {
 			map.put("bookIds", bookIds); // 书籍ids
 		}
