@@ -263,4 +263,12 @@ public interface WriterUserService {
 	 *
 	 */
 	String resetPassword(Long id) throws CheckedServiceException;
+
+	/**
+	 * 置顶作家
+	 * @param id
+	 * @param isTop
+	 * @return
+	 */
+    Integer isTop(Long id, Boolean isTop);
 }

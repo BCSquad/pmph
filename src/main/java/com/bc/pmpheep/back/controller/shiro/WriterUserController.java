@@ -277,4 +277,11 @@ public class WriterUserController {
 	public ResponseBean resetPassword(Long id) {
 		return new ResponseBean<>(writerUserService.resetPassword(id));
 	}
+
+	@ResponseBody
+	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "置顶作家用户")
+	@RequestMapping(value = "/isTop", method = RequestMethod.PUT)
+	public ResponseBean isTop(Long id,Boolean isTop) {
+		return new ResponseBean<>(writerUserService.isTop(id,isTop));
+	}
 }
