@@ -52,9 +52,9 @@ public class DeclarationServiceTest extends BaseTest {
 		Integer positionType=null;
 		Integer onlineProgress=null;
 		Integer offlineProgress=null;
-		PageResult<DeclarationListVO> page=declarationService.pageDeclaration(
+		/*PageResult<DeclarationListVO> page=declarationService.pageDeclaration(
 					pageNumber, pageSize, materialId, textBookids, realname, position, title, orgName, orgId,unitName, positionType, onlineProgress, offlineProgress, null
-				);
+				);*/
 		
 	}
 	

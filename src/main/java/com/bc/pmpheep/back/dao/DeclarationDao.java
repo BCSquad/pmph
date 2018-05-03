@@ -156,4 +156,13 @@ public interface DeclarationDao {
 	 * @return
 	 */
 	List<Declaration> getPositionChooseLossByMaterialId(Long materialId);
+
+	/**
+	 * wx获取用户的教材申报
+	 * @param param
+	 * @return
+	 */
+	Map<String,Object> getMaterialForResolve(Map<String,Object> param);
+
+
 }
