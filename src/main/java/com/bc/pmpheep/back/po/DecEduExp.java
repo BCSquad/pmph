@@ -35,7 +35,7 @@ public class DecEduExp implements java.io.Serializable {
 	//显示顺序
 	private Integer sort;
 	//个人资料id
-	private Long perId;
+	private String perId;
 
 	// 构造器
 
@@ -147,11 +147,11 @@ public class DecEduExp implements java.io.Serializable {
 	}
 
 
-	public Long getPerId() {
+	public String getPerId() {
 		return perId;
 	}
 
-	public void setPerId(Long perId) {
+	public void setPerId(String perId) {
 		this.perId = perId;
 	}
 }
