@@ -29,6 +29,8 @@ public class DecWorkExp implements java.io.Serializable {
 	private String dateEnd;
 	// 显示顺序
 	private Integer sort;
+	//个人资料id
+	private String perId;
 
 	// 构造器
 
@@ -163,4 +165,11 @@ public class DecWorkExp implements java.io.Serializable {
 				+ ", sort:" + sort + "}";
 	}
 
+	public String getPerId() {
+		return perId;
+	}
+
+	public void setPerId(String perId) {
+		this.perId = perId;
+	}
 }

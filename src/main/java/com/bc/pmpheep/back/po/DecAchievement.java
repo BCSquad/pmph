@@ -27,7 +27,9 @@ public class DecAchievement implements java.io.Serializable {
 	 * 成就
 	 */
 	private String content;
-	
+	//个人资料id
+	private String perId;
+
 	public Long getId() {
 		return id;
 	}
@@ -52,5 +54,12 @@ public class DecAchievement implements java.io.Serializable {
 		return "DecAchievement [id=" + id + ", declarationId=" + declarationId
 				+ ", content=" + content + "]";
 	}
-	
+
+	public String getPerId() {
+		return perId;
+	}
+
+	public void setPerId(String perId) {
+		this.perId = perId;
+	}
 }
