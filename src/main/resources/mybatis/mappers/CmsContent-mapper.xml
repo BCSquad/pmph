@@ -414,7 +414,12 @@
 		cc.`id`,
 		cc.`title`,
 		cc.author_name authorname,
-		pu.`username` username,
+		CASE
+		WHEN cc.author_type = 2 THEN
+		wu.username
+		ELSE
+		pu.`username`
+		END username,
 		cc.`auth_status`,
 		cc.`auth_date`,
 		cc.`gmt_create`,
@@ -431,12 +436,12 @@
 		cc.`is_staging`,
 		cc.`is_material_entry`,
 		cc.`author_id`,
-        CASE
-        WHEN pu.`realname` IS NULL THEN
-        wu.realname
-        ELSE
-        pu.`realname`
-        END realname,
+		CASE
+		WHEN cc.author_type = 2 THEN
+		wu.realname
+		ELSE
+		pu.`realname`
+		END realname,
 		cc.`material_id`
 			FROM
 			  `cms_content` cc 
