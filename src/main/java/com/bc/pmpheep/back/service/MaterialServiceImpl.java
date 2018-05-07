@@ -269,6 +269,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 		} else {
 			// 创建人
 			material.setFounderId(pmphUser.getId());
+			material.setIsPublic(true);
 			materialDao.addMaterial(material);
 		}
 		Long materialId = material.getId();
