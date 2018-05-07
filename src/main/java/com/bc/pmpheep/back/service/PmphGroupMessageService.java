@@ -7,6 +7,8 @@ import com.bc.pmpheep.back.po.PmphGroupMessage;
 import com.bc.pmpheep.back.vo.PmphGroupMessageVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * PmphGroupMessageService 接口
  * 
@@ -90,11 +92,12 @@ public interface PmphGroupMessageService {
 	 *
 	 * @param pageParameter
 	 *            分页参数 以及 小组id和进入小组时间
-	 * @return 分页消息结果集
+	 * @param req
+     * @return 分页消息结果集
 	 * @throws CheckedServiceException
 	 *
 	 */
-	PageResult<PmphGroupMessageVO> listPmphGroupMessage(PageParameter<PmphGroupMessageVO> pageParameter)
+	PageResult<PmphGroupMessageVO> listPmphGroupMessage(PageParameter<PmphGroupMessageVO> pageParameter, HttpServletRequest req)
 			throws CheckedServiceException;
 
 	/**

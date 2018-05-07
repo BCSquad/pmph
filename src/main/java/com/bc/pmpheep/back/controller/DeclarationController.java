@@ -62,7 +62,7 @@ public class DeclarationController {
     public ResponseBean declaration(
     @RequestParam(value = "pageNumber", required = true) Integer pageNumber,
     @RequestParam(value = "pageSize", required = true) Integer pageSize,
-    @RequestParam(value = "materialId", required = true) Long materialId,
+    @RequestParam(value = "materialId", required = true) String materialId,
     @RequestParam(value = "textBookids", required = false) String textBookids,
     @RequestParam(value = "realname", required = false) String realname,
     @RequestParam(value = "position", required = false) String position,
@@ -73,10 +73,11 @@ public class DeclarationController {
     @RequestParam(value = "positionType", required = false) Integer positionType,
     @RequestParam(value = "onlineProgress", required = false) Integer onlineProgress,
     @RequestParam(value = "offlineProgress", required = false) Integer offlineProgress,
-    @RequestParam(value = "haveFile", required = false) Boolean haveFile) {
+    @RequestParam(value = "haveFile", required = false) Boolean haveFile,
+    @RequestParam(value = "tag" ,required = false) String tag,HttpServletRequest request) {
         return new ResponseBean(declarationService.pageDeclaration(pageNumber,
                                                                    pageSize,
-                                                                   materialId,
+                                                                   Long.valueOf(materialId),
                                                                    textBookids,
                                                                    realname,
                                                                    position,
@@ -87,7 +88,7 @@ public class DeclarationController {
                                                                    positionType,
                                                                    onlineProgress,
                                                                    offlineProgress,
-                                                                   haveFile));
+                                                                   haveFile,tag,request));
     }
 
     /**

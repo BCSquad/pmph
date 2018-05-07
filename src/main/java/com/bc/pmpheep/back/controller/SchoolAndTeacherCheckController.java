@@ -162,9 +162,9 @@ public class SchoolAndTeacherCheckController {
     @LogDetail(businessType = BUSSINESS_TYPE, logRemark = "查询系统消息列表")
     @RequestMapping(value = "/writerCheck", method = RequestMethod.PUT)
     public ResponseBean writerCheck(@RequestParam("progress") Short progress,
-    @RequestParam("userIds") Long[] userIds,HttpServletRequest request) throws CheckedServiceException, Exception {
+    @RequestParam("userIds") Long[] userIds,@RequestParam("backReason") String backReason,HttpServletRequest request) throws CheckedServiceException, Exception {
         return new ResponseBean(
                                 writerUserCertificationService.updateWriterUserCertificationProgressByUserId(progress,
-                                                                                                             userIds,request));
+                                                                                                             userIds,backReason,request));
     }
 }

@@ -17,6 +17,8 @@ import com.bc.pmpheep.back.vo.DeclarationListVO;
 import com.bc.pmpheep.back.vo.DeclarationOrDisplayVO;
 import com.bc.pmpheep.service.exception.CheckedServiceException;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * <p>
  * Title:Declaration业务层接口
@@ -120,7 +122,8 @@ public interface DeclarationService {
 	 */
 	public PageResult<DeclarationListVO> pageDeclaration(Integer pageNumber, Integer pageSize, Long materialId,
 			String textBookids, String realname, String position, String title, String orgName, Long orgId,
-			String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile)
+			String unitName, Integer positionType, Integer onlineProgress, Integer offlineProgress, Boolean haveFile,String tag,
+														 HttpServletRequest request)
 			throws CheckedServiceException;
 
 	/**
