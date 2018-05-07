@@ -105,7 +105,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 
 	/**
 	 * 
-	 * @param Material
+	 * @param  //Material
 	 *            实体对象
 	 * @return 带主键的 Material
 	 * @throws CheckedServiceException
@@ -698,7 +698,7 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 	/**
 	 * 通过主键id更新material 不为null 的字段
 	 * 
-	 * @param Material
+	 * @param // Material
 	 * @return 影响行数
 	 * @throws CheckedServiceException
 	 */
@@ -792,10 +792,15 @@ public class MaterialServiceImpl extends BaseService implements MaterialService 
 					pageParameter.getParameter().setIsForceEnd(false);
 					pageParameter.getParameter().setIsPublished(true);
 					break;
+				case "未结束":
+					pageParameter.getParameter().setIsAllTextbookPublished(false);//是否所有书籍已公布
+					pageParameter.getParameter().setIsForceEnd(false);//是否被强制结束
+					pageParameter.getParameter().setIsPublished(null);//是否已发布到前台
+					break;
 				case "已结束":
-					pageParameter.getParameter().setIsAllTextbookPublished(false);
-					pageParameter.getParameter().setIsForceEnd(false);
-					pageParameter.getParameter().setIsPublished(null);
+					pageParameter.getParameter().setIsAllTextbookPublished(true);//是否所有书籍已公布
+					pageParameter.getParameter().setIsForceEnd(false);//是否被强制结束
+					pageParameter.getParameter().setIsPublished(null);//是否已发布到前台
 					break;
 
 				default:
