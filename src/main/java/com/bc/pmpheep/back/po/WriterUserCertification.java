@@ -35,6 +35,8 @@ public class WriterUserCertification implements Serializable {
     private Timestamp gmtCreate;
     // 修改时间
     private Timestamp gmtUpdate;
+    //退回原因
+    private String backReason;
 
     /** default constructor */
     public WriterUserCertification() {
@@ -43,6 +45,11 @@ public class WriterUserCertification implements Serializable {
     public WriterUserCertification(Long userId, Short progress) {
         this.userId = userId;
         this.progress = progress;
+    }
+    public WriterUserCertification(Long userId, Short progress,String backReason) {
+        this.userId = userId;
+        this.progress = progress;
+        this.backReason = backReason;
     }
 
     public WriterUserCertification(Long id) {
@@ -147,4 +154,12 @@ public class WriterUserCertification implements Serializable {
 		return null;
 		
 	}
+
+    public String getBackReason() {
+        return backReason;
+    }
+
+    public void setBackReason(String backReason) {
+        this.backReason = backReason;
+    }
 }

@@ -205,6 +205,8 @@ public class GroupController {
 	@RequestMapping(value = "/update/pmphGroupDetail", method = RequestMethod.PUT)
 	public ResponseBean pmphGroupDetail(String file, PmphGroup pmphGroup, HttpServletRequest request) {
 		try {
+			pmphGroup.setId(Long.parseLong(request.getParameter("groupId")));
+			pmphGroup.setGroupName(request.getParameter("groupName"));
 			return new ResponseBean(pmphGroupService.updatePmphGroupOnGroup(file, pmphGroup, request));
 		} catch (IOException e) {
 			return new ResponseBean(e.getMessage());
@@ -430,13 +432,13 @@ public class GroupController {
 	@ResponseBody
 	@LogDetail(businessType = BUSSINESS_TYPE, logRemark = "获取历史消息")
 	@RequestMapping(value = "/list/message", method = RequestMethod.GET)
-	public ResponseBean message(Integer pageSize, Integer pageNumber, Long groupId, Long baseTime) {
+	public ResponseBean message(Integer pageSize, Integer pageNumber, Long groupId, Long baseTime,HttpServletRequest req) {
 		PageParameter<PmphGroupMessageVO> pageParameter = new PageParameter<>(pageNumber, pageSize);
 		PmphGroupMessageVO pmphGroupMessageVO = new PmphGroupMessageVO();
 		pmphGroupMessageVO.setGmtCreate(new Timestamp(baseTime));
 		pmphGroupMessageVO.setGroupId(groupId);
 		pageParameter.setParameter(pmphGroupMessageVO);
-		return new ResponseBean(pmphGroupMessageService.listPmphGroupMessage(pageParameter));
+		return new ResponseBean(pmphGroupMessageService.listPmphGroupMessage(pageParameter,req));
 	}
 
 	/**

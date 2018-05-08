@@ -306,6 +306,8 @@
 		)temp
 	</select>
 
+
+
 	<!-- 职位遴选界面书籍分页列表 -->
 	<select id="listBookPosition" parameterType="PageParameter"
 		resultType="BookPositionVO">
@@ -314,7 +316,7 @@
 		a.revision_times,
 		a.republish_times,
 		a.is_locked,
-		a.is_published, 
+		a.is_published,
 		d.id materialId,
 		d.is_all_textbook_published
 		isAllTextbookPublished,
@@ -330,61 +332,61 @@
 		planningEditor.realname
 		planningEditorName ,
 		GROUP_CONCAT(
-			IF(
-			b.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),
-			IF(g.allres like CONCAT('%,',b.textbook_id,'_',b.declaration_id,'_',b.preset_position,'_',b.chosen_position,'_',IFNULL(b.rank,0),',%') 
-			    or a.is_published or a.is_chief_published, 
-				CONCAT('&lt;font color="red"&gt;',c.realname,'&lt;/font&gt;'), CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;')),
-			null
-			) ORDER BY if(b.chosen_position>8,b.chosen_position-8,b.chosen_position) desc,b.rank asc) editorsAndAssociateEditors,
+		IF(
+		b.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),
+		IF(g.allres like CONCAT('%,',b.textbook_id,'_',b.declaration_id,'_',b.preset_position,'_',b.chosen_position,'_',IFNULL(b.rank,0),',%')
+		or a.is_published or a.is_chief_published,
+		CONCAT('&lt;font color="red"&gt;',c.realname,'&lt;/font&gt;'), CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;')),
+		null
+		) ORDER BY if(b.chosen_position>8,b.chosen_position-8,b.chosen_position) desc,b.rank asc) editorsAndAssociateEditors,
 		sum(IF(b.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),1,0))
 		editorsAndAssociateEditorsNum,
 		GROUP_CONCAT(
-			IF(
-			b.chosen_position in (1,9),<!-- baohanshuzibainwei  1,3,5,7,8,9,10,11,12,13,14,15 -->
-			IF(g.allres like CONCAT('%,',b.textbook_id,'_',b.declaration_id,'_',b.preset_position,'_',b.chosen_position,'_',IFNULL(b.rank,0),',%'),
-			 	CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;'),CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;')),
-			null
-			) ORDER BY b.chosen_position desc,b.rank asc) bianWeis,
+		IF(
+		b.chosen_position in (1,9),<!-- baohanshuzibainwei  1,3,5,7,8,9,10,11,12,13,14,15 -->
+		IF(g.allres like CONCAT('%,',b.textbook_id,'_',b.declaration_id,'_',b.preset_position,'_',b.chosen_position,'_',IFNULL(b.rank,0),',%'),
+		CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;'),CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;')),
+		null
+		) ORDER BY b.chosen_position desc,b.rank asc) bianWeis,
 		sum(IF(b.chosen_position in (1,3,5,7) ,1,0)) bianWeisNum ,
 		e.id groupId,
-		IF(!a.is_published,null,f.repub) repub 
+		IF(!a.is_published,null,f.repub) repub
 		from textbook a
 		LEFT
-			JOIN dec_position b on b.textbook_id=a.id
+		JOIN dec_position b on b.textbook_id=a.id
 		LEFT JOIN (select * from
-			declaration where is_deleted = 0 and is_staging =
-			0 and online_progress
-			!=0) c on c.id = b.declaration_id
+		declaration where is_deleted = 0 and is_staging =
+		0 and online_progress
+		!=0) c on c.id = b.declaration_id
 		LEFT JOIN material d on d.id =
-			a.material_id
+		a.material_id
 		LEFT JOIN (select * from pmph_user where is_deleted =0
-			and is_disabled =0)
-			planningEditor on planningEditor.id =
-			a.planning_editor
-		LEFT JOIN pmph_group e on e.book_id = a.id 
+		and is_disabled =0)
+		planningEditor on planningEditor.id =
+		a.planning_editor
+		LEFT JOIN pmph_group e on e.book_id = a.id
 		<!-- 下面f是连接发布结果后是否可以再发布的 -->
 		LEFT JOIN (
-				SELECT textbook_id,IF(GROUP_CONCAT(PUB ORDER BY PUB ASC ) != GROUP_CONCAT(RES ORDER BY PUB ASC ),true,false) repub  FROM (
-					select A.textbook_id,IFNULL(a.PUB,'')PUB ,IFNULL(b.RES,'')RES from (
-						SELECT  textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) PUB
-						from dec_position_published   
-					) a left  JOIN (
-						SELECT  textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) RES
-						from dec_position WHERE chosen_position !=0   
-					) b  on b.textbook_id = a.textbook_id and a.declaration_id = b.declaration_id 
-						UNION
-					select B.textbook_id,IFNULL(a.PUB,'')PUB ,IFNULL(b.RES,'')RES from (
-						SELECT  textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) PUB
-						from dec_position_published   
-					) a RIGHT  JOIN (
-						SELECT textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) RES
-						from dec_position WHERE chosen_position !=0 
-					) b on b.textbook_id = a.textbook_id and a.declaration_id = b.declaration_id 
-				) T GROUP BY textbook_ID
-			)f on f.textbook_id = a.id 
+		SELECT textbook_id,IF(GROUP_CONCAT(PUB ORDER BY PUB ASC ) != GROUP_CONCAT(RES ORDER BY PUB ASC ),true,false) repub  FROM (
+		select A.textbook_id,IFNULL(a.PUB,'')PUB ,IFNULL(b.RES,'')RES from (
+		SELECT  textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) PUB
+		from dec_position_published
+		) a left  JOIN (
+		SELECT  textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) RES
+		from dec_position WHERE chosen_position !=0
+		) b  on b.textbook_id = a.textbook_id and a.declaration_id = b.declaration_id
+		UNION
+		select B.textbook_id,IFNULL(a.PUB,'')PUB ,IFNULL(b.RES,'')RES from (
+		SELECT  textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) PUB
+		from dec_position_published
+		) a RIGHT  JOIN (
+		SELECT textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) RES
+		from dec_position WHERE chosen_position !=0
+		) b on b.textbook_id = a.textbook_id and a.declaration_id = b.declaration_id
+		) T GROUP BY textbook_ID
+		)f on f.textbook_id = a.id
 		LEFT JOIN (SELECT textbook_id ,CONCAT(',',GROUP_CONCAT(CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0))),',') allres
-				from dec_position_published GROUP BY textbook_id ) g on g.textbook_id = a.id 
+		from dec_position_published GROUP BY textbook_id ) g on g.textbook_id = a.id
 		where d.is_deleted =0 and d.is_published =1
 		and d.id =
 		#{parameter.materialId}
@@ -408,13 +410,149 @@
 		<if test="parameter.list !=null and  parameter.list.size() > 0 ">
 			and a.id in
 			<foreach collection="parameter.list" item="item" index="index"
-				open="(" close=")" separator=",">
+					 open="(" close=")" separator=",">
 				#{item}
 			</foreach>
 		</if>
 		<if test="parameter.bookName !=null ">
-				and a.textbook_name like concat ('%',#{parameter.bookName},'%')
+			and a.textbook_name like concat ('%',#{parameter.bookName},'%')
+		</if>
+		GROUP BY a.id ORDER BY a.sort
+		<if test="start !=null and pageNumber != null">
+			limit #{start},#{pageSize}
+		</if>
+	</select>
+
+	<!-- 职位遴选界面书籍分页列表 -->
+	<select id="listBookPosition_up1" parameterType="PageParameter"
+			resultType="BookPositionVO">
+
+		select
+		e.book_id bookId,
+		a.revision_times,
+		a.republish_times,
+		a.is_locked,
+		a.is_published,
+		d.id materialId,
+		d.is_all_textbook_published
+		isAllTextbookPublished,
+		d.is_force_end isForceEnd,
+		a.id textBookId,
+		a.sort sort,
+		a.textbook_name,
+		a.textbook_round textbookRound,
+		a.is_chief_published,
+		sum(IF(g.id is not null ,1,0))
+		applyNum,
+		a.planning_editor planningEditor,
+		planningEditor.realname
+		planningEditorName ,
+		IF(a.is_chief_published,
+		(GROUP_CONCAT(
+		IF(
+		g.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),
+		IF(g.id
+		or a.is_published or a.is_chief_published,
+		CONCAT('&lt;font color="red"&gt;',c.realname,'&lt;/font&gt;'),NULL ),
+		null
+		) ORDER BY if(g.chosen_position>8,g.chosen_position-8,g.chosen_position) desc,g.rank asc))
+		,
+		(GROUP_CONCAT(
+		IF(
+		b.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),
+
+		CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;'),
+		null
+		) ORDER BY if(b.chosen_position>8,b.chosen_position-8,b.chosen_position) desc,b.rank asc))
+
+		) editorsAndAssociateEditors,
+		sum(IF(g.chosen_position in (2,3,4,5,6,7,10,11,12,13,14,15),1,0))
+		editorsAndAssociateEditorsNum,
+		IF(a.is_chief_published,(GROUP_CONCAT(
+		IF(
+		g.chosen_position in (1,9),
+
+		CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;'),
+		null
+		) ORDER BY g.chosen_position desc,g.rank asc)),
+
+		(GROUP_CONCAT(
+		IF(
+		b.chosen_position in (1,9),
+
+		CONCAT('&lt;font color="black"&gt;',c.realname,'&lt;/font&gt;'),
+		null
+		) ORDER BY b.chosen_position desc,b.rank asc))
+
+		) bianWeis,
+		sum(IF(g.chosen_position in (1,3,5,7) ,1,0)) bianWeisNum ,
+		e.id groupId,
+		IF(!a.is_published,null,f.repub) repub
+		from textbook a
+
+		LEFT JOIN material d on d.id =
+		a.material_id
+		LEFT JOIN (select * from pmph_user where is_deleted =0
+		and is_disabled =0)
+		planningEditor on planningEditor.id =
+		a.planning_editor
+		LEFT JOIN pmph_group e on e.book_id = a.id
+		LEFT JOIN (
+		SELECT textbook_id,IF(GROUP_CONCAT(PUB ORDER BY PUB ASC ) != GROUP_CONCAT(RES ORDER BY PUB ASC ),true,false) repub  FROM (
+		select A.textbook_id,IFNULL(a.PUB,'')PUB ,IFNULL(b.RES,'')RES from (
+		SELECT  textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) PUB
+		from dec_position_published
+		) a left  JOIN (
+		SELECT  textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) RES
+		from dec_position WHERE chosen_position !=0
+		) b  on b.textbook_id = a.textbook_id and a.declaration_id = b.declaration_id
+		UNION
+		select B.textbook_id,IFNULL(a.PUB,'')PUB ,IFNULL(b.RES,'')RES from (
+		SELECT  textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) PUB
+		from dec_position_published
+		) a RIGHT  JOIN (
+		SELECT textbook_id,declaration_id, CONCAT(textbook_id,'_',declaration_id,'_',preset_position,'_',chosen_position,'_',IFNULL(rank,0)) RES
+		from dec_position WHERE chosen_position !=0
+		) b on b.textbook_id = a.textbook_id and a.declaration_id = b.declaration_id
+		) T GROUP BY textbook_ID
+		)f on f.textbook_id = a.id
+		LEFT JOIN  dec_position_published g on g.textbook_id = a.id
+		LEFT JOIN (select * from
+		declaration where is_deleted = 0 and is_staging =
+		0 and online_progress
+		!=0) c on c.id = g.declaration_id and g.textbook_id = a.id
+		left join dec_position b
+		on c.id = b.declaration_id and b.textbook_id = a.id
+		where d.is_deleted =0 and d.is_published =1
+		and d.id =
+		#{parameter.materialId}
+		<if test="parameter.power == 4 and parameter.pmphUserId !=null ">
+			and a.planning_editor = #{parameter.pmphUserId}
+		</if>
+		<if test="parameter.state !=null ">
+			<if test="parameter.state == 1 ">
+				and a.is_locked = 0
 			</if>
+			<if test="parameter.state == 2 ">
+				and a.is_locked = 1
+			</if>
+			<if test="parameter.state == 3 ">
+				and a.is_published =1
+			</if>
+			<if test="parameter.state == 4 ">
+				and d.is_force_end =1
+			</if>
+		</if>
+		<if test="parameter.list !=null and  parameter.list.size() > 0 ">
+			and a.id in
+			<foreach collection="parameter.list" item="item" index="index"
+					 open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="parameter.bookName !=null ">
+			and a.textbook_name like concat ('%',#{parameter.bookName},'%')
+		</if>
 		GROUP BY a.id ORDER BY a.sort
 		<if test="start !=null and pageNumber != null">
 			limit #{start},#{pageSize}
@@ -429,6 +567,7 @@
 			#{item}
 		</foreach>
 	</select>
+
 	<!-- 根据id进行名单确认 -->
 	<update id="updateTextbooks" parameterType="list">
 		update textbook
